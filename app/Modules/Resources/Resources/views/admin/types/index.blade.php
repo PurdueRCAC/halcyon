@@ -113,7 +113,7 @@ app('pathway')
 						@if ($row->description)
 							{{ Illuminate\Support\Str::limit(strip_tags($row->description), 70) }}
 						@else
-							<span class="none">{{ trans('global.none') }}</span>
+							<span class="text-muted none">{{ trans('global.none') }}</span>
 						@endif
 					@if (auth()->user()->can('edit resources.types'))
 					</a>
@@ -121,7 +121,7 @@ app('pathway')
 				</td>
 				<td class="priority-4 text-right">
 					<a href="{{ route('admin.resources.index') }}?type={{ $row->id }}">
-						{{ $row->resources_count }}
+						{{ number_format($row->resources_count) }}
 					</a>
 				</td>
 			</tr>

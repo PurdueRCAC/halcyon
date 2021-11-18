@@ -105,7 +105,7 @@ app('pathway')
 				</td>
 				<td class="priority-4 text-right">
 					<a href="{{ route('admin.resources.index') }}?batchsystems={{ $row->id }}">
-						{{ $row->resources_count }}
+						{{ number_format($row->resources_count) }}
 					</a>
 				</td>
 			</tr>

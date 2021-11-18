@@ -127,10 +127,7 @@ app('pathway')
 		</thead>
 		<tbody>
 		@foreach ($rows as $i => $row)
-			<?php
-			$cls = $row->trashed() ? 'trashed' : 'active';
-			?>
-			<tr class="{{ $cls }}">
+			<tr class="{{ $row->trashed() ? 'trashed' : 'active' }}">
 				@if (auth()->user()->can('edit.state resources') || auth()->user()->can('delete resources'))
 					<td>
 						{!! Html::grid('id', $i, $row->id) !!}

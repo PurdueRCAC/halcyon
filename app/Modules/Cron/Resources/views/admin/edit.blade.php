@@ -38,7 +38,7 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-command">{{ trans('cron::cron.command') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-command">{{ trans('cron::cron.command') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<select name="fields[command]" class="form-control">
 						<option value="">{{ trans('global.none') }}</option>
 						<?php foreach ($commands as $command): ?>
@@ -50,13 +50,13 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-parameters">{{ trans('cron::cron.parameters') }}:</label>
+					<label for="field-parameters">{{ trans('cron::cron.parameters') }}</label>
 					<input type="text" name="fields[parameters]" id="field-parameters" class="form-control" maxlength="250" value="{{ $row->parameters }}" placeholder="--foo=bar" />
 					<span class="form-text">{{ trans('cron::cron.parameters desc') }}</span>
 				</div>
 
 				<div class="form-group">
-					<label for="field-description">{{ trans('cron::cron.description') }}:</label>
+					<label for="field-description">{{ trans('cron::cron.description') }}</label>
 					<input type="text" name="fields[description]" id="field-description" class="form-control" maxlength="250" value="{{ $row->description }}" />
 				</div>
 			</fieldset>
@@ -65,7 +65,7 @@ app('pathway')
 				<legend>{{ trans('cron::cron.recurrence') }}</legend>
 
 				<div class="input-wrap">
-					{{ trans('cron::cron.common') }}:<br />
+					{{ trans('cron::cron.common') }}<br />
 					<select name="fields[recurrence]" id="field-recurrence" class="form-control">
 						<option value=""<?php echo ($row->recurrence == '') ? ' selected="selected"' : ''; ?>>{{ trans('cron::cron.option.select') }}</option>
 						<option value="custom"<?php echo ($row->recurrence == 'custom') ? ' selected="selected"' : ''; ?>>{{ trans('cron::cron.option.custom') }}</option>
@@ -82,7 +82,7 @@ app('pathway')
 					<tbody id="custom"<?php echo ($row->isCustomRecurrence()) ? '' : ' class="hidden"'; ?>>
 						<tr>
 							<th scope="row">
-								<label for="field-minute-c">{{ trans('cron::cron.minute') }}</label>:
+								<label for="field-minute-c">{{ trans('cron::cron.minute') }}</label>
 							</th>
 							<td>
 								<input type="text" name="fields[minute][c]" id="field-minute-c" class="form-control" value="{{ $row->minute }}" />
@@ -103,7 +103,7 @@ app('pathway')
 						</tr>
 						<tr>
 							<th scope="row">
-								<label for="field-hour-c">{{ trans('cron::cron.hour') }}</label>:
+								<label for="field-hour-c">{{ trans('cron::cron.hour') }}</label>
 							</th>
 							<td>
 								<input type="text" name="fields[hour][c]" id="field-hour-c" class="form-control" value="{{ $row->hour }}" />
@@ -124,7 +124,7 @@ app('pathway')
 						</tr>
 						<tr>
 							<th scope="row">
-								<label for="field-day-c">{{ trans('cron::cron.day of month') }}</label>:
+								<label for="field-day-c">{{ trans('cron::cron.day of month') }}</label>
 							</th>
 							<td>
 								<input type="text" name="fields[day][c]" id="field-day-c" class="form-control" value="{{ $row->day }}" />
@@ -141,7 +141,7 @@ app('pathway')
 						</tr>
 						<tr>
 							<th scope="row">
-								<label for="field-month-c">{{ trans('cron::cron.month') }}</label>:
+								<label for="field-month-c">{{ trans('cron::cron.month') }}</label>
 							</th>
 							<td>
 								<input type="text" name="fields[month][c]" id="field-month-c" class="form-control" value="{{ $row->month }}" />
@@ -170,7 +170,7 @@ app('pathway')
 						</tr>
 						<tr>
 							<th scope="row">
-								<label for="field-dayofweek-c">{{ trans('cron::cron.day of week') }}</label>:
+								<label for="field-dayofweek-c">{{ trans('cron::cron.day of week') }}</label>
 							</th>
 							<td>
 								<input type="text" name="fields[dayofweek][c]" id="field-dayofweek-c" class="form-control" value="{{ $row->dayofweek }}" />
@@ -198,7 +198,7 @@ app('pathway')
 				<legend>{{ trans('global.publishing') }}</legend>
 
 				<div class="form-group">
-					<label for="field-state">{{ trans('cron::cron.state') }}:</label>
+					<label for="field-state">{{ trans('cron::cron.state') }}</label>
 					<select class="form-control" name="fields[state]" id="field-state">
 						<option value="0"<?php if ($row->state == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
 						<option value="1"<?php if ($row->state == 1) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
@@ -206,7 +206,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-dont_overlap">{{ trans('cron::cron.overlap') }}:</label>
+					<label for="field-dont_overlap">{{ trans('cron::cron.overlap') }}</label>
 					<select class="form-control" name="fields[dont_overlap]" id="field-dont_overlap">
 						<option value="0"<?php if ($row->dont_overlap == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
 						<option value="1"<?php if ($row->dont_overlap == 1) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
@@ -220,7 +220,7 @@ app('pathway')
 				<caption class="sr-only">{{ trans('global.metadata') }}</caption>
 				<tbody>
 					<tr>
-						<th scope="row">{{ trans('cron::cron.last run') }}:</th>
+						<th scope="row">{{ trans('cron::cron.last run') }}</th>
 						<td>
 							@if ($row->ran_at)
 								<time datetime="{{ $row->ran_at }}">{{ $row->ran_at }}</time>
@@ -230,7 +230,7 @@ app('pathway')
 						</td>
 					</tr>
 					<tr>
-						<th scope="row">{{ trans('cron::cron.next run') }}:</th>
+						<th scope="row">{{ trans('cron::cron.next run') }}</th>
 						<td>
 							<?php $nxt = $row->nextRun(); ?>
 							<?php if ($nxt) { ?>

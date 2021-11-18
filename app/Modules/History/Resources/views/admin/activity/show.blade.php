@@ -42,22 +42,22 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-objectid">{{ trans('history::history.objectid') }}:</label>
+					<label for="field-objectid">{{ trans('history::history.objectid') }}</label>
 					<input type="text" name="fields[objectid]" id="field-objectid" class="form-control" disabled="disabled" readonly="readonly" maxlength="250" value="{{ $row->objectid }}" />
 				</div>
 
 				<div class="form-group">
-					<label for="field-app">{{ trans('history::history.app') }}:</label>
+					<label for="field-app">{{ trans('history::history.app') }}</label>
 					<input type="text" name="fields[app]" id="field-app" class="form-control" disabled="disabled" readonly="readonly" maxlength="250" value="{{ $row->app }}" />
 				</div>
 
 				<div class="form-group">
-					<label for="field-classmethod">{{ trans('history::history.method') }}:</label>
+					<label for="field-classmethod">{{ trans('history::history.method') }}</label>
 					<input type="text" name="fields[classmethod]" id="field-classmethod" class="form-control" disabled="disabled" readonly="readonly" maxlength="250" value="{{ $row->classname }}::{{ $row->classmethod }}" />
 				</div>
 
 				<div class="form-group">
-					<label for="field-status">{{ trans('history::history.status') }}:</label>
+					<label for="field-status">{{ trans('history::history.status') }}</label>
 					<input type="text" name="fields[status]" id="field-status" class="form-control" disabled="disabled" readonly="readonly" maxlength="250" value="{{ $row->status }}" />
 				</div>
 			</fieldset>
@@ -67,17 +67,17 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-ip">{{ trans('history::history.ip') }}:</label>
+					<label for="field-ip">{{ trans('history::history.ip') }}</label>
 					<input type="text" name="fields[ip]" id="field-ip" class="form-control" disabled="disabled" readonly="readonly" maxlength="250" value="{{ $row->ip }}" />
 				</div>
 
 				<div class="form-group">
-					<label for="field-userid">{{ trans('history::history.actor') }}:</label>
+					<label for="field-userid">{{ trans('history::history.actor') }}</label>
 					<input type="text" name="fields[userid]" id="field-userid" class="form-control" disabled="disabled" readonly="readonly" value="{{ $row->user ? $row->user->name : trans('global.unknown') }}" />
 				</div>
 
 				<div class="form-group">
-					<label for="field-uri">{{ trans('history::history.uri') }}:</label>
+					<label for="field-uri">{{ trans('history::history.uri') }}</label>
 					<span class="input-group">
 						<span class="input-group-prepend"><span class="input-group-text">{{ $row->transportmethod }}</span></span>
 						<input type="text" name="fields[uri]" id="field-uri" class="form-control" disabled="disabled" readonly="readonly" maxlength="250" value="{{ $row->uri }}" />
@@ -85,7 +85,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-datetime">{{ trans('history::history.datetime') }}:</label>
+					<label for="field-datetime">{{ trans('history::history.datetime') }}</label>
 					<input type="text" name="fields[datetime]" id="field-datetime" class="form-control" disabled="disabled" readonly="readonly" value="{{ $row->datetime }}" />
 				</div>
 			</fieldset>
@@ -97,7 +97,7 @@ app('pathway')
 		<div class="row">
 			<div class="col-md-12">
 				<div class="form-group">
-					<label for="field-payload">{{ trans('history::history.payload') }}:</label>
+					<label for="field-payload">{{ trans('history::history.payload') }}</label>
 					<textarea name="fields[payload]" id="field-payload" class="form-control" disabled="disabled" readonly="readonly" rows="20" cols="40">{{ $row->payload }}</textarea>
 				</div>
 			</div>

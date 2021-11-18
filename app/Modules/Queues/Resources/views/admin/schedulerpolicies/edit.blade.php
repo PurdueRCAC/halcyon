@@ -39,21 +39,29 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.queues.schedulerpolicies.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+<form action="{{ route('admin.queues.schedulerpolicies.store') }}" method="post" name="adminForm" id="item-form" class="editform">
 	<div class="row">
 		<div class="col-md-7">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-name">{{ trans('queues::queues.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-name">{{ trans('queues::queues.name') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[name]" id="field-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" maxlength="64" required value="{{ $row->name }}" />
 					<span class="invalid-feedback">{{ $errors->first('fields.name') }}</span>
 				</div>
 			</fieldset>
 		</div>
 		<div class="col-md-5">
-			@include('history::admin.history')
+			<table class="meta table table-bordered">
+				<caption class="sr-only">{{ trans('global.metadata') }}</caption>
+				<tbody>
+					<tr>
+						<th scope="row">{{ trans('queues::queues.schedulers') }}</th>
+						<td class="text-right">{{ $row->schedulers()->count() }}</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 

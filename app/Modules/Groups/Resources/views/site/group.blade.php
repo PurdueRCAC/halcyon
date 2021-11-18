@@ -648,6 +648,8 @@ document.addEventListener('DOMContentLoaded', function() {
 				ajax: {
 					url: $('#addmembers').data('api'),
 					dataType: 'json',
+					tags: true,
+					tokenSeparators: [','],
 					//maximumSelectionLength: 1,
 					//theme: "classic",
 					data: function (params) {

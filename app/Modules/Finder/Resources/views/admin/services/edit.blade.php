@@ -42,12 +42,12 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-title">{{ trans('finder::finder.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-title">{{ trans('finder::finder.title') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[title]" id="field-title" class="form-control{{ $errors->has('fields.title') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->title }}" />
 				</div>
 
 				<div class="form-group">
-					<label for="field-summary">{{ trans('finder::finder.summary') }}:</label>
+					<label for="field-summary">{{ trans('finder::finder.summary') }}</label>
 					<textarea name="fields[summary]" id="field-summary" class="form-control{{ $errors->has('fields.summary') ? ' is-invalid' : '' }}" rows="5" cols="50">{{ $row->summary }}</textarea>
 				</div>
 
@@ -66,7 +66,7 @@ app('pathway')
 				endforeach;
 				?>
 				<div class="form-group">
-					<label for="sfield-{{ $field->name }}">{{ $field->label }}:</label>
+					<label for="sfield-{{ $field->name }}">{{ $field->label }}</label>
 					<textarea name="sfields[{{ $field->name }}]" id="sfield-{{ $field->name }}" class="form-control{{ $errors->has('sfields.' . $field->name) ? ' is-invalid' : '' }}" cols="50" rows="3">{{ $value }}</textarea>
 				</div>
 			@endforeach

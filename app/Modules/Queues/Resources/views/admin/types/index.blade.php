@@ -105,10 +105,10 @@ app('pathway')
 				<td class="priority-4 text-right">
 					@if (auth()->user()->can('edit queues.types'))
 						<a href="{{ route('admin.queues.index', ['type' => $row->id]) }}">
-							{{ $row->queues_count }}
+							{{ number_format($row->queues_count) }}
 						</a>
 					@else
-						{{ $row->queues_count }}
+						{{ number_format($row->queues_count) }}
 					@endif
 				</td>
 			</tr>

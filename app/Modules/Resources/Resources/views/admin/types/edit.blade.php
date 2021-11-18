@@ -42,19 +42,19 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-name">{{ trans('resources::assets.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-name">{{ trans('resources::assets.name') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[name]" id="field-name" class="form-control required" required maxlength="20" value="{{ $row->name }}" />
 					<span class="invalid-feedback">{{ trans('resources::assets.invalid.name') }}</span>
 				</div>
 
 				<div class="form-group">
-					<label for="field-description">{{ trans('resources::assets.description') }}:</label>
-					{!! editor('fields[description]', $row->description, ['rows' => 5]) !!}
+					<label for="field-description">{{ trans('resources::assets.description') }}</label>
+					{!! editor('fields[description]', $row->description, ['rows' => 5, 'maxlength' => 2000]) !!}
 				</div>
 			</fieldset>
 		</div>
 		<div class="col col-md-5">
-			<table class="meta">
+			<table class="meta table table-bordered">
 				<caption class="sr-only">{{ trans('global.metadata') }}</caption>
 				<tbody>
 					<tr>

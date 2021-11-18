@@ -173,7 +173,7 @@ app('pathway')
 			<h2 class="modal-title sr-only">{{ trans('courses::courses.add member') }}</h2>
 
 			<div class="form-group">
-				<label for="field-userid">{{ trans('courses::courses.member') }}: <span class="required">{{ trans('global.required') }}</span></label>
+				<label for="field-userid">{{ trans('courses::courses.member') }} <span class="required">{{ trans('global.required') }}</span></label>
 				<span class="input-group">
 					<input type="text" name="userid" id="field-userid" data-classaccountid="{{ $account->id }}" class="form-control form-users" data-uri="{{ route('api.users.index') }}?search=%s" required value="" />
 					<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
@@ -181,7 +181,7 @@ app('pathway')
 			</div>
 
 			<div class="form-group">
-				<label for="field-membertype">{{ trans('courses::courses.type') }}:</label>
+				<label for="field-membertype">{{ trans('courses::courses.type') }}</label>
 				<select name="membertype" id="field-membertype" class="form-control">
 					<option value="1">{{ trans('courses::courses.student') }}</option>
 					<option value="2">{{ trans('courses::courses.instructor') }}</option>

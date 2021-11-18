@@ -289,7 +289,7 @@
 					<form id="class_{{ $class->crn }}" method="post" class="edit-form" action="{{ route('site.users.account.section', ['section' => 'class']) }}{{ request()->has('u') ? '?u=' . request()->input('u') : '' }}">
 
 						<div class="form-group">
-							<label for="resourceid-{{ $class->crn }}">{{ trans('courses::courses.resource') }}: <span class="required">*</span></label>
+							<label for="resourceid-{{ $class->crn }}">{{ trans('courses::courses.resource') }} <span class="required">*</span></label>
 							<select name="resourceid" id="resourceid-{{ $class->crn }}" class="form-control" required>
 								<option value="0">{{ trans('global.none') }}</option>
 								<?php foreach ($resources as $resource): ?>
@@ -303,20 +303,20 @@
 						</div>
 
 						<div class="form-group">
-							<label for="classname-{{ $class->crn }}">{{ trans('courses::courses.course name') }}:</label>
+							<label for="classname-{{ $class->crn }}">{{ trans('courses::courses.course name') }}</label>
 							<input type="text" name="classname" id="classname-{{ $class->crn }}" <?php if ($class->semester != 'Workshop') { echo 'disabled'; } ?> class="form-control" maxlength="255" value="{{ $class->classname }}" />
 						</div>
 
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group type-course<?php if ($class->semester == 'Workshop') { echo ' hide'; } ?><?php if ($class->semester == 'Workshop') { echo ' hide'; } ?>">
-									<label for="crn-{{ $class->crn }}">{{ trans('courses::courses.crn') }}:</label>
+									<label for="crn-{{ $class->crn }}">{{ trans('courses::courses.crn') }}</label>
 									<input type="text" name="crn" id="crn-{{ $class->crn }}" <?php if ($class->semester != 'Workshop') { echo 'disabled'; } ?> class="form-control" maxlength="8" value="{{ $class->crn }}" />
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group type-course<?php if ($class->semester == 'Workshop') { echo ' hide'; } ?>">
-									<label for="coursenumber-{{ $class->crn }}">{{ trans('courses::courses.course number') }}:</label>
+									<label for="coursenumber-{{ $class->crn }}">{{ trans('courses::courses.course number') }}</label>
 									<input type="text" name="coursenumber" id="coursenumber-{{ $class->crn }}" <?php if ($class->semester != 'Workshop') { echo 'disabled'; } ?> class="form-control" maxlength="8" value="{{ $class->coursenumber }}" />
 								</div>
 							</div>
@@ -325,33 +325,33 @@
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group type-course<?php if ($class->semester == 'Workshop') { echo ' hide'; } ?>">
-									<label for="department-{{ $class->crn }}">{{ trans('courses::courses.department') }}:</label>
+									<label for="department-{{ $class->crn }}">{{ trans('courses::courses.department') }}</label>
 									<input type="text" name="department" id="department-{{ $class->crn }}" <?php if ($class->semester != 'Workshop') { echo 'disabled'; } ?> class="form-control" maxlength="4" value="{{ $class->department }}" />
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group type-course<?php if ($class->semester == 'Workshop') { echo ' hide'; } ?>">
-									<label for="reference-{{ $class->crn }}">{{ trans('courses::courses.reference') }}:</label>
+									<label for="reference-{{ $class->crn }}">{{ trans('courses::courses.reference') }}</label>
 									<input type="text" name="reference" id="reference-{{ $class->crn }}" <?php if ($class->semester != 'Workshop') { echo 'disabled'; } ?> class="form-control" maxlength="64" value="{{ $class->reference }}" />
 								</div>
 							</div>
 						</div>
 
 						<div class="form-group type-course<?php if ($class->semester == 'Workshop') { echo ' hide'; } ?>">
-							<label for="semester-{{ $class->crn }}">{{ trans('courses::courses.semester') }}: <span class="required">*</span></label>
+							<label for="semester-{{ $class->crn }}">{{ trans('courses::courses.semester') }} <span class="required">*</span></label>
 							<input type="text" name="semester" id="semester-{{ $class->crn }}" <?php if ($class->semester != 'Workshop') { echo 'disabled'; } ?> class="form-control" required maxlength="16" value="{{ $class->semester }}" />
 						</div>
 
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="datetimestart-{{ $class->datetimestart }}">{{ trans('courses::courses.start') }}:</label>
+									<label for="datetimestart-{{ $class->datetimestart }}">{{ trans('courses::courses.start') }}</label>
 									<input type="text" name="datetimestart" id="datetimestart-{{ $class->crn }}" <?php if ($class->semester != 'Workshop') { echo 'disabled'; } ?> class="form-control date-pick" maxlength="8" value="{{ $class->datetimestart->format('Y-m-d') }}" />
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="datetimestop-{{ $class->crn }}">{{ trans('courses::courses.stop') }}:</label>
+									<label for="datetimestop-{{ $class->crn }}">{{ trans('courses::courses.stop') }}</label>
 									<input type="text" name="datetimestop" id="datetimestop-{{ $class->crn }}" <?php if ($class->semester != 'Workshop') { echo 'disabled'; } ?> class="form-control date-pick" maxlength="8" value="{{ $class->datetimestop->format('Y-m-d') }}" />
 								</div>
 							</div>
@@ -538,7 +538,7 @@
 	<form id="add-account" method="post" class="create-form hide editform" action="{{ route('site.users.account.section', ['section' => 'class']) }}{{ request()->has('u') ? '?u=' . request()->input('u') : '' }}">
 		@if (auth()->user()->can('manage courses'))
 			<div class="form-group">
-				<label for="field-type">{{ trans('courses::courses.type') }}:</label>
+				<label for="field-type">{{ trans('courses::courses.type') }}</label>
 				<select name="type" id="field-type" class="form-control">
 					<option value="course">{{ trans('courses::courses.course') }}</option>
 					<option value="workshop"{{ (count($classes) == 0 ? ' selected="selected"' : '') }}>{{ trans('courses::courses.workshop') }}</option>

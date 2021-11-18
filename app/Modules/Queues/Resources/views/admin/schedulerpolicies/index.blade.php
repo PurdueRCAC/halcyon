@@ -104,7 +104,7 @@ app('pathway')
 				</td>
 				<td class="priority-4 text-right">
 					<a href="{{ route('admin.queues.schedulers', ['type' => $row->id]) }}">
-						{{ $row->schedulers_count }}
+						{{ number_format($row->schedulers_count) }}
 					</a>
 				</td>
 			</tr>

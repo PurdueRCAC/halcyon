@@ -243,7 +243,7 @@ app('pathway')
 		<h2 class="modal-title sr-only">{{ trans('courses::courses.choose user') }}</h2>
 
 		<div class="form-group">
-			<label for="field-userid">{{ trans('courses::courses.owner') }}:</label>
+			<label for="field-userid">{{ trans('courses::courses.owner') }}</label>
 			<span class="input-group">
 				<input type="text" name="userid" id="field-userid" class="form-control form-users redirect" data-uri="{{ route('api.users.index') }}?search=%s" data-location="{{ route('admin.courses.create') }}?userid=%s" value="" />
 				<span class="input-group-append"><span class="input-group-text icon-user"></span></span>

@@ -42,12 +42,12 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-label">{{ trans('finder::finder.label') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-label">{{ trans('finder::finder.label') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[label]" id="field-label" class="form-control{{ $errors->has('fields.label') ? ' is-invalid' : '' }}" required maxlength="150" value="{{ $row->label }}" />
 				</div>
 
 				<div class="form-group">
-					<label for="field-name">{{ trans('finder::finder.name') }}:</label>
+					<label for="field-name">{{ trans('finder::finder.name') }}</label>
 					<input type="text" name="fields[name]" id="field-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" maxlength="150" value="{{ $row->name }}" />
 				</div>
 

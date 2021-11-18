@@ -79,7 +79,7 @@ app('pathway')
 				@endif
 
 				<div class="form-group">
-					<label for="field-parent_id">{{ trans('knowledge::knowledge.parent') }}:</label>
+					<label for="field-parent_id">{{ trans('knowledge::knowledge.parent') }}</label>
 					<select name="fields[parent_id]" id="field-parent_id" class="form-control searchable-select">
 						<option value="1">{{ trans('global.none') }}</option>
 						<?php foreach ($tree as $pa): ?>
@@ -90,13 +90,13 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-title">{{ trans('knowledge::knowledge.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-title">{{ trans('knowledge::knowledge.title') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="page[title]" id="field-title" class="form-control{{ $errors->has('page.title') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $page->title }}" />
 					<span class="invalid-feedback">{{ trans('knowledge::knowledge.invalid.title') }}</span>
 				</div>
 
 				<div class="form-group">
-					<label for="field-alias">{{ trans('knowledge::knowledge.path') }}:</label>
+					<label for="field-alias">{{ trans('knowledge::knowledge.path') }}</label>
 					<div class="input-group mb-2 mr-sm-2">
 						<div class="input-group-prepend">
 							<div class="input-group-text"><span id="parent-path">{{ $parentpath }}</span>/</div>
@@ -109,7 +109,7 @@ app('pathway')
 				<input type="hidden" name="page[snippet]" id="field-snippet" class="form-check-input" value="1" />
 
 				<div class="form-group">
-					<label for="page--content">{{ trans('knowledge::knowledge.content') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="page--content">{{ trans('knowledge::knowledge.content') }} <span class="required">{{ trans('global.required') }}</span></label>
 					{!! editor('page[content]', $page->content, ['rows' => 35, 'class' => ($errors->has('page.title') ? 'is-invalid' : 'required'), 'required' => 'required']) !!}
 					<span class="invalid-feedback">{{ trans('knowledge::knowledge.invalid.content') }}</span>
 				</div>
@@ -120,7 +120,7 @@ app('pathway')
 				<legend>{{ trans('global.publishing') }}</legend>
 
 				<div class="form-group">
-					<label for="field-access">{{ trans('knowledge::knowledge.access') }}:</label>
+					<label for="field-access">{{ trans('knowledge::knowledge.access') }}</label>
 					<select class="form-control" name="fields[access]" id="field-access"<?php if ($row->id && $row->isRoot()) { echo ' readonly="readonly" disabled="disabled"'; } ?>>
 						<?php foreach (App\Halcyon\Access\Viewlevel::all() as $access): ?>
 							<option value="{{ $access->id }}"<?php if ($page->access == $access->id) { echo ' selected="selected"'; } ?>>{{ $access->title }}</option>
@@ -129,7 +129,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-state">{{ trans('knowledge::knowledge.state') }}:</label><br />
+					<label for="field-state">{{ trans('knowledge::knowledge.state') }}</label><br />
 					<select class="form-control" name="fields[state]" id="field-state"<?php if ($row->id && $row->isRoot()) { echo ' readonly="readonly" disabled="disabled"'; } ?>>
 						<option value="1"<?php if ($page->state == 1) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
 						<option value="0"<?php if ($page->state == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
@@ -138,12 +138,12 @@ app('pathway')
 
 				<!--
 				<div class="form-group">
-					<label for="field-publish_up">{{ trans('knowledge::knowledge.publish up') }}:</label><br />
+					<label for="field-publish_up">{{ trans('knowledge::knowledge.publish up') }}</label>
 					{!! Html::input('calendar', 'fields[publish_up]', Carbon\Carbon::parse($row->publish_up ? $row->publish_up : $page->created_at)) !!}
 				</div>
 
 				<div class="form-group">
-					<label for="field-publish_down">{{ trans('knowledge::knowledge.publish down') }}:</label><br />
+					<label for="field-publish_down">{{ trans('knowledge::knowledge.publish down') }}</label>
 					<span class="input-group input-datetime">
 						<input type="text" name="fields[publish_down]" id="field-publish_down" class="form-control datetime" value="<?php echo ($row->publish_down ? e(Carbon\Carbon::parse($row->publish_down)->toDateTimeString()) : ''); ?>" placeholder="<?php echo ($row->publish_down ? '' : trans('global.never')); ?>" />
 						<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>

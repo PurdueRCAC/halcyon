@@ -390,12 +390,12 @@ app('pathway')
 		<h3 class="sr-only">{{ trans('groups::groups.add member') }}</h3>
 
 		<div class="form-group">
-			<label for="field-users">{{ trans('groups::groups.add users') }}:</label>
+			<label for="field-users">{{ trans('groups::groups.add users') }}</label>
 			<input type="text" name="users" id="users" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" value="" />
 		</div>
 
 		<div class="form-group">
-			<label for="field-membertype">{{ trans('groups::groups.member type') }}:</label>
+			<label for="field-membertype">{{ trans('groups::groups.member type') }}</label>
 			<select name="membertype" id="membertype" class="form-control">
 				@foreach ($types as $type)
 					@if ($type->id == 1 || $type->id == 2 || $type->id == 3)

@@ -99,7 +99,7 @@
 					@endforeach
 				</select>
 
-				<label class="sr-only" for="filter_parent">{{ trans('knowledge::knowledge.parent') }}:</label>
+				<label class="sr-only" for="filter_parent">{{ trans('knowledge::knowledge.parent') }}</label>
 				<select name="parent" id="filter_parent" class="form-control filter filter-submit searchable-select">
 					<option value="0">{{ trans('knowledge::knowledge.all pages') }}</option>
 					@foreach ($tree as $page)

@@ -71,7 +71,7 @@ app('pathway')
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
-								<label for="field-queuetype">{{ trans('queues::queues.type') }}:</label>
+								<label for="field-queuetype">{{ trans('queues::queues.type') }}</label>
 								<select name="fields[queuetype]" id="field-queuetype" class="form-control">
 									<option value="0">{{ trans('global.none') }}</option>
 									@foreach ($types as $type)
@@ -94,7 +94,7 @@ app('pathway')
 					</div>
 
 					<div class="form-group">
-						<label for="field-groupid">{{ trans('queues::queues.group') }}:</label>
+						<label for="field-groupid">{{ trans('queues::queues.group') }}</label>
 						<span class="input-group">
 							<input type="text" name="fields[groupid]" id="field-groupid" class="form-control form-groups" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&amp;search=%s" data-multiple="false" placeholder="{{ trans('queues::queues.search for group') }}" value="{{ ($row->group ? $row->group->name . ':' . $row->groupid : '') }}" />
 							<span class="input-group-append"><span class="input-group-text icon-users"></span></span>
@@ -102,7 +102,7 @@ app('pathway')
 					</div>
 
 					<div class="form-group">
-						<label for="field-name">{{ trans('queues::queues.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+						<label for="field-name">{{ trans('queues::queues.name') }} <span class="required">{{ trans('global.required') }}</span></label>
 						<input type="text" name="fields[name]" id="field-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required pattern="[a-zA-Z0-9_\-]{1,64}" maxlength="64" value="{{ $row->name }}" data-invalid-msg="{{ trans('queues::queues.name error') }}" />
 						<span class="invalid-feedback">{{ trans('queues::queues.error.invalid name') }}</span>
 					</div>
@@ -110,7 +110,7 @@ app('pathway')
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
-								<label for="field-schedulerid">{{ trans('queues::queues.scheduler') }}:  <span class="required">{{ trans('global.required') }}</span></label>
+								<label for="field-schedulerid">{{ trans('queues::queues.scheduler') }}  <span class="required">{{ trans('global.required') }}</span></label>
 								<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
 								<select name="fields[schedulerid]" id="field-schedulerid" class="form-control{{ $errors->has('fields.schedulerid') ? ' is-invalid' : '' }}" required>
 									<option value="0">{{ trans('global.none') }}</option>
@@ -128,7 +128,7 @@ app('pathway')
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label for="field-schedulerpolicyid">{{ trans('queues::queues.scheduler policy') }}:</label>
+								<label for="field-schedulerpolicyid">{{ trans('queues::queues.scheduler policy') }}</label>
 								<select name="fields[schedulerpolicyid]" id="field-schedulerpolicyid" class="form-control">
 									<option value="0">{{ trans('global.none') }}</option>
 									@foreach ($schedulerpolicies as $schedulerpolicy)
@@ -147,7 +147,7 @@ app('pathway')
 								$cores = '-';
 								$mem   = '-';
 								?>
-								<label for="field-subresourceid">{{ trans('queues::queues.subresource') }}:  <span class="required">{{ trans('global.required') }}</span></label>
+								<label for="field-subresourceid">{{ trans('queues::queues.subresource') }} <span class="required">{{ trans('global.required') }}</span></label>
 								<select name="fields[subresourceid]" id="field-subresourceid" class="form-control{{ $errors->has('fields.subresourceid') ? ' is-invalid' : '' }}" required>
 									<option value="0">{{ trans('global.none') }}</option>
 									<?php foreach ($resources as $resource): ?>
@@ -181,7 +181,7 @@ app('pathway')
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label for="field-cluster">{{ trans('queues::queues.cluster') }}:</label>
+								<label for="field-cluster">{{ trans('queues::queues.cluster') }}</label>
 								<input type="text" name="fields[cluster]" id="field-cluster" class="form-control" maxlength="32" value="{{ $row->cluster }}" />
 							</div>
 						</div>
@@ -190,7 +190,7 @@ app('pathway')
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
-								<label for="field-defaultwalltime">{{ trans('queues::queues.default walltime') }}:</label>
+								<label for="field-defaultwalltime">{{ trans('queues::queues.default walltime') }}</label>
 								<span class="input-group">
 									<input type="number" name="fields[defaultwalltime]" id="field-defaultwalltime" class="form-control" min="0" step="0.25" value="{{ ($row->defaultwalltime/60/60) }}" />
 									<span class="input-group-append"><span class="input-group-text">{{ trans_choice('global.time.hours', 2) }}</span></span>
@@ -208,7 +208,7 @@ app('pathway')
 									$wid = $walltime->id;
 								endif;
 								?>
-								<label for="field-maxwalltime">{{ trans('queues::queues.max walltime') }}:</label>
+								<label for="field-maxwalltime">{{ trans('queues::queues.max walltime') }}</label>
 								<span class="input-group">
 									<input type="number" name="maxwalltime" id="field-maxwalltime" class="form-control" min="0" step="0.25" value="{{ $val }}" />
 									<span class="input-group-append"><span class="input-group-text">{{ trans_choice('global.time.hours', 2) }}</span></span>
@@ -218,8 +218,8 @@ app('pathway')
 					</div>
 
 					<div class="form-group">
-						<label for="field-priority">{{ trans('queues::queues.priority') }}:</label>
-						<input type="number" name="fields[priority]" id="field-priority" class="form-control" min="0" value="{{ $row->priority }}" />
+						<label for="field-priority">{{ trans('queues::queues.priority') }}</label>
+						<input type="number" name="fields[priority]" id="field-priority" class="form-control" min="0" max="999999" value="{{ $row->priority }}" />
 					</div>
 
 					<div class="row">
@@ -250,14 +250,14 @@ app('pathway')
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
-								<label for="field-maxjobsqueued">{{ trans('queues::queues.max jobs queued') }}:</label>
-								<input type="number" name="fields[maxjobsqueued]" id="field-maxjobsqueued" class="form-control" min="0" value="{{ $row->maxjobsqueued }}" />
+								<label for="field-maxjobsqueued">{{ trans('queues::queues.max jobs queued') }}</label>
+								<input type="number" name="fields[maxjobsqueued]" id="field-maxjobsqueued" class="form-control" min="0" max="99999" value="{{ $row->maxjobsqueued }}" />
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="form-group">
-								<label for="field-maxjobsqueueduser">{{ trans('queues::queues.max jobs queued per user') }}:</label>
-								<input type="number" name="fields[maxjobsqueueduser]" id="field-maxjobsqueueduser" class="form-control" min="0" value="{{ $row->maxjobsqueueduser }}" />
+								<label for="field-maxjobsqueueduser">{{ trans('queues::queues.max jobs queued per user') }}</label>
+								<input type="number" name="fields[maxjobsqueueduser]" id="field-maxjobsqueueduser" class="form-control" min="0" max="99999" value="{{ $row->maxjobsqueueduser }}" />
 							</div>
 						</div>
 					</div>
@@ -265,34 +265,34 @@ app('pathway')
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
-								<label for="field-maxjobsrun">{{ trans('queues::queues.max jobs run') }}:</label>
-								<input type="number" name="fields[maxjobsrun]" id="field-maxjobsrun" class="form-control" min="0" value="{{ $row->maxjobsrun }}" />
+								<label for="field-maxjobsrun">{{ trans('queues::queues.max jobs run') }}</label>
+								<input type="number" name="fields[maxjobsrun]" id="field-maxjobsrun" class="form-control" min="0" max="99999" value="{{ $row->maxjobsrun }}" />
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="form-group">
-								<label for="field-maxjobsrunuser">{{ trans('queues::queues.max jobs run per user') }}:</label>
-								<input type="number" name="fields[maxjobsrunuser]" id="field-maxjobsrunuser" class="form-control" min="0" value="{{ $row->maxjobsrunuser }}" />
+								<label for="field-maxjobsrunuser">{{ trans('queues::queues.max jobs run per user') }}</label>
+								<input type="number" name="fields[maxjobsrunuser]" id="field-maxjobsrunuser" class="form-control" min="0" max="99999" value="{{ $row->maxjobsrunuser }}" />
 							</div>
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="field-maxjobcores">{{ trans('queues::queues.max job cores') }}:</label>
-						<input type="number" name="fields[maxjobcores]" id="field-maxjobcores" class="form-control" min="0" value="{{ $row->maxjobcores }}" />
+						<label for="field-maxjobcores">{{ trans('queues::queues.max job cores') }}</label>
+						<input type="number" name="fields[maxjobcores]" id="field-maxjobcores" class="form-control" min="0" max="99999999" value="{{ $row->maxjobcores }}" />
 					</div>
 
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group mb-0">
-								<label for="field-maxijobfactor">{{ trans('queues::queues.max ijob factor') }}:</label>
-								<input type="number" name="fields[maxijobfactor]" id="field-maxijobfactor" class="form-control" min="0" value="{{ $row->maxijobfactor }}" />
+								<label for="field-maxijobfactor">{{ trans('queues::queues.max ijob factor') }}</label>
+								<input type="number" name="fields[maxijobfactor]" id="field-maxijobfactor" class="form-control" min="0" max="99999" value="{{ $row->maxijobfactor }}" />
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="form-group mb-0">
-								<label for="field-maxijobuserfactor">{{ trans('queues::queues.max ijob user factor') }}:</label>
-								<input type="number" name="fields[maxijobuserfactor]" id="field-maxijobuserfactor" class="form-control" min="0" value="{{ $row->maxijobuserfactor }}" />
+								<label for="field-maxijobuserfactor">{{ trans('queues::queues.max ijob user factor') }}</label>
+								<input type="number" name="fields[maxijobuserfactor]" id="field-maxijobuserfactor" class="form-control" min="0" max="99999" value="{{ $row->maxijobuserfactor }}" />
 							</div>
 						</div>
 					</div>
@@ -302,21 +302,21 @@ app('pathway')
 					<legend>{{ trans('queues::queues.nodes') }}</legend>
 
 					<div class="form-group">
-						<label for="field-nodecoresdefault">{{ trans('queues::queues.node cores default') }}:</label>
-						<input type="number" name="fields[nodecoresdefault]" id="field-nodecoresdefault" class="form-control" maxlength="250" value="{{ $row->nodecoresdefault }}" />
+						<label for="field-nodecoresdefault">{{ trans('queues::queues.node cores default') }}</label>
+						<input type="number" name="fields[nodecoresdefault]" id="field-nodecoresdefault" class="form-control" min="0" max="999" value="{{ $row->nodecoresdefault }}" />
 					</div>
 
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
-								<label for="field-nodecoresmin">{{ trans('queues::queues.node cores min') }}:</label>
-								<input type="number" name="fields[nodecoresmin]" id="field-nodecoresmin" class="form-control" maxlength="250" value="{{ $row->nodecoresmin }}" />
+								<label for="field-nodecoresmin">{{ trans('queues::queues.node cores min') }}</label>
+								<input type="number" name="fields[nodecoresmin]" id="field-nodecoresmin" class="form-control" min="0" max="999" value="{{ $row->nodecoresmin }}" />
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="form-group">
-								<label for="field-nodecoresmax">{{ trans('queues::queues.node cores max') }}:</label>
-								<input type="number" name="fields[nodecoresmax]" id="field-nodecoresmax" class="form-control" maxlength="250" value="{{ $row->nodecoresmax }}" />
+								<label for="field-nodecoresmax">{{ trans('queues::queues.node cores max') }}</label>
+								<input type="number" name="fields[nodecoresmax]" id="field-nodecoresmax" class="form-control" min="0" max="999" value="{{ $row->nodecoresmax }}" />
 							</div>
 						</div>
 					</div>
@@ -324,14 +324,14 @@ app('pathway')
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group mb-0">
-								<label for="field-nodememmin">{{ trans('queues::queues.node mem min') }}:</label>
-								<input type="text" name="fields[nodememmin]" id="field-nodememmin" class="form-control" maxlength="250" value="{{ $row->nodememmin }}" />
+								<label for="field-nodememmin">{{ trans('queues::queues.node mem min') }}</label>
+								<input type="text" name="fields[nodememmin]" id="field-nodememmin" class="form-control" maxlength="5" pattern="[0-9]{1,4}[PTGMKB]" value="{{ $row->nodememmin }}" />
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="form-group mb-0">
-								<label for="field-nodememmax">{{ trans('queues::queues.node mem max') }}:</label>
-								<input type="text" name="fields[nodememmax]" id="field-nodememmax" class="form-control" maxlength="250" value="{{ $row->nodememmax }}" />
+								<label for="field-nodememmax">{{ trans('queues::queues.node mem max') }}</label>
+								<input type="text" name="fields[nodememmax]" id="field-nodememmax" class="form-control" maxlength="5" pattern="[0-9]{1,4}[PTGMKB]" value="{{ $row->nodememmax }}" />
 							</div>
 						</div>
 					</div>
@@ -361,7 +361,7 @@ app('pathway')
 					<legend>{{ trans('global.publishing') }}</legend>
 
 					<div class="form-group">
-						<label for="field-enabled">{{ trans('queues::queues.submission state') }}:</label>
+						<label for="field-enabled">{{ trans('queues::queues.submission state') }}</label>
 						<select class="form-control" name="fields[enabled]" id="field-enabled">
 							<option value="0"<?php if ($row->enabled == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.disabled') }}</option>
 							<option value="1"<?php if ($row->enabled == 1) { echo ' selected="selected"'; } ?>>{{ trans('global.enabled') }}</option>
@@ -369,7 +369,7 @@ app('pathway')
 					</div>
 
 					<div class="form-group">
-						<label for="field-started">{{ trans('queues::queues.scheduling') }}:</label>
+						<label for="field-started">{{ trans('queues::queues.scheduling') }}</label>
 						<select class="form-control" name="fields[started]" id="field-started">
 							<option value="0"<?php if ($row->started == 0) { echo ' selected="selected"'; } ?>>{{ trans('queues::queues.stopped') }}</option>
 							<option value="1"<?php if ($row->started == 1) { echo ' selected="selected"'; } ?>>{{ trans('queues::queues.started') }}</option>
@@ -477,48 +477,35 @@ app('pathway')
 							<?php
 							$what = '';
 							$cls = '';
-							if ($item->type == 1)
-							{
+							if ($item->type == 1):
 								$what = 'Loan';
-								if ($item->corecount < 0)
-								{
+								if ($item->corecount < 0):
 									$what .= " to";
 									$cls = 'decrease';
-								}
-								else if ($item->corecount >= 0)
-								{
+								elseif ($item->corecount >= 0):
 									$what .= " from";
 									$cls = 'increase';
-								}
-							}
-							else
-							{
-								if ($item->sellerqueueid == $row->id || $item->corecount < 0)
-								{
+								endif;
+							else:
+								if ($item->sellerqueueid == $row->id || $item->corecount < 0):
 									$what = 'Sale to';
 									$cls = 'decrease';
-								}
-								else if ($item->corecount >= 0)
-								{
+								elseif ($item->corecount >= 0):
 									$what = 'Purchase from';
 									$cls = 'increase';
-								}
-							}
+								endif;
+							endif;
 
 							//$title  = $item->nodecount . " nodes / ";
 							//$title .= $item->corecount . " cores; ".$what.": ";
-							if ($item->serviceunits > 0)
-							{
+							if ($item->serviceunits > 0):
 								$amt = $item->serviceunits;
-							}
-							else
-							{
+							else:
 								$amt = $item->nodecount;
-								if ($item->corecount)
-								{
+								if ($item->corecount):
 									$amt = $nodecores ? round($item->corecount / $nodecores, 1) : 0;
-								}
-							}
+								endif;
+							endif;
 
 							echo '<a href="#dialog-edit' . $item->id . '" class="dialog-btn">' . $what . '</a>';
 							?>
@@ -869,7 +856,7 @@ app('pathway')
 						</div>
 
 						<div class="form-group">
-							<label for="lender-queue">{{ trans('queues::queues.queue') }}: <span class="required">{{ trans('global.required') }}</span></label>
+							<label for="lender-queue">{{ trans('queues::queues.queue') }} <span class="required">{{ trans('global.required') }}</span></label>
 							<select id="lender-queue" name="lenderqueueid" class="form-control">
 								<option value="0">{{ trans('queues::queues.select queue') }}</option>
 								@foreach ($groups as $group)

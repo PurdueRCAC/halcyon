@@ -267,13 +267,13 @@
 						@endphp
 
 						<div class="form-group">
-							<label for="field-title">{{ trans('knowledge::knowledge.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
+							<label for="field-title">{{ trans('knowledge::knowledge.title') }} <span class="required">{{ trans('global.required') }}</span></label>
 							<input type="text" name="title" id="field-title" class="form-control{{ $errors->has('page.title') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $page->title }}" />
 							<span class="invalid-feedback">{{ trans('knowledge::knowledge.invalid.title') }}</span>
 						</div>
 
 						<div class="form-group">
-							<label for="field-alias">{{ trans('knowledge::knowledge.path') }}:</label>
+							<label for="field-alias">{{ trans('knowledge::knowledge.path') }}</label>
 							<div class="input-group mb-2 mr-sm-2">
 								<div class="input-group-prepend">
 									<div class="input-group-text">{{ route('site.knowledge.index') }}<span id="parent-path">{{ $parentpath }}</span>/</div>
@@ -284,7 +284,7 @@
 						</div>
 
 						<div class="form-group">
-							<label for="field-content">{{ trans('pages::pages.content') }}: <span class="required">{{ trans('global.required') }}</span></label>
+							<label for="field-content">{{ trans('pages::pages.content') }} <span class="required">{{ trans('global.required') }}</span></label>
 							{!! editor('content', $page->content, ['rows' => 35, 'class' => 'required']) !!}
 						</div>
 					</fieldset>
@@ -297,7 +297,7 @@
 							<legend>{{ trans('global.publishing') }}</legend>
 
 							<div class="form-group">
-								<label for="field-access">{{ trans('knowledge::knowledge.access') }}:</label>
+								<label for="field-access">{{ trans('knowledge::knowledge.access') }}</label>
 								<select class="form-control" name="access" id="field-access"<?php if ($page->isRoot()) { echo ' readonly="readonly" disabled="disabled"'; } ?>>
 									@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
 										<option value="{{ $access->id }}"<?php if ($node->access == $access->id) { echo ' selected="selected"'; } ?>>{{ $access->title }}</option>
@@ -306,7 +306,7 @@
 							</div>
 
 							<div class="form-group">
-								<label for="field-state">{{ trans('knowledge::knowledge.state') }}:</label><br />
+								<label for="field-state">{{ trans('knowledge::knowledge.state') }}</label><br />
 								<select class="form-control" name="state" id="field-state"<?php if ($page->isRoot()) { echo ' readonly="readonly" disabled="disabled"'; } ?>>
 									<option value="0"<?php if ($node->state == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
 									<option value="2"<?php if ($node->state == 2) { echo ' selected="selected"'; } ?>>&nbsp;|_&nbsp;{{ trans('knowledge::knowledge.archived') }}</option>

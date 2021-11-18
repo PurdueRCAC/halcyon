@@ -82,7 +82,7 @@ app('pathway')
 					@endforeach
 				</select>
 
-				<label class="sr-only" for="filter_resource">{{ trans('queues::queues.resource') }}:</label>
+				<label class="sr-only" for="filter_resource">{{ trans('queues::queues.resource') }}</label>
 				<select name="resource" id="filter_resource" class="form-control filter filter-submit">
 					<option value="0">{{ trans('queues::queues.all resources') }}</option>
 					@foreach ($resources as $resource)
@@ -100,7 +100,7 @@ app('pathway')
 					@endforeach
 				</select>
 
-				<label class="sr-only" for="filter_class">{{ trans('queues::queues.class') }}:</label>
+				<label class="sr-only" for="filter_class">{{ trans('queues::queues.class') }}</label>
 				<select name="class" id="filter_class" class="form-control filter filter-submit">
 					<option value="*">{{ trans('queues::queues.all queue classes') }}</option>
 					<option value="system"<?php if ($filters['class'] == 'system'): echo ' selected="selected"'; endif;?>>{{ trans('queues::queues.system queues') }}</option>
@@ -267,27 +267,27 @@ app('pathway')
 									{{ $row->group->name }}
 								</a>
 							@else
-								<span class="unknown">{{ trans('global.none') }}</span>
+								<span class="text-muted unknown">{{ trans('global.none') }}</span>
 							@endif
 						</td>
 						<td class="priority-4 text-center">
 							@if ($row->groupid <= 0)
-								<span class="icon-cpu">{{ trans('queues::queues.system') }}</span>
+								<span class="icon-cpu" aria-hidden="true"></span> {{ trans('queues::queues.system') }}
 							@else
-								<span class="icon-user">{{ trans('queues::queues.owner') }}</span>
+								<span class="icon-user" aria-hidden="true"></span> {{ trans('queues::queues.owner') }}
 							@endif
 						</td>
 						<td class="text-right">
-							{!! $row->totalnodes ? number_format($row->totalnodes) : '<span class="none">' . $row->totalnodes . '</span>' !!}
+							{!! $row->totalnodes ? number_format($row->totalnodes) : '<span class="text-muted none">' . $row->totalnodes . '</span>' !!}
 						</td>
 						<td class="text-right">
-							{!! $row->loanednodes ? number_format($row->loanednodes) : '<span class="none">' . $row->loanednodes . '</span>' !!}
+							{!! $row->loanednodes ? number_format($row->loanednodes) : '<span class="text-muted none">' . $row->loanednodes . '</span>' !!}
 						</td>
 						<td class="text-right">
-							{!! $row->totalcores ? number_format($row->totalcores) : '<span class="none">' . $row->totalcores . '</span>' !!}
+							{!! $row->totalcores ? number_format($row->totalcores) : '<span class="text-muted none">' . $row->totalcores . '</span>' !!}
 						</td>
 						<td class="text-right">
-							{!! $row->loanedcores ? number_format($row->loanedcores) : '<span class="none">' . $row->loanedcores . '</span>' !!}
+							{!! $row->loanedcores ? number_format($row->loanedcores) : '<span class="text-muted none">' . $row->loanedcores . '</span>' !!}
 							<?php
 							/*$soldpercent = $row->totalcores ? round(($row->soldcores / $row->totalcores) * 100, 1) : 0;
 							$loanedpercent = $row->totalcores ? round(($row->loanedcores / $row->totalcores) * 100, 1) : 0;
@@ -305,33 +305,22 @@ app('pathway')
 						</td>
 						<td class="priority-4">
 							@if ($row->subresourceid)
-								<?php /*@if ($row->resource)
-									@if ($row->subresource)
-										<span data-tip="{{ $row->subresource->name }}">
-									@endif
-									{{ $row->resource->name }}
-									@if ($row->subresource)
-										</span>
-									@endif
-								@else
-									<span class="unknown">{{ trans('global.unknown') }}</span>
-								@endif*/ ?>
 								@if ($row->subresource)
 									{{ $row->subresource->name }}
 								@elseif ($row->resource)
 									{{ $row->resource->name }}
 								@else
-									<span class="unknown">{{ trans('global.unknown') }}</span>
+									<span class="text-muted unknown">{{ trans('global.unknown') }}</span>
 								@endif
 							@else
-								<span class="none">{{ trans('global.none') }}</span>
+								<span class="text-muted none">{{ trans('global.none') }}</span>
 							@endif
 						</td>
 						<td class="text-right">
 							<?php
 							$walltime = $row->walltimes()->first();
 							if ($walltime):
-								echo $row->walltimes()->first()->humanWalltime;
+								echo $walltime->humanWalltime;
 							endif;
 							?>
 						</td>

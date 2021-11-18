@@ -58,7 +58,7 @@ Toolbar::cancel(route('admin.issues.cancel'));
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-datetimecreated">{{ trans('issues::issues.created') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-datetimecreated">{{ trans('issues::issues.created') }} <span class="required">{{ trans('global.required') }}</span></label>
 					{!! Html::input('calendar', 'fields[datetimecreated]', $row->datetimecreated ? $row->datetimecreated->format('Y-m-d') : '', ['required' => true, 'time' => false]) !!}
 					<span class="invalid-feedback">{{ trans('issues::issues.invalid.contacted') }}</span>
 				</div>
@@ -70,7 +70,7 @@ Toolbar::cancel(route('admin.issues.cancel'));
 						$resources[] = ($resource->resource ? $resource->resource->name : trans('global.unknown')) . ':' . $resource->resourceid;
 					endforeach;
 					?>
-					<label for="field-resources">{{ trans('issues::issues.resources') }}:</label>
+					<label for="field-resources">{{ trans('issues::issues.resources') }}</label>
 					<select class="form-control basic-multiple" name="resources[]" multiple="multiple" data-placeholder="">
 						<?php
 						$r = $row->resources->pluck('resourceid')->toArray();
@@ -85,7 +85,7 @@ Toolbar::cancel(route('admin.issues.cancel'));
 				</div>
 
 				<div class="form-group">
-					<label for="field-report">{{ trans('issues::issues.report') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-report">{{ trans('issues::issues.report') }} <span class="required">{{ trans('global.required') }}</span></label>
 					{!! markdown_editor('fields[report]', $row->report, ['rows' => 15, 'required' => 'required']) !!}
 					<span class="invalid-feedback">{{ trans('issues::issues.invalid.report') }}</span>
 					<span class="form-text">{{ trans('issues::issues.formatting help') }}</span>

@@ -619,7 +619,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 										</div>
 
 										<div class="form-group">
-											<label for="lender-queue{{ $q->id }}">{{ trans('queues::queues.queue') }}: <span class="required">*</span></label>
+											<label for="lender-queue{{ $q->id }}">{{ trans('queues::queues.queue') }} <span class="required">*</span></label>
 											<select id="lender-queue{{ $q->id }}" name="lenderqueueid" class="form-control">
 												<option value="0">{{ trans('queues::queues.select queue') }}</option>
 												@foreach ($groups as $grp)

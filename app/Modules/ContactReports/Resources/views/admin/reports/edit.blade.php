@@ -60,13 +60,13 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-datetimecontact">{{ trans('contactreports::contactreports.contacted') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-datetimecontact">{{ trans('contactreports::contactreports.contacted') }} <span class="required">{{ trans('global.required') }}</span></label>
 					{!! Html::input('calendar', 'fields[datetimecontact]', $row->datetimecontact ? $row->datetimecontact->format('Y-m-d') : '', ['required' => true, 'time' => false]) !!}
 					<span class="invalid-feedback">{{ trans('contactreports::contactreports.invalid.contacted') }}</span>
 				</div>
 
 				<div class="form-group">
-					<label for="field-contactreporttypeid">{{ trans('contactreports::contactreports.type') }}:</label>
+					<label for="field-contactreporttypeid">{{ trans('contactreports::contactreports.type') }}</label>
 					<select name="fields[contactreporttypeid]" id="field-contactreporttypeid" class="form-control">
 						<option value="0"<?php if (!$row->contactreporttypeid) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
 						@foreach ($types as $type)
@@ -83,7 +83,7 @@ app('pathway')
 						$resources[] = ($resource->resource ? $resource->resource->name : trans('global.unknown')) . ':' . $resource->resourceid;
 					}*/
 					?>
-					<label for="field-resources">{{ trans('contactreports::contactreports.resources') }}:</label>
+					<label for="field-resources">{{ trans('contactreports::contactreports.resources') }}</label>
 					<select class="form-control basic-multiple" name="resources[]" multiple="multiple" data-placeholder="">
 						<?php
 						$r = $row->resources->pluck('resourceid')->toArray();
@@ -104,12 +104,12 @@ app('pathway')
 						$users[] = ($user->user ? $user->user->name : trans('global.unknown')) . ':' . $user->userid;
 					endforeach;
 					?>
-					<label for="field-people">{{ trans('contactreports::contactreports.users') }}:</label>
+					<label for="field-people">{{ trans('contactreports::contactreports.users') }}</label>
 					<input type="text" name="people" id="field-people" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" value="{{ implode(',', $users) }}" />
 				</div>
 
 				<div class="form-group">
-					<label for="field-groupid">{{ trans('contactreports::contactreports.group') }}:</label>
+					<label for="field-groupid">{{ trans('contactreports::contactreports.group') }}</label>
 					<select name="fields[groupid]" id="field-groupid" class="form-control searchable-select">
 						<option value="0"<?php if (!$row->groupid) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
 						@foreach ($groups as $group)
@@ -119,7 +119,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-report">{{ trans('contactreports::contactreports.report') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-report">{{ trans('contactreports::contactreports.report') }} <span class="required">{{ trans('global.required') }}</span></label>
 					{!! markdown_editor('fields[report]', $row->report, ['rows' => 15, 'class' => ($errors->has('fields.report') ? 'is-invalid' : 'required'), 'required' => 'required']) !!}
 					<span class="form-text text-muted">{!! trans('contactreports::contactreports.report formatting') !!}</span>
 					<span class="invalid-feedback">{{ trans('contactreports::contactreports.invalid.report') }}</span>

@@ -50,6 +50,7 @@
 			description="widgets::widgets.publish up description"
 			filter="user_utc"
 			format="%Y-%m-%d %H:%M:%S"
+			placeholder="global.immediately"
 			label="widgets::widgets.publish up"
 		/>
 
@@ -57,6 +58,7 @@
 			description="widgets::widgets.publish down description"
 			filter="user_utc"
 			format="%Y-%m-%d %H:%M:%S"
+			placeholder="global.never"
 			label="widgets::widgets.publish down"
 		/>
 

@@ -1,3 +1,8 @@
+@if ($group->motd)
+	<div class="alert">
+		{{ $group->motd->motd }}
+	</div>
+@endif
 
 <div class="card panel panel-default">
 	<div class="card-header panel-heading">

@@ -46,7 +46,7 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="assoc-resourceid">{{ trans('resources::assets.resource') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="assoc-resourceid">{{ trans('resources::assets.resource') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<select name="assoc[resourceid]" id="assoc-resourceid" class="form-control" required>
 						<option value="0">{{ trans('global.none') }}</option>
 						<?php foreach ($parents as $parent): ?>
@@ -63,7 +63,7 @@ app('pathway')
 					<div class="col-xs-12 col-md-6">
 						<div class="form-group">
 							<div class="form-group">
-								<label for="field-cluster">{{ trans('resources::assets.cluster') }}: <span class="required">{{ trans('global.required') }}</span></label>
+								<label for="field-cluster">{{ trans('resources::assets.cluster') }} <span class="required">{{ trans('global.required') }}</span></label>
 								<input type="text" name="fields[cluster]" id="field-cluster" class="form-control" maxlength="12" value="{{ $row->cluster }}" />
 							</div>
 						</div>
@@ -71,7 +71,7 @@ app('pathway')
 					<div class="col-xs-12 col-md-6">
 						<div class="form-group">
 							<div class="form-group">
-								<label for="field-name">{{ trans('resources::assets.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+								<label for="field-name">{{ trans('resources::assets.name') }} <span class="required">{{ trans('global.required') }}</span></label>
 								<input type="text" name="fields[name]" id="field-name" class="form-control" required maxlength="32" value="{{ $row->name }}" />
 								<span class="invalid-feedback">{{ trans('resources::assets.invalid.name') }}</span>
 							</div>
@@ -80,7 +80,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-description">{{ trans('resources::assets.description') }}:</label>
+					<label for="field-description">{{ trans('resources::assets.description') }}</label>
 					<textarea name="fields[description]" id="field-description" class="form-control" rows="3" cols="35">{{ $row->description }}</textarea>
 				</div>
 
@@ -88,7 +88,7 @@ app('pathway')
 					<div class="col-xs-12 col-md-4">
 						<div class="form-group">
 							<div class="form-group">
-								<label for="field-nodecores">{{ trans('resources::assets.node cores') }}: <span class="required">{{ trans('global.required') }}</span></label>
+								<label for="field-nodecores">{{ trans('resources::assets.node cores') }} <span class="required">{{ trans('global.required') }}</span></label>
 								<input type="number" name="fields[nodecores]" id="field-nodecores" class="form-control" value="{{ $row->nodecores }}" />
 							</div>
 						</div>
@@ -96,7 +96,7 @@ app('pathway')
 					<div class="col-xs-12 col-md-4">
 						<div class="form-group">
 							<div class="form-group">
-								<label for="field-nodemem">{{ trans('resources::assets.node mem') }}: <span class="required">{{ trans('global.required') }}</span></label>
+								<label for="field-nodemem">{{ trans('resources::assets.node mem') }} <span class="required">{{ trans('global.required') }}</span></label>
 								<input type="text" name="fields[nodemem]" id="field-nodemem" class="form-control" pattern="[0-9]{1,4}[PTGMKB]" value="{{ $row->nodemem }}" />
 								<span class="form-text text-muted">{{ trans('resources::assets.node mem desc') }}</span>
 							</div>
@@ -105,15 +105,15 @@ app('pathway')
 					<div class="col-xs-12 col-md-4">
 						<div class="form-group">
 							<div class="form-group">
-								<label for="field-nodegpus">{{ trans('resources::assets.node gpus') }}:</label>
-								<input type="number" name="fields[nodegpus]" id="field-nodegpus" class="form-control" value="{{ $row->nodegpus }}" />
+								<label for="field-nodegpus">{{ trans('resources::assets.node gpus') }}</label>
+								<input type="number" name="fields[nodegpus]" id="field-nodegpus" class="form-control" min="0" max="9999" value="{{ $row->nodegpus }}" />
 							</div>
 						</div>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label for="field-nodeattributes">{{ trans('resources::assets.node attributes') }}:</label>
+					<label for="field-nodeattributes">{{ trans('resources::assets.node attributes') }}</label>
 					<input type="text" name="fields[nodeattributes]" id="field-nodeattributes" class="form-control" maxlength="16" value="{{ $row->nodeattributes }}" />
 				</div>
 

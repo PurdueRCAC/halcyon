@@ -44,7 +44,7 @@ app('request')->merge(['hidemainmenu' => 1]);
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-comment">{{ trans('contactreports::contactreports.comment') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-comment">{{ trans('contactreports::contactreports.comment') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<textarea name="fields[comment]" id="field-comment" class="form-control{{ $errors->has('fields.comment') ? ' is-invalid' : '' }}" required rows="20" cols="40">{{ $row->comment }}</textarea>
 				</div>
 			</fieldset>
@@ -54,7 +54,7 @@ app('request')->merge(['hidemainmenu' => 1]);
 				<caption>{{ trans('global.metadata') }}</caption>
 				<tbody>
 					<tr>
-						<th scope="row">{{ trans('contactreports::contactreports.contactreport id') }}:</th>
+						<th scope="row">{{ trans('contactreports::contactreports.contactreport id') }}</th>
 						<td>
 							{{ $row->contactreportid }}
 							<input type="hidden" name="fields[contactreportid]" id="field-contactreportid" value="{{ $row->contactreportid }}" />
@@ -62,14 +62,14 @@ app('request')->merge(['hidemainmenu' => 1]);
 					</tr>
 					@if ($row->id)
 						<tr>
-							<th scope="row">{{ trans('contactreports::contactreports.id') }}:</th>
+							<th scope="row">{{ trans('contactreports::contactreports.id') }}</th>
 							<td>
 								{{ $row->id }}
 								<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
 							</td>
 						</tr>
 						<tr>
-							<th scope="row">{{ trans('contactreports::contactreports.created') }}:</th>
+							<th scope="row">{{ trans('contactreports::contactreports.created') }}</th>
 							<td>
 								@if ($row->datetimecreated)
 									{{ $row->datetimecreated }}

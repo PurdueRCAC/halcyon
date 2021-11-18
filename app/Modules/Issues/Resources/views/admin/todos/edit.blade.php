@@ -67,7 +67,7 @@ Toolbar::cancel(route('admin.issues.todos.cancel'));
 				</div>
 
 				<div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
-					<label for="field-description">{{ trans('issues::issues.description') }}:</label>
+					<label for="field-description">{{ trans('issues::issues.description') }}</label>
 					{!! markdown_editor('fields[description]', $row->description, ['rows' => 5]) !!}
 					<span class="form-text text-muted">{{ trans('issues::issues.formatting help') }}</span>
 				</div>

@@ -133,7 +133,7 @@ app('pathway')
 				</div>
 			</div>
 			<div class="col col-md-3 text-right">
-				<label class="sr-only" for="filter_contactreporttypeid">{{ trans('contactreports::contactreports.type') }}:</label>
+				<label class="sr-only" for="filter_contactreporttypeid">{{ trans('contactreports::contactreports.type') }}</label>
 				<select name="type" id="filter_contactreporttypeid" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['type'] == '*') { echo ' selected="selected"'; } ?>>{{ trans('contactreports::contactreports.all types') }}</option>
 					<option value="0"<?php if (!$filters['type']) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>

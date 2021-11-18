@@ -51,7 +51,7 @@ app('pathway')
 		<legend><span>{{ trans('global.details') }}</span></legend>
 
 		<div class="form-group" data-hint="{{ trans('courses::courses.name hint') }}">
-			<label for="field-name">{{ trans('courses::courses.name') }}:</label>
+			<label for="field-name">{{ trans('courses::courses.name') }}</label>
 			<input type="text" name="name" id="field-user" class="form-control disabled" disabled="disabled" readonly="readonly" value="{{ $row->user ? $row->user->username : '' }}" />
 		</div>
 

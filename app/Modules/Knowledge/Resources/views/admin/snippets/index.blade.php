@@ -59,7 +59,7 @@ app('pathway')
 				</div>
 			</div>
 			<div class="col-md-9 text-right">
-				<label class="sr-only" for="filter_parent">{{ trans('knowledge::knowledge.parent') }}:</label>
+				<label class="sr-only" for="filter_parent">{{ trans('knowledge::knowledge.parent') }}</label>
 				<select name="parent" id="filter_parent" class="form-control filter filter-submit">
 					<option value="0">{{ trans('knowledge::knowledge.all snippets') }}</option>
 					<?php foreach ($tree as $page): ?>

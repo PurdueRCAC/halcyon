@@ -53,7 +53,7 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-userid">{{ trans('courses::courses.owner') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-userid">{{ trans('courses::courses.owner') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<span class="input-group">
 						<input type="text" name="fields[userid]" id="field-userid" data-show="#field-options" class="form-control form-users redirect{{ $errors->has('fields.userid') ? ' is-invalid' : '' }}" required data-uri="{{ route('api.users.index') }}?search=%s" data-location="{{ $row->id ? route('admin.courses.edit', ['id' => $row->id]) : route('admin.courses.create') }}?userid=%s" value="{{ ($row->user ? $row->user->name . ':' . $row->userid : '') }}" />
 						<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
@@ -62,7 +62,7 @@ app('pathway')
 
 				<div<?php if (!$row->userid) { echo ' class="d-none"'; } ?> id="field-options">
 					<div class="form-group">
-						<label for="field-type">{{ trans('courses::courses.type') }}:</label>
+						<label for="field-type">{{ trans('courses::courses.type') }}</label>
 						<select name="type" id="field-type" class="form-control">
 							@if ($row->id || count($classes))
 								<option value="course"<?php if ($row->semester != 'Workshop') { echo ' selected="selected"'; } ?>>{{ trans('courses::courses.course') }}</option>
@@ -72,7 +72,7 @@ app('pathway')
 					</div>
 
 					<div class="form-group">
-						<label for="field-resourceid">{{ trans('courses::courses.resource') }}: <span class="required">{{ trans('global.required') }}</span></label>
+						<label for="field-resourceid">{{ trans('courses::courses.resource') }} <span class="required">{{ trans('global.required') }}</span></label>
 						<select name="fields[resourceid]" id="field-resourceid" class="form-control{{ $errors->has('fields.resourceid') ? ' is-invalid' : '' }}" required>
 							<option value="0">{{ trans('global.none') }}</option>
 							<?php foreach ($resources as $resource): ?>
@@ -86,7 +86,7 @@ app('pathway')
 					</div>
 
 					<div class="form-group">
-						<label for="field-classname">{{ trans('courses::courses.course name') }}:</label>
+						<label for="field-classname">{{ trans('courses::courses.course name') }}</label>
 						<input type="text" name="fields[classname]" id="field-classname" class="form-control" maxlength="255" value="{{ $row->classname }}" />
 					</div>
 
@@ -122,20 +122,20 @@ app('pathway')
 						</div>
 
 						<div class="form-group type-course type-dependant">
-							<label for="field-semester">{{ trans('courses::courses.semester') }}: <span class="required">{{ trans('global.required') }}</span></label>
+							<label for="field-semester">{{ trans('courses::courses.semester') }} <span class="required">{{ trans('global.required') }}</span></label>
 							<input type="text" name="fields[semester]" id="field-semester" class="form-control{{ $errors->has('fields.semester') ? ' is-invalid' : '' }}" required maxlength="16" value="{{ $row->semester }}" />
 						</div>
 
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group type-course type-dependant">
-									<label for="field-crn">{{ trans('courses::courses.crn') }}:</label>
+									<label for="field-crn">{{ trans('courses::courses.crn') }}</label>
 									<input type="text" name="fields[crn]" id="field-crn" class="form-control{{ $errors->has('fields.crn') ? ' is-invalid' : '' }}" maxlength="8" value="{{ $row->crn }}" />
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group type-course type-dependant">
-									<label for="field-coursenumber">{{ trans('courses::courses.course number') }}:</label>
+									<label for="field-coursenumber">{{ trans('courses::courses.course number') }}</label>
 									<input type="text" name="fields[coursenumber]" id="field-coursenumber" class="form-control{{ $errors->has('fields.coursenumber') ? ' is-invalid' : '' }}" maxlength="8" value="{{ $row->coursenumber }}" />
 								</div>
 							</div>
@@ -144,13 +144,13 @@ app('pathway')
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group type-course type-dependant">
-									<label for="field-department">{{ trans('courses::courses.department') }}:</label>
+									<label for="field-department">{{ trans('courses::courses.department') }}</label>
 									<input type="text" name="fields[department]" id="field-department" class="form-control{{ $errors->has('fields.department') ? ' is-invalid' : '' }}" maxlength="4" value="{{ $row->department }}" />
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group type-course type-dependant">
-									<label for="field-reference">{{ trans('courses::courses.reference') }}:</label>
+									<label for="field-reference">{{ trans('courses::courses.reference') }}</label>
 									<input type="text" name="fields[reference]" id="field-reference" class="form-control{{ $errors->has('fields.reference') ? ' is-invalid' : '' }}" maxlength="64" value="{{ $row->reference }}" />
 								</div>
 							</div>
@@ -206,7 +206,7 @@ app('pathway')
 						<tr>
 							<td colspan="2">
 								<div class="form-group">
-									<label for="member-userid" class="sr-only">{{ trans('courses::courses.member') }}:</label>
+									<label for="member-userid" class="sr-only">{{ trans('courses::courses.member') }}</label>
 									<span class="input-group">
 										<input type="text" name="member-userid" id="member-userid" class="form-control form-users" data-uri="{{ route('api.users.index') }}?search=%s" value="" />
 										<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
@@ -229,13 +229,13 @@ app('pathway')
 				<legend>{{ trans('global.publishing') }}</legend>
 
 				<div class="form-group">
-					<label for="field-datetimestart">{{ trans('courses::courses.date start') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-datetimestart">{{ trans('courses::courses.date start') }} <span class="required">{{ trans('global.required') }}</span></label>
 					{!! Html::input('calendar', 'fields[datetimestart]', $row->datetimestart->format('Y-m-d'), ['required' => 'required', 'time' => false]) !!}
 					<span class="invalid-feedback">{{ trans('courses::courses.invalid.start date') }}</span>
 				</div>
 
 				<div class="form-group">
-					<label for="field-datetimestop">{{ trans('courses::courses.date stop') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-datetimestop">{{ trans('courses::courses.date stop') }} <span class="required">{{ trans('global.required') }}</span></label>
 					{!! Html::input('calendar', 'fields[datetimestop]', $row->datetimestop->format('Y-m-d'), ['required' => 'required', 'time' => false]) !!}
 					<span class="invalid-feedback">{{ trans('courses::courses.invalid.end date') }}</span>
 				</div>

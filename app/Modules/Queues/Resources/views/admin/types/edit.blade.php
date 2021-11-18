@@ -42,14 +42,22 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-name">{{ trans('queues::queues.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-name">{{ trans('queues::queues.name') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[name]" id="field-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" maxlength="20" required value="{{ $row->name }}" />
 					<span class="invalid-feedback">{{ $errors->first('fields.name') }}</span>
 				</div>
 			</fieldset>
 		</div>
 		<div class="col-md-5">
-			@include('history::admin.history')
+			<table class="meta table table-bordered">
+				<caption class="sr-only">{{ trans('global.metadata') }}</caption>
+				<tbody>
+					<tr>
+						<th scope="row">{{ trans('queues::queues.queues') }}</th>
+						<td class="text-right">{{ number_format($row->queues()->count()) }}</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 

@@ -51,7 +51,7 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-parentid">{{ trans('groups::groups.parent') }}:</label>
+					<label for="field-parentid">{{ trans('groups::groups.parent') }}</label>
 					<select name="fields[parentid]" id="field-parentid" class="form-control searchable-select">
 						<option value="1">{{ trans('global.none') }}</option>
 						<?php foreach ($parents as $parent): ?>
@@ -63,19 +63,17 @@ app('pathway')
 							$ancestors = collect($parent->ancestors());
 							$ids = $ancestors->pluck('id')->toArray();
 
-							if ($parent->parentid > 1 && in_array($row->id, $ids))
-							{
+							if ($parent->parentid > 1 && in_array($row->id, $ids)):
 								continue;
-							}
+							endif;
 
 							$selected = ($parent->id == $row->parentid ? ' selected="selected"' : '');
 							?>
 							<option value="{{ $parent->id }}"<?php echo $selected; ?>><?php
 								foreach ($ancestors as $ancestor):
-									if (!$ancestor->parentid)
-									{
+									if (!$ancestor->parentid):
 										continue;
-									}
+									endif;
 									?>{{ $ancestor->name }} &rsaquo; <?php
 								endforeach;
 								echo e($parent->name);
@@ -85,7 +83,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-name">{{ trans('groups::groups.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-name">{{ trans('groups::groups.name') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[name]" id="field-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->name }}" />
 				</div>
 

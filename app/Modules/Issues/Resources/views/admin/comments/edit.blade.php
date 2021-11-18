@@ -57,7 +57,7 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-comment">{{ trans('issues::issues.comment') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-comment">{{ trans('issues::issues.comment') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<textarea name="fields[comment]" id="field-comment" class="form-control" rows="20" cols="40">{{ $row->comment }}</textarea>
 				</div>
 			</fieldset>
@@ -67,7 +67,7 @@ app('pathway')
 				<caption class="sr-only">{{ trans('global.metadata') }}</caption>
 				<tbody>
 					<tr>
-						<th scope="row">{{ trans('issues::issues.contactreport id') }}:</th>
+						<th scope="row">{{ trans('issues::issues.contactreport id') }}</th>
 						<td>
 							{{ $row->contactreportid }}
 							<input type="hidden" name="fields[contactreportid]" id="field-contactreportid" value="{{ $row->contactreportid }}" />
@@ -75,14 +75,14 @@ app('pathway')
 					</tr>
 					@if ($row->id)
 						<tr>
-							<th scope="row">{{ trans('issues::issues.id') }}:</th>
+							<th scope="row">{{ trans('issues::issues.id') }}</th>
 							<td>
 								{{ $row->id }}
 								<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
 							</td>
 						</tr>
 						<tr>
-							<th scope="row">{{ trans('issues::issues.created') }}:</th>
+							<th scope="row">{{ trans('issues::issues.created') }}</th>
 							<td>
 								@if ($row->datetimecreated)
 									{{ $row->datetimecreated->format('Y-m-d h:i:s') }}

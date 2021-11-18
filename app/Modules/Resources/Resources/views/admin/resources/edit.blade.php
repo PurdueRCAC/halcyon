@@ -66,7 +66,7 @@ app('pathway')
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="field-resourcetype">{{ trans('resources::assets.type') }}:</label>
+									<label for="field-resourcetype">{{ trans('resources::assets.type') }}</label>
 									<select name="fields[resourcetype]" id="field-resourcetype" class="form-control">
 										<option value="0">{{ trans('global.none') }}</option>
 										@foreach ($types as $type)
@@ -77,7 +77,7 @@ app('pathway')
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="field-producttype">{{ trans('resources::assets.product type') }}:</label>
+									<label for="field-producttype">{{ trans('resources::assets.product type') }}</label>
 									<select name="fields[producttype]" id="field-producttype" class="form-control">
 										<option value="0">{{ trans('global.none') }}</option>
 										<option value="1"<?php if ($row->producttype == 1): echo ' selected="selected"'; endif;?>>{{ trans('resources::assets.cluster') }}</option>
@@ -89,7 +89,7 @@ app('pathway')
 						</div>
 
 						<div class="form-group">
-							<label for="field-parentid">{{ trans('resources::assets.parent') }}:</label>
+							<label for="field-parentid">{{ trans('resources::assets.parent') }}</label>
 							<select name="fields[parentid]" class="form-control">
 								<option value="0">{{ trans('global.none') }}</option>
 								@foreach ($parents as $parent)
@@ -100,7 +100,7 @@ app('pathway')
 						</div>
 
 						<div class="form-group">
-							<label for="field-batchsystem">{{ trans('resources::assets.batchsystem') }}:</label>
+							<label for="field-batchsystem">{{ trans('resources::assets.batchsystem') }}</label>
 							<select name="fields[batchsystem]" class="form-control">
 								<option value="0">{{ trans('global.none') }}</option>
 								@foreach ($batchsystems as $batchsystem)
@@ -111,7 +111,7 @@ app('pathway')
 						</div>
 
 						<div class="form-group">
-							<label for="field-name">{{ trans('resources::assets.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+							<label for="field-name">{{ trans('resources::assets.name') }} <span class="required">{{ trans('global.required') }}</span></label>
 							<input type="text" name="fields[name]" id="field-name" class="form-control" required maxlength="32" value="{{ $row->name }}" />
 							<span class="invalid-feedback">{{ trans('resources::assets.invalid.name') }}</span>
 						</div>
@@ -119,22 +119,22 @@ app('pathway')
 						<div class="row">
 							<div class="col-xs-12 col-md-6">
 								<div class="form-group">
-									<label for="field-rolename">{{ trans('resources::assets.role name') }}:</label>
-									<input type="text" name="fields[rolename]" id="field-rolename" class="form-control" maxlength="32" value="{{ $row->rolename }}" />
+									<label for="field-rolename">{{ trans('resources::assets.role name') }}</label>
+									<input type="text" name="fields[rolename]" id="field-rolename" class="form-control" maxlength="32" pattern="[a-zA-Z0-9_\-]" value="{{ $row->rolename }}" />
 									<span class="form-text text-muted">{{ trans('resources::assets.role name desc') }}</span>
 								</div>
 							</div>
 							<div class="col-xs-12 col-md-6">
 								<div class="form-group">
-									<label for="field-importhostname">{{ trans('resources::assets.list name') }}:</label>
-									<input type="text" name="fields[listname]" id="field-listname" class="form-control" maxlength="32" value="{{ $row->listname }}" />
+									<label for="field-importhostname">{{ trans('resources::assets.list name') }}</label>
+									<input type="text" name="fields[listname]" id="field-listname" class="form-control" maxlength="32" pattern="[a-zA-Z0-9_\-]" value="{{ $row->listname }}" />
 									<span class="form-text text-muted">{{ trans('resources::assets.list name desc') }}</span>
 								</div>
 							</div>
 						</div>
 
 						<div class="form-group">
-							<label for="field-description">{{ trans('resources::assets.description') }}:</label>
+							<label for="field-description">{{ trans('resources::assets.description') }}</label>
 							<textarea name="fields[description]" id="field-description" cols="35" rows="5" class="form-control">{{ $row->description }}</textarea>
 						</div>
 					</fieldset>
@@ -144,31 +144,31 @@ app('pathway')
 						<legend>{{ trans('resources::assets.options') }}</legend>
 
 						<div class="form-group">
-							<label for="params-desktop">{{ trans('resources::assets.params.desktop') }}:</label>
+							<label for="params-desktop">{{ trans('resources::assets.params.desktop') }}</label>
 							<input type="text" class="form-control" name="params[desktop]" id="params-desktop" value="{{ $row->params->get('desktop') }}" />
 							<span class="form-text text-muted">{{ trans('resources::assets.params.desktop desc') }}</span>
 						</div>
 
 						<div class="form-group">
-							<label for="params-gateway">{{ trans('resources::assets.params.gateway') }}:</label>
+							<label for="params-gateway">{{ trans('resources::assets.params.gateway') }}</label>
 							<input type="text" class="form-control" name="params[gateway]" id="params-gateway" value="{{ $row->params->get('gateway') }}" />
 							<span class="form-text text-muted">{{ trans('resources::assets.params.gateway desc') }}</span>
 						</div>
 
 						<div class="form-group">
-							<label for="params-notebook">{{ trans('resources::assets.params.notebook') }}:</label>
+							<label for="params-notebook">{{ trans('resources::assets.params.notebook') }}</label>
 							<input type="text" class="form-control" name="params[notebook]" id="params-notebook" value="{{ $row->params->get('notebook') }}" />
 							<span class="form-text text-muted">{{ trans('resources::assets.params.notebook desc') }}</span>
 						</div>
 
 						<div class="form-group">
-							<label for="params-rstudio">{{ trans('resources::assets.params.rstudio') }}:</label>
+							<label for="params-rstudio">{{ trans('resources::assets.params.rstudio') }}</label>
 							<input type="text" class="form-control" name="params[rstudio]" id="params-rstudio" value="{{ $row->params->get('rstudio') }}" />
 							<span class="form-text text-muted">{{ trans('resources::assets.params.rstudio desc') }}</span>
 						</div>
 
 						<div class="form-group">
-							<label for="params-url">{{ trans('resources::assets.params.url') }}:</label>
+							<label for="params-url">{{ trans('resources::assets.params.url') }}</label>
 							<input type="text" class="form-control" name="params[url]" id="params-url" value="{{ $row->params->get('url') }}" />
 							<span class="form-text text-muted">{{ trans('resources::assets.params.url desc') }}</span>
 						</div>

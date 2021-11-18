@@ -46,13 +46,13 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-hostname">{{ trans('queues::queues.hostname') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-hostname">{{ trans('queues::queues.hostname') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[hostname]" id="field-hostname" class="form-control{{ $errors->has('fields.hostname') ? ' is-invalid' : '' }}" maxlength="64" required value="{{ $row->hostname }}" />
 					<span class="invalid-feedback">{{ $errors->first('fields.hostname') }}</span>
 				</div>
 
 				<div class="form-group">
-					<label for="field-queuesubresourceid">{{ trans('queues::queues.resource') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-queuesubresourceid">{{ trans('queues::queues.resource') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<select name="fields[queuesubresourceid]" id="field-queuesubresourceid" class="form-control{{ $errors->has('fields.queuesubresourceid') ? ' is-invalid' : '' }}" required>
 						<option value="0">{{ trans('global.none') }}</option>
 						<?php foreach ($resources as $resource): ?>
@@ -89,7 +89,7 @@ app('pathway')
 						$val = $row->defaultmaxwalltime;
 					endif;
 					?>
-					<label for="field-defaultmaxwalltime">{{ trans('queues::queues.default max walltime') }}:</label>
+					<label for="field-defaultmaxwalltime">{{ trans('queues::queues.default max walltime') }}</label>
 					<div class="row">
 						<div class="col-md-8">
 							<input type="number" name="maxwalltime" id="field-maxwalltime" class="form-control" value="{{ $val }}" />
@@ -107,7 +107,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-batchsystem">{{ trans('queues::queues.batch system') }}:</label>
+					<label for="field-batchsystem">{{ trans('queues::queues.batch system') }}</label>
 					<select name="fields[batchsystem]" id="field-batchsystem" class="form-control">
 						<option value="0">{{ trans('queues::queues.all batch systems') }}</option>
 						<?php foreach ($batchsystems as $batchsystem): ?>
@@ -115,11 +115,11 @@ app('pathway')
 							<option value="{{ $batchsystem->id }}"<?php echo $selected; ?>>{{ $batchsystem->name }}</option>
 						<?php endforeach; ?>
 					</select>
-					<span class="form-text text-muted">{!! trans('queues::queues.batch system warning') !!}</span>
+					<span class="form-text text-warning">{!! trans('queues::queues.batch system warning') !!}</span>
 				</div>
 
 				<div class="form-group">
-					<label for="field-schedulerpolicyid">{{ trans('queues::queues.scheduler policy') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-schedulerpolicyid">{{ trans('queues::queues.scheduler policy') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<select name="fields[schedulerpolicyid]" id="field-schedulerpolicyid" class="form-control{{ $errors->has('fields.schedulerpolicyid') ? ' is-invalid' : '' }}" required>
 						<option value="0">{{ trans('queues::queues.all scheduler policies') }}</option>
 						<?php foreach ($policies as $policy): ?>
@@ -132,7 +132,15 @@ app('pathway')
 			</fieldset>
 		</div>
 		<div class="col-md-5">
-			@include('history::admin.history')
+			<table class="meta table table-bordered">
+				<caption class="sr-only">{{ trans('global.metadata') }}</caption>
+				<tbody>
+					<tr>
+						<th scope="row">{{ trans('queues::queues.queues') }}</th>
+						<td class="text-right">{{ $row->queues()->count() }}</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 

@@ -47,12 +47,12 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-name">{{ trans('finder::finder.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-name">{{ trans('finder::finder.name') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[name]" id="field-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->name }}" />
 				</div>
 
 				<div class="form-group">
-					<label for="field-description">{{ trans('finder::finder.description') }}:</label>
+					<label for="field-description">{{ trans('finder::finder.description') }}</label>
 					<textarea name="fields[description]" id="field-description" class="form-control{{ $errors->has('fields.description') ? ' is-invalid' : '' }}" rows="5" cols="50">{{ $row->description }}</textarea>
 				</div>
 
@@ -90,7 +90,7 @@ app('pathway')
 					<div class="row">
 						<div class="col-md-10">
 							<div class="form-group">
-								<label for="choice-{{ $k }}-name">{{ trans('finder::finder.value') }}:</label>
+								<label for="choice-{{ $k }}-name">{{ trans('finder::finder.value') }}</label>
 								<input type="text" name="choice[{{ $k }}][name]" id="choice-{{ $k }}-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $choice->name }}" />
 								<input type="hidden" name="choice[{{ $k }}][id]" id="choice-{{ $k }}-id" value="{{ $choice->id }}" />
 							</div>
@@ -141,7 +141,7 @@ app('pathway')
 					<div class="row">
 						<div class="col-md-10">
 							<div class="form-group">
-								<label for="choice-<?php echo '{{i}}'; ?>-name">{{ trans('finder::finder.value') }}:</label>
+								<label for="choice-<?php echo '{{i}}'; ?>-name">{{ trans('finder::finder.value') }}</label>
 								<input type="text" name="choice[<?php echo '{{i}}'; ?>][name]" id="choice-<?php echo '{{i}}'; ?>-name" class="form-control" required maxlength="250" value="" />
 								<input type="hidden" name="choice[<?php echo '{{i}}'; ?>][id]" id="choice-<?php echo '{{i}}'; ?>-id" value="" />
 							</div>

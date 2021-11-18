@@ -51,7 +51,7 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-parentid">{{ trans('groups::groups.parent') }}:</label>
+					<label for="field-parentid">{{ trans('groups::groups.parent') }}</label>
 					<select name="fields[parentid]" id="field-parentid" class="form-control searchable-select">
 						<option value="1">{{ trans('global.none') }}</option>
 						<?php foreach ($parents as $parent): ?>
@@ -85,7 +85,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-name">{{ trans('groups::groups.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-name">{{ trans('groups::groups.name') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[name]" id="field-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->name }}" />
 				</div>
 
