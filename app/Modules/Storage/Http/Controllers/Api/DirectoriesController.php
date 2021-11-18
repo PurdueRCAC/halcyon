@@ -899,7 +899,8 @@ class DirectoriesController extends Controller
 			'storageresourceid' => 'nullable|integer',
 		]);
 
-		//$row->fill($request->all());
+		$fixpermissions = $request->input('fixpermissions');
+
 		$keys = array(
 			'name',
 			'path',
@@ -923,6 +924,12 @@ class DirectoriesController extends Controller
 			if ($request->has($key))
 			{
 				$row->{$key} = $request->input($key);
+
+				// If certain fields are changed, permissions need fixing
+				if (in_array($key, ['unixgroupid', 'ownerread', 'groupread', 'groupwrite', 'publicread', 'publicwrite']))
+				{
+					$fixpermissions = true;
+				}
 			}
 		}
 
@@ -932,26 +939,6 @@ class DirectoriesController extends Controller
 			$type = MessageType::query()
 				->where('resourceid', '=', $row->resourceid)
 				->where('name', 'like', 'get % quota')
-				->get()
-				->first();
-
-			if (!$type)
-			{
-				return response()->json(['message' => trans('Failed to retrieve messagequeuetype for resourceid :id', ['id' => $row->resourceid])], 415);
-			}
-
-			// Form message queue
-			$row->addMessageToQueue($type->id, $row->userid);
-
-			return new DirectoryResource($row);
-		}
-
-		if ($request->input('fixpermissions'))
-		{
-			// Fetch message type
-			$type = MessageType::query()
-				->where('resourceid', '=', $row->resourceid)
-				->where('name', 'like', 'fix %')
 				->get()
 				->first();
 
@@ -1128,6 +1115,24 @@ class DirectoriesController extends Controller
 
 		$row->save();
 		$row->unallocatedbytes = $unallocatedbytes;
+
+		if ($fixpermissions)
+		{
+			// Fetch message type
+			$type = MessageType::query()
+				->where('resourceid', '=', $row->resourceid)
+				->where('name', 'like', 'fix %')
+				->get()
+				->first();
+
+			if (!$type)
+			{
+				return response()->json(['message' => trans('Failed to retrieve messagequeuetype for resourceid :id', ['id' => $row->resourceid])], 415);
+			}
+
+			// Add to message queue
+			$row->addMessageToQueue($type->id, $row->userid);
+		}
 
 		return new DirectoryResource($row);
 	}

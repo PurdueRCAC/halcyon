@@ -167,6 +167,10 @@ class DirectoriesController extends Controller
 		if ($parent = $request->input('parent'))
 		{
 			$row->parentstoragedirid = $parent;
+			if ($row->parent)
+			{
+				$row->groupid = $row->parent->groupid;
+			}
 		}
 
 		if ($fields = app('request')->old('fields'))

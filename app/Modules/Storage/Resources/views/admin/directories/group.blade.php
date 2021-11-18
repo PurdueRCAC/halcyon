@@ -549,7 +549,7 @@
 										}
 										?>
 										</tbody>
-										@if (auth()->user()->can('manage storage') && $dir->children()->count() == 0)
+										@if ($dir->children()->count() == 0)
 											<tfoot>
 												<tr>
 													<td colspan="3" class="text-center">
