@@ -15,7 +15,7 @@ $menu->getParent();
 // Site SubMenu
 //
 
-$chm = $user->can('admin messages');
+$chm = $user->can('manage messages');
 $cam = $user->can('manage cache');
 $cst = $user->can('manage cron');
 
