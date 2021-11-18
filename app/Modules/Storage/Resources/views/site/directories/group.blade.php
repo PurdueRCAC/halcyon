@@ -739,6 +739,12 @@
 						<div class="col-md-6">
 					@endif
 							{{ trans('storage::storage.history') }}
+							<a href="#help_history" class="help icn glyph icon-help tip" title="Help">
+								<span class="fa fa-question-circle" aria-hidden="true"></span> Help
+							</a>
+							<div class="dialog dialog-help" id="help_history" title="{{ trans('storage::storage.history') }}">
+								<p>This is a history of purchases and loans of storage space for this group. Entries are presented newest to oldest.</p>
+							</div>
 					@if (auth()->user()->can('manage storage'))
 						</div>
 						<div class="col-md-6 text-right">
@@ -1078,10 +1084,16 @@
 					@endif
 				</div>
 			</div><!-- / .panel -->
-		@if (auth()->user()->can('manage storage'))
+
 			<div class="card panel panel-default">
 				<div class="card-header panel-heading">
 					{{ trans('storage::storage.messages') }}
+					<a href="#help_messages" class="help icn glyph icon-help tip" title="Help">
+						<span class="fa fa-question-circle" aria-hidden="true"></span> Help
+					</a>
+					<div class="dialog dialog-help" id="help_messages" title="{{ trans('storage::storage.messages') }}">
+						<p>Changes to storage spaces, such as new directories or altered permissions, are sent to a worker queue. Changes may take several minutes to be processed. If a process appears to be queued for an unusually long period of time, please contact <a href="{{ route('page', ['uri' => 'help']) }}">support</a>.</p>
+					</div>
 				</div>
 				<div class="card-body panel-body">
 					@if ($group->messages->count())
@@ -1140,8 +1152,8 @@
 					@endif
 				</div>
 			</div><!-- / .panel -->
-		@endif
-		<?php
+
+			<?php
 		else:
 			?>
 			<p class="text-center text-muted">{{ trans('global.none') }}</p>

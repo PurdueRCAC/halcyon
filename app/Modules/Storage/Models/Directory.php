@@ -210,11 +210,14 @@ class Directory extends Model
 			$message->datetimesubmitted = Carbon::now()->add($offset . ' seconds')->toDateTimeString();
 		}
 
+		// Check for any pending messages
+		// We want to avoid duplicates
 		$exists = Message::query()
 			->where('userid', '=', $message->userid)
 			->where('targetobjectid', '=', $message->targetobjectid)
 			->where('messagequeuetypeid', '=', $message->messagequeuetypeid)
-			->where('datetimesubmitted', '=', $message->datetimesubmitted)
+			//->where('datetimesubmitted', '=', $message->datetimesubmitted)
+			->whereNotCompleted()
 			->first();
 
 		if (!$exists)
