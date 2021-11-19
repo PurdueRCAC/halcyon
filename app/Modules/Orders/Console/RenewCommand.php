@@ -109,25 +109,27 @@ class RenewCommand extends Command
 				$renew = false;
 			}
 
-			$orderitems = Item::query()
+			$orderitem = Item::query()
 				->where('origorderitemid', '=', $sequence->origorderitemid)
-				->orderBy('datetimecreated', 'asc')
-				->get();
+				->orderBy('datetimecreated', 'desc')
+				->limit(1)
+				->get()
+				->first();
 
 			// don't renew again if the last order was canceled
-			if ($renew && $orderitems[count($orderitems)-1]->order->isCanceled())
+			if ($renew && (!$orderitem->order || $orderitem->order->isCanceled()))
 			{
 				$renew = false;
 			}
 
 			// don't renew again if the last order had this item removed (quantity = 0)
-			if ($renew && $orderitems[count($orderitems)-1]->quantity == 0)
+			if ($renew && $orderitem->quantity == 0)
 			{
 				$renew = false;
 			}
 
 			// don't renew if product is removed
-			if ($renew && $sequence->product->trashed())
+			if ($renew && (!$orderitem->product || $orderitem->product->trashed()))
 			{
 				$renew = false;
 			}
