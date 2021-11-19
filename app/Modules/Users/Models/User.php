@@ -700,10 +700,11 @@ class User extends Model implements
 
 			$user->newroles = array($newUsertype);
 
+			$userusername = $user->getUserUsername();
+
 			if ($user->save())
 			{
-				$userusername = $user->getUserUsername();
-				if (!$userusername || !$userusername->id)
+				if (!$userusername)
 				{
 					$userusername = new UserUsername;
 				}

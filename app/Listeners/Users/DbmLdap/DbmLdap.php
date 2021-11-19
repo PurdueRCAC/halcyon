@@ -249,11 +249,13 @@ class DbmLdap
 
 					//$event->user = $user;
 					//break;
-					$results[$key] = $user;
+					$results[] = $result['cn'][0];
+
+					$event->results[] = $user;
 				}
 			}
 
-			$event->results = $results;
+			//$event->results = $results;
 		}
 		catch (\Exception $e)
 		{
