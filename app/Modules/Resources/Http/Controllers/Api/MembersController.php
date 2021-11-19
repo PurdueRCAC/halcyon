@@ -5,13 +5,26 @@ namespace App\Modules\Resources\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Modules\Resources\Models\Asset;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Modules\Resources\Models\Asset;
+use App\Modules\Resources\Models\Subresource;
+use App\Modules\Resources\Models\Child;
 use App\Modules\Resources\Events\ResourceMemberStatus;
 use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Resources\Events\ResourceMemberDeleted;
 use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\UserUsername;
+use App\Modules\Queues\Models\Queue;
+use App\Modules\Queues\Models\User as QueueUser;
+use App\Modules\Queues\Models\GroupUser as GroupQueueUser;
+use App\Modules\Groups\Models\Group;
+use App\Modules\Groups\Models\Member as GroupUser;
+use App\Modules\Groups\Models\UnixGroup;
+use App\Modules\Groups\Models\UnixGroupMember;
+use App\Modules\Storage\Models\Directory;
+use Carbon\Carbon;
 
 /**
  * Members
@@ -20,6 +33,426 @@ use App\Modules\Users\Models\User;
  */
 class MembersController extends Controller
 {
+	/**
+	 * Read a resource
+	 *
+	 * @apiMethod GET
+	 * @apiUri    /api/resources/members/{user id}.{resource id}
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "user id.resource id",
+	 * 		"description":   "User ID and Resource ID separated by a period",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"example":   "12345.67"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
+	 * @param   integer $id
+	 * @return  Response
+	 */
+	public function index($id)
+	{
+		$resource = Asset::findOrFail($id);
+
+		$r = (new Asset)->getTable();
+		$s = (new Subresource)->getTable();
+		$c = (new Child)->getTable();
+
+		$q = (new Queue)->getTable();
+		$qu = (new QueueUser)->getTable();
+
+		$g = (new Group)->getTable();
+		$gu = (new GroupUser)->getTable();
+		$gqu = (new GroupQueueUser)->getTable();
+		$u = (new UnixGroup)->getTable();
+		$ugm = (new UnixGroupMember)->getTable();
+
+		$d = (new Directory)->getTable();
+
+		$uu = (new UserUsername)->getTable();
+
+		$now = Carbon::now();
+
+		/*
+		SELECT DISTINCT username FROM (
+				SELECT DISTINCT userusernames.username AS username
+				FROM groupusers
+				INNER JOIN groups ON groupusers.groupid = groups.id
+				INNER JOIN queues ON groups.id = queues.groupid
+				INNER JOIN resourcesubresources ON queues.subresourceid = resourcesubresources.subresourceid
+				INNER JOIN resources ON resourcesubresources.resourceid = resources.id
+				INNER JOIN userusernames ON groupusers.userid = userusernames.userid
+				LEFT OUTER JOIN unixgroups ON groups.id = unixgroups.groupid
+				LEFT OUTER JOIN unixgroupusers ON unixgroups.id = unixgroupusers.unixgroupid
+					AND unixgroupusers.userid = userusernames.userid
+					AND unixgroupusers.datetimecreated <= NOW()
+					AND (unixgroupusers.datetimeremoved IS NULL OR unixgroupusers.datetimeremoved = '0000-00-00 00:00:00' OR unixgroupusers.datetimeremoved > NOW())
+					AND unixgroups.datetimecreated <= NOW()
+					AND (unixgroups.datetimeremoved IS NULL OR unixgroups.datetimeremoved = '0000-00-00 00:00:00' OR unixgroups.datetimeremoved > NOW())
+				WHERE groupusers.membertype = '2'
+				AND groupusers.datecreated <= NOW()
+				AND (groupusers.dateremoved IS NULL OR groupusers.dateremoved = '0000-00-00 00:00:00' OR groupusers.dateremoved > NOW())
+				AND queues.datetimecreated <= NOW()
+				AND (queues.datetimeremoved IS NULL OR queues.datetimeremoved = '0000-00-00 00:00:00' OR queues.datetimeremoved > NOW())
+				AND resources.datetimecreated <= NOW()
+				AND (resources.datetimeremoved IS NULL OR resources.datetimeremoved = '0000-00-00 00:00:00' OR resources.datetimeremoved > NOW())
+				AND userusernames.datecreated <= NOW()
+				AND (userusernames.dateremoved IS NULL OR userusernames.dateremoved = '0000-00-00 00:00:00' OR userusernames.dateremoved > NOW())
+				AND resources.resourcetype = '1'
+				AND (resources.id IN ('" + resource + "') OR resources.parentid IN ('" + resource + "'))
+			UNION ALL
+				SELECT DISTINCT userusernames.username AS username
+				FROM queueusers
+				INNER JOIN queues ON queueusers.queueid = queues.id
+				INNER JOIN resourcesubresources ON queues.subresourceid = resourcesubresources.subresourceid
+				INNER JOIN resources ON resourcesubresources.resourceid = resources.id
+				INNER JOIN userusernames ON queueusers.userid = userusernames.userid
+				INNER JOIN groups ON queues.groupid = groups.id
+				LEFT OUTER JOIN unixgroups ON groups.id = unixgroups.groupid
+				LEFT OUTER JOIN unixgroupusers ON unixgroups.id = unixgroupusers.unixgroupid
+				AND unixgroupusers.userid = userusernames.userid
+				WHERE queueusers.membertype = '1'
+				AND queueusers.datetimecreated <= NOW()
+				AND (queueusers.datetimeremoved IS NULL OR queueusers.datetimeremoved = '0000-00-00 00:00:00' OR queueusers.datetimeremoved > NOW())
+				AND queues.datetimecreated <= NOW()
+				AND (queues.datetimeremoved IS NULL OR queues.datetimeremoved = '0000-00-00 00:00:00' OR queues.datetimeremoved > NOW())
+				AND resources.datetimecreated <= NOW()
+				AND (resources.datetimeremoved IS NULL OR resources.datetimeremoved = '0000-00-00 00:00:00' OR resources.datetimeremoved > NOW())
+				AND userusernames.datecreated <= NOW()
+				AND (userusernames.dateremoved IS NULL OR userusernames.dateremoved = '0000-00-00 00:00:00' OR userusernames.dateremoved > NOW())
+				AND resources.resourcetype = '1' AND (resources.id IN ('" + resource + "') OR resources.parentid IN ('" + resource + "'))
+			UNION ALL
+				SELECT DISTINCT userusernames.username AS username
+				FROM groupqueueusers
+				INNER JOIN queueusers ON groupqueueusers.queueuserid = queueusers.id
+				INNER JOIN queues ON queueusers.queueid = queues.id
+				INNER JOIN resourcesubresources ON queues.subresourceid = resourcesubresources.subresourceid
+				INNER JOIN resources ON resourcesubresources.resourceid = resources.id
+				INNER JOIN userusernames ON queueusers.userid = userusernames.userid
+				INNER JOIN groups ON groupqueueusers.groupid = groups.id
+				LEFT OUTER JOIN unixgroups ON groups.id = unixgroups.groupid
+				LEFT OUTER JOIN unixgroupusers ON unixgroups.id = unixgroupusers.unixgroupid
+				AND unixgroupusers.userid = userusernames.userid
+				WHERE groupqueueusers.membertype = '1'
+				AND queueusers.membertype = '1'
+				AND groupqueueusers.datetimecreated <= NOW()
+				AND (groupqueueusers.datetimeremoved IS NULL OR groupqueueusers.datetimeremoved = '0000-00-00 00:00:00' OR groupqueueusers.datetimeremoved > NOW())
+				AND queueusers.datetimecreated <= NOW()
+				AND (queueusers.datetimeremoved IS NULL OR queueusers.datetimeremoved = '0000-00-00 00:00:00' OR queueusers.datetimeremoved > NOW())
+				AND queues.datetimecreated <= NOW()
+				AND (queues.datetimeremoved IS NULL OR queues.datetimeremoved = '0000-00-00 00:00:00' OR queues.datetimeremoved > NOW())
+				AND resources.datetimecreated <= NOW()
+				AND (resources.datetimeremoved IS NULL OR resources.datetimeremoved = '0000-00-00 00:00:00' OR resources.datetimeremoved > NOW())
+				AND userusernames.datecreated <= NOW()
+				AND (userusernames.dateremoved IS NULL OR userusernames.dateremoved = '0000-00-00 00:00:00' OR userusernames.dateremoved > NOW())
+				AND resources.resourcetype = '1' AND (resources.id IN ('" + resource + "') OR resources.parentid IN ('" + resource + "'))
+			UNION ALL
+				SELECT DISTINCT userusernames.username
+				FROM unixgroupusers
+				INNER JOIN unixgroups ON unixgroupusers.unixgroupid = unixgroups.id
+				INNER JOIN storagedirs ON unixgroups.groupid = storagedirs.groupid
+				INNER JOIN resources ON storagedirs.resourceid = resources.id
+				INNER JOIN userusernames ON unixgroupusers.userid = userusernames.userid
+				INNER JOIN groups ON unixgroups.groupid = groups.id
+				LEFT OUTER JOIN groupusers ON groups.id = groupusers.groupid
+				AND groupusers.userid = userusernames.userid
+				AND groupusers.datecreated <= NOW()
+				AND (groupusers.dateremoved IS NULL OR groupusers.dateremoved = '0000-00-00 00:00:00' OR groupusers.dateremoved > NOW())
+				WHERE unixgroupusers.datetimecreated <= NOW()
+				AND (unixgroupusers.datetimeremoved IS NULL OR unixgroupusers.datetimeremoved = '0000-00-00 00:00:00' OR unixgroupusers.datetimeremoved > NOW())
+				AND unixgroups.datetimecreated <= NOW()
+				AND (unixgroups.datetimeremoved IS NULL OR unixgroups.datetimeremoved = '0000-00-00 00:00:00' OR unixgroups.datetimeremoved > NOW())
+				AND storagedirs.datetimecreated <= NOW()
+				AND (storagedirs.datetimeremoved IS NULL OR storagedirs.datetimeremoved = '0000-00-00 00:00:00' OR storagedirs.datetimeremoved > NOW())
+				AND userusernames.datecreated <= NOW()
+				AND (userusernames.dateremoved IS NULL OR userusernames.dateremoved = '0000-00-00 00:00:00' OR userusernames.dateremoved > NOW())
+				AND resources.resourcetype = '2'
+				AND resources.id IN ('" + re.escape(resource) + "')
+		) AS allusers
+		ORDER BY username;
+		
+		SELECT DISTINCT username, userid
+		FROM (
+			SELECT DISTINCT userusernames.username AS username, userusernames.userid
+			FROM groupusers
+			INNER JOIN groups ON groupusers.groupid = groups.id
+			INNER JOIN queues ON groups.id = queues.groupid
+			INNER JOIN resourcesubresources ON queues.subresourceid = resourcesubresources.subresourceid
+			INNER JOIN resources ON resourcesubresources.resourceid = resources.id
+			INNER JOIN userusernames ON groupusers.userid = userusernames.userid
+			LEFT OUTER JOIN unixgroups ON groups.id = unixgroups.groupid
+			LEFT OUTER JOIN unixgroupusers ON unixgroups.id = unixgroupusers.unixgroupid
+				AND unixgroupusers.userid = userusernames.userid
+				AND unixgroupusers.datetimecreated <= NOW()
+				AND (unixgroupusers.datetimeremoved IS NULL OR unixgroupusers.datetimeremoved = '0000-00-00 00:00:00' OR unixgroupusers.datetimeremoved > NOW())
+				AND unixgroups.datetimecreated <= NOW()
+				AND (unixgroups.datetimeremoved IS NULL OR unixgroups.datetimeremoved = '0000-00-00 00:00:00' OR unixgroups.datetimeremoved > NOW())
+			WHERE groupusers.membertype = '2'
+			AND groupusers.datecreated <= NOW()
+			AND (groupusers.dateremoved IS NULL OR groupusers.dateremoved = '0000-00-00 00:00:00' OR groupusers.dateremoved > NOW())
+			AND queues.datetimecreated <= NOW()
+			AND (queues.datetimeremoved IS NULL OR queues.datetimeremoved = '0000-00-00 00:00:00' OR queues.datetimeremoved > NOW())
+			AND resources.datetimecreated <= NOW()
+			AND (resources.datetimeremoved IS NULL OR resources.datetimeremoved = '0000-00-00 00:00:00' OR resources.datetimeremoved > NOW())
+			AND userusernames.datecreated <= NOW()
+			AND (userusernames.dateremoved IS NULL OR userusernames.dateremoved = '0000-00-00 00:00:00' OR userusernames.dateremoved > NOW())
+			AND resources.resourcetype = '1'
+			AND resources.id IN ('" + resource + "')
+		UNION ALL
+			SELECT DISTINCT userusernames.username AS username, userusernames.userid
+			FROM queueusers
+			INNER JOIN queues ON queueusers.queueid = queues.id
+			INNER JOIN resourcesubresources ON queues.subresourceid = resourcesubresources.subresourceid
+			INNER JOIN resources ON resourcesubresources.resourceid = resources.id
+			INNER JOIN userusernames ON queueusers.userid = userusernames.userid
+			INNER JOIN groups ON queues.groupid = groups.id
+			LEFT OUTER JOIN unixgroups ON groups.id = unixgroups.groupid
+			LEFT OUTER JOIN unixgroupusers ON unixgroups.id = unixgroupusers.unixgroupid
+				AND unixgroupusers.userid = userusernames.userid
+			WHERE queueusers.membertype = '1'
+			AND queueusers.datetimecreated <= NOW()
+			AND (queueusers.datetimeremoved IS NULL OR queueusers.datetimeremoved = '0000-00-00 00:00:00' OR queueusers.datetimeremoved > NOW())
+			AND queues.datetimecreated <= NOW()
+			AND (queues.datetimeremoved IS NULL OR queues.datetimeremoved = '0000-00-00 00:00:00' OR queues.datetimeremoved > NOW())
+			AND resources.datetimecreated <= NOW()
+			AND (resources.datetimeremoved IS NULL OR resources.datetimeremoved = '0000-00-00 00:00:00' OR resources.datetimeremoved > NOW())
+			AND userusernames.datecreated <= NOW()
+			AND (userusernames.dateremoved IS NULL OR userusernames.dateremoved = '0000-00-00 00:00:00' OR userusernames.dateremoved > NOW())
+			AND resources.resourcetype = '1'
+			AND resources.id IN ('" + resource + "')
+		UNION ALL
+			SELECT DISTINCT userusernames.username AS username, userusernames.userid
+			FROM groupqueueusers
+			INNER JOIN queueusers ON groupqueueusers.queueuserid = queueusers.id
+			INNER JOIN queues ON queueusers.queueid = queues.id
+			INNER JOIN resourcesubresources ON queues.subresourceid = resourcesubresources.subresourceid
+			INNER JOIN resources ON resourcesubresources.resourceid = resources.id
+			INNER JOIN userusernames ON queueusers.userid = userusernames.userid
+			INNER JOIN groups ON groupqueueusers.groupid = groups.id
+			LEFT OUTER JOIN unixgroups ON groups.id = unixgroups.groupid
+			LEFT OUTER JOIN unixgroupusers ON unixgroups.id = unixgroupusers.unixgroupid
+				AND unixgroupusers.userid = userusernames.userid
+			WHERE groupqueueusers.membertype = '1'
+			AND queueusers.membertype = '1'
+			AND groupqueueusers.datetimecreated <= NOW()
+			AND (groupqueueusers.datetimeremoved IS NULL OR groupqueueusers.datetimeremoved = '0000-00-00 00:00:00' OR groupqueueusers.datetimeremoved > NOW())
+			AND queueusers.datetimecreated <= NOW()
+			AND (queueusers.datetimeremoved IS NULL OR queueusers.datetimeremoved = '0000-00-00 00:00:00' OR queueusers.datetimeremoved > NOW())
+			AND queues.datetimecreated <= NOW()
+			AND (queues.datetimeremoved IS NULL OR queues.datetimeremoved = '0000-00-00 00:00:00' OR queues.datetimeremoved > NOW())
+			AND resources.datetimecreated <= NOW()
+			AND (resources.datetimeremoved IS NULL OR resources.datetimeremoved = '0000-00-00 00:00:00' OR resources.datetimeremoved > NOW())
+			AND userusernames.datecreated <= NOW()
+			AND (userusernames.dateremoved IS NULL OR userusernames.dateremoved = '0000-00-00 00:00:00' OR userusernames.dateremoved > NOW())
+			AND resources.resourcetype = '1'
+			AND resources.id IN ('" + resource + "')
+		UNION ALL
+			SELECT DISTINCT userusernames.username, userusernames.userid
+			FROM unixgroupusers
+			INNER JOIN unixgroups ON unixgroupusers.unixgroupid = unixgroups.id
+			INNER JOIN storagedirs ON unixgroups.groupid = storagedirs.groupid
+			INNER JOIN resources ON storagedirs.resourceid = resources.id
+			INNER JOIN userusernames ON unixgroupusers.userid = userusernames.userid
+			INNER JOIN groups ON unixgroups.groupid = groups.id
+			LEFT OUTER JOIN groupusers ON groups.id = groupusers.groupid
+				AND groupusers.userid = userusernames.userid
+				AND groupusers.datecreated <= NOW()
+				AND (groupusers.dateremoved IS NULL OR groupusers.dateremoved = '0000-00-00 00:00:00' OR groupusers.dateremoved > NOW())
+			WHERE unixgroupusers.datetimecreated <= NOW()
+			AND (unixgroupusers.datetimeremoved IS NULL OR unixgroupusers.datetimeremoved = '0000-00-00 00:00:00' OR unixgroupusers.datetimeremoved > NOW())
+			AND unixgroups.datetimecreated <= NOW()
+			AND (unixgroups.datetimeremoved IS NULL OR unixgroups.datetimeremoved = '0000-00-00 00:00:00' OR unixgroups.datetimeremoved > NOW())
+			AND storagedirs.datetimecreated <= NOW()
+			AND (storagedirs.datetimeremoved IS NULL OR storagedirs.datetimeremoved = '0000-00-00 00:00:00' OR storagedirs.datetimeremoved > NOW())
+			AND userusernames.datecreated <= NOW()
+			AND (userusernames.dateremoved IS NULL OR userusernames.dateremoved = '0000-00-00 00:00:00' OR userusernames.dateremoved > NOW())
+			AND resources.resourcetype = '2'
+			AND resources.id IN ('" + resource + "')
+		) AS allusers
+		ORDER BY username;"
+		*/
+
+		$gus = GroupUser::query()
+			->select(
+				DB::raw('DISTINCT(' . $uu . '.userid)'),
+			)
+			// Group
+			->join($g, $g . '.id', $gu . '.groupid')
+			->where($gu . '.membertype', '=', 2)
+			->where($gu . '.datecreated', '<=', $now->toDateTimeString())
+			// Queues
+			->join($q, $q . '.groupid', $g . '.id')
+			->where($q . '.datetimecreated', '<=', $now->toDateTimeString())
+			->whereNull($q . '.datetimeremoved')
+			// Userusername
+			->join($uu, $uu . '.userid', $gu . '.userid')
+			->where($uu . '.datecreated', '<=', $now->toDateTimeString())
+			->whereNull($uu . '.dateremoved')
+			// Resource/subresource
+			->join($c, $c . '.subresourceid', $q . '.subresourceid')
+			// Resource
+			->join($r, $r . '.id', $c . '.resourceid')
+			->where($r . '.datetimecreated', '<=', $now->toDateTimeString())
+			->whereNull($r . '.datetimeremoved')
+			->where($r . '.id', '=', $resource->id)
+			->leftJoin($u, $u . '.groupid', $g . '.id')
+			// Group users
+			->leftJoin($ugm, function($join) use ($u, $ugm, $uu)
+			{
+				$join->on($ugm . '.unixgroupid', $u . '.id')
+					->on($ugm . '.userid', $uu . '.userid');
+			})
+			->get()
+			->pluck('userid')
+			->toArray();
+		$gus = array_unique($gus);
+
+		$qus = QueueUser::query()
+			->select(
+				DB::raw('DISTINCT(' . $uu . '.userid)'),
+			)
+			// Queues
+			->join($q, $q . '.id', $qu . '.queueid')
+			->where($q . '.datetimecreated', '<=', $now->toDateTimeString())
+			->whereNull($q . '.datetimeremoved')
+			->where($qu . '.membertype', '=', 1)
+			// Userusername
+			->join($uu, $uu . '.userid', $qu . '.userid')
+			->where($uu . '.datecreated', '<=', $now->toDateTimeString())
+			->whereNull($uu . '.dateremoved')
+			// Resource/subresource
+			->join($c, $c . '.subresourceid', $q . '.subresourceid')
+			// Resource
+			->join($r, $r . '.id', $c . '.resourceid')
+			->where($r . '.datetimecreated', '<=', $now->toDateTimeString())
+			->whereNull($r . '.datetimeremoved')
+			->where($r . '.id', '=', $resource->id)
+			// Group
+			->join($g, $g . '.id', $q . '.groupid')
+			->leftJoin($u, $u . '.groupid', $g . '.id')
+			// Group users
+			->leftJoin($ugm, function($join) use ($u, $ugm, $uu)
+			{
+				$join->on($ugm . '.unixgroupid', $u . '.id')
+					->on($ugm . '.userid', $uu . '.userid');
+			})
+			->get()
+			->pluck('userid')
+			->toArray();
+		$qus = array_unique($qus);
+
+		$gqus = GroupQueueUser::query()
+			->select(
+				DB::raw('DISTINCT(' . $uu . '.userid)'),
+			)
+			// Queue user
+			->join($qu, $qu . '.id', $gqu . '.queueuserid')
+			->where($gqu . '.datetimecreated', '<=', $now->toDateTimeString())
+			//->whereNull($gqu . '.datetimeremoved')
+			->where($qu . '.datetimecreated', '<=', $now->toDateTimeString())
+			->whereNull($qu . '.datetimeremoved')
+			->where($gqu . '.membertype', '=', 1)
+			->where($qu . '.membertype', '=', 1)
+			// Queues
+			->join($q, $q . '.id', $qu . '.queueid')
+			->where($q . '.datetimecreated', '<=', $now->toDateTimeString())
+			->whereNull($q . '.datetimeremoved')
+			// Userusername
+			->join($uu, $uu . '.userid', $qu . '.userid')
+			->where($uu . '.datecreated', '<=', $now->toDateTimeString())
+			->whereNull($uu . '.dateremoved')
+			// Resource/subresource
+			->join($c, $c . '.subresourceid', $q . '.subresourceid')
+			// Resource
+			->join($r, $r . '.id', $c . '.resourceid')
+			->where($r . '.datetimecreated', '<=', $now->toDateTimeString())
+			->whereNull($r . '.datetimeremoved')
+			->where($r . '.id', '=', $resource->id)
+			// Group
+			->join($g, $g . '.id', $gqu . '.groupid')
+			->leftJoin($u, $u . '.groupid', $g . '.id')
+			// Group users
+			->leftJoin($ugm, function($join) use ($u, $ugm, $uu)
+			{
+				$join->on($ugm . '.unixgroupid', $u . '.id')
+					->on($ugm . '.userid', $uu . '.userid');
+			})
+			->get()
+			->pluck('userid')
+			->toArray();
+		$gqus = array_unique($gqus);
+
+		$ugus = UnixGroupMember::query()
+			->select(
+				DB::raw('DISTINCT(' . $uu . '.userid)'),
+			)
+			// Unix group member
+			->where($ugm . '.datetimecreated', '<=', $now->toDateTimeString())
+			// Unix group
+			->join($u, $u . '.id', $ugm . '.unixgroupid')
+			->where($u . '.datetimecreated', '<=', $now->toDateTimeString())
+			->whereNull($u . '.datetimeremoved')
+			// Directory
+			->join($d, $d . '.groupid', $u . '.groupid')
+			->where($d . '.datetimecreated', '<=', $now->toDateTimeString())
+			->whereNull($d . '.datetimeremoved')
+			// Userusername
+			->join($uu, $uu . '.userid', $ugm . '.userid')
+			->where($uu . '.datecreated', '<=', $now->toDateTimeString())
+			->whereNull($uu . '.dateremoved')
+			// Resource
+			->join($r, $r . '.id', $d . '.resourceid')
+			->where($r . '.datetimecreated', '<=', $now->toDateTimeString())
+			->whereNull($r . '.datetimeremoved')
+			->where($r . '.id', '=', $resource->id)
+			// Group
+			->join($g, $g . '.id', $u . '.groupid')
+			// Group users
+			->leftJoin($gu, function($join) use ($g, $gu, $uu)
+			{
+				$join->on($gu . '.groupid', $g . '.id')
+					->on($gu . '.userid', $uu . '.userid');
+			})
+			->get()
+			->pluck('userid')
+			->toArray();
+		$ugus = array_unique($ugus);
+
+		$userids = array_merge($gus, $qus, $gqus, $ugus);
+		$userids = array_unique($userids);
+
+		$users = array();
+		foreach ($userids as $userid)
+		{
+			$user = User::find($userid);
+
+			if (!$user || !$user->id || $user->trashed())
+			{
+				continue;
+			}
+
+			$users[] = array(
+				'id'       => $user->id,
+				'name'     => $user->name,
+				'username' => $user->username,
+				'email'    => $user->email,
+				'api'      => route('api.users.read', ['id' => $user->id]),
+			);
+		}
+
+		return $users; //new ResourceCollection(collect($users));
+	}
+
 	/**
 	 * Create a resource
 	 *

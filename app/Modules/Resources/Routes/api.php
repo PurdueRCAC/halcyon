@@ -90,10 +90,11 @@ $router->group(['prefix' => 'resources'], function (Router $router)
 
 	$router->group(['prefix' => 'members', 'middleware' => 'auth:api'], function (Router $router)
 	{
-		$router->get('/', [
+		$router->get('/{id?}', [
 			'as' => 'api.resources.members',
 			'uses' => 'MembersController@index',
-		]);
+		])->where('id', '[0-9]+');
+
 		$router->post('/', [
 			'as' => 'api.resources.members.create',
 			'uses' => 'MembersController@create',
