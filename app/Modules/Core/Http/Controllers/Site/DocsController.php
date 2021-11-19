@@ -21,7 +21,7 @@ class DocsController extends Controller
 		$modules = collect(Module::all());
 		$modules = $modules->filter(function($value, $key)
 		{
-			$apiRoutes = $value->getPath() . '/Http/apiRoutes.php';
+			$apiRoutes = $value->getPath() . '/Routes/api.php';
 
 			return file_exists($apiRoutes) && $value->isStatus(true);
 		});
