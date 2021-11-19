@@ -228,7 +228,7 @@ class DbmLdap
 			// Performing a query.
 			$data = $ldap->search()
 				->where($query)
-				->select(['cn', 'uid', 'employeeNumber', 'employeeType'])
+				->select(['cn', 'uid', 'employeeNumber', 'employeeType', 'mail'])
 				->get();
 
 			if (!empty($data))
@@ -244,6 +244,7 @@ class DbmLdap
 					}
 					$user->name = $result['cn'][0];
 					$user->getUserUsername()->username = $result['uid'][0];
+					$user->getUserUsername()->email = $result['mail'][0];
 					$user->puid = $result['employeeNumber'][0];
 
 					//$event->user = $user;
