@@ -76,6 +76,15 @@ class EmailCommentsCommand extends Command
 					continue;
 				}
 
+				if (!$user->email)
+				{
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->error("Email address not found for user {$user->name}.");
+					}
+					continue;
+				}
+
 				// Start assembling email
 				foreach ($comments as $comment)
 				{

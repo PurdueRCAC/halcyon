@@ -75,6 +75,15 @@ class EmailQuotaCommand extends Command
 				continue;
 			}
 
+			if (!$user->email)
+			{
+				if ($debug || $this->output->isVerbose())
+				{
+					$this->error("Email address not found for user {$user->name}.");
+				}
+				continue;
+			}
+
 			$notifications = Notification::query()
 				->select($n . '.*')
 				->withTrashed()
@@ -219,7 +228,7 @@ class EmailQuotaCommand extends Command
 							}
 						}
 
-						Mail::to($user->email)->send($message);
+						//Mail::to($user->email)->send($message);
 
 						$this->log($user->id, $user->email, 'Emailed exceed quota.');
 					}
@@ -313,7 +322,7 @@ class EmailQuotaCommand extends Command
 								}
 							}
 
-							Mail::to($user->email)->send($message);
+							//Mail::to($user->email)->send($message);
 
 							$this->log($user->id, $user->email, 'Emailed report quota, next report:' . $not->nextnotify);
 						}

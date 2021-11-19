@@ -180,15 +180,6 @@ class EmailFreeAuthorizedCommand extends Command
 						'roles'      => $roles[$userid]
 					);
 
-					if (!$user->email)
-					{
-						if ($debug || $this->output->isVerbose())
-						{
-							$this->error("Email address not found for user {$user->name}.");
-						}
-						continue;
-					}
-
 					// Prepare and send actual email
 					$message = new FreeAuthorized($user, $queueusers, $roles[$userid]);
 
@@ -205,6 +196,15 @@ class EmailFreeAuthorizedCommand extends Command
 						{
 							continue;
 						}
+					}
+
+					if (!$user->email)
+					{
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->error("Email address not found for user {$user->name}.");
+						}
+						continue;
 					}
 
 					Mail::to($user->email)->send($message);
@@ -246,15 +246,6 @@ class EmailFreeAuthorizedCommand extends Command
 						continue;
 					}
 
-					if (!$manager->user->email)
-					{
-						if ($debug || $this->output->isVerbose())
-						{
-							$this->error("Email address not found for manager {$manager->user->name}.");
-						}
-						continue;
-					}
-
 					// Prepare and send actual email
 					$message = new FreeAuthorizedManager($manager->user, $data);
 
@@ -265,12 +256,21 @@ class EmailFreeAuthorizedCommand extends Command
 
 					if ($debug || $this->output->isVerbose())
 					{
-						$this->info("Emailed freeauthorized to manager {$manager->user->email}.");
+						$this->info("Emailed freeauthorized to manager {$user->email}.");
 
 						if ($debug)
 						{
 							continue;
 						}
+					}
+
+					if (!$user->email)
+					{
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->error("Email address not found for manager {$user->name}.");
+						}
+						continue;
 					}
 
 					Mail::to($user->email)->send($message);

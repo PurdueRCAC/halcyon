@@ -157,15 +157,6 @@ class EmailQueueAuthorizedCommand extends Command
 						'roles'      => $roles[$userid]
 					);
 
-					if (!$user->email)
-					{
-						if ($debug || $this->output->isVerbose())
-						{
-							$this->error("Email address not found for user {$user->name}.");
-						}
-						continue;
-					}
-
 					// Prepare and send actual email
 					$message = new QueueAuthorized($user, $queueusers, $roles[$userid]);
 
@@ -182,6 +173,15 @@ class EmailQueueAuthorizedCommand extends Command
 						{
 							continue;
 						}
+					}
+
+					if (!$user->email)
+					{
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->error("Email address not found for user {$user->name}.");
+						}
+						continue;
 					}
 
 					Mail::to($user->email)->send($message);
@@ -209,15 +209,6 @@ class EmailQueueAuthorizedCommand extends Command
 				// Assemble list of managers to email
 				foreach ($group->managers as $manager)
 				{
-					if (!$manager->user->email)
-					{
-						if ($debug || $this->output->isVerbose())
-						{
-							$this->error("Email address not found for manager {$manager->user->name}.");
-						}
-						continue;
-					}
-
 					// Prepare and send actual email
 					$message = new QueueAuthorizedManager($manager->user, $data);
 
@@ -234,6 +225,15 @@ class EmailQueueAuthorizedCommand extends Command
 						{
 							continue;
 						}
+					}
+
+					if (!$manager->user->email)
+					{
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->error("Email address not found for manager {$manager->user->name}.");
+						}
+						continue;
 					}
 
 					Mail::to($manager->user->email)->send($message);

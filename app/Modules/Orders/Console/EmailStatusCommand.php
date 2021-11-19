@@ -139,6 +139,15 @@ class EmailStatusCommand extends Command
 					}
 				}
 
+				if (!$user->email)
+				{
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->error("Email address not found for user {$user->name}.");
+					}
+					continue;
+				}
+
 				Mail::to($user->email)->send($message);
 
 				$this->log($user->id, $order->id, $user->email, "Emailed new order #{$order->id}.");
@@ -214,6 +223,15 @@ class EmailStatusCommand extends Command
 					{
 						continue;
 					}
+				}
+
+				if (!$user->email)
+				{
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->error("Email address not found for user {$user->name}.");
+					}
+					continue;
 				}
 
 				Mail::to($user->email)->send($message);
@@ -296,6 +314,15 @@ class EmailStatusCommand extends Command
 					}
 				}
 
+				if (!$user->email)
+				{
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->error("Email address not found for user {$user->name}.");
+					}
+					continue;
+				}
+
 				Mail::to($user->email)->send($message);
 
 				$this->log($user->id, $order->id, $user->email, "Emailed pending payment approval order #{$order->id}.");
@@ -334,6 +361,15 @@ class EmailStatusCommand extends Command
 						{
 							continue;
 						}
+					}
+
+					if (!$user->email)
+					{
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->error("Email address not found for user {$user->name}.");
+						}
+						continue;
 					}
 
 					Mail::to($user->email)->send($message);
@@ -415,6 +451,15 @@ class EmailStatusCommand extends Command
 					{
 						continue;
 					}
+				}
+
+				if (!$user->email)
+				{
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->error("Email address not found for user {$user->name}.");
+					}
+					continue;
 				}
 
 				Mail::to($user->email)->send($message);
@@ -526,6 +571,15 @@ class EmailStatusCommand extends Command
 					}
 				}
 
+				if (!$user->email)
+				{
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->error("Email address not found for user {$user->name}.");
+					}
+					continue;
+				}
+
 				Mail::to($user->email)->send($message);
 
 				$this->log($user->id, $order->id, $user->email, "Emailed pending collection order #{$order->id}.");
@@ -596,6 +650,15 @@ class EmailStatusCommand extends Command
 					{
 						continue;
 					}
+				}
+
+				if (!$user->email)
+				{
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->error("Email address not found for user {$user->name}.");
+					}
+					continue;
 				}
 
 				Mail::to($user->email)->send($message);
@@ -669,6 +732,15 @@ class EmailStatusCommand extends Command
 					{
 						continue;
 					}
+				}
+
+				if (!$user->email)
+				{
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->error("Email address not found for user {$user->name}.");
+					}
+					continue;
 				}
 
 				Mail::to($user->email)->send($message);
