@@ -157,6 +157,15 @@ class EmailQueueAuthorizedCommand extends Command
 						'roles'      => $roles[$userid]
 					);
 
+					if (!$user->email)
+					{
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->error("Email address not found for user {$user->name}.");
+						}
+						continue;
+					}
+
 					// Prepare and send actual email
 					$message = new QueueAuthorized($user, $queueusers, $roles[$userid]);
 
@@ -167,7 +176,7 @@ class EmailQueueAuthorizedCommand extends Command
 
 					if ($debug || $this->output->isVerbose())
 					{
-						$this->info("Emailed freeauthorized to {$user->email}.");
+						$this->info("Emailed queue authorized to {$user->email}.");
 
 						if ($debug)
 						{
@@ -177,7 +186,7 @@ class EmailQueueAuthorizedCommand extends Command
 
 					Mail::to($user->email)->send($message);
 
-					$this->log($user->id, $user->email, "Emailed freeauthorized.");
+					$this->log($user->id, $user->email, "Emailed queue authorized.");
 
 					$r = collect($roles[$userid])->pluck('rolename')->toArray();
 
@@ -219,7 +228,7 @@ class EmailQueueAuthorizedCommand extends Command
 
 					if ($debug || $this->output->isVerbose())
 					{
-						$this->info("Emailed freeauthorized to manager {$manager->user->email}.");
+						$this->info("Emailed queue authorized to manager {$manager->user->email}.");
 
 						if ($debug)
 						{
@@ -229,7 +238,7 @@ class EmailQueueAuthorizedCommand extends Command
 
 					Mail::to($manager->user->email)->send($message);
 
-					$this->log($manager->user->id, $manager->user->email, "Emailed freeauthorized to manager.");
+					$this->log($manager->user->id, $manager->user->email, "Emailed queue authorized to manager.");
 				}
 			}
 		}

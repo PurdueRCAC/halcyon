@@ -175,6 +175,15 @@ class EmailWelcomeFreeCommand extends Command
 				}
 			}
 
+			if (!$u->email)
+			{
+				if ($debug || $this->output->isVerbose())
+				{
+					$this->error("Email address not found for user {$u->name}.");
+				}
+				continue;
+			}
+
 			Mail::to($u->email)->send($message);
 
 			$this->log($u->id, $u->email, "Emailed welcome (free).");

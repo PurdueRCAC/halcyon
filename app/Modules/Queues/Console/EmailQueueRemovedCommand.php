@@ -213,6 +213,15 @@ class EmailQueueRemovedCommand extends Command
 						}
 					}
 
+					if (!$user->email)
+					{
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->error("Email address not found for user {$user->name}.");
+						}
+						continue;
+					}
+
 					Mail::to($user->email)->send($message);
 
 					$this->log($user->id, $user->email, "Emailed queueremoved.");
@@ -248,6 +257,15 @@ class EmailQueueRemovedCommand extends Command
 						{
 							continue;
 						}
+					}
+
+					if (!$manager->user->email)
+					{
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->error("Email address not found for user {$manager->user->name}.");
+						}
+						continue;
 					}
 
 					Mail::to($manager->user->email)->send($message);

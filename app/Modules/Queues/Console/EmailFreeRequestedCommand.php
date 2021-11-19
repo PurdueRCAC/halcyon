@@ -145,6 +145,15 @@ class EmailFreeRequestedCommand extends Command
 						}
 					}
 
+					if (!$manager->user->email)
+					{
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->error("Email address not found for user {$manager->user->name}.");
+						}
+						continue;
+					}
+
 					Mail::to($manager->user->email)->send($message);
 
 					$this->log($manager->user->id, $manager->user->email, "Emailed freerequested to manager.");

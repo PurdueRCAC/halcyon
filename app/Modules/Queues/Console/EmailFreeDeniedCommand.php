@@ -156,6 +156,15 @@ class EmailFreeDeniedCommand extends Command
 						}
 					}
 
+					if (!$user->email)
+					{
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->error("Email address not found for user {$user->name}.");
+						}
+						continue;
+					}
+
 					Mail::to($user->email)->send($message);
 
 					$this->log($user->id, $groupid, $user->email, 'Emailed freedenied.');
@@ -197,6 +206,15 @@ class EmailFreeDeniedCommand extends Command
 						{
 							continue;
 						}
+					}
+
+					if (!$user->email)
+					{
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->error("Email address not found for user {$user->name}.");
+						}
+						continue;
 					}
 
 					Mail::to($user->email)->send($message);

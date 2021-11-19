@@ -180,6 +180,15 @@ class EmailFreeAuthorizedCommand extends Command
 						'roles'      => $roles[$userid]
 					);
 
+					if (!$user->email)
+					{
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->error("Email address not found for user {$user->name}.");
+						}
+						continue;
+					}
+
 					// Prepare and send actual email
 					$message = new FreeAuthorized($user, $queueusers, $roles[$userid]);
 
@@ -234,6 +243,15 @@ class EmailFreeAuthorizedCommand extends Command
 
 					if (!$user || !$user->id || $user->trashed())
 					{
+						continue;
+					}
+
+					if (!$manager->user->email)
+					{
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->error("Email address not found for manager {$manager->user->name}.");
+						}
 						continue;
 					}
 
