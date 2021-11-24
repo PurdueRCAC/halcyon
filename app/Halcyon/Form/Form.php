@@ -248,7 +248,7 @@ class Form
 			}
 		}
 
-		return $output->toArray();
+		return $output->all();
 	}
 
 	/**
