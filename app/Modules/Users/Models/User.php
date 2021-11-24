@@ -217,6 +217,46 @@ class User extends Model implements
 	}
 
 	/**
+	 * Generate permissions for the modules provided
+	 *
+	 * @param array $names
+	 * @return  array
+	 */
+	public function setModulePermissionsAttribute(array $names)
+	{
+		$this->attributes['module_permissions'] = [];
+		$permissions = array(
+			'edit', 'edit.own', 'edit.state', 
+			'create', 'manage', 'delete'
+		);
+		if (is_array($names) && count($names) > 0) 
+		{
+			foreach ($names as $name)
+			{
+				foreach ($permissions as $permission)
+				{
+					$permissionResult = $this->can("$permission $name");
+					$this->attributes['module_permissions'][$name]['can'][$permission] = $permissionResult;
+				}
+			}
+
+		}
+	}
+
+	/**
+	 * Get permissions of the modules provided
+	 *
+	 * @return array
+	 */
+	public function getModulePermissionsAttribute()
+	{
+		if (isset($this->attributes['module_permissions']))
+		{
+			return $this->attributes['module_permissions'];
+		}
+	}
+
+	/**
 	 * Gets an array of the authorised access levels for the user
 	 *
 	 * @return  integer

@@ -39,6 +39,10 @@ class UserResource extends JsonResource
 		// Permissions check
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
+		if ($this->module_permissions)
+		{
+			$data['module_permissions'] = $this->module_permissions;
+		}
 
 		$user = auth()->user();
 		if (!$user)

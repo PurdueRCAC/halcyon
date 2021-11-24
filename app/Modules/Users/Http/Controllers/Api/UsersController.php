@@ -4,6 +4,7 @@ namespace App\Modules\Users\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Users\Http\Resources\UserResourceCollection;
@@ -375,6 +376,16 @@ class UsersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "module_permissions",
+	 * 		"description":   "A comma-separated list of modules to grab permissions from",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"example":   "news,users,resources"
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"200": {
 	 * 			"description": "Successful entry read"
@@ -386,10 +397,22 @@ class UsersController extends Controller
 	 * @param  integer  $id
 	 * @return Response
 	 */
-	public function read($id): UserResource
+	public function read(Request $request, $id): UserResource
 	{
-		$user = User::findOrFail($id);
-
+		if ($id === 'me')
+		{
+			$user = auth()->user();
+		}
+		else
+		{
+			$user = User::findOrFail($id);
+		}
+		if ($request->has('module_permissions'))
+		{
+			$permissions = explode(',', $request->input('module_permissions'));
+			$permissions = array_map('trim', $permissions);
+			$user->module_permissions = $permissions;
+		}
 		return new UserResource($user);
 	}
 

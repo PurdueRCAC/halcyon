@@ -20,8 +20,8 @@ $router->group(['prefix' => 'users'], function (Router $router)
 	$router->get('{id}', [
 		'as' => 'api.users.read',
 		'uses' => 'UsersController@read',
-		//'middleware' => 'can:users.user.view',
-	])->where('id', '[0-9]+');
+		'middleware' => ['auth:api'],
+	])->where('id', '^me$|[0-9]+');
 
 	$router->put('{id}', [
 		'as' => 'api.users.update',
