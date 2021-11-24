@@ -213,18 +213,19 @@ class EmailQueueRemovedCommand extends Command
 						}
 					}
 
-					if (!$user->email)
+					if ($user->email)
+					{
+						Mail::to($user->email)->send($message);
+
+						$this->log($user->id, $user->email, "Emailed queueremoved.");
+					}
+					else
 					{
 						if ($debug || $this->output->isVerbose())
 						{
 							$this->error("Email address not found for user {$user->name}.");
 						}
-						continue;
 					}
-
-					Mail::to($user->email)->send($message);
-
-					$this->log($user->id, $user->email, "Emailed queueremoved.");
 
 					// Change states
 					foreach ($queuestudents as $queueuser)

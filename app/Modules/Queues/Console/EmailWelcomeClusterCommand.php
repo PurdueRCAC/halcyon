@@ -136,18 +136,19 @@ class EmailWelcomeClusterCommand extends Command
 				}
 			}
 
-			if (!$u->email)
+			if ($u->email)
+			{
+				Mail::to($u->email)->send($message);
+
+				$this->log($u->id, $u->email, "Emailed welcome (cluster).");
+			}
+			else
 			{
 				if ($debug || $this->output->isVerbose())
 				{
 					$this->error("Email address not found for user {$u->name}.");
 				}
-				continue;
 			}
-
-			Mail::to($u->email)->send($message);
-
-			$this->log($u->id, $u->email, "Emailed welcome (cluster).");
 
 			foreach ($userqueues as $userqueue)
 			{

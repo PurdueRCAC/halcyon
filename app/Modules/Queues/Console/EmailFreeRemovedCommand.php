@@ -232,18 +232,17 @@ class EmailFreeRemovedCommand extends Command
 						}
 					}
 
-					if (!$user->email)
+					if ($user->email)
+					{
+						Mail::to($user->email)->send($message);
+					}
+					else
 					{
 						if ($debug || $this->output->isVerbose())
 						{
 							$this->error("Email address not found for user {$user->name}.");
 						}
-						continue;
 					}
-
-					Mail::to($user->email)->send($message);
-
-					//$this->info("Emailed freeremoved to {$user->email}.");
 
 					$r = collect($removals[$userid])->pluck('rolename')->toArray();
 

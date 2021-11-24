@@ -155,18 +155,19 @@ class EmailQueueDeniedCommand extends Command
 						}
 					}
 
-					if (!$user->email)
+					if ($user->email)
+					{
+						Mail::to($user->email)->send($message);
+
+						$this->log($user->id, $user->email, "Emailed queuedenied.");
+					}
+					else
 					{
 						if ($debug || $this->output->isVerbose())
 						{
 							$this->error("Email address not found for user {$user->name}.");
 						}
-						continue;
 					}
-
-					Mail::to($user->email)->send($message);
-
-					$this->log($user->id, $user->email, "Emailed queuedenied.");
 
 					// Change states
 					foreach ($queueusers as $queueuser)
