@@ -219,28 +219,34 @@ class User extends Model implements
 	/**
 	 * Generate permissions for the modules provided
 	 *
-	 * @param array $names
-	 * @return  array
+	 * @param  array $names
+	 * @return array
 	 */
 	public function setModulePermissionsAttribute(array $names)
 	{
-		$this->attributes['module_permissions'] = [];
+		$value = [];
+
 		$permissions = array(
-			'edit', 'edit.own', 'edit.state', 
-			'create', 'manage', 'delete'
+			'edit',
+			'edit.own',
+			'edit.state',
+			'create',
+			'manage',
+			'delete'
 		);
-		if (is_array($names) && count($names) > 0) 
+
+		if (is_array($names) && count($names) > 0)
 		{
 			foreach ($names as $name)
 			{
 				foreach ($permissions as $permission)
 				{
-					$permissionResult = $this->can("$permission $name");
-					$this->attributes['module_permissions'][$name]['can'][$permission] = $permissionResult;
+					$value[$name]['can'][$permission] = $this->can("$permission $name");
 				}
 			}
-
 		}
+
+		$this->attributes['module_permissions'] = $value;
 	}
 
 	/**
@@ -254,6 +260,8 @@ class User extends Model implements
 		{
 			return $this->attributes['module_permissions'];
 		}
+
+		return array();
 	}
 
 	/**
