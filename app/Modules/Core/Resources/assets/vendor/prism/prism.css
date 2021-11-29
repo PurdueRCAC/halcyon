@@ -58,7 +58,7 @@ pre[class*="language-"] {
 .token.prolog,
 .token.cdata {
 	color: #808080;
-	color: #d73a49;
+	color: #D42B3C;
 }
 
 .token.delimiter,
@@ -158,12 +158,12 @@ code.language-css .token.selector > .token.pseudo-element {
 }
 code {
 	background-color: #f6f6f6;
-	color: #d73a49;
+	color: #D42B3C;
 }*/
 .token.keyword,
 .token.operator,
 .token.script > .token.script-punctuation {
-  color: #d73a49;
+  color: #D42B3C;
 }
 
 .token.function,
