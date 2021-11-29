@@ -251,7 +251,7 @@ class Item extends Model
 		{
 			if ($row->id == $this->origorderitemid)
 			{
-				$datestart = $row->datetimefulfilled;
+				$datestart = $row->datetimefulfilled ? $row->datetimefulfilled : $row->datetimecreated;
 			}
 
 			if (!$row->order)

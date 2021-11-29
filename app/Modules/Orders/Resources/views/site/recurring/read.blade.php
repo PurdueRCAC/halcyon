@@ -157,14 +157,14 @@ app('pathway')
 								@if ($row->order->isCanceled())
 									-
 								@else
-									{{ $row->start->format('Y-m-d') }}
+									{{ $row->start ? $row->start->format('Y-m-d') : '-' }}
 								@endif
 							</td>
 							<td class="priority-4">
 								@if ($row->order->isCanceled())
 									-
 								@else
-									{{ $row->end->format('Y-m-d') }}
+									{{ $row->end ? $row->end->format('Y-m-d') : '-' }}
 								@endif
 							</td>
 							<td class="text-right">
