@@ -42,6 +42,8 @@ app('pathway')->append(
                     <div class="cd-cell cd-questions">
                         <div class="cd-overflow">
                             <div class="step-header questions-header">
+                                <h3 class="sub-heading sr-only">Filter Questions</h3>
+
                                 <p>Answer these questions to help identify storage solutions and services that are most suitable for your needs.</p>
 
                                 <div class="text-center">
