@@ -186,6 +186,34 @@ class CommentsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"issueid": 3,
+	 * 						"userid": 1234,
+	 * 						"comment": "Updated the config settings.",
+	 * 						"stemmedcomment": "uupdate tthe cconfig ssettings",
+	 * 						"datetimecreated": "2021-10-25T20:24:30.000000Z",
+	 * 						"resolution": 1,
+	 * 						"formatteddate": "October 25, 2021 4:24pm",
+	 * 						"formattedcomment": "<p>Updated the config settings.</p>",
+	 * 						"username": "John Doe",
+	 * 						"api": "https://example.org/api/issues/comments/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"401": {
+	 * 			"description": "Unauthorized"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return  CommentResource
 	 */
@@ -240,6 +268,31 @@ class CommentsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"issueid": 3,
+	 * 						"userid": 1234,
+	 * 						"comment": "Updated the config settings.",
+	 * 						"stemmedcomment": "uupdate tthe cconfig ssettings",
+	 * 						"datetimecreated": "2021-10-25T20:24:30.000000Z",
+	 * 						"resolution": 1,
+	 * 						"formatteddate": "October 25, 2021 4:24pm",
+	 * 						"formattedcomment": "<p>Updated the config settings.</p>",
+	 * 						"username": "John Doe",
+	 * 						"api": "https://example.org/api/issues/comments/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer  $comment
 	 * @return CommentResource
 	 */
@@ -291,6 +344,34 @@ class CommentsController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"issueid": 3,
+	 * 						"userid": 1234,
+	 * 						"comment": "Updated the config settings.",
+	 * 						"stemmedcomment": "uupdate tthe cconfig ssettings",
+	 * 						"datetimecreated": "2021-10-25T20:24:30.000000Z",
+	 * 						"resolution": 1,
+	 * 						"formatteddate": "October 25, 2021 4:24pm",
+	 * 						"formattedcomment": "<p>Updated the config settings.</p>",
+	 * 						"username": "John Doe",
+	 * 						"api": "https://example.org/api/issues/comments/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
 	 * @param   Request  $request
@@ -355,6 +436,14 @@ class CommentsController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param   integer  $comment

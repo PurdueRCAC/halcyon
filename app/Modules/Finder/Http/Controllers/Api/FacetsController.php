@@ -187,6 +187,34 @@ class FacetsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"name": "Is your dataset restricted to U.S. persons only?",
+	 * 						"control_type": "radio",
+	 * 						"parent": 0,
+	 * 						"weight": 1,
+	 * 						"status": 1,
+	 * 						"description": "<p>Export controlled data (ITAR/EAR) are restricted by law to U.S. persons only. This means that non-U.S. persons including international students or individuals from foreign countries are barred from accessing this data.</p>\r\n\r\n<p>Contact <a href=\"https://www.purdue.edu/research/regulatory-affairs/\";>Purdue Regulatory Affairs</a> for more information.</p>\r\n",
+	 * 						"created_at": "2021-04-28T12:27:39.000000Z",
+	 * 						"updated_at": "2021-04-28T12:27:39.000000Z",
+	 * 						"deleted_at": null,
+	 * 						"api": "https://example.org/api/finder/facets/11"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return Response
 	 */
@@ -263,6 +291,31 @@ class FacetsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"name": "Is your dataset restricted to U.S. persons only?",
+	 * 						"control_type": "radio",
+	 * 						"parent": 0,
+	 * 						"weight": 1,
+	 * 						"status": 1,
+	 * 						"description": "<p>Export controlled data (ITAR/EAR) are restricted by law to U.S. persons only. This means that non-U.S. persons including international students or individuals from foreign countries are barred from accessing this data.</p>\r\n\r\n<p>Contact <a href=\"https://www.purdue.edu/research/regulatory-affairs/\";>Purdue Regulatory Affairs</a> for more information.</p>\r\n",
+	 * 						"created_at": "2021-04-28T12:27:39.000000Z",
+	 * 						"updated_at": "2021-04-28T12:27:39.000000Z",
+	 * 						"deleted_at": null,
+	 * 						"api": "https://example.org/api/finder/facets/11"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer  $id
 	 * @return Response
 	 */
@@ -306,6 +359,34 @@ class FacetsController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"name": "Is your dataset restricted to U.S. persons only?",
+	 * 						"control_type": "radio",
+	 * 						"parent": 0,
+	 * 						"weight": 1,
+	 * 						"status": 1,
+	 * 						"description": "<p>Export controlled data (ITAR/EAR) are restricted by law to U.S. persons only. This means that non-U.S. persons including international students or individuals from foreign countries are barred from accessing this data.</p>\r\n\r\n<p>Contact <a href=\"https://www.purdue.edu/research/regulatory-affairs/\";>Purdue Regulatory Affairs</a> for more information.</p>\r\n",
+	 * 						"created_at": "2021-04-28T12:27:39.000000Z",
+	 * 						"updated_at": "2021-04-28T12:27:39.000000Z",
+	 * 						"deleted_at": null,
+	 * 						"api": "https://example.org/api/finder/facets/11"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
 	 * @param   Request $request
@@ -429,6 +510,14 @@ class FacetsController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param   integer  $id

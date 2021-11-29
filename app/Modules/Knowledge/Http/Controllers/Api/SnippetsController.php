@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Modules\Knowledge\Models\Page;
 use App\Modules\Knowledge\Models\Associations;
 use App\Modules\Knowledge\Models\SnippetAssociation;
-use App\Modules\Knowledge\Http\Resources\PageResource;
-use App\Modules\Knowledge\Http\Resources\PageResourceCollection;
+use App\Modules\Knowledge\Http\Resources\SnippetResource;
+use App\Modules\Knowledge\Http\Resources\SnippetResourceCollection;
 use Carbon\Carbon;
 
 /**
@@ -28,8 +28,6 @@ class SnippetsController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api/knowledge/snippets
 	 * @apiAuthorization  false
-	 * @apiMethod GET
-	 * @apiUri    /api/knowledge/feedback
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "parent",
@@ -100,7 +98,7 @@ class SnippetsController extends Controller
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
 	 * 		"required":      false,
-	* 		"schema": {
+	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"default":   "created_at",
 	 * 			"enum": [
@@ -199,7 +197,7 @@ class SnippetsController extends Controller
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
-		return new PageResourceCollection($rows);
+		return new SnippetResourceCollection($rows);
 	}
 
 	/**
@@ -270,6 +268,47 @@ class SnippetsController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"parent_id": 0,
+	 * 						"page_id": 1,
+	 * 						"lft": 0,
+	 * 						"rgt": 1,
+	 * 						"level": 1,
+	 * 						"path": "storage",
+	 * 						"state": 1,
+	 * 						"access": 1,
+	 * 						"page": {
+	 * 							"id": 1,
+	 * 							"title": "File Storage and Transfer",
+	 * 							"alias": "storage",
+	 * 							"created_at": "2020-05-28T16:57:38.000000Z",
+	 * 							"updated_at": "2021-10-22T18:40:52.000000Z",
+	 * 							"deleted_at": null,
+	 * 							"state": 1,
+	 * 							"access": 1,
+	 * 							"content": "<p>File Storage and Transfer for ${resource.name}.<\/p>",
+	 * 							"params": [],
+	 * 							"main": 1,
+	 * 							"snippet": 0
+	 * 						},
+	 * 						"api": "https://example.org/api/knowledge/snippets/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"401": {
+	 * 			"description": "Unauthorized"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
 	 * @param  Request $request
@@ -365,7 +404,7 @@ class SnippetsController extends Controller
 			return response()->json(['message' => trans('knowledge::knowledge.messages.rebuild failed')], 409);
 		}
 
-		return new PageResource($row);
+		return new SnippetResource($row);
 	}
 
 	/**
@@ -382,6 +421,44 @@ class SnippetsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"parent_id": 0,
+	 * 						"page_id": 1,
+	 * 						"lft": 0,
+	 * 						"rgt": 1,
+	 * 						"level": 1,
+	 * 						"path": "storage",
+	 * 						"state": 1,
+	 * 						"access": 1,
+	 * 						"page": {
+	 * 							"id": 1,
+	 * 							"title": "File Storage and Transfer",
+	 * 							"alias": "storage",
+	 * 							"created_at": "2020-05-28T16:57:38.000000Z",
+	 * 							"updated_at": "2021-10-22T18:40:52.000000Z",
+	 * 							"deleted_at": null,
+	 * 							"state": 1,
+	 * 							"access": 1,
+	 * 							"content": "<p>File Storage and Transfer for ${resource.name}.<\/p>",
+	 * 							"params": [],
+	 * 							"main": 1,
+	 * 							"snippet": 0
+	 * 						},
+	 * 						"api": "https://example.org/api/knowledge/snippets/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer $id
 	 * @return Response
 	 */
@@ -389,7 +466,7 @@ class SnippetsController extends Controller
 	{
 		$row = SnippetAssociation::findOrFail((int)$id);
 
-		return new PageResource($row);
+		return new SnippetResource($row);
 	}
 
 	/**
@@ -472,6 +549,47 @@ class SnippetsController extends Controller
 	 * 		"schema": {
 	 * 			"type":      "integer",
 	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"parent_id": 0,
+	 * 						"page_id": 1,
+	 * 						"lft": 0,
+	 * 						"rgt": 1,
+	 * 						"level": 1,
+	 * 						"path": "storage",
+	 * 						"state": 1,
+	 * 						"access": 1,
+	 * 						"page": {
+	 * 							"id": 1,
+	 * 							"title": "File Storage and Transfer",
+	 * 							"alias": "storage",
+	 * 							"created_at": "2020-05-28T16:57:38.000000Z",
+	 * 							"updated_at": "2021-10-22T18:40:52.000000Z",
+	 * 							"deleted_at": null,
+	 * 							"state": 1,
+	 * 							"access": 1,
+	 * 							"content": "<p>File Storage and Transfer for ${resource.name}.<\/p>",
+	 * 							"params": [],
+	 * 							"main": 1,
+	 * 							"snippet": 0
+	 * 						},
+	 * 						"api": "https://example.org/api/knowledge/snippets/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
 	 * @param   Request $request
@@ -563,11 +681,11 @@ class SnippetsController extends Controller
 			return response()->json(['message' => trans('knowledge::knowledge.messages.rebuild failed')], 409);
 		}
 
-		return new PageResource($row);
+		return new SnippetResource($row);
 	}
 
 	/**
-	 * Retrieve an entry
+	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /api/knowledge/snippets/{id}
@@ -579,6 +697,14 @@ class SnippetsController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param  integer $id

@@ -193,6 +193,33 @@ class FieldsController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 4,
+	 * 						"name": "cost",
+	 * 						"label": "Cost",
+	 * 						"weight": 3,
+	 * 						"status": 1,
+	 * 						"created_at": "2021-04-28T11:34:01.000000Z",
+	 * 						"updated_at": "2021-04-28T11:34:01.000000Z",
+	 * 						"deleted_at": null,
+	 * 						"services_count": 15,
+	 * 						"api": "https://example.org/api/finder/fields/4"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return Response
 	 */
@@ -242,6 +269,30 @@ class FieldsController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 4,
+	 * 						"name": "cost",
+	 * 						"label": "Cost",
+	 * 						"weight": 3,
+	 * 						"status": 1,
+	 * 						"created_at": "2021-04-28T11:34:01.000000Z",
+	 * 						"updated_at": "2021-04-28T11:34:01.000000Z",
+	 * 						"deleted_at": null,
+	 * 						"services_count": 15,
+	 * 						"api": "https://example.org/api/finder/fields/4"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param  integer  $id
@@ -304,6 +355,33 @@ class FieldsController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 4,
+	 * 						"name": "cost",
+	 * 						"label": "Cost",
+	 * 						"weight": 3,
+	 * 						"status": 1,
+	 * 						"created_at": "2021-04-28T11:34:01.000000Z",
+	 * 						"updated_at": "2021-04-28T11:34:01.000000Z",
+	 * 						"deleted_at": null,
+	 * 						"services_count": 15,
+	 * 						"api": "https://example.org/api/finder/fields/4"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request $request
 	 * @param   integer $id
 	 * @return  Response
@@ -362,6 +440,14 @@ class FieldsController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param   integer  $id

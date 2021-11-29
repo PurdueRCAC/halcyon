@@ -304,6 +304,48 @@ class PagesController extends Controller
 	 * 			"default":   0
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"parent_id": 0,
+	 * 						"page_id": 1,
+	 * 						"lft": 0,
+	 * 						"rgt": 1,
+	 * 						"level": 0,
+	 * 						"path": "",
+	 * 						"state": 1,
+	 * 						"access": 1,
+	 * 						"page": {
+	 * 							"id": 1,
+	 * 							"title": "User Guides",
+	 * 							"alias": "kb",
+	 * 							"created_at": "2020-05-28T16:57:38.000000Z",
+	 * 							"updated_at": "2021-10-22T18:40:52.000000Z",
+	 * 							"deleted_at": null,
+	 * 							"state": 1,
+	 * 							"access": 1,
+	 * 							"content": "<p>Here you will find all the user guides.</p>",
+	 * 							"params": [],
+	 * 							"main": 1,
+	 * 							"snippet": 0
+	 * 						},
+	 * 						"api": "https://example.org/api/knowledge/1",
+	 * 						"url": "https://example.org/knowledge"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"401": {
+	 * 			"description": "Unauthorized"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -421,6 +463,45 @@ class PagesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"parent_id": 0,
+	 * 						"page_id": 1,
+	 * 						"lft": 0,
+	 * 						"rgt": 1,
+	 * 						"level": 0,
+	 * 						"path": "",
+	 * 						"state": 1,
+	 * 						"access": 1,
+	 * 						"page": {
+	 * 							"id": 1,
+	 * 							"title": "User Guides",
+	 * 							"alias": "kb",
+	 * 							"created_at": "2020-05-28T16:57:38.000000Z",
+	 * 							"updated_at": "2021-10-22T18:40:52.000000Z",
+	 * 							"deleted_at": null,
+	 * 							"state": 1,
+	 * 							"access": 1,
+	 * 							"content": "<p>Here you will find all the user guides.<\/p>",
+	 * 							"params": [],
+	 * 							"main": 1,
+	 * 							"snippet": 0
+	 * 						},
+	 * 						"api": "https://example.org/api/knowledge/1",
+	 * 						"url": "https://example.org/knowledge"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer $id
 	 * @return Response
 	 */
@@ -511,6 +592,48 @@ class PagesController extends Controller
 	 * 		"schema": {
 	 * 			"type":      "integer",
 	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"parent_id": 0,
+	 * 						"page_id": 1,
+	 * 						"lft": 0,
+	 * 						"rgt": 1,
+	 * 						"level": 0,
+	 * 						"path": "",
+	 * 						"state": 1,
+	 * 						"access": 1,
+	 * 						"page": {
+	 * 							"id": 1,
+	 * 							"title": "User Guides",
+	 * 							"alias": "kb",
+	 * 							"created_at": "2020-05-28T16:57:38.000000Z",
+	 * 							"updated_at": "2021-10-22T18:40:52.000000Z",
+	 * 							"deleted_at": null,
+	 * 							"state": 1,
+	 * 							"access": 1,
+	 * 							"content": "<p>Here you will find all the user guides. Look around all you like.<\/p>",
+	 * 							"params": [],
+	 * 							"main": 1,
+	 * 							"snippet": 0
+	 * 						},
+	 * 						"api": "https://example.org/api/knowledge/1",
+	 * 						"url": "https://example.org/knowledge"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
 	 * @param   Request $request
@@ -629,6 +752,14 @@ class PagesController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param  integer $id

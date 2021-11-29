@@ -242,6 +242,11 @@ class FeedbackController extends Controller
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
+		$rows->each(function($item, $i)
+		{
+			$item->api = route('api.knowledge.feedback.read', ['id' => $item->id]);
+		});
+
 		return new ResourceCollection($rows);
 	}
 
@@ -287,6 +292,32 @@ class FeedbackController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"target_id": 5020,
+	 * 						"ip": "10.195.27.2",
+	 * 						"type": "positive",
+	 * 						"user_id": 0,
+	 * 						"created_at": "2021-03-04T23:29:24.000000Z",
+	 * 						"updated_at": "2021-03-04T23:29:24.000000Z",
+	 * 						"comments": "Testing the helpful commments",
+	 * 						"api": "https://example.org/api/knowledge/feedback/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"401": {
+	 * 			"description": "Unauthorized"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -325,6 +356,8 @@ class FeedbackController extends Controller
 			return response()->json(['message' => trans('global.messages.save failed')], 409);
 		}
 
+		$row->api = route('api.knowledge.feedback.read', ['id' => $row->id]);
+
 		return new JsonResource($row);
 	}
 
@@ -342,6 +375,29 @@ class FeedbackController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"target_id": 5020,
+	 * 						"ip": "10.195.27.2",
+	 * 						"type": "positive",
+	 * 						"user_id": 0,
+	 * 						"created_at": "2021-03-04T23:29:24.000000Z",
+	 * 						"updated_at": "2021-03-04T23:29:24.000000Z",
+	 * 						"comments": "Testing the helpful commments",
+	 * 						"api": "https://example.org/api/knowledge/feedback/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer $id
 	 * @return Response
 	 */
@@ -354,6 +410,8 @@ class FeedbackController extends Controller
 		{
 			return response()->json(['message' => trans('global.messages.not found')], 404);
 		}
+
+		$row->api = route('api.knowledge.feedback.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -390,6 +448,32 @@ class FeedbackController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"target_id": 5020,
+	 * 						"ip": "10.195.27.2",
+	 * 						"type": "positive",
+	 * 						"user_id": 0,
+	 * 						"created_at": "2021-03-04T23:29:24.000000Z",
+	 * 						"updated_at": "2021-03-04T23:45:01.000000Z",
+	 * 						"comments": "Updated comment",
+	 * 						"api": "https://example.org/api/knowledge/feedback/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request $request
 	 * @param   integer $id
 	 * @return  Response
@@ -423,6 +507,8 @@ class FeedbackController extends Controller
 			return response()->json(['message' => trans('global.messages.save failed')], 409);
 		}
 
+		$row->api = route('api.knowledge.feedback.read', ['id' => $row->id]);
+
 		return new JsonResource($row);
 	}
 
@@ -438,6 +524,14 @@ class FeedbackController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param  integer $id

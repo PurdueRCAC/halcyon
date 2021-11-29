@@ -218,6 +218,31 @@ class ServicesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 14,
+	 * 						"title": "Amazon Drive",
+	 * 						"summary": "A personal cloud storage platform hosted by Amazon.",
+	 * 						"status": 1,
+	 * 						"created_at": "2021-04-28T11:20:01.000000Z",
+	 * 						"updated_at": "2021-04-28T11:20:01.000000Z",
+	 * 						"deleted_at": null,
+	 * 						"api": "https://example.org/api/finder/services/14"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return Response
 	 */
@@ -282,6 +307,28 @@ class ServicesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 14,
+	 * 						"title": "Amazon Drive",
+	 * 						"summary": "A personal cloud storage platform hosted by Amazon.",
+	 * 						"status": 1,
+	 * 						"created_at": "2021-04-28T11:20:01.000000Z",
+	 * 						"updated_at": "2021-04-28T11:20:01.000000Z",
+	 * 						"deleted_at": null,
+	 * 						"api": "https://example.org/api/finder/services/14"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer  $id
 	 * @return Response
 	 */
@@ -341,6 +388,31 @@ class ServicesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "array"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 14,
+	 * 						"title": "Amazon Drive",
+	 * 						"summary": "A personal cloud storage platform hosted by Amazon.",
+	 * 						"status": 1,
+	 * 						"created_at": "2021-04-28T11:20:01.000000Z",
+	 * 						"updated_at": "2021-04-28T11:20:01.000000Z",
+	 * 						"deleted_at": null,
+	 * 						"api": "https://example.org/api/finder/services/14"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
 	 * @param   Request $request
@@ -423,6 +495,14 @@ class ServicesController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param   integer  $id

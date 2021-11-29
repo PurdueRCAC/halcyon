@@ -236,6 +236,38 @@ class IssuesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"issueid": 3,
+	 * 						"userid": 1234,
+	 * 						"report": "An LDAP misconfiguration on these systems was causing centralservices to get overloaded and slow down responding to queries that resulted in sluggishness with Data Depot",
+	 * 						"stemmedreport": "AAn lldap mmisconfigur oon tthese ssystem wwa ccaus ccentralservic tto gget ooverload aand sslow ddown rrespond tto qqueri tthat rresult iin ssluggish wwith ddata ddepot ",
+	 * 						"datetimecreated": "2021-10-25T20:24:30.000000Z",
+	 * 						"resolution": 1,
+	 * 						"formatteddate": "October 25, 2021 4:24pm",
+	 * 						"formattedreport": "<p>An LDAP misconfiguration on these systems was causing centralservices to get overloaded and slow down responding to queries that resulted in sluggishness with Data Depot</p>",
+	 * 						"username": "John Doe",
+	 * 						"comments": [],
+	 * 						"resources": [],
+	 * 						"age": 10707683,
+	 * 						"api": "https://example.org/api/issues/1",
+	 * 						"api": "https://example.org/issues/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return  Response
 	 */
@@ -306,6 +338,35 @@ class IssuesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"issueid": 3,
+	 * 						"userid": 1234,
+	 * 						"report": "An LDAP misconfiguration on these systems was causing centralservices to get overloaded and slow down responding to queries that resulted in sluggishness with Data Depot",
+	 * 						"stemmedreport": "AAn lldap mmisconfigur oon tthese ssystem wwa ccaus ccentralservic tto gget ooverload aand sslow ddown rrespond tto qqueri tthat rresult iin ssluggish wwith ddata ddepot ",
+	 * 						"datetimecreated": "2021-10-25T20:24:30.000000Z",
+	 * 						"resolution": 1,
+	 * 						"formatteddate": "October 25, 2021 4:24pm",
+	 * 						"formattedreport": "<p>An LDAP misconfiguration on these systems was causing centralservices to get overloaded and slow down responding to queries that resulted in sluggishness with Data Depot</p>",
+	 * 						"username": "John Doe",
+	 * 						"comments": [],
+	 * 						"resources": [],
+	 * 						"age": 10707683,
+	 * 						"api": "https://example.org/api/issues/1",
+	 * 						"api": "https://example.org/issues/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer  $id
 	 * @return Response
 	 */
@@ -359,6 +420,38 @@ class IssuesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"issueid": 3,
+	 * 						"userid": 1234,
+	 * 						"report": "An LDAP misconfiguration on these systems was causing centralservices to get overloaded and slow down responding to queries that resulted in sluggishness with Data Depot",
+	 * 						"stemmedreport": "AAn lldap mmisconfigur oon tthese ssystem wwa ccaus ccentralservic tto gget ooverload aand sslow ddown rrespond tto qqueri tthat rresult iin ssluggish wwith ddata ddepot ",
+	 * 						"datetimecreated": "2021-10-25T20:24:30.000000Z",
+	 * 						"resolution": 1,
+	 * 						"formatteddate": "October 25, 2021 4:24pm",
+	 * 						"formattedreport": "<p>An LDAP misconfiguration on these systems was causing centralservices to get overloaded and slow down responding to queries that resulted in sluggishness with Data Depot</p>",
+	 * 						"username": "John Doe",
+	 * 						"comments": [],
+	 * 						"resources": [],
+	 * 						"age": 10707683,
+	 * 						"api": "https://example.org/api/issues/1",
+	 * 						"api": "https://example.org/issues/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
 	 * @param   Request  $request
@@ -491,6 +584,14 @@ class IssuesController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param   integer  $id

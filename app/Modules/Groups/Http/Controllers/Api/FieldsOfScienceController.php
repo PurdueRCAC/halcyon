@@ -174,6 +174,28 @@ class FieldsOfScienceController extends Controller
 	 * 			"default":   1
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1103,
+	 * 						"parentid": 1100,
+	 * 						"name": "Agricultural Biotechnology",
+	 * 						"groups_count": 0,
+	 * 						"api": "https://example.org/api/groups/fieldsofscience/1103"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return  JsonResponse
 	 */
@@ -223,6 +245,25 @@ class FieldsOfScienceController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1103,
+	 * 						"parentid": 1100,
+	 * 						"name": "Agricultural Biotechnology",
+	 * 						"groups_count": 0,
+	 * 						"api": "https://example.org/api/groups/fieldsofscience/1103"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer  $id
 	 * @return JsonResponse
 	 */
@@ -266,6 +307,28 @@ class FieldsOfScienceController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1103,
+	 * 						"parentid": 1100,
+	 * 						"name": "Agricultural Biotechnology",
+	 * 						"groups_count": 0,
+	 * 						"api": "https://example.org/api/groups/fieldsofscience/1103"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
 	 * @param   Request $request
@@ -322,6 +385,14 @@ class FieldsOfScienceController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param   integer  $id

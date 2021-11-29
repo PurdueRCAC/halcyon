@@ -16,7 +16,9 @@ class SnippetResource extends JsonResource
 	{
 		$data = parent::toArray($request);
 
-		$data['api'] = route('api.knowledge.read', ['id' => $this->id]);
+		$data['page'] = $this->page;
+
+		$data['api'] = route('api.knowledge.snippets.read', ['id' => $this->id]);
 
 		$data['can']['create'] = false;
 		$data['can']['edit']   = false;

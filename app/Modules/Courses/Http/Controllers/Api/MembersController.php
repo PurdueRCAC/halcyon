@@ -256,7 +256,7 @@ class MembersController extends Controller
 	 * 						"datetimeremoved": null,
 	 * 						"api": "https://example.org/api/courses/members/1",
 	 * 						"user": {
-	 * 							"id": 2,
+	 * 							"id": 1234,
 	 * 							"name": "Jane Doe",
 	 * 							"username": "jdoe"
 	 * 						}
@@ -356,7 +356,7 @@ class MembersController extends Controller
 	 * 						"datetimeremoved": null,
 	 * 						"api": "https://example.org/api/courses/members/1",
 	 * 						"user": {
-	 * 							"id": 2,
+	 * 							"id": 1234,
 	 * 							"name": "Jane Doe",
 	 * 							"username": "jdoe"
 	 * 						}
@@ -468,7 +468,7 @@ class MembersController extends Controller
 	 * 						"datetimeremoved": null,
 	 * 						"api": "https://example.org/api/courses/members/1",
 	 * 						"user": {
-	 * 							"id": 2,
+	 * 							"id": 1234,
 	 * 							"name": "Jane Doe",
 	 * 							"username": "jdoe"
 	 * 						}
@@ -608,6 +608,59 @@ class MembersController extends Controller
 	 * 			"type":      "array"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"data": [
+	 * 							{
+	 * 								"id": 1,
+	 * 								"classaccountid": 1,
+	 * 								"userid": 1234,
+	 * 								"membertype": 1,
+	 * 								"datetimestart": "2016-08-22T04:00:00.000000Z",
+	 * 								"datetimestop": "2016-12-17T05:00:00.000000Z",
+	 * 								"notice": 0,
+	 * 								"datetimecreated": "2016-08-19T04:02:01.000000Z",
+	 * 								"datetimeremoved": null,
+	 * 								"api": "https://example.org/api/courses/members/1",
+	 * 								"user": {
+	 * 									"id": 1234,
+	 * 									"name": "Jane Doe",
+	 * 									"username": "jdoe"
+	 * 								}
+	 * 							},
+	 * 							{
+	 * 								"id": 2,
+	 * 								"classaccountid": 1,
+	 * 								"userid": 1235,
+	 * 								"membertype": 1,
+	 * 								"datetimestart": "2016-08-22T04:00:00.000000Z",
+	 * 								"datetimestop": "2016-12-17T05:00:00.000000Z",
+	 * 								"notice": 0,
+	 * 								"datetimecreated": "2016-08-19T04:02:01.000000Z",
+	 * 								"datetimeremoved": null,
+	 * 								"api": "https://example.org/api/courses/members/2",
+	 * 								"user": {
+	 * 									"id": 1235,
+	 * 									"name": "Jimmy Doe",
+	 * 									"username": "jimmyd"
+	 * 								}
+	 * 							}
+	 * 						]
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return  Response
 	 */
@@ -622,7 +675,7 @@ class MembersController extends Controller
 
 		if (empty($files))
 		{
-			abort(415, trans('courses::courses.error.no files'));
+			abort(409, trans('courses::courses.error.no files'));
 		}
 
 		$response = [

@@ -196,6 +196,31 @@ class ToDosController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"userid": 1234,
+	 * 						"name": "Check for emails for SSL certs expiring",
+	 * 						"description": "",
+	 * 						"recurringtimeperiodid": 1,
+	 * 						"datetimecreated": "2021-10-25T20:24:30.000000Z",
+	 * 						"datetimeremoved": null,
+	 * 						"api": "https://example.org/api/issues/todos/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return  JsonResource
 	 */
@@ -253,6 +278,28 @@ class ToDosController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"userid": 1234,
+	 * 						"name": "Check for emails for SSL certs expiring",
+	 * 						"description": "",
+	 * 						"recurringtimeperiodid": 1,
+	 * 						"datetimecreated": "2021-10-25T20:24:30.000000Z",
+	 * 						"datetimeremoved": null,
+	 * 						"api": "https://example.org/api/issues/todos/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer  $id
 	 * @return JsonResource
 	 */
@@ -307,6 +354,31 @@ class ToDosController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"userid": 1234,
+	 * 						"name": "Check for emails for SSL certs expiring",
+	 * 						"description": "",
+	 * 						"recurringtimeperiodid": 1,
+	 * 						"datetimecreated": "2021-10-25T20:24:30.000000Z",
+	 * 						"datetimeremoved": null,
+	 * 						"api": "https://example.org/api/issues/todos/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
 	 * @param   Request  $request
@@ -366,6 +438,14 @@ class ToDosController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param   integer  $id
