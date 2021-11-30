@@ -206,7 +206,7 @@
 						</div>
 						<div class="department col-lg-9 col-md-9 col-sm-9 col-xs-12">
 							<a href="{{ route('home') }}" title="{{ config('app.name') }}">
-								Information Technology<span class="tagline">Research Computing</span>
+								Information Technology <span class="tagline">Research Computing</span>
 							</a>
 						</div>
 					</div>
