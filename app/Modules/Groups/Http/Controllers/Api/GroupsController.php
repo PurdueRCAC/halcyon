@@ -345,6 +345,38 @@ class GroupsController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"name": "My Research Group",
+	 * 						"owneruserid": 0,
+	 * 						"unixgroup": "mrg",
+	 * 						"unixid": 0,
+	 * 						"githuborgname": "",
+	 * 						"datetimecreated": "2021-01-07T14:13:17.000000Z",
+	 * 						"datetimeremoved": null,
+	 * 						"api": "https://example.org/api/groups/1",
+	 * 						"department": [
+	 * 							{
+	 * 								"id": 3541,
+	 * 								"groupid": 1,
+	 * 								"collegedeptid": 313,
+	 * 								"percentage": 100,
+	 * 								"api": "https://example.org/api/groups/departments/3541"
+	 * 							}
+	 * 						]
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return  GroupResponse
 	 */
@@ -448,10 +480,42 @@ class GroupsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"name": "My Research Group",
+	 * 						"owneruserid": 0,
+	 * 						"unixgroup": "mrg",
+	 * 						"unixid": 0,
+	 * 						"githuborgname": "",
+	 * 						"datetimecreated": "2021-01-07T14:13:17.000000Z",
+	 * 						"datetimeremoved": null,
+	 * 						"api": "https://example.org/api/groups/1",
+	 * 						"department": [
+	 * 							{
+	 * 								"id": 3541,
+	 * 								"groupid": 1,
+	 * 								"collegedeptid": 313,
+	 * 								"percentage": 100,
+	 * 								"api": "https://example.org/api/groups/departments/3541"
+	 * 							}
+	 * 						]
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer  $id
 	 * @return GroupResponse
 	 */
-	public function read($id)
+	public function read(int $id)
 	{
 		$row = Group::findOrFail($id);
 
@@ -518,11 +582,46 @@ class GroupsController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"name": "My Research Group",
+	 * 						"owneruserid": 0,
+	 * 						"unixgroup": "mrg",
+	 * 						"unixid": 0,
+	 * 						"githuborgname": "",
+	 * 						"datetimecreated": "2021-01-07T14:13:17.000000Z",
+	 * 						"datetimeremoved": null,
+	 * 						"api": "https://example.org/api/groups/1",
+	 * 						"department": [
+	 * 							{
+	 * 								"id": 3541,
+	 * 								"groupid": 1,
+	 * 								"collegedeptid": 313,
+	 * 								"percentage": 100,
+	 * 								"api": "https://example.org/api/groups/departments/3541"
+	 * 							}
+	 * 						]
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request $request
 	 * @param   integer $id
 	 * @return  Response
 	 */
-	public function update(Request $request, $id)
+	public function update(Request $request, int $id)
 	{
 		$rules = [
 			'name' => 'nullable|max:48',
@@ -626,10 +725,18 @@ class GroupsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function delete($id)
+	public function delete(int $id)
 	{
 		$row = Group::findOrFail($id);
 

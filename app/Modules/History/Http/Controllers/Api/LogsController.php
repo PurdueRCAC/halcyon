@@ -321,25 +321,34 @@ class LogsController extends Controller
 	 * 		}
 	 * }
 	 * @apiResponse {
-	 * 		"200": {
+	 * 		"201": {
 	 * 			"description": "Successful entry creation",
 	 * 			"content": {
 	 * 				"application/json": {
 	 * 					"example": {
-	 * 						"id":            "1",
-	 * 						"name":          "Examples",
-	 * 						"tagresources":  0,
-	 * 						"tagusers":      1,
-	 * 						"location":      1,
-	 * 						"future":        1,
-	 * 						"calendar":      1,
-	 * 						"url":           1,
-	 * 						"api":           "https://example.com/api/news/types/1"
+	 * 						"id": 870,
+	 * 						"datetime": "2021-11-30T13:21:03.000000Z",
+	 * 						"ip": "127.0.0.1",
+	 * 						"hostname": "",
+	 * 						"userid": 1234,
+	 * 						"status": 200,
+	 * 						"transportmethod": "GET",
+	 * 						"servername": "example.org",
+	 * 						"uri": "/admin/history/activity",
+	 * 						"app": "ui",
+	 * 						"classname": "ActivityController",
+	 * 						"classmethod": "index",
+	 * 						"objectid": "",
+	 * 						"payload": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Safari/605.1.15",
+	 * 						"groupid": -2,
+	 * 						"targetuserid": -2,
+	 * 						"targetobjectid": -2,
+	 * 						"url": "https://example.org/api/logs/8703798"
 	 * 					}
 	 * 				}
 	 * 			}
 	 * 		},
-	 * 		"415": {
+	 * 		"409": {
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
@@ -398,15 +407,24 @@ class LogsController extends Controller
 	 * 			"content": {
 	 * 				"application/json": {
 	 * 					"example": {
-	 * 						"id":            "1",
-	 * 						"name":          "Examples",
-	 * 						"tagresources":  0,
-	 * 						"tagusers":      1,
-	 * 						"location":      1,
-	 * 						"future":        1,
-	 * 						"calendar":      1,
-	 * 						"url":           1,
-	 * 						"api":           "https://example.com/api/news/types/1"
+	 * 						"id": 870,
+	 * 						"datetime": "2021-11-30T13:21:03.000000Z",
+	 * 						"ip": "127.0.0.1",
+	 * 						"hostname": "",
+	 * 						"userid": 1234,
+	 * 						"status": 200,
+	 * 						"transportmethod": "GET",
+	 * 						"servername": "example.org",
+	 * 						"uri": "/admin/history/activity",
+	 * 						"app": "ui",
+	 * 						"classname": "ActivityController",
+	 * 						"classmethod": "index",
+	 * 						"objectid": "",
+	 * 						"payload": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Safari/605.1.15",
+	 * 						"groupid": -2,
+	 * 						"targetuserid": -2,
+	 * 						"targetobjectid": -2,
+	 * 						"url": "https://example.org/api/logs/8703798"
 	 * 					}
 	 * 				}
 	 * 			}

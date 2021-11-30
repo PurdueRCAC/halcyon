@@ -170,6 +170,34 @@ class HistoryController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 270955,
+	 * 						"user_id": 1234,
+	 * 						"historable_id": 51685,
+	 * 						"historable_type": "App\\Modules\\Queues\\Models\\User",
+	 * 						"historable_table": "queueusers",
+	 * 						"action": "updated",
+	 * 						"old": {
+	 * 							"notice": 2
+	 * 						},
+	 * 						"new": {
+	 * 							"notice": 0
+	 * 						},
+	 * 						"created_at": "2021-11-18T18:14:07.000000Z",
+	 * 						"updated_at": "2021-11-18T18:14:07.000000Z"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer $id
 	 * @return JsonResource
 	 */

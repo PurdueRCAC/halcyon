@@ -286,6 +286,39 @@ class MessagesController extends Controller
 	 * 			"default":   0
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 341137,
+	 * 						"userid": 1234,
+	 * 						"messagequeuetypeid": 1,
+	 * 						"targetobjectid": 98686,
+	 * 						"messagequeueoptionsid": 0,
+	 * 						"datetimesubmitted": "2021-11-16T19:00:42.000000Z",
+	 * 						"datetimestarted": null,
+	 * 						"datetimecompleted": null,
+	 * 						"pid": 0,
+	 * 						"returnstatus": 0,
+	 * 						"output": "",
+	 * 						"type": {
+	 * 							"id": 1,
+	 * 							"name": "get gpfs quota",
+	 * 							"resourceid": 64,
+	 * 							"classname": "storagedir"
+	 * 						},
+	 * 						"api": "https://example.org/api/messages/341137",
+	 * 						"target": "/foo/bar"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -373,6 +406,39 @@ class MessagesController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 341137,
+	 * 						"userid": 1234,
+	 * 						"messagequeuetypeid": 1,
+	 * 						"targetobjectid": 98686,
+	 * 						"messagequeueoptionsid": 0,
+	 * 						"datetimesubmitted": "2021-11-16T19:00:42.000000Z",
+	 * 						"datetimestarted": null,
+	 * 						"datetimecompleted": null,
+	 * 						"pid": 0,
+	 * 						"returnstatus": 0,
+	 * 						"output": "",
+	 * 						"type": {
+	 * 							"id": 1,
+	 * 							"name": "get gpfs quota",
+	 * 							"resourceid": 64,
+	 * 							"classname": "storagedir"
+	 * 						},
+	 * 						"api": "https://example.org/api/messages/341137",
+	 * 						"target": "/foo/bar"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param  integer $id
@@ -522,11 +588,47 @@ class MessagesController extends Controller
 	 * 			"default":   0
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 341137,
+	 * 						"userid": 1234,
+	 * 						"messagequeuetypeid": 1,
+	 * 						"targetobjectid": 98686,
+	 * 						"messagequeueoptionsid": 0,
+	 * 						"datetimesubmitted": "2021-11-16T19:00:42.000000Z",
+	 * 						"datetimestarted": null,
+	 * 						"datetimecompleted": null,
+	 * 						"pid": 0,
+	 * 						"returnstatus": 0,
+	 * 						"output": "",
+	 * 						"type": {
+	 * 							"id": 1,
+	 * 							"name": "get gpfs quota",
+	 * 							"resourceid": 64,
+	 * 							"classname": "storagedir"
+	 * 						},
+	 * 						"api": "https://example.org/api/messages/341137",
+	 * 						"target": "/foo/bar"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param  Request $request
 	 * @param  integer $id
 	 * @return Response
 	 */
-	public function update(Request $request, $id)
+	public function update(Request $request, int $id)
 	{
 		$validator = Validator::make($request->all(), [
 			'userid' => 'nullable|integer|min:1',
@@ -631,10 +733,18 @@ class MessagesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param   integer $id
 	 * @return  Response
 	 */
-	public function delete($id)
+	public function delete(int $id)
 	{
 		$row = Message::findOrFail($id);
 

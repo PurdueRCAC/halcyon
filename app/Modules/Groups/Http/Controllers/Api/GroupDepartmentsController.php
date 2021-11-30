@@ -91,7 +91,7 @@ class GroupDepartmentsController extends Controller
 	 * @param   integer  $group
 	 * @return Response
 	 */
-	public function index(Request $request, $group)
+	public function index(Request $request, int $group)
 	{
 		$filters = array(
 			'groupid' => $group,
@@ -151,11 +151,30 @@ class GroupDepartmentsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 18,
+	 * 						"groupid": 1,
+	 * 						"collegedeptid": 103,
+	 * 						"percentage": 100,
+	 * 						"api": "https://example.org/api/groups/1/departments/18"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @param   integer  $group
 	 * @return  JsonResponse
 	 */
-	public function create(Request $request, $group)
+	public function create(Request $request, int $group)
 	{
 		$rules = [
 			'collegedeptid' => 'required|integer',
@@ -198,11 +217,30 @@ class GroupDepartmentsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 18,
+	 * 						"groupid": 1,
+	 * 						"collegedeptid": 103,
+	 * 						"percentage": 100,
+	 * 						"api": "https://example.org/api/groups/1/departments/18"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer  $group
 	 * @param  integer  $id
 	 * @return JsonResponse
 	 */
-	public function read($group, $id)
+	public function read(int $group, int $id)
 	{
 		$row = GroupDepartment::findOrFail($id);
 		$row->api = route('api.groups.groupdepartments.read', ['group' => $row->groupid, 'id' => $row->id]);
@@ -243,12 +281,34 @@ class GroupDepartmentsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 18,
+	 * 						"groupid": 1,
+	 * 						"collegedeptid": 103,
+	 * 						"percentage": 100,
+	 * 						"api": "https://example.org/api/groups/1/departments/18"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request $request
 	 * @param   integer $group
 	 * @param   integer $id
 	 * @return  JsonResponse
 	 */
-	public function update(Request $request, $group, $id)
+	public function update(Request $request, int $group, int $id)
 	{
 		$rules = [
 			'collegedeptid' => 'required|integer',
@@ -311,7 +371,7 @@ class GroupDepartmentsController extends Controller
 	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function delete($group, $id)
+	public function delete(int $group, int $id)
 	{
 		$row = GroupDepartment::findOrFail($id);
 

@@ -224,6 +224,29 @@ class UnixGroupMembersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 2,
+	 * 						"unixgroupid": 1,
+	 * 						"userid": 1234,
+	 * 						"datetimecreated": "2021-02-03T18:36:02.000000Z",
+	 * 						"datetimeremoved": null,
+	 * 						"notice": 0,
+	 * 						"username": "janedoe",
+	 * 						"name": "Jane Doe",
+	 * 						"api": "https://example.org/api/unixgroups/members/39372"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return Response
 	 */
@@ -335,10 +358,33 @@ class UnixGroupMembersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 2,
+	 * 						"unixgroupid": 1,
+	 * 						"userid": 1234,
+	 * 						"datetimecreated": "2021-02-03T18:36:02.000000Z",
+	 * 						"datetimeremoved": null,
+	 * 						"notice": 0,
+	 * 						"username": "janedoe",
+	 * 						"name": "Jane Doe",
+	 * 						"api": "https://example.org/api/unixgroups/members/39372"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param   integer $id
 	 * @return Response
 	 */
-	public function read($id)
+	public function read(int $id)
 	{
 		$row = UnixGroupMember::findOrFail($id);
 		$row->api = route('api.unixgroups.members.read', ['id' => $row->id]);
@@ -370,11 +416,37 @@ class UnixGroupMembersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 2,
+	 * 						"unixgroupid": 1,
+	 * 						"userid": 1234,
+	 * 						"datetimecreated": "2021-02-03T18:36:02.000000Z",
+	 * 						"datetimeremoved": null,
+	 * 						"notice": 0,
+	 * 						"username": "janedoe",
+	 * 						"name": "Jane Doe",
+	 * 						"api": "https://example.org/api/unixgroups/members/39372"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request $request
 	 * @param   integer $id
 	 * @return  Response
 	 */
-	public function update(Request $request, $id)
+	public function update(Request $request, int $id)
 	{
 		$rules = [
 			'notice' => 'nullable|integer'
@@ -425,10 +497,18 @@ class UnixGroupMembersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param   integer $id
 	 * @return  Response
 	 */
-	public function delete($id)
+	public function delete(int $id)
 	{
 		$row = UnixGroupMember::find($id);
 

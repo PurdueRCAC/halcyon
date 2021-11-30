@@ -151,17 +151,40 @@ class MotdController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "motd",
 	 * 		"description":   "Message of the day",
-	 * 		"type":          "string",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "groupid",
 	 * 		"description":   "Group ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 13,
+	 * 						"groupid": 1,
+	 * 						"motd": "This is the J Does research space",
+	 * 						"datetimecreated": "2021-06-08T10:17:02.000000Z",
+	 * 						"datetimeremoved": null,
+	 * 						"api": "https://example.org/api/groups/motd/131"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return Response
@@ -225,10 +248,30 @@ class MotdController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 13,
+	 * 						"groupid": 1,
+	 * 						"motd": "This is the J Does research space",
+	 * 						"datetimecreated": "2021-06-08T10:17:02.000000Z",
+	 * 						"datetimeremoved": null,
+	 * 						"api": "https://example.org/api/groups/motd/131"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer  $id
 	 * @return Response
 	 */
-	public function read($id)
+	public function read(int $id)
 	{
 		$row = Motd::findOrFail($id);
 		$row->api = route('api.groups.motd.read', ['id' => $row->id]);
@@ -255,23 +298,49 @@ class MotdController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "motd",
 	 * 		"description":   "Message of the day",
-	 * 		"type":          "string",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "groupid",
 	 * 		"description":   "Group ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 13,
+	 * 						"groupid": 1,
+	 * 						"motd": "This is the J Does research space",
+	 * 						"datetimecreated": "2021-06-08T10:17:02.000000Z",
+	 * 						"datetimeremoved": null,
+	 * 						"api": "https://example.org/api/groups/motd/131"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
 	 * }
 	 * @param   Request $request
 	 * @param   integer $id
 	 * @return  Response
 	 */
-	public function update(Request $request, $id)
+	public function update(Request $request, int $id)
 	{
 		$rules = [
 			'groupid' => 'required|integer',
@@ -324,10 +393,18 @@ class MotdController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function delete($id)
+	public function delete(int $id)
 	{
 		$row = Motd::findOrFail($id);
 

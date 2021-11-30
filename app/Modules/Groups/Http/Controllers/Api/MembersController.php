@@ -178,33 +178,70 @@ class MembersController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "groupid",
 	 * 		"description":   "Group ID",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "userid",
 	 * 		"description":   "User ID",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "membertype",
 	 * 		"description":   "Member type",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "userrequestid",
 	 * 		"description":   "User request ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 43,
+	 * 						"groupid": 1,
+	 * 						"userid": 1234,
+	 * 						"userrequestid": 0,
+	 * 						"membertype": 2,
+	 * 						"owner": 1,
+	 * 						"datecreated": "2011-03-08T13:46:42.000000Z",
+	 * 						"dateremoved": null,
+	 * 						"datelastseen": null,
+	 * 						"notice": 0,
+	 * 						"api": "https://example.org/api/groups/members/43818",
+	 * 						"user": {
+	 * 							"id": 1234,
+	 * 							"name": "Jane Doe",
+	 * 							"username": "janedoe",
+	 * 							"unixid": 43674,
+	 * 							"datecreated": "2021-06-17T17:07:05.000000Z",
+	 * 							"dateremoved": null
+	 * 						}
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return  Response
@@ -327,10 +364,43 @@ class MembersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 43,
+	 * 						"groupid": 1,
+	 * 						"userid": 1234,
+	 * 						"userrequestid": 0,
+	 * 						"membertype": 2,
+	 * 						"owner": 1,
+	 * 						"datecreated": "2011-03-08T13:46:42.000000Z",
+	 * 						"dateremoved": null,
+	 * 						"datelastseen": null,
+	 * 						"notice": 0,
+	 * 						"api": "https://example.org/api/groups/members/43818",
+	 * 						"user": {
+	 * 							"id": 1234,
+	 * 							"name": "Jane Doe",
+	 * 							"username": "janedoe",
+	 * 							"unixid": 43674,
+	 * 							"datecreated": "2021-06-17T17:07:05.000000Z",
+	 * 							"dateremoved": null
+	 * 						}
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer  $id
 	 * @return Response
 	 */
-	public function read($id)
+	public function read(int $id)
 	{
 		$row = Member::findOrFail($id);
 		$row->api = route('api.groups.members.read', ['id' => $row->id]);
@@ -358,23 +428,61 @@ class MembersController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "membertype",
 	 * 		"description":   "Member type",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "userrequestid",
 	 * 		"description":   "User request ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 43,
+	 * 						"groupid": 1,
+	 * 						"userid": 1234,
+	 * 						"userrequestid": 0,
+	 * 						"membertype": 2,
+	 * 						"owner": 1,
+	 * 						"datecreated": "2011-03-08T13:46:42.000000Z",
+	 * 						"dateremoved": null,
+	 * 						"datelastseen": null,
+	 * 						"notice": 0,
+	 * 						"api": "https://example.org/api/groups/members/43818",
+	 * 						"user": {
+	 * 							"id": 1234,
+	 * 							"name": "Jane Doe",
+	 * 							"username": "janedoe",
+	 * 							"unixid": 43674,
+	 * 							"datecreated": "2021-06-17T17:07:05.000000Z",
+	 * 							"dateremoved": null
+	 * 						}
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
 	 * }
 	 * @param   Request $request
 	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function update(Request $request, $id)
+	public function update(Request $request, int $id)
 	{
 		$rules = [
 			'membertype' => 'nullable|integer',
@@ -438,10 +546,18 @@ class MembersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function delete($id)
+	public function delete(int $id)
 	{
 		$row = Member::findOrFail($id);
 

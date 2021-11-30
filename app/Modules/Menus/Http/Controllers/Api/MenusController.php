@@ -143,32 +143,66 @@ class MenusController extends Controller
 	 * @apiUri    /api/menus
 	 * @apiAuthorization  true
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "title",
 	 * 		"description":   "Menu title",
-	 * 		"type":          "string",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "description",
 	 * 		"description":   "A description of the menu",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "client_id",
 	 * 		"description":   "Client (admin = 1|site = 0) ID",
 	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "menutype",
 	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 2,
+	 * 						"menutype": "about",
+	 * 						"title": "About",
+	 * 						"description": "About Side Menu",
+	 * 						"client_id": 0,
+	 * 						"created_at": null,
+	 * 						"updated_at": null,
+	 * 						"deleted_at": null,
+	 * 						"items_count": 12,
+	 * 						"api": "https://example.org/api/menus/2"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
 	 * }
 	 * @return Response
 	 */
@@ -216,10 +250,34 @@ class MenusController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 2,
+	 * 						"menutype": "about",
+	 * 						"title": "About",
+	 * 						"description": "About Side Menu",
+	 * 						"client_id": 0,
+	 * 						"created_at": null,
+	 * 						"updated_at": null,
+	 * 						"deleted_at": null,
+	 * 						"items_count": 12,
+	 * 						"api": "https://example.org/api/menus/2"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param  integer  $id
 	 * @return Response
 	 */
-	public function read($id)
+	public function read(int $id)
 	{
 		$row = Type::findOrFail((int)$id);
 
@@ -244,38 +302,74 @@ class MenusController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "title",
 	 * 		"description":   "Menu title",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "description",
 	 * 		"description":   "A description of the menu",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "client_id",
 	 * 		"description":   "Client (admin = 1|site = 0) ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "menutype",
 	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 2,
+	 * 						"menutype": "about",
+	 * 						"title": "About",
+	 * 						"description": "About Side Menu",
+	 * 						"client_id": 0,
+	 * 						"created_at": null,
+	 * 						"updated_at": null,
+	 * 						"deleted_at": null,
+	 * 						"items_count": 12,
+	 * 						"api": "https://example.org/api/menus/2"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
 	 * }
 	 * @param   Request $request
 	 * @param   integer $id
 	 * @return  Response
 	 */
-	public function update(Request $request, $id)
+	public function update(Request $request, int $id)
 	{
 		$rules = [
 			'title' => 'nullable|string|max:48',
@@ -320,10 +414,18 @@ class MenusController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function delete($id)
+	public function delete(int $id)
 	{
 		$row = Type::findOrFail($id);
 

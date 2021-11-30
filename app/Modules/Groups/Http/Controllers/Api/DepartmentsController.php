@@ -189,9 +189,6 @@ class DepartmentsController extends Controller
 	 * 				}
 	 * 			}
 	 * 		},
-	 * 		"404": {
-	 * 			"description": "Record not found"
-	 * 		},
 	 * 		"409": {
 	 * 			"description": "Invalid data"
 	 * 		}
@@ -267,7 +264,7 @@ class DepartmentsController extends Controller
 	 * @param  integer  $id
 	 * @return JsonResponse
 	 */
-	public function read($id)
+	public function read(int $id)
 	{
 		$row = Department::findOrFail($id);
 		$row->api = route('api.groups.fieldsofscience.read', ['id' => $row->id]);
@@ -335,7 +332,7 @@ class DepartmentsController extends Controller
 	 * @param   integer $id
 	 * @return  JsonResponse
 	 */
-	public function update(Request $request, $id)
+	public function update(Request $request, int $id)
 	{
 		$rules = [
 			'parentid' => 'nullable|integer',
@@ -398,7 +395,7 @@ class DepartmentsController extends Controller
 	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function delete($id)
+	public function delete(int $id)
 	{
 		$row = Department::findOrFail($id);
 

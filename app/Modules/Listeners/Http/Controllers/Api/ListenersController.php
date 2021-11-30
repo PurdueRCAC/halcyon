@@ -281,6 +281,38 @@ class ListenersController extends Controller
 	 * 			"type":      "array"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 10042,
+	 * 						"name": "Content - OpenGraph",
+	 * 						"type": "listener",
+	 * 						"element": "opengraph",
+	 * 						"folder": "content",
+	 * 						"client_id": 0,
+	 * 						"enabled": 1,
+	 * 						"access": 1,
+	 * 						"protected": 1,
+	 * 						"params": [],
+	 * 						"checked_out": 61344,
+	 * 						"checked_out_time": "2021-11-17T21:58:24.000000Z",
+	 * 						"ordering": 11,
+	 * 						"updated_at": null,
+	 * 						"updated_by": 0,
+	 * 						"editor": "Jane Doe",
+	 * 						"access_level": "Public",
+	 * 						"api": "https://example.org/api/listeners/10042"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return  Response
 	 */
@@ -329,12 +361,44 @@ class ListenersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 10042,
+	 * 						"name": "Content - OpenGraph",
+	 * 						"type": "listener",
+	 * 						"element": "opengraph",
+	 * 						"folder": "content",
+	 * 						"client_id": 0,
+	 * 						"enabled": 1,
+	 * 						"access": 1,
+	 * 						"protected": 1,
+	 * 						"params": [],
+	 * 						"checked_out": 61344,
+	 * 						"checked_out_time": "2021-11-17T21:58:24.000000Z",
+	 * 						"ordering": 11,
+	 * 						"updated_at": null,
+	 * 						"updated_by": 0,
+	 * 						"editor": "Jane Doe",
+	 * 						"access_level": "Public",
+	 * 						"api": "https://example.org/api/listeners/10042"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function read($id)
+	public function read(int $id)
 	{
-		$row = Listener::findOrFail((int)$id);
+		$row = Listener::findOrFail($id);
 
 		return new ListenerResource($row);
 	}
@@ -408,10 +472,45 @@ class ListenersController extends Controller
 	 * 			"type":      "array"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 10042,
+	 * 						"name": "Content - OpenGraph",
+	 * 						"type": "listener",
+	 * 						"element": "opengraph",
+	 * 						"folder": "content",
+	 * 						"client_id": 0,
+	 * 						"enabled": 1,
+	 * 						"access": 1,
+	 * 						"protected": 1,
+	 * 						"params": [],
+	 * 						"checked_out": 61344,
+	 * 						"checked_out_time": "2021-11-17T21:58:24.000000Z",
+	 * 						"ordering": 11,
+	 * 						"updated_at": null,
+	 * 						"updated_by": 0,
+	 * 						"editor": "Jane Doe",
+	 * 						"access_level": "Public",
+	 * 						"api": "https://example.org/api/listeners/10042"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request $request
 	 * @return  Response
 	 */
-	public function update(Request $request, $id)
+	public function update(Request $request, int $id)
 	{
 		$rules = [
 			'name' => 'nullable|string|max:100',
@@ -461,10 +560,18 @@ class ListenersController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
 	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function delete($id)
+	public function delete(int $id)
 	{
 		$row = Listener::findOrFail($id);
 
