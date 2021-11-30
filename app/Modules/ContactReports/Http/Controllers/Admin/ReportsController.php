@@ -13,6 +13,7 @@ use App\Modules\ContactReports\Models\Comment;
 use App\Modules\ContactReports\Models\Reportresource;
 use App\Modules\ContactReports\Models\User as ReportUser;
 use App\Modules\ContactReports\Models\Type;
+use App\Modules\Users\Models\User;
 use App\Halcyon\Utility\PorterStemmer;
 use Carbon\Carbon;
 
@@ -427,9 +428,23 @@ class ReportsController extends Controller
 
 			foreach ($addusers as $r)
 			{
+				if (!is_numeric($r))
+				{
+					$usr = User::createFromUsername($r);
+				}
+				else
+				{
+					$usr = User::find($r);
+				}
+
+				if (!$usr || !$usr->id)
+				{
+					continue;
+				}
+
 				$rr = new ReportUser;
 				$rr->contactreportid = $row->id;
-				$rr->userid = $r;
+				$rr->userid = $usr->id;
 
 				if (!$rr->save())
 				{
