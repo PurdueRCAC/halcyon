@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					return {
 						label: el.name + ' (' + el.username + ')',
 						name: el.name,
-						id: el.id,
+						id: (el.id ? el.id : el.username)
 					};
 				}));
 			});
