@@ -85,7 +85,7 @@ app('pathway')
 					<?php
 					$attending = false;
 					foreach ($article->associations as $i => $assoc):
-						if (auth()->user()->id = $assoc->associd):
+						if (auth()->user()->id == $assoc->associd):
 							$attending = $assoc->id;
 							break;
 						endif;
