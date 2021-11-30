@@ -52,7 +52,7 @@ app('pathway')
 			<div class="col filter-select col-md-8 text-right">
 				<label class="sr-only" for="filter_app">{{ trans('history::history.app') }}</label>
 				<select name="transport" id="filter_app" class="form-control filter filter-submit">
-					<option value=""<?php if ($filters['transport'] == ''): echo ' selected="selected"'; endif;?>>{{ trans('history::history.all apps') }}</option>
+					<option value=""<?php if (!$filters['app']): echo ' selected="selected"'; endif;?>>{{ trans('history::history.all apps') }}</option>
 					@foreach ($apps as $app)
 						<option value="{{ $app->app }}"<?php if ($filters['app'] == $app->app): echo ' selected="selected"'; endif;?>>{{ $app->app }}</option>
 					@endforeach
@@ -79,6 +79,7 @@ app('pathway')
 					<option value="POST"<?php if ($filters['transport'] == 'POST'): echo ' selected="selected"'; endif;?>>POST</option>
 					<option value="PUT"<?php if ($filters['transport'] == 'PUT'): echo ' selected="selected"'; endif;?>>PUT</option>
 					<option value="DELETE"<?php if ($filters['transport'] == 'DELETE'): echo ' selected="selected"'; endif;?>>DELETE</option>
+					<option value="HEAD"<?php if ($filters['transport'] == 'HEAD'): echo ' selected="selected"'; endif;?>>HEAD</option>
 				</select>
 			</div>
 		</div>
@@ -138,15 +139,7 @@ app('pathway')
 				</td>
 				<td>
 					<a href="{{ route('admin.history.activity.show', ['id' => $row->id]) }}">
-					@if ($row->app == 'ws' || $row->app == 'api')
-						<span class="icon-code">
-					@elseif ($row->app == 'ui')
-						<span class="icon-layout">
-					@else
-						<span class="icon-activity">
-					@endif
 						{{ $row->app }}
-						</span>
 					</a>
 				</td>
 				<td>
@@ -180,15 +173,17 @@ app('pathway')
 						<a href="{{ route('admin.users.edit', ['id' => $row->user->id]) }}">
 							{{ $row->user->name }}
 						</a>
+					@elseif (!$row->userid)
+						<span class="text-muted unknown">{{ trans('global.unknown') }}</span>
 					@else
-						<span class="unknown">{{ trans('global.unknown') }}</span>
+						<span class="text-muted none">{{ trans('global.none') }}</span>
 					@endif
 				</td>
 				<td class="priority-4">
 					@if ($row->datetime)
 						<time datetime="{{ $row->datetime->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetime }}</time>
 					@else
-						<span class="never">{{ trans('global.unknown') }}</span>
+						<span class="text-muted never">{{ trans('global.unknown') }}</span>
 					@endif
 				</td>
 			</tr>

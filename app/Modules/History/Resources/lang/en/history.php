@@ -40,4 +40,5 @@ return [
 	'status' => 'Status',
 	'all status' => '- All Statuses -',
 	'view' => 'View',
+	'app' => 'App',
 ];
