@@ -114,6 +114,14 @@ app('pathway')
 							@endif
 						</td>
 						<td class="priority-3 text-right">
+							<?php
+							if (!$row->tagged_count):
+								$c = $row->tagged()->count();
+								if ($c):
+									$row->update(['tagged_count' => $c]);
+								endif;
+							endif;
+							?>
 							@if (!$row->tagged_count)
 								<span class="none">
 							@endif

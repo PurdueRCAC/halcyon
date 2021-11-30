@@ -8,26 +8,26 @@ $router->group(['prefix' => 'tags'], function (Router $router)
 	$router->get('/', [
 		'as' => 'api.tags.index',
 		'uses' => 'TagsController@index',
-		//'middleware' => 'can:tag.tags.index',
+		//'middleware' => ['auth:api', 'can:tag.tags.index'],
 	]);
 	$router->post('/', [
 		'as' => 'api.tags.create',
 		'uses' => 'TagsController@create',
-		//'middleware' => 'can:tag.tags.create',
+		'middleware' => ['auth:api', 'can:create tags'],
 	]);
 	$router->get('{id}', [
 		'as' => 'api.tags.read',
 		'uses' => 'TagsController@read',
-		//'middleware' => 'can:tag.tags.edit',
+		//'middleware' => ['auth:api', 'can:tag.tags.edit'],
 	]);
 	$router->put('{id}', [
 		'as' => 'api.tags.update',
 		'uses' => 'TagsController@update',
-		//'middleware' => 'can:tag.tags.edit',
+		'middleware' => ['auth:api', 'can:edit tags'],
 	]);
 	$router->delete('{id}', [
 		'as' => 'api.tags.delete',
 		'uses' => 'TagsController@delete',
-		//'middleware' => 'can:tag.tags.destroy',
+		'middleware' => ['auth:api', 'can:delete tags'],
 	]);
 });

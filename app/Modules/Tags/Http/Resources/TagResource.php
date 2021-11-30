@@ -14,20 +14,35 @@ class TagResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		$this->setAttribute('api', route('api.tags.read', ['id' => $this->id]));
-
 		$data = parent::toArray($request);
+
+		$data['api'] = route('api.tags.read', ['id' => $this->id]);
 
 		// Permissions check
 		$data['can'] = array(
-			'edit' => false,
+			'create' => false,
+			'edit'   => false,
 			'delete' => false,
+			'manage' => false,
+			'admin'  => false,
 		);
 
-		if (auth()->user())
+		$user = auth()->user();
+		if (!$user)
 		{
-			$data['can']['edit'] = (auth()->user()->can('edit tags') || (auth()->user()->can('edit.own tags') && $this->created_by == auth()->user()->id));
-			$data['can']['delete'] = auth()->user()->can('delete tags');
+			if (auth()->guard('api')->check())
+			{
+				$user = auth()->guard('api')->user();
+			}
+		}
+
+		if ($user)
+		{
+			$data['can']['create'] = $user->can('create tags');
+			$data['can']['edit'] = ($user->can('edit tags') || ($user->can('edit.own tags') && $this->created_by == $user->id));
+			$data['can']['delete'] = $user->can('delete tags');
+			$data['can']['manage'] = $user->can('manage tags');
+			$data['can']['admin'] = $user->can('admin tags');
 		}
 
 		return $data;

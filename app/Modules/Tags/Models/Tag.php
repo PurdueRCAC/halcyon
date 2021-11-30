@@ -304,7 +304,7 @@ class Tag extends Model
 			$row->delete();
 		}
 
-		$this->deleted_by = auth()->user()->id;
+		$this->deleted_by = auth()->user() ? auth()->user()->id : 0;
 
 		return parent::delete($options);
 	}
@@ -406,7 +406,7 @@ class Tag extends Model
 	{
 		if (!$tag_id)
 		{
-			$this->addError(trans('Missing tag ID.'));
+			$this->addError(trans('tags::tags.error.Missing tag ID.'));
 			return false;
 		}
 
@@ -414,7 +414,7 @@ class Tag extends Model
 		// Loop through the associations and link them to a different tag
 		if (!Tagged::moveTo($this->id, $tag_id))
 		{
-			$this->addError(trans('Failed to move objects attached to tag.'));
+			$this->addError(trans('tags::tags.error.Failed to move objects attached to tag.'));
 			return false;
 		}
 
@@ -422,21 +422,23 @@ class Tag extends Model
 		// Loop through the records and link them to a different tag
 		if (!self::moveTo($this->id, $tag_id))
 		{
-			$this->addError(trans('Failed to move aliases attached to tag.'));
+			$this->addError(trans('tags::tags.error.Failed to move aliases attached to tag.'));
 			return false;
 		}
 
 		// Make the current tag an alias for the new tag
 		$sub = new self;
-		$sub->name      = $this->name;
-		$sub->parent_id = $tag_id;
-		$sub->save();
+		$sub->update([
+			'name'      => $this->name,
+			'parent_id' => $tag_id
+		]);
 
 		// Update new tag's counts
 		$tag = self::find($tag_id);
-		$tag->tagged_count = $tag->tagged()->count();
-		$tag->alias_count  = $tag->aliases()->count();
-		$tag->save();
+		$tag->update([
+			'tagged_count' => $tag->tagged()->count(),
+			'alias_count'  => $tag->aliases()->count()
+		]);
 
 		// Destroy the old tag
 		if (!$this->delete())
@@ -457,7 +459,7 @@ class Tag extends Model
 	{
 		if (!$tag_id)
 		{
-			$this->addError(trans('Missing tag ID.'));
+			$this->addError(trans('tags::tags.error.Missing tag ID.'));
 			return false;
 		}
 
@@ -471,8 +473,9 @@ class Tag extends Model
 
 		// Update new tag's counts
 		$tag = self::find($tag_id);
-		$tag->tagged_count = $tag->tagged()->count();
-		$tag->save();
+		$tag->update([
+			'tagged_count' => $tag->tagged()->count()
+		]);
 
 		return true;
 	}

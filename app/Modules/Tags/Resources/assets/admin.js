@@ -73,23 +73,27 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
-	$('#main').on('click', '.remove-alias', function (e) {
+	document.querySelector('#main').addEventListener('click', (e) => {
+		if (!e.target.parentNode.matches('.remove-alias')) {
+			return;
+		}
+
 		e.preventDefault();
 
-		var btn = $(this);
-		var result = confirm(btn.attr('data-confirm'));
+		var btn = e.target.parentNode;
+		var result = confirm(btn.getAttribute('data-confirm'));
 
 		if (result) {
-			var field = $(btn.attr('href'));
+			var field = document.querySelector(btn.getAttribute('href'));
 
 			// delete relationship
 			$.ajax({
-				url: btn.attr('data-api'),
+				url: btn.getAttribute('data-api'),
 				type: 'delete',
 				dataType: 'json',
 				async: false,
 				success: function () {
-					Halcyon.message('success', btn.attr('data-success'));
+					Halcyon.message('success', btn.getAttribute('data-success'));
 					field.remove();
 				},
 				error: function (xhr) {

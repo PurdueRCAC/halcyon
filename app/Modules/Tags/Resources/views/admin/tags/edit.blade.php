@@ -77,11 +77,11 @@ app('pathway')
 									<td>{{ $u->name }}</td>
 									<td>{{ $u->slug }}</td>
 									<td class="text-right">
-										<a href="#alias-{{ $u->id }}" class="btn btn-secondary btn-danger remove-alias"
+										<a href="#alias-{{ $u->id }}" class="btn text-danger remove-alias"
 											data-api="{{ route('api.tags.delete', ['id' => $u->id]) }}"
-											data-confirm="{{ trans('tags::tags.confirm delete') }}"
+											data-confirm="{{ trans('global.confirm delete') }}"
 											data-success="{{ trans('tags::tags.item removed') }}">
-											<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+											<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.trash') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -91,11 +91,11 @@ app('pathway')
 								<td>{name}</td>
 								<td>{slug}</td>
 								<td class="text-right">
-									<a href="#alias-{id}" class="btn btn-secondary btn-danger remove-alias"
+									<a href="#alias-{id}" class="btn text-danger remove-alias"
 										data-api="{{ route('api.tags.create') }}/{id}"
-										data-confirm="{{ trans('tags::tags.confirm delete') }}"
+										data-confirm="{{ trans('global.confirm delete') }}"
 										data-success="{{ trans('tags::tags.item removed') }}">
-										<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+										<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.trash') }}</span>
 									</a>
 								</td>
 							</tr>
@@ -107,11 +107,11 @@ app('pathway')
 									<input type="text" name="name" id="name" class="form-control input-alias" placeholder="{{ trans('tags::tags.name') }}" />
 								</td>
 								<td class="text-right">
-									<a href="#name" class="btn btn-secondary btn-success alias-add"
+									<a href="#name" class="btn text-success alias-add"
 										data-id="{{ $row->id }}"
 										data-api="{{ route('api.tags.create') }}"
 										data-success="{{ trans('tags::tags.item added') }}">
-										<span class="icon-plus glyph">{{ trans('global.add') }}</span>
+										<span class="fa fa-plus" aria-hidden="true"></span><span class="sr-only">{{ trans('global.add') }}</span>
 									</a>
 								</td>
 							</tr>

@@ -197,6 +197,34 @@ class TagsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"parent_id": 0,
+	 * 						"slug": "anaconda",
+	 * 						"name": "Anaconda",
+	 * 						"domain": "crm",
+	 * 						"created_at": "2021-07-13T20:38:57.000000Z",
+	 * 						"created_by": 98254,
+	 * 						"updated_at": "2021-07-13T20:38:57.000000Z",
+	 * 						"updated_by": 0,
+	 * 						"deleted_at": null,
+	 * 						"deleted_by": 0,
+	 * 						"tagged_count": 0,
+	 * 						"alias_count": 0,
+	 * 						"api": "https://example.org/api/tags/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -223,7 +251,7 @@ class TagsController extends Controller
 		}
 
 		$data = $request->all();
-		$data['created_by'] = auth()->user()->id;
+		$data['created_by'] = auth()->user() ? auth()->user()->id : 0;
 
 		$row = Tag::create($data);
 
@@ -242,6 +270,34 @@ class TagsController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"parent_id": 0,
+	 * 						"slug": "anaconda",
+	 * 						"name": "Anaconda",
+	 * 						"domain": "crm",
+	 * 						"created_at": "2021-07-13T20:38:57.000000Z",
+	 * 						"created_by": 98254,
+	 * 						"updated_at": "2021-07-13T20:38:57.000000Z",
+	 * 						"updated_by": 0,
+	 * 						"deleted_at": null,
+	 * 						"deleted_by": 0,
+	 * 						"tagged_count": 0,
+	 * 						"alias_count": 0,
+	 * 						"api": "https://example.org/api/tags/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
 	 * 		}
 	 * }
 	 * @param  integer  $id
@@ -307,6 +363,37 @@ class TagsController extends Controller
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"example":   "one,two,three"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"parent_id": 0,
+	 * 						"slug": "anaconda",
+	 * 						"name": "Anaconda",
+	 * 						"domain": "crm",
+	 * 						"created_at": "2021-07-13T20:38:57.000000Z",
+	 * 						"created_by": 98254,
+	 * 						"updated_at": "2021-07-13T20:38:57.000000Z",
+	 * 						"updated_by": 0,
+	 * 						"deleted_at": null,
+	 * 						"deleted_by": 0,
+	 * 						"tagged_count": 0,
+	 * 						"alias_count": 0,
+	 * 						"api": "https://example.org/api/tags/1"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
 	 * @param   Request $request

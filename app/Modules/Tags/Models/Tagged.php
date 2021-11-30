@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
-//use Carbon\Carbon;
-//use stdClass;
 
 /**
  * Tag object association
@@ -63,8 +61,7 @@ class Tagged extends Model
 				->where('tag_id', '=', $model->tag_id)
 				->count();
 
-			$model->tag->tagged_count = $c;
-			$model->tag->save();
+			$model->tag->update(['tagged_count' => $c]);
 
 			return true;
 		});
@@ -121,7 +118,7 @@ class Tagged extends Model
 	 * @param   integer  $newtagid  ID of tag to move to
 	 * @return  boolean  True if records changed
 	 */
-	public static function moveTo($oldtagid=null, $newtagid=null)
+	public static function moveTo(int $oldtagid, int $newtagid)
 	{
 		if (!$oldtagid || !$newtagid)
 		{
@@ -132,28 +129,10 @@ class Tagged extends Model
 			->where('tag_id', '=', $oldtagid)
 			->get();
 
-		//$entries = array();
-
 		foreach ($items as $item)
 		{
-			$item->tag_id = $newtagid;
-			$item->save();
-
-			//$entries[] = $item->toArray();
+			$item->update(['tag_id' => $newtagid]);
 		}
-
-		/*$data = new stdClass;
-		$data->old_id  = $oldtagid;
-		$data->new_id  = $newtagid;
-		$data->entries = $entries;
-
-		$log = new Log();
-		$log->set([
-			'tag_id'   => $newtagid,
-			'action'   => 'objects_moved',
-			'comments' => json_encode($data)
-		]);
-		$log->save();*/
 
 		return true;
 	}
@@ -165,7 +144,7 @@ class Tagged extends Model
 	 * @param   integer  $newtagid  ID of tag to copy to
 	 * @return  boolean  True if records copied
 	 */
-	public static function copyTo($oldtagid=null, $newtagid=null)
+	public static function copyTo(int $oldtagid, int $newtagid)
 	{
 		if (!$oldtagid || !$newtagid)
 		{
@@ -178,29 +157,12 @@ class Tagged extends Model
 
 		if ($rows)
 		{
-			//$entries = array();
-
 			foreach ($rows as $row)
 			{
 				$row->id = null;
 				$row->tag_id = $newtagid;
 				$row->save();
-
-				//$entries[] = $row->id;
 			}
-
-			/*$data = new stdClass;
-			$data->old_id  = $oldtagid;
-			$data->new_id  = $newtagid;
-			$data->entries = $entries;
-
-			$log = new Log();
-			$log->set([
-				'tag_id'   => $newtagid,
-				'action'   => 'objects_copied',
-				'comments' => json_encode($data)
-			]);
-			$log->save();*/
 		}
 
 		return true;
