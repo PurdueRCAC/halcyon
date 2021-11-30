@@ -101,8 +101,8 @@ class ThemesController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
-			'template'  => 0,
-			'client_id' => null,
+			'element'  => null,
+			'client_id' => '*',
 			// Pagination
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
@@ -127,40 +127,39 @@ class ThemesController extends Controller
 
 		$query = Theme::query();
 
-		$e = 'extensions';
+		//$e = 'extensions';
 		//$l = 'languages';
-		$m = 'menu';
+		//$m = 'menus';
 		$s = (new Theme)->getTable();
 
 		$query
-			->select([
-				$s . '.id',
-				$s . '.template',
-				$s . '.title',
-				$s . '.home',
+			/*->select([
+				$s . '.id AS id',
+				$s . '.element',
+				$s . '.name',
+				$s . '.enabled',
 				$s . '.client_id',
-				$s . '.params',
 				//'\'0\' AS assigned',
-				$m . '.template_style_id AS assigned',
+				//$m . '.template_style_id AS assigned',
 				//$l . '.title AS language_title',
-				//$l . '.image',
-				$e . '.id AS e_id'
-			]);
+				//$l . '.image'
+			])*/
+			->whereIsTheme();
 
 		// Join on menus.
-		$query
-			->leftJoin($m, $m . '.template_style_id', $s . '.id');
+		//$query
+		//	->leftJoin($m, $m . '.template_style_id', $s . '.id');
 
 		// Join over the language
 		//$query
 		//	->leftJoin($l, $l . '.lang_code', $s . '.home');
 
 		// Filter by extension enabled
-		$query
+		/*$query
 			->leftJoin($e, $e . '.element', $s . '.template')
 			//->where($e . '.client_id', '=', $s . '.client_id')
 			->where($e . '.enabled', '=', 1)
-			->where($e . '.type', '=', 'template');
+			->where($e . '.type', '=', 'theme');*/
 
 		if ($filters['search'])
 		{
@@ -174,32 +173,39 @@ class ThemesController extends Controller
 			{
 				$query->where(function($q) use ($filters)
 				{
-					$q->where($s . '.title', 'like', $filters['search'])
-						->orWhere($s . '.template', 'like', $filters['search']);
+					$q->where($s . '.name', 'like', $filters['search'])
+						->orWhere($s . '.element', 'like', $filters['search']);
 				});
 			}
 		}
 
-		if (!is_null($filters['client_id']))
+		if ($filters['client_id'] != '*')
 		{
 			$query->where($s . '.client_id', '=', (int)$filters['client_id']);
 		}
 
-		if ($filters['template'])
+		if ($filters['element'])
 		{
-			$query->where($s . '.template', '=', (int)$filters['template']);
+			$query->where($s . '.element', '=', (int)$filters['element']);
 		}
 
 		$query
 			->groupBy([
 				$s . '.id',
-				$s . '.template',
-				$s . '.title',
-				$s . '.home',
+				$s . '.element',
+				$s . '.folder',
+				$s . '.name',
+				$s . '.enabled',
+				$s . '.access',
+				$s . '.protected',
 				$s . '.client_id',
-				//$l . '.title',
-				//$l . '.image',
-				$e . '.id AS extension_id'
+				$s . '.type',
+				$s . '.checked_out',
+				$s . '.checked_out_time',
+				$s . '.ordering',
+				$s . '.updated_at',
+				$s . '.updated_by',
+				$s . '.params'
 			]);
 
 		// Get records
@@ -249,11 +255,32 @@ class ThemesController extends Controller
 	 * 		}
 	 * }
 	 * @apiResponse {
-	 * 		"200": {
-	 * 			"description": "Successful creation"
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"name": "Admin (default)",
+	 * 						"type": "theme",
+	 * 						"element": "admin",
+	 * 						"folder": "",
+	 * 						"client_id": 1,
+	 * 						"enabled": 1,
+	 * 						"access": 1,
+	 * 						"protected": 1,
+	 * 						"params": [],
+	 * 						"checked_out": 0,
+	 * 						"checked_out_time": null,
+	 * 						"ordering": 0,
+	 * 						"updated_at": null,
+	 * 						"updated_by": 0
+	 * 					}
+	 * 				}
+	 * 			}
 	 * 		},
-	 * 		"500": {
-	 * 			"description": "Failed to create record"
+	 * 		"409": {
+	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
 	 * @param  Request $request
@@ -273,7 +300,7 @@ class ThemesController extends Controller
 
 		if ($validator->fails())
 		{
-			return response()->json(['message' => $validator->messages()], 415);
+			return response()->json(['message' => $validator->messages()], 409);
 		}
 
 		$row = new Theme();
@@ -336,7 +363,28 @@ class ThemesController extends Controller
 	 * }
 	 * @apiResponse {
 	 * 		"200": {
-	 * 			"description": "Successful creation"
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"name": "Admin (default)",
+	 * 						"type": "theme",
+	 * 						"element": "admin",
+	 * 						"folder": "",
+	 * 						"client_id": 1,
+	 * 						"enabled": 1,
+	 * 						"access": 1,
+	 * 						"protected": 1,
+	 * 						"params": [],
+	 * 						"checked_out": 0,
+	 * 						"checked_out_time": null,
+	 * 						"ordering": 0,
+	 * 						"updated_at": null,
+	 * 						"updated_by": 0
+	 * 					}
+	 * 				}
+	 * 			}
 	 * 		},
 	 * 		"404": {
 	 * 			"description": "Record not found"
@@ -423,17 +471,35 @@ class ThemesController extends Controller
 	 * 		}
 	 * }
 	 * @apiResponse {
-	 * 		"200": {
-	 * 			"description": "Successful creation"
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"name": "Admin (default)",
+	 * 						"type": "theme",
+	 * 						"element": "admin",
+	 * 						"folder": "",
+	 * 						"client_id": 1,
+	 * 						"enabled": 1,
+	 * 						"access": 1,
+	 * 						"protected": 1,
+	 * 						"params": [],
+	 * 						"checked_out": 0,
+	 * 						"checked_out_time": null,
+	 * 						"ordering": 0,
+	 * 						"updated_at": null,
+	 * 						"updated_by": 0
+	 * 					}
+	 * 				}
+	 * 			}
 	 * 		},
 	 * 		"404": {
 	 * 			"description": "Record not found"
 	 * 		},
-	 * 		"415": {
+	 * 		"409": {
 	 * 			"description": "Invalid data"
-	 * 		},
-	 * 		"500": {
-	 * 			"description": "Failed to update record"
 	 * 		}
 	 * }
 	 * @param   Request $request

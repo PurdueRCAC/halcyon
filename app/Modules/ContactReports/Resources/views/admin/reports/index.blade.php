@@ -119,7 +119,7 @@ app('pathway')
 @component('contactreports::admin.submenu')
 	reports
 @endcomponent
-<form action="{{ route('admin.contactreports.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.contactreports.index') }}" data-api="{{ route('api.contactreports.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -164,6 +164,7 @@ app('pathway')
 		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
+	<div id="results">
 	@if (count($rows))
 		@foreach ($rows as $i => $row)
 			<div class="card mb-3">
@@ -316,6 +317,7 @@ app('pathway')
 			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>
 		</div>
 	@endif
+	</div>
 
 	<input type="hidden" name="boxchecked" value="0" />
 

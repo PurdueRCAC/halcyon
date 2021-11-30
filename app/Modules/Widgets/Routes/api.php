@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'widgets'], function (Router $router)
+$router->group(['prefix' => 'widgets', 'middleware' => 'auth:api'], function (Router $router)
 {
 	$router->get('/', [
 		'as'   => 'api.widgets.index',

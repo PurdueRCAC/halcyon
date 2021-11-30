@@ -50,8 +50,8 @@ class Theme extends Model
 	 * @var  array
 	 */
 	protected $rules = array(
-		'template' => 'notempty',
-		'title'    => 'notempty'
+		'element' => 'required|string',
+		'name'    => 'required|string'
 	);
 
 	/**
@@ -188,7 +188,7 @@ class Theme extends Model
 
 		$paths   = array();
 		$paths[] = $this->path() . '/Config/Params.xml';
-		$paths[] = $this->path() . '/templateDetails.xml';
+		$paths[] = $this->path() . '/theme.xml';
 
 		foreach ($paths as $file)
 		{

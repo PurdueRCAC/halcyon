@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'themes'], function (Router $router)
+$router->group(['prefix' => 'themes', 'middleware' => 'auth:api'], function (Router $router)
 {
 	$router->get('/', [
 		'as'   => 'api.themes.index',

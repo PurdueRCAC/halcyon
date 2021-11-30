@@ -208,9 +208,6 @@ class FacetsController extends Controller
 	 * 				}
 	 * 			}
 	 * 		},
-	 * 		"404": {
-	 * 			"description": "Record not found"
-	 * 		},
 	 * 		"409": {
 	 * 			"description": "Invalid data"
 	 * 		}
