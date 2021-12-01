@@ -3,6 +3,7 @@ namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Models\Casts\Bytesize;
@@ -12,6 +13,7 @@ use App\Modules\Queues\Events\QueueCreated;
 use App\Modules\Queues\Events\QueueUpdating;
 use App\Modules\Queues\Events\QueueUpdated;
 use App\Modules\Queues\Events\QueueDeleted;
+use App\Modules\Queues\Database\Factories\QueueFactory;
 use App\Modules\Resources\Models\Subresource;
 use App\Modules\Resources\Models\Child;
 use App\Modules\Resources\Models\Asset;
@@ -25,7 +27,7 @@ use Carbon\Carbon;
  */
 class Queue extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes;
+	use ErrorBag, Validatable, Historable, SoftDeletes, HasFactory;
 
 	/**
 	 * The name of the "created at" column.
@@ -111,6 +113,16 @@ class Queue extends Model
 		'updated'  => QueueUpdated::class,
 		'deleted'  => QueueDeleted::class,
 	];
+
+	/**
+	 * Create a new factory instance for the model.
+	 *
+	 * @return \Illuminate\Database\Eloquent\Factories\Factory
+	 */
+	protected static function newFactory()
+	{
+		return new QueueFactory;
+	}
 
 	/**
 	 * Determine if entry has an end time

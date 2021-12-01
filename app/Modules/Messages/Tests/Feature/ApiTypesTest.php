@@ -3,6 +3,7 @@
 namespace App\Modules\Messages\Tests\Feature;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
+use App\Modules\Messages\Models\Type;
 use App\Modules\Users\Models\User;
 use Tests\TestCase;
 
@@ -46,6 +47,9 @@ class ApiTypesTest extends TestCase
             ->assertJsonPath('name', $data['name'])
             ->assertJsonPath('resourceid', $data['resourceid'])
             ->assertJsonPath('classname', $data['classname']);
+
+        $testdata = Type::find($response->decodeResponseJson()->json('id'));
+        $testdata->delete();
     }
 
     /**
@@ -63,20 +67,25 @@ class ApiTypesTest extends TestCase
             'classname' => 'storagedir'
         );
 
-        $response = $this->actingAs($user)
-            ->json('post', route('api.messages.types.create'), $data);
+        $created = Type::create($data);
 
-        $created = $response->decodeResponseJson();
+        //$response = $this->actingAs($user)
+        //    ->json('post', route('api.messages.types.create'), $data);
+
+        //$created = $response->decodeResponseJson();
 
         $response = $this->actingAs($user)
-            ->json('get', route('api.messages.types.read', ['id' => $created['id']]));
+            ->json('get', route('api.messages.types.read', ['id' => $created->id]));
 
         $response
             ->assertStatus(200)
-            ->assertJsonPath('id', $created['id'])
+            ->assertJsonPath('id', $created->id)
             ->assertJsonPath('name', $data['name'])
             ->assertJsonPath('resourceid', $data['resourceid'])
             ->assertJsonPath('classname', $data['classname']);
+
+        $testdata = Type::find($created->id);
+        $testdata->delete();
     }
 
     /**
@@ -94,22 +103,21 @@ class ApiTypesTest extends TestCase
             'classname' => 'storagedir'
         );
 
-        $response = $this->actingAs($user)
-            ->json('post', route('api.messages.types.create'), $data);
-
-        $fake = $response->decodeResponseJson();
+        $created = Type::create($data);
 
         $put = array(
             'name' => 'feature update test'
         );
 
         $response = $this->actingAs($user)
-            ->json('put', route('api.messages.types.update', ['id' => $fake['id']]), $put);
+            ->json('put', route('api.messages.types.update', ['id' => $created->id]), $put);
 
         $response
             ->assertStatus(200)
-            ->assertJsonPath('id', $fake['id'])
+            ->assertJsonPath('id', $created->id)
             ->assertJsonPath('name', $put['name']);
+
+        $created->delete();
     }
 
     /**
@@ -127,13 +135,15 @@ class ApiTypesTest extends TestCase
             'classname' => 'storagedir'
         );
 
-        $response = $this->actingAs($user)
-            ->json('post', route('api.messages.types.create'), $data);
+        $created = Type::create($data);
 
-        $fake = $response->decodeResponseJson();
+        //$response = $this->actingAs($user)
+        //    ->json('post', route('api.messages.types.create'), $data);
+
+        //$fake = $response->decodeResponseJson();
 
         $response = $this->actingAs($user)
-            ->json('delete', route('api.messages.types.delete', ['id' => $fake['id']]));
+            ->json('delete', route('api.messages.types.delete', ['id' => $created->id]));
 
         $response->assertStatus(204);
     }

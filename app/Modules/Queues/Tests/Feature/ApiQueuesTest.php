@@ -4,10 +4,11 @@ namespace App\Modules\Queues\Tests\Feature;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use App\Modules\Queues\Models\Queue;
+use App\Modules\Queues\Models\Scheduler;
 use App\Modules\Users\Models\User;
 use Tests\TestCase;
 
-class ApiMessagesTest extends TestCase
+class ApiQueuesTest extends TestCase
 {
     use WithoutMiddleware;
 
@@ -18,13 +19,23 @@ class ApiMessagesTest extends TestCase
      */
     public function testIndex()
     {
-        $posts = factory(Queue::class, 2)->create();
+        $posts = Queue::factory()->count(2)->make();
+
+        foreach ($posts as $post)
+        {
+            $post->save();
+        }
 
         $response = $this->json('get', route('api.queues.index'));
 
         $response
             ->assertStatus(200);
             //->assertJsonPath('data', $posts->toArray());
+
+        foreach ($posts as $post)
+        {
+            $post->delete();
+        }
     }
 
     /**
@@ -36,7 +47,8 @@ class ApiMessagesTest extends TestCase
     {
         $user = new User;
 
-        $data = factory(Queue::class)->make();
+        $data = Queue::factory()->make();
+        $data->schedulerid = Scheduler::query()->limit(1)->first()->id;
 
         $response = $this->actingAs($user)
             ->json('post', route('api.queues.create'), $data->toArray());
@@ -47,6 +59,9 @@ class ApiMessagesTest extends TestCase
             ->assertJsonPath('subresourceid', $data->subresourceid)
             ->assertJsonPath('name', $data->name)
             ->assertJsonPath('groupid', $data->groupid);
+
+        $data->id = $response->decodeResponseJson()->json('id');
+        $data->delete();
     }
 
     /**
@@ -58,7 +73,9 @@ class ApiMessagesTest extends TestCase
     {
         $user = new User;
 
-        $data = factory(Queue::class)->create();
+        $data = Queue::factory()->make();
+        $data->id = null;
+        $data->save();
 
         $response = $this->actingAs($user)
             ->json('get', route('api.queues.read', ['id' => $data->id]));
@@ -70,6 +87,8 @@ class ApiMessagesTest extends TestCase
             ->assertJsonPath('subresourceid', $data->subresourceid)
             ->assertJsonPath('name', $data->name)
             ->assertJsonPath('groupid', $data->groupid);
+
+        $data->delete();
     }
 
     /**
@@ -81,23 +100,25 @@ class ApiMessagesTest extends TestCase
     {
         $user = new User;
 
-        $fake = factory(Message::class)->create();
-
-        /*$response = $this->actingAs($user)
-            ->json('post', route('api.queues.create'), $fake->toArray());*/
+        $data = Queue::factory()->make();
+        $data->id = null;
+        $data->save();
 
         $put = array(
             'schedulerid' => 2,
-            'started' => 1
+            'started' => 0
         );
 
         $response = $this->actingAs($user)
-            ->json('put', route('api.queues.update', ['id' => $fake->id]), $put);
+            ->json('put', route('api.queues.update', ['id' => $data->id]), $put);
 
         $response
             ->assertStatus(200)
-            ->assertJsonPath('id', $fake->id)
-            ->assertJsonPath('schedulerid', $put['schedulerid']);
+            ->assertJsonPath('id', $data->id)
+            ->assertJsonPath('schedulerid', $put['schedulerid'])
+            ->assertJsonPath('started', $put['started']);
+
+        $data->delete();
     }
 
     /**
@@ -109,10 +130,12 @@ class ApiMessagesTest extends TestCase
     {
         $user = new User;
 
-        $fake = factory(Queue::class)->create();
+        $data = Queue::factory()->make();
+        $data->id = null;
+        $data->save();
 
         $response = $this->actingAs($user)
-            ->json('delete', route('api.queues.delete', ['id' => $fake->id]));
+            ->json('delete', route('api.queues.delete', ['id' => $data->id]));
 
         $response->assertStatus(204);
     }

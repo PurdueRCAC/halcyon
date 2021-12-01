@@ -981,7 +981,7 @@ class QueuesController extends Controller
 		}
 		$queue->save();
 
-		return new QueuesQueue($queue);
+		return new QueueResource($queue);
 	}
 
 	/**

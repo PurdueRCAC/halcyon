@@ -3,6 +3,7 @@
 namespace App\Modules\Messages\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
@@ -12,11 +13,12 @@ use App\Modules\Messages\Events\MessageUpdating;
 use App\Modules\Messages\Events\MessageUpdated;
 use App\Modules\Messages\Events\MessageDeleted;
 use App\Modules\Messages\Events\MessageReading;
+use App\Modules\Messages\Database\Factories\MessageFactory;
 use Carbon\Carbon;
 
 class Message extends Model
 {
-	use ErrorBag, Validatable, Historable;
+	use ErrorBag, Validatable, Historable, HasFactory;
 
 	/**
 	 * The name of the "created at" column.
@@ -96,6 +98,16 @@ class Message extends Model
 		'updated'  => MessageUpdated::class,
 		'deleted'  => MessageDeleted::class,
 	];
+
+	/**
+	 * Create a new factory instance for the model.
+	 *
+	 * @return \Illuminate\Database\Eloquent\Factories\Factory
+	 */
+	protected static function newFactory()
+	{
+		return new MessageFactory;
+	}
 
 	/**
 	 * Set messagequeuetypeid

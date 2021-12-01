@@ -3,6 +3,7 @@
 namespace App\Modules\Queues\Tests\Feature;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
+use App\Modules\Queues\Models\Type;
 use App\Modules\Users\Models\User;
 use Tests\TestCase;
 
@@ -33,9 +34,7 @@ class ApiTypesTest extends TestCase
         $user = new User;
 
         $data = array(
-            'name' => 'feature test',
-            'subresourceid' => 1,
-            'schedulerid' => 1
+            'name' => 'feature test'
         );
 
         $response = $this->actingAs($user)
@@ -43,9 +42,10 @@ class ApiTypesTest extends TestCase
 
         $response
             ->assertStatus(201)
-            ->assertJsonPath('name', $data['name'])
-            ->assertJsonPath('subresourceid', $data['resourceid'])
-            ->assertJsonPath('schedulerid', $data['schedulerid']);
+            ->assertJsonPath('name', $data['name']);
+
+        $testdata = Type::find($response->decodeResponseJson()->json('id'));
+        $testdata->delete();
     }
 
     /**
@@ -58,25 +58,21 @@ class ApiTypesTest extends TestCase
         $user = new User;
 
         $data = array(
-            'name' => 'feature test',
-            'subresourceid' => 1,
-            'schedulerid' => 1
+            'name' => 'feature test'
         );
 
-        $response = $this->actingAs($user)
-            ->json('post', route('api.queues.types.create'), $data);
-
-        $created = $response->decodeResponseJson();
+        $created = Type::create($data);
 
         $response = $this->actingAs($user)
-            ->json('get', route('api.queues.types.read', ['id' => $created['id']]));
+            ->json('get', route('api.queues.types.read', ['id' => $created->id]));
 
         $response
             ->assertStatus(200)
-            ->assertJsonPath('id', $created['id'])
-            ->assertJsonPath('name', $data['name'])
-            ->assertJsonPath('subresourceid', $data['subresourceid'])
-            ->assertJsonPath('schedulerid', $data['schedulerid']);
+            ->assertJsonPath('id', $created->id)
+            ->assertJsonPath('name', $data['name']);
+
+        $testdata = Type::find($created->id);
+        $testdata->delete();
     }
 
     /**
@@ -89,27 +85,24 @@ class ApiTypesTest extends TestCase
         $user = new User;
 
         $data = array(
-            'name' => 'feature test',
-            'subresourceid' => 1,
-            'schedulerid' => 1
+            'name' => 'feature test'
         );
 
-        $response = $this->actingAs($user)
-            ->json('post', route('api.queues.types.create'), $data);
-
-        $fake = $response->decodeResponseJson();
+        $created = Type::create($data);
 
         $put = array(
             'name' => 'feature update test'
         );
 
         $response = $this->actingAs($user)
-            ->json('put', route('api.queues.types.update', ['id' => $fake['id']]), $put);
+            ->json('put', route('api.queues.types.update', ['id' => $created->id]), $put);
 
         $response
             ->assertStatus(200)
-            ->assertJsonPath('id', $fake['id'])
+            ->assertJsonPath('id', $created->id)
             ->assertJsonPath('name', $put['name']);
+
+        $created->delete();
     }
 
     /**
@@ -122,18 +115,13 @@ class ApiTypesTest extends TestCase
         $user = new User;
 
         $data = array(
-            'name' => 'feature test',
-            'subresourceid' => 1,
-            'schedulerid' => 1
+            'name' => 'feature test'
         );
 
-        $response = $this->actingAs($user)
-            ->json('post', route('api.queues.types.create'), $data);
-
-        $fake = $response->decodeResponseJson();
+        $created = Type::create($data);
 
         $response = $this->actingAs($user)
-            ->json('delete', route('api.queues.types.delete', ['id' => $fake['id']]));
+            ->json('delete', route('api.queues.types.delete', ['id' => $created->id]));
 
         $response->assertStatus(204);
     }
