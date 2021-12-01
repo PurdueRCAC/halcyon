@@ -1289,7 +1289,7 @@ function SaveQuantities() {
 		}
 		if (originalprice.length == quantityinputs.length
 		&& originalprice[x].value.replace(/[,.]/g, "") != priceinputs[x].value.replace(/[,.]/g, "")
-		&& priceinputs[x].value.replace(/[,.]/g, "").match(/^[0-9]+$/)) {
+		&& priceinputs[x].value.replace(/[,.]/g, "").match(/^[0-9-]+$/)) {
 			post['price'] = priceinputs[x].value.replace(/[,.]/g, "");
 			post['price'] = post['price'] == '000' ? 0 : post['price'];
 		}
