@@ -608,6 +608,9 @@ class UsersController extends Controller
 			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
 		}
 
+		$response = null;
+		$status = 204;
+
 		event($resourcemember = new ResourceMemberStatus($row->queue->scheduler->resource, $row->user));
 
 		if ($resourcemember->status == 2 || $resourcemember->status == 3)
@@ -654,9 +657,15 @@ class UsersController extends Controller
 			if ($rows == 0)
 			{
 				event($resourcemember = new ResourceMemberDeleted($row->queue->scheduler->resource, $row->user));
+
+				if (count($resourcemember->errors))
+				{
+					$response = ['message' => implode("\n", $resourcemember->errors)];
+					$status = 500;
+				}
 			}
 		}
 
-		return response()->json(null, 204);
+		return response()->json($response, $status);
 	}
 }

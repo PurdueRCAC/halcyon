@@ -921,6 +921,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		$('body').on('change', '.membership-toggle', function(e){
 			e.preventDefault();
 
+			var al = $($(this).closest('.card')).find('.alert');
+			if (al.length) {
+				al.addClass('hide').html('');
+			}
+
 			var bx = $(this);
 			bx.parent().find('.fa').remove();
 
@@ -952,15 +957,26 @@ document.addEventListener('DOMContentLoaded', function() {
 					success: function (data) {
 						bx.data('api', data.api);
 						if (typeof data.error != 'undefined') {
+							if (al.length) {
+								al.removeClass('hide').html(data.error);
+							}
 							bx.after($('<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true" title="' + data.error + '"><span class="sr-only">' + data.error + '</span></span>'));
 							alert('An error occurred. Try toggling the checkbox. If issues persist, please contact help.');
 						}
 					},
 					error: function (xhr) {
+						var msg = '';
+
 						if (xhr.status == 416) {
-							alert("Queue enabled for system/guest account. ACMaint Role addition must be requested manually from accounts@purdue.edu", null);
+							msg = "Queue enabled for system/guest account. ACMaint Role addition must be requested manually from accounts@purdue.edu";
 						} else {
-							alert(xhr.responseJSON.message);
+							msg = xhr.responseJSON.message;
+						}
+
+						if (al.length) {
+							al.removeClass('hide').html(msg);
+						} else {
+							alert(msg);
 						}
 					}
 				});
@@ -971,17 +987,24 @@ document.addEventListener('DOMContentLoaded', function() {
 					dataType: 'json',
 					async: false,
 					success: function (data) {
-						if (data && typeof data.error != 'undefined') {
-							bx.after($('<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true" title="' + data.error + '"><span class="sr-only">' + data.error + '</span></span>'));
-							alert('An error occurred. Try toggling the checkbox. If issues persist, please contact help.');
-						}
+						// Nothing to do here
 						//bx.data('api', bx.data('api-create'));
 					},
 					error: function (xhr) { //xhr, ajaxOptions, thrownError
+						var msg = '';
+
 						if (xhr.status == 416) {
-							alert("Queue disabled for system/guest account. ACMaint Role removal must be requested manually from accounts@purdue.edu", null);
+							msg = "Queue disabled for system/guest account. ACMaint Role removal must be requested manually from accounts@purdue.edu";
 						} else {
-							alert(xhr.responseJSON.message);
+							msg = xhr.responseJSON.message;
+						}
+
+						bx.after($('<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true" title="' + msg + '"><span class="sr-only">' + msg+ '</span></span>'));
+
+						if (al.length) {
+							al.removeClass('hide').html(msg);
+						} else {
+							alert(msg);
 						}
 					}
 				});
