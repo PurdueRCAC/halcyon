@@ -930,7 +930,7 @@
 														<textarea id="{{ $t }}-comment" name="comment" class="form-control" maxlength="2000" rows="3" cols="40">{{ $item->comment }}</textarea>
 													</div>
 
-													<div id="error_{{ $t }}" class="alert alert-danger hide"></div>
+													<div id="error_{{ $t }}{{ $item->id }}" class="alert alert-danger hide"></div>
 
 													<div class="dialog-footer text-right">
 														<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.update') }}" data-id="{{ $item->id }}" data-type="{{ $t }}" data-success="{{ trans('queues::queues.item updated') }}" />
