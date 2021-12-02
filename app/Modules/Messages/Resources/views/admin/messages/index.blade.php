@@ -125,11 +125,15 @@ app('pathway')
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col-md-5 filter-select">
-				<label class="sr-only" for="filter_start">{{ trans('messages::messages.start') }}</label>
-				<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" placeholder="{{ trans('messages::messages.start placeholder') }}" />
-				to
-				<label class="sr-only" for="filter_stop">{{ trans('messages::messages.stop') }}</label>
-				<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="{{ trans('messages::messages.stop placeholder') }}" />
+				<div class="input-group">
+					<label class="sr-only" for="filter_start">{{ trans('messages::messages.start') }}</label>
+					<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" placeholder="{{ trans('messages::messages.start placeholder') }}" />
+					<span class="input-group-prepend input-group-append">
+						<span class="input-group-text">to</span>
+					</span>
+					<label class="sr-only" for="filter_stop">{{ trans('messages::messages.stop') }}</label>
+					<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="{{ trans('messages::messages.stop placeholder') }}" />
+				</div>
 			</div>
 			<div class="col-md-7 text-right">
 				<label class="sr-only" for="filter_state">{{ trans('messages::messages.state') }}</label>
@@ -184,21 +188,9 @@ app('pathway')
 						<th scope="col" class="priority-4">
 							{!! Html::grid('sort', trans('messages::messages.submitted'), 'datetimesubmitted', $filters['order_dir'], $filters['order']) !!}
 						</th>
-						<!-- <th scope="col" class="priority-4">
-							{!! Html::grid('sort', trans('messages::messages.started'), 'datetimestarted', $filters['order_dir'], $filters['order']) !!}
-						</th>
-						<th scope="col" class="priority-4">
-							{!! Html::grid('sort', trans('messages::messages.completed'), 'datetimecompleted', $filters['order_dir'], $filters['order']) !!}
-						</th>
-						<th scope="col" class="priority-4">
-							{{ trans('messages::messages.elapsed') }}
-						</th> -->
 						<th scope="col" class="priority-4">
 							{{ trans('messages::messages.processed') }}
-						<!-- </th>
-						<th scope="col" class="text-right">
-							{!! Html::grid('sort', trans('messages::messages.pid'), 'pid', $filters['order_dir'], $filters['order']) !!}
-						</th> -->
+						</th>
 						<th scope="col" class="priority-4 text-right">
 							{!! Html::grid('sort', trans('messages::messages.return status'), 'returnstatus', $filters['order_dir'], $filters['order']) !!}
 						</th>
@@ -268,43 +260,23 @@ app('pathway')
 								</time>
 							@endif
 						</td>
-						<!--
-						<td class="priority-4">
-							@if ($row->started())
-								<time datetime="{{ $row->datetimestarted->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestarted }}</time>
-							@else
-								<span class="text-muted">{{ trans('messages::messages.not started') }}</span>
-							@endif
-						</td>
-						<td class="priority-4">
-							@if ($row->completed())
-								<time datetime="{{ $row->datetimecompleted->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimecompleted }}</time>
-							@else
-								<span class="text-muted">{{ trans('messages::messages.not completed') }}</span>
-							@endif
-						</td>
-						<td>
-							{{ $row->elapsed }}
-						</td>
-						-->
 						<td>
 							<?php
-							$timetable  = '<table><tbody>';
-							$timetable .= '<tr><th scope=\'row\'>' . trans('messages::messages.started') . '</th><td>';
-							if ($row->datetimestarted):
-								$timetable .= '<time datetime=\''. $row->datetimestarted .'\'>' . $row->datetimestarted . '</time>';
+							$timetable  = '<div>';
+							$timetable .= '<strong>' . trans('messages::messages.started') . '</strong>: ';
+							if ($row->started()):
+								$timetable .= '<time datetime=\'' . $row->datetimestarted . '\'>' . $row->datetimestarted . '</time>';
 							else:
 								$timetable .= trans('messages::messages.not started');
 							endif;
-							$timetable .= '</td></tr>';
-							$timetable .= '<tr><th scope=\'row\'>' . trans('messages::messages.completed') . '</th><td>';
-							if ($row->datetimecompleted):
-								$timetable .= '<time datetime=\''. $row->datetimecompleted .'\'>' . $row->datetimecompleted . '</time>';
+							$timetable .= '<br />';
+							$timetable .= '<strong>' . trans('messages::messages.completed') . '</strong>: ';
+							if ($row->completed()):
+								$timetable .= '<time datetime=\'' . $row->datetimecompleted . '\'>' . $row->datetimecompleted . '</time>';
 							else:
 								$timetable .= trans('messages::messages.not completed');
 							endif;
-							$timetable .= '</td></tr>';
-							$timetable .= '</tbody></table>';
+							$timetable .= '</div>';
 							?>
 							@if ($row->completed())
 								<span class="badge badge-success has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-check" aria-hidden="true"></span> {{ $row->elapsed }}</span>
@@ -314,15 +286,6 @@ app('pathway')
 								<span class="badge badge-info has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-more-horizontal" aria-hidden="true"></span> {{ trans('messages::messages.pending') }}</span>
 							@endif
 						</td>
-						<!-- <td class="text-right">
-							@if (auth()->user()->can('edit messages'))
-								<a href="{{ route('admin.messages.edit', ['id' => $row->id]) }}">
-									{{ $row->pid }}
-								</a>
-							@else
-								{{ $row->pid }}
-							@endif
-						</td> -->
 						<td class="priority-4 text-right">
 							@if ($row->completed())
 								@if ($row->returnstatus)

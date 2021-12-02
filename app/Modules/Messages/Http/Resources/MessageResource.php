@@ -21,23 +21,15 @@ class MessageResource extends JsonResource
 		$data['api'] = route('api.messages.read', ['id' => $this->id]);
 		$data['target'] = $this->target;
 
-		$data['can']['edit']   = false;
-		$data['can']['delete'] = false;
+		$data['can'] = array(
+			'edit'   => false,
+			'delete' => false,
+		);
 
 		if (auth()->user())
 		{
 			$data['can']['edit']   = auth()->user()->can('edit messages');
 			$data['can']['delete'] = auth()->user()->can('delete messages');
-		}
-
-		if (!$this->started())
-		{
-			$data['datetimestarted'] = null;
-		}
-
-		if (!$this->completed())
-		{
-			$data['datetimecompleted'] = null;
 		}
 
 		// [!] Legacy compatibility
