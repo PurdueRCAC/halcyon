@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Halcyon\Traits\ErrorBag;
 
 /**
- * Model for a subresource mapping
+ * Model for a page association mapping
  */
 class Associations extends Model
 {
@@ -138,9 +138,10 @@ class Associations extends Model
 	/**
 	 * Get the root node
 	 *
+	 * @param   string  $path
 	 * @return  object
 	 */
-	public static function findByPath($path)
+	public static function findByPath(string $path)
 	{
 		$path = trim($path, '/');
 
@@ -160,9 +161,10 @@ class Associations extends Model
 	/**
 	 * Get the root node
 	 *
+	 * @param   string  $path
 	 * @return  object
 	 */
-	public static function stackByPath($path)
+	public static function stackByPath(string $path)
 	{
 		$path = trim($path, '/');
 
@@ -246,7 +248,7 @@ class Associations extends Model
 	 * @param   array  $ancestors
 	 * @return  array
 	 */
-	public function ancestors($ancestors = array())
+	public function ancestors(array $ancestors = [])
 	{
 		$parent = $this->parent;
 
@@ -269,7 +271,7 @@ class Associations extends Model
 	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
-	public function save(array $options = array())
+	public function save(array $options = [])
 	{
 		$isNew = !$this->id;
 
@@ -356,7 +358,7 @@ class Associations extends Model
 	 * @param   string   $path      The path to the current nodes.
 	 * @return  integer  1 + value of root rgt on success, false on failure
 	 */
-	public function rebuild($parentId, $leftId = 0, $level = 0, $path = '')
+	public function rebuild(int $parentId, int $leftId = 0, int $level = 0, string $path = '')
 	{
 		$a = $this->getTable();
 		$p = (new Page)->getTable();
@@ -422,7 +424,7 @@ class Associations extends Model
 	 *                                   should be made.
 	 * @return  mixed    Boolean false on failure or data object on success.
 	 */
-	protected function getTreeRepositionData($referenceNode, $nodeWidth, $position = 'before')
+	protected function getTreeRepositionData($referenceNode, int $nodeWidth, string $position = 'before')
 	{
 		// Make sure the reference an object with a left and right id.
 		if (!is_object($referenceNode) && isset($referenceNode->lft) && isset($referenceNode->rgt))
@@ -518,7 +520,7 @@ class Associations extends Model
 	 * @param   string   $where  WHERE clause to use for limiting the selection of rows to compact the ordering values.
 	 * @return  mixed    Boolean true on success.
 	 */
-	public function move($delta, $where = '')
+	public function move($delta, string $where = '')
 	{
 		$query = self::query()
 			->where('parent_id', '=', $this->parent_id);
@@ -563,7 +565,7 @@ class Associations extends Model
 	 * @param   integer  $pk           The primary key of the node to move.
 	 * @return  boolean  True on success.
 	 */
-	public function moveByReference($referenceId, $position = 'after', $pk = 0)
+	public function moveByReference(int $referenceId, string $position = 'after', int $pk = 0)
 	{
 		// Initialise variables.
 		$pk = (is_null($pk)) ? $this->id : $pk;

@@ -136,7 +136,7 @@ class Page extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setAliasAttribute($value)
+	public function setAliasAttribute(string $value)
 	{
 		$alias = strip_tags($value);
 		$alias = trim($alias);
@@ -281,7 +281,7 @@ class Page extends Model
 	 * @param   array  $matches
 	 * @return  string
 	 */
-	private function tokenizeIf($matches)
+	private function tokenizeIf(array $matches)
 	{
 		self::$matches++;
 
@@ -345,7 +345,7 @@ class Page extends Model
 	 * @param   array   $matches
 	 * @return  string
 	 */
-	protected function replaceVariables($matches)
+	protected function replaceVariables(array $matches)
 	{
 		$vars = $this->variables->toArray();
 
@@ -389,7 +389,7 @@ class Page extends Model
 	 * @param   array   $matches
 	 * @return  string
 	 */
-	protected function replaceLink($matches)
+	protected function replaceLink(array $matches)
 	{
 		$branch = '';
 
@@ -432,7 +432,7 @@ class Page extends Model
 	 * @param   array   $matches
 	 * @return  string
 	 */
-	protected function replaceIfStatement($matches)
+	protected function replaceIfStatement(array $matches)
 	{
 		$vars = $this->variables->toArray();
 
@@ -596,7 +596,8 @@ class Page extends Model
 	/**
 	 * Get path
 	 *
-	 * @return  object
+	 * @param   mixed  $path
+	 * @return  string
 	 */
 	public function getPathAttribute($path)
 	{
@@ -610,7 +611,7 @@ class Page extends Model
 	 * @param   integer  $parent_id
 	 * @return  object
 	 */
-	public static function findByAlias($alias, $parent_id=0)
+	public static function findByAlias(string $alias, int $parent_id=0)
 	{
 		return self::query()
 			->where('alias', '=', (string)$alias)
@@ -625,7 +626,7 @@ class Page extends Model
 	 * @param   string  $path
 	 * @return  object
 	 */
-	public static function findByPath($path)
+	public static function findByPath(string $path)
 	{
 		return self::query()
 			->where('path', '=', (string)$path)
@@ -639,7 +640,7 @@ class Page extends Model
 	 * @param   integer  $id  Primary key of the node for which to get the path.
 	 * @return  mixed    Boolean false on failure or array of node objects on success.
 	 */
-	public static function stackById($id)
+	public static function stackById(int $id)
 	{
 		$model = self::query();
 
@@ -667,7 +668,7 @@ class Page extends Model
 	 * @param   string  $path  Primary key of the node for which to get the path.
 	 * @return  mixed   Boolean false on failure or array of node objects on success.
 	 */
-	public static function stackByPath($path)
+	public static function stackByPath(string $path)
 	{
 		$path = trim($path, '/');
 
@@ -721,7 +722,7 @@ class Page extends Model
 	 * @param   string  $path  Primary key of the node for which to get the path.
 	 * @return  mixed   Boolean false on failure or array of node objects on success.
 	 */
-	public static function tree($filters = array())
+	public static function tree(array $filters = [])
 	{
 		$p = (new self)->getTable();
 		$a = (new Associations)->getTable();
@@ -738,16 +739,13 @@ class Page extends Model
 	/**
 	 * Recursive function to build tree
 	 *
-	 * @param   integer  $id        Parent ID
-	 * @param   string   $indent    Indent text
 	 * @param   array    $list      List of records
 	 * @param   array    $children  Container for parent/children mapping
 	 * @param   integer  $maxlevel  Maximum levels to descend
 	 * @param   integer  $level     Indention level
-	 * @param   integer  $type      Indention type
 	 * @return  array
 	 */
-	protected static function treeRecurse($list, $children, $maxlevel=9999, $level=0)
+	protected static function treeRecurse($list, $children, int $maxlevel=9999, int $level=0)
 	{
 		if (count($children) && $level <= $maxlevel)
 		{
@@ -757,7 +755,7 @@ class Page extends Model
 
 				$child->level = $level;
 
-				$list[$id] = $child; //str_repeat('<span class="gi">|&mdash;</span>', $level) . $child->title;
+				$list[$id] = $child;
 
 				$list = self::treeRecurse($list, $child->children()->orderBy('ordering', 'asc')->get(), $maxlevel, $level+1);
 			}
@@ -856,36 +854,8 @@ class Page extends Model
 	 */
 	public function children()
 	{
-		//return $this->hasManyThrough(self::class, Association::class, 'parent_id', 'id', 'id', 'child_id');
 		$a = (new Associations)->getTable();
 		$p = $this->getTable();
-
-		/*return self::query()
-			->select($p . '.*')
-			->join($a, $a . '.page_id', $p . '.id')
-			->join($a . ' AS assoc2', 'assoc2.id', $a . '.parent_id')
-			->where($a . '.page_id', '=', (int) $this->id)
-			->where($a . '.lft', '>', 'assoc2.lft')
-			->where($a . '.rgt', '<', 'assoc2.rgt')
-			->orderBy($a . '.parent_id', 'asc')
-			->orderBy($a . '.lft', 'asc');
-		echo self::query()
-			->select($p . '.*')
-			->from($p)
-			->join($a . ' AS n', 'n.page_id', $p . '.id')
-			->join($a . ' AS p', 'p.level', '>', \Illuminate\Support\Facades\DB::raw(0))
-			->whereRaw('n.lft BETWEEN p.lft AND p.rgt')
-			->where('n.page_id', '=', (int) $this->id)
-			->orderBy('p.lft', 'asc')
-			->toSql(); die();
-		return self::query()
-			->select($p . '.*')
-			->from($p)
-			->join($a . ' AS n', 'n.page_id', $p . '.id')
-			->join($a . ' AS p', 'p.level', '>', \Illuminate\Support\Facades\DB::raw(0))
-			->whereRaw('n.lft BETWEEN p.lft AND p.rgt')
-			->where('n.page_id', '=', (int) $this->id)
-			->orderBy('p.lft', 'asc');*/
 
 		// Assemble the query to find all children of this node.
 		return self::query()

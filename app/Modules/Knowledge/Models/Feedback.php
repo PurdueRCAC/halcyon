@@ -10,8 +10,6 @@ use App\Modules\Knowledge\Events\FeedbackCreated;
  */
 class Feedback extends Model
 {
-	//use ErrorBag, Validatable, Historable, SoftDeletes;
-
 	/**
 	 * The table to which the class pertains
 	 *

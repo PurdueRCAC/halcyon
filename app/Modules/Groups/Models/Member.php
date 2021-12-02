@@ -278,7 +278,7 @@ class Member extends Model
 	 * @param   integer  $userid
 	 * @return  object
 	 */
-	public static function findByGroupAndUser($groupid, $userid)
+	public static function findByGroupAndUser(int $groupid, int $userid)
 	{
 		return self::query()
 			->where('groupid', '=', $groupid)

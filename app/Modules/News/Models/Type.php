@@ -97,7 +97,7 @@ class Type extends Model
 	 * @param   array   $data  the data being saved
 	 * @return  string
 	 **/
-	public function setNameAttribute($value)
+	public function setNameAttribute(string $value)
 	{
 		$this->attributes['name'] = Str::limit($value, 32);
 	}
@@ -168,7 +168,7 @@ class Type extends Model
 	 * @param  array  $columns
 	 * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|static[]|static|null
 	 */
-	public static function findByName($name, $columns = ['*'])
+	public static function findByName(string $name, array $columns = ['*'])
 	{
 		$name = str_replace('-', ' ', $name);
 

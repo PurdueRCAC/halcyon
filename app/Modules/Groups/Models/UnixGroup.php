@@ -116,7 +116,7 @@ class UnixGroup extends Model
 	 * @param   string  $name
 	 * @return  string
 	 */
-	public function generateShortname($name)
+	public function generateShortname(string $name)
 	{
 		$lastchar = '0';
 		if (preg_match('/^$/', $name))
@@ -201,9 +201,9 @@ class UnixGroup extends Model
 	 * Get a list of "message of the day"
 	 *
 	 * @param   string  $name
-	 * @return  object
+	 * @return  mixed   object|null
 	 */
-	public static function findByLongname($name)
+	public static function findByLongname(string $name)
 	{
 		return self::query()
 			->where('longname', '=', $name)
@@ -214,9 +214,9 @@ class UnixGroup extends Model
 	 * Get a list of "message of the day"
 	 *
 	 * @param   string  $name
-	 * @return  object
+	 * @return  mixed   object|null
 	 */
-	public static function findByShortname($name)
+	public static function findByShortname(string $name)
 	{
 		return self::query()
 			->where('shortname', '=', $name)

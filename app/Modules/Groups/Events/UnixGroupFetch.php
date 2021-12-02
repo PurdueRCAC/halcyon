@@ -20,7 +20,7 @@ class UnixGroupFetch
 	 * @param string $name
 	 * @return void
 	 */
-	public function __construct($name)
+	public function __construct(string $name)
 	{
 		$this->name = $name;
 		$this->results = array();

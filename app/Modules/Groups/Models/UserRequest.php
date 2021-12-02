@@ -25,14 +25,14 @@ class UserRequest extends Model
 	/**
 	 * The name of the "updated at" column.
 	 *
-	 * @var  string
+	 * @var string
 	 */
 	const UPDATED_AT = null;
 
 	/**
 	 * The table to which the class pertains
 	 *
-	 * @var  string
+	 * @var string
 	 **/
 	protected $table = 'userrequests';
 
@@ -46,7 +46,7 @@ class UserRequest extends Model
 	/**
 	 * Default order direction for select queries
 	 *
-	 * @var  string
+	 * @var string
 	 */
 	public static $orderDir = 'asc';
 
@@ -62,7 +62,7 @@ class UserRequest extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var array
 	 */
 	protected $rules = array(
 		'userid' => 'required|integer|min:1'
@@ -84,7 +84,7 @@ class UserRequest extends Model
 	 *
 	 * @return  object
 	 */
-	public function setCommentAttribute($value)
+	public function setCommentAttribute(string $value)
 	{
 		$this->attributes['comment'] = strip_tags($value);
 	}

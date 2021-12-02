@@ -6,15 +6,15 @@ use App\Modules\Queues\Events\UserRequestUpdated;
 use App\Modules\Groups\Models\UnixGroupMember;
 
 /**
- * Group listener
+ * Group listener to add a user to a unix group
  */
 class AddUserToUnixGroup
 {
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
-	 * @return void
+	 * @param   Illuminate\Events\Dispatcher  $events
+	 * @return  void
 	 */
 	public function subscribe($events)
 	{
@@ -24,8 +24,7 @@ class AddUserToUnixGroup
 	/**
 	 * Handle an updated User Request
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin.
-	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @param   UserRequestUpdated  $event
 	 * @return  void
 	 */
 	public function handleUserRequestUpdated(UserRequestUpdated $event)
@@ -38,7 +37,7 @@ class AddUserToUnixGroup
 		// Get base unix group
 		$unixgroup = UnixGroup::query()
 			->where('groupid', '=', $event->userrequest->queue->groupid)
-			->where('shortname', 'like', config('modules.groups.unix_prefix', 'rcs') . '%0')
+			->where('shortname', 'like', config('module.groups.unix_prefix', 'rcs') . '%0')
 			->get()
 			->first();
 

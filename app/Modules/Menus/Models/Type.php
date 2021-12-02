@@ -81,7 +81,7 @@ class Type extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setMenutypeAttribute($value)
+	public function setMenutypeAttribute(string $value)
 	{
 		$value = str_replace(' ', '-', $value);
 		$value = preg_replace("/[^a-zA-Z0-9\-]/", '', strtolower($value));
@@ -298,11 +298,11 @@ class Type extends Model
 	/**
 	 * Find a model by menutype
 	 *
-	 * @param  mixed  $id
+	 * @param  string $type
 	 * @param  array  $columns
 	 * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|static[]|static|null
 	 */
-	public static function findByMenutype($type, $columns = ['*'])
+	public static function findByMenutype(string $type, array $columns = ['*'])
 	{
 		return static::query()->where('menutype', '=', $type)->first($columns);
 	}
@@ -310,6 +310,7 @@ class Type extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
+	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
 	public function save(array $options = [])
@@ -389,6 +390,7 @@ class Type extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
+	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
 	public function delete(array $options = [])

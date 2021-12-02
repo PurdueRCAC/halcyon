@@ -107,22 +107,12 @@ class Item extends Model
 	 * @param   string  $alias
 	 * @return  string
 	 */
-	public function setAliasAttribute($alias)
+	public function setAliasAttribute(string $alias)
 	{
-		/*if (empty($alias)
-		 && $this->type != 'alias'
-		 && $this->type != 'url')
-		{
-			$alias = $this->title;
-		}*/
-
 		$alias = trim($alias);
 
 		// Remove any '-' from the string since they will be used as concatenaters
 		$alias = str_replace('-', ' ', $alias);
-
-		//$alias = Lang::transliterate($alias);
-
 		$alias = preg_replace('/(\s|[^A-Za-z0-9\-])+/', '-', strtolower($alias));
 		$alias = trim($alias, '-');
 
@@ -151,14 +141,13 @@ class Item extends Model
 	 */
 	public function children()
 	{
-		//return self::query()
 		return $this->hasMany(self::class, 'parent_id');
-			//->where('parent_id', '=', $this->id);
 	}
 
 	/**
 	 * Delete the record and all associated data
 	 *
+	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
 	public function delete(array $options = [])
@@ -180,6 +169,7 @@ class Item extends Model
 	/**
 	 * Save the record
 	 *
+	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
 	public function save(array $options = [])
@@ -312,9 +302,10 @@ class Item extends Model
 	 * @param   integer  $leftId    The left id to start with in building the tree.
 	 * @param   integer  $level     The level to assign to the current nodes.
 	 * @param   string   $path      The path to the current nodes.
+	 * @param   string   $orderby
 	 * @return  integer  1 + value of root rgt on success, false on failure
 	 */
-	public function rebuild($parentId, $leftId = 0, $level = 0, $path = '', $orderby = 'lft')
+	public function rebuild(int $parentId, int $leftId = 0, int $level = 0, string $path = '', string $orderby = 'lft')
 	{
 		// Assemble the query to find all children of this node.
 		$children = self::query()
@@ -390,7 +381,7 @@ class Item extends Model
 	 *                                   should be made.
 	 * @return  mixed    Boolean false on failure or data object on success.
 	 */
-	protected function getTreeRepositionData($referenceNode, $nodeWidth, $position = 'before')
+	protected function getTreeRepositionData($referenceNode, int $nodeWidth, string $position = 'before')
 	{
 		// Make sure the reference an object with a left and right id.
 		if (!is_object($referenceNode) || !isset($referenceNode->lft) || !isset($referenceNode->rgt))
@@ -787,7 +778,7 @@ class Item extends Model
 	 * @param   integer  $pk           The primary key of the node to move.
 	 * @return  boolean  True on success.
 	 */
-	public function moveByReference($referenceId, $position = 'after', $pk = 0)
+	public function moveByReference(int $referenceId, string $position = 'after', int $pk = 0)
 	{
 		// Initialise variables.
 		$pk = (is_null($pk)) ? $this->id : $pk;
@@ -934,7 +925,7 @@ class Item extends Model
 	 * @param   array  $order  An array of order values.
 	 * @return  bool
 	 */
-	public static function saveorder($pks = null, $order = null)
+	public static function saveorder(array $pks = [], array $order = [])
 	{
 		if (empty($pks))
 		{

@@ -128,11 +128,12 @@ class Update extends Model
 	}
 
 	/**
-	 * Defines a relationship to type
+	 * Format datetimecreated
 	 *
+	 * @param   string  $startdate
 	 * @return  string
 	 */
-	public function formattedDatetimecreated($startdate)
+	public function formattedDatetimecreated(string $startdate)
 	{
 		$starttime = explode(' ', $startdate);
 		$starttime = $starttime[1];
@@ -147,7 +148,7 @@ class Update extends Model
 	}
 
 	/**
-	 * Defines a relationship to type
+	 * Format body
 	 *
 	 * @return string
 	 */
@@ -300,7 +301,7 @@ class Update extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function replaceCode($match)
+	protected function replaceCode(array $match)
 	{
 		$code = array_shift($this->codeblocks);
 
@@ -320,7 +321,6 @@ class Update extends Model
 	 * Format news date
 	 *
 	 * @param   string  $startdate
-	 * @param   string  $enddate
 	 * @return  string
 	 */
 	public function formatDate($startdate)

@@ -126,7 +126,7 @@ class Article extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setHeadlineAttribute($value)
+	public function setHeadlineAttribute(string $value)
 	{
 		$value = strip_tags($value);
 		$value = htmlentities($value, ENT_QUOTES, 'UTF-8');
@@ -140,7 +140,7 @@ class Article extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setBodyAttribute($value)
+	public function setBodyAttribute(string $value)
 	{
 		$value = strip_tags($value);
 
@@ -710,7 +710,7 @@ class Article extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	private function matchNews($match)
+	private function matchNews(array $match)
 	{
 		$title = trans('news::news.news story number', ['number' => $match[3]]);
 
@@ -748,7 +748,7 @@ class Article extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function stripCode($match)
+	protected function stripCode(array $match)
 	{
 		array_push($this->replacements['codeblocks'], $match[0]);
 
@@ -761,7 +761,7 @@ class Article extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function stripPre($match)
+	protected function stripPre(array $match)
 	{
 		array_push($this->replacements['preblocks'], $match[0]);
 
@@ -774,7 +774,7 @@ class Article extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function replaceCode($match)
+	protected function replaceCode(array $match)
 	{
 		return array_shift($this->replacements['codeblocks']);
 	}
@@ -785,7 +785,7 @@ class Article extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function replacePre($match)
+	protected function replacePre(array $match)
 	{
 		return array_shift($this->replacements['preblocks']);
 	}
@@ -867,7 +867,7 @@ class Article extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function stripURL($match)
+	protected function stripURL(array $match)
 	{
 		if (isset($match[12]))
 		{
@@ -1189,7 +1189,7 @@ class Article extends Model
 	 * @param   array  $resources
 	 * @return  void
 	 */
-	public function setResources($resources = array())
+	public function setResources(array $resources = [])
 	{
 		if (empty($resources))
 		{
@@ -1259,7 +1259,7 @@ class Article extends Model
 	 * @param   array  $associations
 	 * @return  void
 	 */
-	public function setAssociations($associations = array())
+	public function setAssociations(array $associations = [])
 	{
 		if (empty($associations))
 		{

@@ -65,7 +65,7 @@ class GroupDisplay
 	 *
 	 * @return void
 	 */
-	public function addSection($route, $name, $active = false, $content = null)
+	public function addSection(string $route, string $name, bool $active = false, $content = null)
 	{
 		$this->sections[] = array(
 			'route'   => $route,

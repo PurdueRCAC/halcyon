@@ -111,6 +111,7 @@ class Group extends Model
 	/**
 	 * Determine if a user is a manager
 	 *
+	 * @param   object  $user
 	 * @return  boolean  True if modified, false if not
 	 */
 	public function isManager($user)
@@ -625,7 +626,7 @@ class Group extends Model
 	 * @param   string  $name
 	 * @return  object
 	 */
-	public static function findByName($name)
+	public static function findByName(string $name)
 	{
 		return self::query()
 			->where('name', '=', $name)
@@ -638,7 +639,7 @@ class Group extends Model
 	 * @param   string  $unixgroup
 	 * @return  object
 	 */
-	public static function findByUnixgroup($unixgroup)
+	public static function findByUnixgroup(string $unixgroup)
 	{
 		return self::query()
 			->where('unixgroup', '=', $unixgroup)
@@ -693,7 +694,7 @@ class Group extends Model
 	 * @param   integer  $owner
 	 * @return  bool
 	 */
-	public function addManager($userid, $owner = 0)
+	public function addManager(int $userid, int $owner = 0)
 	{
 		$member = Member::findByGroupAndUser($this->id, $userid);
 
@@ -717,7 +718,7 @@ class Group extends Model
 	 * @param   integer  $userid
 	 * @return  bool
 	 */
-	public function addMember($userid)
+	public function addMember(int $userid)
 	{
 		$member = Member::findByGroupAndUser($this->id, $userid);
 
@@ -741,7 +742,7 @@ class Group extends Model
 	 * @param   integer  $userid
 	 * @return  bool
 	 */
-	public function addViewer($userid)
+	public function addViewer(int $userid)
 	{
 		$member = Member::findByGroupAndUser($this->id, $userid);
 
@@ -765,7 +766,7 @@ class Group extends Model
 	 * @param   integer  $depid
 	 * @return  bool
 	 */
-	public function addDepartment($depid)
+	public function addDepartment(int $depid)
 	{
 		$row = new GroupDepartment;
 		$row->groupid = $this->id;
@@ -781,7 +782,7 @@ class Group extends Model
 	 * @param   integer  $fid
 	 * @return  bool
 	 */
-	public function addFieldOfScience($fid)
+	public function addFieldOfScience(int $fid)
 	{
 		$row = new GroupFieldOfScience;
 		$row->groupid = $this->id;

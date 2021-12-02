@@ -6,15 +6,15 @@ use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Groups\Models\Member;
 
 /**
- * User listener for groups
+ * Group listener to get compile info for a user
  */
 class GetUserGroups
 {
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
-	 * @return void
+	 * @param   Illuminate\Events\Dispatcher  $events
+	 * @return  void
 	 */
 	public function subscribe($events)
 	{
@@ -24,7 +24,7 @@ class GetUserGroups
 	/**
 	 * Display user profile info
 	 *
-	 * @param   object  $event
+	 * @param   UserBeforeDisplay  $event
 	 * @return  void
 	 */
 	public function handleUserBeforeDisplay(UserBeforeDisplay $event)

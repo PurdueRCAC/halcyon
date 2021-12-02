@@ -84,7 +84,7 @@ class Department extends Model
 	 *
 	 * @return  object
 	 */
-	public static function tree($order = 'name', $dir = 'asc')
+	public static function tree(string $order = 'name', string $dir = 'asc')
 	{
 		$rows = self::query()
 			->orderBy($order, $dir)
@@ -102,9 +102,6 @@ class Department extends Model
 			foreach ($rows as $k)
 			{
 				$pt = $k->parentid;
-				//$list = @$children[$pt] ? $children[$pt] : array();
-				//array_push($list, $k);
-				//$children[$pt] = $list;
 
 				if (!isset($children[$pt]))
 				{
@@ -132,7 +129,7 @@ class Department extends Model
 	 * @param   string   $prfx
 	 * @return  array
 	 */
-	protected static function treeRecurse($id, $list, $children, $maxlevel=9999, $level=0, $type=1, $prfx = '')
+	protected static function treeRecurse(int $id, array $list, array $children, int $maxlevel=9999, int $level=0, int $type=1, string $prfx = '')
 	{
 		if (@$children[$id] && $level <= $maxlevel)
 		{
@@ -178,7 +175,7 @@ class Department extends Model
 	 * @param   array  $ancestors
 	 * @return  array
 	 */
-	public function ancestors($ancestors = array())
+	public function ancestors(array $ancestors = [])
 	{
 		$parent = $this->parent;
 
