@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Modules\Messages\Models\Message;
 use App\Modules\Messages\Models\Type;
 use App\Halcyon\Http\StatefulRequest;
+use Symfony\Component\Process\Process;
 use Carbon\Carbon;
 
 class MessagesController extends Controller
@@ -390,7 +391,7 @@ class MessagesController extends Controller
 			'lines' => (int) $request->input('lines', 30)
 		);
 
-		$results = null;
+		$results = array();
 		$err = null;
 		$file = config('module.messages.log');
 
@@ -402,33 +403,37 @@ class MessagesController extends Controller
 			}
 			else
 			{
-				$command = 'tail -n ' . $filters['lines'] . ' ' . $file . '';
-				$command = escapeshellcmd($command);
+				$command = '\\tail -n ' . $filters['lines'] . ' "' . $file . '"';
 
-				exec($command, $results, $status);
-
-				if (is_array($results))
-				{
-					foreach ($results as $k => $v)
+				Process::fromShellCommandline($command)
+					->setTimeout(null)
+					->run(function ($type, $line) use (&$results)
 					{
-						if (stristr($v, 'INFO'))
+						$lines = explode("\n", $line);
+						foreach ($lines as $v)
 						{
-							$results[$k] = '<span class="text-info">' . $v . '</span>';
+							if (stristr($v, 'INFO'))
+							{
+								$results[] = '<span class="text-info">' . $v . '</span>';
+							}
+							if (stristr($v, 'WARNING'))
+							{
+								$results[] = '<span class="text-warning">' . $v . '</span>';
+							}
+							if (stristr($v, 'ERROR'))
+							{
+								$results[] = '<span class="text-danger">' . $v . '</span>';
+							}
 						}
-						if (stristr($v, 'ERROR'))
-						{
-							$results[$k] = '<span class="text-danger">' . $v . '</span>';
-						}
-					}
-					$results = implode("\n", $results);
-				}
-				$results = trim($results);
+					});
 			}
 		}
 		else
 		{
 			$err = trans('messages::messages.errors.log not configured');
 		}
+
+		$results = implode("\n", $results);
 
 		return view('messages::admin.messages.logs', [
 			'filters' => $filters,
