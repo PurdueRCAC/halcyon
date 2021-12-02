@@ -446,7 +446,7 @@ class QueuesController extends Controller
 					$rids = $resource->subresources->pluck('id')->toArray();
 				}
 			}
-print_r($rids); die();
+
 			foreach ($rids as $rid)
 			{
 				$subresource = Subresource::find($rid);
@@ -536,7 +536,6 @@ print_r($rids); die();
 		]);
 
 		$output = Artisan::output();
-		//$output = str_replace("\n", '<br />', $output);
 
 		$request->session()->flash('success', $output);
 

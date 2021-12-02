@@ -3500,6 +3500,16 @@ select.filter_search {
   background-color: #1e7e34;
   border-color: #1e7e34;
 }
+.toolbar-box .btn-unpublish {
+  background-color: rgb(212, 149, 1);
+  border-color: rgb(212, 149, 1);
+  color: #fff;
+}
+.toolbar-box .btn-unpublish:hover {
+  background-color: rgb(173, 122, 1);
+  border-color: rgb(173, 122, 1);
+  color: #fff;
+}
 .toolbar-box .btn-plus {
   color: #fff;
   background-color: #0071EB;
