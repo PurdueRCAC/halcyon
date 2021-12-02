@@ -301,7 +301,7 @@ class SizesController extends Controller
 			$row->sellerqueueid = $row->queueid;
 		}
 
-		if ($row->datetimestop && $row->datetimestart > $row->datetimestop)
+		if (!$row->endsAfterStarts())
 		{
 			return response()->json(['message' => trans('queues::queues.error.start cannot be after end')], 409);
 		}
@@ -647,7 +647,7 @@ class SizesController extends Controller
 			$row->serviceunits = (float)$request->input('serviceunits');
 		}
 
-		if ($row->hasEnd() && $row->datetimestart > $row->datetimestop)
+		if (!$row->endsAfterStarts())
 		{
 			return response()->json(['message' => trans('queues::queues.error.start cannot be after stop')], 409);
 		}

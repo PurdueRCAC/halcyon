@@ -12,56 +12,14 @@ use Carbon\Carbon;
 /**
  * Storage model for a resource directory
  */
-class Loan extends Model
+class Loan extends Purchase
 {
-	use Historable, SoftDeletes;
-
-	/**
-	 * The name of the "created at" column.
-	 *
-	 * @var string
-	 */
-	const CREATED_AT = 'datetimestart';
-
-	/**
-	 * The name of the "updated at" column.
-	 *
-	 * @var  string
-	 */
-	const UPDATED_AT = null;
-
-	/**
-	 * The name of the "updated at" column.
-	 *
-	 * @var  string
-	 */
-	const DELETED_AT = 'datetimestop';
-
 	/**
 	 * The table to which the class pertains
 	 *
 	 * @var  string
 	 **/
 	protected $table = 'storagedirloans';
-
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $guarded = [
-		'id'
-	];
-
-	/**
-	 * Automatic fields to populate every time a row is created
-	 *
-	 * @var  array
-	 */
-	protected $dates = array(
-		'datetimestart',
-		'datetimestop'
-	);
 
 	/**
 	 * The event map for the model.
@@ -73,23 +31,13 @@ class Loan extends Model
 	];
 
 	/**
-	 * Defines a relationship to a resource
-	 *
-	 * @return  object
-	 */
-	public function resource()
-	{
-		return $this->belongsTo(StorageResource::class, 'resourceid');
-	}
-
-	/**
 	 * Defines a relationship to a group
 	 *
 	 * @return  object
 	 */
-	public function group()
+	public function seller()
 	{
-		return $this->belongsTo(Group::class, 'groupid');
+		return $this->lender();
 	}
 
 	/**
@@ -100,205 +48,6 @@ class Loan extends Model
 	public function lender()
 	{
 		return $this->belongsTo(Group::class, 'lendergroupid');
-	}
-
-	/**
-	 * Set a query's WHERE clause to include published state
-	 *
-	 * @return  object
-	 */
-	public function hasStart()
-	{
-		return !is_null($this->datetimestart);
-	}
-
-	/**
-	 * Set a query's WHERE clause to include published state
-	 *
-	 * @return  object
-	 */
-	public function hasEnd()
-	{
-		return !is_null($this->datetimestop);
-	}
-
-	/**
-	 * Get when this will end in human readable format
-	 *
-	 * @return  string
-	 */
-	public function willEnd()
-	{
-		if (!$this->hasEnd())
-		{
-			return trans('global.never');
-		}
-		if ($this->hasEnded())
-		{
-			return $this->datetimestop->toDateTimeString();
-		}
-
-		$inputSeconds = $this->datetimestop->timestamp - Carbon::now()->timestamp;
-
-		$secondsInAMinute = 60;
-		$secondsInAnHour = 60 * $secondsInAMinute;
-		$secondsInADay = 24 * $secondsInAnHour;
-
-		// Extract days
-		$days = floor($inputSeconds / $secondsInADay);
-
-		// Extract hours
-		$hourSeconds = $inputSeconds % $secondsInADay;
-		$hours = floor($hourSeconds / $secondsInAnHour);
-
-		// Extract minutes
-		$minuteSeconds = $hourSeconds % $secondsInAnHour;
-		$minutes = floor($minuteSeconds / $secondsInAMinute);
-
-		// Extract the remaining seconds
-		$remainingSeconds = $minuteSeconds % $secondsInAMinute;
-		$seconds = ceil($remainingSeconds);
-
-		// Format and return
-		$timeParts = [];
-		$sections = [
-			'days'    => (int)$days,
-			'hours'   => (int)$hours,
-			'minutes' => (int)$minutes,
-			'seconds' => (int)$seconds,
-		];
-
-		foreach ($sections as $name => $value)
-		{
-			if ($value > 0)
-			{
-				$timeParts[] = $value . ' ' . trans_choice('global.time.' . $name, $value);
-				break;
-			}
-		}
-
-		return implode(', ', $timeParts);
-	}
-
-	/**
-	 * Set a query's WHERE clause to include published state
-	 *
-	 * @return  object
-	 */
-	public function hasEnded()
-	{
-		return ($this->hasEnd() && $this->datetimestop->toDateTimeString() <= Carbon::now()->toDateTimeString());
-	}
-
-	/**
-	 * Set a query's WHERE clause to include published state
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhenAvailable($query)
-	{
-		$now = Carbon::now()->toDateTimeString();
-
-		return $query->withTrashed()
-			->where(function($where) use ($now)
-			{
-				$where->whereNull('datetimestart')
-					->orWhere('datetimestart', '<=', $now);
-			})
-			->where(function($where) use ($now)
-			{
-				$where->whereNull('datetimestop')
-					->orWhere('datetimestop', '>', $now);
-			});
-	}
-
-	/**
-	 * Set a query's WHERE clause to include published state
-	 *
-	 * @param   object  $query
-	 * @return  object
-	 */
-	public function scopeWhenNotAvailable($query)
-	{
-		$now = Carbon::now()->toDateTimeString();
-
-		return $query->withTrashed()
-			->whereNotNull('datetimestop')
-			->where('datetimestop', '<=', $now);
-	}
-
-	/**
-	 * Set value in bytes
-	 *
-	 * @param   mixed  $value
-	 * @return  void
-	 */
-	public function setBytesAttribute($value)
-	{
-		$value = str_replace(',', '', $value);
-		
-		$neg = false;
-
-		if (preg_match_all("/^(\-?\d*\.?\d+)\s*([PpTtGgMmKkBb]{1,2})$/", $value, $matches))
-		{
-			if ($matches[1][0] < 0)
-			{
-				$neg = true;
-			}
-			$num  = abs((int)$matches[1][0]);
-			$unit = $matches[2][0];
-
-			$value = $this->convertToBytes($num, $unit);
-		}
-		else
-		{
-			
-			$value = intval($value);
-		}
-
-		$this->attributes['bytes'] = $neg ? -(int)$value : (int)$value;
-	}
-
-	/**
-	 * Convert a value to bytes
-	 *
-	 * @param   integer  $num
-	 * @param   string   $unit
-	 * @return  integer
-	 */
-	private function convertToBytes($num, $unit)
-	{
-		$units = array(
-			array("b", "bytes?"),
-			array("ki?b?", "kilobytes?", "kibibytes?", "kbytes?"),
-			array("mi?b?", "megabytes?", "mebibytes?", "mbytes?"),
-			array("gi?b?", "gigabytes?", "gibibytes?", "gbytes?"),
-			array("ti?b?", "terabytes?", "tebibytes?", "tbytes?"),
-			array("pi?b?", "petabytes?", "pebibytes?", "pbytes?"),
-			array("xi?b?", "exabytes?", "exibytes?", "xbytes?"),
-		);
-
-		$power = 0;
-		foreach ($units as $unit_group)
-		{
-			foreach ($unit_group as $unit_regex)
-			{
-				if (preg_match("/^" . $unit_regex . "$/i", $unit))
-				{
-					break 2;
-				}
-			}
-			$power++;
-		}
-
-		$mult = $num;
-		for ($i=0; $i<$power; $i++)
-		{
-			$mult = $mult*1024;
-		}
-
-		return $mult;
 	}
 
 	/**

@@ -271,7 +271,7 @@ class LoansController extends Controller
 			return response()->json(['message' => trans('Field `start` cannot be before "now"')], 409);
 		}
 
-		if ($row->datetimestop && $row->datetimestart->timestamp >= $row->datetimestop->timestamp)
+		if (!$row->endsAfterStarts())
 		{
 			return response()->json(['message' => trans('Field `start` cannot be after `stop`')], 409);
 		}
@@ -546,6 +546,7 @@ class LoansController extends Controller
 			'lendergroupid' => 'nullable|integer',
 			'datetimestart' => 'nullable|date',
 			'datetimestop' => 'nullable|date',
+			'comment'       => 'nullable|string',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -588,6 +589,10 @@ class LoansController extends Controller
 		{
 			$row->datetimestop = $request->input('datetimestop');
 		}
+		if ($request->has('comment'))
+		{
+			$row->comment = $request->input('comment');
+		}
 
 		// Sanity checks if we are changing start time
 		if ($request->has('datetimestart')
@@ -608,20 +613,20 @@ class LoansController extends Controller
 			if ($row->hasEnd())
 			{
 				// Compare to new values
-				if ($row->datetimestop->timestamp <= $row->datetimestart->timestamp)
+				if (!$row->endsAfterStarts())
 				{
 					return response()->json(['message' => trans('Field `start` cannot be after `stop`')], 409);
 				}
 			}
 		}
 
-		if ($request->has('datetimestop') && $row->datetimestop->toDateTimeString() != $request->input('datetimestop'))
+		if ($request->has('datetimestop'))
 		{
 			// Make sure we aren't setting the stop time before the start
 			//if ($row->datetimestart != $row->getOriginal('datetimestart'))
 			//{
 				// Compare to new values
-				if ($row->datetimestop->timestamp <= $row->datetimestart->timestamp)
+				if (!$row->endsAfterStarts())
 				{
 					return response()->json(['message' => trans('Field `start` cannot be after `stop`')], 409);
 				}
@@ -640,7 +645,7 @@ class LoansController extends Controller
 		if ($request->has('bytes'))
 		{
 			// Can't change bytes of a entry that has already started
-			if ($row->bytes != $row->getOriginal('bytes') && $row->datetimestart->timestamp <= Carbon::now()->timestamp)
+			if ($row->bytes != $row->getOriginal('bytes') && $row->hasStarted())
 			{
 				return response()->json(['message' => trans('Cannot change bytes of a entry that has already started')], 409);
 			}

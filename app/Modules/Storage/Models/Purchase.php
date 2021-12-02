@@ -73,9 +73,9 @@ class Purchase extends Model
 	];
 
 	/**
-	 * Set a query's WHERE clause to include published state
+	 * Has a start date been set?
 	 *
-	 * @return  object
+	 * @return  bool
 	 */
 	public function hasStart()
 	{
@@ -83,9 +83,38 @@ class Purchase extends Model
 	}
 
 	/**
-	 * Set a query's WHERE clause to include published state
+	 * Has the item started?
 	 *
-	 * @return  object
+	 * @return  bool
+	 */
+	public function hasStarted()
+	{
+		return (!$this->hasStart() || $this->datetimestart->timestamp <= Carbon::now()->timestamp);
+	}
+
+	/**
+	 * Get when this will start in human readable format
+	 *
+	 * @return  string
+	 */
+	public function willStart()
+	{
+		if (!$this->hasStart())
+		{
+			return trans('global.immediately');
+		}
+		if ($this->hasStarted())
+		{
+			return $this->datetimestart->toDateTimeString();
+		}
+
+		return $this->calculateTimeLeft($this->datetimestart->timestamp);
+	}
+
+	/**
+	 * Has an end date been set?
+	 *
+	 * @return  bool
 	 */
 	public function hasEnd()
 	{
@@ -93,13 +122,27 @@ class Purchase extends Model
 	}
 
 	/**
-	 * Set a query's WHERE clause to include published state
+	 * Has the item ended?
 	 *
-	 * @return  object
+	 * @return  bool
 	 */
 	public function hasEnded()
 	{
-		return ($this->hasEnd() && $this->datetimestop->toDateTimeString() <= Carbon::now()->toDateTimeString());
+		return ($this->hasEnd() && $this->datetimestop->timestamp <= Carbon::now()->timestamp);
+	}
+
+	/**
+	 * Is the end time sane?
+	 *
+	 * @return  bool
+	 */
+	public function endsAfterStarts()
+	{
+		if (!$this->hasEnd())
+		{
+			return true;
+		}
+		return ($this->datetimestop->timestamp > $this->datetimestart->timestamp);
 	}
 
 	/**
@@ -118,7 +161,18 @@ class Purchase extends Model
 			return $this->datetimestop->toDateTimeString();
 		}
 
-		$inputSeconds = $this->datetimestop->timestamp - Carbon::now()->timestamp;
+		return $this->calculateTimeLeft($this->datetimestop->timestamp);
+	}
+
+	/**
+	 * Calculate time left from a start time
+	 *
+	 * @param   integer  $start
+	 * @return  string
+	 */
+	private function calculateTimeLeft($start)
+	{
+		$inputSeconds = $start - Carbon::now()->timestamp;
 
 		$secondsInAMinute = 60;
 		$secondsInAnHour = 60 * $secondsInAMinute;

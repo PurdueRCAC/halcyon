@@ -320,7 +320,7 @@ class LoansController extends Controller
 			$row->serviceunits = (float)$request->input('serviceunits');
 		}
 
-		if ($row->datetimestop && $row->datetimestart > $row->datetimestop)
+		if (!$row->endsAfterStarts())
 		{
 			return response()->json(['message' => trans('queues::queues.error.start cannot be after end')], 409);
 		}
@@ -635,7 +635,7 @@ class LoansController extends Controller
 			$updatecounter = true;
 		}
 
-		if ($row->hasEnd() && $row->datetimestart > $row->datetimestop)
+		if (!$row->endsAfterStarts())
 		{
 			return response()->json(['message' => trans('queues::queues.error.start cannot be after stop')], 409);
 		}

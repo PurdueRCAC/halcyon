@@ -3,14 +3,9 @@ namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-/*use App\Modules\Queues\Events\SizeCreating;
-use App\Modules\Queues\Events\SizeCreated;
-use App\Modules\Queues\Events\SizeUpdating;
-use App\Modules\Queues\Events\SizeUpdated;
-use App\Modules\Queues\Events\SizeDeleted;*/
 
 /**
- * Model for a queue size
+ * Model for a queue purchase
  */
 class Size extends Model
 {
@@ -71,17 +66,6 @@ class Size extends Model
 	];
 
 	/**
-	 * The event map for the model.
-	 *
-	 * @var array
-	 */
-	/*protected $dispatchesEvents = [
-		'created'  => SizeCreated::class,
-		'updated'  => SizeUpdated::class,
-		'deleted'  => SizeDeleted::class,
-	];*/
-
-	/**
 	 * Determine if in a trashed state
 	 *
 	 * @return  bool
@@ -89,6 +73,21 @@ class Size extends Model
 	public function hasStart()
 	{
 		return !is_null($this->datetimestart);
+	}
+
+	/**
+	 * Determine if in a trashed state
+	 *
+	 * @return  bool
+	 */
+	public function hasStarted()
+	{
+		// No start time means start immediately
+		if (!$this->hasStart())
+		{
+			return true;
+		}
+		return ($this->datetimestart->timestamp < Carbon::now()->timestamp);
 	}
 
 	/**
@@ -107,46 +106,7 @@ class Size extends Model
 			return $this->datetimestart->toDateTimeString();
 		}
 
-		$inputSeconds = $this->datetimestart->timestamp - Carbon::now()->timestamp;
-
-		$secondsInAMinute = 60;
-		$secondsInAnHour = 60 * $secondsInAMinute;
-		$secondsInADay = 24 * $secondsInAnHour;
-
-		// Extract days
-		$days = floor($inputSeconds / $secondsInADay);
-
-		// Extract hours
-		$hourSeconds = $inputSeconds % $secondsInADay;
-		$hours = floor($hourSeconds / $secondsInAnHour);
-
-		// Extract minutes
-		$minuteSeconds = $hourSeconds % $secondsInAnHour;
-		$minutes = floor($minuteSeconds / $secondsInAMinute);
-
-		// Extract the remaining seconds
-		$remainingSeconds = $minuteSeconds % $secondsInAMinute;
-		$seconds = ceil($remainingSeconds);
-
-		// Format and return
-		$timeParts = [];
-		$sections = [
-			'days'    => (int)$days,
-			'hours'   => (int)$hours,
-			'minutes' => (int)$minutes,
-			'seconds' => (int)$seconds,
-		];
-
-		foreach ($sections as $name => $value)
-		{
-			if ($value > 0)
-			{
-				$timeParts[] = $value . ' ' . trans_choice('global.time.' . $name, $value);
-				break;
-			}
-		}
-
-		return implode(', ', $timeParts);
+		return $this->calculateTimeLeft($this->datetimestart->timestamp);
 	}
 
 	/**
@@ -157,21 +117,6 @@ class Size extends Model
 	public function hasEnd()
 	{
 		return !is_null($this->datetimestop);
-	}
-
-	/**
-	 * Determine if in a trashed state
-	 *
-	 * @return  bool
-	 */
-	public function hasStarted()
-	{
-		// No start time means start immediately
-		if (!$this->hasStart())
-		{
-			return true;
-		}
-		return ($this->datetimestart->timestamp < Carbon::now()->timestamp);
 	}
 
 	/**
@@ -200,7 +145,18 @@ class Size extends Model
 			return $this->datetimestop->toDateTimeString();
 		}
 
-		$inputSeconds = $this->datetimestop->timestamp - Carbon::now()->timestamp;
+		return $this->calculateTimeLeft($this->datetimestop->timestamp);
+	}
+
+	/**
+	 * Calculate time left from a start time
+	 *
+	 * @param   integer  $start
+	 * @return  string
+	 */
+	private function calculateTimeLeft($start)
+	{
+		$inputSeconds = $start - Carbon::now()->timestamp;
 
 		$secondsInAMinute = 60;
 		$secondsInAnHour = 60 * $secondsInAMinute;
@@ -240,6 +196,20 @@ class Size extends Model
 		}
 
 		return implode(', ', $timeParts);
+	}
+
+	/**
+	 * Is the end time sane?
+	 *
+	 * @return  bool
+	 */
+	public function endsAfterStarts()
+	{
+		if (!$this->hasEnd())
+		{
+			return true;
+		}
+		return ($this->datetimestop->timestamp > $this->datetimestart->timestamp);
 	}
 
 	/**
