@@ -56,5 +56,9 @@ class Scheduling extends Mailable
 						'started' => $this->started,
 						'stopped' => $this->stopped,
 					]);
+					/*->withSwiftMessage(function ($message)
+					{
+						$message->getHeaders()->addTextHeader('X-Command', 'resources:emailscheduling');
+					});*/
 	}
 }

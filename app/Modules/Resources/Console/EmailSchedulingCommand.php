@@ -4,6 +4,7 @@ namespace App\Modules\Resources\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use App\Modules\Resources\Models\Subresource;
 use App\Modules\Resources\Models\Child;
 use App\Modules\Resources\Models\Asset;
@@ -116,6 +117,8 @@ class EmailSchedulingCommand extends Command
 			}
 
 			Mail::to($email)->send($message);
+
+			$this->log($email, 'Emailed started scheduling.');
 
 			foreach ($started as $subresource)
 			{
