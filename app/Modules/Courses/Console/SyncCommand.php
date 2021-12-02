@@ -141,9 +141,14 @@ class SyncCommand extends Command
 						$user->puid = $student->externalId;
 						$user->save();
 
-						$userusername = new UserUsername;
+						$userusername = $user->getUserUsername();
+						if (!$userusername)
+						{
+							$userusername = new UserUsername;
+						}
 						$userusername->userid = $user->id;
-						$userusername->username = $user->username;
+						$userusername->username = $userusername->username ?: $user->username;
+						$userusername->email = $userusername->email ?: $user->email;
 						$userusername->save();
 					}
 				}
