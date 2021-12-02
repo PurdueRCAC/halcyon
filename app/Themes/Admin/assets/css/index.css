@@ -446,6 +446,20 @@ pre {
   white-space: pre-wrap;
   white-space: pre-line;
   word-wrap: break-word;
+
+  display: block;
+  font-size: 87.5%;
+	padding: 1em;
+	margin: 0 0 1em 0;
+	line-height: 1.42857;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: pre;
+	white-space: -moz-pre-wrap;
+	white-space: -o-pre-wrap;
+	white-space: -pre-wrap;
+	white-space: pre-wrap;
+	color: var(--body-text);
 }
 p {
   -webkit-hyphens: auto;

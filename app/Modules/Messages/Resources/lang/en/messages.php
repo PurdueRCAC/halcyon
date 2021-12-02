@@ -48,6 +48,8 @@ return [
 		'invalid target object id' => 'Please enter a valid target object ID.',
 		'invalid message queue type id' => 'Please select a type.',
 		'invalid name' => 'Please provide a name.',
+		'log not configured' => 'No log file configured.',
+		'log not found' => 'Configured log file not found.',
 	],
 	'status' => 'Return status',
 	'all statuses' => '- All Return Statuses -',
@@ -55,4 +57,7 @@ return [
 	'failure' => 'Failed',
 	'rerun' => 'Re-submit',
 	'message types' => 'Message types',
+	'tail limit' => 'Tail limit',
+	'lines' => 'lines',
+	'logs' => 'Logs',
 ];

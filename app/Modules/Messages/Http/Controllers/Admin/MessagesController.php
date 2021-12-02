@@ -377,4 +377,63 @@ class MessagesController extends Controller
 	{
 		return redirect(route('admin.messages.index'));
 	}
+
+	/**
+	 * Show the form for editing the specified entry
+	 *
+	 * @param   Request $request
+	 * @return  Response
+	 */
+	public function logs(Request $request)
+	{
+		$filters = array(
+			'lines' => (int) $request->input('lines', 30)
+		);
+
+		$results = null;
+		$err = null;
+		$file = config('module.messages.log');
+
+		if ($file)
+		{
+			if (!is_file($file))
+			{
+				$err = trans('messages::messages.errors.log not found');
+			}
+			else
+			{
+				$command = 'tail -n ' . $filters['lines'] . ' ' . $file . '';
+				$command = escapeshellcmd($command);
+
+				exec($command, $results, $status);
+
+				if (is_array($results))
+				{
+					foreach ($results as $k => $v)
+					{
+						if (stristr($v, 'INFO'))
+						{
+							$results[$k] = '<span class="text-info">' . $v . '</span>';
+						}
+						if (stristr($v, 'ERROR'))
+						{
+							$results[$k] = '<span class="text-danger">' . $v . '</span>';
+						}
+					}
+					$results = implode("\n", $results);
+				}
+				$results = trim($results);
+			}
+		}
+		else
+		{
+			$err = trans('messages::messages.errors.log not configured');
+		}
+
+		return view('messages::admin.messages.logs', [
+			'filters' => $filters,
+			'results' => $results,
+			'err' => $err,
+		]);
+	}
 }

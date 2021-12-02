@@ -39,6 +39,12 @@ $router->group(['prefix' => 'messages'], function (Router $router)
 		]);
 	});
 
+	$router->match(['get', 'post'], '/logs', [
+		'as'   => 'admin.messages.logs',
+		'uses' => 'MessagesController@logs',
+		'middleware' => 'can:manage messages',
+	]);
+
 	$router->match(['get', 'post'], '/', [
 		'as'   => 'admin.messages.index',
 		'uses' => 'MessagesController@index',

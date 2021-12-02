@@ -17,5 +17,5 @@ return [
 	| of issues.
 	|
 	*/
-	'log' => storage_path('logs/messages.log'),
+	'log' => '/var/fsmq-py/log/scheduler.log',
 ];

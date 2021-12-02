@@ -7,5 +7,8 @@
 		<li class="nav-item">
 			<a class="nav-link @if (trim($slot) == 'types') active @endif" href="{{ route('admin.messages.types') }}">{{ trans('messages::messages.types') }}</a>
 		</li>
+		<li class="nav-item">
+			<a class="nav-link @if (trim($slot) == 'logs') active @endif" href="{{ route('admin.messages.logs') }}">{{ trans('messages::messages.logs') }}</a>
+		</li>
 	</ul>
 </nav><!-- / .sub-navigation -->
