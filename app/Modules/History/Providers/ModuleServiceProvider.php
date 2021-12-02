@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 //use App\Modules\History\Facades\History as HistoryFacade;
 //use App\Modules\History\Models\History;
 use App\Modules\History\Listeners\LogSentMessage;
+use App\Modules\History\Listeners\LogCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -25,10 +26,10 @@ class ModuleServiceProvider extends ServiceProvider
 	protected $listen = [
 		/*'Illuminate\Mail\Events\MessageSending' => [
 			'App\Listeners\LogSendingMessage',
-		],*/
+		],
 		'Illuminate\Mail\Events\MessageSent' => [
 			LogSentMessage::class,
-		],
+		],*/
 	];
 
 	/**
@@ -42,6 +43,9 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerViews();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+		//$this->app['events']->listen('Illuminate\Mail\Events\MessageSent', LogSentMessage::class);
+		$this->app['events']->listen('Illuminate\Console\Events\CommandFinished', LogCommand::class);
 
 		//AliasLoader::getInstance()->alias('History', HistoryFacade::class);
 	}
