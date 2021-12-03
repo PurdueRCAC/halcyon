@@ -55,160 +55,6 @@ function CreateNewGroupVal(num, btn, all) {
 	});
 }
 
-var _DEBUG = true;
-/**
- * Message of the Day
- */
-var motd = {
-	/**
-	 * Set the MOTD for a group
-	 *
-	 * @param   {string}  group
-	 * @return  {void}
-	 */
-	set: function (group) {
-		var message = document.getElementById("MotdText_" + group);
-
-		if (!group) {
-			Halcyon.message('danger', 'No group ID provided.');
-			return false;
-		}
-
-		var post = {
-			'groupid': group,
-			'motd': message.value
-		};
-
-		_DEBUG ? console.log('post: ' + message.getAttribute('data-api'), post) : null;
-
-		$.ajax({
-			url: message.getAttribute('data-api'),
-			type: 'post',
-			data: post,
-			dataType: 'json',
-			async: false,
-			success: function () {
-				window.location.reload();
-			},
-			error: function (xhr) {
-				Halcyon.message('danger', xhr.response);
-			}
-		});
-	},
-
-	/**
-	 * Delete the MOTD for a group
-	 *
-	 * @param   {string}  group
-	 * @return  {void}
-	 */
-	delete: function (group) {
-		if (!group) {
-			Halcyon.message('danger', 'No group ID provided.');
-			return false;
-		}
-
-		var btn = document.getElementById("MotdText_delete_" + group);
-
-		_DEBUG ? console.log('delete: ' + btn.getAttribute('data-api')) : null;
-
-		$.ajax({
-			url: btn.getAttribute('data-api'),
-			type: 'delete',
-			async: false,
-			success: function () {
-				window.location.reload();
-			},
-			error: function (xhr) {
-				Halcyon.message('danger', xhr.response);
-			}
-		});
-	}
-}
-
-var UserRequests = {
-	/**
-	 * Pending approved requests
-	 *
-	 * @var  {number}
-	 */
-	approvepending: 0,
-
-	/**
-	 * Pending rejected requests
-	 *
-	 * @var  {number}
-	 */
-	rejectpending: 0,
-
-	/**
-	 * Approve a user request
-	 *
-	 * @param   {array}  requests
-	 * @return  {void}
-	 */
-	Approve: function (requests) {
-		for (var request in requests) {
-			UserRequests.approvepending++;
-
-			WSPutURL(request, '{}', function (xml) {
-				if (xml.status < 400) {
-					UserRequests.approvepending--;
-
-					if (UserRequests.approvepending == 0) {
-						window.location.reload(true);
-					}
-				} else {
-					SetError(ERRORS['generic'], ERRORS['500']);
-				}
-			});
-		}
-	},
-
-	/**
-	 * Reject a user request
-	 *
-	 * @param   {array}  requests
-	 * @return  {void}
-	 */
-	Reject: function (requests) {
-		for (var request in requests) {
-			UserRequests.approvepending++;
-
-			WSDeleteURL(request, function (xml) {
-				if (xml.status < 400) {
-					UserRequests.rejectpending--;
-
-					if (UserRequests.rejectpending == 0) {
-						window.location.reload(true);
-					}
-				} else {
-					SetError(ERRORS['generic'], ERRORS['500']);
-				}
-			});
-		}
-	}
-}
-
-/**
- * toggle accept all radio buttons
- *
- * @param   {string}  btn
- * @return  {void}
- */
-function ToggleAllRadio(btn) {
-	if (btn == 0) {
-		$('#denyAll').prop('checked', false);
-		$('.approve-value1').prop('checked', false);
-	}
-	else if (btn == 1) {
-		$('#acceptAll').prop('checked', false);
-		$('.approve-value0').prop('checked', false);
-	}
-
-	$('.approve-value' + btn).prop('checked', true);
-}
-
 function checkprocessed(processed, pending) {
 	if (processed['users'] == pending['users']
 		&& processed['queues'] == pending['queues']
@@ -225,22 +71,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		$('.searchable-select').select2();
 	}
 
-	$('.reveal').on('click', function () {
-		$($(this).data('toggle')).toggleClass('hide');
+	document.querySelectorAll('.reveal').forEach(function (item) {
+		item.addEventListener('click', function (e) {
+			document.querySelector(this.getAttribute('data-toggle')).classList.toggle('hide');
 
-		var text = $(this).data('text');
-		$(this).data('text', $(this).html());
-		$(this).html(text);
-	});
-
-	$('.motd-delete').on('click', function (e) {
-		e.preventDefault();
-		motd.delete(this.getAttribute('data-group'));
-	});
-
-	$('.motd-set').on('click', function (e) {
-		e.preventDefault();
-		motd.set(this.getAttribute('data-group'));
+			var text = this.getAttribute('data-text');
+			this.setAttribute('data-text', this.innerHTML);
+			this.innerHTML = text;
+		});
 	});
 
 	$('#main').on('change', '.membertype', function(){
@@ -427,42 +265,6 @@ document.addEventListener('DOMContentLoaded', function() {
 					Halcyon.message('danger', xhr.responseJSON.message);
 				}
 			});
-		}
-	});
-
-	// Pending user requests
-	$('.radio-toggle').on('change', function () {
-		ToggleAllRadio(parseInt($(this).val()));
-		$('#submit-requests').prop('disabled', false);
-	});
-	$('.approve-request').on('change', function () {
-		$('#submit-requests').prop('disabled', false);
-	});
-	$('#submit-requests').on('click', function (e) {
-		e.preventDefault();
-
-		var inputs = $('.approve-request:checked');
-
-		if (!inputs.length) {
-			alert("Must select an option for all users before continuing.");
-			return;
-		}
-
-		UserRequests.approvepending = 0;
-
-		// Loop through list and approve users. -2 so it doesnt hit the approve/deny all buttons
-		for (var i = 0; i < inputs.length; i++) {
-			//var user = inputs[i].value.split(",")[0];
-			var approve = inputs[i].value.split(",")[1];
-
-			if (approve == 0 && inputs[i].checked == true) {
-				// Approve the user
-				UserRequests.Approve(inputs[i].getAttribute('data-api').split(','));
-			}
-			else if (inputs[i].value.split(",")[1] == 1 && inputs[i].checked == true) {
-				// Delete the request
-				UserRequests.Reject(inputs[i].getAttribute('data-api').split(','));
-			}
 		}
 	});
 

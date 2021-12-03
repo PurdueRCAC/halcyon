@@ -276,8 +276,8 @@ $i = 0;
 					<tr id="selectAll">
 						<td><strong>Select All</strong></td>
 						<?php /*<td></td>*/ ?>
-						<td class="text-center"><input type="radio" id="acceptAll" class="radio-toggle" value="0" /></td>
-						<td class="text-center"><input type="radio" id="denyAll" class="radio-toggle" value="1" /></td>
+						<td class="text-center"><input type="radio" id="acceptAll" class="toggle-requests" value="0" /></td>
+						<td class="text-center"><input type="radio" id="denyAll" class="toggle-requests" value="1" /></td>
 					</tr>
 				</tbody>
 				<tfoot>
@@ -285,7 +285,10 @@ $i = 0;
 						<td></td>
 						<?php /*<td></td>*/ ?>
 						<td colspan="2" class="text-center">
-							<button id="submit-requests" data-groupid="{{ $group->id }}" class="btn btn-success" disabled>{{ trans('global.button.save') }}</button>
+							<button id="submit-requests" data-groupid="{{ $group->id }}" class="btn btn-success" disabled>
+								{{ trans('global.button.save') }}
+								<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.saving') }}</span></span>
+							</button>
 						</td>
 					</tr>
 				</tfoot>
