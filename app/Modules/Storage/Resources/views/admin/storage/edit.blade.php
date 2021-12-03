@@ -82,7 +82,7 @@ app('pathway')
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="field-defaultquotaspace">{{ trans('storage::storage.quota space') }}:</label>
-							<input type="text" name="fields[defaultquotaspace]" id="field-defaultquotaspace" class="form-control" value="{{ App\Halcyon\Utility\Number::formatBytes($row->defaultquotaspace) }}" />
+							<input type="text" name="fields[defaultquotaspace]" id="field-defaultquotaspace" class="form-control" value="{{ $row->formattedDefaultquotaspace }}" />
 							<span class="form-text text-muted">{{ trans('storage::storage.quota space desc') }}</span>
 						</div>
 					</div>

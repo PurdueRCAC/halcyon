@@ -191,7 +191,7 @@ class EmailQuotaCommand extends Command
 
 				if ($not->type->id == 2)
 				{
-					$not->threshold = Number::formatBytes($not->value);
+					$not->threshold = $not->formattedValue;
 				}
 				else if ($not->type->id == 3)
 				{

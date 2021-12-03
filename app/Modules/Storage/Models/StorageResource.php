@@ -5,6 +5,7 @@ namespace App\Modules\Storage\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
+use App\Halcyon\Utility\Number;
 
 /**
  * Storage resource model
@@ -144,21 +145,17 @@ class StorageResource extends Model
 	 */
 	public function setDefaultquotaspaceAttribute($value)
 	{
-		$value = str_replace(',', '', $value);
+		$this->attributes['defaultquotaspace'] = Number::toBytes($value);
+	}
 
-		if (preg_match_all("/^(\-?\d*\.?\d+)\s*(\w+)$/", $value, $matches))
-		{
-			$num  = abs((int)$matches[1][0]);
-			$unit = strtolower($matches[2][0]);
-
-			$value = $this->convertToBytes($num, $unit);
-		}
-		else
-		{
-			$value = intval($value);
-		}
-
-		$this->attributes['defaultquotaspace'] = (int)$value;
+	/**
+	 * Get defaultquotaspace in human readable format
+	 *
+	 * @return  string
+	 */
+	public function getFormattedDefaultquotaspaceAttribute()
+	{
+		return Number::formatBytes($this->defaultquotaspace);
 	}
 
 	/**
@@ -172,46 +169,5 @@ class StorageResource extends Model
 		$value = str_replace(',', '', $value);
 
 		$this->attributes['defaultquotafile'] = (int)$value;
-	}
-
-	/**
-	 * Convert a value to bytes
-	 *
-	 * @param   integer  $num
-	 * @param   string   $unit
-	 * @return  integer
-	 */
-	private function convertToBytes($num, $unit)
-	{
-		$units = array(
-			array("b", "bytes?"),
-			array("ki?b?", "kilobytes?", "kibibytes?", "kbytes?"),
-			array("mi?b?", "megabytes?", "mebibytes?", "mbytes?"),
-			array("gi?b?", "gigabytes?", "gibibytes?", "gbytes?"),
-			array("ti?b?", "terabytes?", "tebibytes?", "tbytes?"),
-			array("pi?b?", "petabytes?", "pebibytes?", "pbytes?"),
-			array("xi?b?", "exabytes?", "exibytes?", "xbytes?"),
-		);
-
-		$power = 0;
-		foreach ($units as $unit_group)
-		{
-			foreach ($unit_group as $unit_regex)
-			{
-				if (preg_match("/^" . $unit_regex . "$/i", $unit))
-				{
-					break 2;
-				}
-			}
-			$power++;
-		}
-
-		$mult = $num;
-		for ($i=0; $i<$power; $i++)
-		{
-			$mult = $mult*1024;
-		}
-
-		return $mult;
 	}
 }

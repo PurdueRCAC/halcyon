@@ -1,7 +1,6 @@
 <?php
 namespace App\Modules\Queues\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
 /**
@@ -23,7 +22,7 @@ class Loan extends Size
 	 */
 	public function seller()
 	{
-		return $this->lender;
+		return $this->belongsTo(Queue::class, 'lenderqueueid');
 	}
 
 	/**

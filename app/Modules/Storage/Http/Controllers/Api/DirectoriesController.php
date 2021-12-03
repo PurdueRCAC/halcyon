@@ -509,7 +509,7 @@ class DirectoriesController extends Controller
 			elseif ($row->bytes > $bucket['unallocatedbytes'])
 			{
 				// Check to see if tried to allocate all remaining space but we missed a fwe bits because of rounding
-				if (Number::formatBytes($row->bytes, 2) == Number::formatBytes($bucket['unallocatedbytes'], 2)
+				if (Number::formatBytes($row->bytes) == Number::formatBytes($bucket['unallocatedbytes'])
 				 && $row->bytes != $bucket['unallocatedbytes'])
 				{
 					$row->bytes = $bucket['unallocatedbytes'];
@@ -523,7 +523,7 @@ class DirectoriesController extends Controller
 			else
 			{
 				// Check to see if tried to allocate all remaining space but we missed a fwe bits because of rounding
-				if (Number::formatBytes($row->bytes, 2) == Number::formatBytes($bucket['unallocatedbytes'], 2)
+				if (Number::formatBytes($row->bytes) == Number::formatBytes($bucket['unallocatedbytes'])
 				 && $row->bytes != $bucket['unallocatedbytes'])
 				{
 					$row->bytes = $bucket['unallocatedbytes'];
@@ -1004,7 +1004,7 @@ class DirectoriesController extends Controller
 				}
 
 				// Check to see if tried to allocate all remaining space but we missed a fwe bits because of rounding
-				if (Number::formatBytes($row->bytes, 2) == Number::formatBytes($bucket['unallocatedbytes'] + $row->getOriginal('bytes'), 2)
+				if (Number::formatBytes($row->bytes) == Number::formatBytes($bucket['unallocatedbytes'] + $row->getOriginal('bytes'))
 				 && $row->bytes != $bucket['unallocatedbytes'] + $row->getOriginal('bytes'))
 				{
 					$row->bytes = $bucket['unallocatedbytes'] + $row->getOriginal('bytes');
@@ -1029,23 +1029,23 @@ class DirectoriesController extends Controller
 
 			if ($bucket == null)
 			{
-				$unallocatedbytes = Number::formatBytes(0, 2);
+				$unallocatedbytes = Number::formatBytes(0);
 			}
 			else
 			{
-				$unallocatedbytes = Number::formatBytes($bucket['unallocatedbytes'] + ($row->getOriginal('bytes') - $bytes), 2);
+				$unallocatedbytes = Number::formatBytes($bucket['unallocatedbytes'] + ($row->getOriginal('bytes') - $bytes));
 			}
 
 			if ($unallocatedbytes < 0)
 			{
-				$row->unallocatedbytes = Number::formatBytes(-($bucket['unallocatedbytes'] + ($row->getOriginal('bytes') - $bytes)), 2);
+				$row->unallocatedbytes = Number::formatBytes(-($bucket['unallocatedbytes'] + ($row->getOriginal('bytes') - $bytes)));
 				$row->overallocated    = 1;
 
 				return new DirectoryResource($row);
 			}
 
 			// Send back new formatted number
-			/*$dataobj->formatbytes = formatBytes($copyobj->bytes, true);
+			/*$dataobj->formatbytes = formatBytes($copyobj->bytes);
 
 			if ($copyobj->bytes == NO_QUOTA)
 			{

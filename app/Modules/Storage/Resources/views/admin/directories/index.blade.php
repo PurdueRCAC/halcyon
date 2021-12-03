@@ -156,7 +156,7 @@ if ($parent)
 				</td>
 				<td class="priority-4 text-right">
 					@if ($row->bytes)
-						{{ App\Halcyon\Utility\Number::formatBytes($row->bytes) }}
+						{{ App\Halcyon\Utility\Number::formatBytes($row->bytes, 0) }}
 					@else
 						<span class="none">{{ trans('global.none') }}</span>
 					@endif

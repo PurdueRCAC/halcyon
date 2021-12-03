@@ -6,7 +6,7 @@ Total usage has dropped below {{ $notification->threshold }} on `{{ $notificatio
 Current usage:
 
 @if ($latest->quota)
-{{ App\Halcyon\Utility\Number::formatBytes($latest->space) }} / {{ App\Halcyon\Utility\Number::formatBytes($latest->quota) }} ({{ round(($latest->space / $latest->quota) * 100, 1) }}%)
+{{ $latest->formattedSpace }} / {{ $latest->formattedQuota }} ({{ round(($latest->space / $latest->quota) * 100, 1) }}%)
 @endif
 @if ($latest->filequota)
 {{ $latest->files }} / {{ $latest->filequota }} files ({{ round(($latest->files / $latest->filequota) * 100, 1) }}%)

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 use App\Halcyon\Models\Timeperiod;
 use App\Modules\Storage\Models\Notification\Type;
+use App\Halcyon\Utility\Number;
 use Carbon\Carbon;
 
 /**
@@ -74,58 +75,17 @@ class Notification extends Model
 	 */
 	public function setValueAttribute($value)
 	{
-		$value = str_replace(',', '', $value);
-
-		if (preg_match_all("/^(\-?\d*\.?\d+)\s*(\D+)$/", $value, $matches))
-		{
-			$num  = abs((int)$matches[1][0]);
-			$unit = $matches[2][0];
-
-			$value = $this->convertToBytes($num, $unit);
-		}
-
-		$this->attributes['value'] = $value;
+		$this->attributes['value'] = Number::toBytes($value);
 	}
 
 	/**
-	 * Convert a value to bytes
+	 * Get bytes in human readable format
 	 *
-	 * @param   integer  $num
-	 * @param   string   $unit
-	 * @return  integer
+	 * @return  string
 	 */
-	private function convertToBytes($num, $unit)
+	public function getFormattedValueAttribute()
 	{
-		$units = array(
-			array("b", "bytes?"),
-			array("ki?b?", "kilobytes?", "kibibytes?", "kbytes?"),
-			array("mi?b?", "megabytes?", "mebibytes?", "mbytes?"),
-			array("gi?b?", "gigabytes?", "gibibytes?", "gbytes?"),
-			array("ti?b?", "terabytes?", "tebibytes?", "tbytes?"),
-			array("pi?b?", "petabytes?", "pebibytes?", "pbytes?"),
-			array("xi?b?", "exabytes?", "exibytes?", "xbytes?"),
-		);
-
-		$power = 0;
-		foreach ($units as $unit_group)
-		{
-			foreach ($unit_group as $unit_regex)
-			{
-				if (preg_match("/^" . $unit_regex . "$/i", $unit))
-				{
-					break 2;
-				}
-			}
-			$power++;
-		}
-
-		$mult = $num;
-		for ($i=0; $i<$power; $i++)
-		{
-			$mult = $mult*1024;
-		}
-
-		return $mult;
+		return Number::formatBytes($this->value);
 	}
 
 	/**

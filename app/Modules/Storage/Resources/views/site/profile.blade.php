@@ -70,7 +70,7 @@
 										$cls = $val > 70 ? 'bg-warning' : $cls;
 										$cls = $val > 90 ? 'bg-danger' : $cls;
 
-										echo App\Halcyon\Utility\Number::formatBytes($usage->space, 1); ?> / <?php echo App\Halcyon\Utility\Number::formatBytes($usage->quota, 1);
+										echo $usage->formattedSpace . ' / ' . $usage->formattedQuota;
 										?>
 										<div class="progress" style="height: 3px">
 											<div class="progress-bar <?php echo $cls; ?>" role="progressbar" style="width: <?php echo $val; ?>%;" aria-valuenow="<?php echo $val; ?>" aria-valuemin="0" aria-valuemax="100" aria-label="<?php echo $val; ?>% space used">
@@ -209,7 +209,7 @@
 										if ($not->type->valuetype == 1):
 											// Nothing here
 										elseif ($not->type->valuetype == 2):
-											echo App\Halcyon\Utility\Number::formatBytes($not->value);
+											echo $not->formattedValue;
 										elseif ($not->type->valuetype == 3):
 											echo $not->value . '%';
 										elseif ($not->type->valuetype == 4):
@@ -294,7 +294,7 @@
 								if ($not->type->valuetype == 1):
 									// Nothing here
 								elseif ($not->type->valuetype == 2):
-									$number = App\Halcyon\Utility\Number::formatBytes($not->value);
+									$number = $not->formattedValue;
 								elseif ($not->type->valuetype == 3):
 									$number = $not->value;
 									$unit = '%';

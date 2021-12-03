@@ -2,12 +2,8 @@
 
 namespace App\Modules\Storage\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Storage\Events\LoanCreated;
-use App\Modules\History\Traits\Historable;
-use Carbon\Carbon;
 
 /**
  * Storage model for a resource directory
@@ -37,7 +33,7 @@ class Loan extends Purchase
 	 */
 	public function seller()
 	{
-		return $this->lender();
+		return $this->belongsTo(Group::class, 'lendergroupid');
 	}
 
 	/**

@@ -443,7 +443,7 @@ class Directory extends Model
 	 */
 	public function getQuotaAttribute()
 	{
-		return Number::formatBytes($this->bytes, 1);
+		return Number::formatBytes($this->bytes);
 	}
 
 	/**
@@ -670,67 +670,17 @@ class Directory extends Model
 	 */
 	public function setBytesAttribute($value)
 	{
-		$value = str_replace(',', '', $value);
-		$neg = false;
-
-		if (preg_match_all("/^(\-?\d*\.?\d+)\s*([PpTtGgMmKkBb]{1,2})$/", $value, $matches))
-		{
-			if ($matches[1][0] < 0)
-			{
-				$neg = true;
-			}
-			$num  = abs((int)$matches[1][0]);
-			$unit = $matches[2][0];
-
-			$value = $this->convertToBytes($num, $unit);
-		}
-		else
-		{
-			$value = intval($value);
-		}
-
-		$this->attributes['bytes'] = $neg ? -(int)$value : (int)$value;
+		$this->attributes['bytes'] = Number::toBytes($value);
 	}
 
 	/**
-	 * Convert a value to bytes
+	 * Get bytes in human readable format
 	 *
-	 * @param   integer  $num
-	 * @param   string   $unit
-	 * @return  integer
+	 * @return  string
 	 */
-	private function convertToBytes($num, $unit)
+	public function getFormattedBytesAttribute()
 	{
-		$units = array(
-			array("b", "bytes?"),
-			array("ki?b?", "kilobytes?", "kibibytes?", "kbytes?"),
-			array("mi?b?", "megabytes?", "mebibytes?", "mbytes?"),
-			array("gi?b?", "gigabytes?", "gibibytes?", "gbytes?"),
-			array("ti?b?", "terabytes?", "tebibytes?", "tbytes?"),
-			array("pi?b?", "petabytes?", "pebibytes?", "pbytes?"),
-			array("xi?b?", "exabytes?", "exibytes?", "xbytes?"),
-		);
-
-		$power = 0;
-		foreach ($units as $unit_group)
-		{
-			foreach ($unit_group as $unit_regex)
-			{
-				if (preg_match("/^" . $unit_regex . "$/i", $unit))
-				{
-					break 2;
-				}
-			}
-			$power++;
-		}
-
-		$mult = $num;
-		for ($i=0; $i<$power; $i++)
-		{
-			$mult = $mult*1024;
-		}
-
-		return $mult;
+		return Number::formatBytes($this->bytes);
 	}
 
 	/**

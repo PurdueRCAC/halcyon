@@ -377,8 +377,8 @@ class DirectoriesController extends Controller
 			}
 			elseif ($row->bytes > $bucket['unallocatedbytes'])
 			{
-				// Check to see if tried to allocate all remaining space but we missed a fwe bits because of rounding
-				if (Number::formatBytes($row->bytes, true) == Number::formatBytes($bucket['unallocatedbytes'], true)
+				// Check to see if tried to allocate all remaining space but we missed a few bits because of rounding
+				if (Number::formatBytes($row->bytes) == Number::formatBytes($bucket['unallocatedbytes'])
 				 && $row->bytes != $bucket['unallocatedbytes'])
 				{
 					$row->bytes = $bucket['unallocatedbytes'];
@@ -391,8 +391,8 @@ class DirectoriesController extends Controller
 			}
 			else
 			{
-				// Check to see if tried to allocate all remaining space but we missed a fwe bits because of rounding
-				if (Number::formatBytes($row->bytes, true) == Number::formatBytes($bucket['unallocatedbytes'], true)
+				// Check to see if tried to allocate all remaining space but we missed a few bits because of rounding
+				if (Number::formatBytes($row->bytes) == Number::formatBytes($bucket['unallocatedbytes'])
 				 && $row->bytes != $bucket['unallocatedbytes'])
 				{
 					$row->bytes = $bucket['unallocatedbytes'];

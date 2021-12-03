@@ -152,7 +152,7 @@ app('pathway')
 						</td>
 						<td class="priority-4 text-right">
 							@if ($row->defaultquotaspace)
-								{{ App\Halcyon\Utility\Number::formatBytes($row->defaultquotaspace) }}
+								{{ App\Halcyon\Utility\Number::formatBytes($row->defaultquotaspace, 0) }}
 							@endif
 						</td>
 						<td class="priority-3 text-right">

@@ -5,6 +5,7 @@ namespace App\Modules\Storage\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Modules\History\Traits\Historable;
+use App\Halcyon\Utility\Number;
 use Carbon\Carbon;
 
 /**
@@ -143,21 +144,17 @@ class Usage extends Model
 	 */
 	public function setQuotaAttribute($value)
 	{
-		$value = str_replace(',', '', $value);
+		$this->attributes['quota'] = Number::toBytes($value);
+	}
 
-		if (preg_match_all("/^(\-?\d*\.?\d+)\s*([PpTtGgMmKkiBb]{1,3})$/", $value, $matches))
-		{
-			$num  = abs((int)$matches[1][0]);
-			$unit = $matches[2][0];
-
-			$value = $this->convertToBytes($num, $unit);
-		}
-		else
-		{
-			$value = intval($value);
-		}
-
-		$this->attributes['quota'] = (int)$value;
+	/**
+	 * Get quota in human readable format
+	 *
+	 * @return  string
+	 */
+	public function getFormattedQuotaAttribute()
+	{
+		return Number::formatBytes($this->quota);
 	}
 
 	/**
@@ -195,61 +192,16 @@ class Usage extends Model
 	 */
 	public function setSpaceAttribute($value)
 	{
-		$value = str_replace(',', '', $value);
-
-		if (preg_match_all("/^(\-?\d*\.?\d+)\s*([PpTtGgMmKkiBb]{1,3})$/", $value, $matches))
-		{
-			$num  = abs((int)$matches[1][0]);
-			$unit = $matches[2][0];
-
-			$value = $this->convertToBytes($num, $unit);
-		}
-		else
-		{
-			$value = intval($value);
-		}
-
-		$this->attributes['space'] = (int)$value;
+		$this->attributes['space'] = Number::toBytes($value);
 	}
 
 	/**
-	 * Convert a value to bytes
+	 * Get space in human readable format
 	 *
-	 * @param   integer  $num
-	 * @param   string   $unit
-	 * @return  integer
+	 * @return  string
 	 */
-	private function convertToBytes($num, $unit)
+	public function getFormattedSpaceAttribute()
 	{
-		$units = array(
-			array("b", "bytes?"),
-			array("ki?b?", "kilobytes?", "kibibytes?", "kbytes?"),
-			array("mi?b?", "megabytes?", "mebibytes?", "mbytes?"),
-			array("gi?b?", "gigabytes?", "gibibytes?", "gbytes?"),
-			array("ti?b?", "terabytes?", "tebibytes?", "tbytes?"),
-			array("pi?b?", "petabytes?", "pebibytes?", "pbytes?"),
-			array("xi?b?", "exabytes?", "exibytes?", "xbytes?"),
-		);
-
-		$power = 0;
-		foreach ($units as $unit_group)
-		{
-			foreach ($unit_group as $unit_regex)
-			{
-				if (preg_match("/^" . $unit_regex . "$/i", $unit))
-				{
-					break 2;
-				}
-			}
-			$power++;
-		}
-
-		$mult = $num;
-		for ($i=0; $i<$power; $i++)
-		{
-			$mult = $mult*1024;
-		}
-
-		return $mult;
+		return Number::formatBytes($this->space);
 	}
 }

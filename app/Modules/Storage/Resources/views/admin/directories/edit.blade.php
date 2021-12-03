@@ -112,7 +112,7 @@ app('pathway')
 
 						<div class="form-group">
 							<label for="field-bytes">{{ trans('storage::storage.quota') }}</label>
-							<input type="text" name="fields[bytes]" id="field-bytes" class="form-control" value="{{ App\Halcyon\Utility\Number::formatBytes($row->bytes) }}" />
+							<input type="text" name="fields[bytes]" id="field-bytes" class="form-control" value="{{ $row->formattedBytes }}" />
 							<span class="form-text text-muted">{{ trans('storage::storage.quota desc') }}</span>
 						</div>
 					</fieldset>

@@ -26,7 +26,7 @@ class Number
 	 * @param   integer $decimals
 	 * @return  string
 	 */
-	public static function formatBytes($bytes = 0, $decimals = 0)
+	public static function formatBytes($bytes = 0, $decimals = 2)
 	{
 		$quant = array(
 			'TB' => 1099511627776,  // pow(1024, 4)
@@ -53,6 +53,66 @@ class Number
 		}
 
 		return $sign . '0 B';
+	}
+
+	/**
+	 * Convert a string to bytes
+	 *
+	 * @param   mixed  $value
+	 * @return  int
+	 */
+	public static function toBytes($value)
+	{
+		$value = str_replace(',', '', $value);
+		$neg = false;
+
+		//if (preg_match_all("/^(\-?\d*\.?\d+)\s*(\D+)$/", $value, $matches))
+		if (preg_match_all("/^(\-?\d*\.?\d+)\s*([PpTtGgMmKkBb]{1,2})$/", $value, $matches))
+		{
+			if ($matches[1][0] < 0)
+			{
+				$neg = true;
+			}
+			$num  = abs((int)$matches[1][0]);
+			$unit = $matches[2][0];
+
+			$units = array(
+				array("b", "bytes?"),
+				array("ki?b?", "kilobytes?", "kibibytes?", "kbytes?"),
+				array("mi?b?", "megabytes?", "mebibytes?", "mbytes?"),
+				array("gi?b?", "gigabytes?", "gibibytes?", "gbytes?"),
+				array("ti?b?", "terabytes?", "tebibytes?", "tbytes?"),
+				array("pi?b?", "petabytes?", "pebibytes?", "pbytes?"),
+				array("xi?b?", "exabytes?", "exibytes?", "xbytes?"),
+			);
+
+			$power = 0;
+			foreach ($units as $unit_group)
+			{
+				foreach ($unit_group as $unit_regex)
+				{
+					if (preg_match("/^" . $unit_regex . "$/i", $unit))
+					{
+						break 2;
+					}
+				}
+				$power++;
+			}
+
+			$mult = $num;
+			for ($i=0; $i<$power; $i++)
+			{
+				$mult = $mult*1024;
+			}
+
+			$value = $mult;
+		}
+		else
+		{
+			$value = intval($value);
+		}
+
+		return $neg ? -(int)$value : (int)$value;
 	}
 
 	/**
