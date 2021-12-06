@@ -46,11 +46,11 @@ app('pathway')
 @section('panel')
 	<div class="card">
 		<div class="card-body">
-			<div class="stat-block text-danger">
+			<a href="{{ route('admin.messages.index', ['status' => 'failure', 'type' => '']) }}" class="stat-block text-danger">
 				<span class="icon-alert-triangle display-4 float-left" aria-hidden="true"></span>
 				<span class="value">{{ number_format($stats->failed) }}</span><br />
 				<span class="key">{{ trans('messages::messages.failure') }}</span>
-			</div>
+			</a>
 		</div>
 		@if (count($stats->failedtypes))
 			<table class="table">
@@ -58,7 +58,7 @@ app('pathway')
 				<tbody>
 					@foreach ($stats->failedtypes as $t)
 						<tr>
-							<th scope="row">{{ $t->name }}</th>
+							<th scope="row"><a href="{{ route('admin.messages.index', ['status' => 'failure', 'type' => $t->id]) }}">{{ $t->name }}</a></th>
 							<td class="text-right">{{ number_format($t->total) }}</td>
 						</tr>
 					@endforeach
@@ -69,11 +69,11 @@ app('pathway')
 
 	<div class="card">
 		<div class="card-body">
-			<div class="stat-block text-success">
+			<a href="{{ route('admin.messages.index', ['status' => 'success', 'type' => '']) }}" class="stat-block text-success">
 				<span class="icon-check display-4 float-left" aria-hidden="true"></span>
 				<span class="value">{{ number_format($stats->succeeded) }}</span><br />
 				<span class="key">{{ trans('messages::messages.success') }}</span>
-			</div>
+			</a>
 		</div>
 		@if (count($stats->succeededtypes))
 			<table class="table">
@@ -81,7 +81,7 @@ app('pathway')
 				<tbody>
 					@foreach ($stats->succeededtypes as $t)
 						<tr>
-							<th scope="row">{{ $t->name }}</th>
+							<th scope="row"><a href="{{ route('admin.messages.index', ['status' => 'success', 'type' => $t->id]) }}">{{ $t->name }}</a></th>
 							<td class="text-right">{{ number_format($t->total) }}</td>
 						</tr>
 					@endforeach
@@ -92,11 +92,11 @@ app('pathway')
 
 	<div class="card">
 		<div class="card-body">
-			<div class="stat-block text-info">
+			<a href="{{ route('admin.messages.index', ['state' => 'pending', 'type' => '']) }}" class="stat-block text-info">
 				<span class="icon-more-horizontal display-4 float-left" aria-hidden="true"></span>
 				<span class="value">{{ number_format($stats->pending) }}</span><br />
 				<span class="key">{{ trans('messages::messages.pending') }}</span>
-			</div>
+			</a>
 		</div>
 		@if (count($stats->pendingtypes))
 			<table class="table">
@@ -104,7 +104,7 @@ app('pathway')
 				<tbody>
 					@foreach ($stats->pendingtypes as $t)
 						<tr>
-							<th scope="row">{{ $t->name }}</th>
+							<th scope="row"><a href="{{ route('admin.messages.index', ['state' => 'pending', 'type' => $t->id]) }}">{{ $t->name }}</a></th>
 							<td class="text-right">{{ $t->total }}</td>
 						</tr>
 					@endforeach

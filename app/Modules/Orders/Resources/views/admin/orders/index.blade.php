@@ -139,21 +139,21 @@ app('pathway')
 
 	<div class="card">
 		<div class="card-body">
-			<div class="stat-block text-danger">
+			<a href="{{ route('admin.orders.index', ['status' => 'canceled', 'start' => $start->format('Y-m-d')]) }}" class="stat-block text-danger">
 				<span class="icon-alert-triangle display-4 float-left" aria-hidden="true"></span>
 				<span class="value">{{ number_format($stats['canceled']) }}</span><br />
 				<span class="key">{{ trans('orders::orders.canceled') }}</span>
-			</div>
+			</a>
 		</div>
 	</div>
 
 	<div class="card">
 		<div class="card-body">
-			<div class="stat-block text-success">
+			<a href="{{ route('admin.orders.index', ['status' => 'complete', 'start' => $start->format('Y-m-d')]) }}" class="stat-block text-success">
 				<span class="fa fa-check display-4 float-left" aria-hidden="true"></span>
 				<span class="value">{{ number_format($stats['fulfilled']) }}</span><br />
 				<span class="key">{{ trans('orders::orders.fulfilled') }}</span>
-			</div>
+			</a>
 		</div>
 	</div>
 
