@@ -104,6 +104,7 @@
 							<a id="mode"
 								data-api="{{ route('api.users.update', ['id' => auth()->user()->id]) }}"
 								data-mode="{{ auth()->user()->facet('theme.admin.mode', 'light') == 'light' ? 'dark' : 'light' }}"
+								data-error="{{ trans('theme::admin.mode error') }}"
 								href="{{ request()->url() }}?theme.admin.mode={{ auth()->user()->facet('theme.admin.mode', 'light') == 'light' ? 'dark' : 'light' }}">{{ trans('theme::admin.toggle theme') }}</a>
 						</li>
 						<li data-title="{{ trans('theme::admin.logout') }}">

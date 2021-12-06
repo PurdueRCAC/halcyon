@@ -3,6 +3,7 @@ return [
 	// Params
 	'mode' => 'Mode',
 	'mode description' => 'Select between a light toolbar and colored menu or a dark menu and colored toolbar.',
+	'mode error' => 'An error occurred trying to set light/dark mode.',
 	'logo' => 'Logo',
 	'logo description' => 'File path for a logo.',
 	'light' => 'Light (default)',
