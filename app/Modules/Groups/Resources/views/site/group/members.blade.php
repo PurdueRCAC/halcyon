@@ -987,13 +987,25 @@ $i = 0;
 				<legend>Unix Group Selection</legend>
 
 				<div id="unix-group-selection" class="row groupSelect">
+					<?php
+					$name = null;
+					$i = 0;
+					?>
 					@foreach ($unixgroups as $name)
+						<?php
+						if ($group->unixgroup == $name->longname):
+							$base = $i . '-' . $name->id;
+						endif;
+						?>
 						<div class="col-sm-4 unixData">
 							<div class="form-check">
-								<input type="checkbox" class="form-check-input add-unixgroup-member" name="unixgroup[]" id="unixgroup{{ $name->id }}" value="{{ $name->id }}" />
-								<label class="form-check-label" for="unixgroup{{ $name->id }}">{{ $name->longname }}</label>
+								<input type="checkbox" data-base="unixgroup-{{ $base }}" class="form-check-input add-unixgroup-member" name="unixgroup[]" id="unixgroup-{{ $i }}-{{ $name->id }}" value="{{ $name->id }}" />
+								<label class="form-check-label" for="unixgroup-{{ $i }}-{{ $name->id }}">{{ $name->longname }}</label>
 							</div>
 						</div>
+						<?php
+						$i++;
+						?>
 					@endforeach
 				</div>
 			</fieldset>

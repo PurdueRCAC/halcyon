@@ -423,6 +423,21 @@
 			});
 		});
 
+		$('.add-unixgroup-member').on('change', function(e){
+			e.preventDefault();
+
+			var bx = $(this);
+
+			if (bx.is(':checked')) {
+				if (bx.attr('data-base') && bx.attr('data-base') != bx.attr('id')) {
+					$('#' + bx.attr('data-base'))
+						.prop('checked', true)
+						.attr('checked', 'checked')
+						.trigger('change');
+				}
+			}
+		});
+
 		$('#add_member_save').on('click', function(e){
 			e.preventDefault();
 
