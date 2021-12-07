@@ -180,6 +180,7 @@ class Account extends Model
 	/**
 	 * Delete entry and associated data
 	 *
+	 * @param   array  $options
 	 * @return  bool
 	 */
 	public function delete(array $options = [])
@@ -200,7 +201,7 @@ class Account extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasStart()
+	public function hasStart(): bool
 	{
 		return !is_null($this->datetimestart);
 	}
@@ -210,8 +211,18 @@ class Account extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasEnd()
+	public function hasEnd(): bool
 	{
 		return !is_null($this->datetimestop);
+	}
+
+	/**
+	 * Is this a workshop?
+	 *
+	 * @return  bool
+	 */
+	public function isWorkshop(): bool
+	{
+		return ($this->semester == 'Workshop');
 	}
 }

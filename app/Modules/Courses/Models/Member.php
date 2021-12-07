@@ -158,6 +158,7 @@ class Member extends Model
 	/**
 	 * Delete entry and associated data
 	 *
+	 * @param   array  $options
 	 * @return  bool
 	 */
 	public function delete(array $options = [])
@@ -175,7 +176,7 @@ class Member extends Model
 	 * @param   integer  $userid
 	 * @return  bool
 	 */
-	public static function findByAccountAndUser($classaccountid, $userid)
+	public static function findByAccountAndUser(int $classaccountid, int $userid)
 	{
 		return self::query()
 			->where('classaccountid', '=', $classaccountid)

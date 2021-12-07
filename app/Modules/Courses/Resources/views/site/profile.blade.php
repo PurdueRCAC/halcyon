@@ -68,7 +68,7 @@
 				foreach ($courses as $class)
 				{
 					if ($class->datetimestop > $now
-					 || $class->semester == 'Workshop')
+					 || $class->isWorkshop())
 					{
 						$class_data = null;
 						$usernames = array();
@@ -122,7 +122,7 @@
 								{{ $resource ? $resource->name : trans('global.unknown') }}
 							</td>
 							<td>
-								@if ($class->semester == 'Workshop')
+								@if ($class->isWorkshop())
 									{{ $class->classname }}
 								@else
 									{{ $class->department . ' ' . $class->coursenumber . ' (' . $class->crn . ')' }}
@@ -139,7 +139,7 @@
 							</td>
 							<td class="text-center">
 								<a class="tip" data-toggle="collapse" data-parent="#accounts" href="#collapse{{ $class->id }}" title="View Accounts">
-								@if ($class->semester != 'Workshop' && $class_data)
+								@if (!$class->isWorkshop() && $class_data)
 									{{ $class_data->accounts }}
 									@if (isset($class_data->enrollment))
 										{{ ' / ' . count($class_data->enrollment) }}
@@ -236,7 +236,7 @@
 														@endif
 													</td>
 													<td>
-														@if ($class->semester == 'Workshop')
+														@if ($class->isWorkshop())
 															@if ($usr->membertype > 0)
 																<span class="badge badge-success">Manual addition</span>
 															@else
@@ -312,55 +312,55 @@
 
 						<div class="form-group">
 							<label for="classname-{{ $class->crn }}">{{ trans('courses::courses.course name') }}</label>
-							<input type="text" name="classname" id="classname-{{ $class->crn }}" <?php if ($class->semester != 'Workshop') { echo 'disabled'; } ?> class="form-control" maxlength="255" value="{{ $class->classname }}" />
+							<input type="text" name="classname" id="classname-{{ $class->crn }}" <?php if (!$class->isWorkshop()) { echo 'disabled'; } ?> class="form-control" maxlength="255" value="{{ $class->classname }}" />
 						</div>
 
 						<div class="row">
 							<div class="col-md-6">
-								<div class="form-group type-course<?php if ($class->semester == 'Workshop') { echo ' hide'; } ?><?php if ($class->semester == 'Workshop') { echo ' hide'; } ?>">
+								<div class="form-group type-course<?php if ($class->isWorkshop()) { echo ' hide'; } ?>">
 									<label for="crn-{{ $class->crn }}">{{ trans('courses::courses.crn') }}</label>
-									<input type="text" name="crn" id="crn-{{ $class->crn }}" <?php if ($class->semester != 'Workshop') { echo 'disabled'; } ?> class="form-control" maxlength="8" value="{{ $class->crn }}" />
+									<input type="text" name="crn" id="crn-{{ $class->crn }}" <?php if (!$class->isWorkshop()) { echo 'disabled'; } ?> class="form-control" maxlength="8" value="{{ $class->crn }}" />
 								</div>
 							</div>
 							<div class="col-md-6">
-								<div class="form-group type-course<?php if ($class->semester == 'Workshop') { echo ' hide'; } ?>">
+								<div class="form-group type-course<?php if ($class->isWorkshop()) { echo ' hide'; } ?>">
 									<label for="coursenumber-{{ $class->crn }}">{{ trans('courses::courses.course number') }}</label>
-									<input type="text" name="coursenumber" id="coursenumber-{{ $class->crn }}" <?php if ($class->semester != 'Workshop') { echo 'disabled'; } ?> class="form-control" maxlength="8" value="{{ $class->coursenumber }}" />
+									<input type="text" name="coursenumber" id="coursenumber-{{ $class->crn }}" <?php if (!$class->isWorkshop()) { echo 'disabled'; } ?> class="form-control" maxlength="8" value="{{ $class->coursenumber }}" />
 								</div>
 							</div>
 						</div>
 
 						<div class="row">
 							<div class="col-md-6">
-								<div class="form-group type-course<?php if ($class->semester == 'Workshop') { echo ' hide'; } ?>">
+								<div class="form-group type-course<?php if ($class->isWorkshop()) { echo ' hide'; } ?>">
 									<label for="department-{{ $class->crn }}">{{ trans('courses::courses.department') }}</label>
-									<input type="text" name="department" id="department-{{ $class->crn }}" <?php if ($class->semester != 'Workshop') { echo 'disabled'; } ?> class="form-control" maxlength="4" value="{{ $class->department }}" />
+									<input type="text" name="department" id="department-{{ $class->crn }}" <?php if (!$class->isWorkshop()) { echo 'disabled'; } ?> class="form-control" maxlength="4" value="{{ $class->department }}" />
 								</div>
 							</div>
 							<div class="col-md-6">
-								<div class="form-group type-course<?php if ($class->semester == 'Workshop') { echo ' hide'; } ?>">
+								<div class="form-group type-course<?php if ($class->isWorkshop()) { echo ' hide'; } ?>">
 									<label for="reference-{{ $class->crn }}">{{ trans('courses::courses.reference') }}</label>
-									<input type="text" name="reference" id="reference-{{ $class->crn }}" <?php if ($class->semester != 'Workshop') { echo 'disabled'; } ?> class="form-control" maxlength="64" value="{{ $class->reference }}" />
+									<input type="text" name="reference" id="reference-{{ $class->crn }}" <?php if (!$class->isWorkshop()) { echo 'disabled'; } ?> class="form-control" maxlength="64" value="{{ $class->reference }}" />
 								</div>
 							</div>
 						</div>
 
-						<div class="form-group type-course<?php if ($class->semester == 'Workshop') { echo ' hide'; } ?>">
+						<div class="form-group type-course<?php if ($class->isWorkshop()) { echo ' hide'; } ?>">
 							<label for="semester-{{ $class->crn }}">{{ trans('courses::courses.semester') }} <span class="required">*</span></label>
-							<input type="text" name="semester" id="semester-{{ $class->crn }}" <?php if ($class->semester != 'Workshop') { echo 'disabled'; } ?> class="form-control" required maxlength="16" value="{{ $class->semester }}" />
+							<input type="text" name="semester" id="semester-{{ $class->crn }}" <?php if (!$class->isWorkshop()) { echo 'disabled'; } ?> class="form-control" required maxlength="16" value="{{ $class->semester }}" />
 						</div>
 
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="datetimestart-{{ $class->datetimestart }}">{{ trans('courses::courses.start') }}</label>
-									<input type="text" name="datetimestart" id="datetimestart-{{ $class->crn }}" <?php if ($class->semester != 'Workshop') { echo 'disabled'; } ?> class="form-control date-pick" maxlength="8" value="{{ $class->datetimestart->format('Y-m-d') }}" />
+									<input type="text" name="datetimestart" id="datetimestart-{{ $class->crn }}" <?php if (!$class->isWorkshop()) { echo 'disabled'; } ?> class="form-control date-pick" maxlength="8" value="{{ $class->datetimestart->format('Y-m-d') }}" />
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="datetimestop-{{ $class->crn }}">{{ trans('courses::courses.stop') }}</label>
-									<input type="text" name="datetimestop" id="datetimestop-{{ $class->crn }}" <?php if ($class->semester != 'Workshop') { echo 'disabled'; } ?> class="form-control date-pick" maxlength="8" value="{{ $class->datetimestop->format('Y-m-d') }}" />
+									<input type="text" name="datetimestop" id="datetimestop-{{ $class->crn }}" <?php if (!$class->isWorkshop()) { echo 'disabled'; } ?> class="form-control date-pick" maxlength="8" value="{{ $class->datetimestop->format('Y-m-d') }}" />
 								</div>
 							</div>
 						</div>
@@ -380,7 +380,7 @@
 						<tr>
 							<th scope="row">Class</th>
 							<td>
-								@if ($class->semester == 'Workshop')
+								@if ($class->isWorkshop())
 									{{ $class->classname }}
 								@else
 									{{ $class->department . ' ' . $class->coursenumber . ' (' . $class->crn . ') - ' . $class->semester }}
@@ -460,7 +460,7 @@
 									?>
 								</ul>
 
-								@if ($class->semester != 'Workshop')
+								@if (!$class->isWorkshop())
 									<div class="form-group">
 										<label for="searchuser_{{ $class->crn }}">Add instructors, TAs, or others:</label>
 										<input id="searchuser_{{ $class->crn }}" class="form-control search-user" data-id="{{ $class->crn }}" data-api="{{ route('api.users.index') }}?search=%s" value="" />
@@ -469,7 +469,7 @@
 								@endif
 							</td>
 						</tr>
-						@if ($class->semester == 'Workshop')
+						@if ($class->isWorkshop())
 							<tr>
 								<td colspan="2">
 									<div class="form-group">

@@ -43,7 +43,7 @@
 									@if (auth()->user()->can('manage courses'))
 										<a href="{{ route('admin.courses.edit', ['id' => $class->id]) }}">
 									@endif
-									@if ($class->semester == 'Workshop')
+									@if ($class->isWorkshop())
 										{{ $class->classname }}
 									@else
 										{{ $class->department . ' ' . $class->coursenumber . ' (' . $class->crn . ')' }}
@@ -139,7 +139,7 @@
 									@if (auth()->user()->can('manage courses'))
 										<a href="{{ route('admin.courses.edit', ['id' => $class->id]) }}">
 									@endif
-									@if ($class->semester == 'Workshop')
+									@if ($class->isWorkshop())
 										{{ $class->classname }}
 									@else
 										{{ $class->department . ' ' . $class->coursenumber . ' (' . $class->crn . ')' }}

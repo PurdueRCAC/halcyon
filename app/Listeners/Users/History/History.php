@@ -191,7 +191,7 @@ class History
 				$item->id = $g->id;
 				$item->route = route('site.users.account.section', ['section' => 'class', 'u' => $user->id != auth()->user()->id ? $user->id : null]);
 				$item->type = 'class';
-				if ($class->semester == 'Workshop')
+				if ($class->isWorkshop())
 				{
 					$item->description = $class->classname;
 				}
@@ -219,7 +219,7 @@ class History
 				$item->id = $class->id;
 				$item->route = route('site.users.account.section', ['section' => 'class', 'u' => $user->id != auth()->user()->id ? $user->id : null]);
 				$item->type = 'class';
-				if ($class->semester == 'Workshop')
+				if ($class->isWorkshop())
 				{
 					$item->description = $class->classname;
 				}
