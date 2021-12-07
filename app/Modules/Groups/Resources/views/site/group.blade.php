@@ -16,7 +16,9 @@
 	$(document).ready(function() {
 		document.querySelectorAll('.reveal').forEach(function (item) {
 			item.addEventListener('click', function (e) {
-				document.querySelector(this.getAttribute('data-toggle')).classList.toggle('hide');
+				document.querySelectorAll(this.getAttribute('data-toggle')).forEach(function(el) {
+					el.classList.toggle('hide');
+				});
 
 				var text = this.getAttribute('data-text');
 				this.setAttribute('data-text', this.innerHTML);
