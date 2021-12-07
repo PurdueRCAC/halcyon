@@ -461,8 +461,8 @@ function EditUnixGroup(dir, api) {
 	//var span_quota = document.getElementById(dir + "_quota_span");
 	var input_quota = document.getElementById(dir + "_quota_input");
 	//var span_other = document.getElementById(dir + "_other_read_span");
-	var input_otheryes = document.getElementById(dir + "_other_read_box1");
-	var input_otherno = document.getElementById(dir + "_other_read_box2");
+	var input_otheryes = document.getElementById(dir + "_other_read_box");
+	//var input_otherno = document.getElementById(dir + "_other_read_box");
 
 	//var span_type = document.getElementById(dir + "_dir_type");
 	var input_type = document.getElementById(dir + "_dir_type_select");
