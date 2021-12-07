@@ -122,7 +122,7 @@ app('pathway')
 
 		<h3 class="card-title pt-0">{{ trans('groups::groups.unix groups') }}</h3>
 	</div>
-	<div class="card-body">
+	<!--<div class="card-body"> -->
 		@if (count($row->unixGroups))
 			<table class="table table-hover">
 				<caption class="sr-only">{{ trans('groups::groups.unix groups') }}</caption>
@@ -136,7 +136,11 @@ app('pathway')
 				<tbody>
 					@foreach ($row->unixGroups as $i => $u)
 						<tr id="unixgroup-{{ $u->id }}" data-id="{{ $u->id }}">
-							<td>{{ $u->longname }}</td>
+							<td>
+								{{ $u->longname }}<br />
+								<small class="text-muted text-sm shortname" data-tip="{{ trans('groups::groups.short name') }}">{{ $u->shortname }}</small>
+								<!-- &ndash; <small class="text-muted text-sm unixgid" data-tip="GID Number">{{ $u->unixgid }}</small> -->
+							</td>
 							<!-- <td>{{ $u->shortname }}</td> -->
 							<td class="text-right">{{ $u->members()->count() }}</td>
 						</tr>
@@ -146,7 +150,7 @@ app('pathway')
 		@else
 			<p class="text-center"><span class="none">{{ trans('global.none') }}</span></p>
 		@endif
-	</div>
+	<!--</div>-->
 </div>
 @stop
 
