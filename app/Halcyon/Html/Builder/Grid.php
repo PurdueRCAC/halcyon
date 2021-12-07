@@ -463,22 +463,22 @@ class Grid
 		if ($publish_up || $publish_down)
 		{
 			$nullDate = null; //\App::get('db')->getNullDate();
-			$nowDate = with(new Carbon)->toUnix();
+			$nowDate = Carbon::now()->timestamp;
 
 			$tz = new \DateTimeZone(User::getParam('timezone', \Config::get('offset')));
 
-			$publish_up   = ($publish_up != $nullDate)   ? with(new Carbon($publish_up, 'UTC'))->setTimeZone($tz)   : false;
-			$publish_down = ($publish_down != $nullDate) ? with(new Carbon($publish_down, 'UTC'))->setTimeZone($tz) : false;
+			$publish_up   = ($publish_up != $nullDate)   ? Carbon::parse($publish_up)   : false;
+			$publish_down = ($publish_down != $nullDate) ? Carbon::parse($publish_down) : false;
 
 			// Create tip text, only we have publish up or down settings
 			$tips = array();
 			if ($publish_up)
 			{
-				$tips[] = trans('global.start publishing', $publish_up->format(Carbon::$format, true));
+				$tips[] = trans('global.start publishing', $publish_up->toDateTimeString());
 			}
 			if ($publish_down)
 			{
-				$tips[] = trans('global.finish publishing', $publish_down->format(Carbon::$format, true));
+				$tips[] = trans('global.finish publishing', $publish_down->toDateTimeString());
 			}
 			$tip = empty($tips) ? false : implode('<br/>', $tips);
 

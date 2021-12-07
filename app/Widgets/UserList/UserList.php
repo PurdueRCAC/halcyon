@@ -92,7 +92,6 @@ class UserList extends Widget
 		// Apply the range filter.
 		if ($range = $this->params->get('range'))
 		{
-			// Get UTC for now.
 			$dNow = Carbon::now();
 			$dStart = clone $dNow;
 

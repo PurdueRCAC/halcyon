@@ -146,7 +146,7 @@ class UsersController extends Controller
 		// Apply the range filter.
 		if ($filters['range'])
 		{
-			// Get UTC for now.
+			// Get now.
 			$dNow = Carbon::now();
 			$dStart = clone $dNow;
 

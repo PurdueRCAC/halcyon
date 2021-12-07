@@ -48,7 +48,6 @@
 
 		<field name="publish_up" type="calendar"
 			description="widgets::widgets.publish up description"
-			filter="user_utc"
 			format="%Y-%m-%d %H:%M:%S"
 			placeholder="global.immediately"
 			label="widgets::widgets.publish up"
@@ -56,7 +55,6 @@
 
 		<field name="publish_down" type="calendar"
 			description="widgets::widgets.publish down description"
-			filter="user_utc"
 			format="%Y-%m-%d %H:%M:%S"
 			placeholder="global.never"
 			label="widgets::widgets.publish down"

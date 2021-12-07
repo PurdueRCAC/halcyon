@@ -28,7 +28,7 @@ class Calendar extends Field
 	protected function getInput()
 	{
 		// Initialize some field attributes.
-		$format = $this->element['format'] ? (string) $this->element['format'] : 'yy-mm-dd';
+		$format = $this->element['format'] ? (string) $this->element['format'] : '%Y-%m-%d %H:%M:%S';
 
 		// Build the attributes array.
 		$attributes = array();
@@ -76,34 +76,14 @@ class Calendar extends Field
 			$this->value = strftime($format);
 		}
 
-		// If a known filter is given use it.
-		/*switch (strtoupper((string) $this->element['filter']))
+		if ($this->value)
 		{
-			case 'SERVER_UTC':*/
-				// Convert a date to UTC based on the server timezone.
-				if (intval($this->value))
-				{
-					// Get a date object based on the correct timezone.
-					$date = Carbon::parse($this->value);
+			// Get a date object based on the correct timezone.
+			$date = Carbon::parse($this->value);
 
-					// Transform the date string.
-					$this->value = $date->format('Y-m-d H:i:s');
-				}
-				/*break;
-
-			case 'USER_UTC':
-				// Convert a date to UTC based on the user timezone.
-				if (intval($this->value))
-				{
-					// Get a date object based on the correct timezone.
-					$date = new Date($this->value, 'UTC');
-					$date->setTimezone(new DateTimeZone(app('user')->getParam('timezone', app('config')->get('offset'))));
-
-					// Transform the date string.
-					$this->value = $date->format('Y-m-d H:i:s');
-				}
-				break;
-		}*/
+			// Transform the date string.
+			$this->value = $date->toDateTimeString();
+		}
 
 		$attributes['id'] = $this->id;
 		$attributes['format'] = $format;

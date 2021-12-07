@@ -1134,7 +1134,7 @@ class Form
 				if (intval($value) > 0)
 				{
 					// Get the server timezone setting.
-					$offset = app('config')->get('offset');
+					//$offset = app('config')->get('offset');
 
 					// Return an SQL formatted datetime string in UTC.
 					$return = Carbon::parse($value)->setTimezone('UTC')->toDateTimeString();
@@ -1150,10 +1150,10 @@ class Form
 				if (intval($value) > 0)
 				{
 					// Get the user timezone setting defaulting to the server timezone setting.
-					$offset = app('user')->getParam('timezone');
+					//$offset = app('user')->getParam('timezone');
 
 					// Return a MySQL formatted datetime string in UTC.
-					$return = Carbon::parse($value, $offset)->setTimezone('UTC')->toDateTimeString();
+					$return = Carbon::parse($value)->setTimezone('UTC')->toDateTimeString();
 				}
 				else
 				{

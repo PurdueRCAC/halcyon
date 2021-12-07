@@ -337,6 +337,8 @@ class Widget extends Model
 		}
 
 		$data = $this->toArray();
+		$data['publish_up'] = $this->publish_up ? $this->publish_up->toDateTimeString() : '';
+		$data['publish_down'] = $this->publish_down ? $this->publish_down->toDateTimeString() : '';
 		$data['params'] = $this->params->all(); //()->toArray();
 
 		$form->bind($data);
