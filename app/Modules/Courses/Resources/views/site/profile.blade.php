@@ -71,6 +71,7 @@
 					 || $class->semester == 'Workshop')
 					{
 						$class_data = null;
+						$usernames = array();
 
 						// Find class data
 						foreach ($classes as $c)
@@ -84,6 +85,10 @@
 								event($e = new App\Modules\Courses\Events\AccountEnrollment($class));
 
 								$class_data->enrollment = $e->enrollments;
+								if (count($class_data->enrollment) != $class->studentcount)
+								{
+									$class->update(['studentcount' => count($class_data->enrollment)]);
+								}
 
 								if (is_array($class_data->enrollment))
 								{
@@ -94,7 +99,7 @@
 
 										if ($u)
 										{
-											//$username = $u->username;
+											$usernames[] = $u->username;
 
 											// See if the they have host entry yet
 											event($e = new App\Modules\Users\Events\UserLookup(['username' => $u->username, 'host' => $class->resource->rolename . '.rcac.purdue.edu']));
@@ -242,6 +247,9 @@
 																<span class="badge badge-success">Instructor/TA</span>
 															@else
 																<span class="badge badge-secondary">Student</span>
+															@endif
+															@if (in_array($usr->user->username, $usernames))
+																<span class="badge badge-info tip" title="Enrollment data was found for {{ $usr->user ? $usr->user->name : $usr->userid }}.">Enrolled</span>
 															@endif
 														@endif
 													</td>
