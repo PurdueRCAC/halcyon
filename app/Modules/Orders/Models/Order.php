@@ -9,6 +9,7 @@ use App\Modules\Groups\Models\Group;
 use App\Modules\Users\Models\User;
 use App\Modules\Orders\Events\OrderCreated;
 use App\Modules\Orders\Events\OrderDeleted;
+use App\Modules\Orders\Helpers\Currency;
 use Carbon\Carbon;
 
 /**
@@ -144,6 +145,7 @@ class Order extends Model
 	/**
 	 * Set user notes
 	 *
+	 * @param   string  $value
 	 * @return  void
 	 */
 	public function setUsernotesAttribute($value)
@@ -154,6 +156,7 @@ class Order extends Model
 	/**
 	 * Set staff notes
 	 *
+	 * @param   string  $value
 	 * @return  void
 	 */
 	public function setStaffnotesAttribute($value)
@@ -170,7 +173,7 @@ class Order extends Model
 	{
 		$ordertotal = 0;
 
-		foreach ($this->items as $item)
+		foreach ($this->items()->get() as $item)
 		{
 			$ordertotal += $item->price;
 		}
@@ -180,39 +183,14 @@ class Order extends Model
 	}
 
 	/**
-	 * Format unit price
+	 * Format a number into currency
 	 *
+	 * @param   mixed  $val
 	 * @return  string
 	 */
 	public function formatNumber($val)
 	{
-		$number = preg_replace('/[^0-9\-]/', '', $val);
-
-		$neg = '';
-		if ($number < 0)
-		{
-			$neg = '-';
-			$number = -$number;
-		}
-
-		if ($number > 99)
-		{
-			$dollars = substr($number, 0, strlen($number) - 2);
-			$cents   = substr($number, strlen($number) - 2, 2);
-			$dollars = number_format($dollars);
-
-			$number = $dollars . '.' . $cents;
-		}
-		elseif ($number > 9 && $number < 100)
-		{
-			$number = '0.' . $number;
-		}
-		else
-		{
-			$number = '0.0' . $number;
-		}
-
-		return $neg . $number;
+		return Currency::formatNumber($val);
 	}
 
 	/**
@@ -391,50 +369,14 @@ class Order extends Model
 	 */
 	public function getFormattedTotalAttribute()
 	{
-		return self::formatCurrency($this->total);
-	}
-
-	/**
-	 * Format currency
-	 *
-	 * @param   integer  $value
-	 * @return  string
-	 */
-	public static function formatCurrency($value)
-	{
-		$number = preg_replace('/[^0-9\-]/', '', $value);
-
-		$neg = '';
-		if ($number < 0)
-		{
-			$neg = '-';
-			$number = -$number;
-		}
-
-		if ($number > 99)
-		{
-			$dollars = substr($number, 0, strlen($number) - 2);
-			$cents   = substr($number, strlen($number) - 2, 2);
-			$dollars = number_format($dollars);
-
-			$number = $dollars . '.' . $cents;
-		}
-		elseif ($number > 9 && $number < 100)
-		{
-			$number = '0.' . $number;
-		}
-		else
-		{
-			$number = '0.0' . $number;
-		}
-
-		return $neg . $number;
+		return $this->formatNumber($this->total);
 	}
 
 	/**
 	 * Generate basic stats for a given number of days
 	 *
-	 * @param   integer  $timeframe
+	 * @param   string  $start
+	 * @param   string  $stop
 	 * @return  array
 	 */
 	public static function stats($start, $stop)
@@ -638,20 +580,20 @@ class Order extends Model
 		}
 
 		$stats = array(
-			'timeframe' => $timeframe,
-			'submitted' => $total,
+			'timeframe'      => $timeframe,
+			'submitted'      => $total,
 			'submitted_prev' => $total_prev,
-			'sold' => self::formatCurrency($sold),
-			'sold_prev' => self::formatCurrency($sold_prev),
-			'canceled'  => $canceled,
+			'sold'           => Currency::formatNumber($sold),
+			'sold_prev'      => Currency::formatNumber($sold_prev),
+			'canceled'       => $canceled,
 			'canceled_prev'  => $canceled_prev,
-			'uncharged' => self::formatCurrency($uncharged),
-			'fulfilled' => $fulfilled,
+			'uncharged'      => Currency::formatNumber($uncharged),
+			'fulfilled'      => $fulfilled,
 			'fulfilled_prev' => $fulfilled_prev,
-			'collected' => self::formatCurrency($collected),
-			'steps'     => $step,
-			'daily'     => $placed,
-			'products'  => $topprods,
+			'collected'      => Currency::formatNumber($collected),
+			'steps'          => $step,
+			'daily'          => $placed,
+			'products'       => $topprods,
 		);
 
 		return $stats;

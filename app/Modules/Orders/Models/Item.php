@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 //use Illuminate\Support\Facades\DB;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Orders\Events\ItemUpdated;
+use App\Modules\Orders\Helpers\Currency;
 use Carbon\Carbon;
 
 /**
@@ -321,9 +322,9 @@ class Item extends Model
 	}
 
 	/**
-	 * If account is fulfilled
+	 * Get start datetime
 	 *
-	 * @return  bool
+	 * @return  object
 	 **/
 	public function start()
 	{
@@ -356,9 +357,9 @@ class Item extends Model
 	}
 
 	/**
-	 * If account is fulfilled
+	 * Get end datetime
 	 *
-	 * @return  bool
+	 * @return  mixed
 	 **/
 	public function end()
 	{
@@ -413,37 +414,12 @@ class Item extends Model
 	/**
 	 * Format unit price
 	 *
+	 * @param   mixed  $val
 	 * @return  string
 	 */
 	public function formatCurrency($val)
 	{
-		$number = preg_replace('/[^0-9\-]/', '', $val);
-
-		$neg = '';
-		if ($number < 0)
-		{
-			$neg = '-';
-			$number = -$number;
-		}
-
-		if ($number > 99)
-		{
-			$dollars = substr($number, 0, strlen($number) - 2);
-			$cents   = substr($number, strlen($number) - 2, 2);
-			$dollars = number_format($dollars);
-
-			$number = $dollars . '.' . $cents;
-		}
-		elseif ($number > 9 && $number < 100)
-		{
-			$number = '0.' . $number;
-		}
-		else
-		{
-			$number = '0.0' . $number;
-		}
-
-		return $neg . $number;
+		return Currency::formatNumber($val);
 	}
 
 	/**

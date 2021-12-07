@@ -130,8 +130,7 @@ class Category extends Model
 	/**
 	 * Query scope where record is trashed
 	 *
-	 * @param   object  $query
-	 * @return  object
+	 * @return  string
 	 */
 	public function getAliasAttribute()
 	{

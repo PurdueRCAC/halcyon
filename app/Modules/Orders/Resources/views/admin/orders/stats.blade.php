@@ -400,7 +400,7 @@ app('pathway')
 											<span class="legend-key"></span> {{ $name }}
 										</td>
 										<td class="text-right">
-											{{ config('orders.currency', '$') }} {{ App\Modules\Orders\Models\Order::formatCurrency($val) }}
+											{{ config('orders.currency', '$') }} {{ App\Modules\Orders\Helpers\Currency::formatNumber($val) }}
 										</td>
 									</tr>
 									@endforeach

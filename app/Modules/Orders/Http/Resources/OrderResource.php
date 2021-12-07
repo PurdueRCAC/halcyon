@@ -16,12 +16,14 @@ class OrderResource extends JsonResource
 	{
 		$data = parent::toArray($request);
 
+		$data['formattedtotal'] = $this->ordertotal ? $this->formatNumber($this->ordertotal) : $this->formattedTotal;
 		$data['accounts'] = $this->accounts;
 		$data['items'] = $this->items;
 
 		$data['api'] = route('api.orders.read', ['id' => $this->id]);
 		$data['url'] = route('site.orders.read', ['id' => $this->id]);
 
+		$data['can'] = array();
 		$data['can']['create'] = false;
 		$data['can']['edit']   = false;
 		$data['can']['delete'] = false;
@@ -39,6 +41,6 @@ class OrderResource extends JsonResource
 			$data['can']['admin']  = $user->can('admin orders');
 		}
 
-		return $data; //parent::toArray($request);
+		return $data;
 	}
 }

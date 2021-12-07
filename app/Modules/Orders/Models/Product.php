@@ -3,6 +3,7 @@ namespace App\Modules\Orders\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Modules\Orders\Helpers\Currency;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Resources\Models\Asset;
 use Carbon\Carbon;
@@ -146,33 +147,7 @@ class Product extends Model
 	 */
 	public function getPriceAttribute()
 	{
-		$number = preg_replace('/[^0-9\-]/', '', $this->unitprice);
-
-		$neg = '';
-		if ($number < 0)
-		{
-			$neg = '-';
-			$number = -$number;
-		}
-
-		if ($number > 99)
-		{
-			$dollars = substr($number, 0, strlen($number) - 2);
-			$cents   = substr($number, strlen($number) - 2, 2);
-			$dollars = number_format($dollars);
-
-			$number = $dollars . '.' . $cents;
-		}
-		elseif ($number > 9 && $number < 100)
-		{
-			$number = '0.' . $number;
-		}
-		else
-		{
-			$number = '0.0' . $number;
-		}
-
-		return $neg . $number;
+		return Currency::formatNumber($this->unitprice);
 	}
 
 	/**
@@ -182,37 +157,13 @@ class Product extends Model
 	 */
 	public function getDecimalUnitpriceAttribute()
 	{
-		$number = preg_replace('/[^0-9\-]/', '', $this->unitprice);
-
-		$neg = '';
-		if ($number < 0)
-		{
-			$neg = '-';
-			$number = -$number;
-		}
-
-		if ($number > 99)
-		{
-			$dollars = substr($number, 0, strlen($number) - 2);
-			$cents   = substr($number, strlen($number) - 2, 2);
-
-			$number = $dollars . '.' . $cents;
-		}
-		elseif ($number > 9 && $number < 100)
-		{
-			$number = '0.' . $number;
-		}
-		else
-		{
-			$number = '0.0' . $number;
-		}
-
-		return $neg . $number;
+		return Currency::formatNumber($this->unitprice);
 	}
 
 	/**
 	 * Set unit price
 	 *
+	 * @param   string  $value
 	 * @return  void
 	 */
 	public function setUnitpriceAttribute($value)
