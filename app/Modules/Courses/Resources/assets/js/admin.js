@@ -5,221 +5,213 @@
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function () {
-	var users = $(".form-users");
-	if (users.length) {
-		users.each(function (i, user) {
-			user = $(user);
-			var cl = user.clone()
-				.attr('type', 'hidden')
-				.val(user.val().replace(/([^:]+):/, ''));
-			user
-				.attr('name', user.attr('id') + i)
-				.attr('id', user.attr('id') + i)
-				.val(user.val().replace(/(:\d+)$/, ''))
-				.after(cl);
-			user.autocomplete({
-				minLength: 2,
-				source: function (request, response) {
-					return $.getJSON(user.attr('data-uri').replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
-						response($.map(data.data, function (el) {
-							return {
-								label: el.name + ' (' + el.username + ')',
-								name: el.name,
-								id: el.id,
-							};
-						}));
-					});
-				},
-				select: function (event, ui) {
-					event.preventDefault();
-					// Set selection
-					user.val(ui.item.label); // display the selected text
-					cl.val(ui.item.id); // save selected id to input
 
-					if (user.hasClass('redirect')) {
-						window.location.href = user.data('location').replace('%s', ui.item.id);
-					}
+	document.querySelectorAll('.form-users').forEach(function (user, i) {
+		user = $(user);
 
-					if (user.hasClass('submit')) {
-						user.closest('form').submit();
-					}
+		var cl = user.clone()
+			.attr('type', 'hidden')
+			.val(user.val().replace(/([^:]+):/, ''));
 
-					return false;
+		user
+			.attr('name', user.attr('id') + i)
+			.attr('id', user.attr('id') + i)
+			.val(user.val().replace(/(:\d+)$/, ''))
+			.after(cl);
+		user.autocomplete({
+			minLength: 2,
+			source: function (request, response) {
+				return $.getJSON(user.attr('data-uri').replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
+					response($.map(data.data, function (el) {
+						return {
+							label: el.name + ' (' + el.username + ')',
+							name: el.name,
+							id: el.id,
+						};
+					}));
+				});
+			},
+			select: function (event, ui) {
+				event.preventDefault();
+				// Set selection
+				user.val(ui.item.label); // display the selected text
+				cl.val(ui.item.id); // save selected id to input
+
+				if (user.hasClass('redirect')) {
+					window.location.href = user.data('location').replace('%s', ui.item.id);
+				}
+
+				if (user.hasClass('submit')) {
+					user.closest('form').submit();
+				}
+
+				return false;
+			}
+		});
+	});
+
+	document.querySelectorAll('.type-dependant').forEach(function (el) {
+		el.classList.add('d-none');
+	});
+
+	document.querySelectorAll('[name="type"]').forEach(function (el) {
+		el.addEventListener('change', function () {
+			document.querySelectorAll('.type-dependant').forEach(function (dep) {
+				dep.classList.add('d-none');
+				if (dep.classList.contains('type-' + el.value)) {
+					dep.classList.remove('d-none');
 				}
 			});
-		});
-	}
 
-	$('.type-dependant').hide();
-
-	$('[name="type"]')
-		.on('change', function () {
-			$('.type-dependant').hide();
-			$('.type-' + $(this).val()).show();
-			if ($(this).val() == 'workshop') {
-				$('#field-semester').val('Workshop');
+			if (el.value == 'workshop') {
+				document.getElementById('field-semester').value = 'Workshop';
 			}
 		})
-		.each(function (i, el) {
-			$('.type-' + $(el).val()).show();
+
+		document.querySelectorAll('.type-' + el.value).forEach(function (dep) {
+			dep.classList.remove('d-none');
 		});
+	});
 
-	$('#main').on('click', '.remove-member', function (e) {
-		e.preventDefault();
+	document.querySelector('#main').addEventListener('click', function (e) {
+		if (e.target.closest('#main .remove-member')) {
+			e.preventDefault();
 
-		var result = confirm($(this).data('confirm'));
+			var result = confirm(this.getAttribute('data-confirm'));
 
-		if (result) {
-			var field = $($(this).attr('href'));
+			if (result) {
+				var btn = this,
+					field = document.getElementById(this.getAttribute('href').replace('#', ''));
 
-			// delete relationship
+				// delete relationship
+				$.ajax({
+					url: btn.getAttribute('data-api'),
+					type: 'delete',
+					dataType: 'json',
+					async: false,
+					success: function () {
+						Halcyon.message('success', btn.getAttribute('data-success'));
+						field.parentNode.removeChild(field);
+					},
+					error: function (xhr) {
+						Halcyon.message('danger', xhr.responseJSON.message);
+					}
+				});
+			}
+		}
+	});
+
+	document.querySelectorAll('.add-member').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			var select = document.querySelector(this.getAttribute('data-field'));
+			var btn = this;
+			var post = {
+				'userid': select.value,
+				'classaccountid': btn.getAttribute('data-account'),
+				'membertype': document.querySelector(this.getAttribute('data-type')).value
+			};
+
+			// create new relationship
 			$.ajax({
-				url: $(this).data('api'),
-				type: 'delete',
+				url: btn.getAttribute('data-api'),
+				type: 'post',
+				data: post,
 				dataType: 'json',
 				async: false,
-				success: function () {
-					Halcyon.message('success', $(this).data('success'));
-					field.remove();
+				success: function () { //response
+					Halcyon.message('success', btn.getAttribute('data-success'));
+					window.location.reload(true);
 				},
 				error: function (xhr) {
 					Halcyon.message('danger', xhr.responseJSON.message);
 				}
 			});
-		}
-	});
-
-	$('.add-member').on('click', function (e) {
-		e.preventDefault();
-
-		var select = $($(this).data('field'));
-		var btn = $(this);
-		var post = {
-			'userid': select.val(),
-			'classaccountid': btn.data('account'),
-			'membertype': $($(this).data('type')).val()
-		};
-
-		// create new relationship
-		$.ajax({
-			url: btn.data('api'),
-			type: 'post',
-			data: post,
-			dataType: 'json',
-			async: false,
-			success: function () { //response
-				Halcyon.message('success', btn.data('success'));
-				window.location.reload(true);
-
-				/*var c = select.closest('table');
-				var li = c.find('tr.d-none');
-
-				if (typeof (li) !== 'undefined') {
-					var template = $(li)
-						.clone()
-						.removeClass('d-none');
-
-					template
-						.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
-						.data('id', response.id);
-
-					template.find('a').each(function (i, el) {
-						$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.id));
-					});
-
-					var content = template
-						.html()
-						.replace(/\{id\}/g, response.id)
-						.replace(/\{name\}/g, response.user.name)
-						.replace(/\{userid\}/g, response.userid);
-
-					template.html(content).insertBefore(li);
-				}
-
-				select.val();*/
-			},
-			error: function (xhr) {
-				Halcyon.message('danger', xhr.responseJSON.message);
-			}
 		});
 	});
 
 	//----
 
-	var dialog = $("#new-account").dialog({
-		autoOpen: false,
-		height: 'auto',//200,
-		width: 500,
-		modal: true
-	});
-
-	$('#toolbar-plus').on('click', function (e) {
-		e.preventDefault();
-
-		dialog.dialog("open");
-	});
-
-	var searchusers = $('#filter_userid');
-	if (searchusers.length) {
-		searchusers.each(function (i, el) {
-			$(el).select2({
-				ajax: {
-					url: $(el).data('api'),
-					dataType: 'json',
-					maximumSelectionLength: 1,
-					data: function (params) {
-						var query = {
-							search: params.term,
-							order: 'name',
-							order_dir: 'asc'
-						}
-
-						return query;
-					},
-					processResults: function (data) {
-						for (var i = 0; i < data.data.length; i++) {
-							if (data.data[i].id) {
-								data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
-							} else {
-								data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
-								data.data[i].id = data.data[i].username;
-							}
-						}
-
-						return {
-							results: data.data
-						};
-					}
-				},
-				templateResult: function (state) {
-					if (isNaN(state.id) && typeof state.name != 'undefined') {
-						return $('<span>' + state.text + ' <span class="text-warning ml-1"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> No local account</span></span>');
-					}
-					return state.text;
-				}
-			});
+	var plus = document.getElementById('toolbar-plus');
+	if (plus) {
+		var dialog = $("#new-account").dialog({
+			autoOpen: false,
+			height: 'auto',//200,
+			width: 500,
+			modal: true
 		});
-		searchusers.on('select2:select', function (e) {
-			var data = e.params.data;
-			window.location = $(this).data('url') + "?userid=" + data.id;
-		});
-		searchusers.on('select2:unselect', function () {
-			window.location = $(this).data('url') + "?userid=";
+
+		plus.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			dialog.dialog("open");
 		});
 	}
 
-	var sdialog = $("#sync").dialog({
-		autoOpen: false,
-		height: 400,
-		width: 500,
-		modal: true
-	});
+	var searchusers = document.getElementById('filter_userid');
+	if (searchusers) {
+		$(searchusers).select2({
+			ajax: {
+				url: searchusers.getAttribute('data-api'),
+				dataType: 'json',
+				maximumSelectionLength: 1,
+				data: function (params) {
+					var query = {
+						search: params.term,
+						order: 'name',
+						order_dir: 'asc'
+					}
 
-	document.getElementById('toolbar-refresh').addEventListener('click', function (e) {
-		e.preventDefault();
+					return query;
+				},
+				processResults: function (data) {
+					for (var i = 0; i < data.data.length; i++) {
+						if (data.data[i].id) {
+							data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
+						} else {
+							data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
+							data.data[i].id = data.data[i].username;
+						}
+					}
 
-		sdialog.dialog("open");
-	});
+					return {
+						results: data.data
+					};
+				}
+			},
+			templateResult: function (state) {
+				if (isNaN(state.id) && typeof state.name != 'undefined') {
+					return $('<span>' + state.text + ' <span class="text-warning ml-1"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> No local account</span></span>');
+				}
+				return state.text;
+			}
+		});
+		$(searchusers).on('select2:select', function (e) {
+			var data = e.params.data;
+			window.location = this.getAttribute('data-url') + "?userid=" + data.id;
+		});
+		$(searchusers).on('select2:unselect', function () {
+			window.location = this.getAttribute('data-url') + "?userid=";
+		});
+	}
+
+	var refresh = document.getElementById('toolbar-refresh');
+	if (refresh) {
+		var sdialog = $("#sync").dialog({
+			autoOpen: false,
+			height: 400,
+			width: 500,
+			modal: true
+		});
+
+		refresh.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			sdialog.dialog("open");
+		});
+	}
+
 	document.querySelectorAll('.btn-sync').forEach(function (btn) {
 		btn.addEventListener('click', function (e) {
 			e.preventDefault();
