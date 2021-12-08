@@ -34,12 +34,12 @@
 			</div>
 		</div>
 	@else
-		<div id="counthelp" class="dialog dialog-help" title="Account Counts">
-			<p>This shows a count of all student accounts associated with this course. The numbers are the number of accounts currently active out of the enrolled students.</p>
+		<div id="counthelp" class="dialog dialog-help" title="Accounts / Enrolled">
+			<p>This shows a count of all accounts associated with this course. The numbers are the number of accounts currently active out of the enrolled students. <strong>The number of accounts may exceed the number of enrolled if any people have been manually added.</strong></p>
 
 			<p>If you just added a new course, accounts are processed overnight, so at first you will see 0 accounts (or a small number active through another course). A small number of missing accounts may be due to students who just registered for the course.</p>
 
-			<p>Note: The total count is a union of all students in all sections/CRNs of your course (even if you just added one CRN), and not the count of each individual section. As well, we may not receive complete enrollment data until the start of the semester.</p>
+			<p class="alert alert-info">The total enrollment is a union of all students in all sections/CRNs of your course (even if you just added one CRN), and not the count of each individual section. As well, complete enrollment data may not be received until the start of the semester.</p>
 		</div>
 
 		<table class="table">
@@ -85,10 +85,6 @@
 								event($e = new App\Modules\Courses\Events\AccountEnrollment($class));
 
 								$class_data->enrollment = $e->enrollments;
-								if (count($class_data->enrollment) != $class->studentcount)
-								{
-									$class->update(['studentcount' => count($class_data->enrollment)]);
-								}
 
 								if (is_array($class_data->enrollment))
 								{
@@ -116,6 +112,18 @@
 						}
 
 						$resource = $class->resource;
+
+						$m = (new App\Modules\Courses\Models\Member)->getTable();
+						$u = (new App\Modules\Users\Models\UserUsername)->getTable();
+
+						$members = $class->members()
+							->select($m . '.*')
+							->leftJoin($u, $u . '.userid', $m . '.userid')
+							->where('membertype', '>=', 0)
+							->orderBy($m . '.membertype', 'desc')
+							->orderBy($u . '.username', 'asc')
+							->whereNull($u . '.dateremoved')
+							->get();
 						?>
 						<tr>
 							<td>
@@ -140,14 +148,14 @@
 							<td class="text-center">
 								<a class="tip" data-toggle="collapse" data-parent="#accounts" href="#collapse{{ $class->id }}" title="View Accounts">
 								@if (!$class->isWorkshop() && $class_data)
-									{{ $class_data->accounts }}
+									{{ count($members) }}
 									@if (isset($class_data->enrollment))
 										{{ ' / ' . count($class_data->enrollment) }}
 									@else
 										{{ ' / --' }}
 									@endif
 								@else
-									{{ ($class->studentcount ? $class->studentcount : $class->members()->count()) . ' / --' }}
+									{{ count($members) . ' / --' }}
 								@endif
 								</a>
 							</td>
@@ -191,7 +199,7 @@
 									</div>
 								</div>
 
-								<table class="table table-hover datatable">
+								<table class="table table-hover datatable" data-length="{{ count($members) }}">
 									<caption class="sr-only">Account Users</caption>
 									<thead>
 										<th scope="col">Name</th>
@@ -201,18 +209,6 @@
 									</thead>
 									<tbody>
 										<?php
-										$m = (new App\Modules\Courses\Models\Member)->getTable();
-										$u = (new App\Modules\Users\Models\UserUsername)->getTable();
-
-										$members = $class->members()
-											->select($m . '.*')
-											->leftJoin($u, $u . '.userid', $m . '.userid')
-											->where('membertype', '>=', 0)
-											->orderBy($m . '.membertype', 'desc')
-											->orderBy($u . '.username', 'asc')
-											->whereNull($u . '.dateremoved')
-											->get();
-
 										if (count($members)):
 											foreach ($members as $usr):
 												?>

@@ -925,22 +925,24 @@ $(document).ready(function () {
 
 	$('.collapse').on('shown.bs.collapse', function () {
 		if (!this.getAttribute('data-table')) {
-			$('#' + this.getAttribute('id') + ' .datatable').DataTable({
-				//pageLength: 20,
-				//pagingType: 'numbers',
-				paging: false,
-				scrollY: '50vh',
-				scrollCollapse: true,
-				headers: true,
-				info: true,
-				ordering: false,
-				lengthChange: false,
-				dom: "<'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'i>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'p><'col-sm-12 col-md-7'l>>",
-				//scrollX: true,
-				language: {
-					searchPlaceholder: "Filter users...",
-					search: "_INPUT_",
-				}
+			$('#' + this.getAttribute('id') + ' .datatable').each(function(i, el) {
+				$(el).DataTable({
+					//pageLength: 20,
+					//pagingType: 'numbers',
+					paging: ($(el).attr('data-length') && parseInt($(el).attr('data-length')) > 200 ? true : false),
+					scrollY: '50vh',
+					scrollCollapse: true,
+					headers: true,
+					info: true,
+					ordering: true,
+					lengthChange: false,
+					dom: "<'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'i>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'p><'col-sm-12 col-md-7'l>>",
+					//scrollX: true,
+					language: {
+						searchPlaceholder: "Filter users...",
+						search: "_INPUT_",
+					}
+				});
 			});
 			// Record this so it doesn't get re-initialized on multiple open/closings of the list
 			this.setAttribute('data-table', 1);
