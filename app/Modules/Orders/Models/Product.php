@@ -157,7 +157,7 @@ class Product extends Model
 	 */
 	public function getDecimalUnitpriceAttribute()
 	{
-		return Currency::formatNumber($this->unitprice);
+		return str_replace(',', '', Currency::formatNumber($this->unitprice));
 	}
 
 	/**
