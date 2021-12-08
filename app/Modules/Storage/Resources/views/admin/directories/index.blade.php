@@ -132,7 +132,7 @@ if ($parent)
 					{{ $row->id }}
 				</td>
 				<td>
-					@if ($row->trashed() || $sr->trashed())
+					@if ($row->trashed())
 						<span class="glyph icon-trash text-danger" data-tip="{{ trans('global.trashed') }}: {{ $row->datetimeremoved->format('Y-m-d') }}">
 							{{ trans('global.trashed') }}: <time datetime="{{ $row->datetimeremoved->toDateTimeString() }}">{{ $row->datetimeremoved->format('Y-m-d') }}</time>
 						</span>
@@ -176,7 +176,11 @@ if ($parent)
 				</td>
 				<td class="priority-4">
 					@if ($sr)
-						{{ $sr->name }}
+						@if ($sr->trashed())
+							<del class="text-danger">{{ $sr->name }}</del>
+						@else
+							{{ $sr->name }}
+						@endif
 					@else
 						<span class="unknown">{{ trans('global.unknown') }}</span>
 					@endif
