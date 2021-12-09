@@ -50,7 +50,7 @@ app('pathway')
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col col-md-3 filter-search">
+			<div class="col col-md-2 filter-search">
 				<div class="form-group">
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
@@ -83,7 +83,13 @@ app('pathway')
 					</select>
 				</div>
 			</div>
-			<div class="col col-md-6 text-right filter-select">
+			<div class="col col-md-7 text-right filter-select">
+				<label class="sr-only" for="filter_start">{{ trans('courses::courses.start') }}</label>
+				<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" placeholder="Start date" />
+
+				<label class="sr-only" for="filter_stop">{{ trans('courses::courses.end') }}</label>
+				<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="End date" />
+
 				<label class="sr-only" for="filter_semester">{{ trans('courses::courses.semester') }}</label>
 				<select name="semester" id="filter_semester" class="form-control filter filter-submit">
 					<option value=""<?php if (!$filters['semester']): echo ' selected="selected"'; endif;?>>{{ trans('courses::courses.all semesters') }}</option>

@@ -30,6 +30,8 @@ class AccountsController extends Controller
 			'userid' => null,
 			'semester' => '',
 			'state' => 'active',
+			'start'     => null,
+			'stop'       => null,
 			// Paging
 			'limit' => config('list_limit', 20),
 			'page' => 1,
@@ -72,6 +74,16 @@ class AccountsController extends Controller
 		if ($filters['semester'])
 		{
 			$query->where('semester', '=', $filters['semester']);
+		}
+
+		if ($filters['start'])
+		{
+			$query->where('datetimestart', '>=', $filters['start']);
+		}
+
+		if ($filters['stop'])
+		{
+			$query->where('datetimestop', '<=', $filters['stop']);
 		}
 
 		if ($filters['state'] == 'active')
