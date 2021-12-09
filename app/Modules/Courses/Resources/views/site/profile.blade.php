@@ -470,7 +470,7 @@
 								<td colspan="2">
 									<div class="form-group">
 										<label for="bulkadd_{{ $class->crn }}">Bulk add users:</label>
-										<textarea class="bulkAdd form-control" id="bulkadd_{{ $class->crn }}" rows="8" cols="40" placeholder="Username or email, comma or line seperated." id="users"></textarea>
+										<textarea class="bulkAdd form-control" id="bulkadd_{{ $class->crn }}" rows="8" cols="40" placeholder="Username or email, comma or line separated." id="users"></textarea>
 									</div>
 									<button class="btn btn-secondary account-add" data-crn="{{ $class->crn }}" data-id="{{ $class->id }}">Bulk Add Accounts</button>
 								</td>
@@ -491,7 +491,7 @@
 					<div class="form-group">
 						<label for="bulkadd_{{ $class->crn }}">Bulk add users:</label>
 						<textarea class="bulkAdd form-control" id="bulkadd_{{ $class->crn }}" rows="5" cols="40"></textarea>
-						<span class="form-text text-muted">Username or email, comma or line seperated.</span>
+						<span class="form-text text-muted">Username or email, comma or line separated.</span>
 					</div>
 
 					<div class="form-group text-right">
