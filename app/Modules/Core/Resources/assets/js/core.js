@@ -896,7 +896,12 @@ document.addEventListener('DOMContentLoaded', function() {
 	$('input.date').datepicker({
 		duration: '',
 		constrainInput: false,
-		dateFormat: 'yy-mm-dd'
+		dateFormat: 'yy-mm-dd',
+		onClose: function () {
+			if (this.classList.contains('filter-submit')) {
+				this.form.submit();
+			}
+		}
 	}).keyup(function (e) {
 		if (e.keyCode == 8 || e.keyCode == 46) {
 			$(this).val('').datepicker("refresh");
@@ -908,7 +913,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		dateFormat: 'yy-mm-dd',
 		controlType: 'select',
 		oneLine: true,
-		timeFormat: 'HH:mm:00'
+		timeFormat: 'HH:mm:00',
+		onClose: function () {
+			if (this.classList.contains('filter-submit')) {
+				this.form.submit();
+			}
+		}
 	}).keyup(function (e) {
 		if (e.keyCode == 8 || e.keyCode == 46) {
 			$(this).val('').datetimepicker("refresh");
