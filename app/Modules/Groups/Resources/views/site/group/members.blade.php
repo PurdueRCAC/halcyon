@@ -161,6 +161,7 @@ $unixgroups = $group->unixgroups()
 	->orderBy('longname', 'asc')
 	->get();
 
+$base = null;
 $group_boxes = 0;
 foreach ($unixgroups as $unixgroup)
 {
@@ -169,6 +170,11 @@ foreach ($unixgroups as $unixgroup)
 	if (!preg_match("/rcs[0-9]{4}0/", $unixgroup->shortname))
 	{
 		$group_boxes++;
+	}
+
+	if ($unixgroup->longname == $group->unixgroup)
+	{
+		$base = $unixgroup->id;
 	}
 
 	$uu = array();
@@ -244,8 +250,8 @@ $i = 0;
 					</tr>
 				</thead>
 				<tbody>
-					@foreach ($pending as $i => $req)
-						<tr id="entry{{ $i }}" data-id="{{ $req->id }}">
+					@foreach ($pending as $j => $req)
+						<tr id="entry{{ $j }}" data-id="{{ $req->id }}">
 							<td>
 								{{ $req->user->name }}
 								@if ($req->request && $req->request->comment)
@@ -417,6 +423,7 @@ $i = 0;
 								<input type="checkbox"
 									class="membership-toggle queue-toggle"
 									name="queue[{{ $i }}][{{ $queue->id }}]"{!! $checked !!}
+									data-base="unix-{{ $i }}-{{ $base }}"
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $queue->id }}"
 									data-api-create="{{ route('api.queues.users.create') }}"
@@ -427,14 +434,12 @@ $i = 0;
 						endforeach;
 
 						$uu = array();
-						$base = null;
+
 						foreach ($unixgroups as $unix):
 							//$uu[$unix->id] = $unix->members->pluck('userid')->toArray();
 							$checked = '';
 							$m = null;
-							if ($group->unixgroup == $unix->longname):
-								$base = $unix->id;
-							endif;
+
 								if (isset($unix->uu[$member->userid])):
 									$m = $unix->uu[$member->userid];
 							//foreach ($unix->members as $m):
@@ -589,6 +594,7 @@ $i = 0;
 									<input type="checkbox"
 										class="membership-toggle queue-toggle"
 										name="queue[{{ $i }}][{{ $queue->id }}]"{!! $checked !!}
+										data-base="unix-{{ $i }}-{{ $base }}"
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $queue->id }}"
 										data-api-create="{{ route('api.queues.users.create') }}"
@@ -598,13 +604,10 @@ $i = 0;
 								<?php
 							endforeach;
 
-							$base = null;
 							foreach ($unixgroups as $unix):
 								$checked = '';
 								$m = null;
-								if ($group->unixgroup == $unix->longname):
-									$base = $unix->id;
-								endif;
+
 								//foreach ($unix->members as $m):
 									if (isset($unix->uu[$member->userid])):
 										$m = $unix->uu[$member->userid];
@@ -744,6 +747,7 @@ $i = 0;
 								<input type="checkbox"
 									class="membership-toggle queue-toggle"
 									name="queue[{{ $i }}][{{ $queue->id }}]"{!! $checked !!}
+									data-base="unix-{{ $i }}-{{ $base }}"
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $queue->id }}"
 									data-api-create="{{ route('api.queues.users.create') }}"
@@ -753,13 +757,10 @@ $i = 0;
 							<?php
 						endforeach;
 
-						$base = null;
 						foreach ($unixgroups as $unix):
 							$checked = '';
 							$m = null;
-							if ($group->unixgroup == $unix->longname):
-								$base = $unix->id;
-							endif;
+
 							//foreach ($unix->members as $m):
 								//if ($member->userid == $m->userid):
 								if (isset($unix->uu[$member->userid])):
@@ -882,6 +883,7 @@ $i = 0;
 									<input type="checkbox"
 										class="membership-toggle queue-toggle"
 										name="queue[{{ $i }}][{{ $queue->id }}]"{!! $checked !!}
+										data-base="unix-{{ $i }}-{{ $base }}"
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $queue->id }}"
 										data-api-create="{{ route('api.queues.users.create') }}"
@@ -892,13 +894,9 @@ $i = 0;
 								<?php
 							endforeach;
 
-							$base = null;
 							foreach ($unixgroups as $unix):
 								$checked = '';
 								$m = null;
-								if ($group->unixgroup == $unix->longname):
-									$base = $unix->id;
-								endif;
 								//foreach ($unix->members()->withTrashed()->get() as $m):
 									//if ($member->userid == $m->userid):
 									if (isset($unix->uu[$member->userid])):
@@ -970,7 +968,7 @@ $i = 0;
 								<td class="rowData">
 								@foreach ($queues as $queue)
 									<div class="form-check">
-										<input type="checkbox" class="form-check-input add-queue-member" name="queue[]" id="queue{{ $queue->id }}" value="{{ $queue->id }}" />
+										<input type="checkbox" class="form-check-input add-queue-member" name="queue[]" data-base="unixgroup-{{ $base }}" id="queue{{ $queue->id }}" value="{{ $queue->id }}" />
 										<label class="form-check-label" for="queue{{ $queue->id }}">{{ $queue->name }}</label>
 									</div>
 								@endforeach
@@ -987,25 +985,13 @@ $i = 0;
 				<legend>Unix Group Selection</legend>
 
 				<div id="unix-group-selection" class="row groupSelect">
-					<?php
-					$name = null;
-					$i = 0;
-					?>
 					@foreach ($unixgroups as $name)
-						<?php
-						if ($group->unixgroup == $name->longname):
-							$base = $i . '-' . $name->id;
-						endif;
-						?>
 						<div class="col-sm-4 unixData">
 							<div class="form-check">
-								<input type="checkbox" data-base="unixgroup-{{ $base }}" class="form-check-input add-unixgroup-member" name="unixgroup[]" id="unixgroup-{{ $i }}-{{ $name->id }}" value="{{ $name->id }}" />
-								<label class="form-check-label" for="unixgroup-{{ $i }}-{{ $name->id }}">{{ $name->longname }}</label>
+								<input type="checkbox" data-base="unixgroup-{{ $base }}" class="form-check-input add-unixgroup-member" name="unixgroup[]" id="unixgroup-{{ $name->id }}" value="{{ $name->id }}" />
+								<label class="form-check-label" for="unixgroup-{{ $name->id }}">{{ $name->longname }}</label>
 							</div>
 						</div>
-						<?php
-						$i++;
-						?>
 					@endforeach
 				</div>
 			</fieldset>

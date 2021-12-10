@@ -425,7 +425,7 @@
 			});
 		});
 
-		$('.add-unixgroup-member').on('change', function(e){
+		$('.add-queue-member,.add-unixgroup-member').on('change', function(e){
 			e.preventDefault();
 
 			var bx = $(this);
