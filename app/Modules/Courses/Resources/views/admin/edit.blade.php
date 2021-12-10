@@ -55,7 +55,7 @@ app('pathway')
 				<div class="form-group">
 					<label for="field-userid">{{ trans('courses::courses.owner') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<span class="input-group">
-						<input type="text" name="fields[userid]" id="field-userid" data-show="#field-options" class="form-control form-users redirect{{ $errors->has('fields.userid') ? ' is-invalid' : '' }}" required data-uri="{{ route('api.users.index') }}?search=%s" data-location="{{ $row->id ? route('admin.courses.edit', ['id' => $row->id]) : route('admin.courses.create') }}?userid=%s" value="{{ ($row->user ? $row->user->name . ':' . $row->userid : '') }}" />
+						<input type="text" name="fields[userid]" id="field-userid" data-show="#field-options" class="form-control form-user redirect{{ $errors->has('fields.userid') ? ' is-invalid' : '' }}" required data-uri="{{ route('api.users.index') }}?search=%s" data-location="{{ $row->id ? route('admin.courses.edit', ['id' => $row->id]) : route('admin.courses.create') }}?userid=%s" value="{{ ($row->user ? $row->user->name . ':' . $row->userid : '') }}" />
 						<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
 					</span>
 				</div>

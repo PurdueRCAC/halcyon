@@ -22,10 +22,17 @@ app('pathway')
 		{!! Toolbar::deleteList('', route('admin.courses.delete')) !!}
 	@endif
 
-	<?php /*
 	@if (auth()->user()->can('manage courses'))
-		{!! Toolbar::link('refresh', 'Sync', '#sync', false) !!}
-	@endif */ ?>
+		{!!
+			Toolbar::dropdown('export', trans('courses::courses.export'), [
+				route('admin.courses.index', ['export' => 'instructors']) => trans('courses::courses.export instructors'),
+				route('admin.courses.index', ['export' => 'users']) => trans('courses::courses.export users')
+			]);
+			/*Toolbar::link('refresh', 'Sync', '#sync', false);*/
+			Toolbar::link('mail', 'courses::courses.mail', route('admin.courses.mail', $filters), false);
+			Toolbar::spacer();
+		!!}
+	@endif
 
 	@if (auth()->user()->can('create courses'))
 		{!! Toolbar::addNew(route('admin.courses.create')) !!}
@@ -84,11 +91,11 @@ app('pathway')
 				</div>
 			</div>
 			<div class="col col-md-7 text-right filter-select">
-				<label class="sr-only" for="filter_start">{{ trans('courses::courses.start') }}</label>
-				<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" placeholder="Start date" />
+				<label class="sr-only" for="filter_start">{{ trans('courses::courses.starts before') }}</label>
+				<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" placeholder="{{ trans('courses::courses.starts before') }}" />
 
-				<label class="sr-only" for="filter_stop">{{ trans('courses::courses.end') }}</label>
-				<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="End date" />
+				<label class="sr-only" for="filter_stop">{{ trans('courses::courses.ends after') }}</label>
+				<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="{{ trans('courses::courses.ends after') }}" />
 
 				<label class="sr-only" for="filter_semester">{{ trans('courses::courses.semester') }}</label>
 				<select name="semester" id="filter_semester" class="form-control filter filter-submit">
@@ -251,7 +258,7 @@ app('pathway')
 		<div class="form-group">
 			<label for="field-userid">{{ trans('courses::courses.owner') }}</label>
 			<span class="input-group">
-				<input type="text" name="userid" id="field-userid" class="form-control form-users redirect" data-uri="{{ route('api.users.index') }}?search=%s" data-location="{{ route('admin.courses.create') }}?userid=%s" value="" />
+				<input type="text" name="userid" id="field-userid" class="form-control form-user redirect" data-uri="{{ route('api.users.index') }}?search=%s" data-location="{{ route('admin.courses.create') }}?userid=%s" value="" />
 				<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
 			</span>
 		</div>

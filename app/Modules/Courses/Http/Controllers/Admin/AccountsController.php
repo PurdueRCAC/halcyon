@@ -8,10 +8,13 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Mail;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Courses\Models\Account;
 use App\Modules\Courses\Events\InstructorLookup;
+use App\Modules\Courses\Mail\Composed;
 use App\Modules\Resources\Models\Asset;
+use App\Modules\Users\Models\User;
 use Carbon\Carbon;
 
 class AccountsController extends Controller
@@ -26,7 +29,7 @@ class AccountsController extends Controller
 	{
 		$filters = array(
 			'search' => '',
-			'resourceid'  => 0,
+			//'resourceid'  => 0,
 			'userid' => null,
 			'semester' => '',
 			'state' => 'active',
@@ -61,10 +64,10 @@ class AccountsController extends Controller
 			$query->where('classname', 'like', '%' . $filters['search'] . '%');
 		}
 
-		if ($filters['resourceid'])
+		/*if ($filters['resourceid'])
 		{
 			$query->where('resourceid', '=', $filters['resourceid']);
-		}
+		}*/
 
 		if ($filters['userid'])
 		{
@@ -78,12 +81,12 @@ class AccountsController extends Controller
 
 		if ($filters['start'])
 		{
-			$query->where('datetimestart', '>=', $filters['start']);
+			$query->where('datetimestart', '<=', $filters['start']);
 		}
 
 		if ($filters['stop'])
 		{
-			$query->where('datetimestop', '<=', $filters['stop']);
+			$query->where('datetimestop', '>', $filters['stop']);
 		}
 
 		if ($filters['state'] == 'active')
@@ -107,6 +110,15 @@ class AccountsController extends Controller
 			$query->withTrashed();
 		}
 
+		if ($request->has('export'))
+		{
+			$rows = $query
+				->orderBy($filters['order'], $filters['order_dir'])
+				->get();
+
+			return $this->export($rows, $request->input('export'));
+		}
+
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
@@ -120,6 +132,106 @@ class AccountsController extends Controller
 			'rows'    => $rows,
 			'filters' => $filters,
 			'semesters' => $semesters,
+		]);
+	}
+
+	/**
+	 * Download a list of records
+	 * 
+	 * @param  object  $rows
+	 * @return Response
+	 */
+	public function export($rows, $export)
+	{
+		$data = array();
+		$data[] = array(
+			trans('courses::courses.id'),
+			trans('courses::courses.course number'),
+			trans('courses::courses.course name'),
+			trans('courses::courses.semester'),
+			trans('courses::courses.date start'),
+			trans('courses::courses.date stop'),
+			trans('courses::courses.resource'),
+			trans('courses::courses.user'),
+			trans('courses::courses.username'),
+			trans('courses::courses.email'),
+			trans('courses::courses.member type'),
+		);
+
+		$courses = array();
+		foreach ($rows as $row)
+		{
+			if (in_array($row->id, $courses))
+			{
+				continue;
+			}
+
+			$courses[] = $row->id;
+
+			$data[] = array(
+				$row->id,
+				$row->department . ' ' . $row->coursenumber,
+				$row->classname,
+				$row->semester,
+				$row->datetimestart->format('Y-m-d'),
+				$row->datetimestop->format('Y-m-d'),
+				($row->resource ? $row->resource->name : ''),
+				($row->user ? $row->user->name : ''),
+				($row->user ? $row->user->username : ''),
+				($row->user ? $row->user->email : ''),
+				($row->user ? 'Instructor' : '')
+			);
+
+			if ($export == 'users')
+			{
+				foreach ($row->members as $member)
+				{
+					$data[] = array(
+						$row->id,
+						$row->department . ' ' . $row->coursenumber,
+						$row->classname,
+						$row->semester,
+						$row->datetimestart->format('Y-m-d'),
+						$row->datetimestop->format('Y-m-d'),
+						($row->resource ? $row->resource->name : ''),
+						($member->user ? $member->user->name : ''),
+						($member->user ? $member->user->username : ''),
+						($member->user ? $member->user->email : ''),
+						($member->membertype == 2 ? 'Instructor/TA' : 'student')
+					);
+				}
+			}
+		}
+
+		$filename = 'courses_data.csv';
+
+		$headers = array(
+			'Content-type' => 'text/csv',
+			'Content-Disposition' => 'attachment; filename=' . $filename,
+			'Pragma' => 'no-cache',
+			'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+			'Expires' => '0',
+			'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT'
+		);
+
+		$callback = function() use ($data)
+		{
+			$file = fopen('php://output', 'w');
+
+			foreach ($data as $datum)
+			{
+				fputcsv($file, $datum);
+			}
+			fclose($file);
+		};
+
+		return response()->streamDownload($callback, $filename, $headers);
+
+		// Set headers and output
+		return new Response($output, 200, [
+			'Content-Type' => 'text/csv;charset=UTF-8',
+			'Content-Disposition' => 'attachment; filename="' . $file . '.csv"',
+			'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT'
 		]);
 	}
 
@@ -352,5 +464,189 @@ class AccountsController extends Controller
 		$response->output = $data;
 
 		return response()->json($response);
+	}
+
+	/**
+	 * Display a listing of the resource.
+	 * 
+	 * @param  Request  $request
+	 * @return Response
+	 */
+	public function mail(Request $request)
+	{
+		$filters = array(
+			'search'     => '',
+			//'resourceid' => 0,
+			'userid'     => null,
+			'semester'   => '',
+			'state'      => 'active',
+			'start'      => null,
+			'stop'       => null,
+		);
+
+		foreach ($filters as $key => $default)
+		{
+			$filters[$key] = $request->input($key, $default);
+		}
+
+		$query = Account::query();
+
+		if ($filters['search'])
+		{
+			$query->where('classname', 'like', '%' . $filters['search'] . '%');
+		}
+
+		/*if ($filters['resourceid'])
+		{
+			$query->where('resourceid', '=', $filters['resourceid']);
+		}*/
+
+		if ($filters['userid'])
+		{
+			$query->where('userid', '=', $filters['userid']);
+		}
+
+		if ($filters['semester'])
+		{
+			$query->where('semester', '=', $filters['semester']);
+		}
+
+		if ($filters['start'])
+		{
+			$query->where('datetimestart', '<=', $filters['start']);
+		}
+
+		if ($filters['stop'])
+		{
+			$query->where('datetimestop', '>', $filters['stop']);
+		}
+
+		if ($filters['state'] == 'active')
+		{
+			$query->where(function ($where)
+				{
+					$where->whereNull('datetimestop')
+						->orWhere('datetimestop', '>', Carbon::now()->toDateTimeString());
+				});
+		}
+		elseif ($filters['state'] == 'inactive')
+		{
+			$query->whereNotNull('datetimestop');
+		}
+		elseif ($filters['state'] == 'trashed')
+		{
+			$query->onlyTrashed();
+		}
+		else
+		{
+			$query->withTrashed();
+		}
+
+		$rows = $query->get();
+
+		$users = array();
+		foreach ($rows as $row)
+		{
+			if (!isset($users[$row->userid]))
+			{
+				$users[$row->userid] = array();
+			}
+			$users[$row->userid][] = $row;
+		}
+
+		return view('courses::admin.mail', [
+			'users' => $users,
+		]);
+	}
+
+	/**
+	 * Display a listing of the resource.
+	 * 
+	 * @param  Request  $request
+	 * @return Response
+	 */
+	public function send(Request $request)
+	{
+		$rules = [
+			'subject' => 'required|string|max:255',
+			'body'    => 'required|string',
+			'user'    => 'required|array',
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()->withError($validator->messages());
+		}
+
+		$subject = $request->input('subject');
+		$body    = $request->input('body');
+		$users   = $request->input('user', []);
+		$bcc     = $request->input('bcc');
+		if (strstr($bcc, ','))
+		{
+			$bcc = explode(',', $bcc);
+		}
+		$bcc = (array)$bcc;
+
+		if (!empty($bcc))
+		{
+			foreach ($bcc as $k => $userid)
+			{
+				$user = User::find($userid);
+
+				if (!$user)
+				{
+					$request->session()->flash('error', "Could not find account for BCC user ID {$userid}.");
+					continue;
+				}
+
+				if (!$user->email)
+				{
+					$request->session()->flash('error', "Email address not found for BCC user {$user->name}.");
+					continue;
+				}
+
+				$bcc[$k] = $user->email;
+			}
+		}
+
+		$success = 0;
+		foreach ($users as $userid)
+		{
+			$user = User::find($userid);
+
+			if (!$user)
+			{
+				$request->session()->flash('error', "Could not find account for user ID {$userid}.");
+				continue;
+			}
+
+			// Prepare and send actual email
+			$message = new Composed($user, $subject, $body);
+
+			if (!$user->email)
+			{
+				$request->session()->flash('error', "Email address not found for user {$user->name}.");
+				continue;
+			}
+
+			$mail = Mail::to($user->email);
+			if (!empty($bcc))
+			{
+				$mail->bcc($bcc);
+			}
+			$mail->send($message);
+
+			$success++;
+		}
+
+		if ($success)
+		{
+			$request->session()->flash('success', trans('courses::courses.email sent', ['count' => $success]));
+		}
+
+		return $this->cancel();
 	}
 }

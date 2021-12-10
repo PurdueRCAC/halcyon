@@ -6,7 +6,7 @@
  */
 document.addEventListener('DOMContentLoaded', function () {
 
-	document.querySelectorAll('.form-users').forEach(function (user, i) {
+	document.querySelectorAll('.form-user').forEach(function (user, i) {
 		user = $(user);
 
 		var cl = user.clone()
@@ -49,6 +49,34 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		});
 	});
+
+	var newsuser = $(".form-users");
+	if (newsuser.length) {
+		newsuser.tagsInput({
+			placeholder: '',
+			importPattern: /([^:]+):(.+)/i,
+			'autocomplete': {
+				source: autocompleteUsers(newsuser.attr('data-uri')),
+				dataName: 'users',
+				height: 150,
+				delay: 100,
+				minLength: 1,
+				open: function (e, ui) {
+					var acData = $(this).data('ui-autocomplete');
+
+					acData
+						.menu
+						.element
+						.find('.ui-menu-item-wrapper')
+						.each(function () {
+							var me = $(this);
+							var regex = new RegExp('(' + acData.term + ')', "gi");
+							me.html(me.text().replace(regex, '<b>$1</b>'));
+						});
+				}
+			}
+		});
+	}
 
 	document.querySelectorAll('.type-dependant').forEach(function (el) {
 		el.classList.add('d-none');

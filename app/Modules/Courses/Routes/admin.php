@@ -26,7 +26,7 @@ $router->group(['prefix' => 'courses', 'middleware' => 'can:manage courses'], fu
 			'as' => 'admin.courses.members.edit',
 			'uses' => 'MembersController@edit',
 			'middleware' => 'can:edit courses|edit.own courses',
-		]);
+		])->where('id', '[0-9]+');
 		$router->match(['get', 'post'], '/delete/{id?}', [
 			'as'   => 'admin.courses.members.delete',
 			'uses' => 'MembersController@delete',
@@ -52,11 +52,21 @@ $router->group(['prefix' => 'courses', 'middleware' => 'can:manage courses'], fu
 		'uses' => 'AccountsController@store',
 		'middleware' => 'can:create courses|edit courses',
 	]);
+	$router->get('/mail', [
+		'as'   => 'admin.courses.mail',
+		'uses' => 'AccountsController@mail',
+		'middleware' => 'can:manage courses',
+	]);
+	$router->post('/send', [
+		'as' => 'admin.courses.send',
+		'uses' => 'AccountsController@send',
+		'middleware' => 'can:manage courses',
+	]);
 	$router->get('{id}', [
 		'as' => 'admin.courses.edit',
 		'uses' => 'AccountsController@edit',
 		'middleware' => 'can:edit courses',
-	]);
+	])->where('id', '[0-9]+');
 	$router->match(['get', 'post'], '/delete/{id?}', [
 		'as'   => 'admin.courses.delete',
 		'uses' => 'AccountsController@delete',
