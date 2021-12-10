@@ -4,7 +4,11 @@ Hello {{ $user->name }},
 You that you have been **<span style="color:red;">removed</span>** from the following queues.
 
 @foreach ($removedqueues as $queueuser)
+@if ($queueuser->unixgroupid)
+* Unix group: {{ $queueuser->unixgroup->longname }} (membership ready {{ $eta }})
+@else
 * {{ $queueuser->queue->resource->name }}: '{{ $queueuser->queue->name }}' queue
+@endif
 @endforeach
 
 @if (count($keptqueues))

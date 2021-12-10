@@ -43,7 +43,7 @@ else:
 endif;
 @endphp
 @if ($groupqueue->unixgroupid)
-* Unix group: '{{ $groupqueue->group->name }}' (membership ready {{ $eta }})
+* Unix group: '{{ $groupqueue->unixgroup->longname }}' (membership ready {{ $eta }})
 @else
 * {{ $groupqueue->queue->resource->name }}: '{{ $groupqueue->queue->name }}' queue (account ready {{ $eta }})
 @endif

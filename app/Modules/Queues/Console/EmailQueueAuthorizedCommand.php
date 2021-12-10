@@ -12,6 +12,8 @@ use App\Modules\Queues\Mail\QueueAuthorized;
 use App\Modules\Queues\Mail\QueueAuthorizedManager;
 use App\Modules\Users\Models\User;
 use App\Modules\Groups\Models\Group;
+use App\Modules\Groups\Models\UnixGroup;
+use App\Modules\Groups\Models\UnixGroupMember;
 use App\Modules\Resources\Events\ResourceMemberStatus;
 
 class EmailQueueAuthorizedCommand extends Command
@@ -47,7 +49,16 @@ class EmailQueueAuthorizedCommand extends Command
 			->where($qu . '.notice', '=', 2)
 			->get();
 
-		if (!count($users))
+		$uu = (new UnixGroupMember)->getTable();
+		$u = (new UnixGroup)->getTable();
+
+		$uusers = UnixGroupMember::query()
+			->select($uu . '.*', $u . '.groupid')
+			->join($u, $u . '.id', $uu . '.unixgroupid')
+			->where($uu . '.notice', '=', 2)
+			->get();
+
+		if (!count($users) && !count($uusers))
 		{
 			if ($debug || $this->output->isVerbose())
 			{
@@ -60,6 +71,16 @@ class EmailQueueAuthorizedCommand extends Command
 		$group_activity = array();
 
 		foreach ($users as $user)
+		{
+			if (!isset($group_activity[$user->groupid]))
+			{
+				$group_activity[$user->groupid] = array();
+			}
+
+			array_push($group_activity[$user->groupid], $user);
+		}
+
+		foreach ($uusers as $user)
 		{
 			if (!isset($group_activity[$user->groupid]))
 			{
@@ -133,6 +154,11 @@ class EmailQueueAuthorizedCommand extends Command
 
 					foreach ($queueusers as $queueuser)
 					{
+						if (!$queueuser->queue)
+						{
+							continue;
+						}
+
 						$role = $queueuser->queue->resource->rolename;
 
 						if ($role == $last_role)
@@ -194,13 +220,17 @@ class EmailQueueAuthorizedCommand extends Command
 					// Change states
 					foreach ($queueusers as $queueuser)
 					{
-						// Determine which state to go to, depending on whether a new role was created
-						$rolename = $queueuser->queue->resource->rolename;
-
 						$notice = 0;
-						if (in_array($rolename, $r))
+
+						// Determine which state to go to, depending on whether a new role was created
+						if ($queueuser->queue)
 						{
-							$notice = 8;
+							$rolename = $queueuser->queue->resource->rolename;
+
+							if (in_array($rolename, $r))
+							{
+								$notice = 8;
+							}
 						}
 
 						$queueuser->update(['notice' => $notice]);

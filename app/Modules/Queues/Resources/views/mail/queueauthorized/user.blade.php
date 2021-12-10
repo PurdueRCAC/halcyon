@@ -75,7 +75,7 @@ else
 }
 @endphp
 @if (isset($queueuser->unixgroupid))
-* Unix group: {{ $queueuser->group->name }} (membership ready {{ $eta }})
+* Unix group: {{ $queueuser->unixgroup->longname }} (membership ready {{ $eta }})
 @else
 * {{ $queueuser->queue->resource->name }}: {{ $queueuser->queue->name }} (account ready {{ $eta }})
 @endif

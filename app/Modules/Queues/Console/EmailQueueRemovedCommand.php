@@ -14,6 +14,8 @@ use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Queues\Models\Scheduler;
 use App\Modules\Users\Models\User;
 use App\Modules\Groups\Models\Group;
+use App\Modules\Groups\Models\UnixGroup;
+use App\Modules\Groups\Models\UnixGroupMember;
 use App\Modules\Resources\Events\ResourceMemberStatus;
 
 class EmailQueueRemovedCommand extends Command
@@ -50,7 +52,17 @@ class EmailQueueRemovedCommand extends Command
 			->where($qu . '.notice', '=', 3)
 			->get();
 
-		if (!count($users))
+		$uu = (new UnixGroupMember)->getTable();
+		$u = (new UnixGroup)->getTable();
+
+		$uusers = UnixGroupMember::query()
+			//->withTrashed()
+			->select($uu . '.*', $u . '.groupid')
+			->join($u, $u . '.id', $uu . '.unixgroupid')
+			->where($uu . '.notice', '=', 3)
+			->get();
+
+		if (!count($users) && !count($uusers))
 		{
 			if ($debug || $this->output->isVerbose())
 			{
@@ -63,6 +75,16 @@ class EmailQueueRemovedCommand extends Command
 		$group_activity = array();
 
 		foreach ($users as $user)
+		{
+			if (!isset($group_activity[$user->groupid]))
+			{
+				$group_activity[$user->groupid] = array();
+			}
+
+			array_push($group_activity[$user->groupid], $user);
+		}
+
+		foreach ($uusers as $user)
 		{
 			if (!isset($group_activity[$user->groupid]))
 			{
@@ -157,6 +179,11 @@ class EmailQueueRemovedCommand extends Command
 					$removals[$userid] = array();
 					foreach ($queuestudents as $queueuser)
 					{
+						if (!$queueuser->queue)
+						{
+							continue;
+						}
+
 						$role = $queueuser->queue->resource->rolename;
 
 						if ($role == $last_role)

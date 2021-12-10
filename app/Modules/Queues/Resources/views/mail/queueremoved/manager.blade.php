@@ -9,7 +9,11 @@ Access to your {{ config('app.name') }} resources (resources, queues, and Unix g
 {{ $data['user']->name }} ({{ $data['user']->email }})
 
 @foreach ($data['queueusers'] as $queueuser)
+@if ($groupqueue->unixgroupid)
+* Unix group: '{{ $groupqueue->unixgroup->longname }}'
+@else
 * {{ $queueuser->queue->resource->name }}: '{{ $queueuser->queue->name }}' queue - _removed by {{ $queueuser->log ? $queueuser->log->user : trans('global.unknown') }}_
+@endif
 @endforeach
 @endforeach
 
