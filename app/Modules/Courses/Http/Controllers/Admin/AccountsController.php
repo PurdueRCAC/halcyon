@@ -9,12 +9,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Courses\Models\Account;
 use App\Modules\Courses\Events\InstructorLookup;
 use App\Modules\Courses\Mail\Composed;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Users\Models\User;
+use App\Modules\History\Models\Log;
 use Carbon\Carbon;
 
 class AccountsController extends Controller
@@ -638,6 +640,20 @@ class AccountsController extends Controller
 				$mail->bcc($bcc);
 			}
 			$mail->send($message);
+
+			Log::create([
+				'ip'              => $request->ip(),
+				'userid'          => (auth()->user() ? auth()->user()->id : 0),
+				'status'          => 200,
+				'transportmethod' => 'POST',
+				'servername'      => $request->getHttpHost(),
+				'uri'             => Str::limit($user->email, 128, ''),
+				'app'             => Str::limit('email', 20, ''),
+				'payload'         => Str::limit('Emailed composed message to class user.', 2000, ''),
+				'classname'       => Str::limit(__CLASS__, 32, ''),
+				'classmethod'     => Str::limit('send', 16, ''),
+				'targetuserid'    => (int)$user->id,
+			]);
 
 			$success++;
 		}
