@@ -284,7 +284,7 @@ class MembersController extends Controller
 
 		$gus = GroupUser::query()
 			->select(
-				DB::raw('DISTINCT(' . $uu . '.userid)'),
+				DB::raw('DISTINCT(' . $uu . '.userid)')
 			)
 			// Group
 			->join($g, $g . '.id', $gu . '.groupid')
