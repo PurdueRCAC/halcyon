@@ -799,14 +799,15 @@ class MembersController extends Controller
 		// Check for other queue memberships on this resource that might conflict with removing the role
 		$rows = 0;
 
-		$resources = Asset::query()
+		/*$resources = Asset::query()
 			->where('rolename', '!=', '')
 			->where('listname', '!=', '')
 			->get();
 
 		foreach ($resources as $res)
 		{
-			$subresources = $res->subresources;
+			$subresources = $res->subresources;*/
+			$subresources = $resource->subresources;
 
 			foreach ($subresources as $sub)
 			{
@@ -832,7 +833,7 @@ class MembersController extends Controller
 					}
 				}
 			}
-		}
+		//}
 
 		if ($rows > 0)
 		{

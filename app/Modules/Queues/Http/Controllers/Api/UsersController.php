@@ -617,8 +617,9 @@ class UsersController extends Controller
 		{
 			$rows = 0;
 
-			$owned = $row->user->groups->pluck('id')->toArray();
+			/*$owned = $row->user->groups->pluck('id')->toArray();
 
+			// Check for other queue memberships on this resource that might conflict with removing the role
 			$resources = Asset::query()
 				->where('rolename', '!=', '')
 				->where('listname', '!=', '')
@@ -626,7 +627,8 @@ class UsersController extends Controller
 
 			foreach ($resources as $res)
 			{
-				$subresources = $res->subresources;
+				$subresources = $res->subresources;*/
+				$subresources = $row->queue->scheduler->resource->subresources;
 
 				foreach ($subresources as $sub)
 				{
@@ -652,10 +654,11 @@ class UsersController extends Controller
 						}
 					}
 				}
-			}
+			//}
 
 			if ($rows == 0)
 			{
+				// No other active memberships found, remove resource access
 				event($resourcemember = new ResourceMemberDeleted($row->queue->scheduler->resource, $row->user));
 
 				if (count($resourcemember->errors))
