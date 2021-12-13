@@ -43,7 +43,26 @@ if (count($l))
 						}
 						$log->save();
 					}
+
+					if ($log->transportmethod == 'DELETE')
+					{
+						$segments = strstr($log->uri, '?') ? strstr($log->uri, '?', true) : $log->uri;
+						$segments = explode('/', $segments);
+						$id = array_pop($segments);
+
+						if ($log->classname == 'UsersController')
+						{
+							$queueuser = App\Modules\Queues\Models\User::query()->withTrashed()->where('id', '=', $id)->first();
+							if ($queueuser)
+							{
+								$log->targetuserid = $queueuser->userid;
+								$log->targetobjectid = $queueuser->queueid;
+								$log->save();
+							}
+						}
+					}
 				}
+
 				if ($log->targetobjectid <= 0 && $log->payload)
 				{
 					if (isset($log->jsonPayload->unixgroupid) && $log->jsonPayload->unixgroupid)
