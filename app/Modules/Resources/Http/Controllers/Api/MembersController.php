@@ -319,7 +319,7 @@ class MembersController extends Controller
 
 		$qus = QueueUser::query()
 			->select(
-				DB::raw('DISTINCT(' . $uu . '.userid)'),
+				DB::raw('DISTINCT(' . $uu . '.userid)')
 			)
 			// Queues
 			->join($q, $q . '.id', $qu . '.queueid')
@@ -353,7 +353,7 @@ class MembersController extends Controller
 
 		$gqus = GroupQueueUser::query()
 			->select(
-				DB::raw('DISTINCT(' . $uu . '.userid)'),
+				DB::raw('DISTINCT(' . $uu . '.userid)')
 			)
 			// Queue user
 			->join($qu, $qu . '.id', $gqu . '.queueuserid')
@@ -394,7 +394,7 @@ class MembersController extends Controller
 
 		$ugus = UnixGroupMember::query()
 			->select(
-				DB::raw('DISTINCT(' . $uu . '.userid)'),
+				DB::raw('DISTINCT(' . $uu . '.userid)')
 			)
 			// Unix group member
 			->where($ugm . '.datetimecreated', '<=', $now->toDateTimeString())
