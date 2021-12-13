@@ -396,7 +396,9 @@
 							<td class="text-right">
 								@if (!preg_match("/rcs[0-9]{4}[0-9]/", $unixgroup->shortname) || auth()->user()->can('manage groups'))
 									@php
-									$used++;
+									if (!preg_match("/rcs[0-9]{4}[0-9]/", $unixgroup->shortname)):
+										$used++;
+									endif;
 									@endphp
 									<a href="{{ route('site.users.account.section', ['section' => 'groups', 'delete' => $unixgroup->id]) }}"
 										class="delete delete-unix-group remove-unixgroup"
