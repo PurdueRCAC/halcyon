@@ -117,7 +117,7 @@ class TypesController extends Controller
 			$filters[$key] = $request->input($key, $default);
 		}
 
-		if (!in_array($filters['order'], array_keys(['id', 'name', 'resourceid', 'classname'])))
+		if (!in_array($filters['order'], ['id', 'name', 'resourceid', 'classname']))
 		{
 			$filters['order'] = Type::$orderBy;
 		}

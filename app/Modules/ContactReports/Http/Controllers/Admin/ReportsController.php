@@ -57,7 +57,7 @@ class ReportsController extends Controller
 		}
 		$filters['page'] = $reset ? 1 : $filters['page'];
 
-		if (!in_array($filters['order'], array_keys(['id', 'report', 'datetimecreated', 'datetimecontact', 'groupid', 'userid', 'contactreporttypeid'])))
+		if (!in_array($filters['order'], ['id', 'report', 'datetimecreated', 'datetimecontact', 'groupid', 'userid', 'contactreporttypeid']))
 		{
 			$filters['order'] = Report::$orderBy;
 		}
