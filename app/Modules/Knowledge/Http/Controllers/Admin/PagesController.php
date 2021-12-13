@@ -53,7 +53,7 @@ class PagesController extends Controller
 			$filters['page'] = 1;
 		}
 
-		if (!in_array($filters['order'], array_keys((new Page)->getAttributes())))
+		if (!in_array($filters['order'], array_keys(['id', 'lft', 'rgt', 'title', 'state', 'access', 'updated_at', 'created_at'])))
 		{
 			$filters['order'] = 'lft';
 		}

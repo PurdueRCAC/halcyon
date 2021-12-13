@@ -41,7 +41,7 @@ class TypesController extends Controller
 		}
 		$filters['page'] = $reset ? 1 : $filters['page'];
 
-		if (!in_array($filters['order'], array_keys((new Type)->getAttributes())))
+		if (!in_array($filters['order'], array_keys(['id', 'name', 'resourceid', 'classname'])))
 		{
 			$filters['order'] = Type::$orderBy;
 		}

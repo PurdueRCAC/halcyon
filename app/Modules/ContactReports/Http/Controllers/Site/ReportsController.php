@@ -45,7 +45,7 @@ class ReportsController extends Controller
 			$filters[$key] = $request->input($key, $default);
 		}
 
-		if (!in_array($filters['order'], array_keys((new Report)->getAttributes())))
+		if (!in_array($filters['order'], array_keys(['id', 'report', 'datetimecreated', 'datetimecontact', 'groupid', 'userid', 'contactreporttypeid'])))
 		{
 			$filters['order'] = Report::$orderBy;
 		}

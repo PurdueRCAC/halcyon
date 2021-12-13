@@ -38,7 +38,7 @@ class TodosController extends Controller
 			$filters[$key] = $request->state('issues.todos.filter_' . $key, $key, $default);
 		}
 
-		if (!in_array($filters['order'], array_keys((new ToDo)->getAttributes())))
+		if (!in_array($filters['order'], array_keys(['id', 'userid', 'name', 'description', 'datetimecreated', 'recurringtimeperiodid'])))
 		{
 			$filters['order'] = ToDo::$orderBy;
 		}

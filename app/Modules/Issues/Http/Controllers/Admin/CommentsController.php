@@ -35,7 +35,7 @@ class CommentsController extends Controller
 			$filters[$key] = $request->state('issues.comments.filter_' . $key, $key, $default);
 		}
 
-		if (!in_array($filters['order'], array_keys((new Comment)->getAttributes())))
+		if (!in_array($filters['order'], array_keys(['id', 'datetimecreated', 'userid', 'comment', 'issueid'])))
 		{
 			$filters['order'] = Comment::$orderBy;
 		}

@@ -155,7 +155,7 @@ class MessagesController extends Controller
 			$filters[$key] = $request->input($key, $default);
 		}
 
-		if (!in_array($filters['order'], array_keys((new Message)->getAttributes())))
+		if (!in_array($filters['order'], array_keys(['id', 'messagequeuetypeid', 'targetobjectid', 'datetimesubmitted', 'returnstatus'])))
 		{
 			$filters['order'] = Message::$orderBy;
 		}

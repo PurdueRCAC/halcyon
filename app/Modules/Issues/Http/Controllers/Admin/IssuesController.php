@@ -43,7 +43,7 @@ class IssuesController extends Controller
 			$filters[$key] = $request->state('issues.reports.filter_' . $key, $key, $default);
 		}
 
-		if (!in_array($filters['order'], array_keys((new Issue)->getAttributes())))
+		if (!in_array($filters['order'], array_keys(['id', 'userid', 'report', 'datetimecreated', 'issuetodoid'])))
 		{
 			$filters['order'] = Issue::$orderBy;
 		}
