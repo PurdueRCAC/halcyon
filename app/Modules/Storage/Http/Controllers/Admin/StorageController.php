@@ -175,6 +175,7 @@ class StorageController extends Controller
 		$row = $id ? StorageResource::findOrFail($id) : new StorageResource;
 
 		$row->fill($request->input('fields'));
+		$row->importhostname = $row->importhostname ?: '';
 
 		if (!$row->save())
 		{

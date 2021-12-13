@@ -58,8 +58,8 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-name">{{ trans('storage::storage.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[name]" id="field-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required maxlength="32" value="{{ $row->name }}" />
+					<label for="field-sname">{{ trans('storage::storage.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<input type="text" name="fields[name]" id="field-sname" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required maxlength="32" value="{{ $row->name }}" />
 					<span class="invalid-feedback">{{ trans('storage::storage.error.invalid name') }}</span>
 				</div>
 

@@ -41,7 +41,7 @@
 			//{
 				//return $item->parentstoragedirid == 0;
 			//}
-			return $item->parentstoragedirid == 0 && $item->storageresourceid == 4;
+			return $item->parentstoragedirid == 0 && $item->storageResource->isSelfServe();
 		});
 
 		if (count($rows)):
@@ -205,9 +205,15 @@
 					$configuring = array();
 					$removing = array();
 					//$directories = $group->directories;
+					$top = 0;
 					foreach ($row->nested() as $dir)
 					{
 						$did = $dir->id;
+
+						if (!$dir->parentstoragedirid)
+						{
+							$top = $dir->id;
+						}
 
 						$disabled = '';
 						if (in_array($dir->id, $removing))
@@ -717,7 +723,7 @@
 								@endif
 							</div>
 							<div class="col-md-1 text-right">
-								<a href="#{{ $dir->id }}_dialog" class="details updatequota tip" data-api="{{ route('api.storage.directories.update', ['id' => $dir->id]) }}" data-id="{{ $dir->id }}" title="Update usage now"><!--
+								<a href="#{{ $dir->id }}_dialog" class="details updatequota tip" data-api="{{ route('api.storage.directories.update', ['id' => $top]) }}" data-id="{{ $top }}" title="Update usage now"><!--
 								--><span class="fa fa-undo updater" aria-hidden="true"></span><!--
 								--><span class="spinner-border spinner-border-sm hide" role="status"><span class="sr-only">Loading...</span></span><!--
 								--><span class="sr-only">Update usage now</span><!--

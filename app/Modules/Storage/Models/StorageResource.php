@@ -170,4 +170,14 @@ class StorageResource extends Model
 
 		$this->attributes['defaultquotafile'] = (int)$value;
 	}
+
+	/**
+	 * Can this be self-serve managed?
+	 *
+	 * @return  bool
+	 */
+	public function isSelfServe()
+	{
+		return ($this->id == 4);
+	}
 }
