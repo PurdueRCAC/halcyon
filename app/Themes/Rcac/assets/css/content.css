@@ -48,7 +48,9 @@ figcaption {
 	max-width: 40em;
 	margin: 0 auto;
 }
-
+.text-sm {
+	font-size: 85%;
+}
 /* Alerts */
 .alert a {
 	font-weight: bold;

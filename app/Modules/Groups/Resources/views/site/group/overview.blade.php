@@ -365,7 +365,13 @@
 			</div>
 		@endif
 
-		@if (count($group->unixgroups) > 0)
+		@php
+		$unixgroups = $group->unixgroups()->orderBy('longname', 'asc')->get();
+		@endphp
+		@if (count($unixgroups) > 0)
+			@php
+			$used = 0;
+			@endphp
 			<table id="actmaint_info" class="table table-hover {{ ($group->id > 1 && !$group->unixgroup ? 'hide' : '') }}">
 				<caption class="sr-only">Unix Groups</caption>
 				<thead>
@@ -379,18 +385,8 @@
 						@endif
 					</tr>
 				</thead>
-				<tfoot>
-					<tr>
-						<td>
-							<span class="text-muted">Up to 26 custom unix groups allowed.</span>
-						</td>
-						<td colspan="4" class="text-right">
-							<button class="btn btn-sm reveal" data-toggle=".extendedinfo" data-text="<span class='fa fa-eye-slash'></span> Hide Extended Info</button>"><span class="fa fa-eye"></span> Show Extended Info</button>
-						</td>
-					</tr>
-				</tfoot>
 				<tbody>
-					@foreach ($group->unixgroups()->orderBy('longname', 'asc')->get() as $unixgroup)
+					@foreach ($unixgroups as $unixgroup)
 						<tr id="unixgroup-{{ $unixgroup->id }}" data-id="{{ $unixgroup->id }}">
 							<td>{{ $unixgroup->longname }}</td>
 							<td class="extendedinfo hide">{{ config('modules.groups.unix_prefix', 'rcac-') . $unixgroup->longname }}</td>
@@ -399,6 +395,9 @@
 							@if ($canManage)
 							<td class="text-right">
 								@if (!preg_match("/rcs[0-9]{4}[0-9]/", $unixgroup->shortname) || auth()->user()->can('manage groups'))
+									@php
+									$used++;
+									@endphp
 									<a href="{{ route('site.users.account.section', ['section' => 'groups', 'delete' => $unixgroup->id]) }}"
 										class="delete delete-unix-group remove-unixgroup"
 										data-value="{{ $group->id }}"
@@ -429,6 +428,14 @@
 					@endif
 				</tbody>
 			</table>
+			<div class="row">
+				<div class="col-md-9">
+					<span class="text-sm text-muted">{{ $used }} custom unix {{ $used == 1 ? 'group' : 'groups' }} (of 26 allowed, not including base, <code>-data</code>, and <code>-apps</code>).</span>
+				</div>
+				<div class="col-md-3 text-right">
+					<button class="btn btn-sm reveal" data-toggle=".extendedinfo" data-text="<span class='fa fa-eye-slash'></span> Hide Extended Info</button>"><span class="fa fa-eye"></span> Show Extended Info</button>
+				</div>
+			</div>
 
 			<div id="deletegroup_{{ $group->id }}" class="alert alert-danger hide"></div>
 		@endif
