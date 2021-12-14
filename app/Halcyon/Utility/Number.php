@@ -67,7 +67,7 @@ class Number
 		$neg = false;
 
 		//if (preg_match_all("/^(\-?\d*\.?\d+)\s*(\D+)$/", $value, $matches))
-		if (preg_match_all("/^(\-?\d*\.?\d+)\s*([PpTtGgMmKkBb]{1,2})$/", $value, $matches))
+		if (preg_match_all("/^(\-?\d*\.?\d+)\s*([PpTtGgMmKkiBb]{1,3})$/", $value, $matches))
 		{
 			if ($matches[1][0] < 0)
 			{
