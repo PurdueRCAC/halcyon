@@ -105,6 +105,12 @@ class StorageController extends Controller
 		$filters = array(
 			'search'   => $request->input('search', ''),
 			'state'    => $request->input('state', 'active'),
+			'groupmanaged' => $request->input('groupmanaged'),
+			'parentresourceid' => $request->input('parentresourceid'),
+			'import' => $request->input('import'),
+			'autouserdir' => $request->input('autouserdir'),
+			'getquotatypeid' => $request->input('getquotatypeid'),
+			'createtypeid' => $request->input('createtypeid'),
 			// Paging
 			'limit'    => $request->input('limit', config('list_limit', 20)),
 			'page'     => $request->input('page', 1),
@@ -142,6 +148,36 @@ class StorageController extends Controller
 			{
 				$query->where('name', 'like', '%' . $filters['search'] . '%');
 			}
+		}
+
+		if (!is_null($filters['groupmanaged']))
+		{
+			$query->where('groupmanaged', '=', $filters['groupmanaged']);
+		}
+
+		if (!is_null($filters['parentresourceid']))
+		{
+			$query->where('parentresourceid', '=', $filters['parentresourceid']);
+		}
+
+		if (!is_null($filters['import']))
+		{
+			$query->where('import', '=', $filters['import']);
+		}
+
+		if (!is_null($filters['autouserdir']))
+		{
+			$query->where('autouserdir', '=', $filters['autouserdir']);
+		}
+
+		if (!is_null($filters['getquotatypeid']))
+		{
+			$query->where('getquotatypeid', '=', $filters['getquotatypeid']);
+		}
+
+		if (!is_null($filters['createtypeid']))
+		{
+			$query->where('createtypeid', '=', $filters['createtypeid']);
 		}
 
 		$rows = $query
@@ -257,6 +293,15 @@ class StorageController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "groupmanaged",
+	 * 		"description":   "Groups can manage directory structure and permissions",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"201": {
 	 * 			"description": "Successful entry creation"
@@ -284,6 +329,7 @@ class StorageController extends Controller
 			'defaultquotafile' => 'nullable|integer',
 			'getquotatypeid' => 'nullable|integer',
 			'createtypeid' => 'nullable|integer',
+			'groupmanaged' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -475,6 +521,15 @@ class StorageController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "groupmanaged",
+	 * 		"description":   "Groups can manage directory structure and permissions",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"202": {
 	 * 			"description": "Successful entry modification"
@@ -505,6 +560,7 @@ class StorageController extends Controller
 			'defaultquotafile' => 'nullable|integer',
 			'getquotatypeid' => 'nullable|integer',
 			'createtypeid' => 'nullable|integer',
+			'groupmanaged' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);

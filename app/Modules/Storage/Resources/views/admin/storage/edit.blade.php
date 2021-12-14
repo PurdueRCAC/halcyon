@@ -73,6 +73,32 @@ app('pathway')
 					<label for="field-importhostname">{{ trans('storage::storage.import hostname') }}:</label>
 					<input type="text" name="fields[importhostname]" id="field-listname" class="form-control" maxlength="64" value="{{ $row->importhostname ? $row->importhostname : '' }}" />
 				</div>
+
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group mb-0">
+							@php
+							$hardware = App\Modules\Storage\Models\Purchase::query()
+								->where('resourceid', '=', $row->parentresourceid)
+								->where('groupid', '=', '-1')
+								->where('sellergroupid', '=', 0)
+								->first();
+							@endphp
+							<label for="field-bytes">{{ trans('storage::storage.available space') }}:</label>
+							<input type="text" name="bytes" id="field-bytes" class="form-control" value="{{ $hardware ? $hardware->formattedBytes : '' }}" />
+							<span class="form-text text-muted">{{ trans('storage::storage.quota space desc') }}</span>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group form-block mb-0">
+							<div class="form-check">
+								<input type="checkbox" name="fields[groupmanaged]" id="field-groupmanaged" class="form-check-input" value="1"<?php if ($row->groupmanaged) { echo ' checked="checked"'; } ?> />
+								<label for="field-groupmanaged" class="form-check-label">{{ trans('storage::storage.group managed') }}</label>
+								<span class="form-text text-muted">{{ trans('storage::storage.group managed desc') }}</span>
+							</div>
+						</div>
+					</div>
+				</div>
 			</fieldset>
 
 			<fieldset class="adminform">

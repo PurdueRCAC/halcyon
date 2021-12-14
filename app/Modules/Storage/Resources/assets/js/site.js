@@ -1144,6 +1144,22 @@ document.addEventListener('DOMContentLoaded', function () {
 								};
 							}
 						}
+					})
+					.on('select2:select', function (e) {
+						e.preventDefault();
+
+						var group = $(this);
+
+						var seller = $('#' + group.attr('data-update'));
+						//var dest_queue = document.getElementById("field-id").value;
+
+						if (group.val() == 0) {
+							seller.val(0);
+							seller.parent().addClass('d-none');
+							return;
+						} else {
+							seller.parent().removeClass('d-none');
+						}
 					});
 				});
 				/*var groups = $(".form-group-storage");

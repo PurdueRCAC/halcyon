@@ -66,7 +66,6 @@ class Messages
 	{
 		$row = $event->directory;
 
-		//if ($row->resourceid == 64 && !$row->bytes && $row->parent)
 		if (!$row->bytes && $row->parent)
 		{
 			// Submit mkdir

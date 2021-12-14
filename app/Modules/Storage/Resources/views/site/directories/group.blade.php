@@ -41,7 +41,7 @@
 			//{
 				//return $item->parentstoragedirid == 0;
 			//}
-			return $item->parentstoragedirid == 0 && $item->storageResource->isSelfServe();
+			return $item->parentstoragedirid == 0 && $item->storageResource->isGroupManaged();
 		});
 
 		if (count($rows)):
@@ -685,6 +685,7 @@
 						</div><!-- / #<?php echo $did; ?>_dialog -->
 					<?php } ?>
 					</div>
+					@if ($row->storageResource->getquotatypeid)
 					<div class="card-footer">
 						<div class="row">
 							<?php
@@ -730,8 +731,9 @@
 							--></a>
 							</div>
 						</div>
-					</div><!-- / .panel-body -->
-				</div><!-- / .panel -->
+					</div><!-- / .card-footer -->
+					@endif
+				</div><!-- / .card -->
 				<?php
 			endforeach;
 			?>
@@ -966,8 +968,25 @@
 					@endif
 
 					@if (auth()->user()->can('manage storage'))
+					<?php
+					$storageresources = App\Modules\Storage\Models\StorageResource::query()
+						->where('groupmanaged', '=', 1)
+						->orderBy('name', 'asc')
+						->get();
+					?>
 					<div class="dialog" id="dialog-sell" title="{{ trans('storage::storage.sell space') }}">
 						<form method="post" action="{{ route('admin.storage.store') }}" data-api="{{ route('api.storage.purchases.create') }}">
+							<div class="form-group">
+								<label for="sell-resourceid">{{ trans('storage::storage.parent') }}: <span class="required">*</span></label>
+								<select name="resourceid" id="sell-resourceid" class="form-control required" required>
+									<?php foreach ($storageresources as $s): ?>
+										<?php $selected = ($s->parentresourceid == $row->storageResource->parentresourceid ? ' selected="selected"' : ''); ?>
+										<option value="{{ $s->parentresourceid }}" data-storageresource="{{ $s->id }}"<?php echo $selected; ?>>{{ $s->name }}</option>
+									<?php endforeach; ?>
+								</select>
+								<span class="invalid-feedback">{{ trans('storage::storage.error.invalid parent') }}</span>
+							</div>
+
 							<div class="form-group">
 								<label for="sell-bytes">{{ trans('storage::storage.amount') }} <span class="required">*</span></label>
 								<input type="text" class="form-control bytes" size="4" id="sell-bytes" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]{1,2}" value="" />
@@ -1021,13 +1040,24 @@
 								<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.create') }}" data-type="purchase" data-success="{{ trans('storage::storage.item created') }}" />
 							</div>
 
-							<input type="hidden" name="resourceid" value="{{ $row->storageResource->parentresourceid }}" />
+							<!-- <input type="hidden" name="resourceid" value="{{ $row->storageResource->parentresourceid }}" /> -->
 							@csrf
 						</form>
 					</div>
 
 					<div class="dialog" id="dialog-loan" title="{{ trans('storage::storage.loan space') }}">
 						<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.storage.loans.create') }}">
+							<div class="form-group">
+								<label for="loan-resourceid">{{ trans('storage::storage.parent') }}: <span class="required">*</span></label>
+								<select name="resourceid" id="loan-resourceid" class="form-control required" required>
+									<?php foreach ($storageresources as $s): ?>
+										<?php $selected = ($s->parentresourceid == $row->storageResource->parentresourceid ? ' selected="selected"' : ''); ?>
+										<option value="{{ $s->parentresourceid }}" data-storageresource="{{ $s->id }}"<?php echo $selected; ?>>{{ $s->name }}</option>
+									<?php endforeach; ?>
+								</select>
+								<span class="invalid-feedback">{{ trans('storage::storage.error.invalid parent') }}</span>
+							</div>
+
 							<div class="form-group">
 								<label for="loan-bytes">{{ trans('storage::storage.amount') }} <span class="required">*</span></label>
 								<input type="text" class="form-control bytes" size="4" id="loan-bytes" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]{1,2}" value="" />
@@ -1081,7 +1111,7 @@
 								<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.create') }}" data-type="loan" data-success="{{ trans('queues::queues.item created') }}" />
 							</div>
 
-							<input type="hidden" name="resourceid" value="{{ $row->storageResource->parentresourceid }}" />
+							<!-- <input type="hidden" name="resourceid" value="{{ $row->storageResource->parentresourceid }}" /> -->
 							@csrf
 						</form>
 					</div>
@@ -1236,6 +1266,7 @@
 						$purchases = $group->purchases()->withTrashed()->count();
 						$loans = $group->loans()->withTrashed()->count();
 						$storageresources = App\Modules\Storage\Models\StorageResource::query()
+							->where('groupmanaged', '=', 1)
 							->orderBy('name', 'asc')
 							->get();
 						?>
@@ -1253,8 +1284,7 @@
 										<label for="sell-resource">{{ trans('storage::storage.resource') }} <span class="required">*</span></label>
 										<select name="resourceid" id="sell-resource" class="form-control">
 											<?php foreach ($storageresources as $s): ?>
-												<?php $selected = ($s->parentresourceid == 64 ? ' selected="selected"' : ''); ?>
-												<option value="{{ $s->parentresourceid }}" data-storageresource="{{ $s->id }}"<?php echo $selected; ?>>{{ $s->name }}</option>
+												<option value="{{ $s->parentresourceid }}" data-storageresource="{{ $s->id }}">{{ $s->name }}</option>
 											<?php endforeach; ?>
 										</select>
 									</div>
@@ -1322,8 +1352,7 @@
 										<label for="loan-resource">{{ trans('storage::storage.resource') }} <span class="required">*</span></label>
 										<select name="resourceid" id="loan-resource" class="form-control">
 											<?php foreach ($storageresources as $s): ?>
-												<?php $selected = ($s->parentresourceid == 64 ? ' selected="selected"' : ''); ?>
-												<option value="{{ $s->parentresourceid }}" data-storageresource="{{ $s->id }}"<?php echo $selected; ?>>{{ $s->name }}</option>
+												<option value="{{ $s->parentresourceid }}" data-storageresource="{{ $s->id }}">{{ $s->name }}</option>
 											<?php endforeach; ?>
 										</select>
 									</div>
@@ -1398,6 +1427,16 @@
 				}
 				$data = $group->unixGroups->firstWhere('longname', $group->unixgroup . '-data');
 				$apps = $group->unixGroups->firstWhere('longname', $group->unixgroup . '-apps');
+
+				$defaultrid = 0;
+				if ($purchases)
+				{
+					$defaultrid = $group->purchases()->withTrashed()->orderBy('id', 'asc')->first()->resourceid;
+				}
+				elseif ($loans)
+				{
+					$defaultrid = $group->loans()->withTrashed()->orderBy('id', 'asc')->first()->resourceid;
+				}
 				?>
 				<div class="card panel panel-default">
 					<div class="card-header panel-heading">
@@ -1414,7 +1453,7 @@
 								<label for="new-resourceid">{{ trans('storage::storage.parent') }}: <span class="required">*</span></label>
 								<select name="resourceid" id="new-resourceid" class="form-control required" required>
 									<?php foreach ($storageresources as $s): ?>
-										<?php $selected = ($s->parentresourceid == 64 ? ' selected="selected"' : ''); ?>
+										<?php $selected = ($s->parentresourceid == $defaultrid ? ' selected="selected"' : ''); ?>
 										<option value="{{ $s->parentresourceid }}" data-storageresource="{{ $s->id }}"<?php echo $selected; ?>>{{ $s->name }}</option>
 									<?php endforeach; ?>
 								</select>

@@ -176,8 +176,8 @@ class StorageResource extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isSelfServe()
+	public function isGroupManaged()
 	{
-		return ($this->id == 4);
+		return ($this->groupmanaged > 0);
 	}
 }

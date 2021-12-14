@@ -120,4 +120,7 @@ return [
 		'below' => 'Quota Usage Alert',
 		'report' => 'Quota Usage Report',
 	],
+	'available space' => 'Available space',
+	'group managed' => 'Group managed spaces',
+	'group managed desc' => 'Group managers can create directories and apply unix groups & permissions.',
 ];

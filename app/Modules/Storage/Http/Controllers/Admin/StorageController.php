@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Storage\Models\StorageResource;
+use App\Modules\Storage\Models\Purchase;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Messages\Models\Type as MessageType;
@@ -182,6 +183,30 @@ class StorageController extends Controller
 			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
+		}
+
+		$bytes = $request->input('bytes');
+
+		if ($bytes)
+		{
+			$hardware = Purchase::query()
+				->where('resourceid', '=', $row->getOriginal('parentresourceid'))
+				->where('groupid', '=', '-1')
+				->where('sellergroupid', '=', 0)
+				->first();
+
+			if (!$hardware)
+			{
+				$hardware = new Purchase;
+				$hardware->comment = 'New hardware';
+				$hardware->datetimestart = $row->datetimecreated;
+				$hardware->sellergroupid = 0;
+				$hardware->groupid = -1;
+			}
+
+			$hardware->resourceid = $row->parentresourceid;
+			$hardware->bytes = $bytes;
+			$hardware->save();
 		}
 
 		return $this->cancel()->with('success', trans('global.messages.item saved'));
