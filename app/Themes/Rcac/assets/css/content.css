@@ -182,6 +182,28 @@ form.dropzone {
 	display: inline;
 }
 
+/* Fancytree */
+.card span.fancytree-empty,
+.card span.fancytree-vline,
+.card span.fancytree-expander,
+.card span.fancytree-icon,
+.card span.fancytree-checkbox,
+.card span.fancytree-drag-helper-img,
+.card #fancytree-drop-marker {
+	vertical-align: baseline;
+}
+.card span.fancytree-icon.fa-folder-open,
+.card span.fancytree-icon.fa-folder {
+	color: #e7c248;
+}
+.card span.fancytree-icon.fa-plus-circle {
+	color: #28a745;
+}
+.card table.fancytree-ext-table {
+	font-size: 90%;
+	font-family: inherit;
+}
+
  /* tabs */
 .nav-tabs .nav-link {
 	text-decoration: none;

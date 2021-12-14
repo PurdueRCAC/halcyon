@@ -1,11 +1,11 @@
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.css?v=' . filemtime(public_path() . '/modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.css')) }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/fancytree/skin-xp/ui.fancytree.css?v=' . filemtime(public_path() . '/modules/core/vendor/fancytree/skin-xp/ui.fancytree.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/fancytree/skin-awesome/ui.fancytree.css?v=' . filemtime(public_path() . '/modules/core/vendor/fancytree/skin-awesome/ui.fancytree.css')) }}" />
 @endpush
 
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.js')) }}"></script>
-<script src="{{ asset('modules/core/vendor/fancytree/jquery.fancytree-all.js?v=' . filemtime(public_path() . '/modules/core/vendor/fancytree/jquery.fancytree-all.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/fancytree/jquery.fancytree-all.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/fancytree/jquery.fancytree-all.min.js')) }}"></script>
 <script src="{{ asset('modules/storage/js/site.js?v=' . filemtime(public_path() . '/modules/storage/js/site.js')) }}"></script>
 <script src="{{ asset('modules/storage/js/quotas.js?v=' . filemtime(public_path() . '/modules/storage/js/quotas.js')) }}"></script>
 @endpush
@@ -54,7 +54,7 @@
 				<div class="card-body panel-body">
 
 					<div id="new_dir_dialog" title="Add new directory" class="dialog">
-						<fieldset class="mb-1">
+						<!-- <fieldset class="mb-1"> -->
 							<div class="form-group">
 								<label for="new_dir_type">Name:</label>
 								<span class="input-group">
@@ -157,7 +157,7 @@
 									?>
 								</select>
 							</div>
-						</fieldset>
+						<!-- </fieldset> -->
 
 						<div id="new_dir_error" class="alert alert-danger hide"></div>
 
@@ -196,7 +196,7 @@
 					<input type="hidden" id="selected_dir_unixgroup" />
 
 					<script type="application/json" id="tree{{ $row->id }}-data"><?php
-					$data = array($row->tree());
+					$data = array($row->tree(true, explode(',', request()->input('expanded', ''))));
 					echo json_encode($data);
 					?></script>
 

@@ -675,13 +675,88 @@ document.addEventListener('DOMContentLoaded', function() {
 				$('#new_dir_quota_available2').html(node.data.parentquota);
 			},
 			persist: true,
-			extensions: ["table"],
+			extensions: ["table", "glyph"],
 			table: {
 				indentation: 20,      // indent 20px per node level
 				nodeColumnIdx: 0,     // render the node title into the 2nd column
 				checkboxColumnIdx: 0  // render the checkboxes into the 1st column
 			},
+			glyph: {
+				preset: "awesome4",
+				map: {
+					doc: "far fa-plus-circle"//,
+					//folder: "far fa-folder",
+					//folderOpen: "far fa-folder-open"
+				}
+			},
 			source: data,
+			collapse: function (event, data) {
+				if (typeof (history.pushState) != 'undefined') {
+					var url = window.location.href.match(/\?.*/);
+					if (url != null) {
+						url = url[0].replace('?', '');
+
+						var kvp = url.split('&');
+						var i = 0;
+
+						for (; i < kvp.length; i++) {
+							if (kvp[i].startsWith('expanded=')) {
+								var pair = kvp[i].split('=');
+								var expanded = pair[1].split(','),
+									vals = [];
+								for (var j = 0; j < expanded.length; j++) {
+									if (expanded[j] == data.node.data.id) {
+										continue;
+									}
+									vals.push(expanded[j]);
+								}
+								pair[1] = vals.join(',');
+								kvp[i] = pair.join('=');
+								break;
+							}
+						}
+						url = '?' + kvp.join('&');
+
+						history.pushState(null, null, encodeURI(url));
+					}
+				}
+			},
+			expand: function (event, data) {
+				if (typeof (history.pushState) != 'undefined') {
+					var url = window.location.href.match(/\?.*/);
+					if (url != null) {
+						url = url[0].replace('?', '');
+
+						var kvp = url.split('&');
+						var i = 0;
+
+						for (; i < kvp.length; i++) {
+							if (kvp[i].startsWith('expanded=')) {
+								var pair = kvp[i].split('=');
+								var expanded = pair[1].split(','),
+									vals = [];
+								for (var j = 0; j < expanded.length; j++) {
+									if (expanded[j] != data.node.data.id) {
+										vals.push(expanded[j]);
+									}
+								}
+								pair[1] = (vals.join(',') ? vals.join(',') + ',' : '') + data.node.data.id;
+								kvp[i] = pair.join('=');
+								break;
+							}
+						}
+
+						if (i >= kvp.length) {
+							kvp[kvp.length] = ['expanded', data.node.data.id].join('=');
+						}
+						url = '?' + kvp.join('&');
+					} else {
+						url = "?expanded=" + data.node.data.id;
+					}
+
+					history.pushState(null, null, encodeURI(url));
+				}
+			},
 			renderColumns: function(event, data) {
 				var node = data.node,
 				$tdList = $(node.tr).find(">td");

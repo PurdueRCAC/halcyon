@@ -604,7 +604,7 @@ class Directory extends Model
 	 * @param   bool   $expanded
 	 * @return  array
 	 */
-	public function tree($expanded = true)
+	public function tree($expanded = true, $active = [])
 	{
 		$item = array(); //$this->toArray();
 		$item['id'] = $this->id;
@@ -617,7 +617,7 @@ class Directory extends Model
 		$children = array();
 		foreach ($this->children()->orderBy('name', 'asc')->get() as $child)
 		{
-			$children[] = $child->tree(false);
+			$children[] = $child->tree(in_array($child->id, $active), $active);
 		}
 
 		$new_quota = $this->quota;
@@ -627,7 +627,7 @@ class Directory extends Model
 		}
 
 		$children[] = array(
-			'title' => '(Add New Directory)',
+			'title' => trans('storage::storage.add new directory'),
 			'folder' => false,
 			'expanded' => false,
 			'id'   => 'new_dir',
