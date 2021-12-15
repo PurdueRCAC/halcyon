@@ -1,5 +1,5 @@
 <nav aria-label="News Categories">
-	<ul class="nav">
+	<ul class="nav flex-column">
 		@if (auth()->user() && auth()->user()->can('manage news'))
 			<li class="nav-item<?php if (!is_numeric($active) && $active == 'manage') { echo ' active'; } ?>"><a class="nav-link" href="{{ route('site.news.manage') }}">{{ trans('news::news.manage news') }}</a></li>
 		@endif

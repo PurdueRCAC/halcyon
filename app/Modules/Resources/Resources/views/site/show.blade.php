@@ -22,7 +22,7 @@ $content = '';
 		@endif
 	@endforeach
 
-	<ul class="nav">
+	<ul class="nav flex-column">
 		@foreach ($sections as $section)
 			<?php
 			$active = '';
@@ -39,7 +39,7 @@ $content = '';
 	</ul>
 
 	<h2>{{ $type->name }} Resources</h2>
-	<ul class="nav">
+	<ul class="nav flex-column">
 		@foreach ($rows as $i => $row)
 			@php
 			if (!$row->listname)

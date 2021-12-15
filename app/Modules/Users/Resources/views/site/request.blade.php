@@ -20,7 +20,7 @@ $active = $sections->firstWhere('active', '=', true);
 	<h2>{{ $user->name }}</h2>
 
 	<div class="qlinks">
-		<ul class="nav">
+		<ul class="nav flex-column">
 			<li class="nav-item<?php if (!$active) { echo ' active'; } ?>">
 				<a class="nav-link<?php if (!$active) { echo ' active'; } ?>" href="{{ auth()->user()->id != $user->id ? route('site.users.account', ['u' => $user->id]) : route('site.users.account') }}">{{ trans('users::users.my accounts') }}</a>
 			</li>

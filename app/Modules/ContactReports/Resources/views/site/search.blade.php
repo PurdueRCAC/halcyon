@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
-	<ul class="nav">
+	<ul class="nav flex-column">
 		<li class="nav-item"><a class="nav-link" href="{{ route('site.news.search') }}">Search ContactReports</a></li>
 		<li class="nav-item"><a class="nav-link" href="{{ route('site.news.rss') }}">RSS Feeds</a></li>
 		<li class="nav-item"><div class="separator"></div></li>

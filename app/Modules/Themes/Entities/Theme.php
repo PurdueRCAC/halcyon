@@ -54,10 +54,13 @@ class Theme
 		//$this->app = $app;
 		$this->name = $name;
 		$this->path = realpath($path);
+
 		if (is_string($params))
 		{
 			$params = json_decode($params, true);
 		}
+		$params = is_array($params) ? $params : [];
+
 		$this->params = new Repository($params);
 	}
 

@@ -17,7 +17,7 @@ app('pathway')
 @section('content')
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	<h2>Quick Filters</h2>
-	<ul class="nav">
+	<ul class="nav flex-column">
 		<li class="nav-item">
 			<a class="nav-link" href="{{ route('site.contactreports.index') }}?people={{ auth()->user()->id }}">
 				{{ trans('contactreports::contactreports.my reports') }}
