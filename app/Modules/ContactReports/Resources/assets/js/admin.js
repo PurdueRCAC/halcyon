@@ -3,35 +3,52 @@
 /* global Chart */ // vendor/chartjs/Chart.min.js
 
 /**
+ * Get and return array of objects
+ *
+ * @param   {string}  url
+ * @return  {array}
+ */
+var autocompleteList = function (url) {
+	return function (request, response) {
+		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
+			response($.map(data.data, function (el) {
+				if (typeof (el.id) == 'undefined' && typeof (el.username) != 'undefined') {
+					el.id = el.username;
+				}
+				if (typeof (el.username) != 'undefined') {
+					el.name += ' (' + el.username + ')';
+				}
+				if (typeof (el.slug) != 'undefined') {
+					el.id = el.slug;
+				}
+				//var regEx = new RegExp("(" + request.term + ")(?!([^<]+)?>)", "gi");
+				//el.name = el.name.replace(regEx, '<span class="highlight">$1</span>');
+				return {
+					label: el.name,
+					name: el.name,
+					id: el.id,
+				};
+			}));
+		});
+	};
+};
+
+/**
  * Initiate event hooks
  */
-document.addEventListener('DOMContentLoaded', function() {
-	var autocompleteUsers = function(url) {
-		return function(request, response) {
-			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
-				response($.map(data.data, function (el) {
-					return {
-						label: el.name + ' (' + el.username + ')',
-						name: el.name,
-						id: (el.id ? el.id : el.username)
-					};
-				}));
-			});
-		};
-	};
-
+document.addEventListener('DOMContentLoaded', function () {
 	var newsuser = $(".form-users");
 	if (newsuser.length) {
 		newsuser.tagsInput({
 			placeholder: '',
 			importPattern: /([^:]+):(.+)/i,
 			'autocomplete': {
-				source: autocompleteUsers(newsuser.attr('data-uri')),
+				source: autocompleteList(newsuser.attr('data-uri')),
 				dataName: 'users',
 				height: 150,
 				delay: 100,
 				minLength: 1,
-				open: function () {//e, ui
+				open: function (e, ui) {
 					var acData = $(this).data('ui-autocomplete');
 
 					acData
@@ -44,13 +61,84 @@ document.addEventListener('DOMContentLoaded', function() {
 							me.html(me.text().replace(regex, '<b>$1</b>'));
 						});
 				}
-			}/*,
-			'onAddTag': function(input, value) {
-				NEWSSearch();
 			},
-			'onRemoveTag': function(input, value) {
-				NEWSSearch();
-			}*/
+			'onAddTag': function (input) {
+				if (input.classList.contains('filter-submit')) {
+					$(input).closest('form').submit();
+				}
+			},
+			'onRemoveTag': function (input) {
+				if (input.classList.contains('filter-submit')) {
+					$(input).closest('form').submit();
+				}
+			}
+		});
+	}
+
+	var group = $(".form-groups");
+	if (group.length) {
+		group.tagsInput({
+			placeholder: '',
+			importPattern: /([^:]+):(.+)/i,
+			limit: 1,
+			'autocomplete': {
+				source: autocompleteList(group.attr('data-uri')),
+				dataName: 'groups',
+				height: 150,
+				delay: 100,
+				minLength: 1,
+				open: function () { //e, ui
+					var acData = $(this).data('ui-autocomplete');
+
+					acData
+						.menu
+						.element
+						.find('.ui-menu-item-wrapper')
+						.each(function () {
+							var me = $(this);
+							var regex = new RegExp('(' + acData.term + ')', "gi");
+							me.html(me.text().replace(regex, '<b>$1</b>'));
+						});
+				}
+				//maxLength: 1
+			},
+			'onAddTag': function (input) {
+				if (input.classList.contains('filter-submit')) {
+					$(input).closest('form').submit();
+				}
+			},
+			'onRemoveTag': function (input) {
+				if (input.classList.contains('filter-submit')) {
+					$(input).closest('form').submit();
+				}
+			}
+		});
+	}
+
+	var tags = $(".form-tags");
+	if (tags.length) {
+		tags.each(function (i, tag) {
+			$(tag).tagsInput({
+				placeholder: tag.getAttribute('placeholder'),
+				importPattern: /([^:]+):(.+)/i,
+				'autocomplete': {
+					source: autocompleteList(tag.getAttribute('data-uri')),
+					dataName: 'tags',
+					height: 150,
+					delay: 100,
+					minLength: 1
+				},
+				'onAddTag': function (input) {
+					if (input.classList.contains('filter-submit')) {
+						$(input).closest('form').submit();
+					}
+				},
+				'onRemoveTag': function (input) {
+					if (input.classList.contains('filter-submit')) {
+						$(input).closest('form').submit();
+					}
+				}
+			});
 		});
 	}
 
@@ -59,6 +147,27 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	$('.searchable-select').select2();
+
+	var rselects = $(".searchable-select-multi");
+	if (rselects.length) {
+		$(".searchable-select-multi").select2({
+			multiple: true
+		})
+		.on('select2:select', function () {
+			if (this.classList.contains('filter-submit')) {
+				$(this).closest('form').submit();
+			}
+		})
+		.on('select2:unselect', function () {
+			if (this.classList.contains('filter-submit')) {
+				var frm = $(this).closest('form');
+				if (!$(this).val() || !$(this).val().length) {
+					frm.attr('action', frm.attr('action') + '?resource=');
+				}
+				frm.submit();
+			}
+		});
+	}
 
 	$('.comment-add').on('click', function (e) {
 		e.preventDefault();

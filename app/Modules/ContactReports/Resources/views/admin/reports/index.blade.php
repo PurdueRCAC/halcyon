@@ -43,6 +43,7 @@ app('pathway')
 {!! config('contactreports.name') !!}
 @stop
 
+<?php /*
 @section('panel')
 	<h2 class="sr-only">Contact Reports Stats</h2>
 
@@ -114,16 +115,18 @@ app('pathway')
 		</table>
 	</div>
 @stop
+*/ ?>
 
 @section('content')
 @component('contactreports::admin.submenu')
 	reports
 @endcomponent
-<form action="{{ route('admin.contactreports.index') }}" data-api="{{ route('api.contactreports.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.contactreports.index') }}" data-api="{{ route('api.contactreports.index') }}" method="post" name="adminForm" id="adminForm" class="form-inlin">
 
-	<fieldset id="filter-bar" class="container-fluid">
-		<div class="row">
-			<div class="col col-md-3">
+	<div class="row">
+		<div class="col-md-3">
+		<fieldset id="filter-bar" class="container-fluid">
+			<div class="form-group">
 				<div class="form-group">
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
@@ -132,8 +135,8 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col col-md-3 text-right">
-				<label class="sr-only" for="filter_contactreporttypeid">{{ trans('contactreports::contactreports.type') }}</label>
+			<div class="form-group">
+				<label for="filter_contactreporttypeid">{{ trans('contactreports::contactreports.type') }}</label>
 				<select name="type" id="filter_contactreporttypeid" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['type'] == '*') { echo ' selected="selected"'; } ?>>{{ trans('contactreports::contactreports.all types') }}</option>
 					<option value="0"<?php if (!$filters['type']) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
@@ -142,28 +145,134 @@ app('pathway')
 					@endforeach
 				</select>
 			</div>
-			<div class="col col-md-3">
-				<label class="sr-only" for="filter_start">{{ trans('contactreports::contactreports.start') }}</label>
+			<div class="form-group">
+				<label for="filter_start">{{ trans('contactreports::contactreports.start') }}</label>
 				<span class="input-group">
-					<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" placeholder="Start date" />
+					<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" />
 					<span class="input-group-append"><span class="input-group-text"><span class="fa fa-calendar" aria-hidden="true"></span></span>
 				</span>
 			</div>
-			<div class="col col-md-3">
-				<label class="sr-only" for="filter_stop">{{ trans('contactreports::contactreports.stop') }}</label>
+			<div class="form-group">
+				<label for="filter_stop">{{ trans('contactreports::contactreports.stop') }}</label>
 				<span class="input-group">
-					<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="End date" />
+					<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="{{ trans('global.never') }}" />
 					<span class="input-group-append"><span class="input-group-text"><span class="fa fa-calendar" aria-hidden="true"></span></span></span>
 				</span>
 			</div>
+
+			<div class="form-group">
+				<label for="filter_group">{{ trans('contactreports::contactreports.group') }}</label>
+				<?php
+				$grps = array();
+				if ($groups = $filters['group']):
+					foreach (explode(',', $groups) as $g):
+						if (trim($g)):
+							$grp = App\Modules\Groups\Models\Group::find($g);
+							$grps[] = $grp->name . ':' . $g . '';
+						endif;
+					endforeach;
+				endif;
+				?>
+				<input name="group" id="filter_group" size="45" class="form-control form-groups filter-submit" value="{{ implode(',', $grps) }}" data-uri="{{ route('api.groups.index') }}?search=%s" data-api="{{ route('api.groups.index') }}" />
+			</div>
+
+			<div class="form-group">
+				<label for="filter_people">{{ trans('contactreports::contactreports.users') }}</label>
+				<?php
+				$usrs = array();
+				if ($users = $filters['people']):
+					foreach ($users as $u):
+						if (trim($u)):
+							if (!is_numeric($u)):
+								$usr = App\Modules\Users\Models\User::findByUsername($u);
+							else:
+								$usr = App\Modules\Users\Models\User::find($u);
+							endif;
+							$usrs[] = $usr->name . ':' . $u;
+						endif;
+					endforeach;
+				endif;
+				?>
+				<input name="people" id="filter_people" size="45" class="form-control form-users filter-submit" value="{{ implode(',', $usrs) }}" data-uri="{{ route('api.users.index') }}?search=%s" data-api="{{ route('api.users.index') }}" />
+			</div>
+
+			<div class="form-group">
+				<label for="newsresource">{{ trans('contactreports::contactreports.resources') }}</label>
+				<?php
+				$selected = array();
+				if ($res = $filters['resource'])
+				{
+					$selected = is_string($res) ? explode(',', $res) : $res;
+					$selected = array_map('trim', $selected);
+				}
+				?>
+				<select class="form-control filter-submit searchable-select-multi" multiple="multiple" name="resource[]" id="crmresource" data-api="{{ route('api.resources.index') }}">
+					<?php
+					$resources = App\Modules\Resources\Models\Asset::query()
+						->where('listname', '!=', '')
+						->where('display', '>', 0)
+						->orderBy('name')
+						->get();
+
+					$types = array();
+					foreach ($resources as $resource)
+					{
+						if (!isset($types[$resource->resourcetype]))
+						{
+							$types[$resource->resourcetype] = array();
+						}
+						$types[$resource->resourcetype][] = $resource;
+					}
+					ksort($types);
+
+					foreach ($types as $t => $res)
+					{
+						$type = App\Modules\Resources\Models\Type::find($t);
+						if (!$type)
+						{
+							$type = new App\Modules\Resources\Models\Type;
+							$type->name = 'Services';
+						}
+						?>
+						<optgroup label="{{ $type->name }}" class="select2-result-selectable">
+							<?php
+							foreach ($res as $resource)
+							{
+								?>
+								<option value="{{ $resource->id }}"<?php if (in_array($resource->id, $selected)) { echo ' selected="selected"'; } ?>>{{ $resource->name }}</option>
+								<?php
+							}
+							?>
+						</optgroup>
+						<?php
+					}
+					?>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label for="filter_tag">{{ trans('contactreports::contactreports.tags') }}</label>
+				<?php
+				$tags = array();
+				if ($tg = $filters['tag']):
+					foreach (explode(',', $tg) as $t):
+						if (trim($t)):
+							$tag = App\Modules\Tags\Models\Tag::query()->where('slug', '=', $t)->first();
+							$tags[] = $tag->name . ':' . $t;
+						endif;
+					endforeach;
+				endif;
+				?>
+				<input name="tag" id="filter_tag" size="45" class="form-control form-tags filter-submit" value="{{ implode(', ', $tags) }}" data-uri="{{ route('api.tags.index') }}?search=%s" data-api="{{ route('api.tags.index') }}" />
+			</div>
+
+			<input type="hidden" name="order" value="{{ $filters['order'] }}" />
+			<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
+
+			<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		</fieldset>
 		</div>
-
-		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
-		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
-
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
-	</fieldset>
-
+		<div class="col-md-9">
 	<div id="results">
 	@if (count($rows))
 		@foreach ($rows as $i => $row)
@@ -318,7 +427,8 @@ app('pathway')
 		</div>
 	@endif
 	</div>
-
+		</div>
+		</div>
 	<input type="hidden" name="boxchecked" value="0" />
 
 	@csrf

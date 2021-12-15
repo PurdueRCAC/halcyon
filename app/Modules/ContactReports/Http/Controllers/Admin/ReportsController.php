@@ -32,11 +32,14 @@ class ReportsController extends Controller
 			'timeframe' => 1,
 			'search'    => null,
 			'tag'       => '',
-			'group'    => null,
-			'start'    => null,
-			'stop'     => null,
-			'type'     => '*',
-			'notice'   => '*',
+			'group'     => null,
+			'start'     => null,
+			'stop'      => null,
+			'people'    => null,
+			'tag'       => null,
+			'resource'  => null,
+			'type'      => '*',
+			'notice'    => '*',
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
 			'order'     => Report::$orderBy,
@@ -67,11 +70,52 @@ class ReportsController extends Controller
 			$filters['order_dir'] = Report::$orderDir;
 		}
 
+		$cr = (new Report)->getTable();
+
 		$query = Report::query();
 
 		if ($filters['tag'])
 		{
 			$query->withTag($filters['tag']);
+		}
+
+		if ($filters['people'])
+		{
+			$filters['people'] = explode(',', $filters['people']);
+			foreach ($filters['people'] as $k => $person)
+			{
+				if (!is_numeric($person))
+				{
+					$user = User::findByUsername($person);
+					if ($user && $user->id)
+					{
+						$filters['people'][$k] = $user->id;
+					}
+				}
+			}
+
+			$cru = (new ReportUser)->getTable();
+
+			$query->join($cru, $cru . '.contactreportid', $cr . '.id');
+			$query->where(function ($where) use ($filters, $cru, $cr)
+				{
+					$where->whereIn($cru . '.userid', $filters['people'])
+						->orWhereIn($cr . '.userid', $filters['people']);
+				})
+				->groupBy($cr . '.id');
+		}
+
+		if ($filters['resource'])
+		{
+			if (is_string($filters['resource']))
+			{
+				$filters['resource'] = explode(',', $filters['resource']);
+			}
+
+			$crr = (new Reportresource)->getTable();
+
+			$query->join($crr, $crr . '.contactreportid', $cr . '.id')
+				->whereIn($crr . '.resourceid', $filters['resource']);
 		}
 
 		if ($filters['search'])
@@ -119,17 +163,17 @@ class ReportsController extends Controller
 
 		if ($filters['notice'] != '*')
 		{
-			$query->where('notice', '=', $filters['notice']);
+			$query->where($cr . '.notice', '=', $filters['notice']);
 		}
 
 		if ($filters['group'])
 		{
-			$query->where('groupid', '=', $filters['group']);
+			$query->where($cr . '.groupid', '=', $filters['group']);
 		}
 
 		if ($filters['type'] != '*')
 		{
-			$query->where('contactreporttypeid', '=', $filters['type']);
+			$query->where($cr . '.contactreporttypeid', '=', $filters['type']);
 		}
 
 		$rows = $query

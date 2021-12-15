@@ -63,4 +63,6 @@ return [
 	'pause followups' => 'Mute For',
 	'input text' => 'Input text',
 	'output text' => 'Output text',
+	'start' => 'Start date',
+	'stop' => 'End date',
 ];
