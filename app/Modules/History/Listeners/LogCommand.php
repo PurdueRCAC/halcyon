@@ -31,7 +31,7 @@ class LogCommand
 			'servername'      => 'localhost',
 			'uri'             => $event->command ?? $event->input->getArguments()['command'] ?? 'default',
 			'app'             => 'cli',
-			'payload'         => implode(' ', $event->input->getArguments() + $event->input->getOptions()),
+			'payload'         => json_encode($event->input->getArguments() + $event->input->getOptions()),
 			'classname'       => 'artisan',
 			'classmethod'     => 'handle',
 		]);
