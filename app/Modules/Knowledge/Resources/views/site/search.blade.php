@@ -32,32 +32,38 @@
 		</div>
 	</div>
 
-	<ul class="article-list">
-	@foreach ($rows as $row)
-		<li>
-			<?php
-			$ancestors = array_reverse($row->ancestors());
-			foreach ($ancestors as $ancestor):
-				$row->page->variables->merge($ancestor->page->variables, true);
-			endforeach;
-			?>
-			<article id="kb_{{ $row->id }}" class="article">
-				<h3 class="article-title">
-					<a href="{{ route('site.knowledge.page', ['uri' => $row->path]) }}">
-						{{ $row->page->headline }}
-					</a>
-				</h3>
-				<p class="article-metadata text-muted">
-					{{ route('site.knowledge.page', ['uri' => $row->path]) }}
-				</p>
-				<p class="article-body">
-					{!! App\Halcyon\Utility\Str::highlight(App\Halcyon\Utility\Str::excerpt(strip_tags($row->page->body), $filters['search']), $filters['search']) !!}
-				</p>
-			</article>
-		</li>
-	@endforeach
-	</ul>
+	@if (count($rows))
+		<ul class="article-list">
+		@foreach ($rows as $row)
+			<li>
+				<?php
+				$ancestors = array_reverse($row->ancestors());
+				foreach ($ancestors as $ancestor):
+					$row->page->variables->merge($ancestor->page->variables, true);
+				endforeach;
+				?>
+				<article id="kb_{{ $row->id }}" class="article">
+					<h3 class="article-title">
+						<a href="{{ route('site.knowledge.page', ['uri' => $row->path]) }}">
+							{{ $row->page->headline }}
+						</a>
+					</h3>
+					<p class="article-metadata text-muted">
+						{{ route('site.knowledge.page', ['uri' => $row->path]) }}
+					</p>
+					<p class="article-body">
+						{!! App\Halcyon\Utility\Str::highlight(App\Halcyon\Utility\Str::excerpt(strip_tags($row->page->body), $filters['search']), $filters['search']) !!}
+					</p>
+				</article>
+			</li>
+		@endforeach
+		</ul>
 
-	{{ $rows->render() }}
+		{{ $rows->render() }}
+	@else
+		<div class="card mb-4">
+			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>
+		</div>
+	@endif
 </div>
 @stop

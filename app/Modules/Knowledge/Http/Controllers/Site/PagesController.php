@@ -203,7 +203,8 @@ class PagesController extends Controller
 			$filters['order'] = 'weight';
 
 			$query->select($p . '.title', $p . '.content', $p . '.params', $p . '.snippet', $p . '.updated_at', $a . '.*',
-				DB::raw("IF(" . $p . ".title LIKE '" . $filters['search'] . "%', 20, 
+				DB::raw("IF(" . $a . ".path LIKE '%" . $filters['search'] . "', 10, 0) +
+					IF(" . $p . ".title LIKE '" . $filters['search'] . "%', 20, 
 						IF(" . $p . ".title LIKE '%" . $filters['search'] . "%', 10, 0)
 					)
 					+ IF(" . $p . ".content LIKE '%" . $filters['search'] . "%', 5, 0)
@@ -248,8 +249,8 @@ class PagesController extends Controller
 					->where($a . '.rgt', '<=', $parent->rgt);
 		}
 
-		$query->where($p . '.state', '=', 1);
-		$query->where($p . '.access', '=', $levels);
+		$query->where($a . '.state', '=', 1);
+		$query->where($a . '.access', '=', $levels);
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
