@@ -78,7 +78,7 @@ class MenusController extends Controller
 
 		foreach ($results as $result)
 		{
-			$params = new \Illuminate\Config\Repository(json_decode($result->params, true));
+			$params = new \Illuminate\Config\Repository($result->params ? json_decode($result->params, true) : []);
 
 			$menuType = $params->get('menutype');
 			if (!isset($widgets[$menuType]))
