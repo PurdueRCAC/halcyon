@@ -6,6 +6,7 @@ use App\Modules\Widgets\Entities\WidgetManager;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use App\Modules\Widgets\Console\DiscoverCommand;
 use App\Modules\Widgets\Console\InstallCommand;
 use App\Modules\Widgets\Console\DisableCommand;
 use App\Modules\Widgets\Console\EnableCommand;
@@ -70,6 +71,7 @@ class ModuleServiceProvider extends ServiceProvider
 	protected function registerConsoleCommands()
 	{
 		$this->commands([
+			DiscoverCommand::class,
 			InstallCommand::class,
 			DisableCommand::class,
 			EnableCommand::class,

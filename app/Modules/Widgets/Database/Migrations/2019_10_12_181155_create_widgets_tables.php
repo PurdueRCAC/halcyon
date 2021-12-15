@@ -38,74 +38,116 @@ class CreateWidgetsTables extends Migration
 				$table->index(['widget', 'published'], 'widget');
 				$table->index('language');
 			});
+		}
 
-			// Create the root node
-			DB::table('widgets')->insert([
-				'title' => 'Admin Menu',
-				'note' => 'Admin menu',
-				'widget' => 'adminmenu',
-				'position' => 'menu',
-				'published' => 1,
-				'ordering' => 1,
-				'showtitle' => 0,
-				'access' => 2,
-				'client_id' => 1,
-				'language' => '*',
-			]);
+		if (Schema::hasTable('extensions'))
+		{
+			$entries = DB::table('extensions')
+				->where('type', '=', 'widget')
+				->count();
 
-			DB::table('widgets')->insert([
-				'title' => 'Admin Menu',
-				'note' => 'Admin menu',
-				'widget' => 'adminmenu',
-				'position' => 'top',
-				'published' => 1,
-				'ordering' => 1,
-				'showtitle' => 0,
-				'access' => 2,
-				'client_id' => 0,
-				'language' => '*',
-			]);
+			if (!$entries)
+			{
+				foreach (app('files')->directories(app_path('Widgets')) as $dir)
+				{
+					$element = strtolower(basename($dir));
+					$name = $element;
 
-			DB::table('widgets')->insert([
-				'title' => 'Main Menu',
-				'note' => 'Main menu',
-				'widget' => 'menu',
-				'position' => 'mainmenu',
-				'published' => 1,
-				'ordering' => 1,
-				'showtitle' => 0,
-				'access' => 1,
-				'client_id' => 0,
-				'language' => '*',
-			]);
+					$manifest = $dir . '/widget.json';
+					if (file_exists($manifest))
+					{
+						$info = json_decode(file_get_contents($manifest));
+						$name = $info->name;
+					}
 
-			DB::table('widgets')->insert([
-				'title' => 'Breadcrumbs',
-				'note' => 'breadcrumbs',
-				'widget' => 'breadcrumbs',
-				'position' => 'breadcrumbs',
-				'published' => 1,
-				'ordering' => 1,
-				'showtitle' => 0,
-				'access' => 2,
-				'client_id' => 1,
-				'language' => '*',
-				'params' => '{"showHere":0}',
-			]);
+					DB::table('extensions')->insert([
+						'name'       => $name,
+						'element'    => $element,
+						'type'       => 'widget',
+						'enabled'    => 1,
+						'protected'  => 1,
+						'state'      => 1,
+						'access'     => 1,
+					]);
+				}
+			}
+		}
 
-			DB::table('widgets')->insert([
-				'title' => 'Breadcrumbs',
-				'note' => 'breadcrumbs',
-				'widget' => 'breadcrumbs',
-				'position' => 'breadcrumbs',
-				'published' => 1,
-				'ordering' => 2,
-				'showtitle' => 0,
-				'access' => 1,
-				'client_id' => 0,
-				'language' => '*',
-				'params' => '{"showHere":0}',
-			]);
+		if (Schema::hasTable('widgets'))
+		{
+			$total = DB::table('widgets')
+				->count();
+
+			if (!$total)
+			{
+				// Create the root node
+				DB::table('widgets')->insert([
+					'title' => 'Admin Menu',
+					'note' => 'Admin menu',
+					'widget' => 'adminmenu',
+					'position' => 'menu',
+					'published' => 1,
+					'ordering' => 1,
+					'showtitle' => 0,
+					'access' => 2,
+					'client_id' => 1,
+					'language' => '*',
+				]);
+
+				DB::table('widgets')->insert([
+					'title' => 'Admin Menu',
+					'note' => 'Admin menu',
+					'widget' => 'adminmenu',
+					'position' => 'top',
+					'published' => 1,
+					'ordering' => 1,
+					'showtitle' => 0,
+					'access' => 2,
+					'client_id' => 0,
+					'language' => '*',
+				]);
+
+				DB::table('widgets')->insert([
+					'title' => 'Main Menu',
+					'note' => 'Main menu',
+					'widget' => 'menu',
+					'position' => 'mainmenu',
+					'published' => 1,
+					'ordering' => 1,
+					'showtitle' => 0,
+					'access' => 1,
+					'client_id' => 0,
+					'language' => '*',
+				]);
+
+				DB::table('widgets')->insert([
+					'title' => 'Breadcrumbs',
+					'note' => 'breadcrumbs',
+					'widget' => 'breadcrumbs',
+					'position' => 'breadcrumbs',
+					'published' => 1,
+					'ordering' => 1,
+					'showtitle' => 0,
+					'access' => 2,
+					'client_id' => 1,
+					'language' => '*',
+					'params' => '{"showHere":0}',
+				]);
+
+				DB::table('widgets')->insert([
+					'title' => 'Breadcrumbs',
+					'note' => 'breadcrumbs',
+					'widget' => 'breadcrumbs',
+					'position' => 'breadcrumbs',
+					'published' => 1,
+					'ordering' => 2,
+					'showtitle' => 0,
+					'access' => 1,
+					'client_id' => 0,
+					'language' => '*',
+					'params' => '{"showHere":0}',
+				]);
+			}
 		}
 
 		if (!Schema::hasTable('widgets_menu'))
