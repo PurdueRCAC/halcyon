@@ -1060,7 +1060,7 @@
 
 							<div class="form-group">
 								<label for="loan-bytes">{{ trans('storage::storage.amount') }} <span class="required">*</span></label>
-								<input type="text" class="form-control bytes" size="4" id="loan-bytes" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]{1,2}" value="" />
+								<input type="text" class="form-control bytes" size="4" id="loan-bytes" name="bytes" required pattern="[0-9.]{1,10}\s?[PTGMKB]{1,2}" value="" />
 								<span class="form-text text-muted">{{ trans('storage::storage.quota desc') }}</span>
 							</div>
 
@@ -1291,7 +1291,7 @@
 
 									<div class="form-group">
 										<label for="sell-bytes">{{ trans('storage::storage.amount') }} <span class="required">*</span></label>
-										<input type="text" class="form-control bytes" size="4" id="sell-bytes" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]{1,2}" value="" />
+										<input type="text" class="form-control bytes" size="4" id="sell-bytes" name="bytes" required pattern="[0-9.]{1,10}\s?[PTGMKB]{1,2}" value="" />
 										<span class="form-text text-muted">{{ trans('storage::storage.quota desc') }}</span>
 									</div>
 
@@ -1359,7 +1359,7 @@
 
 									<div class="form-group">
 										<label for="loan-bytes">{{ trans('storage::storage.amount') }} <span class="required">*</span></label>
-										<input type="text" class="form-control bytes" size="4" id="loan-bytes" name="bytes" required pattern="[0-9]{1,10}\s?[PTGMKB]{1,2}" value="" />
+										<input type="text" class="form-control bytes" size="4" id="loan-bytes" name="bytes" required pattern="[0-9.]{1,10}\s?[PTGMKB]{1,2}" value="" />
 										<span class="form-text text-muted">{{ trans('storage::storage.quota desc') }}</span>
 									</div>
 
