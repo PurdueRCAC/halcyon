@@ -28,6 +28,20 @@ class Associations extends Model
 	public $timestamps = false;
 
 	/**
+	 * Default order by for model
+	 *
+	 * @var string
+	 */
+	public static $orderBy = 'lft';
+
+	/**
+	 * Default order direction for select queries
+	 *
+	 * @var  string
+	 */
+	public static $orderDir = 'asc';
+
+	/**
 	 * Defines a relationship to a parent page
 	 *
 	 * @return  object

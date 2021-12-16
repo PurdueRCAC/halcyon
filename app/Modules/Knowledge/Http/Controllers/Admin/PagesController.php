@@ -30,8 +30,8 @@ class PagesController extends Controller
 			'access'    => null,
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
-			'order'     => Page::$orderBy,
-			'order_dir' => Page::$orderDir,
+			'order'     => Associations::$orderBy,
+			'order_dir' => Associations::$orderDir,
 			'level'     => 0,
 		);
 
