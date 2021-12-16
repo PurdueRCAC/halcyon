@@ -58,7 +58,7 @@ class Widget extends Model
 	 * @param   integer  $pk
 	 * @return  array    An array of module records (id, title, position)
 	 */
-	public static function forMenuId(int $pk = 0)
+	public static function forMenuId($pk = 0)
 	{
 		$query = DB::table((new self)->getTable() . ' AS a')
 			->select([

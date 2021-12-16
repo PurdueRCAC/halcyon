@@ -418,7 +418,7 @@ class ItemsController extends Controller
 
 		$form = $row->getForm();
 
-		$widgets = \App\Modules\Menus\Models\Widget::forMenuId($row->id);
+		$widgets = \App\Modules\Menus\Models\Widget::forMenuId($row->id ? $row->id : 0);
 
 		return view('menus::admin.items.edit', [
 			'row' => $row,
