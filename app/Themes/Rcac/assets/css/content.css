@@ -1637,7 +1637,7 @@ img.newsdeleteresource {
 	text-align: center;
 }
 .news-location:before {
-	content: "";
+	content: "\f041";
 }
 .news-date:before {
 	content: "\f073";
@@ -1649,20 +1649,23 @@ img.newsdeleteresource {
 	content: "\f0c1";
 }
 .news-tags:before {
-	content: "";
+	content: "\f02c";
+}
+.news-resources:before {
+	content: "\f233";
 }
 .news-group:before {
-	content: "";
+	content: "\f0c0";
 }
 .news-author:before {
-	content: "";
+	content: "\f007";
 }
 .news-users:before {
-	content: "";
+	content: "\f0c0";
 }
 .crmsubscribe a:before {
 	margin-right: 0.5em;
-	content: "";
+	content: "\f0f3";
 }
 
 .panel-default > .panel-heading .badge-published {

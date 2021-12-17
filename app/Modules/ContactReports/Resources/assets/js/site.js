@@ -1581,12 +1581,12 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	// Resource list
 	if (report.resources.length > 0) {
 		li = document.createElement("li");
-		li.className = 'item-resources';
+		li.className = 'news-resources';
 
-		var icon = document.createElement("i");
+		/*var icon = document.createElement("i");
 		icon.className = "fa fa-server";
 		icon.setAttribute('aria-hidden', true);
-		li.appendChild(icon);
+		li.appendChild(icon);*/
 
 		span = document.createElement("span");
 		span.className = "crmpostresources";
@@ -1621,12 +1621,12 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	// Tags list
 	if (report.tags.length > 0) {
 		li = document.createElement("li");
-		li.className = 'item-tags';
+		li.className = 'news-tags';
 
-		icon = document.createElement("i");
-		icon.className = "fa fa-tags";
+		/*icon = document.createElement("i");
+		icon.className = "fa fa-fw fa-tags";
 		icon.setAttribute('aria-hidden', true);
-		li.appendChild(icon);
+		li.appendChild(icon);*/
 
 		span = document.createElement("span");
 		span.className = "crmposttags";
