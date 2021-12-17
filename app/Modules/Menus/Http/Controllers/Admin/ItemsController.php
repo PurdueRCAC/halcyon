@@ -73,7 +73,7 @@ class ItemsController extends Controller
 		}
 
 		// Get records
-		$menu = Type::findByMenutype($filters['menutype']);
+		$menu = Type::findByMenutype((string)$filters['menutype']);
 
 		if (!$menu)
 		{
