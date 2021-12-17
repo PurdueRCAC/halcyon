@@ -265,7 +265,7 @@ class UnixGroupsController extends Controller
 		$group = Group::findOrFail($request->input('groupid'));
 
 		$base = '';
-		$name = $request->input('longname');
+		$name = (string)$request->input('longname');
 
 		if ($group->id != 1)
 		{
@@ -550,7 +550,7 @@ class UnixGroupsController extends Controller
 			$group = $row->group;
 
 			$base = '';
-			$name = $request->input('longname');
+			$name = (string)$request->input('longname');
 
 			if ($group->id != 1)
 			{
@@ -632,7 +632,7 @@ class UnixGroupsController extends Controller
 
 		if ($request->has('shortname'))
 		{
-			$row->shortname = $request->input('shortname');
+			$row->shortname = (string)$request->input('shortname');
 		}
 
 		if ($request->has('unixgid'))
