@@ -285,6 +285,15 @@
 </div>
 
 <div class="card panel panel-default">
+	@php
+	$unixgroups = $group->unixgroups()->orderBy('longname', 'asc')->get();
+	$used = 0;
+	foreach ($unixgroups as $unixgroup):
+		if (!preg_match("/rcs[0-9]{4}[0-9]/", $unixgroup->shortname)):
+			$used++;
+		endif;
+	endforeach;
+	@endphp
 	<div class="card-header panel-heading">
 		<div class="row">
 			<div class="col col-md-6">
@@ -295,8 +304,8 @@
 			</div>
 			<div class="col col-md-6 text-right">
 				@if ($canManage)
-					@if (count($group->unixgroups) > 0)
-						@if (count($group->unixgroups) == 29)
+					@if (count($unixgroups) > 0)
+						@if ($used == 26)
 							<span class="fa fa-exclamation-triangle text-warning tip" aria-hidden="true" title="Max number of custom unix groups reached"></span><span class="sr-only">Max number of custom unix groups reached</span>
 							<button class="btn btn-default btn-sm" disabled="disabled">
 								<span class="fa fa-plus-circle" aria-hidden="true"></span> Add New Unix Group
@@ -351,7 +360,7 @@
 			</ul>
 		</div>
 
-		@if ($group->unixgroup && count($group->unixgroups) == 0 && $canManage)
+		@if ($group->unixgroup && count($unixgroups) == 0 && $canManage)
 			<div id="INPUT_groupsbutton">
 				<p class="text-center">
 					<button class="btn btn-secondary create-default-unix-groups" data-api="{{ route('api.unixgroups.create') }}" data-group="{{ $group->id }}" data-value="{{ $group->unixgroup }}" data-all-groups="1" id="INPUT_groupsbutton_{{ $group->id }}">
@@ -365,13 +374,7 @@
 			</div>
 		@endif
 
-		@php
-		$unixgroups = $group->unixgroups()->orderBy('longname', 'asc')->get();
-		@endphp
 		@if (count($unixgroups) > 0)
-			@php
-			$used = 0;
-			@endphp
 			<table id="actmaint_info" class="table table-hover {{ ($group->id > 1 && !$group->unixgroup ? 'hide' : '') }}">
 				<caption class="sr-only">Unix Groups</caption>
 				<thead>
@@ -395,11 +398,6 @@
 							@if ($canManage)
 							<td class="text-right">
 								@if (!preg_match("/rcs[0-9]{4}[0-9]/", $unixgroup->shortname) || auth()->user()->can('manage groups'))
-									@php
-									if (!preg_match("/rcs[0-9]{4}[0-9]/", $unixgroup->shortname)):
-										$used++;
-									endif;
-									@endphp
 									<a href="{{ route('site.users.account.section', ['section' => 'groups', 'delete' => $unixgroup->id]) }}"
 										class="delete delete-unix-group remove-unixgroup"
 										data-value="{{ $group->id }}"
@@ -432,7 +430,7 @@
 			</table>
 			<div class="row">
 				<div class="col-md-9">
-					<span class="text-sm text-muted">{{ $used }} custom unix {{ $used == 1 ? 'group' : 'groups' }} (of 26 allowed, not including base, <code>-data</code>, and <code>-apps</code>).</span>
+					<span class="text-sm text-muted">{{ $used }} custom unix {{ $used == 1 ? 'group' : 'groups' }} (of 26 allowed, not including base, <code>-data</code>, or <code>-apps</code>).</span>
 				</div>
 				<div class="col-md-3 text-right">
 					<button class="btn btn-sm reveal" data-toggle=".extendedinfo" data-text="<span class='fa fa-eye-slash'></span> Hide Extended Info</button>"><span class="fa fa-eye"></span> Show Extended Info</button>
