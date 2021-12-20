@@ -55,7 +55,7 @@ class Orders
 			// Get filters
 			$filters = array(
 				'search'    => null,
-				'status'    => 'active',
+				'status'    => '*',
 				'category'  => '*',
 				'start'     => null,
 				'end'       => null,
@@ -304,7 +304,7 @@ class Orders
 			$account = $row->purchasewbse;
 			$account = $account ?: $row->purchaseio;
 
-			$content = '<a href="' . route('site.orders.read', ['id' => $row->orderid]) . '">' . trans('orders::orders.purchase account waiting approval', ['order' => $row->orderid, 'account' => $account]) . '</a>';
+			$content = '<a href="' . route('site.orders.read', ['id' => $row->orderid, 'status' => '*']) . '">' . trans('orders::orders.purchase account waiting approval', ['order' => $row->orderid, 'account' => $account]) . '</a>';
 
 			$event->addNotification(new Notification($title, $content));
 		}
