@@ -236,7 +236,8 @@ class AuthprimaryLdap
 						'cn'            => $conf['auth'] ? $user->name : '-',
 						'sn'            => $conf['auth'] ? $user->surname : '-',
 						'loginShell'    => $conf['auth'] ? $user->loginShell : '/bin/false',
-						'homeDirectory' => $conf['auth'] ? '/home/' . $user->username : '/dev/null',
+						//'homeDirectory' => $conf['auth'] ? '/home/' . $user->username : '/dev/null',
+						'homeDirectory' => '/home/' . $user->username,
 					];
 
 					$entry = $ldap->make()->user($data);
