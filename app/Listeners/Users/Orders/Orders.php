@@ -47,7 +47,7 @@ class Orders
 		if (auth()->user()->id != $user->id)
 		{
 			$r['u'] = $user->id;
-			$route = route('site.orders.index', ['userid' => $user->id]);
+			$route = route('site.orders.index', ['userid' => $user->id, 'status' => '*']);
 		}
 
 		/*if ($event->getActive() == 'orders')
@@ -304,7 +304,7 @@ class Orders
 			$account = $row->purchasewbse;
 			$account = $account ?: $row->purchaseio;
 
-			$content = '<a href="' . route('site.orders.read', ['id' => $row->orderid, 'status' => '*']) . '">' . trans('orders::orders.purchase account waiting approval', ['order' => $row->orderid, 'account' => $account]) . '</a>';
+			$content = '<a href="' . route('site.orders.read', ['id' => $row->orderid]) . '">' . trans('orders::orders.purchase account waiting approval', ['order' => $row->orderid, 'account' => $account]) . '</a>';
 
 			$event->addNotification(new Notification($title, $content));
 		}
