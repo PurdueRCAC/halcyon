@@ -231,6 +231,169 @@
 													</div>
 												</div>
 
+												<div class="opblock-section">
+													<div class="opblock-section-header">
+														<div class="tab-header">
+															<h4 class="opblock-title">{{ trans('core::docs.example') }}</h4>
+														</div>
+													</div>
+													<div class="response-container">
+														<ul class="nav nav-tabs" role="tablist">
+															<li class="nav-item"><a class="nav-link active" href="#{{ $key }}-{{ strtolower($endpoint['method']) }}-curl" id="{{ $key }}-{{ strtolower($endpoint['method']) }}-curl-tab">cURL</a></li>
+															<li class="nav-item"><a class="nav-link" href="#{{ $key }}-{{ strtolower($endpoint['method']) }}-python">Python</a></li>
+															<li class="nav-item"><a class="nav-link" href="#{{ $key }}-{{ strtolower($endpoint['method']) }}-php">PHP</a></li>
+															<li class="nav-item"><a class="nav-link" href="#{{ $key }}-{{ strtolower($endpoint['method']) }}-js">JavaScript</a></li>
+														</ul>
+														<div class="tab-content">
+														<div class="tab-pane active" role="tabpanel" aria-labelledby="{{ $key }}-{{ strtolower($endpoint['method']) }}-curl-tab" id="{{ $key }}-{{ strtolower($endpoint['method']) }}-curl">
+															<?php if (strtolower($endpoint['method']) == 'post' || strtolower($endpoint['method']) == 'put') { ?>
+																<pre>curl -d '{"key1":"value1", "key2":"value2"}' -X <?php echo strtoupper($endpoint['method']); ?> --H 'Accept: application/json' '<?php echo $server['url'] . $endpoint['uri']; ?>'</pre>
+															<?php } elseif (strtolower($endpoint['method']) == 'get') { ?>
+																<pre>curl -X <?php echo strtoupper($endpoint['method']); ?> --H 'Accept: application/json' '<?php echo $server['url'] . $endpoint['uri']; ?>'</pre>
+															<?php } elseif (strtolower($endpoint['method']) == 'delete') { ?>
+																<pre>curl -X <?php echo strtoupper($endpoint['method']); ?> '<?php echo $server['url'] . $endpoint['uri']; ?>'</pre>
+															<?php } ?>
+														</div>
+														<div class="tab-pane" role="tabpanel" aria-labelledby="{{ $key }}-{{ strtolower($endpoint['method']) }}-python-tab" id="{{ $key }}-{{ strtolower($endpoint['method']) }}-python">
+															<?php if (strtolower($endpoint['method']) == 'post' || strtolower($endpoint['method']) == 'put') { ?>
+																<pre>import requests
+from requests.structures import CaseInsensitiveDict
+
+url = "<?php echo $server['url'] . $endpoint['uri']; ?>"
+
+headers = CaseInsensitiveDict()
+headers["Accept"] = "application/json"
+
+data = '{"key1":"value1","key2":"value2"}'
+
+response = requests.<?php echo strtolower($endpoint['method']); ?>(url, headers=headers, data=data)
+print(response.status_code)</pre>
+															<?php } elseif (strtolower($endpoint['method']) == 'get') { ?>
+																<pre>import requests
+from requests.structures import CaseInsensitiveDict
+
+url = "<?php echo $server['url'] . $endpoint['uri']; ?>"
+
+headers = CaseInsensitiveDict()
+headers["Accept"] = "application/json"
+
+response = requests.<?php echo strtolower($endpoint['method']); ?>(url, headers=headers)
+print(response.status_code)</pre>
+															<?php } elseif (strtolower($endpoint['method']) == 'delete') { ?>
+																<pre>import requests
+
+url = "<?php echo $server['url'] . $endpoint['uri']; ?>"
+response = requests.<?php echo strtolower($endpoint['method']); ?>(url)
+print(response.status_code)</pre>
+															<?php } ?>
+														</div>
+														<div class="tab-pane" role="tabpanel" aria-labelledby="{{ $key }}-{{ strtolower($endpoint['method']) }}-php-tab" id="{{ $key }}-{{ strtolower($endpoint['method']) }}-php">
+															<?php if (strtolower($endpoint['method']) == 'post' || strtolower($endpoint['method']) == 'put') { ?>
+																<pre>&lt;?php
+$url = '<?php echo $server['url'] . $endpoint['uri']; ?>';
+$curl = curl_init($url);
+curl_setopt($curl, CURLOPT_URL, $url);
+<?php if (strtolower($endpoint['method']) == 'post') { ?>
+curl_setopt($curl, CURLOPT_POST, true);
+<?php } elseif (strtolower($endpoint['method']) == 'put') { ?>
+curl_setopt($curl, CURLOPT_PUT, true);
+<?php } ?>
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+$headers = array(
+   "Content-Type: application/json",
+);
+curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+$data = '{"key1":"value1","key2":"value2"}';
+curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+$response = curl_exec($curl);
+curl_close($curl);
+
+print_r($response)</pre>
+															<?php } elseif (strtolower($endpoint['method']) == 'get') { ?>
+																<pre>&lt;?php
+$url = '<?php echo $server['url'] . $endpoint['uri']; ?>';
+$curl = curl_init($url);
+curl_setopt($curl, CURLOPT_URL, $url);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+$headers = array(
+   "Content-Type: application/json",
+);
+curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+$response = curl_exec($curl);
+curl_close($curl);
+
+print_r($response)</pre>
+															<?php } elseif (strtolower($endpoint['method']) == 'delete') { ?>
+																<pre>&lt;?php
+$url = '<?php echo $server['url'] . $endpoint['uri']; ?>';
+$curl = curl_init($url);
+curl_setopt($curl, CURLOPT_URL, $url);
+curl_setopt($curl, CURLOPT_DELETE, true);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($curl);
+curl_close($curl);
+
+print_r($response)</pre>
+															<?php } ?>
+														</div>
+														<div class="tab-pane" role="tabpanel" aria-labelledby="{{ $key }}-{{ strtolower($endpoint['method']) }}-js-tab" id="{{ $key }}-{{ strtolower($endpoint['method']) }}-js">
+															<?php if (strtolower($endpoint['method']) == 'post' || strtolower($endpoint['method']) == 'put') { ?>
+																<pre>const url = '<?php echo $server['url'] . $endpoint['uri']; ?>';
+
+const data = {
+    key1: "value1",
+    key2: "value2"
+};
+
+fetch(url, {
+        method: '<?php echo strtoupper($endpoint['method']); ?>',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch((error) => {
+        console.error('Error:', error);
+    });</pre>
+															<?php } elseif (strtolower($endpoint['method']) == 'get') { ?>
+																<pre>const url = '<?php echo $server['url'] . $endpoint['uri']; ?>';
+
+fetch(url, {
+        method: '<?php echo strtoupper($endpoint['method']); ?>',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+</pre>
+															<?php } elseif (strtolower($endpoint['method']) == 'delete') { ?>
+																<pre>const url = '<?php echo $server['url'] . $endpoint['uri']; ?>';
+
+fetch(url, {
+        method: '<?php echo strtoupper($endpoint['method']); ?>'
+    })
+    .then(response => response.json())
+    .catch((error) => {
+        console.error('Error:', error);
+    });</pre>
+															<?php } ?>
+														</div>
+														</div>
+													</div>
+												</div>
+
 												@if (isset($endpoint['response']) && $endpoint['response'])
 												<div class="opblock-section">
 													<div class="opblock-section-header">
