@@ -15,7 +15,7 @@ use App\Modules\Groups\Models\GroupDepartment;
  * 
  * Relationship mappings of a group to departments
  * 
- * @apiUri    /api/groups/{group}/departments
+ * @apiUri    /groups/{group}/departments
  */
 class GroupDepartmentsController extends Controller
 {
@@ -23,7 +23,7 @@ class GroupDepartmentsController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/groups/{group}/departments
+	 * @apiUri    /groups/{group}/departments
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "group",
@@ -131,7 +131,7 @@ class GroupDepartmentsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/groups/{group}/departments
+	 * @apiUri    /groups/{group}/departments
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -207,7 +207,7 @@ class GroupDepartmentsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/groups/{group}/departments/{id}
+	 * @apiUri    /groups/{group}/departments/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -252,7 +252,7 @@ class GroupDepartmentsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/groups/{group}/departments/{id}
+	 * @apiUri    /groups/{group}/departments/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -348,7 +348,7 @@ class GroupDepartmentsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/groups/{group}/departments/{id}
+	 * @apiUri    /groups/{group}/departments/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

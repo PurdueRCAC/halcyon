@@ -23,7 +23,7 @@ use Carbon\Carbon;
 /**
  * Articles
  *
- * @apiUri    /api/news
+ * @apiUri    /news
  */
 class ArticlesController extends Controller
 {
@@ -31,7 +31,7 @@ class ArticlesController extends Controller
 	 * Display a listing of news articles
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/news
+	 * @apiUri    /news
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "start",
@@ -413,7 +413,7 @@ class ArticlesController extends Controller
 	 * Create a news article
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/news
+	 * @apiUri    /news
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -635,7 +635,7 @@ class ArticlesController extends Controller
 	 * Read a news article
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/news/{id}
+	 * @apiUri    /news/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -667,7 +667,7 @@ class ArticlesController extends Controller
 	 * Retrieve news article view stats
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/news/{id}/views
+	 * @apiUri    /news/{id}/views
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -702,7 +702,7 @@ class ArticlesController extends Controller
 	 * Update a news article
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/news/{id}
+	 * @apiUri    /news/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -955,7 +955,7 @@ class ArticlesController extends Controller
 	 * Delete a news article
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/news/{id}
+	 * @apiUri    /news/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -993,7 +993,7 @@ class ArticlesController extends Controller
 	 * Preview a news article
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/news/preview
+	 * @apiUri    /news/preview
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -1051,7 +1051,7 @@ class ArticlesController extends Controller
 	 * Email a news article
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/news/{id}/email
+	 * @apiUri    /news/{id}/email
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

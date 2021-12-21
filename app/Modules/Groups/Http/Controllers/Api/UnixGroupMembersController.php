@@ -18,7 +18,7 @@ use App\Modules\Users\Models\User;
 /**
  * Unix group members
  *
- * @apiUri    /api/unixgroups/members
+ * @apiUri    /unixgroups/members
  */
 class UnixGroupMembersController extends Controller
 {
@@ -26,7 +26,7 @@ class UnixGroupMembersController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/unixgroups/members
+	 * @apiUri    /unixgroups/members
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -175,7 +175,7 @@ class UnixGroupMembersController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/unixgroups/members
+	 * @apiUri    /unixgroups/members
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -347,7 +347,7 @@ class UnixGroupMembersController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/unixgroups/members/{id}
+	 * @apiUri    /unixgroups/members/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -396,7 +396,7 @@ class UnixGroupMembersController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/unixgroups/members/{id}
+	 * @apiUri    /unixgroups/members/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -486,7 +486,7 @@ class UnixGroupMembersController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/unixgroups/members/{id}
+	 * @apiUri    /unixgroups/members/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

@@ -13,7 +13,7 @@ use App\Modules\News\Http\Resources\UpdateResourceCollection;
 /**
  * Article Updates
  *
- * @apiUri    /api/news/updates
+ * @apiUri    /news/updates
  */
 class UpdatesController extends Controller
 {
@@ -21,7 +21,7 @@ class UpdatesController extends Controller
 	 * Display a listing of news article updates
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/news/updates
+	 * @apiUri    /news/updates
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "newsid",
@@ -142,7 +142,7 @@ class UpdatesController extends Controller
 	 * Create a news article update
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/news/updates
+	 * @apiUri    /news/updates
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -222,7 +222,7 @@ class UpdatesController extends Controller
 	 * Read a news article update
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/news/updates/{id}
+	 * @apiUri    /news/updates/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -269,7 +269,7 @@ class UpdatesController extends Controller
 	 * Update a news article update
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/news/updates/{id}
+	 * @apiUri    /news/updates/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -348,7 +348,7 @@ class UpdatesController extends Controller
 	 * Delete a news article update
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/news/updates/{id}
+	 * @apiUri    /news/updates/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

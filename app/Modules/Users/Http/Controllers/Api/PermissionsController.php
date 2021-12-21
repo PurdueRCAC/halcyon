@@ -11,7 +11,7 @@ use App\Halcyon\Access\Viewlevel as Level;
 /**
  * Permissions
  *
- * @apiUri    /api/users/permissions
+ * @apiUri    /users/permissions
  */
 class PermissionsController extends Controller
 {
@@ -19,7 +19,7 @@ class PermissionsController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/users/permissions
+	 * @apiUri    /users/permissions
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -141,7 +141,7 @@ class PermissionsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/users/permissions/{id}
+	 * @apiUri    /users/permissions/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -258,7 +258,7 @@ class PermissionsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/users/permissions/{id}
+	 * @apiUri    /users/permissions/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

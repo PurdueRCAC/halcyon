@@ -11,7 +11,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 /**
  * Change History
  *
- * @apiUri    /api/history
+ * @apiUri    /history
  */
 class HistoryController extends Controller
 {
@@ -19,7 +19,7 @@ class HistoryController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/history
+	 * @apiUri    /history
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "action",
@@ -160,7 +160,7 @@ class HistoryController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/history/{id}
+	 * @apiUri    /history/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

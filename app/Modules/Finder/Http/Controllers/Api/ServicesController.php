@@ -14,7 +14,7 @@ use App\Modules\Finder\Models\ServiceField;
 /**
  * Services
  *
- * @apiUri    /api/finder/services
+ * @apiUri    /finder/services
  */
 class ServicesController extends Controller
 {
@@ -22,7 +22,7 @@ class ServicesController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/finder/services
+	 * @apiUri    /finder/services
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "parentid",
@@ -182,7 +182,7 @@ class ServicesController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/finder/services
+	 * @apiUri    /finder/services
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -297,7 +297,7 @@ class ServicesController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/finder/services/{id}
+	 * @apiUri    /finder/services/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -345,7 +345,7 @@ class ServicesController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/finder/services/{id}
+	 * @apiUri    /finder/services/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -486,7 +486,7 @@ class ServicesController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/finder/services/{id}
+	 * @apiUri    /finder/services/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

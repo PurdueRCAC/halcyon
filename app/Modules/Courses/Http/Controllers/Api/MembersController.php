@@ -18,7 +18,7 @@ use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 /**
  * Account Members
  *
- * @apiUri    /api/courses/members
+ * @apiUri    /courses/members
  */
 class MembersController extends Controller
 {
@@ -589,7 +589,7 @@ class MembersController extends Controller
 	 * Import
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/courses/members/import
+	 * @apiUri    /courses/members/import
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "id",

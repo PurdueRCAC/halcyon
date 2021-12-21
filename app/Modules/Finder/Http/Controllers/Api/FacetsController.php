@@ -13,7 +13,7 @@ use App\Modules\Finder\Models\ServiceFacet;
 /**
  * Facets
  *
- * @apiUri    /api/finder/facets
+ * @apiUri    /finder/facets
  */
 class FacetsController extends Controller
 {
@@ -21,7 +21,7 @@ class FacetsController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/finder/facets
+	 * @apiUri    /finder/facets
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "parentid",
@@ -167,7 +167,7 @@ class FacetsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/finder/facets
+	 * @apiUri    /finder/facets
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -278,7 +278,7 @@ class FacetsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/finder/facets/{id}
+	 * @apiUri    /finder/facets/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -329,7 +329,7 @@ class FacetsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/finder/facets/{id}
+	 * @apiUri    /finder/facets/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -498,7 +498,7 @@ class FacetsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/finder/facets/{id}
+	 * @apiUri    /finder/facets/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

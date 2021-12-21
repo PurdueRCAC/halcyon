@@ -19,7 +19,7 @@ use App\Modules\Orders\Http\Resources\OrderResourceCollection;
 /**
  * Orders
  *
- * @apiUri    /api/orders
+ * @apiUri    /orders
  */
 class OrdersController extends Controller
 {
@@ -27,7 +27,7 @@ class OrdersController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/orders
+	 * @apiUri    /orders
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "state",
@@ -322,7 +322,7 @@ class OrdersController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/orders
+	 * @apiUri    /orders
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -591,7 +591,7 @@ class OrdersController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/orders/{id}
+	 * @apiUri    /orders/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -622,7 +622,7 @@ class OrdersController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/orders/{id}
+	 * @apiUri    /orders/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -821,7 +821,7 @@ class OrdersController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/orders/{id}
+	 * @apiUri    /orders/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

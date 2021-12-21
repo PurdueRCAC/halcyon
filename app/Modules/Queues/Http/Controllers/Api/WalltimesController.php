@@ -13,7 +13,7 @@ use App\Modules\Queues\Models\Walltime;
 /**
  * Queue Walltimes
  *
- * @apiUri    /api/queues/walltimes
+ * @apiUri    /queues/walltimes
  */
 class WalltimesController extends Controller
 {
@@ -21,7 +21,7 @@ class WalltimesController extends Controller
 	 * Display a listing of queue walltimes.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/walltimes
+	 * @apiUri    /queues/walltimes
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -162,7 +162,7 @@ class WalltimesController extends Controller
 	 * Create a queue walltime
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/queues/walltimes
+	 * @apiUri    /queues/walltimes
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -256,7 +256,7 @@ class WalltimesController extends Controller
 	 * Read a queue walltime
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/walltimes/{id}
+	 * @apiUri    /queues/walltimes/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -295,7 +295,7 @@ class WalltimesController extends Controller
 	 * Update a queue walltime
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/queues/walltimes/{id}
+	 * @apiUri    /queues/walltimes/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -392,7 +392,7 @@ class WalltimesController extends Controller
 	 * Delete a queue walltime
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/queues/walltimes/{id}
+	 * @apiUri    /queues/walltimes/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

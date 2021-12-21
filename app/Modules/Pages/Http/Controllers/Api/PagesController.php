@@ -13,7 +13,7 @@ use App\Modules\Pages\Http\Resources\PageResourceCollection;
 /**
  * Pages
  *
- * @apiUri    /api/pages
+ * @apiUri    /pages
  */
 class PagesController extends Controller
 {
@@ -21,7 +21,7 @@ class PagesController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/pages
+	 * @apiUri    /pages
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
@@ -206,7 +206,7 @@ class PagesController extends Controller
 	 * Create an entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/pages
+	 * @apiUri    /pages
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -341,7 +341,7 @@ class PagesController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/pages/{id}
+	 * @apiUri    /pages/{id}
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "id",
@@ -392,7 +392,7 @@ class PagesController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/pages/{id}
+	 * @apiUri    /pages/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -546,7 +546,7 @@ class PagesController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/pages/{id}
+	 * @apiUri    /pages/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",

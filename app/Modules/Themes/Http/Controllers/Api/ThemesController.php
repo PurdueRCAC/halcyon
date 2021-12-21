@@ -13,7 +13,7 @@ use App\Modules\Themes\Models\Theme;
 /**
  * Themes
  *
- * @apiUri    /api/themes
+ * @apiUri    /themes
  */
 class ThemesController extends Controller
 {
@@ -21,7 +21,7 @@ class ThemesController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/themes
+	 * @apiUri    /themes
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "client_id",
@@ -222,7 +222,7 @@ class ThemesController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/themes
+	 * @apiUri    /themes
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "title",
@@ -351,7 +351,7 @@ class ThemesController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/themes/{id}
+	 * @apiUri    /themes/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -420,7 +420,7 @@ class ThemesController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/themes/{id}
+	 * @apiUri    /themes/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -558,7 +558,7 @@ class ThemesController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/themes/{id}
+	 * @apiUri    /themes/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

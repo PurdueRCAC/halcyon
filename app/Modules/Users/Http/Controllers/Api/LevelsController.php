@@ -11,7 +11,7 @@ use App\Halcyon\Access\Viewlevel as Level;
 /**
  * View levels
  *
- * @apiUri    /api/users/levels
+ * @apiUri    /users/levels
  */
 class LevelsController extends Controller
 {
@@ -19,7 +19,7 @@ class LevelsController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/users/levels
+	 * @apiUri    /users/levels
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -171,7 +171,7 @@ class LevelsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/users/levels
+	 * @apiUri    /users/levels
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -239,7 +239,7 @@ class LevelsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/users/levels/{id}
+	 * @apiUri    /users/levels/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -285,7 +285,7 @@ class LevelsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/users/levels/{id}
+	 * @apiUri    /users/levels/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -366,7 +366,7 @@ class LevelsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/users/levels/{id}
+	 * @apiUri    /users/levels/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

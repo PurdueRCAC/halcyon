@@ -14,7 +14,7 @@ use App\Modules\Groups\Models\Motd;
 /**
  * Message of the day
  *
- * @apiUri    /api/groups/motd
+ * @apiUri    /groups/motd
  */
 class MotdController extends Controller
 {
@@ -22,7 +22,7 @@ class MotdController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/groups/motd
+	 * @apiUri    /groups/motd
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
@@ -145,7 +145,7 @@ class MotdController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/groups/motd
+	 * @apiUri    /groups/motd
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -238,7 +238,7 @@ class MotdController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/groups/motd/{id}
+	 * @apiUri    /groups/motd/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -283,7 +283,7 @@ class MotdController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/groups/motd/{id}
+	 * @apiUri    /groups/motd/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -382,7 +382,7 @@ class MotdController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/groups/motd/{id}
+	 * @apiUri    /groups/motd/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

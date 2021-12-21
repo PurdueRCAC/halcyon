@@ -11,7 +11,7 @@ use App\Modules\Users\Models\Facet;
 /**
  * User facets
  * 
- * @apiUri    /api/users/facets
+ * @apiUri    /users/facets
  */
 class FacetsController extends Controller
 {
@@ -19,7 +19,7 @@ class FacetsController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/users/facets
+	 * @apiUri    /users/facets
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -157,7 +157,7 @@ class FacetsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/users/facets
+	 * @apiUri    /users/facets
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -283,7 +283,7 @@ class FacetsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/users/facets/{id}
+	 * @apiUri    /users/facets/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -318,7 +318,7 @@ class FacetsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/users/facets/{id}
+	 * @apiUri    /users/facets/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -384,7 +384,7 @@ class FacetsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/users/facets/{id}
+	 * @apiUri    /users/facets/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

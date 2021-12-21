@@ -13,7 +13,7 @@ use App\Modules\Tags\Http\Resources\TagResource;
 /**
  * Tags
  *
- * @apiUri    /api/tags
+ * @apiUri    /tags
  */
 class TagsController extends Controller
 {
@@ -21,7 +21,7 @@ class TagsController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/tags
+	 * @apiUri    /tags
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
@@ -156,7 +156,7 @@ class TagsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/tags
+	 * @apiUri    /tags
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -262,7 +262,7 @@ class TagsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/tags/{id}
+	 * @apiUri    /tags/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -314,7 +314,7 @@ class TagsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/tags/{id}
+	 * @apiUri    /tags/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -425,7 +425,7 @@ class TagsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/tags/{id}
+	 * @apiUri    /tags/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

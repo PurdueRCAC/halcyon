@@ -15,7 +15,7 @@ use Carbon\Carbon;
 /**
  * Queue Loans
  *
- * @apiUri    /api/queues/loans
+ * @apiUri    /queues/loans
  */
 class LoansController extends Controller
 {
@@ -23,7 +23,7 @@ class LoansController extends Controller
 	 * Display a listing of purchases for a queue
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/loans
+	 * @apiUri    /queues/loans
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -186,7 +186,7 @@ class LoansController extends Controller
 	 * Create a queue purchase
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/queues/loans
+	 * @apiUri    /queues/loans
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -452,7 +452,7 @@ class LoansController extends Controller
 	 * Read a queue
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/loans/{id}
+	 * @apiUri    /queues/loans/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -487,7 +487,7 @@ class LoansController extends Controller
 	 * Update a queue
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/queues/loans/{id}
+	 * @apiUri    /queues/loans/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -784,7 +784,7 @@ class LoansController extends Controller
 	 * Delete a queue
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/queues/loans/{id}
+	 * @apiUri    /queues/loans/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

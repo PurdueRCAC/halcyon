@@ -13,7 +13,7 @@ use App\Modules\Impact\Models\Constant;
 /**
  * Impact Constants
  *
- * @apiUri    /api/impact/constants
+ * @apiUri    /impact/constants
  */
 class ConstantsController extends Controller
 {
@@ -21,7 +21,7 @@ class ConstantsController extends Controller
 	 * Display a listing of constants
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/impact/constants
+	 * @apiUri    /impact/constants
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
@@ -130,7 +130,7 @@ class ConstantsController extends Controller
 	 * Create a constant
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/impact/constants
+	 * @apiUri    /impact/constants
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -199,7 +199,7 @@ class ConstantsController extends Controller
 	 * Retrieve a constant
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/impact/constants/{id}
+	 * @apiUri    /impact/constants/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -223,7 +223,7 @@ class ConstantsController extends Controller
 	 * Update a constant
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/impact/constants/{id}
+	 * @apiUri    /impact/constants/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -311,7 +311,7 @@ class ConstantsController extends Controller
 	 * Delete a constant
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/impact/constants/{id}
+	 * @apiUri    /impact/constants/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

@@ -15,7 +15,7 @@ use App\Modules\Listeners\Http\Resources\ListenerResourceCollection;
 /**
  * Listeners
  *
- * @apiUri    /api/listeners
+ * @apiUri    /listeners
  */
 class ListenersController extends Controller
 {
@@ -23,7 +23,7 @@ class ListenersController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/listeners
+	 * @apiUri    /listeners
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -223,7 +223,7 @@ class ListenersController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/listeners
+	 * @apiUri    /listeners
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -350,7 +350,7 @@ class ListenersController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/listeners/{id}
+	 * @apiUri    /listeners/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -407,7 +407,7 @@ class ListenersController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/listeners/{id}
+	 * @apiUri    /listeners/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -549,7 +549,7 @@ class ListenersController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/listeners/{id}
+	 * @apiUri    /listeners/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

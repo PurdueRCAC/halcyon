@@ -13,7 +13,7 @@ use App\Modules\Groups\Models\Department;
 /**
  * Departments
  *
- * @apiUri    /api/groups/departments
+ * @apiUri    /groups/departments
  */
 class DepartmentsController extends Controller
 {
@@ -21,7 +21,7 @@ class DepartmentsController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/groups/departments
+	 * @apiUri    /groups/departments
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "parentid",
@@ -154,7 +154,7 @@ class DepartmentsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/groups/departments
+	 * @apiUri    /groups/departments
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -232,7 +232,7 @@ class DepartmentsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/groups/departments/{id}
+	 * @apiUri    /groups/departments/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -277,7 +277,7 @@ class DepartmentsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/groups/departments/{id}
+	 * @apiUri    /groups/departments/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -373,7 +373,7 @@ class DepartmentsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/groups/departments/{id}
+	 * @apiUri    /groups/departments/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

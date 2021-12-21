@@ -13,7 +13,7 @@ use App\Modules\Queues\Models\SchedulerReservation;
 /**
  * Scheduler Reservations
  *
- * @apiUri    /api/queues/schedulerreservations
+ * @apiUri    /queues/schedulerreservations
  */
 class SchedulerReservationsController extends Controller
 {
@@ -21,7 +21,7 @@ class SchedulerReservationsController extends Controller
 	 * Display a listing of queue scheduler reservations
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/schedulerreservations
+	 * @apiUri    /queues/schedulerreservations
 	 * @apiParameter {
 	 *      "name":          "limit",
 	 *      "description":   "Number of result to return.",
@@ -98,7 +98,7 @@ class SchedulerReservationsController extends Controller
 	 * Create a queue scheduler reservation
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/queues/schedulerreservations
+	 * @apiUri    /queues/schedulerreservations
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -188,7 +188,7 @@ class SchedulerReservationsController extends Controller
 	 * Read a queue scheduler reservation
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/schedulerreservations/{id}
+	 * @apiUri    /queues/schedulerreservations/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -220,7 +220,7 @@ class SchedulerReservationsController extends Controller
 	 * Update a queue scheduler policy
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/queues/schedulerreservations/{id}
+	 * @apiUri    /queues/schedulerreservations/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -324,7 +324,7 @@ class SchedulerReservationsController extends Controller
 	 * Delete a queue scheduler reservation
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/queues/schedulerreservations/{id}
+	 * @apiUri    /queues/schedulerreservations/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

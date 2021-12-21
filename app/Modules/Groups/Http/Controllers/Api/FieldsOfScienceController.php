@@ -13,7 +13,7 @@ use App\Halcyon\Models\FieldOfScience;
 /**
  * Fields of science
  *
- * @apiUri    /api/groups/fieldsofscience
+ * @apiUri    /groups/fieldsofscience
  */
 class FieldsOfScienceController extends Controller
 {
@@ -21,7 +21,7 @@ class FieldsOfScienceController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/groups/fieldsofscience
+	 * @apiUri    /groups/fieldsofscience
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "parentid",
@@ -153,7 +153,7 @@ class FieldsOfScienceController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/groups/fieldsofscience
+	 * @apiUri    /groups/fieldsofscience
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -232,7 +232,7 @@ class FieldsOfScienceController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/groups/fieldsofscience/{id}
+	 * @apiUri    /groups/fieldsofscience/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -277,7 +277,7 @@ class FieldsOfScienceController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/groups/fieldsofscience/{id}
+	 * @apiUri    /groups/fieldsofscience/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -373,7 +373,7 @@ class FieldsOfScienceController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/groups/fieldsofscience/{id}
+	 * @apiUri    /groups/fieldsofscience/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

@@ -15,7 +15,7 @@ use App\Halcyon\Access\Viewlevel;
 /**
  * Menus
  *
- * @apiUri    /api/menus
+ * @apiUri    /menus
  */
 class MenusController extends Controller
 {
@@ -23,7 +23,7 @@ class MenusController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/menus
+	 * @apiUri    /menus
 	 * @apiParameter {
 	 * 		"name":          "client_id",
 	 * 		"description":   "Client (admin = 1|site = 0) ID",
@@ -140,7 +140,7 @@ class MenusController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/menus
+	 * @apiUri    /menus
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -240,7 +240,7 @@ class MenusController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/menus/{id}
+	 * @apiUri    /menus/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -290,7 +290,7 @@ class MenusController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/menus/{id}
+	 * @apiUri    /menus/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -403,7 +403,7 @@ class MenusController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/menus/{id}
+	 * @apiUri    /menus/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

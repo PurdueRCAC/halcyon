@@ -19,7 +19,7 @@ use App\Halcyon\Access\Map;
 /**
  * Users
  *
- * @apiUri    /api/users
+ * @apiUri    /users
  */
 class UsersController extends Controller
 {
@@ -27,7 +27,7 @@ class UsersController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/users
+	 * @apiUri    /users
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -292,7 +292,7 @@ class UsersController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/users
+	 * @apiUri    /users
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -364,7 +364,7 @@ class UsersController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/users/{id}
+	 * @apiUri    /users/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -419,7 +419,7 @@ class UsersController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/users/{id}
+	 * @apiUri    /users/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -647,7 +647,7 @@ class UsersController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/users/{id}
+	 * @apiUri    /users/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

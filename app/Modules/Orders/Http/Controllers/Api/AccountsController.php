@@ -16,7 +16,7 @@ use Carbon\Carbon;
 /**
  * Order Purchase Accounts
  * 
- * @apiUri    /api/orders/accounts
+ * @apiUri    /orders/accounts
  */
 class AccountsController extends Controller
 {
@@ -24,7 +24,7 @@ class AccountsController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/orders/accounts
+	 * @apiUri    /orders/accounts
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "state",
@@ -217,7 +217,7 @@ class AccountsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/orders/accounts
+	 * @apiUri    /orders/accounts
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -425,7 +425,7 @@ class AccountsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/orders/accounts/{id}
+	 * @apiUri    /orders/accounts/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -458,7 +458,7 @@ class AccountsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/orders/accounts/{id}
+	 * @apiUri    /orders/accounts/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -816,7 +816,7 @@ class AccountsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/orders/accounts/{id}
+	 * @apiUri    /orders/accounts/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

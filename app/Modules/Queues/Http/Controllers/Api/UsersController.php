@@ -21,7 +21,7 @@ use App\Modules\Resources\Models\Asset;
 /**
  * Queue Users
  *
- * @apiUri    /api/queues/users
+ * @apiUri    /queues/users
  */
 class UsersController extends Controller
 {
@@ -29,7 +29,7 @@ class UsersController extends Controller
 	 * Display a listing of queue users.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/users
+	 * @apiUri    /queues/users
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -177,7 +177,7 @@ class UsersController extends Controller
 	 * Create a queue user
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/queues/users
+	 * @apiUri    /queues/users
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -358,7 +358,7 @@ class UsersController extends Controller
 	 * Read a queue user
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/users/{id}
+	 * @apiUri    /queues/users/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -392,7 +392,7 @@ class UsersController extends Controller
 	 * Update a queue user
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/queues/users/{id}
+	 * @apiUri    /queues/users/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -530,7 +530,7 @@ class UsersController extends Controller
 	 * Delete a queue user
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/queues/users/{id}
+	 * @apiUri    /queues/users/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

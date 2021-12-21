@@ -19,7 +19,7 @@ use Carbon\Carbon;
 /**
  * Queue Allocations
  *
- * @apiUri    /api/allocations
+ * @apiUri    /allocations
  */
 class AllocationsController extends Controller
 {
@@ -27,7 +27,7 @@ class AllocationsController extends Controller
 	 * Display a listing of the queue.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/allocations
+	 * @apiUri    /allocations
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "state",
@@ -345,7 +345,7 @@ class AllocationsController extends Controller
 	 * Create an allocation
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/allocations
+	 * @apiUri    /allocations
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -383,7 +383,7 @@ class AllocationsController extends Controller
 	 * Update a queue
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/allocations/{id}
+	 * @apiUri    /allocations/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -422,7 +422,7 @@ class AllocationsController extends Controller
 	 * Delete a queue
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/allocations/{id}
+	 * @apiUri    /allocations/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

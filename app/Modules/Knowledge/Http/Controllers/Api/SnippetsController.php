@@ -18,7 +18,7 @@ use Carbon\Carbon;
  * 
  * Re-usable pages. Modifying one may affect multiple pages in the knowledge base.
  * 
- * @apiUri    /api/knowledge/snippets
+ * @apiUri    /knowledge/snippets
  */
 class SnippetsController extends Controller
 {
@@ -26,7 +26,7 @@ class SnippetsController extends Controller
 	 * Display a listing of articles
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/knowledge/snippets
+	 * @apiUri    /knowledge/snippets
 	 * @apiAuthorization  false
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -204,7 +204,7 @@ class SnippetsController extends Controller
 	 * Create an entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/knowledge/snippets
+	 * @apiUri    /knowledge/snippets
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -411,7 +411,7 @@ class SnippetsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/knowledge/snippets/{id}
+	 * @apiUri    /knowledge/snippets/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -473,7 +473,7 @@ class SnippetsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/knowledge/snippets/{id}
+	 * @apiUri    /knowledge/snippets/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -688,7 +688,7 @@ class SnippetsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/knowledge/snippets/{id}
+	 * @apiUri    /knowledge/snippets/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

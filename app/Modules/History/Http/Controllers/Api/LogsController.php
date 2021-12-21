@@ -11,7 +11,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 /**
  * Logs
  *
- * @apiUri    /api/logs
+ * @apiUri    /logs
  */
 class LogsController extends Controller
 {
@@ -19,7 +19,7 @@ class LogsController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/logs
+	 * @apiUri    /logs
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "action",
@@ -215,7 +215,7 @@ class LogsController extends Controller
 	 * Create a news article type
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/news/types
+	 * @apiUri    /news/types
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -391,7 +391,7 @@ class LogsController extends Controller
 	 * Read a news article type
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/news/types/{id}
+	 * @apiUri    /news/types/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

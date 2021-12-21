@@ -13,7 +13,7 @@ use Carbon\Carbon;
 /**
  * Follow Users
  *
- * @apiUri    /api/contactreports/followusers
+ * @apiUri    /contactreports/followusers
  */
 class FollowUsersController extends Controller
 {
@@ -21,7 +21,7 @@ class FollowUsersController extends Controller
 	 * Display a listing of contact reports user followings
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/contactreports/followusers
+	 * @apiUri    /contactreports/followusers
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "targetuserid",
@@ -153,7 +153,7 @@ class FollowUsersController extends Controller
 	 * Create a contact report user following
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/contactreports/followusers
+	 * @apiUri    /contactreports/followusers
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -232,7 +232,7 @@ class FollowUsersController extends Controller
 	 * Retrieve a contact report user following
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/contactreports/followusers/{id}
+	 * @apiUri    /contactreports/followusers/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -280,7 +280,7 @@ class FollowUsersController extends Controller
 	 * Update a contact report user following
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/contactreports/followusers/{id}
+	 * @apiUri    /contactreports/followusers/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -374,7 +374,7 @@ class FollowUsersController extends Controller
 	 * Delete a contact report user following
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/contactreports/followusers/{id}
+	 * @apiUri    /contactreports/followusers/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

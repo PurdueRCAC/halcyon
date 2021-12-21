@@ -15,7 +15,7 @@ use App\Modules\Users\Models\User;
 /**
  * Group Members
  *
- * @apiUri    /api/groups/members
+ * @apiUri    /groups/members
  */
 class MembersController extends Controller
 {
@@ -23,7 +23,7 @@ class MembersController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/groups/members
+	 * @apiUri    /groups/members
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -187,7 +187,7 @@ class MembersController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/groups/members
+	 * @apiUri    /groups/members
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -368,7 +368,7 @@ class MembersController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/groups/members/{id}
+	 * @apiUri    /groups/members/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -428,7 +428,7 @@ class MembersController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/groups/members/{id}
+	 * @apiUri    /groups/members/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -550,7 +550,7 @@ class MembersController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/groups/members/{id}
+	 * @apiUri    /groups/members/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

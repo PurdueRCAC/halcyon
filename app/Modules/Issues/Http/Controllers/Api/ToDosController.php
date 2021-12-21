@@ -15,7 +15,7 @@ use App\Modules\Issues\Models\ToDo;
  * 
  * Checklist items that can have a recurrence such as daily, weekly, etc.
  * 
- * @apiUri    /api/issues/todos
+ * @apiUri    /issues/todos
  */
 class ToDosController extends Controller
 {
@@ -23,7 +23,7 @@ class ToDosController extends Controller
 	 * Display a listing of to-dos
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/issues/todos
+	 * @apiUri    /issues/todos
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
@@ -156,7 +156,7 @@ class ToDosController extends Controller
 	 * Create a new to-do
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/issues/todos
+	 * @apiUri    /issues/todos
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -268,7 +268,7 @@ class ToDosController extends Controller
 	 * Retrieve a to-do
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/issues/todos/{id}
+	 * @apiUri    /issues/todos/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -316,7 +316,7 @@ class ToDosController extends Controller
 	 * Update a to-do
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/issues/todos/{id}
+	 * @apiUri    /issues/todos/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -429,7 +429,7 @@ class ToDosController extends Controller
 	 * Delete a to-do
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/issues/todos/{id}
+	 * @apiUri    /issues/todos/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

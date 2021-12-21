@@ -16,7 +16,7 @@ use App\Modules\Users\Models\User;
 /**
  * Quotas
  *
- * @apiUri    /api/storage/quotas
+ * @apiUri    /storage/quotas
  */
 class QuotasController extends Controller
 {
@@ -27,7 +27,7 @@ class QuotasController extends Controller
 	 * a message is added to the queue to provide the latest info.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/storage/quotas/{username?}
+	 * @apiUri    /storage/quotas/{username?}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

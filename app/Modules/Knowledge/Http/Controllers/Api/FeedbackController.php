@@ -13,7 +13,7 @@ use App\Modules\Knowledge\Models\Feedback;
 /**
  * Feedback
  *
- * @apiUri    /api/knowledge/feedback
+ * @apiUri    /knowledge/feedback
  */
 class FeedbackController extends Controller
 {
@@ -21,7 +21,7 @@ class FeedbackController extends Controller
 	 * Display a listing of feedback
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/knowledge/feedback
+	 * @apiUri    /knowledge/feedback
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "user_id",
@@ -254,7 +254,7 @@ class FeedbackController extends Controller
 	 * Create an entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/knowledge/feedback
+	 * @apiUri    /knowledge/feedback
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -365,7 +365,7 @@ class FeedbackController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/knowledge/feedback/{id}
+	 * @apiUri    /knowledge/feedback/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -420,7 +420,7 @@ class FeedbackController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/knowledge/feedback/{id}
+	 * @apiUri    /knowledge/feedback/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -516,7 +516,7 @@ class FeedbackController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/knowledge/feedback/{id}
+	 * @apiUri    /knowledge/feedback/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

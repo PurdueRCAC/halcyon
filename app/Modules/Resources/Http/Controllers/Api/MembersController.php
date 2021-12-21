@@ -29,7 +29,7 @@ use Carbon\Carbon;
 /**
  * Members
  *
- * @apiUri    /api/resources/members
+ * @apiUri    /resources/members
  */
 class MembersController extends Controller
 {
@@ -37,7 +37,7 @@ class MembersController extends Controller
 	 * Read a resource
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/resources/members/{user id}.{resource id}
+	 * @apiUri    /resources/members/{user id}.{resource id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -457,7 +457,7 @@ class MembersController extends Controller
 	 * Create a resource
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/resources/members
+	 * @apiUri    /resources/members
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -627,7 +627,7 @@ class MembersController extends Controller
 	 * Read a resource
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/resources/members/{user id}.{resource id}
+	 * @apiUri    /resources/members/{user id}.{resource id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -720,7 +720,7 @@ class MembersController extends Controller
 	 * Delete a resource
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/resources/members/{user id}.{resource id}
+	 * @apiUri    /resources/members/{user id}.{resource id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

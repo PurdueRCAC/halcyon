@@ -13,7 +13,7 @@ use App\Halcyon\Access\Role;
  * 
  * Authorization roles that permissions can be assigned to.
  * 
- * @apiUri    /api/users/roles
+ * @apiUri    /users/roles
  */
 class RolesController extends Controller
 {
@@ -21,7 +21,7 @@ class RolesController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/users/roles
+	 * @apiUri    /users/roles
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -143,7 +143,7 @@ class RolesController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/users/roles
+	 * @apiUri    /users/roles
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -193,7 +193,7 @@ class RolesController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/users/roles/{id}
+	 * @apiUri    /users/roles/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -220,7 +220,7 @@ class RolesController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/users/roles/{id}
+	 * @apiUri    /users/roles/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -280,7 +280,7 @@ class RolesController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/users/roles/{id}
+	 * @apiUri    /users/roles/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

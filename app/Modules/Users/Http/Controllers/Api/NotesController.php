@@ -13,7 +13,7 @@ use App\Modules\Users\Models\Note;
  * 
  * Administrative notes pertaining to specific users
  * 
- * @apiUri    /api/users/notes
+ * @apiUri    /users/notes
  */
 class NotesController extends Controller
 {
@@ -21,7 +21,7 @@ class NotesController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/users/notes
+	 * @apiUri    /users/notes
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -155,7 +155,7 @@ class NotesController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/users/notes
+	 * @apiUri    /users/notes
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -221,7 +221,7 @@ class NotesController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/users/notes/{id}
+	 * @apiUri    /users/notes/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -248,7 +248,7 @@ class NotesController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/users/notes/{id}
+	 * @apiUri    /users/notes/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -306,7 +306,7 @@ class NotesController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/users/notes/{id}
+	 * @apiUri    /users/notes/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

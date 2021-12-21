@@ -12,7 +12,7 @@ use App\Modules\Finder\Models\Facet;
 /**
  * Finder
  *
- * @apiUri    /api/finder
+ * @apiUri    /finder
  */
 class FinderController extends Controller
 {
@@ -20,7 +20,7 @@ class FinderController extends Controller
 	 * Get settings
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/finder/settings
+	 * @apiUri    /finder/settings
 	 * @apiResponse {
 	 * 		"200": {
 	 * 			"description": "Successful entry modification",
@@ -62,7 +62,7 @@ class FinderController extends Controller
 	 * Get service list
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/finder/servicelist
+	 * @apiUri    /finder/servicelist
 	 * @apiResponse {
 	 * 		"200": {
 	 * 			"description": "Successful entry modification",
@@ -147,7 +147,7 @@ class FinderController extends Controller
 	 * Get facet tree
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/finder/facettree
+	 * @apiUri    /finder/facettree
 	 * @apiResponse {
 	 * 		"200": {
 	 * 			"description": "Successful entry modification",
@@ -226,7 +226,7 @@ class FinderController extends Controller
 	 * Send an email
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/finder/sendmail
+	 * @apiUri    /finder/sendmail
 	 * @apiAuthorization  true
 	 * @apiResponse {
 	 * 		"200": {

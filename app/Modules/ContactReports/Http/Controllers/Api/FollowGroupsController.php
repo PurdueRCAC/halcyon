@@ -13,7 +13,7 @@ use Carbon\Carbon;
 /**
  * Follow Groups
  *
- * @apiUri    /api/contactreports/followgroups
+ * @apiUri    /contactreports/followgroups
  */
 class FollowGroupsController extends Controller
 {
@@ -21,7 +21,7 @@ class FollowGroupsController extends Controller
 	 * Display a listing of contact reports followgroups
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/contactreports/followgroups
+	 * @apiUri    /contactreports/followgroups
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "groupid",
@@ -148,7 +148,7 @@ class FollowGroupsController extends Controller
 	 * Create a group following
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/contactreports/followusers
+	 * @apiUri    /contactreports/followusers
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -230,7 +230,7 @@ class FollowGroupsController extends Controller
 	 * Retrieve a group following record
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/contactreports/followusers/{id}
+	 * @apiUri    /contactreports/followusers/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -281,7 +281,7 @@ class FollowGroupsController extends Controller
 	 * Update a group following
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/contactreports/followusers/{id}
+	 * @apiUri    /contactreports/followusers/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -380,7 +380,7 @@ class FollowGroupsController extends Controller
 	 * Delete a group following
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/contactreports/followusers/{id}
+	 * @apiUri    /contactreports/followusers/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

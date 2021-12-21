@@ -13,7 +13,7 @@ use Carbon\Carbon;
 /**
  * Product Categories
  *
- * @apiUri    /api/orders/categories
+ * @apiUri    /orders/categories
  */
 class CategoriesController extends Controller
 {
@@ -21,7 +21,7 @@ class CategoriesController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/orders/categories
+	 * @apiUri    /orders/categories
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "state",
@@ -175,7 +175,7 @@ class CategoriesController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/orders/categories
+	 * @apiUri    /orders/categories
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -277,7 +277,7 @@ class CategoriesController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/orders/categories/{id}
+	 * @apiUri    /orders/categories/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -309,7 +309,7 @@ class CategoriesController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/orders/categories/{id}
+	 * @apiUri    /orders/categories/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -422,7 +422,7 @@ class CategoriesController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/orders/categories/{id}
+	 * @apiUri    /orders/categories/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

@@ -18,7 +18,7 @@ use App\Modules\Media\Events\FilesUploaded;
 /**
  * Media
  *
- * @apiUri    /api/media
+ * @apiUri    /media
  */
 class MediaController extends Controller
 {
@@ -26,7 +26,7 @@ class MediaController extends Controller
 	 * Display a listing of files
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/media
+	 * @apiUri    /media
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -49,7 +49,7 @@ class MediaController extends Controller
 	 * Get directory tree
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/media/tree
+	 * @apiUri    /media/tree
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -127,7 +127,7 @@ class MediaController extends Controller
 	/**
 	 * Upload
 	 *
-	 * @apiUri    /api/media/upload
+	 * @apiUri    /media/upload
 	 * @apiParameter {
 	 * 		"name":          "disk",
 	 * 		"description":   "Filesystem disk",
@@ -245,8 +245,8 @@ class MediaController extends Controller
 	/**
 	 * Rename/move a file
 	 *
-	 * @apiUri    /api/media/rename
-	 * @apiUri    /api/media/move
+	 * @apiUri    /media/rename
+	 * @apiUri    /media/move
 	 * @apiParameter {
 	 * 		"name":          "disk",
 	 * 		"description":   "Filesystem disk",
@@ -343,7 +343,7 @@ class MediaController extends Controller
 	/**
 	 * Delete a file
 	 *
-	 * @apiUri    /api/media/delete
+	 * @apiUri    /media/delete
 	 * @apiParameter {
 	 * 		"name":          "disk",
 	 * 		"description":   "Filesystem disk",
@@ -404,7 +404,7 @@ class MediaController extends Controller
 	 * Download a file
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/media/download
+	 * @apiUri    /media/download
 	 * @apiParameter {
 	 * 		"name":          "disk",
 	 * 		"description":   "Filesystem disk",
@@ -449,7 +449,7 @@ class MediaController extends Controller
 	 * Get file URL
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/media/url
+	 * @apiUri    /media/url
 	 * @apiParameter {
 	 * 		"name":          "disk",
 	 * 		"description":   "Filesystem disk",

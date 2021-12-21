@@ -16,7 +16,7 @@ use Carbon\Carbon;
 /**
  * Usage
  *
- * @apiUri    /api/storage/usage
+ * @apiUri    /storage/usage
  */
 class UsageController extends Controller
 {

@@ -15,7 +15,7 @@ use App\Modules\Groups\Models\GroupFieldOfScience;
  * 
  * Relationship mappings of a group to fields of science
  * 
- * @apiUri    /api/groups/{group}/fieldsofscience
+ * @apiUri    /groups/{group}/fieldsofscience
  */
 class GroupFieldsOfScienceController extends Controller
 {
@@ -23,7 +23,7 @@ class GroupFieldsOfScienceController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/groups/{group}/fieldsofscience
+	 * @apiUri    /groups/{group}/fieldsofscience
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "group",
@@ -131,7 +131,7 @@ class GroupFieldsOfScienceController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/groups/{group}/fieldsofscience
+	 * @apiUri    /groups/{group}/fieldsofscience
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -208,7 +208,7 @@ class GroupFieldsOfScienceController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/groups/{group}/fieldsofscience/{id}
+	 * @apiUri    /groups/{group}/fieldsofscience/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -254,7 +254,7 @@ class GroupFieldsOfScienceController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/groups/{group}/fieldsofscience/{id}
+	 * @apiUri    /groups/{group}/fieldsofscience/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -351,7 +351,7 @@ class GroupFieldsOfScienceController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/groups/{group}/fieldsofscience/{id}
+	 * @apiUri    /groups/{group}/fieldsofscience/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

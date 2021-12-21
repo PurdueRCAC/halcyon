@@ -16,7 +16,7 @@ use Carbon\Carbon;
 /**
  * Issues
  *
- * @apiUri    /api/issues
+ * @apiUri    /issues
  */
 class IssuesController extends Controller
 {
@@ -24,7 +24,7 @@ class IssuesController extends Controller
 	 * Display a listing of issues
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/issues
+	 * @apiUri    /issues
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
@@ -194,7 +194,7 @@ class IssuesController extends Controller
 	 * Create a new issue
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/issues
+	 * @apiUri    /issues
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -328,7 +328,7 @@ class IssuesController extends Controller
 	 * Retrieve an issue
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/issues/{id}
+	 * @apiUri    /issues/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -381,7 +381,7 @@ class IssuesController extends Controller
 	 * Update an issue
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/issues/{id}
+	 * @apiUri    /issues/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -575,7 +575,7 @@ class IssuesController extends Controller
 	 * Delete an issue
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/issues/{id}
+	 * @apiUri    /issues/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

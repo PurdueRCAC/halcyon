@@ -15,7 +15,7 @@ use Carbon\Carbon;
 /**
  * Pages
  *
- * @apiUri    /api/knowledge
+ * @apiUri    /knowledge
  */
 class PagesController extends Controller
 {
@@ -23,7 +23,7 @@ class PagesController extends Controller
 	 * Display a listing of articles
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/knowledge
+	 * @apiUri    /knowledge
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "parent",
@@ -235,7 +235,7 @@ class PagesController extends Controller
 	 * Create an entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/knowledge
+	 * @apiUri    /knowledge
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -453,7 +453,7 @@ class PagesController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/knowledge/{id}
+	 * @apiUri    /knowledge/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -516,7 +516,7 @@ class PagesController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/knowledge/{id}
+	 * @apiUri    /knowledge/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -743,7 +743,7 @@ class PagesController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/knowledge/{id}
+	 * @apiUri    /knowledge/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

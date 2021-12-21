@@ -15,7 +15,7 @@ use App\Modules\Groups\Events\UnixGroupFetch;
 /**
  * Unix groups
  *
- * @apiUri    /api/unixgroups
+ * @apiUri    /unixgroups
  */
 class UnixGroupsController extends Controller
 {
@@ -23,7 +23,7 @@ class UnixGroupsController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/unixgroups
+	 * @apiUri    /unixgroups
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
@@ -147,7 +147,7 @@ class UnixGroupsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/unixgroups
+	 * @apiUri    /unixgroups
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -363,7 +363,7 @@ class UnixGroupsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/unixgroups/{id}
+	 * @apiUri    /unixgroups/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -433,7 +433,7 @@ class UnixGroupsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/unixgroups/{id}
+	 * @apiUri    /unixgroups/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -652,7 +652,7 @@ class UnixGroupsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/unixgroups/{id}
+	 * @apiUri    /unixgroups/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

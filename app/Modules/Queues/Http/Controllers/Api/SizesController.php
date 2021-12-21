@@ -14,7 +14,7 @@ use Carbon\Carbon;
 /**
  * Queue Purchases
  *
- * @apiUri    /api/queues/sizes
+ * @apiUri    /queues/sizes
  */
 class SizesController extends Controller
 {
@@ -22,7 +22,7 @@ class SizesController extends Controller
 	 * Display a listing of queue sizes
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/sizes
+	 * @apiUri    /queues/sizes
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -150,7 +150,7 @@ class SizesController extends Controller
 	 * Create a queue size
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/queues/sizes
+	 * @apiUri    /queues/sizes
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -440,7 +440,7 @@ class SizesController extends Controller
 	 * Read a queue size
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/sizes/{id}
+	 * @apiUri    /queues/sizes/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -479,7 +479,7 @@ class SizesController extends Controller
 	 * Update a queue size
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/queues/sizes/{id}
+	 * @apiUri    /queues/sizes/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -789,7 +789,7 @@ class SizesController extends Controller
 	 * Delete a queue size
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/queues/sizes/{id}
+	 * @apiUri    /queues/sizes/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

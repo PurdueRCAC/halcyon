@@ -19,7 +19,7 @@ use App\Modules\Resources\Models\Asset;
 /**
  * Queues
  *
- * @apiUri    /api/queues
+ * @apiUri    /queues
  */
 class QueuesController extends Controller
 {
@@ -27,7 +27,7 @@ class QueuesController extends Controller
 	 * Display a listing of the queue.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues
+	 * @apiUri    /queues
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "state",
@@ -255,7 +255,7 @@ class QueuesController extends Controller
 	 * Create a queue
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/queues
+	 * @apiUri    /queues
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -617,7 +617,7 @@ class QueuesController extends Controller
 	 * Read a queue
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/{id}
+	 * @apiUri    /queues/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -649,7 +649,7 @@ class QueuesController extends Controller
 	 * Update a queue
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/queues/{id}
+	 * @apiUri    /queues/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -988,7 +988,7 @@ class QueuesController extends Controller
 	 * Delete a queue
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/queues/{id}
+	 * @apiUri    /queues/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

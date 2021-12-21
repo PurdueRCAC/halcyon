@@ -16,7 +16,7 @@ use Carbon\Carbon;
  * 
  * Comments on an issue.
  * 
- * @apiUri    /api/issues/comments
+ * @apiUri    /issues/comments
  */
 class CommentsController extends Controller
 {
@@ -24,7 +24,7 @@ class CommentsController extends Controller
 	 * Display a listing of issues comments
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/issues/comments
+	 * @apiUri    /issues/comments
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "issueid",
@@ -156,7 +156,7 @@ class CommentsController extends Controller
 	 * Create a issue comment
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/issues/comments
+	 * @apiUri    /issues/comments
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -258,7 +258,7 @@ class CommentsController extends Controller
 	 * Retrieve an issue comment
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/issues/comments/{id}
+	 * @apiUri    /issues/comments/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -307,7 +307,7 @@ class CommentsController extends Controller
 	 * Update an issue comment
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/issues/comments/{id}
+	 * @apiUri    /issues/comments/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -427,7 +427,7 @@ class CommentsController extends Controller
 	 * Delete an issue comment
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/issues/comments/{id}
+	 * @apiUri    /issues/comments/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

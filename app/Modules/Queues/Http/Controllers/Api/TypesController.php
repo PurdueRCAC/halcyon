@@ -13,7 +13,7 @@ use App\Modules\Queues\Models\Type;
 /**
  * Queue Types
  *
- * @apiUri    /api/queues/types
+ * @apiUri    /queues/types
  */
 class TypesController extends Controller
 {
@@ -21,7 +21,7 @@ class TypesController extends Controller
 	 * Display a listing of queue types.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/types
+	 * @apiUri    /queues/types
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 *      "name":          "search",
@@ -123,7 +123,7 @@ class TypesController extends Controller
 	 * Create a queue type
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/queues/types
+	 * @apiUri    /queues/types
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "name",
@@ -177,7 +177,7 @@ class TypesController extends Controller
 	 * Read a queue type
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/types/{id}
+	 * @apiUri    /queues/types/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -210,7 +210,7 @@ class TypesController extends Controller
 	 * Update a queue type
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/queues/types/{id}
+	 * @apiUri    /queues/types/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -277,7 +277,7 @@ class TypesController extends Controller
 	 * Delete a queue type
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/queues/types/{id}
+	 * @apiUri    /queues/types/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

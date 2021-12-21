@@ -19,7 +19,7 @@ use Carbon\Carbon;
 /**
  * Contact Reports
  *
- * @apiUri    /api/contactreports
+ * @apiUri    /contactreports
  */
 class ReportsController extends Controller
 {
@@ -27,7 +27,7 @@ class ReportsController extends Controller
 	 * Display a listing of contact reports
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/contactreports
+	 * @apiUri    /contactreports
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
@@ -274,7 +274,7 @@ class ReportsController extends Controller
 	 * Create a contact report
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/contactreports
+	 * @apiUri    /contactreports
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -500,7 +500,7 @@ class ReportsController extends Controller
 	 * Parse submitted text to see the final result
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/contactreports/preview
+	 * @apiUri    /contactreports/preview
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "body",
@@ -531,7 +531,7 @@ class ReportsController extends Controller
 	 * Retrieve a contact report
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/contactreports/{id}
+	 * @apiUri    /contactreports/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -631,7 +631,7 @@ class ReportsController extends Controller
 	 * Update a contact report
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/contactreports/{id}
+	 * @apiUri    /contactreports/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -977,7 +977,7 @@ class ReportsController extends Controller
 	 * Delete a contact report
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/contactreports/{id}
+	 * @apiUri    /contactreports/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

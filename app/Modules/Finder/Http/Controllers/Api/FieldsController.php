@@ -12,7 +12,7 @@ use App\Modules\Finder\Models\Field;
 /**
  * Fields
  *
- * @apiUri    /api/finder/fields
+ * @apiUri    /finder/fields
  */
 class FieldsController extends Controller
 {
@@ -20,7 +20,7 @@ class FieldsController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/finder/fields
+	 * @apiUri    /finder/fields
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "status",
@@ -148,7 +148,7 @@ class FieldsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/finder/fields
+	 * @apiUri    /finder/fields
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -261,7 +261,7 @@ class FieldsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/finder/fields/{id}
+	 * @apiUri    /finder/fields/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -310,7 +310,7 @@ class FieldsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/finder/fields/{id}
+	 * @apiUri    /finder/fields/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -431,7 +431,7 @@ class FieldsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/finder/fields/{id}
+	 * @apiUri    /finder/fields/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

@@ -12,7 +12,7 @@ use App\Modules\Resources\Models\Batchsystem;
 /**
  * Batch systems
  *
- * @apiUri    /api/resources/batchsystems
+ * @apiUri    /resources/batchsystems
  */
 class BatchsystemsController extends Controller
 {
@@ -20,7 +20,7 @@ class BatchsystemsController extends Controller
 	 * Display a listing of batchsystems.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/resources/batchsystems
+	 * @apiUri    /resources/batchsystems
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
@@ -125,7 +125,7 @@ class BatchsystemsController extends Controller
 	 * Create a batchsystem
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/resources/batchsystems
+	 * @apiUri    /resources/batchsystems
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -171,7 +171,7 @@ class BatchsystemsController extends Controller
 	 * Read a batchsystem
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/resources/batchsystems/{id}
+	 * @apiUri    /resources/batchsystems/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -206,7 +206,7 @@ class BatchsystemsController extends Controller
 	 * Update a batchsystem
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/resources/batchsystems/{id}
+	 * @apiUri    /resources/batchsystems/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -265,7 +265,7 @@ class BatchsystemsController extends Controller
 	 * Delete a batchsystem
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/resources/batchsystems/{id}
+	 * @apiUri    /resources/batchsystems/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

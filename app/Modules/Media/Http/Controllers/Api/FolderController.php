@@ -16,7 +16,7 @@ use App\Modules\Media\Events\DirectoryDeleted;
 /**
  * Folder
  *
- * @apiUri    /api/media/folder
+ * @apiUri    /media/folder
  */
 class FolderController extends Controller
 {
@@ -24,7 +24,7 @@ class FolderController extends Controller
 	 * Display a listing of files
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/media
+	 * @apiUri    /media
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "path",
@@ -56,7 +56,7 @@ class FolderController extends Controller
 	 * Create a directory
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/media
+	 * @apiUri    /media
 	 * @apiParameter {
 	 * 		"name":          "name",
 	 * 		"description":   "Group name",
@@ -157,7 +157,7 @@ class FolderController extends Controller
 	 * Delete a file
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/media/{file}
+	 * @apiUri    /media/{file}
 	 * @apiParameter {
 	 * 		"name":          "path",
 	 * 		"description":   "File path",

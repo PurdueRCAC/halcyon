@@ -12,7 +12,7 @@ use App\Modules\Messages\Models\Type;
 /**
  * Message Types
  *
- * @apiUri    /api/messages/types
+ * @apiUri    /messages/types
  */
 class TypesController extends Controller
 {
@@ -20,7 +20,7 @@ class TypesController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/messages/types
+	 * @apiUri    /messages/types
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
@@ -156,7 +156,7 @@ class TypesController extends Controller
 	 * Create an entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/messages/types
+	 * @apiUri    /messages/types
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "name",
@@ -255,7 +255,7 @@ class TypesController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/messages/types/{id}
+	 * @apiUri    /messages/types/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -298,7 +298,7 @@ class TypesController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/messages/types/{id}
+	 * @apiUri    /messages/types/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -407,7 +407,7 @@ class TypesController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/messages/types/{id}
+	 * @apiUri    /messages/types/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

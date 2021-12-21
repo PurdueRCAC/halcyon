@@ -13,7 +13,7 @@ use App\Modules\Orders\Http\Resources\CartResourceCollection;
 /**
  * Shopping Cart
  *
- * @apiUri    /api/orders/cart
+ * @apiUri    /orders/cart
  */
 class CartController extends Controller
 {
@@ -21,7 +21,7 @@ class CartController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/orders/cart
+	 * @apiUri    /orders/cart
 	 * @param  Request $request
 	 * @return ProductResourcEcollection
 	 */
@@ -37,7 +37,7 @@ class CartController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/orders/cart
+	 * @apiUri    /orders/cart
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -110,7 +110,7 @@ class CartController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/orders/cart/{id}
+	 * @apiUri    /orders/cart/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -145,7 +145,7 @@ class CartController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/orders/cart/{id}
+	 * @apiUri    /orders/cart/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -218,7 +218,7 @@ class CartController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/orders/cart/{id}
+	 * @apiUri    /orders/cart/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

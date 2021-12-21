@@ -13,7 +13,7 @@ use App\Modules\Queues\Models\SchedulerPolicy;
 /**
  * Scheduler Policies
  *
- * @apiUri    /api/queues/schedulerpolicies
+ * @apiUri    /queues/schedulerpolicies
  */
 class SchedulerPoliciesController extends Controller
 {
@@ -21,7 +21,7 @@ class SchedulerPoliciesController extends Controller
 	 * Display a listing of queue schedulers
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/schedulerpolicies
+	 * @apiUri    /queues/schedulerpolicies
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
@@ -121,7 +121,7 @@ class SchedulerPoliciesController extends Controller
 	 * Create a queue scheduler policy
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/queues/schedulerpolicies
+	 * @apiUri    /queues/schedulerpolicies
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -176,7 +176,7 @@ class SchedulerPoliciesController extends Controller
 	 * Read a queue scheduler policy
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/schedulerpolicies/{id}
+	 * @apiUri    /queues/schedulerpolicies/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -208,7 +208,7 @@ class SchedulerPoliciesController extends Controller
 	 * Update a queue scheduler policy
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/queues/schedulerpolicies/{id}
+	 * @apiUri    /queues/schedulerpolicies/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -277,7 +277,7 @@ class SchedulerPoliciesController extends Controller
 	 * Delete a queue scheduler policy
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/queues/schedulerpolicies/{id}
+	 * @apiUri    /queues/schedulerpolicies/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

@@ -16,7 +16,7 @@ use Carbon\Carbon;
 /**
  * Comments
  *
- * @apiUri    /api/contactreports/comments
+ * @apiUri    /contactreports/comments
  */
 class CommentsController extends Controller
 {
@@ -24,7 +24,7 @@ class CommentsController extends Controller
 	 * Display a listing of contact reports comments
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/contactreports/comments
+	 * @apiUri    /contactreports/comments
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "contactreportid",
@@ -180,7 +180,7 @@ class CommentsController extends Controller
 	 * Create a contact report comment
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/contactreports/comments
+	 * @apiUri    /contactreports/comments
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -281,7 +281,7 @@ class CommentsController extends Controller
 	 * Retrieve a contact report comment
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/contactreports/comments/{id}
+	 * @apiUri    /contactreports/comments/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -330,7 +330,7 @@ class CommentsController extends Controller
 	 * Update a contact report comment
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/contactreports/comments/{id}
+	 * @apiUri    /contactreports/comments/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -442,7 +442,7 @@ class CommentsController extends Controller
 	 * Delete a contact report comment
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/contactreports/comments/{id}
+	 * @apiUri    /contactreports/comments/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

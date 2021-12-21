@@ -15,7 +15,7 @@ use App\Modules\Users\Models\Userusername;
 /**
  * Resources
  *
- * @apiUri    /api/resources
+ * @apiUri    /resources
  */
 class ResourcesController extends Controller
 {
@@ -23,7 +23,7 @@ class ResourcesController extends Controller
 	 * Display a listing of the resource.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/resources
+	 * @apiUri    /resources
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
@@ -134,7 +134,7 @@ class ResourcesController extends Controller
 	 * Create a resource
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/resources
+	 * @apiUri    /resources
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -244,7 +244,7 @@ class ResourcesController extends Controller
 	 * Read a resource
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/resources/{id}
+	 * @apiUri    /resources/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -276,7 +276,7 @@ class ResourcesController extends Controller
 	 * Update a resource
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/resources/{id}
+	 * @apiUri    /resources/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -404,7 +404,7 @@ class ResourcesController extends Controller
 	 * Delete a resource
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/resources/{id}
+	 * @apiUri    /resources/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -444,7 +444,7 @@ class ResourcesController extends Controller
 	 * Read a resource
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/resources/{id}
+	 * @apiUri    /resources/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

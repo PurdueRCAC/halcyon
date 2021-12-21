@@ -14,7 +14,7 @@ use Carbon\Carbon;
 /**
  * Message
  *
- * @apiUri    /api/messages
+ * @apiUri    /messages
  */
 class MessagesController extends Controller
 {
@@ -22,7 +22,7 @@ class MessagesController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/messages
+	 * @apiUri    /messages
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "state",
@@ -246,7 +246,7 @@ class MessagesController extends Controller
 	 * Create an entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/messages
+	 * @apiUri    /messages
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -398,7 +398,7 @@ class MessagesController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/messages/{id}
+	 * @apiUri    /messages/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -455,7 +455,7 @@ class MessagesController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/messages/{id}
+	 * @apiUri    /messages/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -722,7 +722,7 @@ class MessagesController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/messages/{id}
+	 * @apiUri    /messages/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

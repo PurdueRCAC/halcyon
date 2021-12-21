@@ -13,7 +13,7 @@ use App\Modules\Storage\Models\Notification\Type;
 /**
  * Notification types
  *
- * @apiUri    /api/storage/notificationtypes
+ * @apiUri    /storage/notificationtypes
  */
 class NotificationTypesController extends Controller
 {

@@ -21,7 +21,7 @@ use App\Modules\Resources\Events\ResourceMemberStatus;
 /**
  * Queue User Requests
  *
- * @apiUri    /api/queues/requests
+ * @apiUri    /queues/requests
  */
 class UserRequestsController extends Controller
 {
@@ -29,7 +29,7 @@ class UserRequestsController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/requests
+	 * @apiUri    /queues/requests
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -169,7 +169,7 @@ class UserRequestsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/queues/requests
+	 * @apiUri    /queues/requests
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -379,7 +379,7 @@ class UserRequestsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/requests/{id}
+	 * @apiUri    /queues/requests/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -412,7 +412,7 @@ class UserRequestsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/queues/requests/{id}
+	 * @apiUri    /queues/requests/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -518,7 +518,7 @@ class UserRequestsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/queues/requests/{id}
+	 * @apiUri    /queues/requests/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

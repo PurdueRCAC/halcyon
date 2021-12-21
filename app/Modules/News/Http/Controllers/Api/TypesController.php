@@ -12,7 +12,7 @@ use App\Modules\News\Models\Type;
 /**
  * Types
  *
- * @apiUri    /api/news/types
+ * @apiUri    /news/types
  */
 class TypesController extends Controller
 {
@@ -20,7 +20,7 @@ class TypesController extends Controller
 	 * Display a listing of news article types
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/news/types
+	 * @apiUri    /news/types
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "tagresources",
@@ -245,7 +245,7 @@ class TypesController extends Controller
 	 * Create a news article type
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/news/types
+	 * @apiUri    /news/types
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -412,7 +412,7 @@ class TypesController extends Controller
 	 * Read a news article type
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/news/types/{id}
+	 * @apiUri    /news/types/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -461,7 +461,7 @@ class TypesController extends Controller
 	 * Update a news article type
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/news/types/{id}
+	 * @apiUri    /news/types/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -630,7 +630,7 @@ class TypesController extends Controller
 	 * Delete a news article type
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/news/types/{id}
+	 * @apiUri    /news/types/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

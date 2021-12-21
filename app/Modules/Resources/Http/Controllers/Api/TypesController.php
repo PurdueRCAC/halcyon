@@ -12,7 +12,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 /**
  * Types
  *
- * @apiUri    /api/resources/types
+ * @apiUri    /resources/types
  */
 class TypesController extends Controller
 {
@@ -20,7 +20,7 @@ class TypesController extends Controller
 	 * Display a listing of resource types.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/resources/types
+	 * @apiUri    /resources/types
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
@@ -126,7 +126,7 @@ class TypesController extends Controller
 	 * Create a resource type
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/resources/types
+	 * @apiUri    /resources/types
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -185,7 +185,7 @@ class TypesController extends Controller
 	 * Read a resource type
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/resources/types/{id}
+	 * @apiUri    /resources/types/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -229,7 +229,7 @@ class TypesController extends Controller
 	 * Update a resource type
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/resources/types/{id}
+	 * @apiUri    /resources/types/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -298,7 +298,7 @@ class TypesController extends Controller
 	 * Delete a resource type
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/resources/types/{id}
+	 * @apiUri    /resources/types/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

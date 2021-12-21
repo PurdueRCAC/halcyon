@@ -16,7 +16,7 @@ use Carbon\Carbon;
 /**
  * Products
  *
- * @apiUri    /api/orders/products
+ * @apiUri    /orders/products
  */
 class ProductsController extends Controller
 {
@@ -24,7 +24,7 @@ class ProductsController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/orders/products
+	 * @apiUri    /orders/products
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "state",
@@ -192,7 +192,7 @@ class ProductsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/orders/products
+	 * @apiUri    /orders/products
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
@@ -382,7 +382,7 @@ class ProductsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/orders/products/{id}
+	 * @apiUri    /orders/products/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -414,7 +414,7 @@ class ProductsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/orders/products/{id}
+	 * @apiUri    /orders/products/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -608,7 +608,7 @@ class ProductsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/orders/products/{id}
+	 * @apiUri    /orders/products/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

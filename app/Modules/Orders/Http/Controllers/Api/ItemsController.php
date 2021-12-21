@@ -18,7 +18,7 @@ use Carbon\Carbon;
  * 
  * Ordered products, their quantities, etc.
  * 
- * @apiUri    /api/orders/items
+ * @apiUri    /orders/items
  */
 class ItemsController extends Controller
 {
@@ -26,7 +26,7 @@ class ItemsController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/orders/items
+	 * @apiUri    /orders/items
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "state",
@@ -235,7 +235,7 @@ class ItemsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/orders/items
+	 * @apiUri    /orders/items
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -393,7 +393,7 @@ class ItemsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/orders/items/{id}
+	 * @apiUri    /orders/items/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -436,7 +436,7 @@ class ItemsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/orders/items/{id}
+	 * @apiUri    /orders/items/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -577,7 +577,7 @@ class ItemsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/orders/items/{id}
+	 * @apiUri    /orders/items/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -632,7 +632,7 @@ class ItemsController extends Controller
 	 * Get recurring item sequence
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/orders/sequence/{id}
+	 * @apiUri    /orders/sequence/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

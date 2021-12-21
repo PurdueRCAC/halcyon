@@ -13,7 +13,7 @@ use App\Modules\Resources\Http\Resources\SubresourceResource;
 /**
  * Sub-resources
  *
- * @apiUri    /api/resources/subresources
+ * @apiUri    /resources/subresources
  */
 class SubresourcesController extends Controller
 {
@@ -21,7 +21,7 @@ class SubresourcesController extends Controller
 	 * Display a listing of the resource.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/resources/subresources/
+	 * @apiUri    /resources/subresources/
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
@@ -140,7 +140,7 @@ class SubresourcesController extends Controller
 	 * Create a resource
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/resources/subresources/
+	 * @apiUri    /resources/subresources/
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -280,7 +280,7 @@ class SubresourcesController extends Controller
 	 * Read a resource
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/resources/subresources/{id}
+	 * @apiUri    /resources/subresources/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -312,7 +312,7 @@ class SubresourcesController extends Controller
 	 * Update a resource
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/resources/subresources/{id}
+	 * @apiUri    /resources/subresources/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -466,7 +466,7 @@ class SubresourcesController extends Controller
 	 * Delete a resource
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/resources/subresources/{id}
+	 * @apiUri    /resources/subresources/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

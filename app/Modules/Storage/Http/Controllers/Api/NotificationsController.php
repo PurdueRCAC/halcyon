@@ -14,7 +14,7 @@ use Carbon\Carbon;
 /**
  * Notifications
  *
- * @apiUri    /api/storage/notifications
+ * @apiUri    /storage/notifications
  */
 class NotificationsController extends Controller
 {

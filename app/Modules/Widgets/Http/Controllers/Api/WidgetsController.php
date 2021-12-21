@@ -19,7 +19,7 @@ use App\Modules\Widgets\Http\Resources\WidgetResourceCollection;
  *
  * Manage content widgets for the site.
  *
- * @apiUri    /api/widgets
+ * @apiUri    /widgets
  */
 class WidgetsController extends Controller
 {
@@ -27,7 +27,7 @@ class WidgetsController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/widgets
+	 * @apiUri    /widgets
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "client_id",
@@ -443,7 +443,7 @@ class WidgetsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/widgets
+	 * @apiUri    /widgets
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "title",
@@ -547,7 +547,7 @@ class WidgetsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/widgets/{id}
+	 * @apiUri    /widgets/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -628,7 +628,7 @@ class WidgetsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/widgets/{id}
+	 * @apiUri    /widgets/{id}
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "title",
@@ -793,7 +793,7 @@ class WidgetsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/widgets/{id}
+	 * @apiUri    /widgets/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

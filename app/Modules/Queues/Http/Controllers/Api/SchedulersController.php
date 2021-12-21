@@ -13,7 +13,7 @@ use App\Modules\Queues\Models\Scheduler;
 /**
  * Schedulers
  *
- * @apiUri    /api/queues/schedulers
+ * @apiUri    /queues/schedulers
  */
 class SchedulersController extends Controller
 {
@@ -21,7 +21,7 @@ class SchedulersController extends Controller
 	 * Display a listing of queue schedulers
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/schedulers
+	 * @apiUri    /queues/schedulers
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -160,7 +160,7 @@ class SchedulersController extends Controller
 	 * Create a scheduler
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/queues/schedulers
+	 * @apiUri    /queues/schedulers
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -283,7 +283,7 @@ class SchedulersController extends Controller
 	 * Read a scheduler
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/queues/schedulers/{id}
+	 * @apiUri    /queues/schedulers/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -316,7 +316,7 @@ class SchedulersController extends Controller
 	 * Update a scheduler
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/queues/schedulers/{id}
+	 * @apiUri    /queues/schedulers/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -460,7 +460,7 @@ class SchedulersController extends Controller
 	 * Delete a scheduler
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/queues/schedulers/{id}
+	 * @apiUri    /queues/schedulers/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

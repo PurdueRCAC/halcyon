@@ -28,7 +28,7 @@ use Carbon\Carbon;
 /**
  * Accounts
  *
- * @apiUri    /api/courses
+ * @apiUri    /courses
  */
 class AccountsController extends Controller
 {

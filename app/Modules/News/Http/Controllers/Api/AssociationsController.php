@@ -12,7 +12,7 @@ use App\Modules\News\Models\Association;
 /**
  * Types
  *
- * @apiUri    /api/news/associations
+ * @apiUri    /news/associations
  */
 class AssociationsController extends Controller
 {
@@ -20,7 +20,7 @@ class AssociationsController extends Controller
 	 * Display a listing of news article types
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/news/associations
+	 * @apiUri    /news/associations
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "tagresources",
@@ -233,7 +233,7 @@ class AssociationsController extends Controller
 	 * Create a news article type
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/news/types
+	 * @apiUri    /news/types
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -403,7 +403,7 @@ class AssociationsController extends Controller
 	 * Read a news article type
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/news/types/{id}
+	 * @apiUri    /news/types/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -452,7 +452,7 @@ class AssociationsController extends Controller
 	 * Update a news article type
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/news/types/{id}
+	 * @apiUri    /news/types/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -627,7 +627,7 @@ class AssociationsController extends Controller
 	 * Delete a news article type
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/news/types/{id}
+	 * @apiUri    /news/types/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

@@ -13,7 +13,7 @@ use App\Modules\Impact\Models\Table;
 /**
  * Impact Tables
  *
- * @apiUri    /api/impact/tables
+ * @apiUri    /impact/tables
  */
 class TablesController extends Controller
 {
@@ -21,7 +21,7 @@ class TablesController extends Controller
 	 * Display a listing of tables
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/impact/tables
+	 * @apiUri    /impact/tables
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
@@ -128,7 +128,7 @@ class TablesController extends Controller
 	 * Create a new table
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/impact/tables
+	 * @apiUri    /impact/tables
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -198,7 +198,7 @@ class TablesController extends Controller
 	 * Retrieve an issue
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/impact/tables/{id}
+	 * @apiUri    /impact/tables/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -222,7 +222,7 @@ class TablesController extends Controller
 	 * Update an issue
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/impact/tables/{id}
+	 * @apiUri    /impact/tables/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -305,7 +305,7 @@ class TablesController extends Controller
 	 * Delete an issue
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/impact/tables/{id}
+	 * @apiUri    /impact/tables/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

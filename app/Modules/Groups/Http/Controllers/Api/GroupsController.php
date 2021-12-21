@@ -20,7 +20,7 @@ use Carbon\Carbon;
 /**
  * Groups
  *
- * @apiUri    /api/groups
+ * @apiUri    /groups
  */
 class GroupsController extends Controller
 {
@@ -28,7 +28,7 @@ class GroupsController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/groups
+	 * @apiUri    /groups
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "owneruserid",
@@ -296,7 +296,7 @@ class GroupsController extends Controller
 	 * Create a new entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/groups
+	 * @apiUri    /groups
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -470,7 +470,7 @@ class GroupsController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/groups/{id}
+	 * @apiUri    /groups/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -526,7 +526,7 @@ class GroupsController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/groups/{id}
+	 * @apiUri    /groups/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -714,7 +714,7 @@ class GroupsController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/groups/{id}
+	 * @apiUri    /groups/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

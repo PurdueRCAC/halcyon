@@ -13,7 +13,7 @@ use App\Modules\Impact\Models\Impact;
 /**
  * Impact Data
  *
- * @apiUri    /api/impact
+ * @apiUri    /impact
  */
 class ImpactController extends Controller
 {
@@ -21,7 +21,7 @@ class ImpactController extends Controller
 	 * Display a listing of entries
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/impact
+	 * @apiUri    /impact
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
@@ -131,7 +131,7 @@ class ImpactController extends Controller
 	 * Create an entry
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/impact
+	 * @apiUri    /impact
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -201,7 +201,7 @@ class ImpactController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/impact/{id}
+	 * @apiUri    /impact/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -225,7 +225,7 @@ class ImpactController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/impact/{id}
+	 * @apiUri    /impact/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -314,7 +314,7 @@ class ImpactController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/impact/{id}
+	 * @apiUri    /impact/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

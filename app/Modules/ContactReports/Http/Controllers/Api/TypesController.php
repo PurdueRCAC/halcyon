@@ -12,7 +12,7 @@ use App\Modules\ContactReports\Models\Type;
 /**
  * Types
  *
- * @apiUri    /api/contactreports/types
+ * @apiUri    /contactreports/types
  */
 class TypesController extends Controller
 {
@@ -20,7 +20,7 @@ class TypesController extends Controller
 	 * Display a listing of contact report types
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/contactreports/types
+	 * @apiUri    /contactreports/types
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
@@ -139,7 +139,7 @@ class TypesController extends Controller
 	 * Create a contact report type
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /api/contactreports/types
+	 * @apiUri    /contactreports/types
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
@@ -243,7 +243,7 @@ class TypesController extends Controller
 	 * Read a contact report type
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /api/contactreports/types/{id}
+	 * @apiUri    /contactreports/types/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -293,7 +293,7 @@ class TypesController extends Controller
 	 * Update a contact report type
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /api/contactreports/types/{id}
+	 * @apiUri    /contactreports/types/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -408,7 +408,7 @@ class TypesController extends Controller
 	 * Delete a contact report type
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /api/contactreports/types/{id}
+	 * @apiUri    /contactreports/types/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
