@@ -22,7 +22,7 @@ class CreateMenusTables extends Migration
 				$table->increments('id');
 				$table->string('menutype', 24);
 				$table->string('title', 48);
-				$table->string('description', 255);
+				$table->string('description', 255)->nullable();
 				$table->tinyInteger('client_id')->unsigned()->default(0);
 				$table->dateTime('created_at')->nullable();
 				$table->dateTime('updated_at')->nullable();
