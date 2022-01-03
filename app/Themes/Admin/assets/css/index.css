@@ -1168,6 +1168,7 @@ h4 {
 .icon-smartphone:before {
   content: "\e8ca";
 }
+.fa-square:before,
 .icon-square:before {
   content: "\e8cb";
 }

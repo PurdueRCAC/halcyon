@@ -107,6 +107,9 @@
 								data-error="{{ trans('theme::admin.mode error') }}"
 								href="{{ request()->url() }}?theme.admin.mode={{ auth()->user()->facet('theme.admin.mode', 'light') == 'light' ? 'dark' : 'light' }}">{{ trans('theme::admin.toggle theme') }}</a>
 						</li>
+						<li data-title="{{ trans('theme::admin.account') }}">
+							<a class="icon-user" href="{{ route('admin.users.show', ['id' => auth()->user()->id]) }}">{{ trans('theme::admin.account') }}</a>
+						</li>
 						<li data-title="{{ trans('theme::admin.logout') }}">
 							<a class="icon-power logout" href="{{ route('logout') }}">{{ trans('theme::admin.logout') }}</a>
 						</li>

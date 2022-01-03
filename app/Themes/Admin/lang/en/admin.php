@@ -23,6 +23,7 @@ return [
 	'admin login' => 'Administration Login',
 	'module section' => 'Module sections',
 	'main' => 'Main',
+	'account' => 'My Account',
 	// Error pages
 	'error 403 title' => 'Not Authorized',
 	'error 403 description' => 'You are not authorized to make this request.',
