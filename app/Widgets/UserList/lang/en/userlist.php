@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 return [
 	'widget name' => 'User List',
 	'widget desc' => 'This displays a list of users',
@@ -15,26 +9,30 @@ return [
 	// Misc.
 	'no articles found' => 'No articles found.',
 	'params' => [
-		'category desc' => 'Select Articles from a specific Category. If no selection, it will show all categories by default.',
-		'category' => 'Category',
-		'all categories' => '- All Categories -',
-		'link title desc' => 'Link the Article titles to Articles.',
-		'link title' => 'Linked Titles',
-		'number of items desc' => 'The number of Articles to display within this module',
-		'number of items' => 'Number of Articles',
+		'role desc' => 'Select users with a specific role. If no selection, it will show all roles by default.',
+		'role' => 'Role',
+		'all roles' => '- All Roles -',
+		'number of items desc' => 'The number of users to display within this module',
+		'number of items' => 'Number of Users',
 		'ordering desc' => 'Select the order in which you want query results presented.',
 		'ordering' => 'Order Results',
 		'order by registered' => 'Registered Date',
 		'order by title' => 'Title',
 		'order by name' => 'Name',
-		'show title desc' => 'Show/hide Article title',
-		'show title' => 'Show Article title',
+		'show title desc' => 'Show/hide user title',
+		'show title' => 'Show title',
+		'show specialty desc' => 'Show/hide specialty',
+		'show specialty' => 'Show specialty',
+		'show email desc' => 'Show/hide email',
+		'show email' => 'Show email',
+		'show phone desc' => 'Show/hide phone',
+		'show phone' => 'Show phone',
+		'show office desc' => 'Show/hide office',
+		'show office' => 'Show office',
 		'header level' => 'Header Level',
-		'header level desc' => 'Select the desired HTML header level for the Article titles.',
-		'separator desc' => 'Show separator after last Article',
+		'header level desc' => 'Select the desired HTML header level for the entry titles.',
+		'separator desc' => 'Show separator after last entry',
 		'separator' => 'Show last separator',
-		'readmore desc' => 'If set to Show, the "Read more..." link will show if Main text has been provided for an Article.',
-		'readmore' => '"Read more..." Link',
 		'direction' => 'Order Direction',
 		'direction desc' => 'Select the order direction in which you want query results presented.',
 		'direction new to old' => 'Newest to Oldest',

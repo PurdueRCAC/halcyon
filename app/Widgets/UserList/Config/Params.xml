@@ -2,7 +2,7 @@
 <config>
 	<fields name="params">
 		<fieldset name="basic">
-			<field name="role_id" type="App\Modules\Users\Models\Fields\Roles" extension="users" multiple="true" default="" size="10" label="widget.userlist::userlist.params.category" description="widget.userlist::userlist.params.category desc" >
+			<field name="role_id" type="App\Modules\Users\Models\Fields\Roles" extension="users" multiple="true" default="" size="10" label="widget.userlist::userlist.params.role" description="widget.userlist::userlist.params.role desc" >
 				<option value="">widget.userlist::userlist.params.all roles</option>
 			</field>
 			<field name="show_phone" type="radio" default="0" label="widget.userlist::userlist.params.show phone" description="widget.userlist::userlist.params.show phone desc">
