@@ -59,6 +59,7 @@ app('pathway')
 			@endif
 		</ul>
 	</nav>
+
 	<div class="tab-content" id="user-tabs-content">
 		<div class="tab-pane show active" id="user-account" role="tabpanel" aria-labelledby="user-account-tab">
 			<div class="row">
@@ -66,7 +67,7 @@ app('pathway')
 
 					<div class="card">
 						<div class="card-header">
-							<a class="btn btn-sm btn-link float-right" href="{{ route('admin.users.edit', ['id' => $user->id]) }}" data-tip="Edit User Info">
+							<a class="btn btn-sm btn-link float-right" data-toggle="modal" href="#manage_details_dialog" data-tip="Edit User Info">
 								<span class="fa fa-pencil" aria-hidden="true"></span>
 								<span class="sr-only">Edit</span>
 							</a>
@@ -181,7 +182,7 @@ app('pathway')
 
 					<div class="card">
 						<div class="card-header">
-							<a class="btn btn-sm btn-link float-right" href="{{ route('admin.users.edit', ['id' => $user->id]) }}" data-tip="Edit User Roles">
+							<a class="btn btn-sm btn-link float-right" data-toggle="modal" href="#manage_access_dialog" data-tip="Edit Assigned Roles">
 								<span class="fa fa-pencil" aria-hidden="true"></span>
 								<span class="sr-only">Edit</span>
 							</a>
@@ -228,11 +229,19 @@ app('pathway')
 
 								// Build the HTML for the item.
 								$html[] = '	<li>';
-								$html[] = '		<div class="form-check">';
-								$html[] = '		<input type="checkbox" class="form-check-input" disabled name="role[]" value="' . $item->id . '" id="' . $eid . '"' . $checked . $rel . ' />';
-								$html[] = '		<label for="' . $eid . '" class="form-check-label">';
+								$html[] = '		<div class="form-check' . ($checked ? ' text-success' : '') . '">';
+								if ($checked)
+								{
+									$html[] = '			<span class="fa fa-check-square" aria-hidden="true"></span><span class="sr-only">' . trans('global.yes') . '</span>';
+								}
+								else
+								{
+									$html[] = '			<span class="fa fa-square" aria-hidden="true"></span><span class="sr-only">' . trans('global.no') . '</span>';
+								}
+								//$html[] = '		<input type="checkbox" class="form-check-input" disabled name="role[]" value="' . $item->id . '" id="' . $eid . '"' . $checked . $rel . ' />';
+								//$html[] = '		<label for="' . $eid . '" class="form-check-label">';
 								$html[] = '		' . str_repeat('<span class="gi">|&mdash;</span>', $item->level) . $item->title;
-								$html[] = '		</label>';
+								//$html[] = '		</label>';
 								$html[] = '		</div>';
 								$html[] = '	</li>';
 							}
@@ -466,6 +475,7 @@ app('pathway')
 			<div class="tab-pane" id="user-attributes" role="tabpanel" aria-labelledby="user-attributes-tab">
 				<div class="card">
 					<table class="table table-hover">
+						<caption class="sr-only">{{ trans('users::users.attributes') }}</caption>
 						<thead>
 							<tr>
 								<th scope="col" width="25">{{ trans('users::users.locked') }}</th>
@@ -485,14 +495,23 @@ app('pathway')
 										<span class="icon-lock glyph">{{ trans('users::users.locked') }}</span>
 									@endif
 								</td>
-								<td>{{ $facet->key }}</td>
-								<td>{{ $facet->value }}</td>
+								<td><input type="text" name="facet[{{ $i }}][key]" class="form-control" value="{{ $facet->key }}" {{ $facet->locked ? ' readonly="readonly"' : '' }} /></td>
+								<td><input type="text" name="facet[{{ $i }}][value]" class="form-control" value="{{ $facet->value }}" {{ $facet->locked ? ' readonly="readonly"' : '' }} /></td>
 								<td>
+									<select name="facet[{{ $i }}][access]" class="form-control">
+										<option value="0">{{ trans('users::users.private') }}</option>
 										@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
-											@if ($facet->access == $access->id)
-												{{ $access->title }}
-											@endif
+											<option value="{{ $access->id }}"{{ $facet->access == $access->id ? ' selected="selected"' : '' }}>{{ $access->title }}</option>
 										@endforeach
+									</select>
+								</td>
+								<td class="text-right">
+									<input type="hidden" name="facet[{{ $i }}][id]" class="form-control" value="{{ $facet->id }}" />
+									<a href="#facet-{{ $facet->id }}" class="btn text-danger remove-facet"
+										data-api="{{ route('api.users.facets.delete', ['id' => $facet->id]) }}"
+										data-confirm="{{ trans('global.confirm delete') }}">
+										<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+									</a>
 								</td>
 							</tr>
 							<?php
@@ -500,7 +519,52 @@ app('pathway')
 							?>
 						@endforeach
 						</tbody>
+						<tfoot>
+							<tr id="newfacet">
+								<td></td>
+								<td><input type="text" name="facet[{{ $i }}][key]" id="newfacet-key" class="form-control" value="" /></td>
+								<td><input type="text" name="facet[{{ $i }}][value]" id="newfacet-value" class="form-control" value="" /></td>
+								<td>
+									<select name="facet[{{ $i }}][access]" id="newfacet-access" class="form-control">
+										<option value="0">{{ trans('users::users.private') }}</option>
+										@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
+											<option value="{{ $access->id }}">{{ $access->title }}</option>
+										@endforeach
+									</select>
+								</td>
+								<td class="text-right">
+									<a href="#newfacet" class="btn btn-success add-facet"
+										data-userid="{{ $user->id }}"
+										data-api="{{ route('api.users.facets.create') }}">
+										<span class="icon-plus glyph">{{ trans('global.add') }}</span>
+									</a>
+								</td>
+							</tr>
+						</tfoot>
 					</table>
+					<script id="facet-template" type="text/x-handlebars-template">
+						<tr id="facet-{id}" data-id="{id}">
+							<td></td>
+							<td><input type="text" name="facet[{i}][key]" class="form-control" value="{key}" /></td>
+							<td><input type="text" name="facet[{i}][value]" class="form-control" value="{value}" /></td>
+							<td>
+								<select name="facet[{i}][access]" class="form-control">
+									<option value="0">{{ trans('users::users.private') }}</option>
+									@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
+										<option value="{{ $access->id }}">{{ $access->title }}</option>
+									@endforeach
+								</select>
+							</td>
+							<td class="text-right">
+								<input type="hidden" name="facet[{i}][id]" class="form-control" value="{id}" />
+								<a href="#facet-{id}" class="btn text-danger remove-facet"
+									data-api="{{ route('api.users.facets.create') }}/{id}"
+									data-confirm="{{ trans('global.confirm delete') }}">
+									<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+								</a>
+							</td>
+						</tr>
+					</script>
 				</div>
 			</div>
 
@@ -596,6 +660,97 @@ app('pathway')
 	@csrf
 	<input type="hidden" name="id" value="{{ $user->id }}" />
 </form>
+
+<div id="manage_details_dialog" data-id="{{ $user->id }}" title="Edit Details" class="modal dialog details-dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<form method="post" class="modal-content" action="{{ route('admin.users.store') }}">
+			<div class="modal-header">
+				<h3 class="modal-title">Edit Details</h3>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				@if ($user->sourced)
+					<p class="alert alert-info">{{ trans('users::users.sourced description') }}</p>
+				@endif
+
+				<div class="form-group">
+					<label for="field_username" id="field_username-lbl">{{ trans('users::users.username') }}: <span class="required star">{{ trans('global.required') }}</span></label>
+					<input type="text" name="ufields[username]" id="field_username" value="{{ $user->username }}" maxlength="16" class="form-control<?php if ($user->id) { echo ' readonly" readonly="readonly'; } ?>" required />
+					<span class="invalid-feedback">{{ trans('users::users.invalid.username') }}</span>
+				</div>
+
+				<div class="form-group">
+					<label for="field-name">{{ trans('users::users.name') }}: <span class="required star">{{ trans('global.required') }}</span></label>
+					<input type="text" class="form-control<?php if ($user->sourced) { echo ' readonly" readonly="readonly'; } ?>" required maxlength="128" name="fields[name]" id="field-name" value="{{ $user->name }}" />
+					<span class="invalid-feedback">{{ trans('users::users.invalid.name') }}</span>
+				</div>
+
+				<div class="form-group">
+					<label for="field_email" id="field_email-lbl">{{ trans('users::users.email') }}:</label>
+					<input type="text" name="ufields[email]" id="field_email" value="{{ $user->email }}" maxlength="250" class="form-control" />
+					<span class="invalid-feedback">{{ trans('users::users.invalid.email') }}</span>
+				</div>
+
+				<div class="form-group">
+					<label for="field-organization_id">{{ trans('users::users.organization id') }}:</label>
+					<input type="text" class="form-control" name="fields[puid]" id="field-organization_id" maxlength="10" value="{{ $user->puid }}" />
+				</div>
+
+				@if ($user->id)
+				<div class="form-group">
+					<label for="field-api_token">{{ trans('users::users.api token') }}:</label>
+					<span class="input-group">
+						<input type="text" class="form-control readonly" readonly="readonly" name="fields[api_token]" id="field-api_token" maxlength="100" value="{{ $user->api_token }}" />
+						<span class="input-group-append">
+							<button class="input-group-text btn btn-secondary btn-apitoken">{{ trans('users::users.regenerate') }}</button>
+						</span>
+					</span>
+					<span class="form-text text-muted">{{ trans('users::users.api token hint') }}</span>
+				</div>
+				@endif
+
+				<span id="details_errors" class="alert alert-warning hide"></span>
+
+				<input type="hidden" name="userid" value="{{ $user->id }}" />
+				@csrf
+				<input type="hidden" name="id" value="{{ $user->id }}" />
+			</div>
+			<div class="modal-footer">
+				<button id="user_details_save" class="btn btn-success" data-id="{{ $user->id }}">Save</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div id="manage_access_dialog" data-id="{{ $user->id }}" title="Edit Assigned Roles" class="modal dialog access-dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<form method="post" class="modal-content" action="{{ route('admin.users.store') }}">
+			<div class="modal-header">
+				<h3 class="modal-title">Edit Assigned Roles</h3>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<?php
+				echo App\Halcyon\Html\Builder\Access::roles('fields[newroles]', $roles, true);
+				?>
+
+				<span id="access_errors" class="alert alert-warning hide"></span>
+
+				<input type="hidden" name="fields[name]" value="{{ $user->name }}" />
+				<input type="hidden" name="userid" value="{{ $user->id }}" />
+				@csrf
+				<input type="hidden" name="id" value="{{ $user->id }}" />
+			</div>
+			<div class="modal-footer">
+				<button id="user_access_save" data-api="{{ route('api.users.update', ['id' => $user->id]) }}" class="btn btn-success" data-id="{{ $user->id }}">Save</button>
+			</div>
+		</form>
+	</div>
+</div>
 
 <div id="manage_roles_dialog" data-id="{{ $user->id }}" title="Manage Access" class="dialog roles-dialog">
 	<form method="post" action="{{ route('site.users.account') }}">

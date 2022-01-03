@@ -71,6 +71,66 @@ jQuery(document).ready(function(){
 		return result;
 	}
 
+	$('#user_details_save').on('click', function (e) {
+		e.preventDefault();
+
+		var btn = $(this);
+
+		// create new relationship
+		$.ajax({
+			url: btn.data('api'),
+			type: 'put',
+			data: {
+				'name': $('#field-name').val(),
+				'puid': $('#field-organization_id').val(),
+				'api_token': $('#field-api_token').val(),
+				'username': $('#field_username').val(),
+				'email': $('#field_email').val()
+			},
+			dataType: 'json',
+			async: false,
+			success: function () { //response
+				Halcyon.message('success', 'Account updated');
+
+				window.location.reload(true);
+			},
+			error: function (xhr) { //, ajaxOptions, thrownError
+				Halcyon.message('danger', xhr.responseJSON.message);
+			}
+		});
+	});
+
+	$('#user_access_save').on('click', function (e) {
+		e.preventDefault();
+
+		var btn = $(this);
+		var roles = [],
+			r = $(btn.closest('form')).find('input:checked');
+
+		r.each(function (i, el) {
+			roles.push(el.value);
+		});
+
+		// create new relationship
+		$.ajax({
+			url: btn.data('api'),
+			type: 'put',
+			data: {
+				'roles': roles
+			},
+			dataType: 'json',
+			async: false,
+			success: function () { //response
+				Halcyon.message('success', 'Roles updated');
+
+				window.location.reload(true);
+			},
+			error: function (xhr) { //, ajaxOptions, thrownError
+				Halcyon.message('danger', xhr.responseJSON.message);
+			}
+		});
+	});
+
 	// Roles
 	$('#permissions-rules').accordion({
 		heightStyle: 'content',
@@ -128,6 +188,9 @@ jQuery(document).ready(function(){
 						.replace(/\{key\}/g, response.key)
 						.replace(/\{value\}/g, response.value)
 						.replace(/\{access\}/g, response.access);
+
+					content = $(content);
+					content.find('select').val(response.access);
 
 					//template.html(content).insertBefore(li);
 					//template.html(content);

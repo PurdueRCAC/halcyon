@@ -1071,27 +1071,42 @@ document.addEventListener('DOMContentLoaded', function() {
 	});*/
 
 	$('[maxlength]').each(function (i, el) {
-		var counter = $('<span class="char-counter"></span>'),
-			item = $(el);
-		if (item.attr('id') != '') {
-			counter.attr('id', item.attr('id') + '-counter');
-		}
-		if (item.parent().hasClass('input-group')) {
-			counter.insertBefore(item.parent());
-		} else {
-			counter.insertBefore(item);
-		}
-		counter.text(item.val().length + ' / ' + item.attr('maxlength'));
-	});
+		var container = $('<span class="char-counter-wrap"></span>');
+		var counter = $('<span class="char-counter"></span>');
+		var input = $(el);
 
-	$('[maxlength]').on('keyup', function () {
-		var chars = $(this).val().length;
-		var counter = $('#' + $(this).attr('id') + '-counter');/*$(this).parent().find('.char-counter');
-		if (!counter.length) {
-			counter = $(this).parent().parent().find('.char-counter');
-		}*/
-		if (counter.length) {
-			counter.text(chars + ' / ' + $(this).attr('maxlength'));
+		if (input.attr('id') != '') {
+			counter.attr('id', input.attr('id') + '-counter');
 		}
+
+		if (input.parent().hasClass('input-group')) {
+			input.parent().wrap(container);
+			counter.insertBefore(input.parent());
+		} else {
+			input.wrap(container);
+			counter.insertBefore(input);
+		}
+		counter.text(input.val().length + ' / ' + input.attr('maxlength'));
+
+		input
+			.on('focus', function () {
+				var container = $(this).closest('.char-counter-wrap');
+				if (container.length) {
+					container.addClass('char-counter-focus');
+				}
+			})
+			.on('blur', function () {
+				var container = $(this).closest('.char-counter-wrap');
+				if (container.length) {
+					container.removeClass('char-counter-focus');
+				}
+			})
+			.on('keyup', function () {
+				var chars = $(this).val().length;
+				var counter = $('#' + $(this).attr('id') + '-counter');
+				if (counter.length) {
+					counter.text(chars + ' / ' + $(this).attr('maxlength'));
+				}
+			});
 	});
 });

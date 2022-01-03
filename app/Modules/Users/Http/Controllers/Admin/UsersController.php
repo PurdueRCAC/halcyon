@@ -302,16 +302,19 @@ class UsersController extends Controller
 				->withError($error);
 		}
 
-		$ufields = $request->input('ufields');
-
-		$username = $id ? $user->getUserUsername() : new UserUsername();
-		$username->userid = $user->id;
-		$username->fill($ufields);
-		if (!$id)
+		if ($request->has('ufields'))
 		{
-			$username->datecreated = Carbon::now()->toDateTimeString();
+			$ufields = $request->input('ufields');
+
+			$username = $id ? $user->getUserUsername() : new UserUsername();
+			$username->userid = $user->id;
+			$username->fill($ufields);
+			if (!$id)
+			{
+				$username->datecreated = Carbon::now()->toDateTimeString();
+			}
+			$username->save();
 		}
-		$username->save();
 
 		if ($request->has('facet'))
 		{

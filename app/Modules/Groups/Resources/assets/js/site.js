@@ -326,7 +326,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	});
 
-	$('[maxlength]').each(function (i, el) {
+	/*$('[maxlength]').each(function (i, el) {
 		var container = $('<span class="char-counter-wrap"></span>');
 		var counter = $('<span class="char-counter"></span>');
 		var input = $(el);
@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					counter.text(chars + ' / ' + $(this).attr('maxlength'));
 				}
 			});
-	});
+	});*/
 
 	//---------
 	// New group
