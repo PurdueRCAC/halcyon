@@ -357,6 +357,7 @@ class FacetsController extends Controller
 	public function update(Request $request, $id)
 	{
 		$request->validate([
+			'key'    => 'nullable|string|max:255',
 			'value'  => 'nullable|string|max:8096',
 			'access' => 'nullable|integer',
 		]);
@@ -368,7 +369,18 @@ class FacetsController extends Controller
 			return response()->json(['message' => trans('users::users.messages.facet locked')], 403);
 		}
 
-		$row->fill($request->all());
+		if ($request->has('key'))
+		{
+			$row->key = $request->input('key');
+		}
+		if ($request->has('value'))
+		{
+			$row->value = $request->input('value');
+		}
+		if ($request->has('access'))
+		{
+			$row->access = $request->input('access');
+		}
 
 		if (!$row->save())
 		{

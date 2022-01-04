@@ -495,10 +495,10 @@ app('pathway')
 										<span class="icon-lock glyph">{{ trans('users::users.locked') }}</span>
 									@endif
 								</td>
-								<td><input type="text" name="facet[{{ $i }}][key]" class="form-control" value="{{ $facet->key }}" {{ $facet->locked ? ' readonly="readonly"' : '' }} /></td>
-								<td><input type="text" name="facet[{{ $i }}][value]" class="form-control" value="{{ $facet->value }}" {{ $facet->locked ? ' readonly="readonly"' : '' }} /></td>
+								<td><input type="text" name="facet[{{ $i }}][key]" id="facet-{{ $facet->id }}-key" class="form-control" value="{{ $facet->key }}" {{ $facet->locked ? ' readonly="readonly"' : '' }} /></td>
+								<td><input type="text" name="facet[{{ $i }}][value]" id="facet-{{ $facet->id }}-value" class="form-control" value="{{ $facet->value }}" {{ $facet->locked ? ' readonly="readonly"' : '' }} /></td>
 								<td>
-									<select name="facet[{{ $i }}][access]" class="form-control">
+									<select name="facet[{{ $i }}][access]" id="facet-{{ $facet->id }}-access" class="form-control">
 										<option value="0">{{ trans('users::users.private') }}</option>
 										@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
 											<option value="{{ $access->id }}"{{ $facet->access == $access->id ? ' selected="selected"' : '' }}>{{ $access->title }}</option>
@@ -507,6 +507,9 @@ app('pathway')
 								</td>
 								<td class="text-right">
 									<input type="hidden" name="facet[{{ $i }}][id]" class="form-control" value="{{ $facet->id }}" />
+									<a href="#facet-{{ $facet->id }}" class="btn update-facet" data-api="{{ route('api.users.facets.update', ['id' => $facet->id]) }}">
+										<span class="icon-save glyph">{{ trans('global.save') }}</span>
+									</a>
 									<a href="#facet-{{ $facet->id }}" class="btn text-danger remove-facet"
 										data-api="{{ route('api.users.facets.delete', ['id' => $facet->id]) }}"
 										data-confirm="{{ trans('global.confirm delete') }}">
@@ -545,10 +548,10 @@ app('pathway')
 					<script id="facet-template" type="text/x-handlebars-template">
 						<tr id="facet-{id}" data-id="{id}">
 							<td></td>
-							<td><input type="text" name="facet[{i}][key]" class="form-control" value="{key}" /></td>
-							<td><input type="text" name="facet[{i}][value]" class="form-control" value="{value}" /></td>
+							<td><input type="text" name="facet[{i}][key]" id="facet-{id}-key" class="form-control" value="{key}" /></td>
+							<td><input type="text" name="facet[{i}][value]" id="facet-{id}-value" class="form-control" value="{value}" /></td>
 							<td>
-								<select name="facet[{i}][access]" class="form-control">
+								<select name="facet[{i}][access]" id="facet-{id}-access" class="form-control">
 									<option value="0">{{ trans('users::users.private') }}</option>
 									@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
 										<option value="{{ $access->id }}">{{ $access->title }}</option>
@@ -557,6 +560,9 @@ app('pathway')
 							</td>
 							<td class="text-right">
 								<input type="hidden" name="facet[{i}][id]" class="form-control" value="{id}" />
+								<a href="#facet-{id}" class="btn update-facet" data-api="{{ route('api.users.facets') }}/{id}">
+									<span class="icon-save glyph">{{ trans('global.save') }}</span>
+								</a>
 								<a href="#facet-{id}" class="btn text-danger remove-facet"
 									data-api="{{ route('api.users.facets.create') }}/{id}"
 									data-confirm="{{ trans('global.confirm delete') }}">

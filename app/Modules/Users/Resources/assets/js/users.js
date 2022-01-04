@@ -207,6 +207,38 @@ jQuery(document).ready(function(){
 		});
 	});
 
+	$('.update-facet').on('click', function (e) {
+		e.preventDefault();
+
+		var btn = $(this);
+		var key = $(btn.attr('href') + '-key'),
+			value = $(btn.attr('href') + '-value'),
+			access = $(btn.attr('href') + '-access');
+
+		btn.attr('disabled', true);
+
+		// create new relationship
+		$.ajax({
+			url: btn.data('api'),
+			type: 'put',
+			data: {
+				'key': key.val(),
+				'value': value.val(),
+				'access': access.val()
+			},
+			dataType: 'json',
+			async: false,
+			success: function () { //response
+				Halcyon.message('success', 'Item updated');
+				btn.attr('disabled', false);
+			},
+			error: function (xhr) { //, ajaxOptions, thrownError
+				//console.log(xhr);
+				Halcyon.message('danger', xhr.responseJSON.message);
+			}
+		});
+	});
+
 	$('#main').on('click', '.remove-facet', function (e) {
 		e.preventDefault();
 

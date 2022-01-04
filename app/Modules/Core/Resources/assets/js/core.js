@@ -273,7 +273,8 @@ Halcyon.message = function(type, message) {
 	});*/
 	div.appendTo(container);
 
-	$(document).trigger('renderMessages');
+	//$(document).trigger('renderMessages');
+	document.dispatchEvent(new Event('renderMessages'));
 };
 
 

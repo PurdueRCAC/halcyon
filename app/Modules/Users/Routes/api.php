@@ -104,7 +104,7 @@ $router->group(['prefix' => 'users'], function (Router $router)
 			'as' => 'api.users.facets.read',
 			'uses' => 'FacetsController@read',
 		])->where('id', '[0-9]+');
-		$router->put('/', [
+		$router->put('{id}', [
 			'as' => 'api.users.facets.update',
 			'uses' => 'FacetsController@update',
 			'middleware' => 'can:edit users',
