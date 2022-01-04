@@ -262,7 +262,7 @@ class PedLdap
 
 					if ($f && $f->value && !$user->title)
 					{
-						$user->title = $f;
+						$user->title = $f->value;
 					}
 					elseif (isset($data['title']))
 					{
