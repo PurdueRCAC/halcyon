@@ -27,6 +27,26 @@ class MediaController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /media
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "disk",
+	 * 		"description":   "Storage disk",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "public"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "path",
+	 * 		"description":   "Which folder to get tree of",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "/"
+	 * 		}
+	 * }
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -50,6 +70,15 @@ class MediaController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /media/tree
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "folder",
+	 * 		"description":   "Which folder to get tree of",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -107,6 +136,17 @@ class MediaController extends Controller
 	/**
 	 * Get directory tree
 	 *
+	 * @apiMethod GET
+	 * @apiUri    /media/layout
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "layout",
+	 * 		"description":   "Which view layout to return",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return  Response
 	 */
@@ -127,8 +167,10 @@ class MediaController extends Controller
 	/**
 	 * Upload
 	 *
+	 * @apiMethod POST
 	 * @apiUri    /media/upload
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "disk",
 	 * 		"description":   "Filesystem disk",
 	 * 		"required":      false,
@@ -137,6 +179,7 @@ class MediaController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "path",
 	 * 		"description":   "File path to upload the file to",
 	 * 		"required":      false,
@@ -145,6 +188,7 @@ class MediaController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "file",
 	 * 		"description":   "File to be uploaded",
 	 * 		"required":      true,
@@ -153,6 +197,7 @@ class MediaController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "overwrite",
 	 * 		"description":   "Overwrite existing file of the same name",
 	 * 		"required":      false,
@@ -276,30 +321,6 @@ class MediaController extends Controller
 	 */
 	public function update(Request $request)
 	{
-		/*$disk = $request->input('disk');
-		$path = $request->input('path');
-		$name = $request->input('name');
-
-		$name = MediaHelper::sanitize($name);
-
-		$source = $path;
-		$dest   = dirname($path) . '/' . $name;
-
-		// check all files and folders - exists or no
-		if (!Storage::disk($disk)->exists($source))
-		{
-			return response()->json('File not found', 404);
-		}
-
-		if (!Storage::disk($disk)->exists($dest))
-		{
-			return response()->json('Destination already exists', 404);
-		}
-
-		Storage::disk($disk)->move($source, $dest);
-
-		return response()->json(null, 204);*/
-
 		event($event = new Updating($request));
 
 		$disk   = $event->disk();
@@ -311,8 +332,8 @@ class MediaController extends Controller
 			return response()->json(['message' => trans('media::media.error.missing name')], 415);
 		}
 
-		$before = MediaHelper::sanitize($before);
-		$after  = MediaHelper::sanitize($after);
+		$before = $this->sanitize($before);
+		$after  = $this->sanitize($after);
 
 		if (!$before || !$after)
 		{
@@ -321,7 +342,7 @@ class MediaController extends Controller
 
 		if (!Storage::disk($disk)->exists($before))
 		{
-			return response()->json(['message' => trans('media::media.error.missing source' . $before)], 415);
+			return response()->json(['message' => trans('media::media.error.missing source', ['source' => $before])], 415);
 		}
 
 		if (Storage::disk($disk)->exists($after))
@@ -489,16 +510,29 @@ class MediaController extends Controller
 	 * @param   string  $path
 	 * @return  string
 	 */
-	/*private function sanitize($path)
+	private function sanitize($path)
 	{
-		$path = str_replace(' ', '_', $path);
-		$path = preg_replace('/[^a-zA-Z0-9\-_\/\.]+/', '', $path);
+		/*$path = str_replace(' ', '_', $path);
+		$path = preg_replace('/[^a-zA-Z0-9\-_\/]+/', '', $path);
 
 		if (!preg_match('/^[\x20-\x7e]*$/', $path))
 		{
 			$path = \Illuminate\Support\Facades\Str::ascii($path);
 		}
 
+		return $path;*/
+
+		$path = trim($path, '/');
+
+		$parts = explode('/', $path);
+		foreach ($parts as $i => $p)
+		{
+			$parts[$i] = MediaHelper::sanitize($p);
+		}
+		$parts = array_filter($parts);
+		$path = implode('/', $parts);
+		$path = trim($path, '/');
+
 		return $path;
-	}*/
+	}
 }

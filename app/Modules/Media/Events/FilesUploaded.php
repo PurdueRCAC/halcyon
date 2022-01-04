@@ -33,7 +33,7 @@ class FilesUploaded
 	 */
 	public function __construct(Request $request)
 	{
-		$this->disk = $request->input('disk');
+		$this->disk = $request->input('disk', 'public');
 		$this->path = $request->input('path');
 		$this->files = $request->file('files');
 		$this->overwrite = $request->input('overwrite');

@@ -39,8 +39,8 @@ class FolderController extends Controller
 	 */
 	public function read(Request $request)
 	{
-		$disk = $request->input('disk');
-		$path = $request->input('path');
+		$disk = $request->input('disk', 'public');
+		$path = $this->sanitize($request->input('path'));
 
 		$content = Storage::disk($disk)->listContents($path);
 
@@ -58,11 +58,32 @@ class FolderController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /media
 	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "disk",
+	 * 		"description":   "Storage disk",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "public"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "path",
+	 * 		"description":   "Path to create new directory in",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "name",
-	 * 		"description":   "Group name",
-	 * 		"type":          "string",
+	 * 		"description":   "Folder name",
 	 * 		"required":      true,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @param  Request $request
 	 * @return Response
@@ -72,8 +93,8 @@ class FolderController extends Controller
 		event($event = new DirectoryCreating($request));
 
 		$disk   = $event->disk();
-		$folder = trim($event->name(), '/');
-		$parent = trim($event->path(), '/');
+		$folder = $this->sanitize($event->name());
+		$parent = $this->sanitize($event->path());
 
 		if (!$folder)
 		{
@@ -81,14 +102,11 @@ class FolderController extends Controller
 		}
 
 		$path = ($parent ? $parent . '/' : '') . $folder;
-		//$path = MediaHelper::sanitize($path);
 
 		if (!$path)
 		{
 			return response()->json(['message' => trans('media::media.error.invalid directory name')], 415);
 		}
-
-		$path = '/public/' . $path;
 
 		// Check if directory already exists
 		if (!Storage::disk($disk)->exists($path))
@@ -109,24 +127,46 @@ class FolderController extends Controller
 	/**
 	 * Update a directory
 	 *
+	 * @apiMethod PUT
+	 * @apiUri    /media/folder
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "disk",
+	 * 		"description":   "Storage disk",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "public"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "before",
+	 * 		"description":   "Original folder path",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "after",
+	 * 		"description":   "Renamed folder path",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
 	 * @param  Request $request
-	 * @return  Response
+	 * @return Response
 	 */
 	public function update(Request $request)
 	{
 		event($event = new DirectoryUpdating($request));
 
 		$disk   = $event->disk();
-		$before = trim($event->before(), '/');
-		$after  = trim($event->after(), '/');
-
-		if (!$before || !$after)
-		{
-			return response()->json(['message' => trans('media::media.error.missing directory name')], 415);
-		}
-
-		$before = MediaHelper::sanitize($before);
-		$after  = MediaHelper::sanitize($after);
+		$before = $this->sanitize($event->before());
+		$after  = $this->sanitize($event->after());
 
 		if (!$before || !$after)
 		{
@@ -156,20 +196,31 @@ class FolderController extends Controller
 	}
 
 	/**
-	 * Delete a file
+	 * Delete a folder
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /media/{file}
+	 * @apiUri    /media/folder/{path}
 	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "disk",
+	 * 		"description":   "Storage disk",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "public"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "path",
 	 * 		"name":          "path",
-	 * 		"description":   "File path",
+	 * 		"description":   "Folder path",
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "string"
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return  Response
+	 * @return Response
 	 */
 	public function delete(Request $request)
 	{
@@ -177,11 +228,8 @@ class FolderController extends Controller
 
 		// Get some data from the request
 		$disk   = $event->disk();
-		//$folder = trim($event->name(), '/');
-		$path = trim($event->path(), '/');
-
-		//$path = ($parent ? $parent . '/' : '') . $folder;
-		$path = MediaHelper::sanitize($path);
+		//$folder = $this->sanitize($event->name());
+		$path = $this->sanitize($event->path());
 
 		// Nothing to delete
 		if (empty($path))
@@ -220,9 +268,9 @@ class FolderController extends Controller
 	 * @param   string  $path
 	 * @return  string
 	 */
-	/*private function sanitize($path)
+	private function sanitize($path)
 	{
-		$path = str_replace(' ', '_', $path);
+		/*$path = str_replace(' ', '_', $path);
 		$path = preg_replace('/[^a-zA-Z0-9\-_\/]+/', '', $path);
 
 		if (!preg_match('/^[\x20-\x7e]*$/', $path))
@@ -230,6 +278,19 @@ class FolderController extends Controller
 			$path = \Illuminate\Support\Facades\Str::ascii($path);
 		}
 
+		return $path;*/
+
+		$path = trim($path, '/');
+
+		$parts = explode('/', $path);
+		foreach ($parts as $i => $p)
+		{
+			$parts[$i] = MediaHelper::sanitize($p);
+		}
+		$parts = array_filter($parts);
+		$path = implode('/', $parts);
+		$path = trim($path, '/');
+
 		return $path;
-	}*/
+	}
 }

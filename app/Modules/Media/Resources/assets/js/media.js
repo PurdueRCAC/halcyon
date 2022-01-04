@@ -73,6 +73,8 @@ jQuery(document).ready(function () {
 				window.console && console.log({ 'path': folder.val(), 'name': title })
 			}
 
+			$('.spinner').removeClass('d-none');
+
 			$.post(href, { 'path': folder.val(), 'name': title }, function (response) {
 				if (_DEBUG) {
 					window.console && console.log(response);
@@ -83,6 +85,8 @@ jQuery(document).ready(function () {
 						window.console && console.log(data);
 					}
 					contents.html(data);
+
+					$('.spinner').addClass('d-none');
 
 					bindContextModals();
 				});
@@ -212,6 +216,8 @@ jQuery(document).ready(function () {
 					window.console && console.log(data);
 				}
 
+				$('.spinner').removeClass('d-none');
+
 				$.ajax({
 					url: href,
 					type: 'PUT',
@@ -226,6 +232,8 @@ jQuery(document).ready(function () {
 								window.console && console.log(data);
 							}
 							contents.html(data);
+
+							$('.spinner').addClass('d-none');
 
 							bindContextModals();
 						});
@@ -246,6 +254,8 @@ jQuery(document).ready(function () {
 				window.console && console.log('Deleting: ' + href);
 			}
 
+			$('.spinner').removeClass('d-none');
+
 			$.ajax({
 				url: href,
 				type: 'DELETE',
@@ -259,6 +269,8 @@ jQuery(document).ready(function () {
 							window.console && console.log(data);
 						}
 						contents.html(data);
+
+						$('.spinner').addClass('d-none');
 
 						bindContextModals();
 					});

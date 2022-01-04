@@ -28,7 +28,7 @@ class Updating
 	 */
 	public function __construct(Request $request)
 	{
-		$this->disk = $request->input('disk', 'local');
+		$this->disk = $request->input('disk', 'public');
 		$this->before = $request->input('before');
 		$this->after = $request->input('after');
 	}

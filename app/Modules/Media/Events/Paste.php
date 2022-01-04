@@ -28,7 +28,7 @@ class Paste
 	 */
 	public function __construct(Request $request)
 	{
-		$this->disk = $request->input('disk');
+		$this->disk = $request->input('disk', 'public');
 		$this->path = $request->input('path');
 		$this->clipboard = $request->input('clipboard');
 	}

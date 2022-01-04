@@ -23,7 +23,7 @@ class Deleting
 	 */
 	public function __construct(Request $request)
 	{
-		$this->disk = $request->input('disk');
+		$this->disk = $request->input('disk', 'public');
 		$this->items = $request->input('items');
 	}
 
