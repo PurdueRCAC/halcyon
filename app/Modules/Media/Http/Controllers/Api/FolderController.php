@@ -81,12 +81,14 @@ class FolderController extends Controller
 		}
 
 		$path = ($parent ? $parent . '/' : '') . $folder;
-		$path = MediaHelper::sanitize($path);
+		//$path = MediaHelper::sanitize($path);
 
 		if (!$path)
 		{
 			return response()->json(['message' => trans('media::media.error.invalid directory name')], 415);
 		}
+
+		$path = '/public/' . $path;
 
 		// Check if directory already exists
 		if (!Storage::disk($disk)->exists($path))

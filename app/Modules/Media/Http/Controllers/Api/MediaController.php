@@ -55,7 +55,7 @@ class MediaController extends Controller
 	 */
 	public function tree(Request $request)
 	{
-		/*$disk = $request->input('disk';
+		/*$disk = $request->input('disk');
 
 		$content = Storage::disk($disk)->listContents('/');
 
