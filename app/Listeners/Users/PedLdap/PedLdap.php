@@ -261,11 +261,20 @@ class PedLdap
 					if (isset($data['title']))
 					{
 						$user->title = Str::properCaseNoun($data['title'][0]);
+
+						$f = $user->facets->where('key', 'title')->first();
+
+						if ($f && $f->value != $user->title)
+						{
+							$f->value = $user->title;
+							$f->save();
+						}
 					}
 
-					if (!$user->email && isset($data['mail']))
+					if (!$user->getUserUsername()->email && isset($data['mail']))
 					{
 						$user->getUserUsername()->email = $data['mail'][0];
+						$user->getUserUsername()->save();
 					}
 
 					if (isset($data['roomnumber']))
