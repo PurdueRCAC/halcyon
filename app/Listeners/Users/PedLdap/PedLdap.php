@@ -267,7 +267,7 @@ class PedLdap
 						if ($f && $f->value != $user->title)
 						{
 							$f->value = $user->title;
-							$f->save();
+							//$f->save();
 						}
 					}
 
