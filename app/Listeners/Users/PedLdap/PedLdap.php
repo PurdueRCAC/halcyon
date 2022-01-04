@@ -258,17 +258,15 @@ class PedLdap
 						$user->name = Str::properCaseNoun($data['cn'][0]);
 					}
 
-					if (isset($data['title']))
+					$f = $user->facets->where('key', 'title')->first();
+
+					if ($f && $f->value && !$user->title)
+					{
+						$user->title = $f;
+					}
+					elseif (isset($data['title']))
 					{
 						$user->title = Str::properCaseNoun($data['title'][0]);
-
-						$f = $user->facets->where('key', 'title')->first();
-
-						if ($f && $f->value != $user->title)
-						{
-							$f->value = $user->title;
-							//$f->save();
-						}
 					}
 
 					if (!$user->getUserUsername()->email && isset($data['mail']))
