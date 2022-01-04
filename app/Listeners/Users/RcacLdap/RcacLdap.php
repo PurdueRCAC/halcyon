@@ -773,7 +773,7 @@ class RcacLdap
 			// Performing a query.
 			$data = $ldap->search()
 				->where($query)
-				->select(['cn', 'uid', 'uidNumber']) //'employeeNumber', 
+				->select(['cn', 'uid', 'uidNumber', 'mailHost']) //'employeeNumber', 
 				->get();
 
 			if (!empty($data))
@@ -790,6 +790,7 @@ class RcacLdap
 					$user->name = $result['cn'][0];
 					$user->getUserUsername()->username = $result['uid'][0];
 					$user->getUserUsername()->unixid = $result['uidNumber'][0];
+					$user->getUserUsername()->email = isset($result['mailHost']) ? $result['mailHost'][0] : $result['uid'][0] . '@purdue.edu';
 					//$user->puid = $result['employeeNumber'][0];
 
 					//$event->user = $user;
