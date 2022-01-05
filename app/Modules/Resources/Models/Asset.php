@@ -74,16 +74,6 @@ class Asset extends Model
 	];
 
 	/**
-	 * The attributes that should be mutated to dates.
-	 *
-	 * @var array
-	 */
-	/*protected $dates = [
-		'datetimecreated',
-		'datetimeremoved'
-	];*/
-
-	/**
 	 * The model's default values for attributes.
 	 *
 	 * @var array
@@ -258,7 +248,9 @@ class Asset extends Model
 	/**
 	 * Defines a relationship to parent
 	 *
-	 * @return  object
+	 * @param   string  $order
+	 * @param   string  $dir
+	 * @return  array
 	 */
 	public function tree($order = 'name', $dir = 'asc')
 	{
@@ -327,11 +319,10 @@ class Asset extends Model
 	}
 
 	/**
-	 * Delete the model from the database.
+	 * Set listname attribute
 	 *
-	 * @return bool|null
-	 *
-	 * @throws \Exception
+	 * @param  string  $value
+	 * @return void
 	 */
 	public function setListnameAttribute($value)
 	{
@@ -339,11 +330,10 @@ class Asset extends Model
 	}
 
 	/**
-	 * Delete the model from the database.
+	 * Set rolename attribute
 	 *
-	 * @return bool|null
-	 *
-	 * @throws \Exception
+	 * @param  string  $value
+	 * @return void
 	 */
 	public function setRolenameAttribute($value)
 	{
@@ -351,33 +341,10 @@ class Asset extends Model
 	}
 
 	/**
-	 * Delete the model from the database.
-	 *
-	 * @return bool|null
-	 *
-	 * @throws \Exception
-	 */
-	/*public function delete()
-	{
-		$result = parent::delete();
-
-		foreach ($this->descendents as $child)
-		{
-			$child->delete();
-		}
-
-		foreach ($this->subresources as $subresource)
-		{
-			$subresource->delete();
-		}
-
-		return $result;
-	}*/
-
-	/**
 	 * Retrieve record by name
 	 *
-	 * @return  object
+	 * @param   string  $name
+	 * @return  mixed   Asset|null
 	 */
 	public static function findByName($name)
 	{
