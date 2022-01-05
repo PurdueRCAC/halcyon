@@ -6,7 +6,7 @@ use App\Modules\Storage\Models\StorageResource;
 use App\Modules\Storage\Models\Directory;
 
 /**
- * Storage listener for resources
+ * Storage listener for scratch spaces
  */
 class StorageScratch
 {
@@ -22,7 +22,7 @@ class StorageScratch
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * This performs any necessary setup or other functions of scratch space
 	 *
 	 * @param   ResourceMemberCreated  $event
 	 * @return  void
@@ -40,16 +40,21 @@ class StorageScratch
 			// First check if we have a storage dir already
 			$dir = $storage->directories()
 				->where('name', '=', $event->user->username)
-				->first();
+				->count();
 
 			if ($dir)
 			{
 				continue;
 			}
 
-			// Some resources require alphabetical subdivision
 			$p = $event->user->username;
 
+			// Some resources require alphabetical subdivision
+			//
+			// 75 = Rice
+			// 76 = Snyder
+			// 83 = Halstead
+			// 86 = HalsteadGPU
 			if (in_array($event->resource->id, array(83, 86, 75, 76)))
 			{
 				$l = substr($event->user->username, 0, 1);

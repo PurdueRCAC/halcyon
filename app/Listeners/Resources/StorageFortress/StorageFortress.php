@@ -37,20 +37,9 @@ class StorageFortress
 			return;
 		}
 
-		$resource = Asset::query()
-			->where('rolename', '=', 'HPSSUSER')
-			->first();
-
-		if (!$resource)
+		if (!$this->ensureResourceMembership($event->user))
 		{
 			return;
-		}
-
-		event($ev = new ResourceMemberStatus($resource, $event->user));
-
-		if ($ev->status == 1 || $ev->status == 4)
-		{
-			event($ev = new ResourceMemberCreated($resource, $event->user));
 		}
 
 		if (!$event->user->id)
@@ -58,8 +47,8 @@ class StorageFortress
 			return;
 		}
 
-		// Add DB tracking entry for fortress
-		$queueid = 33338;
+		// Add DB tracking entry for Fortress
+		$queueid = 33338; // "Research Storage" queue for the ITaP group
 
 		$qu = QueueUser::query()
 			->where('queueid', '=', $queueid)
@@ -86,22 +75,35 @@ class StorageFortress
 	 */
 	public function handleUnixGroupMemberCreated(UnixGroupMemberCreated $event)
 	{
+		$this->ensureResourceMembership($event->member->user);
+	}
+
+	/**
+	 * Check if they have the HPSS role, if not, give them that role
+	 *
+	 * @param   User  $user
+	 * @return  bool
+	 */
+	private function ensureResourceMembership($user)
+	{
 		$resource = Asset::query()
 			->where('rolename', '=', 'HPSSUSER')
 			->first();
 
 		if (!$resource)
 		{
-			return;
+			return false;
 		}
 
-		// Check if they have the HPSS role, if not, give them that role
-		event($ev = new ResourceMemberStatus($resource, $event->member->user));
+		event($ev = new ResourceMemberStatus($resource, $user));
 
+		// 1 == no role, 4 == removal pending
 		if ($ev->status == 1 || $ev->status == 4)
 		{
 			// Make call to role provision to generate role
-			event($ev = new ResourceMemberCreated($resource, $event->member->user));
+			event($ev = new ResourceMemberCreated($resource, $user));
 		}
+
+		return true;
 	}
 }

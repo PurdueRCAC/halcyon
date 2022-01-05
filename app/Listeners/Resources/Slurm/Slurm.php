@@ -4,7 +4,7 @@ namespace App\Listeners\Resources\Slurm;
 use App\Modules\Queues\Events\QueueReading;
 
 /**
- * Knowledge base listener for Resources
+ * Slurm listener for Resources
  */
 class Slurm
 {
@@ -20,7 +20,7 @@ class Slurm
 	}
 
 	/**
-	 * Unpublish linked pages when a resource is trashed
+	 * Format queue allocations for Slurm
 	 *
 	 * @param   QueueReading  $event
 	 * @return  void

@@ -35,8 +35,10 @@ class StorageHome
 			return;
 		}
 
-		// Need to check for Home dir and create if necessary
-		// First check if we have a storage dir already
+		// Get the Home resource
+		//
+		// Home directories can either be shared across multiple resources
+		// or specific to a resource. Check which one we should load.
 		if ($event->resource->home && $event->resource->home != 'shared')
 		{
 			$home = Asset::query()
@@ -56,6 +58,7 @@ class StorageHome
 			return;
 		}
 
+		// Check if we have a storage dir already and create if not
 		$dir = Directory::query()
 			->where('name', '=', $event->user->username)
 			->where('resourceid', '=', $home->id)
@@ -66,7 +69,6 @@ class StorageHome
 			return;
 		}
 
-		// Get values
 		$storage = StorageResource::query()
 			->where('parentresourceid', '=', $home->id)
 			->first();
