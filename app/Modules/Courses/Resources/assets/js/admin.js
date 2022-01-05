@@ -50,6 +50,20 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
+	var autocompleteUsers = function (url) {
+		return function (request, response) {
+			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
+				response($.map(data.data, function (el) {
+					return {
+						label: el.name + ' (' + el.username + ')',
+						name: el.name,
+						id: (el.id ? el.id : el.username),
+					};
+				}));
+			});
+		};
+	};
+
 	var newsuser = $(".form-users");
 	if (newsuser.length) {
 		newsuser.tagsInput({
@@ -61,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				height: 150,
 				delay: 100,
 				minLength: 1,
-				open: function (e, ui) {
+				open: function () { //e, ui
 					var acData = $(this).data('ui-autocomplete');
 
 					acData

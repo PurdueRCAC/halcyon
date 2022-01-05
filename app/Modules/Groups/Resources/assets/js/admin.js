@@ -1,9 +1,6 @@
 /* global $ */ // jquery.js
 /* global Halcyon */ // core.js
-/* global WSPutURL */ // core.js
-/* global WSDeleteURL */ // core.js
 /* global SetError */ // common.js
-/* global ERRORS */ // common.js
 
 /**
  * Unix base groups
@@ -72,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	document.querySelectorAll('.reveal').forEach(function (item) {
-		item.addEventListener('click', function (e) {
+		item.addEventListener('click', function () {
 			document.querySelector(this.getAttribute('data-toggle')).classList.toggle('hide');
 
 			var text = this.getAttribute('data-text');

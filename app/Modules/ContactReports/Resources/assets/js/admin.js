@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				height: 150,
 				delay: 100,
 				minLength: 1,
-				open: function (e, ui) {
+				open: function () { //e, ui
 					var acData = $(this).data('ui-autocomplete');
 
 					acData
