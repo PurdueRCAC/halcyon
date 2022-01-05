@@ -57,6 +57,8 @@
   --check-border: #cdcdcd;
   --check-back-checked: #222;
   --check-border-checked: #222;
+  --btn-cl: #212529;
+  --btn-cl-focus: #000;
   --btn-secondary-bg: #fff;
   --btn-secondary-br: #dbdbdb;
   --btn-secondary-cl: #333;
@@ -171,6 +173,8 @@
   --check-border: transparent;
   --check-back-checked: #5897fb;
   --check-border-checked: #5897fb;
+  --btn-cl: #e1e1e1;
+  --btn-cl-focus: #fff;
   --btn-secondary-bg: #f1f1f1;
   --btn-secondary-br: #f1f1f1;
   --btn-secondary-cl: #333;
@@ -2535,9 +2539,13 @@ fieldset.adminform fieldset {
   right: 1em;
 }
 
-/*.btn {
-  color: var(--body-text);
-}*/
+.btn {
+  color: var(--btn-cl);
+}
+.btn:hover,
+.btn:focus {
+  color: var(--btn-cl-focus);
+}
 .btn-secondary {
   background-color: var(--btn-secondary-bg);
   border-color: var(--btn-secondary-br);
@@ -2825,6 +2833,10 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   font-weight: bold;
 }
 .modal-header {
+  padding: 1rem 2rem;
+  border-color: var(--ui-widget-br);
+}
+.modal-footer {
   padding: 1rem 2rem;
   border-color: var(--ui-widget-br);
 }
@@ -3438,11 +3450,13 @@ select.filter_search {
 }
 
 .toolbar-box .btn {
+  color: var(--btn-secondary-cl);
   background-color: #fff;
   border-color: #e5e5e5; /*rgba(0, 0, 0, 0.15);*/
   position: relative;
 }
 .toolbar-box .btn:hover {
+  color: var(--btn-secondary-cl-focus);
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }
 .toolbar-box .btn.disabled,
