@@ -171,7 +171,7 @@ foreach ($rows as $event)
 		{!! $event->body !!}
 		<div class="dialog-footer newsattend">
 			@if ($event->url)
-				@if (auth()->user() && in_array(config()->get('module.news.ignore_role', 4), auth()->user()->getAuthorisedRoles()))
+				@if (auth()->user() && $ignore && in_array($ignore, auth()->user()->getAuthorisedRoles()))
 					@if ($reserved)
 						<div class="text-success">{{ trans('widget.coffeehours::coffeehours.reserved by', ['name' => $reserved]) }}</div>
 					@else
@@ -179,7 +179,13 @@ foreach ($rows as $event)
 					@endif
 				@else
 					@if ($reserved)
-						<div class="text-success">This time is reserved.</div>
+						<div class="text-success">
+							@if (auth()->user() && auth()->user()->can('manage news'))
+								{{ trans('widget.coffeehours::coffeehours.reserved by', ['name' => $reserved]) }}
+							@else
+								This time is reserved.
+							@endif
+						</div>
 					@elseif ($now->getTimestamp() < $endregistration->getTimestamp())
 						@if (auth()->user())
 							@if (!$attending && $canAttend)

@@ -44,6 +44,12 @@ class Roles extends Select
 			$item->text = str_repeat('|&mdash;', $item->level) . $item->title;
 		});
 
+		$none = new Role;
+		$none->value = 0;
+		$none->text = trans('global.none');
+
+		$options->prepend($none);
+
 		return $options->toArray();
 	}
 }
