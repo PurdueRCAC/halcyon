@@ -7,7 +7,9 @@ use App\Modules\Storage\Events\DirectoryDeleted;
 use App\Modules\Storage\Events\LoanCreated;
 use App\Modules\Storage\Events\PurchaseCreated;
 use App\Modules\Storage\Models\Directory;
+use App\Modules\Storage\Models\StorageResource;
 use App\Modules\Groups\Models\UnixGroup;
+use App\Modules\Resources\Models\Asset;
 use App\Modules\Messages\Models\Type as MessageType;
 
 /**
@@ -31,6 +33,17 @@ class Depot
 	}
 
 	/**
+	 * Get the resource's ID
+	 *
+	 * @return  int
+	 */
+	private function getResourceId()
+	{
+		$asset = Asset::findByName('depot');
+		return $asset ? $asset->id : 64;
+	}
+
+	/**
 	 * Setup default notifications for new directory
 	 *
 	 * @param   DirectoryCreated   $event
@@ -41,7 +54,7 @@ class Depot
 		$dir = $event->directory;
 
 		// Create bonus thing if we're Depot, and root directory
-		if ($dir->resourceid != 64)
+		if ($dir->resourceid != $this->getResourceId())
 		{
 			return;
 		}
@@ -73,10 +86,19 @@ class Depot
 			}
 		}
 
+		$fortress = Asset::findByName('fortress');
+
 		$dr = new Directory;
 		$dr->fill($data);
-		$dr->resourceid = 48; // Fortress
-		$dr->storageresourceid = 1;
+		$dr->resourceid = $fortress ? $fortress->id : 48;
+
+		$storage = StorageResource::query()
+			->where('parentresourceid', '=', $dr->resourceid)
+			->limit(1)
+			->get()
+			->first();
+
+		$dr->storageresourceid = $storage ? $storage->id : 1;
 		$dr->parentstoragedirid = 0;
 		$dr->unixgroupid = $unixgroups->id;
 		$dr->owneruserid = 0;
@@ -99,10 +121,19 @@ class Depot
 			return;
 		}
 
+		$box = Asset::findByName('boxfolder');
+
 		$dr = new Directory;
 		$dr->fill($data);
-		$dr->resourceid = 93; // Box Research Lab Folder
-		$dr->storageresourceid = 21;
+		$dr->resourceid = $box ? $box->id : 93; // Box Research Lab Folder
+
+		$storage = StorageResource::query()
+			->where('parentresourceid', '=', $dr->resourceid)
+			->limit(1)
+			->get()
+			->first();
+
+		$dr->storageresourceid = $storage ? $storage->id : 21;
 		$dr->parentstoragedirid = 0;
 		$dr->unixgroupid = $unixgroups->id;
 		$dr->owneruserid = 0;
@@ -123,7 +154,7 @@ class Depot
 	{
 		$dir = $event->directory;
 
-		if ($dir->resourceid != 64)
+		if ($dir->resourceid != $this->getResourceId())
 		{
 			return;
 		}
@@ -140,8 +171,9 @@ class Depot
 	public function handleLoanCreated(LoanCreated $event)
 	{
 		$loan = $event->loan;
+		$depotid = $this->getResourceId();
 
-		if ($loan->resourceid != 64 || $loan->bytes <= 0)
+		if ($loan->resourceid != $depotid || $loan->bytes <= 0)
 		{
 			return;
 		}
@@ -149,7 +181,7 @@ class Depot
 		$dir = Directory::query()
 			->where('parentstoragedirid', '=', 0)
 			->where('groupid', '=', $loan->groupid)
-			->where('resourceid', '=', 64)
+			->where('resourceid', '=', $depotid)
 			->first();
 
 		if (!$dir)
@@ -192,8 +224,9 @@ class Depot
 	public function handlePurchaseCreated(PurchaseCreated $event)
 	{
 		$purchase = $event->purchase;
+		$depotid = $this->getResourceId();
 
-		if ($purchase->resourceid != 64 || $purchase->bytes <= 0)
+		if ($purchase->resourceid != $depotid || $purchase->bytes <= 0)
 		{
 			return;
 		}
@@ -201,7 +234,7 @@ class Depot
 		$dir = Directory::query()
 			->where('parentstoragedirid', '=', 0)
 			->where('groupid', '=', $purchase->groupid)
-			->where('resourceid', '=', 64)
+			->where('resourceid', '=', $depotid)
 			->first();
 
 		if (!$dir)
@@ -285,7 +318,7 @@ class Depot
 	{
 		$dir = $event->directory;
 
-		if ($dir->resourceid != 64)
+		if ($dir->resourceid != $this->getResourceId())
 		{
 			return;
 		}
