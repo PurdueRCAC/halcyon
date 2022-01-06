@@ -41,6 +41,21 @@ class GroupsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
+	 * 		"name":          "state",
+	 * 		"description":   "Entry state",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "active",
+	 * 			"enum": [
+	 * 				"active",
+	 * 				"trashed",
+	 * 				"*"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "unixgroup",
 	 * 		"description":   "Unix group name",
 	 * 		"required":      false,
@@ -139,6 +154,7 @@ class GroupsController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
+			'state'   => $request->input('state', 'active'),
 			'search'   => $request->input('search', ''),
 			'searchuser' => $request->input('searchuser', ''),
 			'owneruserid'   => $request->input('owneruserid', 0),
@@ -162,6 +178,15 @@ class GroupsController extends Controller
 
 		$query = Group::query()
 			->select(DB::raw('DISTINCT ' . $g . '.id, ' . $g . '.name, ' . $g . '.owneruserid, ' . $g . '.unixgroup, ' . $g . '.unixid, ' . $g . '.githuborgname, ' . $g . '.datetimecreated, ' . $g . '.datetimeremoved'));
+
+		if ($filters['state'] == 'trashed')
+		{
+			$query->onlyTrashed();
+		}
+		elseif ($filters['state'] == '*')
+		{
+			$query->withTrashed();
+		}
 
 		if ($filters['search'])
 		{
