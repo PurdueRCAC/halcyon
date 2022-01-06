@@ -2,6 +2,7 @@
 namespace App\Modules\Groups\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
@@ -23,7 +24,7 @@ use Carbon\Carbon;
  */
 class Group extends Model
 {
-	use ErrorBag, Validatable, Historable;
+	use ErrorBag, Validatable, Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.

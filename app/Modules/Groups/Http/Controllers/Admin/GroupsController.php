@@ -27,7 +27,7 @@ class GroupsController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
-			'state'     => null,
+			'state'     => 'active',
 			'department' => 0,
 			'fieldofscience' => 0,
 			// Paging
@@ -82,6 +82,15 @@ class GroupsController extends Controller
 						->orWhere($g . '.unixgroup', 'like', '%' . $filters['search'] . '%');
 				});
 			}
+		}
+
+		if ($filters['state'] == 'trashed')
+		{
+			$query->onlyTrashed();
+		}
+		elseif ($filters['state'] == '*')
+		{
+			$query->withTrashed();
 		}
 
 		if ($filters['department'])

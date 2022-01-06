@@ -106,6 +106,13 @@ app('pathway')
 				</div>
 			</div>
 			<div class="col col-md-9 text-right">
+				<label class="sr-only" for="filter-state">{{ trans('groups::groups.state') }}</label>
+				<select name="state" id="filter-state" class="form-control filter filter-submit">
+					<option value="*">{{ trans('groups::groups.all states') }}</option>
+					<option value="active"<?php if ($filters['state'] == 'active') { echo ' selected="selected"'; } ?>>{{ trans('global.active') }}</option>
+					<option value="trashed"<?php if ($filters['state'] == 'trashed') { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
+				</select>
+
 				<label class="sr-only" for="filter_fieldofscience">{{ trans('groups::groups.field of science') }}</label>
 				<select name="fieldofscience" id="filter_fieldofscience" class="form-control filter-submit searchable-select">
 					<option value="0">{{ trans('groups::groups.all fields of science') }}</option>
