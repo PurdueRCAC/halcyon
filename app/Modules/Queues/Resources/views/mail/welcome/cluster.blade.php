@@ -35,7 +35,7 @@ $standby = false;
 		</tr>
 		<tr>
 			<th scope="row"><strong>Home directory</strong></th>
-			<td>{!! $data->resource->home == 'shared' ? 'shared' : '<strong>specific</strong> to ' . $data->resource->name !!}, 25GB</td>
+			<td>{!! $data->resource->params->get('home') == 'shared' ? 'shared' : '<strong>specific</strong> to ' . $data->resource->name !!}, 25GB</td>
 		</tr>
 @if ($data->storage)
 @php
@@ -43,20 +43,21 @@ $standby = false;
 @endphp
 		<tr>
 			<th scope="row"><strong>Scratch space</strong></th>
-			<td>{{ $data->storage->space }} space; {{ $data->storage->files }} files</td>
+			<td>{{ $data->storage->formattedDefaultquotaspace }} space; {{ number_format($data->storage->defaultquotafile) }} files</td>
 		</tr>
 @endif
 @foreach ($data->queues as $i => $queue)
 		<tr>
 			<th scope="row">{!! ($i == 0 ? '<strong>Queues</strong>' : '') !!}</th>
-			<td>{{ $queue->name }} - {{ $queue->totalcores }} cores, {{ $queue->humanWalltime }}</td>
+			<td>{{ $queue->name }} - {{ $queue->totalcores ? $queue->totalcores . ' cores, ' : '' }}{{ $queue->humanWalltime }}</td>
 		</tr>
 @endforeach
 @foreach ($data->standbys as $sb)
 @php
-$standby = true;
 if (preg_match("/^partner/", $sb->name)):
 	$partner = true;
+else:
+	$standby = true;
 endif;
 @endphp
 		<tr>
@@ -85,7 +86,7 @@ You also have access to the "standby" queue. This queue utilizes idle cores from
 
 Scratch space is available for storing large input and output data during computations. This space offers both a much larger quota and better performance than your home directory.
 
-<p class="alert alert-warning">There is no backup service for scratch directories and files not accessed or modified in the [last 60 days will be removed]({{ route('page', ['uri' => 'policies/scratchpurge']) }}). Files in scratch directories are not recoverable if they are purged or accidentally deleted.</p>
+<p class="alert alert-warning">There is no backup service for scratch directories and files not accessed or modified in the <a href="{{ route('page', ['uri' => 'policies/scratchpurge']) }}">last 60 days will be removed</a>. Files in scratch directories are not recoverable if they are purged or accidentally deleted.</p>
 @endif
 
 ### Archival Space

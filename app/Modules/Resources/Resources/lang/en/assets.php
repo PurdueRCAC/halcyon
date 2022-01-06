@@ -92,5 +92,9 @@ return [
 		'rstudio desc' => 'URL for launching RStudio',
 		'url' => 'URL',
 		'url desc' => 'Alternate URL to point the resource to',
+		'home' => 'Home directories',
+		'home desc' => 'The type of home directories this resource has.',
+		'shared home' => 'Shared',
+		'dedicated home' => 'Dedicated',
 	],
 ];

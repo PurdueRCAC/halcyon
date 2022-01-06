@@ -172,6 +172,15 @@ app('pathway')
 							<input type="text" class="form-control" name="params[url]" id="params-url" value="{{ $row->params->get('url') }}" />
 							<span class="form-text text-muted">{{ trans('resources::assets.params.url desc') }}</span>
 						</div>
+
+						<div class="form-group">
+							<label for="params-home">{{ trans('resources::assets.params.home') }}</label>
+							<select class="form-control" name="params[home]" id="params-home">
+								<option value="dedicated"<?php if ($row->params->get('home') != 'shared') { echo ' selected="selected"'; } ?>>{{ trans('resources::assets.params.dedicated home') }}</option>
+								<option value="shared"<?php if ($row->params->get('home') == 'shared') { echo ' selected="selected"'; } ?>>{{ trans('resources::assets.params.shared home') }}</option>
+							</select>
+							<span class="form-text text-muted">{{ trans('resources::assets.params.home desc') }}</span>
+						</div>
 					</fieldset>
 				</div>
 			</div>
