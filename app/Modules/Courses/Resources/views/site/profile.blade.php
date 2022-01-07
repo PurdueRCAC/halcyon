@@ -72,6 +72,7 @@
 					{
 						$class_data = null;
 						$usernames = array();
+						$studentids = array();
 
 						// Find class data
 						foreach ($classes as $c)
@@ -90,6 +91,11 @@
 								{
 									foreach ($class_data->enrollment as $student)
 									{
+										if (!in_array($student->externalId, $studentids))
+										{
+											$studentids[] = $student->externalId;
+										}
+
 										// Attempt to look up student in our records
 										$u = App\Modules\Users\Models\User::findByOrganizationId($student->externalId);
 
@@ -150,7 +156,7 @@
 								@if (!$class->isWorkshop() && $class_data)
 									{{ count($members) }}
 									@if (isset($class_data->enrollment))
-										{{ ' / ' . count($class_data->enrollment) }}
+										{{ ' / ' . count($studentids) }}
 									@else
 										{{ ' / --' }}
 									@endif
