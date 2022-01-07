@@ -33,6 +33,7 @@ class Coffeehours extends Widget
 		$stop  = $week_end->format('Y-m-d') . ' 00:00:00';
 
 		$rows = $type->articles()
+			->with('associations')
 			->where('published', '=', 1)
 			->where('template', '=', 0)
 			->where(function($where) use ($start, $stop)

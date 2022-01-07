@@ -62,7 +62,7 @@ class PagesController extends Controller
 		// Get records
 		$p = new Page;
 
-		$query = $p->query();
+		$query = $p->query()->with('viewlevel');
 
 		$page = $p->getTable();
 		/*$version = (new Version())->getTable();

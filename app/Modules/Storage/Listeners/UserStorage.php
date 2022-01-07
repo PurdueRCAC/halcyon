@@ -38,6 +38,7 @@ class UserStorage
 
 		// Grab privately owned resources
 		$dirs = Directory::query()
+			->with('storageResource')
 			->where('owneruserid', '=', $user->id)
 			->where('parentstoragedirid', '=', 0)
 			->get();

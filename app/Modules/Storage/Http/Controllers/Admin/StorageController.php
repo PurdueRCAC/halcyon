@@ -49,7 +49,7 @@ class StorageController extends Controller
 		$filters['page'] = $reset ? 1 : $filters['page'];
 
 		// Get records
-		$query = StorageResource::query()->withTrashed();
+		$query = StorageResource::query()->withTrashed()->with('resource');
 
 		if ($filters['state'] != '*')
 		{

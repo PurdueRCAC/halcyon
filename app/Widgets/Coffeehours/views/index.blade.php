@@ -36,7 +36,7 @@ foreach ($rows as $event)
 	$reserved  = false;
 	$canAttend = true;
 
-	foreach ($event->associations()->get() as $assoc)
+	foreach ($event->associations as $assoc)
 	{
 		if (auth()->user() && $assoc->associd == auth()->user()->id)
 		{
@@ -118,13 +118,13 @@ foreach ($rows as $event)
 				echo '<li><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="' . $event->url . '">' . \Illuminate\Support\Str::limit($event->url, 50) . '</a></li>';
 			}
 
-			$resourceArray;
-			if (count($event->resources) > 0)
+			$resources = $event->resourceList()->get();
+			if (count($resources) > 0)
 			{
 				$resourceArray = array();
-				foreach ($event->resources as $resource)
+				foreach ($resources as $resource)
 				{
-					$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->resource->name)]) . '">' . $resource->resource->name . '</a>';
+					$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->name)]) . '">' . $resource->name . '</a>';
 				}
 				echo '<li><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray) . '</li>';
 			}

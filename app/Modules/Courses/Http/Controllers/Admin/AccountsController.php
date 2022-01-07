@@ -59,7 +59,9 @@ class AccountsController extends Controller
 		}
 		$filters['page'] = $reset ? 1 : $filters['page'];
 
-		$query = Account::query();
+		$query = Account::query()
+			->with('user')
+			->with('resource');
 
 		if ($filters['search'])
 		{

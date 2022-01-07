@@ -63,7 +63,7 @@ class PagesController extends Controller
 			$filters['order_dir'] = 'asc';
 		}
 
-		$query = Page::query();
+		$query = Page::query()->with('viewlevel');
 
 		$p = (new Page)->getTable();
 		$a = (new Associations)->getTable();

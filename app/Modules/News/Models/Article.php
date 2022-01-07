@@ -1157,9 +1157,9 @@ class Article extends Model
 		}
 
 		$resources = array();
-		foreach ($this->resources as $resource)
+		foreach ($this->resourceList()->get() as $resource)
 		{
-			array_push($resources, $resource->resource->name);
+			array_push($resources, $resource->name);
 		}
 
 		if (count($resources) > 1)

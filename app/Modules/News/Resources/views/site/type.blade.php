@@ -98,7 +98,7 @@ app('pathway')
 							if (count($resources) > 0):
 								$resourceArray = array();
 								foreach ($resources as $resource):
-									if (!$resource->resource):
+									if (!$resource->name):
 										continue;
 									endif;
 									$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->name)]) . '">' . $resource->name . '</a>';

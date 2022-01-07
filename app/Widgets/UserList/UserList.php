@@ -54,7 +54,8 @@ class UserList extends Widget
 		$query = User::query()
 			->select($a . '.*')
 			->join($u, $u . '.userid', $a . '.id')
-			->with('roles');
+			->with('roles')
+			->with('facets');
 
 		$roles = $this->params->get('role_id');
 		if (!empty($roles))

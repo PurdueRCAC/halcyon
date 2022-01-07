@@ -54,6 +54,9 @@ class IssuesController extends Controller
 		}
 
 		$query = Issue::query()
+			->with('creator')
+			->with('resources')
+			->with('tags')
 			->where('issuetodoid', '=', 0);
 
 		if ($filters['tag'])
@@ -99,6 +102,7 @@ class IssuesController extends Controller
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
 		$todos = ToDo::query()
+			->with('timeperiod')
 			->get();
 
 		return view('issues::admin.issues.index', [

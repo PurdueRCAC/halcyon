@@ -53,7 +53,8 @@ class DirectoriesController extends Controller
 		$filters['page'] = $reset ? 1 : $filters['page'];
 
 		// Get records
-		$query = Directory::query();
+		$query = Directory::query()
+			->with('group');
 
 		$d = (new Directory)->getTable();
 

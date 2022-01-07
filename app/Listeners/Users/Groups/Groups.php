@@ -192,6 +192,7 @@ class Groups
 			}
 		}*/
 		$queueusers = $user->queues()
+			->with('queue')
 			->whereIn('membertype', [1, 4])
 			->get();
 
@@ -240,7 +241,7 @@ class Groups
 				continue;
 			}
 
-			if (!$unixgroup->group)
+			if (!$unixgroup->group || $unixgroup->group->trashed())
 			{
 				continue;
 			}

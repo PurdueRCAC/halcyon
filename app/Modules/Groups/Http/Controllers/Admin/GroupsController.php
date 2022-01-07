@@ -109,6 +109,7 @@ class GroupsController extends Controller
 
 		$rows = $query
 			->withCount('members')
+			->with('departmentList')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 

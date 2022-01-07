@@ -212,10 +212,13 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-3">
-					{{ $row->type->name }}
+					{{ $types->where('id', $row->resourcetype)->first()->name }}
 				</td>
 				<td class="priority-4">
-					{{ $row->batchsystm ? $row->batchsystm->name : '' }}
+					@php
+					$b = $batchsystems->where('id', $row->batchsystem)->first();
+					@endphp
+					{{ $b ? $b->name : '' }}
 				</td>
 				<td class="priority-4 text-right">
 					<a href="{{ route('admin.resources.subresources', ['resource' => $row->id]) }}">

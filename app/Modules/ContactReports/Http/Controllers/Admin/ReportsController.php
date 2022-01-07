@@ -72,7 +72,9 @@ class ReportsController extends Controller
 
 		$cr = (new Report)->getTable();
 
-		$query = Report::query();
+		$query = Report::query()
+			->with('creator')
+			->with('users');
 
 		if ($filters['tag'])
 		{

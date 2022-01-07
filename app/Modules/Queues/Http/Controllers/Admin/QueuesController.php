@@ -75,6 +75,8 @@ class QueuesController extends Controller
 
 		$query = Queue::query()
 			->select($q . '.*')
+			->with('subresource')
+			->with('group')
 			->join($c, $c . '.subresourceid', $q . '.subresourceid')
 			->join($r, $r . '.id', $c . '.resourceid')
 			->whereNull($r . '.datetimeremoved')
