@@ -58,20 +58,22 @@ class UnixGroupMembers
 				$userdir->unixgroupid = $event->member->unixgroupid;
 				$userdir->owneruserid = $event->member->userid;
 				$userdir->storageresourceid = $dir->storageresourceid;
+				$userdir->ownerread   = 1;
+				$userdir->ownerwrite  = 1;
 
 				if ($dir->autouser == '1')
 				{
 					// Group readable
 					$userdir->groupread  = 1;
 					$userdir->groupwrite = 0;
-					$userdir->publicread  = 0;
+					$userdir->publicread = 0;
 				}
 				elseif ($dir->autouser == '2')
 				{
 					// Private
 					$userdir->groupread  = 0;
 					$userdir->groupwrite = 0;
-					$userdir->publicread  = 0;
+					$userdir->publicread = 0;
 				}
 
 				$userdir->save();

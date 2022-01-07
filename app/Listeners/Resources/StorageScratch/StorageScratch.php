@@ -69,6 +69,8 @@ class StorageScratch
 				'bytes' => $storage->defaultquotaspace,
 				'files' => $storage->defaultquotafile,
 				'owneruserid' => $event->user->id,
+				'ownerread' => 1,
+				'ownerwrite' => 1,
 				'storageresourceid' => $storage->id,
 			]);
 

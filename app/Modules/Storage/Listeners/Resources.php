@@ -188,6 +188,8 @@ class Resources
 				'files'             => $row->defaultquotafile,
 				'owneruserid'       => $event->user->id,
 				'storageresourceid' => $row->id,
+				'ownerread'         => 1,
+				'ownerwrite'        => 1,
 			]);
 			$directory->save();
 
@@ -227,6 +229,8 @@ class Resources
 			'files'             => $storageResource->defaultquotafile,
 			'owneruserid'       => $event->user->id,
 			'storageresourceid' => $storageResource->id,
+			'ownerread'         => 1,
+			'ownerwrite'        => 1,
 		]);
 		$directory->save();
 

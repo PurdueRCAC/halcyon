@@ -609,6 +609,8 @@ class DirectoriesController extends Controller
 					'resourceid'  => $row->resourceid,
 					'unixgroupid' => $row->unixgroupid,
 					'userid'      => $row->userid,
+					'ownerread'   => 1,
+					'ownerwrite'  => 1,
 				];
 
 				if ($row->autouser == 1)
