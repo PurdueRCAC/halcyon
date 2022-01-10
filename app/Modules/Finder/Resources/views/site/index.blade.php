@@ -41,8 +41,8 @@ app('pathway')->append(
                 <div class="cd-row">
                     <div class="cd-cell cd-questions">
                         <div class="cd-overflow">
-                            <div class="step-header questions-header">
-                                <h3 class="sub-heading sr-only">Filter Questions</h3>
+                            <div class="step-header questions-header sr-only">
+                                <h3 class="sub-heading">Filter Questions</h3>
 
                                 <p>Answer these questions to help identify storage solutions and services that are most suitable for your needs.</p>
 
@@ -54,10 +54,12 @@ app('pathway')->append(
                         </div>
                     </div>
                     <div class="cd-cell cd-services">
-                        <h3 class="sub-heading sr-only">Services</h3>
+                        <div class="sr-only">
+                            <h3 class="sub-heading">Services</h3>
 
-                        <div class="step-header services-header">
-                            <p>Select data storage solutions you would like to compare in details.</p>
+                            <div class="step-header services-header">
+                                <p>Select data storage solutions you would like to compare in details.</p>
+                            </div>
                         </div>
 
                         <div class="text-right">

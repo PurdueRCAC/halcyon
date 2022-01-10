@@ -24,7 +24,6 @@
 .step-header {
 	background-color: #f1f1f1;
 	padding: 1em;
-	display: none;
 }
 .step-header>*:first-child {
 	margin-top: 0;
