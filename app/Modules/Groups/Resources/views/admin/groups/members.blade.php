@@ -15,6 +15,7 @@ $disabled = collect([]);
 $processed = array();
 
 $users = $group->members()
+	->with('user')
 	->orderBy('datecreated', 'desc')
 	->get();
 
@@ -83,6 +84,7 @@ foreach ($queues as $queue)
 	$resources[$queue->resource->name][] = $queue;
 
 	$users = $queue->users()
+		->with('user')
 		->orderBy('datetimecreated', 'desc')
 		->get();
 
@@ -161,6 +163,7 @@ foreach ($unixgroups as $unixgroup)
 	}
 
 	$users = $unixgroup->members()
+		->with('user')
 		->get();
 
 	$unixgroup->activemembers = $users;

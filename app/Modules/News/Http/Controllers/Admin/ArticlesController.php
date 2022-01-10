@@ -80,6 +80,7 @@ class ArticlesController extends Controller
 			->select($n . '.*')
 			->with('type')
 			->with('associations')
+			->with('mailer')
 			->where($n . '.template', '=', $this->template);
 
 		if ($filters['search'])

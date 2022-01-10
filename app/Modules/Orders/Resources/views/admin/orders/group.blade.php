@@ -21,6 +21,8 @@
 				<tbody>
 					<?php
 					$orders = \App\Modules\Orders\Models\Order::query()
+						->with('accounts')
+						//->with('items')
 						->where('groupid', '=', $group->id)
 						->orderBy('datetimecreated', 'desc')
 						->paginate();
@@ -53,12 +55,14 @@
 								{
 									return $value->isPaid();
 								})->count();
+
+								$order->items = $order->items()->with('product')->get();
 								$itemsfulfilled = $order->items->filter(function($value, $key)
 								{
 									return $value->isFulfilled();
 								})->count();
 								?>
-								<span class="badge badge-sm order-status {{ str_replace(' ', '-', $order->status) }}" data-tip="Accounts: {{ $order->accounts->count() }}<br />Assigned: {{ $accountsassigned }}<br />Approved: {{ $accountsapproved }}<br />Denied: {{ $accountsdenied }}<br />Paid: {{ $accountspaid }}<br />---<br />Items: {{ $order->items->count() }}<br />Fulfilled: {{ $itemsfulfilled }}">
+								<span class="badge badge-sm order-status {{ str_replace(' ', '-', $order->status) }}" data-tip="Accounts: {{ $order->accounts->count() }}<br />Assigned: {{ $accountsassigned }}<br />Approved: {{ $accountsapproved }}<br />Denied: {{ $accountsdenied }}<br />Paid: {{ $accountspaid }}<br />---<br />Items: {{ count($order->items) }}<br />Fulfilled: {{ $itemsfulfilled }}">
 									{{ trans('orders::orders.' . $order->status) }}
 								</span>
 							</td>

@@ -459,6 +459,7 @@ class Groups
 
 		// Owner
 		$memberships = Member::query()
+			->with('group')
 			->where('userid', '=', $user->id)
 			->whereIsManager()
 			->orderBy('datecreated', 'asc')

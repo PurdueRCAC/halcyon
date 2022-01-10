@@ -161,6 +161,8 @@ class Service extends Model
 		}*/
 
 		$nodes = self::query()
+			->with('facets')
+			//->with('fields')
 			->orderBy('title', 'asc')
 			->get();
 
@@ -181,6 +183,7 @@ class Service extends Model
 			}
 
 			$fields = $node->fields()
+				->with('field')
 				->get();
 
 			if (count($fields))
