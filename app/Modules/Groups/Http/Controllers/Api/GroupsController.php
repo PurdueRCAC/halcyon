@@ -177,6 +177,7 @@ class GroupsController extends Controller
 		$g = (new Group)->getTable();
 
 		$query = Group::query()
+			->with('departments')
 			->select(DB::raw('DISTINCT ' . $g . '.id, ' . $g . '.name, ' . $g . '.owneruserid, ' . $g . '.unixgroup, ' . $g . '.unixid, ' . $g . '.githuborgname, ' . $g . '.datetimecreated, ' . $g . '.datetimeremoved'));
 
 		if ($filters['state'] == 'trashed')

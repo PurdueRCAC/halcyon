@@ -21,6 +21,7 @@ class AccountResource extends JsonResource
 		if (auth()->user() && auth()->user()->can('manage courses'))
 		{
 			$members = $this->members()
+				->with('user')
 				->get();
 
 			$data['members'] = array();
@@ -29,6 +30,12 @@ class AccountResource extends JsonResource
 				$data['members'][] = new MemberResource($item);
 			}
 		}
+
+		$data['user'] = array(
+			'id' => $this->userid,
+			'name' => $this->user ? $this->user->name : trans('global.unknown'),
+			'username' => $this->user ? $this->user->username : trans('global.unknown'),
+		);
 
 		$data['can'] = array(
 			'create' => false,

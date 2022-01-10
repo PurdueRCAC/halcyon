@@ -162,7 +162,7 @@ class SnippetsController extends Controller
 			$filters['order_dir'] = 'asc';
 		}
 
-		$query = SnippetAssociation::query();
+		$query = SnippetAssociation::query()->with('page');
 
 		$p = (new Page)->getTable();
 		$a = (new SnippetAssociation)->getTable();

@@ -97,7 +97,8 @@ class SubresourcesController extends Controller
 		// Build query
 		$s = (new Subresource)->getTable();
 
-		$query = Subresource::query();
+		$query = Subresource::query()
+			->with('queues');
 
 		if ($filters['state'] == 'trashed')
 		{

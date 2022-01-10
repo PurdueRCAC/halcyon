@@ -117,7 +117,8 @@ class UnixGroupsController extends Controller
 			$filters['order_dir'] = UnixGroup::$orderDir;
 		}
 
-		$query = UnixGroup::query();
+		$query = UnixGroup::query()
+			->with('group');
 
 		if ($filters['search'])
 		{

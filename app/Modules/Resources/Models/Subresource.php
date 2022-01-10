@@ -229,7 +229,7 @@ class Subresource extends Model
 
 		$now = Carbon::now();
 
-		$query = $this->queues;
+		$query = $this->queues();
 
 		if (!$this->nodecores)
 		{

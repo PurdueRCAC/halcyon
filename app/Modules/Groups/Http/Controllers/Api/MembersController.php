@@ -139,7 +139,7 @@ class MembersController extends Controller
 			$filters['order_dir'] = Member::$orderDir;
 		}
 
-		$query = Member::query();
+		$query = Member::query()->with('user');
 
 		if ($filters['search'])
 		{
@@ -178,6 +178,7 @@ class MembersController extends Controller
 		{
 			$item->api = route('api.groups.members.read', ['id' => $item->id]);
 			$item->user;
+			$item->user->setHidden(['api_token']);
 		});
 
 		return new ResourceCollection($rows);
@@ -360,6 +361,7 @@ class MembersController extends Controller
 		}
 
 		$row->api = route('api.groups.members.read', ['id' => $row->id]);
+		$row->user->setHidden(['api_token']);
 
 		return new JsonResource($row);
 	}
@@ -420,6 +422,7 @@ class MembersController extends Controller
 		$row = Member::findOrFail($id);
 		$row->api = route('api.groups.members.read', ['id' => $row->id]);
 		$row->user;
+		$row->user->setHidden(['api_token']);
 
 		return new JsonResource($row);
 	}
@@ -542,6 +545,7 @@ class MembersController extends Controller
 
 		$row->api = route('api.groups.members.read', ['id' => $row->id]);
 		$row->user;
+		$row->user->setHidden(['api_token']);
 
 		return new JsonResource($row);
 	}

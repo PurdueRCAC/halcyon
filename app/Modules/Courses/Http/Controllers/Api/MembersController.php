@@ -152,7 +152,7 @@ class MembersController extends Controller
 			$filters['order_dir'] = Member::$orderDir;
 		}
 
-		$query = Member::query();
+		$query = Member::query()->with('user');
 
 		if ($filters['classaccountid'])
 		{

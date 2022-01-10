@@ -100,7 +100,8 @@ class LoansController extends Controller
 		);
 
 		// Get records
-		$query = Loan::query();
+		$query = Loan::query()
+			->with('resource');
 
 		if ($filters['resourceid'])
 		{

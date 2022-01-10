@@ -70,6 +70,7 @@ class QuotasController extends Controller
 
 		$rows = Directory::query()
 			->withTrashed()
+			->with('storageResource')
 			->select($d . '.*', $r . '.getquotatypeid')
 			->join($r, $r . '.id', $d . '.storageresourceid')
 			->where($d . '.owneruserid', '=', $user->id)
@@ -86,6 +87,7 @@ class QuotasController extends Controller
 
 		$rows2 = Directory::query()
 			->withTrashed()
+			->with('storageResource')
 			->select($d . '.*', $r . '.getquotatypeid')
 			->join($r, $r . '.id', $d . '.storageresourceid')
 			->join($g, $g . '.id', $d . '.unixgroupid')

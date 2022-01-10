@@ -98,7 +98,9 @@ class ResourcesController extends Controller
 			$filters['order_dir'] = 'asc';
 		}
 
-		$query = Asset::query();
+		$query = Asset::query()
+			->with('descendents')
+			->with('subresources');
 
 		if ($filters['search'])
 		{

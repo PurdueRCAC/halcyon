@@ -132,7 +132,8 @@ class PurchasesController extends Controller
 		);
 
 		// Get records
-		$query = Purchase::query();
+		$query = Purchase::query()
+			->with('resource');
 
 		if ($filters['resourceid'])
 		{

@@ -124,7 +124,10 @@ class IssuesController extends Controller
 			$filters['order_dir'] = Issue::$orderDir;
 		}
 
-		$query = Issue::query();
+		$query = Issue::query()
+			->with('resources')
+			->with('comments')
+			->with('creator');
 
 		$cr = (new Issue)->getTable();
 

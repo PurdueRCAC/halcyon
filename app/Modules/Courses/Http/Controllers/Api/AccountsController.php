@@ -199,7 +199,7 @@ class AccountsController extends Controller
 			$filters['order_dir'] = Account::$orderDir;
 		}
 
-		$query = Account::query();
+		$query = Account::query()->with('user');
 
 		if ($filters['search'])
 		{

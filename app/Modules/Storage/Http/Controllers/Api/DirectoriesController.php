@@ -111,7 +111,12 @@ class DirectoriesController extends Controller
 		);
 
 		// Get records
-		$query = Directory::query();
+		$query = Directory::query()
+			->with('group')
+			->with('unixgroup')
+			->with('autounixgroup')
+			->with('children')
+			->with('owner');
 
 		if ($filters['state'] != '*')
 		{
@@ -1086,6 +1091,8 @@ class DirectoriesController extends Controller
 						'resourceid'  => $row->resourceid,
 						'unixgroupid' => $row->unixgroupid,
 						'userid'      => $row->userid,
+						'ownerread'   => 1,
+						'ownerwrite'  => 1,
 					];
 
 					if ($row->autouser == 1)

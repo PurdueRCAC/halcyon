@@ -24,7 +24,7 @@ class UnixGroupResource extends JsonResource
 			$data['members'] = array();
 			$data['priormembers'] = array();
 
-			foreach ($this->members()->withTrashed()->get() as $m)
+			foreach ($this->members()->with('user')->withTrashed()->get() as $m)
 			{
 				$ma = $m->toArray();
 				$ma['username'] = ($m->user ? $m->user->username : trans('global.unknown'));

@@ -120,7 +120,8 @@ class StorageController extends Controller
 		);
 
 		// Get records
-		$query = StorageResource::query();
+		$query = StorageResource::query()
+			->with('resource');
 
 		if ($filters['state'] != 'all')
 		{
