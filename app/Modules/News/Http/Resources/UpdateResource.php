@@ -31,13 +31,6 @@ class UpdateResource extends JsonResource
 		$data['can']['admin']  = false;
 
 		$user = auth()->user();
-		if (!$user)
-		{
-			if (auth()->guard('api')->check())
-			{
-				$user = auth()->guard('api')->user();
-			}
-		}
 
 		if ($user)
 		{

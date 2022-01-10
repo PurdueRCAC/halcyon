@@ -8,6 +8,7 @@ $router->group(['prefix' => 'news'], function (Router $router)
 	$router->get('/', [
 		'as'   => 'api.news.index',
 		'uses' => 'ArticlesController@index',
+		'middleware' => 'auth.optional:api',
 	]);
 	$router->post('/', [
 		'as' => 'api.news.create',
@@ -17,10 +18,12 @@ $router->group(['prefix' => 'news'], function (Router $router)
 	$router->post('/preview', [
 		'as' => 'api.news.preview',
 		'uses' => 'ArticlesController@preview',
+		'middleware' => 'auth.optional:api',
 	]);
 	$router->get('{id}', [
 		'as'   => 'api.news.read',
 		'uses' => 'ArticlesController@read',
+		'middleware' => 'auth.optional:api',
 	])->where('id', '[0-9]+');
 	$router->put('{id}/email', [
 		'as'   => 'api.news.email',
@@ -44,6 +47,7 @@ $router->group(['prefix' => 'news'], function (Router $router)
 		$router->get('/', [
 			'as'   => 'api.news.types',
 			'uses' => 'TypesController@index',
+			'middleware' => 'auth.optional:api',
 		]);
 		$router->post('/', [
 			'as' => 'api.news.types.create',
@@ -53,6 +57,7 @@ $router->group(['prefix' => 'news'], function (Router $router)
 		$router->get('{id}', [
 			'as' => 'api.news.types.read',
 			'uses' => 'TypesController@read',
+			'middleware' => 'auth.optional:api',
 		])->where('id', '[0-9]+');
 		$router->put('{id}', [
 			'as' => 'api.news.types.update',
@@ -97,6 +102,7 @@ $router->group(['prefix' => 'news'], function (Router $router)
 		$router->get('/', [
 			'as'   => 'api.news.updates',
 			'uses' => 'UpdatesController@index',
+			'middleware' => 'auth.optional:api',
 		]);
 		$router->post('/', [
 			'as' => 'api.news.updates.create',
@@ -106,6 +112,7 @@ $router->group(['prefix' => 'news'], function (Router $router)
 		$router->get('{id}', [
 			'as' => 'api.news.updates.read',
 			'uses' => 'UpdatesController@read',
+			'middleware' => 'auth.optional:api',
 		])->where('id', '[0-9]+');
 		$router->put('{id}', [
 			'as' => 'api.news.updates.update',
@@ -122,5 +129,6 @@ $router->group(['prefix' => 'news'], function (Router $router)
 	$router->get('{id}/views', [
 		'as'   => 'api.news.views',
 		'uses' => 'ArticlesController@views',
+		'middleware' => 'auth.optional:api',
 	])->where('id', '[0-9]+');
 });

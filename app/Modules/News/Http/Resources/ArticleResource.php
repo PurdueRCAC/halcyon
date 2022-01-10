@@ -33,7 +33,7 @@ class ArticleResource extends JsonResource
 		$data['formattedupdatedate']  = $this->formatDate($this->getOriginal('datetimeupdate'));
 
 		$data['updates'] = array();
-		foreach ($this->updates()->orderBy('datetimecreated', 'desc')->get() as $update)
+		foreach ($this->updates->sortByDesc('datetimecreated') as $update)
 		{
 			$data['updates'][] = new UpdateResource($update);
 		}
@@ -56,13 +56,6 @@ class ArticleResource extends JsonResource
 		$data['can']['admin']  = false;
 
 		$user = auth()->user();
-		if (!$user)
-		{
-			if (auth()->guard('api')->check())
-			{
-				$user = auth()->guard('api')->user();
-			}
-		}
 
 		if ($user)
 		{

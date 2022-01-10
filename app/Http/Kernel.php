@@ -61,6 +61,7 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth.optional' => \App\Http\Middleware\OptionalAuthenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'cas.auth'  => \App\Halcyon\Cas\Middleware\CASAuth::class,
         'cas.guest' => \App\Halcyon\Cas\Middleware\RedirectCASAuthenticated::class,
