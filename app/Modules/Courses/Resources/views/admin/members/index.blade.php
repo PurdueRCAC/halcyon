@@ -1,6 +1,11 @@
 @extends('layouts.master')
 
+@push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
+@endpush
+
 @push('scripts')
+<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/courses/js/admin.js?v=' . filemtime(public_path() . '/modules/courses/js/admin.js')) }}"></script>
 @endpush
 
@@ -175,7 +180,7 @@ app('pathway')
 			<div class="form-group">
 				<label for="field-userid">{{ trans('courses::courses.member') }} <span class="required">{{ trans('global.required') }}</span></label>
 				<span class="input-group">
-					<input type="text" name="userid" id="field-userid" data-classaccountid="{{ $account->id }}" class="form-control form-users" data-uri="{{ route('api.users.index') }}?search=%s" required value="" />
+					<input type="text" name="userid" id="field-userid" data-classaccountid="{{ $account->id }}" class="form-control form-user" data-uri="{{ route('api.users.index') }}?search=%s" required value="" />
 					<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
 				</span>
 			</div>

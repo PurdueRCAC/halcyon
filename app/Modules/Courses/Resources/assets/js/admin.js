@@ -24,9 +24,9 @@ document.addEventListener('DOMContentLoaded', function () {
 				return $.getJSON(user.attr('data-uri').replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
 					response($.map(data.data, function (el) {
 						return {
-							label: el.name + ' (' + el.username + ')',
+							label: el.name + ' (' + el.username + ')' + (el.id ? '' : ' ! No local account'),
 							name: el.name,
-							id: el.id,
+							id: (el.id ? el.id : el.username),
 						};
 					}));
 				});
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
-	var autocompleteUsers = function (url) {
+	/*var autocompleteUsers = function (url) {
 		return function (request, response) {
 			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
 				response($.map(data.data, function (el) {
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				height: 150,
 				delay: 100,
 				minLength: 1,
-				open: function () { //e, ui
+				open: function (e, ui) {
 					var acData = $(this).data('ui-autocomplete');
 
 					acData
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 			}
 		});
-	}
+	}*/
 
 	document.querySelectorAll('.type-dependant').forEach(function (el) {
 		el.classList.add('d-none');
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	//----
 
-	var plus = document.getElementById('toolbar-plus');
+	var plus = document.querySelector('#toolbar-plus a');
 	if (plus) {
 		var dialog = $("#new-account").dialog({
 			autoOpen: false,
