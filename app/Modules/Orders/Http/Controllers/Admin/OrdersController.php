@@ -12,6 +12,7 @@ use App\Modules\Orders\Models\Product;
 use App\Modules\Orders\Models\Item;
 use App\Modules\Orders\Models\Account;
 use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\UserUsername;
 use App\Halcyon\Http\StatefulRequest;
 use Carbon\Carbon;
 
@@ -75,6 +76,7 @@ class OrdersController extends Controller
 
 		$o = $order->getTable();
 		$u = (new User())->getTable();
+		$uu = (new UserUsername())->getTable();
 		$a = (new Account())->getTable();
 		$i = (new Item())->getTable();
 		//$p = (new Product())->getTable();
@@ -236,11 +238,12 @@ class OrdersController extends Controller
 				$g = (new \App\Modules\Groups\Models\Group())->getTable();
 
 				$query->leftJoin($g, $g . '.id', 'tbaccounts.groupid')
-					->where(function($query) use ($filters, $g, $u)
+					->leftJoin($uu, $uu . '.userid', $u . '.id')
+					->where(function($query) use ($filters, $g, $u, $uu)
 					{
-						
 						$query->where($g . '.name', 'like', '%' . $filters['search'] . '%')
-							->orWhere($u . '.name', 'like', '%' . $filters['search'] . '%');
+							->orWhere($u . '.name', 'like', '%' . $filters['search'] . '%')
+							->orWhere($uu . '.username', 'like', '%' . $filters['search'] . '%');
 					});
 			}
 		}
