@@ -302,13 +302,13 @@ app('pathway')
 							</td>
 							<td class="orderproductitem text-center">
 								<label class="sr-only" for="{{ $product->id }}_quantity">Quantity</label>
-								<input type="number" name="quantity[{{ $product->id }}][]" id="{{ $product->id }}_quantity" data-id="{{ $product->id }}" size="4" min="0" class="form-control quantity-input" value="{{ $found ? $found->qty : 0 }}" />
+								<input type="number" name="quantity[{{ $product->id }}][]" id="{{ $product->id }}_quantity" data-id="{{ $product->id }}" size="4" min="0" class="form-control quantity-input" value="{{ $found ? $found->qty : 1 }}" />
 							</td>
 							<td class="orderproductitem text-right text-nowrap">
 								@if (!$found)
 									<span id="{{ $product->id }}_linetotal" class="hide">{{ $found ? $found->price() : 0.00 }}</span>
 								
-									<button class="btn btn-cart-add btn-secondary" disabled data-product="{{ $product->id }}" data-api="{{ route('api.orders.cart.create') }}" data-text-update="Update cart">
+									<button class="btn btn-cart-add btn-secondary" data-product="{{ $product->id }}" data-api="{{ route('api.orders.cart.create') }}" data-text-update="Update cart">
 										Add to cart
 										<span class="spinner-border spinner-border-sm" role="status"><span class="hide">Working...</span></span>
 									</button>
