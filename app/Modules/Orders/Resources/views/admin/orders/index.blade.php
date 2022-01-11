@@ -420,7 +420,7 @@ app('pathway')
 									</td>
 									<td class="text-right">
 										<span class="item-edit-hide quantity_span">{{ $item->quantity }}</span>
-										@if ($item->origorderitemid)
+										@if ($item->product->timeperiod && $item->origorderitemid)
 											for<br/>
 											<span class="item-edit-hide periods_span">{{ $item->timeperiodcount }}</span>
 											@if ($item->timeperiodcount > 1)
