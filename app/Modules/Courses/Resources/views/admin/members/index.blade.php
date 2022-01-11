@@ -102,6 +102,9 @@ app('pathway')
 							{!! Html::grid('sort', trans('courses::courses.name'), 'name', $filters['order_dir'], $filters['order']) !!}
 						</th>
 						<th scope="col" class="priority-4">
+							{!! Html::grid('sort', trans('courses::courses.added'), 'datetimecreated', $filters['order_dir'], $filters['order']) !!}
+						</th>
+						<th scope="col" class="priority-4">
 							{!! Html::grid('sort', trans('courses::courses.start'), 'datetimestart', $filters['order_dir'], $filters['order']) !!}
 						</th>
 						<th scope="col" class="priority-4">
@@ -142,10 +145,13 @@ app('pathway')
 							@endif
 						</td>
 						<td class="priority-4">
-							<time datetime="{{ $row->datetimestart->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestart->toDateTimeString() }}</time>
+							<time datetime="{{ $row->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimecreated->toDateTimeString() }}</time>
 						</td>
 						<td class="priority-4">
-							<time datetime="{{ $row->datetimestop->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestop->toDateTimeString() }}</time>
+							<time datetime="{{ $row->datetimestart->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestart->format('Y-m-d') }}</time>
+						</td>
+						<td class="priority-4">
+							<time datetime="{{ $row->datetimestop->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestop->format('Y-m-d') }}</time>
 						</td>
 						<td>
 							@if ($row->membertype == 2)

@@ -210,6 +210,7 @@
 									<thead>
 										<th scope="col">Name</th>
 										<th scope="col">Username</th>
+										<th scope="col">Added</th>
 										<th scope="col">Type</th>
 										<th scope="col" class="text-right">Options</th>
 									</thead>
@@ -236,6 +237,9 @@
 														@if (auth()->user()->can('manage users'))
 															</a>
 														@endif
+													</td>
+													<td class="priority-4">
+														<time datetime="{{ $usr->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">{{ $usr->datetimecreated->toDateTimeString() }}</time>
 													</td>
 													<td>
 														@if ($class->isWorkshop())
