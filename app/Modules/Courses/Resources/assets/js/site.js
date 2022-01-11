@@ -149,7 +149,7 @@ function AddingManyUsersEmail(xml, post_obj) {
 
 	if (xml.status < 400) {
 		var response = JSON.parse(xml.responseText);
-		var post;
+		var post, user;
 
 		if (response['data'].length == 0) {
 			errors++;
@@ -158,23 +158,25 @@ function AddingManyUsersEmail(xml, post_obj) {
 			return;
 		}
 
-		/*if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
-			var username = response['data'][0]['username']; //[0]['name'];
-			post = { 'username': username, 'name': response['data'][0]['name'] };
-			post_obj['user'] = username;
-
-			post = JSON.stringify(post);
-			pending++;
-			WSPostURL(ROOT_URL + "users", post, newUser, post_obj);
-		}*/
-		var user = 0;
-		if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
-			user = response['data'][0]['username'];
-		} else {
-			user = response['data'][0]['id'];
+		for (var i = 0; i < response['data'].length; i++) {
+			if (response['data'][i]['username'] == post_obj['userid']
+				|| response['data'][i]['email'] == post_obj['userid']) {
+				if (typeof (response['data'][i]['id']) == 'undefined' || !response['data'][i]['id']) {
+					user = response['data'][i]['username'];
+				} else {
+					user = response['data'][i]['id'];
+				}
+				break;
+			}
 		}
 
-		//var user = response['data'][0]['id'];
+		if (!user) {
+			errors++;
+			problem_users.push(post_obj['userid']);
+			PrintErrors();
+			return;
+		}
+
 		post = {
 			'userid': user,
 			'classaccountid': post_obj['classaccountid'],
@@ -203,7 +205,7 @@ function AddingManyUsers(xml, post_obj) {
 
 	if (xml.status < 400) {
 		var response = JSON.parse(xml.responseText);
-		var post;
+		var post, user;
 
 		if (response['data'].length == 0) {
 			errors++;
@@ -212,23 +214,25 @@ function AddingManyUsers(xml, post_obj) {
 			return;
 		}
 
-		/*if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
-			var username = response['data'][0]['username']; //[0]['name'];
-			post = { 'username': username, 'name': response['data'][0]['name'] };
-			post = JSON.stringify(post);
-			pending++;
-			WSPostURL(ROOT_URL + "users", post, newUser, post_obj);
-			return;
-		}*/
-
-		var user = 0;
-		if (typeof (response['data'][0]['id']) == 'undefined' || !response['data'][0]['id']) {
-			user = response['data'][0]['username'];
-		} else {
-			user = response['data'][0]['id'];
+		for (var i = 0; i < response['data'].length; i++) {
+			if (response['data'][i]['username'] == post_obj['userid']
+				|| response['data'][i]['email'] == post_obj['userid']) {
+				if (typeof (response['data'][i]['id']) == 'undefined' || !response['data'][i]['id']) {
+					user = response['data'][i]['username'];
+				} else {
+					user = response['data'][i]['id'];
+				}
+				break;
+			}
 		}
 
-		//var user = response['data'][0]['id'];
+		if (!user) {
+			errors++;
+			problem_users.push(post_obj['userid']);
+			PrintErrors();
+			return;
+		}
+
 		post = {
 			'userid': user,
 			'classaccountid': post_obj['classaccountid'],

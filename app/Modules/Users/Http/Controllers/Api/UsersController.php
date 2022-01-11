@@ -166,13 +166,14 @@ class UsersController extends Controller
 					$search = strtolower((string)$filters['search']);
 					$skipmiddlename = preg_replace('/ /', '% ', $search);
 
-					$where->where($u . '.username', 'like', $search . '%')
+					$where->where($u . '.username', '=', $search)
+						->orWhere($u . '.username', 'like', $search . '%')
 						->orWhere($u . '.username', 'like', '%' . $search . '%')
 						->orWhere($a . '.name', 'like', '% ' . $search . '%')
 						->orWhere($a . '.name', 'like', $search . '%')
 						->orWhere($a . '.name', 'like', '% ' . $skipmiddlename . '%')
 						->orWhere($a . '.name', 'like', $skipmiddlename . '%');
-						//->orWhere($a . '.email', 'like', '%' . $search . '%');
+						//->orWhere($u . '.email', 'like', '%' . $search . '%');
 				});
 			}
 		}

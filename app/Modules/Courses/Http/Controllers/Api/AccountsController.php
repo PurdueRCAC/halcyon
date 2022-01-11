@@ -22,7 +22,6 @@ use App\Modules\Resources\Models\Asset;
 use App\Modules\Courses\Http\Resources\AccountResource;
 use App\Modules\Courses\Http\Resources\AccountResourceCollection;
 use App\Modules\Users\Models\User;
-use App\Modules\Users\Events\UserLookup;
 use Carbon\Carbon;
 
 /**
