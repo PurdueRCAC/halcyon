@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			success: function () {
 				document.getElementsByTagName('html')[0].setAttribute('data-mode', mode);
 
-				btn.getAttribute('data-mode', mode == 'dark' ? 'light' : 'dark');
+				btn.setAttribute('data-mode', mode == 'dark' ? 'light' : 'dark');
 			},
 			error: function () {
 				Halcyon.error(btn.getAttribute('data-error'));
