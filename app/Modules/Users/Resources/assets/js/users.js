@@ -2,7 +2,7 @@
 /* global jQuery */ // jquery.js
 /* global Halcyon */ // core.js
 
-jQuery(document).ready(function(){
+jQuery(document).ready(function () {
 	var searchusers = $('#filter_search');
 	if (searchusers.length) {
 		searchusers.each(function (i, el) {
@@ -22,10 +22,8 @@ jQuery(document).ready(function(){
 					},
 					processResults: function (data) {
 						for (var i = 0; i < data.data.length; i++) {
-							if (data.data[i].id) {
-								data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
-							} else {
-								data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
+							data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
+							if (!data.data[i].id) {
 								data.data[i].id = data.data[i].username;
 							}
 						}
@@ -53,7 +51,7 @@ jQuery(document).ready(function(){
 	}
 
 	// API token generation
-	$('.btn-apitoken').on('click', function(e){
+	$('.btn-apitoken').on('click', function (e) {
 		e.preventDefault();
 
 		if (confirm('Are you sure you want to regenerate the API token for this user?')) {
@@ -137,7 +135,7 @@ jQuery(document).ready(function(){
 		collapsible: true,
 		active: false
 	});
-	$('#permissions-rules .stop-propagation').on('click', function(e) {
+	$('#permissions-rules .stop-propagation').on('click', function (e) {
 		e.stopPropagation();
 	});
 
@@ -201,7 +199,7 @@ jQuery(document).ready(function(){
 					value.val(''),
 					access.val(0);
 			},
-			error: function (xhr) { // xhr, ajaxOptions, thrownError
+			error: function (xhr) { //, ajaxOptions, thrownError
 				Halcyon.message('danger', xhr.responseJSON.message);
 			}
 		});
@@ -211,15 +209,17 @@ jQuery(document).ready(function(){
 		e.preventDefault();
 
 		var btn = $(this);
-		var key = $(btn.attr('href') + '-key'),
-			value = $(btn.attr('href') + '-value'),
-			access = $(btn.attr('href') + '-access');
+		var key = $(btn.attr('data-target') + '-key'),
+			value = $(btn.attr('data-target') + '-value'),
+			access = $(btn.attr('data-target') + '-access');
 
-		btn.attr('disabled', true);
+		btn.parent().find('.btn').attr('disabled', true);
+		btn.addClass('loading').find('.fa').addClass('d-none');
+		btn.find('.spinner-border').removeClass('d-none');
 
-		// create new relationship
+		// Update entry
 		$.ajax({
-			url: btn.data('api'),
+			url: btn.attr('data-api'),
 			type: 'put',
 			data: {
 				'key': key.val(),
@@ -229,11 +229,17 @@ jQuery(document).ready(function(){
 			dataType: 'json',
 			async: false,
 			success: function () { //response
-				Halcyon.message('success', 'Item updated');
-				btn.attr('disabled', false);
+				btn.parent().find('.btn').attr('disabled', false);
+				btn.removeClass('loading').find('.spinner-border').addClass('d-none');
+				btn.find('.fa').removeClass('d-none');
+
+				Halcyon.message('success', btn.attr('data-success'));
 			},
 			error: function (xhr) { //, ajaxOptions, thrownError
-				//console.log(xhr);
+				btn.parent().find('.btn').attr('disabled', false);
+				btn.removeClass('loading').find('.spinner-border').addClass('d-none');
+				btn.find('.fa').removeClass('d-none');
+
 				Halcyon.message('danger', xhr.responseJSON.message);
 			}
 		});
@@ -242,21 +248,22 @@ jQuery(document).ready(function(){
 	$('#main').on('click', '.remove-facet', function (e) {
 		e.preventDefault();
 
-		var result = confirm($(this).data('confirm'));
+		var btn = $(this);
+		var result = confirm(btn.attr('data-confirm'));
 
 		if (result) {
-			var field = $($(this).attr('href'));
+			var field = $(btn.attr('data-target'));
 
 			$.ajax({
-				url: $(this).data('api'),
+				url: btn.attr('data-api'),
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function () {
-					Halcyon.message('success', 'Item removed');
+				success: function () { //data
+					Halcyon.message('success', btn.attr('data-success'));
 					field.remove();
 				},
-				error: function (xhr) {
+				error: function (xhr) { //, ajaxOptions, thrownError
 					Halcyon.message('danger', xhr.responseJSON.message);
 				}
 			});

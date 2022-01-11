@@ -507,14 +507,22 @@ app('pathway')
 								</td>
 								<td class="text-right">
 									<input type="hidden" name="facet[{{ $i }}][id]" class="form-control" value="{{ $facet->id }}" />
-									<a href="#facet-{{ $facet->id }}" class="btn update-facet" data-api="{{ route('api.users.facets.update', ['id' => $facet->id]) }}">
-										<span class="icon-save glyph">{{ trans('global.save') }}</span>
-									</a>
-									<a href="#facet-{{ $facet->id }}" class="btn text-danger remove-facet"
+									<button class="btn update-facet"
+										data-target="#facet-{{ $facet->id }}"
+										data-success="Item updated"
+										data-api="{{ route('api.users.facets.update', ['id' => $facet->id]) }}">
+										<span class="spinner-border spinner-border-sm d-none" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
+										<span class="fa fa-save" aria-hidden="true"></span>
+										<span class="sr-only">{{ trans('global.save') }}</span>
+									</button>
+									<button class="btn text-danger remove-facet"
+										data-target="#facet-{{ $facet->id }}"
+										data-success="Item removed"
 										data-api="{{ route('api.users.facets.delete', ['id' => $facet->id]) }}"
 										data-confirm="{{ trans('global.confirm delete') }}">
-										<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
-									</a>
+										<span class="fa fa-trash" aria-hidden="true"></span>
+										<span class="sr-only">{{ trans('global.trash') }}</span>
+									</button>
 								</td>
 							</tr>
 							<?php
@@ -560,14 +568,22 @@ app('pathway')
 							</td>
 							<td class="text-right">
 								<input type="hidden" name="facet[{i}][id]" class="form-control" value="{id}" />
-								<a href="#facet-{id}" class="btn update-facet" data-api="{{ route('api.users.facets') }}/{id}">
-									<span class="icon-save glyph">{{ trans('global.save') }}</span>
-								</a>
-								<a href="#facet-{id}" class="btn text-danger remove-facet"
+								<button class="btn update-facet"
+									data-target="#facet-{id}"
+									data-success="Item updated"
+									data-api="{{ route('api.users.facets') }}/{id}">
+									<span class="spinner-border spinner-border-sm d-none" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
+									<span class="fa fa-save" aria-hidden="true"></span>
+									<span class="sr-only">{{ trans('global.save') }}</span>
+								</button>
+								<button class="btn text-danger remove-facet"
+									data-target="#facet-{id}"
+									data-success="Item removed"
 									data-api="{{ route('api.users.facets.create') }}/{id}"
 									data-confirm="{{ trans('global.confirm delete') }}">
-									<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
-								</a>
+									<span class="fa fa-trash" aria-hidden="true"></span>
+									<span class="sr-only">{{ trans('global.trash') }}</span>
+								</button>
 							</td>
 						</tr>
 					</script>
