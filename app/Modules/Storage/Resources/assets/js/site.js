@@ -1191,7 +1191,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				}*/
 				$(".form-group-storage").each(function (i, el) {
 					$(el).select2({
-						placeholder: $(el).attr('placeholder'),
+						//placeholder: $(el).attr('placeholder'),
 						ajax: {
 							url: $(el).data('api'),// + '&api_token=' + $('meta[name="api-token"]').attr('content'),
 							dataType: 'json',
@@ -1209,6 +1209,7 @@ document.addEventListener('DOMContentLoaded', function () {
 								for (var i = 0; i < data.data.length; i++) {
 									data.data[i].text = data.data[i].name;
 								}
+
 								var d = {};
 								d.id = -1;
 								d.text = el.options[1].innerHTML;

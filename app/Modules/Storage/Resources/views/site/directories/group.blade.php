@@ -908,10 +908,9 @@
 															class="form-control form-group-storage"
 															data-api="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s">
 															<option value="0">{{ trans('storage::storage.select group') }}</option>
-															@if ($item->sellergroupid == -1)
-															<option value="-1" selected="selected">{{ trans('storage::storage.org owned') }}</option>
-															@else
-															<option value="{{ $item->sellergroupid }}">{{ $item->seller->name }}</option>
+															<option value="-1"<?php if ($item->sellergroupid == -1) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.org owned') }}</option>
+															@if ($item->sellergroupid != -1)
+															<option value="{{ $item->sellergroupid }}" selected="selected">{{ $item->seller->name }}</option>
 															@endif
 														</select>
 													</div>
@@ -923,10 +922,9 @@
 															class="form-control form-group-storage"
 															data-update="{{ $t }}-storage"
 															data-api="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s">
-															@if ($item->groupid == -1)
-															<option value="-1" selected="selected">{{ trans('storage::storage.org owned') }}</option>
-															@else
-															<option value="{{ $item->groupid }}">{{ $item->group->name }}</option>
+															<option value="-1"<?php if ($item->groupid == -1) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.org owned') }}</option>
+															@if ($item->groupid != -1)
+															<option value="{{ $item->groupid }}" selected="selected">{{ $item->group->name }}</option>
 															@endif
 														</select>
 													</div>
