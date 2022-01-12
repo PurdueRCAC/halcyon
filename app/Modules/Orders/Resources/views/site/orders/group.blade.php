@@ -5,25 +5,25 @@
 <div class="row">
 	<div class="col-md-12">
 
-			<table class="table table-hover">
-				<caption class="sr-only">{{ trans('orders::orders.orders') }}</caption>
-				<thead>
-					<tr>
-						<th scope="col">{{ trans('orders::orders.id') }}</th>
-						<th scope="col">{{ trans('orders::orders.status') }}</th>
-						<th scope="col">{{ trans('orders::orders.created') }}</th>
-						<th scope="col">{{ trans('orders::orders.items') }}</th>
-						<th scope="col" class="text-right">{{ trans('orders::orders.total') }}</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php
-					$orders = \App\Modules\Orders\Models\Order::query()
-						->withTrashed()
-						->where('groupid', '=', $group->id)
-						->orderBy('datetimecreated', 'desc')
-						->paginate();
-					?>
+		<table class="table table-hover">
+			<caption class="sr-only">{{ trans('orders::orders.orders') }}</caption>
+			<thead>
+				<tr>
+					<th scope="col">{{ trans('orders::orders.id') }}</th>
+					<th scope="col">{{ trans('orders::orders.status') }}</th>
+					<th scope="col">{{ trans('orders::orders.created') }}</th>
+					<th scope="col">{{ trans('orders::orders.items') }}</th>
+					<th scope="col" class="text-right">{{ trans('orders::orders.total') }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php
+				$orders = \App\Modules\Orders\Models\Order::query()
+					->withTrashed()
+					->where('groupid', '=', $group->id)
+					->orderBy('datetimecreated', 'desc')
+					->paginate();
+				?>
 				@if (count($orders))
 					@foreach ($orders as $order)
 						<tr>
@@ -57,7 +57,7 @@
 									return $value->isFulfilled();
 								})->count();
 								?>
-								<span class="order-status {{ str_replace(' ', '-', $order->status) }}" data-tip="Accounts: {{ $order->accounts->count() }}<br />Assigned: {{ $accountsassigned }}<br />Approved: {{ $accountsapproved }}<br />Denied: {{ $accountsdenied }}<br />Paid: {{ $accountspaid }}<br />---<br />Items: {{ $order->items->count() }}<br />Fulfilled: {{ $itemsfulfilled }}">
+								<span class="badge order-status {{ str_replace(' ', '-', $order->status) }}" data-tip="Accounts: {{ $order->accounts->count() }}<br />Assigned: {{ $accountsassigned }}<br />Approved: {{ $accountsapproved }}<br />Denied: {{ $accountsdenied }}<br />Paid: {{ $accountspaid }}<br />---<br />Items: {{ $order->items->count() }}<br />Fulfilled: {{ $itemsfulfilled }}">
 									{{ trans('orders::orders.' . $order->status) }}
 								</span>
 							</td>
@@ -65,10 +65,9 @@
 							<td>
 								<?php
 								$products = array();
-								foreach ($order->items as $item)
-								{
+								foreach ($order->items as $item):
 									$products[] = $item->product->name;
-								}
+								endforeach;
 								echo implode('<br />', $products);
 								?>
 							</td>
@@ -82,9 +81,9 @@
 						<td colspan="5" class="text-center">{{ trans('global.none') }}</td>
 					</tr>
 				@endif
-				</tbody>
-			</table>
+			</tbody>
+		</table>
 
-			<?php $orders->render(); ?>
+		<?php $orders->render(); ?>
 	</div>
 </div>
