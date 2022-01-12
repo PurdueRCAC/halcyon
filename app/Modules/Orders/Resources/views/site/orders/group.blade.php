@@ -19,6 +19,7 @@
 				<tbody>
 					<?php
 					$orders = \App\Modules\Orders\Models\Order::query()
+						->withTrashed()
 						->where('groupid', '=', $group->id)
 						->orderBy('datetimecreated', 'desc')
 						->paginate();
