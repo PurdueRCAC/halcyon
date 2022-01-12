@@ -355,7 +355,7 @@ class QueuesController extends Controller
 			$size->save();
 		}
 
-		return $this->cancel()->withSuccess(trans('global.messages.update success'));
+		return $this->cancel()->withSuccess($id ? trans('global.messages.item updated') : trans('global.messages.item created'));
 	}
 
 	/**

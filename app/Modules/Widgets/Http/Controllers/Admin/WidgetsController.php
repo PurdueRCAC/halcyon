@@ -566,8 +566,8 @@ class WidgetsController extends Controller
 		if ($success)
 		{
 			$msg = $value
-				? 'global.messages.items published'
-				: 'global.messages.items unpublished';
+				? 'global.messages.item published'
+				: 'global.messages.item unpublished';
 
 			$request->session()->flash('success', trans($msg, ['count' => $success]));
 		}
