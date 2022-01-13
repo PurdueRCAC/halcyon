@@ -34,6 +34,7 @@ foreach ($rows as $event)
 
 	$attending = false;
 	$reserved  = false;
+	$comment   = null;
 	$canAttend = true;
 
 	foreach ($event->associations as $assoc)
@@ -41,6 +42,7 @@ foreach ($rows as $event)
 		if (auth()->user() && $assoc->associd == auth()->user()->id)
 		{
 			$attending = $assoc->id;
+			$comment = $assoc->comment;
 			if (!$event->ended())
 			{
 				$event->attending = $assoc->id;
@@ -54,6 +56,7 @@ foreach ($rows as $event)
 			if ($u && (!$ignore || !in_array($ignore, $u->getAuthorisedRoles())))
 			{
 				$reserved = $u->name;
+				$comment = $assoc->comment;
 			}
 		}
 	}
@@ -179,22 +182,27 @@ foreach ($rows as $event)
 					@endif
 				@else
 					@if ($reserved)
-						<div class="text-success">
-							@if (auth()->user() && auth()->user()->can('manage news'))
-								{{ trans('widget.coffeehours::coffeehours.reserved by', ['name' => $reserved]) }}
-							@else
-								This time is reserved.
+						@if (auth()->user() && auth()->user()->can('manage news'))
+							<div class="text-success">{{ trans('widget.coffeehours::coffeehours.reserved by', ['name' => $reserved]) }}</div>
+							@if ($comment)
+								<blockquote>"{{ $comment }}"</blockquote>
 							@endif
-						</div>
+						@else
+							<div class="text-success">This time is reserved.</div>
+						@endif
 					@elseif ($now->getTimestamp() < $endregistration->getTimestamp())
 						@if (auth()->user())
 							@if (!$attending && $canAttend)
+								<div class="form-group" id="reserve-comment{{ $event->id }}">
+									<label for="comment{{ $event->id }}">Please explain your issue to help the consultant prepare for the session: <span class="required">*</span></label>
+									<textarea class="form-control" name="comment" id="comment{{ $event->id }}" required rows="2" cols="35"></textarea>
+								</div>
 								<div class="row">
 									<div class="col-md-6 text-right">
-										<div class="alert hide" data-success="You reserved this time." data-error="An error occurred. We were unable to reserve this time."></div>
+										<div class="alert hide" data-success="You reserved this time." data-hide="#reserve-comment{{ $event->id }}" data-error="An error occurred. We were unable to reserve this time."></div>
 									</div>
 									<div class="col-md-6 text-right">
-										<a class="btn-attend btn btn-primary" href="{{ route('page', ['uri' => 'coffee', 'attend' => 1]) }}" data-newsid="{{ $event->id }}" data-assoc="{{ auth()->user()->id }}">Reserve this time</a>
+										<a class="btn-attend btn btn-primary" href="{{ route('page', ['uri' => 'coffee', 'attend' => 1]) }}" data-comment="#comment{{ $event->id }}" data-newsid="{{ $event->id }}" data-assoc="{{ auth()->user()->id }}">Reserve this time</a>
 									</div>
 								</div>
 							@elseif (!$attending && !$canAttend)
@@ -208,6 +216,9 @@ foreach ($rows as $event)
 										<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $attending }}">Cancel reservation</a>
 									</div>
 								</div>
+								@if ($comment)
+									<blockquote>"{{ $comment }}"</blockquote>
+								@endif
 							@endif
 						@else
 							<div class="row">

@@ -230,112 +230,46 @@ class AssociationsController extends Controller
 	}
 
 	/**
-	 * Create a news article type
+	 * Create a news associations
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /news/types
+	 * @apiUri    /news/associations
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "comment",
-	 * 		"description":   "The comment being made",
+	 * 		"name":          "associd",
+	 * 		"description":   "The association ID",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "name",
-	 * 		"description":   "The name of the type",
+	 * 		"name":          "assoctype",
+	 * 		"description":   "The association type",
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"maxLength": 32
+	 * 			"maxLength": 255
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "tagresources",
-	 * 		"description":   "Allow articles to tag resources",
-	 * 		"required":      false,
+	 * 		"name":          "newsid",
+	 * 		"description":   "The news article ID",
+	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0,
-	 * 			"enum": [
-	 * 				0,
-	 * 				1
-	 * 			]
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "tagusers",
-	 * 		"description":   "Allow articles to tag users",
+	 * 		"name":          "comment",
+	 * 		"description":   "Comment / notes",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0,
-	 * 			"enum": [
-	 * 				0,
-	 * 				1
-	 * 			]
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "location",
-	 * 		"description":   "Allow articles to set location",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0,
-	 * 			"enum": [
-	 * 				0,
-	 * 				1
-	 * 			]
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "future",
-	 * 		"description":   "Allow articles to set future",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0,
-	 * 			"enum": [
-	 * 				0,
-	 * 				1
-	 * 			]
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "ongoing",
-	 * 		"description":   "Allow articles to set ongoing",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0,
-	 * 			"enum": [
-	 * 				0,
-	 * 				1
-	 * 			]
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "url",
-	 * 		"description":   "A URL associated with the news article",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0,
-	 * 			"enum": [
-	 * 				0,
-	 * 				1
-	 * 			]
+	 * 			"type":      "string"
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -344,15 +278,12 @@ class AssociationsController extends Controller
 	 * 			"content": {
 	 * 				"application/json": {
 	 * 					"example": {
-	 * 						"id":            "1",
-	 * 						"name":          "Examples",
-	 * 						"tagresources":  0,
-	 * 						"tagusers":      1,
-	 * 						"location":      1,
-	 * 						"future":        1,
-	 * 						"calendar":      1,
-	 * 						"url":           1,
-	 * 						"api":           "https://example.com/api/news/types/1"
+	 * 						"id":        1,
+	 * 						"associd":   1234,
+	 * 						"assoctype": "user",
+	 * 						"newsid":    1,
+	 * 						"comment":   "Examples",
+	 * 						"api":       "https://example.com/api/news/associations/1"
 	 * 					}
 	 * 				}
 	 * 			}
@@ -370,6 +301,7 @@ class AssociationsController extends Controller
 			'associd' => 'required|integer',
 			'assoctype' => 'required|string|max:255',
 			'newsid' => 'required|integer',
+			'comment' => 'nullable|string|max:2000',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -383,6 +315,7 @@ class AssociationsController extends Controller
 		$row->newsid = $request->input('newsid');
 		$row->assoctype = $request->input('assoctype');
 		$row->associd = $request->input('associd');
+		$row->comment = $request->input('comment');
 
 		if (!$row->article)
 		{
@@ -400,10 +333,10 @@ class AssociationsController extends Controller
 	}
 
 	/**
-	 * Read a news article type
+	 * Read a news associations
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /news/types/{id}
+	 * @apiUri    /news/associations/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -419,15 +352,12 @@ class AssociationsController extends Controller
 	 * 			"content": {
 	 * 				"application/json": {
 	 * 					"example": {
-	 * 						"id":            "1",
-	 * 						"name":          "Examples",
-	 * 						"tagresources":  0,
-	 * 						"tagusers":      1,
-	 * 						"location":      1,
-	 * 						"future":        1,
-	 * 						"calendar":      1,
-	 * 						"url":           1,
-	 * 						"api":           "https://example.com/api/news/types/1"
+	 * 						"id":        1,
+	 * 						"associd":   1234,
+	 * 						"assoctype": "user",
+	 * 						"newsid":    1,
+	 * 						"comment":   "Examples",
+	 * 						"api":       "https://example.com/api/news/associations/1"
 	 * 					}
 	 * 				}
 	 * 			}
@@ -449,10 +379,10 @@ class AssociationsController extends Controller
 	}
 
 	/**
-	 * Update a news article type
+	 * Update a news association
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /news/types/{id}
+	 * @apiUri    /news/associations/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -465,90 +395,39 @@ class AssociationsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "name",
-	 * 		"description":   "The name of the type",
+	 * 		"name":          "associd",
+	 * 		"description":   "The association ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "assoctype",
+	 * 		"description":   "The association type",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"maxLength": 32
+	 * 			"maxLength": 255
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "tagresources",
-	 * 		"description":   "Allow articles to tag resources",
+	 * 		"name":          "newsid",
+	 * 		"description":   "The news article ID",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"enum": [
-	 * 				0,
-	 * 				1
-	 * 			]
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "tagusers",
-	 * 		"description":   "Allow articles to tag users",
+	 * 		"name":          "comment",
+	 * 		"description":   "Comment / notes",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"enum": [
-	 * 				0,
-	 * 				1
-	 * 			]
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "location",
-	 * 		"description":   "Allow articles to set location",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"enum": [
-	 * 				0,
-	 * 				1
-	 * 			]
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "future",
-	 * 		"description":   "Allow articles to set future",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"enum": [
-	 * 				0,
-	 * 				1
-	 * 			]
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "ongoing",
-	 * 		"description":   "Allow articles to set ongoing",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"enum": [
-	 * 				0,
-	 * 				1
-	 * 			]
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "url",
-	 * 		"description":   "A URL associated with the news article",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"enum": [
-	 * 				0,
-	 * 				1
-	 * 			]
+	 * 			"type":      "string"
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -557,15 +436,12 @@ class AssociationsController extends Controller
 	 * 			"content": {
 	 * 				"application/json": {
 	 * 					"example": {
-	 * 						"id":            "1",
-	 * 						"name":          "Examples",
-	 * 						"tagresources":  0,
-	 * 						"tagusers":      1,
-	 * 						"location":      1,
-	 * 						"future":        1,
-	 * 						"calendar":      1,
-	 * 						"url":           1,
-	 * 						"api":           "https://example.com/api/news/types/1"
+	 * 						"id":        1,
+	 * 						"associd":   1234,
+	 * 						"assoctype": "user",
+	 * 						"newsid":    1,
+	 * 						"comment":   "Examples",
+	 * 						"api":       "https://example.com/api/news/associations/1"
 	 * 					}
 	 * 				}
 	 * 			}
@@ -584,6 +460,7 @@ class AssociationsController extends Controller
 			'associd' => 'nullable|integer',
 			'assoctype' => 'nullable|string|max:255',
 			'newsid' => 'nullable|integer',
+			'comment' => 'nullable|string|max:2000',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -612,6 +489,10 @@ class AssociationsController extends Controller
 		{
 			$row->associd = $request->input('associd');
 		}
+		if ($request->has('comment'))
+		{
+			$row->comment = $request->input('comment');
+		}
 
 		if (!$row->save())
 		{
@@ -624,10 +505,10 @@ class AssociationsController extends Controller
 	}
 
 	/**
-	 * Delete a news article type
+	 * Delete a news associations
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /news/types/{id}
+	 * @apiUri    /news/associations/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

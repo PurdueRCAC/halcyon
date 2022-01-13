@@ -3574,17 +3574,24 @@ document.addEventListener('DOMContentLoaded', function() {
 		event.preventDefault();
 
 		var el = $(this);
-
 		var id = el.data('newsid');
-		//var id = newsid.substr(newsid.lastIndexOf("/") + 1);
-
-		//var parts = el.data('assoc').split('/');
-
 		var post = {
-			'associd': el.data('assoc'), //parts[parts.length - 1],
-			'assoctype': 'user',//parts[parts.length - 2],
+			'associd': el.data('assoc'),
+			'assoctype': 'user',
 			'newsid': id
 		};
+
+		if (el.attr('data-comment') && $(el.attr('data-comment'))) {
+			post['comment'] = $(el.attr('data-comment')).val();
+
+			if (!post['comment']) {
+				$(el.attr('data-comment')).addClass('is-invalid');
+				el.parent().append('<span class="alert alert-danger">Please provide a comment.</span>');
+				return;
+			} else {
+				$(el.attr('data-comment')).removeClass('is-invalid');
+			}
+		}
 
 		post = JSON.stringify(post);
 
@@ -3597,7 +3604,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			} else if (xml.status == 403) {
 				el.parent().append('<span class="alert alert-warning">Unable to register changes.</span>');
 			} else {
-				el.parent().append('<span class="alert alert-error">An error occurred.</span>');
+				el.parent().append('<span class="alert alert-danger">An error occurred.</span>');
 			}
 		});
 	});
