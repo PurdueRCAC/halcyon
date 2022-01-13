@@ -15,7 +15,6 @@ class ArticleCreated
 	 * Constructor
 	 *
 	 * @param Article $article
-	 * @param array $data
 	 * @return void
 	 */
 	public function __construct(Article $article)

@@ -9,8 +9,14 @@ class ArticleUpdating
 	/**
 	 * @var Article
 	 */
-	private $article;
+	public $article;
 
+	/**
+	 * Constructor
+	 *
+	 * @param Article $article
+	 * @return void
+	 */
 	public function __construct(Article $article)
 	{
 		$this->article = $article;

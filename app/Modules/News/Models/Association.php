@@ -5,6 +5,8 @@ namespace App\Modules\News\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Users\Models\User;
+use App\Modules\News\Events\AssociationCreated;
+use App\Modules\News\Events\AssociationDeleted;
 
 /**
  * News model mapping to associations
@@ -62,6 +64,16 @@ class Association extends Model
 	 */
 	protected $guarded = [
 		'id'
+	];
+
+	/**
+	 * The event map for the model.
+	 *
+	 * @var  array
+	 */
+	protected $dispatchesEvents = [
+		'created'  => AssociationCreated::class,
+		'deleted'  => AssociationDeleted::class,
 	];
 
 	/**

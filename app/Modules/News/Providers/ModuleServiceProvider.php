@@ -3,6 +3,7 @@ namespace App\Modules\News\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Modules\News\Console\CopyCommand;
+use App\Modules\News\Listeners\Registrations;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -34,6 +35,8 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+		$this->app['events']->subscribe(new Registrations);
 	}
 
 	/**
