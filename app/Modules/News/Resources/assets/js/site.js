@@ -3582,9 +3582,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 
 		if (el.attr('data-comment') && $(el.attr('data-comment'))) {
-			post['comment'] = $(el.attr('data-comment')).val();
+			post['comment'] = $(el.attr('data-comment')).val().trim();
+			var words = post['comment']
+				.replace(/^[\s,.;]+/, "")
+				.replace(/[\s,.;]+$/, "")
+				.split(/[\s,.;]+/)
+				.length;
 
-			if (!post['comment']) {
+			if (!post['comment'] || words < 3) {
 				$(el.attr('data-comment')).addClass('is-invalid');
 				el.parent().append('<span class="alert alert-danger">Please provide a comment.</span>');
 				return;
