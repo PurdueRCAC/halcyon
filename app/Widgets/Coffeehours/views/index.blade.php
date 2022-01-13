@@ -32,6 +32,11 @@ foreach ($rows as $event)
 	$slot->end   = $event->datetimenewsend->format('Y-m-d\TH:i:s');
 	$slot->id    = $event->id;
 
+	if (strstr($event->body, '&amp;#039;'))
+	{
+		$event->body = str_replace('&amp;#039;', "'", $event->body);
+	}
+
 	$attending = false;
 	$reserved  = false;
 	$comment   = null;
@@ -171,7 +176,7 @@ foreach ($rows as $event)
 			}
 			?>
 		</ul>
-		{!! $event->body !!}
+		{!! $event->formattedBody !!}
 		<div class="dialog-footer newsattend">
 			@if ($event->url)
 				@if (auth()->user() && $ignore && in_array($ignore, auth()->user()->getAuthorisedRoles()))
