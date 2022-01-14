@@ -125,6 +125,7 @@ class Twitter
 			$content = str_replace(['&amp;', '&nbsp;'], ['&', ' '], $page->body);
 			$content = strip_tags($content);
 			$content = str_replace(array("\n", "\t", "\r"), ' ', $content);
+			$content = preg_replace("/\s+/", ' ', $content);
 			$content = Str::limit($content, 140);
 			$content = trim($content);
 			if (!$content)
