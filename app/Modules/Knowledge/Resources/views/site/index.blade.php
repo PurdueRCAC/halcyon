@@ -243,6 +243,57 @@
 
 	@if (auth()->user())
 		@if (auth()->user()->can('edit knowledge'))
+		<div class="text-muted mt-3">
+			@php
+			$allhistory = $page->history()->orderBy('created_at', 'desc')->get();
+			$by = '';
+			if (count($allhistory) > 0)
+			{
+				$latest = $allhistory->first();
+				$by = $latest->user ? ' by ' . $latest->user->name : '';
+			}
+			@endphp
+			<p class="last-update">Last updated: {{ $node->page->updated_at->format('F j, Y g:ia T') . $by }}. <a href="#page-history{{ $page->id }}" data-toggle="modal" data-target="#page-history{{ $page->id }}">View edit history</a>.</p>
+
+			<div id="page-history{{ $page->id }}" class="modal fade" tabindex="-1" aria-labelledby="page-history-title{{ $page->id }}" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h3 class="modal-title" id="page-history-title{{ $page->id }}">Page History</h3>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							@if (count($allhistory))
+							<table class="table">
+								<caption class="sr-only">Page History</caption>
+								<thead>
+									<tr>
+										<th scope="col">When</th>
+										<th scope="col">Who</th>
+										<th scope="col">Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach ($allhistory as $history)
+										<tr>
+											<td>{{ $history->created_at->toDateTimeString() }}</td>
+											<td>{{ $history->user ? $history->user->name : trans('global.unknown') }}</td>
+											<td>{{ $history->action }}</td>
+										</tr>
+									@endforeach
+								</tbody>
+							</table>
+							@else
+							<p>No edit history could be found.</p>
+							@endif
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div class="hide" id="page-form{{ $page->id }}">
 			<form action="{{ route('site.knowledge.page', ['uri' => ($p ? $p : '/')]) }}" data-api="{{ route('api.knowledge.update', ['id' => $node->id]) }}" method="post" name="pageform" id="pageform" class="editform">
 				@if (auth()->user()->can('edit pages'))
