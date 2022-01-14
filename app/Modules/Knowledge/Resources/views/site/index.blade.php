@@ -239,10 +239,8 @@
 				</div>
 			</div>
 		@endif
-	</div>
 
-	@if (auth()->user())
-		@if (auth()->user()->can('edit knowledge'))
+		@if (auth()->user() && auth()->user()->can('edit knowledge'))
 		<div class="text-muted mt-3">
 			@php
 			$allhistory = $page->history()->orderBy('created_at', 'desc')->get();
@@ -293,7 +291,11 @@
 				</div>
 			</div>
 		</div>
+		@endif
+	</div>
 
+	@if (auth()->user())
+		@if (auth()->user()->can('edit knowledge'))
 		<div class="hide" id="page-form{{ $page->id }}">
 			<form action="{{ route('site.knowledge.page', ['uri' => ($p ? $p : '/')]) }}" data-api="{{ route('api.knowledge.update', ['id' => $node->id]) }}" method="post" name="pageform" id="pageform" class="editform">
 				@if (auth()->user()->can('edit pages'))
