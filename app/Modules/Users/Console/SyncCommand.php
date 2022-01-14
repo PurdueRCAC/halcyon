@@ -35,7 +35,7 @@ class SyncCommand extends Command
 		$a = (new User)->getTable();
 		$u = (new UserUsername)->getTable();
 
-		$users = $query = User::query()
+		$users = User::query()
 			->select($a . '.id', $u . '.username')
 			->join($u, $u . '.userid', $a . '.id')
 			->whereNull($u . '.dateremoved')

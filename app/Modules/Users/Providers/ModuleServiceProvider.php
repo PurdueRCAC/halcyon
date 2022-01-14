@@ -5,6 +5,7 @@ namespace App\Modules\Users\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use App\Modules\Users\Console\SyncCommand;
+use App\Modules\Users\Console\CleanUpCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -57,6 +58,7 @@ class ModuleServiceProvider extends ServiceProvider
 	{
 		$this->commands([
 			SyncCommand::class,
+			CleanUpCommand::class,
 		]);
 	}
 
