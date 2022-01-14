@@ -43,7 +43,6 @@ class OpenGraph
 		$params = new Repository(config('listeners.content.opengraph', []));
 
 		// We need help variables as we cannot change the $page variable - such then will influence global settings
-		$desc = $page->metadesc;
 		$tags = array();
 
 		// Title
@@ -121,12 +120,9 @@ class OpenGraph
 		}
 
 		// Description
-		$desc ?: $params->get('description');
-		if ($desc)
-		{
-			$tags['og:description'] = htmlspecialchars($desc);
-		}
-		else
+		$desc = $page->metadesc;
+		$desc = $desc ?: $params->get('description');
+		if (!$desc)
 		{
 			// Clean up cases where content may be just encoded whitespace
 			$content = str_replace(['&amp;', '&nbsp;'], ['&', ' '], $page->body);
@@ -138,8 +134,11 @@ class OpenGraph
 			{
 				$content = $page->title;
 			}
-			$tags['og:description'] = htmlspecialchars($content);
+			$desc = $content;
 		}
+
+		$event->page->metadesc = $desc;
+		$tags['og:description'] = htmlspecialchars($desc);
 
 		// FB App ID - COMMON
 		if ($app_id = $params->get('app_id'))

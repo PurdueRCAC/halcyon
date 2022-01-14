@@ -118,12 +118,8 @@ class Twitter
 
 		// Description
 		$desc = $page->metadesc;
-		$desc ?: $params->get('description');
-		if ($desc)
-		{
-			$content = htmlspecialchars($desc);
-		}
-		else
+		$desc = $desc ?: $params->get('description');
+		if (!$desc)
 		{
 			// Clean up cases where content may be just encoded whitespace
 			$content = str_replace(['&amp;', '&nbsp;'], ['&', ' '], $page->body);
@@ -135,10 +131,11 @@ class Twitter
 			{
 				$content = $page->title;
 			}
-			$content = htmlspecialchars($content);
+			$desc = $content;
 		}
 
-		$tags['twitter:description'] = htmlspecialchars($content);
+		$event->page->metadesc = $desc;
+		$tags['twitter:description'] = htmlspecialchars($desc);
 
 		// Other
 		if ($other = $params->get('other'))
