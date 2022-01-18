@@ -594,7 +594,11 @@ class AmieLdap
 								}
 								if ($member->email != $mem->getAttribute('mail', 0))
 								{
-									$member->getUserUsername()->update(['email' => $mem->getAttribute('mail', 0)]);
+									$email = $mem->getAttribute('mail', 0);
+									if (strstr($email, '@'))
+									{
+										$member->getUserUsername()->update(['email' => $email]);
+									}
 								}
 								if ($member->name != $mem->getAttribute('cn', 0))
 								{
