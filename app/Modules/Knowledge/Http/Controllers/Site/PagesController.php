@@ -10,6 +10,10 @@ use App\Modules\Knowledge\Models\Page;
 use App\Modules\Knowledge\Models\SnippetAssociation;
 use App\Modules\Knowledge\Models\Associations;
 use App\Modules\Knowledge\Events\PageMetadata;
+use App\Modules\Knowledge\Helpers\Diff;
+use App\Modules\Knowledge\Helpers\Diff\TableDiffFormatter;
+//use App\Modules\Knowledge\Helpers\Diff\DivDiffFormatter;
+use App\Modules\History\Models\History;
 
 class PagesController extends Controller
 {
@@ -122,7 +126,15 @@ class PagesController extends Controller
 
 		$all = $request->input('all');
 
-		return view('knowledge::site.index', [
+		$view = 'index';
+		if (auth()->user()
+		 && auth()->user()->can('edit knowledge')
+		 && $request->input('action') == 'history')
+		{
+			$view = 'history';
+		}
+
+		return view('knowledge::site.' . $view, [
 			'node' => $node,
 			'pages' => $pages,
 			'path' => $path,
@@ -130,6 +142,171 @@ class PagesController extends Controller
 			'parent' => $parent,
 			'all' => $all,
 		]);
+	}
+
+	/**
+	 * Show a diff of two page versions
+	 * 
+	 * @param  Request $request
+	 * @return Response
+	 */
+	public function diff(Request $request)
+	{
+		app('pathway')->append(
+			trans('knowledge::knowledge.knowledge base'),
+			route('site.knowledge.index')
+		);
+		app('pathway')->append(
+			trans('knowledge::knowledge.diff')
+		);
+
+		$a = $request->input('a');
+		$b = $request->input('b');
+
+		$or = History::findOrFail($a);
+		$dr = History::findOrFail($b);
+
+		// Diff the two versions
+		if (isset($or->new->title))
+		{
+			$ota = [$or->new->title];
+			$nta = [$dr->new->title];
+
+			$formatter = new TableDiffFormatter();
+			$results[] = $formatter->format(new Diff($ota, $nta));
+		}
+
+		if (isset($or->new->content))
+		{
+			$ota = explode("\n", $or->new->content);
+			$nta = explode("\n", $dr->new->content);
+
+			$formatter = new TableDiffFormatter();
+			$results[] = $formatter->format(new Diff($ota, $nta));
+		}
+
+		if (isset($or->new->params))
+		{
+			$orparams = json_decode($or->new->params, true);
+			$drparams = json_decode($dr->new->params, true);
+
+			// Params
+			$ota = [];
+			$nta = [];
+			foreach (['show_title', 'show_toc'] as $p)
+			{
+				if (isset($orparams[$p]) && isset($drparams[$p]))
+				{
+					$ota[] = $p . ': ' . ($orparams[$p] ? 'true' : 'false');
+					$nta[] = $p . ': ' . ($drparams[$p] ? 'true' : 'false');
+				}
+			}
+
+			if (!empty($ota) && !empty($nta))
+			{
+				$formatter = new TableDiffFormatter();
+				$results[] = $formatter->format(new Diff($ota, $nta));
+			}
+
+			// Variables
+			if (isset($orparams['variables']))
+			{
+				$ota = $orparams['variables'];
+				$nta = $drparams['variables'];
+
+				$formatter = new TableDiffFormatter();
+				$results[] = $formatter->format(new Diff($ota, $nta));
+			}
+
+			// Tags
+			if (isset($orparams['tags']))
+			{
+				$ota = $orparams['tags'];
+				$nta = $drparams['tags'];
+
+				$formatter = new TableDiffFormatter();
+				$results[] = $formatter->format(new Diff($ota, $nta));
+			}
+		}
+
+		return view('knowledge::site.diff', [
+			'a' => $a,
+			'b' => $b,
+			'results' => $results,
+		]);
+	}
+
+	/**
+	 * Restore to a specific version
+	 * 
+	 * @param  Request $request
+	 * @return Response
+	 */
+	public function restore(Request $request)
+	{
+		$dest = $request->input('revision');
+
+		$node = Association::findOrFail($request->input('node'));
+		$page = $node->page;
+
+		$revisions = $page->history()
+			->orderBy('created_at', 'desc')
+			->get();
+
+		foreach ($revisions as $revision)
+		{
+			if (isset($revision->new->title))
+			{
+				$page->title = $revision->new->title;
+			}
+			if (isset($revision->new->alias))
+			{
+				$page->alias = $revision->new->alias;
+			}
+			if (isset($revision->new->content))
+			{
+				$page->content = $revision->new->content;
+			}
+			if (isset($revision->new->params))
+			{
+				$params = json_decode($revision->new->params, true);
+				foreach (['show_title', 'show_toc', 'variables', 'tags'] as $p)
+				{
+					if (isset($params[$p]))
+					{
+						$page->params->{$p} = $params[$p];
+					}
+				}
+			}
+
+			if ($revision->id == $dest)
+			{
+				$page->save();
+
+				$row->path = '';
+				if ($row->parent)
+				{
+					$row->path = trim($row->parent->path . '/' . $page->alias, '/');
+				}
+
+				if (!$row->save())
+				{
+					$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
+
+					return redirect()->back()->withError($error);
+				}
+
+				// Rebuild the paths of the entry's children
+				if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
+				{
+					return redirect()->back()->withError($row->getError());
+				}
+
+				break;
+			}
+		}
+
+		return redirect(route('site.knowledge.page', ['uri' => $node->path]))->withSuccess(trans('knowledge::knowledge.page restored'));
 	}
 
 	/**

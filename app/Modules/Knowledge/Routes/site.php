@@ -30,6 +30,16 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 		'uses' => 'PagesController@attach',
 		'middleware' => 'can:create knowledge|edit knowledge',
 	]);
+	$router->post('/diff', [
+		'as' => 'site.knowledge.diff',
+		'uses' => 'PagesController@diff',
+		'middleware' => 'can:edit knowledge',
+	]);
+	$router->post('/restore', [
+		'as' => 'site.knowledge.restore',
+		'uses' => 'PagesController@restore',
+		'middleware' => 'can:edit knowledge',
+	]);
 	$router->match(['get', 'post'], '/delete/{id?}', [
 		'as'   => 'site.knowledge.delete',
 		'uses' => 'PagesController@delete',

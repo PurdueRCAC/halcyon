@@ -219,3 +219,50 @@ h6:hover a.heading-anchor {
 .open .toggle-tree:before {
   border-color: #333 transparent transparent transparent;
 }
+
+/* Diffs */
+.diff-versions {
+	margin: 0;
+}
+.diff-versions dt {
+	font-weight: bold;
+	margin-top: 0.5em;
+}
+.diffs {
+	margin: 1em 0;
+	border: 1px solid #ccc;
+}
+.diffs td,
+.diffs th {
+	border: 1px solid #fff;
+	margin: 0;
+	padding: 0.2em 0.8em;
+}
+.diffs th {
+	text-align: right;
+	background-color: #efefef;
+}
+.diff-marker {
+	width: 1em;
+	text-align: center;
+}
+.diff-deletedline {
+	border: 1px solid #EFCCC2; 
+	background: #FFF2EF;
+	margin: 1em 0;
+	padding: 1em;
+	color: #CC0000;
+}
+.diff-addedline {
+	border: 1px solid #DAE6DA;
+	background: #F2FFF2;
+	margin: 1em 0;
+	padding: 1em;
+	color: #360;
+}
+del.diffchange {
+	color: #CC0000;
+}
+ins.diffchange {
+	color: #360;
+}
