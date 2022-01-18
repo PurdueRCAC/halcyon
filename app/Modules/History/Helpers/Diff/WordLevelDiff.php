@@ -84,7 +84,7 @@ class WordLevelDiff extends MappedDiff
 	 */
 	public function orig()
 	{
-		$orig = new HWLDF_WordAccumulator;
+		$orig = new WordAccumulator;
 
 		foreach ($this->edits as $edit)
 		{
@@ -111,7 +111,7 @@ class WordLevelDiff extends MappedDiff
 	 */
 	public function closing()
 	{
-		$closing = new HWLDF_WordAccumulator;
+		$closing = new WordAccumulator;
 
 		foreach ($this->edits as $edit)
 		{

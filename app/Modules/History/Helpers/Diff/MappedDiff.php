@@ -5,9 +5,7 @@ namespace App\Modules\History\Helpers\Diff;
 use App\Modules\History\Helpers\Diff;
 
 /**
- * Short description for 'class'
- *
- * Long description (if any) ...
+ * Mapped diff
  */
 class MappedDiff extends Diff
 {

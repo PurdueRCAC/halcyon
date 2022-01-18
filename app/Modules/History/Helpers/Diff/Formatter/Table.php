@@ -1,18 +1,19 @@
 <?php
 
-namespace App\Modules\History\Helpers\Diff;
+namespace App\Modules\History\Helpers\Diff\Formatter;
+
+use App\Modules\History\Helpers\Diff\Formatter;
+use App\Modules\History\Helpers\Diff\WordLevelDiff;
 
 /**
  * Wikipedia Table style diff formatter.
  */
-class TableDiffFormatter extends DiffFormatter
+class Table extends Formatter
 {
 	/**
-	 * Short description for 'TableDiffFormatter'
+	 * Constructed
 	 *
-	 * Long description (if any) ...
-	 *
-	 * @return     void
+	 * @return void
 	 */
 	public function __construct()
 	{

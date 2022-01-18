@@ -140,7 +140,7 @@
 											$ota = [$revision->old->title];
 											$nta = [$revision->new->title];
 
-											$formatter = new App\Modules\History\Helpers\Diff\TableDiffFormatter();
+											$formatter = new App\Modules\History\Helpers\Diff\Formatter\Table();
 											$results[] = $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));
 										endif;
 
@@ -148,7 +148,7 @@
 											$ota = explode("\n", $revision->old->content);
 											$nta = explode("\n", $revision->new->content);
 
-											$formatter = new App\Modules\History\Helpers\Diff\TableDiffFormatter();
+											$formatter = new App\Modules\History\Helpers\Diff\Formatter\Table();
 
 											echo '<h3>Content</h3>';
 											echo $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));
@@ -169,7 +169,7 @@
 											endforeach;
 
 											if (!empty($ota) && !empty($nta)):
-												$formatter = new App\Modules\History\Helpers\Diff\TableDiffFormatter();
+												$formatter = new App\Modules\History\Helpers\Diff\Formatter\Table();
 
 												echo '<h3>Options</h3>';
 												echo $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));
@@ -181,7 +181,7 @@
 												$nta = isset($drparams['variables']) ? $drparams['variables'] : [];
 
 												if ($ota != $nta):
-													$formatter = new App\Modules\History\Helpers\Diff\TableDiffFormatter();
+													$formatter = new App\Modules\History\Helpers\Diff\Formatter\Table();
 
 													echo '<h3>Variables</h3>';
 													echo $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));
@@ -194,7 +194,7 @@
 												$nta = isset($drparams['tags']) ? $drparams['tags'] : [];
 
 												if ($ota != $nta):
-													$formatter = new App\Modules\History\Helpers\Diff\TableDiffFormatter();
+													$formatter = new App\Modules\History\Helpers\Diff\Formatter\Table();
 
 													echo '<h3>Tags</h3>';
 													echo $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));

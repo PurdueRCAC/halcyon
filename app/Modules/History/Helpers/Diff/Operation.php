@@ -5,35 +5,33 @@ namespace App\Modules\History\Helpers\Diff;
 /**
  * Diff operation
  */
-class DiffOp
+class Operation
 {
 	/**
 	 * Description for 'type'
 	 *
-	 * @var unknown
+	 * @var string
 	 */
 	public $type;
 
 	/**
 	 * Description for 'orig'
 	 *
-	 * @var unknown
+	 * @var array
 	 */
 	public $orig;
 
 	/**
 	 * Description for 'closing'
 	 *
-	 * @var unknown
+	 * @var array
 	 */
 	public $closing;
 
 	/**
-	 * Short description for 'reverse'
+	 * Reverse operation
 	 *
-	 * Long description (if any) ...
-	 *
-	 * @return     void
+	 * @return  void
 	 */
 	public function reverse()
 	{
@@ -45,7 +43,7 @@ class DiffOp
 	 *
 	 * Long description (if any) ...
 	 *
-	 * @return     integer Return description (if any) ...
+	 * @return integer
 	 */
 	public function norig()
 	{
@@ -57,7 +55,7 @@ class DiffOp
 	 *
 	 * Long description (if any) ...
 	 *
-	 * @return     integer Return description (if any) ...
+	 * @return  integer
 	 */
 	public function nclosing()
 	{

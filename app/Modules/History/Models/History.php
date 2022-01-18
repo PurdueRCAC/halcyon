@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\Users\Models\User;
+use App\Modules\History\Helpers\Diff\Formatter\Table;
+use App\Modules\History\Helpers\Diff;
 
 class History extends Model
 {
@@ -111,5 +113,36 @@ class History extends Model
 		}
 
 		return $this->attributes['historable_type'];
+	}
+
+	/**
+	 * Get a diff of the specified column
+	 *
+	 * @param   string  $column
+	 * @return  string
+	 */
+	public function diff($column): string
+	{
+		if (!isset($this->old->{$column})
+		 && !isset($this->new->{$column}))
+		{
+			return '';
+		}
+
+		$ota = $this->old->{$column};
+		$nta = $this->new->{$column};
+
+		if (is_string($ota))
+		{
+			$ota = explode("\n", $nta);
+		}
+		if (is_string($ota))
+		{
+			$nta = explode("\n", $nta);
+		}
+
+		$formatter = new Table();
+
+		return $formatter->format(new Diff($ota, $nta));
 	}
 }

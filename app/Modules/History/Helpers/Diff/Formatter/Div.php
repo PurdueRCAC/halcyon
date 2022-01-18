@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Modules\History\Helpers\Diff;
+namespace App\Modules\History\Helpers\Diff\Formatter;
+
+use App\Modules\History\Helpers\Diff\Formatter;
+use App\Modules\History\Helpers\Diff\WordLevelDiff;
 
 /**-------------------------------------------------------------
  *  Div style diff formatter. Highlights blocks that have
@@ -11,18 +14,10 @@ namespace App\Modules\History\Helpers\Diff;
  *     <div class="diff-addedline">newcode</div>
  *     unchanged code
  */
-
-/**
- * Short description for 'DivDiffFormatter'
- *
- * Long description (if any) ...
- */
-class DivDiffFormatter extends DiffFormatter
+class Div extends Formatter
 {
 	/**
-	 * Short description for 'DivDiffFormatter'
-	 *
-	 * Long description (if any) ...
+	 * Constructor
 	 *
 	 * @return     void
 	 */

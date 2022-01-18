@@ -2,6 +2,9 @@
 
 namespace App\Modules\History\Helpers\Diff;
 
+use App\Modules\History\Helpers\Diff\Operation\Copy;
+use Closure;
+
 /**
  * A class to format Diffs
  *
@@ -11,7 +14,7 @@ namespace App\Modules\History\Helpers\Diff;
  *
  * @todo document
  */
-class DiffFormatter
+class Formatter
 {
 	/**
 	 * Number of leading context "lines" to preserve.
@@ -76,7 +79,7 @@ class DiffFormatter
 						if ($ntrail)
 						{
 							$context = array_slice($edit->orig, 0, $ntrail);
-							$block[] = new DiffOp_Copy($context);
+							$block[] = new Copy($context);
 						}
 						$this->_block(
 							$x0,
@@ -100,7 +103,7 @@ class DiffFormatter
 					$block = array();
 					if ($context)
 					{
-						$block[] = new DiffOp_Copy($context);
+						$block[] = new Copy($context);
 					}
 				}
 				$block[] = $edit;

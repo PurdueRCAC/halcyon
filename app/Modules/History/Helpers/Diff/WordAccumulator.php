@@ -6,7 +6,7 @@ namespace App\Modules\History\Helpers\Diff;
  * Additions by Axel Boldt follow,
  * partly taken from diff.php, phpwiki-1.3.3
  */
-class HWLDF_WordAccumulator
+class WordAccumulator
 {
 	/**
 	 * Constructor

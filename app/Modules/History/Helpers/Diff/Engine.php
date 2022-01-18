@@ -2,6 +2,11 @@
 
 namespace App\Modules\History\Helpers\Diff;
 
+use App\Modules\History\Helpers\Diff\Operation\Add;
+use App\Modules\History\Helpers\Diff\Operation\Copy;
+use App\Modules\History\Helpers\Diff\Operation\Change;
+use App\Modules\History\Helpers\Diff\Operation\Delete;
+
 /**
  * Class used internally by Diff to actually compute the diffs.
  *
@@ -124,7 +129,7 @@ class Engine
 			}
 			if ($copy)
 			{
-				$edits[] = new DiffOp_Copy($copy);
+				$edits[] = new Copy($copy);
 			}
 
 			// Find deletes & adds.
@@ -142,15 +147,15 @@ class Engine
 
 			if ($delete && $add)
 			{
-				$edits[] = new DiffOp_Change($delete, $add);
+				$edits[] = new Change($delete, $add);
 			}
 			elseif ($delete)
 			{
-				$edits[] = new DiffOp_Delete($delete);
+				$edits[] = new Delete($delete);
 			}
 			elseif ($add)
 			{
-				$edits[] = new DiffOp_Add($add);
+				$edits[] = new Add($add);
 			}
 		}
 
