@@ -101,13 +101,15 @@
 
 										if ($u)
 										{
-											$usernames[] = $u->username;
+											//$usernames[] = $u->username;
+											$usernames[$u->username] = 0;
 
 											// See if the they have host entry yet
 											event($e = new App\Modules\Users\Events\UserLookup(['username' => $u->username, 'host' => $class->resource->rolename . '.rcac.purdue.edu']));
 
 											if (count($e->results) > 0)
 											{
+												$usernames[$u->username] = 1;
 												$class_data->accounts++;
 											}
 										}
@@ -212,6 +214,7 @@
 										<th scope="col">Username</th>
 										<th scope="col">Added</th>
 										<th scope="col">Type</th>
+										<th scope="col">Status</th>
 										<th scope="col" class="text-right">Options</th>
 									</thead>
 									<tbody>
@@ -257,6 +260,45 @@
 															@if (in_array($usr->user->username, $usernames))
 																<span class="badge badge-info tip" title="Enrollment data was found for {{ $usr->user ? $usr->user->name : $usr->userid }}.">Enrolled</span>
 															@endif
+														@endif
+													</td>
+													<td class="text-center">
+														<?php
+														if (!isset($usernames[$usr->user->username]) && $usr->user):
+															$usernames[$usr->user->username] = 0;
+
+															// See if the they have host entry yet
+															event($e = new App\Modules\Users\Events\UserLookup(['username' => $usr->user->username, 'host' => $class->resource->rolename . '.rcac.purdue.edu']));
+
+															if (count($e->results) > 0):
+																$usernames[$usr->user->username] = 1;
+															endif;
+														endif;
+														?>
+														@if (isset($usernames[$usr->user->username]))
+															@if ($usernames[$usr->user->username] == 1)
+																<span class="fa fa-check-circle text-success tip" aria-hidden="true" title="Access ready for {{ $usr->user ? $usr->user->name : $usr->userid }}."></span>
+																<span class="sr-only">Ready</span>
+															@else
+																<?php
+																$log = App\Modules\History\Models\Log::query()
+																	->where('app', '=', 'roleprovision')
+																	->where('transportmethod', '=', 'POST')
+																	->where('uri', '=', 'createOrUpdateRole/rcs/' . $class->resource->rolename . '/' . $usr->user->username)
+																	->limit(1)
+																	->first();
+																?>
+																@if ($log && $log->status == 204)
+																	<span class="fa fa-ellipsis text-info tip" aria-hidden="true" title="Access pending for {{ $usr->user ? $usr->user->name : $usr->userid }}."></span>
+																	<span class="sr-only">Pending</span>
+																@else
+																	<span class="fa fa-exclamation-triangle text-warning tip" aria-hidden="true" title="Access not ready or could not be determined for {{ $usr->user ? $usr->user->name : $usr->userid }}."></span>
+																	<span class="sr-only">Not Ready</span>
+																@endif
+															@endif
+														@else
+															<span class="fa fa-exclamation-circle text-danger tip" aria-hidden="true" title="Account not found for user ID {{ $usr->userid }}."></span>
+															<span class="sr-only">Error</span>
 														@endif
 													</td>
 													<td class="text-right">
