@@ -203,8 +203,9 @@ class DbmLdap
 					$query[] = ['uid', '=', $val];
 				break;
 
-				case 'host':
-					$query[] = [$key, '=', $val];
+				case 'email':
+				case 'mail':
+					$query[] = ['mail', '=', $val];
 				break;
 
 				case 'name':
