@@ -289,7 +289,7 @@
 																	->first();
 																?>
 																@if ($log && $log->status == 204)
-																	<span class="fa fa-ellipsis text-info tip" aria-hidden="true" title="Access pending for {{ $usr->user ? $usr->user->name : $usr->userid }}."></span>
+																	<span class="fa fa-ellipsis-h text-info tip" aria-hidden="true" title="Access pending for {{ $usr->user ? $usr->user->name : $usr->userid }}.<?php if (auth()->user()->can('manage courses')) { echo ' Access initiated at ' . $log->datetime->toDateTimeString() . '.'; } ?>"></span>
 																	<span class="sr-only">Pending</span>
 																@else
 																	<span class="fa fa-exclamation-triangle text-warning tip" aria-hidden="true" title="Access not ready or could not be determined for {{ $usr->user ? $usr->user->name : $usr->userid }}."></span>
