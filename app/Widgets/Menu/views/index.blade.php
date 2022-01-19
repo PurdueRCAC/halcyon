@@ -81,7 +81,7 @@
 			case 'url':
 				if ($item->parent):
 					$item->anchor_css .= ' dropdown-toggle';
-					$item->data['toggle'] = 'dropdown';
+					//$item->data['toggle'] = 'dropdown';
 				endif;
 
 				// Note. It is important to remove spaces between elements.
@@ -121,7 +121,7 @@
 			case 'module':
 				if ($item->parent):
 					$item->anchor_css .= ' dropdown-toggle';
-					$item->data['toggle'] = 'dropdown';
+					//$item->data['toggle'] = 'dropdown';
 				endif;
 
 				$atts = array(
