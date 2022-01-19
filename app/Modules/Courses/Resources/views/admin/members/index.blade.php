@@ -192,7 +192,7 @@ app('pathway')
 								endif;
 							endif;
 							?>
-							@if ($status < 0)
+							@if ($status >= 0)
 								@if ($status == 1)
 									<span class="fa fa-check-circle text-success tip" aria-hidden="true" title="Access ready for {{ $row->user ? $row->user->name : $row->userid }}."></span>
 									<span class="sr-only">Ready</span>
