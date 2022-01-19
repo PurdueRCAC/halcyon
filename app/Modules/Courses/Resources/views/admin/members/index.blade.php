@@ -206,15 +206,15 @@ app('pathway')
 										->first();
 									?>
 									@if ($log && $log->status == 204)
-										<span class="fa fa-ellipsis-h text-info tip" aria-hidden="true" title="Access pending for {{ $row->user ? $row->user->name : $row->userid }}.<?php if (auth()->user()->can('manage courses')) { echo ' Access initiated at ' . $log->datetime->toDateTimeString() . '.'; } ?>"></span>
+										<span class="fa fa-ellipsis-h text-info tip" aria-hidden="true" data-tip="Access pending for {{ $row->user ? $row->user->name : $row->userid }}.<?php if (auth()->user()->can('manage courses')) { echo ' Access initiated at ' . $log->datetime->toDateTimeString() . '.'; } ?>"></span>
 										<span class="sr-only">Pending</span>
 									@else
-										<span class="fa fa-exclamation-triangle text-warning tip" aria-hidden="true" title="Access not ready or could not be determined for {{ $row->user ? $row->user->name : $row->userid }}."></span>
+										<span class="fa fa-exclamation-triangle text-warning tip" aria-hidden="true" data-tip="Access not ready or could not be determined for {{ $row->user ? $row->user->name : $row->userid }}."></span>
 										<span class="sr-only">Not Ready</span>
 									@endif
 								@endif
 							@else
-								<span class="fa fa-exclamation-circle text-danger tip" aria-hidden="true" title="Account not found for user ID {{ $row->userid }}."></span>
+								<span class="fa fa-exclamation-circle text-danger tip" aria-hidden="true" data-tip="Account not found for user ID {{ $row->userid }}."></span>
 								<span class="sr-only">Error</span>
 							@endif
 						</td>

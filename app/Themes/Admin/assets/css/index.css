@@ -709,6 +709,7 @@ h4 {
 .icon-camera:before {
   content: "\e83d";
 }
+.fa-check-circle:before,
 .icon-check-circle:before {
   content: "\e83e";
 }
