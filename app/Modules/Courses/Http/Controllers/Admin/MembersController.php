@@ -9,6 +9,7 @@ use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Courses\Models\Account;
 use App\Modules\Courses\Models\Member;
 use App\Modules\Users\Models\UserUsername;
+use App\Modules\Users\Models\User;
 use Carbon\Carbon;
 
 class MembersController extends Controller
@@ -31,8 +32,8 @@ class MembersController extends Controller
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
 			// Sorting
-			'order'     => Member::$orderBy,
-			'order_dir' => Member::$orderDir,
+			'order'     => 'name',
+			'order_dir' => 'asc',
 		);
 
 		$reset = false;
@@ -47,25 +48,28 @@ class MembersController extends Controller
 			}
 			$filters[$key] = $request->state('courses.members.filter_' . $key, $key, $default);
 		}
+
 		$filters['page'] = $reset ? 1 : $filters['page'];
 
-		if (!in_array($filters['order'], ['id', 'name', 'created_at', 'updated_at']))
+		if (!in_array($filters['order'], ['id', 'name', 'datetimecreated', 'username', 'membertype']))
 		{
-			$filters['order'] = Member::$orderBy;
+			$filters['order'] = 'name';
 		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
-			$filters['order_dir'] = Member::$orderDir;
+			$filters['order_dir'] = 'asc';
 		}
 
 		$account = Account::findOrFail($filters['account']);
 
-		$u = (new UserUsername)->getTable();
+		$u = (new User)->getTable();
+		$uu = (new UserUsername)->getTable();
 		$m = (new Member)->getTable();
 
 		$query = Member::query()
-			->join($u, $u . '.userid', $m . '.userid')
+			->join($uu, $uu . '.userid', $m . '.userid')
+			->join($u, $u . '.id', $uu . '.userid')
 			->select($m . '.*')
 			->where($m . '.classaccountid', '=', $account->id);
 
@@ -73,7 +77,8 @@ class MembersController extends Controller
 		{
 			$filters['search'] = strtolower((string)$filters['search']);
 
-			$query->where($u . '.name', 'like', '%' . $filters['search'] . '%');
+			$query->where($u . '.name', 'like', '%' . $filters['search'] . '%')
+				->orWhere($uu . '.username', 'like', '%' . $filters['search'] . '%');
 		}
 
 		if ($filters['type'])
@@ -86,7 +91,7 @@ class MembersController extends Controller
 			$now = Carbon::now();
 
 			$query->withTrashed()
-				->whereNull($u . '.dateremoved')
+				->whereNull($uu . '.dateremoved')
 				->whereNull($m . '.datetimeremoved')
 				->where($m . '.datetimestop', '>', $now->toDateTimeString());
 		}

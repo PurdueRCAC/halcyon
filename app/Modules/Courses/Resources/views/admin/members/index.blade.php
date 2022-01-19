@@ -80,8 +80,8 @@ app('pathway')
 		</div>
 
 		<input type="hidden" name="account" value="{{ $account->id }}" autocomplete="off" />
-		<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
-		<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
+		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
+		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
 		<button type="submit" class="btn btn-secondary sr-only">{{ trans('search.submit') }}</button>
 	</fieldset>
@@ -101,17 +101,23 @@ app('pathway')
 						<th scope="col">
 							{!! Html::grid('sort', trans('courses::courses.name'), 'name', $filters['order_dir'], $filters['order']) !!}
 						</th>
+						<th scope="col">
+							{!! Html::grid('sort', trans('courses::courses.username'), 'username', $filters['order_dir'], $filters['order']) !!}
+						</th>
 						<th scope="col" class="priority-4">
 							{!! Html::grid('sort', trans('courses::courses.added'), 'datetimecreated', $filters['order_dir'], $filters['order']) !!}
 						</th>
-						<th scope="col" class="priority-4">
+						<?php /*<th scope="col" class="priority-4">
 							{!! Html::grid('sort', trans('courses::courses.start'), 'datetimestart', $filters['order_dir'], $filters['order']) !!}
 						</th>
 						<th scope="col" class="priority-4">
 							{!! Html::grid('sort', trans('courses::courses.stop'), 'datetimestop', $filters['order_dir'], $filters['order']) !!}
-						</th>
+						</th>*/ ?>
 						<th scope="col" class="priority-4">
 							{!! Html::grid('sort', trans('courses::courses.type'), 'membertype', $filters['order_dir'], $filters['order']) !!}
+						</th>
+						<th scope="col" class="priority-4 text-center">
+							Status
 						</th>
 					</tr>
 				</thead>
@@ -137,9 +143,21 @@ app('pathway')
 								<span class="icon-alert-triangle glyph warning has-tip" title="{{ trans('courses::courses.user account removed') }}">{{ trans('courses::courses.user account removed') }}</span>
 							@endif
 							@if (auth()->user()->can('edit users'))
-								<a href="{{ route('admin.users.edit', ['id' => $row->userid]) }}">
+								<a href="{{ route('admin.users.show', ['id' => $row->userid]) }}">
 							@endif
 									{{ $row->user ? $row->user->name : trans('global.unknown') . ': ' . $row->userid }}
+							@if (auth()->user()->can('edit users'))
+								</a>
+							@endif
+						</td>
+						<td>
+							@if ($row->user && $row->user->trashed())
+								<span class="icon-alert-triangle glyph warning has-tip" title="{{ trans('courses::courses.user account removed') }}">{{ trans('courses::courses.user account removed') }}</span>
+							@endif
+							@if (auth()->user()->can('edit users'))
+								<a href="{{ route('admin.users.show', ['id' => $row->userid]) }}">
+							@endif
+									{{ $row->user ? $row->user->username : trans('global.unknown') . ': ' . $row->userid }}
 							@if (auth()->user()->can('edit users'))
 								</a>
 							@endif
@@ -147,17 +165,57 @@ app('pathway')
 						<td class="priority-4">
 							<time datetime="{{ $row->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimecreated->toDateTimeString() }}</time>
 						</td>
-						<td class="priority-4">
+						<?php /*<td class="priority-4">
 							<time datetime="{{ $row->datetimestart->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestart->format('Y-m-d') }}</time>
 						</td>
 						<td class="priority-4">
 							<time datetime="{{ $row->datetimestop->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestop->format('Y-m-d') }}</time>
-						</td>
+						</td>*/ ?>
 						<td>
 							@if ($row->membertype == 2)
 								<span class="badge badge-success">{{ trans('courses::courses.instructor') }}</span>
 							@else
 								<span class="badge badge-info">{{ trans('courses::courses.student') }}</span>
+							@endif
+						</td>
+						<td class="text-center">
+							<?php
+							$status = -1;
+							if ($row->user):
+								$status = 0;
+
+								// See if the they have host entry yet
+								event($e = new App\Modules\Users\Events\UserLookup(['username' => $row->user->username, 'host' => $account->resource->rolename . '.rcac.purdue.edu']));
+
+								if (count($e->results) > 0):
+									$status = 1;
+								endif;
+							endif;
+							?>
+							@if ($status < 0)
+								@if ($status == 1)
+									<span class="fa fa-check-circle text-success tip" aria-hidden="true" title="Access ready for {{ $row->user ? $row->user->name : $row->userid }}."></span>
+									<span class="sr-only">Ready</span>
+								@else
+									<?php
+									$log = App\Modules\History\Models\Log::query()
+										->where('app', '=', 'roleprovision')
+										->where('transportmethod', '=', 'POST')
+										->where('uri', '=', 'createOrUpdateRole/rcs/' . $account->resource->rolename . '/' . $row->user->username)
+										->limit(1)
+										->first();
+									?>
+									@if ($log && $log->status == 204)
+										<span class="fa fa-ellipsis-h text-info tip" aria-hidden="true" title="Access pending for {{ $row->user ? $row->user->name : $row->userid }}.<?php if (auth()->user()->can('manage courses')) { echo ' Access initiated at ' . $log->datetime->toDateTimeString() . '.'; } ?>"></span>
+										<span class="sr-only">Pending</span>
+									@else
+										<span class="fa fa-exclamation-triangle text-warning tip" aria-hidden="true" title="Access not ready or could not be determined for {{ $row->user ? $row->user->name : $row->userid }}."></span>
+										<span class="sr-only">Not Ready</span>
+									@endif
+								@endif
+							@else
+								<span class="fa fa-exclamation-circle text-danger tip" aria-hidden="true" title="Account not found for user ID {{ $row->userid }}."></span>
+								<span class="sr-only">Error</span>
 							@endif
 						</td>
 					</tr>
