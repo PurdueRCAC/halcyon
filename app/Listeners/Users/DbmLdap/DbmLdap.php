@@ -208,6 +208,10 @@ class DbmLdap
 					$query[] = ['mail', '=', $val];
 				break;
 
+				case 'host':
+					return;
+				break;
+
 				case 'name':
 				default:
 					$query[] = ['cn', '=', $val];

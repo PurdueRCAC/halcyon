@@ -202,6 +202,7 @@ app('pathway')
 										->where('app', '=', 'roleprovision')
 										->where('transportmethod', '=', 'POST')
 										->where('uri', '=', 'createOrUpdateRole/rcs/' . $account->resource->rolename . '/' . $row->user->username)
+										->orderBy('id', 'desc')
 										->limit(1)
 										->first();
 									?>

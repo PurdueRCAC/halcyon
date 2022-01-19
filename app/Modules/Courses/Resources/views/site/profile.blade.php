@@ -285,6 +285,7 @@
 																	->where('app', '=', 'roleprovision')
 																	->where('transportmethod', '=', 'POST')
 																	->where('uri', '=', 'createOrUpdateRole/rcs/' . $class->resource->rolename . '/' . $usr->user->username)
+																	->orderBy('id', 'desc')
 																	->limit(1)
 																	->first();
 																?>
