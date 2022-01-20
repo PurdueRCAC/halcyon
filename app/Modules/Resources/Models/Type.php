@@ -74,7 +74,7 @@ class Type extends Model
 	public static $orderDir = 'desc';
 
 	/**
-	 * Defines a relationship to notification type
+	 * Defines a relationship to resources
 	 *
 	 * @return  object
 	 */
@@ -84,7 +84,7 @@ class Type extends Model
 	}
 
 	/**
-	 * Defines a relationship to notification type
+	 * Get an alias
 	 *
 	 * @return  object
 	 */
@@ -97,7 +97,7 @@ class Type extends Model
 	}
 
 	/**
-	 * Defines a relationship to notification type
+	 * Find a record by name
 	 *
 	 * @return  object
 	 */

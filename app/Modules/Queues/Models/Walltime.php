@@ -77,7 +77,7 @@ class Walltime extends Model
 	}
 
 	/**
-	 * Defines a relationship to notification type
+	 * Defines a relationship to queue
 	 *
 	 * @return  object
 	 */
@@ -87,7 +87,7 @@ class Walltime extends Model
 	}
 
 	/**
-	 * Defines a relationship to notification type
+	 * Get walltime in human readable format
 	 *
 	 * @return  string
 	 */

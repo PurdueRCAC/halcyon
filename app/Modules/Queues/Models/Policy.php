@@ -46,7 +46,7 @@ class Policy extends Model
 	];
 
 	/**
-	 * Defines a relationship to notification type
+	 * Defines a relationship to schedulers
 	 *
 	 * @return  object
 	 */

@@ -91,7 +91,7 @@ class User extends Model
 	}
 
 	/**
-	 * Defines a relationship to notification type
+	 * Defines a relationship to queue
 	 *
 	 * @return  object
 	 */
@@ -111,7 +111,7 @@ class User extends Model
 	}
 
 	/**
-	 * Defines a relationship to notification type
+	 * Defines a relationship to group
 	 *
 	 * @return  object
 	 */
@@ -121,7 +121,7 @@ class User extends Model
 	}
 
 	/**
-	 * Defines a relationship to notification type
+	 * Defines a relationship to group user
 	 *
 	 * @return  object
 	 */

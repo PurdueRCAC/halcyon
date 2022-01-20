@@ -47,7 +47,7 @@ class Batchsystem extends Model
 	public static $orderDir = 'asc';
 
 	/**
-	 * Defines a relationship to notification type
+	 * Defines a relationship to resources
 	 *
 	 * @return  object
 	 */

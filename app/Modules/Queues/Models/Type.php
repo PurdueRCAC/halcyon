@@ -76,7 +76,7 @@ class Type extends Model
 	];
 
 	/**
-	 * Defines a relationship to notification type
+	 * Defines a relationship to queues
 	 *
 	 * @return  object
 	 */
