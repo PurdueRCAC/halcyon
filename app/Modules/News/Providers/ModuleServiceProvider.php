@@ -3,6 +3,7 @@ namespace App\Modules\News\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Modules\News\Console\CopyCommand;
+use App\Modules\News\Console\EventsTodayCommand;
 use App\Modules\News\Listeners\Registrations;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -47,7 +48,8 @@ class ModuleServiceProvider extends ServiceProvider
 	protected function registerConsoleCommands()
 	{
 		$this->commands([
-			CopyCommand::class
+			CopyCommand::class,
+			EventsTodayCommand::class,
 		]);
 	}
 
