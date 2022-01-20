@@ -729,8 +729,9 @@ class RcacLdap
 		}
 
 		$criteria = $event->criteria;
-		$query = [];
-		$results = array();
+		$where    = [];
+		$orwhere  = [];
+		$results  = array();
 
 		foreach ($criteria as $key => $val)
 		{
@@ -740,26 +741,50 @@ class RcacLdap
 				case 'organization_id':
 					// `employeeNumber` needs to be 10 digits in length for the query to work
 					//    ex: 12345678 -> 0012345678
-					$val = str_pad($val, 10, '0', STR_PAD_LEFT);
-					$query[] = ['employeeNumber', '=', $val];
+					if (is_array($val))
+					{
+						foreach ($val as $j => $v)
+						{
+							$val[$j] = str_pad($v, 10, '0', STR_PAD_LEFT);
+						}
+					}
+					else
+					{
+						$val = str_pad($val, 10, '0', STR_PAD_LEFT);
+					}
+
+					$key = 'employeeNumber';
 				break;
 
+				case 'uid':
 				case 'username':
-					$query[] = ['uid', '=', $val];
+					$key = 'uid';
 				break;
 
 				case 'host':
-					$query[] = [$key, '=', $val];
+					$key = 'host';
 				break;
 
 				case 'name':
 				default:
-					$query[] = ['cn', '=', $val];
+					$key = 'cn';
 				break;
+			}
+
+			if (is_array($val))
+			{
+				foreach ($val as $v)
+				{
+					$orwhere[] = [$key, '=', $v];
+				}
+			}
+			else
+			{
+				$where[] = [$key, '=', $val];
 			}
 		}
 
-		if (empty($query))
+		if (empty($where) && empty($orwhere))
 		{
 			return;
 		}
@@ -771,9 +796,23 @@ class RcacLdap
 			$status = 404;
 
 			// Performing a query.
-			$data = $ldap->search()
-				->where($query)
-				->select(['cn', 'uid', 'uidNumber', 'mailHost']) //'employeeNumber', 
+			$query = $ldap->search();
+
+			if (!empty($where))
+			{
+				$query->where($where);
+			}
+
+			if (!empty($orwhere))
+			{
+				foreach ($orwhere as $or)
+				{
+					$query->orWhere($or[0], $or[1], $or[2]);
+				}
+			}
+
+			$data = $query
+				->select(['cn', 'uid', 'uidNumber', 'mailHost'])
 				->get();
 
 			if (!empty($data))
@@ -809,6 +848,11 @@ class RcacLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, json_encode($query));
+		$q = array(
+			'where' => $where,
+			'or' => $orwhere,
+		);
+
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, json_encode($q));
 	}
 }
