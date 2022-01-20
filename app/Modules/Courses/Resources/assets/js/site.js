@@ -159,8 +159,8 @@ function AddingManyUsersEmail(xml, post_obj) {
 		}
 
 		for (var i = 0; i < response['data'].length; i++) {
-			if (response['data'][i]['username'] == post_obj['userid']
-				|| response['data'][i]['email'] == post_obj['userid']) {
+			if (response['data'][i]['username'] + '@purdue.edu' == post_obj['userid']
+			 || response['data'][i]['email'] == post_obj['userid']) {
 				if (typeof (response['data'][i]['id']) == 'undefined' || !response['data'][i]['id']) {
 					user = response['data'][i]['username'];
 				} else {
