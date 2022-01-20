@@ -266,6 +266,7 @@ class UsersController extends Controller
 		foreach ($rows as $row)
 		{
 			$row->username;
+			$row->email;
 		}
 
 		if (count($rows) < $filters['limit'] && $filters['search'])
@@ -276,14 +277,12 @@ class UsersController extends Controller
 
 		$rows->each(function($item, $key)
 		{
-			if (!$item->getUserUsername()->trashed())
-			{
-				$item->getUserUsername()->dateremoved = null;
-			}
 			if ($item->id)
 			{
 				$item->api = route('api.users.read', ['id' => $item->id]);
+				$item->email = $item->getUserUsername()->email;
 			}
+			$item->api_token = null;
 		});
 
 		return $rows; //new UserResourceCollection($rows);

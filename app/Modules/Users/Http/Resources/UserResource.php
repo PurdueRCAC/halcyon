@@ -31,6 +31,7 @@ class UserResource extends JsonResource
 		$data['dateremoved'] = $this->getUserUsername()->trashed() ? $this->dateremoved : null;
 		$data['unixid'] = $this->unixid;
 		$data['username'] = $this->username;
+		$data['email'] = $this->email;
 
 		$data['notes'] = $this->notes;
 		$data['roles'] = $this->roles;
