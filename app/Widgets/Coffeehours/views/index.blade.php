@@ -144,7 +144,7 @@ foreach ($rows as $event)
 				{
 					if ($assoc->associated)
 					{
-						$users[] = $assoc->associated->name;
+						$users[] = $assoc->associated->name . ' (' . $assoc->associated->username . ')';
 					}
 				}
 				if (!empty($users))
