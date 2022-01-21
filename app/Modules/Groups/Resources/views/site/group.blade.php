@@ -659,10 +659,10 @@
 				}
 			});
 
-			if ($(this).data('api')) {
+			if ($(this).attr('data-api')) {
 				$.ajax({
 					url: $(this).data('api'),
-					type: 'put',
+					type: $(this).attr('data-method'),
 					data: {
 						userid: $(this).data('userid'),
 						membertype: $(this).data('target'),
