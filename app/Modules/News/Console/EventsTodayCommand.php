@@ -42,7 +42,7 @@ class EventsTodayCommand extends Command
 			return;
 		}
 
-		$route = env('SLACK_NOTIFICATION_WEBHOOK');
+		$route = env('SLACK_NOTIFICATION_NEWS_TODAY');
 
 		if (!$route)
 		{

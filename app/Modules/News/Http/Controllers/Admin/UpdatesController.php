@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Update;
+use App\Modules\News\Notifications\ArticleUpdated;
 use App\Halcyon\Http\StatefulRequest;
 
 class UpdatesController extends Controller
@@ -175,6 +176,11 @@ class UpdatesController extends Controller
 		if (!$row->save())
 		{
 			return redirect()->back()->with('error', trans('global.messages.save failed'));
+		}
+
+		if (in_array($row->article->newstypeid, config('module.news.notify_update', [])))
+		{
+			$row->article->notify(new ArticleUpdated($row->article));
 		}
 
 		return redirect(route('admin.news.updates', ['article' => $row->newsid]))->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created')));

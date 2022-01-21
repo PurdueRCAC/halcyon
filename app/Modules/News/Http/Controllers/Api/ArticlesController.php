@@ -16,6 +16,7 @@ use App\Modules\News\Models\Newsresource;
 use App\Modules\News\Models\Association;
 use App\Modules\News\Http\Resources\ArticleResource;
 use App\Modules\News\Http\Resources\ArticleResourceCollection;
+use App\Modules\News\Notifications\ArticleCreated;
 use App\Modules\History\Models\Log;
 use App\Halcyon\Utility\PorterStemmer;
 use Carbon\Carbon;
@@ -626,6 +627,11 @@ class ArticlesController extends Controller
 		if ($request->has('associations'))
 		{
 			$row->setAssociations($request->input('associations'));
+		}
+
+		if (in_array($row->newstypeid, config('module.news.notify_create', [])))
+		{
+			$row->notify(new ArticleCreated($row));
 		}
 
 		return new ArticleResource($row);

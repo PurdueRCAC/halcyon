@@ -53,6 +53,8 @@ class EventRegistered extends Notification
 		$event = $this->event;
 
 		return (new SlackMessage)
+			->from(config('app.name'))
+			->info()
 			->content($event->datetimenews->format('g:ia') . ' - ' . $event->datetimenewsend->format('g:ia T'))
 			->attachment(function ($attachment) use ($notifiable, $event)
 			{

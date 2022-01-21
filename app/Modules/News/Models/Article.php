@@ -4,6 +4,7 @@ namespace App\Modules\News\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Config\Repository;
+use Illuminate\Notifications\Notifiable;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Utility\PorterStemmer;
@@ -22,7 +23,7 @@ use Carbon\Carbon;
  */
 class Article extends Model
 {
-	use ErrorBag, Validatable, Historable;
+	use ErrorBag, Validatable, Historable, Notifiable;
 
 	/**
 	 * The name of the "created at" column.
@@ -119,6 +120,17 @@ class Article extends Model
 	 * @var  object
 	 */
 	protected $metadataRepository = null;
+
+	/**
+	 * Route notifications for the Slack channel.
+	 *
+	 * @param  \Illuminate\Notifications\Notification  $notification
+	 * @return string
+	 */
+	public function routeNotificationForSlack($notification)
+	{
+		return env('SLACK_NOTIFICATION_NEWS');
+	}
 
 	/**
 	 * Set body value
@@ -1259,7 +1271,7 @@ class Article extends Model
 	 * @param   array  $associations
 	 * @return  void
 	 */
-	public function setAssociations(array $associations = [])
+	public function setAssociations($associations = [])
 	{
 		if (empty($associations))
 		{

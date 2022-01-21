@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Update;
+use App\Modules\News\Notifications\ArticleUpdated;
 use App\Modules\News\Http\Resources\UpdateResource;
 use App\Modules\News\Http\Resources\UpdateResourceCollection;
 
@@ -213,6 +214,11 @@ class UpdatesController extends Controller
 		if (!$row->save())
 		{
 			return response()->json(['message' => trans('news::news.error.failed to create record')], 500);
+		}
+
+		if (in_array($row->article->newstypeid, config('module.news.notify_update', [])))
+		{
+			$row->article->notify(new ArticleUpdated($row->article));
 		}
 
 		return new UpdateResource($row);
