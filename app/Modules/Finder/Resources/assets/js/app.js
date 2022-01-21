@@ -17,7 +17,8 @@ var drupalSettings = {
     }
 };
 
-(function ($, Drupal, drupalSettings) {
+//(function ($, Drupal, drupalSettings) {
+$(document).ready(function () {
 
     function findGetParameter(parameterName) {
         var result = "",
@@ -781,4 +782,5 @@ var drupalSettings = {
         }
     }
 
-})(jQuery, Drupal, drupalSettings);
+//})(jQuery, Drupal, drupalSettings);
+});
