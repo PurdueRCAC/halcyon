@@ -214,7 +214,7 @@
 										<th scope="col">Username</th>
 										<th scope="col">Added</th>
 										<th scope="col">Type</th>
-										<th scope="col">Status</th>
+										<?php /*<th scope="col">Status</th>*/ ?>
 										<th scope="col" class="text-right">Options</th>
 									</thead>
 									<tbody>
@@ -262,7 +262,7 @@
 															@endif
 														@endif
 													</td>
-													<td class="text-center">
+													<?php /*<td class="text-center">
 														<?php
 														if (!isset($usernames[$usr->user->username]) && $usr->user):
 															$usernames[$usr->user->username] = 0;
@@ -301,7 +301,7 @@
 															<span class="fa fa-exclamation-circle text-danger tip" aria-hidden="true" title="Account not found for user ID {{ $usr->userid }}."></span>
 															<span class="sr-only">Error</span>
 														@endif
-													</td>
+													</td>*/ ?>
 													<td class="text-right">
 														<input type="hidden" id="HIDDEN_{{ $usr->id }}_{{ $class->crn }}" value="{{ $usr->id }}" />
 														<a href="#USER_{{ $usr->id }}_{{ $class->crn }}" class="user-delete delete" data-api="{{ route('api.courses.members.delete', ['id' => $usr->id]) }}" data-confirm="Are you sure you wish to remove this user?" data-user="{{ $usr->id }}" data-crn="{{ $class->crn }}">
