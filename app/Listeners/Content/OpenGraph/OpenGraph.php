@@ -63,7 +63,7 @@ class OpenGraph
 		{
 			// Try to find image in article
 			$img = 0;
-			$content = $page->content;
+			$content = $page->body;
 
 			preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $content, $src);
 			if (isset($src[1]) && $src[1] != '')
@@ -125,7 +125,7 @@ class OpenGraph
 		if (!$desc)
 		{
 			// Clean up cases where content may be just encoded whitespace
-			$content = str_replace(['&amp;', '&nbsp;'], ['&', ' '], $page->body);
+			$content = str_replace(['&amp;', '&nbsp;'], ['&', ' '], ($page->formattedBody ? $page->formattedBody : $page->body));
 			$content = strip_tags($content);
 			$content = str_replace(array("\n", "\t", "\r"), ' ', $content);
 			$content = preg_replace("/\s+/", ' ', $content);
