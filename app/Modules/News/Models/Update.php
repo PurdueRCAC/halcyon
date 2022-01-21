@@ -141,7 +141,7 @@ class Update extends Model
 		$datestring = date("F j, Y", strtotime($startdate));
 		if ($starttime != '00:00:00')
 		{
-			$datestring .= '&nbsp; ' . date("g:ia", strtotime($startdate));
+			$datestring .= ' ' . date("g:ia", strtotime($startdate));
 		}
 
 		return $datestring;
