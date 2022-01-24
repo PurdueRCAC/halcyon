@@ -278,7 +278,7 @@ function NEWSPreview(btn) {
 		edit = false;
 	}*/
 
-	var text = document.getElementById("field-body").value;
+	var text = document.getElementById("fields-body").value;
 
 	if (text == "") {
 		return;
