@@ -651,13 +651,13 @@
 		$('body').on('click', '.membership-move', function(e){
 			e.preventDefault();
 
-			var parent = $($(this).attr('href'));
+			/*var parent = $($(this).attr('href'));
 
 			parent.find('.membership-toggle').each(function(i, el){
 				if ($(el).is(':checked')) {
 					$(el).prop('checked', false).change();
 				}
-			});
+			});*/
 
 			if ($(this).attr('data-api')) {
 				$.ajax({
