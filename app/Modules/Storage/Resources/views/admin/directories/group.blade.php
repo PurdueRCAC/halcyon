@@ -1255,7 +1255,7 @@
 										<label for="sell-resource">{{ trans('storage::storage.resource') }} <span class="required">{{ trans('global.required') }}</span></label>
 										<select name="resourceid" id="sell-resource" class="form-control">
 											<?php foreach ($storageresources as $s): ?>
-												<option value="{{ $s->parentresourceid }}" data-storageresource="{{ $s->id }}"<?php echo $selected; ?>>{{ $s->name }}</option>
+												<option value="{{ $s->parentresourceid }}" data-storageresource="{{ $s->id }}">{{ $s->name }}</option>
 											<?php endforeach; ?>
 										</select>
 									</div>
@@ -1323,7 +1323,7 @@
 										<label for="loan-resource">{{ trans('storage::storage.resource') }} <span class="required">{{ trans('global.required') }}</span></label>
 										<select name="resourceid" id="loan-resource" class="form-control">
 											<?php foreach ($storageresources as $s): ?>
-												<option value="{{ $s->parentresourceid }}" data-storageresource="{{ $s->id }}"<?php echo $selected; ?>>{{ $s->name }}</option>
+												<option value="{{ $s->parentresourceid }}" data-storageresource="{{ $s->id }}">{{ $s->name }}</option>
 											<?php endforeach; ?>
 										</select>
 									</div>
