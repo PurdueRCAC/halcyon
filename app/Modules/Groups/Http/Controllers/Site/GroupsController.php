@@ -10,6 +10,8 @@ use App\Halcyon\Models\FieldOfScience;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Department;
 use App\Modules\Groups\Models\GroupDepartment;
+use App\Modules\Groups\Models\Member;
+use App\Modules\Groups\Models\UnixGroupMember;
 
 class GroupsController extends Controller
 {
@@ -21,67 +23,162 @@ class GroupsController extends Controller
 	 */
 	public function index(StatefulRequest $request)
 	{
-		// Get filters
-		$filters = array(
-			'search'    => null,
-			'state'     => null,
-			'department' => 0,
-			// Paging
-			'limit'     => config('list_limit', 20),
-			'page'      => 1,
-			// Sorting
-			'order'     => Group::$orderBy,
-			'order_dir' => Group::$orderDir,
-		);
+		$user = auth()->user();
 
-		foreach ($filters as $key => $default)
+		$groups = $user->groups()
+			->where('groupid', '>', 0)
+			->get()
+			->pluck('groupid')
+			->toArray();
+		$groups = array_unique($groups);
+
+		$total = count($groups);
+
+		$queueusers = $user->queues()
+			->with('queue')
+			->whereIn('membertype', [1, 4])
+			->get();
+
+		foreach ($queueusers as $qu)
 		{
-			$filters[$key] = $request->state('groups.filter_' . $key, $key, $default);
-		}
-
-		if (!in_array($filters['order'], array('id', 'name', 'unixgroup', 'members_count')))
-		{
-			$filters['order'] = Group::$orderBy;
-		}
-
-		if (!in_array($filters['order_dir'], ['asc', 'desc']))
-		{
-			$filters['order_dir'] = Group::$orderDir;
-		}
-
-		$query = Group::query();
-
-		$g = (new Group)->getTable();
-
-		if ($filters['search'])
-		{
-			$filters['search'] = strtolower((string)$filters['search']);
-
-			$query->where(function ($where) use ($filters)
+			if ($qu->isMember() && $qu->trashed())
 			{
-				$where->where($g . '.name', 'like', '%' . $filters['search'] . '%')
-					->orWhere($g . '.unixgroup', 'like', '%' . $filters['search'] . '%');
-			});
+				continue;
+			}
+
+			$queue = $qu->queue;
+
+			if (!$queue || $queue->trashed())
+			{
+				continue;
+			}
+
+			if (!$queue->scheduler || $queue->scheduler->trashed())
+			{
+				continue;
+			}
+
+			if (!in_array($queue->groupid, $groups))
+			{
+				$groups[] = $queue->groupid;
+				$total++;
+			}
 		}
 
-		if ($filters['department'])
+		$unixusers = UnixGroupMember::query()
+			->where('userid', '=', $user->id)
+			->orderBy('datetimecreated', 'asc')
+			->get();
+
+		foreach ($unixusers as $uu)
 		{
-			$gd = (new GroupDepartment)->getTable();
-			$query->join($gd, $gd . '.groupid', $g . '.id')
-				->where($gd . '.collegedeptid', $filters['department']);
+			if ($uu->trashed())
+			{
+				continue;
+			}
+
+			$unixgroup = $uu->unixgroup;
+
+			if (!$unixgroup || $unixgroup->trashed())
+			{
+				continue;
+			}
+
+			if (!$unixgroup->group || $unixgroup->group->trashed())
+			{
+				continue;
+			}
+
+			if (!in_array($unixgroup->groupid, $groups))
+			{
+				$groups[] = $unixgroup->groupid;
+				$total++;
+			}
 		}
 
-		$rows = $query
-			->withCount('members')
-			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
+		$rows = $user->groups()
+			->where('groupid', '>', 0)
+			->orderBy('membertype', 'desc')
+			->get();
 
-		$departments = Department::tree();
+		$groups = array_unique($rows->pluck('groupid')->toArray());
+
+		foreach ($queueusers as $qu)
+		{
+			if ($qu->isMember() && $qu->trashed())
+			{
+				continue;
+			}
+
+			$queue = $qu->queue;
+
+			if (!$queue || $queue->trashed())
+			{
+				continue;
+			}
+
+			if (!$queue->scheduler || $queue->scheduler->trashed())
+			{
+				continue;
+			}
+
+			if (!in_array($queue->groupid, $groups))
+			{
+				$qu->groupid = $queue->groupid;
+
+				$rows->add($qu);
+
+				$groups[] = $queue->groupid;
+			}
+		}
+
+		foreach ($unixusers as $uu)
+		{
+			if ($uu->trashed())
+			{
+				continue;
+			}
+
+			$unixgroup = $uu->unixgroup;
+
+			if (!$unixgroup || $unixgroup->trashed())
+			{
+				continue;
+			}
+
+			if (!$unixgroup->group)
+			{
+				continue;
+			}
+
+			if (!in_array($unixgroup->groupid, $groups))
+			{
+				$uu->groupid = $unixgroup->groupid;
+				$uu->group = $unixgroup->group;
+				$rows->add($uu);
+				$groups[] = $unixgroup->groupid;
+			}
+		}
+
+		$managers = $rows->filter(function($value, $key)
+		{
+			return $value->isManager();
+		});//->pluck('groupid')->toArray();
+
+		foreach ($rows as $k => $g)
+		{
+			foreach ($managers as $manager)
+			{
+				if ($g->groupid == $manager->groupid && $g->id != $manager->id)
+				{
+					$rows->forget($k);
+				}
+			}
+		}
 
 		return view('groups::site.index', [
 			'rows'    => $rows,
-			'filters' => $filters,
-			'departments' => $departments,
+			'user' => $user,
 		]);
 	}
 
