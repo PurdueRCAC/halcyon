@@ -111,7 +111,7 @@ abstract class RoutingServiceProvider extends ServiceProvider
 				[
 					'namespace'  => 'Admin',
 					'prefix'     => 'admin', //config('admin-prefix'),
-					'middleware' => config('admin.middleware', ['auth.admin']),
+					'middleware' => config('admin.middleware', ['auth']),
 				],
 				function (Router $router) use ($backend)
 				{

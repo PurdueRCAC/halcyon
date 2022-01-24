@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'orders', 'middleware' => 'auth.admin'], function (Router $router)
+$router->group(['prefix' => 'orders', 'middleware' => 'auth'], function (Router $router)
 {
 	$router->get('/', [
 		'as' => 'site.orders.index',
@@ -159,7 +159,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth.admin'], function (R
 });
 
 // Legacy routes
-$router->group(['prefix' => 'order', 'middleware' => 'auth.admin'], function (Router $router)
+$router->group(['prefix' => 'order', 'middleware' => 'auth'], function (Router $router)
 {
 	$router->get('/', [
 		'as' => 'site.order.index',

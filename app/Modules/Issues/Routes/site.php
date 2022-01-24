@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'issues', 'middleware' => ['auth.admin', 'can:manage issues']], function (Router $router)
+$router->group(['prefix' => 'issues', 'middleware' => ['auth', 'can:manage issues']], function (Router $router)
 {
 	$router->get('/', [
 		'as' => 'site.issues.index',

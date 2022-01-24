@@ -31,7 +31,7 @@ if (config('user.allow_registration', true))
 	]);
 }
 
-$router->group(['prefix' => 'account', 'middleware' => 'auth.admin'], function (Router $router)
+$router->group(['prefix' => 'account', 'middleware' => 'auth'], function (Router $router)
 {
 	$router->get('/', [
 		'as' => 'site.users.account',
@@ -61,12 +61,12 @@ $router->group(['prefix' => 'account', 'middleware' => 'auth.admin'], function (
 $router->get('impersonate/take/{id}/{guardName?}', [
 	'as' => 'impersonate',
 	'uses' => '\Lab404\Impersonate\Controllers\ImpersonateController@take',
-	'middleware' => ['auth.admin', 'can:manage users']
+	'middleware' => ['auth', 'can:manage users']
 ]);
 $router->get('impersonate/leave', [
 	'as' => 'impersonate.leave',
 	'uses' => '\Lab404\Impersonate\Controllers\ImpersonateController@leave',
-	'middleware' => ['auth.admin']
+	'middleware' => ['auth']
 ]);
 
 $router->get('reset', [

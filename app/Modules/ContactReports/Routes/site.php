@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'contactreports', 'middleware' => ['auth.admin', 'can:manage contactreports']], function (Router $router)
+$router->group(['prefix' => 'contactreports', 'middleware' => ['auth', 'can:manage contactreports']], function (Router $router)
 {
 	$router->get('/', [
 		'as' => 'site.contactreports.index',
