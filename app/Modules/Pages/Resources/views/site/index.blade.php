@@ -134,7 +134,7 @@
 									</select>
 								</div>
 							@else
-								<input type="hidden" name="parent_id" value="{{ $page->parent_id }}" />
+								<input type="hidden" name="parent_id" id="field-parent_id" value="{{ $page->parent_id }}" />
 							@endif
 
 							<div class="form-group">
