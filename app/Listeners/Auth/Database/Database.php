@@ -1,142 +1,90 @@
 <?php
 namespace App\Listeners\Auth\Database;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Failed;
 use App\Modules\Users\Models\User;
+use App\Modules\Users\Events\Login;
+use App\Modules\Users\Events\Authenticate;
 
 /**
- * Batabase-based authentication plugin
+ * Database-based authentication plugin
  */
 class Database
 {
 	/**
+	 * Register the listeners for the subscriber.
+	 *
+	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @return void
+	 */
+	public function subscribe($events)
+	{
+		$events->listen(Login::class, self::class . '@handleLogin');
+		$events->listen(Authenticate::class, self::class . '@handleAuthenticate');
+	}
+
+	/**
 	 * This method should handle any authentication and report back to the subject
 	 *
-	 * @param   array    $credentials  Array holding the user credentials
-	 * @param   array    $options      Array of extra options
-	 * @param   object   $response     Authentication response object
-	 * @return  boolean
+	 * @param   Login $event
+	 * @return  void
 	 */
-	public function onUserAuthenticate($credentials, $options, &$response)
+	public function handleLogin(Login $event)
 	{
-		// For Log
-		$response->type = 'database';
+	}
 
-		// Halcyon does not like blank passwords
-		if (empty($credentials['password']))
+	/**
+	 * This method should handle any authentication and report back to the subject
+	 *
+	 * @param   LoginAuthenticate $event
+	 * @return  void
+	 */
+	public function handleAuthenticate(Authenticate $event)
+	{
+		$request = $event->request;
+
+		$request->validate([
+			'username' => 'required|min:3',//'required|email',
+			'password' => 'required|min:3'
+		]);
+
+		$credentials = [
+			'username' => $request->input('username'),
+			'password' => $request->input('password'),
+		];
+
+		if (filter_var($credentials['username'], FILTER_VALIDATE_EMAIL))
 		{
-			$response->status = \Halcyon\Auth\Status::FAILURE;
-			$response->error_message = trans('listener.auth.database::database.no password');
-			return false;
-		}
+			$credentials['email'] = $credentials['username'];
+			unset($credentials['username']);
 
-		// Initialize variables
-		$conditions = '';
-
-		// Determine if attempting to log in via username or email address
-		$query = User::query();
-
-		if (strpos($credentials['username'], '@'))
-		{
-			$query->where('email', '=', $credentials['username']);
-		}
-		else
-		{
-			$query->where('username', '=', $credentials['username']);
-		}
-
-		$result = $query->first();
-
-		if (is_array($result) && count($result) > 1)
-		{
-			$response->status = \Halcyon\Auth\Status::FAILURE;
-			$response->error_message = trans('listener.auth.database::database.authentication failed');
-			return false;
-		}
-		elseif (is_array($result) && isset($result[0]))
-		{
-			$result = $result[0];
+			$user = User::findByEmail($credentials['email']);
 		}
 		else
 		{
-			$response->status = \Halcyon\Auth\Status::FAILURE;
-			$response->error_message = trans('listener.auth.database::database.authentication failed');
+			$user = User::findByUsername($credentials['username']);
+		}
+
+		if (!$user)
+		{
+			event(new Failed('web', $user, $credentials));
+
+			$event->error = 'Invalid Username/email.';
 			return false;
 		}
 
-		// Remove old records
-		/*if ($duration = config('login_log_timeframe'))
+		if (!Hash::check($credentials['password'], $user->password))
 		{
-			$authlog = \Halcyon\User\Log\Auth::blank();
-			$authlog->delete($authlog->getTableName())
-				->where('logged', '<', Date::of('now')->modify('-' . $duration)->toSql())
-				->execute();
-		}
-
-		// Check to see if there are many blocked accounts
-		if ($this->hasExceededBlockLimit($result))
-		{
-			// Might be a moot point if Fail2Ban is triggered
-			$response->status = \Halcyon\Auth\Status::FAILURE;
-			$response->error_message = trans('listener.auth.database::database.too many attempts');
+			$event->error = 'Incorrect password.';
 			return false;
 		}
 
-		// Now make sure they haven't made too many failed login attempts
-		if ($this->hasExceededLoginLimit(\Halcyon\User\User::oneOrFail($result->id)))
-		{
-			$response->status = \Halcyon\Auth\Status::FAILURE;
-			$response->error_message = trans('listener.auth.database::database.too many attempts');
-			return false;
-		}*/
+		Auth::loginUsingId($user->id);
 
-		if ($result)
-		{
-			if (\Halcyon\User\Password::passwordMatches($result->username, $credentials['password'], true))
-			{
-				$user = User::getInstance($result->id);
+		//$remember = (bool) $request->get('remember_me', false);
 
-				$response->username      = $user->get('username');
-				$response->email         = $user->get('email');
-				$response->fullname      = $user->get('name');
-				$response->status        = \Halcyon\Auth\Status::SUCCESS;
-				$response->error_message = '';
-
-				// Check validity and age of password
-				$password_rules = \Halcyon\Password\Rule::all()
-					->whereEquals('enabled', 1)
-					->rows();
-				$msg = \Halcyon\Password\Rule::verify($credentials['password'], $password_rules, $result->username, null, false);
-				if (is_array($msg) && !empty($msg[0]))
-				{
-					App::get('session')->set('badpassword', '1');
-				}
-				if (\Halcyon\User\Password::isPasswordExpired($result->username))
-				{
-					App::get('session')->set('expiredpassword', '1');
-				}
-
-				// Set cookie with login preference info
-				$prefs = array(
-					'user_id'       => $user->get('id'),
-					'user_img'      => $user->picture(0, false),
-					'authenticator' => 'halcyon'
-				);
-
-				$namespace = 'authenticator';
-				$lifetime  = time() + 365*24*60*60;
-
-				\Halcyon\Utility\Cookie::bake($namespace, $lifetime, $prefs);
-			}
-			else
-			{
-				$response->status = \Halcyon\Auth\Status::FAILURE;
-				$response->error_message = trans('listener.auth.database::database.authentication failed');
-			}
-		}
-		else
-		{
-			$response->status = \Halcyon\Auth\Status::FAILURE;
-			$response->error_message = trans('listener.auth.database::database.authentication failed');
-		}
+		$event->authenticated = true;//Auth::attempt($credentials, $remember);
 	}
 }

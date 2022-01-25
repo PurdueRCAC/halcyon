@@ -31,11 +31,11 @@ app('pathway')
 			?>
 
 			<form method="post" action="{{ route('login.post') }}" class="card-body">
-				<div class="form-group has-feedback {{ $errors->has('email') ? ' has-error' : '' }}">
-					<label for="login-email">{{ trans('users::auth.email') }}</label>
-					<input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" autofocus name="email" id="login-email" value="{{ old('email')}}">
+				<div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
+					<label for="login-username">{{ trans('users::auth.username or email') }}</label>
+					<input type="username" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" autofocus name="username" id="login-username" value="{{ old('username')}}">
 					<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-					{!! $errors->first('email', '<span class="help-block">:message</span>') !!}
+					{!! $errors->first('username', '<span class="help-block">:message</span>') !!}
 				</div>
 
 				<div class="form-group has-feedback {{ $errors->has('password') ? ' has-error' : '' }}">
