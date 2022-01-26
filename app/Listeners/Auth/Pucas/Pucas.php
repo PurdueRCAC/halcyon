@@ -145,7 +145,7 @@ class Pucas
 				}
 				else
 				{
-					abort(401, 'Unauthorized.1');
+					abort(401, 'Unauthorized.');
 				}
 			}
 
@@ -179,9 +179,13 @@ class Pucas
 	 */
 	public function handleLogout(Logout $event)
 	{
+		//session()->flush();
+		session()->invalidate();
+		session()->regenerate();
+
 		if (app()->has('cas'))
 		{
-			//app('cas')->logout(route('home'), route('home'));
+			app('cas')->logout(route('home'), route('home'));
 		}
 	}
 }
