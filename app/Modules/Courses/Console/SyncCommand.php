@@ -68,6 +68,11 @@ class SyncCommand extends Command
 
 		foreach ($classdata as $row)
 		{
+			if ($debug || $this->output->isDebug())
+			{
+				$this->line('Looking up instructor for ' . $row->classname . ($row->coursenumber ? ' (' . $row->department . ' ' . $row->coursenumber . ')' : ''));
+			}
+
 			if (!$row->user)
 			{
 				$msg = 'Failed to retrieve instructor for class #' . $row->id;
@@ -102,6 +107,11 @@ class SyncCommand extends Command
 		$students = array();
 		foreach ($courses as $course)
 		{
+			if ($debug || $this->output->isVerbose())
+			{
+				$this->line('Looking up enrollment info for ' . $course->classname . ($course->coursenumber ? ' (' . $course->department . ' ' . $course->coursenumber . ')' : ''));
+			}
+
 			event($event = new AccountEnrollment($course));
 
 			$course = $event->account;
@@ -189,6 +199,11 @@ class SyncCommand extends Command
 				$students[] = $user;
 			}
 
+			if ($debug || $this->output->isVerbose())
+			{
+				$this->info('  Found ' . $count . ' enrollment(s)');
+			}
+
 			// Slap student count back into database
 			unset($course->classid);
 			$course->update([
@@ -210,6 +225,11 @@ class SyncCommand extends Command
 		}
 
 		// OK! Now we need to get explict users. TAs, instructors, and workshop participants.
+		if ($debug || $this->output->isVerbose())
+		{
+			$this->info('Looking up explicitely added users...');
+		}
+
 		foreach ($classdata as $row)
 		{
 			// Add instructor starting now
@@ -222,6 +242,11 @@ class SyncCommand extends Command
 		}
 
 		$users = array_unique($users);
+
+		if ($debug || $this->output->isVerbose())
+		{
+			$this->info('Checking ' . count($users) . ' users for who still needs access...');
+		}
 
 		// Get list of current scholar users
 		event($event = new CourseEnrollment($users));
@@ -361,14 +386,17 @@ class SyncCommand extends Command
 			'Removing: ' . count($remove_users),
 			'Total users: ' . count($users)
 		);
-		$msg = implode(', ', $data);
+		//$msg = implode(', ', $data);
 
 		if ($debug || $this->output->isVerbose())
 		{
-			$this->info('Class sync - ' . $msg);
+			$this->line('  <fg=green><options=bold>Creating:</> ' . count($create_users) . '</>');
+			$this->line('  <fg=red><options=bold>Removing:</> ' . count($remove_users) . '</>');
+			$this->line('  <fg=blue><options=bold>Total users:</> ' . count($users) . '</>');
 		}
 		if ($log)
 		{
+			$msg = implode(', ', $data);
 			error_log($msg);
 		}
 
@@ -396,7 +424,7 @@ class SyncCommand extends Command
 
 			if ($debug || $this->output->isVerbose())
 			{
-				$this->info($msg);
+				$this->line('<fg=red>' . $msg . '</>');
 			}
 
 			if ($log)
