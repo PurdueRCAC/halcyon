@@ -70,8 +70,8 @@ class CreateMenusTables extends Migration
 				$table->integer('access')->unsigned()->default(0)->comment('The access level required to view the menu item.');
 				$table->string('class', 255)->nullable();
 				$table->text('params')->nullable()->comment('JSON encoded data for the menu item.');
-				$table->integer('lft')->unsigned()->default(0)->comment('Nested set lft.');
-				$table->integer('rgt')->unsigned()->default(0)->comment('Nested set rgt.');
+				$table->integer('lft')->default(0)->comment('Nested set lft.');
+				$table->integer('rgt')->default(0)->comment('Nested set rgt.');
 				$table->tinyInteger('home')->unsigned()->default(0);
 				$table->string('language', 7);
 				$table->tinyInteger('client_id')->unsigned()->default(0);
