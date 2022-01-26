@@ -4,7 +4,7 @@ use Illuminate\Routing\Router;
 
 /** @var Router $router */
 $router->get('login', [
-	'middleware' => 'cas.auth',
+	//'middleware' => 'cas.auth',
 	'as'   => 'login',
 	'uses' => 'AuthController@login'
 ]);
@@ -15,13 +15,13 @@ $router->post('login', [
 $router->get('callback', [
 	//'middleware' => 'cas.guest',
 	'as'   => 'callback',
-	'uses' => 'AuthController@callback'
+	'uses' => 'AuthController@authenticate'
 ]);
 
-if (config('user.allow_registration', true))
+if (config('module.user.allow_registration', true))
 {
 	$router->get('register', [
-		'middleware' => 'auth.guest',
+		//'middleware' => 'auth.guest',
 		'as'   => 'register',
 		'uses' => 'AuthController@register'
 	]);

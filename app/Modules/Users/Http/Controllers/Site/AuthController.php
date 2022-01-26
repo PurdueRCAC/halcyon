@@ -5,12 +5,15 @@ namespace App\Modules\Users\Http\Controllers\Site;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 use App\Halcyon\Access\Role;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
-//use App\User;
+use App\Modules\Users\Events\Login;
+use App\Modules\Users\Events\Authenticate;
 
 class AuthController extends Controller
 {
@@ -35,56 +38,16 @@ class AuthController extends Controller
 			}
 		}
 
+		event($event = new Login($request));
+
 		if (Auth::check())
 		{
-			return redirect()->intended($this->authenticatedRoute());
-		}
-
-		if (app()->has('cas'))
-		{
-			return $this->callback($request);
-			/*$cas = app('cas');
-
-			if (!$cas->checkAuthentication())
-			{
-				return $cas->authenticate();
-			}
-			else
-			{
-				return redirect()->intended($this->authenticatedRoute());
-			}*/
+			return redirect($this->authenticatedRoute());
 		}
 
 		return view('users::site.login', [
 			'return' => $return
 		]);
-	}
-
-	/**
-	 * Is the provided string base64 encoded?
-	 *
-	 * @param   string  $str
-	 * @return  bool
-	 **/
-	protected function isBase64($str)
-	{
-		if (preg_match('/[^A-Za-z0-9\+\/\=]/', $str))
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Is the provided url internal to the site?
-	 *
-	 * @param   string  $str
-	 * @return  bool
-	 **/
-	protected function isInternal($str)
-	{
-		return (stripos($str, request()->root()) !== false);
 	}
 
 	/**
@@ -95,33 +58,20 @@ class AuthController extends Controller
 	 */
 	public function authenticate(Request $request)
 	{
-		//Auth::loginUsingId($user->id);
+		event($event = new Authenticate($request));
 
-		$request->validate([
-			'email'    => 'required|email',
-			'password' => 'required|min:3'
-		]);
-
-		$credentials = [
-			'email'    => $request->input('email'),
-			'password' => $request->input('password'),
-		];
-
-		$remember = (bool) $request->get('remember_me', false);
-
-		//$error = $this->auth->login($credentials, $remember);
-
-		//if ($error)
-		if (!Auth::attempt($credentials, $remember))
+		if (!$event->authenticated || !Auth::check())
 		{
-			return redirect()
+			return response(trans('users::auth.authentication failed'), 401);
+
+			/*return redirect()
 				->back()
 				->withInput()
-				->withError(trans('users::auth.authentication failed'));
+				->withError(trans('users::auth.authentication failed'));*/
 		}
 
-		return redirect()
-			->intended($this->authenticatedRoute());
+		return redirect($this->authenticatedRoute());
+			//->intended($this->authenticatedRoute());
 	}
 
 	/**
@@ -132,34 +82,6 @@ class AuthController extends Controller
 	 */
 	public function callback(Request $request)
 	{
-		/*try
-		{
-			$linkdinUser = Socialite::driver('linkedin')->user();
-			$existUser = User::where('email', $linkdinUser->email)->first();
-
-			if ($existUser)
-			{
-				Auth::loginUsingId($existUser->id);
-			}
-			else
-			{
-				$user = new User;
-				$user->name = $linkdinUser->name;
-				$user->email = $linkdinUser->email;
-				$user->linkedin_id = $linkdinUser->id;
-				$user->password = md5(rand(1,10000));
-				$user->save();
-
-				Auth::loginUsingId($user->id);
-			}
-
-			return redirect()->to('/home');
-		}
-		catch (Exception $e)
-		{
-			return 'error';
-		}*/
-
 		if (app()->has('cas'))
 		{
 			$cas = app('cas');
@@ -264,10 +186,7 @@ class AuthController extends Controller
 			}
 		}
 
-		$route = $this->authenticatedRoute();
-
-		return redirect()
-			->intended($route);
+		return redirect($this->authenticatedRoute());
 	}
 
 	/**
@@ -279,13 +198,6 @@ class AuthController extends Controller
 	public function logout(Request $request)
 	{
 		Auth::logout();
-
-		session()->flush();
-
-		if (app()->has('cas'))
-		{
-			//app('cas')->logout(route('home'), route('home'));
-		}
 
 		return redirect()->route(config('module.users.redirect_route_after_logout', 'login'));
 	}
@@ -299,8 +211,7 @@ class AuthController extends Controller
 	{
 		if (Auth::check())
 		{
-			return redirect()
-				->intended($this->authenticatedRoute())
+			return redirect($this->authenticatedRoute())
 				->withSuccess(trans('users::messages.already registered'));
 		}
 
@@ -315,6 +226,104 @@ class AuthController extends Controller
 	 */
 	public function registering(Request $request)
 	{
+		$rules = [
+			'name' => 'required|min:3',
+			'username' => 'required|min:3',
+			'email' => 'required|email',
+			'password' => 'required|min:8',
+			'password_confirmation' => 'required|min:8',
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
+
+		if ($request->input('password') != $request->input('password_confirmation'))
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors(['password' => 'Password and password confirmation do not match']);
+		}
+
+		$user = User::findByUsername($request->input('username'));
+
+		if ($user && $user->id)
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors(['username' => 'Username is already taken']);
+		}
+
+		$user = User::findByEmail($request->input('email'));
+
+		if ($user && $user->id)
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors(['email' => 'Email is already taken']);
+		}
+
+		$user = new User;
+		$user->name = $request->input('name');
+		$user->api_token = Str::random(60);
+		$user->password = Hash::make($request->input('password'));
+
+		$newUsertype = config('module.users.new_usertype');
+
+		if (!$newUsertype)
+		{
+			$newUsertype = Role::findByTitle('Registered')->id;
+		}
+
+		if ($newUsertype)
+		{
+			$user->newroles = array($newUsertype);
+		}
+
+		if ($user->save())
+		{
+			$userusername = new UserUsername;
+			$userusername->userid = $user->id;
+			$userusername->username = $request->input('username');
+			$userusername->email = $request->input('email');
+			$userusername->save();
+		}
+
+		Auth::loginUsingId($user->id);
+
+		return redirect(route(config('module.users.redirect_route_after_login', 'home')));
+	}
+
+	/**
+	 * Is the provided string base64 encoded?
+	 *
+	 * @param   string  $str
+	 * @return  bool
+	 **/
+	protected function isBase64($str)
+	{
+		if (preg_match('/[^A-Za-z0-9\+\/\=]/', $str))
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Is the provided url internal to the site?
+	 *
+	 * @param   string  $str
+	 * @return  bool
+	 **/
+	protected function isInternal($str)
+	{
+		return (stripos($str, request()->root()) !== false);
 	}
 
 	/**
@@ -332,7 +341,9 @@ class AuthController extends Controller
 		}
 		elseif ($url = session()->previousUrl())
 		{
-			if (substr($url, -6) != 'login' && $this->isInternal($url))
+			if (substr($url, -6) != 'login'
+			 && substr($url, -8) != 'register'
+			 && $this->isInternal($url))
 			{
 				$route = $url;
 			}
