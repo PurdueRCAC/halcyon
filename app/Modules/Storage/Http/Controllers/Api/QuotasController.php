@@ -9,9 +9,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Storage\Models\Directory;
 use App\Modules\Storage\Models\StorageResource;
-//use App\Modules\Messages\Models\Message;
 use App\Modules\Groups\Models\UnixGroup;
 use App\Modules\Users\Models\User;
+use Carbon\Carbon;
 
 /**
  * Quotas
@@ -143,15 +143,21 @@ class QuotasController extends Controller
 			}
 
 			// Force refresh?
-			if (!$data || date("U") - strtotime($data->datetimerecorded) > 900)
+			if (!$data || date("U") - strtotime($data->datetimerecorded) > 900) // 15 minutes
 			{
 				// If we know how
 				if ($row->getquotatypeid)
 				{
-					// Assuming no pending requests
+					// Assuming no pending requests or recent checks
 					$message = $row->messages()
 						->where('messagequeuetypeid', '=', $row->getquotatypeid)
-						->whereNull('datetimecompleted')
+						->where(function($where)
+						{
+							$recent = Carbon::now()->modify('-15 minutes');
+
+							$where->whereNull('datetimecompleted')
+								->orWhere('datetimecompleted', '>=', $recent->toDateTimeString());
+						})
 						->get()
 						->first();
 
@@ -173,6 +179,7 @@ class QuotasController extends Controller
 		{
 			$item = $row->toArray();
 
+			// If legacy format ...
 			if ($ws)
 			{
 				$item['datetimecreated'] = $row->datetimecreated ? $row->datetimecreated->toDateTimeString() : '0000-00-00 00:00:00';
