@@ -48,7 +48,7 @@ app('pathway')
 		@foreach ($rows as $i => $row)
 			<div class="col-md-12">
 				<div class="card mb-3">
-					@if ($url = $row->hasFacet('url'))
+					@if ($url = $row->getFacet('url'))
 					<a href="{{ $url }}" class="card-content">
 					@else
 					<a href="{{ route('site.resources.' . $type->alias . '.show', ['name' => $row->listname]) }}" class="card-content">
