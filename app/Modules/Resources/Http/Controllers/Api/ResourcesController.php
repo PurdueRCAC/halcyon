@@ -5,6 +5,7 @@ namespace App\Modules\Resources\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Models\Facet;
 use App\Modules\Resources\Http\Resources\AssetResourceCollection;
@@ -221,7 +222,7 @@ class ResourcesController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'required|string|max:32',
 			'parentid' => 'required|integer|min:1',
 			'batchsystem' => 'required|integer|min:1',
@@ -230,7 +231,14 @@ class ResourcesController extends Controller
 			'rolename' => 'nullable|string',
 			'listname' => 'nullable|string',
 			'facets' => 'nullable|array',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$exist = Asset::findByName($request->input('name'));
 
@@ -405,7 +413,7 @@ class ResourcesController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'nullable|string|max:32',
 			'parentid' => 'nullable|integer|min:1',
 			'batchsystem' => 'nullable|integer|min:1',
@@ -415,7 +423,14 @@ class ResourcesController extends Controller
 			'listname' => 'nullable|string',
 			'status' => 'nullable|string',
 			'facets' => 'nullable|array',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Asset::findOrFail($id);
 		$row->fill($request->all());

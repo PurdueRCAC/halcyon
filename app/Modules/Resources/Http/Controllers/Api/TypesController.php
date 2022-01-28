@@ -5,6 +5,7 @@ namespace App\Modules\Resources\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Resources\Models\Type;
@@ -183,11 +184,18 @@ class TypesController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'required|string|max:20',
 			'description' => 'nullable|string|max:1000',
 			'facets' => 'nullable|array',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Type::create($request->all());
 
@@ -425,11 +433,18 @@ class TypesController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'required|string|max:20',
 			'description' => 'nullable|string|max:1000',
 			'facets' => 'nullable|array',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$row = Type::findOrFail($id);
 
