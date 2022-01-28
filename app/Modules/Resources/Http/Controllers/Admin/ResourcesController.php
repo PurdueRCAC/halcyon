@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Models\Type;
 use App\Modules\Resources\Models\Batchsystem;
+use App\Modules\Resources\Models\Facet;
 use App\Modules\Resources\Events\AssetDisplaying;
 use App\Halcyon\Http\StatefulRequest;
 
@@ -308,19 +309,44 @@ class ResourcesController extends Controller
 
 		$row->fill($request->input('fields'));
 
-		if ($params = $request->input('params', []))
-		{
-			foreach ($params as $key => $val)
-			{
-				$row->params->set($key, $val);
-			}
-		}
-
 		if (!$row->save())
 		{
 			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
+		}
+
+		if ($facets = $request->input('facets', []))
+		{
+			if (isset($facets[$row->resourcetype]))
+			{
+				foreach ($facets[$row->resourcetype] as $key => $value)
+				{
+					$ft = $row->type->facetTypes->where('name', '=', $key)->first();
+
+					if (!$ft)
+					{
+						continue;
+					}
+
+					$facet = $row->facets->where('facet_type_id', '=', $ft->id)->first();
+
+					if (!$value)
+					{
+						if ($facet)
+						{
+							$facet->delete();
+						}
+						continue;
+					}
+
+					$facet = $facet ?: new Facet;
+					$facet->asset_id = $row->id;
+					$facet->facet_type_id = $ft->id;
+					$facet->value = $value;
+					$facet->save();
+				}
+			}
 		}
 
 		return redirect(route('admin.resources.index'))->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created')));

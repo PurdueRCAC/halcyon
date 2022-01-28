@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use App\Modules\Resources\Models\Asset;
+use App\Modules\Resources\Models\Facet;
 use App\Modules\Resources\Http\Resources\AssetResourceCollection;
 use App\Modules\Resources\Http\Resources\AssetResource;
 use App\Modules\Resources\Http\Resources\MemberResourceCollection;
@@ -228,6 +229,7 @@ class ResourcesController extends Controller
 			'producttype' => 'nullable|integer',
 			'rolename' => 'nullable|string',
 			'listname' => 'nullable|string',
+			'facets' => 'nullable|array',
 		]);
 
 		$exist = Asset::findByName($request->input('name'));
@@ -238,6 +240,36 @@ class ResourcesController extends Controller
 		}
 
 		$row = Asset::create($request->all());
+
+		if ($facets = $request->input('facets', []))
+		{
+			foreach ($facets as $key => $value)
+			{
+				$ft = $row->type->facetTypes->where('name', '=', $key)->first();
+
+				if (!$ft)
+				{
+					continue;
+				}
+
+				$facet = $row->facets->where('facet_type_id', '=', $ft->id)->first();
+
+				if (!$value)
+				{
+					if ($facet)
+					{
+						$facet->delete();
+					}
+					continue;
+				}
+
+				$facet = $facet ?: new Facet;
+				$facet->asset_id = $row->id;
+				$facet->facet_type_id = $ft->id;
+				$facet->value = $value;
+				$facet->save();
+			}
+		}
 
 		return new AssetResource($row);
 	}
@@ -382,6 +414,7 @@ class ResourcesController extends Controller
 			'rolename' => 'nullable|string',
 			'listname' => 'nullable|string',
 			'status' => 'nullable|string',
+			'facets' => 'nullable|array',
 		]);
 
 		$row = Asset::findOrFail($id);
@@ -398,6 +431,36 @@ class ResourcesController extends Controller
 		}
 
 		$row->save();
+
+		if ($facets = $request->input('facets', []))
+		{
+			foreach ($facets as $key => $value)
+			{
+				$ft = $row->type->facetTypes->where('name', '=', $key)->first();
+
+				if (!$ft)
+				{
+					continue;
+				}
+
+				$facet = $row->facets->where('facet_type_id', '=', $ft->id)->first();
+
+				if (!$value)
+				{
+					if ($facet)
+					{
+						$facet->delete();
+					}
+					continue;
+				}
+
+				$facet = $facet ?: new Facet;
+				$facet->asset_id = $row->id;
+				$facet->facet_type_id = $ft->id;
+				$facet->value = $value;
+				$facet->save();
+			}
+		}
 
 		return new AssetResource($row);
 	}

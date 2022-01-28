@@ -143,44 +143,17 @@ app('pathway')
 					<fieldset class="adminform">
 						<legend>{{ trans('resources::assets.options') }}</legend>
 
-						<div class="form-group">
-							<label for="params-desktop">{{ trans('resources::assets.params.desktop') }}</label>
-							<input type="text" class="form-control" name="params[desktop]" id="params-desktop" value="{{ $row->params->get('desktop') }}" />
-							<span class="form-text text-muted">{{ trans('resources::assets.params.desktop desc') }}</span>
+						<div class="type-dependent type-0 <?php if ($row->resourcetype) { echo 'd-none'; } ?>">
+							<p>{{ trans('global.none') }}</p>
 						</div>
 
-						<div class="form-group">
-							<label for="params-gateway">{{ trans('resources::assets.params.gateway') }}</label>
-							<input type="text" class="form-control" name="params[gateway]" id="params-gateway" value="{{ $row->params->get('gateway') }}" />
-							<span class="form-text text-muted">{{ trans('resources::assets.params.gateway desc') }}</span>
-						</div>
-
-						<div class="form-group">
-							<label for="params-notebook">{{ trans('resources::assets.params.notebook') }}</label>
-							<input type="text" class="form-control" name="params[notebook]" id="params-notebook" value="{{ $row->params->get('notebook') }}" />
-							<span class="form-text text-muted">{{ trans('resources::assets.params.notebook desc') }}</span>
-						</div>
-
-						<div class="form-group">
-							<label for="params-rstudio">{{ trans('resources::assets.params.rstudio') }}</label>
-							<input type="text" class="form-control" name="params[rstudio]" id="params-rstudio" value="{{ $row->params->get('rstudio') }}" />
-							<span class="form-text text-muted">{{ trans('resources::assets.params.rstudio desc') }}</span>
-						</div>
-
-						<div class="form-group">
-							<label for="params-url">{{ trans('resources::assets.params.url') }}</label>
-							<input type="text" class="form-control" name="params[url]" id="params-url" value="{{ $row->params->get('url') }}" />
-							<span class="form-text text-muted">{{ trans('resources::assets.params.url desc') }}</span>
-						</div>
-
-						<div class="form-group">
-							<label for="params-home">{{ trans('resources::assets.params.home') }}</label>
-							<select class="form-control" name="params[home]" id="params-home">
-								<option value="dedicated"<?php if ($row->params->get('home') != 'shared') { echo ' selected="selected"'; } ?>>{{ trans('resources::assets.params.dedicated home') }}</option>
-								<option value="shared"<?php if ($row->params->get('home') == 'shared') { echo ' selected="selected"'; } ?>>{{ trans('resources::assets.params.shared home') }}</option>
-							</select>
-							<span class="form-text text-muted">{{ trans('resources::assets.params.home desc') }}</span>
-						</div>
+						@foreach ($types as $type)
+							<div class="type-dependent type-{{ $type->id }} <?php if ($type->id != $row->resourcetype) { echo 'd-none'; } ?>">
+							@foreach ($type->facetTypes as $field)
+								@include('resources::fields.' . $field->type)
+							@endforeach
+							</div>
+						@endforeach
 					</fieldset>
 				</div>
 			</div>

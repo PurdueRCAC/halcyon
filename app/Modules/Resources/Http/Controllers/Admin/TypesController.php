@@ -8,6 +8,8 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Models\Type;
+use App\Modules\Resources\Models\FacetType;
+use App\Modules\Resources\Models\FacetOption;
 use App\Halcyon\Http\StatefulRequest;
 
 class TypesController extends Controller
@@ -146,6 +148,117 @@ class TypesController extends Controller
 			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
+		}
+
+		if ($request->has('facets'))
+		{
+			$facets = json_decode($request->input('facets'));
+
+			// Collect old fields
+			$oldFields = array();
+			foreach ($row->facetTypes as $oldField)
+			{
+				$oldFields[$oldField->id] = $oldField;
+			}
+
+			foreach ($facets->fields as $i => $element)
+			{
+				$field = null;
+
+				$fid = (isset($element->field_id) ? $element->field_id : 0);
+
+				if ($fid && isset($oldFields[$fid]))
+				{
+					$field = $oldFields[$fid];
+
+					// Remove found fields from the list
+					// Anything remaining will be deleted
+					unset($oldFields[$fid]);
+				}
+
+				$field = $field ?: new FacetType; //FacetType::find($fid));
+				//$field = $field ?: new FacetType;
+				$field->fill([
+					'type_id'       => $row->id,
+					'type'          => (string) $element->field_type,
+					'label'         => (string) $element->label,
+					'name'          => (string) $element->name,
+					'description'   => (isset($element->field_options->description) ? (string) $element->field_options->description : null),
+					//'required'     => (isset($element->required) ? (int) $element->required : 0),
+					'ordering'      => ($i + 1),
+					'min'           => (isset($element->field_options->min) ? (int) $element->field_options->min : 0),
+					'max'           => (isset($element->field_options->max) ? (int) $element->field_options->max : 0),
+					'default_value' => (isset($element->field_options->value) ? (string) $element->field_options->value : null),
+					'placeholder'   => (isset($element->field_options->placeholder) ? (string) $element->field_options->placeholder : null)
+				]);
+
+				if ($field->type == 'dropdown')
+				{
+					$field->type = 'select';
+				}
+				if ($field->type == 'paragraph')
+				{
+					$field->type = 'textarea';
+				}
+
+				if (!$field->save())
+				{
+					continue;
+				}
+
+				// Collect old options
+				$oldOptions = array();
+				foreach ($field->options as $oldOption)
+				{
+					$oldOptions[$oldOption->id] = $oldOption;
+				}
+
+				// Does this field have any set options?
+				if (isset($element->field_options->options))
+				{
+					foreach ($element->field_options->options as $k => $opt)
+					{
+						$option = null;
+
+						$oid = (isset($opt->field_id) ? $opt->field_id : 0);
+
+						if ($oid && isset($oldOptions[$oid]))
+						{
+							$option = $oldOptions[$oid];
+
+							// Remove found options from the list
+							// Anything remaining will be deleted
+							unset($oldOptions[$oid]);
+						}
+
+						$option = $option ?: new FacetOption;
+						$option->fill([
+							'facet_type_id' => $field->id,
+							'label'      => (string) $opt->label,
+							'value'      => (isset($opt->value)   ? (string) $opt->value : null),
+							'checked'    => (isset($opt->checked) ? (int) $opt->checked : 0),
+							'ordering'   => ($k + 1),
+						]);
+
+						if (!$option->save())
+						{
+							continue;
+						}
+					}
+				}
+
+				// Remove any options not in the incoming list
+				foreach ($oldOptions as $option)
+				{
+					$option->delete();
+				}
+			}
+
+			// Remove any fields not in the incoming list
+			foreach ($oldFields as $field)
+			{
+				$field->delete();
+			}
 		}
 
 		return $this->cancel()->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created')));

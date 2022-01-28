@@ -212,7 +212,10 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-3">
-					{{ $types->where('id', $row->resourcetype)->first()->name }}
+					@php
+					$t = $types->where('id', $row->resourcetype)->first();
+					@endphp
+					{{ $t ? $t->name : $row->resourcetype }}
 				</td>
 				<td class="priority-4">
 					@php

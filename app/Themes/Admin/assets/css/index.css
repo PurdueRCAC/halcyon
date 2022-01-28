@@ -620,9 +620,11 @@ h4 {
 .icon-align-justify:before {
   content: "\e821";
 }
+.fa-align-left:before,
 .icon-align-left:before {
   content: "\e822";
 }
+.fa-align-right:before,
 .icon-align-right:before {
   content: "\e823";
 }
@@ -755,6 +757,7 @@ h4 {
 .icon-chevrons-left:before {
   content: "\e849";
 }
+.fa-dot-circle-o:before,
 .icon-circle:before {
   content: "\e84a";
 }
@@ -995,6 +998,7 @@ h4 {
   content: "\e893";
 }
 .fa-ban:before,
+.fa-minus-circle:before,
 .icon-minus-circle:before {
   content: "\e894";
 }

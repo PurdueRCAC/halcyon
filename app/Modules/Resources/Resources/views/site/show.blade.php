@@ -82,33 +82,33 @@ $content = '';
 
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 	@if (!$resource->trashed())
-		@if ($resource->params->get('gateway') || $resource->params->get('desktop') || $resource->params->get('notebook') || $resource->params->get('rstudio'))
+		@if ($resource->hasFacet('gateway') || $resource->hasFacet('desktop') || $resource->hasFacet('notebook') || $resource->hasFacet('rstudio'))
 			<div class="launch">
-				@if ($gateway = $resource->params->get('gateway'))
+				@if ($gateway = $resource->getFacet('gateway'))
 					<div class="panel">
 						Gateway
-						<a class="btn btn-launch" href="{{ $gateway }}" title="Launch OnDemand Gateway" target="_blank" rel="noopener">Launch</a>
+						<a class="btn btn-launch" href="{{ $gateway->value }}" title="Launch OnDemand Gateway" target="_blank" rel="noopener">Launch</a>
 					</div>
 				@endif
 
-				@if ($desktop = $resource->params->get('desktop'))
+				@if ($desktop = $resource->getFacet('desktop'))
 					<div class="panel">
 						Remote Desktop
-						<a class="btn btn-launch" href="{{ $desktop }}" title="Launch Remote Desktop" target="_blank" rel="noopener">Launch</a>
+						<a class="btn btn-launch" href="{{ $desktop->value }}" title="Launch Remote Desktop" target="_blank" rel="noopener">Launch</a>
 					</div>
 				@endif
 
-				@if ($notebook = $resource->params->get('notebook'))
+				@if ($notebook = $resource->getFacet('notebook'))
 					<div class="panel">
 						Jupyter Hub
-						<a class="btn btn-launch" href="{{ $notebook }}" title="Launch Jupyter Hub" target="_blank" rel="noopener">Launch</a>
+						<a class="btn btn-launch" href="{{ $notebook->value }}" title="Launch Jupyter Hub" target="_blank" rel="noopener">Launch</a>
 					</div>
 				@endif
 
-				@if ($rstudio = $resource->params->get('rstudio'))
+				@if ($rstudio = $resource->getFacet('rstudio'))
 					<div class="panel">
 						Rstudio
-						<a class="btn btn-launch" href="{{ $rstudio }}" title="Launch Rstudio" target="_blank" rel="noopener">Launch</a>
+						<a class="btn btn-launch" href="{{ $rstudio->value }}" title="Launch Rstudio" target="_blank" rel="noopener">Launch</a>
 					</div>
 				@endif
 			</div>

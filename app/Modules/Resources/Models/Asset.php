@@ -212,6 +212,47 @@ class Asset extends Model
 	}
 
 	/**
+	 * Defines a relationship to facets
+	 *
+	 * @return  object
+	 */
+	public function facets()
+	{
+		return $this->hasMany(Facet::class, 'asset_id');
+	}
+
+	/**
+	 * Defines a relationship to facets
+	 *
+	 * @param   string  $name
+	 * @return  bool
+	 */
+	public function hasFacet($name)
+	{
+		$found = $this->getFacet($name);
+
+		return $found ? true : false;
+	}
+
+	/**
+	 * Defines a relationship to facets
+	 *
+	 * @param   string  $name
+	 * @return  mixed
+	 */
+	public function getFacet($name)
+	{
+		$ft = $this->type->facetTypes->where('name', '=', $name)->first();
+
+		if (!$ft)
+		{
+			return null;
+		}
+
+		return $this->facets->where('facet_type_id', '=', $ft->id)->first();
+	}
+
+	/**
 	 * The "booted" method of the model.
 	 *
 	 * @return void
@@ -326,7 +367,10 @@ class Asset extends Model
 	 */
 	public function setListnameAttribute($value)
 	{
-		$this->attributes['listname'] = (string)$value;
+		$value = strip_tags((string)$value);
+		$value = str_replace(' ', '-', $value);
+
+		$this->attributes['listname'] = $value;
 	}
 
 	/**
@@ -337,7 +381,10 @@ class Asset extends Model
 	 */
 	public function setRolenameAttribute($value)
 	{
-		$this->attributes['rolename'] = (string)$value;
+		$value = strip_tags((string)$value);
+		$value = str_replace(' ', '-', $value);
+
+		$this->attributes['rolename'] = $value;
 	}
 
 	/**

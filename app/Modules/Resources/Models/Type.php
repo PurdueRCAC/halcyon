@@ -84,6 +84,16 @@ class Type extends Model
 	}
 
 	/**
+	 * Defines a relationship to facet types
+	 *
+	 * @return  object
+	 */
+	public function facetTypes()
+	{
+		return $this->hasMany(FacetType::class, 'type_id');
+	}
+
+	/**
 	 * Get an alias
 	 *
 	 * @return  object

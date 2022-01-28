@@ -5,9 +5,11 @@ namespace App\Modules\Resources\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Modules\Resources\Models\Type;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Modules\Resources\Models\Type;
+use App\Modules\Resources\Models\FacetType;
+use App\Modules\Resources\Models\FacetOption;
 
 /**
  * Types
@@ -137,6 +139,24 @@ class TypesController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "description",
+	 * 		"description":   "A short description of the resource type",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "facets",
+	 * 		"description":   "A list of facet fields",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "array"
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"201": {
 	 * 			"description": "Successful entry creation",
@@ -165,7 +185,8 @@ class TypesController extends Controller
 	{
 		$request->validate([
 			'name' => 'required|string|max:20',
-			'description' => 'nullable|string|max:1000'
+			'description' => 'nullable|string|max:1000',
+			'facets' => 'nullable|array',
 		]);
 
 		$row = Type::create($request->all());
@@ -173,6 +194,116 @@ class TypesController extends Controller
 		if (!$row)
 		{
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
+		}
+
+		if ($request->has('facets'))
+		{
+			$facets = $request->input('facets', []);
+
+			// Collect old fields
+			$oldFields = array();
+			foreach ($row->facetTypes as $oldField)
+			{
+				$oldFields[$oldField->id] = $oldField;
+			}
+
+			foreach ($facets->fields as $i => $element)
+			{
+				$field = null;
+
+				$fid = (isset($element->field_id) ? $element->field_id : 0);
+
+				if ($fid && isset($oldFields[$fid]))
+				{
+					$field = $oldFields[$fid];
+
+					// Remove found fields from the list
+					// Anything remaining will be deleted
+					unset($oldFields[$fid]);
+				}
+
+				$field = $field ?: new FacetType;
+				$field->fill([
+					'type_id'       => $row->id,
+					'type'          => (string) $element->field_type,
+					'label'         => (string) $element->label,
+					'name'          => (string) $element->name,
+					'description'   => (isset($element->field_options->description) ? (string) $element->field_options->description : null),
+					//'required'     => (isset($element->required) ? (int) $element->required : 0),
+					'ordering'      => ($i + 1),
+					'min'           => (isset($element->field_options->min) ? (int) $element->field_options->min : 0),
+					'max'           => (isset($element->field_options->max) ? (int) $element->field_options->max : 0),
+					'default_value' => (isset($element->field_options->value) ? (string) $element->field_options->value : null),
+					'placeholder'   => (isset($element->field_options->placeholder) ? (string) $element->field_options->placeholder : null)
+				]);
+
+				if ($field->type == 'dropdown')
+				{
+					$field->type = 'select';
+				}
+				if ($field->type == 'paragraph')
+				{
+					$field->type = 'textarea';
+				}
+
+				if (!$field->save())
+				{
+					continue;
+				}
+
+				// Collect old options
+				$oldOptions = array();
+				foreach ($field->options as $oldOption)
+				{
+					$oldOptions[$oldOption->id] = $oldOption;
+				}
+
+				// Does this field have any set options?
+				if (isset($element->field_options->options))
+				{
+					foreach ($element->field_options->options as $k => $opt)
+					{
+						$option = null;
+
+						$oid = (isset($opt->field_id) ? $opt->field_id : 0);
+
+						if ($oid && isset($oldOptions[$oid]))
+						{
+							$option = $oldOptions[$oid];
+
+							// Remove found options from the list
+							// Anything remaining will be deleted
+							unset($oldOptions[$oid]);
+						}
+
+						$option = $option ?: new FacetOption;
+						$option->fill([
+							'facet_type_id' => $field->id,
+							'label'      => (string) $opt->label,
+							'value'      => (isset($opt->value)   ? (string) $opt->value : null),
+							'checked'    => (isset($opt->checked) ? (int) $opt->checked : 0),
+							'ordering'   => ($k + 1),
+						]);
+
+						if (!$option->save())
+						{
+							continue;
+						}
+					}
+				}
+
+				// Remove any options not in the incoming list
+				foreach ($oldOptions as $option)
+				{
+					$option->delete();
+				}
+			}
+
+			// Remove any fields not in the incoming list
+			foreach ($oldFields as $field)
+			{
+				$field->delete();
+			}
 		}
 
 		$row->resources_count = $row->resources()->count();
@@ -249,19 +380,37 @@ class TypesController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "description",
+	 * 		"description":   "A short description of the resource type",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "facets",
+	 * 		"description":   "A list of facet fields",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "array"
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"202": {
 	 * 			"description": "Successful entry modification",
-	* 			"content": {
-	* 				"application/json": {
-	* 					"example": {
-	* 						"id": 1,
-	* 						"name": "Updated type",
-	* 						"resources_count": 34,
-	* 						"api": "https://yourhost/api/resources/types/1"
-	* 					}
-	* 				}
-	* 			}
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 1,
+	 * 						"name": "Updated type",
+	 * 						"resources_count": 34,
+	 * 						"api": "https://yourhost/api/resources/types/1"
+	 * 					}
+	 * 				}
+	 * 			}
 	 * 		},
 	 * 		"404": {
 	 * 			"description": "Record not found"
@@ -278,7 +427,8 @@ class TypesController extends Controller
 	{
 		$request->validate([
 			'name' => 'required|string|max:20',
-			'description' => 'nullable|string|max:1000'
+			'description' => 'nullable|string|max:1000',
+			'facets' => 'nullable|array',
 		]);
 
 		$row = Type::findOrFail($id);
@@ -286,6 +436,116 @@ class TypesController extends Controller
 		if (!$row->update($request->all()))
 		{
 			return response()->json(['message' => trans('global.messages.update failed')], 500);
+		}
+
+		if ($request->has('facets'))
+		{
+			$facets = $request->input('facets', []);
+
+			// Collect old fields
+			$oldFields = array();
+			foreach ($row->facetTypes as $oldField)
+			{
+				$oldFields[$oldField->id] = $oldField;
+			}
+
+			foreach ($facets->fields as $i => $element)
+			{
+				$field = null;
+
+				$fid = (isset($element->field_id) ? $element->field_id : 0);
+
+				if ($fid && isset($oldFields[$fid]))
+				{
+					$field = $oldFields[$fid];
+
+					// Remove found fields from the list
+					// Anything remaining will be deleted
+					unset($oldFields[$fid]);
+				}
+
+				$field = $field ?: new FacetType;
+				$field->fill([
+					'type_id'       => $row->id,
+					'type'          => (string) $element->field_type,
+					'label'         => (string) $element->label,
+					'name'          => (string) $element->name,
+					'description'   => (isset($element->field_options->description) ? (string) $element->field_options->description : null),
+					//'required'     => (isset($element->required) ? (int) $element->required : 0),
+					'ordering'      => ($i + 1),
+					'min'           => (isset($element->field_options->min) ? (int) $element->field_options->min : 0),
+					'max'           => (isset($element->field_options->max) ? (int) $element->field_options->max : 0),
+					'default_value' => (isset($element->field_options->value) ? (string) $element->field_options->value : null),
+					'placeholder'   => (isset($element->field_options->placeholder) ? (string) $element->field_options->placeholder : null)
+				]);
+
+				if ($field->type == 'dropdown')
+				{
+					$field->type = 'select';
+				}
+				if ($field->type == 'paragraph')
+				{
+					$field->type = 'textarea';
+				}
+
+				if (!$field->save())
+				{
+					continue;
+				}
+
+				// Collect old options
+				$oldOptions = array();
+				foreach ($field->options as $oldOption)
+				{
+					$oldOptions[$oldOption->id] = $oldOption;
+				}
+
+				// Does this field have any set options?
+				if (isset($element->field_options->options))
+				{
+					foreach ($element->field_options->options as $k => $opt)
+					{
+						$option = null;
+
+						$oid = (isset($opt->field_id) ? $opt->field_id : 0);
+
+						if ($oid && isset($oldOptions[$oid]))
+						{
+							$option = $oldOptions[$oid];
+
+							// Remove found options from the list
+							// Anything remaining will be deleted
+							unset($oldOptions[$oid]);
+						}
+
+						$option = $option ?: new FacetOption;
+						$option->fill([
+							'facet_type_id' => $field->id,
+							'label'      => (string) $opt->label,
+							'value'      => (isset($opt->value)   ? (string) $opt->value : null),
+							'checked'    => (isset($opt->checked) ? (int) $opt->checked : 0),
+							'ordering'   => ($k + 1),
+						]);
+
+						if (!$option->save())
+						{
+							continue;
+						}
+					}
+				}
+
+				// Remove any options not in the incoming list
+				foreach ($oldOptions as $option)
+				{
+					$option->delete();
+				}
+			}
+
+			// Remove any fields not in the incoming list
+			foreach ($oldFields as $field)
+			{
+				$field->delete();
+			}
 		}
 
 		$row->resources_count = $row->resources()->count();

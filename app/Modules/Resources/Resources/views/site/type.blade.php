@@ -24,8 +24,8 @@ app('pathway')
 			<li class="nav-item">
 				@php
 				$url = route('site.resources.' . $type->alias . '.show', ['name' => ($row->listname ? $row->listname : $row->rolename)]);
-				if ($row->params->get('url')):
-					$url = $row->params->get('url');
+				if ($row->hasFacet('url')):
+					$url = $row->getFacet('url');
 				endif;
 				@endphp
 				<a class="nav-link" href="{{ $url }}">{{ $row->name }}</a>
@@ -48,7 +48,7 @@ app('pathway')
 		@foreach ($rows as $i => $row)
 			<div class="col-md-12">
 				<div class="card mb-3">
-					@if ($url = $row->params->get('url'))
+					@if ($url = $row->hasFacet('url'))
 					<a href="{{ $url }}" class="card-content">
 					@else
 					<a href="{{ route('site.resources.' . $type->alias . '.show', ['name' => $row->listname]) }}" class="card-content">

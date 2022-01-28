@@ -73,6 +73,13 @@ class AssetResource extends JsonResource
 			}
 		}
 
+		$data['facets'] = $this->facets;
+
+		/*foreach ($this->facets as $facet)
+		{
+			$data['facets'][$facet->facetType->name] = $facet->value;
+		}*/
+
 		return $data;
 	}
 }
