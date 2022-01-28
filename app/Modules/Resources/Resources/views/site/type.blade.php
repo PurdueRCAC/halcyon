@@ -25,7 +25,7 @@ app('pathway')
 				@php
 				$url = route('site.resources.' . $type->alias . '.show', ['name' => ($row->listname ? $row->listname : $row->rolename)]);
 				if ($row->hasFacet('url')):
-					$url = $row->getFacet('url');
+					$url = $row->getFacet('url')->value;
 				endif;
 				@endphp
 				<a class="nav-link" href="{{ $url }}">{{ $row->name }}</a>
@@ -49,7 +49,7 @@ app('pathway')
 			<div class="col-md-12">
 				<div class="card mb-3">
 					@if ($url = $row->getFacet('url'))
-					<a href="{{ $url }}" class="card-content">
+					<a href="{{ $url->value }}" class="card-content">
 					@else
 					<a href="{{ route('site.resources.' . $type->alias . '.show', ['name' => $row->listname]) }}" class="card-content">
 					@endif
