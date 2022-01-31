@@ -158,13 +158,13 @@ app('pathway')
 	<nav class="container-fluid">
 		<ul id="group-tabs" class="nav nav-tabs" role="tablist">
 			<li class="nav-item" role="presentation">
-				<a href="#group-members" id="group-members-tab" class="nav-link active" data-toggle="tab" role="tab" aria-controls="group-members" aria-selected="true">
+				<a href="#group-members" id="group-members-tab" class="nav-link<?php echo (!request()->input('active') ? ' active" aria-selected="true' : '" aria-selected="false'); ?>" data-toggle="tab" role="tab" aria-controls="group-members">
 					{{ trans('groups::groups.members') }}
 				</a>
 			</li>
 			@foreach ($sections as $section)
 				<li class="nav-item" role="presentation">
-					<a href="#group-{{ $section['route'] }}" id="group-{{ $section['route'] }}-tab" class="nav-link" data-toggle="tab" role="tab" aria-controls="group-{{ $section['route'] }}" aria-selected="false">
+					<a href="#group-{{ $section['route'] }}" id="group-{{ $section['route'] }}-tab" class="nav-link<?php echo (request()->input('active') == $section['route'] ? ' active" aria-selected="true' : '" aria-selected="false'); ?>" data-toggle="tab" role="tab" aria-controls="group-{{ $section['route'] }}">
 						{{ $section['name'] }}
 					</a>
 				</li>
@@ -177,12 +177,12 @@ app('pathway')
 		</ul>
 	</nav>
 	<div class="tab-content" id="queue-tabs-contant">
-		<div class="tab-pane show active" id="group-members" role="tabpanel" aria-labelledby="group-members-tab">
+		<div class="tab-pane<?php echo (!request()->input('active') ? ' show active' : ''); ?>" id="group-members" role="tabpanel" aria-labelledby="group-members-tab">
 			@include('groups::admin.groups.members', ['group' => $row])
 		</div>
 
 		@foreach ($sections as $section)
-			<div class="tab-pane" id="group-{{ $section['route'] }}" role="tabpanel" aria-labelledby="group-{{ $section['route'] }}-tab">
+			<div class="tab-pane<?php echo (request()->input('active') == $section['route'] ? ' show active' : ''); ?>" id="group-{{ $section['route'] }}" role="tabpanel" aria-labelledby="group-{{ $section['route'] }}-tab">
 				{!! $section['content'] !!}
 			</div>
 		@endforeach

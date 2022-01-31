@@ -12,7 +12,8 @@
 			//->where('datetime', '>', Carbon\Carbon::now()->modify('-1 month')->toDateTimeString())
 			->orderBy('datetime', 'desc')
 			->limit(20)
-			->paginate();
+			->paginate()
+			->appends(['active' => 'history']);
 
 		if (count($l))
 		{
