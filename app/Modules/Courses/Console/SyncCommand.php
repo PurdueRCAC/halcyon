@@ -104,7 +104,9 @@ class SyncCommand extends Command
 		}
 
 		// Fetch course enrollments
-		$students = array();
+		$users = array();
+		$now = Carbon::now();
+		//$students = array();
 		foreach ($courses as $course)
 		{
 			if ($debug || $this->output->isVerbose())
@@ -196,7 +198,13 @@ class SyncCommand extends Command
 
 				$count++;
 
-				$students[] = $user;
+				if ($member->datetimestart <= $now->toDateTimeString()
+				 && $member->datetimestop > $now->toDateTimeString())
+				{
+					$users[] = $user->username;
+				}
+
+				//$students[] = $user;
 			}
 
 			if ($debug || $this->output->isVerbose())
@@ -211,7 +219,7 @@ class SyncCommand extends Command
 			]);
 		}
 
-		$users = array();
+		/*$users = array();
 		$now = Carbon::now();
 
 		// Ok, we got students. Search for students that need access now.
@@ -222,7 +230,7 @@ class SyncCommand extends Command
 			{
 				$users[] = $student->username;
 			}
-		}
+		}*/
 
 		// OK! Now we need to get explict users. TAs, instructors, and workshop participants.
 		if ($debug || $this->output->isVerbose())
