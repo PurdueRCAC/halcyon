@@ -113,14 +113,17 @@
 				?>
 				<tr>
 					<td>
-						@if (in_array('params', $fields))
-							Page options<br />
-						@endif
 						@if (in_array('title', $fields))
 							Title<br />
 						@endif
+						@if (in_array('alias', $fields))
+							Page alias<br />
+						@endif
 						@if (in_array('content', $fields))
-							Content
+							Content<br />
+						@endif
+						@if (in_array('params', $fields))
+							Page options
 						@endif
 					</td>
 					<td>
@@ -141,6 +144,14 @@
 											$nta = [$revision->new->title];
 
 											echo '<h3>Title</h3>';
+											echo $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));
+										endif;
+
+										if (isset($revision->new->alias)):
+											$ota = isset($revision->old->alias) ? [$revision->old->alias] : [];
+											$nta = [$revision->new->alias];
+
+											echo '<h3>Page alias</h3>';
 											echo $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));
 										endif;
 
