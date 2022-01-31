@@ -166,11 +166,11 @@
   --input-border-disabled: rgba(255, 255, 255, 0.1);
   --input-color: rgba(255, 255, 255, 0.5);
   --input-color-disabled: rgba(255, 255, 255, 0.5);
-  --input-prepend-back: rgba(255, 255, 255, 0.1);
+  --input-prepend-back: rgba(255, 255, 255, 0.035);
   --input-prepend: rgba(255, 255, 255, 0.3);
   --check-back: rgba(225, 231, 255, 0.1); /*rgba(255, 255, 255, 0.1);*/
   --check-back-disabled: #eee;
-  --check-border: transparent;
+  --check-border: rgba(225, 231, 255, 0.1);
   --check-back-checked: #5897fb;
   --check-border-checked: #5897fb;
   --btn-cl: #e1e1e1;
@@ -1932,16 +1932,17 @@ button.loading .spinner-border,
   border-color: transparent;
   background-color: transparent;
 }
-.input-group .input-group-text,
+/*.input-group .input-group-text,
 .input-group .input-group-prepend,
 .input-group .input-group-append {
   border-color: transparent;
   background-color: transparent;
-}
-/*.input-group .input-group-prepend {
+}*/
+.input-group .input-group-text {
+  border-color: transparent;
   background-color: var(--input-prepend-back);
 }
-.input-group .input-group-prepend .input-group-text {
+/*.input-group .input-group-prepend .input-group-text {
   color: var(--input-prepend);
 }*/
 .input-group-text {
@@ -3233,6 +3234,8 @@ html .select2-container--default .select2-selection--multiple .select2-selection
 }
 .main-navigation ul#adminmenu ul li {
   padding: 0.5em 1em;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .main-navigation ul#adminmenu > li {
   display: block;
