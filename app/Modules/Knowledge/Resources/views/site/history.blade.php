@@ -85,6 +85,8 @@
 
 			$latest = $revisions->first();
 
+			$formatter = new App\Modules\History\Helpers\Diff\Formatter\Table();
+
 			foreach ($revisions as $revision):
 				$i++;
 
@@ -134,29 +136,25 @@
 									</div>
 									<div class="modal-body">
 										<?php
-										$results = array();
-
 										if (isset($revision->new->title)):
 											$ota = isset($revision->old->title) ? [$revision->old->title] : [];
 											$nta = [$revision->new->title];
 
-											$formatter = new App\Modules\History\Helpers\Diff\Formatter\Table();
-											$results[] = $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));
+											echo '<h3>Title</h3>';
+											echo $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));
 										endif;
 
 										if (isset($revision->new->content)):
 											$ota = isset($revision->old->content) ? explode("\n", $revision->old->content) : [];
 											$nta = explode("\n", $revision->new->content);
 
-											$formatter = new App\Modules\History\Helpers\Diff\Formatter\Table();
-
 											echo '<h3>Content</h3>';
 											echo $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));
 										endif;
 
 										if (isset($revision->new->params)):
-											$orparams = isset($revision->old->params) ? json_decode($revision->old->params, true) : [];
-											$drparams = json_decode($revision->new->params, true);
+											$orparams = isset($revision->old->params) ? (array)$revision->old->params : [];
+											$drparams = (array)$revision->new->params;
 
 											// Params
 											$ota = [];
@@ -169,8 +167,6 @@
 											endforeach;
 
 											if (!empty($ota) && !empty($nta)):
-												$formatter = new App\Modules\History\Helpers\Diff\Formatter\Table();
-
 												echo '<h3>Options</h3>';
 												echo $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));
 											endif;
@@ -181,8 +177,6 @@
 												$nta = isset($drparams['variables']) ? $drparams['variables'] : [];
 
 												if ($ota != $nta):
-													$formatter = new App\Modules\History\Helpers\Diff\Formatter\Table();
-
 													echo '<h3>Variables</h3>';
 													echo $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));
 												endif;
@@ -194,15 +188,11 @@
 												$nta = isset($drparams['tags']) ? $drparams['tags'] : [];
 
 												if ($ota != $nta):
-													$formatter = new App\Modules\History\Helpers\Diff\Formatter\Table();
-
 													echo '<h3>Tags</h3>';
 													echo $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));
 												endif;
 											endif;
 										endif;
-
-										echo implode("\n", $results);
 										?>
 									</div>
 								</div>
