@@ -1057,7 +1057,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 												<input type="text" maxlength="17" class="form-control num8 balance-update" name="account" data-api="{{ route('api.orders.accounts.create') }}" placeholder="Account" value="" />
 												<br />
 												<label class="sr-only" for="justification0">Budget justification</label>
-												<textarea name="justification" id="justification0" rows="3" cols="35" maxlength="2000" placeholder="Budget justification" class="form-control balance-update"></textarea>
+												<textarea name="justification" id="justification0" rows="3" cols="35" maxlength="2000" placeholder="Budget justification (optional)" class="form-control balance-update"></textarea>
 											</td>
 											<td>
 												<span class="approver_span hide" data-approverid=""></span>
