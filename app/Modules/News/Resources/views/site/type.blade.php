@@ -1,5 +1,25 @@
 @extends('layouts.master')
 
+@section('meta')
+		<meta name="description" content="{{ trans('news::news.news') . ': ' . $type->name . ($articles->total() > $filters['limit'] ? ': Page ' . $filters['page'] : '') }}" />
+@stop
+
+@if ($type->metadata)
+	@foreach ($type->metadata->all() as $k => $v)
+		@if ($v)
+			@if ($v == '__comment__')
+				@push('meta')
+		{!! $k !!}
+@endpush
+			@else
+				@push('meta')
+		{!! $v !!}
+@endpush
+			@endif
+		@endif
+	@endforeach
+@endif
+
 @section('title'){{ trans('news::news.news') . ': ' . $type->name . ($articles->total() > $filters['limit'] ? ': Page ' . $filters['page'] : '') }}@stop
 
 @push('styles')

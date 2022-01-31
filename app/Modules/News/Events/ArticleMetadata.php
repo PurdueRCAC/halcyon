@@ -19,7 +19,7 @@ class ArticleMetadata
 	 */
 	public function __construct($page)
 	{
-		$page->title = $page->headline;
+		$page->title = $page->title ?: $page->headline;
 		$page->content = $page->formattedBody;
 
 		$this->page = $page;

@@ -1,6 +1,26 @@
 @extends('layouts.master')
 
-@section('title') Search News &amp; Events @stop
+@section('meta')
+		<meta name="description" content="{{ trans('news::news.search news') }}" />
+@stop
+
+@if ($page->metadata)
+	@foreach ($page->metadata->all() as $k => $v)
+		@if ($v)
+			@if ($v == '__comment__')
+				@push('meta')
+		{!! $k !!}
+@endpush
+			@else
+				@push('meta')
+		{!! $v !!}
+@endpush
+			@endif
+		@endif
+	@endforeach
+@endif
+
+@section('title'){{ trans('news::news.search news') }}@stop
 
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.css')) }}" />

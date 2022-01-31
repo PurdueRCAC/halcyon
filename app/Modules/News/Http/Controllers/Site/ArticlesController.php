@@ -23,18 +23,25 @@ class ArticlesController extends Controller
 	 */
 	public function index()
 	{
+		$page = new Article;
+		$page->headline = trans('news::news.news');
+		event($event = new ArticleMetadata($page));
+
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
 			->orderBy('name', 'asc')
 			->get();
 
 		return view('news::site.index', [
-			'types' => $types
+			'types' => $types,
+			'page' => $page,
 		]);
 	}
 
 	/**
 	 * Display a listing of the resource.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function search(Request $request)
@@ -51,8 +58,8 @@ class ArticlesController extends Controller
 			'id'        => null,
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
-			//'order'     => 'datetimecreated',
-			//'order_dir' => 'desc',
+			'order'     => 'datetimecreated',
+			'order_dir' => 'desc',
 		);
 
 		foreach ($filters as $key => $default)
@@ -60,7 +67,7 @@ class ArticlesController extends Controller
 			$filters[$key] = $request->input($key, $default);
 		}
 
-		/*if (!in_array($filters['order'], ['id', 'headline', 'datetimecreated']))
+		if (!in_array($filters['order'], ['id', 'headline', 'datetimecreated', 'newstype', 'location']))
 		{
 			$filters['order'] = 'datetimecreated';
 		}
@@ -68,7 +75,11 @@ class ArticlesController extends Controller
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
 			$filters['order_dir'] = 'desc';
-		}*/
+		}
+
+		$page = new Article;
+		$page->headline = trans('news::news.search news');
+		event($event = new ArticleMetadata($page));
 
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
@@ -78,27 +89,37 @@ class ArticlesController extends Controller
 		return view('news::site.search', [
 			'types' => $types,
 			'filters' => $filters,
+			'page' => $page,
 		]);
 	}
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
 	 * @return Response
 	 */
 	public function rss()
 	{
+		$page = new Article;
+		$page->headline = trans('news::news.rss feeds');
+		event($event = new ArticleMetadata($page));
+
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
 			->orderBy('name', 'asc')
 			->get();
 
 		return view('news::site.rss', [
-			'types' => $types
+			'types' => $types,
+			'page' => $page,
 		]);
 	}
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  Request $request
+	 * @param  string  $name
 	 * @return Response
 	 */
 	public function feed(Request $request, $name = null)
@@ -187,6 +208,8 @@ class ArticlesController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function manage(Request $request)
@@ -236,6 +259,7 @@ class ArticlesController extends Controller
 	 * Show the specified entry
 	 *
 	 * @param   string  $name
+	 * @param   Request $request
 	 * @return  Response
 	 */
 	public function type($name, Request $request)
@@ -316,6 +340,9 @@ class ArticlesController extends Controller
 				->whereIn($r . '.resourceid', $resource);
 		}
 
+		$row->title = trans('news::news.news') . ': ' . $row->name . ': Page ' . $filters['page'];
+		event($event = new ArticleMetadata($row));
+
 		$articles = $query
 			->orderBy('datetimenews', 'desc')
 			->limit(20)
@@ -383,6 +410,8 @@ class ArticlesController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
+	 * 
+	 * @param  string  $search
 	 * @return Response
 	 */
 	public function calendar($search)
@@ -603,7 +632,6 @@ class ArticlesController extends Controller
 		$row = Article::findOrFail($id);
 
 		event($event = new ArticleMetadata($row));
-
 		$row = $event->page;
 
 		$types = Type::query()
@@ -619,22 +647,32 @@ class ArticlesController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
+	 * 
+	 * @param  integer  $id
 	 * @return Response
 	 */
-	public function edit()
+	public function edit($id)
 	{
-		$id = 1;
+		$row = Article::findOrFail($id);
 
 		app('pathway')
 			->append(
-				config('resources.name'),
-				url('/resources')
+				trans('news::news.name'),
+				route('site.news.index')
 			)
 			->append(
-				trans('resources::assets.edit'),
+				trans('news::news.edit'),
 				route('site.news.edit', ['id' => $id])
 			);
 
-		return view('news::site.edit');
+		$types = Type::query()
+			->where('name', 'NOT LIKE', 'coffee%')
+			->orderBy('name', 'asc')
+			->get();
+
+		return view('news::site.edit', [
+			'article' => $row,
+			'types' => $types
+		]);
 	}
 }

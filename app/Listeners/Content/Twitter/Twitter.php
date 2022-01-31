@@ -136,7 +136,10 @@ class Twitter
 		}
 
 		$event->page->metadesc = $desc;
-		$tags['twitter:description'] = htmlspecialchars($desc);
+		if ($desc)
+		{
+			$tags['twitter:description'] = htmlspecialchars($desc);
+		}
 
 		// Other
 		if ($other = $params->get('other'))
@@ -161,6 +164,10 @@ class Twitter
 			}
 		}
 
+		if (!$page->metadata)
+		{
+			$page->metadata = new Repository;
+		}
 		$page->metadata->set('twitter_comment', '<!-- Twitter -->');
 		foreach ($tags as $key => $val)
 		{

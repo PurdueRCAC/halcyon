@@ -1,5 +1,25 @@
 @extends('layouts.master')
 
+@section('meta')
+		<meta name="description" content="{{ trans('news::news.news') }}" />
+@stop
+
+@if ($page->metadata)
+	@foreach ($page->metadata->all() as $k => $v)
+		@if ($v)
+			@if ($v == '__comment__')
+				@push('meta')
+		{!! $k !!}
+@endpush
+			@else
+				@push('meta')
+		{!! $v !!}
+@endpush
+			@endif
+		@endif
+	@endforeach
+@endif
+
 @section('title'){{ route('site.news.index') }}@stop
 
 @push('styles')

@@ -48,7 +48,7 @@ class OpenGraph
 		// Title
 		if ($title = $params->get('title', $page->title))
 		{
-			$tags['og:title'] = htmlspecialchars($title);
+			$tags['og:title'] = htmlspecialchars(Str::limit(strip_tags($title), 40));
 		}
 
 		// Type
@@ -139,7 +139,10 @@ class OpenGraph
 		}
 
 		$event->page->metadesc = $desc;
-		$tags['og:description'] = htmlspecialchars($desc);
+		if ($desc)
+		{
+			$tags['og:description'] = htmlspecialchars($desc);
+		}
 
 		// FB App ID - COMMON
 		if ($app_id = $params->get('app_id'))
@@ -170,6 +173,10 @@ class OpenGraph
 			}
 		}
 
+		if (!$page->metadata)
+		{
+			$page->metadata = new Repository;
+		}
 		$page->metadata->set('og_comment', '<!-- OpenGraph -->');
 		foreach ($tags as $key => $val)
 		{
