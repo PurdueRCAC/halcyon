@@ -145,7 +145,7 @@
 										endif;
 
 										if (isset($revision->new->content)):
-											$ota = isset($revision->old) ? explode("\n", $revision->old->content) : [];
+											$ota = isset($revision->old->content) ? explode("\n", $revision->old->content) : [];
 											$nta = explode("\n", $revision->new->content);
 
 											$formatter = new App\Modules\History\Helpers\Diff\Formatter\Table();
