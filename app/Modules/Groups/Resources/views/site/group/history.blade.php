@@ -10,6 +10,11 @@ $l = App\Modules\History\Models\Log::query()
 	->limit(20)
 	->paginate();
 
+if (app('isAdmin'))
+{
+	$l->appends(['active' => 'history']);
+}
+
 if (count($l))
 {
 	?>
