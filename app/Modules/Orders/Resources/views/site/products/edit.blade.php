@@ -123,7 +123,7 @@ jQuery(document).ready(function ($) {
 
 				<div class="form-group">
 					<label for="field-ordercategoryid">{{ trans('orders::orders.parent category') }}: <span class="required" title="{{ trans('global.required') }}">*</span></label>
-					<select name="fields[ordercategoryid]" id="field-ordercategoryid" class="form-control filter filter-submit" required>
+					<select name="fields[ordercategoryid]" id="field-ordercategoryid" class="form-control" required>
 						<option value="1"<?php if ($row->parentordercategoryid == 1): echo ' selected="selected"'; endif;?>>{{ trans('global.none') }}</option>
 						<?php foreach ($categories as $category) { ?>
 							<option value="<?php echo $category->id; ?>"<?php if ($row->ordercategoryid == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
