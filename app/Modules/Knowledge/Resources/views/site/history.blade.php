@@ -137,7 +137,7 @@
 										$results = array();
 
 										if (isset($revision->new->title)):
-											$ota = [$revision->old->title];
+											$ota = isset($revision->old->title) ? [$revision->old->title] : [];
 											$nta = [$revision->new->title];
 
 											$formatter = new App\Modules\History\Helpers\Diff\Formatter\Table();
@@ -145,7 +145,7 @@
 										endif;
 
 										if (isset($revision->new->content)):
-											$ota = explode("\n", $revision->old->content);
+											$ota = isset($revision->old) ? explode("\n", $revision->old->content) : [];
 											$nta = explode("\n", $revision->new->content);
 
 											$formatter = new App\Modules\History\Helpers\Diff\Formatter\Table();
@@ -155,7 +155,7 @@
 										endif;
 
 										if (isset($revision->new->params)):
-											$orparams = json_decode($revision->old->params, true);
+											$orparams = isset($revision->old->params) ? json_decode($revision->old->params, true) : [];
 											$drparams = json_decode($revision->new->params, true);
 
 											// Params
