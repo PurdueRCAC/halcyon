@@ -175,15 +175,15 @@
   --check-border-checked: #5897fb;
   --btn-cl: #e1e1e1;
   --btn-cl-focus: #fff;
-  --btn-secondary-bg: #f1f1f1;
-  --btn-secondary-br: #f1f1f1;
-  --btn-secondary-cl: #333;
-  --btn-secondary-bg-focus: #eee;
-  --btn-secondary-br-focus: #eee;
-  --btn-secondary-cl-focus: #222;
-  --btn-secondary-bg-active: #e1e1e1;
-  --btn-secondary-br-active: #e1e1e1;
-  --btn-secondary-cl-active: #111;
+  --btn-secondary-bg: rgba(255, 255, 255, 0.1);
+  --btn-secondary-br: rgba(255, 255, 255, 0.1);
+  --btn-secondary-cl: #b9b9bf;
+  --btn-secondary-bg-focus: rgba(255, 255, 255, 0.1);
+  --btn-secondary-br-focus: rgba(255, 255, 255, 0.5);
+  --btn-secondary-cl-focus: #fff;
+  --btn-secondary-bg-active: rgba(255, 255, 255, 0.1);
+  --btn-secondary-br-active: rgba(255, 255, 255, 0.5);
+  --btn-secondary-cl-active: #fff;
   --footer-border: rgba(255, 255, 255, 0.1);
   --fieldset-bg: #252529; /*#1c1b21;*/
   --fieldset-br: #313136; /*rgba(0,0,0,.125);*/
@@ -2046,6 +2046,10 @@ ul {
 }
 .ui-widget-content {
   color: var(--body-text);
+  background: var(--ui-widget-bg);
+}
+.ui-widget.ui-widget-content {
+  border-color: var(--ui-widget-br);
 }
 .ui-widget-content a,
 a {
@@ -2557,12 +2561,12 @@ fieldset.adminform fieldset {
   border-color: var(--btn-secondary-br);
   color: var(--btn-secondary-cl);
 }
+.btn-secondary:hover,
 .btn-secondary:focus {
   background-color: var(--btn-secondary-bg-focus);
   border-color: var(--btn-secondary-br-focus);
   color: var(--btn-secondary-cl-focus);
 }
-.btn-secondary:hover,
 .btn-secondary:active {
   background-color: var(--btn-secondary-bg-active);
   border-color: var(--btn-secondary-br-active);
@@ -3459,12 +3463,14 @@ select.filter_search {
 
 .toolbar-box .btn {
   color: var(--btn-secondary-cl);
-  background-color: #fff;
-  border-color: #e5e5e5; /*rgba(0, 0, 0, 0.15);*/
+  background-color: var(--btn-secondary-bg);
+  border-color: var(--btn-secondary-br);
   position: relative;
 }
 .toolbar-box .btn:hover {
   color: var(--btn-secondary-cl-focus);
+  background-color: var(--btn-secondary-bg-focus);
+  border-color: var(--btn-secondary-br-focus);
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }
 .toolbar-box .btn.disabled,
