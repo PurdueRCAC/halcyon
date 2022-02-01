@@ -68,13 +68,23 @@ trait Taggable
 	/**
 	 * {@inheritdoc}
 	 */
+	public function scopeWhereDomain(Builder $query, $domain)
+	{
+		return $query->where('domain', $domain);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function tags()
 	{
 		return $this->morphToMany(static::$tagsModel, 'taggable', 'tags_tagged', 'taggable_id', 'tag_id');
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Create an instance of the tag model
+	 *
+	 * @return Tag
 	 */
 	public static function createTagsModel()
 	{
@@ -82,7 +92,9 @@ trait Taggable
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Get a list of all tags for a domain
+	 *
+	 * @return array|Collection
 	 */
 	public static function allTags()
 	{
@@ -92,7 +104,11 @@ trait Taggable
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Set the list of tags
+	 * 
+	 * @param  array  $tags
+	 * @param  string $type
+	 * @return bool
 	 */
 	public function setTags($tags, $type = 'slug')
 	{
@@ -124,7 +140,10 @@ trait Taggable
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Add a list of tags
+	 * 
+	 * @param  array $tags
+	 * @return bool
 	 */
 	public function tag($tags)
 	{
@@ -137,7 +156,10 @@ trait Taggable
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Add a tag
+	 * 
+	 * @param  string $name
+	 * @return void
 	 */
 	public function addTag($name)
 	{
@@ -171,7 +193,10 @@ trait Taggable
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Remove a list of tags
+	 * 
+	 * @param  array $tags
+	 * @return bool
 	 */
 	public function untag($tags = null)
 	{
@@ -186,7 +211,10 @@ trait Taggable
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Remove a tag
+	 * 
+	 * @param  string $name
+	 * @return void
 	 */
 	public function removeTag($name)
 	{
@@ -204,7 +232,32 @@ trait Taggable
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Check if the model has the specified tag
+	 * 
+	 * @param  string $name
+	 * @return mixed
+	 */
+	public function hasTag($name)
+	{
+		$model = $this->createTagsModel();
+
+		$tag = $model
+			//->where('domain', $this->getEntityClassName())
+			->where('slug', $model->normalize($name))
+			->first();
+
+		if ($tag)
+		{
+			return $tag;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get class name
+	 * 
+	 * @return string
 	 */
 	protected function getEntityClassName()
 	{
