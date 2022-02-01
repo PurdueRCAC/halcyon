@@ -574,8 +574,8 @@ class UnixGroupMembersController extends Controller
 			// unix groups by the same name. In such a case, only ONE should have
 			// a unixgid.
 			$altunixgroup = UnixGroup::query()
-				->where('longname', '=', $unixgroup->longname)
-				->where('id', '!=', $unixgroup->id)
+				->where('longname', '=', $row->unixgroup->longname)
+				->where('id', '!=', $row->unixgroupid)
 				->first();
 
 			if ($altunixgroup && (!$unixgroup->unixgid || !$altunixgroup->unixgid))
