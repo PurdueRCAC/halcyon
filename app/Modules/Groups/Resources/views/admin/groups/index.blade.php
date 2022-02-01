@@ -9,6 +9,7 @@
 <script>
 $(document).ready(function() {
 	$('.searchable-select').select2({
+			width: '35%'
 		//placeholder: $(this).data('placeholder')
 		})
 		.on('select2:select', function (e) {

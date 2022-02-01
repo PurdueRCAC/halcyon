@@ -15,8 +15,6 @@
 @endpush
 
 @php
-app('request')->merge(['hidemainmenu' => 1]);
-
 app('pathway')
 	->append(
 		trans('groups::groups.module name'),
@@ -48,6 +46,18 @@ app('pathway')
 	</div>
 	<div class="card-body">
 		<dl>
+			<div class="form-group">
+				<dt>{{ trans('groups::groups.created') }}:</dt>
+				<dd class="mx-0">{{ $row->datetimecreated->format('F j, Y') }}</dd>
+			</div>
+
+			@if ($row->trashed())
+			<div class="form-group">
+				<dt>{{ trans('groups::groups.removed') }}:</dt>
+				<dd class="mx-0">{{ $row->datetimeremoved->format('F j, Y') }}</dd>
+			</div>
+			@endif
+
 			<div class="form-group">
 				<dt>{{ trans('groups::groups.name') }}:</dt>
 				<dd class="mx-0">{{ $row->name }}</dd>
