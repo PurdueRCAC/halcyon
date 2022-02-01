@@ -338,6 +338,43 @@ class UnixGroupMembersController extends Controller
 			event(new UnixGroupMemberCreated($row));
 		}
 
+		// Check to see if another unix group by the same name exists
+		//
+		// This is a catch for a loophole condition that allowed for multiple
+		// unix groups by the same name. In such a case, only ONE should have
+		// a unixgid.
+		$altunixgroup = UnixGroup::query()
+			->where('longname', '=', $unixgroup->longname)
+			->where('id', '!=', $unixgroup->id)
+			->first();
+
+		if ($altunixgroup && (!$unixgroup->unixgid || !$altunixgroup->unixgid))
+		{
+			$altrow = UnixGroupMember::query()
+				->withTrashed()
+				->where('unixgroupid', '=', $altunixgroup->id)
+				->where('userid', '=', $row->userid)
+				->get()
+				->first();
+
+			if (!$altrow)
+			{
+				$altrow = new UnixGroupMember;
+				$altrow->unixgroupid = $altunixgroup->id;
+				$altrow->userid = $row->userid;
+				$altrow->save();
+			}
+			else
+			{
+				if ($altrow->trashed())
+				{
+					$altrow->restore();
+				}
+				$altrow->notice = 0;
+				$altrow->save();
+			}
+		}
+
 		$row->api = route('api.unixgroups.members.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
@@ -529,6 +566,31 @@ class UnixGroupMembersController extends Controller
 			if (!$row->delete())
 			{
 				return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+			}
+
+			// Check to see if another unix group by the same name exists
+			//
+			// This is a catch for a loophole condition that allowed for multiple
+			// unix groups by the same name. In such a case, only ONE should have
+			// a unixgid.
+			$altunixgroup = UnixGroup::query()
+				->where('longname', '=', $unixgroup->longname)
+				->where('id', '!=', $unixgroup->id)
+				->first();
+
+			if ($altunixgroup && (!$unixgroup->unixgid || !$altunixgroup->unixgid))
+			{
+				$altrow = UnixGroupMember::query()
+					->withTrashed()
+					->where('unixgroupid', '=', $altunixgroup->id)
+					->where('userid', '=', $row->userid)
+					->get()
+					->first();
+
+				if ($altrow)
+				{
+					$altrow->delete();
+				}
 			}
 		}
 
