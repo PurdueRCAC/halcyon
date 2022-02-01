@@ -446,4 +446,88 @@ class ResourcesController extends Controller
 	{
 		return redirect(route('admin.resources.index'));
 	}
+
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @param  StatefulRequest $request
+	 * @return Response
+	 */
+	public function members(Request $request, $id)
+	{
+		$rows = array();
+
+		if ($request->has('export'))
+		{
+			$rows = json_decode($request->input('export', '[]'));
+
+			return $this->export($rows, $id);
+		}
+
+		$asset = Asset::query()->withTrashed()->where('id', '=', $id)->first();
+
+		return view('resources::admin.resources.members', [
+			'asset' => $asset,
+			'rows' => $rows,
+		]);
+	}
+
+	/**
+	 * Download a list of records
+	 * 
+	 * @param  array $rows
+	 * @return Response
+	 */
+	public function export($rows, $id)
+	{
+		$data = array();
+		$data[] = array(
+			trans('resources::assets.id'),
+			trans('users::users.name'),
+			trans('users::users.username'),
+			trans('users::users.email'),
+		);
+
+		$users = array();
+		foreach ($rows as $row)
+		{
+			if (in_array($row->id, $users))
+			{
+				continue;
+			}
+
+			$users[] = $row->id;
+
+			$data[] = array(
+				$row->id,
+				$row->name,
+				$row->username,
+				$row->email,
+			);
+		}
+
+		$filename = 'resource_' . $id . '_active_users.csv';
+
+		$headers = array(
+			'Content-type' => 'text/csv',
+			'Content-Disposition' => 'attachment; filename=' . $filename,
+			'Pragma' => 'no-cache',
+			'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+			'Expires' => '0',
+			'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT'
+		);
+
+		$callback = function() use ($data)
+		{
+			$file = fopen('php://output', 'w');
+
+			foreach ($data as $datum)
+			{
+				fputcsv($file, $datum);
+			}
+			fclose($file);
+		};
+
+		return response()->streamDownload($callback, $filename, $headers);
+	}
 }

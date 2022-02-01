@@ -1275,6 +1275,7 @@ h4 {
 .icon-user:before {
   content: "\e8e9";
 }
+.fa-users:before,
 .icon-users:before {
   content: "\e8ea";
 }

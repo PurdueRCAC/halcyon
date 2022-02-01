@@ -156,6 +156,9 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('global.ordering'), 'display', $filters['order_dir'], $filters['order']) !!}
 				</th>
+				<th scope="col">
+					Users
+				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -224,6 +227,7 @@ app('pathway')
 					{{ $b ? $b->name : '' }}
 				</td>
 				<td class="priority-4 text-right">
+					
 					<a href="{{ route('admin.resources.subresources', ['resource' => $row->id]) }}">
 						{{ $row->children_count }}
 					</a>
@@ -242,6 +246,14 @@ app('pathway')
 						<?php echo $orderkey + 1;?>
 					<?php endif;*/ ?>
 					{{ $row->display }}
+				</td>
+				<td class="text-center">
+					@if ($row->children_count)
+						<a href="{{ route('admin.resources.members', ['id' => $row->id]) }}" data-tip="{{ trans('resources::assets.active users') }}">
+							<span class="fa fa-users" aria-hidden="true"></span>
+							<span class="sr-only">{{ trans('resources::assets.active users') }}</a>
+						</a>
+					@endif
 				</td>
 			</tr>
 		@endforeach

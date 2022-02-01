@@ -71,4 +71,6 @@ return [
 		'shared home' => 'Shared',
 		'dedicated home' => 'Dedicated',
 	],
+	'export' => 'Export',
+	'active users' => 'Active Users',
 ];

@@ -39,6 +39,10 @@ $router->group(['prefix' => 'resources', 'middleware' => 'can:manage resources']
 		'uses' => 'ResourcesController@restore',
 		'middleware' => 'can:delete resources',
 	]);
+	$router->match(['get', 'post'], '/members/{id}', [
+		'as'   => 'admin.resources.members',
+		'uses' => 'ResourcesController@members',
+	]);
 
 	$router->group(['prefix' => 'types'], function (Router $router)
 	{
