@@ -629,26 +629,24 @@ class RcacLdap
 		{
 			$ldap = $this->connect($config);
 
-			// Performing a query.
-			$ldapdata = $ldap->search()
-				->where('host', '=', 'scholar.rcac.purdue.edu') //$event->account->resource->rolename . '.rcac.purdue.edu'
-				->get();
-
 			$status = 404;
 			$results = array();
+			$users = $event->users;
+			$ldap_users = array();
+			$system_users = array();
+
+			// Performing a query.
+			$ldapdata = $ldap->search()
+				->select(['cn', 'uid', 'classification'])
+				->where('host', '=', 'scholar.rcac.purdue.edu') //$event->account->resource->rolename . '.rcac.purdue.edu'
+				->get();
 
 			if (!empty($ldapdata))
 			{
 				$status = 200;
 
-				$users = $event->users;
-				$ldap_users   = array();
-				$system_users = array();
-
 				foreach ($ldapdata as $row)
 				{
-					$foo = array();
-
 					// Try to subtract staff users. Subtact anyone in xenon.
 					$rows = $ldap->search()
 						->where('uid', '=', $row['uid'][0])
@@ -681,20 +679,20 @@ class RcacLdap
 						}
 					}
 				}
-
-				$create_users = array_diff($users, $ldap_users);
-				$create_users = array_diff($create_users, $system_users);
-				$remove_users = array_diff($ldap_users, $users);
-				$remove_users = array_diff($remove_users, $system_users);
-
-				$event->create_users = $create_users;
-				$event->remove_users = $remove_users;
-
-				$results = [
-					'create_users' => $create_users,
-					'remove_users' => $remove_users
-				];
 			}
+
+			$create_users = array_diff($users, $ldap_users);
+			$create_users = array_diff($create_users, $system_users);
+			$remove_users = array_diff($ldap_users, $users);
+			$remove_users = array_diff($remove_users, $system_users);
+
+			$event->create_users = $create_users;
+			$event->remove_users = $remove_users;
+
+			$results = [
+				'create_users' => $create_users,
+				'remove_users' => $remove_users
+			];
 		}
 		catch (\Exception $e)
 		{
