@@ -486,6 +486,7 @@ class ResourcesController extends Controller
 			trans('users::users.name'),
 			trans('users::users.username'),
 			trans('users::users.email'),
+			trans('resources::assets.queues'),
 		);
 
 		$users = array();
@@ -498,11 +499,21 @@ class ResourcesController extends Controller
 
 			$users[] = $row->id;
 
+			$queues = array();
+			if (isset($row->queues))
+			{
+				foreach ($row->queues as $q)
+				{
+					$queues[] = $q->name;
+				}
+			}
+
 			$data[] = array(
 				$row->id,
 				$row->name,
 				$row->username,
 				$row->email,
+				implode('; ', $queues)
 			);
 		}
 

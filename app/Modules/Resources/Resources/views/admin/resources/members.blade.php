@@ -5,46 +5,46 @@
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/handlebars/handlebars.min-v4.7.6.js?v=' . filemtime(public_path() . '/modules/core/vendor/handlebars/handlebars.min-v4.7.6.js')) }}"></script>
+<!-- <script src="{{ asset('modules/core/vendor/handlebars/handlebars.min-v4.7.6.js?v=' . filemtime(public_path() . '/modules/core/vendor/handlebars/handlebars.min-v4.7.6.js')) }}"></script> -->
 <script src="{{ asset('modules/core/vendor/datatables/datatables.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/datatables/datatables.min.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/datatables/dataTables.bootstrap4.min.js')) }}"></script>
 <script>
 $(document).ready(function () {
-
 	/*var container = $('#members-list');
 
 	if (container.length) {
 		$.ajax({
-					url: container.attr('data-api'),
-					type: 'get',
-					dataType: 'json',
-					async: false,
-					success: function(result) {
-						var source   = $(container.attr('data-row')).html(),
-							template = Handlebars.compile(source);
+			url: container.attr('data-api'),
+			type: 'get',
+			dataType: 'json',
+			async: false,
+			success: function(result) {
+				var source   = $(container.attr('data-row')).html(),
+					template = Handlebars.compile(source);
 
-						for (var i = 0; i < result.length; i++)
-						{
-							var context  = {
-									"index" : container.find('tr').length,
-									"id": result[i].id,
-									"name": result[i].name,
-									"username": result[i].username,
-									"email": result[i].email
-								},
-								html = template(context);
+				for (var i = 0; i < result.length; i++)
+				{
+					var context  = {
+							"index" : container.find('tr').length,
+							"id": result[i].id,
+							"name": result[i].name,
+							"username": result[i].username,
+							"email": result[i].email,
+							"queues": result[i].queues
+						},
+						html = template(context);
 
-							container.append($(html));
-							//$(html).insertBefore(container.find('tr:last-child'));
-						}
-					},
-					error: function() {
-						if (numerrorboxes == 0) {
-							alert("An error occurred while updating account. Please reload page and try again or contact help.");
-							numerrorboxes++;
-						}
-					}
-				});
+					container.append($(html));
+					//$(html).insertBefore(container.find('tr:last-child'));
+				}
+			},
+			error: function() {
+				if (numerrorboxes == 0) {
+					alert("An error occurred while updating account. Please reload page and try again or contact help.");
+					numerrorboxes++;
+				}
+			}
+		});
 	}*/
 	var container = $('#members-list');
 
@@ -64,7 +64,17 @@ $(document).ready(function () {
 				{ data: 'id' },
 				{ data: 'name' },
 				{ data: 'username' },
-				{ data: 'email' }
+				{ data: 'email' },
+				{ data: 'queues',
+					render: function (data, type, row) {
+						var rows = new Array;
+						for (var i = 0; i < data.length; i++)
+						{
+							rows.push(data[i].name);
+						}
+						return rows.join('<br />');
+					}
+				}
 			],
 			paging: true,
 			//scrollY: '50vh',
@@ -74,7 +84,7 @@ $(document).ready(function () {
 			info: true,
 			ordering: true,
 			lengthChange: true,
-			dom: "<'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'i>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'p><'col-sm-12 col-md-7'l>>"
+			dom: "<'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'i>><'card my-4'<'row'<'col-sm-12'tr>>><'row'<'col-sm-12 col-md-5'p><'col-sm-12 col-md-7'l>>"
 		});
 	}
 });
@@ -121,69 +131,85 @@ app('pathway')
 @component('resources::admin.submenu')
 @endcomponent
 
-<form action="{{ route('admin.resources.members', ['id' => $asset->id]) }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.resources.members', ['id' => $asset->id]) }}" method="post" name="adminForm" id="adminForm" class="for-inline">
 
-	<div class="card mb-4">
+	<div class="car mb-4">
 	<table class="table table-hover adminlist datatable" id="members-list" data-row="#members-row" data-api="{{ route('api.resources.members', ['id' => $asset->id]) }}">
 		<caption>{{ $asset->name }}: {{ trans('resources::assets.active users') }}</caption>
 		<thead>
 			<tr>
 				<th scope="col" class="priority-5">
-					{!! trans('resources::assets.id') !!}
+					{{ trans('resources::assets.id') }}
 				</th>
 				<th scope="col">
-					{!! trans('users::users.name') !!}
+					{{ trans('users::users.name') }}
 				</th>
 				<th scope="col">
-					{!! trans('users::users.username') !!}
+					{{ trans('users::users.username') }}
 				</th>
 				<th scope="col" class="priority-4">
-					{!! trans('users::users.email') !!}
+					{{ trans('users::users.email') }}
+				</th>
+				<th scope="col" class="priority-4">
+					{{ trans('resources::assets.queues') }}
 				</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td colspan="4">
-					<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
-				</td>
-			</tr>
-		@if (count($rows))
-		@foreach ($rows as $i => $row)
-			<tr>
-				<td class="priority-5">
-					{{ $row->id }}
-				</td>
-				<td>
-					@if (auth()->user()->can('manage users'))
-						<a href="{{ route('admin.users.show', ['id' => $row->id]) }}">
-					@endif
-						{{ $row->name }}
-					@if (auth()->user()->can('manage users'))
-						</a>
-					@endif
-				</td>
-				<td>
-					@if (auth()->user()->can('manage users'))
-						<a href="{{ route('admin.users.show', ['id' => $row->id]) }}">
-					@endif
-						{{ $row->username }}
-					@if (auth()->user()->can('manage users'))
-						</a>
-					@endif
-				</td>
-				<td class="priority-4">
-					@if (auth()->user()->can('manage users'))
-						<a href="{{ route('admin.users.show', ['id' => $row->id]) }}">
-					@endif
-						{{ $row->email }}
-					@if (auth()->user()->can('manage users'))
-						</a>
-					@endif
-				</td>
-			</tr>
-		@endforeach
-		@endif
+			@if (count($rows))
+				@foreach ($rows as $i => $row)
+					<tr>
+						<td class="priority-5">
+							{{ $row->id }}
+						</td>
+						<td>
+							@if (auth()->user()->can('manage users'))
+								<a href="{{ route('admin.users.show', ['id' => $row->id]) }}">
+							@endif
+								{{ $row->name }}
+							@if (auth()->user()->can('manage users'))
+								</a>
+							@endif
+						</td>
+						<td>
+							@if (auth()->user()->can('manage users'))
+								<a href="{{ route('admin.users.show', ['id' => $row->id]) }}">
+							@endif
+								{{ $row->username }}
+							@if (auth()->user()->can('manage users'))
+								</a>
+							@endif
+						</td>
+						<td class="priority-4">
+							@if (auth()->user()->can('manage users'))
+								<a href="{{ route('admin.users.show', ['id' => $row->id]) }}">
+							@endif
+								{{ $row->email }}
+							@if (auth()->user()->can('manage users'))
+								</a>
+							@endif
+						</td>
+						<td>
+							@if (isset($row->queues))
+								@foreach ($row->queues as $queue)
+									<a href="{{ route('admin.queues.edit', ['id' => $queue->id]) }}">{{ $queue->name }}</a>
+								@endforeach
+							@endif
+							@if (isset($row->directories))
+								@foreach ($row->directories as $dir)
+									<a href="{{ route('admin.storage.directory.edit', ['id' => $dir->id]) }}">{{ $dir->name }}</a>
+								@endforeach
+							@endif
+						</td>
+					</tr>
+				@endforeach
+			@else
+				<tr>
+					<td colspan="5">
+						<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
+					</td>
+				</tr>
+			@endif
 		</tbody>
 	</table>
 	</div>
@@ -218,6 +244,8 @@ app('pathway')
 				@if (auth()->user()->can('manage users'))
 					</a>
 				@endif
+			</td>
+			<td>
 			</td>
 		</tr>
 	</script>

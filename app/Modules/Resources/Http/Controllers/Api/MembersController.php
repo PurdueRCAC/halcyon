@@ -284,7 +284,8 @@ class MembersController extends Controller
 
 		$gus = GroupUser::query()
 			->select(
-				DB::raw('DISTINCT(' . $uu . '.userid)')
+				//DB::raw('DISTINCT(' . $uu . '.userid)')
+				$uu . '.userid', $q . '.id as queueid', $q . '.name', $g . '.name AS group'
 			)
 			// Group
 			->join($g, $g . '.id', $gu . '.groupid')
@@ -312,14 +313,42 @@ class MembersController extends Controller
 				$join->on($ugm . '.unixgroupid', $u . '.id')
 					->on($ugm . '.userid', $uu . '.userid');
 			})
-			->get()
-			->pluck('userid')
-			->toArray();
-		$gus = array_unique($gus);
+			->groupBy($q . '.id')
+			->groupBy($uu . '.userid')
+			->groupBy($g . '.name')
+			->get();
+
+		$users = array();
+		foreach ($gus as $gur)
+		{
+			if (!isset($users[$gur->userid]))
+			{
+				$users[$gur->userid] = array();
+			}
+
+			if (!isset($users[$gur->userid]['queues']))
+			{
+				$users[$gur->userid]['queues'] = array();
+			}
+
+			if (isset($users[$gur->userid]['queues'][$gur->queueid]))
+			{
+				continue;
+			}
+
+			$users[$gur->userid]['queues'][$gur->queueid] = [
+				'id' => $gur->queueid,
+				'name' => $gur->name . ' (' . $gur->group . ')',
+			];
+		}
+			//->pluck('userid')
+			//->toArray();
+		//$gus = array_unique($gus);
 
 		$qus = QueueUser::query()
 			->select(
-				DB::raw('DISTINCT(' . $uu . '.userid)')
+				//DB::raw('DISTINCT(' . $uu . '.userid)')
+				$uu . '.userid', $qu . '.queueid', $q . '.name', $g . '.name AS group'
 			)
 			// Queues
 			->join($q, $q . '.id', $qu . '.queueid')
@@ -346,14 +375,40 @@ class MembersController extends Controller
 				$join->on($ugm . '.unixgroupid', $u . '.id')
 					->on($ugm . '.userid', $uu . '.userid');
 			})
-			->get()
-			->pluck('userid')
-			->toArray();
-		$qus = array_unique($qus);
+			->groupBy($qu . '.queueid')
+			->groupBy($uu . '.userid')
+			->groupBy($g . '.name')
+			->get();
+			//->pluck('userid')
+			//->toArray();
+		//$qus = array_unique($qus);
+		foreach ($qus as $qur)
+		{
+			if (!isset($users[$qur->userid]))
+			{
+				$users[$qur->userid] = array();
+			}
+
+			if (!isset($users[$qur->userid]['queues']))
+			{
+				$users[$qur->userid]['queues'] = array();
+			}
+
+			if (isset($users[$qur->userid]['queues'][$qur->queueid]))
+			{
+				continue;
+			}
+
+			$users[$qur->userid]['queues'][$qur->queueid] = [
+				'id' => $qur->queueid,
+				'name' => $qur->name . ' (' . $qur->group . ')',
+			];
+		}
 
 		$gqus = GroupQueueUser::query()
 			->select(
-				DB::raw('DISTINCT(' . $uu . '.userid)')
+				//DB::raw('DISTINCT(' . $uu . '.userid)')
+				$uu . '.userid', $qu . '.queueid', $q . '.name', $g . '.name AS group'
 			)
 			// Queue user
 			->join($qu, $qu . '.id', $gqu . '.queueuserid')
@@ -387,14 +442,40 @@ class MembersController extends Controller
 				$join->on($ugm . '.unixgroupid', $u . '.id')
 					->on($ugm . '.userid', $uu . '.userid');
 			})
-			->get()
-			->pluck('userid')
-			->toArray();
-		$gqus = array_unique($gqus);
+			->groupBy($qu . '.queueid')
+			->groupBy($uu . '.userid')
+			->groupBy($g . '.name')
+			->get();
+			//->pluck('userid')
+			//->toArray();
+		//$gqus = array_unique($gqus);
+		foreach ($gqus as $gqur)
+		{
+			if (!isset($users[$gqur->userid]))
+			{
+				$users[$gqur->userid] = array();
+			}
+
+			if (!isset($users[$gqur->userid]['queues']))
+			{
+				$users[$gqur->userid]['queues'] = array();
+			}
+
+			if (isset($users[$gqur->userid]['queues'][$gqur->queueid]))
+			{
+				continue;
+			}
+
+			$users[$gqur->userid]['queues'][$gqur->queueid] = [
+				'id' => $gqur->queueid,
+				'name' => $gqur->name . ' (' . $gqur->group . ')',
+			];
+		}
 
 		$ugus = UnixGroupMember::query()
 			->select(
-				DB::raw('DISTINCT(' . $uu . '.userid)')
+				//DB::raw('DISTINCT(' . $uu . '.userid)')
+				$uu . '.userid', $d . '.id as dirid', $d . '.name', $g . '.name AS group'
 			)
 			// Unix group member
 			->where($ugm . '.datetimecreated', '<=', $now->toDateTimeString())
@@ -423,16 +504,41 @@ class MembersController extends Controller
 				$join->on($gu . '.groupid', $g . '.id')
 					->on($gu . '.userid', $uu . '.userid');
 			})
-			->get()
-			->pluck('userid')
-			->toArray();
-		$ugus = array_unique($ugus);
+			->groupBy($d . '.id')
+			->groupBy($uu . '.userid')
+			->groupBy($g . '.name')
+			->get();
+			//->pluck('userid')
+			//->toArray();
+		//$ugus = array_unique($ugus);
+		foreach ($ugus as $uqur)
+		{
+			if (!isset($users[$uqur->userid]))
+			{
+				$users[$uqur->userid] = array();
+			}
 
-		$userids = array_merge($gus, $qus, $gqus, $ugus);
-		$userids = array_unique($userids);
+			if (!isset($users[$uqur->userid]['directories']))
+			{
+				$users[$uqur->userid]['directories'] = array();
+			}
 
-		$users = array();
-		foreach ($userids as $userid)
+			if (isset($users[$uqur->userid]['directories'][$uqur->dirid]))
+			{
+				continue;
+			}
+
+			$users[$uqur->userid]['directories'][$uqur->dirid] = [
+				'id' => $uqur->dirid,
+				'name' => $uqur->name . ' (' . $uqur->group . ')',
+			];
+		}
+
+		//$userids = array_merge($gus, $qus, $gqus, $ugus);
+		//$userids = array_unique($userids);
+
+		$data = array();
+		foreach ($users as $userid => $datum)
 		{
 			$user = User::find($userid);
 
@@ -441,16 +547,32 @@ class MembersController extends Controller
 				continue;
 			}
 
-			$users[] = array(
+			$info = array();
+			$info['id'] = $user->id;
+			$info['name'] = $user->name;
+			$info['username'] = $user->username;
+			$info['email'] = $user->email;
+			$info['api'] = route('api.users.read', ['id' => $user->id]);
+			if (isset($datum['queues']))
+			{
+				$info['queues'] = array_values($datum['queues']);
+			}
+			if (isset($datum['directories']))
+			{
+				$info['directories'] = array_values($datum['directories']);
+			}
+
+			$data[] = $info;
+			/*$data[] = array(
 				'id'       => $user->id,
 				'name'     => $user->name,
 				'username' => $user->username,
 				'email'    => $user->email,
 				'api'      => route('api.users.read', ['id' => $user->id]),
-			);
+			);*/
 		}
 
-		return $users; //new ResourceCollection(collect($users));
+		return $data; //new ResourceCollection(collect($users));
 	}
 
 	/**

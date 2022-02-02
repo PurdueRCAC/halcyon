@@ -73,4 +73,5 @@ return [
 	],
 	'export' => 'Export',
 	'active users' => 'Active Users',
+	'queues' => 'Queues',
 ];
