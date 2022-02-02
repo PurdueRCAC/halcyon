@@ -192,10 +192,6 @@ class TypesController extends Controller
 					'placeholder'   => (isset($element->field_options->placeholder) ? (string) $element->field_options->placeholder : null)
 				]);
 
-				if ($field->type == 'dropdown')
-				{
-					$field->type = 'select';
-				}
 				if ($field->type == 'paragraph')
 				{
 					$field->type = 'textarea';
