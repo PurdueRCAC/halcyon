@@ -315,6 +315,7 @@ class MembersController extends Controller
 			})
 			->groupBy($q . '.id')
 			->groupBy($uu . '.userid')
+			->groupBy($q . '.name')
 			->groupBy($g . '.name')
 			->get();
 
@@ -377,6 +378,7 @@ class MembersController extends Controller
 			})
 			->groupBy($qu . '.queueid')
 			->groupBy($uu . '.userid')
+			->groupBy($q . '.name')
 			->groupBy($g . '.name')
 			->get();
 			//->pluck('userid')
@@ -444,6 +446,7 @@ class MembersController extends Controller
 			})
 			->groupBy($qu . '.queueid')
 			->groupBy($uu . '.userid')
+			->groupBy($q . '.name')
 			->groupBy($g . '.name')
 			->get();
 			//->pluck('userid')
@@ -506,6 +509,7 @@ class MembersController extends Controller
 			})
 			->groupBy($d . '.id')
 			->groupBy($uu . '.userid')
+			->groupBy($d . '.name')
 			->groupBy($g . '.name')
 			->get();
 			//->pluck('userid')
