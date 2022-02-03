@@ -428,7 +428,7 @@ class SyncCommand extends Command
 		$removed = array();
 		foreach ($remove_users as $user)
 		{
-			$msg = 'Will delete resource ' . $row->resource->name . ' role for ' . $user . ': ' . $event->status;
+			$msg = 'Will delete resource ' . $row->resource->name . ' role for ' . $user;
 
 			if ($debug || $this->output->isVerbose())
 			{
