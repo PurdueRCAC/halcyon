@@ -330,9 +330,8 @@ class OrdersController extends Controller
 	{
 		$data = array();
 		$data[] = array(
-			trans('orders::orders.type'),
+			//trans('orders::orders.type'),
 			trans('orders::orders.id'),
-			trans('orders::orders.order'),
 			trans('orders::orders.created'),
 			trans('orders::orders.status'),
 			trans('orders::orders.submitter'),
@@ -344,6 +343,7 @@ class OrdersController extends Controller
 			trans('orders::orders.total'),
 			'purchaseio',
 			'purchasewbse',
+			'paymentdocid',
 			trans('orders::orders.product'),
 			trans('orders::orders.notes'),
 		);
@@ -386,72 +386,87 @@ class OrdersController extends Controller
 				$submitter = $row->submitter ? $row->submitter->name : '';
 			}
 
-			$data[] = array(
-				'order',
-				$row->id,
-				$row->id,
-				$row->datetimecreated->format('Y-m-d'),
-				trans('orders::orders.' . $row->status),
-				$submitter,
-				$user,
-				$group,
-				$department,
-				'',
-				'',
-				config('orders.currency', '$') . ' ' . $row->formatNumber($row->ordertotal),
-				'',
-				'',
-				'',
-				'',
-				$row->usernotes
-			);
+			//unset($row->state);
+
+			$products = '';
+			if ($export != 'items')
+			{
+				$products = array();
+				foreach ($row->items as $item)
+				{
+					$products[] = $item->product ? $item->product->name : 'product #' . $item->orderproductid;
+				}
+				$products = implode(', ', $products);
+			}
+
+			if ($export != 'accounts')
+			{
+				$data[] = array(
+					//'order',
+					$row->id,
+					$row->datetimecreated->format('Y-m-d'),
+					trans('orders::orders.' . $row->status),
+					$submitter,
+					$user,
+					$group,
+					$department,
+					'',
+					'',
+					$row->formatNumber($row->ordertotal),
+					'',
+					'',
+					'',
+					$products,
+					$row->usernotes
+				);
+			}
 
 			if ($export == 'items')
 			{
-				foreach ($row->items as $item)
+				foreach ($row->items()->get() as $item)
 				{
 					$data[] = array(
-						'item',
-						$item->id,
+						//'item',
 						$item->orderid,
 						$item->datetimecreated->format('Y-m-d'),
 						$item->isFulfilled() ? 'fullfilled' : 'pending',
-						'',
-						'',
-						'',
-						'',
+						$submitter,
+						$user,
+						$group,
+						$department,
 						$item->quantity,
-						config('orders.currency', '$') . ' ' . $row->formatNumber($item->origunitprice),
-						config('orders.currency', '$') . ' ' . $row->formatNumber($item->price),
+						$row->formatNumber($item->origunitprice),
+						$row->formatNumber($item->price),
+						'',
 						'',
 						'',
 						$item->product ? $item->product->name : $item->orderproductid,
-						''
+						$row->usernotes
 					);
 				}
 			}
 
 			if ($export == 'accounts')
 			{
-				foreach ($row->accounts as $account)
+				foreach ($row->accounts()->get() as $account)
 				{
 					$data[] = array(
-						'account',
-						$account->id,
+						//'account',
 						$account->orderid,
 						$account->datetimecreated->format('Y-m-d'),
 						trans('orders::orders.' . $account->status),
+						$submitter,
+						$user,
+						$group,
+						$department,
 						'',
 						'',
-						'',
-						'',
-						'',
-						'',
-						config('orders.currency', '$') . ' ' . $row->formatNumber($account->amount),
+						$row->formatNumber($account->amount),
 						($account->purchaseio ? $account->purchaseio : ''),
 						($account->purchasewbse ? $account->purchasewbse : ''),
-						'',
-						''
+						($account->paymentdocid ? $account->paymentdocid : ''),
+						$products,
+						$row->usernotes
 					);
 				}
 			}
