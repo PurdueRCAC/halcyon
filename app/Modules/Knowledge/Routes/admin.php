@@ -113,6 +113,11 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 			'uses' => 'SnippetsController@edit',
 			'middleware' => 'can:edit knowledge',
 		]);
+		$router->match(['get', 'post'], '/unpublish/{id?}', [
+			'as'   => 'admin.knowledge.snippets.unpublish',
+			'uses' => 'SnippetsController@state',
+			'middleware' => 'can:edit.state knowledge',
+		])->where('id', '[0-9]+');
 		$router->match(['get', 'post'], '/delete/{id?}', [
 			'as'   => 'admin.knowledge.snippets.delete',
 			'uses' => 'SnippetsController@delete',

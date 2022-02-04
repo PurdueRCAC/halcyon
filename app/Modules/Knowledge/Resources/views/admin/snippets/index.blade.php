@@ -17,6 +17,11 @@ app('pathway')
 @endphp
 
 @section('toolbar')
+	@if (auth()->user()->can('edit.state menus'))
+		{!! Toolbar::unpublishList(route('admin.knowledge.snippets.unpublish')) !!}
+		{!! Toolbar::spacer() !!}
+	@endif
+
 	@if (auth()->user()->can('delete knowledge'))
 		{!! Toolbar::deleteList('', route('admin.knowledge.snippets.delete')) !!}
 	@endif

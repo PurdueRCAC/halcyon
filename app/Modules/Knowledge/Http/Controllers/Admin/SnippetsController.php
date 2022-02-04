@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Knowledge\Models\Page;
 use App\Modules\Knowledge\Models\SnippetAssociation;
+use App\Modules\Knowledge\Models\Associations;
 
 class SnippetsController extends Controller
 {
@@ -308,9 +309,9 @@ class SnippetsController extends Controller
 	 * @param   integer $id
 	 * @return  Response
 	 */
-	public function state(Request $request, $id)
+	public function state(Request $request, $id = null)
 	{
-		$action = $request->segment(count($request->segments()) - 1);
+		$action = $request->segment(3);
 		$state  = $action == 'publish' ? 1 : 0;
 
 		// Incoming
@@ -329,22 +330,26 @@ class SnippetsController extends Controller
 		// Comment record(s)
 		foreach ($ids as $id)
 		{
-			$row = Report::findOrFail(intval($id));
+			$row = SnippetAssociation::findOrFail(intval($id));
 
-			if ($row->published == $state)
+			$grows = Associations::query()
+				->where('page_id', '=', $row->page_id)
+				->get();
+
+			foreach ($grows as $grow)
 			{
-				continue;
-			}
+				if ($grow->state == $state)
+				{
+					continue;
+				}
 
-			// Don't update last modified timestamp for state changes
-			$row->timestamps = false;
+				$grow->state = $state;
 
-			$row->published = $state;
-
-			if (!$row->save())
-			{
-				$request->session()->flash('error', $row->getError());
-				continue;
+				if (!$grow->save())
+				{
+					$request->session()->flash('error', $grow->getError());
+					continue;
+				}
 			}
 
 			$success++;
@@ -354,8 +359,8 @@ class SnippetsController extends Controller
 		if ($success)
 		{
 			$msg = $state
-				? 'global.messages.item published'
-				: 'global.messages.item unpublished';
+				? 'global.messages.items published'
+				: 'global.messages.items unpublished';
 
 			$request->session()->flash('success', trans($msg, ['count' => $success]));
 		}
