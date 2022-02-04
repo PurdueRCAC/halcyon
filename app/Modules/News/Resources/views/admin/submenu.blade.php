@@ -10,5 +10,8 @@
 		<li class="nav-item">
 			<a class="nav-link @if (trim($slot) == 'types') active @endif" href="{{ route('admin.news.types') }}">{{ trans('news::news.types') }}</a>
 		</li>
+		<li class="nav-item">
+			<a class="nav-link @if (trim($slot) == 'stats') active @endif" href="{{ route('admin.news.stats') }}">{{ trans('news::news.stats') }}</a>
+		</li>
 	</ul>
 </nav><!-- / .sub-navigation -->

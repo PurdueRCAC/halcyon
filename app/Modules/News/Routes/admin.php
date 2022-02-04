@@ -54,6 +54,10 @@ $router->group(['prefix' => 'news', 'middleware' => 'can:manage news'], function
 		'uses' => 'ArticlesController@copy',
 		'middleware' => 'can:create news',
 	]);
+	$router->match(['get', 'post'], '/stats', [
+		'as'   => 'admin.news.stats',
+		'uses' => 'ArticlesController@stats',
+	]);
 
 	// Types
 	$router->group(['prefix' => 'types'], function (Router $router)

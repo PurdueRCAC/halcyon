@@ -108,4 +108,5 @@ return [
 	'unique view count' => 'Unique View Count',
 	'cancelled event registration' => 'Event registration cancelled',
 	'registered for event' => 'Event registration confirmation',
+	'stats' => 'Stats',
 ];

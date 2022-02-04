@@ -509,4 +509,38 @@ class ArticlesController extends Controller
 	{
 		return redirect(route('admin.news.index'));
 	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 * 
+	 * @return Response
+	 */
+	public function stats(Request $request)
+	{
+		$start = Carbon::now()->modify('-1 year'); //30 days
+		$today = Carbon::now()->modify('+1 day');
+
+		// Get filters
+		$filters = array(
+			'start' => $start->format('Y-m-d'),
+			'end'   => $today->format('Y-m-d'),
+		);
+
+		foreach ($filters as $key => $default)
+		{
+			$filters[$key] = $request->input($key, $default);
+		}
+
+		$stats = null;//Article::stats($filters['start'], $filters['end']);
+
+		$types = Type::query()
+			->orderBy('name', 'asc')
+			->get();
+
+		return view('news::admin.articles.stats', [
+			'types' => $types,
+			'filters' => $filters,
+			'stats' => $stats,
+		]);
+	}
 }

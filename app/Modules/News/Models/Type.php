@@ -4,6 +4,7 @@ namespace App\Modules\News\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
@@ -12,6 +13,7 @@ use App\Modules\News\Events\TypeCreated;
 use App\Modules\News\Events\TypeUpdating;
 use App\Modules\News\Events\TypeUpdated;
 use App\Modules\News\Events\TypeDeleted;
+use Carbon\Carbon;
 
 /**
  * Model for news type
@@ -228,5 +230,98 @@ class Type extends Model
 	public function getDownloadCalendarLinkAttribute()
 	{
 		return route('site.news.calendar', ['name' => strtolower($this->name)]);
+	}
+
+	/**
+	 * Generate basic stats for a given number of days
+	 *
+	 * @param   string  $start
+	 * @param   string  $stop
+	 * @return  array
+	 */
+	public function stats($start, $stop)
+	{
+		$start = Carbon::parse($start);
+		$stop  = Carbon::parse($stop);
+		$timeframe = round(($stop->timestamp - $start->timestamp) / (60 * 60 * 24));
+
+		$a = (new Article)->getTable();
+		$s = (new Association)->getTable();
+
+		/*$now = Carbon::now();
+		$placed = array();
+		for ($d = $timeframe; $d >= 0; $d--)
+		{
+			$yesterday = Carbon::now()->modify('- ' . $d . ' days');
+			$tomorrow  = Carbon::now()->modify(($d ? '- ' . ($d - 1) : '+ 1') . ' days');
+
+			$item = [];
+			$item['timestamp'] = $yesterday->timestamp;
+			$item['count'] = Association::query()
+				->select($s . '.newsid', $s . '.associd') //, $s . '.assoctype', DB::raw('COUNT(*) as total'))
+				->join($a, $a . '.id', $s . '.newsid')
+				->where($a . '.newstypeid', '=', $this->id)
+				->where($s . '.assoctype', '=', 'user')
+				->where($a . '.datetimenews', '>=', $yesterday->format('Y-m-d') . ' 00:00:00')
+				->where($a . '.datetimenewsend', '<', $tomorrow->format('Y-m-d') . ' 00:00:00')
+				->whereNull($s . '.datetimeremoved')
+				->groupBy($s . '.newsid')
+				->groupBy($s . '.associd')
+				->get()
+				->count();
+
+			$placed[] = $item;
+		}*/
+
+		$assocs = Association::query()
+			->select($s . '.newsid', $s . '.associd', $a . '.datetimenews', $a . '.datetimenewsend') //, $s . '.assoctype', DB::raw('COUNT(*) as total'))
+			->join($a, $a . '.id', $s . '.newsid')
+			->where($a . '.newstypeid', '=', $this->id)
+			->where($s . '.assoctype', '=', 'user')
+			->where($a . '.datetimenews', '>=', $start->format('Y-m-d') . ' 00:00:00')
+			->where($a . '.datetimenewsend', '<', $stop->format('Y-m-d') . ' 00:00:00')
+			->whereNull($s . '.datetimeremoved')
+			//->groupBy($s . '.newsid')
+			//->groupBy($s . '.associd')
+			->get();
+
+		$dates = array();
+		$users = array();
+		foreach ($assocs as $user)
+		{
+			$key = Carbon::parse($user->datetimenews)->format('Y-m-d');
+
+			if (!isset($dates[$key]))
+			{
+				$dates[$key] = 0;
+			}
+
+			$dates[$key]++;
+
+			if (!isset($users[$user->associd]))
+			{
+				$users[$user->associd] = 0;
+			}
+
+			$users[$user->associd]++;
+		}
+
+		arsort($users);
+
+		foreach ($dates as $dt => $c)
+		{
+			$item = [];
+			$item['timestamp'] = Carbon::parse($dt)->timestamp;
+			$item['count'] = $c;
+
+			$placed[] = $item;
+		}
+
+		$stats = array(
+			'daily' => $placed,
+			'users' => array_slice($users, 0, 10, true),
+		);
+
+		return $stats;
 	}
 }
