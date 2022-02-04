@@ -1,0 +1,59 @@
+.svg-tip {
+  padding: 10px;
+  background: rgba(0,0,0,0.8);
+  color: #bbb;
+  font-size: 12px;
+  position: absolute;
+  z-index: 99999;
+  text-align: center;
+  border-radius: 3px;
+}
+
+.svg-tip:after {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  position: absolute;
+  left: 50%;
+  height: 5px;
+  width: 5px;
+  bottom: -10px;
+  margin: 0 0 0 -5px;
+  content: " ";
+  border: 5px solid transparent;
+  border-top-color: rgba(0,0,0,0.8);
+}
+
+.color1 {
+  fill: #eeeeee;
+}
+.color2 {
+  fill: #d6e685;
+}
+.color3 {
+  fill: #8cc665;
+}
+.color4 {
+  fill: #44a340;
+}
+.color5 {
+  fill: #337a30;
+}
+[data-mode="dark"] .color1 {
+  fill: rgba(255, 255, 255, 0.1);
+}
+[data-mode="dark"] .color2 {
+  fill: rgba(214, 230, 133, 0.25);
+}
+[data-mode="dark"] .color3 {
+  fill: rgba(140, 198, 101, 0.5);
+}
+[data-mode="dark"] .color4 {
+  fill: rgba(68, 163, 64, 0.65);
+}
+[data-mode="dark"] .color5 {
+  fill: rgb(68, 163, 64);
+}
+[data-mode="dark"] .wday,
+[data-mode="dark"] .month {
+  fill: #aaa;
+}
