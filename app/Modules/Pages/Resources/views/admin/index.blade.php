@@ -148,7 +148,7 @@ app('pathway')
 				<td>
 					<?php echo str_repeat('<span class="gi">|&mdash;</span>', $row->level); ?>
 					@if ($row->trashed())
-						<span class="glyph icon-trash text-danger" aria-hidden="true"></span>
+						<span class="fa fa-trash text-danger" aria-hidden="true"></span>
 					@endif
 					@if (auth()->user()->can('edit pages'))
 						<a href="{{ route('admin.pages.edit', ['id' => $row->id]) }}">

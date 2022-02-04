@@ -224,7 +224,10 @@ app('pathway')
 										<input type="text" name="params[variables][{{ $i }}][value]" id="params-variables-{{ $i }}-value" value="{{ $val }}" class="form-control" />
 									</td>
 									<td>
-										<a href="#params-variables-{{ $i }}" class="btn btn-danger delete-row"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
+										<a href="#params-variables-{{ $i }}" class="btn btn-danger delete-row">
+											<span class="fa fa-trash" aria-hidden="true"></span>
+											<span class="sr-only">{{ trans('global.delete') }}</span>
+										</a>
 									</td>
 								</tr>
 								<?php
@@ -244,14 +247,20 @@ app('pathway')
 										<input type="text" name="params[variables][{{ $i }}][value]" id="params-variables-{{ $i }}-value" value="" class="form-control" />
 									</td>
 									<td>
-										<a href="#params-variables-{{ $i }}" class="btn btn-danger delete-row disabled"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
+										<a href="#params-variables-{{ $i }}" class="btn btn-danger delete-row disabled">
+											<span class="fa fa-trash" aria-hidden="true"></span>
+											<span class="sr-only">{{ trans('global.delete') }}</span>
+										</a>
 									</td>
 								</tr>
 							</tbody>
 							<tfoot>
 								<tr>
 									<td colspan="3" class="text-right">
-										<button data-type="script" data-container="param-variables" class="add-row btn btn-success param-variable-new"><span class="glyph icon-plus">{{ trans('global.add') }}</span></button>
+										<button data-type="script" data-container="param-variables" class="add-row btn btn-success param-variable-new">
+											<span class="fa fa-plus" aria-hidden="true"></span>
+											<span class="sr-only">{{ trans('global.add') }}</span>
+										</button>
 									</td>
 								</tr>
 							</tfoot>

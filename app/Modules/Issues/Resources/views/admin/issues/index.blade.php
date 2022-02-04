@@ -138,11 +138,14 @@ app('pathway')
 					<span class="form-control">
 						<span class="tag badge badge-secondary">
 							{{ $filters['tag'] }}
-							<a href="{{ route('admin.issues.index', ['tag' => '']) }}" class="icon-x glyph fa fa-times">x</a>
+							<a href="{{ route('admin.issues.index', ['tag' => '']) }}" class="fa fa-times">x</a>
 						</span>
 					</span>
 					<span class="input-group-append">
-						<span class="input-group-text"><span class="icon-tag glyph">{{ trans('issues::issues.tags') }}</span></span>
+						<span class="input-group-text">
+							<span class="fa fa-tag" aria-hidden="true"></span>
+							<span class="sr-only">{{ trans('issues::issues.tags') }}</span>
+						</span>
 					</span>
 				</span>
 				@endif

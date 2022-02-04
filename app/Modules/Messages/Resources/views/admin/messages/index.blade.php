@@ -279,17 +279,23 @@ app('pathway')
 							$timetable .= '</div>';
 							?>
 							@if ($row->completed())
-								<span class="badge badge-success has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-check" aria-hidden="true"></span> {{ $row->elapsed }}</span>
+								<span class="badge badge-success has-tip" data-tip="{!! $timetable !!}">
+									<span class="fa fa-check" aria-hidden="true"></span> {{ $row->elapsed }}
+								</span>
 							@elseif ($row->started())
-								<span class="badge badge-warning has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-rotate-ccw" aria-hidden="true"></span> {{ trans('messages::messages.processing') }}</span>
+								<span class="badge badge-warning has-tip" data-tip="{!! $timetable !!}">
+									<span class="fa fa-undo" aria-hidden="true"></span> {{ trans('messages::messages.processing') }}
+								</span>
 							@else
-								<span class="badge badge-info has-tip" data-tip="{!! $timetable !!}"><span class="glyph icon-more-horizontal" aria-hidden="true"></span> {{ trans('messages::messages.pending') }}</span>
+								<span class="badge badge-info has-tip" data-tip="{!! $timetable !!}">
+									<span class="fa fa-ellipsis-h" aria-hidden="true"></span> {{ trans('messages::messages.pending') }}
+								</span>
 							@endif
 						</td>
 						<td class="priority-4 text-right">
 							@if ($row->completed())
 								@if ($row->returnstatus)
-									<span class="text-danger icon-alert-octagon" aria-hidden="true"></span>
+									<span class="text-danger fa fa-exclamation-circle" aria-hidden="true"></span>
 								@else
 									<span class="text-success fa fa-check" aria-hidden="true"></span>
 								@endif

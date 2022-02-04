@@ -456,7 +456,8 @@
 					data-container="#actmaint_info"
 					data-error="#new-unixgroup_{{ $group->id }}_error"
 					data-api="{{ route('api.unixgroups.create') }}">
-					<span class="icon-plus glyph">{{ trans('global.create') }}</span>
+					<span class="fa fa-plus-circle" aria-hidden="true"></span>
+					<span class="sr-only">{{ trans('global.create') }}</span>
 				</a>
 			</div>
 		</div>

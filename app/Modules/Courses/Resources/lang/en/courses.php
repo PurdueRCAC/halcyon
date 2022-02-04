@@ -74,4 +74,5 @@ return [
 	'username' => 'Username',
 	'member type' => 'User type',
 	'user' => 'User',
+	'user account removed' => 'User account removed',
 ];

@@ -257,13 +257,13 @@ app('pathway')
 				@endif
 				<td class="priority-5">
 					@if (($row->user && $row->user->trashed()) || $row->trashed())
-						<span class="icon-trash" aria-hidden="true"></span>
+						<span class="fa fa-trash text-danger" aria-hidden="true"></span>
 					@endif
 					{{ $row->id }}
 				</td>
 				<td>
 					@if ($row->user && $row->user->trashed())
-						<span class="icon-alert-triangle glyph warning has-tip" title="{{ trans('groups::groups.user account removed') }}">{{ trans('groups::groups.user account removed') }}</span>
+						<span class="fa fa-exclamation-triangle text-warning" data-tip="{{ trans('groups::groups.user account removed') }}">{{ trans('groups::groups.user account removed') }}</span>
 					@endif
 					@if (auth()->user()->can('edit users'))
 						<a href="{{ route('admin.users.edit', ['id' => $row->userid]) }}">
@@ -358,13 +358,13 @@ app('pathway')
 			</td>
 			<td class="priority-5">
 				<?php echo '{{#if ((row.user && $row.user.deleted_at) || row.dateremoved)}}'; ?>
-					<span class="icon-trash" aria-hidden="true"></span>
+					<span class="fa fa-trash text-danger" aria-hidden="true"></span>
 				<?php echo '{{/if}}'; ?>
 				<?php echo '{{ row.id }}'; ?>
 			</td>
 			<td>
 				<?php echo '{{#if (row.user && $row.user.deleted_at)}}'; ?>
-					<span class="icon-alert-triangle glyph warning has-tip" title="<?php echo trans('groups::groups.user account removed'); ?>"><?php echo trans('groups::groups.user account removed'); ?></span>
+					<span class="fa fa-exclamation-triangle text-warning" data-tip="{{ trans('groups::groups.user account removed') }}">{{ trans('groups::groups.user account removed') }}</span>
 				<?php echo '{{/if}}'; ?>
 				<?php if (auth()->user()->can('edit users')): ?>
 					<a href="<?php echo '{{row.user.route}}'; ?>">

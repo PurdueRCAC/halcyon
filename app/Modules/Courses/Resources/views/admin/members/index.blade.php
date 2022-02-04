@@ -107,12 +107,6 @@ app('pathway')
 						<th scope="col" class="priority-4">
 							{!! Html::grid('sort', trans('courses::courses.added'), 'datetimecreated', $filters['order_dir'], $filters['order']) !!}
 						</th>
-						<?php /*<th scope="col" class="priority-4">
-							{!! Html::grid('sort', trans('courses::courses.start'), 'datetimestart', $filters['order_dir'], $filters['order']) !!}
-						</th>
-						<th scope="col" class="priority-4">
-							{!! Html::grid('sort', trans('courses::courses.stop'), 'datetimestop', $filters['order_dir'], $filters['order']) !!}
-						</th>*/ ?>
 						<th scope="col" class="priority-4">
 							{!! Html::grid('sort', trans('courses::courses.type'), 'membertype', $filters['order_dir'], $filters['order']) !!}
 						</th>
@@ -140,7 +134,8 @@ app('pathway')
 						</td>
 						<td>
 							@if ($row->user && $row->user->trashed())
-								<span class="icon-alert-triangle glyph warning has-tip" title="{{ trans('courses::courses.user account removed') }}">{{ trans('courses::courses.user account removed') }}</span>
+								<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true" data-tip="{{ trans('courses::courses.user account removed') }}"></span>
+								<span class="sr-only">{{ trans('courses::courses.user account removed') }}</span>
 							@endif
 							@if (auth()->user()->can('edit users'))
 								<a href="{{ route('admin.users.show', ['id' => $row->userid]) }}">
@@ -152,7 +147,8 @@ app('pathway')
 						</td>
 						<td>
 							@if ($row->user && $row->user->trashed())
-								<span class="icon-alert-triangle glyph warning has-tip" title="{{ trans('courses::courses.user account removed') }}">{{ trans('courses::courses.user account removed') }}</span>
+								<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true" data-tip="{{ trans('courses::courses.user account removed') }}"></span>
+								<span class="sr-only">{{ trans('courses::courses.user account removed') }}</span>
 							@endif
 							@if (auth()->user()->can('edit users'))
 								<a href="{{ route('admin.users.show', ['id' => $row->userid]) }}">
@@ -165,12 +161,6 @@ app('pathway')
 						<td class="priority-4">
 							<time datetime="{{ $row->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimecreated->toDateTimeString() }}</time>
 						</td>
-						<?php /*<td class="priority-4">
-							<time datetime="{{ $row->datetimestart->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestart->format('Y-m-d') }}</time>
-						</td>
-						<td class="priority-4">
-							<time datetime="{{ $row->datetimestop->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestop->format('Y-m-d') }}</time>
-						</td>*/ ?>
 						<td>
 							@if ($row->membertype == 2)
 								<span class="badge badge-success">{{ trans('courses::courses.instructor') }}</span>

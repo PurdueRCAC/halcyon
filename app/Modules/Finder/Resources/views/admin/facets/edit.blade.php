@@ -97,9 +97,8 @@ app('pathway')
 						</div>
 						<div class="col-md-2 text-right">
 							<button class="btn remove-choice" data-confirm="{{ trans('finder::finder.confirm delete') }}" data-target="#choice-{{ $k }}">
-								<span class="glyph icon-trash text-danger">
-									{{ trans('finder::finder.remove choice') }}
-								</span>
+								<span class="fa fa-trash text-danger" aria-hidden="true" data-tip="{{ trans('finder::finder.remove choice') }}"></span>
+								<span class="sr-only">{{ trans('finder::finder.remove choice') }}</span>
 							</button>
 						</div>
 					</div>
@@ -148,9 +147,8 @@ app('pathway')
 						</div>
 						<div class="col-md-2 text-right">
 							<button class="btn remove-choice" data-confirm="{{ trans('finder::finder.confirm delete') }}" data-target="#choice-<?php echo '{{i}}'; ?>">
-								<span class="glyph icon-trash text-danger">
-									{{ trans('finder::finder.remove choice') }}
-								</span>
+								<span class="fa fa-trash text-danger" aria-hidden="true" data-tip="{{ trans('finder::finder.remove choice') }}"></span>
+								<span class="sr-only">{{ trans('finder::finder.remove choice') }}</span>
 							</button>
 						</div>
 					</div>

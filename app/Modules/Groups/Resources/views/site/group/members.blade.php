@@ -309,8 +309,9 @@ $i = 0;
 <div class="card">
 	<div class="card-header">
 		Managers
-		<a href="#help_managers_span_{{ $group->id }}" class="help icn glyph icon-help tip" title="Help">
-			<span class="fa fa-question-circle" aria-hidden="true"></span> Help
+		<a href="#help_managers_span_{{ $group->id }}" class="help text-info tip" title="Help">
+			<span class="fa fa-question-circle" aria-hidden="true"></span>
+			<span class="sr-only">Help</span>
 		</a>
 		<div class="dialog dialog-help" id="help_managers_span_{{ $group->id }}" title="Managers">
 			<p>Managers are the owners or <abbr title="Principle Investigators">PIs</abbr> of this group and any others they may choose to delegate to manage access to this group. Only Managers can access this interface and are able to grant queue access for other people in the group. Managers can also grant and remove Group Management privileges to and from others, although you cannot remove your own Group Management privileges.</p>
@@ -487,8 +488,9 @@ $i = 0;
 <div class="card">
 	<div class="card-header">
 		Members
-		<a href="#help_members_span_{{ $group->id }}" class="help icn tip" title="Help">
-			<span class="fa fa-question-circle" aria-hidden="true"></span> Help
+		<a href="#help_members_span_{{ $group->id }}" class="help text-info tip" title="Help">
+			<span class="fa fa-question-circle" aria-hidden="true"></span>
+			<span class="sr-only">Help</span>
 		</a>
 		<div class="dialog dialog-help" id="help_members_span_{{ $group->id }}" title="Members">
 			<p>Members are people that have access to some or all of this group's queues but have no other special privileges such as Group Usage Reporting privileges or Group Managment privileges. Enabling a queue for someone will also create an account for them on the appropriate resource if they do not already have one. New accounts on a cluster will be processed overnight and be ready use the next morning. The person will receive an email notification once their account is ready.</p>
@@ -658,8 +660,9 @@ $i = 0;
 <div class="card">
 	<div class="card-header">
 		Usage Reporting Viewers
-		<a href="#help_viewers_span_{{ $group->id }}" class="help icn tip" title="Help">
-			<span class="fa fa-question-circle" aria-hidden="true"></span> Help
+		<a href="#help_viewers_span_{{ $group->id }}" class="help text-help tip" title="Help">
+			<span class="fa fa-question-circle" aria-hidden="true"></span>
+			<span class="sr-only">Help</span>
 		</a>
 		<div class="dialog dialog-help" id="help_viewers_span_{{ $group->id }}" title="Usage Reporting Viewers">
 			<p>Group Usage Reporting Viewers are people who have been given permission to view all usage data for the entire group. You may also grant queue submission privileges individually for these people if desired. Group Usage Reporting Viewers may not access this interface or grant or remove privileges to or from others.</p>
@@ -808,8 +811,9 @@ $i = 0;
 <div class="card">
 	<div class="card-header">
 		Disabled Members
-		<a href="#help_disabledmembers_span_{{ $group->id }}" class="help icn tip" title="Help">
-			<span class="fa fa-question-circle" aria-hidden="true"></span> Help
+		<a href="#help_disabledmembers_span_{{ $group->id }}" class="help text-help tip" title="Help">
+			<span class="fa fa-question-circle" aria-hidden="true"></span>
+			<span class="sr-only">Help</span>
 		</a>
 		<div class="dialog dialog-help" id="help_disabledmembers_span_{{ $group->id }}" title="Disabled Members">
 			<p>Disabled Members are people that you have granted access to your queues but who no longer have an active account with {{ config('app.name') }} or have an active Purdue Career Account. Although queues may be enabled for them, they cannot log into Research Computing resources and use your queues without an active account. If the people listed here have left the University and are no longer participating in research, please remove them from your queues. If people listed here have left Purdue but still require access to your queues then you will need to file a Request for Privileges (R4P). If you believe people are listed here in error, please contact {{ config('mail.from.address') }}.</p>
