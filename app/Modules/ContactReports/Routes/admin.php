@@ -34,6 +34,10 @@ $router->group(['prefix' => 'contactreports', 'middleware' => 'can:manage contac
 		'uses' => 'ReportsController@delete',
 		'middleware' => 'can:delete contactreports',
 	]);
+	$router->match(['get', 'post'], '/stats', [
+		'as'   => 'admin.contactreports.stats',
+		'uses' => 'ReportsController@stats',
+	]);
 
 	// Comments
 	$router->group(['prefix' => '{report}/comments'], function (Router $router)

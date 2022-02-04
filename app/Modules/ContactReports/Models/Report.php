@@ -754,4 +754,38 @@ class Report extends Model
 
 		return implode(', ', $hashtag);
 	}
+
+	/**
+	 * Generate basic stats for a given number of days
+	 *
+	 * @param   string  $start
+	 * @param   string  $stop
+	 * @return  array
+	 */
+	public static function stats($start, $stop)
+	{
+		$start = Carbon::parse($start);
+		$stop  = Carbon::parse($stop);
+		$timeframe = round(($stop->timestamp - $start->timestamp) / (60 * 60 * 24));
+
+		$now = Carbon::now();
+		$placed = array();
+		for ($d = $timeframe; $d >= 0; $d--)
+		{
+			$yesterday = Carbon::now()->modify('- ' . $d . ' days');
+			$tomorrow  = Carbon::now()->modify(($d ? '- ' . ($d - 1) : '+ 1') . ' days');
+
+			$placed[$yesterday->format('Y-m-d')] = self::query()
+				->where('datetimecontact', '>=', $yesterday->format('Y-m-d') . ' 00:00:00')
+				->where('datetimecontact', '<', $tomorrow->format('Y-m-d') . ' 00:00:00')
+				->count();
+		}
+
+		$stats = array(
+			'timeframe'      => $timeframe,
+			'daily'          => $placed,
+		);
+
+		return $stats;
+	}
 }

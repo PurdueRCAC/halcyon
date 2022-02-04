@@ -65,4 +65,5 @@ return [
 	'output text' => 'Output text',
 	'start' => 'Start date',
 	'stop' => 'End date',
+	'stats' => 'Stats',
 ];

@@ -547,4 +547,39 @@ class ReportsController extends Controller
 	{
 		return redirect(route('admin.contactreports.index'));
 	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 * 
+	 * @return Response
+	 */
+	public function stats(Request $request)
+	{
+		$start = Carbon::now()->modify('-30 days');
+		$today = Carbon::now()->modify('+1 day');
+
+		// Get filters
+		$filters = array(
+			'start' => $start->format('Y-m-d'),
+			'end'   => $today->format('Y-m-d'),
+			'timeframe' => 1,
+		);
+
+		foreach ($filters as $key => $default)
+		{
+			$filters[$key] = $request->input($key, $default);
+		}
+
+		$stats = Report::stats($filters['start'], $filters['end']);
+
+		$types = Type::query()
+			->orderBy('name', 'asc')
+			->get();
+
+		return view('contactreports::admin.reports.stats', [
+			'types' => $types,
+			'filters' => $filters,
+			'stats' => $stats,
+		]);
+	}
 }
