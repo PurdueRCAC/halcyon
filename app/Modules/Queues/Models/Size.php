@@ -2,6 +2,9 @@
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Modules\Queues\Events\QueueSizeCreated;
+use App\Modules\Queues\Events\QueueSizeUpdated;
+use App\Modules\Queues\Events\QueueSizeDeleted;
 use Carbon\Carbon;
 
 /**
@@ -63,6 +66,17 @@ class Size extends Model
 	protected $dates = [
 		'datetimestart',
 		'datetimestop',
+	];
+
+	/**
+	 * The event map for the model.
+	 *
+	 * @var array
+	 */
+	protected $dispatchesEvents = [
+		'created'  => QueueSizeCreated::class,
+		'updated'  => QueueSizeUpdated::class,
+		'deleted'  => QueueSizeDeleted::class,
 	];
 
 	/**

@@ -1,6 +1,9 @@
 <?php
 namespace App\Modules\Queues\Models;
 
+use App\Modules\Queues\Events\QueueSizeCreated;
+use App\Modules\Queues\Events\QueueSizeUpdated;
+use App\Modules\Queues\Events\QueueSizeDeleted;
 use Carbon\Carbon;
 
 /**
@@ -14,6 +17,17 @@ class Loan extends Size
 	 * @var  string
 	 **/
 	protected $table = 'queueloans';
+
+	/**
+	 * The event map for the model.
+	 *
+	 * @var array
+	 */
+	protected $dispatchesEvents = [
+		'created'  => QueueLoanCreated::class,
+		'updated'  => QueueLoanUpdated::class,
+		'deleted'  => QueueLoanDeleted::class,
+	];
 
 	/**
 	 * Defines a relationship to a lender
