@@ -35,7 +35,7 @@ class PagesController extends Controller
 			'level'     => 0,
 		);
 
-		$refresh = false;
+		$reset = false;
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
@@ -47,11 +47,7 @@ class PagesController extends Controller
 			}
 			$filters[$key] = $request->state('kb.filter_' . $key, $key, $default);
 		}
-
-		if ($refresh)
-		{
-			$filters['page'] = 1;
-		}
+		$filters['page'] = $reset ? 1 : $filters['page'];
 
 		if (!in_array($filters['order'], ['id', 'lft', 'rgt', 'title', 'state', 'access', 'updated_at', 'created_at']))
 		{
