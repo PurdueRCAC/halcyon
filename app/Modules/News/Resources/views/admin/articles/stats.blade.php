@@ -226,7 +226,7 @@ app('pathway')
 					return $item->tagusers == 1;
 				});
 				foreach ($tagusers as $type):
-					$stats = $type->stats(Carbon\Carbon::parse($filters['end'])->modify('-1 year')->format('Y-m-d'), $filters['end']);
+					$stats = $type->stats($filters['start'], $filters['end']);
 					?>
 					<h3>{{ $type->name }}</h3>
 					<div class="card mb-3">
@@ -322,6 +322,29 @@ app('pathway')
 							<div class="card mb-3">
 								<div class="card-body">
 									<h4>Top Topics</h4>
+									<?php
+									$assocs = App\Modules\News\Models\Association::query()->whereNotNull('comment')->get();
+									foreach ($assocs as $assoc)
+									{
+										$keywords = $assoc->extractKeywords($assoc->comment, 0);
+										$keywords = array_keys($keywords);
+
+										if (!empty($keywords))
+										{
+											$tags = array();
+
+											foreach ($keywords as $match)
+											{
+												if ($assoc->isTag($match))
+												{
+													$tags[] = $match;
+												}
+											}
+
+											$assoc->setTags($tags);
+										}
+									}
+									?>
 									<table class="table table-hover">
 										<caption class="sr-only">Top Topics</caption>
 										<thead>
