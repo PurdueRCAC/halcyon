@@ -1,9 +1,9 @@
 <?php
 namespace App\Modules\Queues\Models;
 
-use App\Modules\Queues\Events\QueueSizeCreated;
-use App\Modules\Queues\Events\QueueSizeUpdated;
-use App\Modules\Queues\Events\QueueSizeDeleted;
+use App\Modules\Queues\Events\QueueLoanCreated;
+use App\Modules\Queues\Events\QueueLoanUpdated;
+use App\Modules\Queues\Events\QueueLoanDeleted;
 use Carbon\Carbon;
 
 /**
