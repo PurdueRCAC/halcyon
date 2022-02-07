@@ -227,12 +227,11 @@ app('pathway')
 					$c = (new App\Modules\ContactReports\Models\Report)->getTable();
 
 					$tags = App\Modules\Tags\Models\Tagged::query()
-						->select($r . '.taggable_id', $r . '.tag_id', DB::raw('COUNT(*) as total'))
+						->select($r . '.tag_id', DB::raw('COUNT(*) as total'))
 						->join($c, $c . '.id', $r . '.taggable_id')
 						->where($r . '.taggable_type', '=', App\Modules\ContactReports\Models\Report::class)
 						->where($c . '.datetimecontact', '>=', Carbon\Carbon::parse($filters['start'])->toDateTimeString())
 						->where($c . '.datetimecontact', '<', Carbon\Carbon::parse($filters['end'])->toDateTimeString())
-						->groupBy($r . '.taggable_id')
 						->groupBy($r . '.tag_id')
 						->orderBy('total', 'desc')
 						->limit(5)

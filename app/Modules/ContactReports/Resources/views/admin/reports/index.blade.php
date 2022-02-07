@@ -272,7 +272,7 @@ app('pathway')
 						if (!empty($matches)):
 							foreach ($matches[0] as $match):
 								$slug = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
-								if ($tag = $row->hasTag($slug)):
+								if ($tag = $row->isTag($slug)):
 									$str = str_replace($match, ' <a class="tag badge badge-sm badge-secondary" href="' . route('admin.issues.index', ['tag' => $tag->slug]) . '">' . $tag->name . '</a> ', $str);
 								endif;
 							endforeach;

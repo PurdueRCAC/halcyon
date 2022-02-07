@@ -286,33 +286,72 @@ app('pathway')
 						</div>
 					</div>
 
-					<div class="card mb-3">
-						<div class="card-body">
-							<h4>Most Reservations</h4>
-							<table class="table table-hover">
-								<caption class="sr-only">Most Reservations</caption>
-								<thead>
-									<tr>
-										<th scope="col">Name</th>
-										<th scope="col" class="text-right">Reservations</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach ($stats['users'] as $userid => $val)
-									<?php
-									$user = App\Modules\Users\Models\User::find($userid);
-									?>
-									<tr>
-										<td>
-											<a href="{{ route('admin.users.show', ['id' => $userid]) }}">{{ $user ? $user->name . ' (' . $user->username . ')' : $userid }}</a>
-										</td>
-										<td class="text-right">
-											{{ number_format($val) }}
-										</td>
-									</tr>
-									@endforeach
-								</tbody>
-							</table>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="card mb-3">
+								<div class="card-body">
+									<h4>Most Reservations</h4>
+									<table class="table table-hover">
+										<caption class="sr-only">Most Reservations</caption>
+										<thead>
+											<tr>
+												<th scope="col">Name</th>
+												<th scope="col" class="text-right">Reservations</th>
+											</tr>
+										</thead>
+										<tbody>
+											@foreach ($stats['users'] as $userid => $val)
+											<?php
+											$user = App\Modules\Users\Models\User::find($userid);
+											?>
+											<tr>
+												<td>
+													<a href="{{ route('admin.users.show', ['id' => $userid]) }}">{{ $user ? $user->name . ' (' . $user->username . ')' : $userid }}</a>
+												</td>
+												<td class="text-right">
+													{{ number_format($val) }}
+												</td>
+											</tr>
+											@endforeach
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="card mb-3">
+								<div class="card-body">
+									<h4>Top Topics</h4>
+									<table class="table table-hover">
+										<caption class="sr-only">Top Topics</caption>
+										<thead>
+											<tr>
+												<th scope="col">Topic</th>
+												<th scope="col" class="text-right">Occurrences</th>
+											</tr>
+										</thead>
+										<tbody>
+											@foreach ($stats['tags'] as $i => $tag)
+												<tr>
+													<td><span class="badge badge-secondary">{{ $tag->tag->name }}</span></td>
+													<td class="text-right">{{ $tag->total }}</td>
+												</tr>
+											@endforeach
+											@if ($i < 9)
+												@php
+												$i++;
+												@endphp
+												@for ($i; $i < 10; $i++)
+													<tr>
+														<th scope="row"><span class="text-muted">-</span></th>
+														<td class="text-right"></td>
+													</tr>
+												@endfor
+											@endif
+										</tbody>
+									</table>
+								</div>
+							</div>
 						</div>
 					</div>
 					<?php

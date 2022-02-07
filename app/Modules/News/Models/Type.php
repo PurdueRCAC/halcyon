@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
+use App\Modules\Tags\Models\Tagged;
 use App\Modules\History\Traits\Historable;
 use App\Modules\News\Events\TypeCreating;
 use App\Modules\News\Events\TypeCreated;
@@ -332,12 +333,27 @@ class Type extends Model
 			->whereNotNull($s . '.datetimeremoved')
 			->count();
 
+		$r = (new Tagged)->getTable();
+		$c = (new Association)->getTable();
+
+		$tags = Tagged::query()
+			->select($r . '.tag_id', DB::raw('COUNT(*) as total'))
+			->join($c, $c . '.id', $r . '.taggable_id')
+			->where($r . '.taggable_type', '=', Association::class)
+			->where($c . '.datetimecreated', '>=', $start->format('Y-m-d') . ' 00:00:00')
+			->where($c . '.datetimecreated', '<', $stop->format('Y-m-d') . ' 00:00:00')
+			->groupBy($r . '.tag_id')
+			->orderBy('total', 'desc')
+			->limit(10)
+			->get();
+
 		$stats = array(
 			'reservations' => count($assocs),
 			'repeat_users' => $repeat_users,
 			'canceled' => $canceled,
 			'daily' => $placed,
 			'users' => array_slice($users, 0, 10, true),
+			'tags' => $tags,
 		);
 
 		return $stats;

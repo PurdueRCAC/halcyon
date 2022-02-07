@@ -232,12 +232,12 @@ trait Taggable
 	}
 
 	/**
-	 * Check if the model has the specified tag
+	 * Check if the given string is a tag
 	 * 
 	 * @param  string $name
 	 * @return mixed
 	 */
-	public function hasTag($name)
+	public function isTag($name)
 	{
 		$model = $this->createTagsModel();
 
@@ -252,6 +252,20 @@ trait Taggable
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check if the model has the specified tag
+	 * 
+	 * @param  string $name
+	 * @return bool
+	 */
+	public function hasTag($name)
+	{
+		$tags = $this->tags->pluck('slug')->toArray();
+		$slug = $model->normalize($name);
+
+		return in_array($slug, $tags);
 	}
 
 	/**
