@@ -1119,6 +1119,7 @@ h4 {
 .icon-rotate-ccw:before {
   content: "\e8b9";
 }
+.fa-refresh:before,
 .icon-refresh:before,
 .icon-refresh-cw:before {
   content: "\e8ba";

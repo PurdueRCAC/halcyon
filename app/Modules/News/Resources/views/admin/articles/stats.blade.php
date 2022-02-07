@@ -103,7 +103,8 @@ $(document).ready(function () {
 							'rgb(75, 192, 192)', // blue green
 							'rgb(255, 159, 64)', // orange
 							'rgb(153, 102, 255)' // purple
-						]
+						],
+						borderColor: <?php echo (auth()->user()->facet('theme.admin.mode') == 'dark' ? '"rgba(0, 0, 0, 0.6)"' : '"#fff"'); ?>
 					}
 				]
 			},
@@ -171,174 +172,139 @@ app('pathway')
 		</div>
 	</fieldset>
 
-	<?php /*<div class="row">
-		<div class="col-md-4">
-			<div class="card">
-				<div class="card-body">
-					<div class="stat-block">
-						<div class="text-info">
-							<strong class="float-right">{{ config('news.currency', '$') }} {{ $stats['sold'] }}</strong>
-							<span class="fa fa-shopping-cart display-4 float-left" aria-hidden="true"></span>
-							<span class="value">{{ number_format($stats['submitted']) }}</span><br />
-							<span class="key">{{ trans('news::news.submitted') }}</span>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4">
+				<div class="card mb-3">
+					<div class="card-body">
+						<h4>Articles By Category</h4>
+						<?php
+						$cats = array();
+						foreach ($types as $type):
+							$val = $type->articles()
+								->where('datetimenews', '>=', $filters['start'] . ' 00:00:00')
+								->where('datetimenews', '<', $filters['end'] . ' 00:00:00')
+								->count();
+
+							$cats[$type->name] = $val;
+						endforeach;
+
+						$cats = array_filter($cats);
+						?>
+						<div>
+							<canvas id="news-categories" class="pie-chart" width="275" height="275" data-labels="{{ json_encode(array_keys($cats)) }}" data-values="{{ json_encode(array_values($cats)) }}">
+								<table class="table">
+									<caption class="sr-only">Orders By Category</caption>
+									<thead>
+										<tr>
+											<th scope="col">Category</th>
+											<th scope="col" class="text-right">Total</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach ($cats as $name => $val)
+										<tr>
+											<td>
+												<span class="legend-key"></span> {{ $name }}
+											</td>
+											<td class="text-right">
+												{{ number_format($val) }}
+											</td>
+										</tr>
+										@endforeach
+									</tbody>
+								</table>
+							</canvas>
 						</div>
-						@if ($stats['submitted_prev'] > $stats['submitted'])
-							<div><span class="text-danger" aria-hidden="true">&darr; {{ number_format(abs(100 - (($stats['submitted'] / $stats['submitted_prev']) * 100))) }}%</span> Down from previous period</div>
-						@elseif ($stats['submitted_prev'] == $stats['submitted'])
-							<div><span class="text-info" aria-hidden="true">&rarr;</span> Same as previous period</div>
-						@else
-						{{ $stats['submitted_prev'] }}
-							<div><span class="text-success" aria-hidden="true">&uarr; {{ $stats['submitted_prev'] ? number_format(abs(100 - (($stats['submitted'] / $stats['submitted_prev']) * 100))) : 100 }}%</span> Up from previous period</div>
-						@endif
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="col-md-4">
-			<div class="card">
-				<div class="card-body">
-					<div class="stat-block">
-						<div class="text-danger">
-							<strong class="float-right">{{ config('news.currency', '$') }} {{ $stats['uncharged'] }}</strong>
-							<span class="icon-alert-triangle display-4 float-left" aria-hidden="true"></span>
-							<span class="value">{{ number_format($stats['canceled']) }}</span><br />
-							<span class="key">{{ trans('news::news.canceled') }}</span>
-						</div>
-						@if ($stats['canceled_prev'] > $stats['canceled'])
-							<div><span class="text-success" aria-hidden="true">&darr; {{ number_format(abs(100 - (($stats['canceled'] / $stats['canceled_prev']) * 100))) }}%</span> Down from previous period</div>
-						@elseif ($stats['canceled_prev'] == $stats['canceled'])
-							<div><span class="text-info" aria-hidden="true">&rarr;</span> Same as previous period</div>
-						@else
-							<div><span class="text-danger" aria-hidden="true">&uarr; {{ $stats['canceled_prev'] ? number_format(abs(100 - (($stats['canceled'] / $stats['canceled_prev']) * 100))) : 100 }}%</span> Up from previous period</div>
-						@endif
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-4">
-			<div class="card">
-				<div class="card-body">
-					<div class="stat-block">
-						<div class="text-success">
-							<strong class="float-right">{{ config('news.currency', '$') }} {{ $stats['collected'] }}</strong>
-							<span class="fa fa-check display-4 float-left" aria-hidden="true"></span>
-							<span class="value">{{ number_format($stats['fulfilled']) }}</span><br />
-							<span class="key">{{ trans('news::news.fulfilled') }}</span>
-						</div>
-						@if ($stats['fulfilled_prev'] > $stats['fulfilled'])
-							<div><span class="text-danger" aria-hidden="true">&darr; {{ number_format(abs(100 - (($stats['fulfilled'] / $stats['fulfilled_prev']) * 100))) }}%</span> Down from previous period</div>
-						@elseif ($stats['fulfilled_prev'] == $stats['fulfilled'])
-							<div><span class="text-info" aria-hidden="true">&rarr;</span> Same as previous period</div>
-						@else
-							<div><span class="text-success" aria-hidden="true">&uarr; {{ $stats['fulfilled_prev'] ? number_format(abs(100 - (($stats['fulfilled'] / $stats['fulfilled_prev']) * 100))) : 100 }}%</span> Up from previous period</div>
-						@endif
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-md-4">
-			<div class="card mb-3">
-				<div class="card-body">
-					<h4>Avg. Time From Order Submission</h4>
-					<div class="order-process">
-						<ol>
-							<li>
-								<strong>Payment information</strong><br />
-								<span class="text-muted">{{ $stats['steps']['payment']['average'] ? $stats['steps']['payment']['average'] : '-' }}</span>
-							</li>
-							<li>
-								<strong>Approval by business office</strong><br />
-								<span class="text-muted">{{ $stats['steps']['approval']['average'] ? $stats['steps']['approval']['average'] : '-' }}</span>
-							</li>
-							<li>
-								<strong>Fulfillment</strong><br />
-								<span class="text-muted">{{ $stats['steps']['fulfilled']['average'] }}</span>
-								<span class="text-muted float-right">{{ $stats['steps']['completed']['average'] }}</span>
-							</li>
-						</ol>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-md-8">
-			<div class="card mb-3">
-				<div class="card-body">
-					<h4>New news</h4>
-					<div>
-					<canvas id="sparkline" class="sparkline-chart" width="500" height="110" data-labels="{{ json_encode(array_keys($stats['daily'])) }}" data-values="{{ json_encode(array_values($stats['daily'])) }}">
-						@foreach ($stats['daily'] as $day => $val)
-							{{ $day }}: $val<br />
-						@endforeach
-					</canvas>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-md-4">
-			<div class="card mb-3">
-				<div class="card-body">
-					<h4>Most Ordered Products</h4>
-					<table class="table">
-						<caption class="sr-only">Most Ordered Products</caption>
-						<thead>
-							<tr>
-								<th scope="col">Product</th>
-								<th scope="col">Orders</th>
-							</tr>
-						</thead>
-						<tbody>
-							@foreach ($stats['products'] as $name => $val)
-							<tr>
-								<td>
-									{{ $name }}
-								</td>
-								<td class="text-right">
-									{{ number_format($val) }}
-								</td>
-							</tr>
-							@endforeach
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>*/ ?>
-<div class="container-fluid">
-<div class="row">
-		<div class="col-md-4">
-			<div class="card mb-3">
-				<div class="card-body">
-					<h4>Articles By Category</h4>
-					<?php
-					$cats = array();
-					foreach ($types as $type):
-						$val = $type->articles()
-							->where('datetimenews', '>=', $filters['start'] . ' 00:00:00')
-							->where('datetimenews', '<', $filters['end'] . ' 00:00:00')
-							->count();
-
-						$cats[$type->name] = $val;
-					endforeach;
-
-					$cats = array_filter($cats);
+			<div class="col-md-8">
+				<?php
+				$tagusers = $types->filter(function($item)
+				{
+					return $item->tagusers == 1;
+				});
+				foreach ($tagusers as $type):
+					$stats = $type->stats(Carbon\Carbon::parse($filters['end'])->modify('-1 year')->format('Y-m-d'), $filters['end']);
 					?>
-					<div>
-						<canvas id="news-categories" class="pie-chart" width="275" height="275" data-labels="{{ json_encode(array_keys($cats)) }}" data-values="{{ json_encode(array_values($cats)) }}">
-							<table class="table">
-								<caption class="sr-only">Orders By Category</caption>
+					<h3>{{ $type->name }}</h3>
+					<div class="card mb-3">
+						<div class="card-body">
+							<h4>Daily Reservations</h4>
+							<?php /*<canvas id="sparkline" class="sparkline-chart" width="275" height="30" data-labels="{{ json_encode(array_keys($stats['daily'])) }}" data-values="{{ json_encode(array_values($stats['daily'])) }}">
+								@foreach ($stats['daily'] as $item)
+									{{ $item->timestamp }}: {{ $item->count }}<br />
+								@endforeach
+							</canvas>*/ ?>
+
+							<div id="activity{{ $type->id }}" class="heatmap" data-src="#activity_data{{ $type->id }}">
+								<input type="hidden" id="activity_data{{ $type->id }}" value="{{ json_encode($stats['daily']) }}" />
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-4">
+							<div class="card">
+								<div class="card-body">
+									<div class="stat-block">
+										<div class="text-success">
+											<span class="fa fa-check display-4 float-left" aria-hidden="true"></span>
+											<span class="value">{{ number_format($stats['reservations']) }}</span><br />
+											<span class="key">{{ trans('news::news.reservations') }}</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="card">
+								<div class="card-body">
+									<div class="stat-block">
+										<div class="text-info">
+											<span class="fa fa-refresh display-4 float-left" aria-hidden="true"></span>
+											<span class="value">{{ number_format($stats['repeat_users']) }}</span><br />
+											<span class="key">{{ trans('news::news.repeat users') }}</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="card">
+								<div class="card-body">
+									<div class="stat-block">
+										<div class="text-danger">
+											<span class="fa fa-trash display-4 float-left" aria-hidden="true"></span>
+											<span class="value">{{ number_format($stats['canceled']) }}</span><br />
+											<span class="key">{{ trans('news::news.canceled reservations') }}</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="card mb-3">
+						<div class="card-body">
+							<h4>Most Reservations</h4>
+							<table class="table table-hover">
+								<caption class="sr-only">Most Reservations</caption>
 								<thead>
 									<tr>
-										<th scope="col">Category</th>
-										<th scope="col" class="text-right">Total</th>
+										<th scope="col">Name</th>
+										<th scope="col" class="text-right">Reservations</th>
 									</tr>
 								</thead>
 								<tbody>
-									@foreach ($cats as $name => $val)
+									@foreach ($stats['users'] as $userid => $val)
+									<?php
+									$user = App\Modules\Users\Models\User::find($userid);
+									?>
 									<tr>
 										<td>
-											<span class="legend-key"></span> {{ $name }}
+											<a href="{{ route('admin.users.show', ['id' => $userid]) }}">{{ $user ? $user->name . ' (' . $user->username . ')' : $userid }}</a>
 										</td>
 										<td class="text-right">
 											{{ number_format($val) }}
@@ -347,71 +313,14 @@ app('pathway')
 									@endforeach
 								</tbody>
 							</table>
-						</canvas>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-8">
-			<?php
-			$tagusers = $types->filter(function($item)
-			{
-				return $item->tagusers == 1;
-			});
-			foreach ($tagusers as $type):
-				$stats = $type->stats(Carbon\Carbon::parse($filters['end'])->modify('-1 year')->format('Y-m-d'), $filters['end']);
-				?>
-				<h3>{{ $type->name }}</h3>
-				<div class="card mb-3">
-					<div class="card-body">
-						<h4>Daily Reservations</h4>
-						<?php /*<canvas id="sparkline" class="sparkline-chart" width="275" height="30" data-labels="{{ json_encode(array_keys($stats['daily'])) }}" data-values="{{ json_encode(array_values($stats['daily'])) }}">
-							@foreach ($stats['daily'] as $item)
-								{{ $item->timestamp }}: {{ $item->count }}<br />
-							@endforeach
-						</canvas>*/ ?>
-
-						<div id="activity{{ $type->id }}" class="heatmap" data-src="#activity_data{{ $type->id }}">
-							<input type="hidden" id="activity_data{{ $type->id }}" value="{{ json_encode($stats['daily']) }}" />
 						</div>
 					</div>
-				</div>
+					<?php
+				endforeach;
+				?>
+			</div>
 
-				<div class="card mb-3">
-					<div class="card-body">
-						<h4>Most Reservations</h4>
-						<table class="table">
-							<caption class="sr-only">Most Reservations</caption>
-							<thead>
-								<tr>
-									<th scope="col">Name</th>
-									<th scope="col" class="text-right">Reservations</th>
-								</tr>
-							</thead>
-							<tbody>
-								@foreach ($stats['users'] as $userid => $val)
-								<?php
-								$user = App\Modules\Users\Models\User::find($userid);
-								?>
-								<tr>
-									<td>
-										<a href="{{ route('admin.users.show', ['id' => $userid]) }}">{{ $user ? $user->name . ' (' . $user->username . ')' : $userid }}</a>
-									</td>
-									<td class="text-right">
-										{{ number_format($val) }}
-									</td>
-								</tr>
-								@endforeach
-							</tbody>
-						</table>
-					</div>
-				</div>
-				<?php
-			endforeach;
-			?>
 		</div>
-
-	</div>
 	</div>
 
 	@csrf

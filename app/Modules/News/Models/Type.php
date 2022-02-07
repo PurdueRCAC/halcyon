@@ -285,6 +285,8 @@ class Type extends Model
 			//->groupBy($s . '.associd')
 			->get();
 
+		$stats['reservations'] = count($assocs);
+
 		$dates = array();
 		$users = array();
 		foreach ($assocs as $user)
@@ -306,6 +308,8 @@ class Type extends Model
 			$users[$user->associd]++;
 		}
 
+		$repeat_users = count($users);
+
 		arsort($users);
 
 		foreach ($dates as $dt => $c)
@@ -317,7 +321,21 @@ class Type extends Model
 			$placed[] = $item;
 		}
 
+		$canceled = Association::query()
+			->withTrashed()
+			->select($s . '.newsid', $s . '.associd', $a . '.datetimenews', $a . '.datetimenewsend')
+			->join($a, $a . '.id', $s . '.newsid')
+			->where($a . '.newstypeid', '=', $this->id)
+			->where($s . '.assoctype', '=', 'user')
+			->where($a . '.datetimenews', '>=', $start->format('Y-m-d') . ' 00:00:00')
+			->where($a . '.datetimenewsend', '<', $stop->format('Y-m-d') . ' 00:00:00')
+			->whereNotNull($s . '.datetimeremoved')
+			->count();
+
 		$stats = array(
+			'reservations' => count($assocs),
+			'repeat_users' => $repeat_users,
+			'canceled' => $canceled,
 			'daily' => $placed,
 			'users' => array_slice($users, 0, 10, true),
 		);
