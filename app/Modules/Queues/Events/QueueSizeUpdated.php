@@ -4,7 +4,7 @@ namespace App\Modules\Queues\Events;
 
 use App\Modules\Queues\Models\Size;
 
-class QueueSizeDeleted
+class QueueSizeUpdated
 {
 	/**
 	 * @var Size

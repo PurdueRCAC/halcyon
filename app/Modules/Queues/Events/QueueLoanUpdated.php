@@ -4,7 +4,7 @@ namespace App\Modules\Queues\Events;
 
 use App\Modules\Queues\Models\Loan;
 
-class QueueLoanCreated
+class QueueLoanUpdated
 {
 	/**
 	 * @var Loan

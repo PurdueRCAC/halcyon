@@ -2,23 +2,23 @@
 
 namespace App\Modules\Queues\Events;
 
-use App\Modules\Queues\Models\Queue;
+use App\Modules\Queues\Models\Loan;
 
-class QueueDeleted
+class QueueLoanDeleted
 {
 	/**
-	 * @var Queue
+	 * @var Loan
 	 */
-	public $queue;
+	public $loan;
 
 	/**
 	 * Constructor
 	 *
-	 * @param  Queue $queue
+	 * @param  Loan $loan
 	 * @return void
 	 */
-	public function __construct(Queue $queue)
+	public function __construct(Loan $loan)
 	{
-		$this->queue = $queue;
+		$this->loan = $loan;
 	}
 }

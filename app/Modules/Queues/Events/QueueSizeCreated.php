@@ -2,23 +2,23 @@
 
 namespace App\Modules\Queues\Events;
 
-use App\Modules\Queues\Models\Queue;
+use App\Modules\Queues\Models\Size;
 
-class QueueCreated
+class QueueSizeCreated
 {
 	/**
-	 * @var Queue
+	 * @var Size
 	 */
-	public $queue;
+	public $size;
 
 	/**
 	 * Constructor
 	 *
-	 * @param  Queue $queue
+	 * @param  Size $size
 	 * @return void
 	 */
-	public function __construct(Queue $queue)
+	public function __construct(Size $size)
 	{
-		$this->queue = $queue;
+		$this->size = $size;
 	}
 }
