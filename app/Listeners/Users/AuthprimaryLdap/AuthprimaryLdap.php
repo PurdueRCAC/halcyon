@@ -467,10 +467,10 @@ class AuthprimaryLdap
 		}
 
 		$userDns = array();
-			foreach ($user->facets()->where('key', '=', 'x-xsede-userDn')->get() as $facet)
-			{
-				$userDns[] = $facet->value;
-			}
+		foreach ($user->facets()->where('key', '=', 'x-xsede-userDn')->get() as $facet)
+		{
+			$userDns[] = $facet->value;
+		}
 
 		//$results = array();
 		$status = 200;
@@ -525,6 +525,26 @@ class AuthprimaryLdap
 
 				$results['created'] = $data;
 				$status = 201;
+			}
+			else
+			{
+				// Update user record in ou=allPeople
+				$result->setAttribute('cn', $user->name);
+				$result->setAttribute('sn', $user->surname);
+				$result->setAttribute('loginShell', $user->loginShell);
+				$result->setAttribute('homeDirectory', '/home/' . $user->username);
+
+				if (!$result->save())
+				{
+					throw new Exception('Failed to update AuthPrimary ou=allPeople record', 500);
+				}
+
+				$results['updated'] = [
+					'cn' => $user->name,
+					'sn' => $user->surname,
+					'loginShell' => $user->loginShell,
+					'homeDirectory' => '/home/' . $user->username
+				];
 			}
 
 			// Check for an existing record in the ou=People (i.e., authorized) tree
