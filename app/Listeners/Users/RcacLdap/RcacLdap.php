@@ -808,11 +808,6 @@ class RcacLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$q = array(
-			'where' => $where,
-			'or' => $orwhere,
-		);
-
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, json_encode($q));
+		$this->log('ldap', __METHOD__, 'GET', $status, $results, json_encode($query));
 	}
 }
