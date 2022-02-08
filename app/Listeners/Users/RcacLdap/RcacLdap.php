@@ -727,9 +727,8 @@ class RcacLdap
 		}
 
 		$criteria = $event->criteria;
-		$where    = [];
-		$orwhere  = [];
-		$results  = array();
+		$query = [];
+		$results = array();
 
 		foreach ($criteria as $key => $val)
 		{
@@ -739,50 +738,27 @@ class RcacLdap
 				case 'organization_id':
 					// `employeeNumber` needs to be 10 digits in length for the query to work
 					//    ex: 12345678 -> 0012345678
-					if (is_array($val))
-					{
-						foreach ($val as $j => $v)
-						{
-							$val[$j] = str_pad($v, 10, '0', STR_PAD_LEFT);
-						}
-					}
-					else
-					{
-						$val = str_pad($val, 10, '0', STR_PAD_LEFT);
-					}
-
-					$key = 'employeeNumber';
+					$val = str_pad($val, 10, '0', STR_PAD_LEFT);
+					$query[] = ['employeeNumber', '=', $val];
 				break;
 
 				case 'uid':
 				case 'username':
-					$key = 'uid';
+					$query[] = ['uid', '=', $val];
 				break;
 
 				case 'host':
-					$key = 'host';
+					$query[] = [$key, '=', $val];
 				break;
 
 				case 'name':
 				default:
-					$key = 'cn';
+					$query[] = ['cn', '=', $val];
 				break;
-			}
-
-			if (is_array($val))
-			{
-				foreach ($val as $v)
-				{
-					$orwhere[] = [$key, '=', $v];
-				}
-			}
-			else
-			{
-				$where[] = [$key, '=', $val];
 			}
 		}
 
-		if (empty($where) && empty($orwhere))
+		if (empty($query))
 		{
 			return;
 		}
@@ -794,22 +770,8 @@ class RcacLdap
 			$status = 404;
 
 			// Performing a query.
-			$query = $ldap->search();
-
-			if (!empty($where))
-			{
-				$query->where($where);
-			}
-
-			if (!empty($orwhere))
-			{
-				foreach ($orwhere as $or)
-				{
-					$query->orWhere($or[0], $or[1], $or[2]);
-				}
-			}
-
-			$data = $query
+			$data = $ldap->search()
+				->where($query)
 				->select(['cn', 'uid', 'uidNumber', 'mailHost'])
 				->get();
 
