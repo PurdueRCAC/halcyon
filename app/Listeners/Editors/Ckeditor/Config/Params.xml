@@ -32,6 +32,7 @@
 				<option value="0">global.no</option>
 				<option value="1">global.yes</option>
 			</field>
+			<field name="contentCss" type="textarea" rows="5" cols="35" default="modules/core/vendor/bootstrap/bootstrap.min.css" label="Styles to include" description="URL to a stylehseet to include when editing content" />
 			<!--<field name="skin" type="list" default="0" description="Editor Skin" label="Editor Skin">
 				<option value="moono">Moono</option>
 				<option value="moonocolor">Moono Color</option>

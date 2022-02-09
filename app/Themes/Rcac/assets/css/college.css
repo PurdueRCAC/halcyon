@@ -10356,6 +10356,7 @@ a.text-dark:hover, a.text-dark:focus {
 */
 
 html {
+  height: 100%;
 	background-color: #3b3b3b;
 	color: #ccc;
 	font-size: 95%;

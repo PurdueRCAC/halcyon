@@ -2522,9 +2522,13 @@ html div.dataTables_wrapper div.dataTables_info{
 	text-align: right;
 }
 
+body.ckeditor-body {
+	padding: 1em;
+}
+
 /* [!] Day of Giving */
 .dayofgiving {
-	background-color: #333;
+	background-color: rgb(53, 45, 45);
 	position: relative;
 	font-family: acumin-pro-semi-condensed, "Franklin Gothic", sans-serif;
 	color: #fff;

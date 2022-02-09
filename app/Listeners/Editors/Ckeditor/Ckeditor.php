@@ -69,7 +69,7 @@ class Ckeditor
 		$cls = explode(' ', $attr['class']);
 		$cls = array_map('trim', $cls);
 
-		$params = new Repository(config('listeners.editors.ckeditor', []));
+		$params = new Repository(config('listener.editors.ckeditor', []));
 		$params->set('class', $cls);
 		$params->set('height', (18 * intval($attr['rows'])) . 'px');
 
@@ -120,9 +120,17 @@ class Ckeditor
 		$config->scayt_moreSuggestions         = 'off';
 		$config->bodyClass                     = 'ckeditor-body';
 		$config->contentsCss                   = [
-			asset('modules/core/vendor/bootstrap/bootstrap.min.css') . '?v=' . filemtime(public_path() . '/modules/core/vendor/bootstrap/bootstrap.min.css'),
-			asset('listeners/editors/ckeditor/css/contents.css') . '?v=' . filemtime(public_path() . '/listeners/editors/ckeditor/css/contents.css')
+			//asset('modules/core/vendor/bootstrap/bootstrap.min.css') . '?v=' . filemtime(public_path() . '/modules/core/vendor/bootstrap/bootstrap.min.css'),
+			//asset('listeners/editors/ckeditor/css/contents.css') . '?v=' . filemtime(public_path() . '/listeners/editors/ckeditor/css/contents.css')
 		];
+		if ($css = $params->get('contentCss'))
+		{
+			$css = explode("\n", $css);
+			foreach ($css as $c)
+			{
+				$config->contentsCss[] = $c . '?t=' . time();
+			}
+		}
 		//$config->templates                     = array('halcyon');
 		//$config->templates_files               = array(public_path() . '/listeners/editors/ckeditor/assets/templates/halcyon.js');
 		$config->templates_replaceContent      = false;
