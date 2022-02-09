@@ -24,7 +24,7 @@
 					<tr>
 						<th scope="col">{{ trans('groups::groups.history.date') }}</th>
 						<th scope="col">{{ trans('groups::groups.history.time') }}</th>
-						<th scope="col">{{ trans('groups::groups.history.manager') }}</th>
+						<th scope="col">{{ trans('groups::groups.history.actor') }}</th>
 						<th scope="col">{{ trans('groups::groups.history.user') }}</th>
 						<th scope="col">{{ trans('groups::groups.history.action taken') }}</th>
 					</tr>

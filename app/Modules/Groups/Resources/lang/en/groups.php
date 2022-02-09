@@ -54,6 +54,7 @@ return [
 		'title' => 'History',
 		'date' => 'Date',
 		'time' => 'Time',
+		'actor' => 'Actor',
 		'manager' => 'Manager',
 		'user' => 'User',
 		'action taken' => 'Action taken',

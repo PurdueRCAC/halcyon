@@ -24,7 +24,7 @@ if (count($l))
 			<tr>
 				<th scope="col">Date</th>
 				<th scope="col">Time</th>
-				<th scope="col">Manager</th>
+				<th scope="col">Actor</th>
 				<th scope="col">User</th>
 				<th scope="col">Action Taken</th>
 			</tr>
