@@ -3589,7 +3589,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				.split(/[\s,.;]+/)
 				.length;
 
-			if (!post['comment'] || words < 3) {
+			if (!post['comment'] || words < 1) {
 				$(el.attr('data-comment')).addClass('is-invalid');
 				el.parent().append('<span class="alert alert-danger">Please provide a comment.</span>');
 				return;
