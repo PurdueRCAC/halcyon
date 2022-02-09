@@ -272,10 +272,10 @@ $i = 0;
 									endforeach;
 								endif;
 								?>
-								<input type="radio" name="approve{{ $i }}" class="approve-request approve-value0" data-api="{{ implode(',', $approves) }}" value="{{ $req->userid }},0" />
+								<input type="radio" name="approve{{ $i }}" class="approve-request approve-value0" data-groupid="{{ $group->id }}" data-api="{{ implode(',', $approves) }}" value="{{ $req->userid }},0" />
 							</td>
 							<td class="text-center">
-								<input type="radio" name="approve{{ $i }}" class="approve-request approve-value1" data-api="{{ implode(',', $denies) }}" value="{{ $req->userid }},1" />
+								<input type="radio" name="approve{{ $i }}" class="approve-request approve-value1" data-groupid="{{ $group->id }}" data-api="{{ implode(',', $denies) }}" value="{{ $req->userid }},1" />
 							</td>
 						</tr>
 					@endforeach
