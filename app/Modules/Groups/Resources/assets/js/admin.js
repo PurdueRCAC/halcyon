@@ -63,7 +63,7 @@ function checkprocessed(processed, pending) {
 /**
  * Initiate event hooks
  */
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 	if ($.fn.select2) {
 		$('.searchable-select').select2();
 	}
@@ -78,11 +78,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
-	$('#main').on('change', '.membertype', function(){
+	$('#main').on('change', '.membertype', function () {
 		$.ajax({
 			url: $(this).data('api'),
 			type: 'put',
-			data: {membertype: $(this).val()},
+			data: { membertype: $(this).val() },
 			dataType: 'json',
 			async: false,
 			success: function () {
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
-	$('.input-unixgroup').on('keyup', function (){
+	$('.input-unixgroup').on('keyup', function () {
 		var val = $(this).val();
 
 		val = val.toLowerCase()
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		$(this).val(val);
 	});
 
-	$('.create-default-unix-groups').on('click', function(e) {
+	$('.create-default-unix-groups').on('click', function (e) {
 		e.preventDefault();
 
 		$(this).find('.spinner-border').removeClass('d-none');
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		CreateNewGroupVal(0, $(this), parseInt($(this).data('all-groups')));
 	});
 
-	$('.add-category').on('click', function(e){
+	$('.add-category').on('click', function (e) {
 		e.preventDefault();
 
 		var select = $($(this).attr('href'));
@@ -123,18 +123,18 @@ document.addEventListener('DOMContentLoaded', function() {
 			url: btn.data('api'),
 			type: 'post',
 			data: {
-				'groupid' : btn.data('group'),
-				[select.data('category')] : select.val()
+				'groupid': btn.data('group'),
+				[select.data('category')]: select.val()
 			},
 			dataType: 'json',
 			async: false,
-			success: function(response) {
+			success: function (response) {
 				Halcyon.message('success', 'Item added');
 
 				var c = select.closest('table');
 				var li = c.find('tr.hidden');
 
-				if (typeof(li) !== 'undefined') {
+				if (typeof (li) !== 'undefined') {
 					var template = $(li)
 						.clone()
 						.removeClass('hidden');
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
 						.data('id', response.id);
 
-					template.find('a').each(function(i, el){
+					template.find('a').each(function (i, el) {
 						$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.id));
 					});
 
@@ -157,13 +157,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 				select.val(0);
 			},
-			error: function(xhr) {
+			error: function (xhr) {
 				Halcyon.message('danger', xhr.responseJSON.message);
 			}
 		});
 	});
 
-	$('#main').on('click', '.remove-category', function(e){
+	$('#main').on('click', '.remove-category', function (e) {
 		e.preventDefault();
 
 		var result = confirm($(this).data('confirm'));
@@ -177,18 +177,18 @@ document.addEventListener('DOMContentLoaded', function() {
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function() {
+				success: function () {
 					Halcyon.message('success', 'Item removed');
 					field.remove();
 				},
-				error: function(xhr) {
+				error: function (xhr) {
 					Halcyon.message('danger', xhr.responseJSON.message);
 				}
 			});
 		}
 	});
 
-	$('.add-unixgroup').on('click', function(e){
+	$('.add-unixgroup').on('click', function (e) {
 		e.preventDefault();
 
 		var name = $($(this).attr('href'));
@@ -199,18 +199,18 @@ document.addEventListener('DOMContentLoaded', function() {
 			url: btn.data('api'),
 			type: 'post',
 			data: {
-				'groupid' : btn.data('group'),
-				'longname' : name.val()
+				'groupid': btn.data('group'),
+				'longname': name.val()
 			},
 			dataType: 'json',
 			async: false,
-			success: function(response) {
+			success: function (response) {
 				Halcyon.message('success', 'Item added');
 
 				var c = name.closest('table');
 				var li = c.find('tr.hidden');
 
-				if (typeof(li) !== 'undefined') {
+				if (typeof (li) !== 'undefined') {
 					var template = $(li)
 						.clone()
 						.removeClass('hidden');
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
 						.data('id', response.id);
 
-					template.find('a').each(function(i, el){
+					template.find('a').each(function (i, el) {
 						$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.id));
 					});
 
@@ -234,13 +234,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 				name.val('');
 			},
-			error: function(xhr) {
+			error: function (xhr) {
 				Halcyon.message('danger', xhr.responseJSON.message);
 			}
 		});
 	});
 
-	$('#main').on('click', '.remove-unixgroup', function(e){
+	$('#main').on('click', '.remove-unixgroup', function (e) {
 		e.preventDefault();
 
 		var result = confirm($(this).data('confirm'));
@@ -254,11 +254,11 @@ document.addEventListener('DOMContentLoaded', function() {
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function() {
+				success: function () {
 					Halcyon.message('success', 'Item removed');
 					field.remove();
 				},
-				error: function(xhr) {
+				error: function (xhr) {
 					Halcyon.message('danger', xhr.responseJSON.message);
 				}
 			});
@@ -380,85 +380,85 @@ document.addEventListener('DOMContentLoaded', function() {
 	//$('a.tab').on('shown.bs.tab', function(e){
 	var inited = false;
 	//$('.tabs').on("tabsactivate", function (event, ui) {
-		if ($('.datatable').length && !inited) {
-			$('.datatable').DataTable({
-				pageLength: 20,
-				pagingType: 'numbers',
-				info: false,
-				ordering: false,
-				lengthChange: false,
-				scrollX: true,
-				//autoWidth: false,
-				language: {
-					searchPlaceholder: "Filter users...",
-					search: "_INPUT_",
-				},
-				fixedColumns: {
-					leftColumns: 1
-				},
-				initComplete: function () {
-					$($.fn.dataTable.tables(true)).css('width', '100%');
+	if ($('.datatable').length && !inited) {
+		$('.datatable').DataTable({
+			pageLength: 20,
+			pagingType: 'numbers',
+			info: false,
+			ordering: false,
+			lengthChange: false,
+			scrollX: true,
+			//autoWidth: false,
+			language: {
+				searchPlaceholder: "Filter users...",
+				search: "_INPUT_",
+			},
+			fixedColumns: {
+				leftColumns: 1
+			},
+			initComplete: function () {
+				$($.fn.dataTable.tables(true)).css('width', '100%');
 
-					var table = this;
-					this.api().columns().every(function (i) {
-						if (i < 2) {
+				var table = this;
+				this.api().columns().every(function (i) {
+					if (i < 2) {
+						return;
+					}
+					var column = this;
+					var select = $('<select class="data-col-filter" data-index="' + i + '"><option value="all">- All -</option><option value="selected">Selected</option><option value="not-selected">Not selected</option></select><br />');
+					select.prependTo($(column.header()));
+				});
+
+				$('.data-col-filter').on('change', function () {
+					$.fn.dataTable.ext.search = [];//.pop();
+
+					$('.data-col-filter').each(function (k, el) {
+						var val = $(el).val(),
+							index = $(el).data('index');
+
+						// If all records should be displayed
+						if (val === 'all') {
 							return;
 						}
-						var column = this;
-						var select = $('<select class="data-col-filter" data-index="' + i + '"><option value="all">- All -</option><option value="selected">Selected</option><option value="not-selected">Not selected</option></select><br />');
-							select.prependTo($(column.header()));
+
+						// If selected records should be displayed
+						if (val === 'selected') {
+							$.fn.dataTable.ext.search.push(
+								function (settings, data, dataIndex) {
+									var has = $(table
+										.api()
+										.cell(dataIndex, index)
+										.node())
+										.find(':checked').length;
+
+									return has ? true : false;
+								}
+							);
+						}
+
+						// If selected records should not be displayed
+						if (val === 'not-selected') {
+							$.fn.dataTable.ext.search.push(
+								function (settings, data, dataIndex) {
+									var has = $(table
+										.api()
+										.cell(dataIndex, index)
+										.node())
+										.find(':checked').length;
+
+									return has ? false : true;
+								}
+							);
+						}
 					});
 
-					$('.data-col-filter').on('change', function () {
-						$.fn.dataTable.ext.search = [];//.pop();
+					table.api().draw();
+				});
+			}
+		});
 
-						$('.data-col-filter').each(function (k, el) {
-							var val = $(el).val(),
-								index = $(el).data('index');
-
-							// If all records should be displayed
-							if (val === 'all') {
-								return;
-							}
-
-							// If selected records should be displayed
-							if (val === 'selected') {
-								$.fn.dataTable.ext.search.push(
-									function (settings, data, dataIndex) {
-										var has = $(table
-											.api()
-											.cell(dataIndex, index)
-											.node())
-											.find(':checked').length;
-
-										return has ? true : false;
-									}
-								);
-							}
-
-							// If selected records should not be displayed
-							if (val === 'not-selected') {
-								$.fn.dataTable.ext.search.push(
-									function (settings, data, dataIndex) {
-										var has = $(table
-											.api()
-											.cell(dataIndex, index)
-											.node())
-											.find(':checked').length;
-
-										return has ? false : true;
-									}
-								);
-							}
-						});
-
-						table.api().draw();
-					});
-				}
-			});
-
-			inited = true;
-		}
+		inited = true;
+	}
 	//});
 
 	// [!] Fix dropdowns in datatables getting cut off if there is only one row
@@ -581,6 +581,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							type: 'post',
 							data: {
 								'userid': userid,
+								'groupid': btn.data('group'),
 								'queueid': checkbox.value,
 							},
 							dataType: 'json',
@@ -590,13 +591,12 @@ document.addEventListener('DOMContentLoaded', function() {
 								checkprocessed(processed, pending);
 							},
 							error: function (xhr) {
-								//Halcyon.message('danger', xhr.response);
-								alert(xhr.responseJSON.message);
+								Halcyon.message('danger', xhr.responseJSON.message);
+
 								processed['queues']++;
 								checkprocessed(processed, pending);
 							}
 						});
-						console.log(btn.data('api-queueusers'));
 					});
 
 					unixgroups.each(function (k, checkbox) {
@@ -605,7 +605,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							type: 'post',
 							data: {
 								'userid': userid,
-								//'groupid': btn.data('group'),
+								'groupid': btn.data('group'),
 								'unixgroupid': checkbox.value
 							},
 							dataType: 'json',
@@ -615,18 +615,16 @@ document.addEventListener('DOMContentLoaded', function() {
 								checkprocessed(processed, pending);
 							},
 							error: function (xhr) {
-								//Halcyon.message('danger', xhr.response);
-								alert(xhr.responseJSON.message);
+								Halcyon.message('danger', xhr.responseJSON.message);
+
 								processed['unixgroups']++;
 								checkprocessed(processed, pending);
 							}
 						});
-						console.log(btn.data('api-unixgroupusers'));
 					});
 				},
 				error: function (xhr) {
-					//Halcyon.message('danger', xhr.response);
-					alert(xhr.responseJSON.message);
+					Halcyon.message('danger', xhr.responseJSON.message);
 				}
 			});
 		});
@@ -707,19 +705,29 @@ document.addEventListener('DOMContentLoaded', function() {
 	$('body').on('change', '.membership-toggle', function (e) {
 		e.preventDefault();
 
-		if ($(this).is(':checked')) {
+		var bx = $(this);
+
+		if (bx.is(':checked')) {
+			if (bx.attr('data-base') && bx.attr('data-base') != bx.attr('id')) {
+				$('#' + bx.attr('data-base'))
+					.prop('checked', true)
+					.attr('checked', 'checked')
+					.prop('disabled', true)
+					.trigger('change');
+			}
+
 			var post = {
-				userid: $(this).data('userid')
+				userid: bx.data('userid')
 			};
+			post['groupid'] = $('#groupid').val();
 			if ($(this).hasClass('queue-toggle')) {
-				post['groupid'] = $('#groupid').val();
-				post['queueid'] = $(this).data('objectid');
+				post['queueid'] = bx.data('objectid');
 			} else {
-				post['unixgroupid'] = $(this).data('objectid');
+				post['unixgroupid'] = bx.data('objectid');
 			}
 
 			$.ajax({
-				url: $(this).data('api'),
+				url: bx.data('api'),
 				type: 'post',
 				data: post,
 				dataType: 'json',
@@ -736,7 +744,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		} else {
 			$.ajax({
-				url: $(this).data('api'),
+				url: bx.data('api'),
 				type: 'delete',
 				dataType: 'json',
 				async: false,

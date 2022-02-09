@@ -153,6 +153,7 @@ $unixgroups = $group->unixgroups()
 	->get();
 
 $group_boxes = 0;
+$base = null;
 foreach ($unixgroups as $unixgroup)
 {
 	// Shortname is only defined when queue is actually a unix group
@@ -160,6 +161,11 @@ foreach ($unixgroups as $unixgroup)
 	if (!preg_match("/rcs[0-9]{4}0/", $unixgroup->shortname))
 	{
 		$group_boxes++;
+	}
+
+	if ($unixgroup->longname == $group->unixgroup)
+	{
+		$base = $unixgroup->id;
 	}
 
 	$users = $unixgroup->members()
@@ -216,6 +222,7 @@ foreach ($unixgroups as $unixgroup)
 
 $managers = $managers->sortBy('username');
 $members = $members->sortBy('username');
+$i = 0;
 ?>
 <div class="row mb-3">
 	<div class="col-md-6">
@@ -406,10 +413,11 @@ $members = $members->sortBy('username');
 							$csv[] = $checked ? 'yes' : 'no';
 							?>
 							<td class="col-queue text-nowrap text-center">
-								<span class="form-check">
+								<span class="form-chec">
 								<input type="checkbox"
 									class="membership-toggle queue-toggle form-check-input"
 									name="queue[{{ $queue->id }}]"{!! $checked !!}
+									data-base="unix-{{ $i }}-{{ $base }}"
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $queue->id }}"
 									data-api-create="{{ route('api.queues.users.create') }}"
@@ -443,10 +451,12 @@ $members = $members->sortBy('username');
 							endif;
 							?>
 							<td class="col-unixgroup text-nowrap text-center">
-								<span class="form-check">
+								<span class="form-chec">
 								<input type="checkbox"
 									class="membership-toggle unixgroup-toggle form-check-input"
 									name="unix[{{ $unix->id }}]"{{ $checked }}
+									id="unix-{{ $i }}-{{ $unix->id }}"
+									data-base="unix-{{ $i }}-{{ $base }}"
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $unix->id }}"
 									data-api-create="{{ route('api.unixgroups.members.create') }}"
@@ -458,6 +468,7 @@ $members = $members->sortBy('username');
 							<?php
 						endforeach;
 						$csv_data[] = $csv;
+						$i++;
 						?>
 					</tr>
 				@endforeach
@@ -566,11 +577,12 @@ $members = $members->sortBy('username');
 								$csv[] = $checked ? 'yes' : 'no';
 								?>
 								<td class="text-center col-queue">
-									<span class="form-check">
+									<span class="form-chec">
 									<input type="checkbox"
 										class="membership-toggle queue-toggle form-check-input"
 										id="queue-{{ $queue->id }}"
 										name="queue[{{ $queue->id }}]"{{ $checked }}
+										data-base="unix-{{ $i }}-{{ $base }}"
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $queue->id }}"
 										data-api-create="{{ route('api.queues.users.create') }}"
@@ -602,22 +614,24 @@ $members = $members->sortBy('username');
 								endif;
 								?>
 								<td class="text-center col-unixgroup">
-									<span class="form-check">
+									<span class="form-chec">
 									<input type="checkbox"
 										class="membership-toggle unixgroup-toggle form-check-input"
-										id="unix-{{ $unix->id }}"
 										name="unix[{{ $unix->id }}]"{{ $checked }}
+										id="unix-{{ $i }}-{{ $unix->id }}"
+										data-base="unix-{{ $i }}-{{ $base }}"
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $unix->id }}"
 										data-api-create="{{ route('api.unixgroups.members.create') }}"
 										data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
 										value="1" />
-									<label for="unix-{{ $unix->id }}" class="form-check-label"><span class="sr-only">{{ $unix->name }}</span></label>
+									<label for="unix-{{ $i }}-{{ $unix->id }}" class="form-check-label"><span class="sr-only">{{ $unix->name }}</span></label>
 									</span>
 								</td>
 								<?php
 							endforeach;
 							$csv_data[] = $csv;
+							$i++;
 							?>
 						</tr>
 					@endforeach
@@ -719,11 +733,12 @@ $members = $members->sortBy('username');
 							$csv[] = $checked ? 'yes' : 'no';
 							?>
 							<td class="text-center col-queue">
-								<span class="form-check">
+								<span class="form-chec">
 								<input type="checkbox"
 									class="membership-toggle queue-toggle form-check-input"
 									id="queue-{{ $queue->id }}"
 									name="queue[{{ $queue->id }}]"{{ $checked }}
+									data-base="unix-{{ $i }}-{{ $base }}"
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $queue->id }}"
 									data-api-create="{{ route('api.queues.users.create') }}"
@@ -753,22 +768,24 @@ $members = $members->sortBy('username');
 							endif;
 							?>
 							<td class="text-center col-unixgroup">
-								<span class="form-check">
+								<span class="form-chec">
 								<input type="checkbox"
 									class="membership-toggle unixgroup-toggle form-check-input"
-									id="unix-{{ $unix->id }}"
 									name="unix[{{ $unix->id }}]"{{ $checked }}
+									id="unix-{{ $i }}-{{ $unix->id }}"
+									data-base="unix-{{ $i }}-{{ $base }}"
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $unix->id }}"
 									data-api-create="{{ route('api.unixgroups.members.create') }}"
 									data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
 									value="1" />
-								<label for="unix-{{ $unix->id }}" class="form-check-label"><span class="sr-only">{{ $unix->name }}</span></label>
+								<label for="unix-{{ $i }}-{{ $unix->id }}" class="form-check-label"><span class="sr-only">{{ $unix->name }}</span></label>
 								</span>
 							</td>
 							<?php
 						endforeach;
 						$csv_data[] = $csv;
+						$i++;
 						?>
 					</tr>
 				@endforeach
@@ -856,10 +873,11 @@ $members = $members->sortBy('username');
 								$csv[] = $checked ? 'yes' : 'no';
 								?>
 								<td class="text-center col-queue">
-									<span class="form-check">
+									<span class="form-chec">
 									<input type="checkbox"
 										class="membership-toggle queue-toggle form-check-input"
 										name="queue[{{ $queue->id }}]"{{ $checked }}
+										data-base="unix-{{ $i }}-{{ $base }}"
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $queue->id }}"
 										data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
@@ -885,21 +903,24 @@ $members = $members->sortBy('username');
 								$csv[] = $checked ? 'yes' : 'no';
 								?>
 								<td class="text-center col-unixgroup">
-									<span class="form-check">
+									<span class="form-chec">
 									<input type="checkbox"
 										class="membership-toggle unixgroup-toggle form-check-input"
 										name="unix[{{ $unix->id }}]"{{ $checked }}
+										id="unix-{{ $i }}-{{ $unix->id }}"
+										data-base="unix-{{ $i }}-{{ $base }}"
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $unix->groupid }}"
 										data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
 										disabled="disabled"
 										value="1" />
-									<label for="unix-{{ $unix->id }}" class="form-check-label"><span class="sr-only">{{ $unix->name }}</span></label>
+									<label for="unix-{{ $i }}-{{ $unix->id }}" class="form-check-label"><span class="sr-only">{{ $unix->name }}</span></label>
 									</span>
 								</td>
 								<?php
 							endforeach;
 							$csv_data[] = $csv;
+							$i++;
 							?>
 							<td class="text-right text-nowrap">
 								<a href="#member{{ $member->id }}" class="membership-remove delete tip" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group"><span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">Remove from group</span></a>
@@ -969,8 +990,8 @@ $members = $members->sortBy('username');
 						<div class="col-sm-4 unixData">
 							<div class="form-group">
 							<div class="form-check">
-								<input type="checkbox" class="form-check-input add-unixgroup-member" name="unixgroup[]" id="unixgroup{{ $name->id }}" value="{{ $name->id }}" />
-								<label class="form-check-label" for="unixgroup{{ $name->id }}">{{ $name->longname }}</label>
+								<input type="checkbox" data-base="unixgroup-{{ $base }}" class="form-check-input add-unixgroup-member" name="unixgroup[]" id="unixgroup-{{ $name->id }}" value="{{ $name->id }}" />
+								<label class="form-check-label" for="unixgroup-{{ $name->id }}">{{ $name->longname }}</label>
 							</div>
 							</div>
 						</div>

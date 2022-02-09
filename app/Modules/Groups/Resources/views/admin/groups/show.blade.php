@@ -202,5 +202,5 @@ app('pathway')
 		</div>
 	</div>
 
-	<input type="hidden" name="id" value="{{ $row->id }}" />
+	<input type="hidden" name="id" id="groupid" value="{{ $row->id }}" />
 @stop
