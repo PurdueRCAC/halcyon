@@ -10,13 +10,12 @@ use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User as Member;
 use App\Modules\Queues\Models\GroupUser;
 use App\Modules\Queues\Models\UserRequest;
-use App\Modules\Resources\Models\Child;
+use App\Modules\Queues\Events\UserRequestUpdated;
 use App\Modules\Queues\Http\Resources\UserRequestResource;
 use App\Modules\Queues\Http\Resources\UserRequestResourceCollection;
+use App\Modules\Resources\Models\Child;
 use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Resources\Events\ResourceMemberStatus;
-//use Illuminate\Http\Resources\Json\JsonResource;
-//use Illuminate\Http\Resources\Json\ResourceCollection;
 
 /**
  * Queue User Requests
@@ -475,11 +474,11 @@ class UserRequestsController extends Controller
 
 		if (!count($queueusers))
 		{
-			$gu = (new GroupMember)->getTable();
+			$gu = (new GroupUser)->getTable();
 
-			$queueusers = GroupMember::query()
-				->select($gu . '.*', $q . '.groupid')
-				->join($q, $q . '.id', $gu . '.queueid')
+			$queueusers = GroupUser::query()
+				->select($gu . '.*')
+				->join($u, $u . '.id', $gu . '.queueuserid')
 				->where($gu . '.userrequestid', '=', $id)
 				->wherePendingRequest()
 				->get();
@@ -510,6 +509,8 @@ class UserRequestsController extends Controller
 				event($resourcemember = new ResourceMemberCreated($queueuser->queue->scheduler->resource, $queueuser->user));
 			}
 		}
+
+		event(new UserRequestUpdated($row));
 
 		return new UserRequestResource($row);
 	}

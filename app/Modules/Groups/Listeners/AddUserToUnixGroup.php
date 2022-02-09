@@ -3,6 +3,9 @@
 namespace App\Modules\Groups\Listeners;
 
 use App\Modules\Queues\Events\UserRequestUpdated;
+use App\Modules\Queues\Models\Queue;
+use App\Modules\Queues\Models\User as QueueUser;
+use App\Modules\Queues\Models\GroupUser;
 use App\Modules\Groups\Models\UnixGroupMember;
 
 /**
@@ -34,34 +37,72 @@ class AddUserToUnixGroup
 			return;
 		}
 
-		// Get base unix group
-		$unixgroup = UnixGroup::query()
-			->where('groupid', '=', $event->userrequest->queue->groupid)
-			->where('shortname', 'like', config('module.groups.unix_prefix', 'rcs') . '%0')
-			->get()
-			->first();
+		// Ensure the client is authorized to manage the controlling group.
+		$u = (new QueueUser)->getTable();
+		$q = (new Queue)->getTable();
 
-		if (!$unixgroup)
+		$queueusers = QueueUser::query()
+			->select($u . '.*', $q . '.groupid')
+			->join($q, $q . '.id', $u . '.queueid')
+			->where($u . '.userrequestid', '=', $event->userrequest->id)
+			->wherePendingRequest()
+			->get();
+
+		if (!count($queueusers))
 		{
-			return;
+			$gu = (new GroupUser)->getTable();
+
+			$queueusers = GroupUser::query()
+				->select($gu . '.*')
+				->join($u, $u . '.id', $gu . '.queueuserid')
+				->where($gu . '.userrequestid', '=', $event->userrequest->id)
+				->wherePendingRequest()
+				->get();
+
+			if (!count($queueusers))
+			{
+				return;
+			}
 		}
 
-		// Look for user's membership
-		$item = UnixGroupMember::query()
-			->where('userid', '=', $event->userrequest->userid)
-			->where('unixgroupid', '=', $unixgroup->id)
-			->get()
-			->first();
-
-		if ($item)
+		foreach ($queueusers as $queueuser)
 		{
-			return;
-		}
+			// Need to create membership in base group
+			if ($queueuser->group && $queueuser->group->unixgroup)
+			{
+				// Get base unix group
+				$base = $queueuser->group->primaryUnixGroup;
 
-		// Need to create membership in base group
-		$item = new UnixGroupMember;
-		$item->userid = $event->userrequest->userid;
-		$item->unixgroupid = $unixgroup->id;
-		$item->save();
+				if (!$base)
+				{
+					return;
+				}
+
+				// Look for user's membership
+				$baserow = UnixGroupMember::query()
+					->withTrashed()
+					->where('unixgroupid', '=', $base->id)
+					->where('userid', '=', $event->userrequest->userid)
+					->get()
+					->first();
+
+				// Restore or create as needed
+				if ($baserow)
+				{
+					if ($baserow->trashed())
+					{
+						$baserow->restore();
+					}
+				}
+				else
+				{
+					$baserow = new UnixGroupMember;
+					$baserow->unixgroupid = $base->id;
+					$baserow->userid = $event->userrequest->userid;
+					$baserow->notice = 0;
+					$baserow->save();
+				}
+			}
+		}
 	}
 }
