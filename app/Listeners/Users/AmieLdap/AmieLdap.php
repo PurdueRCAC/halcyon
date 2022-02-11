@@ -10,6 +10,7 @@ use App\Halcyon\Utility\Str;
 use App\Halcyon\Access\Role;
 use App\Modules\History\Traits\Loggable;
 use App\Modules\Groups\Models\Group;
+use App\Modules\Groups\Models\Member as GroupMember;
 use App\Modules\Groups\Models\UnixGroup;
 use App\Modules\Groups\Models\UnixGroupMember;
 use App\Modules\Resources\Models\Asset;
@@ -506,7 +507,7 @@ class AmieLdap
 					}
 
 					$members = array();
-					$allmembers = array();
+					$allmemberids = array();
 
 					//
 					// Unix groups
@@ -636,14 +637,29 @@ class AmieLdap
 									$ugu->unixgroupid = $unixgroup->id;
 									$ugu->userid = $member->id;
 									$ugu->save();
+
+									$gu = GroupMember::query()
+										->select('id')
+										->where('groupid', '=', $group->id)
+										->where('userid', '=', $userid)
+										->get();
+
+									if (!$gu)
+									{
+										$gu = new GroupMember;
+										$gu->groupid = $group->id;
+										$gu->userid = $member->id;
+										$gu->setAsMember();
+										$gu->save();
+									}
 								}
 
 								$members[] = $member;
-								$allmembers[] = $member->id;
+								$allmemberids[] = $member->id;
 							}
 
 							// Remove any users not found in the list from LDAP
-							$remove = array_diff($current, $allmembers);
+							$remove = array_diff($current, $allmemberids);
 
 							foreach ($remove as $userid)
 							{
@@ -654,6 +670,16 @@ class AmieLdap
 										$uguser->delete();
 										continue;
 									}
+								}
+
+								$gu = GroupUser::query()
+									->where('groupid', '=', $group->id)
+									->where('userid', '=', $userid)
+									->get();
+
+								if ($gu)
+								{
+									$gu->delete();
 								}
 							}
 						}
@@ -724,7 +750,7 @@ class AmieLdap
 						->pluck('userid')
 						->toArray();
 
-					foreach ($allmembers as $userid)
+					foreach ($allmemberids as $userid)
 					{
 						if (in_array($userid, $queueuserids))
 						{
@@ -737,7 +763,7 @@ class AmieLdap
 						$qm->save();
 					}
 
-					$remove = array_diff($queueuserids, $allmembers);
+					$remove = array_diff($queueuserids, $allmemberids);
 
 					foreach ($remove as $userid)
 					{
@@ -826,7 +852,7 @@ class AmieLdap
 					// Storage
 					//
 					$dir = null;
-					$storage = StorageResource::query()
+					/*$storage = StorageResource::query()
 						->where('path', '=', '/depot')
 						->get()
 						->first();
@@ -907,9 +933,11 @@ class AmieLdap
 							$dir->bytes = $space;
 							$dir->save();
 						}
-					}
+					}*/
 
+					//
 					// Output
+					//
 					$q = $queue->toArray();
 					$q['members'] = array();
 
