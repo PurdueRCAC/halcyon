@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title'){{ $type->name }}@stop
+@section('title'){{ $type->name . ($retired ? ': ' . trans('resources::resources.retired') : '') }}@stop
 
 @php
 app('pathway')
