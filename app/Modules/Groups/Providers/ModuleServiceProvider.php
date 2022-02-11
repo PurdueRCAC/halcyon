@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\View;
 use App\Modules\Groups\Composers\ProfileComposer;
 use App\Modules\Groups\Console\EmailAuthorizedCommand;
 use App\Modules\Groups\Console\EmailRemovedCommand;
+use App\Modules\Groups\Console\SyncMembershipCommand;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -57,6 +58,7 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->commands([
 			EmailAuthorizedCommand::class,
 			EmailRemovedCommand::class,
+			SyncMembershipCommand::class,
 		]);
 	}
 
