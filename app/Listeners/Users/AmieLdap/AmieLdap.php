@@ -641,7 +641,7 @@ class AmieLdap
 									$gu = GroupMember::query()
 										->select('id')
 										->where('groupid', '=', $group->id)
-										->where('userid', '=', $userid)
+										->where('userid', '=', $member->id)
 										->get();
 
 									if (!$gu)
