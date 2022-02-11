@@ -157,7 +157,7 @@ class DbmLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->search);
+		$this->log('dbmldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->search);
 	}
 
 	/**
@@ -268,7 +268,7 @@ class DbmLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, json_encode($query));
+		$this->log('dbmldap', __METHOD__, 'GET', $status, $results, json_encode($query));
 	}
 
 	/**
@@ -325,7 +325,7 @@ class DbmLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'cn=' . $event->user->username);
+		$this->log('dbmldap', __METHOD__, 'GET', $status, $results, 'cn=' . $event->user->username);
 	}
 
 	/**
@@ -422,6 +422,6 @@ class DbmLdap
 
 		$event->setUser($user);
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $user->username);
+		$this->log('dbmldap', __METHOD__, 'GET', $status, $results, 'uid=' . $user->username);
 	}
 }

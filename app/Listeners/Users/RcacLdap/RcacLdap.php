@@ -177,7 +177,7 @@ class RcacLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->search);
+		$this->log('rcacldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->search);
 	}
 
 	/**
@@ -251,7 +251,7 @@ class RcacLdap
 
 		$event->setUser($user);
 	
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $user->username);
+		$this->log('rcacldap', __METHOD__, 'GET', $status, $results, 'uid=' . $user->username);
 	}
 
 	/**
@@ -323,7 +323,7 @@ class RcacLdap
 				$results = ['error' => $e->getMessage()];
 			}
 
-			$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $user->username);
+			$this->log('rcacldap', __METHOD__, 'GET', $status, $results, 'uid=' . $user->username);
 		}
 
 		$event->addSection(
@@ -478,7 +478,7 @@ class RcacLdap
 			}
 		}
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->user->username);
+		$this->log('rcacldap', __METHOD__, 'GET', $status, $results, 'uid=' . $event->user->username);
 	}
 
 	/**
@@ -540,7 +540,7 @@ class RcacLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'cn=' . $event->name);
+		$this->log('rcacldap', __METHOD__, 'GET', $status, $results, 'cn=' . $event->name);
 	}
 
 	/**
@@ -602,7 +602,7 @@ class RcacLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'cn=' . $event->name);
+		$this->log('rcacldap', __METHOD__, 'GET', $status, $results, 'cn=' . $event->name);
 	}
 
 	/**
@@ -700,7 +700,7 @@ class RcacLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, 'host=scholar.rcac.purdue.edu');
+		$this->log('rcacldap', __METHOD__, 'GET', $status, $results, 'host=scholar.rcac.purdue.edu');
 	}
 
 	/**
@@ -808,6 +808,6 @@ class RcacLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('ldap', __METHOD__, 'GET', $status, $results, json_encode($query));
+		$this->log('rcacldap', __METHOD__, 'GET', $status, $results, json_encode($query));
 	}
 }
