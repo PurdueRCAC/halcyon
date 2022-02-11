@@ -992,7 +992,7 @@ $i = 0;
 					@foreach ($unixgroups as $name)
 						<div class="col-sm-4 unixData">
 							<div class="form-check">
-								<input type="checkbox" data-base="unixgroup-{{ $base }}" class="form-check-input add-unixgroup-member" name="unixgroup[]" id="unixgroup-{{ $name->id }}" value="{{ $name->id }}" />
+								<input type="checkbox" data-base="unixgroup-{{ $base }}" <?php if ($name->longname == $group->unixgroup) { echo 'checked disabled'; } ?> class="form-check-input add-unixgroup-member" name="unixgroup[]" id="unixgroup-{{ $name->id }}" value="{{ $name->id }}" />
 								<label class="form-check-label" for="unixgroup-{{ $name->id }}">{{ $name->longname }}</label>
 							</div>
 						</div>
