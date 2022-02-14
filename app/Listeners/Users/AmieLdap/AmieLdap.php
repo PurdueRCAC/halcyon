@@ -672,7 +672,7 @@ class AmieLdap
 									}
 								}
 
-								$gu = GroupUser::query()
+								$gu = GroupMember::query()
 									->where('groupid', '=', $group->id)
 									->where('userid', '=', $userid)
 									->get();
