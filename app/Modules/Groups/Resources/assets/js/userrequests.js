@@ -94,7 +94,7 @@ var UserRequests = {
 	 * @param   {array}  requests
 	 * @return  {void}
 	 */
-	Reject: function (requests) {
+	Reject: function (requests, membership) {
 		for (var i = 0; i < requests.length; i++) {
 			UserRequests.rejectpending++;
 
@@ -103,11 +103,38 @@ var UserRequests = {
 				type: 'delete',
 				async: false,
 				success: function () {
-					UserRequests.rejectpending--;
+					$.ajax({
+						url: membership,
+						type: 'delete',
+						dataType: 'json',
+						async: false,
+						success: function () {
+							UserRequests.rejectpending--;
+
+							if (UserRequests.rejectpending == 0) {
+								window.location.reload(true);
+							}
+						},
+						error: function (xhr) {
+							var msg = 'Failed to approve request.';
+
+							if (xhr.responseJSON) {
+								msg = xhr.responseJSON.message;
+								if (typeof msg === 'object') {
+									var lines = Object.values(msg);
+									msg = lines.join('<br />');
+								}
+							}
+
+							SetError(msg);
+						}
+					});
+
+					/*UserRequests.rejectpending--;
 
 					if (UserRequests.rejectpending == 0) {
 						window.location.reload(true);
-					}
+					}*/
 				},
 				error: function (xhr) {
 					var msg = 'Failed to reject request.';
@@ -204,7 +231,10 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 				else if (approve == 1) {
 					// Delete the request
-					UserRequests.Reject(inputs[i].getAttribute('data-api').split(','));
+					UserRequests.Reject(
+						inputs[i].getAttribute('data-api').split(','),
+						inputs[i].getAttribute('data-membership')
+					);
 				}
 			}
 		}

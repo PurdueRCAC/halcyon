@@ -15,7 +15,6 @@ $disabled = collect([]);
 $processed = array();
 
 $users = $group->members()
-	->with('user')
 	->orderBy('datecreated', 'desc')
 	->get();
 
@@ -30,7 +29,7 @@ foreach ($users as $me)
 
 	if (!$me->user || $me->user->trashed())
 	{
-		if (!($found = $disabled->firstWhere('userid', $me->userid)))
+		if (!$disabled->contains('userid', $me->userid))
 		{
 			$disabled->push($me);
 		}
@@ -40,23 +39,36 @@ foreach ($users as $me)
 		$me->username = $me->user->username;
 		if ($me->isManager())
 		{
-			if (!($found = $managers->firstWhere('userid', $me->userid)))
+			if (!$managers->contains('userid', $me->userid))
 			{
 				$managers->push($me);
 			}
 		}
 		elseif ($me->isMember())
 		{
-			if (!($found = $members->firstWhere('userid', $me->userid)))
+			if (!$managers->contains('userid', $me->userid)
+			 && !$members->contains('userid', $me->userid))
 			{
 				$members->push($me);
 			}
 		}
 		elseif ($me->isViewer())
 		{
-			if (!($found = $viewers->firstWhere('userid', $me->userid)))
+			if (!$managers->contains('userid', $me->userid)
+			 && !$members->contains('userid', $me->userid)
+			 && !$viewers->contains('userid', $me->userid))
 			{
 				$viewers->push($me);
+			}
+		}
+		elseif ($me->isPending())
+		{
+			if (!$managers->contains('userid', $me->userid)
+			 && !$members->contains('userid', $me->userid)
+			 && !$viewers->contains('userid', $me->userid)
+			 && !$pending->contains('userid', $me->userid))
+			{
+				$pending->push($me);
 			}
 		}
 	}
@@ -84,20 +96,22 @@ foreach ($queues as $queue)
 	$resources[$queue->resource->name][] = $queue;
 
 	$users = $queue->users()
-		->with('user')
 		->orderBy('datetimecreated', 'desc')
 		->get();
+	$qu = array();
 
 	foreach ($users as $me)
 	{
-		if (in_array($me->userid, $processed))
+		$qu[$me->userid] = ($me->isPending() ? 'p' : '') . $me->id;
+
+		if (in_array($queue->id . '_' . $me->userid, $processed))
 		{
 			continue;
 		}
 
 		$me->membershiptype = 'queueuser';
 
-		if (!$me->user || $me->user->trashed())
+		/*if (!$me->user || $me->user->trashed())
 		{
 			if (!($found = $disabled->firstWhere('userid', $me->userid)))
 			{
@@ -106,7 +120,7 @@ foreach ($queues as $queue)
 		}
 		else
 		{
-			$me->username = $me->user->username;
+			$me->username = $me->user->username;*/
 
 			if ($me->isPending())
 			{
@@ -116,44 +130,49 @@ foreach ($queues as $queue)
 				}
 				$user_requests[$me->userid][] = $me->userrequestid;
 
-				if (!($found = $pending->firstWhere('userid', $me->userid)))
+				/*if (!$pending->contains('userid', $me->userid))
 				{
 					$pending->push($me);
-				}
+				}*/
 			}
-			elseif ($me->isManager())
+			/*elseif ($me->isManager())
 			{
-				if (!($found = $managers->firstWhere('userid', $me->userid)))
+				if (!$managers->contains('userid', $me->userid))
 				{
 					$managers->push($me);
 				}
 			}
 			elseif ($me->isMember())
 			{
-				if (!($found = $members->firstWhere('userid', $me->userid)))
+				if (!$managers->contains('userid', $me->userid)
+				 && !$members->contains('userid', $me->userid))
 				{
 					$members->push($me);
 				}
 			}
 			elseif ($me->isViewer())
 			{
-				if (!($found = $viewers->firstWhere('userid', $me->userid)))
+				if (!$managers->contains('userid', $me->userid)
+				 && !$members->contains('userid', $me->userid)
+				 && !$viewers->contains('userid', $me->userid))
 				{
 					$viewers->push($me);
 				}
 			}
 		}
 
-		$processed[] = $me->userid;
+		$processed[] = $queue->id . '_' . $me->userid;*/
 	}
+
+	$queue->qu = $qu;
 }
 
 $unixgroups = $group->unixgroups()
 	->orderBy('longname', 'asc')
 	->get();
 
-$group_boxes = 0;
 $base = null;
+$group_boxes = 0;
 foreach ($unixgroups as $unixgroup)
 {
 	// Shortname is only defined when queue is actually a unix group
@@ -168,15 +187,13 @@ foreach ($unixgroups as $unixgroup)
 		$base = $unixgroup->id;
 	}
 
-	$users = $unixgroup->members()
-		->with('user')
-		->get();
+	$uu = array();
 
-	$unixgroup->activemembers = $users;
-
-	foreach ($users as $me)
+	foreach ($unixgroup->members as $me)
 	{
-		if (in_array($me->userid, $processed))
+		$uu[$me->userid] = $me->id;
+
+		/*if (in_array($me->userid, $processed))
 		{
 			continue;
 		}
@@ -185,39 +202,27 @@ foreach ($unixgroups as $unixgroup)
 
 		if (!$me->user || $me->user->trashed())
 		{
-			if (!($found = $disabled->firstWhere('userid', $me->userid)))
+			if (!$disabled->contains('userid', $me->userid))
 			{
 				$disabled->push($me);
 			}
 		}
 		else
 		{
+			$uu[$me->userid] = $me->id;
+
 			$me->username = $me->user->username;
-			/*if ($me->isManager())
+
+			if (!$members->contains('userid', $me->userid))
 			{
-				if (!($found = $managers->firstWhere('userid', $me->userid)))
-				{
-					$managers->push($me);
-				}
+				$members->push($me);
 			}
-			elseif ($me->isMember())
-			{*/
-				if (!($found = $members->firstWhere('userid', $me->userid)))
-				{
-					$members->push($me);
-				}
-			/*}
-			elseif ($me->isViewer())
-			{
-				if (!($found = $viewers->firstWhere('userid', $me->userid)))
-				{
-					$viewers->push($me);
-				}
-			}*/
 		}
 
-		$processed[] = $me->userid;
+		$processed[] = $me->userid;*/
 	}
+
+	$unixgroup->uu = $uu;
 }
 
 $managers = $managers->sortBy('username');
@@ -270,10 +275,10 @@ $i = 0;
 									endforeach;
 								endif;
 								?>
-								<input type="radio" name="approve{{ $i }}" class="approve-request approve-value0" data-groupid="{{ $group->id }}" data-api="{{ implode(',', $approves) }}" value="{{ $req->userid }},0" />
+								<input type="radio" name="approve{{ $i }}" class="approve-request approve-value0" data-groupid="{{ $group->id }}" data-api="{{ implode(',', $approves) }}" data-membership="{{ route('api.groups.members.update', ['id' => $req->id]) }}" value="{{ $req->userid }},0" />
 							</td>
 							<td class="text-center">
-								<input type="radio" name="approve{{ $i }}" class="approve-request approve-value1" data-groupid="{{ $group->id }}" data-api="{{ implode(',', $denies) }}" value="{{ $req->userid }},1" />
+								<input type="radio" name="approve{{ $i }}" class="approve-request approve-value1" data-groupid="{{ $group->id }}" data-api="{{ implode(',', $denies) }}" data-membership="{{ route('api.groups.members.delete', ['id' => $req->id]) }}" value="{{ $req->userid }},1" />
 							</td>
 						</tr>
 					@endforeach
@@ -401,14 +406,14 @@ $i = 0;
 								$disable = true;
 								$checked = ' checked="checked" disabled="disabled"';
 							else:
-								foreach ($queue->users as $m):
-								//if (in_array($member->userid, $qu[$queue->id])):
-									if ($member->userid == $m->userid):
-										//$in[] = $queue->name;
+								//foreach ($queue->users as $m):
+									if (isset($queue->qu[$member->userid])):
+										$m = $queue->qu[$member->userid];
+									//if ($member->userid == $m->userid):
 										$checked = ' checked="checked"';
-										break;
+										//break;
 									endif;
-								endforeach;
+								//endforeach;
 							endif;
 							$csv[] = $checked ? 'yes' : 'no';
 							?>
@@ -434,14 +439,15 @@ $i = 0;
 							//$uu[$unix->id] = $unix->members->pluck('userid')->toArray();
 							$checked = '';
 							$m = null;
-							foreach ($unix->activemembers as $m):
+							if (isset($unix->uu[$member->userid])):
+									$m = $unix->uu[$member->userid];
+							//foreach ($unix->members as $m):
 								//if (in_array($member->userid, $uu[$unix->id])):
-								if ($member->userid == $m->userid):
+								//if ($member->userid == $m->userid):
 									//$in[] = $unix->longname;
 									$checked = ' checked="checked"';
-									break;
+									//break;
 								endif;
-							endforeach;
 							$csv[] = $checked ? 'yes' : 'no';
 
 							if (preg_match("/rcs[0-9]{4}0/", $unix->shortname)):
@@ -460,7 +466,7 @@ $i = 0;
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $unix->id }}"
 									data-api-create="{{ route('api.unixgroups.members.create') }}"
-									data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
+									data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m]) : route('api.unixgroups.members.create') }}"
 									value="1" />
 								<label for="unix-{{ $unix->id }}" class="form-check-label"><span class="sr-only">{{ $unix->name }}</span></label>
 								</span>
@@ -565,15 +571,23 @@ $i = 0;
 								$checked = '';
 								$m = null;
 
-								foreach ($queue->users as $m):
-									//if ($m->userid == $member->userid):
-									if ($member->userid == $m->userid):
-									//if (in_array($member->userid, $qu[$queue->id])):
-										//$in[] = $queue->name;
-										$checked = ' checked="checked"';
-										break;
+								// We check queues a little differently because it's possible
+								// to be a pending member of one queue but full member of another
+								//foreach ($queue->users as $m):
+									if (isset($queue->qu[$member->userid])):
+										$m = $queue->qu[$member->userid];
+									//if ($member->userid == $m->userid):
+										//if ($m->isPending()):
+										if (substr($m, 0, 1) == 'p'):
+											$m = substr($m, 1);
+											$checked = ' disabled';
+										else:
+											$checked = ' checked="checked"';
+										endif;
+
+									//	break;
 									endif;
-								endforeach;
+								//endforeach;
 								$csv[] = $checked ? 'yes' : 'no';
 								?>
 								<td class="text-center col-queue">
@@ -586,7 +600,7 @@ $i = 0;
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $queue->id }}"
 										data-api-create="{{ route('api.queues.users.create') }}"
-										data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
+										data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m]) : route('api.queues.users.create') }}"
 										value="1" />
 									<label for="queue-{{ $queue->id }}" class="form-check-label"><span class="sr-only">{{ $queue->name }}</span></label>
 									</span>
@@ -597,14 +611,15 @@ $i = 0;
 							foreach ($unixgroups as $unix):
 								$checked = '';
 								$m = null;
-								foreach ($unix->activemembers as $m):
-									//if (in_array($member->userid, $uu[$unix->id])):
-									if ($member->userid == $m->userid):
+								//foreach ($unix->members as $m):
+									if (isset($unix->uu[$member->userid])):
+										$m = $unix->uu[$member->userid];
+									//if ($member->userid == $m->userid):
 										//$in[] = $unix->longname;
 										$checked = ' checked="checked"';
-										break;
+										//break;
 									endif;
-								endforeach;
+								//endforeach;
 								$csv[] = $checked ? 'yes' : 'no';
 
 								if (preg_match("/rcs[0-9]{4}0/", $unix->shortname)):
@@ -623,7 +638,7 @@ $i = 0;
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $unix->id }}"
 										data-api-create="{{ route('api.unixgroups.members.create') }}"
-										data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
+										data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m]) : route('api.unixgroups.members.create') }}"
 										value="1" />
 									<label for="unix-{{ $i }}-{{ $unix->id }}" class="form-check-label"><span class="sr-only">{{ $unix->name }}</span></label>
 									</span>
@@ -724,12 +739,14 @@ $i = 0;
 							$checked = '';
 							$m = null;
 
-							foreach ($queue->users as $m):
-								if ($member->userid == $m->userid):
+							//foreach ($queue->users as $m):
+								//if ($member->userid == $m->userid):
+								if (isset($queue->qu[$member->userid])):
+									$m = $queue->qu[$member->userid];
 									$checked = ' checked="checked"';
-									break;
+									//break;
 								endif;
-							endforeach;
+							//endforeach;
 							$csv[] = $checked ? 'yes' : 'no';
 							?>
 							<td class="text-center col-queue">
@@ -742,7 +759,7 @@ $i = 0;
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $queue->id }}"
 									data-api-create="{{ route('api.queues.users.create') }}"
-									data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
+									data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m]) : route('api.queues.users.create') }}"
 									value="1" />
 								<label for="queue-{{ $queue->id }}" class="form-check-label"><span class="sr-only">{{ $queue->name }}</span></label>
 								</span>
@@ -753,12 +770,14 @@ $i = 0;
 						foreach ($unixgroups as $unix):
 							$checked = '';
 							$m = null;
-							foreach ($unix->activemembers as $m):
-								if ($member->userid == $m->userid):
+							//foreach ($unix->members as $m):
+								//if ($member->userid == $m->userid):
+								if (isset($unix->uu[$member->userid])):
+									$m = $unix->uu[$member->userid];
 									$checked = ' checked="checked"';
-									break;
+									//break;
 								endif;
-							endforeach;
+							//endforeach;
 							$csv[] = $checked ? 'yes' : 'no';
 
 							if (preg_match("/rcs[0-9]{4}0/", $unix->shortname)):
@@ -777,7 +796,7 @@ $i = 0;
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $unix->id }}"
 									data-api-create="{{ route('api.unixgroups.members.create') }}"
-									data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
+									data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m]) : route('api.unixgroups.members.create') }}"
 									value="1" />
 								<label for="unix-{{ $i }}-{{ $unix->id }}" class="form-check-label"><span class="sr-only">{{ $unix->name }}</span></label>
 								</span>
