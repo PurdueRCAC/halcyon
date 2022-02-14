@@ -10,6 +10,7 @@ use App\Modules\Groups\Models\UnixGroupMember;
 use App\Modules\Users\Models\UserUsername;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User AS QueueUser;
+use App\Modules\Queues\Models\Scheduler;
 
 class SyncMembershipCommand extends Command
 {
@@ -60,6 +61,8 @@ class SyncMembershipCommand extends Command
 		$g = (new UnixGroup)->getTable();
 		$gu = (new UnixGroupMember)->getTable();
 
+		$s = (new Scheduler)->getTable();
+
 		foreach ($groups as $groupid)
 		{
 			$group = Group::find($groupid);
@@ -78,10 +81,13 @@ class SyncMembershipCommand extends Command
 			$queueusers = QueueUser::query()
 				->select($qu . '.queueid', $qu . '.userid', $qu . '.datetimecreated')
 				->join($q, $q . '.id', $qu . '.queueid')
+				->join($s, $s . '.id', $q . '.schedulerid')
 				->join($u, $u . '.userid', $qu . '.userid')
 				->whereNull($q . '.datetimeremoved')
+				->whereNull($s . '.datetimeremoved')
 				->whereNull($u . '.dateremoved')
 				->where($q . '.groupid', '=', $group->id)
+				->whereIn($q . '.queuetype', [1,3])
 				->whereNotIn($qu . '.userid', $existing)
 				->get();
 

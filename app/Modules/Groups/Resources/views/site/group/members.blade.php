@@ -101,7 +101,7 @@ foreach ($queues as $queue)
 
 		$me->membershiptype = 'queueuser';
 
-		if (!$me->user || $me->user->trashed())
+		/*if (!$me->user || $me->user->trashed())
 		{
 			if (!($found = $disabled->firstWhere('userid', $me->userid)))
 			{
@@ -110,7 +110,7 @@ foreach ($queues as $queue)
 		}
 		else
 		{
-			$me->username = $me->user->username;
+			$me->username = $me->user->username;*/
 
 			if ($me->isPending())
 			{
@@ -120,12 +120,12 @@ foreach ($queues as $queue)
 				}
 				$user_requests[$me->userid][] = $me->userrequestid;
 
-				if (!$pending->contains('userid', $me->userid))
+				/*if (!$pending->contains('userid', $me->userid))
 				{
 					$pending->push($me);
-				}
+				}*/
 			}
-			elseif ($me->isManager())
+			/*elseif ($me->isManager())
 			{
 				if (!$managers->contains('userid', $me->userid))
 				{
@@ -151,7 +151,7 @@ foreach ($queues as $queue)
 			}
 		}
 
-		$processed[] = $queue->id . '_' . $me->userid;
+		$processed[] = $queue->id . '_' . $me->userid;*/
 	}
 
 	$queue->qu = $qu;
@@ -183,7 +183,7 @@ foreach ($unixgroups as $unixgroup)
 	{
 		$uu[$me->userid] = $me->id;
 
-		if (in_array($me->userid, $processed))
+		/*if (in_array($me->userid, $processed))
 		{
 			continue;
 		}
@@ -209,7 +209,7 @@ foreach ($unixgroups as $unixgroup)
 			}
 		}
 
-		$processed[] = $me->userid;
+		$processed[] = $me->userid;*/
 	}
 
 	$unixgroup->uu = $uu;

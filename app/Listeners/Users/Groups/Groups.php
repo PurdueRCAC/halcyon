@@ -176,22 +176,7 @@ class Groups
 
 		$total = count($groups);
 
-		/*$total = $user->groups()
-			//->whereIsManager()
-			->where('groupid', '>', 0)
-			->count();
-
-		foreach ($user->groups as $g)
-		{
-			$queues = $g->group->queues()
-						//->withTrashed()
-						->get();
-			foreach ($queues as $queue)
-			{
-				$total += $queue->users()->where('userid', '=', $user->id)->count();
-			}
-		}*/
-		$queueusers = $user->queues()
+		/*$queueusers = $user->queues()
 			->with('queue')
 			->whereIn('membertype', [1, 4])
 			->get();
@@ -251,7 +236,7 @@ class Groups
 				$groups[] = $unixgroup->groupid;
 				$total++;
 			}
-		}
+		}*/
 
 		if ($event->getActive() == 'groups' || app('isAdmin'))
 		{
@@ -277,7 +262,7 @@ class Groups
 				if (!$membership)
 				{
 					$found = false;
-					$queues = $group->queues()
+					/*$queues = $group->queues()
 						->get();
 
 					foreach ($queues as $queue)
@@ -323,7 +308,7 @@ class Groups
 						}
 					}
 
-					//$found = in_array($id, $groups);
+					//$found = in_array($id, $groups);*/
 
 					if (!$found && !(auth()->user() && auth()->user()->can('manage groups')))
 					{
@@ -357,7 +342,7 @@ class Groups
 					->orderBy('membertype', 'desc')
 					->get();
 
-				$groups = array_unique($rows->pluck('groupid')->toArray());
+				/*$groups = array_unique($rows->pluck('groupid')->toArray());
 
 				foreach ($queueusers as $qu)
 				{
@@ -414,12 +399,17 @@ class Groups
 						$rows->add($uu);
 						$groups[] = $unixgroup->groupid;
 					}
-				}
+				}*/
 
+				// Filter out duplicate memberships
+				//
+				// In some weird cases, a user can end up with both
+				// a manager and non-manager record. Here, we
+				// discard the non-manager entries.
 				$managers = $rows->filter(function($value, $key)
 				{
 					return $value->isManager();
-				});//->pluck('groupid')->toArray();
+				});
 
 				foreach ($rows as $k => $g)
 				{
