@@ -43,7 +43,7 @@ class EmailQuotaCommand extends Command
 
 		$users = Notification::query()
 			->select(DB::raw('DISTINCT(userid) AS userid'))
-			->withTrashed()
+			//->withTrashed()
 			->get()
 			->pluck('userid')
 			->toArray();
@@ -52,7 +52,7 @@ class EmailQuotaCommand extends Command
 		{
 			if ($debug || $this->output->isVerbose())
 			{
-				$this->info('No quotas found');
+				$this->info('No quota notifications found.');
 			}
 			return;
 		}
@@ -61,6 +61,7 @@ class EmailQuotaCommand extends Command
 		$d = (new Directory)->getTable();
 		$r = (new Asset)->getTable();
 		$s = (new StorageResource)->getTable();
+		$total = 0;
 
 		foreach ($users as $userid)
 		{
@@ -79,7 +80,7 @@ class EmailQuotaCommand extends Command
 			{
 				if ($debug || $this->output->isVerbose())
 				{
-					$this->error("Email address not found for user {$user->name}.");
+					$this->error("Email address not found for user {$user->name} ($userid).");
 				}
 				continue;
 			}
@@ -211,6 +212,8 @@ class EmailQuotaCommand extends Command
 				{
 					if ($not->enabled && $last && $last->space)
 					{
+						$total++;
+
 						$message = new Quota('exceed', $user, $not, $last);
 
 						if ($this->output->isDebug())
@@ -228,7 +231,7 @@ class EmailQuotaCommand extends Command
 							}
 						}
 
-						//Mail::to($user->email)->send($message);
+						Mail::to($user->email)->send($message);
 
 						$this->log($user->id, $user->email, 'Emailed exceed quota.');
 					}
@@ -305,6 +308,8 @@ class EmailQuotaCommand extends Command
 						// Only mail if enabled
 						if ($not->enabled)
 						{
+							$total++;
+
 							$message = new Quota('report', $user, $not, $last);
 
 							if ($this->output->isDebug())
@@ -322,7 +327,7 @@ class EmailQuotaCommand extends Command
 								}
 							}
 
-							//Mail::to($user->email)->send($message);
+							Mail::to($user->email)->send($message);
 
 							$this->log($user->id, $user->email, 'Emailed report quota, next report:' . $not->nextnotify);
 						}
@@ -348,6 +353,14 @@ class EmailQuotaCommand extends Command
 						}*/
 					}
 				}
+			}
+		}
+
+		if (!$total)
+		{
+			if ($debug || $this->output->isVerbose())
+			{
+				$this->info('No reports to send at this time.');
 			}
 		}
 	}
