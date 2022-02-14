@@ -217,7 +217,7 @@
   --tab-color: #999;
   --tab-active: #fff;
   --tabs-border: rgba(255, 255, 255, 0.2);
-  --navtab-border-active: transparent transparent #fff transparent;
+  --navtab-border-active: transparent transparent #F78166 transparent;
   --navtab-border-hover: transparent transparent #5897fb transparent;
   /* States */
   --off-color: #fff;
