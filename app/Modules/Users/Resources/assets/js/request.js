@@ -397,10 +397,26 @@ function SubmitRequest() {
 		post['queues'].push(queues[x]);
 	}
 
+	// Pending group membership
+	var grouppost = {
+		'groupid': post['group'],
+		'userid': 0,
+		'userrequestid': 0,
+		'membertype': 4
+	};
+
 	//post = JSON.stringify(post);
 
 	$.when(
-		$.post(ROOT_URL + 'queues/requests', post).fail(function () {
+		$.post(ROOT_URL + 'queues/requests', post, function (response) {
+			grouppost['userid'] = response.userid;
+			grouppost['userrequestid'] = response.id;
+
+			$.post(ROOT_URL + 'groups/members', grouppost).fail(function () {
+				$('#errors').addClass('alert').addClass('alert-danger').text("There was an error processing your request.");
+			});
+		})
+		.fail(function () {
 			$('#errors').addClass('alert').addClass('alert-danger').text("There was an error processing your request.");
 		})
 	).done(function () {

@@ -1,5 +1,4 @@
 /* global $ */ // jquery.js
-/* global SetError */ // common.js
 
 var UserRequests = {
 	/**
@@ -22,7 +21,7 @@ var UserRequests = {
 	 * @param   {array}  requests
 	 * @return  {void}
 	 */
-	Approve: function (requests, groupid) {
+	Approve: function (requests, groupid, membership) {
 		for (var i = 0; i < requests.length; i++) {
 			UserRequests.approvepending++;
 
@@ -36,11 +35,41 @@ var UserRequests = {
 				dataType: 'json',
 				async: false,
 				success: function () {
-					UserRequests.approvepending--;
+					$.ajax({
+						url: membership,
+						type: 'put',
+						data: {
+							"membertype": 1
+						},
+						dataType: 'json',
+						async: false,
+						success: function () {
+							UserRequests.approvepending--;
+
+							if (UserRequests.approvepending == 0) {
+								window.location.reload(true);
+							}
+						},
+						error: function (xhr) {
+							var msg = 'Failed to approve request.';
+
+							if (xhr.responseJSON) {
+								msg = xhr.responseJSON.message;
+								if (typeof msg === 'object') {
+									var lines = Object.values(msg);
+									msg = lines.join('<br />');
+								}
+							}
+
+							SetError(msg);
+						}
+					});
+
+					/*UserRequests.approvepending--;
 
 					if (UserRequests.approvepending == 0) {
 						window.location.reload(true);
-					}
+					}*/
 				},
 				error: function (xhr) {
 					var msg = 'Failed to approve request.';
@@ -132,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// Pending user requests
 	document.querySelectorAll('.toggle-requests').forEach(function (item) {
-		item.addEventListener('change', function () {
+		item.addEventListener('change', function (e) {
 			UserRequests.ToggleAllRadio(parseInt(this.value));
 
 			submitr.disabled = false;
@@ -140,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	document.querySelectorAll('.approve-request').forEach(function (item) {
-		item.addEventListener('change', function () {
+		item.addEventListener('change', function (e) {
 			submitr.disabled = false;
 		});
 	});
@@ -169,7 +198,8 @@ document.addEventListener('DOMContentLoaded', function () {
 					// Approve the user
 					UserRequests.Approve(
 						inputs[i].getAttribute('data-api').split(','),
-						inputs[i].getAttribute('data-groupid')
+						inputs[i].getAttribute('data-groupid'),
+						inputs[i].getAttribute('data-membership')
 					);
 				}
 				else if (approve == 1) {
