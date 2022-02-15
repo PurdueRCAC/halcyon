@@ -14,7 +14,7 @@ Your registration for an event has been **<span style="color:red">cancelled</spa
 **Location:** {{ $article->location }} <br />
 @endif
 @if ($article->url)
-**URL:** [{{ \Illuminate\Support\Str::limit($article->url, 50) }}]($article->url)
+**URL:** [{{ \Illuminate\Support\Str::limit($article->url, 50) }}]({{ $article->url }})
 @endif
 
 @if (count($article->updates))

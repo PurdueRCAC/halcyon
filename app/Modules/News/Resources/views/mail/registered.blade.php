@@ -18,7 +18,7 @@ You **<span style="color:green">successfully</span>** registered for an event. E
 **Location:** {{ $article->location }} <br />
 @endif
 @if ($article->url)
-**URL:** [{{ \Illuminate\Support\Str::limit($article->url, 50) }}]($article->url)
+**URL:** [{{ \Illuminate\Support\Str::limit($article->url, 50) }}]({{ $article->url }})
 @endif
 
 @if (count($article->updates))
