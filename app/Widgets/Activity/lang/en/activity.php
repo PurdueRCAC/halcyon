@@ -7,4 +7,12 @@ return [
 	'transportmethod' => 'Method',
 	'classname' => 'Class',
 	'classmethod' => 'Function',
+	'uri' => 'URI',
+	'status' => 'Status',
+	'app' => 'App',
+	'view all' => 'View All',
+	'data for past days' => 'Page views for the past :num days.',
+
+	'time range' => 'Time range',
+	'time range description' => 'Activity for the past N days',
 ];

@@ -20,13 +20,13 @@ return [
 		'advanced' => [
 			'fields' => [
 				'moduleclass_sfx' => [
-					'type'    => 'text'
+					'type'    => 'text',
 					'label'   => 'widgets::activity.param display limit',
 					'desc'    => 'widgets::activity.param display limit desc',
 					'default' => ''
 				],
 				'cache' => [
-					'type'    => 'list'
+					'type'    => 'list',
 					'label'   => 'widgets::activity.param display limit',
 					'desc'    => 'widgets::activity.param display limit desc',
 					'default' => ''
@@ -36,7 +36,7 @@ return [
 		'admin' => [
 			'fields' => [
 				'display_limit' => [
-					'type' => 'text'
+					'type' => 'text',
 					'label' => 'widgets::activity.param display limit',
 					'desc' => 'widgets::activity.param display limit desc',
 					'default' => 25

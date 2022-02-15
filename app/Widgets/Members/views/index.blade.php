@@ -9,31 +9,42 @@
 @endpush
 
 <div class="card widget {{ $widget->widget }}" id="{{ $widget->widget . $widget->id }}">
+	<div class="card-body">
+		@if ($widget->showtitle)
+			<div class="row">
+				<div class="col-md-8">
+					<h4 class="card-title py-0">{{ $widget->title }}</h4>
+				</div>
+				<div class="col-md-4 text-right">
+					<a href="{{ route('admin.users.index') }}">{{ trans('widget.members::members.view all') }}</a>
+				</div>
+			</div>
+		@endif
 
-	<canvas id="users-pastmonth" width="365" height="182">
-		<table class="table stats-overview">
-			<caption>New Registrations</caption>
-			<thead>
-				<tr>
-					<th scope="col">Day</th>
-					<th scope="col">Total</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach ($data as $dt => $total)
-				<tr>
-					<td>
-						{{ $total->x }}
-					</td>
-					<td>
-						{{ $total->y }}
-					</td>
-				</tr>
-				@endforeach
-			</tbody>
-		</table>
-	</canvas>
-
+		<canvas id="users-pastmonth" width="350" height="100">
+			<table class="table">
+				<caption>{{ trans('widget.members::members.new registrations') }}</caption>
+				<thead>
+					<tr>
+						<th scope="col">Day</th>
+						<th scope="col">Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach ($data as $dt => $total)
+					<tr>
+						<td>
+							{{ $total->x }}
+						</td>
+						<td>
+							{{ $total->y }}
+						</td>
+					</tr>
+					@endforeach
+				</tbody>
+			</table>
+		</canvas>
+	</div>
 </div>
 <script>
 var ctx = document.getElementById('users-pastmonth');
@@ -49,7 +60,7 @@ new Chart(ctx,{
 			}
 			echo json_encode($x);
 		?>,
-		"datasets":[{
+		"datasets": [{
 			"label":"New Users",
 			"data":<?php
 				$y = array();
@@ -62,13 +73,25 @@ new Chart(ctx,{
 			"fill":false,
 			"borderColor":"rgb(75, 192, 192)",
 			"lineTension":0.1
-		}]},
-	"options":{
+		}]
+	},
+	options: {
+		responsive: true,
+		animation: {
+			duration: 0
+		},
 		title: {
 			display: false
 		},
 		legend: {
 			display: false
+		},
+		scales: {
+			xAxes: [
+				{
+					display: false
+				}
+			]
 		}
 	}
 });

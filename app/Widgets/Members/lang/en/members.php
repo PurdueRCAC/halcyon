@@ -6,6 +6,8 @@ return [
 
 	'none' => 'No user data found.',
 	'note' => '<strong>Note:</strong> Blocked accounts are excluded from data.',
+	'new registrations' => 'New Registrations',
+	'view all' => 'View All',
 
 	// Confirmed
 	'confirmed' => 'Confirmed',

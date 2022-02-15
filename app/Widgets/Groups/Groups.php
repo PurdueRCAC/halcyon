@@ -5,7 +5,7 @@ use App\Modules\Widgets\Entities\Widget;
 use App\Modules\Groups\Models\Group;
 
 /**
- * Module class for user data
+ * Module class for Group data
  */
 class Groups extends Widget
 {
@@ -22,8 +22,8 @@ class Groups extends Widget
 		}
 
 		$groups = Group::query()
-			//->orderBy('datetimecreated', 'desc')
 			->withCount('members')
+			->orderBy('datetimecreated', 'desc')
 			->limit($this->params->get('limit', 10))
 			->get();
 
