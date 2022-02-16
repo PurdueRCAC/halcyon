@@ -9,7 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Storage\Models\Directory;
 use App\Modules\Storage\Models\StorageResource;
-use App\Modules\Groups\Models\UnixGroup;
+use App\Modules\Groups\Models\UnixGroupMember;
 use App\Modules\Users\Models\User;
 use Carbon\Carbon;
 
@@ -83,15 +83,15 @@ class QuotasController extends Controller
 			->whereNull($r . '.datetimeremoved')
 			->get();
 
-		$g = (new UnixGroup)->getTable();
+		$g = (new UnixGroupMember)->getTable();
 
 		$rows2 = Directory::query()
 			->withTrashed()
 			->with('storageResource')
 			->select($d . '.*', $r . '.getquotatypeid')
 			->join($r, $r . '.id', $d . '.storageresourceid')
-			->join($g, $g . '.id', $d . '.unixgroupid')
-			->where($d . '.owneruserid', '=', $user->id)
+			->join($g, $g . '.unixgroupid', $d . '.unixgroupid')
+			->where($g . '.userid', '=', $user->id)
 			->where(function($where) use ($r, $d)
 				{
 					$where->where($d . '.bytes', '<>', 0)
