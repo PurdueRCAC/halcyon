@@ -51,33 +51,33 @@ class QuotaCheckCommand extends Command
 
 		$u = (new Usage)->getTable();
 
-		$usages = DB::select(DB::raw("SELECT resourceid, 
-				storagedirid, 
-				quota AS lastquota, 
-				space AS lastspace, 
-				lastcheck, 
+		$usages = DB::select(DB::raw("SELECT resourceid,
+				storagedirid,
+				quota AS lastquota,
+				space AS lastspace,
+				lastcheck,
 				lastinterval,
-				LEAST(1, (SUM(tb1.var) / SUM(tb1.max)) * GREATEST(1, 5 * POW((space / quota) , 28))) AS normalvariability FROM 
-					(SELECT $u.id, 
-						$d.resourceid, 
-						$u.storagedirid, 
-						$u.quota, 
-						$u.space, 
-						$u.lastinterval, 
+				LEAST(1, (SUM(tb1.var) / SUM(tb1.max)) * GREATEST(1, 5 * POW((space / quota) , 28))) AS normalvariability FROM
+					(SELECT $u.id,
+						$d.resourceid,
+						$u.storagedirid,
+						$u.quota,
+						$u.space,
+						$u.lastinterval,
 						MAX($u.datetimerecorded) AS lastcheck,
 						LEFT($u.datetimerecorded, 10) AS day,
 						(((COUNT(DISTINCT $u.space)-1) / COUNT($u.space)) * EXP(-(((UNIX_TIMESTAMP(LEFT(NOW(), 10)) - UNIX_TIMESTAMP(LEFT($u.datetimerecorded, 10)))/86400)+1)*0.25)) as var,
-							(EXP(-(((UNIX_TIMESTAMP(LEFT(NOW(), 10)) - UNIX_TIMESTAMP(LEFT($u.datetimerecorded, 10)))/86400)+1)*0.25)) AS max 
-					FROM $u, 
-						$d 
-					WHERE $u.datetimerecorded >= DATE_SUB(NOW(), INTERVAL 10 DAY) AND 
-						$u.storagedirid <> 0 
-						AND ($u.quota <> 0 OR $u.space <> 0) 
-						AND $d.id = $u.storagedirid 
-					GROUP BY $u.storagedirid, 
+							(EXP(-(((UNIX_TIMESTAMP(LEFT(NOW(), 10)) - UNIX_TIMESTAMP(LEFT($u.datetimerecorded, 10)))/86400)+1)*0.25)) AS max
+					FROM $u,
+						$d
+					WHERE $u.datetimerecorded >= DATE_SUB(NOW(), INTERVAL 10 DAY) AND
+						$u.storagedirid <> 0
+						AND ($u.quota <> 0 OR $u.space <> 0)
+						AND $d.id = $u.storagedirid
+					GROUP BY $u.storagedirid,
 						day, $u.id
-					ORDER BY $u.storagedirid, 
-						$u.datetimerecorded DESC) AS tb1 
+					ORDER BY $u.storagedirid,
+						$u.datetimerecorded DESC) AS tb1
 			GROUP BY tb1.storagedirid, tb1.quota, tb1.space, tb1.lastcheck, tb1.lastinterval"));
 
 		$usag = array();
@@ -136,8 +136,7 @@ class QuotaCheckCommand extends Command
 					$message = $dir->messages()
 						->where('messagequeuetypeid', '=', $dir->getquotatypeid)
 						->whereNull('datetimecompleted')
-						->get()
-						->first();
+						->count();
 
 					if (!$message)
 					{
@@ -195,8 +194,7 @@ class QuotaCheckCommand extends Command
 				$message = $dir->messages()
 					->where('messagequeuetypeid', '=', $dir->getquotatypeid)
 					->whereNull('datetimecompleted')
-					->get()
-					->first();
+					->count();
 
 				if (!$message)
 				{
