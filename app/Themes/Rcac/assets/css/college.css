@@ -10513,8 +10513,10 @@ a:active {
 }
 a:focus,
 a:hover {
+  /* outline: 1px solid orange; */
 	text-decoration:none
 }
+
 ol, ul {
 	padding:10px 0 10px 35px
 }
@@ -13587,7 +13589,8 @@ table.gsc-search-box .gsc-search-button {
 }
 .bottom p {
 	margin: 0 !important;
-	padding-bottom:0.5rem
+	padding-bottom:0.5rem;
+  line-height:1.5em
 }
 @media (min-width: 768px) {
 	.bottom {
