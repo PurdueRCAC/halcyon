@@ -141,7 +141,7 @@ class Article extends Model
 	public function setHeadlineAttribute(string $value)
 	{
 		$value = strip_tags($value);
-		$value = htmlentities($value, ENT_QUOTES, 'UTF-8');
+		//$value = htmlentities($value, ENT_QUOTES, 'UTF-8');
 
 		$this->attributes['headline'] = $value;
 	}
