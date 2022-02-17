@@ -485,8 +485,8 @@ class Directory extends Model
 				}
 				$buckets[$purchase->resourceid]['soldbytes'] += $row->bytes;
 				$buckets[$purchase->resourceid]['totalbytes'] += $row->bytes;*/
-				$bucket['soldbytes']  += $row->bytes;
-				$bucket['totalbytes'] += $row->bytes;
+				$bucket['soldbytes']  += $purchase->bytes;
+				$bucket['totalbytes'] += $purchase->bytes;
 			}
 		}
 
@@ -505,11 +505,13 @@ class Directory extends Model
 		//$now = Carbon::now();
 
 		$purchases = Purchase::query()
+			->withTrashed()
 			->where('groupid', $this->groupid)
 			->where('resourceid', $this->resourceid)
 			->get();
 
 		$loans = Loan::query()
+			->withTrashed()
 			->where('groupid', $this->groupid)
 			->where('resourceid', $this->resourceid)
 			->get();
@@ -520,24 +522,24 @@ class Directory extends Model
 
 		foreach ($items as $purchase)
 		{
-			if ($purchase->start)
+			if ($purchase->datetimestart)
 			{
-				if (!isset($increments[strtotime($purchase->start)]))
+				if (!isset($increments[$purchase->datetimestart->timestamp]))
 				{
-					$increments[strtotime($purchase->start)] = 0;
+					$increments[$purchase->datetimestart->timestamp] = 0;
 				}
 
-				$increments[strtotime($purchase->start)] += $purchase->bytes;
+				$increments[$purchase->datetimestart->timestamp] += $purchase->bytes;
 			}
 
-			if ($purchase->stop)
+			if ($purchase->datetimestop)
 			{
-				if (!isset($increments[strtotime($purchase->stop)]))
+				if (!isset($increments[$purchase->datetimestop->timestamp]))
 				{
-					$increments[strtotime($purchase->stop)] = 0;
+					$increments[$purchase->datetimestop->timestamp] = 0;
 				}
 
-				$increments[strtotime($purchase->stop)] -= $purchase->bytes;
+				$increments[$purchase->datetimestop->timestamp] -= $purchase->bytes;
 			}
 		}
 
@@ -571,23 +573,48 @@ class Directory extends Model
 	public function getFuturequotasAttribute()
 	{
 		// Find appropriate bucket
-		$this_bucket = $this->bucket;
+		$this_bucket = $this->buckets;
 		$futurequotas = array();
 
 		if ($this->bytes && $this_bucket != null)
 		{
+			$now = Carbon::now()->toDateTimeString();
+
+			$groupdirs = self::query()
+				->withTrashed()
+				->select('bytes')
+				->where(function($where) use ($now)
+				{
+					$where->whereNull('datetimecreated')
+						->orWhere('datetimecreated', '<', $now);
+				})
+				->where(function($where) use ($now)
+				{
+					$where->whereNull('datetimeremoved')
+						->orWhere('datetimeremoved', '>', $now);
+				})
+				->where('groupid', '=', $this->groupid)
+				->where('resourceid', '=', $this->resourceid)
+				->where('bytes', '>', 0)
+				->get();
+			$allocated = 0;
+			foreach ($groupdirs as $groupdir)
+			{
+				$allocated += $groupdir->bytes;
+			}
+
 			// Set up future quota information
 			foreach ($this->resourceTotal as $total)
 			{
 				// Is this a future quota?
-				if ($total['time'] > $now->toDateTimeString())
+				if ($total['time'] > $now)
 				{
 					// Will this oversubscribe us?
-					if ($allocated[$this->resourceid] > $total['bytes'])
+					if ($allocated > $total['bytes'])
 					{
 						$future_quota = array();
 						$future_quota['time']  = $total['time'];
-						$future_quota['quota'] = $this->bytes + round(($this->bytes / $this_bucket['totalbytes']) * ($total['bytes'] - $allocated[$this->resourceid]));
+						$future_quota['quota'] = $this->bytes + ($this->bytes / $this_bucket['totalbytes']) * ($total['bytes'] - $allocated);
 
 						array_push($futurequotas, $future_quota);
 					}
@@ -609,6 +636,21 @@ class Directory extends Model
 		$item = array(); //$this->toArray();
 		$item['id'] = $this->id;
 		$item['data'] = $this->toArray();
+		$item['data']['futurequota'] = '-';
+		$future = $this->futurequotas;
+		if (count($future) > 0)
+		{
+			$item['data']['futurequota'] = Number::formatBytes($future[0]['quota']) . ' on ' . date("M d, Y", strtotime($future[0]['time']));
+
+			if ($future[0]['quota'] < $this->bytes)
+			{
+				$item['data']['futurequota'] = '&darr; ' . $item['data']['futurequota'];
+			}
+			else
+			{
+				$item['data']['futurequota'] = '&uarr; ' . $item['data']['futurequota'];
+			}
+		}
 		$item['title'] = $this->name;
 		$item['folder'] = true;
 		$item['expanded'] = $expanded;
