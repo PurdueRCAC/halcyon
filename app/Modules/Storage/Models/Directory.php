@@ -501,9 +501,6 @@ class Directory extends Model
 	public function getResourceTotalAttribute()
 	{
 		// Fetch storage buckets under this group
-		//$bucket = null;
-		//$now = Carbon::now();
-
 		$purchases = Purchase::query()
 			->withTrashed()
 			->where('groupid', $this->groupid)
@@ -558,7 +555,8 @@ class Directory extends Model
 		{
 			array_push($storagedirtotals, array(
 				'time'  => date('Y-m-d H:i:s', $time),
-				'bytes' => $total
+				'bytes' => $total,
+				'human' => Number::formatBytes($total),
 			));
 		}
 
@@ -614,7 +612,7 @@ class Directory extends Model
 					{
 						$future_quota = array();
 						$future_quota['time']  = $total['time'];
-						$future_quota['quota'] = $this->bytes + ($this->bytes / $this_bucket['totalbytes']) * ($total['bytes'] - $allocated);
+						$future_quota['quota'] = $this->bytes + ($this->bytes / $allocated) * ($total['bytes'] - $allocated);
 
 						array_push($futurequotas, $future_quota);
 					}
@@ -629,11 +627,12 @@ class Directory extends Model
 	 * Get directory tree
 	 *
 	 * @param   bool   $expanded
+	 * @param   array  $active
 	 * @return  array
 	 */
 	public function tree($expanded = true, $active = [])
 	{
-		$item = array(); //$this->toArray();
+		$item = array();
 		$item['id'] = $this->id;
 		$item['data'] = $this->toArray();
 		$item['data']['futurequota'] = '-';
