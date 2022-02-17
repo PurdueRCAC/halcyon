@@ -255,7 +255,7 @@ class Purchase extends Model
 	{
 		$now = Carbon::now()->toDateTimeString();
 
-		return $query->where(function($where) use ($now)
+		return $query->withTrashed()->where(function($where) use ($now)
 			{
 				$where->whereNull('datetimestop')
 					->orWhere('datetimestart', '<', $now);
@@ -277,7 +277,7 @@ class Purchase extends Model
 	{
 		$now = Carbon::now()->toDateTimeString();
 
-		return $query->whereNotNull('datetimestop')
+		return $query->withTrashed()->whereNotNull('datetimestop')
 			->where('datetimestop', '<=', $now);
 	}
 
