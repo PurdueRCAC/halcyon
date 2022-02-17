@@ -250,7 +250,7 @@ class Page extends Model
 
 				$anchor = '<a href="#' . $title . '" class="heading-anchor" title="Link to section \'' . e(strip_tags($matches[3])) . '\' of \'' . e(strip_tags($this->headline)) . '\'"><span class="fa fa-link" aria-hidden="true"></span><span class="sr-only">Link to section \'' . strip_tags($matches[3]) . '\' of \'' . strip_tags($this->headline) . '\'</span></a> ';
 
-				$matches[0] = $matches[1] . $matches[2] . ' id="' . $title . '">' . $anchor . $matches[3] . $matches[4];
+				$matches[0] = $matches[1] . ' id="' . $title . '">' . $anchor . $matches[3] . $matches[4];
 			}
 			else
 			{
