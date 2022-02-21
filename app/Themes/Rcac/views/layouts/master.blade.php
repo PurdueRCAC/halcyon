@@ -266,6 +266,10 @@
 					<div class="collapse navbar-collapse black">
 						@widget('mainmenu')
 					</div>
+					<div class="social">
+						<a href="https://twitter.com/purduercac" rel="noopener" target="_blank"><span class="sr-only">RCAC Twitter</span><span aria-hidden="true" class="fa fa-twitter"></span></a>
+						<a href="https://www.youtube.com/user/purduercac" rel="noopener" target="_blank"><span class="sr-only">RCAC YouTube</span><span aria-hidden="true" class="fa fa-youtube"></span></a>
+					</div>
 				</div>
 			</nav><!-- / .blackbar -->
 

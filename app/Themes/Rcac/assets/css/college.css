@@ -11186,6 +11186,7 @@ table.gsc-search-box .gsc-search-button {
 	position: absolute;
 	top:0.35rem
 }
+
 @media (min-width: 992px) {
 	.blackbar li {
 		color:#000
@@ -11290,10 +11291,40 @@ table.gsc-search-box .gsc-search-button {
 .blackbar .navbar-header .navbar-toggle:focus .icon-bar {
 	background-color:#cfb991
 }
+.blackbar .container {
+  position: relative;
+}
+.blackbar .social {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 1.25em;
+  width: 8em;
+  display: block;
+  text-align: right;
+}
+.blackbar .social a {
+  padding: 0.2em 0.5em;
+  width: auto;
+  border: 2px solid transparent;
+  transition: all 0.25s ease;
+  color: #fff !important;
+  background-color: inherit !important;
+}
+.blackbar .social a:hover,
+.blackbar .social a:focus {
+  border: 2px solid #8e6f3e;
+}
 @media (min-width: 992px) {
 	.blackbar .navbar-header {
 		display:none
 	}
+  .blackbar .social {
+    top: 15px;
+  }
+  .blackbar .social a {
+    color: #000 !important;
+  }
 }
 @media (max-width: 991px) {
 	.blackbar .navbar-toggle {
