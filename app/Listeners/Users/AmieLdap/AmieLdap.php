@@ -675,7 +675,7 @@ class AmieLdap
 								$gu = GroupMember::query()
 									->where('groupid', '=', $group->id)
 									->where('userid', '=', $userid)
-									->get();
+									->first();
 
 								if ($gu)
 								{
