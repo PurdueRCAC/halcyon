@@ -368,6 +368,10 @@ a {
   margin: 0;
   padding: 0;
 }
+blockquote {
+  border-left: 4px solid rgba(0, 0, 0, 0.2);
+  padding: 0 0 0 1rem;
+}
 /*ins {
   background-color: #ff9;
   color: #000;
@@ -563,6 +567,7 @@ h6 {
   font-weight: 700;
   margin: 0;
   line-height: 1.7142em;
+  color: var(--legend-text);
 }
 h1 {
   font-size: 2.618em;
@@ -879,15 +884,18 @@ h4 {
 .icon-fast-forward:before {
   content: "\e86f";
 }
+.fa-lines:before,
 .icon-file-text:before {
   content: "\e870";
 }
 .icon-film:before {
   content: "\e871";
 }
+.fa-file:before,
 .icon-file:before {
   content: "\e872";
 }
+.fa-file-plus:before,
 .icon-file-plus:before {
   content: "\e873";
 }
@@ -2186,6 +2194,7 @@ table tbody td {
 .card-footer {
   padding: 1rem 2rem;
 }
+.list-group-item,
 .card-body {
   padding: 2rem;
 }
