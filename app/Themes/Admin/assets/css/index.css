@@ -913,6 +913,7 @@ h4 {
 .icon-globe:before {
   content: "\e877";
 }
+.fa-table:before,
 .icon-dashboard:before,
 .icon-grid:before {
   content: "\e878";
@@ -1004,6 +1005,10 @@ h4 {
 }
 .icon-mic-off:before {
   content: "\e893";
+}
+.fa-strikethrough:before {
+  content: 'S̶';
+  font-family: 'Times', serif;
 }
 .fa-ban:before,
 .fa-minus-circle:before,

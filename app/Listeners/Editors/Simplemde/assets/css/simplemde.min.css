@@ -9,53 +9,130 @@
     content: '';
 }
 .editor-toolbar .fa-code {
-    background: url("../img/code.svg") center center no-repeat;
+    background: url("../img/dark/code.svg") center center no-repeat;
 }
 .editor-toolbar .fa-bold {
-    background: url("../img/bold.svg") center center no-repeat;
+    background: url("../img/dark/bold.svg") center center no-repeat;
 }
 .editor-toolbar .fa-italic {
-    background: url("../img/italic.svg") center center no-repeat;
+    background: url("../img/dark/italic.svg") center center no-repeat;
 }
 .editor-toolbar .fa-list-ol {
-    background: url("../img/orderedlist.svg") center center no-repeat;
+    background: url("../img/dark/orderedlist.svg") center center no-repeat;
 }
 .editor-toolbar .fa-list-ul {
-    background: url("../img/unorderedlist.svg") center center no-repeat;
+    background: url("../img/dark/unorderedlist.svg") center center no-repeat;
 }
 .editor-toolbar .fa-strikethrough {
-	background: url("../img/strikethrough.svg") center center no-repeat;
+	background: url("../img/dark/strikethrough.svg") center center no-repeat;
 }
 .editor-toolbar .fa-link {
-    background: url("../img/link.svg") center center no-repeat;
+    background: url("../img/dark/link.svg") center center no-repeat;
 }
 .editor-toolbar .fa-quote {
-    background: url("../img/blockquote.svg") center center no-repeat;
+    background: url("../img/dark/blockquote.svg") center center no-repeat;
 }
 .editor-toolbar .fa-minus {
-    background: url("../img/horizontal-rule.svg") center center no-repeat;
+    background: url("../img/dark/horizontal-rule.svg") center center no-repeat;
 }
 .editor-toolbar .fa-table {
-    background: url("../img/table.svg") center center no-repeat;
+    background: url("../img/dark/table.svg") center center no-repeat;
 }
 .editor-toolbar .fa-picture-o {
-    background: url("../img/image.svg") center center no-repeat;
+    background: url("../img/dark/image.svg") center center no-repeat;
 }
 .editor-toolbar .fa-eye {
-    background: url("../img/eye.svg") center center no-repeat;
+    background: url("../img/dark/eye.svg") center center no-repeat;
 }
 .editor-toolbar .fa-quote-left {
-    background: url("../img/quote.svg") center center no-repeat;
+    background: url("../img/dark/quote.svg") center center no-repeat;
 }
 .editor-toolbar .fa-header {
-    background: url("../img/heading.svg") center center no-repeat;
+    background: url("../img/dark/heading.svg") center center no-repeat;
 }
 .editor-toolbar .fa-question-circle {
-    background: url("../img/question.svg") center center no-repeat;
+    background: url("../img/dark/question.svg") center center no-repeat;
 }
 .editor-toolbar .fa-columns {
-    background: url("../img/columns.svg") center center no-repeat;
+    background: url("../img/dark/columns.svg") center center no-repeat;
 }
 .editor-toolbar .fa-arrows-alt {
-    background: url("../img/screen-full.svg") center center no-repeat;
+    background: url("../img/dark/screen-full.svg") center center no-repeat;
+}
+
+[data-mode=dark] .editor-toolbar .fa-code {
+    background: url("../img/light/code.svg") center center no-repeat;
+}
+[data-mode=dark] .editor-toolbar .fa-bold {
+    background: url("../img/light/bold.svg") center center no-repeat;
+}
+[data-mode=dark] .editor-toolbar .fa-italic {
+    background: url("../img/light/italic.svg") center center no-repeat;
+}
+[data-mode=dark] .editor-toolbar .fa-list-ol {
+    background: url("../img/light/orderedlist.svg") center center no-repeat;
+}
+[data-mode=dark] .editor-toolbar .fa-list-ul {
+    background: url("../img/light/unorderedlist.svg") center center no-repeat;
+}
+[data-mode=dark] .editor-toolbar .fa-strikethrough {
+	background: url("../img/light/strikethrough.svg") center center no-repeat;
+}
+[data-mode=dark] .editor-toolbar .fa-link {
+    background: url("../img/light/link.svg") center center no-repeat;
+}
+[data-mode=dark] .editor-toolbar .fa-quote {
+    background: url("../img/light/blockquote.svg") center center no-repeat;
+}
+[data-mode=dark] .editor-toolbar .fa-minus {
+    background: url("../img/light/horizontal-rule.svg") center center no-repeat;
+}
+[data-mode=dark] .editor-toolbar .fa-table {
+    background: url("../img/light/table.svg") center center no-repeat;
+}
+[data-mode=dark] .editor-toolbar .fa-picture-o {
+    background: url("../img/light/image.svg") center center no-repeat;
+}
+[data-mode=dark] .editor-toolbar .fa-eye {
+    background: url("../img/light/eye.svg") center center no-repeat;
+}
+[data-mode=dark] .editor-toolbar .fa-quote-left {
+    background: url("../img/light/quote.svg") center center no-repeat;
+}
+[data-mode=dark] .editor-toolbar .fa-header {
+    background: url("../img/light/heading.svg") center center no-repeat;
+}
+[data-mode=dark] .editor-toolbar .fa-question-circle {
+    background: url("../img/light/question.svg") center center no-repeat;
+}
+[data-mode=dark] .editor-toolbar .fa-columns {
+    background: url("../img/light/columns.svg") center center no-repeat;
+}
+[data-mode=dark] .editor-toolbar .fa-arrows-alt {
+    background: url("../img/light/screen-full.svg") center center no-repeat;
+}
+[data-mode=dark] .editor-toolbar.disabled-for-preview a:not(.no-disable) {
+    background: var(--input-back-disabled, rgba(225, 231, 255, 0.1));
+}
+[data-mode=dark] .editor-preview,
+[data-mode=dark] .editor-preview-side {
+    background: #252529;
+}
+[data-mode=dark] .CodeMirror{
+    border-color: var(--input-border, rgba(225, 231, 255, 0.1));
+    background: var(--input-back, rgba(225, 231, 255, 0.05));
+    color: var(--input-color, rgba(255, 255, 255, 0.5));
+}
+[data-mode=dark] .editor-toolbar a {
+    color: var(--body-text, rgba(255, 255, 255, 0.75)) !important;
+}
+[data-mode=dark] .editor-toolbar i.separator {
+    border-left-color: var(--input-border, rgba(225, 231, 255, 0.1));
+    border-right-color: var(--input-back, rgba(225, 231, 255, 0.05));
+}
+[data-mode=dark] .editor-toolbar {
+    background-color: var(--input-toolbar-back, rgba(255, 255, 255, 0.135));
+    border-top-color: var(--input-border, rgba(225, 231, 255, 0.1));
+    border-left-color: var(--input-border, rgba(225, 231, 255, 0.1));
+    border-right-color: var(--input-border, rgba(225, 231, 255, 0.1));
 }
