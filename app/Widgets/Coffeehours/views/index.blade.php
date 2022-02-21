@@ -257,7 +257,6 @@ foreach ($rows as $event)
 				@else
 					<div class="row">
 						<div class="col-md-12 text-right">
-							
 							<a href="/login?return=<?php echo base64_encode(route('page', ['uri' => 'coffee', 'attend' => 1, 'event' => $event->id])); ?>" data-newsid="{{ $event->id }}" data-assoc="0">Login</a> is required to reserve times.
 						</div>
 					</div>
