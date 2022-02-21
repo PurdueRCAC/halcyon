@@ -875,7 +875,7 @@ tr.floatingBoxHidden {
 	margin: 1em 0 0 0;
 }
 .profile_teaser_title {
-	font-style: italic;
+	/*font-style: italic;*/
 	font-weight: normal;
 }
 body ul.profile_teaser_contact {
@@ -2261,9 +2261,10 @@ img.profile_teaser_photo {
 	min-height: 88px;
 }
 p.profile_teaser_title {
-	font-style: italic;
-	margin-bottom: 0;
-	margin-top: -1em;
+	/*font-style: italic;
+	margin-top: -1em;*/
+	margin: -0.5em 0 0 0;
+	color: #6b6b6b;
 }
 
 p.profile_title {
