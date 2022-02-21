@@ -187,7 +187,7 @@ $(document).ready(function () {
 
         // render the questions
 
-        $("#questionlist").append($.Mustache.render('question-checkbox-template', { questions: questionlist }));
+        $("#questionlist").empty().append($.Mustache.render('question-checkbox-template', { questions: questionlist }));
 
         $(".facet").on("change", function () { //thefacet
             var a = find_facet($(this).attr("facetid"));

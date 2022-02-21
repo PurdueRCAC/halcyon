@@ -50,7 +50,9 @@ app('pathway')->append(
                                     <button class="btn btn-secondary btn-sm btn-clear-filters ">Clear Answers</button>
                                 </div>
                             </div>
-                            <ol id="questionlist"></ol>
+                            <ol id="questionlist">
+                                <li class="sr-only">Loading questions...</li>
+                            </ol>
                         </div>
                     </div>
                     <div class="cd-cell cd-services">
