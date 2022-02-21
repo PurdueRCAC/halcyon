@@ -1188,11 +1188,9 @@ class ArticlesController extends Controller
 
 		if (count($emails) > 0)
 		{
-			$message = new Message($row, $name);
-
 			foreach ($emails as $email)
 			{
-				Mail::to($email)->send($message);
+				Mail::to($email)->send(new Message($row, $name));
 
 				Log::create([
 					'ip'              => request()->ip(),
