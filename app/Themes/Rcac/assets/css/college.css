@@ -74,7 +74,7 @@ table {
   --gray-dark: #343a40;
   --primary: #007bff;
   --secondary: #6c757d;
-  --success: #28a745;
+  --success: #218739; /*#28a745;*/
   --info: #17a2b8;
   --warning: #ffc107;
   --danger: #dc3545;
@@ -10176,7 +10176,8 @@ a.text-secondary:hover, a.text-secondary:focus {
 }
 
 .text-success {
-  color: #28a745 !important;
+  /*color: #28a745 !important;*/
+  color: #218739 !important;
 }
 
 a.text-success:hover, a.text-success:focus {
