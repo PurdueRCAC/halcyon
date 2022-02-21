@@ -80,14 +80,14 @@ app('pathway')->append(
 					<ul class="news-list">
 						<?php foreach ($articles as $article): ?>
 							<li>
-								<article id="article-{{ $article->id }}" aria-labelledby="article-{{ $article->id }}-title">
+								<article id="article-{{ $article->id }}" aria-labelledby="article-{{ $article->id }}-title" itemscope itemtype="https://schema.org/<?php echo ($article->type->calendar ? 'Event' : 'NewsArticle'); ?>">
 									<h3 id="article-{{ $article->id }}-title" class="news-title">
-										<a href="{{ route('site.news.show', ['id' => $article->id]) }}"><span class="sr-only">{{ trans('news::news.article id', ['id' => $article->id]) }}:</span> {{ $article->headline }}</a>
+										<a href="{{ route('site.news.show', ['id' => $article->id]) }}"><span class="sr-only">{{ trans('news::news.article id', ['id' => $article->id]) }}:</span> <span itemprop="name">{{ $article->headline }}</span></a>
 									</h3>
 									<ul class="news-meta text-muted">
 										<li>
 											<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span>
-											<time>{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}</time>
+											<time datetime="{{ $article->datetimenews->format('Y-m-d\TH:i:s\Z') }}">{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}</time>
 											@if ($article->isToday())
 												@if ($article->isNow())
 													<span class="badge badge-success">{{ trans('news::news.happening now') }}</span>

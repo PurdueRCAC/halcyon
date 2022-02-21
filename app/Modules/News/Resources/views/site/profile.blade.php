@@ -43,7 +43,7 @@
 							<h3 class="card-title panel-title crmcontactdate"><a href="{{ route('site.news.show', ['id' => $row->id]) }}">{{ $row->headline }}</a></h3>
 							<ul class="card-meta panel-meta news-meta">
 								@if (auth()->user() && auth()->user()->can('manage news'))
-									<li class="news-date"><span class="newspostdate">Posted on {{ $row->datetimecreated->format('M d, Y') }}</span></li>
+									<li class="news-date"><span class="newspostdate">Posted on <time datetime="{{ $row->datetimenews->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimecreated->format('M d, Y') }}</time></span></li>
 									<li class="news-author"><span class="newsposter">Posted by {{ $row->creator->name }}</span></li>
 								@endif
 								<li class="news-date">{!! $row->formatDate($row->datetimenews, $row->datetimenewsend) !!}
@@ -115,7 +115,7 @@
 										{!! $update->formattedBody !!}
 									</div>
 									<div class="card-footer panel-footer">
-										<div class="crmcommentpostedby">Posted by {{ $update->creator ? $update->creator->name : trans('global.unknown') }} on {{ $update->formattedDatetimecreated($update->datetimecreated->toDateTimeString()) }}</div>
+										<div class="crmcommentpostedby">Posted by {{ $update->creator ? $update->creator->name : trans('global.unknown') }} on <time datetime="{{ $update->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">{{ $update->formattedDatetimecreated($update->datetimecreated->toDateTimeString()) }}</time></div>
 									</div>
 								</div>
 							</li>

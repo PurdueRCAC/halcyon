@@ -84,34 +84,37 @@ app('pathway')
 							--><span class="fa fa-fw fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.edit') }}</span><!--
 						--></a>
 					@endif
-					<article id="article-{{ $article->id }}" aria-labelledby="article-{{ $article->id }}-title">
+					<article id="article-{{ $article->id }}" aria-labelledby="article-{{ $article->id }}-title" itemscope itemtype="https://schema.org/<?php echo ($type->calendar ? 'Event' : 'NewsArticle'); ?>">
 						<h3 id="article-{{ $article->id }}-title" class="news-title">
-							<a href="{{ route('site.news.show', ['id' => $article->id]) }}"><span class="sr-only">{{ trans('news::news.article id', ['id' => $article->id]) }}:</span> {{ $article->headline }}</a>
+							<a href="{{ route('site.news.show', ['id' => $article->id]) }}"><span class="sr-only">{{ trans('news::news.article id', ['id' => $article->id]) }}:</span> <span itemprop="name">{{ $article->headline }}</span></a>
 						</h3>
 						<ul class="news-meta text-muted">
 							<li>
-							<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span>
-							<time datetime="{{ $article->datetimenews }}">
-								{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}
-							</time>
-							@if ($article->isToday())
-								@if ($article->isNow())
-									<span class="badge badge-success">{{ trans('news::news.happening now') }}</span>
-								@else
-									<span class="badge badge-info">{{ trans('news::news.today') }}</span>
+								<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span>
+								<time datetime="{{ $article->datetimenews->format('Y-m-d\TH:i:s\Z') }}">
+									{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}
+								</time>
+								@if ($article->isToday())
+									@if ($article->isNow())
+										<span class="badge badge-success">{{ trans('news::news.happening now') }}</span>
+									@else
+										<span class="badge badge-info">{{ trans('news::news.today') }}</span>
+									@endif
+								@elseif ($article->isTomorrow())
+									<span class="badge">{{ trans('news::news.tomorrow') }}</span>
 								@endif
-							@elseif ($article->isTomorrow())
-								<span class="badge">{{ trans('news::news.tomorrow') }}</span>
-							@endif
-							<?php
-							$lastupdate = $article->updates()
-								->orderBy('datetimecreated', 'desc')
-								->limit(1)
-								->first();
-							?>
-							@if ($lastupdate)
-								<span class="badge badge-warning"><span class="fa fa-exclamation-circle" aria-hidden="true"></span> {{ trans('news::news.updated at', ['time' => $lastupdate->datetimecreated->format('M d, Y h:ia')]) }}</span>
-							@endif
+								<?php
+								$lastupdate = $article->updates()
+									->orderBy('datetimecreated', 'desc')
+									->limit(1)
+									->first();
+								?>
+								@if ($lastupdate)
+									<span class="badge badge-warning">
+										<span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+										<time datetime="{{ $lastupdate->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">{{ trans('news::news.updated at', ['time' => $lastupdate->datetimecreated->format('M d, Y h:ia')]) }}</time>
+									</span>
+								@endif
 							</li>
 							<?php
 							$resources = $article->resourceList()->get();
@@ -128,7 +131,7 @@ app('pathway')
 							endif;
 							?>
 						</ul>
-						<p>
+						<p itemprop="description">
 							{{ Illuminate\Support\Str::limit(strip_tags($article->formattedBody), 150) }}
 						</p>
 					</article>

@@ -4,7 +4,7 @@
 	<ul class="newslist">
 		@foreach ($articles as $i => $article)
 			<li<?php if ($i == 0) { echo ' class="first"'; } ?>>
-				<a href="{{ route('site.news.show', ['id' => $article->id]) }}">{{ $article->headline }}</a>
+				<a href="{{ route('site.news.show', ['id' => $article->id]) }}" itemprop="name">{{ $article->headline }}</a>
 				<p class="news-metadata text-muted">
 					@if ($article->isToday())
 						@if ($article->isNow())
@@ -16,7 +16,7 @@
 						<span class="badge">{{ trans('news::news.tomorrow') }}</span>
 					@endif
 
-					<time datetime="{{ $article->datetimenews }}">
+					<time datetime="{{ $article->datetimenews->format('Y-m-d\TH:i:s\Z') }}">
 						{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}
 					</time>
 					<?php
@@ -26,7 +26,10 @@
 						->first();
 					?>
 					@if ($lastupdate)
-						<span class="badge badge-warning"><span class="fa fa-exclamation-circle" aria-hidden="true"></span> {{ trans('news::news.updated at', ['time' => $lastupdate->datetimecreated->format('M d, Y h:ia')]) }}</span>
+						<span class="badge badge-warning">
+							<span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+							<time datetime="{{ $lastupdate->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">{{ trans('news::news.updated at', ['time' => $lastupdate->datetimecreated->format('M d, Y h:ia')]) }}</time>
+						</span>
 					@endif
 				</p>
 			</li>
