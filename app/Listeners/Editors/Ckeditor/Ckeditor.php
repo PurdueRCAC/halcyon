@@ -11,6 +11,13 @@ use stdClass;
 class Ckeditor
 {
 	/**
+	 * Number of instances, used to ensure assets only get added once
+	 *
+	 * @var  integer
+	 */
+	private static $instances = 0;
+
+	/**
 	 * Register the listeners for the subscriber.
 	 *
 	 * @param  Illuminate\Events\Dispatcher  $events
@@ -33,6 +40,8 @@ class Ckeditor
 		{
 			return;
 		}
+
+		self::$instances++;
 
 		$content = $editor->getValue();
 		$name = $editor->getName();
@@ -86,6 +95,7 @@ class Ckeditor
 			'value' => $content, //$editor->getValue(),
 			'atts'  => $attributes,
 			'config' => $config,
+			'assets' => self::$instances > 1 ? false : true,
 		]));
 
 		return false;

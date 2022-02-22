@@ -131,27 +131,22 @@ app('pathway')
 				<fieldset class="adminform">
 					<legend>{{ trans('contactreports::contactreports.comments') }}</legend>
 
-					<ul id="comments">
+					<ul id="comments" class="list-group">
 					<?php
 					$comments = $row->comments()->orderBy('datetimecreated', 'asc')->get();
 
 					if (count($comments) > 0):
 					?>
 						@foreach ($comments as $comment)
-						<li id="comment_{{ $comment->id }}" data-api="{{ route('api.contactreports.comments.update', ['id' => $comment->id]) }}">
-							<a href="#comment_{{ $comment->id }}_comment" class="btn btn-link comment-edit hide-when-editing">
-								<span class="fa fa-pencil"><span class="sr-only">{{ trans('global.button.edit') }}</span></span>
-							</a>
-							<a href="#comment_{{ $comment->id }}" class="btn btn-link comment-delete" data-confirm="{{ trans('global.confirm delete') }}">
-								<span class="fa fa-trash"><span class="sr-only">{{ trans('global.button.delete') }}</span></span>
-							</a>
-							<div id="comment_{{ $comment->id }}_text">
+						<li id="comment_{{ $comment->id }}" data-api="{{ route('api.contactreports.comments.update', ['id' => $comment->id]) }}" class="list-group-item">
+							<div id="comment_{{ $comment->id }}_text" class="hide-when-editing">
 								{!! $comment->formattedComment !!}
 							</div>
 							<div id="comment_{{ $comment->id }}_edit" class="show-when-editing">
 								<div class="form-group">
 									<label for="comment_{{ $comment->id }}_comment" class="sr-only">{{ trans('contactreports::contactreports.comment') }}</label>
-									<textarea name="comment" id="comment_{{ $comment->id }}_comment" class="form-control" cols="45" rows="3">{{ $comment->comment }}</textarea>
+									<!-- <textarea name="comment" id="comment_{{ $comment->id }}_comment" class="form-control" cols="45" rows="3">{{ $comment->comment }}</textarea> -->
+									{!! markdown_editor('comment', $comment->comment, ['rows' => 2, 'id' => 'comment_' . $comment->id . '_comment']) !!}
 								</div>
 								<div class="form-group text-right">
 									<button class="btn btn-secondary comment-save" data-parent="#comment_{{ $comment->id }}">{{ trans('global.button.save') }}</button>
@@ -160,25 +155,31 @@ app('pathway')
 									</a>
 								</div>
 							</div>
-							<p>{{ trans('contactreports::contactreports.posted by', ['who' => ($comment->creator ? $comment->creator->name : trans('global.unknown')), 'when' => $comment->datetimecreated->toDateTimeString()]) }}</p>
+							<div class="row">
+								<div class="col-md-9 text-muted">
+									{{ trans('contactreports::contactreports.posted by', ['who' => ($comment->creator ? $comment->creator->name : trans('global.unknown')), 'when' => $comment->datetimecreated->format('M d, Y')]) }}
+								</div>
+								<div class="col-md-3 text-right">
+									<a href="#comment_{{ $comment->id }}_comment" class="comment-edit hide-when-editing">
+										<span class="fa fa-pencil"><span class="sr-only">{{ trans('global.button.edit') }}</span></span>
+									</a>
+									<a href="#comment_{{ $comment->id }}" class="comment-delete text-danger" data-confirm="{{ trans('global.confirm delete') }}">
+										<span class="fa fa-trash"><span class="sr-only">{{ trans('global.button.delete') }}</span></span>
+									</a>
+								</div>
+							</div>
 						</li>
 						@endforeach
 					<?php
 					endif;
 					?>
-						<li id="comment_<?php echo '{id}'; ?>" class="d-none" data-api="{{ route('api.contactreports.comments') }}/<?php echo '{id}'; ?>">
-							<a href="#comment_<?php echo '{id}'; ?>_comment" class="btn btn-link comment-edit hide-when-editing">
-								<span class="fa fa-pencil"><span class="sr-only">{{ trans('global.button.edit') }}</span></span>
-							</a>
-							<a href="#comment_<?php echo '{id}'; ?>" class="btn btn-link comment-delete" data-confirm="{{ trans('global.confirm delete') }}">
-								<span class="fa fa-trash"><span class="sr-only">{{ trans('global.button.delete') }}</span></span>
-							</a>
-							<div id="comment_<?php echo '{id}'; ?>_text">
+						<li id="comment_<?php echo '{id}'; ?>" class="list-group-item d-none" data-api="{{ route('api.contactreports.comments') }}/<?php echo '{id}'; ?>">
+							<div id="comment_<?php echo '{id}'; ?>_text" class="hide-when-editing">
 							</div>
 							<div id="comment_<?php echo '{id}'; ?>_edit" class="show-when-editing">
 								<div class="form-group">
 									<label for="comment_<?php echo '{id}'; ?>_comment" class="sr-only">{{ trans('contactreports::contactreports.comment') }}</label>
-									<textarea name="comment" id="comment_<?php echo '{id}'; ?>_comment" class="form-control" cols="45" rows="3"></textarea>
+									<textarea name="comment" id="comment_<?php echo '{id}'; ?>_comment" class="form-control md" cols="45" rows="3"></textarea>
 								</div>
 								<div class="form-group text-right">
 									<button class="btn btn-secondary comment-save" data-parent="#comment_<?php echo '{id}'; ?>">{{ trans('global.button.save') }}</button>
@@ -187,12 +188,25 @@ app('pathway')
 									</a>
 								</div>
 							</div>
-							<p>{{ trans('contactreports::contactreports.posted by', ['who' => '{who}', 'when' => '{when}']) }}</p>
+							<div class="row">
+								<div class="col-md-9 text-muted">
+									{{ trans('contactreports::contactreports.posted by', ['who' => '{who}', 'when' => '{when}']) }}
+								</div>
+								<div class="col-md-3 text-right">
+									<a href="#comment_<?php echo '{id}'; ?>_comment" class="comment-edit hide-when-editing">
+										<span class="fa fa-pencil"><span class="sr-only">{{ trans('global.button.edit') }}</span></span>
+									</a>
+									<a href="#comment_<?php echo '{id}'; ?>" class="comment-delete text-danger" data-confirm="{{ trans('global.confirm delete') }}">
+										<span class="fa fa-trash"><span class="sr-only">{{ trans('global.button.delete') }}</span></span>
+									</a>
+								</div>
+							</div>
 						</li>
 						<li id="comment_new" data-api="{{ route('api.contactreports.comments.create') }}">
 							<div class="form-group">
 								<label for="comment_new_comment" class="sr-only">{{ trans('contactreports::contactreports.comment') }}</label>
-								<textarea name="comment" id="comment_new_comment" class="form-control" cols="45" rows="3"></textarea>
+								<!-- <textarea name="comment" id="comment_new_comment" class="form-control" cols="45" rows="3"></textarea> -->
+								{!! markdown_editor('comment', '', ['rows' => 2, 'id' => 'comment_new_comment']) !!}
 							</div>
 							<div class="form-group text-right">
 								<button class="btn btn-secondary comment-add" data-parent="#comment_new">{{ trans('contactreports::contactreports.add') }}</button>

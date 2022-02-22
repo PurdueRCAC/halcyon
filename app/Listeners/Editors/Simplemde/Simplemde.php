@@ -11,6 +11,13 @@ use stdClass;
 class Simplemde
 {
 	/**
+	 * Number of instances, used to ensure assets only get added once
+	 *
+	 * @var  integer
+	 */
+	private static $instances = 0;
+
+	/**
 	 * Register the listeners for the subscriber.
 	 *
 	 * @param  Illuminate\Events\Dispatcher  $events
@@ -33,6 +40,8 @@ class Simplemde
 		{
 			return;
 		}
+
+		self::$instances++;
 
 		$content = $editor->getValue();
 		$name    = $editor->getName();
@@ -79,6 +88,7 @@ class Simplemde
 			'id'     => $attr['id'],
 			'value'  => $content, //$editor->getValue(),
 			'atts'   => $attributes,
+			'assets' => self::$instances > 1 ? false : true,
 		]));
 
 		return false;

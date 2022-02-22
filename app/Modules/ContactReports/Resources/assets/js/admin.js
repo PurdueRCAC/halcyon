@@ -238,7 +238,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 					template.html(content).insertBefore(li);
 
-					$('#comment_' + response.id + '_comment').val(response.comment);
+					var ta = $('#comment_' + response.id + '_comment');
+					ta.val(response.comment);
+					ta[0].dispatchEvent(new Event('initEditor', { bubbles: true }));
 				}
 
 				comment.val('');
