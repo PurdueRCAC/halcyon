@@ -216,7 +216,7 @@ class UpdatesController extends Controller
 			return response()->json(['message' => trans('news::news.error.failed to create record')], 500);
 		}
 
-		if (in_array($row->article->newstypeid, config('module.news.notify_update', [])))
+		if ($row->article->published && !$row->article->template && in_array($row->article->newstypeid, config('module.news.notify_update', [])))
 		{
 			$row->article->notify(new ArticleUpdated($row->article));
 		}

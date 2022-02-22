@@ -11,6 +11,7 @@ use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Type;
 use App\Modules\News\Models\Stemmedtext;
 use App\Modules\News\Notifications\ArticleCreated;
+use App\Modules\News\Notifications\ArticleUpdated;
 use App\Halcyon\Http\StatefulRequest;
 use App\Halcyon\Utility\PorterStemmer;
 use Carbon\Carbon;
@@ -334,9 +335,16 @@ class ArticlesController extends Controller
 			$row->setAssociations($request->input('associations'));
 		}
 
-		if (!$id && in_array($row->newstypeid, config('module.news.notify_create', [])))
+		if ($row->published && !$row->template)
 		{
-			$row->notify(new ArticleCreated($row));
+			if (!$id && in_array($row->newstypeid, config('module.news.notify_create', [])))
+			{
+				$row->notify(new ArticleCreated($row));
+			}
+			elseif (in_array($row->newstypeid, config('module.news.notify_update', [])))
+			{
+				$row->notify(new ArticleUpdated($row));
+			}
 		}
 
 		return $this->cancel()->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created')));

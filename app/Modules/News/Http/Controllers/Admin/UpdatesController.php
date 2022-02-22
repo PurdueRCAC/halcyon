@@ -178,7 +178,7 @@ class UpdatesController extends Controller
 			return redirect()->back()->with('error', trans('global.messages.save failed'));
 		}
 
-		if (in_array($row->article->newstypeid, config('module.news.notify_update', [])))
+		if ($row->article->published && !$row->article->template && in_array($row->article->newstypeid, config('module.news.notify_update', [])))
 		{
 			$row->article->notify(new ArticleUpdated($row->article));
 		}
