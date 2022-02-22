@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             spellChecker: false,
             status: false,
+            forceSync: true,
             showIcons: ["bold", "italic", "heading", "strikethrough", "code", "quote", "unordered-list", "ordered-list", "link", "image", "horizontal-rule", "table"],
             hideIcons: ["side-by-side", "fullscreen", "guide", "undo", "redo"],
             autoDownloadFontAwesome: false

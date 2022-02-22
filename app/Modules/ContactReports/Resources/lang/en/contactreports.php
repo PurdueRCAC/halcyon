@@ -66,4 +66,8 @@ return [
 	'start' => 'Start date',
 	'stop' => 'End date',
 	'stats' => 'Stats',
+	'invalid' => [
+		'contacted' => 'Please provide a valid date of contact.',
+		'report' => 'Please provide a report.',
+	],
 ];
