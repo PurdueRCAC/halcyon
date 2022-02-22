@@ -757,9 +757,12 @@ class OrdersController extends Controller
 			return response()->json(['message' => 'Invalid group ID'], 404);
 		}
 
+		$isApprover = in_array(auth()->user()->id, $row->accounts->pluck('approveruserid')->toArray());
+
 		// Ensure client is authorized
 		if (auth()->user()->id != $row->userid
 		 && auth()->user()->id != $row->submitteruserid
+		 && ($request->has('usernotes') && !$isApprover)
 		 && !auth()->user()->can('manage orders'))
 		{
 			return response()->json(['message' => trans('global.error.not authorized')], 403);

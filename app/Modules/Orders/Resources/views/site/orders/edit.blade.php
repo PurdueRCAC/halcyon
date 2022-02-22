@@ -331,7 +331,8 @@ $(document).ready(function() {
 
 @php
 $myorder = (auth()->user()->id == $order->submitteruserid || auth()->user()->id == $order->userid);
-$canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own orders') && $myorder));
+$canEdit = (auth()->user()->can('manage orders') || (auth()->user()->can('edit.own orders') && $myorder));
+$isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruserid')->toArray());
 @endphp
 
 @section('content')
@@ -1141,7 +1142,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 
 				<div class="card">
 					<div class="card-header">
-						@if ($canEdit)
+						@if ($canEdit || $isApprover)
 							<div class="row">
 								<div class="col-md-6">
 									<h3 class="panel-title card-title">
@@ -1179,7 +1180,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 						<p class="ordernotes">
 							<span id="SPAN_{{ $order->id }}_usernotes">{!! $order->usernotes ? nl2br($order->usernotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</span>
 
-							@if ($canEdit)
+							@if ($canEdit || $isApprover)
 								<label for="INPUT_{{ $order->id }}_usernotes" class="sr-only">{{ trans('orders::orders.user notes') }}:</label>
 								<textarea name="fields[usernotes]" maxlength="2000" cols="80" rows="10" class="form-control stash" id="INPUT_{{ $order->id }}_usernotes">{{ $order->usernotes }}</textarea>
 							@endif
