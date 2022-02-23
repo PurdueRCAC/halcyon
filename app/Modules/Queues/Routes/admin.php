@@ -170,4 +170,9 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		'uses' => 'QueuesController@delete',
 		'middleware' => 'can:delete queues',
 	]);
+	$router->match(['get', 'post'], '/stats', [
+		'as'   => 'admin.queues.stats',
+		'uses' => 'StatsController@index',
+		'middleware' => 'can:manage queues',
+	]);
 });

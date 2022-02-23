@@ -146,4 +146,5 @@ return [
 	'entry marked as trashed' => 'This entry is marked as trashed.',
 	'list of queues' => 'Below is a list of all queues',
 	'confirm delete queue' => 'Are you sure you want to delete this queue?',
+	'stats' => 'Stats',
 ];

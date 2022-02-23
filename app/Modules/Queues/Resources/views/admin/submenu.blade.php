@@ -13,5 +13,8 @@
 		<li class="nav-item">
 			<a class="nav-link @if (trim($slot) == 'schedulerpolicies') active @endif" href="{{ route('admin.queues.schedulerpolicies') }}">{{ trans('queues::queues.scheduler policies') }}</a>
 		</li>
+		<li class="nav-item">
+			<a class="nav-link @if (trim($slot) == 'stats') active @endif" href="{{ route('admin.queues.stats') }}">{{ trans('queues::queues.stats') }}</a>
+		</li>
 	</ul>
 </nav><!-- / .sub-navigation -->
