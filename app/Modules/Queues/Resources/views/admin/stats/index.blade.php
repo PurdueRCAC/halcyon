@@ -144,15 +144,6 @@ app('pathway')
 					@foreach ($resources as $res)
 						<?php $selected = ($res->id == $filters['resource'] ? ' selected="selected"' : ''); ?>
 						<option value="{{ $res->id }}"<?php echo $selected; ?>>{{ str_repeat('- ', $res->level) . $res->name }}</option>
-						<?php
-						foreach ($res->subresources()->orderBy('name', 'asc')->get() as $subresource):
-							$key = 's' . $subresource->id;
-							$selected = ($filters['resource'] && $key == (string)$filters['resource'] ? ' selected="selected"' : '');
-							?>
-							<option value="{{ $key }}"<?php echo $selected; ?>>{{ str_repeat('- ', 1) . $subresource->name }}</option>
-							<?php
-						endforeach;
-						?>
 					@endforeach
 				</select>
 
