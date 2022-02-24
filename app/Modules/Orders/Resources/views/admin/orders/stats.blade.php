@@ -83,7 +83,8 @@ $(document).ready(function () {
 							'rgb(75, 192, 192)', // blue green
 							'rgb(255, 159, 64)', // orange
 							'rgb(153, 102, 255)' // purple
-						]
+						],
+						borderColor: <?php echo (auth()->user()->facet('theme.admin.mode') == 'dark' ? '"rgba(0, 0, 0, 0.6)"' : '"#fff"'); ?>
 					}
 				]
 			},
