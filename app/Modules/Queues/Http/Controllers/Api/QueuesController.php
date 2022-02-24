@@ -183,8 +183,8 @@ class QueuesController extends Controller
 		$query = Queue::query()
 			->select($q . '.*')
 			->with('scheduler')
-			->join($c, $c . '.subresourceid', $q . '.subresourceid')
-			->join($r, $r . '.id', $c . '.resourceid')
+			->leftJoin($c, $c . '.subresourceid', $q . '.subresourceid')
+			->leftJoin($r, $r . '.id', $c . '.resourceid')
 			->whereNull($r . '.datetimeremoved')
 			->withTrashed();
 
