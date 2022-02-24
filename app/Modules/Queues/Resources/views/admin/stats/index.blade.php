@@ -138,6 +138,14 @@ app('pathway')
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col col-md-12 filter-select text-right">
+				<label class="sr-only" for="filter_type">{{ trans('queues::queues.type') }}</label>
+				<select name="type" id="filter_type" class="form-control filter filter-submit">
+					<option value="0">{{ trans('queues::queues.all types') }}</option>
+					@foreach ($types as $type)
+						<option value="{{ $type->id }}"<?php if ($filters['type'] == $type->id): echo ' selected="selected"'; endif;?>>{{ $type->name }}</option>
+					@endforeach
+				</select>
+
 				<label class="sr-only" for="filter_resource">{{ trans('queues::queues.resource') }}</label>
 				<select name="resource" id="filter_resource" class="form-control filter filter-submit">
 					<option value="0">{{ trans('queues::queues.all resources') }}</option>
@@ -189,6 +197,10 @@ app('pathway')
 
 							foreach ($resource->subresources()->orderBy('name', 'asc')->get() as $subresource):
 								$query = $subresource->queues();
+								if ($filters['type'])
+								{
+									$query->where($q . '.queuetype', '=', $filters['type']);
+								}
 								if ($filters['class'] == 'system')
 								{
 									$query->where('groupid', '<=', 0);
@@ -211,6 +223,11 @@ app('pathway')
 											->orWhere($s . '.datetimestop', '>', $now->toDateTimeString());
 									})
 									->where($s . '.datetimestart', '<=', $now->toDateTimeString());
+
+								if ($filters['type'])
+								{
+									$pquery->where($q . '.queuetype', '=', $filters['type']);
+								}
 
 								if ($filters['class'] == 'system')
 								{
@@ -245,6 +262,11 @@ app('pathway')
 											->orWhere($l . '.datetimestop', '>', $now->toDateTimeString());
 									})
 									->where($l . '.datetimestart', '<=', $now->toDateTimeString());
+
+								if ($filters['type'])
+								{
+									$lquery->where($q . '.queuetype', '=', $filters['type']);
+								}
 
 								if ($filters['class'] == 'system')
 								{
@@ -337,6 +359,11 @@ app('pathway')
 						})
 						->where($s . '.datetimestart', '<=', $now->toDateTimeString());
 
+					if ($filters['type'])
+					{
+						$pquery->where($q . '.queuetype', '=', $filters['type']);
+					}
+
 					if ($filters['class'] == 'system')
 					{
 						$pquery->where($q . '.groupid', '<=', 0);
@@ -370,6 +397,11 @@ app('pathway')
 								->orWhere($l . '.datetimestop', '>', $now->toDateTimeString());
 						})
 						->where($l . '.datetimestart', '<=', $now->toDateTimeString());
+
+					if ($filters['type'])
+					{
+						$lquery->where($q . '.queuetype', '=', $filters['type']);
+					}
 
 					if ($filters['class'] == 'system')
 					{
@@ -427,6 +459,10 @@ app('pathway')
 					$queues = array();
 					foreach ($resource->subresources()->orderBy('name', 'asc')->get() as $subresource):
 						$query = $subresource->queues();
+						if ($filters['type'])
+						{
+							$query->where('queuetype', '=', $filters['type']);
+						}
 						if ($filters['class'] == 'system')
 						{
 							$query->where('groupid', '<=', 0);
