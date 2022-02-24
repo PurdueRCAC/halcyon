@@ -198,10 +198,14 @@ app('pathway')
 								$start->modify('+1 week');
 								$weekend   = $start->format('Y-m-d') . ' 00:00:00';
 
-								$stats[$weekstart] = App\Modules\Queues\Models\Queue::query()
+								$qry = App\Modules\Queues\Models\Queue::query()
 									->where('datetimecreated', '>', $weekstart . ' 00:00:00')
-									->where('datetimecreated', '<', $weekend)
-									->count();
+									->where('datetimecreated', '<', $weekend);
+								if ($filters['type'])
+								{
+									$qry->where('queuetype', '=', $filters['type']);
+								}
+								$stats[$weekstart] = $qry->count();
 							}
 							?>
 							<canvas id="sparkline" class="sparkline-chart" width="500" height="110" data-labels="{{ json_encode(array_keys($stats)) }}" data-values="{{ json_encode(array_values($stats)) }}">
@@ -214,12 +218,12 @@ app('pathway')
 										</tr>
 									</thead>
 									<tbody>
-								@foreach ($stats as $day => $val)
+										@foreach ($stats as $day => $val)
 										<tr>
 											<td>{{ $day }}</td>
 											<td>{{ $val }}</td>
 										</tr>
-								@endforeach
+										@endforeach
 									</tbody>
 								</table>
 							</canvas>
@@ -477,11 +481,15 @@ app('pathway')
 								$start->modify('+1 week');
 								$weekend   = $start->format('Y-m-d') . ' 00:00:00';
 
-								$stats[$weekstart] = App\Modules\Queues\Models\Queue::query()
+								$qry = App\Modules\Queues\Models\Queue::query()
 									->whereIn('subresourceid', $ids)
 									->where('datetimecreated', '>', $weekstart . ' 00:00:00')
-									->where('datetimecreated', '<', $weekend)
-									->count();
+									->where('datetimecreated', '<', $weekend);
+								if ($filters['type'])
+								{
+									$qry->where('queuetype', '=', $filters['type']);
+								}
+								$stats[$weekstart] = $qry->count();
 							}
 							?>
 							<canvas id="sparkline" class="sparkline-chart" width="500" height="110" data-labels="{{ json_encode(array_keys($stats)) }}" data-values="{{ json_encode(array_values($stats)) }}">
