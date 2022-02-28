@@ -14,4 +14,7 @@ return [
 	'choose method' => 'Choose your sign in method:',
 	'authentication failed' => 'Authentication failed',
 	'i already have an account' => 'I already have an account',
+	'send reset link' => 'Email Password Reset Link',
+	'forgotten password' => 'Forgotten password',
+	'forgotten password instructions' => 'Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.',
 ];

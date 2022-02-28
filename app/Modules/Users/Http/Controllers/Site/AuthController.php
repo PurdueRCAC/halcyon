@@ -14,6 +14,7 @@ use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
 use App\Modules\Users\Events\Login;
 use App\Modules\Users\Events\Authenticate;
+use App\Modules\Users\Events\UserRegistered;
 
 class AuthController extends Controller
 {
@@ -200,103 +201,6 @@ class AuthController extends Controller
 		Auth::logout();
 
 		return redirect()->route(config('module.users.redirect_route_after_logout', 'login'));
-	}
-
-	/**
-	 * Display a listing of the resource.
-	 * 
-	 * @return Response
-	 */
-	public function register()
-	{
-		if (Auth::check())
-		{
-			return redirect($this->authenticatedRoute())
-				->withSuccess(trans('users::messages.already registered'));
-		}
-
-		return view('users::site.register');
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 * 
-	 * @param  Request $request
-	 * @return Response
-	 */
-	public function registering(Request $request)
-	{
-		$rules = [
-			'name' => 'required|min:3',
-			'username' => 'required|min:3',
-			'email' => 'required|email',
-			'password' => 'required|min:8',
-			'password_confirmation' => 'required|min:8',
-		];
-
-		$validator = Validator::make($request->all(), $rules);
-
-		if ($validator->fails())
-		{
-			return redirect()->back()
-				->withInput($request->input())
-				->withErrors($validator->messages());
-		}
-
-		if ($request->input('password') != $request->input('password_confirmation'))
-		{
-			return redirect()->back()
-				->withInput($request->input())
-				->withErrors(['password' => 'Password and password confirmation do not match']);
-		}
-
-		$user = User::findByUsername($request->input('username'));
-
-		if ($user && $user->id)
-		{
-			return redirect()->back()
-				->withInput($request->input())
-				->withErrors(['username' => 'Username is already taken']);
-		}
-
-		$user = User::findByEmail($request->input('email'));
-
-		if ($user && $user->id)
-		{
-			return redirect()->back()
-				->withInput($request->input())
-				->withErrors(['email' => 'Email is already taken']);
-		}
-
-		$user = new User;
-		$user->name = $request->input('name');
-		$user->api_token = Str::random(60);
-		$user->password = Hash::make($request->input('password'));
-
-		$newUsertype = config('module.users.new_usertype');
-
-		if (!$newUsertype)
-		{
-			$newUsertype = Role::findByTitle('Registered')->id;
-		}
-
-		if ($newUsertype)
-		{
-			$user->newroles = array($newUsertype);
-		}
-
-		if ($user->save())
-		{
-			$userusername = new UserUsername;
-			$userusername->userid = $user->id;
-			$userusername->username = $request->input('username');
-			$userusername->email = $request->input('email');
-			$userusername->save();
-		}
-
-		Auth::loginUsingId($user->id);
-
-		return redirect(route(config('module.users.redirect_route_after_login', 'home')));
 	}
 
 	/**

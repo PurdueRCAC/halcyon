@@ -25,11 +25,6 @@ app('pathway')
 				<p class="login-box-msg">{{ trans('users::auth.sign in welcome message') }}</p>
 			</div>
 
-			<?php
-			//$results = Event::dispatch('loginOptions', [$return]);
-			//echo implode("\n", $results);
-			?>
-
 			<form method="post" action="{{ route('login.post') }}" class="card-body">
 				<div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
 					<label for="login-username">{{ trans('users::auth.username or email') }}</label>
@@ -39,7 +34,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group has-feedback {{ $errors->has('password') ? ' has-error' : '' }}">
-					<a class="float-right" href="{{ route('reset') }}">{{ trans('users::auth.forgot password') }}</a>
+					<a class="float-right" href="{{ route('password.forgot') }}">{{ trans('users::auth.forgot password') }}</a>
 					<label for="login-password">{{ trans('users::auth.password') }}</label>
 					<input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" id="login-password" value="{{ old('password')}}">
 					<span class="glyphicon glyphicon-lock form-control-feedback"></span>

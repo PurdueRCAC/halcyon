@@ -2,16 +2,15 @@
 namespace App\Modules\Users\Models;
 
 use Illuminate\Notifications\Notifiable;
-use App\Halcyon\Access\Gate;
-use App\Halcyon\Access\Map;
-use App\Halcyon\Access\Role;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Support\Str;
+use App\Halcyon\Access\Gate;
+use App\Halcyon\Access\Map;
+use App\Halcyon\Access\Role;
 use App\Modules\Users\Events\UserCreating;
 use App\Modules\Users\Events\UserCreated;
 use App\Modules\Users\Events\UserUpdating;
@@ -28,7 +27,7 @@ class User extends Model implements
 	AuthenticatableContract,
 	AuthorizableContract
 {
-	use Authenticatable, Notifiable, Impersonate;
+	use Authenticatable, Notifiable, Impersonate, CanResetPassword;
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -42,7 +41,7 @@ class User extends Model implements
 	 *
 	 * @var  string
 	 **/
-	protected $table = 'users';//_old
+	protected $table = 'users';
 
 	/**
 	 * The attributes that are mass assignable.
@@ -61,7 +60,7 @@ class User extends Model implements
 	 *
 	 * @var array
 	 */
-	protected $appends = ['username', 'unixid', 'datecreated', 'dateremoved'];
+	protected $appends = ['username', 'unixid', 'datecreated', 'dateremoved', 'email'];
 
 	/**
 	 * Fields and their validation criteria

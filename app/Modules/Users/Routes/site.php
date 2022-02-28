@@ -4,7 +4,6 @@ use Illuminate\Routing\Router;
 
 /** @var Router $router */
 $router->get('login', [
-	//'middleware' => 'cas.auth',
 	'as'   => 'login',
 	'uses' => 'AuthController@login'
 ]);
@@ -13,23 +12,52 @@ $router->post('login', [
 	'uses' => 'AuthController@authenticate'
 ]);
 $router->get('callback', [
-	//'middleware' => 'cas.guest',
 	'as'   => 'callback',
 	'uses' => 'AuthController@authenticate'
+]);
+$router->get('logout', [
+	'as'   => 'logout',
+	'uses' => 'AuthController@logout'
 ]);
 
 if (config('module.user.allow_registration', true))
 {
 	$router->get('register', [
-		//'middleware' => 'auth.guest',
 		'as'   => 'register',
-		'uses' => 'AuthController@register'
+		'uses' => 'RegisterController@index'
 	]);
 	$router->post('register', [
 		'as'   => 'register.post',
-		'uses' => 'AuthController@registering'
+		'uses' => 'RegisterController@store'
 	]);
+
+	// Account Activation
+	//verify-email/{id}/{hash}
+	$router->get(
+		'activate/{id}/{code}',
+		'AuthController@activate'
+	);
 }
+
+// Remind password
+$router->get('forgot-password', [
+	'as' => 'password.forgot',
+	'uses' => 'ForgotPasswordController@index'
+]);
+$router->post('forgot-password', [
+	'as' => 'password.email',
+	'uses' => 'ForgotPasswordController@store'
+]);
+
+// Reset password
+$router->get('reset-password', [
+	'as' => 'password.reset',
+	'uses' => 'NewPasswordController@index'
+]);
+$router->post('reset-password', [
+	'as' => 'password.update',
+	'uses' => 'NewPasswordController@store'
+]);
 
 $router->group(['prefix' => 'account', 'middleware' => 'auth'], function (Router $router)
 {
@@ -58,6 +86,7 @@ $router->group(['prefix' => 'account', 'middleware' => 'auth'], function (Router
 	])->where('section', '[a-zA-Z0-9]+')->where('id', '[0-9]+')->where('subsection', '[a-zA-Z0-9]+');
 });
 
+// Impersonation
 $router->get('impersonate/take/{id}/{guardName?}', [
 	'as' => 'impersonate',
 	'uses' => '\Lab404\Impersonate\Controllers\ImpersonateController@take',
@@ -67,24 +96,4 @@ $router->get('impersonate/leave', [
 	'as' => 'impersonate.leave',
 	'uses' => '\Lab404\Impersonate\Controllers\ImpersonateController@leave',
 	'middleware' => ['auth']
-]);
-
-$router->get('reset', [
-	'as' => 'reset',
-	'uses' => 'AuthController@reset'
-]);
-$router->post('reset', [
-	'as' => 'reset.post',
-	'uses' => 'AuthController@resetting'
-]);
-
-// Account Activation
-$router->get(
-	'activate/{userId}/{activationCode}',
-	'AuthController@activate'
-);
-
-$router->get('logout', [
-	'as'   => 'logout',
-	'uses' => 'AuthController@logout'
 ]);
