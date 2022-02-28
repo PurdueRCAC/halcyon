@@ -2,9 +2,7 @@
 
 [![Build Status](https://build.rcac.purdue.edu/api/badges/RCAC-Staff/halcyon/status.svg)](https://build.rcac.purdue.edu/RCAC-Staff/halcyon)
 
-ITaP Research Computing portal.
-
-This is built on Laravel.
+ITaP Research Computing portal. The site uses Laravel for the underlying framework.
 
 ### About Laravel
 
@@ -23,7 +21,7 @@ Laravel is accessible, powerful, and provides tools required for large, robust a
 ### Minimum System Requirements
 
 To be able to run Halcyon you have to meet the following requirements:
-* PHP >= 7.2.5 or higher
+* PHP >= 7.3 or higher
 * BCMath PHP Extension
 * Ctype PHP Extension
 * Fileinfo PHP extension
@@ -33,7 +31,7 @@ To be able to run Halcyon you have to meet the following requirements:
 * PDO PHP Extension
 * Tokenizer PHP Extension
 * XML PHP Extension
-* MySql 5.5+ or MariahDB 10.1+
+* MySql 5.6+ or MariahDB 10.1+
 
 ### Structure
 
