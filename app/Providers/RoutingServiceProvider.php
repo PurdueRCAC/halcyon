@@ -3,7 +3,10 @@
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Routing\Router;
+use Illuminate\Http\Request;
 
 abstract class RoutingServiceProvider extends ServiceProvider
 {
@@ -130,6 +133,13 @@ abstract class RoutingServiceProvider extends ServiceProvider
 
 		if ($api && file_exists($api))
 		{
+			RateLimiter::for('api', function (Request $request)
+			{
+				return $request->user()
+					? Limit::perMinute(420)->by($request->user()->id)
+					: Limit::perMinute(120)->by($request->ip());
+			});
+
 			$router->group(
 				[
 					'namespace'  => 'Api',
@@ -149,11 +159,16 @@ abstract class RoutingServiceProvider extends ServiceProvider
 
 		if ($ws && file_exists($ws))
 		{
+			RateLimiter::for('ws', function (Request $request)
+			{
+				return Limit::none(); //perMinute(1000)->by(optional($request->user())->id ?: $request->ip());
+			});
+
 			$router->group(
 				[
 					'namespace'  => 'Api',
 					'prefix'     => 'ws',
-					'middleware' => ['api'],
+					'middleware' => ['throttle:ws', \Illuminate\Routing\Middleware\SubstituteBindings::class],
 				],
 				function (Router $router) use ($ws)
 				{
