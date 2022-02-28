@@ -197,7 +197,14 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 														<option value="/bin/bash"<?php echo $selected; ?>>bash</option>
 														<?php
 														$selected = '';
-														if (preg_match("/csh$/", $user->loginShell)):
+														if (preg_match("/\/csh$/", $user->loginShell)):
+															$selected = ' selected="selected"';
+														endif;
+														?>
+														<option value="/bin/csh"<?php echo $selected; ?>>csh</option>
+														<?php
+														$selected = '';
+														if (preg_match("/tcsh$/", $user->loginShell)):
 															$selected = ' selected="selected"';
 														endif;
 														?>
@@ -568,7 +575,14 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 										<option value="/bin/bash"<?php echo $selected; ?>>bash</option>
 										<?php
 										$selected = '';
-										if (preg_match("/csh$/", $user->loginShell)):
+										if (preg_match("/\/csh$/", $user->loginShell)):
+											$selected = ' selected="selected"';
+										endif;
+										?>
+										<option value="/bin/csh"<?php echo $selected; ?>>csh</option>
+										<?php
+										$selected = '';
+										if (preg_match("/tcsh$/", $user->loginShell)):
 											$selected = ' selected="selected"';
 										endif;
 										?>
