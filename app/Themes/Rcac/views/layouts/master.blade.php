@@ -89,6 +89,7 @@
 
 	</head>
 	<body>
+		<a class="sr-only visually-hidden" href="#content">Skip to main content</a>
 		@widget('top')
 		@if (app()->has('impersonate') && app('impersonate')->isImpersonating())
 			<div class="notice-banner admin text-center">
@@ -306,56 +307,68 @@
 					<div class="row panel-group" id="accordion">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footerone">Portal <span class="fa fa-plus right" aria-hidden="true"></span><span class="fa fa-minus right" aria-hidden="true"></span></a></h3>
+								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footerone">Communication <span class="fa fa-plus right" aria-hidden="true"></span><span class="fa fa-minus right" aria-hidden="true"></span></a></h3>
 							</div>
 							<div class="panel-collapse collapse" id="footerone">
 								<div class="panel-body">
 									<ul>
-										<li><a href="https://mypurdue.purdue.edu/">MyPurdue</a></li>
-										<li><a href="https://one.purdue.edu/">OneCampus Portal</a></li>
-										<li><a href="https://www.purdue.edu/employeeportal">Employee Portal</a></li>
+										<li><a href="https://one.purdue.edu">OneCampus Portal</a></li>
+										<li><a href="https://purdue.brightspace.com" rel="noopener" target="_blank">Brightspace</a></li>
+										<li><a href="https://www.purdue.edu/boilerconnect/">BoilerConnect</a></li>
+										<li><a href="https://portal.office.com/">Office 365</a></li>
+										<li><a href="https://outlook.office.com/">Outlook</a></li>
+										<li><a href="https://mypurdue.purdue.edu">myPurdue</a></li>
 									</ul>
 								</div>
 							</div>
 						</div>
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footertwo"><span class="sr-only">Purdue </span>Services <span class="fa fa-plus right" aria-hidden="true"></span><span class="fa fa-minus right" aria-hidden="true"></span></a></h3>
+								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footertwo">Campus <span class="fa fa-plus right" aria-hidden="true"></span><span class="fa fa-minus right" aria-hidden="true"></span></a></h3>
 							</div>
 							<div class="panel-collapse collapse" id="footertwo">
 								<div class="panel-body">
 									<ul>
-										<li><a href="https://www.itap.purdue.edu/">Information Technology</a></li>
-										<li><a href="https://www.lib.purdue.edu/">Libraries</a></li>
-										<li><a href="https://www.itap.purdue.edu/directory/">Directory</a></li>
+										<li><a href="https://www.purdue.edu/purdue/faculty_staff/index.php">Faculty and Staff</a></li>
+										<li><a href="https://www.purdue.edu/hr/">Human Resources</a></li>
+										<li><a href="https://www.purdue.edu/purdue/careers/index.php"><span class="sr-only">Purdue </span>Careers</a></li>
+										<li><a href="https://www.purdue.edu/purdue/about/colleges_schools.php">Colleges and Schools</a></li>
+										<li><a href="https://www.purdue.edu/directory/">Directory</a></li>
+										<li><a href="https://www.purdue.edu/campus-map/">Campus Map</a></li>
 									</ul>
 								</div>
 							</div>
 						</div>
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footerthree">Communication <span class="fa fa-plus right" aria-hidden="true"></span><span class="fa fa-minus right" aria-hidden="true"></span></a></h3>
+								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footerthree">Information <span class="fa fa-plus right" aria-hidden="true"></span><span class="fa fa-minus right" aria-hidden="true"></span></a></h3>
 							</div>
 							<div class="panel-collapse collapse" id="footerthree">
 								<div class="panel-body">
 									<ul>
-										<li><a href="https://outlook.office.com/">Outlook</a></li>
-										<li><a href="https://portal.office.com/">Office 365</a></li>
 										<li><a href="https://www.purdue.edu/newsroom/purduetoday/">Purdue Today</a></li>
+										<li><a href="https://calendar.purdue.edu/">Calendar</a></li>
+										<li><a href="https://www.lib.purdue.edu/">Libraries</a></li>
+										<li><a href="https://www.purdue.edu/physicalfacilities/construction/">Construction</a></li>
+										<li><a href="https://www.purdue.edu/bursar/tuition/calculator.php">Tuition Calculator</a></li>
+										<li><a href="https://www.purdue.edu/hr/CHL/">Center for Healthy Living</a></li>
 									</ul>
 								</div>
 							</div>
 						</div>
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footerfour">University <span class="fa fa-plus right" aria-hidden="true"></span><span class="fa fa-minus right" aria-hidden="true"></span></a></h3>
+								<h3 class="panel-title"><a class="collapsed" data-parent="#accordion" data-toggle="collapse" href="#footerfour">People <span class="fa fa-plus right" aria-hidden="true"></span><span class="fa fa-minus right" aria-hidden="true"></span></a></h3>
 							</div>
 							<div class="panel-collapse collapse" id="footerfour">
 								<div class="panel-body">
 									<ul>
-										<li><a href="http://www.purdue.edu/research/">Research &amp; Partnerships</a></li>
-										<li><a href="http://www.purdue.edu/purdue/careers/">Careers</a></li>
-										<li><a href="http://www.purdue.edu/diversity-inclusion/">Diversity &amp; Inclusion</a></li>
+										<li><a href="https://www.purdue.edu/hotline/">Speak Up</a></li>
+										<li><a href="https://www.purdue.edu/diversity-inclusion/">Diversity and Inclusion</a></li>
+										<li><a href="https://www.purdue.edu/ethics/">Ethics and Compliance</a></li>
+										<li><a href="https://www.itap.purdue.edu/">Information Technology</a></li>
+										<li><a href="https://www.purdue.edu/ehps/police/statistics-policies/security-reports.php">Annual Security Report</a></li>
+										<li><a href="https://www.purdue.edu/ehps/police/timely-warnings/">Timely Warnings</a></li>
 									</ul>
 								</div>
 							</div>
