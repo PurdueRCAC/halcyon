@@ -56,7 +56,7 @@
 		<caption class="sr-only">{{ trans('core::modules.module manager') }}</caption>
 		<thead>
 			<tr>
-				<th>
+				<th class="text-center">
 					{!! Html::grid('checkall') !!}
 				</th>
 				<th scope="col" class="priority-5">
@@ -69,9 +69,6 @@
 					{!! Html::grid('sort', trans('core::modules.state'), 'state', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-4 text-center">
-					{!! Html::grid('sort', trans('core::modules.protected'), 'protected', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-4 text-center">
 					{!! Html::grid('sort', trans('core::modules.admin'), 'client_id', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-5 text-center">
@@ -82,8 +79,11 @@
 		<tbody>
 		@foreach ($rows as $i => $row)
 			<tr>
-				<td>
-					@if (!$row->protected)
+				<td class="text-center">
+					@if ($row->protected)
+						<span class="fa fa-lock" aria-hidden="true"></span>
+						<span class="sr-only">{{ trans('global.yes') }}</span>
+					@else
 						{!! Html::grid('id', $i, $row->id) !!}
 					@endif
 				</td>
@@ -114,14 +114,6 @@
 								{{ trans('core::modules.disabled') }}
 							</a>
 						@endif
-					@endif
-				</td>
-				<td class="priority-4 text-center">
-					@if ($row->protected)
-						<span class="fa fa-lock" aria-hidden="true"></span>
-						<span class="sr-only">{{ trans('global.yes') }}</span>
-					@else
-						<span class="sr-only">{{ trans('global.no') }}</span>
 					@endif
 				</td>
 				<td class="priority-4 text-center">
