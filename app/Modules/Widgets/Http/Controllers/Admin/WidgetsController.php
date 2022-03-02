@@ -227,10 +227,11 @@ class WidgetsController extends Controller
 		{
 			$widget = ucfirst($item->element);
 			$path = app_path() . '/Widgets/' . $widget;
-			app('translator')->addNamespace('widget.' . $item->element, $path . '/lang');
+			$name = strtolower($item->element);
+			app('translator')->addNamespace('widget.' . $name, $path . '/lang');
 
-			$item->name = trans('widget.' . $item->element . '::' . $item->element . '.widget name');
-			$item->desc = trans('widget.' . $item->element . '::' . $item->element . '.widget desc');
+			$item->name = trans('widget.' . $name . '::' . $name . '.widget name');
+			$item->desc = trans('widget.' . $name . '::' . $name . '.widget desc');
 		}
 
 		$widgets = collect($items)->sortBy('name')->all();
@@ -468,17 +469,13 @@ class WidgetsController extends Controller
 
 		foreach ($items as $item)
 		{
-			if (substr($item->element, 0, 4) == 'mod_')
-			{
-				$item->element = substr($item->element, 4);
-			}
-
 			$widget = ucfirst($item->element);
 			$path = app_path() . '/Widgets/' . $widget;
-			app('translator')->addNamespace('widget.' . $item->element, $path . '/lang');
+			$name = strtolower($item->element);
+			app('translator')->addNamespace('widget.' . $name, $path . '/lang');
 
-			$item->name = trans('widget.' . $item->element . '::' . $item->element . '.widget name');
-			$item->desc = trans('widget.' . $item->element . '::' . $item->element . '.widget desc');
+			$item->name = trans('widget.' . $name . '::' . $name . '.widget name');
+			$item->desc = trans('widget.' . $name . '::' . $name . '.widget desc');
 		}
 
 		$items = collect($items)->sortBy('name')->all();
@@ -575,44 +572,6 @@ class WidgetsController extends Controller
 		// Redirect back to the listing
 		return $this->cancel($request);
 	}
-
-	/**
-	 * Changes the order of one or more records.
-	 *
-	 * @param  Request $request
-	 * @return  boolean  True on success
-	 */
-	/*public function reorder(Request $request)
-	{
-		// Initialise variables.
-		$ids = $request->input('cid');
-		$inc = ($this->getTask() == 'orderup') ? -1 : +1;
-
-		$success = 0;
-
-		foreach ($ids as $id)
-		{
-			// Load the record and reorder it
-			$model = Widget::findOrFail(intval($id));
-
-			if (!$model->move($inc))
-			{
-				$request->session()->flash('error', trans('global.messages.items reordering failed'));
-				continue;
-			}
-
-			$success++;
-		}
-
-		if ($success)
-		{
-			// Set the success message
-			$request->session()->flash('success', trans('global.messages.items reordered'));
-		}
-
-		// Redirect back to the listing
-		return $this->cancel($request);
-	}*/
 
 	/**
 	 * Reorder entries

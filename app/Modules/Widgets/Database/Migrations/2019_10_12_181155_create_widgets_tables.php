@@ -50,8 +50,8 @@ class CreateWidgetsTables extends Migration
 			{
 				foreach (app('files')->directories(app_path('Widgets')) as $dir)
 				{
-					$element = strtolower(basename($dir));
-					$name = $element;
+					$element = basename($dir);
+					$name = strtolower($element);
 
 					$manifest = $dir . '/widget.json';
 					if (file_exists($manifest))
@@ -84,7 +84,7 @@ class CreateWidgetsTables extends Migration
 				DB::table('widgets')->insert([
 					'title' => 'Admin Menu',
 					'note' => 'Admin menu',
-					'widget' => 'adminmenu',
+					'widget' => 'Adminmenu',
 					'position' => 'menu',
 					'published' => 1,
 					'ordering' => 1,
@@ -97,7 +97,7 @@ class CreateWidgetsTables extends Migration
 				DB::table('widgets')->insert([
 					'title' => 'Admin Menu',
 					'note' => 'Admin menu',
-					'widget' => 'adminmenu',
+					'widget' => 'Adminmenu',
 					'position' => 'top',
 					'published' => 1,
 					'ordering' => 1,
@@ -110,7 +110,7 @@ class CreateWidgetsTables extends Migration
 				DB::table('widgets')->insert([
 					'title' => 'Main Menu',
 					'note' => 'Main menu',
-					'widget' => 'menu',
+					'widget' => 'Menu',
 					'position' => 'mainmenu',
 					'published' => 1,
 					'ordering' => 1,
@@ -123,7 +123,7 @@ class CreateWidgetsTables extends Migration
 				DB::table('widgets')->insert([
 					'title' => 'Breadcrumbs',
 					'note' => 'breadcrumbs',
-					'widget' => 'breadcrumbs',
+					'widget' => 'Breadcrumbs',
 					'position' => 'breadcrumbs',
 					'published' => 1,
 					'ordering' => 1,
@@ -137,7 +137,7 @@ class CreateWidgetsTables extends Migration
 				DB::table('widgets')->insert([
 					'title' => 'Breadcrumbs',
 					'note' => 'breadcrumbs',
-					'widget' => 'breadcrumbs',
+					'widget' => 'Breadcrumbs',
 					'position' => 'breadcrumbs',
 					'published' => 1,
 					'ordering' => 2,
