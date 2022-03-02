@@ -32,7 +32,7 @@ class CreateBaseTables extends Migration
 				$table->integer('checked_out')->unsigned()->default(0);
 				$table->dateTime('checked_out_time')->nullable();
 				$table->integer('ordering')->unsigned()->default(0);
-				$table->integer('state')->unsigned()->default(0);
+				//$table->integer('state')->unsigned()->default(0);
 				$table->dateTime('updated_at')->nullable();
 				$table->integer('updated_by')->unsigned()->default(0);
 				$table->index(['element', 'client_id']);
