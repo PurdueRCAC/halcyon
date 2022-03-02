@@ -83,7 +83,9 @@
 		@foreach ($rows as $i => $row)
 			<tr>
 				<td>
-					{!! Html::grid('id', $i, $row->id) !!}
+					@if (!$row->protected)
+						{!! Html::grid('id', $i, $row->id) !!}
+					@endif
 				</td>
 				<td class="priority-5">
 					{{ $row->id }}
@@ -92,14 +94,26 @@
 					{{ ($row->name == $row->element ? trans($row->name . '::' . $row->name . '.module name') : $row->name) }}
 				</td>
 				<td class="priority-4">
-					@if ($row->enabled)
-						<a class="badge badge-success btn-state" href="{{ route('admin.modules.disable', ['id' => $row->id]) }}" title="{{ trans('core::modules.set state to', ['state' => trans('global.unpublished')]) }}">
-							{{ trans('core::modules.enabled') }}
-						</a>
+					@if ($row->protected)
+						@if ($row->enabled)
+							<span class="badge badge-success">
+								{{ trans('core::modules.enabled') }}
+							</span>
+						@else
+							<span class="badge badge-secondary">
+								{{ trans('core::modules.disabled') }}
+							</span>
+						@endif
 					@else
-						<a class="badge badge-secondary btn-state" href="{{ route('admin.modules.enable', ['id' => $row->id]) }}" title="{{ trans('core::modules.set state to', ['state' => trans('global.published')]) }}">
-							{{ trans('core::modules.disabled') }}
-						</a>
+						@if ($row->enabled)
+							<a class="badge badge-success btn-state" href="{{ route('admin.modules.disable', ['id' => $row->id]) }}" title="{{ trans('core::modules.set state to', ['state' => trans('global.unpublished')]) }}">
+								{{ trans('core::modules.enabled') }}
+							</a>
+						@else
+							<a class="badge badge-secondary btn-state" href="{{ route('admin.modules.enable', ['id' => $row->id]) }}" title="{{ trans('core::modules.set state to', ['state' => trans('global.published')]) }}">
+								{{ trans('core::modules.disabled') }}
+							</a>
+						@endif
 					@endif
 				</td>
 				<td class="priority-4 text-center">

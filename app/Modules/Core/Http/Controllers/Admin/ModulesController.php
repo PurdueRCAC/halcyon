@@ -126,7 +126,7 @@ class ModulesController extends Controller
 		{
 			$row = Extension::findOrFail(intval($id));
 
-			if ($row->enabled == $state)
+			if ($row->enabled == $state || $row->protected)
 			{
 				continue;
 			}
