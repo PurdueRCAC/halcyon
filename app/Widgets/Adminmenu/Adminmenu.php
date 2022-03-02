@@ -95,7 +95,7 @@ class Adminmenu extends Widget
 		$ext = 'extensions';
 
 		// Prepare the query.
-		$modules = DB::table($items)
+		/*$modules = DB::table($items)
 			->select(
 				$items . '.id',
 				$items . '.title',
@@ -112,6 +112,22 @@ class Adminmenu extends Widget
 			->where($ext . '.type', '=', 'module')
 			->where($items . '.id', '>', '1')
 			->orderBy($items . '.lft', 'asc')
+			->get();*/
+		$modules = DB::table($ext)
+			->select(
+				$ext . '.id',
+				$ext . '.name',
+				$ext . '.name AS title',
+				$ext . '.element AS alias',
+				$ext . '.element AS class',
+				$ext . '.element',
+				$ext . '.protected'
+			)
+			->where($ext . '.client_id', '=', '1')
+			->where($ext . '.enabled', '=', '1')
+			->where($ext . '.type', '=', 'module')
+			->where($ext . '.protected', '=', '0')
+			->orderBy($ext . '.name', 'asc')
 			->get();
 
 		// Initialise variables.
@@ -123,10 +139,10 @@ class Adminmenu extends Widget
 		foreach ($modules as &$module)
 		{
 			// Trim the menu link.
-			$module->link = trim($module->link);
+			/*$module->link = trim($module->link);
 
 			if ($module->parent_id == 1)
-			{
+			{*/
 				// Only add this top level if it is authorised and enabled.
 				if ($authCheck == false)// || ($authCheck && auth()->user()->can('core.manage', $module->element)))
 				{
@@ -160,7 +176,7 @@ class Adminmenu extends Widget
 
 					$module->text = $lang->has($key) ? trans($key) : $module->alias;
 				}
-			}
+			/*}
 			else
 			{
 				// Sub-menu level.
@@ -175,7 +191,7 @@ class Adminmenu extends Widget
 						$result[$module->parent_id]->submenu[] =& $module;
 					}
 				}
-			}
+			}*/
 		}
 
 		return collect($result)->sortBy('text');
