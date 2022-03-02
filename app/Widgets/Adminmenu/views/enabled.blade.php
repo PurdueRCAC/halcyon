@@ -20,16 +20,7 @@ $cam = $user->can('manage cache');
 $cst = $user->can('manage cron');
 
 $badge = '';
-/*if ($chm && Module::isEnabled('messages'))
-{
-	$failed = App\Modules\Messages\Models\Message::whereCompleted(Carbon\Carbon::now()->modify('-1 week')->toDateTimeString())
-		->whereNotSuccessful()
-		->count();
-	if ($failed)
-	{
-		$badge = ' <span class="badge badge-danger">' . $failed . '</span>';
-	}
-}*/
+
 $menu->addChild(
 	new Node(trans('widget.adminmenu::adminmenu.system') . $badge, route('admin.core.sysinfo'), 'class:settings', in_array($active, ['info', 'core', 'config', 'checkin', 'cache', 'redirect', 'history'])), true
 );
@@ -216,15 +207,15 @@ if ($user->can('manage pages')
 	$menu->getParent();
 }
 
-if ($user->can('manage resources')
+if (($user->can('manage resources')
  || $user->can('manage queues')
- || $user->can('manage storage'))
+ || $user->can('manage storage')) && Module::isEnabled('resources'))
 {
 	$menu->addChild(
 		new Node(trans('widget.adminmenu::adminmenu.resources'), route('admin.resources.index'), 'class:server', in_array($active, ['resources', 'queues', 'storage'])), true
 	);
 
-	if ($user->can('manage queues') && Module::isEnabled('contactreports'))
+	if ($user->can('manage queues') && Module::isEnabled('queues'))
 	{
 		$menu->addChild(
 			new Node(trans('widget.adminmenu::adminmenu.queue manager'), route('admin.queues.index'), 'class:queues', ($active == 'queues'))
@@ -233,7 +224,6 @@ if ($user->can('manage resources')
 
 	if ($user->can('manage resources') && Module::isEnabled('resources'))
 	{
-		//$menu->addSeparator();
 		$menu->addChild(
 			new Node(trans('widget.adminmenu::adminmenu.resources'), route('admin.resources.index'), 'class:resources', $active == 'resources')
 		);
@@ -241,7 +231,6 @@ if ($user->can('manage resources')
 
 	if ($user->can('manage storage') && Module::isEnabled('storage'))
 	{
-		//$menu->addSeparator();
 		$menu->addChild(
 			new Node(trans('widget.adminmenu::adminmenu.storage manager'), route('admin.storage.index'), 'class:storage', $active == 'storage')
 		);
@@ -249,7 +238,6 @@ if ($user->can('manage resources')
 
 	if ($user->can('manage issues') && Module::isEnabled('issues'))
 	{
-		//$menu->addSeparator();
 		$menu->addChild(
 			new Node(trans('widget.adminmenu::adminmenu.issues manager'), route('admin.issues.index'), 'class:issues', $active == 'issues')
 		);
@@ -273,7 +261,7 @@ if ($user->can('manage orders') && Module::isEnabled('orders'))
 }
 
 //
-// Components Submenu
+// Extensions Submenu
 //
 
 // Check if there are any modules, otherwise, don't render the menu
@@ -354,6 +342,7 @@ if ($mm || $pm || count($modules))
 		$menu->getParent();
 	}
 }
+
 //
 // Extensions Submenu
 //

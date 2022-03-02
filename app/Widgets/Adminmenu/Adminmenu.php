@@ -28,11 +28,11 @@ class Adminmenu extends Widget
 
 		// Render the module layout
 		return view($this->getViewName($enabled ? 'enabled' : 'disabled'), [
-			'enabled'    => $enabled,
-			'menu'       => $menu,
-			'modules'    => $modules,
-			'menus'      => $menus,
-			'params'     => $this->params
+			'enabled' => $enabled,
+			'menu'    => $menu,
+			'modules' => $modules,
+			'menus'   => $menus,
+			'params'  => $this->params
 		]);
 	}
 
@@ -87,11 +87,12 @@ class Adminmenu extends Widget
 	 * Get a list of the authorised, non-special components to display in the components menu.
 	 *
 	 * @param   boolean  $authCheck  An optional switch to turn off the auth check (to support custom layouts 'grey out' behaviour).
-	 * @return  array    A nest array of component objects and submenus
+	 * @return  array|Collection    A collection of objects and submenus
 	 */
 	public function getModules($authCheck = true)
 	{
 		$items = (new Item)->getTable();
+		$ext = 'extensions';
 
 		// Prepare the query.
 		$modules = DB::table($items)
@@ -102,12 +103,13 @@ class Adminmenu extends Widget
 				$items . '.link',
 				$items . '.parent_id',
 				$items . '.class',
-				'extensions.element',
-				'extensions.protected'
+				$ext . '.element',
+				$ext . '.protected'
 			)
-			->leftJoin('extensions', 'extensions.id', '=', $items . '.module_id')
+			->leftJoin($ext, $ext . '.id', '=', $items . '.module_id')
 			->where($items . '.client_id', '=', '1')
-			->where('extensions.enabled', '=', '1')
+			->where($ext . '.enabled', '=', '1')
+			->where($ext . '.type', '=', 'module')
 			->where($items . '.id', '>', '1')
 			->orderBy($items . '.lft', 'asc')
 			->get();
@@ -134,16 +136,6 @@ class Adminmenu extends Widget
 					if (!isset($result[$module->id]->submenu))
 					{
 						$result[$module->id]->submenu = array();
-					}
-
-					if (substr($module->element, 0, 4) == 'com_')
-					{
-						$module->element = substr($module->element, 4);
-					}
-
-					if (substr($module->title, 0, 4) == 'com_')
-					{
-						$module->title = substr($module->title, 4);
 					}
 
 					// If the root menu link is empty, add it in.

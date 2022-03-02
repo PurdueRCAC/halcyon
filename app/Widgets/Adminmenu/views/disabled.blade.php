@@ -37,12 +37,12 @@ if ($user->can('manage pages') || $user->can('manage news') || $user->can('manag
 //
 // Resources Submenu
 //
-if ($user->can('manage resources') || $user->can('manage queues') || $user->can('manage storage'))
+if (($user->can('manage resources') || $user->can('manage queues') || $user->can('manage storage')) && Module::isEnabled('resources'))
 {
 	$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.resources'), null, 'class:server disabled'));
 }
 
-if ($user->can('manage orders'))
+if ($user->can('manage orders') && Module::isEnabled('orders'))
 {
 	$menu->addChild(
 		new Node(trans('widget.adminmenu::adminmenu.order manager'), null, 'class:shopping-cart')
