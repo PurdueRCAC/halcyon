@@ -11,25 +11,11 @@ use App\Halcyon\Form\Form;
 use App\Halcyon\Models\Casts\Params;
 
 /**
- * Plugin extension model
+ * Extension model
  */
 class Extension extends Model
 {
 	use ErrorBag, Validatable, Historable;
-
-	/**
-	 * The name of the "created at" column.
-	 *
-	 * @var string
-	 */
-	const CREATED_AT = 'created';
-
-	/**
-	 * The name of the "updated at" column.
-	 *
-	 * @var  string
-	 */
-	const UPDATED_AT = 'modified';
 
 	/**
 	 * The table associated with the model.
@@ -37,6 +23,13 @@ class Extension extends Model
 	 * @var string
 	 */
 	protected $table = 'extensions';
+
+	/**
+	 * Indicates if the model should be timestamped.
+	 *
+	 * @var bool
+	 */
+	public $timestamps = false;
 
 	/**
 	 * Default order by for model
@@ -84,8 +77,12 @@ class Extension extends Model
 	 * @var  array
 	 */
 	protected $rules = array(
-		'element' => 'required|string',
-		'name'    => 'required|string'
+		'element' => 'required|string|max:100',
+		'name'    => 'required|string|max:100',
+		'type'    => 'required|string|max:20',
+		'folder'  => 'nullable|string|max:100',
+		'client_id' => 'nullable|integer',
+		'enabled' => 'nullable|integer',
 	);
 
 	/**
@@ -149,16 +146,6 @@ class Extension extends Model
 	public static function findModuleByElement($element)
 	{
 		return self::findByElement($element, 'module');
-	}
-
-	/**
-	 * Get ID
-	 *
-	 * @return  integer
-	 */
-	public function getIdAttribute()
-	{
-		return $this->extension_id;
 	}
 
 	/**

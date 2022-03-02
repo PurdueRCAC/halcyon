@@ -968,6 +968,7 @@ h4 {
 .icon-list:before {
   content: "\e886";
 }
+.fa-lock:before,
 .icon-lock:before {
   content: "\e887";
 }

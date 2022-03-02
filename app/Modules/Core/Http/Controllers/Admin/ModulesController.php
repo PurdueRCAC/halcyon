@@ -6,43 +6,153 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use App\Modules\Core\Models\Extension;
-use App\Halcyon\Access\Asset;
-use App\Halcyon\Access\Rules;
+use App\Halcyon\Http\StatefulRequest;
 
 class ModulesController extends Controller
 {
 	/**
-	 * Display config options for a module
-	 *
-	 * @param   string   $module
+	 * Display a listing of the resource.
+	 * 
+	 * @param  StatefulRequest $request
+	 * @return Response
+	 */
+	public function index(StatefulRequest $request)
+	{
+		$filters = array(
+			'search'   => null,
+			'state'    => 'enabled',
+			// Paging
+			'limit'    => config('list_limit', 20),
+			'page'     => 1,
+			// Sorting
+			'order'     => 'name',
+			'order_dir' => 'asc'
+		);
+
+		$reset = false;
+		$request = $request->mergeWithBase();
+		foreach ($filters as $key => $default)
+		{
+			if ($key != 'page'
+			 && $request->has($key) && session()->has('core.modules.filter_' . $key)
+			 && $request->input($key) != session()->get('core.modules.filter_' . $key))
+			{
+				$reset = true;
+			}
+			$filters[$key] = $request->state('core.modules.filter_' . $key, $key, $default);
+		}
+		$filters['page'] = $reset ? 1 : $filters['page'];
+
+		if (!in_array($filters['order'], ['id', 'name', 'element', 'enabled']))
+		{
+			$filters['order'] = 'name';
+		}
+
+		if (!in_array($filters['order_dir'], ['asc', 'desc']))
+		{
+			$filters['order_dir'] = 'asc';
+		}
+
+		// Get records
+		$query = Extension::query()
+			->where('type', '=', 'module');
+
+		if ($filters['state'] != '*')
+		{
+			if ($filters['state'] == 'enabled')
+			{
+				$query->where('enabled', '=', 1);
+			}
+			elseif ($filters['state'] == 'disabled')
+			{
+				$query->where('enabled', '=', 0);
+			}
+		}
+
+		if ($filters['search'])
+		{
+			if (is_numeric($filters['search']))
+			{
+				$query->where('id', '=', $filters['search']);
+			}
+			else
+			{
+				$query->where(function($where) use ($filters)
+				{
+					$where->where('name', 'like', '%' . $filters['search'] . '%')
+						->orWhere('name', 'like', $filters['search'] . '%')
+						->orWhere('name', 'like', '%' . $filters['search']);
+				});
+			}
+		}
+
+		$rows = $query
+			->orderBy($filters['order'], $filters['order_dir'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
+
+		return view('core::admin.modules.index', [
+			'rows'    => $rows,
+			'filters' => $filters,
+		]);
+	}
+
+	/**
+	 * Sets the state of one or more entries
+	 * 
+	 * @param   Request $request
+	 * @param   integer  $id
 	 * @return  Response
 	 */
-	public function index($module)
+	public function state(Request $request, $id = null)
 	{
-		//$module = new Models\Component();
+		$action = app('request')->segment(count($request->segments()) - 1);
+		$state  = $action == 'enable' ? 1 : 0;
 
-		//$form = $module->getForm();
-		$module = Extension::findModuleByName($module);
+		// Incoming
+		$ids = $request->input('id', array($id));
+		$ids = (!is_array($ids) ? array($ids) : $ids);
 
-		if (!$module || !$module->id)
+		// Check for an ID
+		if (count($ids) < 1)
 		{
-			abort(404);
+			$request->session()->flash('warning', trans($state ? 'global.select to publish' : 'global.select to unpublish'));
+			return $this->cancel();
 		}
 
-		if (!auth()->user()
-		 || !auth()->user()->can('admin ' . $module->element))
+		$success = 0;
+
+		// Update record(s)
+		foreach ($ids as $id)
 		{
-			abort(403);
+			$row = Extension::findOrFail(intval($id));
+
+			if ($row->enabled == $state)
+			{
+				continue;
+			}
+
+			$row->enabled = $state;
+
+			if (!$row->save())
+			{
+				$request->session()->flash('error', $row->getError());
+				continue;
+			}
+
+			$success++;
 		}
 
-		$form = $module->getForm();
+		// Set message
+		if ($success)
+		{
+			$msg = $state
+				? 'global.items published'
+				: 'global.items unpublished';
 
-		//$module->registerLanguage();
+			$request->session()->flash('success', trans($msg, ['count' => $success]));
+		}
 
-		return view('config::admin.module', [
-			'module' => $module,
-			'form' => $form
-		]);
+		return redirect(route('admin.modules.index'));
 	}
 
 	/**

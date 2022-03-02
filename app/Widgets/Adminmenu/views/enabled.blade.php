@@ -265,10 +265,11 @@ if ($user->can('manage orders') && Module::isEnabled('orders'))
 //
 
 // Check if there are any modules, otherwise, don't render the menu
-$mm = $user->can('manage widgets');
+$mm = $user->can('manage modules');
+$mw = $user->can('manage widgets');
 $pm = $user->can('manage listeners');
 
-if ($mm || $pm || count($modules))
+if ($mm || $mw || $pm || count($modules))
 {
 	$skip = array(
 		'core', 'cron', 'users', 'groups',
@@ -276,7 +277,7 @@ if ($mm || $pm || count($modules))
 		'resources', 'queues', 'storage',
 		'contactreports', 'knowledge', 'news'
 	);
-	$actives = array('widgets', 'listeners');
+	$actives = array('modules', 'widgets', 'listeners');
 
 	if (count($modules))
 	{
@@ -294,6 +295,11 @@ if ($mm || $pm || count($modules))
 	$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.extensions'), '#', 'class:extensions', in_array($active, $actives)), true);
 
 	if ($mm)
+	{
+		$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.module manager'), route('admin.modules.index'), 'class:module', ($active == 'modules')));
+	}
+
+	if ($mw)
 	{
 		$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.widget manager'), route('admin.widgets.index'), 'class:widgets', ($active == 'widgets')));
 	}

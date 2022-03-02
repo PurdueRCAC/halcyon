@@ -50,7 +50,7 @@ return [
 
 	// Extensions
 	'extensions' => 'Extensions',
-	'extensions manager' => 'Extensions',
+	'module manager' => 'Modules',
 	'language manager' => 'Translations',
 	'widget manager' => 'Widgets',
 	'listener manager' => 'Listeners',
