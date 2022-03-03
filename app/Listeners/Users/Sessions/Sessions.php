@@ -19,7 +19,7 @@ class Sessions
 	public function subscribe($events)
 	{
 		$events->listen(UserDeleted::class, self::class . '@handleUserDeleted');
-		//$events->listen(UserDisplay::class, self::class . '@handleUserDisplay');
+		$events->listen(UserDisplay::class, self::class . '@handleUserDisplay');
 	}
 
 	/**
@@ -43,13 +43,16 @@ class Sessions
 	 */
 	public function handleUserDisplay(UserDisplay $event)
 	{
-		$content = null;
+		if (!auth()->user())
+		{
+			return;
+		}
+
 		$user = $event->getUser();
 
-		$r = ['section' => 'sessions'];
-		if (auth()->user()->id != $user->id)
+		if (auth()->user()->id != $user->id && !auth()->user()->can('manage users'))
 		{
-			$r['u'] = $user->id;
+			return;
 		}
 
 		app('translator')->addNamespace(
@@ -57,28 +60,16 @@ class Sessions
 			__DIR__ . '/lang'
 		);
 
-		if ($event->getActive() == 'tickets')
-		{
-			app('pathway')
-				->append(
-					trans('listener.users.sessions::sessions.sessions'),
-					route('site.users.account.section', $r)
-				);
+		app('view')->addNamespace(
+			'listener.users.sessions',
+			__DIR__ . '/views'
+		);
 
-			app('view')->addNamespace(
-				'listener.users.sessions',
-				__DIR__ . '/views'
-			);
+		$content = view('listener.users.sessions::profile', [
+			'user' => $user,
+		]);
 
-			$content = view('listener.users.sessions::profile', [
-				'user' => $user,
-			]);
-		}
-
-		$event->addSection(
-			route('site.users.account.section', $r),
-			trans('listener.users.sessions::sessions.sessions'),
-			($event->getActive() == 'sessions'),
+		$event->addPart(
 			$content
 		);
 	}

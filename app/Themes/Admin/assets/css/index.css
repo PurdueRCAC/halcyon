@@ -1029,6 +1029,7 @@ h4 {
 .icon-moon:before {
   content: "\e898";
 }
+.fa-desktop:before,
 .icon-monitor:before {
   content: "\e899";
 }

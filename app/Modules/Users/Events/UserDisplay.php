@@ -27,9 +27,17 @@ class UserDisplay
 	private $sections;
 
 	/**
+	 * Content parts
+	 *
+	 * @var string
+	 */
+	private $parts;
+
+	/**
 	 * Constructor
 	 *
 	 * @param  object $user
+	 * @param  string $active
 	 * @return void
 	 */
 	public function __construct(User $user, $active)
@@ -40,7 +48,7 @@ class UserDisplay
 	}
 
 	/**
-	 * Get the user
+	 * Get active section
 	 *
 	 * @return string
 	 */
@@ -50,9 +58,9 @@ class UserDisplay
 	}
 
 	/**
-	 * Get the user
+	 * Get sections
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getSections()
 	{
@@ -60,18 +68,44 @@ class UserDisplay
 	}
 
 	/**
-	 * Get the user
+	 * Get parts
 	 *
+	 * @return array
+	 */
+	public function getParts()
+	{
+		return $this->parts;
+	}
+
+	/**
+	 * Add a content section
+	 *
+	 * @param  string  $route
+	 * @param  string  $name
+	 * @param  bool    $active
+	 * @param  string  $content
 	 * @return void
 	 */
 	public function addSection($route, $name, $active = false, $content = null)
 	{
-		$this->sections[] = array(
+		$this->sections[$name] = array(
 			'route'   => $route,
 			'name'    => $name,
 			'active'  => $active,
 			'content' => $content,
+			'parts'   => array(),
 		);
+	}
+
+	/**
+	 * Add a part
+	 *
+	 * @param  string  $content
+	 * @return void
+	 */
+	public function addPart($content)
+	{
+		$this->parts[] = $content;
 	}
 
 	/**
