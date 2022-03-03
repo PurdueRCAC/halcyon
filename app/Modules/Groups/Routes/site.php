@@ -23,6 +23,6 @@ $router->group(['prefix' => 'groups', 'middleware' => ['auth']], function (Route
 	$router->post('/export', [
 		'as' => 'site.groups.export',
 		'uses' => 'GroupsController@export',
-		'middleware' => 'can:view groups',
+		//'middleware' => 'can:view groups',
 	]);
 });
