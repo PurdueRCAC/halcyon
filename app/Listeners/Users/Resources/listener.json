@@ -1,0 +1,11 @@
+{
+    "name": "Users - Resources",
+    "alias": "listener_users_resources",
+    "description": "This displays user access to available resources.",
+    "keywords": [],
+    "active": 1,
+    "priority": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

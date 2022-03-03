@@ -1,0 +1,11 @@
+{
+    "name": "Users - Queues",
+    "alias": "lst_users_queues",
+    "description": "This displays a list of queues the user has access to.",
+    "keywords": [],
+    "active": 1,
+    "priority": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

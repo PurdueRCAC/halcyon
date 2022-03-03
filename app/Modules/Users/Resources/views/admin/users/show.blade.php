@@ -2,7 +2,6 @@
 
 @push('scripts')
 <script src="{{ asset('modules/users/js/users.js?v=' . filemtime(public_path() . '/modules/users/js/users.js')) }}"></script>
-<script src="{{ asset('modules/resources/js/roles.js?v=' . filemtime(public_path() . '/modules/resources/js/roles.js')) }}"></script>
 @endpush
 
 @php
@@ -27,7 +26,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.users.store') }}" method="post" name="adminForm" id="item-form" class="editform">
+<div id="item-form" class="editform">
 
 	@if ($errors->any())
 		<div class="alert alert-error">
@@ -255,218 +254,9 @@ app('pathway')
 					<!-- </fieldset> -->
 				</div>
 				<div class="col col-md-6">
-					<?php
-					// Owner groups
-					$memberships = $user->groups()
-						->where('groupid', '>', 0)
-						->whereIsManager()
-						->get();
-
-					$ids = array();
-					$allqueues = array();
-					foreach ($memberships as $membership):
-						$group = $membership->group;
-
-						$queues = $group->queues;
-
-						foreach ($queues as $queue):
-							$ids[] = $queue->id;
-
-							if (!$queue || $queue->trashed()):
-								continue;
-							endif;
-
-							if (!$queue->scheduler || $queue->scheduler->trashed()):
-								continue;
-							endif;
-
-							$queue->status = 'member';
-
-							$allqueues[] = $queue;
-						endforeach;
-					endforeach;
-
-					$queues = $user->queues()
-						->whereNotIn('queueid', $ids)
-						->get();
-
-					foreach ($queues as $qu):
-						if ($qu->trashed()):
-							continue;
-						endif;
-
-						$queue = $qu->queue;
-
-						if (!$queue || $queue->trashed()):
-							continue;
-						endif;
-
-						if (!$queue->scheduler || $queue->scheduler->trashed()):
-							continue;
-						endif;
-
-						$group = $queue->group;
-
-						if (!$group || !$group->id):
-							continue;
-						endif;
-
-						if ($qu->isPending()):
-							$queue->status = 'pending';
-						else:
-							$queue->status = 'member';
-						endif;
-
-						$allqueues[] = $queue;
-					endforeach;
-
-					if (count($allqueues)):
-						?>
-						<div class="card mb-3">
-							<div class="card-header">
-								<div class="card-title">Queues</div>
-							</div>
-							<div class="card-body">
-								<table class="table table-hover">
-									<caption class="sr-only">Queues</caption>
-									<thead>
-										<tr>
-											<th scope="col">Queue</th>
-											<th scope="col">Resource</th>
-											<th scope="col">Group</th>
-											<th scope="col">Status</th>
-										</tr>
-									</thead>
-									<tbody>
-									<?php
-									foreach ($allqueues as $queue):
-										$group = $queue->group;
-										?>
-										<tr>
-											<td>
-												@if (auth()->user()->can('manage queues'))
-													<a href="{{ route('admin.queues.edit', ['id' => $queue->id]) }}">
-												@endif
-												{{ $queue->name }}
-												@if (auth()->user()->can('manage queues'))
-													</a>
-												@endif
-											</td>
-											<td>
-												{{ $queue->resource ? $queue->resource->name : '' }}
-											</td>
-											<td>
-												<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $group->id, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}">{{ $group->name }}</a>
-											</td>
-											<td>
-											@if ($queue->status == 'pending')
-												<span class="badge badge-warning">Pending</span>
-											@else
-												<span class="badge badge-success">Member</span>
-											@endif
-											</td>
-										</tr>
-									<?php endforeach; ?>
-									</tbody>
-								</table>
-							</div>
-						</div>
-						<?php
-					endif;
-					?>
-
-					<div class="card mb-3">
-						<div class="card-header">
-							<div class="row">
-								<div class="col-md-9">
-									<div class="card-title">Resources</div>
-								</div>
-								<div class="col-md-3 text-right">
-									<a href="#manage_roles_dialog" id="manage_roles" data-membertype="1" class="btn btn-sm btn-link" data-tip="Manage Resource Access">
-										<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only"> Manage</span>
-									</a>
-								</div>
-							</div>
-						</div>
-						<div class="card-body">
-							<?php
-							// Gather roles
-							$resources = App\Modules\Resources\Models\Asset::query()
-								->where('rolename', '!=', '')
-								//->where('retired', '=', 0)
-								->where('listname', '!=', '')
-								->orderBy('name', 'asc')
-								->get();
-							?>
-
-							<table class="table table-hover" id="roles" data-api="{{ route('api.resources.index', ['limit' => 100]) }}">
-								<caption class="sr-only">Roles</caption>
-								<thead>
-									<tr>
-										<th scope="col">Resource</th>
-										<th scope="col">Group</th>
-										<th scope="col">Shell</th>
-										<th scope="col">PI</th>
-										<th scope="col">Status</th>
-									</tr>
-								</thead>
-								<tbody>
-								@foreach ($resources as $resource)
-									<tr>
-										<td>{{ $resource->name }}</td>
-										<td id="resource{{ $resource->id }}_group"></td>
-										<td id="resource{{ $resource->id }}_shell"></td>
-										<td id="resource{{ $resource->id }}_pi"></td>
-										<td id="resource{{ $resource->id }}" data-api="{{ route('api.resources.members') }}">
-											<span class="fa fa-exclamation-triangle text-warning" aria-hidde="true"></span>
-											<span class="sr-only">Loading...</span>
-										</td>
-									</tr>
-								@endforeach
-								</tbody>
-							</table>
-
-							
-						</div>
-					</div>
-
-					<?php /*
-					<fieldset class="adminform">
-						<legend>{{ trans('users::users.sessions') }}</legend>
-						<div class="card session">
-						<ul class="list-group list-group-flush">
-							@if (count($user->sessions))
-								@foreach ($user->sessions as $session)
-									<li class="list-group-item">
-										<div class="session-ip card-title">
-											<div class="row">
-												<div class="col-md-4">
-													<strong>{{ $session->ip_address == '::1' ? 'localhost' : $session->ip_address }}</strong>
-												</div>
-												<div class="col-md-4">
-													{{ $session->last_activity->diffForHumans() }}
-												</div>
-												<div class="col-md-4 text-right">
-													@if ($session->id == session()->getId())
-														<span class="badge badge-info float-right">Your current session</span>
-													@endif
-												</div>
-											</div>
-										</div>
-										<div class="session-current card-text text-muted">
-											{{ $session->user_agent }}
-										</div>
-									</li>
-								@endforeach
-							@else
-								<li class="list-group-item text-center">
-									<span class="none">{{ trans('global.none') }}
-								</li>
-							@endif
-							</ul>
-						</div>
-					</fieldset>
-					*/ ?>
+					@foreach ($parts as $part)
+						{!! $part !!}
+					@endforeach
 				</div><!-- / .col -->
 			</div><!-- / .grid -->
 		</div><!-- / #user-account -->
@@ -679,9 +469,8 @@ app('pathway')
 	</div><!-- / .tab-content -->
 
 	<input type="hidden" name="userid" id="userid" value="{{ $user->id }}" />
-	@csrf
 	<input type="hidden" name="id" value="{{ $user->id }}" />
-</form>
+</div>
 
 <div id="manage_details_dialog" data-id="{{ $user->id }}" title="Edit Details" class="modal dialog details-dialog" aria-hidden="true">
 	<div class="modal-dialog">
@@ -772,45 +561,5 @@ app('pathway')
 			</div>
 		</form>
 	</div>
-</div>
-
-<div id="manage_roles_dialog" data-id="{{ $user->id }}" title="Manage Access" class="dialog roles-dialog">
-	<form method="post" action="{{ route('site.users.account') }}">
-		<div class="form-group">
-			<label for="role">Resource</label>
-			<select id="role" class="form-control" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">
-				<option value="">(Select Resource)</option>
-				@foreach ($resources as $resource)
-					<option value="{{ $resource->id }}" data-api="{{ route('api.resources.members.read', ['id' => $resource->id . '.' . $user->id]) }}">{{ $resource->name }}</option>
-				@endforeach
-			</select>
-		</div>
-
-		<div class="hide" id="role_table">
-			<div class="form-group">
-				<label for="role_status">Status</label>
-				<input type="text" disabled="disabled" class="form-control" id="role_status" />
-			</div>
-			<div class="form-group">
-				<label for="role_group">Group</label>
-				<input id="role_group" type="text" class="form-control" />
-			</div>
-			<div class="form-group">
-				<label for="role_shell">Shell</label>
-				<input id="role_shell" type="text" class="form-control" />
-			</div>
-			<div class="form-group">
-				<label for="role_pi">PI</label>
-				<input id="role_pi" type="text" class="form-control" />
-			</div>
-			<div class="form-group mb-0">
-				<button id="role_add" class="btn btn-success role-add hide" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">Add Role</button>
-				<button id="role_modify" class="btn btn-success role-add hide" data-id="{{ $user->id }}">Modify Role</button>
-				<button id="role_delete" class="btn btn-danger role-delete hide" data-id="{{ $user->id }}">Delete Role</button>
-			</div>
-
-			<span id="role_errors" class="alert alert-warning hide"></span>
-		</div>
-	</form>
 </div>
 @stop

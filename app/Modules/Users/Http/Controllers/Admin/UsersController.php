@@ -398,10 +398,12 @@ class UsersController extends Controller
 
 		event($event = new UserDisplay($user, ''));
 		$sections = collect($event->getSections());
+		$parts = collect($event->getParts());
 
 		return view('users::admin.users.show', [
 			'user' => $user,
-			'sections' => $sections
+			'sections' => $sections,
+			'parts' => $parts,
 		]);
 	}
 
