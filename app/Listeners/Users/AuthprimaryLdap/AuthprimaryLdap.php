@@ -398,6 +398,7 @@ class AuthprimaryLdap
 					if ($result && $result->exists)
 					{
 						$result->delete();
+						$results['deleted'] = 'uid=' . $event->user->username;
 					}
 				}
 			}

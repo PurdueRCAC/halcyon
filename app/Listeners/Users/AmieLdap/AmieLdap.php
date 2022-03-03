@@ -815,7 +815,7 @@ class AmieLdap
 					//
 					// Members
 					//
-					$authorized = true;
+					/*$authorized = true;
 					// This is total available service units and 
 					// takes into account start and stop times.
 					if (!$queue->serviceunits)
@@ -823,7 +823,7 @@ class AmieLdap
 						$authorized = false;
 					}
 
-					/*$start = $results->getAttribute('x-xsede-startTime', 0);
+					$start = $results->getAttribute('x-xsede-startTime', 0);
 					$start = $start ? Carbon::parse($start) : null;
 
 					$stop  = $results->getAttribute('x-xsede-endTime', 0);
@@ -843,8 +843,30 @@ class AmieLdap
 						$authorized = false;
 					}*/
 
+					$srids = $resource->subresources->pluck('id')->toArray();
+					$qu = (new QueueUser)->getTable();
+					$q = (new Queue)->getTable();
+
 					foreach ($members as $member)
 					{
+						$authorized = false;
+
+						// Do they have any other active queues?
+						$memberqueues = $member->queues()
+							->select($qu . '.*')
+							->join($q, $q . '.id', $qu . '.queueid')
+							->whereIn($q . '.subresourceid', $srids)
+							->get();
+
+						foreach ($memberqueues as $que)
+						{
+							if ($que->queue && $que->queue->serviceunits)
+							{
+								$authorized = true;
+								break;
+							}
+						}
+
 						event(new UserSync($member, $authorized, $resource->rolename));
 					}
 
