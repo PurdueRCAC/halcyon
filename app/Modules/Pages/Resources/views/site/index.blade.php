@@ -138,7 +138,7 @@
 							@endif
 
 							<div class="form-group">
-								<label for="field-title">{{ trans('pages::pages.title') }}: <span class="required" data-tip="{{ trans('global.required') }}">*</label>
+								<label for="field-title">{{ trans('pages::pages.title') }}: <span class="required" data-tip="{{ trans('global.required') }}">*</span></label>
 								<input type="text" name="title" id="field-title" class="form-control required" maxlength="250" value="{{ $page->title }}" />
 							</div>
 
@@ -171,7 +171,7 @@
 								</div>
 
 								<div class="form-group col-md-6">
-									<label for="field-state">{{ trans('pages::pages.state') }}:</label><br />
+									<label for="field-state">{{ trans('pages::pages.state') }}:</label>
 									<select class="form-control" name="state" id="field-state"<?php if ($page->isRoot()) { echo ' readonly="readonly" disabled="disabled"'; } ?>>
 										<option value="0"<?php if ($page->state == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
 										<option value="1"<?php if ($page->state == 1) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
@@ -179,12 +179,12 @@
 								</div>
 
 								<div class="form-group col-md-6">
-									<label for="field-publish_up">{{ trans('pages::pages.publish up') }}:</label><br />
+									<label for="field-publish_up">{{ trans('pages::pages.publish up') }}:</label>
 									<input type="text" name="publish_up" id="field-publish_up" class="form-control datetime date-pick" value="<?php echo e(Carbon\Carbon::parse($page->publish_up ? $page->publish_up : $page->created)->toDateTimeString()); ?>" />
 								</div>
 
 								<div class="form-group col-md-6">
-									<label for="field-publish_down">{{ trans('pages::pages.publish down') }}:</label><br />
+									<label for="field-publish_down">{{ trans('pages::pages.publish down') }}:</label>
 									<input type="text" name="publish_down" id="field-publish_down" class="form-control datetime date-pick" value="<?php echo ($page->publish_down ? e(Carbon\Carbon::parse($page->publish_down)->toDateTimeString()) : ''); ?>" placeholder="<?php echo ($page->publish_down ? '' : trans('global.never')); ?>" />
 								</div>
 							</div>
