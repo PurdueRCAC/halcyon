@@ -631,6 +631,11 @@ class ArticlesController extends Controller
 	{
 		$row = Article::findOrFail($id);
 
+		if ($row->template)
+		{
+			abort(404);
+		}
+
 		event($event = new ArticleMetadata($row));
 		$row = $event->page;
 

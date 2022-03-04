@@ -91,9 +91,11 @@ app('pathway')
 						<ul class="news-meta text-muted">
 							<li>
 								<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span>
+								@if ($article->datetimenews)
 								<time datetime="{{ $article->datetimenews->format('Y-m-d\TH:i:s\Z') }}">
 									{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}
 								</time>
+								@endif
 								@if ($article->isToday())
 									@if ($article->isNow())
 										<span class="badge badge-success">{{ trans('news::news.happening now') }}</span>
