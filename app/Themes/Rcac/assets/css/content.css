@@ -1804,6 +1804,16 @@ ol pre {
 ul pre {
 	margin-top: 0px;
 }
+code.line-wrap,
+pre.line-wrap,
+code.line-wrap[class*="language-"],
+pre.line-wrap[class*="language-"] {
+	white-space: -moz-pre-wrap;
+	white-space: -o-pre-wrap;
+	white-space: -pre-wrap;
+	white-space: pre-wrap;
+	word-break: break-word !important;
+}
 
 div.dialog {
 	text-align: left;
