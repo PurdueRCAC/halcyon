@@ -5,6 +5,7 @@ namespace App\Modules\Core\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Artisan;
 use App\Modules\Core\Models\Extension;
 use App\Halcyon\Http\StatefulRequest;
 
@@ -278,5 +279,83 @@ class ModulesController extends Controller
 		}
 
 		return redirect(route('admin.' . $module->element . '.index'))->with('success', trans('config::config.configuration saved'));
+	}
+
+	/**
+	 * Scan for new modules
+	 *
+	 * @param  Request $request
+	 * @return Response
+	 */
+	public function scan(Request $request)
+	{
+		$modules = Extension::query()
+			->select('element')
+			->where('type', '=', 'module')
+			->get()
+			->pluck('element')
+			->toArray();
+
+		$rows = array();
+		foreach (app('files')->directories(app_path('Modules')) as $dir)
+		{
+			$name = basename($dir);
+			$element = strtolower($name);
+
+			if (in_array($element, $modules))
+			{
+				continue;
+			}
+
+			$row = new Extension;
+			$row->type = 'module';
+			$row->name = $element;
+			$row->element = $element;
+
+			$rows[] = $row;
+		}
+
+		return view('core::admin.modules.scan', [
+			'rows' => $rows,
+		]);
+	}
+
+	/**
+	 * Scan for new modules
+	 *
+	 * @param  Request $request
+	 * @return Response
+	 */
+	public function install(Request $request, $element)
+	{
+		//$element = $request->input('element');
+
+		$module = Extension::query()
+			->select('*')
+			->where('type', '=', 'module')
+			->where('element', '=', $element)
+			->first();
+
+		if (!$module)
+		{
+			$row = new Extension;
+			$row->type = 'module';
+			$row->name = $element;
+			$row->element = $element;
+			$row->access = 1;
+			$row->enabled = 0;
+			$row->client_id = 1;
+			$row->save();
+
+			Artisan::call('module:migrate', [
+				'element' => 1
+			]);
+
+			Artisan::call('module:publish', [
+				'element' => 1
+			]);
+		}
+
+		return redirect(route('admin.modules.index'))->with('success', trans('core::modules.module installed'));
 	}
 }

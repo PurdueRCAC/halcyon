@@ -7,6 +7,8 @@
 			route('admin.modules.index')
 		);
 
+	Toolbar::link('search', trans('core::modules.scan'), route('admin.modules.scan'), false);
+
 	Toolbar::publishList(route('admin.modules.enable'), trans('global.toolbar.enable'));
 	Toolbar::unpublishList(route('admin.modules.disable'), trans('global.toolbar.disable'));
 @endphp

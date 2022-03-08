@@ -221,6 +221,42 @@ class Extension extends Model
 	}
 
 	/**
+	 * Get a value from the manifest
+	 *
+	 * @param   string  $key
+	 * @return  mixed
+	 */
+	public function manifest($key)
+	{
+		$val = null;
+
+		if (is_null($this->manifest))
+		{
+			$dir = $this->path();
+
+			$info = false;
+
+			if ($dir)
+			{
+				$manifest = $dir . '/' . strtolower($this->type) . '.json';
+				if (file_exists($manifest))
+				{
+					$info = json_decode(file_get_contents($manifest));
+				}
+			}
+
+			$this->manifest = $info;
+		}
+
+		if (isset($this->manifest->$key))
+		{
+			$val = $this->manifest->$key;
+		}
+
+		return $val;
+	}
+
+	/**
 	 * Get a form
 	 *
 	 * @return  object

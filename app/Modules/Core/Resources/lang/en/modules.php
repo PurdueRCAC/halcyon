@@ -10,4 +10,5 @@ return [
 	'all states' => 'All States',
 	'protected' => 'Protected',
 	'admin' => 'Admin Interface',
+	'scan' => 'Scan',
 ];

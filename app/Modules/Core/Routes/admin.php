@@ -50,4 +50,13 @@ $router->group(['prefix' => 'modules', 'middleware' => 'can:admin'], function (R
 		'as'   => 'admin.modules.delete',
 		'uses' => 'ModulesController@delete',
 	]);
+
+	$router->get('/scan', [
+		'as' => 'admin.modules.scan',
+		'uses' => 'ModulesController@scan',
+	]);
+	$router->get('/install/{element}', [
+		'as' => 'admin.modules.install',
+		'uses' => 'ModulesController@install',
+	]);
 });
