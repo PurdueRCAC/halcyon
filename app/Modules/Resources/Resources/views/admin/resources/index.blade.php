@@ -215,10 +215,14 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-3">
-					@php
-					$t = $types->where('id', $row->resourcetype)->first();
-					@endphp
-					{{ $t ? $t->name : $row->resourcetype }}
+					@if ($row->resourcetype)
+						@php
+						$t = $types->where('id', $row->resourcetype)->first();
+						@endphp
+						{{ $t ? $t->name : trans('global.unknown') }}
+					@else
+						{{ trans('global.none') }}
+					@endif
 				</td>
 				<td class="priority-4">
 					@php
@@ -227,7 +231,6 @@ app('pathway')
 					{{ $b ? $b->name : '' }}
 				</td>
 				<td class="priority-4 text-right">
-					
 					<a href="{{ route('admin.resources.subresources', ['resource' => $row->id]) }}">
 						{{ $row->children_count }}
 					</a>
