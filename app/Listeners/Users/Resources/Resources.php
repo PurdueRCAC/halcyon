@@ -28,28 +28,18 @@ class Resources
 	 */
 	public function handleUserDisplay(UserDisplay $event)
 	{
-		if (!auth()->user())
+		if (!auth()->user() || !auth()->user()->can('manage users'))
 		{
 			return;
 		}
 
 		$user = $event->getUser();
 
-		if (auth()->user()->id != $user->id
+		/*if (auth()->user()->id != $user->id
 		 && !auth()->user()->can('manage users'))
 		{
 			return;
-		}
-
-		/*app('translator')->addNamespace(
-			'listener.users.resources',
-			__DIR__ . '/lang'
-		);
-
-		app('view')->addNamespace(
-			'listener.users.resources',
-			__DIR__ . '/views'
-		);*/
+		}*/
 
 		$resources = Asset::query()
 			->where('rolename', '!=', '')

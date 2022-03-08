@@ -6,11 +6,25 @@
 	<div class="card-header">
 		<div class="row">
 			<div class="col-md-9">
-				<div class="card-title">Resources</div>
+				<div class="card-title">
+					Resources
+					<a href="#roles_help" class="help help-dialog text-info tip" title="Roles Help">
+						<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only"> Help</span>
+					</a>
+				</div>
+				<div id="roles_help" class="dialog-help" title="Roles">
+					<p>Role status may be compiled from various external sources. Available statuses are:</p>
+					<ul>
+						<li><span class="badge badge-secondary">No Role</span></li>
+						<li><span class="badge badge-info">Role Pending</span></li>
+						<li><span class="badge badge-success">Role Ready</span></li>
+						<li><span class="badge badge-danger">Removal Pending</span></li>
+					</ul>
+				</div>
 			</div>
 			<div class="col-md-3 text-right">
-				<a href="#manage_roles_dialog" id="manage_roles" data-membertype="1" class="btn btn-sm btn-link" data-tip="Manage Resource Access">
-					<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only"> Manage</span>
+				<a href="#manage_roles_dialog" id="manage_roles" data-membertype="1" class="btn btn-sm" data-tip="Manage Resource Access">
+					<span class="fa fa-pencil" aria-hidden="true"></span> Manage
 				</a>
 			</div>
 		</div>
@@ -48,7 +62,7 @@
 <div id="manage_roles_dialog" data-id="{{ $user->id }}" title="Manage Access" class="dialog roles-dialog">
 	<form method="post" action="{{ route('site.users.account') }}">
 		<div class="form-group">
-			<label for="role">Resource</label>
+			<label for="role">Resource <span class="required">*</span></label>
 			<select id="role" class="form-control" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">
 				<option value="">(Select Resource)</option>
 				@foreach ($resources as $resource)
@@ -68,7 +82,37 @@
 			</div>
 			<div class="form-group">
 				<label for="role_shell">Shell</label>
-				<input id="role_shell" type="text" class="form-control" />
+				<select class="form-control" id="role_shell">
+					<option value="">{{ trans('global.none') }}</option>
+					<?php
+					$selected = '';
+					if (preg_match("/bash$/", $user->loginShell)):
+						$selected = ' selected="selected"';
+					endif;
+					?>
+					<option value="/bin/bash"<?php echo $selected; ?>>bash</option>
+					<?php
+					$selected = '';
+					if (preg_match("/\/csh$/", $user->loginShell)):
+						$selected = ' selected="selected"';
+					endif;
+					?>
+					<option value="/bin/csh"<?php echo $selected; ?>>csh</option>
+					<?php
+					$selected = '';
+					if (preg_match("/tcsh$/", $user->loginShell)):
+						$selected = ' selected="selected"';
+					endif;
+					?>
+					<option value="/bin/tcsh"<?php echo $selected; ?>>tcsh</option>
+					<?php
+					$selected = '';
+					if (preg_match("/zsh$/", $user->loginShell)):
+						$selected = ' selected="selected"';
+					endif;
+					?>
+					<option value="/bin/zsh"<?php echo $selected; ?>>zsh</option>
+				</select>
 			</div>
 			<div class="form-group">
 				<label for="role_pi">PI</label>

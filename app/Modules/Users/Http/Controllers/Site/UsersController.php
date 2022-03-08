@@ -68,10 +68,12 @@ class UsersController extends Controller
 
 		event($event = new UserDisplay($user, $request->segment(2)));
 		$sections = collect($event->getSections());
+		$parts = collect($event->getParts());
 
 		return view('users::site.profile', [
-			'user'     => $user,
+			'user' => $user,
 			'sections' => $sections,
+			'parts' => $parts,
 		]);
 	}
 
