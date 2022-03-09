@@ -1064,56 +1064,48 @@ function CRMSearch() {
 	}
 
 	// start assembling string
-	//var searchstring = "";
-	var querystring = "&";
+	var querystring = new Array();
 
 	// if not add new
 	if (!document.getElementById("TAB_add").className.match(/active/)) {
 		if (start != "") {
-			//searchstring += " start:" + start;
-			querystring += "&start=" + start;
+			querystring.push("start=" + start);
 		}
 		if (stop != "") {
-			//searchstring += " stop:" + stop;
-			querystring += "&stop=" + stop;
+			querystring.push("stop=" + stop);
 		}
 	}
 	if (groups.length > 0) {
-		//searchstring += " group:" + groups[0];
-		querystring += "&group=" + groups[0];
+		var qg = groups[0];
 		for (x = 1; x < groups.length; x++) {
-			//searchstring += "," + groups[x];
-			querystring += "," + groups[x];
+			qg += "," + groups[x];
 		}
+		querystring.push("group=" + qg);
 	}
 	if (people.length > 0) {
-		//searchstring += " people:" + people[0];
-		querystring += "&people=" + people[0];
+		var qp = people[0];
 		for (x = 1; x < people.length; x++) {
-			//searchstring += "," + people[x];
-			querystring += "," + people[x];
+			qp += "," + people[x];
 		}
+		querystring.push("people=" + qp);
 	}
 	if (tags.length > 0) {
-		//searchstring += " tag:" + tags[0];
-		querystring += "&tag=" + tags[0];
+		var qt = tags[0];
 		for (x = 1; x < tags.length; x++) {
-			//searchstring += "," + tags[x];
-			querystring += "," + tags[x];
+			qt += "," + tags[x];
 		}
+		querystring.push("tag=" + qt);
 	}
 	// Construct resource query
 	if (resources.length > 0) {
-		//searchstring += " resource:" + resources[0];
-		querystring += "&resource=" + resources[0];
+		var qr = resources[0];
 		for (x = 1; x < resources.length; x++) {
-			//searchstring += "," + resources[x];
-			querystring += "," + resources[x];
+			qr += "," + resources[x];
 		}
+		querystring.push("resource=" + qr);
 	}
 	if (typeid != '-1') {
-		//searchstring += " type:" + typeid;
-		querystring += "&type=" + typeid;
+		querystring.push("type=" + typeid);
 	}
 	// if not add new
 	if (!document.getElementById("TAB_add").className.match(/active/)) {
@@ -1123,15 +1115,14 @@ function CRMSearch() {
 
 			// filter out potentially dangerous garbage
 			keywords = keywords.replace(/[^a-zA-Z0-9_ ]/g, '');
-			//searchstring += " " + keywords;
-			querystring += "&search=" + keywords;
+
+			querystring.push("search=" + keywords);
 		}
 	}
 	// if not add new
 	if (!document.getElementById("TAB_add").className.match(/active/)) {
 		if (id.match(/(\d)+/)) {
-			//searchstring += " id:" + id;
-			querystring += "&id=" + id;
+			querystring.push("id=" + id);
 		}
 	}
 
@@ -1145,10 +1136,10 @@ function CRMSearch() {
 	if (typeof (history.pushState) != 'undefined') {
 		var tab = window.location.href.match(/[&?](\w+)$/);
 		if (tab != null && tab[1] != 'search') {
-			querystring = querystring + "&" + tab[1];
+			querystring.push(tab[1]);
 		}
-		querystring = querystring.replace(/^&+/, '?');
-		history.pushState(null, null, encodeURI(querystring));
+
+		history.pushState(null, null, encodeURI('?' + querystring.join('&')));
 	}
 
 	//if (searchstring == "") {
@@ -1157,9 +1148,11 @@ function CRMSearch() {
 
 	//console.log('Searching... ' + $("#reports").data('api') + encodeURI(querystring));
 
-	$("#reports").data('query', querystring.replace('?', ''));
+	$("#reports").data('query', querystring.join('&'));//querystring.replace('?', ''));
 
-	WSGetURL($("#reports").data('api') + encodeURI(querystring), CRMSearched);
+	querystring.push("page=" + document.getElementById("page").value);
+
+	WSGetURL($("#reports").data('api') + encodeURI('?' + querystring.join('&')), CRMSearched);
 }
 
 /**
@@ -1265,7 +1258,7 @@ function CRMSearched(xml) {
 
 			var li = $('<li class="page-item page-first">');
 			var a = $('<a class="page-link" title="First page"><span aria-hidden="true">«</span></a>')
-				.attr('href', '?' + query + '&page=1')
+				.attr('href', '?page=1&' + query)
 				.attr('data-page', 1);
 			if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
 				li.addClass('disabled');
@@ -1276,7 +1269,7 @@ function CRMSearched(xml) {
 
 			li = $('<li class="page-item page-prev">');
 			a = $('<a class="page-link" title="Previous page"><span aria-hidden="true">‹</span></a>')
-				.attr('href', '?' + query + ' &page=' + (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1))
+				.attr('href', '?page=' + (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1) + '&' + query)
 				.attr('data-page', (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1));
 			if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
 				li.addClass('disabled');
@@ -1289,7 +1282,7 @@ function CRMSearched(xml) {
 				li = $('<li class="page-item">');
 				a = $('<a class="page-link"></a>')
 					.text('1')
-					.attr('href', '?' + query + '&page=1')
+					.attr('href', '?page=1&' + query)
 					.attr('data-page', 1);
 				if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
 					li.addClass('disabled');
@@ -1312,7 +1305,7 @@ function CRMSearched(xml) {
 					li = $('<li class="page-item">');
 					a = $('<a class="page-link"></a>')
 						.text(l)
-						.attr('href', '?' + query + '&page=' + l)
+						.attr('href', '?page=' + l + '&' + query)
 						.attr('data-page', l);
 					if (results.meta.current_page == l) {
 						li.addClass('active');
@@ -1326,7 +1319,7 @@ function CRMSearched(xml) {
 
 			li = $('<li class="page-item page-next">');
 			a = $('<a class="page-link" title="Next page"><span aria-hidden="true">›</span></a>')
-				.attr('href', '?' + query + '&page=' + (results.meta.current_page < lastpage ? lastpage - 1 : 1))
+				.attr('href', '?page=' + (results.meta.current_page < lastpage ? lastpage - 1 : 1) + '&' + query)
 				.attr('data-page', (results.meta.current_page > 1 ? lastpage - 1 : 1))
 				.attr('data-query', q.replace(/(page:\d+)/, 'page:' + (results.meta.current_page > 1 ? lastpage - 1 : 1)));
 			if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
@@ -1338,7 +1331,7 @@ function CRMSearched(xml) {
 
 			li = $('<li class="page-item page-last">');
 			a = $('<a class="page-link" title="Last page"><span aria-hidden="true">»</span></a>')
-				.attr('href', '?' + query + '&page=' + lastpage)
+				.attr('href', '?page=' + lastpage + '&' + query)
 				.attr('data-page', lastpage)
 				.attr('data-query', q.replace(/(page:\d+)/, 'page:' + lastpage));
 			if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {

@@ -324,6 +324,7 @@ app('pathway')->append(
 						</div>
 
 						<input id="myuserid" type="hidden" value="{{ auth()->user()->id }}" />
+						<input id="page" type="hidden" value="{{ request()->input('page', 1) }}" />
 
 						<span id="TAB_search_action"></span>
 						<span id="TAB_add_action"></span>

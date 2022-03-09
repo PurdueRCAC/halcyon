@@ -117,7 +117,16 @@ class Report extends Model
 
 				foreach ($matches[0] as $match)
 				{
-					$tags[] = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
+					$tag = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
+
+					// Ignore purely numeric items as this is most likely
+					// a reference to some ID. e.g., ticket #1234
+					if (is_numeric($tag))
+					{
+						continue;
+					}
+
+					$tags[] = $tag;
 				}
 
 				$model->setTags($tags);
@@ -134,7 +143,16 @@ class Report extends Model
 
 				foreach ($matches[0] as $match)
 				{
-					$tags[] = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
+					$tag = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
+
+					// Ignore purely numeric items as this is most likely
+					// a reference to some ID. e.g., ticket #1234
+					if (is_numeric($tag))
+					{
+						continue;
+					}
+
+					$tags[] = $tag;
 				}
 
 				$model->setTags($tags);
@@ -746,6 +764,12 @@ class Report extends Model
 			foreach ($matches[0] as $match)
 			{
 				$match = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
+
+				if (is_numeric($match))
+				{
+					continue;
+				}
+
 				$this->addTag($match);
 
 				$hashtag[] = $match;
@@ -782,8 +806,8 @@ class Report extends Model
 		}
 
 		$stats = array(
-			'timeframe'      => $timeframe,
-			'daily'          => $placed,
+			'timeframe' => $timeframe,
+			'daily'     => $placed,
 		);
 
 		return $stats;
