@@ -5,6 +5,7 @@
 @stop
 
 @section('content')
+<div class="row">
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	<ul class="nav flex-column">
 		<li class="nav-item"><a class="nav-link" href="{{ route('site.news.search') }}">Search ContactReports</a></li>
@@ -25,5 +26,6 @@
 		<example-component></example-component>
 	</div>
 	<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
+</div>
 </div>
 @stop

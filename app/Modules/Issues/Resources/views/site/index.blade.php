@@ -20,6 +20,7 @@ app('pathway')->append(
 @endphp
 
 @section('content')
+<div class="row">
 <div class="sidenav col-lg-4 col-md-4 col-sm-12 col-xs-12">
 	<h3 class="card-title panel-title">Checklist</h3>
 	<div class="card panel panel-default panel-issuetodos tab-search">
@@ -371,5 +372,6 @@ if ($issue)
 	<?php
 }
 ?>
+</div>
 </div>
 @stop

@@ -112,6 +112,7 @@ jQuery(document).ready(function ($) {
 @endphp
 
 @section('content')
+<div class="row">
 <div class="contentInner col-md-12">
 	<h2>{{ trans('orders::orders.products') }}: {{ $row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create') }}</h2>
 
@@ -235,5 +236,6 @@ jQuery(document).ready(function ($) {
 
 	@csrf
 </form>
+</div>
 </div>
 @stop

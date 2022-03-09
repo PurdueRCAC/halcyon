@@ -16,14 +16,16 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 @section('content')
 
 @include('users::site.admin', ['user' => $user])
-
+<div class="row">
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
-	<h2>
-		{{ $user->name }}
-		@if (auth()->user()->can('manage users') && $user->isOnline())
-			<span class="badge badge-success">Online</span>
-		@endif
-	</h2>
+	<div class="card">
+		<div class="card-header text-center bg-secondary text-white">
+			<strong>{{ $user->name }}</strong>
+			@if (auth()->user()->can('manage users') && $user->isOnline())
+				<span class="badge badge-success">Online</span>
+			@endif
+		</div>
+	</div>
 
 	<div class="qlinks">
 		<ul class="nav flex-column profile-menu">
@@ -245,5 +247,6 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 		<?php
 	endif;
 	?>
+</div>
 </div>
 @stop

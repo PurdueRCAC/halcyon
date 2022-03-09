@@ -13,6 +13,7 @@ app('pathway')
 @stop
 
 @section('content')
+<div class="row">
 <div class="col-md-12">
 <section>
 	<div class="container py-2 h-100">
@@ -49,5 +50,6 @@ app('pathway')
 		</div>
 	</div>
 </section>
+</div>
 </div>
 @stop

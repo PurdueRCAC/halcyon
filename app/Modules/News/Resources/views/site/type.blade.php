@@ -43,6 +43,7 @@ app('pathway')
 @endphp
 
 @section('content')
+<div class="row">
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	@include('news::site.menu', ['types' => $types, 'active' => $type->id])
 </div>
@@ -145,5 +146,5 @@ app('pathway')
 		<p>{{ trans('news::news.no type articles', ['type' => $type->name]) }}</p>
 	<?php endif; ?>
 </div>
-
+</div>
 @stop

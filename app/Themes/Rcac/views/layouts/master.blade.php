@@ -283,8 +283,9 @@
 			@include('partials.notifications')
 
 			<div class="container">
-				<div class="row contentPage">
+				<div class="contentPage{{ app('widget')->count('left') ? ' row' : '' }}">
 				@if (app('widget')->count('left'))
+				
 					<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 						@widget('left')
 					</div><!-- /.sidenav end -->

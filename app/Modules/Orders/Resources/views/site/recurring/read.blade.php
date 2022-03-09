@@ -25,6 +25,7 @@ app('pathway')
 @endphp
 
 @section('content')
+<div class="row">
 @component('orders::site.submenu')
 	recur
 @endcomponent
@@ -197,5 +198,6 @@ app('pathway')
 		</div>
 		@csrf
 	</form>
+</div>
 </div>
 @stop

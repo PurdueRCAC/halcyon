@@ -26,10 +26,11 @@ app('pathway')
 @endphp
 
 @section('content')
-
+<div class="row">
 @component('orders::site.submenu')
 	products
 @endcomponent
+
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 	<h2 class="sr-only">{{ trans('orders::orders.products') }}</h2>
 
@@ -364,5 +365,6 @@ app('pathway')
 			</form>
 		</div>
 	</div>
+</div>
 </div>
 @stop

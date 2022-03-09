@@ -69,6 +69,7 @@ app('pathway')
 @stop
 
 @section('content')
+<div class="row">
 <div class="contentInner col-lg-12 col-md-12 col-sm-12 col-xs-12">
 	<h2>{{ trans('orders::orders.categories') }}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}</h2>
 
@@ -134,5 +135,6 @@ app('pathway')
 			</a>
 		</div>
 	</form>
+</div>
 </div>
 @stop

@@ -7,6 +7,7 @@ $content = '';
 @endphp
 
 @section('content')
+<div class="row">
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	<h2>{{ $resource->name }}</h2>
 
@@ -163,5 +164,6 @@ $content = '';
 			</tbody>
 		</table>
 	@endif
+</div>
 </div>
 @stop

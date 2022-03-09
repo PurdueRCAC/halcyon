@@ -27,10 +27,12 @@
 
 	<div id="account-list">
 	@if (count($courses) == 0)
-		<div class="card card-help">
-			<div class="card-body">
-				<h3 class="card-title">What is this page?</h3>
-				<p>Here you can find courses that you're an instructor for that have been set up with access to <a href="{{ route('site.resources.compute.show', ['name' => 'scholar']) }}">Scholar</a>. When set up, all isntructors and students registered for the course will gain access to Scholar. To begin, click the "Add Class" button and select a course.</p>
+		<div class="d-flex justify-content-center">
+			<div class="card card-help w-50">
+				<div class="card-body">
+					<h3 class="card-title mt-0">What is this page?</h3>
+					<p class="card-text">Here you can find courses that you're an instructor for that have been set up with access to <a href="{{ route('site.resources.compute.show', ['name' => 'scholar']) }}">Scholar</a>. When set up, all isntructors and students registered for the course will gain access to Scholar. To begin, click the "Add Class" button and select a course.</p>
+				</div>
 			</div>
 		</div>
 	@else

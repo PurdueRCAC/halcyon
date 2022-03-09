@@ -24,7 +24,7 @@ app('pathway')->append(
 @section('title'){{ trans('finder::finder.module name') }}@stop
 
 @section('content')
-
+<div class="row">
 <div class="col-md-12">
     <div id="app">
         <div class="row">
@@ -109,5 +109,6 @@ app('pathway')->append(
             <li>Cornell University Research Data Management Service Group and Cornell Information Technologies Custom Development Group (2018). Port of the <a href="https://github.com/CU-CommunityApps/CD-finder">Finder Module. Drupal 8</a>.</li>
         </ul>
     </div>
+</div>
 </div>
 @stop

@@ -43,6 +43,7 @@ app('pathway')
 @endphp
 
 @section('content')
+<div class="row">
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	@include('news::site.menu', ['types' => $types, 'active' => 'feeds'])
 </div>
@@ -125,5 +126,6 @@ app('pathway')
 	<p>
 		<button class="rssCustomize btn btn-secondary" data-txt="{{ trans('global.cancel') }}">{{ trans('news::news.customize feed') }}</button>
 	</p>
+</div>
 </div>
 @stop

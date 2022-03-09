@@ -22,6 +22,7 @@ app('pathway')->append(
 @section('title'){{ trans('contactreports::contactreports.contact reports') }}@stop
 
 @section('content')
+<div class="row">
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	<h2>Quick Filters</h2>
 	<ul class="nav flex-column">
@@ -551,4 +552,5 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 		</script>
 	</div><!-- / #everything -->
 </div><!-- / .contentInner -->
+</div>
 @stop

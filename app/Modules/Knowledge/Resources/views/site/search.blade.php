@@ -7,6 +7,7 @@
 @endpush
 
 @section('content')
+<div class="row">
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	@php
 	$children = $root->publishedChildren();
@@ -65,5 +66,6 @@
 			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>
 		</div>
 	@endif
+</div>
 </div>
 @stop

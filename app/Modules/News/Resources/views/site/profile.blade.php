@@ -7,14 +7,16 @@
 
 	<div id="reports">
 		@if (!count($rows))
-			<div class="card card-help">
-				<div class="card-body">
-					<h3 class="card-title">What is this page?</h3>
-					@if (auth()->user()->can('manage news'))
-						<p>If {{ $user->name }} has registered for any events, you'll find them listed here.</p>
-					@else
-						<p>If you have registered for any events, you'll find them listed here.</p>
-					@endif
+			<div class="d-flex justify-content-center">
+				<div class="card card-help w-50">
+					<div class="card-body">
+						<h3 class="card-title mt-0">What is this page?</h3>
+						@if (auth()->user()->can('manage news'))
+							<p class="card-text">If {{ $user->name }} has registered for any events, you'll find them listed here.</p>
+						@else
+							<p class="card-text">If you have registered for any events, you'll find them listed here.</p>
+						@endif
+					</div>
 				</div>
 			</div>
 		@else

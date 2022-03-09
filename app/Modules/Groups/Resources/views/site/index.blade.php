@@ -11,6 +11,7 @@ app('pathway')
 @endphp
 
 @section('content')
+<div class="row">
 <div class="col-md-12">
 	@if (auth()->user()->can('manage groups'))
 		<div class="row">
@@ -128,4 +129,5 @@ app('pathway')
 	@endif
 	</div><!-- / #everything -->
 </div><!-- / .contentInner -->
+</div>
 @stop

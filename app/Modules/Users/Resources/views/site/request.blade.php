@@ -15,7 +15,7 @@ $active = $sections->firstWhere('active', '=', true);
 
 @section('content')
 @include('users::site.admin', ['user' => $user])
-
+<div class="row">
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	<h2>{{ $user->name }}</h2>
 
@@ -235,5 +235,5 @@ $active = $sections->firstWhere('active', '=', true);
 		</form>
 	</div>
 </div>
-
+</div>
 @stop

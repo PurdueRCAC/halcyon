@@ -336,7 +336,7 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 @endphp
 
 @section('content')
-
+<div class="row">
 @component('orders::site.submenu')
 	orders
 @endcomponent
@@ -1573,4 +1573,5 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 		</div><!-- / .contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12 -->
 	</div><!-- / .row -->
 </div><!-- / .col-lg-12 col-md-12 col-sm-12 col-xs-12 -->
+</div>
 @stop
