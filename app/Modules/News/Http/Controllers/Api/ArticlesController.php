@@ -1194,10 +1194,10 @@ class ArticlesController extends Controller
 
 		if (count($emails) > 0)
 		{
+			Mail::to($emails)->send(new Message($row, $name));
+
 			foreach ($emails as $email)
 			{
-				Mail::to($email)->send(new Message($row, $name));
-
 				Log::create([
 					'ip'              => request()->ip(),
 					'userid'          => (auth()->user() ? auth()->user()->id : 0),
