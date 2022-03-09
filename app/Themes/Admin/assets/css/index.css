@@ -3364,6 +3364,9 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   .main-navigation {
     font-size: 1em;
   }
+  .main-navigation ul#adminmenu {
+    margin: 0;
+  }
   #header .user-options li a,
   .main-navigation ul#adminmenu > li > a {
     font-size: 1em;
