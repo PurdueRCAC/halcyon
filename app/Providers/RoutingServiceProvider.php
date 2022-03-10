@@ -168,7 +168,7 @@ abstract class RoutingServiceProvider extends ServiceProvider
 				[
 					'namespace'  => 'Api',
 					'prefix'     => 'ws',
-					'middleware' => ['throttle:ws', \Illuminate\Routing\Middleware\SubstituteBindings::class],
+					'middleware' => ['throttle:2000,1', \Illuminate\Routing\Middleware\SubstituteBindings::class],
 				],
 				function (Router $router) use ($ws)
 				{
