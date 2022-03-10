@@ -2957,6 +2957,18 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   border-right: 1px solid var(--menu-br);
   z-index: 1;
 }
+#header h1 {
+  margin: 1em;
+  padding: 0;
+  font-size: 1em;
+  line-height: 1;
+  overflow: hidden;
+  height: 47px;
+  color: transparent;
+}
+/*#header .app-name {
+  display: none;
+}*/
 #header .logo-container {
   display: block;
   float: left;
@@ -2979,19 +2991,10 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   fill: currentColor;
 }
 #header .logo-container img {
-  width: 100%;
+  height: 100%;
   margin: 0;
   padding: 0;
   vertical-align: middle;
-}
-#header h1 {
-  margin: 1em;
-  padding: 0;
-  font-size: 1em;
-  line-height: 1;
-  overflow: hidden;
-  height: 47px;
-  color: transparent;
 }
 #header .user-options {
   list-style: none;
@@ -3178,6 +3181,9 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   width: 230px;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
 }
+/*.menu-open #header .app-name {
+  display: block;
+}*/
 .menu-open #header h1,
 .menu-open #header h1 a {
   width: auto;
@@ -3191,6 +3197,7 @@ html .select2-container--default .select2-selection--multiple .select2-selection
 }
 .main-navigation {
   flex-grow: 1;
+  margin: 0 0 1em 0;
 }
 .main-navigation ul {
   list-style: none;
@@ -3360,13 +3367,13 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   right: 0.2em;
   padding: 0.125em 0.3em;
 }
-@media (max-height: 800px) {
+@media (max-height: 924px) {
   .main-navigation {
     font-size: 1em;
   }
-  .main-navigation ul#adminmenu {
+  /*.main-navigation ul#adminmenu {
     margin: 0;
-  }
+  }*/
   #header .user-options li a,
   .main-navigation ul#adminmenu > li > a {
     font-size: 1em;
@@ -3374,6 +3381,41 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   }
   .main-navigation ul#adminmenu > li.node:after {
     top: 1em;
+  }
+  .main-navigation ul#adminmenu>li>ul:after {
+    top: 0.5em;
+  }
+}
+@media (max-height: 768px) {
+  #header h1 {
+    padding: 0 8px;
+    margin-bottom: 0;
+    height: 30px;
+  }
+  #header h1 .logo-container {
+    height: 30px;
+    width: 30px;
+  }
+  #header .user-options {
+    margin-bottom: 0.5em;
+  }
+  .main-navigation ul#adminmenu {
+    margin: 0;
+  }
+  .main-navigation ul#adminmenu > li.node:after {
+    top: 0.85em;
+  }
+  #header .user-options li,
+  .main-navigation ul#adminmenu > li {
+    padding: 0.25em 1em;
+  }
+}
+@media (max-height: 620px) {
+  #header .user-options {
+    margin-bottom: 0;
+  }
+  #header h1 {
+    display: none;
   }
 }
 

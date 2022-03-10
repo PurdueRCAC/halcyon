@@ -75,7 +75,7 @@
 						<span class="logo-container">
 							<span class="logo-shim"></span>
 							@if ($file = app('themes')->getActiveTheme()->getParams('logo'))
-								<img src="{{ asset($file) }}" alt="" height="47" />
+								<img src="{{ asset($file) }}" alt="{{ config('app.name') }}" />
 							@else
 								<?php echo file_get_contents(app_path('Themes/Admin/assets/images/halcyon.svg')); ?>
 							@endif
