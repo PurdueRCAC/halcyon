@@ -116,16 +116,16 @@ app('pathway')
 						{!! Html::grid('checkall') !!}
 					</th>
 				@endif
-				<th scope="col" class="priority-5">
+				<th scope="col" class="priority-6">
 					{!! Html::grid('sort', trans('orders::orders.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
 					{!! Html::grid('sort', trans('orders::orders.name'), 'name', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-2">
+				<th scope="col" class="priority-5">
 					{!! Html::grid('sort', trans('orders::orders.category'), 'ordercategoryid', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-2 text-center">
+				<th scope="col" class="priority-3 text-center">
 					{!! Html::grid('sort', trans('orders::orders.recurrence'), 'recurringtimeperiodid', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-2 text-right">
@@ -135,7 +135,7 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('orders::orders.unit'), 'unit', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-2 text-right" colspan="2">
+				<th scope="col" class="priority-6 text-right" colspan="2">
 					{!! Html::grid('sort', trans('orders::orders.sequence'), 'sequence', $filters['order_dir'], $filters['order']) !!}
 				</th>
 			</tr>
@@ -148,7 +148,7 @@ app('pathway')
 						{!! Html::grid('id', $i, $row->id) !!}
 					</td>
 				@endif
-				<td class="priority-5">
+				<td class="priority-6">
 					{{ $row->id }}
 				</td>
 				<td>
@@ -173,10 +173,10 @@ app('pathway')
 						<br /><span class="text-muted"><span class="fa fa-link" aria-hidden="true"></span> {{ $row->resource->name }}</span>
 					@endif
 				</td>
-				<td class="priority-2">
+				<td class="priority-5">
 					{!! $row->category_name ? $row->category_name : '<span class="unknown">' . trans('global.unknown') . '</span>' !!}
 				</td>
-				<td class="priority-2 text-center">
+				<td class="priority-3 text-center">
 					{{ $row->timeperiod ? $row->timeperiod->name : '' }}
 				</td>
 				<td class="priority-2 text-right">
@@ -188,10 +188,10 @@ app('pathway')
 				<td>
 					{{ $row->unit }}
 				</td>
-				<td class="priority-2 text-right">
+				<td class="priority-6 text-right">
 					{{ $row->sequence }}
 				</td>
-				<td class="text-right">
+				<td class="priority-6 text-right">
 					@if ($filters['order'] == 'sequence')
 						<span class="drag-handle" draggable="true">
 							<svg class="MiniIcon DragMiniIcon DragHandle-icon" viewBox="0 0 24 24"><path d="M10,4c0,1.1-0.9,2-2,2S6,5.1,6,4s0.9-2,2-2S10,2.9,10,4z M16,2c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,2,16,2z M8,10 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,10,8,10z M16,10c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,10,16,10z M8,18 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,18,8,18z M16,18c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,18,16,18z"></path></svg>

@@ -112,7 +112,7 @@ app('pathway')
 				<th scope="col" class="priority-4 text-center">
 					{!! Html::grid('sort', trans('queues::queues.default max walltime'), 'defaultmaxwalltime', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4 text-right">
+				<th scope="col" class="priority-3 text-right">
 					{{ trans('queues::queues.queues') }}
 				</th>
 			</tr>
@@ -140,10 +140,10 @@ app('pathway')
 						{{ $row->hostname }}
 					@endif
 				</td>
-				<td class="text-center">
+				<td class="priority-4 text-center">
 					{{ $row->batchsystm ? $row->batchsystm->name : '' }}
 				</td>
-				<td>
+				<td class="priority-5">
 					{{ $row->policy ? $row->policy->name : '' }}
 				</td>
 				<td class="priority-4 text-center">
@@ -151,7 +151,7 @@ app('pathway')
 						{{ $row->humanDefaultmaxwalltime() }}
 					@endif
 				</td>
-				<td class="priority-4 text-right">
+				<td class="priority-3 text-right">
 					@if (auth()->user()->can('edit queues.schedulers'))
 						<a href="{{ route('admin.queues.index') }}?type={{ $row->id }}">
 							{{ number_format($row->queues_count) }}

@@ -272,14 +272,14 @@ app('pathway')
 						{!! Html::grid('checkall') !!}
 					</th>
 				@endif
-				<th scope="col" class="priority-5">
+				<th scope="col">
 					{!! Html::grid('sort', trans('orders::orders.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4">
+				<th scope="col" class="priority-6">
 					{!! Html::grid('sort', trans('orders::orders.created'), 'datetimecreated', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">{{ trans('orders::orders.status') }}</th>
-				<th scope="col" class="priority-4">
+				<th scope="col" class="priority-5">
 					{!! Html::grid('sort', trans('orders::orders.submitter'), 'userid', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-2 numeric">
@@ -297,7 +297,7 @@ app('pathway')
 						{!! Html::grid('id', $i, $row->id) !!}
 					</td>
 				@endif
-				<td class="priority-5">
+				<td>
 					@if (auth()->user()->can('edit orders'))
 						<a href="{{ route('admin.orders.edit', ['id' => $row->id]) }}">
 							{{ $row->id }}
@@ -306,7 +306,7 @@ app('pathway')
 						{{ $row->id }}
 					@endif
 				</td>
-				<td class="priority-4">
+				<td class="priority-6">
 					@if (auth()->user()->can('edit orders'))
 						<a href="{{ route('admin.orders.edit', ['id' => $row->id]) }}">
 					@endif
@@ -330,7 +330,7 @@ app('pathway')
 						{{ trans('orders::orders.' . $row->status) }}
 					</span>
 				</td>
-				<td class="priority-4">
+				<td class="priority-5">
 					@if ($row->groupid)
 						@if (auth()->user()->can('manage groups'))
 							<a href="{{ route('admin.groups.edit', ['id' => $row->groupid]) }}">

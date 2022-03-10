@@ -122,16 +122,16 @@ app('pathway')
 			<thead>
 				<tr>
 					<th></th>
+					<th class="priority-5"></th>
 					<th></th>
 					<th></th>
 					<th></th>
-					<th></th>
-					<th></th>
-					<th></th>
-					<th colspan="2">{{ trans('queues::queues.nodes') }}</th>
-					<th colspan="2">{{ trans('queues::queues.cores') }}</th>
-					<th></th>
-					<th></th>
+					<th class="priority-4"></th>
+					<th class="priority-6"></th>
+					<th class="priority-5" colspan="2">{{ trans('queues::queues.nodes') }}</th>
+					<th class="priority-5" colspan="2">{{ trans('queues::queues.cores') }}</th>
+					<th class="priority-2"></th>
+					<th class="priority-6 text-right"></th>
 				</tr>
 				<tr>
 					<th>
@@ -143,34 +143,34 @@ app('pathway')
 					<th scope="col">
 						{!! Html::grid('sort', trans('queues::queues.name'), 'name', $filters['order_dir'], $filters['order']) !!}
 					</th>
-					<th scope="col" class="priority-4">
+					<th scope="col">
 						{!! Html::grid('sort', trans('queues::queues.state'), 'enabled', $filters['order_dir'], $filters['order']) !!}
 					</th>
-					<th scope="col" class="priority-4">
+					<th scope="col">
 						{!! Html::grid('sort', trans('queues::queues.scheduling'), 'started', $filters['order_dir'], $filters['order']) !!}
 					</th>
 					<th scope="col" class="priority-4">
 						{!! Html::grid('sort', trans('queues::queues.group'), 'groupid', $filters['order_dir'], $filters['order']) !!}
 					</th>
-					<th scope="col" class="priority-2 text-center">
+					<th scope="col" class="priority-6 text-center">
 						{!! Html::grid('sort', trans('queues::queues.class'), 'groupid', $filters['order_dir'], $filters['order']) !!}
 					</th>
-					<th scope="col" class="text-right">
+					<th scope="col" class="priority-5 text-right">
 						{{ trans('queues::queues.total') }}
 					</th>
-					<th scope="col" class="text-right">
+					<th scope="col" class="priority-5 text-right">
 						{{ trans('queues::queues.loans') }}
 					</th>
-					<th scope="col" class="text-right">
+					<th scope="col" class="priority-5 text-right">
 						{{ trans('queues::queues.total') }}
 					</th>
-					<th scope="col" class="text-right">
+					<th scope="col" class="priority-5 text-right">
 						{{ trans('queues::queues.loans') }}
 					</th>
-					<th scope="col">
+					<th scope="col" class="priority-2">
 						{{ trans('queues::queues.resource') }}
 					</th>
-					<th scope="col" class="text-right">
+					<th scope="col" class="priority-6 text-right">
 						{{ trans('queues::queues.walltime') }}
 					</th>
 				</tr>
@@ -195,7 +195,7 @@ app('pathway')
 							</a>
 							@endif
 						</td>
-						<td class="priority-4">
+						<td>
 							@if ($row->trashed())
 								@if (auth()->user()->can('edit queues'))
 									<a class="badge badge-danger" href="{{ route('admin.queues.restore', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.set state to', ['state' => trans('global.enabled')]) }}">
@@ -270,23 +270,23 @@ app('pathway')
 								<span class="text-muted unknown">{{ trans('global.none') }}</span>
 							@endif
 						</td>
-						<td class="priority-4 text-center">
+						<td class="priority-6 text-center">
 							@if ($row->groupid <= 0)
 								<span class="icon-cpu" aria-hidden="true"></span> {{ trans('queues::queues.system') }}
 							@else
 								<span class="icon-user" aria-hidden="true"></span> {{ trans('queues::queues.owner') }}
 							@endif
 						</td>
-						<td class="text-right">
+						<td class="priority-5 text-right">
 							{!! $row->totalnodes ? number_format($row->totalnodes) : '<span class="text-muted none">' . $row->totalnodes . '</span>' !!}
 						</td>
-						<td class="text-right">
+						<td class="priority-5 text-right">
 							{!! $row->loanednodes ? number_format($row->loanednodes) : '<span class="text-muted none">' . $row->loanednodes . '</span>' !!}
 						</td>
-						<td class="text-right">
+						<td class="priority-5 text-right">
 							{!! $row->totalcores ? number_format($row->totalcores) : '<span class="text-muted none">' . $row->totalcores . '</span>' !!}
 						</td>
-						<td class="text-right">
+						<td class="priority-5 text-right">
 							{!! $row->loanedcores ? number_format($row->loanedcores) : '<span class="text-muted none">' . $row->loanedcores . '</span>' !!}
 							<?php
 							/*$soldpercent = $row->totalcores ? round(($row->soldcores / $row->totalcores) * 100, 1) : 0;
@@ -303,7 +303,7 @@ app('pathway')
 								<span class="progress-bar bg-warning" style="width: <?php echo $loanedpercent; ?>%" aria-valuenow="<?php echo $loanedpercent; ?>" aria-valuemin="0" aria-valuemax="100"></span>
 							</span>*/?>
 						</td>
-						<td class="priority-4">
+						<td class="priority-2">
 							@if ($row->subresourceid)
 								@if ($row->subresource)
 									{{ $row->subresource->name }}
@@ -316,7 +316,7 @@ app('pathway')
 								<span class="text-muted none">{{ trans('global.none') }}</span>
 							@endif
 						</td>
-						<td class="text-right">
+						<td class="priority-6 text-right">
 							<?php
 							$walltime = $row->walltimes()->first();
 							if ($walltime):

@@ -76,22 +76,22 @@ app('pathway')
 				<th scope="col">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.name'), 'name', $filters['order_dir'], $filters['order']); ?>
 				</th>
-				<th scope="col" class="priority-4 text-center">
+				<th scope="col" class="priority-5 text-center">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.location'), 'location', $filters['order_dir'], $filters['order']); ?>
 				</th>
-				<th scope="col" class="priority-4 text-center">
+				<th scope="col" class="priority-5 text-center">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.future'), 'future', $filters['order_dir'], $filters['order']); ?>
 				</th>
-				<th scope="col" class="priority-4 text-center">
+				<th scope="col" class="priority-5 text-center">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.ongoing'), 'ongoing', $filters['order_dir'], $filters['order']); ?>
 				</th>
-				<th scope="col" class="priority-4 text-center">
+				<th scope="col" class="priority-5 text-center">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.tag resources'), 'tagresources', $filters['order_dir'], $filters['order']); ?>
 				</th>
-				<th scope="col" class="priority-4 text-center">
+				<th scope="col" class="priority-5 text-center">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.tag users'), 'tagusers', $filters['order_dir'], $filters['order']); ?>
 				</th>
-				<th scope="col" class="priority-4 text-center">
+				<th scope="col" class="priority-5 text-center">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.url'), 'url', $filters['order_dir'], $filters['order']); ?>
 				</th>
 			</tr>
@@ -104,7 +104,7 @@ app('pathway')
 						{!! Html::grid('id', $i, $row->id) !!}
 					</td>
 				@endif
-				<td class="priority-5">
+				<td class="priority-6">
 					{{ $row->id }}
 				</td>
 				<td>
@@ -118,7 +118,7 @@ app('pathway')
 						</span>
 					@endif
 				</td>
-				<td class="priority-4 text-center">
+				<td class="priority-5 text-center">
 					@if ($row->location)
 						<span class="badge badge-success">
 							<span class="icon-check" aria-hidden="true"></span><span class="sr-only">{{ trans('global.yes') }}</span>
@@ -129,7 +129,7 @@ app('pathway')
 						</span>
 					@endif
 				</td>
-				<td class="priority-4 text-center">
+				<td class="priority-5 text-center">
 					@if ($row->future)
 						<span class="badge badge-success">
 							<span class="icon-check" aria-hidden="true"></span><span class="sr-only">{{ trans('global.yes') }}</span>
@@ -140,7 +140,7 @@ app('pathway')
 						</span>
 					@endif
 				</td>
-				<td class="priority-4 text-center">
+				<td class="priority-5 text-center">
 					@if ($row->ongoing)
 						<span class="badge badge-success">
 							<span class="icon-check" aria-hidden="true"></span><span class="sr-only">{{ trans('global.yes') }}</span>
@@ -151,7 +151,7 @@ app('pathway')
 						</span>
 					@endif
 				</td>
-				<td class="priority-4 text-center">
+				<td class="priority-5 text-center">
 					@if ($row->tagresources)
 						<span class="badge badge-success">
 							<span class="icon-check" aria-hidden="true"></span><span class="sr-only">{{ trans('global.yes') }}</span>
@@ -162,7 +162,7 @@ app('pathway')
 						</span>
 					@endif
 				</td>
-				<td class="priority-4 text-center">
+				<td class="priority-5 text-center">
 					@if ($row->tagusers)
 						<span class="badge badge-success">
 							<span class="icon-check" aria-hidden="true"></span><span class="sr-only">{{ trans('global.yes') }}</span>
@@ -173,7 +173,7 @@ app('pathway')
 						</span>
 					@endif
 				</td>
-				<td class="priority-4 text-center">
+				<td class="priority-5 text-center">
 					@if ($row->url)
 						<span class="badge badge-success">
 							<span class="icon-check" aria-hidden="true"></span><span class="sr-only">{{ trans('global.yes') }}</span>

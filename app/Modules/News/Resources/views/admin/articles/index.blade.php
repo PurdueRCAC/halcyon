@@ -136,14 +136,14 @@ else
 				<th scope="col" class="priority-2">
 					{!! Html::grid('sort', trans('news::news.state'), 'state', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4">
+				<th scope="col" class="priority-5">
 					{!! Html::grid('sort', trans('news::news.type'), 'newstypeid', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				@if (!$template)
 					<th scope="col" colspan="3" class="text-center priority-4">
 						{!! Html::grid('sort', trans('news::news.publish window'), 'datetimenews', $filters['order_dir'], $filters['order']) !!}
 					</th>
-					<th scope="col" class="priority-5 text-right">{{ trans('news::news.updates') }}</th>
+					<th scope="col" class="priority-6 text-right">{{ trans('news::news.updates') }}</th>
 					<th scope="col" class="priority-6 text-right">{{ trans('news::news.email') }}</th>
 				@endif
 			</tr>
@@ -209,7 +209,7 @@ else
 						@endif
 					@endif
 				</td>
-				<td class="priority-4">
+				<td class="priority-5">
 					{{ $row->type->name }}
 				</td>
 				@if (!$template)
@@ -240,7 +240,7 @@ else
 							<span class="none">{{ trans('global.none') }}</span>
 						@endif
 					</td>
-					<td class="priority-5 text-right">
+					<td class="priority-6 text-right">
 						<a href="{{ route('admin.news.updates', ['article' => $row->id]) }}">
 							{{ $row->updates_count }}
 						</a>

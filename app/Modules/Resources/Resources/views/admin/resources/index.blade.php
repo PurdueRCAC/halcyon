@@ -147,16 +147,16 @@ app('pathway')
 				<th scope="col" class="priority-3">
 					{!! Html::grid('sort', trans('resources::assets.type'), 'resourcetype', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4">
+				<th scope="col" class="priority-6">
 					{!! Html::grid('sort', trans('resources::assets.batchsystem'), 'batchsystem', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-4 text-right">
 					{{ trans('resources::assets.subresources') }}
 				</th>
-				<th scope="col">
+				<th scope="col" class="priority-6">
 					{!! Html::grid('sort', trans('global.ordering'), 'display', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col">
+				<th scope="col" class="priority-5">
 					Users
 				</th>
 			</tr>
@@ -224,7 +224,7 @@ app('pathway')
 						{{ trans('global.none') }}
 					@endif
 				</td>
-				<td class="priority-4">
+				<td class="priority-6">
 					@php
 					$b = $batchsystems->where('id', $row->batchsystem)->first();
 					@endphp
@@ -235,7 +235,7 @@ app('pathway')
 						{{ $row->children_count }}
 					</a>
 				</td>
-				<td class="order">
+				<td class="priority-6 order">
 					<?php /*$orderkey = array_search($row->id, $ordering[$row->parent_id]); ?>
 					<?php if ($canChange): ?>
 
@@ -250,7 +250,7 @@ app('pathway')
 					<?php endif;*/ ?>
 					{{ $row->display }}
 				</td>
-				<td class="text-center">
+				<td class="priority-5 text-center">
 					@if ($row->children_count)
 						<a href="{{ route('admin.resources.members', ['id' => $row->id]) }}" data-tip="{{ trans('resources::assets.active users') }}">
 							<span class="fa fa-users" aria-hidden="true"></span>

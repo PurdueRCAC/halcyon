@@ -159,7 +159,7 @@ app('pathway')
 						{!! Html::grid('checkall') !!}
 					</th>
 				@endif
-				<th scope="col" class="priority-5">
+				<th scope="col" class="priority-6">
 					{!! Html::grid('sort', trans('groups::groups.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
@@ -171,7 +171,7 @@ app('pathway')
 				<th scope="col" class="priority-4 text-right">
 					{!! Html::grid('sort', trans('groups::groups.members'), 'members_count', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4">
+				<th scope="col" class="priority-6">
 					{{ trans('groups::groups.department') }}
 				</th>
 			</tr>
@@ -184,7 +184,7 @@ app('pathway')
 						{!! Html::grid('id', $i, $row->id) !!}
 					</td>
 				@endif
-				<td class="priority-5">
+				<td class="priority-6">
 					{{ $row->id }}
 				</td>
 				<td>
@@ -210,7 +210,7 @@ app('pathway')
 				<td class="priority-4 text-right">
 					{{ $row->members_count }}
 				</td>
-				<td class="priority-4">
+				<td class="priority-6">
 					{{ implode(', ', $row->departmentList->pluck('name')->toArray()) }}
 				</td>
 			</tr>

@@ -132,7 +132,7 @@ app('pathway')
 						{!! Html::grid('checkall') !!}
 					</th>
 				@endif
-				<th scope="col" class="priority-5">
+				<th scope="col" class="priority-6">
 					{!! Html::grid('sort', trans('courses::courses.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-5">
@@ -147,13 +147,13 @@ app('pathway')
 				<th scope="col" class="priority-2">
 					{!! Html::grid('sort', trans('courses::courses.semester'), 'semester', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4">
+				<th scope="col" class="priority-5">
 					{!! Html::grid('sort', trans('courses::courses.date start'), 'datetimestart', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-2">
+				<th scope="col" class="priority-5">
 					{!! Html::grid('sort', trans('courses::courses.date stop'), 'datetimestop', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4">
+				<th scope="col" class="priority-6">
 					{{ trans('courses::courses.resource') }}
 				</th>
 				<th scope="col" class="priority-2 text-right">
@@ -172,7 +172,7 @@ app('pathway')
 						{!! Html::grid('id', $i, $row->id) !!}
 					</td>
 				@endif
-				<td class="priority-5">
+				<td class="priority-6">
 					{{ $row->id }}
 				</td>
 				<td class="priority-5">
@@ -208,21 +208,21 @@ app('pathway')
 						{{ $row->semester }}
 					@endif
 				</td>
-				<td class="priority-4">
+				<td class="priority-5">
 					<span class="datetime">
 						@if ($row->hasStart())
 							<time datetime="{{ $row->datetimestart->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestart->format('Y-m-d') }}</time>
 						@endif
 					</span>
 				</td>
-				<td class="priority-2">
+				<td class="priority-5">
 					<span class="datetime">
 						@if ($row->hasEnd())
 							<time datetime="{{ $row->datetimestop->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimestop->format('Y-m-d') }}</time>
 						@endif
 					</span>
 				</td>
-				<td class="priority-4">
+				<td class="priority-6">
 					@if ($row->resource)
 						{{ $row->resource->name }}
 					@endif

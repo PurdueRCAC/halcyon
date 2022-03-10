@@ -61,7 +61,7 @@
 				<th class="text-center">
 					{!! Html::grid('checkall') !!}
 				</th>
-				<th scope="col" class="priority-5">
+				<th scope="col" class="priority-6">
 					{!! Html::grid('sort', trans('core::modules.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
@@ -70,7 +70,7 @@
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('core::modules.state'), 'state', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4 text-center">
+				<th scope="col" class="priority-6 text-center">
 					{!! Html::grid('sort', trans('core::modules.admin'), 'client_id', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-5 text-center">
@@ -89,7 +89,7 @@
 						{!! Html::grid('id', $i, $row->id) !!}
 					@endif
 				</td>
-				<td class="priority-5">
+				<td class="priority-6">
 					{{ $row->id }}
 				</td>
 				<td>
@@ -118,7 +118,7 @@
 						@endif
 					@endif
 				</td>
-				<td class="priority-4 text-center">
+				<td class="priority-6 text-center">
 					@if ($row->client_id)
 						<span class="badge badge-success">{{ trans('global.yes') }}</span>
 					@else

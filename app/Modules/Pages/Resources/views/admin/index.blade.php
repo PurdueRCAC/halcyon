@@ -109,13 +109,13 @@ app('pathway')
 						{!! Html::grid('checkall') !!}
 					</th>
 				@endif
-				<th scope="col" class="priority-5">
+				<th scope="col" class="priority-6">
 					{!! Html::grid('sort', trans('pages::pages.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
 					{!! Html::grid('sort', trans('pages::pages.title'), 'title', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-2">
+				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('pages::pages.path'), 'path', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-3">
@@ -124,7 +124,7 @@ app('pathway')
 				<th scope="col" class="priority-3">
 					{!! Html::grid('sort', trans('pages::pages.access'), 'access', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4" colspan="2">
+				<th scope="col" class="priority-6" colspan="2">
 					{!! Html::grid('sort', trans('pages::pages.updated'), 'updated_at', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<?php /*<th scope="col" class="priority-6">
@@ -142,7 +142,7 @@ app('pathway')
 						@endif
 					</td>
 				@endif
-				<td class="priority-5">
+				<td class="priority-6">
 					{{ $row->id }}
 				</td>
 				<td>
@@ -158,7 +158,7 @@ app('pathway')
 						{{ $row->title }}
 					@endif
 				</td>
-				<td class="priority-2">
+				<td class="priority-4">
 					<a href="{{ route('admin.pages.edit', ['id' => $row->id]) }}">
 						/{{ ltrim($row->path, '/') }}
 					</a>
@@ -199,7 +199,7 @@ app('pathway')
 				<td class="priority-3">
 					<span class="badge access {{ str_replace(' ', '', strtolower($row->viewlevel->title)) }}">{{ $row->viewlevel->title }}</span>
 				</td>
-				<td class="priority-4">
+				<td class="priority-6">
 					<span class="datetime">
 						@if ($row->updated_at)
 							<time datetime="{{ $row->updated_at->format('Y-m-d\TH:i:s\Z') }}">
@@ -222,7 +222,7 @@ app('pathway')
 						@endif
 					</span>
 				</td>
-				<td class="priority-4">
+				<td class="priority-6">
 					<a href="{{ route('admin.pages.history', ['id' => $row->id]) }}" data-href="#history{{ $row->id }}">
 						<span class="fa fa-clock-o" aria-hidden="true"></span><span class="sr-only">Change history</span>
 					</a>

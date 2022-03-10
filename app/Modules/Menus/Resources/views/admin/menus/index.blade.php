@@ -60,25 +60,25 @@ app('pathway')
 				<th>
 					{!! Html::grid('checkall') !!}
 				</th>
-				<th scope="col" class="priority-5">
+				<th scope="col" class="priority-6">
 					{!! Html::grid('sort', trans('menus::menus.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
 					{!! Html::grid('sort', trans('menus::menus.title'), 'title', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4">
+				<th scope="col" class="priority-3">
 					{{ trans('menus::menus.item type') }}
 				</th>
 				<th scope="col" class="priority-4 text-right">
 					{{ trans('menus::menus.published items') }}
 				</th>
-				<th scope="col" class="priority-4 text-right">
+				<th scope="col" class="priority-6 text-right">
 					{{ trans('menus::menus.unpublished items') }}
 				</th>
-				<th scope="col" class="priority-4 text-right">
+				<th scope="col" class="priority-6 text-right">
 					{{ trans('menus::menus.trashed items') }}
 				</th>
-				<th scope="col" class="priority-6">
+				<th scope="col" class="priority-5">
 					{{ trans('menus::menus.linked widgets') }}
 				</th>
 			</tr>
@@ -91,7 +91,7 @@ app('pathway')
 						{!! Html::grid('id', $i, $row->id) !!}
 					@endif
 				</td>
-				<td class="priority-5">
+				<td class="priority-6">
 					{{ $row->id }}
 				</td>
 				<td>
@@ -103,7 +103,7 @@ app('pathway')
 						{{ $row->title }}
 					@endif
 				</td>
-				<td class="priority-4">
+				<td class="priority-3">
 					@if (auth()->user()->can('edit menus'))
 						<a href="{{ route('admin.menus.edit', ['id' => $row->id]) }}">
 							{{ $row->menutype }}
@@ -117,17 +117,17 @@ app('pathway')
 						{{ $row->countPublishedItems() }}
 					</a>
 				</td>
-				<td class="priority-4 text-right">
+				<td class="priority-6 text-right">
 					<a href="{{ route('admin.menus.items', ['menutype' => $row->menutype]) }}">
 						{{ $row->countUnpublishedItems() }}
 					</a>
 				</td>
-				<td class="priority-4 text-right">
+				<td class="priority-6 text-right">
 					<a href="{{ route('admin.menus.items', ['menutype' => $row->menutype]) }}">
 						{{ $row->countTrashedItems() }}
 					</a>
 				</td>
-				<td class="priority-6">
+				<td class="priority-5">
 					@if (isset($widgets[$row->menutype]))
 						<ul>
 							@foreach ($widgets[$row->menutype] as $widget)

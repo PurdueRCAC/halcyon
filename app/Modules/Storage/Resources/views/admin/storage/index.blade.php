@@ -93,7 +93,7 @@ app('pathway')
 							{!! Html::grid('checkall') !!}
 						</th>
 					@endif
-					<th scope="col" class="priority-5">
+					<th scope="col" class="priority-6">
 						{!! Html::grid('sort', trans('storage::storage.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 					</th>
 					<th scope="col">
@@ -102,16 +102,16 @@ app('pathway')
 					<th scope="col">
 						{!! Html::grid('sort', trans('storage::storage.path'), 'path', $filters['order_dir'], $filters['order']) !!}
 					</th>
-					<th scope="col" class="priority-4 text-right">
+					<th scope="col" class="priority-5 text-right">
 						{!! Html::grid('sort', trans('storage::storage.quota space'), 'defaultquotaspace', $filters['order_dir'], $filters['order']) !!}
 					</th>
-					<th scope="col" class="priority-3 text-right">
+					<th scope="col" class="priority-5 text-right">
 						{!! Html::grid('sort', trans('storage::storage.quota file'), 'defaultquotafile', $filters['order_dir'], $filters['order']) !!}
 					</th>
 					<th scope="col" class="priority-4">
 						{!! Html::grid('sort', trans('storage::storage.resource'), 'storageresourceid', $filters['order_dir'], $filters['order']) !!}
 					</th>
-					<th scope="col" class="priority-4 text-right">
+					<th scope="col" class="text-right">
 						{{ trans('storage::storage.directories') }}
 					</th>
 				</tr>
@@ -124,7 +124,7 @@ app('pathway')
 								{!! Html::grid('id', $i, $row->id) !!}
 							</td>
 						@endif
-						<td class="priority-5">
+						<td class="priority-6">
 							{{ $row->id }}
 						</td>
 						<td>
@@ -150,12 +150,12 @@ app('pathway')
 							</a>
 							@endif
 						</td>
-						<td class="priority-4 text-right">
+						<td class="priority-5 text-right">
 							@if ($row->defaultquotaspace)
 								{{ App\Halcyon\Utility\Number::formatBytes($row->defaultquotaspace, 0) }}
 							@endif
 						</td>
-						<td class="priority-3 text-right">
+						<td class="priority-5 text-right">
 							@if ($row->defaultquotafile)
 								{{ number_format($row->defaultquotafile, 2) }}
 							@endif
@@ -174,7 +174,7 @@ app('pathway')
 								@endif
 							@endif
 						</td>
-						<td class="priority-4 text-right">
+						<td class="text-right">
 							@if ($row->directories_count)
 								<a href="{{ route('admin.storage.directories', ['resource' => $row->id]) }}">
 									{{ number_format($row->directories_count) }}

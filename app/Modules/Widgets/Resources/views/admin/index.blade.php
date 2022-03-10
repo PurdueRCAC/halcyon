@@ -122,7 +122,7 @@ app('pathway')
 						<?php echo App\Halcyon\Html\Builder\Grid::checkall(); ?>
 					</th>
 				@endif
-				<th scope="col" class="priority-5">
+				<th scope="col" class="priority-6">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('widgets::widgets.id'), 'id', $filters['order_dir'], $filters['order']); ?>
 				</th>
 				<th scope="col">
@@ -137,10 +137,10 @@ app('pathway')
 				<th scope="col" class="priority-3">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('widgets::widgets.ordering'), 'ordering', $filters['order_dir'], $filters['order']); ?>
 				</th>
-				<th scope="col" class="priority-4">
+				<th scope="col" class="priority-5">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('widgets::widgets.widget'), 'widget', $filters['order_dir'], $filters['order']); ?>
 				</th>
-				<th scope="col" class="priority-4">
+				<th scope="col" class="priority-6">
 					{{ trans('widgets::widgets.pages') }}
 				</th>
 				<th scope="col" class="priority-4">
@@ -159,7 +159,7 @@ app('pathway')
 						{!! Html::grid('id', $i, $row->id) !!}
 					</td>
 				@endif
-				<td class="priority-5">
+				<td class="priority-6">
 					{{ $row->id }}
 				</td>
 				<td>
@@ -231,10 +231,10 @@ app('pathway')
 						{{ $row->ordering }}
 					@endif
 				</td>
-				<td class="priority-4">
+				<td class="priority-5">
 					{{ $row->widget }}
 				</td>
-				<td class="priority-4">
+				<td class="priority-6">
 					<?php
 					$pages = $row->pages;
 					if (is_null($row->pages)):

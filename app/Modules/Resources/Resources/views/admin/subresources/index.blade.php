@@ -112,17 +112,17 @@ app('pathway')
 				<th scope="col">
 					{{ trans('resources::assets.resource') }}
 				</th>
-				<th scope="col" class="priority-4 text-right">
+				<th scope="col" class="priority-5 text-right">
 					{!! Html::grid('sort', trans('resources::assets.node mem'), 'nodemem', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-3 text-right">
+				<th scope="col" class="priority-5 text-right">
 					{!! Html::grid('sort', trans('resources::assets.node cores'), 'nodecores', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4 text-right">
+				<th scope="col" class="priority-5 text-right">
 					{!! Html::grid('sort', trans('resources::assets.node gpus'), 'nodegpus', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4">{{ trans('resources::assets.node attributes') }}</th>
-				<th scope="col" class="priority-4" colspan="2">{{ trans('resources::assets.queues') }}</th>
+				<th scope="col" class="priority-6">{{ trans('resources::assets.node attributes') }}</th>
+				<th scope="col" class="priority-4 text-center" colspan="2">{{ trans('resources::assets.queues') }}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -161,10 +161,10 @@ app('pathway')
 				<td>
 					{{ $row->association ? $row->association->resource->name : '' }}
 				</td>
-				<td class="priority-4 text-right">
+				<td class="priority-5 text-right">
 					{{ $row->nodemem }}
 				</td>
-				<td class="priority-3 text-right">
+				<td class="priority-5 text-right">
 					{{ $row->nodecores }}
 					<?php
 					/*$soldpercent = $row->totalcores ? round(($row->soldcores / $row->totalcores) * 100, 1) : 0;
@@ -181,10 +181,10 @@ app('pathway')
 						<span class="progress-bar bg-warning" style="width: <?php echo $loanedpercent; ?>%" aria-valuenow="<?php echo $loanedpercent; ?>" aria-valuemin="0" aria-valuemax="100"></span>
 					</span>*/?>
 				</td>
-				<td class="priority-4 text-right">
+				<td class="priority-5 text-right">
 					{{ $row->nodegpus }}
 				</td>
-				<td class="priority-4">
+				<td class="priority-6">
 					{{ $row->nodeattributes }}
 				</td>
 				<td class="priority-4 text-right">
@@ -192,7 +192,7 @@ app('pathway')
 						{{ $row->queues_count }}
 					</a>
 				</td>
-				<td>
+				<td class="priority-4">
 					@if ($row->queuestatus == 1)
 						<span class="glyph icon-check-circle text-success" data-tip="{{ trans('resources::resources.queue status.all queues running') }}">
 							{{ trans('resources::resources.queue status.all queues running') }}
