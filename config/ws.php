@@ -26,8 +26,8 @@ return [
         '::1', // localhost
         '127.0.0.1', // localhost
 
+        '128.211.157.100', // bastion.rcac.purdue.edu
         '128.211.157.39',  // amie.anvil.rcac.purdue.edu
-
         '172.18.8.33',     // gateway.mack
         '172.18.66.17',    // ondemand.mack
         '128.211.157.26',  // ondemand.rcac
