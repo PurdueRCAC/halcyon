@@ -119,7 +119,7 @@ if (count($l))
 								{
 									$log->action = 'Promoted to manager';
 								}
-								if ($payload->membertype == 2)
+								if ($payload->membertype == 3)
 								{
 									$log->action = 'Promoted to group usage viewer';
 								}
@@ -129,6 +129,17 @@ if (count($l))
 						if ($log->classmethod == 'create')
 						{
 							$log->action = 'Added to group';
+							if (isset($payload->membertype))
+							{
+								if ($payload->membertype == 2)
+								{
+									$log->action .= 'as a manager';
+								}
+								if ($payload->membertype == 4)
+								{
+									$log->action = 'Submitted request to join group';
+								}
+							}
 						}
 
 						if ($log->classmethod == 'delete')
