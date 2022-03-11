@@ -348,7 +348,7 @@ $i = 0;
 					$csv_headers = array(
 						'Name',
 						'Username',
-						'Table'
+						'Membership'
 					);
 					foreach ($queues as $queue):
 						$csv_headers[] = $queue->name . ' (' . $queue->resource->name . ')';
@@ -407,7 +407,7 @@ $i = 0;
 						$csv = array(
 							($member->user ? $member->user->name : trans('global.unknown')),
 							($member->user ? $member->username : trans('global.unknown')),
-							'Managers'
+							'Manager'
 						);
 						foreach ($queues as $queue):
 							//$qu[$queue->id] = $queue->users->pluck('userid')->toArray();
@@ -576,7 +576,7 @@ $i = 0;
 							$csv = array(
 								($member->user ? $member->user->name : trans('global.unknown')),
 								($member->user ? $member->username : trans('global.unknown')),
-								'Members'
+								'Member'
 							);
 							foreach ($queues as $queue):
 								$checked = '';
@@ -740,7 +740,7 @@ $i = 0;
 						$csv = array(
 							($member->user ? $member->user->name : trans('global.unknown')),
 							($member->user ? $member->username : trans('global.unknown')),
-							'Usage Reporting Viewers'
+							'Viewer'
 						);
 						foreach ($queues as $queue):
 							$checked = '';
