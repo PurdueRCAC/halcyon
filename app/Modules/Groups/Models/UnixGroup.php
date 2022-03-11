@@ -198,6 +198,23 @@ class UnixGroup extends Model
 	}
 
 	/**
+	 * Add user as a member
+	 *
+	 * @param   integer  $userid
+	 * @return  bool
+	 */
+	public function addMember(int $userid)
+	{
+		$member = UnixGroupMember::findByGroupAndUser($this->id, $userid);
+
+		$member = $member ?: new UnixGroupMember;
+		$member->userid = $userid;
+		$member->unixgroupid = $this->id;
+
+		return $member->save();
+	}
+
+	/**
 	 * Get a list of "message of the day"
 	 *
 	 * @param   string  $name

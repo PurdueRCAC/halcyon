@@ -719,6 +719,29 @@ class Queue extends Model
 	}
 
 	/**
+	 * Add a user
+	 *
+	 * @param   integer  $userid
+	 * @param   integer  $membertype
+	 * @return  bool
+	 */
+	public function addUser($userid, $membertype = 1)
+	{
+		$row = $this->users()->where('userid', '=', $userid)->first();
+
+		if (!$row)
+		{
+			$row = new User;
+			$row->queueid = $this->id;
+			$row->userid = $userid;
+		}
+
+		$row->membertype = $membertype;
+
+		return $row->save();
+	}
+
+	/**
 	 * Add loan
 	 *
 	 * @return  bool

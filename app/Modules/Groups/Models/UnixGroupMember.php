@@ -156,4 +156,19 @@ class UnixGroupMember extends Model
 	{
 		return false;
 	}
+
+	/**
+	 * Get a record by unixgroup/user
+	 *
+	 * @param   integer  $unixgroupid
+	 * @param   integer  $userid
+	 * @return  object
+	 */
+	public static function findByGroupAndUser(int $unixgroupid, int $userid)
+	{
+		return self::query()
+			->where('unixgroupid', '=', $unixgroupid)
+			->where('userid', '=', $userid)
+			->first();
+	}
 }
