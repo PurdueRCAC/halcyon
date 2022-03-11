@@ -104,11 +104,12 @@ if (count($l))
 					break;
 
 					case 'MembersController':
+						$payload = $log->jsonPayload;
+
 						if ($log->classmethod == 'update')
 						{
 							$log->action = 'Membership status changed';
 
-							$payload = $log->jsonPayload;
 							if (isset($payload->membertype))
 							{
 								if ($payload->membertype == 1)
@@ -138,6 +139,7 @@ if (count($l))
 								if ($payload->membertype == 4)
 								{
 									$log->action = 'Submitted request to join group';
+									$log->targetuserid = 0;
 								}
 							}
 						}
