@@ -1,3 +1,8 @@
+/* global $ */ // jquery.js
+/* global rivets */ // vendor.js
+/* global Backbone */ // vendor.js
+/* global _ */ // vendor.js < Underscore.js
+
 // Based on code by ajb <ad@mbecker.cc>
 // https://github.com/dobtco/formbuilder
 //
@@ -313,7 +318,7 @@
       this.formSaved = true;
       this.saveFormButton = this.$el.find(".js-save-form");
       this.saveFormButton.attr('disabled', true).text(Formbuilder.options.dict.ALL_CHANGES_SAVED);
-      if (!!Formbuilder.options.AUTOSAVE) {
+      if (Formbuilder.options.AUTOSAVE) {
         setInterval(function() {
           return _this.saveForm.call(_this);
         }, 5000);
@@ -525,7 +530,7 @@
       return this.saveFormButton.removeAttr('disabled').text(Formbuilder.options.dict.SAVE_FORM);
     };
 
-    BuilderView.prototype.saveForm = function(e) {
+    BuilderView.prototype.saveForm = function() {
       var payload;
       /*if (this.formSaved) {
         return;

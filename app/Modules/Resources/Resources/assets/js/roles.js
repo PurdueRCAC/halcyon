@@ -25,24 +25,26 @@ var Roles = {
 				var userid = document.getElementById("userid").value;
 
 				for (var count = 0; count < results.data.length; count++) {
-					if (results.data[count]['rolename'] != '') {
-						var resource = results.data[count]['id'];
+					if (results.data[count]['rolename'] == '') {
+						continue;
+					}
 
-						if (!results.data[count]['retired']) {
-							var image = document.createElement("span");
-							image.className = "spinner-border spinner-border-sm";
-							image.role = "status";
-							image.id = 'IMG_' + results.data[count]['id'];
+					var resource = results.data[count]['id'];
 
-							var cell = document.getElementById("resource" + resource);
+					if (!results.data[count]['retired']) {
+						var indicator = document.createElement("span");
+						indicator.className = "spinner-border spinner-border-sm";
+						indicator.role = "status";
+						indicator.id = 'IMG_' + results.data[count]['id'];
 
-							if (cell != null) {
-								cell.innerHTML = "";
-								cell.setAttribute('data-loading', true);
-								cell.appendChild(image);
+						var cell = document.getElementById("resource" + resource);
 
-								WSGetURL(cell.getAttribute('data-api') + "/" + resource + "." + userid, Roles.PopulateRole, results.data[count]['id']);
-							}
+						if (cell != null) {
+							cell.innerHTML = "";
+							cell.setAttribute('data-loading', true);
+							cell.appendChild(indicator);
+
+							WSGetURL(cell.getAttribute('data-api') + "/" + resource + "." + userid, Roles.PopulateRole, results.data[count]['id']);
 						}
 					}
 				}
@@ -131,46 +133,34 @@ var Roles = {
 			var shell = document.getElementById("role_shell");
 			var pi = document.getElementById("role_pi");
 			// Buttons
-			var add = $("#role_add");
-			var mod = $("#role_modify");
-			var del = $("#role_delete");
+			var add = document.getElementById("role_add");
+			var mod = document.getElementById("role_modify");
+			var del = document.getElementById("role_delete");
 
-			add.addClass('hide');
-			mod.addClass('hide');
-			del.addClass('hide');
+			add.classList.add('hide');
+			mod.classList.add('hide');
+			del.classList.add('hide');
 
 			container.className = '';
 
 			if (results['status'] == 0) {
 				stat.value = "Login Invalid";
-				//add.style.display = "none";
-				//mod.style.display = "none";
-				//del.style.display = "none";
 			} else if (results['status'] == 1) {
 				stat.value = "No Role Exists";
-				add.removeClass('hide');
-				//mod.style.display = "none";
-				//del.style.display = "none";
+				add.classList.remove('hide');
 			} else if (results['status'] == 2) {
 				stat.value = "Role Creation Pending";
-				//add.style.display = "none";
-				mod.removeClass('hide');
-				del.removeClass('hide');
+				mod.classList.remove('hide');
+				del.classList.remove('hide');
 			} else if (results['status'] == 3) {
 				stat.value = "Role Exists";
-				//add.style.display = "none";
-				mod.removeClass('hide');
-				del.removeClass('hide');
+				mod.classList.remove('hide');
+				del.classList.remove('hide');
 			} else if (results['status'] == 4) {
 				stat.value = "Role Removal Pending";
-				add.removeClass('hide');
-				//mod.style.display = "none";
-				//del.style.display = "none";
+				add.classList.remove('hide');
 			} else {
 				stat.value = "Unknown";
-				//add.style.display = "none";
-				//mod.style.display = "none";
-				//del.style.display = "none";
 			}
 
 			if (typeof results['primarygroup'] != 'undefined') {
@@ -244,13 +234,41 @@ var Roles = {
 	 * @return  {void}
 	 */
 	Delete: function (userid) {
-		var resource = document.getElementById("role");
-		resource = resource[resource.selectedIndex].value;
+		var res = document.getElementById("role");
+		var resource = res[res.selectedIndex].value;
+
+		/*var headers = new Headers({
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content'),
+			'Content-Type': 'application/json' // : 'application/x-www-form-urlencoded'
+		});*/
 
 		if (resource) {
-			WSDeleteURL(resource.getAttribute('data-api') + "/" + resource + "." + userid, function (xml, target) {
+			/*fetch(resource.getAttribute('data-api') + "/" + resource + "." + userid, {
+				method: 'DELETE',
+				headers: headers
+			}).then(function (response) {
+				if (response.ok) {
+					fetch(resource.getAttribute('data-api') + "/" + resource + "." + userid, {
+						method: 'GET',
+						headers: headers
+					})
+					.then(function (response) {
+						if (response.ok) {
+							Roles.GotUserStatus();
+						}
+						return Promise.reject(response);
+					})
+				}
+				return Promise.reject(response);
+			}).catch(function (error) {
+				var err = document.getElementById("role_errors");
+				err.classList.remove('hide');
+				err.innerHTML = error;
+			});*/
+
+			WSDeleteURL(res.getAttribute('data-api') + "/" + resource + "." + userid, function (xml, target) {
 				if (xml.status < 400) {
-					WSGetURL(resource.getAttribute('data-api') + "/" + target, Roles.GotUserStatus);
+					WSGetURL(res.getAttribute('data-api') + "/" + target, Roles.GotUserStatus);
 				} else {
 					var err = document.getElementById("role_errors");
 					err.classList.remove('hide');
@@ -268,19 +286,24 @@ var Roles = {
 	}
 }
 
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function () {
 	Roles.Populate();
 
-	$('#role').on('change', function () {
-		Roles.GetUserStatus($(this).data('id'));
+	document.getElementById('role').addEventListener('change', function () {
+		Roles.GetUserStatus(this.getAttribute('data-id'));
 	});
-	$('.role-add').on('click', function (e) {
-		e.preventDefault();
-		Roles.Add($(this).data('id'));
+
+	document.querySelectorAll('.role-add').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+			Roles.Add(this.getAttribute('data-id'));
+		});
 	});
-	$('.role-delete').on('click', function (e) {
-		e.preventDefault();
-		Roles.Delete($(this).data('id'));
+	document.querySelectorAll('.role-delete').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+			Roles.Delete(this.getAttribute('data-id'));
+		});
 	});
 
 	$(".roles-dialog").dialog({
@@ -290,9 +313,9 @@ $(document).ready(function () {
 		modal: true
 	});
 
-	$('#manage_roles').on('click', function (e) {
+	document.getElementById('manage_roles').addEventListener('click', function (e) {
 		e.preventDefault();
 
-		$($(this).attr('href')).dialog("open");
+		$(this.getAttribute('href')).dialog("open");
 	});
 });

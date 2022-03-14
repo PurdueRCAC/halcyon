@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/resources/css/formbuilder.css?v=' . filemtime(public_path() . '/modules/resources/css/formbuilder.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/resources/vendor/formbuilder/formbuilder.css?v=' . filemtime(public_path() . '/modules/resources/vendor/formbuilder/formbuilder.css')) }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/resources/js/vendor.js?v=' . filemtime(public_path() . '/modules/resources/js/vendor.js')) }}"></script>
-<script src="{{ asset('modules/resources/js/formbuilder.js?v=' . filemtime(public_path() . '/modules/resources/js/formbuilder.js')) }}"></script>
+<script src="{{ asset('modules/resources/vendor/formbuilder/vendor.js?v=' . filemtime(public_path() . '/modules/resources/vendor/formbuilder/vendor.js')) }}"></script>
+<script src="{{ asset('modules/resources/vendor/formbuilder/formbuilder.js?v=' . filemtime(public_path() . '/modules/resources/vendor/formbuilder/formbuilder.js')) }}"></script>
 @endpush
 
 @php
