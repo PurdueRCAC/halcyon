@@ -1,4 +1,5 @@
 /* global $ */ // jquery.js
+/* global SetError */ // common.js
 
 var UserRequests = {
 	/**
@@ -188,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// Pending user requests
 	document.querySelectorAll('.toggle-requests').forEach(function (item) {
-		item.addEventListener('change', function (e) {
+		item.addEventListener('change', function () {
 			UserRequests.ToggleAllRadio(parseInt(this.value));
 
 			submitr.disabled = false;
@@ -196,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	document.querySelectorAll('.approve-request').forEach(function (item) {
-		item.addEventListener('change', function (e) {
+		item.addEventListener('change', function () {
 			submitr.disabled = false;
 		});
 	});

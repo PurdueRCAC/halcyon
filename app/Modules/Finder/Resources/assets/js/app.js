@@ -1,6 +1,6 @@
-/* global jQuery */ // jquery.js
+/* global $ */ // jquery.js
 
-var Drupal = {};
+//var Drupal = {};
 var drupalSettings = {
     "path": {
         "baseUrl": document.querySelector('meta[name="base-url"]').getAttribute('content'),
