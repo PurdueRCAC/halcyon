@@ -95,7 +95,7 @@ class Banner extends Widget
 						});
 				})
 				->where('newstypeid', '=', $id)
-				->orderBy('datetimenews', 'desc')
+				->orderBy('datetimenews', 'asc')
 				->limit($this->params->get('limit', 1))
 				->get();
 		}
