@@ -166,6 +166,7 @@ app('pathway')
 	</fieldset>
 
 	<div class="card mb-4">
+		<div class="table-responsive">
 		@if (count($rows) > 0)
 			<table class="table table-hover adminlist">
 				<caption class="sr-only">{{ trans('messages::messages.messages') }}</caption>
@@ -311,6 +312,7 @@ app('pathway')
 				<div>{{ trans('global.no records found') }}</div>
 			</div>
 		@endif
+		</div>
 	</div>
 
 	{{ $rows->render() }}

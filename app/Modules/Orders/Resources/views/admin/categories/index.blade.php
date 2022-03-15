@@ -77,6 +77,7 @@ app('pathway')
 
 	@if (count($rows))
 	<div class="card">
+		<div class="table-responsive">
 	<table class="table table-hover adminlist">
 		<thead>
 			<tr>
@@ -143,6 +144,7 @@ app('pathway')
 		@endforeach
 		</tbody>
 	</table>
+		</div>
 	</div>
 
 	{{ $rows->render() }}

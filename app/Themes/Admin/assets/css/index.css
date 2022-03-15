@@ -2298,7 +2298,7 @@ table.adminlist td.order input[type=number] {
   width: auto;
   text-align: center;
 }
-/* Hide all prioritized columns by default */
+/* Hide all prioritized columns by default 
 @media only all {
   th.priority-6,
   td.priority-6,
@@ -2351,6 +2351,30 @@ table.adminlist td.order input[type=number] {
     display: table-cell;
   }
 }
+@media (max-width: 50em) {
+  .adminlist th {
+    display: none;
+  }
+  .adminlist td {
+    display: block;
+    border-color: transparent;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+  }
+  .adminlist td:first-child {
+    border-color: var(--table-br);
+  }
+  .adminlist td:before {
+      content: attr(data-th)": ";
+      font-weight: bold;
+      display: inline-block;
+  }
+  .adminlist td.text-center,
+  .adminlist td.text-right {
+    text-align: left !important;
+  }
+}*/
+
 @media only all {
   th.hidden,
   td.hidden {

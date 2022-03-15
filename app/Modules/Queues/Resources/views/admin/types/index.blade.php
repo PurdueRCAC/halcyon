@@ -62,6 +62,7 @@ app('pathway')
 
 	@if (count($rows))
 	<div class="card mb-4">
+		<div class="table-responsive">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('queues::queues.types') }}</caption>
 		<thead>
@@ -86,14 +87,14 @@ app('pathway')
 		@foreach ($rows as $i => $row)
 			<tr>
 				@if (auth()->user()->can('delete queues.types'))
-					<td>
+					<td data-th="Select">
 						{!! Html::grid('id', $i, $row->id) !!}
 					</td>
 				@endif
-				<td class="priority-5">
+				<td data-th="{{ trans('queues::queues.id') }}" class="priority-5">
 					{{ $row->id }}
 				</td>
-				<td>
+				<td data-th="{{ trans('queues::queues.name') }}">
 					@if (auth()->user()->can('edit queues.types'))
 						<a href="{{ route('admin.queues.types.edit', ['id' => $row->id]) }}">
 							{{ $row->name }}
@@ -102,7 +103,7 @@ app('pathway')
 						{{ $row->name }}
 					@endif
 				</td>
-				<td class="priority-4 text-right">
+				<td data-th="{{ trans('queues::queues.queues') }}" class="priority-4 text-right">
 					@if (auth()->user()->can('edit queues.types'))
 						<a href="{{ route('admin.queues.index', ['type' => $row->id]) }}">
 							{{ number_format($row->queues_count) }}
@@ -115,6 +116,7 @@ app('pathway')
 		@endforeach
 		</tbody>
 	</table>
+		</div>
 	</div>
 
 	{{ $rows->render() }}

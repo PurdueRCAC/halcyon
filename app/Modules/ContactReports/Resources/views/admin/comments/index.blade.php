@@ -43,6 +43,7 @@
 
 	@if (count($rows))
 	<div class="card mb-4">
+		<div class="table-responsive">
 	<table class="table table-hover adminlist">
 		<caption>#{{ $report->id }} - {{ Illuminate\Support\Str::limit($report->report, 70) }}</caption>
 		<thead>
@@ -105,6 +106,7 @@
 		</tbody>
 	</table>
 		</div>
+	</div>
 
 	{{ $rows->render() }}
 	@else

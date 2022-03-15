@@ -18,6 +18,7 @@
 
 	@if (count($rows))
 	<div class="card mb-4">
+		<div class="table-responsive">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('core::modules.module manager') }}</caption>
 		<thead>
@@ -57,6 +58,7 @@
 		@endforeach
 		</tbody>
 	</table>
+		</div>
 	</div>
 	@else
 		<div class="card mb-4">

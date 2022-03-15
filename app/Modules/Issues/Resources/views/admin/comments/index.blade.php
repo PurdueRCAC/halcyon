@@ -41,6 +41,8 @@
 		<button class="btn btn-secondary" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
+	<div class="card">
+		<div class="table-responsive">
 	<table class="table table-hover adminlist">
 		<caption>#{{ $report->id }} - {{ Illuminate\Support\Str::limit($report->report, 70) }}</caption>
 		<thead>
@@ -102,6 +104,8 @@
 		@endforeach
 		</tbody>
 	</table>
+		</div>
+	</div>
 
 	{{ $rows->render() }}
 

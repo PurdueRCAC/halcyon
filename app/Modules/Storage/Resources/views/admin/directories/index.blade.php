@@ -85,6 +85,7 @@ if ($parent)
 
 	@if (count($rows))
 	<div class="card mb-4">
+		<div class="table-responsive">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('storage::storage.directories') }}</caption>
 		<thead>
@@ -201,6 +202,7 @@ if ($parent)
 		@endforeach
 		</tbody>
 	</table>
+		</div>
 	</div>
 
 	{{ $rows->render() }}

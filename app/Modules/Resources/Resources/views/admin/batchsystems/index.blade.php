@@ -63,6 +63,7 @@ app('pathway')
 
 	@if (count($rows))
 	<div class="card mb-4">
+		<div class="table-responsive">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('resources::resources.batchsystems') }}</caption>
 		<thead>
@@ -112,6 +113,7 @@ app('pathway')
 		@endforeach
 		</tbody>
 	</table>
+		</div>
 	</div>
 
 	{{ $rows->render() }}

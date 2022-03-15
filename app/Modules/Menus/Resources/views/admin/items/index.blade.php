@@ -125,6 +125,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 
 	@if (count($rows))
 	<div class="card mb-4">
+		<div class="table-responsive">
 	<table class="table table-hover adminlist">
 		<caption class="sr-only">{{ trans('menus::menus.items') }}</caption>
 		<thead>
@@ -256,6 +257,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 		@endforeach
 		</tbody>
 	</table>
+		</div>
 	</div>
 
 	{{ $rows->render() }}
