@@ -13,6 +13,7 @@ use App\Modules\Queues\Events\QueueLoanUpdated;
 use App\Modules\Queues\Events\QueueLoanDeleted;
 use App\Modules\History\Traits\Loggable;
 use GuzzleHttp\Client;
+use App\Halcyon\Utility\Number;
 
 /**
  * Rancher listener
@@ -31,6 +32,7 @@ class Rancher
 	{
 		// Create/update/delete Rancher projects
 		$events->listen(QueueCreated::class, self::class . '@handleQueueCreated');
+		//$events->listen(QueueDeleted::class, self::class . '@handleQueueDeleted');
 		// Update Rancher project memberships
 		$events->listen(QueueUserCreated::class, self::class . '@handleQueueUserCreated');
 		$events->listen(QueueUserDeleted::class, self::class . '@handleQueueUserDeleted');
@@ -98,10 +100,6 @@ class Rancher
 		try
 		{
 			$client = new Client([
-				/*'auth' => [
-					$config['user'],
-					$config['password']
-				],*/
 				'headers' => ['Authorization' => 'Bearer ' . $config['user'] . ':' . $config['password']],
 			]);
 
@@ -125,6 +123,11 @@ class Rancher
 				if (!$rancherUser)
 				{
 					$rancherUser = $this->createUser($client, $config, $user);
+				}
+
+				if (!$rancherUser)
+				{
+					throw new \Exception('Failed to create Rancher user for ' . $user->username);
 				}
 
 				$member = $this->getProjectMember($client, $config, $project, $rancherUser);
@@ -264,7 +267,7 @@ class Rancher
 
 			if ($mem = $this->getProjectMember($client, $config, $project, $rancherUser))
 			{
-				$url = $mem->actions->delete;
+				$url = $mem->links->remove;
 
 				$res = $client->request('DELETE', $url);
 
@@ -324,8 +327,8 @@ class Rancher
 		$body = [];
 		$url = '';
 
-		try
-		{
+		//try
+		//{
 			$group = $queue->group;
 			$client = new Client([
 				'headers' => ['Authorization' => 'Bearer ' . $config['user'] . ':' . $config['password']],
@@ -338,8 +341,8 @@ class Rancher
 				return;
 			}
 
-			$this->updateProject($client, $config, $queue);
-		}
+			$this->updateProject($client, $config, $project, $queue);
+		/*}
 		catch (\Exception $e)
 		{
 			$status = $e->getCode();
@@ -347,9 +350,9 @@ class Rancher
 			$body   = ['error' => $e->getMessage()];
 
 			$event->errors[] = $e->getMessage();
-		}
 
-		$this->log('rancher', __METHOD__, 'DELETE', $status, $body, $url, $event->user->userid);
+			//$this->log('rancher', __METHOD__, 'PUT', $status, $body, $url);
+		}*/
 	}
 
 	/*
@@ -436,7 +439,7 @@ class Rancher
 				$project->members = $results->data;
 			}
 
-			$this->log('rancher', __METHOD__, 'GET', $status, $body, $url);
+			$this->log('rancher', __METHOD__, 'GET', $status, $results, $url);
 		}
 
 		foreach ($project->members as $mem)
@@ -461,7 +464,7 @@ class Rancher
 	 */
 	private function createProjectMember($client, $config, $project, $rancherUser)
 	{
-		$url = $config['url'] . '/projectroletemplatebindings';
+		$url = $config['url'] . 'projectroletemplatebindings';
 		$body = [
 			'projectId' => $project->id,
 			'userId' => $rancherUser->id,
@@ -485,6 +488,34 @@ class Rancher
 			throw new \Exception('Rancher API: Failed to create project member entry for ' . $user->username);
 		}
 
+		/* Example of returned data:
+		{
+			"annotations": { },
+			"baseType": "projectRoleTemplateBinding",
+			"created": "2022-03-14T18:51:42Z",
+			"createdTS": 1647283902000,
+			"creatorId": "u-fdsgwkepwm",
+			"groupId": "",
+			"groupPrincipalId": "",
+			"id": "p-fkmmx:prtb-f2chw",
+			"labels": {
+			"cattle.io/creator": "norman"
+			},
+			"links": {
+				"remove": "…/v3/projectRoleTemplateBindings/p-fkmmx:prtb-f2chw",
+				"self": "…/v3/projectRoleTemplateBindings/p-fkmmx:prtb-f2chw",
+				"update": "…/v3/projectRoleTemplateBindings/p-fkmmx:prtb-f2chw"
+			},
+			"name": "prtb-f2chw",
+			"namespaceId": null,
+			"projectId": "local:p-fkmmx",
+			"roleTemplateId": "project-member",
+			"type": "projectRoleTemplateBinding",
+			"userId": "u-fdsgwkepwm",
+			"userPrincipalId": "",
+			"uuid": "eccb9a3d-9c33-4848-95f4-5f62f4e02faf"
+		}
+		*/
 		$projectMember = json_decode($res->getBody()->getContents());
 
 		$this->log('rancher', __METHOD__, 'POST', $status, $body, $url);
@@ -551,12 +582,26 @@ class Rancher
 	 */
 	private function updateProject($client, $config, $project, $queue)
 	{
+		$totalmemory = $queue->totalcores * Number::toBytes(config('listener.rancher.quota.memory_per_core', '4GB'));
+
 		$body = array(
+			'resourceQuota' => [
+				'limitsCpu'      => ($queue->totalcores * 1000) . 'm',
+				'limitsMemory'   => $totalmemory,
+				//'requestsCpu'    => '1000m',
+				//'requestsMemory' => '128Mi',
+				'pods' => config('listener.rancher.quota.pod_limit_project', 200),
+			],
 			'containerDefaultResourceLimit' => [
-				'limitsCpu'      => $queue->totalcores . 'm',
-				'limitsMemory'   => config('listener.rancher.quota.memory_limit_project', 128) . 'Mi',
-				'requestsCpu'    => '1000m',
-				'requestsMemory' => '128Mi',
+				'limitsCpu'      => config('listener.rancher.quota.cpu_limit_container', '100mCPU'),
+				'limitsMemory'   => config('listener.rancher.quota.memory_limit_container', '128Mi'),
+			],
+			'namespaceDefaultResourceQuota' => [
+				'limitsCpu'      => round($queue->totalcores * config('listener.rancher.quota.cpu_limit_namespacce', 0.25)) . 'm',
+				'limitsMemory'   => round($totalmemory * config('listener.rancher.quota.memory_limit_namespacce', 0.25)),
+				//'requestsCpu'    => "1000m",
+				//'requestsMemory' => "128Mi",
+				'pods' => config('listener.rancher.quota.pod_limit_namespace', 50),
 			],
 			/*'namespaceDefaultResourceQuota' => [
 				'limitsCpu'      => (config('listener.rancher.quota.cpu_limit_project', 1000) * config('listener.rancher.quota.cpu_limit_namespace', 0.25)) . 'm',
@@ -566,7 +611,7 @@ class Rancher
 			],*/
 		);
 
-		$url = $project->links->self;
+		$url = $project->links->update;
 
 		$res = $client->request('PUT', $url, [
 			'json' => $body
@@ -596,11 +641,14 @@ class Rancher
 	 */
 	private function getUser($client, $config, $user)
 	{
-		$url = $config['url'] . '/users?username=' . $user->username;
+		$url = $config['url'] . '/users?name=' . $user->name;
 
 		$res = $client->request('GET', $url);
 
-		if ($res->getStatusCode() >= 400)
+		$status = $res->getStatusCode();
+		$found = false;
+
+		if ($status >= 400)
 		{
 			throw new \Exception('Rancher API: Failed to retrieve users', $res->getStatusCode());
 		}
@@ -611,16 +659,18 @@ class Rancher
 		{
 			foreach ($results->data as $usr)
 			{
-				if ($usr->username == $user->username)
+				if ((isset($usr->username) && $usr->username == $user->username)
+				|| (isset($usr->principalIds) && in_array('shibboleth_user://' . $user->username, $usr->principalIds)))
 				{
-					return $usr;
+					$found = $usr;
+					break;
 				}
 			}
 		}
 
-		$this->log('rancher', __METHOD__, 'GET', $status, $body, $url, $user->id);
+		$this->log('rancher', __METHOD__, 'GET', $status, $results, $url, $user->id);
 
-		return false;
+		return $found;
 	}
 
 	/**
@@ -634,9 +684,15 @@ class Rancher
 	private function createUser($client, $config, $user)
 	{
 		$body = array(
-			'name' => $user->username,
+			'name' => $user->name,
 			'state' => 'active',
 			'enabled' => true,
+			//'username' => $user->username, Don't set this for shibboleth accounts
+			'mustChangePassword' => false,
+			'principalIds' => [
+				'shibboleth_user://' . $user->username,
+			],
+			'description' => 'Account created by RCAC portal for ' . $user->username,
 		);
 
 		$url = $config['url'] . '/users';
