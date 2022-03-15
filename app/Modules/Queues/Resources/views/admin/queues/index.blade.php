@@ -86,10 +86,16 @@ app('pathway')
 				<select name="resource" id="filter_resource" class="form-control filter filter-submit">
 					<option value="0">{{ trans('queues::queues.all resources') }}</option>
 					@foreach ($resources as $resource)
-						<?php $selected = ($resource->id == $filters['resource'] ? ' selected="selected"' : ''); ?>
+						<?php
+						$subresources = $resource->subresources()->orderBy('name', 'asc')->get();
+						if (!count($subresources)):
+							continue;
+						endif;
+						$selected = ($resource->id == $filters['resource'] ? ' selected="selected"' : '');
+						?>
 						<option value="{{ $resource->id }}"<?php echo $selected; ?>>{{ str_repeat('- ', $resource->level) . $resource->name }}</option>
 						<?php
-						foreach ($resource->subresources()->orderBy('name', 'asc')->get() as $subresource):
+						foreach ($subresources as $subresource):
 							$key = 's' . $subresource->id;
 							$selected = ($filters['resource'] && $key == (string)$filters['resource'] ? ' selected="selected"' : '');
 							?>
