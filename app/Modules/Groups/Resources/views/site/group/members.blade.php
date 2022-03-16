@@ -128,12 +128,12 @@ foreach ($queues as $queue)
 				{
 					$user_requests[$me->userid] = array();
 				}
-				$user_requests[$me->userid][] = $me->userrequestid;
+				$user_requests[$me->userid][] = $me;//->userrequestid;
 
-				/*if (!$pending->contains('userid', $me->userid))
+				if (!$pending->contains('userid', $me->userid))
 				{
 					$pending->push($me);
-				}*/
+				}
 			}
 			/*elseif ($me->isManager())
 			{
@@ -254,7 +254,7 @@ $i = 0;
 				<thead>
 					<tr>
 						<th scope="col">Name(s)</th>
-						<?php /*<th scope="col">Queue</th>*/ ?>
+						<th scope="col">Queue(s)</th>
 						<th scope="col" class="text-center">Accept</th>
 						<th scope="col" class="text-center">Deny</th>
 					</tr>
@@ -268,20 +268,25 @@ $i = 0;
 									<div class="text-muted">{{ $req->request->comment }}</div>
 								@endif
 							</td>
-							<?php /*<td>
-								{{ $req->queue->name }} ({{ $queue->resource->name }})
-							</td>*/ ?>
-							<td class="text-center">
+							<td>
 								<?php
 								$approves = array();
 								$denies = array();
+								$reqqueues = array();
+
 								if (isset($user_requests[$req->userid])):
-									foreach ($user_requests[$req->userid] as $reqid):
-										$approves[] = route('api.queues.requests.update', ['id' => $reqid]);
-										$denies[]   = route('api.queues.requests.delete', ['id' => $reqid]);
+									foreach ($user_requests[$req->userid] as $rq):
+										$approves[] = route('api.queues.requests.update', ['id' => $rq->id]);
+										$denies[]   = route('api.queues.requests.delete', ['id' => $rq->id]);
+
+										$reqqueues[] = '<span class="text-nowrap">' . $rq->queue->name . ' (' . $rq->queue->resource->name . ')</span>';
 									endforeach;
 								endif;
+
+								echo (!empty($reqqueues) ? implode('<br />', $reqqueues) : '<span class="text-muted">' . trans('global.none') . '</span>');
 								?>
+							</td>
+							<td class="text-center">
 								<input type="radio" name="approve{{ $i }}" class="approve-request approve-value0" data-groupid="{{ $group->id }}" data-api="{{ implode(',', $approves) }}" data-membership="{{ route('api.groups.members.update', ['id' => $req->id]) }}" value="{{ $req->userid }},0" />
 							</td>
 							<td class="text-center">
@@ -291,7 +296,7 @@ $i = 0;
 					@endforeach
 					<tr id="selectAll">
 						<td><strong>Select All</strong></td>
-						<?php /*<td></td>*/ ?>
+						<td></td>
 						<td class="text-center"><input type="radio" id="acceptAll" class="toggle-requests" value="0" /></td>
 						<td class="text-center"><input type="radio" id="denyAll" class="toggle-requests" value="1" /></td>
 					</tr>
@@ -299,7 +304,7 @@ $i = 0;
 				<tfoot>
 					<tr>
 						<td></td>
-						<?php /*<td></td>*/ ?>
+						<td></td>
 						<td colspan="2" class="text-center">
 							<button id="submit-requests" data-groupid="{{ $group->id }}" class="btn btn-success" disabled>
 								{{ trans('global.button.save') }}
