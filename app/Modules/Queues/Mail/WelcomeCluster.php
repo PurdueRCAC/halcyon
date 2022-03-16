@@ -6,6 +6,7 @@ use App\Modules\Users\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use App\Modules\Queues\Events\WelcomeClusterBuild;
 
 class WelcomeCluster extends Mailable
 {
@@ -43,7 +44,9 @@ class WelcomeCluster extends Mailable
 	 */
 	public function build()
 	{
-		return $this->markdown('queues::mail.welcome.cluster')
+		event($e = new WelcomeClusterBuild($this->user, $this->activity));
+
+		return $this->markdown($e->path ? $e->path : 'queues::mail.welcome.cluster')
 					->subject(trans('queues::mail.welcome.cluster'))
 					->with([
 						'user' => $this->user,
