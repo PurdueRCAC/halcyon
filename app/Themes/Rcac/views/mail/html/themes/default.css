@@ -51,6 +51,18 @@ a img {
     border: none;
 }
 
+code {
+  padding: 0.2rem 0.4rem;
+  font-size: 87.5%;
+  color: #D2196F;
+  background-color: #f6f6f6;
+  border-radius: 0.2rem;
+  word-wrap: break-word;
+}
+pre>code {
+  padding: 0;
+}
+
 /* Typography */
 
 h1 {
