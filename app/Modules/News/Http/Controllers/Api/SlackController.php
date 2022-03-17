@@ -201,15 +201,13 @@ class SlackController extends Controller
 				$article_id = $parts[1];
 
 				$article = Article::findOrFail($article_id);
-if ($payload['user']['username'] == 'zooley')
-{
-        $payload['user']['username'] = 'rices';
-}
+
 				$user = User::findByUsername($payload['user']['username']);
 
 				if (!$user || !$user->id)
 				{
-					return response()->json(['message' => 'Unknown user'], 415);
+					continue;
+					//return response()->json(['message' => 'Unknown user'], 415);
 				}
 
 				if ($type == 'reserve')
