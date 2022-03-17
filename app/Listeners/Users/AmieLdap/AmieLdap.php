@@ -760,6 +760,7 @@ class AmieLdap
 						$qm->queueid = $queue->id;
 						$qm->userid = $userid;
 						$qm->membertype = 1;
+						$qm->notice = 8;
 						$qm->save();
 					}
 
