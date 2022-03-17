@@ -192,21 +192,24 @@ class MediaHelper
 		$name = preg_replace(array(
 			// "file   name.zip" becomes "file-name.zip"
 			'/ +/',
-			// "file___name.zip" becomes "file-name.zip"
-			'/_+/',
 			// "file---name.zip" becomes "file-name.zip"
 			'/-+/'
 		), '-', $name);
+		$name = preg_replace(
+			// "file___name.zip" becomes "file_name.zip"
+			'/_+/', '_', $name);
 		$name = preg_replace(array(
 			// "file--.--.-.--name.zip" becomes "file.name.zip"
 			'/-*\.-*/',
+			// "file__.__._.__name.zip" becomes "file.name.zip"
+			'/_*\._*/',
 			// "file...name..zip" becomes "file.name.zip"
 			'/\.{2,}/'
 		), '.', $name);
 		// lowercase for windows/unix interoperability http://support.microsoft.com/kb/100625
-		$name = mb_strtolower($name, mb_detect_encoding($name));
+		//$name = mb_strtolower($name, mb_detect_encoding($name));
 		// ".file-name.-" becomes "file-name"
-		$name = trim($name, '.-');
+		$name = trim($name, '.-_');
 
 		return $name;
 	}
