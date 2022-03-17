@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Modules\News\Models\Association;
 
 /**
- * Types
+ * Article Registrants
  *
  * @apiUri    /news/associations
  */

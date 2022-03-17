@@ -131,4 +131,13 @@ $router->group(['prefix' => 'news'], function (Router $router)
 		'uses' => 'ArticlesController@views',
 		'middleware' => 'auth.optional:api',
 	])->where('id', '[0-9]+');
+
+	// Slack
+	$router->group(['prefix' => 'slack'], function (Router $router)
+	{
+		$router->post('/', [
+			'as' => 'api.news.slack',
+			'uses' => 'SlackController@index',
+		]);
+	});
 });
