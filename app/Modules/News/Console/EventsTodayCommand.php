@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Notification;
 use App\Modules\News\Models\Type;
 use App\Modules\News\Notifications\EventRegistered;
+use App\Modules\News\Notifications\EventClaimed;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use Carbon\Carbon;
 
@@ -16,7 +17,7 @@ class EventsTodayCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'news:eventstoday {type} {--debug : Output actions that would be taken without making them}';
+	protected $signature = 'news:eventstoday {type} {--summary : Output a summary of claimed events} {--debug : Output actions that would be taken without making them}';
 
 	/**
 	 * The console command description.
@@ -31,6 +32,7 @@ class EventsTodayCommand extends Command
 	public function handle()
 	{
 		$debug = $this->option('debug') ? true : false;
+		$summary = $this->option('summary') ? true : false;
 
 		$id = $this->argument('type');
 
@@ -141,7 +143,7 @@ class EventsTodayCommand extends Command
 			}
 
 			Notification::route('slack', $route)
-				->notify(new EventRegistered($event));
+				->notify($summary ? new EventClaimed($event) : new EventRegistered($event));
 		}
 	}
 }

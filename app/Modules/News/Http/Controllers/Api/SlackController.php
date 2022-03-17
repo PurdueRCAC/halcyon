@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Modules\News\Models\Association;
 use App\Modules\News\Models\Article;
 use App\Modules\Users\Models\User;
+use GuzzleHttp\Client;
 use Carbon\Carbon;
 
 /**
@@ -183,19 +184,30 @@ class SlackController extends Controller
 		*/
 		$message = 'Acknowledged';
 
-		if ($request->has('actions'))
+		if ($request->has('payload'))
 		{
-			foreach ($request->input('actions') as $action)
+			$payload = $request->input('payload');
+
+			if (is_string($payload))
 			{
-				$parts = explode('_', $action->action_id);
+				$payload = json_decode($payload, true);
+			}
+
+			foreach ($payload['actions'] as $action)
+			{
+				$parts = explode('_', $action['action_id']);
+
 				$type = $parts[0];
 				$article_id = $parts[1];
 
 				$article = Article::findOrFail($article_id);
+if ($payload['user']['username'] == 'zooley')
+{
+        $payload['user']['username'] = 'rices';
+}
+				$user = User::findByUsername($payload['user']['username']);
 
-				$user = User::findByUsername($action->user->username);
-
-				if (!$user)
+				if (!$user || !$user->id)
 				{
 					return response()->json(['message' => 'Unknown user'], 415);
 				}
@@ -213,21 +225,41 @@ class SlackController extends Controller
 						return response()->json(['message' => trans('global.messages.creation failed')], 500);
 					}
 
-					/*if ($response_url = $request->input('response_url'))
+					$message = $payload['message'];
+
+					foreach ($message['attachments'] as $j => $attach)
+					{
+						foreach ($attach['blocks'] as $i => $block)
+						{
+							if ($block['type'] == 'actions')
+							{
+								$message['replace_original'] = true;
+
+								$block['type'] = 'context';
+								$block['elements'] = [
+									[
+										'type' => 'mrkdwn',
+										'text' => ':white_check_mark: *@' . $user->username . '* claimed this.'
+									]
+								];
+
+								$message['attachments'][$j]['blocks'][$i] = $block;
+							}
+						}
+					}
+
+					if (isset($payload['response_url']))
 					{
 						$client = new Client();
-						$res = $client->request('POST', $response_url, [
-							'json' => [
-								'replace_original' => true,
-								'text' => 'Reserved!',
-							]
+						$res = $client->request('POST', $payload['response_url'], [
+							'json' => $message
 						]);
 
 						if ($res->getStatusCode() >= 400)
 						{
 							return response()->json(['message' => 'Failed to response'], 500);
 						}
-					}*/
+					}
 
 					$message = 'Reserved by @' . $user->username;
 				}
@@ -251,7 +283,6 @@ class SlackController extends Controller
 		}
 
 		return response()->json([
-				'replace_original' => true,
 				'text' => $message,
 			], 200);
 	}

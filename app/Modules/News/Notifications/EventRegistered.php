@@ -4,7 +4,7 @@ namespace App\Modules\News\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\SlackMessage;
+use NathanHeffley\LaravelSlackBlocks\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\News\Models\Article;
@@ -52,7 +52,7 @@ class EventRegistered extends Notification
 	{
 		$event = $this->event;
 
-		return (new SlackMessage)
+		$msg = (new SlackMessage)
 			->from(config('app.name'))
 			->info()
 			->content($event->datetimenews->format('g:ia') . ' - ' . $event->datetimenewsend->format('g:ia T'))
@@ -145,7 +145,7 @@ class EventRegistered extends Notification
 					$groups[] = $group->name . ' - ' . $queue->name . ($queue->resource ? ' (' . $queue->resource->name . ')' : '');
 				}
 
-				$attachment
+				/*$attachment
 					->title($event->headline, route('site.news.show', ['id' => $event->id]))
 					->author($user->name . ' (' . $user->username . ')', route('site.users.account', ['u' => $user->id]))
 					->content($assoc->comment)
@@ -157,7 +157,95 @@ class EventRegistered extends Notification
 				if ($event->url)
 				{
 					$attachment->action($event->location, $event->url, 'primary');
-				}
+				}*/
+				$attachment->block(function ($block) use ($event)
+				{
+					$block
+						->type('header')
+						->text([
+							'type' => 'plain_text',
+							'text' => $event->headline,
+							'emoji' => false,
+						]);
+				});
+
+				$attachment->block(function ($block) use ($event, $user)
+				{
+					$block
+						->type('section')
+						->text([
+							'type' => 'mrkdwn',
+							'text' => '<' . route('site.users.account', ['u' => $user->id]) . '|' . $user->name . ' (' . $user->username . ')>'
+						])
+						->accessory([
+							'type' => 'button',
+							'text' => [
+								'type' => 'plain_text',
+								'text' => $event->location,
+							],
+							'url' => $event->url,
+							'style' => 'primary',
+						]);
+				});
+
+				$attachment->block(function ($block) use ($event, $assoc)
+				{
+					$block
+						->type('section')
+						->text([
+							'type' => 'plain_text',
+							'text' => '"' . $assoc->comment . '"'
+						]);
+				});
+
+				$attachment->block(function ($block) use ($event, $groups, $user)
+				{
+					$block
+						->type('section')
+						->fields([
+							[
+								'type' => 'mrkdwn',
+								'text' => '*Groups*'  . "\n" . (count($groups) ? implode("\n", $groups) : '-'),
+							],
+							[
+								'type' => 'mrkdwn',
+								'text' => '*Department*' . "\n" . ($user->department ? $user->department : '-'),
+							]
+						]);
+				});
+
+				$attachment->block(function ($block) use ($event)
+				{
+					$block
+						->type('actions')
+						->elements([
+							/*[
+								'type' => 'button',
+								'text' => [
+									'type' => 'plain_text',
+									'text' => $event->location,
+								],
+								'url' => $event->url,
+								'action_id' => 'launch_' . $event->id,
+								//'callback_id' => 'launch_' . $event->id,
+								'style' => 'primary',
+							],*/
+							[
+								'type' => 'button',
+								'text' => [
+									'type' => 'plain_text',
+									'text' => 'Claim',
+								],
+								'value' => 'reserve_' . $event->id,
+								'action_id' => 'reserve_' . $event->id,
+								//'callback_id' => 'reserve_' . $event->id,
+								//'style' => 'danger',
+							],
+						]);
+				});
 			});
+
+		//print_r($msg); die();
+		return $msg;
 	}
 }
