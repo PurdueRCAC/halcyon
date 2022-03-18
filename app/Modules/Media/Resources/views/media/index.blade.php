@@ -111,6 +111,30 @@ app('pathway')
 					</form>
 				</div>
 			<?php endif; ?>
+
+			<div class="dialog dialog-move" id="media-move" title="{{ trans('media::media.move') }}">
+				<form action="{{ route('api.media.move', ['api_token' => auth()->user()->api_token]) }}" id="mover">
+					<div class="form-group">
+						<label for="move-destination">Destination folder</label>
+						<select id="move-destination" class="form-control">
+							<option>/</option>
+							@foreach ($folders as $j => $fold)
+								<?php
+								if ($j == 0):
+									continue;
+								endif;
+								?>
+								<option>{{ '/' . trim($fold['relname'], '/') }}</option>
+							@endforeach
+						</select>
+					</div>
+
+					<div class="form-group text-right">
+						<input type="submit" class="btn btn-success" value="{{ trans('media::media.move') }}" />
+					</div>
+					@csrf
+				</form>
+			</div>
 		</div><!-- / .panel-files -->
 	</div><!-- / .media-panels -->
 </div>

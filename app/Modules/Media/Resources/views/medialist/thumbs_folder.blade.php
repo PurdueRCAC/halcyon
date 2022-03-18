@@ -26,6 +26,9 @@ $ext = 'folder';
 				<li>
 					<a class="icon-edit media-opt-rename" href="{{ route('admin.media.medialist', ['folder' => '/' . $path]) }}" data-api="{{ route('api.media.rename') }}" data-path="{{ dirname($path) }}" data-name="{{ basename($path) }}" data-prompt="{{ trans('media::media.rename prompt') }}">{{ trans('media::media.rename') }}</a>
 				</li>
+				<li>
+					<a class="icon-move media-opt-move" href="{{ route('admin.media.medialist', ['folder' => '/' . $path]) }}" data-api="{{ route('api.media.move') }}" data-path="{{ dirname($path) }}" data-name="{{ basename($path) }}">{{ trans('media::media.move') }}</a>
+				</li>
 			@endif
 			@if (auth()->user()->can('delete media'))
 				<li>

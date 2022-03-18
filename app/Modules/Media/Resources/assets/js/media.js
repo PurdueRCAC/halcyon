@@ -2,7 +2,7 @@
 /* global jQuery */ // jquery.js
 /* global Dropzone */ // dropzone.js
 
-var _DEBUG = 0;
+var _DEBUG = 1;
 
 if (typeof ('Dropzone') !== undefined) {
 	Dropzone.autoDiscover = false;
@@ -123,7 +123,7 @@ jQuery(document).ready(function () {
 	});
 
 	contents
-		.on('click', '.folder-item', function(e) {
+		.on('click', '.folder-item', function (e) {
 			e.preventDefault();
 
 			folder.val($(this).attr('data-folder'));
@@ -240,6 +240,63 @@ jQuery(document).ready(function () {
 					}
 				});
 			}
+		})
+		.on('click', '.media-opt-move', function (e) {
+			e.preventDefault();
+
+			$('.media-item').removeClass('ui-activated');
+			$('#media-move').dialog('open');
+
+			var name = $(this).data('name');
+			var before = $(this).data('path') + '/' + name;
+			var href = $(this).data('api');
+
+			before = '/' + before.replace(/^\.+/gm, '').replace(/^\/+/gm, '');
+
+			$('#mover').on('submit', function (e) {
+				e.preventDefault();
+
+				var after = $('#move-destination').val() + '/' + name;
+
+				if (before == after) {
+					alert('Cannot move to self.');
+				}
+
+				var data = {
+					'before': before,
+					'after': after
+				};
+
+				if (_DEBUG) {
+					window.console && console.log(data);
+				}
+
+				$('.spinner').removeClass('d-none');
+
+				$.ajax({
+					url: href,
+					type: 'PUT',
+					data: data,
+					success: function (response) {
+						if (_DEBUG) {
+							window.console && console.log(response);
+						}
+
+						$.get(contents.attr('data-list') + '?layout=' + layout.val() + '&folder=' + folder.val(), function (data) {
+							if (_DEBUG) {
+								window.console && console.log(data);
+							}
+							contents.html(data);
+
+							$('.spinner').addClass('d-none');
+
+							bindContextModals();
+
+							$('#media-move').dialog('close');
+						});
+					}
+				});
+			});
 		})
 		.on('click', '.media-opt-delete', function (e) {
 			e.preventDefault();
