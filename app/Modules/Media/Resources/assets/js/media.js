@@ -2,7 +2,7 @@
 /* global jQuery */ // jquery.js
 /* global Dropzone */ // dropzone.js
 
-var _DEBUG = 1;
+var _DEBUG = 0;
 
 if (typeof ('Dropzone') !== undefined) {
 	Dropzone.autoDiscover = false;
