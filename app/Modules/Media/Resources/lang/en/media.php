@@ -25,6 +25,7 @@ return [
 	'new name' => 'New name',
 	'use helper in content' => 'Or use <code>:helper</code> in content',
 	'rename prompt' => 'New name',
+	'move' => 'Move',
 
 	// Error messages
 	'error' => [

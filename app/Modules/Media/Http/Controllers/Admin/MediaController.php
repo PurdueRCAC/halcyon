@@ -55,6 +55,7 @@ class MediaController extends Controller
 			'folders_id' => ' id="media-tree"',
 			'folder' => $folder,
 			'folderTree' => $folderTree,
+			'folders' => $folders,
 			'parent' => MediaHelper::getParent($folder),
 			'layout' => $layout
 		]);
