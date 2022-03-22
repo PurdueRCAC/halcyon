@@ -276,8 +276,8 @@ $i = 0;
 
 								if (isset($user_requests[$req->userid])):
 									foreach ($user_requests[$req->userid] as $rq):
-										$approves[] = route('api.queues.requests.update', ['id' => $rq->id]);
-										$denies[]   = route('api.queues.requests.delete', ['id' => $rq->id]);
+										$approves[] = route('api.queues.requests.update', ['id' => $rq->userrequestid]);
+										$denies[]   = route('api.queues.requests.delete', ['id' => $rq->userrequestid]);
 
 										$reqqueues[] = '<span class="text-nowrap">' . $rq->queue->name . ' (' . $rq->queue->resource->name . ')</span>';
 									endforeach;
