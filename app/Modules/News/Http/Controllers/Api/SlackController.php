@@ -186,97 +186,105 @@ class SlackController extends Controller
 
 		if ($request->has('payload'))
 		{
-			$payload = $request->input('payload');
-
-			if (is_string($payload))
+			try
 			{
-				$payload = json_decode($payload, true);
-			}
+				$payload = $request->input('payload');
 
-			foreach ($payload['actions'] as $action)
-			{
-				$parts = explode('_', $action['action_id']);
-
-				$type = $parts[0];
-				$article_id = $parts[1];
-
-				$article = Article::findOrFail($article_id);
-
-				$user = User::findByUsername($payload['user']['username']);
-
-				if (!$user || !$user->id)
+				if (is_string($payload))
 				{
-					continue;
-					//return response()->json(['message' => 'Unknown user'], 415);
+					$payload = json_decode($payload, true);
 				}
 
-				if ($type == 'reserve')
+				foreach ($payload['actions'] as $action)
 				{
-					$row = new Association;
-					$row->newsid = $article->id;
-					$row->assoctype = 'staff';
-					$row->associd = $user->id;
-					$row->comment = 'Reserved via Slack bot';
+					$parts = explode('_', $action['action_id']);
 
-					if (!$row->save())
+					$type = $parts[0];
+					$article_id = isset($parts[1]) ? $parts[1] : 0;
+
+					$article = Article::findOrFail($article_id);
+
+					$user = User::findByUsername($payload['user']['username']);
+
+					if (!$user || !$user->id)
 					{
-						return response()->json(['message' => trans('global.messages.creation failed')], 500);
+						continue;
+						//return response()->json(['message' => 'Unknown user'], 415);
 					}
 
-					$message = $payload['message'];
-
-					foreach ($message['attachments'] as $j => $attach)
+					if ($type == 'reserve')
 					{
-						foreach ($attach['blocks'] as $i => $block)
+						$row = new Association;
+						$row->newsid = $article->id;
+						$row->assoctype = 'staff';
+						$row->associd = $user->id;
+						$row->comment = 'Reserved via Slack bot';
+
+						if (!$row->save())
 						{
-							if ($block['type'] == 'actions')
+							return response()->json(['message' => trans('global.messages.creation failed')], 500);
+						}
+
+						$message = $payload['message'];
+
+						foreach ($message['attachments'] as $j => $attach)
+						{
+							foreach ($attach['blocks'] as $i => $block)
 							{
-								$message['replace_original'] = true;
+								if ($block['type'] == 'actions')
+								{
+									$message['replace_original'] = true;
 
-								$block['type'] = 'context';
-								$block['elements'] = [
-									[
-										'type' => 'mrkdwn',
-										'text' => ':white_check_mark: *@' . $user->username . '* claimed this.'
-									]
-								];
+									$block['type'] = 'context';
+									$block['elements'] = [
+										[
+											'type' => 'mrkdwn',
+											'text' => ':white_check_mark: *@' . $user->username . '* claimed this.'
+										]
+									];
 
-								$message['attachments'][$j]['blocks'][$i] = $block;
+									$message['attachments'][$j]['blocks'][$i] = $block;
+								}
 							}
 						}
-					}
 
-					if (isset($payload['response_url']))
-					{
-						$client = new Client();
-						$res = $client->request('POST', $payload['response_url'], [
-							'json' => $message
-						]);
-
-						if ($res->getStatusCode() >= 400)
+						if (isset($payload['response_url']))
 						{
-							return response()->json(['message' => 'Failed to response'], 500);
+							$client = new Client();
+							$res = $client->request('POST', $payload['response_url'], [
+								'json' => $message
+							]);
+
+							if ($res->getStatusCode() >= 400)
+							{
+								return response()->json(['message' => 'Failed to response'], 500);
+							}
 						}
+
+						$message = 'Reserved by @' . $user->username;
 					}
-
-					$message = 'Reserved by @' . $user->username;
-				}
-				elseif ($type == 'launch')
-				{
-					/*foreach ($article->associations as $assoc)
+					elseif ($type == 'launch')
 					{
-						if ($assoc->userid == $user->id)
+						/*foreach ($article->associations as $assoc)
 						{
-							$assoc->datetimeattended = Carbon::now();
-							$assoc->save();
+							if ($assoc->userid == $user->id)
+							{
+								$assoc->datetimeattended = Carbon::now();
+								$assoc->save();
 
-							//return redirect($article->url);
-							$message = 'Launched by @' . $user->username;
-							break;
-						}
-					}*/
-					$message = 'Launched by @' . $user->username;
+								//return redirect($article->url);
+								$message = 'Launched by @' . $user->username;
+								break;
+							}
+						}*/
+						$message = 'Launched by @' . $user->username;
+					}
 				}
+			}
+			catch (\Exception $e)
+			{
+				// Log this?
+				error_log($e->getMessage());
 			}
 		}
 

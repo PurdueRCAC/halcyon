@@ -185,6 +185,7 @@ class EventRegistered extends Notification
 							],
 							'url' => $event->url,
 							'style' => 'primary',
+							'action_id' => 'launch_' . $event->id,
 						]);
 				});
 
