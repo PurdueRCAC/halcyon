@@ -15,7 +15,7 @@ endif;
 					<img src="{{ asset($icon) }}" alt="{{ trans('media::media.image title', ['name' => $file->getFilename(), 'size' => $file->getFormattedSize()]) }}" />
 				</span>
 				<span class="media-name">
-					{{ $file->getShortName() }}
+					{{ $file->getFilename() }}
 				</span>
 			</a>
 		</td>

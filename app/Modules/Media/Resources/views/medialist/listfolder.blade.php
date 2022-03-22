@@ -1,5 +1,5 @@
 <?php
-$name = $file->getShortName();
+$name = $file->getFilename();
 $path = ltrim($file->getRelativePath(), '/');
 ?>
 	<tr class="media-item media-item-list">
