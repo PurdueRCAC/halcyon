@@ -24,52 +24,43 @@ $ignore = $params->get('ignore_role');
 $events = array();
 $attend = array();
 
-foreach ($rows as $event)
-{
+foreach ($rows as $event):
 	$slot = new stdClass;
 	$slot->title = (isset($event->location) && $event->location) ? $event->location : $event->headline;
 	$slot->start = $event->datetimenews->format('Y-m-d\TH:i:s');
 	$slot->end   = $event->datetimenewsend->format('Y-m-d\TH:i:s');
 	$slot->id    = $event->id;
 
-	if (strstr($event->body, '&amp;#039;'))
-	{
+	if (strstr($event->body, '&amp;#039;')):
 		$event->body = str_replace('&amp;#039;', "'", $event->body);
-	}
+	endif;
 
 	$attending = false;
 	$reserved  = false;
 	$comment   = null;
 	$canAttend = true;
 
-	foreach ($event->associations as $assoc)
-	{
-		if (auth()->user() && $assoc->associd == auth()->user()->id)
-		{
+	foreach ($event->associations as $assoc):
+		if (auth()->user() && $assoc->associd == auth()->user()->id):
 			$attending = $assoc->id;
 			$comment = $assoc->comment;
-			if (!$event->ended())
-			{
+			if (!$event->ended()):
 				$event->attending = $assoc->id;
 				$attend[] = $event;
-			}
-		}
-		elseif ($event->url && $assoc->assoctype == 'user')
-		{
+			endif;
+		elseif ($event->url && $assoc->assoctype == 'user'):
 			$u = App\Modules\Users\Models\User::find($assoc->associd);
 
-			if ($u && (!$ignore || !in_array($ignore, $u->getAuthorisedRoles())))
-			{
+			if ($u && (!$ignore || !in_array($ignore, $u->getAuthorisedRoles()))):
 				$reserved = $u->name;
 				$comment = $assoc->comment;
-			}
-		}
-	}
+			endif;
+		endif;
+	endforeach;
 
-	if (!$attending && isset($attendance[$event->datetimenews->format('Y-m-d')]))
-	{
+	if (!$attending && isset($attendance[$event->datetimenews->format('Y-m-d')])):
 		$canAttend = false;
-	}
+	endif;
 
 	$now = Carbon\Carbon::now();
 	$endregistration = Carbon\Carbon::parse($event->datetimenews)->modify('-2 hours');
@@ -78,18 +69,16 @@ foreach ($rows as $event)
 	$slot->borderColor = '#0e7e12';
 
 	// Mark as closed registration
-	if ($now->getTimestamp() >= $endregistration->getTimestamp())
-	{
+	if ($now->getTimestamp() >= $endregistration->getTimestamp()):
 		$slot->backgroundColor = '#757575'; // gray
 		$slot->borderColor = '#757575';
-	}
+	endif;
 
 	// Mark as reserved if the event hasn't ended
-	if (($reserved || $attending) && $now->getTimestamp() < $event->datetimenewsend->getTimestamp())
-	{
+	if (($reserved || $attending) && $now->getTimestamp() < $event->datetimenewsend->getTimestamp()):
 		$slot->backgroundColor = '#0c5460'; // blue
 		$slot->borderColor = '#0c5460';
-	}
+	endif;
 
 	$events[] = $slot;
 	?>
@@ -97,68 +86,55 @@ foreach ($rows as $event)
 		<h3 id="coffee{{ $event->id }}-title" class="sr-only"><span class="sr-only">Article #{{ $event->id }}:</span> {{ $event->headline }}</h3>
 
 		<ul class="news-meta text-muted">
-			<li><span class="fa fa-fw fa-clock-o text-muted" aria-hidden="true"></span> {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}
+			<li>
+				<span class="fa fa-fw fa-clock-o text-muted" aria-hidden="true"></span> {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}
+				@if ($event->isToday())
+					@if ($event->isNow())
+						<span class="badge badge-success">{{ trans('news::news.happening now') }}</span>
+					@else
+						<span class="badge badge-info">{{ trans('news::news.today') }}</span>
+					@endif
+				@elseif ($event->isTomorrow())
+					<span class="badge badge-secondary">{{ trans('news::news.tomorrow') }}</span>
+				@endif
+			</li>
+
+			@if ($event->location != '')
+				<li><span class="fa fa-fw fa-map-marker" aria-hidden="true"></span> {{ $event->location }}</li>
+			@endif
+
+			@if ($event->url && auth()->user())
+				<li><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="{{ $event->url }}">{{ \Illuminate\Support\Str::limit($event->url, 50) }}</a></li>
+			@endif
+
 			<?php
-			if ($event->isToday())
-			{
-				if ($event->isNow())
-				{
-					echo ' <span class="badge badge-success">' . trans('news::news.happening now') . '</span>';
-				}
-				else
-				{
-					echo ' <span class="badge badge-info">' . trans('news::news.today') . '</span>';
-				}
-			}
-			elseif ($event->isTomorrow())
-			{
-				echo ' <span class="badge badge-secondary">' . trans('news::news.tomorrow') . '</span>';
-			}
-			echo '</li>';
-
-			if ($event->location != '')
-			{
-				echo '<li><span class="fa fa-fw fa-map-marker" aria-hidden="true"></span> ' . $event->location . '</li>';
-			}
-
-			if ($event->url && auth()->user())
-			{
-				echo '<li><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="' . $event->url . '">' . \Illuminate\Support\Str::limit($event->url, 50) . '</a></li>';
-			}
-
 			$resources = $event->resourceList()->get();
-			if (count($resources) > 0)
-			{
+			if (count($resources) > 0):
 				$resourceArray = array();
-				foreach ($resources as $resource)
-				{
+				foreach ($resources as $resource):
 					$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->name)]) . '">' . $resource->name . '</a>';
-				}
-				echo '<li><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray) . '</li>';
-			}
+				endforeach;
 
-			if (auth()->user() && auth()->user()->can('manage news') && !empty($event->associations))
-			{
+				echo '<li><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray) . '</li>';
+			endif;
+
+			if (auth()->user() && auth()->user()->can('manage news') && !empty($event->associations)):
 				$users = array();
-				foreach ($event->associations as $assoc)
-				{
-					if ($assoc->associated)
-					{
+				foreach ($event->associations as $assoc):
+					if ($assoc->associated):
 						$users[] = $assoc->associated->name . ' (' . $assoc->associated->username . ')';
-					}
-				}
-				if (!empty($users))
-				{
+					endif;
+				endforeach;
+
+				if (!empty($users)):
 					echo '<li><span class="fa fa-fw fa-user" aria-hidden="true"></span> ' . implode(', ', $users) . '</li>';
-				}
-			}
+				endif;
+			endif;
 
 			if (!$event->template
 			 && $event->hasEnd()
-			 && $event->datetimenewsend > $now->format('Y-m-d h:i:s'))
-			{
-				if ($type->calendar)
-				{
+			 && $event->datetimenewsend > $now->format('Y-m-d h:i:s')):
+				if ($type->calendar):
 					?>
 					<li>
 					<span class="fa fa-fw fa-calendar" aria-hidden="true"></span>
@@ -172,11 +148,13 @@ foreach ($rows as $event)
 					--></a>
 					</li>
 					<?php
-				}
-			}
+				endif;
+			endif;
 			?>
 		</ul>
-		{!! $event->formattedBody !!}
+
+		<div class="sr-only">{!! $event->formattedBody !!}</div>
+
 		<div class="dialog-footer newsattend">
 			@if ($event->url)
 				@if (auth()->user() && $ignore && in_array($ignore, auth()->user()->getAuthorisedRoles()))
@@ -265,46 +243,30 @@ foreach ($rows as $event)
 		</div>
 	</section>
 	<?php
-}
+endforeach;
+?>
 
-if (count($attend))
-{
-	?>
-
-	<?php
-	foreach ($attend as $event)
-	{
-		?>
-
+@if (count($attend))
+	@foreach ($attend as $event)
 		<div class="alert alert-success">
 			<a class="btn-notattend float-right btn btn-sm btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $event->attending }}" title="Cancel reservation">Cancel</a>
 
 			You have the following time slot reserved.<br />
 			{!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}
-			<?php
-			if ($event->isToday())
-			{
-				if ($event->isNow())
-				{
-					echo ' <span class="badge badge-success">' . trans('news::news.happening now') . '</span>';
-				}
-				else
-				{
-					echo ' <span class="badge badge-info">' . trans('news::news.today') . '</span>';
-				}
-			}
-			elseif ($event->isTomorrow())
-			{
-				echo ' <span class="badge badge-secondary">' . trans('news::news.tomorrow') . '</span>';
-			}
-			?>
+
+			@if ($event->isToday())
+				@if ($event->isNow())
+					<span class="badge badge-success">{{ trans('news::news.happening now') }}</span>
+				@else
+					<span class="badge badge-info">{{ trans('news::news.today') }}</span>
+				@endif
+			@elseif ($event->isTomorrow())
+				<span class="badge badge-secondary">{{ trans('news::news.tomorrow') }}</span>
+			@endif
 		</div>
-		<?php
-	}
-	?>
-	<?php
-}
-?>
+	@endforeach
+@endif
+
 <hr />
 
 <div id="calendar">
