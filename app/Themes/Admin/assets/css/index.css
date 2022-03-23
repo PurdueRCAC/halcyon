@@ -4285,8 +4285,8 @@ a.menulist:hover:before {
 .never {
   color: var(--none);
 }
-.block,
-.show {
+/*.show,*/
+.block {
   display: block;
 }
 .hide {

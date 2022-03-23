@@ -377,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	$('.dialog-submit').on('click', function(e){
+	$('.queue-dialog-submit').on('click', function(e){
 		e.preventDefault();
 
 		var btn = this,

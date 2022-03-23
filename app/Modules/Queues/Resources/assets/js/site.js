@@ -827,7 +827,7 @@ function SetQueueAndSubresourceStatus(queue, subresource, state, tab_id) {
 		for (var x = 0; x < td.children.length; x++) {
 			if (isImage(td.children[x])) {
 				if (Object.prototype.hasOwnProperty.call(total, subresource)) {
-				//if (total.hasOwnProperty(subresource)) {
+					//if (total.hasOwnProperty(subresource)) {
 					total[subresource] += 1;
 					if ((td.children[x].id.match(regex) && state == 1) || td.children[x].src.match(/green/)) {
 						total_active[subresource] += 1;
@@ -2021,7 +2021,7 @@ $(document).ready(function () {
 		}
 	});
 
-	$('.dialog-submit').on('click', function (e) {
+	$('.queue-dialog-submit').on('click', function (e) {
 		e.preventDefault();
 
 		var btn = this,
@@ -2063,7 +2063,7 @@ $(document).ready(function () {
 		}
 
 		$.ajax({
-			url: frm.data('api'),
+			url: frm.attr('data-api'),
 			type: btn.getAttribute('data-action') == 'update' ? 'put' : 'post',
 			data: frm.serialize(),
 			dataType: 'json',
@@ -2076,7 +2076,6 @@ $(document).ready(function () {
 				if (xhr.responseJSON && xhr.responseJSON.message) {
 					msg = xhr.responseJSON.message;
 				}
-
 				alert(msg);
 			}
 		});
@@ -2115,5 +2114,90 @@ $(document).ready(function () {
 			modal: true,
 			width: '550px'
 		});
+	});
+
+	// Create queue
+	$('#queue-name').on('keyup', function () {
+		var val = $(this).val();
+
+		val = val.toLowerCase()
+			.replace(/\s+/g, '_')
+			.replace(/[^a-z0-9_-]+/g, '');
+
+		$(this).val(val);
+	});
+
+	$('#queue-queueclass').on('change', function () {
+		var val = $(this).val();
+
+		if (val == 'debug') {
+			$('#queue-reservation').prop('checked', true);
+		}
+	});
+
+	$('#queue-subresourceid').on('change', function () {
+		var opt = this.options[this.selectedIndex];
+
+		var nodecores = document.getElementById("SPAN_nodecores");
+		var nodemem = document.getElementById("SPAN_nodemem");
+		var cluster = document.getElementById("queue-cluster");
+
+		nodecores.innerHTML = opt.getAttribute('data-nodecores');
+		nodemem.innerHTML = opt.getAttribute('data-nodemem');
+
+		var nodememmin = document.getElementById('queue-nodememmin');
+		nodememmin.value = opt.getAttribute('data-nodemem');
+
+		var nodememmax = document.getElementById('queue-nodememmax');
+		nodememmax.value = opt.getAttribute('data-nodemem');
+
+		var nodecoresmin = document.getElementById('queue-nodecoresmin');
+		nodecoresmin.value = opt.getAttribute('data-nodecores');
+
+		var nodecoresmax = document.getElementById('queue-nodecoresmax');
+		nodecoresmax.value = opt.getAttribute('data-nodecores');
+
+		cluster.value = opt.getAttribute('data-cluster');
+	});
+
+	// Clone the select to preserve all the optgroups
+	var select = document.getElementById("queue-subresourceid");
+	var sclone = $(select).clone().attr('id', $(select).attr('id') + '-clone');
+
+	$('#queue-schedulerid').on('change', function () {
+		if (this.selectedIndex == 0) {
+			return;
+		}
+
+		// Clear some values
+		document.getElementById("SPAN_nodecores").innerHTML = '-';
+		document.getElementById("SPAN_nodemem").innerHTML = '-';
+
+		var sched = this,
+			opt = sched.options[sched.selectedIndex];
+
+		// Start processing
+		sched.parentNode.className = sched.parentNode.className + ' loading';
+
+		// Set max wall time
+		document.getElementById("queue-maxwalltime").value = parseInt(opt.getAttribute('data-defaultmaxwalltime')) / 60 / 60;
+
+		// Set policy
+		var policies = document.getElementById("queue-schedulerpolicyid");
+
+		for (var x = 0; x < policies.options.length; x++) {
+			if (policies.options[x].value == opt.getAttribute('data-schedulerpolicyid')) {//results['defaultpolicy']['id']) {
+				policies.options[x].selected = "true";
+			} else {
+				policies.options[x].selected = "";
+			}
+		}
+
+		// Get the optgroup for the selected resource
+		$(select).find("optgroup").remove();
+		$(select).append(sclone.find("optgroup[data-resourceid='" + opt.getAttribute('data-resourceid') + "']").clone());
+
+		// Finished processing
+		sched.parentNode.className = sched.parentNode.className.replace(' loading', '');
 	});
 });

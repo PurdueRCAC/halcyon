@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Modules\Queues\Http\Resources\QueueResourceCollection;
 use App\Modules\Queues\Http\Resources\QueueResource;
 use App\Modules\Queues\Models\Queue;
+use App\Modules\Queues\Models\Walltime;
 //use App\Modules\Queues\Models\Type;
 //use App\Modules\Queues\Models\Scheduler;
 //use App\Modules\Queues\Models\SchedulerPolicy;
@@ -540,7 +541,7 @@ class QueuesController extends Controller
 			'reservation'       => 'nullable|integer',
 			'cluster'           => 'nullable|string|max:32',
 			'priority'          => 'nullable|integer',
-			'defaultwalltime'   => 'nullable|integer',
+			'defaultwalltime'   => 'nullable|numeric',
 			'maxjobsqueued'     => 'nullable|integer',
 			'maxjobsqueueduser' => 'nullable|integer',
 			'maxjobsrun'        => 'nullable|integer',
@@ -572,8 +573,7 @@ class QueuesController extends Controller
 				$queue->{$key} = $request->input($key);
 			}
 		}
-		//$queue->fill($request->all());
-
+		$queue->aclgroups = $queue->aclgroups ?: '';
 		$queue->cluster = $queue->cluster ?: '';
 
 		$exists = Queue::query()
@@ -609,6 +609,28 @@ class QueuesController extends Controller
 		if (!$queue->save())
 		{
 			return response()->json(trans('queues::queues.error.creation failed'), 500);
+		}
+
+		$walltime = Walltime::query()
+			->where('queueid', '=', $queue->id)
+			->orderBy('id', 'asc')
+			->first();
+		if (!$walltime)
+		{
+			$walltime = new Walltime;
+		}
+		$walltime->queueid = $queue->id;
+		$walltime->walltime = intval(floatval($request->input('maxwalltime')) * 60 * 60);
+		$walltime->datetimestart = $queue->datetimecreated;
+		$walltime->save();
+
+		if ($request->input('queueclass') == 'standby')
+		{
+			$size = new Size;
+			$size->queueid = $queue->id;
+			$size->corecount = 20000;
+			$size->datetimestart = $queue->datetimecreated;
+			$size->save();
 		}
 
 		return new QueueResource($queue);
@@ -947,7 +969,7 @@ class QueuesController extends Controller
 			'reservation'       => 'nullable|integer',
 			'cluster'           => 'nullable|string|max:32',
 			'priority'          => 'nullable|integer',
-			'defaultwalltime'   => 'nullable|integer',
+			'defaultwalltime'   => 'nullable|numeric',
 			'maxjobsqueued'     => 'nullable|integer',
 			'maxjobsqueueduser' => 'nullable|integer',
 			'maxjobsrun'        => 'nullable|integer',

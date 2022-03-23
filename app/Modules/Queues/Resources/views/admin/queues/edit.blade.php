@@ -615,7 +615,7 @@ app('pathway')
 											</div>
 										</div>
 										<div class="modal-footer dialog-footer text-right">
-											<button type="submit" class="btn btn-success dialog-submit" data-action="update" data-success="{{ trans('queues::queues.item updated') }}">
+											<button type="submit" class="btn btn-success queue-dialog-submit" data-action="update" data-success="{{ trans('queues::queues.item updated') }}">
 												<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('queues::queues.saving') }}</span></span>
 												{{ trans('global.button.update') }}
 											</button>
@@ -777,7 +777,7 @@ app('pathway')
 						</div>
 					</div>
 					<div class="modal-footer dialog-footer text-right">
-						<button type="submit" class="btn btn-success dialog-submit" data-success="{{ trans('queues::queues.item created') }}">
+						<button type="submit" class="btn btn-success queue-dialog-submit" data-success="{{ trans('queues::queues.item created') }}">
 							<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('queues::queues.saving') }}</span></span>
 							{{ trans('global.button.create') }}
 						</button>
@@ -904,7 +904,7 @@ app('pathway')
 						</div>
 					</div>
 					<div class="modal-footer dialog-footer text-right">
-						<button type="submit" class="btn btn-success dialog-submit" data-success="{{ trans('queues::queues.item created') }}">
+						<button type="submit" class="btn btn-success queue-dialog-submit" data-success="{{ trans('queues::queues.item created') }}">
 							<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('queues::queues.saving') }}</span></span>
 							{{ trans('global.button.create') }}
 						</button>
