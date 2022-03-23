@@ -14,11 +14,11 @@ function bindContextModals() {
 		autoOpen: false,
 		modal: true,
 		close: function () {
+			$(this).dialog('close');
 			// We need to do this to avoid "cached" dialogs
 			// for folder contents that are reloaded via AJAX
-			$(this).dialog('close');
-			$(this).dialog('destroy');
-			$(this).html('');
+			//$(this).dialog('destroy');
+			//$(this).html('');
 		},
 		width: 700
 	});
@@ -60,6 +60,10 @@ jQuery(document).ready(function () {
 		$('#media-' + view).addClass('active');
 
 		layout.val(view);
+
+		var url = window.location.protocol + '//' + window.location.host + window.location.pathname + '?layout=' + view + '&folder=' + folder.val();
+		var dataurl = history.state ? history.state.dataurl.replace(/(layout=[^&]+)/, '') + 'layout=' + view : contents.attr('data-list') + '?layout=' + view;
+		window.history.pushState({ dataurl: dataurl, folder: folder.val(), layout: view }, '', url);
 	});
 
 	$('#toolbar-folder-new a').off('click').on('click', function (e) {

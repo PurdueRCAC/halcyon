@@ -48,7 +48,7 @@ class MediaController extends Controller
 		//$root = new Folder(storage_path('app/public'));
 		//$folderTree = $root->tree();
 
-		$layout = session()->get('media.layout', 'thumbs');
+		$layout = session()->get('media.layout', $request->input('layout', 'thumbs'));
 
 		return view('media::media.index', [
 			'config' => config('media', []),
