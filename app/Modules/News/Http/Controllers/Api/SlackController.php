@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Modules\News\Models\Association;
 use App\Modules\News\Models\Article;
 use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\Facet;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
 
@@ -208,8 +209,21 @@ class SlackController extends Controller
 
 					if (!$user || !$user->id)
 					{
-						continue;
-						//return response()->json(['message' => 'Unknown user'], 415);
+						$facet = Facet::query()
+							->where('key', '=', 'slack')
+							->where('value', '=', $payload['user']['username'])
+							->first();
+
+						if ($facet)
+						{
+							$user = $facet->user;
+						}
+
+						if (!$user || !$user->id)
+						{
+							continue;
+							//return response()->json(['message' => 'Unknown user'], 415);
+						}
 					}
 
 					if ($type == 'reserve')
