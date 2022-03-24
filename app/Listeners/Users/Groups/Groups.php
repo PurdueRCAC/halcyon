@@ -238,7 +238,17 @@ class Groups
 			}
 		}*/
 
-		if ($event->getActive() == 'groups' || app('isAdmin'))
+		if (!$event->getActive())
+		{
+			$content = view('groups::site.profile', [
+				'user' => $user,
+			]);
+
+			$event->addPart(
+				$content
+			);
+		}
+		elseif ($event->getActive() == 'groups' || app('isAdmin'))
 		{
 			if (!app('isAdmin'))
 			{
