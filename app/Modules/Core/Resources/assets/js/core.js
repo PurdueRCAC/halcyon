@@ -1072,6 +1072,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	});*/
 
 	$('[maxlength]').each(function (i, el) {
+		if (el.getAttribute('data-counter') && el.getAttribute('data-counter') == 'false') {
+			return;
+		}
 		var container = $('<span class="char-counter-wrap"></span>');
 		var counter = $('<span class="char-counter"></span>');
 		var input = $(el);

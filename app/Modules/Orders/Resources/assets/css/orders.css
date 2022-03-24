@@ -14,6 +14,9 @@
 .card-title {
 	font-size: 1.2em;
 }
+.stash {
+	display: none;
+}
 /*.contentInner ul li.list-group-item {
 	margin: 0;
 }*/

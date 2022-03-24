@@ -636,14 +636,20 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										<p class="form-text">
 											<span id="edit_user" data-userid="{{ $order->userid }}">
 												@if ($order->user)
+													@if (auth()->user()->can('manage users'))
+													<a href="{{ route('site.users.account', ['u' => $order->userid]) }}">
+													@endif
 													{{ $order->user->name }} ({{ $order->user->username }})
+													@if (auth()->user()->can('manage users'))
+													</a>
+													@endif
 												@else
 													<span class="none">{{ trans('global.none') }}</span>
 												@endif
 											</span>
 
 											<span class="hide">
-											<input type="text" name="search_user" id="search_user" class="form-control form-users" value="{{ ($order->user ? $order->user->name . ':' . $order->userid : '') }}" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" placeholder="{{ trans('global.none') }}" />
+												<input type="text" name="search_user" id="search_user" class="form-control form-users" value="{{ ($order->user ? $order->user->name . ' (' . $order->user->username . ')' : '') }}" data-id="{{ $order->userid }}" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" placeholder="{{ trans('global.none') }}" />
 											</span>
 
 											<a href="#edit_user" id="order_user_save" class="order-edit" title="{{ trans('global.button.edit') }}" data-txt-save="Save Change">
@@ -651,16 +657,23 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											</a>
 										</p>
 										@if ($order->user)
-											@if ($order->user->title)
-												<p class="form-text">{{ $order->user->title }}</p>
+											<?php
+											event($event = new App\Modules\Users\Events\UserBeforeDisplay($order->user));
+											$user = $event->getUser();
+											?>
+											@if ($user->title)
+												<p><strong>Title:</strong></p>
+												<p class="form-text">{{ $user->title }}</p>
 											@endif
 
-											@if ($order->user->department)
-												<p class="form-text">{{ $order->user->department }}</p>
+											@if ($user->department)
+												<p><strong>Department:</strong></p>
+												<p class="form-text">{{ $user->department }}</p>
 											@endif
 
-											@if ($order->user->school)
-												<p class="form-text">{{ $order->user->school }}</p>
+											@if ($user->school)
+												<p><strong>School:</strong></p>
+												<p class="form-text">{{ $user->school }}</p>
 											@endif
 										@endif
 									@else
@@ -681,13 +694,19 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										<p class="form-text">
 											<span id="edit_group" data-groupid="{{ $order->groupid }}">
 												@if ($order->groupid)
-													{{ $order->group->name }}
+													@if (auth()->user()->can('manage groups'))
+													<a href="{{ route('site.users.account.section.show', ['u' => $order->userid, 'section' => 'groups', 'id' => $order->groupid]) }}">
+													@endif
+													{{ $order->group ? $order->group->name : trans('global.unknown') }}
+													@if (auth()->user()->can('manage groups'))
+													</a>
+													@endif
 												@else
 													<span class="none">{{ trans('global.none') }}</span>
 												@endif
 											</span>
 
-											<input type="text" name="search_group" id="search_group" class="form-control form-groups hide" data-groupid="{{ $order->groupid }}" value="{{ $order->group ? $order->group->name : '' }}" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" placeholder="{{ trans('global.none') }}" />
+											<input type="text" name="search_group" id="search_group" class="form-control form-groups hide" data-groupid="{{ $order->groupid }}" value="{{ $order->groupid && $order->group ? $order->group->name : '' }}" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" placeholder="{{ trans('global.none') }}" />
 
 											<a href="#edit_group" id="order_group_save" class="order-edit" title="{{ trans('global.button.edit') }}" data-txt-save="Save Change">
 												<span id="group_save" class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
@@ -724,8 +743,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								|| (
 									($order->status == 'pending_approval' || $order->status == 'pending_fulfillment') && auth()->user()->can('manage orders'))
 									|| ($order->status == 'pending_approval' && !$myorder)) && (auth()->user()->can('manage orders') || $myorder)): ?>
-									<a href="#help4" class="btn text-info help help-dialog" data-tip="Help">
-										<span class="icon-help-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+									<a href="#help4" class="help icn tip text-info" title="Help">
+										<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only"> Help</span>
 									</a>
 
 									<button id="save_quantities" class="btn btn-sm btn-secondary" data-state="inactive" data-inactive="Edit Items" data-active="Save Changes">Edit Items</button>
@@ -763,9 +782,9 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								<?php foreach ($order->items as $item) {
 									$history = $history->merge($item->history()->orderBy('created_at', 'desc')->get());
 									?>
-									<tr>
+									<tr id="item_{{ $item->id }}">
 										@if (!$item->isFulfilled())
-											@if ($order->status != 'canceled' && $order->status == 'pending_fulfillment')
+											@if ($order->status != 'canceled' && $order->status == 'pending_fulfillment' && auth()->user()->can('manage orders'))
 												<td>
 													<div class="badge order-status {{ str_replace(' ', '-', $order->status) }}" id="status_{{ $item->id }}">{{ trans('orders::orders.pending_fulfillment') }}</div>
 
@@ -787,7 +806,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										@else
 											<td>
 												<div class="badge order-status fulfilled">{{ trans('orders::orders.fulfilled') }}</div>
-												<time datetime="{{ $item->fulfilled }}">{{ Carbon\Carbon::parse($item->fulfilled)->format('M j, Y') }}</time>
+												<time datetime="{{ $item->datetimefulfilled }}">{{ $item->datetimefulfilled->format('M j, Y') }}</time>
 											</td>
 										@endif
 										<td>
@@ -847,7 +866,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										<td class="text-right text-nowrap">
 											<span class="item-edit-hide">{{ config('orders.currency', '$') }} <span name="itemtotal">{{ $item->formattedTotal }}</span></span>
 											@if ($item->origorderitemid)
-												<a href="{{ route('site.orders.recurring.read', ['id' => $order->id]) }}" class="text-success tip" title="This is a recurring item.">
+												<a href="{{ route('site.orders.recurring.read', ['id' => $item->origorderitemid]) }}" class="text-success tip" title="This is a recurring item.">
 													<span class="fa fa-undo" aria-hidden="true"></span><span class="sr-only">This is a recurring item.</span>
 												</a>
 											@endif
@@ -859,7 +878,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										</td>
 										@if ($order->isActive() && auth()->user()->can('manage orders'))
 											<td class="item-edit-show hide">
-												<a href="{{ route('site.orders.read', ['id' => $order->id, 'remove' => $item->id]) }}"
+												<a href="#item_{{ $item->id }}"
 													title="Remove product"
 													class="btn btn-dangerd text-danger item-remove tip"
 													data-api="{{ route('api.orders.items.delete', ['id' => $item->id]) }}"
@@ -874,7 +893,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 									<tr id="item_new_row" class="hide">
 										<td></td>
 										<td>
-											<select name="new_product" class="form-control item-product searchable-select">
+											<select name="new_product" class="form-control item-product searchable-select" data-api="{{ route('api.orders.items.create') }}">
 												<option value="0">{{ trans('orders::orders.select product') }}</option>
 												@foreach ($products as $product)
 													<option value="{{ $product->id }}"
@@ -887,7 +906,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										</td>
 										<td class="text-right">
 											<span class="quantity_span hide"></span>
-											<input type="number" name="quantity" value="0" size="4" class="item-quantity form-control total-update" />
+											<input type="number" name="newquantity" value="0" size="4" class="item-quantity form-control total-update" />
 											<span class="item-period hide">
 												for
 												<input type="number" name="periods" min="1" max="999" value="1" class="item-periods form-control total-update" />
@@ -900,7 +919,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										</td>
 										<td class="text-right text-nowrap">
 											<span class="hide" name="itemtotal"></span>
-											<input type="text" name="linetotal" value="0.00" class="item-total form-control total-update" />
+											<input type="text" name="newlinetotal" value="0.00" class="item-total form-control total-update" data-override="1" />
 										</td>
 										<td>
 											<a href="#item_new_row"
@@ -938,7 +957,6 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 						</table>
 					</div>
 				</div><!-- / .card -->
-			</fieldset>
 
 				@if (($order->status != 'canceled' || count($order->accounts) > 0) && $order->total)
 				<div class="card">
@@ -951,8 +969,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							</div>
 							<div class="col col-md-6 text-right">
 								@if (count($order->accounts) == 0 && $canEdit)
-									<a href="#help2" class="help text-info help-dialog" data-tip="Help on Payment Information">
-										<span class="icon-help-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+									<a href="#help2" class="help icn tip text-info" title="Help on Payment Information">
+										<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only"> Help</span>
 									</a>
 									<button class="btn btn-secondary account-save" id="save_accounts" disabled="true">Save Accounts</button>
 								@else
@@ -1032,14 +1050,14 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 									else if ($s == 'paid')
 									{
 										$cls = 'success';
-										$text = trans('orders::orders.paid on date', ['date' => date("M j, Y", strtotime($account->docdate)), 'docid' => $account->docid]);
+										$text = trans('orders::orders.paid on date', ['date' => date("M j, Y", strtotime($account->datetimepaymentdoc)), 'docid' => $account->paymentdocid]);
 									}
 
 									$total += $account->amount;
 									?>
 									<tr id="account_{{ $account->id }}">
 										<td>
-											<div id="status_{{ $account->id }}" class="badge order-status {{ $account->status }}">{{ $text }}</div>
+											<div id="status_{{ $account->id }}" class="badge order-status {{ $account->status }}">{!! $text !!}</div>
 											<input type="hidden" name="accountid" data-api="{{ route('api.orders.accounts.read', ['id' => $account->id]) }}" id="{{ $account->id }}" value="{{ strtoupper($account->status) }}" />
 
 											@if ($s == 'pending_approval')
@@ -1067,26 +1085,30 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										</td>
 										<td>
 											@if ($account->purchaseio)
-												<input type="text" class="account-edit-show hide balance-update form-control" name="account" data-api-list="{{ route('api.orders.accounts') }}" data-api="{{ route('api.orders.accounts.read', ['id' => $account->id]) }}" maxlength="17" value="{{ $account->purchaseio }}" />
+												<input type="text" class="account-edit-show hide balance-update form-control" name="account" data-api="{{ route('api.orders.accounts.read', ['id' => $account->id]) }}" maxlength="17" data-counter="false" value="{{ $account->purchaseio }}" />
 											@else
-												<input type="text" class="account-edit-show hide num8 balance-update form-control" name="account" data-api-list="{{ route('api.orders.accounts') }}" data-api="{{ route('api.orders.accounts.read', ['id' => $account->id]) }}" maxlength="17" value="{{ $account->purchasewbse }}" />
+												<input type="text" class="account-edit-show hide num8 balance-update form-control" name="account" data-api="{{ route('api.orders.accounts.read', ['id' => $account->id]) }}" maxlength="17" data-counter="false" value="{{ $account->purchasewbse }}" />
 											@endif
 											@if ($account->purchaseio)
 												<span class="account-edit-hide">Internal order: <span class="account_span">{{ $account->purchaseio }}</span></span>
-											@else
+											@elseif ($account->purchasewbse)
 												<span class="account-edit-hide">WBSE: <span class="account_span">{{ $account->purchasewbse }}</span></span>
+											@elseif ($account->purchasefund)
+												<span class="account-edit-hide">Fund: <span class="account_span">{{ $account->purchasefund }}</span></span><br />
+												<span class="account-edit-hide">Cost Center: <span class="account_span">{{ $account->purchasecostcenter }}</span></span><br />
+												<span class="account-edit-hide">Order: <span class="account_span">{{ $account->purchaseorder }}</span></span>
 											@endif
 											<br />
 											<label class="sr-only" for="justification{{ $account->id }}">Budget justification:</label>
 											<span class="account-edit-hide form-text text-muted justification_span">{{ $account->budgetjustification ? $account->budgetjustification : '' }}</span>
-											<textarea name="justification" id="justification{{ $account->id }}" rows="3" maxlength="2000" cols="68" class="account-edit-show hide form-control balance-update">{{ $account->budgetjustification }}</textarea>
-											@if ($order->status == 'pending_collection' && auth()->user()->can('manage orders'))
+											<textarea name="justification" id="justification{{ $account->id }}" rows="3" maxlength="2000" data-counter="false" cols="68" class="account-edit-show hide form-control balance-update">{{ $account->budgetjustification }}</textarea>
+											@if ($order->status == 'pending_collection' && auth()->user()->can('manage orders') && !$account->paymentdocid)
 												<div class="form-inline mt-3 account-edit-hide" id="button_{{ $account->id }}">
 													<label for="docid_{{ $account->id }}" class="sr-only">Doc ID</label>
-													<input type="text" class="doc copy-doc form-control" name="docid" id="docid_{{ $account->id }}" data-api-list="{{ route('api.orders.accounts') }}" placeholder="Doc ID" size="15" maxlength="12" />
+													<input type="text" class="doc copy-doc form-control nocounter" name="docid" id="docid_{{ $account->id }}" value="{{ $account->paymentdocid }}" placeholder="Doc ID" size="15" maxlength="12" data-counter="false" />
 
 													<label for="docdate_{{ $account->id }}" class="sr-only">Doc Date</label>
-													<input type="text" class="doc copy-docdate form-control date-pick" name="docdate" id="docdate_{{ $account->id }}" placeholder="Doc Date (YYYY-MM-DD)" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" size="10" />
+													<input type="text" class="doc copy-docdate form-control date-pick" name="docdate" id="docdate_{{ $account->id }}" placeholder="Doc Date (YYYY-MM-DD)" value="{{ $account->isCollected() ? $account->datetimepaymentdoc->format('Y-m-d') : Carbon\Carbon::now()->format('Y-m-d') }}" size="10" />
 
 													<button class="btn btn-secondary account-collect" data-txt="Paid" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}">{{ trans('orders::orders.collect') }}</button>
 												</div>
@@ -1105,23 +1127,23 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											@if ($account->approver)
 												@if (auth()->user()->can('manage users'))
 													<a class="account-edit-hide" href="{{ route('admin.users.edit', ['id' => $account->approver->id]) }}">
-														<span class="approver_span" data-approverid="{{ $account->approveruserid ? $account->approveruserid : '' }}">{{ $account->approver->name }} ({{ $account->approver->username }})</span>
+														<span class="approver_span" data-approverid="{{ $account->approveruserid }}">{{ $account->approver->name }} ({{ $account->approver->username }})</span>
 													</a>
 												@else
-													<span class="account-edit-hide approver_span" data-approverid="{{ $account->approveruserid ? $account->approveruserid : '' }}">{{ $account->approver->name }} ({{ $account->approver->username }})</span>
+													<span class="account-edit-hide approver_span" data-approverid="{{ $account->approveruserid }}">{{ $account->approver->name }} ({{ $account->approver->username }})</span>
 												@endif
 											@elseif ($account->approveruserid)
-												<span class="account-edit-hide approver_span unknown" data-approverid="{{ $account->approveruserid ? $account->approveruserid : '' }}">{{ trans('global.unknown') }}</span> ({{ $account->approveruserid }})
+												<span class="account-edit-hide approver_span unknown" data-approverid="{{ $account->approveruserid }}">{{ trans('global.unknown') }}</span> ({{ $account->approveruserid }})
 											@else
-												<span class="account-edit-hide approver_span none" data-approverid="{{ $account->approveruserid ? $account->approveruserid : '' }}">{{ trans('global.none') }}</span>
+												<span class="account-edit-hide approver_span none" data-approverid="{{ $account->approveruserid }}">{{ trans('global.none') }}</span>
 											@endif
 											<span class="account-edit-show hide">
 												<input type="text" id="search_{{ $account->id }}" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" data-id="{{ $account->approveruserid }}" class="form-control form-users" name="approver" value="{{ $account->approver ? $account->approver->name . ' (' . $account->approver->username . ')' : '' }}" />
 											</span>
 										</td>
 										<td class="text-right text-nowrap">
-											<a href="#help2" class="help help-dialog" data-tip="Help">
-												<span class="amount_error hide"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span><span class="sr-only">Required field is missing or invalid format</span></span>
+											<a href="#help2" class="help tip" title="Help">
+												<span class="amount_error stash"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span><span class="sr-only">Required field is missing or invalid format</span></span>
 											</a>
 											<span class="account-edit-hide">{{ config('orders.currency', '$') }} <span class="account_amount_span">{{ $account->formattedAmount }}</span></span>
 											<input type="text" class="account-edit-show hide form-control balance-update" size="8" name="account_amount" value="{{ $account->formattedAmount }}" />
@@ -1144,10 +1166,10 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										<tr id="account0">
 											<td class="hide"></td>
 											<td>
-												<input type="text" maxlength="17" class="form-control num8 balance-update" name="account" data-api-list="{{ route('api.orders.accounts') }}" data-api="{{ route('api.orders.accounts.create') }}" placeholder="Account" value="" />
+												<input type="text" maxlength="17"  data-counter="false" class="form-control num8 balance-update" name="account" data-api="{{ route('api.orders.accounts.create') }}" placeholder="Account" value="" />
 												<br />
 												<label class="sr-only" for="justification0">Budget justification</label>
-												<textarea name="justification" id="justification0" rows="3" cols="35" maxlength="2000" placeholder="Budget justification" class="form-control balance-update"></textarea>
+												<textarea name="justification" id="justification0" rows="3" cols="35" maxlength="2000" data-counter="false" placeholder="Budget justification (optional)" class="form-control balance-update"></textarea>
 											</td>
 											<td>
 												<span class="approver_span hide" data-approverid=""></span>
@@ -1168,10 +1190,10 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 									<tr id="account_new_row" class="hide">
 										<td{!! count($order->accounts) == 0 ? ' class="hide"' : '' !!}></td>
 										<td>
-											<input type="text" maxlength="17" class="form-control num8 balance-update" name="account" data-api-list="{{ route('api.orders.accounts') }}" data-api="{{ route('api.orders.accounts.create') }}" placeholder="Account" value="" />
+											<input type="text" maxlength="17" class="form-control num8 balance-update" name="account" data-api="{{ route('api.orders.accounts.create') }}" placeholder="Account" value="" />
 											<br />
 											<label class="sr-only" for="new_justification">Budget justification</label>
-											<textarea name="justification" id="new_justification" rows="3" cols="35" maxlength="2000" placeholder="Budget justification" class="form-control balance-update"></textarea>
+											<textarea name="justification" id="new_justification" rows="3" cols="35" maxlength="2000" data-counter="false" placeholder="Budget justification" class="form-control balance-update"></textarea>
 										</td>
 										<td>
 											<span class="approver_span hide" data-approverid=""></span>
@@ -1186,7 +1208,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 												class="btn btn-link text-danger account-remove tip"
 												data-api=""
 												data-confirm="{{ trans('orders::orders.confirm.account removal') }}">
-												<span class="icon-trash" aria-hidden="true"></span><span class="sr-only">Remove account</span>
+												<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">Remove account</span>
 											</a>
 										</td>
 									</tr>
@@ -1195,8 +1217,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							<tfoot>
 								<tr>
 									<td class="text-right" colspan="{{ count($order->accounts) == 0 ? 2 : 3 }}">
-										<a href="#help2" class="help help-dialog icn" data-tip="Balance should be $0.00 before saving changes."><!--
-											--><span id="balance_error" aria-hidden="true" class="fa fa-exclamation-triangle text-warning hide"></span><span class="sr-only">Balance should be $0.00 before saving changes.</span><!--
+										<a href="#help2" class="help icn"><!--
+											--><span id="balance_error" aria-hidden="true" class="fa fa-exclamation-triangle text-warning stash"></span><span class="sr-only">Balance should be $0.00 before saving changes.</span><!--
 										--></a>
 										<strong>{{ trans('orders::orders.balance remaining') }}</strong>
 									</td>
@@ -1228,32 +1250,25 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 					</div>
 				</div><!-- / .card -->
 				@endif
-			</div><!-- / .contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12 -->
-		</div><!-- / .row -->
-		</div>
-		<div class="tab-pane" id="order-notes" role="tabpanel" aria-labelledby="order-notes-tab">
-			@if (auth()->user()->can('manage orders'))
-			<div class="row">
-				<div class="col-md-6">
-			@endif
+
 				<div class="card">
 					<div class="card-header">
-						@if ($canEdit)
+						@if ($canEdit || $isApprover)
 							<div class="row">
 								<div class="col-md-6">
 									<h3 class="panel-title card-title">
 										{{ trans('orders::orders.notes') }}
-										<a href="#help1" class="help btn help-dialog text-info" data-tip="Help on Order Notes">
-											<span class="icon-help-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+										<a href="#help1" class="help icn tip text-info" title="Help on Order Notes">
+											<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only"> Help</span>
 										</a>
 									</h3>
 								</div>
 								<div class="col-md-6 text-right">
 									@if ($order->status != 'canceled')
-									<a href="{{ route('site.orders.read', ['id' => $order->id, 'edit' => 'usernotes']) }}" class="edit-property btn" data-tip="Edit" data-prop="usernotes" data-value="{{ $order->id }}">
+									<a href="{{ route('site.orders.read', ['id' => $order->id, 'edit' => 'usernotes']) }}" class="edit-property tip" title="Edit" data-prop="usernotes" data-value="{{ $order->id }}">
 										<span class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_usernotes"></span><span class="sr-only">Edit</span>
 									</a>
-									<a href="{{ route('site.orders.read', ['id' => $order->id]) }}" id="CANCEL_{{ $order->id }}_usernotes" class="hide cancel-edit-property btn" title="Cancel" data-prop="usernotes" data-value="{{ $order->id }}">
+									<a href="{{ route('site.orders.read', ['id' => $order->id]) }}" id="CANCEL_{{ $order->id }}_usernotes" class="stash cancel-edit-property" title="Cancel" data-prop="usernotes" data-value="{{ $order->id }}">
 										<span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only">Cancel</span>
 									</a>
 									@endif
@@ -1262,8 +1277,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 						@else
 							<h3 class="panel-title card-title">
 								{{ trans('orders::orders.notes') }}
-								<a href="#help1" class="help btn help-dialog tip" data-tip="Help on Order Notes">
-									<span class="icon-help-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+								<a href="#help1" class="help icn tip text-info" title="Help on Order Notes">
+									<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only"> Help</span>
 								</a>
 							</h3>
 						@endif
@@ -1276,82 +1291,34 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 						<p class="ordernotes">
 							<span id="SPAN_{{ $order->id }}_usernotes">{!! $order->usernotes ? nl2br($order->usernotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</span>
 
-							@if ($canEdit)
+							@if ($canEdit || $isApprover)
 								<label for="INPUT_{{ $order->id }}_usernotes" class="sr-only">{{ trans('orders::orders.user notes') }}:</label>
-								<textarea name="fields[usernotes]" maxlength="2000" cols="80" rows="10" class="form-control hide" id="INPUT_{{ $order->id }}_usernotes">{{ $order->usernotes }}</textarea>
+								<textarea name="fields[usernotes]" maxlength="2000" data-counter="false" cols="80" rows="10" class="form-control stash" id="INPUT_{{ $order->id }}_usernotes">{{ $order->usernotes }}</textarea>
 							@endif
 						</p>
 					</div>
-				</div><!-- / .card -->
-				<div class="card">
-					@foreach ($order->items as $item)
-						@if ($item->origorderitemid)
-							<div class="card-header">
-								User Notes for recurring item:
-								<br /><strong>{{ $item->product->name }}</strong>
-							</div>
-							<ul class="list-group list-group-flush p-0">
-								<?php
-								foreach ($item->sequence() as $usernote):
-									if ($usernote->id == $item->id || $usernote->datetimecreated > $item->datetimecreated):
-										continue;
-									endif;
-									?>
-									<li class="list-group-item">
-										<div class="mb-1">
-											<strong>Order <a href="{{ route('site.orders.read', ['id' => $usernote->orderid]) }}">#{{ $usernote->orderid }}</a></strong>
-											<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
-										</div>
-										<blockquote>
-											<p>{!! $usernote->order->usernotes ? nl2br($usernote->order->usernotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
-										</blockquote>
-									</li>
-									<?php
-								endforeach;
-								?>
-							</ul>
-						@endif
-					@endforeach
-				</div>
-
-				@if (auth()->user()->can('manage orders'))
-				</div>
-				<div class="col-md-6">
-					<div class="card">
-						<div class="card-header">
-							<div class="row">
-								<div class="col-md-6">
-									<h3 class="pane-title card-title">{{ trans('orders::orders.staff notes') }}</h3>
-								</div>
-								<div class="col-md-6 text-right">
-								@if ($order->status != 'canceled')
-									<a href="{{ route('site.orders.read', ['id' => $order->id, 'edit' => 'usernotes']) }}" class="edit-property btn" data-tip="Edit" data-prop="staffnotes" data-value="{{ $order->id }}">
-										<span class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_staffnotes"></span><span class="sr-only">Edit</span>
-									</a>
-									<a href="{{ route('site.orders.read', ['id' => $order->id]) }}" id="CANCEL_{{ $order->id }}_staffnotes" class="hide btn cancel-edit-property" data-tip="Cancel" data-prop="staffnotes" data-value="{{ $order->id }}">
-										<span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only">Cancel</span>
-									</a>
-								@endif
-								</div>
-							</div>
-						</div>
-						<div class="card-body">
-							<p class="ordernotes">
-								<span id="SPAN_{{ $order->id }}_staffnotes">{!! $order->staffnotes ? nl2br($order->staffnotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</span>
-
-								<label for="INPUT_{{ $order->id }}_staffnotes" class="sr-only">{{ trans('orders::orders.staff notes') }}:</label>
-								<textarea name="fields[staffnotes]" maxlength="2000" cols="80" rows="10" class="form-control hide" id="INPUT_{{ $order->id }}_staffnotes">{{ $order->staffnotes }}</textarea>
-							</p>
-						</div>
-					</div><!-- / .card -->
-
-					<div class="card">
+					<div class="card-footer">
 						@foreach ($order->items as $item)
 							@if ($item->origorderitemid)
-								<div class="card-header">
-									Staff Notes for recurring item:
-									<br /><strong>{{ $item->product->name }}</strong>
-								</div>
+								<a href="#recurringusernotes" class="help tip" title="Recurring item notes">
+									<span class="fa fa-sticky-note" aria-hidden="true"></span> Past Notes on recurring orders
+								</a>
+								@php
+								break;
+								@endphp
+							@endif
+						@endforeach
+					</div>
+				</div><!-- / .card -->
+
+				<div id="recurringusernotes" class="dialog dialog-help" title="Past User Notes">
+					@foreach ($order->items as $item)
+						@if ($item->origorderitemid)
+							<p>
+								User Notes for recurring item:
+								<br /><strong>{{ $item->product->name }}</strong>
+							</p>
+							<div class="card">
 								<ul class="list-group list-group-flush p-0">
 									<?php
 									foreach ($item->sequence() as $usernote):
@@ -1365,33 +1332,121 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 												<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
 											</div>
 											<blockquote>
-												<p>{!! $usernote->order->staffnotes ? nl2br($usernote->order->staffnotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
+												<p>{!! $usernote->order->usernotes ? nl2br($usernote->order->usernotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
 											</blockquote>
 										</li>
 										<?php
 									endforeach;
 									?>
 								</ul>
+							</div>
+						@endif
+					@endforeach
+				</div>
+
+				@if (auth()->user()->can('manage orders'))
+					<div class="card">
+						<div class="card-header">
+							<div class="row">
+								<div class="col-md-6">
+									<h3 class="pane-title card-title">{{ trans('orders::orders.staff notes') }}</h3>
+								</div>
+								<div class="col-md-6 text-right">
+								@if ($order->status != 'canceled')
+									<a href="{{ route('site.orders.read', ['id' => $order->id, 'edit' => 'usernotes']) }}" class="edit-property tip" title="Edit" data-prop="staffnotes" data-value="{{ $order->id }}">
+										<span class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_staffnotes"></span><span class="sr-only">Edit</span>
+									</a>
+									<a href="{{ route('site.orders.read', ['id' => $order->id]) }}" id="CANCEL_{{ $order->id }}_staffnotes" class="stash cancel-edit-property tip" title="Cancel" data-prop="staffnotes" data-value="{{ $order->id }}">
+										<span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only">Cancel</span>
+									</a>
+								@endif
+								</div>
+							</div>
+						</div>
+						<div class="card-body">
+							<p class="ordernotes">
+								<span id="SPAN_{{ $order->id }}_staffnotes">{!! $order->staffnotes ? nl2br($order->staffnotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</span>
+
+								<label for="INPUT_{{ $order->id }}_staffnotes" class="sr-only">{{ trans('orders::orders.staff notes') }}:</label>
+								<textarea name="fields[staffnotes]" maxlength="2000" data-counter="false" cols="80" rows="10" class="form-control stash" id="INPUT_{{ $order->id }}_staffnotes">{{ $order->staffnotes }}</textarea>
+							</p>
+						</div>
+						<div class="card-footer">
+							@foreach ($order->items as $item)
+								@if ($item->origorderitemid)
+									<a href="#recurringstaffnotes" class="help tip" title="Recurring item notes">
+										<span class="fa fa-sticky-note" aria-hidden="true"></span> Past Notes on recurring orders
+									</a>
+									@php
+									break;
+									@endphp
+								@endif
+							@endforeach
+						</div>
+					</div><!-- / .card -->
+
+					<div id="recurringstaffnotes" class="dialog dialog-help" title="Past Staff Notes">
+						@foreach ($order->items as $item)
+							@if ($item->origorderitemid)
+								<p>
+									Staff Notes for recurring item:
+									<br /><strong>{{ $item->product->name }}</strong>
+								</p>
+								<div class="card">
+									<ul class="list-group list-group-flush p-0">
+										<?php
+										foreach ($item->sequence() as $usernote):
+											if ($usernote->id == $item->id || $usernote->datetimecreated > $item->datetimecreated):
+												continue;
+											endif;
+											?>
+											<li class="list-group-item">
+												<div class="mb-1">
+													<strong>Order <a href="{{ route('site.orders.read', ['id' => $usernote->orderid]) }}">#{{ $usernote->orderid }}</a></strong>
+													<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
+												</div>
+												<blockquote>
+													<p>{!! $usernote->order->staffnotes ? nl2br($usernote->order->staffnotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
+												</blockquote>
+											</li>
+											<?php
+										endforeach;
+										?>
+									</ul>
+								</div>
 							@endif
 						@endforeach
 					</div>
-					</div>
-				</div>
-				@endif
-@if ($order->id)
-		</div>
-		<div class="tab-pane" id="order-history" role="tabpanel" aria-labelledby="order-history-tab">
-			<div class="card">
+
+					<div id="order-history" class="card">
 						<div class="card-header">
 							<h3 class="card-title">{{ trans('history::history.history') }}</h3>
 						</div>
 						<ul class="list-group list-group-flush">
 							<?php
+							$emailed = \App\Modules\History\Models\Log::query()
+								->where('app', '=', 'email')
+								->where('classname', '=', 'orders:emailstatus')
+								->where('targetobjectid', '=', $order->id)
+								->get();
+
+							foreach ($emailed as $email)
+							{
+								$history->push($email->toHistory());
+							}
+
 							if (count($history)):
-								$sorted = $history->sortByDesc('updated_at');
+								$sorted = $history->sortByDesc('created_at');
 
 								foreach ($sorted as $action):
 									$actor = trans('global.unknown');
+
+									if (!$action->user_id):
+										$actor = '[system]';
+										if ($action->historable_type != 'orders:emailstatus'):
+											continue;
+										endif;
+									endif;
 
 									if ($action->user):
 										$actor = e($action->user->name);
@@ -1401,9 +1456,11 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										$dt = $action->created_at;
 									elseif ($action->action == 'updated'):
 										$dt = $action->updated_at;
+									elseif ($action->action == 'deleted'):
+										$dt = $action->updated_at;
 									endif;
 
-									$fields = array_keys(get_object_vars($action->new));
+									$fields = is_object($action->new) ? array_keys(get_object_vars($action->new)) : array_keys($action->new);
 									foreach ($fields as $i => $k):
 										if (in_array($k, ['created_at', 'updated_at', 'deleted_at'])):
 											unset($fields[$i]);
@@ -1422,11 +1479,83 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 									{
 										if ($action->action == 'created')
 										{
-											$did = '<span class="text-info">added</span> payment account #' . $action->historable_id;
+											$acct = '#' . $action->historable_id;
+											foreach ($order->accounts as $account)
+											{
+												if ($account->id == $action->historable_id)
+												{
+													$acct = $account->purchaseio ? $account->purchaseio : $account->purchasewbse;
+												}
+											}
+											$did = '<span class="text-info">added</span> payment account ' . $acct;
 										}
 										if ($action->action == 'updated')
 										{
-											$did = '<span class="text-info">edited</span> a payment account';
+											$did = '<span class="text-info">edited</span> ';
+											$changes = array();
+											$acct = '#' . $action->historable_id;
+											foreach ($order->accounts as $account)
+											{
+												if ($account->id == $action->historable_id)
+												{
+													$acct = $account->purchaseio ? $account->purchaseio : $account->purchasewbse;
+													if (in_array('amount', $fields))
+													{
+														$changes[] = 'amount';
+													}
+													if (in_array('budgetjustification', $fields))
+													{
+														$changes[] = 'budget justification';
+													}
+													if (in_array('approveruserid', $fields))
+													{
+														$changes[] = 'approver';
+													}
+												}
+											}
+											$did .= implode(', ', $changes) . ' on payment account ' . $acct;
+
+											if (in_array('datetimeapproved', $fields))
+											{
+												$acct = '#' . $action->historable_id;
+												foreach ($order->accounts as $account)
+												{
+													if ($account->id == $action->historable_id)
+													{
+														$acct = $account->purchaseio ? $account->purchaseio : $account->purchasewbse;
+													}
+												}
+												$did = '<span class="text-success">approved</span> account ' . $acct;
+											}
+											if (in_array('approveruserid', $fields))
+											{
+												$acct = '#' . $action->historable_id;
+												foreach ($order->accounts as $account)
+												{
+													if ($account->id == $action->historable_id)
+													{
+														$acct = $account->purchaseio ? $account->purchaseio : $account->purchasewbse;
+														$acct .= ' to ' . ($account->approver ? $account->approver->name : trans('global.none'));
+													}
+												}
+												$did = '<span class="text-info">set</span> approver for account ' . $acct;
+											}
+											if (in_array('datetimedenied', $fields))
+											{
+												$did = '<span class="text-danger">denied</span> account #' . $action->historable_id;
+											}
+											if (in_array('notice', $fields) && count($fields) == 1)
+											{
+												$acct = '#' . $action->historable_id;
+												foreach ($order->accounts as $account)
+												{
+													if ($account->id == $action->historable_id)
+													{
+														$acct = $account->purchaseio ? $account->purchaseio : $account->purchasewbse;
+													}
+												}
+												$did = '<span class="text-info">set</span> reminder on account ' . $acct;
+											}
 										}
 										if ($action->action == 'deleted')
 										{
@@ -1442,6 +1571,20 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										if ($action->action == 'updated')
 										{
 											$did = '<span class="text-info">edited</span> an item';
+											$did .= ', changed: ' . implode(', ', $fields);
+
+											if (in_array('datetimefulfilled', $fields))
+											{
+												$acct = 'item #' . $action->historable_id;
+												foreach ($order->items as $item)
+												{
+													if ($item->id == $action->historable_id)
+													{
+														$acct = '"' . $item->product->name . '"';
+													}
+												}
+												$did = '<span class="text-success">fulfilled</span> item ' . $acct;
+											}
 										}
 										if ($action->action == 'deleted')
 										{
@@ -1457,31 +1600,67 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										if ($action->action == 'updated')
 										{
 											$did = '<span class="text-info">edited</span> this order';
+
+											if (in_array('userid', $fields))
+											{
+												$did = '<span class="text-info">set</span> the user to ' . ($order->user ? $order->user->name : trans('global.none'));
+											}
+											if (in_array('groupid', $fields))
+											{
+												$did = '<span class="text-info">set</span> the group to ' . ($order->groupid && $order->group ? $order->group->name : trans('global.none'));
+											}
+											if (in_array('usernotes', $fields))
+											{
+												$did = '<span class="text-info">edited</span> user notes';
+											}
+											if (in_array('staffnotes', $fields))
+											{
+												$did = '<span class="text-info">edited</span> staff notes';
+											}
+											// Only updated notice state
+											if (isset($action->new->notice) && count($fields) == 1)
+											{
+												continue;
+											}
+										}
+										if ($action->action == 'deleted')
+										{
+											$did = '<span class="text-danger">canceled</span> this order';
+										}
+										if (!$action->user_id && isset($action->new->notice))
+										{
+											$did = '<span class="text-info">emailed</span> order status';
 										}
 									}
-									if (in_array('approveruserid', $fields))
+									if ($entity == 'orders:emailstatus')
 									{
-										$did = '<span class="text-info">set</span> approver for payment account #' . $action->historable_id;
-									}
-									if (in_array('datetimedenied', $fields))
-									{
-										$did = '<span class="text-danger">denied</span> payment account #' . $action->historable_id;
+										//if (!$action->user_id && isset($action->new->notice))
+										//{
+											if (isset($action->new->targetuserid) && $action->new->targetuserid)
+											{
+												$person = \App\Modules\Users\Models\User::find($action->new->targetuserid);
+											}
+											elseif (isset($action->new->uri))
+											{
+												$person = \App\Modules\Users\Models\User::findByEmail($action->new->uri);
+											}
+											$did = '<span class="text-info">emailed</span> order status to ' . ($person ? $person->name : $action->new->uri);
+										//}
 									}
 									?>
-									<li class="list-group-item">
-										<!-- <span class="entry-log-action">{{ trans('history::history.action ' . $action->action, ['user' => $actor, 'entity' => $entity]) }}</span><br /> -->
+									<li class="list-group-item" id="action_{{ $action->id }}">
 										<div class="row">
 											<div class="col-md-8">
 											{!! $actor . ' ' . $did !!}
 											</div>
 											<div class="col-md-4 text-right">
-										<time datetime="{{ $action->dt }}" class="entry-log-date">
-											@if ($dt < $old)
-												{{ $dt->format('d M Y') }}
-											@else
-												{{ $dt->diffForHumans() }}
-											@endif
-										</time>
+												<time datetime="{{ $dt }}" class="entry-log-date">
+													@if ($dt < $old)
+														{{ $dt ? $dt->format('d M Y') : trans('global.unknown') }}
+													@else
+														{{ $dt->diffForHumans() }}
+													@endif
+												</time>
 											</div>
 										</div>
 									</li>
@@ -1497,9 +1676,10 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							?>
 						</ul>
 					</div><!-- / #order-history -->
-			</div><!-- / .tab-pane -->
-		</div><!-- / .tab-content -->
-	@endif
+				@endif
+		</div><!-- / .tab-pane -->
+	</div><!-- / .row -->
+
 
 	<input type="hidden" name="id" id="field-id" value="{{ $order->id }}" />
 	@csrf
