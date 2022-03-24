@@ -103,7 +103,8 @@ class Software
 
 				$user = $ev->getUser();
 
-				if (in_array(strtolower($user->department), $s['dept_lower']))
+				if (in_array(strtolower($user->department), $s['dept_lower'])
+				 || in_array(strtolower($user->school), $s['dept_lower']))
 				{
 					$event->restricted = false;
 				}

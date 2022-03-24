@@ -7,8 +7,8 @@
 
 		<p>Most of the software installed on the clusters are either free or site-licensed for Purdue. However, some licenses have further restrictions such as your academic department or school. The software with additional restrictions for which you are eligible to access are listed below.</p>
 
-		@if (!$user->department)
-			<p class="alert alert-warning">You have no account on {{ config('app.name') }} resources. Please <a href="{{ route('page', ['uri' => 'account/request']) }}">request an account</a> first.</p>
+		@if (!$user->department && !$user->school)
+			<p class="alert alert-warning">We are unable to determine your department or school. Please <a href="{{ route('page', ['uri' => 'help']) }}">contact supportt</a>.</p>
 		@endif
 
 		<table class="table simpleTable">
@@ -32,7 +32,7 @@
 				// What do I have access to already?
 				foreach ($software as $s):
 					foreach ($unixgroups as $g):
-						if ($s['group'] == $g->unixgroup->name):
+						if ($s['group'] == $g->unixgroup->longname):
 							?>
 							<tr>
 								<td>{{ $s['name'] }}</td>
@@ -47,7 +47,7 @@
 				endforeach;
 
 				foreach ($software as $s):
-					if (!$s['access'] && in_array(strtolower($user->department), $s['dept_lower'])):
+					if (!$s['access'] && (in_array(strtolower($user->department), $s['dept_lower']) || in_array(strtolower($user->school), $s['dept_lower']))):
 						?>
 						<tr>
 							<td>{{ $s['name'] }}</td>
