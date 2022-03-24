@@ -51,7 +51,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 		<div class="contentInner">
 			<div class="row">
 				<div class="col-md-9">
-					<h2>{{ trans('users::users.my accounts') }}</h2>
+					<h2 class="mt-0">{{ trans('users::users.my accounts') }}</h2>
 				</div>
 				<div class="col-md-3 text-right">
 					@if (auth()->user()->id == $user->id)
@@ -134,38 +134,26 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 					@else
 					<dl class="row">
 					@endif
-						<div class="col-md-6 mb-2">
-							<dt>Username</dt>
-							<dd><span class="text-muted">{{ $user->username }}</span></dd>
-						</div>
-						<div class="col-md-6 mb-2">
-							<dt>Department</dt>
-							<dd><span class="text-muted">{!! $user->department ? e($user->department) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span></dd>
-						</div>
-						<div class="col-md-6 mb-2">
-							<dt>Title</dt>
-							<dd><span class="text-muted">{!! $user->title ? e($user->title) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span></dd>
-						</div>
-						<div class="col-md-6 mb-2">
-							<dt>Campus</dt>
-							<dd><span class="text-muted">{!! $user->campus ? e($user->campus) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span></dd>
-						</div>
-						<div class="col-md-6 mb-2">
-							<dt>Phone</dt>
-							<dd><span class="text-muted">{!! $user->phone ? e($user->phone) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span></dd>
-						</div>
-						<div class="col-md-6 mb-2">
-							<dt>Building</dt>
-							<dd><span class="text-muted">{!! $user->building ? e($user->building) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span></dd>
-						</div>
-						<div class="col-md-6 mb-2">
-							<dt>Email</dt>
-							<dd><span class="text-muted">{{ $user->email }}</span></dd>
-						</div>
-						<div class="col-md-6 mb-2">
-							<dt>Room</dt>
-							<dd><span class="text-muted">{!! $user->roomnumber ? e($user->roomnumber) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</span></dd>
-						</div>
+						@php
+						$fields = [
+							'username' => 'Username',
+							'department' => 'Department',
+							'title' => 'Title',
+							'campus' => 'Campus',
+							'phone' => 'Phone',
+							'building' => 'Building',
+							'email' => 'Email',
+							'room' => 'Room',
+						];
+						@endphp
+						@foreach ($fields as $key => $name)
+							@if ($val = $user->{$key})
+								<div class="col-md-6 mb-2">
+									<dt>{{ $name }}</dt>
+									<dd><span class="text-muted">{{ $val }}</dd>
+								</div>
+							@endif
+						@endforeach
 						<div class="col-md-6 mb-2">
 							<dt>
 								Login Shell

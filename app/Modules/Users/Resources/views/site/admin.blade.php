@@ -63,7 +63,7 @@ $(document).ready(function() {
 
 <!-- <div class="row">
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->
-	<div class="card card-admin">
+	<div class="card card-admin mb-4">
 		<div class="card-body">
 			<form method="get" action="{{ route('site.users.account') }}" class="row">
 			@if (app()->has('impersonate'))
