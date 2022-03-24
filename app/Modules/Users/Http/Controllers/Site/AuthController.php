@@ -245,7 +245,7 @@ class AuthController extends Controller
 		}
 		elseif ($url = session()->previousUrl())
 		{
-			if (substr($url, -6) != 'login'
+			if (substr($url, -5) != 'login'
 			 && substr($url, -8) != 'register'
 			 && $this->isInternal($url))
 			{
