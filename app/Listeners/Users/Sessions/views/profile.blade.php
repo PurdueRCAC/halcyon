@@ -2,7 +2,7 @@
 
 	<div class="card session mb-3">
 		<div class="card-header">
-			<h3 class="card-title">{{ trans('listener.users.sessions::sessions.sessions') }}</h3>
+			<div class="card-title">{{ trans('listener.users.sessions::sessions.sessions') }}</div>
 			<p class="mt-0">{{ trans('listener.users.sessions::sessions.explanation') }}</p>
 		</div>
 		<ul class="list-group list-group-flush">
