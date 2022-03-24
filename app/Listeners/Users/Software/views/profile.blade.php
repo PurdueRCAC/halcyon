@@ -30,7 +30,7 @@
 				$count = 0;
 
 				// What do I have access to already?
-				foreach ($software as $s):
+				foreach ($software as $i => $s):
 					foreach ($unixgroups as $g):
 						if ($s['group'] == $g->unixgroup->longname):
 							?>
@@ -40,7 +40,7 @@
 								<td>Active</td>
 							</tr>
 							<?php
-							$s['access'] = true;
+							$software[$i]['access'] = true;
 							$count++;
 						endif;
 					endforeach;
