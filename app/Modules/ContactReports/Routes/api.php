@@ -18,7 +18,7 @@ $router->group(['prefix' => 'contactreports', 'middleware' => 'auth:api'], funct
 		'as'   => 'api.contactreports.read',
 		'uses' => 'ReportsController@read',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as'   => 'api.contactreports.update',
 		'uses' => 'ReportsController@update',
 		'middleware' => 'can:edit contactreports',
@@ -45,7 +45,7 @@ $router->group(['prefix' => 'contactreports', 'middleware' => 'auth:api'], funct
 			'as' => 'api.contactreports.comments.read',
 			'uses' => 'CommentsController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.contactreports.comments.update',
 			'uses' => 'CommentsController@update',
 			'middleware' => 'can:edit contactreports',
@@ -73,7 +73,7 @@ $router->group(['prefix' => 'contactreports', 'middleware' => 'auth:api'], funct
 			'as' => 'api.contactreports.types.read',
 			'uses' => 'TypesController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.contactreports.types.update',
 			'uses' => 'TypesController@update',
 			'middleware' => 'can:edit contactreports',
@@ -101,7 +101,7 @@ $router->group(['prefix' => 'contactreports', 'middleware' => 'auth:api'], funct
 			'as' => 'api.contactreports.followusers.read',
 			'uses' => 'FollowUsersController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.contactreports.followusers.update',
 			'uses' => 'FollowUsersController@update',
 			'middleware' => 'can:edit contactreports',
@@ -129,7 +129,7 @@ $router->group(['prefix' => 'contactreports', 'middleware' => 'auth:api'], funct
 			'as' => 'api.contactreports.followgroups.read',
 			'uses' => 'FollowGroupsController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.contactreports.followgroups.update',
 			'uses' => 'FollowGroupsController@update',
 			'middleware' => 'can:edit contactreports',

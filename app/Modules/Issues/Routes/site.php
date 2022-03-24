@@ -32,7 +32,7 @@ $router->group(['prefix' => 'issues', 'middleware' => ['auth', 'can:manage issue
 		'middleware' => 'can:edit issues',
 	])->where('id', '[0-9]+');
 
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as' => 'site.issues.update',
 		'uses' => 'IssuesController@update',
 		'middleware' => 'can:edit issues|can:create issues',

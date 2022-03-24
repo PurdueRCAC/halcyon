@@ -17,7 +17,7 @@ $router->group(['prefix' => 'menus'], function (Router $router)
 		'as'   => 'api.menus.read',
 		'uses' => 'MenusController@read',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as'   => 'api.menus.update',
 		'uses' => 'MenusController@update',
 	])->where('id', '[0-9]+');
@@ -41,7 +41,7 @@ $router->group(['prefix' => 'menus'], function (Router $router)
 			'as' => 'api.menus.items.read',
 			'uses' => 'ItemsController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.menus.items.update',
 			'uses' => 'ItemsController@update',
 		])->where('id', '[0-9]+');

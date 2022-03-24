@@ -21,7 +21,7 @@ $router->group(['prefix' => 'storage', 'middleware' => 'auth:api'], function (Ro
 				'as' => 'api.storage.notifications.types.read',
 				'uses' => 'NotificationTypesController@read',
 			])->where('id', '[0-9]+');
-			$router->put('{id}', [
+			$router->match(['put', 'patch'], '{id}', [
 				'as' => 'api.storage.notifications.types.update',
 				'uses' => 'NotificationTypesController@update',
 			])->where('id', '[0-9]+');
@@ -46,7 +46,7 @@ $router->group(['prefix' => 'storage', 'middleware' => 'auth:api'], function (Ro
 			'uses' => 'NotificationsController@read',
 			//'middleware' => 'can:create storage.notifications',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.storage.notifications.update',
 			'uses' => 'NotificationsController@update',
 			//'middleware' => 'can:edit storage.notifications',
@@ -72,7 +72,7 @@ $router->group(['prefix' => 'storage', 'middleware' => 'auth:api'], function (Ro
 			'as' => 'api.storage.purchases.read',
 			'uses' => 'PurchasesController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.storage.purchases.update',
 			'uses' => 'PurchasesController@update',
 		])->where('id', '[0-9]+');
@@ -96,7 +96,7 @@ $router->group(['prefix' => 'storage', 'middleware' => 'auth:api'], function (Ro
 			'as' => 'api.storage.loans.read',
 			'uses' => 'LoansController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.storage.loans.update',
 			'uses' => 'LoansController@update',
 		])->where('id', '[0-9]+');
@@ -120,7 +120,7 @@ $router->group(['prefix' => 'storage', 'middleware' => 'auth:api'], function (Ro
 			'as' => 'api.storage.usage.read',
 			'uses' => 'UsageController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.storage.usage.update',
 			'uses' => 'UsageController@update',
 		])->where('id', '[0-9]+');
@@ -144,7 +144,7 @@ $router->group(['prefix' => 'storage', 'middleware' => 'auth:api'], function (Ro
 			'as' => 'api.storage.directories.read',
 			'uses' => 'DirectoriesController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.storage.directories.update',
 			'uses' => 'DirectoriesController@update',
 		])->where('id', '[0-9]+');
@@ -172,7 +172,7 @@ $router->group(['prefix' => 'storage', 'middleware' => 'auth:api'], function (Ro
 		'as' => 'api.storage.read',
 		'uses' => 'StorageController@read',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as' => 'api.storage.update',
 		'uses' => 'StorageController@update',
 		'middleware' => 'can:edit storage',

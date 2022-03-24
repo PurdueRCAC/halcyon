@@ -22,7 +22,7 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 			'uses' => 'MembersController@read',
 			'middleware' => 'auth:api',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.groups.members.update',
 			'uses' => 'MembersController@update',
 			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
@@ -51,7 +51,7 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 			'uses' => 'MotdController@read',
 			//'middleware' => 'auth:api',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.groups.motd.update',
 			'uses' => 'MotdController@update',
 			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
@@ -80,7 +80,7 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 			'uses' => 'DepartmentsController@read',
 			//'middleware' => 'auth:api',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.groups.departments.update',
 			'uses' => 'DepartmentsController@update',
 			'middleware' => ['auth:api', 'can:manage groups'],
@@ -109,7 +109,7 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 			'uses' => 'FieldsOfScienceController@read',
 			//'middleware' => 'auth:api',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.groups.fieldsofscience.update',
 			'uses' => 'FieldsOfScienceController@update',
 			'middleware' => ['auth:api', 'can:manage groups'],
@@ -136,7 +136,7 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 		'uses' => 'GroupsController@read',
 		'middleware' => 'auth:api',
 	]);
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as' => 'api.groups.update',
 		'uses' => 'GroupsController@update',
 		'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
@@ -164,7 +164,7 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 			'uses' => 'GroupDepartmentsController@read',
 			//'middleware' => 'auth:api',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.groups.groupdepartments.update',
 			'uses' => 'GroupDepartmentsController@update',
 			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
@@ -193,7 +193,7 @@ $router->group(['prefix' => 'groups'], function (Router $router)
 			'uses' => 'GroupFieldsOfScienceController@read',
 			//'middleware' => 'auth:api',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.groups.groupfieldsofscience.update',
 			'uses' => 'GroupFieldsOfScienceController@update',
 			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
@@ -225,7 +225,7 @@ $router->group(['prefix' => 'unixgroups'], function (Router $router)
 			'uses' => 'UnixGroupMembersController@read',
 			'middleware' => 'auth:api',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.unixgroups.members.update',
 			'uses' => 'UnixGroupMembersController@update',
 			'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],
@@ -252,7 +252,7 @@ $router->group(['prefix' => 'unixgroups'], function (Router $router)
 		'uses' => 'UnixGroupsController@read',
 		'middleware' => 'auth:api',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as' => 'api.unixgroups.update',
 		'uses' => 'UnixGroupsController@update',
 		'middleware' => ['auth:api', 'can:edit groups|edit.own groups'],

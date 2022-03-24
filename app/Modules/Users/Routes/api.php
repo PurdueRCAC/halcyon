@@ -23,7 +23,7 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		'middleware' => ['auth:api'],
 	])->where('id', '^me$|[0-9]+');
 
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as' => 'api.users.update',
 		'uses' => 'UsersController@update',
 		'middleware' => ['auth:api', 'can:edit users|can:edit.own users'],
@@ -50,7 +50,7 @@ $router->group(['prefix' => 'users'], function (Router $router)
 			'as' => 'api.users.levels.read',
 			'uses' => 'LevelsController@read',
 		])->where('id', '[0-9]+');
-		$router->put('/', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.users.levels.update',
 			'uses' => 'LevelsController@update',
 			'middleware' => 'can:manage users',
@@ -77,7 +77,7 @@ $router->group(['prefix' => 'users'], function (Router $router)
 			'as' => 'api.users.roles.read',
 			'uses' => 'RolesController@read',
 		])->where('id', '[0-9]+');
-		$router->put('/', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.users.roles.update',
 			'uses' => 'RolesController@update',
 			'middleware' => 'can:manage users',
@@ -104,7 +104,7 @@ $router->group(['prefix' => 'users'], function (Router $router)
 			'as' => 'api.users.facets.read',
 			'uses' => 'FacetsController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.users.facets.update',
 			'uses' => 'FacetsController@update',
 			'middleware' => 'can:edit users',
@@ -131,7 +131,7 @@ $router->group(['prefix' => 'users'], function (Router $router)
 			'as' => 'api.users.notes.read',
 			'uses' => 'NotesController@read',
 		])->where('id', '[0-9]+');
-		$router->put('/', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.users.notes.update',
 			'uses' => 'NotesController@update',
 			'middleware' => 'can:edit users',

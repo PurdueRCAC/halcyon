@@ -20,7 +20,7 @@ $router->group(['prefix' => 'tags'], function (Router $router)
 		'uses' => 'TagsController@read',
 		//'middleware' => ['auth:api', 'can:tag.tags.edit'],
 	]);
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as' => 'api.tags.update',
 		'uses' => 'TagsController@update',
 		'middleware' => ['auth:api', 'can:edit tags'],

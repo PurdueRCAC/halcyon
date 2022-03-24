@@ -18,7 +18,7 @@ $router->group(['prefix' => 'themes', 'middleware' => 'auth:api'], function (Rou
 		'as'   => 'api.themes.read',
 		'uses' => 'ThemesController@read',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as'   => 'api.themes.update',
 		'uses' => 'ThemesController@update',
 		'middleware' => 'can:edit themes',

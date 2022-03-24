@@ -22,6 +22,8 @@
 		@stack('styles')
 
 		<!-- Scripts -->
+		<script type="text/javascript" src="{{ asset('modules/core/vendor/jquery/jquery.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/jquery/jquery.min.js')) }}"></script>
+		<script type="text/javascript" src="{{ asset('modules/core/vendor/bootstrap/bootstrap.bundle.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/bootstrap/bootstrap.bundle.min.js')) }}"></script>
 		<script type="text/javascript" src="{{ asset('modules/core/vendor/prism/prism.js?v=' . filemtime(public_path() . '/modules/core/vendor/prism/prism.js')) }}"></script>
 		<script type="text/javascript" src="{{ asset('modules/core/js/api.js?v=' . filemtime(public_path() . '/modules/core/js/api.js')) }}"></script>
 		@yield('scripts')
@@ -238,11 +240,11 @@
 														</div>
 													</div>
 													<div class="response-container">
-														<ul class="nav nav-tabs" role="tablist">
-															<li class="nav-item"><a class="nav-link active" href="#{{ $key }}-{{ strtolower($endpoint['method']) }}-curl" id="{{ $key }}-{{ strtolower($endpoint['method']) }}-curl-tab">cURL</a></li>
-															<li class="nav-item"><a class="nav-link" href="#{{ $key }}-{{ strtolower($endpoint['method']) }}-python">Python</a></li>
-															<li class="nav-item"><a class="nav-link" href="#{{ $key }}-{{ strtolower($endpoint['method']) }}-php">PHP</a></li>
-															<li class="nav-item"><a class="nav-link" href="#{{ $key }}-{{ strtolower($endpoint['method']) }}-js">JavaScript</a></li>
+														<ul class="nav nav-tabs" role="tablist" id="{{ $key }}-{{ strtolower($endpoint['method']) }}">
+															<li class="nav-item" role="presentation"><a class="nav-link active" href="#{{ $key }}-{{ strtolower($endpoint['method']) }}-curl" id="{{ $key }}-{{ strtolower($endpoint['method']) }}-curl-tab" data-toggle="tab" role="tab" aria-controls="{{ $key }}-{{ strtolower($endpoint['method']) }}-curl" aria-selected="true">cURL</a></li>
+															<li class="nav-item" role="presentation"><a class="nav-link" href="#{{ $key }}-{{ strtolower($endpoint['method']) }}-python" id="{{ $key }}-{{ strtolower($endpoint['method']) }}-python-tab" data-toggle="tab" role="tab" aria-controls="{{ $key }}-{{ strtolower($endpoint['method']) }}-python" aria-selected="false">Python</a></li>
+															<li class="nav-item" role="presentation"><a class="nav-link" href="#{{ $key }}-{{ strtolower($endpoint['method']) }}-php" id="{{ $key }}-{{ strtolower($endpoint['method']) }}-php-tab" data-toggle="tab" role="tab" aria-controls="{{ $key }}-{{ strtolower($endpoint['method']) }}-php" aria-selected="false">PHP</a></li>
+															<li class="nav-item" role="presentation"><a class="nav-link" href="#{{ $key }}-{{ strtolower($endpoint['method']) }}-js" id="{{ $key }}-{{ strtolower($endpoint['method']) }}-js-tab" data-toggle="tab" role="tab" aria-controls="{{ $key }}-{{ strtolower($endpoint['method']) }}-js" aria-selected="false">JavaScript</a></li>
 														</ul>
 														<div class="tab-content">
 														<div class="tab-pane active" role="tabpanel" aria-labelledby="{{ $key }}-{{ strtolower($endpoint['method']) }}-curl-tab" id="{{ $key }}-{{ strtolower($endpoint['method']) }}-curl">

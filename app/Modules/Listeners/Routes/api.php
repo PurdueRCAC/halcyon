@@ -18,7 +18,7 @@ $router->group(['prefix' => 'listeners', 'middleware' => ['auth:api', 'can:manag
 		'as'   => 'api.listeners.read',
 		'uses' => 'ListenersController@read',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as'   => 'api.listeners.update',
 		'uses' => 'ListenersController@update',
 		'middleware' => 'can:edit listeners',

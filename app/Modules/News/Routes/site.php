@@ -45,7 +45,7 @@ $router->group(['prefix' => 'news'], function (Router $router)
 		'as' => 'site.news.edit',
 		'uses' => 'ArticlesController@edit',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as' => 'site.news.update',
 		'uses' => 'ArticlesController@update',
 	])->where('id', '[0-9]+');

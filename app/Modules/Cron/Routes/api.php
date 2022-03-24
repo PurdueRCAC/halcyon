@@ -18,7 +18,7 @@ $router->group(['prefix' => 'cron', 'middleware' => ['auth:api', 'can:manage cro
 		'as'   => 'api.cron.read',
 		'uses' => 'JobsController@read',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as'   => 'api.cron.update',
 		'uses' => 'JobsController@update',
 		'middleware' => 'auth:api',

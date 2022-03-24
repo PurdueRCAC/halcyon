@@ -18,7 +18,7 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 		'as'   => 'api.knowledge.read',
 		'uses' => 'PagesController@read',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as'   => 'api.knowledge.update',
 		'uses' => 'PagesController@update',
 		'middleware' => ['auth:api', 'can:edit knowledge'],
@@ -47,7 +47,7 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 			'uses' => 'SnippetsController@read',
 			//'middleware' => ['auth:api', 'can:manage knowledge'],
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.knowledge.snippets.update',
 			'uses' => 'SnippetsController@update',
 			//'middleware' => ['auth:api', 'can:edit knowledge'],
@@ -75,7 +75,7 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 			'uses' => 'FeedbackController@read',
 			'middleware' => ['auth:api'],
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.knowledge.feedback.update',
 			'uses' => 'FeedbackController@update',
 			'middleware' => ['auth:api'],

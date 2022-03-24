@@ -18,7 +18,7 @@ $router->group(['prefix' => 'pages'], function (Router $router)
 		'as'   => 'api.pages.read',
 		'uses' => 'PagesController@read',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as'   => 'api.pages.update',
 		'uses' => 'PagesController@update',
 		'middleware' => ['auth:api', 'can:edit pages']

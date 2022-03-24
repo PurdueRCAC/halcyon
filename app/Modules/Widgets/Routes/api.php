@@ -18,7 +18,7 @@ $router->group(['prefix' => 'widgets', 'middleware' => 'auth:api'], function (Ro
 		'as'   => 'api.widgets.read',
 		'uses' => 'WidgetsController@read',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as'   => 'api.widgets.update',
 		'uses' => 'WidgetsController@update',
 		'middleware' => 'can:edit widgets',

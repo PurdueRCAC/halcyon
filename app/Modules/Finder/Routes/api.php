@@ -20,7 +20,7 @@ $router->group(['prefix' => 'finder'], function (Router $router)
 			'as' => 'api.finder.facets.read',
 			'uses' => 'FacetsController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.finder.facets.update',
 			'uses' => 'FacetsController@update',
 			'middleware' => ['auth:api', 'can:edit finder'],
@@ -47,7 +47,7 @@ $router->group(['prefix' => 'finder'], function (Router $router)
 			'as' => 'api.finder.services.read',
 			'uses' => 'ServicesController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.finder.services.update',
 			'uses' => 'ServicesController@update',
 			'middleware' => ['auth:api', 'can:edit finder'],
@@ -74,7 +74,7 @@ $router->group(['prefix' => 'finder'], function (Router $router)
 			'as' => 'api.finder.fields.read',
 			'uses' => 'FieldsController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.finder.fields.update',
 			'uses' => 'FieldsController@update',
 			'middleware' => ['auth:api', 'can:edit finder'],

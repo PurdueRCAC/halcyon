@@ -20,7 +20,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth:api'], function (Rou
 		'uses' => 'OrdersController@read',
 		//'middleware' => 'can:tag.orders.edit',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as' => 'api.orders.update',
 		'uses' => 'OrdersController@update',
 		'middleware' => 'can:edit orders',
@@ -52,7 +52,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth:api'], function (Rou
 			'as' => 'api.orders.categories.read',
 			'uses' => 'CategoriesController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.orders.categories.update',
 			'uses' => 'CategoriesController@update',
 			'middleware' => 'can:edit orders.categories',
@@ -80,7 +80,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth:api'], function (Rou
 			'as' => 'api.orders.products.read',
 			'uses' => 'ProductsController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.orders.products.update',
 			'uses' => 'ProductsController@update',
 			'middleware' => 'can:edit orders.products',
@@ -107,7 +107,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth:api'], function (Rou
 			'as' => 'api.orders.cart.read',
 			'uses' => 'CartController@read',
 		])->where('id', '[a-z0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.orders.cart.update',
 			'uses' => 'CartController@update',
 		])->where('id', '[a-z0-9]+');
@@ -133,7 +133,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth:api'], function (Rou
 			'as' => 'api.orders.items.read',
 			'uses' => 'ItemsController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.orders.items.update',
 			'uses' => 'ItemsController@update',
 			'middleware' => 'can:edit orders',
@@ -161,7 +161,7 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth:api'], function (Rou
 			'as' => 'api.orders.accounts.read',
 			'uses' => 'AccountsController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.orders.accounts.update',
 			'uses' => 'AccountsController@update',
 			//'middleware' => 'can:edit orders',

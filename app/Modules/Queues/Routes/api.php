@@ -20,7 +20,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 			'as' => 'api.queues.types.read',
 			'uses' => 'TypesController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.queues.types.update',
 			'uses' => 'TypesController@update',
 			'middleware' => 'can:manage queues',
@@ -47,7 +47,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 			'as' => 'api.queues.walltimes.read',
 			'uses' => 'WalltimesController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.queues.walltimes.update',
 			'uses' => 'WalltimesController@update',
 			'middleware' => 'can:edit queues|edit.own queues',
@@ -74,7 +74,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 			'as' => 'api.queues.schedulers.read',
 			'uses' => 'SchedulersController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.queues.schedulers.update',
 			'uses' => 'SchedulersController@update',
 			'middleware' => 'can:manage queues',
@@ -101,7 +101,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 			'as' => 'api.queues.schedulerpolicies.read',
 			'uses' => 'SchedulerPoliciesController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.queues.schedulerpolicies.update',
 			'uses' => 'SchedulerPoliciesController@update',
 			'middleware' => 'can:manage queues',
@@ -128,7 +128,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 			'as' => 'api.queues.loans.read',
 			'uses' => 'LoansController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.queues.loans.update',
 			'uses' => 'LoansController@update',
 			'middleware' => 'can:edit queues|edit.own queues',
@@ -155,7 +155,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 			'as' => 'api.queues.sizes.read',
 			'uses' => 'SizesController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.queues.sizes.update',
 			'uses' => 'SizesController@update',
 			'middleware' => 'can:edit queues|edit.own queues',
@@ -182,7 +182,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 			'as' => 'api.queues.requests.read',
 			'uses' => 'UserRequestsController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.queues.requests.update',
 			'uses' => 'UserRequestsController@update',
 			//'middleware' => 'can:manage queues',
@@ -209,7 +209,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 			'as' => 'api.queues.users.read',
 			'uses' => 'UsersController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.queues.users.update',
 			'uses' => 'UsersController@update',
 			'middleware' => 'can:edit queues|edit.own queues',
@@ -234,7 +234,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		'as' => 'api.queues.read',
 		'uses' => 'QueuesController@read',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as' => 'api.queues.update',
 		'uses' => 'QueuesController@update',
 		'middleware' => ['auth:api', 'can:edit queues'],
@@ -257,7 +257,7 @@ $router->group(['prefix' => 'allocations', 'middleware' => 'auth.ip'], function 
 		'uses' => 'AllocationsController@create',
 		'middleware' => 'can:create queues',
 	]);
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as' => 'api.allocations.update',
 		'uses' => 'AllocationsController@update',
 		'middleware' => 'can:edit queues',

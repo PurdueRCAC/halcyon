@@ -30,7 +30,7 @@ $router->group(['prefix' => 'news'], function (Router $router)
 		'uses' => 'ArticlesController@email',
 		'middleware' => ['auth:api', 'can:edit news'],
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as'   => 'api.news.update',
 		'uses' => 'ArticlesController@update',
 		'middleware' => ['auth:api', 'can:edit news'],
@@ -59,7 +59,7 @@ $router->group(['prefix' => 'news'], function (Router $router)
 			'uses' => 'TypesController@read',
 			'middleware' => 'auth.optional:api',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.news.types.update',
 			'uses' => 'TypesController@update',
 			'middleware' => ['auth:api', 'can:manage news'],
@@ -86,7 +86,7 @@ $router->group(['prefix' => 'news'], function (Router $router)
 			'as' => 'api.news.associations.read',
 			'uses' => 'AssociationsController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.news.associations.update',
 			'uses' => 'AssociationsController@update',
 		])->where('id', '[0-9]+');
@@ -114,7 +114,7 @@ $router->group(['prefix' => 'news'], function (Router $router)
 			'uses' => 'UpdatesController@read',
 			'middleware' => 'auth.optional:api',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.news.updates.update',
 			'uses' => 'UpdatesController@update',
 			'middleware' => ['auth:api', 'can:edit news'],

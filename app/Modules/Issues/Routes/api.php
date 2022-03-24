@@ -21,7 +21,7 @@ $router->group(['prefix' => 'issues', 'middleware' => ['auth:api', 'can:manage i
 			'as' => 'api.issues.todos.read',
 			'uses' => 'ToDosController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.issues.todos.update',
 			'uses' => 'ToDosController@update',
 			'middleware' => 'can:edit issues',
@@ -49,7 +49,7 @@ $router->group(['prefix' => 'issues', 'middleware' => ['auth:api', 'can:manage i
 			'as' => 'api.issues.comments.read',
 			'uses' => 'CommentsController@read',
 		])->where('comment', '[0-9]+');
-		$router->put('{comment}', [
+		$router->match(['put', 'patch'], '{comment}', [
 			'as' => 'api.issues.comments.update',
 			'uses' => 'CommentsController@update',
 			'middleware' => 'can:edit issues',
@@ -74,7 +74,7 @@ $router->group(['prefix' => 'issues', 'middleware' => ['auth:api', 'can:manage i
 		'as'   => 'api.issues.read',
 		'uses' => 'IssuesController@read',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as'   => 'api.issues.update',
 		'uses' => 'IssuesController@update',
 		'middleware' => 'can:edit issues',

@@ -20,7 +20,7 @@ $router->group(['prefix' => 'resources'], function (Router $router)
 			'as' => 'api.resources.types.read',
 			'uses' => 'TypesController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.resources.types.update',
 			'uses' => 'TypesController@update',
 			'middleware' => ['auth:api', 'can:edit resources.types'],
@@ -47,7 +47,7 @@ $router->group(['prefix' => 'resources'], function (Router $router)
 			'as' => 'api.resources.batchsystems.read',
 			'uses' => 'BatchsystemsController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.resources.batchsystems.update',
 			'uses' => 'BatchsystemsController@update',
 			'middleware' => ['auth:api', 'can:edit resources.batchsystems'],
@@ -76,7 +76,7 @@ $router->group(['prefix' => 'resources'], function (Router $router)
 			'uses' => 'SubresourcesController@read',
 			//'middleware' => 'can:create resources.subresources',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.resources.subresources.update',
 			'uses' => 'SubresourcesController@update',
 			'middleware' => 'can:edit resources.subresources',
@@ -135,7 +135,7 @@ $router->group(['prefix' => 'resources'], function (Router $router)
 		'middleware' => ['auth:api', 'can:manage resources'],
 	])->where('id', '[0-9]+');
 
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as' => 'api.resources.update',
 		'uses' => 'ResourcesController@update',
 		'middleware' => ['auth:api', 'can:edit resources'],

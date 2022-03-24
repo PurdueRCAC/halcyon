@@ -17,7 +17,7 @@ $router->group(['prefix' => 'messages', 'middleware' => ['auth:api', 'can:manage
 		'as'   => 'api.messages.read',
 		'uses' => 'MessagesController@read',
 	])->where('id', '[0-9]+');
-	$router->put('{id}', [
+	$router->match(['put', 'patch'], '{id}', [
 		'as'   => 'api.messages.update',
 		'uses' => 'MessagesController@update',
 	])->where('id', '[0-9]+');
@@ -41,7 +41,7 @@ $router->group(['prefix' => 'messages', 'middleware' => ['auth:api', 'can:manage
 			'as' => 'api.messages.types.read',
 			'uses' => 'TypesController@read',
 		])->where('id', '[0-9]+');
-		$router->put('{id}', [
+		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.messages.types.update',
 			'uses' => 'TypesController@update',
 		])->where('id', '[0-9]+');
