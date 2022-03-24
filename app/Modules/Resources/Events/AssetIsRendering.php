@@ -16,14 +16,14 @@ class AssetIsRendering
 	/**
 	 * The original body of the page to render
 	 *
-	 * @var objec6
+	 * @var Asset
 	 */
 	private $asset;
 
 	/**
 	 * Constructor
 	 *
-	 * @param  object $asset
+	 * @param  Asset $asset
 	 * @return void
 	 */
 	public function __construct(Asset $asset)
@@ -54,9 +54,9 @@ class AssetIsRendering
 	}
 
 	/**
-	 * Get the original, unaltered body
+	 * Get Asset object
 	 *
-	 * @return mixed
+	 * @return Asset
 	 */
 	public function getAsset()
 	{

@@ -21,14 +21,4 @@ class SubresourceCreated
 	{
 		$this->subresource = $subresource;
 	}
-
-	/**
-	 * Return the entity
-	 *
-	 * @return \Illuminate\Database\Eloquent\Model
-	 */
-	public function getSubresource()
-	{
-		return $this->subresource;
-	}
 }

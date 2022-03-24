@@ -9,7 +9,7 @@ class TypeUpdating
 	/**
 	 * @var Type
 	 */
-	private $type;
+	public $type;
 
 	/**
 	 * Constructor
@@ -23,7 +23,9 @@ class TypeUpdating
 	}
 
 	/**
-	 * @return Article
+	 * Return the entity
+	 *
+	 * @return Type
 	 */
 	public function getType()
 	{

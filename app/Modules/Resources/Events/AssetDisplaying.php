@@ -7,9 +7,9 @@ use App\Modules\Resources\Models\Asset;
 class AssetDisplaying
 {
 	/**
-	 * Active section
+	 * Asset object
 	 *
-	 * @var string
+	 * @var Asset
 	 */
 	private $asset;
 
@@ -30,7 +30,7 @@ class AssetDisplaying
 	/**
 	 * Constructor
 	 *
-	 * @param  object $asset
+	 * @param  Asset $asset
 	 * @param  string $active
 	 * @return void
 	 */
@@ -44,7 +44,7 @@ class AssetDisplaying
 	/**
 	 * Get the asset
 	 *
-	 * @return string
+	 * @return Asset
 	 */
 	public function getAsset()
 	{

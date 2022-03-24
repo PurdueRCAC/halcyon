@@ -2,6 +2,8 @@
 
 namespace App\Modules\Tags\Events;
 
+use App\Modules\Tags\Models\Tag;
+
 class TagCreating
 {
 	/**

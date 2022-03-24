@@ -9,7 +9,7 @@ class SubresourceUpdating
 	/**
 	 * @var Subresource
 	 */
-	private $subresource;
+	public $subresource;
 
 	/**
 	 * Constructor
@@ -20,13 +20,5 @@ class SubresourceUpdating
 	public function __construct(Subresource $subresource)
 	{
 		$this->subresource = $subresource;
-	}
-
-	/**
-	 * @return User
-	 */
-	public function getSubresource()
-	{
-		return $this->subresource;
 	}
 }

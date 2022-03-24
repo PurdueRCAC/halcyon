@@ -9,7 +9,7 @@ class GroupDisplay
 	/**
 	 * The group
 	 *
-	 * @var string
+	 * @var Group
 	 */
 	public $group;
 
@@ -23,7 +23,7 @@ class GroupDisplay
 	/**
 	 * Content sections
 	 *
-	 * @var string
+	 * @var array
 	 */
 	public $sections;
 
@@ -31,6 +31,7 @@ class GroupDisplay
 	 * Constructor
 	 *
 	 * @param  Group $group
+	 * @param  string $active
 	 * @return void
 	 */
 	public function __construct(Group $group, $active)
@@ -53,7 +54,7 @@ class GroupDisplay
 	/**
 	 * Get all sections
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getSections()
 	{
@@ -63,6 +64,10 @@ class GroupDisplay
 	/**
 	 * Add a section
 	 *
+	 * @param string $route
+	 * @param string $name
+	 * @param bool $active
+	 * @param string $content
 	 * @return void
 	 */
 	public function addSection(string $route, string $name, bool $active = false, $content = null)
@@ -78,7 +83,7 @@ class GroupDisplay
 	/**
 	 * Get the group
 	 *
-	 * @return string
+	 * @return Group
 	 */
 	public function getGroup()
 	{

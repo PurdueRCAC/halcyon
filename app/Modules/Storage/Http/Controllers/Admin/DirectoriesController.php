@@ -118,26 +118,7 @@ class DirectoriesController extends Controller
 			->orderBy($d . '.' . $filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
-		$query = StorageResource::query();
-
-		/*if ($filters['state'] != '*')
-		{
-			if ($filters['state'] == 'active')
-			{
-				// Default behavior
-			}
-			elseif ($filters['state'] == 'inactive')
-			{
-				$query->onlyTrashed();
-			}
-		}
-		else
-		{
-			$query->withTrashed();
-		}*/
-
-		$storages = $query
-			//->orderBy('datetimeremoved', 'asc')
+		$storages = StorageResource::query()
 			->orderBy('name', 'asc')
 			->get();
 

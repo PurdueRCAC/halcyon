@@ -78,7 +78,7 @@ class Queues
 	 */
 	public function handleSubresourceCreated(SubresourceCreated $event)
 	{
-		$subresource = $event->getSubresource();
+		$subresource = $event->subresource;
 
 		if (!$subresource->cluster)
 		{

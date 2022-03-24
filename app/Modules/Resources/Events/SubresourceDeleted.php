@@ -14,7 +14,7 @@ class SubresourceDeleted
 	/**
 	 * Constructor
 	 *
-	 * @param  Asset $subresource
+	 * @param Subresource $subresource
 	 * @return void
 	 */
 	public function __construct(Subresource $subresource)

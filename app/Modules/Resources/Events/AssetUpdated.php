@@ -25,7 +25,7 @@ class AssetUpdated
 	/**
 	 * Return the entity
 	 *
-	 * @return \Illuminate\Database\Eloquent\Model
+	 * @return Asset
 	 */
 	public function getAsset()
 	{

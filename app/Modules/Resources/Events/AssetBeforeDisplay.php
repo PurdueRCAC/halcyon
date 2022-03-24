@@ -9,7 +9,7 @@ class AssetBeforeDisplay
 	/**
 	 * Active section
 	 *
-	 * @var string
+	 * @var Asset
 	 */
 	private $asset;
 
@@ -27,7 +27,7 @@ class AssetBeforeDisplay
 	/**
 	 * Get the user
 	 *
-	 * @return string
+	 * @return Asset
 	 */
 	public function getAsset()
 	{
@@ -37,7 +37,8 @@ class AssetBeforeDisplay
 	/**
 	 * Get the user
 	 *
-	 * @return string
+	 * @param Asset $asset
+	 * @return void
 	 */
 	public function setAsset(Asset $asset)
 	{

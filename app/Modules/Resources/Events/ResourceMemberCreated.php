@@ -30,7 +30,8 @@ class ResourceMemberCreated
 	/**
 	 * Constructor
 	 *
-	 * @param Subresource $subresource
+	 * @param Asset $resource
+	 * @param User $user
 	 * @return void
 	 */
 	public function __construct(Asset $resource, User $user)

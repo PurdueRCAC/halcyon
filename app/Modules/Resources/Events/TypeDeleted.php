@@ -14,11 +14,21 @@ class TypeDeleted
 	/**
 	 * Constructor
 	 *
-	 * @param  Type $type
+	 * @param Type $type
 	 * @return void
 	 */
 	public function __construct(Type $type)
 	{
 		$this->type = $type;
+	}
+
+	/**
+	 * Return the entity
+	 *
+	 * @return Type
+	 */
+	public function getType()
+	{
+		return $this->type;
 	}
 }

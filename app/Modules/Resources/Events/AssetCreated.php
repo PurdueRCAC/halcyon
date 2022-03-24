@@ -15,7 +15,6 @@ class AssetCreated
 	 * Constructor
 	 *
 	 * @param Asset $asset
-	 * @param array $data
 	 * @return void
 	 */
 	public function __construct(Asset $asset)
@@ -26,7 +25,7 @@ class AssetCreated
 	/**
 	 * Return the entity
 	 *
-	 * @return \Illuminate\Database\Eloquent\Model
+	 * @return Asset
 	 */
 	public function getAsset()
 	{

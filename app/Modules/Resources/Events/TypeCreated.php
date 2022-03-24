@@ -25,7 +25,7 @@ class TypeCreated
 	/**
 	 * Return the entity
 	 *
-	 * @return \Illuminate\Database\Eloquent\Model
+	 * @return Type
 	 */
 	public function getType()
 	{

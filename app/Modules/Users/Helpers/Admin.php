@@ -2,7 +2,6 @@
 namespace App\Modules\Users\Helpers;
 
 use Illuminate\Support\Fluent;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\DB;
 use App\Halcyon\Facades\Submenu;
 use App\Halcyon\Access\Role;
@@ -12,33 +11,6 @@ use App\Halcyon\Access\Role;
  */
 class Admin
 {
-	/**
-	 * Configure the Linkbar.
-	 *
-	 * @param   string  $vName  The name of the active view.
-	 * @return  void
-	 */
-	public static function addSubmenu($vName)
-	{
-		$controllerName = request()->segment(2, $vName);
-
-		Submenu::addEntry(
-			trans('users::users.users'),
-			route('admin.users.index'),
-			$controllerName == 'users'
-		);
-		Submenu::addEntry(
-			trans('users::users.notes'),
-			route('admin.users.notes'),
-			($controllerName == 'notes' || $vName == 'categories')
-		);
-		Submenu::addEntry(
-			trans('users::users.access'),
-			route('admin.users.acessgroups'),
-			($controllerName == 'accessgroups' || $controllerName == 'accesslevels')
-		);
-	}
-
 	/**
 	 * A cache for the available actions.
 	 *

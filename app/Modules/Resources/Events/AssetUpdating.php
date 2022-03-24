@@ -9,7 +9,7 @@ class AssetUpdating
 	/**
 	 * @var Asset
 	 */
-	private $asset;
+	public $asset;
 
 	/**
 	 * Constructor
@@ -23,7 +23,9 @@ class AssetUpdating
 	}
 
 	/**
-	 * @return User
+	 * Return the entity
+	 *
+	 * @return Asset
 	 */
 	public function getAsset()
 	{
