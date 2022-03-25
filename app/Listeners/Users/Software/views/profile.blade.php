@@ -40,7 +40,7 @@
 							@if (in_array(strtolower($user->department), $s['dept_lower']) || in_array(strtolower($user->school), $s['dept_lower']))
 								<button class="btn btn-sm btn-secondary btn-software-request" data-group="{{ $s['groupid'] }}" data-user="{{ $user->id }}">Request</button>
 							@else
-								<span class="tip" title="You do not appear to be apart of an eligible department or school.">
+								<span class="tip" title="You do not appear to be a part of an eligible department or school.">
 									<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span> Ineligible
 								</span>
 							@endif
