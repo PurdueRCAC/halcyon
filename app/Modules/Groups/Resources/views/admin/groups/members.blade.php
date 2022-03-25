@@ -378,8 +378,8 @@ $i = 0;
 										<span class="sr-only">Options</span>
 									</button>
 									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
-										<a href="#manager-{{ $member->id }}" class="dropdown-item btn membership-move demote" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="1" title="Remove manager privleges">
-											<span class="fa fa-arrow-down" aria-hidden="true"></span> Remove manager privleges
+										<a href="#manager-{{ $member->id }}" class="dropdown-item btn membership-move demote" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="1" title="Remove manager privileges">
+											<span class="fa fa-arrow-down" aria-hidden="true"></span> Remove manager privileges
 										</a>
 										<a href="#manager-{{ $member->id }}" class="dropdown-item btn membership-remove delete" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group">
 											<span class="fa fa-trash" aria-hidden="true"></span> Remove from group
@@ -549,11 +549,11 @@ $i = 0;
 											<span class="fa fa-fw fa-check-square" aria-hidden="true"></span> Enable all queues
 										</a>
 										@endif
-										<a href="#member{{ $member->id }}" class="dropdown-item btn membership-move change" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="3" title="Grant usage viewer privleges">
-											<span class="fa fa-fw fa-bar-chart" aria-hidden="true"></span> Grant usage viewer privleges
+										<a href="#member{{ $member->id }}" class="dropdown-item btn membership-move change" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="3" title="Grant usage viewer privileges">
+											<span class="fa fa-fw fa-bar-chart" aria-hidden="true"></span> Grant usage viewer privileges
 										</a>
-										<a href="#member{{ $member->id }}" class="dropdown-item btn membership-move promote" data-api="{{ route('api.groups.members.create') }}" data-target="2" data-userid="{{ $member->userid }}" title="Grant manager privleges">
-											<span class="fa fa-fw fa-arrow-up" aria-hidden="true"></span> Grant manager privleges
+										<a href="#member{{ $member->id }}" class="dropdown-item btn membership-move promote" data-api="{{ route('api.groups.members.create') }}" data-target="2" data-userid="{{ $member->userid }}" title="Grant manager privileges">
+											<span class="fa fa-fw fa-arrow-up" aria-hidden="true"></span> Grant manager privileges
 										</a>
 										<a href="#member{{ $member->id }}" class="dropdown-item btn membership-remove delete" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group">
 											<span class="fa fa-fw fa-trash" aria-hidden="true"></span> Remove from group
@@ -720,8 +720,8 @@ $i = 0;
 									<a href="#member{{ $member->id }}" class="dropdown-item btn membership-allqueues allqueues" title="Enable all queues for this user">
 										<span class="fa fa-fw fa-check-square" aria-hidden="true"></span> Enable all queues
 									</a>
-									<a href="#member{{ $member->id }}" class="dropdown-item btn membership-move change" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="1" title="Remove usage viewer privleges">
-										<span class="fa fa-fw fa-user" aria-hidden="true"></span> Remove usage viewer privleges
+									<a href="#member{{ $member->id }}" class="dropdown-item btn membership-move change" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="1" title="Remove usage viewer privileges">
+										<span class="fa fa-fw fa-user" aria-hidden="true"></span> Remove usage viewer privileges
 									</a>
 									<a href="#member{{ $member->id }}" class="dropdown-item btn membership-remove delete" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group">
 										<span class="fa fa-fw fa-trash" aria-hidden="true"></span> Remove from group
