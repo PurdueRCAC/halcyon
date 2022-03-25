@@ -9,7 +9,7 @@ You have been granted manager privileges on {{ config('app.name') }} resources. 
 * {{ $queue->resource ? $queue->resource->name : trans('global.unknown') . ' (' . $queue->subresourceid . ')' }}: '{{ $queue->name }}'
 @endforeach
 
-**Unixg groups:**
+**Unix groups:**
 
 @foreach ($group->unixGroups as $unixgroup)
 * {{ $unixgroup->longname }}
