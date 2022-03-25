@@ -7,86 +7,91 @@
 
 		<p>Most of the software installed on the clusters are either free or site-licensed for Purdue. However, some licenses have further restrictions such as your academic department or school. The software with additional restrictions for which you are eligible to access are listed below.</p>
 
-		@if (!$user->department && !$user->school)
-			<p class="alert alert-warning">We are unable to determine your department or school. Please <a href="{{ route('page', ['uri' => 'help']) }}">contact supportt</a>.</p>
-		@endif
-
-		<table class="table simpleTable">
+		<table class="table">
 			<caption>
-				Eligible Software
-				<a href="#eligible" class="tip text-info help" title="Eligible Departments">
-					<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Eligible Departments</span>
-				</a>
+				Software
 			</caption>
 			<thead>
 				<tr>
-					<th scope="col">Software</th>
+					<th scope="col">Package</th>
 					<th scope="col">Requirements</th>
 					<th scope="col">Status</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php
-				$count = 0;
-
-				// What do I have access to already?
 				foreach ($software as $i => $s):
+					$active = false;
+					// Check the user's unix groups to see if they already have access
 					foreach ($unixgroups as $g):
 						if ($s['group'] == $g->unixgroup->longname):
-							?>
-							<tr>
-								<td>{{ $s['name'] }}</td>
-								<td>{{ $s['req'] }}</td>
-								<td>Active</td>
-							</tr>
-							<?php
-							$software[$i]['access'] = true;
-							$count++;
+							$active = true;
+							break;
 						endif;
 					endforeach;
-				endforeach;
-
-				foreach ($software as $s):
-					if (!$s['access'] && (in_array(strtolower($user->department), $s['dept_lower']) || in_array(strtolower($user->school), $s['dept_lower']))):
-						?>
-						<tr>
-							<td>{{ $s['name'] }}</td>
-							<td>{{ $s['req'] }}</td>
-							<td><button class="btn btn-sm btn-secondary btn-software-request" data-group="{{ $s['groupid'] }}" data-user="{{ $user->id }}">Request</button></td>
-						</tr>
-						<?php
-						$count++;
-					endif;
-				endforeach;
-
-				if ($count == 0):
 					?>
 					<tr>
-						<td colspan="3">You have no software requests available.</td>
+						<td>{{ $s['name'] }}</td>
+						<td>{{ $s['req'] }}</td>
+					@if ($active)
+						<td><span class="badge badge-success">Active</span></td>
+					@else
+						<td>
+							@if (in_array(strtolower($user->department), $s['dept_lower']) || in_array(strtolower($user->school), $s['dept_lower']))
+								<button class="btn btn-sm btn-secondary btn-software-request" data-group="{{ $s['groupid'] }}" data-user="{{ $user->id }}">Request</button>
+							@else
+								<span class="tip" title="You do not appear to be apart of an eligible department or school.">
+									<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span> Ineligible
+								</span>
+							@endif
+						</td>
+					@endif
 					</tr>
 					<?php
-				endif;
+				endforeach;
 				?>
 			</tbody>
 		</table>
 
-		<div id="eligible" class="dialog dialog-help" title="Eligible Departments">
-			<ul>
-				<?php
-				$depts = array();
-				foreach ($software as $s):
-					foreach ($s['dept'] as $dept):
-						if (!in_array($dept, $depts)):
-							$depts[] = $dept;
-						endif;
-					endforeach;
-				endforeach;
-				?>
-				@foreach ($depts as $dept)
-					<li>{{ $dept }}</li>
-				@endforeach
-			</ul>
+		<div id="eligible" class="dilog dilog-help" title="Eligible Departments">
+			<div class="row">
+				<div class="col-md-6">
+					<h3>Eligible Departments</h3>
+					<ul>
+						<?php
+						$depts = array();
+						foreach ($software as $s):
+							foreach ($s['dept'] as $dept):
+								if (!in_array($dept, $depts)):
+									$depts[] = $dept;
+								endif;
+							endforeach;
+						endforeach;
+						?>
+						@foreach ($depts as $dept)
+							<li>
+								{{ $dept }}
+							</li>
+						@endforeach
+					</ul>
+				</div>
+				<div class="col-md-6">
+					@if (!$user->department && !$user->school)
+						<h3>Your Department</h3>
+						<p class="alert alert-warning">We are unable to determine your department or school. Please <a href="{{ route('page', ['uri' => 'help']) }}">contact support</a>.</p>
+					@else
+						@if ($user->department)
+							<h3>Your Department</h3>
+							<div>{{ $user->department }}</div>
+						@endif
+						@if ($user->school)
+							<h3>Your School</h3>
+							<div>{{ $user->school }}</div>
+						@endif
+					@endif
+				</div>
+			</div>
 		</div>
 
-		<p>To request software not already installed on the clusters, see the <a href="{{ route('page', ['uri' => 'policies/software']) }}">software installation policy</a>. If you do not see the software you expect above, or encounter any issues, please contact <a href="{{ route('page', ['uri' => 'help']) }}">support</a>.</p>
+		<p class="alert alert-info">To request software not already installed on the clusters, see the <a href="{{ route('page', ['uri' => 'policies/software']) }}">software installation policy</a>. If you do not see the software you expect above, or encounter any issues, please contact <a href="{{ route('page', ['uri' => 'help']) }}">support</a>.</p>
 	</div>
