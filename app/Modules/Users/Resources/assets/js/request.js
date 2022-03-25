@@ -2,63 +2,6 @@
 /* global ROOT_URL */ // common.js
 /* global WSPostURL */ // common.js
 
-//var min_search_length = 2; // 0 for group
-//var add_button = "accept" // add
-//var search_path = "groupusername"; // groupname
-//var SELECTED = null;
-
-/**
- * Perform search
- *
- * @param   {object}  clicked
- * @return  {void}
- */
-/*function SearchEventHandler(clicked) {
-	// don't do anything if nothing was selected
-	if (clicked != null) {
-		// Is this a user or group?
-		if (clicked.match(/ws\//)) {
-			if (clicked.match(/user/)) {
-				document.getElementById("group").style.display = "none";
-				document.getElementById("person").style.display = "block";
-				document.getElementById("personname").innerHTML = SEARCH[clicked]['name'];
-				document.getElementById("title").innerHTML = SEARCH[clicked]['title'];
-			} else if (clicked.match(/group/)) {
-				document.getElementById("person").style.display = "none";
-				document.getElementById("group").style.display = "block";
-				document.getElementById("groupname").innerHTML = SEARCH[clicked]['name'];
-				document.getElementById("dept").innerHTML = SEARCH[clicked]['dept'];
-			}
-			PrintAccountResources(SEARCH[clicked]);
-			SELECTED = SEARCH[clicked]['id'];
-		} else {
-			// if username doesn't exist, create it
-			var post = JSON.stringify({ "name" : clicked });
-			WSPostURL(ROOT_URL + "userusername", post, CreateUser, clicked);
-		}
-		ClearSearch();
-	}
-}*/
-
-/**
- * Parse results, add to USER container and render them
- *
- * @param   {object}  xml
- * @param   {string}  clicked
- * @return  {void}
- */
-/*function CreateUser(xml, clicked) {
-	if (xml.status == 200) {
-		var new_user = JSON.parse(xml.responseText);
-
-		document.getElementById("group").style.display = "none";
-		document.getElementById("person").style.display = "block";
-		document.getElementById("personname").innerHTML = SEARCH[new_user['name']]['name'];
-
-		PrintAccountResources(SEARCH[clicked]);
-	}
-}*/
-
 /**
  * Output account resources
  *
@@ -74,7 +17,19 @@ function PrintAccountResources(user) {
 	var fortress = false;
 	var x, div, span;
 
-	if (typeof (user['resources']) != 'undefined') {
+	if (typeof (user['queues']) != 'undefined') {
+		document.getElementById("queues").style.display = "block";
+		document.getElementById("resources").style.display = "none";
+		div = document.getElementById("queuelist");
+		queues = user['queues'];
+		if (typeof (user['memberofqueues']) != 'undefined') {
+			memberofqueues = user['memberofqueues'];
+		}
+		if (typeof (user['pendingmemberofqueues']) != 'undefined') {
+			pendingmemberofqueues = user['pendingmemberofqueues'];
+		}
+		fortress = true;
+	} else if (typeof (user['resources']) != 'undefined') {
 		document.getElementById("resources").style.display = "block";
 		document.getElementById("queues").style.display = "none";
 		div = document.getElementById("resourcelist");
@@ -82,16 +37,6 @@ function PrintAccountResources(user) {
 		if (typeof (user['pendingresources']) != 'undefined') {
 			pendingresources = user['pendingresources'];
 		}
-	} else if (typeof (user['queues']) != 'undefined') {
-		document.getElementById("queues").style.display = "block";
-		document.getElementById("resources").style.display = "none";
-		div = document.getElementById("queuelist");
-		queues = user['queues'];
-		memberofqueues = user['memberofqueues'];
-		if (typeof (user['pendingmemberofqueues']) != 'undefined') {
-			pendingmemberofqueues = user['pendingmemberofqueues'];
-		}
-		fortress = true;
 	}
 
 	document.getElementById("searchbox").style.display = "none";
@@ -106,15 +51,6 @@ function PrintAccountResources(user) {
 	for (x = 0; x < resources.length; x++) {
 		resource = resources[x];
 
-		if (resource['name'] == "BoilerGrid") {
-			continue;
-		}
-		if (resource['name'] == "Radon") {
-			continue;
-		}
-		if (resource['name'] == "Hathi") {
-			continue;
-		}
 		d = document.createElement("div");
 		box = document.createElement("input");
 		box.type = "checkbox";
@@ -184,25 +120,9 @@ function PrintAccountResources(user) {
 
 		d.appendChild(box);
 
-		if (queue['resource'] == "BoilerGrid") {
-			continue;
-		}
-		if (queue['resource'] == "Radon") {
-			continue;
-		}
-		if (queue['resource'] == "Hathi") {
-			continue;
-		}
-
 		label = document.createElement("label");
 		label.setAttribute('for', box.id);
-		if (queue['resource'].match(/Radon/)
-			|| queue['resource'].match(/Fortress/)
-			|| queue['resource'].match(/BoilerGrid/)) {
-			label.innerHTML = queue['resource'] + " (" + queue['name'] + ")";
-		} else {
-			label.innerHTML = queue['name'] + " (" + queue['subresource'] + ")";
-		}
+		label.innerHTML = queue['name'] + " (" + queue['resource']['name'] + ")";
 
 		d.appendChild(label);
 		d.id = queue['id'] + "_name";
@@ -224,13 +144,7 @@ function PrintAccountResources(user) {
 		d.appendChild(box);
 
 		span = document.createElement("span");
-		if (queue['resource'].match(/Radon/)
-			|| queue['resource'].match(/Fortress/)
-			|| queue['resource'].match(/BoilerGrid/)) {
-			span.innerHTML = queue['resource'] + " (" + queue['name'] + ", access authorized)";
-		} else {
-			span.innerHTML = queue['name'] + " (" + queue['subresource'] + ", access authorized)";
-		}
+		span.innerHTML = queue['name'] + " (" + queue['resource']['name'] + ", access authorized)";
 
 		d.appendChild(span);
 		d.id = queue['id'] + "_name";
@@ -252,13 +166,7 @@ function PrintAccountResources(user) {
 		d.appendChild(box);
 
 		span = document.createElement("span");
-		if (queue['resource'].match(/Radon/)
-			|| queue['resource'].match(/Fortress/)
-			|| queue['resource'].match(/BoilerGrid/)) {
-			span.innerHTML = queue['resource'] + " (" + queue['name'] + ", request pending)";
-		} else {
-			span.innerHTML = queue['name'] + " (" + queue['subresource'] + ", request pending)";
-		}
+		span.innerHTML = queue['name'] + " (" + queue['subresource'] + ", request pending)";
 
 		d.appendChild(span);
 		d.id = queue['id'] + "_name";
@@ -291,34 +199,25 @@ function SubmitRequest() {
 	var free = false;
 	var x, boxes, box;
 
-	//if (document.getElementById("resources").style.display != "none") {
-	//boxes = document.getElementById("resourcelist").getElementsByTagName("div");
-	boxes = document.querySelectorAll("#resourcelist input[type=checkbox]"); //.getElementsByTagName("div");
+	boxes = document.querySelectorAll("#resourcelist input[type=checkbox]");
 	for (x = 0; x < boxes.length; x++) {
 		box = boxes[x];
-		//box = boxes[x].getElementsByTagName("input")[0];
-		//var text = boxes[x].getElementsByTagName("label")[0].innerHTML;
+
 		if (box.checked == true
 			&& box.disabled == false) {
 			resources.push(box.id);
 		}
-		/*if (text.match(/Radon/)) {
-			free = true;
-		} else if (box.disabled == true && text.match(/Fortress/)) {
-			resources.push(box.id);
-		}*/
 	}
-	//} else if (document.getElementById("queues").style.display != "none") {
-	boxes = document.querySelectorAll("queuelist input[type=checkbox]"); //.getElementsByTagName("div");
+
+	boxes = document.querySelectorAll("#queuelist input[type=checkbox]");
 	for (x = 0; x < boxes.length; x++) {
-		box = boxes[x]; //.getElementsByTagName("input")[0];
+		box = boxes[x];
 
 		if (box.checked == true
 			&& box.disabled == false) {
 			queues.push(box.id);
 		}
 	}
-	//}
 
 	if (queues.length == 0
 		&& resources.length == 0) {
@@ -416,9 +315,9 @@ function SubmitRequest() {
 				$('#errors').addClass('alert').addClass('alert-danger').text("There was an error processing your request.");
 			});
 		})
-		.fail(function () {
-			$('#errors').addClass('alert').addClass('alert-danger').text("There was an error processing your request.");
-		})
+			.fail(function () {
+				$('#errors').addClass('alert').addClass('alert-danger').text("There was an error processing your request.");
+			})
 	).done(function () {
 		//window.location = url;
 		$('#errors').addClass('alert').addClass('alert-success').text("Your request has been submitted.");
@@ -618,26 +517,35 @@ $(document).ready(function () {
 		}
 	});
 
-	$('.request-clear').on('click', function (e) {
-		e.preventDefault();
+	document.querySelectorAll('.request-clear').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		var els = document.querySelectorAll('.request-selection');
+			var els = document.querySelectorAll('.request-selection');
 
-		for (var x = 0; x < els.length; x++) {
-			els[x].style.display = 'none';
-		}
+			for (var x = 0; x < els.length; x++) {
+				els[x].style.display = 'none';
+			}
 
-		document.getElementById("searchbox").style.display = 'block';
-		document.getElementById("newuser").value = '';
+			document.getElementById("searchbox").style.display = 'block';
+			document.getElementById("newuser").value = '';
+		});
 	});
 
-	$('.request-submit').on('click', function (e) {
-		e.preventDefault();
-		SubmitRequest();
+	document.querySelectorAll('.request-submit').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+			SubmitRequest();
+		});
 	});
 
-	$('.btn-software-request').on('click', function (e) {
-		e.preventDefault();
-		RequestGroup($(this).data('group'), $(this).data('user'));
+	document.querySelectorAll('.btn-software-request').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+			RequestGroup(
+				el.getAttribute('data-group'),
+				el.getAttribute('data-user')
+			);
+		});
 	});
 });
