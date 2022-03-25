@@ -40,12 +40,13 @@ class Queues
 		$c = (new Child)->getTable();
 
 		$queues = Queue::query()
+			->select($q . '.*')
 			->join($s, $s . '.id', $q . '.subresourceid')
 			->join($c, $c . '.subresourceid', $q . '.subresourceid')
 			->join($r, $r . '.id', $c . '.resourceid')
 			->whereNull($q . '.datetimeremoved')
 			->whereNull($r . '.datetimeremoved')
-			->where('groupid', '=', $event->group->id)
+			->where($q . '.groupid', '=', $event->group->id)
 			->get();
 
 		$resources = array();
