@@ -10368,14 +10368,14 @@ body {
 @media (min-width: 768px) {
 	body {
 		font-size: 1em;
-		line-height:1.5em
+		line-height:1.5
 	}
 }
 
 @media (max-width: 767px) {
 	body {
 		font-size: 1.125em;
-		line-height:1.5em
+		line-height:1.5
 	}
 }
 
@@ -10498,11 +10498,11 @@ p {
 }
 small {
 	font-size: 0.75em;
-	line-height: 1em;
+	line-height: 1;
 }
 big {
 	font-size: 1.25em;
-	line-height: 1em;
+	line-height: 1;
 }
 a,
 a:visited,
@@ -10935,7 +10935,7 @@ table.gsc-search-box .gsc-search-button {
 	}
 
 	.goldbar .gold .navbar-nav a {
-		line-height: 1.42857em;
+		line-height: 1.42857;
 		white-space: normal;
 		padding:5px 0
 	}
@@ -11040,7 +11040,7 @@ table.gsc-search-box .gsc-search-button {
 }
 .top .department a {
 	display: inline-block;
-	line-height: 1.2em;
+	line-height: 1.2;
 	border: none;
 	padding:0
 }
@@ -11053,7 +11053,7 @@ table.gsc-search-box .gsc-search-button {
 	.top .department a {
 		display: inline-block;
 		padding: 2px 0px;
-		line-height:1.1em
+		line-height:1.1
 	}
 }
 .top .department a,
@@ -11072,7 +11072,7 @@ table.gsc-search-box .gsc-search-button {
 	color: inherit;
 	font-family: acumin-pro-semi-condensed, "Franklin Gothic", sans-serif;
 	font-size: .6087em;
-	line-height: 1.2em;
+	line-height: 1.2;
 	letter-spacing: 0;
 	text-transform:uppercase
 }
@@ -11133,8 +11133,8 @@ table.gsc-search-box .gsc-search-button {
 		text-align:center
 	}
 	.top .tagline {
-		padding: 0px 0px 10px 0px;
-		line-height: 1.2em;
+		padding: 0 0 10px 0;
+		line-height: 1.2;
 		border:none
 	}
 	.top .homeButton {
@@ -11171,7 +11171,7 @@ table.gsc-search-box .gsc-search-button {
 .blackbar .navbar-nav > li > .nav-link {
 	padding-left: 15px;
 	padding-right: 15px;
-	line-height: 1.5em;
+	line-height: 1.5;
 	position: relative;
 }
 .caret:after {
@@ -11938,14 +11938,14 @@ table.gsc-search-box .gsc-search-button {
 @media (min-width: 768px) {
 	.collegeContent .grid .introContainer .intro h1 {
 		font-size: 1.75em;
-		line-height: 1.07143em;
+		line-height: 1.07143;
 	}
 }
 
 @media (max-width: 767px) {
 	.collegeContent .grid .introContainer .intro h1 {
 		font-size: 1.55556em;
-		line-height: 1.07143em;
+		line-height: 1.07143;
 	}
 }
 
@@ -12319,7 +12319,7 @@ table.gsc-search-box .gsc-search-button {
 	.collegeContent .grid .tiles .row .tile.col-lg-3.row-lg-1 a.audience,
 	.collegeContent .grid .tiles .row .tile.col-lg-3.row-lg-1 a.news {
 		font-size: 1.375em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-lg-3.row-lg-1 a.audience .caption .fa.icon,
 	.collegeContent .grid .tiles .row .tile.col-lg-3.row-lg-1 a.news .caption .fa.icon {
@@ -12346,7 +12346,7 @@ table.gsc-search-box .gsc-search-button {
 	}
 	.collegeContent .grid .tiles .row .tile.col-lg-3.row-lg-2 a.audience {
 		font-size: 1.75em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-lg-3.row-lg-2 a.audience .caption .fa.icon {
 		display: block;
@@ -12372,7 +12372,7 @@ table.gsc-search-box .gsc-search-button {
 	}
 	.collegeContent .grid .tiles .row .tile.col-lg-3.row-lg-2 a.news {
 		font-size: 1.75em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-lg-3.row-lg-2 a.news .caption .fa.icon {
 		display: block;
@@ -12397,7 +12397,7 @@ table.gsc-search-box .gsc-search-button {
 	.collegeContent .grid .tiles .row .tile.col-lg-3.row-lg-3 a.news,
 	.collegeContent .grid .tiles .row .tile.col-lg-3.row-lg-4 a.news {
 		font-size: 1.75em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-lg-3.row-lg-3 a.news .caption .fa.icon,
 	.collegeContent .grid .tiles .row .tile.col-lg-3.row-lg-4 a.news .caption .fa.icon {
@@ -12426,7 +12426,7 @@ table.gsc-search-box .gsc-search-button {
 	.collegeContent .grid .tiles .row .tile.col-lg-6.row-lg-1 a.audience,
 	.collegeContent .grid .tiles .row .tile.col-lg-6.row-lg-1 a.news {
 		font-size: 1.75em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-lg-6.row-lg-1 a.audience .caption .icon,
 	.collegeContent .grid .tiles .row .tile.col-lg-6.row-lg-1 a.news .caption .icon {
@@ -12448,7 +12448,7 @@ table.gsc-search-box .gsc-search-button {
 	.collegeContent .grid .tiles .row .tile.col-lg-12.row-lg-1 a.audience,
 	.collegeContent .grid .tiles .row .tile.col-lg-12.row-lg-1 a.news {
 		font-size: 1.75em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-lg-9.row-lg-1 a.audience .caption .fa.icon,
 	.collegeContent .grid .tiles .row .tile.col-lg-9.row-lg-1 a.news .caption .fa.icon,
@@ -12512,7 +12512,7 @@ table.gsc-search-box .gsc-search-button {
 		background-size: cover;
 		background-position: center center;
 		font-size: 2.375em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-lg-6.row-lg-2 a.audience .caption .icon,
 	.collegeContent .grid .tiles .row .tile.col-lg-6.row-lg-3 a.audience .caption .icon,
@@ -12552,7 +12552,7 @@ table.gsc-search-box .gsc-search-button {
 		background-size: cover;
 		background-position: center center;
 		font-size: 1.625em;
-		line-height: 1.2em;
+		line-height: 1.2;
 	}
 	.collegeContent .grid .tiles .row .tile.col-lg-6.row-lg-2 a.news .caption,
 	.collegeContent .grid .tiles .row .tile.col-lg-6.row-lg-3 a.news .caption,
@@ -12596,7 +12596,7 @@ table.gsc-search-box .gsc-search-button {
 	.collegeContent .grid .tiles .row .tile.col-md-3.row-md-1 a.audience,
 	.collegeContent .grid .tiles .row .tile.col-md-3.row-md-1 a.news {
 		font-size: 1.125em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-md-3.row-md-1 a.audience .caption .fa.icon,
 	.collegeContent .grid .tiles .row .tile.col-md-3.row-md-1 a.news .caption .fa.icon {
@@ -12619,7 +12619,7 @@ table.gsc-search-box .gsc-search-button {
 	.collegeContent .grid .tiles .row .tile.col-md-3.row-md-3 a.audience,
 	.collegeContent .grid .tiles .row .tile.col-md-3.row-md-4 a.audience {
 		font-size: 1.5em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-md-3.row-md-2 a.audience .caption .fa.icon,
 	.collegeContent .grid .tiles .row .tile.col-md-3.row-md-3 a.audience .caption .fa.icon,
@@ -12648,7 +12648,7 @@ table.gsc-search-box .gsc-search-button {
 	.collegeContent .grid .tiles .row .tile.col-md-3.row-md-3 a.news,
 	.collegeContent .grid .tiles .row .tile.col-md-3.row-md-4 a.news {
 		font-size: 1.5em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-md-3.row-md-2 a.news .caption .fa.icon,
 	.collegeContent .grid .tiles .row .tile.col-md-3.row-md-3 a.news .caption .fa.icon,
@@ -12676,7 +12676,7 @@ table.gsc-search-box .gsc-search-button {
 	.collegeContent .grid .tiles .row .tile.col-md-6.row-md-1 a.audience,
 	.collegeContent .grid .tiles .row .tile.col-md-6.row-md-1 a.news {
 		font-size: 1.5em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-md-6.row-md-1 a.audience .caption .icon,
 	.collegeContent .grid .tiles .row .tile.col-md-6.row-md-1 a.news .caption .icon {
@@ -12694,7 +12694,7 @@ table.gsc-search-box .gsc-search-button {
 	.collegeContent .grid .tiles .row .tile.col-md-12.row-md-1 a.audience,
 	.collegeContent .grid .tiles .row .tile.col-md-12.row-md-1 a.news {
 		font-size: 1.75em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-md-9.row-md-1 a.audience .caption .fa.icon,
 	.collegeContent .grid .tiles .row .tile.col-md-9.row-md-1 a.news .caption .fa.icon,
@@ -12748,7 +12748,7 @@ table.gsc-search-box .gsc-search-button {
 		background-size: cover;
 		background-position: center center;
 		font-size: 2.125em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-md-6.row-md-2 a.audience .caption .icon,
 	.collegeContent .grid .tiles .row .tile.col-md-6.row-md-3 a.audience .caption .icon,
@@ -12788,7 +12788,7 @@ table.gsc-search-box .gsc-search-button {
 		background-size: cover;
 		background-position: center center;
 		font-size: 1.375em;
-		line-height: 1.2em;
+		line-height: 1.2;
 	}
 	.collegeContent .grid .tiles .row .tile.col-md-6.row-md-2 a.news .caption,
 	.collegeContent .grid .tiles .row .tile.col-md-6.row-md-3 a.news .caption,
@@ -12832,7 +12832,7 @@ table.gsc-search-box .gsc-search-button {
 	.collegeContent .grid .tiles .row .tile.col-sm-3.row-sm-1 a.audience,
 	.collegeContent .grid .tiles .row .tile.col-sm-3.row-sm-1 a.news {
 		font-size: 1.375em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-sm-3.row-sm-1 a.audience .caption .fa.icon,
 	.collegeContent .grid .tiles .row .tile.col-sm-3.row-sm-1 a.news .caption .fa.icon {
@@ -12855,7 +12855,7 @@ table.gsc-search-box .gsc-search-button {
 	.collegeContent .grid .tiles .row .tile.col-sm-3.row-sm-3 a.audience,
 	.collegeContent .grid .tiles .row .tile.col-sm-3.row-sm-4 a.audience {
 		font-size: 1.75em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-sm-3.row-sm-2 a.audience .caption .fa.icon,
 	.collegeContent .grid .tiles .row .tile.col-sm-3.row-sm-3 a.audience .caption .fa.icon,
@@ -12884,7 +12884,7 @@ table.gsc-search-box .gsc-search-button {
 	.collegeContent .grid .tiles .row .tile.col-sm-3.row-sm-3 a.news,
 	.collegeContent .grid .tiles .row .tile.col-sm-3.row-sm-4 a.news {
 		font-size: 1.75em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-sm-3.row-sm-2 a.news .caption .fa.icon,
 	.collegeContent .grid .tiles .row .tile.col-sm-3.row-sm-3 a.news .caption .fa.icon,
@@ -12912,7 +12912,7 @@ table.gsc-search-box .gsc-search-button {
 	.collegeContent .grid .tiles .row .tile.col-sm-6.row-sm-1 a.audience,
 	.collegeContent .grid .tiles .row .tile.col-sm-6.row-sm-1 a.news {
 		font-size: 1.75em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-sm-6.row-sm-1 a.audience .caption .icon,
 	.collegeContent .grid .tiles .row .tile.col-sm-6.row-sm-1 a.news .caption .icon {
@@ -12930,7 +12930,7 @@ table.gsc-search-box .gsc-search-button {
 	.collegeContent .grid .tiles .row .tile.col-sm-12.row-sm-1 a.audience,
 	.collegeContent .grid .tiles .row .tile.col-sm-12.row-sm-1 a.news {
 		font-size: 1.75em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-sm-9.row-sm-1 a.audience .caption .fa.icon,
 	.collegeContent .grid .tiles .row .tile.col-sm-9.row-sm-1 a.news .caption .fa.icon,
@@ -12983,7 +12983,7 @@ table.gsc-search-box .gsc-search-button {
 		background-size: cover;
 		background-position: center center;
 		font-size: 2.375em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-sm-6.row-sm-2 a.audience .caption .icon,
 	.collegeContent .grid .tiles .row .tile.col-sm-6.row-sm-3 a.audience .caption .icon,
@@ -13023,7 +13023,7 @@ table.gsc-search-box .gsc-search-button {
 		background-size: cover;
 		background-position: center center;
 		font-size: 1.625em;
-		line-height: 1.2em;
+		line-height: 1.2;
 	}
 	.collegeContent .grid .tiles .row .tile.col-sm-6.row-sm-2 a.news .caption,
 	.collegeContent .grid .tiles .row .tile.col-sm-6.row-sm-3 a.news .caption,
@@ -13067,7 +13067,7 @@ table.gsc-search-box .gsc-search-button {
 	.collegeContent .grid .tiles .row .tile.col-xs-6.row-xs-1 a.audience,
 	.collegeContent .grid .tiles .row .tile.col-xs-6.row-xs-1 a.news {
 		font-size: 1.125em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-xs-6.row-xs-1 a.audience .caption .fa.icon,
 	.collegeContent .grid .tiles .row .tile.col-xs-6.row-xs-1 a.news .caption .fa.icon {
@@ -13096,7 +13096,7 @@ table.gsc-search-box .gsc-search-button {
 	.collegeContent .grid .tiles .row .tile.col-xs-6.row-xs-3 a.audience,
 	.collegeContent .grid .tiles .row .tile.col-xs-6.row-xs-4 a.audience {
 		font-size: 1.5em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-xs-6.row-xs-2 a.audience .caption .fa.icon,
 	.collegeContent .grid .tiles .row .tile.col-xs-6.row-xs-3 a.audience .caption .fa.icon,
@@ -13132,7 +13132,7 @@ table.gsc-search-box .gsc-search-button {
 	.collegeContent .grid .tiles .row .tile.col-xs-6.row-xs-3 a.news,
 	.collegeContent .grid .tiles .row .tile.col-xs-6.row-xs-4 a.news {
 		font-size: 1.5em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-xs-6.row-xs-2 a.news .caption .fa.icon,
 	.collegeContent .grid .tiles .row .tile.col-xs-6.row-xs-3 a.news .caption .fa.icon,
@@ -13165,7 +13165,7 @@ table.gsc-search-box .gsc-search-button {
 	.collegeContent .grid .tiles .row .tile.col-xs-12.row-xs-1 a.audience,
 	.collegeContent .grid .tiles .row .tile.col-xs-12.row-xs-1 a.news {
 		font-size: 1.25em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-xs-12.row-xs-1 a.audience .caption .icon,
 	.collegeContent .grid .tiles .row .tile.col-xs-12.row-xs-1 a.news .caption .icon {
@@ -13188,7 +13188,7 @@ table.gsc-search-box .gsc-search-button {
 		background-size: cover;
 		background-position: center center;
 		font-size: 2.125em;
-		line-height: 1em;
+		line-height: 1;
 	}
 	.collegeContent .grid .tiles .row .tile.col-xs-12.row-xs-2 a.audience .caption .icon,
 	.collegeContent .grid .tiles .row .tile.col-xs-12.row-xs-3 a.audience .caption .icon,
@@ -13210,7 +13210,7 @@ table.gsc-search-box .gsc-search-button {
 		background-size: cover;
 		background-position: center center;
 		font-size: 1.375em;
-		line-height: 1.2em;
+		line-height: 1.2;
 	}
 	.collegeContent .grid .tiles .row .tile.col-xs-12.row-xs-2 a.news .caption,
 	.collegeContent .grid .tiles .row .tile.col-xs-12.row-xs-3 a.news .caption,
@@ -13249,7 +13249,7 @@ table.gsc-search-box .gsc-search-button {
 	width: 100%;
 	border-bottom: solid 1px #333;
 	font-size: .875em;
-	line-height:2.3125em
+	line-height:2.3125
 }
 .footer #accordion .panel li {
 	font-size: 1em;
@@ -13496,14 +13496,14 @@ table.gsc-search-box .gsc-search-button {
 		padding: 0 30px 15px;
 		border: none;
 		font-size: 0.9em; /*.875em;*/
-		line-height:1.6875em
+		line-height:1.6875
 	}
 	.footer #accordion .panel .panel-heading {
 		display: block;
 		padding: 0;
 		background-color: transparent;
 		font-size: 1.3125em;
-		line-height:1em
+		line-height:1
 	}
 	.footer #accordion .panel .panel-heading .panel-title {
 		font-family: acumin-pro-semi-condensed, "Franklin Gothic", sans-serif;
