@@ -1,55 +1,74 @@
-/* global $ */ // jquery.js
-/* global jQuery */ // jquery.js
+/**
+ * Remove unwanted characters from roles
+ *
+ * @return  {void}
+ */
+function formatName() {
+	var val = this.value;
 
-jQuery(document).ready(function () {
+	val = val.toLowerCase()
+		.replace(/\s+/g, '_')
+		.replace(/[^a-z0-9-_]+/g, '');
 
-	$('#field-name').on('keyup', function (){
-		var val = $(this).val();
+	this.value = val;
+}
 
-		val = val.toLowerCase()
-			.replace(/\s+/g, '_')
-			.replace(/[^a-z0-9-_]+/g, '');
+/**
+ * Set subresource name based on resource and cluster
+ *
+ * @return  {void}
+ */
+function setName() {
+	var resource = document.querySelector('#assoc-resourceid').selectedOptions[0].text.replace(/(- )+/, '');
+	var cluster = document.getElementById('field-cluster').value;
+	document.getElementById('field-name').value = resource + "-" + cluster;
+}
 
-		var rolename = $('#field-rolename');
-		if (rolename.length) {
-			rolename.val(val);
-		}
-		var listname = $('#field-listname');
-		if (listname.length) {
-			listname.val(val);
-		}
-	});
+document.addEventListener('DOMContentLoaded', function () {
+	// Asset
+	var name = document.getElementById('field-name');
+	if (name) {
+		name.addEventListener('keyup', function () {
+			var val = this.value;
 
-	$('#field-rolename,#field-listname').on('keyup', function (){
-		var val = $(this).val();
+			val = val.toLowerCase()
+				.replace(/\s+/g, '_')
+				.replace(/[^a-z0-9-_]+/g, '');
 
-		val = val.toLowerCase()
-			.replace(/\s+/g, '_')
-			.replace(/[^a-z0-9-_]+/g, '');
+			var rolename = document.getElementById('field-rolename');
+			if (rolename) {
+				rolename.value = val;
+			}
+			var listname = document.getElementById('field-listname');
+			if (listname) {
+				listname.value = val;
+			}
+		});
+	}
 
-		$(this).val(val);
-	});
+	var rolename = document.getElementById('field-rolename');
+	if (rolename) {
+		rolename.addEventListener('keyup', formatName);
+	}
+	var listname = document.getElementById('field-listname');
+	if (listname) {
+		listname.addEventListener('keyup', formatName);
+	}
 
-	// Subresources
+	// Subresource
+	var rid = document.getElementById('assoc-resourceid');
+	if (rid) {
+		rid.addEventListener('change', setName);
+	}
+	var cluster = document.getElementById('field-cluster');
+	if (cluster) {
+		cluster.addEventListener('change', setName);
+	}
 
-	/*$('#assoc-resourceid').on('change', function() {
-		var resource = $('#' + $(this).attr('id') + ' option:selected').text().replace(/(\- )+/, '');
-		var cluster = $('#field-cluster').val();
-		$('#field-name').val(resource + "-" + cluster);
-	});*/
-
-	// Autocomplete the fields related to resource name
-	$('#assoc-resourceid,#field-cluster').on('change', function() {
-		var resource = $('#assoc-resourceid option:selected').text().replace(/(- )+/, '');
-		var cluster = $('#field-cluster').val();
-		$('#field-name').val(resource + "-" + cluster);
-	});
-
-	$('#field-nodemem').on('keyup', function (){
-		var val = $(this).val();
-
-		val = val.toUpperCase().replace(/[^0-9]{1,4}[^PTGMKB]/g, '');
-
-		$(this).val(val);
-	});
+	var nodemem = document.getElementById('field-nodemem');
+	if (nodemem) {
+		nodemem.addEventListener('keyup', function () {
+			this.value = this.value.toUpperCase().replace(/[^0-9]{1,4}[^PTGMKB]/g, '');
+		});
+	}
 });
