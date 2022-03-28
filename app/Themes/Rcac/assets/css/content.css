@@ -712,7 +712,7 @@ table.orderproduct th {
 }
 .crmshortrow,
 .newsshortrow {
-	line-height: 0.7em;
+	line-height: 0.7;
 }
 .crmcontactdate {
 	font-weight: bold;
@@ -790,41 +790,6 @@ a.news-cancel:active {
 .panel-options a:last-child {
 	margin-right: 0;
 }
-
-/*
-tr.floatingBoxHidden {
-	display: none;
-}
-.floatingBoxHidden {
-	display: none;
-}
-.floatingBox {
-	width: 450px;
-	background-color: #fff;
-	font-weight: normal;
-	border: 1px solid #6c6c6c;
-	padding: 3px 10px;
-	line-height: 1.3em;
-}
-.floatingBoxSmall {
-	background-color: #fff;
-	font-weight: normal;
-	border: 1px solid #6c6c6c;
-	padding: 3px 10px;
-	margin: 0 10px 20px;
-	line-height: 1.3em;
-}
-.faqBoxHidden {
-	display: none;
-}
-.faqBox {
-	background-color: #fff;
-	font-weight: normal;
-	border: 1px solid #6c6c6c;
-	padding: 3px 10px;
-	margin: 3px 10px 20px;
-	line-height: 1.3em;
-}*/
 
 /* Staff */
 .profiles {
@@ -1044,7 +1009,7 @@ h6 a.heading-anchor {
 	opacity: 0;
 	position: absolute;
 	left: -0.5em;
-	line-height: 1.5rem;
+	line-height: 1.5;
 	font-size: 1rem;
 	color: #656565;
 }
@@ -1414,67 +1379,6 @@ table.mainTable th.headTop {
 table.mainTable th.headBottom {
 	border-bottom: 0px !important;
 }
-/*table.mainTable td.nameColumn1 {
-	width: 155px;
-}
-table.mainTable th.nameColumn1 {
-	border: 0;
-	width: 155px;
-}
-table.mainTable td.nameColumn2 {
-	width: 70px;
-}
-table.mainTable th.nameColumn2 {
-	border: 0;
-	width: 100px;
-}
-table.mainTable td.queueColumn {
-	text-align: center;
-	padding: 5px;
-}
-table.mainTable tr:hover td {
-	background-color: rgba(207, 181, 59, 0.6); 
-}
-table.mainTable th.queueColumnTop {
-	padding: 5px;
-	text-align: center;
-	font-weight: bold;
-}
-table.mainTable th.queueColumn {
-	text-align: left;
-}
-table.mainTable td.boxColumn {
-	width: 85px;
-}
-table.mainTable th.boxColumn {
-	border-top: 0;
-	border-bottom: 0;
-}
-table.mainTable td.actionColumn {
-	width: 100px;
-	white-space: nowrap;
-}
-table.mainTable th.actionColumn {
-	width: 100%;
-}
-table.mainTable td.actionColumn a img {
-	margin-left: 0;
-	margin-right: 0;
-}
-table.mainTable th.arrow_right a {
-	float: right;
-}
-table.mainTable th.hiddenHeader {
-	white-space: nowrap;
-	text-align: center;
-	font-size: 0;
-	line-height: 0;
-	visibility: hidden;
-	table-layout: fixed;
-	height: 0;
-	padding: 0;
-	overflow: hidden;
-}*/
 
 table .action-container,
 table .action-container {
@@ -1505,7 +1409,7 @@ table td.newsheadline {
 }
 table tr.crmshortrow,
 table tr.newsshortrow {
-	line-height: 0.7em;
+	line-height: 0.7;
 }
 table td.crmcontactdate,
 table td.newsdate {
@@ -1609,10 +1513,6 @@ table td.crmpostspacer {
 	height: 1px;
 	padding: 0;
 }
-/*div#DIV_crm table tbody tr:hover,
-tr:active {
-	background-color: #f1f1f1
-}*/
 
 tbody.report {
 	border-bottom: 1px solid #000;
@@ -1706,8 +1606,6 @@ img.newsdeleteresource {
 }
 .crm-comments .panel,
 .news-updates .panel {
-	/*background-color: #FDF0C3;
-	background-color: rgba(253,240,195, 0.4);*/
 	background-color: #fff;
 }
 .contentInner .issues-item ul.issue-comments,
@@ -2171,17 +2069,6 @@ table a.icn {
 	line-height: 1.3;
 }
 
-/*p.resource_name {
-	font-family: Techno,Impact,sans-serif;
-	font-size: 200%;
-	position: absolute;
-	z-index: 1;
-	margin: 0;
-	color: #a37b2c;
-	text-shadow: 0 0 1px #fff, 0 0 2px #ece4d5, 0 0 3px #dfd1b5, 0 0 4px #cab488, 0 0 5px #b59659;
-	bottom: 7px;
-	right: 13px;
-}*/
 .pic {
 	border: 1px solid #a0a0a0;
 	margin: 4px 6px;
@@ -2281,8 +2168,6 @@ img.profile_teaser_photo {
 	min-height: 88px;
 }
 p.profile_teaser_title {
-	/*font-style: italic;
-	margin-top: -1em;*/
 	margin: -0.5em 0 0 0;
 	color: #6b6b6b;
 }
