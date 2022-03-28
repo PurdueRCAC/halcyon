@@ -257,15 +257,25 @@ a.btn-info:active {
 .login a.btn {
 	font-size: 0.85rem;
 }
+.login .dropdown-menu {
+	font-size: 0.85rem;
+	background-color: #333;
+}
+.login .dropdown-menu .dropdown-divider {
+	border-top-color: #555;
+}
+.login .dropdown-menu .dropdown-item:hover {
+	background-color: #000;
+}
 .login .btn,
 .login a:link,
 .login a:visited {
-	color: #fff;
+	color: #eee;
 	font-weight: 400;
 	text-decoration: none;
 }
 .login a:not(.btn):hover {
-	color: #aaaaaa;
+	color: #fff;
 	font-weight: 400;
 	text-decoration: none;
 }

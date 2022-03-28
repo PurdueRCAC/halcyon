@@ -13609,7 +13609,7 @@ table.gsc-search-box .gsc-search-button {
 	background-color: #3b3b3b;
 	color: #ccc;
 	text-align: center;
-	line-height:1.5em
+	line-height:1.5
 }
 .bottom a,
 .bottom a:link,
@@ -13622,7 +13622,7 @@ table.gsc-search-box .gsc-search-button {
 .bottom p {
 	margin: 0 !important;
 	padding-bottom:0.5rem;
-  line-height:1.5em
+  line-height:1.5
 }
 @media (min-width: 768px) {
 	.bottom {
