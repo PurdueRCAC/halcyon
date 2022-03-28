@@ -183,7 +183,7 @@ class Twitter
 			$content = trim($content);
 			if (!$content)
 			{
-				$content = $attr['title'];
+				$content = $attrs['title'];
 			}
 			$desc = $content;
 		}
