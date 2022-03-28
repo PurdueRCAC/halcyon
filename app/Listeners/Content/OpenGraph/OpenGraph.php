@@ -4,6 +4,7 @@ namespace App\Listeners\Content\OpenGraph;
 use App\Modules\Pages\Events\PageMetadata;
 use App\Modules\Knowledge\Events\PageMetadata as KnowledgeMetadata;
 use App\Modules\News\Events\ArticleMetadata;
+use App\Modules\Resources\Events\AssetDisplaying;
 use Illuminate\Config\Repository;
 use Illuminate\Support\Str;
 
@@ -23,12 +24,13 @@ class OpenGraph
 		$events->listen(PageMetadata::class, self::class . '@handlePageMetadata');
 		$events->listen(KnowledgeMetadata::class, self::class . '@handlePageMetadata');
 		$events->listen(ArticleMetadata::class, self::class . '@handlePageMetadata');
+		$events->listen(AssetDisplaying::class, self::class . '@handleAssetDisplaying');
 	}
 
 	/**
 	 * Event after content has been displayed
 	 *
-	 * @param   PageMetadata  $event
+	 * @param   PageMetadata|KnowledgeMetadata|ArticleMetadata  $event
 	 * @return  string
 	 */
 	public function handlePageMetadata($event)
@@ -40,30 +42,80 @@ class OpenGraph
 		}
 
 		$page = $event->page;
+
+		$event->page = $this->buildTags($page, [
+			'title' => $page->title,
+			'description' => ($page->formattedBody ? $page->formattedBody : $page->body)
+		]);
+	}
+
+	/**
+	 * Event after content has been displayed
+	 *
+	 * @param   AssetDisplaying  $event
+	 * @return  string
+	 */
+	public function handleAssetDisplaying($event)
+	{
+		if (!app()->has('isAdmin')
+		 || app()->get('isAdmin'))
+		{
+			return;
+		}
+
+		$asset = $event->asset;
+
+		$event->asset = $this->buildTags($asset, [
+			'title' => $asset->name,
+			'description' => $asset->description,
+			'image' => $asset->picture
+		]);
+	}
+
+	/**
+	 * Build meta tags
+	 *
+	 * @param   object $page
+	 * @param   array  $attrs
+	 * @return  string
+	 */
+	protected function buildTags($page, $attrs = array())
+	{
 		$params = new Repository(config('listeners.content.opengraph', []));
 
-		// We need help variables as we cannot change the $page variable - such then will influence global settings
+		foreach (['title', 'image', 'description'] as $key)
+		{
+			if (!isset($attrs[$key]))
+			{
+				$attrs[$key] = null;
+			}
+		}
+
 		$tags = array();
 
 		// Title
-		if ($title = $params->get('title', $page->title))
+		if ($title = $params->get('title', $attrs['title']))
 		{
 			$tags['og:title'] = htmlspecialchars(Str::limit(strip_tags($title), 40));
 		}
 
 		// Type
-		$tags['og:type'] = $params->get('type', 'article');
+		$tags['og:type'] = $params->get('type', isset($attrs['type']) ? $attrs['type'] : 'article');
 
 		// Image
-		if ($img = $params->get('image'))
+		if ($img = $params->get('image', $attrs['image']))
 		{
-			$tags['og:image'] = url('/') . htmlspecialchars($img);
+			if (substr($img, 0, 4) != 'http')
+			{
+				$img = url($img);
+			}
+			$tags['og:image'] = htmlspecialchars($img);
 		}
 		else
 		{
 			// Try to find image in article
 			$img = 0;
-			$content = $page->body;
+			$content = $attrs['description'];
 
 			preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $content, $src);
 			if (isset($src[1]) && $src[1] != '')
@@ -125,7 +177,7 @@ class OpenGraph
 		if (!$desc)
 		{
 			// Clean up cases where content may be just encoded whitespace
-			$content = str_replace(['&amp;', '&nbsp;'], ['&', ' '], ($page->formattedBody ? $page->formattedBody : $page->body));
+			$content = str_replace(['&amp;', '&nbsp;'], ['&', ' '], $attrs['description']);
 			$content = strip_tags($content);
 			$content = str_replace(array("\n", "\t", "\r"), ' ', $content);
 			$content = preg_replace("/\s+/", ' ', $content);
@@ -133,14 +185,14 @@ class OpenGraph
 			$content = trim($content);
 			if (!$content)
 			{
-				$content = $page->title;
+				$content = $attr['title'];
 			}
 			$desc = $content;
 		}
 
-		$event->page->metadesc = $desc;
 		if ($desc)
 		{
+			$page->metadesc = $desc;
 			$tags['og:description'] = htmlspecialchars($desc);
 		}
 
@@ -183,6 +235,6 @@ class OpenGraph
 			$page->metadata->set($key, '<meta property="' . e($key) . '" content="' . e($val) . '" />');
 		}
 
-		$event->page = $page;
+		return $page;
 	}
 }

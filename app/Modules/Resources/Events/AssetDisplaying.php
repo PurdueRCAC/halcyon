@@ -11,7 +11,7 @@ class AssetDisplaying
 	 *
 	 * @var Asset
 	 */
-	private $asset;
+	public $asset;
 
 	/**
 	 * Content sections

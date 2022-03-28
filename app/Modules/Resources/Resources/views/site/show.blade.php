@@ -1,5 +1,32 @@
 @extends('layouts.master')
 
+@if ($resource->metadesc || $resource->metakey)
+@section('meta')
+	@if ($resource->metadesc)
+		<meta name="description" content="{{ $resource->metadesc }}" />
+	@endif
+	@if ($resource->metakey)
+		<meta name="keywords" content="{{ $resource->metakey }}" />
+	@endif
+@stop
+@endif
+
+@if ($resource->metadata)
+	@foreach ($resource->metadata->all() as $k => $v)
+		@if ($v)
+			@if ($v == '__comment__')
+				@push('meta')
+		{!! $k !!}
+@endpush
+			@else
+				@push('meta')
+		{!! $v !!}
+@endpush
+			@endif
+		@endif
+	@endforeach
+@endif
+
 @section('title'){{ $resource->type->name }}: {{ $resource->name }}@stop
 
 @php
