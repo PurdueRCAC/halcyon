@@ -1,115 +1,101 @@
 /* global $ */ // jquery.js
-/* global jQuery */ // jquery.js
 
-jQuery(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function () {
 	// Feedback
-	$('.btn-feedback').on('click', function (e) {
-		e.preventDefault();
+	document.querySelectorAll('.btn-feedback').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		$('#feedback-state').removeClass('hide');
-		var lbl = $('#feedback-label'),
-			val = $(this).data('feedback-text');
+			document.getElementById('feedback-state').classList.remove('hide');
+			var lbl = document.getElementById('feedback-label'),
+				val = this.getAttribute('data-feedback-text');
 
-		$('#feedback-type').val($(this).data('feedback-type'));
+			document.getElementById('feedback-type').value = this.getAttribute('data-feedback-type');
 
-		lbl.text($('#feedback-text').data(val + '-label'));
-		$('#feedback-response').text($('#feedback-response').data(val + '-label'));
+			lbl.innerHTML = document.getElementById('feedback-text').getAttribute('data-' + val + '-label');
+			document.getElementById('feedback-response').innerHTML = document.getElementById('feedback-response').getAttribute('data-' + val + '-label');
 
-		$('#question-state').addClass('hide');
+			document.getElementById('question-state').classList.add('hide');
+		});
 	});
 
-	$('#submit-feedback').on('click', function (e) {
+	document.getElementById('submit-feedback').addEventListener('click', function (e) {
 		e.preventDefault();
 
 		// Honeypot was filled
-		if ($('#feedback-hpt').val()) {
+		if (document.getElementById('feedback-hpt').value) {
 			return;
 		}
 
-		$('#feedback-state').addClass('hide');
+		document.getElementById('feedback-state').classList.add('hide');
 
-		var frm = $($(this).closest('form'));
+		var frm = this.closest('form');
+		var post = Object.fromEntries(new FormData(frm).entries());
 
-		$.ajax({
-			url: frm.data('api'),
-			type: 'post',
-			data: frm.serialize(),
-			dataType: 'json',
-			async: false,
-			success: function () {
-				$('#rating-done').removeClass('hide');
-			},
-			error: function () { // xhr, ajaxOptions, thrownError
-				$('#rating-error').removeClass('hide');
-			}
-		});
+		fetch(frm.getAttribute('data-api'), {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+				},
+				body: JSON.stringify(post),
+			})
+			.then(function () {
+				document.getElementById('rating-done').classList.remove('hide');
+			})
+			.catch(function () {
+				document.getElementById('rating-error').classList.remove('hide');
+			});
 	});
 
 	//----
 
-	$('[data-max-length]').on('keyup', function () {
-		var chars = $(this).val().length,
-			max = parseInt($(this).data('max-length')),
-			ctr = $(this).parent().find('.char-count');
-
-		if (chars) {
-			ctr.removeClass('hide');
-		} else {
-			ctr.addClass('hide');
-		}
-		ctr.text(max - chars);
-
-		if (chars >= max) {
-			var trimmed = $(this).val().substring(0, max);
-			$(this).val(trimmed);
-		}
-	});
-
-	var alias = $('#field-alias');
-	if (alias.length) {
-		$('#field-title').on('keyup', function () {
-			var val = $(this).val();
-
-			val = val.toLowerCase()
+	var alias = document.getElementById('field-alias');
+	if (alias) {
+		document.getElementById('field-title').addEventListener('keyup', function () {
+			alias.value = this.value.toLowerCase()
 				.replace(/\s+/g, '_')
 				.replace(/[^a-z0-9\-_]+/g, '');
-
-			alias.val(val);
 		});
 	}
 
-	$('#field-parent_id')
-		.on('change', function () {
-			$('#parent-path').html($(this).children("option:selected").data('path'));
+	var parent = document.getElementById('field-parent_id');
+	if (parent) {
+		parent.addEventListener('change', function () {
+			document.getElementById('parent-path').innerHTML = this.selectedOptions[0].getAttribute('data-path');
 		});
+	}
 
 	// Page editing
-	$('#content')
+	document.getElementById('content')
 		// Add confirm dialog to delete links
-		.on('click', 'a.delete', function (e) {
-			var res = confirm($(this).attr('data-confirm'));
-			if (!res) {
-				e.preventDefault();
+		.addEventListener('click', function (e) {
+			if (e.target.matches('a.delete')) {
+				var res = confirm(e.target.getAttribute('data-confirm'));
+				if (!res) {
+					e.preventDefault();
+				}
+				return res;
 			}
-			return res;
-		})
-		.on('click', 'a.edit,a.cancel', function (e) {
-			e.preventDefault();
 
-			var id = $(this).attr('data-id');
+			if (e.target.matches('a.edit')
+				|| e.target.matches('a.cancel')) {
+				e.preventDefault();
 
-			$('#page-form' + id).toggleClass('hide');
-			$('#page-content' + id).toggleClass('hide');
+				var id = e.target.getAttribute('data-id');
+
+				document.getElementById('page-form' + id).classList.toggle('hide');
+				document.getElementById('page-content' + id).classList.toggle('hide');
+			}
 		});
 
-	$('#pageform').on('submit', function (e) {
+	document.getElementById('pageform').addEventListener('submit', function (e) {
 		e.preventDefault();
 
-		var frm = $(this),
+		var frm = this,
 			invalid = false;
 
-		var elms = frm.find('input[required]');
-		elms.each(function (i, el) {
+		frm.querySelectorAll('input[required]').forEach(function (el) {
 			if (!el.value || !el.validity.valid) {
 				el.classList.add('is-invalid');
 				invalid = true;
@@ -117,8 +103,7 @@ jQuery(document).ready(function () {
 				el.classList.remove('is-invalid');
 			}
 		});
-		elms = frm.find('select[required]');
-		elms.each(function (i, el) {
+		frm.querySelectorAll('select[required]').forEach(function (el) {
 			if (!el.value || el.value <= 0) {
 				el.classList.add('is-invalid');
 				invalid = true;
@@ -126,8 +111,7 @@ jQuery(document).ready(function () {
 				el.classList.remove('is-invalid');
 			}
 		});
-		elms = frm.find('textarea[required]');
-		elms.each(function (i, el) {
+		frm.querySelectorAll('textarea[required]').forEach(function (el) {
 			if (!el.value || !el.validity.valid) {
 				el.classList.add('is-invalid');
 				invalid = true;
@@ -140,50 +124,48 @@ jQuery(document).ready(function () {
 			return false;
 		}
 
-		var btn = $('#save-page');
-		btn.addClass('processing');
-		/*var post = frm.serializeArray().reduce(function(obj, item) {
-			obj[item.name] = item.value;
-			return obj;
-		}, {});*/
-
-		//const frm = document.querySelector('form');
-		//const data = Object.fromEntries(new FormData(frm).entries());
+		var btn = document.getElementById('save-page');
+		btn.classList.add('processing');
 
 		var post = {},
 			k,
-			fields = frm.serializeArray();
-		for (var i = 0; i < fields.length; i++) {
-			if (fields[i].name.substring(0, 6) == 'params') {
+			fields = new FormData(frm);
+
+		for (var i of fields.keys()) {
+			if (i.substring(0, 6) == 'params') {
 				if (typeof (post['params']) === 'undefined') {
 					post['params'] = {};
 				}
-				k = fields[i].name.substring(7);
+				k = i.substring(7);
 
-				post['params'][k.substring(0, k.length - 1)] = fields[i].value;
+				post['params'][k.substring(0, k.length - 1)] = fields.get(i);
 			} else {
-				post[fields[i].name] = fields[i].value;
+				post[i] = fields.get(i);
 			}
 		}
 
-		$.ajax({
-			url: frm.data('api'),
-			type: (post['id'] ? 'put' : 'post'),
-			data: post,
-			dataType: 'json',
-			async: false,
-			success: function (response) {
-				if (response.url) {
-					window.location.href = response.url;
+		fetch(frm.getAttribute('data-api'), {
+				method: (post['id'] ? 'PUT' : 'POST'),
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+				},
+				body: JSON.stringify(post),
+			})
+			.then(function (response) {
+				return response.json();
+			})
+			.then(function (data) {
+				if (data.url) {
+					window.location.href = data.url;
 				} else {
-					window.location.reload();
+					window.location.reload(true);
 				}
-			},
-			error: function (xhr) {
-				btn.removeClass('processing');
-				frm.prepend('<div class="alert alert-danger">' + xhr.responseJSON.message + '</div>');
-			}
-		});
+			})
+			.catch(function (error) {
+				btn.classList.remove('processing');
+				frm.prepend('<div class="alert alert-danger">' + error + '</div>');
+			});
 	});
 
 	//----
@@ -195,7 +177,7 @@ jQuery(document).ready(function () {
 		modal: true
 	});
 
-	$('#add-page').on('click', function (e) {
+	document.getElementById('add-page').addEventListener('click', function (e) {
 		e.preventDefault();
 
 		dialog.dialog("open");
@@ -203,27 +185,29 @@ jQuery(document).ready(function () {
 
 	//----
 
-	$('.snippet-checkbox').on('change', function () {
-		if ($(this).is(':checked')) {
-			$('tr[data-parent=' + $(this).data('id') + ']')
-				.find('.snippet-checkbox')
-				.each(function (i, el) {
-					$(el).prop('checked', true).trigger('change');
+	document.querySelectorAll('.snippet-checkbox').forEach(function (el) {
+		el.addEventListener('change', function () {
+			const event = new Event('change');
+			const checked = this.checked;
+
+			document.querySelectorAll('tr[data-parent="' + this.getAttribute('data-id') + '"]').forEach(function (ele) {
+				ele.querySelectorAll('.snippet-checkbox').forEach(function (item) {
+					item.checked = checked;
+					item.dispatchEvent(event);
 				});
-		} else {
-			$('tr[data-parent=' + $(this).data('id') + ']')
-				.find('.snippet-checkbox')
-				.each(function (i, el) {
-					$(el).prop('checked', false).trigger('change');
-				});
-		}
+			});
+		});
 	});
-	$('.toggle-tree').on('click', function (e) {
-		e.preventDefault();
 
-		$(this).closest('tr').toggleClass('open');
+	document.querySelectorAll('.toggle-tree').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		$('tr[data-parent=' + $(this).data('id') + ']')
-			.toggleClass('d-none');
+			this.closest('tr').classList.toggle('open');
+
+			document.querySelectorAll('tr[data-parent="' + this.getAttribute('data-id') + '"]').forEach(function (ele) {
+				ele.classList.toggle('d-none');
+			});
+		});
 	});
 });
