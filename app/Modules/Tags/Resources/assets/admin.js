@@ -1,20 +1,15 @@
-/* global $ */ // jquery.js
-/* global jQuery */ // jquery.js
 /* global Halcyon */ // core.js
 
 document.addEventListener('DOMContentLoaded', function () {
 
-	document.querySelectorAll('.sluggable').forEach(function(el){
+	document.querySelectorAll('.sluggable').forEach(function (el) {
 		el.addEventListener('keyup', function () {
 			if (this.getAttribute('data-rel')) {
 				var alias = document.querySelector(this.getAttribute('data-rel'));
 
-				var val = this.value;
-				val = val.toLowerCase()
+				alias.value = this.value.toLowerCase()
 					.replace(/\s+/g, '_')
 					.replace(/[^a-z0-9_]+/g, '');
-
-				alias.value = val;
 			}
 		});
 	});
@@ -25,55 +20,69 @@ document.addEventListener('DOMContentLoaded', function () {
 
 			var name = document.querySelector(this.getAttribute('href'));
 			var btn = this;
+			var post = {
+				'parent_id': btn.getAttribute('data-id'),
+				'name': name.value
+			};
 
 			// create new relationship
-			$.ajax({
-				url: btn.getAttribute('data-api'),
-				type: 'post',
-				data: {
-					'parent_id': btn.getAttribute('data-id'),
-					'name': name.value
+			fetch(btn.getAttribute('data-api'), {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 				},
-				dataType: 'json',
-				async: false,
-				success: function (response) {
+				body: JSON.stringify(post),
+			})
+				.then(function (response) {
+					if (!response.ok) {
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
+							}
+							throw msg;
+						});
+					}
+
+					return response.json();
+				})
+				.then(function (response) {
 					Halcyon.message('success', btn.getAttribute('data-success'));
 
-					var c = $(name).closest('table');
-					var li = c.find('tr.hidden');
+					var c = name.closest('table');
+					var li = c.querySelector('tr.hidden');
 
 					if (typeof (li) !== 'undefined') {
-						var template = $(li)
-							.clone()
-							.removeClass('hidden');
+						var template = li.cloneNode(true);
 
-						template
-							.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
-							.data('id', response.id);
+						template.classList.remove('hidden');
+						template.setAttribute('id', template.getAttribute('id').replace(/\{id\}/g, response.id));
+						template.setAttribute('data-id', response.id);
 
-						template.find('a').each(function (i, el) {
-							$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.id));
+						template.querySelectorAll('a').forEach(function (el) {
+							el.setAttribute('data-api', el.getAttribute('data-api').replace(/\{id\}/g, response.id));
 						});
 
 						var content = template
-							.html()
+							.innerHTML
 							.replace(/\{id\}/g, response.id)
 							.replace(/\{name\}/g, response.name)
 							.replace(/\{slug\}/g, response.slug);
 
-						template.html(content).insertBefore(li);
+						template.innerHTML = content;
+						li.parentNode.insertBefore(template, li);
 					}
 
 					name.value = '';
-				},
-				error: function (xhr) { //xhr, ajaxOptions, thrownError
-					Halcyon.message('danger', xhr.responseJSON.message);
-				}
-			});
+				})
+				.catch(function (error) {
+					Halcyon.message('danger', error);
+				});
 		});
 	});
 
-	document.querySelector('#main').addEventListener('click', (e) => {
+	document.getElementById('main').addEventListener('click', (e) => {
 		if (!e.target.parentNode.matches('.remove-alias')) {
 			return;
 		}
@@ -87,19 +96,30 @@ document.addEventListener('DOMContentLoaded', function () {
 			var field = document.querySelector(btn.getAttribute('href'));
 
 			// delete relationship
-			$.ajax({
-				url: btn.getAttribute('data-api'),
-				type: 'delete',
-				dataType: 'json',
-				async: false,
-				success: function () {
+			fetch(btn.getAttribute('data-api'), {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+				}
+			})
+				.then(function (response) {
+					if (!response.ok) {
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
+							}
+							throw msg;
+						});
+					}
+
 					Halcyon.message('success', btn.getAttribute('data-success'));
 					field.remove();
-				},
-				error: function (xhr) {
-					Halcyon.message('danger', xhr.responseJSON.message);
-				}
-			});
+				})
+				.catch(function (error) {
+					Halcyon.message('danger', error);
+				});
 		}
 	});
 });
