@@ -19,34 +19,37 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
-	document.getElementById('submit-feedback').addEventListener('click', function (e) {
-		e.preventDefault();
+	var feedback = document.getElementById('submit-feedback');
+	if (feedback) {
+		feedback.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		// Honeypot was filled
-		if (document.getElementById('feedback-hpt').value) {
-			return;
-		}
+			// Honeypot was filled
+			if (document.getElementById('feedback-hpt').value) {
+				return;
+			}
 
-		document.getElementById('feedback-state').classList.add('hide');
+			document.getElementById('feedback-state').classList.add('hide');
 
-		var frm = this.closest('form');
-		var post = Object.fromEntries(new FormData(frm).entries());
+			var frm = this.closest('form');
+			var post = Object.fromEntries(new FormData(frm).entries());
 
-		fetch(frm.getAttribute('data-api'), {
+			fetch(frm.getAttribute('data-api'), {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 				},
-				body: JSON.stringify(post)
+				body: JSON.stringify(post),
 			})
-			.then(function () {
-				document.getElementById('rating-done').classList.remove('hide');
-			})
-			.catch(function () {
-				document.getElementById('rating-error').classList.remove('hide');
-			});
-	});
+				.then(function () {
+					document.getElementById('rating-done').classList.remove('hide');
+				})
+				.catch(function () {
+					document.getElementById('rating-error').classList.remove('hide');
+				});
+		});
+	}
 
 	//----
 
@@ -89,84 +92,87 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		});
 
-	document.getElementById('pageform').addEventListener('submit', function (e) {
-		e.preventDefault();
+	var pageform = document.getElementById('pageform');
+	if (pageform) {
+		pageform.addEventListener('submit', function (e) {
+			e.preventDefault();
 
-		var frm = this,
-			invalid = false;
+			var frm = this,
+				invalid = false;
 
-		frm.querySelectorAll('input[required]').forEach(function (el) {
-			if (!el.value || !el.validity.valid) {
-				el.classList.add('is-invalid');
-				invalid = true;
-			} else {
-				el.classList.remove('is-invalid');
-			}
-		});
-		frm.querySelectorAll('select[required]').forEach(function (el) {
-			if (!el.value || el.value <= 0) {
-				el.classList.add('is-invalid');
-				invalid = true;
-			} else {
-				el.classList.remove('is-invalid');
-			}
-		});
-		frm.querySelectorAll('textarea[required]').forEach(function (el) {
-			if (!el.value || !el.validity.valid) {
-				el.classList.add('is-invalid');
-				invalid = true;
-			} else {
-				el.classList.remove('is-invalid');
-			}
-		});
-
-		if (invalid) {
-			return false;
-		}
-
-		var btn = document.getElementById('save-page');
-		btn.classList.add('processing');
-
-		var post = {},
-			k,
-			fields = new FormData(frm);
-
-		for (var i of fields.keys()) {
-			if (i.substring(0, 6) == 'params') {
-				if (typeof (post['params']) === 'undefined') {
-					post['params'] = {};
+			frm.querySelectorAll('input[required]').forEach(function (el) {
+				if (!el.value || !el.validity.valid) {
+					el.classList.add('is-invalid');
+					invalid = true;
+				} else {
+					el.classList.remove('is-invalid');
 				}
-				k = i.substring(7);
+			});
+			frm.querySelectorAll('select[required]').forEach(function (el) {
+				if (!el.value || el.value <= 0) {
+					el.classList.add('is-invalid');
+					invalid = true;
+				} else {
+					el.classList.remove('is-invalid');
+				}
+			});
+			frm.querySelectorAll('textarea[required]').forEach(function (el) {
+				if (!el.value || !el.validity.valid) {
+					el.classList.add('is-invalid');
+					invalid = true;
+				} else {
+					el.classList.remove('is-invalid');
+				}
+			});
 
-				post['params'][k.substring(0, k.length - 1)] = fields.get(i);
-			} else {
-				post[i] = fields.get(i);
+			if (invalid) {
+				return false;
 			}
-		}
 
-		fetch(frm.getAttribute('data-api'), {
+			var btn = document.getElementById('save-page');
+			btn.classList.add('processing');
+
+			var post = {},
+				k,
+				fields = new FormData(frm);
+
+			for (var i of fields.keys()) {
+				if (i.substring(0, 6) == 'params') {
+					if (typeof (post['params']) === 'undefined') {
+						post['params'] = {};
+					}
+					k = i.substring(7);
+
+					post['params'][k.substring(0, k.length - 1)] = fields.get(i);
+				} else {
+					post[i] = fields.get(i);
+				}
+			}
+
+			fetch(frm.getAttribute('data-api'), {
 				method: (post['id'] ? 'PUT' : 'POST'),
 				headers: {
 					'Content-Type': 'application/json',
 					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 				},
-				body: JSON.stringify(post)
+				body: JSON.stringify(post),
 			})
-			.then(function (response) {
-				return response.json();
-			})
-			.then(function (data) {
-				if (data.url) {
-					window.location.href = data.url;
-				} else {
-					window.location.reload(true);
-				}
-			})
-			.catch(function (error) {
-				btn.classList.remove('processing');
-				frm.prepend('<div class="alert alert-danger">' + error + '</div>');
-			});
-	});
+				.then(function (response) {
+					return response.json();
+				})
+				.then(function (data) {
+					if (data.url) {
+						window.location.href = data.url;
+					} else {
+						window.location.reload(true);
+					}
+				})
+				.catch(function (error) {
+					btn.classList.remove('processing');
+					frm.prepend('<div class="alert alert-danger">' + error + '</div>');
+				});
+		});
+	}
 
 	//----
 
@@ -177,11 +183,14 @@ document.addEventListener('DOMContentLoaded', function () {
 		modal: true
 	});
 
-	document.getElementById('add-page').addEventListener('click', function (e) {
-		e.preventDefault();
+	var addpage = document.getElementById('add-page');
+	if (addpage) {
+		addpage.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		dialog.dialog("open");
-	});
+			dialog.dialog("open");
+		});
+	}
 
 	//----
 
