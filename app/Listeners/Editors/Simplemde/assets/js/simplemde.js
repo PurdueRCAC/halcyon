@@ -17,6 +17,8 @@ var smdeConfig = {
     autoDownloadFontAwesome: false
 };
 
+var simplemdes = new Array;
+
 document.addEventListener('DOMContentLoaded', function () {
     var els = document.querySelectorAll('.simplemde'),
         simplemde = null;
@@ -24,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
     els.forEach(function (el) {
         smdeConfig.element = el;
         simplemde = new SimpleMDE(smdeConfig);
+        simplemdes.push(simplemde);
     });
 });
 
@@ -31,5 +34,16 @@ document.addEventListener('initEditor', function (e) {
     if (e.target && (e.target.classList.contains('simplemde') || e.target.classList.contains('md'))) {
         smdeConfig.element = e.target;
         var simplemde = new SimpleMDE(smdeConfig);
+        simplemdes.push(simplemde);
+    }
+});
+
+document.addEventListener('refreshEditor', function (e) {
+    if (e.target && (e.target.classList.contains('simplemde') || e.target.classList.contains('md'))) {
+        for (var i = 0; i < simplemdes.length; i++) {
+            if (simplemdes[i].element == e.target) {
+                simplemdes[i].codemirror.setValue(e.target.value);
+            }
+        }
     }
 });
