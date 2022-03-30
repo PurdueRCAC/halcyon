@@ -2,6 +2,9 @@
 namespace App\Modules\Users\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Modules\Tags\Traits\Taggable;
+use App\Modules\History\Traits\Historable;
 use App\Modules\Users\Events\NoteCreated;
 use App\Modules\Users\Events\NoteUpdated;
 use App\Modules\Users\Events\NoteDeleted;
@@ -11,6 +14,8 @@ use App\Modules\Users\Events\NoteDeleted;
  */
 class Note extends Model
 {
+	use SoftDeletes, Historable, Taggable;
+
 	/**
 	 * The table to which the class pertains
 	 *
@@ -23,7 +28,7 @@ class Note extends Model
 	 *
 	 * @var  string
 	 */
-	public static $orderBy = 'user_id';
+	public static $orderBy = 'created_at';
 
 	/**
 	 * Default order direction for select queries
@@ -50,9 +55,7 @@ class Note extends Model
 	protected $dates = [
 		'created_at',
 		'updated_at',
-		'publish_up',
-		'publish_down',
-		'review_time',
+		'deleted_at',
 	];
 
 	/**
@@ -66,8 +69,71 @@ class Note extends Model
 		'deleted'  => NoteDeleted::class,
 	];
 
+/**
+	 * Runs extra setup code when creating/updating a new model
+	 *
+	 * @return  void
+	 */
+	protected static function boot()
+	{
+		parent::boot();
+
+		// Parse out hashtags and tag the record
+		static::created(function ($model)
+		{
+			preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $model->body, $matches);
+
+			if (!empty($matches[0]))
+			{
+				$tags = array();
+
+				foreach ($matches[0] as $match)
+				{
+					$tag = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
+
+					// Ignore purely numeric items as this is most likely
+					// a reference to some ID. e.g., ticket #1234
+					if (is_numeric($tag))
+					{
+						continue;
+					}
+
+					$tags[] = $tag;
+				}
+
+				$model->setTags($tags);
+			}
+		});
+
+		static::updated(function ($model)
+		{
+			preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $model->body, $matches);
+
+			if (!empty($matches[0]))
+			{
+				$tags = array();
+
+				foreach ($matches[0] as $match)
+				{
+					$tag = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
+
+					// Ignore purely numeric items as this is most likely
+					// a reference to some ID. e.g., ticket #1234
+					if (is_numeric($tag))
+					{
+						continue;
+					}
+
+					$tags[] = $tag;
+				}
+
+				$model->setTags($tags);
+			}
+		});
+	}
+
 	/**
-	 * Get parent member
+	 * Get user
 	 *
 	 * @return  object
 	 */
@@ -77,12 +143,78 @@ class Note extends Model
 	}
 
 	/**
-	 * Get parent category
+	 * Get creator
 	 *
 	 * @return  object
 	 */
-	/*public function category()
+	public function creator()
 	{
-		return $this->belongsToOne('App\Modules\Users\Models\Note\Category', 'category_id');
-	}*/
+		return $this->belongsTo(User::class, 'created_by');
+	}
+
+	/**
+	 * Get editor
+	 *
+	 * @return  object
+	 */
+	public function editor()
+	{
+		return $this->belongsTo(User::class, 'updated_by');
+	}
+
+	/**
+	 * Get formatted body
+	 *
+	 * @return string
+	 */
+	public function getFormattedBodyAttribute()
+	{
+		$text = $this->body;
+
+		if (class_exists('Parsedown'))
+		{
+			$mdParser = new \Parsedown();
+
+			$text = $mdParser->text(trim($text));
+		}
+
+		return $text;
+	}
+
+/**
+	 * Taggable namespace
+	 */
+	static $entityNamespace = 'usernote';
+
+	/**
+	 * Find all hashtags in the report
+	 *
+	 * @return  array
+	 */
+	public function getHashtagsAttribute()
+	{
+		$str = $this->body;
+
+		preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $str, $matches);
+
+		$hashtag = [];
+		if (!empty($matches[0]))
+		{
+			foreach ($matches[0] as $match)
+			{
+				$match = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
+
+				if (is_numeric($match))
+				{
+					continue;
+				}
+
+				$this->addTag($match);
+
+				$hashtag[] = $match;
+			}
+		}
+
+		return implode(', ', $hashtag);
+	}
 }

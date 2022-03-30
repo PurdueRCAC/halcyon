@@ -2,6 +2,7 @@
 
 @push('scripts')
 <script src="{{ asset('modules/users/js/users.js?v=' . filemtime(public_path() . '/modules/users/js/users.js')) }}"></script>
+<script src="{{ asset('modules/users/js/notes.js?v=' . filemtime(public_path() . '/modules/users/js/notes.js')) }}"></script>
 @endpush
 
 @php
@@ -84,30 +85,25 @@ app('pathway')
 										<th scope="row">{{ trans('users::users.name') }}</th>
 										<td>{{ $user->name }}</td>
 									</tr>
+								@php
+								$fields = [
+									'department' => 'Department',
+									'title' => 'Title',
+									'campus' => 'Campus',
+									'phone' => 'Phone',
+									'building' => 'Building',
+									'email' => 'Email',
+									'room' => 'Room',
+								];
+								@endphp
+								@foreach ($fields as $key => $name)
+									@if ($val = $user->{$key})
 									<tr>
-										<th scope="row">Title</th>
-										<td>{!! $user->title ? e($user->title) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
+										<th scope="row">{{ $name }}</th>
+										<td>{{ $val }}</td>
 									</tr>
-									<tr>
-										<th scope="row">Campus</th>
-										<td>{!! $user->campus ? e($user->campus) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
-									</tr>
-									<tr>
-										<th scope="row">Phone</th>
-										<td>{!! $user->phone ? e($user->phone) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
-									</tr>
-									<tr>
-										<th scope="row">Building</th>
-										<td>{!! $user->building ? e($user->building) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
-									</tr>
-									<tr>
-										<th scope="row">Email</th>
-										<td>{{ $user->email }}</td>
-									</tr>
-									<tr>
-										<th scope="row">Room</th>
-										<td>{!! $user->roomnumber ? e($user->roomnumber) : '<span class="none">' . trans('global.unknown') . '</span>' !!}</td>
-									</tr>
+									@endif
+								@endforeach
 									<tr>
 										<th scope="row">{{ trans('users::users.organization id') }}</th>
 										<td>{{ $user->puid }}</td>
@@ -119,7 +115,6 @@ app('pathway')
 								<caption class="sr-only">Usernames</caption>
 								<thead>
 									<tr>
-										<th scope="col">ID</th>
 										<th scope="col">Username</th>
 										<th scope="col">Created</th>
 										<th scope="col">Removed</th>
@@ -129,9 +124,6 @@ app('pathway')
 								<tbody>
 									@foreach ($user->usernames()->withTrashed()->orderBy('id', 'asc')->get() as $username)
 									<tr<?php if ($username->trashed()) { echo ' class="trashed"'; } ?>>
-										<td>
-											{{ $username->id }}
-										</td>
 										<td>
 											{{ $username->username }}
 										</td>
@@ -169,7 +161,7 @@ app('pathway')
 													@endif
 												</time>
 											@else
-												{{ trans('global.never') }}
+												<span class="text-muted">{{ trans('global.never') }}</span>
 											@endif
 										</td>
 									</td>
@@ -386,13 +378,15 @@ app('pathway')
 						<div class="col-md-6">
 							<?php
 							$notes = $user->notes()->orderBy('created_at', 'desc')->get();
-							if (count($notes)):
+							//if (count($notes)): ?>
+								<ul id="note_list">
+									<?php
 								foreach ($notes as $note):
 									?>
-									<div class="card">
+									<?php /*<div class="card">
 										<div class="card-body">
-											<h4 class="card-title">{{ $note->subject }}</h4>
-											{!! $note->body !!}
+											<h4 class="card-title">{{ $note->created_at }}</h4>
+											<div id="note_{{ $note->id }}_body">{!! $note->body !!}</div>
 										</div>
 										<div class="card-footer">
 											<div class="row">
@@ -413,49 +407,137 @@ app('pathway')
 												<div class="col-md-6 text-right">
 													@if (auth()->user()->can('manage users.notes'))
 														<button data-api="{{ route('api.users.notes.update', ['id' => $note->id]) }}" class="btn btn-sm btn-secondary">
-															<span class="icon-edit glyph">{{ trans('global.edit') }}</span>
+															<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.edit') }}</span>
 														</button>
 														<button data-api="{{ route('api.users.notes.delete', ['id' => $note->id]) }}" class="btn btn-sm btn-danger">
-															<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+															<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.trash') }}</span>
 														</button>
 													@endif
 												</div>
 											</div>
 										</div>
-									</div>
+									</div>*/ ?>
+									<li id="note_{{ $note->id }}" data-api="{{ route('api.users.notes.update', ['id' => $note->id]) }}" class="list-group-item">
+										<div id="note_{{ $note->id }}_text" class="hide-when-editing">
+											{!! $note->formattedBody !!}
+										</div>
+										<div id="note_{{ $note->id }}_edit" class="show-when-editing">
+											<div class="form-group">
+												<label for="note_{{ $note->id }}_body" class="sr-only">{{ trans('users::notes.note') }}</label>
+												<!-- <textarea name="note" id="note_{{ $note->id }}_note" class="form-control" cols="45" rows="3">{{ $note->note }}</textarea> -->
+												{!! markdown_editor('note', $note->body, ['rows' => 2, 'id' => 'note_' . $note->id . '_body']) !!}
+											</div>
+											<div class="form-group text-right">
+												<button class="btn btn-secondary note-save" data-parent="#note_{{ $note->id }}">{{ trans('global.button.save') }}</button>
+												<a href="#note_{{ $note->id }}" class="btn btn-link note-cancel">
+													{{ trans('global.button.cancel') }}
+												</a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-9 text-muted">
+												{{ trans('users::notes.posted by', ['who' => ($note->creator ? $note->creator->name : trans('global.unknown')), 'when' => $note->created_at->format('M d, Y')]) }}
+											</div>
+											<div class="col-md-3 text-right">
+												<a href="#note_{{ $note->id }}_note" class="note-edit hide-when-editing">
+													<span class="fa fa-pencil"><span class="sr-only">{{ trans('global.button.edit') }}</span></span>
+												</a>
+												<a href="#note_{{ $note->id }}" class="note-delete text-danger" data-confirm="{{ trans('global.confirm delete') }}">
+													<span class="fa fa-trash"><span class="sr-only">{{ trans('global.button.delete') }}</span></span>
+												</a>
+											</div>
+										</div>
+									</li>
+
+									<?php /*<div id="note_{{ $note->id }}_dialog" data-id="{{ $note->id }}" title="Edit Note" class="modal dialog details-dialog" aria-hidden="true">
+										<div class="modal-dialog">
+											<form method="post" class="modal-content" action="{{ route('admin.users.store') }}">
+												<div class="modal-header">
+													<h3 class="modal-title">Edit Note</h3>
+													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<div class="form-group">
+														<label for="note_{{ $note->id }}_body">{{ trans('users::notes.body') }}: <span class="required">{{ trans('global.required') }}</span></label>
+														{!! markdown_editor('body', $note->body, ['rows' => 10, 'class' => 'minimal no-footer', 'maxlength' => 5000, 'id' => 'note_' . $note->id . '_body']) !!}
+														<span class="form-text text-muted">{!! trans('users::notes.body formatting') !!}</span>
+														<span class="invalid-feedback">{{ trans('users::notes.invalid.body') }}</span>
+													</div>
+
+													<div class="form-group text-right">
+														<input type="submit" class="btn btn-info" value="{{ trans('global.button.update') }}" />
+													</div>
+												</div>
+
+												@csrf
+											</form>
+										</div>
+									</div>*/?>
 									<?php
 								endforeach;
-							else:
+								?>
+								<li id="note_<?php echo '{id}'; ?>" class="list-group-item d-none" data-api="{{ route('api.users.notes') }}/<?php echo '{id}'; ?>">
+									<div id="note_<?php echo '{id}'; ?>_text" class="hide-when-editing">
+									</div>
+									<div id="note_<?php echo '{id}'; ?>_edit" class="show-when-editing">
+										<div class="form-group">
+											<label for="note_<?php echo '{id}'; ?>_body" class="sr-only">{{ trans('users::notes.note') }}</label>
+											<textarea name="note" id="note_<?php echo '{id}'; ?>_body" class="form-control md" cols="45" rows="3"></textarea>
+										</div>
+										<div class="form-group text-right">
+											<button class="btn btn-secondary note-save" data-parent="#note_<?php echo '{id}'; ?>">{{ trans('global.button.save') }}</button>
+											<a href="#note_<?php echo '{id}'; ?>" class="btn btn-link note-cancel">
+												{{ trans('global.button.cancel') }}
+											</a>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-9 text-muted">
+											{{ trans('users::notes.posted by', ['who' => '{who}', 'when' => '{when}']) }}
+										</div>
+										<div class="col-md-3 text-right">
+											<a href="#note_<?php echo '{id}'; ?>_note" class="note-edit hide-when-editing">
+												<span class="fa fa-pencil"><span class="sr-only">{{ trans('global.button.edit') }}</span></span>
+											</a>
+											<a href="#note_<?php echo '{id}'; ?>" class="note-delete text-danger" data-confirm="{{ trans('global.confirm delete') }}">
+												<span class="fa fa-trash"><span class="sr-only">{{ trans('global.button.delete') }}</span></span>
+											</a>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<?php
+							/*else:
 								?>
 								<p>No notes found.</p>
 								<?php
-							endif;
+							endif;*/
 							?>
 						</div>
 						<div class="col-md-6">
-							<?php /*<fieldset class="adminform">
-								<legend>{{ trans('global.details') }}</legend>
+							<form method="post" id="note_new" action="{{ route('admin.users.notes.store') }}" data-api="{{ route('api.users.notes.create') }}">
+								<fieldset class="adminform">
+									<legend>{{ trans('global.details') }}</legend>
 
-								<div class="form-group">
-									<label for="field-subject">{{ trans('users::notes.subject') }}: <span class="required">{{ trans('global.required') }}</span></label><br />
-									<input type="text" class="form-control required" name="fields[subject]" id="field-subject" value="" />
-								</div>
+									<div class="form-group">
+										<label for="note_new_body">{{ trans('users::notes.body') }}: <span class="required">{{ trans('global.required') }}</span></label>
+										{!! markdown_editor('body', '', ['rows' => 10, 'maxlength' => 5000, 'id' => 'note_new_body']) !!}
+										<span class="form-text text-muted">{!! trans('users::notes.body formatting') !!}</span>
+										<span class="invalid-feedback">{{ trans('users::notes.invalid.body') }}</span>
+									</div>
 
-								<div class="form-group">
-									<label for="field-body">{{ trans('users::notes.body') }}:</label>
-									{!! editor('fields[body]', '', ['rows' => 15, 'class' => 'minimal no-footer']) !!}
-								</div>
+									<div class="form-group text-right">
+										<input type="submit" class="btn btn-success note-add" data-parent="note_new" value="{{ trans('global.button.add') }}" />
+									</div>
+								</fieldset>
 
-								<div class="form-group">
-									<label for="field-state">{{ trans('global.state') }}:</label>
-									<select name="fields[state]" class="form-control" id="field-state">
-										<option value="0">{{ trans('global.unpublished') }}</option>
-										<option value="1">{{ trans('global.published') }}</option>
-										<option value="2">{{ trans('global.trashed') }}</option>
-									</select>
-								</div>
-							</fieldset>*/ ?>
+								<input type="hidden" name="userid" value="{{ $user->id }}" />
+								@csrf
+							</form>
 						</div>
+
 					</div>
 				</div><!-- / #user-notes -->
 			@endif

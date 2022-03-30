@@ -66,21 +66,15 @@ class CreateUsersTables extends Migration
 			{
 				$table->increments('id');
 				$table->integer('user_id')->unsigned()->default(0)->comment('Foreign Key to users.id');
-				//$table->integer('category_id')->unsigned()->default(0);
-				$table->string('subject', 100)->default('');
+				//$table->string('subject', 100)->default('');
 				$table->text('body');
-				$table->tinyInteger('state')->unsigned()->default(0);
-				$table->integer('checked_out')->unsigned()->default(0);
-				$table->dateTime('checked_out_time')->nullable();
+				//$table->string('body', 5000);
 				$table->integer('created_by')->unsigned()->default(0);
 				$table->dateTime('created_at')->nullable();
 				$table->integer('updated_by')->unsigned()->default(0);
 				$table->dateTime('updated_at')->nullable();
-				$table->dateTime('review_time');
-				//$table->dateTime('publish_up');
-				//$table->dateTime('publish_down');
+				$table->dateTime('deleted_at')->nullable();
 				$table->index('user_id');
-				//$table->index('category_id');
 
 				//$table->foreign('user_id')->references('id')->on('users');
 			});

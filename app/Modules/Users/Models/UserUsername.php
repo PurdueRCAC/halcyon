@@ -62,7 +62,8 @@ class UserUsername extends Model
 	protected $dates = [
 		'datecreated',
 		'dateremoved',
-		'datelastseen'
+		'datelastseen',
+		'dateverified',
 	];
 
 	/**
@@ -115,5 +116,15 @@ class UserUsername extends Model
 	public function hasVisited()
 	{
 		return !is_null($this->datelastseen);
+	}
+
+	/**
+	 * If user if the verified timestamp is set
+	 *
+	 * @return  bool
+	 **/
+	public function isEmailVerified()
+	{
+		return !is_null($this->dateverified);
 	}
 }

@@ -14,6 +14,7 @@ use App\Modules\Users\Models\UserUsername;
 use App\Modules\Users\Models\Facet;
 use App\Modules\Users\Events\UserSearching;
 use App\Modules\Users\Events\UserUpdated;
+use App\Modules\Users\Events\UserDeleted;
 use App\Halcyon\Access\Map;
 
 /**
@@ -672,12 +673,16 @@ class UsersController extends Controller
 	public function delete($id)
 	{
 		$user = User::findOrFail($id);
-		$username = $user->getUserUsername();
 
-		if (!$username->delete())
+		foreach ($user->usernames as $username)
 		{
-			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+			if (!$username->delete())
+			{
+				return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+			}
 		}
+
+		event(new UserDeleted($user));
 
 		return response()->json(null, 204);
 	}

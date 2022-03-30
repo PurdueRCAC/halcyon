@@ -192,12 +192,14 @@ class NotesController extends Controller
 	{
 		$request->validate([
 			'user_id' => 'required|integer|min:1',
-			'subject' => 'required|string|max:100',
+			//'subject' => 'required|string|max:100',
 			'body'    => 'required|string'
 		]);
 
 		$row = new Note;
-		$row->fill($request->all());
+		$row->user_id = $request->input('user_id');
+		$row->body = $request->input('body');
+		$row->created_by = auth()->user() ? auth()->user()->id : 0;
 
 		// Check that the provided user ID is valid
 		$user = $row->user;
@@ -212,9 +214,16 @@ class NotesController extends Controller
 			return response()->json(['message' => trans('global.messages.creation failed')], 500);
 		}
 
-		$row->api = route('api.users.notes.read', ['id' => $row->id]);
+		$data = $row->toArray();
+		$data['api'] = route('api.users.notes.read', ['id' => $row->id]);
+		$data['formattedbody'] = $row->formattedbody;
+		$data['creator'] = array(
+			'id' => $row->created_by,
+			'name' => ($row->creator ? $row->creator->name : trans('global.unknown')),
+			'username' => ($row->creator ? $row->creator->username : trans('global.unknown')),
+		);
 
-		return new JsonResource($row);
+		return new JsonResource($data);
 	}
 
 	/**
@@ -239,9 +248,16 @@ class NotesController extends Controller
 	{
 		$row = Note::findOrFail((int)$id);
 
-		$row->api = route('api.users.notes.read', ['id' => $row->id]);
+		$data = $row->toArray();
+		$data['api'] = route('api.users.notes.read', ['id' => $row->id]);
+		$data['formattedbody'] = $row->formattedbody;
+		$data['creator'] = array(
+			'id' => $row->created_by,
+			'name' => ($row->creator ? $row->creator->name : trans('global.unknown')),
+			'username' => ($row->creator ? $row->creator->username : trans('global.unknown')),
+		);
 
-		return new JsonResource($row);
+		return new JsonResource($data);
 	}
 
 	/**
@@ -285,21 +301,29 @@ class NotesController extends Controller
 	public function update(Request $request, $id)
 	{
 		$request->validate([
-			'subject' => 'nullable|string|max:100',
+			//'subject' => 'nullable|string|max:100',
 			'body'    => 'nullable|string'
 		]);
 
 		$row = Note::findOrFail($id);
-		$row->fill($request->all());
+		$row->body = $request->input('body');
+		$row->updated_by = auth()->user() ? auth()->user()->id : 0;
 
 		if (!$row->save())
 		{
 			return response()->json(['message' => trans('global.messages.creation failed')], 500);
 		}
 
-		$row->api = route('api.users.notes.read', ['id' => $row->id]);
+		$data = $row->toArray();
+		$data['api'] = route('api.users.notes.read', ['id' => $row->id]);
+		$data['formattedbody'] = $row->formattedbody;
+		$data['creator'] = array(
+			'id' => $row->created_by,
+			'name' => ($row->creator ? $row->creator->name : trans('global.unknown')),
+			'username' => ($row->creator ? $row->creator->username : trans('global.unknown')),
+		);
 
-		return new JsonResource($row);
+		return new JsonResource($data);
 	}
 
 	/**

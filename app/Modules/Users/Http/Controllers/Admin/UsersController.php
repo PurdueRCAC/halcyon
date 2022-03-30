@@ -12,6 +12,7 @@ use App\Modules\Users\Models\UserUsername;
 use App\Modules\Users\Models\Facet;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Users\Events\UserDisplay;
+use App\Modules\Users\Events\UserDeleted;
 use App\Halcyon\Http\StatefulRequest;
 use App\Halcyon\Access\Map;
 use App\Halcyon\Access\Role;
@@ -424,11 +425,12 @@ class UsersController extends Controller
 		{
 			$row = User::findOrFail($id);
 
-			if (!$row->delete())
+			foreach ($row->usernames as $username)
 			{
-				$request->session()->flash('error', $row->getError());
-				continue;
+				$username->delete();
 			}
+
+			event(new UserDeleted($row));
 
 			$success++;
 		}
