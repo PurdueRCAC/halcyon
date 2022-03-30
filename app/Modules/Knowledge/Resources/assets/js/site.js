@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					'Content-Type': 'application/json',
 					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 				},
-				body: JSON.stringify(post),
+				body: JSON.stringify(post)
 			})
 			.then(function () {
 				document.getElementById('rating-done').classList.remove('hide');
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					'Content-Type': 'application/json',
 					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 				},
-				body: JSON.stringify(post),
+				body: JSON.stringify(post)
 			})
 			.then(function (response) {
 				return response.json();
