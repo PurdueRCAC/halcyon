@@ -74,4 +74,6 @@ return [
 		'unixgroup name already exists' => 'Unix group ":name" already exists.',
 		'unixgroup invalid format' => 'Field `unixgroup` not in valid format.',
 	],
+	'cascade managers' => 'Automatically add managers to associated items',
+	'cascade managers desc' => 'When checked, this means that any time someone is added to the group as a manager or promoted to manager, they will automatically become a member of any associated unix groups, compute queues, etc.',
 ];

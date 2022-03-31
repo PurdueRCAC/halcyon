@@ -333,6 +333,10 @@ $i = 0;
 		</div>
 	</div>
 	<div class="card-body">
+		@if (!$group->cascademanagers && auth()->user()->can('manage groups'))
+			<p class="alert alert-info">Managers are <strong>not</strong> automatically added to queues and unix groups.</p>
+		@endif
+
 		<table class="table datatable" data-length="{{ count($managers) }}">
 			<caption class="sr-only">Managers</caption>
 			<thead>
@@ -420,7 +424,7 @@ $i = 0;
 							$m = null;
 							$disable = false;
 							// Managers get explicit access to owned queues, but not for free queues.
-							if (!$queue->free):
+							if (!$queue->free && $group->cascademanagers && !auth()->user()->can('manage groups')):
 								$disable = true;
 								$checked = ' checked="checked" disabled="disabled"';
 							else:
@@ -468,7 +472,7 @@ $i = 0;
 							//endforeach;
 							$csv[] = $checked ? 'yes' : 'no';
 
-							if (preg_match("/rcs[0-9]{4}0/", $unix->shortname)):
+							if (preg_match("/rcs[0-9]{4}0/", $unix->shortname) && $group->cascademanagers && !auth()->user()->can('manage groups')):
 								if ($group_boxes > 0 && $checked):
 									$checked .= ' disabled="disabled"';
 								endif;
@@ -636,7 +640,7 @@ $i = 0;
 								//endforeach;
 								$csv[] = $checked ? 'yes' : 'no';
 
-								if (preg_match("/rcs[0-9]{4}0/", $unix->shortname)):
+								if (preg_match("/rcs[0-9]{4}0/", $unix->shortname) && !auth()->user()->can('manage groups')):
 									if ($group_boxes > 0 && $checked):
 										$checked .= ' disabled="disabled"';
 									endif;
@@ -789,7 +793,7 @@ $i = 0;
 							//endforeach;
 							$csv[] = $checked ? 'yes' : 'no';
 
-							if (preg_match("/rcs[0-9]{4}0/", $unix->shortname)):
+							if (preg_match("/rcs[0-9]{4}0/", $unix->shortname) && !auth()->user()->can('manage groups')):
 								if ($group_boxes > 0 && $checked):
 									$checked .= ' disabled="disabled"';
 								endif;
@@ -967,7 +971,7 @@ $i = 0;
 
 		<div class="form-group">
 			<label for="new_membertype">Membership type</label>
-			<select class="form-control" id="new_membertype">
+			<select class="form-control" id="new_membertype"{{ $group->cascademanagers ? ' data-cascade="1"' : '' }}{{ auth()->user()->can('manage groups') ? '0' : ' data-disable="1"' }}>
 				<option value="1">Member</option>
 				<option value="2">Manager</option>
 				<option value="3">Usage Viewer</option>
@@ -1007,7 +1011,7 @@ $i = 0;
 					@foreach ($unixgroups as $name)
 						<div class="col-sm-4 unixData">
 							<div class="form-check">
-								<input type="checkbox" data-base="unixgroup-{{ $base }}" <?php if ($name->longname == $group->unixgroup) { echo 'checked disabled'; } ?> class="form-check-input add-unixgroup-member" name="unixgroup[]" id="unixgroup-{{ $name->id }}" value="{{ $name->id }}" />
+								<input type="checkbox" data-base="unixgroup-{{ $base }}" <?php if ($group->cascademanagers && $name->longname == $group->unixgroup) { echo (!auth()->user()->can('manage groups') ? 'checked disabled' : 'checked'); } ?> class="form-check-input add-unixgroup-member" name="unixgroup[]" id="unixgroup-{{ $name->id }}" value="{{ $name->id }}" />
 								<label class="form-check-label" for="unixgroup-{{ $name->id }}">{{ $name->longname }}</label>
 							</div>
 						</div>
@@ -1021,12 +1025,15 @@ $i = 0;
 		<div class="dialog-footer">
 			<div class="row">
 				<div class="col-md-12 text-right">
-					<input type="button" disabled="disabled" id="add_member_save" class="btn btn-success"
+					<button disabled="disabled" id="add_member_save" class="btn btn-success"
 						data-group="{{ $group->id }}"
 						data-api="{{ route('api.groups.members.create') }}"
 						data-api-unixgroupusers="{{ route('api.unixgroups.members.create') }}"
 						data-api-queueusers="{{ route('api.queues.users.create') }}"
-						value="{{ trans('global.button.save') }}" />
+						>
+						<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.saving') }}</span></span>
+						{{ trans('global.button.save') }}
+					</button>
 				</div>
 			</div>
 		</div>

@@ -32,7 +32,7 @@ class Queues
 	{
 		$queue = $event->queue;
 
-		if (!$queue || !$queue->group)
+		if (!$queue || !$queue->group || !$queue->group->cascademanagers)
 		{
 			return;
 		}

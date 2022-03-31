@@ -56,6 +56,14 @@ app('pathway')
 					<span class="invalid-feedback">{{ trans('groups::groups.invalid.title') }}</span>
 				</div>
 
+				<div class="form-group">
+					<div class="form-check">
+						<input type="checkbox" name="fields[cascademanagers]" id="field-cascade" class="form-check-input" value="1"{{ $row->cascademanagers ? ' checked="checked"' : '' }} />
+						<label for="field-cascade" class="form-check-label">{{ trans('groups::groups.cascade managers') }}</label>
+						<span class="form-text text-muted">{{ trans('groups::groups.cascade managers desc') }}</span>
+					</div>
+				</div>
+
 				<div class="row">
 					<div class="col col-md-6">
 						<div class="form-group mb-0">

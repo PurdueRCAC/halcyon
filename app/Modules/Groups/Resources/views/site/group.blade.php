@@ -425,6 +425,35 @@
 			});
 		});
 
+		$('#new_membertype').on('change', function(e) {
+			var sel = $(this);
+			if (sel.val() == 2 && sel.attr('data-cascade')) {
+				$('.add-queue-member').each(function(i, el) {
+					$(el).prop('checked', true)
+						.attr('checked', 'checked')
+						.trigger('change');
+					if (sel.attr('data-disable')) {
+						$(el).prop('disabled', true);
+					}
+				});
+				$('.add-unixgroup-member').each(function(i, el) {
+					var bx = $(el);
+					bx.prop('checked', true)
+						.attr('checked', 'checked')
+						.trigger('change');
+					if (sel.attr('data-disable') && bx.attr('data-base') && bx.attr('data-base') == bx.attr('id')) {
+						bx.prop('disabled', true);
+					}
+				});
+			} else {
+				$('.add-queue-member').each(function(i, el) {
+					if (sel.attr('data-disable')) {
+						$(el).prop('disabled', false);
+					}
+				});
+			}
+		});
+
 		$('.add-queue-member,.add-unixgroup-member').on('change', function(e){
 			e.preventDefault();
 
@@ -454,6 +483,8 @@
 				$('#add_member_error').removeClass('hide').html('Please specify the person(s) to add.');
 				return;
 			}
+
+			btn.addClass('processing');
 
 			var post = {
 				'groupid': btn.data('group'),
@@ -489,6 +520,11 @@
 						processed['users']++;
 
 						userid = data.userid;
+
+						if (!queues.length && !unixgroups.length) {
+							checkprocessed(processed, pending);
+							return;
+						}
 
 						queues.each(function(k, checkbox){
 							$.ajax({
@@ -575,9 +611,10 @@
 					}
 				});
 			});
-			// Done?
 
+			// Done?
 			if (errors.length) {
+				btn.removeClass('processing');
 				$('#add_member_error').removeClass('hide').html(errors.join('<br />'));
 			}
 		});

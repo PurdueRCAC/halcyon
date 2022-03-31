@@ -215,14 +215,24 @@ class GroupsController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.name' => 'required'
+			'fields.name' => 'required|max:255',
+			'fields.unixgroup' => 'nullable|max:10',
+			'fields.cascademanagers' => 'nullable|integer',
 		]);
 
 		$id = $request->input('id');
 
-		$row = $id ? Group::findOrFail($id) : new Group();
+		$row = $id ? Group::findOrFail($id) : new Group;
 		$row->fill($request->input('fields'));
-		$row->slug = $row->normalize($row->name);
+		//$row->slug = $row->normalize($row->name);
+		if (!$request->has('fields.cascademanagers') || !$request->input('fields.cascademanagers'))
+		{
+			$row->cascademanagers = 0;
+		}
+		else
+		{
+			$row->cascademanagers = 1;
+		}
 
 		if (!$row->created_by)
 		{

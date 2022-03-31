@@ -537,6 +537,50 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
+	$('#new_membertype').on('change', function (e) {
+		var sel = $(this);
+		if (sel.val() == 2 && sel.attr('data-cascade')) {
+			$('.add-queue-member').each(function (i, el) {
+				$(el).prop('checked', true)
+					.attr('checked', 'checked')
+					.trigger('change');
+				if (sel.attr('data-disable')) {
+					$(el).prop('disabled', true);
+				}
+			});
+			$('.add-unixgroup-member').each(function (i, el) {
+				var bx = $(el);
+				bx.prop('checked', true)
+					.attr('checked', 'checked')
+					.trigger('change');
+				if (sel.attr('data-disable') && bx.attr('data-base') && bx.attr('data-base') == bx.attr('id')) {
+					bx.prop('disabled', true);
+				}
+			});
+		} else {
+			$('.add-queue-member').each(function (i, el) {
+				if (sel.attr('data-disable')) {
+					$(el).prop('disabled', false);
+				}
+			});
+		}
+	});
+
+	$('.add-queue-member,.add-unixgroup-member').on('change', function (e) {
+		e.preventDefault();
+
+		var bx = $(this);
+
+		if (bx.is(':checked')) {
+			if (bx.attr('data-base') && bx.attr('data-base') != bx.attr('id')) {
+				$('#' + bx.attr('data-base'))
+					.prop('checked', true)
+					.attr('checked', 'checked')
+					.trigger('change');
+			}
+		}
+	});
+
 	$('#add_member_save').on('click', function (e) {
 		e.preventDefault();
 
@@ -574,6 +618,11 @@ document.addEventListener('DOMContentLoaded', function () {
 				async: false,
 				success: function () {
 					processed['users']++;
+
+					if (!queues.length && !unixgroups.length) {
+						checkprocessed(processed, pending);
+						return;
+					}
 
 					queues.each(function (k, checkbox) {
 						$.ajax({

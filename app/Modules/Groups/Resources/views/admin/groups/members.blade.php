@@ -130,10 +130,10 @@ foreach ($queues as $queue)
 				}
 				$user_requests[$me->userid][] = $me->userrequestid;
 
-				/*if (!$pending->contains('userid', $me->userid))
+				if (!$pending->contains('userid', $me->userid))
 				{
 					$pending->push($me);
-				}*/
+				}
 			}
 			/*elseif ($me->isManager())
 			{
@@ -402,9 +402,9 @@ $i = 0;
 							$m = null;
 							$disable = false;
 							// Managers get explicit access to owned queues, but not for free queues.
-							if (!$queue->free):
+							if (!$queue->free && $group->cascademanagers):
 								$disable = true;
-								$checked = ' checked="checked" disabled="disabled"';
+								$checked = ' checked="checked"';
 							else:
 								//foreach ($queue->users as $m):
 									if (isset($queue->qu[$member->userid])):
@@ -415,6 +415,7 @@ $i = 0;
 									endif;
 								//endforeach;
 							endif;
+
 							$csv[] = $checked ? 'yes' : 'no';
 							?>
 							<td class="col-queue text-nowrap text-center">
@@ -426,7 +427,7 @@ $i = 0;
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $queue->id }}"
 									data-api-create="{{ route('api.queues.users.create') }}"
-									data-api="{{ $checked && !$disable ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
+									data-api="{{ $checked && !$disable ? route('api.queues.users.delete', ['id' => $m]) : route('api.queues.users.create') }}"
 									value="1" />
 								<label for="queue-{{ $queue->id }}" class="form-check-label"><span class="sr-only">{{ $queue->name }}</span></label>
 								</span>
@@ -450,11 +451,11 @@ $i = 0;
 								endif;
 							$csv[] = $checked ? 'yes' : 'no';
 
-							if (preg_match("/rcs[0-9]{4}0/", $unix->shortname)):
+							/*if (preg_match("/rcs[0-9]{4}0/", $unix->shortname) && $group->cascademanagers):
 								if ($group_boxes > 0 && $checked):
 									$checked .= ' disabled="disabled"';
 								endif;
-							endif;
+							endif;*/
 							?>
 							<td class="col-unixgroup text-nowrap text-center">
 								<span class="form-chec">
@@ -622,11 +623,11 @@ $i = 0;
 								//endforeach;
 								$csv[] = $checked ? 'yes' : 'no';
 
-								if (preg_match("/rcs[0-9]{4}0/", $unix->shortname)):
+								/*if (preg_match("/rcs[0-9]{4}0/", $unix->shortname)):
 									if ($group_boxes > 0 && $checked):
 										$checked .= ' disabled="disabled"';
 									endif;
-								endif;
+								endif;*/
 								?>
 								<td class="text-center col-unixgroup">
 									<span class="form-chec">
@@ -780,11 +781,11 @@ $i = 0;
 							//endforeach;
 							$csv[] = $checked ? 'yes' : 'no';
 
-							if (preg_match("/rcs[0-9]{4}0/", $unix->shortname)):
+							/*if (preg_match("/rcs[0-9]{4}0/", $unix->shortname)):
 								if ($group_boxes > 0 && $checked):
 									$checked .= ' disabled="disabled"';
 								endif;
-							endif;
+							endif;*/
 							?>
 							<td class="text-center col-unixgroup">
 								<span class="form-chec">
@@ -966,7 +967,7 @@ $i = 0;
 
 		<div class="form-group">
 			<label for="new_membertype">Membership type</label>
-			<select class="form-control" id="new_membertype">
+			<select class="form-control" id="new_membertype"{{ $group->cascademanagers ? ' data-cascade="1"' : '' }}{{ auth()->user()->can('manage groups') ? '0' : ' data-disable="1"' }}>
 				<option value="1">Member</option>
 				<option value="2">Manager</option>
 				<option value="3">Usage Viewer</option>
@@ -1009,7 +1010,7 @@ $i = 0;
 						<div class="col-sm-4 unixData">
 							<div class="form-group">
 								<div class="form-check">
-									<input type="checkbox" data-base="unixgroup-{{ $base }}" <?php if ($name->longname == $group->unixgroup) { echo 'checked disabled'; } ?> class="form-check-input add-unixgroup-member" name="unixgroup[]" id="unixgroup-{{ $name->id }}" value="{{ $name->id }}" />
+									<input type="checkbox" data-base="unixgroup-{{ $base }}" <?php if ($group->cascademanagers && $name->longname == $group->unixgroup) { echo 'checked disabled'; } ?> class="form-check-input add-unixgroup-member" name="unixgroup[]" id="unixgroup-{{ $name->id }}" value="{{ $name->id }}" />
 									<label class="form-check-label" for="unixgroup-{{ $name->id }}">{{ $name->longname }}</label>
 								</div>
 							</div>

@@ -131,7 +131,8 @@ class GroupsController extends Controller
 	 */
 	public function create()
 	{
-		$row = new Group();
+		$row = new Group;
+		$row->cascademanagers = 1;
 
 		if ($fields = app('request')->old('fields'))
 		{
@@ -160,6 +161,7 @@ class GroupsController extends Controller
 		$rules = [
 			'fields.name' => 'required|max:255',
 			'fields.unixgroup' => 'nullable|max:10',
+			'fields.cascademanagers' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -173,8 +175,16 @@ class GroupsController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Group::findOrFail($id) : new Group();
+		$row = $id ? Group::findOrFail($id) : new Group;
 		$row->fill($request->input('fields'));
+		if (!$request->has('fields.cascademanagers') || !$request->input('fields.cascademanagers'))
+		{
+			$row->cascademanagers = 0;
+		}
+		else
+		{
+			$row->cascademanagers = 1;
+		}
 
 		// Verify UNIX group is sane - this is just a first pass,
 		// would still need to make sure this is not a duplicate anywhere, etc

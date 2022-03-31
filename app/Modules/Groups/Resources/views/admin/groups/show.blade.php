@@ -69,6 +69,17 @@ app('pathway')
 			</div>
 
 			<div class="form-group">
+				<dt>{{ trans('groups::groups.cascade managers') }}:</dt>
+				<dd class="mx-0">
+					@if ($row->cascademanagers)
+						<span class="text-success"><span class="fa fa-check-circle" aria-hidden="true"></span> {{ trans('global.yes') }}</span>
+					@else
+						<span class="text-warning"><span class="fa fa-ban" aria-hidden="true"></span> {{ trans('global.no') }}</span>
+					@endif
+				</dd>
+			</div>
+
+			<div class="form-group">
 				<dt>{{ trans('groups::groups.department') }}:</dt>
 				<dd class="mx-0">
 					@if (count($row->departments))

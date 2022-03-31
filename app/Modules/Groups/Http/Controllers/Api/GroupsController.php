@@ -364,6 +364,16 @@ class GroupsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
+	 * 		"name":          "cascademanagers",
+	 * 		"description":   "Cascade manager memberships",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "githuborgname",
 	 * 		"description":   "Github organization name",
 	 * 		"required":      false,
@@ -385,6 +395,7 @@ class GroupsController extends Controller
 	 * 						"githuborgname": "",
 	 * 						"datetimecreated": "2021-01-07T14:13:17.000000Z",
 	 * 						"datetimeremoved": null,
+	 * 						"cascademanagers": 1,
 	 * 						"api": "https://example.org/api/groups/1",
 	 * 						"department": [
 	 * 							{
@@ -411,7 +422,8 @@ class GroupsController extends Controller
 		$rules = [
 			'name' => 'required|string|max:48',
 			'unixgroup' => 'nullable|integer|max:10',
-			'userid' => 'nullable|integer'
+			'userid' => 'nullable|integer',
+			'cascademanagers' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -432,7 +444,13 @@ class GroupsController extends Controller
 		}
 
 		$row = new Group;
+		$row->cascademanagers = 1;
 		$row->name = $request->input('name');
+
+		if ($request->has('cascademanagers'))
+		{
+			$row->cascademanagers = $request->input('cascademanagers');
+		}
 
 		// Verify UNIX group is sane - this is just a first pass,
 		// would still need to make sure this is not a duplicate anywhere, etc
@@ -520,6 +538,7 @@ class GroupsController extends Controller
 	 * 						"githuborgname": "",
 	 * 						"datetimecreated": "2021-01-07T14:13:17.000000Z",
 	 * 						"datetimeremoved": null,
+	 * 						"cascademanagers": 1,
 	 * 						"api": "https://example.org/api/groups/1",
 	 * 						"department": [
 	 * 							{
@@ -622,6 +641,7 @@ class GroupsController extends Controller
 	 * 						"githuborgname": "",
 	 * 						"datetimecreated": "2021-01-07T14:13:17.000000Z",
 	 * 						"datetimeremoved": null,
+	 * 						"cascademanagers": 1,
 	 * 						"api": "https://example.org/api/groups/1",
 	 * 						"department": [
 	 * 							{
@@ -650,8 +670,9 @@ class GroupsController extends Controller
 	public function update(Request $request, int $id)
 	{
 		$rules = [
-			'name' => 'nullable|max:48',
-			'unixgroup' => 'nullable|max:10',
+			'name' => 'nullable|string|max:48',
+			'unixgroup' => 'nullable|string|max:10',
+			'cascademanagers' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -662,7 +683,11 @@ class GroupsController extends Controller
 		}
 
 		$row = Group::findOrFail($id);
-		//$row->update($request->all());
+
+		if ($request->has('cascademanagers'))
+		{
+			$row->cascademanagers = $request->input('cascademanagers');
+		}
 
 		if ($request->has('unixgroup'))
 		{
