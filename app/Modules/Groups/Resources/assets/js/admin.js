@@ -537,7 +537,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
-	$('#new_membertype').on('change', function (e) {
+	$('#new_membertype').on('change', function () {
 		var sel = $(this);
 		if (sel.val() == 2 && sel.attr('data-cascade')) {
 			$('.add-queue-member').each(function (i, el) {

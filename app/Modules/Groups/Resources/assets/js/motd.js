@@ -1,6 +1,5 @@
-/* global $ */ // jquery.js
 
-var _DEBUG = true;
+var _DEBUG = false;
 
 /**
  * Message of the Day
@@ -29,29 +28,30 @@ var motd = {
 
 		_DEBUG ? console.log('post: ' + message.getAttribute('data-api'), post) : null;
 
-		$.ajax({
-			url: message.getAttribute('data-api'),
-			type: 'post',
-			data: post,
-			dataType: 'json',
-			async: false,
-			success: function () {
-				window.location.reload();
+		fetch(message.getAttribute('data-api'), {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 			},
-			error: function (xhr) {
-				var msg = 'Failed to set notice.';
-
-				if (xhr.responseJSON) {
-					msg = xhr.responseJSON.message;
-					if (typeof msg === 'object') {
-						var lines = Object.values(msg);
-						msg = lines.join('<br />');
-					}
+			body: JSON.stringify(post)
+		})
+			.then(function (response) {
+				if (response.ok) {
+					window.location.reload();
 				}
-
-				motd.setError(msg);
-			}
-		});
+				return response.json();
+			})
+			.then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			})
+			.catch(function (error) {
+				motd.setError(error);
+			});
 	},
 
 	/**
@@ -100,27 +100,29 @@ var motd = {
 
 		_DEBUG ? console.log('delete: ' + btn.getAttribute('data-api')) : null;
 
-		$.ajax({
-			url: btn.getAttribute('data-api'),
-			type: 'delete',
-			async: false,
-			success: function () {
-				window.location.reload();
-			},
-			error: function (xhr) {
-				var msg = 'Failed to set notice.';
-
-				if (xhr.responseJSON) {
-					msg = xhr.responseJSON.message;
-					if (typeof msg === 'object') {
-						var lines = Object.values(msg);
-						msg = lines.join('<br />');
-					}
-				}
-
-				motd.setError(msg);
+		fetch(btn.getAttribute('data-api'), {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 			}
-		});
+		})
+			.then(function (response) {
+				if (response.ok) {
+					window.location.reload();
+				}
+				return response.json();
+			})
+			.then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			})
+			.catch(function (error) {
+				motd.setError(error);
+			});
 	}
 }
 
