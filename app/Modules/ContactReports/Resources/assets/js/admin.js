@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	$('.comments-show').on('click', function (e) {
 		e.preventDefault();
-		$($(this).attr('href')).toggleClass('hide');
+		$($(this).attr('href')).toggleClass('d-none');
 	});
 
 	var charts = new Array;

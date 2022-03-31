@@ -565,13 +565,13 @@ function AddUserClass(xml, crn) {
 						var results = JSON.parse(xml.responseText);
 						document.getElementById("HIDDEN_" + data['user'] + "_" + data['crn']).value = results['id'];
 						$('#searchuser_alert_' + data['crn'])
-							.removeClass('hide')
+							.removeClass('d-none')
 							.removeClass('alert-danger')
 							.addClass('alert-success')
 							.text('Successfully added person.');
 					} else {
 						$('#searchuser_alert_' + data['crn'])
-							.removeClass('hide')
+							.removeClass('d-none')
 							.removeClass('alert-success')
 							.addClass('alert-danger')
 							.text('An error occurred. Reload the page and try again. If problem persists contact help.');
@@ -711,7 +711,7 @@ $(document).ready(function () {
 			minLength: 2,
 			filter: /^[a-z0-9\-_ .,@+]+$/i,
 			open: function () {
-				$('#searchuser_alert_' + $(this).data('id')).addClass('hide');
+				$('#searchuser_alert_' + $(this).data('id')).addClass('d-none');
 				/*var dlg = $('#class_dialog_' + $(this).data('id'));
 				if (dlg.length) {
 					$(this).autocomplete("widget").zIndex(dlg.zIndex() + 1);
@@ -866,7 +866,7 @@ $(document).ready(function () {
 			} else {
 				var results = JSON.parse(xml.responseText);
 
-				$('#error-' + crn).removeClass('hide').html(results.message);
+				$('#error-' + crn).removeClass('d-none').html(results.message);
 			}
 		});
 	});
@@ -882,8 +882,8 @@ $(document).ready(function () {
 	});
 	$('.add-account').on('click', function (e) {
 		e.preventDefault();
-		$($(this).attr('href')).toggleClass('hide');
-		$($(this).data('hide')).toggleClass('hide');
+		$($(this).attr('href')).toggleClass('d-none');
+		$($(this).data('hide')).toggleClass('d-none');
 		var txt = $(this).html();
 		$(this).html($(this).data('text'));
 		$(this).data('text', txt);
@@ -906,7 +906,7 @@ $(document).ready(function () {
 		var target = $(this).attr('href');
 
 		if ($(target).length) {
-			$(target).toggleClass('hide');
+			$(target).toggleClass('d-none');
 			return;
 		}
 
@@ -971,7 +971,7 @@ $(document).ready(function () {
 				init: function () {
 					this.on("success", function (file, responseText) {
 						if (responseText.error.length) {
-							$('#import-error-' + $(el).attr('data-id')).removeClass('hide').html(responseText.error.join('<br />'));
+							$('#import-error-' + $(el).attr('data-id')).removeClass('d-none').html(responseText.error.join('<br />'));
 							return;
 						}
 
@@ -982,7 +982,7 @@ $(document).ready(function () {
 					Dropzone.forElement('.dropzone').removeAllFiles();
 				},
 				error: function (errorMessage) {
-					$('#import-error-' + $(el).attr('data-id')).removeClass('hide').html(errorMessage);
+					$('#import-error-' + $(el).attr('data-id')).removeClass('d-none').html(errorMessage);
 				}
 			});
 		});

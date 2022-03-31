@@ -229,7 +229,7 @@ app('pathway')
 	@csrf
 </form>
 
-<div id="new-account" class="modal dialog hide" title="{{ trans('courses::courses.choose member') }}">
+<div id="new-account" class="modal dialog" title="{{ trans('courses::courses.choose member') }}">
 	<form action="{{ route('admin.courses.members', ['account' => $account->id]) }}" method="post">
 		<div class="modal-body">
 			<h2 class="modal-title sr-only">{{ trans('courses::courses.add member') }}</h2>

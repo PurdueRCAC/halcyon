@@ -330,8 +330,8 @@ app('pathway')
 
 			if (count($comments) > 0):
 				?>
-				<div class="card ml-4 mb-3 hide" id="comments_{{ $row->id }}">
-					<ul class="list-group w-100">
+				<div class="ml-4 mb-3 d-none" id="comments_{{ $row->id }}">
+					<ul class="list-group">
 						@foreach ($comments as $comment)
 							<li id="comment_{{ $comment->id }}" class="list-group-item" data-api="{{ route('api.contactreports.comments.update', ['id' => $comment->id]) }}">
 								{!! $comment->formattedComment !!}

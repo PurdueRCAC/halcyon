@@ -421,7 +421,7 @@ Style guide
 						</div>
 					</div>
 				</div>
-				<div class="table-row hide">
+				<div class="table-row d-none">
 					Detailed info here
 				</div>
 				</div>

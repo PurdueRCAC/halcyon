@@ -254,29 +254,33 @@ app('pathway')
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />
 
-	<div id="new-account" class="hide" title="{{ trans('courses::courses.choose user') }}">
-		<h2 class="modal-title sr-only">{{ trans('courses::courses.choose user') }}</h2>
+	<div id="new-account" class="modal dialog" title="{{ trans('courses::courses.choose user') }}">
+		<div class="modal-body">
+			<h2 class="modal-title sr-only">{{ trans('courses::courses.choose user') }}</h2>
 
-		<div class="form-group">
-			<label for="field-userid">{{ trans('courses::courses.owner') }}</label>
-			<span class="input-group">
-				<input type="text" name="userid" id="field-userid" class="form-control form-user redirect" data-uri="{{ route('api.users.index') }}?search=%s" data-location="{{ route('admin.courses.create') }}?userid=%s" value="" />
-				<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
-			</span>
+			<div class="form-group">
+				<label for="field-userid">{{ trans('courses::courses.owner') }}</label>
+				<span class="input-group">
+					<input type="text" name="userid" id="field-userid" class="form-control form-user redirect" data-uri="{{ route('api.users.index') }}?search=%s" data-location="{{ route('admin.courses.create') }}?userid=%s" value="" />
+					<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
+				</span>
+			</div>
 		</div>
 	</div>
 
-	<div id="sync" class="hide" title="{{ trans('courses::courses.sync') }}">
-		<h2 class="modal-title sr-only">{{ trans('courses::courses.sync') }}</h2>
+	<div id="sync" class="modal dialog" title="{{ trans('courses::courses.sync') }}">
+		<div class="modal-body">
+			<h2 class="modal-title sr-only">{{ trans('courses::courses.sync') }}</h2>
 
-		<div class="row">
-			<div class="col-md-12 text-center">
-				<a href="{{ route('admin.courses.sync') }}" data-api="{{ route('api.courses.sync') }}" class="btn btn-sync bt-primary">
-					<span class="spinner-border spinner-border-sm d-none" role="status"><span class="hide">{{ trans('global.loading') }}</span></span>
-					{{ trans('courses::courses.sync') }}
-				</a>
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<a href="{{ route('admin.courses.sync') }}" data-api="{{ route('api.courses.sync') }}" class="btn btn-sync bt-primary">
+						<span class="spinner-border spinner-border-sm d-none" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
+						{{ trans('courses::courses.sync') }}
+					</a>
 
-				<div id="sync-output">
+					<div id="sync-output">
+					</div>
 				</div>
 			</div>
 		</div>

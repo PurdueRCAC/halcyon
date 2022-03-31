@@ -31,11 +31,11 @@ function CRMToggle(on, refresh) {
 		refresh = true;
 	}
 
-	$(".tab-add").addClass('hide');
-	$(".tab-edit").addClass('hide');
-	$(".tab-follow").addClass('hide');
-	$(".tab-search").addClass('hide');
-	$(".tab-" + on).removeClass('hide');
+	$(".tab-add").addClass('d-none');
+	$(".tab-edit").addClass('d-none');
+	$(".tab-follow").addClass('d-none');
+	$(".tab-search").addClass('d-none');
+	$(".tab-" + on).removeClass('d-none');
 
 	activetab = on;
 

@@ -416,7 +416,7 @@
 							</div>
 						</div>
 
-						<div class="alert alert-danger hide" id="error-{{ $class->crn }}"></div>
+						<div class="alert alert-danger d-none" id="error-{{ $class->crn }}"></div>
 
 						<div class="dialog-footer text-right">
 							<button class="btn btn-success account-save" data-crn="{{ $class->crn }}" data-api="{{ route('api.courses.update', ['id' => $class->id]) }}">
@@ -490,7 +490,7 @@
 
 								All registered students: <a href="#class_students_{{ $class->crn }}" class="show-students" data-crn="{{ $class->crn }}">[ View List ]</a><br/>
 
-								<ul id="class_students_{{ $class->crn }}" class="student-list hide">
+								<ul id="class_students_{{ $class->crn }}" class="student-list d-none">
 									<?php
 									$members = $class->members()
 										->where('membertype', '=', 0)
@@ -515,7 +515,7 @@
 									<div class="form-group">
 										<label for="searchuser_{{ $class->crn }}">Add instructors, TAs, or others:</label>
 										<input id="searchuser_{{ $class->crn }}" class="form-control search-user" data-id="{{ $class->crn }}" data-api="{{ route('api.users.index') }}?search=%s" value="" />
-										<div class="alert hide" id="searchuser_alert_{{ $class->crn }}" data-success="Successfully added person."></div>
+										<div class="alert d-none" id="searchuser_alert_{{ $class->crn }}" data-success="Successfully added person."></div>
 									</div>
 								@endif
 							</td>
@@ -588,13 +588,13 @@
 					@csrf
 				</form>
 
-				<div class="alert alert-danger hide" id="import-error-{{ $class->id }}"></div>
+				<div class="alert alert-danger d-none" id="import-error-{{ $class->id }}"></div>
 			</div>
 		@endforeach
 	@endif
 	</div>
 
-	<form id="add-account" method="post" class="create-form hide editform" action="{{ route('site.users.account.section', ['section' => 'class']) }}{{ request()->has('u') ? '?u=' . request()->input('u') : '' }}">
+	<form id="add-account" method="post" class="create-form d-none editform" action="{{ route('site.users.account.section', ['section' => 'class']) }}{{ request()->has('u') ? '?u=' . request()->input('u') : '' }}">
 		@if (auth()->user()->can('manage courses'))
 			<div class="form-group">
 				<label for="field-type">{{ trans('courses::courses.type') }}</label>
