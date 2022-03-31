@@ -239,9 +239,9 @@ class Gate
 		$rolePath = self::getRolePath($roleId);
 
 		// Default to the root asset node.
-		if (empty($asset))
+		if (!$asset)
 		{
-			$rootId = Asset::getRootId();
+			$asset = Asset::getRootId();
 		}
 
 		// Get the rules for the asset recursively to root if not already retrieved.

@@ -83,7 +83,7 @@ class UsersController extends Controller
 	 * @param  Request $request
 	 * @return Response
 	 */
-	public function index(Request $request)//: UserResourceCollection
+	public function index(Request $request)
 	{
 		// Get filters
 		$filters = array(
@@ -330,7 +330,7 @@ class UsersController extends Controller
 	 * @param  Request $request
 	 * @return Response
 	 */
-	public function create(Request $request): UserResource
+	public function create(Request $request)
 	{
 		$request->validate(array(
 			'name' => 'required|string|max:128',
@@ -398,7 +398,7 @@ class UsersController extends Controller
 	 * @param  integer  $id
 	 * @return Response
 	 */
-	public function read(Request $request, $id): UserResource
+	public function read(Request $request, $id)
 	{
 		if ($id === 'me')
 		{
@@ -514,7 +514,7 @@ class UsersController extends Controller
 	 * @param   integer $id
 	 * @return  Response
 	 */
-	public function update(Request $request, $id): UserResource
+	public function update(Request $request, $id)
 	{
 		$request->validate([
 			'name' => 'nullable|string|max:128',
