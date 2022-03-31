@@ -16,6 +16,7 @@ use App\Modules\Users\Events\UserSearching;
 use App\Modules\Users\Events\UserUpdated;
 use App\Modules\Users\Events\UserDeleted;
 use App\Halcyon\Access\Map;
+use App\Halcyon\Access\Gate;
 
 /**
  * Users
