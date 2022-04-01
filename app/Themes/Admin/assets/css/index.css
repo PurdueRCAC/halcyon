@@ -368,6 +368,10 @@ a {
   margin: 0;
   padding: 0;
 }
+a *,
+button * {
+  pointer-events: none;
+}
 blockquote {
   border-left: 4px solid rgba(0, 0, 0, 0.2);
   padding: 0 0 0 1rem;
@@ -2811,10 +2815,14 @@ border-bottom: 1px solid #d7d7d7;
   border-color: transparent transparent #d7d7d7 transparent;
   border-radius: 0;
 }
+html .ts-dropdown,
+html .ts-dropdown.form-control,
 .ui-datepicker.ui-widget-content,
 html .select2-dropdown {
   background-color: var(--ui-widget-bg);
   border-color: var(--ui-widget-br);
+  color: var(--input-color);
+  text-align: left;
 }
 html .select2-container--default .select2-selection--single,
 html .select2-container--default .select2-selection--multiple {
@@ -2828,6 +2836,12 @@ html .select2-container--default .select2-selection--multiple {
 html .select2-container--default .select2-selection--single input,
 html .select2-container--default .select2-selection--multiple input {
   color: var(--input-color);
+}
+html .ts-wrapper.single .ts-control:after {
+  border-color: var(--input-color) transparent transparent;
+}
+html .ts-wrapper.single.dropdown-active .ts-control:after {
+  border-color: transparent transparent var(--input-color);
 }
 html .select2-container--default .select2-selection--single,
 html .select2-container--default .select2-selection--single .select2-selection__rendered,
@@ -4432,6 +4446,7 @@ html div.dataTables_wrapper div.dataTables_info{
     border-color: var(--panel-border);
   }
 
+  html .full .ts-control,
   html .tagsinput,
   .form-control,
   .input-group,
@@ -4443,6 +4458,7 @@ html div.dataTables_wrapper div.dataTables_info{
     color: var(--input-color);
     /*box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);*/
   }
+  html .ts-wrapper.single.input-active .ts-control,
   html .select2-container--default .select2-results__option[aria-selected=true],
   .form-control:focus {
     background-color: var(--input-back-focus);

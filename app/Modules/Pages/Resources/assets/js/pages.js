@@ -1,106 +1,68 @@
-/* global $ */ // jquery.js
-/* global jQuery */ // jquery.js
-/* global Chart */ // vendor/chartjs/Chart.min.js
+/* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 
-jQuery(document).ready(function () {
-	var alias = $('#field-alias');
-	if (alias.length && !alias.val()) {
-		$('#field-title').on('keyup', function (){
-			var val = $(this).val();
-
-			val = val.toLowerCase()
+document.addEventListener('DOMContentLoaded', function () {
+	var alias = document.getElementById('field-alias');
+	if (alias && !alias.value) {
+		document.getElementById('field-title').addEventListener('keyup', function () {
+			alias.value = this.value.toLowerCase()
 				.replace(/\s+/g, '_')
 				.replace(/[^a-z0-9\-_]+/g, '');
-
-			alias.val(val);
 		});
 	}
 
-	$('#field-parent_id')
-		.on('change', function (){
-			$('#parent-path').html($(this).children("option:selected").data('path'));
-		});
-
-	$('body').on('click', '.delete-row', function (e) {
-		e.preventDefault();
-
-		//console.log($(this).attr('href'));
-
-		$($(this).attr('href')).remove();
-	});
-
-	$('.add-row').on('click', function(e){
-		e.preventDefault();
-
-		var tr = $('#' + $(this).data('container')).find('.input-group:last');
-
-		var clone  = tr.clone(true);
-			clone.removeClass('d-none');
-			clone.find('.btn').removeClass('disabled');
-
-		var cindex = $('#' + $(this).data('container')).find('.input-group').length;
-		var inputs = clone.find('input,select');
-
-		clone.attr('id', clone.attr('id').replace(/-\d+/, '-' + cindex));
-
-		inputs.val('');
-		inputs.each(function(i, el){
-			$(el).attr('name', $(el).attr('name').replace(/\[\d+\]/, '[' + cindex + ']'));
-			$(el).attr('id', $(el).attr('id').replace(/-\d+/, '-' + cindex));
-		});
-
-		clone.find('a').each(function (i, el) {
-			$(el).attr('href', $(el).attr('href').replace(/-\d+/, '-' + cindex));
-		});
-
-		tr.after(clone);
-	});
-
-	var charts = new Array;
-	$('.sparkline-chart').each(function (i, el) {
-		const ctx = el.getContext('2d');
-		const chart = new Chart(ctx, {
-			type: 'line',
-			data: {
-				labels: JSON.parse($(el).attr('data-labels')),
-				datasets: [
-					{
-						fill: false,
-						data: JSON.parse($(el).attr('data-values'))
-					}
-				]
-			},
-			options: {
-				responsive: false,
-				animation: {
-					duration: 0
-				},
-				legend: {
-					display: false
-				},
-				elements: {
-					line: {
-						borderColor: '#0071EB',
-						borderWidth: 1
-					},
-					point: {
-						radius: 0
-					}
-				},
-				scales: {
-					yAxes: [
-						{
-							display: false
-						}
-					],
-					xAxes: [
-						{
-							display: false
-						}
-					]
-				}
+	document.querySelector('body').addEventListener('click', function (e) {
+		if (e.target.matches('.delete-row') || e.target.matches('.icon-trash')) {
+			e.preventDefault();
+			var el = e.target;
+			if (e.target.matches('.icon-trash')) {
+				el = e.target.parentNode;
 			}
-		});
-		charts.push(chart);
+			document.querySelector(el.getAttribute('href')).remove();
+		}
 	});
+
+	document.querySelectorAll('.add-row').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			var tr = document.getElementById(this.getAttribute('data-container')).querySelector('.d-none');
+
+			var clone = tr.cloneNode(true);
+			clone.classList.remove('d-none');
+			clone.querySelectorAll('.btn').forEach(function (b) {
+				b.classList.remove('disabled');
+			});
+
+			var cindex = document.getElementById(this.getAttribute('data-container')).querySelectorAll('.input-group').length;
+			var inputs = clone.querySelectorAll('input,select');
+
+			clone.setAttribute('id', clone.getAttribute('id').replace(/-\d+/, '-' + cindex));
+
+			inputs.forEach(function (el) {
+				el.value = '';
+				el.setAttribute('name', el.getAttribute('name').replace(/\[\d+\]/, '[' + cindex + ']'));
+				el.setAttribute('id', el.getAttribute('id').replace(/-\d+/, '-' + cindex));
+			});
+
+			clone.querySelectorAll('a').forEach(function (el) {
+				el.setAttribute('href', el.getAttribute('href').replace(/-\d+/, '-' + cindex));
+			});
+
+			tr.parentNode.insertBefore(clone, tr);
+		});
+	});
+
+	var select = document.getElementById('field-parent_id');
+	if (select) {
+		if (typeof TomSelect !== 'undefined') {
+			var sel = new TomSelect(select, { plugins: ['dropdown_input'] });
+			sel.on('change', function () {
+				document.getElementById('parent-path').innerHTML = this.input.selectedOptions[0].getAttribute('data-path');
+			});
+		} else {
+			select.addEventListener('change', function () {
+				document.getElementById('parent-path').innerHTML = this.selectedOptions[0].getAttribute('data-path');
+			});
+		}
+	}
 });
