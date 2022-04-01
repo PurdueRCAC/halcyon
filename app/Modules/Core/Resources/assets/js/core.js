@@ -238,42 +238,21 @@ Halcyon.enableDisableBtn = function(num) {
  * @return  void
  */
 Halcyon.message = function(type, message) {
-	//Halcyon.removeMessages();
-	var container = $('#system-messages');
+	var container = document.getElementById('system-messages');
 
 	if (typeof message === 'object') {
 		var lines = Object.values(message);
 		message = lines.join('<br />');
 	}
 
-	var div = $('<div>')
-				.addClass('alert')
-				.addClass('alert-' + type)
-				.attr('role', 'alert')
-				.text(message);
+	var div = document.createElement('div');
+	div.classList.add('alert');
+	div.classList.add('alert-' + type);
+	div.setAttribute('role', 'alert');
+	div.innerHTML = message;
 
-	/*$.each(messages, function (type, item) {
-		var dt = $('<dt>')
-					.addClass(type)
-					.html(type)
-					.appendTo(dl);
+	container.appendChild(div);
 
-		var dd = $('<dd>')
-					.addClass(type)
-					.addClass('message');
-		var list = $('<ul>');
-
-		$.each(item, function (index, item, object) {
-			var li = $('<li>')
-						.html(item)
-						.appendTo(list);
-		});
-		list.appendTo(dd);
-		dd.appendTo(dl);
-	});*/
-	div.appendTo(container);
-
-	//$(document).trigger('renderMessages');
 	document.dispatchEvent(new Event('renderMessages'));
 };
 
@@ -284,8 +263,9 @@ Halcyon.message = function(type, message) {
  * @return  void
  */
 Halcyon.removeMessages = function() {
-	var children = $('#system-messages > *');
-	children.remove();
+	document.querySelectorAll('#system-messages > *').forEach(function(el) {
+		el.remove();
+	});
 }
 
 /**
@@ -324,10 +304,9 @@ Halcyon.isChecked = function(isitchecked, form) {
 Halcyon.popupWindow = function(mypage, myname, w, h, scroll) {
 	var winl = (screen.width - w) / 2;
 	var wint = (screen.height - h) / 2;
-	var winprops = 'height=' + h + ',width=' + w + ',top=' + wint + ',left=' + winl
-			+ ',scrollbars=' + scroll + ',resizable'
+	var winprops = 'height=' + h + ',width=' + w + ',top=' + wint + ',left=' + winl + ',scrollbars=' + scroll + ',resizable';
 
-	var win = window.open(mypage, myname, winprops)
+	var win = window.open(mypage, myname, winprops);
 	win.window.focus();
 }
 
