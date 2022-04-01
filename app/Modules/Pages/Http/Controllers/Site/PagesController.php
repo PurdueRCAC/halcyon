@@ -101,7 +101,7 @@ class PagesController extends Controller
 			$parents = Page::query()
 				->select('id', 'title', 'path', 'level')
 				->where('level', '>', 0)
-				->orderBy('lft', 'asc')
+				->orderBy('path', 'asc')
 				->get();
 		}
 
