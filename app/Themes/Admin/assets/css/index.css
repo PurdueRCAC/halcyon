@@ -368,8 +368,8 @@ a {
   margin: 0;
   padding: 0;
 }
-a *,
-button * {
+a.btn *,
+button.btn * {
   pointer-events: none;
 }
 blockquote {

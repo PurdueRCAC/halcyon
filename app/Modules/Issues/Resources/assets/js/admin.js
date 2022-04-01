@@ -143,9 +143,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.querySelectorAll('.comments-show').forEach(function (el) {
 		el.addEventListener('click', function (e) {
 			e.preventDefault();
-			document.getElementById(this.getAttribute('href')).classList.toggle('hide');
+			document.querySelector(this.getAttribute('href')).classList.toggle('hide');
 		});
 	});
+
 
 	document.querySelectorAll('.comment-add').forEach(function (el) {
 		el.addEventListener('click', function (e) {
@@ -247,15 +248,15 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	document.getElementById('main').addEventListener('click', function (e) {
-		if (e.target.parentNode.matches('.comment-edit')
+		if (e.target.matches('.comment-edit')
 			|| e.target.matches('.comment-cancel')) {
 			e.preventDefault();
 			e.target.closest('li').classList.toggle('is-editing');
 		}
 
-		if (e.target.parentNode.matches('.comment-delete')) {
-			if (confirm(e.target.parentNode.getAttribute('data-confirm'))) {
-				var field = document.querySelector(e.target.parentNode.getAttribute('href'));
+		if (e.target.matches('.comment-delete')) {
+			if (confirm(e.target.getAttribute('data-confirm'))) {
+				var field = document.querySelector(e.target.getAttribute('href'));
 
 				fetch(field.getAttribute('data-api'), {
 						method: 'DELETE',

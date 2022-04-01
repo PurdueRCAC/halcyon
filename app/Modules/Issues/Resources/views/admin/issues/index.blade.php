@@ -204,7 +204,7 @@ app('pathway')
 						</div>
 						<div class="flex-fill text-right">
 							@if (auth()->user()->can('edit issues'))
-								<a href="{{ route('admin.issues.edit', ['id' => $row->id]) }}">
+								<a class="btn" href="{{ route('admin.issues.edit', ['id' => $row->id]) }}">
 									<span class="fa fa-pencil" aria-hidden="true"></span>
 									<span class="sr-only"># {{ $row->id }}</span>
 								</a>

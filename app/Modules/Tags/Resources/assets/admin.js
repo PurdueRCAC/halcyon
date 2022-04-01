@@ -83,13 +83,13 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	document.getElementById('main').addEventListener('click', (e) => {
-		if (!e.target.parentNode.matches('.remove-alias')) {
+		if (!e.target.matches('.remove-alias')) {
 			return;
 		}
 
 		e.preventDefault();
 
-		var btn = e.target.parentNode;
+		var btn = e.target;
 		var result = confirm(btn.getAttribute('data-confirm'));
 
 		if (result) {

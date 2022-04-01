@@ -31,9 +31,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	document.querySelector('body').addEventListener('click', function (e) {
-		if (e.target.parentNode.matches('.delete-row')) {
+		if (e.target.matches('.delete-row')) {
 			e.preventDefault();
-			document.querySelector(e.target.parentNode.getAttribute('href')).remove();
+			document.querySelector(e.target.getAttribute('href')).remove();
 		}
 	});
 
