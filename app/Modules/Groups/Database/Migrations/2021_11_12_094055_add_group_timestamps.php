@@ -24,7 +24,7 @@ class AddGroupTimestamps extends Migration
 					$table->dateTime('datetimecreated')->nullable();
 				});
 
-				$groups = Group::query()->orderBy('id', 'asc')->get();
+				$groups = Group::query()->withTrashed()->orderBy('id', 'asc')->get();
 
 				foreach ($groups as $group)
 				{
