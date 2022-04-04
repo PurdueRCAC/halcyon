@@ -4,7 +4,7 @@
 	</div>
 @endif
 
-<div class="card panel panel-default">
+<div class="card panel panel-default mb-3">
 	<div class="card-header panel-heading">
 		Details
 	</div>
@@ -35,7 +35,7 @@
 	</div>
 </div>
 
-<div class="card panel panel-default" id="departments">
+<div class="card panel panel-default mb-3" id="departments">
 	<div class="card-header panel-heading">
 		<div class="row">
 			<div class="col-md-11">
@@ -161,7 +161,7 @@
 	</script> -->
 </div>
 
-<div class="card panel panel-default" id="fieldofscience">
+<div class="card panel panel-default mb-3" id="fieldofscience">
 	<div class="card-header panel-heading">
 		<div class="row">
 			<div class="col-md-11">
@@ -284,7 +284,7 @@
 	</script> -->
 </div>
 
-<div class="card panel panel-default">
+<div class="card panel panel-default mb-3">
 	@php
 	$unixgroups = $group->unixgroups()->orderBy('longname', 'asc')->get();
 	$used = 0;

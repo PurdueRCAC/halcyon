@@ -858,7 +858,7 @@ $pending = $group->pendingMembersCount;
 @endphp
 
 	<div class="contentInner">
-		<div class="row">
+		<div class="row mb-3">
 			<div class="col-md-9">
 				<h2>{{ $group->name }}</h2>
 			</div>
@@ -876,7 +876,7 @@ $pending = $group->pendingMembersCount;
 		</div>
 
 		<div id="everything">
-			<ul class="nav nav-tabs">
+			<ul class="nav nav-tabs mb-3">
 				<li class="nav-item">
 					<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $group->id, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}" id="group-overview" class="nav-link tab<?php if ($subsection == 'overview') { echo ' active activeTab'; } ?>">
 						Overview
