@@ -605,20 +605,11 @@ class User extends Model implements
 	 */
 	public static function findByEmail($email)
 	{
-		if (!filter_var($email, FILTER_VALIDATE_EMAIL))
-		{
-			return self::findByUsername($email);
-		}
-
-		$email = strstr($email, '@', true);
-
-		return self::findByUsername($email);
-
-		/*$user = self::query()
+		$username = UserUsername::query()
 			->where('email', '=', $email)
 			->first();
 
-		return $user ?: new self;*/
+		return $username ? $username->user : new self;
 	}
 
 	/**
