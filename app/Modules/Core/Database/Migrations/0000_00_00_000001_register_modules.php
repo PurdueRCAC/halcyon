@@ -48,12 +48,17 @@ class RegisterModules extends Migration
 				{
 					$element = strtolower(basename($dir));
 
+					if ($element == 'core')
+					{
+						continue;
+					}
+
 					DB::table('extensions')->insert([
 						'name'       => $element,
 						'element'    => $element,
 						'type'       => 'module',
 						'enabled'    => 1,
-						'protected'  => 1,
+						'protected'  => (in_array($element, ['core', 'config', 'dashboard', 'history', 'users', 'listeners', 'widgets', 'pages', 'menus', 'media', 'tags', 'themes']) ? 1 : 0),
 						'state'      => 1,
 						'access'     => 1,
 					]);
@@ -92,6 +97,11 @@ class RegisterModules extends Migration
 				foreach (app('files')->directories(app_path('Modules')) as $dir)
 				{
 					$element = strtolower(basename($dir));
+
+					if ($element == 'core')
+					{
+						continue;
+					}
 
 					DB::table('extensions')
 						->where('element', '=', $element)
