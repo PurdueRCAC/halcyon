@@ -98,7 +98,7 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 				<input type="hidden" name="fields[widget]" value="{{ $row->widget }}" />
 			</fieldset>
 
-			<?php if (empty($row->widget) || $row->widget == 'custom' || $row->widget == 'mod_custom') : ?>
+			<?php if (empty($row->widget) || strtolower($row->widget) == 'custom') : ?>
 				<fieldset class="adminform">
 					<legend>{{ trans('widgets::widgets.custom content') }}</legend>
 
