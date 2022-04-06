@@ -29,7 +29,7 @@ function NewDirType() {
 
 		input.value = " (Select User) ";
 
-		for (x=0;x<unixgroup_select.options.length;x++) {
+		for (x = 0; x < unixgroup_select.options.length; x++) {
 			if (unixgroup_select.options[x].innerHTML == parent_unixgroup.value) {
 				unixgroup_select.options[x].selected = true;
 				$.get(unixgroup_select.options[x].getAttribute('data-api'), NewDirUserPopulate);
@@ -46,7 +46,7 @@ function NewDirType() {
 
 		input.value = " (Select User) ";
 
-		for (x=0;x<unixgroup_select.options.length;x++) {
+		for (x = 0; x < unixgroup_select.options.length; x++) {
 			if (unixgroup_select.options[x].innerHTML == parent_unixgroup.value) {
 				unixgroup_select.options[x].selected = true;
 				WSGetURL(unixgroup_select.options[x].value, NewDirUserPopulate);
@@ -60,7 +60,7 @@ function NewDirType() {
 		var opt = document.createElement("option");
 		opt.innerHTML = parent_unixgroup.value;
 
-		for (x=0;x<unixgroup_select.options.length;x++) {
+		for (x = 0; x < unixgroup_select.options.length; x++) {
 			if (unixgroup_select.options[x].innerHTML == parent_unixgroup.value) {
 				opt.value = unixgroup_select.options[x].value;
 				WSGetURL(unixgroup_select.options[x].value, NewDirUserPopulate);
@@ -71,7 +71,7 @@ function NewDirType() {
 		unixgroup_select.classList.add('d-none'); //.style.display = "none";
 		autouserunixgroup_row.classList.add('d-none');//.style.display = "none";
 
-		$( unixgroup_select_decoy ).empty();
+		$(unixgroup_select_decoy).empty();
 		unixgroup_select_decoy.appendChild(opt);
 		unixgroup_select_decoy.disabled = true;
 	} else if (selected == "normal") {
@@ -104,22 +104,22 @@ function NewDirType() {
 function NewDirUserPopulate(results) {
 	var user_select = document.getElementById("new_dir_user_select");
 	var opt = document.createElement("option");
-		opt.innerHTML = "(Select User)";
-		opt.value = "";
+	opt.innerHTML = "(Select User)";
+	opt.value = "";
 
 	$(user_select).empty();
 	user_select.appendChild(opt);
 
 	//if (xml.status == 200) {
-		//var results = JSON.parse(xml.responseText);
+	//var results = JSON.parse(xml.responseText);
 
-		for (var x=0;x<results['members'].length;x++) {
-			opt = document.createElement("option");
-			opt.value = results['members'][x]['userid'];
-			opt.innerHTML = results['members'][x]['username'];
+	for (var x = 0; x < results['members'].length; x++) {
+		opt = document.createElement("option");
+		opt.value = results['members'][x]['userid'];
+		opt.innerHTML = results['members'][x]['username'];
 
-			user_select.appendChild(opt);
-		}
+		user_select.appendChild(opt);
+	}
 	//}
 }
 
@@ -132,7 +132,7 @@ function GuessDirUnixGroup() {
 	var input = document.getElementById("new_dir_input");
 	var unixgroup = document.getElementById("new_dir_unixgroup_select");
 
-	for (var x=0;x<unixgroup.options.length;x++) {
+	for (var x = 0; x < unixgroup.options.length; x++) {
 		var opt = unixgroup.options[x];
 		var bits = opt.innerHTML.split("-");
 		if (bits.length > 1) {
@@ -229,13 +229,13 @@ function NewDir(btn) {
 	}
 
 	var post = {
-		"name"       : input.value,
-		"parentstoragedirid"     : parentdir,
-		"groupid"      : group,
-		"resourceid"   : resource,
-		"bytes"      : bytes,
-		"bytesource" : bytesource,
-		"unixgroupid"  : unixgroup,
+		"name": input.value,
+		"parentstoragedirid": parentdir,
+		"groupid": group,
+		"resourceid": resource,
+		"bytes": bytes,
+		"bytesource": bytesource,
+		"unixgroupid": unixgroup,
 		//"storageresource" : storageresource,
 	};
 
@@ -243,12 +243,12 @@ function NewDir(btn) {
 		post['user'] = user;
 	}
 	if (type == "userprivate") {
-		post['groupread']  = "0";
+		post['groupread'] = "0";
 		post['groupwrite'] = "0";
 		post['publicread'] = "0";
 	}
 	if (type == "user") {
-		post['groupread']  = "1";
+		post['groupread'] = "1";
 		post['groupwrite'] = "0";
 		post['publicread'] = "0";
 	}
@@ -274,9 +274,7 @@ function NewDir(btn) {
 		post['groupread'] = "1";
 		post['groupwrite'] = "0";
 		post['autouserunixgroup'] = autouserunixgroup;
-	} 
-	//post = JSON.stringify(post);
-//console.log(post);return;
+	}
 
 	$.ajax({
 		url: btn.getAttribute('data-api'),
@@ -284,75 +282,18 @@ function NewDir(btn) {
 		data: post,
 		dataType: 'json',
 		async: false,
-		success: function() {
+		success: function () {
 			Halcyon.message('success', 'Directory created!');
 			window.location.reload(true);
 		},
 		error: function (xhr) { //xhr, reason, thrownError
-			/*var error = document.getElementById("new_dir_error");
-			var img = document.getElementById("new_dir_img");
-
-			if (xml.status == 200) {
-				window.location.reload(true);
-			} else if (xml.status == 409) {
-				error.innerHTML = "Directory already exists.";
-				if (img) {
-					img.src = "/include/images/error.png";
-				}
-			} else if (xml.status == 414) {
-				error.innerHTML = "Invalid quota.";
-				if (img) {
-					img.src = "/include/images/error.png";
-				}
-			} else if (xml.status == 415) {
-				error.innerHTML = "Invalid directory name.";
-				if (img) {
-					img.src = "/include/images/error.png";
-				}
-			} else {
-				error.innerHTML = "An error has occurred.";
-				if (img) {
-					img.src = "/include/images/error.png";
-				}
-			}*/
 			if (xhr.responseJSON) {
 				Halcyon.message('danger', xhr.responseJSON.message);
 			} else {
 				Halcyon.message('danger', 'Failed to create directory.');
 			}
-			console.log(xhr.responseText);
-			
 		}
 	});
-
-	/*WSPostURL("/ws/storagedir", post, function(xml) {
-		var error = document.getElementById("new_dir_error");
-		var img = document.getElementById("new_dir_img");
-
-		if (xml.status == 200) {
-			window.location.reload(true);
-		} else if (xml.status == 409) {
-			error.innerHTML = "Directory already exists.";
-			if (img) {
-				img.src = "/include/images/error.png";
-			}
-		} else if (xml.status == 414) {
-			error.innerHTML = "Invalid quota.";
-			if (img) {
-				img.src = "/include/images/error.png";
-			}
-		} else if (xml.status == 415) {
-			error.innerHTML = "Invalid directory name.";
-			if (img) {
-				img.src = "/include/images/error.png";
-			}
-		} else {
-			error.innerHTML = "An error has occurred.";
-			if (img) {
-				img.src = "/include/images/error.png";
-			}
-		}
-	});*/
 }
 
 /**
@@ -370,31 +311,18 @@ function DeleteDir(btn) {
 			type: 'delete',
 			dataType: 'json',
 			async: false,
-			success: function() {
+			success: function () {
 				Halcyon.message('success', 'Directory removed!');
 				window.location.reload(true);
 			},
-			error: function(xhr) {
-					if (xhr.responseJSON) {
-						Halcyon.message('danger', xhr.responseJSON.message);
-					} else {
-						Halcyon.message('danger', 'Failed to delete directory.');
-					}
-					console.log(xhr.responseText);
+			error: function (xhr) {
+				if (xhr.responseJSON) {
+					Halcyon.message('danger', xhr.responseJSON.message);
+				} else {
+					Halcyon.message('danger', 'Failed to delete directory.');
 				}
-			});
-
-		/*WSDeleteURL(dir, function(xml, dir) {
-			var error = document.getElementById(dir + "_error");
-
-			if (xml.status == 200) {
-				window.location.reload(true);
-			} else if (xml.status == 409) {
-				error.innerHTML = "Directory is not empty.";
-			} else {
-				error.innerHTML = "An error has occurred.";
 			}
-		}, dir);*/
+		});
 	}
 }
 
@@ -408,7 +336,7 @@ function DeleteDir(btn) {
 function ResetPermissions(btn) {
 	if (confirm(btn.getAttribute('data-confirm'))) {
 		var post = {
-			"fixpermissions" : "1"
+			"fixpermissions": "1"
 		};
 
 		$.ajax({
@@ -417,16 +345,15 @@ function ResetPermissions(btn) {
 			data: post,
 			dataType: 'json',
 			async: false,
-			success: function() {
+			success: function () {
 				window.location.reload(true);
 			},
-			error: function(xhr) {
+			error: function (xhr) {
 				if (xhr.responseJSON) {
 					Halcyon.message('danger', xhr.responseJSON.message);
 				} else {
 					Halcyon.message('danger', 'Failed to reset permissions.');
 				}
-				console.log(xhr.responseText);
 			}
 		});
 	}
@@ -435,8 +362,23 @@ function ResetPermissions(btn) {
 /**
  * Initiate event hooks
  */
-document.addEventListener('DOMContentLoaded', function() {
-	if ($('.searchable-select').length) {
+document.addEventListener('DOMContentLoaded', function () {
+	var selects = document.querySelectorAll('.searchable-select');
+	if (selects.length) {
+		selects.forEach(function (el) {
+			if (el.classList.contains('filter-submit')) {
+				el.style.width = '15em';
+			}
+			var sel = new TomSelect(el, { plugins: ['dropdown_input'] });
+			sel.on('item_select', function () {
+				if (sel.classList.contains('filter-submit')) {
+					sel.closest('form').submit();
+				}
+			});
+		});
+	}
+
+	/*if ($('.searchable-select').length) {
 		$('.searchable-select').select2()
 			.on('select2:select', function () {
 				if ($(this).hasClass('filter-submit')) {
@@ -444,7 +386,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			});
 	}
-	/*var autocompleteUsers = function(url) {
+	var autocompleteUsers = function(url) {
 		return function(request, response) {
 			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
 				response($.map(data.data, function (el) {
@@ -506,7 +448,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	var users = $(".form-users");
 	if (users.length) {
-		users.each(function(i, user){
+		users.each(function (i, user) {
 			user = $(user);
 			var cl = user.clone()
 				.attr('type', 'hidden')
@@ -518,7 +460,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				.after(cl);
 			user.autocomplete({
 				minLength: 2,
-				source: function( request, response ) {
+				source: function (request, response) {
 					return $.getJSON(user.attr('data-uri').replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
 						response($.map(data.data, function (el) {
 							return {
@@ -540,9 +482,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
-	var groups = $(".form-groups");
+	var groups = document.querySelectorAll(".form-groups");
 	if (groups.length) {
-		groups.each(function (i, group) {
+		groups.forEach(function (group, i) {
 			group = $(group);
 			var cl = group.clone()
 				.attr('type', 'hidden')
@@ -611,51 +553,53 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
-	$('#field-name').on('keyup', function () {
-		var val = $(this).val();
+	var name = document.getElementById('field-name');
+	if (name) {
+		name.addEventListener('keyup', function () {
+			this.value = this.value.toLowerCase()
+				.replace(/\s+/g, '-')
+				.replace(/[^a-z0-9\-_]+/g, '');
+		});
+	}
 
-		val = val.toLowerCase()
-			.replace(/\s+/g, '-')
-			.replace(/[^a-z0-9\-_]+/g, '');
+	var autouser = document.getElementById('field-autouser');
+	if (autouser) {
+		autouser.addEventListener('change', function () {
+			var opt = this.selectedOptions[0];
 
-		$(this).val(val);
-	});
+			var read = opt.getAttribute('data-read');
+			var write = opt.getAttribute('data-write');
 
-	$('#field-autouser').on('change', function () {
-		var opt = $($(this).find('option:selected')[0]);
+			if (this.value != '0') {
+				document.querySelector(this.getAttribute('data-update')).classList.remove('hidden');
+			} else {
+				document.querySelector(this.getAttribute('data-update')).classList.add('hidden');
+			}
 
-		var read = opt.attr('data-read');
-		var write = opt.attr('data-write');
+			document.getElementById('field-ownerread').checked = true;
+			document.getElementById('field-ownerwrite').checked = true;
+			document.getElementById('field-publicread').checked = false;
+			document.getElementById('field-publicwrite').checked = false;
 
-		if ($(this).val() != '0') {
-			$($(this).attr('data-update')).removeClass('hidden');
-		} else {
-			$($(this).attr('data-update')).addClass('hidden');
-		}
+			if (read == '1') {
+				document.getElementById('field-groupread').checked = true;
+			} else {
+				document.getElementById('field-groupread').checked = false;
+			}
 
-		$('#field-ownerread').prop('checked', true);
-		$('#field-ownerwrite').prop('checked', true);
-		$('#field-publicread').prop('checked', false);
-		$('#field-publicwrite').prop('checked', false);
+			if (write == '1') {
+				document.getElementById('field-groupwrite').checked = true;
+			} else {
+				document.getElementById('field-groupwrite').checked = false;
+			}
+		});
+	}
 
-		if (read == '1') {
-			$('#field-groupread').prop('checked', true);
-		} else {
-			$('#field-groupread').prop('checked', false);
-		}
-
-		if (write == '1') {
-			$('#field-groupwrite').prop('checked', true);
-		} else {
-			$('#field-groupwrite').prop('checked', false);
-		}
-	});
-
-	$(".tree").each(function(i, el){
+	$(".tree").each(function (i, el) {
 		var data = JSON.parse($('#' + $(el).attr('id') + '-data').html());
 
 		$(el).fancytree({
-			activate: function(event, data) {
+			activate: function (event, data) {
 				var node = data.node;
 				var did = node.data.id;
 
@@ -663,7 +607,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					modal: true,
 					width: '550px',
 					//position: { my: "left top", at: "left top", of: $( "#tree" ) },
-					close: function() {
+					close: function () {
 						$("#tree").fancytree("getActiveNode").setActive(false);
 					}
 				});
@@ -757,17 +701,17 @@ document.addEventListener('DOMContentLoaded', function() {
 					history.pushState(null, null, encodeURI(url));
 				}
 			},
-			renderColumns: function(event, data) {
+			renderColumns: function (event, data) {
 				var node = data.node,
-				$tdList = $(node.tr).find(">td");
+					$tdList = $(node.tr).find(">td");
 
-				if ( node.data.quota == '0 B') {
+				if (node.data.quota == '0 B') {
 					$tdList.eq(1).text("-");
 				} else {
 					$tdList.eq(1).text(node.data.quota);
 					$tdList.eq(1).attr("id", node.key + "_quota_td");
-					if ( node.data.quotaproblem == "1" ) {
-						if ( node.data.quota != "-" ) {
+					if (node.data.quotaproblem == "1") {
+						if (node.data.quota != "-") {
 							$tdList.eq(1).addClass('quotaProblem');
 							$tdList.eq(1).html(node.data.quota + '<span class="icon-error">Storage space is over-allocated. Quotas reduced until allocation balanced.</span>');
 						}
@@ -784,12 +728,18 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
-	$('#new_dir_input').on('change', function (){
-		GuessDirUnixGroup();
-	});
-	$('#new_dir_type').on('change', function (){
-		NewDirType();
-	});
+	var newdirinput = document.getElementById('new_dir_input');
+	if (newdirinput) {
+		newdirinput.addEventListener('change', function () {
+			GuessDirUnixGroup();
+		});
+	}
+	var newdirtype = document.getElementById('new_dir_type');
+	if (newdirtype) {
+		newdirtype.addEventListener('change', function () {
+			NewDirType();
+		});
+	}
 	/*$('#new_dir_user_select').on('change', function (){
 		NewDirUserSelected();
 	});
@@ -811,29 +761,41 @@ document.addEventListener('DOMContentLoaded', function() {
 		NewTopDir();
 	});*/
 
-	$('#new_dir').on('click', function(e) {
-		e.preventDefault();
-		NewDir(this);
-	});
+	var newdir = document.getElementById('new_dir');
+	if (newdir) {
+		newdir.addEventListener('click', function (e) {
+			e.preventDefault();
+			NewDir(this);
+		});
+	}
 
-	$('#deduct_radio').on('click', function() {
-		document.getElementById('new_dir_quota_deduct').focus();
-	});
-	$('#new_dir_quota_deduct').on('focus', function() {
-		document.getElementById('deduct_radio').checked = true;
-	});
+	var deduct = document.getElementById('deduct_radio');
+	if (deduct) {
+		deduct.addEventListener('click', function () {
+			document.getElementById('new_dir_quota_deduct').focus();
+		});
+	}
+	var newdirdeduct = document.getElementById('new_dir_quota_deduct');
+	if (newdirdeduct) {
+		newdirdeduct.addEventListener('focus', function () {
+			document.getElementById('deduct_radio').checked = true;
+		});
+	}
 
-	$('#unalloc_radio').on('click', function() {
-		document.getElementById('new_dir_quota_unalloc').focus();
-	});
-	$('#new_dir_quota_unalloc').on('focus', function() {
-		document.getElementById('unalloc_radio').checked = true;
-	});
+	var unalloc = document.getElementById('unalloc_radio');
+	if (unalloc) {
+		unalloc.addEventListener('click', function () {
+			document.getElementById('new_dir_quota_unalloc').focus();
+		});
+	}
+	var newdirunalloc = document.getElementById('new_dir_quota_unalloc');
+	if (newdirunalloc) {
+		newdirunalloc.addEventListener('focus', function () {
+			document.getElementById('unalloc_radio').checked = true;
+		});
+	}
 
-	/*$('.permissions-reset').on('click', function(e) {
-		e.preventDefault();
-		ResetPermissions($(this).data('dir'), $(this).data('path'));
-	});
+	/*
 	$('.unixgroup-edit').on('click', function(e) {
 		e.preventDefault();
 		EditUnixGroup($(this).data('dir'));
@@ -846,9 +808,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		e.preventDefault();
 		SetBaseName($(this).data('id'));
 	});*/
-	$('.dir-delete').on('click', function(e) {
-		e.preventDefault();
-		DeleteDir(this);
+	document.querySelectorAll('.dir-delete').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+			DeleteDir(this);
+		})
 	});
 	/*$('.dir-create-default').on('click', function(e) {
 		e.preventDefault();
@@ -868,12 +832,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		DistributeQuota($(this).data('dir'));
 	});*/
 
-	$('.permissions-reset').on('click', function(e) {
-		e.preventDefault();
-		ResetPermissions(this);
+	document.querySelectorAll('.permissions-reset').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+			ResetPermissions(this);
+		})
 	});
 
-	$('body').on('change', '.form-control', function(el){
+	$('body').on('change', '.form-control', function (el) {
 		var dialog = $(el).closest('.dialog');
 		if (dialog.length) {
 			$('#' + $(dialog).data('id') + '_save_button').prop('disabled', false);
@@ -886,10 +852,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		});*/
 	});
 
-	if ($('#storageresourceid_path').length) {
-		$('#storageresourceid')
-			.on('change', function () {
-				$('#storageresourceid_path').html($(this).children("option:selected").data('path'));
-			});
+	var srpath = document.getElementById('storageresourceid_path');
+	if (srpath) {
+		document.getElementById('storageresourceid').addEventListener('change', function () {
+			srpath.innerHTML = this.selectedOptions[0].getAttribute('data-path');
+		});
 	}
 });

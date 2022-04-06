@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css?v=' . filemtime(public_path('/modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css'))) }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js?v=' . filemtime(public_path('/modules/core/vendor/tom-select/js/tom-select.complete.min.js'))) }}"></script>
 <script src="{{ Module::asset('storage:js/admin.js') . '?v=' . filemtime(public_path() . '/modules/storage/js/admin.js') }}"></script>
 @endpush
 
@@ -59,6 +59,12 @@ app('pathway')
 				</div>
 			</div>
 			<div class="col filter-select col-md-8 text-right">
+				<!-- <div class="btn-group" role="group" aria-label="{{ trans('global.state') }}">
+					<a class="btn btn-outline-secondary<?php if ($filters['state'] == '*'): echo ' active"'; endif; ?>" href="{{ route('admin.storage.index', ['state' => '*']) }}">{{ trans('global.option.all states') }}</a>
+					<a class="btn btn-outline-secondary<?php if ($filters['state'] == 'active'): echo ' active"'; endif; ?>" href="{{ route('admin.storage.index', ['state' => 'active']) }}">{{ trans('global.active') }}</a>
+					<a class="btn btn-outline-secondary<?php if ($filters['state'] == 'inactive'): echo ' active"'; endif; ?>" href="{{ route('admin.storage.index', ['state' => 'inactive']) }}">{{ trans('global.inactive') }}</a>
+				</div> -->
+
 				<label class="sr-only" for="filter_state">{{ trans('global.state') }}</label>
 				<select name="state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.option.all states') }}</option>
