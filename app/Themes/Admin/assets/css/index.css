@@ -2999,7 +2999,7 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   left: 0px;
   bottom: 0px;
   border-right: 1px solid var(--menu-br);
-  z-index: 1;
+  z-index: 55;
 }
 #header h1 {
   margin: 1em;
