@@ -49,7 +49,7 @@ class QueuesController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) && session()->has('queues.filter_' . $key)
+			 && $request->has($key) //&& session()->has('queues.filter_' . $key)
 			 && $request->input($key) != session()->get('queues.filter_' . $key))
 			{
 				$reset = true;

@@ -35,7 +35,7 @@ class TaggedController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) && session()->has('tagged.filter_' . $key)
+			 && $request->has($key) //&& session()->has('tagged.filter_' . $key)
 			 && $request->input($key) != session()->get('tagged.filter_' . $key))
 			{
 				$reset = true;

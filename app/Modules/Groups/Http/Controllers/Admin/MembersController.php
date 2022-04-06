@@ -41,7 +41,7 @@ class MembersController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) && session()->has('groups.members.filter_' . $key)
+			 && $request->has($key) //&& session()->has('groups.members.filter_' . $key)
 			 && $request->input($key) != session()->get('groups.members.filter_' . $key))
 			{
 				$reset = true;

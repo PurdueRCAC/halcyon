@@ -39,7 +39,7 @@ class StorageController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) && session()->has('storage.filter_' . $key)
+			 && $request->has($key) //&& session()->has('storage.filter_' . $key)
 			 && $request->input($key) != session()->get('storage.filter_' . $key))
 			{
 				$reset = true;

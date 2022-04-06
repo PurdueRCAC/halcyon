@@ -36,7 +36,7 @@ class LevelsController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) && session()->has('users.levels.filter_' . $key)
+			 && $request->has($key) //&& session()->has('users.levels.filter_' . $key)
 			 && $request->input($key) != session()->get('users.levels.filter_' . $key))
 			{
 				$reset = true;

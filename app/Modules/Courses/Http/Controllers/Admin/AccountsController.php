@@ -50,7 +50,7 @@ class AccountsController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) && session()->has('courses.filter_' . $key)
+			 && $request->has($key) //&& session()->has('courses.filter_' . $key)
 			 && $request->input($key) != session()->get('courses.filter_' . $key))
 			{
 				$reset = true;

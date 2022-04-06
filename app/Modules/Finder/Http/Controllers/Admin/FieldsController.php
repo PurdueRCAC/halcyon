@@ -35,7 +35,7 @@ class FieldsController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) && session()->has('finder.fields.filter_' . $key)
+			 && $request->has($key) //&& session()->has('finder.fields.filter_' . $key)
 			 && $request->input($key) != session()->get('finder.fields.filter_' . $key))
 			{
 				$reset = true;

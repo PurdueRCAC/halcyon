@@ -43,7 +43,7 @@ class GroupsController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) && session()->has('groups.filter_' . $key)
+			 && $request->has($key) //&& session()->has('groups.filter_' . $key)
 			 && $request->input($key) != session()->get('groups.filter_' . $key))
 			{
 				$reset = true;

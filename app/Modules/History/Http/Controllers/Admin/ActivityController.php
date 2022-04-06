@@ -36,7 +36,7 @@ class ActivityController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) && session()->has('history.activity.filter_' . $key)
+			 && $request->has($key) //&& session()->has('history.activity.filter_' . $key)
 			 && $request->input($key) != session()->get('history.activity.filter_' . $key))
 			{
 				$reset = true;

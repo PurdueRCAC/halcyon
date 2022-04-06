@@ -36,7 +36,7 @@ class FacetsController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) && session()->has('finder.facets.filter_' . $key)
+			 && $request->has($key) //&& session()->has('finder.facets.filter_' . $key)
 			 && $request->input($key) != session()->get('finder.facets.filter_' . $key))
 			{
 				$reset = true;

@@ -47,7 +47,7 @@ class ItemsController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) && session()->has('menus.items.filter_' . $key)
+			 && $request->has($key) //&& session()->has('menus.items.filter_' . $key)
 			 && $request->input($key) != session()->get('menus.items.filter_' . $key))
 			{
 				$reset = true;

@@ -33,7 +33,7 @@ class HistoryController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) && session()->has('history.filter_' . $key)
+			 && $request->has($key) //&& session()->has('history.filter_' . $key)
 			 && $request->input($key) != session()->get('history.filter_' . $key))
 			{
 				$reset = true;

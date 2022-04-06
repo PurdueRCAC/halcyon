@@ -40,7 +40,7 @@ class MenusController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) && session()->has('menus.filter_' . $key)
+			 && $request->has($key) //&& session()->has('menus.filter_' . $key)
 			 && $request->input($key) != session()->get('menus.filter_' . $key))
 			{
 				$reset = true;

@@ -36,7 +36,7 @@ class FieldsOfScienceController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) && session()->has('groups.fos.filter_' . $key)
+			 && $request->has($key) //&& session()->has('groups.fos.filter_' . $key)
 			 && $request->input($key) != session()->get('groups.fos.filter_' . $key))
 			{
 				$reset = true;

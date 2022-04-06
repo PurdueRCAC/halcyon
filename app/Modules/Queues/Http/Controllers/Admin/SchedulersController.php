@@ -41,7 +41,7 @@ class SchedulersController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) && session()->has('queues.schedulers.filter_' . $key)
+			 && $request->has($key) //&& session()->has('queues.schedulers.filter_' . $key)
 			 && $request->input($key) != session()->get('queues.schedulers.filter_' . $key))
 			{
 				$reset = true;
