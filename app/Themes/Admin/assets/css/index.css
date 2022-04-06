@@ -4446,6 +4446,8 @@ html div.dataTables_wrapper div.dataTables_info{
     border-color: var(--panel-border);
   }
 
+  html .ts-control,
+  html .ts-wrapper.single.input-active .ts-control,
   html .full .ts-control,
   html .tagsinput,
   .form-control,
