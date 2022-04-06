@@ -1,13 +1,13 @@
 @extends('layouts.master')
 
-@section('styles')
+@push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css?v=' . filemtime(public_path('/modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css'))) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.css')) }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
-@stop
+@endpush
 
 @push('scripts')
+<script src="{{ asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js?v=' . filemtime(public_path('/modules/core/vendor/tom-select/js/tom-select.complete.min.js'))) }}"></script>
 <script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
-<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ Module::asset('core:vendor/chartjs/Chart.min.js') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.min.js') }}"></script>
 <script src="{{ asset('modules/contactreports/js/admin.js?v=' . filemtime(public_path() . '/modules/contactreports/js/admin.js')) }}"></script>
 @endpush
@@ -123,14 +123,13 @@ app('pathway')
 			</div>
 
 			<div class="form-group">
-				<label for="newsresource">{{ trans('contactreports::contactreports.resources') }}</label>
+				<label for="crmresource">{{ trans('contactreports::contactreports.resources') }}</label>
 				<?php
 				$selected = array();
-				if ($res = $filters['resource'])
-				{
+				if ($res = $filters['resource']):
 					$selected = is_string($res) ? explode(',', $res) : $res;
 					$selected = array_map('trim', $selected);
-				}
+				endif;
 				?>
 				<select class="form-control filter-submit searchable-select-multi" multiple="multiple" name="resource[]" id="crmresource" data-api="{{ route('api.resources.index') }}">
 					<?php
@@ -141,37 +140,32 @@ app('pathway')
 						->get();
 
 					$types = array();
-					foreach ($resources as $resource)
-					{
-						if (!isset($types[$resource->resourcetype]))
-						{
+					foreach ($resources as $resource):
+						if (!isset($types[$resource->resourcetype])):
 							$types[$resource->resourcetype] = array();
-						}
+						endif;
 						$types[$resource->resourcetype][] = $resource;
-					}
+					endforeach;
 					ksort($types);
 
-					foreach ($types as $t => $res)
-					{
+					foreach ($types as $t => $res):
 						$type = App\Modules\Resources\Models\Type::find($t);
-						if (!$type)
-						{
+						if (!$type):
 							$type = new App\Modules\Resources\Models\Type;
 							$type->name = 'Services';
-						}
+						endif;
 						?>
 						<optgroup label="{{ $type->name }}" class="select2-result-selectable">
 							<?php
-							foreach ($res as $resource)
-							{
+							foreach ($res as $resource):
 								?>
 								<option value="{{ $resource->id }}"<?php if (in_array($resource->id, $selected)) { echo ' selected="selected"'; } ?>>{{ $resource->name }}</option>
 								<?php
-							}
+							endforeach;
 							?>
 						</optgroup>
 						<?php
-					}
+					endforeach;
 					?>
 				</select>
 			</div>
@@ -184,7 +178,10 @@ app('pathway')
 					foreach (explode(',', $tg) as $t):
 						if (trim($t)):
 							$tag = App\Modules\Tags\Models\Tag::query()->where('slug', '=', $t)->first();
-							$tags[] = $tag->name . ':' . $t;
+							if (!$tag):
+								continue;
+							endif;
+							$tags[] = $tag->slug; // . ':' . $t;
 						endif;
 					endforeach;
 				endif;

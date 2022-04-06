@@ -115,10 +115,37 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
-	var tags = $(".form-tags");
+	var tags = document.querySelectorAll(".form-tags");
 	if (tags.length) {
-		tags.each(function (i, tag) {
-			$(tag).tagsInput({
+		tags.forEach(function (tag) {
+			new TomSelect(tag, {
+				plugins: {
+					remove_button: {
+						title: 'Remove this tag',
+					}
+				},
+				valueField: 'slug',
+				labelField: 'slug',
+				searchField: ['name'],
+				persist: false,
+				create: true,
+				load: function (query, callback) {
+					var url = tag.getAttribute('data-uri').replace('%s', encodeURIComponent(query));
+
+					fetch(url)
+						.then(response => response.json())
+						.then(json => {
+							callback(json.data);
+						}).catch(() => {
+							callback();
+						});
+				},
+				onDelete: function () { //values
+					tag.closest('form').submit();
+					//return confirm(values.length > 1 ? 'Are you sure you want to remove these ' + values.length + ' items?' : 'Are you sure you want to remove "' + values[0] + '"?');
+				}
+			});
+			/*$(tag).tagsInput({
 				placeholder: tag.getAttribute('placeholder'),
 				importPattern: /([^:]+):(.+)/i,
 				'autocomplete': {
@@ -138,194 +165,275 @@ document.addEventListener('DOMContentLoaded', function () {
 						$(input).closest('form').submit();
 					}
 				}
-			});
+			});*/
 		});
 	}
 
-	$('.basic-multiple').select2({
-		placeholder: $(this).data('placeholder')
-	});
-
-	$('.searchable-select').select2();
-
-	var rselects = $(".searchable-select-multi");
-	if (rselects.length) {
-		$(".searchable-select-multi").select2({
-			multiple: true
-		})
-		.on('select2:select', function () {
-			if (this.classList.contains('filter-submit')) {
-				$(this).closest('form').submit();
-			}
-		})
-		.on('select2:unselect', function () {
-			if (this.classList.contains('filter-submit')) {
-				var frm = $(this).closest('form');
-				if (!$(this).val() || !$(this).val().length) {
-					frm.attr('action', frm.attr('action') + '?resource=');
-				}
-				frm.submit();
-			}
-		});
-	}
-
-	$('.comment-add').on('click', function (e) {
-		e.preventDefault();
-
-		var btn = $(this);
-		var container = $(btn.data('parent'));
-		var comment = $('#' + container.attr('id') + '_comment');
-
-		// create new relationship
-		$.ajax({
-			url: container.data('api'),
-			type: 'post',
-			data: {
-				'contactreportid': $('#field-id').val(),
-				'comment': comment.val()
-			},
-			dataType: 'json',
-			async: false,
-			success: function (response) {
-				Halcyon.message('success', 'Item added');
-
-				var c = container.parent();
-				var li = c.find('li.d-none');
-
-				if (typeof (li) !== 'undefined') {
-					var template = $(li)
-						.clone()
-						.removeClass('d-none');
-
-					template
-						.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
-						.data('api', response.api);
-
-					template.find('a').each(function (i, el) {
-						$(el).attr('href', $(el).attr('href').replace(/\{id\}/g, response.id));
-					});
-					template.find('textarea').each(function (i, el) {
-						$(el).attr('id', $(el).attr('id').replace(/\{id\}/g, response.id));
-						//$(el).val(response.comment);
-					});
-					template.find('label').each(function (i, el) {
-						$(el).attr('for', $(el).attr('for').replace(/\{id\}/g, response.id));
-					});
-					template.find('button').each(function (i, el) {
-						$(el).attr('data-parent', $(el).attr('data-parent').replace(/\{id\}/g, response.id));
-					});
-
-					template.find('p').each(function (i, el) {
-						$(el).html(
-							$(el).html()
-								.replace(/\{who\}/g, response.username)
-								.replace(/\{when\}/g, response.datetimecreated)
-						);
-					});
-
-					template.find('div').each(function (i, el) {
-						if ($(el).attr('id')) {
-							$(el).attr('id', $(el).attr('id').replace(/\{id\}/g, response.id));
-							if ($(el).attr('id').match(/_text$/)) {
-								$(el).html(response.formattedcomment);
-							}
-						}
-					});
-
-					var content = template
-						.html()
-						.replace(/\{id\}/g, response.id);
-
-					template.html(content).insertBefore(li);
-
-					var ta = $('#comment_' + response.id + '_comment');
-					ta.val(response.comment);
-					ta[0].dispatchEvent(new Event('initEditor', { bubbles: true }));
-				}
-
-				comment.val('');
-			},
-			error: function (xhr) { //xhr, ajaxOptions, thrownError
-				//console.log(xhr);
-				Halcyon.message('danger', xhr.responseJSON.message);
-			}
-		});
-	});
-
-	$('#main')
-		.on('click', '.comment-edit,.comment-cancel', function (e) {
-			e.preventDefault();
-
-			$(this).closest('li').toggleClass('is-editing');
-			//$('#' + container.attr('id') + '_text').toggleClass('d-none');
-			//$('#' + container.attr('id') + '_edit').toggleClass('d-none');
-			//$(this).toggleClass('d-none');
-		})
-		.on('click', '.comment-delete', function (e) {
-			e.preventDefault();
-
-			var result = confirm($(this).data('confirm'));
-
-			if (result) {
-				var field = $($(this).attr('href'));
-
-				$.ajax({
-					url: field.data('api'),
-					type: 'delete',
-					dataType: 'json',
-					async: false,
-					success: function () {
-						Halcyon.message('success', 'Item removed');
-						field.remove();
-					},
-					error: function (xhr) {
-						Halcyon.message('danger', xhr.responseJSON.message);
-					}
+	var bselects = document.querySelectorAll('.basic-multiple');
+	if (bselects.length) {
+		bselects.forEach(function (select) {
+			if (typeof TomSelect !== 'undefined') {
+				new TomSelect(select, { plugins: ['dropdown_input', 'remove_button'] });
+			} else if (typeof select2 !== 'undefined') {
+				$(select).select2({
+					placeholder: select.getAttribute('data-placeholder')
 				});
 			}
-		})
-		.on('click', '.comment-save', function (e) {
+		});
+	}
+
+	var rselects = document.querySelectorAll('.searchable-select-multi');
+	if (rselects.length) {
+		rselects.forEach(function (select) {
+			if (select.classList.contains('filter-submit')) {
+				select.removeEventListener('change', Halcyon.filterSubmit);
+			}
+			if (typeof TomSelect !== 'undefined') {
+				var sel = new TomSelect(select, { plugins: ['dropdown_input', 'remove_button'] });
+				sel.on('change', function () {
+					var frm = select.closest('form');
+					if (!select.value) {
+						frm.setAttribute('action', frm.getAttribute('action') + '?resource=');
+					}
+					frm.submit();
+				});
+			} else if (typeof select2 !== 'undefined') {
+				$(select).select2({
+						multiple: true
+					})
+					.on('select2:select', function () {
+						if (this.classList.contains('filter-submit')) {
+							$(this).closest('form').submit();
+						}
+					})
+					.on('select2:unselect', function () {
+						if (this.classList.contains('filter-submit')) {
+							var frm = $(this).closest('form');
+							if (!$(this).val() || !$(this).val().length) {
+								frm.attr('action', frm.attr('action') + '?resource=');
+							}
+							frm.submit();
+						}
+					});
+			} else {
+				select.addEventListener('change', function () {
+					var frm = this.closest('form');
+					if (!this.value) {
+						frm.setAttribute('action', frm.getAttribute('action') + '?resource=');
+					}
+					frm.submit();
+				});
+			}
+		});
+	}
+
+	document.querySelectorAll('.comment-add').forEach(function (el) {
+		el.addEventListener('click', function (e) {
 			e.preventDefault();
 
-			//var btn = $(this);
-			var container = $(this).closest('li');
-			var comment = $('#' + container.attr('id') + '_comment');
+			var btn = this;
+			var container = document.querySelector(btn.getAttribute('data-parent'));
+			var comment = document.getElementById(container.getAttribute('id') + '_comment');
 
-			$.ajax({
-				url: container.data('api'),
-				type: 'put',
-				data: {
-					'comment': comment.val()
-				},
-				dataType: 'json',
-				async: false,
-				success: function (response) {
-					Halcyon.message('success', 'Item saved');
-					container.toggleClass('is-editing');
-					$('#comment_' + response.data.id + '_text').html(response.data.formattedcomment);
-				},
-				error: function (xhr) {
-					//console.log(xhr);
-					Halcyon.message('danger', xhr.responseJSON.message);
-				}
-			});
+			fetch(container.getAttribute('data-api'), {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+					},
+					body: JSON.stringify({
+						'contactreportid': document.getElementById('field-id').value,
+						'comment': comment.value
+					})
+				})
+				.then(function (response) {
+					if (response.ok) {
+						return response.json();
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.then(function (data) {
+					Halcyon.message('success', 'Item added');
+
+					var c = container.parentNode;
+					var li = c.querySelector('li.d-none');
+
+					if (typeof (li) !== 'undefined') {
+						var template = li.cloneNode(true);
+						template.classList.remove('d-none');
+						template.setAttribute('id', template.getAttribute('id').replace(/\{id\}/g, data.id))
+						template.setAttribute('data-api', data.api);
+
+						template.querySelectorAll('a').forEach(function (el) {
+							el.setAttribute('href', el.getAttribute('href').replace(/\{id\}/g, data.id));
+						});
+						template.querySelectorAll('textarea').forEach(function (el) {
+							el.setAttribute('id', el.getAttribute('id').replace(/\{id\}/g, data.id));
+						});
+						template.querySelectorAll('label').forEach(function (el) {
+							el.setAttribute('for', el.getAttribute('for').replace(/\{id\}/g, data.id));
+						});
+						template.querySelectorAll('button').forEach(function (el) {
+							el.setAttribute('data-parent', el.getAttribute('data-parent').replace(/\{id\}/g, data.id));
+						});
+
+						template.querySelectorAll('.text-muted').forEach(function (el) {
+							el.innerHTML = el.innerHTML
+								.replace(/\{who\}/g, data.username)
+								.replace(/\{when\}/g, data.datetimecreated);
+						});
+
+						template.querySelectorAll('div').forEach(function (el) {
+							if (el.getAttribute('id')) {
+								el.setAttribute('id', el.getAttribute('id').replace(/\{id\}/g, data.id));
+								if (el.getAttribute('id').match(/_text$/)) {
+									el.innerHTML = data.formattedcomment;
+								}
+							}
+						});
+
+						template.setAttribute('id', template.getAttribute('id').replace(/\{id\}/g, data.id))
+						template.setAttribute('data-api', data.api);
+
+						var content = template
+							.innerHTML
+							.replace(/\{id\}/g, data.id);
+
+						template.innerHTML = content;
+						li.parentNode.insertBefore(template, li);
+
+						var ta = document.getElementById('comment_' + data.id + '_comment');
+						ta.value = data.comment;
+						ta.dispatchEvent(new Event('initEditor', { bubbles: true }));
+					}
+
+					comment.value = '';
+					comment.dispatchEvent(new Event('refreshEditor', { bubbles: true }));
+				})
+				.catch(function (error) {
+					Halcyon.message('danger', error);
+				});
 		});
+	});
 
-	$('.comments-show').on('click', function (e) {
-		e.preventDefault();
-		$($(this).attr('href')).toggleClass('d-none');
+	document.getElementById('main').addEventListener('click', function (e) {
+		if (e.target.matches('.comment-edit') || e.target.parentNode.matches('.comment-edit') || e.target.matches('.comment-cancel')) {
+			e.preventDefault();
+
+			var el = e.target;
+			if (e.target.parentNode.matches('.comment-edit')) {
+				el = e.target.parentNode;
+			}
+
+			el.closest('li').classList.toggle('is-editing');
+			return;
+		}
+
+		if (e.target.matches('.comment-delete') || e.target.parentNode.matches('.comment-delete')) {
+			e.preventDefault();
+
+			var el = e.target;
+			if (e.target.parentNode.matches('.comment-delete')) {
+				el = e.target.parentNode;
+			}
+
+			var result = confirm(el.getAttribute('data-confirm'));
+
+			if (result) {
+				var field = document.querySelector(el.getAttribute('href'));
+
+				fetch(field.getAttribute('data-api'), {
+						method: 'DELETE',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+						}
+					})
+					.then(function (response) {
+						if (response.ok) {
+							Halcyon.message('success', 'Item removed');
+							field.remove();
+							return;
+						}
+
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
+							}
+							throw msg;
+						});
+					})
+					.catch(function (error) {
+						Halcyon.message('danger', error);
+					});
+			}
+			return;
+		}
+
+		if (e.target.matches('.comment-save')) {
+			e.preventDefault();
+
+			var container = e.target.closest('li');
+			var comment = document.getElementById(container.getAttribute('id') + '_comment');
+
+			fetch(container.getAttribute('data-api'), {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+					},
+					body: JSON.stringify({
+						'comment': comment.value
+					})
+				})
+				.then(function (response) {
+					if (response.ok) {
+						return response.json();
+					}
+
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.then(function (data) {
+					Halcyon.message('success', 'Item saved');
+					container.classList.toggle('is-editing');
+					document.getElementById('comment_' + data.id + '_text').innerHTML = data.formattedcomment;
+				})
+				.catch(function (error) {
+					Halcyon.message('danger', error);
+				});
+		}
+	});
+
+	document.querySelectorAll('.comments-show').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+			document.querySelector(this.getAttribute('href')).classList.toggle('d-none');
+		});
 	});
 
 	var charts = new Array;
-	$('.pie-chart').each(function (i, el) {
+	document.querySelectorAll('.pie-chart').forEach(function (el) {
 		const ctx = el.getContext('2d');
 		const chart = new Chart(ctx, {
 			type: 'doughnut',
 			data: {
-				labels: JSON.parse($(el).attr('data-labels')),
+				labels: JSON.parse(el.getAttribute('data-labels')),
 				datasets: [
 					{
-						data: JSON.parse($(el).attr('data-values')),
+						data: JSON.parse(el.getAttribute('data-values')),
 						backgroundColor: [
 							'rgb(255, 99, 132)',
 							'rgb(54, 162, 235)',
@@ -341,10 +449,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			options: {
 				animation: {
 					duration: 0
-				}/*,
-				legend: {
-					display: false
-				}*/
+				}
 			}
 		});
 		charts.push(chart);
