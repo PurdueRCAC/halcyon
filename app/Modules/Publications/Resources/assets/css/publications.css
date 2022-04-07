@@ -1,0 +1,76 @@
+/*!
+ * Publications module styles
+ */
+
+.nav-tabs {
+	margin-bottom: 1em;
+}
+
+table tbody tr.selected td,
+table tbody tr.selected {
+	background-color: #eaf6f6;
+}
+.filters {
+	background-color: #f5f5f5;
+}
+.draghandle {
+	cursor: move;
+}
+.spinner-border {
+	display: none;
+}
+.processing .spinner-border {
+	display: inline-block;
+}
+
+/* Applied filters */
+#applied-filters {
+	display: block;
+	margin: 0 0 1em 0;
+}
+#applied-filters ul {
+	margin: 0;
+	overflow: hidden;
+}
+#applied-filters p {
+	float: left;
+	margin: 0.4em 1em 0.4em 0;
+}
+#applied-filters li {
+	float: left;
+	list-style: none;
+	margin: 0 0.5em 0.3em 0;
+	padding: 0.2em 0.5em;
+	background: #ededed;
+}
+#applied-filters li a.filters-x {
+	margin-left: 0.5em;
+	color: #aaa;
+	border-bottom: none;
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	overflow: hidden;
+	white-space: nowrap;
+	line-height: 1;
+}
+#applied-filters li a.filters-x:hover {
+	border-bottom: none;
+	color: #222;
+}
+
+@media print {
+	.container {
+		width: 100% !important;
+	}
+	.nav-tabs,
+	.order-edit,
+	.form-control,
+	.btn,
+	input,
+	select,
+	textarea,
+	button {
+		display: none;
+	}
+}
