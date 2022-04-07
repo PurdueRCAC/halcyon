@@ -101,9 +101,9 @@ class IEEE implements Format
 			$html .= $publication->editor;
 		}
 
-		if ($publication->year)
+		if ($publication->published_at)
 		{
-			$html .= ' (' . $publication->year . ')';
+			$html .= ' (' . $publication->published_at->format('Y') . ')';
 		}
 
 		if ($publication->title)
