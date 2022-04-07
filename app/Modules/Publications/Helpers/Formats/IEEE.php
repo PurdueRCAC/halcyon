@@ -101,11 +101,6 @@ class IEEE implements Format
 			$html .= $publication->editor;
 		}
 
-		if ($publication->published_at)
-		{
-			$html .= ' (' . $publication->published_at->format('Y') . ')';
-		}
-
 		if ($publication->title)
 		{
 			$title = $publication->title;
@@ -198,6 +193,17 @@ class IEEE implements Format
 			}
 			$html .= '. <b>' . $publication->pages . '</b>';
 		}
+
+		if ($publication->published_at)
+		{
+			$html  = self::grammarCheck($html, ',');
+			if ($publication->month)
+			{
+				$html .= ' ' . $publication->month;
+			}
+			$html .= ' ' . $publication->published_at->format('Y');
+		}
+
 		if ($publication->organization)
 		{
 			$html  = self::grammarCheck($html, ',');
@@ -217,11 +223,6 @@ class IEEE implements Format
 		{
 			$html  = self::grammarCheck($html, ',');
 			$html .= ' ' . stripslashes($publication->location);
-		}
-		if ($publication->month)
-		{
-			$html  = self::grammarCheck($html, ',');
-			$html .= ' ' . $publication->month;
 		}
 		if ($publication->isbn)
 		{
