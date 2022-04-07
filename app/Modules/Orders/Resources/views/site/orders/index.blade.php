@@ -57,7 +57,7 @@ app('pathway')
 			<div class="form-group">
 				<label for="filter_category">{{ trans('orders::orders.category') }}</label>
 				<select name="category" id="filter_category" class="form-control filter filter-submit">
-					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
+					<option value="*"<?php if ($filters['category'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
 					<?php foreach ($categories as $category) { ?>
 						<option value="<?php echo $category->id; ?>"<?php if ($filters['category'] == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
 					<?php } ?>
