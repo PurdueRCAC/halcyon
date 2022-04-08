@@ -79,6 +79,7 @@ class MembersController extends Controller
 
 		$d = (new Directory)->getTable();
 
+		$us = (new User)->getTable();
 		$uu = (new UserUsername)->getTable();
 
 		$now = Carbon::now();
@@ -282,10 +283,12 @@ class MembersController extends Controller
 		ORDER BY username;"
 		*/
 
+		$users = array();
+
 		$gus = GroupUser::query()
 			->select(
 				//DB::raw('DISTINCT(' . $uu . '.userid)')
-				$uu . '.userid', $q . '.id as queueid', $q . '.name', $g . '.name AS group'
+				$uu . '.userid', $uu . '.username', $uu . '.email', $us . '.name', $q . '.id as queueid', $q . '.name', $g . '.name AS group'
 			)
 			// Group
 			->join($g, $g . '.id', $gu . '.groupid')
@@ -299,6 +302,7 @@ class MembersController extends Controller
 			->join($uu, $uu . '.userid', $gu . '.userid')
 			->where($uu . '.datecreated', '<=', $now->toDateTimeString())
 			->whereNull($uu . '.dateremoved')
+			->join($us, $us . '.id', $uu . '.userid')
 			// Resource/subresource
 			->join($c, $c . '.subresourceid', $q . '.subresourceid')
 			// Resource
@@ -315,19 +319,22 @@ class MembersController extends Controller
 			})
 			->groupBy($q . '.id')
 			->groupBy($uu . '.userid')
+			->groupBy($uu . '.username')
+			->groupBy($uu . '.email')
+			->groupBy($us . '.name')
 			->groupBy($q . '.name')
 			->groupBy($g . '.name')
 			->get();
-			//->pluck('userid')
-			//->toArray();
-		//$gus = array_unique($gus);
 
-		$users = array();
-		foreach ($gus as $gur)
+		foreach ($gus as $i => $gur)
 		{
 			if (!isset($users[$gur->userid]))
 			{
-				$users[$gur->userid] = array();
+				$users[$gur->userid] = array(
+					'name' => $gur->name,
+					'username' => $gur->username,
+					'email' => $gur->email
+				);
 			}
 
 			if (!isset($users[$gur->userid]['queues']))
@@ -344,13 +351,15 @@ class MembersController extends Controller
 				'id' => $gur->queueid,
 				'name' => $gur->name . ' (' . $gur->group . ')',
 			];
+
+			unset($gus[$i]);
 		}
 		unset($gus);
 
 		$qus = QueueUser::query()
 			->select(
 				//DB::raw('DISTINCT(' . $uu . '.userid)')
-				$uu . '.userid', $qu . '.queueid', $q . '.name', $g . '.name AS group'
+				$uu . '.userid', $uu . '.username', $uu . '.email', $us . '.name', $qu . '.queueid', $q . '.name', $g . '.name AS group'
 			)
 			// Queues
 			->join($q, $q . '.id', $qu . '.queueid')
@@ -361,6 +370,7 @@ class MembersController extends Controller
 			->join($uu, $uu . '.userid', $qu . '.userid')
 			->where($uu . '.datecreated', '<=', $now->toDateTimeString())
 			->whereNull($uu . '.dateremoved')
+			->join($us, $us . '.id', $uu . '.userid')
 			// Resource/subresource
 			->join($c, $c . '.subresourceid', $q . '.subresourceid')
 			// Resource
@@ -379,17 +389,22 @@ class MembersController extends Controller
 			})
 			->groupBy($qu . '.queueid')
 			->groupBy($uu . '.userid')
+			->groupBy($uu . '.username')
+			->groupBy($uu . '.email')
+			->groupBy($us . '.name')
 			->groupBy($q . '.name')
 			->groupBy($g . '.name')
 			->get();
-			//->pluck('userid')
-			//->toArray();
-		//$qus = array_unique($qus);
-		foreach ($qus as $qur)
+
+		foreach ($qus as $i => $qur)
 		{
 			if (!isset($users[$qur->userid]))
 			{
-				$users[$qur->userid] = array();
+				$users[$qur->userid] = array(
+					'name' => $qur->name,
+					'username' => $qur->username,
+					'email' => $qur->email
+				);
 			}
 
 			if (!isset($users[$qur->userid]['queues']))
@@ -406,13 +421,15 @@ class MembersController extends Controller
 				'id' => $qur->queueid,
 				'name' => $qur->name . ' (' . $qur->group . ')',
 			];
+
+			unset($qus[$i]);
 		}
 		unset($qus);
 
 		$gqus = GroupQueueUser::query()
 			->select(
 				//DB::raw('DISTINCT(' . $uu . '.userid)')
-				$uu . '.userid', $qu . '.queueid', $q . '.name', $g . '.name AS group'
+				$uu . '.userid', $uu . '.username', $uu . '.email', $us . '.name', $qu . '.queueid', $q . '.name', $g . '.name AS group'
 			)
 			// Queue user
 			->join($qu, $qu . '.id', $gqu . '.queueuserid')
@@ -430,6 +447,7 @@ class MembersController extends Controller
 			->join($uu, $uu . '.userid', $qu . '.userid')
 			->where($uu . '.datecreated', '<=', $now->toDateTimeString())
 			->whereNull($uu . '.dateremoved')
+			->join($us, $us . '.id', $uu . '.userid')
 			// Resource/subresource
 			->join($c, $c . '.subresourceid', $q . '.subresourceid')
 			// Resource
@@ -448,17 +466,22 @@ class MembersController extends Controller
 			})
 			->groupBy($qu . '.queueid')
 			->groupBy($uu . '.userid')
+			->groupBy($uu . '.username')
+			->groupBy($uu . '.email')
+			->groupBy($us . '.name')
 			->groupBy($q . '.name')
 			->groupBy($g . '.name')
 			->get();
-			//->pluck('userid')
-			//->toArray();
-		//$gqus = array_unique($gqus);
-		foreach ($gqus as $gqur)
+
+		foreach ($gqus as $i => $gqur)
 		{
 			if (!isset($users[$gqur->userid]))
 			{
-				$users[$gqur->userid] = array();
+				$users[$gqur->userid] = array(
+					'name' => $gqur->name,
+					'username' => $gqur->username,
+					'email' => $gqur->email
+				);
 			}
 
 			if (!isset($users[$gqur->userid]['queues']))
@@ -475,6 +498,8 @@ class MembersController extends Controller
 				'id' => $gqur->queueid,
 				'name' => $gqur->name . ' (' . $gqur->group . ')',
 			];
+
+			unset($gqus[$i]);
 		}
 		unset($gqus);
 
@@ -482,7 +507,13 @@ class MembersController extends Controller
 			->select(
 				//DB::raw('DISTINCT(' . $uu . '.userid)')
 				//$uu . '.userid', $d . '.id as dirid', $d . '.name', $g . '.name AS group'
-				$uu . '.userid'
+				$uu . '.userid',
+				$uu . '.username',
+				$uu . '.email',
+				$us . '.name',
+				//$d . '.id as dirid',
+				//$d . '.name',
+				//$g . '.name AS group'
 			)
 			// Unix group member
 			->where($ugm . '.datetimecreated', '<=', $now->toDateTimeString())
@@ -498,6 +529,7 @@ class MembersController extends Controller
 			->join($uu, $uu . '.userid', $ugm . '.userid')
 			->where($uu . '.datecreated', '<=', $now->toDateTimeString())
 			->whereNull($uu . '.dateremoved')
+			->join($us, $us . '.id', $uu . '.userid')
 			// Resource
 			->join($r, $r . '.id', $d . '.resourceid')
 			->where($r . '.datetimecreated', '<=', $now->toDateTimeString())
@@ -513,25 +545,26 @@ class MembersController extends Controller
 			})
 			//->groupBy($d . '.id')
 			->groupBy($uu . '.userid')
+			->groupBy($uu . '.username')
+			->groupBy($uu . '.email')
+			->groupBy($us . '.name')
+			//->groupBy($d . '.id')
 			//->groupBy($d . '.name')
 			//->groupBy($g . '.name')
-			->get()
-			->pluck('userid')
-			->toArray();
+			->get();
 
-		//$ugus = array_unique($ugus);
-		foreach ($ugus as $uqur)
+		foreach ($ugus as $i => $uqur)
 		{
-			if (!isset($users[$uqur]))
+			if (!isset($users[$uqur->userid]))
 			{
-				$users[$uqur] = array();
-			}
-			/*if (!isset($users[$uqur->userid]))
-			{
-				$users[$uqur->userid] = array();
+				$users[$uqur->userid] = array(
+					'name' => $uqur->name,
+					'username' => $uqur->username,
+					'email' => $uqur->email
+				);
 			}
 
-			if (!isset($users[$uqur->userid]['directories']))
+			/*if (!isset($users[$uqur->userid]['directories']))
 			{
 				$users[$uqur->userid]['directories'] = array();
 			}
@@ -545,28 +578,34 @@ class MembersController extends Controller
 				'id' => $uqur->dirid,
 				'name' => $uqur->name . ' (' . $uqur->group . ')',
 			];*/
+
+			unset($ugus[$i]);
 		}
 		unset($ugus);
-
-		//$userids = array_merge($gus, $qus, $gqus, $ugus);
-		//$userids = array_unique($userids);
 
 		$data = array();
 		foreach ($users as $userid => $datum)
 		{
-			$user = User::find($userid);
-
-			if (!$user || !$user->id || $user->trashed())
+			if (!isset($datum['name']))
 			{
-				continue;
+				$user = User::find($userid);
+
+				if (!$user || !$user->id || $user->trashed())
+				{
+					continue;
+				}
+
+				$datum['name'] = $user->name;
+				$datum['username'] = $user->username;
+				$datum['email'] = $user->email;
 			}
 
 			$info = array();
-			$info['id'] = $user->id;
-			$info['name'] = $user->name;
-			$info['username'] = $user->username;
-			$info['email'] = $user->email;
-			$info['api'] = route('api.users.read', ['id' => $user->id]);
+			$info['id'] = $userid;
+			$info['name'] = $datum['name'];
+			$info['username'] = $datum['username'];
+			$info['email'] = $datum['email'];
+			$info['api'] = route('api.users.read', ['id' => $userid]);
 			if (isset($datum['queues']))
 			{
 				$info['queues'] = array_values($datum['queues']);
@@ -576,7 +615,12 @@ class MembersController extends Controller
 				$info['directories'] = array_values($datum['directories']);
 			}
 
-			unset($user);
+			unset($users[$userid]);
+
+			if (isset($user))
+			{
+				unset($user);
+			}
 
 			$data[] = $info;
 		}
