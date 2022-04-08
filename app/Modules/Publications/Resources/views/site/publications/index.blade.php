@@ -164,15 +164,29 @@ app('pathway')
 		</div>
 
 	@if (count($rows))
-				<ul>
+		<ul>
 			@foreach ($rows as $i => $row)
 			<li>
-				<div class="publication">
+				<div id="publication{{ $row->id }}" class="publication">
 					{!! $row->toHtml() !!}
 				</div>
+				<?php /*
+				@if (auth()->user() && (auth()->user()->can('edit publications') || auth()->user()->can('delete publications')))
+					@if (auth()->user()->can('edit publications'))
+						<a href="{{ route('site.publications.edit', ['id' => $row->id]) }}" data-api="{{ route('api.publications.read', ['id' => $row->id]) }}" class="btn btn-sm btn-edit tip" title="{{ trans('global.button.edit') }}">
+							<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }} #{{ $row->id }}</span>
+						</a>
+					@endif
+					@if (auth()->user()->can('delete publications'))
+						<a href="#publication{{ $row->id }}" data-api="{{ route('api.publications.delete', ['id' => $row->id]) }}" class="btn btn-sm btn-delete text-danger tip" title="{{ trans('global.button.delete') }}" data-confirm="{{ trans('global.confirm delete') }}">
+							<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }} #{{ $row->id }}</span>
+						</a>
+					@endif
+				@endif
+				*/ ?>
 			</li>
 			@endforeach
-			</ul>
+		</ul>
 
 		{{ $rows->render() }}
 	@else

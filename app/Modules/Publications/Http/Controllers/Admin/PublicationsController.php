@@ -106,7 +106,7 @@ class PublicationsController extends Controller
 		if ($filters['year'] && $filters['year'] != '*')
 		{
 			$query->where('published_at', '>', $filters['year'] . '-01-01 00:00:00')
-				->where('published_at', '<', Carbon::parse($filters['year'])->modify('+1 year')->format('Y') . '-01-01 00:00:00');
+				->where('published_at', '<', Carbon::parse($filters['year'] . '-01-01 00:00:00')->modify('+1 year')->format('Y') . '-01-01 00:00:00');
 		}
 
 		$rows = $query
@@ -120,7 +120,7 @@ class PublicationsController extends Controller
 		$now = date("Y");
 		$start = date("Y");
 		$first = Publication::query()
-			->orderBy('published_at', 'desc')
+			->orderBy('published_at', 'asc')
 			->first();
 		if ($first)
 		{
