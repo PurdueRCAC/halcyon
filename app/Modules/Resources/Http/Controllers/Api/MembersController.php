@@ -318,6 +318,9 @@ class MembersController extends Controller
 			->groupBy($q . '.name')
 			->groupBy($g . '.name')
 			->get();
+			//->pluck('userid')
+			//->toArray();
+		//$gus = array_unique($gus);
 
 		$users = array();
 		foreach ($gus as $gur)
@@ -342,9 +345,7 @@ class MembersController extends Controller
 				'name' => $gur->name . ' (' . $gur->group . ')',
 			];
 		}
-			//->pluck('userid')
-			//->toArray();
-		//$gus = array_unique($gus);
+		unset($gus);
 
 		$qus = QueueUser::query()
 			->select(
@@ -406,6 +407,7 @@ class MembersController extends Controller
 				'name' => $qur->name . ' (' . $qur->group . ')',
 			];
 		}
+		unset($qus);
 
 		$gqus = GroupQueueUser::query()
 			->select(
@@ -474,11 +476,13 @@ class MembersController extends Controller
 				'name' => $gqur->name . ' (' . $gqur->group . ')',
 			];
 		}
+		unset($gqus);
 
 		$ugus = UnixGroupMember::query()
 			->select(
 				//DB::raw('DISTINCT(' . $uu . '.userid)')
-				$uu . '.userid', $d . '.id as dirid', $d . '.name', $g . '.name AS group'
+				//$uu . '.userid', $d . '.id as dirid', $d . '.name', $g . '.name AS group'
+				$uu . '.userid'
 			)
 			// Unix group member
 			->where($ugm . '.datetimecreated', '<=', $now->toDateTimeString())
@@ -507,17 +511,22 @@ class MembersController extends Controller
 				$join->on($gu . '.groupid', $g . '.id')
 					->on($gu . '.userid', $uu . '.userid');
 			})
-			->groupBy($d . '.id')
+			//->groupBy($d . '.id')
 			->groupBy($uu . '.userid')
-			->groupBy($d . '.name')
-			->groupBy($g . '.name')
-			->get();
-			//->pluck('userid')
-			//->toArray();
+			//->groupBy($d . '.name')
+			//->groupBy($g . '.name')
+			->get()
+			->pluck('userid')
+			->toArray();
+
 		//$ugus = array_unique($ugus);
 		foreach ($ugus as $uqur)
 		{
-			if (!isset($users[$uqur->userid]))
+			if (!isset($users[$uqur]))
+			{
+				$users[$uqur] = array();
+			}
+			/*if (!isset($users[$uqur->userid]))
 			{
 				$users[$uqur->userid] = array();
 			}
@@ -535,8 +544,9 @@ class MembersController extends Controller
 			$users[$uqur->userid]['directories'][$uqur->dirid] = [
 				'id' => $uqur->dirid,
 				'name' => $uqur->name . ' (' . $uqur->group . ')',
-			];
+			];*/
 		}
+		unset($ugus);
 
 		//$userids = array_merge($gus, $qus, $gqus, $ugus);
 		//$userids = array_unique($userids);
@@ -566,17 +576,12 @@ class MembersController extends Controller
 				$info['directories'] = array_values($datum['directories']);
 			}
 
+			unset($user);
+
 			$data[] = $info;
-			/*$data[] = array(
-				'id'       => $user->id,
-				'name'     => $user->name,
-				'username' => $user->username,
-				'email'    => $user->email,
-				'api'      => route('api.users.read', ['id' => $user->id]),
-			);*/
 		}
 
-		return $data; //new ResourceCollection(collect($users));
+		return $data;
 	}
 
 	/**
