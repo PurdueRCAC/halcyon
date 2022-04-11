@@ -22,6 +22,7 @@ use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Queues\Models\GroupUser as GroupQueueUser;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Member as GroupUser;
+use App\Modules\Groups\Models\Type;
 use App\Modules\Groups\Models\UnixGroup;
 use App\Modules\Groups\Models\UnixGroupMember;
 use App\Modules\Storage\Models\Directory;
@@ -35,19 +36,33 @@ use Carbon\Carbon;
 class MembersController extends Controller
 {
 	/**
-	 * Read a resource
+	 * Retrieve list of active users for a resource
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /resources/members/{user id}.{resource id}
+	 * @apiUri    /resources/members/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
-	 * 		"name":          "user id.resource id",
-	 * 		"description":   "User ID and Resource ID separated by a period",
+	 * 		"name":          "id",
+	 * 		"description":   "Resource ID",
 	 * 		"required":      true,
 	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"example":   "99"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "membertype",
+	 * 		"description":   "Filter by group member type",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"example":   "12345.67"
+	 * 			"default":   null,
+	 * 			"enum": [
+	 * 				"2",
+	 * 				"manager"
+	 * 			]
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -58,11 +73,22 @@ class MembersController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
+	 * @param   Request $request
 	 * @param   integer $id
 	 * @return  Response
 	 */
-	public function index($id)
+	public function index(Request $request, $id)
 	{
+		$filters = array(
+			'membertype' => $request->input('membertype')
+		);
+		if ($filters['membertype'] == 'manager' || $filters['membertype'] == 'managers')
+		{
+			$filters['membertype'] = Type::MANAGER;
+		}
+		$filters['membertype'] = $filters['membertype'] == Type::MANAGER ?: 0;
+
+
 		$resource = Asset::findOrFail($id);
 
 		$r = (new Asset)->getTable();
@@ -286,221 +312,245 @@ class MembersController extends Controller
 
 		$users = array();
 
-		$gus = GroupUser::query()
-			->select(
-				$uu . '.userid', $uu . '.username', $uu . '.email', $us . '.name', $q . '.id as queueid', $q . '.name AS queue', $g . '.name AS group'
-			)
-			// Group
-			->join($g, $g . '.id', $gu . '.groupid')
-			->where($gu . '.membertype', '=', 2)
-			->where($gu . '.datecreated', '<=', $now->toDateTimeString())
-			// Queues
-			->join($q, $q . '.groupid', $g . '.id')
-			->where($q . '.datetimecreated', '<=', $now->toDateTimeString())
-			->whereNull($q . '.datetimeremoved')
-			// Userusername
-			->join($uu, $uu . '.userid', $gu . '.userid')
-			->where($uu . '.datecreated', '<=', $now->toDateTimeString())
-			->whereNull($uu . '.dateremoved')
-			->join($us, $us . '.id', $uu . '.userid')
-			// Resource/subresource
-			->join($c, $c . '.subresourceid', $q . '.subresourceid')
-			// Resource
-			->join($r, $r . '.id', $c . '.resourceid')
-			->where($r . '.datetimecreated', '<=', $now->toDateTimeString())
-			->whereNull($r . '.datetimeremoved')
-			->where($r . '.id', '=', $resource->id)
-			->leftJoin($u, $u . '.groupid', $g . '.id')
-			// Group users
-			->leftJoin($ugm, function($join) use ($u, $ugm, $uu)
-			{
-				$join->on($ugm . '.unixgroupid', $u . '.id')
-					->on($ugm . '.userid', $uu . '.userid');
-			})
-			->groupBy($q . '.id')
-			->groupBy($uu . '.userid')
-			->groupBy($uu . '.username')
-			->groupBy($uu . '.email')
-			->groupBy($us . '.name')
-			->groupBy($q . '.name')
-			->groupBy($g . '.name')
-			->get();
-
-		foreach ($gus as $i => $gur)
+		if (!$filters['membertype'] || $filters['membertype'] == Type::MANAGER)
 		{
-			if (!isset($users[$gur->userid]))
+			$gus = GroupUser::query()
+				->select(
+					$uu . '.userid',
+					$uu . '.username',
+					$uu . '.email',
+					$us . '.name',
+					$q . '.id as queueid',
+					$q . '.name AS queue',
+					$g . '.name AS group'
+				)
+				// Group
+				->join($g, $g . '.id', $gu . '.groupid')
+				->where($gu . '.membertype', '=', Type::MANAGER)
+				->where($gu . '.datecreated', '<=', $now->toDateTimeString())
+				// Queues
+				->join($q, $q . '.groupid', $g . '.id')
+				->where($q . '.datetimecreated', '<=', $now->toDateTimeString())
+				->whereNull($q . '.datetimeremoved')
+				// Userusername
+				->join($uu, $uu . '.userid', $gu . '.userid')
+				->where($uu . '.datecreated', '<=', $now->toDateTimeString())
+				->whereNull($uu . '.dateremoved')
+				->join($us, $us . '.id', $uu . '.userid')
+				// Resource/subresource
+				->join($c, $c . '.subresourceid', $q . '.subresourceid')
+				// Resource
+				->join($r, $r . '.id', $c . '.resourceid')
+				->where($r . '.datetimecreated', '<=', $now->toDateTimeString())
+				->whereNull($r . '.datetimeremoved')
+				->where($r . '.id', '=', $resource->id)
+				->leftJoin($u, $u . '.groupid', $g . '.id')
+				// Unix Group users
+				/*->leftJoin($ugm, function($join) use ($u, $ugm, $uu)
+				{
+					$join->on($ugm . '.unixgroupid', $u . '.id')
+						->on($ugm . '.userid', $uu . '.userid');
+				})*/
+				->groupBy($q . '.id')
+				->groupBy($uu . '.userid')
+				->groupBy($uu . '.username')
+				->groupBy($uu . '.email')
+				->groupBy($us . '.name')
+				->groupBy($q . '.name')
+				->groupBy($g . '.name')
+				->get();
+
+			foreach ($gus as $i => $gur)
 			{
-				$users[$gur->userid] = array(
-					'name' => $gur->name,
-					'username' => $gur->username,
-					'email' => $gur->email
-				);
+				if (!isset($users[$gur->userid]))
+				{
+					$users[$gur->userid] = array(
+						'name' => $gur->name,
+						'username' => $gur->username,
+						'email' => $gur->email
+					);
+				}
+
+				if (!isset($users[$gur->userid]['queues']))
+				{
+					$users[$gur->userid]['queues'] = array();
+				}
+
+				if (isset($users[$gur->userid]['queues'][$gur->queueid]))
+				{
+					continue;
+				}
+
+				$users[$gur->userid]['queues'][$gur->queueid] = [
+					'id' => $gur->queueid,
+					'name' => $gur->queue . ' (' . $gur->group . ')',
+				];
+
+				unset($gus[$i]);
 			}
-
-			if (!isset($users[$gur->userid]['queues']))
-			{
-				$users[$gur->userid]['queues'] = array();
-			}
-
-			if (isset($users[$gur->userid]['queues'][$gur->queueid]))
-			{
-				continue;
-			}
-
-			$users[$gur->userid]['queues'][$gur->queueid] = [
-				'id' => $gur->queueid,
-				'name' => $gur->queue . ' (' . $gur->group . ')',
-			];
-
-			unset($gus[$i]);
+			unset($gus);
 		}
-		unset($gus);
 
-		$qus = QueueUser::query()
-			->select(
-				$uu . '.userid', $uu . '.username', $uu . '.email', $us . '.name', $qu . '.queueid', $q . '.name AS queue', $g . '.name AS group'
-			)
-			// Queues
-			->join($q, $q . '.id', $qu . '.queueid')
-			->where($q . '.datetimecreated', '<=', $now->toDateTimeString())
-			->whereNull($q . '.datetimeremoved')
-			->where($qu . '.membertype', '=', 1)
-			// Userusername
-			->join($uu, $uu . '.userid', $qu . '.userid')
-			->where($uu . '.datecreated', '<=', $now->toDateTimeString())
-			->whereNull($uu . '.dateremoved')
-			->join($us, $us . '.id', $uu . '.userid')
-			// Resource/subresource
-			->join($c, $c . '.subresourceid', $q . '.subresourceid')
-			// Resource
-			->join($r, $r . '.id', $c . '.resourceid')
-			->where($r . '.datetimecreated', '<=', $now->toDateTimeString())
-			->whereNull($r . '.datetimeremoved')
-			->where($r . '.id', '=', $resource->id)
-			// Group
-			->join($g, $g . '.id', $q . '.groupid')
-			->leftJoin($u, $u . '.groupid', $g . '.id')
-			// Group users
-			->leftJoin($ugm, function($join) use ($u, $ugm, $uu)
-			{
-				$join->on($ugm . '.unixgroupid', $u . '.id')
-					->on($ugm . '.userid', $uu . '.userid');
-			})
-			->groupBy($qu . '.queueid')
-			->groupBy($uu . '.userid')
-			->groupBy($uu . '.username')
-			->groupBy($uu . '.email')
-			->groupBy($us . '.name')
-			->groupBy($q . '.name')
-			->groupBy($g . '.name')
-			->get();
-
-		foreach ($qus as $i => $qur)
+		if (!$filters['membertype'])
 		{
-			if (!isset($users[$qur->userid]))
+			$qus = QueueUser::query()
+				->select(
+					$uu . '.userid',
+					$uu . '.username',
+					$uu . '.email',
+					$us . '.name',
+					$qu . '.queueid',
+					$q . '.name AS queue',
+					$g . '.name AS group'
+				)
+				// Queues
+				->join($q, $q . '.id', $qu . '.queueid')
+				->where($q . '.datetimecreated', '<=', $now->toDateTimeString())
+				->whereNull($q . '.datetimeremoved')
+				->where($qu . '.membertype', '=', 1) // We don't want pending members (4)
+				// Userusername
+				->join($uu, $uu . '.userid', $qu . '.userid')
+				->where($uu . '.datecreated', '<=', $now->toDateTimeString())
+				->whereNull($uu . '.dateremoved')
+				->join($us, $us . '.id', $uu . '.userid')
+				// Resource/subresource
+				->join($c, $c . '.subresourceid', $q . '.subresourceid')
+				// Resource
+				->join($r, $r . '.id', $c . '.resourceid')
+				->where($r . '.datetimecreated', '<=', $now->toDateTimeString())
+				->whereNull($r . '.datetimeremoved')
+				->where($r . '.id', '=', $resource->id)
+				// Group
+				->join($g, $g . '.id', $q . '.groupid')
+				->leftJoin($u, $u . '.groupid', $g . '.id')
+				// Unix Group users
+				/*->leftJoin($ugm, function($join) use ($u, $ugm, $uu)
+				{
+					$join->on($ugm . '.unixgroupid', $u . '.id')
+						->on($ugm . '.userid', $uu . '.userid');
+				})*/
+				->groupBy($qu . '.queueid')
+				->groupBy($uu . '.userid')
+				->groupBy($uu . '.username')
+				->groupBy($uu . '.email')
+				->groupBy($us . '.name')
+				->groupBy($q . '.name')
+				->groupBy($g . '.name')
+				->get();
+
+			foreach ($qus as $i => $qur)
 			{
-				$users[$qur->userid] = array(
-					'name' => $qur->name,
-					'username' => $qur->username,
-					'email' => $qur->email
-				);
-			}
+				if (!isset($users[$qur->userid]))
+				{
+					$users[$qur->userid] = array(
+						'name' => $qur->name,
+						'username' => $qur->username,
+						'email' => $qur->email
+					);
+				}
 
-			if (!isset($users[$qur->userid]['queues']))
+				if (!isset($users[$qur->userid]['queues']))
+				{
+					$users[$qur->userid]['queues'] = array();
+				}
+
+				if (isset($users[$qur->userid]['queues'][$qur->queueid]))
+				{
+					continue;
+				}
+
+				$users[$qur->userid]['queues'][$qur->queueid] = [
+					'id' => $qur->queueid,
+					'name' => $qur->queue . ' (' . $qur->group . ')',
+				];
+
+				unset($qus[$i]);
+			}
+			unset($qus);
+
+			$gqus = GroupQueueUser::query()
+				->select(
+					$uu . '.userid',
+					$uu . '.username',
+					$uu . '.email',
+					$us . '.name',
+					$qu . '.queueid',
+					$q . '.name AS queue',
+					$g . '.name AS group'
+				)
+				// Queue user
+				->join($qu, $qu . '.id', $gqu . '.queueuserid')
+				->where($gqu . '.datetimecreated', '<=', $now->toDateTimeString())
+				->where($qu . '.datetimecreated', '<=', $now->toDateTimeString())
+				->whereNull($qu . '.datetimeremoved')
+				->where($gqu . '.membertype', '=', 1)
+				->where($qu . '.membertype', '=', 1)
+				// Queues
+				->join($q, $q . '.id', $qu . '.queueid')
+				->where($q . '.datetimecreated', '<=', $now->toDateTimeString())
+				->whereNull($q . '.datetimeremoved')
+				// Userusername
+				->join($uu, $uu . '.userid', $qu . '.userid')
+				->where($uu . '.datecreated', '<=', $now->toDateTimeString())
+				->whereNull($uu . '.dateremoved')
+				->join($us, $us . '.id', $uu . '.userid')
+				// Resource/subresource
+				->join($c, $c . '.subresourceid', $q . '.subresourceid')
+				// Resource
+				->join($r, $r . '.id', $c . '.resourceid')
+				->where($r . '.datetimecreated', '<=', $now->toDateTimeString())
+				->whereNull($r . '.datetimeremoved')
+				->where($r . '.id', '=', $resource->id)
+				// Group
+				->join($g, $g . '.id', $gqu . '.groupid')
+				->leftJoin($u, $u . '.groupid', $g . '.id')
+				// Unix Group users
+				/*->leftJoin($ugm, function($join) use ($u, $ugm, $uu)
+				{
+					$join->on($ugm . '.unixgroupid', $u . '.id')
+						->on($ugm . '.userid', $uu . '.userid');
+				})*/
+				->groupBy($qu . '.queueid')
+				->groupBy($uu . '.userid')
+				->groupBy($uu . '.username')
+				->groupBy($uu . '.email')
+				->groupBy($us . '.name')
+				->groupBy($q . '.name')
+				->groupBy($g . '.name')
+				->get();
+
+			foreach ($gqus as $i => $gqur)
 			{
-				$users[$qur->userid]['queues'] = array();
+				if (!isset($users[$gqur->userid]))
+				{
+					$users[$gqur->userid] = array(
+						'name' => $gqur->name,
+						'username' => $gqur->username,
+						'email' => $gqur->email
+					);
+				}
+
+				if (!isset($users[$gqur->userid]['queues']))
+				{
+					$users[$gqur->userid]['queues'] = array();
+				}
+
+				if (isset($users[$gqur->userid]['queues'][$gqur->queueid]))
+				{
+					continue;
+				}
+
+				$users[$gqur->userid]['queues'][$gqur->queueid] = [
+					'id' => $gqur->queueid,
+					'name' => $gqur->queue . ' (' . $gqur->group . ')',
+				];
+
+				unset($gqus[$i]);
 			}
-
-			if (isset($users[$qur->userid]['queues'][$qur->queueid]))
-			{
-				continue;
-			}
-
-			$users[$qur->userid]['queues'][$qur->queueid] = [
-				'id' => $qur->queueid,
-				'name' => $qur->queue . ' (' . $qur->group . ')',
-			];
-
-			unset($qus[$i]);
+			unset($gqus);
 		}
-		unset($qus);
 
-		$gqus = GroupQueueUser::query()
-			->select(
-				$uu . '.userid', $uu . '.username', $uu . '.email', $us . '.name', $qu . '.queueid', $q . '.name AS queue', $g . '.name AS group'
-			)
-			// Queue user
-			->join($qu, $qu . '.id', $gqu . '.queueuserid')
-			->where($gqu . '.datetimecreated', '<=', $now->toDateTimeString())
-			->where($qu . '.datetimecreated', '<=', $now->toDateTimeString())
-			->whereNull($qu . '.datetimeremoved')
-			->where($gqu . '.membertype', '=', 1)
-			->where($qu . '.membertype', '=', 1)
-			// Queues
-			->join($q, $q . '.id', $qu . '.queueid')
-			->where($q . '.datetimecreated', '<=', $now->toDateTimeString())
-			->whereNull($q . '.datetimeremoved')
-			// Userusername
-			->join($uu, $uu . '.userid', $qu . '.userid')
-			->where($uu . '.datecreated', '<=', $now->toDateTimeString())
-			->whereNull($uu . '.dateremoved')
-			->join($us, $us . '.id', $uu . '.userid')
-			// Resource/subresource
-			->join($c, $c . '.subresourceid', $q . '.subresourceid')
-			// Resource
-			->join($r, $r . '.id', $c . '.resourceid')
-			->where($r . '.datetimecreated', '<=', $now->toDateTimeString())
-			->whereNull($r . '.datetimeremoved')
-			->where($r . '.id', '=', $resource->id)
-			// Group
-			->join($g, $g . '.id', $gqu . '.groupid')
-			->leftJoin($u, $u . '.groupid', $g . '.id')
-			// Group users
-			->leftJoin($ugm, function($join) use ($u, $ugm, $uu)
-			{
-				$join->on($ugm . '.unixgroupid', $u . '.id')
-					->on($ugm . '.userid', $uu . '.userid');
-			})
-			->groupBy($qu . '.queueid')
-			->groupBy($uu . '.userid')
-			->groupBy($uu . '.username')
-			->groupBy($uu . '.email')
-			->groupBy($us . '.name')
-			->groupBy($q . '.name')
-			->groupBy($g . '.name')
-			->get();
-
-		foreach ($gqus as $i => $gqur)
-		{
-			if (!isset($users[$gqur->userid]))
-			{
-				$users[$gqur->userid] = array(
-					'name' => $gqur->name,
-					'username' => $gqur->username,
-					'email' => $gqur->email
-				);
-			}
-
-			if (!isset($users[$gqur->userid]['queues']))
-			{
-				$users[$gqur->userid]['queues'] = array();
-			}
-
-			if (isset($users[$gqur->userid]['queues'][$gqur->queueid]))
-			{
-				continue;
-			}
-
-			$users[$gqur->userid]['queues'][$gqur->queueid] = [
-				'id' => $gqur->queueid,
-				'name' => $gqur->queue . ' (' . $gqur->group . ')',
-			];
-
-			unset($gqus[$i]);
-		}
-		unset($gqus);
-
-		$ugus = UnixGroupMember::query()
+		$query = UnixGroupMember::query()
 			->select(
 				$uu . '.userid',
 				$uu . '.username',
@@ -531,13 +581,30 @@ class MembersController extends Controller
 			->whereNull($r . '.datetimeremoved')
 			->where($r . '.id', '=', $resource->id)
 			// Group
-			->join($g, $g . '.id', $u . '.groupid')
+			->join($g, $g . '.id', $u . '.groupid');
+
+		if ($filters['membertype'] == Type::MANAGER)
+		{
 			// Group users
-			->leftJoin($gu, function($join) use ($g, $gu, $uu)
+			$query->join($gu, function($join) use ($g, $gu, $ugm)
+			{
+				$join->on($gu . '.groupid', $g . '.id')
+					->on($gu . '.userid', $ugm . '.userid');
+			})
+			->where($gu . '.membertype', '=', Type::MANAGER)
+			->whereNull($gu . '.dateremoved');
+		}
+		else
+		{
+			// Group users
+			$query->leftJoin($gu, function($join) use ($g, $gu, $uu)
 			{
 				$join->on($gu . '.groupid', $g . '.id')
 					->on($gu . '.userid', $uu . '.userid');
-			})
+			});
+		}
+
+		$ugus = $query
 			->groupBy($uu . '.userid')
 			->groupBy($uu . '.username')
 			->groupBy($uu . '.email')
@@ -629,7 +696,7 @@ class MembersController extends Controller
 	}
 
 	/**
-	 * Create a resource
+	 * Create a resource member association
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /resources/members
@@ -799,7 +866,7 @@ class MembersController extends Controller
 	}
 
 	/**
-	 * Read a resource
+	 * Read a resource member status
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /resources/members/{user id}.{resource id}
@@ -892,7 +959,7 @@ class MembersController extends Controller
 	}
 
 	/**
-	 * Delete a resource
+	 * Delete a resource/member association
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /resources/members/{user id}.{resource id}
