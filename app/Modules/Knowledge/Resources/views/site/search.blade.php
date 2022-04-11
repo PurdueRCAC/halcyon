@@ -40,7 +40,7 @@
 				<?php
 				$ancestors = array_reverse($row->ancestors());
 				foreach ($ancestors as $ancestor):
-					$row->page->variables->merge($ancestor->page->variables, true);
+					$row->page->mergeVariables($ancestor->page->variables->toArray(), true);
 				endforeach;
 				?>
 				<article id="kb_{{ $row->id }}" class="article">
