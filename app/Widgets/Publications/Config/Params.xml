@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="basic">
+			<field name="year" type="text" default="" label="widget.publications::publications.params.year" description="widget.publications::publications.params.year desc" />
+			<field name="type" type="App\Modules\Publications\Models\Fields\Types" default="*" label="widget.publications::publications.params.type" description="widget.publications::publications.params.type desc">
+				<option value="*">widget.publications::publications.params.all</option>
+			</field>
+			<field name="limit" type="text" default="500" label="widget.publications::publications.params.number of items" description="widget.publications::publications.params.number of items desc" />
+			<field name="order" type="list" default="published_at" label="widget.publications::publications.params.ordering" description="widget.publications::publications.params.ordering desc">
+				<option value="title">widget.publications::publications.params.order by title</option>
+				<option value="published_at">widget.publications::publications.params.order by year</option>
+			</field>
+			<field name="order_dir" type="list" default="desc" label="widget.publications::publications.params.ordering direction" description="widget.publications::publications.params.ordering direction desc">
+				<option value="asc">widget.publications::publications.params.order asc</option>
+				<option value="desc">widget.publications::publications.params.order desc</option>
+			</field>
+		</fieldset>
+		<fieldset name="advanced">
+			<field name="class" type="text" label="widgets::widgets.field.class name" description="widgets::widgets.field.class name description" />
+			<field name="cache" type="list" default="1" label="widgets::widgets.field.caching" description="widgets::widgets.field.caching description">
+				<option value="1">widgets::widgets.use global</option>
+				<option value="0">widgets::widgets.no caching</option>
+			</field>
+			<field name="cache_time" type="text" default="900" label="widgets::widgets.field.cache time" description="widgets::widgets.field.cache time description" />
+		</fieldset>
+	</fields>
+</config>

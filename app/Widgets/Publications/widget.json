@@ -1,0 +1,7 @@
+{
+	"name": "Publications",
+	"alias": "publicaitons",
+	"description": "This displays a list of publications",
+	"type": "site",
+	"version": "1.0.0"
+}
