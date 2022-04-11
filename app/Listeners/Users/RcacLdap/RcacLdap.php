@@ -8,6 +8,7 @@ use App\Modules\Users\Events\UserLookup;
 use App\Modules\Users\Models\User;
 use App\Modules\Courses\Events\CourseEnrollment;
 use App\Modules\Resources\Events\ResourceMemberStatus;
+use App\Modules\Resources\Events\ResourceMemberList;
 use App\Modules\Groups\Events\UnixGroupFetch;
 use App\Modules\History\Traits\Loggable;
 use App\Halcyon\Utility\Str;
@@ -34,6 +35,7 @@ class RcacLdap
 		$events->listen(ResourceMemberStatus::class, self::class . '@handleResourceMemberStatus');
 		$events->listen(UnixGroupFetch::class, self::class . '@handleUnixGroupFetch');
 		$events->listen(CourseEnrollment::class, self::class . '@handleCourseEnrollment');
+		//$events->listen(ResourceMemberList::class, self::class . '@handleResourceMemberList');
 	}
 
 	/**
@@ -645,6 +647,10 @@ class RcacLdap
 			{
 				$status = 200;
 
+				$xenon = $ldap->search()
+					->where('host', '=', 'xenon.rcac.purdue.edu')
+					->get();
+
 				foreach ($ldapdata as $row)
 				{
 					// Try to subtract staff users. Subtact anyone in xenon.
@@ -809,5 +815,109 @@ class RcacLdap
 		}
 
 		$this->log('rcacldap', __METHOD__, 'GET', $status, $results, json_encode($query));
+	}
+
+	/**
+	 * Lookup membership for a resource
+	 *
+	 * @param   ResourceMembers  $event
+	 * @return  void
+	 */
+	public function handleResourceMemberList(ResourceMemberList $event)
+	{
+		if (!app()->has('ldap'))
+		{
+			return;
+		}
+
+		$config = config('ldap.rcac', []);
+
+		if (empty($config))
+		{
+			return;
+		}
+
+		try
+		{
+			$ldap = $this->connect($config);
+
+			$status = 404;
+			$results = array();
+			$ldap_users = array();
+
+			// Performing a query.
+			$ldapdata = $ldap->search()
+				->select(['uid', 'classification'])
+				->where('host', '=', $event->resource->rolename . '.rcac.purdue.edu')
+				->get();
+
+			if (!empty($ldapdata))
+			{
+				$status = 200;
+
+				// Try to subtract staff users. Subtact anyone in xenon.
+				/*$xenon = array();
+				$rows = $ldap->search()
+					->select(['uid'])
+					->where('host', '=', 'xenon.rcac.purdue.edu')
+					->get();
+				foreach ($rows as $row)
+				{
+					$xenon[] = $row['uid'][0];
+				}
+				unset($rows);*/
+
+				foreach ($ldapdata as $row)
+				{
+					/*if (!in_array($row['uid'][0], $xenon))
+					{
+						$ldap_users[$row['uid'][0]] = $row['uid'][0];
+					}
+					else
+					{
+						$system_users[$row['uid'][0]] = $row['uid'][0];
+					}*/
+
+					if (isset($row['classification'][0])
+					 && ($row['classification'][0] == 'System Account' || $row['classification'][0] == 'Software Account'))
+					{
+						$system_users[$row['uid'][0]] = $row['uid'][0];
+					}
+					else
+					{
+						$ldap_users[$row['uid'][0]] = $row['uid'][0];
+					}
+				}
+			}
+
+			$users = array_diff($ldap_users, $system_users);
+
+			foreach ($users as $username)
+			{
+				$user = User::findByUsername($username);
+
+				if (!$user || !$user->id || $user->trashed())
+				{
+					continue;
+				}
+
+				$results[$user->id] = array(
+					'name' => $user->name,
+					'username' => $user->username,
+					'email' => $user->email
+				);
+
+				unset($user);
+			}
+
+			$event->results = $results;
+		}
+		catch (\Exception $e)
+		{
+			$status = 500;
+			$results = ['error' => $e->getMessage()];
+		}
+
+		$this->log('rcacldap', __METHOD__, 'GET', $status, $results, 'host=' . $event->resource->rolename . '.rcac.purdue.edu');
 	}
 }

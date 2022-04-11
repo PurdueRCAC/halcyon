@@ -14,6 +14,7 @@ use App\Modules\Resources\Models\Child;
 use App\Modules\Resources\Events\ResourceMemberStatus;
 use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Resources\Events\ResourceMemberDeleted;
+use App\Modules\Resources\Events\ResourceMemberList;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
 use App\Modules\Queues\Models\Queue;
@@ -287,8 +288,7 @@ class MembersController extends Controller
 
 		$gus = GroupUser::query()
 			->select(
-				//DB::raw('DISTINCT(' . $uu . '.userid)')
-				$uu . '.userid', $uu . '.username', $uu . '.email', $us . '.name', $q . '.id as queueid', $q . '.name', $g . '.name AS group'
+				$uu . '.userid', $uu . '.username', $uu . '.email', $us . '.name', $q . '.id as queueid', $q . '.name AS queue', $g . '.name AS group'
 			)
 			// Group
 			->join($g, $g . '.id', $gu . '.groupid')
@@ -349,7 +349,7 @@ class MembersController extends Controller
 
 			$users[$gur->userid]['queues'][$gur->queueid] = [
 				'id' => $gur->queueid,
-				'name' => $gur->name . ' (' . $gur->group . ')',
+				'name' => $gur->queue . ' (' . $gur->group . ')',
 			];
 
 			unset($gus[$i]);
@@ -358,8 +358,7 @@ class MembersController extends Controller
 
 		$qus = QueueUser::query()
 			->select(
-				//DB::raw('DISTINCT(' . $uu . '.userid)')
-				$uu . '.userid', $uu . '.username', $uu . '.email', $us . '.name', $qu . '.queueid', $q . '.name', $g . '.name AS group'
+				$uu . '.userid', $uu . '.username', $uu . '.email', $us . '.name', $qu . '.queueid', $q . '.name AS queue', $g . '.name AS group'
 			)
 			// Queues
 			->join($q, $q . '.id', $qu . '.queueid')
@@ -419,7 +418,7 @@ class MembersController extends Controller
 
 			$users[$qur->userid]['queues'][$qur->queueid] = [
 				'id' => $qur->queueid,
-				'name' => $qur->name . ' (' . $qur->group . ')',
+				'name' => $qur->queue . ' (' . $qur->group . ')',
 			];
 
 			unset($qus[$i]);
@@ -428,13 +427,11 @@ class MembersController extends Controller
 
 		$gqus = GroupQueueUser::query()
 			->select(
-				//DB::raw('DISTINCT(' . $uu . '.userid)')
-				$uu . '.userid', $uu . '.username', $uu . '.email', $us . '.name', $qu . '.queueid', $q . '.name', $g . '.name AS group'
+				$uu . '.userid', $uu . '.username', $uu . '.email', $us . '.name', $qu . '.queueid', $q . '.name AS queue', $g . '.name AS group'
 			)
 			// Queue user
 			->join($qu, $qu . '.id', $gqu . '.queueuserid')
 			->where($gqu . '.datetimecreated', '<=', $now->toDateTimeString())
-			//->whereNull($gqu . '.datetimeremoved')
 			->where($qu . '.datetimecreated', '<=', $now->toDateTimeString())
 			->whereNull($qu . '.datetimeremoved')
 			->where($gqu . '.membertype', '=', 1)
@@ -496,7 +493,7 @@ class MembersController extends Controller
 
 			$users[$gqur->userid]['queues'][$gqur->queueid] = [
 				'id' => $gqur->queueid,
-				'name' => $gqur->name . ' (' . $gqur->group . ')',
+				'name' => $gqur->queue . ' (' . $gqur->group . ')',
 			];
 
 			unset($gqus[$i]);
@@ -505,14 +502,12 @@ class MembersController extends Controller
 
 		$ugus = UnixGroupMember::query()
 			->select(
-				//DB::raw('DISTINCT(' . $uu . '.userid)')
-				//$uu . '.userid', $d . '.id as dirid', $d . '.name', $g . '.name AS group'
 				$uu . '.userid',
 				$uu . '.username',
 				$uu . '.email',
 				$us . '.name',
 				//$d . '.id as dirid',
-				//$d . '.name',
+				//$d . '.name as dir',
 				//$g . '.name AS group'
 			)
 			// Unix group member
@@ -543,7 +538,6 @@ class MembersController extends Controller
 				$join->on($gu . '.groupid', $g . '.id')
 					->on($gu . '.userid', $uu . '.userid');
 			})
-			//->groupBy($d . '.id')
 			->groupBy($uu . '.userid')
 			->groupBy($uu . '.username')
 			->groupBy($uu . '.email')
@@ -576,12 +570,18 @@ class MembersController extends Controller
 
 			$users[$uqur->userid]['directories'][$uqur->dirid] = [
 				'id' => $uqur->dirid,
-				'name' => $uqur->name . ' (' . $uqur->group . ')',
+				'name' => $uqur->dir . ' (' . $uqur->group . ')',
 			];*/
 
 			unset($ugus[$i]);
 		}
 		unset($ugus);
+
+		if (!count($users))
+		{
+			event($e = new ResourceMemberList($resource));
+			$users = $e->results;
+		}
 
 		$data = array();
 		foreach ($users as $userid => $datum)
