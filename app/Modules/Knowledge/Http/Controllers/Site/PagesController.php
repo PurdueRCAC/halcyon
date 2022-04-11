@@ -339,7 +339,11 @@ class PagesController extends Controller
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
+			->appends([
+				'search' => $filters['search'],
+				'parent' => $filters['parent']
+			]);
 			/*->map(function ($row) use ($filters)
 			{
 				$row->title = preg_replace('/(' . $filters['search'] . ')/i', "<strong class=\"highlight\">$1</strong>", $row->title);
