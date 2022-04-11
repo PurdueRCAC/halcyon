@@ -54,7 +54,6 @@ class SetActiveMenu
 
 		foreach ($items as $item)
 		{
-			//sqlsrv  change
 			if (isset($item->language))
 			{
 				$item->language = trim($item->language);
@@ -66,37 +65,31 @@ class SetActiveMenu
 			// Get the length of the route
 			$length = strlen($item->link);
 			$item->link = trim($item->link, '/');
-//echo $route . '/' . ' -- '. $item->link . '/<br />';
+			//echo $route . ' -- '. $item->link . '<br />';
+
 			if ($length > 0 && strpos($route . '/', $item->link . '/') === 0
 			 && $item->type != 'alias'
 			 && (!app()->has('language.filter') || $item->language == '*' || $item->language == $lang))
 			{
 				// Handle external url menu items differently
-				if ($item->type == 'url')
-				{
+				//if ($item->type == 'url')
+				//{
 					// If menu route exactly matches url route, redirect (if necessary) to menu link
 					if (trim($item->link, '/') == trim($route, '/'))
 					{
-						/*if (trim($item->route, '/') != trim($item->link, '/')
-						 && trim(url('/') . '/' . $item->route, '/') != trim($item->link, '/') // Added because it would cause redirect loop for installs not in top-level webroot
-						 && trim(url('/') . '/index.php/' . $item->route, '/') != trim($item->link, '/')) // Added because it would cause redirect loop for installs not in top-level webroot
-						{
-							\App::redirect($item->link);
-						}*/
-						//$menu->setActive($item->id);
 						$found = $item;
 						break;
 					}
 
 					// Pass local URLs through, but record Itemid (we want the content parser to handle this)
-					if (strpos($item->link, '://') === false)
+					/*if (strpos($item->link, '://') === false)
 					{
 						//$vars['Itemid'] = $item->id;
 						//$menu->setActive($item->id);
 						$found = $item;
 						break;
-					}
-				}
+					}*/
+				//}
 
 				// We have exact item for this language
 				if ($item->language == $lang)
@@ -117,8 +110,6 @@ class SetActiveMenu
 			}
 		}
 
-		// No menu item found.
-		// Carry on...
 		if ($found)
 		{
 			$request->merge(['itemid' => $found->id]);
