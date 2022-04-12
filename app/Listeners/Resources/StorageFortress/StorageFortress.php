@@ -9,6 +9,9 @@ use App\Modules\Queues\Models\User as QueueUser;
 
 /**
  * Fortress Storage listener for resources
+ * 
+ * This ensures access to Fortress when a user is added to
+ * some other resource and/or unix group.
  */
 class StorageFortress
 {
@@ -25,24 +28,26 @@ class StorageFortress
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Setup access to Fortress for new resource members
 	 *
 	 * @param   ResourceMemberCreated  $event
 	 * @return  void
 	 */
 	public function handleResourceMemberCreated(ResourceMemberCreated $event)
 	{
+		// "HPSSUSER" is Fortress. Avoid a neverending loop.
 		if ($event->resource->rolename == 'HPSSUSER')
 		{
 			return;
 		}
 
-		if (!$this->ensureResourceMembership($event->user))
+		if (!$event->user || !$event->user->id)
 		{
 			return;
 		}
 
-		if (!$event->user->id)
+		// Create account role if needed
+		if (!$this->ensureResourceMembership($event->user))
 		{
 			return;
 		}
@@ -84,7 +89,7 @@ class StorageFortress
 	 * @param   User  $user
 	 * @return  bool
 	 */
-	private function ensureResourceMembership($user)
+	private function ensureResourceMembership(User $user)
 	{
 		$resource = Asset::query()
 			->where('rolename', '=', 'HPSSUSER')

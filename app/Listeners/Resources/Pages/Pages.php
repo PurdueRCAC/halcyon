@@ -21,7 +21,7 @@ class Pages
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Find pages to be listed on a resource Asset's overview
 	 *
 	 * @param   AssetDisplaying  $event
 	 * @return  void
@@ -33,7 +33,7 @@ class Pages
 			return;
 		}
 
-		$ids = config()->get('listener.resources.pages.display', [8]);
+		$ids = config()->get('listener.resources.pages.display', [8]); // 8 = "Help" page
 
 		if (empty($ids))
 		{

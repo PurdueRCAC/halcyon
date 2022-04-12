@@ -26,7 +26,7 @@ class News
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Find news to be listed on a resource Asset's overview
 	 *
 	 * @param   AssetDisplaying  $event
 	 * @return  void
@@ -49,9 +49,8 @@ class News
 			->select($a . '.*')
 			->join($r, $r . '.newsid', $a . '.id')
 			->wherePublished()
-			->where($a . '.newstypeid', '=', 1)
+			->where($a . '.newstypeid', '=', 1) // Outages and Maintenance
 			->where($a . '.template', '=', 0)
-			//->where($a . '.datetimenews', '<', $now)
 			->where(function($where) use ($now, $a)
 			{
 				$where->whereNull($a . '.datetimenewsend')
@@ -79,7 +78,7 @@ class News
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Look for outage events for a specific resource
 	 *
 	 * @param   StatusRetrieval  $event
 	 * @return  void
@@ -106,7 +105,7 @@ class News
 			->select($a . '.*')
 			->join($r, $r . '.newsid', $a . '.id')
 			->wherePublished()
-			->where($a . '.newstypeid', '=', 1)
+			->where($a . '.newstypeid', '=', 1) // Outages and Maintenance
 			->where($a . '.template', '=', 0)
 			->where($a . '.datetimenews', '<', $now)
 			->where(function($where) use ($now, $a)
@@ -134,17 +133,15 @@ class News
 
 			$resource->isHappening = true;
 
-			//$thisnews[] = $article;
-			//echo $article->datetimenews . ' ' . $article->datetimenewsend . ' - ' . $article->id . '<br />';
 			$resource->status = 'maintenance';
 
 			if (stristr($article->headline, 'issue')
-				|| stristr($article->headline, 'unavailable')
-				|| stristr($article->headline, 'outage'))
+			|| stristr($article->headline, 'unavailable')
+			|| stristr($article->headline, 'outage'))
 			{
 				$resource->status = 'down';
+				break;
 			}
-			break;
 		}
 
 		$resource->news = $news;

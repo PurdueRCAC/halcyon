@@ -41,7 +41,7 @@ class Orders
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Find related products to be listed on a resource Asset's overview
 	 *
 	 * @param   AssetDisplaying  $event
 	 * @return  void

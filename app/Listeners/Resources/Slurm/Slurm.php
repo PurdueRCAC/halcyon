@@ -39,6 +39,7 @@ class Slurm
 			return;
 		}
 
+		// Convert Service Units (minutes) to seconds
 		$queue->serviceunits = $queue->serviceunits * 60;
 
 		$event->queue = $queue;

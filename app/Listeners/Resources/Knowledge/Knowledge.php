@@ -39,7 +39,7 @@ class Knowledge
 			->select($a . '.*')
 			->join($p, $p . '.id', $a . '.page_id')
 			->where($a . '.path', '=', $event->asset->listname)
-			->where($a . '.state', '=', 1)
+			->where($a . '.state', '=', Associations::STATE_PUBLISHED)
 			->orderBy($a . '.id', 'asc')
 			->get()
 			->first();
@@ -49,12 +49,12 @@ class Knowledge
 			return;
 		}
 
-		$assoc->state = 1;
+		$assoc->state = Associations::STATE_ARCHIVED;
 		$assoc->save();
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Load various related knowledge base pages for a resource's overview
 	 *
 	 * @param   AssetDisplaying  $event
 	 * @return  void
@@ -65,8 +65,6 @@ class Knowledge
 		{
 			return;
 		}
-
-		//$content = $event->getBody();
 
 		$access = [1];
 
@@ -82,7 +80,7 @@ class Knowledge
 			->select($a . '.*')
 			->join($p, $p . '.id', $a . '.page_id')
 			->where($a . '.path', '=', $event->getAsset()->listname)
-			->where($a . '.state', '=', 1)
+			->where($a . '.state', '=', Associations::STATE_PUBLISHED)
 			->whereIn($a . '.access', $access)
 			->orderBy($a . '.id', 'asc')
 			->get()
@@ -101,7 +99,7 @@ class Knowledge
 
 		$overview = $page->children()
 			->where('alias', '=', 'overview')
-			->where($a . '.state', '=', 1)
+			->where($a . '.state', '=', Associations::STATE_PUBLISHED)
 			->whereIn($a . '.access', $access)
 			->get()
 			->first();
@@ -152,7 +150,7 @@ class Knowledge
 		// FAQ page
 		$faq = $page->children()
 			->where('alias', '=', 'faq')
-			->where($a . '.state', '=', 1)
+			->where($a . '.state', '=', Associations::STATE_PUBLISHED)
 			->whereIn($a . '.access', $access)
 			->get()
 			->first();
@@ -170,7 +168,7 @@ class Knowledge
 		// Bio
 		$bio = $page->children()
 			->where('alias', '=', 'bio')
-			->where($a . '.state', '=', 1)
+			->where($a . '.state', '=', Associations::STATE_PUBLISHED)
 			->whereIn($a . '.access', $access)
 			->get()
 			->first();
