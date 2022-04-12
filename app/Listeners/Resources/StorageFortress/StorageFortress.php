@@ -89,7 +89,7 @@ class StorageFortress
 	 * @param   User  $user
 	 * @return  bool
 	 */
-	private function ensureResourceMembership(User $user)
+	private function ensureResourceMembership($user)
 	{
 		$resource = Asset::query()
 			->where('rolename', '=', 'HPSSUSER')
