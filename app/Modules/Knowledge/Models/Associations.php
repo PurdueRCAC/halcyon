@@ -14,6 +14,13 @@ class Associations extends Model
 	use ErrorBag;
 
 	/**
+	 * States
+	 **/
+	const STATE_UNPUBLISHED = 0;
+	const STATE_PUBLISHED   = 1;
+	const STATE_ARCHIVED    = 2;
+
+	/**
 	 * The table to which the class pertains
 	 *
 	 * @var  string
@@ -105,7 +112,7 @@ class Associations extends Model
 	public function publishedChildren()
 	{
 		return $this->children()
-			->where('state', '=', 1)
+			->where('state', '=', self::STATE_PUBLISHED)
 			->whereIn('access', (auth()->user() ? auth()->user()->getAuthorisedViewLevels() : [1]))
 			->orderBy('lft', 'asc')
 			->get();
@@ -115,7 +122,7 @@ class Associations extends Model
 			->select($this->getTable() . '.*')
 			->join($p, $p . '.id', $this->getTable() . '.page_id')
 			//->orderBy($a . '.lft', 'asc')
-			->where($p . '.state', '=', 1)
+			->where($p . '.state', '=', self::STATE_PUBLISHED)
 			->whereIn($p . '.access', (auth()->user() ? auth()->user()->getAuthorisedViewLevels() : [1]))
 			->get();*/
 	}
@@ -243,7 +250,7 @@ class Associations extends Model
 	 */
 	public function isPublished()
 	{
-		return ($this->state == 1);
+		return ($this->state == self::STATE_PUBLISHED);
 	}
 
 	/**
@@ -253,7 +260,7 @@ class Associations extends Model
 	 */
 	public function isArchived()
 	{
-		return ($this->state == 2);
+		return ($this->state == self::STATE_ARCHIVED);
 	}
 
 	/**
