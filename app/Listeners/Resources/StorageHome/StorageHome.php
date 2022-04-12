@@ -7,7 +7,7 @@ use App\Modules\Storage\Models\StorageResource;
 use App\Modules\Storage\Models\Directory;
 
 /**
- * Storage listener for resources
+ * "Home" Storage listener for resources
  */
 class StorageHome
 {
@@ -23,7 +23,7 @@ class StorageHome
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Create home dirs for users new to the resource
 	 *
 	 * @param   ResourceMemberCreated  $event
 	 * @return  void
@@ -39,7 +39,7 @@ class StorageHome
 		//
 		// Home directories can either be shared across multiple resources
 		// or specific to a resource. Check which one we should load.
-		if ($event->resource->home && $event->resource->home != 'shared')
+		if ($event->resource->getFacet('home') && $event->resource->getFacet('home') != 'shared')
 		{
 			$home = Asset::query()
 				->whereLike('name', 'Home')
