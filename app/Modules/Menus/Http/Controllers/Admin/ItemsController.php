@@ -46,21 +46,24 @@ class ItemsController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
+			if ($key == 'menutype' && $filters['menutype'])
+			{
+				continue;
+			}
 			if ($key != 'page'
 			 && $request->has($key) //&& session()->has('menus.items.filter_' . $key)
 			 && $request->input($key) != session()->get('menus.items.filter_' . $key))
 			{
 				$reset = true;
 			}
-			$filters[$key] = $request->state('menus.items.' . $key, $key, $default);
+			$filters[$key] = $request->state('menus.items.filter_' . $key, $key, $default);
 		}
-
 		$filters['page'] = $reset ? 1 : $filters['page'];
 
-		if ($menutype)
+		/*if ($menutype)
 		{
 			$filters['menutype'] = $menutype;
-		}
+		}*/
 
 		if (!in_array($filters['order'], ['id', 'title', 'published', 'access']))
 		{
