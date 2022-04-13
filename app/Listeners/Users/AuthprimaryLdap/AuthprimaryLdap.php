@@ -929,7 +929,7 @@ class AuthprimaryLdap
 
 		$unixgroup = $event->member->unixgroup;
 
-		if (!$unixgroup || substr($unixgroup->longname, 0, 2) != 'x-')
+		if (!$unixgroup || substr($event->member->user->username, 0, 2) != 'x-')
 		{
 			return;
 		}
@@ -953,7 +953,7 @@ class AuthprimaryLdap
 				$usernames = array();
 				foreach ($members as $member)
 				{
-					if (!$member->user)
+					if (!$member->user || substr($member->user->username, 0, 2) != 'x-')
 					{
 						continue;
 					}
