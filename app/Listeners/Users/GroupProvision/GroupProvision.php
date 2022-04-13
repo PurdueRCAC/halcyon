@@ -272,7 +272,7 @@ class GroupProvision
 
 		$member = $event->member;
 
-		if (!$this->shouldHandleUnixgroup($member->unixgroup) || !$this->shouldHandleMember($member))
+		if (!$this->shouldHandleUnixgroup($member->unixgroup) || !$this->shouldHandleMember($member->user))
 		{
 			return;
 		}
@@ -334,7 +334,7 @@ class GroupProvision
 
 		$member = $event->member;
 
-		if (!$this->shouldHandleUnixgroup($member->unixgroup) || !$this->shouldHandleMember($member))
+		if (!$this->shouldHandleUnixgroup($member->unixgroup) || !$this->shouldHandleMember($member->user))
 		{
 			return;
 		}
