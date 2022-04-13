@@ -26,7 +26,7 @@ class StatusController extends Controller
 		if (!$type)
 		{
 			$type = NewsType::query()
-				->whereLike('name', 'outage')
+				->where('name', 'LIKE', '%outage%')
 				->first();
 		}
 
