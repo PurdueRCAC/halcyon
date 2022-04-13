@@ -42,7 +42,7 @@ class StorageHome
 		if ($event->resource->getFacet('home') && $event->resource->getFacet('home') != 'shared')
 		{
 			$home = Asset::query()
-				->whereLike('name', 'Home')
+				->where('name', 'LIKE', '%Home')
 				->where('parentid', '=', $event->resource->id)
 				->first();
 		}
