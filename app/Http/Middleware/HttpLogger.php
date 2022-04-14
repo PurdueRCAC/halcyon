@@ -92,7 +92,8 @@ class HttpLogger
 		}
 
 		$log->status = 200;
-		if (!($response instanceof StreamedResponse))
+		if (!($response instanceof StreamedResponse)
+		 && !($response instanceof BinaryFileResponse))
 		{
 			$log->status = $response->status();
 		}
