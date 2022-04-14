@@ -69,14 +69,14 @@ class Publication extends Model
 	];
 
 	/**
-	 * Get a list of menu items
+	 * Get a list of associated users
 	 *
 	 * @return  object
 	 */
-	public function authors()
+	/*public function users()
 	{
-		return $this->hasMany(Author::class, 'publication_id');
-	}
+		return $this->hasMany(Map::class, 'publication_id');
+	}*/
 
 	/**
 	 * Get a list of menu items
@@ -94,7 +94,7 @@ class Publication extends Model
 	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
-	public function delete(array $options = [])
+	/*public function delete(array $options = [])
 	{
 		// Delete the module items
 		foreach ($this->authors as $row)
@@ -104,7 +104,7 @@ class Publication extends Model
 
 		// Attempt to delete the record
 		return parent::delete($options);
-	}
+	}*/
 
 	/**
 	 * Format a publication
@@ -144,5 +144,58 @@ class Publication extends Model
 	public function isUnpublished()
 	{
 		return !$this->isPublished();
+	}
+
+	/**
+	 * Get authors as an array
+	 * 
+	 * @return array
+	 */
+	public function getAuthorListAttribute()
+	{
+		$authors = $this->author;
+		$items = array();
+
+		if (strstr($authors, ';'))
+		{
+			$auths = explode(';', $authors);
+		}
+		else
+		{
+			$authors = str_replace(' and ', ',', $authors);
+			$auths = explode('.,', $authors);
+		}
+
+		foreach ($auths as $i => $auth)
+		{
+			$author = trim($auth) . '.';
+			$author = str_replace('..', '.', $author);
+			$item = array();
+
+			$author_arr = explode(',', $author);
+			$author_arr = array_map('trim', $author_arr);
+			if (count($author_arr) < 2)
+			{
+				$author_arr = explode(' ', $author);
+				$first = array_shift($author_arr);
+				$last = array_pop($author_arr);
+				foreach ($author_arr as $leftover)
+				{
+					$first .= ' ' . $leftover;
+				}
+
+				$item['first'] = (!empty($first)) ? trim($first) : '';
+				$item['last']  = (!empty($last)) ? trim($last) : '';
+			}
+			else
+			{
+				$item['first'] = (isset($author_arr[1])) ? $author_arr[1] : '';
+				$item['last']  = (isset($author_arr[0])) ? $author_arr[0] : '';
+			}
+
+			$items[] = $item;
+		}
+
+		return $items;
 	}
 }

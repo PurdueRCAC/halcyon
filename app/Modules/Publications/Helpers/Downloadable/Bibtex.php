@@ -1,0 +1,99 @@
+<?php
+namespace App\Modules\Publications\Helpers\Downloadable;
+
+use App\Modules\Publications\Helpers\Downloadable;
+use App\Modules\Publications\Helpers\Parsers\BibTex as Parser;
+use App\Modules\Publications\Models\Publication;
+
+/**
+ * Citations download class for BibText format
+ */
+class Bibtex extends Downloadable
+{
+	/**
+	 * Mime type
+	 *
+	 * @var string
+	 */
+	protected $mimetype = 'application/x-bibtex';
+
+	/**
+	 * File extension
+	 *
+	 * @var string
+	 */
+	protected $extension = 'bib';
+
+	/**
+	 * Format the file
+	 *
+	 * @param      object $row Record to format
+	 * @return     string
+	 */
+	public function format(Publication $row)
+	{
+		$addarray = array();
+
+		$addarray['type']    = $row->type->name;
+		$addarray['title']   = $row->title;
+		$addarray['address'] = $row->address;
+
+		$addarray['author'] = $row->authorList;
+
+		if (!$row->cite)
+		{
+			$author = $addarray['author'][0];
+			$row->cite  = strtolower($author['last']);
+			$row->cite .= $row->published_at->format('Y');
+			$t = preg_replace('/[^a-zA-Z0-9]/', '', strtolower($row->title));
+			$row->cite .= (strlen($t) > 10 ? substr($t, 0, 10) : $t);
+		}
+
+		$addarray['cite']         = $row->cite;
+		$addarray['booktitle']    = $row->booktitle;
+		$addarray['chapter']      = $row->chapter;
+		$addarray['edition']      = $row->edition;
+		$addarray['editor']       = $row->editor;
+		$addarray['eprint']       = $row->eprint;
+		$addarray['howpublished'] = $row->howpublished;
+		$addarray['institution']  = $row->institution;
+		$addarray['journal']      = $row->journal;
+		$addarray['key']          = $row->key;
+		$addarray['location']     = $row->location;
+		$addarray['month']        = $row->month;
+		$addarray['note']         = $row->note;
+		$addarray['number']       = $row->number;
+		$addarray['organization'] = $row->organization;
+		$addarray['pages']        = $row->pages;
+		$addarray['publisher']    = $row->publisher;
+		$addarray['series']       = $row->series;
+		$addarray['school']       = $row->school;
+		$addarray['url']          = $row->url;
+		$addarray['volume']       = $row->volume;
+		$addarray['year']         = $row->published_at->format('Y');
+		if ($row->journal)
+		{
+			$addarray['issn']     = $row->isbn;
+		}
+		else
+		{
+			$addarray['isbn']     = $row->isbn;
+		}
+		$addarray['doi']          = $row->doi;
+
+		/*$addarray['language']         = $row->language;
+		$addarray['accession_number'] = $row->accession_number;
+		$addarray['short_title']      = html_entity_decode($row->short_title);*/
+		$addarray['author_address']   = $row->author_address;
+		//$addarray['keywords']         = str_replace("\r\n", ', ', $row->keywords);
+		$addarray['abstract']         = $row->abstract;
+		/*$addarray['call_number']      = $row->call_number;
+		$addarray['label']            = $row->label;
+		$addarray['research_notes']   = $row->research_notes;*/
+
+		$bibtex = new Parser();
+		$bibtex->addEntry($addarray);
+
+		return $bibtex->bibTex();
+	}
+}

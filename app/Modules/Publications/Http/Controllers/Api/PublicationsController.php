@@ -87,6 +87,7 @@ class PublicationsController extends Controller
 		$filters = array(
 			'search'    => null,
 			'state'     => 'published',
+			'year'      => '*',
 			'type'      => 0,
 			// Paging
 			'limit'     => config('list_limit', 20),

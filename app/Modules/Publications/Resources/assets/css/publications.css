@@ -59,6 +59,29 @@ table tbody tr.selected {
 	color: #222;
 }
 
+.publications {
+	border-top: 1px solid #ddd;
+}
+.publications li,
+.contentInner ul.publications li {
+	list-style: none;
+	margin: 0;
+}
+.publication {
+	margin: 0;
+	padding: 1em 0;
+	border-bottom: 1px solid #ddd;
+}
+.publication:hover {
+	background-color: #f9f9f9;
+}
+.publication p {
+	margin: 0;
+}
+.publication .row {
+	margin-top: 0.5em;
+}
+
 @media print {
 	.container {
 		width: 100% !important;

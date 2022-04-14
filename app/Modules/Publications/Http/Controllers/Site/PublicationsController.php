@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Publications\Models\Type;
 use App\Modules\Publications\Models\Publication;
+use App\Modules\Publications\Helpers\Download;
 use App\Halcyon\Http\StatefulRequest;
 use Carbon\Carbon;
 
@@ -141,6 +142,7 @@ class PublicationsController extends Controller
 	{
 		$row = new Publication();
 		$row->state = 1;
+		$row->published_at = Carbon::now();
 
 		if ($fields = app('request')->old())
 		{
@@ -190,7 +192,6 @@ class PublicationsController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		//$request->validate([
 		$rules = [
 			'type_id' => 'required|integer|min:1',
 			'title' => 'required|string|max:500',
@@ -251,16 +252,50 @@ class PublicationsController extends Controller
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->cancel()->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created')));
+		return $this->redirect(route('site.publications.index'))->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**
-	 * Return to default page
+	 * Download a citation
 	 *
-	 * @return  Response
+	 * @return  string
 	 */
-	public function cancel()
+	public function download(Request $request, $id)
 	{
-		return redirect(route('site.publications.index'));
+		$format = strtolower($request->input('format', 'bibtex'));
+
+		if (!in_array($format, array('bibtex', 'endnote')))
+		{
+			abort(419);
+		}
+
+		$row = Publication::findOrFail($id);
+
+		$formatter = new Download();
+		$formatter->setFormat($format);
+
+		// Set some vars
+		$doc  = $formatter->formatReference($row);
+		$mime = $formatter->getMimeType();
+		$file = 'publication_' . $id . '.' . $formatter->getExtension();
+
+		$headers = array(
+			'Content-type' => $mime,
+			'Content-Disposition' => 'attachment; filename=' . $file,
+			'Pragma' => 'no-cache',
+			'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+			'Expires' => '0',
+			'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT'
+		);
+
+		$callback = function() use ($doc)
+		{
+			$file = fopen('php://output', 'w');
+
+			fputs($file, $doc);
+			fclose($file);
+		};
+
+		return response()->streamDownload($callback, $file, $headers);
 	}
 }

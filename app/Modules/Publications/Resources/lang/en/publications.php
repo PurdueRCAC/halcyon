@@ -60,6 +60,8 @@ return [
 		'endnote' => 'EndNote',
 		'csv' => 'CSV',
 	],
+	'download bibtex' => 'Export as BibTex',
+	'download endnote' => 'Export as EndNote',
 	'filters' => [
 		'state' => 'State',
 	],

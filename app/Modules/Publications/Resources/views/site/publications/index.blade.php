@@ -4,6 +4,10 @@
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/publications/css/publications.css?v=' . filemtime(public_path('/modules/publications/css/publications.css'))) }}" />
 @endpush
 
+@push('scripts')
+<script src="{{ asset('modules/publications/js/site.js?v=' . filemtime(public_path() . '/modules/publications/js/site.js')) }}"></script>
+@endpush
+
 @section('title'){{ trans('publications::publications.publications') }}@stop
 
 @php
@@ -18,6 +22,11 @@ app('pathway')
 <div class="row">
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
+@if (auth()->user() && auth()->user()->can('create publications'))
+<div class="pull-right">
+	<a href="{{ route('site.publications.create') }}" class="btn btn-primary">{{ trans('global.create') }}</a>
+</div>
+@endif
 <h2 class="mt-0">{{ trans('publications::publications.publications') }}</h2>
 
 <form action="{{ route('site.publications.index') }}" method="get" class="row">
@@ -164,26 +173,38 @@ app('pathway')
 		</div>
 
 	@if (count($rows))
-		<ul>
+		<ul class="publications">
 			@foreach ($rows as $i => $row)
-			<li>
-				<div id="publication{{ $row->id }}" class="publication">
+			<li class="publication">
+				<div id="publication{{ $row->id }}">
 					{!! $row->toHtml() !!}
 				</div>
-				<?php /*
-				@if (auth()->user() && (auth()->user()->can('edit publications') || auth()->user()->can('delete publications')))
-					@if (auth()->user()->can('edit publications'))
-						<a href="{{ route('site.publications.edit', ['id' => $row->id]) }}" data-api="{{ route('api.publications.read', ['id' => $row->id]) }}" class="btn btn-sm btn-edit tip" title="{{ trans('global.button.edit') }}">
-							<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }} #{{ $row->id }}</span>
+				<div class="row publication-options">
+					<div class="col-md-8">
+						<a href="{{ route('site.publications.download', ['id' => $row->id, 'format' => 'bibtex']) }}" class="btn btn-sm tip" title="{{ trans('publications::publications.download bibtex') }}">
+							<span class="fa fa-download" aria-hidden="true"></span> {{ trans('publications::publications.export options.bibtex') }}<span class="sr-only"> #{{ $row->id }}</span>
 						</a>
-					@endif
-					@if (auth()->user()->can('delete publications'))
-						<a href="#publication{{ $row->id }}" data-api="{{ route('api.publications.delete', ['id' => $row->id]) }}" class="btn btn-sm btn-delete text-danger tip" title="{{ trans('global.button.delete') }}" data-confirm="{{ trans('global.confirm delete') }}">
-							<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }} #{{ $row->id }}</span>
+						<a href="{{ route('site.publications.download', ['id' => $row->id, 'format' => 'endnote']) }}" class="btn btn-sm tip" title="{{ trans('publications::publications.download endnote') }}">
+							<span class="fa fa-download" aria-hidden="true"></span> {{ trans('publications::publications.export options.endnote') }}<span class="sr-only"> #{{ $row->id }}</span>
 						</a>
+					</div>
+					<div class="col-md-4 text-right">
+					@if (auth()->user() && (auth()->user()->can('edit publications') || auth()->user()->can('delete publications')))
+						
+						@if (auth()->user()->can('edit publications'))
+							<a href="{{ route('site.publications.edit', ['id' => $row->id]) }}" data-api="{{ route('api.publications.read', ['id' => $row->id]) }}" class="btn btn-sm btn-edit tip" title="{{ trans('global.button.edit') }}">
+								<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }} #{{ $row->id }}</span>
+							</a>
+						@endif
+						@if (auth()->user()->can('delete publications'))
+							<a href="{{ route('site.publications.delete', ['id' => $row->id]) }}" data-api="{{ route('api.publications.delete', ['id' => $row->id]) }}" class="btn btn-sm btn-delete text-danger tip" title="{{ trans('global.button.delete') }}" data-confirm="{{ trans('global.confirm delete') }}">
+								<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }} #{{ $row->id }}</span>
+							</a>
+						@endif
+						
 					@endif
-				@endif
-				*/ ?>
+					</div>
+				</div>
 			</li>
 			@endforeach
 		</ul>

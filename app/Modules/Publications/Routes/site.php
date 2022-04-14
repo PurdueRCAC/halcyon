@@ -12,31 +12,31 @@ $router->group(['prefix' => 'publications'], function (Router $router)
 	$router->get('/create', [
 		'as'   => 'site.publications.create',
 		'uses' => 'PublicationsController@create',
-		'middleware' => 'can:create publications',
+		'middleware' => ['auth', 'can:create publications'],
 	]);
 	$router->get('/import', [
 		'as'   => 'site.publications.import',
 		'uses' => 'PublicationsController@import',
-		'middleware' => 'can:create publications',
+		'middleware' => ['auth', 'can:create publications'],
 	]);
 	$router->post('/store', [
 		'as'   => 'site.publications.store',
 		'uses' => 'PublicationsController@store',
-		'middleware' => 'can:create publications|edit publications',
+		'middleware' => ['auth', 'can:create publications|edit publications'],
 	]);
-	$router->get('/{id}', [
+	$router->get('/download/{id}', [
+		'as'   => 'site.publications.download',
+		'uses' => 'PublicationsController@download',
+	])->where('id', '[0-9]+');
+	$router->get('/edit/{id}', [
 		'as'   => 'site.publications.edit',
 		'uses' => 'PublicationsController@edit',
-		'middleware' => 'can:edit publications',
+		'middleware' => ['auth', 'can:edit publications'],
 	])->where('id', '[0-9]+');
-	$router->match(['get', 'post'], '/delete/{id?}', [
+	$router->get('/delete/{id}', [
 		'as'   => 'site.publications.delete',
 		'uses' => 'PublicationsController@delete',
-		'middleware' => 'can:delete publications',
-	]);
-	$router->match(['get', 'post'], 'cancel', [
-		'as' => 'site.publications.cancel',
-		'uses' => 'PublicationsController@cancel',
+		'middleware' => ['auth', 'can:delete publications'],
 	]);
 
 	$router->group(['prefix' => 'authors'], function (Router $router)
