@@ -17,6 +17,7 @@ use App\Modules\Users\Events\UserUpdating;
 use App\Modules\Users\Events\UserUpdated;
 use App\Modules\Users\Events\UserDeleted;
 use App\Modules\Users\Events\UserLookup;
+use App\Modules\Users\Entities\LetterAvatar;
 use Lab404\Impersonate\Models\Impersonate;
 use Carbon\Carbon;
 
@@ -753,5 +754,51 @@ class User extends Model implements
 		}
 
 		return $user;
+	}
+
+	/**
+	 * Get user avatar
+	 *
+	 * Retrieves thumbnail by default as it's the most used.
+	 * Will retrieve full-size by setting $thumb to false
+	 *
+	 * @param   bool $thumb
+	 * @return  string
+	 */
+	public function avatar($thumb = true)
+	{
+		$name = ($thumb ? 'thumb' : 'photo');
+
+		/*$found = false;
+		foreach (['jpg', 'png'] as $ext)
+		{
+			$file = 'users/' . $this->id . '/' . $name . '.' . $ext;
+			$path = storage_path('app/public/' . $file);
+
+			if (file_exists($path))
+			{
+				$found = true;
+				break;
+			}
+		}
+
+		if (!$found)
+		{*/
+			$file = 'users/' . $this->id . '/' . $name . '.png';
+			$path = storage_path('app/public/' . $file);
+
+			if (!file_exists($path))
+			{
+				$avatar = new LetterAvatar($this->name);
+				$avatar->setSize($thumb ? 50 : 250);
+
+				if (!$avatar->saveAs($path))
+				{
+					return asset('modules/users/images/' . $name . '.png');
+				}
+			}
+		//}
+
+		return asset('files/' . $file);
 	}
 }
