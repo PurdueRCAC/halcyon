@@ -82,6 +82,8 @@ class StorageHome
 			'files'             => $storage->defaultquotafile,
 			'owneruserid'       => $event->user->id,
 			'storageresourceid' => $storage->id,
+			'ownerread'         => 1,
+			'ownerwrite'        => 1,
 		]);
 
 		// Prepare job to create directory in reality

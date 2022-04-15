@@ -29,6 +29,12 @@ class StorageScratch
 	 */
 	public function handleResourceMemberCreated(ResourceMemberCreated $event)
 	{
+		// 75 = Rice
+		// 76 = Snyder
+		// 83 = Halstead
+		// 86 = HalsteadGPU
+		$alphabetical = config()->get('module.storage.alphabetical', [83, 86, 75, 76]);
+
 		// Set up scratch dir if needed
 		$storages = StorageResource::query()
 			->where('parentresourceid', '=', $event->resource->id)
@@ -50,12 +56,7 @@ class StorageScratch
 			$p = $event->user->username;
 
 			// Some resources require alphabetical subdivision
-			//
-			// 75 = Rice
-			// 76 = Snyder
-			// 83 = Halstead
-			// 86 = HalsteadGPU
-			if (in_array($event->resource->id, array(83, 86, 75, 76)))
+			if (in_array($event->resource->id, $alphabetical))
 			{
 				$l = substr($event->user->username, 0, 1);
 				$p = $l . '/' . $p;
@@ -63,15 +64,15 @@ class StorageScratch
 
 			// Prepare storagedir entry
 			$dir = Directory::create([
-				'resourceid' => $event->resource->id,
-				'name' => $event->user->username,
-				'path' => $p,
-				'bytes' => $storage->defaultquotaspace,
-				'files' => $storage->defaultquotafile,
-				'owneruserid' => $event->user->id,
-				'ownerread' => 1,
-				'ownerwrite' => 1,
+				'resourceid'        => $event->resource->id,
+				'name'              => $event->user->username,
+				'path'              => $p,
+				'bytes'             => $storage->defaultquotaspace,
+				'files'             => $storage->defaultquotafile,
+				'owneruserid'       => $event->user->id,
 				'storageresourceid' => $storage->id,
+				'ownerread'         => 1,
+				'ownerwrite'        => 1,
 			]);
 
 			// Prepare job to create directory in reality

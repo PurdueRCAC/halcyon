@@ -10,6 +10,7 @@ use App\Modules\Storage\Models\Loan;
 use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Resources\Events\AssetBeforeDisplay;
 use App\Modules\Resources\Events\AssetDeleted;
+use App\Modules\Resources\Models\Asset;
 
 /**
  * Resources listener
@@ -24,7 +25,7 @@ class Resources
 	 */
 	public function subscribe($events)
 	{
-		$events->listen(ResourceMemberCreated::class, self::class . '@handleResourceMemberCreated');
+		//$events->listen(ResourceMemberCreated::class, self::class . '@handleResourceMemberCreated');
 		$events->listen(AssetBeforeDisplay::class, self::class . '@handleAssetBeforeDisplay');
 		$events->listen(AssetDeleted::class, self::class . '@handleAssetDeleted');
 	}
@@ -138,7 +139,7 @@ class Resources
 	 * @param   object   $event
 	 * @return  void
 	 */
-	public function handleResourceMemberCreated(ResourceMemberCreated $event)
+	/*public function handleResourceMemberCreated(ResourceMemberCreated $event)
 	{
 		if (!$event->user->id)
 		{
@@ -157,24 +158,21 @@ class Resources
 		foreach ($data as $row)
 		{
 			// First check if we have a storage dir already
-			$directory = Directory::query()
+			$directory = $row->directories()
 				->where('name', '=', $event->user->username)
-				->where('storageresourceid', '=', $row->id)
-				->get()
-				->first();
+				->count();
 
 			if ($directory)
 			{
 				continue;
 			}
 
-			$l = substr($event->user->username, 0, 1);
-
 			$p = $event->user->username;
 
 			// Are resource directories grouped by alphabet?
 			if (in_array($event->resource->id, $alphabetical))
 			{
+				$l = substr($event->user->username, 0, 1);
 				$p = $l . '/' . $event->user->username;
 			}
 
@@ -200,11 +198,34 @@ class Resources
 			}
 		}
 
+		// Get the Home resource
+		//
+		// Home directories can either be shared across multiple resources
+		// or specific to a resource. Check which one we should load.
+		if ($event->resource->getFacet('home') && $event->resource->getFacet('home') != 'shared')
+		{
+			$home = Asset::query()
+				->where('name', 'LIKE', '%Home')
+				->where('parentid', '=', $event->resource->id)
+				->first();
+		}
+		else
+		{
+			$home = Asset::query()
+				->where('listname', '=', 'home')
+				->first();
+		}
+
+		if (!$home)
+		{
+			return;
+		}
+
 		// Need to check for Home dir and create if necessary
 		// First check if we have a storage dir already
 		$directory = Directory::query()
 			->where('name', '=', $event->user->username)
-			->where('resourceid', '=', 81)
+			->where('resourceid', '=', $home->id)
 			->get()
 			->first();
 
@@ -215,8 +236,7 @@ class Resources
 
 		// Get values
 		$storageResource = StorageResource::query()
-			->where('name', '=', 'Home')
-			->get()
+			->where('parentresourceid', '=', $home->id)
 			->first();
 
 		// Create entry
@@ -236,5 +256,5 @@ class Resources
 
 		// Prepare job to create directory in reality
 		$directory->addMessageToQueue(11);
-	}
+	}*/
 }
