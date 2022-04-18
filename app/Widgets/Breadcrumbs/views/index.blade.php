@@ -38,9 +38,9 @@
 						if ($key != $last_item_key):
 							// Render all but last item - along with separator
 							if (!empty($item->link)):
-								echo '<li class="breadcrumb-item"><a href="' . $item->link . '" class="pathway">' . html_entity_decode($item->name) . '</a></li>';
+								echo '<li class="breadcrumb-item"><a href="' . $item->link . '" class="pathway">' . Illuminate\Support\Str::limit($item->name, 30) . '</a></li>';
 							else:
-								echo '<li class="breadcrumb-item">' . $item->name . '</li>';
+								echo '<li class="breadcrumb-item">' . Illuminate\Support\Str::limit($item->name, 30) . '</li>';
 							endif;
 						elseif ($show_last):
 							// Render last item if reqd.
