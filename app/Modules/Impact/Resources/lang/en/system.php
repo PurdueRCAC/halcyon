@@ -1,4 +1,4 @@
 <?php
 return [
-	'issues' => 'Issues',
+	'impact' => 'Impact',
 ];
