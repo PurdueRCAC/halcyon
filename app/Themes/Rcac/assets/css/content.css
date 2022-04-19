@@ -99,11 +99,11 @@ figcaption {
 }
 .notice-banner .alert-info {
 	background-color: #20809D;
-	color: #E3F3F7;
+	color: #D7F4F4;
 }
 .notice-banner .alert-info a,
 .notice-banner .alert-info a:link {
-	color: #E3F3F7;
+	color: #fff;
 }
 .notice-banner .sticky {
 	position: fixed;
