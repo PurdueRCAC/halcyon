@@ -233,7 +233,7 @@
 									</td>
 									@if ($user->id == auth()->user()->id || auth()->user()->can('manage users'))
 										<td class="text-right">
-											<a href="#{{ $not->id }}_not_dialog" class="storagealert-edit tip" title="{{ trans('global.button.edit') }}"><!--
+											<a href="#not_dialog_{{ $not->id }}" class="storagealert-edit tip" title="{{ trans('global.button.edit') }}"><!--
 												--><span class="fa fa-pencil"></span><span class="sr-only">{{ trans('global.button.edit') }}</span><!--
 											--></a>
 										</td>
@@ -269,7 +269,7 @@
 						continue;
 					endif;
 					?>
-					<div id="{{ $not->id }}_not_dialog" title="Storage Alert Detail" class="dialog dialog-storagealert">
+					<div id="not_dialog_{{ $not->id }}" title="Storage Alert Detail" class="dialog dialog-storagealert">
 						<form method="post" action="{{ route('api.storage.notifications.update', ['id' => $not->id]) }}">
 						<input type="hidden" id="HIDDEN_property_{{ $not->id }}" value="{{ $not->id }}" />
 
@@ -334,7 +334,7 @@
 							</div>
 						</div>
 
-						<div class="alert alert-danger hide" id="{{ $not->id }}_not_error"></div>
+						<div class="alert alert-danger hide" id="not_dialog_{{ $not->id }}_not_error"></div>
 						</form>
 					</div>
 					<?php
@@ -496,7 +496,7 @@
 								</td>
 								@if ($user->id == auth()->user()->id || auth()->user()->can('manage storage'))
 									<td class="text-right">
-										<a href="#{{ $not->id }}_not_dialog" class="storagealert-edit tip" title="Edit usage report"><!--
+										<a href="#not_dialog_{{ $not->id }}" class="storagealert-edit tip" title="Edit usage report"><!--
 											--><span class="fa fa-pencil"></span><span class="sr-only">Edit</span><!--
 										--></a>
 									</td>
@@ -529,7 +529,7 @@
 						continue;
 					endif;
 					?>
-					<div id="{{ $not->id }}_not_dialog" title="Storage Usage Report Detail" class="dialog dialog-storagealert">
+					<div id="not_dialog_{{ $not->id }}" title="Storage Usage Report Detail" class="dialog dialog-storagealert">
 						<form method="post" action="{{ route('api.storage.notifications.update', ['id' => $not->id]) }}">
 						<input type="hidden" id="HIDDEN_property_{{ $not->id }}" value="{{ $not->id }}" />
 
@@ -582,7 +582,7 @@
 							</div>
 						</div>
 
-						<div class="alert alert-danger hide" id="{{ $not->id }}_not_error"></div>
+						<div class="alert alert-danger hide" id="not_dialog_{{ $not->id }}_not_error"></div>
 						</form>
 					</div>
 					<?php
