@@ -59,7 +59,7 @@ app('pathway')
 				@csrf
 			</form>
 
-			@if (config('user.allow_registration'))
+			@if (config('module.users.allow_registration', true))
 				<p><a href="{{ route('register')}}" class="text-center">{{ trans('users::auth.register')}}</a></p>
 			@endif
 		</div>
