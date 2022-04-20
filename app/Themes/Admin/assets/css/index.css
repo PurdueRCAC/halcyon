@@ -1023,6 +1023,7 @@ h4 {
 .icon-mic:before {
   content: "\e895";
 }
+.fa-minus-square:before,
 .icon-minus-square:before {
   content: "\e896";
 }
