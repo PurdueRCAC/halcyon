@@ -3,36 +3,13 @@
 return [
 	/*
 	|--------------------------------------------------------------------------
-	| Module Name
+	| Allow user registration?
 	|--------------------------------------------------------------------------
 	|
-	| The name of this module.
+	| When set to `false`, the registration form will not be available.
 	|
 	*/
-	'name' => 'Users',
-
-	/*
-	|--------------------------------------------------------------------------
-	| Profile options
-	|--------------------------------------------------------------------------
-	|
-	| Profile fields. Currently not used.
-	|
-	*/
-	'profiles' => [
-		'org' => [
-			'type' => 'textarea',
-			'label' => '',
-			'desc' => '',
-			'required' => false,
-		],
-		'orcid' => [
-			'type' => 'text',
-			'label' => '',
-			'desc' => '',
-			'required' => false,
-		],
-	],
+	'allow_registration' => env('USERS_ALLOW_REGISTRATION', true),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -42,7 +19,7 @@ return [
 	| Where to redirect to after login.
 	|
 	*/
-	'redirect_route_after_login' => 'home',
+	'redirect_route_after_login' => 'site.users.account',
 
 	/*
 	|--------------------------------------------------------------------------

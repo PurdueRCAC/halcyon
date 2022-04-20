@@ -20,7 +20,7 @@ $router->get('logout', [
 	'uses' => 'AuthController@logout'
 ]);
 
-if (config('module.user.allow_registration', true))
+if (config('module.users.allow_registration', true))
 {
 	$router->get('register', [
 		'as'   => 'register',
