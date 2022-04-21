@@ -5,7 +5,7 @@
     "keywords": [],
     "priority": 0,
     "providers": [
-        "App\\Modules\\Issues\\Providers\\ModuleServiceProvider",
+        "App\\Modules\\Issues\\Providers\\IssuesServiceProvider",
         "App\\Modules\\Issues\\Providers\\RouteServiceProvider"
     ],
     "aliases": {},

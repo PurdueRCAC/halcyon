@@ -12,7 +12,7 @@ use App\Modules\Themes\Console\EnableCommand;
 use App\Modules\Themes\Console\PublishCommand;
 use App\Modules\Themes\Console\SetupCommand;
 
-class ModuleServiceProvider extends ServiceProvider
+class ThemesServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.

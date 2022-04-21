@@ -1,10 +1,11 @@
 <?php
-namespace App\Modules\Status\Providers;
+namespace App\Modules\Core\Providers;
 
+use App\Modules\Core\Http\Middleware\PublicPath;
+use App\Modules\Core\Http\Middleware\LegacyFiles;
 use Illuminate\Support\ServiceProvider;
-use App\Modules\Status\Console\FetchCommand;
 
-class ModuleServiceProvider extends ServiceProvider
+class CoreServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -18,7 +19,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'status';
+	public $name = 'core';
 
 	/**
 	 * Boot the application events.
@@ -27,25 +28,21 @@ class ModuleServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
+		/*Blade::directive('editor', function ($expression) {
+			return "<?php echo editor($expression); ?>";
+		});*/
+
 		$this->registerTranslations();
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
-		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
-	}
 
-	/**
-	 * Register console commands.
-	 *
-	 * @return void
-	 */
-	protected function registerConsoleCommands()
-	{
-		$this->commands([
-			FetchCommand::class,
-		]);
+		// adding global middleware
+		$kernel = $this->app->make('Illuminate\Contracts\Http\Kernel');
+		$kernel->pushMiddleware(PublicPath::class);
+		$kernel->pushMiddleware(LegacyFiles::class);
 	}
 
 	/**
@@ -95,6 +92,8 @@ class ModuleServiceProvider extends ServiceProvider
 		{
 			return $path . '/modules/' . $this->name;
 		}, config('view.paths')), [$sourcePath]), $this->name);
+
+		\Illuminate\Pagination\LengthAwarePaginator::defaultView('core::pagination.bootstrap-4');
 	}
 
 	/**

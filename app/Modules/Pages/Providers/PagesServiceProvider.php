@@ -1,11 +1,13 @@
 <?php
-namespace App\Modules\Core\Providers;
 
-use App\Modules\Core\Http\Middleware\PublicPath;
-use App\Modules\Core\Http\Middleware\LegacyFiles;
+namespace App\Modules\Pages\Providers;
+
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Support\Facades\Blade;
+use App\Modules\Pages\Console\ImportStaffCommand;
 
-class ModuleServiceProvider extends ServiceProvider
+class PagesServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -19,7 +21,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'core';
+	public $name = 'pages';
 
 	/**
 	 * Boot the application events.
@@ -28,8 +30,14 @@ class ModuleServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		/*Blade::directive('editor', function ($expression) {
-			return "<?php echo editor($expression); ?>";
+		/*Blade::directive('file', function ($expression)
+		{
+			return "<?php echo asset('files/' . $expression); ?>";
+		});
+
+		Blade::directive('filesize', function ($expression)
+		{
+			return "<?php echo App\Halcyon\Utility\Number::formatBytes(filesize(storage_path($expression))); ?>";
 		});*/
 
 		$this->registerTranslations();
@@ -39,10 +47,19 @@ class ModuleServiceProvider extends ServiceProvider
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
-		// adding global middleware
-		$kernel = $this->app->make('Illuminate\Contracts\Http\Kernel');
-		$kernel->pushMiddleware(PublicPath::class);
-		$kernel->pushMiddleware(LegacyFiles::class);
+		$this->commands([
+			ImportStaffCommand::class
+		]);
+	}
+
+	/**
+	 * Register the service provider.
+	 *
+	 * @return void
+	 */
+	public function register()
+	{
+		//
 	}
 
 	/**
@@ -92,8 +109,6 @@ class ModuleServiceProvider extends ServiceProvider
 		{
 			return $path . '/modules/' . $this->name;
 		}, config('view.paths')), [$sourcePath]), $this->name);
-
-		\Illuminate\Pagination\LengthAwarePaginator::defaultView('core::pagination.bootstrap-4');
 	}
 
 	/**

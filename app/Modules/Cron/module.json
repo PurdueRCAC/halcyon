@@ -5,7 +5,7 @@
     "keywords": [],
     "priority": 0,
     "providers": [
-        "App\\Modules\\Cron\\Providers\\ModuleServiceProvider",
+        "App\\Modules\\Cron\\Providers\\CronServiceProvider",
         "App\\Modules\\Cron\\Providers\\RouteServiceProvider"
     ],
     "aliases": {},

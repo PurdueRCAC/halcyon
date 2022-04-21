@@ -1,10 +1,15 @@
 <?php
-namespace App\Modules\Issues\Providers;
+
+namespace App\Modules\Resources\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Modules\Issues\Listeners\ResourceIssues;
+use Illuminate\Database\Eloquent\Factory;
+use App\Modules\Resources\Console\EmailSchedulingCommand;
+use App\Modules\Resources\Listeners\Groups;
+use App\Modules\Resources\Listeners\Queues;
+use App\Modules\Resources\Listeners\Subresources;
 
-class ModuleServiceProvider extends ServiceProvider
+class ResourcesServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -18,7 +23,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'issues';
+	public $name = 'resources';
 
 	/**
 	 * Boot the application events.
@@ -31,13 +36,43 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
+		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
-		if (is_dir(dirname(dirname(__DIR__))) . '/Resources')
+		$this->app['events']->subscribe(new Subresources);
+
+		if (is_dir(dirname(dirname(__DIR__))) . '/Queues')
 		{
-			$this->app['events']->subscribe(new ResourceIssues);
+			$this->app['events']->subscribe(new Queues);
 		}
+
+		if (is_dir(dirname(dirname(__DIR__))) . '/Groups')
+		{
+			$this->app['events']->subscribe(new Groups);
+		}
+	}
+
+	/**
+	 * Register console commands.
+	 *
+	 * @return void
+	 */
+	protected function registerConsoleCommands()
+	{
+		$this->commands([
+			EmailSchedulingCommand::class,
+		]);
+	}
+
+	/**
+	 * Register the service provider.
+	 *
+	 * @return void
+	 */
+	public function register()
+	{
+		//
 	}
 
 	/**
@@ -104,5 +139,15 @@ class ModuleServiceProvider extends ServiceProvider
 		}
 
 		$this->loadTranslationsFrom($langPath, $this->name);
+	}
+
+	/**
+	 * Get the services provided by the provider.
+	 *
+	 * @return array
+	 */
+	public function provides()
+	{
+		return [];
 	}
 }

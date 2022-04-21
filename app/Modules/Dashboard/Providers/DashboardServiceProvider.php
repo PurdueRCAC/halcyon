@@ -1,12 +1,10 @@
 <?php
-namespace App\Modules\News\Providers;
+
+namespace App\Modules\Dashboard\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Modules\News\Console\CopyCommand;
-use App\Modules\News\Console\EventsTodayCommand;
-use App\Modules\News\Listeners\Registrations;
 
-class ModuleServiceProvider extends ServiceProvider
+class DashboardServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -20,7 +18,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'news';
+	public $name = 'dashboard';
 
 	/**
 	 * Boot the application events.
@@ -33,24 +31,8 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
-		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
-
-		$this->app['events']->subscribe(new Registrations);
-	}
-
-	/**
-	 * Register console commands.
-	 *
-	 * @return void
-	 */
-	protected function registerConsoleCommands()
-	{
-		$this->commands([
-			CopyCommand::class,
-			EventsTodayCommand::class,
-		]);
 	}
 
 	/**

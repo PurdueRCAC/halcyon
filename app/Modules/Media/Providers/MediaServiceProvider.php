@@ -1,10 +1,9 @@
 <?php
-
-namespace App\Modules\Dashboard\Providers;
+namespace App\Modules\Media\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class ModuleServiceProvider extends ServiceProvider
+class MediaServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -18,7 +17,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'dashboard';
+	public $name = 'media';
 
 	/**
 	 * Boot the application events.

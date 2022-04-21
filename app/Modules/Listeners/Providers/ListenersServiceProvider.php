@@ -1,25 +1,19 @@
 <?php
 
-namespace App\Modules\Queues\Providers;
+namespace App\Modules\Listeners\Providers;
 
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
-use App\Modules\Queues\Console\EmailFreeAuthorizedCommand;
-use App\Modules\Queues\Console\EmailFreeDeniedCommand;
-use App\Modules\Queues\Console\EmailFreeRemovedCommand;
-use App\Modules\Queues\Console\EmailFreeRequestedCommand;
-use App\Modules\Queues\Console\EmailQueueAuthorizedCommand;
-use App\Modules\Queues\Console\EmailQueueDeniedCommand;
-use App\Modules\Queues\Console\EmailQueueRemovedCommand;
-use App\Modules\Queues\Console\EmailQueueRequestedCommand;
-use App\Modules\Queues\Console\EmailWelcomeClusterCommand;
-use App\Modules\Queues\Console\EmailWelcomeFreeCommand;
-use App\Modules\Queues\Console\EmailExpiredCommand;
-use App\Modules\Queues\Console\FixStatusCommand;
-use App\Modules\Queues\Console\StopCommand;
-use App\Modules\Queues\Console\StartCommand;
-use App\Modules\Queues\Listeners\GetUserQueues;
+use Illuminate\Support\Str;
+use App\Modules\Listeners\Models\Listener;
+use App\Modules\Listeners\Console\ListCommand;
+use App\Modules\Listeners\Console\DisableCommand;
+use App\Modules\Listeners\Console\EnableCommand;
+use App\Modules\Listeners\Console\PublishCommand;
+use App\Modules\Listeners\Console\SetupCommand;
+use App\Modules\Listeners\Entities\ListenerManager;
 
-class ModuleServiceProvider extends ServiceProvider
+class ListenersServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -33,7 +27,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'queues';
+	public $name = 'listeners';
 
 	/**
 	 * Boot the application events.
@@ -47,13 +41,32 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerAssets();
 		$this->registerViews();
 		$this->registerConsoleCommands();
+		$this->registerListeners();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+	}
 
-		if (is_dir(dirname(dirname(__DIR__))) . '/Users')
+	/**
+	 * Register the service provider.
+	 *
+	 * @return void
+	 */
+	public function register()
+	{
+		$this->app->singleton('listener', function ($app)
 		{
-			$this->app['events']->subscribe(new GetUserQueues);
-		}
+			return new ListenerManager($app['events']);
+		});
+	}
+
+	/**
+	 * Register any events for your application.
+	 *
+	 * @return void
+	 */
+	public function registerListeners()
+	{
+		$this->app['listener']->subscribe();
 	}
 
 	/**
@@ -64,20 +77,12 @@ class ModuleServiceProvider extends ServiceProvider
 	protected function registerConsoleCommands()
 	{
 		$this->commands([
-			EmailFreeAuthorizedCommand::class,
-			EmailFreeDeniedCommand::class,
-			EmailFreeRemovedCommand::class,
-			EmailFreeRequestedCommand::class,
-			EmailQueueAuthorizedCommand::class,
-			EmailQueueDeniedCommand::class,
-			EmailQueueRemovedCommand::class,
-			EmailQueueRequestedCommand::class,
-			EmailWelcomeClusterCommand::class,
-			EmailWelcomeFreeCommand::class,
-			EmailExpiredCommand::class,
-			FixStatusCommand::class,
-			StopCommand::class,
-			StartCommand::class,
+			//InstallCommand::class,
+			ListCommand::class,
+			DisableCommand::class,
+			EnableCommand::class,
+			PublishCommand::class,
+			SetupCommand::class,
 		]);
 	}
 
@@ -98,7 +103,7 @@ class ModuleServiceProvider extends ServiceProvider
 	}
 
 	/**
-	 * Publish assets
+	 * Register config.
 	 *
 	 * @return void
 	 */
@@ -145,5 +150,15 @@ class ModuleServiceProvider extends ServiceProvider
 		}
 
 		$this->loadTranslationsFrom($langPath, $this->name);
+	}
+
+	/**
+	 * Get the services provided by the provider.
+	 *
+	 * @return array
+	 */
+	public function provides()
+	{
+		return ['listener'];
 	}
 }

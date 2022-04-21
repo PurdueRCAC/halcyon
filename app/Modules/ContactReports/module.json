@@ -5,7 +5,7 @@
     "keywords": [],
     "priority": 0,
     "providers": [
-        "App\\Modules\\ContactReports\\Providers\\ModuleServiceProvider",
+        "App\\Modules\\ContactReports\\Providers\\ContactReportsServiceProvider",
         "App\\Modules\\ContactReports\\Providers\\RouteServiceProvider",
         "App\\Modules\\ContactReports\\Providers\\ScheduleServiceProvider"
     ],

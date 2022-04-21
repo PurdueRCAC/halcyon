@@ -1,10 +1,10 @@
 <?php
-namespace App\Modules\Messages\Providers;
+namespace App\Modules\Status\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Modules\Status\Console\FetchCommand;
 
-class ModuleServiceProvider extends ServiceProvider
+class StatusServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -18,7 +18,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'messages';
+	public $name = 'status';
 
 	/**
 	 * Boot the application events.
@@ -27,26 +27,25 @@ class ModuleServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		$this->registerFactories();
 		$this->registerTranslations();
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
+		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 	}
 
 	/**
-	 * Register an additional directory of factories.
+	 * Register console commands.
 	 *
 	 * @return void
 	 */
-	public function registerFactories()
+	protected function registerConsoleCommands()
 	{
-		if (! app()->environment('production') && $this->app->runningInConsole())
-		{
-			//app(Factory::class)->load(dirname(__DIR__) . '/Database/Factories');
-		}
+		$this->commands([
+			FetchCommand::class,
+		]);
 	}
 
 	/**

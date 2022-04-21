@@ -1,11 +1,9 @@
 <?php
-
-namespace App\Modules\Impact\Providers;
+namespace App\Modules\Config\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
 
-class ModuleServiceProvider extends ServiceProvider
+class ConfigServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -19,7 +17,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'impact';
+	public $name = 'config';
 
 	/**
 	 * Boot the application events.

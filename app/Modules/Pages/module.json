@@ -6,7 +6,7 @@
     "priority": 9999,
     "order": 9999,
     "providers": [
-        "App\\Modules\\Pages\\Providers\\ModuleServiceProvider",
+        "App\\Modules\\Pages\\Providers\\PagesServiceProvider",
         "App\\Modules\\Pages\\Providers\\RouteServiceProvider"
     ],
     "aliases": {},

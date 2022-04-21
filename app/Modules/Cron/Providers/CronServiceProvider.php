@@ -1,19 +1,9 @@
 <?php
+namespace App\Modules\Cron\Providers;
 
-namespace App\Modules\Listeners\Providers;
-
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
-use App\Modules\Listeners\Models\Listener;
-use App\Modules\Listeners\Console\ListCommand;
-use App\Modules\Listeners\Console\DisableCommand;
-use App\Modules\Listeners\Console\EnableCommand;
-use App\Modules\Listeners\Console\PublishCommand;
-use App\Modules\Listeners\Console\SetupCommand;
-use App\Modules\Listeners\Entities\ListenerManager;
 
-class ModuleServiceProvider extends ServiceProvider
+class CronServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -27,7 +17,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'listeners';
+	public $name = 'cron';
 
 	/**
 	 * Boot the application events.
@@ -40,50 +30,8 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
-		$this->registerConsoleCommands();
-		$this->registerListeners();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
-	}
-
-	/**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
-		$this->app->singleton('listener', function ($app)
-		{
-			return new ListenerManager($app['events']);
-		});
-	}
-
-	/**
-	 * Register any events for your application.
-	 *
-	 * @return void
-	 */
-	public function registerListeners()
-	{
-		$this->app['listener']->subscribe();
-	}
-
-	/**
-	 * Register console commands.
-	 *
-	 * @return void
-	 */
-	protected function registerConsoleCommands()
-	{
-		$this->commands([
-			//InstallCommand::class,
-			ListCommand::class,
-			DisableCommand::class,
-			EnableCommand::class,
-			PublishCommand::class,
-			SetupCommand::class,
-		]);
 	}
 
 	/**
@@ -103,7 +51,7 @@ class ModuleServiceProvider extends ServiceProvider
 	}
 
 	/**
-	 * Register config.
+	 * Publish assets
 	 *
 	 * @return void
 	 */
@@ -150,15 +98,5 @@ class ModuleServiceProvider extends ServiceProvider
 		}
 
 		$this->loadTranslationsFrom($langPath, $this->name);
-	}
-
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return ['listener'];
 	}
 }

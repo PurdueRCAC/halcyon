@@ -1,9 +1,10 @@
 <?php
-namespace App\Modules\Config\Providers;
+namespace App\Modules\Knowledge\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Modules\Knowledge\Console\ImportCommand;
 
-class ModuleServiceProvider extends ServiceProvider
+class KnowledgeServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -17,7 +18,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'config';
+	public $name = 'knowledge';
 
 	/**
 	 * Boot the application events.
@@ -30,6 +31,7 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
+		$this->registerCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 	}
@@ -98,5 +100,17 @@ class ModuleServiceProvider extends ServiceProvider
 		}
 
 		$this->loadTranslationsFrom($langPath, $this->name);
+	}
+
+	/**
+	 * Register console commands.
+	 *
+	 * @return void
+	 */
+	public function registerCommands()
+	{
+		$this->commands([
+			ImportCommand::class
+		]);
 	}
 }

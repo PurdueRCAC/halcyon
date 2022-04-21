@@ -1,19 +1,15 @@
 <?php
+namespace App\Modules\Courses\Providers;
 
-namespace App\Modules\Widgets\Providers;
-
-use App\Modules\Widgets\Entities\WidgetManager;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
-use App\Modules\Widgets\Console\DiscoverCommand;
-use App\Modules\Widgets\Console\InstallCommand;
-use App\Modules\Widgets\Console\DisableCommand;
-use App\Modules\Widgets\Console\EnableCommand;
-use App\Modules\Widgets\Console\PublishCommand;
-use App\Modules\Widgets\Console\SetupCommand;
+use Illuminate\Support\Facades\View;
+use App\Modules\Courses\Composers\ProfileComposer;
+use App\Modules\Courses\Console\EmailAdditionsCommand;
+use App\Modules\Courses\Console\EmailRemovalsCommand;
+use App\Modules\Courses\Console\SyncCommand;
+use App\Modules\Courses\Listeners\UserCourses;
 
-class ModuleServiceProvider extends ServiceProvider
+class CoursesServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -27,7 +23,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'widgets';
+	public $name = 'courses';
 
 	/**
 	 * Boot the application events.
@@ -36,31 +32,18 @@ class ModuleServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		Blade::directive('widget', function ($expression)
-		{
-			return "<?php echo app('widget')->byPosition($expression); ?>";
-		});
-
 		$this->registerTranslations();
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
-		$this->registerConsoleCommands();
+		$this->registerCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
-	}
 
-	/**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
-		$this->app->singleton('widget', function ($app)
+		if (is_dir(dirname(dirname(__DIR__))) . '/Users')
 		{
-			return new WidgetManager($app);
-		});
+			$this->app['events']->subscribe(new UserCourses);
+		}
 	}
 
 	/**
@@ -68,15 +51,12 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	protected function registerConsoleCommands()
+	public function registerCommands()
 	{
 		$this->commands([
-			DiscoverCommand::class,
-			InstallCommand::class,
-			DisableCommand::class,
-			EnableCommand::class,
-			PublishCommand::class,
-			SetupCommand::class,
+			EmailAdditionsCommand::class,
+			EmailRemovalsCommand::class,
+			SyncCommand::class
 		]);
 	}
 
@@ -127,6 +107,10 @@ class ModuleServiceProvider extends ServiceProvider
 		{
 			return $path . '/modules/' . $this->name;
 		}, config('view.paths')), [$sourcePath]), $this->name);
+
+		/*View::composer(
+			'users::site.profile', ProfileComposer::class
+		);*/
 	}
 
 	/**
@@ -144,15 +128,5 @@ class ModuleServiceProvider extends ServiceProvider
 		}
 
 		$this->loadTranslationsFrom($langPath, $this->name);
-	}
-
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return ['widget'];
 	}
 }

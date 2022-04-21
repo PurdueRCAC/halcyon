@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Modules\Pages\Providers;
+namespace App\Modules\Impact\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
-use Illuminate\Support\Facades\Blade;
-use App\Modules\Pages\Console\ImportStaffCommand;
 
-class ModuleServiceProvider extends ServiceProvider
+class ImpactServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -21,7 +19,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'pages';
+	public $name = 'impact';
 
 	/**
 	 * Boot the application events.
@@ -30,36 +28,12 @@ class ModuleServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		/*Blade::directive('file', function ($expression)
-		{
-			return "<?php echo asset('files/' . $expression); ?>";
-		});
-
-		Blade::directive('filesize', function ($expression)
-		{
-			return "<?php echo App\Halcyon\Utility\Number::formatBytes(filesize(storage_path($expression))); ?>";
-		});*/
-
 		$this->registerTranslations();
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
-
-		$this->commands([
-			ImportStaffCommand::class
-		]);
-	}
-
-	/**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
-		//
 	}
 
 	/**

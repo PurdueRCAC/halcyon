@@ -1,11 +1,25 @@
 <?php
 
-namespace App\Modules\Tags\Providers;
+namespace App\Modules\Queues\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
+use App\Modules\Queues\Console\EmailFreeAuthorizedCommand;
+use App\Modules\Queues\Console\EmailFreeDeniedCommand;
+use App\Modules\Queues\Console\EmailFreeRemovedCommand;
+use App\Modules\Queues\Console\EmailFreeRequestedCommand;
+use App\Modules\Queues\Console\EmailQueueAuthorizedCommand;
+use App\Modules\Queues\Console\EmailQueueDeniedCommand;
+use App\Modules\Queues\Console\EmailQueueRemovedCommand;
+use App\Modules\Queues\Console\EmailQueueRequestedCommand;
+use App\Modules\Queues\Console\EmailWelcomeClusterCommand;
+use App\Modules\Queues\Console\EmailWelcomeFreeCommand;
+use App\Modules\Queues\Console\EmailExpiredCommand;
+use App\Modules\Queues\Console\FixStatusCommand;
+use App\Modules\Queues\Console\StopCommand;
+use App\Modules\Queues\Console\StartCommand;
+use App\Modules\Queues\Listeners\GetUserQueues;
 
-class ModuleServiceProvider extends ServiceProvider
+class QueuesServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -19,7 +33,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'tags';
+	public $name = 'queues';
 
 	/**
 	 * Boot the application events.
@@ -32,18 +46,39 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
+		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+		if (is_dir(dirname(dirname(__DIR__))) . '/Users')
+		{
+			$this->app['events']->subscribe(new GetUserQueues);
+		}
 	}
 
 	/**
-	 * Register the service provider.
+	 * Register console commands.
 	 *
 	 * @return void
 	 */
-	public function register()
+	protected function registerConsoleCommands()
 	{
-		//
+		$this->commands([
+			EmailFreeAuthorizedCommand::class,
+			EmailFreeDeniedCommand::class,
+			EmailFreeRemovedCommand::class,
+			EmailFreeRequestedCommand::class,
+			EmailQueueAuthorizedCommand::class,
+			EmailQueueDeniedCommand::class,
+			EmailQueueRemovedCommand::class,
+			EmailQueueRequestedCommand::class,
+			EmailWelcomeClusterCommand::class,
+			EmailWelcomeFreeCommand::class,
+			EmailExpiredCommand::class,
+			FixStatusCommand::class,
+			StopCommand::class,
+			StartCommand::class,
+		]);
 	}
 
 	/**
@@ -110,15 +145,5 @@ class ModuleServiceProvider extends ServiceProvider
 		}
 
 		$this->loadTranslationsFrom($langPath, $this->name);
-	}
-
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return [];
 	}
 }

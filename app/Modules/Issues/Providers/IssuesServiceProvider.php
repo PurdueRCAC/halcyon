@@ -1,19 +1,10 @@
 <?php
-
-namespace App\Modules\Storage\Providers;
+namespace App\Modules\Issues\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
-use App\Modules\Storage\Listeners\Messages;
-use App\Modules\Storage\Listeners\Resources;
-use App\Modules\Storage\Listeners\GroupMembers;
-use App\Modules\Storage\Listeners\UnixGroupMembers;
-use App\Modules\Storage\Listeners\Notifications;
-use App\Modules\Storage\Listeners\UserStorage;
-use App\Modules\Storage\Console\EmailQuotaCommand;
-use App\Modules\Storage\Console\QuotaCheckCommand;
+use App\Modules\Issues\Listeners\ResourceIssues;
 
-class ModuleServiceProvider extends ServiceProvider
+class IssuesServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -27,7 +18,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'storage';
+	public $name = 'issues';
 
 	/**
 	 * Boot the application events.
@@ -40,55 +31,13 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
-		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
-		$this->app['events']->subscribe(new Notifications);
-
-		if (is_dir(dirname(dirname(__DIR__))) . '/Messages')
-		{
-			$this->app['events']->subscribe(new Messages);
-		}
-
 		if (is_dir(dirname(dirname(__DIR__))) . '/Resources')
 		{
-			$this->app['events']->subscribe(new Resources);
+			$this->app['events']->subscribe(new ResourceIssues);
 		}
-
-		if (is_dir(dirname(dirname(__DIR__))) . '/Groups')
-		{
-			$this->app['events']->subscribe(new GroupMembers);
-			$this->app['events']->subscribe(new UnixGroupMembers);
-		}
-
-		if (is_dir(dirname(dirname(__DIR__))) . '/Users')
-		{
-			$this->app['events']->subscribe(new UserStorage);
-		}
-	}
-
-	/**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
-		//
-	}
-
-	/**
-	 * Register console commands.
-	 *
-	 * @return void
-	 */
-	protected function registerConsoleCommands()
-	{
-		$this->commands([
-			EmailQuotaCommand::class,
-			QuotaCheckCommand::class,
-		]);
 	}
 
 	/**
@@ -155,15 +104,5 @@ class ModuleServiceProvider extends ServiceProvider
 		}
 
 		$this->loadTranslationsFrom($langPath, $this->name);
-	}
-
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return [];
 	}
 }

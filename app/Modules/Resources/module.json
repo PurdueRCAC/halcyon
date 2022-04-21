@@ -5,7 +5,7 @@
     "keywords": [],
     "priority": 0,
     "providers": [
-        "App\\Modules\\Resources\\Providers\\ModuleServiceProvider",
+        "App\\Modules\\Resources\\Providers\\ResourcesServiceProvider",
         "App\\Modules\\Resources\\Providers\\RouteServiceProvider",
         "App\\Modules\\Resources\\Providers\\ScheduleServiceProvider"
     ],

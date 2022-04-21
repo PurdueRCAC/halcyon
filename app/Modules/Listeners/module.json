@@ -5,7 +5,7 @@
     "keywords": [],
     "priority": 2,
     "providers": [
-        "App\\Modules\\Listeners\\Providers\\ModuleServiceProvider",
+        "App\\Modules\\Listeners\\Providers\\ListenersServiceProvider",
         "App\\Modules\\Listeners\\Providers\\RouteServiceProvider"
     ],
     "aliases": {},

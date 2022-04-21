@@ -1,20 +1,19 @@
 <?php
 
-namespace App\Modules\Orders\Providers;
+namespace App\Modules\Widgets\Providers;
 
+use App\Modules\Widgets\Entities\WidgetManager;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
-//use Illuminate\Support\Facades\View;
-//use Illuminate\Database\Eloquent\Factory;
-use Illuminate\Auth\Events\Logout;
-use Illuminate\Session\SessionManager;
-use App\Modules\Orders\Console\RenewCommand;
-use App\Modules\Orders\Console\EmailStatusCommand;
-use App\Modules\Orders\Listeners\GroupOrders;
-use App\Modules\Orders\Listeners\UserOrders;
-//use App\Modules\Orders\Composers\ProfileComposer;
-use App\Modules\Orders\Entities\Cart;
+use Illuminate\Database\Eloquent\Factory;
+use App\Modules\Widgets\Console\DiscoverCommand;
+use App\Modules\Widgets\Console\InstallCommand;
+use App\Modules\Widgets\Console\DisableCommand;
+use App\Modules\Widgets\Console\EnableCommand;
+use App\Modules\Widgets\Console\PublishCommand;
+use App\Modules\Widgets\Console\SetupCommand;
 
-class ModuleServiceProvider extends ServiceProvider
+class WidgetsServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -28,7 +27,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'orders';
+	public $name = 'widgets';
 
 	/**
 	 * Boot the application events.
@@ -37,6 +36,11 @@ class ModuleServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
+		Blade::directive('widget', function ($expression)
+		{
+			return "<?php echo app('widget')->byPosition($expression); ?>";
+		});
+
 		$this->registerTranslations();
 		$this->registerConfig();
 		$this->registerAssets();
@@ -44,16 +48,6 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
-
-		if (is_dir(dirname(dirname(__DIR__))) . '/Groups')
-		{
-			$this->app['events']->subscribe(new GroupOrders);
-		}
-
-		if (is_dir(dirname(dirname(__DIR__))) . '/Users')
-		{
-			$this->app['events']->subscribe(new UserOrders);
-		}
 	}
 
 	/**
@@ -63,15 +57,9 @@ class ModuleServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		$this->app->bind('cart', Cart::class);
-
-		$this->app['events']->listen(Logout::class, function ()
+		$this->app->singleton('widget', function ($app)
 		{
-			if ($this->app['config']->get('module.orders.destroy_on_logout'))
-			{
-				$this->app->make(SessionManager::class)->forget('cart');
-				//$this->app->make(Cart::class)->forget();
-			}
+			return new WidgetManager($app);
 		});
 	}
 
@@ -83,10 +71,12 @@ class ModuleServiceProvider extends ServiceProvider
 	protected function registerConsoleCommands()
 	{
 		$this->commands([
-			RenewCommand::class,
-		]);
-		$this->commands([
-			EmailStatusCommand::class,
+			DiscoverCommand::class,
+			InstallCommand::class,
+			DisableCommand::class,
+			EnableCommand::class,
+			PublishCommand::class,
+			SetupCommand::class,
 		]);
 	}
 
@@ -137,10 +127,6 @@ class ModuleServiceProvider extends ServiceProvider
 		{
 			return $path . '/modules/' . $this->name;
 		}, config('view.paths')), [$sourcePath]), $this->name);
-
-		/*View::composer(
-			'users::site.profile', ProfileComposer::class
-		);*/
 	}
 
 	/**
@@ -158,5 +144,15 @@ class ModuleServiceProvider extends ServiceProvider
 		}
 
 		$this->loadTranslationsFrom($langPath, $this->name);
+	}
+
+	/**
+	 * Get the services provided by the provider.
+	 *
+	 * @return array
+	 */
+	public function provides()
+	{
+		return ['widget'];
 	}
 }

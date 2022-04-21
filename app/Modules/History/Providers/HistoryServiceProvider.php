@@ -9,7 +9,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Modules\History\Listeners\LogSentMessage;
 use App\Modules\History\Listeners\LogCommand;
 
-class ModuleServiceProvider extends ServiceProvider
+class HistoryServiceProvider extends ServiceProvider
 {
 	/**
 	 * Module name

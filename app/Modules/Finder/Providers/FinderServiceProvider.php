@@ -1,9 +1,12 @@
 <?php
-namespace App\Modules\Cron\Providers;
+
+namespace App\Modules\Finder\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Support\Facades\View;
 
-class ModuleServiceProvider extends ServiceProvider
+class FinderServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -17,7 +20,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'cron';
+	public $name = 'finder';
 
 	/**
 	 * Boot the application events.

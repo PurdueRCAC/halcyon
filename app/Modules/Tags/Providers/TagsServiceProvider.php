@@ -1,17 +1,11 @@
 <?php
 
-namespace App\Modules\Groups\Providers;
+namespace App\Modules\Tags\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
-use App\Modules\Groups\Listeners\AddUserToUnixGroup;
-use Illuminate\Support\Facades\View;
-use App\Modules\Groups\Composers\ProfileComposer;
-use App\Modules\Groups\Console\EmailAuthorizedCommand;
-use App\Modules\Groups\Console\EmailRemovedCommand;
-use App\Modules\Groups\Console\SyncMembershipCommand;
 
-class ModuleServiceProvider extends ServiceProvider
+class TagsServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -25,7 +19,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'groups';
+	public $name = 'tags';
 
 	/**
 	 * Boot the application events.
@@ -38,28 +32,8 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
-		$this->registerConsoleCommands();
 
-		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
-
-		if (is_dir(dirname(dirname(__DIR__))) . '/Queues')
-		{
-			$this->app['events']->subscribe(new AddUserToUnixGroup);
-		}
-	}
-
-	/**
-	 * Register console commands.
-	 *
-	 * @return void
-	 */
-	protected function registerConsoleCommands()
-	{
-		$this->commands([
-			EmailAuthorizedCommand::class,
-			EmailRemovedCommand::class,
-			SyncMembershipCommand::class,
-		]);
+		$this->loadMigrationsFrom(dirname(__DIR__) . '/Database/Migrations');
 	}
 
 	/**
@@ -109,10 +83,6 @@ class ModuleServiceProvider extends ServiceProvider
 		{
 			return $path . '/modules/' . $this->name;
 		}, config('view.paths')), [$sourcePath]), $this->name);
-
-		/*View::composer(
-			'users::site.profile', ProfileComposer::class
-		);*/
 	}
 
 	/**
@@ -130,5 +100,15 @@ class ModuleServiceProvider extends ServiceProvider
 		}
 
 		$this->loadTranslationsFrom($langPath, $this->name);
+	}
+
+	/**
+	 * Get the services provided by the provider.
+	 *
+	 * @return array
+	 */
+	public function provides()
+	{
+		return [];
 	}
 }

@@ -1,10 +1,14 @@
 <?php
-
-namespace App\Modules\Publications\Providers;
+namespace App\Modules\ContactReports\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Modules\ContactReports\Console\EmailCommentsCommand;
+use App\Modules\ContactReports\Console\EmailFollowupsCommand;
+use App\Modules\ContactReports\Console\EmailReportsCommand;
+use App\Modules\ContactReports\Listeners\GroupReports;
+use App\Modules\ContactReports\Listeners\CourseReport;
 
-class ModuleServiceProvider extends ServiceProvider
+class ContactReportsServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -18,7 +22,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'publications';
+	public $name = 'contactreports';
 
 	/**
 	 * Boot the application events.
@@ -31,8 +35,18 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
+		$this->registerCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+		if (is_dir(dirname(dirname(__DIR__))) . '/Groups')
+		{
+			$this->app['events']->subscribe(new GroupReports);
+		}
+		if (is_dir(dirname(dirname(__DIR__))) . '/Courses')
+		{
+			$this->app['events']->subscribe(new CourseReport);
+		}
 	}
 
 	/**
@@ -99,5 +113,19 @@ class ModuleServiceProvider extends ServiceProvider
 		}
 
 		$this->loadTranslationsFrom($langPath, $this->name);
+	}
+
+	/**
+	 * Register console commands.
+	 *
+	 * @return void
+	 */
+	public function registerCommands()
+	{
+		$this->commands([
+			EmailCommentsCommand::class,
+			EmailReportsCommand::class,
+			EmailFollowupsCommand::class
+		]);
 	}
 }

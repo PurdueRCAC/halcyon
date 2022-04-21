@@ -5,7 +5,7 @@
     "keywords": [],
     "priority": 30,
     "providers": [
-        "App\\Modules\\Finder\\Providers\\ModuleServiceProvider",
+        "App\\Modules\\Finder\\Providers\\FinderServiceProvider",
         "App\\Modules\\Finder\\Providers\\RouteServiceProvider"
     ],
     "aliases": {},

@@ -1,15 +1,17 @@
 <?php
-namespace App\Modules\Courses\Providers;
+
+namespace App\Modules\Groups\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Factory;
+use App\Modules\Groups\Listeners\AddUserToUnixGroup;
 use Illuminate\Support\Facades\View;
-use App\Modules\Courses\Composers\ProfileComposer;
-use App\Modules\Courses\Console\EmailAdditionsCommand;
-use App\Modules\Courses\Console\EmailRemovalsCommand;
-use App\Modules\Courses\Console\SyncCommand;
-use App\Modules\Courses\Listeners\UserCourses;
+use App\Modules\Groups\Composers\ProfileComposer;
+use App\Modules\Groups\Console\EmailAuthorizedCommand;
+use App\Modules\Groups\Console\EmailRemovedCommand;
+use App\Modules\Groups\Console\SyncMembershipCommand;
 
-class ModuleServiceProvider extends ServiceProvider
+class GroupsServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -23,7 +25,7 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	public $name = 'courses';
+	public $name = 'groups';
 
 	/**
 	 * Boot the application events.
@@ -36,13 +38,13 @@ class ModuleServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
-		$this->registerCommands();
+		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
-		if (is_dir(dirname(dirname(__DIR__))) . '/Users')
+		if (is_dir(dirname(dirname(__DIR__))) . '/Queues')
 		{
-			$this->app['events']->subscribe(new UserCourses);
+			$this->app['events']->subscribe(new AddUserToUnixGroup);
 		}
 	}
 
@@ -51,12 +53,12 @@ class ModuleServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	public function registerCommands()
+	protected function registerConsoleCommands()
 	{
 		$this->commands([
-			EmailAdditionsCommand::class,
-			EmailRemovalsCommand::class,
-			SyncCommand::class
+			EmailAuthorizedCommand::class,
+			EmailRemovedCommand::class,
+			SyncMembershipCommand::class,
 		]);
 	}
 
