@@ -202,7 +202,7 @@ app('pathway')
 			<div class="card mb-3">
 				<div class="card-header">
 					<div class="d-flex">
-						@if (auth()->user()->can('delete issues'))
+						@if (auth()->user()->can('delete contactreports'))
 							<div>
 								{!! Html::grid('id', $i, $row->id) !!}
 							</div>
