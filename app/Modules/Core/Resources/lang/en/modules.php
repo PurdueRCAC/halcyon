@@ -11,4 +11,5 @@ return [
 	'protected' => 'Protected',
 	'admin' => 'Admin Interface',
 	'scan' => 'Scan',
+	'folder' => 'Grouping',
 ];

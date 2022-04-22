@@ -81,4 +81,7 @@ return [
 	'menu manager new menu item' => 'Add New Menu Item',
 	'home default' => 'Home',
 	'home multiple' => 'Warning! Multiple homes!',
+
+	'groupings' => 'Groupings',
+	'groupings description' => 'Add CSS class names for module groupings. These class names are used when bulding the admin menu.',
 ];

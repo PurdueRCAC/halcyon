@@ -3,19 +3,36 @@ use App\Widgets\Adminmenu\Node;
 
 $user = auth()->user();
 
-$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.dashboard'), null, 'class:dashboard disabled'));
+//
+// Dashboard SubMenu
+//
+$menu->addChild(new Node(
+	trans('widget.adminmenu::adminmenu.dashboard'),
+	null,
+	'class:' . (isset($groupings['dashboard']) ? $groupings['dashboard'] : 'dashboard') . ' disabled'
+));
 
 //
 // Site SubMenu
 //
-$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.configuration'), null, 'class:settings disabled'));
+$menu->addChild(new Node(
+	trans('widget.adminmenu::adminmenu.configuration'),
+	null,
+	'class:' . (isset($groupings['system']) ? $groupings['system'] : 'settings') . ' disabled'
+));
 
 //
 // Users Submenu
 //
-if ($user->can('manage users') || $user->can('manage groups'))
+if ($user->can('manage users')
+ || $user->can('manage groups')
+ || !empty($modules['users']))
 {
-	$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.users'), null, 'class:users disabled'));
+	$menu->addChild(new Node(
+		trans('widget.adminmenu::adminmenu.users'),
+		null,
+		'class:' . (isset($groupings['users']) ? $groupings['users'] : 'users') . ' disabled'
+	));
 }
 
 //
@@ -23,30 +40,50 @@ if ($user->can('manage users') || $user->can('manage groups'))
 //
 if ($user->can('manage menus'))
 {
-	$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.menus'), null, 'class:menus disabled'));
+	$menu->addChild(new Node(
+		trans('widget.adminmenu::adminmenu.menus'),
+		null,
+		'class:' . (isset($groupings['menus']) ? $groupings['menus'] : 'menus') . ' disabled'
+	));
 }
 
 //
 // Content Submenu
 //
-if ($user->can('manage pages') || $user->can('manage news') || $user->can('manage knowledge') || $user->can('manage media'))
+if ($user->can('manage pages')
+ || $user->can('manage media')
+ || !empty($modules['content']))
 {
-	$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.content'), null, 'class:file-text disabled'));
+	$menu->addChild(new Node(
+		trans('widget.adminmenu::adminmenu.content'),
+		null,
+		'class:' . (isset($groupings['content']) ? $groupings['content'] : 'file-text') . ' disabled'
+	));
 }
 
 //
-// Resources Submenu
+// Custom groupings
 //
-if (($user->can('manage resources') || $user->can('manage queues') || $user->can('manage storage')) && Module::isEnabled('resources'))
+foreach ($modules as $group => $mods)
 {
-	$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.resources'), null, 'class:server disabled'));
-}
+	if (in_array($group, ['dashboard', 'system', 'users', 'menus', 'themes', 'content', 'extensions']))
+	{
+		continue;
+	}
 
-if ($user->can('manage orders') && Module::isEnabled('orders'))
-{
-	$menu->addChild(
-		new Node(trans('widget.adminmenu::adminmenu.order manager'), null, 'class:shopping-cart')
-	);
+	foreach ($mods as $i => $mod)
+	{
+		if ($i == 0)
+		{
+			$menu->addChild(
+				new Node(
+					$mod->text,
+					null,
+					'class:' . (isset($groupings[$group]) ? $groupings[$group] : $mod->element) . ' disabled'
+				)
+			);
+		}
+	}
 }
 
 //
@@ -58,20 +95,23 @@ $lm = $user->can('manage languages');
 
 if ($mm || $pm || $lm)
 {
-	$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.extensions'), null, 'class:extensions disabled'));
+	$menu->addChild(new Node(
+		trans('widget.adminmenu::adminmenu.extensions'),
+		null,
+		'class:' . (isset($groupings['extensions']) ? $groupings['extensions'] : 'extensions') . ' disabled'
+	));
 }
 
+//
+// Themes Submenu
+//
 if ($user->can('manage themes'))
 {
-	$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.theme manager'), null, 'class:modules disabled'));
+	$menu->addChild(new Node(
+		trans('widget.adminmenu::adminmenu.theme manager'),
+		null,
+		'class:' . (isset($groupings['themes']) ? $groupings['themes'] : 'modules') . ' disabled'
+	));
 }
-
-//
-// Help Submenu
-//
-/*if ($params->get('showhelp', 0) == 1)
-{
-	$menu->addChild(new Node(trans('widget.adminmenu::adminmenu.HELP'), null, 'class:help disabled'));
-}*/
 
 $menu->renderMenu('adminmenu', 'disabled');

@@ -71,8 +71,11 @@
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('core::modules.state'), 'state', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-6 text-center">
+				<!--<th scope="col" class="priority-6 text-center">
 					{!! Html::grid('sort', trans('core::modules.admin'), 'client_id', $filters['order_dir'], $filters['order']) !!}
+				</th>-->
+				<th scope="col" class="priority-5">
+					{!! Html::grid('sort', trans('core::modules.folder'), 'folder', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-5 text-center">
 					{!! Html::grid('sort', trans('core::modules.ordering'), 'ordering', $filters['order_dir'], $filters['order']) !!}
@@ -81,7 +84,7 @@
 		</thead>
 		<tbody>
 		@foreach ($rows as $i => $row)
-			<tr>
+			<tr{!! $row->protected ? ' class="locked"' : '' !!}>
 				<td class="text-center">
 					@if ($row->protected)
 						<span class="fa fa-lock" aria-hidden="true"></span>
@@ -94,7 +97,9 @@
 					{{ $row->id }}
 				</td>
 				<td>
-					{{ ($row->name == $row->element ? trans($row->name . '::' . $row->name . '.module name') : $row->name) }}
+					<a href="{{ route('admin.modules.edit', ['id' => $row->id]) }}">
+						{{ ($row->name == $row->element ? trans($row->name . '::' . $row->name . '.module name') : $row->name) }}
+					</a>
 				</td>
 				<td class="priority-4">
 					@if ($row->protected)
@@ -119,13 +124,18 @@
 						@endif
 					@endif
 				</td>
-				<td class="priority-6 text-center">
+				<td class="priority-6">
+					<a href="{{ route('admin.modules.edit', ['id' => $row->id]) }}">
+						{{ $row->folder ? $row->folder : 'extensions' }}
+					</a>
+				</td>
+				<!-- <td class="priority-6 text-center">
 					@if ($row->client_id)
 						<span class="badge badge-success">{{ trans('global.yes') }}</span>
 					@else
 						<span class="badge badge-secondary">{{ trans('global.no') }}</span>
 					@endif
-				</td>
+				</td> -->
 				<td class="priority-5 text-center">
 					{{ $row->ordering }}
 				</td>

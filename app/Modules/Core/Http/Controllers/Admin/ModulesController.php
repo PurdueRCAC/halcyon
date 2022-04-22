@@ -5,6 +5,7 @@ namespace App\Modules\Core\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Artisan;
 use App\Modules\Core\Models\Extension;
 use App\Halcyon\Http\StatefulRequest;
@@ -44,7 +45,7 @@ class ModulesController extends Controller
 		}
 		$filters['page'] = $reset ? 1 : $filters['page'];
 
-		if (!in_array($filters['order'], ['id', 'name', 'element', 'enabled']))
+		if (!in_array($filters['order'], ['id', 'name', 'element', 'folder', 'ordering', 'enabled']))
 		{
 			$filters['order'] = 'name';
 		}
@@ -87,14 +88,83 @@ class ModulesController extends Controller
 			}
 		}
 
-		$rows = $query
-			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
+		$query->orderBy($filters['order'], $filters['order_dir']);
+		
+		if ($filters['order'] != 'ordering')
+		{
+			$query->orderBy('ordering', $filters['order_dir']);
+		}
+
+		$rows = $query->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
 		return view('core::admin.modules.index', [
 			'rows'    => $rows,
 			'filters' => $filters,
 		]);
+	}
+
+	/**
+	 * Show the form for creating a new resource.
+	 * 
+	 * @return Response
+	 */
+	public function edit(Request $request, $id)
+	{
+		$row = Extension::findOrFail($id);
+		$row->folder = $row->folder ?: 'extensions';
+
+		return view('core::admin.modules.edit', [
+			'row'  => $row,
+		]);
+	}
+
+	/**
+	 * Update the specified extension
+	 *
+	 * @param   Request $request
+	 * @return  Response
+	 */
+	public function store(Request $request)
+	{
+		$rules = [
+			'name'    => 'required|string|max:255',
+			'folder'  => 'nullable|string|max:255',
+			'enabled'  => 'nullable|integer',
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
+
+		$id = $request->input('id');
+
+		$row = $id ? Extension::findOrFail($id) : new Extension;
+		if ($request->has('name'))
+		{
+			$row->name = $request->input('name');
+		}
+		if ($request->has('folder'))
+		{
+			$row->folder = $request->input('folder');
+		}
+		if ($request->has('enabled'))
+		{
+			$row->enabled = $request->input('enabled');
+		}
+
+		if (!$row->save())
+		{
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
+
+			return redirect()->back()->withError($error);
+		}
+
+		return redirect(route('admin.modules.index'))->withSuccess(trans('global.messages.item updated'));
 	}
 
 	/**

@@ -1156,6 +1156,7 @@ h4 {
 .icon-search:before {
   content: "\e8bd";
 }
+.icon-resources:before,
 .icon-server:before {
   content: "\e8be";
 }
@@ -1385,6 +1386,7 @@ h4 {
   content: "\e904";
 }
 .fa-shopping-cart:before,
+.icon-orders:before,
 .icon-shopping-cart:before {
   content: "\e905";
 }
@@ -4028,6 +4030,10 @@ label[data-hint] {
 
 tr.trashed {
   background-color: rgba(218, 52, 71, 0.05);
+}
+tr.locked {
+  background-color: rgba(238, 193, 109, 0.09);
+  opacity: 0.75;
 }
 table.meta {
   padding: 0;

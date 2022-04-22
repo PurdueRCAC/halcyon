@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
 	<fields name="params">
+		<fieldset name="basic">
+			<field name="groupings" type="App\Modules\Core\Models\Fields\Modules" label="widget.adminmenu::adminmenu.groupings" description="widget.adminmenu::adminmenu.groupings description" />
+		</fieldset>
 		<fieldset name="advanced">
 			<field name="class" type="text" label="widgets::widgets.field.class name" description="widgets::widgets.field.class name description" />
 			<field name="htmlid" type="text" default="adminmenu" label="widgets::widgets.field.html id" description="widgets::widgets.field.html id description" />

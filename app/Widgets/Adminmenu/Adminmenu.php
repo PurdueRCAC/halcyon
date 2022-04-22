@@ -25,14 +25,41 @@ class Adminmenu extends Widget
 		$enabled = Request::input('hidemainmenu') ? false : true;
 		$modules = $this->getModules(false);
 		$menus = $this->getMenus();
+		$user = auth()->user();
+
+		$groupings = array();
+		foreach ($this->params->get('groupings', []) as $grouping)
+		{
+			$groupings[$grouping['grouping']] = $grouping['class'];
+		}
+
+		foreach ($modules as $module)
+		{
+			if (!$user->can('manage ' . $module->element))
+			{
+				continue;
+			}
+
+			if (!$module->folder)
+			{
+				$module->folder = 'extensions';
+			}
+
+			if (!isset($mods[$module->folder]))
+			{
+				$mods[$module->folder] = array();
+			}
+			$mods[$module->folder][] = $module;
+		}
 
 		// Render the module layout
 		return view($this->getViewName($enabled ? 'enabled' : 'disabled'), [
 			'enabled' => $enabled,
 			'menu'    => $menu,
-			'modules' => $modules,
+			'modules' => $mods,
 			'menus'   => $menus,
-			'params'  => $this->params
+			'params'  => $this->params,
+			'groupings' => $groupings,
 		]);
 	}
 
@@ -95,24 +122,6 @@ class Adminmenu extends Widget
 		$ext = 'extensions';
 
 		// Prepare the query.
-		/*$modules = DB::table($items)
-			->select(
-				$items . '.id',
-				$items . '.title',
-				$items . '.alias',
-				$items . '.link',
-				$items . '.parent_id',
-				$items . '.class',
-				$ext . '.element',
-				$ext . '.protected'
-			)
-			->leftJoin($ext, $ext . '.id', '=', $items . '.module_id')
-			->where($items . '.client_id', '=', '1')
-			->where($ext . '.enabled', '=', '1')
-			->where($ext . '.type', '=', 'module')
-			->where($items . '.id', '>', '1')
-			->orderBy($items . '.lft', 'asc')
-			->get();*/
 		$modules = DB::table($ext)
 			->select(
 				$ext . '.id',
@@ -121,12 +130,15 @@ class Adminmenu extends Widget
 				$ext . '.element AS alias',
 				$ext . '.element AS class',
 				$ext . '.element',
+				$ext . '.folder',
 				$ext . '.protected'
 			)
 			->where($ext . '.client_id', '=', '1')
 			->where($ext . '.enabled', '=', '1')
 			->where($ext . '.type', '=', 'module')
-			->where($ext . '.protected', '=', '0')
+			//->where($ext . '.protected', '=', '0')
+			//->orderBy($ext . '.folder', 'asc')
+			->orderBy($ext . '.ordering', 'asc')
 			->orderBy($ext . '.name', 'asc')
 			->get();
 
@@ -138,62 +150,31 @@ class Adminmenu extends Widget
 		// Parse the list of extensions.
 		foreach ($modules as &$module)
 		{
-			// Trim the menu link.
-			/*$module->link = trim($module->link);
-
-			if ($module->parent_id == 1)
-			{*/
-				// Only add this top level if it is authorised and enabled.
-				if ($authCheck == false)// || ($authCheck && auth()->user()->can('core.manage', $module->element)))
-				{
-					// Root level.
-					$result[$module->id] = $module;
-
-					if (!isset($result[$module->id]->submenu))
-					{
-						$result[$module->id]->submenu = array();
-					}
-
-					// If the root menu link is empty, add it in.
-					/*if (empty($module->link))
-					{
-						$module->link = url(config('app.admin-prefix', 'admin') . '/' . $module->element);
-					}
-					else
-					{
-						$module->link = route($module->link);
-					}*/
-
-					//$module->link = route('admin.' . substr($module->element, 4) . '.index');
-					$module->link = url(config('app.admin-prefix', 'admin') . '/' . $module->element);
-
-					if (!empty($module->element))
-					{
-						$lang->addNamespace($module->element, app_path() . '/Modules/' . ucfirst($module->element) . '/Resources/lang');
-					}
-
-					$key = $module->element . '::system.' . $module->title;
-
-					$module->text = $lang->has($key) ? trans($key) : $module->alias;
-				}
-			/*}
-			else
+			// Only add this top level if it is authorised and enabled.
+			if ($authCheck == false)// || ($authCheck && auth()->user()->can('core.manage', $module->element)))
 			{
-				// Sub-menu level.
-				if (isset($result[$module->parent_id]))
-				{
-					// Add the submenu link if it is defined.
-					if (isset($result[$module->parent_id]->submenu) && !empty($module->link))
-					{
-						$key = $module->element . '::system.' . $module->title;
-						$module->text = $lang->has($key) ? trans($key) : $module->alias;
+				// Root level.
+				$result[$module->id] = $module;
 
-						$result[$module->parent_id]->submenu[] =& $module;
-					}
+				if (!isset($result[$module->id]->submenu))
+				{
+					$result[$module->id]->submenu = array();
 				}
-			}*/
+
+				//$module->link = route('admin.' . substr($module->element, 4) . '.index');
+				$module->link = url(config('app.admin-prefix', 'admin') . '/' . $module->element);
+
+				if (!empty($module->element))
+				{
+					$lang->addNamespace($module->element, app_path() . '/Modules/' . ucfirst($module->element) . '/Resources/lang');
+				}
+
+				$key = $module->element . '::system.' . $module->title;
+
+				$module->text = $lang->has($key) ? trans($key) : $module->alias;
+			}
 		}
 
-		return collect($result)->sortBy('text');
+		return collect($result); //->sortBy('text');
 	}
 }
