@@ -299,19 +299,19 @@ function NewDir(btn) {
 		post['autouser'] = "1";
 		post['groupread'] = "1";
 		post['groupwrite'] = "0";
-		post['autouserunixgroup'] = autouserunixgroup;
+		post['autouserunixgroupid'] = autouserunixgroup;
 	}
 	if (type == "autouserprivate") {
 		post['autouser'] = "2";
 		post['groupread'] = "0";
 		post['groupwrite'] = "0";
-		post['autouserunixgroup'] = autouserunixgroup;
+		post['autouserunixgroupid'] = autouserunixgroup;
 	}
 	if (type == "autouserreadwrite") {
 		post['autouser'] = "3";
 		post['groupread'] = "1";
 		post['groupwrite'] = "1";
-		post['autouserunixgroup'] = autouserunixgroup;
+		post['autouserunixgroupid'] = autouserunixgroup;
 	}
 	//post = JSON.stringify(post);
 	//console.log(post);return;

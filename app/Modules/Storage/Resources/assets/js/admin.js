@@ -261,19 +261,19 @@ function NewDir(btn) {
 		post['autouser'] = "1";
 		post['groupread'] = "1";
 		post['groupwrite'] = "0";
-		post['autouserunixgroup'] = autouserunixgroup;
+		post['autouserunixgroupid'] = autouserunixgroup;
 	}
 	if (type == "autouserprivate") {
 		post['autouser'] = "2";
 		post['groupread'] = "1";
 		post['groupwrite'] = "0";
-		post['autouserunixgroup'] = autouserunixgroup;
+		post['autouserunixgroupid'] = autouserunixgroup;
 	}
 	if (type == "autouserreadwrite") {
 		post['autouser'] = "3";
 		post['groupread'] = "1";
 		post['groupwrite'] = "0";
-		post['autouserunixgroup'] = autouserunixgroup;
+		post['autouserunixgroupid'] = autouserunixgroup;
 	}
 
 	$.ajax({
