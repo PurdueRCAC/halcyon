@@ -1,6 +1,6 @@
 <?php
 return [
-	'module name' => 'Finder',
+	'module name' => 'Service Finder',
 
 	'facets' => 'Facets',
 	'services' => 'Services',
