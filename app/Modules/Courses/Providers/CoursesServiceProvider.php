@@ -8,6 +8,7 @@ use App\Modules\Courses\Console\EmailAdditionsCommand;
 use App\Modules\Courses\Console\EmailRemovalsCommand;
 use App\Modules\Courses\Console\SyncCommand;
 use App\Modules\Courses\Listeners\UserCourses;
+use App\Modules\Courses\Listeners\RemoveMembershipsForDeletedUser;
 
 class CoursesServiceProvider extends ServiceProvider
 {
@@ -39,6 +40,8 @@ class CoursesServiceProvider extends ServiceProvider
 		$this->registerCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+		$this->app['events']->subscribe(new RemoveMembershipsForDeletedUser);
 
 		if (is_dir(dirname(dirname(__DIR__))) . '/Users')
 		{

@@ -18,6 +18,7 @@ use App\Modules\Queues\Console\FixStatusCommand;
 use App\Modules\Queues\Console\StopCommand;
 use App\Modules\Queues\Console\StartCommand;
 use App\Modules\Queues\Listeners\GetUserQueues;
+use App\Modules\Queues\Listeners\RemoveMembershipsForDeletedUser;
 
 class QueuesServiceProvider extends ServiceProvider
 {
@@ -49,6 +50,8 @@ class QueuesServiceProvider extends ServiceProvider
 		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+		$this->app['events']->subscribe(new RemoveMembershipsForDeletedUser);
 
 		if (is_dir(dirname(dirname(__DIR__))) . '/Users')
 		{
