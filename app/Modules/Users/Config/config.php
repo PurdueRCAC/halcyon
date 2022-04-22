@@ -9,7 +9,37 @@ return [
 	| When set to `false`, the registration form will not be available.
 	|
 	*/
-	'allow_registration' => env('USERS_ALLOW_REGISTRATION', true),
+	'allow_registration' => false,
+
+	/*
+	|--------------------------------------------------------------------------
+	| Allow self deletion
+	|--------------------------------------------------------------------------
+	|
+	| Allow users to delete their accounts.
+	|
+	*/
+	'allow_self_deletion' => false,
+
+	/*
+	|--------------------------------------------------------------------------
+	| Profile Photos
+	|--------------------------------------------------------------------------
+	|
+	| Display profile photos and allow users to change them
+	|
+	*/
+	'profile_photos' => false,
+
+	/*
+	|--------------------------------------------------------------------------
+	| Terms of Service
+	|--------------------------------------------------------------------------
+	|
+	| Set the ID of a page in the Pages module to act as the Terms of Service
+	|
+	*/
+	'terms' => 0,
 
 	/*
 	|--------------------------------------------------------------------------

@@ -2,19 +2,17 @@
 <config>
 	<fieldset name="module">
 		<field
-			name="allowUserRegistration"
+			name="allow_registration"
 			type="radio"
 			default="0"
 			label="users::config.allow registration"
 			description="users::config.allow registration desc">
-			<option
-				value="0">global.no</option>
-			<option
-				value="1">global.yes</option>
+			<option value="0">global.no</option>
+			<option value="1">global.yes</option>
 		</field>
 
 		<field
-			name="new_userrole"
+			name="new_usertype"
 			type="App\Modules\Users\Models\Fields\Usergroup"
 			default="2"
 			label="users::config.new user role"
@@ -22,38 +20,34 @@
 		</field>
 
 		<field
-			name="guest_userrole"
-			type="App\Modules\Users\Models\Fields\Usergroup"
-			default="1"
-			label="users::config.guest user role"
-			description="users::config.guest user role desc">
-		</field>
-
-		<field
-			name="mail_to_admin"
-			type="radio"
-			default="1"
-			label="users::config.mail to admin"
-			description="users::config.mail to admin desc">
-			<option
-				value="0">global.no</option>
-			<option
-				value="1">global.yes</option>
-		</field>
-
-		<field
-			name="change_username"
+			name="allow_self_deletion"
 			type="radio"
 			default="0"
-			label="users::config.change username"
-			description="users::config.change username desc">
-			<option
-				value="0">global.no</option>
-			<option
-				value="1">global.yes</option>
+			label="users::config.allow deletion"
+			description="users::config.allow deletion desc">
+			<option value="0">global.no</option>
+			<option value="1">global.yes</option>
 		</field>
 
-		<field name="defaultpic" type="text" menu="hide" default="/modules/users/images/profile.gif" label="Default picture" description="Default placeholder image for user pictures" />
+		<field
+			name="profile_photos"
+			type="radio"
+			default="0"
+			label="users::config.profile photos"
+			description="users::config.profile photos desc">
+			<option value="0">global.no</option>
+			<option value="1">global.yes</option>
+		</field>
+
+		<field
+			name="terms"
+			type="App\Modules\Pages\Models\Fields\Page"
+			default="0"
+			option_blank="true"
+			label="users::config.terms page"
+			description="users::config.terms page desc">
+			<option value="0">global.none</option>
+		</field>
 	</fieldset>
 	<fieldset name="permissions" label="access.permissions" description="access.permissions description">
 		<field name="rules" type="rules" label="access.permissions" validate="rules" filter="rules" module="users" section="module" />

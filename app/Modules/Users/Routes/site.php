@@ -72,6 +72,13 @@ $router->group(['prefix' => 'account', 'middleware' => 'auth'], function (Router
 		'as' => 'site.users.account.request',
 		'uses' => 'UsersController@request',
 	]);
+	if (config('module.users.allow_self_deletion'))
+	{
+		$router->get('delete', [
+			'as' => 'site.users.account.delete',
+			'uses' => 'UsersController@delete',
+		]);
+	}
 	$router->get('{section}', [
 		'as' => 'site.users.account.section',
 		'uses' => 'UsersController@profile',

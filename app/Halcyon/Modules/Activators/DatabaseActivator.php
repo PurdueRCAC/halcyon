@@ -5,9 +5,9 @@ namespace App\Halcyon\Modules\Activators;
 use Illuminate\Cache\CacheManager;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Container\Container;
+use Illuminate\Support\Facades\Schema;
 use Nwidart\Modules\Contracts\ActivatorInterface;
 use Nwidart\Modules\Module;
-use Illuminate\Support\Facades\Schema;
 
 class DatabaseActivator implements ActivatorInterface
 {
@@ -59,6 +59,7 @@ class DatabaseActivator implements ActivatorInterface
 		$this->cache  = $app['cache'];
 		$this->db     = $app['db'];
 		$this->config = $app['config'];
+
 		$this->cacheKey = $this->config('cache-key');
 		$this->cacheLifetime = $this->config('cache-lifetime');
 		$this->modulesStatuses = $this->getModulesStatuses();
@@ -169,13 +170,23 @@ class DatabaseActivator implements ActivatorInterface
 		}
 
 		$rows = $this->db->table('extensions')
-			->select(['element', 'enabled'])
+			->select(['element', 'enabled', 'params'])
 			->where('type', '=', 'module')
 			->orderBy('ordering', 'asc')
 			->get();
 
 		foreach ($rows as $row)
 		{
+			if (trim($row->params))
+			{
+				$params = json_decode($row->params, true);
+
+				$config = config()->get('module.' . $row->element, []);
+				$config = array_merge($config, $params);
+
+				config()->set('module.' . $row->element, $config);
+			}
+
 			$modules[strtolower($row->element)] = (bool) $row->enabled;
 		}
 

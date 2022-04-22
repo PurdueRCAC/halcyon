@@ -3,6 +3,7 @@
 namespace App\Modules\Pages\Models\Fields;
 
 use App\Halcyon\Form\Fields\Select;
+use App\Halcyon\Html\Builder\Select as Dropdown;
 use App\Modules\Pages\Models\Page as PageModel;
 
 /**
@@ -35,6 +36,11 @@ class Page extends Select
 		{
 			$page->text = str_repeat('|&mdash; ', $page->level) . e($page->text);
 		});
+
+		if ($this->element['option_blank'])
+		{
+			$options->prepend(Dropdown::option('', trans('- Select -'), 'value', 'text'));
+		}
 
 		return $options->toArray();
 	}

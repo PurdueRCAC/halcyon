@@ -675,6 +675,11 @@ class UsersController extends Controller
 	{
 		$user = User::findOrFail($id);
 
+		if (!config('module.users.allow_self_deletion') && $user->id == auth()->user()->id)
+		{
+			return response()->json(['message' => trans('users::auth.self deletion not allowed', ['id' => $id])], 403);
+		}
+
 		foreach ($user->usernames as $username)
 		{
 			if (!$username->delete())

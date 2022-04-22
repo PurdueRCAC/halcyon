@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rule;
 use App\Halcyon\Access\Role;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
@@ -47,6 +48,11 @@ class RegisterController extends Controller
 			'email' => ['required', 'string', 'email', 'max:255'], //, 'unique:users'],
 			'password' => ['required', 'confirmed', Rules\Password::defaults()],
 		];
+
+		if (config('module.users.terms'))
+		{
+			$rules['terms'] = ['required', 'int', Rule::in([1])];
+		}
 
 		$validator = Validator::make($request->all(), $rules);
 
