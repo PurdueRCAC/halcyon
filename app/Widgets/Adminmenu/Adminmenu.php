@@ -33,6 +33,15 @@ class Adminmenu extends Widget
 			$groupings[$grouping['grouping']] = $grouping['class'];
 		}
 
+		$mods = array(
+			'dashboard' => array(),
+			'system' => array(),
+			'users' => array(),
+			'content' => array(),
+			'menus' => array(),
+			'extensions' => array(),
+			'themes' => array(),
+		);
 		foreach ($modules as $module)
 		{
 			if (!$user->can('manage ' . $module->element))
@@ -42,7 +51,28 @@ class Adminmenu extends Widget
 
 			if (!$module->folder)
 			{
-				$module->folder = 'extensions';
+				switch ($module->element)
+				{
+					case 'users':
+					case 'meneus':
+					case 'dashboard':
+					case 'themes':
+						$module->folder = $module->element;
+					break;
+					case 'pages':
+					case 'media':
+					case 'tags':
+						$module->folder = 'content';
+					break;
+					case 'core':
+					case 'config':
+					case 'history':
+						$module->folder = 'system';
+					break;
+					default:
+						$module->folder = 'extensions';
+					break;
+				}
 			}
 
 			if (!isset($mods[$module->folder]))
