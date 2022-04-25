@@ -8,7 +8,7 @@ use Illuminate\Config\Repository;
 use App\Modules\Menus\Entities\Menu;
 use App\Modules\Menus\Listeners\InstallModule;
 
-class ModuleServiceProvider extends ServiceProvider
+class MenusServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.

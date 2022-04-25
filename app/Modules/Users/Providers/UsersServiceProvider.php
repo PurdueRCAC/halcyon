@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factory;
 use App\Modules\Users\Console\SyncCommand;
 use App\Modules\Users\Console\CleanUpCommand;
 
-class ModuleServiceProvider extends ServiceProvider
+class UsersServiceProvider extends ServiceProvider
 {
 	/**
 	 * Indicates if loading of the provider is deferred.
