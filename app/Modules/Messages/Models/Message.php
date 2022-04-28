@@ -190,7 +190,7 @@ class Message extends Model
 	}
 
 	/**
-	 * Defines a relationship to a subresource
+	 * Defines a relationship to a type
 	 *
 	 * @return  object
 	 */
@@ -200,7 +200,7 @@ class Message extends Model
 	}
 
 	/**
-	 * Defines a relationship to a subresource
+	 * Save model data
 	 *
 	 * @param   array  $options
 	 * @return  bool
@@ -230,9 +230,9 @@ class Message extends Model
 	}
 
 	/**
-	 * Defines a relationship to a subresource
+	 * Get elapsed time in a human readable format
 	 *
-	 * @return  object
+	 * @return  string
 	 */
 	public function getElapsedAttribute()
 	{
@@ -244,7 +244,7 @@ class Message extends Model
 	 *
 	 * @param   string  $start  Start time
 	 * @param   string  $end    End time
-	 * @param   string  $unit   Time unit
+	 * @param   string  $unit   If a specific time unit is desired (e.g., seconds), name the unit [seconds, minutes, hours, days, weeks, months]
 	 * @return  string
 	 */
 	private function diffForHumans($start, $end = null, $unit = null)
@@ -267,56 +267,56 @@ class Message extends Model
 		// Less than a minute
 		if ($diff < 60 || $unit == 'seconds')
 		{
-			return $diff . ' second' . ($diff == 1 ? '' : 's');
+			return trans_choice('messages::messages.time.seconds', $diff, ['value' => $diff]);
 		}
 
 		// Round to minutes
 		$diff = round($diff / 60);
 
 		// 1 to 59 minutes
-		if ($diff < 60 || $unit == 'minute')
+		if ($diff < 60 || $unit == 'minutes')
 		{
-			return $diff . ' minute' . ($diff == 1 ? '' : 's');
+			return trans_choice('messages::messages.time.minutes', $diff, ['value' => $diff]);
 		}
 
 		// Round to hours
 		$diff = round($diff / 60);
 
 		// 1 to 23 hours
-		if ($diff < 24 || $unit == 'hour')
+		if ($diff < 24 || $unit == 'hours')
 		{
-			return $diff . ' hour' . ($diff == 1 ? '' : 's');
+			return trans_choice('messages::messages.time.hours', $diff, ['value' => $diff]);
 		}
 
 		// Round to days
 		$diff = round($diff / 24);
 
 		// 1 to 6 days
-		if ($diff < 7 || $unit == 'day')
+		if ($diff < 7 || $unit == 'days')
 		{
-			return $diff . ' day' . ($diff == 1 ? '' : 's');
+			return trans_choice('messages::messages.time.days', $diff, ['value' => $diff]);
 		}
 
 		// Round to weeks
 		$diff = round($diff / 7);
 
 		// 1 to 4 weeks
-		if ($diff <= 4 || $unit == 'week')
+		if ($diff <= 4 || $unit == 'weeks')
 		{
-			return $diff . ' week' . ($diff == 1 ? '' : 's');
+			return trans_choice('messages::messages.time.weeks', $diff, ['value' => $diff]);
 		}
 
 		// Round to months
 		$diff = round($diff / 4);
 
 		// 1 to 12 months
-		if ($diff <= 12 || $unit == 'month')
+		if ($diff <= 12 || $unit == 'months')
 		{
-			return $diff . ' month' . ($diff == 1 ? '' : 's');
+			return trans_choice('messages::messages.time.months', $diff, ['value' => $diff]);
 		}
 
-		// 1 to 12 months
-		return $diff . ' year' . ($diff == 1 ? '' : 's');
+		// > 12 months
+		return trans_choice('messages::messages.time.years', $diff, ['value' => $diff]);
 	}
 
 	/**
@@ -402,7 +402,7 @@ class Message extends Model
 		// Less than a minute
 		if ($diff < 60)
 		{
-			return $diff . ' ' . trans_choice('global.time.seconds', $diff);// $diff . ' second' . ($diff == 1 ? '' : 's');
+			return trans_choice('messages::messages.time.seconds', $diff, ['value' => $diff]);
 		}
 
 		// Round to minutes
@@ -411,7 +411,7 @@ class Message extends Model
 		// 1 to 59 minutes
 		if ($diff < 60)
 		{
-			return $diff . ' ' . trans_choice('global.time.minutes', $diff);//$diff . ' minute' . ($diff == 1 ? '' : 's');
+			return trans_choice('messages::messages.time.minutes', $diff, ['value' => $diff]);
 		}
 
 		// Round to hours
@@ -420,7 +420,7 @@ class Message extends Model
 		// 1 to 23 hours
 		if ($diff < 24)
 		{
-			return $diff . ' ' . trans_choice('global.time.hours', $diff);//$diff . ' hour' . ($diff == 1 ? '' : 's');
+			return trans_choice('messages::messages.time.hours', $diff, ['value' => $diff]);
 		}
 
 		// Round to days
@@ -429,7 +429,7 @@ class Message extends Model
 		// 1 to 6 days
 		if ($diff < 7)
 		{
-			return $diff . ' ' . trans_choice('global.time.days', $diff);//$diff . ' day' . ($diff == 1 ? '' : 's');
+			return trans_choice('messages::messages.time.days', $diff, ['value' => $diff]);
 		}
 
 		// Round to weeks
@@ -438,7 +438,7 @@ class Message extends Model
 		// 1 to 4 weeks
 		if ($diff <= 4)
 		{
-			return $diff . ' ' . trans_choice('global.time.weeks', $diff);//$diff . ' week' . ($diff == 1 ? '' : 's');
+			return trans_choice('messages::messages.time.weeks', $diff, ['value' => $diff]);
 		}
 
 		// Round to months
@@ -447,8 +447,11 @@ class Message extends Model
 		// 1 to 12 months
 		if ($diff <= 12)
 		{
-			return $diff . ' ' . trans_choice('global.time.months', $diff);//$diff . ' month' . ($diff == 1 ? '' : 's');
+			return trans_choice('messages::messages.time.months', $diff, ['value' => $diff]);
 		}
+
+		// > 12 months
+		return trans_choice('messages::messages.time.years', $diff, ['value' => $diff]);
 	}
 
 	/**

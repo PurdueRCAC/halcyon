@@ -68,7 +68,7 @@ return [
 		'days' => 'day|days',
 		'weeks' => 'week|weeks',
 		'months' => 'month|months',
-		'years' => 'year|ears',
+		'years' => 'year|years',
 		'decades' => 'decade|decades',
 	],
 	'month' => [

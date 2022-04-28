@@ -4,6 +4,7 @@ namespace App\Modules\Listeners\Models\Fields;
 
 use App\Halcyon\Form\Field;
 use App\Halcyon\Html\Builder\Select;
+use App\Modules\Listeners\Models\Listener;
 
 /**
  * Supports an HTML select list of plugins
@@ -40,10 +41,9 @@ class Ordering extends Field
 		$pluginId = (int) $this->form->getValue('id');
 		$folder = $this->form->getValue('folder');
 
-		$listeners = app('db')
-			->table('extensions')
+		$listeners = Listener::query()
 			->select(['id', 'ordering AS value', 'name AS text', 'type', 'folder'])
-			->where('type', 'plugin')
+			->where('type', 'listener')
 			->where('folder', $folder)
 			->orderBy('ordering', 'asc')
 			->get();

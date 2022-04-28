@@ -42,12 +42,7 @@ class Listener
 	 */
 	public function __construct($model)
 	{
-		$name = $model->module;
-		if (substr($name, 0, 4) == 'mod_')
-		{
-			$name = substr($name, 4);
-		}
-		//$name = Str::studly($name);
+		$name = $model->element;
 
 		$this->name   = $name;
 		$this->model  = $model;

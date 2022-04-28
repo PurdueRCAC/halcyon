@@ -21,14 +21,4 @@ class ListenerUpdated
 	{
 		$this->listener = $listener;
 	}
-
-	/**
-	 * Return the entity
-	 *
-	 * @return \Illuminate\Database\Eloquent\Model
-	 */
-	public function getListener()
-	{
-		return $this->listener;
-	}
 }

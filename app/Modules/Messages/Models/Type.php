@@ -15,7 +15,7 @@ use App\Modules\Messages\Events\TypeUpdated;
 use App\Modules\Messages\Events\TypeDeleted;
 
 /**
- * Model for news type
+ * Model for message type
  */
 class Type extends Model
 {
@@ -90,7 +90,7 @@ class Type extends Model
 	];
 
 	/**
-	 * Set targetobjectid
+	 * Set resource ID
 	 *
 	 * @param   mixed  $value
 	 * @return  void
@@ -117,7 +117,7 @@ class Type extends Model
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Defines a relationship to messages
 	 *
 	 * @return  object
 	 */

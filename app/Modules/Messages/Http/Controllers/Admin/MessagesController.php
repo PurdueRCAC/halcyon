@@ -31,12 +31,13 @@ class MessagesController extends Controller
 			'status'    => '*',
 			'start'     => $weekago->format('Y-m-d'),
 			'stop'      => null,
-			'type'      => '',
+			'type'      => null,
+			// Pagination
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
+			// Ordering
 			'order'     => Message::$orderBy,
 			'order_dir' => Message::$orderDir,
-			'type'      => null,
 		);
 
 		$reset = false;

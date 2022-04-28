@@ -121,14 +121,12 @@ app('pathway')
 				<td class="priority-4">
 					@if ($row->resource)
 						@if ($row->resource->trashed())
-							<del class="text-danger" data-tip="Resource is trashed.">
+							<del class="text-danger" data-tip="{{ trans('messages::messages.resource is trashed') }}">
 						@endif
 						{{ $row->resource->name }}
 						@if ($row->resource->trashed())
 							</del>
 						@endif
-					@else
-						<span class="text-muted none">{{ trans('global.none') }}</span>
 					@endif
 				</td>
 			</tr>

@@ -60,4 +60,15 @@ return [
 	'tail limit' => 'Tail limit',
 	'lines' => 'lines',
 	'logs' => 'Logs',
+	'resource is trashed' => 'Resource is trashed.',
+	'time' => [
+		'seconds' => '{1} :value second|[2,*] :value seconds',
+		'minutes' => '{1} :value minute|[2,*] :value minutes',
+		'hours' => '{1} :value hour|[2,*] :value hours',
+		'days' => '{1} :value day|[2,*] :value days',
+		'weeks' => '{1} :value week|[2,*] :value weeks',
+		'months' => '{1} :value month|[2,*] :value months',
+		'years' => '{1} :value year|[2,*] :value years',
+		'decades' => '{1} :value decade|[2,*] :value decades',
+	],
 ];

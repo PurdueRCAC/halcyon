@@ -46,6 +46,29 @@ app('pathway')
 @section('panel')
 	<div class="card">
 		<div class="card-body">
+			<a href="{{ route('admin.messages.index', ['state' => 'pending', 'type' => '']) }}" class="stat-block text-info">
+				<span class="icon-more-horizontal display-4 float-left" aria-hidden="true"></span>
+				<span class="value">{{ number_format($stats->pending) }}</span><br />
+				<span class="key">{{ trans('messages::messages.pending') }}</span>
+			</a>
+		</div>
+		@if (count($stats->pendingtypes))
+			<table class="table">
+				<caption class="sr-only">{{ trans('messages::messages.message types') }}</caption>
+				<tbody>
+					@foreach ($stats->pendingtypes as $t)
+						<tr>
+							<th scope="row"><a href="{{ route('admin.messages.index', ['state' => 'pending', 'type' => $t->id]) }}">{{ $t->name }}</a></th>
+							<td class="text-right">{{ $t->total }}</td>
+						</tr>
+					@endforeach
+				</tbody>
+			</table>
+		@endif
+	</div>
+
+	<div class="card">
+		<div class="card-body">
 			<a href="{{ route('admin.messages.index', ['status' => 'failure', 'type' => '']) }}" class="stat-block text-danger">
 				<span class="icon-alert-triangle display-4 float-left" aria-hidden="true"></span>
 				<span class="value">{{ number_format($stats->failed) }}</span><br />
@@ -89,29 +112,6 @@ app('pathway')
 			</table>
 		@endif
 	</div>
-
-	<div class="card">
-		<div class="card-body">
-			<a href="{{ route('admin.messages.index', ['state' => 'pending', 'type' => '']) }}" class="stat-block text-info">
-				<span class="icon-more-horizontal display-4 float-left" aria-hidden="true"></span>
-				<span class="value">{{ number_format($stats->pending) }}</span><br />
-				<span class="key">{{ trans('messages::messages.pending') }}</span>
-			</a>
-		</div>
-		@if (count($stats->pendingtypes))
-			<table class="table">
-				<caption class="sr-only">{{ trans('messages::messages.message types') }}</caption>
-				<tbody>
-					@foreach ($stats->pendingtypes as $t)
-						<tr>
-							<th scope="row"><a href="{{ route('admin.messages.index', ['state' => 'pending', 'type' => $t->id]) }}">{{ $t->name }}</a></th>
-							<td class="text-right">{{ $t->total }}</td>
-						</tr>
-					@endforeach
-				</tbody>
-			</table>
-		@endif
-	</div>
 @stop
 
 @section('content')
@@ -129,7 +129,7 @@ app('pathway')
 					<label class="sr-only" for="filter_start">{{ trans('messages::messages.start') }}</label>
 					<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" placeholder="{{ trans('messages::messages.start placeholder') }}" />
 					<span class="input-group-prepend input-group-append">
-						<span class="input-group-text">to</span>
+						<span class="input-group-text">&rarr;</span>
 					</span>
 					<label class="sr-only" for="filter_stop">{{ trans('messages::messages.stop') }}</label>
 					<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="{{ trans('messages::messages.stop placeholder') }}" />

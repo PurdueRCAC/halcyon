@@ -95,10 +95,10 @@ class Listener extends Model
 	 *
 	 * @var array
 	 */
-	/*protected $dispatchesEvents = [
+	protected $dispatchesEvents = [
 		'updating' => ListenerUpdating::class,
 		'updated'  => ListenerUpdated::class,
-	];*/
+	];
 
 	/**
 	 * The path to the installed files
@@ -156,7 +156,7 @@ class Listener extends Model
 	}
 
 	/**
-	 * Get the class name
+	 * Get the folder name
 	 *
 	 * @return  string
 	 */
@@ -166,7 +166,7 @@ class Listener extends Model
 	}
 
 	/**
-	 * Get the class name
+	 * Get the name
 	 *
 	 * @return  string
 	 */

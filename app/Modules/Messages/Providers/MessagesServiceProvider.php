@@ -27,7 +27,7 @@ class MessagesServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		$this->registerFactories();
+		//$this->registerFactories();
 		$this->registerTranslations();
 		$this->registerConfig();
 		$this->registerAssets();
@@ -45,7 +45,7 @@ class MessagesServiceProvider extends ServiceProvider
 	{
 		if (! app()->environment('production') && $this->app->runningInConsole())
 		{
-			//app(Factory::class)->load(dirname(__DIR__) . '/Database/Factories');
+			app(Factory::class)->load(dirname(__DIR__) . '/Database/Factories');
 		}
 	}
 

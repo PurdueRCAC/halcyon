@@ -9,7 +9,7 @@ app('pathway')
 		route('admin.listeners.index')
 	)
 	->append(
-		($row->extension_id ? trans('global.edit') . ' #' . $row->id : trans('global.create'))
+		($row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create'))
 	);
 @endphp
 
@@ -23,7 +23,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('listeners.name') !!}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{!! config('listeners.name') !!}: {{ $row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')
@@ -58,7 +58,8 @@ app('pathway')
 				<div class="form-group">
 					<label>{{ trans('listeners::listeners.description') }}</label>
 					<p>
-					{!! trans(strtolower('listener.' . $row->folder . '.' . $row->element . '::' . $row->element . '.listener desc')) !!}</p>
+					{!! trans(strtolower('listener.' . $row->folder . '.' . $row->element . '::' . $row->element . '.listener desc')) !!}
+					</p>
 				</div>
 			</fieldset>
 

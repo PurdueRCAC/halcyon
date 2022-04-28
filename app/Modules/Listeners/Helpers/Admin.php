@@ -2,8 +2,9 @@
 
 namespace App\Modules\Listeners\Helpers;
 
-use App\Halcyon\Html\Builder\Select;
 use Illuminate\Support\Facades\DB;
+use App\Halcyon\Html\Builder\Select;
+use App\Modules\Listeners\Models\Listener;
 
 /**
  * Modules component helper.
@@ -32,7 +33,7 @@ abstract class Admin
 	 */
 	public static function folderOptions()
 	{
-		$options = DB::table('extensions')
+		$options = Listener::query()
 			->select([DB::raw('DISTINCT(folder) AS value'), 'folder AS text'])
 			->where('type', '=', 'listener')
 			->orderBy('folder', 'asc')

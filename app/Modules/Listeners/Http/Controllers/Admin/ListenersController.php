@@ -177,6 +177,7 @@ class ListenersController extends Controller
 	public function edit($id, Request $request)
 	{
 		$row = Listener::findOrFail($id);
+		$row->registerLanguage();
 
 		if ($fields = app('request')->old('fields'))
 		{
@@ -199,8 +200,6 @@ class ListenersController extends Controller
 				return $this->cancel()->with('warning', trans('global.check out failed'));
 			}
 		}
-
-		$row->registerLanguage();
 
 		return view('listeners::admin.edit', [
 			'row'  => $row,

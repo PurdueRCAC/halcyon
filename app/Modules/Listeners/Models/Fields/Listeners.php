@@ -4,9 +4,10 @@ namespace App\Modules\Listeners\Models\Fields;
 
 use Illuminate\Support\Str;
 use App\Halcyon\Form\Field;
+use App\Modules\Listeners\Models\Listener;
 
 /**
- * Form Field class for listing plugins
+ * Form Field class for listing listeners
  */
 class Listeners extends Select
 {
@@ -29,11 +30,10 @@ class Listeners extends Select
 
 		if (!empty($folder))
 		{
-			// Get list of plugins
-			$db = app('db');
-
-			$options = $db->table('extensions')
+			// Get list of listeners
+			$options = Listener::query()
 				->select('element AS value', 'name AS text')
+				->where('type', '=', 'listener')
 				->where('folder', '=', $folder)
 				->where('enabled', '=', '1')
 				->orderBy('ordering', 'asc')
@@ -42,9 +42,7 @@ class Listeners extends Select
 
 			foreach ($options as $item)
 			{
-				$path = app_path('Listeners/' . Str::studly($folder) . '/' . Str::studly($item->value));
-
-				app('translator')->addNamespace('listeners.' . $folder . '.' . $item->value, $path . '/lang');
+				$item->registerLanguage();
 
 				$item->text = trans('plugin.' . $folder . '.' . $item->value . '::' . $item->value . '.widget name');
 			}
