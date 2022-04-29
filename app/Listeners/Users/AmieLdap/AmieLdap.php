@@ -803,13 +803,17 @@ class AmieLdap
 						{
 							$loan->update(['serviceunits' => $serviceUnits]);
 						}
-						if ($loan->datetimestart->toDateTimeString() != $start->toDateTimeString());
+						if ($start && $loan->datetimestart->toDateTimeString() != $start->toDateTimeString());
 						{
 							$loan->update(['datetimestart' => $start->toDateTimeString()]);
 						}
-						if ($loan->datetimestop->toDateTimeString() != $stop->toDateTimeString());
+						if ((!$stop && $loan->datetimestop)
+						|| ($stop && !$loan->datetimestop)
+						|| ($stop && $loan->datetimestop && $loan->datetimestop->toDateTimeString() != $stop->toDateTimeString()))
 						{
-							$loan->update(['datetimestop' => $stop->toDateTimeString()]);
+							$end = $stop ? $stop->toDateTimeString() : null;
+							$end = $end ? $end : ($loan->datetimestop ? $loan->datetimestop->toDateTimeString() : null);
+							$loan->update(['datetimestop' => $end]);
 						}
 					}
 
