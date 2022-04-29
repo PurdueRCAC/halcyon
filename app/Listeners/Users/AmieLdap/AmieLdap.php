@@ -803,10 +803,15 @@ class AmieLdap
 						{
 							$loan->update(['serviceunits' => $serviceUnits]);
 						}
-						if ($start && $loan->datetimestart->toDateTimeString() != $start->toDateTimeString());
+						// Check the submitted $start date against the existing loan
+						if ($start)
 						{
-							$loan->update(['datetimestart' => $start->toDateTimeString()]);
+							if ($loan->datetimestart->toDateTimeString() != $start->toDateTimeString());
+							{
+								$loan->update(['datetimestart' => $start->toDateTimeString()]);
+							}
 						}
+						// Check the submitted $stop date against the existing loan
 						if ((!$stop && $loan->datetimestop)
 						|| ($stop && !$loan->datetimestop)
 						|| ($stop && $loan->datetimestop && $loan->datetimestop->toDateTimeString() != $stop->toDateTimeString()))
