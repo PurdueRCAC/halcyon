@@ -19,31 +19,45 @@ var smdeConfig = {
 
 var simplemdes = new Array;
 
-document.addEventListener('DOMContentLoaded', function () {
+function initSimpleMDE() {
     var els = document.querySelectorAll('.simplemde'),
         simplemde = null;
+
+    simplemdes = new Array;
 
     els.forEach(function (el) {
         smdeConfig.element = el;
         simplemde = new SimpleMDE(smdeConfig);
         simplemdes.push(simplemde);
+
+        el.addEventListener('refreshEditor', function (e) {
+            if (e.target && (e.target.classList.contains('simplemde') || e.target.classList.contains('md'))) {
+                for (var i = 0; i < simplemdes.length; i++) {
+                    if (simplemdes[i].element == e.target) {
+                        simplemdes[i].codemirror.setValue(e.target.value);
+                        simplemdes[i].codemirror.focus();
+                    }
+                }
+            }
+        });
     });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    initSimpleMDE()
 });
 
 document.addEventListener('initEditor', function (e) {
-    if (e.target && (e.target.classList.contains('simplemde') || e.target.classList.contains('md'))) {
-        smdeConfig.element = e.target;
-        var simplemde = new SimpleMDE(smdeConfig);
-        simplemdes.push(simplemde);
-    }
+    initSimpleMDE();
 });
 
 document.addEventListener('refreshEditor', function (e) {
-    if (e.target && (e.target.classList.contains('simplemde') || e.target.classList.contains('md'))) {
-        for (var i = 0; i < simplemdes.length; i++) {
-            if (simplemdes[i].element == e.target) {
-                simplemdes[i].codemirror.setValue(e.target.value);
-            }
-        }
+    //if (e.target && (e.target.classList.contains('simplemde') || e.target.classList.contains('md'))) {
+    for (var i = 0; i < simplemdes.length; i++) {
+        //if (simplemdes[i].element == e.target) {
+        simplemdes[i].codemirror.setValue(e.target.value);
+        simplemdes[i].codemirror.focus();
+        //}
     }
+    //}
 });
