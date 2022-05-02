@@ -17,6 +17,8 @@ use App\Modules\Queues\Database\Factories\QueueFactory;
 use App\Modules\Resources\Models\Subresource;
 use App\Modules\Resources\Models\Child;
 use App\Modules\Resources\Models\Asset;
+use App\Modules\Resources\Events\ResourceMemberCreated;
+use App\Modules\Resources\Events\ResourceMemberStatus;
 use App\Modules\Resources\Events\ResourceMemberDeleted;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Users\Models\UserUsername;
@@ -727,19 +729,99 @@ class Queue extends Model
 	 */
 	public function addUser($userid, $membertype = 1)
 	{
-		$row = $this->users()->where('userid', '=', $userid)->first();
+		$row = $this->users()
+			->withTrashed()
+			->where('userid', '=', $userid)
+			->first();
 
-		if (!$row)
+		if ($row)
+		{
+			if ($row->trashed())
+			{
+				$row->restore();
+			}
+			// Nothing to do, we are cancelling a removal
+			$row->notice = 0;
+		}
+		else
 		{
 			$row = new User;
 			$row->queueid = $this->id;
 			$row->userid = $userid;
+			$row->membertype = $membertype;
+			$row->notice = 2;
 		}
 
-		$row->membertype = $membertype;
+		/*event($resourcemember = new ResourceMemberStatus($row->queue->scheduler->resource, $row->user));
+
+		if ($resourcemember->status == 1 || $resourcemember->status == 4)
+		{
+			event($resourcemember = new ResourceMemberCreated($row->queue->scheduler->resource, $row->user));
+		}*/
 
 		return $row->save();
 	}
+
+	/**
+	 * Add a user
+	 *
+	 * @param   integer  $userid
+	 * @param   integer  $membertype
+	 * @return  bool
+	 */
+	public function removeUser($userid)
+	{
+		$row = $this->users()
+			->where('userid', '=', $userid)
+			->first();
+
+		if (!$row || !$row->id)
+		{
+			return true;
+		}
+
+		$res = $row->delete();
+
+		event($resourcemember = new ResourceMemberStatus($this->scheduler->resource, $row->user));
+
+		if ($resourcemember->status == 2 || $resourcemember->status == 3)
+		{
+			$rows = 0;
+
+			$subresources = $this->scheduler->resource->subresources;
+
+			foreach ($subresources as $sub)
+			{
+				$queues = $sub->queues()
+					->get();
+
+				foreach ($queues as $queue)
+				{
+					$rows += $queue->users()
+						->whereIsMember()
+						->where('userid', '=', $row->userid)
+						->count();
+
+					if ($queue->group)
+					{
+						$rows += $queue->group->members()
+							->whereIsManager()
+							->where('userid', '=', $row->userid)
+							->count();
+					}
+				}
+			}
+
+			if ($rows == 0)
+			{
+				// No other active memberships found, remove resource access
+				event(new ResourceMemberDeleted($this->scheduler->resource, $row->user));
+			}
+		}
+
+		return $res;
+	}
+
 
 	/**
 	 * Add loan
@@ -861,7 +943,7 @@ class Queue extends Model
 			// Look up the current username of the user being removed
 			$user = $row->user;
 
-			// Look up the ACMaint role name of the resource to which access is being granted.
+			// Look up the role name of the resource to which access is being granted.
 			$resource = $this->resource;
 
 			// Ensure the client is authorized to manage a group with queues on the resource in question.

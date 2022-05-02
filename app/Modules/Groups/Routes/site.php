@@ -25,4 +25,14 @@ $router->group(['prefix' => 'groups', 'middleware' => ['auth']], function (Route
 		'uses' => 'GroupsController@export',
 		//'middleware' => 'can:view groups',
 	]);
+	$router->post('import', [
+		'as' => 'site.groups.import',
+		'uses' => 'GroupsController@import',
+		'middleware' => 'can:manage groups',
+	]);
+	$router->post('process', [
+		'as' => 'site.groups.process',
+		'uses' => 'GroupsController@process',
+		'middleware' => 'can:manage groups',
+	]);
 });

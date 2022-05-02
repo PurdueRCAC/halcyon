@@ -16,6 +16,8 @@ use App\Modules\Groups\Models\GroupDepartment;
 use App\Modules\Groups\Models\Member;
 use App\Modules\Groups\Models\Type;
 use App\Modules\Groups\Models\UnixGroupMember;
+use App\Modules\Resources\Models\Asset;
+use App\Modules\Users\Models\User;
 
 class GroupsController extends Controller
 {
@@ -380,8 +382,8 @@ class GroupsController extends Controller
 		//$data = array();
 
 		$fileNotUploaded = false;
-		$maxSize = config('module.courses.max-file-size', 0);
-		$allowedTypes = config('module.courses.allowed-extensions', ['csv', 'xlsx', 'ods']);
+		$maxSize = config('module.groups.max-file-size', 0);
+		$allowedTypes = config('module.groups.allowed-extensions', ['csv', 'xlsx', 'ods']);
 
 		foreach ($files as $file)
 		{
@@ -410,36 +412,6 @@ class GroupsController extends Controller
 
 			try
 			{
-				// Get file data and process into a collection of objects
-				/*$handle = fopen(storage_path('app/' . $path), 'r');
-
-				if ($handle !== false)
-				{
-					while (!feof($handle))
-					{
-						$line = fgetcsv($handle, 0, ',');
-
-						if ($row == 0)
-						{
-							$headers = $line;
-							$row++;
-							continue;
-						}
-
-						$item = new Fluent;
-						foreach ($headers as $k => $v)
-						{
-							$v = strtolower($v);
-
-							$item->{$v} = $line[$k];
-						}
-
-						$data[] = $item;
-
-						$row++;
-					}
-					fclose($handle);
-				}*/
 				$path = storage_path('app/' . $path);
 
 				if ($extension == 'csv' || $extension == 'txt')
@@ -519,15 +491,14 @@ class GroupsController extends Controller
 
 					if ($member)
 					{
-						// Was apart of the class but membership was removed?
+						// Was apart of the group but membership was removed?
 						if ($member->trashed())
 						{
 							// Restore membership
 							$member->restore();
 						}
 
-						// Already apart of the class
-						continue;
+						// Already apart of the group
 					}
 
 					$membertype = Type::MEMBER;
@@ -542,25 +513,40 @@ class GroupsController extends Controller
 						{
 							$item->membership = strtoupper(trim($item->membership));
 
-							if (in_array($item->type, ['MEMBER', 'MANAGER', 'PENDING', 'VIEWER']))
+							if (in_array($item->membership, ['MEMBER', 'MANAGER', 'PENDING', 'VIEWER']))
 							{
-								$t = $item->membership;
-								$membertype = Type::$t;
+								switch ($item->membership)
+								{
+									case 'MANAGER':
+										$membertype = Type::MANAGER;
+									break;
+									case 'VIEWER':
+										$membertype = Type::VIEWER;
+									break;
+									case 'PENDING':
+										$membertype = Type::PENDING;
+									break;
+									case 'MEMBER':
+									default:
+										$membertype = Type::MEMBER;
+									break;
+								}
 							}
 						}
 					}
 
 					// Create the membership
-					$member = new Member;
+					$member = $member ?: new Member;
 					$member->groupid = $group->id;
 					$member->userid = $user->id;
 					$member->membertype = $membertype;
 					$member->save();
 
-					foreach (get_object_vars($item) as $key => $val)
+					foreach ($item->toArray() as $key => $val)
 					{
 						$key = strtolower($key);
 
+						// Skip user columns
 						if (in_array($key, ['name', 'username', 'email', 'membership']))
 						{
 							continue;
@@ -570,10 +556,18 @@ class GroupsController extends Controller
 
 						if (!$val || $val == 'no' || $val == '0' || $val == 'false')
 						{
-							continue;
+							//continue;
+							$val = false;
+						}
+						else
+						{
+							$val = true;
 						}
 
-						if (preg_match('/([a-z0-9\-_]+) \(([^\)]+)\)/', $val, $matches))
+						// Determine if we're dealing with a queue or unix group.
+						// Queues follow a pattern of "name (resource name)" whereas
+						// unix groups are just "name".
+						if (preg_match('/([a-z0-9\-_]+) \(([^\)]+)\)/', $key, $matches))
 						{
 							$resource = Asset::findByName($matches[2]);
 
@@ -594,52 +588,61 @@ class GroupsController extends Controller
 								continue;
 							}
 
-							$queue->addUser($user->id);
+							if ($val)
+							{
+								$queue->addUser($user->id);
+							}
+							else
+							{
+								$queue->removeUser($user->id);
+							}
 						}
 						else
 						{
 							$unix = $group->unixGroups()
-								->where('name', '=', $val)
+								->where('longname', '=', $key)
 								->first();
 
 							if (!$unix)
 							{
-								$response['error'][] = 'Could not find unix group "' . $val . '"';
+								$response['error'][] = 'Could not find unix group "' . $key . '"';
 								continue;
 							}
 
-							$unix->addMember($user->id);
+							if ($val)
+							{
+								$unix->addMember($user->id);
+							}
+							else
+							{
+								$unix->removeMember($user->id);
+							}
 						}
 					}
-
-					$response['data'][] = $member->toArray();
 				}
 			}
 			catch (\Exception $e)
 			{
-				$response['error'][] = $e->getMessage();
-				$fileNotUploaded = false;
+				$response['error'] = $e->getMessage();
 			}
 
 			// Clean up
 			Storage::disk($disk)->delete($path);
 		}
 
-		if ($fileNotUploaded)
+		if (!empty($response['error']))
 		{
-			$response['message'] = trans('groups::groups.error.not all uploaded');
+			$request->session()->flash('error', $response['error']);
+		}
+		else
+		{
+			$request->session()->flash('success', trans('groups::groups.memberships updated'));
 		}
 
-		return redirect(route('site.users.account'));
-	}
-
-	/**
-	 * Return to the main view
-	 *
-	 * @return  Response
-	 */
-	public function cancel()
-	{
-		return redirect(route('admin.groups.index'));
+		return redirect(route('site.users.account.section.show.subsection', [
+			'section' => 'groups',
+			'id' => $group->id,
+			'subsection' => 'members'
+		]));
 	}
 }

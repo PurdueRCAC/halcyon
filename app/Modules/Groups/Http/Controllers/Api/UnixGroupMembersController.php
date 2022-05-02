@@ -294,11 +294,11 @@ class UnixGroupMembersController extends Controller
 			if ($row->trashed())
 			{
 				$row->restore();
+
+				$restore = true;
 			}
 			// Nothing to do, we are cancelling a removal
 			$row->notice = 0;
-
-			$restore = true;
 		}
 		else
 		{
@@ -551,46 +551,9 @@ class UnixGroupMembersController extends Controller
 
 		if ($row)
 		{
-			// Determine notice level
-			if ($row->notice == 2)
-			{
-				$row->notice = 0;
-			}
-			else
-			{
-				$row->notice = 3;
-			}
-
-			$row->save();
-
 			if (!$row->delete())
 			{
 				return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
-			}
-
-			// Check to see if another unix group by the same name exists
-			//
-			// This is a catch for a loophole condition that allowed for multiple
-			// unix groups by the same name. In such a case, only ONE should have
-			// a unixgid.
-			$altunixgroup = UnixGroup::query()
-				->where('longname', '=', $row->unixgroup->longname)
-				->where('id', '!=', $row->unixgroupid)
-				->first();
-
-			if ($altunixgroup && (!$unixgroup->unixgid || !$altunixgroup->unixgid))
-			{
-				$altrow = UnixGroupMember::query()
-					->withTrashed()
-					->where('unixgroupid', '=', $altunixgroup->id)
-					->where('userid', '=', $row->userid)
-					->get()
-					->first();
-
-				if ($altrow)
-				{
-					$altrow->delete();
-				}
 			}
 		}
 

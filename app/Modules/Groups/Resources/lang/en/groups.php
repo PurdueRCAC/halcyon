@@ -49,6 +49,9 @@ return [
 	'until' => 'Until',
 	'message' => 'Message',
 	'back' => 'Back',
+	'export' => 'Export',
+	'import' => 'Import',
+	'memberships updated' => 'Memberships updated!',
 	'group has pending requests' => ':group has pending membership requests.',
 	'history' => [
 		'title' => 'History',

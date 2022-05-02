@@ -81,6 +81,33 @@ class User extends Model
 	];
 
 	/**
+	 * Boot
+	 *
+	 * @return  void
+	 */
+	public static function boot()
+	{
+		parent::boot();
+
+		self::deleting(function($model)
+		{
+			// Determine notice level
+			if ($model->notice == 2)
+			{
+				$model->notice = 0;
+			}
+			elseif ($model->notice == 10)
+			{
+				$model->notice = 17;
+			}
+			else
+			{
+				$model->notice = 3;
+			}
+		});
+	}
+
+	/**
 	 * Determine if user was last seen
 	 *
 	 * @return  bool

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
+use App\Modules\Groups\Events\UnixGroupMemberCreating;
 use App\Modules\Groups\Events\UnixGroupMemberCreated;
 use App\Modules\Groups\Events\UnixGroupMemberDeleted;
 
@@ -83,9 +84,61 @@ class UnixGroupMember extends Model
 	 * @var array
 	 */
 	protected $dispatchesEvents = [
+		'creating' => UnixGroupMemberCreating::class,
 		'created' => UnixGroupMemberCreated::class,
 		'deleted' => UnixGroupMemberDeleted::class,
 	];
+
+	/**
+	 * Boot
+	 *
+	 * @return  void
+	 */
+	public static function boot()
+	{
+		parent::boot();
+
+		self::deleting(function($model)
+		{
+			// Set sequence value for new entries
+			if ($model->notice == 2)
+			{
+				$model->notice = 0;
+			}
+			else
+			{
+				$model->notice = 3;
+			}
+		});
+
+		self::deleted(function($model)
+		{
+			// Check to see if another unix group by the same name exists
+			//
+			// This is a catch for a loophole condition that allowed for multiple
+			// unix groups by the same name. In such a case, only ONE should have
+			// a unixgid.
+			$altunixgroup = UnixGroup::query()
+				->where('longname', '=', $model->unixgroup->longname)
+				->where('id', '!=', $model->unixgroupid)
+				->first();
+
+			if ($altunixgroup && (!$unixgroup->unixgid || !$altunixgroup->unixgid))
+			{
+				$altrow = self::query()
+					->withTrashed()
+					->where('unixgroupid', '=', $altunixgroup->id)
+					->where('userid', '=', $model->userid)
+					->get()
+					->first();
+
+				if ($altrow)
+				{
+					$altrow->delete();
+				}
+			}
+		});
+	}
 
 	/**
 	 * Get parent group

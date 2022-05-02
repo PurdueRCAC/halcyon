@@ -232,13 +232,33 @@ $i = 0;
 <div class="row mb-3">
 	<div class="col-md-6">
 		<button id="export_to_csv" data-id="{{ $group->id }}" class="btn btn-info btn-sm">
-			<span class="fa fa-table" ara-hidden="true"></span> Export to CSV
+			<span class="fa fa-table" ara-hidden="true"></span> Export
 		</button>
 	</div>
 	<div class="col-md-6 text-right">
 		<a href="#add_member_dialog" class="add_member btn btn-secondary btn-sm" data-membertype="1">
-			<span class="fa fa-plus-circle"></span> Add Member
+			<span class="fa fa-plus-circle" aria-hidden="true"></span> Add Member
 		</a>
+		<a href="#import_member_dialog" class="import_member btn btn-secondary btn-sm" data-membertype="1">
+			<span class="fa fa-upload" aria-hidden="true"></span> Import
+		</a>
+		<!--
+		<div class="members-dropdown dropdown">
+			<button id="add_member" class="btn btn-secondary btn-sm dropdown-toggle" data-membertype="1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<span class="fa fa-plus-circle" aria-hidden="true"></span> Add Member
+			</button>
+			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="add_member">
+				<a class="dropdown-item add_member" href="#add_member_dialog" data-membertype="1">
+					<span class="fa fa-user" aria-hidden="true"></span>
+					Select Users
+				</a>
+				<a class="dropdown-item import_member" href="#import_member_dialog">
+					<span class="fa fa-upload" aria-hidden="true"></span>
+					Import
+				</a>
+			</div>
+		</div>
+		-->
 	</div>
 </div>
 
@@ -961,7 +981,7 @@ $i = 0;
 </div>
 @endif
 
-<div id="add_member_dialog" data-id="{{ $group->id }}" title="Add users to {{ $group->name }}" class="membership-dialog">
+<div id="add_member_dialog" data-id="{{ $group->id }}" class="membership-dialog" title="Add users to {{ $group->name }}">
 	<form id="form_{{ $group->id }}" method="post">
 		<div class="form-group">
 			<label for="addmembers">Enter names, usernames, or email addresses</label>
@@ -1034,6 +1054,38 @@ $i = 0;
 						<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.saving') }}</span></span>
 						{{ trans('global.button.save') }}
 					</button>
+				</div>
+			</div>
+		</div>
+
+		@csrf
+	</form>
+</div>
+
+<div id="import_member_dialog" data-id="{{ $group->id }}" class="import-dialog" title="Import spreadsheet to {{ $group->name }}">
+	<form action="{{ route('site.groups.import') }}" method="post" enctype="multipart/form-data">
+		<p>CSV, XLSX (Excel), and ODS files are accepted. The first row must be headers with at least a <code>Username</code> column. Optional columns: <code>Name</code>, <code>Membership</code>, and columns for each queue or unix group.</p>
+
+		<ul>
+			<li>Membership types: <code>member</code> (default), <code>manager</code>, <code>viewer</code>.</li>
+			<li>To add membership to a queue or unix group, set column to <code>yes</code>, <code>1</code>, or <code>true</code>.</li>
+			<li>To remove membership from a queue or unix group, set column to <code>no</code>, <code>0</code>, <code>false</code>, or leave blank.</li>
+		</ul>
+
+		<div class="form-group dropzone has-advanced-upload" data-acceptedfiles=".csv,.xlsx,.ods">
+			<div id="uploader" class="fallback" data-instructions="Click or Drop files" data-list="#uploader-list">
+				<label for="upload">Choose a file<span class="dropzone__dragndrop"> or drag it here</span></label>
+				<input type="file" name="file" id="upload" class="form-control-file" />
+			</div>
+			<div class="file-list" id="uploader-list"></div>
+			<input type="hidden" name="tmp_dir" id="ticket-tmp_dir" value="{{ ('-' . time()) }}" />
+			<input type="hidden" name="id" value="{{ $group->id }}" />
+		</div>
+
+		<div class="dialog-footer">
+			<div class="row">
+				<div class="col-md-12 text-right">
+					<input type="submit" class="order btn btn-primary" data-group="{{ $group->id }}" value="Import" />
 				</div>
 			</div>
 		</div>

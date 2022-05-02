@@ -350,6 +350,7 @@ class Groups
 				$rows = $user->groups()
 					->where('groupid', '>', 0)
 					->orderBy('membertype', 'desc')
+					->orderBy('id', 'asc')
 					->get();
 
 				/*$groups = array_unique($rows->pluck('groupid')->toArray());
@@ -420,6 +421,20 @@ class Groups
 				{
 					return $value->isManager();
 				});
+
+				// Clean up duplicate manager entries
+				foreach ($managers as $j => $manager)
+				{
+					if (!isset($found[$manager->groupid]))
+					{
+						$found[$manager->groupid] = $manager->id;
+					}
+					else
+					{
+						$manager->delete();
+						$managers->forget($j);
+					}
+				}
 
 				foreach ($rows as $k => $g)
 				{

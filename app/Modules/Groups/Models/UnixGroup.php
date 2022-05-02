@@ -205,13 +205,89 @@ class UnixGroup extends Model
 	 */
 	public function addMember(int $userid)
 	{
-		$member = UnixGroupMember::findByGroupAndUser($this->id, $userid);
+		$member = $this->members()
+			->withTrashed()
+			->where('userid', '=', $userid)
+			->first(); //UnixGroupMember::findByGroupAndUser($this->id, $userid);
 
-		$member = $member ?: new UnixGroupMember;
-		$member->userid = $userid;
-		$member->unixgroupid = $this->id;
+		if ($member)
+		{
+			if ($member->trashed())
+			{
+				$member->restore();
+
+				event(new UnixGroupMemberCreated($member));
+			}
+
+			// Nothing to do, we are cancelling a removal
+			$member->notice = 0;
+		}
+		else
+		{
+			$member = new UnixGroupMember;
+			$member->unixgroupid = $this->id;
+			$member->userid = $userid;
+			$member->notice = 2;
+		}
 
 		return $member->save();
+	}
+
+	/**
+	 * Remove user as a member
+	 *
+	 * @param   integer  $userid
+	 * @return  bool
+	 */
+	public function removeMember(int $userid)
+	{
+		$member = $this->members()
+			->where('userid', '=', $userid)
+			->first();//UnixGroupMember::findByGroupAndUser($this->id, $userid);
+
+		if (!$member || !$member->id)
+		{
+			return true;
+		}
+
+		// Determine notice level
+		/*if ($member->notice == 2)
+		{
+			$member->notice = 0;
+		}
+		else
+		{
+			$member->notice = 3;
+		}
+
+		$member->save();
+
+		// Check to see if another unix group by the same name exists
+		//
+		// This is a catch for a loophole condition that allowed for multiple
+		// unix groups by the same name. In such a case, only ONE should have
+		// a unixgid.
+		$altunixgroup = UnixGroup::query()
+			->where('longname', '=', $member->unixgroup->longname)
+			->where('id', '!=', $member->unixgroupid)
+			->first();
+
+		if ($altunixgroup && (!$unixgroup->unixgid || !$altunixgroup->unixgid))
+		{
+			$altrow = UnixGroupMember::query()
+				->withTrashed()
+				->where('unixgroupid', '=', $altunixgroup->id)
+				->where('userid', '=', $member->userid)
+				->get()
+				->first();
+
+			if ($altrow)
+			{
+				$altrow->delete();
+			}
+		}*/
+
+		return $member->delete();
 	}
 
 	/**
