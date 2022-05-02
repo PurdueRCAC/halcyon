@@ -39,7 +39,9 @@ class StorageHome
 		//
 		// Home directories can either be shared across multiple resources
 		// or specific to a resource. Check which one we should load.
-		if ($event->resource->getFacet('home') && $event->resource->getFacet('home') != 'shared')
+		$facet = $event->resource->getFacet('home');
+
+		if ($facet && $facet->value != 'shared')
 		{
 			$home = Asset::query()
 				->where('name', 'LIKE', '%Home')
