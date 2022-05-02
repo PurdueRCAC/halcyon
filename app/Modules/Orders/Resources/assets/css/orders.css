@@ -87,6 +87,16 @@ table tbody tr.selected {
 	background-color: rgba(211, 81, 93, 0.1);
 }
 
+/* Re-ordering */
+.drag-handle {
+	height: 1em;
+	display: inline-block;
+	cursor: grab;
+}
+.drag-handle svg {
+	height: 100%;
+}
+
 /* Order steps */
 ol.steps li {
 	position: relative;

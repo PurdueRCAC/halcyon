@@ -280,19 +280,26 @@ app('pathway')
 									@if (!$product->public)
 										<span class="badge badge-warning order-product-hidden">{{ trans('orders::orders.hidden') }}</span>
 									@endif
-									<b id="{{ $product->id }}_productname">{{ $product->name }}</b><br />
-									<span class="text-muted hide">{{ $product->category->name }}</span>
+									<strong id="{{ $product->id }}_productname">{{ $product->name }}</strong>
+									@if (auth()->user() && auth()->user()->can('manage orders'))
+									<br />
+									<span class="text-muted">
+										<span class="fa fa-folder-o" aria-hidden="true"></span>
+										{{ $product->category->name }}
+									</span>
+									@endif
 								</p>
-								{{ $product->description }}
-
+								<p class="mt-0">
+									{{ $product->description }}
+								</p>
 								@if ($product->mou || $product->restricteddata)
-								<div>
-								@if ($product->mou)
-									<span class="badge badge-info">MOU</span>
-								@endif
-								@if ($product->restricteddata)
-									<span class="badge badge-danger">Restricted data check</span>
-								@endif
+									<div>
+										@if ($product->mou)
+											<span class="badge badge-info">MOU</span>
+										@endif
+										@if ($product->restricteddata)
+											<span class="badge badge-danger">Restricted data check</span>
+										@endif
 									</div>
 								@endif
 							</td>

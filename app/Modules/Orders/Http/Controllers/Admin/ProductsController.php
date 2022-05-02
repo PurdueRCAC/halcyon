@@ -221,6 +221,62 @@ class ProductsController extends Controller
 	}
 
 	/**
+	 * Reorder entries
+	 * 
+	 * @param   integer  $id
+	 * @param   Request $request
+	 * @return  Response
+	 */
+	public function reorder($id, Request $request)
+	{
+		// Get the element being moved
+		$row = Product::findOrFail($id);
+		$move = ($request->segment(4) == 'orderup') ? -1 : +1;
+
+		if (!$row->move($move))
+		{
+			$request->session()->flash('error', $row->getError());
+		}
+
+		// Redirect
+		return $this->cancel();
+	}
+
+	/**
+	 * Method to save the submitted ordering values for records.
+	 *
+	 * @param   Request  $request
+	 * @return  Response
+	 */
+	public function saveorder(Request $request)
+	{
+		// Get the input
+		$pks   = $request->input('id', []);
+		$order = $request->input('sequence', []);
+
+		// Sanitize the input
+		$pks   = array_map('intval', $pks);
+		$order = array_map('intval', $order);
+
+		// Save the ordering
+		$return = Product::saveOrder($pks, $order);
+
+		if ($return === false)
+		{
+			// Reorder failed
+			$request->session()->flash('error', trans('global.error.reorder failed'));
+		}
+		else
+		{
+			// Reorder succeeded.
+			$request->session()->flash('success', trans('global.messages.ordering saved'));
+		}
+
+		// Redirect back to the listing
+		return $this->cancel();
+	}
+
+	/**
 	 * Remove the specified resource from storage.
 	 *
 	 * @param   Request $request

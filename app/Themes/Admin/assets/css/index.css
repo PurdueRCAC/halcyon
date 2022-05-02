@@ -4028,6 +4028,10 @@ label[data-hint] {
   border-color: #f7eabc;
 }
 
+.ordering-control {
+  display: inline-block;
+  width: 1.5em;
+}
 tr.trashed {
   background-color: rgba(218, 52, 71, 0.05);
 }

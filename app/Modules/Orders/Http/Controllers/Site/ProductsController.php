@@ -36,6 +36,10 @@ class ProductsController extends Controller
 			'order'     => 'sequence',
 			'order_dir' => Product::$orderDir,
 		);
+		if (auth()->user() && auth()->user()->can('manage orders'))
+		{
+			$filters['public'] = '*';
+		}
 
 		$reset = false;
 		$request = $request->mergeWithBase();
@@ -43,11 +47,11 @@ class ProductsController extends Controller
 		{
 			if ($key != 'page'
 			 && $request->has($key) //&& session()->has('orders.products.filter_' . $key)
-			 && $request->input($key) != session()->get('orders.products.filter_' . $key))
+			 && $request->input($key) != session()->get('orders.site.products.filter_' . $key))
 			{
 				$reset = true;
 			}
-			$filters[$key] = $request->state('orders.products.filter_' . $key, $key, $default);
+			$filters[$key] = $request->state('orders.site.products.filter_' . $key, $key, $default);
 		}
 		$filters['page'] = $reset ? 1 : $filters['page'];
 

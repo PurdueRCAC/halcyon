@@ -3,6 +3,7 @@ namespace App\Modules\Orders\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use App\Modules\Orders\Helpers\Currency;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Resources\Models\Asset;
@@ -91,6 +92,7 @@ class Product extends Model
 			if (!$model->id)
 			{
 				$sequence = self::query()
+					->where('ordercategoryid', '=', $model->ordercategoryid)
 					->orderBy('sequence', 'desc')
 					->first()
 					->sequence;
@@ -169,5 +171,107 @@ class Product extends Model
 	public function setUnitpriceAttribute($value)
 	{
 		$this->attributes['unitprice'] = preg_replace('/[^0-9]+/', '', $value);
+	}
+
+	/**
+	 * Method to move a row in the ordering sequence of a group of rows defined by an SQL WHERE clause.
+	 * Negative numbers move the row up in the sequence and positive numbers move it down.
+	 *
+	 * @param   integer  $delta  The direction and magnitude to move the row in the ordering sequence.
+	 * @param   string   $where  WHERE clause to use for limiting the selection of rows to compact the ordering values.
+	 * @return  bool     True on success.
+	 */
+	public function move($delta, $where = '')
+	{
+		// If the change is none, do nothing.
+		if (empty($delta))
+		{
+			return true;
+		}
+
+		// Select the primary key and ordering values from the table.
+		$query = self::query()
+			->where('ordercategoryid', '=', $this->ordercategoryid);
+
+		// If the movement delta is negative move the row up.
+		if ($delta < 0)
+		{
+			$query->where('sequence', '<', (int) $this->sequence);
+			$query->orderBy('sequence', 'desc');
+		}
+		// If the movement delta is positive move the row down.
+		elseif ($delta > 0)
+		{
+			$query->where('sequence', '>', (int) $this->sequence);
+			$query->orderBy('sequence', 'asc');
+		}
+
+		// Add the custom WHERE clause if set.
+		if ($where)
+		{
+			$query->where(DB::raw($where));
+		}
+
+		// Select the first row with the criteria.
+		$row = $query->first();
+
+		// If a row is found, move the item.
+		if ($row)
+		{
+			$prev = $this->sequence;
+
+			// Update the ordering field for this instance to the row's ordering value.
+			if (!$this->update(['sequence' => (int) $row->sequence]))
+			{
+				return false;
+			}
+
+			// Update the ordering field for the row to this instance's ordering value.
+			if (!$row->update(['sequence' => (int) $prev]))
+			{
+				return false;
+			}
+		}
+
+		$all = self::query()
+			->where('ordercategoryid', '=', $this->ordercategoryid)
+			->orderBy('sequence', 'asc')
+			->get();
+
+		foreach ($all as $i => $row)
+		{
+			$row->update(['sequence' => $i]);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Saves the manually set order of records.
+	 *
+	 * @param   array  $pks    An array of primary key ids.
+	 * @param   array  $order  An array of order values.
+	 * @return  bool
+	 */
+	public static function saveorder(array $pks = [], array $order = [])
+	{
+		if (empty($pks))
+		{
+			return false;
+		}
+
+		// Update ordering values
+		foreach ($pks as $i => $pk)
+		{
+			$model = self::findOrFail((int) $pk);
+
+			if ($model->sequence != $order[$i])
+			{
+				$model->sequence = $order[$i];
+				$model->save();
+			}
+		}
+
+		return true;
 	}
 }

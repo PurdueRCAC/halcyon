@@ -33,6 +33,21 @@ $router->group(['prefix' => 'orders', 'middleware' => 'can:manage orders'], func
 			'uses' => 'CategoriesController@delete',
 			'middleware' => 'can:delete orders.categories',
 		]);
+		$router->match(['get', 'post'], '/orderup/{id}', [
+			'as'   => 'admin.orders.categories.orderup',
+			'uses' => 'CategoriesController@reorder',
+			'middleware' => 'can:edit.state orders',
+		])->where('id', '[0-9]+');
+		$router->match(['get', 'post'], '/orderdown/{id?}', [
+			'as'   => 'admin.orders.categories.orderdown',
+			'uses' => 'CategoriesController@reorder',
+			'middleware' => 'can:edit.state orders',
+		])->where('id', '[0-9]+');
+		$router->post('/saveorder', [
+			'as'   => 'admin.orders.categories.saveorder',
+			'uses' => 'CategoriesController@saveorder',
+			'middleware' => 'can:edit.state orders',
+		]);
 		$router->post('/cancel', [
 			'as' => 'admin.orders.categories.cancel',
 			'uses' => 'CategoriesController@cancel',
@@ -66,6 +81,21 @@ $router->group(['prefix' => 'orders', 'middleware' => 'can:manage orders'], func
 			'as'   => 'admin.orders.products.delete',
 			'uses' => 'ProductsController@delete',
 			'middleware' => 'can:delete orders',
+		]);
+		$router->match(['get', 'post'], '/orderup/{id}', [
+			'as'   => 'admin.orders.products.orderup',
+			'uses' => 'ProductsController@reorder',
+			'middleware' => 'can:edit.state orders',
+		])->where('id', '[0-9]+');
+		$router->match(['get', 'post'], '/orderdown/{id?}', [
+			'as'   => 'admin.orders.products.orderdown',
+			'uses' => 'ProductsController@reorder',
+			'middleware' => 'can:edit.state orders',
+		])->where('id', '[0-9]+');
+		$router->post('/saveorder', [
+			'as'   => 'admin.orders.products.saveorder',
+			'uses' => 'ProductsController@saveorder',
+			'middleware' => 'can:edit.state orders',
 		]);
 		$router->post('/cancel', [
 			'as' => 'admin.orders.products.cancel',

@@ -112,6 +112,28 @@ class CategoriesController extends Controller
 	}
 
 	/**
+	 * Show the form for editing the specified entry
+	 *
+	 * @param   integer   $id
+	 * @return  Response
+	 */
+	public function edit($id)
+	{
+		$row = Category::withTrashed()->find($id);
+
+		$categories = Category::query()
+			->where('id', '!=', $id)
+			->where('id', '!=', 1)
+			->orderBy('name', 'asc')
+			->get();
+
+		return view('orders::admin.categories.edit', [
+			'row' => $row,
+			'categories' => $categories
+		]);
+	}
+
+	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @param   Request  $request
@@ -120,7 +142,7 @@ class CategoriesController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.name' => 'required'
+			'fields.name' => 'required|string|max:64'
 		]);
 
 		$id = $request->input('id');
@@ -161,25 +183,59 @@ class CategoriesController extends Controller
 	}
 
 	/**
-	 * Show the form for editing the specified entry
-	 *
-	 * @param   integer   $id
+	 * Reorder entries
+	 * 
+	 * @param   integer  $id
+	 * @param   Request $request
 	 * @return  Response
 	 */
-	public function edit($id)
+	public function reorder($id, Request $request)
 	{
-		$row = Category::withTrashed()->find($id);
+		// Get the element being moved
+		$row = Category::findOrFail($id);
+		$move = ($request->segment(4) == 'orderup') ? -1 : +1;
 
-		$categories = Category::query()
-			->where('id', '!=', $id)
-			->where('id', '!=', 1)
-			->orderBy('name', 'asc')
-			->get();
+		if (!$row->move($move))
+		{
+			$request->session()->flash('error', $row->getError());
+		}
 
-		return view('orders::admin.categories.edit', [
-			'row' => $row,
-			'categories' => $categories
-		]);
+		// Redirect
+		return $this->cancel();
+	}
+
+	/**
+	 * Method to save the submitted ordering values for records.
+	 *
+	 * @param   Request  $request
+	 * @return  Response
+	 */
+	public function saveorder(Request $request)
+	{
+		// Get the input
+		$pks   = $request->input('id', []);
+		$order = $request->input('sequence', []);
+
+		// Sanitize the input
+		$pks   = array_map('intval', $pks);
+		$order = array_map('intval', $order);
+
+		// Save the ordering
+		$return = Category::saveOrder($pks, $order);
+
+		if ($return === false)
+		{
+			// Reorder failed
+			$request->session()->flash('error', trans('global.error.reorder failed'));
+		}
+		else
+		{
+			// Reorder succeeded.
+			$request->session()->flash('success', trans('global.messages.ordering saved'));
+		}
+
+		// Redirect back to the listing
+		return $this->cancel();
 	}
 
 	/**

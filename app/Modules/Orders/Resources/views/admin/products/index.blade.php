@@ -136,14 +136,17 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('orders::orders.unit'), 'unit', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-6 text-right" colspan="2">
+				<th scope="col" class="priority-6 text-right"{!! auth()->user()->can('edit orders') ? ' colspan="2"' : '' !!}>
 					{!! Html::grid('sort', trans('orders::orders.sequence'), 'sequence', $filters['order_dir'], $filters['order']) !!}
 				</th>
 			</tr>
 		</thead>
 		<tbody class="sortable">
+			<?php
+			$positions = $rows->pluck('ordercategoryid')->toArray();
+			?>
 		@foreach ($rows as $i => $row)
-			<tr<?php if ($row->trashed()) { echo ' class="trashed"'; } ?>>
+			<tr<?php if ($row->trashed()) { echo ' class="trashed"'; } ?> data-id="{{ $row->id }}">
 				@if (auth()->user()->can('delete orders.products'))
 					<td>
 						{!! Html::grid('id', $i, $row->id) !!}
@@ -192,13 +195,22 @@ app('pathway')
 				<td class="priority-6 text-right">
 					{{ $row->sequence }}
 				</td>
+				@if (auth()->user()->can('edit orders'))
 				<td class="priority-6 text-right">
 					@if ($filters['order'] == 'sequence')
-						<span class="drag-handle" draggable="true">
+						<!-- <span class="drag-handle" draggable="true">
 							<svg class="MiniIcon DragMiniIcon DragHandle-icon" viewBox="0 0 24 24"><path d="M10,4c0,1.1-0.9,2-2,2S6,5.1,6,4s0.9-2,2-2S10,2.9,10,4z M16,2c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,2,16,2z M8,10 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,10,8,10z M16,10c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,10,16,10z M8,18 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,18,8,18z M16,18c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,18,16,18z"></path></svg>
-						</span>
+						</span> -->
+						@if ($filters['order_dir'] == 'asc')
+							<span class="ordering-control">{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, (@$positions[$i-1] == $row->ordercategoryid), route('admin.orders.products.orderup', ['id' => $row->id])) !!}</span>
+							<span class="ordering-control">{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), (@$positions[$i+1] == $row->ordercategoryid), route('admin.orders.products.orderdown', ['id' => $row->id])) !!}</span>
+						@elseif ($filters['order_dir'] == 'desc')
+							<span class="ordering-control">{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, (@$positions[$i-1] == $row->ordercategoryid), route('admin.orders.products.orderup', ['id' => $row->id])) !!}</span>
+							<span class="ordering-control">{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), (@$positions[$i+1] == $row->ordercategoryid), route('admin.orders.products.orderdown', ['id' => $row->id])) !!}</span>
+						@endif
 					@endif
 				</td>
+				@endif
 			</tr>
 		@endforeach
 		</tbody>
