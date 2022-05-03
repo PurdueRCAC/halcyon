@@ -192,7 +192,7 @@ class Adminmenu extends Widget
 				}
 
 				//$module->link = route('admin.' . substr($module->element, 4) . '.index');
-				$module->link = url(config('app.admin-prefix', 'admin') . '/' . $module->element);
+				$module->link = url(config('app.admin-prefix', 'admin') . '/' . strtolower($module->element));
 
 				if (!empty($module->element))
 				{
