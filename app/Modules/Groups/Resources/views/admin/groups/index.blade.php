@@ -209,7 +209,7 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-4 text-right">
-					{{ $row->members_count }}
+					{{ number_format($row->members_count) }}
 				</td>
 				<td class="priority-6">
 					{{ implode(', ', $row->departmentList->pluck('name')->toArray()) }}

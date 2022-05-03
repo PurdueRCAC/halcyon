@@ -231,10 +231,10 @@ app('pathway')
 				<td class="priority-2 text-right">
 					@if (auth()->user()->can('edit courses'))
 						<a href="{{ route('admin.courses.members', ['account' => $row->id]) }}">
-							{{ $row->studentcount ? $row->studentcount : $row->members()->where('datetimestop', '>', $now)->count() }}
+					@endif
+						{{ number_format($row->studentcount ? $row->studentcount : $row->members()->where('datetimestop', '>', $now)->count()) }}
+					@if (auth()->user()->can('edit courses'))
 						</a>
-					@else
-						{{ $row->studentcount ? $row->studentcount : $row->members()->where('datetimestop', '>', $now)->count() }}
 					@endif
 				</td>
 			</tr>

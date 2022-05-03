@@ -126,7 +126,7 @@ app('pathway')
 							@if (!$row->tagged_count)
 								<span class="none">
 							@endif
-							{{ $row->tagged_count }}
+							{{ number_format($row->tagged_count) }}
 							@if (!$row->tagged_count)
 								</span>
 							@endif
@@ -135,7 +135,7 @@ app('pathway')
 							@if (!$row->alias_count)
 								<span class="none">
 							@endif
-							{{ $row->alias_count }}
+							{{ number_format($row->alias_count) }}
 							@if (!$row->alias_count)
 								</span>
 							@endif

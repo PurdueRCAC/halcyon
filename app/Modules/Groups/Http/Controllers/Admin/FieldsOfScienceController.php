@@ -89,6 +89,7 @@ class FieldsOfScienceController extends Controller
 			$query->where('parentid', '>', 0);
 
 			$rows = $query
+				->withCount('groups')
 				->orderBy($filters['order'], $filters['order_dir'])
 				->get();
 

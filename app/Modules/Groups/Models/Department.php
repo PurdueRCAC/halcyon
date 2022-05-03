@@ -87,6 +87,7 @@ class Department extends Model
 	public static function tree(string $order = 'name', string $dir = 'asc')
 	{
 		$rows = self::query()
+			->withCount('groups')
 			->orderBy($order, $dir)
 			->get();
 

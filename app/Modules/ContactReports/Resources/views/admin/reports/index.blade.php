@@ -314,9 +314,9 @@ app('pathway')
 						<div class="flex-fill text-right">
 							<span class="fa fa-comment" aria-hidden="true"></span>
 							@if ($row->comments_count)
-								<a href="#comments_{{ $row->id }}" class="comments-show">{{ $row->comments_count }}</a>
+								<a href="#comments_{{ $row->id }}" class="comments-show">{{ number_format($row->comments_count) }}</a>
 							@else
-								<span class="none">{{ $row->comments_count }}</span>
+								<span class="none">0</span>
 							@endif
 						</div>
 					</div>

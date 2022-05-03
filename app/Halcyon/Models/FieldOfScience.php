@@ -59,7 +59,8 @@ class FieldOfScience extends Model
 	 * @var  array
 	 */
 	protected $rules = array(
-		'name' => 'required'
+		'name' => 'required|string|max:255',
+		'parentid' => 'nullable|integer'
 	);
 
 	/**
@@ -71,6 +72,7 @@ class FieldOfScience extends Model
 	{
 		static::creating(function ($model)
 		{
+			// The table is not setup for auto-increment
 			$result = self::query()
 				->select(DB::raw('MAX(id) + 1 AS seq'))
 				->get()
@@ -94,11 +96,14 @@ class FieldOfScience extends Model
 	/**
 	 * Defines a relationship to parent
 	 *
-	 * @return  object
+	 * @param  string $order
+	 * @param  string $dir
+	 * @return object
 	 */
 	public static function tree($order = 'name', $dir = 'asc')
 	{
 		$rows = self::query()
+			->withCount('groups')
 			->orderBy($order, $dir)
 			->get();
 
@@ -114,9 +119,6 @@ class FieldOfScience extends Model
 			foreach ($rows as $k)
 			{
 				$pt = $k->parentid;
-				//$list = isset($children[$pt]) ? $children[$pt] : array();
-				//array_push($list, $k);
-				//$children[$pt] = $list;
 
 				if (!isset($children[$pt]))
 				{
@@ -140,10 +142,9 @@ class FieldOfScience extends Model
 	 * @param   array    $children  Container for parent/children mapping
 	 * @param   integer  $maxlevel  Maximum levels to descend
 	 * @param   integer  $level     Indention level
-	 * @param   integer  $type      Indention type
 	 * @return  array
 	 */
-	protected static function treeRecurse($id, $list, $children, $maxlevel=9999, $level=0, $type=1)
+	protected static function treeRecurse($id, $list, $children, $maxlevel=9999, $level=0)
 	{
 		if (@$children[$id] && $level <= $maxlevel)
 		{
@@ -155,11 +156,10 @@ class FieldOfScience extends Model
 				$v->children_count = isset($children[$vid]) ? count($children[$vid]) : 0;
 
 				$list[$vid] = $v;
-				//$list[$vid]->level = $level;
-				//$list[$vid]->children_count = isset($children[$vid]) ? count($children[$vid]) : 0;
+
 				unset($children[$id][$z]);
 
-				$list = self::treeRecurse($vid, $list, $children, $maxlevel, $level+1, $type);
+				$list = self::treeRecurse($vid, $list, $children, $maxlevel, $level+1);
 			}
 			unset($children[$id]);
 		}
@@ -213,7 +213,8 @@ class FieldOfScience extends Model
 	/**
 	 * Delete entry and associated data
 	 *
-	 * @return  bool
+	 * @param  array $options
+	 * @return bool
 	 */
 	public function delete(array $options = [])
 	{

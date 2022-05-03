@@ -115,7 +115,7 @@ app('pathway')
 				</td>
 				<td class="priority-4 text-right">
 					<a href="{{ route('admin.groups.index', ['fieldofscience' => $row->id]) }}">
-						{{ $row->groups()->count() }}
+						{{ number_format($row->groups_count) }}
 					</a>
 				</td>
 			</tr>

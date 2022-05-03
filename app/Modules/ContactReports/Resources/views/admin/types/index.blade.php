@@ -113,7 +113,7 @@ app('pathway')
 				</td>
 				<td class="text-right">
 					<a href="{{ route('admin.contactreports.index', ['type' => $row->id]) }}">
-						{{ $row->reports_count }}
+						{{ number_format($row->reports_count) }}
 					</a>
 				</td>
 				<td>

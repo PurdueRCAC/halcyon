@@ -243,7 +243,7 @@ else
 					</td>
 					<td class="priority-6 text-right">
 						<a href="{{ route('admin.news.updates', ['article' => $row->id]) }}">
-							{{ $row->updates_count }}
+							{{ number_format($row->updates_count) }}
 						</a>
 					</td>
 					<td class="priority-6 text-right">

@@ -115,17 +115,17 @@ app('pathway')
 				</td>
 				<td class="priority-4 text-right">
 					<a href="{{ route('admin.menus.items', ['menutype' => $row->menutype]) }}">
-						{{ $row->countPublishedItems() }}
+						{{ number_format($row->countPublishedItems()) }}
 					</a>
 				</td>
 				<td class="priority-6 text-right">
 					<a href="{{ route('admin.menus.items', ['menutype' => $row->menutype]) }}">
-						{{ $row->countUnpublishedItems() }}
+						{{ number_format($row->countUnpublishedItems()) }}
 					</a>
 				</td>
 				<td class="priority-6 text-right">
 					<a href="{{ route('admin.menus.items', ['menutype' => $row->menutype]) }}">
-						{{ $row->countTrashedItems() }}
+						{{ number_format($row->countTrashedItems()) }}
 					</a>
 				</td>
 				<td class="priority-5">

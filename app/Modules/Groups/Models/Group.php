@@ -83,7 +83,7 @@ class Group extends Model
 	 * @var  array
 	 */
 	protected $rules = array(
-		'name' => 'required'
+		'name' => 'required|string|max:48'
 	);
 
 	/**
