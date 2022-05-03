@@ -213,8 +213,8 @@ class Page extends Model
 		//$text = preg_replace_callback(self::REGEXP_LINK, array($this, 'replaceLink'), $text);
 
 		$text = preg_replace("/<p>(.*)<\/p>\n<(table.*)\n/m", "<$2 <caption>$1</caption>\n", $text);
-		$text = preg_replace("/<h2>(.*)<\/h2>/", "<h3 class=\"kb2\">$1</h3>", $text);
-		$text = preg_replace("/<h1>(.*)<\/h1>/", "<h2 class=\"kb1\">$1</h2>", $text);
+		$text = preg_replace("/<h2>(.*)<\/h2>/", "<h3>$1</h3>", $text);
+		$text = preg_replace("/<h1>(.*)<\/h1>/", "<h2>$1</h2>", $text);
 
 		$text = preg_replace('/href="\/(.*?)"/i', 'href="' . url("$1") . '"', $text);
 
@@ -243,8 +243,9 @@ class Page extends Model
 		$text = preg_replace('/href="\/(.*?)"/i', 'href="' . url("$1") . '"', $text);
 
 		$headers = array();
+		$toc = array();
 
-		$text = preg_replace_callback( '/(\<h[1-6](.*?))\>(.*)(<\/h[1-6]>)/i', function($matches) use (&$headers)
+		$text = preg_replace_callback( '/(\<h[1-6](.*?))\>(.*)(<\/h[1-6]>)/i', function($matches) use (&$headers, &$toc)
 		{
 			if (!stripos($matches[0], 'id='))
 			{
@@ -266,6 +267,7 @@ class Page extends Model
 				{
 					$title = $headers[$title] . '_' . $title;
 				}
+				$toc[$title] = $matches[3];
 
 				$anchor = '<a href="#' . $title . '" class="heading-anchor" title="Link to section \'' . e(strip_tags($matches[3])) . '\' of \'' . e(strip_tags($this->headline)) . '\'"><span class="fa fa-link" aria-hidden="true"></span><span class="sr-only">Link to section \'' . strip_tags($matches[3]) . '\' of \'' . strip_tags($this->headline) . '\'</span></a> ';
 
@@ -284,7 +286,20 @@ class Page extends Model
 			return $matches[0];
 		}, $text);
 
-		return $text;
+		$t = '';
+		if ($this->params->get('show_page_toc'))
+		{
+			$t .= '<div class="table-of-contents">';
+			$t .= '<ul>';
+			foreach ($toc as $anchor => $header)
+			{
+				$t .= '<li><a href="#' . $anchor . '">' . $header. '</a></li>';
+			}
+			$t .= '</ul>';
+			$t .= '</div>';
+		}
+
+		return $t . $text;
 	}
 
 	/**
