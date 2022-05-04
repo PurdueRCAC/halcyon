@@ -133,13 +133,19 @@ if ($user->can('manage users')
 		$menu->getParent();
 	}
 
-	$menu->addSeparator();
+	$addedSeparator = false;
 
 	foreach ($modules['users'] as $mod)
 	{
 		if (in_array($mod->element, ['users', 'groups']))
 		{
 			continue;
+		}
+
+		if (!$addedSeparator)
+		{
+			$menu->addSeparator();
+			$addedSeparator = true;
 		}
 
 		$menu->addChild(new Node(
