@@ -3,6 +3,7 @@
 namespace App\Halcyon\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Database ORM class for implementing nested set records
@@ -32,7 +33,7 @@ class Nested extends Model
 			->where($pos, '>=', $base)
 			->where('id', '!=', $this->id)
 			->update([
-				$pos => $pos . ($add ? '+' : '-') . '2',
+				$pos => DB::raw($pos . ($add ? '+' : '-') . '2'),
 			]);
 
 		return $this;
