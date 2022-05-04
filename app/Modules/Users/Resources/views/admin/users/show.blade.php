@@ -611,7 +611,7 @@ app('pathway')
 				<input type="hidden" name="id" value="{{ $user->id }}" />
 			</div>
 			<div class="modal-footer">
-				<button id="user_details_save" class="btn btn-success" data-id="{{ $user->id }}">Save</button>
+				<button id="user_details_save" class="btn btn-success" data-id="{{ $user->id }}" data-api="{{ route('api.users.update', ['id' => $user->id]) }}">Save</button>
 			</div>
 		</form>
 	</div>
