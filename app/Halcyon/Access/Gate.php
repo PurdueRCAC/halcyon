@@ -361,7 +361,7 @@ class Gate
 		if (empty($result) && $recursive)
 		{
 			$result = Asset::findOrFail(Asset::getRootId());
-			$result = $result->rules;
+			$result = [$result->rules];
 		}
 
 		// Instantiate and return the Rules object for the asset rules.
