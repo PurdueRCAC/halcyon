@@ -222,11 +222,11 @@ app('pathway')
 				<td class="priority-3 text-center">
 					@if (auth()->user()->can('edit widgets'))
 						@if ($filters['order_dir'] == 'asc')
-							<span>{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, (@$positions[$i-1] == $row->position), route('admin.menus.items.orderup', ['id' => $row->id])) !!}</span>
-							<span>{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), (@$positions[$i+1] == $row->position), route('admin.widgets.orderdown', ['id' => $row->id])) !!}</span>
+							<span class="ordering-control">{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, (@$positions[$i-1] == $row->position), route('admin.widgets.orderup', ['id' => $row->id])) !!}</span>
+							<span class="ordering-control">{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), (@$positions[$i+1] == $row->position), route('admin.widgets.orderdown', ['id' => $row->id])) !!}</span>
 						@elseif ($filters['order_dir'] == 'desc')
-							<span>{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, (@$positions[$i-1] == $row->position), route('admin.menus.items.orderup', ['id' => $row->id])) !!}</span>
-							<span>{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), (@$positions[$i+1] == $row->position), route('admin.widgets.orderdown', ['id' => $row->id])) !!}</span>
+							<span class="ordering-control">{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, (@$positions[$i-1] == $row->position), route('admin.widgets.orderup', ['id' => $row->id])) !!}</span>
+							<span class="ordering-control">{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), (@$positions[$i+1] == $row->position), route('admin.widgets.orderdown', ['id' => $row->id])) !!}</span>
 						@endif
 					@else
 						{{ $row->ordering }}

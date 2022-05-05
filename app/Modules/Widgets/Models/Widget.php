@@ -546,19 +546,21 @@ class Widget extends Model
 			$prev = $this->ordering;
 
 			// Update the ordering field for this instance to the row's ordering value.
-			//$this->ordering = (int) $row->ordering;
+			$this->ordering = (int) $row->ordering;
 
 			// Check for a database error.
-			if (!$this->update(['ordering' => (int) $row->ordering]))
+			//if (!$this->update(['ordering' => (int) $row->ordering]))
+			if (!$this->save())
 			{
 				return false;
 			}
 
 			// Update the ordering field for the row to this instance's ordering value.
-			//$row->ordering = (int) $prev;
+			$row->ordering = (int) $prev;
 
 			// Check for a database error.
-			if (!$row->update(['ordering' => (int) $prev]))
+			//if (!$row->update(['ordering' => (int) $prev]))
+			if (!$row->save())
 			{
 				return false;
 			}

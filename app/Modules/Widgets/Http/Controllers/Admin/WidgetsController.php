@@ -53,7 +53,7 @@ class WidgetsController extends Controller
 		}
 		$filters['page'] = $reset ? 1 : $filters['page'];
 
-		if (!in_array($filters['order'], ['id', 'title', 'position', 'state', 'widget', 'access']))
+		if (!in_array($filters['order'], ['id', 'title', 'position', 'state', 'widget', 'access', 'ordering']))
 		{
 			$filters['order'] = Widget::$orderBy;
 		}
@@ -208,8 +208,8 @@ class WidgetsController extends Controller
 		else
 		{
 			$query->orderBy($filters['order'], $filters['order_dir']);
-			$query->orderBy('name', 'asc');
 			$query->orderBy('ordering', 'asc');
+			$query->orderBy('name', 'asc');
 		}
 
 		$rows = $query
@@ -587,7 +587,7 @@ class WidgetsController extends Controller
 
 		// Get the element being moved
 		$row = Widget::findOrFail($id);
-		$move = ($request->segment(4) == 'orderup') ? -1 : +1;
+		$move = ($request->segment(3) == 'orderup') ? -1 : +1;
 
 		if (!$row->move($move))
 		{

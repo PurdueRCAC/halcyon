@@ -109,6 +109,10 @@ app('pathway')
 			</tr>
 		</thead>
 		<tbody>
+			<?php
+			$folders = $rows->pluck('folder')->toArray();
+			$ordering   = ($filters['order'] == 'ordering');
+			?>
 		@foreach ($rows as $i => $row)
 			<?php
 			$row->registerLanguage();
@@ -118,7 +122,6 @@ app('pathway')
 				$row->enabled = 0;
 			endif;
 
-			$ordering   = ($filters['order'] == 'ordering');
 			$canEdit    = $path ? auth()->user()->can('edit listeners') : false;
 			$canCheckin = auth()->user()->can('manage listeners') || $row->checked_out == auth()->user()->id || $row->checked_out == 0;
 			$canChange  = auth()->user()->can('edit.state listeners') && $canCheckin;
@@ -178,6 +181,17 @@ app('pathway')
 				</td>
 				<td class="priority-4 text-center">
 					{{ $row->ordering }}
+					@if ($ordering && auth()->user()->can('edit listeners'))
+						@if ($filters['order_dir'] == 'asc')
+							<span class="ordering-control">{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, (@$folders[$i-1] == $row->folder), route('admin.listeners.orderup', ['id' => $row->id])) !!}</span>
+							<span class="ordering-control">{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), (@$folders[$i+1] == $row->folder), route('admin.listeners.orderdown', ['id' => $row->id])) !!}</span>
+						@elseif ($filters['order_dir'] == 'desc')
+							<span class="ordering-control">{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, (@$folders[$i-1] == $row->folder), route('admin.listeners.orderup', ['id' => $row->id])) !!}</span>
+							<span class="ordering-control">{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), (@$folders[$i+1] == $row->folder), route('admin.listeners.orderdown', ['id' => $row->id])) !!}</span>
+						@endif
+					@else
+						{{ $row->ordering }}
+					@endif
 				</td>
 				<td class="priority-5">
 					{{ $row->folder }}

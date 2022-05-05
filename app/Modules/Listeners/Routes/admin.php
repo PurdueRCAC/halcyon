@@ -38,6 +38,16 @@ $router->group(['prefix' => 'listeners'], function (Router $router)
 		'uses' => 'ListenersController@delete',
 		'middleware' => 'can:delete listeners',
 	]);
+	$router->match(['get', 'post'], '/orderup/{id}', [
+		'as'   => 'admin.listeners.orderup',
+		'uses' => 'ListenersController@reorder',
+		'middleware' => 'can:edit.state listeners',
+	])->where('id', '[0-9]+');
+	$router->match(['get', 'post'], '/orderdown/{id?}', [
+		'as'   => 'admin.listeners.orderdown',
+		'uses' => 'ListenersController@reorder',
+		'middleware' => 'can:edit.state listeners',
+	])->where('id', '[0-9]+');
 	$router->post('/reorder', [
 		'as'   => 'admin.listeners.reorder',
 		'uses' => 'ListenersController@reorder',
