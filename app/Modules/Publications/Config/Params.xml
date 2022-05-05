@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
+	<fieldset name="module">
+		<field
+			name="style"
+			type="radio"
+			default="IEEE"
+			label="publications::config.style"
+			description="publications::config.style desc">
+			<option value="IEEE">IEEE</option>
+			<option value="APA">APA</option>
+			<option value="MLA">MLA</option>
+		</field>
+	</fieldset>
 	<fieldset
 		name="permissions"
 		label="access.permissions"

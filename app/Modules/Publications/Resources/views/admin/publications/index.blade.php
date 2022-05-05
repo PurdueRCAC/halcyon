@@ -55,17 +55,17 @@ app('pathway')
 				</div>
 			</div>
 			<div class="col filter-select col-md-8 text-right">
-				<label class="sr-only" for="filter_state">{{ trans('resources::assets.state') }}</label>
+				<label class="sr-only" for="filter_state">{{ trans('global.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
-					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('resources::assets.all states') }}</option>
+					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.all states') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('global.published') }}</option>
 					<option value="unpublished"<?php if ($filters['state'] == 'unpublished'): echo ' selected="selected"'; endif;?>>{{ trans('global.unpublished') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('global.trashed') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_type">{{ trans('resources::assets.type') }}</label>
+				<label class="sr-only" for="filter_type">{{ trans('publications::publications.type') }}</label>
 				<select name="type" id="filter_type" class="form-control filter filter-submit">
-					<option value="0">{{ trans('resources::assets.all types') }}</option>
+					<option value="0">{{ trans('publications::publications.all types') }}</option>
 					@foreach ($types as $type)
 						<option value="{{ $type->id }}"<?php if ($filters['type'] == $type->id): echo ' selected="selected"'; endif;?>>{{ $type->name }}</option>
 					@endforeach

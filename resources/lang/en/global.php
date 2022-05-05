@@ -110,6 +110,7 @@ return [
 	'publishing' => 'Publishing',
 	'validation failed' => 'Something went wrong while trying to process the page.',
 	// States
+	'all states' => '- All States -',
 	'active' => 'Active',
 	'inactive' => 'Inactive',
 	'trashed' => 'Trashed',
