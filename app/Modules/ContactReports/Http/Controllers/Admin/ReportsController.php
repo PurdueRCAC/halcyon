@@ -104,7 +104,16 @@ class ReportsController extends Controller
 					$where->whereIn($cru . '.userid', $filters['people'])
 						->orWhereIn($cr . '.userid', $filters['people']);
 				})
-				->groupBy($cr . '.id');
+				->groupBy($cr . '.id')
+				->groupBy($cr . '.groupid')
+				->groupBy($cr . '.userid')
+				->groupBy($cr . '.report')
+				->groupBy($cr . '.stemmedreport')
+				->groupBy($cr . '.datetimecontact')
+				->groupBy($cr . '.datetimecreated')
+				->groupBy($cr . '.notice')
+				->groupBy($cr . '.datetimegroupid')
+				->groupBy($cr . '.contactreporttypeid');
 		}
 
 		if ($filters['resource'])
