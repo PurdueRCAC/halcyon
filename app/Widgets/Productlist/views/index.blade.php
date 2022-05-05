@@ -2,6 +2,8 @@
 /**
  * Product list
  */
+
+$ids = array();
 ?>
 @foreach ($categories as $category)
 	<div id="{{ $category->alias }}">
@@ -14,9 +16,17 @@
 				<li>
 					<?php
 					$resource = $data['resource'];
-					$products = $data['products'];//$resource->listname
+					$products = $data['products'];
+
+					$id = $resource->listname;
+
+					if (in_array($id, $ids)):
+						$id .= '-' . $category->alias;
+					endif;
+
+					$ids[] = $id;
 					?>
-					<div id="{{ $resource->listname }}" class="card purchase-card">
+					<div id="{{ $id }}" class="card purchase-card">
 						<div class="card-content">
 							<div class="card-body">
 								<div class="row">
