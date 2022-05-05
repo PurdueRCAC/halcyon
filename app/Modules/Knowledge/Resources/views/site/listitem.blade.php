@@ -23,15 +23,23 @@ if (!empty($current) && $current[0] == $node->page->alias)
 		$cls .= ' active';
 	}
 }
+if ($node->isSeparator())
+{
+	$cls = 'separator';
+}
 @endphp
 <li<?php if ($cls) { echo ' class="' . trim($cls) . '"'; } ?>>
 	@if ($node->page->access > 1)
 		<span class="fa fa-lock" aria-hidden="true"></span>
 	@endif
-	@if ($isActive)
-		<span>{{ $node->page->headline }}</span>
+	@if ($node->isSeparator())
+		<span>&mdash;</span>
 	@else
-		<a href="{{ route('site.knowledge.page', ['uri' => $path]) }}">{{ $node->page->headline }}</a>
+		@if ($isActive)
+			<span>{{ $node->page->headline }}</span>
+		@else
+			<a href="{{ route('site.knowledge.page', ['uri' => $path]) }}">{{ $node->page->headline }}</a>
+		@endif
 	@endif
 	@if (!empty($current) && ($current[0] == $node->page->alias || $current[0] == '__all__'))
 		@php

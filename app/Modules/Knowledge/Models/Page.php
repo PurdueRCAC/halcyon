@@ -131,6 +131,16 @@ class Page extends Model
 	}
 
 	/**
+	 * Is this a separator
+	 *
+	 * @return  bool
+	 */
+	public function isSeparator()
+	{
+		return ($this->alias == '-separator-');
+	}
+
+	/**
 	 * Generates automatic alias field value
 	 *
 	 * @param   string  $value

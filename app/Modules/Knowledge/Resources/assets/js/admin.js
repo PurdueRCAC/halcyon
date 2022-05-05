@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		var dialog = $("#new-page").dialog({
 			autoOpen: false,
 			height: 250,
-			width: 500,
+			width: 600,
 			modal: true
 		});
 

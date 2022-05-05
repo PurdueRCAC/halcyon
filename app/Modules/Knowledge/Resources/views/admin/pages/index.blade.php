@@ -173,7 +173,11 @@
 					{!! str_repeat('<span class="gi">|&mdash;</span>', $row->level) !!}
 					@if (auth()->user()->can('edit knowledge'))
 						<a href="{{ route('admin.knowledge.edit', ['id' => $row->id]) }}">
-							{{ Illuminate\Support\Str::limit($row->title, 70) }}
+							@if ($row->isSeparator())
+								<span class="unknown">{{ trans('knowledge::knowledge.type separator') }}</span>
+							@else
+								{{ Illuminate\Support\Str::limit($row->title, 70) }}
+							@endif
 						</a>
 					@else
 						<span>
@@ -182,7 +186,11 @@
 					@endif
 				</td>
 				<td>
-					/{{ trim($row->path, '/') }}
+					@if ($row->isSeparator())
+						<span class="unknown">&mdash;</span>
+					@else
+						/{{ trim($row->path, '/') }}
+					@endif
 				</td>
 				<td>
 					@if ($row->snippet)
@@ -282,16 +290,22 @@
 		<h2 class="modal-title sr-only">{{ trans('knowledge::knowledge.choose type') }}</h2>
 
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-4">
 				<a href="{{ route('admin.knowledge.create') }}" class="form-group form-block">
-					<span class="icon-edit"></span>
+					<span class="icon-edit" aria-hidden="true"></span>
 					{{ trans('knowledge::knowledge.new page') }}
 				</a>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-4">
 				<a href="{{ route('admin.knowledge.select') }}" class="form-group form-block">
-					<span class="icon-repeat"></span>
+					<span class="icon-repeat" aria-hidden="true"></span>
 					{{ trans('knowledge::knowledge.snippet') }}
+				</a>
+			</div>
+			<div class="col-md-4">
+				<a href="{{ route('admin.knowledge.create', ['type' => 'separator']) }}" class="form-group form-block">
+					<span class="icon-minus" aria-hidden="true"></span>
+					{{ trans('knowledge::knowledge.separator') }}
 				</a>
 			</div>
 		</div>

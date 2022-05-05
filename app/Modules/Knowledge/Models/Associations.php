@@ -65,6 +65,16 @@ class Associations extends Model
 	}
 
 	/**
+	 * Is this a separator
+	 *
+	 * @return  bool
+	 */
+	public function isSeparator()
+	{
+		return (substr($this->path, -strlen('-separator-')) == '-separator-');
+	}
+
+	/**
 	 * Defines a relationship to a parent page
 	 *
 	 * @return  object

@@ -88,6 +88,14 @@ app('pathway')
 					</div>
 				@endif
 
+				@if ($type == 'separator')
+				<div class="form-group">
+					<hr />
+					<input type="hidden" name="page[title]" value="{{ trans('knowledge::knowledge.type separator') }}" />
+					<input type="hidden" name="page[alias]" value="-separator-" />
+					<input type="hidden" name="page[content]" value="-" />
+				</div>
+				@else
 				<div class="form-group">
 					<label for="field-title">{{ trans('knowledge::knowledge.title') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="page[title]" id="field-title" class="form-control{{ $errors->has('page.title') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $page->title }}" />
@@ -110,6 +118,7 @@ app('pathway')
 					{!! editor('page[content]', $page->content, ['rows' => 35, 'class' => ($errors->has('page.content') ? 'is-invalid' : 'required')]) !!}
 					<span class="invalid-feedback">{{ trans('knowledge::knowledge.invalid.content') }}</span>
 				</div>
+				@endif
 			</fieldset>
 		</div>
 		<div class="col-md-5">
@@ -133,23 +142,10 @@ app('pathway')
 						<option value="0"<?php if ($row->state == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
 					</select>
 				</div>
-
-				<!--
-				<div class="form-group">
-					<label for="field-publish_up">{{ trans('knowledge::knowledge.publish up') }}</label>
-					{!! Html::input('calendar', 'fields[publish_up]', Carbon\Carbon::parse($row->publish_up ? $row->publish_up : $page->created_at)) !!}
-				</div>
-
-				<div class="form-group">
-					<label for="field-publish_down">{{ trans('knowledge::knowledge.publish down') }}</label>
-					<span class="input-group input-datetime">
-						<input type="text" name="fields[publish_down]" id="field-publish_down" class="form-control datetime" value="<?php echo ($row->publish_down ? e(Carbon\Carbon::parse($row->publish_down)->toDateTimeString()) : ''); ?>" placeholder="<?php echo ($row->publish_down ? '' : trans('global.never')); ?>" />
-						<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
-					</span>
-				</div>
-				-->
 			</fieldset>
 
+			@if ($type == 'separator')
+			@else
 			<fieldset class="adminform">
 				<legend>{{ trans('knowledge::knowledge.options') }}</legend>
 
@@ -373,6 +369,7 @@ app('pathway')
 						</table>
 					</fieldset>
 			@sliders('end')
+			@endif
 		</div>
 	</div>
 

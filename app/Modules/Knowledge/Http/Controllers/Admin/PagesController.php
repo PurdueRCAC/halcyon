@@ -65,7 +65,7 @@ class PagesController extends Controller
 		$a = (new Associations)->getTable();
 
 		$query->join($a, $a . '.page_id', $p . '.id')
-			->select($p . '.title', $p . '.snippet', $p . '.updated_at', $a . '.*'); //$p . '.state', $p . '.access', 
+			->select($p . '.title', $p . '.alias', $p . '.snippet', $p . '.updated_at', $a . '.*'); //$p . '.state', $p . '.access', 
 			//->select($p . '.title', $p . '.snippet', $p . '.updated_at', $a . '.*');
 
 		$lists = Page::query()
@@ -156,7 +156,7 @@ class PagesController extends Controller
 	 * 
 	 * @return Response
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$row = new Associations();
 		$row->state = 1;
@@ -169,7 +169,8 @@ class PagesController extends Controller
 		return view('knowledge::admin.pages.edit', [
 			'row'  => $row,
 			'tree' => $parents,
-			'page' => $page
+			'page' => $page,
+			'type' => $request->input('type'),
 		]);
 	}
 

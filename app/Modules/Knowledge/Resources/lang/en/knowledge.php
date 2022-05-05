@@ -89,4 +89,6 @@ return [
 	'characters left' => 'Characters left',
 	'honeypot label' => 'Leave this field blank',
 	'all topics' => 'All topics',
+	'separator' => 'Separator',
+	'type separator' => '[ separator ]',
 ];
