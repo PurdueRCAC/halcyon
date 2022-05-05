@@ -328,6 +328,22 @@ class Listener extends Model
 			}
 		}
 
+		$rows = $query = self::query()
+			->where('folder', '=', $this->folder)
+			->where('type', '=', $this->type)
+			->orderBy('ordering', 'asc')
+			->orderBy('name', 'asc')
+			->get();
+
+		foreach ($rows as $i => $row)
+		{
+			if ($row->ordering != ($i + 1))
+			{
+				$row->ordering = ($i + 1);
+				$row->save();
+			}
+		}
+
 		return true;
 	}
 

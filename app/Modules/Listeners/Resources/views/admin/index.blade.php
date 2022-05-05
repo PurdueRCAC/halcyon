@@ -180,7 +180,7 @@ app('pathway')
 					<span class="badge access {{ str_replace(' ', '', strtolower($row->access_level)) }}">{{ $row->access_level }}</span>
 				</td>
 				<td class="priority-4 text-center">
-					{{ $row->ordering }}
+					<span class="badge badge-secondary">{{ $row->ordering }}</span>
 					@if ($ordering && auth()->user()->can('edit listeners'))
 						@if ($filters['order_dir'] == 'asc')
 							<span class="ordering-control">{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, (@$folders[$i-1] == $row->folder), route('admin.listeners.orderup', ['id' => $row->id])) !!}</span>

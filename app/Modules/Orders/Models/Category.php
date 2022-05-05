@@ -228,7 +228,10 @@ class Category extends Model
 
 		foreach ($all as $i => $row)
 		{
-			$row->update(['sequence' => $i]);
+			if ($row->sequence != ($i + 1))
+			{
+				$row->update(['sequence' => $i + 1]);
+			}
 		}
 
 		return true;
