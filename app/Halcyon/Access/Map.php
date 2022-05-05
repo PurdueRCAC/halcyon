@@ -68,25 +68,17 @@ class Map extends Model
 	}
 
 	/**
-	 * Delete this object and its dependencies
+	 * Delete the specified record
 	 *
-	 * @return  boolean
+	 * @param  array $options
+	 * @return bool
 	 */
 	public function delete($options = [])
 	{
-		$result = $this->newQuery()
-			//->table($this->getTable())
+		return self::query()
 			->where('role_id', '=', $this->role_id)
 			->where('user_id', '=', $this->user_id)
 			->delete();
-
-		if (!$result)
-		{
-			$this->addError($query->getError());
-			return false;
-		}
-
-		return true;
 	}
 
 	/**
@@ -99,19 +91,9 @@ class Map extends Model
 	{
 		$role_id = (is_array($role_id) ? $role_id : array($role_id));
 
-		$blank = new self();
-
-		$result = $blank->newQuery()
-			//->table($blank->getTable())
+		return self::query()
 			->whereIn('role_id', $role_id)
 			->delete();
-
-		if (!$result)
-		{
-			return false;
-		}
-
-		return true;
 	}
 
 	/**
@@ -124,19 +106,9 @@ class Map extends Model
 	{
 		$user_id = (is_array($user_id) ? $user_id : array($user_id));
 
-		$blank = new self();
-
-		$result = $blank->getQuery()
-			//->table($blank->getTable())
+		return self::query()
 			->whereIn('user_id', $user_id)
 			->delete();
-
-		if (!$result)
-		{
-			return false;
-		}
-
-		return true;
 	}
 
 	/**
@@ -201,18 +173,9 @@ class Map extends Model
 	{
 		$role_id = (is_array($role_id) ? $role_id : array($role_id));
 
-		$blank = new self();
-
-		$result = $blank->newQuery()
+		return self::query()
 			->where('user_id', '=', $user_id)
 			->whereIn('role_id', $role_id)
 			->delete();
-
-		if (!$result)
-		{
-			return false;
-		}
-
-		return true;
 	}
 }
