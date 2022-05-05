@@ -189,8 +189,6 @@ app('pathway')
 							<span class="ordering-control">{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, (@$folders[$i-1] == $row->folder), route('admin.listeners.orderup', ['id' => $row->id])) !!}</span>
 							<span class="ordering-control">{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), (@$folders[$i+1] == $row->folder), route('admin.listeners.orderdown', ['id' => $row->id])) !!}</span>
 						@endif
-					@else
-						{{ $row->ordering }}
 					@endif
 				</td>
 				<td class="priority-5">
