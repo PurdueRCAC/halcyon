@@ -127,6 +127,17 @@
 	width: 1em;
 	margin-right: 0.5em;
 }
+.sidenav .tree li.separator span {
+	border-top: 1px solid #ddd;
+	display: block;
+	height: 0;
+	overflow: hidden;
+	margin: 1em 0;
+}
+.sidenav .tree li.separator:before {
+	content: '';
+	display: none;
+}
 .sidenav .tree li.active>span {
 	font-weight: bold;
 }
