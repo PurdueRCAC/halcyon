@@ -238,14 +238,13 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 				</td>
 				<td class="text-center">
 					<?php $orderkey = array_search($row->id, $ordering[$row->parent_id]); ?>
+					<span class="badge badge-secondary"><?php echo $orderkey + 1; ?></span>
 					<?php if ($canChange): ?>
-						<span>{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, isset($ordering[$row->parent_id][$orderkey - 1]), route('admin.menus.items.orderup', ['id' => $row->id])) !!}</span>
-						<span>{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), isset($ordering[$row->parent_id][$orderkey + 1]), route('admin.menus.items.orderdown', ['id' => $row->id])) !!}</span>
+						<span class="ordering-control">{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, isset($ordering[$row->parent_id][$orderkey - 1]), route('admin.menus.items.orderup', ['id' => $row->id])) !!}</span>
+						<span class="ordering-control">{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), isset($ordering[$row->parent_id][$orderkey + 1]), route('admin.menus.items.orderdown', ['id' => $row->id])) !!}</span>
 						<?php $disabled = $saveOrder ? '' : 'disabled="disabled"'; ?>
 						<!-- <input type="text" name="order[]" size="5" value="<?php echo $orderkey + 1;?>" <?php echo $disabled ?> class="form-control text-area-order" /> -->
 						<?php $originalOrders[] = $orderkey + 1; ?>
-					<?php else : ?>
-						<?php echo $orderkey + 1;?>
 					<?php endif; ?>
 				</td>
 				<!-- <td>
