@@ -88,20 +88,20 @@ app('pathway')
 					</div>
 				@endif
 
-				@if ($type == 'separator')
-				<div class="form-group">
-					<hr />
-					<input type="hidden" name="page[title]" value="{{ trans('knowledge::knowledge.type separator') }}" />
-					<input type="hidden" name="page[alias]" value="-separator-" />
-					<input type="hidden" name="page[content]" value="-" />
-				</div>
-				@else
 				<div class="form-group">
 					<label for="field-title">{{ trans('knowledge::knowledge.title') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="page[title]" id="field-title" class="form-control{{ $errors->has('page.title') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $page->title }}" />
 					<span class="invalid-feedback">{{ trans('knowledge::knowledge.invalid.title') }}</span>
 				</div>
 
+				@if ($page->isSeparator())
+				<div class="form-group">
+					<hr />
+					<!--<input type="hidden" name="page[title]" value="{{ trans('knowledge::knowledge.type separator') }}" /> -->
+					<input type="hidden" name="page[alias]" value="{{ $page->alias }}" />
+					<input type="hidden" name="page[content]" value="-" />
+				</div>
+				@else
 				<div class="form-group">
 					<label for="field-alias">{{ trans('knowledge::knowledge.path') }}</label>
 					<div class="input-group mb-2 mr-sm-2">
@@ -144,8 +144,7 @@ app('pathway')
 				</div>
 			</fieldset>
 
-			@if ($type == 'separator')
-			@else
+			@if (!$page->isSeparator())
 			<fieldset class="adminform">
 				<legend>{{ trans('knowledge::knowledge.options') }}</legend>
 

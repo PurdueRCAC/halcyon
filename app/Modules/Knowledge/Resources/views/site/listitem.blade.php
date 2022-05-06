@@ -29,18 +29,20 @@ if ($node->isSeparator())
 }
 @endphp
 <li<?php if ($cls) { echo ' class="' . trim($cls) . '"'; } ?>>
+	<div>
 	@if ($node->page->access > 1)
 		<span class="fa fa-lock" aria-hidden="true"></span>
 	@endif
 	@if ($node->isSeparator())
-		<span>&mdash;</span>
+		<span class="page-title">{{ $node->page->headline }}</span>
 	@else
 		@if ($isActive)
-			<span>{{ $node->page->headline }}</span>
+			<span class="page-title">{{ $node->page->headline }}</span>
 		@else
-			<a href="{{ route('site.knowledge.page', ['uri' => $path]) }}">{{ $node->page->headline }}</a>
+			<a class="page-title" href="{{ route('site.knowledge.page', ['uri' => $path]) }}">{{ $node->page->headline }}</a>
 		@endif
 	@endif
+	</div>
 	@if (!empty($current) && ($current[0] == $node->page->alias || $current[0] == '__all__'))
 		@php
 		if ($current[0] != '__all__')

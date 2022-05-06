@@ -175,12 +175,14 @@
 						<a href="{{ route('admin.knowledge.edit', ['id' => $row->id]) }}">
 							@if ($row->isSeparator())
 								<span class="unknown">{{ trans('knowledge::knowledge.type separator') }}</span>
-							@else
-								{{ Illuminate\Support\Str::limit($row->title, 70) }}
 							@endif
+							{{ Illuminate\Support\Str::limit($row->title, 70) }}
 						</a>
 					@else
 						<span>
+							@if ($row->isSeparator())
+								<span class="unknown">{{ trans('knowledge::knowledge.type separator') }}</span>
+							@endif
 							{{ Illuminate\Support\Str::limit($row->title, 70) }}
 						</span>
 					@endif

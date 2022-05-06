@@ -166,11 +166,18 @@ class PagesController extends Controller
 
 		$parents = Page::tree();
 
+		$type = $request->input('type');
+		if ($type == 'separator')
+		{
+			$page->alias = '-separator-';
+			$page->title = trans('knowledge::knowledge.type separator');
+		}
+
 		return view('knowledge::admin.pages.edit', [
 			'row'  => $row,
 			'tree' => $parents,
 			'page' => $page,
-			'type' => $request->input('type'),
+			//'type' => $request->input('type'),
 		]);
 	}
 
@@ -272,6 +279,7 @@ class PagesController extends Controller
 			'row'  => $row,
 			'tree' => $parents,
 			'page' => $row->page,
+			//'type' => $row->page->isSeparator() ? 'separator' : 'article',
 		]);
 	}
 
