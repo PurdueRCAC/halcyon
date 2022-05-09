@@ -612,6 +612,26 @@ class AuthprimaryLdap
 				$results['created_auth'] = $data;
 				$status = 201;
 			}
+			else
+			{
+				// Update user record in ou=People
+				$result->setAttribute('cn', $user->name);
+				$result->setAttribute('sn', $user->surname);
+				$result->setAttribute('loginShell', $user->loginShell);
+				$result->setAttribute('homeDirectory', '/home/' . $user->username);
+
+				if (!$result->save())
+				{
+					throw new Exception('Failed to update AuthPrimary ou=People record', 500);
+				}
+
+				$results['updated_auth'] = [
+					'cn' => $user->name,
+					'sn' => $user->surname,
+					'loginShell' => $user->loginShell,
+					'homeDirectory' => '/home/' . $user->username
+				];
+			}
 		}
 		catch (Exception $e)
 		{
