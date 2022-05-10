@@ -512,6 +512,7 @@ class AuthprimaryLdap
 		}
 
 		$results = array();
+		$status = 201;
 
 		try
 		{
