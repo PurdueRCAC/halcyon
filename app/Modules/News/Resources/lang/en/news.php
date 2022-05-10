@@ -110,6 +110,7 @@ return [
 	'registered for event' => 'Event registration confirmation',
 	'stats' => 'Stats',
 	'reservations' => 'Reservations',
+	'no registrations for today' => 'No registrations for today\'s events',
 	'canceled reservations' => 'Canceled Reservations',
 	'repeat users' => 'Repeat users',
 ];

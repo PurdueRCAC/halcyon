@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Notification;
 use App\Modules\News\Models\Type;
 use App\Modules\News\Notifications\EventRegistered;
+use App\Modules\News\Notifications\EventNoneRegistered;
 use App\Modules\News\Notifications\EventClaimed;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use Carbon\Carbon;
@@ -90,6 +91,18 @@ class EventsTodayCommand extends Command
 			->limit(100)
 			->get();
 
+		if (count($rows) <= 0)
+		{
+			if ($debug || $this->output->isVerbose())
+			{
+				$this->line(trans('news::news.no events for today'));
+				return;
+			}
+
+			return;
+		}
+
+		$found = false;
 		$locations = array();
 		foreach ($rows as $event)
 		{
@@ -97,6 +110,8 @@ class EventsTodayCommand extends Command
 			{
 				continue;
 			}
+
+			$found = true;
 
 			if (!isset($locations[$event->location]))
 			{
@@ -144,6 +159,18 @@ class EventsTodayCommand extends Command
 
 			Notification::route('slack', $route)
 				->notify($summary ? new EventClaimed($event) : new EventRegistered($event));
+		}
+
+		if (!$found)
+		{
+			if ($debug || $this->output->isVerbose())
+			{
+				$this->line(trans('news::news.no registrations for today'));
+				return;
+			}
+
+			Notification::route('slack', $route)
+				->notify(new EventNoneRegistered());
 		}
 	}
 }
