@@ -35,8 +35,11 @@ class StorageFortress
 	 */
 	public function handleResourceMemberCreated(ResourceMemberCreated $event)
 	{
+		$blacklist = config('listener.storagefortress.blacklist', ['anvil', 'internal']);
+		$blacklist[] = 'HPSSUSER';
+
 		// "HPSSUSER" is Fortress. Avoid a neverending loop.
-		if ($event->resource->rolename == 'HPSSUSER')
+		if (in_array($event->resource->rolename, $blacklist))
 		{
 			return;
 		}

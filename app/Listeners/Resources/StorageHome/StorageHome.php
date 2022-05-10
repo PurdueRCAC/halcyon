@@ -35,6 +35,16 @@ class StorageHome
 			return;
 		}
 
+		// Make sure it's a compute resource
+		//
+		// We do this because the StorageFortress plugin also triggers this
+		// event and can cause a home dir get created for a compute resource
+		// that doesn't want them.
+		if ($event->resource->resourcetype != 1)
+		{
+			return;
+		}
+
 		// Get the Home resource
 		//
 		// Home directories can either be shared across multiple resources
