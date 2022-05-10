@@ -2,6 +2,7 @@
 namespace App\Listeners\Users\AuthprimaryLdap;
 
 use App\Modules\Users\Events\UserSync;
+use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\History\Traits\Loggable;
 use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Resources\Events\ResourceMemberStatus;
@@ -38,6 +39,7 @@ class AuthprimaryLdap
 	public function subscribe($events)
 	{
 		$events->listen(UserSync::class, self::class . '@handleUserSync');
+		$events->listen(UserBeforeDisplay::class, self::class . '@handleUserBeforeDisplay');
 
 		// User/Resource
 		$events->listen(ResourceMemberCreated::class, self::class . '@handleResourceMemberCreated');
@@ -91,6 +93,7 @@ class AuthprimaryLdap
 	 * Establish LDAP connection
 	 *
 	 * @param   array  $config
+	 * @param   string $name
 	 * @return  object
 	 */
 	private function connect($config, $name = 'authprimary')
@@ -413,6 +416,71 @@ class AuthprimaryLdap
 	}
 
 	/**
+	 * Display user profile info
+	 *
+	 * @param   UserBeforeDisplay  $event
+	 * @return  void
+	 */
+	public function handleUserBeforeDisplay(UserBeforeDisplay $event)
+	{
+		$config = $this->config('People', 'anvil');
+
+		if (empty($config))
+		{
+			return;
+		}
+
+		$user = $event->getUser();
+
+		if (substr($user->username, 0, 2) != 'x-')
+		{
+			return;
+		}
+
+		if ($user->loginShell)
+		{
+			return;
+		}
+
+		try
+		{
+			$ldap = $this->connect($config);
+
+			// Performing a query.
+			$results = $ldap->search()
+				->where('uid', '=', $user->username)
+				->select(['cn', 'loginShell'])
+				->get();
+
+			$status = 404;
+
+			if (!empty($results))
+			{
+				$status = 200;
+
+				foreach ($results as $data)
+				{
+					if (isset($data['loginShell']))
+					{
+						$user->loginShell = $data['loginShell'][0];
+					}
+				}
+			}
+		}
+		catch (\Exception $e)
+		{
+			$user->loginShell = false;
+
+			$status = 500;
+			$results = ['error' => $e->getMessage()];
+		}
+
+		$event->setUser($user);
+
+		$this->log('authprimaryldap', __METHOD__, 'GET', $status, $results, 'uid=' . $user->username);
+	}
+
+	/**
 	 * Search for users
 	 *
 	 * @param   ResourceMemberCreated  $event
@@ -673,6 +741,7 @@ class AuthprimaryLdap
 			$ldap = $this->connect($config);
 
 			$result = $ldap->search()
+				->select(['dn', 'loginShell'])
 				->where('uid', '=', $event->user->username)
 				->first();
 
@@ -682,6 +751,11 @@ class AuthprimaryLdap
 			}
 			else
 			{
+				if (isset($result['loginShell']))
+				{
+					$event->user->loginShell = $result['loginShell'][0];
+				}
+
 				$results['dn'] = $result->getAttribute('distinguishedname', 0);
 				$event->status = 3;
 			}

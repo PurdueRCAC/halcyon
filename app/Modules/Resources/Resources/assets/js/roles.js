@@ -83,8 +83,8 @@ var Roles = {
 			cell.setAttribute('data-api', results['api']);
 			cell.removeAttribute('data-loading');
 
-			if (typeof results['loginshell'] != 'undefined') {
-				document.getElementById('resource' + results['resource']['id'] + '_shell').innerHTML = results['loginshell'];
+			if (typeof results['loginShell'] != 'undefined') {
+				document.getElementById('resource' + results['resource']['id'] + '_shell').innerHTML = results['loginShell'];
 			}
 			if (typeof results['primarygroup'] != 'undefined') {
 				document.getElementById('resource' + results['resource']['id'] + '_group').innerHTML = results['primarygroup'];
@@ -166,8 +166,8 @@ var Roles = {
 			if (typeof results['primarygroup'] != 'undefined') {
 				group.value = results['primarygroup'];
 			}
-			if (typeof results['loginshell'] != 'undefined') {
-				shell.value = results['loginshell'];
+			if (typeof results['loginShell'] != 'undefined') {
+				shell.value = results['loginShell'];
 			}
 			if (typeof results['pilogin'] != 'undefined') {
 				pi.value = results['pilogin'];
@@ -176,7 +176,7 @@ var Roles = {
 			//stat.classList.remove('hide');
 			stat.value = "Unknown - Error";
 		}
-		document.getElementById("role_errors").innerHTML = ""
+		document.getElementById("role_errors").innerHTML = "";
 		document.getElementById("role_errors").classList.add('hide');
 	},
 
