@@ -573,7 +573,7 @@ class AuthprimaryLdap
 			$results = ['error' => $e->getMessage()];
 		}
 
-		$this->log('authprimaryldap', __METHOD__, 'POST', $status, $results, $user->username . '?loginShell=' . $user->loginShell, $user->id);
+		$this->log('authprimaryldap', __METHOD__, 'PUT', $status, $results, $user->username . '?loginShell=' . $user->loginShell, $user->id);
 	}
 
 	/**

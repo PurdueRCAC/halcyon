@@ -40,8 +40,18 @@ document.addEventListener('DOMContentLoaded', function () {
 					},
 					body: JSON.stringify(data),
 				})
-				.then(function () {
-					window.location.reload(true);
+				.then(function (response) {
+					if (response.ok) {
+						window.location.reload(true);
+						return;
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
 				})
 				.catch(function (error) {
 					var err = document.getElementById('loginshell_error');
