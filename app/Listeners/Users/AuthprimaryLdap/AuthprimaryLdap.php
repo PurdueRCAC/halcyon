@@ -3,6 +3,7 @@ namespace App\Listeners\Users\AuthprimaryLdap;
 
 use App\Modules\Users\Events\UserSync;
 use App\Modules\Users\Events\UserBeforeDisplay;
+use App\Modules\Users\Events\UserUpdated;
 use App\Modules\History\Traits\Loggable;
 use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Resources\Events\ResourceMemberStatus;
@@ -38,10 +39,12 @@ class AuthprimaryLdap
 	 */
 	public function subscribe($events)
 	{
+		// User
 		$events->listen(UserSync::class, self::class . '@handleUserSync');
+		$events->listen(UserUpdated::class, self::class . '@handleUserUpdated');
 		$events->listen(UserBeforeDisplay::class, self::class . '@handleUserBeforeDisplay');
 
-		// User/Resource
+		// User & Resource
 		$events->listen(ResourceMemberCreated::class, self::class . '@handleResourceMemberCreated');
 		$events->listen(ResourceMemberStatus::class, self::class . '@handleResourceMemberStatus');
 		$events->listen(ResourceMemberDeleted::class, self::class . '@handleResourceMemberDeleted');
@@ -467,7 +470,7 @@ class AuthprimaryLdap
 				}
 			}
 		}
-		catch (\Exception $e)
+		catch (Exception $e)
 		{
 			$user->loginShell = false;
 
@@ -478,6 +481,99 @@ class AuthprimaryLdap
 		$event->setUser($user);
 
 		$this->log('authprimaryldap', __METHOD__, 'GET', $status, $results, 'uid=' . $user->username);
+	}
+
+	/**
+	 * Handle a user being updated
+	 *
+	 * @param   UserUpdated  $event
+	 * @return  void
+	 */
+	public function handleUserUpdated(UserUpdated $event)
+	{
+		$user = $event->user;
+
+		if (substr($user->username, 0, 2) != 'x-')
+		{
+			return;
+		}
+
+		if (!$user->loginShell)
+		{
+			return;
+		}
+
+		$configall = $this->config('allPeople', 'anvil');
+		$config = $this->config('People', 'anvil');
+
+		if (empty($configall) || empty($config))
+		{
+			return;
+		}
+
+		$results = array();
+
+		try
+		{
+			// Check for an existing record in the ou=People (i.e., authorized) tree
+			$ldap = $this->connect($config);
+
+			$result = $ldap->search()
+				->where('uid', '=', $user->username)
+				->first();
+
+			if ($result)
+			{
+				if ($result->loginShell != $user->loginShell)
+				{
+					// Update user record in ou=People
+					$result->setAttribute('loginShell', $user->loginShell);
+
+					if (!$result->save())
+					{
+						throw new Exception('Failed to update AuthPrimary ou=People record', 500);
+					}
+
+					$results['updated_auth'] = [
+						'loginShell' => $user->loginShell,
+					];
+				}
+
+				// The user must be in the People tree to have anything relevant
+				// we can change in the allPeople tree.
+				//
+				// Check for an existing record in ou=allPeople
+				$ldap = $this->connect($configall, 'authprimaryall');
+
+				$result = $ldap->search()
+					->where('uid', '=', $user->username)
+					->first();
+
+				if ($result
+				 && $result->loginShell != '/bin/false'
+				 && $result->loginShell != $user->loginShell)
+				{
+					$result->setAttribute('loginShell', $user->loginShell);
+
+					if (!$result->save())
+					{
+						throw new Exception('Failed to update AuthPrimary ou=allPeople record', 500);
+					}
+
+					$results['updated'] = [
+						'loginShell' => $user->loginShell,
+					];
+				}
+			}
+		}
+		catch (Exception $e)
+		{
+			$status = $e->getCode();
+			$status = $status ?: 500;
+			$results = ['error' => $e->getMessage()];
+		}
+
+		$this->log('authprimaryldap', __METHOD__, 'POST', $status, $results, $user->username . '?loginShell=' . $user->loginShell, $user->id);
 	}
 
 	/**
@@ -762,7 +858,7 @@ class AuthprimaryLdap
 
 			$status = 200;
 		}
-		catch (\Exception $e)
+		catch (Exception $e)
 		{
 			$event->status = -1;
 
@@ -826,7 +922,7 @@ class AuthprimaryLdap
 			{
 				$result->cn = '-';
 				$result->sn = '-';
-				$result->longinShell = '/bin/false';
+				$result->loginShell = '/bin/false';
 				$result->homeDirectory = '/dev/null';
 
 				if (!$result->update())
@@ -837,7 +933,7 @@ class AuthprimaryLdap
 
 			$status = 200;
 		}
-		catch (\Exception $e)
+		catch (Exception $e)
 		{
 			$status  = 500;
 			$results = ['error' => $e->getMessage()];
@@ -968,7 +1064,7 @@ class AuthprimaryLdap
 			$status = 204;
 			$body   = null;
 		}
-		catch (\Exception $e)
+		catch (Exception $e)
 		{
 			$status = $e->getCode();
 			$body   = ['error' => $e->getMessage()];
