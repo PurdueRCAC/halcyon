@@ -187,26 +187,18 @@ app('pathway')
 					{{ $row->id }}
 				</td>
 				<td>
-					@if ($canEdit)
-						<a href="{{ route('admin.users.show', ['id' => $row->id]) }}">
-							{{ $row->name }}
-						</a>
-					@else
+					<a href="{{ route('admin.users.show', ['id' => $row->id]) }}">
 						{{ $row->name }}
-					@endif
+					</a>
 				</td>
 				<td>
-					@if ($canChange)
-						<a href="{{ route('admin.users.edit', ['id' => $row->id]) }}">
-					@endif
+					<a href="{{ route('admin.users.show', ['id' => $row->id]) }}">
 						@if ($row->username)
 							{{ $row->username }}
 						@else
 							<span class="text-muted unknown">{{ trans('global.none') }}</span>
 						@endif
-					@if ($canChange)
-						</a>
-					@endif
+					</a>
 				</td>
 				<?php /*@if ($canChange)
 				<td class="text-center priority-3">
