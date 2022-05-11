@@ -161,7 +161,7 @@ class EventsTodayCommand extends Command
 				->notify($summary ? new EventClaimed($event) : new EventRegistered($event));
 		}
 
-		if (!$found)
+		if (!$found && !$summary)
 		{
 			if ($debug || $this->output->isVerbose())
 			{
