@@ -567,4 +567,15 @@ class Toolbar
 	{
 		$this->append('Dropdown', $name, $alt, $items);
 	}
+
+	/**
+	 * Writes a button that displays help information in a modal
+	 *
+	 * @param   string   $url
+	 * @return  void
+	 */
+	public function help($url = '#')
+	{
+		$this->append('Help', $url);
+	}
 }

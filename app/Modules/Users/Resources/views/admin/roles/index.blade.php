@@ -33,6 +33,8 @@ app('pathway')
 		{!! Toolbar::addNew(route('admin.users.roles.create')) !!}
 	@endif
 
+	{!! Toolbar::help('users::admin.help.roles') !!}
+
 	{!! Toolbar::render() !!}
 @stop
 

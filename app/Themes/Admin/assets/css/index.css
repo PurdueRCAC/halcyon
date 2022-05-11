@@ -3562,7 +3562,7 @@ select.filter_search {
   list-style: none;
   flex: 0 1 auto;
 }
-.toolbar-box ul li + li>a {
+.toolbar-box ul>li + li>a {
   margin-left: 0.5em;
 }
 .toolbar-box .spacer,
@@ -4385,6 +4385,45 @@ a.menulist:hover:before {
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
   flex-grow: 0 0 1;
+}
+
+.modal-help ul {
+  list-style: disc outside;
+  display: block;
+  margin: 1em 0 1em 1.2em;
+}
+.modal-help ol {
+  list-style: decimal outside;
+  display: block;
+  margin: 1em 0 1em 1.2em;
+}
+.modal-help ol li,
+.modal-help ul li {
+  list-style: inherit;
+  display: list-item;
+}
+.modal-help .modal-body article>*:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+.modal-help .modal-body article>*:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.modal-help ol ol,
+.modal-help ul ul {
+  margin: 0 0 0 1.2em;
+}
+.modal-help .toc,
+.modal-help .toc ol {
+  list-style: none;
+}
+.modal-help .toc {
+  margin-left: 0;
+}
+.modal-help .toc li:before {
+  content: '# ';
+  color: #ccc;
 }
 
 body table.dataTable {

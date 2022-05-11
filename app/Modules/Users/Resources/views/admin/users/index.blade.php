@@ -20,24 +20,24 @@ app('pathway')
 	->append(
 		trans('users::users.users')
 	);
+
+	if (auth()->user()->can('delete users')):
+		Toolbar::deleteList('', route('admin.users.delete'));
+	endif;
+
+	if (auth()->user()->can('create users')):
+		Toolbar::addNew(route('admin.users.create'));
+	endif;
+
+	if (auth()->user()->can('admin users')):
+		Toolbar::spacer();
+		Toolbar::preferences('users');
+	endif;
+
+	Toolbar::help('users::admin.help.users');
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('delete users'))
-		{!! Toolbar::deleteList('', route('admin.users.delete')) !!}
-	@endif
-
-	@if (auth()->user()->can('create users'))
-		{!! Toolbar::addNew(route('admin.users.create')) !!}
-	@endif
-
-	@if (auth()->user()->can('admin users'))
-		{!!
-			Toolbar::spacer();
-			Toolbar::preferences('users');
-		!!}
-	@endif
-
 	{!! Toolbar::render() !!}
 @stop
 
