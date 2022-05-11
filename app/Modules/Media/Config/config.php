@@ -21,5 +21,14 @@ return [
     | Defined in MB
     |--------------------------------------------------------------------------
     */
-    'max-file-size' => '100',
+    'max-file-size' => 100,
+
+    /*
+    |--------------------------------------------------------------------------
+    | List limit
+    |--------------------------------------------------------------------------
+    | Maximum number of items to show at once. Showing too many can cause
+    | slow-downs in the page.
+    */
+    'list_limit' => 100,
 ];

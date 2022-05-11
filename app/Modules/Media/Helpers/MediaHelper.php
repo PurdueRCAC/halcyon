@@ -301,19 +301,22 @@ class MediaHelper
 	 */
 	public static function getChildren($directory, $folder)
 	{
-		$files = array();
+		$data = array(
+			'files' => array(),
+			'folders' => array(),
+		);
 
 		foreach (app('files')->files($directory . $folder) as $child)
 		{
-			$files[] = new File($child->getPathname());
+			$data['files'][] = new File($child->getPathname());
 		}
 
 		foreach (app('files')->directories($directory . $folder) as $child)
 		{
-			$files[] = new Folder($child);
+			$data['folders'][] = new Folder($child);
 		}
 
-		return $files;
+		return $data;
 	}
 
 	/**

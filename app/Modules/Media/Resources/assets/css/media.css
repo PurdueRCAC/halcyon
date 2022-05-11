@@ -95,6 +95,13 @@
 	display: inline-block;
 	cursor: pointer;
 }
+.media-pagination {
+	padding: 0 1em;
+}
+.media-pagination .form-control {
+	display: inline-block;
+	width: auto;
+}
 .dir-separator {
 	width: 1em;
 	overflow: hidden;

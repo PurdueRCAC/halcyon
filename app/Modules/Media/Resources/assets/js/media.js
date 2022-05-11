@@ -34,10 +34,15 @@ function bindContextModals() {
 	});
 }
 
+function mediaUrl(base, layout, folder, page) {
+	return base + '?layout=' + layout + '&page=' + page + '&folder=' + folder
+}
+
 jQuery(document).ready(function () {
 	var contents = $('#media-items'),
 		layout = $('#layout'),
-		folder = $('#folder');
+		folder = $('#folder'),
+		page = $('#page');
 
 	_DEBUG = 1; //$('#system-debug').length;
 
@@ -84,7 +89,7 @@ jQuery(document).ready(function () {
 					window.console && console.log(response);
 				}
 
-				$.get(contents.attr('data-list') + '?layout=' + layout.val() + '&folder=' + folder.val(), function (data) {
+				$.get(mediaUrl(contents.attr('data-list'), layout.val(), folder.val(), page.val()), function (data) {
 					if (_DEBUG) {
 						window.console && console.log(data);
 					}
@@ -104,14 +109,14 @@ jQuery(document).ready(function () {
 		folder.val($(this).attr('data-folder'));
 
 		if (_DEBUG) {
-			window.console && console.log('Calling: ' + $(this).attr('href') + '&layout=' + layout.val());
+			window.console && console.log('Calling: ' + mediaUrl($(this).attr('href'), layout.val(), '', page.val()));
 		}
 
 		var fldr = $(this).attr('data-folder');
 
 		breadcrumbs(
 			fldr,
-			contents.attr('data-list') + '?layout=' + layout.val() + '&folder='
+			mediaUrl(contents.attr('data-list'), layout.val(), '', page.val())
 		);
 
 		$('.spinner').removeClass('d-none');
@@ -133,14 +138,14 @@ jQuery(document).ready(function () {
 			folder.val($(this).attr('data-folder'));
 
 			if (_DEBUG) {
-				window.console && console.log('Calling: ' + $(this).attr('href') + '&layout=' + layout.val());
+				window.console && console.log('Calling: ' + mediaUrl($(this).attr('href'), layout.val(), '', page.val()));
 			}
 
 			var fldr = $(this).attr('data-folder');
 
 			breadcrumbs(
 				fldr,
-				contents.attr('data-list') + '?layout=' + layout.val() + '&folder='
+				mediaUrl(contents.attr('data-list'), layout.val(), '', page.val())
 			);
 
 			$('.spinner').removeClass('d-none');
@@ -148,7 +153,7 @@ jQuery(document).ready(function () {
 			var url = $(this).attr('href'),
 				dataurl = $(this).attr('data-href');
 
-			$.get(dataurl + '&layout=' + layout.val(), function (data) {
+			$.get(mediaUrl(dataurl, layout.val(), '', page.val()), function (data) {
 				contents.html(data);
 
 				window.history.pushState({ dataurl: dataurl, folder: fldr, layout: layout.val() }, '', url);
@@ -231,7 +236,7 @@ jQuery(document).ready(function () {
 							window.console && console.log(response);
 						}
 
-						$.get(contents.attr('data-list') + '?layout=' + layout.val() + '&folder=' + folder.val(), function (data) {
+						$.get(mediaUrl(contents.attr('data-list'), layout.val(), folder.val(), page.val()), function (data) {
 							if (_DEBUG) {
 								window.console && console.log(data);
 							}
@@ -286,7 +291,7 @@ jQuery(document).ready(function () {
 							window.console && console.log(response);
 						}
 
-						$.get(contents.attr('data-list') + '?layout=' + layout.val() + '&folder=' + folder.val(), function (data) {
+						$.get(mediaUrl(contents.attr('data-list'), layout.val(), folder.val(), page.val()), function (data) {
 							if (_DEBUG) {
 								window.console && console.log(data);
 							}
@@ -325,7 +330,7 @@ jQuery(document).ready(function () {
 						window.console && console.log(response);
 					}
 
-					$.get(contents.attr('data-list') + '?layout=' + layout.val() + '&folder=' + folder.val(), function (data) {
+					$.get(mediaUrl(contents.attr('data-list'), layout.val(), folder.val(), page.val()), function (data) {
 						if (_DEBUG) {
 							window.console && console.log(data);
 						}
@@ -368,15 +373,11 @@ jQuery(document).ready(function () {
 
 			folder.val($(this).attr('data-folder'));
 
-			if (_DEBUG) {
-				window.console && console.log('Calling: ' + $(this).attr('href') + '&layout=' + layout.val());
-			}
-
 			var fldr = $(this).attr('data-folder');
 
 			breadcrumbs(
 				fldr,
-				contents.attr('data-list') + '?layout=' + layout.val() + '&folder='
+				mediaUrl(contents.attr('data-list'), layout.val(), '', page.val())
 			);
 
 			$('.spinner').removeClass('d-none');
@@ -384,7 +385,11 @@ jQuery(document).ready(function () {
 			var url = $(this).attr('href'),
 				dataurl = $(this).attr('data-href');
 
-			$.get(dataurl + '&layout=' + layout.val(), function (data) {
+			if (_DEBUG) {
+				window.console && console.log('Calling: ' + dataurl + '&layout=' + layout.val() + '&page=' + page.val());
+			}
+
+			$.get(dataurl + '&layout=' + layout.val() + '&page=' + page.val(), function (data) {
 				contents.html(data);
 
 				window.history.pushState({ dataurl: dataurl, folder: fldr, layout: layout.val() }, '', url);
@@ -402,12 +407,12 @@ jQuery(document).ready(function () {
 		if (history.state) {
 			$('.spinner').removeClass('d-none');
 
-			$.get(history.state.dataurl + '&layout=' + history.state.layout, function (data) {
+			$.get(mediaUrl(history.state.dataurl, history.state.layout, '', page.val()), function (data) {
 				contents.html(data);
 
 				breadcrumbs(
 					history.state.folder,
-					contents.attr('data-list') + '?layout=' + layout.val() + '&folder='
+					mediaUrl(contents.attr('data-list'), layout.val(), '', page.val())
 				);
 
 				$('.spinner').addClass('d-none');
@@ -432,7 +437,7 @@ jQuery(document).ready(function () {
 			});
 		},
 		queuecomplete: function () {
-			$.get(contents.attr('data-list') + '?layout=' + $('#layout').val() + '&folder=' + $('#folder').val(), function (data) {
+			$.get(mediaUrl(contents.attr('data-list'), $('#layout').val(), $('#folder').val(), $('#page').val()), function (data) {
 				contents.html(data);
 
 				bindContextModals();

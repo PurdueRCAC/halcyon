@@ -23,7 +23,7 @@ endif;
 				<tbody>
 					<?php
 					// Group files and folders
-					$folders = array();
+					/*$folders = array();
 					$files = array();
 					foreach ($children as $child):
 						if ($child->isDir()):
@@ -45,6 +45,22 @@ endif;
 						?>
 						@include('media::medialist.listdoc')
 						<?php
+					endforeach;*/
+
+					foreach ($children as $file):
+						if ($file->isDir()):
+							?>
+							@include('media::medialist.thumbs_folder')
+							<?php
+						elseif ($file->isImage()):
+							?>
+							@include('media::medialist.thumbs_img')
+							<?php
+						else:
+							?>
+							@include('media::medialist.thumbs_doc')
+							<?php
+						endif;
 					endforeach;
 					?>
 				</tbody>

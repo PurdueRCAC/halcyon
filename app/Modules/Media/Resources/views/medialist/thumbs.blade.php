@@ -8,7 +8,7 @@ endif;
 	<div action="{{ route('admin.media.medialist', ['folder' => $folder]) }}" method="post" id="media-form-thumbs" name="media-form-thumbs">
 		<div class="manager">
 			<?php
-			$folders = array();
+			/*$folders = array();
 			$files = array();
 
 			// Group files and folders
@@ -20,16 +20,26 @@ endif;
 				endif;
 			endforeach;
 
-			// Display folders first
-			foreach ($folders as $file):
-				?>
-				@include('media::medialist.thumbs_folder')
-				<?php
-			endforeach;
-
 			// Display files
 			foreach ($files as $file):
 				if ($file->isImage()):
+					?>
+					@include('media::medialist.thumbs_img')
+					<?php
+				else:
+					?>
+					@include('media::medialist.thumbs_doc')
+					<?php
+				endif;
+			endforeach;*/
+
+			// Display folders first
+			foreach ($children as $file):
+				if ($file->isDir()):
+					?>
+					@include('media::medialist.thumbs_folder')
+					<?php
+				elseif ($file->isImage()):
 					?>
 					@include('media::medialist.thumbs_img')
 					<?php
