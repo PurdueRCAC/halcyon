@@ -35,7 +35,8 @@ function bindContextModals() {
 }
 
 function mediaUrl(base, layout, folder, page) {
-	return base + '?layout=' + layout + '&page=' + page + '&folder=' + folder
+	base += (base.indexOf('?') == -1 ? '?' : '&');
+	return base + 'layout=' + layout + '&page=' + page + (folder ? '&folder=' + folder : '');
 }
 
 jQuery(document).ready(function () {
@@ -116,7 +117,7 @@ jQuery(document).ready(function () {
 
 		breadcrumbs(
 			fldr,
-			mediaUrl(contents.attr('data-list'), layout.val(), '', page.val())
+			contents.attr('data-list') + '?layout=' + layout.val() + '&page=' + page.val() + '&folder='
 		);
 
 		$('.spinner').removeClass('d-none');
@@ -145,7 +146,7 @@ jQuery(document).ready(function () {
 
 			breadcrumbs(
 				fldr,
-				mediaUrl(contents.attr('data-list'), layout.val(), '', page.val())
+				contents.attr('data-list') + '?layout=' + layout.val() + '&page=' + page.val() + '&folder='
 			);
 
 			$('.spinner').removeClass('d-none');
@@ -377,7 +378,7 @@ jQuery(document).ready(function () {
 
 			breadcrumbs(
 				fldr,
-				mediaUrl(contents.attr('data-list'), layout.val(), '', page.val())
+				contents.attr('data-list') + '?layout=' + layout.val() + '&folder='
 			);
 
 			$('.spinner').removeClass('d-none');
@@ -412,7 +413,7 @@ jQuery(document).ready(function () {
 
 				breadcrumbs(
 					history.state.folder,
-					mediaUrl(contents.attr('data-list'), layout.val(), '', page.val())
+					contents.attr('data-list') + '?layout=' + layout.val() + '&page=' + page.val() + '&folder='
 				);
 
 				$('.spinner').addClass('d-none');
