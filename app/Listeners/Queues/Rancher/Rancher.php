@@ -100,7 +100,7 @@ class Rancher
 		try
 		{
 			$client = new Client([
-				'headers' => ['Authorization' => 'Bearer ' . $config['user'] . ':' . $config['password']],
+				'headers' => ['Authorization' => 'Bearer ' . $config['access_key'] . ':' . $config['secret_key']],
 			]);
 
 			// Check for a project representing the group
@@ -146,7 +146,7 @@ class Rancher
 
 			$event->errors[] = $e->getMessage();
 
-			$this->log('rancher', __METHOD__, 'POST', $status, $body, $url);
+			$this->log('rancher', __METHOD__, 'POST', $status, $body, $config['url']);
 		}
 	}
 
@@ -172,14 +172,14 @@ class Rancher
 			return;
 		}
 
-		$url = '';
+		$url = $config['url'];
 
 		try
 		{
 			// Check for a project representing the group
 			$group = $queue->group;
 			$client = new Client([
-				'headers' => ['Authorization' => 'Bearer ' . $config['user'] . ':' . $config['password']],
+				'headers' => ['Authorization' => 'Bearer ' . $config['access_key'] . ':' . $config['secret_key']],
 			]);
 
 			$project = $this->getProject($client, $config, $group);
@@ -240,13 +240,13 @@ class Rancher
 		}
 
 		$body = [];
-		$url = '';
+		$url = $config['url'];
 
 		try
 		{
 			$group = $queue->group;
 			$client = new Client([
-				'headers' => ['Authorization' => 'Bearer ' . $config['user'] . ':' . $config['password']],
+				'headers' => ['Authorization' => 'Bearer ' . $config['access_key'] . ':' . $config['secret_key']],
 			]);
 
 			$project = $this->getProject($client, $config, $group);
@@ -267,6 +267,11 @@ class Rancher
 
 			if ($mem = $this->getProjectMember($client, $config, $project, $rancherUser))
 			{
+				if (isset($mem->removed) && $mem->removed)
+				{
+					return;
+				}
+
 				$url = $mem->links->remove;
 
 				$res = $client->request('DELETE', $url);
@@ -327,11 +332,11 @@ class Rancher
 		$body = [];
 		$url = '';
 
-		//try
-		//{
+		try
+		{
 			$group = $queue->group;
 			$client = new Client([
-				'headers' => ['Authorization' => 'Bearer ' . $config['user'] . ':' . $config['password']],
+				'headers' => ['Authorization' => 'Bearer ' . $config['access_key'] . ':' . $config['secret_key']],
 			]);
 
 			$project = $this->getProject($client, $config, $group);
@@ -342,7 +347,7 @@ class Rancher
 			}
 
 			$this->updateProject($client, $config, $project, $queue);
-		/*}
+		}
 		catch (\Exception $e)
 		{
 			$status = $e->getCode();
@@ -352,7 +357,7 @@ class Rancher
 			$event->errors[] = $e->getMessage();
 
 			//$this->log('rancher', __METHOD__, 'PUT', $status, $body, $url);
-		}*/
+		}
 	}
 
 	/*
@@ -583,32 +588,36 @@ class Rancher
 	private function updateProject($client, $config, $project, $queue)
 	{
 		$totalmemory = $queue->totalcores * Number::toBytes(config('listener.rancher.quota.memory_per_core', '4GB'));
+		$totalcpu = ($queue->totalcores * 1000);
 
 		$body = array(
 			'resourceQuota' => [
-				'limitsCpu'      => ($queue->totalcores * 1000) . 'm',
-				'limitsMemory'   => $totalmemory,
+				'limit' => [
+					'limitsCpu'      => $totalcpu . 'm',
+					'limitsMemory'   => $totalmemory,
+					'pods' => config('listener.rancher.quota.pod_limit_project', 200),
+					'type' => '/v3/schemas/resourceQuotaLimit',
+				],
+				'type' => '/v3/schemas/projectResourceQuota',
 				//'requestsCpu'    => '1000m',
 				//'requestsMemory' => '128Mi',
-				'pods' => config('listener.rancher.quota.pod_limit_project', 200),
 			],
 			'containerDefaultResourceLimit' => [
-				'limitsCpu'      => config('listener.rancher.quota.cpu_limit_container', '100mCPU'),
-				'limitsMemory'   => config('listener.rancher.quota.memory_limit_container', '128Mi'),
+				'limitsCpu'    => config('listener.rancher.quota.cpu_limit_container', '100mCPU'),
+				'limitsMemory' => config('listener.rancher.quota.memory_limit_container', '128Mi'),
+				'type'         => '/v3/schemas/containerResourceLimit',
 			],
 			'namespaceDefaultResourceQuota' => [
-				'limitsCpu'      => round($queue->totalcores * config('listener.rancher.quota.cpu_limit_namespacce', 0.25)) . 'm',
-				'limitsMemory'   => round($totalmemory * config('listener.rancher.quota.memory_limit_namespacce', 0.25)),
-				//'requestsCpu'    => "1000m",
-				//'requestsMemory' => "128Mi",
-				'pods' => config('listener.rancher.quota.pod_limit_namespace', 50),
+				'limit' => [
+					'limitsCpu'      => round($totalcpu * config('listener.rancher.quota.cpu_limit_namespace', 0.25)) . 'm',
+					'limitsMemory'   => round($totalmemory * config('listener.rancher.quota.memory_limit_namespace', 0.25)),
+					//'requestsCpu'    => "1000m",
+					//'requestsMemory' => "128Mi",
+					'pods' => config('listener.rancher.quota.pod_limit_namespace', 50),
+					'type' => '/v3/schemas/resourceQuotaLimit',
+				],
+				'type' => '/v3/schemas/namespaceResourceQuota',
 			],
-			/*'namespaceDefaultResourceQuota' => [
-				'limitsCpu'      => (config('listener.rancher.quota.cpu_limit_project', 1000) * config('listener.rancher.quota.cpu_limit_namespace', 0.25)) . 'm',
-				'limitsMemory'   => (config('listener.rancher.quota.memory_limit_project', 128) * config('listener.rancher.quota.memory_limit_namespace', 0.25)) . 'Mi',
-				'requestsCpu'    => "1000m",
-				'requestsMemory' => "128Mi",
-			],*/
 		);
 
 		$url = $project->links->update;

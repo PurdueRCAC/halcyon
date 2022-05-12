@@ -126,8 +126,8 @@ $queues = $queues->reject(function($q) use ($canManage)
 											<optgroup data-resourceid="{{ $resource->id }}" label="{{ $resource->name }}">
 												<?php foreach ($children as $child): ?>
 													<option value="{{ $child->subresourceid }}"
-														data-nodecores="{{ $child->subresource ? $child->subresource->nodecores : 0 }}"
-														data-nodemem="{{ $child->subresource ? $child->subresource->nodemem : 0 }}"
+														data-nodecores="{{ $child->subresource && $child->subresource->nodecores ? $child->subresource->nodecores : 0 }}"
+														data-nodemem="{{ $child->subresource && $child->subresource->nodemem ? $child->subresource->nodemem : 0 }}"
 														data-cluster="{{ $child->subresource ? $child->subresource->cluster : '' }}">{{ $child->subresource ? $child->subresource->name : trans('global.unknown') }}</option>
 												<?php endforeach; ?>
 											</optgroup>

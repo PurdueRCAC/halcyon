@@ -9,15 +9,15 @@ return [
     | this.
     |
     */
-    'url' => env('RANCHER_URL', 'https://beta.geddes.rcac.purdue.edu/v3/'),
+    'url' => env('RANCHER_URL', 'https://geddes.rcac.purdue.edu/v3/'),
 
     /*
     |--------------------------------------------------------------------------
     | Credentials
     |--------------------------------------------------------------------------
     */
-    'user' => env('RANCHER_ACCESS_KEY'),
-    'password' => env('RANCHER_SECRET_KEY'),
+    'access_key' => env('RANCHER_ACCESS_KEY'),
+    'secret_key' => env('RANCHER_SECRET_KEY'),
 
     /*
     |--------------------------------------------------------------------------
