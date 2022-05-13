@@ -642,7 +642,7 @@ class AmieLdap
 										->select('id')
 										->where('groupid', '=', $group->id)
 										->where('userid', '=', $member->id)
-										->get();
+										->first();
 
 									if (!$gu)
 									{
