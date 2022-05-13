@@ -265,7 +265,12 @@ class AuthprimaryLdap
 						// Update user record in ou=allPeople
 						$result->setAttribute('cn', $user->name);
 						$result->setAttribute('sn', $user->surname);
-						$result->setAttribute('loginShell', $user->loginShell);
+						if (!$result->loginShell
+							|| $result->loginShell == '/bin/false'
+							|| $result->loginShell == $user->loginShell)
+						{
+							$result->setAttribute('loginShell', $user->loginShell);
+						}
 						$result->setAttribute('homeDirectory', '/home/' . $user->username);
 
 						if (!$result->save())
