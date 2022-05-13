@@ -636,6 +636,14 @@ class ArticlesController extends Controller
 			abort(404);
 		}
 
+		if (!$row->published)
+		{
+			if (!auth()->user() || !auth()->user()->can('manage news'))
+			{
+				abort(404);
+			}
+		}
+
 		event($event = new ArticleMetadata($row));
 		$row = $event->page;
 

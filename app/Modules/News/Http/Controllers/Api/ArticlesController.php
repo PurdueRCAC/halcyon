@@ -195,6 +195,11 @@ class ArticlesController extends Controller
 			$filters[$key] = $val;
 		}
 
+		if (!auth()->user() || !auth()->user()->can('manage news'))
+		{
+			$filters['state'] = 'published';
+		}
+
 		/*$query = null;
 		if ($query)
 		{
