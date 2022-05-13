@@ -633,10 +633,27 @@ class AmieLdap
 								// Create user if needed
 								if (!in_array($member->id, $current))
 								{
-									$ugu = new UnixGroupMember;
-									$ugu->unixgroupid = $unixgroup->id;
-									$ugu->userid = $member->id;
-									$ugu->save();
+									// Check for an existing trashed record
+									$ugu = UnixGroupMember::withTrashed()
+										->where('unixgroupid', '=', $unixgroup->id)
+										->where('userid', '=', $member->id)
+										->first();
+
+									if ($ugu)
+									{
+										if ($ugu->trashed())
+										{
+											// Restore it
+											$ugu->restore();
+										}
+									}
+									else
+									{
+										$ugu = new UnixGroupMember;
+										$ugu->unixgroupid = $unixgroup->id;
+										$ugu->userid = $member->id;
+										$ugu->save();
+									}
 
 									$gu = GroupMember::query()
 										->select('id')
@@ -672,7 +689,7 @@ class AmieLdap
 									}
 								}
 
-								$gu = GroupMember::query()
+								/*$gu = GroupMember::query()
 									->where('groupid', '=', $group->id)
 									->where('userid', '=', $userid)
 									->first();
@@ -680,7 +697,7 @@ class AmieLdap
 								if ($gu)
 								{
 									$gu->delete();
-								}
+								}*/
 							}
 						}
 					}
@@ -778,6 +795,9 @@ class AmieLdap
 						}
 					}
 
+					//
+					// Queue allocations
+					//
 					$loans = $queue->loans()->orderBy('id', 'asc')->get();
 
 					if (!count($loans) && $serviceUnits && $subresource)// && $start && $start >= $now)
@@ -856,6 +876,44 @@ class AmieLdap
 					$srids = $resource->subresources->pluck('id')->toArray();
 					$qu = (new QueueUser)->getTable();
 					$q = (new Queue)->getTable();
+
+					/*$queuememberships = array();
+					if ($unixgroup)
+					{
+						foreach ($group->queues as $groupqueue)
+						{
+							$queuememberships = $queuememberships + $groupqueue->users()
+								->select('userid')
+								->get()
+								->pluck('userid')
+								->toArray();
+						}
+						$queuememberships = array_unique($queuememberships);
+					}*/
+					foreach ($group->members as $m)
+					{
+						// Triple check that they're a part of the base unix group
+						$ugu = UnixGroupMember::withTrashed()
+							->where('unixgroupid', '=', $unixgroup->id)
+							->where('userid', '=', $m->userid)
+							->first();
+
+						if ($ugu)
+						{
+							if ($ugu->trashed())
+							{
+								// Restore it
+								$ugu->restore();
+							}
+						}
+						else
+						{
+							$ugu = new UnixGroupMember;
+							$ugu->unixgroupid = $unixgroup->id;
+							$ugu->userid = $m->userid;
+							$ugu->save();
+						}
+					}
 
 					foreach ($members as $member)
 					{
