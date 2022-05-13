@@ -54,7 +54,6 @@ class Article extends Mailable
 		event($e = new ArticleMailing($this->article, $this->name));
 		$article = $e->article;
 
-		//return $this->markdown($e->path ? $e->path : 'news::mail.article')
 		return $this->markdown('news::mail.article')
 					->subject($article->headline)
 					->with([

@@ -1107,7 +1107,7 @@ class Article extends Model
 				if ($this->hasStart())
 				{
 					$date = $this->datetimenews->format('l, F jS, Y');
-					$time = $this->datetimenews->format('g:ia');
+					$time = $this->datetimenews->format('g:ia T');
 
 					if ($var == 'starttime')
 					{

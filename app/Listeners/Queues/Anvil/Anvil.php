@@ -88,12 +88,6 @@ class Anvil
 			return;
 		}
 
-		/*app('view')->addNamespace(
-			'listener.queues.anvil',
-			__DIR__ . '/views'
-		);
-
-		$event->path = 'listener.queues.anvil::article';*/
 		$event->layout = 'xsede';
 	}
 }
