@@ -19,7 +19,7 @@ body > header {
 	position: relative;
 }
 ul,
-li {
+ul li {
 	list-style: none;
 	padding: 0;
 }
