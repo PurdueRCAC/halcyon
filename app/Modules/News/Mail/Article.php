@@ -3,6 +3,7 @@
 namespace App\Modules\News\Mail;
 
 use App\Modules\News\Models\Article as Art;
+use App\Modules\News\Events\ArticleMailing;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -29,6 +30,7 @@ class Article extends Mailable
 	 * Create a new message instance.
 	 *
 	 * @param  Art  $article
+	 * @param  string $name
 	 * @return void
 	 */
 	public function __construct(Art $article, $name = null)
@@ -48,10 +50,16 @@ class Article extends Mailable
 		{
 			$this->from(config('mail.from.address'), $this->name);
 		}
+
+		event($e = new ArticleMailing($this->article, $this->name));
+		$article = $e->article;
+
+		//return $this->markdown($e->path ? $e->path : 'news::mail.article')
 		return $this->markdown('news::mail.article')
-					->subject($this->article->headline)
+					->subject($article->headline)
 					->with([
-						'article' => $this->article,
+						'article' => $article,
+						'layout' => $e->layout ? $e->layout : 'message',
 					]);
 	}
 }

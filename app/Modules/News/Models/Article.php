@@ -1053,6 +1053,7 @@ class Article extends Model
 						// single day
 						$date = $this->datetimenews->format('l, F j, Y');
 						$time = $this->datetimenews->format('g:ia');
+						$tzon = $this->datetimenews->format('T');
 
 						if ($this->hasEnd())
 						{
@@ -1069,7 +1070,7 @@ class Article extends Model
 						}
 						else
 						{
-							$vars[$var] = $date . ' ' . $time;
+							$vars[$var] = $date . ' ' . $time . ' ' . $tzon;
 						}
 					}
 					else
@@ -1096,6 +1097,8 @@ class Article extends Model
 					{
 						$vars[$var] .= ' &#8211; ' . $this->datetimenewsend->format('g:ia');
 					}
+
+					$vars[$var] .= ' ' . $this->datetimenews->format('T');
 				}
 			}
 
@@ -1126,7 +1129,7 @@ class Article extends Model
 				if ($this->hasEnd())
 				{
 					$date = $this->datetimenewsend->format('l, F jS, Y');
-					$time = $this->datetimenewsend->format('g:ia');
+					$time = $this->datetimenewsend->format('g:ia T');
 
 					if ($var == 'endtime')
 					{

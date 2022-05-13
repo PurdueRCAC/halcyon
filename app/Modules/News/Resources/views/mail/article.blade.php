@@ -1,4 +1,4 @@
-@component('mail::message')
+@component('mail::' . ($layout ? $layout : 'message'))
 @if (count($article->updates))
 @foreach ($article->updates()->orderBy('datetimecreated', 'desc')->get() as $update)
 _**UPDATE: {{ $update->formatDate($update->datetimecreated) }}**_
@@ -23,5 +23,5 @@ _**Update: {{ $article->formatDate($article->datetimeupdate) }}**_
 {!! $article->formattedBody !!}
 
 ---
-[Article #{{ $article->id }}]({{ route('site.news.show', ['id' => $article->id]) }}) posted on {{ $article->datetimenews->format('F j, Y g:ia') }}.
+[Article #{{ $article->id }}]({{ route('site.news.show', ['id' => $article->id]) }}) posted on {{ $article->datetimenews->format('F j, Y g:ia T') }}.
 @endcomponent

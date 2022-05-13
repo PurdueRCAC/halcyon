@@ -3,6 +3,7 @@
 namespace App\Listeners\Queues\Anvil;
 
 use App\Modules\Queues\Events\WelcomeClusterBuild;
+use App\Modules\News\Events\ArticleMailing;
 
 /**
  * Anvil listener
@@ -18,6 +19,7 @@ class Anvil
 	public function subscribe($events)
 	{
 		$events->listen(WelcomeClusterBuild::class, self::class . '@handleWelcomeClusterBuild');
+		$events->listen(ArticleMailing::class, self::class . '@handleArticleMailing');
 	}
 
 	/**
@@ -56,5 +58,42 @@ class Anvil
 		);
 
 		$event->path = 'listener.queues.anvil::welcome';
+	}
+
+	/**
+	 * Change mail templates if the article is for Anvil
+	 *
+	 * @param   ArticleMailing   $event
+	 * @return  void
+	 */
+	public function handleArticleMailing(ArticleMailing $event)
+	{
+		if (count($event->article->resources) != 1)
+		{
+			return;
+		}
+
+		$found = false;
+		foreach ($event->article->resources as $res)
+		{
+			if ($res->resource->listname == 'anvil')
+			{
+				$found = true;
+				break;
+			}
+		}
+
+		if (!$found)
+		{
+			return;
+		}
+
+		/*app('view')->addNamespace(
+			'listener.queues.anvil',
+			__DIR__ . '/views'
+		);
+
+		$event->path = 'listener.queues.anvil::article';*/
+		$event->layout = 'xsede';
 	}
 }

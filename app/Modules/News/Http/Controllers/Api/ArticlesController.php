@@ -1199,6 +1199,8 @@ class ArticlesController extends Controller
 
 		if (count($emails) > 0)
 		{
+			$msg = new Message($row, $name);
+			echo $msg->render(); die();
 			Mail::to($emails)->send(new Message($row, $name));
 
 			foreach ($emails as $email)

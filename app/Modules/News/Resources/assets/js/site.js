@@ -2823,7 +2823,7 @@ function NEWSSendMail(news) {
 		var header = "To: " + resources + " Users<br />From: " + name + " via Research Computing<br/>Subject: " + subject + " - " + formatteddate + "<br/><hr /><strong>" + subject + "</strong><br/>" + formatteddate + "<br/>" + locale + "<br/>";
 
 		// set up foot for email preview
-		var footer = '<hr/><a href="/news/' + news + '">ITaP Research Computing News</a> from ' + name + '<br/><br/>Please reply to <a href="mailto:rcac-help@purdue.edu">rcac-help@purdue.edu</a> with any questions or concerns.<br/><a href="/news/' + news + '">View this article on the web.</a>';
+		var footer = '<hr/><a href="/news/' + news + '">Article #' + news + '</a> posted on ' + data['formattedcreateddate'] + '.</a>';
 
 		var body = "";
 		if (data['updates'].length > 0) {
