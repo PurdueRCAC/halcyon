@@ -230,6 +230,7 @@ class PublicationsController extends Controller
 			'state' => 'nullable|integer',
 			'published_at' => 'nullable|datetime',
 			//'year' => 'nullable|integer',
+			'filename' => 'nullable|string|max:255',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -261,6 +262,28 @@ class PublicationsController extends Controller
 			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
 
 			return redirect()->back()->withError($error);
+		}
+
+		if ($request->has('file'))
+		{
+			// Doing this by file extension is iffy at best but
+			// detection by contents productes `txt`
+			$name = $request->file('file')->getClientOriginalName();
+			$name = $row->sanitize($name);
+
+			$parts = explode('.', $name);
+			$extension = end($parts);
+			$extension = strtolower($extension);
+
+			if (!in_array($extension, ['pdf', 'doc', 'docx', 'rtf', 'txt', 'md']))
+			{
+				return redirect()->back()->withError(trans('publications::publications.errors.invalid file type'));
+			}
+
+			$file = $request->file('file')->store('public/publications/' . $row->id);
+
+			$row->filename = $name;
+			$row->save();
 		}
 
 		return $this->cancel()->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created')));
@@ -310,4 +333,23 @@ class PublicationsController extends Controller
 	{
 		return redirect(route('admin.publications.index'));
 	}
+
+	/**
+	 * Remove the file for specified entry
+	 *
+	 * @param   Request  $request
+	 * @param   integer  $id
+	 * @return  Response
+	 */
+	public function deletefile(Request $request, $id)
+	{
+		$row = Publication::findOrFail($id);
+
+		if (!$row->deleteAttachment())
+		{
+			return redirect()->back()->withError(trans('publications::publications.errors.file delete failed'));
+		}
+
+		return redirect(route('admin.publications.edit', ['id' => $id]));
+	} 
 }

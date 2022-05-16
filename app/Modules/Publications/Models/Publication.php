@@ -94,17 +94,13 @@ class Publication extends Model
 	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
-	/*public function delete(array $options = [])
+	public function delete(array $options = [])
 	{
-		// Delete the module items
-		foreach ($this->authors as $row)
-		{
-			$row->delete();
-		}
+		$this->deleteAttachment();
 
 		// Attempt to delete the record
 		return parent::delete($options);
-	}*/
+	}
 
 	/**
 	 * Format a publication
@@ -197,5 +193,101 @@ class Publication extends Model
 		}
 
 		return $items;
+	}
+
+	/**
+	 * Does this have an attachment
+	 *
+	 * @return string
+	 */
+	public function path()
+	{
+		return storage_path('app/public/publications/' . $this->id . '/' . $this->filename);
+	}
+
+	/**
+	 * Does this have an attachment
+	 *
+	 * @return bool
+	 */
+	public function hasAttachment()
+	{
+		return file_exists($this->path());
+	}
+
+	/**
+	 * Does this have an attachment
+	 *
+	 * @return mixed
+	 */
+	public function getAttachmentAttribute()
+	{
+		return $this->hasAttachment() ? new Attachment($this->path()) : false;
+	}
+
+	/**
+	 * Does this have an attachment
+	 *
+	 * @return mixed
+	 */
+	public function deleteAttachment()
+	{
+		if ($this->hasAttachment())
+		{
+			return unlink($this->path());
+		}
+
+		return true;
+	}
+
+	/**
+	 * Sanitize file names
+	 *
+	 * @param   string  $name
+	 * @return  string
+	 */
+	public function sanitize($name)
+	{
+		if (!preg_match('/^[\x20-\x7e]*$/', $name))
+		{
+			$name = \Illuminate\Support\Facades\Str::ascii($name);
+		}
+		$name = preg_replace(
+			'~
+			[<>:"/\\|?*]|            # file system reserved https://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
+			[\x00-\x1F]|             # control characters http://msdn.microsoft.com/en-us/library/windows/desktop/aa365247%28v=vs.85%29.aspx
+			[\x7F\xA0\xAD]|          # non-printing characters DEL, NO-BREAK SPACE, SOFT HYPHEN
+			[#\[\]@!$&\'()+,;=]|     # URI reserved https://tools.ietf.org/html/rfc3986#section-2.2
+			[{}^\~`]                 # URL unsafe characters https://www.ietf.org/rfc/rfc1738.txt
+			~x',
+			'-', $name
+		);
+		// avoids ".", ".." or ".hiddenFiles"
+		$name = ltrim($name, '.-');
+
+		// reduce consecutive characters
+		$name = preg_replace(array(
+			// "file   name.zip" becomes "file-name.zip"
+			'/ +/',
+			// "file---name.zip" becomes "file-name.zip"
+			'/-+/'
+		), '-', $name);
+		$name = preg_replace(
+			// "file___name.zip" becomes "file_name.zip"
+			'/_+/', '_', $name);
+		$name = preg_replace(array(
+			// "file--.--.-.--name.zip" becomes "file.name.zip"
+			'/-*\.-*/',
+			// "file__.__._.__name.zip" becomes "file.name.zip"
+			'/_*\._*/',
+			// "file...name..zip" becomes "file.name.zip"
+			'/\.{2,}/'
+		), '.', $name);
+		// lowercase for windows/unix interoperability http://support.microsoft.com/kb/100625
+		//$name = mb_strtolower($name, mb_detect_encoding($name));
+		// ".file-name.-" becomes "file-name"
+		$name = trim($name, '.-_');
+
+		return $name;
 	}
 }

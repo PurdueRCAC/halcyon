@@ -30,7 +30,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.publications.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+<form action="{{ route('admin.publications.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" enctype="multipart/form-data">
 
 	@if ($errors->any())
 		<div class="alert alert-danger">
@@ -137,16 +137,16 @@ app('pathway')
 
 				<div class="row type-dependent type-unknown type-inbook">
 					<div class="col col-md-6">
-				<div class="form-group">
-					<label for="field-edition">{{ trans('publications::publications.edition') }}</label>
-					<input type="text" name="edition" id="field-edition" class="form-control" maxlength="100" value="{{ $row->edition }}" />
-				</div>
+						<div class="form-group">
+							<label for="field-edition">{{ trans('publications::publications.edition') }}</label>
+							<input type="text" name="edition" id="field-edition" class="form-control" maxlength="100" value="{{ $row->edition }}" />
+						</div>
 					</div>
 					<div class="col col-md-6">
-				<div class="form-group">
-					<label for="field-chapter">{{ trans('publications::publications.chapter') }}</label>
-					<input type="text" name="chapter" id="field-chapter" class="form-control" maxlength="40" value="{{ $row->chapter }}" />
-				</div>
+						<div class="form-group">
+							<label for="field-chapter">{{ trans('publications::publications.chapter') }}</label>
+							<input type="text" name="chapter" id="field-chapter" class="form-control" maxlength="40" value="{{ $row->chapter }}" />
+						</div>
 					</div>
 				</div>
 
@@ -244,6 +244,43 @@ app('pathway')
 					<label for="field-note">{{ trans('publications::publications.note') }}</label>
 					<textarea name="note" id="field-note" class="form-control" maxlength="2000" rows="3" cols="40">{{ $row->note }}</textarea>
 				</div>
+			</fieldset>
+
+			<fieldset class="adminform">
+				<legend>{{ trans('publications::publications.attachment') }}</legend>
+
+				@if ($row->hasAttachment())
+				<div class="form-group">
+					<table>
+						<tbody>
+							<tr>
+								<th scope="row">{{ trans('publications::publications.file name') }}</th>
+								<td>{{ $row->filename }}</td>
+							</tr>
+							<tr>
+								<th scope="row">{{ trans('publications::publications.file size') }}</th>
+								<td>{{ $row->attachment->getFormattedSize() }}</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div class="text-right">
+						<a class="btn text-danger" href="{{ route('admin.publications.deletefile', ['id' => $row->id]) }}">
+							<span class="fa fa-trash" aria-hidden="true"></span>
+							<span class="sr-only">{{ trans('global.button.trash') }}</span>
+						</a>
+					</div>
+					<input type="hidden" name="filename" id="upload" value="{{ $row->filename }}" />
+				</div>
+				@else
+				<div class="form-group dropzone">
+					<div id="uploader" class="fallback" data-instructions="Click or Drop files" data-list="#uploader-list">
+						<label for="upload">Choose a file<span class="dropzone__dragndrop"> or drag it here</span></label>
+						<input type="file" name="file" id="upload" class="form-control-file" multiple="multiple" />
+					</div>
+					<div class="file-list" id="uploader-list"></div>
+				</div>
+				@endif
 			</fieldset>
 		</div>
 	</div>

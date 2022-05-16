@@ -4261,6 +4261,52 @@ a.menulist:hover:before {
   padding-bottom: 0;
 }
 
+/* File drop */
+.dropzone {
+  background: rgba(0, 0, 0, 0.05);
+  border: 2px dashed rgba(0, 0, 0, 0.1);
+  padding: 0;
+  text-align: center;
+  color: #bbb;
+  font-size: 1em;
+}
+.dropzone.has-advanced-upload {
+  background-color: #f1f1f1;
+  position: relative;
+  padding: 1.5em;
+  text-align: center;
+}
+.dropzone.is-dragover {
+  outline-offset: -20px;
+  outline-color: #E3F3F7;
+  background-color: #fff;
+}
+.dropzone.has-advanced-upload input {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+.dropzone.has-advanced-upload label {
+  max-width: 80%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  display: inline-block;
+  overflow: hidden;
+  font-size: 1.25em;
+  margin: 0.5rem 0;
+  color: #555555;
+}
+.dropzone .dropzone__dragndrop {
+  display: none;
+}
+.dropzone.has-advanced-upload .dropzone__dragndrop {
+  display: inline;
+}
+
 /* Usage meter */
 .meter {
   display: block;

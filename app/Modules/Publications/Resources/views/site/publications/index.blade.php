@@ -187,10 +187,14 @@ app('pathway')
 						<a href="{{ route('site.publications.download', ['id' => $row->id, 'format' => 'endnote']) }}" class="btn btn-sm tip" title="{{ trans('publications::publications.download endnote') }}">
 							<span class="fa fa-download" aria-hidden="true"></span> {{ trans('publications::publications.export options.endnote') }}<span class="sr-only"> #{{ $row->id }}</span>
 						</a>
+						@if ($row->hasAttachment())
+							<a href="{{ $row->attachment->route() }}" class="btn btn-sm btn-download tip" title="{{ trans('publications::publications.download') }} ({{ $row->attachment->getFormattedSize() }})">
+								<span class="fa fa-file" aria-hidden="true"></span> {{ trans('publications::publications.download') }}<span class="sr-only"> #{{ $row->id }}</span>
+							</a>
+						@endif
 					</div>
 					<div class="col-md-4 text-right">
 					@if (auth()->user() && (auth()->user()->can('edit publications') || auth()->user()->can('delete publications')))
-						
 						@if (auth()->user()->can('edit publications'))
 							<a href="{{ route('site.publications.edit', ['id' => $row->id]) }}" data-api="{{ route('api.publications.read', ['id' => $row->id]) }}" class="btn btn-sm btn-edit tip" title="{{ trans('global.button.edit') }}">
 								<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }} #{{ $row->id }}</span>
@@ -201,7 +205,6 @@ app('pathway')
 								<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }} #{{ $row->id }}</span>
 							</a>
 						@endif
-						
 					@endif
 					</div>
 				</div>

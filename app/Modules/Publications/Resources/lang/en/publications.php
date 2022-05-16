@@ -44,7 +44,10 @@ return [
 	'edition' => 'Edition',
 	'chapter' => 'Chapter',
 	'url' => 'URL',
-
+	'attachment' => 'Attachment',
+	'file name' => 'File name',
+	'file size' => 'File size',
+	'download' => 'Download',
 	'created' => 'Created',
 	'creator' => 'Creator',
 	'modified' => 'Last Modified',

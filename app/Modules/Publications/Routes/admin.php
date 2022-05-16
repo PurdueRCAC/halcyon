@@ -30,6 +30,11 @@ $router->group(['prefix' => 'publications'], function (Router $router)
 		'uses' => 'PublicationsController@delete',
 		'middleware' => 'can:delete publications',
 	]);
+	$router->match(['get', 'post'], '/deletefile/{id}', [
+		'as'   => 'admin.publications.deletefile',
+		'uses' => 'PublicationsController@deletefile',
+		'middleware' => 'can:edit publications',
+	]);
 	$router->match(['get', 'post'], '/publish/{id?}', [
 		'as'   => 'admin.publications.publish',
 		'uses' => 'PublicationsController@state',
