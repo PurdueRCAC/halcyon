@@ -14,10 +14,10 @@ class AddFilenameToPublicationsTable extends Migration
 	 */
 	public function up()
 	{
-		if (Schema::hasTable('publicaitons') && !Schema::hasColumn('publicaitons', 'filename'))
+		if (Schema::hasTable('publications') && !Schema::hasColumn('publications', 'filename'))
 		{
-			// ALTER TABLE `publicaitons` ADD COLUMN `filename` varchar(255) DEFAULT NULL;
-			Schema::table('publicaitons', function (Blueprint $table)
+			// ALTER TABLE `publications` ADD COLUMN `filename` varchar(255) DEFAULT NULL;
+			Schema::table('publications', function (Blueprint $table)
 			{
 				$table->string('filename', 255);
 			});
@@ -31,9 +31,9 @@ class AddFilenameToPublicationsTable extends Migration
 	 */
 	public function down()
 	{
-		if (Schema::hasTable('publicaitons') && Schema::hasColumn('publicaitons', 'filename'))
+		if (Schema::hasTable('publications') && Schema::hasColumn('publications', 'filename'))
 		{
-			Schema::table('publicaitons', function (Blueprint $table)
+			Schema::table('publications', function (Blueprint $table)
 			{
 				$table->dropColumn('filename');
 			});
