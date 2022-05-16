@@ -1,5 +1,5 @@
 <?php
 return [
-	'listener name' => 'Users - News',
-	'listener desc' => 'News items related to this user.',
+	'listener name' => 'Users - Resources',
+	'listener desc' => 'This displays user access to available resources.',
 ];
