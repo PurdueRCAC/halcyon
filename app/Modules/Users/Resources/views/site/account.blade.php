@@ -37,7 +37,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 	<div class="qlinks">
 		<ul class="nav flex-column profile-menu">
 			<li class="nav-item<?php if (!$active) { echo ' active'; } ?>">
-				<a class="nav-link<?php if (!$active) { echo ' active'; } ?>" href="{{ auth()->user()->id != $user->id ? route('site.users.account', ['u' => $user->id]) : route('site.users.account') }}">{{ trans('users::users.my accounts') }}</a>
+				<a class="nav-link<?php if (!$active) { echo ' active'; } ?>" href="{{ auth()->user()->id != $user->id ? route('site.users.account', ['u' => $user->id]) : route('site.users.account') }}">{{ trans('users::users.my account') }}</a>
 			</li>
 			@foreach ($sections as $section)
 				<li class="nav-item<?php if ($section['active']) { echo ' active'; } ?>">
@@ -56,16 +56,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 	else:
 		?>
 		<div class="contentInner">
-			<div class="row">
-				<div class="col-md-9">
-					<h2 class="mt-0">{{ trans('users::users.my accounts') }}</h2>
-				</div>
-				<div class="col-md-3 text-right">
-					@if (auth()->user()->id == $user->id)
-						<a class="btn btn-outline-secondary" href="{{ route('site.users.account.request') }}">{{ trans('users::users.request access') }}</a>
-					@endif
-				</div>
-			</div>
+			<h2 class="mt-0">{{ trans('users::users.my account') }}</h2>
 
 			<div class="card panel panel-default mb-3">
 				<div class="card-header panel-heading">

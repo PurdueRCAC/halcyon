@@ -22,7 +22,7 @@ class UsersController extends Controller
 	 * @param  Request $request
 	 * @return Response
 	 */
-	public function profile(Request $request)
+	public function account(Request $request)
 	{
 		$user = auth()->user();
 
@@ -69,7 +69,7 @@ class UsersController extends Controller
 		$sections = collect($event->getSections());
 		$parts = collect($event->getParts());
 
-		return view('users::site.profile', [
+		return view('users::site.account', [
 			'user' => $user,
 			'sections' => $sections,
 			'parts' => $parts,
@@ -82,7 +82,7 @@ class UsersController extends Controller
 	 * @param  Request $request
 	 * @return Response
 	 */
-	public function request(Request $request)
+	/*public function request(Request $request)
 	{
 		$user = auth()->user();
 
@@ -106,7 +106,7 @@ class UsersController extends Controller
 			'user' => $user,
 			'sections' => $sections,
 		]);
-	}
+	}*/
 
 	/**
 	 * Show confirmation form for deleting user

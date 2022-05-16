@@ -63,15 +63,15 @@ $router->group(['prefix' => 'account', 'middleware' => 'auth'], function (Router
 {
 	$router->get('/', [
 		'as' => 'site.users.account',
-		'uses' => 'UsersController@profile',
+		'uses' => 'UsersController@account',
 	]);
 	$router->get('myinfo', [
-		'uses' => 'UsersController@profile',
+		'uses' => 'UsersController@account',
 	]);
-	$router->get('request', [
+	/*$router->get('request', [
 		'as' => 'site.users.account.request',
 		'uses' => 'UsersController@request',
-	]);
+	]);*/
 	if (config('module.users.allow_self_deletion'))
 	{
 		$router->get('delete', [
@@ -81,15 +81,15 @@ $router->group(['prefix' => 'account', 'middleware' => 'auth'], function (Router
 	}
 	$router->get('{section}', [
 		'as' => 'site.users.account.section',
-		'uses' => 'UsersController@profile',
+		'uses' => 'UsersController@account',
 	])->where('section', '[a-zA-Z0-9\-_]+');
 	$router->get('{section}/{id}', [
 		'as' => 'site.users.account.section.show',
-		'uses' => 'UsersController@profile',
+		'uses' => 'UsersController@account',
 	])->where('section', '[a-zA-Z0-9]+')->where('id', '[0-9]+');
 	$router->get('{section}/{id}/{subsection}', [
 		'as' => 'site.users.account.section.show.subsection',
-		'uses' => 'UsersController@profile',
+		'uses' => 'UsersController@account',
 	])->where('section', '[a-zA-Z0-9]+')->where('id', '[0-9]+')->where('subsection', '[a-zA-Z0-9]+');
 });
 

@@ -1,0 +1,11 @@
+{
+    "name": "Users - Request",
+    "alias": "listener_users_request",
+    "description": "This displays a page to request access to resources.",
+    "keywords": [],
+    "active": 1,
+    "priority": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

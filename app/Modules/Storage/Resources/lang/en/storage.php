@@ -57,7 +57,7 @@ return [
 	'parent' => 'Parent Resource',
 	'quota desc' => 'Size in bytes. Use size abbreviations (PB, TB, GB, KB, MB, B). Values with no abbreviation will be taken as bytes (ex: 100000 = 100000 B).',
 	'quota space desc' => 'Size in bytes. Use size abbreviations (PB, TB, GB, KB, MB, B). Values with no abbreviation will be taken as bytes (ex: 100000 = 100000 B).',
-	'my quotas' => 'Quotas',
+	'my quotas' => 'Storage Quotas',
 	'messages' => 'Queued Processes',
 	'status' => 'Status',
 	'action' => 'Action',

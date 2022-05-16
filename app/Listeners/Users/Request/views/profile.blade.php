@@ -1,46 +1,19 @@
-@extends('layouts.master')
-
-@php
-$active = $sections->firstWhere('active', '=', true);
-@endphp
-
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
+	<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
-<script src="{{ asset('modules/users/js/request.js?v=' . filemtime(public_path() . '/modules/users/js/request.js')) }}"></script>
+	<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
+	<script src="{{ asset('listeners/users/request/js/request.js?v=' . filemtime(public_path() . '/listeners/users/request/js/request.js')) }}"></script>
 @endpush
 
-@section('content')
-@include('users::site.admin', ['user' => $user])
-<div class="row">
-<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
-	<h2>{{ $user->name }}</h2>
-
-	<div class="qlinks">
-		<ul class="nav flex-column">
-			<li class="nav-item<?php if (!$active) { echo ' active'; } ?>">
-				<a class="nav-link<?php if (!$active) { echo ' active'; } ?>" href="{{ auth()->user()->id != $user->id ? route('site.users.account', ['u' => $user->id]) : route('site.users.account') }}">{{ trans('users::users.my accounts') }}</a>
-			</li>
-			@foreach ($sections as $section)
-				<li class="nav-item<?php if ($section['active']) { echo ' active'; } ?>">
-					<a class="nav-link<?php if ($section['active']) { echo ' active'; } ?>" href="{{ $section['route'] }}">{!! $section['name'] !!}</a>
-				</li>
-			@endforeach
-		</ul>
-	</div>
-</div>
-
-<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
 	<div class="contentInner">
-		<h2>{{ trans('users::users.request access') }}</h2>
+		<h2>{{ trans('listener.users.request::request.request access') }}</h2>
 
-		<form method="get" action="{{ route('site.users.account.request') }}">
+		<form method="get" action="{{ route('site.users.account.section', ['section' => 'request']) }}">
 			<div id="request_header">
 				<p>
-					Purdue researchers collaborating with faculty, staff, or departments who have purchased access to cluster
+					Researchers collaborating with faculty, staff, or departments who have purchased access to cluster
 					nodes or research storage through the <a href="{{ url('/services/communityclusters/') }}">Community Cluster Program</a>
 					will be able to select one of the Community Clusters or storage resources on the request form.
 				</p>
@@ -92,7 +65,7 @@ $active = $sections->firstWhere('active', '=', true);
 								<span id="title"></span>
 							</div>
 							<div class="col col-sm-12 col-md-4">
-								<a href="{{ route('site.users.account.request') }}" class="request-clear btn" title="Choose another person.">
+								<a href="{{ route('site.users.account.section', ['section' => 'request']) }}" class="request-clear btn" title="Choose another person.">
 									<span class="fa fa-undo" aria-hidden="true"></span> Change selection
 								</a>
 							</div>
@@ -111,7 +84,7 @@ $active = $sections->firstWhere('active', '=', true);
 								<span id="dept"></span>
 							</div>
 							<div class="col col-sm-12 col-md-4">
-								<a href="{{ route('site.users.account.request') }}" class="request-clear btn" title="Choose another group.">
+								<a href="{{ route('site.users.account.section', ['section' => 'request']) }}" class="request-clear btn" title="Choose another group.">
 									<span class="fa fa-undo" aria-hidden="true"></span> Change selection
 								</a>
 							</div>
@@ -184,7 +157,7 @@ $active = $sections->firstWhere('active', '=', true);
 					<p>
 						Your request has been submitted. An email notification has been sent to the faculty or staff member or
 						managers of this group to approve your request. You will be notified once your request is approved. You
-						may view the status of your request from the "My Accounts" tab. <strong>Your request will need to be
+						may view the status of your request from the "Account" tab. <strong>Your request will need to be
 						approved by the research group or faculty you have entered. Please direct any questions regarding
 						approval status to those people.</strong> Below is a summary of your request.
 					</p>
@@ -234,6 +207,3 @@ $active = $sections->firstWhere('active', '=', true);
 			@csrf
 		</form>
 	</div>
-</div>
-</div>
-@stop
