@@ -172,7 +172,7 @@ app('pathway')
 				<td class="priority-4">
 					<span class="datetime">
 						@if ($row->ran_at)
-							<time datetime="{{ $row->ran_at }}">{{ $row->ran_at }}</time>
+							<time datetime="{{ $row->ran_at->toDateTimeLocalString() }}">{{ $row->ran_at }}</time>
 						@else
 							<span class="never">{{ trans('global.unknown') }}</span>
 						@endif

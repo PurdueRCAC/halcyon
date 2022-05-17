@@ -138,10 +138,10 @@ app('pathway')
 				<td class="priority-4">
 					<span class="datetime">
 						@if ($row->updated_at)
-							<time datetime="{{ $row->updated_at->format('Y-m-d\TH:i:s\Z') }}">{{ $row->updated_at }}</time>
+							<time datetime="{{ $row->updated_at->toDateTimeLocalString() }}">{{ $row->updated_at }}</time>
 						@else
 							@if ($row->created_at)
-								<time datetime="{{ $row->created_at->format('Y-m-d\TH:i:s\Z') }}">{{ $row->created_at }}</time>
+								<time datetime="{{ $row->created_at->toDateTimeLocalString() }}">{{ $row->created_at }}</time>
 							@else
 								<span class="never">{{ trans('global.unknown') }}</span>
 							@endif

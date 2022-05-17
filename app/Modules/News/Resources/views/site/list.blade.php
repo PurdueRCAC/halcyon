@@ -16,7 +16,7 @@
 						<span class="badge">{{ trans('news::news.tomorrow') }}</span>
 					@endif
 
-					<time datetime="{{ $article->datetimenews->format('Y-m-d\TH:i:s\Z') }}">
+					<time datetime="{{ $article->datetimenews->toDateTimeLocalString() }}">
 						{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}
 					</time>
 					<?php
@@ -28,7 +28,7 @@
 					@if ($lastupdate)
 						<span class="badge badge-warning">
 							<span class="fa fa-exclamation-circle" aria-hidden="true"></span>
-							<time datetime="{{ $lastupdate->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">{{ trans('news::news.updated at', ['time' => $lastupdate->datetimecreated->format('M d, Y h:ia')]) }}</time>
+							<time datetime="{{ $lastupdate->datetimecreated->toDateTimeLocalString() }}">{{ trans('news::news.updated at', ['time' => $lastupdate->datetimecreated->format('M d, Y h:ia')]) }}</time>
 						</span>
 					@endif
 				</p>

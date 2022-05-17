@@ -695,7 +695,7 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 										@else
 											<td>
 												<div class="badge order-status fulfilled">{{ trans('orders::orders.fulfilled') }}</div>
-												<time datetime="{{ $item->datetimefulfilled }}">{{ $item->datetimefulfilled->format('M j, Y') }}</time>
+												<time datetime="{{ $item->datetimefulfilled->toDateTimeLocalString() }}">{{ $item->datetimefulfilled->format('M j, Y') }}</time>
 											</td>
 										@endif
 										<td>
@@ -1543,7 +1543,7 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 											{!! $actor . ' ' . $did !!}
 											</div>
 											<div class="col-md-4 text-right">
-												<time datetime="{{ $dt }}" class="entry-log-date">
+												<time datetime="{{ $dt->toDateTimeLocalString() }}" class="entry-log-date">
 													@if ($dt < $old)
 														{{ $dt ? $dt->format('d M Y') : trans('global.unknown') }}
 													@else

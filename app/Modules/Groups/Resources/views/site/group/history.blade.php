@@ -304,8 +304,8 @@ if (count($l))
 				}
 				?>
 				<tr>
-					<td><time datimetime="{{ $log->datetime->format('Y-m-d\TH:i:s\Z') }}">{{ $log->datetime->format('M j, Y') }}</time></td>
-					<td><time datimetime="{{ $log->datetime->format('Y-m-d\TH:i:s\Z') }}">{{ $log->datetime->format('g:ia') }}</time></td>
+					<td><time datimetime="{{ $log->datetime->toDateTimeLocalString() }}">{{ $log->datetime->format('M j, Y') }}</time></td>
+					<td><time datimetime="{{ $log->datetime->toDateTimeLocalString() }}">{{ $log->datetime->format('g:ia') }}</time></td>
 					<td>
 						@if ($log->userid > 0)
 							{{ $log->user ? $log->user->name : trans('global.unknown') }}

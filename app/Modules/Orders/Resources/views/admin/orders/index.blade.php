@@ -312,7 +312,7 @@ app('pathway')
 						<a href="{{ route('admin.orders.edit', ['id' => $row->id]) }}">
 					@endif
 					@if ($row->datetimecreated)
-						<time datetime="{{ $row->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">
+						<time datetime="{{ $row->datetimecreated->toDateTimeLocalString() }}">
 							@if ($row->datetimecreated->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
 								{{ $row->datetimecreated->diffForHumans() }}
 							@else
@@ -394,7 +394,7 @@ app('pathway')
 									@else
 										<td>
 											<div class="badge order-status fulfilled">{{ trans('orders::orders.fulfilled') }}</div>
-											<time datetime="{{ $item->fulfilled }}">{{ Carbon\Carbon::parse($item->fulfilled)->format('M j, Y') }}</time>
+											<time datetime="{{ Carbon\Carbon::parse($item->fulfilled)->toDateTimeLocalString() }}">{{ Carbon\Carbon::parse($item->fulfilled)->format('M j, Y') }}</time>
 										</td>
 									@endif
 									<td>

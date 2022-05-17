@@ -74,7 +74,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 							<dd>
 								<span class="text-muted">
 									@if ($user->isCreated())
-										<time datetime="{{ $user->getUserUsername()->datecreated }}">{{ $user->getUserUsername()->datecreated->format('M d, Y') }}</time>
+										<time datetime="{{ $user->getUserUsername()->datecreated->toDateTimeLocalString() }}">{{ $user->getUserUsername()->datecreated->format('M d, Y') }}</time>
 									@else
 										{{ trans('global.unknown') }}
 									@endif
@@ -86,7 +86,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 							<dd>
 								<span class="text-muted">
 									@if ($user->hasVisited())
-										<time datetime="{{ $user->datelastseen }}">{{ $user->datelastseen->format('M d, Y @ h:i a') }}</time>
+										<time datetime="{{ $user->datelastseen->toDateTimeLocalString() }}">{{ $user->datelastseen->format('M d, Y @ h:i a') }}</time>
 									@else
 										{{ trans('global.unknown') }}
 									@endif

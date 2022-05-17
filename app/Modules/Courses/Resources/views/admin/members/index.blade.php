@@ -160,7 +160,7 @@ app('pathway')
 							@endif
 						</td>
 						<td class="priority-4">
-							<time datetime="{{ $row->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetimecreated->toDateTimeString() }}</time>
+							<time datetime="{{ $row->datetimecreated->toDateTimeLocalString() }}">{{ $row->datetimecreated->toDateTimeString() }}</time>
 						</td>
 						<td>
 							@if ($row->membertype == 2)

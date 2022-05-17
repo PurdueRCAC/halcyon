@@ -308,7 +308,7 @@ app('pathway')->append(
 										<span class="badge">{{ trans('news::news.tomorrow') }}</span>
 									@endif
 									<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span>
-									<time datetime="{{ $article->datetimenews }}">
+									<time datetime="{{ $article->datetimenews->toDateTimeLocalString() }}">
 										{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}
 									</time>
 									<?php
@@ -405,7 +405,7 @@ app('pathway')->append(
 									</h4>
 								</div>
 								<div class="card-body news-body">
-									<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span> <time datetime="{{ $news->datetimenews->format('Y-m-d h:i:s') }}">{{ $news->formatDate($news->datetimenews, $news->datetimenewsend) }}</time>
+									<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span> <time datetime="{{ $news->datetimenews->toDateTimeLocalString() }}">{{ $news->formatDate($news->datetimenews, $news->datetimenewsend) }}</time>
 
 									@if ($news->isToday())
 										@if ($news->isNow())

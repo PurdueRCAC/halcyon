@@ -223,7 +223,7 @@ app('pathway')
 						<th scope="row">{{ trans('cron::cron.last run') }}</th>
 						<td>
 							@if ($row->ran_at)
-								<time datetime="{{ $row->ran_at }}">{{ $row->ran_at }}</time>
+								<time datetime="{{ $row->ran_at->toDateTimeLocalString() }}">{{ $row->ran_at }}</time>
 							@else
 								{{ trans('global.never') }}
 							@endif

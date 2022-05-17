@@ -243,7 +243,7 @@ app('pathway')
 						<td>
 							@if (auth()->user()->can('edit messages'))
 								<a href="{{ route('admin.messages.edit', ['id' => $row->id]) }}">
-									<time datetime="{{ $row->datetimesubmitted->format('Y-m-d\TH:i:s\Z') }}">
+									<time datetime="{{ $row->datetimesubmitted->toDateTimeLocalString() }}">
 										@if ($row->datetimesubmitted->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
 											{{ $row->datetimesubmitted->diffForHumans() }}
 										@else
@@ -252,7 +252,7 @@ app('pathway')
 									</time>
 								</a>
 							@else
-								<time datetime="{{ $row->datetimesubmitted->format('Y-m-d\TH:i:s\Z') }}">
+								<time datetime="{{ $row->datetimesubmitted->toDateTimeLocalString() }}">
 									@if ($row->datetimesubmitted->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
 										{{ $row->datetimesubmitted->diffForHumans() }}
 									@else
@@ -266,14 +266,14 @@ app('pathway')
 							$timetable  = '<div>';
 							$timetable .= '<strong>' . trans('messages::messages.started') . '</strong>: ';
 							if ($row->started()):
-								$timetable .= '<time datetime=\'' . $row->datetimestarted . '\'>' . $row->datetimestarted . '</time>';
+								$timetable .= '<time datetime=\'' . $row->datetimestarted->toDateTimeLocalString() . '\'>' . $row->datetimestarted . '</time>';
 							else:
 								$timetable .= trans('messages::messages.not started');
 							endif;
 							$timetable .= '<br />';
 							$timetable .= '<strong>' . trans('messages::messages.completed') . '</strong>: ';
 							if ($row->completed()):
-								$timetable .= '<time datetime=\'' . $row->datetimecompleted . '\'>' . $row->datetimecompleted . '</time>';
+								$timetable .= '<time datetime=\'' . $row->datetimecompleted->toDateTimeLocalString() . '\'>' . $row->datetimecompleted . '</time>';
 							else:
 								$timetable .= trans('messages::messages.not completed');
 							endif;

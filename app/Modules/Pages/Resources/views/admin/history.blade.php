@@ -101,7 +101,7 @@ app('pathway')
 						@endif
 					</td>
 					<td class="priority-4">
-						<time datetime="{{ $action->created_at }}">
+						<time datetime="{{ $action->created_at->toDateTimeLocalString() }}">
 							@if ($action->created_at < $old)
 								{{ $action->created_at->format('d M Y') }}
 							@else
@@ -122,7 +122,7 @@ app('pathway')
 					<td class="priority-3">
 					</td>
 					<td class="priority-4">
-						<time datetime="{{ $row->created_at }}">
+						<time datetime="{{ $row->created_at->toDateTimeLocalString() }}">
 							@if ($row->created_at < Carbon\Carbon::now()->subDays(2))
 								{{ $row->created_at->format('d M Y') }}
 							@else

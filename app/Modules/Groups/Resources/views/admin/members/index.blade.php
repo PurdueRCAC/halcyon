@@ -286,7 +286,7 @@ app('pathway')
 				<td class="priority-4">
 					<span class="datetime">
 						@if ($row->datecreated)
-							<time datetime="{{ $row->datecreated }}">{{ $row->datecreated }}</time>
+							<time datetime="{{ $row->datecreated->toDateTimeLocalString() }}">{{ $row->datecreated }}</time>
 						@else
 							<span class="never">{{ trans('global.never') }}</span>
 						@endif
@@ -295,7 +295,7 @@ app('pathway')
 				<td class="priority-4">
 					<span class="datetime">
 						@if ($row->datelastseen)
-							<time datetime="{{ $row->datelastseen }}">{{ $row->datelastseen }}</time>
+							<time datetime="{{ $row->datelastseen->toDateTimeLocalString() }}">{{ $row->datelastseen }}</time>
 						@else
 							<span class="never">{{ trans('global.never') }}</span>
 						@endif

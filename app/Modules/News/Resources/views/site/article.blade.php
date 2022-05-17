@@ -104,7 +104,7 @@ app('pathway')
 		@endif
 		<ul class="news-meta text-muted">
 			@if (!$article->template)
-				<li><span class="fa fa-fw fa-clock-o" aria-hidden="true"></span> <time datetime="{{ $article->datetimenews->format('Y-m-d\TH:i:s\Z') }}">{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}</time></li>
+				<li><span class="fa fa-fw fa-clock-o" aria-hidden="true"></span> <time datetime="{{ $article->datetimenews->toDateTimeLocalString() }}">{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}</time></li>
 			@endif
 
 			@if ($article->location)
@@ -158,13 +158,13 @@ app('pathway')
 		@if (count($article->updates))
 			@foreach ($article->updates()->orderBy('datetimecreated', 'desc')->get() as $update)
 				<section>
-					<h3 class="newsupdate">{{ strtoupper(trans('news::news.update')) }}: <time datetime="{{ $update->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">{!! $update->formattedDatetimecreated($update->datetimecreated) !!}</time></h3>
+					<h3 class="newsupdate">{{ strtoupper(trans('news::news.update')) }}: <time datetime="{{ $update->datetimecreated->toDateTimeLocalString() }}">{!! $update->formattedDatetimecreated($update->datetimecreated) !!}</time></h3>
 					{!! $update->formattedBody !!}
 				</section>
 			@endforeach
 
 			<section>
-				<h3 class="newsupdate">{{ strtoupper(trans('news::news.original')) }}: <time datetime="{{ $article->datetimenews->format('Y-m-d\TH:i:s\Z') }}">{{ $article->formatDate($article->datetimenews, $article->originalDatetimenewsend) }}</time></h3>
+				<h3 class="newsupdate">{{ strtoupper(trans('news::news.original')) }}: <time datetime="{{ $article->datetimenews->toDateTimeLocalString() }}">{{ $article->formatDate($article->datetimenews, $article->originalDatetimenewsend) }}</time></h3>
 		@endif
 
 		{!! $article->formattedBody !!}
@@ -175,18 +175,18 @@ app('pathway')
 		</div>
 
 		<p class="newsfooter">
-			{{ trans('news::news.originally posted') }}: <time datetime="{{ $article->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">{{ $article->formatDate($article->datetimecreated) }}</time>
+			{{ trans('news::news.originally posted') }}: <time datetime="{{ $article->datetimecreated->toDateTimeLocalString() }}">{{ $article->formatDate($article->datetimecreated) }}</time>
 
 			@if (auth()->user() && auth()->user()->can('manage news'))
 				<span itemprop="author">{{ trans('news::news.by author', ['author' => $article->creator->name]) }}</span>
 
 				@if ($article->isModified())
-					<br />{{ trans('news::news.last updated') }}: <time datetime="{{ $article->datetimeedited->format('Y-m-d\TH:i:s\Z') }}">{{ $article->formatDate($article->datetimeedited) }}</time>
+					<br />{{ trans('news::news.last updated') }}: <time datetime="{{ $article->datetimeedited->toDateTimeLocalString() }}">{{ $article->formatDate($article->datetimeedited) }}</time>
 					{{ trans('news::news.by author', ['author' => $article->modifier ? $article->modifier->name : trans('global.unknown')]) }}
 				@endif
 
 				@if ($article->isMailed())
-					<br />{{ trans('news::news.last mailing') }}: <time datetime="{{ $article->datetimemailed->format('Y-m-d\TH:i:s\Z') }}">{{ $article->formatDate($article->datetimemailed) }}</time>
+					<br />{{ trans('news::news.last mailing') }}: <time datetime="{{ $article->datetimemailed->toDateTimeLocalString() }}">{{ $article->formatDate($article->datetimemailed) }}</time>
 					{{ trans('news::news.by author', ['author' => $article->mailer ? $article->mailer->name : trans('global.unknown')]) }}
 				@endif
 			@endif

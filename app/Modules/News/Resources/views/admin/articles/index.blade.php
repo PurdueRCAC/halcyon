@@ -180,7 +180,7 @@ else
 					@if ($row->isMailed())
 						<div class="text-muted">
 							Last emailed:
-							<time datetime="{{ $row->datetimemailed->format('Y-m-d\TH:i:s\Z') }}">
+							<time datetime="{{ $row->datetimemailed->toDateTimeLocalString() }}">
 								{{ $row->datetimemailed->format('M j, Y g:ia') }}
 							</time>
 							by {{ $row->mailer ? $row->mailer->name : trans('global.unknown') }}
@@ -216,7 +216,7 @@ else
 				@if (!$template)
 					<td class="priority-4 text-right text-nowrap">
 						@if ($row->hasStart())
-							<time datetime="{{ $row->datetimenews->format('Y-m-d\TH:i:s\Z') }}">
+							<time datetime="{{ $row->datetimenews->toDateTimeLocalString() }}">
 								{{ $row->datetimenews->format('M j, Y g:ia') }}
 							</time>
 						@else
@@ -231,7 +231,7 @@ else
 					<td class="priority-4 text-nowrap">
 						@if ($row->hasStart())
 							@if ($row->hasEnd())
-								<time datetime="{{ $row->datetimenewsend->format('Y-m-d\TH:i:s\Z') }}">
+								<time datetime="{{ $row->datetimenewsend->toDateTimeLocalString() }}">
 									{{ $row->isSameDay() ? $row->datetimenewsend->format('g:ia') : $row->datetimenewsend->format('M j, Y g:ia') }}
 								</time>
 							@else

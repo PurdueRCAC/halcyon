@@ -45,7 +45,7 @@
 				<td class="priority-4">
 					<span class="datetime">
 						@if ($row->datetimecreated)
-							<time datetime="{{ $row->datetimecreated }}">
+							<time datetime="{{ $row->datetimecreated->toDateTimeLocalString() }}">
 								@if ($row->datetimecreated->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
 									{{ $row->datetimecreated->diffForHumans() }}
 								@else

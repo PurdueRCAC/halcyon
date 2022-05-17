@@ -229,7 +229,7 @@ app('pathway')
 					@if (!$row->hasVisited())
 						<span class="text-muted never">{{ trans('global.never') }}</span>
 					@else
-						<time datetime="{{ $row->last_visit->format('Y-m-dTh:i:s') }}">
+						<time datetime="{{ $row->last_visit->toDateTimeLocalString() }}">
 							@if ($row->last_visit->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
 								{{ $row->last_visit->diffForHumans() }}
 							@else

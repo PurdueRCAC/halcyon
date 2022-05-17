@@ -88,7 +88,7 @@
 				</td>
 				<td>
 					@if ($g->datecreated)
-						<time datetime="{{ $g->datecreated->format('Y-m-d\TH:i:s\Z') }}">
+						<time datetime="{{ $g->datecreated->toDateTimeLocalString() }}">
 							@if ($g->datecreated->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
 								{{ $g->datecreated->diffForHumans() }}
 							@else
@@ -96,7 +96,7 @@
 							@endif
 						</time>
 					@elseif ($g->datetimecreated)
-						<time datetime="{{ $g->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">
+						<time datetime="{{ $g->datetimecreated->toDateTimeLocalString() }}">
 							@if ($g->datetimecreated->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
 								{{ $g->datetimecreated->diffForHumans() }}
 							@else

@@ -547,7 +547,7 @@
 										<?php if (!$not->wasNotified()) { ?>
 											<span class="none">-</span>
 										<?php } else { ?>
-											<time datetime="{{ $not->datetimelastnotify->format('Y-m-d\TH:i:s\Z') }}">{{ $not->datetimelastnotify->format("m/d/Y") }}</time>
+											<time datetime="{{ $not->datetimelastnotify->toDateTimeLocalString() }}">{{ $not->datetimelastnotify->format("m/d/Y") }}</time>
 										<?php } ?>
 									</td>
 									<?php if ($user->id == auth()->user()->id || auth()->user()->can('manage users')) { ?>
@@ -842,7 +842,7 @@
 									@endif
 								</td>
 								<td>
-									<time datetime="{{ $not->datetimelastnotify->format('Y-m-d\TH:i:s\Z') }}"><?php echo $not->wasNotified() ? $not->datetimelastnotify->format('m/d/Y') : trans('global.unknown'); ?></time>
+									<time datetime="{{ $not->datetimelastnotify->toDateTimeLocalString() }}"><?php echo $not->wasNotified() ? $not->datetimelastnotify->format('m/d/Y') : trans('global.unknown'); ?></time>
 								</td>
 								<?php if ($user->id == auth()->user()->id || auth()->user()->can('manage storage')) { ?>
 									<td class="text-right">

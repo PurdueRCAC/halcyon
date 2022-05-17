@@ -240,7 +240,7 @@
 				<td class="priority-6">
 					<span class="datetime">
 						@if ($row->updated_at)
-							<time datetime="{{ Carbon\Carbon::parse($row->updated_at)->format('Y-m-d\TH:i:s\Z') }}">
+							<time datetime="{{ Carbon\Carbon::parse($row->updated_at)->toDateTimeLocalString() }}">
 								@if ($row->updated_at->timestamp > Carbon\Carbon::now()->timestamp)
 									{{ $row->updated_at->diffForHumans() }}
 								@else
@@ -249,7 +249,7 @@
 							</time>
 						@else
 							@if ($row->created_at)
-								<time datetime="{{ Carbon\Carbon::parse($row->created_at)->format('Y-m-d\TH:i:s\Z') }}">
+								<time datetime="{{ Carbon\Carbon::parse($row->created_at)->toDateTimeLocalString() }}">
 									@if ($row->created_at->timestamp > Carbon\Carbon::now()->timestamp)
 										{{ $row->created_at->diffForHumans() }}
 									@else

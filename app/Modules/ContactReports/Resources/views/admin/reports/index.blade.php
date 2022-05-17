@@ -210,7 +210,7 @@ app('pathway')
 						<div class="text-muted ml-4">
 							<span class="fa fa-calendar" aria-hidden="true"></span>
 							@if ($row->datetimecreated)
-								<time datetime="{{ $row->datetimecreated->format('Y-m-dTh:i:s') }}">
+								<time datetime="{{ $row->datetimecreated->toDateTimeLocalString() }}">
 									@if ($row->datetimecreated->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
 										{{ $row->datetimecreated->diffForHumans() }}
 									@else
@@ -336,7 +336,7 @@ app('pathway')
 								<div class="d-flex text-muted">
 									<div class="mr-4">
 										<span class="fa fa-calendar" aria-hidden="true"></span>
-										<time datetime="{{ $comment->datetimecreated->format('Y-m-dTh:i:s') }}">
+										<time datetime="{{ $comment->datetimecreated->toDateTimeLocalString() }}">
 											{{ $comment->datetimecreated->format('M d, Y') }} @ {{ $comment->datetimecreated->format('h:i a') }}
 										</time>
 									</div>

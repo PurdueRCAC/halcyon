@@ -129,7 +129,7 @@ app('pathway')
 										</td>
 										<td>
 											@if ($username->isCreated())
-												<time datetime="{{ $username->datecreated->format('Y-m-d\TH:i:s\Z') }}">
+												<time datetime="{{ $username->datecreated->toDateTimeLocalString() }}">
 													@if ($username->datecreated->toDateTimeString() > Carbon\Carbon::now()->toDateTimeString())
 														{{ $username->datecreated->diffForHumans() }}
 													@else
@@ -142,7 +142,7 @@ app('pathway')
 										</td>
 										<td>
 											@if ($username->trashed())
-												<time datetime="{{ $username->dateremoved->format('Y-m-d\TH:i:s\Z') }}">
+												<time datetime="{{ $username->dateremoved->toDateTimeLocalString() }}">
 													@if ($username->dateremoved->toDateTimeString() > Carbon\Carbon::now()->toDateTimeString())
 														{{ $username->dateremoved->diffForHumans() }}
 													@else
@@ -153,7 +153,7 @@ app('pathway')
 										</td>
 										<td>
 											@if ($username->hasVisited())
-												<time datetime="{{ $username->datelastseen->format('Y-m-d\TH:i:s\Z') }}">
+												<time datetime="{{ $username->datelastseen->toDateTimeLocalString() }}">
 													@if ($username->datelastseen->toDateTimeString() > Carbon\Carbon::now()->toDateTimeString())
 														{{ $username->datelastseen->diffForHumans() }}
 													@else

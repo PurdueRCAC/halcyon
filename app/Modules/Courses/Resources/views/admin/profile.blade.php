@@ -56,17 +56,17 @@
 									{{ $class->semester }}
 								</td>
 								<td>
-									<time datetime="{{ $class->datetimestart->toDateTimeString() }}">
+									<time datetime="{{ $class->datetimestart->toDateTimeLocalString() }}">
 										{{ $class->datetimestart->format('Y-m-d') }}
 									</time>
 								</td>
 								<td>
-									<time datetime="{{ $class->datetimestop->toDateTimeString() }}">
+									<time datetime="{{ $class->datetimestop->toDateTimeLocalString() }}">
 										{{ $class->datetimestop->format('Y-m-d') }}
 									</time>
 								</td>
 								<td>
-									<time datetime="{{ $class->datetimecreated->toDateTimeString() }}">
+									<time datetime="{{ $class->datetimecreated->toDateTimeLocalString() }}">
 										@if ($class->datetimecreated->getTimestamp() > $now->getTimestamp())
 											{{ $class->datetimecreated->diffForHumans() }}
 										@else
@@ -76,7 +76,7 @@
 								</td>
 								<td>
 									@if ($class->trashed())
-										<time datetime="{{ $class->datetimeremoved->toDateTimeString() }}">
+										<time datetime="{{ $class->datetimeremoved->toDateTimeLocalString() }}">
 											@if ($class->datetimeremoved->getTimestamp() > $now->getTimestamp())
 												{{ $class->datetimeremoved->diffForHumans() }}
 											@else
@@ -152,17 +152,17 @@
 									{{ $class->semester }}
 								</td>
 								<td>
-									<time datetime="{{ $class->datetimestart->toDateTimeString() }}">
+									<time datetime="{{ $class->datetimestart->toDateTimeLocalString() }}">
 										{{ $class->datetimestart->format('Y-m-d') }}
 									</time>
 								</td>
 								<td>
-									<time datetime="{{ $class->datetimestop->toDateTimeString() }}">
+									<time datetime="{{ $class->datetimestop->toDateTimeLocalString() }}">
 										{{ $class->datetimestop->format('Y-m-d') }}
 									</time>
 								</td>
 								<td>
-									<time datetime="{{ $s->datetimecreated->toDateTimeString() }}">
+									<time datetime="{{ $s->datetimecreated->toDateTimeLocalString() }}">
 										@if ($s->datetimecreated->getTimestamp() > $now->getTimestamp())
 											{{ $s->datetimecreated->diffForHumans() }}
 										@else
@@ -172,7 +172,7 @@
 								</td>
 								<td>
 									@if ($s->trashed())
-										<time datetime="{{ $s->datetimeremoved->toDateTimeString() }}">
+										<time datetime="{{ $s->datetimeremoved->toDateTimeLocalString() }}">
 											@if ($s->datetimeremoved->getTimestamp() > $now->getTimestamp())
 												{{ $s->datetimeremoved->diffForHumans() }}
 											@else

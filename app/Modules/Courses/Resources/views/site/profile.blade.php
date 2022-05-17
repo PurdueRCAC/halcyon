@@ -244,7 +244,7 @@
 														@endif
 													</td>
 													<td class="priority-4">
-														<time datetime="{{ $usr->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">{{ $usr->datetimecreated->toDateTimeString() }}</time>
+														<time datetime="{{ $usr->datetimecreated->toDateTimeLocalString() }}">{{ $usr->datetimecreated->toDateTimeString() }}</time>
 													</td>
 													<td>
 														@if ($class->isWorkshop())

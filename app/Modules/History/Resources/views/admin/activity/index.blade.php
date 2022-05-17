@@ -182,7 +182,7 @@ app('pathway')
 				</td>
 				<td class="priority-4">
 					@if ($row->datetime)
-						<time datetime="{{ $row->datetime->format('Y-m-d\TH:i:s\Z') }}">{{ $row->datetime }}</time>
+						<time datetime="{{ $row->datetime->toDateTimeLocalString() }}">{{ $row->datetime }}</time>
 					@else
 						<span class="text-muted never">{{ trans('global.unknown') }}</span>
 					@endif

@@ -203,7 +203,7 @@ app('pathway')
 				<td class="priority-6">
 					<span class="datetime">
 						@if ($row->updated_at)
-							<time datetime="{{ $row->updated_at->format('Y-m-d\TH:i:s\Z') }}">
+							<time datetime="{{ $row->updated_at->toDateTimeLocalString() }}">
 								@if ($row->updated_at->toDateTimeString() > Carbon\Carbon::now()->toDateTimeString())
 									{{ $row->updated_at->diffForHumans() }}
 								@else
@@ -211,7 +211,7 @@ app('pathway')
 								@endif
 							</time>
 						@elseif ($row->created_at)
-							<time datetime="{{ Carbon\Carbon::parse($row->created_at)->format('Y-m-d\TH:i:s\Z') }}">
+							<time datetime="{{ $row->created_at->toDateTimeLocalString() }}">
 								@if ($row->created_at->toDateTimeString() > Carbon\Carbon::now()->toDateTimeString())
 									{{ $row->created_at->diffForHumans() }}
 								@else

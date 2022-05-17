@@ -86,7 +86,7 @@
 				<td class="priority-4">
 					<span class="datetime">
 						@if ($row->datetimecreated)
-							<time datetime="{{ $row->datetimecreated }}">{{ $row->datetimecreated }}</time>
+							<time datetime="{{ $row->datetimecreated->toDateTimeLocalString() }}">{{ $row->datetimecreated }}</time>
 						@else
 							<span class="never">{{ __('resources::assets.UNKNOWN') }}</span>
 						@endif
@@ -95,7 +95,7 @@
 				<td class="priority-4">
 					<span class="datetime">
 						@if ($row->datetimeremoved)
-							<time datetime="{{ $row->datetimeremoved }}">{{ $row->datetimeremoved }}</time>
+							<time datetime="{{ $row->datetimeremoved->toDateTimeLocalString() }}">{{ $row->datetimeremoved }}</time>
 						@else
 							<span class="never">{{ __('resources::assets.NEVER') }}</span>
 						@endif

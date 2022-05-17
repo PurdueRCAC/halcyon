@@ -33,7 +33,7 @@
 					<li class="{{ $action->action }}">
 						<span class="entry-action">{{ trans('history::history.action ' . $action->action, ['user' => $actor, 'entity' => 'menu']) }}</span><br />
 						<span class="entry-date">
-							<time datetime="{{ $action->created_at }}">
+							<time datetime="{{ $action->created_at->toDateTimeLocalString() }}">
 							@if ($action->created_at < $old)
 								{{ $action->created_at->format('d M Y') }}
 							@else

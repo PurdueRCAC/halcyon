@@ -93,7 +93,7 @@ app('pathway')
 							<li>
 								<span class="fa fa-fw fa-clock-o" aria-hidden="true"></span>
 								@if ($article->datetimenews)
-								<time datetime="{{ $article->datetimenews->format('Y-m-d\TH:i:s\Z') }}">
+								<time datetime="{{ $article->datetimenews->toDateTimeLocalString() }}">
 									{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}
 								</time>
 								@endif
@@ -115,7 +115,7 @@ app('pathway')
 								@if ($lastupdate)
 									<span class="badge badge-warning">
 										<span class="fa fa-exclamation-circle" aria-hidden="true"></span>
-										<time datetime="{{ $lastupdate->datetimecreated->format('Y-m-d\TH:i:s\Z') }}">{{ trans('news::news.updated at', ['time' => $lastupdate->datetimecreated->format('M d, Y h:ia')]) }}</time>
+										<time datetime="{{ $lastupdate->datetimecreated->toDateTimeLocalString() }}">{{ trans('news::news.updated at', ['time' => $lastupdate->datetimecreated->format('M d, Y h:ia')]) }}</time>
 									</span>
 								@endif
 							</li>
