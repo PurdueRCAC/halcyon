@@ -200,6 +200,11 @@ class ArticlesController extends Controller
 			$filters['state'] = 'published';
 		}
 
+		if ($request->has('keywords'))
+		{
+			$filters['search'] = $request->input('keywords');
+		}
+
 		/*$query = null;
 		if ($query)
 		{
