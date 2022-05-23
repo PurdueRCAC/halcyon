@@ -295,8 +295,53 @@ function NEWSDateSearch(box) {
 				document.getElementById("datestopshort").value = start;
 				STOPBOX = start;
 			}
+			// If a start time is set and an end time is not...
 			if (stoptime == "" && starttime != "") {
-				document.getElementById("timestopshort").value = starttime;
+				var stoptime = starttime;
+
+				// If it's the same day, and an end time isn't set,
+				// default it to one hour later
+				if (start) {
+					if (!stop || stop == start) {
+						var timeInt = parseInt(starttime);
+						var minutes = starttime.substring(3, 5);
+						var ampm = starttime.substring(-1);
+
+						if (ampm == 'PM') {
+							timeInt + 12;
+						}
+						if (timeInt < 10) {
+							timeInt = '0' + timeInt;
+						}
+
+						var sptm = new Date(Date.parse(start + 'T' + timeInt + ':' + minutes + ':00'));
+						sptm.setTime(sptm.getTime() + 1 * 60 * 60 * 1000);
+
+						var hr = sptm.getHours();
+						var min = sptm.getMinutes();
+						if (min < 10) {
+							min = '0' + min;
+						}
+						var ampm = 'AM';
+						if (hr > 12) {
+							hr -= 12;
+							ampm = 'PM';
+						}
+
+						stoptime = hr + ':' + min + ' ' + ampm;
+					}
+				} else {
+					// No dates set, so just bump the time by an hour
+					var timeInt = parseInt(starttime) + 1;
+					var minutes = starttime.substring(3, 5);
+
+					if (starttime > '12:00') {
+						stoptime = `${timeInt - 12}:${minutes} PM`;
+					} else {
+						stoptime = `${timeInt}:${minutes} AM`;
+					}
+				}
+				document.getElementById("timestopshort").value = stoptime;
 			}
 			if (stop != "" && start != "" && box == "start") {
 				var START = new Date(STARTBOX);
@@ -3691,9 +3736,13 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 		if (original.published == "1") {
 			document.getElementById('published').checked = true;
+		} else {
+			document.getElementById('published').checked = false;
 		}
 		if (original.template == "1") {
 			document.getElementById('template').checked = true;
+		} else {
+			document.getElementById('template').checked = false;
 		}
 
 		on = 'edit';
