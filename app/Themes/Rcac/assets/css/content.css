@@ -259,13 +259,13 @@ a.btn-info:active {
 }
 .login .dropdown-menu {
 	font-size: 0.85rem;
-	background-color: #333;
+	/*background-color: #333;
 }
 .login .dropdown-menu .dropdown-divider {
 	border-top-color: #555;
 }
 .login .dropdown-menu .dropdown-item:hover {
-	background-color: #000;
+	background-color: #000;*/
 }
 .login .btn,
 .login a:link,
