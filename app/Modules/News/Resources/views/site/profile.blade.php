@@ -10,12 +10,8 @@
 			<div class="d-flex justify-content-center">
 				<div class="card card-help w-50">
 					<div class="card-body">
-						<h3 class="card-title mt-0">What is this page?</h3>
-						@if (auth()->user()->can('manage news'))
-							<p class="card-text">If {{ $user->name }} has registered for any events, you'll find them listed here.</p>
-						@else
-							<p class="card-text">If you have registered for any events, you'll find them listed here.</p>
-						@endif
+						<h3 class="card-title mt-0">{{ trans('news::news.user news header') }}</h3>
+						<p class="card-text">{{ trans('news::news.user news explanation') }}</p>
 					</div>
 				</div>
 			</div>
@@ -29,14 +25,14 @@
 									<span class="newsid">#{{ $row->id }}</span>
 									<span class="newspublication">
 										@if ($row->published)
-											<span class="badge badge-published">Published</span>
+											<span class="badge badge-published">{{ trans('global.published') }}</span>
 										@else
-											<span class="badge badge-unpublished">Unpublished</span>
+											<span class="badge badge-unpublished">{{ trans('global.unpublished') }}</span>
 										@endif
 									</span>
 								@else
 									<div class="text-right">
-										<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $row->attending }}">Cancel reservation</a>
+										<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $row->attending }}">{{ trans('news::news.cancel reservation') }}</a>
 									</div>
 								@endif
 							</div>
@@ -45,8 +41,8 @@
 							<h3 class="card-title panel-title crmcontactdate"><a href="{{ route('site.news.show', ['id' => $row->id]) }}">{{ $row->headline }}</a></h3>
 							<ul class="card-meta panel-meta news-meta">
 								@if (auth()->user() && auth()->user()->can('manage news'))
-									<li class="news-date"><span class="newspostdate">Posted on <time datetime="{{ $row->datetimenews->toDateTimeLocalString() }}">{{ $row->datetimecreated->format('M d, Y') }}</time></span></li>
-									<li class="news-author"><span class="newsposter">Posted by {{ $row->creator->name }}</span></li>
+									<li class="news-date"><span class="newspostdate">{!! trans('posted on date', ['date' => '<time datetime="' . $row->datetimenews->toDateTimeLocalString() . '">' . $row->datetimecreated->format('M d, Y') . '</time>'] !!}</span></li>
+									<li class="news-author"><span class="newsposter">{{ trans('posted by name', ['name' => $row->creator->name]) }}</span></li>
 								@endif
 								<li class="news-date">{!! $row->formatDate($row->datetimenews, $row->datetimenewsend) !!}
 									@if ($row->isToday())

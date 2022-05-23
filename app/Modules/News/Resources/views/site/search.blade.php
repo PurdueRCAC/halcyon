@@ -59,9 +59,9 @@ app('pathway')
 	<div id="everything">
 		<form method="get" action="{{ route('site.news.search') }}" class="editform">
 			<fieldset>
-				<legend>Filters</legend>
+				<legend>{{ trans('news::news.filters') }}</legend>
 				<div class="form-group row tab-search tab-add tab-edit" id="TR_date">
-					<label for="datestartshort" class="col-sm-2 col-form-label">Date from</label>
+					<label for="datestartshort" class="col-sm-2 col-form-label">{{ trans('news::news.publish up') }}</label>
 					<div class="col-sm-4">
 						<?php
 						$startdate = '';
@@ -139,29 +139,29 @@ app('pathway')
 							<input id="datestartshort" type="text" class="date-pick form-control" name="start" placeholder="YYYY-MM-DD" data-start="{{ $startdate }}" value="{{ $startdate }}" />
 						</div>
 						<div class="input-group input-time tab-add tab-edit hide">
-							<label for="timestartshort" class="sr-only">Time from</label>
+							<label for="timestartshort" class="sr-only">{{ trans('news::news.time from') }}</label>
 							<span class="input-group-prepend"><span class="input-group-text fa fa-clock-o" aria-hidden="true"></span></span>
 							<input id="timestartshort" type="text" class="time-pick form-control" name="starttime" placeholder="h:mm AM/PM" value="{{ $starttime }}" />
 						</div>
 					</div>
-					<label for="datestopshort" class="col-sm-2 col-form-label align-right">Date to</label>
+					<label for="datestopshort" class="col-sm-2 col-form-label align-right">{{ trans('news::news.publish down') }}</label>
 					<div class="col-sm-4">
 						<div class="input-group" id="enddate">
 							<span class="input-group-prepend"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
 							<input id="datestopshort" type="text" class="date-pick form-control" name="stop" placeholder="YYYY-MM-DD" data-stop="{{ $stopdate }}" value="{{ $stopdate }}">
 						</div>
 						<div class="input-group input-time tab-add tab-edit hide">
-						<label for="timestopshort" class="sr-only">Time to</label>
+						<label for="timestopshort" class="sr-only">{{ trans('news::news.time to') }}</label>
 							<span class="input-group-prepend"><span class="input-group-text fa fa-clock-o" aria-hidden="true"></span></span>
 							<input id="timestopshort" type="text" class="time-pick form-control" name="stoptime" placeholder="h:mm AM/PM" value="{{ $stoptime }}" />
 						</div>
 					</div>
 				</div>
 				<div class="form-group row tab-search tab-add tab-edit" id="TR_newstype">
-					<label for="newstype" class="col-sm-2 col-form-label">News Type</label>
+					<label for="newstype" class="col-sm-2 col-form-label">{{ trans('news::news.type') }}</label>
 					<div class="col-sm-10">
 						<select id="newstype" name="newstype" class="form-control">
-							<option id="OPTION_all" name="all" value="-1">All</option>
+							<option id="OPTION_all" name="all" value="-1">{{ trans('global.all') }}</option>
 							@foreach ($types as $type)
 								<option value="{{ $type->id }}"<?php if ($filters['newstype'] == $type->id) { echo ' selected="selected"'; } ?> data-tagresources="{{ $type->tagresources }}" data-taglocation="{{ $type->location }}">{{ $type->name }}</option>
 							@endforeach
@@ -169,13 +169,13 @@ app('pathway')
 					</div>
 				</div>
 				<div class="form-group row tab-search" id="TR_keywords">
-					<label for="keywords" class="col-sm-2 col-form-label">Keywords</label>
+					<label for="keywords" class="col-sm-2 col-form-label">{{ trans('news::news.keywords') }}</label>
 					<div class="col-sm-10">
 						<input type="text" v-model="keywords" v-on:keyup="read" name="keyword" id="keywords" size="45" class="form-control" value="{{ $filters['keyword'] }}" />
 					</div>
 				</div>
 				<div class="form-group row tab-search tab-add tab-edit" id="TR_resource">
-					<label for="newsresource" class="col-sm-2 col-form-label">Resource</label>
+					<label for="newsresource" class="col-sm-2 col-form-label">{{ trans('news::news.resources') }}</label>
 					<div class="col-sm-10">
 						<?php
 						$selected = array();
@@ -228,13 +228,13 @@ app('pathway')
 					</div>
 				</div>
 				<div class="form-group row tab-search tab-add tab-edit" id="TR_location">
-					<label for="location" class="col-sm-2 col-form-label">Location</label>
+					<label for="location" class="col-sm-2 col-form-label">{{ trans('news::news.location') }}</label>
 					<div class="col-sm-10">
 						<input type="text" name="location" id="location" maxlength="32" class="form-control" value="{{ $filters['location'] }}" />
 					</div>
 				</div>
 				<div class="form-group row tab-search" id="TR_id">
-					<label for="id" class="col-sm-2 col-form-label">NEWS#</label>
+					<label for="id" class="col-sm-2 col-form-label">{{ trans('news::news.news') }} #</label>
 					<div class="col-sm-10">
 						<input type="text" name="id" id="id" class="form-control" value="{{ $filters['id'] }}" />
 					</div>
@@ -243,8 +243,8 @@ app('pathway')
 					<div class="col-sm-2">
 					</div>
 					<div class="col-sm-10">
-						<input type="submit" class="btn btn-primary" value="Search" id="INPUT_search" />
-						<input type="reset" class="btn btn-secondary" value="Clear" id="INPUT_clear" />
+						<input type="submit" class="btn btn-primary" value="{{ trans('news::news.search') }}" id="INPUT_search" />
+						<input type="reset" class="btn btn-secondary" value="{{ trans('news::news.clear') }}" id="INPUT_clear" />
 					</div>
 				</div>
 				<span id="TAB_search_action"></span>
@@ -265,9 +265,9 @@ app('pathway')
 		}
 		$string = implode('&', $string);
 		?>
-		<p><strong id="matchingnews">Search results:</strong></p>
+		<p><strong id="matchingnews">{{ trans('news::news.search results') }}:</strong></p>
 		<div id="news" data-query="{{ $string }}">
-			News stories are loading...
+			{{ trans('global.loading') }}
 		</div>
 
 		<div id="preview"></div>

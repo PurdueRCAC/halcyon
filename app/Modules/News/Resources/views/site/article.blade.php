@@ -93,12 +93,12 @@ app('pathway')
 					endforeach;
 					?>
 					@if (!$attending)
-						<a class="btn-attend btn btn-primary" href="{{ route('site.news.show', ['attend' => 1, 'id' => $article->id]) }}" data-newsid="{{ $article->id }}" data-assoc="{{ auth()->user()->id }}">I'm interested in attending</a>
+						<a class="btn-attend btn btn-primary" href="{{ route('site.news.show', ['attend' => 1, 'id' => $article->id]) }}" data-newsid="{{ $article->id }}" data-assoc="{{ auth()->user()->id }}">{{ trans('news::news.interested in attending') }}</a>
 					@else
-						<a class="btn-notattend btn btn-danger" href="{{ route('site.news.show', ['attend' => 0, 'id' => $article->id]) }}" data-id="{{ $attending }}">Cancel attendance</a>
+						<a class="btn-notattend btn btn-danger" href="{{ route('site.news.show', ['attend' => 0, 'id' => $article->id]) }}" data-id="{{ $attending }}">{{ trans('news::news.cancel reservation') }}</a>
 					@endif
 				@else
-					<a href="{{ route('login', ['return' => base64_encode(route('site.news.show', ['attend' => 1, 'id' => $article->id]))]) }}" data-newsid="{{ $article->id }}" data-assoc="0">Login</a> is required to reserve times.
+					<a href="{{ route('login', ['return' => base64_encode(route('site.news.show', ['attend' => 1, 'id' => $article->id]))]) }}" data-newsid="{{ $article->id }}" data-assoc="0">{{ trans('news::news.login required') }}</a>
 				@endif
 			</div>
 		@endif
