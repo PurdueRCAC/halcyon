@@ -9,18 +9,18 @@
 @endpush
 
 <div class="contentInner">
-	<h2>{{ trans('users::users.quotas') }}</h2>
+	<h2>{{ trans('storage::storage.my quotas') }}</h2>
 
 	<input type="hidden" id="HIDDEN_user" value="{{ $user->id }}" />
 
 	<div class="card mb-3">
 		<div class="card-header">
-			<div class="card-title">
+			<h3 class="card-title my-0">
 				Storage Spaces
 				<a href="#storagespacehelp" class="help icn tip" title="Help">
 					<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 				</a>
-			</div>
+			</h3>
 		</div>
 		<div class="card-body">
 			<div id="storagespacehelp" class="dialog dialog-help" title="Storage Spaces">
@@ -137,9 +137,11 @@
 	<div class="card mb-3">
 		<div class="card-header">
 			<div class="row">
-				<div class="col col-md-6 card-title">
-					Storage Alerts
-					<a href="#storagealerthelp" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span></a>
+				<div class="col col-md-6">
+					<h3 class="card-title my-0">
+						Storage Alerts
+						<a href="#storagealerthelp" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span></a>
+					</h3>
 				</div>
 				<div class="col col-md-6 text-right">
 					<button class="btn btn-default btn-sm accountsbtn" id="create-newalert"><span class="fa fa-plus-circle" aria-hidden="true"></span> Create New Alert</button>
@@ -407,11 +409,13 @@
 	<div class="card mb-3">
 		<div class="card-header">
 			<div class="row">
-				<div class="col col-md-6 card-title">
-					Storage Usage Reports
-					<a href="#storageusagehelp" class="help icn tip" title="Help">
-						<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
-					</a>
+				<div class="col col-md-6">
+					<h3 class="card-title my-0">
+						Storage Usage Reports
+						<a href="#storageusagehelp" class="help icn tip" title="Help">
+							<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+						</a>
+					</h3>
 				</div>
 				<div class="col col-md-6 text-right">
 					<button class="btn btn-default btn-sm accountsbtn" id="create-newreport"><span class="fa fa-plus-circle" aria-hidden="true"></span> Create New Usage Report</button>
