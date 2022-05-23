@@ -105,7 +105,7 @@ app('pathway')
 					{!! Html::grid('sort', trans('knowledge::knowledge.last update'), 'updated_at', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-5">
-					{{ trans('knowledge::knowledge.ordering') }}
+					{!! Html::grid('sort', trans('knowledge::knowledge.ordering'), 'lft', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-2 text-right">
 					{{ trans('knowledge::knowledge.used') }}
@@ -162,7 +162,9 @@ app('pathway')
 						@endif
 					</span>
 				</td>
-				<td class="priority-5 text-center">
+				<td class="priority-5 text-centr">
+					@if ($row->level > 1)
+					{!! str_repeat('<span class="gi">|&mdash;</span>', $row->level - 1) !!}
 					<?php $orderkey = array_search($row->id, $ordering[$row->parent_id]); ?>
 					<?php if (auth()->user()->can('edit knowledge')): ?>
 						<span class="glyph">{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, isset($ordering[$row->parent_id][$orderkey - 1]), route('admin.knowledge.snippets.orderup', ['id' => $row->id])) !!}</span>
@@ -171,6 +173,7 @@ app('pathway')
 					<?php else : ?>
 						<?php echo $orderkey + 1;?>
 					<?php endif; ?>
+					@endif
 				</td>
 				<td class="priority-2 text-right">
 					{{ $row->used }}

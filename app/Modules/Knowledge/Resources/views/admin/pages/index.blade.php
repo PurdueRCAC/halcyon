@@ -149,7 +149,7 @@
 					{!! Html::grid('sort', trans('knowledge::knowledge.last update'), 'updated_at', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-5">
-					{{ trans('knowledge::knowledge.ordering') }}
+					{!! Html::grid('sort', trans('knowledge::knowledge.ordering'), 'lft', $filters['order_dir'], $filters['order']) !!}
 				</th>
 			</tr>
 		</thead>
@@ -262,7 +262,8 @@
 						@endif
 					</span>
 				</td>
-				<td class="priority-5 text-center">
+				<td class="priority-5 text-cente">
+					{!! str_repeat('<span class="gi">|&mdash;</span>', $row->level) !!}
 					<?php $orderkey = array_search($row->id, $ordering[$row->parent_id]); ?>
 					<?php if (auth()->user()->can('edit knowledge')): ?>
 						<span class="glyph">{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, isset($ordering[$row->parent_id][$orderkey - 1]), route('admin.knowledge.orderup', ['id' => $row->id])) !!}</span>
