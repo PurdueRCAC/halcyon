@@ -982,7 +982,8 @@ a.card-content:hover {
 	max-width: 28em;
 	margin: 2em auto;
 }
-.card-help .card-title {
+
+.card-title {
 	font-size: 1.2em;
 }
 .card-help .fa {

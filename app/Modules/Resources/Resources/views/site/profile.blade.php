@@ -6,39 +6,39 @@
 	<div class="card-header">
 		<div class="row">
 			<div class="col-md-9">
-				<div class="card-title">
-					Resources
-					<a href="#roles_help" class="help help-dialog text-info tip" title="Roles Help">
-						<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only"> Help</span>
+				<h3 class="card-title">
+					{{ trans('resources::assets.resources') }}
+					<a href="#roles_help" class="help help-dialog text-info tip" title="{{ trans('resources::assets.roles help') }}">
+						<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only"> {{ trans('resources::assets.roles help') }}</span>
 					</a>
-				</div>
-				<div id="roles_help" class="dialog-help" title="Roles">
-					<p>Role status may be compiled from various external sources. Available statuses are:</p>
+				</h3>
+				<div id="roles_help" class="dialog-help" title="Resources">
+					<p>{{ trans('resources::assets.roles explanation') }}</p>
 					<ul>
-						<li><span class="badge badge-secondary">No Role</span></li>
-						<li><span class="badge badge-info">Role Pending</span></li>
-						<li><span class="badge badge-success">Role Ready</span></li>
-						<li><span class="badge badge-danger">Removal Pending</span></li>
+						<li><span class="badge badge-secondary">{{ trans('resources::assets.no role') }}</span></li>
+						<li><span class="badge badge-info">{{ trans('resources::assets.role pending') }}</span></li>
+						<li><span class="badge badge-success">{{ trans('resources::assets.role ready') }}</span></li>
+						<li><span class="badge badge-danger">{{ trans('resources::assets.removal pending') }}</span></li>
 					</ul>
 				</div>
 			</div>
 			<div class="col-md-3 text-right">
-				<a href="#manage_roles_dialog" id="manage_roles" data-membertype="1" class="btn btn-sm" data-tip="Manage Resource Access">
-					<span class="fa fa-pencil" aria-hidden="true"></span> Manage
+				<a href="#manage_roles_dialog" id="manage_roles" data-membertype="1" class="btn btn-sm" data-tip="{{ trans('resources::assets.manage access') }}">
+					<span class="fa fa-pencil" aria-hidden="true"></span> {{ trans('resources::assets.manage') }}
 				</a>
 			</div>
 		</div>
 	</div>
 	<div class="card-body">
 		<table class="table table-hover" id="roles" data-api="{{ route('api.resources.index', ['limit' => 100]) }}">
-			<caption class="sr-only">Roles</caption>
+			<caption class="sr-only">{{ trans('resources::assets.resource membership') }}</caption>
 			<thead>
 				<tr>
-					<th scope="col">Resource</th>
-					<th scope="col">Group</th>
-					<th scope="col">Shell</th>
-					<th scope="col">PI</th>
-					<th scope="col">Status</th>
+					<th scope="col">{{ trans('resources::assets.resource') }}</th>
+					<th scope="col">{{ trans('resources::assets.group') }}</th>
+					<th scope="col">{{ trans('resources::assets.shell') }}</th>
+					<th scope="col">{{ trans('resources::assets.pi') }}</th>
+					<th scope="col">{{ trans('resources::assets.status') }}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -50,7 +50,7 @@
 					<td id="resource{{ $resource->id }}_pi"></td>
 					<td id="resource{{ $resource->id }}" data-api="{{ route('api.resources.members') }}">
 						<span class="fa fa-exclamation-triangle text-warning" aria-hidde="true"></span>
-						<span class="sr-only">Loading...</span>
+						<span class="sr-only">{{ trans('global.loading') }}</span>
 					</td>
 				</tr>
 			@endforeach
@@ -59,12 +59,12 @@
 	</div>
 </div>
 
-<div id="manage_roles_dialog" data-id="{{ $user->id }}" title="Manage Access" class="dialog roles-dialog">
+<div id="manage_roles_dialog" data-id="{{ $user->id }}" title="{{ trans('resources::assets.manage access') }}" class="dialog roles-dialog">
 	<form method="post" action="{{ route('site.users.account') }}">
 		<div class="form-group">
-			<label for="role">Resource <span class="required">*</span></label>
-			<select id="role" class="form-control" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">
-				<option value="">(Select Resource)</option>
+			<label for="role">{{ trans('resources::assets.resource') }} <span class="required">*</span></label>
+			<select id="role" class="form-control" required data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">
+				<option value="">{{ trans('resources::assets.select resource') }}</option>
 				@foreach ($resources as $resource)
 					<option value="{{ $resource->id }}" data-api="{{ route('api.resources.members.read', ['id' => $resource->id . '.' . $user->id]) }}">{{ $resource->name }}</option>
 				@endforeach
@@ -73,15 +73,15 @@
 
 		<div class="hide" id="role_table">
 			<div class="form-group">
-				<label for="role_status">Status</label>
+				<label for="role_status">{{ trans('resources::assets.status') }}</label>
 				<input type="text" disabled="disabled" class="form-control" id="role_status" />
 			</div>
 			<div class="form-group">
-				<label for="role_group">Group</label>
+				<label for="role_group">{{ trans('resources::assets.group') }}</label>
 				<input id="role_group" type="text" class="form-control" />
 			</div>
 			<div class="form-group">
-				<label for="role_shell">Shell</label>
+				<label for="role_shell">{{ trans('resources::assets.shell') }}</label>
 				<select class="form-control" id="role_shell">
 					<option value="">{{ trans('global.none') }}</option>
 					<?php
@@ -115,13 +115,13 @@
 				</select>
 			</div>
 			<div class="form-group">
-				<label for="role_pi">PI</label>
+				<label for="role_pi">{{ trans('resources::assets.pi') }}</label>
 				<input id="role_pi" type="text" class="form-control" />
 			</div>
 			<div class="form-group mb-0">
-				<button id="role_add" class="btn btn-success role-add hide" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">Add Role</button>
-				<button id="role_modify" class="btn btn-success role-add hide" data-id="{{ $user->id }}">Modify Role</button>
-				<button id="role_delete" class="btn btn-danger role-delete hide" data-id="{{ $user->id }}">Delete Role</button>
+				<button id="role_add" class="btn btn-success role-add hide" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">{{ trans('resources::assets.add role') }}</button>
+				<button id="role_modify" class="btn btn-success role-add hide" data-id="{{ $user->id }}">{{ trans('resources::assets.modify role') }}</button>
+				<button id="role_delete" class="btn btn-danger role-delete hide" data-id="{{ $user->id }}">{{ trans('resources::assets.delete role') }}</button>
 			</div>
 
 			<span id="role_errors" class="alert alert-warning hide"></span>

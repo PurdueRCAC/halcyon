@@ -60,7 +60,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 
 			<div class="card panel panel-default mb-3">
 				<div class="card-header panel-heading">
-					Profile
+					<h3 class="card-title my-0">Profile</h3>
 				</div>
 				<div class="card-body panel-body">
 					@if (auth()->user()->can('manage users'))

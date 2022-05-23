@@ -7,7 +7,7 @@
 	@if (auth()->user()->can('manage groups'))
 		<div class="row">
 			<div class="col-md-9">
-				<h2>{{ trans('users::users.groups') }}</h2>
+				<h2>{{ trans('groups::groups.groups') }}</h2>
 			</div>
 			<div class="col-md-3 text-right">
 				<a class="btn btn-outline-secondary float-right add-group" href="{{ route('site.users.account.section', ['section' => 'groups']) }}">
