@@ -197,36 +197,36 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 			@if (config('module.users.allow_self_deletion'))
 				<div class="card card-danger">
 					<div class="card-header">
-						<div class="card-title">Delete Account</div>
+						<h3 class="card-title my-0">{{ trans('users::users.delete.delete account') }}</h3>
 					</div>
 					<div class="card-body">
-						<p>Once you delete your account, this cannot be undone. Please be certain.</p>
+						<p>{{ trans('users::users.delete.description') }}</p>
 						<p>
 							<a href="#confirmdelete" class="btn btn-danger" data-toggle="modal" data-target="#confirmdelete">
-								Delete Account
+								{{ trans('users::users.delete.delete account') }}
 							</a>
 						</p>
 					</div>
 				</div>
 
-				<div class="modal dialog" id="confirmdelete" tabindex="-1" aria-labelledby="confirmdelete-title" aria-hidden="true" title="Are you sure?">
+				<div class="modal dialog" id="confirmdelete" tabindex="-1" aria-labelledby="confirmdelete-title" aria-hidden="true" title="{{ trans('users::users.delete.are you sure') }}">
 					<div class="modal-dialog modal-dialog-centered">
 						<div class="modal-content dialog-content shadow-sm">
 							<div class="modal-header">
-								<div class="modal-title" id="confirmdelete-title">Are you sure?</div>
+								<div class="modal-title" id="confirmdelete-title">{{ trans('users::users.delete.are you sure') }}</div>
 								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
 							<div class="modal-body dialog-body">
 								<form method="post" action="{{ route('site.users.account.delete') }}">
-									<p>This action cannot be undone. This will permanently delete the account and remove all associations.</p>
+									<p>{{ trans('users::users.delete.warning') }}</p>
 									<div class="form-group">
-										<label for="confirmdelete">Please type "<strong>{{ $user->name }}</strong>" to confirm.</label>
+										<label for="confirmdelete">{!! trans('users::users.delete.confirm', ['username' => $user->name]) !!}</label>
 										<input type="text" name="confirmdelete" id="confirmdelete" class="form-control" required value="" />
 									</div>
 									<div class="form-group">
-										<input type="submit" class="btn btn-danger" value="I understand the consequences, delete this account" />
+										<input type="submit" class="btn btn-danger" value="{{ trans('users::users.delete.confirm submit') }}" />
 									</div>
 									@csrf
 								</form>

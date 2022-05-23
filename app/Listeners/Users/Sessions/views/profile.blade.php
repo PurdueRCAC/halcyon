@@ -11,7 +11,7 @@
 			<p>{{ trans('listener.users.sessions::sessions.explanation') }}</p>
 		</div>
 	</div>
-	<ul class="list-group list-group-flush">
+	<ul class="list-group list-group-flush my-0">
 		@if (count($user->sessions))
 			@foreach ($user->sessions as $session)
 				@php
@@ -62,8 +62,8 @@
 				</li>
 			@endforeach
 		@else
-			<li class="list-group-item">
-				<span class="none">{{ trans('global.none') }}</span>
+			<li class="list-group-item text-center">
+				<span class="text-muted none">{{ trans('global.none') }}</span>
 			</li>
 		@endif
 	</ul>
