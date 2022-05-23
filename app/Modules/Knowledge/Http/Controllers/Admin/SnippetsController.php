@@ -32,23 +32,19 @@ class SnippetsController extends Controller
 			'order_dir' => Page::$orderDir,
 		);
 
-		$refresh = false;
+		$reset = false;
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('kb.snippets.filter_' . $key)
+			 && $request->has($key) //&& session()->has('kb.filter_' . $key)
 			 && $request->input($key) != session()->get('kb.snippets.filter_' . $key))
 			{
 				$reset = true;
 			}
 			$filters[$key] = $request->state('kb.snippets.filter_' . $key, $key, $default);
 		}
-
-		if ($refresh)
-		{
-			$filters['page'] = 1;
-		}
+		$filters['page'] = $reset ? 1 : $filters['page'];
 
 		if (!in_array($filters['order'], array('lft', 'id', 'title', 'updated_at')))
 		{
