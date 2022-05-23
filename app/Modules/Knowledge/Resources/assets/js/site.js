@@ -1,5 +1,18 @@
 /* global $ */ // jquery.js
 
+/**
+ * Convert title to URL segment
+ *
+ * @return void
+ */
+function setAlias() {
+	document.getElementById('field-alias').value = this.value
+		.trim()
+		.toLowerCase()
+		.replace(/\s+/g, '_')
+		.replace(/[^a-z0-9\-_]+/g, '');
+}
+
 document.addEventListener('DOMContentLoaded', function () {
 	// Feedback
 	document.querySelectorAll('.btn-feedback').forEach(function (el) {
@@ -53,13 +66,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	//----
 
-	var alias = document.getElementById('field-alias');
-	if (alias) {
-		document.getElementById('field-title').addEventListener('keyup', function () {
-			alias.value = this.value.toLowerCase()
-				.replace(/\s+/g, '_')
-				.replace(/[^a-z0-9\-_]+/g, '');
+	var alias = document.getElementById('field-alias'),
+		title = document.getElementById('field-title');
+	if (alias && title) {
+		title.addEventListener('focus', function () {
+			if (!alias.value) {
+				title.addEventListener('keyup', setAlias);
+			}
 		});
+		title.addEventListener('blur', function () {
+			title.removeEventListener('keyup', setAlias);
+		});
+
+		alias.addEventListener('keyup', setAlias);
 	}
 
 	var parent = document.getElementById('field-parent_id');

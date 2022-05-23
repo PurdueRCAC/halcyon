@@ -1,27 +1,48 @@
 /* global $ */ // jquery.js
 
+/**
+ * Convert title to URL segment
+ *
+ * @return void
+ */
+function setAlias() {
+	document.getElementById('field-alias').value = this.value
+		.trim()
+		.toLowerCase()
+		.replace(/\s+/g, '_')
+		.replace(/[^a-z0-9\-_]+/g, '');
+}
+
 document.addEventListener('DOMContentLoaded', function () {
 
 	// Edit page
 
-	var alias = document.getElementById('field-alias');
-	if (alias) {
-		document.getElementById('field-title').addEventListener('keyup', function () {
-			alias.value = this.value
-				.toLowerCase()
-				.replace(/\s+/g, '_')
-				.replace(/[^a-z0-9\-_]+/g, '');
+	var alias = document.getElementById('field-alias'),
+		title = document.getElementById('field-title');
+	if (alias && title) {
+		title.addEventListener('focus', function () {
+			if (!alias.value) {
+				title.addEventListener('keyup', setAlias);
+			}
 		});
+		title.addEventListener('blur', function () {
+			title.removeEventListener('keyup', setAlias);
+		});
+
+		alias.addEventListener('keyup', setAlias);
 	}
 
-	$('.searchable-select').select2()
-		.on('select2:select', function () {
-			if (this.classList.contains('filter-submit')) {
-				$(this).closest('form').submit();
-			}
+	var sselects = $('.searchable-select');
+	if (sselects.length) {
+		$('.searchable-select').select2()
+			.on('select2:select', function () {
+				if (this.classList.contains('filter-submit')) {
+					$(this).closest('form').submit();
+				}
 
-			this.dispatchEvent(new Event('change'));
-		});
+				this.dispatchEvent(new Event('change'));
+			});
+	}
 
 	var parent = document.getElementById('field-parent_id');
 	if (parent) {
