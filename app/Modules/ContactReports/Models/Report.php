@@ -346,6 +346,24 @@ class Report extends Model
 		event($event = new ReportPrepareContent($text));
 		$text = $event->getBody();
 
+		$this->hashTags;
+		if (count($this->tags))
+		{
+			preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $text, $matches);
+
+			if (!empty($matches))
+			{
+				foreach ($matches[0] as $match)
+				{
+					$slug = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
+					if ($tag = $this->isTag($slug))
+					{
+						$text = str_replace($match, ' <a class="tag badge badge-sm badge-secondary" href="' . route((app('isAdmin') ? 'admin' : 'site') . '.contactreports.index', ['tag' => $tag->slug]) . '">' . $tag->name . '</a> ', $text);
+					}
+				}
+			}
+		}
+
 		return $text;
 	}
 

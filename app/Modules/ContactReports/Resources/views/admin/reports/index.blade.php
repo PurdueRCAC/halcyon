@@ -260,31 +260,7 @@ app('pathway')
 					</div>
 				</div>
 				<div class="card-body">
-					<?php
-					$str = $row->formattedReport;
-					$row->hashTags;
-					if (count($row->tags)):
-						preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $str, $matches);
-
-						if (!empty($matches)):
-							foreach ($matches[0] as $match):
-								$slug = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
-								if ($tag = $row->isTag($slug)):
-									$str = str_replace($match, ' <a class="tag badge badge-sm badge-secondary" href="' . route('admin.issues.index', ['tag' => $tag->slug]) . '">' . $tag->name . '</a> ', $str);
-								endif;
-							endforeach;
-						endif;
-					endif;
-					?>
-					{!! $str !!}
-					<?php /*$row->hashTags; ?>
-					@if (count($row->tags))
-						<p>
-						@foreach ($row->tags as $tag)
-							<a class="tag badge badge-sm badge-secondary" href="{{ route('admin.issues.index', ['tag' => $tag->slug]) }}">{{ $tag->name }}</a>
-						@endforeach
-						</p>
-					@endif*/ ?>
+					{!! $row->formattedReport !!}
 					@if (count($row->resources))
 						<?php
 						$names = array();
@@ -347,7 +323,6 @@ app('pathway')
 										@endif
 									</div>
 									<div class="flex-fill text-right">
-										<span class="badge badge-success<?php if (!$comment->resolution) { echo ' hide'; } ?>">{{ trans('issues::issues.resolution') }}</span>
 									</div>
 								</div>
 							</li>
