@@ -1,0 +1,661 @@
+<?php
+
+namespace App\Modules\Mailer\Http\Controllers\Api;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Modules\Mailer\Models\Message;
+use App\Modules\Mailer\Mail\GenericMessage;
+use App\Modules\History\Models\Log;
+use App\Modules\Users\Models\User;
+use App\Halcyon\Access\Map;
+use Carbon\Carbon;
+
+/**
+ * Mailer
+ *
+ * @apiUri    /mail
+ */
+class MessagesController extends Controller
+{
+	/**
+	 * Display a listing of entries
+	 *
+	 * @apiMethod GET
+	 * @apiUri    /mail
+	 * @apiParameter {
+	 * 		"name":          "client_id",
+	 * 		"description":   "Client (admin = 1|site = 0) ID",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       null
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       ""
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result per page.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   25
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"default":       1
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "datetimecreated",
+	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"type":          "string",
+	 * 		"required":      false,
+	 * 		"default":       "desc",
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
+	 * }
+	 * @param  Request  $request
+	 * @return Response
+	 */
+	public function index(Request $request)
+	{
+		// Get filters
+		$filters = array(
+			'search'   => null,
+			'template' => 0,
+			// Paging
+			'limit'    => config('list_limit', 20),
+			// Sorting
+			'order'     => Message::$orderBy,
+			'order_dir' => Message::$orderDir,
+		);
+
+		foreach ($filters as $key => $default)
+		{
+			$filters[$key] = $request->input($key, $default);
+		}
+
+		if (!in_array($filters['order'], ['id', 'subject', 'created_at', 'updated_at', 'sent_at', 'sent_by']))
+		{
+			$filters['order'] = Message::$orderBy;
+		}
+
+		if (!in_array($filters['order_dir'], ['asc', 'desc']))
+		{
+			$filters['order_dir'] = Message::$orderDir;
+		}
+
+		// Get records
+		$query = Message::query();
+
+		if ($filters['search'])
+		{
+			$query->where(function($where) use ($filters)
+			{
+				$where->where('subject', 'like', '%' . $filters['search'] . '%')
+					->orWhere('body', 'like', '%' . $filters['search'] . '%');
+			});
+		}
+
+		$rows = $query
+			->orderBy($filters['order'], $filters['order_dir'])
+			->paginate($filters['limit'])
+			->appends(array_filter($filters))
+			->each(function($item, $key)
+			{
+				$item->api = route('api.mailer.read', ['id' => $item->id]);
+			});
+
+		return new ResourceCollection($rows);
+	}
+
+	/**
+	 * Create a new entry
+	 *
+	 * @apiMethod POST
+	 * @apiUri    /mail
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "subject",
+	 * 		"description":   "Message subject",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "body",
+	 * 		"description":   "Message contents",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "template",
+	 * 		"description":   "If the message is a template or not",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 2,
+	 * 						"subject": "About",
+	 * 						"body": "About Side Menu",
+	 * 						"template": 0,
+	 * 						"created_at": "2022-05-24 12:31:01",
+	 * 						"updated_at": null,
+	 * 						"deleted_at": null,
+	 * 						"sent_at": null,
+	 * 						"sent_by": 12,
+	 * 						"api": "https://example.org/api/mail/2"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
+	 * @return Response
+	 */
+	public function create(Request $request)
+	{
+		$rules = [
+			'subject' => 'required|string|max:255',
+			'body' => 'required|string|max:15000',
+			'template' => 'nullable|integer',
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
+
+		$row = new Message();
+		$row->subject = $request->input('subject');
+		$row->body = $request->input('body');
+		$row->template = $request->input('template', 0);
+
+		if (!$row->save())
+		{
+			return response()->json(['message' => trans('global.messages.save failed')], 500);
+		}
+
+		$row->api = route('api.mailer.read', ['id' => $row->id]);
+
+		return new JsonResource($row);
+	}
+
+	/**
+	 * Retrieve an entry
+	 *
+	 * @apiMethod GET
+	 * @apiUri    /mail/{id}
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 2,
+	 * 						"subject": "About",
+	 * 						"body": "About Side Menu",
+	 * 						"template": 0,
+	 * 						"created_at": "2022-05-24 12:31:01",
+	 * 						"updated_at": null,
+	 * 						"deleted_at": null,
+	 * 						"sent_at": null,
+	 * 						"sent_by": 12,
+	 * 						"api": "https://example.org/api/mail/2"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
+	 * @param  integer  $id
+	 * @return Response
+	 */
+	public function read(int $id)
+	{
+		$row = Message::findOrFail((int)$id);
+
+		$row->api = route('api.mailer.read', ['id' => $row->id]);
+
+		return new JsonResource($row);
+	}
+
+	/**
+	 * Update an entry
+	 *
+	 * @apiMethod PUT
+	 * @apiUri    /mail/{id}
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "subject",
+	 * 		"description":   "Menu subject",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "description",
+	 * 		"description":   "A description of the menu",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "client_id",
+	 * 		"description":   "Client (admin = 1|site = 0) ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "menutype",
+	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the subject.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 2,
+	 * 						"subject": "About",
+	 * 						"body": "About Side Menu",
+	 * 						"template": 0,
+	 * 						"created_at": "2022-05-24 12:31:01",
+	 * 						"updated_at": null,
+	 * 						"deleted_at": null,
+	 * 						"sent_at": null,
+	 * 						"sent_by": 12,
+	 * 						"api": "https://example.org/api/mail/2"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
+	 * @param   Request $request
+	 * @param   integer $id
+	 * @return  Response
+	 */
+	public function update(Request $request, int $id)
+	{
+		$rules = [
+			'subject' => 'nullable|string|max:255',
+			'body' => 'nullable|string|max:15000',
+			'template' => 'nullable|integer',
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
+
+		$row = Message::findOrFail($id);
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
+		}
+
+		if (!$row->save())
+		{
+			return response()->json(['message' => trans('global.messages.save failed')], 500);
+		}
+
+		$row->api = route('api.mailer.read', ['id' => $row->id]);
+
+		return new JsonResource($row);
+	}
+
+	/**
+	 * Delete an entry
+	 *
+	 * @apiMethod DELETE
+	 * @apiUri    /mail/{id}
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful entry deletion"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
+	 * @param   integer  $id
+	 * @return  Response
+	 */
+	public function delete(int $id)
+	{
+		$row = Message::findOrFail($id);
+
+		if (!$row->delete())
+		{
+			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+		}
+
+		return response()->json(null, 204);
+	}
+
+	/**
+	 * Post a message
+	 *
+	 * @apiMethod POST
+	 * @apiUri    /mail/send
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "id",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry read",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {
+	 * 						"id": 2,
+	 * 						"subject": "About",
+	 * 						"body": "About Side Menu",
+	 * 						"template": 0,
+	 * 						"created_at": "2022-05-24 12:31:01",
+	 * 						"updated_at": null,
+	 * 						"deleted_at": null,
+	 * 						"sent_at": null,
+	 * 						"sent_by": 12,
+	 * 						"api": "https://example.org/api/mail/2"
+	 * 					}
+	 * 				}
+	 * 			}
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
+	 * @param  integer  $id
+	 * @return Response
+	 */
+	public function send(Request $request)
+	{
+		$rules = [
+			'subject' => 'required|string|max:255',
+			'body' => 'required|string|max:15000'
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
+
+		$row = new Message;
+		$row->subject = $request->input('subject');
+		$row->body = $request->input('body');
+		$row->save();
+
+		$cc  = [];
+
+		if ($request->has('cc'))
+		{
+			$ccs = $request->input('cc');
+			$cc = $this->toEmails($ccs, $cc, $request);
+		}
+
+		$bcc = [];
+
+		if ($request->has('bcc'))
+		{
+			$bccs = $request->input('bcc');
+			$bcc = $this->toEmails($bccs, $bcc, $request);
+		}
+
+		$to = [];
+		$users = [];
+
+		if ($request->has('user'))
+		{
+			$users = $request->input('user');
+			$users = explode(',', $users);
+			$users = array_map('trim', $users);
+		}
+
+		if ($request->has('role'))
+		{
+			$role = $request->input('role');
+
+			$a = (new User)->getTable();
+			$b = (new Map)->getTable();
+
+			$results = User::query()
+				->select($a . '.id')
+				->leftJoin($b, $b . '.user_id', $a . '.id')
+				->whereIn($b . '.role_id', (array)$role)
+				->get()
+				->pluck('id')
+				->toArray();
+
+			$users = $users + $results;
+		}
+
+		$users = array_filter($users);
+		$users = array_unique($users);
+
+		if (count($users) > 0)
+		{
+			foreach ($users as $id)
+			{
+				if (is_numeric($id))
+				{
+					$user = User::find($id);
+				}
+				elseif (filter_var($id, FILTER_VALIDATE_EMAIL))
+				{
+					$user = User::findByEmail($id);
+
+					if (!$user)
+					{
+						$user = new User;
+						$user->name = $id;
+						$user->username = $id;
+						$user->email = $id;
+					}
+				}
+
+				if (!$user || !$user->email)
+				{
+					return response()->json(['message' => 'Could not find account for user ID #' . $id], 415);
+				}
+
+				$to[] = $user->email;
+
+				$message = new GenericMessage($row, $user);
+
+				Mail::to($user->email)
+					->cc($cc)
+					->bcc($bcc)
+					->send($message);
+
+				$this->log($user, $row);
+			}
+		}
+
+		$row->sent_at = Carbon::now();
+		$row->sent_by = auth()->user()->id;
+		$row->recipients->set('to', $to);
+		$row->recipients->set('cc', $cc);
+		$row->recipients->set('bcc', $bcc);
+		$row->save();
+
+		$row->api = route('api.mailer.read', ['id' => $row->id]);
+
+		return new JsonResource($row);
+	}
+
+	/**
+	 * Convert a string of user IDs or emails into an array of emails
+	 *
+	 * @param string $str
+	 * @param array  $emails
+	 * @param Request $request
+	 * @return array
+	 */
+	protected function toEmails($str, $emails = array(), $request)
+	{
+		$str = explode(',', $str);
+		$str = array_map('trim', $str);
+
+		foreach ($str as $id)
+		{
+			if (is_numeric($id))
+			{
+				$user = User::find($id);
+
+				if (!$user)
+				{
+					return response()->json(['message' => 'Could not find account for user ID #' . $id], 415);
+				}
+
+				$emails[] = $user->email;
+			}
+			elseif (filter_var($id, FILTER_VALIDATE_EMAIL))
+			{
+				$emails[] = $id;
+			}
+			else
+			{
+				return response()->json(['message' => 'Invalid value: ' . $id], 415);
+			}
+		}
+
+		$emails = array_filter($emails);
+		$emails = array_unique($emails);
+
+		return $emails;
+	}
+
+	/**
+	 * Log email
+	 *
+	 * @param   object $user
+	 * @param   object $message
+	 * @return  void
+	 */
+	protected function log($user, $message)
+	{
+		Log::create([
+			'ip'              => request()->ip(),
+			'userid'          => (auth()->user() ? auth()->user()->id : 0),
+			'status'          => 200,
+			'transportmethod' => 'POST',
+			'servername'      => request()->getHttpHost(),
+			'uri'             => Str::limit($user->email, 128, ''),
+			'app'             => 'email',
+			'objectid'        => (int)$message->id,
+			'payload'         => $message->subject,
+			'classname'       => Str::limit('MessagesController', 32, ''),
+			'classmethod'     => Str::limit('send', 16, ''),
+			'targetuserid'    => (int)$user->id,
+		]);
+	}
+}

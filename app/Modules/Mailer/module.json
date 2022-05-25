@@ -1,0 +1,14 @@
+{
+    "name": "Mailer",
+    "alias": "mailer",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "App\\Modules\\Mailer\\Providers\\MailServiceProvider",
+        "App\\Modules\\Mailer\\Providers\\RouteServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
