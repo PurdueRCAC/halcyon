@@ -30,6 +30,16 @@
 		</field>
 
 		<field
+			name="allow_disabled_login"
+			type="radio"
+			default="0"
+			label="users::config.allow disabled login"
+			description="users::config.allow disabled login desc">
+			<option value="0">global.no</option>
+			<option value="1">global.yes</option>
+		</field>
+
+		<field
 			name="profile_photos"
 			type="radio"
 			default="0"

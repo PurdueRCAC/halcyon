@@ -242,23 +242,6 @@ $i = 0;
 		<a href="#import_member_dialog" class="import_member btn btn-secondary btn-sm" data-membertype="1">
 			<span class="fa fa-upload" aria-hidden="true"></span> Import
 		</a>
-		<!--
-		<div class="members-dropdown dropdown">
-			<button id="add_member" class="btn btn-secondary btn-sm dropdown-toggle" data-membertype="1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				<span class="fa fa-plus-circle" aria-hidden="true"></span> Add Member
-			</button>
-			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="add_member">
-				<a class="dropdown-item add_member" href="#add_member_dialog" data-membertype="1">
-					<span class="fa fa-user" aria-hidden="true"></span>
-					Select Users
-				</a>
-				<a class="dropdown-item import_member" href="#import_member_dialog">
-					<span class="fa fa-upload" aria-hidden="true"></span>
-					Import
-				</a>
-			</div>
-		</div>
-		-->
 	</div>
 </div>
 
@@ -414,20 +397,24 @@ $i = 0;
 							{{ $member->user ? $member->user->username : trans('global.unknown') }}
 						</td>
 						<td class="text-center">
-							@if ($member->userid != $user->id || auth()->user()->can('manage groups'))
-								<div class="dropdown dropright">
-									<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										<span class="sr-only">Options</span>
-									</button>
-									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
-										<a href="#manager-{{ $member->id }}" class="dropdown-item btn membership-move demote" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-userid="{{ $member->userid }}" data-target="1" data-method="{{ $member->groupid ? 'put' : 'post' }}" title="Remove manager privileges">
-											<span class="fa fa-arrow-down" aria-hidden="true"></span> Remove manager privileges
-										</a>
-										<a href="#manager-{{ $member->id }}" class="dropdown-item btn membership-remove delete" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group">
-											<span class="fa fa-trash" aria-hidden="true"></span> Remove from group
-										</a>
+							@if ($member->user)
+								@if (!$member->user->enabled)
+									<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span>
+								@elseif ($member->userid != $user->id || auth()->user()->can('manage groups'))
+									<div class="dropdown dropright">
+										<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											<span class="sr-only">Options</span>
+										</button>
+										<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
+											<a href="#manager-{{ $member->id }}" class="dropdown-item btn membership-move demote" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-userid="{{ $member->userid }}" data-target="1" data-method="{{ $member->groupid ? 'put' : 'post' }}" title="Remove manager privileges">
+												<span class="fa fa-arrow-down" aria-hidden="true"></span> Remove manager privileges
+											</a>
+											<a href="#manager-{{ $member->id }}" class="dropdown-item btn membership-remove delete" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group">
+												<span class="fa fa-trash" aria-hidden="true"></span> Remove from group
+											</a>
+										</div>
 									</div>
-								</div>
+								@endif
 							@endif
 						</td>
 						<?php
@@ -439,30 +426,32 @@ $i = 0;
 							'Manager'
 						);
 						foreach ($queues as $queue):
-							//$qu[$queue->id] = $queue->users->pluck('userid')->toArray();
 							$checked = '';
+							$disable = '';
 							$m = null;
-							$disable = false;
+
 							// Managers get explicit access to owned queues, but not for free queues.
 							if (!$queue->free && $group->cascademanagers && !auth()->user()->can('manage groups')):
 								$disable = true;
-								$checked = ' checked="checked" disabled="disabled"';
+								$checked = ' checked="checked"';
+								$disable = ' disabled="disabled"';
 							else:
-								//foreach ($queue->users as $m):
-									if (isset($queue->qu[$member->userid])):
-										$m = $queue->qu[$member->userid];
-									//if ($member->userid == $m->userid):
-										$checked = ' checked="checked"';
-										//break;
-									endif;
-								//endforeach;
+								if (isset($queue->qu[$member->userid])):
+									$m = $queue->qu[$member->userid];
+
+									$checked = ' checked="checked"';
+								endif;
 							endif;
 							$csv[] = $checked ? 'yes' : 'no';
+
+							if (!$member->user->enabled):
+								$disable = ' disabled="disabled"';
+							endif;
 							?>
 							<td class="col-queue text-nowrap text-center">
 								<input type="checkbox"
 									class="membership-toggle queue-toggle"
-									name="queue[{{ $i }}][{{ $queue->id }}]"{!! $checked !!}
+									name="queue[{{ $i }}][{{ $queue->id }}]"{!! $checked !!}{!! $disable !!}
 									data-base="unix-{{ $i }}-{{ $base }}"
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $queue->id }}"
@@ -476,32 +465,33 @@ $i = 0;
 						$uu = array();
 
 						foreach ($unixgroups as $unix):
-							//$uu[$unix->id] = $unix->members->pluck('userid')->toArray();
 							$checked = '';
+							$disable = '';
 							$m = null;
 
-								if (isset($unix->uu[$member->userid])):
-									$m = $unix->uu[$member->userid];
-							//foreach ($unix->members as $m):
-								//if (in_array($member->userid, $uu[$unix->id])):
-								//if ($member->userid == $m->userid):
-									//$in[] = $unix->longname;
-									$checked = ' checked="checked"';
-									//break;
-								endif;
-							//endforeach;
+							if (isset($unix->uu[$member->userid])):
+								$m = $unix->uu[$member->userid];
+
+								$checked = ' checked="checked"';
+							endif;
+
 							$csv[] = $checked ? 'yes' : 'no';
 
+							// Disable unchecking the base unix group
 							if (preg_match("/rcs[0-9]{4}0/", $unix->shortname) && $group->cascademanagers && !auth()->user()->can('manage groups')):
 								if ($group_boxes > 0 && $checked):
-									$checked .= ' disabled="disabled"';
+									$disable = ' disabled="disabled"';
 								endif;
+							endif;
+
+							if (!$member->user->enabled):
+								$disable = ' disabled="disabled"';
 							endif;
 							?>
 							<td class="col-unixgroup text-nowrap text-center">
 								<input type="checkbox"
 									class="membership-toggle unixgroup-toggle"
-									name="unix[{{ $unix->id }}]"{!! $checked !!}
+									name="unix[{{ $unix->id }}]"{!! $checked !!}{!! $disable !!}
 									id="unix-{{ $i }}-{{ $unix->id }}"
 									data-base="unix-{{ $i }}-{{ $base }}"
 									data-userid="{{ $member->userid }}"
@@ -579,27 +569,33 @@ $i = 0;
 								{{ $member->user ? $member->user->username : trans('global.unknown') }}
 							</td>
 							<td class="text-center">
-								<div class="dropdown dropleft">
-									<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										<span class="sr-only">Options</span>
-									</button>
-									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
-										@if (count($queues))
-										<a href="#member{{ $member->id }}" class="dropdown-item btn membership-allqueues allqueues" title="Enable all queues for this user">
-											<span class="fa fa-fw fa-check-square" aria-hidden="true"></span> Enable all queues
-										</a>
-										@endif
-										<a href="#member{{ $member->id }}" class="dropdown-item btn membership-move change" data-api="{{ $member->groupid ? route('api.groups.members.update', ['id' => $member->id]) : route('api.groups.members.create') }}" data-target="3" data-method="{{ $member->groupid ? 'put' : 'post' }}" data-userid="{{ $member->userid }}" title="Grant usage viewer privileges">
-											<span class="fa fa-fw fa-bar-chart" aria-hidden="true"></span> Grant usage viewer privileges
-										</a>
-										<a href="#member{{ $member->id }}" class="dropdown-item btn membership-move promote" data-api="{{ $member->groupid ? route('api.groups.members.update', ['id' => $member->id]) : route('api.groups.members.create') }}" data-target="2" data-method="{{ $member->groupid ? 'put' : 'post' }}" data-userid="{{ $member->userid }}" title="Grant manager privileges">
-											<span class="fa fa-fw fa-arrow-up" aria-hidden="true"></span> Grant manager privileges
-										</a>
-										<a href="#member{{ $member->id }}" class="dropdown-item btn membership-remove delete" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group">
-											<span class="fa fa-fw fa-trash" aria-hidden="true"></span> Remove from group
-										</a>
-									</div>
-								</div>
+								@if ($member->user)
+									@if (!$member->user->enabled)
+										<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span>
+									@elseif ($member->userid != $user->id || auth()->user()->can('manage groups'))
+										<div class="dropdown dropleft">
+											<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+												<span class="sr-only">Options</span>
+											</button>
+											<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
+												@if (count($queues))
+												<a href="#member{{ $member->id }}" class="dropdown-item btn membership-allqueues allqueues" title="Enable all queues for this user">
+													<span class="fa fa-fw fa-check-square" aria-hidden="true"></span> Enable all queues
+												</a>
+												@endif
+												<a href="#member{{ $member->id }}" class="dropdown-item btn membership-move change" data-api="{{ $member->groupid ? route('api.groups.members.update', ['id' => $member->id]) : route('api.groups.members.create') }}" data-target="3" data-method="{{ $member->groupid ? 'put' : 'post' }}" data-userid="{{ $member->userid }}" title="Grant usage viewer privileges">
+													<span class="fa fa-fw fa-bar-chart" aria-hidden="true"></span> Grant usage viewer privileges
+												</a>
+												<a href="#member{{ $member->id }}" class="dropdown-item btn membership-move promote" data-api="{{ $member->groupid ? route('api.groups.members.update', ['id' => $member->id]) : route('api.groups.members.create') }}" data-target="2" data-method="{{ $member->groupid ? 'put' : 'post' }}" data-userid="{{ $member->userid }}" title="Grant manager privileges">
+													<span class="fa fa-fw fa-arrow-up" aria-hidden="true"></span> Grant manager privileges
+												</a>
+												<a href="#member{{ $member->id }}" class="dropdown-item btn membership-remove delete" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group">
+													<span class="fa fa-fw fa-trash" aria-hidden="true"></span> Remove from group
+												</a>
+											</div>
+										</div>
+									@endif
+								@endif
 							</td>
 							<?php
 							$csv = array(
@@ -609,32 +605,33 @@ $i = 0;
 							);
 							foreach ($queues as $queue):
 								$checked = '';
+								$disable = '';
 								$m = null;
 
 								// We check queues a little differently because it's possible
 								// to be a pending member of one queue but full member of another
-								//foreach ($queue->users as $m):
-									if (isset($queue->qu[$member->userid])):
-										$m = $queue->qu[$member->userid];
-									//if ($member->userid == $m->userid):
-										//if ($m->isPending()):
-										if (substr($m, 0, 1) == 'p'):
-											$m = substr($m, 1);
-											$checked = ' disabled';
-										else:
-											$checked = ' checked="checked"';
-										endif;
+								if (isset($queue->qu[$member->userid])):
+									$m = $queue->qu[$member->userid];
 
-									//	break;
+									if (substr($m, 0, 1) == 'p'):
+										$m = substr($m, 1);
+										$checked = ' checked="checked"';
+										$disable = ' disabled';
+									else:
+										$checked = ' checked="checked"';
 									endif;
-								//endforeach;
+								endif;
 
 								$csv[] = $checked ? 'yes' : 'no';
+
+								if (!$member->user || !$member->user->enabled):
+									$disable = ' disabled';
+								endif;
 								?>
 								<td class="text-center col-queue">
 									<input type="checkbox"
 										class="membership-toggle queue-toggle"
-										name="queue[{{ $i }}][{{ $queue->id }}]"{!! $checked !!}
+										name="queue[{{ $i }}][{{ $queue->id }}]"{!! $checked !!}{!! $disable !!}
 										data-base="unix-{{ $i }}-{{ $base }}"
 										data-userid="{{ $member->userid }}"
 										data-objectid="{{ $queue->id }}"
@@ -647,17 +644,15 @@ $i = 0;
 
 							foreach ($unixgroups as $unix):
 								$checked = '';
+								$disable = '';
 								$m = null;
 
-								//foreach ($unix->members as $m):
-									if (isset($unix->uu[$member->userid])):
-										$m = $unix->uu[$member->userid];
-									//if ($member->userid == $m->userid):
-										//$in[] = $unix->longname;
-										$checked = ' checked="checked"';
-										//break;
-									endif;
-								//endforeach;
+								if (isset($unix->uu[$member->userid])):
+									$m = $unix->uu[$member->userid];
+
+									$checked = ' checked="checked"';
+								endif;
+
 								$csv[] = $checked ? 'yes' : 'no';
 
 								if (preg_match("/rcs[0-9]{4}0/", $unix->shortname) && !auth()->user()->can('manage groups')):
@@ -665,11 +660,15 @@ $i = 0;
 										$checked .= ' disabled="disabled"';
 									endif;
 								endif;
+
+								if (!$member->user->enabled):
+									$disable = ' disabled';
+								endif;
 								?>
 								<td class="text-center col-unixgroup">
 									<input type="checkbox"
 										class="membership-toggle unixgroup-toggle"
-										name="unix[{{ $i }}][{{ $unix->id }}]"{!! $checked !!}
+										name="unix[{{ $i }}][{{ $unix->id }}]"{!! $checked !!}{!! $disable !!}
 										id="unix-{{ $i }}-{{ $unix->id }}"
 										data-base="unix-{{ $i }}-{{ $base }}"
 										data-userid="{{ $member->userid }}"
@@ -748,22 +747,28 @@ $i = 0;
 							{{ $member->user ? $member->user->username : trans('global.unknown') }}
 						</td>
 						<td class="text-right text-nowrap">
-							<div class="dropdown dropright">
-								<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<span class="sr-only">Options</span>
-								</button>
-								<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
-									<a href="#member{{ $member->id }}" class="dropdown-item btn membership-allqueues allqueues" title="Enable all queues for this user">
-										<span class="fa fa-fw fa-check-square" aria-hidden="true"></span> Enable all queues
-									</a>
-									<a href="#member{{ $member->id }}" class="dropdown-item btn membership-move change" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="1" data-userid="{{ $member->userid }}" data-method="{{ $member->groupid ? 'put' : 'post' }}" title="Remove usage viewer privileges">
-										<span class="fa fa-fw fa-user" aria-hidden="true"></span> Remove usage viewer privileges
-									</a>
-									<a href="#member{{ $member->id }}" class="dropdown-item btn membership-remove delete" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group">
-										<span class="fa fa-fw fa-trash" aria-hidden="true"></span> Remove from group
-									</a>
-								</div>
-							</div>
+							@if ($member->user)
+								@if (!$member->user->enabled)
+									<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span>
+								@elseif ($member->userid != $user->id || auth()->user()->can('manage groups'))
+									<div class="dropdown dropright">
+										<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											<span class="sr-only">Options</span>
+										</button>
+										<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
+											<a href="#member{{ $member->id }}" class="dropdown-item btn membership-allqueues allqueues" title="Enable all queues for this user">
+												<span class="fa fa-fw fa-check-square" aria-hidden="true"></span> Enable all queues
+											</a>
+											<a href="#member{{ $member->id }}" class="dropdown-item btn membership-move change" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="1" data-userid="{{ $member->userid }}" data-method="{{ $member->groupid ? 'put' : 'post' }}" title="Remove usage viewer privileges">
+												<span class="fa fa-fw fa-user" aria-hidden="true"></span> Remove usage viewer privileges
+											</a>
+											<a href="#member{{ $member->id }}" class="dropdown-item btn membership-remove delete" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group">
+												<span class="fa fa-fw fa-trash" aria-hidden="true"></span> Remove from group
+											</a>
+										</div>
+									</div>
+								@endif
+							@endif
 						</td>
 						<?php
 						$csv = array(
@@ -773,22 +778,24 @@ $i = 0;
 						);
 						foreach ($queues as $queue):
 							$checked = '';
+							$disable = '';
 							$m = null;
 
-							//foreach ($queue->users as $m):
-								//if ($member->userid == $m->userid):
-								if (isset($queue->qu[$member->userid])):
-									$m = $queue->qu[$member->userid];
-									$checked = ' checked="checked"';
-									//break;
-								endif;
-							//endforeach;
+							if (isset($queue->qu[$member->userid])):
+								$m = $queue->qu[$member->userid];
+								$checked = ' checked="checked"';
+							endif;
+
 							$csv[] = $checked ? 'yes' : 'no';
+
+							if (!$member->user->enabled):
+								$disable = ' disabled';
+							endif;
 							?>
 							<td class="text-center col-queue">
 								<input type="checkbox"
 									class="membership-toggle queue-toggle"
-									name="queue[{{ $i }}][{{ $queue->id }}]"{!! $checked !!}
+									name="queue[{{ $i }}][{{ $queue->id }}]"{!! $checked !!}{!! $disable !!}
 									data-base="unix-{{ $i }}-{{ $base }}"
 									data-userid="{{ $member->userid }}"
 									data-objectid="{{ $queue->id }}"
@@ -801,16 +808,14 @@ $i = 0;
 
 						foreach ($unixgroups as $unix):
 							$checked = '';
+							$disable = '';
 							$m = null;
 
-							//foreach ($unix->members as $m):
-								//if ($member->userid == $m->userid):
-								if (isset($unix->uu[$member->userid])):
-									$m = $unix->uu[$member->userid];
-									$checked = ' checked="checked"';
-									//break;
-								endif;
-							//endforeach;
+							if (isset($unix->uu[$member->userid])):
+								$m = $unix->uu[$member->userid];
+								$checked = ' checked="checked"';
+							endif;
+
 							$csv[] = $checked ? 'yes' : 'no';
 
 							if (preg_match("/rcs[0-9]{4}0/", $unix->shortname) && !auth()->user()->can('manage groups')):
@@ -818,11 +823,15 @@ $i = 0;
 									$checked .= ' disabled="disabled"';
 								endif;
 							endif;
+
+							if (!$member->user->enabled):
+								$disable = ' disabled';
+							endif;
 							?>
 							<td class="text-center col-unixgroup">
 								<input type="checkbox"
 									class="membership-toggle unixgroup-toggle"
-									name="unix[{{ $i }}][{{ $unix->id }}]"{!! $checked !!}
+									name="unix[{{ $i }}][{{ $unix->id }}]"{!! $checked !!}{!! $disable !!}
 									id="unix-{{ $i }}-{{ $unix->id }}"
 									data-base="unix-{{ $i }}-{{ $base }}"
 									data-userid="{{ $member->userid }}"
@@ -940,14 +949,12 @@ $i = 0;
 							foreach ($unixgroups as $unix):
 								$checked = '';
 								$m = null;
-								//foreach ($unix->members()->withTrashed()->get() as $m):
-									//if ($member->userid == $m->userid):
-									if (isset($unix->uu[$member->userid])):
-										$m = $unix->uu[$member->userid];
-										$checked = ' checked="checked"';
-										//break;
-									endif;
-								//endforeach;
+
+								if (isset($unix->uu[$member->userid])):
+									$m = $unix->uu[$member->userid];
+									$checked = ' checked="checked"';
+								endif;
+
 								$csv[] = $checked ? 'yes' : 'no';
 								?>
 								<td class="text-center col-unixgroup">

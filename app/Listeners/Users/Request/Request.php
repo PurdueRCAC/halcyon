@@ -48,6 +48,11 @@ class Request
 		$content = null;
 		$user = $event->getUser();
 
+		if (!$user->enabled)
+		{
+			return;
+		}
+
 		$r = ['section' => 'request'];
 		if (auth()->user()->id != $user->id)
 		{

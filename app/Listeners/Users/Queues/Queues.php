@@ -20,7 +20,7 @@ class Queues
 	}
 
 	/**
-	 * Display session data for a user
+	 * Display queue membership data for a user
 	 *
 	 * @param   UserDisplay  $event
 	 * @return  void

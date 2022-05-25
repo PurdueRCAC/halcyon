@@ -81,6 +81,12 @@ class Database
 			return false;
 		}
 
+		if (!$user->enabled && !config('module.users.allow_disabled_login'))
+		{
+			$event->error = 'Account has been disabled.';
+			return false;
+		}
+
 		Auth::loginUsingId($user->id);
 
 		//$remember = (bool) $request->get('remember_me', false);

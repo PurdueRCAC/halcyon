@@ -58,6 +58,12 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 		<div class="contentInner">
 			<h2 class="mt-0">{{ trans('users::users.my account') }}</h2>
 
+			@if (!$user->enabled)
+				<div class="alert alert-warning" role="alert">
+					{{ trans('users::users.account suspended') }}
+				</div>
+			@endif
+
 			<div class="card panel panel-default mb-3">
 				<div class="card-header panel-heading">
 					<h3 class="card-title my-0">Profile</h3>
@@ -116,6 +122,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 								</div>
 							@endif
 						@endforeach
+						@if ($user->enabled)
 						<div class="col-md-6 mb-2">
 							<dt>
 								Login Shell
@@ -186,6 +193,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 								</div>
 							</dd>
 						</div>
+						@endif
 					</dl>
 				</div>
 			</div>

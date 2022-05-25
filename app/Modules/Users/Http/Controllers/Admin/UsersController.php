@@ -137,7 +137,13 @@ class UsersController extends Controller
 
 		if ($filters['state'] == 'enabled')
 		{
-			$query->whereNull($u . '.dateremoved');
+			$query->whereNull($u . '.dateremoved')
+				->where($a . '.enabled', '=', 1);
+		}
+		elseif ($filters['state'] == 'disabled')
+		{
+			$query->whereNull($u . '.dateremoved')
+				->where($a . '.enabled', '=', 0);
 		}
 		elseif ($filters['state'] == 'trashed')
 		{
@@ -454,48 +460,40 @@ class UsersController extends Controller
 	}
 
 	/**
-	 * Sets the account blocked state of a member
+	 * Sets the account state of a member to enabled
 	 *
 	 * @param   Request $request
 	 * @return  Response
 	 */
-	public function unblock(Request $request)
+	public function enable(Request $request)
 	{
-		return $this->block($request, 0);
+		return $this->disable($request, 1);
 	}
 
 	/**
-	 * Sets the account blocked state of a member
+	 * Sets the account state of a member to disabled
 	 *
 	 * @param   Request $request
 	 * @param   integer $state
 	 * @return  Response
 	 */
-	public function block(Request $request, $state = 1)
+	public function disable(Request $request, $state = 0)
 	{
 		// Incoming user ID
 		$ids = $request->input('id', array());
 		$ids = (!is_array($ids) ? array($ids) : $ids);
 
-		// Do we have an ID?
-		if (empty($ids))
-		{
-			$request->session()->flash('warning', trans('users::users.no id'));
-
-			return $this->cancel();
-		}
-
-		$i = 0;
+		$success = 0;
 
 		foreach ($ids as $id)
 		{
 			// Load the profile
 			$user = User::findOrFail(intval($id));
-			$user->block = $state;
+			$user->enabled = $state;
 
-			if ($user->block && $user->id == auth()->user()->id)
+			if (!$user->enabled && $user->id == auth()->user()->id)
 			{
-				$request->session()->flash('error', trans('users::users.error.cannot block self'));
+				$request->session()->flash('error', trans('users::users.error.cannot disable self'));
 				continue;
 			}
 
@@ -505,12 +503,12 @@ class UsersController extends Controller
 				continue;
 			}
 
-			$i++;
+			$success++;
 		}
 
-		if ($i)
+		if ($success)
 		{
-			$request->session()->flash('success', trans('users::users.user blocked'));
+			$request->session()->flash('success', trans('users::users.user ' . ($state ? 'enabled' : 'disabled'), ['count' => $success]));
 		}
 
 		return $this->cancel();

@@ -18,10 +18,12 @@
 			<h2>{{ trans('courses::courses.my courses') }}</h2>
 		</div>
 		<div class="col-md-3 text-right">
+		@if ($user->enabled)
 			<a href="#add-account" data-hide="#account-list" data-icon="fa-times" data-text="<span class='fa fa-times' aria-hidden='true'></span> {{ trans('global.cancel') }}" class="btn btn-secondary add-account">
 				<span class="fa fa-plus" aria-hidden="true"></span>
 				{{ trans('courses::courses.add account') }}
 			</a>
+		@endif
 		</div>
 	</div>
 

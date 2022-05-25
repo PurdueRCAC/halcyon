@@ -8,6 +8,7 @@ use App\Modules\Resources\Console\EmailSchedulingCommand;
 use App\Modules\Resources\Listeners\Groups;
 use App\Modules\Resources\Listeners\Queues;
 use App\Modules\Resources\Listeners\Subresources;
+use App\Modules\Resources\Listeners\Users;
 
 class ResourcesServiceProvider extends ServiceProvider
 {
@@ -41,6 +42,7 @@ class ResourcesServiceProvider extends ServiceProvider
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
 		$this->app['events']->subscribe(new Subresources);
+		$this->app['events']->subscribe(new Users);
 
 		if (is_dir(dirname(dirname(__DIR__))) . '/Queues')
 		{

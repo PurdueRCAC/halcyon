@@ -23,9 +23,11 @@
 				</div>
 			</div>
 			<div class="col-md-3 text-right">
+				@if ($user->enabled)
 				<a href="#manage_roles_dialog" id="manage_roles" data-membertype="1" class="btn btn-sm" data-tip="{{ trans('resources::assets.manage access') }}">
 					<span class="fa fa-pencil" aria-hidden="true"></span> {{ trans('resources::assets.manage') }}
 				</a>
+				@endif
 			</div>
 		</div>
 	</div>
@@ -59,6 +61,7 @@
 	</div>
 </div>
 
+@if ($user->enabled)
 <div id="manage_roles_dialog" data-id="{{ $user->id }}" title="{{ trans('resources::assets.manage access') }}" class="dialog roles-dialog">
 	<form method="post" action="{{ route('site.users.account') }}">
 		<div class="form-group">
@@ -128,3 +131,4 @@
 		</div>
 	</form>
 </div>
+@endif

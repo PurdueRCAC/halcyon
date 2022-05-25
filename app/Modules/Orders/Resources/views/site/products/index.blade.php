@@ -145,7 +145,11 @@ app('pathway')
 						</div>
 					</li>
 					<li class="list-group-item">
-						<a href="{{ route('site.orders.cart') }}" class="btn btn-primary d-block">View Cart</a>
+						@if (auth()->user() && auth()->user()->enabled)
+							<a href="{{ route('site.orders.cart') }}" class="btn btn-primary d-block">View Cart</a>
+						@else
+							<a href="{{ route('site.orders.cart') }}" class="btn btn-primary d-block disabled">View Cart</a>
+						@endif
 					</li>
 				</ul>
 			</div>
@@ -310,12 +314,16 @@ app('pathway')
 							</td>
 							<td class="orderproductitem text-center">
 								<label class="sr-only" for="{{ $product->id }}_quantity">Quantity</label>
-								<input type="number" name="quantity[{{ $product->id }}][]" id="{{ $product->id }}_quantity" data-id="{{ $product->id }}" size="4" min="0" class="form-control quantity-input" value="{{ $found ? $found->qty : 1 }}" />
+								@if (auth()->user() && auth()->user()->enabled)
+									<input type="number" name="quantity[{{ $product->id }}][]" id="{{ $product->id }}_quantity" data-id="{{ $product->id }}" size="4" min="0" class="form-control quantity-input" value="{{ $found ? $found->qty : 1 }}" />
+								@else
+									<input type="number" name="quantity[{{ $product->id }}][]" id="{{ $product->id }}_quantity" data-id="{{ $product->id }}" size="4" min="0" class="form-control quantity-input" value="{{ $found ? $found->qty : 1 }}" disabled />
+								@endif
 							</td>
 							<td class="orderproductitem text-right text-nowrap">
+								@if (auth()->user() && auth()->user()->enabled)
 								@if (!$found)
 									<span id="{{ $product->id }}_linetotal" class="hide">{{ $found ? $found->price() : 0.00 }}</span>
-								
 									<button class="btn btn-cart-add btn-secondary" data-product="{{ $product->id }}" data-api="{{ route('api.orders.cart.create') }}" data-text-update="Update cart">
 										Add to cart
 										<span class="spinner-border spinner-border-sm" role="status"><span class="hide">Working...</span></span>
@@ -323,6 +331,13 @@ app('pathway')
 								@else
 									<button class="btn btn-cart-update btn-secondary" disabled data-product="{{ $product->id }}" data-api="{{ route('api.orders.cart.update', ['id' => $item->rowId]) }}">
 										Update cart
+										<span class="spinner-border spinner-border-sm" role="status"><span class="hide">Working...</span></span>
+									</button>
+								@endif
+								@else
+									<span id="{{ $product->id }}_linetotal" class="hide">{{ $found ? $found->price() : 0.00 }}</span>
+									<button class="btn btn-cart-add btn-secondary" disabled data-product="{{ $product->id }}" data-api="{{ route('api.orders.cart.create') }}" data-text-update="Update cart">
+										Add to cart
 										<span class="spinner-border spinner-border-sm" role="status"><span class="hide">Working...</span></span>
 									</button>
 								@endif

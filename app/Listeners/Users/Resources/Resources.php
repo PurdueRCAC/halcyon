@@ -35,12 +35,6 @@ class Resources
 
 		$user = $event->getUser();
 
-		/*if (auth()->user()->id != $user->id
-		 && !auth()->user()->can('manage users'))
-		{
-			return;
-		}*/
-
 		$resources = Asset::query()
 			->where('rolename', '!=', '')
 			->where('listname', '!=', '')

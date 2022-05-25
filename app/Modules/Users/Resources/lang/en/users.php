@@ -23,7 +23,7 @@ return [
 	// Status
 	'status' => 'Status',
 	'status trashed' => 'Trashed',
-	'status blocked' => 'Disabled',
+	'status disabled' => 'Suspended',
 	'status enabled' => 'Enabled',
 	'status pending' => 'Pending',
 	'status unapproved' => 'Not Approved',
@@ -37,9 +37,9 @@ return [
 	'status incomplete details' => 'Registration via 3rd-party authenticator but hasn\'t completed the process.',
 	// Actions
 	'trashed on' => 'Removed on :date',
-	'block this user' => 'Disable this account',
-	'block user' => 'Disable',
-	'unblock user' => 'Unblock',
+	'disable this user' => 'Suspend this account',
+	'disable' => 'Suspend',
+	'enable' => 'Enable',
 	'unconfirm email' => 'Unconfirm email',
 	'confirm email' => 'Confirm email',
 	'resend confirmation' => 'Resend confirmation',
@@ -48,7 +48,9 @@ return [
 	// Filters
 	'all states' => '- All States -',
 	'enabled' => 'Enabled',
-	'disabled' => 'Disabled',
+	'disabled' => 'Suspended',
+	'user enabled' => ':count users(s) enabled',
+	'user disabled' => ':count users(s) suspended',
 	'select approved status' => '- Approved -',
 	'unapproved' => 'Unapproved',
 	'manually approved' => 'Manually approved',
@@ -117,4 +119,5 @@ return [
 		'confirm submit' => 'I understand the consequences, delete this account',
 		'warning' => 'This action cannot be undone. This will permanently delete the account and remove all associations.',
 	],
+	'account suspended' => 'This account has been suspended.',
 ];

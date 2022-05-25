@@ -40,24 +40,24 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		'uses' => 'UsersController@store',
 		'middleware' => 'can:create users|edit users',
 	]);
-	$router->match(['get', 'post'], '/block/{id?}', [
-		'as' => 'admin.users.block',
-		'uses' => 'UsersController@block',
+	$router->match(['get', 'post'], '/disable/{id?}', [
+		'as' => 'admin.users.disable',
+		'uses' => 'UsersController@disable',
 		'middleware' => 'can:edit.state users',
 	]);
-	$router->match(['get', 'post'], '/unblock/{id?}', [
-		'as' => 'admin.users.unblock',
-		'uses' => 'UsersController@unblock',
+	$router->match(['get', 'post'], '/enable/{id?}', [
+		'as' => 'admin.users.enable',
+		'uses' => 'UsersController@enable',
 		'middleware' => 'can:edit.state users',
 	]);
 	$router->match(['get', 'post'], '/confirm/{id?}', [
 		'as' => 'admin.users.confirm',
-		'uses' => 'UsersController@block',
+		'uses' => 'UsersController@confirm',
 		'middleware' => 'can:edit.state users',
 	]);
 	$router->match(['get', 'post'], '/unconfirm/{id?}', [
 		'as' => 'admin.users.unconfirm',
-		'uses' => 'UsersController@unblock',
+		'uses' => 'UsersController@unconfirm',
 		'middleware' => 'can:edit.state users',
 	]);
 	$router->match(['get', 'post'], '/delete/{id?}', [

@@ -42,6 +42,11 @@ class Software
 		$content = null;
 		$user = $event->getUser();
 
+		if (!$user->enabled)
+		{
+			return;
+		}
+
 		$r = ['section' => 'software'];
 		if (auth()->user()->id != $user->id)
 		{

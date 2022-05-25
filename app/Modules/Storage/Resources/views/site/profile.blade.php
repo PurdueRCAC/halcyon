@@ -144,7 +144,9 @@
 					</h3>
 				</div>
 				<div class="col col-md-6 text-right">
-					<button class="btn btn-default btn-sm accountsbtn" id="create-newalert"><span class="fa fa-plus-circle" aria-hidden="true"></span> Create New Alert</button>
+					@if ($user->enabled && ($user->id == auth()->user()->id || auth()->user()->can('manage storage')))
+						<button class="btn btn-default btn-sm accountsbtn" id="create-newalert"><span class="fa fa-plus-circle" aria-hidden="true"></span> Create New Alert</button>
+					@endif
 				</div>
 			</div>
 		</div>
@@ -179,7 +181,7 @@
 							<th scope="col" class="text-center">Threshold</th>
 							<th scope="col" class="text-center">Enabled</th>
 							<th scope="col">Last Notify</th>
-							@if ($user->id == auth()->user()->id || auth()->user()->can('manage users'))
+							@if ($user->enabled && ($user->id == auth()->user()->id || auth()->user()->can('manage storage')))
 								<th scope="col" colspan="2" class="text-right">Actions</th>
 							@endif
 						</tr>
@@ -233,7 +235,7 @@
 											<time datetime="{{ $not->datetimelastnotify->toDateTimeLocalString() }}">{{ $not->datetimelastnotify->format("m/d/Y") }}</time>
 										@endif
 									</td>
-									@if ($user->id == auth()->user()->id || auth()->user()->can('manage users'))
+									@if ($user->enabled && ($user->id == auth()->user()->id || auth()->user()->can('manage storage')))
 										<td class="text-right">
 											<a href="#not_dialog_{{ $not->id }}" class="storagealert-edit tip" title="{{ trans('global.button.edit') }}"><!--
 												--><span class="fa fa-pencil"></span><span class="sr-only">{{ trans('global.button.edit') }}</span><!--
@@ -259,6 +261,7 @@
 				</table>
 
 				<?php
+				if ($user->enabled && ($user->id == auth()->user()->id || auth()->user()->can('manage storage'))):
 				foreach ($als as $not):
 					if (!isset($sdirs[$not->storagedirid])):
 						continue;
@@ -341,6 +344,7 @@
 					</div>
 					<?php
 				endforeach;
+				endif;
 			else:
 				?>
 				<p class="text-muted text-center">No storage alerts found.</p>
@@ -418,7 +422,9 @@
 					</h3>
 				</div>
 				<div class="col col-md-6 text-right">
-					<button class="btn btn-default btn-sm accountsbtn" id="create-newreport"><span class="fa fa-plus-circle" aria-hidden="true"></span> Create New Usage Report</button>
+					@if ($user->enabled && ($user->id == auth()->user()->id || auth()->user()->can('manage storage')))
+						<button class="btn btn-default btn-sm accountsbtn" id="create-newreport"><span class="fa fa-plus-circle" aria-hidden="true"></span> Create New Usage Report</button>
+					@endif
 				</div>
 			</div>
 		</div>
@@ -460,7 +466,7 @@
 							<th scope="col">Frequency</th>
 							<th scope="col" class="text-center">Enabled</th>
 							<th scope="col">Next Report</th>
-							@if ($user->id == auth()->user()->id || auth()->user()->can('manage users'))
+							@if ($user->enabled && ($user->id == auth()->user()->id || auth()->user()->can('manage storage')))
 							<th scope="col" colspan="2" class="text-right">Actions</th>
 							@endif
 						</tr>
@@ -498,7 +504,7 @@
 								<td>
 									<time datetime="{{ $not->datetimelastnotify->toDateTimeLocalString() }}">{{ $not->wasNotified() ? $not->datetimelastnotify->format('m/d/Y') : trans('global.unknown') }}</time>
 								</td>
-								@if ($user->id == auth()->user()->id || auth()->user()->can('manage storage'))
+								@if ($user->enabled && ($user->id == auth()->user()->id || auth()->user()->can('manage storage')))
 									<td class="text-right">
 										<a href="#not_dialog_{{ $not->id }}" class="storagealert-edit tip" title="Edit usage report"><!--
 											--><span class="fa fa-pencil"></span><span class="sr-only">Edit</span><!--
@@ -522,6 +528,7 @@
 					</tbody>
 				</table>
 				<?php
+			if ($user->enabled && ($user->id == auth()->user()->id || auth()->user()->can('manage storage'))):
 				foreach ($storagedirquotanotifications as $not):
 					if (!isset($sdirs[$not->storagedirid])):
 						continue;
@@ -591,6 +598,7 @@
 					</div>
 					<?php
 				endforeach;
+				endif;
 			else:
 				?>
 				<p class="text-muted text-center">No storage usage reports found.</p>

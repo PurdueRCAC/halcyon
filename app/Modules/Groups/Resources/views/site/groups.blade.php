@@ -4,7 +4,7 @@
 @endpush
 
 <div class="contentInner">
-	@if (auth()->user()->can('manage groups'))
+	@if ($user->enabled && auth()->user()->can('manage groups'))
 		<div class="row">
 			<div class="col-md-9">
 				<h2>{{ trans('groups::groups.groups') }}</h2>
@@ -39,7 +39,7 @@
 			</form>
 		</div>
 	@else
-		<h2>{{ trans('users::users.groups') }}</h2>
+		<h2>{{ trans('groups::groups.groups') }}</h2>
 	@endif
 
 	<div id="everything">

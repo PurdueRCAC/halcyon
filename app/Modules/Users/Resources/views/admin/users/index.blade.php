@@ -21,6 +21,12 @@ app('pathway')
 		trans('users::users.users')
 	);
 
+	if (auth()->user()->can('edit.state users')):
+		Toolbar::publishList(route('admin.users.enable'), 'users::users.enable');
+		Toolbar::unpublishList(route('admin.users.disable'), 'users::users.disable');
+		Toolbar::spacer();
+	endif;
+
 	if (auth()->user()->can('delete users')):
 		Toolbar::deleteList('', route('admin.users.delete'));
 	endif;
@@ -83,6 +89,7 @@ app('pathway')
 				<select name="state" id="filter-state" class="form-control filter filter-submit">
 					<option value="*">{{ trans('users::users.all states') }}</option>
 					<option value="enabled"<?php if ($filters['state'] == 'enabled'): echo ' selected="selected"'; endif;?>>{{ trans('users::users.status enabled') }}</option>
+					<option value="disabled"<?php if ($filters['state'] == 'disabled'): echo ' selected="selected"'; endif;?>>{{ trans('users::users.status disabled') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('users::users.status trashed') }}</option>
 				</select>
 
@@ -219,9 +226,13 @@ app('pathway')
 						<span class="badge badge-danger">
 							{{ trans('users::users.status trashed') }}
 						</span>
-					@else
+					@elseif ($row->enabled)
 						<span class="badge badge-success">
 							{{ trans('users::users.status enabled') }}
+						</span>
+					@else
+						<span class="badge badge-warning">
+							{{ trans('users::users.status disabled') }}
 						</span>
 					@endif
 				</td>
