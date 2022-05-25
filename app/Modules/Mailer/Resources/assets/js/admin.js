@@ -128,4 +128,18 @@ document.addEventListener('DOMContentLoaded', function () {
 			});*/
 		});
 	}
+
+	var templates = document.getElementById('field-template');
+	if (templates) {
+		templates.addEventListener('change', function () {
+			if (this.options[this.selectedIndex].value) {
+				var selected = document.getElementById(this.options[this.selectedIndex].value);
+
+				document.getElementById('field-subject').value = this.options[this.selectedIndex].innerHTML;
+
+				document.getElementById('field-body').value = selected.value;
+				document.getElementById('field-body').dispatchEvent(new Event('refreshEditor', { bubbles: true }));
+			}
+		});
+	}
 });
