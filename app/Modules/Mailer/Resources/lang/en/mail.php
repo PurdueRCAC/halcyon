@@ -11,6 +11,7 @@ return [
 	'invalid' => [
 		'subject' => 'Please provide a valid subject',
 		'body' => 'Please provide a valid body',
+		'recipient' => 'Invalid value ":id"',
 	],
 	'created' => 'Created',
 	'modified' => 'Last Modified',
@@ -42,4 +43,8 @@ return [
 	'variables' => 'Variables',
 	'example result' => 'Example Output',
 	'variable replacement' => 'Variable placeholders can be used to dynamically inject content into emails. This is particularly useful when sending the same email to multiple recipients.',
+	'sent message to' => 'Sent message to :count people.',
+	'error' => [
+		'account not found' => 'Could not find account for user ID :id',
+	],
 ];

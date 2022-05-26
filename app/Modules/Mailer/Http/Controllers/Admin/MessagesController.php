@@ -41,7 +41,7 @@ class MessagesController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('users.messages.filter_' . $key)
+			 && $request->has($key)
 			 && $request->input($key) != session()->get('users.messages.filter_' . $key))
 			{
 				$reset = true;
@@ -255,6 +255,8 @@ class MessagesController extends Controller
 		$users = array_filter($users);
 		$users = array_unique($users);
 
+		$success = 0;
+
 		if (count($users) > 0)
 		{
 			foreach ($users as $id)
@@ -278,7 +280,7 @@ class MessagesController extends Controller
 
 				if (!$user || !$user->email)
 				{
-					$request->session()->flash('warning', 'Could not find account for user ID #' . $id);
+					$request->session()->flash('warning', trans('mailer::mail.error.account not found', ['id' => $id]));
 					continue;
 				}
 
@@ -291,6 +293,8 @@ class MessagesController extends Controller
 					->bcc($bcc)
 					->send($message);
 
+				$success++;
+
 				$this->log($user, $row);
 			}
 		}
@@ -301,6 +305,11 @@ class MessagesController extends Controller
 		$row->recipients->set('cc', $cc);
 		$row->recipients->set('bcc', $bcc);
 		$row->save();
+
+		if ($success)
+		{
+			$request->session()->flash('success', trans('mailer::mail.sent message to', ['count' => $success]));
+		}
 
 		return $this->cancel();
 	}
@@ -317,6 +326,8 @@ class MessagesController extends Controller
 	{
 		$str = explode(',', $str);
 		$str = array_map('trim', $str);
+		$str = array_filter($str);
+		$str = array_unique($str);
 
 		foreach ($str as $id)
 		{
@@ -326,7 +337,7 @@ class MessagesController extends Controller
 
 				if (!$user)
 				{
-					$request->session()->flash('warning', 'Could not find account for user ID #' . $id);
+					$request->session()->flash('warning', trans('mailer::mail.error.account not found', ['id' => $id]));
 					continue;
 				}
 
@@ -338,7 +349,7 @@ class MessagesController extends Controller
 			}
 			else
 			{
-				$request->session()->flash('warning', 'Invalid value: ' . $id);
+				$request->session()->flash('warning', trans('mailer::mail.invalid.recipient', ['id' => $id]));
 			}
 		}
 
