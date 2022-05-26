@@ -165,6 +165,11 @@ class MessagesController extends Controller
 
 		$row = $id ? Message::findOrFail($id) : new Message;
 
+		if ($fields = app('request')->old())
+		{
+			$row->fill($fields);
+		}
+
 		$templates = Message::query()
 			->where('template', '=', 1)
 			->orderBy('subject', 'asc')
@@ -198,15 +203,6 @@ class MessagesController extends Controller
 				->withInput($request->input())
 				->withErrors($validator->messages());
 		}
-
-		$row = new Message;
-		$row->subject = $request->input('subject');
-		$row->body = $request->input('body');
-		if ($request->has('alert'))
-		{
-			$row->alert = $request->input('alert');
-		}
-		$row->save();
 
 		$cc  = [];
 
@@ -257,46 +253,61 @@ class MessagesController extends Controller
 
 		$success = 0;
 
-		if (count($users) > 0)
+		if (count($users) <= 0)
 		{
-			foreach ($users as $id)
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors([trans('mailer::mailer.invalid.user list')]);
+		}
+
+		$row = new Message;
+		$row->subject = $request->input('subject');
+		$row->body = $request->input('body');
+		if ($request->has('alert'))
+		{
+			$row->alert = $request->input('alert');
+		}
+		// We need to save it before sending messsages out so the log
+		// has an object ID to point to.
+		$row->save();
+
+		foreach ($users as $id)
+		{
+			if (is_numeric($id))
 			{
-				if (is_numeric($id))
-				{
-					$user = User::find($id);
-				}
-				elseif (filter_var($id, FILTER_VALIDATE_EMAIL))
-				{
-					$user = User::findByEmail($id);
-
-					if (!$user)
-					{
-						$user = new User;
-						$user->name = $id;
-						$user->username = $id;
-						$user->email = $id;
-					}
-				}
-
-				if (!$user || !$user->email)
-				{
-					$request->session()->flash('warning', trans('mailer::mailer.error.account not found', ['id' => $id]));
-					continue;
-				}
-
-				$to[] = $user->email;
-
-				$message = new GenericMessage($row, $user);
-
-				Mail::to($user->email)
-					->cc($cc)
-					->bcc($bcc)
-					->send($message);
-
-				$success++;
-
-				$this->log($user, $row);
+				$user = User::find($id);
 			}
+			elseif (filter_var($id, FILTER_VALIDATE_EMAIL))
+			{
+				$user = User::findByEmail($id);
+
+				if (!$user)
+				{
+					$user = new User;
+					$user->name = $id;
+					$user->username = $id;
+					$user->email = $id;
+				}
+			}
+
+			if (!$user || !$user->email)
+			{
+				$request->session()->flash('warning', trans('mailer::mailer.error.account not found', ['id' => $id]));
+				continue;
+			}
+
+			$to[] = $user->email;
+
+			$message = new GenericMessage($row, $user);
+
+			Mail::to($user->email)
+				->cc($cc)
+				->bcc($bcc)
+				->send($message);
+
+			$success++;
+
+			$this->log($user, $row);
 		}
 
 		$row->sent_at = Carbon::now();
