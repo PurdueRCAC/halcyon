@@ -166,25 +166,37 @@ hr {
     padding-bottom: 0;
 }
 .alert-warning {
-    background-color: #fcf8e3;
+    background: #fcf8e3;
     color: #8a6d3b;
 }
 .alert-warning a {
     color: #8a6d3b;
 }
 .alert-info {
-    background-color: #d9edf7;
+    background: #d9edf7;
     color: #31708f;
 }
 .alert-info a {
     color: #31708f;
 }
 .alert-danger {
-    background-color: #f2dede;
+    background: #f2dede;
     color: #a94442;
 }
 .alert-danger a {
     color: #a94442;
+}
+td.alert-info {
+    background: #1291c7;
+    color: #fff;
+}
+td.alert-warning {
+    background: #e8ab13;
+    color: #fff;
+}
+td.alert-danger {
+    background: #bd1613;
+    color: #fff;
 }
 
 /* Logo */
