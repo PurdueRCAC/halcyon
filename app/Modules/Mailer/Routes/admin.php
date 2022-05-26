@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'mail'], function (Router $router)
+$router->group(['prefix' => 'mailer'], function (Router $router)
 {
 	$router->match(['get', 'post'], '/', [
 		'as'   => 'admin.mailer.index',

@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'mail', 'middleware' => ['auth:api']], function (Router $router)
+$router->group(['prefix' => 'mailer', 'middleware' => ['auth:api']], function (Router $router)
 {
 	$router->get('/', [
 		'as'   => 'api.mailer.index',
