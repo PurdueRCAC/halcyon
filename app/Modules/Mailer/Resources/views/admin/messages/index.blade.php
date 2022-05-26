@@ -3,7 +3,7 @@
 @php
 app('pathway')
 	->append(
-		trans('mailer::mail.module name'),
+		trans('mailer::mailer.module name'),
 		route('admin.mailer.index')
 	);
 @endphp
@@ -26,7 +26,7 @@ app('pathway')
 @stop
 
 @section('title')
-{{ trans('mailer::mail.module name') }}
+{{ trans('mailer::mailer.module name') }}
 @stop
 
 @section('content')
@@ -59,26 +59,26 @@ app('pathway')
 	<div class="card mb-4">
 		<div class="table-responsive">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('mailer::mail.menu manager') }}</caption>
+		<caption class="sr-only">{{ trans('mailer::mailer.menu manager') }}</caption>
 		<thead>
 			<tr>
 				<th>
 					{!! Html::grid('checkall') !!}
 				</th>
 				<th scope="col" class="priority-6">
-					{!! Html::grid('sort', trans('mailer::mail.id'), 'id', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('mailer::mailer.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
-					{!! Html::grid('sort', trans('mailer::mail.subject'), 'subject', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('mailer::mailer.subject'), 'subject', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-6">
-					{!! Html::grid('sort', trans('mailer::mail.sent at'), 'sent_at', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('mailer::mailer.sent at'), 'sent_at', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-6">
-					{!! Html::grid('sort', trans('mailer::mail.sent by'), 'sent_by', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('mailer::mailer.sent by'), 'sent_by', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-6">
-					{{ trans('mailer::mail.to') }}
+					{{ trans('mailer::mailer.to') }}
 				</th>
 			</tr>
 		</thead>

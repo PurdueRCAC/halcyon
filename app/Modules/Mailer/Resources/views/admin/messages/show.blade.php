@@ -5,7 +5,7 @@ app('request')->merge(['hidemainmenu' => 1]);
 
 app('pathway')
 	->append(
-		trans('mailer::mail.module name'),
+		trans('mailer::mailer.module name'),
 		route('admin.mailer.index')
 	)
 	->append(
@@ -19,7 +19,7 @@ app('pathway')
 @stop
 
 @section('subject')
-{{ trans('mailer::mail.module name') }}: #{{ $row->id }}
+{{ trans('mailer::mailer.module name') }}: #{{ $row->id }}
 @stop
 
 @section('content')
@@ -31,22 +31,22 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-subject">{{ trans('mailer::mail.subject') }}</label>
+					<label for="field-subject">{{ trans('mailer::mailer.subject') }}</label>
 					<input type="text" name="subject" id="field-subject" readonly class="form-control-plaintext" value="{{ $row->subject }}" />
 				</div>
 
 				<div class="form-group">
-					<label for="field-body">{{ trans('mailer::mail.body') }} <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-body">{{ trans('mailer::mailer.body') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<textarea name="body" id="field-body" readonly class="form-control-plaintext" cols="45" rows="40">{{ $row->body }}</textarea>
 				</div>
 			</fieldset>
 		</div>
 		<div class="col col-md-5">
 			<fieldset class="adminform">
-				<legend>{{ trans('mailer::mail.send to') }}</legend>
+				<legend>{{ trans('mailer::mailer.send to') }}</legend>
 
 				<div class="form-group">
-					<label for="field-user">{{ trans('mailer::mail.to') }}</label>
+					<label for="field-user">{{ trans('mailer::mailer.to') }}</label>
 					<?php
 					$rec = $row->recipients->get('to', []);
 					$rec = empty($rec) ? [trans('global.none')] : $rec;
@@ -55,7 +55,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-cc">{{ trans('mailer::mail.cc') }}</label>
+					<label for="field-cc">{{ trans('mailer::mailer.cc') }}</label>
 					<?php
 					$rec = $row->recipients->get('cc', []);
 					$rec = empty($rec) ? [trans('global.none')] : $rec;
@@ -64,7 +64,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-bcc">{{ trans('mailer::mail.bcc') }}</label>
+					<label for="field-bcc">{{ trans('mailer::mailer.bcc') }}</label>
 					<?php
 					$rec = $row->recipients->get('bcc', []);
 					$rec = empty($rec) ? [trans('global.none')] : $rec;

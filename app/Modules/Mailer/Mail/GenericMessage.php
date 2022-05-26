@@ -67,7 +67,7 @@ class GenericMessage extends Mailable
 			$body
 		);
 
-		return $this->markdown('mailer::mail.message')
+		return $this->markdown('mailer::mailer.message')
 					->subject($this->message->subject)
 					->with([
 						'body' => $body,

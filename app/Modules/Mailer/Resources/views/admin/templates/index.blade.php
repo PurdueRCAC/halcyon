@@ -3,11 +3,11 @@
 @php
 app('pathway')
 	->append(
-		trans('mailer::mail.module name'),
+		trans('mailer::mailer.module name'),
 		route('admin.mailer.index')
 	)
 	->append(
-		trans('mailer::mail.templates'),
+		trans('mailer::mailer.templates'),
 		route('admin.mailer.templates')
 	);
 @endphp
@@ -30,7 +30,7 @@ app('pathway')
 @stop
 
 @section('title')
-{{ trans('mailer::mail.module name') }}
+{{ trans('mailer::mailer.module name') }}
 @stop
 
 @section('content')
@@ -63,29 +63,29 @@ app('pathway')
 	<div class="card mb-4">
 		<div class="table-responsive">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('mailer::mail.templates') }}</caption>
+		<caption class="sr-only">{{ trans('mailer::mailer.templates') }}</caption>
 		<thead>
 			<tr>
 				<th>
 					{!! Html::grid('checkall') !!}
 				</th>
 				<th scope="col" class="priority-6">
-					{!! Html::grid('sort', trans('mailer::mail.id'), 'id', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('mailer::mailer.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
-					{!! Html::grid('sort', trans('mailer::mail.subject'), 'subject', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('mailer::mailer.subject'), 'subject', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-3">
-					{!! Html::grid('sort', trans('mailer::mail.created'), 'created_at', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('mailer::mailer.created'), 'created_at', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('mailer::mail.modified'), 'updated_at', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('mailer::mailer.modified'), 'updated_at', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-6">
-					{!! Html::grid('sort', trans('mailer::mail.alert level'), 'alert', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('mailer::mailer.alert level'), 'alert', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-6 text-right">
-					{{ trans('mailer::mail.options') }}
+					{{ trans('mailer::mailer.options') }}
 				</th>
 			</tr>
 		</thead>
@@ -133,7 +133,7 @@ app('pathway')
 				</td>
 				<td class="priority-6">
 					@if ($row->alert)
-						<span class="text-{{ $row->alert }}">{{ trans('mailer::mail.alert.' . $row->alert) }}</span>
+						<span class="text-{{ $row->alert }}">{{ trans('mailer::mailer.alert.' . $row->alert) }}</span>
 					@else
 						<span class="text-muted">{{ trans('global.none') }}</span>
 					@endif
@@ -141,7 +141,7 @@ app('pathway')
 				<td class="text-right">
 					<a class="btn btn-secondary" href="{{ route('admin.mailer.create', ['id' => $row->id]) }}">
 						<span class="fa fa-plus" aria-hidden="true"></span>
-						{{ trans('mailer::mail.use template') }}
+						{{ trans('mailer::mailer.use template') }}
 					</a>
 				</td>
 			</tr>

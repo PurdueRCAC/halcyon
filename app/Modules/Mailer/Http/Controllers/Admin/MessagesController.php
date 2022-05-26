@@ -280,7 +280,7 @@ class MessagesController extends Controller
 
 				if (!$user || !$user->email)
 				{
-					$request->session()->flash('warning', trans('mailer::mail.error.account not found', ['id' => $id]));
+					$request->session()->flash('warning', trans('mailer::mailer.error.account not found', ['id' => $id]));
 					continue;
 				}
 
@@ -308,7 +308,7 @@ class MessagesController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('mailer::mail.sent message to', ['count' => $success]));
+			$request->session()->flash('success', trans('mailer::mailer.sent message to', ['count' => $success]));
 		}
 
 		return $this->cancel();
@@ -337,7 +337,7 @@ class MessagesController extends Controller
 
 				if (!$user)
 				{
-					$request->session()->flash('warning', trans('mailer::mail.error.account not found', ['id' => $id]));
+					$request->session()->flash('warning', trans('mailer::mailer.error.account not found', ['id' => $id]));
 					continue;
 				}
 
@@ -349,7 +349,7 @@ class MessagesController extends Controller
 			}
 			else
 			{
-				$request->session()->flash('warning', trans('mailer::mail.invalid.recipient', ['id' => $id]));
+				$request->session()->flash('warning', trans('mailer::mailer.invalid.recipient', ['id' => $id]));
 			}
 		}
 

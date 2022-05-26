@@ -18,7 +18,7 @@ use App\Halcyon\Access\Map;
 use Carbon\Carbon;
 
 /**
- * Mailer
+ * Mail messages
  *
  * @apiUri    /mail
  */
@@ -30,23 +30,16 @@ class MessagesController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /mail
 	 * @apiParameter {
-	 * 		"name":          "client_id",
-	 * 		"description":   "Client (admin = 1|site = 0) ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -56,24 +49,35 @@ class MessagesController extends Controller
 	 * @apiParameter {
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "datetimecreated",
-	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "sent_at",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"subject",
+	 * 				"created_at",
+	 * 				"updated_at",
+	 * 				"sent_at",
+	 * 				"sent_by",
+	 * 				"template",
+	 * 				"alert"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"default":   "asc",
@@ -104,7 +108,7 @@ class MessagesController extends Controller
 			$filters[$key] = $request->input($key, $default);
 		}
 
-		if (!in_array($filters['order'], ['id', 'subject', 'created_at', 'updated_at', 'sent_at', 'sent_by']))
+		if (!in_array($filters['order'], ['id', 'subject', 'created_at', 'updated_at', 'sent_at', 'sent_by', 'alert', 'template']))
 		{
 			$filters['order'] = Message::$orderBy;
 		}
@@ -150,13 +154,14 @@ class MessagesController extends Controller
 	 * 		"description":   "Message subject",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "body",
-	 * 		"description":   "Message contents",
+	 * 		"description":   "Message contents, formatted using MarkDown",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string"
@@ -173,6 +178,22 @@ class MessagesController extends Controller
 	 * 			"default":   0
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "alert",
+	 * 		"description":   "An alert level to use for styling HTML portions of emails",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null,
+	 * 			"enum": [
+	 * 				"info",
+	 * 				"warning",
+	 * 				"danger"
+	 * 			]
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"201": {
 	 * 			"description": "Successful entry creation",
@@ -180,14 +201,15 @@ class MessagesController extends Controller
 	 * 				"application/json": {
 	 * 					"example": {
 	 * 						"id": 2,
-	 * 						"subject": "About",
-	 * 						"body": "About Side Menu",
+	 * 						"subject": "Scratch Filesystem Purge Policy Violation",
+	 * 						"body": "Don't violate our policies!",
 	 * 						"template": 0,
+	 * 						"alert": "info",
 	 * 						"created_at": "2022-05-24 12:31:01",
 	 * 						"updated_at": null,
 	 * 						"deleted_at": null,
-	 * 						"sent_at": null,
-	 * 						"sent_by": 12,
+	 * 						"sent_at": "2022-05-24 12:31:01",
+	 * 						"sent_by": 1234,
 	 * 						"api": "https://example.org/api/mail/2"
 	 * 					}
 	 * 				}
@@ -255,14 +277,15 @@ class MessagesController extends Controller
 	 * 				"application/json": {
 	 * 					"example": {
 	 * 						"id": 2,
-	 * 						"subject": "About",
-	 * 						"body": "About Side Menu",
+	 * 						"subject": "Scratch Filesystem Purge Policy Violation",
+	 * 						"body": "Don't violate our policies!",
 	 * 						"template": 0,
+	 * 						"alert": "info",
 	 * 						"created_at": "2022-05-24 12:31:01",
 	 * 						"updated_at": null,
 	 * 						"deleted_at": null,
-	 * 						"sent_at": null,
-	 * 						"sent_by": 12,
+	 * 						"sent_at": "2022-05-24 12:31:01",
+	 * 						"sent_by": 1234,
 	 * 						"api": "https://example.org/api/mail/2"
 	 * 					}
 	 * 				}
@@ -302,7 +325,17 @@ class MessagesController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "subject",
-	 * 		"description":   "Menu subject",
+	 * 		"description":   "Message subject",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "body",
+	 * 		"description":   "Message contents, formatted using MarkDown",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string"
@@ -310,17 +343,9 @@ class MessagesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "A description of the menu",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "client_id",
-	 * 		"description":   "Client (admin = 1|site = 0) ID",
+	 * 		"name":          "template",
+	 * 		"description":   "If the message is a template or not",
+	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -329,11 +354,18 @@ class MessagesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "menutype",
-	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the subject.",
+	 * 		"name":          "alert",
+	 * 		"description":   "An alert level to use for styling HTML portions of emails",
+	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"default":   null,
+	 * 			"enum": [
+	 * 				"info",
+	 * 				"warning",
+	 * 				"danger"
+	 * 			]
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -343,14 +375,15 @@ class MessagesController extends Controller
 	 * 				"application/json": {
 	 * 					"example": {
 	 * 						"id": 2,
-	 * 						"subject": "About",
-	 * 						"body": "About Side Menu",
+	 * 						"subject": "Scratch Filesystem Purge Policy Violation",
+	 * 						"body": "Don't violate our policies!",
 	 * 						"template": 0,
+	 * 						"alert": "info",
 	 * 						"created_at": "2022-05-24 12:31:01",
 	 * 						"updated_at": null,
 	 * 						"deleted_at": null,
-	 * 						"sent_at": null,
-	 * 						"sent_by": 12,
+	 * 						"sent_at": "2022-05-24 12:31:01",
+	 * 						"sent_by": 1234,
 	 * 						"api": "https://example.org/api/mail/2"
 	 * 					}
 	 * 				}
@@ -461,14 +494,15 @@ class MessagesController extends Controller
 	 * 				"application/json": {
 	 * 					"example": {
 	 * 						"id": 2,
-	 * 						"subject": "About",
-	 * 						"body": "About Side Menu",
+	 * 						"subject": "Scratch Filesystem Purge Policy Violation",
+	 * 						"body": "Don't violate our policies!",
 	 * 						"template": 0,
+	 * 						"alert": "info",
 	 * 						"created_at": "2022-05-24 12:31:01",
 	 * 						"updated_at": null,
 	 * 						"deleted_at": null,
-	 * 						"sent_at": null,
-	 * 						"sent_by": 12,
+	 * 						"sent_at": "2022-05-24 12:31:01",
+	 * 						"sent_by": 1234,
 	 * 						"api": "https://example.org/api/mail/2"
 	 * 					}
 	 * 				}

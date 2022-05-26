@@ -14,7 +14,7 @@ app('request')->merge(['hidemainmenu' => 1]);
 
 app('pathway')
 	->append(
-		trans('mailer::mail.module name'),
+		trans('mailer::mailer.module name'),
 		route('admin.mailer.index')
 	)
 	->append(
@@ -23,13 +23,13 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	{!! Toolbar::save(route('admin.mailer.send'), trans('mailer::mail.send')) !!}
+	{!! Toolbar::save(route('admin.mailer.send'), trans('mailer::mailer.send')) !!}
 	{!! Toolbar::cancel(route('admin.mailer.cancel')) !!}
 	{!! Toolbar::render() !!}
 @stop
 
 @section('subject')
-{{ trans('mailer::mail.module name') }}: {{ trans('mailer::mail.create') }}
+{{ trans('mailer::mailer.module name') }}: {{ trans('mailer::mailer.create') }}
 @stop
 
 @section('content')
@@ -41,7 +41,7 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-template">{{ trans('mailer::mail.template') }}</label>
+					<label for="field-template">{{ trans('mailer::mailer.template') }}</label>
 					<select name="template" id="field-template" class="form-control{{ $errors->has('fields.subject') ? ' is-invalid' : '' }}">
 						<option value="">{{ trans('global.none') }}</option>
 						@foreach ($templates as $template)
@@ -54,46 +54,46 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-subject">{{ trans('mailer::mail.subject') }} <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-subject">{{ trans('mailer::mailer.subject') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="subject" id="field-subject" class="form-control{{ $errors->has('fields.subject') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->subject }}" />
-					<span class="invalid-feedback">{{ trans('mailer::mail.invalid.subject') }}</span>
+					<span class="invalid-feedback">{{ trans('mailer::mailer.invalid.subject') }}</span>
 					{!! $errors->first('subject', '<span class="form-text text-danger">:message</span>') !!}
 				</div>
 
 				<div class="form-group">
-					<label for="field-body">{{ trans('mailer::mail.body') }} <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-body">{{ trans('mailer::mailer.body') }} <span class="required">{{ trans('global.required') }}</span></label>
 					{!! markdown_editor('body', $row->body, ['id' => 'field-body', 'rows' => 50, 'class' => ($errors->has('body') ? 'is-invalid' : 'required'), 'required' => 'required']) !!}
-					<span class="form-text text-muted">{!! trans('mailer::mail.body formatting') !!}</span>
-					<span class="invalid-feedback">{{ trans('mailer::mail.invalid.body') }}</span>
+					<span class="form-text text-muted">{!! trans('mailer::mailer.body formatting') !!}</span>
+					<span class="invalid-feedback">{{ trans('mailer::mailer.invalid.body') }}</span>
 					{!! $errors->first('body', '<span class="form-text text-danger">:message</span>') !!}
 				</div>
 			</fieldset>
 
 			<fieldset class="adminform">
-				<legend>{{ trans('mailer::mail.options') }}</legend>
+				<legend>{{ trans('mailer::mailer.options') }}</legend>
 
 				<div class="form-group">
-					<label for="field-alert">{{ trans('mailer::mail.alert level') }}</label>
+					<label for="field-alert">{{ trans('mailer::mailer.alert level') }}</label>
 					<select name="alert" id="field-alert" class="form-control">
 						<option value=""<?php if (!$row->alert) { echo ' selected'; } ?>>{{ trans('global.none') }}</option>
-						<option value="info"<?php if ($row->alert == 'info') { echo ' selected'; } ?>>{{ trans('mailer::mail.alert.info') }}</option>
-						<option value="warning"<?php if ($row->alert == 'warning') { echo ' selected'; } ?>>{{ trans('mailer::mail.alert.warning') }}</option>
-						<option value="danger"<?php if ($row->alert == 'danger') { echo ' selected'; } ?>>{{ trans('mailer::mail.alert.danger') }}</option>
+						<option value="info"<?php if ($row->alert == 'info') { echo ' selected'; } ?>>{{ trans('mailer::mailer.alert.info') }}</option>
+						<option value="warning"<?php if ($row->alert == 'warning') { echo ' selected'; } ?>>{{ trans('mailer::mailer.alert.warning') }}</option>
+						<option value="danger"<?php if ($row->alert == 'danger') { echo ' selected'; } ?>>{{ trans('mailer::mailer.alert.danger') }}</option>
 					</select>
-					<span class="form-text text-muted">{{ trans('mailer::mail.alert level description') }}</span>
+					<span class="form-text text-muted">{{ trans('mailer::mailer.alert level description') }}</span>
 				</div>
 			</fieldset>
 
 			<fieldset class="adminform">
-				<legend>{{ trans('mailer::mail.variables') }}</legend>
+				<legend>{{ trans('mailer::mailer.variables') }}</legend>
 
 				<div class="form-group">
-					<p>{{ trans('mailer::mail.variable replacement') }}</p>
+					<p>{{ trans('mailer::mailer.variable replacement') }}</p>
 					<table>
 						<thead>
 							<tr>
-								<th scope="col">{{ trans('mailer::mail.variable') }}</th>
-								<th scope="col">{{ trans('mailer::mail.example result') }}</th>
+								<th scope="col">{{ trans('mailer::mailer.variable') }}</th>
+								<th scope="col">{{ trans('mailer::mailer.example result') }}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -128,10 +128,10 @@ app('pathway')
 		</div>
 		<div class="col col-md-5">
 			<fieldset class="adminform">
-				<legend>{{ trans('mailer::mail.send to') }}</legend>
+				<legend>{{ trans('mailer::mailer.send to') }}</legend>
 
 				<div class="form-group">
-					<label for="field-user">{{ trans('mailer::mail.to') }}</label>
+					<label for="field-user">{{ trans('mailer::mailer.to') }}</label>
 					<input type="text" name="user" id="field-user" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" value="" />
 				</div>
 
@@ -142,12 +142,12 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-cc">{{ trans('mailer::mail.cc') }}</label>
+					<label for="field-cc">{{ trans('mailer::mailer.cc') }}</label>
 					<input type="text" name="cc" id="field-cc" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" value="" />
 				</div>
 
 				<div class="form-group">
-					<label for="field-bcc">{{ trans('mailer::mail.bcc') }}</label>
+					<label for="field-bcc">{{ trans('mailer::mailer.bcc') }}</label>
 					<input type="text" name="bcc" id="field-bcc" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" value="" />
 				</div>
 			</fieldset>
@@ -254,10 +254,10 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 							}
 							?>
 							<div class="form-group">
-								<label for="help1ainput">{{ trans('mailer::mail.input text') }}:</label>
+								<label for="help1ainput">{{ trans('mailer::mailer.input text') }}:</label>
 								<textarea id="help1ainput" class="form-control samplebox" rows="5" data-sample="a"><?php echo $help1a; ?></textarea>
 							</div>
-							<p>{{ trans('mailer::mail.output text') }}:<p>
+							<p>{{ trans('mailer::mailer.output text') }}:<p>
 							<div id="help1aoutput" class="sampleoutput"><?php echo $text; ?></div>
 						</div>
 						<div class="tab-pane" id="help1b" role="tabpanel" aria-labelledby="help1b-tab">
@@ -269,10 +269,10 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 							}
 							?>
 							<div class="form-group">
-								<label for="help1binput">{{ trans('mailer::mail.input text') }}:</label>
+								<label for="help1binput">{{ trans('mailer::mailer.input text') }}:</label>
 								<textarea id="help1binput" class="form-control samplebox" rows="5" data-sample="b"><?php echo $help1b; ?></textarea>
 							</div>
-							<p>{{ trans('mailer::mail.output text') }}:<p>
+							<p>{{ trans('mailer::mailer.output text') }}:<p>
 							<div id="help1boutput" class="sampleoutput"><?php echo $text; ?></div>
 						</div>
 						<div class="tab-pane" id="help1c" role="tabpanel" aria-labelledby="help1c-tab">
@@ -284,10 +284,10 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 							}
 							?>
 							<div class="form-group">
-								<label for="help1cinput">{{ trans('mailer::mail.input text') }}:</label>
+								<label for="help1cinput">{{ trans('mailer::mailer.input text') }}:</label>
 								<textarea id="help1cinput" class="form-control samplebox" rows="5" data-sample="c"><?php echo $help1c; ?></textarea>
 							</div>
-							<p>{{ trans('mailer::mail.output text') }}:<p>
+							<p>{{ trans('mailer::mailer.output text') }}:<p>
 							<div id="help1coutput" class="sampleoutput"><?php echo $text; ?></div>
 						</div>
 						<div class="tab-pane" id="help1e" role="tabpanel" aria-labelledby="help1e-tab">
@@ -299,10 +299,10 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 							}
 							?>
 							<div class="form-group">
-								<label for="help1einput">{{ trans('mailer::mail.input text') }}:</label>
+								<label for="help1einput">{{ trans('mailer::mailer.input text') }}:</label>
 								<textarea id="help1einput" class="form-control samplebox" rows="5" data-sample="e"><?php echo $help1e; ?></textarea>
 							</div>
-							<p>{{ trans('mailer::mail.output text') }}:<p>
+							<p>{{ trans('mailer::mailer.output text') }}:<p>
 							<div id="help1eoutput" class="sampleoutput"><?php echo $text; ?></div>
 						</div>
 						<div class="tab-pane" id="help1f" role="tabpanel" aria-labelledby="help1f-tab">
@@ -314,10 +314,10 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 							}
 							?>
 							<div class="form-group">
-								<label for="help1finput">{{ trans('mailer::mail.input text') }}:</label>
+								<label for="help1finput">{{ trans('mailer::mailer.input text') }}:</label>
 								<textarea id="help1finput" class="form-control samplebox" rows="5" data-sample="f"><?php echo $help1f; ?></textarea>
 							</div>
-							<p>{{ trans('mailer::mail.output text') }}:<p>
+							<p>{{ trans('mailer::mailer.output text') }}:<p>
 							<div id="help1foutput" class="sampleoutput"><?php echo $text; ?></div>
 						</div>
 						<div class="tab-pane" id="help1g" role="tabpanel" aria-labelledby="help1g-tab">
@@ -329,10 +329,10 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 							}
 							?>
 							<div class="form-group">
-								<label for="help1ginput">{{ trans('mailer::mail.input text') }}:</label>
+								<label for="help1ginput">{{ trans('mailer::mailer.input text') }}:</label>
 								<textarea id="help1ginput" class="form-control samplebox" rows="5" data-sample="g"><?php echo $help1g; ?></textarea>
 							</div>
-							<p>{{ trans('mailer::mail.output text') }}:<p>
+							<p>{{ trans('mailer::mailer.output text') }}:<p>
 							<div id="help1goutput" class="sampleoutput"><?php echo $text; ?></div>
 						</div>
 					</div>
