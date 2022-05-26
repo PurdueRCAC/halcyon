@@ -65,6 +65,18 @@ class MembersController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "datecreated",
+	 * 		"description":   "Filter for records created after the specified date",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null,
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"200": {
 	 * 			"description": "Successful entry read"
@@ -80,13 +92,19 @@ class MembersController extends Controller
 	public function index(Request $request, $id)
 	{
 		$filters = array(
-			'membertype' => $request->input('membertype')
+			'membertype' => $request->input('membertype'),
+			'datecreated' => $request->input('datecreated'),
 		);
 		if ($filters['membertype'] == 'manager' || $filters['membertype'] == 'managers')
 		{
 			$filters['membertype'] = Type::MANAGER;
 		}
 		$filters['membertype'] = $filters['membertype'] == Type::MANAGER ?: 0;
+
+		if ($filters['datecreated'])
+		{
+			$filters['datecreated'] = Carbon::parse($filters['datecreated'])->toDateTimeString();
+		}
 
 
 		$resource = Asset::findOrFail($id);
@@ -314,7 +332,7 @@ class MembersController extends Controller
 
 		if (!$filters['membertype'] || $filters['membertype'] == Type::MANAGER)
 		{
-			$gus = GroupUser::query()
+			$query = GroupUser::query()
 				->select(
 					$uu . '.userid',
 					$uu . '.username',
@@ -326,8 +344,14 @@ class MembersController extends Controller
 				)
 				// Group
 				->join($g, $g . '.id', $gu . '.groupid')
-				->where($gu . '.membertype', '=', Type::MANAGER)
-				->where($gu . '.datecreated', '<=', $now->toDateTimeString())
+				->where($gu . '.membertype', '=', Type::MANAGER);
+				//->where($gu . '.datecreated', '<=', $now->toDateTimeString())
+			if ($filters['datecreated'])
+			{
+				$query->where($gu . '.datecreated', '>', $filters['datecreated']);
+			}
+
+			$gus = $query
 				// Queues
 				->join($q, $q . '.groupid', $g . '.id')
 				->where($q . '.datetimecreated', '<=', $now->toDateTimeString())
@@ -365,9 +389,9 @@ class MembersController extends Controller
 				if (!isset($users[$gur->userid]))
 				{
 					$users[$gur->userid] = array(
-						'name' => $gur->name,
+						'name'     => $gur->name,
 						'username' => $gur->username,
-						'email' => $gur->email
+						'email'    => $gur->email
 					);
 				}
 
@@ -382,7 +406,7 @@ class MembersController extends Controller
 				}
 
 				$users[$gur->userid]['queues'][$gur->queueid] = [
-					'id' => $gur->queueid,
+					'id'   => $gur->queueid,
 					'name' => $gur->queue . ' (' . $gur->group . ')',
 				];
 
@@ -393,7 +417,7 @@ class MembersController extends Controller
 
 		if (!$filters['membertype'])
 		{
-			$qus = QueueUser::query()
+			$query = QueueUser::query()
 				->select(
 					$uu . '.userid',
 					$uu . '.username',
@@ -405,9 +429,15 @@ class MembersController extends Controller
 				)
 				// Queues
 				->join($q, $q . '.id', $qu . '.queueid')
-				->where($q . '.datetimecreated', '<=', $now->toDateTimeString())
 				->whereNull($q . '.datetimeremoved')
-				->where($qu . '.membertype', '=', 1) // We don't want pending members (4)
+				->where($qu . '.membertype', '=', 1); // We don't want pending members (4)
+				//->where($q . '.datetimecreated', '<=', $now->toDateTimeString())
+			if ($filters['datecreated'])
+			{
+				$query->where($qu . '.datetimecreated', '>', $filters['datecreated']);
+			}
+
+			$qus = $query
 				// Userusername
 				->join($uu, $uu . '.userid', $qu . '.userid')
 				->where($uu . '.datecreated', '<=', $now->toDateTimeString())
@@ -443,9 +473,9 @@ class MembersController extends Controller
 				if (!isset($users[$qur->userid]))
 				{
 					$users[$qur->userid] = array(
-						'name' => $qur->name,
+						'name'     => $qur->name,
 						'username' => $qur->username,
-						'email' => $qur->email
+						'email'    => $qur->email
 					);
 				}
 
@@ -460,7 +490,7 @@ class MembersController extends Controller
 				}
 
 				$users[$qur->userid]['queues'][$qur->queueid] = [
-					'id' => $qur->queueid,
+					'id'   => $qur->queueid,
 					'name' => $qur->queue . ' (' . $qur->group . ')',
 				];
 
@@ -468,7 +498,7 @@ class MembersController extends Controller
 			}
 			unset($qus);
 
-			$gqus = GroupQueueUser::query()
+			$query = GroupQueueUser::query()
 				->select(
 					$uu . '.userid',
 					$uu . '.username',
@@ -479,9 +509,16 @@ class MembersController extends Controller
 					$g . '.name AS group'
 				)
 				// Queue user
-				->join($qu, $qu . '.id', $gqu . '.queueuserid')
-				->where($gqu . '.datetimecreated', '<=', $now->toDateTimeString())
-				->where($qu . '.datetimecreated', '<=', $now->toDateTimeString())
+				->join($qu, $qu . '.id', $gqu . '.queueuserid');
+				//->where($gqu . '.datetimecreated', '<=', $now->toDateTimeString())
+				//->where($qu . '.datetimecreated', '<=', $now->toDateTimeString())
+			if ($filters['datecreated'])
+			{
+				$query->where($gqu . '.datetimecreated', '>', $filters['datecreated']);
+				$query->where($qu . '.datetimecreated', '>', $filters['datecreated']);
+			}
+
+			$gqus = $query
 				->whereNull($qu . '.datetimeremoved')
 				->where($gqu . '.membertype', '=', 1)
 				->where($qu . '.membertype', '=', 1)
@@ -524,9 +561,9 @@ class MembersController extends Controller
 				if (!isset($users[$gqur->userid]))
 				{
 					$users[$gqur->userid] = array(
-						'name' => $gqur->name,
+						'name'     => $gqur->name,
 						'username' => $gqur->username,
-						'email' => $gqur->email
+						'email'    => $gqur->email
 					);
 				}
 
@@ -541,7 +578,7 @@ class MembersController extends Controller
 				}
 
 				$users[$gqur->userid]['queues'][$gqur->queueid] = [
-					'id' => $gqur->queueid,
+					'id'   => $gqur->queueid,
 					'name' => $gqur->queue . ' (' . $gqur->group . ')',
 				];
 
@@ -559,9 +596,15 @@ class MembersController extends Controller
 				//$d . '.id as dirid',
 				//$d . '.name as dir',
 				//$g . '.name AS group'
-			)
+			);
 			// Unix group member
-			->where($ugm . '.datetimecreated', '<=', $now->toDateTimeString())
+			//->where($ugm . '.datetimecreated', '<=', $now->toDateTimeString())
+		if ($filters['datecreated'])
+		{
+			$query->where($ugm . '.datetimecreated', '>', $filters['datecreated']);
+		}
+
+		$query
 			// Unix group
 			->join($u, $u . '.id', $ugm . '.unixgroupid')
 			->where($u . '.datetimecreated', '<=', $now->toDateTimeString())
@@ -619,9 +662,9 @@ class MembersController extends Controller
 			if (!isset($users[$uqur->userid]))
 			{
 				$users[$uqur->userid] = array(
-					'name' => $uqur->name,
+					'name'     => $uqur->name,
 					'username' => $uqur->username,
-					'email' => $uqur->email
+					'email'    => $uqur->email
 				);
 			}
 
@@ -636,7 +679,7 @@ class MembersController extends Controller
 			}
 
 			$users[$uqur->userid]['directories'][$uqur->dirid] = [
-				'id' => $uqur->dirid,
+				'id'   => $uqur->dirid,
 				'name' => $uqur->dir . ' (' . $uqur->group . ')',
 			];*/
 
