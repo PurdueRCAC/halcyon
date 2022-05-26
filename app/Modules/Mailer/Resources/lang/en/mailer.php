@@ -12,6 +12,7 @@ return [
 		'subject' => 'Please provide a valid subject',
 		'body' => 'Please provide a valid body',
 		'recipient' => 'Invalid value ":id"',
+		'user list' => 'No valid recipients found.',
 	],
 	'created' => 'Created',
 	'modified' => 'Last Modified',
@@ -47,4 +48,5 @@ return [
 	'error' => [
 		'account not found' => 'Could not find account for user ID :id',
 	],
+	'role confirmation' => 'Selecting a role will email all users assigned that role. This could be a significant number of people so please be certain.',
 ];

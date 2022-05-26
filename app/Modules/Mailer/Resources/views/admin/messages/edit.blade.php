@@ -35,6 +35,16 @@ app('pathway')
 @section('content')
 <form action="{{ route('admin.mailer.send') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 
+	@if ($errors->any())
+		<div class="alert alert-danger">
+			<ul>
+				@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
+	@endif
+
 	<div class="row">
 		<div class="col col-md-7">
 			<fieldset class="adminform">
@@ -135,10 +145,11 @@ app('pathway')
 					<input type="text" name="user" id="field-user" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" value="" />
 				</div>
 
-				<div class="form-group">
-				<?php
-				echo App\Halcyon\Html\Builder\Access::roles('role', [], true);
-				?>
+				<div class="form-group" id="field-roles">
+					<div class="alert alert-warning d-none">{{ trans('mailer::mailer.role confirmation') }}</div>
+					<?php
+					echo App\Halcyon\Html\Builder\Access::roles('role', [], true);
+					?>
 				</div>
 
 				<div class="form-group">

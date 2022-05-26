@@ -142,4 +142,29 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		});
 	}
+
+	var confirmed = 0;
+	var parent = document.getElementById('field-roles');
+	if (parent) {
+		parent.querySelectorAll('input').forEach(function (el) {
+			el.addEventListener('change', function () {
+				if (this.checked) {
+					if (!confirmed) {
+						parent.querySelectorAll('.alert').forEach(function (al) {
+							al.classList.remove('d-none');
+						});
+					}
+
+					confirmed++;
+				} else if (!this.checked) {
+					confirmed--;
+					if (confirmed == 0) {
+						parent.querySelectorAll('.alert').forEach(function (al) {
+							al.classList.add('d-none');
+						});
+					}
+				}
+			});
+		});
+	}
 });
