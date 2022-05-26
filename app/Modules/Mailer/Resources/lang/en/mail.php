@@ -30,4 +30,16 @@ return [
 	'template' => 'Template',
 	'use template' => 'Use this template',
 	'sent' => 'Sent messages',
+	'options' => 'Options',
+	'alert level' => 'Alert level',
+	'alert level description' => 'Selecting an alert level will alter the style of the email sent, typically with a banner, to distinguish it more clearly from other system emails.',
+	'alert' => [
+		'info' => 'Info',
+		'warning' => 'Warning',
+		'danger' => 'Danger',
+	],
+	'variable' => 'Variable',
+	'variables' => 'Variables',
+	'example result' => 'Example Output',
+	'variable replacement' => 'Variable placeholders can be used to dynamically inject content into emails. This is particularly useful when sending the same email to multiple recipients.',
 ];

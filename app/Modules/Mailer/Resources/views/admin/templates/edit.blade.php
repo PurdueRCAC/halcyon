@@ -53,6 +53,65 @@ app('pathway')
 				</div>
 			</fieldset>
 		</div>
+
+		<div class="col col-md-5">
+			<fieldset class="adminform">
+				<legend>{{ trans('mailer::mail.options') }}</legend>
+
+				<div class="form-group">
+					<label for="field-alert">{{ trans('mailer::mail.alert level') }}</label>
+					<select name="alert" id="field-alert" class="form-control">
+						<option value=""<?php if (!$row->alert) { echo ' selected'; } ?>>{{ trans('global.none') }}</option>
+						<option value="info"<?php if ($row->alert == 'info') { echo ' selected'; } ?>>{{ trans('mailer::mail.alert.info') }}</option>
+						<option value="warning"<?php if ($row->alert == 'warning') { echo ' selected'; } ?>>{{ trans('mailer::mail.alert.warning') }}</option>
+						<option value="danger"<?php if ($row->alert == 'danger') { echo ' selected'; } ?>>{{ trans('mailer::mail.alert.danger') }}</option>
+					</select>
+					<span class="form-text text-muted">{{ trans('mailer::mail.alert level description') }}</span>
+				</div>
+			</fieldset>
+
+			<fieldset class="adminform">
+				<legend>{{ trans('mailer::mail.variables') }}</legend>
+
+				<div class="form-group">
+					<p>{{ trans('mailer::mail.variable replacement') }}</p>
+					<table>
+						<thead>
+							<tr>
+								<th scope="col">{{ trans('mailer::mail.variable') }}</th>
+								<th scope="col">{{ trans('mailer::mail.example result') }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><code>{user.id}</code></td>
+								<td>{{ auth()->user()->id }}</td>
+							</tr>
+							<tr>
+								<td><code>{user.name}</code></td>
+								<td>{{ auth()->user()->name }}</td>
+							</tr>
+							<tr>
+								<td><code>{user.username}</code></td>
+								<td>{{ auth()->user()->username }}</td>
+							</tr>
+							<tr>
+								<td><code>{user.email}</code></td>
+								<td>{{ auth()->user()->email }}</td>
+							</tr>
+							<tr>
+								<td><code>{site.name}</code></td>
+								<td>{{ config('app.name') }}</td>
+							</tr>
+							<tr>
+								<td><code>{site.url}</code></td>
+								<td>{{ url('/') }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</fieldset>
+		</div>
 	</div>
 
 	<?php

@@ -52,13 +52,17 @@ class GenericMessage extends Mailable
 				'{user.id}',
 				'{user.name}',
 				'{user.username}',
-				'{user.email}'
+				'{user.email}',
+				'{site.name}',
+				'{site.url}'
 			],
 			[
 				$user->id,
 				$user->name,
 				$user->username,
-				$user->email
+				$user->email,
+				config('app.name'),
+				url('/')
 			],
 			$body
 		);
@@ -67,6 +71,7 @@ class GenericMessage extends Mailable
 					->subject($this->message->subject)
 					->with([
 						'body' => $body,
+						'alert' => $this->message->alert,
 					]);
 	}
 }

@@ -205,6 +205,7 @@ class MessagesController extends Controller
 			'subject' => 'required|string|max:255',
 			'body' => 'required|string|max:15000',
 			'template' => 'nullable|integer',
+			'alert' => 'nullable|string|max:50',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -218,6 +219,10 @@ class MessagesController extends Controller
 		$row->subject = $request->input('subject');
 		$row->body = $request->input('body');
 		$row->template = $request->input('template', 0);
+		if ($request->has('alert'))
+		{
+			$row->alert = $request->input('alert');
+		}
 
 		if (!$row->save())
 		{
@@ -368,6 +373,7 @@ class MessagesController extends Controller
 			'subject' => 'nullable|string|max:255',
 			'body' => 'nullable|string|max:15000',
 			'template' => 'nullable|integer',
+			'alert' => 'nullable|string|max:50',
 		];
 
 		$validator = Validator::make($request->all(), $rules);

@@ -23,6 +23,7 @@ class CreateMailTables extends Migration
 				$table->tinyInteger('template')->unsigned()->default(0);
 				$table->string('subject', 255);
 				$table->mediumText('body');
+				$table->string('alert', 50);
 				$table->dateTime('created_at')->nullable();
 				$table->dateTime('updated_at')->nullable();
 				$table->dateTime('deleted_at')->nullable();

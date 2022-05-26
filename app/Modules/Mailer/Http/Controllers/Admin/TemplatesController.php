@@ -139,7 +139,8 @@ class TemplatesController extends Controller
 		//$request->validate([
 		$rules = [
 			'subject' => 'required|string|max:255',
-			'body' => 'required|string|max:15000'
+			'body' => 'required|string|max:15000',
+			'alert' => 'nullable|string|max:50',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -156,6 +157,10 @@ class TemplatesController extends Controller
 		$row = $id ? Message::findOrFail($id) : new Message();
 		$row->subject = $request->input('subject');
 		$row->body = $request->input('body');
+		if ($request->has('alert'))
+		{
+			$row->alert = $request->input('alert');
+		}
 		$row->template = 1;
 
 		if (!$row->save())

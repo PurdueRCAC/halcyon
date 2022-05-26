@@ -82,7 +82,7 @@ app('pathway')
 					{!! Html::grid('sort', trans('mailer::mail.modified'), 'updated_at', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-6">
-					{!! Html::grid('sort', trans('mailer::mail.sent at'), 'sent_at', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('mailer::mail.alert level'), 'alert', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-6 text-right">
 					{{ trans('mailer::mail.options') }}
@@ -132,16 +132,10 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-6">
-					@if ($row->sent_at)
-						<time datetime="{{ $row->sent_at->toDateTimeLocalString() }}">
-							@if ($row->sent_at->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
-								{{ $row->sent_at->diffForHumans() }}
-							@else
-								{{ $row->sent_at->format('Y-m-d') }}
-							@endif
-						</time>
+					@if ($row->alert)
+						<span class="text-{{ $row->alert }}">{{ trans('mailer::mail.alert.' . $row->alert) }}</span>
 					@else
-						<span class="text-muted never">{{ trans('global.never') }}</span>
+						<span class="text-muted">{{ trans('global.none') }}</span>
 					@endif
 				</td>
 				<td class="text-right">
