@@ -52,7 +52,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-template">{{ trans('mailer::mailer.template') }}</label>
-					<select name="template" id="field-template" class="form-control{{ $errors->has('fields.subject') ? ' is-invalid' : '' }}">
+					<select name="usetemplate" id="field-template" class="form-control{{ $errors->has('fields.subject') ? ' is-invalid' : '' }}">
 						<option value="">{{ trans('global.none') }}</option>
 						@foreach ($templates as $template)
 							<option value="template{{ $template->id }}"<?php if ($row->id == $template->id) { echo ' selected'; } ?>>{{ $template->subject }}</option>
