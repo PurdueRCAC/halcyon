@@ -16,7 +16,14 @@ class ArticleMailing
 	 *
 	 * @var string
 	 */
-	protected $name;
+	public $name;
+
+	/**
+	 * Layout to use
+	 *
+	 * @var string
+	 */
+	public $layout;
 
 	/**
 	 * Constructor
