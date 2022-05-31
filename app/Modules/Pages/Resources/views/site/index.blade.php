@@ -155,7 +155,7 @@
 
 							<div class="form-group">
 								<label for="field-content">{{ trans('pages::pages.content') }}: <span class="required" data-tip="{{ trans('global.required') }}">*</span></label>
-								{!! editor('content', $page->getOriginal('content'), ['rows' => 35, 'class' => 'required']) !!}
+								{!! editor('content', $page->getOriginal('content'), ['rows' => 35, 'class' => 'required', 'id' => 'field-content']) !!}
 							</div>
 						@endif
 
