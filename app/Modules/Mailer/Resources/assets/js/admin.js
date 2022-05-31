@@ -167,4 +167,20 @@ document.addEventListener('DOMContentLoaded', function () {
 			});
 		});
 	}
+
+	var me = document.getElementById('field-fromme');
+	if (me) {
+		me.addEventListener('change', function () {
+			if (this.checked) {
+				document.getElementById('field-fromemail').setAttribute('data-value', document.getElementById('field-fromemail').value);
+				document.getElementById('field-fromname').setAttribute('data-value', document.getElementById('field-fromname').value);
+
+				document.getElementById('field-fromemail').value = this.value;
+				document.getElementById('field-fromname').value = this.getAttribute('data-name');
+			} else {
+				document.getElementById('field-fromemail').value = document.getElementById('field-fromemail').getAttribute('data-value');
+				document.getElementById('field-fromname').value = document.getElementById('field-fromname').getAttribute('data-value');
+			}
+		});
+	}
 });
