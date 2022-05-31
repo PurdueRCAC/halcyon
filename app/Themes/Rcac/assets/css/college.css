@@ -11449,6 +11449,18 @@ table.gsc-search-box .gsc-search-button {
 	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 	min-width: 14rem;
 	margin: 0;
+
+  display:block;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  /*border: none;
+  -webkit-transition:max-height .4s ease-in-out .4s;
+  -moz-transition:max-height .4s ease-in-out .4s;
+  -ms-transition:max-height .4s ease-in-out .4s;
+  -o-transition:max-height .4s ease-in-out .4s;
+  transition:max-height .4s ease-in-out .4s;*/
+  transition:max-height .5s, opcaity .1s;
 }
 @media (max-width: 992px) {
 	.blackbar .black .dropdown-menu {
@@ -11655,6 +11667,14 @@ table.gsc-search-box .gsc-search-button {
 .navbar-inverse .navbar-nav > .open > a:hover,
 .navbar-inverse .navbar-nav > .open > a:focus {
 	background-color:#fff
+}
+.navbar .dropdown:hover>.dropdown-menu,
+.navbar .dropdown:focus-within .dropdown-menu,
+.navbar .dropdown>a:hover + .dropdown-menu,
+.navbar .dropdown>a:focus + .dropdown-menu {
+  display: block;
+  opacity: 1;
+  max-height:30em;
 }
 
 /* [!] Breadcrumbs */
