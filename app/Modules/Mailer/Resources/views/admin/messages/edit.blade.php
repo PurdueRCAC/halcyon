@@ -50,9 +50,35 @@ app('pathway')
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
+				<div class="row">
+					<div class="col-md-5">
+						<div class="form-group">
+							<label for="field-fromemail">{{ trans('mailer::mailer.from email') }} <span class="required">{{ trans('global.required') }}</span></label>
+							<input type="email" name="fromemail" id="field-fromemail" class="form-control{{ $errors->has('fromemail') ? ' is-invalid' : '' }}" required maxlength="320" value="{{ config('mail.from.address') }}" data-value="{{ config('mail.from.address') }}" />
+							<span class="invalid-feedback">{{ trans('mailer::mailer.invalid.subject') }}</span>
+							{!! $errors->first('fromemail', '<span class="form-text text-danger">:message</span>') !!}
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="field-fromname">{{ trans('mailer::mailer.from name') }}</label>
+							<input type="text" name="fromname" id="field-fromname" class="form-control" maxlength="150" value="{{ config('mail.from.name') }}" data-value="{{ config('mail.from.name') }}" />
+						</div>
+					</div>
+					<div class="col-md-1">
+						<div class="form-group">
+							<br />
+							<div class="form-check">
+								<input type="checkbox" name="fromme" id="field-fromme" class="form-check-input" value="{{ auth()->user()->email }}" data-name="{{ auth()->user()->name }}" />
+								<label for="field-fromme" class="form-check-label">{{ trans('mailer::mailer.from me') }}</label>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<div class="form-group">
 					<label for="field-template">{{ trans('mailer::mailer.template') }}</label>
-					<select name="usetemplate" id="field-template" class="form-control{{ $errors->has('fields.subject') ? ' is-invalid' : '' }}">
+					<select name="usetemplate" id="field-template" class="form-control">
 						<option value="">{{ trans('global.none') }}</option>
 						@foreach ($templates as $template)
 							<option value="template{{ $template->id }}"<?php if ($row->id == $template->id) { echo ' selected'; } ?>>{{ $template->subject }}</option>
@@ -65,7 +91,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-subject">{{ trans('mailer::mailer.subject') }} <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="subject" id="field-subject" class="form-control{{ $errors->has('fields.subject') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->subject }}" />
+					<input type="text" name="subject" id="field-subject" class="form-control{{ $errors->has('subject') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->subject }}" />
 					<span class="invalid-feedback">{{ trans('mailer::mailer.invalid.subject') }}</span>
 					{!! $errors->first('subject', '<span class="form-text text-danger">:message</span>') !!}
 				</div>

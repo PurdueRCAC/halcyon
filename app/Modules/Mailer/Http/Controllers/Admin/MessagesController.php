@@ -193,6 +193,8 @@ class MessagesController extends Controller
 			'subject' => 'required|string|max:255',
 			'body' => 'required|string|max:15000',
 			'alert' => 'nullable|string|max:50',
+			'fromemail' => 'required|email',
+			'fromname' => 'nullable|string|max:150',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -203,6 +205,12 @@ class MessagesController extends Controller
 				->withInput($request->input())
 				->withErrors($validator->messages());
 		}
+
+		$from = [
+			'email' => $request->input('fromemail'),
+			'name'  => $request->input('fromname'),
+		];
+		$from['name'] = $from['name'] ? $from['name'] : $from['email'];
 
 		$cc  = [];
 
@@ -303,6 +311,7 @@ class MessagesController extends Controller
 			Mail::to($user->email)
 				->cc($cc)
 				->bcc($bcc)
+				->from($from['email'], $from['name'])
 				->send($message);
 
 			$success++;
