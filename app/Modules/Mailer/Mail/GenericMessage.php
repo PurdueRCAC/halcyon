@@ -30,7 +30,7 @@ class GenericMessage extends Mailable
 	 *
 	 * @var array
 	 */
-	protected $from;
+	protected $frominfo;
 
 	/**
 	 * Create a new message instance.
@@ -44,7 +44,7 @@ class GenericMessage extends Mailable
 	{
 		$this->message = $message;
 		$this->user = $user;
-		$this->from = (array)$from;
+		$this->frominfo = (array)$from;
 	}
 
 	/**
@@ -77,14 +77,14 @@ class GenericMessage extends Mailable
 			$body
 		);
 
-		if (isset($this->from['email']))
+		if (isset($this->frominfo['email']))
 		{
-			if (!isset($this->from['name']))
+			if (!isset($this->frominfo['name']))
 			{
-				$this->from['name'] = $this->from['email'];
+				$this->frominfo['name'] = $this->frominfo['email'];
 			}
 
-			$this->from($this->from['email'], $this->from['name']);
+			$this->from($this->from['email'], $this->frominfo['name']);
 		}
 
 		return $this->markdown('mailer::mail.message')
