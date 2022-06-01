@@ -84,7 +84,7 @@ class GenericMessage extends Mailable
 				$this->frominfo['name'] = $this->frominfo['email'];
 			}
 
-			$this->from($this->from['email'], $this->frominfo['name']);
+			$this->from($this->frominfo['email'], $this->frominfo['name']);
 		}
 
 		return $this->markdown('mailer::mail.message')
