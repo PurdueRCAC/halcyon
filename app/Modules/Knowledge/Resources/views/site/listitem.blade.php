@@ -30,7 +30,7 @@ if ($node->isSeparator())
 @endphp
 <li<?php if ($cls) { echo ' class="' . trim($cls) . '"'; } ?>>
 	<div>
-	@if ($node->page->access > 1)
+	@if ($node->access > 1)
 		<span class="fa fa-lock" aria-hidden="true"></span>
 	@endif
 	@if ($node->isSeparator())
