@@ -207,8 +207,8 @@ class MessagesController extends Controller
 		}
 
 		$from = [
-			'email' => $request->input('fromemail'),
-			'name'  => $request->input('fromname'),
+			'email' => $request->input('fromemail', config('mail.from.address')),
+			'name'  => $request->input('fromname', config('mail.from.name')),
 		];
 		$from['name'] = $from['name'] ? $from['name'] : $from['email'];
 
@@ -306,12 +306,11 @@ class MessagesController extends Controller
 
 			$to[] = $user->email;
 
-			$message = new GenericMessage($row, $user);
+			$message = new GenericMessage($row, $user, $from);
 
 			Mail::to($user->email)
 				->cc($cc)
 				->bcc($bcc)
-				->from($from['email'], $from['name'])
 				->send($message);
 
 			$success++;

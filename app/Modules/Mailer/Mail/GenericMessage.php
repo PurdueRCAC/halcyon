@@ -26,15 +26,25 @@ class GenericMessage extends Mailable
 	protected $user;
 
 	/**
+	 * From email and name
+	 *
+	 * @var array
+	 */
+	protected $from;
+
+	/**
 	 * Create a new message instance.
 	 *
-	 * @param  Message  $message
+	 * @param  Message $message
+	 * @param  User $user
+	 * @param  array $from
 	 * @return void
 	 */
-	public function __construct(Message $message, User $user)
+	public function __construct(Message $message, User $user, $from = array())
 	{
 		$this->message = $message;
 		$this->user = $user;
+		$this->from = (array)$from;
 	}
 
 	/**
@@ -66,6 +76,16 @@ class GenericMessage extends Mailable
 			],
 			$body
 		);
+
+		if (isset($this->from['email']))
+		{
+			if (!isset($this->from['name']))
+			{
+				$this->from['name'] = $this->from['email'];
+			}
+
+			$this->from($this->from['email'], $this->from['name']);
+		}
 
 		return $this->markdown('mailer::mail.message')
 					->subject($this->message->subject)

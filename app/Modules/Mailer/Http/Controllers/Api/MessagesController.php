@@ -487,6 +487,69 @@ class MessagesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "subject",
+	 * 		"description":   "Message subject",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "body",
+	 * 		"description":   "Message body",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "to",
+	 * 		"description":   "A comma-separated list of user IDs or email addresses",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "fromemail",
+	 * 		"description":   "An email address the message is from. Defaults to global site setting.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "fromname",
+	 * 		"description":   "A name the message is from. Defaults to global site setting.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "cc",
+	 * 		"description":   "A comma-separated list of user IDs or email addresses",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "bcc",
+	 * 		"description":   "A comma-separated list of user IDs or email addresses",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"200": {
 	 * 			"description": "Successful entry read",
@@ -533,6 +596,12 @@ class MessagesController extends Controller
 		$row->subject = $request->input('subject');
 		$row->body = $request->input('body');
 		$row->save();
+
+		$from = [
+			'email' => $request->input('fromemail', config('mail.from.address')),
+			'name'  => $request->input('fromname', config('mail.from.name')),
+		];
+		$from['name'] = $from['name'] ? $from['name'] : $from['email'];
 
 		$cc  = [];
 
@@ -609,7 +678,7 @@ class MessagesController extends Controller
 
 				$to[] = $user->email;
 
-				$message = new GenericMessage($row, $user);
+				$message = new GenericMessage($row, $user, $from);
 
 				Mail::to($user->email)
 					->cc($cc)
