@@ -266,8 +266,7 @@ class AuthprimaryLdap
 						$result->setAttribute('cn', $user->name);
 						$result->setAttribute('sn', $user->surname);
 						if (!$result->loginShell
-							|| $result->loginShell == '/bin/false'
-							|| $result->loginShell == $user->loginShell)
+						 || $result->loginShell != $user->loginShell)
 						{
 							$result->setAttribute('loginShell', $user->loginShell);
 						}
@@ -285,20 +284,36 @@ class AuthprimaryLdap
 							'homeDirectory' => '/home/' . $user->username
 						];
 					}
-					elseif ($user->name != $result->getAttribute('cn', 0))
+					else
 					{
-						$result->setAttribute('cn', $user->name);
-						$result->setAttribute('sn', $user->surname);
-
-						if (!$result->save())
+						$update = false;
+						if (!$result->loginShell
+						 || $result->loginShell != '/bin/false')
 						{
-							throw new Exception('Failed to update AuthPrimary ou=allPeople record', 500);
+							$result->setAttribute('loginShell', '/bin/false');
+							$update = true;
 						}
 
-						$results['updated'][] = [
-							'cn' => $user->name,
-							'sn' => $user->surname,
-						];
+						if ($user->name != $result->getAttribute('cn', 0))
+						{
+							$result->setAttribute('cn', $user->name);
+							$result->setAttribute('sn', $user->surname);
+							$update = true;
+						}
+
+						if ($update)
+						{
+							if (!$result->save())
+							{
+								throw new Exception('Failed to update AuthPrimary ou=allPeople record', 500);
+							}
+
+							$results['updated'][] = [
+								'cn' => $user->name,
+								'sn' => $user->surname,
+								'loginShell' => '/bin/false',
+							];
+						}
 					}
 				}
 			}
@@ -382,13 +397,26 @@ class AuthprimaryLdap
 					}
 					else
 					{
+						$update = false;
+
+						if (!$result->loginShell
+						|| $result->loginShell != $user->loginShell)
+						{
+							$result->setAttribute('loginShell', $user->loginShell);
+							$update = true;
+						}
+
 						if ($user->name != $result->getAttribute('cn', 0))
 						{
 							$result->setAttribute('cn', $user->name);
 							$result->setAttribute('sn', $user->surname);
 							$result->setAttribute('givenName', $user->givenName);
 							$result->setAttribute('gecos', $this->transliterate($user->name));
+							$update = true;
+						}
 
+						if ($update)
+						{
 							if (!$result->save())
 							{
 								throw new Exception('Failed to update AuthPrimary ou=People record', 500);
@@ -399,6 +427,7 @@ class AuthprimaryLdap
 								'givenName'     => $user->givenName,
 								'sn'            => $user->surname,
 								'gecos'         => $this->transliterate($user->name),
+								'loginShell'    => $user->loginShell,
 							];
 						}
 					}
