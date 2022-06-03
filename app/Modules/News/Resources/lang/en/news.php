@@ -127,4 +127,5 @@ return [
 	'posted by name' => 'Posted by :name',
 	'user news header' => 'What is this page?',
 	'user news explanation' => 'If you have registered for any events, you\'ll find them listed here.',
+	'news story number' => 'News Story #:id',
 ];

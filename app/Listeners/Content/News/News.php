@@ -12,6 +12,11 @@ use App\Modules\News\Events\UpdatePrepareContent;
 class News
 {
 	/**
+	 * @var string
+	 */
+	private $format = 'html';
+
+	/**
 	 * Register the listeners for the subscriber.
 	 *
 	 * @param  Illuminate\Events\Dispatcher  $events
@@ -36,6 +41,13 @@ class News
 	{
 		$content = $event->getBody();
 
+		$this->format = 'html';
+		if ($event instanceof ArticlePrepareContent
+		 || $event instanceof UpdatePrepareContent)
+		{
+			$this->format = 'md';
+		}
+
 		$content = preg_replace_callback("/(news)\s*(story|item)?\s*#?(\d+)(\{.+?\})?/i", array($this, 'matchNews'), $content);
 
 		$event->setBody($content);
@@ -49,7 +61,7 @@ class News
 	 */
 	private function matchNews($match)
 	{
-		$title = 'News Story #' . $match[3];
+		$title = trans('site.news.news story number', ['id' => $match[3]]);
 
 		$article = Article::find($match[3]);
 
@@ -63,6 +75,15 @@ class News
 			$title = preg_replace("/[{}]+/", '', $match[4]);
 		}
 
-		return '<a href="' . route('site.news.show', ['id' => $match[3]]) . '">' . $title . '</a>';
+		if ($this->format == 'md')
+		{
+			$out = '[' . $title . '](' . route('site.news.show', ['id' => $match[3]]) . ')';
+		}
+		else
+		{
+			$out = '<a href="' . route('site.news.show', ['id' => $match[3]]) . '">' . $title . '</a>';
+		}
+
+		return $out;
 	}
 }
