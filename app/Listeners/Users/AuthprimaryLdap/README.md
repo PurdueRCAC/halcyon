@@ -4,7 +4,7 @@ This connects to the RCAC AuthPrimary LDAP to retrieve user info.
 
 ### Listens for
 
-* `App\Modules\Users\Events\UserSync` - Checks allPeople and People LDAP trees and based on if the user is authorized adds, modifies, or removes entries.
+* `App\Modules\Users\Events\UserSync` - Checks `ou=allPeople` and `ou=People` LDAP trees and based on if the user is authorized adds, modifies, or removes entries.
 
 The following are used for checking, granting, and removing access manually to the resource.
 
@@ -14,10 +14,10 @@ The following are used for checking, granting, and removing access manually to t
 
 The following are used for keeping authentication in sync with membership in unix groups.
 
-* `App\Modules\Groups\Events\UnixGroupCreating`
-* `App\Modules\Groups\Events\UnixGroupDeleted`
-* `App\Modules\Groups\Events\UnixGroupMemberCreated`
-* `App\Modules\Groups\Events\UnixGroupMemberDeleted`
+* `App\Modules\Groups\Events\UnixGroupCreating` - Create a group. This only acts group names that start with `x-`.
+* `App\Modules\Groups\Events\UnixGroupDeleted` - Remove a group. This only acts group names that start with `x-`.
+* `App\Modules\Groups\Events\UnixGroupMemberCreated` - Adds user to a group. This only acts on users with usernames that start with `x-`.
+* `App\Modules\Groups\Events\UnixGroupMemberDeleted` - Removes user from a group. This only acts on users with usernames that start with `x-`.
 
 #### Sample LDAP Entries
 
