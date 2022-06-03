@@ -505,11 +505,20 @@ $(document).ready(function() {
 	});
 
 	// UI helpers like dialogs, tooltips, etc.
-	$('.dialog-help').dialog({
+	document.querySelectorAll('.dialog-help').forEach(function(el) {
+		var w = el.getAttribute('data-width');
+		w = w ? parseInt(w) : 550;
+		$(el).dialog({
+			autoOpen: false,
+			modal: true,
+			width: w
+		});
+	});
+	/*$('.dialog-help').dialog({
 		autoOpen: false,
 		modal: true,
 		width: 550
-	});
+	});*/
 
 	$('.help').on('click', function(e){
 		e.preventDefault();

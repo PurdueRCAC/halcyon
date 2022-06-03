@@ -458,7 +458,7 @@ Additionally these variables are available inside updates and will be filled wit
 - %updatedatetime%
 ";
 ?>
-	<div id="help1" class="dialog dialog-help" title="Text Formatting">
+	<div id="help1" class="dialog dialog-help" data-width="700" title="Text Formatting">
 		<ul>
 			<li><a href="#help1a">Fonts</a></li>
 			<li><a href="#help1b">Lists</a></li>
@@ -474,49 +474,49 @@ Additionally these variables are available inside updates and will be filled wit
 			$article = new App\Modules\News\Models\Article(['body' => $help1a]);
 			?>
 			<p>Input text: <textarea id="help1ainput" class="samplebox" data-sample="a"><?php echo $help1a; ?></textarea></p>
-			<p>Output text: <br/><div id="help1aoutput" class="sampleoutput"><?php echo $article->body; ?></div></p>
+			<p>Output text: <br/><div id="help1aoutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div></p>
 		</div>
 		<div id="help1b">
 			<?php
 			$article = new App\Modules\News\Models\Article(['body' => $help1b]);
 			?>
 			<p>Input text: <textarea id="help1binput" class="samplebox" data-sample="b"><?php echo $help1b; ?></textarea></p>
-			<p>Output text: <br/><div id="help1boutput" class="sampleoutput"><?php echo $article->body; ?></div></p>
+			<p>Output text: <br/><div id="help1boutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div></p>
 		</div>
 		<div id="help1c">
 			<?php
 			$article = new App\Modules\News\Models\Article(['body' => $help1c]);
 			?>
 			<p>Input text: <textarea id="help1cinput" class="samplebox" data-sample="c"><?php echo $help1c; ?></textarea></p>
-			<p>Output text: <br/><div id="help1coutput" class="sampleoutput"><?php echo $article->body; ?></div></p>
+			<p>Output text: <br/><div id="help1coutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div></p>
 		</div>
 		<div id="help1d">
 			<?php
 			$article = new App\Modules\News\Models\Article(['body' => $help1d]);
 			?>
 			<p>Input text: <textarea id="help1dinput" class="samplebox" data-sample="d"><?php echo $help1d; ?></textarea></p>
-			<p>Output text: <br/><div id="help1doutput" class="sampleoutput"><?php echo $article->body; ?></div></p>
+			<p>Output text: <br/><div id="help1doutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div></p>
 		</div>
 		<div id="help1e">
 			<?php
 			$article = new App\Modules\News\Models\Article(['body' => $help1e]);
 			?>
 			<p>Input text: <textarea id="help1einput" class="samplebox" data-sample="e"><?php echo $help1e; ?></textarea></p>
-			<p>Output text: <br/><div id="help1eoutput" class="sampleoutput"><?php echo $article->body; ?></div></p>
+			<p>Output text: <br/><div id="help1eoutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div></p>
 		</div>
 		<div id="help1f">
 			<?php
 			$article = new App\Modules\News\Models\Article(['body' => $help1f]);
 			?>
 			<p>Input text: <textarea id="help1finput" class="samplebox" data-sample="f"><?php echo $help1f; ?></textarea></p>
-			<p>Output text: <br/><div id="help1foutput" class="sampleoutput"><?php echo $article->body; ?></div></p>
+			<p>Output text: <br/><div id="help1foutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div></p>
 		</div>
 		<div id="help1g">
 			<?php
 			$article = new App\Modules\News\Models\Article(['body' => $help1g]);
 			?>
 			<p>Input text: <textarea id="help1ginput" class="samplebox" data-sample="g"><?php echo $help1g; ?></textarea></p>
-			<p>Output text: <br/><div id="help1goutput" class="sampleoutput"><?php echo $article->body; ?></div></p>
+			<p>Output text: <br/><div id="help1goutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div></p>
 		</div>
 		<div id="help1h">
 			<p>Input text: <textarea id="help1hinput" class="samplebox" data-sample="h"><?php echo $help1h; ?></textarea></p>

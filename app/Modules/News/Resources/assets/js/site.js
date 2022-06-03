@@ -2689,7 +2689,8 @@ function PreviewExample(example) {
 	WSPostURL(root + "news/preview", JSON.stringify({ 'body' : document.getElementById('help1' + example + 'input').value, 'vars' : example_vars }), function (xml) {
 		if (xml.status < 400) {
 			var results = JSON.parse(xml.responseText);
-			document.getElementById('help1' + example + 'output').innerHTML = results['formattedtext'];
+			console.log(results);
+			document.getElementById('help1' + example + 'output').innerHTML = results['formattedbody'];
 		} else {
 			alert("An error occurred while generating preview.");
 		}

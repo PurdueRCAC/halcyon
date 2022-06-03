@@ -637,6 +637,12 @@ div.ui-dialog {
 	font-weight: bold;
 	padding: 1em 2em;
 }
+.ui-dialog .ui-tabs-nav {
+	padding: 0;
+}
+.ui-dialog .ui-tabs .ui-tabs-panel {
+	padding: 1em 0 0 0;
+}
 .ui-dialog .ui-dialog-content {
 	padding: 2em;
 }
