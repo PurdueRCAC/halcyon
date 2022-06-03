@@ -257,9 +257,29 @@ class ItemsController extends Controller
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
+		// Preprocess the list of items to find ordering divisions.
 		$ordering = array();
 
-		// Preprocess the list of items to find ordering divisions.
+		$prev = null;
+		if ($filters['page'] > 1)
+		{
+			$prev = $query
+				->orderBy($filters['order'], $filters['order_dir'])
+				->limit(1)
+				->offset($filters['limit'] * ($filters['page'] - 1) - 1)
+				->first();
+		}
+		$next = $query
+			->orderBy($filters['order'], $filters['order_dir'])
+			->limit(1)
+			->offset($filters['limit'] * $filters['page'])
+			->first();
+
+		if ($prev)
+		{
+			$ordering[$prev->parent_id][] = $prev->id;
+		}
+
 		foreach ($rows as $item)
 		{
 			$ordering[$item->parent_id][] = $item->id;
@@ -357,6 +377,11 @@ class ItemsController extends Controller
 					break;
 			}
 			$item->item_type = $value;
+		}
+
+		if ($next)
+		{
+			$ordering[$next->parent_id][] = $next->id;
 		}
 
 		// Levels filter.

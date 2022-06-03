@@ -134,12 +134,35 @@ class PagesController extends Controller
 			->orderBy('lft', 'asc')
 			->get();
 
+		// Preprocess the list of items to find ordering divisions.
 		$ordering = array();
 
-		// Preprocess the list of items to find ordering divisions.
+		$prev = null;
+		if ($filters['page'] > 1)
+		{
+			$prev = $query
+				->orderBy($filters['order'], $filters['order_dir'])
+				->limit(1)
+				->offset($filters['limit'] * ($filters['page'] - 1) - 1)
+				->first();
+		}
+		$next = $query
+			->orderBy($filters['order'], $filters['order_dir'])
+			->limit(1)
+			->offset($filters['limit'] * $filters['page'])
+			->first();
+
+		if ($prev)
+		{
+			$ordering[$prev->parent_id][] = $prev->id;
+		}
 		foreach ($rows as $item)
 		{
 			$ordering[$item->parent_id][] = $item->id;
+		}
+		if ($next)
+		{
+			$ordering[$next->parent_id][] = $next->id;
 		}
 
 		return view('knowledge::admin.pages.index', [

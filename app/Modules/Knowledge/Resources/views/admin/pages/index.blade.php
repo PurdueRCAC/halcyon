@@ -264,7 +264,6 @@
 				</td>
 				<td class="priority-5 text-cente">
 					{!! str_repeat('<span class="gi">|&mdash;</span>', $row->level) !!}
-					<?php $orderkey = array_search($row->id, $ordering[$row->parent_id]); ?>
 					<?php if (auth()->user()->can('edit knowledge')): ?>
 						<span class="glyph">{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, isset($ordering[$row->parent_id][$orderkey - 1]), route('admin.knowledge.orderup', ['id' => $row->id])) !!}</span>
 						<span class="glyph">{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), isset($ordering[$row->parent_id][$orderkey + 1]), route('admin.knowledge.orderdown', ['id' => $row->id])) !!}</span>
