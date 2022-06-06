@@ -371,7 +371,7 @@
 <?php
 $help1a = "The news interface supports basic font formatting:
 
-*Bold* _example_, or you can have *_both_*.
+**Bold** _example_, or you can have **_both_**.
 
 These examples are fully interactive. Just type in the top box and see the formatting below live.";
 
@@ -429,9 +429,10 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 
 The line right before the table will be used as the caption for the table.
 
-| *Node* | *Cores* | *Memory* |
-| Carter-A | 16 | 32GB |
-| Carter-B | 16 | 64GB |
+| Node     | Cores | Memory |
+|----------|------:|-------:|
+| Carter-A |    16 |   32GB |
+| Carter-B |    16 |   64GB |
 ";
 
 $help1h = "Several variables are available to automatically fill in certain fields for a news articles. These include dates, resources, and location. Variables are denoted such as '%date%'. Below is a listing of possible variables.

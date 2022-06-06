@@ -350,10 +350,10 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 
 The line right before the table will be used as the caption for the table.
 
-| *Node*   | *Cores* | *Memory* |
-|----------|--------:|---------:|
-| Carter-A |      16 |     32GB |
-| Carter-B |      16 |     64GB |
+| Node     | Cores | Memory |
+|----------|------:|-------:|
+| Carter-A |    16 |   32GB |
+| Carter-B |    16 |   64GB |
 ";
 ?>
 	<div id="markdown" class="dialog dialog-help tabs" title="MarkDown Help">
