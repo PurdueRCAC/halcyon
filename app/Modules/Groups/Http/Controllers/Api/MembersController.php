@@ -326,6 +326,19 @@ class MembersController extends Controller
 			return response()->json(['message' => trans('groups::groups.error.invalid user id' . $request->input('userid'))], 415);
 		}
 
+		if (!auth()->user()->can('manage groups'))
+		{
+			$rowuser = Member::query()
+				->where('userid', '=', auth()->user()->id)
+				->where('groupid', '=', $row->groupid)
+				->first();
+
+			if (!$rowuser || !$rowuser->isManager())
+			{
+				return response()->json(['message' => trans('Unauthorized to create memberships')], 403);
+			}
+		}
+
 		// Do not allow non-admins to remove himself as an owner.
 		// This would just invite too many potential problems.
 		if ($row->isManager()
@@ -516,6 +529,19 @@ class MembersController extends Controller
 
 		$row = Member::findOrFail($id);
 
+		if (!auth()->user()->can('manage groups'))
+		{
+			$rowuser = Member::query()
+				->where('userid', '=', auth()->user()->id)
+				->where('groupid', '=', $row->groupid)
+				->first();
+
+			if (!$rowuser || !$rowuser->isManager())
+			{
+				return response()->json(['message' => trans('Unauthorized to alter memberships')], 403);
+			}
+		}
+
 		if ($request->has('membertype'))
 		{
 			// Do not allow non-admins to remove himself as an owner.
@@ -526,7 +552,7 @@ class MembersController extends Controller
 			{
 				if ($row->userid == auth()->user()->id)
 				{
-					return response()->json(['message' => trans('Cannot remove self as owner of a group')], 409);
+					return response()->json(['message' => trans('groups::groups.error.cannot remove self as owner')], 409);
 				}
 			}
 
