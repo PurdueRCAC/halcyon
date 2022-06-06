@@ -715,7 +715,7 @@ class AuthprimaryLdap
 				];
 
 				$entry = $ldap->make()->user($data);
-				$entry->setAttribute('objectclass', ['posixAccount', 'inetOrgPerson', 'top']);
+				$entry->setAttribute('objectclass', ['x-xsede-xsedePerson', 'posixAccount', 'inetOrgPerson', 'top']);
 				$entry->setDn('uid=' . $data['uid'] . ',' . $entry->getDnBuilder()->get());
 
 				if (!$entry->save())
@@ -800,7 +800,7 @@ class AuthprimaryLdap
 				}
 
 				$entry = $ldap->make()->user($data);
-				$entry->setAttribute('objectclass', ['posixAccount', 'inetOrgPerson', 'top']);
+				$entry->setAttribute('objectclass', ['x-xsede-xsedePerson', 'posixAccount', 'inetOrgPerson', 'top']);
 				$entry->setDn('uid=' . $data['uid'] . ',' . $entry->getDnBuilder()->get());
 
 				if (!$entry->save())
