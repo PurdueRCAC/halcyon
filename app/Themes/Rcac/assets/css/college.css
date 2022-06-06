@@ -11674,7 +11674,7 @@ table.gsc-search-box .gsc-search-button {
 .navbar .dropdown>a:focus + .dropdown-menu {
   display: block;
   opacity: 1;
-  max-height:30em;
+  max-height:35em;
 }
 
 /* [!] Breadcrumbs */
