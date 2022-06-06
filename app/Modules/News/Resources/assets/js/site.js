@@ -2686,13 +2686,22 @@ function PreviewExample(example) {
 	example_vars["resources"] = ["Anvil", "Bell"];//[{"resourcename": "Carter"}, {"resourcename": "Conte"}];
 	example_vars["location"] = "Envision Center";
 
-	WSPostURL(root + "news/preview", JSON.stringify({ 'body' : document.getElementById('help1' + example + 'input').value, 'vars' : example_vars }), function (xml) {
-		if (xml.status < 400) {
-			var results = JSON.parse(xml.responseText);
-			console.log(results);
-			document.getElementById('help1' + example + 'output').innerHTML = results['formattedbody'];
-		} else {
-			alert("An error occurred while generating preview.");
+	var post = {
+		'body': document.getElementById('help1' + example + 'input').value,
+		'vars': example_vars
+	};
+
+	$.ajax({
+		url: document.getElementById('markdown-help').getAttribute('data-api'),
+		type: 'post',
+		data: post,
+		dataType: 'json',
+		async: false,
+		success: function (response) {
+			document.getElementById('help1' + example + 'output').innerHTML = response['formattedbody'];
+		},
+		error: function (xhr) {
+			Halcyon.message('danger', xhr.responseJSON.message);
 		}
 	});
 }
@@ -3492,10 +3501,10 @@ document.addEventListener('DOMContentLoaded', function() {
 			PreviewExample($(this).data('sample'));
 		});
 
-		$('#help1').tabs();
+		$('#markdown-help').tabs();
 
 		//Load the formatting guide example variables into the text box.
-		PreviewExample('h');
+		//PreviewExample('h');
 	}
 
 	$('#location').on('keyup', function(){

@@ -11,8 +11,8 @@ $help1b = "Unordered lists can be made using '-' or '*' to denote list items. Or
 * A
 * List
 
-1) One
-2) Two
+1. One
+2. Two
 3. Three";
 
 $help1c = "Hyperlinks can be made in the following way.
@@ -63,7 +63,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 | Carter-B |      16 |     64GB |
 ";
 ?>
-	<div id="markdown" class="dialog dialog-help tabs" title="MarkDown Help">
+	<div id="markdown-help" data-api="{{ route('api.news.preview') }}" class="dialog dialog-help tabs" data-width="700" title="MarkDown Help">
 		<ul>
 			<li><a href="#help1a">Fonts</a></li>
 			<li><a href="#help1b">Lists</a></li>

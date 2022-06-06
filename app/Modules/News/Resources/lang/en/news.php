@@ -32,7 +32,7 @@ return [
 	'headline' => 'Headline',
 	'name' => 'Name',
 	'body' => 'Body',
-	'body formatting' => 'Text is formatted in <a class="help-dialog" href="#markdown">MarkDown</a>',
+	'body formatting' => 'Text is formatted in <a class="help-dialog" href="#markdown-help">MarkDown</a>',
 	'state' => 'State',
 	'created' => 'Created',
 	'creator' => 'Creator',

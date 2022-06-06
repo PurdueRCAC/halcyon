@@ -309,6 +309,41 @@ function NEWSPreview(btn) {
 	});
 }
 
+/**
+ * Preview news text
+ *
+ * @param   {string}  example
+ * @return  {void}
+ */
+function PreviewExample(example) {
+	var example_vars = {};
+	example_vars["startDate"] = new Date();
+	var d = new Date();
+	d.setDate(d.getDate() + 1);
+	example_vars["endDate"] = d;
+	example_vars["resources"] = ["Anvil", "Bell"];//[{"resourcename": "Carter"}, {"resourcename": "Conte"}];
+	example_vars["location"] = "Envision Center";
+
+	var post = {
+		'body': document.getElementById('help1' + example + 'input').value,
+		'vars': example_vars
+	};
+
+	$.ajax({
+		url: document.getElementById('markdown-help').getAttribute('data-api'),
+		type: 'post',
+		data: post,
+		dataType: 'json',
+		async: false,
+		success: function (response) {
+			document.getElementById('help1' + example + 'output').innerHTML = response['formattedbody'];
+		},
+		error: function (xhr) {
+			Halcyon.message('danger', xhr.responseJSON.message);
+		}
+	});
+}
+
 function autocompleteUsers(url) {
 	return function (request, response) {
 		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
@@ -354,6 +389,18 @@ document.addEventListener('DOMContentLoaded', function () {
 				minLength: 1
 			}
 		});
+	}
+
+	// Dialogs
+	if ($('.samplebox').length) {
+		$('.samplebox').on('keyup', function () {
+			PreviewExample($(this).data('sample'));
+		});
+
+		$('#markdown-help').tabs();
+
+		//Load the formatting guide example variables into the text box.
+		//PreviewExample('h');
 	}
 
 	//$('#markdown').tabs();
