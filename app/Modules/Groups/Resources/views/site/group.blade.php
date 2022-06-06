@@ -1010,7 +1010,7 @@ $pending = $group->pendingMembersCount;
 			</div><!-- / #group-overview -->
 			@endif
 
-			@if ($subsection == 'members')
+			@if ($subsection == 'members' && $canManage)
 			<div id="DIV_group-members">
 				@include('groups::site.group.members', ['group' => $group])
 			</div><!-- / #group-members -->
