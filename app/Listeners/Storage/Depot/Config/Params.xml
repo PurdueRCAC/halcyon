@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<config>
-	<fields name="params">
-		<fieldset name="basic">
-			<field name="resourceid" type="App\Modules\Resources\Models\Fields\ResourceEntry" label="listener.storage.depot::depot.resource" description="listener.storage.depot::depot.resource desc" />
-		</fieldset>
-	</fields>
-</config>

@@ -1,12 +1,10 @@
 ## Halcyon
 
-[![Build Status](https://build.rcac.purdue.edu/api/badges/RCAC-Staff/halcyon/status.svg)](https://build.rcac.purdue.edu/RCAC-Staff/halcyon)
+Halcyon is a unified HPC center operations portal. It allows for self-serve customer allocation purchase and management, account management, a knowledge base, customer relations management (CRM), and more.
 
-ITaP Research Computing portal. The site uses Laravel for the underlying framework.
+### Underlying Framework
 
-### About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Halcyon utilizes Laravel, a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
 - [Simple, fast routing engine](https://laravel.com/docs/routing).
 - [Powerful dependency injection container](https://laravel.com/docs/container).
@@ -100,7 +98,7 @@ app/
 Clone the repo.
 
 ```
-git clone https://github.rcac.purdue.edu/RCAC-Staff/halcyon.git .
+git clone git@github.com:PurdueRCAC/halcyon.git .
 ```
 
 Move into the directory.
