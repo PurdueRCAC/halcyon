@@ -392,7 +392,7 @@
 					@foreach ($unixgroups as $unixgroup)
 						<tr id="unixgroup-{{ $unixgroup->id }}" data-id="{{ $unixgroup->id }}">
 							<td>{{ $unixgroup->longname }}</td>
-							<td class="extendedinfo hide">{{ config('modules.groups.unix_prefix', 'rcac-') . $unixgroup->longname }}</td>
+							<td class="extendedinfo hide">{{ config('module.groups.unix_group_prefix', 'sys-') . $unixgroup->longname }}</td>
 							<td class="extendedinfo hide">{{ $unixgroup->shortname }}</td>
 							<td class="extendedinfo hide text-right">{{ $unixgroup->unixgid }}</td>
 							@if ($canManage)
@@ -413,7 +413,7 @@
 					@if ($canManage)
 						<tr class="hidden" id="unixgroup-{id}" data-id="{id}">
 							<td>{longname}</td>
-							<td class="extendedinfo hide">{{ config('modules.groups.unix_prefix', 'rcac-') }}{longname}</td>
+							<td class="extendedinfo hide">{{ config('module.groups.unix_group_prefix', 'sys-') }}{longname}</td>
 							<td class="extendedinfo hide">{shortname}</td>
 							<td class="extendedinfo hide text-right">0</td>
 							<td class="text-right">

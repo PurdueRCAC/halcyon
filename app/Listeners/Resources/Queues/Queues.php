@@ -87,7 +87,7 @@ class Queues
 
 		$queue = new Queue;
 
-		$queue->name          = config()->get('module.queues.prefix', 'rcac-') . $subresource->cluster;
+		$queue->name          = config()->get('module.queues.prefix', 'system-') . $subresource->cluster;
 		$queue->cluster       = $subresource->cluster;
 		$queue->groupid       = '-1';
 		$queue->subresourceid = $subresource->id;

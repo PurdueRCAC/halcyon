@@ -328,8 +328,6 @@ class UnixGroupsController extends Controller
 
 		// If base is longer than 10 or fewer than 2 chars, do not proceed
 		// If base+name > 17, do not proceed
-		// WS allows    groupName: ^rcs\d{1,5}$
-		//              lgroupName: ^rcac-.{1,17}$
 		if ((strlen($base) + strlen($name) > 17))
 		{
 			return response()->json(['message' => trans('groups::groups.error.name is too long')], 415);
@@ -608,8 +606,6 @@ class UnixGroupsController extends Controller
 
 			// If base is longer than 10 or fewer than 2 chars, do not proceed
 			// If base+name > 17, do not proceed
-			// WS allows    groupName: ^rcs\d{1,5}$
-			//              lgroupName: ^rcac-.{1,17}$
 			if ((strlen($base) + strlen($name) > 17))
 			{
 				return response()->json(['message' => trans('groups::groups.error.name is too long')], 415);

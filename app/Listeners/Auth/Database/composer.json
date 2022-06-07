@@ -4,16 +4,13 @@
 	"type": "halcyon-listener",
 	"keywords": ["halcyon", "authentication", "RCAC", "Research Computing", "Purdue University"],
 	"homepage": "https://www.rcac.purdue.edu",
-	"license": "MIT",
 	"authors": [
 		{
-			"name": "Purdue University",
-			"email": "rcac-help@purdue.edu"
+			"name": "Purdue University"
 		}
 	],
 	"support": {
-		"email": "rcac-help@purdue.edu",
-		"issues": "https://www.rcac.purdue.edu/help"
+		"issues": "https://github.com/PurdueRCAC/halcyon/issues"
 	},
 	"require": {
 		"php" : "^7.2"
