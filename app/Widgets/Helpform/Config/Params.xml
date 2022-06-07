@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<config>
-	<fields name="params">
-		<fieldset name="basic">
-			<field name="email" type="text" label="widget.helpform::helpform.email" />
-			<field name="topic" type="App\Widgets\Helpform\Fields\Articles" label="widget.helpform::helpform.topics" />
-		</fieldset>
-	</fields>
-</config>

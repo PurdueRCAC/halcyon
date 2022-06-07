@@ -32,7 +32,7 @@ class EmailSchedulingCommand extends Command
 	public function handle()
 	{
 		$debug = $this->option('debug') ? true : false;
-		$email = 'rcac-alerts@lists.purdue.edu';
+		$email = config('module.resources.admin_email');
 
 		$a = (new Asset)->getTable();
 		$s = (new Subresource)->getTable();

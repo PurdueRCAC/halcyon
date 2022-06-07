@@ -20,7 +20,7 @@ class CreateImpactTables extends Migration
 			Schema::create('awardflags', function (Blueprint $table)
 			{
 				$table->increments('id');
-				$table->integer('puid')->unsigned()->default(0)->comment('Purdue User ID');
+				$table->integer('puid')->unsigned()->default(0)->comment('Organization ID');
 				$table->smallInteger('fiscalyear')->unsigned()->default(0);
 				$table->char('flag', 128);
 				$table->index(['puid', 'fiscalyear'], 'puid');

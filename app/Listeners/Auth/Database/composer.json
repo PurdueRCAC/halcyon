@@ -2,13 +2,13 @@
 	"name": "halcyon/lst_auth_database",
 	"description": "Handles user authentication against the database",
 	"type": "halcyon-listener",
-	"keywords": ["ITaP", "RCAC", "Research Computing", "Information Technology at Purdue", "Purdue University"],
+	"keywords": ["halcyon", "authentication", "RCAC", "Research Computing", "Purdue University"],
 	"homepage": "https://www.rcac.purdue.edu",
 	"license": "MIT",
 	"authors": [
 		{
 			"name": "Purdue University",
-			"email": "support@rcac.purdue.edu"
+			"email": "rcac-help@purdue.edu"
 		}
 	],
 	"support": {
@@ -16,8 +16,7 @@
 		"issues": "https://www.rcac.purdue.edu/help"
 	},
 	"require": {
-		"php" : "^5.4",
-		"jasig/phpcas": "1.3.5"
+		"php" : "^7.2"
 	},
 	"extra": {
 		"install-directory": "/Listeners/Auth/Database/"

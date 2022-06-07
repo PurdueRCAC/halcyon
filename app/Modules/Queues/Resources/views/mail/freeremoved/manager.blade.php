@@ -15,6 +15,6 @@ Access to your {{ config('app.name') }} resources has been **<span style="color:
 
 ---
 
-If any of these are incorrect you can make changes at any time on the [Queue Management website]({{ route('site.users.account') }}). Account removals are completed during overnight processing. If a person's access to all {{ config('app.name') }} resources is removed they will be able to access their home directory files and Fortress files for as long as they have a current Purdue Career Account.
+If any of these are incorrect you can make changes at any time on the [Queue Management website]({{ route('site.users.account') }}). Account removals are completed during overnight processing. If a person's access to all {{ config('app.name') }} resources is removed they will be able to access their home directory files and long-term storage files for as long as they have a current institution account.
 
 @endcomponent

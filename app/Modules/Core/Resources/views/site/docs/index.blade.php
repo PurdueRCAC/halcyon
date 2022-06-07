@@ -10,8 +10,8 @@
 
 		<title>{{ config('app.name') }} - {{ trans('core::docs.api documentation') }}</title>
 
-		<meta name="description" content="Information Technology at Purdue (ITaP) Research Computing provides advanced computational resources and services to support Purdue faculty and staff researchers." />
-		<meta name="keywords" content="Purdue University, RCAC, Research Computing, Information Technology at Purdue, ITaP" />
+		<meta name="description" content="{{ config('app.name') . ' API auto-generated documentation.' }}" />
+		<meta name="keywords" content="{{ config('app.name') }}, API, documentation" />
 
 		<!-- Styles -->
 		<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/bootstrap/bootstrap.min.css?v=' . filemtime(public_path() . '/modules/core/vendor/bootstrap/bootstrap.min.css')) }}" />

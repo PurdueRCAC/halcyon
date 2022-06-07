@@ -19,7 +19,7 @@ return [
 	'open-close menu' => 'Open/Close Menu',
 	'menu' => 'Menu',
 	'copyright' => '<a href=":url">:name</a> &copy; :date. All Rights Reserved.',
-	'powered by' => 'Powered by <a rel="external" href="http://www.rcac.purdue.edu">Halcyon</a>, version :v',
+	'powered by' => 'Powered by <a rel="external" href="https://github.com/PurdueRCAC/halcyon">Halcyon</a>, version :v',
 	'admin login' => 'Administration Login',
 	'module section' => 'Module sections',
 	'main' => 'Main',

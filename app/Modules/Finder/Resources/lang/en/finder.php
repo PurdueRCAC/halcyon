@@ -28,4 +28,5 @@ return [
 	'state_publish' => 'Publish',
 	'published' => 'Published',
 	'unpublished' => 'Unpublished',
+	'institution' => config('app.name'),
 ];

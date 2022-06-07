@@ -732,7 +732,7 @@
 					},
 					error: function (xhr, ajaxOptions, thrownError) {
 						if (xhr.status == 416) {
-							errors.push("Queue disabled for system/guest account. ACMaint Role removal must be requested manually from accounts@purdue.edu");
+							errors.push("Queue disabled for system/guest account.");
 						}
 						if (typeof xhr.responseJSON.message === 'object') {
 							var lines = Object.values(xhr.responseJSON.message);
@@ -857,7 +857,7 @@
 						var msg = '';
 
 						if (xhr.status == 416) {
-							msg = "Queue enabled for system/guest account. ACMaint Role addition must be requested manually from accounts@purdue.edu";
+							msg = "Queue enabled for system/guest account.";
 						} else {
 							msg = xhr.responseJSON.message;
 						}
@@ -883,7 +883,7 @@
 						var msg = '';
 
 						if (xhr.status == 416) {
-							msg = "Queue disabled for system/guest account. ACMaint Role removal must be requested manually from accounts@purdue.edu";
+							msg = "Queue disabled for system/guest account.";
 						} else {
 							msg = xhr.responseJSON.message;
 						}

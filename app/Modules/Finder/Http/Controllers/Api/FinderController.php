@@ -29,7 +29,7 @@ class FinderController extends Controller
 	 * 					"example": {
 	 * 						"name": "Finder",
 	 * 						"title": "Data Storage Solutions Finder",
-	 * 						"subtitle": "University researchers, staff, and students have a variety of options to store and collaborate with their Purdue data. This tool will offer recommendations of Purdue solutions appropriate to your usage needs and the data security constraints.",
+	 * 						"subtitle": "This tool will offer recommendations of solutions appropriate to your usage needs and the data security constraints.",
 	 * 						"question_header": "Answer these questions to help identify storage solutions and services that are most suitable for your needs.",
 	 * 						"service_header": "Select data storage solutions you would like to compare in details.",
 	 * 						"chart_header": "Select data storage solutions you would like to compare.",
@@ -161,7 +161,7 @@ class FinderController extends Controller
 	 * 						"parent": 0,
 	 * 						"weight": 1,
 	 * 						"selected": false,
-	 * 						"description": "<p>Export controlled data (ITAR/EAR) are restricted by law to U.S. persons only. This means that non-U.S. persons including international students or individuals from foreign countries are barred from accessing this data.</p>\r\n\r\n<p>Contact <a href=\"https://www.purdue.edu/research/regulatory-affairs/\";>Purdue Regulatory Affairs</a> for more information.</p>\r\n",
+	 * 						"description": "<p>Export controlled data (ITAR/EAR) are restricted by law to U.S. persons only. This means that non-U.S. persons including international students or individuals from foreign countries are barred from accessing this data.</p>\r\n\r\n<p>Contact <a href=\"https://yourinstitution/research/regulatory-affairs/\";>Regulatory Affairs</a> for more information.</p>\r\n",
 	 * 						"choices": [
 	 * 							{
 	 * 								"id": 12,
@@ -188,7 +188,7 @@ class FinderController extends Controller
 	 * 						"parent": 0,
 	 * 						"weight": 2,
 	 * 						"selected": false,
-	 * 						"description": "<p><a href=\"https://www.rcac.purdue.edu/services/communityclusters/\";>Community clusters at Purdue</a> provide cost effective computing resources for researchers to run tasks requiring large amounts of computing resources. These resources are hosted by Purdue and are managed by Purdue Research Computing.</p>\r\n\r\n<p>For more information on community clusters, <a href=\"mailto:rcac-help@purdue.edu\">contact Purdue Research Computing</a>.</p>\r\n",
+	 * 						"description": "<p><a href=\"https://yourinstitution/services/communityclusters/\";>Community clusters</a> provide cost effective computing resources for researchers to run tasks requiring large amounts of computing resources.</p>\r\n\r\n<p>For more information on community clusters, <a href=\"mailto:yourinstitution\">contact Your Institution</a>.</p>\r\n",
 	 * 						"choices": [
 	 * 							{
 	 * 								"id": 9,

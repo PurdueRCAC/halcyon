@@ -14,7 +14,7 @@ Your account on {{ implode(', ', $resources) }} has been created and are ready f
 
 ---
 
-You can access the clusters through the front-ends with your Purdue Career Account credentials using [SSH]({{ route('site.knowledge.index') }}) or [Thinlinc]({{ route('site.knowledge.index') }}). You've been granted access to the following:
+You can access the clusters through the front-ends with your institution credentials using [SSH]({{ route('site.knowledge.index') }}) or [Thinlinc]({{ route('site.knowledge.index') }}). You've been granted access to the following:
 
 @php
 $partner = false;

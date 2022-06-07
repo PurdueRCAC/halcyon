@@ -142,9 +142,9 @@ class StartCommand extends Command
 				$scheduler = Scheduler::query()
 					->where(function($where) use ($resource)
 					{
-						$where->where('hostname', '=', $resource->rolename . '-adm.rcac.purdue.edu')
-							->orWhere('hostname', '=', $resource->rolename . '.adm.rcac.purdue.edu')
-							->orWhere('hostname', '=', 'adm.' . $resource->rolename . '.rcac.purdue.edu');
+						$where->where('hostname', 'LIKE', $resource->rolename . '-adm.%')
+							->orWhere('hostname', 'LIKE', $resource->rolename . '.adm.%')
+							->orWhere('hostname', 'LIKE', 'adm.' . $resource->rolename . '.%');
 					})
 					->get()
 					->first();

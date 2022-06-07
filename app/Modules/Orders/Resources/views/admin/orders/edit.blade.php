@@ -480,7 +480,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 				@endif
 				<div id="orderheaderpopup" class="hide" title="Order Submitted">
 					<p>Your order has been submitted. Thank you for your order! You should receive an email confirmation shortly.</p>
-					<p>Please review the order and enter Purdue account numbers to be used for payment below. You may also add any special instructions for the order in the notes box at the bottom of the page at any time.</p>
+					<p>Please review the order and enter account numbers to be used for payment below. You may also add any special instructions for the order in the notes box at the bottom of the page at any time.</p>
 					<p>Use the form directly below this box to enter your payment information. You or the person this order is for (if placing on behalf) may return to this page at a later time to enter payment information.</p>
 				</div>
 			@elseif ($order->status == 'pending_boassignment')

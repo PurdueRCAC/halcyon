@@ -30,7 +30,7 @@ app('pathway')->append(
         <div class="row">
             <div class="col-md-12 app-title">
                 <h2 class="title" id="pagetitle">Data Storage Solutions Finder</h2>
-                <p class="lead" id="pagesubtitle">Purdue University researchers, staff, and students have a variety of options to store and collaborate with their Purdue data. This tool will offer recommendations of Purdue solutions appropriate to your usage needs and the data security constraints.</p>
+                <p class="lead" id="pagesubtitle">{{ trans('finder::finder.institution') }} researchers, staff, and students have a variety of options to store and collaborate with their data. This tool will offer recommendations of solutions appropriate to your usage needs and the data security constraints.</p>
             </div>
         </div>
 
@@ -105,7 +105,6 @@ app('pathway')->append(
         <h3>Acknowledgements</h3>
 
         <ul>
-            <li>Purdue Libraries' <a href="https://guides.lib.purdue.edu/DataStorage">Data Storage Guide</a>.</li>
             <li>Cornell University Research Data Management Service Group and Cornell Information Technologies Custom Development Group (2018). Port of the <a href="https://github.com/CU-CommunityApps/CD-finder">Finder Module. Drupal 8</a>.</li>
         </ul>
     </div>

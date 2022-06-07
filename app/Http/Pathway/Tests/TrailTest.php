@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    framework
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Http\Pathway\Tests;
 
 use App\Http\Test\Basic;
@@ -19,14 +13,14 @@ class TrailTest extends Basic
 	/**
 	 * Test ArrayAccess methods
 	 *
-	 * @covers  \Ballast\Pathway\Trail::set
-	 * @covers  \Ballast\Pathway\Trail::get
-	 * @covers  \Ballast\Pathway\Trail::has
-	 * @covers  \Ballast\Pathway\Trail::forget
-	 * @covers  \Ballast\Pathway\Trail::offsetSet
-	 * @covers  \Ballast\Pathway\Trail::offsetGet
-	 * @covers  \Ballast\Pathway\Trail::offsetUnset
-	 * @covers  \Ballast\Pathway\Trail::offsetExists
+	 * @covers  \Halcyon\Pathway\Trail::set
+	 * @covers  \Halcyon\Pathway\Trail::get
+	 * @covers  \Halcyon\Pathway\Trail::has
+	 * @covers  \Halcyon\Pathway\Trail::forget
+	 * @covers  \Halcyon\Pathway\Trail::offsetSet
+	 * @covers  \Halcyon\Pathway\Trail::offsetGet
+	 * @covers  \Halcyon\Pathway\Trail::offsetUnset
+	 * @covers  \Halcyon\Pathway\Trail::offsetExists
 	 * @return  void
 	 **/
 	public function testArrayAccessMethods()
@@ -72,17 +66,17 @@ class TrailTest extends Basic
 	 * Tests:
 	 *  1. the append() method is chainable
 	 *  2. append() adds to the items list
-	 *  3. append() adds an Ballast\Pathway\Item object to the items list
+	 *  3. append() adds an Halcyon\Pathway\Item object to the items list
 	 *  4. append() adds to the END of the items list
 	 *
-	 * @covers  \Ballast\Pathway\Trail::append
+	 * @covers  \Halcyon\Pathway\Trail::append
 	 * @return  void
 	 **/
 	public function testAppend()
 	{
 		$pathway = new Trail();
 
-		$this->assertInstanceOf('Ballast\Pathway\Trail', $pathway->append('Crumb 1', 'index.php?option=com_lorem'));
+		$this->assertInstanceOf('Halcyon\Pathway\Trail', $pathway->append('Crumb 1', 'index.php?option=com_lorem'));
 
 		$this->assertCount(1, $pathway->items(), 'List of crumbs should have returned one Item');
 
@@ -94,7 +88,7 @@ class TrailTest extends Basic
 		$items = $pathway->items();
 		$item = array_pop($items);
 
-		$this->assertInstanceOf('Ballast\Pathway\Item', $item);
+		$this->assertInstanceOf('Halcyon\Pathway\Item', $item);
 		$this->assertEquals($item->name, $name);
 		$this->assertEquals($item->link, $link);
 	}
@@ -103,17 +97,17 @@ class TrailTest extends Basic
 	 * Tests:
 	 *  1. the prepend() method is chainable
 	 *  2. prepend() adds to the items list
-	 *  3. prepend() adds an Ballast\Pathway\Item object to the items list
+	 *  3. prepend() adds an Halcyon\Pathway\Item object to the items list
 	 *  4. prepend() adds to the BEGINNING of the items list
 	 *
-	 * @covers  \Ballast\Pathway\Trail::prepend
+	 * @covers  \Halcyon\Pathway\Trail::prepend
 	 * @return  void
 	 **/
 	public function testPrepend()
 	{
 		$pathway = new Trail();
 
-		$this->assertInstanceOf('Ballast\Pathway\Trail', $pathway->prepend('Crumb 1', 'index.php?option=com_lorem'));
+		$this->assertInstanceOf('Halcyon\Pathway\Trail', $pathway->prepend('Crumb 1', 'index.php?option=com_lorem'));
 
 		$this->assertCount(1, $pathway->items(), 'List of crumbs should have returned one Item');
 
@@ -125,7 +119,7 @@ class TrailTest extends Basic
 		$items = $pathway->items();
 		$item = array_shift($items);
 
-		$this->assertInstanceOf('Ballast\Pathway\Item', $item);
+		$this->assertInstanceOf('Halcyon\Pathway\Item', $item);
 		$this->assertEquals($item->name, $name);
 		$this->assertEquals($item->link, $link);
 	}
@@ -133,7 +127,7 @@ class TrailTest extends Basic
 	/**
 	 * Test the count() method returns the number of items added
 	 *
-	 * @covers  \Ballast\Pathway\Trail::count
+	 * @covers  \Halcyon\Pathway\Trail::count
 	 * @return  void
 	 **/
 	public function testCount()
@@ -152,7 +146,7 @@ class TrailTest extends Basic
 	 *  2. the number of items in the array matches the number of items added
 	 *  3. the array returned contains just the names of the items added
 	 *
-	 * @covers  \Ballast\Pathway\Trail::names
+	 * @covers  \Halcyon\Pathway\Trail::names
 	 * @return  void
 	 **/
 	public function testNames()
@@ -177,9 +171,9 @@ class TrailTest extends Basic
 	 * Tests:
 	 *  1. the items() method returns an array
 	 *  2. the number of items in the array matches the number of items added
-	 *  3. the array returned contains a Ballast\Pathway\Item object for each entry added
+	 *  3. the array returned contains a Halcyon\Pathway\Item object for each entry added
 	 *
-	 * @covers  \Ballast\Pathway\Trail::items
+	 * @covers  \Halcyon\Pathway\Trail::items
 	 * @return  void
 	 **/
 	public function testItems()
@@ -206,7 +200,7 @@ class TrailTest extends Basic
 	 *  2. the number of items in the array matches the number of items added
 	 *  3. the array returned contains just the names of the items added
 	 *
-	 * @covers  \Ballast\Pathway\Trail::clear
+	 * @covers  \Halcyon\Pathway\Trail::clear
 	 * @return  void
 	 **/
 	public function testClear()
@@ -224,11 +218,11 @@ class TrailTest extends Basic
 	/**
 	 * Tests array traversing methods
 	 *
-	 * @covers  \Ballast\Pathway\Trail::current
-	 * @covers  \Ballast\Pathway\Trail::key
-	 * @covers  \Ballast\Pathway\Trail::next
-	 * @covers  \Ballast\Pathway\Trail::valid
-	 * @covers  \Ballast\Pathway\Trail::rewind
+	 * @covers  \Halcyon\Pathway\Trail::current
+	 * @covers  \Halcyon\Pathway\Trail::key
+	 * @covers  \Halcyon\Pathway\Trail::next
+	 * @covers  \Halcyon\Pathway\Trail::valid
+	 * @covers  \Halcyon\Pathway\Trail::rewind
 	 * @return  void
 	 **/
 	public function testIterator()

@@ -1,10 +1,4 @@
 <?php
-/**
- * @package    halcyon
- * @copyright  Copyright 2020 Purdue University.
- * @license    http://opensource.org/licenses/MIT MIT
- */
-
 namespace App\Providers;
 
 use App\Http\Pathway\Trail;

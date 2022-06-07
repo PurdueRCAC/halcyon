@@ -218,7 +218,7 @@ class AllocationsController extends Controller
 						AND  userusernames.datecreated  < NOW()
 						AND (userusernames.dateremoved  > NOW() OR userusernames.dateremoved IS NULL OR userusernames.dateremoved = '0000-00-00 00:00:00')
 					WHERE
-						schedulers.hostname = 'bell-adm.rcac.purdue.edu'
+						schedulers.hostname = 'cluster-adm.yourinstution'
 				UNION
 					SELECT DISTINCT
 						queues.id AS queueid,
@@ -233,11 +233,11 @@ class AllocationsController extends Controller
 						AND  userusernames.datecreated  < NOW()
 						AND (userusernames.dateremoved  > NOW() OR userusernames.dateremoved IS NULL OR userusernames.dateremoved = '0000-00-00 00:00:00')
 					WHERE
-						schedulers.hostname = 'bell-adm.rcac.purdue.edu'
+						schedulers.hostname = 'cluster-adm.yourinstution'
 				) AS aclusers
 			) AS uniqaclusers ON (queues.id = uniqaclusers.queueid OR uniqaclusers.queueid = '0')
 		WHERE
-			schedulers.hostname = 'bell-adm.rcac.purdue.edu'
+			schedulers.hostname = 'cluster-adm.yourinstution'
 			AND schedulers.batchsystem = '1'
 		GROUP BY
 			queuename,

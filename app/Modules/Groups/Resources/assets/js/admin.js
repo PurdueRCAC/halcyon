@@ -697,7 +697,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				},
 				error: function (xhr) {
 					if (xhr.status == 416) {
-						SetError("Queue disabled for system/guest account. ACMaint Role removal must be requested manually from accounts@purdue.edu", null);
+						SetError("Queue disabled for system/guest account.", null);
 					}
 				}
 			});
@@ -785,7 +785,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				},
 				error: function (xhr) {
 					if (xhr.status == 416) {
-						alert("Queue enabled for system/guest account. ACMaint Role addition must be requested manually from accounts@purdue.edu", null);
+						alert("Queue enabled for system/guest account.", null);
 					} else {
 						alert(xhr.responseJSON.message);
 					}
@@ -801,7 +801,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				},
 				error: function (xhr) {
 					if (xhr.status == 416) {
-						alert("Queue disabled for system/guest account. ACMaint Role removal must be requested manually from accounts@purdue.edu", null);
+						alert("Queue disabled for system/guest account.", null);
 					} else {
 						alert(xhr.responseJSON.message);
 					}

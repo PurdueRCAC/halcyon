@@ -1,7 +1,0 @@
-{
-	"name": "Fortresskeytab Form",
-	"alias": "fortresskeytab",
-	"description": "Display a form to generate a new Fortresskeytab",
-	"type": "site",
-	"version": "1.0.0"
-}

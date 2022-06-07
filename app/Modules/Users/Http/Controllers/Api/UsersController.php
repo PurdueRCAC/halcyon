@@ -445,7 +445,7 @@ class UsersController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "puid",
-	 * 		"description":   "Purdue ID",
+	 * 		"description":   "Organization ID",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
@@ -473,7 +473,7 @@ class UsersController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "puid",
-	 * 		"description":   "Purdue ID",
+	 * 		"description":   "Organization ID",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"

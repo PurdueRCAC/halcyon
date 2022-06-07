@@ -148,7 +148,9 @@ class Asset extends Model
 	 */
 	public function getMailinglistAttribute()
 	{
-		return $this->listname ? $this->listname . '-users@lists.purdue.edu' : '';
+		$host = config('module.resources.email_lists_host');
+
+		return $this->listname && $host ? $this->listname . '-users@' . $host : '';
 	}
 
 	/**

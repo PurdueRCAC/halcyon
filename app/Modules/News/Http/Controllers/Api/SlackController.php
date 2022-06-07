@@ -159,7 +159,7 @@ class SlackController extends Controller
 			"trigger_id": "12466734323.1395872398",
 			"team": {
 				"id": "T0NVANZP0",
-				"domain": "purduercac"
+				"domain": "yourinstitution"
 			},
 			"enterprise": null,
 			"is_enterprise_install": false,

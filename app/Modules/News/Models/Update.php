@@ -228,7 +228,7 @@ class Update extends Model
 			'updatetime'     => date("g:ia", strtotime($this->getOriginal('datetimecreated')))
 		);
 
-		$news = $this->article->getAttributes(); //$this->article->toArray();
+		$news = $this->article->getAttributes();
 		$news['resources'] = $this->article->resources->toArray();
 		$resources = array();
 		foreach ($this->article->resources as $r)
@@ -243,18 +243,6 @@ class Update extends Model
 			$resources[count($resources)-1] = 'and ' . $resources[count($resources)-1];
 		}
 
-		/*if (count($resources) > 2)
-		{
-			$news['resources'] = implode(', ', $resources);
-		}
-		else if (count($resources) == 2)
-		{
-			$news['resources'] = $resources[0] . ' ' . $resources[1];
-		}
-		else if (count($resources) == 1)
-		{
-			$news['resources'] = $resources[0];
-		}*/
 		$news['resources'] = implode(', ', $resources);
 
 		$vars = array_merge($news, $uvars);
@@ -268,11 +256,6 @@ class Update extends Model
 		{
 			$text = preg_replace("/%([\w\s]+)%/", '<span style="color:red">$0</span>', $text);
 		}
-
-		// convert links
-		//$text = preg_replace_callback("/(news)\s*(story|item)?\s*#?(\d+)(\{.+?\})?/i", 'matchNews', $text);
-		//$text = preg_replace("/(contact|CRM?)(\s+report)?\s*#?(\d+)/i", "<a href=\"/account/crm/?id=$3\">Contact Report #$3</a>", $text);
-		//$text = preg_replace("/((foot\s*prints?)|(FP))(\s+ticket)?\s*#?(\d+)/i", "<a target=\"_blank\" rel=\"noopener\" href=\"https://support.purdue.edu/MRcgi/MRlogin.pl?DL=$5DA17\">Footprints #$5</a>", $text);
 
 		// make <p>s
 		$text = preg_replace("/\n\n\n+/", "\n\n", $text);
