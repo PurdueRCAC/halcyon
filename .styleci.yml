@@ -1,8 +1,8 @@
 php:
   preset: laravel
-  version: 7
+  version: 8
   disabled:
-    - unused_use
+    - no_unused_imports
   finder:
     not-name:
       - index.php
