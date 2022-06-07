@@ -81,7 +81,7 @@ class OpenGraph
 	 */
 	protected function buildTags($page, $attrs = array())
 	{
-		$params = new Repository(config('listeners.content.opengraph', []));
+		$params = new Repository(config('listener.content.opengraph', []));
 
 		foreach (['title', 'image', 'description'] as $key)
 		{

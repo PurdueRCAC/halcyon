@@ -52,18 +52,12 @@ When enabling a queue for a group member via the GUI interface, it performs the 
   * Check user exists
   * Check queue exists
   * Make sure actor has permissions to perform this action
-  * Check RCAC LDAP for special classifications (System Account, Software Account, Lab Account)
   * Check if the user has access to the resource the queue is on
-    * Check role status for the resource in ACMaint
-      * If status is 'NO_ROLE_EXISTS' or 'ROLE_REMOVAL_PENDING', create a resource member entry
-        * POST to ACMaint `createOrUpdateRole`
-        * If needed, set up scratch directory for the resource and user
-        * If needed, set up home directory for the resource and user
-        * If role is not 'HPSSUSER' (Fortress), check role status for the resource in ACMaint
-          * If status is 'NO_ROLE_EXISTS' or 'ROLE_REMOVAL_PENDING', create a resource member entry
-          * POST to ACMaint `createOrUpdateRole`
-          * Add `queueusers` database entry for Fortress queue #33338
+    * event: `App\Modules\Resources\Events\ResourceMemberStatus` - Check role status for the resource
+      * If status is none or pending, create a resource member entry
+        * event: `App\Modules\Resources\Events\ResourceMemberCreated`
 * Create `queueusers` entry
+  * event: `App\Modules\Queues\Events\QueueUserCreated`
 
 ### Enabling unix group membership
 
@@ -74,15 +68,7 @@ When enabling unix group membership for a group member via the GUI interface, it
   * Check user exists
   * Check unix group exists
   * Make sure actor has permissions to perform this action
-  * Check RCAC LDAP for special classifications (System Account, Software Account, Lab Account)
-  * Check if the user has access to the resource the queue is on
-    * Check role status for 'HPSSUSER' (Fortress) in ACMaint
-      * If status is 'NO_ROLE_EXISTS' or 'ROLE_REMOVAL_PENDING', create a resource member entry
-      * POST to ACMaint `createOrUpdateRole`
-* POST to ACMaint `addGroupMember`
 * Create `unixgroupusers` entry
-* Check if storage dirs need to be created for this user
-  * Create `storagedirs` entries if none exist
-  * Create notifications for this user for any directory that has a quota and is owned by this group
-
-**Note:** ACMaint is a 3rd-party service called via the `GroupPrivision` and `RoleProvision` event listeners.
+  * event: `App\Modules\Groups\Events\UnixGroupMemberCreated`
+* Check if the unix group is the base unix group
+  * If not, add the user to the base unix group as well

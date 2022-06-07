@@ -136,57 +136,55 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 								@else
 									<span id="SPAN_loginshell" class="edit-hide text-muted">{!! $user->loginShell ? e($user->loginShell) : '<span id="SPAN_loginshell" class="edit-hide none">' . trans('global.unknown') . '</span>' !!}</span>
 
-									@if (!preg_match("/acmaint/", $user->loginShell))
-										<a href="#loginshell" id="edit-loginshell" class="edit-hide property-edit" data-prop="loginshell">
-											<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span>
-										</a>
-										<div id="loginshell" class="edit-show hide">
-											<div class="form-group">
-												<span class="input-group">
-													<select class="form-control property-edit" id="INPUT_loginshell" data-prop="loginshell">
-														<?php
-														$selected = '';
-														if (preg_match("/bash$/", $user->loginShell)):
-															$selected = ' selected="selected"';
-														endif;
-														?>
-														<option value="/bin/bash"<?php echo $selected; ?>>bash</option>
-														<?php
-														$selected = '';
-														if (preg_match("/\/csh$/", $user->loginShell)):
-															$selected = ' selected="selected"';
-														endif;
-														?>
-														<option value="/bin/csh"<?php echo $selected; ?>>csh</option>
-														<?php
-														$selected = '';
-														if (preg_match("/tcsh$/", $user->loginShell)):
-															$selected = ' selected="selected"';
-														endif;
-														?>
-														<option value="/bin/tcsh"<?php echo $selected; ?>>tcsh</option>
-														<?php
-														$selected = '';
-														if (preg_match("/zsh$/", $user->loginShell)):
-															$selected = ' selected="selected"';
-														endif;
-														?>
-														<option value="/bin/zsh"<?php echo $selected; ?>>zsh</option>
-													</select>
-													<span class="input-group-append">
-														<a href="{{ auth()->user()->id != $user->id ? route('site.users.account', ['u' => $user->id]) : route('site.users.account') }}" data-api="{{ route('api.users.update', ['id' => $user->id]) }}" class="btn input-group-text text-success property-save" title="Save">
-															<span class="fa fa-save" aria-hidden="true"></span><span class="sr-only">Save</span>
-														</a>
-														<a href="#edit-loginshell" class="btn input-group-text text-danger property-cancel" title="Cancel">
-															<span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only">Cancel</span>
-														</a>
-													</span>
+									<a href="#loginshell" id="edit-loginshell" class="edit-hide property-edit" data-prop="loginshell">
+										<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span>
+									</a>
+									<div id="loginshell" class="edit-show hide">
+										<div class="form-group">
+											<span class="input-group">
+												<select class="form-control property-edit" id="INPUT_loginshell" data-prop="loginshell">
+													<?php
+													$selected = '';
+													if (preg_match("/bash$/", $user->loginShell)):
+														$selected = ' selected="selected"';
+													endif;
+													?>
+													<option value="/bin/bash"<?php echo $selected; ?>>bash</option>
+													<?php
+													$selected = '';
+													if (preg_match("/\/csh$/", $user->loginShell)):
+														$selected = ' selected="selected"';
+													endif;
+													?>
+													<option value="/bin/csh"<?php echo $selected; ?>>csh</option>
+													<?php
+													$selected = '';
+													if (preg_match("/tcsh$/", $user->loginShell)):
+														$selected = ' selected="selected"';
+													endif;
+													?>
+													<option value="/bin/tcsh"<?php echo $selected; ?>>tcsh</option>
+													<?php
+													$selected = '';
+													if (preg_match("/zsh$/", $user->loginShell)):
+														$selected = ' selected="selected"';
+													endif;
+													?>
+													<option value="/bin/zsh"<?php echo $selected; ?>>zsh</option>
+												</select>
+												<span class="input-group-append">
+													<a href="{{ auth()->user()->id != $user->id ? route('site.users.account', ['u' => $user->id]) : route('site.users.account') }}" data-api="{{ route('api.users.update', ['id' => $user->id]) }}" class="btn input-group-text text-success property-save" title="Save">
+														<span class="fa fa-save" aria-hidden="true"></span><span class="sr-only">Save</span>
+													</a>
+													<a href="#edit-loginshell" class="btn input-group-text text-danger property-cancel" title="Cancel">
+														<span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only">Cancel</span>
+													</a>
 												</span>
-											</div>
-											<p>Please note it may take a few minutes for changes to be reflected.</p>
-											<div class="alert alert-danger hide" id="loginshell_error"></div>
+											</span>
 										</div>
-									@endif
+										<p>Please note it may take a few minutes for changes to be reflected.</p>
+										<div class="alert alert-danger hide" id="loginshell_error"></div>
+									</div>
 								@endif
 								<div id="box1_account" class="dialog-help" title="Login Shell">
 									<p>This is the interactive shell you are started with when logging into {{ config('app.name') }} resources. The default for new accounts is bash however you may use this to change it if desired. Supported options are <code>bash</code>, <code>tcsh</code>, and <code>zsh</code>. Once changed, it will take one to two hours for the changes to propagate to all systems.</p>

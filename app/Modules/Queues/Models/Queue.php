@@ -1009,7 +1009,7 @@ class Queue extends Model
 
 			if ($rows <= 0)
 			{
-				// Call central accounting service to remove ACMaint role from this user's account.
+				// Call to remove role from this user's account.
 				event(new ResourceMemberDeleted($resource, $user));
 			}
 		}

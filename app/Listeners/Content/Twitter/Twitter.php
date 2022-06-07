@@ -81,7 +81,7 @@ class Twitter
 	 */
 	protected function buildTags($page, $attrs = array())
 	{
-		$params = new Repository(config('listeners.content.twitter', []));
+		$params = new Repository(config('listener.content.twitter', []));
 
 		foreach (['title', 'image', 'description'] as $key)
 		{

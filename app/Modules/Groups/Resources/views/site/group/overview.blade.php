@@ -380,7 +380,7 @@
 				<thead>
 					<tr>
 						<th scope="col">Name</th>
-						<th scope="col" class="extendedinfo hide">ACMaint Name</th>
+						<th scope="col" class="extendedinfo hide">System Name</th>
 						<th scope="col" class="extendedinfo hide">Short Name</th>
 						<th scope="col" class="extendedinfo hide text-right">GID Number</th>
 						@if ($canManage)

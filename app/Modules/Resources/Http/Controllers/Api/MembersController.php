@@ -972,7 +972,7 @@ class MembersController extends Controller
 			return response()->json(['message' => trans('Failed to find resource for ID :id', ['id' => $resource])], 404);
 		}
 
-		// Look up the ACMaint role name of the resource
+		// Ignore if rolename is not set
 		if (!$asset->rolename)
 		{
 			return response()->json(null, 404);
@@ -1049,7 +1049,7 @@ class MembersController extends Controller
 		// Look up the current username of the user being removed
 		$user = User::findOrFail($userid);
 
-		// Look up the ACMaint role name of the resource to which access is being granted.
+		// Look up the resource to which access is being removed.
 		$resource = Asset::findOrFail($resourceid);
 
 		// Ensure the client is authorized to manage a group with queues on the resource in question.
@@ -1125,7 +1125,7 @@ class MembersController extends Controller
 			return 202;
 		}
 
-		// Call central accounting service to remove ACMaint role from this user's account.
+		// Call to remove role from this user's account.
 		event(new ResourceMemberDeleted($resource, $user));
 
 		return response()->json(null, 204);

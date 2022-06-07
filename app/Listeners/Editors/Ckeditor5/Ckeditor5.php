@@ -69,7 +69,7 @@ class Ckeditor5
 		$cls = explode(' ', $attr['class']);
 		$cls = array_map('trim', $cls);
 
-		$params = new Repository(config('listeners.editors.ckeditor5', []));
+		$params = new Repository(config('listener.editors.ckeditor5', []));
 		$params->set('class', $cls);
 		$params->set('height', (18 * intval($attr['rows'])) . 'px');
 

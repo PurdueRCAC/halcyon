@@ -606,7 +606,6 @@ class UsersController extends Controller
 			// shell is in /bin
 			if ($user->loginShell != '/sbin/nologin'
 			&& !preg_match('@^/bin/.*sh$@', $user->loginShell)
-			&& !preg_match('@^/opt/acmaint.*$@', $user->loginShell)
 			&& !preg_match('@^/usr/local/bin/.*sh$@', $user->loginShell))
 			{
 				return response()->json(['message' => trans('Field `loginshell` has invalid format')], 415);

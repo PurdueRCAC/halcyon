@@ -64,7 +64,7 @@ class Groups
 				continue;
 			}
 
-			// Look up the ACMaint role name of the resource
+			// Ignore if rolename is not set
 			if (!$asset->rolename)
 			{
 				continue;
