@@ -1,0 +1,11 @@
+{
+    "name": "Authentication - CAS",
+    "alias": "cas",
+    "description": "Handles user authentication against CAS",
+    "keywords": [],
+    "active": 1,
+    "priority": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -1,0 +1,24 @@
+{
+	"name": "halcyon/listener_auth_cas",
+	"description": "CAS authentication plugin for the Halcyon",
+	"type": "halcyon-listener",
+	"keywords": ["halcyon", "authentication", "CAS"],
+	"homepage": "https://www.rcac.purdue.edu",
+	"authors": [
+		{
+			"name": "Purdue University",
+			"email": "rcac-help@purdue.edu"
+		}
+	],
+	"support": {
+		"email": "rcac-help@purdue.edu",
+		"issues": "https://www.rcac.purdue.edu/help"
+	},
+	"require": {
+		"php" : "^7.2",
+		"apereo/phpcas": "^1.3.9"
+	},
+	"extra": {
+		"install-directory": "/Listeners/Auth/Cas/"
+	}
+}
