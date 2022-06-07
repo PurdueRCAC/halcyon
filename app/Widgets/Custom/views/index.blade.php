@@ -3,6 +3,6 @@
  * Display custom content
  */
 ?>
-<div class="widget {{ $widget->name }}">
+<div class="widget {{ $model->name }}">
 	{!! $content !!}
 </div>
