@@ -1,5 +1,5 @@
 {
-    "name": "PurdueRCAC/halcyon",
+    "name": "purduercac/halcyon",
     "type": "project",
     "description": "The Halcyon HPC resource allocation portal.",
     "keywords": ["cms", "halcyon", "laravel", "hpc"],
