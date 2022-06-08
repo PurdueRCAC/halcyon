@@ -355,6 +355,21 @@ class UnixGroupsController extends Controller
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
+		if ($row->longname == $group->unixgroup)
+		{
+			foreach ($group->members as $member)
+			{
+				$row->addMember($member->userid);
+			}
+		}
+		elseif ($row->longname == $group->unixgroup . '-data' || $row->longname == $group->unixgroup . '-apps')
+		{
+			foreach ($group->managers as $member)
+			{
+				$row->addMember($member->userid);
+			}
+		}
+
 		return new UnixGroupResource($row);
 	}
 
