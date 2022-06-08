@@ -21,17 +21,12 @@ class HttpLogger
 	{
 		$response = $next($request);
 
-		if (app()->has('isAdmin') && app()->get('isAdmin'))
-		{
-			//return $response;
-		}
-
-		$app = 'ui';
-
 		/*if (app()->has('isAdmin') && app()->get('isAdmin'))
 		{
-			$app = 'admin';
+			return $response;
 		}*/
+
+		$app = 'ui';
 
 		if ($request->segment(0) == 'api')
 		{
@@ -61,8 +56,18 @@ class HttpLogger
 		$log->ip = $log->ip == '::1' ? '127.0.0.1' : $log->ip;
 		if ($log->transportmethod == 'GET' && ($app == 'ui' || $app == 'admin'))
 		{
-			// Collect the user agent string
-			$log->payload = $request->server('HTTP_USER_AGENT');
+			// Collect some diagnostic info
+			$headers = $request->headers->all();
+			if (empty($headers))
+			{
+				// No headers? Collect the user agent string
+				$headers['user-agent'] = $request->server('HTTP_USER_AGENT');
+			}
+			if (isset($headers['cookie']))
+			{
+				unset($headers['cookie']);
+			}
+			$log->payload = json_encode($headers);
 			$log->uri = '/' . $request->path();
 		}
 		else
@@ -98,7 +103,7 @@ class HttpLogger
 		{
 			$log->status = $response->status();
 		}
-		
+
 		$log->app = $app;
 		$log->classname = $cls;
 		$log->classmethod = $method;

@@ -4,6 +4,7 @@ namespace App\Modules\History\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\Users\Models\User;
@@ -48,7 +49,21 @@ class Log extends Model
 	 * @var array
 	 */
 	protected $rules = array(
-		'transportmethod' => 'required'
+		'ip' => 'nullable|string|max:39',
+		'hostname' => 'nullable|string|max:128',
+		'userid' => 'nullable|integer',
+		'status' => 'nullable|integer',
+		'transportmethod' => 'required|string|max:7',
+		'servername' => 'nullable|string|max:128',
+		'uri' => 'nullable|string|max:128',
+		'app' => 'nullable|string|max:20',
+		'classname' => 'nullable|string|max:32',
+		'classmethod' => 'nullable|string|max:16',
+		'objectid' => 'nullable|string|max:32',
+		'payload' => 'nullable|string|max:2000',
+		'groupid' => 'nullable|integer',
+		'targetuserid' => 'nullable|integer',
+		'targetobjectid' => 'nullable|integer',
 	);
 
 	/**
@@ -93,7 +108,68 @@ class Log extends Model
 	 */
 	public function setTransportmethodAttribute($value)
 	{
-		$this->attributes['transportmethod'] = strtoupper($value);
+		$value = strtoupper($value);
+		if (!in_array($value, ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'CONNECT', 'OPTIONS', 'TRACE']))
+		{
+			$value = 'GET';
+		}
+		$this->attributes['transportmethod'] = $value;
+	}
+
+	/**
+	 * Set servername
+	 *
+	 * @param   string  $value
+	 * @return  void
+	 */
+	public function setServernameAttribute($value)
+	{
+		// limit appends "..." so we have to remove 3 characters from the limit
+		$this->attributes['servername'] = Str::limit($value, 125); // 128
+	}
+
+	/**
+	 * Set uri
+	 *
+	 * @param   string  $value
+	 * @return  void
+	 */
+	public function setUriAttribute($value)
+	{
+		$this->attributes['uri'] = Str::limit($value, 125); // 128
+	}
+
+	/**
+	 * Set app
+	 *
+	 * @param   string  $value
+	 * @return  void
+	 */
+	public function setAppAttribute($value)
+	{
+		$this->attributes['app'] = Str::limit($value, 17); // 20
+	}
+
+	/**
+	 * Set classname
+	 *
+	 * @param   string  $value
+	 * @return  void
+	 */
+	public function setClassnameAttribute($value)
+	{
+		$this->attributes['classname'] = Str::limit($value, 29); // 32
+	}
+
+	/**
+	 * Set classmethod
+	 *
+	 * @param   string  $value
+	 * @return  void
+	 */
+	public function setClassmethodAttribute($value)
+	{
+		$this->attributes['classmethod'] = Str::limit($value, 13); // 16
 	}
 
 	/**
@@ -129,6 +205,11 @@ class Log extends Model
 		return $payload;
 	}
 
+	/**
+	 * Convert to a History item
+	 *
+	 * @return History
+	 */
 	public function toHistory()
 	{
 		$item = new History;
