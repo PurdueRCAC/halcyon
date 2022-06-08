@@ -604,9 +604,9 @@ class MembersController extends Controller
 	 */
 	public function delete(int $id)
 	{
-		$row = Member::findOrFail($id);
+		$row = Member::find($id);
 
-		if (!$row->trashed())
+		if ($row && !$row->trashed())
 		{
 			if (!$row->delete())
 			{

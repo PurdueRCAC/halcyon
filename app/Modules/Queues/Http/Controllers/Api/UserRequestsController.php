@@ -546,7 +546,7 @@ class UserRequestsController extends Controller
 		$row = UserRequest::findOrFail($id);
 
 		$user = $row->userid;
-		$groups = auth()->user()->groups()->whereIsManager()->get()->pluck('id')->toArray();
+		$groups = auth()->user()->groups()->whereIsManager()->get()->pluck('groupid')->toArray();
 
 		// Fetch count of queueuser entries to delete, and the groupid
 		$u = (new Member)->getTable();
@@ -558,6 +558,7 @@ class UserRequestsController extends Controller
 			->where($u . '.userrequestid', '=', $id)
 			->where($u . '.membertype', '=', 4)
 			->where($u . '.userid', '=', $row->userid)
+			->groupBy($q . '.groupid')
 			->get();
 
 		if (count($numqueues) > 0)

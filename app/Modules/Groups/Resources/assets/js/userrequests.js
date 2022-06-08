@@ -1,5 +1,5 @@
 /* global $ */ // jquery.js
-/* global SetError */ // common.js
+/* global alert */ // common.js
 
 var UserRequests = {
 	/**
@@ -62,7 +62,7 @@ var UserRequests = {
 								}
 							}
 
-							SetError(msg);
+							alert(msg);
 						}
 					});
 
@@ -83,7 +83,7 @@ var UserRequests = {
 						}
 					}
 
-					SetError(msg);
+					alert(msg);
 				}
 			});
 		}
@@ -127,7 +127,7 @@ var UserRequests = {
 								}
 							}
 
-							SetError(msg);
+							alert(msg);
 						}
 					});
 
@@ -148,7 +148,7 @@ var UserRequests = {
 						}
 					}
 
-					SetError(msg);
+					alert(msg);
 				}
 			});
 		}
