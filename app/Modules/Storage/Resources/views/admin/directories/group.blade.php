@@ -145,6 +145,16 @@
 								<label for="new_dir_user_select">User:</label>
 								<select id="new_dir_user_select" class="form-control">
 									<option value="">(Select User)</option>
+									<?php
+									$base = $group->unixgroups()->orderBy('id', 'asc')->first();
+									if ($base):
+										?>
+										@foreach ($base->members as $member)
+											<option value="{{ $member->userid }}">{{ $member->user ? $member->user->username : 'User ID #' . $member->userid }}</option>
+										@endforeach
+										<?php
+									endif;
+									?>
 								</select>
 							</div>
 						</fieldset>
@@ -195,9 +205,15 @@
 					$configuring = array();
 					$removing = array();
 					//$directories = $group->directories;
+					$top = 0;
 					foreach ($row->nested() as $dir)
 					{
 						$did = $dir->id;
+
+						if (!$dir->parentstoragedirid)
+						{
+							$top = $dir->id;
+						}
 
 						$disabled = '';
 						if (in_array($dir->id, $removing))
