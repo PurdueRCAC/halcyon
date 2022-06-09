@@ -1169,7 +1169,7 @@
 											@endif
 										</td>
 										<td>
-											@if ($message->completed())
+											@if ($message->started())
 												{{ $message->runtime }}
 											@else
 												-
