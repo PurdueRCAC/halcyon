@@ -8,6 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\News\Models\Association;
+use Carbon\Carbon;
 
 /**
  * Article Registrants
@@ -320,6 +321,23 @@ class AssociationsController extends Controller
 		if (!$row->article)
 		{
 			return response()->json(['message' => trans('Invalid news ID')], 415);
+		}
+
+		if ($row->assoctype == 'user')
+		{
+			$now = Carbon::now();
+
+			$endregistration = Carbon::parse($row->article->datetimenews);
+
+			if ($end_reg = config('module.news.end_registration'))
+			{
+				$endregistration = $endregistration->modify($end_reg);
+
+				if ($now->getTimestamp() >= $endregistration->getTimestamp())
+				{
+					return response()->json(['message' => trans('news::news.registration is closed')], 403);
+				}
+			}
 		}
 
 		if (!$row->save())

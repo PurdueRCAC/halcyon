@@ -63,7 +63,12 @@ foreach ($rows as $event):
 	endif;
 
 	$now = Carbon\Carbon::now();
-	$endregistration = Carbon\Carbon::parse($event->datetimenews)->modify('-2 hours');
+
+	$endregistration = Carbon\Carbon::parse($event->datetimenews);
+	if ($end_reg = config('module.news.end_registration'))
+	{
+		$endregistration = $endregistration->modify($end_reg);
+	}
 
 	$slot->backgroundColor = '#0e7e12'; // green
 	$slot->borderColor = '#0e7e12';

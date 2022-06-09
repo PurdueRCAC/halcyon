@@ -3636,6 +3636,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			'newsid': id
 		};
 
+		el.parent().find('.alert').remove();
+
 		if (el.attr('data-comment') && $(el.attr('data-comment'))) {
 			post['comment'] = $(el.attr('data-comment')).val().trim();
 			var words = post['comment']
@@ -3662,7 +3664,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					window.location.reload(true);
 				}, 1000);
 			} else if (xml.status == 403) {
-				el.parent().append('<span class="alert alert-warning">Unable to register changes.</span>');
+				el.parent().append('<span class="alert alert-warning">Registration is closed.</span>');
 			} else {
 				el.parent().append('<span class="alert alert-danger">An error occurred.</span>');
 			}

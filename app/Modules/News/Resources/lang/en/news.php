@@ -128,4 +128,13 @@ return [
 	'user news header' => 'What is this page?',
 	'user news explanation' => 'If you have registered for any events, you\'ll find them listed here.',
 	'news story number' => 'News Story #:id',
+	'registration is closed' => 'Registration is closed',
+	'end registration' => 'End registration',
+	'end registration desc' => 'Specify how long before an event starts that registration closes. Leave blank to keep registration open until the start of the event.',
+	'notify create' => 'Notify on creation',
+	'notify create desc' => 'Select news types that should send a notification upon article creation of that.',
+	'notify update' => 'Notify on update',
+	'notify update desc' => 'Select news types that should send a notification upon article updates of that.',
+	'notify delete' => 'Notify on deletion',
+	'notify delete desc' => 'Select news types that should send a notification upon article deletion of that.',
 ];

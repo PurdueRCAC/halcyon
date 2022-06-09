@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
 	<fieldset name="general" label="config::config.fieldset general">
-		<field name="auto_approve" type="list" default="1" label="news::config.AUTO_APPROVE" description="news::config.AUTO_APPROVE_DESC">
-			<option value="0">global.no</option>
-			<option value="1">global.yes</option>
-		</field>
+		<fieldset name="general" label="config::config.fieldset general">
+			<field name="end_registration" type="text" default="-2 hours" label="news::news.end registration" description="news::news.end registration desc" />
+			<field name="notify_create" type="App\Modules\News\Models\Fields\Types" default="" multiple="multiple" size="5" label="news::news.notify create" description="news::news.notify create desc" />
+			<field name="notify_update" type="App\Modules\News\Models\Fields\Types" default="" multiple="multiple" size="5" label="news::news.notify update" description="news::news.notify update desc" />
+			<field name="notify_delete" type="App\Modules\News\Models\Fields\Types" default="" multiple="multiple" size="5" label="news::news.notify delete" description="news::news.notify delete desc" />
+		</fieldset>
 	</fieldset>
 	<fieldset name="permissions" label="access.permissions" description="access.permissions description">
 		<field name="rules" type="rules" label="access.permissions" validate="rules" filter="rules" module="news" section="module" />
