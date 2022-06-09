@@ -1169,7 +1169,7 @@
 											@endif
 										</td>
 										<td>
-											@if (strtotime($message->datetimesubmitted) <= date("U"))
+											@if ($message->completed())
 												{{ $message->runtime }}
 											@else
 												-
