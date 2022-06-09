@@ -79,4 +79,6 @@ return [
 	],
 	'cascade managers' => 'Automatically add managers to associated items',
 	'cascade managers desc' => 'When checked, this means that any time someone is added to the group as a manager or promoted to manager, they will automatically become a member of any associated unix groups, compute queues, etc.',
+	'prefix unixgroup' => 'Enforce custom unix groups are prefixed',
+	'prefix unixgroup desc' => 'Enforce custom unix groups are prefixed with the base unix group.',
 ];

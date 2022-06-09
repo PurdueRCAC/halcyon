@@ -268,7 +268,7 @@ class UnixGroupsController extends Controller
 		$base = '';
 		$name = (string)$request->input('longname');
 
-		if ($group->id != 1)
+		if ($group->prefix_unixgroup)
 		{
 			if (!$group->unixgroup)
 			{
@@ -566,7 +566,7 @@ class UnixGroupsController extends Controller
 			$base = '';
 			$name = (string)$request->input('longname');
 
-			if ($group->id != 1)
+			if ($group->prefix_unixgroup)
 			{
 				if (!$group->unixgroup)
 				{

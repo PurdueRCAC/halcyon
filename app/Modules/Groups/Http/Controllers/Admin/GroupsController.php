@@ -159,9 +159,10 @@ class GroupsController extends Controller
 	{
 		//$request->validate([
 		$rules = [
-			'fields.name' => 'required|max:255',
-			'fields.unixgroup' => 'nullable|max:10',
+			'fields.name' => 'required|string|max:255',
+			'fields.unixgroup' => 'nullable|string|max:48',
 			'fields.cascademanagers' => 'nullable|integer',
+			'fields.prefix_unixgroup' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -177,6 +178,7 @@ class GroupsController extends Controller
 
 		$row = $id ? Group::findOrFail($id) : new Group;
 		$row->fill($request->input('fields'));
+		$row->unixgroup = $row->unixgroup ? $row->unixgroup : '';
 		if (!$request->has('fields.cascademanagers') || !$request->input('fields.cascademanagers'))
 		{
 			$row->cascademanagers = 0;
@@ -185,12 +187,22 @@ class GroupsController extends Controller
 		{
 			$row->cascademanagers = 1;
 		}
+		if (!$request->has('fields.prefix_unixgroup') || !$request->input('fields.prefix_unixgroup'))
+		{
+			$row->prefix_unixgroup = 0;
+		}
+		else
+		{
+			$row->prefix_unixgroup = 1;
+		}
 
 		// Verify UNIX group is sane - this is just a first pass,
 		// would still need to make sure this is not a duplicate anywhere, etc
 		if ($row->unixgroup)
 		{
-			if (!preg_match('/^[a-z][a-z0-9\-]{0,8}[a-z0-9]$/', $row->unixgroup))
+			//if (!preg_match('/^[a-z][a-z0-9\-]{0,8}[a-z0-9]$/', $row->unixgroup)
+			// && !preg_match('/^[a-z][a-z0-9\-]{0,48}$/', $row->unixgroup))
+			if (!preg_match('/^[a-z0-9][a-z0-9\-]*[a-z0-9]+$/', $row->unixgroup))
 			{
 				return redirect()->back()->withError(trans('Field `unixgroup` not in valid format'));
 			}

@@ -85,6 +85,14 @@ app('pathway')
 			<fieldset class="adminform">
 				<legend>{{ trans('groups::groups.unix groups') }}</legend>
 
+				<div class="form-group">
+					<div class="form-check">
+						<input type="checkbox" name="fields[prefix_unixgroup]" id="field-prefix_unixgroup" class="form-check-input" value="1"{{ $row->prefix_unixgroup ? ' checked="checked"' : '' }} />
+						<label for="field-prefix_unixgroup" class="form-check-label">{{ trans('groups::groups.prefix unixgroup') }}</label>
+						<span class="form-text text-muted">{{ trans('groups::groups.prefix unixgroup desc') }}</span>
+					</div>
+				</div>
+
 				@if (count($row->unixGroups))
 				<table class="table table-hover">
 					<caption class="sr-only">{{ trans('groups::groups.unix groups') }}</caption>
@@ -131,10 +139,14 @@ app('pathway')
 						<tr>
 							<td></td>
 							<td colspan="3">
+								@if ($row->prefix_unixgroup)
 								<span class="input-group">
 									<span class="input-group-prepend"><span class="input-group-text">{{ $row->unixgroup }}-</span></span>
 									<input type="text" name="longname" id="longname" class="form-control input-unixgroup" maxlength="{{ (17 - strlen($row->unixgroup . '-')) }}" pattern="[a-z0-9]+" placeholder="{{ strtolower(trans('groups::groups.name')) }}" />
 								</span>
+								@else
+								<input type="text" name="longname" id="longname" class="form-control input-unixgroup" maxlength="48" pattern="[a-z0-9-]+" placeholder="{{ strtolower(trans('groups::groups.name')) }}" value="{{ $row->unixgroup }}-" />
+								@endif
 							</td>
 							<td class="text-right">
 								<a href="#longname" class="btn text-success add-unixgroup"
