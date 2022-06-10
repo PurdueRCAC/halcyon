@@ -326,7 +326,9 @@ class MembersController extends Controller
 			return response()->json(['message' => trans('groups::groups.error.invalid user id' . $request->input('userid'))], 415);
 		}
 
-		if (!auth()->user()->can('manage groups'))
+		$row->membertype = $request->input('membertype', 1);
+
+		if (!$row->isPending() && !auth()->user()->can('manage groups'))
 		{
 			$rowuser = Member::query()
 				->where('userid', '=', auth()->user()->id)
@@ -351,8 +353,6 @@ class MembersController extends Controller
 				return response()->json(['message' => trans('groups::groups.error.cannot remove self as owner')], 409);
 			}
 		}
-
-		$row->membertype = $request->input('membertype', 1);
 
 		if ($row->isManager())
 		{

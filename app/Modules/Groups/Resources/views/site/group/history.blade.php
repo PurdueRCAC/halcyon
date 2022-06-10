@@ -303,7 +303,7 @@ if (count($l))
 					break;
 				}
 				?>
-				<tr>
+				<tr id="log{{ $log->id }}">
 					<td><time datimetime="{{ $log->datetime->toDateTimeLocalString() }}">{{ $log->datetime->format('M j, Y') }}</time></td>
 					<td><time datimetime="{{ $log->datetime->toDateTimeLocalString() }}">{{ $log->datetime->format('g:ia') }}</time></td>
 					<td>

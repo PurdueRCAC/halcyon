@@ -153,7 +153,7 @@
 							break;
 						}
 						?>
-						<tr>
+						<tr id="log{{ $log->id }}">
 							<td>{{ $log->datetime->format('M j, Y') }}</td>
 							<td>{{ $log->datetime->format('g:ia') }}</td>
 							<td>{{ $log->user ? $log->user->name : trans('global.unknown') }}</td>
