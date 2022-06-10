@@ -149,7 +149,7 @@ class PermissionsController extends Controller
 				return redirect()->back()->withInput()->withError($asset->getError());
 			}
 
-		return redirect(route('admin.' . $module->element . '.index'))->with('success', trans('config::config.configuration saved'));
+		return redirect(route('admin.' . strtolower($module->element) . '.index'))->with('success', trans('config::config.configuration saved'));
 	}
 
 	/**

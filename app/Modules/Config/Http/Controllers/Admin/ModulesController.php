@@ -173,6 +173,6 @@ class ModulesController extends Controller
 			return redirect()->back()->withInput()->withError($module->getError());
 		}
 
-		return redirect(route('admin.' . $module->element . '.index'))->with('success', trans('config::config.configuration saved'));
+		return redirect(route('admin.' . strtolower($module->element) . '.index'))->with('success', trans('config::config.configuration saved'));
 	}
 }

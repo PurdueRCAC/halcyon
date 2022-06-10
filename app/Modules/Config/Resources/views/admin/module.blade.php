@@ -12,7 +12,7 @@ app('pathway')
 	)
 	->append(
 		trans($module->element . '::' . $module->element . '.module name'),
-		route('admin.' . $module->element . '.index')
+		route('admin.' . strtolower($module->element) . '.index')
 	);
 @endphp
 
@@ -23,7 +23,7 @@ app('pathway')
 
 	{!!
 		Toolbar::spacer();
-		Toolbar::cancel(route('admin.' . $module->element . '.index'));
+		Toolbar::cancel(route('admin.' . strtolower($module->element) . '.index'));
 	!!}
 
 	{!! Toolbar::render() !!}
