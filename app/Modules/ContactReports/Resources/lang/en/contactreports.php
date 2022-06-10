@@ -70,4 +70,10 @@ return [
 		'contacted' => 'Please provide a valid date of contact.',
 		'report' => 'Please provide a report.',
 	],
+	'params' => [
+		'notify staff' => 'Notify users with role',
+		'notify staff desc' => 'User role ID for those to receieve email notfications.',
+		'highlight staff' => 'Highlight users with roles',
+		'highlight staff desc' => 'User role IDs for those to be highlighted differently from other users.',
+	],
 ];

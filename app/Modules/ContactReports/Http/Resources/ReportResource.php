@@ -44,9 +44,24 @@ class ReportResource extends JsonResource
 		//$data['type']->api = route('api.contactreports.types.read', ['id' => $this->contactreporttypeid]);
 		$data['username'] = $this->creator ? $this->creator->name : trans('global.unknown');
 
-		$data['users'] = array();
+		$highlight = config('module.contactreports.highlight', []);
+
+		$users = array();
+		$staff = array();
+		$staff[] = array(
+			'userid' => $this->userid,
+			'contactreportid' => $this->id,
+			'name' => $this->creator->name,
+			'datetimelastnotify' => null,
+			'highlight' => true,
+		);
 		foreach ($this->users as $res)
 		{
+			if ($res->userid == $this->userid)
+			{
+				continue;
+			}
+
 			$item = $res->toArray();
 
 			$item['name'] = trans('global.unknown');
@@ -54,9 +69,27 @@ class ReportResource extends JsonResource
 			{
 				$item['name'] = $res->user->name;
 			}
+			$item['highlight'] = false;
+			foreach ($res->user->getAuthorisedRoles() as $role)
+			{
+				if (in_array($role, $highlight))
+				{
+					$item['highlight'] = true;
+					break;
+				}
+			}
 
-			$data['users'][] = $item;
+			if ($item['highlight'])
+			{
+				$staff[] = $item;
+			}
+			else
+			{
+				$users[] = $item;
+			}
 		};
+
+		$data['users'] = array_merge($staff, $users);
 
 		$data['groupname'] = $this->group ? $this->group->name : null;
 		/*$data['resources'] = $this->resources->each(function ($res, $key)

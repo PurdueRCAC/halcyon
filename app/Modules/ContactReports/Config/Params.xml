@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
+	<fieldset name="general" label="config::config.fieldset general">
+		<field name="staff" type="App\Modules\Users\Models\Fields\Roles" extension="users" default="0" label="contactreports::contactreports.params.notify staff" description="contactreports::contactreports.params.notify staff desc" >
+			<option value="0">global.none</option>
+		</field>
+		<field name="highlight" type="App\Modules\Users\Models\Fields\Roles" extension="users" default="0" size="10" multiple="multiple" label="contactreports::contactreports.params.highlight staff" description="contactreports::contactreports.params.highlight staff desc" >
+			<option value="0">global.none</option>
+		</field>
+	</fieldset>
 	<fieldset
 		name="permissions"
 		label="access.permissions"

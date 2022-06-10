@@ -1485,7 +1485,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	ul.appendChild(li);
 
 	// Creator
-	li = document.createElement("li");
+	/*li = document.createElement("li");
 	li.className = 'news-author';
 
 	span = document.createElement("span");
@@ -1493,7 +1493,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	span.innerHTML = "Posted by " + report['username'];
 
 	li.appendChild(span);
-	ul.appendChild(li);
+	ul.appendChild(li);*/
 
 	// Group
 	if (report['groupname'] != null && report['groupid'] > 0) {
@@ -1516,6 +1516,8 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 			a = document.createElement("a");
 			a.href = "admin/users/" + report.users[x]['userid'];
 			a.innerHTML = report.users[x]['name'];
+			a.classList.add('badge');
+			a.classList.add('badge-' + (report.users[x]['highlight'] ? 'danger' : 'secondary'));
 
 			if (report.users[x]['datetimelastnotify']) {
 				a.innerHTML = a.innerHTML + ' <span class="fa fa-envelope" aria-hidden="true" title="Follow up email sent ' + report.users[x]['datetimelastnotify'] + '"></span>';

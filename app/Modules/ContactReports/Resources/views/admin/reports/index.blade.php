@@ -198,6 +198,9 @@ app('pathway')
 		<div class="col-md-9">
 	<div id="results">
 	@if (count($rows))
+		<?php
+		$highlight = config('module.contactreports.highlight', []);
+		?>
 		@foreach ($rows as $i => $row)
 			<div class="card mb-3">
 				<div class="card-header">
@@ -226,25 +229,39 @@ app('pathway')
 							$uids = $row->users->pluck('userid')->toArray();
 
 							$users = array();
+							$staff = array();
 							if ($row->userid && !in_array($row->userid, $uids)):
-								$users[] = ($row->creator ? '<a href="' . route('admin.users.show', ['id' => $row->userid]) . '"class="badg badg-primary">' . $row->creator->name . '</a>' : $row->userid . ' <span class="unknown">' . trans('global.unknown') . '</span>');
+								$staff[] = ($row->creator ? '<a href="' . route('admin.users.show', ['id' => $row->userid]) . '"class="badge badge-danger">' . $row->creator->name . '</a>' : $row->userid . ' <span class="unknown">' . trans('global.unknown') . '</span>');
 							endif;
 
 							foreach ($row->users as $user):
-								$u  = '<a href="' . route('admin.users.show', ['id' => $user->userid]) . '" class="badg badg-primary">';
+								$cls = 'secondary';
+
+								foreach ($user->user->getAuthorisedRoles() as $role):
+									if (in_array($role, $highlight)):
+										$cls = 'danger';
+										break;
+									endif;
+								endforeach;
+
+								$u  = '<a href="' . route('admin.users.show', ['id' => $user->userid]) . '" class="badge badge-' . $cls . '">';
 								$u .= ($user->user ? $user->user->name : $user->userid . ' <span class="unknown">' . trans('global.unknown') . '</span>');
-								
+
 								if ($user->notified()):
 									$u .= ' <span class="fa fa-envelope" data-tip="Followup email sent on ' . $user->datetimelastnotify->toDateTimeString() . '"><time class="sr-only" datetime="' . $user->datetimelastnotify->toDateTimeString() . '">' . $user->datetimelastnotify->format('Y-m-d') . '</time></span>';
 								endif;
 								$u .= '</a>';
 
-								$users[] = $u;
+								if ($cls == 'danger'):
+									$staff[] = $u;
+								else:
+									$users[] = $u;
+								endif;
 							endforeach;
 							?>
 							@if (count($users))
 								<span class="fa fa-user" aria-hidden="true"></span>
-								{!! implode(', ', $users) !!}
+								{!! implode(', ', $staff) !!} {!! implode(', ', $users) !!}
 							@endif
 						</div>
 						<div class="flex-fill text-right">
