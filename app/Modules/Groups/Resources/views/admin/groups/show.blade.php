@@ -32,7 +32,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! trans('groups::groups.module name') !!}: {{ 'Edit: #' . $row->id }}
+{{ trans('groups::groups.module name') }}: #{{ $row->id }}
 @stop
 
 @section('panel')

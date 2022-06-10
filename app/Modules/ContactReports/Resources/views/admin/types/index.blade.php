@@ -31,7 +31,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('contactreports.name') !!}: {{ trans('contactreports::contactreports.types') }}
+{{ trans('contactreports::contactreports.module name') }}: {{ trans('contactreports::contactreports.types') }}
 @stop
 
 @section('content')

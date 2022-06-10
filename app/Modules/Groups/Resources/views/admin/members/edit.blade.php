@@ -14,7 +14,7 @@
 @stop
 
 @section('title')
-{!! config('groups.name') !!}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{{ trans('groups::groups.module name') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.creat') }}
 @stop
 
 @section('content')

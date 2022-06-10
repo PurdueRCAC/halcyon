@@ -30,7 +30,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! trans('listeners::listeners.listener manager') !!}
+{{ trans('listeners::listeners.listener manager') }}
 @stop
 
 @section('content')

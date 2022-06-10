@@ -30,7 +30,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('pages.name') !!}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{{ trans('menus::menus.menu manager') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

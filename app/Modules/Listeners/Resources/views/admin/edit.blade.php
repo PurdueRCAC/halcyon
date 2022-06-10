@@ -23,7 +23,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! trans('listeners::listeners.module name') !!}: {{ $row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create') }}
+{{ trans('listeners::listeners.module name') }}: {{ $row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

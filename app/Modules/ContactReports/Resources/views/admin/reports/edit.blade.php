@@ -38,7 +38,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('contactreports.name') !!}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{{ trans('contactreports::contactreports.module name') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

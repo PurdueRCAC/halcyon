@@ -32,7 +32,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('groups.name') !!}
+{{ trans('groups::groups.module name') }}
 @stop
 
 @section('content')

@@ -30,7 +30,7 @@ app('pathway')
 @endphp
 
 @section('title')
-{!! trans('media::media.module name') !!}
+{{ trans('media::media.module name') }}
 @stop
 
 @section('toolbar')

@@ -172,7 +172,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('groups.name') !!}: {{ $group->name }}: Members
+{{ trans('groups::groups.module name') }}: {{ $group->name }}: Members
 @stop
 
 @section('content')

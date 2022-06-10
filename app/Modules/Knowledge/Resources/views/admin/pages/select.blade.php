@@ -36,7 +36,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('knowledge.name') !!}: {{ trans('knowledge::knowledge.attach') }}
+{{ trans('knowledge::knowledge.knowledge base') }}: {{ trans('knowledge::knowledge.attach') }}
 @stop
 
 @section('content')

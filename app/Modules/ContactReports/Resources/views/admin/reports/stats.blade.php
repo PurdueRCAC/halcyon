@@ -126,7 +126,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('news.name') !!}
+{{ trans('contactreports::contactreports.module name') }}
 @stop
 
 @section('content')
@@ -140,10 +140,10 @@ app('pathway')
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col col-md-12 text-right">
-				<label class="sr-only" for="filter_start">{{ trans('news::news.start date') }}</label>
+				<label class="sr-only" for="filter_start">Start date</label>
 				<input type="text" name="start" id="filter_start" class="form-control date filter filter-submit" value="{{ $filters['start'] }}" placeholder="Start date" />
 				to
-				<label class="sr-only" for="filter_end">{{ trans('news::news.end date') }}</label>
+				<label class="sr-only" for="filter_end">End date</label>
 				<input type="text" name="end" id="filter_end" class="form-control date filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
 
 				<button type="submit" class="btn btn-secondary">Filter</button>

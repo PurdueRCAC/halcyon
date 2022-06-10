@@ -26,7 +26,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('menus.name') !!}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
+{{ trans('menus::menus.menu manager') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

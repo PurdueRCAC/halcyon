@@ -41,7 +41,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('knowledge.name') !!}: {{ trans('knowledge::knowledge.snippets') }}
+{{ trans('knowledge::knowledge.knowledge base') }}: {{ trans('knowledge::knowledge.snippets') }}
 @stop
 
 @section('content')

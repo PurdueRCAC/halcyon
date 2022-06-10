@@ -44,7 +44,7 @@
 @stop
 
 @section('title')
-{!! config('knowledge.name') !!}
+{{ trans('knowledge::knowledge.knowledge base') }}
 @stop
 
 @section('content')

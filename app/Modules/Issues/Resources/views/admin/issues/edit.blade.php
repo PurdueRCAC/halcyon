@@ -36,7 +36,7 @@ Toolbar::cancel(route('admin.issues.cancel'));
 @stop
 
 @section('title')
-{!! config('issues.name') !!}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
+{{ trans('issues::issues.module name') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

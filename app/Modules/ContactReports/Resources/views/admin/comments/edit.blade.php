@@ -22,7 +22,7 @@ app('request')->merge(['hidemainmenu' => 1]);
 @stop
 
 @section('title')
-{!! config('contactreports.name') !!} Comment: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{{ trans('contactreports::contactreports.module name') }} Comment: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

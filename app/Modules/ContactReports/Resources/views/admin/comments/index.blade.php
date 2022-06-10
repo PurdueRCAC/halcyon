@@ -24,7 +24,7 @@
 @stop
 
 @section('title')
-{!! config('contactreports.name') !!}: #{{ $report->id }}: {{ trans('contactreports::contactreports.comments') }}
+{{ trans('contactreports::contactreports.module name') }}: #{{ $report->id }}: {{ trans('contactreports::contactreports.comments') }}
 @stop
 
 @section('content')
