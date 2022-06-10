@@ -35,7 +35,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('resources.name') !!}: <?php echo $row->id ? trans('globak.edit') . ': #' . $row->id : trans('global.create'); ?>
+{{ trans('resources::resources.module name') }}: <?php echo $row->id ? trans('globak.edit') . ': #' . $row->id : trans('global.create'); ?>
 @stop
 
 @section('content')

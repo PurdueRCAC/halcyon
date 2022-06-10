@@ -31,7 +31,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('queues.name') !!}: {{ trans('queues::queues.types') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
+{{ trans('queues::queues.module name') }}: {{ trans('queues::queues.types') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

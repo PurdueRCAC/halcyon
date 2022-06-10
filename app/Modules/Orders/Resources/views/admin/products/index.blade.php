@@ -39,7 +39,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('orders.name') !!}: {{ trans('orders::orders.products') }}
+{{ trans('orders::orders.module name') }}: {{ trans('orders::orders.products') }}
 @stop
 
 @section('content')

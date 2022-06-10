@@ -31,7 +31,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('resources.name') !!}: {{ trans('resources::assets.batchsystems') }}: <?php echo $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create'); ?>
+{{ trans('resources::resources.module name') }}: {{ trans('resources::assets.batchsystems') }}: <?php echo $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create'); ?>
 @stop
 
 @section('content')

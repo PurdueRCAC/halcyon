@@ -101,7 +101,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('orders.name') !!}
+{{ trans('orders::orders.module name') }}
 @stop
 
 @section('panel')

@@ -32,7 +32,7 @@ app('pathway')
 @stop
 
 @section('title')
-{{ trans('users::system.users') }}: {{ $user->id ? 'Edit: #' . $user->id : 'Create' }}
+{{ trans('users::system.users') }}: {{ $user->id ? trans('global.edit') . ': #' . $user->id : trans('global.create') }}
 @stop
 
 @section('content')

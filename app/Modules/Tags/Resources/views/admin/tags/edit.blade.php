@@ -31,7 +31,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('tags.name') !!}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{{ trans('tags::tags.module name') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

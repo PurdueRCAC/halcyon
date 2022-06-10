@@ -31,7 +31,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('news.name') !!}: {{ trans('news::news.types') }}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{{ trans('news::news.module name') }}: {{ trans('news::news.types') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

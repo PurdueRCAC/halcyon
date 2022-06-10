@@ -26,7 +26,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('publications.name') !!}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
+{{ trans('publications::publications.module name') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

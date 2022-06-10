@@ -31,7 +31,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('users.name') !!}: {{ trans('users::notes.notes') }}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{{ trans('users::users.module name') }}: {{ trans('users::notes.notes') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

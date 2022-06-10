@@ -32,7 +32,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('resources.name') !!}: {{ trans('resources::resources.batchsystems') }}
+{{ trans('resources::resources.module name') }}: {{ trans('resources::resources.batchsystems') }}
 @stop
 
 @section('content')

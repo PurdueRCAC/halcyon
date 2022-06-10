@@ -39,7 +39,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('users.name') !!}: {{ trans('access.permissions') }}
+{{ trans('users::users.module name') }}: {{ trans('access.permissions') }}
 @stop
 
 @section('content')

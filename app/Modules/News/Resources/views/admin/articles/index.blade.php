@@ -50,7 +50,7 @@ else
 @stop
 
 @section('title')
-{!! config('news.name') !!}{{ $template ? ': ' . trans('news::news.templates') : '' }}
+{{ trans('news::news.module name') }}{{ $template ? ': ' . trans('news::news.templates') : '' }}
 @stop
 
 @section('content')

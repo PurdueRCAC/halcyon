@@ -27,7 +27,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! trans('pages::pages.module name') !!}: {{ trans('pages::pages.history') . ' #' . $row->id }}
+{{ trans('pages::pages.module name') }}: {{ trans('pages::pages.history') . ' #' . $row->id }}
 @stop
 
 @section('content')

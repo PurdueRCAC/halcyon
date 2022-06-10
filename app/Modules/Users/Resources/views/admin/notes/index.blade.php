@@ -31,7 +31,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('users.name') !!}: Notes
+{{ trans('users::users.module name') }}: {{ trans('users::users.notes') }}
 @stop
 
 @section('content')

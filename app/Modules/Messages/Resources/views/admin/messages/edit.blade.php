@@ -35,7 +35,7 @@ app('pathway')
 @stop
 
 @section('title')
-{{ trans('messages::messages.module name') }}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{{ trans('messages::messages.module name') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

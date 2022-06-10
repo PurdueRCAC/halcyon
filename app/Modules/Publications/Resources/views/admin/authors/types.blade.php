@@ -1,8 +1,8 @@
 @push('scripts')
-<script src="{{ asset('modules/menus/js/menus.js?v=' . filemtime(public_path() . '/modules/menus/js/menus.js')) }}"></script>
+<script src="{{ asset('modules/publications/js/publications.js?v=' . filemtime(public_path() . '/modules/publications/js/publications.js')) }}"></script>
 @endpush
 
-<h2 class="modal-title">{{ trans('menus::menus.type choose') }}</h2>
+<h2 class="modal-title">{{ trans('publications::publications.type choose') }}</h2>
 <ul class="menu_types">
 	@foreach ($types as $name => $list)
 		<li>
@@ -25,25 +25,25 @@
 	@endforeach
 	<li>
 		<dl class="menu_type">
-			<dt>{{ trans('menus::menus.type system') }}</dt>
+			<dt>{{ trans('publications::publications.type system') }}</dt>
 			<dd>
 				<ul>
 					<li>
-						<a class="choose_type" href="#" title="{{ trans('menus::menus.type external url desc') }}"
+						<a class="choose_type" href="#" title="{{ trans('publications::publications.type external url desc') }}"
 							onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array('id' => $id, 'title' => 'url'))); ?>')">
-							{{ trans('menus::menus.type external url') }}
+							{{ trans('publications::publications.type external url') }}
 						</a>
 					</li>
 					<li>
-						<a class="choose_type" href="#" title="{{ trans('menus::menus.type alias desc') }}"
+						<a class="choose_type" href="#" title="{{ trans('publications::publications.type alias desc') }}"
 							onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array('id' => $id, 'title' => 'alias'))); ?>')">
-							{{ trans('menus::menus.type alias') }}
+							{{ trans('publications::publications.type alias') }}
 						</a>
 					</li>
 					<li>
-						<a class="choose_type" href="#" title="{{ trans('menus::menus.type separator desc') }}"
+						<a class="choose_type" href="#" title="{{ trans('publications::publications.type separator desc') }}"
 							onclick="javascript:setmenutype('<?php echo base64_encode(json_encode(array('id' => $id, 'title' => 'separator'))); ?>')">
-							{{ trans('menus::menus.type separator') }}
+							{{ trans('publications::publications.type separator') }}
 						</a>
 					</li>
 				</ul>

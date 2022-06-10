@@ -29,7 +29,7 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 @stop
 
 @section('title')
-{!! config('widgets.name') !!}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{{ trans('widgets::widgets.module name') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

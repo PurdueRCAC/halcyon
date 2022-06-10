@@ -31,7 +31,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('orders.name') !!}: {{ trans('orders::orders.categories') }}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{{ trans('orders::orders.module name') }}: {{ trans('orders::orders.categories') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

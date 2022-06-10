@@ -124,7 +124,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('resources.name') !!}
+{{ trans('resources::resources.module name') }}: {{ trans('resources::assets.active users') }}
 @stop
 
 @section('content')

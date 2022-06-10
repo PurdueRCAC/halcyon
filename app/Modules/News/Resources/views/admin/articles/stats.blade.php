@@ -147,7 +147,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('news.name') !!}
+{{ trans('news::news.module name') }}: {{ trans('news::news.stats') }}
 @stop
 
 @section('content')

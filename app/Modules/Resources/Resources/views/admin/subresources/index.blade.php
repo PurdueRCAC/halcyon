@@ -41,7 +41,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('resources.name') !!}
+{{ trans('resources::resources.module name') }}: {{ trans('resources::resources.subresources') }}
 @stop
 
 @section('content')

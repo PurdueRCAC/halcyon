@@ -432,7 +432,7 @@ app('pathway')
 @stop
 
 @section('title')
-{{ trans('orders::orders.module name') }}: {{ $order->id ? '#' . $order->id : 'Create' }}
+{{ trans('orders::orders.module name') }}: {{ $order->id ? trans('global.edit') . ': #' . $order->id : trans('global.create') }}
 @stop
 
 @php

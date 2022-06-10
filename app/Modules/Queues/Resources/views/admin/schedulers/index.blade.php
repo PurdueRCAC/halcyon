@@ -31,7 +31,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('queues.name') !!}: {{ trans('queues::queues.schedulers') }}
+{{ trans('queues::queues.module name') }}: {{ trans('queues::queues.schedulers') }}
 @stop
 
 @section('content')

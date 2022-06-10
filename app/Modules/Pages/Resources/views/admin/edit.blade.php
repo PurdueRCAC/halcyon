@@ -36,7 +36,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! trans('pages::pages.module name') !!}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{{ trans('pages::pages.module name') }}: {{ $row->id ?  trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')

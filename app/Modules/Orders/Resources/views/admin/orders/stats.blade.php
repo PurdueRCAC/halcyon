@@ -108,6 +108,10 @@ app('pathway')
 	->append(
 		trans('orders::orders.module name'),
 		route('admin.orders.index')
+	)
+	->append(
+		trans('orders::orders.stats'),
+		route('admin.orders.stats')
 	);
 @endphp
 
@@ -140,7 +144,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('orders.name') !!}
+{{ trans('orders::orders.module name') }}: {{ trans('orders::orders.stats') }}
 @stop
 
 @section('content')

@@ -28,7 +28,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('tags.name') !!}
+{{ trans('tags::tags.module name') }}
 @stop
 
 @section('content')

@@ -31,7 +31,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('queues.name') !!}: {{ trans('queues::queues.types') }}
+{{ trans('queues::queues.module name') }}: {{ trans('queues::queues.types') }}
 @stop
 
 @section('content')

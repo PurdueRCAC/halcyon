@@ -31,7 +31,7 @@ app('pathway')
 @stop
 
 @section('title')
-{!! config('users.name') !!}: {{ trans('users::access.levels') }}
+{{ trans('users::users.module name') }}: {{ trans('users::access.levels') }}
 @stop
 
 @section('content')

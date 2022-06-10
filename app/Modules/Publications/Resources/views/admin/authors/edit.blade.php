@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @push('scripts')
-<script src="{{ asset('modules/menus/js/menus.js?v=' . filemtime(public_path() . '/modules/menus/js/menus.js')) }}"></script>
+<script src="{{ asset('modules/publications/js/publications.js?v=' . filemtime(public_path() . '/modules/publications/js/publications.js')) }}"></script>
 @endpush
 
 @php
@@ -9,12 +9,12 @@ app('request')->merge(['hidemainmenu' => 1]);
 
 app('pathway')
 	->append(
-		trans('menus::menus.module name'),
-		route('admin.menus.index')
+		trans('publications::publications.module name'),
+		route('admin.publications.index')
 	)
 	->append(
-		trans('menus::menus.items'),
-		route('admin.menus.items')
+		trans('publications::publications.items'),
+		route('admin.publications.items')
 	)
 	->append(
 		($row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create'))
@@ -22,19 +22,19 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('edit menus'))
-		{!! Toolbar::save(route('admin.menus.items.store')) !!}
+	@if (auth()->user()->can('edit publications'))
+		{!! Toolbar::save(route('admin.publications.items.store')) !!}
 	@endif
-	{!! Toolbar::cancel(route('admin.menus.items.cancel')) !!}
+	{!! Toolbar::cancel(route('admin.publications.items.cancel')) !!}
 	{!! Toolbar::render() !!}
 @stop
 
 @section('title')
-{!! config('pages.name') !!}: {{ $row->id ? 'Edit: #' . $row->id : 'Create' }}
+{{ trans('publications::publications.module name') }}: {{ $row->id ? trans('global.edit') . ': #' . $row->id : trans('global.create') }}
 @stop
 
 @section('content')
-<form action="{{ route('admin.menus.items.store') }}" method="post" name="adminForm" id="item-form" class="form-validate">
+<form action="{{ route('admin.publications.items.store') }}" method="post" name="adminForm" id="item-form" class="form-validate">
 	<div class="row">
 		<div class="col col-md-7">
 			<fieldset class="adminform">
@@ -180,7 +180,7 @@ app('pathway')
 				$fieldSets = $form->getFieldsets('request');
 
 				foreach ($fieldSets as $name => $fieldSet) :
-					$label = !empty($fieldSet->label) ? $fieldSet->label : 'menus::menus.' . $name . ' fieldset';
+					$label = !empty($fieldSet->label) ? $fieldSet->label : 'publications::publications.' . $name . ' fieldset';
 					echo app('html.builder')->sliders('panel', trans($label), 'request-options');
 						if (isset($fieldSet->description) && trim($fieldSet->description)) :
 							echo '<p class="tip">' . trans($fieldSet->description) . '</p>';
@@ -207,7 +207,7 @@ app('pathway')
 				$fieldSets = $form->getFieldsets('params');
 
 				foreach ($fieldSets as $name => $fieldSet) :
-					$label = !empty($fieldSet->label) ? $fieldSet->label : 'menus::menus.' . $name . ' fieldset';
+					$label = !empty($fieldSet->label) ? $fieldSet->label : 'publications::publications.' . $name . ' fieldset';
 					echo app('html.builder')->sliders('panel', trans($label), $name . '-options');
 						if (isset($fieldSet->description) && trim($fieldSet->description)) :
 							echo '<p class="tip">' . trans($fieldSet->description) . '</p>';
