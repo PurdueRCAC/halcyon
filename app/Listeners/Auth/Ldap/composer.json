@@ -1,0 +1,22 @@
+{
+	"name": "halcyon/listener_auth_ldap",
+	"description": "LDAP authentication plugin for the Halcyon",
+	"type": "halcyon-listener",
+	"keywords": ["halcyon", "authentication", "LDAP", "OpenLDAP", "FreeIPA", "Active Directory"],
+	"homepage": "https://www.rcac.purdue.edu",
+	"authors": [
+		{
+			"name": "Purdue University"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/PurdueRCAC/halcyon/issues"
+	},
+	"require": {
+		"php" : "^7.2",
+		"adldap2/adldap2": "^10.3.3"
+	},
+	"extra": {
+		"install-directory": "/Listeners/Auth/Ldap/"
+	}
+}

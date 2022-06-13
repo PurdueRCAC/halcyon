@@ -1,0 +1,11 @@
+{
+    "name": "Authentication - LDAP",
+    "alias": "ldap",
+    "description": "Handles user authentication against an LDAP",
+    "keywords": [],
+    "active": 1,
+    "priority": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
