@@ -583,6 +583,11 @@ class User extends Model implements
 	 */
 	public static function findByUsername($username, $includeTrashed = false)
 	{
+		/*if (filter_var($username, FILTER_VALIDATE_EMAIL))
+		{
+			return self::findByEmail($username);
+		}*/
+
 		$query = UserUsername::query();
 
 		if ($includeTrashed)
@@ -608,6 +613,7 @@ class User extends Model implements
 	{
 		$username = UserUsername::query()
 			->where('email', '=', $email)
+			->orderBy('datecreated', 'asc')
 			->first();
 
 		return $username ? $username->user : new self;
