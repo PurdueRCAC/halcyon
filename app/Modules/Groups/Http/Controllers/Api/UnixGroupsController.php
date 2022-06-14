@@ -152,15 +152,6 @@ class UnixGroupsController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "name",
-	 * 		"description":   "Department name",
-	 * 		"required":      true,
-	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
 	 * 		"name":          "groupid",
 	 * 		"description":   "Group ID",
 	 * 		"required":      false,

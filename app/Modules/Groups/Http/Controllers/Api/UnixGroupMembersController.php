@@ -179,46 +179,26 @@ class UnixGroupMembersController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "name",
-	 * 		"description":   "Department name",
+	 * 		"name":          "unixgroupid",
+	 * 		"description":   "Unix group ID",
 	 * 		"required":      true,
-	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "groupid",
-	 * 		"description":   "Group ID",
-	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "longname",
-	 * 		"description":   "Long name",
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID or username",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string",
-	 * 			"maxLength": 32
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "shortname",
-	 * 		"description":   "Short name",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string",
-	 * 			"maxLength": 8
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "unixgid",
-	 * 		"description":   "Unix group system ID",
+	 * 		"name":          "notice",
+	 * 		"description":   "Notice state",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
