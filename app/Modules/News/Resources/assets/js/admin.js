@@ -255,6 +255,10 @@ function NEWSPreviewVars() {
 		$.each(resources, function (i, el) {
 			preview_vars['resources'][i] = el; //{ "resourcename": el };
 		});
+
+		if (preview_vars['resources'].length > 1) {
+			preview_vars['resources'][preview_vars['resources'].length - 1] = 'and ' + preview_vars['resources'][preview_vars['resources'].length - 1];
+		}
 	}
 	preview_vars['update'] = "0";
 
