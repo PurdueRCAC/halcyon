@@ -154,7 +154,7 @@ class UnixGroupsController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "groupid",
 	 * 		"description":   "Group ID",
-	 * 		"required":      false,
+	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}

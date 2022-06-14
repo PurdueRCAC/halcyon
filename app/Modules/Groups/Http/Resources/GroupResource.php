@@ -48,6 +48,8 @@ class GroupResource extends JsonResource
 					$m->api = route('api.groups.members.read', ['id' => $m->id]);
 
 					$ma = $m->toArray();
+					$ma['username'] = ($m->user ? $m->user->username : trans('global.unknown'));
+					$ma['name'] = ($m->user ? $m->user->name : trans('global.unknown'));
 
 					if (!$m->trashed() && ($m->user && $m->user->trashed()))
 					{
@@ -230,6 +232,9 @@ class GroupResource extends JsonResource
 				$item->api = route('api.unixgroups.read', ['id' => $item->id]);
 				$item->members->each(function($item, $key)
 				{
+					$item->name = ($item->user ? $item->user->name : trans('global.unknown'));
+					$item->username = ($item->user ? $item->user->username : trans('global.unknown'));
+					$item->setHidden(['user']);
 					$item->api = route('api.unixgroups.members.read', ['id' => $item->id]);
 				});
 			});
@@ -242,6 +247,9 @@ class GroupResource extends JsonResource
 					$item->api = route('api.unixgroups.read', ['id' => $item->id]);
 					$item->members->each(function($item, $key)
 					{
+						$item->name = ($item->user ? $item->user->name : trans('global.unknown'));
+						$item->username = ($item->user ? $item->user->username : trans('global.unknown'));
+						$item->setHidden(['user']);
 						$item->api = route('api.unixgroups.members.read', ['id' => $item->id]);
 					});
 				});
