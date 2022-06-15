@@ -126,8 +126,8 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 						<div class="col-md-6 mb-2">
 							<dt>
 								Login Shell
-								<a href="#box1_account" class="help icn tip" title="Help">
-									<span class="fa fa-question-circle" aria-hidden="true"></span> Help
+								<a href="#box1_account" class="help text-info tip" title="Help">
+									<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 								</a>
 							</dt>
 							<dd>
