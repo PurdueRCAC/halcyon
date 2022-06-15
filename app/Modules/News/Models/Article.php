@@ -1171,28 +1171,30 @@ class Article extends Model
 			$vars['location'] = $this->location;
 		}
 
-		$resources = array();
+		if (!isset($vars['resources']))
+		{
+			$vars['resources'] = array();
+		}
 		foreach ($this->resourceList()->get() as $resource)
 		{
-			array_push($resources, $resource->name);
+			$vars['resources'][] = $resource->name;
 		}
 
-		if (count($resources) > 1)
+		if (count($vars['resources']) > 1)
 		{
-			$resources[count($resources)-1] = 'and ' . $resources[count($resources)-1];
+			$vars['resources'][count($vars['resources'])-1] = 'and ' . $vars['resources'][count($vars['resources'])-1];
 		}
 
-		if (count($resources) > 2)
+		$vars['resources'] = array_filter($vars['resources']);
+		$vars['resources'] = array_unique($vars['resources']);
+
+		if (count($vars['resources']) == 2)
 		{
-			$vars['resources'] = implode(', ', $resources);
+			$vars['resources'] = $vars['resources'][0] . ' ' . $vars['resources'][1];
 		}
-		else if (count($resources) == 2)
+		else
 		{
-			$vars['resources'] = $resources[0] . ' ' . $resources[1];
-		}
-		else if (count($resources) == 1)
-		{
-			$vars['resources'] = $resources[0];
+			$vars['resources'] = implode(', ', $vars['resources']);
 		}
 
 		return $vars;
