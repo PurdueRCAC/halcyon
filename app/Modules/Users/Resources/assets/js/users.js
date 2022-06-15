@@ -81,7 +81,7 @@ jQuery(document).ready(function () {
 			data: {
 				'name': $('#field-name').val(),
 				'puid': $('#field-organization_id').val(),
-				'api_token': $('#field-api_token').val(),
+				'apitoken': $('#field-api_token').val(),
 				'username': $('#field_username').val(),
 				'email': $('#field_email').val()
 			},

@@ -444,6 +444,16 @@ class UsersController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
+	 * 		"name":          "api_token",
+	 * 		"description":   "API token",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 100
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "puid",
 	 * 		"description":   "Organization ID",
 	 * 		"required":      false,
@@ -525,6 +535,7 @@ class UsersController extends Controller
 			'roles' => 'nullable|array',
 			'facets' => 'nullable|array',
 			'email' => 'nullable|string|max:255',
+			'apitoken' => 'nullable|string|max:100',
 		]);
 
 		$user = User::findOrFail($id);
