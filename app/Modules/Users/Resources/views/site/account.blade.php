@@ -20,7 +20,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 	<div class="card">
 		<div class="card-header text-center bg-secondary text-white">
-			@if (in_array('profile-photos', config('module.users.features', [])))
+			@if (config('module.users.profile_photos'))
 				<div class="user-avatar-container">
 					<img src="{{ $user->avatar(false) }}" class="user-avatar" height="100" width="100" alt="User Image">
 				</div>
