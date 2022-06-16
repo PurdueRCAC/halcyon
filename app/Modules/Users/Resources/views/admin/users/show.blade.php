@@ -327,6 +327,7 @@ app('pathway')
 								</td>
 								<td class="text-right">
 									<a href="#newfacet" class="btn btn-success add-facet"
+										data-success="Item added"
 										data-userid="{{ $user->id }}"
 										data-api="{{ route('api.users.facets.create') }}">
 										<span class="icon-plus glyph">{{ trans('global.add') }}</span>
@@ -597,7 +598,7 @@ app('pathway')
 					<span class="input-group">
 						<input type="text" class="form-control readonly" readonly="readonly" name="fields[api_token]" id="field-api_token" maxlength="100" value="{{ $user->api_token }}" />
 						<span class="input-group-append">
-							<button class="input-group-text btn btn-secondary btn-apitoken">{{ trans('users::users.regenerate') }}</button>
+							<button class="input-group-text btn btn-secondary btn-apitoken" data-confirm="Are you sure you want to regenerate the API token for this user?">{{ trans('users::users.regenerate') }}</button>
 						</span>
 					</span>
 					<span class="form-text text-muted">{{ trans('users::users.api token hint') }}</span>

@@ -1,14 +1,28 @@
 /* global $ */ // jquery.js
-/* global jQuery */ // jquery.js
 /* global Halcyon */ // core.js
 
-jQuery(document).ready(function () {
-	var searchusers = $('#filter_search');
-	if (searchusers.length) {
-		searchusers.each(function (i, el) {
-			$(el).select2({
+function token(length) {
+	var result = '';
+	var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	var charactersLength = characters.length;
+	for (var i = 0; i < length; i++) {
+		result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	}
+	return result;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+	const headers = {
+		'Content-Type': 'application/json',
+		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+	};
+
+	var searchusers = document.getElementById('filter_search');
+	if (searchusers) {
+		//searchusers.each(function (i, el) {
+			$(searchusers).select2({
 				ajax: {
-					url: $(el).data('api'),
+					url: searchusers.getAttribute('data-api'),
 					dataType: 'json',
 					maximumSelectionLength: 1,
 					data: function (params) {
@@ -40,94 +54,100 @@ jQuery(document).ready(function () {
 					return state.text;
 				}
 			});
-		});
-		searchusers.on('select2:select', function (e) {
+		//});
+		searchusers.addEventListener('select2:select', function (e) {
 			var data = e.params.data;
-			window.location = $(this).data('url') + "?search=" + data.id;
+			window.location = this.getAttribute('data-url') + "?search=" + data.id;
 		});
-		searchusers.on('select2:unselect', function () {
-			window.location = $(this).data('url') + "?search=";
+		searchusers.addEventListener('select2:unselect', function () {
+			window.location = this.getAttribute('data-url') + "?search=";
 		});
 	}
 
 	// API token generation
-	$('.btn-apitoken').on('click', function (e) {
-		e.preventDefault();
+	document.querySelectorAll('.btn-apitoken').forEach(function(el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		if (confirm('Are you sure you want to regenerate the API token for this user?')) {
-			$('#field-api_token').val(token(60)).prop('readonly', false);
-		}
+			if (confirm(this.getAttribute('data-confirm'))) {
+				document.getElementById('field-api_token').value = token(60);
+				document.getElementById('field-api_token').readonly = false;
+			}
+		});
 	});
 
-	function token(length) {
-		var result = '';
-		var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-		var charactersLength = characters.length;
-		for (var i = 0; i < length; i++) {
-			result += characters.charAt(Math.floor(Math.random() * charactersLength));
-		}
-		return result;
+	const detailsbtn = document.getElementById('user_details_save');
+	if (detailsbtn) {
+		detailsbtn.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			var btn = this;
+				btn.disabled = true;
+
+			fetch(btn.getAttribute('data-api'), {
+				method: 'PUT',
+				headers: headers,
+				body: JSON.stringify({
+					'name': document.getElementById('field-name').value,
+					'puid': document.getElementById('field-organization_id').value,
+					'apitoken': document.getElementById('field-api_token').value,
+					'username': document.getElementById('field_username').value,
+					'email': document.getElementById('field_email').value
+				})
+			})
+			.then(function (response) {
+				if (response.ok) {
+					window.location.reload(true);
+					return;
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					msg = (typeof msg === 'object') ? Object.values(msg).join('<br />') : msg;
+					throw msg;
+				});
+			})
+			.catch(function (error) {
+				Halcyon.message('danger', error);
+			});
+		});
 	}
 
-	$('#user_details_save').on('click', function (e) {
-		e.preventDefault();
+	const accessbtn = document.getElementById('user_access_save');
+	if (accessbtn) {
+		accessbtn.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		var btn = $(this);
+			var btn = this;
+			var roles = [],
+				r = btn.closest('form').querySelectorAll('input:checked');
 
-		// create new relationship
-		$.ajax({
-			url: btn.data('api'),
-			type: 'put',
-			data: {
-				'name': $('#field-name').val(),
-				'puid': $('#field-organization_id').val(),
-				'apitoken': $('#field-api_token').val(),
-				'username': $('#field_username').val(),
-				'email': $('#field_email').val()
-			},
-			dataType: 'json',
-			async: false,
-			success: function () { //response
-				Halcyon.message('success', 'Account updated');
+			r.forEach(function (el) {
+				roles.push(el.value);
+			});
 
-				window.location.reload(true);
-			},
-			error: function (xhr) { //, ajaxOptions, thrownError
-				Halcyon.message('danger', xhr.responseJSON.message);
-			}
+			fetch(btn.getAttribute('data-api'), {
+				method: 'PUT',
+				headers: headers,
+				body: JSON.stringify({
+					'roles': roles
+				})
+			})
+			.then(function (response) {
+				if (response.ok) {
+					window.location.reload(true);
+					return;
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					msg = (typeof msg === 'object' ? Object.values(msg).join('<br />') : msg);
+					throw msg;
+				});
+			})
+			.catch(function (error) {
+				Halcyon.message('danger', error);
+			});
 		});
-	});
-
-	$('#user_access_save').on('click', function (e) {
-		e.preventDefault();
-
-		var btn = $(this);
-		var roles = [],
-			r = $(btn.closest('form')).find('input:checked');
-
-		r.each(function (i, el) {
-			roles.push(el.value);
-		});
-
-		// create new relationship
-		$.ajax({
-			url: btn.data('api'),
-			type: 'put',
-			data: {
-				'roles': roles
-			},
-			dataType: 'json',
-			async: false,
-			success: function () { //response
-				Halcyon.message('success', 'Roles updated');
-
-				window.location.reload(true);
-			},
-			error: function (xhr) { //, ajaxOptions, thrownError
-				Halcyon.message('danger', xhr.responseJSON.message);
-			}
-		});
-	});
+	}
 
 	// Roles
 	$('#permissions-rules').accordion({
@@ -135,138 +155,170 @@ jQuery(document).ready(function () {
 		collapsible: true,
 		active: false
 	});
-	$('#permissions-rules .stop-propagation').on('click', function (e) {
-		e.stopPropagation();
+
+	document.querySelectorAll('#permissions-rules .stop-propagation').forEach(function(el) {
+		el.addEventListener('click', function (e) {
+			e.stopPropagation();
+		});
 	});
 
 	// User Facets
-	$('.add-facet').on('click', function (e) {
-		e.preventDefault();
+	document.querySelectorAll('.add-facet').forEach(function(el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		var btn = $(this);
-		var key = $(btn.attr('href') + '-key'),
-			value = $(btn.attr('href') + '-value'),
-			access = $(btn.attr('href') + '-access');
+			var btn = this;
+			var key = document.getElementById(btn.getAttribute('href').replace('#', '') + '-key'),
+				value = document.getElementById(btn.getAttribute('href').replace('#', '') + '-value'),
+				access = document.getElementById(btn.getAttribute('href').replace('#', '') + '-access');
 
-		// create new relationship
-		$.ajax({
-			url: btn.data('api'),
-			type: 'post',
-			data: {
-				'user_id': btn.data('userid'),
-				'key': key.val(),
-				'value': value.val(),
-				'access': access.val()
-			},
-			dataType: 'json',
-			async: false,
-			success: function (response) {
-				Halcyon.message('success', 'Item added');
+			fetch(btn.getAttribute('data-api'), {
+				method: 'POST',
+				headers: headers,
+				body: JSON.stringify({
+					'user_id': btn.getAttribute('data-userid'),
+					'key': key.value,
+					'value': value.value,
+					'access': access.value
+				})
+			})
+			.then(function (response) {
+				if (response.ok) {
+					return response.json();
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					msg = (typeof msg === 'object' ? Object.values(msg).join('<br />') : msg);
+					throw msg;
+				});
+			})
+			.then(function (data) {
+				Halcyon.message('success', btn.getAttribute('data-success'));
 
 				var c = btn.closest('table');
-				var li = '#facet-template';//c.find('tr.hidden');
+				var template = document.getElementById('facet-template');
 
-				if (typeof (li) !== 'undefined') {
-					var template = $(li);
-					//.clone()
-					//.removeClass('hidden');
+				if (template) {
+					//var template = li;
 
-					//template
-					//	.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
-					//	.data('id', response.id);
-
-					template.find('a').each(function (i, el) {
-						$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.id));
+					template.querySelectorAll('a').forEach(function (el) {
+						el.setAttribute('data-api', el.getAttribute('data-api').replace(/\{id\}/g, data.id));
 					});
 
 					var content = template
-						.html()
-						.replace(/\{i\}/g, c.find('tbody>tr').length + 2)
-						.replace(/\{id\}/g, response.id)
-						.replace(/\{key\}/g, response.key)
-						.replace(/\{value\}/g, response.value)
-						.replace(/\{access\}/g, response.access);
+						.innerHTML
+						.replace(/\{i\}/g, c.querySelectorAll('tbody>tr').length + 2)
+						.replace(/\{id\}/g, data.id)
+						.replace(/\{key\}/g, data.key)
+						.replace(/\{value\}/g, data.value)
+						.replace(/\{access\}/g, data.access)
+						.replace('option value="' + data.access + '"', 'option value="' + data.access + '" selected');
 
-					content = $(content);
-					content.find('select').val(response.access);
-
-					//template.html(content).insertBefore(li);
-					//template.html(content);
-					$(c.find('tbody')[0]).append(content);
+					var newRow = c.querySelector('tbody').insertRow(c.querySelector('tbody').rows.length);
+					newRow.innerHTML = content;
+					newRow.id = 'facet-' + data.id;
 				}
 
-				key.val(''),
-					value.val(''),
-					access.val(0);
-			},
-			error: function (xhr) { //, ajaxOptions, thrownError
-				Halcyon.message('danger', xhr.responseJSON.message);
-			}
-		});
-	});
-
-	$('.update-facet').on('click', function (e) {
-		e.preventDefault();
-
-		var btn = $(this);
-		var key = $(btn.attr('data-target') + '-key'),
-			value = $(btn.attr('data-target') + '-value'),
-			access = $(btn.attr('data-target') + '-access');
-
-		btn.parent().find('.btn').attr('disabled', true);
-		btn.addClass('loading').find('.fa').addClass('d-none');
-		btn.find('.spinner-border').removeClass('d-none');
-
-		// Update entry
-		$.ajax({
-			url: btn.attr('data-api'),
-			type: 'put',
-			data: {
-				'key': key.val(),
-				'value': value.val(),
-				'access': access.val()
-			},
-			dataType: 'json',
-			async: false,
-			success: function () { //response
-				btn.parent().find('.btn').attr('disabled', false);
-				btn.removeClass('loading').find('.spinner-border').addClass('d-none');
-				btn.find('.fa').removeClass('d-none');
-
-				Halcyon.message('success', btn.attr('data-success'));
-			},
-			error: function (xhr) { //, ajaxOptions, thrownError
-				btn.parent().find('.btn').attr('disabled', false);
-				btn.removeClass('loading').find('.spinner-border').addClass('d-none');
-				btn.find('.fa').removeClass('d-none');
-
-				Halcyon.message('danger', xhr.responseJSON.message);
-			}
-		});
-	});
-
-	$('#main').on('click', '.remove-facet', function (e) {
-		e.preventDefault();
-
-		var btn = $(this);
-		var result = confirm(btn.attr('data-confirm'));
-
-		if (result) {
-			var field = $(btn.attr('data-target'));
-
-			$.ajax({
-				url: btn.attr('data-api'),
-				type: 'delete',
-				dataType: 'json',
-				async: false,
-				success: function () { //data
-					Halcyon.message('success', btn.attr('data-success'));
-					field.remove();
-				},
-				error: function (xhr) { //, ajaxOptions, thrownError
-					Halcyon.message('danger', xhr.responseJSON.message);
-				}
+				key.value = '';
+				value.value = '';
+				access.valule = 0;
+			})
+			.catch(function (error) {
+				Halcyon.message('danger', error);
 			});
+		});
+	});
+
+	document.querySelectorAll('.update-facet').forEach(function(el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			var btn = this;
+			var key = document.getElementById(btn.getAttribute('data-target').replace('#', '') + '-key'),
+				value = document.getElementById(btn.getAttribute('data-target').replace('#', '') + '-value'),
+				access = document.getElementById(btn.getAttribute('data-target').replace('#', '') + '-access');
+
+			btn.parentNode.querySelectorAll('.btn').forEach(function (s) {
+				s.disabled = true;
+			});
+			btn.classList.add('loading');
+			btn.querySelectorAll('.fa').forEach(function (s) {
+				s.classList.add('d-none');
+			});
+			btn.querySelectorAll('.spinner-border').forEach(function(s) {
+				s.classList.remove('d-none');
+			});
+
+			fetch(btn.getAttribute('data-api'), {
+				method: 'PUT',
+				headers: headers,
+				body: JSON.stringify({
+					'key': key.value,
+					'value': value.value,
+					'access': access.value
+				})
+			})
+			.then(function (response) {
+				btn.parentNode.querySelectorAll('.btn').forEach(function(s) {
+					s.disabled = false;
+				});
+				btn.classList.remove('loading');
+				btn.querySelectorAll('.spinner-border').forEach(function (s) {
+					s.classList.add('d-none');
+				});
+				btn.querySelectorAll('.fs').forEach(function (s) {
+					s.classList.remove('d-none');
+				});
+
+				if (response.ok) {
+					Halcyon.message('success', btn.getAttribute('data-success'));
+					return;
+				}
+
+				return response.json().then(function (data) {
+					var msg = data.message;
+					msg = (typeof msg === 'object' ? Object.values(msg).join('<br />') : msg);
+					throw msg;
+				});
+			})
+			.catch(function (error) {
+				Halcyon.message('danger', error);
+			});
+		});
+	});
+
+	document.getElementById('main').addEventListener('click', function (e) {
+		if (e.target.classList.contains('remove-facet')) {
+			e.preventDefault();
+
+			var btn = e.target;
+			var result = confirm(btn.getAttribute('data-confirm'));
+
+			if (result) {
+				fetch(btn.getAttribute('data-api'), {
+					method: 'DELETE',
+					headers: headers
+				})
+				.then(function (response) {
+					if (response.ok) {
+						Halcyon.message('success', btn.getAttribute('data-success'));
+
+						var field = document.getElementById(btn.getAttribute('data-target').replace('#', ''));
+						field.remove();
+						return;
+					}
+
+					return response.json().then(function (data) {
+						var msg = data.message;
+						msg = (typeof msg === 'object' ? Object.values(msg).join('<br />') : msg);
+						throw msg;
+					});
+				})
+				.catch(function (error) {
+					console.error(error);
+					Halcyon.message('danger', error);
+				});
+			}
 		}
 	});
 });
