@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="basic">
+			<field name="pre_text" type="text" default="" label="widget.contactform::contactform.params.pretext" description="widget.contactform::contactform.params.pretext desc" />
+			<field name="name_label" type="text" default="Name:" label="widget.contactform::contactform.params.name label" description="widget.contactform::contactform.params.name label desc" />
+			<field name="email_label" type="text" default="Email:" label="widget.contactform::contactform.params.email label" description="widget.contactform::contactform.params.email label desc" />
+			<field name="subject_label" type="text" default="Subject:" label="widget.contactform::contactform.params.subject label" description="widget.contactform::contactform.params.subject label desc" />
+			<field name="message_label" type="text" default="Message:" label="widget.contactform::contactform.params.body label" description="widget.contactform::contactform.params.body label desc" />
+			<field name="button_text" type="text" default="Send Message" label="widget.contactform::contactform.params.button text" description="widget.contactform::contactform.params.button text desc" />
+			<field name="thank_you_text" type="text" default="Thank you for your contact." label="widget.contactform::contactform.params.thank you text" description="widget.contactform::contactform.params.thank you text desc" />
+			<field name="error_text" type="text" default="Your message could not be sent. Please try again." label="widget.contactform::contactform.params.error text" description="widget.contactform::contactform.params.error text desc" />
+			<field name="no_email" type="text" default="Please write your email" label="widget.contactform::contactform.params.no email" description="widget.contactform::contactform.params.no email desc" />
+			<field name="invalid_email" type="text" default="Please write a valid email" label="widget.contactform::contactform.params.invalid email" description="widget.contactform::contactform.params.invalid email desc" />
+		</fieldset>
+		<fieldset name="advanced">
+			<field name="recipient_name" type="text" default="" label="widget.contactform::contactform.params.recipient name" description="widget.contactform::contactform.params.recipient name desc" />
+			<field name="recipient_email" type="text" default="" label="widget.contactform::contactform.params.recipient email" description="widget.contactform::contactform.params.recipient email desc" />
+			<field name="honeypot" type="radio" default="1" label="widget.contactform::contactform.params.honeypot" description="widget.contactform::contactform.params.honeypot desc">
+				<option value="0">global.no</option>
+				<option value="1">global.yes</option>
+			</field>
+			<field name="send_confirmation" type="list" default="0" label="widget.earlyuserform::earlyuserform.params.confirmation" description="widget.earlyuserform::earlyuserform.params.confirmation desc">
+				<option value="1">global.yes</option>
+				<option value="0">global.no</option>
+			</field>
+		</fieldset>
+	</fields>
+</config>
