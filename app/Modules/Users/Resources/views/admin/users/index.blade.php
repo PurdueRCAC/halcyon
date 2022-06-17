@@ -8,7 +8,6 @@
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/users/js/users.js?v=' . filemtime(public_path() . '/modules/users/js/users.js')) }}"></script>
-<script src="{{ asset('modules/users/js/admin.js?v=' . filemtime(public_path() . '/modules/users/js/admin.js')) }}"></script>
 @endpush
 
 @php

@@ -52,6 +52,10 @@ app('pathway')
 					</li>
 				@endif
 				@foreach ($sections as $k => $section)
+					<?php
+					$k = strtolower($k);
+					$k = preg_replace('/[^a-z0-9]+/', '', $k);
+					?>
 					<li class="nav-item" role="presentation">
 						<a href="#user-{{ $k }}" class="nav-link" data-toggle="tab" role="tab" id="user-{{ $k }}-tab" aria-controls="user-{{ $k }}" aria-selected="false">{!! $section['name'] !!}</a>
 					</li>
@@ -544,6 +548,10 @@ app('pathway')
 			@endif
 
 			@foreach ($sections as $k => $section)
+				<?php
+				$k = strtolower($k);
+				$k = preg_replace('/[^a-z0-9]+/', '', $k);
+				?>
 				<div class="tab-pane" id="user-{{ $k }}" role="tabpanel" aria-labelledby="user-{{ $k }}-tab">
 					{!! $section['content'] !!}
 				</div>

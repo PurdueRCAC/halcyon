@@ -19,47 +19,46 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	var searchusers = document.getElementById('filter_search');
 	if (searchusers) {
-		//searchusers.each(function (i, el) {
-			$(searchusers).select2({
-				ajax: {
-					url: searchusers.getAttribute('data-api'),
-					dataType: 'json',
-					maximumSelectionLength: 1,
-					data: function (params) {
-						var query = {
-							search: params.term,
-							order: 'name',
-							order_dir: 'asc'
-						}
 
-						return query;
-					},
-					processResults: function (data) {
-						for (var i = 0; i < data.data.length; i++) {
-							data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
-							if (!data.data[i].id) {
-								data.data[i].id = data.data[i].username;
-							}
-						}
-
-						return {
-							results: data.data
-						};
+		$(searchusers).select2({
+			ajax: {
+				url: searchusers.getAttribute('data-api'),
+				dataType: 'json',
+				maximumSelectionLength: 1,
+				data: function (params) {
+					var query = {
+						search: params.term,
+						order: 'name',
+						order_dir: 'asc'
 					}
+
+					return query;
 				},
-				templateResult: function (state) {
-					if (isNaN(state.id) && typeof state.name != 'undefined') {
-						return $('<span>' + state.text + ' <span class="text-warning ml-1"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> No local account</span></span>');
+				processResults: function (data) {
+					for (var i = 0; i < data.data.length; i++) {
+						data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
+						if (!data.data[i].id) {
+							data.data[i].id = data.data[i].username;
+						}
 					}
-					return state.text;
+
+					return {
+						results: data.data
+					};
 				}
-			});
-		//});
-		searchusers.addEventListener('select2:select', function (e) {
+			},
+			templateResult: function (state) {
+				if (isNaN(state.id) && typeof state.name != 'undefined') {
+					return $('<span>' + state.text + ' <span class="text-warning ml-1"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> No local account</span></span>');
+				}
+				return state.text;
+			}
+		});
+		$(searchusers).on('select2:select', function (e) {
 			var data = e.params.data;
 			window.location = this.getAttribute('data-url') + "?search=" + data.id;
 		});
-		searchusers.addEventListener('select2:unselect', function () {
+		$(searchusers).on('select2:unselect', function () {
 			window.location = this.getAttribute('data-url') + "?search=";
 		});
 	}
@@ -150,17 +149,11 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	// Roles
-	$('#permissions-rules').accordion({
-		heightStyle: 'content',
-		collapsible: true,
-		active: false
-	});
-
-	document.querySelectorAll('#permissions-rules .stop-propagation').forEach(function(el) {
+	/*document.querySelectorAll('#permissions-rules .stop-propagation').forEach(function(el) {
 		el.addEventListener('click', function (e) {
 			e.stopPropagation();
 		});
-	});
+	});*/
 
 	// User Facets
 	document.querySelectorAll('.add-facet').forEach(function(el) {

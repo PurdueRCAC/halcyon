@@ -238,7 +238,7 @@ class Groups
 			}
 		}*/
 
-		if (!$event->getActive())
+		if (!$event->getActive() && !app('isAdmin'))
 		{
 			$content = view('groups::site.profile', [
 				'user' => $user,

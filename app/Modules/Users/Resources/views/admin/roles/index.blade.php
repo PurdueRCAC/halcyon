@@ -1,9 +1,5 @@
 @extends('layouts.master')
 
-@push('scripts')
-<script src="{{ asset('modules/config/js/config.js') }}"></script>
-@endpush
-
 @php
 app('pathway')
 	->append(
@@ -55,17 +51,17 @@ app('pathway')
 <form action="{{ route('admin.users.roles.update') }}" method="post" name="adminForm" id="adminForm">
 
 	<div id="permissions-sliders" class="pane-sliders">
-		<div id="permissions-rules">
+		<div id="permissions-rules" class="accordion">
 			<?php
 			$curLevel = 0;
 			$canEdit = auth()->user()->can('edit users.roles');
 
-			foreach ($roles as $i => $role)
-			{
+			foreach ($roles as $i => $role):
 				$difLevel = $role->level - $curLevel;
 				$canCalculateSettings = ($role->parent_id);
 				?>
-				<div class="pane-toggler title">
+				<div class="card">
+				<div class="card-header pane-toggler title" data-toggle="collapse" data-target="#collapse{{ $role->value }}" aria-expanded="false" aria-controls="collapse{{ $role->value }}">
 					@if ($canEdit)
 						<span class="form-check stop-propagation"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $role->value }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
 					@endif
@@ -73,16 +69,16 @@ app('pathway')
 					<span class="level">{!! str_repeat('|&mdash; ', $curLevel = $role->level) !!}</span>
 
 					@if ($canEdit)
-						<a class="stop-propagation" href="{{ route('admin.users.roles.edit', ['id' => $role->value]) }}">
+						<a class="stop-propagation" id="heading{{ $role->value }}" href="{{ route('admin.users.roles.edit', ['id' => $role->value]) }}">
 							{{ $role->text }}
 						</a>
 					@else
 						{{ $role->text }}
 					@endif
 
-					<span class="badge badge-secondary">{{ number_format($role->maps_count) }}</span>
+					<span class="badge badge-secondary float-right">{{ number_format($role->maps_count) }}</span>
 				</div>
-				<div class="pane-slider">
+				<div class="card-body pane-slider collapse" id="collapse{{ $role->value }}" aria-labelledby="heading{{ $role->value }}" data-parent="#permissions-rules">
 					<div class="pane-slider content pane-hide">
 
 						<table class="table table-hover role-rules">
@@ -104,8 +100,7 @@ app('pathway')
 							</thead>
 							<tbody>
 							<?php
-							foreach ($actions[$section] as $name => $action)
-							{
+							foreach ($actions[$section] as $name => $action):
 								$action['name'] = $name;
 								$inheritedRule = App\Halcyon\Access\Gate::checkRole($role->value, $action['name'], $assetId);
 
@@ -137,31 +132,32 @@ app('pathway')
 											@if ($assetRule === false)
 												<span class="badge badge-danger">{{ trans('access.rules.not allowed') }}</span>
 											@else
-												<span class="badge badge-danger"><span class="fa fa-lock"></span> {{ trans('access.rules.not allowed locked') }}</span>
+												<span class="badge badge-danger"><span class="fa fa-lock" aria-hidden="true"></span> {{ trans('access.rules.not allowed locked') }}</span>
 											@endif
 										@endif
 									@else
 										@if ($action['name'] === 'admin')
 											<span class="badge badge-success">{{ trans('access.rules.allowed') }}</span>
 										@elseif ($inheritedRule === false)
-											<span class="badge badge-danger"><span class="fa fa-lock"> {{ trans('access.rules.not allowed admin conflict') }}</span></span>
+											<span class="badge badge-danger"><span class="fa fa-lock" aria-hidden="true"></span> {{ trans('access.rules.not allowed admin conflict') }}</span>
 										@else
-											<span class="badge badge-success"><span class="fa fa-lock"> {{ trans('access.rules.allowed admin') }}</span></span>
+											<span class="badge badge-success"><span class="fa fa-lock" aria-hidden="true"></span> {{ trans('access.rules.allowed admin') }}</span>
 										@endif
 									@endif
 									</td>
 								@endif
 								</tr>
 								<?php
-							}
+							endforeach;
 							?>
 							</tbody>
 						</table>
 
 					</div>
+						</div>
 				</div>
 				<?php
-			}
+			endforeach;
 			?>
 		</div>
 		<div class="rule-notes">
