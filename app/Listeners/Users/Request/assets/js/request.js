@@ -1,6 +1,5 @@
 /* global $ */ // jquery.js
 /* global ROOT_URL */ // common.js
-/* global WSPostURL */ // common.js
 
 /**
  * Output account resources
@@ -14,7 +13,6 @@ function PrintAccountResources(user) {
 	var queues = Array();
 	var memberofqueues = Array();
 	var pendingmemberofqueues = Array();
-	var fortress = false;
 	var x, div, span;
 
 	if (typeof (user['queues']) != 'undefined') {
@@ -28,7 +26,6 @@ function PrintAccountResources(user) {
 		if (typeof (user['pendingmemberofqueues']) != 'undefined') {
 			pendingmemberofqueues = user['pendingmemberofqueues'];
 		}
-		fortress = true;
 	} else if (typeof (user['resources']) != 'undefined') {
 		document.getElementById("resources").style.display = "block";
 		document.getElementById("queues").style.display = "none";
@@ -65,10 +62,6 @@ function PrintAccountResources(user) {
 
 		d.id = resource['id'] + "_name";
 
-		if (resource['name'] == "Fortress") {
-			fortress = true;
-		}
-
 		div.appendChild(d);
 	}
 
@@ -91,22 +84,7 @@ function PrintAccountResources(user) {
 
 		d.id = resource['id'] + "_name";
 
-		if (resource['name'] == "Fortress") {
-			fortress = true;
-		}
-
 		div.appendChild(d);
-	}
-
-	if (fortress) {
-		for (x = 0; x < resources.length; x++) {
-			resource = resources[x];
-
-			box = document.getElementById(resource['id']);
-			box.onchange = function () {
-				CheckFortress(this.id);
-			};
-		}
 	}
 
 	for (x = 0; x < queues.length; x++) {
@@ -174,15 +152,13 @@ function PrintAccountResources(user) {
 		div.appendChild(d);
 	}
 
-	if (queues.length == 0 && pendingmemberofqueues.length == 0 && pendingresources.length == 0 && fortress) {
-		div.appendChild(document.createTextNode("These resources are available to anyone on campus with the approval of a faculty or staff member. An email notification will be sent to this person to review this request."));
-	}
+	if (queues.length == 0
+	&& pendingmemberofqueues.length == 0
+	&& pendingresources.length == 0
+	&& resources.length == 0) {
+		var notice = document.getElementById("no-resources");
+		notice.classList.remove('d-none');
 
-	if (queues.length == 0 && pendingmemberofqueues.length == 0 && pendingresources.length == 0 && resources.length == 0) {
-		var text = document.createElement("p");
-		text.innerHTML = 'The faculty or group you select does not participate in any current <a href="/services/communityclusters/">Community Clusters</a>.<br/><br/><strong>NOTE:</strong> This request form does not support requesting Data Depot at this time. You will need to ask your faculty member/advisor directly to add you to the appropriate groups from the <a href="/account/user/">Manage Users</a> page (they should have access to this link).<br/><br/>You may try searching by your Department as some have queues they may grant you access to. If you are collaborating with another faculty member, try searching their name instead.<br/><br/>Otherwise, your faculty may purchase access to the <a href="/services/communityclusters/">Community Cluster Program</a>.';
-		text.className = 'alert alert-warning';
-		div.appendChild(text);
 		document.getElementById("comments").style.display = "none";
 		document.getElementById("controls").style.display = "none";
 	}
@@ -315,9 +291,9 @@ function SubmitRequest() {
 				$('#errors').addClass('alert').addClass('alert-danger').text("There was an error processing your request.");
 			});
 		})
-			.fail(function () {
-				$('#errors').addClass('alert').addClass('alert-danger').text("There was an error processing your request.");
-			})
+		.fail(function () {
+			$('#errors').addClass('alert').addClass('alert-danger').text("There was an error processing your request.");
+		})
 	).done(function () {
 		//window.location = url;
 		$('#errors').addClass('alert').addClass('alert-success').text("Your request has been submitted.");
@@ -334,136 +310,9 @@ function SubmitRequest() {
 }
 
 /**
- * Check Fortress
- *
- * @param   {string}  id
- * @return  {void}
- */
-function CheckFortress(id) {
-	var fortress = document.getElementById(ROOT_URL + "resource/48");
-	var clicked = document.getElementById(id);
-
-	if (fortress == clicked) {
-		return;
-	}
-
-	if (clicked.checked == true) {
-		fortress.checked = true;
-		fortress.disabled = true;
-	} else if (clicked.checked == false) {
-		var resources = document.getElementById("resourcelist").getElementsByTagName("input");
-		var keepfortress = false;
-		for (var x = 0; x < resources.length; x++) {
-			if (resources[x].id != ROOT_URL + "resource/48" && resources[x].checked == true) {
-				keepfortress = true;
-				break;
-			}
-		}
-
-		if (!keepfortress) {
-			fortress.disabled = false;
-		}
-	}
-}
-
-/**
- * Remove a queue
- *
- * @param   {string}  id
- * @param   {string}  name
- * @param   {string}  resource
- * @return  {void}
- */
-/*function RemoveQueue(id, name, resource) {
-	if (confirm("Are you sure you wish to remove access to the queue '" + name + "' (" + resource + ")? \n\nIf this is your last queue on this cluster your account will be removed. Please make an off-site backup of all important data before removing access.")) {
-		WSDeleteURL(id, function (xml) {
-			if (xml.status < 400) {
-				location.reload(true);
-			} else {
-				alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact help.");
-			}
-		});
-	}
-}*/
-
-/**
- * Cancel a queue request
- *
- * @param   {string}  id
- * @param   {string}  name
- * @param   {string}  resource
- * @return  {void}
- */
-/*function CancelQueueRequest(id, name, resource) {
-	if (confirm("Are you sure you wish to cancel this request for access to the queue '" + name + "' (" + resource + ")? ")) {
-		WSDeleteURL(id, function (xml) {
-			if (xml.status < 400) {
-				location.reload(true);
-			} else {
-				alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact help.");
-			}
-		});
-	}
-}*/
-
-/**
- * Cancel a resource request
- *
- * @param   {string}  id
- * @param   {array}   resources
- * @return  {void}
- */
-/*function CancelResourceRequest(id, resources) {
-	var del = false;
-
-	if (resources.length > 0) {
-		var r = "";
-		for (var x = 0; x < resources.length; x++) {
-			r = r + resources[x]['name'] + "\n";
-		}
-		del = confirm("Are you sure you wish this request?\n\nYou must request cancel this request in full, including requests for:\n\n" + r);
-	} else {
-		del = confirm("Are you sure you wish this request?\n\nYou must request cancel this request in full.\n\n");
-	}
-
-	if (del) {
-		WSDeleteURL(id, function (xml) {
-			if (xml.status < 400) {
-				location.reload(true);
-			} else {
-				alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact help.");
-			}
-		});
-	}
-}*/
-
-/**
- * Request group
- *
- * @param   {number}  unixgroup
- * @param   {number}  user
- * @return  {void}
- */
-function RequestGroup(unixgroup, user) {
-	var post = {
-		'unixgroupid': unixgroup,
-		'userid': user
-	};
-
-	WSPostURL(ROOT_URL + "unixgroups/members", JSON.stringify(post), function (xml) {
-		if (xml.status < 400) {
-			alert("You have been added to the access list for this software. Changes will take up to 4 hours to propagate to all cluster nodes.");
-			location.reload(true)
-		} else {
-			alert("An error occurred.")
-		}
-	});
-}
-
-/**
  * Initiate event hooks
  */
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function () {
 	var results = [];
 
 	$('.searchgroups').autocomplete({
@@ -491,28 +340,42 @@ $(document).ready(function () {
 		select: function (event, ui) {
 			var data = results[ui.item.id];
 
-			$.ajax({
-				url: data['api'],
-				type: 'get',
-				dataType: 'json',
-				async: false,
-				success: function (response) {
-					document.getElementById("person").style.display = "none";
-					document.getElementById("group").style.display = "block";
-					document.getElementById("groupname").innerHTML = response['name'];
-					document.getElementById("selected-group").value = response['id'];
-
-					var names = [];
-					for (var x = 0; x < response['department'].length; x++) {
-						names.push(response['department'][x]['name']);
-					}
-					document.getElementById("dept").innerHTML = names.join(', ');
-
-					PrintAccountResources(response);
-				},
-				error: function () { // xhr, ajaxOptions, thrownError
-					alert("An error occurred while processing request. Please wait a few minutes and try again. If problem persists contact help");
+			fetch(data['api'], {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 				}
+			})
+			.then(function (response) {
+				if (response.ok) {
+					return response.json();
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					msg = (typeof msg === 'object' ? Object.values(msg).join('<br />') : msg);
+					throw msg;
+				});
+			})
+			.then(function (res) {
+				var notice = document.getElementById("no-resources");
+				notice.classList.add('d-none');
+
+				document.getElementById("person").style.display = "none";
+				document.getElementById("group").style.display = "block";
+				document.getElementById("groupname").innerHTML = res['name'];
+				document.getElementById("selected-group").value = res['id'];
+
+				var names = [];
+				for (var x = 0; x < res['department'].length; x++) {
+					names.push(res['department'][x]['name']);
+				}
+				document.getElementById("dept").innerHTML = names.join(', ');
+
+				PrintAccountResources(res);
+			})
+			.catch(function (error) {
+				alert(error);
 			});
 		}
 	});
@@ -536,16 +399,6 @@ $(document).ready(function () {
 		el.addEventListener('click', function (e) {
 			e.preventDefault();
 			SubmitRequest();
-		});
-	});
-
-	document.querySelectorAll('.btn-software-request').forEach(function (el) {
-		el.addEventListener('click', function (e) {
-			e.preventDefault();
-			RequestGroup(
-				el.getAttribute('data-group'),
-				el.getAttribute('data-user')
-			);
 		});
 	});
 });

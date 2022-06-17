@@ -53,8 +53,8 @@
 				</div>
 			</div><!-- / #request_header -->
 
-			<div id="selection_info" class="request-selection">
-				<div id="person" class="card" style="display: none">
+			<div id="selection_info">
+				<div id="person" class="card request-selection" style="display: none">
 					<div class="card-header">
 						<strong>1)</strong> Person Selected:
 					</div>
@@ -73,7 +73,7 @@
 					</div>
 					<input type="hidden" id="selected-user" value="" />
 				</div>
-				<div id="group" class="card" style="display: none">
+				<div id="group" class="card request-selection" style="display: none">
 					<div class="card-header">
 						<strong>1)</strong> Group Selected:
 					</div>
@@ -100,6 +100,7 @@
 				</div>
 				<div class="card-body">
 					<div id="resourcelist">
+						<span class="text-muted">{{ trans('global.none') }}</span>
 					</div>
 				</div>
 			</div><!-- / #resources -->
@@ -110,9 +111,17 @@
 				</div>
 				<div class="card-body">
 					<div id="queuelist">
+						<span class="text-muted">{{ trans('global.none') }}</span>
 					</div>
 				</div>
 			</div><!-- / #queues -->
+
+			<div id="no-resources" class="alert alert-warning d-none">
+				<p>The faculty or group you select does not participate in any current <a href="/services/communityclusters/">Community Clusters</a>.</p>
+				<p><strong>NOTE:</strong> This request form does not support requesting Data Depot at this time. You will need to ask your faculty member/advisor directly to add you to the appropriate groups from the <a href="/account/user/">Manage Users</a> page (they should have access to this link).</p>
+				<p>You may try searching by your Department as some have queues they may grant you access to. If you are collaborating with another faculty member, try searching their name instead.</p>
+				<p>Otherwise, your faculty may purchase access to the <a href="/services/communityclusters/">Community Cluster Program</a>.</p>
+			</div>
 
 			<div id="comments" class="card request-selection" style="display: none">
 				<div class="card-header">
