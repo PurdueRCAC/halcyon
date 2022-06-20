@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 use App\Modules\Publications\Models\Type;
 use App\Modules\Publications\Models\Publication;
 use App\Modules\Publications\Helpers\Download;
@@ -252,7 +253,49 @@ class PublicationsController extends Controller
 			return redirect()->back()->withError($error);
 		}
 
-		return $this->redirect(route('site.publications.index'))->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created')));
+		if ($request->has('file'))
+		{
+			// Doing this by file extension is iffy at best but
+			// detection by contents productes `txt`
+			$file = $request->file('file');
+			$filename = $file->getClientOriginalName();
+
+			$parts = explode('.', $filename);
+			$extension = end($parts);
+			$extension = strtolower($extension);
+
+			if (!in_array($extension, ['pdf', 'docx']))
+			{
+				return redirect()->back()->withError(trans('publications::publications.errors.invalid file type'));
+			}
+
+			$filename = str_replace(' ', '-', $filename);
+			$filename = preg_replace('/[^a-zA-Z0-9\-\_\.]+/', '', $filename);
+
+			$disk = $request->input('disk', 'public');
+			$path = 'publications/' . $row->id; //$row->path(false);
+
+			// Check if directory already exists
+			if (!Storage::disk($disk)->exists($path))
+			{
+				// Create new directory
+				if (!Storage::disk($disk)->makeDirectory($path))
+				{
+					return redirect()->back()->withError(trans('publications::publications.errors.failed to make upload directory'));
+				}
+			}
+
+			Storage::disk($disk)->putFileAs(
+				$path,
+				$file,
+				$filename
+			);
+
+			$row->filename = $filename;
+			$row->save();
+		}
+
+		return redirect(route('site.publications.index'))->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**

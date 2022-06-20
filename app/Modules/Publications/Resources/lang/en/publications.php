@@ -68,4 +68,5 @@ return [
 	'filters' => [
 		'state' => 'State',
 	],
+	'attach' => 'Attach',
 ];

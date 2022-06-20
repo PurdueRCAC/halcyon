@@ -8,12 +8,24 @@
 <script src="{{ asset('modules/publications/js/site.js?v=' . filemtime(public_path() . '/modules/publications/js/site.js')) }}"></script>
 @endpush
 
+@php
+app('pathway')
+	->append(
+		trans('publications::publications.publications'),
+		route('site.publications.index')
+	)
+	->append(
+		trans('global.create'),
+		route('site.publications.create')
+	);
+@endphp
+
 @section('title') {{ trans('publications::publications.module name') }}: {{ $row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create') }} @stop
 
 @section('content')
 <h2 class="mt-0">{{ trans('publications::publications.publications') }}: {{ $row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create') }}</h2>
 
-<form action="{{ route('site.publications.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+<form action="{{ route('site.publications.store') }}" method="post" name="adminForm" id="item-form" class="editform" enctype="multipart/form-data">
 
 	@if ($errors->any())
 		<div class="alert alert-danger">
@@ -233,6 +245,31 @@
 				<div class="form-group">
 					<label for="field-note">{{ trans('publications::publications.note') }}</label>
 					<textarea name="note" id="field-note" class="form-control" maxlength="2000" rows="3" cols="40">{{ $row->note }}</textarea>
+				</div>
+			</fieldset>
+
+			<fieldset>
+				<legend>{{ trans('publications::publications.attach') }}</legend>
+
+				@if ($row->hasAttachment())
+				<div class="form-group">
+					{{ $row->filename }}
+
+					<button class="btn btn-delete text-danger">
+						<span class="fa fa-trash" aria-hidden="true"></span>
+						<span class="sr-only">{{ trans('global.button.delete') }}</span>
+					</button>
+				</div>
+				@endif
+
+				<div class="form-group dropzone">
+					<div id="uploader" class="fallback" data-instructions="Click or Drop files" data-list="#uploader-list">
+						<label for="upload">Choose a file<span class="dropzone__dragndrop"> or drag it here</span></label>
+						<input type="file" name="file" id="upload" class="form-control-file" />
+					</div>
+					<div class="file-list" id="uploader-list"></div>
+					<input type="hidden" name="tmp_dir" id="ticket-tmp_dir" value="{{ ('-' . time()) }}" />
+					<span class="form-text text-muted">Accepted formats: <code>pdf</code>, <code>docx</code></span>
 				</div>
 			</fieldset>
 		</div>

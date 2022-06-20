@@ -198,11 +198,12 @@ class Publication extends Model
 	/**
 	 * Does this have an attachment
 	 *
+	 * @param bool $full
 	 * @return string
 	 */
-	public function path()
+	public function path($full = true)
 	{
-		return storage_path('app/public/publications/' . $this->id . '/' . $this->filename);
+		return storage_path('app/public/publications/' . $this->id . ($full ? '/' . $this->filename : ''));
 	}
 
 	/**
@@ -212,6 +213,10 @@ class Publication extends Model
 	 */
 	public function hasAttachment()
 	{
+		if (!$this->id)
+		{
+			return false;
+		}
 		return file_exists($this->path());
 	}
 
