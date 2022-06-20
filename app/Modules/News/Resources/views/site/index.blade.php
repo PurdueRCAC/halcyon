@@ -28,7 +28,7 @@
 
 @php
 app('pathway')->append(
-	config('news.name'),
+	trans('news::news.news'),
 	route('site.news.index')
 );
 @endphp
