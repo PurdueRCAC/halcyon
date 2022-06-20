@@ -100,7 +100,7 @@ $(document).ready(function () {
 				form.addEventListener('drop', function (e) {
 					droppedFiles = e.target.files || e.dataTransfer.files; // the files that were dropped
 					input.files = droppedFiles;
-					//showFiles(droppedFiles);
+					showFiles(droppedFiles);
 				});
 			}
 
