@@ -166,6 +166,8 @@ app('pathway')
 			<fieldset class="adminform">
 				<legend>{{ trans('mailer::mailer.send to') }}</legend>
 
+				<p class="form-text">{{ trans('mailer::mailer.send to hint') }}</p>
+
 				<div class="form-group">
 					<label for="field-user">{{ trans('mailer::mailer.to') }}</label>
 					<input type="text" name="user" id="field-user" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" value="" />

@@ -17,6 +17,7 @@ return [
 	'created' => 'Created',
 	'modified' => 'Last Modified',
 	'sent at' => 'Sent',
+	'send to hint' => 'Search for users or enter email addresses, separated by commas.',
 	'input text' => 'Input text',
 	'output text' => 'Output text',
 	'send' => 'Send',
