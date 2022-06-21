@@ -27,24 +27,30 @@ class AssetPath
 	 */
 	public function handlePageContentIsRendering(PageContentIsRendering $event)
 	{
-		$content = preg_replace_callback('/\ssrc="(.*?)"/i', function($matches)
+		// Target image elements as iframes can also have a `src` attribute
+		$content = preg_replace_callback('/<img([^>]+)>/i', function($match)
 		{
-			if (substr($matches[1], 0, 4) == 'http')
+			$html = preg_replace_callback('/\ssrc="(.*?)"/i', function($matches)
 			{
-				return ' src="' . $matches[1] . '"';
-			}
+				if (substr($matches[1], 0, 4) == 'http')
+				{
+					return ' src="' . $matches[1] . '"';
+				}
 
-			if (substr($matches[1], 0, 7) == '/files/')
-			{
-				$matches[1] = substr($matches[1], 7);
-			}
+				if (substr($matches[1], 0, 7) == '/files/')
+				{
+					$matches[1] = substr($matches[1], 7);
+				}
 
-			if (substr($matches[1], 0, 6) == 'files/')
-			{
-				$matches[1] = substr($matches[1], 6);
-			}
+				if (substr($matches[1], 0, 6) == 'files/')
+				{
+					$matches[1] = substr($matches[1], 6);
+				}
 
-			return ' src="' . asset("files/" . ltrim($matches[1], '/')) . '"';
+				return ' src="' . asset("files/" . ltrim($matches[1], '/')) . '"';
+			}, $match[0]);
+
+			return $html;
 		}, $event->getBody());
 		$content = preg_replace('/ src="\/include\/images\/(.*?)"/i', ' src="' . asset("files/$1") . '"', $content);
 
