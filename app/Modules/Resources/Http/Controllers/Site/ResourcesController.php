@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Models\Type;
 use App\Modules\Resources\Events\AssetDisplaying;
+use App\Modules\Resources\Events\TypeDisplaying;
 
 class ResourcesController extends Controller
 {
@@ -79,6 +80,11 @@ class ResourcesController extends Controller
 			->orderBy('display', 'desc')
 			->get();
 
+		$type->name = trans('resources::resources.type resources', ['type' => $type->name]);
+
+		event($event = new TypeDisplaying($type));
+		$type = $event->type;
+
 		return view('resources::site.type', [
 			'type' => $type,
 			'items' => $rows,
@@ -124,6 +130,11 @@ class ResourcesController extends Controller
 			->whereNotNull('description')
 			->orderBy('display', 'desc')
 			->get();
+
+		$type->name = trans('resources::resources.type retired resources', ['type' => $type->name]);
+
+		event($event = new TypeDisplaying($type));
+		$type = $event->type;
 
 		return view('resources::site.type', [
 			'type'  => $type,

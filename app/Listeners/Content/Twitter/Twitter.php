@@ -5,6 +5,7 @@ use App\Modules\Pages\Events\PageMetadata;
 use App\Modules\Knowledge\Events\PageMetadata as KnowledgeMetadata;
 use App\Modules\News\Events\ArticleMetadata;
 use App\Modules\Resources\Events\AssetDisplaying;
+use App\Modules\Resources\Events\TypeDisplaying;
 use Illuminate\Config\Repository;
 use Illuminate\Support\Str;
 
@@ -25,6 +26,7 @@ class Twitter
 		$events->listen(KnowledgeMetadata::class, self::class . '@handlePageMetadata');
 		$events->listen(ArticleMetadata::class, self::class . '@handlePageMetadata');
 		$events->listen(AssetDisplaying::class, self::class . '@handleAssetDisplaying');
+		$events->listen(TypeDisplaying::class, self::class . '@handleTypeDisplaying');
 	}
 
 	/**
@@ -69,6 +71,29 @@ class Twitter
 			'title' => $asset->name,
 			'description' => $asset->description,
 			'image' => $asset->picture
+		]);
+	}
+
+	/**
+	 * Event after content has been displayed
+	 *
+	 * @param   TypeDisplaying  $event
+	 * @return  string
+	 */
+	public function handleTypeDisplaying($event)
+	{
+		if (!app()->has('isAdmin')
+		 || app()->get('isAdmin'))
+		{
+			return;
+		}
+
+		$type = $event->type;
+
+		$event->type = $this->buildTags($type, [
+			'title' => $type->name,
+			'description' => $type->description,
+			'image' => null
 		]);
 	}
 
@@ -171,7 +196,6 @@ class Twitter
 
 		// Description
 		$desc = $page->metadesc;
-		$desc = $desc ?: $params->get('description');
 		if (!$desc)
 		{
 			// Clean up cases where content may be just encoded whitespace
@@ -187,6 +211,7 @@ class Twitter
 			}
 			$desc = $content;
 		}
+		$desc = $desc ?: $params->get('description');
 
 		if ($desc)
 		{

@@ -1,18 +1,34 @@
 @extends('layouts.master')
 
-@section('title'){{ $type->name . ($retired ? ': ' . trans('resources::resources.retired') : '') }}@stop
+@section('title'){{ $type->name }}@stop
+
+@if ($type->metadata)
+	@foreach ($type->metadata->all() as $k => $v)
+		@if ($v)
+			@if ($v == '__comment__')
+				@push('meta')
+		{!! $k !!}
+@endpush
+			@else
+				@push('meta')
+		{!! $v !!}
+@endpush
+			@endif
+		@endif
+	@endforeach
+@endif
 
 @php
 app('pathway')
 	->append(
-		$type->name,
+		$type->getOriginal('name'),
 		($retired ? route('site.resources.type.' . $type->alias) : route('site.resources.' . $type->alias . '.show', ['name' => $type->alias]))
 	);
 
 	if ($retired):
 		app('pathway')->append(
 			trans('resources::resources.retired'),
-			route('site.resources.' . strtolower($type->name) . '.retired')
+			route('site.resources.' . $type->alias . '.retired')
 		);
 	endif;
 @endphp
@@ -40,7 +56,7 @@ app('pathway')
 </div>
 
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
-	<h2>{{ $retired ? trans('resources::resources.type retired resources', ['type' => $type->name]) : trans('resources::resources.type resources', ['type' => $type->name]) }}</h2>
+	<h2>{{ $type->name }}</h2>
 	@if ($type->description)
 		{!! $type->description !!}
 	@endif

@@ -100,7 +100,7 @@ class Type extends Model
 	 */
 	public function getAliasAttribute()
 	{
-		$name = strtolower($this->name);
+		$name = strtolower($this->getOriginal('name'));
 		$name = str_replace(' ', '-', $name);
 
 		return $name;
