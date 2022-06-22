@@ -1,4 +1,3 @@
-/* global $ */ // jquery.js
 
 function validate() {
 	var value = document.getElementById('menu_assignment').value,
@@ -33,18 +32,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			select.addEventListener('change', function () {
 				validate();
 			});
-		});
-	}
-
-	var nativedatalist = !!('list' in document.createElement('input')) && !!(document.createElement('datalist') && window.HTMLDataListElement);
-
-	if (!nativedatalist) {
-		document.querySelectorAll('input[list]').forEach(function (el) {
-			var availableTags = $('#' + el.getAttribute("list")).find('option').map(function () {
-				return this.value;
-			}).get();
-
-			$(this).autocomplete({ source: availableTags });
 		});
 	}
 

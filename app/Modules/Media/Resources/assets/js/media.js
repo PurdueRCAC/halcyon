@@ -4,7 +4,7 @@
 
 var _DEBUG = 0;
 
-if (typeof ('Dropzone') !== undefined) {
+if (typeof Dropzone !== 'undefined') {
 	Dropzone.autoDiscover = false;
 }
 

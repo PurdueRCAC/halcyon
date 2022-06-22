@@ -1,6 +1,7 @@
 /* global $ */ // jquery.js
 /* global Halcyon */ // core.js
 /* global Chart */ // vendor/chartjs/Chart.min.js
+/* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 
 /**
  * Get and return array of objects
@@ -323,10 +324,11 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	document.getElementById('main').addEventListener('click', function (e) {
+		var el = e.target;
+
 		if (e.target.matches('.comment-edit') || e.target.parentNode.matches('.comment-edit') || e.target.matches('.comment-cancel')) {
 			e.preventDefault();
 
-			var el = e.target;
 			if (e.target.parentNode.matches('.comment-edit')) {
 				el = e.target.parentNode;
 			}
@@ -338,7 +340,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (e.target.matches('.comment-delete') || e.target.parentNode.matches('.comment-delete')) {
 			e.preventDefault();
 
-			var el = e.target;
 			if (e.target.parentNode.matches('.comment-delete')) {
 				el = e.target.parentNode;
 			}

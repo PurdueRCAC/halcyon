@@ -297,14 +297,16 @@ function NEWSDateSearch(box) {
 			}
 			// If a start time is set and an end time is not...
 			if (stoptime == "" && starttime != "") {
-				var stoptime = starttime;
+				stoptime = starttime;
+
+				var timeInt, minutes;
 
 				// If it's the same day, and an end time isn't set,
 				// default it to one hour later
 				if (start) {
 					if (!stop || stop == start) {
-						var timeInt = parseInt(starttime);
-						var minutes = starttime.substring(3, 5);
+						timeInt = parseInt(starttime);
+						minutes = starttime.substring(3, 5);
 						var ampm = starttime.substring(-1);
 
 						if (ampm == 'PM') {
@@ -322,7 +324,7 @@ function NEWSDateSearch(box) {
 						if (min < 10) {
 							min = '0' + min;
 						}
-						var ampm = 'AM';
+						ampm = 'AM';
 						if (hr > 12) {
 							hr -= 12;
 							ampm = 'PM';
@@ -332,8 +334,8 @@ function NEWSDateSearch(box) {
 					}
 				} else {
 					// No dates set, so just bump the time by an hour
-					var timeInt = parseInt(starttime) + 1;
-					var minutes = starttime.substring(3, 5);
+					timeInt = parseInt(starttime) + 1;
+					minutes = starttime.substring(3, 5);
 
 					if (starttime > '12:00') {
 						stoptime = `${timeInt - 12}:${minutes} PM`;
@@ -2701,7 +2703,7 @@ function PreviewExample(example) {
 			document.getElementById('help1' + example + 'output').innerHTML = response['formattedbody'];
 		},
 		error: function (xhr) {
-			Halcyon.message('danger', xhr.responseJSON.message);
+			alert(xhr.responseJSON.message);
 		}
 	});
 }

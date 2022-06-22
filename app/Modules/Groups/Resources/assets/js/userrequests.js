@@ -1,5 +1,4 @@
 /* global $ */ // jquery.js
-/* global alert */ // common.js
 
 var UserRequests = {
 	/**

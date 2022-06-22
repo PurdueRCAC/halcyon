@@ -1,6 +1,6 @@
 
 /* global $ */ // jquery.js
-/* global Halcyon */ // core.js
+/* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 
 /**
  * Get and return array of objects

@@ -1,6 +1,7 @@
 /* global $ */ // jquery.js
 /* global Halcyon */ // core.js
 /* global WSGetURL */ // common.js
+/* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 
 /**
  * New directory type
