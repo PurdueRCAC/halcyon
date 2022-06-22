@@ -68,7 +68,6 @@ class TypesController extends Controller
 		else
 		{
 			$rows = Type::tree($filters['order'], $filters['order_dir']);
-			$root = array_shift($rows);
 
 			$total = count($rows);
 			$rows = array_slice($rows, $filters['start'], $filters['limit']);
@@ -99,7 +98,7 @@ class TypesController extends Controller
 		}
 
 		$parents = Type::query()
-			->where('parent_id', '=', 0)
+			->where('parentid', '=', 0)
 			->orderBy('name', 'asc')
 			->get();
 
@@ -171,7 +170,7 @@ class TypesController extends Controller
 
 		$parents = Type::query()
 			->where('id', '!=', $id)
-			->where('parent_id', '=', 0)
+			->where('parentid', '=', 0)
 			->orderBy('name', 'asc')
 			->get();
 

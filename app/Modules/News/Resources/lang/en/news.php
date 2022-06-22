@@ -40,6 +40,7 @@ return [
 	'modifier' => 'Modifier',
 	'removed' => 'Removed',
 	'type' => 'Type',
+	'parent' => 'Parent',
 	'publish up' => 'Date from',
 	'time from' => 'Time from',
 	'publish down' => 'Date to',
