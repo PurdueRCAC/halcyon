@@ -124,7 +124,7 @@ class UnixGroupsController extends Controller
 		{
 			$filters['search'] = strtolower((string)$filters['search']);
 
-			$query->where(function($where)
+			$query->where(function($where) use ($filters)
 			{
 				$where->where('longname', 'like', '%' . $filters['search'] . '%')
 					->orWhere('shortname', 'like', '%' . $filters['search'] . '%');
