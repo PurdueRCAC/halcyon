@@ -31,7 +31,7 @@ class MotdController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
-	 * 			"default":   25
+	 * 			"default":   20
 	 * 		}
 	 * }
 	 * @apiParameter {

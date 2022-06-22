@@ -63,7 +63,7 @@ class UnixGroupMembersController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
-	 * 			"default":   25
+	 * 			"default":   20
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -136,12 +136,12 @@ class UnixGroupMembersController extends Controller
 		{
 			$filters['search'] = strtolower((string)$filters['search']);
 
-			$g = (new UnixGroupMember)->getTableName();
-			$u = (new User)->getTableName();
+			$g = (new UnixGroupMember)->getTable();
+			$u = (new User)->getTable();
 
 			$query->select($g . '.*');
 			$query->innerJoin($u, $u . '.id', $g . '.userid');
-			$query->where(function($where) use ($u)
+			$query->where(function($where) use ($u, $filters)
 			{
 				$where->where($u . '.name', 'like', '%' . $filters['search'] . '%')
 					->orWhere($u . '.username', 'like', '%' . $filters['search'] . '%');
