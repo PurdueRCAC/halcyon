@@ -14,6 +14,7 @@ use App\Modules\Groups\Models\UnixGroupMember;
 use App\Modules\Groups\Events\UnixGroupMemberCreating;
 use App\Modules\Groups\Events\UnixGroupMemberCreated;
 use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\UserUsername;
 
 /**
  * Unix group members
@@ -138,13 +139,15 @@ class UnixGroupMembersController extends Controller
 
 			$g = (new UnixGroupMember)->getTable();
 			$u = (new User)->getTable();
+			$uu = (new UserUsername)->getTable();
 
-			$query->select($g . '.*');
-			$query->innerJoin($u, $u . '.id', $g . '.userid');
-			$query->where(function($where) use ($u, $filters)
+			$query->select($g . '.*', $u . '.name', $uu . '.username');
+			$query->join($u, $u . '.id', $g . '.userid');
+			$query->join($uu, $uu . '.userid', $g . '.userid');
+			$query->where(function($where) use ($u, $uu, $filters)
 			{
 				$where->where($u . '.name', 'like', '%' . $filters['search'] . '%')
-					->orWhere($u . '.username', 'like', '%' . $filters['search'] . '%');
+					->orWhere($uu . '.username', 'like', '%' . $filters['search'] . '%');
 			});
 		}
 
