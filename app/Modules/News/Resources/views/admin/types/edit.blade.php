@@ -53,9 +53,19 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
+					<label for="field-parentid">{{ trans('news::news.parent') }}:</label>
+					<select name="fields[parentid]" id="field-parentid" class="form-control" value="{{ $row->parent_id }}">
+						<option value="0">{{ trans('global.none') }}</option>
+						@foreach ($parents as $parent)
+							<option value="{{ $parent->id }}"<?php if ($parent->id == $row->parent_id) { echo ' selected="selected"'; } ?>>{{ $parent->name }}</option>
+						@endforeach
+					</select>
+				</div>
+
+				<div class="form-group">
 					<label for="field-name">{{ trans('news::news.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[name]" id="field-name" class="form-control required" required maxlength="250" value="{{ $row->name }}" />
-					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid name') }}</span>
+					<span class="invalid-feedback">{{ trans('news::news.error.invalid name') }}</span>
 				</div>
 
 				<div class="row">

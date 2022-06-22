@@ -109,6 +109,9 @@ app('pathway')
 					{{ $row->id }}
 				</td>
 				<td>
+					@if ($row->level > 0)
+						<span class="gi">{!! str_repeat('|&mdash;', $row->level) !!}</span>
+					@endif
 					@if (auth()->user()->can('edit news.types'))
 						<a href="{{ route('admin.news.types.edit', ['id' => $row->id]) }}">
 							{{ $row->name }}
@@ -192,7 +195,7 @@ app('pathway')
 		</div>
 	</div>
 
-	{{ $rows->render() }}
+	{{ $paginator->render() }}
 	@else
 		<div class="card mb-4">
 			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>

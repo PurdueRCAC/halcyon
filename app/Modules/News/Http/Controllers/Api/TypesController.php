@@ -178,6 +178,7 @@ class TypesController extends Controller
 			'location'  => null,
 			'future'    => null,
 			'ongoing'   => null,
+			'parentid'  => null,
 			'limit'     => config('list_limit', 20),
 			'order'     => Type::$orderBy,
 			'order_dir' => Type::$orderDir,
@@ -226,6 +227,11 @@ class TypesController extends Controller
 		if (!is_null($filters['ongoing']))
 		{
 			$query->where('ongoing', '=', $filters['ongoing']);
+		}
+
+		if (!is_null($filters['parentid']))
+		{
+			$query->where('parentid', '=', $filters['parentid']);
 		}
 
 		$rows = $query
@@ -350,6 +356,15 @@ class TypesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "parentid",
+	 * 		"description":   "Parent type ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"200": {
 	 * 			"description": "Successful entry creation",
@@ -387,6 +402,7 @@ class TypesController extends Controller
 			'tagusers' => 'nullable|boolean',
 			'calendar' => 'nullable|boolean',
 			'url' => 'nullable|url',
+			'parentid' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -560,6 +576,15 @@ class TypesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "parentid",
+	 * 		"description":   "Parent type ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"200": {
 	 * 			"description": "Successful entry modification",
@@ -598,6 +623,7 @@ class TypesController extends Controller
 			'tagusers' => 'nullable|boolean',
 			'calendar' => 'nullable|boolean',
 			'url' => 'nullable|url',
+			'parentid' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);

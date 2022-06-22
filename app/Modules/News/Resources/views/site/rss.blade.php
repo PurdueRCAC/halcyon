@@ -59,7 +59,7 @@ app('pathway')
 		</li>
 		<?php
 		$resourceNewsTypes = array();
-		$types = App\Modules\News\Models\Type::query()->orderBy('name', 'asc')->get();
+		$types = App\Modules\News\Models\Type::tree();
 
 		if (count($types)):
 			foreach ($types as $n):
@@ -73,6 +73,9 @@ app('pathway')
 				endif;
 				?>
 				<li class="form-check">
+					@if ($n->level > 0)
+						<span class="text-muted">{!! str_repeat('|&mdash;', $n->level) !!}</span>
+					@endif
 					<input class="form-check-input rssCheckbox" value="{{ $n->name }}" id="checkbox{{ str_replace(' ', '', $n->name) }}" type="checkbox" />
 					<label class="form-check-label" for="checkbox{{ str_replace(' ', '', $n->name) }}">
 						<a target="_blank" class="rss" href="{{ route('site.news.feed', ['name' => $n->name]) }}">

@@ -71,7 +71,7 @@ app('pathway')->append(
 					</div>
 				</div>
 				<?php
-				$articles = $type->articles()
+				$articles = $type->allArticles()
 					->wherePublished()
 					->orderBy('datetimenews', 'desc')
 					->limit(config('modules.news.limit', 5))

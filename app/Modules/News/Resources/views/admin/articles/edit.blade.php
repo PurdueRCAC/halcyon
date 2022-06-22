@@ -92,6 +92,15 @@ trans('news::news.module name'): {{ $row->id ? trans('global.edit') . ': #' . $r
 								data-url="{{ $type->url }}"
 								data-future="{{ $type->future }}"
 								data-ongoing="{{ $type->ongoing }}">{{ $type->name }}</option>
+							@foreach ($type->children as $child)
+								<option value="{{ $child->id }}"<?php if ($row->newstypeid == $child->id): echo ' selected="selected"'; endif;?>
+									data-tagresources="{{ $child->tagresources }}"
+									data-tagusers="{{ $child->tagusers }}"
+									data-location="{{ $child->location }}"
+									data-url="{{ $child->url }}"
+									data-future="{{ $child->future }}"
+									data-ongoing="{{ $child->ongoing }}">|_ {{ $child->name }}</option>
+							@endforeach
 						<?php endforeach; ?>
 					</select>
 					<span class="invalid-feedback">{{ trans('news::news.error.invalid type') }}</span>

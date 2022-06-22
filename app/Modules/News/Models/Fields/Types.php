@@ -24,19 +24,27 @@ class Types extends Select
 	 */
 	protected function getOptions()
 	{
-		$items = Type::query()
+		/*$items = Type::query()
 			->select(['id AS value', 'name AS text'])
 			->orderBy('name', 'asc')
-			->get();
+			->get();*/
 
-		$menus = array();
-		foreach ($items as $menu)
+		$items = Type::tree();
+
+		$types = array();
+		foreach ($items as $item)
 		{
-			$menus[] = $menu;
+			$item->value = $item->id;
+			$item->text = $item->name;
+			if ($item->level > 0)
+			{
+				$item->text = str_repeat('|&mdash;', $item->level) . ' ' . $item->name;
+			}
+			$types[] = $item;
 		}
 
 		// Merge any additional options in the XML definition.
-		$options = array_merge(parent::getOptions(), $menus);
+		$options = array_merge(parent::getOptions(), $types);
 
 		return $options;
 	}

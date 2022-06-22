@@ -162,8 +162,8 @@ app('pathway')
 					<div class="col-sm-10">
 						<select id="newstype" name="newstype" class="form-control">
 							<option id="OPTION_all" name="all" value="-1">{{ trans('global.all') }}</option>
-							@foreach ($types as $type)
-								<option value="{{ $type->id }}"<?php if ($filters['newstype'] == $type->id) { echo ' selected="selected"'; } ?> data-tagresources="{{ $type->tagresources }}" data-taglocation="{{ $type->location }}">{{ $type->name }}</option>
+							@foreach (App\Modules\News\Models\Type::tree() as $type)
+								<option value="{{ $type->id }}"<?php if ($filters['newstype'] == $type->id) { echo ' selected="selected"'; } ?> data-tagresources="{{ $type->tagresources }}" data-taglocation="{{ $type->location }}">{{ ($type->level ? str_repeat('|_', $type->level) . ' ' : '') . $type->name }}</option>
 							@endforeach
 						</select>
 					</div>

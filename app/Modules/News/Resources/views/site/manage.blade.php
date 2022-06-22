@@ -142,8 +142,8 @@
 							<div class="col-sm-10">
 								<select id="newstype" name="newstype" class="custom-select">
 									<option id="OPTION_all" value="-1">All</option>
-									@foreach ($types as $type)
-										<option value="{{ $type->id }}"<?php if ($filters['newstype'] == $type->id) { echo ' selected="selected"'; } ?> data-tagresources="{{ $type->tagresources }}" data-tagusers="{{ $type->tagusers }}" data-taglocation="{{ $type->location }}"  data-tagurl="{{ $type->url }}">{{ $type->name }}</option>
+									@foreach (App\Modules\News\Models\Type::tree() as $type)
+										<option value="{{ $type->id }}"<?php if ($filters['newstype'] == $type->id) { echo ' selected="selected"'; } ?> data-tagresources="{{ $type->tagresources }}" data-taglocation="{{ $type->location }}">{{ ($type->level ? str_repeat('|_', $type->level) . ' ' : '') . $type->name }}</option>
 									@endforeach
 								</select>
 							</div>

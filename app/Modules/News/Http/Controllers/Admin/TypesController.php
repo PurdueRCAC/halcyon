@@ -40,6 +40,7 @@ class TypesController extends Controller
 			$filters[$key] = $request->state('news.types.filter_' . $key, $key, $default);
 		}
 		$filters['page'] = $reset ? 1 : $filters['page'];
+		$filters['start'] = ($filters['limit'] * $filters['page']) - $filters['limit'];
 
 		if (!in_array($filters['order'], ['id', 'name']))
 		{
@@ -51,20 +52,35 @@ class TypesController extends Controller
 			$filters['order_dir'] = Type::$orderDir;
 		}
 
-		$query = Type::query();
-
 		if ($filters['search'])
 		{
-			$query->where('name', 'like', '%' . $filters['search'] . '%');
+			$query = Type::query();
+
+			if ($filters['search'])
+			{
+				$query->where('name', 'like', '%' . $filters['search'] . '%');
+			}
+
+			$rows = $query
+				->orderBy($filters['order'], $filters['order_dir'])
+				->paginate($filters['limit'], ['*'], 'page', $filters['page']);
+		}
+		else
+		{
+			$rows = Type::tree($filters['order'], $filters['order_dir']);
+			$root = array_shift($rows);
+
+			$total = count($rows);
+			$rows = array_slice($rows, $filters['start'], $filters['limit']);
 		}
 
-		$rows = $query
-			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
+		$paginator = new \Illuminate\Pagination\LengthAwarePaginator($rows, $total, $filters['limit'], $filters['page']);
+		$paginator->withPath(route('admin.news.types'));
 
 		return view('news::admin.types.index', [
 			'filters' => $filters,
 			'rows'    => $rows,
+			'paginator' => $paginator,
 		]);
 	}
 
@@ -82,8 +98,14 @@ class TypesController extends Controller
 			$row->fill($fields);
 		}
 
+		$parents = Type::query()
+			->where('parent_id', '=', 0)
+			->orderBy('name', 'asc')
+			->get();
+
 		return view('news::admin.types.edit', [
-			'row' => $row
+			'row' => $row,
+			'parents' => $parents,
 		]);
 	}
 
@@ -97,6 +119,7 @@ class TypesController extends Controller
 	{
 		$rules = [
 			'fields.name' => 'required|string|max:32',
+			'fields.parentid' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -146,8 +169,15 @@ class TypesController extends Controller
 			$row->fill($fields);
 		}
 
+		$parents = Type::query()
+			->where('id', '!=', $id)
+			->where('parent_id', '=', 0)
+			->orderBy('name', 'asc')
+			->get();
+
 		return view('news::admin.types.edit', [
-			'row' => $row
+			'row' => $row,
+			'parents' => $parents,
 		]);
 	}
 

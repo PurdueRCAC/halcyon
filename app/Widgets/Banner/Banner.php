@@ -52,8 +52,9 @@ class Banner extends Widget
 		if ($id = (int)$this->params->get('catid'))
 		{
 			$type = Type::findOrFail($id);
+			$ids = array_merge([$id], $type->children->pluck('id')->toArray());
 
-			$query->where('newstypeid', '=', $id);
+			$query->whereIn('newstypeid', $ids);
 		}
 
 		$outages = $query
@@ -67,6 +68,7 @@ class Banner extends Widget
 		if ($id = (int)$this->params->get('catid2'))
 		{
 			$type2 = Type::findOrFail($id);
+			$ids = array_merge([$id], $type2->children->pluck('id')->toArray());
 
 			$maintenance = Article::query()
 				->wherePublished()
@@ -94,7 +96,7 @@ class Banner extends Widget
 								});
 						});
 				})
-				->where('newstypeid', '=', $id)
+				->whereIn('newstypeid', $ids)
 				->orderBy('datetimenews', 'asc')
 				->limit($this->params->get('limit', 1))
 				->get();

@@ -165,6 +165,38 @@ class Type extends Model
 	}
 
 	/**
+	 * Defines a relationship to articles of this type and its child types
+	 *
+	 * @return  object
+	 */
+	public function allArticles()
+	{
+		$ids = array_merge([$this->id], $this->children->pluck('id')->toArray());
+
+		return Article::query()->whereIn('newstypeid', $ids);
+	}
+
+	/**
+	 * Defines a relationship to child types
+	 *
+	 * @return  object
+	 */
+	public function children()
+	{
+		return $this->hasMany(self::class, 'parentid');
+	}
+
+	/**
+	 * Defines a relationship to parent type
+	 *
+	 * @return  object
+	 */
+	public function parent()
+	{
+		return $this->belongsTo(self::class, 'parentid');
+	}
+
+	/**
 	 * Find a model by its primary key.
 	 *
 	 * @param  mixed  $id
@@ -177,7 +209,7 @@ class Type extends Model
 
 		return static::query()
 			->where('name', '=', $name)
-			->orWhere('name', 'like', '%' . $name . '%')
+			//->orWhere('name', 'like', '%' . $name . '%')
 			->first($columns);
 	}
 
@@ -189,12 +221,20 @@ class Type extends Model
 	 */
 	public function delete(array $options = [])
 	{
-		// Remove children
 		foreach ($this->articles as $article)
 		{
 			if (!$article->delete($options))
 			{
 				$this->addError($article->getError());
+				return false;
+			}
+		}
+
+		foreach ($this->children as $child)
+		{
+			if (!$child->delete($options))
+			{
+				$this->addError($child->getError());
 				return false;
 			}
 		}
@@ -231,6 +271,85 @@ class Type extends Model
 	public function getDownloadCalendarLinkAttribute()
 	{
 		return route('site.news.calendar', ['name' => strtolower($this->name)]);
+	}
+
+	/**
+	 * Defines a relationship to parent
+	 *
+	 * @return  object
+	 */
+	public static function tree(string $order = 'name', string $dir = 'asc')
+	{
+		$rows = self::query()
+			->orderBy($order, $dir)
+			->get();
+
+		$list = array();
+
+		if (count($rows) > 0)
+		{
+			$levellimit = 9999;
+			$list       = array();
+			$children   = array();
+
+			// First pass - collect children
+			foreach ($rows as $k)
+			{
+				$pt = $k->parentid;
+
+				if (!isset($children[$pt]))
+				{
+					$children[$pt] = array();
+				}
+				$children[$pt][] = $k;
+			}
+
+			// Second pass - get an indent list of the items
+			$list = self::treeRecurse(0, $list, $children, max(0, $levellimit-1));
+		}
+
+		return $list;
+	}
+
+	/**
+	 * Recursive function to build tree
+	 *
+	 * @param   integer  $id        Parent ID
+	 * @param   array    $list      List of records
+	 * @param   array    $children  Container for parent/children mapping
+	 * @param   integer  $maxlevel  Maximum levels to descend
+	 * @param   integer  $level     Indention level
+	 * @param   integer  $type      Indention type
+	 * @param   string   $prfx
+	 * @return  array
+	 */
+	protected static function treeRecurse(int $id, array $list, array $children, int $maxlevel=9999, int $level=0, int $type=1, string $prfx = '')
+	{
+		if (@$children[$id] && $level <= $maxlevel)
+		{
+			foreach ($children[$id] as $z => $v)
+			{
+				$vid = $v->id;
+				$pt = $v->parentid;
+
+				$list[$vid] = $v;
+				$list[$vid]->name = $list[$vid]->name;
+				$list[$vid]->level = $level;
+				$list[$vid]->children_count = isset($children[$vid]) ? count(@$children[$vid]) : 0;
+
+				$p = '';
+				if ($v->parentid)
+				{
+					$p = $list[$vid]->prefix . $list[$vid]->name;
+				}
+
+				unset($children[$id][$z]);
+
+				$list = self::treeRecurse($vid, $list, $children, $maxlevel, $level+1, $type, $p);
+			}
+			unset($children[$id]);
+		}
+		return $list;
 	}
 
 	/**

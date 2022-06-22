@@ -29,6 +29,7 @@ class ArticlesController extends Controller
 
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
+			->where('parentid', '=', 0)
 			->orderBy('name', 'asc')
 			->get();
 
@@ -83,6 +84,7 @@ class ArticlesController extends Controller
 
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
+			->where('parentid', '=', 0)
 			->orderBy('name', 'asc')
 			->get();
 
@@ -94,7 +96,7 @@ class ArticlesController extends Controller
 	}
 
 	/**
-	 * Show the form for editing the specified resource.
+	 * Show the list of available feeds
 	 * 
 	 * @return Response
 	 */
@@ -106,6 +108,7 @@ class ArticlesController extends Controller
 
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
+			->where('parentid', '=', 0)
 			->orderBy('name', 'asc')
 			->get();
 
@@ -143,6 +146,10 @@ class ArticlesController extends Controller
 					}
 
 					$types[] = $row;
+					foreach ($row->children as $child)
+					{
+						$types[] = $child;
+					}
 				}
 				else
 				{
@@ -151,6 +158,10 @@ class ArticlesController extends Controller
 					if ($row)
 					{
 						$types[] = $row;
+						foreach ($row->children as $child)
+						{
+							$types[] = $child;
+						}
 						continue;
 					}
 
@@ -234,7 +245,11 @@ class ArticlesController extends Controller
 			$filters[$key] = $request->input($key, $default);
 		}
 
-		$types = Type::query()->orderBy('name', 'asc')->get();
+		$types = Type::query()
+			->where('name', 'NOT LIKE', 'coffee%')
+			->where('parentid', '=', 0)
+			->orderBy('name', 'asc')
+			->get();
 
 		$templates = Article::where('template', '=', 1)->where('published', '=', 1)->get();
 
@@ -306,7 +321,7 @@ class ArticlesController extends Controller
 		}
 		else
 		{
-			$query = $row->articles()
+			$query = $row->allArticles()
 				->wherePublished()
 				->where('template', '=', 0);
 		}
@@ -350,6 +365,7 @@ class ArticlesController extends Controller
 
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
+			->where('parentid', '=', 0)
 			->orderBy('name', 'asc')
 			->get();
 
@@ -455,7 +471,7 @@ class ArticlesController extends Controller
 
 			$name .= ' ' . $type->name;
 
-			$events = $type->articles()
+			$events = $type->allArticles()
 				->wherePublished()
 				->where('datetimenews', '>=', $n->modify('-1 year')->format('Y-m-d') . ' 00:00:00')
 				->get();

@@ -404,7 +404,9 @@ class ArticlesController extends Controller
 
 		if ($filters['type'])
 		{
-			$query->where($n . '.newstypeid', '=', $filters['type']);
+			$type = Type::findOrFail($filters['type']);
+			$types = array_merge([$type->id], $type->children->pluck('id')->toArray());
+			$query->whereIn($n . '.newstypeid', $types);
 		}
 
 		if ($filters['id'])
