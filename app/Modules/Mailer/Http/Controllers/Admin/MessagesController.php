@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\UserUsername;
 use App\Modules\Groups\Models\Member;
 use App\Modules\History\Models\Log;
 use App\Modules\Mailer\Models\Message;
@@ -266,10 +267,15 @@ class MessagesController extends Controller
 
 			if (count($groups) > 0)
 			{
+				$g = (new Member)->getTable();
+				$uu = (new UserUsername)->getTable();
+
 				$results = Member::query()
-					->select('userid')
-					->whereIn('groupid', (array)$groups)
-					->where('membertype', '!=', 4)
+					->select($g . '.userid')
+					->join($uu, $uu . '.userid', $g . '.userid')
+					->whereIn($g . '.groupid', (array)$groups)
+					->where($g . '.membertype', '!=', 4)
+					->whereNull($uu . '.dateremoved')
 					->get()
 					->pluck('userid')
 					->toArray();
