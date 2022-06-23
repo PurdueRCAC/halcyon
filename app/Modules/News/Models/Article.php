@@ -115,6 +115,13 @@ class Article extends Model
 	];
 
 	/**
+	 * Original end date
+	 *
+	 * @var object
+	 */
+	protected $originalend = false;
+
+	/**
 	 * Page metadata
 	 *
 	 * @var  object
@@ -289,41 +296,55 @@ class Article extends Model
 	}
 
 	/**
-	 * Get the end ttime before any changes or updates
+	 * Get the end time before any changes or updates
 	 *
 	 * @return  Carbon
 	 */
 	public function getOriginalDatetimenewsendAttribute()
 	{
-		$dt = $this->datetimenewsend;
-
-		if ($this->hasEnd() && $this->isModified())
+		if (!$this->originalend)
 		{
-			// Find the first update datetime
-			$first = $this->updates()->orderBy('datetimecreated', 'asc')->first();
+			$dt = $this->datetimenewsend;
 
-			if ($first)
+			if ($this->hasEnd() && $this->isModified())
 			{
-				$before = $this->history()
-					->where('created_at', '<', $first->datetimecreated->toDateTimeString())
-					->orderBy('created_at', 'desc')
-					->get();
+				// Find the first update datetime
+				$first = $this->updates()->orderBy('datetimecreated', 'asc')->first();
 
-				foreach ($before as $item)
+				if ($first)
 				{
-					if (isset($item->old->datetimenewsend)
-					 && isset($item->new->datetimenewsend)
-					 && $item->old->datetimenewsend != $item->new->datetimenewsend
-					 && $item->old->datetimenewsend != null)
+					$before = $this->history()
+						->where('created_at', '<', $first->datetimecreated->toDateTimeString())
+						->orderBy('created_at', 'desc')
+						->get();
+
+					foreach ($before as $item)
 					{
-						$dt = Carbon::parse($item->old->datetimenewsend);
-						break;
+						//if (isset($item->old->datetimenewsend)
+						//&& isset($item->new->datetimenewsend)
+						//&& $item->old->datetimenewsend != $item->new->datetimenewsend
+						//&& $item->old->datetimenewsend != null)
+						if (isset($item->new->datetimenewsend)
+						&& $item->new->datetimenewsend != null)
+						{
+							if (strstr($item->new->datetimenewsend, 'T'))
+							{
+								$dt = Carbon::parse($item->new->datetimenewsend)->tz(config('app.timezone'));
+							}
+							else
+							{
+								$dt = Carbon::parse($item->new->datetimenewsend);
+							}
+							break;
+						}
 					}
 				}
 			}
+
+			$this->originalend = $dt;
 		}
 
-		return $dt;
+		return $this->originalend;
 	}
 
 	/**
@@ -1028,6 +1049,8 @@ class Article extends Model
 			'datetime'       => '%datetime%',
 			'time'           => '%time%',
 			'updatedatetime' => '%updatedatetime%',
+			'updatedate'     => '%updatedate%',
+			'updatetime'     => '%updatetime%',
 			'startdatetime'  => '%startdatetime%',
 			'startdate'      => '%startdate%',
 			'starttime'      => '%starttime%',
@@ -1042,13 +1065,22 @@ class Article extends Model
 			$this->vars = null;
 		}
 
+		if (count($this->updates))
+		{
+			$end = $this->originalDatetimenewsend;
+		}
+		else
+		{
+			$end = $this->datetimenewsend;
+		}
+
 		foreach ($vars as $var => $value)
 		{
 			if ($var == 'datetime' || $var == 'date')
 			{
 				if ($this->hasStart())
 				{
-					if (!$this->hasEnd() || $this->datetimenews->format('Y-m-d') == $this->datetimenewsend->format('Y-m-d'))
+					if (!$this->hasEnd() || $this->datetimenews->format('Y-m-d') == $end->format('Y-m-d'))
 					{
 						// single day
 						$date = $this->datetimenews->format('l, F j, Y');
@@ -1057,7 +1089,7 @@ class Article extends Model
 
 						if ($this->hasEnd())
 						{
-							$time = 'from ' . $time . ' - ' . $this->datetimenewsend->format('g:ia');
+							$time = 'from ' . $time . ' - ' . $end->format('g:ia');
 						}
 						else
 						{
@@ -1077,11 +1109,11 @@ class Article extends Model
 					{
 						if ($var == 'date')
 						{
-							$vars[$var] = preg_replace("/&nbsp;/", ' at ', $this->formatDate($this->datetimenews->format('Y-m-d') . ' 00:00:00', $this->datetimenewsend->format('Y-m-d') . ' 00:00:00'));
+							$vars[$var] = preg_replace("/&nbsp;/", ' at ', $this->formatDate($this->datetimenews->format('Y-m-d') . ' 00:00:00', $end->format('Y-m-d') . ' 00:00:00'));
 						}
 						else
 						{
-							$vars[$var] = preg_replace("/&nbsp;/", ' at ', $this->formatDate($this->datetimenews, $this->datetimenewsend));
+							$vars[$var] = preg_replace("/&nbsp;/", ' at ', $this->formatDate($this->datetimenews, $end));
 						}
 					}
 				}
@@ -1128,8 +1160,8 @@ class Article extends Model
 			{
 				if ($this->hasEnd())
 				{
-					$date = $this->datetimenewsend->format('l, F jS, Y');
-					$time = $this->datetimenewsend->format('g:ia T');
+					$date = $end->format('l, F jS, Y');
+					$time = $end->format('g:ia T');
 
 					if ($var == 'endtime')
 					{
@@ -1146,22 +1178,34 @@ class Article extends Model
 				}
 			}
 
-			if ($var == 'updatedatetime')
+			if ($var == 'updatedatetime' || $var == 'updatedate' || $var == 'updatetime')
 			{
-				if ($this->isUpdated())
-				{
-					$vars[$var] = $this->formatDate($this->datetimeupdate);
-				}
-				else
+				if (!$this->isUpdated())
 				{
 					if ($this->datetimecreated)
 					{
-						$vars[$var] = $this->formatDate($this->datetimecreated);
+						$this->datetimeupdate = $this->datetimecreated;
 					}
 					else
 					{
-						$vars[$var] = $this->formatDate(date("Y-m-d H:i:s"));
+						$this->datetimeupdate = Carbon::now();
 					}
+				}
+
+				$date = $this->datetimeupdate->format('l, F jS, Y');
+				$time = $this->datetimeupdate->format('g:ia T');
+
+				if ($var == 'updatetime')
+				{
+					$vars[$var] = $time;
+				}
+				else if ($time == '12:00am' || $var == 'updatedate')
+				{
+					$vars[$var] = $date;
+				}
+				else
+				{
+					$vars[$var] = $date . ' at ' . $time;
 				}
 			}
 		}
