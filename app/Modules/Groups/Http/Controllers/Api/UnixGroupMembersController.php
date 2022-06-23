@@ -117,7 +117,7 @@ class UnixGroupMembersController extends Controller
 	{
 		$filters = array(
 			'search'   => $request->input('search'),
-			'unixgroupid'   => $request->input('groupid'),
+			'unixgroupid'   => $request->input('unixgroupid'),
 			'userid' => $request->input('userid'),
 			// Paging
 			'limit'     => $request->input('limit', config('list_limit', 20)),
