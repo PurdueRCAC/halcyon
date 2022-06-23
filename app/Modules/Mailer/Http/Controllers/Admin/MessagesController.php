@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Modules\Users\Models\User;
+use App\Modules\Groups\Models\Member;
 use App\Modules\History\Models\Log;
 use App\Modules\Mailer\Models\Message;
 use App\Modules\Mailer\Mail\GenericMessage;
@@ -251,6 +252,23 @@ class MessagesController extends Controller
 				->whereIn($b . '.role_id', (array)$role)
 				->get()
 				->pluck('id')
+				->toArray();
+
+			$users = $users + $results;
+		}
+
+		if ($request->has('group'))
+		{
+			$groups = $request->input('group');
+			$groups = explode(',', $groups);
+			$groups = array_map('trim', $groups);
+
+			$results = Member::query()
+				->select('userid')
+				->whereIn('groupid', (array)$groups)
+				->where('membertype', '!=', 4)
+				->get()
+				->pluck('userid')
 				->toArray();
 
 			$users = $users + $results;

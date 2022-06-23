@@ -14,6 +14,7 @@ use App\Modules\Mailer\Models\Message;
 use App\Modules\Mailer\Mail\GenericMessage;
 use App\Modules\History\Models\Log;
 use App\Modules\Users\Models\User;
+use App\Modules\Groups\Models\Member;
 use App\Halcyon\Access\Map;
 use Carbon\Carbon;
 
@@ -516,6 +517,15 @@ class MessagesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
+	 * 		"name":          "group",
+	 * 		"description":   "A comma-separated list of group IDs to email all users in those gorups",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "fromemail",
 	 * 		"description":   "An email address the message is from. Defaults to global site setting.",
 	 * 		"required":      false,
@@ -642,6 +652,23 @@ class MessagesController extends Controller
 				->whereIn($b . '.role_id', (array)$role)
 				->get()
 				->pluck('id')
+				->toArray();
+
+			$users = $users + $results;
+		}
+
+		if ($request->has('group'))
+		{
+			$groups = $request->input('group');
+			$groups = explode(',', $groups);
+			$groups = array_map('trim', $groups);
+
+			$results = Member::query()
+				->select('userid')
+				->whereIn('groupid', (array)$groups)
+				->where('membertype', '!=', 4)
+				->get()
+				->pluck('userid')
 				->toArray();
 
 			$users = $users + $results;

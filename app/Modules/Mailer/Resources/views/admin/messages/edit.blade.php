@@ -166,28 +166,35 @@ app('pathway')
 			<fieldset class="adminform">
 				<legend>{{ trans('mailer::mailer.send to') }}</legend>
 
-				<p class="form-text">{{ trans('mailer::mailer.send to hint') }}</p>
-
 				<div class="form-group">
-					<label for="field-user">{{ trans('mailer::mailer.to') }}</label>
-					<input type="text" name="user" id="field-user" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" value="" />
+					<label for="field-user">{{ trans('mailer::mailer.to individuals') }}</label>
+					<input type="text" name="user" id="field-user" class="form-control form-users" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" value="" />
+					<span class="form-text text-muted">{{ trans('mailer::mailer.send to hint') }}</span>
 				</div>
 
-				<div class="form-group" id="field-roles">
+				<div class="form-group">
+					<label for="field-group">{{ trans('mailer::mailer.to group') }}</label>
+					<input type="text" name="group" id="field-group" class="form-control form-groups" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" value="" />
+				</div>
+
+				<fieldset class="form-group" id="field-roles">
+					<legend>{{ trans('mailer::mailer.to role') }}</legend>
 					<div class="alert alert-warning d-none">{{ trans('mailer::mailer.role confirmation') }}</div>
 					<?php
 					echo App\Halcyon\Html\Builder\Access::roles('role', [], true);
 					?>
-				</div>
+				</fieldset>
 
 				<div class="form-group">
 					<label for="field-cc">{{ trans('mailer::mailer.cc') }}</label>
 					<input type="text" name="cc" id="field-cc" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" value="" />
+					<span class="form-text text-muted">{{ trans('mailer::mailer.send to hint') }}</span>
 				</div>
 
 				<div class="form-group">
 					<label for="field-bcc">{{ trans('mailer::mailer.bcc') }}</label>
 					<input type="text" name="bcc" id="field-bcc" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" value="" />
+					<span class="form-text text-muted">{{ trans('mailer::mailer.send to hint') }}</span>
 				</div>
 			</fieldset>
 		</div>
