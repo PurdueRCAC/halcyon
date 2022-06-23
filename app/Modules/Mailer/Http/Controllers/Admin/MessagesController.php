@@ -262,16 +262,20 @@ class MessagesController extends Controller
 			$groups = $request->input('group');
 			$groups = explode(',', $groups);
 			$groups = array_map('trim', $groups);
+			$groups = array_filter($groups);
 
-			$results = Member::query()
-				->select('userid')
-				->whereIn('groupid', (array)$groups)
-				->where('membertype', '!=', 4)
-				->get()
-				->pluck('userid')
-				->toArray();
+			if (count($groups) > 0)
+			{
+				$results = Member::query()
+					->select('userid')
+					->whereIn('groupid', (array)$groups)
+					->where('membertype', '!=', 4)
+					->get()
+					->pluck('userid')
+					->toArray();
 
-			$users = $users + $results;
+				$users = $users + $results;
+			}
 		}
 
 		$users = array_filter($users);
