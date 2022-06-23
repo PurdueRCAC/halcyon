@@ -183,7 +183,7 @@ class EventRegistered extends Notification
 								'type' => 'plain_text',
 								'text' => $event->location,
 							],
-							'url' => $event->url,
+							'url' => $event->visitableUrl,
 							'style' => 'primary',
 							'action_id' => 'launch_' . $event->id,
 						]);

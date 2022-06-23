@@ -58,4 +58,9 @@ $router->group(['prefix' => 'news'], function (Router $router)
 		'as' => 'site.news.type',
 		'uses' => 'ArticlesController@type',
 	])->where('name', '[a-zA-Z0-9\-_\+\% ]+');
+
+	$router->get('{id}/visit/{token}', [
+		'as' => 'site.news.visit',
+		'uses' => 'ArticlesController@visit',
+	])->where('id', '[0-9]+'); //->where('token', '[0-9]+');
 });

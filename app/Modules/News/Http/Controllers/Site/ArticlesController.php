@@ -19,6 +19,7 @@ class ArticlesController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
+	 * 
 	 * @return Response
 	 */
 	public function index()
@@ -494,7 +495,7 @@ class ArticlesController extends Controller
 
 		// Get event timezone setting
 		// use this in "DTSTART;TZID="
-		$tzName = date_default_timezone_get(); // America/Indianapolis
+		$tzName = date_default_timezone_get();
 
 		$timezone = new DateTimeZone($tzName);
 		$year = date('Y');
@@ -665,6 +666,7 @@ class ArticlesController extends Controller
 
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
+			->where('parentid', '=', 0)
 			->orderBy('name', 'asc')
 			->get();
 
@@ -696,6 +698,7 @@ class ArticlesController extends Controller
 
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
+			->where('parentid', '=', 0)
 			->orderBy('name', 'asc')
 			->get();
 
@@ -703,5 +706,45 @@ class ArticlesController extends Controller
 			'article' => $row,
 			'types' => $types
 		]);
+	}
+
+	/**
+	 * Mark the associated user has having visited
+	 *
+	 * @param   integer  $id
+	 * @return  Response
+	 */
+	public function visit($id, $token)
+	{
+		$token = base64_decode(urldecode($token));
+
+		$row = Article::findOrFail($id);
+
+		if (!$row->url)
+		{
+			abort(404);
+		}
+
+		if (!auth()->user())
+		{
+			$token = 0;
+		}
+
+		if (auth()->user() && auth()->user()->id != $token)
+		{
+			$token = auth()->user()->id;
+		}
+
+		if ($token)
+		{
+			$user = User::findOrFail($token);
+		}
+
+		if ($token)
+		{
+			$row->markVisit($token);
+		}
+
+		return redirect($row->url);
 	}
 }

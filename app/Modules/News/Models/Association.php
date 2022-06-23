@@ -8,6 +8,7 @@ use App\Modules\Users\Models\User;
 use App\Modules\News\Events\AssociationCreated;
 use App\Modules\News\Events\AssociationDeleted;
 use App\Modules\Tags\Traits\Taggable;
+use Carbon\Carbon;
 
 /**
  * News model mapping to associations
@@ -73,8 +74,19 @@ class Association extends Model
 	 * @var  array
 	 */
 	protected $dispatchesEvents = [
-		'created'  => AssociationCreated::class,
-		'deleted'  => AssociationDeleted::class,
+		'created' => AssociationCreated::class,
+		'deleted' => AssociationDeleted::class,
+	];
+
+	/**
+	 * The attributes that should be mutated to dates.
+	 *
+	 * @var  array
+	 */
+	protected $dates = [
+		'datetimecreated',
+		'datetimeremoved',
+		'datetimevisited',
 	];
 
 	/**
@@ -246,5 +258,27 @@ class Association extends Model
 		}
 
 		return $wordCountArr;
+	}
+
+	/**
+	 * Mark the visited date
+	 *
+	 * @return bool
+	 */
+	public function visit()
+	{
+		$this->datetimevisited = Carbon::now();
+
+		return $this->save();
+	}
+
+	/**
+	 * Has the link been visited?
+	 *
+	 * @return bool
+	 */
+	public function hasVisited()
+	{
+		return is_null($this->datetimevisited);
 	}
 }

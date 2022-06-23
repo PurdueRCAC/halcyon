@@ -14,7 +14,10 @@ Your registration for an event has been **<span style="color:red">cancelled</spa
 **Location:** {{ $article->location }} <br />
 @endif
 @if ($article->url)
-**URL:** [{{ \Illuminate\Support\Str::limit($article->url, 50) }}]({{ $article->url }})
+@php
+$url = parse_url($article->url);
+@endphp
+**URL:** [{{ Illuminate\Support\Str::limit($url['host'], 70) . ($url['path'] || $url['query'] ? ' ...' : '') }}]({{ $article->visitableUrl }})
 @endif
 
 @if (count($article->updates))

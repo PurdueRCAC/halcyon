@@ -40,10 +40,6 @@
 						<div class="card-header panel-heading">
 							<h3 class="card-title panel-title crmcontactdate"><a href="{{ route('site.news.show', ['id' => $row->id]) }}">{{ $row->headline }}</a></h3>
 							<ul class="card-meta panel-meta news-meta">
-								@if (auth()->user() && auth()->user()->can('manage news'))
-									<li class="news-date"><span class="newspostdate">{!! trans('posted on date', ['date' => '<time datetime="' . $row->datetimenews->toDateTimeLocalString() . '">' . $row->datetimecreated->format('M d, Y') . '</time>']) !!}</span></li>
-									<li class="news-author"><span class="newsposter">{{ trans('posted by name', ['name' => $row->creator->name]) }}</span></li>
-								@endif
 								<li class="news-date">{!! $row->formatDate($row->datetimenews, $row->datetimenewsend) !!}
 									@if ($row->isToday())
 										@if ($row->isNow())
@@ -60,7 +56,10 @@
 									<li class="news-location">{{ $row->location }}</li>
 								@endif
 								@if ($row->url)
-									<li class="news-url"><a href="{{ $row->url }}">{{ $row->url }}</a></li>
+									<?php
+									$url = parse_url($row->url);
+									?>
+									<li class="news-url"><a href="{{ $row->visitableUrl }}">{{ Illuminate\Support\Str::limit($url['host'], 70) . ($url['path'] || $url['query'] ? ' ...' : '') }}</a></li>
 								@endif
 								<?php
 								if (count($row->resources) > 0):

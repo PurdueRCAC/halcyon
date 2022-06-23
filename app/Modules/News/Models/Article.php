@@ -300,6 +300,50 @@ class Article extends Model
 	 *
 	 * @return  Carbon
 	 */
+	public function getVisitableUrlAttribute()
+	{
+		$userid = auth()->user() ? auth()->user()->id : 0;
+
+		return route('site.news.visit', ['id' => $this->id, 'token' => urlencode(base64_encode($userid))]);
+	}
+
+	/**
+	 * Mark a visit
+	 *
+	 * @param integer $userid
+	 * @return void
+	 */
+	public function markVisit($userid)
+	{
+		$found = false;
+
+		foreach ($this->associations as $i => $assoc)
+		{
+			if ($userid = $assoc->associd)
+			{
+				$assoc->visit();
+				$found = true;
+				break;
+			}
+		}
+
+		if (!$found)
+		{
+			$r = new Association;
+			$r->associd = $userid;
+			$r->assoctype = 'user';
+			$r->newsid = $this->id;
+			$r->datetimevisited = Carbon::now();
+			$r->comment = 'url_visit';
+			$r->save();
+		}
+	}
+
+	/**
+	 * Get the end time before any changes or updates
+	 *
+	 * @return  Carbon
+	 */
 	public function getOriginalDatetimenewsendAttribute()
 	{
 		if (!$this->originalend)
