@@ -110,7 +110,7 @@ $router->group(['prefix' => 'resources'], function (Router $router)
 			'as' => 'api.resources.members.delete',
 			'uses' => 'MembersController@delete',
 			'middleware' => 'can:delete resources.members',
-		])->where('id', '[0-9]+');
+		])->where('id', '[0-9]+\.[0-9]+');
 	});
 
 	$router->get('/', [
