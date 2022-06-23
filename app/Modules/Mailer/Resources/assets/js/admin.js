@@ -1,6 +1,6 @@
 
 /* global $ */ // jquery.js
-/* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
+/* global Halcyon */ // core.js
 
 /**
  * Get and return array of objects
@@ -61,6 +61,46 @@ document.addEventListener('DOMContentLoaded', function () {
 							me.html(me.text().replace(regex, '<b>$1</b>'));
 						});
 				}
+			},
+			'onAddTag': function (input) {
+				if (input.classList.contains('filter-submit')) {
+					$(input).closest('form').submit();
+				}
+			},
+			'onRemoveTag': function (input) {
+				if (input.classList.contains('filter-submit')) {
+					$(input).closest('form').submit();
+				}
+			}
+		});
+	}
+
+	var group = $(".form-groups");
+	if (group.length) {
+		group.tagsInput({
+			placeholder: '',
+			importPattern: /([^:]+):(.+)/i,
+			//limit: 1,
+			'autocomplete': {
+				source: autocompleteList(group.attr('data-uri')),
+				dataName: 'groups',
+				height: 150,
+				delay: 100,
+				minLength: 1,
+				open: function () { //e, ui
+					var acData = $(this).data('ui-autocomplete');
+
+					acData
+						.menu
+						.element
+						.find('.ui-menu-item-wrapper')
+						.each(function () {
+							var me = $(this);
+							var regex = new RegExp('(' + acData.term + ')', "gi");
+							me.html(me.text().replace(regex, '<b>$1</b>'));
+						});
+				}
+				//maxLength: 1
 			},
 			'onAddTag': function (input) {
 				if (input.classList.contains('filter-submit')) {
