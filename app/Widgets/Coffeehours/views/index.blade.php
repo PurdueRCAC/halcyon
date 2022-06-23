@@ -108,10 +108,6 @@ foreach ($rows as $event):
 				<li><span class="fa fa-fw fa-map-marker" aria-hidden="true"></span> {{ $event->location }}</li>
 			@endif
 
-			@if ($event->url && auth()->user())
-				<li><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="{{ $event->url }}">{{ \Illuminate\Support\Str::limit($event->url, 50) }}</a></li>
-			@endif
-
 			<?php
 			$resources = $event->resourceList()->get();
 			if (count($resources) > 0):
@@ -157,6 +153,12 @@ foreach ($rows as $event):
 			endif;
 			?>
 		</ul>
+
+		@if ($event->url)
+			@if ($attending || (auth()->user() && auth()->user()->can('manage news')))
+				<p class="text-center"><a class="btn btn-success" href="{{ $event->visitableUrl }}">{{ trans('widget.coffeehours::coffeehours.join meeting') }}</a></p>
+			@endif
+		@endif
 
 		<div class="sr-only">{!! $event->formattedBody !!}</div>
 

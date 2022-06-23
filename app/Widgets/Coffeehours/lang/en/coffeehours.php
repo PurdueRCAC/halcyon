@@ -11,6 +11,7 @@ return [
 
 	'reserved by' => 'Reserved by :name',
 	'not reserved' => 'Not reserved',
+	'join meeting' => 'Join Meeting',
 
 	// Params
 	'params' => [
