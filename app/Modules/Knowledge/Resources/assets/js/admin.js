@@ -38,11 +38,11 @@ document.addEventListener('DOMContentLoaded', function () {
 			var sel = new TomSelect(el, {
 				plugins: ['dropdown_input']
 			});
-			sel.on('item_add', function () {
+			/*sel.on('item_add', function () {
 				if (el.classList.contains('filter-submit')) {
 					el.closest('form').submit();
 				}
-			});
+			});*/
 		});
 	}
 
