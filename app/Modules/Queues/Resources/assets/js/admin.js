@@ -1,10 +1,14 @@
-/* global $ */ // jquery.js
+/* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 /* global Halcyon */ // core.js
 
 /**
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function () {
+	var headers = {
+		'Content-Type': 'application/json',
+		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+	};
 
 	var elms = document.querySelectorAll('input[required]');
 
@@ -21,44 +25,17 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
-	document.querySelectorAll('.form-groups').forEach(function (group, i) {
-		group = $(group);
-
-		var cl = group.clone()
-			.attr('type', 'hidden')
-			.val(group.val().replace(/([^:]+):/, ''));
-		group
-			.attr('name', 'groupid' + i)
-			.attr('id', group.attr('id') + i)
-			.val(group.val().replace(/(:\d+)$/, ''))
-			.after(cl);
-
-		group.autocomplete({
-			minLength: 2,
-			source: function (request, response) {
-				return $.getJSON(group.attr('data-uri').replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
-					response($.map(data.data, function (el) {
-						return {
-							label: el.name,
-							name: el.name,
-							id: el.id,
-						};
-					}));
-				});
-			},
-			select: function (event, ui) {
-				event.preventDefault();
-				// Set selection
-				group.val(ui.item.label); // display the selected text
-				cl.val(ui.item.id); // save selected id to input
-				return false;
-			}
+	var sselects = document.querySelectorAll('.searchable-select');
+	if (sselects.length) {
+		sselects.forEach(function (select) {
+			new TomSelect(select, { plugins: ['dropdown_input'] });
 		});
-	});
+	}
 
 	var name = document.getElementById('field-name');
 	if (name) {
 		name.addEventListener('keyup', function () {
+			// Strip out some unwanted characters
 			this.value = this.value.toLowerCase()
 				.replace(/\s+/g, '_')
 				.replace(/[^a-z0-9_-]+/g, '');
@@ -148,82 +125,70 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	}
 
-	document.querySelectorAll('.dialog-btn').forEach(function (el) {
-		el.addEventListener('click', function (e) {
-			e.preventDefault();
+	// When selecting a group to sell or loan from, update its list of queues
+	document.querySelectorAll(".form-group-queues").forEach(function (group) {
+		var sel = new TomSelect(group);
+		sel.on('item_add', function (value) {
+			var queue = document.getElementById(group.getAttribute('data-update'));
 
-			$($(this).attr('href')).on('shown.bs.modal', function () {
-				document.querySelectorAll(".form-group-queues").forEach(function (el) {
-					$(el).select2({})
-						.on('select2:select', function (e) {
-							e.preventDefault();
+			// No group. This means we're selling hardware (populating the base group
+			// that all resources will be sold or loaned out from). We do this so we
+			// can keep a better accounting of available resources and act accordingly.
+			if (value == 0) {
+				queue.value = 0;
+				queue.parentNode.classList.add('d-none');
+				return;
+			} else {
+				queue.parentNode.classList.remove('d-none');
+			}
 
-							var group = this;
-							var queue = document.getElementById(group.getAttribute('data-update'));
+			fetch(group.getAttribute('data-queue-api') + '?' + new URLSearchParams({
+				'group': value, //group.value,
+				'subresource': document.getElementById('field-subresourceid').value
+			}), {
+				method: 'GET',
+				headers: headers
+			})
+				.then(function (response) {
+					if (response.ok) {
+						return response.json();
+					}
 
-							if (group.value == 0) {
-								queue.value = 0;
-								queue.parentNode.classList.add('d-none');
-								return;
-							} else {
-								queue.parentNode.classList.remove('d-none');
-							}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.then(function (data) {
+					if (data.data.length > 0) {
+						queue.disabled = false;
+						queue.options.length = 0;
 
-							fetch(group.getAttribute('data-queue-api') + '?' + new URLSearchParams({
-								'group': group.value,
-								'subresource': document.getElementById('field-subresourceid').value
-							}), {
-								method: 'GET',
-								headers: {
-									'Content-Type': 'application/json',
-									'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-								}
-							})
-								.then(function (response) {
-									if (response.ok) {
-										return response.json();
-									}
+						opt = document.createElement('option');
+						opt.value = 0;
+						opt.innerHTML = '(Select Queue)';
+						queue.append(opt);
 
-									return response.json().then(function (data) {
-										var msg = data.message;
-										if (typeof msg === 'object') {
-											msg = Object.values(msg).join('<br />');
-										}
-										throw msg;
-									});
-								})
-								.then(function (data) {
-									if (data.data.length > 0) {
-										queue.disabled = false;
-										queue.options.length = 0;
+						var x, opt;
+						for (x in data.data) {
+							opt = document.createElement("option");
+							opt.innerHTML = data.data[x]['name'] + ' (' + data.data[x]['subresource']['name'] + ')';
+							opt.value = data.data[x]['id'];
 
-										opt = document.createElement('option');
-										opt.value = 0;
-										opt.innerHTML = '(Select Queue)';
-										queue.append(opt);
-
-										var x, opt;
-										for (x in data.data) {
-											opt = document.createElement("option");
-											opt.innerHTML = data.data[x]['name'] + ' (' + data.data[x]['subresource']['name'] + ')';
-											opt.value = data.data[x]['id'];
-
-											queue.append(opt);
-										}
-									}
-								})
-								.catch(function (error) {
-									console.log(error);
-									Halcyon.message('danger', error);
-								});
-
-							return false;
-						});
+							queue.append(opt);
+						}
+					}
+				})
+				.catch(function (error) {
+					Halcyon.message('danger', error);
 				});
-			});
 		});
 	});
 
+	// Update the "cores" field based on the cores-per-node value
 	document.querySelectorAll('.nodes').forEach(function (el) {
 		el.addEventListener('change', function () {
 			var nodecores = this.getAttribute('data-nodes');
@@ -239,6 +204,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
+	// Update the "nodes" field based on the cores-per-node value
 	document.querySelectorAll('.cores').forEach(function (el) {
 		el.addEventListener('change', function () {
 			var nodecores = this.getAttribute('data-cores');
@@ -258,6 +224,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
+	// Create or update a loan/purchase
 	document.querySelectorAll('.queue-dialog-submit').forEach(function (el) {
 		el.addEventListener('click', function (e) {
 			e.preventDefault();
@@ -305,10 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 			fetch(frm.getAttribute('data-api'), {
 				method: (btn.getAttribute('data-action') == 'update' ? 'PUT' : 'POST'),
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-				},
+				headers: headers,
 				body: JSON.stringify(data)
 			})
 				.then(function (response) {
@@ -335,6 +299,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
+	// Delete a loan/purchase
 	document.querySelectorAll('.delete').forEach(function (el) {
 		el.addEventListener('click', function (e) {
 			e.preventDefault();
@@ -344,10 +309,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (confirm(btn.getAttribute('data-confirm'))) {
 				fetch(btn.getAttribute('data-api'), {
 					method: 'DELETE',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-					}
+					headers: headers
 				})
 					.then(function (response) {
 						if (response.ok) {
