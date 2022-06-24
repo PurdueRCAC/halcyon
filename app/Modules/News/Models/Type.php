@@ -207,10 +207,19 @@ class Type extends Model
 	{
 		$name = str_replace('-', ' ', $name);
 
-		return static::query()
+		$result = static::query()
 			->where('name', '=', $name)
-			//->orWhere('name', 'like', '%' . $name . '%')
 			->first($columns);
+
+		if (!$result)
+		{
+			$result = static::query()
+				->where('name', 'like', $name . '%')
+				->orderBy('parentid', 'asc')
+				->first($columns);
+		}
+
+		return $result;
 	}
 
 	/**
