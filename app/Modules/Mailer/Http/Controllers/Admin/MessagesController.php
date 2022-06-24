@@ -332,6 +332,12 @@ class MessagesController extends Controller
 				continue;
 			}
 
+			if (in_array($user->email, $to))
+			{
+				// Already emailed
+				continue;
+			}
+
 			$to[] = $user->email;
 
 			$message = new GenericMessage($row, $user, $from);

@@ -2826,6 +2826,7 @@ html .ts-dropdown .optgroup-header {
 html .ts-dropdown .optgroup:before {
   border-top-color: var(--ui-widget-br);
 }
+html .ts-control>input,
 html .ts-dropdown,
 html .ts-dropdown.form-control,
 .ui-datepicker.ui-widget-content,
@@ -2853,6 +2854,27 @@ html .ts-wrapper.single .ts-control:after {
 }
 html .ts-wrapper.single.dropdown-active .ts-control:after {
   border-color: transparent transparent var(--input-color);
+}
+html .ts-dropdown .create {
+  color: var(--input-color);
+}
+html .ts-dropdown .active.create,
+html .ts-dropdown .create:hover.create,
+html .ts-dropdown .option:hover.create {
+  color: #16181b;
+}
+html .ts-wrapper .ts-dropdown-content .caption {
+  font-size: 85%;
+  /*display: block;*/
+}
+html .ts-wrapper .ts-dropdown-content .email {
+  margin-left: 0.5em;
+}
+html .ts-wrapper .ts-dropdown-content .email:before {
+  content: '<';
+}
+html .ts-wrapper .ts-dropdown-content .email:after {
+  content: '>';
 }
 html .select2-container--default .select2-selection--single,
 html .select2-container--default .select2-selection--single .select2-selection__rendered,
