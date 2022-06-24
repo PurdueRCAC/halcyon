@@ -97,7 +97,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	var newbtn = document.getElementById('toolbar-plus');
 	if (newbtn) {
 		var a = newbtn.querySelector('a');
-		a.setAttribute('data-toggle', 'modal');
+		if (a.href.indexOf('snippets') == -1) {
+			a.setAttribute('data-toggle', 'modal');
+		}
 	}
 
 	// Snippet tree
