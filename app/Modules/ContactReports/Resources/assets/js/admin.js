@@ -1,118 +1,108 @@
-/* global $ */ // jquery.js
+/* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 /* global Halcyon */ // core.js
 /* global Chart */ // vendor/chartjs/Chart.min.js
-/* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
-
-/**
- * Get and return array of objects
- *
- * @param   {string}  url
- * @return  {array}
- */
-var autocompleteList = function (url) {
-	return function (request, response) {
-		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
-			response($.map(data.data, function (el) {
-				if (typeof (el.id) == 'undefined' && typeof (el.username) != 'undefined') {
-					el.id = el.username;
-				}
-				if (typeof (el.username) != 'undefined') {
-					el.name += ' (' + el.username + ')';
-				}
-				if (typeof (el.slug) != 'undefined') {
-					el.id = el.slug;
-				}
-				//var regEx = new RegExp("(" + request.term + ")(?!([^<]+)?>)", "gi");
-				//el.name = el.name.replace(regEx, '<span class="highlight">$1</span>');
-				return {
-					label: el.name,
-					name: el.name,
-					id: el.id,
-				};
-			}));
-		});
-	};
-};
 
 /**
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function () {
-	var newsuser = $(".form-users");
-	if (newsuser.length) {
-		newsuser.tagsInput({
-			placeholder: '',
-			importPattern: /([^:]+):(.+)/i,
-			'autocomplete': {
-				source: autocompleteList(newsuser.attr('data-uri')),
-				dataName: 'users',
-				height: 150,
-				delay: 100,
-				minLength: 1,
-				open: function () { //e, ui
-					var acData = $(this).data('ui-autocomplete');
+	var headers = {
+		'Content-Type': 'application/json',
+		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+	};
 
-					acData
-						.menu
-						.element
-						.find('.ui-menu-item-wrapper')
-						.each(function () {
-							var me = $(this);
-							var regex = new RegExp('(' + acData.term + ')', "gi");
-							me.html(me.text().replace(regex, '<b>$1</b>'));
+	var users = document.querySelectorAll(".form-users");
+	if (users.length) {
+		users.forEach(function (user) {
+			new TomSelect(user, {
+				plugins: {
+					remove_button: {
+						title: 'Remove this user',
+					}
+				},
+				valueField: 'id',
+				labelField: 'name',
+				searchField: ['name', 'username'],
+				persist: false,
+				create: true,
+				load: function (query, callback) {
+					var url = user.getAttribute('data-uri').replace('%s', encodeURIComponent(query));
+
+					fetch(url, {
+						method: 'GET',
+						headers: headers
+					})
+						.then(response => response.json())
+						.then(json => {
+							callback(json.data);
+						}).catch(() => {
+							callback();
 						});
+				},
+				render: {
+					option: function (item, escape) {
+						var name = item.name;
+						var label = name || item.username;
+						var caption = name ? item.username : null;
+						return '<div>' +
+							'<span class="label">' + escape(label) + '</span>' +
+							(caption ? '<span class="caption text-muted">(' + escape(caption) + ')</span>' : '') +
+							'</div>';
+					},
+					item: function (item) {
+						var match = item.name.match(/([^:]+):(.+)/i);
+						if (match) {
+							item.name = match[1];
+							item.id = match[2];
+						}
+
+						return `<div data-id="${escape(item.id)}">${item.name}</div>`;
+					}
 				}
-			},
-			'onAddTag': function (input) {
-				if (input.classList.contains('filter-submit')) {
-					$(input).closest('form').submit();
-				}
-			},
-			'onRemoveTag': function (input) {
-				if (input.classList.contains('filter-submit')) {
-					$(input).closest('form').submit();
-				}
-			}
+			});
 		});
 	}
 
-	var group = $(".form-groups");
-	if (group.length) {
-		group.tagsInput({
-			placeholder: '',
-			importPattern: /([^:]+):(.+)/i,
-			limit: 1,
-			'autocomplete': {
-				source: autocompleteList(group.attr('data-uri')),
-				dataName: 'groups',
-				height: 150,
-				delay: 100,
-				minLength: 1,
-				open: function () { //e, ui
-					var acData = $(this).data('ui-autocomplete');
+	var groups = document.querySelectorAll(".form-groups");
+	if (groups.length) {
+		groups.forEach(function (group) {
+			new TomSelect(group, {
+				plugins: {
+					remove_button: {
+						title: 'Remove this group',
+					}
+				},
+				valueField: 'id',
+				labelField: 'name',
+				searchField: ['name'],
+				persist: false,
+				//create: true,
+				load: function (query, callback) {
+					var url = group.getAttribute('data-uri').replace('%s', encodeURIComponent(query));
 
-					acData
-						.menu
-						.element
-						.find('.ui-menu-item-wrapper')
-						.each(function () {
-							var me = $(this);
-							var regex = new RegExp('(' + acData.term + ')', "gi");
-							me.html(me.text().replace(regex, '<b>$1</b>'));
+					fetch(url, {
+						method: 'GET',
+						headers: headers
+					})
+						.then(response => response.json())
+						.then(json => {
+							callback(json.data);
+						}).catch(() => {
+							callback();
 						});
+				},
+				render: {
+					item: function (item) {
+						var match = item.name.match(/([^:]+):(.+)/i);
+						if (match) {
+							item.name = match[1];
+							item.id = match[2];
+						}
+
+						return `<div data-id="${escape(item.id)}">${escape(item.name)}</div>`;
+					}
 				}
-				//maxLength: 1
-			},
-			'onAddTag': function (input) {
-				if (input.classList.contains('filter-submit')) {
-					$(input).closest('form').submit();
-				}
-			},
-			'onRemoveTag': function (input) {
-				if (input.classList.contains('filter-submit')) {
-					$(input).closest('form').submit();
-				}
-			}
+			});
 		});
 	}
 
@@ -133,7 +123,10 @@ document.addEventListener('DOMContentLoaded', function () {
 				load: function (query, callback) {
 					var url = tag.getAttribute('data-uri').replace('%s', encodeURIComponent(query));
 
-					fetch(url)
+					fetch(url, {
+						method: 'GET',
+						headers: headers
+					})
 						.then(response => response.json())
 						.then(json => {
 							callback(json.data);
@@ -143,43 +136,22 @@ document.addEventListener('DOMContentLoaded', function () {
 				},
 				onDelete: function () { //values
 					tag.closest('form').submit();
-					//return confirm(values.length > 1 ? 'Are you sure you want to remove these ' + values.length + ' items?' : 'Are you sure you want to remove "' + values[0] + '"?');
 				}
 			});
-			/*$(tag).tagsInput({
-				placeholder: tag.getAttribute('placeholder'),
-				importPattern: /([^:]+):(.+)/i,
-				'autocomplete': {
-					source: autocompleteList(tag.getAttribute('data-uri')),
-					dataName: 'tags',
-					height: 150,
-					delay: 100,
-					minLength: 1
-				},
-				'onAddTag': function (input) {
-					if (input.classList.contains('filter-submit')) {
-						$(input).closest('form').submit();
-					}
-				},
-				'onRemoveTag': function (input) {
-					if (input.classList.contains('filter-submit')) {
-						$(input).closest('form').submit();
-					}
-				}
-			});*/
 		});
 	}
 
 	var bselects = document.querySelectorAll('.basic-multiple');
 	if (bselects.length) {
 		bselects.forEach(function (select) {
-			if (typeof TomSelect !== 'undefined') {
-				new TomSelect(select, { plugins: ['dropdown_input', 'remove_button'] });
-			} else if (typeof select2 !== 'undefined') {
-				$(select).select2({
-					placeholder: select.getAttribute('data-placeholder')
-				});
-			}
+			new TomSelect(select, { plugins: ['dropdown_input', 'remove_button'] });
+		});
+	}
+
+	var sselects = document.querySelectorAll('.searchable-select');
+	if (sselects.length) {
+		sselects.forEach(function (select) {
+			new TomSelect(select, { plugins: ['dropdown_input'] });
 		});
 	}
 
@@ -198,24 +170,6 @@ document.addEventListener('DOMContentLoaded', function () {
 					}
 					frm.submit();
 				});
-			} else if (typeof select2 !== 'undefined') {
-				$(select).select2({
-						multiple: true
-					})
-					.on('select2:select', function () {
-						if (this.classList.contains('filter-submit')) {
-							$(this).closest('form').submit();
-						}
-					})
-					.on('select2:unselect', function () {
-						if (this.classList.contains('filter-submit')) {
-							var frm = $(this).closest('form');
-							if (!$(this).val() || !$(this).val().length) {
-								frm.attr('action', frm.attr('action') + '?resource=');
-							}
-							frm.submit();
-						}
-					});
 			} else {
 				select.addEventListener('change', function () {
 					var frm = this.closest('form');
@@ -237,16 +191,13 @@ document.addEventListener('DOMContentLoaded', function () {
 			var comment = document.getElementById(container.getAttribute('id') + '_comment');
 
 			fetch(container.getAttribute('data-api'), {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-					},
-					body: JSON.stringify({
-						'contactreportid': document.getElementById('field-id').value,
-						'comment': comment.value
-					})
+				method: 'POST',
+				headers: headers,
+				body: JSON.stringify({
+					'contactreportid': document.getElementById('field-id').value,
+					'comment': comment.value
 				})
+			})
 				.then(function (response) {
 					if (response.ok) {
 						return response.json();
@@ -350,12 +301,9 @@ document.addEventListener('DOMContentLoaded', function () {
 				var field = document.querySelector(el.getAttribute('href'));
 
 				fetch(field.getAttribute('data-api'), {
-						method: 'DELETE',
-						headers: {
-							'Content-Type': 'application/json',
-							'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-						}
-					})
+					method: 'DELETE',
+					headers: headers
+				})
 					.then(function (response) {
 						if (response.ok) {
 							Halcyon.message('success', 'Item removed');
@@ -385,15 +333,12 @@ document.addEventListener('DOMContentLoaded', function () {
 			var comment = document.getElementById(container.getAttribute('id') + '_comment');
 
 			fetch(container.getAttribute('data-api'), {
-					method: 'PUT',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-					},
-					body: JSON.stringify({
-						'comment': comment.value
-					})
+				method: 'PUT',
+				headers: headers,
+				body: JSON.stringify({
+					'comment': comment.value
 				})
+			})
 				.then(function (response) {
 					if (response.ok) {
 						return response.json();
