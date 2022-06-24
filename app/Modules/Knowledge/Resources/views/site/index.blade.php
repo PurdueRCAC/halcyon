@@ -89,7 +89,7 @@
 				</button>
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="optionsbutton">
 					@if (auth()->user()->can('create knowledge'))
-						<a href="#new-page" data-id="{{ $page->id }}" id="add-page" class="dropdown-item tip" title="{{ trans('knowledge::knowledge.add child page') }}">
+						<a href="#new-page" data-toggle="modal" data-id="{{ $page->id }}" id="add-page" class="dropdown-item tip" title="{{ trans('knowledge::knowledge.add child page') }}">
 							<span class="fa fa-plus" aria-hidden="true"></span> {{ trans('global.button.add') }}
 						</a>
 					@endif
@@ -373,21 +373,31 @@
 		</div>
 		@endif
 		@if (auth()->user()->can('create knowledge'))
-		<div id="new-page" class="dialog" title="{{ trans('knowledge::knowledge.choose type') }}">
-			<h2 class="modal-title sr-only">{{ trans('knowledge::knowledge.choose type') }}</h2>
-
-			<div class="row">
-				<div class="col-md-6">
-					<a href="{{ route('site.knowledge.create', ['parent' => $node->id]) }}" class="form-group form-block text-center">
-						<span class="fa fa-edit" aria-hidden="true"></span>
-						{{ trans('knowledge::knowledge.new page') }}
-					</a>
-				</div>
-				<div class="col-md-6">
-					<a href="{{ route('site.knowledge.select', ['parent' => $node->id]) }}" class="form-group form-block text-center">
-						<span class="fa fa-repeat" aria-hidden="true"></span>
-						{{ trans('knowledge::knowledge.snippet') }}
-					</a>
+		<div class="modal dialog" id="new-page" tabindex="-1" aria-labelledby="new-page-title" aria-hidden="true" title="{{ trans('knowledge::knowledge.choose type') }}">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content dialog-content shadow-sm">
+					<div class="modal-header">
+						<div class="modal-title" id="new-page-title">{{ trans('knowledge::knowledge.choose type') }}</div>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body dialog-body">
+						<div class="row">
+							<div class="col-md-6">
+								<a href="{{ route('site.knowledge.create', ['parent' => $node->id]) }}" class="form-group form-block text-center">
+									<span class="fa fa-edit" aria-hidden="true"></span>
+									{{ trans('knowledge::knowledge.new page') }}
+								</a>
+							</div>
+							<div class="col-md-6">
+								<a href="{{ route('site.knowledge.select', ['parent' => $node->id]) }}" class="form-group form-block text-center">
+									<span class="fa fa-repeat" aria-hidden="true"></span>
+									{{ trans('knowledge::knowledge.snippet') }}
+								</a>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

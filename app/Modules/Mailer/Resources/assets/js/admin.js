@@ -1,11 +1,10 @@
-/* global Halcyon */ // core.js
 /* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 
 /**
  * Email regex
  */
-var REGEX_EMAIL = '([a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@' +
-	'(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)';
+var REGEX_EMAIL = '([a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@' +
+	'(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)';
 
 /**
  * Initiate event hooks
@@ -46,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				},
 				createFilter: function (input) {
 					var regexpA = new RegExp('^' + REGEX_EMAIL + '$', 'i');
-					var regexpB = new RegExp('^([^<]*)\<' + REGEX_EMAIL + '\>$', 'i');
+					var regexpB = new RegExp('^([^<]*)<' + REGEX_EMAIL + '>$', 'i');
 					return regexpA.test(input) || regexpB.test(input);
 				},
 				render: {

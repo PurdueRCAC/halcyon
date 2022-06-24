@@ -1,5 +1,3 @@
-/* global $ */ // jquery.js
-
 /**
  * Convert title to URL segment
  *
@@ -14,6 +12,11 @@ function setAlias() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+	var headers = {
+		'Content-Type': 'application/json',
+		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+	};
+
 	// Feedback
 	document.querySelectorAll('.btn-feedback').forEach(function (el) {
 		el.addEventListener('click', function (e) {
@@ -49,10 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 			fetch(frm.getAttribute('data-api'), {
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-				},
+				headers: headers,
 				body: JSON.stringify(post),
 			})
 				.then(function () {
@@ -170,10 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 			fetch(frm.getAttribute('data-api'), {
 				method: (post['id'] ? 'PUT' : 'POST'),
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-				},
+				headers: headers,
 				body: JSON.stringify(post),
 			})
 				.then(function (response) {
@@ -190,24 +187,6 @@ document.addEventListener('DOMContentLoaded', function () {
 					btn.classList.remove('processing');
 					frm.prepend('<div class="alert alert-danger">' + error + '</div>');
 				});
-		});
-	}
-
-	//----
-
-	var dialog = $("#new-page").dialog({
-		autoOpen: false,
-		height: 250,
-		width: 500,
-		modal: true
-	});
-
-	var addpage = document.getElementById('add-page');
-	if (addpage) {
-		addpage.addEventListener('click', function (e) {
-			e.preventDefault();
-
-			dialog.dialog("open");
 		});
 	}
 

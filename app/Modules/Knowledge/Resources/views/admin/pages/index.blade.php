@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css?v=' . filemtime(public_path('/modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css'))) }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js?v=' . filemtime(public_path('/modules/core/vendor/tom-select/js/tom-select.complete.min.js'))) }}"></script>
 <script src="{{ asset('modules/knowledge/js/admin.js?v=' . filemtime(public_path() . '/modules/knowledge/js/admin.js')) }}"></script>
 @endpush
 
@@ -30,7 +30,7 @@
 	endif;
 
 	if (auth()->user()->can('create knowledge')):
-		Toolbar::addNew(route('admin.knowledge.create'));
+		Toolbar::addNew('#new-page');
 	endif;
 
 	if (auth()->user()->can('admin knowledge')):
@@ -288,30 +288,42 @@
 
 	<input type="hidden" name="boxchecked" value="0" />
 
-	<div id="new-page" class="hide" title="{{ trans('knowledge::knowledge.choose type') }}">
-		<h2 class="modal-title sr-only">{{ trans('knowledge::knowledge.choose type') }}</h2>
-
-		<div class="row">
-			<div class="col-md-4">
-				<a href="{{ route('admin.knowledge.create') }}" class="form-group form-block">
-					<span class="icon-edit" aria-hidden="true"></span>
-					{{ trans('knowledge::knowledge.new page') }}
-				</a>
-			</div>
-			<div class="col-md-4">
-				<a href="{{ route('admin.knowledge.select') }}" class="form-group form-block">
-					<span class="icon-repeat" aria-hidden="true"></span>
-					{{ trans('knowledge::knowledge.snippet') }}
-				</a>
-			</div>
-			<div class="col-md-4">
-				<a href="{{ route('admin.knowledge.create', ['type' => 'separator']) }}" class="form-group form-block">
-					<span class="icon-minus" aria-hidden="true"></span>
-					{{ trans('knowledge::knowledge.separator') }}
-				</a>
+	@if (auth()->user()->can('create knowledge'))
+	<div class="modal dialog" id="new-page" tabindex="-1" aria-labelledby="new-page-title" aria-hidden="true" title="{{ trans('knowledge::knowledge.choose type') }}">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content dialog-content shadow-sm">
+				<div class="modal-header">
+					<div class="modal-title" id="new-page-title">{{ trans('knowledge::knowledge.choose type') }}</div>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body dialog-body">
+					<div class="row">
+						<div class="col-md-4">
+							<a href="{{ route('admin.knowledge.create') }}" class="form-group form-block text-center">
+								<span class="icon-edit fa fa-pencil" aria-hidden="true"></span>
+								{{ trans('knowledge::knowledge.new page') }}
+							</a>
+						</div>
+						<div class="col-md-4">
+							<a href="{{ route('admin.knowledge.select') }}" class="form-group form-block text-center">
+								<span class="icon-repeat fa fa-repeat" aria-hidden="true"></span>
+								{{ trans('knowledge::knowledge.snippet') }}
+							</a>
+						</div>
+						<div class="col-md-4">
+							<a href="{{ route('admin.knowledge.create', ['type' => 'separator']) }}" class="form-group form-block text-center">
+								<span class="icon-minus fa fa-minus" aria-hidden="true"></span>
+								{{ trans('knowledge::knowledge.separator') }}
+							</a>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
+	@endif
 	@csrf
 </form>
 @stop

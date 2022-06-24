@@ -1,4 +1,4 @@
-/* global $ */ // jquery.js
+/* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 
 /**
  * Convert title to URL segment
@@ -32,16 +32,18 @@ document.addEventListener('DOMContentLoaded', function () {
 		alias.addEventListener('keyup', setAlias);
 	}
 
-	var sselects = $('.searchable-select');
+	var sselects = document.querySelectorAll('.searchable-select');
 	if (sselects.length) {
-		$('.searchable-select').select2()
-			.on('select2:select', function () {
-				if (this.classList.contains('filter-submit')) {
-					$(this).closest('form').submit();
-				}
-
-				this.dispatchEvent(new Event('change'));
+		sselects.forEach(function (el) {
+			var sel = new TomSelect(el, {
+				plugins: ['dropdown_input']
 			});
+			sel.on('item_add', function () {
+				if (el.classList.contains('filter-submit')) {
+					el.closest('form').submit();
+				}
+			});
+		});
 	}
 
 	var parent = document.getElementById('field-parent_id');
@@ -94,18 +96,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	var newbtn = document.getElementById('toolbar-plus');
 	if (newbtn) {
-		var dialog = $("#new-page").dialog({
-			autoOpen: false,
-			height: 250,
-			width: 600,
-			modal: true
-		});
-
-		document.getElementById('toolbar-plus').addEventListener('click', function (e) {
-			e.preventDefault();
-
-			dialog.dialog("open");
-		});
+		var a = newbtn.querySelector('a');
+		a.setAttribute('data-toggle', 'modal');
 	}
 
 	// Snippet tree
