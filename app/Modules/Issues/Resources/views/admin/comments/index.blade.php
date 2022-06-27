@@ -1,9 +1,5 @@
 @extends('layouts.master')
 
-@section('scripts')
-<script src="{{ asset('modules/issues/js/admin.js?v=' . filemtime(public_path() . '/modules/issues/js/admin.js')) }}"></script>
-@stop
-
 @section('toolbar')
 	@if (auth()->user()->can('delete issues'))
 		{!! Toolbar::deleteList('', route('admin.issues.comments.delete', ['report' => $report->id])) !!}

@@ -1,9 +1,5 @@
 @extends('layouts.master')
 
-@push('scripts')
-<script src="{{ asset('modules/issues/js/admin.js?v=' . filemtime(public_path() . '/modules/issues/js/admin.js')) }}"></script>
-@endpush
-
 @php
 app('request')->merge(['hidemainmenu' => 1]);
 

@@ -1,26 +1,74 @@
-/* global $ */ // jquery.js
+/* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 /* global Halcyon */ // core.js
 
 /**
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function () {
+	var headers = {
+		'Content-Type': 'application/json',
+		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+	};
+
 	document.querySelectorAll('.issue-todo').forEach(function (el) {
 		el.addEventListener('change', function () {
 			var that = this;
 
 			if (that.checked) {
 				fetch(that.getAttribute('data-api'), {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-							'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-						},
-						body: JSON.stringify({
-							'report': that.getAttribute('data-name'),
-							'issuetodoid': that.getAttribute('data-id')
-						})
+					method: 'POST',
+					headers: headers,
+					body: JSON.stringify({
+						'report': that.getAttribute('data-name'),
+						'issuetodoid': that.getAttribute('data-id')
 					})
+				})
+					.then(function (response) {
+						if (response.ok) {
+							return response.json();
+						}
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
+							}
+							throw msg;
+						});
+					})
+					.then(function (data) {
+						var li = that.closest('li');
+						var fadeEffect = setInterval(function () {
+							if (!li.style.opacity) {
+								li.style.opacity = 1;
+							}
+							if (li.style.opacity > 0) {
+								li.style.opacity -= 0.1;
+							} else {
+								clearInterval(fadeEffect);
+
+								li.classList.add('hide');
+								li.style = '';
+								li.classList.add('complete');
+								li.classList.remove('incomplete');
+								that.setAttribute('data-issue', data.id);
+
+								document.getElementById('checklist_status').dispatchEvent(new Event('change', { bubbles: true }));
+							}
+						}, 200);
+					})
+					.catch(function (error) {
+						var img = that.closest('li').querySelector('.fa');
+						img.className = "fa fa-exclamation-triangle";
+						img.setAttribute('aria-hidden', true);
+						img.parentNode.title = "Unable to save changes, reload the page and try again.";
+
+						Halcyon.message('danger', error);
+					});
+			} else if (that.getAttribute('data-issue')) {
+				fetch(that.getAttribute('data-api') + '/' + that.getAttribute('data-issue'), {
+					method: 'DELETE',
+					headers: headers
+				})
 					.then(function (response) {
 						if (response.ok) {
 							return response.json();
@@ -47,55 +95,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 								li.classList.add('hide');
 								li.style = '';
-								li.classList.add('complete');
-								li.classList.remove('incomplete');
-								that.setAttribute('data-issue', data.id);
-
-								document.getElementById('checklist_status').dispatchEvent(new Event('change', { bubbles: true }));
-							}
-						}, 200);
-					})
-					.catch(function (error) {
-						var img = that.closest('li').querySelector('.fa');
-						img.className = "fa fa-exclamation-triangle";
-						img.parentNode.title = "Unable to save changes, reload the page and try again.";
-
-						Halcyon.message('danger', error);
-					});
-			} else if (that.getAttribute('data-issue')) {
-				fetch(that.getAttribute('data-api') + '/' + that.getAttribute('data-issue'), {
-						method: 'DELETE',
-						headers: {
-							'Content-Type': 'application/json',
-							'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-						}
-					})
-					.then(function (response) {
-						if (response.ok) {
-							return response.json();
-						}
-						return response.json().then(function (data) {
-							var msg = data.message;
-							if (typeof msg === 'object') {
-								msg = Object.values(msg).join('<br />');
-							}
-							throw msg;
-						});
-					})
-					.then(function () {
-						var li = that.closest('li');
-
-						var fadeEffect = setInterval(function () {
-							if (!li.style.opacity) {
-								li.style.opacity = 1;
-							}
-							if (li.style.opacity > 0) {
-								li.style.opacity -= 0.1;
-							} else {
-								clearInterval(fadeEffect);
-
-								li.classList.add('hide');
-								li.style = '';
 								li.classList.add('incomplete');
 								li.classList.remove('complete');
 								that.setAttribute('data-issue', '');
@@ -107,6 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					.catch(function (error) {
 						var img = that.closest('li').querySelector('.fa');
 						img.className = "fa fa-exclamation-triangle";
+						img.setAttribute('aria-hidden', true);
 						img.parentNode.title = "Unable to save changes, reload the page and try again.";
 
 						Halcyon.message('danger', error);
@@ -134,11 +134,14 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
-	$('.basic-multiple').select2({
-		placeholder: $(this).data('placeholder')
-	});
-
-	$('.searchable-select').select2();
+	var mselects = document.querySelectorAll('.basic-multiple');
+	if (mselects.length) {
+		mselects.forEach(function (el) {
+			var sel = new TomSelect(el, {
+				plugins: ['dropdown_input', 'remove_button']
+			});
+		});
+	}
 
 	document.querySelectorAll('.comments-show').forEach(function (el) {
 		el.addEventListener('click', function (e) {
@@ -146,7 +149,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			document.querySelector(this.getAttribute('href')).classList.toggle('hide');
 		});
 	});
-
 
 	document.querySelectorAll('.comment-add').forEach(function (el) {
 		el.addEventListener('click', function (e) {
@@ -163,13 +165,10 @@ document.addEventListener('DOMContentLoaded', function () {
 			};
 
 			fetch(container.getAttribute('data-api'), {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-					},
-					body: JSON.stringify(post)
-				})
+				method: 'POST',
+				headers: headers,
+				body: JSON.stringify(post)
+			})
 				.then(function (response) {
 					if (response.ok) {
 						return response.json();
@@ -259,12 +258,9 @@ document.addEventListener('DOMContentLoaded', function () {
 				var field = document.querySelector(e.target.getAttribute('href'));
 
 				fetch(field.getAttribute('data-api'), {
-						method: 'DELETE',
-						headers: {
-							'Content-Type': 'application/json',
-							'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-						}
-					})
+					method: 'DELETE',
+					headers: headers
+				})
 					.then(function (response) {
 						if (response.ok) {
 							Halcyon.message('success', 'Comment removed');
@@ -294,16 +290,13 @@ document.addEventListener('DOMContentLoaded', function () {
 			var resolution = document.getElementById(container.getAttribute('id') + '_resolution');
 
 			fetch(container.getAttribute('data-api'), {
-					method: 'PUT',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-					},
-					body: JSON.stringify({
-						'comment': comment.value,
-						'resolution': resolution.checked ? 1 : 0
-					})
+				method: 'PUT',
+				headers: headers,
+				body: JSON.stringify({
+					'comment': comment.value,
+					'resolution': resolution.checked ? 1 : 0
 				})
+			})
 				.then(function (response) {
 					if (response.ok) {
 						return response.json();

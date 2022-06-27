@@ -707,11 +707,11 @@ function IssuesPrintRow(report, userid, cls) {
 	article.className = "crm-item " + cls;
 
 	var panel = document.createElement("div");
-	panel.className = "panel panel-default";
+	panel.className = "card";
 
 	// -- Admin header
 	tr = document.createElement("div");
-	tr.className = 'panel-heading crm-admin';
+	tr.className = 'card-header crm-admin';
 
 	// ID
 	td = document.createElement("span");
@@ -784,12 +784,12 @@ function IssuesPrintRow(report, userid, cls) {
 
 	// -- Header
 	var ul = document.createElement("ul");
-	ul.className = 'panel-meta news-meta';
+	ul.className = 'card-meta panel-meta news-meta';
 
 	// Resource list
 	if (report.resources.length > 0) {
 		ul = document.createElement("ul");
-		ul.className = 'panel-meta news-meta';
+		ul.className = 'card-meta panel-meta news-meta';
 
 		li = document.createElement("li");
 		li.className = 'news-tags';
@@ -813,7 +813,7 @@ function IssuesPrintRow(report, userid, cls) {
 
 	// --Body
 	tr = document.createElement("div");
-	tr.className = 'panel-body';
+	tr.className = 'card-body';
 
 	td = document.createElement("div");
 	td.className = "newsposttext";
@@ -863,10 +863,10 @@ function IssuesPrintRow(report, userid, cls) {
 
 	// -- New Comment
 	tr = document.createElement("div");
-	tr.className = 'newcomment panel panel-default';
+	tr.className = 'newcomment card';
 
 	td = document.createElement("div");
-	td.className = "panel-body";
+	td.className = "card-body";
 
 	div = document.createElement("div");
 	div.id = report['id'] + "_newupdate";
@@ -976,15 +976,15 @@ function IssuesPrintComment(issueid, comment, userid) {
 	var panel = document.createElement("div");
 	panel.id = 'comment' + comment['id'];
 	if (comment.resolution == 1) {
-		panel.className = "panel panel-default issue-resolution";
+		panel.className = "card issue-resolution";
 	} else {
-		panel.className = "panel panel-default";
+		panel.className = "card";
 	}
 
 	var div, span, a, img;
 
 	var tr = document.createElement("div");
-	tr.className = 'panel-heading crm-admin';
+	tr.className = 'card-header crm-admin';
 
 	var bits = comment['datetimecreated'].match(/\d+/g);
 	var d = new Date(bits[0], bits[1] - 1, bits[2], bits[3], bits[4], bits[5], 0);
@@ -1070,7 +1070,7 @@ function IssuesPrintComment(issueid, comment, userid) {
 
 
 	div = document.createElement("div");
-	div.className = "panel-body issuescomment issuescommenttext";
+	div.className = "card-body issuescomment issuescommenttext";
 
 	span = document.createElement("span");
 	span.id = comment['id'] + "_comment";
@@ -1143,23 +1143,33 @@ function IssuesPrintComment(issueid, comment, userid) {
  */
 function IssuesDeleteComment(commentid, issueid) {
 	if (confirm("Are you sure you want to delete this comment?")) {
-		WSDeleteURL(ROOT_URL + "issues/comments/" + commentid, function IssuesDeletedComment(xml, arg) {
-			if (xml.status == 200) {
-				document.getElementById(arg['commentid'] + "_comment").parentNode.parentNode.parentNode.style.display = "none";
-
-				/*WSGetURL(ROOT_URL + "issues/" + arg['issueid'], function (xml) {
-					if (xml.status == 200) {
-						var results = JSON.parse(xml.responseText);
-					}
-				});*/
-			} else if (xml.status == 403) {
-				document.getElementById(arg['issueid'] + "_commentdeleteimg").className = "fa fa-exclamation-circle";
-				document.getElementById(arg['issueid'] + "_commentdeleteimg").parentNode.title = "Unable to save changes, grace editing window has passed.";
-			} else {
-				document.getElementById(arg['commentid'] + "_commentdeleteimg").className = "fa fa-exclamation-circle";
-				document.getElementById(arg['commentid'] + "_commentdeleteimg").parentNode.title = "An error occurred while deleting comment.";
+		fetch(ROOT_URL + "issues/comments/" + commentid, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 			}
-		}, { 'commentid': commentid, 'issueid': issueid });
+		})
+			.then(function (response) {
+				if (response.ok) {
+					return response.json();
+				}
+
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.then(function (data) {
+				document.getElementById(commentid + "_comment").parentNode.parentNode.parentNode.style.display = "none";
+			})
+			.catch(function (error) {
+				document.getElementById(commentid + "_commentdeleteimg").className = "fa fa-exclamation-circle";
+				document.getElementById(commentid + "_commentdeleteimg").parentNode.title = error;
+			});
 	}
 }
 
@@ -1171,17 +1181,33 @@ function IssuesDeleteComment(commentid, issueid) {
  */
 function IssuesDeleteReport(issueid) {
 	if (confirm("Are you sure you want to delete this report?")) {
-		WSDeleteURL(ROOT_URL + "issues/" + issueid, function (xml, issueid) {
-			if (xml.status == 200) {
+		fetch(ROOT_URL + "issues/" + issueid, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+			}
+		})
+			.then(function (response) {
+				if (response.ok) {
+					return response.json();
+				}
+
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.then(function (data) {
 				document.getElementById(issueid).style.display = "none";
-			} else if (xml.status == 403) {
-				document.getElementById(issueid + "_issuesdeleteimg").className = "fa fa-exclamation-circle";
-				document.getElementById(issueid + "_issuesdeleteimg").parentNode.title = "Unable to save changes, grace editing window has passed.";
-			} else {
+			})
+			.catch(function (error) {
 				document.getElementById(issueid + "_issuesdeleteimg").className = "fa fa-exclamation-circle";
 				document.getElementById(issueid + "_issuesdeleteimg").parentNode.title = "An error occurred while deleting report.";
-			}
-		}, issueid);
+			});
 	}
 }
 
@@ -1295,9 +1321,9 @@ function IssuesSaveCommentText(comment) {
 
 			var panel = document.getElementById("comment" + comment);
 			if (results.resolution == 1) {
-				panel.className = "panel panel-default issue-resolution";
+				panel.className = "card issue-resolution";
 			} else {
-				panel.className = "panel panel-default";
+				panel.className = "card";
 			}
 
 			var text = document.getElementById(comment + "_comment");
@@ -1418,9 +1444,12 @@ var autocompleteResource = function (url) {
 document.addEventListener('DOMContentLoaded', function () {
 	var frm = document.getElementById('DIV_search');
 	if (frm) {
-		$('.date-pick').on('change', function () {
-			IssuesDateSearch();
+		document.querySelectorAll('.date-pick').forEach(function (el) {
+			el.addEventListener('change', function (e) {
+				IssuesDateSearch();
+			});
 		});
+
 		$('.time-pick').timepicker({
 			timeFormat: "h:i A",
 			minTime: '8:00am',
@@ -1430,27 +1459,32 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		});
 
-		$('#keywords,#id').on('keyup', function (event) {
+		document.getElementById('keywords').addEventListener('keyup', function (event) {
 			IssuesKeywordSearch(event.keyCode);
 		});
-		$('#NotesText').on('keyup', function () {
+		document.getElementById('id').addEventListener('keyup', function (event) {
+			IssuesKeywordSearch(event.keyCode);
+		});
+		document.getElementById('NotesText').addEventListener('keyup', function () {
 			IssuesToggleAddButton();
 		});
-		$('#resolved').on('change', function (event) {
+		document.getElementById('resolved').addEventListener('change', function (event) {
 			event.preventDefault();
 			IssuesSearch();
 		});
 
-		$('#btn-search').on('click', function (event) {
+		document.getElementById('INPUT_search').addEventListener('click', function (event) {
 			event.preventDefault();
 			IssuesSearch();
 		});
-		$('.btn-clear').on('click', function (event) {
-			event.preventDefault();
-			IssuesClearSearch();
+		document.querySelectorAll('.btn-clear').forEach(function (el) {
+			el.addEventListener('click', function (e) {
+				e.preventDefault();
+				IssuesClearSearch();
+			});
 		});
 
-		$('#INPUT_add').on('click', function (event) {
+		document.getElementById('INPUT_add').addEventListener('click', function (event) {
 			event.preventDefault();
 			IssuesAddEntry();
 		});
@@ -1477,9 +1511,9 @@ document.addEventListener('DOMContentLoaded', function () {
 			});
 		}
 
-		var data = $('#report-data');
-		if (data.length) {
-			var orig = JSON.parse(data.html());
+		var data = document.getElementById('report-data');
+		if (data) {
+			var orig = JSON.parse(data.innerHTML);
 			var original = orig.original;
 
 			document.getElementById('datestartshort').value = original.createddate.substring(0, 10);
@@ -1523,123 +1557,134 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
-	if ($('#reports').length) {
+	var reports = document.getElementById('reports');
+	if (reports) {
 		var q = '';
-		if ($('#reports').data('query')) {
-			q = encodeURI($('#reports').data('query'));
+		if (reports.getAttribute('data-query')) {
+			q = encodeURI(reports.getAttribute('data-query'));
 		}
 		WSGetURL(ROOT_URL + "issues" + (q ? '?' + q : ''), IssuesSearched);
 	}
 
-	$('.issue-todo').on('change', function () {
-		var myuserid = document.getElementById("myuserid").value;
+	document.querySelectorAll('.issue-todo').forEach(function (el) {
+		el.addEventListener('change', function (e) {
+			var myuserid = document.getElementById("myuserid").value;
 
-		var post = {
-			'report': $(this).data('name'),
-			'userid': myuserid,
-			'issuetodoid': $(this).data('id')
-		};
+			var post = {
+				'report': this.getAttribute('data-name'),
+				'userid': myuserid,
+				'issuetodoid': this.getAttribute('data-id')
+			};
 
-		var that = $(this);
+			var that = $(this);
 
-		post = JSON.stringify(post);
+			post = JSON.stringify(post);
 
-		WSPostURL(ROOT_URL + "issues/", post, function (xml) {
-			if (xml.status == 200) {
-				$(that.closest('li')).fadeOut();
-			} else {
-				var img = $(that.closest('li')).find('.fa')[0];
-				img.className = "fa fa-exclamation-triangle";
-				img.parentNode.title = "Unable to save changes, reload the page and try again.";
-			}
+			WSPostURL(ROOT_URL + "issues/", post, function (xml) {
+				if (xml.status == 200) {
+					$(that.closest('li')).fadeOut();
+				} else {
+					var img = $(that.closest('li')).find('.fa')[0];
+					img.className = "fa fa-exclamation-triangle";
+					img.parentNode.title = "Unable to save changes, reload the page and try again.";
+				}
+			});
 		});
 	});
 
-	$('.issuetodo-edit').on('click', function (e) {
-		e.preventDefault();
+	document.querySelectorAll('.issuetodo-edit').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		var frm = document.getElementById($(this).attr('href').replace('#', ''));
-		frm.style.display = 'block';
+			var frm = document.getElementById(this.getAttribute('href').replace('#', ''));
+			frm.style.display = 'block';
 
-		var vals = document.getElementById($(this).attr('href').replace('#', '').replace('-form', '-values'));
-		vals.style.display = 'none';
+			var vals = document.getElementById(this.getAttribute('href').replace('#', '').replace('-form', '-values'));
+			vals.style.display = 'none';
 
-		frm = document.getElementById($(this).attr('href').replace('#', '').replace('-form', '-cancel'));
-		frm.style.display = 'inline-block';
+			frm = document.getElementById(this.getAttribute('href').replace('#', '').replace('-form', '-cancel'));
+			frm.style.display = 'inline-block';
 
-		document.getElementById('issuetodo-new').style.display = 'none';
+			document.getElementById('issuetodo-new').style.display = 'none';
 
-		this.style.display = 'none';
-	});
-
-	$('.issuetodo-cancel').on('click', function (e) {
-		e.preventDefault();
-
-		var frm = document.getElementById($(this).attr('href').replace('#', '') + '-form');
-		frm.style.display = 'none';
-
-		var vals = document.getElementById($(this).attr('href').replace('#', '') + '-values');
-		vals.style.display = 'block';
-
-		frm = document.getElementById($(this).attr('href').replace('#', '') + '-edit');
-		frm.style.display = 'inline-block';
-
-		document.getElementById('issuetodo-new').style.display = 'block';
-
-		this.style.display = 'none';
-	});
-
-	$('.issuetodo-delete').on('click', function (e) {
-		e.preventDefault();
-
-		if (!confirm('Are you sure you want to delete this item?')) {
-			return;
-		}
-
-		var that = $(this);
-
-		WSDeleteURL(that.data('id'), function (xml) {
-			if (xml.status == 200) {
-				$(that.closest('li')).fadeOut();
-			} else {
-				var img = $(that.closest('li')).find('.fa')[0];
-				img.className = "fa fa-exclamation-triangle";
-				img.parentNode.title = "Unable to save changes, reload the page and try again.";
-			}
+			this.style.display = 'none';
 		});
 	});
 
-	$('.issuetodo-save').on('click', function (e) {
-		e.preventDefault();
+	document.querySelectorAll('.issuetodo-cancel').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		var id = $(this).data('id');
-		//var frm = document.getElementById('issuetodo' + id + '-form');
-		//var id = original['id'].substr(original['id'].lastIndexOf("/")+1);
+			var frm = document.getElementById(this.getAttribute('href').replace('#', '') + '-form');
+			frm.style.display = 'none';
 
-		var post = {
-			'name': document.getElementById('issuetodo' + id + '-name').value,
-			'description': document.getElementById('issuetodo' + id + '-description').value,
-			'recurringtimeperiod': document.getElementById('issuetodo' + id + '-recurringtimeperiod').value,
-			'userid': document.getElementById("myuserid").value
-		};
+			var vals = document.getElementById(this.getAttribute('href').replace('#', '') + '-values');
+			vals.style.display = 'block';
 
-		var url = id;
-		if (id == 'new') {
-			url = ROOT_URL + "issues/todos";
-		}
+			frm = document.getElementById(this.getAttribute('href').replace('#', '') + '-edit');
+			frm.style.display = 'inline-block';
 
-		var that = $(this);
+			document.getElementById('issuetodo-new').style.display = 'block';
 
-		post = JSON.stringify(post);
+			this.style.display = 'none';
+		});
+	});
 
-		WSPostURL(url, post, function (xml) {
-			if (xml.status == 200) {
-				location.reload();
-			} else {
-				var img = $(that.closest('li')).find('.fa')[0];
-				img.className = "fa fa-exclamation-triangle";
-				img.parentNode.title = "Unable to save changes, reload the page and try again.";
+	document.querySelectorAll('.issuetodo-delete').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			if (!confirm('Are you sure you want to delete this item?')) {
+				return;
 			}
+
+			var that = $(this);
+
+			WSDeleteURL(that.data('id'), function (xml) {
+				if (xml.status == 200) {
+					$(that.closest('li')).fadeOut();
+				} else {
+					var img = $(that.closest('li')).find('.fa')[0];
+					img.className = "fa fa-exclamation-triangle";
+					img.parentNode.title = "Unable to save changes, reload the page and try again.";
+				}
+			});
+		});
+	});
+
+	document.querySelectorAll('.issuetodo-save').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			var id = this.getAttribute('data-id');
+			//var frm = document.getElementById('issuetodo' + id + '-form');
+			//var id = original['id'].substr(original['id'].lastIndexOf("/")+1);
+
+			var post = {
+				'name': document.getElementById('issuetodo' + id + '-name').value,
+				'description': document.getElementById('issuetodo' + id + '-description').value,
+				'recurringtimeperiod': document.getElementById('issuetodo' + id + '-recurringtimeperiod').value,
+				'userid': document.getElementById("myuserid").value
+			};
+
+			var url = id;
+			if (id == 'new') {
+				url = ROOT_URL + "issues/todos";
+			}
+
+			var that = $(this);
+
+			post = JSON.stringify(post);
+
+			WSPostURL(url, post, function (xml) {
+				if (xml.status == 200) {
+					location.reload();
+				} else {
+					var img = $(that.closest('li')).find('.fa')[0];
+					img.className = "fa fa-exclamation-triangle";
+					img.parentNode.title = "Unable to save changes, reload the page and try again.";
+				}
+			});
 		});
 	});
 });
