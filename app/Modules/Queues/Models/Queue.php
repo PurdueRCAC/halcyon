@@ -415,6 +415,54 @@ class Queue extends Model
 	}
 
 	/**
+	 * Get the next upcoming purchase or loan
+	 *
+	 * @return  mixed
+	 */
+	public function getAllocationStart()
+	{
+		$now = Carbon::now();
+
+		$purchase = $this->sizes()
+			->where(function($where) use ($now)
+			{
+				$where->whereNull('datetimestop')
+					->orWhere('datetimestop', '>', $now->toDateTimeString());
+			})
+			//->where('datetimestart', '>', $now->toDateTimeString())
+			->orderBy('datetimestart', 'asc')
+			->first();
+
+		$loan = $this->loans()
+			->where(function($where) use ($now)
+			{
+				$where->whereNull('datetimestop')
+					->orWhere('datetimestop', '>', $now->toDateTimeString());
+			})
+			//->where('datetimestart', '>', $now->toDateTimeString())
+			->orderBy('datetimestart', 'asc')
+			->first();
+
+		if ($purchase)
+		{
+			if (!$loan || $purchase->datetimestart < $loan->datetimestart)
+			{
+				return $purchase->datetimestart;
+			}
+		}
+
+		if ($loan)
+		{
+			if (!$purchase || $loan->datetimestart < $purchase->datetimestart)
+			{
+				return $loan->datetimestart;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Calculate total cores and nodes
 	 *
 	 * @return  void

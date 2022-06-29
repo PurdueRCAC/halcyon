@@ -127,7 +127,7 @@ app('pathway')
 		<table class="table table-hover adminlist">
 			<caption class="sr-only">{{ trans('queues::queues.queues') }}</caption>
 			<thead>
-				<tr>
+				<!-- <tr>
 					<th></th>
 					<th class="priority-5"></th>
 					<th></th>
@@ -139,7 +139,7 @@ app('pathway')
 					<th class="priority-5" colspan="2">{{ trans('queues::queues.cores') }}</th>
 					<th class="priority-2"></th>
 					<th class="priority-6 text-right"></th>
-				</tr>
+				</tr> -->
 				<tr>
 					<th>
 						{!! Html::grid('checkall') !!}
@@ -163,9 +163,9 @@ app('pathway')
 						{!! Html::grid('sort', trans('queues::queues.class'), 'groupid', $filters['order_dir'], $filters['order']) !!}
 					</th>
 					<th scope="col" class="priority-5 text-right">
-						{{ trans('queues::queues.total') }}
+						{{ trans('queues::queues.active allocation') }}
 					</th>
-					<th scope="col" class="priority-5 text-right">
+					<!-- <th scope="col" class="priority-5 text-right">
 						{{ trans('queues::queues.loans') }}
 					</th>
 					<th scope="col" class="priority-5 text-right">
@@ -173,7 +173,7 @@ app('pathway')
 					</th>
 					<th scope="col" class="priority-5 text-right">
 						{{ trans('queues::queues.loans') }}
-					</th>
+					</th> -->
 					<th scope="col" class="priority-2">
 						{{ trans('queues::queues.resource') }}
 					</th>
@@ -284,7 +284,29 @@ app('pathway')
 								<span class="icon-user" aria-hidden="true"></span> {{ trans('queues::queues.owner') }}
 							@endif
 						</td>
-						<td class="priority-5 text-right">
+						<td class="text-right">
+						@if (!$row->active)
+							@if ($upcoming = $row->getUpcomingLoanOrPurchase())
+								@if ($upcoming->serviceunits > 0)
+									{{ number_format($upcoming->serviceunits) }} <span class="text-muted">SUs</span>
+								@else
+									{{ number_format($upcoming->cores) }} <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>
+								@endif
+								<br /><span class="text-success">starts {{ $upcoming->datetimestart->diffForHumans() }}</span>
+							@else
+								<span class="text-muted">-</span>
+							@endif
+						@else
+							@if ($row->serviceunits > 0)
+								{{ number_format($row->serviceunits) }} <span class="text-muted">SUs</span>
+							@else
+								{{ number_format($row->totalcores) }} <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
+								{{ number_format($row->totalnodes) }} <span class="text-muted">{{ strtolower(trans('queues::queues.nodes')) }}</span>
+							@endif
+						@endif
+						</div>
+						<?php
+							/*<td class="priority-5 text-right">
 							{!! $row->totalnodes ? number_format($row->totalnodes) : '<span class="text-muted none">' . $row->totalnodes . '</span>' !!}
 						</td>
 						<td class="priority-5 text-right">
@@ -295,8 +317,7 @@ app('pathway')
 						</td>
 						<td class="priority-5 text-right">
 							{!! $row->loanedcores ? number_format($row->loanedcores) : '<span class="text-muted none">' . $row->loanedcores . '</span>' !!}
-							<?php
-							/*$soldpercent = $row->totalcores ? round(($row->soldcores / $row->totalcores) * 100, 1) : 0;
+							$soldpercent = $row->totalcores ? round(($row->soldcores / $row->totalcores) * 100, 1) : 0;
 							$loanedpercent = $row->totalcores ? round(($row->loanedcores / $row->totalcores) * 100, 1) : 0;
 							echo 'total cores: ' . $row->totalcores . ' avail: ' . ($row->totalcores - $row->soldcores - $row->loanedcores);
 							?>
@@ -308,8 +329,8 @@ app('pathway')
 							<span class="progress" style="height: 0.2em">
 								<span class="progress-bar bg-info" style="width: <?php echo $soldpercent; ?>%" aria-valuenow="<?php echo $soldpercent; ?>" aria-valuemin="0" aria-valuemax="100"></span>
 								<span class="progress-bar bg-warning" style="width: <?php echo $loanedpercent; ?>%" aria-valuenow="<?php echo $loanedpercent; ?>" aria-valuemin="0" aria-valuemax="100"></span>
-							</span>*/?>
-						</td>
+							</span>
+						</td>*/?>
 						<td class="priority-2">
 							@if ($row->subresourceid)
 								@if ($row->subresource)

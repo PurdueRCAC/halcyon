@@ -87,6 +87,7 @@ return [
 	'cores' => 'Cores',
 	'service units' => 'Service Units',
 	'total' => 'Total',
+	'active allocation' => 'Active Allocation',
 	'amount' => 'Amount',
 	'loans' => 'Loans',
 	'access' => 'Access',
