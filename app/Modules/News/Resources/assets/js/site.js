@@ -440,7 +440,7 @@ function NEWSAddEntry() {
 	var index = newstypeselect.selectedIndex;
 	var newstypeid = newstypeselect.item(index).value;
 	var tagresources = newstypeselect.item(index).getAttribute("data-tagresources");
-	var notes = PrepareText(document.getElementById("NotesText").value);
+	var notes = document.getElementById("NotesText").value;
 	var newsdate = document.getElementById("datestartshort").value;
 	var newstime = document.getElementById("timestartshort").value;
 	var newsdateend = document.getElementById("datestopshort").value;
@@ -2171,7 +2171,7 @@ function NEWSCancelNewsText(news) {
  */
 function NEWSSaveNewsText(news) {
 	// get text
-	var text = PrepareText(document.getElementById(news + "_textarea").value);
+	var text = document.getElementById(news + "_textarea").value;
 	var update = document.getElementById(news + "_textsaveupdatebox").checked;
 
 	// change save icon

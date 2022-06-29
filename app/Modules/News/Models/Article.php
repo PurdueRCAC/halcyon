@@ -161,7 +161,7 @@ class Article extends Model
 	 */
 	public function setBodyAttribute(string $value)
 	{
-		$value = strip_tags($value);
+		//$value = strip_tags($value);
 
 		$host = request()->getHttpHost();
 
