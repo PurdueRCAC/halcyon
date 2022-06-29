@@ -709,9 +709,9 @@ class Article extends Model
 		/*$converter = new CommonMarkConverter([
 			'html_input' => 'allow',
 		]);
-		$converter->getEnvironment()->addExtension(new TableExtension());*/
+		$converter->getEnvironment()->addExtension(new TableExtension());
+		$text = (string) $converter->convertToHtml($text);*/
 
-		$text = (string) $converter->convertToHtml($text);
 		if (class_exists('Parsedown'))
 		{
 			$mdParser = new \Parsedown();
