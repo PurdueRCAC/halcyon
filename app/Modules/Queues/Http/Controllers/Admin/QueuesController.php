@@ -336,6 +336,7 @@ class QueuesController extends Controller
 
 		$walltime = Walltime::query()
 			->where('queueid', '=', $row->id)
+			->whereNull('datetimestop')
 			->orderBy('id', 'asc')
 			->first();
 		if (!$walltime)
