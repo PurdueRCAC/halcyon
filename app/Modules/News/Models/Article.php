@@ -696,7 +696,7 @@ class Article extends Model
 		{
 			if (substr($matches[1], 0, 4) == 'http')
 			{
-				return $matches[1];
+				return $matches[0];
 			}
 
 			return str_replace($matches[1], asset(ltrim($matches[1], '/')), $matches[0]);
