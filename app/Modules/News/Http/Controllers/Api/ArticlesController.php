@@ -1149,31 +1149,40 @@ class ArticlesController extends Controller
 
 		if ($request->has('associations'))
 		{
-			$associations = $request->has('associations');
+			$associations = $request->input('associations');
 
 			foreach ($associations as $i => $association)
 			{
-				$association = str_replace(ROOT_URI, '', $association);
-				$association = trim($association, '/');
+				$associd = $association;
+				$assoctype = 'user';
 
-				$parts = explode('/', $association);
-
-				if (count($parts) != 2)
+				if (strstr('/', $association))
 				{
-					unset($associations[$i]);
-					continue;
+					$association = str_replace(ROOT_URI, '', $association);
+					$association = trim($association, '/');
+
+					$parts = explode('/', $association);
+
+					if (count($parts) != 2)
+					{
+						unset($associations[$i]);
+						continue;
+					}
+
+					$associd = intval($parts[1]);
+					$assoctype = $parts[0];
 				}
 
 				$associations[$i] = new Association(array(
-					'associd'   => intval($parts[1]),
-					'assoctype' => $parts[0]
+					'associd'   => $associd,
+					'assoctype' => $assoctype
 				));
 
 				if ($associations[$i]->assoctype == 'user')
 				{
 					$user = $associations[$i]->associated;
 
-					if (!$user || !$user->mail)
+					if (!$user || !$user->email)
 					{
 						continue;
 					}

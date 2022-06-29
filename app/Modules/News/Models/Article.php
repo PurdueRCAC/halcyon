@@ -692,10 +692,26 @@ class Article extends Model
 	{
 		$body = $this->body;
 
+		$body = preg_replace_callback('/\[.*?\]\(([^\)]+)\)/i', function($matches)
+		{
+			if (substr($matches[1], 0, 4) == 'http')
+			{
+				return $matches[1];
+			}
+
+			return str_replace($matches[1], asset(ltrim($matches[1], '/')), $matches[0]);
+		}, $body);
+
 		event($event = new ArticlePrepareContent($body));
 
 		$text = $event->getBody();
 
+		/*$converter = new CommonMarkConverter([
+			'html_input' => 'allow',
+		]);
+		$converter->getEnvironment()->addExtension(new TableExtension());*/
+
+		$text = (string) $converter->convertToHtml($text);
 		if (class_exists('Parsedown'))
 		{
 			$mdParser = new \Parsedown();
