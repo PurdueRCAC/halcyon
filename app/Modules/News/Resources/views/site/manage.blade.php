@@ -325,6 +325,8 @@
 						<span id="TAB_search_action"></span>
 						<span id="TAB_add_action"></span>
 					</fieldset>
+
+					@csrf
 				</form>
 
 				<?php
@@ -391,7 +393,7 @@
 	</div>
 
 	<div id="mailwrite" class="stash" title="Write Mail">
-		<form method="post" action="/news/manage">
+		<form method="post" action="{{ route('site.news.manage') }}">
 			<div class="form-group row">
 				<label for="newsuser" class="col-sm-2 col-form-label">To</label>
 				<div class="col-sm-10">
@@ -421,6 +423,7 @@
 					<textarea name="body" id="mail-body" rows="15" cols="77" class="form-control"></textarea>
 				</div>
 			</div>
+			@csrf
 		</form>
 	</div>
 

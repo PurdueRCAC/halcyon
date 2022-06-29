@@ -1223,7 +1223,7 @@ function NEWSPrintRow(news) {
 				};
 				post = JSON.stringify(post);
 
-				WSPostURL(root + "news/" + id, post, function (xml) {
+				WSPutURL(root + "news/" + id, post, function (xml) {
 					if (xml.status < 400) {
 						document.getElementById("id").value = id;
 						NEWSSearch();
@@ -1250,7 +1250,7 @@ function NEWSPrintRow(news) {
 				};
 				post = JSON.stringify(post);
 
-				WSPostURL(root + "news/" + id, post, function (xml) {
+				WSPutURL(root + "news/" + id, post, function (xml) {
 					if (xml.status < 400) {
 						document.getElementById("id").value = id;
 						NEWSSearch();

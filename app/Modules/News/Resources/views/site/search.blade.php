@@ -251,6 +251,8 @@ app('pathway')
 				<span id="TAB_add_action"></span>
 				<input type="hidden" name="page" id="page" value="{{ $filters['page'] }}" />
 			</fieldset>
+
+			@csrf
 		</form>
 
 		<?php
