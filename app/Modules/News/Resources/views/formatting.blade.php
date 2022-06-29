@@ -62,6 +62,11 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 | Carter-A |      16 |     32GB |
 | Carter-B |      16 |     64GB |
 ";
+
+$help1i = 'Images can be included using a similar syntax as links but prefixing with an exclamation mark:
+
+![Halcyon logo](/themes/admin/images/halcyon.svg)
+';
 ?>
 	<div id="markdown-help" data-api="{{ route('api.news.preview') }}" class="dialog dialog-help tabs" data-width="700" title="MarkDown Help">
 		<ul>
@@ -72,6 +77,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 			<li><a href="#help1e">Line Breaks</a></li>
 			<li><a href="#help1f">Code</a></li>
 			<li><a href="#help1g">Tables</a></li>
+			<li><a href="#help1i">Images</a></li>
 		</ul>
 		<div id="help1a">
 			<?php
@@ -146,6 +152,17 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 			<div class="form-group">
 				<label for="help1ginput">Input text:</label>
 				<textarea id="help1ginput" class="form-control samplebox" rows="5" data-sample="g"><?php echo $help1g; ?></textarea>
+			</div>
+			<p>Output text:</p>
+			<div id="help1goutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
+		</div>
+		<div id="help1i">
+			<?php
+			$article = new App\Modules\News\Models\Article(['body' => $help1i]);
+			?>
+			<div class="form-group">
+				<label for="help1ginput">Input text:</label>
+				<textarea id="help1ginput" class="form-control samplebox" rows="5" data-sample="g"><?php echo $help1i; ?></textarea>
 			</div>
 			<p>Output text:</p>
 			<div id="help1goutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
