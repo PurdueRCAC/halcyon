@@ -60,6 +60,7 @@ return [
 	'ordering' => 'Ordering',
 	'all levels' => '- All Levels -',
 	'snippets attached' => 'Snippet(s) attached',
+	'copy' => 'Copy',
 	'error' => [
 		'failed to attach snippets' =>'Failed to attach snippets.',
 		'select to publish' => 'Select items to publish',

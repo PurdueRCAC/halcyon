@@ -282,6 +282,36 @@ class PagesController extends Controller
 	}
 
 	/**
+	 * Copy the specified entry to the edit form to make a new entry.
+	 * 
+	 * @param  integer $id
+	 * @return Response
+	 */
+	public function copy($id)
+	{
+		$row = Associations::findOrFail($id);
+
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
+		$row->id = null;
+		$row->path = $row->path . '_copy';
+		$row->page->id = null;
+		$row->page->title = $row->page->title . ' (copy)';
+		$row->page->alias = $row->page->alias . '_copy';
+
+		$parents = Page::tree();
+
+		return view('knowledge::admin.pages.edit', [
+			'row'  => $row,
+			'tree' => $parents,
+			'page' => $row->page,
+		]);
+	}
+
+	/**
 	 * Show the form for editing the specified resource.
 	 * 
 	 * @param  integer $id

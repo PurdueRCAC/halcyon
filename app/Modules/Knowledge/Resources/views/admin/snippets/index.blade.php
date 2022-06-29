@@ -110,6 +110,8 @@ app('pathway')
 				<th scope="col" class="priority-2 text-right">
 					{{ trans('knowledge::knowledge.used') }}
 				</th>
+				<th scope="col">
+				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -177,6 +179,12 @@ app('pathway')
 				</td>
 				<td class="priority-2 text-right">
 					{{ $row->used }}
+				</td>
+				<td>
+					<a href="{{ route('admin.knowledge.snippets.copy', ['id' => $row->id]) }}" data-hint="{{ trans('knowledge::knowledge.copy') }}">
+						<span class="fa fa-copy" aria-hidden="true"></span>
+						<span class="sr-only">{{ trans('knowledge::knowledge.copy') }}</span>
+					</a>
 				</td>
 			</tr>
 		@endforeach

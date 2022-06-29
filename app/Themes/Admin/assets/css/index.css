@@ -801,6 +801,7 @@ h4 {
 .icon-compass:before {
   content: "\e854";
 }
+.fa-copy:before,
 .icon-copy:before {
   content: "\e855";
 }

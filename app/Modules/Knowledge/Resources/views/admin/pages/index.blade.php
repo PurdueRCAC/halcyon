@@ -151,6 +151,8 @@
 				<th scope="col" class="priority-5">
 					{!! Html::grid('sort', trans('knowledge::knowledge.ordering'), 'lft', $filters['order_dir'], $filters['order']) !!}
 				</th>
+				<th scope="col">
+				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -271,6 +273,14 @@
 					<?php else : ?>
 						<?php echo $orderkey + 1;?>
 					<?php endif; ?>
+				</td>
+				<td>
+					@if ($row->parent_id)
+					<a href="{{ route('admin.knowledge.copy', ['id' => $row->id]) }}" data-hint="{{ trans('knowledge::knowledge.copy') }}">
+						<span class="fa fa-copy" aria-hidden="true"></span>
+						<span class="sr-only">{{ trans('knowledge::knowledge.copy') }}</span>
+					</a>
+					@endif
 				</td>
 			</tr>
 		@endforeach

@@ -74,6 +74,11 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 		'uses' => 'PagesController@delete',
 		'middleware' => 'can:delete knowledge',
 	]);
+	$router->get('/copy/{id}', [
+		'as'   => 'admin.knowledge.copy',
+		'uses' => 'PagesController@copy',
+		'middleware' => 'can:create knowledge',
+	]);
 
 	// Products
 	$router->group(['prefix' => 'snippets'], function (Router $router)
@@ -126,6 +131,11 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 		$router->post('/cancel', [
 			'as' => 'admin.knowledge.snippets.cancel',
 			'uses' => 'SnippetsController@cancel',
+		]);
+		$router->get('/copy/{id}', [
+			'as'   => 'admin.knowledge.snippets.copy',
+			'uses' => 'SnippetsController@copy',
+			'middleware' => 'can:create knowledge',
 		]);
 	});
 });

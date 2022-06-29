@@ -142,6 +142,43 @@ class SnippetsController extends Controller
 	}
 
 	/**
+	 * Copy the specified entry to the edit form to make a new entry.
+	 * 
+	 * @param  integer $id
+	 * @return Response
+	 */
+	public function copy($id)
+	{
+		$row = SnippetAssociation::findOrFail($id);
+
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
+		$row->id = null;
+		$row->path = $row->path . '_copy';
+		$row->page->id = null;
+		$row->page->title = $row->page->title . ' (copy)';
+		$row->page->alias = $row->page->alias . '_copy';
+
+		$p = (new Page)->getTable();
+		$a = (new SnippetAssociation)->getTable();
+		$parents = Page::query()
+			->join($a, $a . '.page_id', $p . '.id')
+			->select($p . '.title', $a . '.level', $a . '.lft', $a . '.rgt', $a . '.id', $a . '.path')
+			->where($p . '.snippet', '=', 1)
+			->orderBy('lft', 'asc')
+			->get();
+
+		return view('knowledge::admin.snippets.edit', [
+			'row'  => $row,
+			'tree' => $parents,
+			'page' => $row->page,
+		]);
+	}
+
+	/**
 	 * Show the form for editing the specified resource.
 	 * 
 	 * @param  integer  $id
