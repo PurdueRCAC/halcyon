@@ -12,10 +12,11 @@ function NEWSSendMail(btn) {
 	// Get text and updates
 	$.getJSON(btn.data('article'), function (data) {
 		// Gather some  variables from DOM
-		var resources = [], x;
+		var resources = [], resourcelist = [], x;
 		if (data['resources'].length > 0) {
+			resources = data['resources'];
 			for (x = 0; x < data['resources'].length; x++) {
-				resources.push(data['resources'][x]['resource']['name']);
+				resourcelist.push(data['resources'][x]['name']);
 			}
 		}
 
@@ -28,7 +29,7 @@ function NEWSSendMail(btn) {
 				"local": data.location,
 				"uri": data.uri,
 				"updates": data.updates.length ? data.updates : null,
-				"resourcelist": resources,
+				"resourcelist": resourcelist.join(', '),
 				"resources": data.resources.length ? data.resources : null
 			},
 			html = template(context);

@@ -279,8 +279,8 @@ else
 
 		<?php echo '{{#if updates}}'; ?>
 			<?php echo '{{#each updates}}'; ?>
-				<span class="newsupdate" style="font-style: italic"><strong>UPDATE: <?php echo '{{formattedcreateddate}}'; ?></strong></span>
-				<?php echo '{{{formattedbody}}}'; ?><br/>
+				<span class="newsupdate" style="font-style: italic"><strong>UPDATE: <?php echo '{{this.formattedcreateddate}}'; ?></strong></span>
+				<?php echo '{{{this.formattedbody}}}'; ?><br/>
 			<?php echo '{{/each}}'; ?>
 			<span class="newsupdate" style="font-style: italic"><strong>ORIGINAL: <?php echo '{{formattedcreateddate}}'; ?></strong></span>
 		<?php echo '{{/if}}'; ?>
@@ -299,9 +299,9 @@ else
 					<div class="row">
 						<?php echo '{{#each resources}}'; ?>
 							<div class="col-md-3">
-								<label>
-									<input type="checkbox" checked="checked" value="<?php echo '{{resourceid}}'; ?>" class="preview-resource" />
-									<?php echo '{{resource.name}}'; ?>
+								<label for="resource<?php echo '{{this.id}}'; ?>">
+									<input type="checkbox" checked="checked" id="resource<?php echo '{{this.id}}'; ?>" value="<?php echo '{{this.id}}'; ?>" class="preview-resource" />
+									<?php echo '{{this.name}}'; ?>
 								</label>
 							</div>
 						<?php echo '{{/each}}'; ?>
