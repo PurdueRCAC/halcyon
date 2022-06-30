@@ -2,111 +2,11 @@
 
 @push('styles')
 <link rel="stylesheet" type="text/css" href="{{ Module::asset('core:vendor/chartjs/Chart.css') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.css') }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/orders/css/orders.css?v=' . filemtime(public_path() . '/modules/orders/css/orders.css')) }}" />
 @endpush
 
 @push('scripts')
 <script src="{{ Module::asset('core:vendor/chartjs/Chart.min.js') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.min.js') }}"></script>
-<script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
-<script>
-$(document).ready(function () {
-	$('.items-toggle').on('click', function(e){
-		e.preventDefault();
-		$($(this).attr('href')).toggle('collapse');
-	});
-
-	var charts = new Array;
-	$('.sparkline-chart').each(function (i, el) {
-		const ctx = el.getContext('2d');
-		const chart = new Chart(ctx, {
-			type: 'line',
-			data: {
-				labels: JSON.parse($(el).attr('data-labels')),
-				datasets: [
-					{
-						fill: true,
-						data: JSON.parse($(el).attr('data-values'))
-					}
-				]
-			},
-			options: {
-				//responsive: false,
-				bezierCurve: false,
-				animation: {
-					duration: 0
-				},
-				legend: {
-					display: false
-				},
-				elements: {
-					line: {
-						borderColor: 'rgb(54, 162, 235)', //'#0091EB',
-						backgroundColor: 'rgb(54, 162, 235)',
-						borderWidth: 1,
-						tension: 0
-					},
-					point: {
-						borderColor: 'rgb(54, 162, 235)'//'#0091EB'
-					}
-				},
-				scales: {
-					/*yAxes: [
-						{
-							display: false
-						}
-					],*/
-					xAxes: [
-						{
-							display: false
-						}
-					]
-				}
-			}
-		});
-		charts.push(chart);
-	});
-
-	$('.pie-chart').each(function (i, el) {
-		const ctx = el.getContext('2d');
-		const pchart = new Chart(ctx, {
-			type: 'doughnut',
-			data: {
-				labels: JSON.parse($(el).attr('data-labels')),
-				datasets: [
-					{
-						data: JSON.parse($(el).attr('data-values')),
-						backgroundColor: [
-							'rgb(255, 99, 132)', // red
-							'rgb(54, 162, 235)', // blue
-							'rgb(255, 205, 86)', // yellow
-							'rgb(201, 203, 207)', // grey
-							'rgb(75, 192, 192)', // blue green
-							'rgb(255, 159, 64)', // orange
-							'rgb(153, 102, 255)', // purple
-							'rgb(43, 11, 63)',
-							'rgb(87, 22, 126)',
-							'rgb(155, 49, 146)',
-							'rgb(234, 95, 137)',
-							'rgb(247, 183, 163)',
-							'rgb(255, 241, 201)'
-						],
-						borderColor: <?php echo (auth()->user()->facet('theme.admin.mode') == 'dark' ? '"rgba(0, 0, 0, 0.6)"' : '"#fff"'); ?>
-					}
-				]
-			},
-			options: {
-				animation: {
-					duration: 0
-				}/*,
-				legend: {
-					display: false
-				}*/
-			}
-		});
-		charts.push(pchart);
-	});
-});
-</script>
+<script src="{{ asset('modules/queues/js/admin.js?v=' . filemtime(public_path() . '/modules/queues/js/admin.js')) }}"></script>
 @endpush
 
 @php
