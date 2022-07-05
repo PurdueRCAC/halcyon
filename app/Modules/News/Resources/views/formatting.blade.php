@@ -63,6 +63,30 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 | Carter-B |      16 |     64GB |
 ";
 
+$help1h = "Several variables are available to automatically fill in certain fields for a news articles. These include dates, resources, and location. Variables are denoted such as '%date%'. Below is a listing of possible variables.
+
+Templates may also be written to contain placeholder text intended to be replaced by the author. These are variables that cannot be filled in automatically. They are denoted such as '%%insert text here%%'.
+
+List of possible variables:
+- %date%
+- %datetime%
+- %time%
+- %startdatetime%
+- %startdate%
+- %starttime%
+- %enddatetime%
+- %enddate%
+- %endtime%
+- %resources%
+- %location%
+
+Additionally these variables are available inside updates and will be filled with appropriate values for each update:
+
+- %updatetime%
+- %updatedate%
+- %updatedatetime%
+";
+
 $help1i = 'Images can be included using a similar syntax as links but prefixing with an exclamation mark:
 
 ![Halcyon logo](/themes/admin/images/halcyon.svg)
@@ -77,6 +101,7 @@ $help1i = 'Images can be included using a similar syntax as links but prefixing 
 			<li><a href="#help1e">Line Breaks</a></li>
 			<li><a href="#help1f">Code</a></li>
 			<li><a href="#help1g">Tables</a></li>
+			<li><a href="#help1h">Variables</a></li>
 			<li><a href="#help1i">Images</a></li>
 		</ul>
 		<div id="help1a">
@@ -152,6 +177,20 @@ $help1i = 'Images can be included using a similar syntax as links but prefixing 
 			<div class="form-group">
 				<label for="help1ginput">Input text:</label>
 				<textarea id="help1ginput" class="form-control samplebox" rows="5" data-sample="g"><?php echo $help1g; ?></textarea>
+			</div>
+			<p>Output text:</p>
+			<div id="help1goutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
+		</div>
+		<div id="help1h">
+			<?php
+			$article = new App\Modules\News\Models\Article(['body' => $help1h]);
+			$article->datetimenews = Carbon\Carbon::now();
+			$article->datetimenewsend = Carbon\Carbon::now()->modify('+3 hours');
+			$article->location = '123 Some Street';
+			?>
+			<div class="form-group">
+				<label for="help1hinput">Input text:</label>
+				<textarea id="help1hinput" class="form-control samplebox" rows="5" data-sample="h"><?php echo $help1h; ?></textarea>
 			</div>
 			<p>Output text:</p>
 			<div id="help1goutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
