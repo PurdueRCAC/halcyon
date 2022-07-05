@@ -45,7 +45,7 @@ class GroupsServiceProvider extends ServiceProvider
 
 		$this->app['events']->subscribe(new RemoveMembershipsForDeletedUser);
 
-		if (is_dir(dirname(dirname(__DIR__))) . '/Queues')
+		if (is_dir(dirname(dirname(__DIR__)) . '/Queues'))
 		{
 			$this->app['events']->subscribe(new AddUserToUnixGroup);
 		}
