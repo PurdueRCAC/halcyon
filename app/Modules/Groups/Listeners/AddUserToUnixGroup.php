@@ -45,7 +45,7 @@ class AddUserToUnixGroup
 			->select($u . '.*', $q . '.groupid')
 			->join($q, $q . '.id', $u . '.queueid')
 			->where($u . '.userrequestid', '=', $event->userrequest->id)
-			->wherePendingRequest()
+			//->wherePendingRequest()
 			->get();
 
 		if (!count($queueusers))
@@ -56,7 +56,7 @@ class AddUserToUnixGroup
 				->select($gu . '.*')
 				->join($u, $u . '.id', $gu . '.queueuserid')
 				->where($gu . '.userrequestid', '=', $event->userrequest->id)
-				->wherePendingRequest()
+				//->wherePendingRequest()
 				->get();
 
 			if (!count($queueusers))
