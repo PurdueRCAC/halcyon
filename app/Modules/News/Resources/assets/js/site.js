@@ -12,8 +12,44 @@ var LASTEDIT = new Array();
 var root = document.querySelector('meta[name="base-url"]').getAttribute('content') + "/api/";
 
 /**
- * Functions common to the user (queue management page)
+ * Callback for JS MarkDown parsing
+ *
+ * @param   {string}  text
+ * @return  {string}
  */
+function customMarkdownParser(text) {
+	text = text.replaceAll(/(contact|CRM?)(\s+report)?\s*#?(\d+)/g, '<a href="?id=$3">Contact Report #$3</a>');
+	var matches = text.matchAll(/(news)\s*(story|item)?\s*#?(\d+)(\{.+?\})?/ig);
+
+	for (const match of matches) {
+		if (match[4]) {
+			text = text.replace(match[0], '<a href="/news/' + match[3] + '">' + match[4].replace('{', '').replace('}', '') +'</a>');
+		} else {
+			text = text.replace(match[0], '<a href="/news/' + match[3] + '">News story #' + match[3] + '</a>');
+		}
+	};
+
+	var keywords = [
+		'%date%',
+		'%datetime%',
+		'%time%',
+		'%updatedatetime%',
+		'%startdatetime%',
+		'%startdate%',
+		'%starttime%',
+		'%enddatetime%',
+		'%enddate%',
+		'%endtime%',
+		'%location%',
+		'%resources%',
+	];
+
+	for (var x = 0; x < keywords.length; x++) {
+		text = text.replaceAll(keywords[x], '<span style="color:red;">' + keywords[x] + '</span>');
+	}
+
+	return text;
+}
 
 /**
  * Toggle UI tabs
@@ -1786,14 +1822,15 @@ function NEWSPrintRow(news) {
 	var textarea = document.createElement("textarea");
 		textarea.id = id + "_textarea";
 		textarea.innerHTML = rawtext;
-		textarea.style.display = "none";
+		//textarea.style.display = "none";
 		textarea.rows = 7;
 		textarea.cols = 45;
-		textarea.className = "form-control newspostedittextbox";
+		textarea.className = "form-control md newspostedittextbox";
 
 	span = document.createElement("span");
 	span.appendChild(label);
 	span.appendChild(textarea);
+	span.style.display = "none";
 
 	td.appendChild(span);
 
@@ -2104,12 +2141,13 @@ function NEWSDeleteNews(newsid) {
 function NEWSEditNewsTextOpen(news) {
 	// hide text
 	var text = document.getElementById(news + "_text");
-		document.getElementById(news + "_textarea").style.height = (25+text.parentNode.offsetHeight)+"px";
 		text.style.display = "none";
 
 	// show textarea
 	var box = document.getElementById(news + "_textarea");
-		box.style.display = "block";
+		box.style.height = (25 + text.parentNode.offsetHeight) + "px";
+		box.dispatchEvent(new Event('initEditor', { bubbles: true }));
+		box.parentNode.style.display = "block";
 
 	// hide edit icon
 	var eicon = document.getElementById(news + "_textediticon");
@@ -2144,7 +2182,7 @@ function NEWSCancelNewsText(news) {
 
 	// show textarea
 	var box = document.getElementById(news + "_textarea");
-		box.style.display = "none";
+		box.parentNode.style.display = "none";
 
 	// hide edit icon
 	var eicon = document.getElementById(news + "_textediticon");
@@ -3302,12 +3340,13 @@ function NewsPrintUpdate(newsid, update, edit) {
 		var textarea = document.createElement("textarea");
 			textarea.id = update['id'] + "_updatetextarea";
 			textarea.innerHTML = update['body'];
-			textarea.style.display = "none";
-			textarea.className = "form-control newsupdateedittextbox";
+			//textarea.style.display = "none";
+			textarea.className = "form-control md newsupdateedittextbox";
 
 		span = document.createElement("span");
 		span.appendChild(label);
 		span.appendChild(textarea);
+		span.style.display = "none";
 
 		div.appendChild(span);
 
@@ -3361,7 +3400,8 @@ function NewsEditUpdateTextOpen(update) {
 
 	// show textarea
 	var box = document.getElementById(update + "_updatetextarea");
-		box.style.display = "block";
+		box.dispatchEvent(new Event('initEditor', { bubbles: true }));
+		box.parentNode.style.display = "block";
 
 	// hide edit icon
 	var eicon = document.getElementById(update + "_updatetextediticon");
@@ -3409,7 +3449,7 @@ function NewsSaveUpdateText(newsid, update) {
 				NewsSaveUpdateText(results.data.newsid, update);
 			};
 			text.style.display = "block";
-			box.style.display = "none";
+			box.parentNode.style.display = "none";
 			editicon.style.display = "block";
 			text.innerHTML = results.formattedbody;
 		} else if (xml.status == 403) {

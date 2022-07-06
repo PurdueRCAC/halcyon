@@ -295,7 +295,7 @@
 								</a>
 							</label>
 							<div class="col-sm-10">
-								<textarea id="NotesText" rows="15" cols="77" class="form-control"></textarea>
+								{!! markdown_editor('NotesText', '', ['rows' => 15, 'cols' =>77, 'class' => 'required', 'required' => 'required']) !!}
 							</div>
 						</div>
 						<div class="form-group row tab-search" id="TR_id">
