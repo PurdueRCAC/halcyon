@@ -12,6 +12,7 @@ use App\Modules\Users\Models\User;
 use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\GroupUser;
+use App\Modules\Queues\Events\UserCreated;
 use App\Modules\Group\Models\Group;
 use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Resources\Events\ResourceMemberStatus;
@@ -270,6 +271,8 @@ class UsersController extends Controller
 			if ($row->trashed())
 			{
 				$row->restore();
+
+				event(new UserCreated($row));
 			}
 			// Nothing to do, we are cancelling a removal
 			$row->notice = 0;
