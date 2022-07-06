@@ -1148,11 +1148,11 @@ function CRMSearch() {
 
 	//console.log('Searching... ' + $("#reports").data('api') + encodeURI(querystring));
 
-	$("#reports").data('query', querystring.join('&'));//querystring.replace('?', ''));
+	document.getElementById("reports").setAttribute('data-query', querystring.join('&'));//querystring.replace('?', ''));
 
 	querystring.push("page=" + document.getElementById("page").value);
 
-	WSGetURL($("#reports").data('api') + encodeURI('?' + querystring.join('&')), CRMSearched);
+	WSGetURL(document.getElementById("reports").getAttribute('data-api') + encodeURI('?' + querystring.join('&')), CRMSearched);
 }
 
 /**
@@ -1211,6 +1211,7 @@ function CRMSearched(xml) {
 					'newEntries' //(x < DEFAULT_ENTRIES ? "newEntries" : "newEntriesHidden")
 				);
 			}
+			//document.dispatchEvent(new Event('initEditor', { bubbles: true }));
 
 			// Re-initialize tooltips
 			$('.tip').tooltip({
@@ -1413,7 +1414,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 		};
 		a.title = "Delete Contact Report.";
 
-		img = document.createElement("i");
+		img = document.createElement("span");
 		img.className = "crmeditdelete fa fa-trash";
 		img.setAttribute('aria-hidden', true);
 		img.id = report['id'] + "_crmdeleteimg";
@@ -1457,7 +1458,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 		};
 		a.title = "Edit contact report date.";
 
-		img = document.createElement("i");
+		img = document.createElement("span");
 		img.className = "crmedit fa fa-pencil";
 		img.setAttribute('aria-hidden', true);
 
@@ -1561,7 +1562,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 				};
 				a.title = "Add or remove users and groups.";
 
-				img = document.createElement("i");
+				img = document.createElement("span");
 				img.className = "crmedit fa fa-pencil";
 				img.setAttribute('aria-hidden', true);
 
@@ -1578,7 +1579,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 		li = document.createElement("li");
 		li.className = 'news-resources';
 
-		/*var icon = document.createElement("i");
+		/*var icon = document.createElement("span");
 		icon.className = "fa fa-server";
 		icon.setAttribute('aria-hidden', true);
 		li.appendChild(icon);*/
@@ -1600,7 +1601,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 			a.href = "contactreports?id=" + id + '&edit';
 			a.title = "Edit tagged resources.";
 
-			img = document.createElement("i");
+			img = document.createElement("span");
 			img.className = "crmedit fa fa-pencil";
 			img.setAttribute('aria-hidden', true);
 
@@ -1618,7 +1619,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 		li = document.createElement("li");
 		li.className = 'news-tags';
 
-		/*icon = document.createElement("i");
+		/*icon = document.createElement("span");
 		icon.className = "fa fa-fw fa-tags";
 		icon.setAttribute('aria-hidden', true);
 		li.appendChild(icon);*/
@@ -1676,7 +1677,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 		a.title = "Edit report text.";
 		a.id = report['id'] + "_textediticon";
 
-		img = document.createElement("i");
+		img = document.createElement("span");
 		img.className = "crmedittext fa fa-pencil";
 		img.setAttribute('aria-hidden', true);
 		img.id = report['id'] + "_textediticonimg";
@@ -1696,7 +1697,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 		a.title = "Save report text.";
 		a.style.display = "none";
 
-		img = document.createElement("i");
+		img = document.createElement("span");
 		img.className = "crmsavetext fa fa-save";
 		img.setAttribute('aria-hidden', true);
 		img.id = report['id'] + "_textsaveiconimg";
@@ -1716,7 +1717,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 		a.id = id + "_textcancelicon";
 		a.style.display = "none";
 
-		img = document.createElement("i");
+		img = document.createElement("span");
 		img.className = "crmsavetext fa fa-ban";
 		img.setAttribute('aria-hidden', true);
 		img.id = id + "_textcanceliconimg";
@@ -1749,12 +1750,13 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	var textarea = document.createElement("textarea");
 	textarea.id = report['id'] + "_textarea";
 	textarea.innerHTML = rawtext;
-	textarea.style.display = "none";
+	//textarea.style.display = "none";
 	textarea.rows = 7;
 	textarea.cols = 45;
-	textarea.className = "form-control crmreportedittextbox";
+	textarea.className = "form-control md crmreportedittextbox";
 
 	span.appendChild(textarea);
+	span.style.display = "none";
 	td.appendChild(span);
 
 	tr.appendChild(td);
@@ -1812,7 +1814,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	div.id = report['id'] + "_newupdate";
 
 	textarea = document.createElement("textarea");
-	textarea.className = "form-control crmcommentbox";
+	textarea.className = "form-control md crmcommentbox";
 	textarea.placeholder = "Write a comment...";
 	textarea.id = report['id'] + "_newcommentbox";
 	textarea.setAttribute('data-api', document.getElementById('reports').getAttribute('data-comments'));
@@ -1836,7 +1838,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	};
 	a.title = "Add a new comment.";
 
-	img = document.createElement("i");
+	img = document.createElement("span");
 	img.className = "fa fa-save";
 	img.setAttribute('aria-hidden', true);
 	img.id = report['id'] + "_newcommentboxsave";
@@ -1887,7 +1889,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 function CRMCancelReportText(id) {
 	// hide text
 	document.getElementById(id + "_text").style.display = "block";
-	document.getElementById(id + "_textarea").style.display = "none";
+	document.getElementById(id + "_textarea").parentNode.style.display = "none";
 	document.getElementById(id + "_textediticon").style.display = "inline";
 	document.getElementById(id + "_textsaveicon").style.display = "none";
 	document.getElementById(id + "_textcancelicon").style.display = "none";
@@ -1943,7 +1945,7 @@ function CRMPrintComment(reportid, comment) { //, userid) {
 		a.id = comment['id'] + "_commenticon";
 		a.title = "Delete comment.";
 
-		img = document.createElement("i");
+		img = document.createElement("span");
 		img.className = "crmeditdeletecomment fa fa-trash";
 		img.setAttribute('aria-hidden', true);
 		img.id = comment['id'] + "_commentdeleteimg";
@@ -1974,7 +1976,7 @@ function CRMPrintComment(reportid, comment) { //, userid) {
 		a.id = comment['id'] + "_commenttextediticon";
 		a.title = "Edit comment.";
 
-		img = document.createElement("i");
+		img = document.createElement("span");
 		img.className = "crmedittextcomment fa fa-pencil";
 		img.setAttribute('aria-hidden', true);
 		img.id = comment['id'] + "_commenttextediticonimg";
@@ -1988,10 +1990,11 @@ function CRMPrintComment(reportid, comment) { //, userid) {
 		var textarea = document.createElement("textarea");
 		textarea.id = comment['id'] + "_commenttextarea";
 		textarea.innerHTML = comment['comment'];
-		textarea.style.display = "none";
-		textarea.className = "form-control crmcommentedittextbox";
+		//textarea.style.display = "none";
+		textarea.className = "form-control md simplemde crmcommentedittextbox";
 
 		span.appendChild(textarea);
+		span.style.display = "none";
 		div.appendChild(span);
 
 		// Save button
@@ -2005,7 +2008,7 @@ function CRMPrintComment(reportid, comment) { //, userid) {
 		a.style.display = "none";
 		a.title = "Edit comment text.";
 
-		img = document.createElement("i");
+		img = document.createElement("span");
 		img.className = "crmsavetext fa fa-save";
 		img.setAttribute('aria-hidden', true);
 		img.id = comment['id'] + "_commenttextsaveiconimg";
@@ -2215,12 +2218,13 @@ function CRMUnsubscribeComment(commentid, reportid) {
 function CRMEditReportTextOpen(report) {
 	// hide text
 	var text = document.getElementById(report + "_text");
-	document.getElementById(report + "_textarea").style.height = (25 + text.parentNode.offsetHeight) + "px";
 	text.style.display = "none";
 
 	// show textarea
 	var box = document.getElementById(report + "_textarea");
-	box.style.display = "block";
+	box.style.height = (25 + text.parentNode.offsetHeight) + "px";
+	box.dispatchEvent(new Event('initEditor', { bubbles: true }));
+	box.parentNode.style.display = "block";
 
 	// hide edit icon
 	var eicon = document.getElementById(report + "_textediticon");
@@ -2247,7 +2251,8 @@ function CRMEditCommentTextOpen(comment) {
 
 	// show textarea
 	var box = document.getElementById(comment + "_commenttextarea");
-	box.style.display = "block";
+	box.dispatchEvent(new Event('initEditor', { bubbles: true }));
+	box.parentNode.style.display = "block";
 
 	// hide edit icon
 	var eicon = document.getElementById(comment + "_commenttextediticon");
@@ -2294,11 +2299,14 @@ function CRMSaveReportText(report, api) {
 			};
 			icon.style.display = "none";
 
+			img.className = "fa fa-save";
+			img.parentNode.title = "Save";
+
 			var text = document.getElementById(report + "_text");
 			text.style.display = "block";
 			text.innerHTML = results.formattedreport;
 
-			document.getElementById(report + "_textarea").style.display = "none";
+			document.getElementById(report + "_textarea").parentNode.style.display = "none";
 			document.getElementById(report + "_textediticon").style.display = "block";
 			document.getElementById(report + "_textcancelicon").style.display = "none";
 		} else if (xml.status == 403) {
@@ -2324,6 +2332,7 @@ function CRMSaveCommentText(comment) {
 	// change save icon
 	var icon = document.getElementById(comment + "_commenttextsaveicon");
 	icon.onclick = function () { };
+
 	var img = document.getElementById(comment + "_commenttextsaveiconimg");
 	img.className = "fa fa-spinner fa-spin";
 	img.parentNode.title = "Saving changes...";
@@ -2348,7 +2357,7 @@ function CRMSaveCommentText(comment) {
 			text.innerHTML = results.formattedcomment;
 
 			var box = document.getElementById(comment + "_commenttextarea");
-			box.style.display = "none";
+			box.parentNode.style.display = "none";
 
 			var editicon = document.getElementById(comment + "_commenttextediticon");
 			editicon.style.display = "block";
@@ -2371,6 +2380,7 @@ function CRMSaveCommentText(comment) {
 function CRMExpandNewComment(comment) {
 	var textarea = document.getElementById(comment);
 	textarea.className = "form-control crmcommentboxexpand";
+
 	var img = document.getElementById(comment + "save");
 	img.className = "crmnewcommentsave fa fa-save";
 	img.style.display = "block";
@@ -2567,6 +2577,12 @@ var autocompleteList = function (url) {
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function () {
+	/*if (typeof (smdeConfig) !== 'undefined') {
+		smdeConfig.previewRender = function(plainText, preview) {
+			preview.innerHTML = plainText.replace('#', '???');
+			return preview;
+		};
+	}*/
 	var frm = document.getElementById('DIV_crm');
 	if (frm) {
 		//usersearch = false;
