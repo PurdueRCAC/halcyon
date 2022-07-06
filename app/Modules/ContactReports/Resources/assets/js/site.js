@@ -924,6 +924,19 @@ function CRMNewReport(xml) { //people
 }*/
 
 /**
+ * Callback for JS MarkDown parsing
+ *
+ * @param   {string}  text
+ * @return  {string}
+ */
+function customMarkdownParser(text) {
+	text = text.replaceAll(/(^|[^a-z0-9_])#([a-z0-9\-_]+)/ig, '$1<span class="badge badge-secondary">$2</span>');
+	text = text.replaceAll(/(contact|CRM?)(\s+report)?\s*#?(\d+)/g, '<a href="?id=$3">Contact Report #$3</a>');
+
+	return text;
+}
+
+/**
  * Search reports
  *
  * @return  {void}

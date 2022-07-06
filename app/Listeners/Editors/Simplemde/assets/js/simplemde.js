@@ -12,6 +12,12 @@ var smdeConfig = {
     spellChecker: false,
     status: false,
     forceSync: true,
+    previewRender: function (plainText, preview) { // Async method
+        if (typeof customMarkdownParser === 'function') {
+            plainText = customMarkdownParser(plainText);
+        }
+        return this.parent.markdown(plainText);
+    },
     showIcons: ["bold", "italic", "heading", "strikethrough", "code", "quote", "unordered-list", "ordered-list", "link", "image", "horizontal-rule", "table"],
     hideIcons: ["side-by-side", "fullscreen", "guide", "undo", "redo"],
     autoDownloadFontAwesome: false
