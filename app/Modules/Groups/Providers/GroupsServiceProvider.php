@@ -5,6 +5,7 @@ namespace App\Modules\Groups\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\Facades\View;
+use App\Modules\Groups\Listeners\AddManagersToNewQueue;
 use App\Modules\Groups\Listeners\AddUserToUnixGroup;
 use App\Modules\Groups\Listeners\RemoveMembershipsForDeletedUser;
 use App\Modules\Groups\Composers\ProfileComposer;
@@ -47,6 +48,7 @@ class GroupsServiceProvider extends ServiceProvider
 
 		if (is_dir(dirname(dirname(__DIR__)) . '/Queues'))
 		{
+			$this->app['events']->subscribe(new AddManagersToNewQueue);
 			$this->app['events']->subscribe(new AddUserToUnixGroup);
 		}
 	}
