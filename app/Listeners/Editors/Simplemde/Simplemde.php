@@ -66,7 +66,7 @@ class Simplemde
 		{
 			$attr['class'] = '';
 		}
-		$attr['class'] .= ' form-control simplemde';
+		$attr['class'] .= ' form-control md simplemde';
 		$attr['class'] = trim($attr['class']);
 
 		$attributes = '';
