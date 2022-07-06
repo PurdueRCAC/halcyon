@@ -2142,6 +2142,8 @@ $(document).ready(function () {
 		var nodemem = document.getElementById("SPAN_nodemem");
 		var cluster = document.getElementById("queue-cluster");
 
+		document.getElementById('queue-clusterlabel').innerHTML = opt.getAttribute('data-clusterlabel');
+
 		nodecores.innerHTML = opt.getAttribute('data-nodecores');
 		nodemem.innerHTML = opt.getAttribute('data-nodemem');
 

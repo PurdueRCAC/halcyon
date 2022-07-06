@@ -149,6 +149,8 @@ app('pathway')
 								<?php
 								$cores = '-';
 								$mem   = '-';
+								$dlabel = trans('queues::queues.cluster');
+								$clabel = $dlabel;
 								?>
 								<label for="field-subresourceid">{{ trans('queues::queues.subresource') }} <span class="required">{{ trans('global.required') }}</span></label>
 								<select name="fields[subresourceid]" id="field-subresourceid" class="form-control{{ $errors->has('fields.subresourceid') ? ' is-invalid' : '' }}" required>
@@ -160,13 +162,20 @@ app('pathway')
 											<optgroup data-resourceid="{{ $resource->id }}" label="{{ $resource->name }}">
 												<?php foreach ($children as $child):
 													$selected = '';
+													$label = $dlabel;
+													if ($facet = $resource->getFacet('cluster_label')):
+														$label = $facet->value;
+													endif;
 													if ($row->subresourceid == $child->subresourceid):
 														$cores = $child->subresource ? $child->subresource->nodecores : 0;
 														$mem = $child->subresource ? $child->subresource->nodemem : 0;
 														$selected = ' selected="selected"';
+
+														$clabel = $label;
 													endif;
 													?>
 													<option value="{{ $child->subresourceid }}"<?php echo $selected; ?>
+														data-clusterlabel="{{ $label }}"
 														data-nodecores="{{ $child->subresource ? $child->subresource->nodecores : 0 }}"
 														data-nodemem="{{ $child->subresource ? $child->subresource->nodemem : 0 }}"
 														data-cluster="{{ $child->subresource ? $child->subresource->cluster : '' }}">{{ $child->subresource ? $child->subresource->name : trans('global.unknown') }}</option>
@@ -184,7 +193,7 @@ app('pathway')
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label for="field-cluster">{{ trans('queues::queues.cluster') }}</label>
+								<label for="field-cluster" id="field-clusterlabel" data-label="{{ $dlabel }}">{{ $clabel }}</label>
 								<input type="text" name="fields[cluster]" id="field-cluster" class="form-control" maxlength="32" value="{{ $row->cluster }}" />
 							</div>
 						</div>

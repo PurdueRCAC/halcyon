@@ -56,6 +56,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		subresourceid.addEventListener('change', function () {
 			var opt = this.options[this.selectedIndex];
 
+			document.getElementById('field-clusterlabel').innerHTML = opt.getAttribute('data-clusterlabel');
+
 			document.getElementById("SPAN_nodecores").innerHTML = opt.getAttribute('data-nodecores');
 			document.getElementById("SPAN_nodemem").innerHTML = opt.getAttribute('data-nodemem');
 

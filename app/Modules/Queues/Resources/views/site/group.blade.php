@@ -115,6 +115,8 @@ $queues = $queues->reject(function($q) use ($canManage)
 								<?php
 								$cores = '-';
 								$mem   = '-';
+								$dlabel = trans('queues::queues.cluster');
+								$clabel = $dlabel;
 								?>
 								<label for="queue-subresourceid">{{ trans('queues::queues.subresource') }} <span class="required">*</span></label>
 								<select name="subresourceid" id="queue-subresourceid" class="form-control{{ $errors->has('fields.subresourceid') ? ' is-invalid' : '' }}" required>
@@ -122,10 +124,16 @@ $queues = $queues->reject(function($q) use ($canManage)
 									<?php foreach ($resources as $resource): ?>
 										<?php
 										$children = $resource->children()->get();
-										if (count($children)): ?>
+										if (count($children)):
+											$label = $dlabel;
+											if ($facet = $resource->getFacet('cluster_label')):
+												$label = $facet->value;
+											endif;
+											?>
 											<optgroup data-resourceid="{{ $resource->id }}" label="{{ $resource->name }}">
 												<?php foreach ($children as $child): ?>
 													<option value="{{ $child->subresourceid }}"
+														data-clusterlabel="{{ $label }}"
 														data-nodecores="{{ $child->subresource && $child->subresource->nodecores ? $child->subresource->nodecores : 0 }}"
 														data-nodemem="{{ $child->subresource && $child->subresource->nodemem ? $child->subresource->nodemem : 0 }}"
 														data-cluster="{{ $child->subresource ? $child->subresource->cluster : '' }}">{{ $child->subresource ? $child->subresource->name : trans('global.unknown') }}</option>
@@ -143,7 +151,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label for="queue-cluster">{{ trans('queues::queues.cluster') }}</label>
+								<label for="queue-cluster" id="queue-clusterlabel" data-label="{{ $dlabel }}">{{ $clabel }}</label>
 								<input type="text" name="cluster" id="queue-cluster" class="form-control" maxlength="32" value="" />
 							</div>
 						</div>
