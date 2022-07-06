@@ -286,7 +286,7 @@ app('pathway')->append(
 								{{ trans('contactreports::contactreports.notes') }}
 							</label>
 							<div class="col-sm-10">
-								<textarea id="NotesText" class="form-control" rows="10" cols="80"></textarea>
+								{!! markdown_editor('NotesText', '', ['rows' => 10, 'cols' => 80, 'class' => 'required', 'required' => 'required']) !!}
 								<span class="form-text text-muted">Reports can be formatted with <a href="#help1" class="help tip" title="MarkDown Formatting Help">MarkDown</a>. Hash tags (e.g., #python) can be used to tag entries.</span>
 							</div>
 						</div>
