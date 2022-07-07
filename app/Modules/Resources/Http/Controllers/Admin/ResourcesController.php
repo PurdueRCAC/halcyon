@@ -370,7 +370,7 @@ class ResourcesController extends Controller
 		{
 			$row = Asset::findOrFail($id);
 
-			if (!$row-trashed())
+			if (!$row->trashed())
 			{
 				if (!$row->delete())
 				{
