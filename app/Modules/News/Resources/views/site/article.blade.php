@@ -147,7 +147,7 @@ app('pathway')
 
 				echo '<li><span class="fa fa-fw fa-user" aria-hidden="true"></span> <span id="attendees">' . implode(', ', array_slice($users, 0, 5)) . '</span>';
 				if (count($users) > 5):
-					echo ' <a id="attendees-reveal" href="#attendees-all">... +' . (count($users) - 5) . ' more</a><span id="attendees-all" class="stash">' . implode(', ', $users) . '</span>';
+					echo ' <a id="attendees-reveal" href="#attendees-all">... +' . (count($users) - 5) . ' more</a><span id="attendees-all" class="d-none">' . implode(', ', $users) . '</span>';
 				endif;
 				echo '</li>';
 			endif;

@@ -2675,6 +2675,7 @@ function NEWSClearSearch() {
 	document.getElementById("newstype").selectedIndex = 0;
 	if (document.getElementById("NotesText")) {
 		document.getElementById("NotesText").value = "";
+		document.getElementById("NotesText").dispatchEvent(new Event('refreshEditor', { bubbles: true }));
 	}
 	if (document.getElementById("Headline")) {
 		document.getElementById("Headline").value = "";
@@ -3664,78 +3665,85 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
-	$('.btn-attend').on('click', function (event) {
-		event.preventDefault();
+	document.querySelectorAll('.btn-attend').forEach(function (el) {
+		el.addEventListener('click', function (event) {
+			event.preventDefault();
 
-		var el = $(this);
-		var id = el.data('newsid');
-		var post = {
-			'associd': el.data('assoc'),
-			'assoctype': 'user',
-			'newsid': id
-		};
+			var el = $(this);
+			var id = el.data('newsid');
+			var post = {
+				'associd': el.data('assoc'),
+				'assoctype': 'user',
+				'newsid': id
+			};
 
-		el.parent().find('.alert').remove();
+			el.parent().find('.alert').remove();
 
-		if (el.attr('data-comment') && $(el.attr('data-comment'))) {
-			post['comment'] = $(el.attr('data-comment')).val().trim();
-			var words = post['comment']
-				.replace(/^[\s,.;]+/, "")
-				.replace(/[\s,.;]+$/, "")
-				.split(/[\s,.;]+/)
-				.length;
+			if (el.attr('data-comment') && $(el.attr('data-comment'))) {
+				post['comment'] = $(el.attr('data-comment')).val().trim();
+				var words = post['comment']
+					.replace(/^[\s,.;]+/, "")
+					.replace(/[\s,.;]+$/, "")
+					.split(/[\s,.;]+/)
+					.length;
 
-			if (!post['comment'] || words < 1) {
-				$(el.attr('data-comment')).addClass('is-invalid');
-				el.parent().append('<span class="alert alert-danger">Please provide a comment.</span>');
-				return;
-			} else {
-				$(el.attr('data-comment')).removeClass('is-invalid');
+				if (!post['comment'] || words < 1) {
+					$(el.attr('data-comment')).addClass('is-invalid');
+					el.parent().append('<span class="alert alert-danger">Please provide a comment.</span>');
+					return;
+				} else {
+					$(el.attr('data-comment')).removeClass('is-invalid');
+				}
 			}
-		}
 
-		post = JSON.stringify(post);
+			post = JSON.stringify(post);
 
-		WSPostURL(root + "news/associations", post, function (xml) {
-			if (xml.status < 400) {
-				el.parent().html('<span class="alert alert-success">Thank you for your interest!</span>');
-				setTimeout(function () {
-					window.location.reload(true);
-				}, 1000);
-			} else if (xml.status == 403) {
-				el.parent().append('<span class="alert alert-warning">Registration is closed.</span>');
-			} else {
-				el.parent().append('<span class="alert alert-danger">An error occurred.</span>');
-			}
+			WSPostURL(root + "news/associations", post, function (xml) {
+				if (xml.status < 400) {
+					el.parent().html('<span class="alert alert-success">Thank you for your interest!</span>');
+					setTimeout(function () {
+						window.location.reload(true);
+					}, 1000);
+				} else if (xml.status == 403) {
+					el.parent().append('<span class="alert alert-warning">Registration is closed.</span>');
+				} else {
+					el.parent().append('<span class="alert alert-danger">An error occurred.</span>');
+				}
+			});
 		});
 	});
 
-	$('.btn-notattend').on('click', function (event) {
-		event.preventDefault();
+	document.querySelectorAll('.btn-notattend').forEach(function(el) {
+		el.addEventListener('click', function (event) {
+			event.preventDefault();
 
-		var el = $(this);
+			var el = $(this);
 
-		WSDeleteURL(root + "news/associations/" + el.data('id'), function (xml) {
-			if (xml.status < 400) {
-				el.parent().html('<span class="alert alert-success">Successfully cancelled.</span>');
-				setTimeout(function () {
-					window.location.reload(true);
-				}, 1000);
-			} else if (xml.status == 403) {
-				el.parent().append('<span class="alert alert-warning">Unable to register changes.</span>');
-			} else {
-				el.parent().append('<span class="alert alert-error">An error occurred.</span>');
-			}
+			WSDeleteURL(root + "news/associations/" + el.data('id'), function (xml) {
+				if (xml.status < 400) {
+					el.parent().html('<span class="alert alert-success">Successfully cancelled.</span>');
+					setTimeout(function () {
+						window.location.reload(true);
+					}, 1000);
+				} else if (xml.status == 403) {
+					el.parent().append('<span class="alert alert-warning">Unable to register changes.</span>');
+				} else {
+					el.parent().append('<span class="alert alert-error">An error occurred.</span>');
+				}
+			});
 		});
 	});
 
-	$('#attendees-reveal').on('click', function (e) {
-		e.preventDefault();
+	var revealbtn = document.getElementById('attendees-reveal');
+	if (revealbtn) {
+		revealbtn.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		$(this).addClass('stash');
-		$('#attendees-all').removeClass('stash');
-		$('#attendees').addClass('stash');
-	});
+			this.classList.add('d-none');
+			document.getElementById('attendees-all').classList.remove('d-none');
+			document.getElementById('attendees').classList.add('d-none');
+		});
+	}
 
 	var url = window.location.href.match(/[&?](\w+)$/),
 		on = 'search',

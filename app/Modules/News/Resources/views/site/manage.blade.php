@@ -233,8 +233,9 @@
 						<div class="form-group row tab-search tab-add tab-edit" id="TR_published">
 							<label for="published" class="col-sm-2 col-form-label">
 								Published
-								<a href="#help2" class="help icn tip" title="Help">
-									<span class="fa fa-question-circle" aria-hidden="true"></span> Help
+								<a href="#help2" class="text-info help tip" title="Help">
+									<span class="fa fa-question-circle" aria-hidden="true"></span>
+									<span class="sr-only">Help</span>
 								</a>
 							</label>
 							<div class="col-sm-10">
@@ -250,22 +251,18 @@
 						<div class="form-group row tab-add tab-edit" id="TR_use_template">
 							<label for="template_select" class="col-sm-2 col-form-label">
 								Template
-								<a href="#help4" class="help icn tip" title="Help">
-									<span class="fa fa-question-circle" aria-hidden="true"></span> Help
+								<a href="#help4" class="text-info help tip" title="Help">
+									<span class="fa fa-question-circle" aria-hidden="true"></span>
+									<span class="sr-only">Help</span>
 								</a>
 							</label>
 							<div class="col-sm-10">
 								<select id="template_select" name="template_select" class="form-control">
 									<option value="0">(No Template)</option>
 									<option value="savetemplate">(Save as New Template)</option>
-									<?php
-									//$templates = $ws->get(ROOT_URI . 'news/template:1');
-
-									foreach ($templates as $template)
-									{
-										echo '<option value="' . route('api.news.read', ['id' => $template['id']]) . '" data-api="' . route('api.news.read', ['id' => $template['id']]) . '">' . e($template['headline']) . '</option>';
-									}
-									?>
+									@foreach ($templates as $template)
+										<option value="{{ route('api.news.read', ['id' => $template['id']]) }}" data-api="{{ route('api.news.read', ['id' => $template['id']]) }}">{{ $template['headline'] }}</option>
+									@endforeach
 								</select>
 							</div>
 						</div>
@@ -290,8 +287,9 @@
 						<div class="form-group row tab-add tab-edit" id="TR_notes">
 							<label for="NotesText" class="col-sm-2 col-form-label">
 								News Text
-								<a href="#markdown-help" class="help icn tip" title="Help">
-									<span class="fa fa-question-circle" aria-hidden="true"></span> Help
+								<a href="#markdown-help" class="text-info help tip" title="Help">
+									<span class="fa fa-question-circle" aria-hidden="true"></span>
+									<span class="sr-only">Help</span>
 								</a>
 							</label>
 							<div class="col-sm-10">
@@ -392,7 +390,7 @@
 	<div id="mailpreview" class="dialog" title="Mail Preview">
 	</div>
 
-	<div id="mailwrite" class="stash" title="Write Mail">
+	<div id="mailwrite" class="dialog" title="Write Mail">
 		<form method="post" action="{{ route('site.news.manage') }}">
 			<div class="form-group row">
 				<label for="newsuser" class="col-sm-2 col-form-label">To</label>
