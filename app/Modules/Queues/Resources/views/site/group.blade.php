@@ -260,6 +260,12 @@ $queues = $queues->reject(function($q) use ($canManage)
 	<tbody id="queues">
 		@if (count($queues) > 0)
 			@foreach ($queues as $q)
+				<?php
+				$unit = 'nodes';
+				if ($facet = $q->resource->getFacet('allocation_unit')):
+					$unit = $facet->value;
+				endif;
+				?>
 				<tr>
 					<td class="text-center">
 						@if ($q->enabled && $q->started && $q->active)
@@ -299,7 +305,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 						<span class="text-success">{{ $upcoming->type ? 'loan' : 'purchase' }} starts {{ $upcoming->datetimestart->diffForHumans() }}</span>
 					</div>
 				@else
-					@if ($q->serviceunits > 0)
+					@if ($unit == 'sus')
 						<td class="text-right" colspan="2">
 							{{ $q->serviceunits }} <span class="text-muted">SUs</span>
 						</div>
@@ -309,7 +315,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 						</td>
 						<td class="text-right">
 							@if ($q->subresource && $q->subresource->nodecores > 0)
-								{{ round($q->totalcores/$q->subresource->nodecores, 1) }} <span class="text-muted">{{ strtolower(trans('queues::queues.nodes')) }}</span>
+								{{ round($q->totalcores/$q->subresource->nodecores, 1) }} <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
 							@endif
 						</td>
 					@endif
@@ -533,10 +539,10 @@ $queues = $queues->reject(function($q) use ($canManage)
 													@endif
 												</td>
 												<td class="text-right">
-													<span class="{{ $cls }}">{{ ($cls == 'text-success' ? '+' : '-') }} {{ abs($amt) }}</span>
+													<span class="{{ $cls }}">{{ ($cls == 'text-success' ? '+' : '-') }} {{ number_format(abs($amt)) }}</span>
 												</td>
 												<td class="text-right">
-													{{ $item->total }}
+													{{ number_format($item->total) }}
 												</td>
 												<td class="text-right">
 													<a href="#dialog-edit{{ $item->id }}" class="btn btn-sm queue-pl-edit"
@@ -560,26 +566,34 @@ $queues = $queues->reject(function($q) use ($canManage)
 													<div class="modl dialog" id="dialog-edit{{ $item->id }}" title="{{ trans('queues::queues.edit ' . ($item->type == 1 ? 'loan' : 'size')) }} #{{ $item->id }}">
 														<form method="post" class="modl-content dialog-content" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes') . '.update', ['id' => $item->id]) }}">
 															<div class="modl-body dialog-body">
+															@if ($unit == 'sus')
 															<div class="row">
-																<div class="col-md-4">
-																	<div class="form-group">
-																		<label for="loan-nodes{{ $item->id }}">{{ trans('queues::queues.nodes') }}</label>
-																		<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $nodecores ? round($item->corecount / $nodecores, 1) : $item->nodecount }}" step="0.5" />
-																	</div>
-																</div>
-																<div class="col-md-4">
-																	<div class="form-group">
-																		<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.cores') }}</label>
-																		<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
-																	</div>
-																</div>
-																<div class="col-md-4">
+																<div class="col-md-12">
 																	<div class="form-group">
 																		<label for="loan-serviceunits{{ $item->id }}">{{ trans('queues::queues.service units') }}</label>
 																		<input type="number" class="form-control serviceunits" size="4" id="loan-serviceunits{{ $item->id }}" name="serviceunits" value="{{ $item->serviceunits }}" step="0.25" />
 																	</div>
 																</div>
 															</div>
+															<input type="hidden" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $nodecores ? round($item->corecount / $nodecores, 1) : $item->nodecount }}" step="0.5" />
+															<input type="hidden" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
+															@else
+															<div class="row">
+																<div class="col-md-6">
+																	<div class="form-group">
+																		<label for="loan-nodes{{ $item->id }}">{{ trans('queues::queues.' . $unit) }}</label>
+																		<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $nodecores ? round($item->corecount / $nodecores, 1) : $item->nodecount }}" step="0.5" />
+																	</div>
+																</div>
+																<div class="col-md-6">
+																	<div class="form-group">
+																		<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.cores') }}</label>
+																		<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
+																	</div>
+																</div>
+															</div>
+															<input type="hidden" class="form-control serviceunits" size="4" id="loan-serviceunits{{ $item->id }}" name="serviceunits" value="{{ $item->serviceunits }}" step="0.25" />
+															@endif
 
 															<div class="row">
 																<div class="col-md-6">
@@ -626,26 +640,34 @@ $queues = $queues->reject(function($q) use ($canManage)
 							<div class="modl dialog" id="dialog-sell{{ $q->id }}" title="{{ trans('queues::queues.sell') }}">
 								<form class="modl-content dialog-content" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.sizes.create') }}">
 									<div class="modl-body dialog-body">
+										@if ($unit == 'sus')
 										<div class="row">
-											<div class="col-md-4">
-												<div class="form-group">
-													<label for="sell-nodes{{ $q->id }}">{{ trans('queues::queues.nodes') }}</label>
-													<input type="number" class="form-control nodes" size="4" id="sell-nodes{{ $q->id }}" name="nodecount" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="sell-cores{{ $q->id }}" value="0" step="0.5" />
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group">
-													<label for="sell-cores{{ $q->id }}">{{ trans('queues::queues.cores') }}</label>
-													<input type="number" class="form-control cores" size="4" id="sell-cores{{ $q->id }}" name="corecount" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="sell-nodes{{ $q->id }}" value="0" />
-												</div>
-											</div>
-											<div class="col-md-4">
+											<div class="col-md-12">
 												<div class="form-group">
 													<label for="sell-serviceunits{{ $q->id }}">{{ trans('queues::queues.service units') }}</label>
 													<input type="number" class="form-control serviceunits" size="4" id="sell-serviceunits{{ $q->id }}" name="serviceunits" value="0.00" step="0.25" />
 												</div>
 											</div>
 										</div>
+										<input type="hidden" class="form-control nodes" size="4" id="sell-nodes{{ $q->id }}" name="nodecount" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="sell-cores{{ $q->id }}" value="0" step="0.5" />
+										<input type="hidden" class="form-control cores" size="4" id="sell-cores{{ $q->id }}" name="corecount" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="sell-nodes{{ $q->id }}" value="0" />
+										@else
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="sell-nodes{{ $q->id }}">{{ trans('queues::queues.' . $unit) }}</label>
+													<input type="number" class="form-control nodes" size="4" id="sell-nodes{{ $q->id }}" name="nodecount" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="sell-cores{{ $q->id }}" value="0" step="0.5" />
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="sell-cores{{ $q->id }}">{{ trans('queues::queues.cores') }}</label>
+													<input type="number" class="form-control cores" size="4" id="sell-cores{{ $q->id }}" name="corecount" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="sell-nodes{{ $q->id }}" value="0" />
+												</div>
+											</div>
+										</div>
+										<input type="hidden" class="form-control serviceunits" size="4" id="sell-serviceunits{{ $q->id }}" name="serviceunits" value="0.00" step="0.25" />
+										@endif
 
 										<div class="row">
 											<div class="col-md-6">
@@ -776,26 +798,34 @@ $queues = $queues->reject(function($q) use ($canManage)
 							<div class="modl dialog" id="dialog-loan{{ $q->id }}" title="{{ trans('queues::queues.loan') }}">
 								<form class="modl-content dialog-content" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.loans.create') }}">
 									<div class="modl-body dialog-body">
+										@if ($unit == 'sus')
 										<div class="row">
-											<div class="col-md-4">
-												<div class="form-group">
-													<label for="loan-nodes{{ $q->id }}">{{ trans('queues::queues.nodes') }}</label>
-													<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $q->id }}" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="loan-cores{{ $q->id }}" value="0" step="0.5" />
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group">
-													<label for="loan-cores{{ $q->id }}">{{ trans('queues::queues.cores') }}</label>
-													<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $q->id }}" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $q->id }}" value="0" />
-												</div>
-											</div>
-											<div class="col-md-4">
+											<div class="col-md-12">
 												<div class="form-group">
 													<label for="loan-serviceunits{{ $q->id }}">{{ trans('queues::queues.service units') }}</label>
 													<input type="number" name="serviceunits" class="form-control serviceunits" size="4" id="loan-serviceunits{{ $q->id }}" value="0.00" step="0.25" />
 												</div>
 											</div>
 										</div>
+										<input type="hidden" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $q->id }}" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="loan-cores{{ $q->id }}" value="0" step="0.5" />
+										<input type="hidden" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $q->id }}" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $q->id }}" value="0" />
+										@else
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="loan-nodes{{ $q->id }}">{{ trans('queues::queues.' . $unit) }}</label>
+													<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $q->id }}" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="loan-cores{{ $q->id }}" value="0" step="0.5" />
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="loan-cores{{ $q->id }}">{{ trans('queues::queues.cores') }}</label>
+													<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $q->id }}" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $q->id }}" value="0" />
+												</div>
+											</div>
+										</div>
+										<input type="hidden" name="serviceunits" class="form-control serviceunits" size="4" id="loan-serviceunits{{ $q->id }}" value="0.00" step="0.25" />
+										@endif
 
 										<div class="row">
 											<div class="col-md-6">
