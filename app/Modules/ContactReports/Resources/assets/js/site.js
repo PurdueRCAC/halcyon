@@ -1447,8 +1447,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	td = document.createElement("h3");
 	td.className = "card-title panel-title crmcontactdate";
 
-	var bits = report['datetimecontact'].match(/\d+/g);
-	var d = new Date(bits[0], bits[1] - 1, bits[2], bits[3], bits[4], bits[5], 0);
+	var d = new Date(report['datetimecontact']);
 
 	td.innerHTML = d.getMonthName() + " " + d.getDate() + ", " + d.getFullYear();
 
@@ -1488,8 +1487,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	li = document.createElement("li");
 	li.className = 'news-date';
 
-	bits = report['datetimecreated'].match(/\d+/g);
-	d = new Date(bits[0], bits[1] - 1, bits[2], bits[3], bits[4], bits[5], 0);
+	d = new Date(report['datetimecreated']);
 
 	span = document.createElement("span");
 	span.className = "crmpostdate";
@@ -2037,7 +2035,7 @@ function CRMPrintComment(reportid, comment) { //, userid) {
 	div.className = "card-footer panel-footer";
 
 	var bits = comment['datetimecreated'].match(/\d+/g);
-	var d = new Date(bits[0], bits[1] - 1, bits[2], bits[3], bits[4], bits[5], 0);
+	var d = new Date(comment['datetimecreated']);
 
 	var div2 = document.createElement("div");
 	div2.innerHTML += "Posted by " + comment['username'] + " on " + d.getMonthName() + " " + d.getDate() + ", " + d.getFullYear();
@@ -2429,6 +2427,7 @@ function CRMClearSearch() {
 	document.getElementById("datestopshort").value = "";
 	document.getElementById("id").value = "";
 	document.getElementById("NotesText").value = "";
+	document.getElementById("NotesText").dispatchEvent(new Event('refreshEditor', { bubbles: true }));
 
 	var data = $('#crm-search-data');
 	var sdata = JSON.parse(data.html());
