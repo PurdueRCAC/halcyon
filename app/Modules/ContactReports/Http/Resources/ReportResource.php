@@ -65,17 +65,18 @@ class ReportResource extends JsonResource
 			$item = $res->toArray();
 
 			$item['name'] = trans('global.unknown');
+			$item['highlight'] = false;
 			if ($res->user)
 			{
 				$item['name'] = $res->user->name;
-			}
-			$item['highlight'] = false;
-			foreach ($res->user->getAuthorisedRoles() as $role)
-			{
-				if (in_array($role, $highlight))
+
+				foreach ($res->user->getAuthorisedRoles() as $role)
 				{
-					$item['highlight'] = true;
-					break;
+					if (in_array($role, $highlight))
+					{
+						$item['highlight'] = true;
+						break;
+					}
 				}
 			}
 
