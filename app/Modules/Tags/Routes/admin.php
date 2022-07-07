@@ -5,7 +5,7 @@ use Illuminate\Routing\Router;
 /** @var Router $router */
 $router->group(['prefix' => 'tags'], function (Router $router)
 {
-	$router->get('/', [
+	$router->match(['get', 'post'], '/', [
 		'as' => 'admin.tags.index',
 		'uses' => 'TagsController@index',
 		'middleware' => 'can:manage tags',
