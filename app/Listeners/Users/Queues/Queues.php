@@ -40,6 +40,13 @@ class Queues
 			->whereIsManager()
 			->get();
 
+		$qu = (new \App\Modules\Queues\Models\User)->getTable();
+		$q = (new \App\Modules\Queues\Models\Queue)->getTable();
+		$s = (new \App\Modules\Queues\Models\Scheduler)->getTable();
+		$r = (new \App\Modules\Resources\Models\Subresource)->getTable();
+		$c = (new \App\Modules\Resources\Models\Child)->getTable();
+		$a = (new \App\Modules\Resources\Models\Asset)->getTable();
+
 		$ids = array();
 		$allqueues = array();
 		foreach ($memberships as $membership)
@@ -48,19 +55,22 @@ class Queues
 
 			$queues = $group->queues;
 
+			$queues = $group->queues()
+				->select($q . '.*')
+				->join($s, $s . '.id', $q . '.schedulerid')
+				->join($r, $r . '.id', $q . '.subresourceid')
+				->join($c, $c . '.subresourceid', $r . '.id')
+				->join($a, $a . '.id', $c . '.resourceid')
+				->whereNull($s . '.datetimeremoved')
+				->whereNull($r . '.datetimeremoved')
+				->whereNull($a . '.datetimeremoved')
+				->orderBy($r . '.name', 'asc')
+				->orderBy($q . '.name', 'asc')
+				->get();
+
 			foreach ($queues as $queue)
 			{
 				$ids[] = $queue->id;
-
-				if (!$queue || $queue->trashed())
-				{
-					continue;
-				}
-
-				if (!$queue->scheduler || $queue->scheduler->trashed())
-				{
-					continue;
-				}
 
 				$queue->status = 'member';
 
@@ -69,7 +79,19 @@ class Queues
 		}
 
 		$queues = $user->queues()
-			->whereNotIn('queueid', $ids)
+			->select($qu . '.*')
+			->join($q, $q . '.id', $qu . '.queueid')
+			->join($s, $s . '.id', $q . '.schedulerid')
+			->join($r, $r . '.id', $q . '.subresourceid')
+			->join($c, $c . '.subresourceid', $r . '.id')
+			->join($a, $a . '.id', $c . '.resourceid')
+			->whereNull($q . '.datetimeremoved')
+			->whereNull($s . '.datetimeremoved')
+			->whereNull($r . '.datetimeremoved')
+			->whereNull($q . '.datetimeremoved')
+			->whereNotIn($qu . '.queueid', $ids)
+			->orderBy($r . '.name', 'asc')
+			->orderBy($q . '.name', 'asc')
 			->get();
 
 		foreach ($queues as $qu)
@@ -80,16 +102,6 @@ class Queues
 			}
 
 			$queue = $qu->queue;
-
-			if (!$queue || $queue->trashed())
-			{
-				continue;
-			}
-
-			if (!$queue->scheduler || $queue->scheduler->trashed())
-			{
-				continue;
-			}
 
 			$group = $queue->group;
 

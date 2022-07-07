@@ -298,7 +298,7 @@ class Queue extends Model
 	 */
 	public function sold()
 	{
-		return $this->hasMany(Size::class, 'sellerqueueid')->where('corecount', '>', 0);
+		return $this->hasMany(Size::class, 'sellerqueueid');
 	}
 
 	/**
@@ -309,6 +309,16 @@ class Queue extends Model
 	public function loans()
 	{
 		return $this->hasMany(Loan::class, 'queueid');
+	}
+
+	/**
+	 * Defines a relationship to loans where the queue is the lender
+	 *
+	 * @return  object
+	 */
+	public function loaned()
+	{
+		return $this->hasMany(Loan::class, 'lenderqueueid');
 	}
 
 	/**
@@ -910,11 +920,11 @@ class Queue extends Model
 	 *
 	 * @return  bool
 	 */
-	public function addPurchase($lenderqueueid, $start, $stop = null, $nodecount = 0, $corecount = 0, $serviceunits = 0, $comment = null)
+	public function addPurchase($sellerqueueid, $start, $stop = null, $nodecount = 0, $corecount = 0, $serviceunits = 0, $comment = null)
 	{
 		$row = new Size;
 		$row->queueid = $this->id;
-		$row->lenderqueueid = $lenderqueueid;
+		$row->sellerqueueid = $sellerqueueid;
 
 		$row->datetimestart = Carbon::now()->toDateTimeString();
 		if ($start)
@@ -993,6 +1003,11 @@ class Queue extends Model
 
 			// Look up the role name of the resource to which access is being granted.
 			$resource = $this->resource;
+
+			if (!$user)
+			{
+				continue;
+			}
 
 			// Ensure the client is authorized to manage a group with queues on the resource in question.
 			if (!auth()->user()->can('manage resources')

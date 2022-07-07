@@ -10,10 +10,12 @@ use App\Modules\Queues\Http\Resources\AllocationResourceCollection;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\Scheduler;
 use App\Modules\Queues\Models\SchedulerPolicy;
-use App\Modules\Resources\Models\Subresource;
 use App\Modules\Queues\Events\AllocationCreate;
 use App\Modules\Queues\Events\AllocationUpdate;
 use App\Modules\Queues\Events\AllocationDelete;
+use App\Modules\Resources\Models\Asset;
+use App\Modules\Resources\Models\Child;
+use App\Modules\Resources\Models\Subresource;
 use Carbon\Carbon;
 
 /**
@@ -271,9 +273,13 @@ class AllocationsController extends Controller
 			nodegpus";
 		*/
 
+		$isAdmin = (auth()->user() && auth()->user()->can('manage resources'));
+
 		$q = (new Queue)->getTable();
 		$s = (new Scheduler)->getTable();
 		$r = (new Subresource)->getTable();
+		$c = (new Child)->getTable();
+		$a = (new Asset)->getTable();
 		$p = (new SchedulerPolicy)->getTable();
 
 		$now = Carbon::now();
@@ -288,9 +294,16 @@ class AllocationsController extends Controller
 			->join($s, $s . '.id', $q . '.schedulerid')
 			->join($r, $r . '.id', $q . '.subresourceid')
 			->join($p, $p . '.id', $q . '.schedulerpolicyid')
+			->join($c, $c . '.subresourceid', $r . '.id')
+			->join($a, $a . '.id', $c . '.resourceid')
 			->where($q . '.datetimecreated', '<', $now->toDateTimeString())
 			->whereNull($s . '.datetimeremoved')
 			->whereNull($r . '.datetimeremoved');
+
+		if (!$isAdmin)
+		{
+			$query->whereNull($a . '.datetimeremoved');
+		}
 			//->where($s . '.batchsystem', '=', 1)
 
 		if ($hostname)

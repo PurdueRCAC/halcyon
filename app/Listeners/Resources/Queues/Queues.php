@@ -41,7 +41,7 @@ class Queues
 		$child = $event->asset->children->first();
 
 		$scheduler = new Scheduler;
-		$scheduler->hostname = $event->asset->rolename . '-adm.' . request()->getHost();
+		$scheduler->hostname = $event->asset->rolename . '-adm.' . str_replace('www', '', request()->getHost());
 		if ($child)
 		{
 			$scheduler->queuesubresourceid = $child->subresourceid;

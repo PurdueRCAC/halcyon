@@ -5,6 +5,7 @@ namespace App\Modules\Resources\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use App\Modules\Resources\Console\EmailSchedulingCommand;
+use App\Modules\Resources\Console\CopyCommand;
 use App\Modules\Resources\Listeners\Groups;
 use App\Modules\Resources\Listeners\Queues;
 use App\Modules\Resources\Listeners\Subresources;
@@ -64,6 +65,7 @@ class ResourcesServiceProvider extends ServiceProvider
 	{
 		$this->commands([
 			EmailSchedulingCommand::class,
+			CopyCommand::class,
 		]);
 	}
 

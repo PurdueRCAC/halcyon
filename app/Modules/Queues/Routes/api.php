@@ -251,6 +251,7 @@ $router->group(['prefix' => 'allocations', 'middleware' => 'auth.ip'], function 
 	$router->get('/{hostname?}', [
 		'as' => 'api.allocations.index',
 		'uses' => 'AllocationsController@index',
+		'middleware' => 'auth.optional:api',
 	])->where('hostname', '[a-z0-9\-\.]+');
 	$router->post('/', [
 		'as' => 'api.allocations.create',

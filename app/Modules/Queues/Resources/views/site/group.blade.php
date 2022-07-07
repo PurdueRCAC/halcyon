@@ -9,13 +9,18 @@ $canManage = auth()->user()->can('edit groups') || (auth()->user()->can('edit.ow
 $q = (new App\Modules\Queues\Models\Queue)->getTable();
 $s = (new App\Modules\Queues\Models\Scheduler)->getTable();
 $r = (new App\Modules\Resources\Models\Subresource)->getTable();
+$c = (new App\Modules\Resources\Models\Child)->getTable();
+$a = (new App\Modules\Resources\Models\Asset)->getTable();
 
 $queues = $group->queues()
 	->select($q . '.*')
 	->join($s, $s . '.id', $q . '.schedulerid')
 	->join($r, $r . '.id', $q . '.subresourceid')
+	->join($c, $c . '.subresourceid', $r . '.id')
+	->join($a, $a . '.id', $c . '.resourceid')
 	->whereNull($s . '.datetimeremoved')
 	->whereNull($r . '.datetimeremoved')
+	->whereNull($a . '.datetimeremoved')
 	->orderBy($r . '.name', 'asc')
 	->orderBy($q . '.name', 'asc')
 	->get();
