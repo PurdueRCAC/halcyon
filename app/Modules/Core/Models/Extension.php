@@ -162,17 +162,9 @@ class Extension extends Model
 				app('translator')->addNamespace($this->element, $this->path() . '/Resources/lang');
 			}
 		}
-		elseif ($this->type == 'widget')
+		else
 		{
-			app('translator')->addNamespace('widget.' . $this->element, $this->path() . '/lang');
-		}
-		elseif ($this->type == 'listener')
-		{
-			app('translator')->addNamespace('widget.' . $this->element, $this->path() . '/lang');
-		}
-		elseif ($this->type == 'theme')
-		{
-			app('translator')->addNamespace('widget.' . $this->element, $this->path() . '/lang');
+			app('translator')->addNamespace($this->type . '.' . $this->element, $this->path() . '/lang');
 		}
 	}
 
@@ -200,7 +192,7 @@ class Extension extends Model
 				}
 				$element = ucfirst($element);
 
-				$path = app_path() . '/Widgets/' . $element . '/' . $element . '.php';
+				$path = app_path() . '/Widgets/' . $element . '/widget.json';
 
 				if (file_exists($path))
 				{
@@ -209,11 +201,21 @@ class Extension extends Model
 			}
 			elseif ($this->type == 'listener')
 			{
+				$path = app_path() . '/Listeners/' . $this->folder . '/' . $element . '/listener.json';
 
+				if (file_exists($path))
+				{
+					$this->path = dirname($path);
+				}
 			}
 			elseif ($this->type == 'theme')
 			{
+				$path = app_path() . '/Themes/' . $element . '/theme.json';
 
+				if (file_exists($path))
+				{
+					$this->path = dirname($path);
+				}
 			}
 		}
 
