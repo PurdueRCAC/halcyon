@@ -648,6 +648,12 @@ class OrdersController extends Controller
 			$filters[$key] = $request->input($key, $default);
 		}
 
+		if ($filters['end'] < $filters['start'])
+		{
+			$request->session()->flash('error', trans('orders::orders.errors.end cannot be before start'));
+			$filters['end'] = Carbon::parse($filters['start'])->modify('+1 week')->format('Y-m-d');
+		}
+
 		$categories = Category::query()
 			->where('parentordercategoryid', '>', 0)
 			->orderBy('name', 'asc')

@@ -115,6 +115,7 @@ return [
 		'invalid approverid' => 'Invalid approver ID',
 		'file not found' => 'Import file not found',
 		'invalid file type' => 'Only CSV files are supported at this time.',
+		'end cannot be before start' => 'End time cannot be before start time.'
 	],
 	'filters' => [
 		'search' => 'Search',
