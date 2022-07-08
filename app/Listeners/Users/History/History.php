@@ -63,13 +63,14 @@ class History
 					);
 			}
 
-			if (Module::isEnabled('groups'))
+			$items = collect([]);
+
+			if (Module::has('groups') && Module::isEnabled('groups'))
 			{
 				/*$history = Log::query()
 					->where('userid', '=', $user->id)
 					->where('transportmethod', '!=', 'GET')
 					->paginate(config('list_limit', 20));*/
-				$items = collect([]);
 
 				$groups = $user->groups()
 					->withTrashed()
@@ -122,7 +123,7 @@ class History
 				}
 			}
 
-			if (Module::isEnabled('queues'))
+			if (Module::has('queues') && Module::isEnabled('queues'))
 			{
 				$queues = \App\Modules\Queues\Models\User::query()
 					->withTrashed()
@@ -176,7 +177,7 @@ class History
 				}
 			}
 
-			if (Module::isEnabled('courses'))
+			if (Module::has('courses') && Module::isEnabled('courses'))
 			{
 				$courses = \App\Modules\Courses\Models\Member::query()
 					->withTrashed()
