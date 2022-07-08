@@ -98,6 +98,7 @@ app('pathway')
 							<span class="input-group-append"><span class="input-group-text icon-users"></span></span>
 						</span> -->
 						<select name="fields[groupid]" id="field-groupid" class="form-control searchable-select">
+							<option	value="-1"<?php if ($row->groupid == '-1') { echo ' selected="selected"'; } ?>>{{ trans('global.none') . ' - ' . trans('queues::queues.system queues') }}</option>
 							@foreach (App\Modules\Groups\Models\Group::query()->orderBy('name', 'asc')->get() as $group)
 								<option value="{{ $group->id }}"<?php if ($row->groupid == $group->id) { echo ' selected="selected"'; } ?>>{{ $group->name }}</option>
 							@endforeach
