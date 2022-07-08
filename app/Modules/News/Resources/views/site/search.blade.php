@@ -58,8 +58,8 @@ app('pathway')
 
 	<div id="everything">
 		<form method="get" action="{{ route('site.news.search') }}" class="editform">
-			<fieldset>
-				<legend>{{ trans('news::news.filters') }}</legend>
+			<div class="card card-news">
+				<div class="card-body">
 				<div class="form-group row tab-search tab-add tab-edit" id="TR_date">
 					<label for="datestartshort" class="col-sm-2 col-form-label">{{ trans('news::news.publish up') }}</label>
 					<div class="col-sm-4">
@@ -244,13 +244,14 @@ app('pathway')
 					</div>
 					<div class="col-sm-10">
 						<input type="submit" class="btn btn-primary" value="{{ trans('news::news.search') }}" id="INPUT_search" />
-						<input type="reset" class="btn btn-secondary" value="{{ trans('news::news.clear') }}" id="INPUT_clear" />
+						<input type="reset" class="btn btn" value="{{ trans('news::news.clear') }}" id="INPUT_clear" />
 					</div>
 				</div>
 				<span id="TAB_search_action"></span>
 				<span id="TAB_add_action"></span>
 				<input type="hidden" name="page" id="page" value="{{ $filters['page'] }}" />
-			</fieldset>
+			</div>
+						</div>
 
 			@csrf
 		</form>

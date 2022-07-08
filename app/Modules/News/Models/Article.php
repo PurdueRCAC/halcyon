@@ -5,6 +5,8 @@ namespace App\Modules\News\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Config\Repository;
 use Illuminate\Notifications\Notifiable;
+//use League\CommonMark\CommonMarkConverter;
+//use League\CommonMark\Extension\Table\TableExtension;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Utility\PorterStemmer;
@@ -129,6 +131,11 @@ class Article extends Model
 	protected $metadataRepository = null;
 
 	/**
+	 * @var string
+	 */
+	protected $formatted_body = null;
+
+	/**
 	 * Route notifications for the Slack channel.
 	 *
 	 * @param  \Illuminate\Notifications\Notification  $notification
@@ -161,10 +168,9 @@ class Article extends Model
 	 */
 	public function setBodyAttribute(string $value)
 	{
-		//$value = strip_tags($value);
-
 		$host = request()->getHttpHost();
 
+		//$value = strip_tags($value);
 		$value = preg_replace("/(https?:\/\/)?" . $host . "\/news\/\?id=(\d+)/", "NEWS#$3$4", $value);
 		$value = preg_replace("/(https?:\/\/)?" . $host . "\/news\/\?id=(\d+)/", "NEWS#$3$4", $value);
 		$value = preg_replace("/(https?:\/\/)?" . $host . "\/news\/(\d+)/", "NEWS#$3$4", $value);
@@ -690,111 +696,82 @@ class Article extends Model
 	 */
 	public function getFormattedBodyAttribute()
 	{
-		$body = $this->body;
-
-		$body = preg_replace_callback('/\[.*?\]\(([^\)]+)\)/i', function($matches)
+		if (is_null($this->formatted_body))
 		{
-			if (substr($matches[1], 0, 4) == 'http')
+			$body = $this->body;
+
+			// Auto-expand relative URLs to absolute
+			$body = preg_replace_callback('/\[.*?\]\(([^\)]+)\)/i', function($matches)
 			{
-				return $matches[0];
+				if (substr($matches[1], 0, 4) == 'http')
+				{
+					return $matches[0];
+				}
+
+				return str_replace($matches[1], asset(ltrim($matches[1], '/')), $matches[0]);
+			}, $body);
+
+			event($event = new ArticlePrepareContent($body));
+
+			$text = $event->getBody();
+
+			/*$converter = new CommonMarkConverter([
+				'html_input' => 'allow',
+			]);
+			$converter->getEnvironment()->addExtension(new TableExtension());
+			$text = (string) $converter->convertToHtml($text);*/
+
+			if (class_exists('Parsedown'))
+			{
+				$mdParser = new \Parsedown();
+
+				$text = $mdParser->text(trim($text));
 			}
 
-			return str_replace($matches[1], asset(ltrim($matches[1], '/')), $matches[0]);
-		}, $body);
+			// Separate code blocks as we don't want to do any processing on their content
+			$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/i", [$this, 'stripPre'], $text);
+			$text = preg_replace_callback("/\<code\>(.*?)\<\/code\>/i", [$this, 'stripCode'], $text);
 
-		event($event = new ArticlePrepareContent($body));
+			// Convert emails
+			$text = preg_replace('/([\w\.\-]+@((\w+\.)*\w{2,}\.\w{2,}))/', "<a target=\"_blank\" href=\"mailto:$1\">$1</a>", $text);
 
-		$text = $event->getBody();
-
-		/*$converter = new CommonMarkConverter([
-			'html_input' => 'allow',
-		]);
-		$converter->getEnvironment()->addExtension(new TableExtension());
-		$text = (string) $converter->convertToHtml($text);*/
-
-		if (class_exists('Parsedown'))
-		{
-			$mdParser = new \Parsedown();
-
-			$text = $mdParser->text(trim($text));
-		}
-
-		// separate code blocks
-		$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/i", [$this, 'stripPre'], $text);
-		$text = preg_replace_callback("/\<code\>(.*?)\<\/code\>/i", [$this, 'stripCode'], $text);
-
-		// convert emails
-		$text = preg_replace('/([\w\.\-]+@((\w+\.)*\w{2,}\.\w{2,}))/', "<a target=\"_blank\" href=\"mailto:$1\">$1</a>", $text);
-
-		// convert template variables
-		if (auth()->user() && auth()->user()->can('manage news'))
-		{
-			$text = preg_replace("/%%([\w\s]+)%%/", '<span style="color:red">$0</span>', $text);
-		}
-
-		$uvars = array(
-			'updatedatetime' => $this->datetimecreated,
-			'updatedate'     => date('l, F jS, Y', strtotime($this->datetimecreated)),
-			'updatetime'     => date("g:ia", strtotime($this->datetimecreated))
-		);
-
-		$news = array_merge($this->getContentVars(), $this->getAttributes()); //$this->toArray();
-		//$news['resources'] = $this->resources->toArray();
-
-		/*$resources = array();
-		foreach ($news['resources'] as $resource)
-		{
-			$resource['resourcename'] = $resource['resourceid'];
-			array_push($resources, $resource['resourcename']);
-		}
-
-		if (count($resources) > 1)
-		{
-			$resources[count($resources)-1] = 'and ' . $resources[count($resources)-1];
-		}
-
-		if (count($resources) > 2)
-		{
-			$news['resources'] = implode(', ', $resources);
-		}
-		else if (count($resources) == 2)
-		{
-			$news['resources'] = $resources[0] . ' ' . $resources[1];
-		}
-		else if (count($resources) == 1)
-		{
-			$news['resources'] = $resources[0];
-		}
-		else
-		{
-			$news['resources'] = implode('', $resources);
-		}*/
-
-		foreach ($news as $var => $value)
-		{
-			if (is_array($value))
+			// Convert template variables
+			if (auth()->user() && auth()->user()->can('manage news'))
 			{
-				$value = implode(', ', $value);
+				$text = preg_replace("/%%([\w\s]+)%%/", '<span style="color:red">$0</span>', $text);
 			}
-			$text = preg_replace("/%" . $var . "%/", $value, $text);
+
+			$news = array_merge($this->getContentVars(), $this->getAttributes());
+
+			foreach ($news as $var => $value)
+			{
+				if (is_array($value))
+				{
+					$value = implode(', ', $value);
+				}
+				$text = preg_replace("/%" . $var . "%/", $value, $text);
+			}
+
+			// Highlight unused variables for admins
+			if (auth()->user() && auth()->user()->can('manage news'))
+			{
+				$text = preg_replace("/%([\w\s]+)%/", '<span style="color:red">$0</span>', $text);
+			}
+
+			$text = preg_replace_callback("/(news)\s*(story|item)?\s*#?(\d+)(\{.+?\})?/i", array($this, 'matchNews'), $text);
+
+			// Put code blocks back
+			$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
+			$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
+			$text = str_replace('<th>', '<th scope="col">', $text);
+
+			$text = preg_replace('/<p>([^\n]+)<\/p>\n(<table.*?>)(.*?<\/table>)/usm', '$2 <caption>$1</caption>$3', $text);
+			$text = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
+
+			$this->formatted_body = $text;
 		}
 
-		if (auth()->user() && auth()->user()->can('manage news'))
-		{
-			$text = preg_replace("/%([\w\s]+)%/", '<span style="color:red">$0</span>', $text);
-		}
-
-		$text = preg_replace_callback("/(news)\s*(story|item)?\s*#?(\d+)(\{.+?\})?/i", array($this, 'matchNews'), $text);
-
-		// Put code blocks back
-		$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
-		$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
-		$text = str_replace('<th>', '<th scope="col">', $text);
-
-		$text = preg_replace('/<p>([^\n]+)<\/p>\n(<table.*?>)(.*?<\/table>)/usm', '$2 <caption>$1</caption>$3', $text);
-		$text = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
-
-		return $text;
+		return $this->formatted_body;
 	}
 
 	/**

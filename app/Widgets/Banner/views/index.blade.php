@@ -24,11 +24,11 @@
 							<p class="date">
 								<span class="text-nowrap">{{ $item->formatDate($item->datetimenews, $item->datetimenewsend) }}</span>
 								@if ($item->isToday())
-									<span class="badge badge-info">Today</span>
+									<span class="badge badge-info">{{ trans('news::news.today') }}</span>
 								@endif
 							</p>
 							@if ($update = $item->updates()->orderBy('datetimecreated', 'desc')->first())
-								<p class="newsupdated">Updated: {{ $update->datetimecreated->format('M d, Y h:ia') }}</p>
+								<p class="newsupdated">{{ trans('widget.banner::banner.updated') }}: {{ $update->datetimecreated->format('M d, Y h:ia') }}</p>
 							@endif
 						</li>
 					@endforeach
@@ -38,9 +38,9 @@
 			@endif
 
 			@if ($params->get('readmore'))
-			<div class="more">
-				<a href="{{ route('site.news.type', ['name' => $type->alias]) }}">previous…</a>
-			</div>
+				<div class="more">
+					<a href="{{ route('site.news.type', ['name' => $type->alias]) }}">{{ trans('widget.banner::banner.previous') }}</a>
+				</div>
 			@endif
 		</div>
 	</div><!-- /.tileRow -->
@@ -49,7 +49,7 @@
 <div class="audienceTiles col-lg-4 col-md-6 col-sm-12 col-xs-12 tiles-1">
 	<div class="tileRow">
 		<div class="tileContainer col-lg-12 col-md-12 col-sm-12 col-xs-12">
-			<h2 class="tile">Upcoming Maintenance</h2>
+			<h2 class="tile">{{ trans('widget.banner::banner.upcoming maintenance') }}</h2>
 
 			@if (count($maintenance))
 				<ul class="newslist">
@@ -59,23 +59,23 @@
 							<p class="date">
 								<span class="text-nowrap">{{ $item->formatDate($item->datetimenews, $item->datetimenewsend) }}</span> 
 								@if ($item->isToday())
-									<span class="badge badge-info">Today</span>
+									<span class="badge badge-info">{{ trans('news::news.today') }}</span>
 								@endif
 							</p>
 							@if ($update = $item->updates()->orderBy('datetimecreated', 'desc')->first())
-								<p class="newsupdated">Updated: {{ $update->datetimecreated->format('M d, Y h:ia') }}</p>
+								<p class="newsupdated">{{ trans('widget.banner::banner.updated') }}: {{ $update->datetimecreated->format('M d, Y h:ia') }}</p>
 							@endif
 						</li>
 					@endforeach
 				</ul>
 			@else
-				<p>There is no upcoming maintenance scheduled at this time.</p>
+				<p>{{ trans('widget.banner::banner.no upcoming maintenance') }}</p>
 			@endif
 
 			@if ($params->get('readmore'))
-			<div class="more">
-				<a href="{{ route('site.news.type', ['name' => $type2->alias]) }}">previous…</a>
-			</div>
+				<div class="more">
+					<a href="{{ route('site.news.type', ['name' => $type2->alias]) }}">{{ trans('widget.banner::banner.previous') }}</a>
+				</div>
 			@endif
 		</div>
 	</div><!-- /.tileRow -->

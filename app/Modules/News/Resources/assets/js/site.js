@@ -2869,7 +2869,7 @@ function NEWSPreview(news, edit) {
  * @return  {void}
  */
 function NEWSSendMail(news) {
-	if ($( '#' + news + '_textarea').css('display') == 'block') {
+	if ($( '#' + news + '_textarea').parent().css('display') == 'block') {
 		// We're still editing. Need to save first.
 		$("#dialog-confirm").dialog({
 			resizable: false,
@@ -2971,7 +2971,7 @@ function NEWSSendMail(news) {
 				}
 			}
 		});
-		if ( $(".ui-dialog-buttonpane").find("div").length == 1) {
+		if ($(".ui-dialog-buttonpane").find("div").length == 1) {
 			$(".ui-dialog-buttonpane").prepend('<div style="float:left;padding-top:1em;padding-left:18em">Send this email message?</div>');
 		}
 		$('#mailpreview').dialog('open');

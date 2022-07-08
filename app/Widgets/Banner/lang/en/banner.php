@@ -6,8 +6,11 @@ return [
 	// Misc.
 	'news' => 'News',
 	'no articles found' => 'No articles found.',
+	'upcoming maintenance' => 'Upcoming Maintenance',
+	'no upcoming maintenance' => 'There is no upcoming maintenance scheduled at this time.',
 	'updated' => 'Updated',
 	'more' => 'see more…',
+	'previous' => 'previous…',
 
 	// Params
 	'params' => [

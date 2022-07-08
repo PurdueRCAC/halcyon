@@ -34,8 +34,9 @@
 			<div id="DIV_news">
 
 				<form method="get" action="{{ route('site.news.manage') }}" class="mb-3 editform">
-					<fieldset>
-						<legend><span id="SPAN_header" data-search="Search News" data-add="Add New News" data-edit="Edit News">Search News</span></legend>
+					<div class="card card-news">
+				<div class="card-body">
+						<!-- <legend><span id="SPAN_header" data-search="Search News" data-add="Add New News" data-edit="Edit News">Search News</span></legend> -->
 
 						<div class="form-group row tab-search tab-add tab-edit" id="TR_date">
 							<label for="datestartshort" class="col-sm-2 col-form-label">Date from</label>
@@ -322,7 +323,7 @@
 
 						<span id="TAB_search_action"></span>
 						<span id="TAB_add_action"></span>
-					</fieldset>
+					</div></div>
 
 					@csrf
 				</form>
