@@ -111,7 +111,7 @@
 				<div class="row">
 					<div class="col-md-11">
 						<select name="department" id="new-department" data-category="collegedeptid" class="form-control searchable-select">
-							<option value="0">{{ trans('groups::groups.select department') }}</option>
+							<option value="">{{ trans('groups::groups.select department') }}</option>
 							<?php
 							$departments = App\Modules\Groups\Models\Department::tree();
 							?>
@@ -237,7 +237,7 @@
 				<div class="row">
 					<div class="col-md-11">
 						<select name="fieldofscience" id="new-fieldofscience" data-category="fieldofscienceid" class="form-control searchable-select">
-							<option value="0">{{ trans('groups::groups.select field of science') }}</option>
+							<option value="">{{ trans('groups::groups.select field of science') }}</option>
 							<?php $fields = App\Halcyon\Models\FieldOfScience::tree(); ?>
 							@foreach ($fields as $f)
 								@php

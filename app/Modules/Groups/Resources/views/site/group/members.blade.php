@@ -236,10 +236,10 @@ $i = 0;
 		</button>
 	</div>
 	<div class="col-md-6 text-right">
-		<a href="#add_member_dialog" class="add_member btn btn-secondary btn-sm" data-membertype="1">
+		<a href="#add_member_dialog" data-toggle="modal" class="add_member btn btn-secondary btn-sm" data-membertype="1">
 			<span class="fa fa-plus-circle" aria-hidden="true"></span> Add Member
 		</a>
-		<a href="#import_member_dialog" class="import_member btn btn-secondary btn-sm" data-membertype="1">
+		<a href="#import_member_dialog" data-toggle="modal" class="import_member btn btn-secondary btn-sm" data-membertype="1">
 			<span class="fa fa-upload" aria-hidden="true"></span> Import
 		</a>
 	</div>
@@ -327,12 +327,24 @@ $i = 0;
 <div class="card">
 	<div class="card-header">
 		Managers
-		<a href="#help_managers_span_{{ $group->id }}" class="help text-info tip" title="Help">
+		<a href="#help_managers_span_{{ $group->id }}" data-toggle="modal" class="text-info tip" title="Help">
 			<span class="fa fa-question-circle" aria-hidden="true"></span>
 			<span class="sr-only">Help</span>
 		</a>
-		<div class="dialog dialog-help" id="help_managers_span_{{ $group->id }}" title="Managers">
-			<p>Managers are the owners or <abbr title="Principle Investigators">PIs</abbr> of this group and any others they may choose to delegate to manage access to this group. Only Managers can access this interface and are able to grant queue access for other people in the group. Managers can also grant and remove Group Management privileges to and from others, although you cannot remove your own Group Management privileges.</p>
+		<div class="modal dialog" id="help_managers_span_{{ $group->id }}" tabindex="-1" aria-labelledby="help_managers_span_{{ $group->id }}-title" aria-hidden="true" title="Managers">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content dialog-content shadow-sm">
+					<div class="modal-header">
+						<div class="modal-title" id="help_managers_span_{{ $group->id }}-title">Managers</div>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body dialog-body">
+						<p>Managers are the owners or <abbr title="Principle Investigators">PIs</abbr> of this group and any others they may choose to delegate to manage access to this group. Only Managers can access this interface and are able to grant queue access for other people in the group. Managers can also grant and remove Group Management privileges to and from others, although you cannot remove your own Group Management privileges.</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="card-body">
@@ -517,12 +529,24 @@ $i = 0;
 <div class="card">
 	<div class="card-header">
 		Members
-		<a href="#help_members_span_{{ $group->id }}" class="help text-info tip" title="Help">
+		<a href="#help_members_span_{{ $group->id }}" data-toggle="modal" class="text-info tip" title="Help">
 			<span class="fa fa-question-circle" aria-hidden="true"></span>
 			<span class="sr-only">Help</span>
 		</a>
-		<div class="dialog dialog-help" id="help_members_span_{{ $group->id }}" title="Members">
-			<p>Members are people that have access to some or all of this group's queues but have no other special privileges such as Group Usage Reporting privileges or Group Managment privileges. Enabling a queue for someone will also create an account for them on the appropriate resource if they do not already have one. New accounts on a cluster will be processed overnight and be ready use the next morning. The person will receive an email notification once their account is ready.</p>
+		<div class="modal dialog" id="help_members_span_{{ $group->id }}" tabindex="-1" aria-labelledby="help_members_span_{{ $group->id }}-title" aria-hidden="true" title="Members">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content dialog-content shadow-sm">
+					<div class="modal-header">
+						<div class="modal-title" id="help_members_span_{{ $group->id }}-title">Members</div>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body dialog-body">
+						<p>Members are people that have access to some or all of this group's queues but have no other special privileges such as Group Usage Reporting privileges or Group Managment privileges. Enabling a queue for someone will also create an account for them on the appropriate resource if they do not already have one. New accounts on a cluster will be processed overnight and be ready use the next morning. The person will receive an email notification once their account is ready.</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="card-body">
@@ -698,12 +722,24 @@ $i = 0;
 <div class="card">
 	<div class="card-header">
 		Usage Reporting Viewers
-		<a href="#help_viewers_span_{{ $group->id }}" class="help text-help tip" title="Help">
+		<a href="#help_viewers_span_{{ $group->id }}" data-toggle="modal" class="text-help tip" title="Help">
 			<span class="fa fa-question-circle" aria-hidden="true"></span>
 			<span class="sr-only">Help</span>
 		</a>
-		<div class="dialog dialog-help" id="help_viewers_span_{{ $group->id }}" title="Usage Reporting Viewers">
-			<p>Group Usage Reporting Viewers are people who have been given permission to view all usage data for the entire group. You may also grant queue submission privileges individually for these people if desired. Group Usage Reporting Viewers may not access this interface or grant or remove privileges to or from others.</p>
+		<div class="modal dialog" id="help_viewers_span_{{ $group->id }}" tabindex="-1" aria-labelledby="help_viewers_span_{{ $group->id }}-title" aria-hidden="true" title="Usage Reporting Viewers">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content dialog-content shadow-sm">
+					<div class="modal-header">
+						<div class="modal-title" id="help_viewers_span_{{ $group->id }}-title">Usage Reporting Viewers</div>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body dialog-body">
+						<p>Group Usage Reporting Viewers are people who have been given permission to view all usage data for the entire group. You may also grant queue submission privileges individually for these people if desired. Group Usage Reporting Viewers may not access this interface or grant or remove privileges to or from others.</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="card-body">
@@ -859,12 +895,24 @@ $i = 0;
 <div class="card">
 	<div class="card-header">
 		Disabled Members
-		<a href="#help_disabledmembers_span_{{ $group->id }}" class="help text-help tip" title="Help">
+		<a href="#help_disabledmembers_span_{{ $group->id }}" data-toggle="modal" class="text-help tip" title="Help">
 			<span class="fa fa-question-circle" aria-hidden="true"></span>
 			<span class="sr-only">Help</span>
 		</a>
-		<div class="dialog dialog-help" id="help_disabledmembers_span_{{ $group->id }}" title="Disabled Members">
-			<p>Disabled Members are people that you have granted access to your queues but who no longer have an active account with {{ config('app.name') }}. Although queues may be enabled for them, they cannot log into {{ config('app.name') }} resources and use your queues without an active account. If the people listed here have left the institution and are no longer participating in research, please remove them from your queues. If people listed here have left but still require access to your queues then you will need to file a Request for Privileges (R4P). If you believe people are listed here in error, please contact {{ config('mail.from.address') }}.</p>
+		<div class="modal dialog" id="help_disabledmembers_span_{{ $group->id }}" tabindex="-1" aria-labelledby="help_disabledmembers_span_{{ $group->id }}-title" aria-hidden="true" title="Disabled Members">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content dialog-content shadow-sm">
+					<div class="modal-header">
+						<div class="modal-title" id="help_disabledmembers_span_{{ $group->id }}-title">Disabled Members</div>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body dialog-body">
+						<p>Disabled Members are people that you have granted access to your queues but who no longer have an active account with {{ config('app.name') }}. Although queues may be enabled for them, they cannot log into {{ config('app.name') }} resources and use your queues without an active account. If the people listed here have left the institution and are no longer participating in research, please remove them from your queues. If people listed here have left but still require access to your queues then you will need to file a Request for Privileges (R4P). If you believe people are listed here in error, please contact {{ config('mail.from.address') }}.</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="card-body">
@@ -988,117 +1036,128 @@ $i = 0;
 </div>
 @endif
 
-<div id="add_member_dialog" data-id="{{ $group->id }}" class="membership-dialog" title="Add users to {{ $group->name }}">
-	<form id="form_{{ $group->id }}" method="post">
-		<div class="form-group">
-			<label for="addmembers">Enter names, usernames, or email addresses</label>
-			<select class="form-control" name="members" id="addmembers" multiple="multiple" data-api="{{ route('api.users.index') }}" data-group="{{ $group->id }}" placeholder="Username, email address, etc.">
-			</select>
-		</div>
-
-		<div class="form-group">
-			<label for="new_membertype">Membership type</label>
-			<select class="form-control" id="new_membertype"{{ $group->cascademanagers ? ' data-cascade="1"' : '' }}{{ auth()->user()->can('manage groups') ? '0' : ' data-disable="1"' }}>
-				<option value="1">Member</option>
-				<option value="2">Manager</option>
-				<option value="3">Usage Viewer</option>
-			</select>
-		</div>
-
-		@if (count($resources))
-			<fieldset>
-				<legend>Queue Selection</legend>
-
-				<table id="queue-selection" class="table table-hover mb-0 groupSelect">
-					<caption class="sr-only">Queues by Resource</caption>
-					<tbody>
-						@foreach ($resources as $name => $queues)
-							<tr>
-								<th scope="row" class="rowHead">{{ $name }}</th>
-								<td class="rowData">
-								@foreach ($queues as $queue)
-									<div class="form-check">
-										<input type="checkbox" class="form-check-input add-queue-member" name="queue[]" data-base="unixgroup-{{ $base }}" id="queue{{ $queue->id }}" value="{{ $queue->id }}" />
-										<label class="form-check-label" for="queue{{ $queue->id }}">{{ $queue->name }}</label>
-									</div>
-								@endforeach
-								</td>
-							</tr>
-						@endforeach
-					</tbody>
-				</table>
-			</fieldset>
-		@endif
-
-		@if (count($unixgroups))
-			<fieldset>
-				<legend>Unix Group Selection</legend>
-
-				<div id="unix-group-selection" class="row groupSelect">
-					@foreach ($unixgroups as $name)
-						<div class="col-sm-4 unixData">
-							<div class="form-check">
-								<input type="checkbox" data-base="unixgroup-{{ $base }}" <?php if ($group->cascademanagers && $name->longname == $group->unixgroup) { echo (!auth()->user()->can('manage groups') ? 'checked disabled' : 'checked'); } ?> class="form-check-input add-unixgroup-member" name="unixgroup[]" id="unixgroup-{{ $name->id }}" value="{{ $name->id }}" />
-								<label class="form-check-label" for="unixgroup-{{ $name->id }}">{{ $name->longname }}</label>
-							</div>
-						</div>
-					@endforeach
-				</div>
-			</fieldset>
-		@endif
-
-		<div class="alert alert-danger hide" id="add_member_error"></div>
-
-		<div class="dialog-footer">
-			<div class="row">
-				<div class="col-md-12 text-right">
-					<button disabled="disabled" id="add_member_save" class="btn btn-success"
-						data-group="{{ $group->id }}"
-						data-api="{{ route('api.groups.members.create') }}"
-						data-api-unixgroupusers="{{ route('api.unixgroups.members.create') }}"
-						data-api-queueusers="{{ route('api.queues.users.create') }}"
-						>
-						<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.saving') }}</span></span>
-						{{ trans('global.button.save') }}
-					</button>
-				</div>
+<div class="modal dialog" id="add_member_dialog" tabindex="-1" aria-labelledby="add_member_dialog-title" aria-hidden="true" title="Add users to {{ $group->name }}">
+	<div class="modal-dialog modal-dialog-centered">
+		<form id="form_{{ $group->id }}" method="post" class="modal-content dialog-content shadow-sm">
+			<div class="modal-header">
+				<div class="modal-title" id="add_member_dialog-title">Add users to {{ $group->name }}</div>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
 			</div>
-		</div>
+			<div class="modal-body dialog-body">
 
-		@csrf
-	</form>
+				<div class="form-group">
+					<label for="addmembers">Enter names, usernames, or email addresses</label>
+					<input type="text" class="form-control" name="members" id="addmembers" data-api="{{ route('api.users.index') }}" data-group="{{ $group->id }}" placeholder="Username, email address, etc." />
+				</div>
+
+				<div class="form-group">
+					<label for="new_membertype">Membership type</label>
+					<select class="form-control" id="new_membertype"{{ $group->cascademanagers ? ' data-cascade="1"' : '' }}{{ auth()->user()->can('manage groups') ? '0' : ' data-disable="1"' }}>
+						<option value="1">Member</option>
+						<option value="2">Manager</option>
+						<option value="3">Usage Viewer</option>
+					</select>
+				</div>
+
+				@if (count($resources))
+					<fieldset>
+						<legend>Queue Selection</legend>
+
+						<table id="queue-selection" class="table table-hover mb-0 groupSelect">
+							<caption class="sr-only">Queues by Resource</caption>
+							<tbody>
+								@foreach ($resources as $name => $queues)
+									<tr>
+										<th scope="row" class="rowHead">{{ $name }}</th>
+										<td class="rowData">
+										@foreach ($queues as $queue)
+											<div class="form-check">
+												<input type="checkbox" class="form-check-input add-queue-member" name="queue[]" data-base="unixgroup-{{ $base }}" id="queue{{ $queue->id }}" value="{{ $queue->id }}" />
+												<label class="form-check-label" for="queue{{ $queue->id }}">{{ $queue->name }}</label>
+											</div>
+										@endforeach
+										</td>
+									</tr>
+								@endforeach
+							</tbody>
+						</table>
+					</fieldset>
+				@endif
+
+				@if (count($unixgroups))
+					<fieldset>
+						<legend>Unix Group Selection</legend>
+
+						<div id="unix-group-selection" class="row groupSelect">
+							@foreach ($unixgroups as $name)
+								<div class="col-sm-4 unixData">
+									<div class="form-check">
+										<input type="checkbox" data-base="unixgroup-{{ $base }}" <?php if ($group->cascademanagers && $name->longname == $group->unixgroup) { echo (!auth()->user()->can('manage groups') ? 'checked disabled' : 'checked'); } ?> class="form-check-input add-unixgroup-member" name="unixgroup[]" id="unixgroup-{{ $name->id }}" value="{{ $name->id }}" />
+										<label class="form-check-label" for="unixgroup-{{ $name->id }}">{{ $name->longname }}</label>
+									</div>
+								</div>
+							@endforeach
+						</div>
+					</fieldset>
+				@endif
+
+				<div class="alert alert-danger hide" id="add_member_error"></div>
+			</div>
+			<div class="modal-footer dialog-footer text-right">
+				<button disabled="disabled" id="add_member_save" class="btn btn-success"
+					data-group="{{ $group->id }}"
+					data-api="{{ route('api.groups.members.create') }}"
+					data-api-unixgroupusers="{{ route('api.unixgroups.members.create') }}"
+					data-api-queueusers="{{ route('api.queues.users.create') }}"
+					>
+					<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.saving') }}</span></span>
+					{{ trans('global.button.save') }}
+				</button>
+			</div>
+
+			@csrf
+		</form>
+	</div>
 </div>
 
-<div id="import_member_dialog" data-id="{{ $group->id }}" class="import-dialog" title="Import spreadsheet to {{ $group->name }}">
-	<form action="{{ route('site.groups.import') }}" method="post" enctype="multipart/form-data">
-		<p>CSV, XLSX (Excel), and ODS files are accepted. The first row must be headers with at least a <code>Username</code> column. Optional columns: <code>Name</code>, <code>Membership</code>, and columns for each queue or unix group.</p>
-
-		<ul>
-			<li>Membership types: <code>member</code> (default), <code>manager</code>, <code>viewer</code>.</li>
-			<li>To add membership to a queue or unix group, set column to <code>yes</code>, <code>1</code>, or <code>true</code>.</li>
-			<li>To remove membership from a queue or unix group, set column to <code>no</code>, <code>0</code>, <code>false</code>, or leave blank.</li>
-		</ul>
-
-		<div class="form-group dropzone has-advanced-upload" data-acceptedfiles=".csv,.xlsx,.ods">
-			<div id="uploader" class="fallback" data-instructions="Click or Drop files" data-list="#uploader-list">
-				<label for="upload">Choose a file<span class="dropzone__dragndrop"> or drag it here</span></label>
-				<input type="file" name="file" id="upload" class="form-control-file" />
+<div class="modal dialog" id="import_member_dialog" tabindex="-1" aria-labelledby="import_member_dialog-title" aria-hidden="true" title="Import spreadsheet to {{ $group->name }}">
+	<div class="modal-dialog modal-dialog-centered">
+		<form action="{{ route('site.groups.import') }}" method="post" enctype="multipart/form-data" class="modal-content dialog-content shadow-sm">
+			<div class="modal-header">
+				<div class="modal-title" id="import_member_dialog-title">Import spreadsheet to {{ $group->name }}</div>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
 			</div>
-			<div class="file-list" id="uploader-list"></div>
-			<input type="hidden" name="tmp_dir" id="ticket-tmp_dir" value="{{ ('-' . time()) }}" />
-			<input type="hidden" name="id" value="{{ $group->id }}" />
-		</div>
+			<div class="modal-body dialog-body">
+				<p>CSV, XLSX (Excel), and ODS files are accepted. The first row must be headers with at least a <code>Username</code> column. Optional columns: <code>Name</code>, <code>Membership</code>, and columns for each queue or unix group.</p>
 
-		<div class="dialog-footer">
-			<div class="row">
-				<div class="col-md-12 text-right">
-					<input type="submit" class="order btn btn-primary" data-group="{{ $group->id }}" value="Import" />
+				<ul>
+					<li>Membership types: <code>member</code> (default), <code>manager</code>, <code>viewer</code>.</li>
+					<li>To add membership to a queue or unix group, set column to <code>yes</code>, <code>1</code>, or <code>true</code>.</li>
+					<li>To remove membership from a queue or unix group, set column to <code>no</code>, <code>0</code>, <code>false</code>, or leave blank.</li>
+				</ul>
+
+				<div class="form-group dropzone has-advanced-upload" data-acceptedfiles=".csv,.xlsx,.ods">
+					<div id="uploader" class="fallback" data-instructions="Click or Drop files" data-list="#uploader-list">
+						<label for="upload">Choose a file<span class="dropzone__dragndrop"> or drag it here</span></label>
+						<input type="file" name="file" id="upload" class="form-control-file" />
+					</div>
+					<div class="file-list" id="uploader-list"></div>
+					<input type="hidden" name="tmp_dir" id="ticket-tmp_dir" value="{{ ('-' . time()) }}" />
+					<input type="hidden" name="id" value="{{ $group->id }}" />
 				</div>
-			</div>
-		</div>
 
-		@csrf
-	</form>
+			</div>
+			<div class="modal-footer dialog-footer text-right">
+				<input type="submit" class="order btn btn-primary" data-group="{{ $group->id }}" value="Import" />
+			</div>
+
+			@csrf
+		</form>
+	</div>
 </div>
 
 <form id="csv_form_{{ $group->id }}" class="csv_form" method="post" action="{{ route('site.groups.export') }}">

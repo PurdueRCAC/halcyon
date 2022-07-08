@@ -108,8 +108,13 @@ function CreateNewGroupVal(num, btn, all) {
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function () {
-	if ($.fn.select2) {
-		$('.searchable-select').select2();
+	if (typeof TomSelect !== 'undefined') {
+		var sselects = document.querySelectorAll(".searchable-select");
+		if (sselects.length) {
+			sselects.forEach(function (input) {
+				new TomSelect(input);
+			});
+		}
 	}
 
 	$('.input-unixgroup').on('keyup', function () {

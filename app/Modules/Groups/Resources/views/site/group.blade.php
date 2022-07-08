@@ -1,15 +1,14 @@
 @push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css?v=' . filemtime(public_path('/modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css'))) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.css') . '?v=' . filemtime(public_path() . '/modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.css?v=' . filemtime(public_path() . '/modules/core/vendor/datatables/dataTables.bootstrap4.min.css')) }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 @endpush
 
 @push('scripts')
-<!-- <script src="{{ asset('modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.js') . '?v=' . filemtime(public_path() . '/modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.js') }}"></script> -->
+<script src="{{ asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js?v=' . filemtime(public_path('/modules/core/vendor/tom-select/js/tom-select.complete.min.js'))) }}"></script>
 <script src="{{ asset('modules/core/vendor/handlebars/handlebars.min-v4.7.6.js?v=' . filemtime(public_path() . '/modules/core/vendor/handlebars/handlebars.min-v4.7.6.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/datatables/datatables.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/datatables/datatables.min.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/datatables/dataTables.bootstrap4.min.js')) }}"></script>
-<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/groups/js/motd.js?v=' . filemtime(public_path() . '/modules/groups/js/motd.js')) }}"></script>
 <script src="{{ asset('modules/groups/js/userrequests.js?v=' . filemtime(public_path() . '/modules/groups/js/userrequests.js')) }}"></script>
 <script src="{{ asset('modules/groups/js/site.js?v=' . filemtime(public_path() . '/modules/groups/js/site.js')) }}"></script>
@@ -222,8 +221,6 @@
 			DeleteUnixGroup($(this), $(this).data('value'));
 		});*/
 
-		$('.searchable-select').select2();
-
 		if ($('.datatable').length) {
 			$('.datatable').each(function(i, el){
 			$(el).DataTable({
@@ -386,48 +383,66 @@
 			modal: true
 		});
 
-		$('.add_member').on('click', function(e){
-			e.preventDefault();
+		// Add members
+		var addmembers = document.getElementById("addmembers");
+		if (addmembers) {
+			var addmembersts = new TomSelect(addmembers, {
+				plugins: {
+					remove_button: {
+						title: 'Remove this email',
+					}
+				},
+				valueField: 'id',
+				labelField: 'name',
+				searchField: ['name', 'username'],
+				hidePlaceholder: true,
+				persist: false,
+				create: true,
+				load: function (query, callback) {
+					var url = addmembers.getAttribute('data-api') + '?search=' + encodeURIComponent(query);
 
-			$($(this).attr('href')).dialog("open");
-			$('#new_membertype').val($(this).data('membertype'));
-
-			$('#addmembers').select2({
-				ajax: {
-					url: $('#addmembers').data('api'),
-					dataType: 'json',
-					tags: true,
-					tokenSeparators: [','],
-					//maximumSelectionLength: 1,
-					//theme: "classic",
-					data: function (params) {
-						var query = {
-							search: params.term,
-							order: 'surname',
-							order_dir: 'asc'
+					fetch(url, {
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 						}
-
-						return query;
-					},
-					processResults: function (data) {
-						for (var i = 0; i < data.data.length; i++) {
-							data.data[i].id = data.data[i].id > 0 ? data.data[i].id : data.data[i].username;
-							data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
-						}
-
-						return {
-							results: data.data
-						};
+					})
+					.then(response => response.json())
+					.then(json => {
+						callback(json.data);
+					}).catch(() => {
+						callback();
+					});
+				},
+				render: {
+					option: function (item, escape) {
+						var name = item.name;
+						var label = name || item.username;
+						var caption = name ? item.username : null;
+						return '<div>' +
+							'<span class="label">' + escape(label) + '</span>' +
+							(caption ? '<span class="caption text-muted">(' + escape(caption) + ')</span>' : '') +
+							'</div>';
 					}
 				}
 			});
-			$('#addmembers').on('select2:select', function (e) {
-				$('#add_member_save').prop('disabled', false);
+			addmembersts.on('item_add', function (e) {
+				document.getElementById('add_member_save').disabled = false;
 			});
-		});
+		}
+
+		/*document.querySelectorAll('.add_member').forEach(function(el) {
+			el.addEventListener('click', function(e){
+				e.preventDefault();
+
+				$(this.getAttribute('href')).dialog("open");
+				document.getElementById('new_membertype').value = this.getAttribute('data-membertype');
+			});
+		});*/
 
 		if ($("#import_member_dialog").length) {
-			var dialogi = $("#import_member_dialog").dialog({
+			/*var dialogi = $("#import_member_dialog").dialog({
 				autoOpen: false,
 				height: 'auto',
 				width: 500,
@@ -438,7 +453,7 @@
 				e.preventDefault();
 
 				dialogi.dialog("open");
-			});
+			});*/
 
 			// feature detection for drag&drop upload
 			var isAdvancedUpload = function () {
@@ -563,7 +578,7 @@
 			e.preventDefault();
 
 			var btn = $(this);
-			var users = $('#addmembers').val();
+			var users = $('#addmembers').val().split(',');
 
 			$('#addmembers').removeClass('is-invalid');
 			$('#add_member_error').addClass('hide').html('');
