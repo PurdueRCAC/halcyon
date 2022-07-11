@@ -427,7 +427,7 @@
 						var caption = name ? item.username : null;
 						return '<div>' +
 							'<span class="label">' + escape(label) + '</span>' +
-							(caption ? '<span class="caption text-muted">(' + escape(caption) + ')</span>' : '') +
+							(caption ? ' <span class="caption text-muted">(' + escape(caption) + ')</span>' : '') +
 							'</div>';
 					}
 				}
