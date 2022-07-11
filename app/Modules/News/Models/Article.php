@@ -810,6 +810,8 @@ class Article extends Model
 	 */
 	public function getFormattedBodyAttribute()
 	{
+		return $this->toHtml();
+
 		if (is_null($this->formatted_body))
 		{
 			$body = $this->body;

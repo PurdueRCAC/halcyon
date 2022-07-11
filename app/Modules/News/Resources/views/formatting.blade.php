@@ -113,7 +113,7 @@ $help1i = 'Images can be included using a similar syntax as links but prefixing 
 				<textarea id="help1ainput" class="form-control samplebox" rows="5" data-sample="a"><?php echo $help1a; ?></textarea>
 			</div>
 			<p>Output text:<p>
-			<div id="help1aoutput" class="sampleoutput"><?php echo $article->formattedbody; ?></div>
+			<div id="help1aoutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
 		</div>
 		<div id="help1b">
 			<?php
