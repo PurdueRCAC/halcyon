@@ -40,112 +40,94 @@ class Groups
 
 		// Owner
 		$memberships = Member::query()
+			->withTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsManager()
 			->orderBy('datecreated', 'asc')
 			->get();
 
-		foreach ($memberships as $membership)
+		$memberships->each(function ($membership, $key)
 		{
 			$membership->api = route('api.groups.read', ['id' => $membership->groupid]);
-		}
+		});
 
-		$user->ownerofgroups = $memberships;
-
-		$memberships = Member::query()
-			->onlyTrashed()
-			->where('userid', '=', $user->id)
-			->whereIsManager()
-			->orderBy('datecreated', 'asc')
-			->get();
-
-		foreach ($memberships as $membership)
+		$user->ownerofgroups = $memberships->reject(function($membership, $key)
 		{
-			$membership->api = route('api.groups.read', ['id' => $membership->groupid]);
-		}
+			return $membership->trashed();
+		});
 
-		$user->priorownerofgroups = $memberships;
+		$user->priorownerofgroups = $memberships->reject(function($membership, $key)
+		{
+			return !$membership->trashed();
+		});
 
 		// Members
 		$memberships = Member::query()
+			->withTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsMember()
 			->orderBy('datecreated', 'asc')
 			->get();
 
-		foreach ($memberships as $membership)
+		$memberships->each(function ($membership, $key)
 		{
 			$membership->api = route('api.groups.read', ['id' => $membership->groupid]);
-		}
+		});
 
-		$user->memberofgroups = $memberships;
-
-		$memberships = Member::query()
-			->onlyTrashed()
-			->where('userid', '=', $user->id)
-			->whereIsMember()
-			->orderBy('datecreated', 'asc')
-			->get();
-
-		foreach ($memberships as $membership)
+		$user->memberofgroups = $memberships->reject(function($membership, $key)
 		{
-			$membership->api = route('api.groups.read', ['id' => $membership->groupid]);
-		}
+			return $membership->trashed();
+		});
 
-		$user->priormemberofgroups = $memberships;
+		$user->priormemberofgroups = $memberships->reject(function($membership, $key)
+		{
+			return !$membership->trashed();
+		});
 
 		// Viewers
 		$memberships = Member::query()
+			->withTrashed()
 			->where('userid', '=', $user->id)
 			->whereIsViewer()
 			->orderBy('datecreated', 'asc')
 			->get();
 
-		foreach ($memberships as $membership)
+		$memberships->each(function ($membership, $key)
 		{
 			$membership->api = route('api.groups.read', ['id' => $membership->groupid]);
-		}
+		});
 
-		$user->viewerofgroups = $memberships;
-
-		$memberships = Member::query()
-			->onlyTrashed()
-			->where('userid', '=', $user->id)
-			->whereIsViewer()
-			->orderBy('datecreated', 'asc')
-			->get();
-
-		foreach ($memberships as $membership)
+		$user->viewerofgroups = $memberships->reject(function($membership, $key)
 		{
-			$membership->api = route('api.groups.read', ['id' => $membership->groupid]);
-		}
+			return $membership->trashed();
+		});
 
-		$user->priorviewerofgroups = $memberships;
+		$user->priorviewerofgroups = $memberships->reject(function($membership, $key)
+		{
+			return !$membership->trashed();
+		});
 
+		// Unix groups
 		$memberships = UnixGroupMember::query()
+			->withTrashed()
 			->where('userid', '=', $user->id)
 			->orderBy('datetimecreated', 'asc')
 			->get();
 
-		foreach ($memberships as $membership)
+		$memberships->each(function ($membership, $key)
 		{
 			$membership->api = route('api.unixgroups.read', ['id' => $membership->unixgroupid]);
-		}
+		});
 
-		$user->memberofunixgroups = $memberships;
-
-		$memberships = UnixGroupMember::query()
-			->onlyTrashed()
-			->where('userid', '=', $user->id)
-			->orderBy('datetimecreated', 'asc')
-			->get();
-
-		foreach ($memberships as $membership)
+		$user->memberofunixgroups = $memberships->reject(function($membership, $key)
 		{
-			$membership->api = route('api.unixgroups.read', ['id' => $membership->unixgroupid]);
-		}
+			return $membership->trashed();
+		});
 
-		$user->priormemberofunixgroups = $memberships;
+		$user->priormemberofunixgroups = $memberships->reject(function($membership, $key)
+		{
+			return !$membership->trashed();
+		});
 
 		$event->setUser($user);
 	}
