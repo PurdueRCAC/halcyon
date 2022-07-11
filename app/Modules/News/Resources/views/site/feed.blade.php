@@ -12,7 +12,7 @@
 				<title><![CDATA[{!! $post->headline !!}]]></title>
 				<link>{{ route('site.news.show', ['id' => $post->id]) }}</link>
 				<guid isPermaLink="true">{{ route('site.news.show', ['id' => $post->id]) }}</guid>
-				<description><![CDATA[{!! $post->formattedBody !!}]]></description>
+				<description><![CDATA[{!! $post->toHtml() !!}]]></description>
 				<pubDate>{{ $post->datetimenews ? $post->datetimenews->format(DateTime::RSS) : $post->datetimecreated->format(DateTime::RSS) }}</pubDate>
 				@if ($post->type)
 					<category>{{ $post->type->name }}</category>

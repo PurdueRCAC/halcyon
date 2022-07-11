@@ -124,7 +124,7 @@ $help1i = 'Images can be included using a similar syntax as links but prefixing 
 				<textarea id="help1binput" class="form-control samplebox" rows="5" data-sample="b"><?php echo $help1b; ?></textarea>
 			</div>
 			<p>Output text:</p>
-			<div id="help1boutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
+			<div id="help1boutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
 		</div>
 		<div id="help1c">
 			<?php
@@ -135,7 +135,7 @@ $help1i = 'Images can be included using a similar syntax as links but prefixing 
 				<textarea id="help1cinput" class="form-control samplebox" rows="5" data-sample="c"><?php echo $help1c; ?></textarea>
 			</div>
 			<p>Output text:</p>
-			<div id="help1coutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
+			<div id="help1coutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
 		</div>
 		<div id="help1d">
 			<?php
@@ -146,7 +146,7 @@ $help1i = 'Images can be included using a similar syntax as links but prefixing 
 				<textarea id="help1dinput" class="form-control samplebox" rows="5" data-sample="d"><?php echo $help1d; ?></textarea>
 			</div>
 			<p>Output text:</p>
-			<div id="help1doutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
+			<div id="help1doutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
 		</div>
 		<div id="help1e">
 			<?php
@@ -157,7 +157,7 @@ $help1i = 'Images can be included using a similar syntax as links but prefixing 
 				<textarea id="help1einput" class="form-control samplebox" rows="5" data-sample="e"><?php echo $help1e; ?></textarea>
 			</div>
 			<p>Output text:</p>
-			<div id="help1eoutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
+			<div id="help1eoutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
 		</div>
 		<div id="help1f">
 			<?php
@@ -168,7 +168,7 @@ $help1i = 'Images can be included using a similar syntax as links but prefixing 
 				<textarea id="help1finput" class="form-control samplebox" rows="5" data-sample="f"><?php echo $help1f; ?></textarea>
 			</div>
 			<p>Output text:</p>
-			<div id="help1foutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
+			<div id="help1foutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
 		</div>
 		<div id="help1g">
 			<?php
@@ -179,7 +179,7 @@ $help1i = 'Images can be included using a similar syntax as links but prefixing 
 				<textarea id="help1ginput" class="form-control samplebox" rows="5" data-sample="g"><?php echo $help1g; ?></textarea>
 			</div>
 			<p>Output text:</p>
-			<div id="help1goutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
+			<div id="help1goutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
 		</div>
 		<div id="help1h">
 			<?php
@@ -193,7 +193,7 @@ $help1i = 'Images can be included using a similar syntax as links but prefixing 
 				<textarea id="help1hinput" class="form-control samplebox" rows="5" data-sample="h"><?php echo $help1h; ?></textarea>
 			</div>
 			<p>Output text:</p>
-			<div id="help1goutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
+			<div id="help1goutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
 		</div>
 		<div id="help1i">
 			<?php
@@ -204,6 +204,6 @@ $help1i = 'Images can be included using a similar syntax as links but prefixing 
 				<textarea id="help1ginput" class="form-control samplebox" rows="5" data-sample="g"><?php echo $help1i; ?></textarea>
 			</div>
 			<p>Output text:</p>
-			<div id="help1goutput" class="sampleoutput"><?php echo $article->formattedBody; ?></div>
+			<div id="help1goutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
 		</div>
 	</div>

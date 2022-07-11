@@ -159,7 +159,7 @@ app('pathway')
 			@foreach ($article->updates()->orderBy('datetimecreated', 'desc')->get() as $update)
 				<section>
 					<h3 class="newsupdate">{{ strtoupper(trans('news::news.update')) }}: <time datetime="{{ $update->datetimecreated->toDateTimeLocalString() }}">{!! $update->formattedDatetimecreated($update->datetimecreated) !!}</time></h3>
-					{!! $update->formattedBody !!}
+					{!! $update->toHtml() !!}
 				</section>
 			@endforeach
 
@@ -167,7 +167,7 @@ app('pathway')
 				<h3 class="newsupdate">{{ strtoupper(trans('news::news.original')) }}: <time datetime="{{ $article->datetimenews->toDateTimeLocalString() }}">{{ $article->formatDate($article->datetimenews, $article->originalDatetimenewsend) }}</time></h3>
 		@endif
 
-		{!! $article->formattedBody !!}
+		{!! $article->toHtml() !!}
 
 		@if (count($article->updates))
 			</section>

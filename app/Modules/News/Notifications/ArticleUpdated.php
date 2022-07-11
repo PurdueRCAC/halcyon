@@ -63,11 +63,11 @@ class ArticleUpdated extends Notification
 			{
 				$user = $article->creator;
 
-				$content = $article->formattedBody;
+				$content = $article->toHtml();
 
 				if (count($article->updates))
 				{
-					$content = $update->formattedBody;
+					$content = $update->toHtml();
 				}
 
 				$content = strip_tags($content);

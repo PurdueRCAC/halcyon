@@ -133,7 +133,12 @@ class Article extends Model
 	/**
 	 * @var string
 	 */
-	protected $formatted_body = null;
+	protected $markdown = null;
+
+	/**
+	 * @var string
+	 */
+	protected $html = null;
 
 	/**
 	 * Route notifications for the Slack channel.
@@ -694,6 +699,115 @@ class Article extends Model
 	 *
 	 * @return string
 	 */
+	public function toMarkdown()
+	{
+		if (is_null($this->markdown))
+		{
+			$body = $this->body;
+
+			// Auto-expand relative URLs to absolute
+			$body = preg_replace_callback('/\[.*?\]\(([^\)]+)\)/i', function($matches)
+			{
+				if (substr($matches[1], 0, 4) == 'http')
+				{
+					return $matches[0];
+				}
+
+				return str_replace($matches[1], asset(ltrim($matches[1], '/')), $matches[0]);
+			}, $body);
+
+			event($event = new ArticlePrepareContent($body));
+
+			$text = $event->getBody();
+
+			// Separate code blocks as we don't want to do any processing on their content
+			$text = preg_replace_callback("/```(.*?)```/i", [$this, 'stripPre'], $text);
+			$text = preg_replace_callback("/`(.*?)`/i", [$this, 'stripCode'], $text);
+
+			$news = array_merge($this->getContentVars(), $this->getAttributes());
+
+			foreach ($news as $var => $value)
+			{
+				if (is_array($value))
+				{
+					$value = implode(', ', $value);
+				}
+				$text = preg_replace("/%" . $var . "%/", $value, $text);
+			}
+
+			$text = preg_replace_callback("/(news)\s*(story|item)?\s*#?(\d+)(\{.+?\})?/i", array($this, 'matchNews'), $text);
+
+			$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
+			$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
+
+			$this->markdown = $text;
+		}
+
+		return $this->markdown;
+	}
+
+	/**
+	 * Defines a relationship to type
+	 *
+	 * @return string
+	 */
+	public function toHtml()
+	{
+		if (is_null($this->html))
+		{
+			$text = $this->toMarkdown();
+
+			/*$converter = new CommonMarkConverter([
+				'html_input' => 'allow',
+			]);
+			$converter->getEnvironment()->addExtension(new TableExtension());
+			$text = (string) $converter->convertToHtml($text);*/
+
+			if (class_exists('Parsedown'))
+			{
+				$mdParser = new \Parsedown();
+
+				$text = $mdParser->text(trim($text));
+			}
+
+			// Separate code blocks as we don't want to do any processing on their content
+			$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/i", [$this, 'stripPre'], $text);
+			$text = preg_replace_callback("/\<code\>(.*?)\<\/code\>/i", [$this, 'stripCode'], $text);
+
+			// Convert emails
+			$text = preg_replace('/([\w\.\-]+@((\w+\.)*\w{2,}\.\w{2,}))/', "<a target=\"_blank\" href=\"mailto:$1\">$1</a>", $text);
+
+			// Convert template variables
+			if (auth()->user() && auth()->user()->can('manage news'))
+			{
+				$text = preg_replace("/%%([\w\s]+)%%/", '<span style="color:red">$0</span>', $text);
+			}
+
+			// Highlight unused variables for admins
+			if (auth()->user() && auth()->user()->can('manage news'))
+			{
+				$text = preg_replace("/%([\w\s]+)%/", '<span style="color:red">$0</span>', $text);
+			}
+
+			// Put code blocks back
+			$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
+			$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
+			$text = str_replace('<th>', '<th scope="col">', $text);
+
+			$text = preg_replace('/<p>([^\n]+)<\/p>\n(<table.*?>)(.*?<\/table>)/usm', '$2 <caption>$1</caption>$3', $text);
+			$text = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
+
+			$this->html = $text;
+		}
+
+		return $this->html;
+	}
+
+	/**
+	 * Defines a relationship to type
+	 *
+	 * @return string
+	 */
 	public function getFormattedBodyAttribute()
 	{
 		if (is_null($this->formatted_body))
@@ -798,7 +912,8 @@ class Article extends Model
 			$title = preg_replace("/[{}]+/", '', $match[4]);
 		}
 
-		return '<a href="' . route('site.news.show', ['id' => $match[3]]) . '">' . $title . '</a>';
+		return '[' . $title . '](' . route('site.news.show', ['id' => $match[3]]) . ')';
+		//return '<a href="' . route('site.news.show', ['id' => $match[3]]) . '">' . $title . '</a>';
 	}
 
 	/**
@@ -1079,7 +1194,7 @@ class Article extends Model
 	 *
 	 * @return  array
 	 */
-	protected function getContentVars()
+	public function getContentVars()
 	{
 		$vars = array(
 			'date'           => '%date%',

@@ -88,6 +88,16 @@ class Update extends Model
 	];
 
 	/**
+	 * @var string
+	 */
+	protected $markdown = null;
+
+	/**
+	 * @var string
+	 */
+	protected $html = null;
+
+	/**
 	 * Defines a relationship to creator
 	 *
 	 * @return  object
@@ -145,6 +155,89 @@ class Update extends Model
 		}
 
 		return $datestring;
+	}
+
+	/**
+	 * Format body
+	 *
+	 * @return string
+	 */
+	public function toMarkdown()
+	{
+		$text = $this->body;
+
+		event($event = new UpdatePrepareContent($text));
+
+		$text = $event->getBody();
+
+		$text = preg_replace_callback("/```(.*?)```/i", [$this, 'stripPre'], $text);
+		$text = preg_replace_callback("/`(.*?)`/i", [$this, 'stripCode'], $text);
+
+		$uvars = array(
+			'updatedatetime' => date('F j, Y g:ia', strtotime($this->getOriginal('datetimecreated'))),
+			'updatedate'     => date('l, F jS, Y', strtotime($this->getOriginal('datetimecreated'))),
+			'updatetime'     => date("g:ia", strtotime($this->getOriginal('datetimecreated')))
+		);
+
+		$news = $this->article->getContentVars();
+
+		$vars = array_merge($news, $uvars);
+
+		foreach ($vars as $var => $value)
+		{
+			$text = preg_replace("/%" . $var . "%/", $value, $text);
+		}
+
+		$text = preg_replace_callback("/(news)\s*(story|item)?\s*#?(\d+)(\{.+?\})?/i", array($this, 'matchNews'), $text);
+
+		$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
+		$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
+
+		return $text;
+	}
+
+	/**
+	 * Format body
+	 *
+	 * @return string
+	 */
+	public function toHtml()
+	{
+		$text = $this->toMarkdown();
+
+		if (class_exists('Parsedown'))
+		{
+			$mdParser = new \Parsedown();
+
+			$text = $mdParser->text(trim($text));
+		}
+
+		// separate code blocks
+		$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/i", [$this, 'stripPre'], $text);
+		$text = preg_replace_callback("/\<code\>(.*?)\<\/code\>/i", [$this, 'stripCode'], $text);
+
+		// convert emails
+		$text = preg_replace('/([\w\.\-]+@((\w+\.)*\w{2,}\.\w{2,}))/', "<a target=\"_blank\" href=\"mailto:$1\">$1</a>", $text);
+
+		// convert template variables
+		if (auth()->user() && auth()->user()->can('manage news'))
+		{
+			$text = preg_replace("/%%([\w\s]+)%%/", '<span style="color:red">$0</span>', $text);
+		}
+
+		if (auth()->user() && auth()->user()->can('manage news'))
+		{
+			$text = preg_replace("/%([\w\s]+)%/", '<span style="color:red">$0</span>', $text);
+		}
+
+		$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
+		$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
+		$text = str_replace('<th>', '<th scope="col">', $text);
+
+		$text = preg_replace('/<p>([^\n]+)<\/p>\n(<table.*?>)(.*?<\/table>)/usm', '$2 <caption>$1</caption>$3', $text);
+		$text = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
+
+		return $text;
 	}
 
 	/**
@@ -222,7 +315,7 @@ class Update extends Model
 			$text = preg_replace("/%%([\w\s]+)%%/", '<span style="color:red">$0</span>', $text);
 		}
 
-		$uvars = array(
+		/*$uvars = array(
 			'updatedatetime' => date('F j, Y g:ia', strtotime($this->getOriginal('datetimecreated'))),
 			'updatedate'     => date('l, F jS, Y', strtotime($this->getOriginal('datetimecreated'))),
 			'updatetime'     => date("g:ia", strtotime($this->getOriginal('datetimecreated')))
@@ -250,7 +343,7 @@ class Update extends Model
 		foreach ($vars as $var => $value)
 		{
 			$text = preg_replace("/%" . $var . "%/", $value, $text);
-		}
+		}*/
 
 		if (auth()->user() && auth()->user()->can('manage news'))
 		{
@@ -258,7 +351,7 @@ class Update extends Model
 		}
 
 		// make <p>s
-		$text = preg_replace("/\n\n\n+/", "\n\n", $text);
+		/*$text = preg_replace("/\n\n\n+/", "\n\n", $text);
 		$text = preg_replace("/^\n+/", '', $text);
 		$text = preg_replace("/\n+$/", '', $text);
 		$text = preg_replace("/\n\n/", "</p>\n<p>", $text);
@@ -268,7 +361,7 @@ class Update extends Model
 		$text = preg_replace("/<\/ul><\/p>/", "</ul>\n", $text);
 		$text = preg_replace("/<\/ol><\/p>/", "</ol>\n", $text);
 		$text = preg_replace("/(.)\n<ul/", "$1</p>\n<ul", $text);
-		$text = preg_replace("/(.)\n<ol/", "$1</p>\n<ol", $text);
+		$text = preg_replace("/(.)\n<ol/", "$1</p>\n<ol", $text);*/
 
 		//$text = preg_replace_callback("/\{\{CODE\}\}/", 'replaceCode', $text);
 
@@ -284,20 +377,85 @@ class Update extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
+	private $replacements = array(
+		'preblocks'  => array(),
+		'codeblocks' => array()
+	);
+
+	/**
+	 * Strip code blocks
+	 *
+	 * @param   array  $match
+	 * @return  string
+	 */
+	protected function stripCode(array $match)
+	{
+		array_push($this->replacements['codeblocks'], $match[0]);
+
+		return '{{CODE}}';
+	}
+
+	/**
+	 * Strip pre blocks
+	 *
+	 * @param   array  $match
+	 * @return  string
+	 */
+	protected function stripPre(array $match)
+	{
+		array_push($this->replacements['preblocks'], $match[0]);
+
+		return '{{PRE}}';
+	}
+
+	/**
+	 * Replace code block
+	 *
+	 * @param   array  $match
+	 * @return  string
+	 */
 	protected function replaceCode(array $match)
 	{
-		$code = array_shift($this->codeblocks);
+		return array_shift($this->replacements['codeblocks']);
+	}
 
-		$c = '';
+	/**
+	 * Replace pre block
+	 *
+	 * @param   array  $match
+	 * @return  string
+	 */
+	protected function replacePre(array $match)
+	{
+		return array_shift($this->replacements['preblocks']);
+	}
 
-		if (preg_match("/^\n/", $code))
+	/**
+	 * Match news
+	 *
+	 * @param   array  $match
+	 * @return  string
+	 */
+	private function matchNews(array $match)
+	{
+		$title = trans('news::news.news story number', ['number' => $match[3]]);
+
+		$news = Article::find($match[3]);
+
+		if (!$news)
 		{
-			$c .= ' codetop';
+			return $match[0];
 		}
 
-		$code = preg_replace("/^\n/", '', $code);
+		$title = $news->headline;
 
-		return '<pre class="code' . $c . '">' . $code . '</pre>';
+		if (isset($match[4]))
+		{
+			$title = preg_replace("/[{}]+/", '', $match[4]);
+		}
+
+		return '[' . $title . '](' . route('site.news.show', ['id' => $match[3]]) . ')';
+		//return '<a href="' . route('site.news.show', ['id' => $match[3]]) . '">' . $title . '</a>';
 	}
 
 	/**

@@ -3,7 +3,7 @@
 @foreach ($article->updates()->orderBy('datetimecreated', 'desc')->get() as $update)
 _**UPDATE: {{ $update->formatDate($update->datetimecreated) }}**_
 
-{!! $update->formattedBody !!}
+{!! $update->toMarkdown() !!}
 
 @endforeach
 
@@ -20,7 +20,7 @@ _**ORIGINAL: {{ $article->formatDate($article->datetimenews, $article->originalD
 _**Update: {{ $article->formatDate($article->datetimeupdate) }}**_
 @endif
 
-{!! $article->formattedBody !!}
+{!! $article->toMarkdown() !!}
 
 ---
 [Article #{{ $article->id }}]({{ route('site.news.show', ['id' => $article->id]) }}) posted on {{ $article->datetimenews->format('F j, Y g:ia T') }}.

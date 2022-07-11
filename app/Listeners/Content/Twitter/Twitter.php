@@ -47,7 +47,7 @@ class Twitter
 
 		$event->page = $this->buildTags($page, [
 			'title' => $page->title,
-			'description' => ($page->formattedBody ? $page->formattedBody : $page->body)
+			'description' => (method_exists($page, 'toHtml') ? $page->toHtml() : $page->body)
 		]);
 	}
 

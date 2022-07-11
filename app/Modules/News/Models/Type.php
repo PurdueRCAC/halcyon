@@ -197,6 +197,16 @@ class Type extends Model
 	}
 
 	/**
+	 * Defines a relationship to parent type
+	 *
+	 * @return  string
+	 */
+	public function toHtml()
+	{
+		return '<p>' . $this->name . '</p>';
+	}
+
+	/**
 	 * Find a model by its primary key.
 	 *
 	 * @param  mixed  $id

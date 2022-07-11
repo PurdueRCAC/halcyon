@@ -27,7 +27,7 @@ class ArticleResource extends JsonResource
 		}
 
 		$data['formatteddate'] = $this->formatDate($this->getOriginal('datetimenews'), $this->getOriginal('datetimenewsend'));
-		$data['formattedbody'] = $this->formattedBody;
+		$data['formattedbody'] = $this->toHtml();
 		$data['formattededitdate']    = $this->formatDate($this->getOriginal('datetimeedited'));
 		$data['formattedcreateddate'] = $this->formatDate($this->getOriginal('datetimecreated'));
 		$data['formattedupdatedate']  = $this->formatDate($this->getOriginal('datetimeupdate'));

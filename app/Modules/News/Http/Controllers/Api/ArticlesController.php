@@ -1215,7 +1215,9 @@ class ArticlesController extends Controller
 
 		if (count($emails) > 0)
 		{
-			Mail::to($emails)->send(new Message($row, $name));
+			$msg = new Message($row, $name);
+			echo $ms->render(); 
+			/*Mail::to($emails)->send(new Message($row, $name));
 
 			foreach ($emails as $email)
 			{
@@ -1236,7 +1238,7 @@ class ArticlesController extends Controller
 			$row->update([
 				'datetimemailed' => Carbon::now()->toDateTimeString(),
 				'lastmailuserid' => auth()->user()->id
-			]);
+			]);*/
 		}
 
 		return new ArticleResource($row);

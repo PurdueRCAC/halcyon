@@ -135,7 +135,7 @@ app('pathway')
 							?>
 						</ul>
 						<p itemprop="description">
-							{{ Illuminate\Support\Str::limit(strip_tags($article->formattedBody), 150) }}
+							{{ Illuminate\Support\Str::limit(strip_tags($article->toHtml()), 150) }}
 						</p>
 					</article>
 				</li>

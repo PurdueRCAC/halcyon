@@ -100,7 +100,7 @@
 						</div>
 						<div class="card-body panel-body">
 							<div class="newsposttext">
-								<span id="{{ $row->id }}_text">{!! $row->formattedBody !!}</span>
+								<span id="{{ $row->id }}_text">{!! $row->toHtml() !!}</span>
 							</div>
 						</div>
 					</div>
@@ -109,7 +109,7 @@
 							<li>
 								<div class="card panel panel-default">
 									<div class="card-body panel-body">
-										{!! $update->formattedBody !!}
+										{!! $update->toHtml() !!}
 									</div>
 									<div class="card-footer panel-footer">
 										<div class="crmcommentpostedby">Posted by {{ $update->creator ? $update->creator->name : trans('global.unknown') }} on <time datetime="{{ $update->datetimecreated->toDateTimeLocalString() }}">{{ $update->formattedDatetimecreated($update->datetimecreated->toDateTimeString()) }}</time></div>

@@ -61,7 +61,7 @@ class ArticleCreated extends Notification
 			{
 				$user = $article->creator;
 
-				$content = strip_tags($article->formattedBody);
+				$content = strip_tags($article->toHtml());
 				$content = html_entity_decode($content);
 				$content = Str::limit($content, 150);
 
