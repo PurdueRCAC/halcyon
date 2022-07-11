@@ -410,6 +410,11 @@
 					})
 					.then(response => response.json())
 					.then(json => {
+						for (var i = 0; i < json.data.length; i++) {
+							if (!json.data[i].id) {
+								json.data[i].id = json.data[i].username;
+							}
+						}
 						callback(json.data);
 					}).catch(() => {
 						callback();
