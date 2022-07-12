@@ -394,7 +394,7 @@
 				},
 				valueField: 'id',
 				labelField: 'name',
-				searchField: ['name', 'username'],
+				searchField: ['name', 'username', 'email'],
 				hidePlaceholder: true,
 				persist: false,
 				create: true,
@@ -416,7 +416,7 @@
 							}
 						}
 						callback(json.data);
-					}).catch(() => {
+					}).catch(function(err) {
 						callback();
 					});
 				},

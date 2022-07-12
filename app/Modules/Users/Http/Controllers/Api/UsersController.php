@@ -157,7 +157,15 @@ class UsersController extends Controller
 		{
 			if (is_numeric($filters['search']))
 			{
-				$entries->where($a . '.id', '=', (int)$filters['search']);
+				$query->where($a . '.id', '=', (int)$filters['search']);
+			}
+			elseif (strstr($filters['search'], '@'))
+			{
+				$query->where(function($where) use ($filters, $u)
+				{
+					$where->where($u . '.email', '=', $filters['search'])
+						->orWhere($u . '.email', 'like', $filters['search'] . '%');
+				});
 			}
 			else
 			{
