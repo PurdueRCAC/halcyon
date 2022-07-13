@@ -200,6 +200,26 @@ class CommentsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "notice",
+	 * 		"description":   "Notification state",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"201": {
 	 * 			"description": "Successful entry creation",
@@ -354,6 +374,24 @@ class CommentsController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "contactreportid",
 	 * 		"description":   "ID of the contact report",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "notice",
+	 * 		"description":   "Notification state",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"

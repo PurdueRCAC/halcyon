@@ -32,7 +32,6 @@ class ReportsController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -43,45 +42,53 @@ class ReportsController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "type",
 	 * 		"description":   "Contact Report type ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "datetimecreated",
-	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "datetimecreated",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"report",
+	 * 				"datetimecreated"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "asc",
+	 * 			"default":   "desc",
 	 * 			"enum": [
 	 * 				"asc",
 	 * 				"desc"
@@ -295,7 +302,8 @@ class ReportsController extends Controller
 	 * 		"description":   "ID of the associated group",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer"
+	 * 			"type":      "integer",
+	 * 			"default":   0
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -304,7 +312,8 @@ class ReportsController extends Controller
 	 * 		"description":   "ID of the user creating the entry",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer"
+	 * 			"type":      "integer",
+	 * 			"default":   0
 	 * 		}
 	 * }
 	 * @apiResponse {

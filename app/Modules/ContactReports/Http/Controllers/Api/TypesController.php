@@ -161,25 +161,52 @@ class TypesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "tagresources",
-	 * 		"description":   "Allow articles to tag resources",
+	 * 		"name":          "timeperiodid",
+	 * 		"description":   "ID of a timeperiod",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
-	 * 			"default":   0,
-	 * 			"enum": [
-	 * 				0,
-	 * 				1
-	 * 			]
+	 * 			"default":   0
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "url",
-	 * 		"description":   "A URL associated with the contact report",
+	 * 		"name":          "timeperiodcount",
+	 * 		"description":   "Number of time periods",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "timeperiodlimit",
+	 * 		"description":   "Timeperiod limit",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "waitperiodid",
+	 * 		"description":   "ID of a timeperiod",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "waitperiodcount",
+	 * 		"description":   "Number of wait periods",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -315,11 +342,47 @@ class TypesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "url",
-	 * 		"description":   "A URL associated with the contact report",
+	 * 		"name":          "timeperiodid",
+	 * 		"description":   "ID of a timeperiod",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "timeperiodcount",
+	 * 		"description":   "Number of time periods",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "timeperiodlimit",
+	 * 		"description":   "Timeperiod limit",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "waitperiodid",
+	 * 		"description":   "ID of a timeperiod",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "waitperiodcount",
+	 * 		"description":   "Number of wait periods",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiResponse {

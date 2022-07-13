@@ -8,7 +8,7 @@ use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 
 /**
- * Model for linking users
+ * Model for following users and groups
  */
 class Follow extends Model
 {
@@ -24,14 +24,14 @@ class Follow extends Model
 	/**
 	 * The name of the "updated at" column.
 	 *
-	 * @var  string
+	 * @var string
 	 */
 	const UPDATED_AT = null;
 
 	/**
 	 * The name of the "deleted at" column.
 	 *
-	 * @var  string
+	 * @var string
 	 */
 	const DELETED_AT = 'datetimeremoved';
 
@@ -52,7 +52,7 @@ class Follow extends Model
 	/**
 	 * Default order direction for select queries
 	 *
-	 * @var  string
+	 * @var string
 	 */
 	public static $orderDir = 'asc';
 
@@ -76,9 +76,24 @@ class Follow extends Model
 	);
 
 	/**
-	 * Defines a relationship to creator
+	 * The "booted" method of the model.
 	 *
-	 * @return  object
+	 * @return void
+	 */
+	protected static function booted()
+	{
+		static::creating(function ($model)
+		{
+			$model->membertype = $model->membertype
+				? $model->membertype
+				: 10;
+		});
+	}
+
+	/**
+	 * Defines a relationship to user following something
+	 *
+	 * @return  object User
 	 */
 	public function follower()
 	{
@@ -86,19 +101,24 @@ class Follow extends Model
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Defines a relationship to object being followed
 	 *
-	 * @return  object
+	 * @return  object User|Group
 	 */
 	public function following()
 	{
+		if ($this->groupid)
+		{
+			return $this->belongsTo('App\Modules\Groups\Models\Group', 'groupid');
+		}
 		return $this->belongsTo('App\Modules\Users\Models\User', 'targetuserid');
 	}
 
 	/**
 	 * Define a query scope
 	 *
-	 * @return  object
+	 * @param  object $query
+	 * @return object
 	 */
 	public function scopeWhereIsContactFollower($query)
 	{

@@ -75,8 +75,8 @@ class User extends Model
 	 * @var array
 	 */
 	protected $rules = array(
-		'contactreportid' => 'required',
-		'userid' => 'required'
+		'contactreportid' => 'required|integer',
+		'userid' => 'required|integer'
 	);
 
 	/**
@@ -112,7 +112,7 @@ class User extends Model
 	/**
 	 * Was the user notified?
 	 *
-	 * @return  object
+	 * @return  bool
 	 */
 	public function notified()
 	{

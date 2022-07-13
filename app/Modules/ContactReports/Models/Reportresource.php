@@ -57,12 +57,12 @@ class Reportresource extends Model
 	 * @var array
 	 */
 	protected $rules = array(
-		'contactreportid' => 'positive|nonzero',
-		'resourceid' => 'positive|nonzero'
+		'contactreportid' => 'required|integer',
+		'resourceid' => 'required|integer'
 	);
 
 	/**
-	 * Defines a relationship to news article
+	 * Defines a relationship to a contact report
 	 *
 	 * @return  object
 	 */

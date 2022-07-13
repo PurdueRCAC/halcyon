@@ -161,7 +161,7 @@ class Report extends Model
 	}
 
 	/**
-	 * Defines a relationship to updates
+	 * Defines a relationship to comments
 	 *
 	 * @return  object
 	 */
@@ -201,7 +201,7 @@ class Report extends Model
 	}
 
 	/**
-	 * Defines a relationship to type
+	 * Defines a relationship to tagged users
 	 *
 	 * @return  object
 	 */
@@ -243,7 +243,6 @@ class Report extends Model
 	public function usersAsString()
 	{
 		$tags = array();
-		//$tags[] = $this->creator ? $this->creator->name : '#' . $this->userid;
 		foreach ($this->users as $u)
 		{
 			$tags[] = $u->user ? $u->user->name : '#' . $u->userid;
@@ -418,7 +417,8 @@ class Report extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @return  boolean  False if error, True on success
+	 * @param  array   $options
+	 * @return boolean False if error, True on success
 	 */
 	public function delete(array $options = [])
 	{
@@ -451,7 +451,7 @@ class Report extends Model
 	}
 
 	/**
-	 * Format news date
+	 * Format date
 	 *
 	 * @param   string  $startdate
 	 * @return  string
@@ -471,10 +471,6 @@ class Report extends Model
 		}
 		$starttime = explode(' ', $startdate);
 		$starttime = $starttime[1];
-
-		$startyear  = date("Y", strtotime($startdate));
-		$startmonth = date("F", strtotime($startdate));
-		$startday   = date("j", strtotime($startdate));
 
 		$datestring = date("F j, Y", strtotime($startdate));
 		if ($starttime != '00:00:00')

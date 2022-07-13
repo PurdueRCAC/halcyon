@@ -9,7 +9,7 @@ use App\Modules\History\Traits\Historable;
 use App\Halcyon\Utility\PorterStemmer;
 
 /**
- * Model for a news article update
+ * Model for a contact report comment
  */
 class Comment extends Model
 {
@@ -65,7 +65,7 @@ class Comment extends Model
 	 * @var array
 	 */
 	protected $rules = array(
-		'body' => 'required'
+		'body' => 'required|string'
 	);
 
 	/**
@@ -98,7 +98,7 @@ class Comment extends Model
 	}
 
 	/**
-	 * Defines a relationship to article
+	 * Defines a relationship to contact report
 	 *
 	 * @return  object
 	 */
@@ -114,7 +114,7 @@ class Comment extends Model
 	 */
 	public function getFormattedDateAttribute()
 	{
-		$startdate = $this->getOriginal('datetimecreated');
+		$startdate = $this->datetimecreated->toDateTimeString();
 
 		$starttime = explode(' ', $startdate);
 		$starttime = $starttime[1];
@@ -129,7 +129,7 @@ class Comment extends Model
 	}
 
 	/**
-	 * Defines a relationship to type
+	 * Get the comment formatted as HTML
 	 *
 	 * @return string
 	 */

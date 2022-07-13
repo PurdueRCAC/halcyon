@@ -148,24 +148,25 @@ class FollowGroupsController extends Controller
 	 * Create a group following
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /contactreports/followusers
+	 * @apiUri    /contactreports/followgroups
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "groupid",
-	 * 		"description":   "Group ID",
-	 * 		"required":      true,
+	 * 		"description":   "ID of group being followed",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @apiParameter {
+	 * @@apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "userid",
-	 * 		"description":   "User ID",
+	 * 		"description":   "User ID of follower",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer"
+	 * 			"type":      "integer",
+	 * 			"default":   "Current user's ID"
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -213,8 +214,6 @@ class FollowGroupsController extends Controller
 		$row = new Follow();
 		$row->groupid = $request->input('groupid');
 		$row->userid = $request->input('userid', auth()->user() ? auth()->user()->id : 0);
-		$row->membertype = 10;
-		$row->datecreated = Carbon::now()->toDateTimeString();
 
 		if (!$row->save())
 		{
@@ -230,7 +229,7 @@ class FollowGroupsController extends Controller
 	 * Retrieve a group following record
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /contactreports/followusers/{id}
+	 * @apiUri    /contactreports/followgroups/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -281,7 +280,7 @@ class FollowGroupsController extends Controller
 	 * Update a group following
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /contactreports/followusers/{id}
+	 * @apiUri    /contactreports/followgroups/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -295,7 +294,7 @@ class FollowGroupsController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "groupid",
-	 * 		"description":   "Group ID",
+	 * 		"description":   "ID of group being followed",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
@@ -304,7 +303,7 @@ class FollowGroupsController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "userid",
-	 * 		"description":   "User ID",
+	 * 		"description":   "ID of user following the group",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
@@ -360,10 +359,20 @@ class FollowGroupsController extends Controller
 		if ($request->has('groupid'))
 		{
 			$row->groupid = $request->input('groupid');
+
+			if (!$row->following)
+			{
+				return response()->json(['message' => 'No group found for specified ID.'], 415);
+			}
 		}
 		if ($request->has('userid'))
 		{
 			$row->userid = $request->input('userid');
+
+			if (!$row->follower)
+			{
+				return response()->json(['message' => 'No user found for specified ID.'], 415);
+			}
 		}
 
 		if (!$row->save())
@@ -380,7 +389,7 @@ class FollowGroupsController extends Controller
 	 * Delete a group following
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /contactreports/followusers/{id}
+	 * @apiUri    /contactreports/followgroups/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",

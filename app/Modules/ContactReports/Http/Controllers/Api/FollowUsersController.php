@@ -158,7 +158,7 @@ class FollowUsersController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "targetuserid",
-	 * 		"description":   "Group ID",
+	 * 		"description":   "User ID to follow",
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
@@ -167,10 +167,11 @@ class FollowUsersController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "userid",
-	 * 		"description":   "User ID",
+	 * 		"description":   "User ID of follower",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer"
+	 * 			"type":      "integer",
+	 * 			"default":   "Current user's ID"
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -215,8 +216,6 @@ class FollowUsersController extends Controller
 		$row = new Follow();
 		$row->targetuserid = $request->input('targetuserid');
 		$row->userid = $request->input('userid', auth()->user() ? auth()->user()->id : 0);
-		$row->membertype = 10;
-		$row->datetimecreated = Carbon::now()->toDateTimeString();
 
 		if (!$row->save())
 		{
@@ -293,19 +292,21 @@ class FollowUsersController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "comment",
-	 * 		"description":   "The comment being made",
-	 * 		"type":          "string",
+	 * 		"name":          "targetuserid",
+	 * 		"description":   "User ID to follow",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "contactreportid",
-	 * 		"description":   "ID of the contact report",
-	 * 		"type":          "integer",
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID of follower",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiResponse {
 	 * 		"204": {

@@ -77,8 +77,8 @@ class Type extends Model
 	/**
 	 * Split event into plugin name and event
 	 *
-	 * @param   array   $data  the data being saved
-	 * @return  string
+	 * @param   string $value the data being saved
+	 * @return  void
 	 **/
 	public function setNameAttribute($value)
 	{
@@ -163,7 +163,7 @@ class Type extends Model
 	 *
 	 * @param  mixed  $id
 	 * @param  array  $columns
-	 * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|static[]|static|null
+	 * @return \Illuminate\Database\Eloquent\Model|null
 	 */
 	public static function findByName($name, $columns = ['*'])
 	{
@@ -178,7 +178,8 @@ class Type extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @return  boolean  False if error, True on success
+	 * @param  array   $options
+	 * @return boolean False if error, True on success
 	 */
 	public function delete(array $options = [])
 	{
