@@ -6,7 +6,7 @@ use App\Modules\News\Models\Type;
 use App\Halcyon\Form\Fields\Select;
 
 /**
- * Form Field class
+ * New Type form field
  */
 class Types extends Select
 {
@@ -18,24 +18,19 @@ class Types extends Select
 	protected $type = 'Types';
 
 	/**
-	 * Method to get the list of menus for the field options.
+	 * Method to get the list of article types for the field options.
 	 *
 	 * @return  array  The field option objects.
 	 */
 	protected function getOptions()
 	{
-		/*$items = Type::query()
-			->select(['id AS value', 'name AS text'])
-			->orderBy('name', 'asc')
-			->get();*/
-
 		$items = Type::tree();
 
 		$types = array();
 		foreach ($items as $item)
 		{
 			$item->value = $item->id;
-			$item->text = $item->name;
+			$item->text  = $item->name;
 			if ($item->level > 0)
 			{
 				$item->text = str_repeat('|&mdash;', $item->level) . ' ' . $item->name;

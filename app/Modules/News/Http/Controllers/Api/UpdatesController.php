@@ -14,7 +14,7 @@ use App\Modules\News\Http\Resources\UpdateResourceCollection;
 /**
  * Article Updates
  *
- * @apiUri    /news/updates
+ * @apiUri    /news/{news_id}/updates
  */
 class UpdatesController extends Controller
 {
@@ -22,12 +22,12 @@ class UpdatesController extends Controller
 	 * Display a listing of news article updates
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /news/updates
+	 * @apiUri    /news/{news_id}/updates
 	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "newsid",
-	 * 		"description":   "Filter by news article ID",
-	 * 		"required":      false,
+	 * 		"in":            "path",
+	 * 		"name":          "news_id",
+	 * 		"description":   "News article identifier",
+	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
@@ -143,8 +143,17 @@ class UpdatesController extends Controller
 	 * Create a news article update
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /news/updates
+	 * @apiUri    /news/{news_id}/updates
 	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "news_id",
+	 * 		"description":   "News article identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "body",
@@ -158,7 +167,6 @@ class UpdatesController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "newsid",
 	 * 		"description":   "News article ID",
-	 * 		"type":          "integer",
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
@@ -228,7 +236,16 @@ class UpdatesController extends Controller
 	 * Read a news article update
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /news/updates/{id}
+	 * @apiUri    /news/{news_id}/updates/{id}
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "news_id",
+	 * 		"description":   "News article identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -275,8 +292,17 @@ class UpdatesController extends Controller
 	 * Update a news article update
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /news/updates/{id}
+	 * @apiUri    /news/{news_id}/updates/{id}
 	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "news_id",
+	 * 		"description":   "News article identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -354,8 +380,17 @@ class UpdatesController extends Controller
 	 * Delete a news article update
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /news/updates/{id}
+	 * @apiUri    /news/{news_id}/updates/{id}
 	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "path",
+	 * 		"name":          "news_id",
+	 * 		"description":   "News article identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

@@ -166,7 +166,7 @@ class Association extends Model
 	/**
 	 * Get the associated object
 	 *
-	 * @return  object
+	 * @return  mixed User|null
 	 */
 	public function getAssociatedAttribute()
 	{

@@ -68,7 +68,7 @@ class Newsresource extends Model
 	}
 
 	/**
-	 * Defines a relationship to resources
+	 * Defines a relationship to a resource
 	 *
 	 * @return  object
 	 */

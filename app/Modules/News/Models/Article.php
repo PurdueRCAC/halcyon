@@ -891,7 +891,8 @@ class Article extends Model
 	}
 
 	/**
-	 * Match news
+	 * Expand NEWS#123 to linked article titles
+	 * This resturns the linked title in MarkDown syntax
 	 *
 	 * @param   array  $match
 	 * @return  string
@@ -915,7 +916,6 @@ class Article extends Model
 		}
 
 		return '[' . $title . '](' . route('site.news.show', ['id' => $match[3]]) . ')';
-		//return '<a href="' . route('site.news.show', ['id' => $match[3]]) . '">' . $title . '</a>';
 	}
 
 	/**

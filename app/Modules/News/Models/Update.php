@@ -73,7 +73,7 @@ class Update extends Model
 	 * @var array
 	 */
 	protected $rules = array(
-		'body' => 'required'
+		'body' => 'required|string'
 	);
 
 	/**
@@ -158,7 +158,7 @@ class Update extends Model
 	}
 
 	/**
-	 * Format body
+	 * Format body as MarkDown
 	 *
 	 * @return string
 	 */
@@ -197,7 +197,7 @@ class Update extends Model
 	}
 
 	/**
-	 * Format body
+	 * Format body as HTML
 	 *
 	 * @return string
 	 */
@@ -243,6 +243,7 @@ class Update extends Model
 	/**
 	 * Format body
 	 *
+	 * @deprecated
 	 * @return string
 	 */
 	public function getFormattedBodyAttribute()
@@ -431,7 +432,8 @@ class Update extends Model
 	}
 
 	/**
-	 * Match news
+	 * Expand NEWS#123 to linked article titles
+	 * This resturns the linked title in MarkDown syntax
 	 *
 	 * @param   array  $match
 	 * @return  string
@@ -455,7 +457,6 @@ class Update extends Model
 		}
 
 		return '[' . $title . '](' . route('site.news.show', ['id' => $match[3]]) . ')';
-		//return '<a href="' . route('site.news.show', ['id' => $match[3]]) . '">' . $title . '</a>';
 	}
 
 	/**

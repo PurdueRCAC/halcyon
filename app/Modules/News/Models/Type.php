@@ -207,11 +207,11 @@ class Type extends Model
 	}
 
 	/**
-	 * Find a model by its primary key.
+	 * Find a model by its name.
 	 *
-	 * @param  mixed  $id
+	 * @param  string $name
 	 * @param  array  $columns
-	 * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|static[]|static|null
+	 * @return \Illuminate\Database\Eloquent\Model|null
 	 */
 	public static function findByName(string $name, array $columns = ['*'])
 	{
@@ -293,9 +293,11 @@ class Type extends Model
 	}
 
 	/**
-	 * Defines a relationship to parent
+	 * Get the list of types as a tree
 	 *
-	 * @return  object
+	 * @param  string $order Field to sort by
+	 * @param  string $dir   Direction to sort
+	 * @return array
 	 */
 	public static function tree(string $order = 'name', string $dir = 'asc')
 	{
