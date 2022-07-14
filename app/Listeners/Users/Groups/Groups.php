@@ -54,12 +54,12 @@ class Groups
 		$user->ownerofgroups = $memberships->reject(function($membership, $key)
 		{
 			return $membership->trashed();
-		});
+		})->values();
 
 		$user->priorownerofgroups = $memberships->reject(function($membership, $key)
 		{
 			return !$membership->trashed();
-		});
+		})->values();
 
 		// Members
 		$memberships = Member::query()
@@ -77,12 +77,12 @@ class Groups
 		$user->memberofgroups = $memberships->reject(function($membership, $key)
 		{
 			return $membership->trashed();
-		});
+		})->values();
 
 		$user->priormemberofgroups = $memberships->reject(function($membership, $key)
 		{
 			return !$membership->trashed();
-		});
+		})->values();
 
 		// Viewers
 		$memberships = Member::query()
@@ -100,12 +100,12 @@ class Groups
 		$user->viewerofgroups = $memberships->reject(function($membership, $key)
 		{
 			return $membership->trashed();
-		});
+		})->values();
 
 		$user->priorviewerofgroups = $memberships->reject(function($membership, $key)
 		{
 			return !$membership->trashed();
-		});
+		})->values();
 
 		// Unix groups
 		$memberships = UnixGroupMember::query()
@@ -122,12 +122,12 @@ class Groups
 		$user->memberofunixgroups = $memberships->reject(function($membership, $key)
 		{
 			return $membership->trashed();
-		});
+		})->values();
 
 		$user->priormemberofunixgroups = $memberships->reject(function($membership, $key)
 		{
 			return !$membership->trashed();
-		});
+		})->values();
 
 		$event->setUser($user);
 	}
