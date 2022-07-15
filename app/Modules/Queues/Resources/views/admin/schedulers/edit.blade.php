@@ -58,7 +58,7 @@ app('pathway')
 						<?php foreach ($resources as $resource): ?>
 							<?php $children = $resource->children()->get();
 							if (count($children)) { ?>
-								<optgroup label="{{ $resource->name }}">
+								<optgroup label="{{ $resource->name . ($resource->trashed() ? ' (' . trans('queues::queues.retired') . ')' : '') }}">
 									<?php foreach ($children as $child): ?>
 										<option value="{{ $child->subresourceid }}"<?php if ($row->queuesubresourceid == $child->subresourceid): echo ' selected="selected"'; endif;?>>{{ $child->subresource ? $child->subresource->name : trans('global.unknown') }}</option>
 									<?php endforeach; ?>

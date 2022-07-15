@@ -154,4 +154,6 @@ return [
 	'member' => 'Member',
 	'pending' => 'Pending',
 	'status' => 'Status',
+	'retired' => 'Retired',
+	'export' => 'Export',
 ];

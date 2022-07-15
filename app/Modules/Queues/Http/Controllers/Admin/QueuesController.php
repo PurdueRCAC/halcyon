@@ -147,14 +147,20 @@ class QueuesController extends Controller
 			$query->where($q . '.groupid', '>', 0);
 		}
 
+		if ($request->input('task') == 'export')
+		{
+			$rows = $query
+				->orderBy($filters['order'], $filters['order_dir'])
+				->get();
+
+			return $this->export($rows, $filters);
+		}
+
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
-		/*$resources = (new Asset)->tree();*/
 		$resources = Asset::query()
-			//->where('batchsystem', '>', 0)
-			//->where('listname', '!=', '')
 			->where('rolename', '!=', '')
 			->orderBy('name', 'asc')
 			->get();
@@ -167,6 +173,187 @@ class QueuesController extends Controller
 			'resources' => $resources,
 			'filters' => $filters,
 		]);
+	}
+
+	/**
+	 * Download a list of records
+	 * 
+	 * @param  object  $rows
+	 * @return Response
+	 */
+	public function export($rows, $filters)
+	{
+		$data = array();
+		$data[] = array(
+			trans('queues::queues.id'),
+			trans('queues::queues.name'),
+			trans('queues::queues.state'),
+			trans('queues::queues.scheduling'),
+			trans('queues::queues.group'),
+			trans('queues::queues.class'),
+			trans('queues::queues.active allocation'),
+			trans('queues::queues.resource'),
+			trans('queues::queues.walltime'),
+		);
+
+		$queues = array();
+		foreach ($rows as $row)
+		{
+			if (in_array($row->id, $queues))
+			{
+				continue;
+			}
+
+			$queues[] = $row->id;
+
+			if ($row->trashed())
+			{
+				$state = trans('global.trashed');
+			}
+			elseif ($row->enabled)
+			{
+				$state = trans('global.enabled');
+			}
+			else
+			{
+				$state = trans('global.disabled');
+			}
+
+			$scheduling = '';
+			if ($row->trashed())
+			{
+				$scheduling = trans('global.trashed');
+			}
+			else
+			{
+				if ($row->enabled && $row->started && $row->active)
+				{
+					if ($row->reservation)
+					{
+						$scheduling = trans('queues::queues.queue has dedicated reservation');
+					}
+					else
+					{
+						$scheduling = trans('queues::queues.queue is running');
+					}
+				}
+				elseif ($row->active)
+				{
+					$scheduling = trans('queues::queues.queue is stopped');
+				}
+				elseif (!$row->active)
+				{
+					$scheduling = trans('queues::queues.queue has not active resources');
+				}
+			}
+
+			if ($row->groupid <= 0)
+			{
+				$class = trans('queues::queues.system');
+			}
+			else
+			{
+				$class = trans('queues::queues.owner');
+			}
+
+			$allocation = '';
+			if (!$row->active)
+			{
+				if ($upcoming = $row->getUpcomingLoanOrPurchase())
+				{
+					if ($upcoming->serviceunits > 0)
+					{
+						$allocation = number_format($upcoming->serviceunits) . ' SUs';
+					}
+					else
+					{
+						$allocation = number_format($upcoming->cores) . ' ' . strtolower(trans('queues::queues.cores'));
+					}
+					$allocation .= ' starts ' . $upcoming->datetimestart->diffForHumans();
+				}
+			}
+			else
+			{
+				if ($row->serviceunits > 0)
+				{
+					$allocation = number_format($row->serviceunits) . ' SUs';
+				}
+				else
+				{
+					$allocation  = number_format($row->totalcores) . ' ' . strtolower(trans('queues::queues.cores')) . ', ';
+					$allocation .= number_format($row->totalnodes) . ' ' . strtolower(trans('queues::queues.nodes'));
+				}
+			}
+
+			if ($row->subresourceid)
+			{
+				if ($row->subresource)
+				{
+					$resource = $row->subresource->name;
+				}
+				elseif ($row->resource)
+				{
+					$resource = $row->resource->name;
+				}
+				else
+				{
+					$resource = trans('global.unknown');
+				}
+			}
+			else
+			{
+				$resource = trans('global.none');
+			}
+
+			$wtime = '';
+			$walltime = $row->walltimes()->first();
+			if ($walltime)
+			{
+				$wtime = $walltime->humanWalltime;
+			}
+
+			$data[] = array(
+				$row->id,
+				$row->name,
+				$state,
+				$scheduling,
+				($row->group ? $row->group->name : ''),
+				$class,
+				$allocation,
+				$resource,
+				$wtime
+			);
+		}
+
+		$filename  = 'queues';
+		foreach (['search', 'state', 'type', 'scheduler', 'resource', 'class'] as $f)
+		{
+			$filename .= ($filters[$f] ? '_' . $filters[$f] : '');
+		}
+		$filename .= '.csv';
+
+		// Set headers and output
+		$headers = array(
+			'Content-type' => 'text/csv',
+			'Content-Disposition' => 'attachment; filename=' . $filename,
+			'Pragma' => 'no-cache',
+			'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+			'Expires' => '0',
+			'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT'
+		);
+
+		$callback = function() use ($data)
+		{
+			$file = fopen('php://output', 'w');
+
+			foreach ($data as $datum)
+			{
+				fputcsv($file, $datum);
+			}
+			fclose($file);
+		};
+
+		return response()->streamDownload($callback, $filename, $headers);
 	}
 
 	/**

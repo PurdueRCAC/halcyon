@@ -29,6 +29,11 @@ app('pathway')
 		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.queues.delete')) !!}
 	@endif
 
+	{!!
+		Toolbar::link('export', trans('queues::queues.export'), route('admin.queues.index', ['task' => 'export']), false);
+		Toolbar::spacer();
+	!!}
+
 	@if (auth()->user()->can('create queues'))
 		{!! Toolbar::addNew(route('admin.queues.create')) !!}
 	@endif
