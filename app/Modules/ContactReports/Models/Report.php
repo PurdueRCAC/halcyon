@@ -98,6 +98,16 @@ class Report extends Model
 	);
 
 	/**
+	 * @var string
+	 */
+	protected $markdown = null;
+
+	/**
+	 * @var string
+	 */
+	protected $html = null;
+
+	/**
 	 * Runs extra setup code when creating/updating a new model
 	 *
 	 * @return  void
@@ -253,12 +263,158 @@ class Report extends Model
 	}
 
 	/**
-	 * Defines a relationship to type
+	 * Return content as MarkDown
 	 *
+	 * @return string
+	 */
+	public function toMarkdown()
+	{
+		if (is_null($this->markdown))
+		{
+			$text = $this->report;
+
+			// Separate code blocks as we don't want to do any processing on their content
+			$text = preg_replace_callback("/```(.*?)```/uis", [$this, 'stripPre'], $text);
+			$text = preg_replace_callback("/`(.*?)`/i", [$this, 'stripCode'], $text);
+
+			$uvars = array(
+				'updatedatetime' => $this->datetimecreated,
+				'updatedate'     => date('l, F jS, Y', strtotime($this->datetimecreated)),
+				'updatetime'     => date("g:ia", strtotime($this->datetimecreated))
+			);
+
+			$news = array_merge($this->getContentVars(), $this->getAttributes()); //$this->toArray();
+			$news['resources'] = $this->resources->toArray();
+
+			$resources = array();
+			foreach ($news['resources'] as $resource)
+			{
+				$resource['resourcename'] = $resource['resourceid'];
+				array_push($resources, $resource['resourcename']);
+			}
+
+			if (count($resources) > 1)
+			{
+				$resources[count($resources)-1] = 'and ' . $resources[count($resources)-1];
+			}
+
+			if (count($resources) > 2)
+			{
+				$news['resources'] = implode(', ', $resources);
+			}
+			else if (count($resources) == 2)
+			{
+				$news['resources'] = $resources[0] . ' ' . $resources[1];
+			}
+			else if (count($resources) == 1)
+			{
+				$news['resources'] = $resources[0];
+			}
+			else
+			{
+				$news['resources'] = implode('', $resources);
+			}
+
+			foreach ($news as $var => $value)
+			{
+				if (is_array($value))
+				{
+					continue;
+				}
+				$text = preg_replace("/%" . $var . "%/", $value, $text);
+			}
+
+			$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
+			$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
+
+			$this->markdown = $text;
+		}
+
+		return $this->markdown;
+	}
+
+	/**
+	 * Return content as HTML
+	 *
+	 * @return string
+	 */
+	public function toHtml()
+	{
+		if (is_null($this->html))
+		{
+			$text = $this->toMarkdown();
+
+			if (class_exists('Parsedown'))
+			{
+				$mdParser = new \Parsedown();
+
+				$text = $mdParser->text(trim($text));
+			}
+
+			// Separate code blocks as we don't want to do any processing on their content
+			$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/i", [$this, 'stripPre'], $text);
+			$text = preg_replace_callback("/\<code\>(.*?)\<\/code\>/i", [$this, 'stripCode'], $text);
+
+			// Convert emails
+			$text = preg_replace('/([\w\.\-]+@((\w+\.)*\w{2,}\.\w{2,}))/', "<a target=\"_blank\" href=\"mailto:$1\">$1</a>", $text);
+
+			// Convert template variables
+			if (auth()->user() && auth()->user()->can('manage contactreports'))
+			{
+				$text = preg_replace("/%%([\w\s]+)%%/", '<span style="color:red">$0</span>', $text);
+			}
+
+			// Highlight unused variables for admins
+			if (auth()->user() && auth()->user()->can('manage contactreports'))
+			{
+				$text = preg_replace("/%([\w\s]+)%/", '<span style="color:red">$0</span>', $text);
+			}
+
+			$this->hashTags;
+			if (count($this->tags))
+			{
+				preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $text, $matches);
+
+				if (!empty($matches))
+				{
+					foreach ($matches[0] as $match)
+					{
+						$slug = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
+						if ($tag = $this->isTag($slug))
+						{
+							$text = str_replace($match, ' <a class="tag badge badge-sm badge-secondary" href="' . route((app('isAdmin') ? 'admin' : 'site') . '.contactreports.index', ['tag' => $tag->slug]) . '">' . $tag->name . '</a> ', $text);
+						}
+					}
+				}
+			}
+
+			// Put code blocks back
+			$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
+			$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
+			$text = str_replace('<th>', '<th scope="col">', $text);
+
+			$text = preg_replace('/<p>([^\n]+)<\/p>\n(<table.*?>)(.*?<\/table>)/usm', '$2 <caption>$1</caption>$3', $text);
+			$text = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
+
+			event($event = new ReportPrepareContent($text));
+			$text = $event->getBody();
+
+			$this->html = $text;
+		}
+
+		return $this->html;
+	}
+
+	/**
+	 * Return content as HTML
+	 *
+	 * @deprecated
 	 * @return string
 	 */
 	public function getFormattedReportAttribute()
 	{
+		return $this->toHtml();
+
 		$text = $this->report;
 
 		if (class_exists('Parsedown'))
@@ -770,6 +926,9 @@ class Report extends Model
 	{
 		$str = $this->report;
 
+		$str = preg_replace_callback("/```\s+(.*?)\s+```/uis", [$this, 'stripPre'], $str);
+		$str = preg_replace_callback("/`(.*?)`/i", [$this, 'stripCode'], $str);
+
 		preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $str, $matches);
 
 		$hashtag = [];
@@ -789,6 +948,9 @@ class Report extends Model
 				$hashtag[] = $match;
 			}
 		}
+
+		$str = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $str);
+		$str = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $str);
 
 		return implode(', ', $hashtag);
 	}

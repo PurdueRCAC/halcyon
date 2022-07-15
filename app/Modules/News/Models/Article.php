@@ -695,7 +695,7 @@ class Article extends Model
 	}
 
 	/**
-	 * Defines a relationship to type
+	 * Output body as MarkDown
 	 *
 	 * @return string
 	 */
@@ -721,7 +721,7 @@ class Article extends Model
 			$text = $event->getBody();
 
 			// Separate code blocks as we don't want to do any processing on their content
-			$text = preg_replace_callback("/```(.*?)```/i", [$this, 'stripPre'], $text);
+			$text = preg_replace_callback("/```(.*?)```/uis", [$this, 'stripPre'], $text);
 			$text = preg_replace_callback("/`(.*?)`/i", [$this, 'stripCode'], $text);
 
 			$news = array_merge($this->getContentVars(), $this->getAttributes());
@@ -747,7 +747,7 @@ class Article extends Model
 	}
 
 	/**
-	 * Defines a relationship to type
+	 * Output body as HTML
 	 *
 	 * @return string
 	 */

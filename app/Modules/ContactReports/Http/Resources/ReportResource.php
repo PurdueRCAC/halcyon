@@ -20,7 +20,7 @@ class ReportResource extends JsonResource
 		$user = auth()->user();
 
 		$data['formatteddate'] = $this->formatDate($this->datetimecreated->toDateTimeString());
-		$data['formattedreport'] = $this->formattedReport;
+		$data['formattedreport'] = $this->toHtml();
 		$data['comments'] = array();
 
 		$data['subscribed'] = 0;

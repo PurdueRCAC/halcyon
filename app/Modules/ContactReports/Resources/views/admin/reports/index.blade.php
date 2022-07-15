@@ -235,12 +235,14 @@ app('pathway')
 							foreach ($row->users as $user):
 								$cls = 'secondary';
 
-								foreach ($user->user->getAuthorisedRoles() as $role):
-									if (in_array($role, $highlight)):
-										$cls = 'danger';
-										break;
-									endif;
-								endforeach;
+								if ($user->user):
+									foreach ($user->user->getAuthorisedRoles() as $role):
+										if (in_array($role, $highlight)):
+											$cls = 'danger';
+											break;
+										endif;
+									endforeach;
+								endif;
 
 								$u  = '<a href="' . route('admin.users.show', ['id' => $user->userid]) . '" class="badge badge-' . $cls . '">';
 								$u .= ($user->user ? $user->user->name : $user->userid . ' <span class="unknown">' . trans('global.unknown') . '</span>');
@@ -275,7 +277,7 @@ app('pathway')
 					</div>
 				</div>
 				<div class="card-body">
-					{!! $row->formattedReport !!}
+					{!! $row->toHtml() !!}
 					@if (count($row->resources))
 						<?php
 						$names = array();

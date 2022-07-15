@@ -408,42 +408,42 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 				$article = new App\Modules\ContactReports\Models\Report(['report' => $help1a]);
 				?>
 				<p>Input text: <textarea id="help1ainput" class="samplebox" data-sample="a"><?php echo $help1a; ?></textarea></p>
-				<p>Output text: <br/><div id="help1aoutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div></p>
+				<p>Output text: <br/><div id="help1aoutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div></p>
 			</div>
 			<div id="help1b">
 				<?php
 				$article = new App\Modules\ContactReports\Models\Report(['report' => $help1b]);
 				?>
 				<p>Input text: <textarea id="help1binput" class="samplebox" data-sample="b"><?php echo $help1b; ?></textarea></p>
-				<p>Output text: <br/><div id="help1boutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div></p>
+				<p>Output text: <br/><div id="help1boutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div></p>
 			</div>
 			<div id="help1c">
 				<?php
 				$article = new App\Modules\ContactReports\Models\Report(['report' => $help1c]);
 				?>
 				<p>Input text: <textarea id="help1cinput" class="samplebox" data-sample="c"><?php echo $help1c; ?></textarea></p>
-				<p>Output text: <br/><div id="help1coutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div></p>
+				<p>Output text: <br/><div id="help1coutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div></p>
 			</div>
 			<div id="help1e">
 				<?php
 				$article = new App\Modules\ContactReports\Models\Report(['report' => $help1e]);
 				?>
 				<p>Input text: <textarea id="help1einput" class="samplebox" data-sample="e"><?php echo $help1e; ?></textarea></p>
-				<p>Output text: <br/><div id="help1eoutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div></p>
+				<p>Output text: <br/><div id="help1eoutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div></p>
 			</div>
 			<div id="help1f">
 				<?php
 				$article = new App\Modules\ContactReports\Models\Report(['report' => $help1f]);
 				?>
 				<p>Input text: <textarea id="help1finput" class="samplebox" data-sample="f"><?php echo $help1f; ?></textarea></p>
-				<p>Output text: <br/><div id="help1foutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div></p>
+				<p>Output text: <br/><div id="help1foutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div></p>
 			</div>
 			<div id="help1g">
 				<?php
 				$article = new App\Modules\ContactReports\Models\Report(['report' => $help1g]);
 				?>
 				<p>Input text: <textarea id="help1ginput" class="samplebox" data-sample="g"><?php echo $help1g; ?></textarea></p>
-				<p>Output text: <br/><div id="help1goutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div></p>
+				<p>Output text: <br/><div id="help1goutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div></p>
 			</div>
 		</div>
 
@@ -489,7 +489,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 						</div>
 						<div class="panel-body">
 							<div class="newsposttext">
-								<span id="{{ $row->id }}_text">{!! $row->formattedReport !!}</span>
+								<span id="{{ $row->id }}_text">{!! $row->toHtml() !!}</span>
 								<span><textarea id="{{ $row->id }}_textarea" rows="7" cols="45" class="form-control crmreportedittextbox" style="display: none;"></textarea></span>
 							</div>
 						</div>

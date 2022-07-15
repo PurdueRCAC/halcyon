@@ -167,6 +167,7 @@ trait Taggable
 
 		$tag = $model
 			//->where('domain', $this->getEntityClassName())
+			->withTrashed()
 			->where('slug', $model->normalize($name))
 			->first();
 
@@ -178,6 +179,11 @@ trait Taggable
 				'name' => $name,
 				'created_by' => auth()->user() ? auth()->user()->id : 0
 			]);
+		}
+
+		if ($tag->trashed())
+		{
+			$tag->restore();
 		}
 
 		if ($tag->exists === false)

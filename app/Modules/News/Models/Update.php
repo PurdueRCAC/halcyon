@@ -170,7 +170,7 @@ class Update extends Model
 
 		$text = $event->getBody();
 
-		$text = preg_replace_callback("/```(.*?)```/i", [$this, 'stripPre'], $text);
+		$text = preg_replace_callback("/```(.*?)```/uis", [$this, 'stripPre'], $text);
 		$text = preg_replace_callback("/`(.*?)`/i", [$this, 'stripCode'], $text);
 
 		$uvars = array(

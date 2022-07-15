@@ -49,7 +49,7 @@
 						</div>
 						<div class="card-body panel-body">
 							<div class="newsposttext">
-								<span id="{{ $row->id }}_text">{!! $row->formattedReport !!}</span>
+								<span id="{{ $row->id }}_text">{!! $row->toHtml() !!}</span>
 							</div>
 						</div>
 					</div>

@@ -317,7 +317,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 								<textarea id="help1ainput" class="form-control samplebox" rows="5" data-sample="a"><?php echo $help1a; ?></textarea>
 							</div>
 							<p>{{ trans('contactreports::contactreports.output text') }}:<p>
-							<div id="help1aoutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
+							<div id="help1aoutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
 						</div>
 						<div class="tab-pane" id="help1b" role="tabpanel" aria-labelledby="help1b-tab">
 							<?php
@@ -328,7 +328,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 								<textarea id="help1binput" class="form-control samplebox" rows="5" data-sample="b"><?php echo $help1b; ?></textarea>
 							</div>
 							<p>{{ trans('contactreports::contactreports.output text') }}:<p>
-							<div id="help1boutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
+							<div id="help1boutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
 						</div>
 						<div class="tab-pane" id="help1c" role="tabpanel" aria-labelledby="help1c-tab">
 							<?php
@@ -339,7 +339,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 								<textarea id="help1cinput" class="form-control samplebox" rows="5" data-sample="c"><?php echo $help1c; ?></textarea>
 							</div>
 							<p>{{ trans('contactreports::contactreports.output text') }}:<p>
-							<div id="help1coutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
+							<div id="help1coutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
 						</div>
 						<div class="tab-pane" id="help1d" role="tabpanel" aria-labelledby="help1d-tab">
 							<?php
@@ -350,7 +350,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 								<textarea id="help1dinput" class="form-control samplebox" rows="5" data-sample="d"><?php echo $help1d; ?></textarea>
 							</div>
 							<p>{{ trans('contactreports::contactreports.output text') }}:<p>
-							<div id="help1doutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
+							<div id="help1doutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
 						</div>
 						<div class="tab-pane" id="help1e" role="tabpanel" aria-labelledby="help1e-tab">
 							<?php
@@ -361,7 +361,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 								<textarea id="help1einput" class="form-control samplebox" rows="5" data-sample="e"><?php echo $help1e; ?></textarea>
 							</div>
 							<p>{{ trans('contactreports::contactreports.output text') }}:<p>
-							<div id="help1eoutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
+							<div id="help1eoutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
 						</div>
 						<div class="tab-pane" id="help1f" role="tabpanel" aria-labelledby="help1f-tab">
 							<?php
@@ -372,7 +372,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 								<textarea id="help1finput" class="form-control samplebox" rows="5" data-sample="f"><?php echo $help1f; ?></textarea>
 							</div>
 							<p>{{ trans('contactreports::contactreports.output text') }}:<p>
-							<div id="help1foutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
+							<div id="help1foutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
 						</div>
 						<div class="tab-pane" id="help1g" role="tabpanel" aria-labelledby="help1g-tab">
 							<?php
@@ -383,7 +383,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 								<textarea id="help1ginput" class="form-control samplebox" rows="5" data-sample="g"><?php echo $help1g; ?></textarea>
 							</div>
 							<p>{{ trans('contactreports::contactreports.output text') }}:<p>
-							<div id="help1goutput" class="sampleoutput"><?php echo $article->formattedReport; ?></div>
+							<div id="help1goutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
 						</div>
 					</div>
 
