@@ -159,7 +159,7 @@ class FollowGroupsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @@apiParameter {
+	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "userid",
 	 * 		"description":   "User ID of follower",
