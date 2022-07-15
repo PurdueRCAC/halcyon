@@ -271,6 +271,7 @@ class Report extends Model
 	{
 		if (is_null($this->markdown))
 		{
+			$this->hashTags;
 			$text = $this->report;
 
 			// Separate code blocks as we don't want to do any processing on their content
@@ -370,7 +371,6 @@ class Report extends Model
 				$text = preg_replace("/%([\w\s]+)%/", '<span style="color:red">$0</span>', $text);
 			}
 
-			$this->hashTags;
 			if (count($this->tags))
 			{
 				preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $text, $matches);
