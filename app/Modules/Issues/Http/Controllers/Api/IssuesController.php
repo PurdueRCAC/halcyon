@@ -114,7 +114,7 @@ class IssuesController extends Controller
 			$filters[$key] = $val;
 		}
 
-		if (!in_array($filters['order'], ['id', 'report', 'datetimecreated']))
+		if (!in_array($filters['order'], ['id', 'issuetodoid', 'userid', 'datetimecreated', 'datetimeremoved']))
 		{
 			$filters['order'] = Issue::$orderBy;
 		}
