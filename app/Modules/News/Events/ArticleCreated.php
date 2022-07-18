@@ -25,7 +25,7 @@ class ArticleCreated
 	/**
 	 * Return the entity
 	 *
-	 * @return \Illuminate\Database\Eloquent\Model
+	 * @return Article
 	 */
 	public function getArticle()
 	{

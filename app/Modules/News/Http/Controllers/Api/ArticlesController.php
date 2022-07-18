@@ -157,6 +157,7 @@ class ArticlesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function index(Request $request)
@@ -544,15 +545,15 @@ class ArticlesController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'newstypeid' => 'required|integer|min:1',
-			'headline' => 'required|string|max:255',
-			'body' => 'required|string|max:15000',
-			'published' => 'nullable|integer|in:0,1',
-			'template' => 'nullable|integer|in:0,1',
-			'datetimenews' => 'nullable|date',
+			'newstypeid'      => 'required|integer|min:1',
+			'headline'        => 'required|string|max:255',
+			'body'            => 'required|string|max:15000',
+			'published'       => 'nullable|integer|in:0,1',
+			'template'        => 'nullable|integer|in:0,1',
+			'datetimenews'    => 'nullable|date',
 			'datetimenewsend' => 'nullable|date',
-			'location' => 'nullable|string|max:32',
-			'url' => 'nullable|url',
+			'location'        => 'nullable|string|max:32',
+			'url'             => 'nullable|url|max:255',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -600,12 +601,6 @@ class ArticlesController extends Controller
 				}
 			}
 		}
-
-		/*if ($row->template)
-		{
-			$row->datetimenews = null;
-			$row->datetimenewsend = null;
-		}*/
 
 		if ($request->has('location'))
 		{
@@ -849,15 +844,16 @@ class ArticlesController extends Controller
 	public function update(Request $request, $id)
 	{
 		$rules = [
-			'newstypeid' => 'nullable|integer',
-			'body' => 'nullable|string',
-			'published' => 'nullable|integer|in:0,1',
-			'template' => 'nullable|integer|in:0,1',
-			'datetimenews' => 'nullable|date',
+			'newstypeid'      => 'nullable|integer',
+			'headline'        => 'nullable|string|max:255',
+			'body'            => 'nullable|string|max:15000',
+			'published'       => 'nullable|integer|in:0,1',
+			'template'        => 'nullable|integer|in:0,1',
+			'datetimenews'    => 'nullable|date',
 			'datetimenewsend' => 'nullable|date',
-			'location' => 'nullable|string',
-			'url' => 'nullable|url',
-			'update' => 'nullable|integer'
+			'location'        => 'nullable|string|max:32',
+			'url'             => 'nullable|url|max:255',
+			'update'          => 'nullable|integer'
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -868,7 +864,6 @@ class ArticlesController extends Controller
 		}
 
 		$row = Article::findOrFail($id);
-		//$row->fill($request->all());
 
 		if ($request->has('newstypeid'))
 		{
@@ -898,12 +893,6 @@ class ArticlesController extends Controller
 		if ($request->has('template'))
 		{
 			$row->template = $request->input('template');
-
-			/*if ($row->template)
-			{
-				$row->datetimenews = null;
-				$row->datetimenewsend = null;
-			}*/
 		}
 
 		if ($request->has('datetimenews'))
@@ -1088,6 +1077,24 @@ class ArticlesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
+	 * 		"name":          "headline",
+	 * 		"description":   "Optional alternate article headline",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "body",
+	 * 		"description":   "Optional alternate article body",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "resources",
 	 * 		"description":   "A list of resource IDs to send the email to mailing lists.",
 	 * 		"required":      false,
@@ -1117,16 +1124,17 @@ class ArticlesController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
+	 * @param   integer  $id
 	 * @param   Request  $request
 	 * @return  Response
 	 */
 	public function email($id, Request $request)
 	{
 		$request->validate([
-			'headline' => 'nullable|string|max:255',
-			'body' => 'nullable|string|max:15000',
+			'headline'     => 'nullable|string|max:255',
+			'body'         => 'nullable|string|max:15000',
 			'associations' => 'nullable|array',
-			'resources' => 'nullable|array'
+			'resources'    => 'nullable|array'
 		]);
 
 		$row = Article::findOrFail($id);
@@ -1142,7 +1150,7 @@ class ArticlesController extends Controller
 		}
 
 		// Fetch name of sender
-		$name = auth()->user()->name . ' via ' . config('app.name') . ' News';
+		$name = (auth()->user() ? auth()->user()->name . ' via ' : '') . config('app.name') . ' News';
 
 		// Recipients
 		$emails = array();
@@ -1215,8 +1223,6 @@ class ArticlesController extends Controller
 
 		if (count($emails) > 0)
 		{
-			$msg = new Message($row, $name);
-
 			Mail::to($emails)->send(new Message($row, $name));
 
 			foreach ($emails as $email)
@@ -1237,7 +1243,7 @@ class ArticlesController extends Controller
 
 			$row->update([
 				'datetimemailed' => Carbon::now()->toDateTimeString(),
-				'lastmailuserid' => auth()->user()->id
+				'lastmailuserid' => (auth()->user() ? auth()->user()->id : 0)
 			]);
 		}
 

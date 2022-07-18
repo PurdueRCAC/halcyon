@@ -9,9 +9,7 @@ use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\Tags\Models\Tagged;
 use App\Modules\History\Traits\Historable;
-use App\Modules\News\Events\TypeCreating;
 use App\Modules\News\Events\TypeCreated;
-use App\Modules\News\Events\TypeUpdating;
 use App\Modules\News\Events\TypeUpdated;
 use App\Modules\News\Events\TypeDeleted;
 use Carbon\Carbon;
@@ -87,9 +85,7 @@ class Type extends Model
 	 * @var array
 	 */
 	protected $dispatchesEvents = [
-		'creating' => TypeCreating::class,
 		'created'  => TypeCreated::class,
-		'updating' => TypeUpdating::class,
 		'updated'  => TypeUpdated::class,
 		'deleted'  => TypeDeleted::class,
 	];
@@ -165,7 +161,7 @@ class Type extends Model
 	}
 
 	/**
-	 * Defines a relationship to articles of this type and its child types
+	 * Defines a relationship to articles of this type
 	 *
 	 * @return  object
 	 */
@@ -197,7 +193,7 @@ class Type extends Model
 	}
 
 	/**
-	 * Defines a relationship to parent type
+	 * Convert to HTML
 	 *
 	 * @return  string
 	 */

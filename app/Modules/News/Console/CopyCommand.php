@@ -25,6 +25,8 @@ class CopyCommand extends Command
 
 	/**
 	 * Execute the console command.
+	 *
+	 * @return  void
 	 */
 	public function handle()
 	{
@@ -94,20 +96,20 @@ class CopyCommand extends Command
 				$payload->edituserid      = $news->edituserid;
 				$payload->published       = 1;
 				$payload->headline        = $news->headline;
-				$payload->body = $news->body;
-				$payload->location = $news->location;
-				$payload->template = $news->template;
-				$payload->newstypeid = $news->newstypeid;
-				$payload->url = $news->url;
+				$payload->body            = $news->body;
+				$payload->location        = $news->location;
+				$payload->template        = $news->template;
+				$payload->newstypeid      = $news->newstypeid;
+				$payload->url             = $news->url;
 
 				if ($debug || $this->output->isVerbose())
 				{
 					$this->info('Adding copy of #' . $id . ' for `' . $payload->datetimenews . '`');
-				}
 
-				if ($debug)
-				{
-					continue;
+					if ($debug)
+					{
+						continue;
+					}
 				}
 
 				$payload->save();

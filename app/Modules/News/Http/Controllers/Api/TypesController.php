@@ -394,15 +394,15 @@ class TypesController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'name' => 'required|string|max:32',
+			'name'         => 'required|string|max:32',
 			'tagresources' => 'nullable|boolean',
-			'location' => 'nullable|boolean',
-			'future' => 'nullable|boolean',
-			'ongoing' => 'nullable|boolean',
-			'tagusers' => 'nullable|boolean',
-			'calendar' => 'nullable|boolean',
-			'url' => 'nullable|url',
-			'parentid' => 'nullable|integer',
+			'location'     => 'nullable|boolean',
+			'future'       => 'nullable|boolean',
+			'ongoing'      => 'nullable|boolean',
+			'tagusers'     => 'nullable|boolean',
+			'calendar'     => 'nullable|boolean',
+			'url'          => 'nullable|url',
+			'parentid'     => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -615,15 +615,15 @@ class TypesController extends Controller
 	public function update(Request $request, $id)
 	{
 		$rules = [
-			'name' => 'nullable|string|max:32',
+			'name'         => 'nullable|string|max:32',
 			'tagresources' => 'nullable|boolean',
-			'location' => 'nullable|boolean',
-			'future' => 'nullable|boolean',
-			'ongoing' => 'nullable|boolean',
-			'tagusers' => 'nullable|boolean',
-			'calendar' => 'nullable|boolean',
-			'url' => 'nullable|url',
-			'parentid' => 'nullable|integer',
+			'location'     => 'nullable|boolean',
+			'future'       => 'nullable|boolean',
+			'ongoing'      => 'nullable|boolean',
+			'tagusers'     => 'nullable|boolean',
+			'calendar'     => 'nullable|boolean',
+			'url'          => 'nullable|url',
+			'parentid'     => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);

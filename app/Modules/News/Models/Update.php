@@ -108,7 +108,7 @@ class Update extends Model
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Defines a relationship to editor
 	 *
 	 * @return  object
 	 */
@@ -373,10 +373,9 @@ class Update extends Model
 	}
 
 	/**
-	 * Replace code block
+	 * Code block replacements
 	 *
-	 * @param   array  $match
-	 * @return  string
+	 * @var  array
 	 */
 	private $replacements = array(
 		'preblocks'  => array(),

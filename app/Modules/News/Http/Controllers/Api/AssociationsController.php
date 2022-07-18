@@ -270,7 +270,8 @@ class AssociationsController extends Controller
 	 * 		"description":   "Comment / notes",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 2000
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -299,10 +300,10 @@ class AssociationsController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'associd' => 'required|integer',
+			'associd'   => 'required|integer',
 			'assoctype' => 'required|string|max:255',
-			'newsid' => 'required|integer',
-			'comment' => 'nullable|string|max:2000',
+			'newsid'    => 'required|integer',
+			'comment'   => 'nullable|string|max:2000',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -445,7 +446,8 @@ class AssociationsController extends Controller
 	 * 		"description":   "Comment / notes",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 2000
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -475,10 +477,10 @@ class AssociationsController extends Controller
 	public function update(Request $request, $id)
 	{
 		$rules = [
-			'associd' => 'nullable|integer',
+			'associd'   => 'nullable|integer',
 			'assoctype' => 'nullable|string|max:255',
-			'newsid' => 'nullable|integer',
-			'comment' => 'nullable|string|max:2000',
+			'newsid'    => 'nullable|integer',
+			'comment'   => 'nullable|string|max:2000',
 		];
 
 		$validator = Validator::make($request->all(), $rules);

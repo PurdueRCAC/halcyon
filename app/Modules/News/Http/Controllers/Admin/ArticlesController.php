@@ -520,7 +520,8 @@ class ArticlesController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function stats(Request $request)
