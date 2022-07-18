@@ -450,7 +450,8 @@ class WidgetsController extends Controller
 	 * 		"description":   "Widget title",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 100
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -459,7 +460,8 @@ class WidgetsController extends Controller
 	 * 		"description":   "Widget position",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 50
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -468,7 +470,8 @@ class WidgetsController extends Controller
 	 * 		"description":   "The type of widget",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 50
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -635,7 +638,8 @@ class WidgetsController extends Controller
 	 * 		"description":   "Widget title",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 100
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -644,7 +648,8 @@ class WidgetsController extends Controller
 	 * 		"description":   "Widget position",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 50
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -653,7 +658,8 @@ class WidgetsController extends Controller
 	 * 		"description":   "The type of widget",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 50
 	 * 		}
 	 * }
 	 * @apiParameter {

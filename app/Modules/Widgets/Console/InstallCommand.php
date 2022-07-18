@@ -25,15 +25,9 @@ class InstallCommand extends Command
 	protected $description = 'Install the specified widget by given package name (vendor/name).';
 
 	/**
-	 * Create a new command instance.
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
-	/**
 	 * Execute the console command.
+	 *
+	 * @return void
 	 */
 	public function handle()
 	{
@@ -54,6 +48,8 @@ class InstallCommand extends Command
 
 	/**
 	 * Install widgets from widgets.json file.
+	 *
+	 * @return void
 	 */
 	protected function installFromFile()
 	{
@@ -98,6 +94,7 @@ class InstallCommand extends Command
 	 * @param string $version
 	 * @param string $type
 	 * @param bool   $tree
+	 * @return void
 	 */
 	protected function install($name, $version = 'dev-master', $type = 'composer', $tree = false)
 	{

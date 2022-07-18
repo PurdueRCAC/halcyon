@@ -9,15 +9,23 @@ class WidgetUpdating
 	/**
 	 * @var Widget
 	 */
-	private $widget;
+	public $widget;
 
+	/**
+	 * Constructor
+	 *
+	 * @param Widget $widget
+	 * @return void
+	 */
 	public function __construct(Widget $widget)
 	{
 		$this->widget = $widget;
 	}
 
 	/**
-	 * @return User
+	 * Return the entity
+	 *
+	 * @return Widget
 	 */
 	public function getWidget()
 	{

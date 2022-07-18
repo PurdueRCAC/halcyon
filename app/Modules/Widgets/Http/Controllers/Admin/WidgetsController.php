@@ -602,7 +602,7 @@ class WidgetsController extends Controller
 	 * Method to save the submitted ordering values for records.
 	 *
 	 * @param  Request $request
-	 * @return  boolean  True on success
+	 * @return Response
 	 */
 	public function saveorder(Request $request)
 	{
@@ -661,7 +661,7 @@ class WidgetsController extends Controller
 	 * Return to the main view
 	 *
 	 * @param  Request $request
-	 * @return  Response
+	 * @return Response
 	 */
 	public function cancel(Request $request)
 	{

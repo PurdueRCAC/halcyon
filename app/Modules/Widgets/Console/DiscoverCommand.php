@@ -25,6 +25,8 @@ class DiscoverCommand extends Command
 
 	/**
 	 * Execute the console command.
+	 *
+	 * @return void
 	 */
 	public function handle()
 	{

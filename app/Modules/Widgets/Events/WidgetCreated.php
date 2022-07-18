@@ -25,7 +25,7 @@ class WidgetCreated
 	/**
 	 * Return the entity
 	 *
-	 * @return \Illuminate\Database\Eloquent\Model
+	 * @return Widget
 	 */
 	public function getWidget()
 	{

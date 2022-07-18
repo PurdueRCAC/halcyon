@@ -15,7 +15,6 @@ class WidgetUpdated
 	 * Constructor
 	 *
 	 * @param Widget $widget
-	 * @param array $data
 	 * @return void
 	 */
 	public function __construct(Widget $widget)
@@ -26,7 +25,7 @@ class WidgetUpdated
 	/**
 	 * Return the entity
 	 *
-	 * @return \Illuminate\Database\Eloquent\Model
+	 * @return Widget
 	 */
 	public function getWidget()
 	{

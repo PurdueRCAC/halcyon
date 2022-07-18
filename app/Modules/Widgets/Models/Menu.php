@@ -20,7 +20,18 @@ class Menu extends Model
 	 */
 	public $timestamps = false;
 
+	/**
+	 * Primary key name
+	 *
+	 * @var string
+	 */
 	protected $primaryKey = null;
+
+	/**
+	 * Auto-increment entries
+	 *
+	 * @var bool
+	 */
 	public $incrementing = false;
 
 	/**
@@ -96,7 +107,6 @@ class Menu extends Model
 	 * Inserts a new row into the database
 	 *
 	 * @return  bool
-	 * @since   2.0.0
 	 **/
 	protected function createWithNoPk()
 	{
@@ -127,7 +137,8 @@ class Menu extends Model
 	/**
 	 * Deletes the existing/current model
 	 *
-	 * @return  bool
+	 * @param  array  $options
+	 * @return bool
 	 **/
 	public function delete(array $options = [])
 	{

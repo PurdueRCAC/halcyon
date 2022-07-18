@@ -22,6 +22,8 @@ class SetupCommand extends Command
 
 	/**
 	 * Execute the console command.
+	 *
+	 * @return void
 	 */
 	public function handle()
 	{
@@ -32,6 +34,8 @@ class SetupCommand extends Command
 
 	/**
 	 * Generate the modules folder.
+	 *
+	 * @return void
 	 */
 	public function generateWidgetsFolder()
 	{
@@ -44,6 +48,8 @@ class SetupCommand extends Command
 
 	/**
 	 * Generate the assets folder.
+	 *
+	 * @return void
 	 */
 	public function generateAssetsFolder()
 	{
@@ -60,6 +66,7 @@ class SetupCommand extends Command
 	 * @param $dir
 	 * @param $success
 	 * @param $error
+	 * @return void
 	 */
 	protected function generateDirectory($dir, $success, $error)
 	{
