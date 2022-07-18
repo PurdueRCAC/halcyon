@@ -12,15 +12,16 @@ class NewComment extends Mailable
 	use Queueable, SerializesModels;
 
 	/**
-	 * The order instance.
+	 * The comment instance.
 	 *
-	 * @var Order
+	 * @var Comment
 	 */
 	protected $comment;
 
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param  Comment $comment
 	 * @return void
 	 */
 	public function __construct(Comment $comment)

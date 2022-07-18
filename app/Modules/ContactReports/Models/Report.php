@@ -10,6 +10,9 @@ use App\Halcyon\Access\Map;
 use App\Modules\Tags\Traits\Taggable;
 use App\Modules\History\Traits\Historable;
 use App\Modules\ContactReports\Events\ReportPrepareContent;
+use App\Modules\ContactReports\Events\ReportCreated;
+use App\Modules\ContactReports\Events\ReportUpdated;
+use App\Modules\ContactReports\Events\ReportDeleted;
 use App\Modules\Users\Models\User as SystemUser;
 use Carbon\Carbon;
 
@@ -86,6 +89,17 @@ class Report extends Model
 		'headline' => 'required',
 		'body'     => 'required'
 	);
+
+	/**
+	 * The event map for the model.
+	 *
+	 * @var array
+	 */
+	protected $dispatchesEvents = [
+		'created' => ReportCreated::class,
+		'updated' => ReportUpdated::class,
+		'deleted' => ReportDeleted::class,
+	];
 
 	/**
 	 * Code block replacements

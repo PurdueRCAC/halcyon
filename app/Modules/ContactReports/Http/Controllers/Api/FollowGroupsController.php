@@ -57,29 +57,36 @@ class FollowGroupsController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "datetimecreated",
-	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "datecreated",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"userid",
+	 * 				"datecreated",
+	 * 				"targetuserid"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "asc",
+	 * 			"default":   "desc",
 	 * 			"enum": [
 	 * 				"asc",
 	 * 				"desc"
@@ -93,8 +100,8 @@ class FollowGroupsController extends Controller
 	{
 		// Get filters
 		$filters = array(
-			'groupid' => 0,
-			'userid' => 0,
+			'groupid'   => 0,
+			'userid'    => 0,
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
 			'order'     => GroupUser::$orderBy,
@@ -201,7 +208,7 @@ class FollowGroupsController extends Controller
 	{
 		$rules = [
 			'groupid' => 'required|integer|min:1',
-			'userid' => 'nullable|integer',
+			'userid'  => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);

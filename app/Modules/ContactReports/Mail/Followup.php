@@ -29,6 +29,8 @@ class Followup extends Mailable
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param  Type $type
+	 * @param  User $user
 	 * @return void
 	 */
 	public function __construct(Type $type, User $user)

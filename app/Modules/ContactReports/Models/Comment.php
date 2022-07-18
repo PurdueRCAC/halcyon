@@ -5,8 +5,11 @@ namespace App\Modules\ContactReports\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
-use App\Modules\History\Traits\Historable;
 use App\Halcyon\Utility\PorterStemmer;
+use App\Modules\History\Traits\Historable;
+use App\Modules\ContactReports\Events\CommentCreated;
+use App\Modules\ContactReports\Events\CommentUpdated;
+use App\Modules\ContactReports\Events\CommentDeleted;
 
 /**
  * Model for a contact report comment
@@ -78,6 +81,17 @@ class Comment extends Model
 	];
 
 	/**
+	 * The event map for the model.
+	 *
+	 * @var array
+	 */
+	protected $dispatchesEvents = [
+		'created' => CommentCreated::class,
+		'updated' => CommentUpdated::class,
+		'deleted' => CommentDeleted::class,
+	];
+
+	/**
 	 * Code block replacements
 	 *
 	 * @var  array
@@ -108,7 +122,7 @@ class Comment extends Model
 	}
 
 	/**
-	 * Defines a relationship to type
+	 * Get formatted created time
 	 *
 	 * @return  string
 	 */

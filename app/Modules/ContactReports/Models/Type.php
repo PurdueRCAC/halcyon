@@ -129,7 +129,7 @@ class Type extends Model
 	}
 
 	/**
-	 * Defines a relationship to articles
+	 * Defines a relationship to reports
 	 *
 	 * @return  object
 	 */
@@ -161,7 +161,7 @@ class Type extends Model
 	/**
 	 * Find a model by its primary key.
 	 *
-	 * @param  mixed  $id
+	 * @param  string $name
 	 * @param  array  $columns
 	 * @return \Illuminate\Database\Eloquent\Model|null
 	 */

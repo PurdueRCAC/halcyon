@@ -46,7 +46,6 @@ class FollowUsersController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -70,11 +69,12 @@ class FollowUsersController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "datetimecreated",
+	 * 			"default":   "datecreated",
 	 * 			"enum": [
 	 * 				"id",
-	 * 				"datetimecreated",
-	 * 				"datetimeremoved"
+	 * 				"userid",
+	 * 				"datecreated",
+	 * 				"targetuserid"
 	 * 			]
 	 * 		}
 	 * }
@@ -99,12 +99,12 @@ class FollowUsersController extends Controller
 	{
 		// Get filters
 		$filters = array(
-			'userid' => 0,
+			'userid'       => 0,
 			'targetuserid' => 0,
-			'limit'     => config('list_limit', 20),
-			'page'      => 1,
-			'order'     => Follow::$orderBy,
-			'order_dir' => Follow::$orderDir,
+			'limit'        => config('list_limit', 20),
+			'page'         => 1,
+			'order'        => Follow::$orderBy,
+			'order_dir'    => Follow::$orderDir,
 		);
 
 		foreach ($filters as $key => $default)

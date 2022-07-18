@@ -17,7 +17,7 @@ class ReportDeleted
 	 * @param  Report $report
 	 * @return void
 	 */
-	public function __construct($report)
+	public function __construct(Report $report)
 	{
 		$this->report = $report;
 	}

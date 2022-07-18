@@ -21,6 +21,7 @@ class NewReport extends Mailable
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param  Report $report
 	 * @return void
 	 */
 	public function __construct(Report $report)

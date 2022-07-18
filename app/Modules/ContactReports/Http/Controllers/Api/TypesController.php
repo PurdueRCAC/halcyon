@@ -23,6 +23,42 @@ class TypesController extends Controller
 	 * @apiUri    /contactreports/types
 	 * @apiParameter {
 	 * 		"in":            "query",
+	 * 		"name":          "tagresources",
+	 * 		"description":   "Filter by `tagresources` value",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "location",
+	 * 		"description":   "Filter by `location` value",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "future",
+	 * 		"description":   "Filter by `future` value",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "ongoing",
+	 * 		"description":   "Filter by `ongoing` value",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"required":      false,
@@ -86,14 +122,15 @@ class TypesController extends Controller
 	{
 		// Get filters
 		$filters = array(
-			'search'    => null,
+			'search'       => null,
 			'tagresources' => null,
-			'location'  => null,
-			'future'    => null,
-			'ongoing'   => null,
-			'limit'     => config('list_limit', 20),
-			'order'     => Type::$orderBy,
-			'order_dir' => Type::$orderDir,
+			'location'     => null,
+			'future'       => null,
+			'ongoing'      => null,
+			'limit'        => config('list_limit', 20),
+			'page'         => 1,
+			'order'        => Type::$orderBy,
+			'order_dir'    => Type::$orderDir,
 		);
 
 		foreach ($filters as $key => $default)
@@ -124,7 +161,7 @@ class TypesController extends Controller
 		$rows = $query
 			->withCount('reports')
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		$rows->each(function ($item, $key)
@@ -238,11 +275,11 @@ class TypesController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'name' => 'required|string|max:32',
-			'timeperiodid' => 'nullable|integer',
+			'name'            => 'required|string|max:32',
+			'timeperiodid'    => 'nullable|integer',
 			'timeperiodcount' => 'nullable|integer',
 			'timeperiodlimit' => 'nullable|integer',
-			'waitperiodid' => 'nullable|integer',
+			'waitperiodid'    => 'nullable|integer',
 			'waitperiodcount' => 'nullable|integer',
 		];
 
@@ -418,11 +455,11 @@ class TypesController extends Controller
 	public function update(Request $request, $id)
 	{
 		$rules = [
-			'name' => 'nullable|string|max:32',
-			'timeperiodid' => 'nullable|integer',
+			'name'            => 'nullable|string|max:32',
+			'timeperiodid'    => 'nullable|integer',
 			'timeperiodcount' => 'nullable|integer',
 			'timeperiodlimit' => 'nullable|integer',
-			'waitperiodid' => 'nullable|integer',
+			'waitperiodid'    => 'nullable|integer',
 			'waitperiodcount' => 'nullable|integer',
 		];
 

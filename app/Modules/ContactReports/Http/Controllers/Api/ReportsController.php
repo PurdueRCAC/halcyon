@@ -403,12 +403,12 @@ class ReportsController extends Controller
 		$now = Carbon::now();
 
 		$rules = [
-			'report' => 'required|string',
-			'datetimecontact' => 'required|date|before_or_equal:' . $now->toDateTimeString(),
-			'userid' => 'nullable|integer',
-			'groupid' => 'nullable|integer',
-			'datetimegroupid' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
-			'notice' => 'nullable|integer',
+			'report'              => 'required|string',
+			'datetimecontact'     => 'required|date|before_or_equal:' . $now->toDateTimeString(),
+			'userid'              => 'nullable|integer',
+			'groupid'             => 'nullable|integer',
+			'datetimegroupid'     => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
+			'notice'              => 'nullable|integer',
 			'contactreporttypeid' => 'nullable|integer',
 		];
 
@@ -761,12 +761,12 @@ class ReportsController extends Controller
 		$now = Carbon::now();
 
 		$rules = [
-			'report' => 'nullable|string',
-			'datetimecontact' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
-			'groupid' => 'nullable|integer',
-			'notice' => 'nullable|integer',
+			'report'              => 'nullable|string',
+			'datetimecontact'     => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
+			'groupid'             => 'nullable|integer',
+			'notice'              => 'nullable|integer',
 			'contactreporttypeid' => 'nullable|integer',
-			//'datetimegroupid' => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
+			//'datetimegroupid'     => 'nullable|date|before_or_equal:' . $now->toDateTimeString(),
 		];
 
 		$validator = Validator::make($request->all(), $rules);
