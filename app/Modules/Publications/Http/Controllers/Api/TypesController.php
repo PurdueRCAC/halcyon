@@ -23,16 +23,16 @@ class TypesController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /publications/types
 	 * @apiParameter {
-	 * 		"name":          "state",
-	 * 		"description":   "Listener enabled/disabled state",
-	 * 		"type":          "string",
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
 	 * 		"required":      false,
-	 * 		"default":       "published"
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -42,31 +42,30 @@ class TypesController extends Controller
 	 * @apiParameter {
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "search",
-	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "datetimecreated",
-	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "name",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"name",
+	 * 				"alias"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"default":   "asc",
@@ -83,9 +82,10 @@ class TypesController extends Controller
 	{
 		// Get filters
 		$filters = array(
-			'search'   => null,
+			'search'    => null,
 			// Paging
-			'limit'    => config('list_limit', 20),
+			'limit'     => config('list_limit', 20),
+			'page'      => 1,
 			// Sorting
 			'order'     => Type::$orderBy,
 			'order_dir' => Type::$orderDir,
@@ -96,7 +96,7 @@ class TypesController extends Controller
 			$filters[$key] = $request->input($key, $default);
 		}
 
-		if (!in_array($filters['order'], ['id', 'title', 'published', 'access']))
+		if (!in_array($filters['order'], ['id', 'name', 'alias']))
 		{
 			$filters['order'] = Type::$orderBy;
 		}
@@ -130,7 +130,7 @@ class TypesController extends Controller
 		// Get records
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit']);
+			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
 		$rows->appends(array_filter($filters));
 		$rows->each(function($row, $key)
@@ -149,30 +149,22 @@ class TypesController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "title",
-	 * 		"description":   "Menu Type text",
+	 * 		"name":          "name",
+	 * 		"description":   "Name",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 50
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "type",
-	 * 		"description":   "Menu type",
+	 * 		"name":          "alias",
+	 * 		"description":   "Alias",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "parent_id",
-	 * 		"description":   "Parent menu Type ID",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0
+	 * 			"type":      "string",
+	 * 			"maxLength": 50
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -193,6 +185,7 @@ class TypesController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -256,6 +249,7 @@ class TypesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
+	 * @param  integer $id
 	 * @return Response
 	 */
 	public function read(int $id)
@@ -284,30 +278,22 @@ class TypesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "title",
-	 * 		"description":   "Menu Type text",
+	 * 		"name":          "name",
+	 * 		"description":   "Name",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 50
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "type",
-	 * 		"description":   "Menu type",
+	 * 		"name":          "alias",
+	 * 		"description":   "Alias",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "parent_id",
-	 * 		"description":   "Parent menu Type ID",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0
+	 * 			"type":      "string",
+	 * 			"maxLength": 50
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -332,12 +318,13 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
+	 * @param   integer $id
 	 * @return  Response
 	 */
 	public function update(Request $request, int $id)
 	{
 		$validator = Validator::make($request->all(), [
-			'name' => 'nullable|string|max:50',
+			'name'  => 'nullable|string|max:50',
 			'alias' => 'nullable|string|max:50'
 		]);
 

@@ -27,21 +27,27 @@ class PublicationsController extends Controller
 	 * @apiParameter {
 	 * 		"name":          "client_id",
 	 * 		"description":   "Client (admin = 1|site = 0) ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       null
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   "0",
+	 * 			"enum": [
+	 * 				"0",
+	 * 				"1"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -51,24 +57,36 @@ class PublicationsController extends Controller
 	 * @apiParameter {
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "datetimecreated",
-	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "published_at",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"title",
+	 * 				"type_id",
+	 * 				"author",
+	 * 				"journal",
+	 * 				"booktitle",
+	 * 				"series",
+	 * 				"state",
+	 * 				"published_at"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"default":   "asc",
@@ -91,6 +109,7 @@ class PublicationsController extends Controller
 			'type'      => 0,
 			// Paging
 			'limit'     => config('list_limit', 20),
+			'page'      => 1,
 			// Sorting
 			'order'     => Publication::$orderBy,
 			'order_dir' => Publication::$orderDir,
@@ -158,7 +177,7 @@ class PublicationsController extends Controller
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters))
 			->each(function($item, $key)
 			{
@@ -176,27 +195,8 @@ class PublicationsController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "title",
-	 * 		"description":   "Menu title",
-	 * 		"required":      true,
-	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "A description of the menu",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "client_id",
-	 * 		"description":   "Client (admin = 1|site = 0) ID",
-	 * 		"type":          "integer",
+	 * 		"name":          "type_id",
+	 * 		"description":   "Type ID",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -205,8 +205,247 @@ class PublicationsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "menutype",
-	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
+	 * 		"name":          "title",
+	 * 		"description":   "Title",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 500
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "author",
+	 * 		"description":   "Authors",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 3000
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "editor",
+	 * 		"description":   "Editors",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 3000
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "url",
+	 * 		"description":   "URL",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 2083
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "series",
+	 * 		"description":   "Series",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "booktitle",
+	 * 		"description":   "Book title",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 1000
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "edition",
+	 * 		"description":   "Edition",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 100
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "chapter",
+	 * 		"description":   "Chapter",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 40
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "issuetitle",
+	 * 		"description":   "Issue title",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "journal",
+	 * 		"description":   "Journal",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "issue",
+	 * 		"description":   "Issue",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 40
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "volume",
+	 * 		"description":   "Volume",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 40
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "number",
+	 * 		"description":   "Number",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 40
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "pages",
+	 * 		"description":   "Pages",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 40
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "publisher",
+	 * 		"description":   "Publisher",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 500
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "address",
+	 * 		"description":   "Address",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 300
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "institution",
+	 * 		"description":   "Institution",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 500
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "organization",
+	 * 		"description":   "Organization",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 500
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "school",
+	 * 		"description":   "School",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 200
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "crossref",
+	 * 		"description":   "Cross-ref",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 100
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "isbn",
+	 * 		"description":   "ISBN",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 50
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "doi",
+	 * 		"description":   "DOI",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "note",
+	 * 		"description":   "Note",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 2000
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "state",
+	 * 		"description":   "State",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "published_at",
+	 * 		"description":   "Published at",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string"
@@ -236,36 +475,37 @@ class PublicationsController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function create(Request $request)
 	{
 		$rules = [
-			'type_id' => 'required|integer|min:1',
-			'title' => 'required|string|max:500',
-			'author' => 'nullable|string|max:3000',
-			'editor' => 'nullable|string|max:3000',
-			'url' => 'nullable|string|max:2083',
-			'series' => 'nullable|string|max:255',
-			'booktitle' => 'nullable|string|max:1000',
-			'edition' => 'nullable|string|max:100',
-			'chapter' => 'nullable|string|max:40',
-			'issuetitle' => 'nullable|string|max:255',
-			'journal' => 'nullable|string|max:255',
-			'issue' => 'nullable|string|max:40',
-			'volume' => 'nullable|string|max:40',
-			'number' => 'nullable|string|max:40',
-			'pages' => 'nullable|string|max:40',
-			'publisher' => 'nullable|string|max:500',
-			'address' => 'nullable|string|max:300',
-			'institution' => 'nullable|string|max:500',
+			'type_id'      => 'required|integer|min:1',
+			'title'        => 'required|string|max:500',
+			'author'       => 'nullable|string|max:3000',
+			'editor'       => 'nullable|string|max:3000',
+			'url'          => 'nullable|string|max:2083',
+			'series'       => 'nullable|string|max:255',
+			'booktitle'    => 'nullable|string|max:1000',
+			'edition'      => 'nullable|string|max:100',
+			'chapter'      => 'nullable|string|max:40',
+			'issuetitle'   => 'nullable|string|max:255',
+			'journal'      => 'nullable|string|max:255',
+			'issue'        => 'nullable|string|max:40',
+			'volume'       => 'nullable|string|max:40',
+			'number'       => 'nullable|string|max:40',
+			'pages'        => 'nullable|string|max:40',
+			'publisher'    => 'nullable|string|max:500',
+			'address'      => 'nullable|string|max:300',
+			'institution'  => 'nullable|string|max:500',
 			'organization' => 'nullable|string|max:500',
-			'school' => 'nullable|string|max:200',
-			'crossref' => 'nullable|string|max:100',
-			'isbn' => 'nullable|string|max:50',
-			'doi' => 'nullable|string|max:255',
-			'note' => 'nullable|string|max:2000',
-			'state' => 'nullable|integer',
+			'school'       => 'nullable|string|max:200',
+			'crossref'     => 'nullable|string|max:100',
+			'isbn'         => 'nullable|string|max:50',
+			'doi'          => 'nullable|string|max:255',
+			'note'         => 'nullable|string|max:2000',
+			'state'        => 'nullable|integer',
 			'published_at' => 'nullable|datetime',
 		];
 
@@ -361,36 +601,9 @@ class PublicationsController extends Controller
 	 * @apiUri    /publications/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 * 		"in":            "path",
-	 * 		"name":          "id",
-	 * 		"description":   "Entry identifier",
-	 * 		"required":      true,
-	 * 		"schema": {
-	 * 			"type":      "integer"
-	 * 		}
-	 * }
-	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "title",
-	 * 		"description":   "Menu title",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "A description of the menu",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "client_id",
-	 * 		"description":   "Client (admin = 1|site = 0) ID",
+	 * 		"name":          "type_id",
+	 * 		"description":   "Type ID",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -399,8 +612,247 @@ class PublicationsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "menutype",
-	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
+	 * 		"name":          "title",
+	 * 		"description":   "Title",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 500
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "author",
+	 * 		"description":   "Authors",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 3000
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "editor",
+	 * 		"description":   "Editors",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 3000
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "url",
+	 * 		"description":   "URL",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 2083
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "series",
+	 * 		"description":   "Series",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "booktitle",
+	 * 		"description":   "Book title",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 1000
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "edition",
+	 * 		"description":   "Edition",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 100
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "chapter",
+	 * 		"description":   "Chapter",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 40
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "issuetitle",
+	 * 		"description":   "Issue title",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "journal",
+	 * 		"description":   "Journal",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "issue",
+	 * 		"description":   "Issue",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 40
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "volume",
+	 * 		"description":   "Volume",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 40
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "number",
+	 * 		"description":   "Number",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 40
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "pages",
+	 * 		"description":   "Pages",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 40
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "publisher",
+	 * 		"description":   "Publisher",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 500
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "address",
+	 * 		"description":   "Address",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 300
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "institution",
+	 * 		"description":   "Institution",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 500
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "organization",
+	 * 		"description":   "Organization",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 500
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "school",
+	 * 		"description":   "School",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 200
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "crossref",
+	 * 		"description":   "Cross-ref",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 100
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "isbn",
+	 * 		"description":   "ISBN",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 50
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "doi",
+	 * 		"description":   "DOI",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "note",
+	 * 		"description":   "Note",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 2000
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "state",
+	 * 		"description":   "State",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "published_at",
+	 * 		"description":   "Published at",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string"
@@ -440,31 +892,31 @@ class PublicationsController extends Controller
 	public function update(Request $request, int $id)
 	{
 		$rules = [
-			'type_id' => 'nullable|integer|min:1',
-			'title' => 'nullable|string|max:500',
-			'author' => 'nullable|string|max:3000',
-			'editor' => 'nullable|string|max:3000',
-			'url' => 'nullable|string|max:2083',
-			'series' => 'nullable|string|max:255',
-			'booktitle' => 'nullable|string|max:1000',
-			'edition' => 'nullable|string|max:100',
-			'chapter' => 'nullable|string|max:40',
-			'issuetitle' => 'nullable|string|max:255',
-			'journal' => 'nullable|string|max:255',
-			'issue' => 'nullable|string|max:40',
-			'volume' => 'nullable|string|max:40',
-			'number' => 'nullable|string|max:40',
-			'pages' => 'nullable|string|max:40',
-			'publisher' => 'nullable|string|max:500',
-			'address' => 'nullable|string|max:300',
-			'institution' => 'nullable|string|max:500',
+			'type_id'      => 'nullable|integer|min:1',
+			'title'        => 'nullable|string|max:500',
+			'author'       => 'nullable|string|max:3000',
+			'editor'       => 'nullable|string|max:3000',
+			'url'          => 'nullable|string|max:2083',
+			'series'       => 'nullable|string|max:255',
+			'booktitle'    => 'nullable|string|max:1000',
+			'edition'      => 'nullable|string|max:100',
+			'chapter'      => 'nullable|string|max:40',
+			'issuetitle'   => 'nullable|string|max:255',
+			'journal'      => 'nullable|string|max:255',
+			'issue'        => 'nullable|string|max:40',
+			'volume'       => 'nullable|string|max:40',
+			'number'       => 'nullable|string|max:40',
+			'pages'        => 'nullable|string|max:40',
+			'publisher'    => 'nullable|string|max:500',
+			'address'      => 'nullable|string|max:300',
+			'institution'  => 'nullable|string|max:500',
 			'organization' => 'nullable|string|max:500',
-			'school' => 'nullable|string|max:200',
-			'crossref' => 'nullable|string|max:100',
-			'isbn' => 'nullable|string|max:50',
-			'doi' => 'nullable|string|max:255',
-			'note' => 'nullable|string|max:2000',
-			'state' => 'nullable|integer',
+			'school'       => 'nullable|string|max:200',
+			'crossref'     => 'nullable|string|max:100',
+			'isbn'         => 'nullable|string|max:50',
+			'doi'          => 'nullable|string|max:255',
+			'note'         => 'nullable|string|max:2000',
+			'state'        => 'nullable|integer',
 			'published_at' => 'nullable|datetime',
 		];
 
