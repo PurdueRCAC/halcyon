@@ -30,6 +30,8 @@ class ThemeManager implements \Countable
 	private $activeTheme;
 
 	/**
+	 * Constructor
+	 *
 	 * @param Application $app
 	 * @param $path
 	 */
@@ -64,6 +66,8 @@ class ThemeManager implements \Countable
 	}
 
 	/**
+	 * Find a theme by name
+	 *
 	 * @param  string     $name
 	 * @return Theme|null
 	 */
@@ -82,6 +86,8 @@ class ThemeManager implements \Countable
 
 	/**
 	 * Get only the public themes
+	 *
+	 * @param  string $type
 	 * @return array
 	 */
 	public function findEnabledByType($type = 'site')
@@ -94,6 +100,8 @@ class ThemeManager implements \Countable
 
 	/**
 	 * Return all available themes
+	 *
+	 * @param  integer $state
 	 * @return array
 	 */
 	public function all($state = null)
@@ -123,7 +131,8 @@ class ThemeManager implements \Countable
 	}
 
 	/**
-	 * Return all available themes
+	 * Return all enabled themes
+	 *
 	 * @return array
 	 */
 	public function allEnabled()
@@ -132,7 +141,8 @@ class ThemeManager implements \Countable
 	}
 
 	/**
-	 * Return all available themes
+	 * Return all disabled themes
+	 *
 	 * @return array
 	 */
 	public function allDisabled()
@@ -141,7 +151,9 @@ class ThemeManager implements \Countable
 	}
 
 	/**
-	 * Get only the public themes
+	 * Get only the front-end themes
+	 *
+	 * @param  string $type
 	 * @return array
 	 */
 	public function allByType($type = 'site')
@@ -175,6 +187,8 @@ class ThemeManager implements \Countable
 
 	/**
 	 * Get the theme directories
+	 *
+	 * @param  integer $state
 	 * @return array
 	 */
 	private function getThemes($state = null)
@@ -215,8 +229,9 @@ class ThemeManager implements \Countable
 
 	/**
 	 * Get the themes from the database
-	 * 
-	 * @param  integer  $state
+	 *
+	 * @param  integer $state
+	 * @param  string  $type
 	 * @return array
 	 */
 	private function getThemesFromDatabase($state = null, $type = null)
@@ -259,6 +274,8 @@ class ThemeManager implements \Countable
 
 	/**
 	 * Get the theme directories
+	 *
+	 * @param  object $theme
 	 * @return array
 	 */
 	private function registerTheme(Theme $theme)
@@ -280,6 +297,7 @@ class ThemeManager implements \Countable
 
 	/**
 	 * Return the theme assets path
+	 *
 	 * @param  string $theme
 	 * @return string
 	 */
@@ -380,6 +398,7 @@ class ThemeManager implements \Countable
 
 	/**
 	 * Returns the theme json file
+	 *
 	 * @param $theme
 	 * @return string
 	 * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException

@@ -25,6 +25,8 @@ class PublishCommand extends Command
 
 	/**
 	 * Execute the console command.
+	 *
+	 * @return  void
 	 */
 	public function handle()
 	{
@@ -40,6 +42,8 @@ class PublishCommand extends Command
 
 	/**
 	 * Publish assets from all modules.
+	 *
+	 * @return  void
 	 */
 	public function publishAll()
 	{
@@ -52,7 +56,8 @@ class PublishCommand extends Command
 	/**
 	 * Publish assets from the specified theme.
 	 *
-	 * @param string $name
+	 * @param  string $name
+	 * @return void
 	 */
 	public function publish($name)
 	{

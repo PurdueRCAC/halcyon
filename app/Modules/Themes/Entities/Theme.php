@@ -32,7 +32,7 @@ class Theme
 	/**
 	 * The theme params
 	 *
-	 * @var  array
+	 * @var object
 	 */
 	private $params;
 
@@ -170,9 +170,9 @@ class Theme
 	/**
 	 * Get theme type
 	 *
-	 * @return array
+	 * @return string
 	 */
-	public function getType(): array
+	public function getType(): string
 	{
 		$type = $this->get('client', 'site');
 
@@ -203,8 +203,7 @@ class Theme
 	/**
 	 * Get json contents from the cache, setting as needed.
 	 *
-	 * @param string $file
-	 *
+	 * @param  string $file
 	 * @return Json
 	 */
 	public function json($file = null): Repository
@@ -223,9 +222,8 @@ class Theme
 	/**
 	 * Get a specific data from json file by given the key.
 	 *
-	 * @param string $key
-	 * @param null $default
-	 *
+	 * @param  string $key
+	 * @param  null   $default
 	 * @return mixed
 	 */
 	public function get(string $key, $default = null)

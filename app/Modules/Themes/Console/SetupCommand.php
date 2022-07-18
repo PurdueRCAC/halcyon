@@ -22,6 +22,8 @@ class SetupCommand extends Command
 
 	/**
 	 * Execute the console command.
+	 *
+	 * @return  void
 	 */
 	public function handle()
 	{
@@ -32,6 +34,8 @@ class SetupCommand extends Command
 
 	/**
 	 * Generate the themes folder.
+	 *
+	 * @return  void
 	 */
 	public function generateThemesFolder()
 	{
@@ -44,6 +48,8 @@ class SetupCommand extends Command
 
 	/**
 	 * Generate the assets folder.
+	 *
+	 * @return  void
 	 */
 	public function generateAssetsFolder()
 	{
@@ -57,9 +63,10 @@ class SetupCommand extends Command
 	/**
 	 * Generate the specified directory by given $dir.
 	 *
-	 * @param $dir
-	 * @param $success
-	 * @param $error
+	 * @param  string $dir
+	 * @param  string $success
+	 * @param  string $error
+	 * @return void
 	 */
 	protected function generateDirectory($dir, $success, $error)
 	{

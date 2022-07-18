@@ -72,10 +72,10 @@ class ThemesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "name",
+	 * 			"default":   "title",
 	 * 			"enum": [
 	 * 				"id",
-	 * 				"name"
+	 * 				"title"
 	 * 			]
 	 * 		}
 	 * }
@@ -106,7 +106,7 @@ class ThemesController extends Controller
 			// Pagination
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
-			'order'     => 'title',
+			'order'     => 'name',
 			'order_dir' => 'asc',
 		);
 
@@ -115,9 +115,9 @@ class ThemesController extends Controller
 			$filters[$key] = $request->input($key, $default);
 		}
 
-		if (!in_array($filters['order'], ['id', 'title']))
+		if (!in_array($filters['order'], ['id', 'name']))
 		{
-			$filters['order'] = 'title';
+			$filters['order'] = 'name';
 		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
@@ -225,20 +225,36 @@ class ThemesController extends Controller
 	 * @apiUri    /themes
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "title",
-	 * 		"description":   "Menu title",
+	 * 		"name":          "name",
+	 * 		"description":   "Theme name",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 100
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "A description of the menu",
+	 * 		"name":          "element",
+	 * 		"description":   "Theme directory name",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 100
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "enabled",
+	 * 		"description":   "Is the theme enabled?",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "integer",
+	 * 			"default":   0,
+	 * 			"enum": [
+	 * 				0,
+	 * 				1
+	 * 			]
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -289,10 +305,10 @@ class ThemesController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'name' => 'required|string|max:255',
- 			'element' => 'required|string|max:255',
- 			'enabled' => 'nullable|integer',
- 			'access' => 'nullable|integer',
+			'name'      => 'required|string|max:255',
+ 			'element'   => 'required|string|max:255',
+ 			'enabled'   => 'nullable|integer',
+ 			'access'    => 'nullable|integer',
  			'client_id' => 'nullable|integer',
 		];
 
@@ -432,42 +448,26 @@ class ThemesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "title",
-	 * 		"description":   "Menu title",
+	 * 		"name":          "name",
+	 * 		"description":   "Theme name",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 100
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "description",
-	 * 		"description":   "A description of the menu",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "client_id",
-	 * 		"description":   "Client (admin = 1|site = 0) ID",
+	 * 		"name":          "enabled",
+	 * 		"description":   "Is the theme enabled?",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
+	 * 			"default":   0,
 	 * 			"enum": [
 	 * 				0,
 	 * 				1
 	 * 			]
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "menutype",
-	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -509,7 +509,7 @@ class ThemesController extends Controller
 	public function update(Request $request, $id)
 	{
 		$rules = [
-			'name' => 'nullable|string|max:255',
+			'name'    => 'nullable|string|max:255',
  			'enabled' => 'nullable|integer'
 		];
 

@@ -241,10 +241,6 @@ class Theme extends Model
 
 			if ($theme = $this->element)
 			{
-				if (substr($theme, 0, 4) == 'tpl_')
-				{
-					$theme = substr($theme, 4);
-				}
 				$theme = ucfirst($theme);
 
 				$path = app_path('Themes') . '/' . $theme;
