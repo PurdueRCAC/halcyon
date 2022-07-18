@@ -117,7 +117,7 @@ class HistoryController extends Controller
 			'type'      => $request->input('type', null)
 		);
 
-		if (!in_array($filters['order'], ['id', 'name']))
+		if (!in_array($filters['order'], ['id', 'created_at', 'action']))
 		{
 			$filters['order'] = History::$orderBy;
 		}

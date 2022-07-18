@@ -21,10 +21,10 @@ $router->group(['prefix' => 'logs', 'middleware' => 'auth:api'], function (Route
 		'as'   => 'api.logs.index',
 		'uses' => 'LogsController@index',
 	]);
-	$router->post('/', [
+	/*$router->post('/', [
 		'as' => 'api.logs.create',
 		'uses' => 'LogsController@create',
-	]);
+	]);*/
 	$router->get('{id}', [
 		'as' => 'api.logs.read',
 		'uses' => 'LogsController@read',
