@@ -79,8 +79,8 @@ class Groups
 				continue;
 			}
 
-			if ($resourcemember->status == 1   // no role exists
-			 || $resourcemember->status == 4)  // removed
+			if ($resourcemember->noStatus()
+			 || $resourcemember->isPendingRemoval())
 			{
 				// Make call to resourcemember to generate role
 				event($event = new ResourceMemberCreated($asset, $member->user));

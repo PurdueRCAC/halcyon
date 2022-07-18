@@ -52,8 +52,8 @@ class Queues
 					continue;
 				}
 
-				if ($resourcemember->status == 1  // no role exists
-				 || $resourcemember->status == 4) // removed
+				if ($resourcemember->noStatus()
+				 || $resourcemember->isPendingRemoval())
 				{
 					event($resourcemember = new ResourceMemberCreated($queue->scheduler->resource, $user->user));
 				}

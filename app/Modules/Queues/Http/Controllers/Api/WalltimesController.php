@@ -81,10 +81,13 @@ class WalltimesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "datetimecreated",
+	 * 			"default":   "id",
 	 * 			"enum": [
 	 * 				"id",
-	 * 				"datetimecreated"
+	 * 				"queueid",
+	 * 				"datetimestart",
+	 * 				"datetimestop",
+	 * 				"walltime"
 	 * 			]
 	 * 		}
 	 * }
@@ -118,6 +121,11 @@ class WalltimesController extends Controller
 			'order'     => $request->input('order', 'id'),
 			'order_dir' => $request->input('order_dir', 'desc')
 		);
+
+		if (!in_array($filters['order'], ['id', 'queueid', 'datetimestart', 'datetimestop', 'walltime']))
+		{
+			$filters['order'] = 'id';
+		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
@@ -219,10 +227,10 @@ class WalltimesController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'queueid' => 'required|integer|min:1',
+			'queueid'       => 'required|integer|min:1',
 			'datetimestart' => 'nullable|string',
-			'datetimestop' => 'nullable|string',
-			'walltime' => 'required|integer',
+			'datetimestop'  => 'nullable|string',
+			'walltime'      => 'required|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -358,8 +366,8 @@ class WalltimesController extends Controller
 
 		$rules = [
 			'datetimestart' => 'nullable|string',
-			'datetimestop' => 'nullable|string',
-			'walltime' => 'nullable|integer',
+			'datetimestop'  => 'nullable|string',
+			'walltime'      => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);

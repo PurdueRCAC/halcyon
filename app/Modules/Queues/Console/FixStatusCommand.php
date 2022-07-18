@@ -100,7 +100,7 @@ class FixStatusCommand extends Command
 
 			event($event = new \App\Modules\Resources\Events\ResourceMemberStatus($asset, $user));
 
-			if ($event->status == 1)
+			if ($event->noStatus())
 			{
 				event($event = new \App\Modules\Resources\Events\ResourceMemberCreated($asset, $user));
 

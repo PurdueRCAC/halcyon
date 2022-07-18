@@ -98,7 +98,12 @@ class UsersController extends Controller
 	 * 			"default":   "datetimecreated",
 	 * 			"enum": [
 	 * 				"id",
-	 * 				"datetimecreated"
+	 * 				"userid",
+	 * 				"queueid",
+	 * 				"membertype",
+	 * 				"datetimecreated",
+	 * 				"datetimeremoved",
+	 * 				"notice"
 	 * 			]
 	 * 		}
 	 * }
@@ -122,17 +127,22 @@ class UsersController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
-			'queueid'   => $request->input('queueid'),
-			'userid'   => $request->input('userid'),
+			'queueid'    => $request->input('queueid'),
+			'userid'     => $request->input('userid'),
 			'membertype' => $request->input('membertype'),
-			'notice' => $request->input('notice'),
+			'notice'     => $request->input('notice'),
 			// Paging
-			'limit'    => $request->input('limit', config('list_limit', 20)),
-			'page'     => $request->input('page', 1),
+			'limit'      => $request->input('limit', config('list_limit', 20)),
+			'page'       => $request->input('page', 1),
 			// Sorting
-			'order'     => $request->input('order', 'datetimecreated'),
-			'order_dir' => $request->input('order_dir', 'asc')
+			'order'      => $request->input('order', 'datetimecreated'),
+			'order_dir'  => $request->input('order_dir', 'asc')
 		);
+
+		if (!in_array($filters['order'], ['id', 'userid', 'queueid', 'membertype', 'datetimecreated', 'datetimeremoved', 'notice']))
+		{
+			$filters['order'] = 'datetimecreated';
+		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
@@ -231,10 +241,10 @@ class UsersController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'queueid' => 'required|integer',
-			'userid' => 'required',
+			'queueid'       => 'required|integer',
+			'userid'        => 'required',
 			'userrequestid' => 'nullable|integer',
-			'membertype' => 'nullable|integer',
+			'membertype'    => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -244,10 +254,12 @@ class UsersController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
+		// This can be either an ID, username, or email
 		$userid = $request->input('userid');
 
 		if (!is_numeric($userid))
 		{
+			// If a username or email is provided, try to find or auto-create an account
 			$user = User::createFromUsername($userid);
 
 			if ($user && $user->id)
@@ -342,7 +354,7 @@ class UsersController extends Controller
 
 		event($resourcemember = new ResourceMemberStatus($row->queue->scheduler->resource, $row->user));
 
-		if ($resourcemember->status == 1 || $resourcemember->status == 4)
+		if ($resourcemember->noStatus() || $resourcemember->isPendingRemoval())
 		{
 			event($resourcemember = new ResourceMemberCreated($row->queue->scheduler->resource, $row->user));
 
@@ -481,12 +493,12 @@ class UsersController extends Controller
 	public function update($id, Request $request)
 	{
 		$rules = [
-			'queueid' => 'nullable|integer',
-			'userid' => 'nullable|integer',
-			'userrequestid' => 'nullable|integer',
-			'membertype' => 'nullable|integer',
+			'queueid'          => 'nullable|integer',
+			'userid'           => 'nullable|integer',
+			'userrequestid'    => 'nullable|integer',
+			'membertype'       => 'nullable|integer',
 			'datetimelastseen' => 'nullable|date',
-			'notice' => 'nullable|integer',
+			'notice'           => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -616,7 +628,7 @@ class UsersController extends Controller
 
 		event($resourcemember = new ResourceMemberStatus($row->queue->scheduler->resource, $row->user));
 
-		if ($resourcemember->status == 2 || $resourcemember->status == 3)
+		if ($resourcemember->isPending() || $resourcemember->isReady())
 		{
 			$rows = 0;
 

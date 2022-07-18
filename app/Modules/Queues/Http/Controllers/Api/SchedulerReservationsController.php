@@ -23,41 +23,73 @@ class SchedulerReservationsController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /queues/schedulerreservations
 	 * @apiParameter {
-	 *      "name":          "limit",
-	 *      "description":   "Number of result to return.",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       25
+	 * 		"in":            "query",
+	 * 		"name":          "scheduler",
+	 * 		"description":   "Scheduler ID to filter by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "page",
-	 *      "description":   "Number of where to start returning results.",
-	 *      "type":          "integer",
-	 *      "required":      false,
-	 *      "default":       0
+	 * 		"in":            "query",
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "search",
-	 *      "description":   "A word or phrase to search for.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       ""
+	 * 		"in":            "query",
+	 * 		"name":          "limit",
+	 * 		"description":   "Number of result to return.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   20
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "order",
-	 *      "description":   "Field to sort results by.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       "created",
-	 *      "allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
+	 * 		"in":            "query",
+	 * 		"name":          "page",
+	 * 		"description":   "Number of where to start returning results.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "order_dir",
-	 *      "description":   "Direction to sort results by.",
-	 *      "type":          "string",
-	 *      "required":      false,
-	 *      "default":       "desc",
-	 *      "allowedValues": "asc, desc"
+	 * 		"in":            "query",
+	 * 		"name":          "order",
+	 * 		"description":   "Field to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "name",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"name",
+	 * 				"schedulerid",
+	 * 				"datetimestart",
+	 * 				"datetimestop"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "asc",
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
 	 * }
 	 * @param   Request  $request
 	 * @return Response
@@ -65,14 +97,20 @@ class SchedulerReservationsController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
-			'search' => $request->input('search'),
+			'schedulerid' => $request->input('schedulerid'),
+			'search'      => $request->input('search'),
 			// Paging
-			'limit'    => $request->input('limit', config('list_limit', 20)),
-			'page'     => $request->input('page', 1),
+			'limit'       => $request->input('limit', config('list_limit', 20)),
+			'page'        => $request->input('page', 1),
 			// Sorting
-			'order'     => $request->input('order', 'name'),
-			'order_dir' => $request->input('order_dir', 'desc')
+			'order'       => $request->input('order', 'name'),
+			'order_dir'   => $request->input('order_dir', 'desc')
 		);
+
+		if (!in_array($filters['order'], ['id', 'schedulerid', 'name', 'datetimestart', 'datetimestop']))
+		{
+			$filters['order'] = 'name';
+		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
@@ -84,6 +122,11 @@ class SchedulerReservationsController extends Controller
 		if ($filters['search'])
 		{
 			$query->where('name', 'like', '%' . $filters['search'] . '%');
+		}
+
+		if ($filters['schedulerid'])
+		{
+			$query->where('schedulerid', '=', $filters['schedulerid']);
 		}
 
 		$rows = $query
@@ -100,6 +143,15 @@ class SchedulerReservationsController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /queues/schedulerreservations
 	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "schedulerid",
+	 * 		"description":   "Scheduler ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
@@ -156,11 +208,11 @@ class SchedulerReservationsController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'schedulerid' => 'nullable|integer',
-			'name' => 'required|string|max:64',
-			'nodes' => 'nullable|string|max:255',
+			'schedulerid'   => 'nullable|integer',
+			'name'          => 'required|string|max:64',
+			'nodes'         => 'nullable|string|max:255',
 			'datetimestart' => 'required|date',
-			'datetimestop' => 'nullable|date',
+			'datetimestop'  => 'nullable|date',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -233,6 +285,15 @@ class SchedulerReservationsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
+	 * 		"name":          "schedulerid",
+	 * 		"description":   "Scheduler ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "name",
 	 * 		"description":   "Entry name",
 	 * 		"required":      false,
@@ -291,11 +352,11 @@ class SchedulerReservationsController extends Controller
 	public function update($id, Request $request)
 	{
 		$rules = [
-			'schedulerid' => 'nullable|integer',
-			'name' => 'nullable|string|max:64',
-			'nodes' => 'nullable|string|max:255',
+			'schedulerid'   => 'nullable|integer',
+			'name'          => 'nullable|string|max:64',
+			'nodes'         => 'nullable|string|max:255',
 			'datetimestart' => 'nullable|date',
-			'datetimestop' => 'nullable|date',
+			'datetimestop'  => 'nullable|date',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -307,7 +368,6 @@ class SchedulerReservationsController extends Controller
 
 		$row = SchedulerReservation::findOrFail($id);
 
-		//$row->update($request->all());
 		foreach ($rules as $key => $rule)
 		{
 			if ($request->has($key))

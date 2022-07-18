@@ -60,13 +60,13 @@ class SizesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "datetimescreated",
+	 * 			"default":   "datetimestart",
 	 * 			"enum": [
 	 * 				"id",
-	 * 				"name",
-	 * 				"parentid",
-	 * 				"datetimescreated",
-	 * 				"datetimeremoved"
+	 * 				"queueid",
+	 * 				"sellerqueueid",
+	 * 				"datetimestart",
+	 * 				"datetimestop"
 	 * 			]
 	 * 		}
 	 * }
@@ -154,27 +154,27 @@ class SizesController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "queueid",
-	 *      "description":   "ID of the queue being sold to",
-	 *      "required":      true,
+	 * 		"name":          "queueid",
+	 * 		"description":   "ID of the queue being sold to",
+	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "sellerqueueid",
-	 *      "description":   "ID of the seller queue",
-	 *      "required":      true,
+	 * 		"name":          "sellerqueueid",
+	 * 		"description":   "ID of the seller queue",
+	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "datetimestart",
-	 *      "description":   "Date/time of when the loan starts",
-	 *      "required":      true,
+	 * 		"name":          "datetimestart",
+	 * 		"description":   "Date/time of when the loan starts",
+	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"format":    "date-time",
@@ -183,9 +183,9 @@ class SizesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "datetimestop",
-	 *      "description":   "Date/time of when the loan stops",
-	 *      "required":      false,
+	 * 		"name":          "datetimestop",
+	 * 		"description":   "Date/time of when the loan stops",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"format":    "date-time",
@@ -194,27 +194,27 @@ class SizesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "nodecount",
-	 *      "description":   "Node count",
-	 *      "required":      true,
+	 * 		"name":          "nodecount",
+	 * 		"description":   "Node count",
+	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "corecount",
-	 *      "description":   "Core count",
-	 *      "required":      true,
+	 * 		"name":          "corecount",
+	 * 		"description":   "Core count",
+	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "comment",
-	 *      "description":   "Comment",
-	 *      "required":      false,
+	 * 		"name":          "comment",
+	 * 		"description":   "Comment",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string"
 	 * 		}
@@ -242,14 +242,14 @@ class SizesController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'queueid' => 'required|integer',
+			'queueid'       => 'required|integer',
 			'sellerqueueid' => 'nullable|integer',
 			'datetimestart' => 'nullable|date',
-			'datetimestop' => 'nullable|date',
-			'nodecount' => 'nullable|numeric',
-			'corecount' => 'required|integer',
-			'comment' => 'nullable|string|max:2000',
-			'serviceunits' => 'nullable|numeric|between:-999999999.99,999999999.99',
+			'datetimestop'  => 'nullable|date',
+			'nodecount'     => 'nullable|numeric',
+			'corecount'     => 'required|integer',
+			'comment'       => 'nullable|string|max:2000',
+			'serviceunits'  => 'nullable|numeric|between:-999999999.99,999999999.99',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -492,27 +492,27 @@ class SizesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "queueid",
-	 *      "description":   "ID of the queue being sold to",
-	 *      "required":      false,
+	 * 		"name":          "queueid",
+	 * 		"description":   "ID of the queue being sold to",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "sellerqueueid",
-	 *      "description":   "ID of the seller queue",
-	 *      "required":      false,
+	 * 		"name":          "sellerqueueid",
+	 * 		"description":   "ID of the seller queue",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "datetimestart",
-	 *      "description":   "Date/time of when the loan starts",
-	 *      "required":      false,
+	 * 		"name":          "datetimestart",
+	 * 		"description":   "Date/time of when the loan starts",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"format":    "date-time",
@@ -521,9 +521,9 @@ class SizesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "datetimestop",
-	 *      "description":   "Date/time of when the loan stops",
-	 *      "required":      false,
+	 * 		"name":          "datetimestop",
+	 * 		"description":   "Date/time of when the loan stops",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"format":    "date-time",
@@ -532,27 +532,27 @@ class SizesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "nodecount",
-	 *      "description":   "Node count",
-	 *      "required":      false,
+	 * 		"name":          "nodecount",
+	 * 		"description":   "Node count",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "corecount",
-	 *      "description":   "Core count",
-	 *      "required":      false,
+	 * 		"name":          "corecount",
+	 * 		"description":   "Core count",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "comment",
-	 *      "description":   "Comment",
-	 *      "required":      false,
+	 * 		"name":          "comment",
+	 * 		"description":   "Comment",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string"
 	 * 		}
@@ -584,14 +584,14 @@ class SizesController extends Controller
 	public function update($id, Request $request)
 	{
 		$rules = [
-			'queueid' => 'nullable|integer',
+			'queueid'       => 'nullable|integer',
 			'sellerqueueid' => 'nullable|integer',
 			'datetimestart' => 'nullable|date',
-			'datetimestop' => 'nullable|date',
-			'nodecount' => 'nullable|numeric',
-			'corecount' => 'nullable|integer',
-			'comment' => 'nullable|string|max:2000',
-			'serviceunits' => 'nullable|numeric|between:-999999999.99,999999999.99',
+			'datetimestop'  => 'nullable|date',
+			'nodecount'     => 'nullable|numeric',
+			'corecount'     => 'nullable|integer',
+			'comment'       => 'nullable|string|max:2000',
+			'serviceunits'  => 'nullable|numeric|between:-999999999.99,999999999.99',
 		];
 
 		$validator = Validator::make($request->all(), $rules);

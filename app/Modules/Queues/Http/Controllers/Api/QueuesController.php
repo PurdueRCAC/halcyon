@@ -126,7 +126,11 @@ class QueuesController extends Controller
 	 * 				"name",
 	 * 				"datetimecreated",
 	 * 				"datetimeremoved",
-	 * 				"parentid"
+	 * 				"queuetype",
+	 * 				"schedulerid",
+	 * 				"subresourceid",
+	 * 				"schedulerpolicyid",
+	 * 				"cluster"
 	 * 			]
 	 * 		}
 	 * }
@@ -150,23 +154,23 @@ class QueuesController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
-			'search'   => $request->input('search', ''),
-			'state'    => $request->input('state', 'enabled'),
-			'type'     => $request->input('type', 0),
+			'search'    => $request->input('search', ''),
+			'state'     => $request->input('state', 'enabled'),
+			'type'      => $request->input('type', 0),
 			'scheduler' => $request->input('scheduler', 0),
-			'resource' => $request->input('resource', 0),
+			'resource'  => $request->input('resource', 0),
 			'subresource' => $request->input('subresource', 0),
-			'group' => $request->input('group', 0),
-			'class' => $request->input('class'),
+			'group'     => $request->input('group', 0),
+			'class'     => $request->input('class'),
 			// Paging
-			'limit'    => $request->input('limit', config('list_limit', 20)),
-			'page'     => $request->input('page', 1),
+			'limit'     => $request->input('limit', config('list_limit', 20)),
+			'page'      => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', Queue::$orderBy),
 			'order_dir' => $request->input('order_dir', Queue::$orderDir)
 		);
 
-		if (!in_array($filters['order'], ['id', 'name', 'state', 'type', 'parent']))
+		if (!in_array($filters['order'], ['id', 'name', 'queuetype', 'datetimecreated', 'datetimeremoved', 'schedulerid', 'subresourceid', 'schedulerpolicyid', 'cluster']))
 		{
 			$filters['order'] = Queue::$orderBy;
 		}
@@ -465,7 +469,8 @@ class QueuesController extends Controller
 	 * 		"description":   "Node memory min",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 5
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -474,7 +479,8 @@ class QueuesController extends Controller
 	 * 		"description":   "Node memory max",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 5
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -522,7 +528,7 @@ class QueuesController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
-	 * @param   Request  $request
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -889,7 +895,8 @@ class QueuesController extends Controller
 	 * 		"description":   "Node memory min",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 5
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -898,7 +905,8 @@ class QueuesController extends Controller
 	 * 		"description":   "Node memory max",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 5
 	 * 		}
 	 * }
 	 * @apiParameter {

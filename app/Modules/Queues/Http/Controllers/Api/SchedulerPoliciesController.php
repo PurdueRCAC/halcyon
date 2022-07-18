@@ -58,13 +58,11 @@ class SchedulerPoliciesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "datetimecreated",
+	 * 			"default":   "name",
 	 * 			"enum": [
 	 * 				"id",
 	 * 				"name",
-	 * 				"datetimecreated",
-	 * 				"datetimeremoved",
-	 * 				"parentid"
+	 * 				"code"
 	 * 			]
 	 * 		}
 	 * }
@@ -96,6 +94,11 @@ class SchedulerPoliciesController extends Controller
 			'order'     => $request->input('order', 'name'),
 			'order_dir' => $request->input('order_dir', 'desc')
 		);
+
+		if (!in_array($filters['order'], ['id', 'name', 'code']))
+		{
+			$filters['order'] = 'name';
+		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
@@ -133,6 +136,16 @@ class SchedulerPoliciesController extends Controller
 	 * 			"maxLength": 64
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "code",
+	 * 		"description":   "Short name",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 16
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"201": {
 	 * 			"description": "Successful entry creation"
@@ -141,7 +154,7 @@ class SchedulerPoliciesController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
-	 * @param   Request  $request
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -158,7 +171,6 @@ class SchedulerPoliciesController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
-		//$row = SchedulerPolicy::create($request->all());
 		$row = new SchedulerPolicy;
 		foreach ($rules as $key => $rule)
 		{
@@ -227,6 +239,16 @@ class SchedulerPoliciesController extends Controller
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"maxLength": 64
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "code",
+	 * 		"description":   "Short name",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 16
 	 * 		}
 	 * }
 	 * @apiResponse {

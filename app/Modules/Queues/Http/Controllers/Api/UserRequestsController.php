@@ -32,8 +32,8 @@ class UserRequestsController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 * 		"name":          "owneruserid",
-	 * 		"description":   "Owner user ID",
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
@@ -41,17 +41,8 @@ class UserRequestsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 * 		"name":          "unixgroup",
-	 * 		"description":   "Unix group name",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "unixid",
-	 * 		"description":   "Unix ID",
+	 * 		"name":          "queueid",
+	 * 		"description":   "Queue ID",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
@@ -93,13 +84,11 @@ class UserRequestsController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "datetimestart",
+	 * 			"default":   "datetimecreated",
 	 * 			"enum": [
 	 * 				"id",
-	 * 				"name",
-	 * 				"owneruserid",
-	 * 				"unixgroup",
-	 * 				"unixid"
+	 * 				"userid",
+	 * 				"datetimecreated"
 	 * 			]
 	 * 		}
 	 * }
@@ -110,7 +99,7 @@ class UserRequestsController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "asc",
+	 * 			"default":   "desc",
 	 * 			"enum": [
 	 * 				"asc",
 	 * 				"desc"
@@ -132,6 +121,11 @@ class UserRequestsController extends Controller
 			'order'     => $request->input('order', 'datetimecreated'),
 			'order_dir' => $request->input('order_dir', 'desc')
 		);
+
+		if (!in_array($filters['order'], ['id', 'userid', 'datetimecreated']))
+		{
+			$filters['order'] = 'datetimecreated';
+		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
@@ -198,6 +192,24 @@ class UserRequestsController extends Controller
 	 * 			"type":      "array"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "resources",
+	 * 		"description":   "Resources requesting access to",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "array"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "group",
+	 * 		"description":   "Group requesting access to",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"201": {
 	 * 			"description": "Successful entry creation"
@@ -212,11 +224,11 @@ class UserRequestsController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'userid' => 'nullable|integer|min:1',
-			'comment' => 'nullable|string|max:255',
-			'queues' => 'nullable|array',
+			'userid'    => 'nullable|integer|min:1',
+			'comment'   => 'nullable|string|max:255',
+			'queues'    => 'nullable|array',
 			'resources' => 'nullable|array',
-			'group' => 'nullable|integer'
+			'group'     => 'nullable|integer'
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -504,7 +516,7 @@ class UserRequestsController extends Controller
 
 			event($resourcemember = new ResourceMemberStatus($queueuser->queue->scheduler->resource, $queueuser->user));
 
-			if ($resourcemember->status == 1 || $resourcemember->status == 4)
+			if ($resourcemember->noStatus() || $resourcemember->isPendingRemoval())
 			{
 				event($resourcemember = new ResourceMemberCreated($queueuser->queue->scheduler->resource, $queueuser->user));
 			}

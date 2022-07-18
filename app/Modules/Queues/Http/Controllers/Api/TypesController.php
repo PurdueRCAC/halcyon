@@ -24,9 +24,9 @@ class TypesController extends Controller
 	 * @apiUri    /queues/types
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 *      "name":          "search",
-	 *      "description":   "A word or phrase to search for.",
-	 *      "required":      false,
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string"
 	 * 		}
@@ -61,10 +61,7 @@ class TypesController extends Controller
 	 * 			"default":   "datetimestart",
 	 * 			"enum": [
 	 * 				"id",
-	 * 				"name",
-	 * 				"parentid",
-	 * 				"datetimescreated",
-	 * 				"datetimeremoved"
+	 * 				"name"
 	 * 			]
 	 * 		}
 	 * }
@@ -96,6 +93,11 @@ class TypesController extends Controller
 			'order'     => $request->input('order', 'name'),
 			'order_dir' => $request->input('order_dir', 'asc')
 		);
+
+		if (!in_array($filters['order'], ['id', 'name']))
+		{
+			$filters['order'] = 'name';
+		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
@@ -159,7 +161,6 @@ class TypesController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
-		//$row = Type::create($request->all());
 		$row = new Type;
 		foreach ($rules as $key => $rule)
 		{
@@ -222,9 +223,9 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 *      "name":          "name",
-	 *      "description":   "The name of the queue type",
-	 *      "required":      true,
+	 * 		"name":          "name",
+	 * 		"description":   "The name of the queue type",
+	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"maxLength": 20
@@ -260,7 +261,6 @@ class TypesController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
-		//$row->update($request->all());
 		foreach ($rules as $key => $rule)
 		{
 			if ($request->has($key))

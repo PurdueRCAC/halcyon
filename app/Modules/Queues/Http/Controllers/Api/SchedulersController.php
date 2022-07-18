@@ -90,8 +90,11 @@ class SchedulersController extends Controller
 	 * 			"enum": [
 	 * 				"id",
 	 * 				"queuesubresourceid",
+	 * 				"hostname",
 	 * 				"batchsystem",
-	 * 				"schedulerpolicyid"
+	 * 				"schedulerpolicyid",
+	 * 				"datetimecreated",
+	 * 				"datetimeremoved"
 	 * 			]
 	 * 		}
 	 * }
@@ -116,19 +119,24 @@ class SchedulersController extends Controller
 	{
 		$filters = array(
 			'queuesubresourceid' => $request->input('queuesubresourceid'),
-			'batchsystem' => $request->input('batchsystem'),
-			'schedulerpolicyid' => $request->input('schedulerpolicyid'),
+			'batchsystem'        => $request->input('batchsystem'),
+			'schedulerpolicyid'  => $request->input('schedulerpolicyid'),
 			// Paging
-			'limit'    => $request->input('limit', config('list_limit', 20)),
-			'page'     => $request->input('page', 1),
+			'limit'     => $request->input('limit', config('list_limit', 20)),
+			'page'      => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'id'),
 			'order_dir' => $request->input('order_dir', 'desc')
 		);
 
+		if (!in_array($filters['order'], ['id', 'queuesubresourceid', 'hostname', 'batchsystem', 'schedulerpolicyid', 'datetimecreated', 'datetimeremoved']))
+		{
+			$filters['order'] = 'id';
+		}
+
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
-			$filters['order_dir'] = 'asc';
+			$filters['order_dir'] = 'desc';
 		}
 
 		$query = Scheduler::query();

@@ -20,7 +20,7 @@ use Carbon\Carbon;
 class LoansController extends Controller
 {
 	/**
-	 * Display a listing of purchases for a queue
+	 * Display a listing of loans for a queue
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /queues/loans
@@ -183,34 +183,34 @@ class LoansController extends Controller
 	}
 
 	/**
-	 * Create a queue purchase
+	 * Create a queue loan
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /queues/loans
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "queueid",
-	 *      "description":   "ID of the queue being loaned to",
-	 *      "required":      true,
+	 * 		"name":          "queueid",
+	 * 		"description":   "ID of the queue being loaned to",
+	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "lenderqueueid",
-	 *      "description":   "ID of the queue being loaned",
-	 *      "required":      true,
+	 * 		"name":          "lenderqueueid",
+	 * 		"description":   "ID of the queue being loaned",
+	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "datetimestart",
-	 *      "description":   "Date/time of when the loan starts",
-	 *      "required":      true,
+	 * 		"name":          "datetimestart",
+	 * 		"description":   "Date/time of when the loan starts",
+	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"format":    "date-time",
@@ -219,9 +219,9 @@ class LoansController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "datetimestop",
-	 *      "description":   "Date/time of when the loan stops",
-	 *      "required":      false,
+	 * 		"name":          "datetimestop",
+	 * 		"description":   "Date/time of when the loan stops",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"format":    "date-time",
@@ -230,18 +230,18 @@ class LoansController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "nodecount",
-	 *      "description":   "Node count",
-	 *      "required":      true,
+	 * 		"name":          "nodecount",
+	 * 		"description":   "Node count",
+	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "corecount",
-	 *      "description":   "Core count",
-	 *      "required":      true,
+	 * 		"name":          "corecount",
+	 * 		"description":   "Core count",
+	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
@@ -253,6 +253,16 @@ class LoansController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "float"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "comment",
+	 * 		"description":   "Comments on this loan",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 2000
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -269,14 +279,14 @@ class LoansController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'queueid' => 'required|integer',
+			'queueid'       => 'required|integer',
 			'lenderqueueid' => 'required|integer',
 			'datetimestart' => 'nullable|date',
-			'datetimestop' => 'nullable|date',
-			'nodecount' => 'nullable|numeric',
-			'corecount' => 'nullable|integer',
-			'comment' => 'nullable|string|max:2000',
-			'serviceunits' => 'nullable|numeric|between:-999999999.99,999999999.99',
+			'datetimestop'  => 'nullable|date',
+			'nodecount'     => 'nullable|numeric',
+			'corecount'     => 'nullable|integer',
+			'comment'       => 'nullable|string|max:2000',
+			'serviceunits'  => 'nullable|numeric|between:-999999999.99,999999999.99',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -449,7 +459,7 @@ class LoansController extends Controller
 	}
 
 	/**
-	 * Read a queue
+	 * Read a queue loan
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /queues/loans/{id}
@@ -484,7 +494,7 @@ class LoansController extends Controller
 	}
 
 	/**
-	 * Update a queue
+	 * Update a queue loan
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /queues/loans/{id}
@@ -500,27 +510,9 @@ class LoansController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "queueid",
-	 *      "description":   "ID of the queue being loaned to",
-	 *      "required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 *      "name":          "lenderqueueid",
-	 *      "description":   "ID of the queue being loaned",
-	 *      "required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 *      "name":          "datetimestart",
-	 *      "description":   "Date/time of when the loan starts",
-	 *      "required":      false,
+	 * 		"name":          "datetimestart",
+	 * 		"description":   "Date/time of when the loan starts",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"format":    "date-time",
@@ -529,9 +521,9 @@ class LoansController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "datetimestop",
-	 *      "description":   "Date/time of when the loan stops",
-	 *      "required":      false,
+	 * 		"name":          "datetimestop",
+	 * 		"description":   "Date/time of when the loan stops",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"format":    "date-time",
@@ -540,18 +532,18 @@ class LoansController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "nodecount",
-	 *      "description":   "Node count",
-	 *      "required":      false,
+	 * 		"name":          "nodecount",
+	 * 		"description":   "Node count",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "corecount",
-	 *      "description":   "Core count",
-	 *      "required":      false,
+	 * 		"name":          "corecount",
+	 * 		"description":   "Core count",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
@@ -563,6 +555,16 @@ class LoansController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "float"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "comment",
+	 * 		"description":   "Comments on this loan",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 2000
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -583,14 +585,12 @@ class LoansController extends Controller
 	public function update($id, Request $request)
 	{
 		$rules = [
-			//'queueid' => 'nullable|integer',
-			//'lenderqueueid' => 'nullable|integer',
 			'datetimestart' => 'nullable|date',
-			'datetimestop' => 'nullable|date',
-			'nodecount' => 'nullable|numeric',
-			'corecount' => 'nullable|integer',
-			'comment' => 'nullable|string|max:2000',
-			'serviceunits' => 'nullable|numeric|between:-999999999.99,999999999.99',
+			'datetimestop'  => 'nullable|date',
+			'nodecount'     => 'nullable|numeric',
+			'corecount'     => 'nullable|integer',
+			'comment'       => 'nullable|string|max:2000',
+			'serviceunits'  => 'nullable|numeric|between:-999999999.99,999999999.99',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -781,7 +781,7 @@ class LoansController extends Controller
 	}
 
 	/**
-	 * Delete a queue
+	 * Delete a queue loan
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /queues/loans/{id}

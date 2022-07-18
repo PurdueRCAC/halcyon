@@ -26,123 +26,17 @@ use Carbon\Carbon;
 class AllocationsController extends Controller
 {
 	/**
-	 * Display a listing of the queue.
+	 * Display a listing of allocations.
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /allocations
+	 * @apiUri    /allocations/{hostname?}
 	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "state",
-	 * 		"description":   "Queue state.",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string",
-	 * 			"default":   "enabled",
-	 * 			"enum": [
-	 * 				"enabled",
-	 * 				"disabled",
-	 * 				"trashed"
-	 * 			]
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "type",
-	 * 		"description":   "Queue type ID.",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "scheduler",
-	 * 		"description":   "Scheduler type ID.",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "resource",
-	 * 		"description":   "Resource ID.",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "subresource",
-	 * 		"description":   "Subresource ID.",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "search",
-	 * 		"description":   "A word or phrase to search for.",
+	 * 		"in":            "path",
+	 * 		"name":          "hostname",
+	 * 		"description":   "Scheduler hostname.",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "limit",
-	 * 		"description":   "Number of result to return.",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   20
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "page",
-	 * 		"description":   "Number of where to start returning results.",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   1
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "order",
-	 * 		"description":   "Field to sort results by.",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string",
-	 * 			"default":   "datetimecreated",
-	 * 			"enum": [
-	 * 				"id",
-	 * 				"name",
-	 * 				"datetimecreated",
-	 * 				"datetimeremoved",
-	 * 				"parentid"
-	 * 			]
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "order_dir",
-	 * 		"description":   "Direction to sort results by.",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string",
-	 * 			"default":   "desc",
-	 * 			"enum": [
-	 * 				"asc",
-	 * 				"desc"
-	 * 			]
 	 * 		}
 	 * }
 	 * @param   Request  $request
@@ -360,15 +254,6 @@ class AllocationsController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /allocations
 	 * @apiAuthorization  true
-	 * @apiParameter {
-	 * 		"in":            "body",
-	 * 		"name":          "x-project",
-	 * 		"description":   "Max ijob user factor",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer"
-	 * 		}
-	 * }
 	 * @apiResponse {
 	 * 		"201": {
 	 * 			"description": "Successful entry creation"
@@ -380,7 +265,7 @@ class AllocationsController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
-	 * @param   Request  $request
+	 * @param  Request  $request
 	 * @return Response
 	 */
 	public function create(Request $request)
@@ -393,7 +278,7 @@ class AllocationsController extends Controller
 	}
 
 	/**
-	 * Update a queue
+	 * Update an allocation
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /allocations/{id}
@@ -432,7 +317,7 @@ class AllocationsController extends Controller
 	}
 
 	/**
-	 * Delete a queue
+	 * Delete an allocation
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /allocations/{id}

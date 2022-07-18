@@ -812,7 +812,7 @@ class Queue extends Model
 
 		/*event($resourcemember = new ResourceMemberStatus($row->queue->scheduler->resource, $row->user));
 
-		if ($resourcemember->status == 1 || $resourcemember->status == 4)
+		if ($resourcemember->noStatus() || $resourcemember->isPendingRemoval())
 		{
 			event($resourcemember = new ResourceMemberCreated($row->queue->scheduler->resource, $row->user));
 		}*/
@@ -842,7 +842,7 @@ class Queue extends Model
 
 		event($resourcemember = new ResourceMemberStatus($this->scheduler->resource, $row->user));
 
-		if ($resourcemember->status == 2 || $resourcemember->status == 3)
+		if ($resourcemember->isPending() || $resourcemember->isReady())
 		{
 			$rows = 0;
 

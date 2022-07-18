@@ -196,8 +196,8 @@ class EmailQueueRemovedCommand extends Command
 						// Contact role provision service
 						event($event = new ResourceMemberstatus($queueuser->queue->resource, $user));
 
-						if ($event->status == 1  // ROLE_REMOVAL_PENDING
-						 || $event->status == 4) // NO_ROLE_EXISTS
+						if ($event->noStatus()
+						 || $event->isPendingRemoval())
 						{
 							array_push($removals[$userid], $queueuser->queue->resource);
 						}
