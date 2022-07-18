@@ -57,13 +57,10 @@ class BatchsystemsController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "datetimecreated",
+	 * 			"default":   "name",
 	 * 			"enum": [
 	 * 				"id",
-	 * 				"name",
-	 * 				"datetimecreated",
-	 * 				"datetimeremoved",
-	 * 				"parentid"
+	 * 				"name"
 	 * 			]
 	 * 		}
 	 * }
@@ -86,14 +83,19 @@ class BatchsystemsController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
-			'search'   => $request->input('search', ''),
+			'search'    => $request->input('search', ''),
 			// Paging
-			'limit'    => $request->input('limit', config('list_limit', 20)),
-			//'start' => $request->input('limitstart', 0),
+			'limit'     => $request->input('limit', config('list_limit', 20)),
+			'page'      => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'name'),
 			'order_dir' => $request->input('order_dir', 'asc')
 		);
+
+		if (!in_array($filters['order'], ['id', 'name']))
+		{
+			$filters['order'] = 'name';
+		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
@@ -110,7 +112,7 @@ class BatchsystemsController extends Controller
 		$rows = $query
 			->withCount('resources')
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		$rows->each(function ($item, $key)

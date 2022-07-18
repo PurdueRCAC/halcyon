@@ -60,13 +60,11 @@ class TypesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "datetimecreated",
+	 * 			"default":   "name",
 	 * 			"enum": [
 	 * 				"id",
 	 * 				"name",
-	 * 				"datetimecreated",
-	 * 				"datetimeremoved",
-	 * 				"parentid"
+	 * 				"description"
 	 * 			]
 	 * 		}
 	 * }
@@ -90,14 +88,19 @@ class TypesController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
-			'search'   => $request->input('search', ''),
+			'search'    => $request->input('search', ''),
 			// Paging
-			'limit'    => $request->input('limit', config('list_limit', 20)),
-			//'start' => $request->input('limitstart', 0),
+			'limit'     => $request->input('limit', config('list_limit', 20)),
+			'page'      => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'name'),
 			'order_dir' => $request->input('order_dir', 'asc')
 		);
+
+		if (!in_array($filters['order'], ['id', 'name', 'description']))
+		{
+			$filters['order'] = 'name';
+		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
@@ -114,7 +117,7 @@ class TypesController extends Controller
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		$rows->each(function ($item, $key)
@@ -137,7 +140,8 @@ class TypesController extends Controller
 	 * 		"description":   "The name of the resource type",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 20
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -146,7 +150,8 @@ class TypesController extends Controller
 	 * 		"description":   "A short description of the resource type",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 2000
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -185,9 +190,9 @@ class TypesController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'name' => 'required|string|max:20',
-			'description' => 'nullable|string|max:1000',
-			'facets' => 'nullable|array',
+			'name'        => 'required|string|max:20',
+			'description' => 'nullable|string|max:2000',
+			'facets'      => 'nullable|array',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -385,7 +390,8 @@ class TypesController extends Controller
 	 * 		"description":   "The name of the resource type",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 20
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -394,7 +400,8 @@ class TypesController extends Controller
 	 * 		"description":   "A short description of the resource type",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 2000
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -434,9 +441,9 @@ class TypesController extends Controller
 	public function update($id, Request $request)
 	{
 		$rules = [
-			'name' => 'required|string|max:20',
-			'description' => 'nullable|string|max:1000',
-			'facets' => 'nullable|array',
+			'name'        => 'required|string|max:20',
+			'description' => 'nullable|string|max:2000',
+			'facets'      => 'nullable|array',
 		];
 
 		$validator = Validator::make($request->all(), $rules);

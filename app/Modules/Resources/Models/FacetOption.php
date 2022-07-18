@@ -56,7 +56,7 @@ class FacetOption extends Model
 	public static $orderDir = 'asc';
 
 	/**
-	 * Defines a relationship to resources
+	 * Defines a relationship to facet type
 	 *
 	 * @return  object
 	 */

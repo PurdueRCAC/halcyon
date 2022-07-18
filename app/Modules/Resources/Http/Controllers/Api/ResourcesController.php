@@ -28,9 +28,41 @@ class ResourcesController extends Controller
 	 * @apiUri    /resources
 	 * @apiParameter {
 	 * 		"in":            "query",
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "type",
+	 * 		"description":   "Filter by resource type ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "state",
+	 * 		"description":   "Filter by state",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "active",
+	 * 			"enum": [
+	 * 				"active",
+	 * 				"inactive",
+	 * 				"all"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result to return.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -41,26 +73,28 @@ class ResourcesController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "search",
-	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "order",
-	 * 		"description":   "Field to order results by.",
-	 * 		"type":          "string",
+	 * 		"description":   "Field to sort results by.",
 	 * 		"required":      false,
-	 *      "default":       "created",
-	 * 		"allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "name",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"name",
+	 * 				"datetimecreated",
+	 * 				"datetimeremoved",
+	 * 				"parentid"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -84,16 +118,21 @@ class ResourcesController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
-			'search'   => $request->input('search', ''),
-			'state'    => $request->input('state', 'active'),
-			'type'     => $request->input('type', null),
+			'search'    => $request->input('search', ''),
+			'state'     => $request->input('state', 'active'),
+			'type'      => $request->input('type', null),
 			// Paging
-			'limit'    => $request->input('limit', config('list_limit', 20)),
-			//'start' => $request->input('limitstart', 0),
+			'limit'     => $request->input('limit', config('list_limit', 20)),
+			'page'      => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'name'),
 			'order_dir' => $request->input('order_dir', 'asc')
 		);
+
+		if (!in_array($filters['order'], ['id', 'name', 'datetimecreated', 'datetimeremoved', 'parentid']))
+		{
+			$filters['order'] = 'name';
+		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
@@ -128,7 +167,7 @@ class ResourcesController extends Controller
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		return new AssetResourceCollection($rows);
@@ -152,59 +191,59 @@ class ResourcesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "parentid",
-	 *      "description":   "Parent resource ID",
-	 *      "required":      false,
-	 *      "schema": {
+	 * 		"name":          "parentid",
+	 * 		"description":   "Parent resource ID",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "integer",
 	 * 			"default":   0
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "resourcetype",
-	 *      "description":   "Resource type ID",
-	 *      "required":      true,
-	 *      "schema": {
+	 * 		"name":          "resourcetype",
+	 * 		"description":   "Resource type ID",
+	 * 		"required":      true,
+	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "producttype",
-	 *      "description":   "Product type ID",
-	 *      "required":      false,
-	 *      "schema": {
+	 * 		"name":          "producttype",
+	 * 		"description":   "Product type ID",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "integer",
 	 * 			"default":   0
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "rolename",
-	 *      "description":   "An alias containing only alpha-numeric characters, dashes, and underscores",
-	 *      "required":      false,
-	 *      "schema": {
+	 * 		"name":          "rolename",
+	 * 		"description":   "An alias containing only alpha-numeric characters, dashes, and underscores",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"maxLength": 32
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "listname",
-	 *      "description":   "An alias containing only alpha-numeric characters, dashes, and underscores",
-	 *      "required":      false,
-	 *      "schema": {
+	 * 		"name":          "listname",
+	 * 		"description":   "An alias containing only alpha-numeric characters, dashes, and underscores",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"maxLength": 32
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "description",
-	 *      "description":   "A short description of the resource",
-	 *      "required":      false,
-	 *      "schema": {
+	 * 		"name":          "description",
+	 * 		"description":   "A short description of the resource",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"maxLength": 2000
 	 * 		}
@@ -223,14 +262,14 @@ class ResourcesController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'name' => 'required|string|max:32',
-			'parentid' => 'required|integer|min:1',
-			'batchsystem' => 'required|integer|min:1',
+			'name'         => 'required|string|max:32',
+			'parentid'     => 'required|integer|min:1',
+			'batchsystem'  => 'required|integer|min:1',
 			'resourcetype' => 'required|integer|min:1',
-			'producttype' => 'nullable|integer',
-			'rolename' => 'nullable|string',
-			'listname' => 'nullable|string',
-			'facets' => 'nullable|array',
+			'producttype'  => 'nullable|integer',
+			'rolename'     => 'nullable|string|max:32',
+			'listname'     => 'nullable|string|max:32',
+			'facets'       => 'nullable|array',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -331,67 +370,67 @@ class ResourcesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "name",
-	 *      "description":   "The name of the resource type",
-	 *      "required":      false,
-	 *      "schema": {
+	 * 		"name":          "name",
+	 * 		"description":   "The name of the resource type",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"maxLength": 32
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "parentid",
-	 *      "description":   "Parent resource ID",
-	 *      "required":      false,
-	 *      "schema": {
+	 * 		"name":          "parentid",
+	 * 		"description":   "Parent resource ID",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "resourcetype",
-	 *      "description":   "Resource type ID",
-	 *      "required":      false,
-	 *      "schema": {
+	 * 		"name":          "resourcetype",
+	 * 		"description":   "Resource type ID",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "producttype",
-	 *      "description":   "Product type ID",
-	 *      "required":      false,
-	 *      "schema": {
+	 * 		"name":          "producttype",
+	 * 		"description":   "Product type ID",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "rolename",
-	 *      "description":   "An alias containing only alpha-numeric characters, dashes, and underscores",
-	 *      "required":      false,
-	 *      "schema": {
+	 * 		"name":          "rolename",
+	 * 		"description":   "An alias containing only alpha-numeric characters, dashes, and underscores",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"maxLength": 32
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "listname",
-	 *      "description":   "An alias containing only alpha-numeric characters, dashes, and underscores",
-	 *      "required":      false,
-	 *      "schema": {
+	 * 		"name":          "listname",
+	 * 		"description":   "An alias containing only alpha-numeric characters, dashes, and underscores",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"maxLength": 32
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 *      "name":          "description",
-	 *      "description":   "A short description of the resource",
-	 *      "required":      false,
-	 *      "schema": {
+	 * 		"name":          "description",
+	 * 		"description":   "A short description of the resource",
+	 * 		"required":      false,
+	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"maxLength": 2000
 	 * 		}
@@ -414,15 +453,15 @@ class ResourcesController extends Controller
 	public function update($id, Request $request)
 	{
 		$rules = [
-			'name' => 'nullable|string|max:32',
-			'parentid' => 'nullable|integer|min:1',
-			'batchsystem' => 'nullable|integer|min:1',
+			'name'         => 'nullable|string|max:32',
+			'parentid'     => 'nullable|integer|min:1',
+			'batchsystem'  => 'nullable|integer|min:1',
 			'resourcetype' => 'nullable|integer|min:1',
-			'producttype' => 'nullable|integer',
-			'rolename' => 'nullable|string',
-			'listname' => 'nullable|string',
-			'status' => 'nullable|string',
-			'facets' => 'nullable|array',
+			'producttype'  => 'nullable|integer',
+			'rolename'     => 'nullable|string|max:32',
+			'listname'     => 'nullable|string|max:32',
+			'status'       => 'nullable|string',
+			'facets'       => 'nullable|array',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
