@@ -84,14 +84,24 @@ class NotificationTypesController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
-			'search'   => $request->input('search', ''),
+			'search'    => $request->input('search', ''),
 			// Paging
-			'limit'    => $request->input('limit', config('list_limit', 20)),
-			'page'     => $request->input('page', 1),
+			'limit'     => $request->input('limit', config('list_limit', 20)),
+			'page'      => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'name'),
-			'order_dir' => $request->input('order_dir', 'ASC')
+			'order_dir' => $request->input('order_dir', 'asc')
 		);
+
+		if (!in_array($filters['order'], ['id', 'name']))
+		{
+			$filters['order'] = 'name';
+		}
+
+		if (!in_array($filters['order_dir'], ['asc', 'desc']))
+		{
+			$filters['order_dir'] = 'asc';
+		}
 
 		// Get records
 		$query = Type::query();
@@ -184,7 +194,6 @@ class NotificationTypesController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
-		//$row = Type::create($request->all());
 		$row = new Type;
 		$row->name = $request->input('name');
 		$row->defaulttimeperiodid = $request->input('defaulttimeperiodid', 0);

@@ -39,6 +39,51 @@ class StorageController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
+	 * 		"name":          "parentresourceid",
+	 * 		"description":   "Parent resource ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "groupmanaged",
+	 * 		"description":   "Storage can be managed by group managers",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "autouserdir",
+	 * 		"description":   "Auto create user directories",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "getquotatypeid",
+	 * 		"description":   "Quota message type ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "createtypeid",
+	 * 		"description":   "Create message type ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result to return.",
 	 * 		"required":      false,
@@ -77,9 +122,10 @@ class StorageController extends Controller
 	 * 			"enum": [
 	 * 				"id",
 	 * 				"name",
+	 * 				"path",
 	 * 				"datetimecreated",
 	 * 				"datetimeremoved",
-	 * 				"parentid"
+	 * 				"parentresourceid"
 	 * 			]
 	 * 		}
 	 * }
@@ -90,7 +136,7 @@ class StorageController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "desc",
+	 * 			"default":   "asc",
 	 * 			"enum": [
 	 * 				"asc",
 	 * 				"desc"
@@ -103,21 +149,31 @@ class StorageController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
-			'search'   => $request->input('search', ''),
-			'state'    => $request->input('state', 'active'),
-			'groupmanaged' => $request->input('groupmanaged'),
+			'search'           => $request->input('search', ''),
+			'state'            => $request->input('state', 'active'),
+			'groupmanaged'     => $request->input('groupmanaged'),
 			'parentresourceid' => $request->input('parentresourceid'),
-			'import' => $request->input('import'),
-			'autouserdir' => $request->input('autouserdir'),
-			'getquotatypeid' => $request->input('getquotatypeid'),
-			'createtypeid' => $request->input('createtypeid'),
+			'import'           => $request->input('import'),
+			'autouserdir'      => $request->input('autouserdir'),
+			'getquotatypeid'   => $request->input('getquotatypeid'),
+			'createtypeid'     => $request->input('createtypeid'),
 			// Paging
-			'limit'    => $request->input('limit', config('list_limit', 20)),
-			'page'     => $request->input('page', 1),
+			'limit'     => $request->input('limit', config('list_limit', 20)),
+			'page'      => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'name'),
 			'order_dir' => $request->input('order_dir', 'asc')
 		);
+
+		if (!in_array($filters['order'], ['id', 'name', 'datetimecreated', 'datetimeremoved', 'path', 'parentresourceid']))
+		{
+			$filters['order'] = 'name';
+		}
+
+		if (!in_array($filters['order_dir'], ['asc', 'desc']))
+		{
+			$filters['order_dir'] = 'asc';
+		}
 
 		// Get records
 		$query = StorageResource::query()
@@ -320,17 +376,17 @@ class StorageController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'name' => 'required|string|max:32',
-			'path' => 'required|string|max:255',
-			'parentresourceid' => 'nullable|integer',
-			'import' => 'nullable|integer',
-			'importhostname' => 'nullable|in:0,1',
-			'autouserdir' => 'nullable|in:0,1',
+			'name'              => 'required|string|max:32',
+			'path'              => 'required|string|max:255',
+			'parentresourceid'  => 'nullable|integer',
+			'import'            => 'nullable|integer',
+			'importhostname'    => 'nullable|in:0,1',
+			'autouserdir'       => 'nullable|in:0,1',
 			'defaultquotaspace' => 'nullable|integer',
-			'defaultquotafile' => 'nullable|integer',
-			'getquotatypeid' => 'nullable|integer',
-			'createtypeid' => 'nullable|integer',
-			'groupmanaged' => 'nullable|integer',
+			'defaultquotafile'  => 'nullable|integer',
+			'getquotatypeid'    => 'nullable|integer',
+			'createtypeid'      => 'nullable|integer',
+			'groupmanaged'      => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -551,17 +607,17 @@ class StorageController extends Controller
 		$row = StorageResource::findOrFail($id);
 
 		$rules = [
-			'name' => 'nullable|string|max:32',
-			'path' => 'nullable|string|max:255',
-			'parentresourceid' => 'nullable|integer',
-			'import' => 'nullable|integer',
-			'importhostname' => 'nullable|in:0,1',
-			'autouserdir' => 'nullable|in:0,1',
+			'name'              => 'nullable|string|max:32',
+			'path'              => 'nullable|string|max:255',
+			'parentresourceid'  => 'nullable|integer',
+			'import'            => 'nullable|integer',
+			'importhostname'    => 'nullable|in:0,1',
+			'autouserdir'       => 'nullable|in:0,1',
 			'defaultquotaspace' => 'nullable|integer',
-			'defaultquotafile' => 'nullable|integer',
-			'getquotatypeid' => 'nullable|integer',
-			'createtypeid' => 'nullable|integer',
-			'groupmanaged' => 'nullable|integer',
+			'defaultquotafile'  => 'nullable|integer',
+			'getquotatypeid'    => 'nullable|integer',
+			'createtypeid'      => 'nullable|integer',
+			'groupmanaged'      => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);

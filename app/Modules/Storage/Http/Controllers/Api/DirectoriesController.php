@@ -65,13 +65,17 @@ class DirectoriesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "name",
+	 * 			"default":   "path",
 	 * 			"enum": [
 	 * 				"id",
+	 * 				"resourceid",
+	 * 				"groupid",
+	 * 				"parentstoragedirid",
 	 * 				"name",
+	 * 				"path",
 	 * 				"datetimecreated",
 	 * 				"datetimeremoved",
-	 * 				"parentid"
+	 * 				"bytes"
 	 * 			]
 	 * 		}
 	 * }
@@ -82,7 +86,7 @@ class DirectoriesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "desc",
+	 * 			"default":   "asc",
 	 * 			"enum": [
 	 * 				"asc",
 	 * 				"desc"
@@ -107,8 +111,18 @@ class DirectoriesController extends Controller
 			'page'      => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'path'),
-			'order_dir' => $request->input('order_dir', 'ASC')
+			'order_dir' => $request->input('order_dir', 'asc')
 		);
+
+		if (!in_array($filters['order'], ['id', 'resourceid', 'groupid', 'parentstoragedirid', 'name', 'path', 'datetimecreated', 'datetimeremoved', 'bytes']))
+		{
+			$filters['order'] = 'path';
+		}
+
+		if (!in_array($filters['order_dir'], ['asc', 'desc']))
+		{
+			$filters['order_dir'] = 'asc';
+		}
 
 		// Get records
 		$query = Directory::query()
@@ -375,24 +389,24 @@ class DirectoriesController extends Controller
 		if (empty($data))
 		{
 			$request->validate([
-				'name' => 'required|string|max:32',
-				//'path' => 'nullable|string|max:255',
-				'resourceid' => 'required|integer|min:1',
-				'groupid' => 'required|integer|min:1',
-				'bytes' => 'required|string',
-				'parentstorageid' => 'nullable|integer',
-				'owneruserid' => 'nullable|integer',
-				'unixgroupid' => 'nullable|integer',
-				'ownerread' => 'nullable|integer',
-				'ownerwrite' => 'nullable|integer',
-				'groupread' => 'nullable|integer',
-				'groupwrite' => 'nullable|integer',
-				'publicread' => 'nullable|integer',
-				'publicwrite' => 'nullable|integer',
-				'autouser' => 'nullable|in:0,1,2,3',
-				'files' => 'nullable|integer',
+				'name'                => 'required|string|max:32',
+				//'path'                => 'nullable|string|max:255',
+				'resourceid'          => 'required|integer|min:1',
+				'groupid'             => 'required|integer|min:1',
+				'bytes'               => 'required|string',
+				'parentstorageid'     => 'nullable|integer',
+				'owneruserid'         => 'nullable|integer',
+				'unixgroupid'         => 'nullable|integer',
+				'ownerread'           => 'nullable|integer',
+				'ownerwrite'          => 'nullable|integer',
+				'groupread'           => 'nullable|integer',
+				'groupwrite'          => 'nullable|integer',
+				'publicread'          => 'nullable|integer',
+				'publicwrite'         => 'nullable|integer',
+				'autouser'            => 'nullable|in:0,1,2,3',
+				'files'               => 'nullable|integer',
 				'autouserunixgroupid' => 'nullable|integer',
-				'storageresourceid' => 'nullable|integer',
+				'storageresourceid'   => 'nullable|integer',
 			]);
 
 			$data = $request->all();
@@ -888,22 +902,22 @@ class DirectoriesController extends Controller
 		}
 
 		$request->validate([
-			'name' => 'nullable|string|max:32',
-			'path' => 'nullable|string|max:255',
-			'resourceid' => 'nullable|integer|min:1',
-			'groupid' => 'nullable|integer|min:1',
-			'parentstorageid' => 'nullable|integer',
-			'owneruserid' => 'nullable|integer',
-			'unixgroupid' => 'nullable|integer',
-			'ownerread' => 'nullable|integer',
-			'groupread' => 'nullable|integer',
-			'groupwrite' => 'nullable|integer',
-			'publicread' => 'nullable|integer',
-			'publicwrite' => 'nullable|integer',
-			'autouser' => 'nullable|in:0,1,2,3',
-			'files' => 'nullable|integer',
+			'name'                => 'nullable|string|max:32',
+			'path'                => 'nullable|string|max:255',
+			'resourceid'          => 'nullable|integer|min:1',
+			'groupid'             => 'nullable|integer|min:1',
+			'parentstorageid'     => 'nullable|integer',
+			'owneruserid'         => 'nullable|integer',
+			'unixgroupid'         => 'nullable|integer',
+			'ownerread'           => 'nullable|integer',
+			'groupread'           => 'nullable|integer',
+			'groupwrite'          => 'nullable|integer',
+			'publicread'          => 'nullable|integer',
+			'publicwrite'         => 'nullable|integer',
+			'autouser'            => 'nullable|in:0,1,2,3',
+			'files'               => 'nullable|integer',
 			'autouserunixgroupid' => 'nullable|integer',
-			'storageresourceid' => 'nullable|integer',
+			'storageresourceid'   => 'nullable|integer',
 		]);
 
 		$fixpermissions = $request->input('fixpermissions');

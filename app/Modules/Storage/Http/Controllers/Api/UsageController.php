@@ -28,62 +28,11 @@ class UsageController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 * 		"name":          "limit",
-	 * 		"description":   "Number of result to return.",
+	 * 		"name":          "storagedirid",
+	 * 		"description":   "Storage directory ID",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   20
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "page",
-	 * 		"description":   "Number of where to start returning results.",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   1
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "search",
-	 * 		"description":   "A word or phrase to search for.",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string"
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "order",
-	 * 		"description":   "Field to sort results by.",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string",
-	 * 			"default":   "datetimecreated",
-	 * 			"enum": [
-	 * 				"id",
-	 * 				"name",
-	 * 				"datetimecreated",
-	 * 				"datetimeremoved",
-	 * 				"parentid"
-	 * 			]
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
-	 * 		"name":          "order_dir",
-	 * 		"description":   "Direction to sort results by.",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "string",
-	 * 			"default":   "desc",
-	 * 			"enum": [
-	 * 				"asc",
-	 * 				"desc"
-	 * 			]
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @param  Request  $request
@@ -91,16 +40,6 @@ class UsageController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		$filters = array(
-			'storagedirid' => $request->input('storagedirid'),
-			// Paging
-			'limit'     => $request->input('limit', config('list_limit', 20)),
-			'page'      => $request->input('page', 1),
-			// Sorting
-			'order'     => $request->input('order', 'datetimestart'),
-			'order_dir' => $request->input('order_dir', 'desc')
-		);
-
 		// Get records
 		$u = (new Usage)->getTable();
 		$d = (new Directory)->getTable();
@@ -171,7 +110,17 @@ class UsageController extends Controller
 			}
 		}
 
-		/*$query = Usage::query();
+		/*$filters = array(
+			'storagedirid' => $request->input('storagedirid'),
+			// Paging
+			'limit'     => $request->input('limit', config('list_limit', 20)),
+			'page'      => $request->input('page', 1),
+			// Sorting
+			'order'     => $request->input('order', 'datetimestart'),
+			'order_dir' => $request->input('order_dir', 'desc')
+		);
+
+		$query = Usage::query();
 
 		if ($filters['resourceid'])
 		{
@@ -270,20 +219,20 @@ class UsageController extends Controller
 	{
 		$rules = [
 			'storagedirid' => 'required|integer|min:1',
-			'quota' => 'required|integer',
-			'space' => 'nullable|integer',
-			'filequota' => 'nullable|integer',
-			'files' => 'nullable|integer',
+			'quota'        => 'required|integer',
+			'space'        => 'nullable|integer',
+			'filequota'    => 'nullable|integer',
+			'files'        => 'nullable|integer',
 		];
 		// [!] Legacy compatibility
 		if (request()->segment(1) == 'ws')
 		{
 			$rules = [
 				'storagedir' => 'required|string',
-				'quota' => 'required',
-				'space' => 'nullable',
-				'filequota' => 'nullable|integer',
-				'files' => 'nullable|integer',
+				'quota'      => 'required',
+				'space'      => 'nullable',
+				'filequota'  => 'nullable|integer',
+				'files'      => 'nullable|integer',
 			];
 		}
 		//$request->validate($rules);
@@ -458,11 +407,11 @@ class UsageController extends Controller
 	{
 		$rules = [
 			'storagedirid' => 'nullable|integer|min:1',
-			'storagedir' => 'nullable|string',
-			'quota' => 'nullable|integer',
-			'space' => 'nullable|integer',
-			'filequota' => 'nullable|integer',
-			'files' => 'nullable|integer',
+			'storagedir'   => 'nullable|string',
+			'quota'        => 'nullable|integer',
+			'space'        => 'nullable|integer',
+			'filequota'    => 'nullable|integer',
+			'files'        => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);

@@ -25,6 +25,34 @@ class LoansController extends Controller
 	 * @apiUri    /storage/loans
 	 * @apiAuthorization  true
 	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "resourceid",
+	 * 		"description":   "Resource ID to filter by",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "groupid",
+	 * 		"description":   "Group ID to filter by",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "lendergroupid",
+	 * 		"description":   "Lender group ID to filter by",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result to return.",
 	 * 		"required":      false,
@@ -34,6 +62,7 @@ class LoansController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
 	 * 		"required":      false,
@@ -43,6 +72,7 @@ class LoansController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"required":      false,
@@ -51,30 +81,32 @@ class LoansController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "datetimecreated",
+	 * 			"default":   "datetimestart",
 	 * 			"enum": [
 	 * 				"id",
-	 * 				"name",
-	 * 				"datetimecreated",
-	 * 				"datetimeremoved",
-	 * 				"parentid"
+	 * 				"resourceid",
+	 * 				"groupid",
+	 * 				"datetimestart",
+	 * 				"datetimestop",
+	 * 				"bytes",
+	 * 				"lendergroupid"
 	 * 			]
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "asc",
+	 * 			"default":   "desc",
 	 * 			"enum": [
 	 * 				"asc",
 	 * 				"desc"
@@ -87,9 +119,9 @@ class LoansController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
-			'search' => $request->input('search'),
-			'resourceid' => $request->input('resourceid'),
-			'groupid'    => $request->input('groupid'),
+			'search'        => $request->input('search'),
+			'resourceid'    => $request->input('resourceid'),
+			'groupid'       => $request->input('groupid'),
 			'lendergroupid' => $request->input('lendergroupid'),
 			// Paging
 			'limit'     => $request->input('limit', config('list_limit', 20)),
@@ -98,6 +130,16 @@ class LoansController extends Controller
 			'order'     => $request->input('order', 'datetimestart'),
 			'order_dir' => $request->input('order_dir', 'desc')
 		);
+
+		if (!in_array($filters['order'], ['id', 'resourceid', 'groupid', 'datetimestart', 'datetimestop', 'bytes', 'lendergroupid']))
+		{
+			$filters['order'] = 'datetimestart';
+		}
+
+		if (!in_array($filters['order_dir'], ['asc', 'desc']))
+		{
+			$filters['order_dir'] = 'desc';
+		}
 
 		// Get records
 		$query = Loan::query()
@@ -224,12 +266,12 @@ class LoansController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'resourceid' => 'required|integer|min:1',
-			'groupid' => 'required|integer',
-			//'bytes' => 'nullable|integer',
+			'resourceid'    => 'required|integer|min:1',
+			'groupid'       => 'required|integer',
+			//'bytes'         => 'nullable|integer',
 			'lendergroupid' => 'nullable|integer',
 			'datetimestart' => 'required|date',
-			'datetimestop' => 'nullable|date',
+			'datetimestop'  => 'nullable|date',
 			'comment'       => 'nullable|string|max:2000'
 		];
 
@@ -541,12 +583,12 @@ class LoansController extends Controller
 	public function update($id, Request $request)
 	{
 		$rules = [
-			'resourceid' => 'nullable|integer|min:1',
-			'groupid' => 'nullable|integer',
-			//'bytes' => 'nullable|integer',
+			'resourceid'    => 'nullable|integer|min:1',
+			'groupid'       => 'nullable|integer',
+			//'bytes'         => 'nullable|integer',
 			'lendergroupid' => 'nullable|integer',
 			'datetimestart' => 'nullable|date',
-			'datetimestop' => 'nullable|date',
+			'datetimestop'  => 'nullable|date',
 			'comment'       => 'nullable|string',
 		];
 

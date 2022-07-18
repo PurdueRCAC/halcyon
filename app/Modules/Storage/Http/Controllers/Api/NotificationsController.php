@@ -25,9 +25,18 @@ class NotificationsController extends Controller
 	 * @apiUri    /storage/notifications
 	 * @apiAuthorization  true
 	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "search",
+	 * 		"description":   "A word or phrase to search for.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result to return.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -35,36 +44,42 @@ class NotificationsController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       0
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"name":          "search",
-	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       ""
-	 * }
-	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "created",
-	 * 		"allowedValues": "id, name, datetimecreated, datetimeremoved, parentid"
-	 * }
-	 * @apiParameter {
-	 * 		"name":          "order_dir",
-	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "asc",
+	 * 			"default":   "datetimestart",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"storagedirid",
+	 * 				"userid",
+	 * 				"datetimecreated",
+	 * 				"datetimeremoved",
+	 * 				"enabled",
+	 * 				"notice"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Direction to sort results by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "desc",
 	 * 			"enum": [
 	 * 				"asc",
 	 * 				"desc"
@@ -89,6 +104,16 @@ class NotificationsController extends Controller
 			'order'     => $request->input('order', 'id'),
 			'order_dir' => $request->input('order_dir', 'desc')
 		);
+
+		if (!in_array($filters['order'], ['id', 'storagedirid', 'userid', 'notice', 'datetimecreated', 'datetimeremoved', 'enabled']))
+		{
+			$filters['order'] = 'id';
+		}
+
+		if (!in_array($filters['order_dir'], ['asc', 'desc']))
+		{
+			$filters['order_dir'] = 'desc';
+		}
 
 		// Get records
 		$query = Notification::query();
@@ -238,14 +263,14 @@ class NotificationsController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'storagedirid' => 'required|integer|min:1',
-			'userid' => 'nullable|integer',
+			'storagedirid'       => 'required|integer|min:1',
+			'userid'             => 'nullable|integer',
 			'storagedirquotanotificationtypeid' => 'required|integer|min:1',
-			'value' => 'nullable|integer',
-			'timeperiodid' => 'nullable|integer',
-			'periods' => 'nullable|integer|min:1',
-			'notice'  => 'nullable|integer',
-			'enabled' => 'nullable|integer',
+			'value'              => 'nullable|integer',
+			'timeperiodid'       => 'nullable|integer',
+			'periods'            => 'nullable|integer|min:1',
+			'notice'             => 'nullable|integer',
+			'enabled'            => 'nullable|integer',
 			'datetimelastnotify' => 'nullable|date',
 		];
 
@@ -256,7 +281,6 @@ class NotificationsController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
-		//$row = Notification::create($request->all());
 		$row = new Notification;
 		$row->fill($request->all());
 
@@ -469,16 +493,16 @@ class NotificationsController extends Controller
 	public function update($id, Request $request)
 	{
 		$rules = [
-			'storagedirid' => 'nullable|integer|min:1',
-			'userid' => 'nullable|integer',
+			'storagedirid'       => 'nullable|integer|min:1',
+			'userid'             => 'nullable|integer',
 			'storagedirquotanotificationtypeid' => 'nullable|integer',
-			'value' => 'nullable|integer',
-			'timeperiodid' => 'nullable|integer',
-			'periods' => 'nullable|integer|min:0',
-			'notice'  => 'nullable|integer',
-			'enabled' => 'nullable|integer',
+			'value'              => 'nullable|integer',
+			'timeperiodid'       => 'nullable|integer',
+			'periods'            => 'nullable|integer|min:0',
+			'notice'             => 'nullable|integer',
+			'enabled'            => 'nullable|integer',
 			'datetimelastnotify' => 'nullable|date',
-			'nextreport' => 'nullable|date',
+			'nextreport'         => 'nullable|date',
 		];
 
 		$validator = Validator::make($request->all(), $rules);

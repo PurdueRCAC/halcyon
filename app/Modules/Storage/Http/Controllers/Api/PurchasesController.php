@@ -103,10 +103,9 @@ class PurchasesController extends Controller
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
 	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "asc",
+	 * 			"default":   "desc",
 	 * 			"enum": [
 	 * 				"asc",
 	 * 				"desc"
@@ -119,7 +118,7 @@ class PurchasesController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
-			'search' => $request->input('search'),
+			'search'     => $request->input('search'),
 			'resourceid' => $request->input('resourceid'),
 			'groupid'    => $request->input('groupid'),
 			'sellergroupid' => $request->input('sellergroupid'),
@@ -130,6 +129,16 @@ class PurchasesController extends Controller
 			'order'     => $request->input('order', 'datetimestart'),
 			'order_dir' => $request->input('order_dir', 'desc')
 		);
+
+		if (!in_array($filters['order'], ['id', 'resourceid', 'groupid', 'datetimestart', 'datetimestop', 'bytes', 'sellergroupid']))
+		{
+			$filters['order'] = 'datetimestart';
+		}
+
+		if (!in_array($filters['order_dir'], ['asc', 'desc']))
+		{
+			$filters['order_dir'] = 'desc';
+		}
 
 		// Get records
 		$query = Purchase::query()
@@ -316,7 +325,6 @@ class PurchasesController extends Controller
 			$row->comment = $request->input('comment');
 		}
 		$row->comment = $row->comment ?: '';
-		//$row->fill($request->all());
 
 		if ($row->datetimestart->timestamp < Carbon::now()->timestamp - 300)
 		{
