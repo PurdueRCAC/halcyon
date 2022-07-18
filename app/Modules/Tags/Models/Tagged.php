@@ -78,7 +78,7 @@ class Tagged extends Model
 	}
 
 	/**
-	 * Creator profile
+	 * Creator user
 	 *
 	 * @return  object
 	 */

@@ -103,7 +103,6 @@ class TagsController extends Controller
 		$filters = array(
 			'search'    => $request->input('search', ''),
 			'state'     => $request->input('state', 'active'),
-			'type'      => $request->input('type', null),
 			// Paging
 			'limit'     => $request->input('limit', config('list_limit', 20)),
 			'page'      => $request->input('page', 1),

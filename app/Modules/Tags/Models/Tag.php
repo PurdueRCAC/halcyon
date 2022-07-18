@@ -221,7 +221,7 @@ class Tag extends Model
 	}
 
 	/**
-	 * Creator profile
+	 * Editor user record
 	 *
 	 * @return  object
 	 */
@@ -231,7 +231,7 @@ class Tag extends Model
 	}
 
 	/**
-	 * Creator profile
+	 * Deleter user record
 	 *
 	 * @return  object
 	 */
@@ -241,7 +241,7 @@ class Tag extends Model
 	}
 
 	/**
-	 * Creator profile
+	 * Parent tag
 	 *
 	 * @return  object
 	 */
@@ -267,18 +267,13 @@ class Tag extends Model
 	 */
 	public function getAliasStringAttribute()
 	{
-		$subs = array();
-
-		foreach ($this->aliases as $sub)
-		{
-			$subs[] = $sub->name;
-		}
+		$subs = $this->aliases->pluck('name')->toArray();
 
 		return implode(', ', $subs);
 	}
 
 	/**
-	 * Get a list of objects
+	 * Get a list of tagged objects
 	 *
 	 * @return  object
 	 */
@@ -290,7 +285,8 @@ class Tag extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @return  boolean  False if error, True on success
+	 * @param  array   $options
+	 * @return boolean False if error, True on success
 	 */
 	public function delete(array $options = [])
 	{
@@ -379,10 +375,10 @@ class Tag extends Model
 
 		// Set some data
 		$to->taggable_type = (string) $scope;
-		$to->taggable_id = (int) $scope_id;
-		$to->tag_id = (int) $this->id;
-		$to->strength = (int) $strength;
-		$to->created_by = $tagger ? $tagger : auth()->user()->id;
+		$to->taggable_id   = (int) $scope_id;
+		$to->tag_id        = (int) $this->id;
+		$to->strength      = (int) $strength;
+		$to->created_by    = $tagger ? $tagger : auth()->user()->id;
 
 		// Attempt to store the new record
 		if (!$to->save())

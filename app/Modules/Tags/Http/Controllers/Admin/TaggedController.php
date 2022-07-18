@@ -24,7 +24,7 @@ class TaggedController extends Controller
 			'search'    => null,
 			// Paging
 			'limit'     => config('list_limit', 20),
-			'page' => 1,
+			'page'      => 1,
 			// Sorting
 			'order'     => Tagged::$orderBy,
 			'order_dir' => Tagged::$orderDir,
