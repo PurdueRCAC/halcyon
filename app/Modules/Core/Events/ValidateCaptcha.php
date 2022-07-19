@@ -5,21 +5,21 @@ namespace App\Modules\Core\Events;
 class ValidateCaptcha
 {
 	/**
-	 * The rendered body of the page
+	 * Captcha name
 	 *
 	 * @var string
 	 */
 	public $name;
 
 	/**
-	 * The original body of the page to render
+	 * Attributes for rendering
 	 *
 	 * @var string
 	 */
 	public $attributes;
 
 	/**
-	 * The original body of the page to render
+	 * Validation state
 	 *
 	 * @var string
 	 */
@@ -28,7 +28,7 @@ class ValidateCaptcha
 	/**
 	 * Constructor
 	 *
-	 * @param  string $editor
+	 * @param  string $name
 	 * @param  array  $attributes
 	 * @return void
 	 */

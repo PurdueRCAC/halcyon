@@ -42,8 +42,10 @@ class EditorIsRendering
 	/**
 	 * Constructor
 	 *
-	 * @param  string $editor
+	 * @param  string $name
+	 * @param  string $value
 	 * @param  array  $attributes
+	 * @param  string $formatting
 	 * @return void
 	 */
 	public function __construct($name, $value, $attributes = array(), $formatting = 'html')
@@ -55,7 +57,7 @@ class EditorIsRendering
 	}
 
 	/**
-	 * Get the page body
+	 * Get the name
 	 *
 	 * @return string
 	 */
@@ -65,9 +67,9 @@ class EditorIsRendering
 	}
 
 	/**
-	 * Set the body
+	 * Set the name
 	 *
-	 * @param string $body
+	 * @param string $name
 	 * @return void
 	 */
 	public function setName($name)
@@ -76,7 +78,7 @@ class EditorIsRendering
 	}
 
 	/**
-	 * Get the page body
+	 * Get the value
 	 *
 	 * @return string
 	 */
@@ -96,9 +98,9 @@ class EditorIsRendering
 	}
 
 	/**
-	 * Get the original, unaltered body
+	 * Get the attributes
 	 *
-	 * @return mixed
+	 * @return array
 	 */
 	public function getAttributes()
 	{
@@ -106,9 +108,9 @@ class EditorIsRendering
 	}
 
 	/**
-	 * Set the body
+	 * Set the attributes
 	 *
-	 * @param string $body
+	 * @param  array $attributes
 	 * @return void
 	 */
 	public function setAttributes($attributes)
@@ -117,9 +119,9 @@ class EditorIsRendering
 	}
 
 	/**
-	 * Set the body
+	 * Set the content
 	 *
-	 * @param string $body
+	 * @param string $content
 	 * @return void
 	 */
 	public function setContent($content)
@@ -128,9 +130,8 @@ class EditorIsRendering
 	}
 
 	/**
-	 * Set the body
+	 * Render the content
 	 *
-	 * @param string $body
 	 * @return void
 	 */
 	public function render()

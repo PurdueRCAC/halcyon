@@ -48,7 +48,6 @@ class CaptchaIsRendering
 	/**
 	 * Set the body
 	 *
-	 * @param string $body
 	 * @return void
 	 */
 	public function render()
@@ -57,9 +56,9 @@ class CaptchaIsRendering
 	}
 
 	/**
-	 * Set the body
+	 * Set the content
 	 *
-	 * @param string $body
+	 * @param string $content
 	 * @return void
 	 */
 	public function setContent($content)
