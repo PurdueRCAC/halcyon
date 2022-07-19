@@ -299,10 +299,10 @@ app('pathway')
 								@if ($product->mou || $product->restricteddata)
 									<div>
 										@if ($product->mou)
-											<span class="badge badge-info">MOU</span>
+											<span class="badge badge-info tip" title="{{ trans('orders::orders.mou') }}: Usage of this product requires an agreement to conform to certain guidelines.">MOU</span>
 										@endif
 										@if ($product->restricteddata)
-											<span class="badge badge-danger">Restricted data check</span>
+											<span class="badge badge-danger tip" title="{{ trans('orders::orders.restricted data explanation') }}">Restricted data check</span>
 										@endif
 									</div>
 								@endif
