@@ -5,8 +5,10 @@ namespace App\Modules\News\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Config\Repository;
 use Illuminate\Notifications\Notifiable;
-//use League\CommonMark\CommonMarkConverter;
-//use League\CommonMark\Extension\Table\TableExtension;
+use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\Extension\Table\TableExtension;
+use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
+use League\CommonMark\Extension\Autolink\AutolinkExtension;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Utility\PorterStemmer;
@@ -757,25 +759,21 @@ class Article extends Model
 		{
 			$text = $this->toMarkdown();
 
-			/*$converter = new CommonMarkConverter([
+			$converter = new CommonMarkConverter([
 				'html_input' => 'allow',
 			]);
 			$converter->getEnvironment()->addExtension(new TableExtension());
-			$text = (string) $converter->convertToHtml($text);*/
+			$converter->getEnvironment()->addExtension(new StrikethroughExtension());
+			$converter->getEnvironment()->addExtension(new AutolinkExtension());
 
-			if (class_exists('Parsedown'))
-			{
-				$mdParser = new \Parsedown();
-
-				$text = $mdParser->text(trim($text));
-			}
+			$text = (string) $converter->convertToHtml($text);
 
 			// Separate code blocks as we don't want to do any processing on their content
-			$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/i", [$this, 'stripPre'], $text);
+			$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/uis", [$this, 'stripPre'], $text);
 			$text = preg_replace_callback("/\<code\>(.*?)\<\/code\>/i", [$this, 'stripCode'], $text);
 
 			// Convert emails
-			$text = preg_replace('/([\w\.\-]+@((\w+\.)*\w{2,}\.\w{2,}))/', "<a target=\"_blank\" href=\"mailto:$1\">$1</a>", $text);
+			//$text = preg_replace('/([\w\.\-]+@((\w+\.)*\w{2,}\.\w{2,}))/', "<a target=\"_blank\" href=\"mailto:$1\">$1</a>", $text);
 
 			// Convert template variables
 			if (auth()->user() && auth()->user()->can('manage news'))
@@ -789,10 +787,12 @@ class Article extends Model
 				$text = preg_replace("/%([\w\s]+)%/", '<span style="color:red">$0</span>', $text);
 			}
 
+			$text = str_replace('<th>', '<th scope="col">', $text);
+			$text = str_replace('align="right"', 'class="text-right"', $text);
+
 			// Put code blocks back
 			$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
 			$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
-			$text = str_replace('<th>', '<th scope="col">', $text);
 
 			$text = preg_replace('/<p>([^\n]+)<\/p>\n(<table.*?>)(.*?<\/table>)/usm', '$2 <caption>$1</caption>$3', $text);
 			$text = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
@@ -831,21 +831,16 @@ class Article extends Model
 
 			$text = $event->getBody();
 
-			/*$converter = new CommonMarkConverter([
+			$converter = new CommonMarkConverter([
 				'html_input' => 'allow',
 			]);
 			$converter->getEnvironment()->addExtension(new TableExtension());
-			$text = (string) $converter->convertToHtml($text);*/
+			$converter->getEnvironment()->addExtension(new StrikethroughExtension());
 
-			if (class_exists('Parsedown'))
-			{
-				$mdParser = new \Parsedown();
-
-				$text = $mdParser->text(trim($text));
-			}
+			$text = (string) $converter->convertToHtml($text);
 
 			// Separate code blocks as we don't want to do any processing on their content
-			$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/i", [$this, 'stripPre'], $text);
+			$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/uis", [$this, 'stripPre'], $text);
 			$text = preg_replace_callback("/\<code\>(.*?)\<\/code\>/i", [$this, 'stripCode'], $text);
 
 			// Convert emails

@@ -14,7 +14,7 @@ use App\Halcyon\Models\Extension;
 use App\Halcyon\Http\StatefulRequest;
 use Carbon\Carbon;
 
-class ItemsController extends Controller
+class AuthorsController extends Controller
 {
 	/**
 	 * Display a listing of the resource.

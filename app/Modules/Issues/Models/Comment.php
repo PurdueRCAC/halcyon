@@ -4,6 +4,10 @@ namespace App\Modules\Issues\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\Extension\Table\TableExtension;
+use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
+use League\CommonMark\Extension\Autolink\AutolinkExtension;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
@@ -145,12 +149,14 @@ class Comment extends Model
 	{
 		$text = $this->comment;
 
-		if (class_exists('Parsedown'))
-		{
-			$mdParser = new \Parsedown();
+		$converter = new CommonMarkConverter([
+			'html_input' => 'allow',
+		]);
+		$converter->getEnvironment()->addExtension(new TableExtension());
+		$converter->getEnvironment()->addExtension(new StrikethroughExtension());
+		$converter->getEnvironment()->addExtension(new AutolinkExtension());
 
-			$text = $mdParser->text(trim($text));
-		}
+		$text = (string) $converter->convertToHtml($text);
 
 		// separate code blocks
 		$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/i", [$this, 'stripPre'], $text);
@@ -210,6 +216,9 @@ class Comment extends Model
 		{
 			$text = preg_replace("/%([\w\s]+)%/", '<span style="color:red">$0</span>', $text);
 		}
+
+		$text = str_replace('<th>', '<th scope="col">', $text);
+		$text = str_replace('align="right"', 'class="text-right"', $text);
 
 		$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
 		$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);

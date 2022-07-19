@@ -3,6 +3,10 @@ namespace App\Modules\Users\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\Extension\Table\TableExtension;
+use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
+use League\CommonMark\Extension\Autolink\AutolinkExtension;
 use App\Modules\Tags\Traits\Taggable;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Users\Events\NoteCreated;
@@ -64,9 +68,9 @@ class Note extends Model
 	 * @var array
 	 */
 	protected $dispatchesEvents = [
-		'created'  => NoteCreated::class,
-		'updated'  => NoteUpdated::class,
-		'deleted'  => NoteDeleted::class,
+		'created' => NoteCreated::class,
+		'updated' => NoteUpdated::class,
+		'deleted' => NoteDeleted::class,
 	];
 
 /**
@@ -81,54 +85,12 @@ class Note extends Model
 		// Parse out hashtags and tag the record
 		static::created(function ($model)
 		{
-			preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $model->body, $matches);
-
-			if (!empty($matches[0]))
-			{
-				$tags = array();
-
-				foreach ($matches[0] as $match)
-				{
-					$tag = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
-
-					// Ignore purely numeric items as this is most likely
-					// a reference to some ID. e.g., ticket #1234
-					if (is_numeric($tag))
-					{
-						continue;
-					}
-
-					$tags[] = $tag;
-				}
-
-				$model->setTags($tags);
-			}
+			$model->hashtags;
 		});
 
 		static::updated(function ($model)
 		{
-			preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $model->body, $matches);
-
-			if (!empty($matches[0]))
-			{
-				$tags = array();
-
-				foreach ($matches[0] as $match)
-				{
-					$tag = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
-
-					// Ignore purely numeric items as this is most likely
-					// a reference to some ID. e.g., ticket #1234
-					if (is_numeric($tag))
-					{
-						continue;
-					}
-
-					$tags[] = $tag;
-				}
-
-				$model->setTags($tags);
-			}
+			$model->hashtags;
 		});
 	}
 
@@ -171,23 +133,25 @@ class Note extends Model
 	{
 		$text = $this->body;
 
-		if (class_exists('Parsedown'))
-		{
-			$mdParser = new \Parsedown();
+		$converter = new CommonMarkConverter([
+			'html_input' => 'allow',
+		]);
+		$converter->getEnvironment()->addExtension(new TableExtension());
+		$converter->getEnvironment()->addExtension(new StrikethroughExtension());
+		$converter->getEnvironment()->addExtension(new AutolinkExtension());
 
-			$text = $mdParser->text(trim($text));
-		}
+		$text = (string) $converter->convertToHtml($text);
 
 		return $text;
 	}
 
-/**
+	/**
 	 * Taggable namespace
 	 */
 	static $entityNamespace = 'usernote';
 
 	/**
-	 * Find all hashtags in the report
+	 * Find all hashtags in the note
 	 *
 	 * @return  array
 	 */
@@ -209,10 +173,10 @@ class Note extends Model
 					continue;
 				}
 
-				$this->addTag($match);
-
 				$hashtag[] = $match;
 			}
+
+			$this->setTags($hashtag);
 		}
 
 		return implode(', ', $hashtag);

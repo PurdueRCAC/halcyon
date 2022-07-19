@@ -207,11 +207,14 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 					<div class="tab-content" id="help-tabs-contant">
 						<div class="tab-pane show active" id="help1a" role="tabpanel" aria-labelledby="help1a-tab">
 							<?php
-							$text = $help1a;
-							if (class_exists('Parsedown'))
-							{
-								$text = (new \Parsedown())->text(trim($text));
-							}
+							$converter = new League\CommonMark\CommonMarkConverter([
+								'html_input' => 'allow',
+							]);
+							$converter->getEnvironment()->addExtension(new League\CommonMark\Extension\Table\TableExtension());
+							$converter->getEnvironment()->addExtension(new League\CommonMark\Extension\Strikethrough\StrikethroughExtension());
+							$converter->getEnvironment()->addExtension(new League\CommonMark\Extension\Autolink\AutolinkExtension());
+
+							$text = (string) $converter->convertToHtml($help1a);
 							?>
 							<div class="form-group">
 								<label for="help1ainput">{{ trans('mailer::mailer.input text') }}:</label>
@@ -222,11 +225,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 						</div>
 						<div class="tab-pane" id="help1b" role="tabpanel" aria-labelledby="help1b-tab">
 							<?php
-							$text = $help1b;
-							if (class_exists('Parsedown'))
-							{
-								$text = (new \Parsedown())->text(trim($text));
-							}
+							$text = (string) $converter->convertToHtml($help1b);
 							?>
 							<div class="form-group">
 								<label for="help1binput">{{ trans('mailer::mailer.input text') }}:</label>
@@ -237,11 +236,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 						</div>
 						<div class="tab-pane" id="help1c" role="tabpanel" aria-labelledby="help1c-tab">
 							<?php
-							$text = $help1c;
-							if (class_exists('Parsedown'))
-							{
-								$text = (new \Parsedown())->text(trim($text));
-							}
+							$text = (string) $converter->convertToHtml($help1c);
 							?>
 							<div class="form-group">
 								<label for="help1cinput">{{ trans('mailer::mailer.input text') }}:</label>
@@ -252,11 +247,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 						</div>
 						<div class="tab-pane" id="help1e" role="tabpanel" aria-labelledby="help1e-tab">
 							<?php
-							$text = $help1e;
-							if (class_exists('Parsedown'))
-							{
-								$text = (new \Parsedown())->text(trim($text));
-							}
+							$text = (string) $converter->convertToHtml($help1e);
 							?>
 							<div class="form-group">
 								<label for="help1einput">{{ trans('mailer::mailer.input text') }}:</label>
@@ -267,11 +258,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 						</div>
 						<div class="tab-pane" id="help1f" role="tabpanel" aria-labelledby="help1f-tab">
 							<?php
-							$text = $help1f;
-							if (class_exists('Parsedown'))
-							{
-								$text = (new \Parsedown())->text(trim($text));
-							}
+							$text = (string) $converter->convertToHtml($help1f);
 							?>
 							<div class="form-group">
 								<label for="help1finput">{{ trans('mailer::mailer.input text') }}:</label>
@@ -282,11 +269,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 						</div>
 						<div class="tab-pane" id="help1g" role="tabpanel" aria-labelledby="help1g-tab">
 							<?php
-							$text = $help1g;
-							if (class_exists('Parsedown'))
-							{
-								$text = (new \Parsedown())->text(trim($text));
-							}
+							$text = (string) $converter->convertToHtml($help1g);
 							?>
 							<div class="form-group">
 								<label for="help1ginput">{{ trans('mailer::mailer.input text') }}:</label>

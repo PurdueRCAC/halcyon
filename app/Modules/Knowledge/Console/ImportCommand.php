@@ -4,6 +4,10 @@ namespace App\Modules\Knowledge\Console;
 
 use App\Modules\Knowledge\Models\Page;
 use App\Modules\Knowledge\Models\Association;
+use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\Extension\Table\TableExtension;
+use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
+use League\CommonMark\Extension\Autolink\AutolinkExtension;
 use Illuminate\Console\Command;
 
 class ImportCommand extends Command
@@ -44,8 +48,12 @@ class ImportCommand extends Command
 		require_once __DIR__ . '/sfYamlParser.php';
 		$yamlParser = new \sfYamlParser();
 
-		//require_once __DIR__ . '/Parsedown.php';
-		$mdParser = new \Parsedown();
+		$mdParser = new CommonMarkConverter([
+			'html_input' => 'allow',
+		]);
+		$mdParser->getEnvironment()->addExtension(new TableExtension());
+		$mdParser->getEnvironment()->addExtension(new StrikethroughExtension());
+		$mdParser->getEnvironment()->addExtension(new AutolinkExtension());
 
 		$this->importGuides($path, $yamlParser, $mdParser, $files);
 		//$this->importPages($path, $yamlParser, $mdParser, $files);
@@ -67,7 +75,7 @@ class ImportCommand extends Command
 			{
 				$contents = file_get_contents($file->getPathname());
 
-				$yaml = $yamlParser->parse($contents);
+				$yaml = $yamlParser->convertToHtml($contents);
 
 				$vars = new \stdClass;
 				$vars->tagtype = $yaml['tagtype'];
@@ -97,6 +105,15 @@ class ImportCommand extends Command
 		}
 	}
 
+	/**
+	 * Parse old MarkDown files and populate database
+	 *
+	 * @param  string $path
+	 * @param  object $yamlParser
+	 * @param  object $mdParser
+	 * @param  array  $files
+	 * @return void
+	 */
 	public function importPages($path, $yamlParser, $mdParser, $files)
 	{
 		$all = $files->allfiles($path);

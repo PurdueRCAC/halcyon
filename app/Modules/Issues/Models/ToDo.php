@@ -4,6 +4,10 @@ namespace App\Modules\Issues\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\Extension\Table\TableExtension;
+use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
+use League\CommonMark\Extension\Autolink\AutolinkExtension;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Utility\PorterStemmer;
@@ -222,12 +226,14 @@ class ToDo extends Model
 	{
 		$text = $this->description;
 
-		if (class_exists('Parsedown'))
-		{
-			$mdParser = new \Parsedown();
+		$converter = new CommonMarkConverter([
+			'html_input' => 'allow',
+		]);
+		$converter->getEnvironment()->addExtension(new TableExtension());
+		$converter->getEnvironment()->addExtension(new StrikethroughExtension());
+		$converter->getEnvironment()->addExtension(new AutolinkExtension());
 
-			$text = $mdParser->text(trim($text));
-		}
+		$text = (string) $converter->convertToHtml($text);
 
 		// separate code blocks
 		$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/i", [$this, 'stripPre'], $text);
@@ -236,8 +242,9 @@ class ToDo extends Model
 		// convert emails
 		$text = preg_replace('/([\w\.\-]+@((\w+\.)*\w{2,}\.\w{2,}))/', "<a target=\"_blank\" href=\"mailto:$1\">$1</a>", $text);
 
-		//$text = '<p>' . $text . '</p>';
 		$text = preg_replace("/<p>(.*)(<table.*?>)(.*<\/table>)/m", "<p>$2 <caption>$1</caption>$3", $text);
+		$text = str_replace('<th>', '<th scope="col">', $text);
+		$text = str_replace('align="right"', 'class="text-right"', $text);
 
 		$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
 		$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);

@@ -3,6 +3,10 @@
 namespace App\Modules\ContactReports\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\Extension\Table\TableExtension;
+use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
+use League\CommonMark\Extension\Autolink\AutolinkExtension;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Utility\PorterStemmer;
@@ -151,15 +155,17 @@ class Comment extends Model
 	{
 		$text = $this->comment;
 
-		if (class_exists('Parsedown'))
-		{
-			$mdParser = new \Parsedown();
+		$converter = new CommonMarkConverter([
+			'html_input' => 'allow',
+		]);
+		$converter->getEnvironment()->addExtension(new TableExtension());
+		$converter->getEnvironment()->addExtension(new StrikethroughExtension());
+		$converter->getEnvironment()->addExtension(new AutolinkExtension());
 
-			$text = $mdParser->text(trim($text));
-		}
+		$text = (string) $converter->convertToHtml($text);
 
 		// separate code blocks
-		$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/i", [$this, 'stripPre'], $text);
+		$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/uis", [$this, 'stripPre'], $text);
 		$text = preg_replace_callback("/\<code\>(.*?)\<\/code\>/i", [$this, 'stripCode'], $text);
 
 		// convert template variables

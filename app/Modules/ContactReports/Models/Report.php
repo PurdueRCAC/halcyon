@@ -3,6 +3,10 @@
 namespace App\Modules\ContactReports\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\Extension\Table\TableExtension;
+use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
+use League\CommonMark\Extension\Autolink\AutolinkExtension;
 use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Utility\PorterStemmer;
@@ -133,54 +137,12 @@ class Report extends Model
 		// Parse out hashtags and tag the record
 		static::created(function ($model)
 		{
-			preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $model->report, $matches);
-
-			if (!empty($matches[0]))
-			{
-				$tags = array();
-
-				foreach ($matches[0] as $match)
-				{
-					$tag = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
-
-					// Ignore purely numeric items as this is most likely
-					// a reference to some ID. e.g., ticket #1234
-					if (is_numeric($tag))
-					{
-						continue;
-					}
-
-					$tags[] = $tag;
-				}
-
-				$model->setTags($tags);
-			}
+			$model->hashTags;
 		});
 
 		static::updated(function ($model)
 		{
-			preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $model->report, $matches);
-
-			if (!empty($matches[0]))
-			{
-				$tags = array();
-
-				foreach ($matches[0] as $match)
-				{
-					$tag = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
-
-					// Ignore purely numeric items as this is most likely
-					// a reference to some ID. e.g., ticket #1234
-					if (is_numeric($tag))
-					{
-						continue;
-					}
-
-					$tags[] = $tag;
-				}
-
-				$model->setTags($tags);
-			}
+			$model->hashTags;
 		});
 	}
 
@@ -359,15 +321,17 @@ class Report extends Model
 		{
 			$text = $this->toMarkdown();
 
-			if (class_exists('Parsedown'))
-			{
-				$mdParser = new \Parsedown();
+			$converter = new CommonMarkConverter([
+				'html_input' => 'allow',
+			]);
+			$converter->getEnvironment()->addExtension(new TableExtension());
+			$converter->getEnvironment()->addExtension(new StrikethroughExtension());
+			$converter->getEnvironment()->addExtension(new AutolinkExtension());
 
-				$text = $mdParser->text(trim($text));
-			}
+			$text = (string) $converter->convertToHtml($text);
 
 			// Separate code blocks as we don't want to do any processing on their content
-			$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/i", [$this, 'stripPre'], $text);
+			$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/uis", [$this, 'stripPre'], $text);
 			$text = preg_replace_callback("/\<code\>(.*?)\<\/code\>/i", [$this, 'stripCode'], $text);
 
 			// Convert emails
@@ -402,10 +366,12 @@ class Report extends Model
 				}
 			}
 
+			$text = str_replace('<th>', '<th scope="col">', $text);
+			$text = str_replace('align="right"', 'class="text-right"', $text);
+
 			// Put code blocks back
 			$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
 			$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
-			$text = str_replace('<th>', '<th scope="col">', $text);
 
 			$text = preg_replace('/<p>([^\n]+)<\/p>\n(<table.*?>)(.*?<\/table>)/usm', '$2 <caption>$1</caption>$3', $text);
 			$text = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
@@ -431,15 +397,16 @@ class Report extends Model
 
 		$text = $this->report;
 
-		if (class_exists('Parsedown'))
-		{
-			$mdParser = new \Parsedown();
+		$converter = new CommonMarkConverter([
+			'html_input' => 'allow',
+		]);
+		$converter->getEnvironment()->addExtension(new TableExtension());
+		$converter->getEnvironment()->addExtension(new StrikethroughExtension());
 
-			$text = $mdParser->text(trim($text));
-		}
+		$text = (string) $converter->convertToHtml($text);
 
 		// separate code blocks
-		$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/i", [$this, 'stripPre'], $text);
+		$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/uis", [$this, 'stripPre'], $text);
 		$text = preg_replace_callback("/\<code\>(.*?)\<\/code\>/i", [$this, 'stripCode'], $text);
 
 		// convert emails
@@ -940,7 +907,7 @@ class Report extends Model
 	{
 		$str = $this->report;
 
-		$str = preg_replace_callback("/```\s+(.*?)\s+```/uis", [$this, 'stripPre'], $str);
+		$str = preg_replace_callback("/```(.*?)```/uis", [$this, 'stripPre'], $str);
 		$str = preg_replace_callback("/`(.*?)`/i", [$this, 'stripCode'], $str);
 
 		preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $str, $matches);
@@ -952,15 +919,17 @@ class Report extends Model
 			{
 				$match = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
 
+				// Ignore purely numeric items as this is most likely
+				// a reference to some ID. e.g., ticket #1234
 				if (is_numeric($match))
 				{
 					continue;
 				}
 
-				$this->addTag($match);
-
 				$hashtag[] = $match;
 			}
+
+			$this->setTags($hashtag);
 		}
 
 		$str = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $str);
