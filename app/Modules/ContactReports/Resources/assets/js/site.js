@@ -1178,9 +1178,9 @@ function CRMToggleAddButton() {
 	if (document.getElementById("TAB_add").className.match(/active/)) {
 		var start = document.getElementById("datestartshort").value;
 		var people = document.getElementById("people").value.split(',');
-		var notes = document.getElementById("NotesText").value;
+		//var notes = document.getElementById("NotesText").value;
 
-		if (start != "" && people.length > 0 && notes != "") {
+		if (start != "" && people.length > 0) { // && notes != "") {
 			document.getElementById("INPUT_add").disabled = false;
 		} else {
 			document.getElementById("INPUT_add").disabled = true;
