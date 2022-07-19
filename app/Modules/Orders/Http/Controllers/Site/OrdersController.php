@@ -128,7 +128,7 @@ class OrdersController extends Controller
 		{
 			$subitems->where($i . '.orderproductid', '=', $filters['product']);
 		}
-		if ($filters['userid'])
+		/*if ($filters['userid'])
 		{
 			$subitems->leftJoin($a, function ($join) use ($a, $o)
 				{
@@ -144,7 +144,7 @@ class OrdersController extends Controller
 					->orWhere($o . '.submitteruserid', '=', $filters['userid'])
 					->orWhere($a . '.approveruserid', '=', $filters['userid']);
 			});
-		}
+		}*/
 
 		$query
 			->select([
