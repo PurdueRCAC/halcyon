@@ -325,25 +325,35 @@ class UnixGroupsController extends Controller
 		}
 
 		// Look for this entry, duplicate name, etc.
-		$exist = UnixGroup::query()
+		$row = UnixGroup::query()
+			->withTrashed()
 			->where('groupid', '=', $group->id)
 			->where('longname', '=', $base . $name)
 			->get()
 			->first();
 
-		if ($exist && $exist->id)
+		if ($row && $row->id)
 		{
-			return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $base . $name])], 409);
+			if ($row->trashed())
+			{
+				$row->restore();
+			}
+			else
+			{
+				return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $base . $name])], 409);
+			}
 		}
-
-		$row = new UnixGroup;
-		$row->groupid = $group->id;
-		$row->longname = $base . $name;
-		$row->shortname = $row->generateShortname($name);
-
-		if (!$row->save())
+		else
 		{
-			return response()->json(['message' => trans('global.messages.create failed')], 500);
+			$row = new UnixGroup;
+			$row->groupid = $group->id;
+			$row->longname = $base . $name;
+			$row->shortname = $row->generateShortname($name);
+
+			if (!$row->save())
+			{
+				return response()->json(['message' => trans('global.messages.create failed')], 500);
+			}
 		}
 
 		if ($row->longname == $group->unixgroup)
