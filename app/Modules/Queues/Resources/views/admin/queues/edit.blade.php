@@ -705,7 +705,7 @@ app('pathway')
 								<div class="form-group">
 									<label for="sell-datetimestart">{{ trans('queues::queues.start') }}</label>
 									<span class="input-group input-datetime">
-										<input type="text" class="form-control datetime" id="sell-datetimestart" name="datetimestart" value="{{ Carbon\Carbon::now()->modify('+3 minutes')->toDateTimeString() }}" />
+										<input type="text" class="form-control datetime" id="sell-datetimestart" name="datetimestart" value="{{ Carbon\Carbon::now()->toDateTimeString() }}" />
 										<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
 									</span>
 								</div>
@@ -767,8 +767,11 @@ app('pathway')
 								<option value="0">{{ trans('queues::queues.select queue') }}</option>
 								@foreach ($groups as $group)
 									@if ($group->id == -1)
-										@foreach ($group->queues()->where('subresourceid', '=', $row->subresourceid)->get() as $queue)
-											<option value="{{ $queue->id }}">{{ $queue->name }} ({{ $row->subresource->name }})</option>
+										@php
+										$queues = $group->queues()->where('subresourceid', '=', $row->subresourceid)->get();
+										@endphp
+										@foreach ($queues as $queue)
+											<option value="{{ $queue->id }}"<?php if (count($queues) == 1) { echo ' selected="selected"'; } ?>>{{ $queue->name }} ({{ $row->subresource->name }})</option>
 										@endforeach
 									@endif
 								@endforeach
@@ -798,7 +801,7 @@ app('pathway')
 								@foreach ($groups as $group)
 									@if ($group->id == $row->groupid)
 										@foreach ($group->queues()->where('subresourceid', '=', $row->subresourceid)->get() as $queue)
-											<option value="{{ $queue->id }}">{{ $queue->name }} ({{ $row->subresource->name }})</option>
+											<option value="{{ $queue->id }}"<?php if ($queue->id == $row->id) { echo ' selected="selected"'; } ?>>{{ $queue->name }} ({{ $row->subresource->name }})</option>
 										@endforeach
 									@endif
 								@endforeach
@@ -867,7 +870,7 @@ app('pathway')
 								<div class="form-group">
 									<label for="loan-datetimestart">{{ trans('queues::queues.start') }}</label>
 									<span class="input-group input-datetime">
-										<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart" value="{{ Carbon\Carbon::now()->modify('+10 minutes')->toDateTimeString() }}" />
+										<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart" value="{{ Carbon\Carbon::now()->toDateTimeString() }}" />
 										<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
 									</span>
 								</div>
@@ -904,8 +907,11 @@ app('pathway')
 								<option value="0">{{ trans('queues::queues.select queue') }}</option>
 								@foreach ($groups as $group)
 									@if ($group->id == -1)
-										@foreach ($group->queues()->where('subresourceid', '=', $row->subresourceid)->get() as $queue)
-											<option value="{{ $queue->id }}">{{ $queue->name }} ({{ $row->subresource->name }})</option>
+										@php
+										$queues = $group->queues()->where('subresourceid', '=', $row->subresourceid)->get();
+										@endphp
+										@foreach ($queues as $queue)
+											<option value="{{ $queue->id }}"<?php if (count($queues) == 1) { echo ' selected="selected"'; } ?>>{{ $queue->name }} ({{ $row->subresource->name }})</option>
 										@endforeach
 									@endif
 								@endforeach
