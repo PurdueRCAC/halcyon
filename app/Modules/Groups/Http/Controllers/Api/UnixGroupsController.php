@@ -11,6 +11,7 @@ use App\Modules\Groups\Models\UnixGroup;
 use App\Modules\Groups\Http\Resources\UnixGroupResource;
 use App\Modules\Groups\Http\Resources\UnixGroupResourceCollection;
 use App\Modules\Groups\Events\UnixGroupFetch;
+use App\Modules\Groups\Events\UnixGroupCreating;
 
 /**
  * Unix groups
@@ -337,6 +338,8 @@ class UnixGroupsController extends Controller
 			if ($row->trashed())
 			{
 				$row->restore();
+
+				event(new UnixGroupCreating($row));
 			}
 			else
 			{
