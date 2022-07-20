@@ -14,7 +14,7 @@ class WidgetDeleted
 	/**
 	 * Constructor
 	 *
-	 * @param  Widget $widget
+	 * @param Widget $widget
 	 * @return void
 	 */
 	public function __construct(Widget $widget)

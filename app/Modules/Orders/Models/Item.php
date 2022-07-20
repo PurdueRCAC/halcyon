@@ -41,7 +41,7 @@ class Item extends Model
 	 * The table to which the class pertains
 	 *
 	 * @var  string
-	 **/
+	 */
 	protected $table = 'orderitems';
 
 	/**
@@ -111,7 +111,7 @@ class Item extends Model
 	 * If account is fulfilled
 	 *
 	 * @return  bool
-	 **/
+	 */
 	public function isFulfilled()
 	{
 		return (!is_null($this->datetimefulfilled));
@@ -121,17 +121,17 @@ class Item extends Model
 	 * If item is recurring
 	 *
 	 * @return  bool
-	 **/
+	 */
 	public function isRecurring()
 	{
 		return ($this->origorderitemid > 0);
 	}
 
 	/**
-	 * If item is recurring
+	 * If item is the original order item in a recurring sequence
 	 *
 	 * @return  bool
-	 **/
+	 */
 	public function isOriginal()
 	{
 		return ($this->origorderitemid == $this->id);
@@ -141,13 +141,13 @@ class Item extends Model
 	 * Calculate billing and paid until...
 	 *
 	 * @return  array
-	 **/
+	 */
 	public function until()
 	{
 		$datebilleduntil = null;
 		$datepaiduntil   = null;
-		$paidperiods   = 0;
-		$billedperiods = 0;
+		$paidperiods     = 0;
+		$billedperiods   = 0;
 
 		$datestart = $this->datetimefulfilled;
 
@@ -209,7 +209,7 @@ class Item extends Model
 	 * If item is trashed
 	 *
 	 * @return  mixed  Carbon|null
-	 **/
+	 */
 	public function getPaiduntilAttribute()
 	{
 		$until = $this->until();
@@ -220,7 +220,7 @@ class Item extends Model
 	 * If item is trashed
 	 *
 	 * @return  mixed  Carbon|null
-	 **/
+	 */
 	public function getBilleduntilAttribute()
 	{
 		$until = $this->until();
@@ -231,7 +231,7 @@ class Item extends Model
 	 * Recurrence range
 	 *
 	 * @return  array
-	 **/
+	 */
 	public function recurrenceRange()
 	{
 		$recur_months  = $this->product->timeperiod ? $this->product->timeperiod->months : 0;
@@ -325,7 +325,7 @@ class Item extends Model
 	 * Get start datetime
 	 *
 	 * @return  object
-	 **/
+	 */
 	public function start()
 	{
 		if ($this->start_at === null)
@@ -360,7 +360,7 @@ class Item extends Model
 	 * Get end datetime
 	 *
 	 * @return  mixed
-	 **/
+	 */
 	public function end()
 	{
 		if ($this->end_at === null)
@@ -402,7 +402,7 @@ class Item extends Model
 	}
 
 	/**
-	 * Format unit price
+	 * Format total price
 	 *
 	 * @return  string
 	 */
@@ -412,7 +412,7 @@ class Item extends Model
 	}
 
 	/**
-	 * Format unit price
+	 * Format currency
 	 *
 	 * @param   mixed  $val
 	 * @return  string

@@ -137,6 +137,7 @@ class GroupUser extends Model
 	/**
 	 * Defines a relationship to creator
 	 *
+	 * @param   object $query
 	 * @return  object
 	 */
 	public function scopeWherePendingRequest($query)
@@ -147,6 +148,7 @@ class GroupUser extends Model
 	/**
 	 * Query scope where is member
 	 *
+	 * @param   object $query
 	 * @return  object
 	 */
 	public function scopeWhereIsMember($query)
@@ -157,6 +159,7 @@ class GroupUser extends Model
 	/**
 	 * Query scope where membership is manager
 	 *
+	 * @param   object $query
 	 * @return  object
 	 */
 	public function scopeWhereIsManager($query)
@@ -167,6 +170,7 @@ class GroupUser extends Model
 	/**
 	 * Query scope where membership is viewer
 	 *
+	 * @param   object $query
 	 * @return  object
 	 */
 	public function scopeWhereIsViewer($query)
@@ -177,6 +181,7 @@ class GroupUser extends Model
 	/**
 	 * Query scope where membership is pending
 	 *
+	 * @param   object $query
 	 * @return  object
 	 */
 	public function scopeWhereIsPending($query)

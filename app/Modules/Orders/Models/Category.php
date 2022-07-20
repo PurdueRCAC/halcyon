@@ -37,7 +37,7 @@ class Category extends Model
 	 * The table to which the class pertains
 	 *
 	 * @var  string
-	 **/
+	 */
 	protected $table = 'ordercategories';
 
 	/**
@@ -98,7 +98,7 @@ class Category extends Model
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Defines a relationship to products
 	 *
 	 * @return  object
 	 */
@@ -108,7 +108,7 @@ class Category extends Model
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Defines a relationship to parent category
 	 *
 	 * @return  object
 	 */

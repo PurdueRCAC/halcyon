@@ -3,11 +3,6 @@ namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\History\Traits\Historable;
-/*use App\Modules\Queues\Events\MemberTypeCreating;
-use App\Modules\Queues\Events\MemberTypeCreated;
-use App\Modules\Queues\Events\MemberTypeUpdating;
-use App\Modules\Queues\Events\MemberTypeUpdated;
-use App\Modules\Queues\Events\MemberTypeDeleted;*/
 
 /**
  * Model for a queue membertype
@@ -66,17 +61,4 @@ class MemberType extends Model
 	protected $guarded = [
 		'id'
 	];
-
-	/**
-	 * The event map for the model.
-	 *
-	 * @var array
-	 */
-	/*protected $dispatchesEvents = [
-		'creating' => MemberTypeCreating::class,
-		'created'  => MemberTypeCreated::class,
-		'updating' => MemberTypeUpdating::class,
-		'updated'  => MemberTypeUpdated::class,
-		'deleted'  => MemberTypeDeleted::class,
-	];*/
 }

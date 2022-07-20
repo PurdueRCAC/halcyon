@@ -18,7 +18,7 @@ class Account extends Model
 	 * The table to which the class pertains
 	 *
 	 * @var  string
-	 **/
+	 */
 	protected $table = 'orderpurchaseaccounts';
 
 	/**
@@ -83,7 +83,7 @@ class Account extends Model
 	 * If account is approved
 	 *
 	 * @return  bool
-	 **/
+	 */
 	public function isApproved()
 	{
 		return (!is_null($this->datetimeapproved));
@@ -93,7 +93,7 @@ class Account extends Model
 	 * If account is paid
 	 *
 	 * @return  bool
-	 **/
+	 */
 	public function isPaid()
 	{
 		return (!is_null($this->datetimepaid));
@@ -103,7 +103,7 @@ class Account extends Model
 	 * If account is paid
 	 *
 	 * @return  bool
-	 **/
+	 */
 	public function isDenied()
 	{
 		return (!is_null($this->datetimedenied));
@@ -113,14 +113,14 @@ class Account extends Model
 	 * If account is documented
 	 *
 	 * @return  bool
-	 **/
+	 */
 	public function isCollected()
 	{
 		return (!is_null($this->datetimepaymentdoc));
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Defines a relationship to approver
 	 *
 	 * @return  object
 	 */
@@ -130,7 +130,7 @@ class Account extends Model
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Defines a relationship to parent Order
 	 *
 	 * @return  object
 	 */
@@ -226,7 +226,7 @@ class Account extends Model
 	}
 
 	/**
-	 * Format unit price
+	 * Format amount
 	 *
 	 * @return  string
 	 */

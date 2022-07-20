@@ -21,14 +21,4 @@ class WidgetCreating
 	{
 		$this->widget = $widget;
 	}
-
-	/**
-	 * Return the entity
-	 *
-	 * @return Widget
-	 */
-	public function getWidget()
-	{
-		return $this->widget;
-	}
 }

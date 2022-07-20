@@ -206,6 +206,7 @@ class WidgetManager
 	/**
 	 * Make call and get return widget content.
 	 *
+	 * @param  object $widget
 	 * @return mixed
 	 */
 	protected function getContent($widget)
@@ -219,8 +220,7 @@ class WidgetManager
 	 * Gets content from cache if it's turned on.
 	 * Runs widget class otherwise.
 	 *
-	 * @param $args
-	 *
+	 * @param  object $widget
 	 * @return mixed
 	 */
 	protected function getContentFromCache($widget)
@@ -357,6 +357,9 @@ class WidgetManager
 	/**
 	 * Find widgets
 	 *
+	 * @param   string  $name
+	 * @param   integer $client
+	 * @param   integer $state
 	 * @return  object  Collection
 	 */
 	public function find($name = null, $client = null, $state = null)

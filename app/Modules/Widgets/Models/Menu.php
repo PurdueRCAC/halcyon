@@ -3,16 +3,12 @@
 namespace App\Modules\Widgets\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 
 /**
- * Module extension model
+ * Widget/Menu map model
  */
 class Menu extends Model
 {
-	use ErrorBag, Validatable;
-
 	/**
 	 * Indicates if the model should be timestamped.
 	 *
@@ -76,7 +72,7 @@ class Menu extends Model
 	 * Saves the current model to the database
 	 *
 	 * @return  bool
-	 **/
+	 */
 	/*public function save(array $options = [])
 	{
 		// Validate
@@ -107,7 +103,7 @@ class Menu extends Model
 	 * Inserts a new row into the database
 	 *
 	 * @return  bool
-	 **/
+	 */
 	protected function createWithNoPk()
 	{
 		// Add any automatic fields
@@ -120,7 +116,7 @@ class Menu extends Model
 	 * Updates an existing item in the database
 	 *
 	 * @return  bool
-	 **/
+	 */
 	protected function modifyWithNoPk()
 	{
 		$query = $this->query();
@@ -139,7 +135,7 @@ class Menu extends Model
 	 *
 	 * @param  array  $options
 	 * @return bool
-	 **/
+	 */
 	public function delete(array $options = [])
 	{
 		$query = $this->query();

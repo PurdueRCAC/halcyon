@@ -133,7 +133,7 @@ class Group extends Model
 	}
 
 	/**
-	 * Get a list of sfields of science
+	 * Get a list of fields of science
 	 *
 	 * @return  object
 	 */
@@ -143,7 +143,7 @@ class Group extends Model
 	}
 
 	/**
-	 * Department
+	 * Departments
 	 *
 	 * @return  object
 	 */
@@ -163,7 +163,7 @@ class Group extends Model
 	}
 
 	/**
-	 * Get a list of users
+	 * Get a list of managers
 	 *
 	 * @return  object
 	 */
@@ -456,7 +456,7 @@ class Group extends Model
 	}
 
 	/**
-	 * Get a list of unix groups
+	 * Get the primary unix group
 	 *
 	 * @return  object
 	 */
@@ -540,7 +540,7 @@ class Group extends Model
 	}
 
 	/**
-	 * Get a list of prior (trashed) resources
+	 * Get a count of pending memberships
 	 *
 	 * @return  object
 	 */

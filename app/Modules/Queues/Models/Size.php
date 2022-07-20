@@ -74,9 +74,9 @@ class Size extends Model
 	 * @var array
 	 */
 	protected $dispatchesEvents = [
-		'created'  => QueueSizeCreated::class,
-		'updated'  => QueueSizeUpdated::class,
-		'deleted'  => QueueSizeDeleted::class,
+		'created' => QueueSizeCreated::class,
+		'updated' => QueueSizeUpdated::class,
+		'deleted' => QueueSizeDeleted::class,
 	];
 
 	/**
@@ -237,7 +237,7 @@ class Size extends Model
 	}
 
 	/**
-	 * Defines a relationship to queue
+	 * Defines a relationship to seller queue
 	 *
 	 * @return  object
 	 */

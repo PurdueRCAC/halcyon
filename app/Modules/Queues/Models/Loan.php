@@ -24,9 +24,9 @@ class Loan extends Size
 	 * @var array
 	 */
 	protected $dispatchesEvents = [
-		'created'  => QueueLoanCreated::class,
-		'updated'  => QueueLoanUpdated::class,
-		'deleted'  => QueueLoanDeleted::class,
+		'created' => QueueLoanCreated::class,
+		'updated' => QueueLoanUpdated::class,
+		'deleted' => QueueLoanDeleted::class,
 	];
 
 	/**
@@ -40,7 +40,7 @@ class Loan extends Size
 	}
 
 	/**
-	 * Defines a relationship to a lender
+	 * Defines a relationship to a lender queue
 	 *
 	 * @return  object
 	 */

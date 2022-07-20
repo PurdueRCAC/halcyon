@@ -80,7 +80,7 @@ class UserRequest extends Model
 	];
 
 	/**
-	 * Get parent group
+	 * Set comment value
 	 *
 	 * @return  object
 	 */
@@ -90,7 +90,7 @@ class UserRequest extends Model
 	}
 
 	/**
-	 * Get parent group
+	 * Get member
 	 *
 	 * @return  object
 	 */

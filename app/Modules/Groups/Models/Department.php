@@ -80,9 +80,11 @@ class Department extends Model
 	}
 
 	/**
-	 * Defines a relationship to parent
+	 * Get records as nested tree
 	 *
-	 * @return  object
+	 * @param   string  $order
+	 * @param   string  $dir
+	 * @return  array
 	 */
 	public static function tree(string $order = 'name', string $dir = 'asc')
 	{
@@ -194,7 +196,7 @@ class Department extends Model
 	}
 
 	/**
-	 * Groups
+	 * Relationship to child records
 	 *
 	 * @return  object
 	 */

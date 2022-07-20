@@ -12,7 +12,7 @@ class Cart extends Model
 	 * The table to which the class pertains
 	 *
 	 * @var  string
-	 **/
+	 */
 	protected $table = 'ordercarts';
 
 	/**

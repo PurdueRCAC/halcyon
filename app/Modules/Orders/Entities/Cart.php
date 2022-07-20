@@ -58,7 +58,7 @@ class Cart
 	 * Set the current cart instance.
 	 *
 	 * @param string|null $instance
-	 * @return \Gloudemans\Shoppingcart\Cart
+	 * @return Cart
 	 */
 	public function instance($instance = null)
 	{
@@ -87,7 +87,7 @@ class Cart
 	 * @param int|float $qty
 	 * @param float     $price
 	 * @param array     $options
-	 * @return \Gloudemans\Shoppingcart\CartItem
+	 * @return CartItem
 	 */
 	public function add($id, $name = null, $qty = null, $price = null, array $options = [])
 	{
@@ -111,7 +111,6 @@ class Cart
 		$content->put($cartItem->rowId, $cartItem);
 
 		$this->events->dispatch('cart.added', $cartItem);
-		//CartAdded::dispatch($cartItem);
 
 		$this->session->put($this->instance, $content);
 
@@ -123,7 +122,7 @@ class Cart
 	 *
 	 * @param string $rowId
 	 * @param mixed  $qty
-	 * @return \Gloudemans\Shoppingcart\CartItem
+	 * @return CartItem
 	 */
 	public function update($rowId, $qty)
 	{
@@ -167,7 +166,6 @@ class Cart
 		}
 
 		$this->events->dispatch('cart.updated', $cartItem);
-		//CartUpdated::dispatch($cartItem);
 
 		$this->session->put($this->instance, $content);
 
@@ -189,7 +187,6 @@ class Cart
 		$content->pull($cartItem->rowId);
 
 		$this->events->dispatch('cart.removed', $cartItem);
-		//CartRemoved::dispatch($cartItem);
 
 		$this->session->put($this->instance, $content);
 	}
@@ -198,7 +195,8 @@ class Cart
 	 * Get a cart item from the cart by its rowId.
 	 *
 	 * @param string $rowId
-	 * @return \Gloudemans\Shoppingcart\CartItem
+	 * @return CartItem
+	 * @throws InvalidRowIDException
 	 */
 	public function get($rowId)
 	{
@@ -328,6 +326,7 @@ class Cart
 	 * @param string $rowId
 	 * @param mixed  $model
 	 * @return void
+	 * @throws UnknownModelException
 	 */
 	public function associate($rowId, $model)
 	{
@@ -399,7 +398,6 @@ class Cart
 		}
 
 		$this->events->dispatch('cart.stored');
-		//CartStored::dispatch();
 	}
 
 	/**
@@ -437,8 +435,6 @@ class Cart
 		}
 
 		$this->events->dispatch('cart.restored');
-		//CartRestored::dispatch();
-		//event(new CartRestored);
 
 		$this->session->put($this->instance, $content);
 
@@ -523,7 +519,7 @@ class Cart
 	 * @param int|float $qty
 	 * @param float     $price
 	 * @param array     $options
-	 * @return \Gloudemans\Shoppingcart\CartItem
+	 * @return CartItem
 	 */
 	private function createCartItem($id, $name, $qty, $price, array $options)
 	{
@@ -611,10 +607,10 @@ class Cart
 	/**
 	 * Get the Formated number
 	 *
-	 * @param $value
-	 * @param $decimals
-	 * @param $decimalPoint
-	 * @param $thousandSeperator
+	 * @param mixed $value
+	 * @param string $decimals
+	 * @param string $decimalPoint
+	 * @param string $thousandSeperator
 	 * @return string
 	 */
 	private function numberFormat($value, $decimals, $decimalPoint, $thousandSeperator)

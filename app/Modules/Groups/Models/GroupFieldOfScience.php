@@ -59,7 +59,7 @@ class GroupFieldOfScience extends Model
 	);
 
 	/**
-	 * Department
+	 * Field of science
 	 *
 	 * @return  object
 	 */
@@ -69,7 +69,7 @@ class GroupFieldOfScience extends Model
 	}
 
 	/**
-	 * Department
+	 * Group
 	 *
 	 * @return  object
 	 */

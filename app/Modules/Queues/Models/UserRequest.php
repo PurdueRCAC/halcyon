@@ -67,8 +67,9 @@ class UserRequest extends Model
 	];
 
 	/**
-	 * Get parent group
+	 * Set the comment
 	 *
+	 * @param   string  $value
 	 * @return  object
 	 */
 	public function setCommentAttribute($value)

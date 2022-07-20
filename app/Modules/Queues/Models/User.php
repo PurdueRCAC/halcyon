@@ -178,13 +178,14 @@ class User extends Model
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Query scope for where is pending member
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWherePendingRequest($query)
 	{
-		return $query->where($this->getTable() . '.membertype', '=', 4);
+		return $query->where($this->getTable() . '.membertype', '=', MemberType::PENDING);
 	}
 
 	/**
@@ -228,8 +229,9 @@ class User extends Model
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Query scope for where is member
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhereIsMember($query)
@@ -238,8 +240,9 @@ class User extends Model
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Query scope for where is manager
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhereIsManager($query)
@@ -248,8 +251,9 @@ class User extends Model
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Query scope for where is viewer
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhereIsViewer($query)
@@ -258,8 +262,9 @@ class User extends Model
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Query scope for where is pending
 	 *
+	 * @param   object  $query
 	 * @return  object
 	 */
 	public function scopeWhereIsPending($query)

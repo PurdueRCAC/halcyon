@@ -316,13 +316,6 @@ class Widget extends Model
 		$paths = array();
 		$paths[] = $this->path() . '/Config/Params.xml';
 
-		/*if (substr($this->widget, 0, 4) == 'mod_')
-		{
-			$paths[] = $this->path() . '/' . substr($this->widget, 4) . '.xml';
-		}
-
-		$paths[] = $this->path() . '/' . $this->widget . '.xml';*/
-
 		foreach ($paths as $file)
 		{
 			if (file_exists($file))
@@ -339,7 +332,7 @@ class Widget extends Model
 		$data = $this->toArray();
 		$data['publish_up'] = $this->publish_up ? $this->publish_up->toDateTimeString() : '';
 		$data['publish_down'] = $this->publish_down ? $this->publish_down->toDateTimeString() : '';
-		$data['params'] = $this->params->all(); //()->toArray();
+		$data['params'] = $this->params->all();
 
 		$form->bind($data);
 
@@ -357,21 +350,6 @@ class Widget extends Model
 
 		app('translator')->addNamespace('widget.' . $name, $this->path() . '/lang');
 	}
-
-	/**
-	 * Save the record
-	 *
-	 * @return  boolean  False if error, True on success
-	 */
-	/*public function save(array $options = array())
-	{
-		if (!is_string($this->params))
-		{
-			$this->params = json_encode($this->params);
-		}
-
-		return parent::save($options);
-	}*/
 
 	/**
 	 * Get menu assignments
@@ -581,7 +559,7 @@ class Widget extends Model
 	 * @param   array  $order  An array of order values.
 	 * @return  bool
 	 */
-	public static function saveOrder($pks = null, $order = null)
+	public static function saveOrder(array $pks, array $order)
 	{
 		if (empty($pks))
 		{
@@ -610,6 +588,7 @@ class Widget extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
+	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
 	public function delete(array $options = [])

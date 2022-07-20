@@ -69,7 +69,7 @@ class GroupDepartment extends Model
 	}
 
 	/**
-	 * Department
+	 * Group
 	 *
 	 * @return  object
 	 */

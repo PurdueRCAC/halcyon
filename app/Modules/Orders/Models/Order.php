@@ -363,7 +363,7 @@ class Order extends Model
 	}*/
 
 	/**
-	 * Format unit price
+	 * Format total
 	 *
 	 * @return  string
 	 */

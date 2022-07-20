@@ -663,7 +663,7 @@ class Queue extends Model
 	}
 
 	/**
-	 * Get loaned nodes
+	 * Get service units
 	 *
 	 * @return  integer
 	 */
@@ -821,10 +821,9 @@ class Queue extends Model
 	}
 
 	/**
-	 * Add a user
+	 * Remove a user
 	 *
 	 * @param   integer  $userid
-	 * @param   integer  $membertype
 	 * @return  bool
 	 */
 	public function removeUser($userid)
@@ -884,6 +883,13 @@ class Queue extends Model
 	/**
 	 * Add loan
 	 *
+	 * @param   integer $lenderqueueid
+	 * @param   string  $start
+	 * @param   string  $stop
+	 * @param   integer $nodecount
+	 * @param   integer $corecount
+	 * @param   integer $serviceunits
+	 * @param   string  $comment
 	 * @return  bool
 	 */
 	public function addLoan($lenderqueueid, $start, $stop = null, $nodecount = 0, $corecount = 0, $serviceunits = 0, $comment = null)
@@ -918,6 +924,13 @@ class Queue extends Model
 	/**
 	 * Add purchase
 	 *
+	 * @param   integer $sellerqueueid
+	 * @param   string  $start
+	 * @param   string  $stop
+	 * @param   integer $nodecount
+	 * @param   integer $corecount
+	 * @param   integer $serviceunits
+	 * @param   string  $comment
 	 * @return  bool
 	 */
 	public function addPurchase($sellerqueueid, $start, $stop = null, $nodecount = 0, $corecount = 0, $serviceunits = 0, $comment = null)

@@ -141,7 +141,7 @@ class UnixGroupMember extends Model
 	}
 
 	/**
-	 * Get parent group
+	 * Get parent unix group
 	 *
 	 * @return  object
 	 */
@@ -151,7 +151,7 @@ class UnixGroupMember extends Model
 	}
 
 	/**
-	 * Get parent user
+	 * Get associated user
 	 *
 	 * @return  object
 	 */
@@ -161,7 +161,7 @@ class UnixGroupMember extends Model
 	}
 
 	/**
-	 * Get parent user
+	 * Get member type
 	 *
 	 * @return  object
 	 */

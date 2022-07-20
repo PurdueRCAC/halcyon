@@ -143,7 +143,7 @@ class Product extends Model
 	}
 
 	/**
-	 * Format unit price
+	 * Get unit price
 	 *
 	 * @return  string
 	 */
@@ -153,7 +153,7 @@ class Product extends Model
 	}
 
 	/**
-	 * Format unit price
+	 * Get unit price without commas
 	 *
 	 * @return  string
 	 */
