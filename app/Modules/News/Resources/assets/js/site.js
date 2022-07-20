@@ -1274,7 +1274,7 @@ function NEWSPrintRow(news) {
 				});
 			};
 			a.appendChild(document.createTextNode("Published"));
-			a.className = 'badge badge-published';
+			a.className = 'badge badge-success badge-published ml-3';
 			a.title = "Recall news item.";
 		} else {
 			a.onclick = function (e) {
@@ -1301,7 +1301,7 @@ function NEWSPrintRow(news) {
 				});
 			};
 			a.appendChild(document.createTextNode("Draft"));
-			a.className = 'badge badge-unpublished';
+			a.className = 'badge badge-danger badge-unpublished ml-3';
 			a.title = "Publish news item.";
 		}
 
@@ -1312,7 +1312,7 @@ function NEWSPrintRow(news) {
 			// Delete button
 			a = document.createElement("a");
 			a.href = "?delete&id=" + id;
-			a.className = 'edit news-delete icn tip';
+			a.className = 'edit news-delete icn tip text-danger';
 			a.title = "Delete News Story.";
 			a.onclick = function (e) {
 				e.preventDefault();
@@ -1324,8 +1324,12 @@ function NEWSPrintRow(news) {
 			img.setAttribute('aria-hidden', true);
 			img.id = id + "_newsdeleteimg";
 
+			span = document.createElement('span');
+			span.classList.add('sr-only');
+			span.appendChild(document.createTextNode("Delete News Story."));
+
 			a.appendChild(img);
-			a.appendChild(document.createTextNode("Delete News Story."));
+			a.appendChild(span);
 			tr.appendChild(a);
 		}
 
@@ -3283,7 +3287,7 @@ function NewsPrintUpdate(newsid, update, edit) {
 		tr.appendChild(span);
 
 		a = document.createElement("a");
-		a.className = 'edit news-update-delete tip';
+		a.className = 'edit news-update-delete tip text-danger';
 		a.href = "?delete&update=" + update['id'];
 		a.onclick = function (e) {
 			e.preventDefault();

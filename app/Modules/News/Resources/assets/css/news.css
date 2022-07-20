@@ -47,3 +47,72 @@ fieldset.filters fieldset legend {
 fieldset.filters fieldset .form-check-label {
 	font-weight: normal;
 }
+
+.news-admin .edit {
+	float: right;
+	margin-left: 1em;
+}
+.news-meta {
+	list-style: none;
+	font-size: 0.9em;
+	margin: 0 0 1em 0;
+}
+.contentInner ul.news-meta li,
+.news-meta li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.news-meta .fa-fw,
+.news-meta li:before {
+	color: #aaaaaa;
+	margin-right: 0.5em;
+}
+.news-meta li:before {
+	font-family: 'FontAwesome';
+	width: 1em;
+	display: inline-block;
+	text-align: center;
+}
+.news-location:before {
+	content: "\f041";
+}
+.news-date:before {
+	content: "\f073";
+}
+.news-type:before {
+	content: "\f07b";
+}
+.news-url:before {
+	content: "\f0c1";
+}
+.news-tags:before {
+	content: "\f02c";
+}
+.news-resources:before {
+	content: "\f233";
+}
+.news-group:before {
+	content: "\f0c0";
+}
+.news-author:before {
+	content: "\f007";
+}
+.news-users:before {
+	content: "\f0c0";
+}
+.news-action {
+	margin-left: 0.5em;
+}
+.card-body {
+	position: relative;
+}
+.card-options {
+	position: absolute;
+	top: -1.2em;
+	right: 1em;
+	border: 1px solid #dddddd;
+	background: #fff;
+	border-radius: 4px;
+	padding: 0.2em 0.5em;
+}
