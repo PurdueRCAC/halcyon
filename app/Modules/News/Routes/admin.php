@@ -91,6 +91,21 @@ $router->group(['prefix' => 'news', 'middleware' => 'can:manage news'], function
 			'as' => 'admin.news.types.cancel',
 			'uses' => 'TypesController@cancel',
 		]);
+
+		$router->match(['get', 'post'], '/orderup/{id}', [
+			'as'   => 'admin.news.types.orderup',
+			'uses' => 'TypesController@reorder',
+			'middleware' => 'can:edit.state news',
+		])->where('id', '[0-9]+');
+		$router->match(['get', 'post'], '/orderdown/{id?}', [
+			'as'   => 'admin.news.types.orderdown',
+			'uses' => 'TypesController@reorder',
+			'middleware' => 'can:edit.state news',
+		])->where('id', '[0-9]+');
+		$router->post('/saveorder', [
+			'as'   => 'admin.news.types.saveorder',
+			'uses' => 'TypesController@saveorder',
+		]);
 	});
 
 	// Updates

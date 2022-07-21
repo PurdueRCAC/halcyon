@@ -16,6 +16,18 @@
 <script src="{{ asset('modules/news/js/site.js?v=' . filemtime(public_path() . '/modules/news/js/site.js')) }}"></script>
 @endpush
 
+@php
+app('pathway')
+	->append(
+		config('module.news.module name', trans('news::news.news')),
+		route('site.news.index')
+	)
+	->append(
+		trans('news::news.manage news'),
+		route('site.news.manage')
+	);
+@endphp
+
 @section('content')
 <div class="row">
 <div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
@@ -27,7 +39,7 @@
 
 	<div id="everything">
 		<ul class="nav nav-tabs">
-			<li class="nav-item"><a id="TAB_search" class="nav-link active tab activeTab" href="#search">Search</a></li>
+			<li class="nav-item"><a id="TAB_search" class="nav-link active tab activeTab" href="#search">{{ trans('news::news.search') }}</a></li>
 			<li class="nav-item"><a id="TAB_add" class="nav-link tab" href="#add">Add New</a></li>
 		</ul>
 		<div class="tabMain" id="tabMain">
@@ -39,7 +51,7 @@
 						<!-- <legend><span id="SPAN_header" data-search="Search News" data-add="Add New News" data-edit="Edit News">Search News</span></legend> -->
 
 						<div class="form-group row tab-search tab-add tab-edit" id="TR_date">
-							<label for="datestartshort" class="col-sm-2 col-form-label">Date from</label>
+							<label for="datestartshort" class="col-sm-2 col-form-label">{{ trans('news::news.publish up') }}</label>
 							<div class="col-sm-4">
 								<?php
 								$startdate = '';
@@ -120,18 +132,20 @@
 									<input id="datestartshort" type="text" class="date-pick form-control" name="start" placeholder="YYYY-MM-DD" data-start="{{ $startdate }}" value="{{ $startdate }}" />
 								</div>
 								<div class="input-group input-time tab-add tab-edit">
+									<label for="timestartshort" class="sr-only">{{ trans('news::news.time from') }}</label>
 									<span class="input-group-prepend"><span class="input-group-text fa fa-clock-o" aria-hidden="true"></span></span>
 									<input id="timestartshort" type="text" class="time-pick form-control" name="starttime" placeholder="h:mm AM/PM" value="{{ $starttime }}" />
 								</div>
 							</div>
 
-							<label for="datestopshort" class="col-sm-2 col-form-label align-right">Date to</label>
+							<label for="datestopshort" class="col-sm-2 col-form-label align-right">{{ trans('news::news.publish down') }}</label>
 							<div class="col-sm-4">
 								<div class="input-group" id="enddate">
 									<span class="input-group-prepend"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
 									<input id="datestopshort" type="text" class="date-pick form-control" name="stop" placeholder="YYYY-MM-DD" data-stop="{{ $stopdate }}" value="{{ $stopdate }}">
 								</div>
 								<div class="input-group input-time tab-add tab-edit">
+									<label for="timestopshort" class="sr-only">{{ trans('news::news.time to') }}</label>
 									<span class="input-group-prepend"><span class="input-group-text fa fa-clock-o" aria-hidden="true"></span></span>
 									<input id="timestopshort" type="text" class="time-pick form-control" name="stoptime" placeholder="h:mm AM/PM" value="{{ $stoptime }}" />
 								</div>
@@ -139,7 +153,7 @@
 						</div>
 
 						<div class="form-group row tab-search tab-add tab-edit" id="TR_newstype">
-							<label for="newstype" class="col-sm-2 col-form-label">News Type</label>
+							<label for="newstype" class="col-sm-2 col-form-label">{{ trans('news::news.type') }}</label>
 							<div class="col-sm-10">
 								<select id="newstype" name="newstype" class="custom-select">
 									<option id="OPTION_all" value="-1">All</option>
@@ -150,13 +164,13 @@
 							</div>
 						</div>
 						<div class="form-group row tab-search" id="TR_keywords">
-							<label for="keywords" class="col-sm-2 col-form-label">Keywords</label>
+							<label for="keywords" class="col-sm-2 col-form-label">{{ trans('news::news.keywords') }}</label>
 							<div class="col-sm-10">
 								<input type="text" name="keyword" id="keywords" size="45" class="form-control" value="{{ request('keywords') }}" />
 							</div>
 						</div>
 						<div class="form-group row tab-search tab-add tab-edit" id="TR_resource">
-							<label for="newsresource" class="col-sm-2 col-form-label">Resource</label>
+							<label for="newsresource" class="col-sm-2 col-form-label">{{ trans('news::news.resources') }}</label>
 							<div class="col-sm-10">
 								<?php
 								$selected = array();
@@ -233,7 +247,7 @@
 						</div>
 						<div class="form-group row tab-search tab-add tab-edit" id="TR_published">
 							<label for="published" class="col-sm-2 col-form-label">
-								Published
+								{{ trans('news::news.published') }}
 								<a href="#help2" class="text-info help tip" title="Help">
 									<span class="fa fa-question-circle" aria-hidden="true"></span>
 									<span class="sr-only">Help</span>
@@ -244,14 +258,14 @@
 							</div>
 						</div>
 						<div class="form-group row tab-search" id="TR_template">
-							<label for="template" class="col-sm-2 col-form-label">Template</label>
+							<label for="template" class="col-sm-2 col-form-label">{{ trans('news::news.template') }}</label>
 							<div class="col-sm-10">
 								<input type="checkbox" id="template" />
 							</div>
 						</div>
 						<div class="form-group row tab-add tab-edit" id="TR_use_template">
 							<label for="template_select" class="col-sm-2 col-form-label">
-								Template
+								{{ trans('news::news.template') }}
 								<a href="#help4" class="text-info help tip" title="Help">
 									<span class="fa fa-question-circle" aria-hidden="true"></span>
 									<span class="sr-only">Help</span>
@@ -268,26 +282,26 @@
 							</div>
 						</div>
 						<div class="form-group row tab-add tab-edit" id="TR_headline">
-							<label for="Headline" class="col-sm-2 col-form-label">Headline</label>
+							<label for="Headline" class="col-sm-2 col-form-label">{{ trans('news::news.headline') }}</label>
 							<div class="col-sm-10">
 								<input id="Headline" name="headline" type="text" size="78" maxlength="255" class="form-control" />
 							</div>
 						</div>
 						<div class="form-group row tab-search tab-add tab-edit" id="TR_location">
-							<label for="location" class="col-sm-2 col-form-label">Location</label>
+							<label for="location" class="col-sm-2 col-form-label">{{ trans('news::news.location') }}</label>
 							<div class="col-sm-10">
 								<input name="location" id="location" type="text" size="45" maxlength="32" class="form-control" />
 							</div>
 						</div>
 						<div class="form-group row tab-add tab-edit" id="TR_url">
-							<label for="url" class="col-sm-2 col-form-label">URL</label>
+							<label for="url" class="col-sm-2 col-form-label">{{ trans('news::news.url') }}</label>
 							<div class="col-sm-10">
 								<input name="url" id="url" type="text" size="45" class="form-control" />
 							</div>
 						</div>
 						<div class="form-group row tab-add tab-edit" id="TR_notes">
 							<label for="NotesText" class="col-sm-2 col-form-label">
-								News Text
+								{{ trans('news::news.body') }}
 								<a href="#markdown-help" class="text-info help tip" title="Help">
 									<span class="fa fa-question-circle" aria-hidden="true"></span>
 									<span class="sr-only">Help</span>
@@ -298,7 +312,7 @@
 							</div>
 						</div>
 						<div class="form-group row tab-search" id="TR_id">
-							<label for="id" class="col-sm-2 col-form-label">NEWS#</label>
+							<label for="id" class="col-sm-2 col-form-label">{{ trans('news::news.id') }} #</label>
 							<div class="col-sm-10">
 								<input name="id" type="text" id="id" size="45" class="form-control" value="{{ request('id') }}" />
 							</div>
@@ -329,11 +343,11 @@
 				</form>
 
 				<?php
+				$string = '';
 				$params = request()->input();
 				if (count($params) > 0)
 				{
 					$valid_args = array('start', 'stop', 'newstype', 'id', 'resource');
-					$string = '';
 
 					foreach ($params as $key => $value)
 					{
@@ -351,19 +365,15 @@
 						}
 					}
 				}
-				else
-				{
-					$string = 'start:0000-00-00';
-				}
 
 				if ($string == '')
 				{
 					$string = 'start:0000-00-00';
 				}
 				?>
-				<p><strong id="matchingnews">Matching News</strong></p>
-				<div id="news" data-query="<?php echo $string; ?>">
-					News stories are loading...
+				<p><strong id="matchingnews">{{ trans('news::news.search results') }}:</strong></p>
+				<div id="news" data-query="<?php echo $string; ?>" data-api="{{ route('api.news.index') }}">
+					{{ trans('global.loading') }}
 				</div>
 			</div>
 		</div>

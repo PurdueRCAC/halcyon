@@ -192,7 +192,7 @@ class TypesController extends Controller
 			$filters[$key] = $val;
 		}
 
-		if (!in_array($filters['order'], ['id', 'name']))
+		if (!in_array($filters['order'], ['id', 'name', 'alias', 'ordering']))
 		{
 			$filters['order'] = Type::$orderBy;
 		}
@@ -255,18 +255,19 @@ class TypesController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "comment",
-	 * 		"description":   "The comment being made",
+	 * 		"name":          "name",
+	 * 		"description":   "The name of the type",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 32
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "name",
-	 * 		"description":   "The name of the type",
-	 * 		"required":      true,
+	 * 		"name":          "alias",
+	 * 		"description":   "A URL-friendly alias for the type. If none provided, one will be generated from the `name`.",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"maxLength": 32
@@ -395,6 +396,7 @@ class TypesController extends Controller
 	{
 		$rules = [
 			'name'         => 'required|string|max:32',
+			'alias'        => 'nullable|string|max:32',
 			'tagresources' => 'nullable|boolean',
 			'location'     => 'nullable|boolean',
 			'future'       => 'nullable|boolean',
@@ -492,6 +494,16 @@ class TypesController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "name",
 	 * 		"description":   "The name of the type",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 32
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "alias",
+	 * 		"description":   "A URL-friendly alias for the type. If none provided, one will be generated from the `name`.",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
@@ -616,6 +628,7 @@ class TypesController extends Controller
 	{
 		$rules = [
 			'name'         => 'nullable|string|max:32',
+			'alias'        => 'nullable|string|max:32',
 			'tagresources' => 'nullable|boolean',
 			'location'     => 'nullable|boolean',
 			'future'       => 'nullable|boolean',

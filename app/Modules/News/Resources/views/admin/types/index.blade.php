@@ -95,9 +95,20 @@ app('pathway')
 				<th scope="col" class="priority-5 text-center">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.url'), 'url', $filters['order_dir'], $filters['order']); ?>
 				</th>
+				<th scope="col" class="priority-3">
+					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('news::news.ordering'), 'ordering', $filters['order_dir'], $filters['order']); ?>
+				</th>
 			</tr>
 		</thead>
 		<tbody>
+			<?php
+			//$parents = $rows->pluck('parentid')->toArray();
+			$parents = array();
+			foreach ($rows as $row)
+			{
+				$parents[] = $row->parentid;
+			}
+			?>
 		@foreach ($rows as $i => $row)
 			<tr>
 				@if (auth()->user()->can('delete news.types'))
@@ -186,6 +197,18 @@ app('pathway')
 						<span class="badge badge-secondary">
 							<span class="icon-minus" aria-hidden="true"></span><span class="sr-only">{{ trans('global.no') }}</span>
 						</span>
+					@endif
+				</td>
+				<td class="priority-3 text-center">
+					<span class="badge badge-secondary">{{ $row->ordering }}</span>
+					@if (auth()->user()->can('edit news'))
+						@if ($filters['order_dir'] == 'asc')
+							<span class="ordering-control">{!! Html::grid('orderUp', (($paginator->currentPage() - 1) * $paginator->perPage()), $i, (@$parents[$i-1] == $row->parentid), route('admin.news.types.orderup', ['id' => $row->id])) !!}</span>
+							<span class="ordering-control">{!! Html::grid('orderDown', (($paginator->currentPage() - 1) * $paginator->perPage()), $i, $paginator->total(), (@$parents[$i+1] == $row->parentid), route('admin.news.types.orderdown', ['id' => $row->id])) !!}</span>
+						@elseif ($filters['order_dir'] == 'desc')
+							<span class="ordering-control">{!! Html::grid('orderUp', (($paginator->currentPage() - 1) * $paginator->perPage()), $i, (@$parents[$i-1] == $row->parentid), route('admin.news.types.orderup', ['id' => $row->id])) !!}</span>
+							<span class="ordering-control">{!! Html::grid('orderDown', (($paginator->currentPage() - 1) * $paginator->perPage()), $i, $paginator->total(), (@$parents[$i+1] == $row->parentid), route('admin.news.types.orderdown', ['id' => $row->id])) !!}</span>
+						@endif
 					@endif
 				</td>
 			</tr>

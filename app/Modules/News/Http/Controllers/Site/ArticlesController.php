@@ -31,6 +31,7 @@ class ArticlesController extends Controller
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
 			->where('parentid', '=', 0)
+			->orderBy('ordering', 'asc')
 			->orderBy('name', 'asc')
 			->get();
 
@@ -86,6 +87,7 @@ class ArticlesController extends Controller
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
 			->where('parentid', '=', 0)
+			->orderBy('ordering', 'asc')
 			->orderBy('name', 'asc')
 			->get();
 
@@ -110,6 +112,7 @@ class ArticlesController extends Controller
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
 			->where('parentid', '=', 0)
+			->orderBy('ordering', 'asc')
 			->orderBy('name', 'asc')
 			->get();
 
@@ -249,20 +252,11 @@ class ArticlesController extends Controller
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
 			->where('parentid', '=', 0)
+			->orderBy('ordering', 'asc')
 			->orderBy('name', 'asc')
 			->get();
 
 		$templates = Article::where('template', '=', 1)->where('published', '=', 1)->get();
-
-		app('pathway')
-			->append(
-				trans('news::news.news'),
-				route('site.news.index')
-			)
-			->append(
-				trans('news::news.manage news'),
-				route('site.news.manage')
-			);
 
 		return view('news::site.manage', [
 			'types' => $types,
@@ -367,6 +361,7 @@ class ArticlesController extends Controller
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
 			->where('parentid', '=', 0)
+			->orderBy('ordering', 'asc')
 			->orderBy('name', 'asc')
 			->get();
 
@@ -667,6 +662,7 @@ class ArticlesController extends Controller
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
 			->where('parentid', '=', 0)
+			->orderBy('ordering', 'asc')
 			->orderBy('name', 'asc')
 			->get();
 
@@ -699,6 +695,7 @@ class ArticlesController extends Controller
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
 			->where('parentid', '=', 0)
+			->orderBy('ordering', 'asc')
 			->orderBy('name', 'asc')
 			->get();
 

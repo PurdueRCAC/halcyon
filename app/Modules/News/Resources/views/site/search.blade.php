@@ -39,7 +39,7 @@
 @php
 app('pathway')
 	->append(
-		trans('news::news.news'),
+		config('module.news.module name', trans('news::news.news')),
 		route('site.news.index')
 	)
 	->append(
@@ -151,7 +151,7 @@ app('pathway')
 							<input id="datestopshort" type="text" class="date-pick form-control" name="stop" placeholder="YYYY-MM-DD" data-stop="{{ $stopdate }}" value="{{ $stopdate }}">
 						</div>
 						<div class="input-group input-time tab-add tab-edit hide">
-						<label for="timestopshort" class="sr-only">{{ trans('news::news.time to') }}</label>
+							<label for="timestopshort" class="sr-only">{{ trans('news::news.time to') }}</label>
 							<span class="input-group-prepend"><span class="input-group-text fa fa-clock-o" aria-hidden="true"></span></span>
 							<input id="timestopshort" type="text" class="time-pick form-control" name="stoptime" placeholder="h:mm AM/PM" value="{{ $stoptime }}" />
 						</div>
@@ -234,7 +234,7 @@ app('pathway')
 					</div>
 				</div>
 				<div class="form-group row tab-search" id="TR_id">
-					<label for="id" class="col-sm-2 col-form-label">{{ trans('news::news.news') }} #</label>
+					<label for="id" class="col-sm-2 col-form-label">{{ trans('news::news.id') }} #</label>
 					<div class="col-sm-10">
 						<input type="text" name="id" id="id" class="form-control" value="{{ $filters['id'] }}" />
 					</div>
@@ -269,7 +269,7 @@ app('pathway')
 		$string = implode('&', $string);
 		?>
 		<p><strong id="matchingnews">{{ trans('news::news.search results') }}:</strong></p>
-		<div id="news" data-query="{{ $string }}">
+		<div id="news" data-query="{{ $string }}" data-api="{{ route('api.news.index') }}">
 			{{ trans('global.loading') }}
 		</div>
 

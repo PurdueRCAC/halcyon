@@ -7,6 +7,7 @@ ul.newslist li {
 }
 .news-list {
 	list-style: none;
+	margin-left: 0;
 }
 .contentInner ul.news-list>li,
 .news-list>li {

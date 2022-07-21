@@ -40,7 +40,7 @@ class Type extends Model
 	 *
 	 * @var string
 	 */
-	public static $orderBy = 'name';
+	public static $orderBy = 'ordering';
 
 	/**
 	 * Default order direction for select queries
@@ -98,7 +98,16 @@ class Type extends Model
 	 **/
 	public function setNameAttribute(string $value)
 	{
-		$this->attributes['name'] = Str::limit($value, 32);
+		$this->attributes['name'] = Str::limit(trim($value), 32);
+
+		$alias = trim($this->attributes['name']);
+
+		// Remove any '-' from the string since they will be used as concatenaters
+		$alias = str_replace('-', ' ', $alias);
+		$alias = preg_replace('/(\s|[^A-Za-z0-9\-])+/', '-', strtolower($alias));
+		$alias = trim($alias, '-');
+
+		$this->attributes['alias'] = $alias;
 	}
 
 	/**
@@ -106,9 +115,9 @@ class Type extends Model
 	 *
 	 * @return  string
 	 **/
-	public function getAliasAttribute()
+	/*public function setNameAttribute($value)
 	{
-		$alias = trim($this->name);
+		$alias = trim($value);
 
 		// Remove any '-' from the string since they will be used as concatenaters
 		$alias = str_replace('-', ' ', $alias);
@@ -116,7 +125,7 @@ class Type extends Model
 		$alias = trim($alias, '-');
 
 		return $alias;
-	}
+	}*/
 
 	/**
 	 * Runs extra setup code when creating a new model
@@ -127,9 +136,21 @@ class Type extends Model
 	{
 		parent::boot();
 
+		static::creating(function ($model)
+		{
+			$result = self::query()
+				->select(DB::raw('MAX(ordering) + 1 AS seq'))
+				->where('parentid', '=', $model->parentid)
+				->get()
+				->first()
+				->seq;
+
+			$model->setAttribute('ordering', (int)$result);
+		});
+
 		static::saving(function ($model)
 		{
-			if (in_array(strtolower($model->name), ['rss', 'search', 'calendar']))
+			if (in_array(strtolower($model->name), ['rss', 'manage', 'search', 'calendar']))
 			{
 				$model->addError(trans('":name" is reserved and cannot be used.', ['name' => $model->name]));
 				return false;
@@ -211,18 +232,25 @@ class Type extends Model
 	 */
 	public static function findByName(string $name, array $columns = ['*'])
 	{
-		$name = str_replace('-', ' ', $name);
-
 		$result = static::query()
-			->where('name', '=', $name)
+			->where('alias', '=', $name)
 			->first($columns);
 
 		if (!$result)
 		{
+			$name = str_replace('-', ' ', $name);
+
 			$result = static::query()
-				->where('name', 'like', $name . '%')
-				->orderBy('parentid', 'asc')
+				->where('name', '=', $name)
 				->first($columns);
+
+			if (!$result)
+			{
+				$result = static::query()
+					->where('name', 'like', $name . '%')
+					->orderBy('parentid', 'asc')
+					->first($columns);
+			}
 		}
 
 		return $result;
@@ -295,7 +323,7 @@ class Type extends Model
 	 * @param  string $dir   Direction to sort
 	 * @return array
 	 */
-	public static function tree(string $order = 'name', string $dir = 'asc')
+	public static function tree(string $order = 'ordering', string $dir = 'asc')
 	{
 		$rows = self::query()
 			->orderBy($order, $dir)
@@ -493,5 +521,114 @@ class Type extends Model
 		);
 
 		return $stats;
+	}
+
+	/**
+	 * Method to move a row in the ordering sequence of a group of rows defined by an SQL WHERE clause.
+	 * Negative numbers move the row up in the sequence and positive numbers move it down.
+	 *
+	 * @param   integer  $delta  The direction and magnitude to move the row in the ordering sequence.
+	 * @param   string   $where  WHERE clause to use for limiting the selection of rows to compact the ordering values.
+	 * @return  bool     True on success.
+	 */
+	public function move($delta, $where = '')
+	{
+		// If the change is none, do nothing.
+		if (empty($delta))
+		{
+			return true;
+		}
+
+		// Select the primary key and ordering values from the table.
+		$query = self::query()
+			->where('parentid', '=', $this->parentid);
+
+		// If the movement delta is negative move the row up.
+		if ($delta < 0)
+		{
+			$query->where('ordering', '<', (int) $this->ordering);
+			$query->orderBy('ordering', 'desc');
+		}
+		// If the movement delta is positive move the row down.
+		elseif ($delta > 0)
+		{
+			$query->where('ordering', '>', (int) $this->ordering);
+			$query->orderBy('ordering', 'asc');
+		}
+
+		// Add the custom WHERE clause if set.
+		if ($where)
+		{
+			$query->where(DB::raw($where));
+		}
+
+		// Select the first row with the criteria.
+		$row = $query->first();
+
+		// If a row is found, move the item.
+		if ($row)
+		{
+			$prev = $this->ordering;
+
+			// Update the ordering field for this instance to the row's ordering value.
+			if (!$this->update(['ordering' => (int) $row->ordering]))
+			{
+				return false;
+			}
+
+			// Update the ordering field for the row to this instance's ordering value.
+			if (!$row->update(['ordering' => (int) $prev]))
+			{
+				return false;
+			}
+		}
+
+		$all = self::query()
+			->where('parentid', '=', $this->parentid)
+			->orderBy('ordering', 'asc')
+			->get();
+
+		foreach ($all as $i => $row)
+		{
+			if ($row->ordering != ($i + 1))
+			{
+				$row->update(['ordering' => $i + 1]);
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Saves the manually set order of records.
+	 *
+	 * @param   array  $pks    An array of primary key ids.
+	 * @param   array  $order  An array of order values.
+	 * @return  bool
+	 */
+	public static function saveOrder($pks = null, $order = null)
+	{
+		if (empty($pks))
+		{
+			return false;
+		}
+
+		// Update ordering values
+		foreach ($pks as $i => $pk)
+		{
+			$model = self::findOrFail((int) $pk);
+
+			if ($model->ordering != $order[$i])
+			{
+				$model->ordering = $order[$i];
+
+				if (!$model->save())
+				{
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 }

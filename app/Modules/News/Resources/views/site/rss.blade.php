@@ -33,11 +33,11 @@
 @php
 app('pathway')
 	->append(
-		trans('news::news.news'),
+		config('module.news.module name', trans('news::news.news')),
 		route('site.news.index')
 	)
 	->append(
-		trans('news::news.feeds'),
+		trans('news::news.rss feeds'),
 		route('site.news.rss')
 	);
 @endphp

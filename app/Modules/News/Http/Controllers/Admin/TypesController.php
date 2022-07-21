@@ -42,7 +42,7 @@ class TypesController extends Controller
 		$filters['page'] = $reset ? 1 : $filters['page'];
 		$filters['start'] = ($filters['limit'] * $filters['page']) - $filters['limit'];
 
-		if (!in_array($filters['order'], ['id', 'name']))
+		if (!in_array($filters['order'], ['id', 'name', 'ordering']))
 		{
 			$filters['order'] = Type::$orderBy;
 		}
@@ -118,6 +118,7 @@ class TypesController extends Controller
 	{
 		$rules = [
 			'fields.name' => 'required|string|max:32',
+			'fields.alias' => 'nullable|string|max:32',
 			'fields.parentid' => 'nullable|integer',
 		];
 
@@ -133,7 +134,12 @@ class TypesController extends Controller
 		$id = $request->input('id');
 
 		$row = $id ? Type::findOrFail($id) : new Type();
-		$row->fill($request->input('fields'));
+		$row->name = $request->input('name');
+		if ($request->has('alias'))
+		{
+			$row->alias = $request->input('alias');
+		}
+		$row->parentid = $request->input('parentid');
 
 		foreach (['tagusers', 'tagresources', 'future', 'location', 'ongoing', 'calendar', 'url'] as $key)
 		{
@@ -211,6 +217,62 @@ class TypesController extends Controller
 			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
+		return $this->cancel();
+	}
+
+	/**
+	 * Reorder entries
+	 * 
+	 * @param   integer  $id
+	 * @param   Request $request
+	 * @return  Response
+	 */
+	public function reorder($id, Request $request)
+	{
+		// Get the element being moved
+		$row = Type::findOrFail($id);
+		$move = ($request->segment(4) == 'orderup') ? -1 : +1;
+
+		if (!$row->move($move))
+		{
+			$request->session()->flash('error', $row->getError());
+		}
+
+		// Redirect
+		return $this->cancel();
+	}
+
+	/**
+	 * Method to save the submitted ordering values for records.
+	 *
+	 * @param  Request $request
+	 * @return Response
+	 */
+	public function saveorder(Request $request)
+	{
+		// Get the input
+		$pks   = $request->input('cid', []);
+		$order = $request->input('order', []);
+
+		// Sanitize the input
+		$pks   = array_map('intval', $pks);
+		$order = array_map('intval', $order);
+
+		// Save the ordering
+		$return = Type::saveOrder($pks, $order);
+
+		if ($return === false)
+		{
+			// Reorder failed
+			$request->session()->flash('error', trans('global.messages.items reordering failed'));
+		}
+		else
+		{
+			// Reorder succeeded.
+			$request->session()->flash('success', trans('global.messages.items reordered'));
+		}
+
+		// Redirect back to the listing
 		return $this->cancel();
 	}
 

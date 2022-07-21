@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'news'], function (Router $router)
+$router->group(['prefix' => config('module.news.route', 'news')], function (Router $router)
 {
 	$router->get('/', [
 		'as' => 'site.news.index',
