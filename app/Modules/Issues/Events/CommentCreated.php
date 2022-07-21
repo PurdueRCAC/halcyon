@@ -7,11 +7,6 @@ use App\Modules\Issues\Models\Comment;
 class CommentCreated
 {
 	/**
-	 * @var array
-	 */
-	public $data;
-
-	/**
 	 * @var Comment
 	 */
 	public $comment;
@@ -19,33 +14,11 @@ class CommentCreated
 	/**
 	 * Constructor
 	 *
-	 * @param Comment $comment
-	 * @param array $data
+	 * @param  Comment $comment
 	 * @return void
 	 */
-	public function __construct(Comment $comment, array $data)
+	public function __construct(Comment $comment)
 	{
-		$this->data = $data;
 		$this->comment = $comment;
-	}
-
-	/**
-	 * Return the entity
-	 *
-	 * @return \Illuminate\Database\Eloquent\Model
-	 */
-	public function getComment()
-	{
-		return $this->comment;
-	}
-
-	/**
-	 * Return ALL data sent
-	 *
-	 * @return array
-	 */
-	public function getSubmissionData()
-	{
-		return $this->data;
 	}
 }

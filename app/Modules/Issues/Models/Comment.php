@@ -110,7 +110,7 @@ class Comment extends Model
 	}
 
 	/**
-	 * Defines a relationship to article
+	 * Defines a relationship to issue
 	 *
 	 * @return  object
 	 */
@@ -120,7 +120,7 @@ class Comment extends Model
 	}
 
 	/**
-	 * Defines a relationship to type
+	 * Get formatted date
 	 *
 	 * @return  string
 	 */
@@ -141,7 +141,7 @@ class Comment extends Model
 	}
 
 	/**
-	 * Defines a relationship to type
+	 * Get formatted comment
 	 *
 	 * @return string
 	 */

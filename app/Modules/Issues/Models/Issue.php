@@ -159,7 +159,7 @@ class Issue extends Model
 	}
 
 	/**
-	 * Defines a relationship to updates
+	 * Defines a relationship to comments
 	 *
 	 * @return  object
 	 */
@@ -189,7 +189,7 @@ class Issue extends Model
 	}
 
 	/**
-	 * Defines a relationship to type
+	 * Get formatted report
 	 *
 	 * @return string
 	 */
@@ -336,6 +336,7 @@ class Issue extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
+	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
 	public function delete(array $options = [])
@@ -363,10 +364,9 @@ class Issue extends Model
 	}
 
 	/**
-	 * Format news date
+	 * Format date
 	 *
 	 * @param   string  $startdate
-	 * @param   string  $enddate
 	 * @return  string
 	 */
 	public function formatDate($startdate)
@@ -395,7 +395,7 @@ class Issue extends Model
 	}
 
 	/**
-	 * Get news vars
+	 * Get content vars
 	 *
 	 * @return  array
 	 */

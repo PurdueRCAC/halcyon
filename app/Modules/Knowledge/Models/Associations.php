@@ -85,7 +85,7 @@ class Associations extends Model
 	}
 
 	/**
-	 * Defines a relationship to a child page
+	 * Defines a relationship to a page
 	 *
 	 * @return  object
 	 */
@@ -95,7 +95,7 @@ class Associations extends Model
 	}
 
 	/**
-	 * Defines a relationship to a parent page
+	 * Defines a relationship to child pages
 	 *
 	 * @return  object
 	 */
@@ -138,7 +138,7 @@ class Associations extends Model
 	}
 
 	/**
-	 * Defines a relationship to a parent page
+	 * Get all descendant pages
 	 *
 	 * @return  object
 	 */
@@ -170,7 +170,7 @@ class Associations extends Model
 	 * Get the root node
 	 *
 	 * @param   string  $path
-	 * @return  object
+	 * @return  object|null
 	 */
 	public static function findByPath(string $path)
 	{
@@ -190,10 +190,10 @@ class Associations extends Model
 	}
 
 	/**
-	 * Get the root node
+	 * Get the full page stack by path
 	 *
 	 * @param   string  $path
-	 * @return  object
+	 * @return  array|bool
 	 */
 	public static function stackByPath(string $path)
 	{
@@ -422,8 +422,7 @@ class Associations extends Model
 			// If there is an update failure, return false to break out of the recursion.
 			if ($rightId === false)
 			{
-				var_dump($rightId); die();
-				return false;
+				return 0;
 			}
 		}
 

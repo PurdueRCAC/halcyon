@@ -163,7 +163,7 @@ class Page extends Model
 	/**
 	 * Get a variables Repository object
 	 *
-	 * @return  object
+	 * @return  Collection
 	 */
 	public function getVariablesAttribute()
 	{
@@ -178,7 +178,7 @@ class Page extends Model
 	/**
 	 * Get a metadata Repository object
 	 *
-	 * @return  object
+	 * @return  Repository
 	 */
 	public function getMetadataAttribute()
 	{
@@ -940,9 +940,9 @@ class Page extends Model
 	}
 
 	/**
-	 * Defines a relationship to a parent page
+	 * Get the count of associations
 	 *
-	 * @return  object
+	 * @return  integer
 	 */
 	public function getUsedAttribute()
 	{

@@ -3,7 +3,7 @@
 namespace App\Modules\Knowledge\Models;
 
 /**
- * Model for a subresource mapping
+ * Model for snippet associations
  */
 class SnippetAssociation extends Associations
 {
@@ -25,7 +25,7 @@ class SnippetAssociation extends Associations
 	}
 
 	/**
-	 * Defines a relationship to a parent page
+	 * Defines a relationship to child pages
 	 *
 	 * @return  object
 	 */

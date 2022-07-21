@@ -23,10 +23,9 @@ class ResourceIssues
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Add a list of issues for a resource
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin.
-	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @param   AssetDisplaying $event
 	 * @return  void
 	 */
 	public function handleAssetDisplaying(AssetDisplaying $event)
@@ -46,8 +45,6 @@ class ResourceIssues
 			->where($r . '.resourceid', '=', $event->getAsset()->id)
 			->orderBy('id', 'desc')
 			->paginate();
-
-		//$event->getAsset()->issues = $issues;
 
 		if (count($issues))
 		{

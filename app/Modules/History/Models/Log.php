@@ -91,7 +91,7 @@ class Log extends Model
 	}
 
 	/**
-	 * User relationship
+	 * Target user relationship
 	 *
 	 * @return  object
 	 */

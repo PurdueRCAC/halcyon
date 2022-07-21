@@ -92,7 +92,7 @@ class Feedback extends Model
 	}
 
 	/**
-	 * Get the modifier of this entry
+	 * Get the target page
 	 *
 	 * @return  object
 	 */

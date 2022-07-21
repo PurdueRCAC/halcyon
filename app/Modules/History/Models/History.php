@@ -101,7 +101,7 @@ class History extends Model
 	}
 
 	/**
-	 * Get edit URL
+	 * Get historable type
 	 *
 	 * @return  string|null
 	 */
