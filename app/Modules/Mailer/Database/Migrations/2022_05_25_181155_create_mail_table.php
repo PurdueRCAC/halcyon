@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
-class CreateMailTables extends Migration
+class CreateMailTable extends Migration
 {
 	/**
 	 * Run the migrations.
