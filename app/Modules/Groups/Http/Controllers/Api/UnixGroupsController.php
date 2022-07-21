@@ -330,6 +330,7 @@ class UnixGroupsController extends Controller
 			->withTrashed()
 			->where('groupid', '=', $group->id)
 			->where('longname', '=', $base . $name)
+			->orderBy('id', 'desc')
 			->get()
 			->first();
 
