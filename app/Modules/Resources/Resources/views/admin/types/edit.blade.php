@@ -100,7 +100,7 @@ app('pathway')
 							$opt = new stdClass;
 							$opt->field_id = (int)$option->id;
 							$opt->label    = (string)$option->label;
-							$opt->value    = ($option->value ? $option->value : $option->label);
+							$opt->value    = (!is_null($option->value) && $option->value !== '' ? $option->value : $option->label);
 							$opt->checked  = (bool)$option->checked;
 
 							$element->field_options->options[] = $opt;
