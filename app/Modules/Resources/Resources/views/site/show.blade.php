@@ -27,6 +27,18 @@
 	@endforeach
 @endif
 
+@php
+app('pathway')
+	->append(
+		$type->name,
+		route('site.resources.type.' . $type->alias)
+	)
+	->append(
+		$resource->name,
+		route('site.resources.' . $type->alias . '.show', ['name' => ($resource->listname ? $resource->listname : $resource->rolename)])
+	);
+@endphp
+
 @section('title'){{ $resource->type->name }}: {{ $resource->name }}@stop
 
 @php
@@ -54,11 +66,10 @@ $content = '';
 		@foreach ($sections as $section)
 			<?php
 			$active = '';
-			if ($section['active'])
-			{
+			if ($section['active']):
 				$active = ' active';
 				$content = $section['content'];
-			}
+			endif;
 			?>
 			<li class="nav-item{!! $active !!}">
 				<a class="nav-link{!! $active !!}" href="{{ $section['route'] }}">{!! $section['name'] !!}</a>
@@ -70,15 +81,14 @@ $content = '';
 	<ul class="nav flex-column">
 		@foreach ($rows as $i => $row)
 			@php
-			if (!$row->listname)
-			{
+			if (!$row->listname):
 				continue;
-			}
+			endif;
+
 			$active = '';
-			if ($row->listname == $resource->listname)
-			{
+			if ($row->listname == $resource->listname):
 				$active = ' active';
-			}
+			endif;
 			@endphp
 			<li class="nav-item{!! $active !!}">
 				<a class="nav-link{!! $active !!}" href="{{ route('site.resources.' . $type->alias . '.show', ['name' => $row->listname]) }}">{{ $row->name }}</a>
@@ -115,35 +125,35 @@ $content = '';
 				@if ($gateway = $resource->getFacet('gateway'))
 					<div class="panel">
 						Gateway
-						<a class="btn btn-launch" href="{{ $gateway->value }}" title="Launch OnDemand Gateway" target="_blank" rel="noopener">Launch</a>
+						<a class="btn btn-launch" href="{{ $gateway->value }}" title="Launch OnDemand Gateway" target="_blank" rel="noopener">{{ trans('resources::assets.launch') }}</a>
 					</div>
 				@endif
 
 				@if ($desktop = $resource->getFacet('desktop'))
 					<div class="panel">
 						Remote Desktop
-						<a class="btn btn-launch" href="{{ $desktop->value }}" title="Launch Remote Desktop" target="_blank" rel="noopener">Launch</a>
+						<a class="btn btn-launch" href="{{ $desktop->value }}" title="Launch Remote Desktop" target="_blank" rel="noopener">{{ trans('resources::assets.launch') }}</a>
 					</div>
 				@endif
 
 				@if ($notebook = $resource->getFacet('notebook'))
 					<div class="panel">
 						Jupyter Hub
-						<a class="btn btn-launch" href="{{ $notebook->value }}" title="Launch Jupyter Hub" target="_blank" rel="noopener">Launch</a>
+						<a class="btn btn-launch" href="{{ $notebook->value }}" title="Launch Jupyter Hub" target="_blank" rel="noopener">{{ trans('resources::assets.launch') }}</a>
 					</div>
 				@endif
 
 				@if ($rstudio = $resource->getFacet('rstudio'))
 					<div class="panel">
 						Rstudio
-						<a class="btn btn-launch" href="{{ $rstudio->value }}" title="Launch Rstudio" target="_blank" rel="noopener">Launch</a>
+						<a class="btn btn-launch" href="{{ $rstudio->value }}" title="Launch Rstudio" target="_blank" rel="noopener">{{ trans('resources::assets.launch') }}</a>
 					</div>
 				@endif
 			</div>
 		@endif
 	@else
 		<div class="alert alert-info">
-			This was retired on {{ $resource->datetimeremoved->format('M d, Y') }}
+			{{ trans('resources::assets.retired on date', ['date' => $resource->datetimeremoved->format('M d, Y')]) }}
 		</div>
 	@endif
 
@@ -155,17 +165,17 @@ $content = '';
 	@endif
 
 	@if ($resource->trashed())
-		<h3>Lifetime Service</h3>
+		<h3>{{ trans('resources::assets.lifetime service') }}</h3>
 
 		<table class="table table-bordered">
-			<caption class="sr-only">Stats</caption>
+			<caption class="sr-only">{{ trans('global.details') }}</caption>
 			<tbody>
 				<tr>
-					<th scope="row">Installed</th>
+					<th scope="row">{{ trans('resources::assets.installed') }}</th>
 					<td>{{ $resource->datetimecreated ? $resource->datetimecreated->format('Y-m-d') : trans('global.unknown') }}</td>
 				</tr>
 				<tr>
-					<th scope="row">Retired</th>
+					<th scope="row">{{ trans('resources::assets.retired') }}</th>
 					<td>{{ $resource->datetimeremoved ? $resource->datetimeremoved->format('Y-m-d') : trans('global.unknown') }}</td>
 				</tr>
 				<?php /*<tr>

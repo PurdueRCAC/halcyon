@@ -172,6 +172,7 @@ class SubresourcesController extends Controller
 	public function store(Request $request)
 	{
 		$rules = [
+			'assoc.resourceid' => 'required|integer',
 			'fields.name' => 'required|string|max:32',
 			'fields.cluster' => 'nullable|string|max:12',
 			'fields.nodecores' => 'nullable|integer|max:999',

@@ -1,110 +1,73 @@
 @extends('layouts.master')
 
+@section('title'){{ trans('resources::resources.resources') }}@stop
+
+@php
+app('pathway')
+	->append(
+		trans('resources::resources.resources'),
+		route('site.resources.index')
+	);
+@endphp
+
 @section('content')
-<h2>{!! config('resources.name') !!}</h2>
-
-<form action="{{ route('site.resources.index') }}" method="post" name="adminForm" id="adminForm">
-
-	<fieldset id="filter-bar" class="form-inline">
-		<legend>Filter</legend>
-		<div class="row">
-			<div class="col-sm-6 filter-search span4">
-				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-					<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-				</div>
-
-				<button type="submit" class="btn btn-default">{{ trans('search.submit') }}</button>
-			</div>
-			<div class="col-sm-6 filter-select span8">
-				<div class="form-group">
-					<label class="sr-only" for="filter_type">{{ trans('resources::assets.type') }}</label>
-					<select name="type" id="filter_type" class="form-control filter filter-submit">
-						<option value="0">{{ trans('resources::assets.all types') }}</option>
-						<?php foreach ($types as $type): ?>
-							<option value="{{ $type->id }}"<?php if ($filters['type'] == $type->id): echo ' selected="selected"'; endif;?>>{{ $type->name }}</option>
-						<?php endforeach; ?>
-					</select>
-				</div>
-			</div>
-		</div>
-	</fieldset>
-
-	<table class="table table-hover adminlist">
-		<thead>
-			<tr>
-				<th>
-					<span class="form-check"><input type="checkbox" name="toggle" value="" id="toggle-all" class="form-check-input checkbox-toggle toggle-all" /><label for="toggle-all"></label></span>
-				</th>
-				<th scope="col" class="priority-5"><?php echo trans('resources::assets.id'); ?></th>
-				<th scope="col"><?php echo trans('resources::assets.name'); ?></th>
-				<th scope="col"><?php echo trans('resources::assets.role name'); ?></th>
-				<th scope="col" class="priority-4">{{ trans('resources::assets.list name') }}</th>
-				<th scope="col" class="priority-3">{{ trans('resources::assets.type') }}</th>
-				<th scope="col" class="priority-4">{{ trans('resources::assets.created') }}</th>
-				<th scope="col" class="priority-2">{{ trans('resources::assets.removed') }}</th>
-				<th scope="col"><?php echo trans('resources::assets.resources'); ?></th>
-			</tr>
-		</thead>
-		<tbody>
-		@foreach ($rows as $i => $row)
-			<tr>
-				<td>
-					<span class="form-check"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $row->id }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
-				</td>
-				<td class="priority-5">
-					{{ $row->id }}
-				</td>
-				<td>
-					<a href="{{ app('request')->root() }}/admin/resources/edit/{{ $row->id }}">
-						{{ $row->name }}
-					</a>
-				</td>
-				<td>
-					<a href="{{ app('request')->root() }}/admin/resources/edit/{{ $row->id }}">
-						{{ $row->rolename }}
-					</a>
-				</td>
-				<td class="priority-4">
-					<a href="{{ app('request')->root() }}/admin/resources/edit/{{ $row->id }}">
-						{{ $row->listname }}
-					</a>
-				</td>
-				<td class="priority-3">
-					{{ $row->type->name }}
-				</td>
-				<td class="priority-4">
-					<span class="datetime">
-						@if ($row->datetimecreated)
-							<time datetime="{{ $row->datetimecreated->toDateTimeLocalString() }}">{{ $row->datetimecreated }}</time>
-						@else
-							<span class="never">{{ trans('global.unknown') }}</span>
-						@endif
-					</span>
-				</td>
-				<td class="priority-4">
-					<span class="datetime">
-						@if ($row->trashed())
-							<time datetime="{{ $row->datetimeremoved->toDateTimeLocalString() }}">{{ $row->datetimeremoved }}</time>
-						@else
-							<span class="never">{{ trans('global.never') }}</span>
-						@endif
-					</span>
-				</td>
-				<td class="priority-4">
-					<a href="{{ app('request')->root() }}/admin/resources/children/{{ $row->id }}">
-						0
-					</a>
-				</td>
-			</tr>
+<div class="row">
+<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
+	<ul class="nav flex-column">
+		@foreach ($types as $i => $type)
+			<li class="nav-item">
+				<a class="nav-link" href="{{ route('site.resources.type.' . $type->alias) }}">{{ $type->name }}</a>
+			</li>
 		@endforeach
-		</tbody>
-	</table>
+		<li class="nav-item"><div class="separator"></div></li>
+		@foreach ($types as $i => $type)
+			<li class="nav-item">
+				<a class="nav-link" href="{{ route('site.resources.' . $type->alias . '.retired') }}">{{ $type->name }}: {{ trans('resources::resources.retired') }}</a>
+			</li>
+		@endforeach
+	</ul>
+</div>
 
-	<input type="hidden" name="task" value="" autocomplete="off" />
-	<input type="hidden" name="boxchecked" value="0" />
+<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
+	<h2>{{ trans('resources::resources.resources') }}</h2>
 
-	@csrf
-</form>
+	<div class="row resources">
+		@foreach ($rows as $i => $row)
+			<div class="col-md-12">
+				<div class="card mb-3">
+					@if ($url = $row->getFacet('url'))
+					<a href="{{ $url->value }}" class="card-content">
+					@elseif ($row->type->id)
+					<a href="{{ route('site.resources.' . $row->type->alias . '.show', ['name' => $row->listname]) }}" class="card-content">
+					@else
+					<div class="card-content">
+					@endif
+						<div class="card-header">
+							@if ($thumb = $row->thumb)
+								<img src="{{ $thumb }}" class="card-img" width="80" alt="{{ trans('resources::assets.asset thumbnail', ['asset' => $row->name]) }}" />
+							@else
+								<img src="{{ asset('/modules/resources/images/resource.png') }}" class="card-img" width="80" alt="{{ trans('resources::assets.asset thumbnail', ['asset' => $row->name]) }}" />
+							@endif
+						</div>
+						<div class="card-body">
+							<h3 class="card-title">
+								{{ $row->name }}
+							</h3>
+							<p class="card-text">
+								{{ $row->description }}
+							</p>
+						</div>
+					@if ($url = $row->getFacet('url') || $row->type->id)
+					</a>
+					@else
+					</div>
+					@endif
+				</div>
+			</div>
+		@endforeach
+	</div>
 
+	{!! $rows->render() !!}
+</div>
+</div>
 @stop

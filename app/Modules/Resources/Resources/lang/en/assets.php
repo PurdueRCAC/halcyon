@@ -91,4 +91,11 @@ return [
 	'export' => 'Export',
 	'active users' => 'Active Users',
 	'queues' => 'Queues',
+	'nodes' => 'Nodes',
+	'launch' => 'Launch',
+	'retired' => 'Retired',
+	'installed' => 'Installed',
+	'lifetime service' => 'Lifetime Service',
+	'retired on date' => 'This was retired on :date',
+	'asset thumbnail' => ':asset thumbnail',
 ];

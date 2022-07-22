@@ -83,12 +83,17 @@ app('pathway')
 					<label for="field-description">{{ trans('resources::assets.description') }}</label>
 					<textarea name="fields[description]" id="field-description" class="form-control" rows="3" cols="35">{{ $row->description }}</textarea>
 				</div>
+			</fieldset>
+		</div>
+		<div class="col-sm-12 col-md-5">
+			<fieldset class="adminform">
+				<legend>{{ trans('resources::assets.nodes') }}</legend>
 
 				<div class="row">
 					<div class="col-xs-12 col-md-4">
 						<div class="form-group">
 							<div class="form-group">
-								<label for="field-nodecores">{{ trans('resources::assets.node cores') }} <span class="required">{{ trans('global.required') }}</span></label>
+								<label for="field-nodecores">{{ trans('resources::assets.node cores') }}</label>
 								<input type="number" name="fields[nodecores]" id="field-nodecores" class="form-control" value="{{ $row->nodecores }}" />
 							</div>
 						</div>
@@ -96,7 +101,7 @@ app('pathway')
 					<div class="col-xs-12 col-md-4">
 						<div class="form-group">
 							<div class="form-group">
-								<label for="field-nodemem">{{ trans('resources::assets.node mem') }} <span class="required">{{ trans('global.required') }}</span></label>
+								<label for="field-nodemem">{{ trans('resources::assets.node mem') }}</label>
 								<input type="text" name="fields[nodemem]" id="field-nodemem" class="form-control" pattern="[0-9]{1,4}[PTGMKB]" value="{{ $row->nodemem }}" />
 								<span class="form-text text-muted">{{ trans('resources::assets.node mem desc') }}</span>
 							</div>
@@ -118,9 +123,6 @@ app('pathway')
 				</div>
 
 			</fieldset>
-		</div>
-		<div class="col-sm-12 col-md-5">
-			@include('history::admin.history')
 		</div>
 	</div>
 

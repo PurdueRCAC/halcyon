@@ -72,9 +72,9 @@ app('pathway')
 					@endif
 						<div class="card-header">
 							@if ($thumb = $row->thumb)
-								<img src="{{ $thumb }}" class="card-img" width="80" alt="{{ $row->name }} thumbnail" />
+								<img src="{{ $thumb }}" class="card-img" width="80" alt="{{ trans('resources::assets.asset thumbnail', ['asset' => $row->name]) }}" />
 							@else
-								<img src="{{ asset('/modules/resources/images/resource.png') }}" class="card-img" width="80" alt="{{ $row->name }} thumbnail" />
+								<img src="{{ asset('/modules/resources/images/resource.png') }}" class="card-img" width="80" alt="{{ trans('resources::assets.asset thumbnail', ['asset' => $row->name]) }}" />
 							@endif
 						</div>
 						<div class="card-body">

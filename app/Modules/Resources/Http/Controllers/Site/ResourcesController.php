@@ -13,7 +13,7 @@ use App\Modules\Resources\Events\TypeDisplaying;
 class ResourcesController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * Display a listing of resources
 	 * 
 	 * @param  Request $request
 	 * @return Response
@@ -38,26 +38,28 @@ class ResourcesController extends Controller
 		}
 
 		$rows = Asset::query()
-			->where('listname', '!=', '')
+			->where('display', '>', 0)
+			->where(function($where)
+			{
+				$where->whereNotNull('listname')
+					->where('listname', '!=', '');
+			})
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate(20);
-
-		app('pathway')->append(
-			config('resources.name'),
-			route('site.resources.index')
-		);
 
 		$types = Type::orderBy('name', 'asc')->get();
 
 		return view('resources::site.index', [
-			'rows' => $rows,
-			'types' => $types,
+			'rows'    => $rows,
+			'types'   => $types,
 			'filters' => $filters
 		]);
 	}
 
 	/**
-	 * Display a listing of the resource.
+	 * Display a listing of resources for a specific type
+	 *
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function type(Request $request)
@@ -86,9 +88,9 @@ class ResourcesController extends Controller
 		$type = $event->type;
 
 		return view('resources::site.type', [
-			'type' => $type,
-			'items' => $rows,
-			'rows' => $rows,
+			'type'    => $type,
+			'items'   => $rows,
+			'rows'    => $rows,
 			'retired' => false,
 		]);
 	}
@@ -149,6 +151,7 @@ class ResourcesController extends Controller
 	 * 
 	 * @param  Request $request
 	 * @param  string  $name
+	 * @param  string  $section
 	 * @return Response
 	 */
 	public function show(Request $request, $name, $section = null)
@@ -175,24 +178,14 @@ class ResourcesController extends Controller
 		event($event = new AssetDisplaying($resource, $section));
 		$sections = collect($event->getSections());
 
-		app('pathway')
-			->append(
-				$type->name,
-				route('site.resources.type.' . $type->alias)
-			)
-			->append(
-				$resource->name,
-				route('site.resources.' . $type->alias . '.show', ['name' => ($resource->listname ? $resource->listname : $resource->rolename)])
-			);
-
 		$rows = $type->resources()
 			->where('display', '>', 0)
 			->orderBy('display', 'desc')
 			->get();
 
 		return view('resources::site.show', [
-			'type' => $type,
-			'rows' => $rows,
+			'type'     => $type,
+			'rows'     => $rows,
 			'resource' => $resource,
 			'sections' => $sections,
 		]);

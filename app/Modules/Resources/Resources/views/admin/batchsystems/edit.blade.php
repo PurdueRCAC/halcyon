@@ -36,7 +36,7 @@ app('pathway')
 
 @section('content')
 <form action="{{ route('admin.resources.batchsystems.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
-	<div class="row">
+	<div class="row justify-content-center">
 		<div class="col-md-7">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
@@ -47,9 +47,6 @@ app('pathway')
 					<span class="invalid-feedback">{{ trans('resources::assets.invalid.name') }}</span>
 				</div>
 			</fieldset>
-		</div>
-		<div class="col-md-5">
-			@include('history::admin.history')
 		</div>
 	</div>
 

@@ -31,7 +31,7 @@ if (Schema::hasTable('resourcetypes'))
 	}
 }
 
-/*
+
 $router->group(['prefix' => 'resources'], function (Router $router)
 {
 	$router->get('/', [
@@ -39,4 +39,4 @@ $router->group(['prefix' => 'resources'], function (Router $router)
 		'uses' => 'ResourcesController@index',
 	]);
 });
-*/
+

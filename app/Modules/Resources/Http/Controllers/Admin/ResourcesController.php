@@ -451,6 +451,7 @@ class ResourcesController extends Controller
 	 * Display a listing of the resource.
 	 *
 	 * @param  StatefulRequest $request
+	 * @param  integer  $id
 	 * @return Response
 	 */
 	public function members(Request $request, $id)
@@ -476,6 +477,7 @@ class ResourcesController extends Controller
 	 * Download a list of records
 	 * 
 	 * @param  array $rows
+	 * @param  integer $id
 	 * @return Response
 	 */
 	public function export($rows, $id)
