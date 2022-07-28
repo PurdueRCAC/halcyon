@@ -889,6 +889,28 @@ class MembersController extends Controller
 
 		event($event = new ResourceMemberCreated($asset, $user));
 
+		$status = trans('global.unknown');
+		if ($event->noStatus())
+		{
+			$status = trans('resources::assets.member status.none');
+		}
+		elseif ($event->isPending())
+		{
+			$status = trans('resources::assets.member status.pending');
+		}
+		elseif ($event->isReady())
+		{
+			$status = trans('resources::assets.member status.ready');
+		}
+		elseif ($event->isPendingRemoval())
+		{
+			$status = trans('resources::assets.member status.pending removal');
+		}
+		elseif ($event->hasError())
+		{
+			$status = trans('resources::assets.member status.error');
+		}
+
 		$data = array(
 			'resource' => array(
 				'id'   => $asset->id,
@@ -899,6 +921,7 @@ class MembersController extends Controller
 				'name' => $user->name
 			),
 			'status'       => $event->status,
+			'status_text'  => $status,
 			'loginShell'   => $event->user->loginShell,
 			'primarygroup' => $event->user->primarygroup,
 			'pilogin'      => $event->user->pilogin,
@@ -981,6 +1004,28 @@ class MembersController extends Controller
 		// Call central accounting service to request status
 		event($event = new ResourceMemberStatus($asset, $user));
 
+		$status = trans('global.unknown');
+		if ($event->noStatus())
+		{
+			$status = trans('resources::assets.member status.none');
+		}
+		elseif ($event->isPending())
+		{
+			$status = trans('resources::assets.member status.pending');
+		}
+		elseif ($event->isReady())
+		{
+			$status = trans('resources::assets.member status.ready');
+		}
+		elseif ($event->isPendingRemoval())
+		{
+			$status = trans('resources::assets.member status.pending removal');
+		}
+		elseif ($event->hasError())
+		{
+			$status = trans('resources::assets.member status.error');
+		}
+
 		$data = array(
 			'resource' => array(
 				'id'   => $asset->id,
@@ -991,6 +1036,7 @@ class MembersController extends Controller
 				'name' => $user->name
 			),
 			'status'       => $event->status,
+			'status_text'  => $status,
 			'errors'       => $event->errors,
 			'loginShell'   => $event->user->loginShell,
 			'primarygroup' => $event->user->primarygroup,

@@ -98,4 +98,11 @@ return [
 	'lifetime service' => 'Lifetime Service',
 	'retired on date' => 'This was retired on :date',
 	'asset thumbnail' => ':asset thumbnail',
+	'member status' => [
+		'none' => 'No Role',
+		'pending' => 'Role Pending',
+		'ready' => 'Role Ready',
+		'pending removal' => 'Removal Pending',
+		'error' => 'Error',
+	],
 ];

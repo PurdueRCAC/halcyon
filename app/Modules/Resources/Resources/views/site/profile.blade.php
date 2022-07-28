@@ -24,7 +24,7 @@
 			</div>
 			<div class="col-md-3 text-right">
 				@if ($user->enabled)
-				<a href="#manage_roles_dialog" id="manage_roles" data-membertype="1" class="btn btn-sm" data-tip="{{ trans('resources::assets.manage access') }}">
+				<a href="#manage_roles_dialog" data-toggle="modal" id="manage_roles" data-membertype="1" class="btn btn-sm" data-tip="{{ trans('resources::assets.manage access') }}">
 					<span class="fa fa-pencil" aria-hidden="true"></span> {{ trans('resources::assets.manage') }}
 				</a>
 				@endif
@@ -62,73 +62,87 @@
 </div>
 
 @if ($user->enabled)
-<div id="manage_roles_dialog" data-id="{{ $user->id }}" title="{{ trans('resources::assets.manage access') }}" class="dialog roles-dialog">
-	<form method="post" action="{{ route('site.users.account') }}">
-		<div class="form-group">
-			<label for="role">{{ trans('resources::assets.resource') }} <span class="required">*</span></label>
-			<select id="role" class="form-control" required data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">
-				<option value="">{{ trans('resources::assets.select resource') }}</option>
-				@foreach ($resources as $resource)
-					<option value="{{ $resource->id }}" data-api="{{ route('api.resources.members.read', ['id' => $resource->id . '.' . $user->id]) }}">{{ $resource->name }}</option>
-				@endforeach
-			</select>
-		</div>
+<div class="modal dialog roles-dialog" id="manage_roles_dialog" tabindex="-1" aria-labelledby="manage_roles_dialog-title" aria-hidden="true" title="{{ trans('resources::assets.manage access') }}">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content dialog-content shadow-sm">
+			<div class="modal-header">
+				<div class="modal-title" id="manage_roles_dialog-title">{{ trans('resources::assets.manage access') }}</div>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body dialog-body">
 
-		<div class="hide" id="role_table">
-			<div class="form-group">
-				<label for="role_status">{{ trans('resources::assets.status') }}</label>
-				<input type="text" disabled="disabled" class="form-control" id="role_status" />
-			</div>
-			<div class="form-group">
-				<label for="role_group">{{ trans('resources::assets.group') }}</label>
-				<input id="role_group" type="text" class="form-control" />
-			</div>
-			<div class="form-group">
-				<label for="role_shell">{{ trans('resources::assets.shell') }}</label>
-				<select class="form-control" id="role_shell">
-					<option value="">{{ trans('global.none') }}</option>
-					<?php
-					$selected = '';
-					if (preg_match("/bash$/", $user->loginShell)):
-						$selected = ' selected="selected"';
-					endif;
-					?>
-					<option value="/bin/bash"<?php echo $selected; ?>>bash</option>
-					<?php
-					$selected = '';
-					if (preg_match("/\/csh$/", $user->loginShell)):
-						$selected = ' selected="selected"';
-					endif;
-					?>
-					<option value="/bin/csh"<?php echo $selected; ?>>csh</option>
-					<?php
-					$selected = '';
-					if (preg_match("/tcsh$/", $user->loginShell)):
-						$selected = ' selected="selected"';
-					endif;
-					?>
-					<option value="/bin/tcsh"<?php echo $selected; ?>>tcsh</option>
-					<?php
-					$selected = '';
-					if (preg_match("/zsh$/", $user->loginShell)):
-						$selected = ' selected="selected"';
-					endif;
-					?>
-					<option value="/bin/zsh"<?php echo $selected; ?>>zsh</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label for="role_pi">{{ trans('resources::assets.pi') }}</label>
-				<input id="role_pi" type="text" class="form-control" />
-			</div>
-			<div class="form-group mb-0">
-				<button id="role_add" class="btn btn-success role-add hide" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">{{ trans('resources::assets.add role') }}</button>
-				<button id="role_modify" class="btn btn-success role-add hide" data-id="{{ $user->id }}">{{ trans('resources::assets.modify role') }}</button>
-				<button id="role_delete" class="btn btn-danger role-delete hide" data-id="{{ $user->id }}">{{ trans('resources::assets.delete role') }}</button>
-			</div>
+				<form method="post" action="{{ route('site.users.account') }}">
+					<div class="form-group">
+						<label for="role">{{ trans('resources::assets.resource') }} <span class="required">*</span></label>
+						<select id="role" class="form-control" required data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">
+							<option value="">{{ trans('resources::assets.select resource') }}</option>
+							@foreach ($resources as $resource)
+								<option value="{{ $resource->id }}" data-api="{{ route('api.resources.members.read', ['id' => $resource->id . '.' . $user->id]) }}">{{ $resource->name }}</option>
+							@endforeach
+						</select>
+					</div>
 
-			<span id="role_errors" class="alert alert-warning hide"></span>
+					<div class="hide" id="role_table">
+						<div class="form-group">
+							<label for="role_status">{{ trans('resources::assets.status') }}</label>
+							<input type="text" disabled="disabled" class="form-control" id="role_status" />
+						</div>
+						<div class="form-group">
+							<label for="role_group">{{ trans('resources::assets.group') }}</label>
+							<input id="role_group" type="text" class="form-control" />
+						</div>
+						<div class="form-group">
+							<label for="role_shell">{{ trans('resources::assets.shell') }}</label>
+							<select class="form-control" id="role_shell">
+								<option value="">{{ trans('global.none') }}</option>
+								<?php
+								$selected = '';
+								if (preg_match("/bash$/", $user->loginShell)):
+									$selected = ' selected="selected"';
+								endif;
+								?>
+								<option value="/bin/bash"<?php echo $selected; ?>>bash</option>
+								<?php
+								$selected = '';
+								if (preg_match("/\/csh$/", $user->loginShell)):
+									$selected = ' selected="selected"';
+								endif;
+								?>
+								<option value="/bin/csh"<?php echo $selected; ?>>csh</option>
+								<?php
+								$selected = '';
+								if (preg_match("/tcsh$/", $user->loginShell)):
+									$selected = ' selected="selected"';
+								endif;
+								?>
+								<option value="/bin/tcsh"<?php echo $selected; ?>>tcsh</option>
+								<?php
+								$selected = '';
+								if (preg_match("/zsh$/", $user->loginShell)):
+									$selected = ' selected="selected"';
+								endif;
+								?>
+								<option value="/bin/zsh"<?php echo $selected; ?>>zsh</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="role_pi">{{ trans('resources::assets.pi') }}</label>
+							<input id="role_pi" type="text" class="form-control" />
+						</div>
+						<div class="form-group mb-0">
+							<button id="role_add" class="btn btn-success role-add hide" data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">{{ trans('resources::assets.add role') }}</button>
+							<button id="role_modify" class="btn btn-success role-add hide" data-id="{{ $user->id }}">{{ trans('resources::assets.modify role') }}</button>
+							<button id="role_delete" class="btn btn-danger role-delete hide" data-id="{{ $user->id }}">{{ trans('resources::assets.delete role') }}</button>
+						</div>
+
+						<span id="role_errors" class="alert alert-warning hide"></span>
+					</div>
+				</form>
+
+			</div>
 		</div>
-	</form>
+	</div>
 </div>
 @endif
