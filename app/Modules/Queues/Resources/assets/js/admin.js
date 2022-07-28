@@ -1,5 +1,6 @@
 /* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 /* global Halcyon */ // core.js
+/* global Chart */ // vendor/chartjs/Chart.min.js
 
 /**
  * Initiate event hooks

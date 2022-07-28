@@ -1,6 +1,7 @@
 /* global $ */ // jquery.js
 /* global SetError */ // common.js
 /* global WSPostURL */ // common.js
+/* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 
 /**
  * Create new group

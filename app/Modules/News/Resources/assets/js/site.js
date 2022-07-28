@@ -17,6 +17,7 @@ var root = document.querySelector('meta[name="base-url"]').getAttribute('content
  * @param   {string}  text
  * @return  {string}
  */
+/* exported customMarkdownParser */
 function customMarkdownParser(text) {
 	text = text.replaceAll(/(contact|CRM?)(\s+report)?\s*#?(\d+)/g, '<a href="?id=$3">Contact Report #$3</a>');
 	var matches = text.matchAll(/(news)\s*(story|item)?\s*#?(\d+)(\{.+?\})?/ig);
@@ -27,7 +28,7 @@ function customMarkdownParser(text) {
 		} else {
 			text = text.replace(match[0], '<a href="/news/' + match[3] + '">News story #' + match[3] + '</a>');
 		}
-	};
+	}
 
 	var keywords = [
 		'%date%',
@@ -456,12 +457,12 @@ function NEWSKeywordSearch(key) {
  * @param   {string}  text
  * @return  {string}
  */
-function PrepareText(text) {
+/*function PrepareText(text) {
 	text = text.replace(/</g, '&lt;');
 	text = text.replace(/>/g, '&gt;');
 
 	return text;
-}
+}*/
 
 /**
  * post new entry to database

@@ -1014,7 +1014,7 @@ function IssuesPrintComment(issueid, comment, userid) {
 		a.href = path + "?comment=" + comment['id'] + "&delete";
 		a.onclick = function (e) {
 			e.preventDefault();
-			IssuesDeleteComment(comment['id'], issueid);
+			IssuesDeleteComment(comment['id']);//, issueid);
 		};
 		a.id = comment['id'] + "_commenticon";
 		a.title = "Delete comment.";
@@ -1141,7 +1141,7 @@ function IssuesPrintComment(issueid, comment, userid) {
  * @param   {string}  issueid
  * @return  {void}
  */
-function IssuesDeleteComment(commentid, issueid) {
+function IssuesDeleteComment(commentid) {
 	if (confirm("Are you sure you want to delete this comment?")) {
 		fetch(ROOT_URL + "issues/comments/" + commentid, {
 			method: 'DELETE',
@@ -1152,7 +1152,8 @@ function IssuesDeleteComment(commentid, issueid) {
 		})
 			.then(function (response) {
 				if (response.ok) {
-					return response.json();
+					document.getElementById(commentid + "_comment").parentNode.parentNode.parentNode.style.display = "none";
+					return;
 				}
 
 				return response.json().then(function (data) {
@@ -1162,9 +1163,6 @@ function IssuesDeleteComment(commentid, issueid) {
 					}
 					throw msg;
 				});
-			})
-			.then(function (data) {
-				document.getElementById(commentid + "_comment").parentNode.parentNode.parentNode.style.display = "none";
 			})
 			.catch(function (error) {
 				document.getElementById(commentid + "_commentdeleteimg").className = "fa fa-exclamation-circle";
@@ -1190,7 +1188,8 @@ function IssuesDeleteReport(issueid) {
 		})
 			.then(function (response) {
 				if (response.ok) {
-					return response.json();
+					document.getElementById(issueid).style.display = "none";
+					return;
 				}
 
 				return response.json().then(function (data) {
@@ -1201,12 +1200,9 @@ function IssuesDeleteReport(issueid) {
 					throw msg;
 				});
 			})
-			.then(function (data) {
-				document.getElementById(issueid).style.display = "none";
-			})
 			.catch(function (error) {
 				document.getElementById(issueid + "_issuesdeleteimg").className = "fa fa-exclamation-circle";
-				document.getElementById(issueid + "_issuesdeleteimg").parentNode.title = "An error occurred while deleting report.";
+				document.getElementById(issueid + "_issuesdeleteimg").parentNode.title = error;
 			});
 	}
 }
@@ -1445,7 +1441,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	var frm = document.getElementById('DIV_search');
 	if (frm) {
 		document.querySelectorAll('.date-pick').forEach(function (el) {
-			el.addEventListener('change', function (e) {
+			el.addEventListener('change', function () {
 				IssuesDateSearch();
 			});
 		});
@@ -1567,7 +1563,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	document.querySelectorAll('.issue-todo').forEach(function (el) {
-		el.addEventListener('change', function (e) {
+		el.addEventListener('change', function () {
 			var myuserid = document.getElementById("myuserid").value;
 
 			var post = {

@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	var sselects = document.querySelectorAll('.searchable-select');
 	if (sselects.length) {
 		sselects.forEach(function (el) {
-			var sel = new TomSelect(el, {
+			new TomSelect(el, {
 				plugins: ['dropdown_input']
 			});
 			/*sel.on('item_add', function () {

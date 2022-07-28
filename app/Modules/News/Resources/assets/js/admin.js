@@ -12,9 +12,8 @@ function NEWSSendMail(btn) {
 	// Get text and updates
 	$.getJSON(btn.data('article'), function (data) {
 		// Gather some  variables from DOM
-		var resources = [], resourcelist = [], x;
+		var resourcelist = [], x;
 		if (data['resources'].length > 0) {
-			resources = data['resources'];
 			for (x = 0; x < data['resources'].length; x++) {
 				resourcelist.push(data['resources'][x]['name']);
 			}

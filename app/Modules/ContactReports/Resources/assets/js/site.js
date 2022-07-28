@@ -929,6 +929,7 @@ function CRMNewReport(xml) { //people
  * @param   {string}  text
  * @return  {string}
  */
+/* exported customMarkdownParser */
 function customMarkdownParser(text) {
 	text = text.replaceAll(/(^|[^a-z0-9_])#([a-z0-9\-_]+)/ig, '$1<span class="badge badge-secondary">$2</span>');
 	text = text.replaceAll(/(contact|CRM?)(\s+report)?\s*#?(\d+)/g, '<a href="?id=$3">Contact Report #$3</a>');
@@ -2034,7 +2035,7 @@ function CRMPrintComment(reportid, comment) { //, userid) {
 	div = document.createElement("div");
 	div.className = "card-footer panel-footer";
 
-	var bits = comment['datetimecreated'].match(/\d+/g);
+	//var bits = comment['datetimecreated'].match(/\d+/g);
 	var d = new Date(comment['datetimecreated']);
 
 	var div2 = document.createElement("div");

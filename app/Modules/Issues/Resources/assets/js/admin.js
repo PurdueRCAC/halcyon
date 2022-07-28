@@ -71,7 +71,27 @@ document.addEventListener('DOMContentLoaded', function () {
 				})
 					.then(function (response) {
 						if (response.ok) {
-							return response.json();
+							var li = that.closest('li');
+
+							var fadeEffect = setInterval(function () {
+								if (!li.style.opacity) {
+									li.style.opacity = 1;
+								}
+								if (li.style.opacity > 0) {
+									li.style.opacity -= 0.1;
+								} else {
+									clearInterval(fadeEffect);
+
+									li.classList.add('hide');
+									li.style = '';
+									li.classList.add('incomplete');
+									li.classList.remove('complete');
+									that.setAttribute('data-issue', '');
+
+									document.getElementById('checklist_status').dispatchEvent(new Event('change', { bubbles: true }));
+								}
+							}, 200);
+							return;
 						}
 						return response.json().then(function (data) {
 							var msg = data.message;
@@ -80,28 +100,6 @@ document.addEventListener('DOMContentLoaded', function () {
 							}
 							throw msg;
 						});
-					})
-					.then(function (data) {
-						var li = that.closest('li');
-
-						var fadeEffect = setInterval(function () {
-							if (!li.style.opacity) {
-								li.style.opacity = 1;
-							}
-							if (li.style.opacity > 0) {
-								li.style.opacity -= 0.1;
-							} else {
-								clearInterval(fadeEffect);
-
-								li.classList.add('hide');
-								li.style = '';
-								li.classList.add('incomplete');
-								li.classList.remove('complete');
-								that.setAttribute('data-issue', '');
-
-								document.getElementById('checklist_status').dispatchEvent(new Event('change', { bubbles: true }));
-							}
-						}, 200);
 					})
 					.catch(function (error) {
 						var img = that.closest('li').querySelector('.fa');
@@ -137,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	var mselects = document.querySelectorAll('.basic-multiple');
 	if (mselects.length) {
 		mselects.forEach(function (el) {
-			var sel = new TomSelect(el, {
+			new TomSelect(el, {
 				plugins: ['dropdown_input', 'remove_button']
 			});
 		});
