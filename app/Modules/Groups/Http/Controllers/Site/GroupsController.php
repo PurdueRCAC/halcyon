@@ -498,7 +498,7 @@ class GroupsController extends Controller
 							$member->restore();
 						}
 
-						// Already apart of the group
+						// Already a part of the group
 					}
 
 					$membertype = Type::MEMBER;
