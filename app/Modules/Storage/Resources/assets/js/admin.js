@@ -1,7 +1,10 @@
 /* global $ */ // jquery.js
 /* global Halcyon */ // core.js
-/* global WSGetURL */ // common.js
 /* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
+
+var headers = {
+	'Content-Type': 'application/json'
+};
 
 /**
  * New directory type
@@ -22,18 +25,40 @@ function NewDirType() {
 	var x;
 
 	if (selected == "user") {
-		user_row.classList.remove('d-none');//.style.display = "table-row";
+		user_row.classList.remove('d-none');
 		unixgroup_select.disabled = false;
-		unixgroup_select_decoy.classList.add('d-none');//.style.display = "none";
-		unixgroup_select.classList.remove('d-none');//.style.display = "inline";
-		autouserunixgroup_row.classList.add('d-none');//.style.display = "none";
+		unixgroup_select_decoy.classList.add('d-none');
+		unixgroup_select.classList.remove('d-none');
+		autouserunixgroup_row.classList.add('d-none');
 
 		input.value = " (Select User) ";
 
 		for (x = 0; x < unixgroup_select.options.length; x++) {
 			if (unixgroup_select.options[x].innerHTML == parent_unixgroup.value) {
 				unixgroup_select.options[x].selected = true;
-				$.get(unixgroup_select.options[x].getAttribute('data-api'), NewDirUserPopulate);
+
+				fetch(unixgroup_select.options[x].getAttribute('data-api'), {
+					method: 'GET',
+					headers: headers
+				})
+				.then(function (response) {
+					if (response.ok) {
+						return response.json();
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.then(function (results) {
+					NewDirUserPopulate(results);
+				})
+				.catch(function (err) {
+					alert(err);
+				});
 			}
 		}
 	}
@@ -50,7 +75,29 @@ function NewDirType() {
 		for (x = 0; x < unixgroup_select.options.length; x++) {
 			if (unixgroup_select.options[x].innerHTML == parent_unixgroup.value) {
 				unixgroup_select.options[x].selected = true;
-				WSGetURL(unixgroup_select.options[x].value, NewDirUserPopulate);
+
+				fetch(unixgroup_select.options[x].value, {
+					method: 'GET',
+					headers: headers
+				})
+				.then(function (response) {
+					if (response.ok) {
+						return response.json();
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.then(function (results) {
+					NewDirUserPopulate(results);
+				})
+				.catch(function (err) {
+					alert(err);
+				});
 			}
 		}
 	} else if (selected == "userprivate") {
@@ -64,7 +111,29 @@ function NewDirType() {
 		for (x = 0; x < unixgroup_select.options.length; x++) {
 			if (unixgroup_select.options[x].innerHTML == parent_unixgroup.value) {
 				opt.value = unixgroup_select.options[x].value;
-				WSGetURL(unixgroup_select.options[x].value, NewDirUserPopulate);
+
+				fetch(unixgroup_select.options[x].value, {
+					method: 'GET',
+					headers: headers
+				})
+				.then(function (response) {
+					if (response.ok) {
+						return response.json();
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.then(function (results) {
+					NewDirUserPopulate(results);
+				})
+				.catch(function (err) {
+					alert(err);
+				});
 			}
 		}
 
@@ -277,23 +346,27 @@ function NewDir(btn) {
 		post['autouserunixgroupid'] = autouserunixgroup;
 	}
 
-	$.ajax({
-		url: btn.getAttribute('data-api'),
-		type: 'post',
-		data: post,
-		dataType: 'json',
-		async: false,
-		success: function () {
+	fetch(btn.getAttribute('data-api'), {
+		method: 'POST',
+		headers: headers,
+		body: JSON.stringify(post)
+	})
+	.then(function (response) {
+		if (response.ok) {
 			Halcyon.message('success', 'Directory created!');
 			window.location.reload(true);
-		},
-		error: function (xhr) { //xhr, reason, thrownError
-			if (xhr.responseJSON) {
-				Halcyon.message('danger', xhr.responseJSON.message);
-			} else {
-				Halcyon.message('danger', 'Failed to create directory.');
-			}
+			return;
 		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.catch(function (err) {
+		Halcyon.message('danger', err);
 	});
 }
 
@@ -306,23 +379,26 @@ function NewDir(btn) {
  */
 function DeleteDir(btn) {
 	if (confirm(btn.getAttribute('data-confirm'))) {
-
-		$.ajax({
-			url: btn.getAttribute('data-api'),
-			type: 'delete',
-			dataType: 'json',
-			async: false,
-			success: function () {
+		fetch(btn.getAttribute('data-api'), {
+			method: 'DELETE',
+			headers: headers
+		})
+		.then(function (response) {
+			if (response.ok) {
 				Halcyon.message('success', 'Directory removed!');
 				window.location.reload(true);
-			},
-			error: function (xhr) {
-				if (xhr.responseJSON) {
-					Halcyon.message('danger', xhr.responseJSON.message);
-				} else {
-					Halcyon.message('danger', 'Failed to delete directory.');
-				}
+				return; // response.json();
 			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.catch(function (err) {
+			Halcyon.message('danger', err);
 		});
 	}
 }
@@ -340,7 +416,29 @@ function ResetPermissions(btn) {
 			"fixpermissions": "1"
 		};
 
-		$.ajax({
+		fetch(btn.getAttribute('data-api'), {
+			method: 'PUT',
+			headers: headers,
+			body: JSON.stringify(post)
+		})
+		.then(function (response) {
+			if (response.ok) {
+				window.location.reload(true);
+				return;
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.catch(function (err) {
+			Halcyon.message('danger', err);
+		});
+
+		/*$.ajax({
 			url: btn.getAttribute('data-api'),
 			type: 'put',
 			data: post,
@@ -356,7 +454,7 @@ function ResetPermissions(btn) {
 					Halcyon.message('danger', 'Failed to reset permissions.');
 				}
 			}
-		});
+		});*/
 	}
 }
 
@@ -364,6 +462,11 @@ function ResetPermissions(btn) {
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function () {
+	headers = {
+		'Content-Type': 'application/json',
+		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+	};
+
 	var selects = document.querySelectorAll('.searchable-select');
 	if (selects.length) {
 		selects.forEach(function (el) {

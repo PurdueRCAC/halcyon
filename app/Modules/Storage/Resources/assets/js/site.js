@@ -1,6 +1,8 @@
 /* global $ */ // jquery.js
-/* global WSPostURL */ // common.js
-/* global WSPutURL */ // common.js
+
+var headers = {
+	'Content-Type': 'application/json'
+};
 
 /**
  * New directory type
@@ -20,16 +22,12 @@ function NewDirType() {
 	var parent_unixgroup = document.getElementById("selected_dir_unixgroup");
 	var x;
 
-	/*unixgroup_select.addEventListener('change', function () {
-		WSGetURL(this.options[this.selectedIndex].getAttribute('data-api'), NewDirUserPopulate);
-	});*/
-
 	if (selected == "user") {
-		user_row.classList.remove('hidden');//.style.display = "table-row";
+		user_row.classList.remove('hidden');
 		unixgroup_select.disabled = false;
-		unixgroup_select_decoy.classList.add('hidden');//.style.display = "none";
-		unixgroup_select.classList.remove('hidden');//.style.display = "inline";
-		autouserunixgroup_row.classList.add('hidden');//.style.display = "none";
+		unixgroup_select_decoy.classList.add('hidden');
+		unixgroup_select.classList.remove('hidden');
+		autouserunixgroup_row.classList.add('hidden');
 
 		if (!input.value) {
 			input.value = "(Select User)";
@@ -38,17 +36,16 @@ function NewDirType() {
 		for (x = 0; x < unixgroup_select.options.length; x++) {
 			if (unixgroup_select.options[x].innerHTML == parent_unixgroup.value) {
 				unixgroup_select.options[x].selected = true;
-				//WSGetURL(unixgroup_select.options[x].getAttribute('data-api'), NewDirUserPopulate);
 			}
 		}
 	}
 
 	if (selected == "userwrite") {
-		user_row.classList.remove('hidden');//.style.display = "table-row";
+		user_row.classList.remove('hidden');
 		unixgroup_select.disabled = false;
-		unixgroup_select_decoy.classList.add('hidden');//.style.display = "none";
-		unixgroup_select.classList.remove('hidden');//.style.display = "inline";
-		autouserunixgroup_row.classList.add('hidden');//.style.display = "none";
+		unixgroup_select_decoy.classList.add('hidden');
+		unixgroup_select.classList.remove('hidden');
+		autouserunixgroup_row.classList.add('hidden');
 
 		if (!input.value) {
 			input.value = "(Select User)";
@@ -57,11 +54,10 @@ function NewDirType() {
 		for (x = 0; x < unixgroup_select.options.length; x++) {
 			if (unixgroup_select.options[x].innerHTML == parent_unixgroup.value) {
 				unixgroup_select.options[x].selected = true;
-				//WSGetURL(unixgroup_select.options[x].getAttribute('data-api'), NewDirUserPopulate);
 			}
 		}
 	} else if (selected == "userprivate") {
-		user_row.classList.remove('hidden'); //.style.display = "table-row";
+		user_row.classList.remove('hidden');
 		user_select.options[0].selected = true;
 
 		if (!input.value) {
@@ -74,13 +70,12 @@ function NewDirType() {
 		for (x = 0; x < unixgroup_select.options.length; x++) {
 			if (unixgroup_select.options[x].innerHTML == parent_unixgroup.value) {
 				opt.value = unixgroup_select.options[x].value;
-				//WSGetURL(unixgroup_select.options[x].getAttribute('data-api'), NewDirUserPopulate);
 			}
 		}
 
-		unixgroup_select_decoy.classList.remove('hidden');//.style.display = "inline";
-		unixgroup_select.classList.add('hidden'); //.style.display = "none";
-		autouserunixgroup_row.classList.add('hidden');//.style.display = "none";
+		unixgroup_select_decoy.classList.remove('hidden');
+		unixgroup_select.classList.add('hidden');
+		autouserunixgroup_row.classList.add('hidden');
 
 		$(unixgroup_select_decoy).empty();
 		unixgroup_select_decoy.appendChild(opt);
@@ -90,54 +85,25 @@ function NewDirType() {
 			input.value = "";
 		}
 
-		user_row.classList.add('hidden');//.style.display = "none";
+		user_row.classList.add('hidden');
 		user_select.options[0].selected = true;
 		unixgroup_select.disabled = false;
-		unixgroup_select_decoy.classList.add('hidden');//.style.display = "none";
-		unixgroup_select.classList.remove('hidden');//.style.display = "inline";
-		autouserunixgroup_row.classList.add('hidden');//.style.display = "none";
+		unixgroup_select_decoy.classList.add('hidden');
+		unixgroup_select.classList.remove('hidden');
+		autouserunixgroup_row.classList.add('hidden');
 	} else if (selected == "autouserprivate" || selected == "autouserread" || selected == "autouserreadwrite") {
 		if (input.value == "(Select User)") {
 			input.value = "";
 		}
 
-		user_row.classList.add('hidden');//.style.display = "none";
+		user_row.classList.add('hidden');
 		user_select.options[0].selected = true;
 		unixgroup_select.disabled = false;
-		unixgroup_select_decoy.classList.add('hidden');//.style.display = "none";
-		unixgroup_select.classList.remove('hidden');//.style.display = "inline";
-		autouserunixgroup_row.classList.remove('hidden');//.style.display = "table-row";
+		unixgroup_select_decoy.classList.add('hidden');
+		unixgroup_select.classList.remove('hidden');
+		autouserunixgroup_row.classList.remove('hidden');
 	}
 }
-
-/**
- * Callback to populate new dir user
- *
- * @param   {object}  xml
- * @return  {void}
- */
-/*function NewDirUserPopulate(xml) {
-	var user_select = document.getElementById("new_dir_user_select");
-	var opt = document.createElement("option");
-	opt.innerHTML = "(Select User)";
-	opt.value = "";
-
-	$(user_select).empty();
-	user_select.appendChild(opt);
-
-	if (xml.status < 400) {
-		var results = JSON.parse(xml.responseText);
-
-		for (var x = 0; x < results.members.length; x++) {
-			opt = document.createElement("option");
-			opt.value = results.members[x]['userid'];
-			opt.innerHTML = results.members[x]['username'];
-
-			user_select.appendChild(opt);
-
-		}
-	}
-}*/
 
 /**
  * Guess the directory's unix group
@@ -164,27 +130,41 @@ function GuessDirUnixGroup() {
  * Distribute quota
  *
  * @param   {string}  dir
+ * @param   {string}  api
  * @return  {void}
  */
 function DistributeQuota(dir, api) {
-	//var img = document.getElementById(dir + "_quota_up");
+	var post = { "bytes": "ALL" };
 
-	//if (img.src.match(/arrow_up\.png$/) || img.src.match(/arrow_down\.png$/)) {
-		// Save quota
-		//img.src = "/include/images/loading.gif";
-		//img.style.width = "20px";
-		//img.style.height = "20px";
-
-		// Make WS call
-		var post = JSON.stringify({ "bytes": "ALL" });
-
-		WSPutURL(api, post, EditedUnixGroup, dir);
-	//}
+	fetch(api, {
+		method: 'PUT',
+		headers: headers,
+		body: JSON.stringify(post)
+	})
+	.then(function (response) {
+		if (response.ok) {
+			window.location.reload(true);
+			return;
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.catch(function () {
+		var error = document.getElementById(dir + "_error");
+		error.classList.remove('hide');
+		error.innerHTML = "An error occurred while setting unix group.";
+	});
 }
 
 /**
  * Create a new directory
  *
+ * @param   {object}  btn
  * @return  {void}
  */
 function NewDir(btn) {
@@ -198,9 +178,6 @@ function NewDir(btn) {
 	var type = document.getElementById("new_dir_type");
 	type = type.options[type.selectedIndex].value;
 
-	//img.src = "/include/images/loading.gif";
-	//img.style.width = "20px";
-	//img.style.height = "20px";
 	img.className = 'spinner-border';
 
 	var share = document.getElementById("share_radio").checked;
@@ -231,7 +208,7 @@ function NewDir(btn) {
 	if (unixgroup == "" && type != "userprivate") {
 		error.classList.remove('hide');
 		error.innerHTML = "Please select a unix group.";
-		//img.src = "/include/images/error.png";
+
 		img.className = 'icon-warning';
 		return;
 	}
@@ -249,7 +226,7 @@ function NewDir(btn) {
 		if (user == "") {
 			error.classList.remove('hide');
 			error.innerHTML = "Please select a user.";
-			//img.src = "/include/images/error.png";
+
 			img.className = 'icon-warning';
 			return;
 		}
@@ -313,53 +290,31 @@ function NewDir(btn) {
 		post['groupwrite'] = "1";
 		post['autouserunixgroupid'] = autouserunixgroup;
 	}
-	//post = JSON.stringify(post);
-	//console.log(post);return;
 
-	$.ajax({
-		url: btn.getAttribute('data-api'),
-		type: 'post',
-		data: post,
-		dataType: 'json',
-		async: false,
-		success: function () {
+	fetch(btn.getAttribute('data-api'), {
+		method: 'POST',
+		headers: headers,
+		body: JSON.stringify(post)
+	})
+	.then(function (response) {
+		if (response.ok) {
 			window.location.reload(true);
-		},
-		error: function (xhr) { // xhr, reason, thrownError
-			/*var error = document.getElementById("new_dir_error");
-			var img = document.getElementById("new_dir_img");
-
-			if (xml.status == 200) {
-				window.location.reload(true);
-			} else if (xml.status == 409) {
-				error.innerHTML = "Directory already exists.";
-				if (img) {
-					img.src = "/include/images/error.png";
-				}
-			} else if (xml.status == 414) {
-				error.innerHTML = "Invalid quota.";
-				if (img) {
-					img.src = "/include/images/error.png";
-				}
-			} else if (xml.status == 415) {
-				error.innerHTML = "Invalid directory name.";
-				if (img) {
-					img.src = "/include/images/error.png";
-				}
-			} else {
-				error.innerHTML = "An error has occurred.";
-				if (img) {
-					img.src = "/include/images/error.png";
-				}
-			}*/
-			error.classList.remove('hide');
-			if (xhr.responseJSON) {
-				error.innerHTML = xhr.responseJSON.message;
-			} else {
-				error.innerHTML = 'Failed to create directory.';
+			return;
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
 			}
-			console.log(xhr.responseText);
-
+			throw msg;
+		});
+	})
+	.catch(function (err) {
+		error.classList.remove('hide');
+		if (err) {
+			error.innerHTML = err;
+		} else {
+			error.innerHTML = 'Failed to create directory.';
 		}
 	});
 }
@@ -373,40 +328,35 @@ function NewDir(btn) {
  */
 function DeleteDir(btn) {
 	if (confirm(btn.getAttribute('data-confirm'))) {
-
-		$.ajax({
-			url: btn.getAttribute('data-api'),
-			type: 'delete',
-			dataType: 'json',
-			async: false,
-			success: function () {
+		fetch(btn.getAttribute('data-api'), {
+			method: 'DELETE',
+			headers: headers
+		})
+		.then(function (response) {
+			if (response.ok) {
 				$('#' + btn.getAttribute('data-dir') + '_error')
 					.removeClass('alert-danger')
 					.addClass('alert-success')
 					.removeClass('hide')
 					.text('Directory removed!');
 				window.location.reload(true);
-			},
-			error: function (xhr) {
-				$('#' + btn.getAttribute('data-dir') + '_error')
-					.removeClass('hide')
-					.text('Failed to delete directory.');
-
-				console.log(xhr.responseText);
+				return;
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.catch(function (err) {
+			var er = document.getElementById(btn.getAttribute('data-dir') + '_error');
+			if (er) {
+				er.classList.remove('hide');
+				er.innerHTML = err;
 			}
 		});
-
-		/*WSDeleteURL(dir, function(xml, dir) {
-			var error = document.getElementById(dir + "_error");
-
-			if (xml.status == 200) {
-				window.location.reload(true);
-			} else if (xml.status == 409) {
-				error.innerHTML = "Directory is not empty.";
-			} else {
-				error.innerHTML = "An error has occurred.";
-			}
-		}, dir);*/
 	}
 }
 
@@ -423,24 +373,29 @@ function ResetPermissions(btn) {
 			"fixpermissions": "1"
 		};
 
-		$.ajax({
-			url: btn.getAttribute('data-api'),
-			type: 'put',
-			data: post,
-			dataType: 'json',
-			async: false,
-			success: function () {
+		fetch(btn.getAttribute('data-api'), {
+			method: 'PUT',
+			headers: headers,
+			body: JSON.stringify(post)
+		})
+		.then(function (response) {
+			if (response.ok) {
 				window.location.reload(true);
-			},
-			error: function (xhr) {
-				var msg = 'Failed to reset permissions.';
-				if (xhr.responseJSON) {
-					msg = xhr.responseJSON.message;
+				return;
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
 				}
-				$('#' + btn.attr('data-dir') + '_error')
-					.removeClass('hide')
-					.text(msg);
-				//console.log(xhr.responseText);
+				throw msg;
+			});
+		})
+		.catch(function (err) {
+			var er = document.getElementById(btn.getAttribute('data-dir') + '_error');
+			if (er) {
+				er.classList.remove('hide');
+				er.innerHTML = err;
 			}
 		});
 	}
@@ -552,41 +507,30 @@ function EditUnixGroup(dir, api) {
 			post['groupread'] = "0";
 		}
 	}
-	//console.log(api); return;
-	//console.log(post); return;
-	post = JSON.stringify(post);
-	WSPutURL(api, post, EditedUnixGroup, dir);
-	//}
-}
 
-/**
- * Callback after editing a unix group
- *
- * @param   {object}  xml
- * @param   {string}  dir
- * @return  {void}
- */
-function EditedUnixGroup(xml, dir) {
-	//var img = document.getElementById(dir + "_unixgroup_img");
-	var error = document.getElementById(dir + "_error");
-
-	if (xml.status < 400) {
-		//var results = JSON.parse(xml.responseText);
-
-		//var span = document.getElementById(dir + "_unixgroup_span");
-		//var input = document.getElementById(dir + "_unixgroup_select");
-		//img.src = "/include/images/edit.png";
-		//span.style.display = "inline";
-		//input.style.display = "none";
-
-		//span.innerHTML = input.options[input.selectedIndex].innerHTML;
-		//error.innerHTML = "";
-		window.location.reload(true);
-	} else {
-		//img.src = "/include/images/error.png";
+	fetch(api, {
+		method: 'PUT',
+		headers: headers,
+		body: JSON.stringify(post)
+	})
+	.then(function (response) {
+		if (response.ok) {
+			window.location.reload(true);
+			return;
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.catch(function () {
+		var error = document.getElementById(dir + "_error");
 		error.classList.remove('hide');
 		error.innerHTML = "An error occurred while setting unix group.";
-	}
+	});
 }
 
 /**
@@ -669,42 +613,86 @@ function CreateDefaultDirs(api, group, name, resource, quota, base, apps, etc, d
 	};
 
 	// Create base dir
-	WSPostURL(api, JSON.stringify(top_dir), function (xml, dirs_desired) {
-		if (xml.status < 400) {
-			var results = JSON.parse(xml.responseText);
-			var parentdir = results['id'];
-			var x;
-
-			// set parent dir
-			for (x = 0; x < dirs_desired.dirs.length; x++) {
-				dirs_desired.dirs[x]['parentstoragedirid'] = parentdir;
-			}
-
-			// create sub dirs
-			pending_dirs = dirs_desired.dirs.length;
-			for (x = 0; x < dirs_desired.dirs.length; x++) {
-				if (dirs_desired.dirs[x]['unixgroupid'] <= 0) {
-					pending_dirs--;
-					continue;
-				}
-				WSPostURL(api, JSON.stringify(dirs_desired.dirs[x]), function (xml) {
-					if (xml.status < 400) {
-						pending_dirs--;
-
-						if (pending_dirs == 0) {
-							window.location.reload(true);
-						}
-					} else {
-						$('.dir-create-default').removeClass('processing');
-						$('#error_new').removeClass('hide').text("An error occurred while creating directory.");
-					}
-				});
-			}
-		} else {
-			$('.dir-create-default').removeClass('processing');
-			$('#error_new').removeClass('hide').text("An error occurred while creating directory.");
+	fetch(api, {
+		method: 'POST',
+		headers: headers,
+		body: JSON.stringify(top_dir)
+	})
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
 		}
-	}, dirs_desired);
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.then(function (results) {
+		var parentdir = results['id'];
+		var x;
+
+		// set parent dir
+		for (x = 0; x < dirs_desired.dirs.length; x++) {
+			dirs_desired.dirs[x]['parentstoragedirid'] = parentdir;
+		}
+
+		// create sub dirs
+		pending_dirs = dirs_desired.dirs.length;
+		for (x = 0; x < dirs_desired.dirs.length; x++) {
+			if (dirs_desired.dirs[x]['unixgroupid'] <= 0) {
+				pending_dirs--;
+				continue;
+			}
+
+			fetch(api, {
+				method: 'POST',
+				headers: headers,
+				body: JSON.stringify(dirs_desired.dirs[x])
+			})
+			.then(function (response) {
+				if (response.ok) {
+					pending_dirs--;
+
+					if (pending_dirs == 0) {
+						window.location.reload(true);
+					}
+					return;
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function () {
+				document.querySelectorAll('.dir-create-default').forEach(function (el) {
+					el.classList.remove('processing');
+				});
+
+				var er = document.getElementById('error_new');
+				if (er) {
+					er.classList.remove('hide');
+					er.innerHTML = "An error occurred while creating directory.";
+				}
+			});
+		}
+	})
+	.catch(function () {
+		document.querySelectorAll('.dir-create-default').forEach(function(el) {
+			el.classList.remove('processing');
+		});
+
+		var er = document.getElementById('error_new');
+		if (er) {
+			er.classList.remove('hide');
+			er.innerHTML = "An error occurred while creating directory.";
+		}
+	});
 }
 
 /**
@@ -718,23 +706,36 @@ function SetBaseName(api) {
 	var post = JSON.stringify({ "unixgroup": name });
 
 	if (name == "") {
-		$('#error_unixgroup').removeClass('hide').text('Unix group name is required.');
+		var er = document.getElementById('error_unixgroup');
+		if (er) {
+			er.classList.remove('hide');
+			er.innerHTML = 'Unix group name is required.';
+		}
 	}
 
-	WSPutURL(api, post, function (xml) {
-		if (xml.status < 400) {
+	fetch(api, {
+		method: 'PUT',
+		headers: headers,
+		body: post
+	})
+	.then(function (response) {
+		if (response.ok) {
 			window.location.reload(true);
-		} else {
-			var err = $('#error_unixgroup');
-			err.removeClass('hide');
-
-			if (xml.status == 409) {
-				err.text("Base name already exists.");
-			} else if (xml.status == 415) {
-				err.text("Invalid format for base name.");
-			} else {
-				err.text("An error occurred while setting base name.");
+			return;
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
 			}
+			throw msg;
+		});
+	})
+	.catch(function (err) {
+		var er = document.getElementById('error_unixgroup');
+		if (er) {
+			er.classList.remove('hide');
+			er.innerHTML = err;
 		}
 	});
 }
@@ -751,7 +752,8 @@ var BASEGROUPS = Array('', 'data', 'apps');
  * Create UNIX group
  *
  * @param   {integer}  num    index for BASEGROUPS array
- * @param   {string}   group
+ * @param   {object}   btn
+ * @param   {bool}     all
  * @return  {void}
  */
 function CreateNewGroupVal(num, btn, all) {
@@ -762,16 +764,16 @@ function CreateNewGroupVal(num, btn, all) {
 		all = true;
 	}
 
-	$.ajax({
-		url: btn.data('api'),
-		type: 'post',
-		data: {
+	fetch(btn.data('api'), {
+		method: 'PUT',
+		headers: headers,
+		body: JSON.stringify({
 			'longname': BASEGROUPS[num],
 			'groupid': group
-		},
-		dataType: 'json',
-		async: false,
-		success: function () {
+		})
+	})
+	.then(function (response) {
+		if (response.ok) {
 			num++;
 			if (all && num < BASEGROUPS.length) {
 				setTimeout(function () {
@@ -780,10 +782,23 @@ function CreateNewGroupVal(num, btn, all) {
 			} else {
 				window.location.reload(true);
 			}
-		},
-		error: function (xhr) {
-			btn.removeClass('processing');
-			$('#error_unixgroups').removeClass('hide').text(xhr.responseJSON.message);
+			return;
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.catch(function (err) {
+		btn.removeClass('processing');
+
+		var er = document.getElementById('error_unixgroups');
+		if (er) {
+			er.classList.remove('hide');
+			er.innerHTML = err;
 		}
 	});
 }
@@ -792,6 +807,11 @@ function CreateNewGroupVal(num, btn, all) {
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function () {
+	headers = {
+		'Content-Type': 'application/json',
+		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+	};
+
 	/*var autocompleteUsers = function(url) {
 		return function(request, response) {
 			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
