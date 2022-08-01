@@ -1,15 +1,294 @@
 /* global $ */ // jquery.js
-/* global ROOT_URL */ // common.js
-/* global WSGetURL */ // common.js
-/* global WSPostURL */ // common.js
-/* global WSPutURL */ // common.js
-/* global WSDeleteURL */ // common.js
-/* global ERRORS */ // common.js
-/* global SetError */ // common.js
-/* global HighlightMatches */ // text.js
 
+var headers = {
+	'Content-Type': 'application/json'
+};
 var keywords_pending = 0;
 var path = window.location.href; //base_url + '/issues';
+var root = document.querySelector('meta[name="base-url"]').getAttribute('content') + "/api/issues";
+
+/**
+ * Put an error into the action bar
+ *
+ * @param   {string}  message
+ */
+function DisplayError(title, message) {
+	var span = document.getElementById("issues_action");
+	if (span) {
+		span.classList.remove('d-none');
+		span.innerHTML = '<strong>' + title + '</strong><br />' + message;
+	}
+}
+
+/**
+ * Hide any displayed errors
+ */
+function ClearError() {
+	var span = document.getElementById("issues_action");
+	if (span) {
+		span.classList.add('d-none');
+		span.innerHTML = '';
+	}
+}
+
+/**
+ * Used to highlight stemmed keyword matches in news text
+ *
+ * @param   {string}  text
+ * @return  {string}
+ */
+function HighlightMatches(text) {
+	var search = document.getElementById("keywords").value;
+	if (search.replace(' ', '') == "") {
+		return text;
+	}
+
+	// Filter out any bad characters
+	search = search.replace(/[^a-zA-Z0-9_ ]/g, '');
+	var keywords = search.split(/ /);
+
+	for (var i = 0; i < keywords.length; i++) {
+		keywords[i] = stemmer(keywords[i]).toLowerCase();
+	}
+
+	// amethyst, sky, green, honeydew, jade, lime, mallow, orpiment, 
+	// pink, red, blue, turquoise, uranium, wine, yellow
+	var colors = [
+		'rgb(240,163,255)', 'rgb(94,241,242)', 'rgb(43,206,72)', 'rgb(255,204,153)',
+		'rgb(148,255,181)', 'rgb(157,204,0)', 'rgb(194,0,136)', 'rgb(255,164,5)', 'rgb(255,168,187)',
+		'rgb(255,0,16)', 'rgb(0,117,220)', 'rgb(0,153,143)', 'rgb(224,255,102)', 'rgb(153,0,0)', 'rgb(255,225,0)'
+	];
+
+	var regx = new RegExp(/(<[^>]+>)|((^|\b)([^<]+?)(\b|$))/i);
+	var m;
+	//var prev = -1;
+	var txt = "";
+	var temp = "";
+	var keyid = 0;
+	//var lastMatch = 0;
+	var color = "";
+	// iterate through matches
+	while ((m = regx.exec(text))) {
+		txt = m[0];
+		keyid = keywords.indexOf(stemmer(txt).toLowerCase());
+		if (keyid != -1) {
+			// if number of keywords exceeds color array, loop back around
+			color = colors[keyid % colors.length];
+			// include everything that was skipped and the match
+			temp += text.substr(0, m.index) + "<span style='background-color:" + color + "'>" + txt + "</span>";
+		} else {
+			temp += text.substr(0, m.index) + txt
+		}
+		text = text.substr(m.index + m[0].length);
+	}
+	temp += text;
+
+	return temp;
+}
+
+// Porter stemmer in Javascript. Few comments, but it's easy to follow against the rules in the original
+// paper, in
+//
+//  Porter, 1980, An algorithm for suffix stripping, Program, Vol. 14,
+//  no. 3, pp 130-137,
+//
+// see also http://www.tartarus.org/~martin/PorterStemmer
+
+// Release 1 be 'andargor', Jul 2004
+// Release 2 (substantially revised) by Christopher McKenzie, Aug 2009
+
+var stemmer = (function () {
+	var step2list = {
+		"ational": "ate",
+		"tional": "tion",
+		"enci": "ence",
+		"anci": "ance",
+		"izer": "ize",
+		"bli": "ble",
+		"alli": "al",
+		"entli": "ent",
+		"eli": "e",
+		"ousli": "ous",
+		"ization": "ize",
+		"ation": "ate",
+		"ator": "ate",
+		"alism": "al",
+		"iveness": "ive",
+		"fulness": "ful",
+		"ousness": "ous",
+		"aliti": "al",
+		"iviti": "ive",
+		"biliti": "ble",
+		"logi": "log"
+	},
+
+		step3list = {
+			"icate": "ic",
+			"ative": "",
+			"alize": "al",
+			"iciti": "ic",
+			"ical": "ic",
+			"ful": "",
+			"ness": ""
+		},
+
+		c = "[^aeiou]",          // consonant
+		v = "[aeiouy]",          // vowel
+		C = c + "[^aeiouy]*",    // consonant sequence
+		V = v + "[aeiou]*",      // vowel sequence
+
+		mgr0 = "^(" + C + ")?" + V + C,               // [C]VC... is m>0
+		meq1 = "^(" + C + ")?" + V + C + "(" + V + ")?$",  // [C]VC[V] is m=1
+		mgr1 = "^(" + C + ")?" + V + C + V + C,       // [C]VCVC... is m>1
+		s_v = "^(" + C + ")?" + v;                   // vowel in stem
+
+	return function (w) {
+		var stem,
+			suffix,
+			firstch,
+			re,
+			re2,
+			re3,
+			re4,
+			fp;
+
+		if (w.length < 3) {
+			return w;
+		}
+
+		w = w.toLowerCase();
+
+		firstch = w.substr(0, 1);
+		if (firstch == "y") {
+			w = firstch.toUpperCase() + w.substr(1);
+		}
+
+		// Step 1a
+		re = /^(.+?)(ss|i)es$/;
+		re2 = /^(.+?)([^s])s$/;
+
+		if (re.test(w)) {
+			w = w.replace(re, "$1$2");
+		}
+		else if (re2.test(w)) {
+			w = w.replace(re2, "$1$2");
+		}
+
+		// Step 1b
+		re = /^(.+?)eed$/;
+		re2 = /^(.+?)(ed|ing)$/;
+		if (re.test(w)) {
+			fp = re.exec(w);
+			re = new RegExp(mgr0);
+			if (re.test(fp[1])) {
+				re = /.$/;
+				w = w.replace(re, "");
+			}
+		} else if (re2.test(w)) {
+			fp = re2.exec(w);
+			stem = fp[1];
+			re2 = new RegExp(s_v);
+			if (re2.test(stem)) {
+				w = stem;
+				re2 = /(at|bl|iz)$/;
+				re3 = new RegExp("([^aeiouylsz])\\1$");
+				re4 = new RegExp("^" + C + v + "[^aeiouwxy]$");
+				if (re2.test(w)) {
+					w = w + "e";
+				}
+				else if (re3.test(w)) {
+					re = /.$/;
+					w = w.replace(re, "");
+				}
+				else if (re4.test(w)) {
+					w = w + "e";
+				}
+			}
+		}
+
+		// Step 1c
+		re = /^(.+?)y$/;
+		if (re.test(w)) {
+			fp = re.exec(w);
+			stem = fp[1];
+			re = new RegExp(s_v);
+			if (re.test(stem)) {
+				w = stem + "i";
+			}
+		}
+
+		// Step 2
+		re = /^(.+?)(ational|tional|enci|anci|izer|bli|alli|entli|eli|ousli|ization|ation|ator|alism|iveness|fulness|ousness|aliti|iviti|biliti|logi)$/;
+		if (re.test(w)) {
+			fp = re.exec(w);
+			stem = fp[1];
+			suffix = fp[2];
+			re = new RegExp(mgr0);
+			if (re.test(stem)) {
+				w = stem + step2list[suffix];
+			}
+		}
+
+		// Step 3
+		re = /^(.+?)(icate|ative|alize|iciti|ical|ful|ness)$/;
+		if (re.test(w)) {
+			fp = re.exec(w);
+			stem = fp[1];
+			suffix = fp[2];
+			re = new RegExp(mgr0);
+			if (re.test(stem)) {
+				w = stem + step3list[suffix];
+			}
+		}
+
+		// Step 4
+		re = /^(.+?)(al|ance|ence|er|ic|able|ible|ant|ement|ment|ent|ou|ism|ate|iti|ous|ive|ize)$/;
+		re2 = /^(.+?)(s|t)(ion)$/;
+		if (re.test(w)) {
+			fp = re.exec(w);
+			stem = fp[1];
+			re = new RegExp(mgr1);
+			if (re.test(stem)) {
+				w = stem;
+			}
+		} else if (re2.test(w)) {
+			fp = re2.exec(w);
+			stem = fp[1] + fp[2];
+			re2 = new RegExp(mgr1);
+			if (re2.test(stem)) {
+				w = stem;
+			}
+		}
+
+		// Step 5
+		re = /^(.+?)e$/;
+		if (re.test(w)) {
+			fp = re.exec(w);
+			stem = fp[1];
+			re = new RegExp(mgr1);
+			re2 = new RegExp(meq1);
+			re3 = new RegExp("^" + C + v + "[^aeiouwxy]$");
+			if (re.test(stem) || (re2.test(stem) && !(re3.test(stem)))) {
+				w = stem;
+			}
+		}
+
+		re = /ll$/;
+		re2 = new RegExp(mgr1);
+		if (re.test(w) && re2.test(w)) {
+			re = /.$/;
+			w = w.replace(re, "");
+		}
+
+		// and turn initial Y back to y
+
+		if (firstch == "y") {
+			w = firstch.toLowerCase() + w.substr(1);
+		}
+
+		return w;
+	}
+})();
 
 /**
  * Toggle UI tabs
@@ -31,7 +310,7 @@ function IssuesToggle(on, refresh) {
 	$(".tab").removeClass('activeTab');
 
 	if (on == 'search') {
-		$("#TAB_" + on).addClass('activeTab');
+		document.getElementById("TAB_" + on).classList.add('activeTab');
 
 		document.getElementById("SPAN_header").innerHTML = "Search Reports";
 		document.getElementById("TAB_add").innerHTML = "Add New";
@@ -41,7 +320,7 @@ function IssuesToggle(on, refresh) {
 		document.getElementById("datestartshort").value = document.getElementById("datestartshort").getAttribute('data-value');
 		document.getElementById("timestartshort").value = document.getElementById("timestartshort").getAttribute('data-value');
 	} else if (on == 'add') {
-		$("#TAB_" + on).addClass('activeTab');
+		document.getElementById("TAB_" + on).classList.add('activeTab');
 
 		document.getElementById("SPAN_header").innerHTML = "Add New Report";
 		document.getElementById("TAB_add").innerHTML = "Add New";
@@ -69,7 +348,7 @@ function IssuesToggle(on, refresh) {
 
 		dt.value = hr + ':' + min + ' ' + ampm;
 	} else if (on == 'edit') {
-		$("#TAB_add").addClass('activeTab');
+		document.getElementById("TAB_add").classList.add('activeTab');
 
 		document.getElementById("TAB_add").innerHTML = "Edit Report";
 		document.getElementById("SPAN_header").innerHTML = "Edit Report";
@@ -120,7 +399,7 @@ function IssuesTabURL(tab) {
  * @param   {array}   flags
  * @return  {void}
  */
-function IssuesSearchResource(xml, flags) {
+/*function IssuesSearchResource(xml, flags) {
 	var pageload = false;
 	//var disabled = false;
 
@@ -157,17 +436,17 @@ function IssuesSearchResource(xml, flags) {
 		switch (xml.status) {
 			case 401:
 			case 403:
-				SetError(ERRORS['403_generic'], null);
+				DisplayError(ERRORS['403_generic'], null);
 				break;
 			case 500:
-				SetError(ERRORS['500'], null);
+				DisplayError(ERRORS['500'], null);
 				break;
 			default:
-				SetError(ERRORS['generic'], ERRORS['unknown']);
+				DisplayError(ERRORS['generic'], ERRORS['unknown']);
 				break;
 		}
 	}
-}
+}*/
 
 /**
  * Search by date
@@ -238,11 +517,10 @@ function IssuesAddEntry() {
 	var i = 0;
 
 	// clear error boxes
-	document.getElementById("TAB_search_action").innerHTML = "";
-	document.getElementById("TAB_add_action").innerHTML = "";
+	ClearError();
 
 	if (!createddate.match(/^\d{4}-\d{2}-\d{2}$/)) {
-		SetError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
+		DisplayError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
 		return;
 	}
 	//createddate += " 00:00:00";
@@ -312,7 +590,27 @@ function IssuesAddEntry() {
 		post = JSON.stringify(post);
 
 		if (post != "{}") {
-			WSPutURL(original['api'], post, IssuesUpdatedReport);
+			fetch(original['api'], {
+				method: 'PUT',
+				headers: headers,
+				body: post
+			})
+			.then(function (response) {
+				if (response.ok) {
+					document.getElementById("INPUT_add").disabled = true;
+					return;// response.json();
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (err) {
+				alert(err);
+			});
 		}
 
 		if (typeof (history.pushState) != 'undefined') {
@@ -333,7 +631,7 @@ function IssuesAddEntry() {
 	}
 
 	if (notes == "") {
-		SetError('Required field missing', 'Please enter some note text.');
+		DisplayError('Required field missing', 'Please enter some note text.');
 		return;
 	}
 	else {
@@ -351,7 +649,29 @@ function IssuesAddEntry() {
 		post = JSON.stringify(post);
 		document.getElementById("INPUT_add").disabled = true;
 
-		WSPostURL(ROOT_URL + "issues", post, IssuesNewReport);
+		fetch(root, {
+			method: 'POST',
+			headers: headers,
+			body: post
+		})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (results) {
+			IssuesNewReport(results);
+		})
+		.catch(function (err) {
+			alert(err);
+		});
 	}
 }
 
@@ -361,11 +681,11 @@ function IssuesAddEntry() {
  * @param   {object}  xml
  * @return  {void}
  */
-function IssuesUpdatedReport(xml) {
+/*function IssuesUpdatedReport(xml) {
 	if (xml.status == 200) {
 		document.getElementById("INPUT_add").disabled = true;
 	}
-}
+}*/
 
 /**
  * Callback for creating a new report
@@ -384,16 +704,16 @@ function IssuesNewReport(xml) {
 
 		IssuesClearSearch();
 
-		document.getElementById("id").value = results['id'].replace(ROOT_URL + "issues/", '');
+		document.getElementById("id").value = results['id'].replace(root + "/", '');
 
 		IssuesToggle('search', true);
 		/*setTimeout(function () {
 			IssuesSearch();
 		}, 250);*/
 	} else if (xml.status == 409) {
-		SetError('Invalid date.', 'Please pick the current date or a date in the past.');
+		DisplayError('Invalid date.', 'Please pick the current date or a date in the past.');
 	} else {
-		SetError('Unable to create report.', 'Your session may have timed out. Copy your text and reload page.');
+		DisplayError('Unable to create report.', 'Your session may have timed out. Copy your text and reload page.');
 	}
 }
 
@@ -435,22 +755,20 @@ function IssuesSearch() {
 	// sanity checks
 	if (start != "") {
 		if (!start.match(/^\d{4}-\d{2}-\d{2}$/)) {
-			SetError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
+			DisplayError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
 			return;
 		} else {
 			// clear error boxes
-			document.getElementById("TAB_search_action").innerHTML = "";
-			document.getElementById("TAB_add_action").innerHTML = "";
+			ClearError();
 		}
 	}
 	if (stop != "") {
 		if (!stop.match(/^\d{4}-\d{2}-\d{2}$/)) {
-			SetError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
+			DisplayError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
 			return;
 		} else {
 			// clear error boxes
-			document.getElementById("TAB_search_action").innerHTML = "";
-			document.getElementById("TAB_add_action").innerHTML = "";
+			ClearError();
 		}
 	}
 
@@ -523,9 +841,30 @@ function IssuesSearch() {
 	}
 
 	//console.log('Searching... ' + encodeURI(searchstring));
-	$("#reports").data('query', searchstring);
+	document.getElementById("reports").setAttribute('data-query', searchstring);
 
-	WSGetURL(ROOT_URL + "issues?" + encodeURI(querystring), IssuesSearched);
+	fetch(root + "?" + encodeURI(querystring.replace('?', '')), {
+		method: 'GET',
+		headers: headers
+	})
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.then(function (results) {
+		IssuesSearched(results);
+	})
+	.catch(function (err) {
+		alert(err);
+	});
 }
 
 /**
@@ -550,132 +889,128 @@ function IssuesToggleAddButton() {
 /**
  * Callback after searching
  *
- * @param   {object}  xml
+ * @param   {object}  results
  * @return  {void}
  */
-function IssuesSearched(xml) {
-	if (xml.status == 200) {
-		var reports = $("#reports");
-		var count = 0;
+function IssuesSearched(results) {
+	var reports = $("#reports");
+	var count = 0;
 
-		var results = JSON.parse(xml.responseText);
+	$("#matchingReports").html("Found " + results.data.length + " matching reports");
 
-		$("#matchingReports").html("Found " + results.data.length + " matching reports");
+	if (results.data.length == 0) {
+		reports.html('<p class="alert alert-warning">No matching reports found.</p>');
+	} else {
+		reports.html('');
 
-		if (results.data.length == 0) {
-			reports.html('<p class="alert alert-warning">No matching reports found.</p>');
-		} else {
-			reports.html('');
+		for (var x = 0; x < results.data.length; x++, count++) {
+			IssuesPrintRow(
+				results.data[x],
+				results.userid,
+				"newEntries" //(x < DEFAULT_ENTRIES ? "newEntries" : "newEntriesHidden")
+			);
+		}
 
-			for (var x = 0; x < results.data.length; x++, count++) {
-				IssuesPrintRow(
-					results.data[x],
-					results.userid,
-					"newEntries" //(x < DEFAULT_ENTRIES ? "newEntries" : "newEntriesHidden")
-				);
-			}
+		// Re-initialize tooltips
+		$('.tip').tooltip({
+			position: {
+				my: 'center bottom',
+				at: 'center top'
+			},
+			hide: false
+		});
 
-			// Re-initialize tooltips
-			$('.tip').tooltip({
-				position: {
-					my: 'center bottom',
-					at: 'center top'
-				},
-				hide: false
-			});
+		reports.find(".alert").hide();
+		$(".newEntriesHidden").hide();
 
-			reports.find(".alert").hide();
-			$(".newEntriesHidden").hide();
+		var q = reports.data('query');
+		var query = q.replace(' ', '&').replace(':', '=');
+		var lastpage = Math.ceil(results.total > results.limit ? results.total / results.limit : 1);
 
-			var q = reports.data('query');
-			var query = q.replace(' ', '&').replace(':', '=');
-			var lastpage = Math.ceil(results.total > results.limit ? results.total / results.limit : 1);
+		// Pagination
+		var ul = $('<ul class="pagination"></ul>');
 
-			// Pagination
-			var ul = $('<ul class="pagination"></ul>');
+		var li = $('<li class="page-item page-first">');
+		var a = $('<a class="page-link" title="First page"><span aria-hidden="true">«</span></a>')
+			.attr('href', path + '?' + query.replace(/(page=\d+)/, 'page=1'))
+			.attr('data-page', 1);
+		if (results.total <= (results.limit * results.page) || results.page == 1) {
+			li.addClass('disabled');
+			a.attr('aria-disabled', 'true');
+		}
+		li.append(a);
+		ul.append(li);
 
-			var li = $('<li class="page-item page-first">');
-			var a = $('<a class="page-link" title="First page"><span aria-hidden="true">«</span></a>')
+		li = $('<li class="page-item page-prev">');
+		a = $('<a class="page-link" title="Previous page"><span aria-hidden="true">‹</span></a>')
+			.attr('href', path + '?' + query.replace(/(page=\d+)/, 'page=' + (results.page > 1 ? results.page - 1 : 1)))
+			.attr('data-page', (results.page > 1 ? results.page - 1 : 1));
+		if (results.total <= (results.limit * results.page) || results.page == 1) {
+			li.addClass('disabled');
+			a.attr('aria-disabled', 'true');
+		}
+		li.append(a);
+		ul.append(li);
+
+		if (results.total <= results.limit) {
+			li = $('<li class="page-item">');
+			a = $('<a class="page-link"></a>')
+				.text('1')
 				.attr('href', path + '?' + query.replace(/(page=\d+)/, 'page=1'))
 				.attr('data-page', 1);
-			if (results.total <= (results.limit * results.page) || results.page == 1) {
+			if (results.total <= (results.limit * results.page)) {
 				li.addClass('disabled');
 				a.attr('aria-disabled', 'true');
 			}
 			li.append(a);
 			ul.append(li);
-
-			li = $('<li class="page-item page-prev">');
-			a = $('<a class="page-link" title="Previous page"><span aria-hidden="true">‹</span></a>')
-				.attr('href', path + '?' + query.replace(/(page=\d+)/, 'page=' + (results.page > 1 ? results.page - 1 : 1)))
-				.attr('data-page', (results.page > 1 ? results.page - 1 : 1));
-			if (results.total <= (results.limit * results.page) || results.page == 1) {
-				li.addClass('disabled');
-				a.attr('aria-disabled', 'true');
-			}
-			li.append(a);
-			ul.append(li);
-
-			if (results.total <= results.limit) {
+		} else {
+			for (var l = 1; l <= lastpage; l++) {
 				li = $('<li class="page-item">');
 				a = $('<a class="page-link"></a>')
-					.text('1')
-					.attr('href', path + '?' + query.replace(/(page=\d+)/, 'page=1'))
-					.attr('data-page', 1);
-				if (results.total <= (results.limit * results.page)) {
-					li.addClass('disabled');
-					a.attr('aria-disabled', 'true');
+					.text(l)
+					.attr('href', path + '?' + query.replace(/(page=\d+)/, 'page=' + l))
+					.attr('data-page', l);
+				if (results.page == l) {
+					li.addClass('active');
+					//a.attr('aria-disabled', 'true');
 				}
 				li.append(a);
 				ul.append(li);
-			} else {
-				for (var l = 1; l <= lastpage; l++) {
-					li = $('<li class="page-item">');
-					a = $('<a class="page-link"></a>')
-						.text(l)
-						.attr('href', path + '?' + query.replace(/(page=\d+)/, 'page=' + l))
-						.attr('data-page', l);
-					if (results.page == l) {
-						li.addClass('active');
-						//a.attr('aria-disabled', 'true');
-					}
-					li.append(a);
-					ul.append(li);
-				}
 			}
-
-			li = $('<li class="page-item page-next">');
-			a = $('<a class="page-link" title="Next page"><span aria-hidden="true">›</span></a>')
-				.attr('href', path + '?' + query.replace(/(page=\d+)/, 'page=' + (results.page > 1 ? lastpage - 1 : 1)))
-				.attr('data-page', (results.page > 1 ? lastpage - 1 : 1))
-				.attr('data-query', q.replace(/(page:\d+)/, 'page:' + (results.page > 1 ? lastpage - 1 : 1)));
-			if (results.total <= (results.limit * results.page)) {
-				li.addClass('disabled');
-				a.attr('aria-disabled', 'true');
-			}
-			li.append(a);
-			ul.append(li);
-
-			li = $('<li class="page-item page-last">');
-			a = $('<a class="page-link" title="Last page"><span aria-hidden="true">»</span></a>')
-				.attr('href', path + '?' + query.replace(/(page=\d+)/, 'page=' + lastpage))
-				.attr('data-page', lastpage)
-				.attr('data-query', q.replace(/(page:\d+)/, 'page:' + lastpage));
-			if (results.total <= (results.limit * results.page)) {
-				li.addClass('disabled');
-				a.attr('aria-disabled', 'true');
-			}
-			li.append(a);
-			ul.append(li);
-
-			reports.append(ul);
-
-			$('.page-link').on('click', function (e) {
-				e.preventDefault();
-				$('#page').val($(this).data('page'));
-				IssuesSearch();
-			});
 		}
+
+		li = $('<li class="page-item page-next">');
+		a = $('<a class="page-link" title="Next page"><span aria-hidden="true">›</span></a>')
+			.attr('href', path + '?' + query.replace(/(page=\d+)/, 'page=' + (results.page > 1 ? lastpage - 1 : 1)))
+			.attr('data-page', (results.page > 1 ? lastpage - 1 : 1))
+			.attr('data-query', q.replace(/(page:\d+)/, 'page:' + (results.page > 1 ? lastpage - 1 : 1)));
+		if (results.total <= (results.limit * results.page)) {
+			li.addClass('disabled');
+			a.attr('aria-disabled', 'true');
+		}
+		li.append(a);
+		ul.append(li);
+
+		li = $('<li class="page-item page-last">');
+		a = $('<a class="page-link" title="Last page"><span aria-hidden="true">»</span></a>')
+			.attr('href', path + '?' + query.replace(/(page=\d+)/, 'page=' + lastpage))
+			.attr('data-page', lastpage)
+			.attr('data-query', q.replace(/(page:\d+)/, 'page:' + lastpage));
+		if (results.total <= (results.limit * results.page)) {
+			li.addClass('disabled');
+			a.attr('aria-disabled', 'true');
+		}
+		li.append(a);
+		ul.append(li);
+
+		reports.append(ul);
+
+		$('.page-link').on('click', function (e) {
+			e.preventDefault();
+			$('#page').val($(this).data('page'));
+			IssuesSearch();
+		});
 	}
 }
 
@@ -823,11 +1158,11 @@ function IssuesPrintRow(report, userid, cls) {
 	report['report'] = report['formattedreport'];
 
 	// determine the directory we are operating in
-	var page = document.location.href.split("/")[4];
+	//var page = document.location.href.split("/")[4];
 	// if we are in issues, we are doing report searches, so we should highlight matches
-	if (page == 'issues') {
+	//if (page == 'issues') {
 		report['report'] = HighlightMatches(report['report']);
-	}
+	//}
 
 	span = document.createElement("div");
 	span.id = report['id'] + "_text";
@@ -1143,7 +1478,7 @@ function IssuesPrintComment(issueid, comment, userid) {
  */
 function IssuesDeleteComment(commentid) {
 	if (confirm("Are you sure you want to delete this comment?")) {
-		fetch(ROOT_URL + "issues/comments/" + commentid, {
+		fetch(root + "/comments/" + commentid, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
@@ -1179,7 +1514,7 @@ function IssuesDeleteComment(commentid) {
  */
 function IssuesDeleteReport(issueid) {
 	if (confirm("Are you sure you want to delete this report?")) {
-		fetch(ROOT_URL + "issues/" + issueid, {
+		fetch(root + "/" + issueid, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
@@ -1223,17 +1558,32 @@ function IssuesPostComment(issueid) {
 		'resolution': (res.checked ? 1 : 0)
 	});
 
-	WSPostURL(ROOT_URL + "issues/comments/", post, function (xml, issueid) {
-		if (xml.status == 200) {
-			var results = JSON.parse(xml.responseText);
-			IssuesPrintComment(issueid, results, results['user']);
-			document.getElementById(issueid + "_newcommentbox").value = "";
-			IssuesCollapseNewComment(issueid + "_newcommentbox");
-		} else {
-			document.getElementById(issueid + "_newcommentboxsave").className = "fa fa-exclamation-circle";
-			document.getElementById(issueid + "_newcommentboxsave").parentNode.title = "An error occured while posting comment.";
+	fetch(root + "/comments", {
+		method: 'POST',
+		headers: headers,
+		body: post
+	})
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
 		}
-	}, issueid);
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.then(function (results) {
+		IssuesPrintComment(issueid, results, results['user']);
+		document.getElementById(issueid + "_newcommentbox").value = "";
+		IssuesCollapseNewComment(issueid + "_newcommentbox");
+	})
+	.catch(function () {
+		document.getElementById(issueid + "_newcommentboxsave").className = "fa fa-exclamation-circle";
+		document.getElementById(issueid + "_newcommentboxsave").parentNode.title = "An error occured while posting comment.";
+	});
 }
 
 /**
@@ -1309,47 +1659,57 @@ function IssuesSaveCommentText(comment) {
 	};
 	post = JSON.stringify(post);
 
-	WSPostURL(ROOT_URL + "issues/comments/" + comment, post, function (xml, comment) {
-		var img = document.getElementById(comment + "_commenttextsaveiconimg");
-
-		if (xml.status == 200) {
-			var results = JSON.parse(xml.responseText);
-
-			var panel = document.getElementById("comment" + comment);
-			if (results.resolution == 1) {
-				panel.className = "card issue-resolution";
-			} else {
-				panel.className = "card";
-			}
-
-			var text = document.getElementById(comment + "_comment");
-			text.style.display = "block";
-			text.innerHTML = results['formattedcomment'];
-
-			var box = document.getElementById(comment + "_commenttextarea");
-			box.style.display = "none";
-
-			var cicon = document.getElementById(comment + "_commenttextcancelicon");
-			cicon.style.display = "none";
-
-			var editicon = document.getElementById(comment + "_commenttextediticon");
-			editicon.style.display = "block";
-
-			var icon = document.getElementById(comment + "_commenttextsaveicon");
-			icon.disabled = false;
-
-			img.className = "fa fa-save";
-
-			var d = document.getElementById(comment + "_commenttextareacontrols");
-			d.className = "row comment-controls hide";
-		} else if (xml.status == 403) {
-			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = "Unable to save changes, grace editing window has passed.";
-		} else {
-			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = "Unable to save changes, reload the page and try again.";
+	fetch(root + "/comments/" + comment, {
+		method: 'POST',
+		headers: headers,
+		body: post
+	})
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
 		}
-	}, comment);
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.then(function (results) {
+		var panel = document.getElementById("comment" + comment);
+		if (results.resolution == 1) {
+			panel.className = "card issue-resolution";
+		} else {
+			panel.className = "card";
+		}
+
+		var text = document.getElementById(comment + "_comment");
+		text.style.display = "block";
+		text.innerHTML = results['formattedcomment'];
+
+		var box = document.getElementById(comment + "_commenttextarea");
+		box.style.display = "none";
+
+		var cicon = document.getElementById(comment + "_commenttextcancelicon");
+		cicon.style.display = "none";
+
+		var editicon = document.getElementById(comment + "_commenttextediticon");
+		editicon.style.display = "block";
+
+		var icon = document.getElementById(comment + "_commenttextsaveicon");
+		icon.disabled = false;
+
+		img.className = "fa fa-save";
+
+		var d = document.getElementById(comment + "_commenttextareacontrols");
+		d.className = "row comment-controls hide";
+	})
+	.catch(function (err) {
+		var img = document.getElementById(comment + "_commenttextsaveiconimg");
+		img.className = "fa fa-exclamation-circle";
+		img.parentNode.title = err;
+	});
 }
 
 /**
@@ -1438,6 +1798,11 @@ var autocompleteResource = function (url) {
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function () {
+	headers = {
+		'Content-Type': 'application/json',
+		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+	};
+
 	var frm = document.getElementById('DIV_search');
 	if (frm) {
 		document.querySelectorAll('.date-pick').forEach(function (el) {
@@ -1522,7 +1887,40 @@ document.addEventListener('DOMContentLoaded', function () {
 			//IssuesToggleSearch('none');
 			var x;
 			for (x = 0; x < original.resources.length; x++) {
-				WSGetURL(original.resources[x]['api'], IssuesSearchResource, { 'pageload': true, 'disabled': false });
+				fetch(original.resources[x]['api'], {
+					method: 'GET',
+					headers: headers
+				})
+				.then(function (response) {
+					if (response.ok) {
+						return response.json();
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.then(function (results) {
+					// reset search box
+					var resource = $('#resource');
+
+					if ($('.tagsinput').length) {
+						if (!resource.tagExist(results['id'])) {
+							resource.addTag({
+								'id': results['id'],
+								'label': results['name']
+							});
+						}
+					} else {
+						resource.val(resource.val() + (resource.val() ? ', ' : '') + results['name'] + ':' + results['id']);
+					}
+				})
+				.catch(function (err) {
+					alert(err);
+				});
 			}
 
 			IssuesToggle('edit', false);
@@ -1559,7 +1957,29 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (reports.getAttribute('data-query')) {
 			q = encodeURI(reports.getAttribute('data-query'));
 		}
-		WSGetURL(ROOT_URL + "issues" + (q ? '?' + q : ''), IssuesSearched);
+
+		fetch(root + "" + (q ? '?' + q : ''), {
+			method: 'GET',
+			headers: headers
+		})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (results) {
+			IssuesSearched(results);
+		})
+		.catch(function (err) {
+			alert(err);
+		});
 	}
 
 	document.querySelectorAll('.issue-todo').forEach(function (el) {
@@ -1576,14 +1996,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
 			post = JSON.stringify(post);
 
-			WSPostURL(ROOT_URL + "issues/", post, function (xml) {
-				if (xml.status == 200) {
+			fetch(root, {
+				method: 'POST',
+				headers: headers,
+				body: post
+			})
+			.then(function (response) {
+				if (response.ok) {
 					$(that.closest('li')).fadeOut();
-				} else {
-					var img = $(that.closest('li')).find('.fa')[0];
-					img.className = "fa fa-exclamation-triangle";
-					img.parentNode.title = "Unable to save changes, reload the page and try again.";
+					return;
 				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function () {
+				var img = $(that.closest('li')).find('.fa')[0];
+				img.className = "fa fa-exclamation-triangle";
+				img.parentNode.title = "Unable to save changes, reload the page and try again.";
 			});
 		});
 	});
@@ -1636,14 +2070,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
 			var that = $(this);
 
-			WSDeleteURL(that.data('id'), function (xml) {
-				if (xml.status == 200) {
+			fetch(that.data('id'), {
+				method: 'DELETE',
+				headers: headers
+			})
+			.then(function (response) {
+				if (response.ok) {
 					$(that.closest('li')).fadeOut();
-				} else {
-					var img = $(that.closest('li')).find('.fa')[0];
-					img.className = "fa fa-exclamation-triangle";
-					img.parentNode.title = "Unable to save changes, reload the page and try again.";
+					return;
 				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function () {
+				var img = $(that.closest('li')).find('.fa')[0];
+				img.className = "fa fa-exclamation-triangle";
+				img.parentNode.title = "Unable to save changes, reload the page and try again.";
 			});
 		});
 	});
@@ -1665,21 +2112,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
 			var url = id;
 			if (id == 'new') {
-				url = ROOT_URL + "issues/todos";
+				url = root + "/todos";
 			}
 
 			var that = $(this);
 
 			post = JSON.stringify(post);
 
-			WSPostURL(url, post, function (xml) {
-				if (xml.status == 200) {
+			fetch(url, {
+				method: 'POST',
+				headers: headers,
+				body: post
+			})
+			.then(function (response) {
+				if (response.ok) {
 					location.reload();
-				} else {
-					var img = $(that.closest('li')).find('.fa')[0];
-					img.className = "fa fa-exclamation-triangle";
-					img.parentNode.title = "Unable to save changes, reload the page and try again.";
+					return;
 				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function () {
+				var img = $(that.closest('li')).find('.fa')[0];
+				img.className = "fa fa-exclamation-triangle";
+				img.parentNode.title = "Unable to save changes, reload the page and try again.";
 			});
 		});
 	});

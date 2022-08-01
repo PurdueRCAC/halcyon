@@ -107,8 +107,8 @@ app('pathway')->append(
 
 <div id="everything">
 	<ul class="nav nav-tabs issues-tabs">
-		<li data-toggle="tab"><a id="TAB_search" class="tab activeTab" href="#search">Search</a></li>
-		<li data-toggle="tab"><a id="TAB_add" class="tab" href="#add">Add New</a></li>
+		<li class="nav-item active" data-toggle="tab"><a id="TAB_search" class="nav-link active tab activeTab" href="#search">Search</a></li>
+		<li class="nav-item" data-toggle="tab"><a id="TAB_add" class="nav-link tab" href="#add">Add New</a></li>
 	</ul>
 	<div class="tabMain" id="tabMain">
 		<div id="DIV_search">
@@ -274,7 +274,7 @@ app('pathway')->append(
 					<div class="form-group row tab-search" id="TR_search">
 						<div class="col-sm-2">
 						</div>
-						<div class="col-sm-10 offset-sm-10">
+						<div class="col-sm-10 text-right">
 							<input type="submit" class="btn btn-primary" value="Search" id="INPUT_search" />
 							<input type="reset" class="btn btn-default btn-clear" value="Clear" id="INPUT_clearsearch" />
 						</div>
@@ -283,7 +283,7 @@ app('pathway')->append(
 					<div class="form-group row tab-add tab-edit hide" id="TR_create">
 						<div class="col-sm-2">
 						</div>
-						<div class="col-sm-10 offset-sm-10">
+						<div class="col-sm-10 text-right">
 							<input id="INPUT_add" type="submit" class="btn btn-primary" value="Add Report" disabled="true" />
 							<input id="INPUT_clear" type="reset" class="btn btn-default btn-clear" value="Clear" />
 						</div>
@@ -292,9 +292,7 @@ app('pathway')->append(
 					<input id="myuserid" type="hidden" value="{{ auth()->user()->id }}" />
 					<input id="page" type="hidden" value="{{ $filters['page'] }}" />
 
-					<span id="TAB_search_action"></span>
-					<span id="TAB_add_action"></span>
-					<span id="issue_action"></span>
+					<div id="issues_action" class="alert alert-danger d-none"></div>
 				</fieldset>
 			</form>
 

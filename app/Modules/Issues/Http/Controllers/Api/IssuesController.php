@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use App\Halcyon\Utility\PorterStemmer;
 use App\Modules\Issues\Models\Issue;
 use App\Modules\Issues\Models\Issueresource;
@@ -93,6 +94,7 @@ class IssuesController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
+			'keywords'  => null,
 			'id'        => null,
 			'group'     => null,
 			'start'     => null,
@@ -124,12 +126,18 @@ class IssuesController extends Controller
 			$filters['order_dir'] = Issue::$orderDir;
 		}
 
+		if ($filters['keywords'])
+		{
+			$filters['search'] = $filters['keywords'];
+		}
+
+		$cr = (new Issue)->getTable();
+
 		$query = Issue::query()
+			->select($cr . '.*')
 			->with('resources')
 			->with('comments')
 			->with('creator');
-
-		$cr = (new Issue)->getTable();
 
 		if ($filters['search'])
 		{
@@ -150,8 +158,8 @@ class IssuesController extends Controller
 				$from_sql[] = "+" . $stem;
 			}
 
-			$query->select('*', DB::raw("(MATCH(stemmedtext) AGAINST ('" . implode(' ', $from_sql) . "') * 10 + 2 * (1 / (ABS(DATEDIFF(NOW(), $n.datetimecreated)) + 1))) AS score"));
-			$query->whereRaw("MATCH(stemmedtext) AGAINST ('" . implode(' ', $from_sql) . "' IN BOOLEAN MODE)");
+			$query->select('*', DB::raw("(MATCH(stemmedreport) AGAINST ('" . implode(' ', $from_sql) . "') * 10 + 2 * (1 / (ABS(DATEDIFF(NOW(), $cr.datetimecreated)) + 1))) AS score"));
+			$query->whereRaw("MATCH(stemmedreport) AGAINST ('" . implode(' ', $from_sql) . "' IN BOOLEAN MODE)");
 			$query->orderBy('score', 'desc');
 		}
 
@@ -184,7 +192,6 @@ class IssuesController extends Controller
 			$query->join($crr, $crr . '.issueid', $cr . '.id')
 				->whereIn($crr . '.resourceid', $filters['resource']);
 		}
-		$query->select($cr . '.*');
 
 		$rows = $query
 			->orderBy($cr . '.' . $filters['order'], $filters['order_dir'])
