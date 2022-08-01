@@ -382,7 +382,7 @@ class ArticlesController extends Controller
 			$filters['resource'] = explode(',', $filters['resource']);
 			$filters['resource'] = array_map('trim', $filters['resource']);
 			$r = (new Newsresource)->getTable();
-			$query->whereIn('id', function($innerQuery) use ($r, $filters){
+			$query->whereIn($n . '.id', function($innerQuery) use ($r, $filters){
 				$innerQuery->select('newsid')
 					->from($r)
 					->whereIn('resourceid', $filters['resource']);
