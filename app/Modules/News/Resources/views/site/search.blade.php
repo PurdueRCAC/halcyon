@@ -247,11 +247,10 @@ app('pathway')
 						<input type="reset" class="btn btn" value="{{ trans('news::news.clear') }}" id="INPUT_clear" />
 					</div>
 				</div>
-				<span id="TAB_search_action"></span>
-				<span id="TAB_add_action"></span>
+				<div id="news_action" class="alert alert-danger d-none"></div>
 				<input type="hidden" name="page" id="page" value="{{ $filters['page'] }}" />
 			</div>
-						</div>
+		</div>
 
 			@csrf
 		</form>

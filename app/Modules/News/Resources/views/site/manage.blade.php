@@ -47,7 +47,7 @@ app('pathway')
 
 				<form method="get" action="{{ route('site.news.manage') }}" class="mb-3 editform">
 					<div class="card card-news">
-				<div class="card-body">
+						<div class="card-body">
 						<!-- <legend><span id="SPAN_header" data-search="Search News" data-add="Add New News" data-edit="Edit News">Search News</span></legend> -->
 
 						<div class="form-group row tab-search tab-add tab-edit" id="TR_date">
@@ -335,9 +335,9 @@ app('pathway')
 							</div>
 						</div>
 
-						<span id="TAB_search_action"></span>
-						<span id="TAB_add_action"></span>
-					</div></div>
+						<div id="news_action" class="alert alert-danger d-none"></div>
+					</div>
+				</div>
 
 					@csrf
 				</form>
