@@ -1,15 +1,294 @@
 /* global $ */ // jquery.js
-/* global WSGetURL */ // common.js
-/* global WSPostURL */ // common.js
-/* global WSPutURL */ // common.js
-/* global WSDeleteURL */ // common.js
-/* global SetError */ // common.js
-/* global HighlightMatches */ // text.js
 
 var keywords_pending = 0;
-//var img_url = "/include/images/";
 var LASTEDIT = new Array();
 var root = document.querySelector('meta[name="base-url"]').getAttribute('content') + "/api/news";
+var headers = {
+	'Content-Type': 'application/json'
+};
+
+/**
+ * Used to highlight stemmed keyword matches in news text
+ *
+ * @param   {string}  text
+ * @return  {string}
+ */
+function HighlightMatches(text) {
+	var search = document.getElementById("keywords").value;
+	if (search.replace(' ', '') == "") {
+		return text;
+	}
+
+	// Filter out any bad characters
+	search = search.replace(/[^a-zA-Z0-9_ ]/g, '');
+	var keywords = search.split(/ /);
+
+	for (var i = 0; i < keywords.length; i++) {
+		keywords[i] = stemmer(keywords[i]).toLowerCase();
+	}
+
+	// amethyst, sky, green, honeydew, jade, lime, mallow, orpiment, 
+	// pink, red, blue, turquoise, uranium, wine, yellow
+	var colors = [
+		'rgb(240,163,255)', 'rgb(94,241,242)', 'rgb(43,206,72)', 'rgb(255,204,153)',
+		'rgb(148,255,181)', 'rgb(157,204,0)', 'rgb(194,0,136)', 'rgb(255,164,5)', 'rgb(255,168,187)',
+		'rgb(255,0,16)', 'rgb(0,117,220)', 'rgb(0,153,143)', 'rgb(224,255,102)', 'rgb(153,0,0)', 'rgb(255,225,0)'
+	];
+
+	var regx = new RegExp(/(<[^>]+>)|((^|\b)([^<]+?)(\b|$))/i);
+	var m;
+	//var prev = -1;
+	var txt = "";
+	var temp = "";
+	var keyid = 0;
+	//var lastMatch = 0;
+	var color = "";
+	// iterate through matches
+	while (!!(m = regx.exec(text))) {
+		txt = m[0];
+		keyid = keywords.indexOf(stemmer(txt).toLowerCase());
+		if (keyid != -1) {
+			// if number of keywords exceeds color array, loop back around
+			color = colors[keyid % colors.length];
+			// include everything that was skipped and the match
+			temp += text.substr(0, m.index) + "<span style='background-color:" + color + "'>" + txt + "</span>";
+		} else {
+			temp += text.substr(0, m.index) + txt
+		}
+		text = text.substr(m.index + m[0].length);
+	}
+	temp += text;
+
+	return temp;
+}
+
+// Porter stemmer in Javascript. Few comments, but it's easy to follow against the rules in the original
+// paper, in
+//
+//  Porter, 1980, An algorithm for suffix stripping, Program, Vol. 14,
+//  no. 3, pp 130-137,
+//
+// see also http://www.tartarus.org/~martin/PorterStemmer
+
+// Release 1 be 'andargor', Jul 2004
+// Release 2 (substantially revised) by Christopher McKenzie, Aug 2009
+
+var stemmer = (function () {
+	var step2list = {
+		"ational": "ate",
+		"tional": "tion",
+		"enci": "ence",
+		"anci": "ance",
+		"izer": "ize",
+		"bli": "ble",
+		"alli": "al",
+		"entli": "ent",
+		"eli": "e",
+		"ousli": "ous",
+		"ization": "ize",
+		"ation": "ate",
+		"ator": "ate",
+		"alism": "al",
+		"iveness": "ive",
+		"fulness": "ful",
+		"ousness": "ous",
+		"aliti": "al",
+		"iviti": "ive",
+		"biliti": "ble",
+		"logi": "log"
+	},
+
+	step3list = {
+		"icate": "ic",
+		"ative": "",
+		"alize": "al",
+		"iciti": "ic",
+		"ical": "ic",
+		"ful": "",
+		"ness": ""
+	},
+
+	c = "[^aeiou]",          // consonant
+	v = "[aeiouy]",          // vowel
+	C = c + "[^aeiouy]*",    // consonant sequence
+	V = v + "[aeiou]*",      // vowel sequence
+
+	mgr0 = "^(" + C + ")?" + V + C,               // [C]VC... is m>0
+	meq1 = "^(" + C + ")?" + V + C + "(" + V + ")?$",  // [C]VC[V] is m=1
+	mgr1 = "^(" + C + ")?" + V + C + V + C,       // [C]VCVC... is m>1
+	s_v = "^(" + C + ")?" + v;                   // vowel in stem
+
+	return function (w) {
+		var stem,
+			suffix,
+			firstch,
+			re,
+			re2,
+			re3,
+			re4,
+			fp;
+
+		if (w.length < 3) {
+			return w;
+		}
+
+		w = w.toLowerCase();
+
+		firstch = w.substr(0, 1);
+		if (firstch == "y") {
+			w = firstch.toUpperCase() + w.substr(1);
+		}
+
+		// Step 1a
+		re = /^(.+?)(ss|i)es$/;
+		re2 = /^(.+?)([^s])s$/;
+
+		if (re.test(w)) {
+			w = w.replace(re, "$1$2");
+		}
+		else if (re2.test(w)) {
+			w = w.replace(re2, "$1$2");
+		}
+
+		// Step 1b
+		re = /^(.+?)eed$/;
+		re2 = /^(.+?)(ed|ing)$/;
+		if (re.test(w)) {
+			fp = re.exec(w);
+			re = new RegExp(mgr0);
+			if (re.test(fp[1])) {
+				re = /.$/;
+				w = w.replace(re, "");
+			}
+		} else if (re2.test(w)) {
+			fp = re2.exec(w);
+			stem = fp[1];
+			re2 = new RegExp(s_v);
+			if (re2.test(stem)) {
+				w = stem;
+				re2 = /(at|bl|iz)$/;
+				re3 = new RegExp("([^aeiouylsz])\\1$");
+				re4 = new RegExp("^" + C + v + "[^aeiouwxy]$");
+				if (re2.test(w)) {
+					w = w + "e";
+				}
+				else if (re3.test(w)) {
+					re = /.$/;
+					w = w.replace(re, "");
+				}
+				else if (re4.test(w)) {
+					w = w + "e";
+				}
+			}
+		}
+
+		// Step 1c
+		re = /^(.+?)y$/;
+		if (re.test(w)) {
+			fp = re.exec(w);
+			stem = fp[1];
+			re = new RegExp(s_v);
+			if (re.test(stem)) {
+				w = stem + "i";
+			}
+		}
+
+		// Step 2
+		re = /^(.+?)(ational|tional|enci|anci|izer|bli|alli|entli|eli|ousli|ization|ation|ator|alism|iveness|fulness|ousness|aliti|iviti|biliti|logi)$/;
+		if (re.test(w)) {
+			fp = re.exec(w);
+			stem = fp[1];
+			suffix = fp[2];
+			re = new RegExp(mgr0);
+			if (re.test(stem)) {
+				w = stem + step2list[suffix];
+			}
+		}
+
+		// Step 3
+		re = /^(.+?)(icate|ative|alize|iciti|ical|ful|ness)$/;
+		if (re.test(w)) {
+			fp = re.exec(w);
+			stem = fp[1];
+			suffix = fp[2];
+			re = new RegExp(mgr0);
+			if (re.test(stem)) {
+				w = stem + step3list[suffix];
+			}
+		}
+
+		// Step 4
+		re = /^(.+?)(al|ance|ence|er|ic|able|ible|ant|ement|ment|ent|ou|ism|ate|iti|ous|ive|ize)$/;
+		re2 = /^(.+?)(s|t)(ion)$/;
+		if (re.test(w)) {
+			fp = re.exec(w);
+			stem = fp[1];
+			re = new RegExp(mgr1);
+			if (re.test(stem)) {
+				w = stem;
+			}
+		} else if (re2.test(w)) {
+			fp = re2.exec(w);
+			stem = fp[1] + fp[2];
+			re2 = new RegExp(mgr1);
+			if (re2.test(stem)) {
+				w = stem;
+			}
+		}
+
+		// Step 5
+		re = /^(.+?)e$/;
+		if (re.test(w)) {
+			fp = re.exec(w);
+			stem = fp[1];
+			re = new RegExp(mgr1);
+			re2 = new RegExp(meq1);
+			re3 = new RegExp("^" + C + v + "[^aeiouwxy]$");
+			if (re.test(stem) || (re2.test(stem) && !(re3.test(stem)))) {
+				w = stem;
+			}
+		}
+
+		re = /ll$/;
+		re2 = new RegExp(mgr1);
+		if (re.test(w) && re2.test(w)) {
+			re = /.$/;
+			w = w.replace(re, "");
+		}
+
+		// and turn initial Y back to y
+
+		if (firstch == "y") {
+			w = firstch.toLowerCase() + w.substr(1);
+		}
+
+		return w;
+	}
+})();
+
+/**
+ * Put an error into the action bar
+ *
+ * @param   {string}  message
+ */
+function DisplayError(message) {
+	var span = document.getElementById("news_action");
+	if (span) {
+		span.classList.remove('d-none');
+		span.innerHTML = message;
+	}
+}
+
+/**
+ * Hide any displayed errors
+ */
+function ClearError() {
+	var span = document.getElementById("news_action");
+	if (span) {
+		span.classList.add('d-none');
+		span.innerHTML = '';
+	}
+}
 
 /**
  * Callback for JS MarkDown parsing
@@ -24,11 +303,13 @@ function customMarkdownParser(text) {
 
 	for (const match of matches) {
 		if (match[4]) {
-			text = text.replace(match[0], '<a href="/news/' + match[3] + '">' + match[4].replace('{', '').replace('}', '') +'</a>');
+			text = text.replace(match[0], '<a href="/news/' + match[3] + '">' + match[4].replace('{', '').replace('}', '') + '</a>');
 		} else {
 			text = text.replace(match[0], '<a href="/news/' + match[3] + '">News story #' + match[3] + '</a>');
 		}
 	}
+
+	//var vars = NEWSPreviewVars();
 
 	var keywords = [
 		'%date%',
@@ -42,11 +323,20 @@ function customMarkdownParser(text) {
 		'%enddate%',
 		'%endtime%',
 		'%location%',
-		'%resources%',
+		'%resources%'
 	];
 
+	//var k;
 	for (var x = 0; x < keywords.length; x++) {
+		/*k = keywords[x].replace('%', '');
+		if (typeof vars[k] != 'undefined' && vars[k].length > 0) {
+			if (k == 'resources') {
+				k = k.join(', ');
+			}
+			text = text.replaceAll(keywords[x], '<span style="color:red;">' + vars[k] + '</span>');
+		} else {*/
 		text = text.replaceAll(keywords[x], '<span style="color:red;">' + keywords[x] + '</span>');
+		//}
 	}
 
 	return text;
@@ -60,20 +350,19 @@ function customMarkdownParser(text) {
  * @return  {void}
  */
 function NEWSToggle(on, refresh) {
-	if (typeof(refresh) == 'undefined') {
+	if (typeof (refresh) == 'undefined') {
 		refresh = true;
 	}
 	var option = document.getElementById("OPTION_all");
 
 	var times = document.getElementsByClassName('input-time');
-	for (var i = 0; i < times.length; i++)
-	{
-		if (!$(times[i]).hasClass('tab-' + on)) {
-			if (!$(times[i]).hasClass('d-none')) {
-				$(times[i]).addClass('d-none');
+	for (var i = 0; i < times.length; i++) {
+		if (!times[i].classList.contains('tab-' + on)) {
+			if (!times[i].classList.contains('d-none')) {
+				times[i].classList.add('d-none');
 			}
 		} else {
-			$(times[i]).removeClass('d-none');
+			times[i].classList.remove('d-none');
 		}
 	}
 
@@ -83,13 +372,22 @@ function NEWSToggle(on, refresh) {
 		header.innerHTML = header.getAttribute('data-' + on);
 	}
 
-	$(".tab-add").addClass('d-none');
-	$(".tab-edit").addClass('d-none');
-	$(".tab-search").addClass('d-none');
-	$(".tab-" + on).removeClass('d-none');
+	document.querySelectorAll('.tab-add').forEach(function (el) {
+		el.classList.add('d-none');
+	});
+	document.querySelectorAll('.tab-edit').forEach(function (el) {
+		el.classList.add('d-none');
+	});
+	document.querySelectorAll('.tab-search').forEach(function (el) {
+		el.classList.add('d-none');
+	});
+	document.querySelectorAll('.tab-' + on).forEach(function (el) {
+		el.classList.remove('d-none');
+	});
 
 	// Remove errors upon a toggle
-	document.getElementById("TAB_search_action").innerHTML = "";
+	ClearError();
+
 	if (on == 'search') {
 		// toggle the search fields on
 		var tab = document.getElementById("TAB_search");
@@ -149,11 +447,6 @@ function NEWSToggle(on, refresh) {
 		if (option) {
 			document.getElementById('newstype').removeChild(option);
 		}
-
-		/*if ($('#DIV_resource').length) {
-			document.getElementById("DIV_resourcesearch").style.display = "none";
-			document.getElementById("DIV_resource").innerHTML = "Click to add resource to post.";
-		}*/
 	} else if (on == 'edit') {
 		// toggle the new entry fields on
 		document.getElementById("TAB_search").className = "nav-link tab";
@@ -168,12 +461,6 @@ function NEWSToggle(on, refresh) {
 		if (option) {
 			document.getElementById('newstype').removeChild(option);
 		}
-
-		/*if ($('#DIV_resource').length) {
-			document.getElementById("DIV_resource").style.display = "block";
-			document.getElementById("DIV_resourcesearch").style.display = "none";
-			document.getElementById("DIV_resource").innerHTML = "Click to add resource to post.";
-		}*/
 	}
 
 	if (refresh) {
@@ -189,7 +476,7 @@ function NEWSToggle(on, refresh) {
  * @return  {void}
  */
 function NEWSTabURL(tab) {
-	if (typeof(history.pushState) != 'undefined') {
+	if (typeof (history.pushState) != 'undefined') {
 		var url = window.location.href.match(/\?.*/);
 		if (url != null) {
 			url = url[0];
@@ -209,25 +496,6 @@ function NEWSTabURL(tab) {
 		}
 	}
 }
-
-/**
- * Add a resource to the list of resources
- *
- * @param   {array}  resource
- * @return  {void}
- */
-/*function NEWSAddResource(resource) {
-	var results;
-	if (typeof resource == 'string') {
-		results = JSON.parse(resource);
-	} else {
-		results = resource;
-	}
-
-	$('#newsresource')
-		.val(results['resourceid'])
-		.trigger('change');
-}*/
 
 /**
  * Add an association to the list of associations
@@ -268,34 +536,43 @@ function NEWSNewstypeSearch() {
 	var taglocation = newstype.item(index).getAttribute("data-taglocation");
 	var tagurl = newstype.item(index).getAttribute("data-tagurl");
 	var tagusers = newstype.item(index).getAttribute("data-tagusers");
-	if (document.getElementById("TR_resource")) {
+
+	var row_resources = document.getElementById("TR_resource");
+	if (row_resources) {
 		if (tagresources == "0") {
-			$('#TR_resource').addClass('d-none');
+			row_resources.classList.add('d-none');
 		} else {
-			$('#TR_resource').removeClass('d-none');
+			row_resources.classList.remove('d-none');
 		}
 	}
-	if (document.getElementById("TR_location")) {
+
+	var row_location = document.getElementById("TR_location");
+	if (row_location) {
 		if (taglocation == "0") {
-			$('#TR_location').addClass('d-none');
+			row_location.classList.add('d-none');
 		} else {
-			$('#TR_location').removeClass('d-none');
+			row_location.classList.remove('d-none');
 		}
 	}
-	if (document.getElementById("TR_url")) {
+
+	var row_url = document.getElementById("TR_url");
+	if (row_url) {
 		if (tagurl == "0") {
-			$('#TR_url').addClass('d-none');
+			row_url.classList.add('d-none');
 		} else {
-			$('#TR_url').removeClass('d-none');
+			row_url.classList.remove('d-none');
 		}
 	}
-	if (document.getElementById("TR_user")) {
+
+	var row_user = document.getElementById("TR_user");
+	if (row_user) {
 		if (tagusers == "0") {
-			$('#TR_user').addClass('d-none');
+			row_user.classList.add('d-none');
 		} else {
-			$('#TR_user').removeClass('d-none');
+			row_user.classList.remove('d-none');
 		}
 	}
+
 	NEWSSearch();
 }
 
@@ -386,9 +663,9 @@ function NEWSDateSearch(box) {
 				var START = new Date(STARTBOX);
 				var STOP = new Date(STOPBOX);
 
-				var diff = ((Date.parse(STARTBOX) + START.getTimezoneOffset()*60*1000) - (Date.parse(STOPBOX) + STOP.getTimezoneOffset()*60*1000));
+				var diff = ((Date.parse(STARTBOX) + START.getTimezoneOffset() * 60 * 1000) - (Date.parse(STOPBOX) + STOP.getTimezoneOffset() * 60 * 1000));
 				var now = new Date(start);
-				var d = new Date(Date.parse(start) - diff + (now.getTimezoneOffset()*60*1000));
+				var d = new Date(Date.parse(start) - diff + (now.getTimezoneOffset() * 60 * 1000));
 				var year = d.getFullYear();
 				var day = d.getDate();
 				var month = d.getMonth() + 1;
@@ -434,7 +711,7 @@ function NEWSKeywordSearch(key) {
 
 	// make sure all the keywords are long enough
 	var search = true;
-	for (var x=0;x<keywords.length;x++) {
+	for (var x = 0; x < keywords.length; x++) {
 		if (keywords[x].length < 3) {
 			search = false;
 		}
@@ -450,19 +727,6 @@ function NEWSKeywordSearch(key) {
 		}, 200);
 	}
 }
-
-/**
- * replace <'s and '>
- *
- * @param   {string}  text
- * @return  {string}
- */
-/*function PrepareText(text) {
-	text = text.replace(/</g, '&lt;');
-	text = text.replace(/>/g, '&gt;');
-
-	return text;
-}*/
 
 /**
  * post new entry to database
@@ -491,11 +755,10 @@ function NEWSAddEntry() {
 		i = 0;
 
 	// clear error boxes
-	document.getElementById("TAB_search_action").innerHTML = "";
-	document.getElementById("TAB_add_action").innerHTML = "";
+	ClearError();
 
 	if (!newsdate.match(/^\d{4}-\d{2}-\d{2}$/) && !template) {
-		SetError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
+		DisplayError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
 		return;
 	}
 
@@ -543,7 +806,7 @@ function NEWSAddEntry() {
 	}
 
 	if (newsdateend && newsdateend != "0000-00-00 00:00:00" && newsdateend < newsdate) {
-		SetError('End date must come after start date', 'Please enter a valid end date');
+		DisplayError('End date must come after start date', 'Please enter a valid end date');
 		return;
 	}
 
@@ -554,7 +817,7 @@ function NEWSAddEntry() {
 	}
 
 	var usersdata = document.getElementById("newsuser").value.split(',');
-	for (i=0; i<usersdata.length; i++) {
+	for (i = 0; i < usersdata.length; i++) {
 		if (usersdata[i] != "") {
 			associations.push(usersdata[i]);
 		}
@@ -563,9 +826,9 @@ function NEWSAddEntry() {
 	var post = {};
 	if (window.location.href.match(/(\?|&)edit/)) {
 		var original = {};
-		var data = $('#news-data');
-		if (data.length) {
-			original = JSON.parse(data.html());
+		var data = document.getElementById('news-data');
+		if (data) {
+			original = JSON.parse(data.innerHTML);
 		}
 
 		// update
@@ -609,17 +872,46 @@ function NEWSAddEntry() {
 		post = JSON.stringify(post);
 		if (post != "{}") {
 			var id = original['id']; //.substr(original['id'].lastIndexOf("/")+1);
-			WSPutURL(original['api'], post, NEWSUpdatedNews, id);
+
+			fetch(original['api'], {
+				method: 'PUT',
+				headers: headers,
+				body: post
+			})
+				.then(function (response) {
+					if (response.ok) {
+						document.getElementById("INPUT_add").disabled = true;
+						document.getElementById("location").value = "";
+						NEWSToggle('search', false);
+						document.getElementById("id").value = id;
+						NEWSSearch();
+						return;// response.json();
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (err) {
+					document.getElementById("INPUT_add").disabled = true;
+					NEWSToggle('search');
+					document.getElementById("id").value = id;
+					NEWSSearch();
+					alert(err);
+				});
 		}
 
 		return;
 	} else {
 		if (notes == "") {
-			SetError('Required field missing', 'Please enter content for the body.');
+			DisplayError('Required field missing', 'Please enter content for the body.');
 			return;
 		}
 		if (headline == "") {
-			SetError('Required field missing', 'Please enter a headline');
+			DisplayError('Required field missing', 'Please enter a headline');
 			return;
 		}
 		// new post
@@ -635,8 +927,8 @@ function NEWSAddEntry() {
 			post['datetimenews'] = newsdate;
 		}
 		if (newsdateend
-		&& newsdateend != '0000-00-00 00:00:00'
-		&& newsdateend != newsdate) {
+			&& newsdateend != '0000-00-00 00:00:00'
+			&& newsdateend != newsdate) {
 			post['datetimenewsend'] = newsdateend;
 		}
 
@@ -672,81 +964,33 @@ function NEWSAddEntry() {
 		post = JSON.stringify(post);
 		document.getElementById("INPUT_add").disabled = true;
 
-		WSPostURL(root, post, NEWSNewNews);
-	}
-}
-
-/**
- * Update news search
- *
- * @param   {object}  xml
- * @param   {string}  id
- * @return  {void}
- */
-function NEWSUpdatedNews(xml, id) {
-	if (xml.status < 400) {
-		document.getElementById("INPUT_add").disabled = true;
-		document.getElementById("location").value = "";
-		NEWSToggle('search', false);
-		document.getElementById("id").value = id;
-		NEWSSearch();
-	} else if (xml.status == 409) {
-		document.getElementById("id").value = id;
-		WSGetURL(root + "/" + id, function (xml) {
-			if (xml.status < 400) {
-				var results = JSON.parse(xml.responseText);
-				alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
-			}
-		});
-	} else {
-		document.getElementById("INPUT_add").disabled = true;
-		NEWSToggle('search');
-		document.getElementById("id").value = id;
-		NEWSSearch();
-		alert("Unable to save changes.");
-	}
-}
-
-/**
- * Clear the form for adding a new News entry
- *
- * @param   {object}  xml
- * @return  {void}
- */
-function NEWSNewNews(xml) {
-	document.getElementById("INPUT_add").disabled = false;
-
-	if (xml.status < 400) {
-		var results = JSON.parse(xml.responseText);
-
-		// Clear the resource listing
-		/*if ($('.tagsinput').length) {
-			$('#newsresource').clearTags();
-		} else {
-			document.getElementById('newsresource').value = '';
-		}
-		document.getElementById("Headline").value = "";
-		document.getElementById("location").value = "";
-		document.getElementById("url").value = "";
-		document.getElementById("NotesText").value = "";
-		document.getElementById("datestartshort").value = "";
-		document.getElementById("timestartshort").value = "";
-		document.getElementById("datestopshort").value = "";
-		document.getElementById("timestopshort").value = "";
-
-		//var id = results['id'];
-		//id = id.split('/');
-		//id = id[id.length-1];*/
-
-		if (results.template) {
-			NEWSToggle('search', true);
-		} else {
-			window.location.href = results.uri;
-		}
-	} else if (xml.status == 409 || xml.status == 415) {
-		SetError('Invalid date.', 'Please pick the current date or a date in the past.');
-	} else {
-		SetError('Unable to create news story.', 'An error occurred during processing of news story.');
+		fetch(root, {
+			method: 'POST',
+			headers: headers,
+			body: post
+		})
+			.then(function (response) {
+				if (response.ok) {
+					return response.json();
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.then(function (results) {
+				if (results.template) {
+					NEWSToggle('search', true);
+				} else {
+					window.location.href = results.uri;
+				}
+			})
+			.catch(function (err) {
+				alert(err);
+			});
 	}
 }
 
@@ -786,33 +1030,33 @@ function NEWSSearch() {
 
 	if (list) {
 		if (tagresources == "0") {
-			$(list).addClass('d-none');
+			list.classList.add('d-none');
 		} else {
-			$(list).removeClass('d-none');
+			list.classList.remove('d-none');
 		}
 	}
 
 	if (locale) {
 		if (taglocation == "0") {
-			$(locale).addClass('d-none');
+			locale.classList.add('d-none');
 		} else {
-			$(locale).removeClass('d-none');
+			locale.classList.remove('d-none');
 		}
 	}
 
 	if (url) {
 		if (!tagurl || tagurl == "0") {
-			$(url).addClass('d-none');
+			url.classList.add('d-none');
 		} else {
-			$(url).removeClass('d-none');
+			url.classList.remove('d-none');
 		}
 	}
 
 	if (users) {
 		if (!tagusers || tagusers == "0") {
-			$(users).addClass('d-none');
+			users.classList.add('d-none');
 		} else {
-			$(users).removeClass('d-none');
+			users.classList.remove('d-none');
 		}
 	}
 
@@ -823,11 +1067,11 @@ function NEWSSearch() {
 	var resourcedata = Array.prototype.slice.call(document.querySelectorAll('#newsresource option:checked'), 0).map(function (v) {
 		return v.value;
 	});
-	for (var i=0; i<resourcedata.length; i++) {
+	for (var i = 0; i < resourcedata.length; i++) {
 		if (resourcedata[i] != "") {
 			if (resourcedata[i].indexOf('/') !== -1) {
 				var resource = resourcedata[i].split('/');
-				resources.push(resource[resource.length-1]);
+				resources.push(resource[resource.length - 1]);
 			} else {
 				resources.push(resourcedata[i]);
 			}
@@ -836,32 +1080,28 @@ function NEWSSearch() {
 
 	// sanity checks
 	if (start != "") {
-		if(!start.match(/^\d{4}-\d{2}-\d{2}$/)) {
-			SetError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
+		if (!start.match(/^\d{4}-\d{2}-\d{2}$/)) {
+			DisplayError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
 			return;
 		} else {
-			// clear error boxes
-			document.getElementById("TAB_search_action").innerHTML = "";
-			document.getElementById("TAB_add_action").innerHTML = "";
+			ClearError();
 		}
 		start = start + "!00:00:00";
 	}
 
 	if (stop != "") {
-		if(!stop.match(/^\d{4}-\d{2}-\d{2}$/)) {
-			SetError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
+		if (!stop.match(/^\d{4}-\d{2}-\d{2}$/)) {
+			DisplayError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
 			return;
 		} else {
-			// clear error boxes
-			document.getElementById("TAB_search_action").innerHTML = "";
-			document.getElementById("TAB_add_action").innerHTML = "";
+			ClearError();
 		}
 		stop = stop + "!23:59:59";
 	}
 
 	if (newstypeid != "") {
 		if (!newstypeid.match(/^(-)?[0-9]+$/)) {
-			SetError('Invalid news type', 'Please select a news type');
+			DisplayError('Invalid news type', 'Please select a news type');
 			return;
 		}
 	}
@@ -895,7 +1135,7 @@ function NEWSSearch() {
 	if (!in_add) {
 		if (start != "") {
 			//searchstring += " start:"  + start;
-			querystring += "&start="  + start;
+			querystring += "&start=" + start;
 		}
 		if (stop != "") {
 			//searchstring += " stop:" + stop;
@@ -907,7 +1147,7 @@ function NEWSSearch() {
 	if (!in_edit && resources.length > 0) {
 		//searchstring += " resource:" + resources[0];
 		querystring += "&resource=" + resources[0];
-		for (var x=1;x<resources.length;x++) {
+		for (var x = 1; x < resources.length; x++) {
 			//searchstring += "," + resources[x];
 			querystring += "," + resources[x];
 		}
@@ -954,7 +1194,7 @@ function NEWSSearch() {
 		}
 	}
 
-	if (typeof(history.pushState) != 'undefined') {
+	if (typeof (history.pushState) != 'undefined') {
 		var tb = window.location.href.match(/[&?](\w+)&?$/);
 		if (tb != null) {
 			querystring = querystring + "&" + tb[1];
@@ -963,17 +1203,34 @@ function NEWSSearch() {
 		history.pushState(null, null, encodeURI(querystring));
 	}
 
-	//if (searchstring == "") {
-	//	searchstring = "start:0000-00-00";
-	//}
 	var page = document.getElementById('page');
 	if (page) {
 		querystring += '&page=' + page.value;
 	}
 	querystring += '&api_token=' + $('meta[name="api-token"]').attr('content');
-	//console.log(root + "/" + encodeURI(querystring));
 
-	WSGetURL(root + "/" + encodeURI(querystring), NEWSSearched);
+	fetch(root + "/" + encodeURI(querystring), {
+		method: 'GET',
+		headers: headers
+	})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (data) {
+			NEWSSearched(data);
+		})
+		.catch(function (err) {
+			alert(err);
+		});
 }
 
 /**
@@ -1003,20 +1260,16 @@ function NEWSToggleAddButton() {
 
 		if ((template || start) && headline && notes) {
 			document.getElementById("INPUT_add").disabled = false;
-		} else  {
+		} else {
 			document.getElementById("INPUT_add").disabled = true;
 		}
 
 		if (template) {
-			$('#TR_date').addClass('d-none');
-			$('#TR_published').addClass('d-none');
-			//document.getElementById("TR_date").style.display = "none";
-			//document.getElementById("TR_published").style.display = "none";
+			document.getElementById('TR_date').classList.add('d-none');
+			document.getElementById('TR_published').classList.add('d-none');
 		} else {
-			//document.getElementById("TR_date").style.display = "block";
-			//document.getElementById("TR_published").style.display = "block";
-			$('#TR_date').removeClass('d-none');
-			$('#TR_published').removeClass('d-none');
+			document.getElementById('TR_date').classList.remove('d-none');
+			document.getElementById('TR_published').classList.remove('d-none');
 		}
 	}
 }
@@ -1027,170 +1280,137 @@ function NEWSToggleAddButton() {
  * @param   {object}  xml
  * @return  {void}
  */
-function NEWSSearched(xml) {
-	if (xml.status == 200) {
-		var news = document.getElementById("news");
+function NEWSSearched(results) { //xml) {
+	//if (xml.status == 200) {
+	var news = document.getElementById("news");
 
-		// clear out reports
-		news.innerHTML = "";
+	// clear out reports
+	news.innerHTML = "";
 
-		// parse results
-		var results = JSON.parse(xml.responseText);
-		//var edit = false;//results['canEdit']; //(results['authorized'] == 1) ? true : false;
+	// parse results
+	//var results = JSON.parse(xml.responseText);
+	//var edit = false;//results['canEdit']; //(results['authorized'] == 1) ? true : false;
 
-		document.getElementById("matchingnews").innerHTML = "Found " + results.meta.total + " matching articles";
-		for (var x=0;x<results.data.length;x++) {
-			NEWSPrintRow(results.data[x]);//, results.updates);
-		}
+	document.getElementById("matchingnews").innerHTML = "Found " + results.meta.total + " matching articles";
+	for (var x = 0; x < results.data.length; x++) {
+		NEWSPrintRow(results.data[x]);//, results.updates);
+	}
 
-		// Re-initialize tooltips
-		$('.tip').tooltip({
-			position: {
-				my: 'center bottom',
-				at: 'center top'
-			},
-			hide: false
-		});
+	// Re-initialize tooltips
+	$('.tip').tooltip({
+		position: {
+			my: 'center bottom',
+			at: 'center top'
+		},
+		hide: false
+	});
 
-		/*var footer = document.createElement("div");
-			footer.id = "newsfooter";
-			footer.innerHTML = "Displaying " + (results.from * results.per_page) + " of " + results.total + " News Articles...<br />";
+	var q = news.getAttribute('data-query');
+	var query = q.replace(' ', '&').replace(':', '=');
+	var lastpage = Math.ceil(results.meta.total > results.meta.per_page ? results.meta.total / results.meta.per_page : 1);
 
-		if ((results.from * results.per_page) < results.total || window.location.href.match(/[\?&]all/)) {
-			var a = document.createElement("a");
+	// Pagination
+	var ul = $('<ul class="pagination"></ul>');
 
-			if (!window.location.href.match(/[\?&]all/)) {
-				a.innerHTML = "Show All News";
-				var url = window.location.href.split("?");
-				if (typeof(url[1]) != 'undefined' || url[1] == '') {
-					a.href = url[0] + "?" + url[1] + "&all";
-				} else {
-					a.href = url[0] + "?all";
-				}
-			} else {
-				a.innerHTML = "Show Less News";
-				a.href = window.location.href.replace(/[&?]all/, '');
-			}
-			footer.appendChild(a);
-		}
+	var li = $('<li class="page-item page-first">');
+	var a = $('<a class="page-link" title="First page"><span aria-hidden="true">«</span></a>')
+		.attr('href', '?' + query + '&page=1')
+		.attr('data-page', 1);
+	if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
+		li.addClass('disabled');
+		a.attr('aria-disabled', 'true');
+	}
+	li.append(a);
+	ul.append(li);
 
-		news.appendChild(footer);
+	li = $('<li class="page-item page-prev">');
+	a = $('<a class="page-link" title="Previous page"><span aria-hidden="true">‹</span></a>')
+		.attr('href', '?' + query + ' &page=' + (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1))
+		.attr('data-page', (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1));
+	if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
+		li.addClass('disabled');
+		a.attr('aria-disabled', 'true');
+	}
+	li.append(a);
+	ul.append(li);
 
-		if (results.data.length == 0) {
-			var noresults = document.createElement("div");
-				noresults.id = "newnews";
-				noresults.innerHTML = "No matching articles found.";
-
-			news.appendChild(noresults);
-		}*/
-		var q = news.getAttribute('data-query');
-		var query = q.replace(' ', '&').replace(':', '=');
-		var lastpage = Math.ceil(results.meta.total > results.meta.per_page ? results.meta.total / results.meta.per_page : 1);
-
-		// Pagination
-		var ul = $('<ul class="pagination"></ul>');
-
-		var li = $('<li class="page-item page-first">');
-		var a = $('<a class="page-link" title="First page"><span aria-hidden="true">«</span></a>')
+	if (results.meta.total <= results.meta.per_page) {
+		li = $('<li class="page-item">');
+		a = $('<a class="page-link"></a>')
+			.text('1')
 			.attr('href', '?' + query + '&page=1')
 			.attr('data-page', 1);
-		if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
+		if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
 			li.addClass('disabled');
 			a.attr('aria-disabled', 'true');
 		}
 		li.append(a);
 		ul.append(li);
-
-		li = $('<li class="page-item page-prev">');
-		a = $('<a class="page-link" title="Previous page"><span aria-hidden="true">‹</span></a>')
-			.attr('href', '?' + query + ' &page=' + (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1))
-			.attr('data-page', (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1));
-		if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
-			li.addClass('disabled');
-			a.attr('aria-disabled', 'true');
-		}
-		li.append(a);
-		ul.append(li);
-
-		if (results.meta.total <= results.meta.per_page) {
+	} else {
+		var c = 0;
+		for (var l = 1; l <= lastpage; l++) {
+			if (c >= 10) {
+				li = $('<li class="page-item">');
+				a = $('<span class="page-link"></span>')
+					.text('...')
+					.attr('aria-disabled', 'true');
+				li.append(a);
+				ul.append(li);
+				break;
+			}
 			li = $('<li class="page-item">');
 			a = $('<a class="page-link"></a>')
-				.text('1')
-				.attr('href', '?' + query + '&page=1')
-				.attr('data-page', 1);
-			if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
-				li.addClass('disabled');
-				a.attr('aria-disabled', 'true');
+				.text(l)
+				.attr('href', '?' + query + '&page=' + l)
+				.attr('data-page', l);
+			if (results.meta.current_page == l) {
+				li.addClass('active');
+				//a.attr('aria-disabled', 'true');
 			}
 			li.append(a);
 			ul.append(li);
-		} else {
-			var c = 0;
-			for (var l = 1; l <= lastpage; l++) {
-				if (c >= 10) {
-					li = $('<li class="page-item">');
-					a = $('<span class="page-link"></span>')
-						.text('...')
-						.attr('aria-disabled', 'true');
-					li.append(a);
-					ul.append(li);
-					break;
-				}
-				li = $('<li class="page-item">');
-				a = $('<a class="page-link"></a>')
-					.text(l)
-					.attr('href', '?' + query + '&page=' + l)
-					.attr('data-page', l);
-				if (results.meta.current_page == l) {
-					li.addClass('active');
-					//a.attr('aria-disabled', 'true');
-				}
-				li.append(a);
-				ul.append(li);
-				c++;
-			}
+			c++;
 		}
-
-		li = $('<li class="page-item page-next">');
-		a = $('<a class="page-link" title="Next page"><span aria-hidden="true">›</span></a>')
-			.attr('href', '?' + query + '&page=' + (results.meta.current_page < lastpage ? lastpage - 1 : 1))
-			.attr('data-page', (results.meta.current_page > 1 ? lastpage - 1 : 1))
-			.attr('data-query', q.replace(/(page:\d+)/, 'page:' + (results.meta.current_page > 1 ? lastpage - 1 : 1)));
-		if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
-			li.addClass('disabled');
-			a.attr('aria-disabled', 'true');
-		}
-		li.append(a);
-		ul.append(li);
-
-		li = $('<li class="page-item page-last">');
-		a = $('<a class="page-link" title="Last page"><span aria-hidden="true">»</span></a>')
-			.attr('href', '?' + query + '&page=' + lastpage)
-			.attr('data-page', lastpage)
-			.attr('data-query', q.replace(/(page:\d+)/, 'page:' + lastpage));
-		if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
-			li.addClass('disabled');
-			a.attr('aria-disabled', 'true');
-		}
-		li.append(a);
-		ul.append(li);
-
-		$(news).append(ul);
-
-		$('.page-link').on('click', function (e) {
-			e.preventDefault();
-			$('#page').val($(this).data('page'));
-			NEWSSearch();
-		});
 	}
+
+	li = $('<li class="page-item page-next">');
+	a = $('<a class="page-link" title="Next page"><span aria-hidden="true">›</span></a>')
+		.attr('href', '?' + query + '&page=' + (results.meta.current_page < lastpage ? lastpage - 1 : 1))
+		.attr('data-page', (results.meta.current_page > 1 ? lastpage - 1 : 1))
+		.attr('data-query', q.replace(/(page:\d+)/, 'page:' + (results.meta.current_page > 1 ? lastpage - 1 : 1)));
+	if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
+		li.addClass('disabled');
+		a.attr('aria-disabled', 'true');
+	}
+	li.append(a);
+	ul.append(li);
+
+	li = $('<li class="page-item page-last">');
+	a = $('<a class="page-link" title="Last page"><span aria-hidden="true">»</span></a>')
+		.attr('href', '?' + query + '&page=' + lastpage)
+		.attr('data-page', lastpage)
+		.attr('data-query', q.replace(/(page:\d+)/, 'page:' + lastpage));
+	if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
+		li.addClass('disabled');
+		a.attr('aria-disabled', 'true');
+	}
+	li.append(a);
+	ul.append(li);
+
+	$(news).append(ul);
+
+	$('.page-link').on('click', function (e) {
+		e.preventDefault();
+		$('#page').val($(this).data('page'));
+		NEWSSearch();
+	});
+	//}
 }
 
 /**
  * Builds the news div with results returned from the WS
  *
  * @param   {object}  news
- * @param   {bool}    edit
- * @param   {array}   updates
  * @return  {void}
  */
 function NEWSPrintRow(news) {
@@ -1202,7 +1422,7 @@ function NEWSPrintRow(news) {
 	}
 
 	var id = news.id; //.split('/');
-		//id = id[id.length - 1];
+	//id = id[id.length - 1];
 
 	var resources = news.resources;
 	var headline = news.headline;
@@ -1255,24 +1475,31 @@ function NEWSPrintRow(news) {
 				e.preventDefault();
 
 				var post = {
-					'published' : '0',
-					'lastedit'  : LASTEDIT[id]
+					'published': '0',
+					'lastedit': LASTEDIT[id]
 				};
-				post = JSON.stringify(post);
 
-				WSPutURL(root + "/" + id, post, function (xml) {
-					if (xml.status < 400) {
-						document.getElementById("id").value = id;
-						NEWSSearch();
-					} else if (xml.status == 409) {
-						WSGetURL(root + "/" + id, function (xml) {
-							if (xml.status < 400) {
-								var results = JSON.parse(xml.responseText);
-								alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
+				fetch(root + "/" + id, {
+					method: 'PUT',
+					headers: headers,
+					body: JSON.stringify(post)
+				})
+					.then(function (response) {
+						if (response.ok) {
+							document.getElementById("id").value = id;
+							return NEWSSearch();
+						}
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
 							}
+							throw msg;
 						});
-					}
-				});
+					})
+					.catch(function (err) {
+						alert(err);
+					});
 			};
 			a.appendChild(document.createTextNode("Published"));
 			a.className = 'badge badge-success badge-published ml-3';
@@ -1282,24 +1509,30 @@ function NEWSPrintRow(news) {
 				e.preventDefault();
 
 				var post = {
-					'published' : '1',
-					'lastedit'  : LASTEDIT[id]
+					'published': '1',
+					'lastedit': LASTEDIT[id]
 				};
-				post = JSON.stringify(post);
-
-				WSPutURL(root + "/" + id, post, function (xml) {
-					if (xml.status < 400) {
-						document.getElementById("id").value = id;
-						NEWSSearch();
-					} else if (xml.status == 409) {
-						WSGetURL(root + "/" + id, function (xml) {
-							if (xml.status < 400) {
-								var results = JSON.parse(xml.responseText);
-								alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
+				fetch(root + "/" + id, {
+					method: 'PUT',
+					headers: headers,
+					body: JSON.stringify(post)
+				})
+					.then(function (response) {
+						if (response.ok) {
+							document.getElementById("id").value = id;
+							return NEWSSearch();
+						}
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
 							}
+							throw msg;
 						});
-					}
-				});
+					})
+					.catch(function (err) {
+						alert(err);
+					});
 			};
 			a.appendChild(document.createTextNode("Draft"));
 			a.className = 'badge badge-danger badge-unpublished ml-3';
@@ -1430,11 +1663,11 @@ function NEWSPrintRow(news) {
 	}
 
 	var input = document.createElement("input");
-		input.id = id + "_headlineinput";
-		input.type = "text";
-		input.value = headline;
-		input.style.display = "none";
-		input.className = "form-control newsheadlineeditinput";
+	input.id = id + "_headlineinput";
+	input.type = "text";
+	input.value = headline;
+	input.style.display = "none";
+	input.className = "form-control newsheadlineeditinput";
 
 	span = document.createElement("span");
 	span.appendChild(input);
@@ -1484,7 +1717,7 @@ function NEWSPrintRow(news) {
 	}
 
 	var ul = document.createElement("ul");
-		ul.className = 'card-meta panel-meta news-meta';
+	ul.className = 'card-meta panel-meta news-meta';
 
 	// Date
 	li = document.createElement("li");
@@ -1807,11 +2040,11 @@ function NEWSPrintRow(news) {
 	body = news.formattedbody;
 
 	// determine the directory we are operating in
-	var page = document.location.href.split("/")[4];
+	//var page = document.location.href.split("/")[4];
 	// if we are in news, we are doing report searches, so we should highlight matches
-	if (page == 'news') {
-		body = HighlightMatches(body);
-	}
+	//if (page == 'news') {
+	body = HighlightMatches(body);
+	//}
 
 	span = document.createElement("span");
 	span.id = id + "_text";
@@ -1820,17 +2053,17 @@ function NEWSPrintRow(news) {
 	td.appendChild(span);
 
 	var label = document.createElement("label");
-		label.setAttribute('for', id + "_textarea");
-		label.className = 'sr-only';
-		label.innerHTML = 'News text';
+	label.setAttribute('for', id + "_textarea");
+	label.className = 'sr-only';
+	label.innerHTML = 'News text';
 
 	var textarea = document.createElement("textarea");
-		textarea.id = id + "_textarea";
-		textarea.innerHTML = rawtext;
-		//textarea.style.display = "none";
-		textarea.rows = 7;
-		textarea.cols = 45;
-		textarea.className = "form-control md newspostedittextbox";
+	textarea.id = id + "_textarea";
+	textarea.innerHTML = rawtext;
+	//textarea.style.display = "none";
+	textarea.rows = 7;
+	textarea.cols = 45;
+	textarea.className = "form-control md newspostedittextbox";
 
 	span = document.createElement("span");
 	span.appendChild(label);
@@ -1928,8 +2161,8 @@ function NEWSPrintRow(news) {
 		span.setAttribute('for', id + "_textsaveupdatebox");
 
 		var checkbox = document.createElement("input");
-			checkbox.type = "checkbox";
-			checkbox.id = id + "_textsaveupdatebox";
+		checkbox.type = "checkbox";
+		checkbox.id = id + "_textsaveupdatebox";
 		span.appendChild(checkbox);
 		td.appendChild(span);
 
@@ -1982,8 +2215,8 @@ function NEWSPrintRow(news) {
 
 	// Edited by
 	if (news['editdate']
-	&& news['editdate'] != '0000-00-00 00:00:00'
-	&& news['editdate'] != news['createdate']) {
+		&& news['editdate'] != '0000-00-00 00:00:00'
+		&& news['editdate'] != news['createdate']) {
 		div = document.createElement("div");
 		div.className = "newspostedby newspostuser";
 
@@ -2023,22 +2256,36 @@ function NEWSPrintRow(news) {
 			label.innerHTML = 'Use template';
 
 			var select = document.createElement("select");
-				select.id = news['id'] + "_newupdatetemplate";
-				select.className = 'form-control';
-				select.innerHTML = tselect.innerHTML;
-				select.options[1] = null;
-				select.onchange = function () {
-					WSGetURL(this.options[this.selectedIndex].value, function(xml, news) {
-						if (xml.status < 400) {
-							var n = JSON.parse(xml.responseText);
-							document.getElementById(news + "_newupdatebox").value = n.body;
-							document.getElementById(news + "_newupdatebox").rows = 7;
-							document.getElementById(news + "_newupdatebox").focus();
-						} else {
-							alert("Error fetching template");
+			select.id = news['id'] + "_newupdatetemplate";
+			select.className = 'form-control';
+			select.innerHTML = tselect.innerHTML;
+			select.options[1] = null;
+			select.onchange = function () {
+				fetch(this.options[this.selectedIndex].value, {
+					method: 'GET',
+					headers: headers
+				})
+					.then(function (response) {
+						if (response.ok) {
+							return response.json();
 						}
-					}, news['id']);
-				};
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
+							}
+							throw msg;
+						});
+					})
+					.then(function (data) {
+						document.getElementById(news['id'] + "_newupdatebox").value = data.body;
+						document.getElementById(news['id'] + "_newupdatebox").rows = 7;
+						document.getElementById(news['id'] + "_newupdatebox").focus();
+					})
+					.catch(function (err) {
+						alert(err);
+					});
+			};
 
 			div.appendChild(label);
 			div.appendChild(select);
@@ -2099,8 +2346,8 @@ function NEWSPrintRow(news) {
 	//var c = Array();
 	for (x = 0; x < news.updates.length; x++) {
 		//if (root + "/" + news.updates[x]['newsid'] == news['id']) {
-			//c.push(news.updates[x]);
-			NewsPrintUpdate(news['id'], news.updates[x], edit);
+		//c.push(news.updates[x]);
+		NewsPrintUpdate(news['id'], news.updates[x], edit);
 		//}
 	}
 	/*for (x = 0; x < c.length; x++) {
@@ -2118,22 +2365,31 @@ function NEWSPrintRow(news) {
  */
 function NEWSDeleteNews(newsid) {
 	if (confirm("Are you sure you want to delete this news story?")) {
-		WSDeleteURL(root + "/" + newsid, function(xml, newsid) {
-			if (xml.status < 400) {
-				document.getElementById(newsid).style.display = "none";
-			} else {
+		fetch(root + "/" + newsid, {
+			method: 'DELETE',
+			headers: headers
+		})
+			.then(function (response) {
+				if (response.ok) {
+					document.getElementById(newsid).style.display = "none";
+					return;
+				}
+
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (error) {
 				var img = document.getElementById(newsid + "_newsdeleteimg");
 				if (img) {
-					if (xml.status == 403) {
-						img.className = "fa fa-exclamation-triangle";
-						img.parentNode.title = "Unable to delete story. Permission denied.";
-					} else {
-						img.className = "fa fa-exclamation-circle";
-						img.parentNode.title = "An error occurred while deleting story.";
-					}
+					img.className = "fa fa-exclamation-triangle";
+					img.parentNode.title = error;
 				}
-			}
-		}, newsid);
+			});
 	}
 }
 
@@ -2146,24 +2402,24 @@ function NEWSDeleteNews(newsid) {
 function NEWSEditNewsTextOpen(news) {
 	// hide text
 	var text = document.getElementById(news + "_text");
-		text.style.display = "none";
+	text.style.display = "none";
 
 	// show textarea
 	var box = document.getElementById(news + "_textarea");
-		box.style.height = (25 + text.parentNode.offsetHeight) + "px";
-		box.dispatchEvent(new Event('initEditor', { bubbles: true }));
-		box.parentNode.style.display = "block";
+	box.style.height = (25 + text.parentNode.offsetHeight) + "px";
+	box.dispatchEvent(new Event('initEditor', { bubbles: true }));
+	box.parentNode.style.display = "block";
 
 	// hide edit icon
 	var eicon = document.getElementById(news + "_textediticon");
-		eicon.style.display = "none";
+	eicon.style.display = "none";
 
 	// show save icon
 	var sicon = document.getElementById(news + "_textsaveicon");
-		sicon.style.display = "inline";
+	sicon.style.display = "inline";
 
 	var img = document.getElementById(news + "_textsaveiconimg");
-		img.className = "fa fa-save";
+	img.className = "fa fa-save";
 
 	document.getElementById(news + "_textpreviewicon").style.display = "inline";
 	document.getElementById(news + "_textcancelicon").style.display = "inline";
@@ -2171,7 +2427,7 @@ function NEWSEditNewsTextOpen(news) {
 
 	// show update
 	var update = document.getElementById(news + "_textsaveupdate");
-		update.style.display = "inline";
+	update.style.display = "inline";
 }
 
 /**
@@ -2183,19 +2439,19 @@ function NEWSEditNewsTextOpen(news) {
 function NEWSCancelNewsText(news) {
 	// hide text
 	var text = document.getElementById(news + "_text");
-		text.style.display = "block";
+	text.style.display = "block";
 
 	// show textarea
 	var box = document.getElementById(news + "_textarea");
-		box.parentNode.style.display = "none";
+	box.parentNode.style.display = "none";
 
 	// hide edit icon
 	var eicon = document.getElementById(news + "_textediticon");
-		eicon.style.display = "inline";
+	eicon.style.display = "inline";
 
 	// show save icon
 	var sicon = document.getElementById(news + "_textsaveicon");
-		sicon.style.display = "none";
+	sicon.style.display = "none";
 
 	document.getElementById(news + "_textpreviewicon").style.display = "none";
 	document.getElementById(news + "_textcancelicon").style.display = "none";
@@ -2203,7 +2459,7 @@ function NEWSCancelNewsText(news) {
 
 	// show update
 	var update = document.getElementById(news + "_textsaveupdate");
-		update.style.display = "none";
+	update.style.display = "none";
 }
 
 /**
@@ -2219,14 +2475,14 @@ function NEWSSaveNewsText(news) {
 
 	// change save icon
 	var icon = document.getElementById(news + "_textsaveicon");
-		icon.onclick = function () {};
+	icon.onclick = function () { };
 
 	var img = document.getElementById(news + "_textsaveiconimg");
-		img.className = "fa fa-spin fa-spinner";
-		img.parentNode.title = "Saving changes...";
+	img.className = "fa fa-spin fa-spinner";
+	img.parentNode.title = "Saving changes...";
 
 	var post = {
-		'body' : text//,
+		'body': text//,
 		//'lastedit' : LASTEDIT[news]
 	};
 
@@ -2235,56 +2491,46 @@ function NEWSSaveNewsText(news) {
 	}
 	post = JSON.stringify(post);
 
-	WSPutURL(root + "/" + news, post, NEWSSavedNewsText, news);
-}
+	fetch(root + "/" + news, {
+		method: 'GET',
+		headers: headers
+	})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (results) {
+			LASTEDIT[news] = results['lastedit'];
 
-/**
- * Callback after saving news text
- *
- * @param   {object}  xml
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSSavedNewsText(xml, news) {
-	var img = document.getElementById(news + "_textsaveiconimg");
-
-	if (xml.status < 400) {
-		var results = JSON.parse(xml.responseText);
-		LASTEDIT[news] = results['lastedit'];
-
-		var icon = document.getElementById(news + "_textsaveicon");
+			var icon = document.getElementById(news + "_textsaveicon");
 			icon.onclick = function () {
 				NEWSSaveNewsText(news);
 			};
 			icon.style.display = "none";
 
-		document.getElementById(news + "_textarea").style.display = "none";
-		document.getElementById(news + "_textediticon").style.display = "block";
-		document.getElementById(news + "_textsaveupdate").style.display = "none";
-		document.getElementById(news + "_textsaveupdatebox").checked = false;
-		document.getElementById(news + "_textpreviewicon").style.display = "none";
-		document.getElementById(news + "_textcancelicon").style.display = "none";
-		document.getElementById(news + "_texthelpicon").style.display = "none";
+			document.getElementById(news + "_textarea").style.display = "none";
+			document.getElementById(news + "_textediticon").style.display = "block";
+			document.getElementById(news + "_textsaveupdate").style.display = "none";
+			document.getElementById(news + "_textsaveupdatebox").checked = false;
+			document.getElementById(news + "_textpreviewicon").style.display = "none";
+			document.getElementById(news + "_textcancelicon").style.display = "none";
+			document.getElementById(news + "_texthelpicon").style.display = "none";
 
-		var text = document.getElementById(news + "_text");
+			var text = document.getElementById(news + "_text");
 			text.innerHTML = results['formattedbody'];
 			text.style.display = "block";
-	} else if (xml.status == 403) {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes, grace editing window has passed.";
-	} else if (xml.status == 409) {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes. This item has been edited by another user since loading this page.";
-		WSGetURL(root + "/" + news, function (xml) {
-			if (xml.status < 400) {
-				var results = JSON.parse(xml.responseText);
-				alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
-			}
+		})
+		.catch(function (err) {
+			alert(err);
 		});
-	} else {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes, reload the page and try again.";
-	}
 }
 
 /**
@@ -2296,26 +2542,26 @@ function NEWSSavedNewsText(xml, news) {
 function NEWSEditNewsHeadlineOpen(news) {
 	// hide text
 	var text = document.getElementById(news + "_headline");
-		text.style.display = "none";
+	text.style.display = "none";
 
 	// show textarea
 	var box = document.getElementById(news + "_headlineinput");
-		box.style.display = "block";
+	box.style.display = "block";
 
 	// hide edit icon
 	var eicon = document.getElementById(news + "_headlineediticon");
-		eicon.style.display = "none";
+	eicon.style.display = "none";
 
 	var cicon = document.getElementById(news + "_headlinecancelicon");
-		cicon.style.display = "inline";
+	cicon.style.display = "inline";
 
 	// show save icon
 	var sicon = document.getElementById(news + "_headlinesaveicon");
-		sicon.style.display = "inline";
+	sicon.style.display = "inline";
 
 	var img = document.getElementById(news + "_headlinesaveiconimg");
-		img.className = "fa fa-save";
-		img.parentNode.title = "Click to save changes.";
+	img.className = "fa fa-save";
+	img.parentNode.title = "Click to save changes.";
 }
 
 /**
@@ -2327,26 +2573,26 @@ function NEWSEditNewsHeadlineOpen(news) {
 function NEWSEditNewsLocationOpen(news) {
 	// hide text
 	var text = document.getElementById(news + "_location");
-		text.style.display = "none";
+	text.style.display = "none";
 
 	// show textarea
 	var box = document.getElementById(news + "_locationinput");
-		box.style.display = "block";
+	box.style.display = "block";
 
 	// hide edit icon
 	var eicon = document.getElementById(news + "_locationediticon");
-		eicon.style.display = "none";
+	eicon.style.display = "none";
 
 	var cicon = document.getElementById(news + "_locationcancelicon");
-		cicon.style.display = "inline";
+	cicon.style.display = "inline";
 
 	// show save icon
 	var sicon = document.getElementById(news + "_locationsaveicon");
-		sicon.style.display = "inline";
+	sicon.style.display = "inline";
 
 	var img = document.getElementById(news + "_locationsaveiconimg");
-		img.className = "fa fa-save";
-		img.parentNode.title = "Click to save changes.";
+	img.className = "fa fa-save";
+	img.parentNode.title = "Click to save changes.";
 }
 
 /**
@@ -2358,21 +2604,21 @@ function NEWSEditNewsLocationOpen(news) {
 function NEWSCancelNewsHeadline(news) {
 	// hide text
 	var text = document.getElementById(news + "_headline");
-		text.style.display = "inline";
+	text.style.display = "inline";
 
 	// show textarea
 	var box = document.getElementById(news + "_headlineinput");
-		box.style.display = "none";
+	box.style.display = "none";
 
 	// hide edit icon
 	var eicon = document.getElementById(news + "_headlineediticon");
-		eicon.style.display = "inline";
+	eicon.style.display = "inline";
 
 	document.getElementById(news + "_headlinecancelicon").style.display = "none";
 
 	// show save icon
 	var sicon = document.getElementById(news + "_headlinesaveicon");
-		sicon.style.display = "none";
+	sicon.style.display = "none";
 }
 
 /**
@@ -2384,21 +2630,21 @@ function NEWSCancelNewsHeadline(news) {
 function NEWSCancelNewsLocation(news) {
 	// hide text
 	var text = document.getElementById(news + "_location");
-		text.style.display = "inline";
+	text.style.display = "inline";
 
 	// show textarea
 	var box = document.getElementById(news + "_locationinput");
-		box.style.display = "none";
+	box.style.display = "none";
 
 	// hide edit icon
 	var eicon = document.getElementById(news + "_locationediticon");
-		eicon.style.display = "inline";
+	eicon.style.display = "inline";
 
 	document.getElementById(news + "_locationcancelicon").style.display = "none";
 
 	// show save icon
 	var sicon = document.getElementById(news + "_locationsaveicon");
-		sicon.style.display = "none";
+	sicon.style.display = "none";
 }
 
 /**
@@ -2413,19 +2659,62 @@ function NEWSSaveNewsHeadline(news) {
 
 	// change save icon
 	var icon = document.getElementById(news + "_headlinesaveicon");
-		icon.onclick = function () {};
+	icon.onclick = function () { };
 
 	var img = document.getElementById(news + "_headlinesaveiconimg");
-		img.className = "fa fa-spinner fa-spin";
-		img.parentNode.title = "Saving changes...";
+	img.className = "fa fa-spinner fa-spin";
+	img.parentNode.title = "Saving changes...";
 
 	var post = {
-		'headline' : text,
-		'lastedit' : LASTEDIT[news]
+		'headline': text,
+		'lastedit': LASTEDIT[news]
 	};
 	post = JSON.stringify(post);
 
-	WSPostURL(root + "/" + news, post, NEWSSavedNewsHeadline, news);
+	fetch(root + "/" + news, {
+		method: 'PUT',
+		headers: headers,
+		body: post
+	})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (results) {
+			LASTEDIT[news] = results['lastedit'];
+
+			var icon = document.getElementById(news + "_headlinesaveicon");
+			icon.onclick = function () {
+				NEWSSaveNewsHeadline(news);
+			};
+			icon.style.display = "none";
+
+			var cancelicon = document.getElementById(news + "_headlinecancelicon");
+			cancelicon.style.display = "none";
+
+			var text = document.getElementById(news + "_headline");
+			text.style.display = "inline";
+			text.innerHTML = results['headline'];
+
+			var input = document.getElementById(news + "_headlineinput");
+			input.style.display = "none";
+
+			var editicon = document.getElementById(news + "_headlineediticon");
+			editicon.style.display = "inline";
+		})
+		.catch(function (err) {
+			var img = document.getElementById(news + "_headlinesaveiconimg");
+			img.className = "fa fa-exclamation-circle";
+			img.parentNode.title = err;
+		});
 }
 
 /**
@@ -2440,108 +2729,62 @@ function NEWSSaveNewsLocation(news) {
 
 	// change save icon
 	var icon = document.getElementById(news + "_locationsaveicon");
-		icon.onclick = function () {};
+	icon.onclick = function () { };
+
 	var img = document.getElementById(news + "_locationsaveiconimg");
-		img.className = "fa fa-spinner fa-spin";
-		img.parentNode.title = "Saving changes...";
+	img.className = "fa fa-spinner fa-spin";
+	img.parentNode.title = "Saving changes...";
 
 	var post = {
-		'location' : text,
-		'lastedit' : LASTEDIT[news]
+		'location': text,
+		'lastedit': LASTEDIT[news]
 	};
 	post = JSON.stringify(post);
 
-	WSPostURL(root + "/" + news, post, NEWSSavedNewsLocation, news);
-}
-
-/**
- * Callback after saving news headline
- *
- * @param   {object}  xml
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSSavedNewsHeadline(xml, news) {
-	var img = document.getElementById(news + "_headlinesaveiconimg");
-
-	if (xml.status < 400) {
-		var editicon = document.getElementById(news + "_headlineediticon");
-		var icon = document.getElementById(news + "_headlinesaveicon");
-		var cancelicon = document.getElementById(news + "_headlinecancelicon");
-		var text = document.getElementById(news + "_headline");
-		var input = document.getElementById(news + "_headlineinput");
-		var results = JSON.parse(xml.responseText);
-		LASTEDIT[news] = results['lastedit'];
-
-		icon.onclick = function () { NEWSSaveNewsHeadline(news); };
-		icon.style.display = "none";
-
-		cancelicon.style.display = "none";
-		text.style.display = "inline";
-		input.style.display = "none";
-		editicon.style.display = "inline";
-		text.innerHTML = results['headline'];
-	} else if (xml.status == 403) {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes, grace editing window has passed.";
-	} else if (xml.status == 409) {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes. This item has been edited by another user since loading this page.";
-		WSGetURL(root + "/" + news, function (xml) {
-			if (xml.status < 400) {
-				var results = JSON.parse(xml.responseText);
-				alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
+	fetch(root + "/" + news, {
+		method: 'PUT',
+		headers: headers,
+		body: post
+	})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
 			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (results) {
+			LASTEDIT[news] = results['lastedit'];
+
+			var icon = document.getElementById(news + "_locationsaveicon");
+			icon.onclick = function () {
+				NEWSSaveNewsLocation(news);
+			};
+			icon.style.display = "none";
+
+			var cancelicon = document.getElementById(news + "_locationcancelicon");
+			cancelicon.style.display = "none";
+
+			var text = document.getElementById(news + "_location");
+			text.style.display = "inline";
+			text.innerHTML = results['location'];
+
+			var input = document.getElementById(news + "_locationinput");
+			input.style.display = "none";
+
+			var editicon = document.getElementById(news + "_locationediticon");
+			editicon.style.display = "inline";
+		})
+		.catch(function (err) {
+			var img = document.getElementById(news + "_locationsaveiconimg");
+			img.className = "fa fa-exclamation-circle";
+			img.parentNode.title = err;
 		});
-	} else {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes, reload the page and try again.";
-	}
-}
-
-/**
- * Callback after saving news location
- *
- * @param   {object}  xml
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSSavedNewsLocation(xml, news) {
-	var img = document.getElementById(news + "_locationsaveiconimg");
-
-	if (xml.status < 400) {
-		var editicon = document.getElementById(news + "_locationediticon");
-		var icon = document.getElementById(news + "_locationsaveicon");
-		var cancelicon = document.getElementById(news + "_locationcancelicon");
-		var text = document.getElementById(news + "_location");
-		var input = document.getElementById(news + "_locationinput");
-		var results = JSON.parse(xml.responseText);
-		LASTEDIT[news] = results['lastedit'];
-
-		icon.onclick = function () { NEWSSaveNewsLocation(news); };
-		icon.style.display = "none";
-
-		cancelicon.style.display = "none";
-		text.style.display = "inline";
-		input.style.display = "none";
-		editicon.style.display = "inline";
-		text.innerHTML = results['location'];
-	} else if (xml.status == 403) {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes, grace editing window has passed.";
-	} else if (xml.status == 409) {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes. This item has been edited by another user since loading this page.";
-		WSGetURL(root + "/" + news, function (xml) {
-			if (xml.status < 400) {
-				var results = JSON.parse(xml.responseText);
-				alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
-			}
-		});
-	} else {
-		img.className = "fa fa-exclamation-circle";
-		img.parentNode.title = "Unable to save changes, reload the page and try again.";
-	}
 }
 
 /**
@@ -2553,26 +2796,26 @@ function NEWSSavedNewsLocation(xml, news) {
 function NEWSEditNewsUrlOpen(news) {
 	// hide text
 	var text = document.getElementById(news + "_url");
-		text.style.display = "none";
+	text.style.display = "none";
 
 	// show textarea
 	var box = document.getElementById(news + "_urlinput");
-		box.style.display = "block";
+	box.style.display = "block";
 
 	// hide edit icon
 	var eicon = document.getElementById(news + "_urlediticon");
-		eicon.style.display = "none";
+	eicon.style.display = "none";
 
 	var cicon = document.getElementById(news + "_urlcancelicon");
-		cicon.style.display = "inline";
+	cicon.style.display = "inline";
 
 	// show save icon
 	var sicon = document.getElementById(news + "_urlsaveicon");
-		sicon.style.display = "inline";
+	sicon.style.display = "inline";
 
 	var img = document.getElementById(news + "_urlsaveiconimg");
-		img.className = "fa fa-save";
-		img.parentNode.title = "Click to save changes.";
+	img.className = "fa fa-save";
+	img.parentNode.title = "Click to save changes.";
 }
 
 /**
@@ -2584,21 +2827,21 @@ function NEWSEditNewsUrlOpen(news) {
 function NEWSCancelNewsUrl(news) {
 	// hide text
 	var text = document.getElementById(news + "_url");
-		text.style.display = "inline";
+	text.style.display = "inline";
 
 	// show textarea
 	var box = document.getElementById(news + "_urlinput");
-		box.style.display = "none";
+	box.style.display = "none";
 
 	// hide edit icon
 	var eicon = document.getElementById(news + "_urlediticon");
-		eicon.style.display = "inline";
+	eicon.style.display = "inline";
 
 	document.getElementById(news + "_urlcancelicon").style.display = "none";
 
 	// show save icon
 	var sicon = document.getElementById(news + "_urlsaveicon");
-		sicon.style.display = "none";
+	sicon.style.display = "none";
 }
 
 /**
@@ -2613,56 +2856,61 @@ function NEWSSaveNewsUrl(news) {
 
 	// change save icon
 	var icon = document.getElementById(news + "_urlsaveicon");
-		icon.onclick = function () {};
+	icon.onclick = function () { };
 	var img = document.getElementById(news + "_urlsaveiconimg");
-		img.className = "fa fa-spinner fa-spin";
-		img.parentNode.title = "Saving changes...";
+	img.className = "fa fa-spinner fa-spin";
+	img.parentNode.title = "Saving changes...";
 
 	var post = {
-		'url' : text,
-		'lastedit' : LASTEDIT[news]
+		'url': text,
+		'lastedit': LASTEDIT[news]
 	};
 	post = JSON.stringify(post);
 
-	WSPostURL(root + "/" + news, post, function(xml, news) {
-		var img = document.getElementById(news + "_urlsaveiconimg");
-
-		if (xml.status < 400) {
-			var editicon = document.getElementById(news + "_urlediticon");
-			var icon = document.getElementById(news + "_urlsaveicon");
-			var cancelicon = document.getElementById(news + "_urlcancelicon");
-			var text = document.getElementById(news + "_url");
-			var input = document.getElementById(news + "_urlinput");
-			var results = JSON.parse(xml.responseText);
+	fetch(root + "/" + news, {
+		method: 'PUT',
+		headers: headers,
+		body: post
+	})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (results) {
 			LASTEDIT[news] = results['lastedit'];
 
+			var icon = document.getElementById(news + "_urlsaveicon");
 			icon.onclick = function () {
 				NEWSSaveNewsUrl(news);
 			};
 			icon.style.display = "none";
 
+			var cancelicon = document.getElementById(news + "_urlcancelicon");
 			cancelicon.style.display = "none";
+
+			var text = document.getElementById(news + "_url");
 			text.style.display = "inline";
-			input.style.display = "none";
-			editicon.style.display = "inline";
 			text.innerHTML = results['location'];
-		} else if (xml.status == 403) {
+
+			var input = document.getElementById(news + "_urlinput");
+			input.style.display = "none";
+
+			var editicon = document.getElementById(news + "_urlediticon");
+			editicon.style.display = "inline";
+		})
+		.catch(function (err) {
+			var img = document.getElementById(news + "_urlsaveiconimg");
 			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = "Unable to save changes, grace editing window has passed.";
-		} else if (xml.status == 409) {
-			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = "Unable to save changes. This item has been edited by another user since loading this page.";
-			WSGetURL(root + "/" + news, function (xml) {
-				if (xml.status < 400) {
-					var results = JSON.parse(xml.responseText);
-					alert("Unable to save changes. This news item has been edited by " + results['editusername'] + " since you loaded this page. Please make note of your changes and reload the page to try editing again.");
-				}
-			});
-		} else {
-			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = "Unable to save changes, reload the page and try again.";
-		}
-	}, news);
+			img.parentNode.title = err;
+		});
 }
 
 /**
@@ -2737,19 +2985,29 @@ function PreviewExample(example) {
 		'vars': example_vars
 	};
 
-	$.ajax({
-		url: document.getElementById('markdown-help').getAttribute('data-api'),
-		type: 'post',
-		data: post,
-		dataType: 'json',
-		async: false,
-		success: function (response) {
-			document.getElementById('help1' + example + 'output').innerHTML = response['formattedbody'];
-		},
-		error: function (xhr) {
-			alert(xhr.responseJSON.message);
-		}
-	});
+	fetch(document.getElementById('markdown-help').getAttribute('data-api'), {
+		method: 'POST',
+		headers: headers,
+		body: JSON.stringify(post)
+	})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (results) {
+			document.getElementById('help1' + example + 'output').innerHTML = results['formattedbody'];
+		})
+		.catch(function (err) {
+			alert(err);
+		});
 }
 
 /**
@@ -2812,7 +3070,7 @@ function NEWSPreviewVars() { // news
  * @return  {void}
  */
 function NEWSPreview(news, edit) {
-	if (typeof(edit) == 'undefined') {
+	if (typeof (edit) == 'undefined') {
 		edit = false;
 	}
 
@@ -2837,35 +3095,33 @@ function NEWSPreview(news, edit) {
 		post['id'] = news;
 	}
 
-	WSPostURL(root + "/preview", JSON.stringify(post), function (xml) {
-		if (xml.status < 400) {
-			var results = JSON.parse(xml.responseText);
+	fetch(root + "/preview", {
+		method: 'POST',
+		headers: headers,
+		body: JSON.stringify(post)
+	})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (results) {
 			document.getElementById("preview").innerHTML = results['formattedbody'];
-		} else {
-			alert("An error occurred while generating preview.");
-		}
-	});
+		})
+		.catch(function (err) {
+			alert(err);
+		});
 
 	$('#preview').dialog({ modal: true, width: '691px' });
 	$('#preview').dialog('open');
 }
-
-/**
- * Toggle 'more' news
- *
- * @return  {void}
- */
-/*function NEWSToggleMoreNews() {
-	var more = document.getElementById("morenews");
-	var moretext = document.getElementById("morenewstext");
-	if (more.style.display == "none") {
-		$( "#morenews" ).toggle( "blind", {'direction': 'up', 'easing': 'swing', 'duration': 1000} );
-		moretext.innerHTML = "Less";
-	} else {
-		$( "#morenews" ).toggle( "blind", {'direction': 'up', 'easing': 'swing', 'duration': 1000} );
-		moretext.innerHTML = "More";
-	}
-}*/
 
 /**
  * Send an email
@@ -2874,7 +3130,7 @@ function NEWSPreview(news, edit) {
  * @return  {void}
  */
 function NEWSSendMail(news) {
-	if ($( '#' + news + '_textarea').parent().css('display') == 'block') {
+	if ($('#' + news + '_textarea').parent().css('display') == 'block') {
 		// We're still editing. Need to save first.
 		$("#dialog-confirm").dialog({
 			resizable: false,
@@ -2899,88 +3155,137 @@ function NEWSSendMail(news) {
 	}
 
 	// Get text and updates from WS
-	$.getJSON(root + "/" + news, function(data) {
-		var text = document.getElementById(news + "_textarea").value;
-		if (text == "") {
-			return;
-		}
-
-		var x = 0;
-
-		// Gather some  variables from DOM
-		var formatteddate = $('#' + news).find(".newsdate").first().html().replace(/<a href.*/, '');
-		var subject = $('#' + news + "_headline").text();
-		var locale = $('#' + news + "_location").text();
-		if (locale != '') {
-			locale = locale + "<br/>";
-		}
-		var resources = $('#' + news).find(".newspostresources").first().text().replace(/^Resources?: /, '');
-		var name = $(".login").find("a").first().text();
-
-		// set up header for email preview
-		var header = "To: " + resources + " Users<br />From: " + name + " via Research Computing<br/>Subject: " + subject + " - " + formatteddate + "<br/><hr /><strong>" + subject + "</strong><br/>" + formatteddate + "<br/>" + locale + "<br/>";
-
-		// set up foot for email preview
-		var footer = '<hr/><a href="/news/' + news + '">Article #' + news + '</a> posted on ' + data['formattedcreateddate'] + '.</a>';
-
-		var body = "";
-		if (data['updates'].length > 0) {
-			for (x = 0; x < data['updates'].length; x++) {
-				body = body + '<section><h3 class="newsupdate">UPDATE: ' + data['updates'][x]['formattedcreateddate'] + '</h3>' + data['updates'][x]['formattedbody'] + '</section>';
+	fetch(root + "/" + news, {
+		method: 'GET',
+		headers: headers
+	})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
 			}
-			body = body + '<section><h3 class="newsupdate">ORIGINAL: ' + data['formattedcreateddate'] + '</h3>';
-		}
-		body = body + data['formattedbody'];
-		if (data['updates'].length > 0) {
-			body += '</section>';
-		}
-
-		if (data['resources'].length > 0) {
-			footer += '<hr /><p>Send to resource mailing lists:</p><div class="row">';
-			for (x = 0; x < data['resources'].length; x++) {
-				footer += '<div class="col-md-3"><label><input type="checkbox" checked="checked" value="' + data['resources'][x]['resourceid'] + '" class="preview-resource" /> ' + data['resources'][x]['name'] + '</label></div>';
-			}
-			footer += '</div>';
-		}
-
-		document.getElementById("mailpreview").innerHTML = header + body + footer;
-
-		$('#mailpreview').dialog({ modal: true,
-			width: '691px',
-			buttons: {
-				"Cancel": function() {
-					$( this ).dialog("close");
-				},
-				"Send mail": function () {
-					$( this).dialog("close");
-
-					var post = {
-						'mail': 1,
-						'lastedit': LASTEDIT[news]
-					};
-
-					var resources = [];
-					$('.preview-resource').each(function (i, el) {
-						if ($(el).is(':checked')) {
-							resources.push($(el).val());
-						}
-					});
-
-					//if ($('.preview-resource').length != resources.length) {
-						post.resources = resources;
-					//}
-
-					post = JSON.stringify(post);
-
-					WSPutURL(root + "/" + news + "/email", post, NEWSSentMail, news);
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
 				}
+				throw msg;
+			});
+		})
+		.then(function (data) {
+			var text = document.getElementById(news + "_textarea").value;
+			if (text == "") {
+				return;
 			}
+
+			var x = 0;
+
+			// Gather some  variables from DOM
+			var formatteddate = $('#' + news).find(".newsdate").first().html().replace(/<a href.*/, '');
+			var subject = $('#' + news + "_headline").text();
+			var locale = $('#' + news + "_location").text();
+			if (locale != '') {
+				locale = locale + "<br/>";
+			}
+			var resources = $('#' + news).find(".newspostresources").first().text().replace(/^Resources?: /, '');
+			var name = $(".login").find("a").first().text();
+
+			// set up header for email preview
+			var header = "To: " + resources + " Users<br />From: " + name + " via Research Computing<br/>Subject: " + subject + " - " + formatteddate + "<br/><hr /><strong>" + subject + "</strong><br/>" + formatteddate + "<br/>" + locale + "<br/>";
+
+			// set up foot for email preview
+			var footer = '<hr/><a href="/news/' + news + '">Article #' + news + '</a> posted on ' + data['formattedcreateddate'] + '.</a>';
+
+			var body = "";
+			if (data['updates'].length > 0) {
+				for (x = 0; x < data['updates'].length; x++) {
+					body = body + '<section><h3 class="newsupdate">UPDATE: ' + data['updates'][x]['formattedcreateddate'] + '</h3>' + data['updates'][x]['formattedbody'] + '</section>';
+				}
+				body = body + '<section><h3 class="newsupdate">ORIGINAL: ' + data['formattedcreateddate'] + '</h3>';
+			}
+			body = body + data['formattedbody'];
+			if (data['updates'].length > 0) {
+				body += '</section>';
+			}
+
+			if (data['resources'].length > 0) {
+				footer += '<hr /><p>Send to resource mailing lists:</p><div class="row">';
+				for (x = 0; x < data['resources'].length; x++) {
+					footer += '<div class="col-md-3"><label><input type="checkbox" checked="checked" value="' + data['resources'][x]['resourceid'] + '" class="preview-resource" /> ' + data['resources'][x]['name'] + '</label></div>';
+				}
+				footer += '</div>';
+			}
+
+			document.getElementById("mailpreview").innerHTML = header + body + footer;
+
+			$('#mailpreview').dialog({
+				modal: true,
+				width: '691px',
+				buttons: {
+					"Cancel": function () {
+						$(this).dialog("close");
+					},
+					"Send mail": function () {
+						$(this).dialog("close");
+
+						var post = {
+							'mail': 1,
+							'lastedit': LASTEDIT[news]
+						};
+
+						var resources = [];
+						$('.preview-resource').each(function (i, el) {
+							if ($(el).is(':checked')) {
+								resources.push($(el).val());
+							}
+						});
+
+						//if ($('.preview-resource').length != resources.length) {
+						post.resources = resources;
+						//}
+
+						post = JSON.stringify(post);
+
+						fetch(root + "/" + news + "/email", {
+							method: 'PUT',
+							headers: headers,
+							body: post
+						})
+							.then(function (response) {
+								if (response.ok) {
+									return response.json();
+								}
+								return response.json().then(function (data) {
+									var msg = data.message;
+									if (typeof msg === 'object') {
+										msg = Object.values(msg).join('<br />');
+									}
+									throw msg;
+								});
+							})
+							.then(function (results) {
+								document.getElementById("IMG_mail_" + news).className = "fa fa-check";
+								document.getElementById("A_mail_" + news).onclick = function () { };
+
+								LASTEDIT[news] = results['lastedit'];
+
+								NEWSSearch();
+							})
+							.catch(function (err) {
+								document.getElementById("IMG_mail_" + news).className = "fa fa-exclamation-circle";
+								document.getElementById("A_mail_" + news).onclick = function () { };
+								alert(err);
+							});
+					}
+				}
+			});
+			if ($(".ui-dialog-buttonpane").find("div").length == 1) {
+				$(".ui-dialog-buttonpane").prepend('<div style="float:left;padding-top:1em;padding-left:18em">Send this email message?</div>');
+			}
+			$('#mailpreview').dialog('open');
+		})
+		.catch(function (err) {
+			alert(err);
 		});
-		if ($(".ui-dialog-buttonpane").find("div").length == 1) {
-			$(".ui-dialog-buttonpane").prepend('<div style="float:left;padding-top:1em;padding-left:18em">Send this email message?</div>');
-		}
-		$('#mailpreview').dialog('open');
-	});
 }
 
 /**
@@ -2990,115 +3295,133 @@ function NEWSSendMail(news) {
  * @return  {void}
  */
 function NEWSWriteMail(news) {
-	$.getJSON(root + "/" + news, function (data) {
-		$('#mail-subject').val(data.headline);
-
-		var body = '**Date:** ' + data.formatteddate.replace(/(<([^>]+)>)/ig, '').replace(/&nbsp;/g, ' ').replace('&#8211;', '-') + "\n";
-
-		if (data.location) {
-			body += '**Location:** ' + data.location + "\n";
-		}
-		if (data.url) {
-			body += '**URL:** ' + data.url + "\n";
-		}
-
-		//var name = $( ".login").find( "a" ).first().text();
-
-		$('#mail-body').val(body + "\n\n");
-
-		var to = $('#mail-to');
-		to.val('');
-		to.tagsInput({
-			placeholder: 'Select user...',
-			importPattern: /([^:]+):(.+)/i,
-			'autocomplete': {
-				source: autocompleteUsers(to.attr('data-uri')),
-				dataName: 'users',
-				height: 150,
-				delay: 100,
-				minLength: 1
+	fetch(root + "/" + news, {
+		method: 'GET',
+		headers: headers
+	})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
 			}
-		});
-		to.clearTags();
-		console.log(data.associations);
-		var x;
-		for (x = 0; x < data.associations.length; x++) {
-			if ($('.tagsinput').length) {
-				if (!to.tagExist(data.associations[x]['id'])) {
-					to.addTag({
-						'id': data.associations[x]['associd'],
-						'label': data.associations[x]['name']
-					});
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
 				}
+				throw msg;
+			});
+		})
+		.then(function (data) {
+			document.getElementById('mail-subject').value = data.headline;
+
+			var body = '**Date:** ' + data.formatteddate.replace(/(<([^>]+)>)/ig, '').replace(/&nbsp;/g, ' ').replace('&#8211;', '-') + "\n";
+
+			if (data.location) {
+				body += '**Location:** ' + data.location + "\n";
 			}
-		}
-
-		$('#mailwrite').dialog({
-			modal: true,
-			width: '691px',
-			buttons: {
-				"Cancel": function () {
-					$(this).dialog("close");
-				},
-				"Send mail": function () {
-					var usersdata = document.getElementById("mail-to").value.split(',');
-					var associations = [],
-						i;
-					for (i = 0; i < usersdata.length; i++) {
-						if (usersdata[i] != "") {
-							associations.push(usersdata[i]);
-						}
-					}
-
-					$(this).dialog("close");
-					var post = JSON.stringify({
-						'mail': 1,
-						'lastedit': LASTEDIT[news],
-						'headline': $('#mail-subject').val(),
-						'body': $('#mail-body').val(),
-						'associations': associations
-					});
-					WSPutURL(root + "/" + news + "/email", post, NEWSSentMail, news);
-				}
+			if (data.url) {
+				body += '**URL:** ' + data.url + "\n";
 			}
-		});
-		if ($(".ui-dialog-buttonpane").find("div").length == 1) {
-			$(".ui-dialog-buttonpane").prepend('<div style="float:left;padding-top:1em;padding-left:18em">Send this email message?</div>');
-		}
-		$('#mailwrite').dialog('open');
-	});
-}
 
-/**
- * Callback after an email has been sent
- *
- * @param   {object}  xml
- * @param   {string}  news
- * @return  {void}
- */
-function NEWSSentMail(xml, news) {
-	if (xml.status == 200) {
-		document.getElementById("IMG_mail_" + news).className = "fa fa-check";
-		document.getElementById("A_mail_" + news).onclick = function () {};
+			//var name = $( ".login").find( "a" ).first().text();
 
-		var results = JSON.parse(xml.responseText);
-		LASTEDIT[news] = results['lastedit'];
+			document.getElementById('mail-body').value = body + "\n\n";
 
-		NEWSSearch();
-	} else {
-		document.getElementById("IMG_mail_" + news).className = "fa fa-exclamation-circle";
-		document.getElementById("A_mail_" + news).onclick = function () {};
-		if (xml.status == 409) {
-			WSGetURL(root + "/" + news, function (xml) {
-				if (xml.status == 200) {
-					var results = JSON.parse(xml.responseText);
-					alert("Unable to save changes. This news item has been edited or mailed by " + results['editusername'] + " since you loaded this page. Please refresh the page and check for edits or mailing.");
+			var to = $('#mail-to');
+			to.val('');
+			to.tagsInput({
+				placeholder: 'Select user...',
+				importPattern: /([^:]+):(.+)/i,
+				'autocomplete': {
+					source: autocompleteUsers(to.attr('data-uri')),
+					dataName: 'users',
+					height: 150,
+					delay: 100,
+					minLength: 1
 				}
 			});
-		} else {
-			alert("An error occurred while sending mail.");
-		}
-	}
+			to.clearTags();
+
+			var x;
+			for (x = 0; x < data.associations.length; x++) {
+				if ($('.tagsinput').length) {
+					if (!to.tagExist(data.associations[x]['id'])) {
+						to.addTag({
+							'id': data.associations[x]['associd'],
+							'label': data.associations[x]['name']
+						});
+					}
+				}
+			}
+
+			$('#mailwrite').dialog({
+				modal: true,
+				width: '691px',
+				buttons: {
+					"Cancel": function () {
+						$(this).dialog("close");
+					},
+					"Send mail": function () {
+						var usersdata = document.getElementById("mail-to").value.split(',');
+						var associations = [],
+							i;
+						for (i = 0; i < usersdata.length; i++) {
+							if (usersdata[i] != "") {
+								associations.push(usersdata[i]);
+							}
+						}
+
+						$(this).dialog("close");
+
+						var post = JSON.stringify({
+							'mail': 1,
+							'lastedit': LASTEDIT[news],
+							'headline': $('#mail-subject').val(),
+							'body': $('#mail-body').val(),
+							'associations': associations
+						});
+
+						fetch(root + "/" + news + "/email", {
+							method: 'PUT',
+							headers: headers,
+							body: JSON.stringify(post)
+						})
+							.then(function (response) {
+								if (response.ok) {
+									return response.json();
+								}
+								return response.json().then(function (data) {
+									var msg = data.message;
+									if (typeof msg === 'object') {
+										msg = Object.values(msg).join('<br />');
+									}
+									throw msg;
+								});
+							})
+							.then(function (results) {
+								document.getElementById("IMG_mail_" + news).className = "fa fa-check";
+								document.getElementById("A_mail_" + news).onclick = function () { };
+
+								LASTEDIT[news] = results['lastedit'];
+
+								NEWSSearch();
+							})
+							.catch(function (err) {
+								document.getElementById("IMG_mail_" + news).className = "fa fa-exclamation-circle";
+								document.getElementById("A_mail_" + news).onclick = function () { };
+								alert(err);
+							});
+					}
+				}
+			});
+			if ($(".ui-dialog-buttonpane").find("div").length == 1) {
+				$(".ui-dialog-buttonpane").prepend('<div style="float:left;padding-top:1em;padding-left:18em">Send this email message?</div>');
+			}
+			$('#mailwrite').dialog('open');
+		})
+		.catch(function (err) {
+			alert(err);
+		});
 }
 
 /**
@@ -3123,7 +3446,7 @@ function NEWSUseTemplate() {
 		}
 
 		if (overwrite) {
-			overwrite = ! confirm("Are you sure you wish to overwrite text with this template? Any work will be lost.");
+			overwrite = !confirm("Are you sure you wish to overwrite text with this template? Any work will be lost.");
 		}
 
 		if (!overwrite) {
@@ -3133,58 +3456,56 @@ function NEWSUseTemplate() {
 			document.getElementById("template").checked = false;
 			document.getElementById("published").checked = true;
 
-			WSGetURL(template, NEWSPopulateTemplate);
-		} else {
+			fetch(template, {
+				method: 'GET',
+				headers: headers
+			})
+				.then(function (response) {
+					if (response.ok) {
+						return response.json();
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.then(function (news) {
+					document.getElementById("Headline").value = news.headline.replace(/&#039;/g, "'").replace(/&quot;/g, '"');
+					document.getElementById("NotesText").value = news.body.replace(/&#039;/g, "'").replace(/&quot;/g, '"');
+					document.getElementById("NotesText").dispatchEvent(new Event('refreshEditor', { bubbles: true }));
 
+					var newstype = document.getElementById("newstype");
+					var x;
+
+					for (x = 0; x < newstype.options.length; x++) {
+						if (newstype.options[x].value == news.newstypeid) {
+							newstype.selectedIndex = x;
+						}
+					}
+
+					var resources = Array.prototype.slice.call(document.querySelectorAll('#newsresource option:checked'), 0).map(function (v) {
+						return v.value;
+					});
+
+					for (x = 0; x < news.resources.length; x++) {
+						resources.push(news.resources[x]['resourceid']);
+					}
+
+					$('#newsresource')
+						.val(resources)
+						.trigger('change');
+
+					NEWSSearch();
+				})
+				.catch(function (err) {
+					alert(err);
+				});
+		} else {
 			document.getElementById("template_select").selectedIndex = 0;
 		}
-	}
-}
-
-/**
- * Populate the form with template contents
- *
- * @param   {object}  xml
- * @return  {void}
- */
-function NEWSPopulateTemplate(xml) {
-	if (xml.status == 200) {
-		var news = JSON.parse(xml.responseText);
-		document.getElementById("Headline").value = news.headline.replace(/&#039;/g, "'").replace(/&quot;/g, '"');
-		document.getElementById("NotesText").value = news.body.replace(/&#039;/g, "'").replace(/&quot;/g, '"');
-
-		var newstype = document.getElementById("newstype");
-		var x;
-
-		for (x=0;x<newstype.options.length;x++) {
-			if (newstype.options[x].value == news.newstypeid) {
-				newstype.selectedIndex = x;
-			}
-		}
-
-		var resources = Array.prototype.slice.call(document.querySelectorAll('#newsresource option:checked'), 0).map(function (v) {
-			return v.value;
-		});
-
-		for (x = 0; x < news.resources.length; x++) {
-			resources.push(news.resources[x]['resourceid']);
-			/*if ($('.tagsinput').length) {
-				if (!$('#newsresource').tagExist(news.resources[x]['resourceid'])) {
-					$('#newsresource').addTag({
-						'id': news.resources[x]['resourceid'],
-						'label': news.resources[x]['resourcename']
-					});
-				}
-			}*/
-		}
-
-		$('#newsresource')
-			.val(resources)
-			.trigger('change');
-
-		NEWSSearch();
-	} else {
-		alert("An error ocurred while fetching template.");
 	}
 }
 
@@ -3196,7 +3517,7 @@ function NEWSPopulateTemplate(xml) {
  */
 function NewsExpandNewUpdate(comment) {
 	var textarea = document.getElementById(comment);
-		textarea.setAttribute('rows', 7);
+	textarea.setAttribute('rows', 7);
 
 	var img = document.getElementById(comment + "save");
 	if (img) {
@@ -3236,18 +3557,32 @@ function NewsPostUpdate(newsid) {
 		'body': body
 	});
 
-	WSPostURL(root + "/" + newsid + "/updates", post, function(xml, newsid) {
-		if (xml.status < 400) {
-			var results = JSON.parse(xml.responseText);
-
+	fetch(root + "/" + newsid + "/updates", {
+		method: 'POST',
+		headers: headers,
+		body: post
+	})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (results) {
 			NewsPrintUpdate(newsid, results);
 			document.getElementById(newsid + "_newupdatebox").value = "";
 			NewsCollapseNewUpdate(newsid + "_newupdatebox");
-		} else {
+		})
+		.catch(function (err) {
 			document.getElementById(newsid + "_newupdateboxsave").className = "fa fa-exclamation-circle";
-			document.getElementById(newsid + "_newupdateboxsave").parentNode.title = "An error occured while posting comment.";
-		}
-	}, newsid);
+			document.getElementById(newsid + "_newupdateboxsave").parentNode.title = err;
+		});
 }
 
 /**
@@ -3259,7 +3594,7 @@ function NewsPostUpdate(newsid) {
  * @return  {void}
  */
 function NewsPrintUpdate(newsid, update, edit) {
-	if (typeof(edit) === 'undefined') {
+	if (typeof (edit) === 'undefined') {
 		edit = update.can.edit;
 	}
 
@@ -3273,13 +3608,13 @@ function NewsPrintUpdate(newsid, update, edit) {
 	var li = document.createElement("li");
 
 	var panel = document.createElement("div");
-		panel.className = "card panel panel-default mb-3";
+	panel.className = "card panel panel-default mb-3";
 
 	var img, a, span;
 
 	if (edit) {
 		var tr = document.createElement("div");
-			tr.className = 'card-header panel-heading news-admin';
+		tr.className = 'card-header panel-heading news-admin';
 
 		span = document.createElement("span");
 		span.className = 'newsid';
@@ -3309,7 +3644,7 @@ function NewsPrintUpdate(newsid, update, edit) {
 	}
 
 	var div = document.createElement("div");
-		div.className = "card-body panel-body crmcomment crmcommenttext";
+	div.className = "card-body panel-body crmcomment crmcommenttext";
 
 	span = document.createElement("span");
 	span.id = update['id'] + "_update";
@@ -3338,16 +3673,16 @@ function NewsPrintUpdate(newsid, update, edit) {
 		div.appendChild(a);
 
 		var label = document.createElement("label");
-			label.setAttribute('for', update['id'] + "_updatetextarea");
-			label.className = 'sr-only';
-			label.innerHTML = 'Update text';
+		label.setAttribute('for', update['id'] + "_updatetextarea");
+		label.className = 'sr-only';
+		label.innerHTML = 'Update text';
 
 		// Text box
 		var textarea = document.createElement("textarea");
-			textarea.id = update['id'] + "_updatetextarea";
-			textarea.innerHTML = update['body'];
-			//textarea.style.display = "none";
-			textarea.className = "form-control md newsupdateedittextbox";
+		textarea.id = update['id'] + "_updatetextarea";
+		textarea.innerHTML = update['body'];
+		//textarea.style.display = "none";
+		textarea.className = "form-control md newsupdateedittextbox";
 
 		span = document.createElement("span");
 		span.appendChild(label);
@@ -3383,8 +3718,8 @@ function NewsPrintUpdate(newsid, update, edit) {
 	div.className = "card-footer panel-footer";
 
 	var div2 = document.createElement("div");
-		div2.innerHTML += "Posted by " + update['username'] + " on " + update['formattedcreateddate'];
-		div2.className = "crmcommentpostedby";
+	div2.innerHTML += "Posted by " + update['username'] + " on " + update['formattedcreateddate'];
+	div2.className = "crmcommentpostedby";
 
 	div.appendChild(div2);
 	panel.appendChild(div);
@@ -3402,23 +3737,23 @@ function NewsPrintUpdate(newsid, update, edit) {
 function NewsEditUpdateTextOpen(update) {
 	// hide text
 	var text = document.getElementById(update + "_update");
-		text.style.display = "none";
+	text.style.display = "none";
 
 	// show textarea
 	var box = document.getElementById(update + "_updatetextarea");
-		box.dispatchEvent(new Event('initEditor', { bubbles: true }));
-		box.parentNode.style.display = "block";
+	box.dispatchEvent(new Event('initEditor', { bubbles: true }));
+	box.parentNode.style.display = "block";
 
 	// hide edit icon
 	var eicon = document.getElementById(update + "_updatetextediticon");
-		eicon.style.display = "none";
+	eicon.style.display = "none";
 
 	// show save icon
 	var sicon = document.getElementById(update + "_updatetextsaveicon");
-		sicon.style.display = "block";
+	sicon.style.display = "block";
 
 	var img = document.getElementById(update + "_updatetextsaveiconimg");
-		img.className = "fa fa-save";
+	img.className = "fa fa-save";
 }
 
 /**
@@ -3433,39 +3768,55 @@ function NewsSaveUpdateText(newsid, update) {
 
 	// change save icon
 	var icon = document.getElementById(update + "_updatetextsaveicon");
-		icon.onclick = function () {};
+	icon.onclick = function () { };
 
 	var img = document.getElementById(update + "_updatetextsaveiconimg");
-		img.className = "fa fa-spinner fa-spin";
+	img.className = "fa fa-spinner fa-spin";
 
-	var post = { 'body' : text };
-		post = JSON.stringify(post);
+	var post = { 'body': text };
+	post = JSON.stringify(post);
 
-	WSPutURL(root + "/" + newsid + "/updates/" + update, post, function(xml, update) {
-		var editicon = document.getElementById(update + "_updatetextediticon");
-		var icon = document.getElementById(update + "_updatetextsaveicon");
-		var img = document.getElementById(update + "_updatetextsaveiconimg");
-		var text = document.getElementById(update + "_update");
-		var box = document.getElementById(update + "_updatetextarea");
+	fetch(root + "/" + newsid + "/updates/" + update, {
+		method: 'PUT',
+		headers: headers,
+		body: post
+	})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
 
-		if (xml.status < 400) {
-			var results = JSON.parse(xml.responseText);
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (results) {
+			var icon = document.getElementById(update + "_updatetextsaveicon");
 			icon.style.display = "none";
 			icon.onclick = function () {
 				NewsSaveUpdateText(results.data.newsid, update);
 			};
+			var text = document.getElementById(update + "_update");
 			text.style.display = "block";
-			box.parentNode.style.display = "none";
-			editicon.style.display = "block";
 			text.innerHTML = results.formattedbody;
-		} else if (xml.status == 403) {
-			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = "Unable to save changes, grace editing window has passed.";
-		} else {
-			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = "Unable to save changes, reload the page and try again.";
-		}
-	}, update);
+
+			var box = document.getElementById(update + "_updatetextarea");
+			box.parentNode.style.display = "none";
+
+			var editicon = document.getElementById(update + "_updatetextediticon");
+			editicon.style.display = "block";
+		})
+		.catch(function (error) {
+			var img = document.getElementById(update + "_updatetextsaveiconimg");
+			if (img) {
+				img.className = "fa fa-exclamation-circle";
+				img.parentNode.title = error;
+			}
+		});
 }
 
 /**
@@ -3477,22 +3828,36 @@ function NewsSaveUpdateText(newsid, update) {
  */
 function NewsDeleteUpdate(updateid, reportid) {
 	if (confirm("Are you sure you want to delete this update?")) {
-		WSDeleteURL(root + "/" + reportid + "/updates/" + updateid, function(xml, arg) {
-			if (xml.status < 400) {
-				$('#' + arg['updateid'] + "_update").closest('li').remove();
-			} else if (xml.status == 403) {
-				document.getElementById(arg['reportid'] + "_updatedeleteimg").className = "fa fa-exclamation-circle";
-				document.getElementById(arg['reportid'] + "_updatedeleteimg").parentNode.title = "Unable to save changes, grace editing window has passed.";
-			} else {
-				document.getElementById(arg['updateid'] + "_updatedeleteimg").className = "fa fa-exclamation-circle";
-				document.getElementById(arg['updateid'] + "_updatedeleteimg").parentNode.title = "An error occurred while deleting update.";
-			}
-		}, { 'updateid' : updateid, 'reportid' : reportid });
+		fetch(root + "/" + reportid + "/updates/" + updateid, {
+			method: 'DELETE',
+			headers: headers
+		})
+			.then(function (response) {
+				if (response.ok) {
+					$('#' + updateid + "_update").closest('li').remove();
+					return;
+				}
+
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (error) {
+				var img = document.getElementById(updateid + "_updatedeleteimg");
+				if (img) {
+					img.className = "fa fa-exclamation-circle";
+					img.parentNode.title = error;
+				}
+			});
 	}
 }
 
-var autocompleteUsers = function(url) {
-	return function(request, response) {
+var autocompleteUsers = function (url) {
+	return function (request, response) {
 		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
 			response($.map(data.data, function (el) {
 				return {
@@ -3508,11 +3873,15 @@ var autocompleteUsers = function(url) {
 /**
  * Initiate event hooks
  */
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+	headers = {
+		'Content-Type': 'application/json',
+		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+	};
+
 	var tabs = document.querySelectorAll('.nav-tabs a');
 
-	for (i = 0; i < tabs.length; i++)
-	{
+	for (i = 0; i < tabs.length; i++) {
 		tabs[i].addEventListener('click', function (event) {
 			event.preventDefault();
 
@@ -3521,7 +3890,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	// Date/time
-	$('.date-pick,.time-pick').on('change', function(){
+	$('.date-pick,.time-pick').on('change', function () {
 		NEWSDateSearch($(this).attr('name'));
 	});
 
@@ -3530,7 +3899,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			timeFormat: "h:i A",
 			minTime: '8:00am',
 			maxTime: '5:00pm',
-			change: function() {
+			change: function () {
 				$(this).trigger('change');
 			}
 		}).keyup(function (e) {
@@ -3542,7 +3911,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	// Dialogs
 	if ($('.samplebox').length) {
-		$('.samplebox').on('keyup', function (){
+		$('.samplebox').on('keyup', function () {
 			PreviewExample($(this).data('sample'));
 		});
 
@@ -3552,58 +3921,58 @@ document.addEventListener('DOMContentLoaded', function() {
 		//PreviewExample('h');
 	}
 
-	$('#location').on('keyup', function(){
+	$('#location').on('keyup', function () {
 		NEWSToggleAddButton();
 	});
-	$('#newstype').on('change', function(){
+	$('#newstype').on('change', function () {
 		NEWSNewstypeSearch($(this).val());
 	});
-	$('#Headline').on('keyup', function(){
+	$('#Headline').on('keyup', function () {
 		NEWSToggleAddButton();
 	});
-	$('#NotesText').on('keyup', function(){
+	$('#NotesText').on('keyup', function () {
 		NEWSToggleAddButton();
 	});
 
-	$('#keywords').on('keyup', function(event){
+	$('#keywords').on('keyup', function (event) {
 		NEWSKeywordSearch(event.keyCode);
 	});
-	$('#id').on('keyup', function(event){
+	$('#id').on('keyup', function (event) {
 		NEWSKeywordSearch(event.keyCode);
 	});
-	$('#template_select').on('change', function(){
+	$('#template_select').on('change', function () {
 		NEWSSearch();
 	});
-	$('#datesegmented').on('change', function(){
+	$('#datesegmented').on('change', function () {
 		$('#TR_date').toggle();
 		$('#TR_newstime').toggle();
 	});
-	$('#template').on('change', function(){
+	$('#template').on('change', function () {
 		NEWSSearch();
 	});
-	$('#published').on('change', function(){
+	$('#published').on('change', function () {
 		NEWSSearch();
 	});
 
 	// Buttons
-	$('#INPUT_search').on('click', function(event){
+	$('#INPUT_search').on('click', function (event) {
 		event.preventDefault();
 		NEWSSearch();
 	});
-	$('#INPUT_clear').on('click', function(event){
+	$('#INPUT_clear').on('click', function (event) {
 		event.preventDefault();
 		NEWSClearSearch();
 	});
-	$('#INPUT_add').on('click', function(event){
+	$('#INPUT_add').on('click', function (event) {
 		event.preventDefault();
 		NEWSAddEntry();
 	});
-	$('#INPUT_preview').on('click', function(event){
+	$('#INPUT_preview').on('click', function (event) {
 		event.preventDefault();
 		NEWSPreview($(this).data('id'), true);
 	});
 
-	$('#DIV_news form').on('submit', function(e){
+	$('#DIV_news form').on('submit', function (e) {
 		e.preventDefault();
 		return false;
 	});
@@ -3641,12 +4010,12 @@ document.addEventListener('DOMContentLoaded', function() {
 				return item.text;
 			}
 		})
-		.on('select2:select', function () {
-			NEWSSearch();
-		})
-		.on('select2:unselect', function () {
-			NEWSSearch();
-		});
+			.on('select2:select', function () {
+				NEWSSearch();
+			})
+			.on('select2:unselect', function () {
+				NEWSSearch();
+			});
 	}
 
 	var newsuser = $("#newsuser");
@@ -3670,22 +4039,22 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
-	document.querySelectorAll('.btn-attend').forEach(function (el) {
-		el.addEventListener('click', function (event) {
+	document.querySelectorAll('.btn-attend').forEach(function (btn) {
+		btn.addEventListener('click', function (event) {
 			event.preventDefault();
 
 			var el = $(this);
-			var id = el.data('newsid');
+			var id = btn.getAttribute('data-newsid');
 			var post = {
-				'associd': el.data('assoc'),
+				'associd': btn.getAttribute('data-assoc'),
 				'assoctype': 'user',
 				'newsid': id
 			};
 
 			el.parent().find('.alert').remove();
 
-			if (el.attr('data-comment') && $(el.attr('data-comment'))) {
-				post['comment'] = $(el.attr('data-comment')).val().trim();
+			if (btn.getAttribute('data-comment') && $(btn.getAttribute('data-comment'))) {
+				post['comment'] = $(btn.getAttribute('data-comment')).val().trim();
 				var words = post['comment']
 					.replace(/^[\s,.;]+/, "")
 					.replace(/[\s,.;]+$/, "")
@@ -3693,49 +4062,70 @@ document.addEventListener('DOMContentLoaded', function() {
 					.length;
 
 				if (!post['comment'] || words < 1) {
-					$(el.attr('data-comment')).addClass('is-invalid');
-					el.parent().append('<span class="alert alert-danger">Please provide a comment.</span>');
+					$(btn.getAttribute('data-comment')).addClass('is-invalid');
+					btn.parentNode.innerHTML = btn.parentNode.innerHTML + '<span class="alert alert-danger">Please provide a comment.</span>';
 					return;
 				} else {
-					$(el.attr('data-comment')).removeClass('is-invalid');
+					$(btn.getAttribute('data-comment')).removeClass('is-invalid');
 				}
 			}
 
-			post = JSON.stringify(post);
+			fetch(root + "/associations", {
+				method: 'POST',
+				headers: headers,
+				body: JSON.stringify(post)
+			})
+				.then(function (response) {
+					if (response.ok) {
+						btn.parentNode.innerHTML = '<span class="alert alert-success">Thank you for your interest!</span>';
+						setTimeout(function () {
+							window.location.reload(true);
+						}, 1000);
+						return;
+					}
 
-			WSPostURL(root + "/associations", post, function (xml) {
-				if (xml.status < 400) {
-					el.parent().html('<span class="alert alert-success">Thank you for your interest!</span>');
-					setTimeout(function () {
-						window.location.reload(true);
-					}, 1000);
-				} else if (xml.status == 403) {
-					el.parent().append('<span class="alert alert-warning">Registration is closed.</span>');
-				} else {
-					el.parent().append('<span class="alert alert-danger">An error occurred.</span>');
-				}
-			});
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (error) {
+					btn.parentNode.innerHTML = btn.parentNode.innerHTML + '<span class="alert alert-error">' + error + '</span>';
+				});
 		});
 	});
 
-	document.querySelectorAll('.btn-notattend').forEach(function(el) {
+	document.querySelectorAll('.btn-notattend').forEach(function (el) {
 		el.addEventListener('click', function (event) {
 			event.preventDefault();
 
-			var el = $(this);
+			fetch(root + "/associations/" + el.getAttribute('data-id'), {
+				method: 'DELETE',
+				headers: headers
+			})
+				.then(function (response) {
+					if (response.ok) {
+						el.parentNode.innerHTML = '<span class="alert alert-success">Successfully cancelled.</span>';
+						setTimeout(function () {
+							window.location.reload(true);
+						}, 1000);
+						return;
+					}
 
-			WSDeleteURL(root + "/associations/" + el.data('id'), function (xml) {
-				if (xml.status < 400) {
-					el.parent().html('<span class="alert alert-success">Successfully cancelled.</span>');
-					setTimeout(function () {
-						window.location.reload(true);
-					}, 1000);
-				} else if (xml.status == 403) {
-					el.parent().append('<span class="alert alert-warning">Unable to register changes.</span>');
-				} else {
-					el.parent().append('<span class="alert alert-error">An error occurred.</span>');
-				}
-			});
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (error) {
+					el.parentNode.innerHTML = el.parentNode.innerHTML + '<span class="alert alert-error">' + error + '</span>';
+				});
 		});
 	});
 
@@ -3763,7 +4153,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		var original = JSON.parse(data.html());
 		var i = 0;
 
-		$("#newstype > option").each(function() {
+		$("#newstype > option").each(function () {
 			if (this.value == original['newstypeid']) {
 				$('#newstype > option:selected', 'select[name="options"]').removeAttr('selected');
 				$(this).attr('selected', true);
@@ -3786,16 +4176,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		document.getElementById('url').value = original.url;
 		document.getElementById('NotesText').innerHTML = original.news;
 		var results = [];
-		for (i = 0; i < original.resources.length; i++)
-		{
+		for (i = 0; i < original.resources.length; i++) {
 			//NEWSAddResource(original.resources[i]);
 			results[i] = original.resources[i]['resourceid'];
 		}
 		$('#newsresource')
 			.val(results)
 			.trigger('change');
-		for (i = 0; i < original.associations.length; i++)
-		{
+		for (i = 0; i < original.associations.length; i++) {
 			NEWSAddAssociation(original.associations[i]);
 		}
 		if (original.published == "1") {
@@ -3813,19 +4201,27 @@ document.addEventListener('DOMContentLoaded', function() {
 		refresh = false;
 	}
 
-	if ($('#news').length) {
-		root = $('#news').attr('data-api');
+	var news = document.getElementById('news');
+	if (news) {
+		root = news.getAttribute('data-api');
 		NEWSToggle(on, refresh);
 		NEWSSearch();
 	}
 
-	var stats = $('#articlestats');
-	if (stats.length) {
-		$.getJSON(stats.attr('data-api'), function (data) {
-			if (data) {
-				$('#viewcount').html(data.viewcount);
-				$('#uniqueviewcount').html(data.uniquecount);
-			}
-		});
+	var stats = document.getElementById('articlestats');
+	if (stats) {
+		fetch(stats.getAttribute('data-api'), {
+			method: 'GET',
+			headers: headers
+		})
+			.then(function (response) {
+				if (response.ok) {
+					return response.json();
+				}
+			})
+			.then(function (data) {
+				document.getElementById('viewcount').innerHTML = data.viewcount;
+				document.getElementById('uniqueviewcount').innerHTML = data.uniquecount;
+			});
 	}
 });
