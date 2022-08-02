@@ -1,9 +1,7 @@
 
 /* global $ */ // jquery.js
-/* global ROOT_URL */ // common.js
-/* global WSPostURL */ // common.js
-/* global WSPutURL */ // common.js
-/* global WSDeleteURL */ // common.js
+
+var root = document.querySelector('meta[name="base-url"]').getAttribute('content') + "/api/";
 
 /**
  * Format number as currency
@@ -437,13 +435,29 @@ function AddNewProduct(category) {
 
 	post = JSON.stringify(post);
 
-	WSPostURL(ROOT_URL + "orders/products", post, function(xml) {
-		if (xml.status != 200) {
-			// Error handling
-			alert("An error occurred.");
-		} else {
-			window.location.reload(true);
+	fetch(root + "orders/products", {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+		},
+		body: post
+	})
+	.then(function (response) {
+		if (response.ok) {
+			window.location.reload(true); 
+			return;
 		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.catch(function (error) {
+		alert(error);
 	});
 }
 
@@ -456,18 +470,35 @@ function AddNewProduct(category) {
 function AddNewCategory() {
 	// Insert blank new entry and refresh page
 	var post = {};
-	post['parentcategory'] = ROOT_URL + "orders/categories/1";
+	post['parentordercategoryid'] = 1;
 	post['name'] = "New Category";
 	post['description'] = "Enter description for new category. This category will not be displayed until at least one public product is created.";
 
 	post = JSON.stringify(post);
-	WSPostURL(ROOT_URL + "ordercategory", post, function(xml) {
-		if (xml.status != 200) {
-			// Error handling
-			alert("An error occurred.");
-		} else {
+
+	fetch(root + "orders/categories", {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+		},
+		body: post
+	})
+	.then(function (response) {
+		if (response.ok) {
 			window.location.reload(true);
+			return;
 		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.catch(function (error) {
+		alert(error);
 	});
 }
 
@@ -480,13 +511,28 @@ function AddNewCategory() {
 /* exported DeleteProduct */
 function DeleteProduct(product) {
 	if (confirm("Are you sure you want to delete '" + document.getElementById("SPAN_" + product + "_name").innerHTML + "'?")) {
-		WSDeleteURL(product, function(xml) {
-			if (xml.status != 200) {
-				// Error handling
-				alert("An error occurred.");
-			} else {
-				window.location.reload();
+		fetch(product, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 			}
+		})
+		.then(function (response) {
+			if (response.ok) {
+				window.location.reload();
+				return;
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.catch(function (error) {
+			alert(error);
 		});
 	}
 }
@@ -500,13 +546,28 @@ function DeleteProduct(product) {
 /* exported DeleteCategory */
 function DeleteCategory(category) {
 	if (confirm("Are you sure you want to delete '" + document.getElementById("SPAN_" + category + "_name").innerHTML + "' and all its products?")) {
-		WSDeleteURL(category, function(xml) {
-			if (xml.status != 200) {
-				// Error handling
-				alert("An error occurred.");
-			} else {
-				window.location.reload();
+		fetch(category, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 			}
+		})
+		.then(function (response) {
+			if (response.ok) {
+				window.location.reload();
+				return;
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.catch(function (error) {
+			alert(error);
 		});
 	}
 }
@@ -523,7 +584,32 @@ function DeleteCategory(category) {
 	post['sequence'] = change;
 	post = JSON.stringify(post);
 
-	WSPutURL(item, post, Sequenced, change);
+	fetch(item, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+		},
+		body: post
+	})
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.then(function (results) {
+		Sequenced(results, change);
+	})
+	.catch(function (error) {
+		alert(error);
+	});
 }*/
 
 /**
@@ -1004,7 +1090,7 @@ function AddNewAccountRow() {
 	};
 
 	$( new_box ).autocomplete({
-		source: autocompleteOrderPruchaseAccount(ROOT_URL + "orders/accounts/?api_token=" + $('meta[name="api-token"]').attr('content') + "&fund=%s"),
+		source: autocompleteOrderPruchaseAccount(root + "orders/accounts/?api_token=" + $('meta[name="api-token"]').attr('content') + "&fund=%s"),
 		dataName: 'data',
 		height: 150,
 		delay: 100,
@@ -1016,7 +1102,7 @@ function AddNewAccountRow() {
 	});
 
 	/*$( new_box2 ).autocomplete({
-		source: autocompleteOrderPruchaseAccount(ROOT_URL + "orderpurchaseaccount/cc:%s"),
+		source: autocompleteOrderPruchaseAccount(root + "orderpurchaseaccount/cc:%s"),
 		dataName: 'accounts',
 		height: 150,
 		delay: 100,
@@ -1300,7 +1386,30 @@ function SaveQuantities() {
 			pendingupdates++;
 			num_changes++;
 
-			WSPutURL(id, post, UpdatedAccountInfo);
+			fetch(id, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+				},
+				body: post
+			})
+			.then(function (response) {
+				if (response.ok) {
+					UpdatedAccountInfo();
+					return;
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (error) {
+				alert(error);
+			});
 		}
 	}
 
@@ -1309,7 +1418,29 @@ function SaveQuantities() {
 		pendingupdates++;
 		num_changes++;
 
-		WSDeleteURL(deleteitems[x], UpdatedAccountInfo);
+		fetch(deleteitems[x], {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+			}
+		})
+		.then(function (response) {
+			if (response.ok) {
+				UpdatedAccountInfo();
+				return;
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.catch(function (error) {
+			alert(error);
+		});
 	}
 
 	// Check for new items
@@ -1347,7 +1478,30 @@ function SaveQuantities() {
 
 		post = JSON.stringify(post);
 
-		WSPostURL(products[x].getAttribute('data-api'), post, UpdatedAccountInfo);
+		fetch(products[x].getAttribute('data-api'), {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+			},
+			body: post
+		})
+		.then(function (response) {
+			if (response.ok) {
+				UpdatedAccountInfo();
+				return;
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.catch(function (error) {
+			alert(error);
+		});
 	}
 
 	if (num_changes == 0) {
@@ -1433,13 +1587,30 @@ function SaveAccounts() {
 	if (total == 0 && errors == 0) {
 		var post = '{"accounts": ' + JSON.stringify(posts) + '}';
 
-		WSPutURL(ROOT_URL + "orders/" + order, post, function(xml) {
-			if (xml.status == 200) {
+		fetch(root + "orders/" + order, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+			},
+			body: post
+		})
+		.then(function (response) {
+			if (response.ok) {
 				window.scrollTo(0, 0);
 				window.location.reload();
-			} else {
-				alert("An error occurred while saving accounts.");
+				return;
 			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.catch(function (error) {
+			alert(error);
 		});
 	}
 }
@@ -1469,7 +1640,29 @@ function CancelOrder(button) {
 	var url = document.getElementById("order").getAttribute('data-api');
 
 	if (confirm(button.getAttribute('data-confirm'))) {
-		WSDeleteURL(url, CanceledOrder);
+		fetch(url, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+			}
+		})
+		.then(function (response) {
+			if (response.ok) {
+				window.location.reload();
+				return;
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.catch(function (error) {
+			alert(error);
+		});
 	}
 }
 
@@ -1479,13 +1672,13 @@ function CancelOrder(button) {
  * @param   {object}  xml
  * @return  {void}
  */
-function CanceledOrder(xml) {
+/*function CanceledOrder(xml) {
 	if (xml.status < 400) {
 		window.location.reload();
 	} else {
 		alert("An error occurred while canceling order.");
 	}
-}
+}*/
 
 /**
  * Cancel an order
@@ -1498,12 +1691,29 @@ function RestoreOrder() {
 
 	var post = JSON.stringify({ "restore": 1 });
 
-	WSPutURL(url, post, function (xml) {
-		if (xml.status < 400) {
+	fetch(url, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+		},
+		body: post
+	})
+	.then(function (response) {
+		if (response.ok) {
 			window.location.reload();
-		} else {
-			alert("An error occurred while restoring order.");
+			return;
 		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.catch(function (error) {
+		alert(error);
 	});
 }
 
@@ -1517,12 +1727,29 @@ function RestoreOrder() {
 function ResetAccount(url) {
 	var post = JSON.stringify({ "reset": 1 });
 
-	WSPutURL(url, post, function (xml) {
-		if (xml.status < 400) {
+	fetch(url, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+		},
+		body: post
+	})
+	.then(function (response) {
+		if (response.ok) {
 			window.location.reload();
-		} else {
-			alert("An error occurred while resetting account.");
+			return;
 		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.catch(function (error) {
+		alert(error);
 	});
 }
 
@@ -1537,8 +1764,16 @@ function ResetAccount(url) {
 function ApproveAccount(url, button) {
 	var post = JSON.stringify({"approved": 1});
 
-	WSPutURL(url, post, function(xml, button) {
-		if (xml.status < 400) {
+	fetch(url, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+		},
+		body: post
+	})
+	.then(function (response) {
+		if (response.ok) {
 			var id = button.getAttribute('data-id');
 
 			button.classList.add('hide');
@@ -1562,10 +1797,19 @@ function ApproveAccount(url, button) {
 					accountstatus[x].value = "PENDING_COLLECTION";
 				}
 			}
-		} else {
-			alert("An error occurred while approving account.");
+			return;
 		}
-	}, button);
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.catch(function (error) {
+		alert(error);
+	});
 }
 
 /**
@@ -1579,16 +1823,33 @@ function ApproveAccount(url, button) {
 function RemindAccount(url, button) {
 	var post = JSON.stringify({ "notice": 3 });
 
-	WSPutURL(url, post, function (xml, button) {
-		if (xml.status == 200) {
+	fetch(url, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+		},
+		body: post
+	})
+	.then(function (response) {
+		if (response.ok) {
 			var id = button.getAttribute('data-id');
 
 			document.getElementById("status_" + id).innerHTML = button.getAttribute('data-txt');
 			document.getElementById("button_" + id).classList.add('hide');
-		} else {
-			alert("An error occurred while approving account.");
+			return;
 		}
-	}, button);
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.catch(function (error) {
+		alert(error);
+	});
 }
 
 /**
@@ -1601,16 +1862,33 @@ function RemindAccount(url, button) {
 function RemindOrder(url, button) {
 	var post = JSON.stringify({ "notice": 1 });
 
-	WSPutURL(url, post, function(xml, button) {
-		if (xml.status == 200) {
+	fetch(url, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+		},
+		body: post
+	})
+	.then(function (response) {
+		if (response.ok) {
 			document.getElementById("remindorderspan").innerHTML = button.getAttribute('data-txt');
 			//document.getElementById("remindorder").style.display = "none";
 			button.classList.add('hide');
 			button.disabled = true;
-		} else {
-			alert("An error occurred while approving account.");
+			return;
 		}
-	}, button);
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.catch(function (error) {
+		alert(error);
+	});
 }
 
 /**
@@ -1624,8 +1902,16 @@ function RemindOrder(url, button) {
 function DenyAccount(url, button) {
 	var post = JSON.stringify({ "denied": 1 });
 
-	WSPutURL(url, post, function (xml, button) {
-		if (xml.status < 400) {
+	fetch(url, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+		},
+		body: post
+	})
+	.then(function (response) {
+		if (response.ok) {
 			var id = button.getAttribute('data-id');
 
 			button.classList.add('hide');
@@ -1649,10 +1935,19 @@ function DenyAccount(url, button) {
 					accountstatus[x].value = "DENIED";
 				}
 			}
-		} else {
-			alert("An error occurred while denying account.");
+			return;
 		}
-	}, button);
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.catch(function (error) {
+		alert(error);
+	});
 }
 
 /**
@@ -1672,16 +1967,33 @@ function CollectAccount(url, button) {
 	if (docid != "" && docdate.match(/\d{4}-\d{2}-\d{2}/)) {
 		var post = JSON.stringify({ "paid": 1, "paymentdocid": docid, "datetimepaymentdoc": docdate});
 
-		WSPutURL(url, post, function(xml, button) {
-			if (xml.status < 400) {
+		fetch(url, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+			},
+			body: post
+		})
+		.then(function (response) {
+			if (response.ok) {
 				id = button.getAttribute('data-id');
 
 				document.getElementById("status_" + id).innerHTML = button.getAttribute('data-txt');
 				document.getElementById("button_" + id).classList.add('hide');
-			} else {
-				alert("An error occurred while collecting account.");
+				return;
 			}
-		}, button);
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.catch(function (error) {
+			alert(error);
+		});
 	}
 }
 
@@ -1728,8 +2040,16 @@ function CopyDocDate(input) {
 function FulfillItem(url, button) {
 	var post = JSON.stringify({"fulfilled": 1});
 
-	WSPutURL(url, post, function(xml, button) {
-		if (xml.status == 200) {
+	fetch(url, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+		},
+		body: post
+	})
+	.then(function (response) {
+		if (response.ok) {
 			var id = button.getAttribute('data-id');
 
 			document.getElementById("status_" + id).innerHTML = button.getAttribute('data-txt');
@@ -1742,10 +2062,19 @@ function FulfillItem(url, button) {
 					itemstatus[x].value = "FULFILLED";
 				}
 			}
-		} else {
-			alert("An error occurred while fulfilling item.");
+			return;
 		}
-	}, button);
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.catch(function (error) {
+		alert(error);
+	});
 }
 
 var deleteaccounts = Array();
@@ -1827,7 +2156,32 @@ function EditAccounts() {
 				pendingupdates++;
 				num_changes++;
 				post = JSON.stringify(post);
-				WSPutURL(id, post, UpdatedAccountInfo);
+
+				fetch(id, {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+					},
+					body: post
+				})
+				.then(function (response) {
+					if (response.ok) {
+						window.scrollTo(0, 0);
+						window.location.reload();
+						return;
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (error) {
+					alert(error);
+				});
 			}
 		}
 
@@ -1843,7 +2197,31 @@ function EditAccounts() {
 				post = JSON.stringify(post);
 				pendingupdates++;
 				num_changes++;
-				WSPutURL(id, post, UpdatedAccountInfo);
+
+				fetch(id, {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+					},
+					body: post
+				})
+				.then(function (response) {
+					if (response.ok) {
+						UpdatedAccountInfo();
+						return;
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (error) {
+					alert(error);
+				});
 			}
 		}
 
@@ -1867,7 +2245,31 @@ function EditAccounts() {
 				pendingupdates++;
 				num_changes++;
 				post = JSON.stringify(post);
-				WSPutURL(id, post, UpdatedAccountInfo);
+
+				fetch(id, {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+					},
+					body: post
+				})
+				.then(function (response) {
+					if (response.ok) {
+						UpdatedAccountInfo();
+						return;
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (error) {
+					alert(error);
+				});
 			}
 		}
 
@@ -1890,7 +2292,30 @@ function EditAccounts() {
 					num_changes++;
 					post = JSON.stringify(post);
 
-					WSPutURL(id, post, UpdatedAccountInfo);
+					fetch(id, {
+						method: 'PUT',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+						},
+						body: post
+					})
+					.then(function (response) {
+						if (response.ok) {
+							UpdatedAccountInfo();
+							return;
+						}
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
+							}
+							throw msg;
+						});
+					})
+					.catch(function (error) {
+						alert(error);
+					});
 				}
 			}
 		}
@@ -1918,7 +2343,31 @@ function EditAccounts() {
 			//if (post != "{}") {
 				pendingupdates++;
 				num_changes++;
-				WSPutURL(id, post, UpdatedAccountInfo);
+
+				fetch(id, {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+					},
+					body: post
+				})
+				.then(function (response) {
+					if (response.ok) {
+						UpdatedAccountInfo();
+						return;
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (error) {
+					alert(error);
+				});
 			//}
 		}*/
 
@@ -1927,7 +2376,29 @@ function EditAccounts() {
 			pendingupdates++;
 			num_changes++;
 
-			WSDeleteURL(deleteaccounts[x], UpdatedAccountInfo);
+			fetch(deleteaccounts[x], {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+				}
+			})
+			.then(function (response) {
+				if (response.ok) {
+					UpdatedAccountInfo();
+					return;
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (error) {
+				alert(error);
+			});
 		}
 
 		// Check for new accounts
@@ -1968,7 +2439,30 @@ function EditAccounts() {
 					num_changes++;
 					post = JSON.stringify(post);
 
-					WSPostURL(accountinputs[x].getAttribute('data-api'), post, UpdatedAccountInfo);
+					fetch(accountinputs[x].getAttribute('data-api'), {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+						},
+						body: post
+					})
+					.then(function (response) {
+						if (response.ok) {
+							UpdatedAccountInfo();
+							return;
+						}
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
+							}
+							throw msg;
+						});
+					})
+					.catch(function (error) {
+						alert(error);
+					});
 				}
 			}
 		}
@@ -2120,22 +2614,19 @@ var numerrorboxes = 0;
 /**
  * Callback after updating account info
  *
- * @param   {object}  xml
  * @return  {void}
  */
-function UpdatedAccountInfo(xml) {
+function UpdatedAccountInfo() {
 	pendingupdates--;
 
-	if (xml.status < 400) {
-		if (pendingupdates == 0) {
-			window.location.reload(true);
-		}
-	} else {
-		if (numerrorboxes == 0) {
-			alert("An error occurred while updating account. Please reload page and try again or contact help.");
-			numerrorboxes++;
-		}
+	if (pendingupdates == 0) {
+		window.location.reload(true);
 	}
+
+	/*if (numerrorboxes == 0) {
+		alert("An error occurred while updating account. Please reload page and try again or contact help.");
+		numerrorboxes++;
+	}*/
 }
 
 /**
@@ -2304,7 +2795,30 @@ function EditQuantities() {
 				buttons: {
 					"Cancel order": function() {
 						var order = document.getElementById("order").value;
-						WSDeleteURL(order, CanceledOrder);
+
+						fetch(order, {
+							method: 'DELETE',
+							headers: {
+								'Content-Type': 'application/json',
+								'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+							}
+						})
+						.then(function (response) {
+							if (response.ok) {
+								window.location.reload();
+								return;
+							}
+							return response.json().then(function (data) {
+								var msg = data.message;
+								if (typeof msg === 'object') {
+									msg = Object.values(msg).join('<br />');
+								}
+								throw msg;
+							});
+						})
+						.catch(function (error) {
+							alert(error);
+						});
 					},
 					"Exit": function() {
 						$(this).dialog("close");
@@ -2345,25 +2859,36 @@ function SaveOrderUser() {
 			if (name != document.getElementById("edit_user").getAttribute('data-userid')) {
 				pendingupdates++;
 
-				$.ajax({
-					url: id,
-					type: 'put',
-					data: {
-						'userid': name
+				fetch(id, {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 					},
-					dataType: 'json',
-					async: false,
-					success: function() {
+					body: JSON.stringify({
+						'userid': name
+					})
+				})
+				.then(function (response) {
+					if (response.ok) {
 						pendingupdates--;
 						if (pendingupdates == 0) {
 							window.location.reload(true);
 						}
-					},
-					error: function() {
-						if (numerrorboxes == 0) {
-							alert("An error occurred while updating account. Please reload page and try again or contact help.");
-							numerrorboxes++;
+						return;
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
 						}
+						throw msg;
+					});
+				})
+				.catch(function (error) {
+					if (numerrorboxes == 0) {
+						alert(error);
+						numerrorboxes++;
 					}
 				});
 			} else {
@@ -2396,7 +2921,30 @@ function SaveOrderGroup() {
 			var post = JSON.stringify({'groupid': id});
 			pendingupdates++;
 
-			WSPutURL(url, post, UpdatedAccountInfo);
+			fetch(url, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+				},
+				body: post
+			})
+			.then(function (response) {
+				if (response.ok) {
+					UpdatedAccountInfo();
+					return;
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (error) {
+				alert(error);
+			});
 		} else {
 			document.getElementById("search_group").classList.add('hide');
 			document.getElementById("edit_group").classList.remove('hide');
@@ -2417,13 +2965,31 @@ function Renew(url, sequence) {
 	post['orderitemsequence'] = sequence;
 	post = JSON.stringify(post);
 
-	WSPostURL(url, post, function(xml) {
-		if (xml.status < 400) {
-			var results =  JSON.parse(xml.responseText);
-			window.location = results.url;
-		} else {
-			alert("An error occurred while renewing. Please wait a few minutes and try again. If error continues, please contact help.");
+	fetch(url, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+		},
+		body: post
+	})
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
 		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.then(function (results) {
+		window.location = results.url;
+	})
+	.catch(function (error) {
+		alert(error);
 	});
 }
 

@@ -1,6 +1,5 @@
 /* global $ */ // jquery.js
 /* global SetError */ // common.js
-/* global WSPostURL */ // common.js
 /* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 
 /**
@@ -22,32 +21,35 @@ function CreateNewGroup() {
 		'userid': input.getAttribute('data-userid')
 	});
 
-	WSPostURL(input.getAttribute('data-api'), post, function (xml) {
+	fetch(input.getAttribute('data-api'), {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+		},
+		body: post
+	})
+	.then(function (response) {
 		$($('#new_group_btn').attr('data-indicator')).addClass('hide');
 
-		if (xml.status < 400) {
-			//var results = JSON.parse(xml.responseText);
-
-			window.location.reload(true); // = input.getAttribute('data-uri') + '/' + results.data.id;
-		} else {
-			var err = document.getElementById('new_group_action');
-			err.classList.remove('hide');
-
-			var msg = 'Unable to create a new group.';
-
-			var response = JSON.parse(xml.responseText);
-			if (response.message) {
-				msg = response.message;
-				if (typeof msg === 'object') {
-					var errors = Object.values(msg);
-					msg = errors.join('<br />');
-				}
-			}
-
-			err.innerHTML = msg;
-
-			$('#new_group_btn').prop('disabled', false);
+		if (response.ok) {
+			window.location.reload(true);
+			return;
 		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.catch(function (error) {
+		var err = document.getElementById('new_group_action');
+		err.classList.remove('hide');
+		err.innerHTML = error;
+
+		$('#new_group_btn').prop('disabled', false);
 	});
 }
 

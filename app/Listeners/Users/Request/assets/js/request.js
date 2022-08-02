@@ -298,15 +298,6 @@ function SubmitRequest() {
 		//window.location = url;
 		$('#errors').addClass('alert').addClass('alert-success').text("Your request has been submitted.");
 	});
-	/*WSPostURL(ROOT_URL + "userrequest", post, function(xml) {
-		if (xml.status != 200) {
-			alert("There was an error processing your request. Please reload page and try request again. If problem persists contact help.");
-		} else {
-			document.getElementById("account").onclick = function() {
-				window.location = "/account/myinfo/";
-			};
-		}
-	});*/
 }
 
 /**

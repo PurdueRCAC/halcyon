@@ -132,7 +132,7 @@ function NEWSSendMail(btn) {
  * @return  {void}
  */
 /*function NEWSWriteMail(news) {
-	$.getJSON(ROOT_URL + "news/" + news, function (data) {
+	$.getJSON(root + "news/" + news, function (data) {
 		$('#mail-subject').val(data.headline);
 
 		var body = '**Date:** ' + data.formatteddate.replace(/(<([^>]+)>)/ig, '').replace(/&nbsp;/g, ' ').replace('&#8211;', '-') + "\n";
@@ -200,7 +200,33 @@ function NEWSSendMail(btn) {
 						'news': $('#mail-body').val(),
 						'associations': associations
 					});
-					WSPostURL(ROOT_URL + "news/" + news, post, NEWSSentMail);
+
+					fetch(root + "news/" + news, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+						},
+						body: post
+					})
+					.then(function (response) {
+						if (response.ok) {
+							return response.json();
+						}
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
+							}
+							throw msg;
+						});
+					})
+					.then(function (data) {
+						NEWSSentMail();
+					})
+					.catch(function (error) {
+						alert(error);
+					});
 				}
 			}
 		});
