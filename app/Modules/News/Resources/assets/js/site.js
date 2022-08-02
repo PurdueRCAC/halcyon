@@ -44,7 +44,7 @@ function HighlightMatches(text) {
 	//var lastMatch = 0;
 	var color = "";
 	// iterate through matches
-	while (!!(m = regx.exec(text))) {
+	while ((m = regx.exec(text))) {
 		txt = m[0];
 		keyid = keywords.indexOf(stemmer(txt).toLowerCase());
 		if (keyid != -1) {
