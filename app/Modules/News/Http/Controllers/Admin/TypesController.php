@@ -134,12 +134,12 @@ class TypesController extends Controller
 		$id = $request->input('id');
 
 		$row = $id ? Type::findOrFail($id) : new Type();
-		$row->name = $request->input('name');
-		if ($request->has('alias'))
+		$row->name = $request->input('fields.name');
+		if ($request->has('fields.alias'))
 		{
-			$row->alias = $request->input('alias');
+			$row->alias = $request->input('fields.alias');
 		}
-		$row->parentid = $request->input('parentid');
+		$row->parentid = $request->input('fields.parentid');
 
 		foreach (['tagusers', 'tagresources', 'future', 'location', 'ongoing', 'calendar', 'url'] as $key)
 		{
