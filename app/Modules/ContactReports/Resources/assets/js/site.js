@@ -1,23 +1,285 @@
 /* global $ */ // jquery.js
-/* global ROOT_URL */ // common.js
-/* global WSGetURL */ // common.js
-/* global WSPostURL */ // common.js
-/* global WSPutURL */ // common.js
-/* global WSDeleteURL */ // common.js
-/* global ClearSearch */ // search.js
-/* global ERRORS */ // common.js
-/* global SetError */ // common.js
-/* global ChangeSearch */ // search.js
-/* global HighlightMatches */ // text.js
 
 // date.js - used for month names
 
-//var search_path = 'name';
+var root = document.querySelector('meta[name="base-url"]').getAttribute('content') + "/api/";
 var keywords_pending = 0;
 var multi_group = false;
-//var groupsearch = false;
-//var usersearch = false;
 var activetab = null;
+var headers = {
+	'Content-Type': 'application/json'
+};
+
+/**
+ * Used to highlight stemmed keyword matches in news text
+ *
+ * @param   {string}  text
+ * @return  {string}
+ */
+function HighlightMatches(text) {
+	var search = document.getElementById("keywords").value;
+	if (search.replace(' ', '') == "") {
+		return text;
+	}
+
+	// Filter out any bad characters
+	search = search.replace(/[^a-zA-Z0-9_ ]/g, '');
+	var keywords = search.split(/ /);
+
+	for (var i = 0; i < keywords.length; i++) {
+		keywords[i] = stemmer(keywords[i]).toLowerCase();
+	}
+
+	// amethyst, sky, green, honeydew, jade, lime, mallow, orpiment, 
+	// pink, red, blue, turquoise, uranium, wine, yellow
+	var colors = [
+		'rgb(240,163,255)', 'rgb(94,241,242)', 'rgb(43,206,72)', 'rgb(255,204,153)',
+		'rgb(148,255,181)', 'rgb(157,204,0)', 'rgb(194,0,136)', 'rgb(255,164,5)', 'rgb(255,168,187)',
+		'rgb(255,0,16)', 'rgb(0,117,220)', 'rgb(0,153,143)', 'rgb(224,255,102)', 'rgb(153,0,0)', 'rgb(255,225,0)'
+	];
+
+	var regx = new RegExp(/(<[^>]+>)|((^|\b)([^<]+?)(\b|$))/i);
+	var m;
+	var txt = "";
+	var temp = "";
+	var keyid = 0;
+	var color = "";
+	// iterate through matches
+	while ((m = regx.exec(text))) {
+		txt = m[0];
+		keyid = keywords.indexOf(stemmer(txt).toLowerCase());
+		if (keyid != -1) {
+			// if number of keywords exceeds color array, loop back around
+			color = colors[keyid % colors.length];
+			// include everything that was skipped and the match
+			temp += text.substr(0, m.index) + "<span style='background-color:" + color + "'>" + txt + "</span>";
+		} else {
+			temp += text.substr(0, m.index) + txt
+		}
+		text = text.substr(m.index + m[0].length);
+	}
+	temp += text;
+
+	return temp;
+}
+
+// Porter stemmer in Javascript. Few comments, but it's easy to follow against the rules in the original
+// paper, in
+//
+//  Porter, 1980, An algorithm for suffix stripping, Program, Vol. 14,
+//  no. 3, pp 130-137,
+//
+// see also http://www.tartarus.org/~martin/PorterStemmer
+
+// Release 1 be 'andargor', Jul 2004
+// Release 2 (substantially revised) by Christopher McKenzie, Aug 2009
+
+var stemmer = (function () {
+	var step2list = {
+		"ational": "ate",
+		"tional": "tion",
+		"enci": "ence",
+		"anci": "ance",
+		"izer": "ize",
+		"bli": "ble",
+		"alli": "al",
+		"entli": "ent",
+		"eli": "e",
+		"ousli": "ous",
+		"ization": "ize",
+		"ation": "ate",
+		"ator": "ate",
+		"alism": "al",
+		"iveness": "ive",
+		"fulness": "ful",
+		"ousness": "ous",
+		"aliti": "al",
+		"iviti": "ive",
+		"biliti": "ble",
+		"logi": "log"
+	},
+
+		step3list = {
+			"icate": "ic",
+			"ative": "",
+			"alize": "al",
+			"iciti": "ic",
+			"ical": "ic",
+			"ful": "",
+			"ness": ""
+		},
+
+		c = "[^aeiou]",          // consonant
+		v = "[aeiouy]",          // vowel
+		C = c + "[^aeiouy]*",    // consonant sequence
+		V = v + "[aeiou]*",      // vowel sequence
+
+		mgr0 = "^(" + C + ")?" + V + C,               // [C]VC... is m>0
+		meq1 = "^(" + C + ")?" + V + C + "(" + V + ")?$",  // [C]VC[V] is m=1
+		mgr1 = "^(" + C + ")?" + V + C + V + C,       // [C]VCVC... is m>1
+		s_v = "^(" + C + ")?" + v;                   // vowel in stem
+
+	return function (w) {
+		var stem,
+			suffix,
+			firstch,
+			re,
+			re2,
+			re3,
+			re4,
+			fp;
+
+		if (w.length < 3) {
+			return w;
+		}
+
+		w = w.toLowerCase();
+
+		firstch = w.substr(0, 1);
+		if (firstch == "y") {
+			w = firstch.toUpperCase() + w.substr(1);
+		}
+
+		// Step 1a
+		re = /^(.+?)(ss|i)es$/;
+		re2 = /^(.+?)([^s])s$/;
+
+		if (re.test(w)) {
+			w = w.replace(re, "$1$2");
+		}
+		else if (re2.test(w)) {
+			w = w.replace(re2, "$1$2");
+		}
+
+		// Step 1b
+		re = /^(.+?)eed$/;
+		re2 = /^(.+?)(ed|ing)$/;
+		if (re.test(w)) {
+			fp = re.exec(w);
+			re = new RegExp(mgr0);
+			if (re.test(fp[1])) {
+				re = /.$/;
+				w = w.replace(re, "");
+			}
+		} else if (re2.test(w)) {
+			fp = re2.exec(w);
+			stem = fp[1];
+			re2 = new RegExp(s_v);
+			if (re2.test(stem)) {
+				w = stem;
+				re2 = /(at|bl|iz)$/;
+				re3 = new RegExp("([^aeiouylsz])\\1$");
+				re4 = new RegExp("^" + C + v + "[^aeiouwxy]$");
+				if (re2.test(w)) {
+					w = w + "e";
+				}
+				else if (re3.test(w)) {
+					re = /.$/;
+					w = w.replace(re, "");
+				}
+				else if (re4.test(w)) {
+					w = w + "e";
+				}
+			}
+		}
+
+		// Step 1c
+		re = /^(.+?)y$/;
+		if (re.test(w)) {
+			fp = re.exec(w);
+			stem = fp[1];
+			re = new RegExp(s_v);
+			if (re.test(stem)) {
+				w = stem + "i";
+			}
+		}
+
+		// Step 2
+		re = /^(.+?)(ational|tional|enci|anci|izer|bli|alli|entli|eli|ousli|ization|ation|ator|alism|iveness|fulness|ousness|aliti|iviti|biliti|logi)$/;
+		if (re.test(w)) {
+			fp = re.exec(w);
+			stem = fp[1];
+			suffix = fp[2];
+			re = new RegExp(mgr0);
+			if (re.test(stem)) {
+				w = stem + step2list[suffix];
+			}
+		}
+
+		// Step 3
+		re = /^(.+?)(icate|ative|alize|iciti|ical|ful|ness)$/;
+		if (re.test(w)) {
+			fp = re.exec(w);
+			stem = fp[1];
+			suffix = fp[2];
+			re = new RegExp(mgr0);
+			if (re.test(stem)) {
+				w = stem + step3list[suffix];
+			}
+		}
+
+		// Step 4
+		re = /^(.+?)(al|ance|ence|er|ic|able|ible|ant|ement|ment|ent|ou|ism|ate|iti|ous|ive|ize)$/;
+		re2 = /^(.+?)(s|t)(ion)$/;
+		if (re.test(w)) {
+			fp = re.exec(w);
+			stem = fp[1];
+			re = new RegExp(mgr1);
+			if (re.test(stem)) {
+				w = stem;
+			}
+		} else if (re2.test(w)) {
+			fp = re2.exec(w);
+			stem = fp[1] + fp[2];
+			re2 = new RegExp(mgr1);
+			if (re2.test(stem)) {
+				w = stem;
+			}
+		}
+
+		// Step 5
+		re = /^(.+?)e$/;
+		if (re.test(w)) {
+			fp = re.exec(w);
+			stem = fp[1];
+			re = new RegExp(mgr1);
+			re2 = new RegExp(meq1);
+			re3 = new RegExp("^" + C + v + "[^aeiouwxy]$");
+			if (re.test(stem) || (re2.test(stem) && !(re3.test(stem)))) {
+				w = stem;
+			}
+		}
+
+		re = /ll$/;
+		re2 = new RegExp(mgr1);
+		if (re.test(w) && re2.test(w)) {
+			re = /.$/;
+			w = w.replace(re, "");
+		}
+
+		// and turn initial Y back to y
+
+		if (firstch == "y") {
+			w = firstch.toLowerCase() + w.substr(1);
+		}
+
+		return w;
+	}
+})();
+
+/**
+ * Put an error into the action bar
+ *
+ * @param   {string}  title
+ * @param   {string}  message
+ */
+function DisplayError(title, message) {
+	var span = document.getElementById("crm_action");
+	if (span) {
+		span.classList.remove('d-none');
+		span.innerHTML = '<strong>' + title + '</strong><br />' + message;
+	}
+}
 
 /**
  * Toggle UI tabs
@@ -114,11 +376,11 @@ function CRMTabURL(tab) {
 /**
  * Result handler function when selecting a group
  *
- * @param   {object}  xml
+ * @param   {object}  results
  * @param   {array}   flags
  * @return  {void}
  */
-function CRMSearchGroup(xml, flags) {
+function CRMSearchGroup(results, flags) {
 	var pageload = false;
 	//var disabled = false;
 
@@ -127,54 +389,36 @@ function CRMSearchGroup(xml, flags) {
 		//disabled = flags['disabled'];
 	}
 
-	if (xml.status == 200) {
-		var results = JSON.parse(xml.responseText);
-
-		if (!pageload) {
-			CRMSearch();
-			if (document.getElementById("TAB_follow").className.match(/active/)) {
-				document.getElementById("INPUT_add").disabled = false;
-			}
+	if (!pageload) {
+		CRMSearch();
+		if (document.getElementById("TAB_follow").className.match(/active/)) {
+			document.getElementById("INPUT_add").disabled = false;
 		}
+	}
 
-		// reset search box
-		var group = $('#group');
+	// reset search box
+	var group = $('#group');
 
-		if ($('.tagsinput').length) {
-			if (!group.tagExist(results['id'])) {
-				group.addTag({
-					'id': results['id'],
-					'label': results['name']
-				});
-			}
-		} else {
-			group.val(group.val() + (group.val() ? ', ' : '') + results['name'] + ':' + results['id']);
+	if ($('.tagsinput').length) {
+		if (!group.tagExist(results['id'])) {
+			group.addTag({
+				'id': results['id'],
+				'label': results['name']
+			});
 		}
 	} else {
-		// error handling
-		switch (xml.status) {
-			case 401:
-			case 403:
-				SetError(ERRORS['403_generic'], null);
-				break;
-			case 500:
-				SetError(ERRORS['500'], null);
-				break;
-			default:
-				SetError(ERRORS['generic'], ERRORS['unknown']);
-				break;
-		}
+		group.val(group.val() + (group.val() ? ', ' : '') + results['name'] + ':' + results['id']);
 	}
 }
 
 /**
  * Result handler when adding a new person
  *
- * @param   {object}  xml
+ * @param   {object}  results
  * @param   {array}   flags
  * @return  {void}
  */
-function CRMSearchUser(xml, flags) {
+function CRMSearchUser(results, flags) {
 	var pageload = false;
 	//var disabled = false;
 
@@ -183,57 +427,39 @@ function CRMSearchUser(xml, flags) {
 		//disabled = flags['disabled'];
 	}
 
-	if (xml.status < 400) {
-		var results = JSON.parse(xml.responseText);
-
-		if (!pageload) {
-			CRMSearch();
-			if (document.getElementById("TAB_follow").className.match(/active/)) {
-				document.getElementById("INPUT_add").disabled = false;
-			}
+	if (!pageload) {
+		CRMSearch();
+		if (document.getElementById("TAB_follow").className.match(/active/)) {
+			document.getElementById("INPUT_add").disabled = false;
 		}
+	}
 
-		// reset search box
-		var people = $('#people');
+	// reset search box
+	var people = $('#people');
 
-		if ($('.tagsinput').length) {
-			if (!people.tagExist(results.id)) {
-				people.addTag({
-					'id': results.id,
-					'label': results.name
-				}, {
-					focus: false,
-					callback: false
-				});
-			}
-		} else {
-			people.val(people.val() + (people.val() ? ', ' : '') + results.name + ':' + results.id);
+	if ($('.tagsinput').length) {
+		if (!people.tagExist(results.id)) {
+			people.addTag({
+				'id': results.id,
+				'label': results.name
+			}, {
+				focus: false,
+				callback: false
+			});
 		}
 	} else {
-		// error handling
-		switch (xml.status) {
-			case 401:
-			case 403:
-				SetError(ERRORS['403_generic'], null);
-				break;
-			case 500:
-				SetError(ERRORS['500'], null);
-				break;
-			default:
-				SetError(ERRORS['generic'], ERRORS['unknown']);
-				break;
-		}
+		people.val(people.val() + (people.val() ? ', ' : '') + results.name + ':' + results.id);
 	}
 }
 
 /**
  * Result handler function when selecting a resource
  *
- * @param   {object}  xml
+ * @param   {object}  results
  * @param   {array}   flags
  * @return  {void}
  */
-function CRMSearchResource(xml, flags) {
+function CRMSearchResource(results, flags) {
 	var pageload = false;
 	//var disabled = false;
 
@@ -242,46 +468,17 @@ function CRMSearchResource(xml, flags) {
 		//disabled = flags['disabled'];
 	}
 
-	if (xml.status == 200) {
-		var results = JSON.parse(xml.responseText);
-
-		if (!pageload) {
-			CRMSearch();
-			if (document.getElementById("TAB_follow").className.match(/active/)) {
-				document.getElementById("INPUT_add").disabled = false;
-			}
-		}
-
-		// reset search box
-		var resource = $('#crmresource');
-
-		resource.val(results.id);
-
-		/*if ($('.tagsinput').length) {
-			if (!resource.tagExist(results.id)) {
-				resource.addTag({
-					'id': results.id,
-					'label': results.name
-				});
-			}
-		} else {
-			resource.val(resource.val() + (resource.val() ? ', ' : '') + results.name + ':' + results.id);
-		}*/
-	} else {
-		// error handling
-		switch (xml.status) {
-			case 401:
-			case 403:
-				SetError(ERRORS['403_generic'], null);
-				break;
-			case 500:
-				SetError(ERRORS['500'], null);
-				break;
-			default:
-				SetError(ERRORS['generic'], ERRORS['unknown']);
-				break;
+	if (!pageload) {
+		CRMSearch();
+		if (document.getElementById("TAB_follow").className.match(/active/)) {
+			document.getElementById("INPUT_add").disabled = false;
 		}
 	}
+
+	// reset search box
+	var resource = $('#crmresource');
+
+	resource.val(results.id);
 }
 
 /**
@@ -425,7 +622,7 @@ function CRMToggleSearch(on) {
 	if (on == 'group') {
 		// reset box
 		document.getElementById("newuser").value = "";
-		ClearSearch();
+		CRMClearSearch();
 
 		// flip the flags so it acts a group search box
 		//groupsearch = true;
@@ -436,7 +633,7 @@ function CRMToggleSearch(on) {
 	} else if (on == 'people') {
 		// move search box for people
 		document.getElementById("newuser").value = "";
-		ClearSearch();
+		CRMClearSearch();
 
 		// flip the flags so it acts a person search box
 		//groupsearch = false;
@@ -499,7 +696,7 @@ function CRMAddEntry() {
 
 	if (!document.getElementById("TAB_follow").className.match(/active/)) {
 		if (!contactdate.match(/^\d{4}-\d{2}-\d{2}$/)) {
-			SetError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
+			DisplayError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
 			return;
 		}
 	}
@@ -624,50 +821,31 @@ function CRMAddEntry() {
 
 		post['resources'] = resources;
 		post['users'] = people;
-
-		// first determine if any users have been deleted
-		/*for (x = 0; x < originalusers.length; x++) {
-			remove = true;
-			for (y = 0; y < people.length; y++) {
-				if (originalusers[x] == people[y]['userid']) {
-					remove = false;
-					break;
-				}
-			}
-			if (remove) {
-				removeusers.push(originalcontactusers[x]);
-			}
-		}
-		// then determine if any users have been added
-		for (x = 0; x < people.length; x++) {
-			add = true;
-			for (y = 0; y < originalusers.length; y++) {
-				if (originalusers[y] == people[x]['userid']) {
-					add = false;
-					break;
-				}
-			}
-			if (add) {
-				addusers.push(people[x]['userid']);
-			}
-		}
-
-		for (x = 0; x < removeusers.length; x++) {
-			WSDeleteURL(removeusers[x], CRMUpdatedReport);
-		}
-
-		for (x = 0; x < addusers.length; x++) {
-			post = JSON.stringify({
-				'contactreportid': original['id'],
-				'userid': addusers[x]
-			});
-			WSPostURL(ROOT_URL + "contactreportuser", post, CRMUpdatedReport);
-		}*/
-
 		post['report'] = notes;
 		post = JSON.stringify(post);
+
 		if (post != "{}") {
-			WSPutURL(original['api'], post, CRMUpdatedReport);
+			fetch(original['api'], {
+				method: 'PUT',
+				headers: headers,
+				body: post
+			})
+				.then(function (response) {
+					if (response.ok) {
+						CRMUpdatedReport();
+						return; //response.json();
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (err) {
+					alert(err);
+				});
 		}
 
 		if (typeof (history.pushState) != 'undefined') {
@@ -743,7 +921,27 @@ function CRMAddEntry() {
 		}
 
 		for (x = 0; x < removeusers.length; x++) {
-			WSDeleteURL(removeusers[x], CRMUpdatedReport);
+			fetch(removeusers[x], {
+				method: 'DELETE',
+				headers: headers
+			})
+				.then(function (response) {
+					if (response.ok) {
+						CRMUpdatedReport();
+						return; // response.json();
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (err) {
+					alert(err);
+				});
+
 			// delete from cache
 			for (y = 0; y < sdata.followerofusers.length; y++) {
 				if (removeusers[x] == sdata.followerofusers[y]['follow']) {
@@ -755,11 +953,53 @@ function CRMAddEntry() {
 
 		for (x = 0; x < addusers.length; x++) {
 			post = JSON.stringify({ 'following': addusers[x] });
-			WSPostURL(ROOT_URL + "contactreportfollowuser", post, CRMUpdatedFollowUser);
+			fetch(root + "contactreportfollowuser", {
+				method: 'POST',
+				headers: headers,
+				body: post
+			})
+				.then(function (response) {
+					if (response.ok) {
+						return response.json();
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.then(function (results) {
+					CRMUpdatedFollowUser(results);
+				})
+				.catch(function (err) {
+					alert(err);
+				});
 		}
 
 		for (x = 0; x < removegroups.length; x++) {
-			WSDeleteURL(removegroups[x], CRMUpdatedReport);
+			fetch(removegroups[x], {
+				method: 'DELETE',
+				headers: headers
+			})
+				.then(function (response) {
+					if (response.ok) {
+						CRMUpdatedReport();
+						return; // response.json();
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (err) {
+					alert(err);
+				});
+
 			// delete from cache
 			for (y = 0; y < sdata.followerofgroups.length; y++) {
 				if (removegroups[x] == sdata.followerofgroups[y]['follow']) {
@@ -771,7 +1011,29 @@ function CRMAddEntry() {
 
 		for (x = 0; x < addgroups.length; x++) {
 			post = JSON.stringify({ 'following': addgroups[x] });
-			WSPostURL(ROOT_URL + "contactreportfollowgroup", post, CRMUpdatedFollowGroup);
+			fetch(root + "contactreportfollowgroup", {
+				method: 'POST',
+				headers: headers,
+				body: post
+			})
+				.then(function (response) {
+					if (response.ok) {
+						return response.json();
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.then(function (results) {
+					CRMUpdatedFollowGroup(results);
+				})
+				.catch(function (err) {
+					alert(err);
+				});
 		}
 
 		return;
@@ -779,16 +1041,16 @@ function CRMAddEntry() {
 
 	if (people.length == 0) {
 		if (groups.length != 0) {
-			SetError('Required field missing', 'Please enter at least one person.');
+			DisplayError('Required field missing', 'Please enter at least one person.');
 			return;
 		}
 		else if (groups.length == 0) {
-			SetError('Required field missing', 'Please enter at least one person and optionally a group.');
+			DisplayError('Required field missing', 'Please enter at least one person and optionally a group.');
 			return;
 		}
 	}
 	else if (notes == "") {
-		SetError('Required field missing', 'Please enter some note text.');
+		DisplayError('Required field missing', 'Please enter some note text.');
 		return;
 	}
 	else {
@@ -815,41 +1077,55 @@ function CRMAddEntry() {
 		post = JSON.stringify(post);
 		document.getElementById("INPUT_add").disabled = true;
 
-		WSPostURL(document.getElementById("reports").getAttribute('data-api'), post, CRMNewReport, people);
+		fetch(document.getElementById("reports").getAttribute('data-api'), {
+			method: 'POST',
+			headers: headers,
+			body: post
+		})
+			.then(function (response) {
+				if (response.ok) {
+					return response.json();
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.then(function (results) {
+				CRMNewReport(results); //, people);
+			})
+			.catch(function (err) {
+				alert(err);
+			});
 	}
 }
 
 /**
  * Callback after updating a report
  *
- * @param   {object}  xml
  * @return  {void}
  */
-function CRMUpdatedReport(xml) {
-	if (xml.status == 200) {
-		document.getElementById("INPUT_add").disabled = true;
-	}
+function CRMUpdatedReport() {
+	document.getElementById("INPUT_add").disabled = true;
 }
 
 /**
  * Callback after following a user
  *
- * @param   {object}  xml
+ * @param   {object}  results
  * @return  {void}
  */
-function CRMUpdatedFollowUser(xml) {
-	if (xml.status == 200) {
-		// add to cache
-		var results = JSON.parse(xml.responseText);
+function CRMUpdatedFollowUser(results) {
+	var data = $('#crm-search-data');
+	var sdata = JSON.parse(data.html());
+	sdata.followerofusers.push(results);
 
-		var data = $('#crm-search-data');
-		var sdata = JSON.parse(data.html());
-		sdata.followerofusers.push(results);
+	data.html(JSON.stringify(sdata));
 
-		data.html(JSON.stringify(sdata));
-
-		document.getElementById("INPUT_add").disabled = true;
-	}
+	document.getElementById("INPUT_add").disabled = true;
 }
 
 /**
@@ -858,57 +1134,38 @@ function CRMUpdatedFollowUser(xml) {
  * @param   {object}  xml
  * @return  {void}
  */
-function CRMUpdatedFollowGroup(xml) {
-	if (xml.status == 200) {
-		// add to cache
-		var results = JSON.parse(xml.responseText);
+function CRMUpdatedFollowGroup(results) {
+	//if (xml.status == 200) {
+	// add to cache
+	//var results = JSON.parse(xml.responseText);
 
-		var data = $('#crm-search-data');
-		var sdata = JSON.parse(data.html());
-		sdata.followerofgroups.push(results);
+	var data = $('#crm-search-data');
+	var sdata = JSON.parse(data.html());
+	sdata.followerofgroups.push(results);
 
-		data.html(JSON.stringify(sdata));
+	data.html(JSON.stringify(sdata));
 
-		document.getElementById("INPUT_add").disabled = true;
-	}
+	document.getElementById("INPUT_add").disabled = true;
+	//}
 }
 
 /**
  * Callback for creating a new report
  *
- * @param   {object}  xml
+ * @param   {object}  results
  * @param   {array}   people
  * @return  {void}
  */
-function CRMNewReport(xml) { //people
+function CRMNewReport(results) { //people
 	document.getElementById("INPUT_add").disabled = false;
 
-	if (xml.status < 400) {
-		var results = JSON.parse(xml.responseText);
+	document.getElementById("NotesText").value = "";
 
-		/*for (var x = 0; x < people.length; x++) {
-			// insert placeholders to put people when posted
-			var post = JSON.stringify({
-				'contactreport': results['id'],
-				'user': people[x]['userid']
-			});
-			WSPostURL(ROOT_URL + "contactreportuser", post, CRMNewPeopleTag);
-		}*/
-		document.getElementById("NotesText").value = "";
+	CRMClearSearch();
 
-		CRMClearSearch();
+	document.getElementById("id").value = results.id;
 
-		document.getElementById("id").value = results.id;
-
-		CRMToggle('search', true);
-		/*setTimeout(function () {
-			CRMSearch();
-		}, 250);*/
-	} else if (xml.status == 409 || xml.status == 415) {
-		SetError('Invalid date.', 'Please pick the current date or a date in the past.');
-	} else {
-		SetError('Unable to create report.', 'Your session may have timed out. Copy your text and reload page.');
-	}
+	CRMToggle('search', true);
 }
 
 /**
@@ -919,7 +1176,7 @@ function CRMNewReport(xml) { //people
  */
 /*function CRMNewPeopleTag(xml) {
 	if (xml.status != 200) {
-		SetError('Unable to create report.', 'An error occurred during processing of new report.');
+		DisplayError('Unable to create report.', 'An error occurred during processing of new report.');
 	}
 }*/
 
@@ -1058,7 +1315,7 @@ function CRMSearch() {
 	// sanity checks
 	if (start != "") {
 		if (!start.match(/^\d{4}-\d{2}-\d{2}$/)) {
-			SetError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
+			DisplayError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
 			return;
 		} else {
 			// clear error boxes
@@ -1068,7 +1325,7 @@ function CRMSearch() {
 	}
 	if (stop != "") {
 		if (!stop.match(/^\d{4}-\d{2}-\d{2}$/)) {
-			SetError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
+			DisplayError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
 			return;
 		} else {
 			// clear error boxes
@@ -1166,7 +1423,28 @@ function CRMSearch() {
 
 	querystring.push("page=" + document.getElementById("page").value);
 
-	WSGetURL(document.getElementById("reports").getAttribute('data-api') + encodeURI('?' + querystring.join('&')), CRMSearched);
+	fetch(document.getElementById("reports").getAttribute('data-api') + encodeURI('?' + querystring.join('&')), {
+		method: 'GET',
+		headers: headers
+	})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (results) {
+			CRMSearched(results);
+		})
+		.catch(function (err) {
+			alert(err);
+		});
 }
 
 /**
@@ -1192,179 +1470,179 @@ function CRMToggleAddButton() {
 /**
  * Callback after searching
  *
- * @param   {object}  xml
+ * @param   {object}  results
  * @return  {void}
  */
-function CRMSearched(xml) {
+function CRMSearched(results) {
 	//const DEFAULT_ENTRIES = 20;
 
-	if (xml.status == 200) {
-		var reports = $("#reports");
-		var count = 0;
+	//if (xml.status == 200) {
+	var reports = $("#reports");
+	var count = 0;
 
-		const results = JSON.parse(xml.responseText);
+	//const results = JSON.parse(xml.responseText);
 
-		$("#matchingReports").html("Found " + results.data.length + " matching reports");
+	$("#matchingReports").html("Found " + results.data.length + " matching reports");
 
-		if (results.data.length == 0) {
-			reports.html('<p class="alert alert-warning">No matching reports found.</p>');
-		} else {
-			reports.html('');
+	if (results.data.length == 0) {
+		reports.html('<p class="alert alert-warning">No matching reports found.</p>');
+	} else {
+		reports.html('');
 
-			var keywords = document.getElementById("keywords").value;
-			for (var x = 0; x < results.data.length; x++, count++) {
-				if (keywords) {
-					var regex = new RegExp('(' + keywords.split(' ').join('|') + ')', "gi");
-					results.data[x].formattedreport = results.data[x].formattedreport.replace(regex, '<strong class="highlight">$1</strong>');
-				}
-				CRMPrintRow(
-					results.data[x],
-					//results.people,
-					//results.comments,
-					//results.userid,
-					'newEntries' //(x < DEFAULT_ENTRIES ? "newEntries" : "newEntriesHidden")
-				);
+		var keywords = document.getElementById("keywords").value;
+		for (var x = 0; x < results.data.length; x++, count++) {
+			if (keywords) {
+				var regex = new RegExp('(' + keywords.split(' ').join('|') + ')', "gi");
+				results.data[x].formattedreport = results.data[x].formattedreport.replace(regex, '<strong class="highlight">$1</strong>');
 			}
-			//document.dispatchEvent(new Event('initEditor', { bubbles: true }));
+			CRMPrintRow(
+				results.data[x],
+				//results.people,
+				//results.comments,
+				//results.userid,
+				'newEntries' //(x < DEFAULT_ENTRIES ? "newEntries" : "newEntriesHidden")
+			);
+		}
+		//document.dispatchEvent(new Event('initEditor', { bubbles: true }));
 
-			// Re-initialize tooltips
-			$('.tip').tooltip({
-				position: {
-					my: 'center bottom',
-					at: 'center top'
-				},
-				hide: false
+		// Re-initialize tooltips
+		$('.tip').tooltip({
+			position: {
+				my: 'center bottom',
+				at: 'center top'
+			},
+			hide: false
+		});
+
+		reports.find(".alert").hide();
+		$(".newEntriesHidden").hide();
+
+		/*var a = $("<a></a>")
+			.attr({
+				id: "showEntries",
+				href: "#"
+			})
+			.html("Show All Reports")
+			.on('click', function (e) {
+				e.preventDefault();
+				const flag = $(this).html().includes('Show All Reports');
+				$(this).html(flag ? "Show Less Reports" : "Show All Reports");
+				$(this).parent().text("Displaying all of CRM Reports...");
+				flag ? $(".newEntriesHidden").show() : $(".newEntriesHidden").hide();
 			});
 
-			reports.find(".alert").hide();
-			$(".newEntriesHidden").hide();
+		var td = $("<p></p>")
+			.attr({
+				id: "displayEntries"
+			})
+			.html("Displaying " + Math.min(count, DEFAULT_ENTRIES) + " of " +
+				results.data.length + " CRM Reports...<br/>"
+			)
+			.append(a);
 
-			/*var a = $("<a></a>")
-				.attr({
-					id: "showEntries",
-					href: "#"
-				})
-				.html("Show All Reports")
-				.on('click', function (e) {
-					e.preventDefault();
-					const flag = $(this).html().includes('Show All Reports');
-					$(this).html(flag ? "Show Less Reports" : "Show All Reports");
-					$(this).parent().text("Displaying all of CRM Reports...");
-					flag ? $(".newEntriesHidden").show() : $(".newEntriesHidden").hide();
-				});
+		reports.append(td);*/
 
-			var td = $("<p></p>")
-				.attr({
-					id: "displayEntries"
-				})
-				.html("Displaying " + Math.min(count, DEFAULT_ENTRIES) + " of " +
-					results.data.length + " CRM Reports...<br/>"
-				)
-				.append(a);
+		var q = reports.data('query');
+		var query = q.replace(' ', '&').replace(':', '=');
+		var lastpage = Math.ceil(results.meta.total > results.meta.per_page ? results.meta.total / results.meta.per_page : 1);
 
-			reports.append(td);*/
+		// Pagination
+		var ul = $('<ul class="pagination"></ul>');
 
-			var q = reports.data('query');
-			var query = q.replace(' ', '&').replace(':', '=');
-			var lastpage = Math.ceil(results.meta.total > results.meta.per_page ? results.meta.total / results.meta.per_page : 1);
+		var li = $('<li class="page-item page-first">');
+		var a = $('<a class="page-link" title="First page"><span aria-hidden="true">«</span></a>')
+			.attr('href', '?page=1&' + query)
+			.attr('data-page', 1);
+		if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
+			li.addClass('disabled');
+			a.attr('aria-disabled', 'true');
+		}
+		li.append(a);
+		ul.append(li);
 
-			// Pagination
-			var ul = $('<ul class="pagination"></ul>');
+		li = $('<li class="page-item page-prev">');
+		a = $('<a class="page-link" title="Previous page"><span aria-hidden="true">‹</span></a>')
+			.attr('href', '?page=' + (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1) + '&' + query)
+			.attr('data-page', (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1));
+		if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
+			li.addClass('disabled');
+			a.attr('aria-disabled', 'true');
+		}
+		li.append(a);
+		ul.append(li);
 
-			var li = $('<li class="page-item page-first">');
-			var a = $('<a class="page-link" title="First page"><span aria-hidden="true">«</span></a>')
+		if (results.meta.total <= results.meta.per_page) {
+			li = $('<li class="page-item">');
+			a = $('<a class="page-link"></a>')
+				.text('1')
 				.attr('href', '?page=1&' + query)
 				.attr('data-page', 1);
-			if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
+			if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
 				li.addClass('disabled');
 				a.attr('aria-disabled', 'true');
 			}
 			li.append(a);
 			ul.append(li);
-
-			li = $('<li class="page-item page-prev">');
-			a = $('<a class="page-link" title="Previous page"><span aria-hidden="true">‹</span></a>')
-				.attr('href', '?page=' + (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1) + '&' + query)
-				.attr('data-page', (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1));
-			if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
-				li.addClass('disabled');
-				a.attr('aria-disabled', 'true');
-			}
-			li.append(a);
-			ul.append(li);
-
-			if (results.meta.total <= results.meta.per_page) {
+		} else {
+			var c = 0;
+			for (var l = 1; l <= lastpage; l++) {
+				if (c >= 10) {
+					li = $('<li class="page-item">');
+					a = $('<span class="page-link"></span>')
+						.text('...')
+						.attr('aria-disabled', 'true');
+					li.append(a);
+					ul.append(li);
+					break;
+				}
 				li = $('<li class="page-item">');
 				a = $('<a class="page-link"></a>')
-					.text('1')
-					.attr('href', '?page=1&' + query)
-					.attr('data-page', 1);
-				if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
-					li.addClass('disabled');
-					a.attr('aria-disabled', 'true');
+					.text(l)
+					.attr('href', '?page=' + l + '&' + query)
+					.attr('data-page', l);
+				if (results.meta.current_page == l) {
+					li.addClass('active');
+					//a.attr('aria-disabled', 'true');
 				}
 				li.append(a);
 				ul.append(li);
-			} else {
-				var c = 0;
-				for (var l = 1; l <= lastpage; l++) {
-					if (c >= 10) {
-						li = $('<li class="page-item">');
-						a = $('<span class="page-link"></span>')
-							.text('...')
-							.attr('aria-disabled', 'true');
-						li.append(a);
-						ul.append(li);
-						break;
-					}
-					li = $('<li class="page-item">');
-					a = $('<a class="page-link"></a>')
-						.text(l)
-						.attr('href', '?page=' + l + '&' + query)
-						.attr('data-page', l);
-					if (results.meta.current_page == l) {
-						li.addClass('active');
-						//a.attr('aria-disabled', 'true');
-					}
-					li.append(a);
-					ul.append(li);
-					c++;
-				}
+				c++;
 			}
-
-			li = $('<li class="page-item page-next">');
-			a = $('<a class="page-link" title="Next page"><span aria-hidden="true">›</span></a>')
-				.attr('href', '?page=' + (results.meta.current_page < lastpage ? lastpage - 1 : 1) + '&' + query)
-				.attr('data-page', (results.meta.current_page > 1 ? lastpage - 1 : 1))
-				.attr('data-query', q.replace(/(page:\d+)/, 'page:' + (results.meta.current_page > 1 ? lastpage - 1 : 1)));
-			if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
-				li.addClass('disabled');
-				a.attr('aria-disabled', 'true');
-			}
-			li.append(a);
-			ul.append(li);
-
-			li = $('<li class="page-item page-last">');
-			a = $('<a class="page-link" title="Last page"><span aria-hidden="true">»</span></a>')
-				.attr('href', '?page=' + lastpage + '&' + query)
-				.attr('data-page', lastpage)
-				.attr('data-query', q.replace(/(page:\d+)/, 'page:' + lastpage));
-			if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
-				li.addClass('disabled');
-				a.attr('aria-disabled', 'true');
-			}
-			li.append(a);
-			ul.append(li);
-
-			reports.append(ul);
-
-			$('.page-link').on('click', function (e) {
-				e.preventDefault();
-				$('#page').val($(this).data('page'));
-				CRMSearch();
-			});
 		}
+
+		li = $('<li class="page-item page-next">');
+		a = $('<a class="page-link" title="Next page"><span aria-hidden="true">›</span></a>')
+			.attr('href', '?page=' + (results.meta.current_page < lastpage ? lastpage - 1 : 1) + '&' + query)
+			.attr('data-page', (results.meta.current_page > 1 ? lastpage - 1 : 1))
+			.attr('data-query', q.replace(/(page:\d+)/, 'page:' + (results.meta.current_page > 1 ? lastpage - 1 : 1)));
+		if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
+			li.addClass('disabled');
+			a.attr('aria-disabled', 'true');
+		}
+		li.append(a);
+		ul.append(li);
+
+		li = $('<li class="page-item page-last">');
+		a = $('<a class="page-link" title="Last page"><span aria-hidden="true">»</span></a>')
+			.attr('href', '?page=' + lastpage + '&' + query)
+			.attr('data-page', lastpage)
+			.attr('data-query', q.replace(/(page:\d+)/, 'page:' + lastpage));
+		if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
+			li.addClass('disabled');
+			a.attr('aria-disabled', 'true');
+		}
+		li.append(a);
+		ul.append(li);
+
+		reports.append(ul);
+
+		$('.page-link').on('click', function (e) {
+			e.preventDefault();
+			$('#page').val($(this).data('page'));
+			CRMSearch();
+		});
 	}
+	//}
 }
 
 /**
@@ -1745,11 +2023,11 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 	report['report'] = report['formattedreport'];
 
 	// determine the directory we are operating in
-	var page = document.location.href.split("/")[4];
+	//var page = document.location.href.split("/")[4];
 	// if we are in crm, we are doing report searches, so we should highlight matches
-	if (page == 'crm') {
-		report['report'] = HighlightMatches(report['report']);
-	}
+	//if (page == 'crm') {
+	report['report'] = HighlightMatches(report['report']);
+	//}
 
 	span = document.createElement("span");
 	span.id = report['id'] + "_text";
@@ -1916,10 +2194,10 @@ function CRMCancelReportText(id) {
  * @return  {void}
  */
 function CRMPrintComment(reportid, comment) { //, userid) {
-	var page = document.location.href.split("/")[4];
-	if (page == 'crm') {
-		comment['comment'] = HighlightMatches(comment['comment']);
-	}
+	//var page = document.location.href.split("/")[4];
+	//if (page == 'crm') {
+	comment['comment'] = HighlightMatches(comment['comment']);
+	//}
 	// determine if we should edit comment
 	var edit = false;
 	if (comment['can']['edit']) {
@@ -2060,7 +2338,27 @@ function CRMPrintComment(reportid, comment) { //, userid) {
  */
 function CRMDeleteComment(commentid, reportid) {
 	if (confirm("Are you sure you want to delete this comment?")) {
-		WSDeleteURL(document.getElementById('comment_' + commentid).getAttribute('data-api'), CRMDeletedComment, { 'commentid': commentid, 'reportid': reportid });
+		fetch(document.getElementById('comment_' + commentid).getAttribute('data-api'), {
+			method: 'DELETE',
+			headers: headers
+		})
+			.then(function (response) {
+				if (response.ok) {
+					CRMDeletedComment({ 'commentid': commentid, 'reportid': reportid });
+					return;// response.json();
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (err) {
+				document.getElementById(commentid + "_commentdeleteimg").className = "fa fa-exclamation-circle";
+				document.getElementById(commentid + "_commentdeleteimg").parentNode.title = err; //"An error occurred while deleting comment.";
+			});
 	}
 }
 
@@ -2071,51 +2369,61 @@ function CRMDeleteComment(commentid, reportid) {
  * @param   {array}   arg
  * @return  {void}
  */
-function CRMDeletedComment(xml, arg) {
-	if (xml.status < 400) {
-		document.getElementById('comment_' + arg['commentid']).style.display = "none";
+function CRMDeletedComment(arg) {
+	//if (xml.status < 400) {
+	document.getElementById('comment_' + arg['commentid']).style.display = "none";
 
-		WSGetURL(document.getElementById(arg['reportid']).getAttribute('data-api'), function (xml) {
-			if (xml.status < 400) {
-				var results = JSON.parse(xml.responseText);
-				var div, a;
-
-				if (results['subscribed'] == '0') {
-					div = document.getElementById(arg['reportid'] + "_subscribed");
-
-					a = document.createElement("a");
-					a.href = "?id=" + arg['reportid'] + "&subscribe";
-					a.className = 'btn btn-default btn-sm';
-					a.onclick = function (e) {
-						e.preventDefault();
-						CRMSubscribeComment(arg['reportid']);
-					};
-					a.innerHTML = "Subscribe";
-
-					div.appendChild(a);
-				} else if (results['subscribed'] == '2') {
-					div = document.getElementById(arg['reportid'] + "_subscribed");
-
-					a = document.createElement("a");
-					a.href = "?id=" + arg['reportid'] + "&unsubscribe";
-					a.className = 'btn btn-default btn-sm';
-					a.onclick = function (e) {
-						e.preventDefault();
-						CRMUnsubscribeComment(results['subscribedcommentid'], arg['reportid']);
-					};
-					a.innerHTML = "Unsubscribe";
-
-					div.appendChild(a);
-				}
+	fetch(document.getElementById(arg['reportid']).getAttribute('data-api'), {
+		method: 'GET',
+		headers: headers
+	})
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
 			}
+			throw msg;
 		});
-	} else if (xml.status == 403) {
-		document.getElementById(arg['reportid'] + "_commentdeleteimg").className = "fa fa-exclamation-circle";
-		document.getElementById(arg['reportid'] + "_commentdeleteimg").parentNode.title = "Unable to save changes, grace editing window has passed.";
-	} else {
+	})
+	.then(function (results) {
+		var div, a;
+
+		if (results['subscribed'] == '0') {
+			div = document.getElementById(arg['reportid'] + "_subscribed");
+
+			a = document.createElement("a");
+			a.href = "?id=" + arg['reportid'] + "&subscribe";
+			a.className = 'btn btn-default btn-sm';
+			a.onclick = function (e) {
+				e.preventDefault();
+				CRMSubscribeComment(arg['reportid']);
+			};
+			a.innerHTML = "Subscribe";
+
+			div.appendChild(a);
+		} else if (results['subscribed'] == '2') {
+			div = document.getElementById(arg['reportid'] + "_subscribed");
+
+			a = document.createElement("a");
+			a.href = "?id=" + arg['reportid'] + "&unsubscribe";
+			a.className = 'btn btn-default btn-sm';
+			a.onclick = function (e) {
+				e.preventDefault();
+				CRMUnsubscribeComment(results['subscribedcommentid'], arg['reportid']);
+			};
+			a.innerHTML = "Unsubscribe";
+
+			div.appendChild(a);
+		}
+	})
+	.catch(function (err) {
 		document.getElementById(arg['commentid'] + "_commentdeleteimg").className = "fa fa-exclamation-circle";
-		document.getElementById(arg['commentid'] + "_commentdeleteimg").parentNode.title = "An error occurred while deleting comment.";
-	}
+		document.getElementById(arg['commentid'] + "_commentdeleteimg").parentNode.title = err; //"An error occurred while deleting comment.";
+	});
 }
 
 /**
@@ -2126,17 +2434,27 @@ function CRMDeletedComment(xml, arg) {
  */
 function CRMDeleteReport(reportid) {
 	if (confirm("Are you sure you want to delete this report?")) {
-		WSDeleteURL(document.getElementById(reportid).getAttribute('data-api'), function (xml, reportid) {
-			if (xml.status < 400) {
+		fetch(document.getElementById(reportid).getAttribute('data-api'), {
+			method: 'DELETE',
+			headers: headers
+		})
+		.then(function (response) {
+			if (response.ok) {
 				document.getElementById(reportid).style.display = "none";
-			} else if (xml.status == 403) {
-				document.getElementById(reportid + "_crmdeleteimg").className = "fa fa-exclamation-circle";
-				document.getElementById(reportid + "_crmdeleteimg").parentNode.title = "Unable to save changes, grace editing window has passed.";
-			} else {
-				document.getElementById(reportid + "_crmdeleteimg").className = "fa fa-exclamation-circle";
-				document.getElementById(reportid + "_crmdeleteimg").parentNode.title = "An error occurred while deleting report.";
+				return;// response.json();
 			}
-		}, reportid);
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.catch(function (err) {
+			document.getElementById(reportid + "_crmdeleteimg").className = "fa fa-exclamation-circle";
+			document.getElementById(reportid + "_crmdeleteimg").parentNode.title = err; //"An error occurred while deleting report.";
+		});
 	}
 }
 
@@ -2154,21 +2472,35 @@ function CRMPostComment(reportid) {
 		'comment': comment.value
 	});
 
-	WSPostURL(comment.getAttribute('data-api'), post, function (xml, reportid) {
-		if (xml.status < 400) {
-			var results = JSON.parse(xml.responseText);
-
+	fetch(comment.getAttribute('data-api'), {
+		method: 'POST',
+		headers: headers,
+		body: post
+	})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (results) {
 			CRMPrintComment(reportid, results);
 			document.getElementById(reportid + "_newcommentbox").value = "";
 			CRMCollapseNewComment(reportid + "_newcommentbox");
 
 			var div = document.getElementById(reportid + "_subscribed");
 			div.innerHTML = "Subscribed";
-		} else {
+		})
+		.catch(function (err) {
 			document.getElementById(reportid + "_newcommentboxsave").className = "fa fa-exclamation-circle";
-			document.getElementById(reportid + "_newcommentboxsave").parentNode.title = "An error occured while posting comment.";
-		}
-	}, reportid);
+			document.getElementById(reportid + "_newcommentboxsave").parentNode.title = err; //"An error occured while posting comment.";
+		});
 }
 
 /**
@@ -2183,10 +2515,24 @@ function CRMSubscribeComment(reportid) {
 		'comment': ''
 	});
 
-	WSPostURL(document.getElementById('reports').getAttribute('data-comments'), post, function (xml, reportid) {
-		var results = JSON.parse(xml.responseText);
-
-		if (xml.status < 400) {
+	fetch(document.getElementById('reports').getAttribute('data-comments'), {
+		method: 'POST',
+		headers: headers,
+		body: post
+	})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (results) {
 			var div = document.getElementById(reportid + "_subscribed");
 			var a = div.getElementsByTagName("a")[0];
 			a.onclick = function (e) {
@@ -2194,10 +2540,10 @@ function CRMSubscribeComment(reportid) {
 				CRMUnsubscribeComment(results.id, reportid);
 			};
 			a.innerHTML = "Unsubscribe";
-		} else {
-			alert(results.message);
-		}
-	}, reportid);
+		})
+		.catch(function (err) {
+			alert(err);
+		});
 }
 
 /**
@@ -2208,17 +2554,32 @@ function CRMSubscribeComment(reportid) {
  * @return  {void}
  */
 function CRMUnsubscribeComment(commentid, reportid) {
-	WSDeleteURL(document.getElementById('reports').getAttribute('data-comments') + "/" + commentid, function (xml, reportid) {
-		if (xml.status < 400) {
-			var div = document.getElementById(reportid + "_subscribed");
-			var a = div.getElementsByTagName("a")[0];
-			a.onclick = function (e) {
-				e.preventDefault();
-				CRMSubscribeComment(reportid);
-			};
-			a.innerHTML = "Subscribe";
-		}
-	}, reportid);
+	fetch(document.getElementById('reports').getAttribute('data-comments') + "/" + commentid, {
+		method: 'DELETE',
+		headers: headers
+	})
+		.then(function (response) {
+			if (response.ok) {
+				var div = document.getElementById(reportid + "_subscribed");
+				var a = div.getElementsByTagName("a")[0];
+				a.onclick = function (e) {
+					e.preventDefault();
+					CRMSubscribeComment(reportid);
+				};
+				a.innerHTML = "Subscribe";
+				return;
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.catch(function (err) {
+			alert(err);
+		});
 }
 
 /**
@@ -2292,6 +2653,7 @@ function CRMSaveReportText(report, api) {
 	// change save icon
 	var icon = document.getElementById(report + "_textsaveicon");
 	icon.onclick = function () { };
+
 	var img = document.getElementById(report + "_textsaveiconimg");
 	img.className = "fa fa-spinner fa-spin";
 	img.parentNode.title = "Saving changes...";
@@ -2299,12 +2661,24 @@ function CRMSaveReportText(report, api) {
 	var post = { 'report': text };
 	post = JSON.stringify(post);
 
-	WSPutURL(api, post, function (xml, report) {
-		var img = document.getElementById(report + "_textsaveiconimg");
-
-		if (xml.status < 400) {
-			var results = JSON.parse(xml.responseText);
-
+	fetch(api, {
+		method: 'PUT',
+		headers: headers,
+		body: post
+	})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (results) {
 			var icon = document.getElementById(report + "_textsaveicon");
 			icon.onclick = function () {
 				CRMSaveReportText(report, api);
@@ -2321,14 +2695,11 @@ function CRMSaveReportText(report, api) {
 			document.getElementById(report + "_textarea").parentNode.style.display = "none";
 			document.getElementById(report + "_textediticon").style.display = "block";
 			document.getElementById(report + "_textcancelicon").style.display = "none";
-		} else if (xml.status == 403) {
+		})
+		.catch(function (err) {
 			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = "Unable to save changes, grace editing window has passed.";
-		} else {
-			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = "Unable to save changes, reload the page and try again.";
-		}
-	}, report);
+			img.parentNode.title = err; //"Unable to save changes, reload the page and try again.";
+		});
 }
 
 /**
@@ -2352,12 +2723,24 @@ function CRMSaveCommentText(comment) {
 	var post = { 'comment': text };
 	post = JSON.stringify(post);
 
-	WSPutURL(document.getElementById('comment_' + comment).getAttribute('data-api'), post, function (xml, comment) {
-		var img = document.getElementById(comment + "_commenttextsaveiconimg");
-
-		if (xml.status == 200) {
-			var results = JSON.parse(xml.responseText);
-
+	fetch(document.getElementById('comment_' + comment).getAttribute('data-api'), {
+		method: 'PUT',
+		headers: headers,
+		body: post
+	})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (results) {
 			var icon = document.getElementById(comment + "_commenttextsaveicon");
 			icon.style.display = "none";
 			icon.onclick = function () {
@@ -2373,14 +2756,11 @@ function CRMSaveCommentText(comment) {
 
 			var editicon = document.getElementById(comment + "_commenttextediticon");
 			editicon.style.display = "block";
-		} else if (xml.status == 403) {
+		})
+		.catch(function (err) {
 			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = "Unable to save changes, grace editing window has passed.";
-		} else {
-			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = "Unable to save changes, reload the page and try again.";
-		}
-	}, comment);
+			img.parentNode.title = err; //"Unable to save changes, reload the page and try again.";
+		});
 }
 
 /**
@@ -2590,6 +2970,11 @@ var autocompleteList = function (url) {
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function () {
+	headers = {
+		'Content-Type': 'application/json',
+		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+	};
+
 	/*if (typeof (smdeConfig) !== 'undefined') {
 		smdeConfig.previewRender = function(plainText, preview) {
 			preview.innerHTML = plainText.replace('#', '???');
@@ -2779,12 +3164,12 @@ document.addEventListener('DOMContentLoaded', function () {
 					return item.text;
 				}
 			})
-			.on('select2:select', function () {
-				CRMSearch();
-			})
-			.on('select2:unselect', function () {
-				CRMSearch();
-			});
+				.on('select2:select', function () {
+					CRMSearch();
+				})
+				.on('select2:unselect', function () {
+					CRMSearch();
+				});
 		}
 
 		var data = $('#crm-search-data');
@@ -2794,7 +3179,28 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (sdata.length) {
 			if (sdata.groups.length) {
 				for (x = 0; x < sdata.groups.length; x++) {
-					WSGetURL(group.data('api') + '/' + sdata.groups[x], CRMSearchGroup, { 'pageload': true, 'disabled': false });
+					fetch(group.data('api') + '/' + sdata.groups[x], {
+						method: 'GET',
+						headers: headers
+					})
+						.then(function (response) {
+							if (response.ok) {
+								return response.json();
+							}
+							return response.json().then(function (data) {
+								var msg = data.message;
+								if (typeof msg === 'object') {
+									msg = Object.values(msg).join('<br />');
+								}
+								throw msg;
+							});
+						})
+						.then(function (results) {
+							CRMSearchGroup(results, { 'pageload': true, 'disabled': false });
+						})
+						.catch(function (err) {
+							alert(err);
+						});
 				}
 			}
 			if (sdata.people.length) {
@@ -2802,12 +3208,54 @@ document.addEventListener('DOMContentLoaded', function () {
 				//CRMToggleSearch('none');
 
 				for (x = 0; x < sdata.people.length; x++) {
-					WSGetURL(people.data('api') + '/' + sdata.people[x], CRMSearchUser, { 'pageload': true, 'disabled': false });
+					fetch(people.data('api') + '/' + sdata.people[x], {
+						method: 'GET',
+						headers: headers
+					})
+						.then(function (response) {
+							if (response.ok) {
+								return response.json();
+							}
+							return response.json().then(function (data) {
+								var msg = data.message;
+								if (typeof msg === 'object') {
+									msg = Object.values(msg).join('<br />');
+								}
+								throw msg;
+							});
+						})
+						.then(function (results) {
+							CRMSearchUser(results, { 'pageload': true, 'disabled': false });
+						})
+						.catch(function (err) {
+							alert(err);
+						});
 				}
 			}
 			if (sdata.resources.length) {
 				for (x = 0; x < sdata.resources.length; x++) {
-					WSGetURL(crmresource.data('api') + '/' + sdata.resources[x], CRMSearchResource, { 'pageload': true, 'disabled': false });
+					fetch(crmresource.data('api') + '/' + sdata.resources[x], {
+						method: 'GET',
+						headers: headers
+					})
+						.then(function (response) {
+							if (response.ok) {
+								return response.json();
+							}
+							return response.json().then(function (data) {
+								var msg = data.message;
+								if (typeof msg === 'object') {
+									msg = Object.values(msg).join('<br />');
+								}
+								throw msg;
+							});
+						})
+						.then(function (results) {
+							CRMSearchResource(results, { 'pageload': true, 'disabled': false });
+						})
+						.catch(function (err) {
+							alert(err);
+						});
 				}
 			}
 		}
@@ -2832,28 +3280,59 @@ document.addEventListener('DOMContentLoaded', function () {
 			//CRMToggleSearch('none');
 
 			for (x = 0; x < original.users.length; x++) {
-				/*if (original.users[x]['age'] > 86400) {
-					WSGetURL(original.users[x]['user'], CRMSearchUser, { 'pageload': true, 'disabled': true });
-				}
-				else {*/
-				WSGetURL(people.data('api') + '/' + original.users[x]['userid'], CRMSearchUser, { 'pageload': true, 'disabled': false });
-				//}
+				fetch(people.data('api') + '/' + original.users[x]['userid'], {
+					method: 'GET',
+					headers: headers
+				})
+					.then(function (response) {
+						if (response.ok) {
+							return response.json();
+						}
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
+							}
+							throw msg;
+						});
+					})
+					.then(function (results) {
+						CRMSearchUser(results, { 'pageload': true, 'disabled': false });
+					})
+					.catch(function (err) {
+						alert(err);
+					});
 			}
 
 			if (original.groupid > 0) {
 				multi_group = false;
 
-				/*if (original.groupage > 86400) {
-					WSGetURL(original.group, CRMSearchGroup, { 'pageload': true, 'disabled': true });
-				}
-				else {*/
-				WSGetURL(group.data('api') + '/' + original.groupid, CRMSearchGroup, { 'pageload': true, 'disabled': false });
-				//}
+				fetch(group.data('api') + '/' + original.groupid, {
+					method: 'GET',
+					headers: headers
+				})
+					.then(function (response) {
+						if (response.ok) {
+							return response.json();
+						}
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
+							}
+							throw msg;
+						});
+					})
+					.then(function (results) {
+						CRMSearchGroup(results, { 'pageload': true, 'disabled': false });
+					})
+					.catch(function (err) {
+						alert(err);
+					});
 			}
 
 			var vals = [];
 			for (x = 0; x < original.resources.length; x++) {
-				//WSGetURL(crmresource.data('api') + '/' + original.resources[x]['resourceid'], CRMSearchResource, { 'pageload': true, 'disabled': false });
 				vals.push(original.resources[x]['resourceid']);
 			}
 			crmresource
@@ -2890,32 +3369,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		$('.date-pick').on('change', function () {
 			CRMDateSearch();
 		});
-
-		$('#tabMain')
-			.on('paste', '.crmsearch', function () {
-				ChangeSearch(0);
-			})
-			.on('keyup', '.crmsearch', function (event) {
-				ChangeSearch(event.keyCode);
-			})
-			.on('focus', '.crmsearch', function () {
-				ChangeSearch(0);
-			})
-			.on('blur', '.crmsearch', function () {
-				CRMToggleSearch('none');
-			});
 	}
 
 	$('#help1').tabs();
 
-	var container = $('#reports');
-	if (container.length && !window.location.href.match(/[&?](\w+)$/)) {
-		/*var q = '';
-		if (container.data('query')) {
-			q = '?' + encodeURI($('#reports').data('query'));
-		}
-
-		WSGetURL(container.data('api') + q, CRMSearched);*/
+	var container = document.getElementById('reports');
+	if (container && !window.location.href.match(/[&?](\w+)$/)) {
 		CRMToggle('search');
 	}
 });

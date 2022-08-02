@@ -328,7 +328,7 @@ app('pathway')->append(
 
 						<span id="TAB_search_action"></span>
 						<span id="TAB_add_action"></span>
-						<span id="crm_action"></span>
+						<div id="crm_action" class="alert alert-danger d-none"></div>
 					</fieldset>
 				</form>
 
