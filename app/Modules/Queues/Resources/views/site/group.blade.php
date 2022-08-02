@@ -539,10 +539,15 @@ $queues = $queues->reject(function($q) use ($canManage)
 													@endif
 												</td>
 												<td class="text-right">
-													<span class="{{ $cls }}">{{ ($cls == 'text-success' ? '+' : '-') }} {{ number_format(abs($amt)) }}</span>
+													<span class="{{ $cls }}">{{ ($cls == 'text-success' ? '+' : '-') }} {{ number_format(abs($amt), 1) }}</span>
+													@if ($unit == 'sus')
+														<span class="text-muted">SUs</span>
+													@else
+														<span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
+													@endif
 												</td>
 												<td class="text-right">
-													{{ number_format($item->total) }}
+													{{ number_format($item->total, 1) }}
 												</td>
 												<td class="text-right">
 													<a href="#dialog-edit{{ $item->id }}" class="btn btn-sm queue-pl-edit"
@@ -729,8 +734,8 @@ $queues = $queues->reject(function($q) use ($canManage)
 													$groups->prepend($first);
 												}
 												?>
-												@foreach ($groups as $group)
-													<option value="{{ $group->id }}"<?php if ($group->id == '-1') { echo ' selected="selected"'; } ?>>{{ $group->name }}</option>
+												@foreach ($groups as $grp)
+													<option value="{{ $grp->id }}"<?php if ($grp->id == '-1') { echo ' selected="selected"'; } ?>>{{ $grp->name }}</option>
 												@endforeach
 											</select>
 										</div>
@@ -859,7 +864,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 												data-subresource="{{ $q->subresourceid }}">
 												<option value="0">{{ trans('queues::queues.select group') }}</option>
 												@foreach ($groups as $grp)
-													<option value="{{ $group->id }}"<?php if ($grp->id == -1) { echo ' selected="selected"'; } ?>>{{ $grp->name }}</option>
+													<option value="{{ $grp->id }}"<?php if ($grp->id == -1) { echo ' selected="selected"'; } ?>>{{ $grp->name }}</option>
 												@endforeach
 											</select>
 										</div>

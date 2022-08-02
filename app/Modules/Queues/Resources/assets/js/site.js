@@ -395,11 +395,11 @@ $(document).ready(function () {
 		var cores = document.getElementById(this.getAttribute('data-cores-field'));
 		var nodes = this.value.replace(/(^\s+|\s+$)/g, "");
 
-		if (nodes.match(RegExp("^[-]?[0-9]+$"))) {
+		//if (nodes.match(RegExp("^[-]?[0-9]+$"))) {
 			cores.value = (nodes * nodecores);
-		} else {
-			cores.value = "";
-		}
+		//} else {
+		//	cores.value = "";
+		//}
 	});
 
 	$('.cores').on('change', function () {
