@@ -44,7 +44,10 @@ if (count($l))
 						else
 						{
 							$target = App\Modules\Users\Models\User::findByUsername($log->jsonPayload->userid);
-							$log->targetuserid = $target ? $target->id : $log->payload->userid;
+							if ($target && $target->id)
+							{
+								$log->targetuserid = $target->id;
+							}
 						}
 						$log->save();
 					}
