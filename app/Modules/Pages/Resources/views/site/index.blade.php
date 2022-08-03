@@ -109,11 +109,11 @@
 
 	@if (auth()->user() && (auth()->user()->can('edit pages') || auth()->user()->can('edit.state pages') || auth()->user()->can('delete pages')))
 		@if (auth()->user()->can('edit pages') || auth()->user()->can('edit.state pages'))
-		<div id="article-form{{ $page->id }}" class="modal fade" tabindex="-1" aria-labelledby="article-form{{ $page->id }}" aria-hidden="true">
+		<div id="article-form{{ $page->id }}" class="modal fade" tabindex="-1" aria-labelledby="article-form{{ $page->id }}-title" aria-hidden="true">
 			<div class="modal-dialog modal-lg modal-dialog-centered">
 				<form action="{{ route('site.pages.store', ['uri' => $page->path]) }}" data-api="{{ route('api.pages.update', ['id' => $page->id]) }}" method="post" name="pageform" id="pageform" class="modal-content editform">
 					<div class="modal-header">
-						<h3 class="modal-title" id="article-form{{ $page->id }}">{{ trans('global.edit') }}</h3>
+						<h3 class="modal-title" id="article-form{{ $page->id }}-title">{{ trans('global.edit') }}</h3>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
