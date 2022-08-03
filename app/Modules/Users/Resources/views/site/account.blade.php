@@ -134,7 +134,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 								@if ($user->loginShell === false)
 									<span class="alert alert-error">Failed to retrieve shell information</span>
 								@else
-									<span id="SPAN_loginshell" class="edit-hide text-muted">{!! $user->loginShell ? e($user->loginShell) : '<span id="SPAN_loginshell" class="edit-hide none">' . trans('global.unknown') . '</span>' !!}</span>
+									<span id="SPAN_loginshell" class="edit-hide text-muted">{!! $user->loginShell ? e($user->loginShell) : trans('global.unknown') !!}</span>
 
 									<a href="#loginshell" id="edit-loginshell" class="edit-hide property-edit" data-prop="loginshell">
 										<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span>
