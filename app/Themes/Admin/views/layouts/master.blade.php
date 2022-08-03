@@ -92,11 +92,8 @@
 					--></li>
 				</ul>
 
-				<nav id="nav" class="main-navigation" aria-label="{{ trans('theme::admin.main') }}">
-					<div class="inner-wrap">
-						@widget('menu')
-					</div>
-				</nav><!-- / .main-navigation -->
+				@widget('menu')
+				<!-- / .main-navigation -->
 
 				<ul class="user-options">
 					@if (Auth::check())

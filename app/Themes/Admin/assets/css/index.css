@@ -3270,21 +3270,21 @@ html .select2-container--default .select2-selection--multiple .select2-selection
 .menu-open #header .user-options a:hover {
   color: #fff;
 }
-.main-navigation {
+.admin-navigation {
   flex-grow: 1;
   margin: 0 0 1em 0;
 }
-.main-navigation ul {
+.admin-navigation ul {
   list-style: none;
 }
-.main-navigation ul#adminmenu {
+.admin-navigation ul#adminmenu {
   z-index: 555;
   display: block;
   margin: 1em 0;
   padding: 0;
   text-align: left;
 }
-.main-navigation ul#adminmenu>li>ul {
+.admin-navigation ul#adminmenu>li>ul {
   margin: 0 0 0 1em;
   padding: 0;
   position: absolute;
@@ -3308,7 +3308,7 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   -moz-transition: visibility 0s, opacity 0.3s;
   transition: visibility 0s, opacity 0.3s;
 }
-.main-navigation ul#adminmenu>li>ul:before {
+.admin-navigation ul#adminmenu>li>ul:before {
   content: '';
   display: block;
   position: absolute;
@@ -3317,7 +3317,7 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   left: -20px;
   width: 20px;
 }
-.main-navigation ul#adminmenu>li>ul:after {
+.admin-navigation ul#adminmenu>li>ul:after {
   content: '';
   display: block;
   position: absolute;
@@ -3328,40 +3328,40 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   border: 10px solid transparent;
   border-color: transparent var(--menu-bg) transparent transparent;
 }
-.main-navigation ul#adminmenu>li>ul.drop-up {
+.admin-navigation ul#adminmenu>li>ul.drop-up {
   top: auto;
   bottom: 0.5em;
 }
-.main-navigation ul#adminmenu>li>ul.drop-up:after {
+.admin-navigation ul#adminmenu>li>ul.drop-up:after {
   top: auto;
   bottom: 1em;
 }
-.main-navigation ul#adminmenu ul li {
+.admin-navigation ul#adminmenu ul li {
   padding: 0.5em 1em;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.main-navigation ul#adminmenu > li {
+.admin-navigation ul#adminmenu > li {
   display: block;
   position: relative;
   margin: 0;
   padding: 0.5em 1em;
 }
-.main-navigation ul#adminmenu > li:hover>ul {
+.admin-navigation ul#adminmenu > li:hover>ul {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }
-.main-navigation ul#adminmenu li.separator {
+.admin-navigation ul#adminmenu li.separator {
   padding: 0;
 }
-.main-navigation ul#adminmenu li.separator span {
+.admin-navigation ul#adminmenu li.separator span {
   display: block;
   height: 1px;
   margin: 0 1em;
   background-color: rgba(255, 255, 255, 0.1);
 }
-.main-navigation ul#adminmenu > li.node:after {
+.admin-navigation ul#adminmenu > li.node:after {
   content: "\e921";
   font-family: Feather;
   position: absolute;
@@ -3369,10 +3369,10 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   top: 1.5em;
   color: rgba(255, 255, 255, 0.4);
 }
-.main-navigation ul#adminmenu > li.node:hover:after {
+.admin-navigation ul#adminmenu > li.node:hover:after {
   color: rgba(255, 255, 255, 1);
 }
-.main-navigation ul#adminmenu > li > a {
+.admin-navigation ul#adminmenu > li > a {
   padding: 0.75em 0.9em;
   display: block;
   font-size: 1.2em;
@@ -3387,7 +3387,7 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   -o-transition: all 0.2s;
   transition: all 0.2s;
 }
-.main-navigation ul#adminmenu > li > a:before {
+.admin-navigation ul#adminmenu > li > a:before {
   vertical-align: middle;
   margin-right: 1em;
   font-size: 1.2em;
@@ -3398,66 +3398,66 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   -o-transition: all 0.2s;
   transition: all 0.2s;
 }
-.main-navigation ul#adminmenu > li > a:hover {
+.admin-navigation ul#adminmenu > li > a:hover {
   border: none;
   text-decoration: none;
   background-color: rgba(255, 255, 255, 0.1);
 }
-.main-navigation ul#adminmenu > li > a:hover:before {
+.admin-navigation ul#adminmenu > li > a:hover:before {
   color: #fff;
 }
-.main-navigation ul#adminmenu > li.active > a {
+.admin-navigation ul#adminmenu > li.active > a {
   background-color: rgba(255, 255, 255, 0.075);
   /*background-color: rgba(240, 95, 43, 0.1);*/
 }
-.main-navigation ul#adminmenu > li.active > a:before {
+.admin-navigation ul#adminmenu > li.active > a:before {
   color: #fff;
   /*color: rgba(240, 95, 43, 1);*/
 }
-.main-navigation ul#adminmenu.disabled li a:before,
-.main-navigation ul#adminmenu.disabled > li:hover > a:before,
-.main-navigation ul#adminmenu.disabled > li:focus > a:before,
-.main-navigation ul#adminmenu.disabled li > a:hover:before,
-.main-navigation ul#adminmenu.disabled li > a:focus:before {
+.admin-navigation ul#adminmenu.disabled li a:before,
+.admin-navigation ul#adminmenu.disabled > li:hover > a:before,
+.admin-navigation ul#adminmenu.disabled > li:focus > a:before,
+.admin-navigation ul#adminmenu.disabled li > a:hover:before,
+.admin-navigation ul#adminmenu.disabled li > a:focus:before {
   color: rgba(255, 255, 255, 0.2);
 }
-.main-navigation ul#adminmenu.disabled > li a:hover,
-.main-navigation ul#adminmenu.disabled > li a:focus {
+.admin-navigation ul#adminmenu.disabled > li a:hover,
+.admin-navigation ul#adminmenu.disabled > li a:focus {
   background-color: transparent;
 }
-.main-navigation ul#adminmenu a,
+.admin-navigation ul#adminmenu a,
 .menu-open ul#adminmenu > li > a {
   color: rgba(255, 255, 255, 0.6);
 }
-.main-navigation ul#adminmenu a:hover,
+.admin-navigation ul#adminmenu a:hover,
 .menu-open ul#adminmenu > li > a:hover {
   color: #fff;
 }
 .menu-open ul#adminmenu > li.deeper:after {
   display: block;
 }
-.main-navigation .badge {
+.admin-navigation .badge {
   position: absolute;
   top: 0.2em;
   right: 0.2em;
   padding: 0.125em 0.3em;
 }
 @media (max-height: 924px) {
-  .main-navigation {
+  .admin-navigation {
     font-size: 1em;
   }
-  /*.main-navigation ul#adminmenu {
+  /*.admin-navigation ul#adminmenu {
     margin: 0;
   }*/
   #header .user-options li a,
-  .main-navigation ul#adminmenu > li > a {
+  .admin-navigation ul#adminmenu > li > a {
     font-size: 1em;
     padding: 0.5em 1.1em;
   }
-  .main-navigation ul#adminmenu > li.node:after {
+  .admin-navigation ul#adminmenu > li.node:after {
     top: 1em;
   }
-  .main-navigation ul#adminmenu>li>ul:after {
+  .admin-navigation ul#adminmenu>li>ul:after {
     top: 0.5em;
   }
 }
@@ -3474,14 +3474,14 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   #header .user-options {
     margin-bottom: 0.5em;
   }
-  .main-navigation ul#adminmenu {
+  .admin-navigation ul#adminmenu {
     margin: 0;
   }
-  .main-navigation ul#adminmenu > li.node:after {
+  .admin-navigation ul#adminmenu > li.node:after {
     top: 0.85em;
   }
   #header .user-options li,
-  .main-navigation ul#adminmenu > li {
+  .admin-navigation ul#adminmenu > li {
     padding: 0.25em 1em;
   }
 }

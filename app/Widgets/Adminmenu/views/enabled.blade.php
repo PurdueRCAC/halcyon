@@ -418,5 +418,8 @@ if ($user->can('manage themes') && Module::isEnabled('themes'))
 
 	$menu->getParent();
 }
-
+echo '<nav class="admin-navigation" aria-label="' . trans('widget.adminmenu::adminmenu.widget name') . '">';
+echo '<div class="inner-wrap">';
 $menu->renderMenu('adminmenu');
+echo '</div>';
+echo '</nav>';

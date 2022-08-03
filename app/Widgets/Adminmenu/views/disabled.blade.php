@@ -113,5 +113,8 @@ if ($user->can('manage themes'))
 		'class:' . (isset($groupings['themes']) ? $groupings['themes'] : 'modules') . ' disabled'
 	));
 }
-
+echo '<nav class="admin-navigation" aria-label="' . trans('widget.adminmenu::adminmenu.widget name') . '">';
+echo '<div class="inner-wrap">';
 $menu->renderMenu('adminmenu', 'disabled');
+echo '</div>';
+echo '</nav>';
