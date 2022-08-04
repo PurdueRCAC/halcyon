@@ -2265,26 +2265,26 @@ function NEWSPrintRow(news) {
 					method: 'GET',
 					headers: headers
 				})
-					.then(function (response) {
-						if (response.ok) {
-							return response.json();
+				.then(function (response) {
+					if (response.ok) {
+						return response.json();
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
 						}
-						return response.json().then(function (data) {
-							var msg = data.message;
-							if (typeof msg === 'object') {
-								msg = Object.values(msg).join('<br />');
-							}
-							throw msg;
-						});
-					})
-					.then(function (data) {
-						document.getElementById(news['id'] + "_newupdatebox").value = data.body;
-						document.getElementById(news['id'] + "_newupdatebox").rows = 7;
-						document.getElementById(news['id'] + "_newupdatebox").focus();
-					})
-					.catch(function (err) {
-						alert(err);
+						throw msg;
 					});
+				})
+				.then(function (data) {
+					document.getElementById(news['id'] + "_newupdatebox").value = data.body;
+					document.getElementById(news['id'] + "_newupdatebox").rows = 7;
+					document.getElementById(news['id'] + "_newupdatebox").focus();
+				})
+				.catch(function (err) {
+					alert(err);
+				});
 			};
 
 			div.appendChild(label);
@@ -2369,27 +2369,27 @@ function NEWSDeleteNews(newsid) {
 			method: 'DELETE',
 			headers: headers
 		})
-			.then(function (response) {
-				if (response.ok) {
-					document.getElementById(newsid).style.display = "none";
-					return;
-				}
+		.then(function (response) {
+			if (response.ok) {
+				document.getElementById(newsid).style.display = "none";
+				return;
+			}
 
-				return response.json().then(function (data) {
-					var msg = data.message;
-					if (typeof msg === 'object') {
-						msg = Object.values(msg).join('<br />');
-					}
-					throw msg;
-				});
-			})
-			.catch(function (error) {
-				var img = document.getElementById(newsid + "_newsdeleteimg");
-				if (img) {
-					img.className = "fa fa-exclamation-triangle";
-					img.parentNode.title = error;
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
 				}
+				throw msg;
 			});
+		})
+		.catch(function (error) {
+			var img = document.getElementById(newsid + "_newsdeleteimg");
+			if (img) {
+				img.className = "fa fa-exclamation-triangle";
+				img.parentNode.title = error;
+			}
+		});
 	}
 }
 
@@ -2676,45 +2676,45 @@ function NEWSSaveNewsHeadline(news) {
 		headers: headers,
 		body: post
 	})
-		.then(function (response) {
-			if (response.ok) {
-				return response.json();
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
 			}
-			return response.json().then(function (data) {
-				var msg = data.message;
-				if (typeof msg === 'object') {
-					msg = Object.values(msg).join('<br />');
-				}
-				throw msg;
-			});
-		})
-		.then(function (results) {
-			LASTEDIT[news] = results['lastedit'];
-
-			var icon = document.getElementById(news + "_headlinesaveicon");
-			icon.onclick = function () {
-				NEWSSaveNewsHeadline(news);
-			};
-			icon.style.display = "none";
-
-			var cancelicon = document.getElementById(news + "_headlinecancelicon");
-			cancelicon.style.display = "none";
-
-			var text = document.getElementById(news + "_headline");
-			text.style.display = "inline";
-			text.innerHTML = results['headline'];
-
-			var input = document.getElementById(news + "_headlineinput");
-			input.style.display = "none";
-
-			var editicon = document.getElementById(news + "_headlineediticon");
-			editicon.style.display = "inline";
-		})
-		.catch(function (err) {
-			var img = document.getElementById(news + "_headlinesaveiconimg");
-			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = err;
+			throw msg;
 		});
+	})
+	.then(function (results) {
+		LASTEDIT[news] = results['lastedit'];
+
+		var icon = document.getElementById(news + "_headlinesaveicon");
+		icon.onclick = function () {
+			NEWSSaveNewsHeadline(news);
+		};
+		icon.style.display = "none";
+
+		var cancelicon = document.getElementById(news + "_headlinecancelicon");
+		cancelicon.style.display = "none";
+
+		var text = document.getElementById(news + "_headline");
+		text.style.display = "inline";
+		text.innerHTML = results['headline'];
+
+		var input = document.getElementById(news + "_headlineinput");
+		input.style.display = "none";
+
+		var editicon = document.getElementById(news + "_headlineediticon");
+		editicon.style.display = "inline";
+	})
+	.catch(function (err) {
+		var img = document.getElementById(news + "_headlinesaveiconimg");
+		img.className = "fa fa-exclamation-circle";
+		img.parentNode.title = err;
+	});
 }
 
 /**
@@ -2746,45 +2746,45 @@ function NEWSSaveNewsLocation(news) {
 		headers: headers,
 		body: post
 	})
-		.then(function (response) {
-			if (response.ok) {
-				return response.json();
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
 			}
-			return response.json().then(function (data) {
-				var msg = data.message;
-				if (typeof msg === 'object') {
-					msg = Object.values(msg).join('<br />');
-				}
-				throw msg;
-			});
-		})
-		.then(function (results) {
-			LASTEDIT[news] = results['lastedit'];
-
-			var icon = document.getElementById(news + "_locationsaveicon");
-			icon.onclick = function () {
-				NEWSSaveNewsLocation(news);
-			};
-			icon.style.display = "none";
-
-			var cancelicon = document.getElementById(news + "_locationcancelicon");
-			cancelicon.style.display = "none";
-
-			var text = document.getElementById(news + "_location");
-			text.style.display = "inline";
-			text.innerHTML = results['location'];
-
-			var input = document.getElementById(news + "_locationinput");
-			input.style.display = "none";
-
-			var editicon = document.getElementById(news + "_locationediticon");
-			editicon.style.display = "inline";
-		})
-		.catch(function (err) {
-			var img = document.getElementById(news + "_locationsaveiconimg");
-			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = err;
+			throw msg;
 		});
+	})
+	.then(function (results) {
+		LASTEDIT[news] = results['lastedit'];
+
+		var icon = document.getElementById(news + "_locationsaveicon");
+		icon.onclick = function () {
+			NEWSSaveNewsLocation(news);
+		};
+		icon.style.display = "none";
+
+		var cancelicon = document.getElementById(news + "_locationcancelicon");
+		cancelicon.style.display = "none";
+
+		var text = document.getElementById(news + "_location");
+		text.style.display = "inline";
+		text.innerHTML = results['location'];
+
+		var input = document.getElementById(news + "_locationinput");
+		input.style.display = "none";
+
+		var editicon = document.getElementById(news + "_locationediticon");
+		editicon.style.display = "inline";
+	})
+	.catch(function (err) {
+		var img = document.getElementById(news + "_locationsaveiconimg");
+		img.className = "fa fa-exclamation-circle";
+		img.parentNode.title = err;
+	});
 }
 
 /**
@@ -2872,45 +2872,45 @@ function NEWSSaveNewsUrl(news) {
 		headers: headers,
 		body: post
 	})
-		.then(function (response) {
-			if (response.ok) {
-				return response.json();
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
 			}
-			return response.json().then(function (data) {
-				var msg = data.message;
-				if (typeof msg === 'object') {
-					msg = Object.values(msg).join('<br />');
-				}
-				throw msg;
-			});
-		})
-		.then(function (results) {
-			LASTEDIT[news] = results['lastedit'];
-
-			var icon = document.getElementById(news + "_urlsaveicon");
-			icon.onclick = function () {
-				NEWSSaveNewsUrl(news);
-			};
-			icon.style.display = "none";
-
-			var cancelicon = document.getElementById(news + "_urlcancelicon");
-			cancelicon.style.display = "none";
-
-			var text = document.getElementById(news + "_url");
-			text.style.display = "inline";
-			text.innerHTML = results['location'];
-
-			var input = document.getElementById(news + "_urlinput");
-			input.style.display = "none";
-
-			var editicon = document.getElementById(news + "_urlediticon");
-			editicon.style.display = "inline";
-		})
-		.catch(function (err) {
-			var img = document.getElementById(news + "_urlsaveiconimg");
-			img.className = "fa fa-exclamation-circle";
-			img.parentNode.title = err;
+			throw msg;
 		});
+	})
+	.then(function (results) {
+		LASTEDIT[news] = results['lastedit'];
+
+		var icon = document.getElementById(news + "_urlsaveicon");
+		icon.onclick = function () {
+			NEWSSaveNewsUrl(news);
+		};
+		icon.style.display = "none";
+
+		var cancelicon = document.getElementById(news + "_urlcancelicon");
+		cancelicon.style.display = "none";
+
+		var text = document.getElementById(news + "_url");
+		text.style.display = "inline";
+		text.innerHTML = results['location'];
+
+		var input = document.getElementById(news + "_urlinput");
+		input.style.display = "none";
+
+		var editicon = document.getElementById(news + "_urlediticon");
+		editicon.style.display = "inline";
+	})
+	.catch(function (err) {
+		var img = document.getElementById(news + "_urlsaveiconimg");
+		img.className = "fa fa-exclamation-circle";
+		img.parentNode.title = err;
+	});
 }
 
 /**
@@ -2977,8 +2977,8 @@ function PreviewExample(example) {
 	var d = new Date();
 	d.setDate(d.getDate() + 1);
 	example_vars["endDate"] = d;
-	example_vars["resources"] = ["Anvil", "Bell"];//[{"resourcename": "Carter"}, {"resourcename": "Conte"}];
-	example_vars["location"] = "Envision Center";
+	example_vars["resources"] = ["Cluster One", "Scratch Storage"];
+	example_vars["location"] = "Example Building, Room 123";
 
 	var post = {
 		'body': document.getElementById('help1' + example + 'input').value,
@@ -2990,24 +2990,24 @@ function PreviewExample(example) {
 		headers: headers,
 		body: JSON.stringify(post)
 	})
-		.then(function (response) {
-			if (response.ok) {
-				return response.json();
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
 			}
-			return response.json().then(function (data) {
-				var msg = data.message;
-				if (typeof msg === 'object') {
-					msg = Object.values(msg).join('<br />');
-				}
-				throw msg;
-			});
-		})
-		.then(function (results) {
-			document.getElementById('help1' + example + 'output').innerHTML = results['formattedbody'];
-		})
-		.catch(function (err) {
-			alert(err);
+			throw msg;
 		});
+	})
+	.then(function (results) {
+		document.getElementById('help1' + example + 'output').innerHTML = results['formattedbody'];
+	})
+	.catch(function (err) {
+		alert(err);
+	});
 }
 
 /**
@@ -3040,17 +3040,16 @@ function NEWSPreviewVars() { // news
 		preview_vars["enddate"] = endDate;
 	}
 
-	if (document.getElementById("newstype").value <= 2) {
-		preview_vars["resources"] = [];
+	preview_vars["resources"] = [];
 
-		var resources = Array.prototype.slice.call(document.querySelectorAll('#newsresource option:checked'), 0).map(function (v) {
-			return v.innerHTML;
-		});
+	var resources = Array.prototype.slice.call(document.querySelectorAll('#newsresource option:checked'), 0).map(function (v) {
+		return v.innerHTML;
+	});
 
-		$.each(resources, function (i, el) {
-			preview_vars['resources'][i] = el;
-		});
-	}
+	$.each(resources, function (i, el) {
+		preview_vars['resources'][i] = el;
+	});
+
 	preview_vars['update'] = "0";
 
 	if (document.getElementById("newstype").value == 4) {
@@ -3100,24 +3099,24 @@ function NEWSPreview(news, edit) {
 		headers: headers,
 		body: JSON.stringify(post)
 	})
-		.then(function (response) {
-			if (response.ok) {
-				return response.json();
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
 			}
-			return response.json().then(function (data) {
-				var msg = data.message;
-				if (typeof msg === 'object') {
-					msg = Object.values(msg).join('<br />');
-				}
-				throw msg;
-			});
-		})
-		.then(function (results) {
-			document.getElementById("preview").innerHTML = results['formattedbody'];
-		})
-		.catch(function (err) {
-			alert(err);
+			throw msg;
 		});
+	})
+	.then(function (results) {
+		document.getElementById("preview").innerHTML = results['formattedbody'];
+	})
+	.catch(function (err) {
+		alert(err);
+	});
 
 	$('#preview').dialog({ modal: true, width: '691px' });
 	$('#preview').dialog('open');
@@ -3781,42 +3780,42 @@ function NewsSaveUpdateText(newsid, update) {
 		headers: headers,
 		body: post
 	})
-		.then(function (response) {
-			if (response.ok) {
-				return response.json();
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
+		}
+
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
 			}
-
-			return response.json().then(function (data) {
-				var msg = data.message;
-				if (typeof msg === 'object') {
-					msg = Object.values(msg).join('<br />');
-				}
-				throw msg;
-			});
-		})
-		.then(function (results) {
-			var icon = document.getElementById(update + "_updatetextsaveicon");
-			icon.style.display = "none";
-			icon.onclick = function () {
-				NewsSaveUpdateText(results.data.newsid, update);
-			};
-			var text = document.getElementById(update + "_update");
-			text.style.display = "block";
-			text.innerHTML = results.formattedbody;
-
-			var box = document.getElementById(update + "_updatetextarea");
-			box.parentNode.style.display = "none";
-
-			var editicon = document.getElementById(update + "_updatetextediticon");
-			editicon.style.display = "block";
-		})
-		.catch(function (error) {
-			var img = document.getElementById(update + "_updatetextsaveiconimg");
-			if (img) {
-				img.className = "fa fa-exclamation-circle";
-				img.parentNode.title = error;
-			}
+			throw msg;
 		});
+	})
+	.then(function (results) {
+		var icon = document.getElementById(update + "_updatetextsaveicon");
+		icon.style.display = "none";
+		icon.onclick = function () {
+			NewsSaveUpdateText(results.data.newsid, update);
+		};
+		var text = document.getElementById(update + "_update");
+		text.style.display = "block";
+		text.innerHTML = results.formattedbody;
+
+		var box = document.getElementById(update + "_updatetextarea");
+		box.parentNode.style.display = "none";
+
+		var editicon = document.getElementById(update + "_updatetextediticon");
+		editicon.style.display = "block";
+	})
+	.catch(function (error) {
+		var img = document.getElementById(update + "_updatetextsaveiconimg");
+		if (img) {
+			img.className = "fa fa-exclamation-circle";
+			img.parentNode.title = error;
+		}
+	});
 }
 
 /**
@@ -3832,27 +3831,27 @@ function NewsDeleteUpdate(updateid, reportid) {
 			method: 'DELETE',
 			headers: headers
 		})
-			.then(function (response) {
-				if (response.ok) {
-					$('#' + updateid + "_update").closest('li').remove();
-					return;
-				}
+		.then(function (response) {
+			if (response.ok) {
+				$('#' + updateid + "_update").closest('li').remove();
+				return;
+			}
 
-				return response.json().then(function (data) {
-					var msg = data.message;
-					if (typeof msg === 'object') {
-						msg = Object.values(msg).join('<br />');
-					}
-					throw msg;
-				});
-			})
-			.catch(function (error) {
-				var img = document.getElementById(updateid + "_updatedeleteimg");
-				if (img) {
-					img.className = "fa fa-exclamation-circle";
-					img.parentNode.title = error;
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
 				}
+				throw msg;
 			});
+		})
+		.catch(function (error) {
+			var img = document.getElementById(updateid + "_updatedeleteimg");
+			if (img) {
+				img.className = "fa fa-exclamation-circle";
+				img.parentNode.title = error;
+			}
+		});
 	}
 }
 
@@ -4010,12 +4009,12 @@ document.addEventListener('DOMContentLoaded', function () {
 				return item.text;
 			}
 		})
-			.on('select2:select', function () {
-				NEWSSearch();
-			})
-			.on('select2:unselect', function () {
-				NEWSSearch();
-			});
+		.on('select2:select', function () {
+			NEWSSearch();
+		})
+		.on('select2:unselect', function () {
+			NEWSSearch();
+		});
 	}
 
 	var newsuser = $("#newsuser");
@@ -4075,26 +4074,26 @@ document.addEventListener('DOMContentLoaded', function () {
 				headers: headers,
 				body: JSON.stringify(post)
 			})
-				.then(function (response) {
-					if (response.ok) {
-						btn.parentNode.innerHTML = '<span class="alert alert-success">Thank you for your interest!</span>';
-						setTimeout(function () {
-							window.location.reload(true);
-						}, 1000);
-						return;
-					}
+			.then(function (response) {
+				if (response.ok) {
+					btn.parentNode.innerHTML = '<span class="alert alert-success">Thank you for your interest!</span>';
+					setTimeout(function () {
+						window.location.reload(true);
+					}, 1000);
+					return;
+				}
 
-					return response.json().then(function (data) {
-						var msg = data.message;
-						if (typeof msg === 'object') {
-							msg = Object.values(msg).join('<br />');
-						}
-						throw msg;
-					});
-				})
-				.catch(function (error) {
-					btn.parentNode.innerHTML = btn.parentNode.innerHTML + '<span class="alert alert-error">' + error + '</span>';
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
 				});
+			})
+			.catch(function (error) {
+				btn.parentNode.innerHTML = btn.parentNode.innerHTML + '<span class="alert alert-error">' + error + '</span>';
+			});
 		});
 	});
 
@@ -4106,26 +4105,26 @@ document.addEventListener('DOMContentLoaded', function () {
 				method: 'DELETE',
 				headers: headers
 			})
-				.then(function (response) {
-					if (response.ok) {
-						el.parentNode.innerHTML = '<span class="alert alert-success">Successfully cancelled.</span>';
-						setTimeout(function () {
-							window.location.reload(true);
-						}, 1000);
-						return;
-					}
+			.then(function (response) {
+				if (response.ok) {
+					el.parentNode.innerHTML = '<span class="alert alert-success">Successfully cancelled.</span>';
+					setTimeout(function () {
+						window.location.reload(true);
+					}, 1000);
+					return;
+				}
 
-					return response.json().then(function (data) {
-						var msg = data.message;
-						if (typeof msg === 'object') {
-							msg = Object.values(msg).join('<br />');
-						}
-						throw msg;
-					});
-				})
-				.catch(function (error) {
-					el.parentNode.innerHTML = el.parentNode.innerHTML + '<span class="alert alert-error">' + error + '</span>';
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
 				});
+			})
+			.catch(function (error) {
+				el.parentNode.innerHTML = el.parentNode.innerHTML + '<span class="alert alert-error">' + error + '</span>';
+			});
 		});
 	});
 
@@ -4214,14 +4213,14 @@ document.addEventListener('DOMContentLoaded', function () {
 			method: 'GET',
 			headers: headers
 		})
-			.then(function (response) {
-				if (response.ok) {
-					return response.json();
-				}
-			})
-			.then(function (data) {
-				document.getElementById('viewcount').innerHTML = data.viewcount;
-				document.getElementById('uniqueviewcount').innerHTML = data.uniquecount;
-			});
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+		})
+		.then(function (data) {
+			document.getElementById('viewcount').innerHTML = data.viewcount;
+			document.getElementById('uniqueviewcount').innerHTML = data.uniquecount;
+		});
 	}
 });
