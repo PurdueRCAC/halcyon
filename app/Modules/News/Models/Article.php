@@ -361,7 +361,7 @@ class Article extends Model
 	{
 		if (!$this->originalend)
 		{
-			$dt = $this->datetimenewsend;
+			$dt = null; //$this->datetimenewsend;
 
 			if ($this->hasEnd() && $this->isModified())
 			{
@@ -1229,14 +1229,14 @@ class Article extends Model
 			{
 				if ($this->hasStart())
 				{
-					if (!$this->hasEnd() || $this->datetimenews->format('Y-m-d') == $end->format('Y-m-d'))
+					if (!$end || $this->datetimenews->format('Y-m-d') == $end->format('Y-m-d'))
 					{
 						// single day
 						$date = $this->datetimenews->format('l, F j, Y');
 						$time = $this->datetimenews->format('g:ia');
 						$tzon = $this->datetimenews->format('T');
 
-						if ($this->hasEnd())
+						if ($end)
 						{
 							$time = 'from ' . $time . ' - ' . $end->format('g:ia');
 						}
@@ -1258,7 +1258,7 @@ class Article extends Model
 					{
 						if ($var == 'date')
 						{
-							$vars[$var] = preg_replace("/&nbsp;/", ' at ', $this->formatDate($this->datetimenews->format('Y-m-d') . ' 00:00:00', $end->format('Y-m-d') . ' 00:00:00'));
+							$vars[$var] = preg_replace("/&nbsp;/", ' at ', $this->formatDate($this->datetimenews->format('Y-m-d') . ' 00:00:00', ($end ? $end->format('Y-m-d') . ' 00:00:00' : '')));
 						}
 						else
 						{
@@ -1307,7 +1307,7 @@ class Article extends Model
 
 			if ($var == 'enddatetime' || $var == 'enddate' || $var == 'endtime')
 			{
-				if ($this->hasEnd())
+				if ($end)
 				{
 					$date = $end->format('l, F jS, Y');
 					$time = $end->format('g:ia T');
