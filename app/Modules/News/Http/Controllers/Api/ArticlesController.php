@@ -705,7 +705,7 @@ class ArticlesController extends Controller
 			->select(DB::raw('COUNT(id) as viewcount'), DB::raw('COUNT(DISTINCT ip) as uniquecount'))
 			->where('transportmethod', '=', 'GET')
 			->where('status', '=', 200)
-			->where('uri', '=', route('site.news.show', ['id' => $id]))
+			->where('uri', '=', str_replace(url('/'), '', route('site.news.show', ['id' => $id])))
 			->get()
 			->first();
 
