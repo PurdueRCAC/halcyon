@@ -29,7 +29,7 @@ endforeach;
 					<span class="text-nowrap">{{ $item->formatDate($item->datetimenews, $item->datetimenewsend) }}</span>
 
 					@if ($update = $item->updates()->orderBy('datetimecreated', 'desc')->first())
-						<span class="badge badge-secondary">{{ trans('widget.banner::banner.updated') }}: {{ $update->datetimecreated->format('M d, Y h:ia') }}</span>
+						<span class="badge badge-secondary">{{ trans('widget.banner::banner.updated') }}: {{ $update->formatDate($update->datetimecreated) }}</span>
 					@endif
 				</div>
 			@endforeach
@@ -46,7 +46,7 @@ endforeach;
 					<span class="text-nowrap">{{ $item->formatDate($item->datetimenews, $item->datetimenewsend) }}</span>
 
 					@if ($update = $item->updates()->orderBy('datetimecreated', 'desc')->first())
-						<span class="badge badge-secondary">{{ trans('widget.banner::banner.updated') }}: {{ $update->datetimecreated->format('M d, Y h:ia') }}</span>
+						<span class="badge badge-secondary">{{ trans('widget.banner::banner.updated') }}: {{ $update->formatDate($update->datetimecreated) }}</span>
 					@endif
 				</div>
 			@endforeach

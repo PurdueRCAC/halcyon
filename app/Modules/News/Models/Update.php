@@ -12,6 +12,7 @@ use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use App\Modules\News\Events\UpdatePrepareContent;
+use Carbon\Carbon;
 
 /**
  * Model for a news article update
@@ -144,21 +145,11 @@ class Update extends Model
 	/**
 	 * Format datetimecreated
 	 *
-	 * @param   string  $startdate
 	 * @return  string
 	 */
-	public function formattedDatetimecreated(string $startdate)
+	public function getFormattedDatetimecreatedAttribute()
 	{
-		$starttime = explode(' ', $startdate);
-		$starttime = $starttime[1];
-
-		$datestring = date("F j, Y", strtotime($startdate));
-		if ($starttime != '00:00:00')
-		{
-			$datestring .= ' ' . date("g:ia", strtotime($startdate));
-		}
-
-		return $datestring;
+		return $this->formatDate($this->datetimecreated);
 	}
 
 	/**
@@ -178,9 +169,9 @@ class Update extends Model
 		$text = preg_replace_callback("/`(.*?)`/i", [$this, 'stripCode'], $text);
 
 		$uvars = array(
-			'updatedatetime' => date('F j, Y g:ia', strtotime($this->getOriginal('datetimecreated'))),
-			'updatedate'     => date('l, F jS, Y', strtotime($this->getOriginal('datetimecreated'))),
-			'updatetime'     => date("g:ia", strtotime($this->getOriginal('datetimecreated')))
+			'updatedatetime' => $this->datetimecreated->format('F j, Y g:ia T'),
+			'updatedate'     => $this->datetimecreated->format('l, F jS, Y'),
+			'updatetime'     => $this->datetimecreated->format('g:ia T')
 		);
 
 		$news = $this->article->getContentVars();
@@ -256,129 +247,7 @@ class Update extends Model
 	 */
 	public function getFormattedBodyAttribute()
 	{
-		$text = $this->body;
-
-		event($event = new UpdatePrepareContent($text));
-
-		$text = $event->getBody();
-
-		$converter = new CommonMarkConverter([
-			'html_input' => 'allow',
-		]);
-		$converter->getEnvironment()->addExtension(new TableExtension());
-		$converter->getEnvironment()->addExtension(new StrikethroughExtension());
-
-		$text = (string) $converter->convertToHtml($text);
-
-		// separate code blocks
-		$text = preg_replace("/\}\}\n\{\{/", "}}\n\n\n{{", $text);
-		$text = preg_replace("/\}\}\n\n\{\{/", "}}\n\n\n{{", $text);
-
-		// no secret words allowed!
-		$text = preg_replace("/\{\{CODE\}\}/", '', $text);
-
-		// first find and remove code blocks. we want to preserve them
-		//$text = preg_replace_callback("/(^|\n)(\n)?[{]{2}\n([\s\S]+?)\n[}]{2}(\n|$)/", 'stripCode', $text);
-		//$text = preg_replace_callback("/(^|\n)(\n)?[|]{2}\n([\s\S]+?)\n[|]{2}(\n|$)/", 'matchTable', $text);
-
-		// strip unneccessary whitespace
-		$text = preg_replace("/(^|\n)[ \t]+/", "$1", $text);
-		$text = preg_replace("/\n\n+/", "\n\n", $text);
-		$text = preg_replace("/\r/", "\n", $text);
-
-		// swap &#8859; for -
-		$text = preg_replace("/\&#8859;/", '-', $text);
-
-		// make bulleted lists
-		// first get the ul tags
-		$text = preg_replace("/(((\n|^)[\*\-]\s+.+?)+)(\n|$)/", "$3<ul class=\"list\">$1</ul>\n\n", $text);
-		$text = preg_replace("/^\n<ul/", "<ul", $text);
-		// get first line
-		$text = preg_replace("/((<ul class = \"list\">)[\*\-]\s+(.+?))(?=\n|$)/", "<ul class=\"list\"><li>$3</li>", $text);
-		// get rest of lines
-		$text = preg_replace("/((\n)[\*\-]\s+(.+?))(?=\n|$)/", "<li>$3</li>", $text);
-		$text = preg_replace("/<\/ul><\/li>/", "</li></ul>", $text);
-
-		// make numbered lists
-		// first get the ol tags
-		$text = preg_replace("/(((\n|^)\d+[\)\.]\s+.+?)+)(\n|$)/", "$3<ol class=\"list\">$1</ol>\n\n", $text);
-		$text = preg_replace("/^\n<ol/", "<ol", $text);
-		// get first line
-		$text = preg_replace("/((<ol class = \"list\">)\d+[\)\.]\s+(.+?))(?=\n|$)/", "<ol class=\"list\"><li>$3</li>", $text);
-		// get rest of lines
-		$text = preg_replace("/((\n)\d+[\)\.]\s+(.+?))(?=\n|$)/", "<li>$3</li>", $text);
-		$text = preg_replace("/<\/ol><\/li>/", "</li></ol>", $text);
-
-		// bold
-		$text = preg_replace("/(^|\W|_)\*(\S.*?)\*(\W|$|_)/", "$1<span style=\"font-weight:bold;\">$2</span>$3", $text);
-		// italics
-		$text = preg_replace("/(^|\W)_(\S.*?)_(\W|$)/", "$1<span style=\"font-style:italic;\">$2</span>$3", $text);
-		// hyperlinks
-		//$text = preg_replace_callback(REGEXP_URL, 'matchURL', $text);
-
-		// convert emails
-		$text = preg_replace('/([\w\.\-]+@((\w+\.)*\w{2,}\.\w{2,}))/', "<a target=\"_blank\" href=\"mailto:$1\">$1</a>", $text);
-
-		// convert template variables
-		if (auth()->user() && auth()->user()->can('manage news'))
-		{
-			$text = preg_replace("/%%([\w\s]+)%%/", '<span style="color:red">$0</span>', $text);
-		}
-
-		/*$uvars = array(
-			'updatedatetime' => date('F j, Y g:ia', strtotime($this->getOriginal('datetimecreated'))),
-			'updatedate'     => date('l, F jS, Y', strtotime($this->getOriginal('datetimecreated'))),
-			'updatetime'     => date("g:ia", strtotime($this->getOriginal('datetimecreated')))
-		);
-
-		$news = $this->article->getAttributes();
-		$news['resources'] = $this->article->resources->toArray();
-		$resources = array();
-		foreach ($this->article->resources as $r)
-		{
-			$resource = $r->toArray();
-			$resource['resourcename'] = $r->resource->name;
-			array_push($resources, $resource['resourcename']);
-		}
-
-		if (count($resources) > 1)
-		{
-			$resources[count($resources)-1] = 'and ' . $resources[count($resources)-1];
-		}
-
-		$news['resources'] = implode(', ', $resources);
-
-		$vars = array_merge($news, $uvars);
-
-		foreach ($vars as $var => $value)
-		{
-			$text = preg_replace("/%" . $var . "%/", $value, $text);
-		}*/
-
-		if (auth()->user() && auth()->user()->can('manage news'))
-		{
-			$text = preg_replace("/%([\w\s]+)%/", '<span style="color:red">$0</span>', $text);
-		}
-
-		// make <p>s
-		/*$text = preg_replace("/\n\n\n+/", "\n\n", $text);
-		$text = preg_replace("/^\n+/", '', $text);
-		$text = preg_replace("/\n+$/", '', $text);
-		$text = preg_replace("/\n\n/", "</p>\n<p>", $text);
-
-		$text = preg_replace("/<p><ul/", "<ul", $text);
-		$text = preg_replace("/<p><ol/", "<ol", $text);
-		$text = preg_replace("/<\/ul><\/p>/", "</ul>\n", $text);
-		$text = preg_replace("/<\/ol><\/p>/", "</ol>\n", $text);
-		$text = preg_replace("/(.)\n<ul/", "$1</p>\n<ul", $text);
-		$text = preg_replace("/(.)\n<ol/", "$1</p>\n<ol", $text);*/
-
-		//$text = preg_replace_callback("/\{\{CODE\}\}/", 'replaceCode', $text);
-
-		//$text = '<p>' . $text . '</p>';
-		$text = preg_replace("/<p>(.*)(<table.*?>)(.*<\/table>)/m", "<p>$2 <caption>$1</caption>$3", $text);
-
-		return $text;
+		return $this->toHtml();
 	}
 
 	/**
@@ -468,20 +337,22 @@ class Update extends Model
 	}
 
 	/**
-	 * Format news date
+	 * Format update date
 	 *
-	 * @param   string  $startdate
+	 * @param   string|Carbon  $startdate
 	 * @return  string
 	 */
 	public function formatDate($startdate)
 	{
-		$starttime = explode(' ', $startdate);
+		$startdate = Carbon::parse($startdate);
+
+		$starttime = explode(' ', $startdate->toDateTimeString());
 		$starttime = $starttime[1];
 
-		$datestring = date("F j, Y", strtotime($startdate));
+		$datestring = $startdate->format('F j, Y');
 		if ($starttime != '00:00:00')
 		{
-			$datestring .= ' ' . date("g:ia", strtotime($startdate));
+			$datestring .= ' ' . $startdate->format('g:ia T');
 		}
 
 		return $datestring;

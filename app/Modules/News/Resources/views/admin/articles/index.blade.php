@@ -181,7 +181,7 @@ else
 						<div class="text-muted">
 							Last emailed:
 							<time datetime="{{ $row->datetimemailed->toDateTimeLocalString() }}">
-								{{ $row->datetimemailed->format('M j, Y g:ia') }}
+								{{ $row->datetimemailed->format('M j, Y g:ia T') }}
 							</time>
 							by {{ $row->mailer ? $row->mailer->name : trans('global.unknown') }}
 						</div>
@@ -217,7 +217,7 @@ else
 					<td class="priority-4 text-right text-nowrap">
 						@if ($row->hasStart())
 							<time datetime="{{ $row->datetimenews->toDateTimeLocalString() }}">
-								{{ $row->datetimenews->format('M j, Y g:ia') }}
+								{{ $row->datetimenews->format('M j, Y g:ia T') }}
 							</time>
 						@else
 							<span class="none">{{ trans('global.none') }}</span>
@@ -232,7 +232,7 @@ else
 						@if ($row->hasStart())
 							@if ($row->hasEnd())
 								<time datetime="{{ $row->datetimenewsend->toDateTimeLocalString() }}">
-									{{ $row->isSameDay() ? $row->datetimenewsend->format('g:ia') : $row->datetimenewsend->format('M j, Y g:ia') }}
+									{{ $row->isSameDay() ? $row->datetimenewsend->format('g:ia T') : $row->datetimenewsend->format('M j, Y g:ia T') }}
 								</time>
 							@else
 								<span class="never">{{ trans('global.never') }}</span>

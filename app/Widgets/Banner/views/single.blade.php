@@ -18,7 +18,7 @@
 						@endif
 					</p>
 					@if ($update = $item->updates()->orderBy('datetimecreated', 'desc')->first())
-						<p class="newsupdated">{{ trans('widget.banner::banner.updated') }}: {{ $update->datetimecreated->format('M d, Y h:ia') }}</p>
+						<p class="newsupdated">{{ trans('widget.banner::banner.updated') }}: {{ $update->formatDate($update->datetimecreated) }}</p>
 					@endif
 				</li>
 			@endforeach
