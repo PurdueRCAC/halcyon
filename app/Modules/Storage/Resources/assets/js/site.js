@@ -765,7 +765,7 @@ function CreateNewGroupVal(num, btn, all) {
 	}
 
 	fetch(btn.data('api'), {
-		method: 'PUT',
+		method: 'POST',
 		headers: headers,
 		body: JSON.stringify({
 			'longname': BASEGROUPS[num],
