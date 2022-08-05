@@ -78,7 +78,7 @@
 					--></li>
 				</ul>
 
-				<nav id="nav" role="navigation" class="main-navigation">
+				<nav id="nav" role="navigation" class="admin-navigation">
 					<div class="inner-wrap">
 						<ul id="adminmenu">
 							<li><a class="icon-dashboard" href="{{ route('admin.dashboard.index') }}">Dashboard</a></li>
@@ -86,8 +86,35 @@
 					</div>
 				</nav><!-- / .main-navigation -->
 
+				<?php /*<ul class="user-options">
+					@if (Auth::check())
+						<li data-title="{{ trans('theme::admin.logout') }}">
+							<a class="icon-power logout" href="{{ route('logout') }}">{{ trans('theme::admin.logout') }}</a>
+						</li>
+					@else
+						@if (app('request')->input('hidemainmenu'))
+							<li class="disabled" data-title="{{ trans('theme::admin.login') }}">
+								<span class="icon-power login">{{ trans('theme::admin.login') }}</span>
+							</li>
+						@else
+							<li data-title="{{ trans('theme::admin.login') }}">
+								<a class="icon-power login" href="{{ route('login') }}">{{ trans('theme::admin.login') }}</a>
+							</li>
+						@endif
+					@endif
+				</ul>*/ ?>
 				<ul class="user-options">
 					@if (Auth::check())
+						<li data-title="{{ trans('theme::admin.toggle theme') }}">
+							<a id="mode"
+								data-api="{{ route('api.users.update', ['id' => auth()->user()->id]) }}"
+								data-mode="{{ auth()->user()->facet('theme.admin.mode', 'light') == 'light' ? 'dark' : 'light' }}"
+								data-error="{{ trans('theme::admin.mode error') }}"
+								href="{{ request()->url() }}?theme.admin.mode={{ auth()->user()->facet('theme.admin.mode', 'light') == 'light' ? 'dark' : 'light' }}">{{ trans('theme::admin.toggle theme') }}</a>
+						</li>
+						<li data-title="{{ trans('theme::admin.account') }}">
+							<a class="icon-user" href="{{ route('admin.users.show', ['id' => auth()->user()->id]) }}">{{ trans('theme::admin.account') }}</a>
+						</li>
 						<li data-title="{{ trans('theme::admin.logout') }}">
 							<a class="icon-power logout" href="{{ route('logout') }}">{{ trans('theme::admin.logout') }}</a>
 						</li>

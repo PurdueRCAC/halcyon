@@ -1,5 +1,9 @@
 @extends('layouts.error')
 
+@section('title')
+{{ trans('theme::admin.error 404 title') }}
+@stop
+
 @section('content')
 
 <div class="row align-items-center h-100 w-100">
