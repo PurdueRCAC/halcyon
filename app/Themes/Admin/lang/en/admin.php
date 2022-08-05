@@ -25,6 +25,7 @@ return [
 	'main' => 'Main',
 	'account' => 'My Account',
 	// Error pages
+	'error' => 'Error',
 	'error 403 title' => 'Not Authorized',
 	'error 403 description' => 'You are not authorized to make this request.',
 	'error 404 title' => 'Not Found',
