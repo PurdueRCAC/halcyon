@@ -58,7 +58,7 @@ class ArticleUpdated extends Notification
 		return (new SlackMessage)
 			->success()
 			->from(config('app.name'))
-			->content('News article *updated* at ' . ($update ? $update->formattedDatetimecreated($update->datetimecreated) : $article->datetimeedited->format('l, F j, Y g:ia')) . '.')
+			->content('News article *updated* at ' . ($update ? $update->formattedDatetimecreated : $article->datetimeedited->format('l, F j, Y g:ia')) . '.')
 			->attachment(function ($attachment) use ($notifiable, $article, $update)
 			{
 				$user = $article->creator;
