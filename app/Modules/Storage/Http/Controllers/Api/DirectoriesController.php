@@ -947,10 +947,10 @@ class DirectoriesController extends Controller
 				$row->{$key} = $request->input($key);
 
 				// If certain fields are changed, permissions need fixing
-				if (in_array($key, ['unixgroupid', 'ownerread', 'groupread', 'groupwrite', 'publicread', 'publicwrite']))
+				/*if (in_array($key, ['unixgroupid', 'ownerread', 'groupread', 'groupwrite', 'publicread', 'publicwrite']))
 				{
 					$fixpermissions = true;
-				}
+				}*/
 			}
 		}
 
