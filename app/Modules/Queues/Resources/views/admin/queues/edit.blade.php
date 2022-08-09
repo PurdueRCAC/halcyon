@@ -552,10 +552,10 @@ app('pathway')
 							@endif
 						</td>
 						<td class="text-right">
-							<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format(abs($amt)) }}</span>
+							<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format(abs($amt), 1) }}</span>
 						</td>
 						<td class="text-right">
-							{{ number_format($item->total) }}
+							{{ number_format($item->total, 1) }}
 						</td>
 						<td class="text-right">
 							<a href="#dialog-edit{{ $item->id }}" class="btn btn-sm edit"
