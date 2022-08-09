@@ -630,7 +630,7 @@ app('pathway')
 														@if ($item->type == 1)
 															<input type="text" name="datetimestop" class="form-control datetime" id="loan-datetimestop{{ $item->id }}" value="{{ $item->hasEnd() ? $item->datetimestop->toDateTimeString() : '' }}" />
 														@else
-															<input type="text" name="datetimestop" class="form-control datetime" id="sell-datetimestop{{ $item->id }}" disabled="disabled" placeholder="{{ trans('queues::queues.end of life') }}" value="" />
+															<input type="text" name="datetimestop" class="form-control datetime" id="sell-datetimestop{{ $item->id }}" value="{{ $item->hasEnd() ? $item->datetimestop->toDateTimeString() : '' }}" placeholder="{{ trans('queues::queues.end of life') }}" />
 														@endif
 													</div>
 												</div>
@@ -714,7 +714,7 @@ app('pathway')
 								<div class="form-group">
 									<label for="sell-datetimestop">{{ trans('queues::queues.end') }}</label>
 									<span class="input-group input-datetime">
-										<input type="text" class="form-control datetime" id="sell-datetimestop" name="datetimestop" disabled="disabled" placeholder="{{ trans('queues::queues.end of life') }}" value="" />
+										<input type="text" class="form-control datetime" id="sell-datetimestop" name="datetimestop" placeholder="{{ trans('queues::queues.end of life') }}" value="" />
 										<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
 									</span>
 								</div>
