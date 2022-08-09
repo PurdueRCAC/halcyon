@@ -23,6 +23,11 @@ class PagesController extends Controller
 	 */
 	public function index(Request $request)
 	{
+		if ($request->expectsJson())
+		{
+			return response()->json(['message' => trans('global.unacceptable header')], 406);
+		}
+
 		$path = trim($request->path(), '/');
 
 		// Load the entire path

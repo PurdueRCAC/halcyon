@@ -103,6 +103,7 @@ return [
 	'error 404 description' => 'The page you are looking for was not found.',
 	'error 500 title' => 'Something went wrong',
 	'error 500 description' => 'Something went wrong while trying to process the page.',
+	'unacceptable header' => 'The requested resource is not capable of generating acceptable content according to the "Accept" headers sent in the request.',
 	// Forms
 	'required' => 'Required',
 	'details' => 'Details',
