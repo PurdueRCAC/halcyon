@@ -4,8 +4,9 @@ namespace App\Modules\Pages\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Routing\Controller;
+use Illuminate\Config\Repository;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Pages\Models\Page;
 //use App\Modules\Pages\Events\PageContentIsRendering;
 //use App\Modules\Pages\Events\PageContentBeforeDisplay;
@@ -88,14 +89,8 @@ class PagesController extends Controller
 		event($event = new PageTitleAfterDisplay($page));
 		$page->event->afterDisplayTitle = $event->getContent();
 
-		//$results = event('onContentBeforeDisplay', array('pages.article', &$page));
-		//$page->event->beforeDisplayContent = trim(implode("\n", $results));
-
 		//event($event = new PageContentBeforeDisplay($page->content));
 		//$page->content = $event->getBody();
-
-		//$results = event('onContentAfterDisplay', array('pages.article', &$page));
-		//$page->event->afterDisplayContent = trim(implode("\n", $results));
 
 		//event($event = new PageContentAfterDisplay($page->content));
 		//$page->content = $event->getBody();
@@ -113,13 +108,13 @@ class PagesController extends Controller
 		$layout = $page->params->get('layout');
 
 		return view('pages::site.' . ($layout ? $layout : 'index'), [
-			'page' => $page,
+			'page'    => $page,
 			'parents' => $parents,
 		]);
 	}
 
 	/**
-	 * Show the specified resource.
+	 * Show the specified page
 	 * 
 	 * @param  Request $request
 	 * @return Response
@@ -136,17 +131,25 @@ class PagesController extends Controller
 	 */
 	public function create()
 	{
-		app('pathway')
-			->append(
-				config('pages.name'),
-				route('site.pages.home')
-			)
-			->append(
-				trans('pages::pages.create'),
-				route('global.create')
-			);
+		$row = new Page;
+		$row->access = 1;
+		$row->state = 1;
 
-		return view('pages::site.create');
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
+		$parents = Page::query()
+			->select('id', 'title', 'path', 'level')
+			->where('level', '>', 0)
+			->orderBy('lft', 'asc')
+			->get();
+
+		return view('pages::site.edit', [
+			'row'     => $row,
+			'parents' => $parents
+		]);
 	}
 
 	/**
@@ -157,45 +160,126 @@ class PagesController extends Controller
 	 */
 	public function store(Request $request)
 	{
+		$rules = [
+			'title'   => 'required|string|max:255',
+			'content' => 'required|string',
+			'access'  => 'nullable|min:1'
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors($validator->messages());
+		}
+
+		$id = $request->input('id');
+
+		$row = $id ? Page::findOrFail($id) : new Page();
+		$row->fill($request->input('fields'));
+
+		if ($params = $request->input('params', []))
+		{
+			foreach ($params as $key => $val)
+			{
+				$params[$key] = is_array($val) ? array_filter($val) : $val;
+			}
+
+			$row->params = new Repository($params);
+		}
+
+		if (!$row->save())
+		{
+			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
+
+			return redirect()->back()->withError($error);
+		}
+
+		// Rebuild the set
+		$root = Page::rootNode();
+		$row->rebuild($root->id);
+
+		return redirect(route('page', ['uri' => $row->path]))->withSuccess(trans('global.messages.item ' . ($id ? 'created' : 'updated')));
 	}
 
 	/**
-	 * Show the form for editing the specified resource.
+	 * Show the form for editing the specified page
+	 *
+	 * @param  integer  $id
 	 * @return Response
 	 */
-	public function edit()
+	public function edit($id)
 	{
-		$id = 1;
+		$row = Page::findOrFail($id);
 
-		app('pathway')
-			->append(
-				config('pages.name'),
-				route('site.pages.home')
-			)
-			->append(
-				trans('global.edit'),
-				route('site.pages.edit', ['id' => $id])
-			);
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
 
-		return view('resources::site.edit');
+		// Fail if checked out not by 'me'
+		if ($row->checked_out
+		 && $row->checked_out <> auth()->user()->id)
+		{
+			return redirect(route('home'))->with('warning', trans('global.checked out'));
+		}
+
+		$parents = Page::query()
+			->select('id', 'title', 'path', 'level')
+			->where('level', '>', 0)
+			->orderBy('path', 'asc')
+			->get();
+
+		return view('pages::site.edit', [
+			'row'     => $row,
+			'parents' => $parents
+		]);
 	}
 
 	/**
-	 * Update the specified resource in storage.
-	 * 
+	 * Remove the specified page
+	 *
 	 * @param  Request $request
 	 * @return Response
 	 */
-	public function update(Request $request)
+	public function delete(Request $request)
 	{
-	}
+		// Incoming
+		$ids = $request->input('id', array());
+		$ids = (!is_array($ids) ? array($ids) : $ids);
 
-	/**
-	 * Remove the specified resource from storage.
-	 * 
-	 * @return Response
-	 */
-	public function destroy()
-	{
+		$success = 0;
+
+		foreach ($ids as $id)
+		{
+			// Delete the entry
+			// Note: This is recursive and will also remove all descendents
+			$row = Page::findOrFail($id);
+
+			if ($row->trashed())
+			{
+				if (!$row->forceDelete())
+				{
+					$request->session()->flash('error', $row->getError());
+					continue;
+				}
+			}
+			elseif (!$row->delete())
+			{
+				$request->session()->flash('error', $row->getError());
+				continue;
+			}
+
+			$success++;
+		}
+
+		if ($success)
+		{
+			$request->session()->flash('success', trans('global.messages.item deleted', ['number' => $success]));
+		}
+
+		return redirect(route('home'));
 	}
 }
