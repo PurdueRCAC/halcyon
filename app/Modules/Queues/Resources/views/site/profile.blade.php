@@ -9,6 +9,7 @@
 				<caption class="sr-only">{{ trans('queues::queues.queues') }}</caption>
 				<thead>
 					<tr>
+						<th scope="col" class="text-center">{{ trans('queues::queues.state') }}</th>
 						<th scope="col">{{ trans('queues::queues.queue') }}</th>
 						<th scope="col">{{ trans('queues::queues.resource') }}</th>
 						<th scope="col">{{ trans('queues::queues.group') }}</th>
@@ -18,6 +19,27 @@
 				<tbody>
 				@foreach ($queues as $queue)
 					<tr>
+						<td class="text-center">
+							@if ($queue->enabled && $queue->started && $queue->active)
+								@if ($queue->reservation)
+									<span class="text-info tip" title="{{ trans('queues::queues.queue has dedicated reservation') }}">
+										<span class="fa fa-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('queues::queues.queue has dedicated reservation') }}</span>
+									</span>
+								@else
+									<span class="text-success tip" title="{{ trans('queues::queues.queue is running') }}">
+										<span class="fa fa-check" aria-hidden="true"></span><span class="sr-only">{{ trans('queues::queues.queue is running') }}</span>
+									</span>
+								@endif
+							@elseif ($queue->active)
+								<span class="text-danger tip" title="{{ trans('queues::queues.queue is stopped') }}">
+									<span class="fa fa-minus-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('queues::queues.queue is stopped') }}</span>
+								</span>
+							@elseif (!$queue->active)
+								<span class="text-warning tip" title="{{ trans('queues::queues.queue has not active resources') }}">
+									<span class="fa fa-exclamation-triangle" aria-hidden="true"></span><span class="sr-only">{{ trans('queues::queues.queue has not active resources') }}</span>
+								</span>
+							@endif
+						</td>
 						<td>
 							@if (auth()->user()->can('manage queues'))
 								<a href="{{ route('admin.queues.edit', ['id' => $queue->id]) }}">
