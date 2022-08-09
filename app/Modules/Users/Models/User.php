@@ -583,10 +583,10 @@ class User extends Model implements
 	 */
 	public static function findByUsername($username, $includeTrashed = false)
 	{
-		/*if (filter_var($username, FILTER_VALIDATE_EMAIL))
+		if (filter_var($username, FILTER_VALIDATE_EMAIL))
 		{
 			return self::findByEmail($username);
-		}*/
+		}
 
 		$query = UserUsername::query();
 
@@ -719,7 +719,24 @@ class User extends Model implements
 			return $user;
 		}
 
-		event($event = new UserLookup(['username' => $username]));
+		$email = null;
+		$criteria = ['username' => $username];
+		// Do we have an email?
+		if (filter_var($username, FILTER_VALIDATE_EMAIL))
+		{
+			$email = $username;
+			$criteria = ['email' => $email];
+			$username = strstr($email, '@', true);
+
+			// Horrible and hackish but try to avoid username collisions
+			$exists = self::findByUsername($username);
+			if ($exists)
+			{
+				$username = str_replace(['@', '.', '+'], '', $email);
+			}
+		}
+
+		event($event = new UserLookup($criteria));
 
 		if (count($event->results))
 		{
@@ -731,32 +748,36 @@ class User extends Model implements
 			$user = new self;
 		}
 
-		if ($user)
+		$user->name = $user->name ?: $username;
+		$user->api_token = Str::random(60);
+
+		$newUsertype = config('module.users.new_usertype');
+
+		if (!$newUsertype)
 		{
-			$user->name = $user->name ?: $username;
-			$user->api_token = Str::random(60);
+			$newUsertype = Role::findByTitle('Registered')->id;
+		}
 
-			$newUsertype = config('module.users.new_usertype');
+		$user->newroles = array($newUsertype);
 
-			if (!$newUsertype)
+		$userusername = $user->getUserUsername();
+
+		if ($user->save())
+		{
+			if (!$userusername)
 			{
-				$newUsertype = Role::findByTitle('Registered')->id;
+				$userusername = new UserUsername;
 			}
-
-			$user->newroles = array($newUsertype);
-
-			$userusername = $user->getUserUsername();
-
-			if ($user->save())
+			$userusername->userid = $user->id;
+			if (!$userusername->username)
 			{
-				if (!$userusername)
-				{
-					$userusername = new UserUsername;
-				}
-				$userusername->userid = $user->id;
 				$userusername->username = $username;
-				$userusername->save();
 			}
+			if (!$userusername->email)
+			{
+				$userusername->email = $email;
+			}
+			$userusername->save();
 		}
 
 		return $user;
