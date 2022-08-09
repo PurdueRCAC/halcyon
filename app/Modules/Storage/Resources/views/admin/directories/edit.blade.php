@@ -115,6 +115,23 @@ app('pathway')
 							<input type="text" name="fields[bytes]" id="field-bytes" class="form-control" value="{{ $row->formattedBytes }}" />
 							<span class="form-text text-muted">{{ trans('storage::storage.quota desc') }}</span>
 						</div>
+
+						@if ($row->id)
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group mb-0">
+										{{ trans('storage::storage.created') }}
+										<span class="form-text text-muted">{{ $row->datetimecreated }}</span>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group mb-0">
+										{{ trans('storage::storage.removed') }}
+										<span class="form-text text-muted">{{ $row->datetimeremoved ? $row->datetimeremoved : '-' }}</span>
+									</div>
+								</div>
+							</div>
+						@endif
 					</fieldset>
 				</div>
 				<div class="col-md-5">
