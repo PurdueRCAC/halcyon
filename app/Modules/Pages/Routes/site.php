@@ -56,4 +56,4 @@ $router->group(['prefix' => 'pages'], function (Router $router)
 $router->match(['get', 'post'],'{uri}', [
 	'uses' => 'PagesController@index',
 	'as' => 'page',
-])->where('uri', '(.*)');
+])->where('uri', '^(?!api|admin).*$');
