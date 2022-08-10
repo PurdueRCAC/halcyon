@@ -1,8 +1,63 @@
 /* global $ */ // jquery.js
 
+var headers = {
+	'Content-Type': 'application/json'
+};
+var oldtime = 0;
+var currtime = 0;
+var checkcount = 0;
+
+/**
+ * Check for usage info
+ *
+ * @param   {string}  api
+ * @return  {void}
+ */
+function check(api) {
+	setTimeout(function () {
+		fetch(api, {
+			method: 'GET',
+			headers: headers
+		})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (dat) {
+			currtime = dat['latestusage'] ? dat['latestusage']['datetimerecorded'] : 0;
+		})
+		.catch(function (error) {
+			alert(error);
+		});
+
+		if (currtime != oldtime) {
+			location.reload(true);
+		}
+
+		checkcount++;
+
+		if (checkcount < 45 && currtime == oldtime) {
+			check(api);
+		}
+
+		if (checkcount >= 45) {
+			alert("Quota checking system is busy or filesystem is unavailable at the moment. Quota refresh has been scheduled so check back on this page later.");
+			location.reload(true);
+		}
+	}, 5000);
+}
+
 document.addEventListener('DOMContentLoaded', function () {
 
-	var headers = {
+	headers = {
 		'Content-Type': 'application/json',
 		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 	};
@@ -285,52 +340,11 @@ document.addEventListener('DOMContentLoaded', function () {
 				})
 				.then(function (response) {
 					if (response.ok) {
-						var oldtime = data['latestusage'] ? data['latestusage']['datetimerecorded'] : 0;
-						var currtime = data['latestusage'] ? data['latestusage']['datetimerecorded'] : 0;
-						var checkcount = 0;
+						oldtime = data['latestusage'] ? data['latestusage']['datetimerecorded'] : 0;
+						currtime = data['latestusage'] ? data['latestusage']['datetimerecorded'] : 0;
+						checkcount = 0;
 
-						function check() {
-							setTimeout(function () {
-								fetch(btn.getAttribute('data-api'), {
-									method: 'GET',
-									headers: headers
-								})
-								.then(function (response) {
-									if (response.ok) {
-										return response.json();
-									}
-									return response.json().then(function (data) {
-										var msg = data.message;
-										if (typeof msg === 'object') {
-											msg = Object.values(msg).join('<br />');
-										}
-										throw msg;
-									});
-								})
-								.then(function (dat) {
-									currtime = dat['latestusage'] ? dat['latestusage']['datetimerecorded'] : 0;
-								})
-								.catch(function (error) {
-									alert(error);
-								});
-
-								if (currtime != oldtime) {
-									location.reload(true);
-								}
-
-								checkcount++;
-
-								if (checkcount < 45 && currtime == oldtime) {
-									check();
-								}
-
-								if (checkcount >= 45) {
-									alert("Quota checking system is busy or filesystem is unavailable at the moment. Quota refresh has been scheduled so check back on this page later.");
-									location.reload(true);
-								}
-							}, 5000);
-						}
-						check();
+						check(btn.getAttribute('data-api'));
 
 						return;
 					}
