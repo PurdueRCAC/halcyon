@@ -62,6 +62,24 @@ class MenusController extends Controller
 		// Get records
 		$query = Type::query();
 
+		if ($filters['search'])
+		{
+			$query->where(function($where) use ($filters)
+			{
+				$where->where('title', 'like', '%' . $filters['search'] . '%')
+					->orWhere('description', 'like', '%' . $filters['search'] . '%');
+			});
+		}
+
+		if ($filters['state'] == 'trashed')
+		{
+			$query->onlyTrashed();
+		}
+		elseif ($filters['state'] == '*')
+		{
+			$query->withTrashed();
+		}
+
 		$rows = $query
 			->withCount('items')
 			->orderBy($filters['order'], $filters['order_dir'])
@@ -254,5 +272,49 @@ class MenusController extends Controller
 		}
 
 		return redirect(route('admin.menus.items', ['menutype' => $menutype]));
+	}
+
+	/**
+	 * Sets the state of one or more entries
+	 * 
+	 * @param   Request $request
+	 * @return  Response
+	 */
+	public function restore(Request $request)
+	{
+		// Incoming
+		$ids = $request->input('id', array());
+		$ids = (!is_array($ids) ? array($ids) : $ids);
+
+		// Check for an ID
+		if (count($ids) < 1)
+		{
+			$request->session()->flash('warning', trans('menus::menus.select to restore'));
+			return $this->cancel();
+		}
+
+		$success = 0;
+
+		// Update record(s)
+		foreach ($ids as $id)
+		{
+			$row = Type::withTrashed()->findOrFail(intval($id));
+
+			if (!$row->restore())
+			{
+				$request->session()->flash('error', $row->getError());
+				continue;
+			}
+
+			$success++;
+		}
+
+		// Set message
+		if ($success)
+		{
+			$request->session()->flash('success', trans('menus::menus.items restored', ['count' => $success]));
+		}
+
+		return $this->cancel();
 	}
 }

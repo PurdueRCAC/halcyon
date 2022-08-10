@@ -1,4 +1,11 @@
+/* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 
+/**
+ * Set menu type
+ *
+ * @param   {string}  type
+ * @return  {void}
+ */
 function setmenutype(type) {
 	window.parent.Halcyon.submitbutton('items.setType', type);
 	window.parent.$.dialog.close();
@@ -42,11 +49,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	var pageid = document.getElementById('fields_page_id');
 	if (pageid) {
-		pageid.addEventListener('change', function () {
-			if (document.getElementById('fields_title').value == '') {
-				document.getElementById('fields_title').value = this.selectedOptions[0].innerHTML.replace(/\|— /g, '');
-			}
-		});
+		if (typeof TomSelect !== 'undefined') {
+			var sel = new TomSelect(pageid, { plugins: ['dropdown_input'] });
+			sel.on('change', function () {
+				if (document.getElementById('fields_title').value == '') {
+					document.getElementById('fields_title').value = this.input.selectedOptions[0].innerHTML.replace(/\|— /g, '');
+				}
+			});
+		} else {
+			pageid.addEventListener('change', function () {
+				if (document.getElementById('fields_title').value == '') {
+					document.getElementById('fields_title').value = this.selectedOptions[0].innerHTML.replace(/\|— /g, '');
+				}
+			});
+		}
 	}
 
 	var data = document.getElementById('menutypes');

@@ -9,8 +9,15 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('delete menus'))
-		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.menus.delete')) !!}
+	@if ($filters['state'] == 'trashed' || $filters['state'] == '*')
+		@if (auth()->user()->can('edit.state menus'))
+			{!! Toolbar::publishList(route('admin.menus.restore'), 'Restore') !!}
+		@endif
+	@endif
+	@if ($filters['state'] != 'trashed')
+		@if (auth()->user()->can('delete menus'))
+			{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.menus.delete')) !!}
+		@endif
 	@endif
 	@if (auth()->user()->can('create menus'))
 		{!! Toolbar::addNew(route('admin.menus.create')) !!}
@@ -34,7 +41,7 @@ app('pathway')
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col-md-12">
+			<div class="col-md-3">
 				<div class="form-group">
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
@@ -42,6 +49,14 @@ app('pathway')
 						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
 					</span>
 				</div>
+			</div>
+			<div class="col col-md-9 text-right filter-select">
+				<label class="sr-only" for="filter_state">{{ trans('global.state') }}</label>
+				<select name="state" id="filter_state" class="form-control filter filter-submit">
+					<option value="*">{{ trans('menus::menus.all states') }}</option>
+					<option value="published"<?php if ($filters['state'] == 'published') { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
+					<option value="trashed"<?php if ($filters['state'] == 'trashed') { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
+				</select>
 			</div>
 		</div>
 
@@ -86,7 +101,7 @@ app('pathway')
 		</thead>
 		<tbody>
 		@foreach ($rows as $i => $row)
-			<tr>
+			<tr<?php if ($row->trashed()) { echo ' class="trashed"'; } ?>>
 				<td>
 					@if (auth()->user()->can('edit menus'))
 						{!! Html::grid('id', $i, $row->id) !!}

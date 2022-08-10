@@ -318,9 +318,9 @@ class Type extends Model
 		if ($this->id)
 		{
 			// Get the old value of the table just in case the 'menutype' changed
-			$prev = self::find($this->id);
+			$prev = self::query()->withTrashed()->where('id', '=', $this->id)->first();
 
-			if ($this->menutype != $prev->menutype) //$prev->getOriginal('menutype'))
+			if ($prev && ($this->menutype != $prev->menutype)) //$prev->getOriginal('menutype'))
 			{
 				// Get the user id
 				$userId = auth()->user()->id;
@@ -437,7 +437,7 @@ class Type extends Model
 		}
 
 		// Delete the module items
-		foreach ($this->widgets as $module)
+		foreach ($this->widgets() as $module)
 		{
 			if (!$module->delete())
 			{
