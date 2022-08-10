@@ -779,7 +779,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 
 			$.ajax({
-				url: bx.data('api'),
+				url: bx.attr('data-create'),
 				type: 'post',
 				data: post,
 				dataType: 'json',
@@ -796,7 +796,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			});
 		} else {
 			$.ajax({
-				url: bx.data('api'),
+				url: bx.attr('data-api'),
 				type: 'delete',
 				dataType: 'json',
 				async: false,
