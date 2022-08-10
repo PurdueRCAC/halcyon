@@ -30,11 +30,11 @@ $router->group(['prefix' => 'menus'], function (Router $router)
 		'uses' => 'MenusController@delete',
 		'middleware' => 'can:delete menus',
 	]);
-	$router->get('/widgets/{id}', [
+	/*$router->get('/widgets/{id}', [
 		'as'   => 'admin.menus.widgets',
 		'uses' => 'MenusController@widgets',
 		'middleware' => 'can:edit menus',
-	])->where('id', '[0-9]+');
+	])->where('id', '[0-9]+');*/
 	$router->match(['get', 'post'], 'cancel', [
 		'as' => 'admin.menus.cancel',
 		'uses' => 'MenusController@cancel',

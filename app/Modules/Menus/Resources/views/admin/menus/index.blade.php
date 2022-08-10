@@ -134,7 +134,7 @@ app('pathway')
 							@foreach ($widgets[$row->menutype] as $widget)
 								<li>
 									@if (auth()->user()->can('edit menus'))
-										<a href="{{ route('admin.menus.widgets', ['id' => $widget->id]) }}"  title="{{ trans('menus::menus.edit widget settings') }}">
+										<a href="{{ route('admin.widgets.edit', ['id' => $widget->id]) }}" title="{{ trans('menus::menus.edit widget settings') }}">
 											{!! trans('menus::menus.access position', ['title' => $widget->title, 'access_title' => $widget->access_title, 'position' => $widget->position]) !!}
 										</a>
 									@else
