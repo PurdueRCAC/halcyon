@@ -297,6 +297,9 @@ function ClearError() {
  * @return  {string}
  */
 /* exported customMarkdownParser */
+//    The above won't work due to the current .eslintrc.js
+//    see: https://stackoverflow.com/questions/37470918/eslint-exported-functionname-not-working-in-browser-env
+// eslint-disable-next-line no-unused-vars
 function customMarkdownParser(text) {
 	text = text.replaceAll(/(contact|CRM?)(\s+report)?\s*#?(\d+)/g, '<a href="?id=$3">Contact Report #$3</a>');
 	var matches = text.matchAll(/(news)\s*(story|item)?\s*#?(\d+)(\{.+?\})?/ig);
