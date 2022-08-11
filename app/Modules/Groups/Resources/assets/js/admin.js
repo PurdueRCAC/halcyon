@@ -779,7 +779,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 
 			$.ajax({
-				url: bx.attr('data-create'),
+				url: bx.attr('data-api-create'),
 				type: 'post',
 				data: post,
 				dataType: 'json',
