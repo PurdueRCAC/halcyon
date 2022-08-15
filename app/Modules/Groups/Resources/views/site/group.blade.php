@@ -26,59 +26,6 @@
 			});
 		});
 
-		//$('.tabbed').tabs();
-
-		/*$('.add-row').on('click', function(e){
-			e.preventDefault();
-
-			var btn = $(this);
-
-			var val = $(btn.attr('href')).val();
-			if (!val) {
-				return;
-			}
-
-			var container = btn.closest('ul'),
-				data = {
-					collegedeptid: val
-				};
-
-			$.post(btn.data('api'), data, function(result){
-				var source   = $(btn.data('row')).html(),
-					template = Handlebars.compile(source),
-					context  = {
-						"index" : container.find('li').length,
-						"ancestors": result.data.ancestors, //[{name: 'foo'}, {name: 'bar'}],
-						"name": val
-					},
-					html = template(context);
-
-				$(html).insertBefore(container.find('li:last-child'));
-			});
-		});*/
-		/*$('.add-fieldofscience-row').on('click', function(e){
-			e.preventDefault();
-
-			var val = $($(this).attr('href')).val();
-			if (!val) {
-				return;
-			}
-
-			var container = $(this).closest('ul');
-
-			//$.post($(this).data('api'), data, function(e){
-				var source   = $('#new-fieldofscience-row').html(),
-					template = Handlebars.compile(source),
-					context  = {
-						"index" : container.find('li').length,
-						"ancestors": [{name: 'foo'}, {name: 'bar'}],
-						"name": val
-					},
-					html = template(context);
-
-				$(html).insertBefore(container.find('li:last-child'));
-			//});
-		});*/
 		$('.list-group').on('click', '.delete-row', function(e){
 			e.preventDefault();
 
@@ -86,10 +33,7 @@
 
 			if (result) {
 				var container = $(this).closest('li');
-
-				//$.post($(this).data('api'), data, function(e){
-					container.remove();
-				//});
+				container.remove();
 			}
 		});
 

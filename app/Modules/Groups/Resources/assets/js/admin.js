@@ -272,10 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		if (result) {
 			var container = $(this).closest('li');
-
-			//$.post($(this).data('api'), data, function(e){
 			container.remove();
-			//});
 		}
 	});
 
