@@ -88,7 +88,7 @@ class Queues
 			->whereNull($q . '.datetimeremoved')
 			->whereNull($s . '.datetimeremoved')
 			->whereNull($r . '.datetimeremoved')
-			->whereNull($q . '.datetimeremoved')
+			->whereNull($a . '.datetimeremoved')
 			->whereNotIn($qu . '.queueid', $ids)
 			->orderBy($r . '.name', 'asc')
 			->orderBy($q . '.name', 'asc')
