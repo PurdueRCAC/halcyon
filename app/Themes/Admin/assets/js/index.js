@@ -5,16 +5,16 @@
 /*
 USAGE:
 
-    $.growl(title, msg);
+	$.growl(title, msg);
 
 OPTIONS:
 
-    animate: Animate the slide in/out of the message
+	animate: Animate the slide in/out of the message
 	autoRemove: Automatically temove the message after a period of time
 */
 
-(function($) {
-	$.growl = function(type, message, animate, autoRemove) {
+(function ($) {
+	$.growl = function (type, message, animate, autoRemove) {
 		notify(type, message, animate, autoRemove);
 	}
 	$.growl.version = "1.0.2";
@@ -69,7 +69,7 @@ OPTIONS:
 			.attr('aria-label', 'Close')
 			//.attr('data-bs-dismiss', 'toast')
 			.html('<span aria-hidden="true">&times;</span>');
-		
+
 		var flex = $('<div/>')
 			.addClass('d-flex');
 
@@ -81,10 +81,10 @@ OPTIONS:
 			.html(message);
 
 		// add close-notification click functionality
-		close.off('click').on('click', function() {
+		close.off('click').on('click', function () {
 			// animate when closing; then remove the DOM element entirely
 			var n = $(this).parent().parent();
-			n.animate({left: '-=50px', opacity: "0"}, "fast", function() { n.remove(); });
+			n.animate({ left: '-=50px', opacity: "0" }, "fast", function () { n.remove(); });
 		});
 
 		var pC = $('<div/>')
@@ -113,12 +113,12 @@ OPTIONS:
 				//...and the progress bar
 				p.addClass('progress-animate');
 				//ensure the node removes itself after the animation finishes
-				node.on('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function() { $(this).remove(); });
+				node.on('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function () { $(this).remove(); });
 			} else {
 				//...and the progress bar
 				p.addClass('progress-animate');
 				//ensure the node removes itself after the progress-bar animation finishes
-				node.on('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function() { $(this).remove(); });
+				node.on('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function () { $(this).remove(); });
 			}
 		}
 
@@ -140,7 +140,7 @@ OPTIONS:
 		position: 'bottomright',
 		animate: true,
 		autoRemove: true,
-		noticeElement: function(el) {
+		noticeElement: function (el) {
 			$.growl.settings.noticeTemplate = $(el);
 		}
 	};
@@ -149,51 +149,42 @@ OPTIONS:
 document.addEventListener('DOMContentLoaded', function () {
 	document.getElementsByTagName('html')[0].classList.remove('no-js');
 
-	document.querySelectorAll('.hamburger').forEach(function(item) {
-		item.addEventListener('click', function (e){
+	document.querySelectorAll('.hamburger').forEach(function (item) {
+		item.addEventListener('click', function (e) {
 			e.preventDefault();
 
 			var body = document.getElementsByTagName('body')[0];
 			var mode = body.classList.contains('menu-open') ? 'closed' : 'open';
 
 			body.classList.toggle('menu-open');
-			/*
-			fetch(btn.getAttribute('data-api'), {
-					method: 'PUT',
-					headers: {
-						'Content-Type': 'application/json'
-						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-					},
-					body: JSON.stringify({
-						facets: {
-							'theme.admin.menu': mode
-						}
-					})
-				})
-				.then(function (response) {
-					return response.json();
-				})
-				.then(function (myJson) {
-					console.log(myJson);
-				})
-				.catch(function (error) {
-					console.error('Error:', error);
-				});*/
 
-			$.ajax({
-				url: this.getAttribute('data-api'),
-				type: 'put',
-				data: {
+			fetch(btn.getAttribute('data-api'), {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+				},
+				body: JSON.stringify({
 					facets: {
 						'theme.admin.menu': mode
 					}
-				},
-				dataType: 'json',
-				async: false,
-				error: function (xhr) { //xhr, ajaxOptions, thrownError
-					console.log(xhr);
-				}
-			});
+				})
+			})
+				.then(function (response) {
+					if (response.ok) {
+						return;
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (error) {
+					console.error('Error:', error);
+				});
 		});
 	});
 
@@ -204,14 +195,14 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});*/
 
-	document.querySelectorAll('.main-navigation li.node>a').forEach(function(el) {
-		el.addEventListener('click', function(e) {
+	document.querySelectorAll('.main-navigation li.node>a').forEach(function (el) {
+		el.addEventListener('click', function (e) {
 			e.preventDefault();
 			this.parentNode.classList.toggle('active');
 		});
 	});
 
-	document.querySelectorAll('.node>ul').forEach(function(el) {
+	document.querySelectorAll('.node>ul').forEach(function (el) {
 		var node = $(el);
 		var t = node.offset().top + node.height(),
 			h = $(window).height();
@@ -221,38 +212,50 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	// Light/dark mode
-	document.getElementById('mode').addEventListener('click', function(e){
+	document.getElementById('mode').addEventListener('click', function (e) {
 		e.preventDefault();
 
 		var btn = this,
 			mode = btn.getAttribute('data-mode');
 
-		$.ajax({
-			url: btn.getAttribute('data-api'),
-			type: 'put',
-			data: {
+		fetch(btn.getAttribute('data-api'), {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+			},
+			body: JSON.stringify({
 				facets: {
 					'theme.admin.mode': mode
 				}
-			},
-			dataType: 'json',
-			async: false,
-			success: function () {
-				document.getElementsByTagName('html')[0].setAttribute('data-mode', mode);
+			})
+		})
+			.then(function (response) {
+				if (response.ok) {
+					document.getElementsByTagName('html')[0].setAttribute('data-mode', mode);
 
-				btn.setAttribute('data-mode', mode == 'dark' ? 'light' : 'dark');
-			},
-			error: function () {
+					btn.setAttribute('data-mode', mode == 'dark' ? 'light' : 'dark');
+					return;
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (error) {
+				console.log(error);
 				Halcyon.error(btn.getAttribute('data-error'));
-			}
-		});
+			});
 	});
 
 	// Display system messages in Growl-like way
 	document.addEventListener('renderMessages', function () {
 		var msg = document.getElementById('system-messages');
 		if (msg && msg.innerHTML.replace(/\s+/, '') != '') {
-			msg.querySelectorAll('.alert').forEach(function(el) {
+			msg.querySelectorAll('.alert').forEach(function (el) {
 				var type = '';
 				type = el.classList.contains('alert-warning') ? 'warning' : type;
 				type = el.classList.contains('alert-danger') ? 'danger' : type;

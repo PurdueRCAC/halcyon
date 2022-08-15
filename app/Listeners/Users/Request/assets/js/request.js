@@ -153,9 +153,9 @@ function PrintAccountResources(user) {
 	}
 
 	if (queues.length == 0
-	&& pendingmemberofqueues.length == 0
-	&& pendingresources.length == 0
-	&& resources.length == 0) {
+		&& pendingmemberofqueues.length == 0
+		&& pendingresources.length == 0
+		&& resources.length == 0) {
 		var notice = document.getElementById("no-resources");
 		notice.classList.remove('d-none');
 
@@ -280,23 +280,65 @@ function SubmitRequest() {
 		'membertype': 4
 	};
 
-	//post = JSON.stringify(post);
+	var error = document.getElementById('errors');
 
-	$.when(
-		$.post(ROOT_URL + 'queues/requests', post, function (response) {
-			grouppost['userid'] = response.userid;
-			grouppost['userrequestid'] = response.id;
+	fetch(ROOT_URL + 'queues/requests', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+		},
+		body: JSON.stringify(post)
+	})
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.then(function (result) {
+		grouppost['userid'] = result.userid;
+		grouppost['userrequestid'] = result.id;
 
-			$.post(ROOT_URL + 'groups/members', grouppost).fail(function () {
-				$('#errors').addClass('alert').addClass('alert-danger').text("There was an error processing your request.");
+		fetch(ROOT_URL + 'groups/members', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+			},
+			body: JSON.stringify(grouppost)
+		})
+		.then(function (response) {
+			if (response.ok) {
+				error.classList.add('alert')
+				error.classList.add('alert-success')
+				error.innerHTML = "Your request has been submitted.";
+				return;
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
 			});
 		})
-		.fail(function () {
-			$('#errors').addClass('alert').addClass('alert-danger').text("There was an error processing your request.");
-		})
-	).done(function () {
-		//window.location = url;
-		$('#errors').addClass('alert').addClass('alert-success').text("Your request has been submitted.");
+		.catch(function (err) {
+			error.classList.add('alert')
+			error.classList.add('alert-danger')
+			error.innerHTML = err;
+		});
+	})
+	.catch(function (err) {
+		error.classList.add('alert')
+		error.classList.add('alert-danger')
+		error.innerHTML = err;
 	});
 }
 
