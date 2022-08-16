@@ -27,15 +27,6 @@ class AccountsController extends Controller
 	 * @apiUri    /orders/accounts
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 * 		"name":          "state",
-	 * 		"description":   "Order state.",
-	 * 		"type":          "string",
-	 * 		"required":      false,
-	 * 		"default":       "active",
-	 * 		"allowedValues": "active [pending_payment, pending_boassignment, pending_collection, pending_approval, pending_fulfillment], canceled, complete"
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "query",
 	 * 		"name":          "category",
 	 * 		"description":   "Orders that have products int he specified category.",
 	 * 		"required":      false,
@@ -47,19 +38,23 @@ class AccountsController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "start",
 	 * 		"description":   "Orders created on or after this datetime.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "",
-	 * 		"allowedValues": "YYYY-MM-DD HH:mm:ss"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "end",
 	 * 		"description":   "Orders created before this datetime.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "",
-	 * 		"allowedValues": "YYYY-MM-DD HH:mm:ss"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date-time",
+	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -94,10 +89,20 @@ class AccountsController extends Controller
 	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "name",
-	 * 		"allowedValues": "id, created_at"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "datetimecreated",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"datetimecreated",
+	 * 				"datetimeremoved",
+	 * 				"amount",
+	 * 				"datetimeapproved",
+	 * 				"datetimedenied",
+	 * 				"datetimepaid"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -106,7 +111,7 @@ class AccountsController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   "asc",
+	 * 			"default":   "desc",
 	 * 			"enum": [
 	 * 				"asc",
 	 * 				"desc"
