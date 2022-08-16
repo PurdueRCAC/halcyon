@@ -9,41 +9,51 @@
 <script src="{{ asset('modules/core/vendor/datatables/datatables.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/datatables/datatables.min.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/datatables/dataTables.bootstrap4.min.js')) }}"></script>
 <script>
-$(document).ready(function () {
-	/*var container = $('#members-list');
+document.addEventListener('DOMContentLoaded', function () {
+	/*var container = document.getElementById('members-list');
 
 	if (container.length) {
-		$.ajax({
-			url: container.attr('data-api'),
-			type: 'get',
-			dataType: 'json',
-			async: false,
-			success: function(result) {
-				var source   = $(container.attr('data-row')).html(),
-					template = Handlebars.compile(source);
-
-				for (var i = 0; i < result.length; i++)
-				{
-					var context  = {
-							"index" : container.find('tr').length,
-							"id": result[i].id,
-							"name": result[i].name,
-							"username": result[i].username,
-							"email": result[i].email,
-							"queues": result[i].queues
-						},
-						html = template(context);
-
-					container.append($(html));
-					//$(html).insertBefore(container.find('tr:last-child'));
-				}
-			},
-			error: function() {
-				if (numerrorboxes == 0) {
-					alert("An error occurred while updating account. Please reload page and try again or contact help.");
-					numerrorboxes++;
-				}
+		fetch(container.attr('data-api'), {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 			}
+		})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function(result) {
+			var source   = document.querySelector(container.getAttribute('data-row')).innerHTML,
+				template = Handlebars.compile(source);
+
+			for (var i = 0; i < result.length; i++)
+			{
+				var context  = {
+						"index" : container.find('tr').length,
+						"id": result[i].id,
+						"name": result[i].name,
+						"username": result[i].username,
+						"email": result[i].email,
+						"queues": result[i].queues
+					},
+					html = template(context);
+
+				container.append($(html));
+				//$(html).insertBefore(container.find('tr:last-child'));
+			}
+		})
+		.catch(function (err) {
+			Halcyon.message('danger', err);
 		});
 	}*/
 	var container = $('#members-list');
