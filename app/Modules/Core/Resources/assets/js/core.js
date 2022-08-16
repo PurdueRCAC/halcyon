@@ -836,7 +836,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		tooltipClass: 'tool-tip'
 	});*/
 
-	$('.btn-settings').on('click', function(e){
+	$('.btn-settings').on('click', function (e) {
 		e.preventDefault();
 
 		$('<div class="ui-widget-overlay ui-front" style="z-index: 100;"></div>').appendTo('body');
@@ -845,39 +845,69 @@ document.addEventListener('DOMContentLoaded', function() {
 		panel
 			.show("slide", { direction: "right" }, 500);
 
-		$.get($(this).attr('href'), function(response){
+		fetch(this.getAttribute('href'), {
+			method: 'GET',
+			headers: {
+				//'Content-Type': 'application/json',
+				'X-Requested-With': 'XMLHttpRequest',
+				'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+				'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+			}
+		})
+		.then(function (response) {
+			if (response.ok) {
+				return response.text();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (result) {
 			panel
-				.html(response);
+				.html(result);
 
-			panel.find('.btn-cancel').on('click', function(e){
+			panel.find('.btn-cancel').on('click', function (e) {
 				e.preventDefault();
 				$('#panel').hide("slide", { direction: "right" }, 500);
 				$('.ui-widget-overlay').remove();
 			});
 
-			panel.find('.btn-save').on('click', function(e){
+			panel.find('.btn-save').on('click', function (e) {
 				e.preventDefault();
 
 				var frm = $(this).closest('form');
+				const formData = new FormData(frm[0]);
 
-				$.ajax({
-					url: $(this).attr('href'),
-					type: 'post',
-					data: frm.serialize(),
-					//dataType: 'json',
-					async: false,
-					success: function() {
+				fetch(this.getAttribute('href'), {
+					method: 'POST',
+					headers: {
+						//'Content-Type': 'application/json',
+						'X-Requested-With': 'XMLHttpRequest',
+						'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+					},
+					body: formData//JSON.stringify(serializeFormData(formData))//frm.serialize())
+				})
+				.then(function (response) {
+					if (response.ok) {
 						$('#panel').hide("slide", { direction: "right" }, 500);
 						$('.ui-widget-overlay').remove();
-					},
-					error: function (xhr) { //xhr, reason, thrownError
-						if (xhr.responseJSON) {
-							Halcyon.message('danger', xhr.responseJSON.message);
-						} else {
-							Halcyon.message('danger', 'Failed to reset permissions.');
-						}
-						console.log(xhr.responseText);
+						return;
 					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (err) {
+					Halcyon.message('danger', err);
 				});
 			});
 
@@ -886,10 +916,13 @@ document.addEventListener('DOMContentLoaded', function() {
 				collapsible: true,
 				active: false
 			});
-			$('#permissions-rules .stop-propagation').on('click', function(e) {
+			$('#permissions-rules .stop-propagation').on('click', function (e) {
 				e.stopPropagation();
 			});
 			$('.tabs').tabs();
+		})
+		.catch(function (err) {
+			Halcyon.message('danger', err);
 		});
 	});
 
