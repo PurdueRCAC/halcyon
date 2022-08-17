@@ -181,10 +181,10 @@ class DatabaseActivator implements ActivatorInterface
 			{
 				$params = json_decode($row->params, true);
 
-				$config = config()->get('module.' . $row->element, []);
+				$config = config()->get('module.' . strtolower($row->element), []);
 				$config = array_merge($config, $params);
 
-				config()->set('module.' . $row->element, $config);
+				config()->set('module.' . strtolower($row->element), $config);
 			}
 
 			$modules[strtolower($row->element)] = (bool) $row->enabled;
