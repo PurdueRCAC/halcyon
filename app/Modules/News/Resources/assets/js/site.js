@@ -2495,8 +2495,9 @@ function NEWSSaveNewsText(news) {
 	post = JSON.stringify(post);
 
 	fetch(root + "/" + news, {
-		method: 'GET',
-		headers: headers
+		method: 'PUT',
+		headers: headers,
+		body: post
 	})
 		.then(function (response) {
 			if (response.ok) {
@@ -2519,7 +2520,7 @@ function NEWSSaveNewsText(news) {
 			};
 			icon.style.display = "none";
 
-			document.getElementById(news + "_textarea").style.display = "none";
+			document.getElementById(news + "_textarea").parentNode.style.display = "none";
 			document.getElementById(news + "_textediticon").style.display = "block";
 			document.getElementById(news + "_textsaveupdate").style.display = "none";
 			document.getElementById(news + "_textsaveupdatebox").checked = false;
