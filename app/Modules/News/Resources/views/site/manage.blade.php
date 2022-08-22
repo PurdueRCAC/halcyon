@@ -383,7 +383,6 @@ app('pathway')
 
 	<div id="help2" class="dialog dialog-help" title="Published">
 		<p>Check this box if you wish to publish this new article to the website for the public to see. Leaving this box unchecked will create the article in draft mode where only other news editors can read it.</p>
-		<p>To publish this article later you can click the 'newspaper' icon in the news article header within the management interface.</p>
 	</div>
 
 	<div id="help3" class="dialog dialog-help" title="Update">
@@ -527,6 +526,7 @@ app('pathway')
 			$data->starttime = $starttime;
 			$data->stoptime = $stoptime;
 			$data->resources = array();
+			$data->vars = $news->getContentVars();
 			foreach ($news->resources as $r)
 			{
 				//$r->resourcename = $r->resource->name;
