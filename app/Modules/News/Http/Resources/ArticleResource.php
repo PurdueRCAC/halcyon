@@ -32,6 +32,8 @@ class ArticleResource extends JsonResource
 		$data['formattedcreateddate'] = $this->formatDate($this->getOriginal('datetimecreated'));
 		$data['formattedupdatedate']  = $this->formatDate($this->getOriginal('datetimeupdate'));
 
+		$data['vars'] = $this->getContentVars();
+
 		$data['updates'] = array();
 		foreach ($this->updates->sortByDesc('datetimecreated') as $update)
 		{

@@ -14,7 +14,7 @@ var smdeConfig = {
     forceSync: true,
     previewRender: function (plainText, preview) { // Async method
         if (typeof customMarkdownParser === 'function') {
-            plainText = customMarkdownParser(plainText);
+            plainText = customMarkdownParser(plainText, this.element);
         }
         return this.parent.markdown(plainText);
     },

@@ -300,7 +300,7 @@ function ClearError() {
 //    The above won't work due to the current .eslintrc.js
 //    see: https://stackoverflow.com/questions/37470918/eslint-exported-functionname-not-working-in-browser-env
 // eslint-disable-next-line no-unused-vars
-function customMarkdownParser(text) {
+function customMarkdownParser(text, element) {
 	text = text.replaceAll(/(contact|CRM?)(\s+report)?\s*#?(\d+)/g, '<a href="?id=$3">Contact Report #$3</a>');
 	var matches = text.matchAll(/(news)\s*(story|item)?\s*#?(\d+)(\{.+?\})?/ig);
 
@@ -312,7 +312,28 @@ function customMarkdownParser(text) {
 		}
 	}
 
-	//var vars = NEWSPreviewVars();
+	var vars = element.getAttribute('data-vars');
+	if (vars) {
+		vars = JSON.parse(vars);
+	} else {
+		vars = {};
+	}
+
+	if (element.id == 'NotesText') {
+		vars = NEWSPreviewVars();
+
+		if (vars.resources.length > 2) {
+			vars.resources[vars.resources.length - 1] = 'and ' + vars.resources[vars.resources.length - 1];
+		}
+		for (var i = 0; i < vars.resources.length; i++) {
+			if (i == vars.resources.length - 1) {
+				continue;
+			}
+
+			vars.resources[i] = vars.resources[i] + ',';
+		}
+		vars.resources = vars.resources.join(' ');
+	}
 
 	var keywords = [
 		'%date%',
@@ -329,17 +350,15 @@ function customMarkdownParser(text) {
 		'%resources%'
 	];
 
-	//var k;
+	var k;
 	for (var x = 0; x < keywords.length; x++) {
-		/*k = keywords[x].replace('%', '');
-		if (typeof vars[k] != 'undefined' && vars[k].length > 0) {
-			if (k == 'resources') {
-				k = k.join(', ');
-			}
-			text = text.replaceAll(keywords[x], '<span style="color:red;">' + vars[k] + '</span>');
-		} else {*/
-		text = text.replaceAll(keywords[x], '<span style="color:red;">' + keywords[x] + '</span>');
-		//}
+		k = keywords[x].replaceAll('%', '');
+
+		if (vars && typeof (vars[k]) != 'undefined') {
+			text = text.replaceAll(keywords[x], vars[k]);
+		} else {
+			text = text.replaceAll(keywords[x], '<span style="color:red;">' + keywords[x] + '</span>');
+		}
 	}
 
 	return text;
@@ -2067,6 +2086,7 @@ function NEWSPrintRow(news) {
 	textarea.rows = 7;
 	textarea.cols = 45;
 	textarea.className = "form-control md newspostedittextbox";
+	textarea.setAttribute('data-vars', JSON.stringify(news.vars));
 
 	span = document.createElement("span");
 	span.appendChild(label);
