@@ -85,7 +85,7 @@ class ProductsController extends Controller
 			}
 		}
 
-		if (!auth()->user())
+		if (!auth()->user() || !auth()->user()->can('manage orders'))
 		{
 			$query->where($p . '.public', '=', 1);
 		}
