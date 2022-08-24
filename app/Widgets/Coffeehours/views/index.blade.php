@@ -37,10 +37,16 @@ foreach ($rows as $event):
 
 	$attending = false;
 	$reserved  = false;
+	$claimed   = false;
 	$comment   = null;
 	$canAttend = true;
 
 	foreach ($event->associations as $assoc):
+		if ($assoc->assoctype == 'staff'):
+			$claimed = $assoc;
+			continue;
+		endif;
+
 		if (auth()->user() && $assoc->associd == auth()->user()->id):
 			$attending = $assoc->id;
 			$comment = $assoc->comment;
@@ -48,7 +54,7 @@ foreach ($rows as $event):
 				$event->attending = $assoc->id;
 				$attend[] = $event;
 			endif;
-		elseif ($event->url && $assoc->assoctype == 'user'):
+		elseif ($event->url):
 			$u = App\Modules\Users\Models\User::find($assoc->associd);
 
 			if ($u && (!$ignore || !in_array($ignore, $u->getAuthorisedRoles()))):
@@ -65,24 +71,28 @@ foreach ($rows as $event):
 	$now = Carbon\Carbon::now();
 
 	$endregistration = Carbon\Carbon::parse($event->datetimenews);
-	if ($end_reg = config('module.news.end_registration'))
-	{
+	if ($end_reg = config('module.news.end_registration')):
 		$endregistration = $endregistration->modify($end_reg);
-	}
+	endif;
 
 	$slot->backgroundColor = '#0e7e12'; // green
 	$slot->borderColor = '#0e7e12';
 
-	// Mark as closed registration
-	if ($now->getTimestamp() >= $endregistration->getTimestamp()):
-		$slot->backgroundColor = '#757575'; // gray
-		$slot->borderColor = '#757575';
-	endif;
+	if ($event->url):
+		// Mark as closed registration
+		if ($now->getTimestamp() >= $endregistration->getTimestamp()):
+			$slot->backgroundColor = '#757575'; // gray
+			$slot->borderColor = '#757575';
+		endif;
 
-	// Mark as reserved if the event hasn't ended
-	if (($reserved || $attending) && $now->getTimestamp() < $event->datetimenewsend->getTimestamp()):
-		$slot->backgroundColor = '#0c5460'; // blue
-		$slot->borderColor = '#0c5460';
+		// Mark as reserved if the event hasn't ended
+		if (($reserved || $attending) && $now->getTimestamp() < $event->datetimenewsend->getTimestamp()):
+			$slot->backgroundColor = '#0c5460'; // blue
+			$slot->borderColor = '#0c5460';
+		endif;
+	else:
+		$slot->backgroundColor = '#7F379A'; // purple
+		$slot->borderColor = '#7F379A';
 	endif;
 
 	$events[] = $slot;
@@ -104,7 +114,7 @@ foreach ($rows as $event):
 				@endif
 			</li>
 
-			@if ($event->location != '')
+			@if ($event->location)
 				<li><span class="fa fa-fw fa-map-marker" aria-hidden="true"></span> {{ $event->location }}</li>
 			@endif
 
@@ -160,7 +170,7 @@ foreach ($rows as $event):
 			@endif
 		@endif
 
-		<div class="sr-only">{!! $event->formattedBody !!}</div>
+		<div class="sr-only">{!! $event->toHtml() !!}</div>
 
 		<div class="dialog-footer newsattend">
 			@if ($event->url)
@@ -176,6 +186,10 @@ foreach ($rows as $event):
 							<div class="text-success">{{ trans('widget.coffeehours::coffeehours.reserved by', ['name' => $reserved]) }}</div>
 							@if ($comment)
 								<blockquote>"{{ $comment }}"</blockquote>
+							@endif
+
+							@if ($claimed)
+								<div class="text-info">{{ trans('widget.coffeehours::coffeehours.claimed by', ['name' => $claimed->associated ? $claimed->associated->name . ' (' . $claimed->associated->username . ')' : trans('global.unknown')]) }}</div>
 							@endif
 						@else
 							<div class="text-success">This time is reserved.</div>
@@ -221,7 +235,7 @@ foreach ($rows as $event):
 						<div class="alert alert-warning">Reservations are closed.</div>
 					@endif
 				@endif
-			@else
+			<?php /*@else
 				@if (auth()->user())
 					@if (!$attending)
 						<div class="row">
@@ -245,7 +259,7 @@ foreach ($rows as $event):
 							<a href="/login?return=<?php echo base64_encode(route('page', ['uri' => 'coffee', 'attend' => 1, 'event' => $event->id])); ?>" data-newsid="{{ $event->id }}" data-assoc="0">Login</a> is required to reserve times.
 						</div>
 					</div>
-				@endif
+				@endif*/ ?>
 			@endif
 		</div>
 	</section>
