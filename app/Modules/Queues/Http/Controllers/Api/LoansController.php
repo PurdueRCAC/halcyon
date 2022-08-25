@@ -423,10 +423,10 @@ class LoansController extends Controller
 					return response()->json(['message' => trans('queues::queues.error.failed to update counter', ['id' => $exist->id])], 500);
 				}
 			}
-			else
+			/*else
 			{
 				return response()->json(['message' => trans('queues::queues.error.failed to find counter')], 506);
-			}
+			}*/
 
 			return new JsonResource($exist);
 		}
@@ -769,10 +769,10 @@ class LoansController extends Controller
 					return response()->json(['message' => trans('queues::queues.error.failed to update counter', ['id' => $counter->id])], 500);
 				}
 			}
-			else
+			/*else
 			{
 				return response()->json(['message' => trans('queues::queues.error.failed to find counter')], 506);
-			}
+			}*/
 		}
 
 		$row->api = route('api.queues.loans.read', ['id' => $row->id]);
