@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
-use App\Halcyon\Utility\Number;
 use App\Modules\Media\Entities\Folder;
 use App\Modules\Media\Helpers\MediaHelper;
 use App\Modules\Media\Events\Deleting;

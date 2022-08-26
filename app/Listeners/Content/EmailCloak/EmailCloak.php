@@ -6,7 +6,7 @@ use App\Modules\ContactReports\Events\CommentPrepareContent;
 use App\Modules\News\Events\ArticlePrepareContent;
 use App\Modules\News\Events\UpdatePrepareContent;
 use App\Modules\Pages\Events\PageContentIsRendering;
-use App\Halcyon\Utility\Str;
+use Illuminate\Support\Str;
 use Illuminate\Config\Repository;
 
 /**
@@ -425,6 +425,39 @@ class EmailCloak
 	 */
 	public function cloak($mail, $mailto = true, $text = '', $email = true)
 	{
-		return '<a href="mailto:' . Str::obfuscate($mail) . '">' . Str::obfuscate($text ? $text : $mail) . '</a>';
+		return '<a href="mailto:' . self::obfuscate($mail) . '">' . self::obfuscate($text ? $text : $mail) . '</a>';
+	}
+
+	/**
+	 * Obfuscate a string to prevent spam-bots from sniffing it.
+	 *
+	 * @param   string  $value
+	 * @return  string
+	 */
+	public static function obfuscate($value)
+	{
+		$safe = '';
+
+		foreach (str_split($value) as $letter)
+		{
+			// To properly obfuscate the value, we will randomly convert each letter to
+			// its entity or hexadecimal representation, keeping a bot from sniffing
+			// the randomly obfuscated letters out of the string on the responses.
+			switch (rand(1, 3))
+			{
+				case 1:
+					$safe .= '&#' . ord($letter) . ';';
+					break;
+
+				case 2:
+					$safe .= '&#x' . dechex(ord($letter)) . ';';
+					break;
+
+				case 3:
+					$safe .= $letter;
+			}
+		}
+
+		return $safe;
 	}
 }

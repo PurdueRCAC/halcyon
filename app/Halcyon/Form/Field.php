@@ -194,7 +194,8 @@ abstract class Field
 			{
 				// We'll assume a CamelCased name
 				// Split by words and take the last one
-				$parts = Str::splitCamel(get_class($this));
+				//$parts = Str::splitCamel(get_class($this));
+				$parts = preg_split('/(?<=[^A-Z_])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][^A-Z_])/x', get_class($this));
 
 				if ($parts[0] == 'J')
 				{
