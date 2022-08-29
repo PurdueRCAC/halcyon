@@ -7,6 +7,7 @@ use App\Halcyon\Traits\ErrorBag;
 use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Groups\Events\UnixGroupCreating;
+use App\Modules\Groups\Events\UnixGroupCreated;
 use App\Modules\Groups\Events\UnixGroupDeleted;
 
 /**
@@ -84,7 +85,7 @@ class UnixGroup extends Model
 	 */
 	protected $dispatchesEvents = [
 		'creating' => UnixGroupCreating::class,
-		//'created'  => UnixGroupCreated::class,
+		'created'  => UnixGroupCreated::class,
 		//'updating' => UnixGroupUpdating::class,
 		//'updated'  => UnixGroupUpdated::class,
 		'deleted'  => UnixGroupDeleted::class,
