@@ -33,7 +33,7 @@ class Number extends Field
 			'max'          => ($this->element['max'] ? (int) $this->element['max'] : null),
 			'step'         => ($this->element['step'] ? (int) $this->element['step'] : null),
 			'pattern'      => ($this->element['pattern'] ? $this->element['pattern'] : null),
-			'class'        => ($this->element['class'] ? (string) $this->element['class'] : null),
+			'class'        => 'form-control' . ($this->element['class'] ? ' ' . (string) $this->element['class'] : null),
 			'readonly'     => ((string) $this->element['readonly'] == 'true' ? 'readonly' : null),
 			'disabled'     => ((string) $this->element['disabled'] == 'true' ? 'disabled' : null),
 			'required'     => ((string) $this->element['required'] == 'true' ? 'required' : null),
