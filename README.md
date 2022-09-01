@@ -43,7 +43,7 @@ app/
       |_ Queues.php
       |_ listener.json
 |_ Modules/
-   |_ News/
+   |_ Users/
       |_ Config/
       |_ Console/
       |_ Database/
@@ -54,13 +54,10 @@ app/
          |_ Controllers/
          |_ Middleware/
          |_ Resources/
-         |_ adminRoutes.php
-         |_ apiRoutes.php
-         |_ siteRoutes.php
       |_ Mail/
       |_ Models/
       |_ Providers/
-         |_ BlogServiceProvider.php
+         |_ UsersServiceProvider.php
          |_ RouteServiceProvider.php
       |_ Resources/
          |_ assets/
@@ -70,6 +67,10 @@ app/
                |_ app.css
          |_ lang/
          |_ views/
+      |_ Routes/
+         |_ admin.php
+         |_ api.php
+         |_ site.php
       |_ Tests/
       |_ composer.json
       |_ module.json
