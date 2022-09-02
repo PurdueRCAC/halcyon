@@ -26,7 +26,7 @@ class Checkbox extends Field
 	protected function getInput()
 	{
 		// Initialize some field attributes.
-		$class    = $this->element['class'] ? ' class="' . (string) $this->element['class'] . '"' : '';
+		$class    = ' class="form-check-input' . ($this->element['class'] ? ' ' . (string) $this->element['class'] : '')  . '"';
 		$disabled = ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
 		$checked  = ((string) $this->element['value'] == $this->value) ? ' checked="checked"' : '';
 

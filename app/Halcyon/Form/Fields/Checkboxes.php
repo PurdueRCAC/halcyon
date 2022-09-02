@@ -54,7 +54,7 @@ class Checkboxes extends Field
 		{
 			// Initialize some option attributes.
 			$checked = (in_array((string) $option->value, $values) ? ' checked="checked"' : '');
-			$class = !empty($option->class) ? ' class="' . $option->class . '"' : '';
+			$class = ' class="form-check-input' . (!empty($option->class) ? ' ' . $option->class : '') . '"';
 			$disabled = !empty($option->disable) ? ' disabled="disabled"' : '';
 
 			// Add data attributes
@@ -84,10 +84,12 @@ class Checkboxes extends Field
 			$onclick = !empty($option->onclick) ? ' onclick="' . $option->onclick . '"' : '';
 
 			$html[] = '<li>';
+			$html[] = '<span class="form-check">';
 			$html[] = '<input type="checkbox" id="' . $this->id . $i . '" name="' . $this->name . '"' .
 				' value="' . htmlspecialchars($option->value, ENT_COMPAT, 'UTF-8') . '"' . $checked . $class . $onclick . $disabled . $dataAttributes . '/>';
 
-			$html[] = '<label for="' . $this->id . $i . '"' . $class . '>' . trans($option->text) . '</label>';
+			$html[] = '<label for="' . $this->id . $i . '"' . $class . ' class="form-check-label">' . trans($option->text) . '</label>';
+			$html[] = '</span>';
 			$html[] = '</li>';
 		}
 
@@ -102,8 +104,10 @@ class Checkboxes extends Field
 				$checked = ' checked="checked"';
 			}
 			$html[] = '<li>';
+			$html[] = '<span class="form-check">';
 			$html[] = '<input type="checkbox" id="' . $this->id . ($i + 1) . '" name="' . $this->name . '" value=""' . $checked . $class . $onclick . $disabled . '/>';
-			$html[] = '<label for="' . $this->id . ($i + 1) . '"' . $class . '>' . trans('global.other') . '</label>';
+			$html[] = '<label for="' . $this->id . ($i + 1) . '" class="form-check-label">' . trans('global.other') . '</label>';
+			$html[] = '</span>';
 			$html[] = '<input type="text" id="' . $this->id . '_other" name="' . substr($this->getName($this->fieldname . '_other'), 0, -2) . '" value="' . ($checked ? htmlspecialchars($values, ENT_COMPAT, 'UTF-8') : '') . '"' . $class . $onclick . $disabled . '/>';
 			$html[] = '</li>';
 		}
