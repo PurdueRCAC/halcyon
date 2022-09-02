@@ -167,7 +167,7 @@ class Associations extends Model
 	}
 
 	/**
-	 * Get the root node
+	 * Find a page by URI path
 	 *
 	 * @param   string  $path
 	 * @return  object|null
@@ -244,7 +244,7 @@ class Associations extends Model
 	}
 
 	/**
-	 * Determine if record is the home page
+	 * Determine if record is the root page
 	 * 
 	 * @return  boolean
 	 */
