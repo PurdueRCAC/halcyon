@@ -568,7 +568,7 @@ app('pathway')
 							</a>
 						</td>
 						<td>
-							@if (auth()->user()->can('admin queues'))
+							@if (auth()->user()->can('edit queues'))
 							<button class="btn btn-sm text-danger delete"
 								data-confirm="{{ trans('global.confirm delete') }}"
 								data-success="{{ trans('global.messages.item deleted', ['count' => 1]) }}"
