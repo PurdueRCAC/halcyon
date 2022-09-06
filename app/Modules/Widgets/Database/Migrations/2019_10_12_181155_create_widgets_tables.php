@@ -37,6 +37,7 @@ class CreateWidgetsTables extends Migration
 				$table->index(['published', 'access'], 'published');
 				$table->index(['widget', 'published'], 'widget');
 				$table->index('language');
+				$table->index('client_id');
 			});
 		}
 
@@ -52,12 +53,14 @@ class CreateWidgetsTables extends Migration
 				{
 					$element = basename($dir);
 					$name = strtolower($element);
+					$client_id = 0;
 
 					$manifest = $dir . '/widget.json';
 					if (file_exists($manifest))
 					{
 						$info = json_decode(file_get_contents($manifest));
 						$name = $info->name;
+						$client_id = ($info->type == 'admin' ? 1 : 0);
 					}
 
 					DB::table('extensions')->insert([
@@ -68,6 +71,7 @@ class CreateWidgetsTables extends Migration
 						'protected'  => 1,
 						'state'      => 1,
 						'access'     => 1,
+						'client_id'  => $client_id,
 					]);
 				}
 			}

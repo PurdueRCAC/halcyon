@@ -52,6 +52,7 @@ class CreateOrdersTables extends Migration
 				$table->index('groupid');
 				$table->index('userid');
 				$table->index('submitteruserid');
+				$table->index('notice');
 			});
 		}
 
@@ -73,6 +74,7 @@ class CreateOrdersTables extends Migration
 				$table->dateTime('datetimeremoved')->nullable();
 				$table->dateTime('datetimefulfilled')->nullable();
 				$table->index('orderid');
+				$table->index('orderproductid');
 
 				$table->foreign('orderid')->references('id')->on('orders');
 			});
@@ -86,7 +88,7 @@ class CreateOrdersTables extends Migration
 				$table->integer('ordercategoryid')->unsigned()->default(0)->comment('FK to ordercategories.id');
 				$table->char('name', 255);
 				$table->string('description', 2000);
-				$table->char('mou', 255);
+				$table->char('mou', 255)->comment('Memorandum of understanding');
 				$table->integer('unitprice')->unsigned()->default(0);
 				$table->tinyInteger('recurringtimeperiodid')->unsigned()->default(0)->comment('FK to timeperiods.id');
 				$table->tinyInteger('public')->unsigned()->default(0);
@@ -100,6 +102,7 @@ class CreateOrdersTables extends Migration
 				$table->integer('resourceid')->unsigned()->default(0)->comment('FK to resources.id');
 				$table->index('recurringtimeperiodid');
 				$table->index('ordercategoryid');
+				$table->index('public');
 
 				//$table->foreign('ordercategoryid')->references('id')->on('ordercategories');
 			});
@@ -128,6 +131,8 @@ class CreateOrdersTables extends Migration
 				$table->char('purchaseio', 10)->default(0);
 				$table->char('purchasewbse', 17)->default(0);
 				$table->index('orderid');
+				$table->index('approveruserid');
+				$table->index('notice');
 
 				//$table->foreign('orderid')->references('id')->on('orders');
 			});

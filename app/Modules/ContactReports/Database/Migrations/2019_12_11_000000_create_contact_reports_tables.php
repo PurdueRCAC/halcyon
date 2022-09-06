@@ -33,6 +33,7 @@ class CreateContactReportsTables extends Migration
 				$table->index(['userid', 'datetimecontact'], 'userid');
 				$table->index(['groupid', 'datetimecontact'], 'datetimecontact');
 				$table->index('contactreporttypeid');
+				$table->index('notice');
 			});
 
 			DB::statement('ALTER TABLE contactreports ADD FULLTEXT (stemmedreport)');
@@ -64,6 +65,8 @@ class CreateContactReportsTables extends Migration
 				$table->dateTime('datetimecreated')->nullable();
 				$table->tinyInteger('notice')->unsigned()->default(0);
 				$table->index('contactreportid');
+				$table->index('userid');
+				$table->index('notice');
 			});
 
 			DB::statement('ALTER TABLE contactreportcomments ADD FULLTEXT (stemmedcomment)');

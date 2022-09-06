@@ -32,6 +32,8 @@ class CreateMessagequeueTables extends Migration
 				$table->string('output', 150);
 				$table->index('datetimecompleted');
 				$table->index(['targetobjectid', 'userid'], 'targetobject');
+				$table->index('messagequeuetypeid');
+				$table->index('returnstatus');
 			});
 		}
 
@@ -43,6 +45,7 @@ class CreateMessagequeueTables extends Migration
 				$table->string('name', 24);
 				$table->integer('resourceid')->unsigned()->default(0)->comment('FK to resources.id');
 				$table->string('classname', 24);
+				$table->index('resourceid');
 			});
 		}
 	}
