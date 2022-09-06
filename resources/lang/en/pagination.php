@@ -15,5 +15,6 @@ return [
 
     'previous' => '&laquo; Previous',
     'next' => 'Next &raquo;',
-
+    'results shown of total' => 'Results :start-:end of :total',
+    'per page' => 'per page',
 ];

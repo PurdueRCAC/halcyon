@@ -23,9 +23,9 @@
                 @if (is_array($element))
                     @foreach ($element as $page => $url)
                         @if ($page == $paginator->currentPage())
-                            <li class="page-item active" aria-current="page"><span class="page-link">{{ $page }}</span></li>
+                            <li class="page-item active" aria-current="page"><span class="page-link">{{ number_format($page) }}</span></li>
                         @else
-                            <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
+                            <li class="page-item"><a class="page-link" href="{{ $url }}">{{ number_format($page) }}</a></li>
                         @endif
                     @endforeach
                 @endif
@@ -43,7 +43,7 @@
             @endif
         </ul>
         <p class="text-right">
-            Results {{ ($paginator->currentPage()-1)*$paginator->perPage()+1 }}-{{ $paginator->total() > $paginator->perPage() ? $paginator->currentPage()*$paginator->perPage() : $paginator->total() }} of {{ $paginator->total() }}
+            @lang('pagination.results shown of total', ['start' => number_format(($paginator->currentPage()-1)*$paginator->perPage()+1), 'end' => number_format($paginator->total() > $paginator->perPage() ? $paginator->currentPage()*$paginator->perPage() : $paginator->total()), 'total' => number_format($paginator->total())])
             @if (app('isAdmin'))
                 <?php
                 $l = rand();
@@ -61,7 +61,7 @@
                         <option value="{{ $limit }}"<?php if ($paginator->perPage() == $limit) { echo ' selected="slected"'; } ?>>{{ $limit }}</option>
                     @endforeach
                 </select>
-                <label for="limit-{{ $l }}" class="d-inline">per page</label>
+                <label for="limit-{{ $l }}" class="d-inline">@lang('pagination.per page')</label>
             @endif
         </p>
     </nav>
