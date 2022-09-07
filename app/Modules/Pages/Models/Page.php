@@ -191,7 +191,7 @@ class Page extends Model
 		}
 		$alias = str_replace(' ', '-', $alias);
 
-		$this->attributes['alias'] = preg_replace("/[^a-zA-Z0-9\-\_]/", '', strtolower($alias));
+		$this->attributes['alias'] = preg_replace("/[^a-zA-Z0-9\-\_\.]/", '', $alias);
 	}
 
 	/**
