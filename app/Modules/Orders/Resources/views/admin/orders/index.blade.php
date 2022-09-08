@@ -9,22 +9,17 @@
 <script src="{{ Module::asset('core:vendor/chartjs/Chart.min.js') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.min.js') }}"></script>
 <script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
 <script>
-$(document).ready(function () {
-	$('.items-toggle').on('click', function(e){
-		e.preventDefault();
-		$($(this).attr('href')).toggle('collapse');
-	});
-
-	$('.sparkline-chart').each(function (i, el) {
+document.addEventListener('DOMContentLoaded', function() {
+	document.querySelectorAll('.sparkline-chart').forEach(function(el){
 		const ctx = el.getContext('2d');
 		const chart = new Chart(ctx, {
 			type: 'line',
 			data: {
-				labels: JSON.parse($(el).attr('data-labels')),
+				labels: JSON.parse(el.getAttribute('data-labels')),
 				datasets: [
 					{
 						fill: false,
-						data: JSON.parse($(el).attr('data-values'))
+						data: JSON.parse(el.getAttribute('data-values'))
 					}
 				]
 			},
@@ -290,7 +285,7 @@ app('pathway')
 				</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody id="queues">
 		@foreach ($rows as $i => $row)
 			<tr>
 				@if (auth()->user()->can('delete orders'))
