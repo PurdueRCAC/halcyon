@@ -3953,7 +3953,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#Headline').on('keyup', function () {
 		NEWSToggleAddButton();
 	});
-	$('#NotesText').on('keyup', function () {
+	$('#NotesText').on('change', function () {
 		NEWSToggleAddButton();
 	});
 
