@@ -6,7 +6,7 @@
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/jquery-timepicker/jquery.timepicker.js?v=' . filemtime(public_path() . '/modules/core/vendor/jquery-timepicker/jquery.timepicker.js')) }}"></script>
 <script>
-	$(document).ready(function() {
+	document.addEventListener('DOMContentLoaded', function () {
 		$('.time-pick').timepicker({
 			timeFormat: "h:i A",
 			minTime: '8:00am',

@@ -10,27 +10,27 @@
 @push('scripts')
 <script src="{{ Module::asset('core:vendor/chartjs/Chart.min.js') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.min.js') }}"></script>
 <script>
-$(document).ready(function () {
-	$('.sparkline-chart').each(function (i, el) {
+document.addEventListener('DOMContentLoaded', function () {
+	document.querySelectorAll('.sparkline-chart').forEach(function (el) {
 		const ctx = el.getContext('2d');
 		const chart = new Chart(ctx, {
 			type: 'line',
 			data: {
-				labels: JSON.parse($(el).attr('data-labels')),
+				labels: JSON.parse(el.getAttribute('data-labels')),
 				datasets: [
 					{
 						label: 'Success',
 						fill: false,
 						//backgroundColor: 'rgba(48, 166, 73, 0.1)',
 						borderColor: 'rgb(48, 166, 73)',
-						data: JSON.parse($(el).attr('data-success-values')),
+						data: JSON.parse(el.getAttribute('data-success-values')),
 						lineTension: 0.1
 					},
 					{
 						label: 'Errors',
 						fill: false,
 						borderColor: '#dc3545',
-						data: JSON.parse($(el).attr('data-error-values')),
+						data: JSON.parse(el.getAttribute('data-error-values')),
 						lineTension: 0.1
 					},
 					{
@@ -38,7 +38,7 @@ $(document).ready(function () {
 						fill: false,
 						//backgroundColor: 'rgba(212, 149, 1, 0.1)',
 						borderColor: 'rgb(212, 149, 1)',
-						data: JSON.parse($(el).attr('data-missing-values')),
+						data: JSON.parse(el.getAttribute('data-missing-values')),
 						lineTension: 0.1
 					}
 				]
