@@ -13,6 +13,7 @@ use App\Modules\Issues\Models\Issueresource;
 use App\Modules\Issues\Models\Comment;
 use App\Modules\Issues\Models\ToDo;
 use App\Halcyon\Utility\PorterStemmer;
+use Carbon\Carbon;
 
 class IssuesController extends Controller
 {
@@ -120,6 +121,7 @@ class IssuesController extends Controller
 	public function create()
 	{
 		$row = new Issue();
+		$row->datetimecreated = Carbon::now();
 
 		if ($fields = app('request')->old('fields'))
 		{
