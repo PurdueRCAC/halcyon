@@ -131,7 +131,7 @@ app('pathway')
 			if (count($resources) > 0):
 				$resourceArray = array();
 				foreach ($resources as $resource):
-					$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->name)]) . '">' . $resource->name . '</a>';
+					$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->name)]) . '">' . e($resource->name) . '</a>';
 				endforeach;
 
 				echo '<li><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray) . '</li>';
