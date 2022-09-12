@@ -312,93 +312,111 @@ class DirectoriesController extends Controller
 			}
 		}
 
-		$bytes = $request->input('bytes');
-		if ($bytes == 'ALL')
+		$unallocatedbytes = 0;
+
+		if ($request->has('bytes'))
 		{
-			if ($bucket == null)
+			// Find appropriate bucket
+			$bucket = null;
+			foreach ($row->group->storagebuckets as $b)
 			{
-				$row->bytes = 0;
+				if ($b['resourceid'] == $row->resourceid)
+				{
+					$bucket = $b;
+					break;
+				}
+			}
+
+			$bytes = $request->input('bytes');
+
+			if (preg_match_all("/^(\-?\d*\.?\d+)\s*(\w+)$/", $bytes, $matches))
+			{
+				if ($bucket == null)
+				{
+					return redirect()->back()->withError(trans('Empty bucket'));
+				}
+
+				$row->bytes = $bytes;
+				$bytes = $row->bytes;
+
+				// Top level dirs are required to have a quota
+				if ($row->bytes == 0 && !$row->parent)
+				{
+					return redirect()->back()->withError(trans('Top level dirs are required to have a quota'));
+				}
+
+				// Can't switch between no quota and quota
+				if (($row->getOriginal('bytes') == 0 && $row->bytes != 0)
+				 || ($row->getOriginal('bytes') != 0 && $row->bytes == 0))
+				{
+					return redirect()->back()->withError(trans('Cannot switch between no quota and quota'));
+				}
+
+				if ($row->bytes < 0)
+				{
+					return redirect()->back()->withError(trans('Cannot have a negative quota'));
+				}
+
+				if ($row->bytes == 0)
+				{
+					return redirect()->back()->withError(trans('Cannot have zero bytes'));
+				}
+
+				// Check to see if tried to allocate all remaining space but we missed a fwe bits because of rounding
+				if (Number::formatBytes($row->bytes) == Number::formatBytes($bucket['unallocatedbytes'] + $row->getOriginal('bytes'))
+				 && $row->bytes != $bucket['unallocatedbytes'] + $row->getOriginal('bytes'))
+				{
+					$row->bytes = $bucket['unallocatedbytes'] + $row->getOriginal('bytes');
+				}
+			}
+			elseif ($bytes == 'ALL')
+			{
+				if ($bucket == null)
+				{
+					$bytes = $row->getOriginal('bytes');
+				}
+				else
+				{
+					$bytes = $bucket['unallocatedbytes'] + $row->getOriginal('bytes');
+				}
+				$row->bytes = $bytes;
 			}
 			else
 			{
-				$row->bytes = $bucket['unallocatedbytes'];
+				return redirect()->back()->withError(trans('Missing or invalid bytes value'));
 			}
-		}
-		else //if (preg_match_all("/^(\-?\d*\.?\d+)\s*(\w+)$/", $bytes, $matches))
-		{
+
 			if ($bucket == null)
 			{
-				return redirect()->back()->withError(trans('Empty bucket'));
-			}
-
-			if ($bytesource && $bytesource == 'p' && $row->parent)
-			{
-				// Deducting from parent
-				// Check to see if parent has sufficient bytes
-				$parent = $row->parent;
-
-				// Find the byte source, next ancestor with a quota
-				while ($parent->quota == 0 && $parent->parentstoragedirid != 0)
-				{
-					$parent = $parent->parent;
-
-					if (!$parent)
-					{
-						return redirect()->back()->withError(trans('Failed to retrieve `storagedir` for :bytesource', ['bytesource' => $bytesource]));
-					}
-				}
-
-				if ($parent->quota <= $row->bytes)
-				{
-					return redirect()->back()->withError(trans('Parent quota is less than value submitted'));
-				}
-
-				// Reduce bytesource appropriately
-				$parent->bytes = ($parent->quota - $row->bytes) . ' B';
-				$parent->save();
-			}
-			elseif ($row->bytes > $bucket['unallocatedbytes'])
-			{
-				// Check to see if tried to allocate all remaining space but we missed a few bits because of rounding
-				if (Number::formatBytes($row->bytes) == Number::formatBytes($bucket['unallocatedbytes'])
-				 && $row->bytes != $bucket['unallocatedbytes'])
-				{
-					$row->bytes = $bucket['unallocatedbytes'];
-				}
-
-				if ($row->bytes > $bucket['unallocatedbytes'])
-				{
-					return redirect()->back()->withError(trans('Submitted bytes is greater than unallocatedbytes'));
-				}
+				$unallocatedbytes = Number::formatBytes(0);
 			}
 			else
 			{
-				// Check to see if tried to allocate all remaining space but we missed a few bits because of rounding
-				if (Number::formatBytes($row->bytes) == Number::formatBytes($bucket['unallocatedbytes'])
-				 && $row->bytes != $bucket['unallocatedbytes'])
-				{
-					$row->bytes = $bucket['unallocatedbytes'];
-				}
-			}
-		}
-		/*elseif ($bytes == '-')
-		{
-			if (!$row->parent)
-			{
-				return redirect()->back()->withError(trans('Missing or invalid parent value'));
+				$unallocatedbytes = Number::formatBytes($bucket['unallocatedbytes'] + ($row->getOriginal('bytes') - $bytes));
 			}
 
-			$row->bytes = 0;
-		}*/
+			if ($unallocatedbytes < 0)
+			{
+				$row->unallocatedbytes = Number::formatBytes(-($bucket['unallocatedbytes'] + ($row->getOriginal('bytes') - $bytes)));
+				$row->overallocated    = 1;
+
+				return redirect()->back()->withError('Over allocated bytes');
+			}
+		}
 
 		// Look for this entry, duplicate name, etc.
-		$exist = Directory::query()
+		$q = Directory::query()
 			->where('resourceid', '=', $row->resourceid)
 			->where('groupid', '=', $row->groupid)
 			->where('parentstoragedirid', '=', $row->parentstoragedirid)
 			->where('name', '=', $row->name)
-			->where('datetimecreated', '<=', Carbon::now()->toDateTimeString())
-			->whereNull('datetimeremoved')
+			//->where('datetimecreated', '<=', Carbon::now()->toDateTimeString())
+			->whereNull('datetimeremoved');
+		if ($id)
+		{
+			$q->where('id', '!=', $id);
+		}
+		$exist = $q
 			->get()
 			->first();
 
@@ -430,7 +448,7 @@ class DirectoriesController extends Controller
 		}
 
 		// If we have are requesting an autopopulate dir, then let's populate with the current list of users
-		if (!$id && $row->autouser > 0)
+		if ($row->autouser > 0)
 		{
 			$members = $row->autounixgroup->members;
 
@@ -438,12 +456,13 @@ class DirectoriesController extends Controller
 			{
 				// Set up object to pass back to ourselfs
 				$data = [
-					'bytes'       => '-',
+					'bytes'       => 0,
 					//'bytesource'  => '',
 					'groupid'     => $row->groupid,
 					'name'        => $member->user->username,
 					'parentstoragedirid' => $row->id,
 					'resourceid'  => $row->resourceid,
+					'storageresourceid'  => $row->storageresourceid,
 					'unixgroupid' => $row->unixgroupid,
 					'userid'      => $row->userid,
 					'ownerread'   => 1,
@@ -476,7 +495,7 @@ class DirectoriesController extends Controller
 			}
 		}
 
-		return $this->cancel($row->storageresourceid)->with('success', trans('global.messages.item saved'));
+		return $this->cancel()->with('success', trans('global.messages.item saved'));
 	}
 
 	/**

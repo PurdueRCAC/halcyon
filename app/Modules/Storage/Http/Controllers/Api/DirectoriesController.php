@@ -626,6 +626,7 @@ class DirectoriesController extends Controller
 					'name'        => $member->user->username,
 					'parentstoragedirid' => $row->id,
 					'resourceid'  => $row->resourceid,
+					'storageresourceid'  => $row->storageresourceid,
 					'unixgroupid' => $row->unixgroupid,
 					'userid'      => $row->userid,
 					'ownerread'   => 1,
