@@ -9,35 +9,51 @@
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
 <script>
-$(document).ready(function() {
-	$('.edit-property').on('click', function(e){
-		e.preventDefault();
-		EditProperty($(this).data('prop'), $(this).data('value'));
+document.addEventListener('DOMContentLoaded', function () {
+	document.querySelectorAll('.edit-property').forEach(function (el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			EditProperty(this.getAttribute('data-prop'), this.getAttribute('data-value'));
+		});
 	});
-	$('.edit-property-input').on('keyup', function(event){
-		if (event.keyCode == 13) {
-			EditProperty($(this).data('prop'), $(this).data('value'));
-		}
+	document.querySelectorAll('.edit-property-input').forEach(function (el) {
+		el.addEventListener('keyup', function(event){
+			if (event.keyCode == 13) {
+				EditProperty(this.getAttribute('data-prop'), this.getAttribute('data-value'));
+			}
+		});
 	});
-	$('.cancel-edit-property').on('click', function(e){
-		e.preventDefault();
-		CancelEditProperty($(this).data('prop'), $(this).data('value'));
-	});
-
-	$('#order_group_save').on('click', function(e){
-		e.preventDefault();
-		SaveOrderGroup();
-	});
-	$('#order_user_save').on('click', function(e){
-		e.preventDefault();
-		SaveOrderUser();
+	document.querySelectorAll('.cancel-edit-property').forEach(function (el) {
+		el.addEventListener('click', function(event){
+			e.preventDefault();
+			CancelEditProperty(this.getAttribute('data-prop'), this.getAttribute('data-value'));
+		});
 	});
 
-	$('.copy-doc').on('blur', function(e){
-		CopyDoc(this);
+	var ogs = document.getElementById('order_group_save');
+	if (ogs) {
+		ogs.addEventListener('click', function(e){
+			e.preventDefault();
+			SaveOrderGroup();
+		});
+	}
+	var ous = document.getElementById('order_user_save');
+	if (ous) {
+		ous.addEventListener('click', function(e){
+			e.preventDefault();
+			SaveOrderUser();
+		});
+	}
+
+	document.querySelectorAll('.copy-doc').forEach(function (el) {
+		el.addEventListener('blur', function(e){
+			CopyDoc(this);
+		});
 	});
-	$('.copy-docdate').on('change', function(e){
-		CopyDocDate(this);
+	document.querySelectorAll('.copy-docdate').forEach(function (el) {
+		el.addEventListener('change', function(e){
+			CopyDocDate(this);
+		});
 	});
 
 	$('.order')
@@ -48,14 +64,17 @@ $(document).ready(function() {
 			UpdateBalance();
 		});
 
-	$('.balance-divide').on('click', function(e){
-		e.preventDefault();
-		DivideBalance();
+	document.querySelectorAll('.balance-divide').forEach(function (el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			DivideBalance();
+		});
 	});
-
-	$('.order-fulfill').on('click', function(e){
-		e.preventDefault();
-		FulfillItem($(this).data('api'), this);
+	document.querySelectorAll('.order-fulfill').forEach(function (el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			FulfillItem($(this).data('api'), this);
+		});
 	});
 
 	$('#orderheaderpopup').dialog({
@@ -71,84 +90,124 @@ $(document).ready(function() {
 			}
 		}*/
 	});
-	$('.order-status').on('click', function(e){
-		e.preventDefault();
-		$( '#orderheaderpopup' ).dialog('open');
+	document.querySelectorAll('.order-status').forEach(function (el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			$('#orderheaderpopup').dialog('open');
+		});
 	});
 
-	$('#save_quantities').on('click', function(e){
-		e.preventDefault();
-		EditQuantities();
-	});
-	$('#cancel_quantities').on('click', function(e){
-		e.preventDefault();
-		CancelEditAccounts();
-	});
+	var sq = document.getElementById('save_quantities');
+	if (sq) {
+		sq.addEventListener('click', function(e){
+			e.preventDefault();
+			EditQuantities();
+		});
+	}
+	var cq = document.getElementById('cancel_quantities');
+	if (cq) {
+		cq.addEventListener('click', function(e){
+			e.preventDefault();
+			CancelEditAccounts();
+		});
+	}
 
-	$('#printorder').on('click', function(e){
-		e.preventDefault();
-		PrintOrder();
-	});
-	$('#remindorder').on('click', function(e){
-		e.preventDefault();
-		RemindOrder($('#order').data('api'), this);
-	});
-	$('#cancelorder').on('click', function(e){
-		e.preventDefault();
-		CancelOrder(this);
-	});
-	$('#restoreorder').on('click', function(e){
-		e.preventDefault();
-		RestoreOrder(this);
-	});
+	var printorder = document.getElementById('printorder');
+	if (printorder) {
+		printorder.addEventListener('click', function(e){
+			e.preventDefault();
+			PrintOrder();
+		});
+	}
+	var remindorder = document.getElementById('remindorder');
+	if (remindorder) {
+		remindorder.addEventListener('click', function(e){
+			e.preventDefault();
+			RemindOrder(document.getElementById('order').getAttribute('data-api'), this);
+		});
+	}
+	var cancelorder = document.getElementById('cancelorder');
+	if (cancelorder) {
+		cancelorder.addEventListener('click', function(e){
+			e.preventDefault();
+			CancelOrder(this);
+		});
+	}
+	var restoreorder = document.getElementById('restoreorder');
+	if (restoreorder) {
+		restoreorder.addEventListener('click', function(e){
+			e.preventDefault();
+			RestoreOrder(this);
+		});
+	}
 
 	// Account creation/editing
-	$('.account-add').on('click', function(e){
-		e.preventDefault();
-		AddNewAccountRow();
+	document.querySelectorAll('.account-add').forEach(function (el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			AddNewAccountRow();
+		});
 	});
-	$('.account-save').on('click', function(e){
-		e.preventDefault();
-		SaveAccounts();
+	document.querySelectorAll('.account-save').forEach(function (el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			SaveAccounts();
+		});
 	});
-	$('.account-edit').on('click', function(e){
-		e.preventDefault();
-		EditAccounts();
+	document.querySelectorAll('.account-edit').forEach(function (el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			EditAccounts();
+		});
 	});
-	$('.account-edit-cancel').on('click', function(e){
-		e.preventDefault();
-		CancelEditAccounts();
+	document.querySelectorAll('.account-edit-cancel').forEach(function (el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			CancelEditAccounts();
+		});
 	});
 	// Account status
-	$('.account-approve').on('click', function(e){
-		e.preventDefault();
-		ApproveAccount($(this).data('api'), this);
+	document.querySelectorAll('.account-approve').forEach(function (el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			ApproveAccount(this.getAttribute('data-api'), this);
+		});
 	});
-	$('.account-deny').on('click', function(e){
-		e.preventDefault();
-		if (confirm($(this).attr('data-confirm'))) {
-			DenyAccount($(this).data('api'), this);
-		}
+	document.querySelectorAll('.account-deny').forEach(function (el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			if (confirm(this.getAttribute('data-confirm'))) {
+				DenyAccount(this.getAttribute('data-api'), this);
+			}
+		});
 	});
-	$('.account-remind').on('click', function(e){
-		e.preventDefault();
-		RemindAccount($(this).data('api'), this);
+	document.querySelectorAll('.account-remind').forEach(function (el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			RemindAccount(this.getAttribute('data-api'), this);
+		});
 	});
-	$('.account-collect').on('click', function(e){
-		e.preventDefault();
-		CollectAccount($(this).data('api'), this);
+	document.querySelectorAll('.account-collect').forEach(function (el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			CollectAccount(this.getAttribute('data-api'), this);
+		});
 	});
-	$('.account-reset').on('click', function(e){
-		e.preventDefault();
-		if (confirm($(this).attr('data-confirm'))) {
-			ResetAccount($(this).data('api'), this);
-		}
+	document.querySelectorAll('.account-reset').forEach(function (el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			if (confirm(this.getAttribute('data-confirm'))) {
+				ResetAccount(this.getAttribute('data-api'), this);
+			}
+		});
 	});
 
 	// Adding products to an order
-	$('.item-add').on('click', function(e) {
-		e.preventDefault();
-		AddNewProductRow();
+	document.querySelectorAll('.item-add').forEach(function (el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			AddNewProductRow();
+		});
 	});
 
 	$('.contentInner')

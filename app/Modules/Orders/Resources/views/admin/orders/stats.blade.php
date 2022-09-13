@@ -9,23 +9,25 @@
 <script src="{{ Module::asset('core:vendor/chartjs/Chart.min.js') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.min.js') }}"></script>
 <script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
 <script>
-$(document).ready(function () {
-	$('.items-toggle').on('click', function(e){
-		e.preventDefault();
-		$($(this).attr('href')).toggle('collapse');
+document.addEventListener('DOMContentLoaded', function () {
+	document.querySelectorAll('.items-toggle').forEach(function (el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			document.getElementById(this.getAttribute('href').replace('#', '')).classList.toggle('collapse');
+		});
 	});
 
 	var charts = new Array;
-	$('.sparkline-chart').each(function (i, el) {
+	document.querySelectorAll('.sparkline-chart').forEach(function (el) {
 		const ctx = el.getContext('2d');
 		const chart = new Chart(ctx, {
 			type: 'line',
 			data: {
-				labels: JSON.parse($(el).attr('data-labels')),
+				labels: JSON.parse(el.getAttribute('data-labels')),
 				datasets: [
 					{
 						fill: true,
-						data: JSON.parse($(el).attr('data-values'))
+						data: JSON.parse(el.getAttribute('data-values'))
 					}
 				]
 			},
@@ -66,15 +68,15 @@ $(document).ready(function () {
 		charts.push(chart);
 	});
 
-	$('.pie-chart').each(function (i, el) {
+	document.querySelectorAll('.pie-chart').forEach(function (el) {
 		const ctx = el.getContext('2d');
 		const pchart = new Chart(ctx, {
 			type: 'doughnut',
 			data: {
-				labels: JSON.parse($(el).attr('data-labels')),
+				labels: JSON.parse(el.getAttribute('data-labels')),
 				datasets: [
 					{
-						data: JSON.parse($(el).attr('data-values')),
+						data: JSON.parse(el.getAttribute('data-values')),
 						backgroundColor: [
 							'rgb(255, 99, 132)', // red
 							'rgb(54, 162, 235)', // blue
