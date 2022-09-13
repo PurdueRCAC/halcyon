@@ -157,7 +157,15 @@ app('pathway')
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col col-md-12 text-right">
+			<div class="col col-md-6">
+				<div class="btn-group" role="group" aria-label="Recurrence filter">
+					<a href="{{ route('admin.orders.stats') }}" class="btn btn-secondary{{ $filters['recurring'] < 0 ? ' active' : '' }}">All</a>
+					<a href="{{ route('admin.orders.stats', ['recurring' => 0]) }}" class="btn btn-secondary{{ $filters['recurring'] == 0 ? ' active' : '' }}">One-time</a>
+					<a href="{{ route('admin.orders.stats', ['recurring' => 1]) }}" class="btn btn-secondary{{ $filters['recurring'] == 1 ? ' active' : '' }}">Recurring</a>
+					<input type="hidden" name="recurring" value="{{ $filters['recurring'] }}" />
+				</div>
+			</div>
+			<div class="col col-md-6 text-right">
 				<label class="sr-only" for="filter_start">{{ trans('orders::orders.start date') }}</label>
 				<input type="text" name="start" id="filter_start" class="form-control date filter filter-submit" value="{{ $filters['start'] }}" placeholder="Start date" />
 				to
@@ -315,7 +323,7 @@ app('pathway')
 
 					$cats = array();
 					foreach ($categories as $category):
-						$val = App\Modules\Orders\Models\Order::query()
+						$query = App\Modules\Orders\Models\Order::query()
 							->join($i, $i . '.orderid', $o . '.id')
 							->join($p, $p . '.id', $i . '.orderproductid')
 							->whereNull($p . '.datetimeremoved')
@@ -323,7 +331,12 @@ app('pathway')
 							->whereNull($o . '.datetimeremoved')
 							->where($p . '.ordercategoryid', '=', $category->id)
 							->where($o . '.datetimecreated', '>=', $filters['start'] . ' 00:00:00')
-							->where($o . '.datetimecreated', '<', $filters['end'] . ' 00:00:00')
+							->where($o . '.datetimecreated', '<', $filters['end'] . ' 00:00:00');
+						if ($filters['recurring'] >= 0)
+						{
+							$query->where($i . '.origorderitemid', ($filters['recurring'] ? '>' : '='), 0);
+						}
+						$val = $query
 							->count();
 
 						$cats[$category->name] = $val;
@@ -367,7 +380,7 @@ app('pathway')
 					<?php
 					$cats = array();
 					foreach ($categories as $category):
-						$val = App\Modules\Orders\Models\Order::query()
+						$query = App\Modules\Orders\Models\Order::query()
 							->select(Illuminate\Support\Facades\DB::raw('SUM(' . $i . '.price) AS revenue'))
 							->join($i, $i . '.orderid', $o . '.id')
 							->join($p, $p . '.id', $i . '.orderproductid')
@@ -376,7 +389,13 @@ app('pathway')
 							->whereNull($o . '.datetimeremoved')
 							->where($p . '.ordercategoryid', '=', $category->id)
 							->where($o . '.datetimecreated', '>=', $filters['start'] . ' 00:00:00')
-							->where($o . '.datetimecreated', '<', $filters['end'] . ' 00:00:00')
+							->where($o . '.datetimecreated', '<', $filters['end'] . ' 00:00:00');
+						if ($filters['recurring'] >= 0)
+						{
+							$query->where($i . '.origorderitemid', ($filters['recurring'] ? '>' : '='), 0);
+						}
+
+						$val = $query
 							->get()
 							->first()->revenue;
 

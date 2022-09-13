@@ -379,8 +379,12 @@ class Order extends Model
 	 * @param   string  $stop
 	 * @return  array
 	 */
-	public static function stats($start, $stop)
+	public static function stats($start, $stop, $recurring = -1)
 	{
+		$p = (new Product)->getTable();
+		$i = (new Item)->getTable();
+		$o = (new self)->getTable();
+
 		$start = Carbon::parse($start);
 		$stop  = Carbon::parse($stop);
 		$timeframe = round(($stop->timestamp - $start->timestamp) / (60 * 60 * 24));
@@ -392,9 +396,19 @@ class Order extends Model
 			$yesterday = Carbon::now()->modify('- ' . $d . ' days');
 			$tomorrow  = Carbon::now()->modify(($d ? '- ' . ($d - 1) : '+ 1') . ' days');
 
-			$placed[$yesterday->format('Y-m-d')] = self::query()
-				->where('datetimecreated', '>', $yesterday->format('Y-m-d') . ' 00:00:00')
-				->where('datetimecreated', '<', $tomorrow->format('Y-m-d') . ' 00:00:00')
+			$query = self::query();
+
+			if ($recurring >= 0)
+			{
+				$query->join($i, $i . '.orderid', $o . '.id')
+					->where($i . '.origorderitemid', ($recurring ? '>' : '='), 0)
+					//->whereNull($i . '.datetimeremoved')
+					->select(DB::raw('DISTINCT(' . $o . '.id)'));
+			}
+
+			$placed[$yesterday->format('Y-m-d')] = $query
+				->where($o . '.datetimecreated', '>', $yesterday->format('Y-m-d') . ' 00:00:00')
+				->where($o . '.datetimecreated', '<', $tomorrow->format('Y-m-d') . ' 00:00:00')
 				->count();
 		}
 
@@ -403,26 +417,78 @@ class Order extends Model
 
 		$prevyesterday = Carbon::parse($start->format('Y-m-d'))->modify('- ' . $timeframe . ' days');
 
-		$past = self::query()
+		// Total
+		$query = self::query();
+		if ($recurring >= 0)
+		{
+			$query->join($i, $i . '.orderid', $o . '.id')
+				->where($i . '.origorderitemid', ($recurring ? '>' : '='), 0)
+				->select($o . '.*')
+				->groupBy($o . '.id')
+				->groupBy($o . '.userid')
+				->groupBy($o . '.submitteruserid')
+				->groupBy($o . '.groupid')
+				->groupBy($o . '.datetimecreated')
+				->groupBy($o . '.datetimeremoved')
+				->groupBy($o . '.usernotes')
+				->groupBy($o . '.staffnotes')
+				->groupBy($o . '.notice');
+		}
+		$past = $query
 			->withTrashed()
-			->where('datetimecreated', '>', $start->format('Y-m-d') . ' 00:00:00')
-			->where('datetimecreated', '<', $stop->format('Y-m-d') . ' 00:00:00')
+			->where($o . '.datetimecreated', '>', $start->format('Y-m-d') . ' 00:00:00')
+			->where($o . '.datetimecreated', '<', $stop->format('Y-m-d') . ' 00:00:00')
 			->get();
 
 		$total = count($past);
 
-		$past_prev = self::query()
+		// Total: previous
+		$query = self::query();
+		if ($recurring >= 0)
+		{
+			$query->join($i, $i . '.orderid', $o . '.id')
+				->where($i . '.origorderitemid', ($recurring ? '>' : '='), 0)
+				->select($o . '.*')
+				->groupBy($o . '.id')
+				->groupBy($o . '.userid')
+				->groupBy($o . '.submitteruserid')
+				->groupBy($o . '.groupid')
+				->groupBy($o . '.datetimecreated')
+				->groupBy($o . '.datetimeremoved')
+				->groupBy($o . '.usernotes')
+				->groupBy($o . '.staffnotes')
+				->groupBy($o . '.notice');
+		}
+		$past_prev = $query
 			->withTrashed()
-			->where('datetimecreated', '>', $prevyesterday->format('Y-m-d') . ' 00:00:00')
-			->where('datetimecreated', '<', $start->format('Y-m-d') . ' 00:00:00')
+			->where($o . '.datetimecreated', '>', $prevyesterday->format('Y-m-d') . ' 00:00:00')
+			->where($o . '.datetimecreated', '<', $start->format('Y-m-d') . ' 00:00:00')
 			->get();
 
 		$total_prev = count($past_prev);
 
-		$canc = self::query()
+		// Canceled
+		$query = self::query();
+		if ($recurring >= 0)
+		{
+			$query->join($i, $i . '.orderid', $o . '.id')
+				->where($i . '.origorderitemid', ($recurring ? '>' : '='), 0)
+				//->whereNotNull($i . '.datetimeremoved')
+				->select($o . '.*')
+				->groupBy($o . '.id')
+				->groupBy($o . '.userid')
+				->groupBy($o . '.submitteruserid')
+				->groupBy($o . '.groupid')
+				->groupBy($o . '.datetimecreated')
+				->groupBy($o . '.datetimeremoved')
+				->groupBy($o . '.usernotes')
+				->groupBy($o . '.staffnotes')
+				->groupBy($o . '.notice');
+		}
+		$canc = $query
 			->onlyTrashed()
-			->where('datetimecreated', '>', $start->format('Y-m-d') . ' 00:00:00')
-			->where('datetimecreated', '<', $stop->format('Y-m-d') . ' 00:00:00')
+			->where($o . '.datetimecreated', '>', $start->format('Y-m-d') . ' 00:00:00')
+			->where($o . '.datetimecreated', '<', $stop->format('Y-m-d') . ' 00:00:00')
 			->get();
 		$canceled = count($canc);
 		$uncharged = 0;
@@ -430,10 +496,20 @@ class Order extends Model
 		{
 			$uncharged += $c->total;
 		}
-		$canceled_prev = self::query()
+
+		// Canceled: previous
+		$query = self::query();
+		if ($recurring >= 0)
+		{
+			$query->join($i, $i . '.orderid', $o . '.id')
+				->where($i . '.origorderitemid', ($recurring ? '>' : '='), 0)
+				//->whereNotNull($i . '.datetimeremoved')
+				->select(DB::raw('DISTINCT(' . $o . '.id)'));
+		}
+		$canceled_prev = $query
 			->onlyTrashed()
-			->where('datetimecreated', '>', $prevyesterday->format('Y-m-d') . ' 00:00:00')
-			->where('datetimecreated', '<', $start->format('Y-m-d') . ' 00:00:00')
+			->where($o . '.datetimecreated', '>', $prevyesterday->format('Y-m-d') . ' 00:00:00')
+			->where($o . '.datetimecreated', '<', $start->format('Y-m-d') . ' 00:00:00')
 			->count();
 
 		$fulfilled = 0;
@@ -462,7 +538,9 @@ class Order extends Model
 		$collected = 0;
 		foreach ($past as $order)
 		{
-			$accounts = $order->accounts()->orderBy('datetimecreated', 'asc')->get();
+			$accounts = $order->accounts()
+				->orderBy('datetimecreated', 'asc')
+				->get();
 
 			$lastapproved = $order->datetimecreated->timestamp;
 			if (count($accounts))
@@ -556,11 +634,7 @@ class Order extends Model
 		$step['completed']['average'] = $avg;
 
 		// Top products
-		$p = (new Product)->getTable();
-		$i = (new Item)->getTable();
-		$o = (new self)->getTable();
-
-		$products = Product::query()
+		$query = Product::query()
 			->select($p . '.name', DB::raw('COUNT(*) AS total'))
 			->join($i, $i . '.orderproductid', $p . '.id')
 			->join($o, $o . '.id', $i . '.orderid')
@@ -571,7 +645,12 @@ class Order extends Model
 			->groupBy($i . '.orderproductid')
 			->groupBy($p . '.name')
 			->orderBy('total', 'desc')
-			->limit(5)
+			->limit(5);
+		if ($recurring >= 0)
+		{
+			$query->where($i . '.origorderitemid', ($recurring ? '>' : '='), 0);
+		}
+		$products = $query
 			->get();
 		$topprods = array();
 		foreach ($products as $prod)

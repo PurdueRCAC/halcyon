@@ -641,6 +641,7 @@ class OrdersController extends Controller
 		$filters = array(
 			'start' => $start->format('Y-m-d'),
 			'end' => $today->format('Y-m-d'),
+			'recurring' => -1,
 		);
 
 		foreach ($filters as $key => $default)
@@ -659,7 +660,7 @@ class OrdersController extends Controller
 			->orderBy('name', 'asc')
 			->get();
 
-		$stats = Order::stats($filters['start'], $filters['end']);
+		$stats = Order::stats($filters['start'], $filters['end'], $filters['recurring']);
 
 		return view('orders::admin.orders.stats', [
 			'categories' => $categories,
