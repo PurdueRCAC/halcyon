@@ -275,12 +275,26 @@ class MediaController extends Controller
 
 		event(new FilesUploaded($request));
 
+		$contents = Storage::disk($disk)->listContents($path);
+		foreach ($contents as $i => $content)
+		{
+			if (substr($content['path'], 0, 1) == '.')
+			{
+				unset($contents[$i]);
+				continue;
+			}
+			$contents[$i]['url'] = asset('/files/' . ($path ? trim($path, '/') . '/' : '') . $content['path']);
+		}
+		$contents = array_values($contents);
+
 		$response = [
-			'data' => Storage::disk($disk)->listContents($path)
+			'data' => $contents,
+			'uploaded' => true,
 		];
 
 		if ($fileNotUploaded)
 		{
+			$response['uploaded'] = false;
 			$response['message'] = trans('media::media.not all uploaded');
 		}
 
