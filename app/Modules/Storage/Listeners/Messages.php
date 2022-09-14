@@ -28,7 +28,7 @@ class Messages
 	/**
 	 * Setup some directories for new resource members
 	 *
-	 * @param   object   $event
+	 * @param   object  $event
 	 * @return  void
 	 */
 	public function handleMessageReading(MessageReading $event)
@@ -39,7 +39,10 @@ class Messages
 		{
 			if (!$type->classname || $type->classname == 'storagedir')
 			{
-				$item = Directory::query()->withTrashed()->where('id', '=', $message->targetobjectid)->first();
+				$item = Directory::query()
+					->withTrashed()
+					->where('id', '=', $message->targetobjectid)
+					->first();
 
 				if ($item)
 				{
@@ -59,7 +62,7 @@ class Messages
 	/**
 	 * Add messages to the queue for new directories
 	 *
-	 * @param   object   $event
+	 * @param   object  $event
 	 * @return  void
 	 */
 	public function handleDirectoryCreated(DirectoryCreated $event)

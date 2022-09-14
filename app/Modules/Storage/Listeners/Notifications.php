@@ -31,51 +31,53 @@ class Notifications
 	{
 		$row = $event->directory;
 
-		if ($row->bytes)
+		if (!$row->bytes)
 		{
-			if ($row->unixgroup)
+			return;
+		}
+
+		if ($row->unixgroup)
+		{
+			// Create 99% alert for existing users
+			$members = $row->unixgroup->members;
+
+			foreach ($members as $member)
 			{
-				// Create 99% alert for existing users
-				$members = $row->unixgroup->members;
+				$notifications = $row->notifications()
+					->where('userid', '=', $member->userid)
+					->count();
 
-				foreach ($members as $member)
+				if (!$notifications)
 				{
-					$notifications = $row->notifications()
-						->where('userid', '=', $member->userid)
-						->count();
-
-					if (!$notifications)
-					{
-						Notification::create([
-							'storagedirid' => $row->id,
-							'storagedirquotanotificationtypeid' => 3,
-							'userid' => $member->userid,
-							'value' => 99,
-						]);
-					}
+					Notification::create([
+						'storagedirid' => $row->id,
+						'storagedirquotanotificationtypeid' => 3,
+						'userid' => $member->userid,
+						'value' => 99,
+					]);
 				}
 			}
+		}
 
-			// Create 80% and 99% alert for existing managers
-			if ($row->group)
+		// Create 80% and 99% alert for existing managers
+		if ($row->group)
+		{
+			$managers = $row->group->managers;
+
+			foreach ($managers as $member)
 			{
-				$managers = $row->group->managers;
+				$notifications = $row->notifications()
+					->where('userid', '=', $member->userid)
+					->count();
 
-				foreach ($managers as $member)
+				if (!$notifications)
 				{
-					$notifications = $row->notifications()
-						->where('userid', '=', $member->userid)
-						->count();
-
-					if (!$notifications)
-					{
-						Notification::create([
-							'storagedirid' => $row->id,
-							'storagedirquotanotificationtypeid' => 3,
-							'userid' => $member->userid,
-							'value' => 99,
-						]);
-					}
+					Notification::create([
+						'storagedirid' => $row->id,
+						'storagedirquotanotificationtypeid' => 3,
+						'userid' => $member->userid,
+						'value' => 99,
+					]);
 				}
 			}
 		}
