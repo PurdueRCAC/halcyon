@@ -264,7 +264,7 @@ class DirectoriesController extends Controller
 		//$row->fill($request->input('fields'));
 		$row->fill($data);
 		$row->resourceid = $row->storageResource->resource->id;
-		$row->owneruserid = $row->owneruserid ?: auth()->user()->id;
+		//$row->owneruserid = $row->owneruserid ?: auth()->user()->id;
 
 		if ($row->parent)
 		{
@@ -465,6 +465,7 @@ class DirectoriesController extends Controller
 					'storageresourceid'  => $row->storageresourceid,
 					'unixgroupid' => $row->unixgroupid,
 					'userid'      => $row->userid,
+					'owneruserid' => $member->userid,
 					'ownerread'   => 1,
 					'ownerwrite'  => 1,
 				];
