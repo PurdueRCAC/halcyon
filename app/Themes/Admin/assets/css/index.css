@@ -1641,6 +1641,10 @@ body .cke_bottom {
   box-shadow: none;
   border-top: 1px solid #D9D9D9;
 }
+body textarea.cke_source {
+  background: var(--input-back);
+  color: var(--input-color);
+}
 
 .permissions.button {
   padding: 0.5em 0.71em;
