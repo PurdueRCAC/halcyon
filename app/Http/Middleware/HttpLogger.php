@@ -28,7 +28,7 @@ class HttpLogger
 
 		$app = 'ui';
 
-		if ($request->segment(0) == 'api')
+		if ($request->segment(1) == 'api')
 		{
 			$app = 'api';
 		}
