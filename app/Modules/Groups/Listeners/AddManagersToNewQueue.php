@@ -35,8 +35,17 @@ class AddManagersToNewQueue
 			return;
 		}
 
+		if ($queue->group->unixgroup && substr($queue->group->unixgroup, 0, 2) == 'x-')
+		{
+			return;
+		}
+
 		foreach ($queue->group->managers as $manager)
 		{
+			if (!$manager->user || substr($manager->user->username, 0, 2) == 'x-')
+			{
+				continue;
+			}
 			$queue->addUser($manager->userid);
 		}
 	}
