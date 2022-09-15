@@ -30,7 +30,7 @@ class Color extends Field
 			$this->value = '#000000';
 		}
 
-		$this->value = '#' . ltrim($this->value, '#');
+		$this->value = '#' . ltrim((string)$this->value, '#');
 
 		// Initialize some field attributes.
 		$attributes = array(

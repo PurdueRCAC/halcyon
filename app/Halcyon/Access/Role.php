@@ -197,25 +197,23 @@ class Role extends Model
 	/**
 	 * Delete this object and its dependencies
 	 *
-	 * @return  boolean
+	 * @param  array $options
+	 * @return boolean
 	 */
 	public function delete($options = [])
 	{
 		if ($this->id == 0)
 		{
-			$this->addError(trans('global.record not found'));
 			return false;
 		}
 
 		if ($this->parent_id == 0)
 		{
-			$this->addError(trans('global.cannot delete root element'));
 			return false;
 		}
 
 		if ($this->lft == 0 or $this->rgt == 0)
 		{
-			$this->addError(trans('global.cannot delete root element'));
 			return false;
 		}
 
@@ -227,7 +225,6 @@ class Role extends Model
 
 		if (!$children->count())
 		{
-			$this->addError(trans('global.failed to delete descendent roles'));
 			return false;
 		}
 
@@ -245,7 +242,6 @@ class Role extends Model
 
 		if (!$result)
 		{
-			$this->addError($query->getError());
 			return false;
 		}
 
@@ -279,7 +275,6 @@ class Role extends Model
 
 					if (!$rule->save())
 					{
-						$this->addError($rule->getError());
 						return false;
 					}
 				}
@@ -293,7 +288,6 @@ class Role extends Model
 		}
 		catch (\Exception $e)
 		{
-			$this->addError($e->getMessage());
 			return false;
 		}
 

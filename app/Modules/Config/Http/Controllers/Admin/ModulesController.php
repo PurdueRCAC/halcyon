@@ -19,28 +19,25 @@ class ModulesController extends Controller
 	 */
 	public function index($module)
 	{
-		//$module = new Models\Component();
+		$mod = Extension::findModuleByName($module);
 
-		//$form = $module->getForm();
-		$module = Extension::findModuleByName($module);
-
-		if (!$module || !$module->id)
+		if (!$mod || !$mod->id)
 		{
 			abort(404);
 		}
 
 		if (!auth()->user()
-		 || !auth()->user()->can('admin ' . $module->element))
+		 || !auth()->user()->can('admin ' . $mod->element))
 		{
 			abort(403);
 		}
 
-		$form = $module->getForm();
+		$form = $mod->getForm();
 
-		//$module->registerLanguage();
+		//$mod->registerLanguage();
 
 		return view('config::admin.module', [
-			'module' => $module,
+			'module' => $mod,
 			'form' => $form
 		]);
 	}

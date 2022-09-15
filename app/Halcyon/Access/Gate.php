@@ -82,7 +82,7 @@ class Gate
 		}
 
 		$action = strtolower(preg_replace('#[\s\-]+#', '.', $action));
-		$asset  = strtolower(preg_replace('#[\s\-]+#', '.', trim($asset)));
+		$asset  = $asset ? strtolower(preg_replace('#[\s\-]+#', '.', trim($asset))) : '';
 
 		// Temporary shim to get permissions working
 		$parts = explode('.', $asset);
@@ -116,8 +116,9 @@ class Gate
 	/**
 	 * Determine if the given ability should be granted for the current user.
 	 *
-	 * @param  string  $ability
-	 * @param  array|mixed  $arguments
+	 * @param  integer  $userId  Id of the user for which to check authorisation.
+	 * @param  string   $action  The name of the action to authorise.
+	 * @param  mixed    $asset   Integer asset id or the name of the asset as a string.  Defaults to the global asset node.
 	 * @return bool
 	 */
 	public static function authorize($userId, $action, $asset = null)
@@ -166,12 +167,12 @@ class Gate
 	/**
 	 * Create a new access response.
 	 *
-	 * @param  string|null  $message
+	 * @param  string  $message
 	 * @return \Illuminate\Auth\Access\Response
 	 */
-	protected static function allow($message = null)
+	protected static function allow($message = '')
 	{
-		return new Response($message);
+		return new Response(true, $message);
 	}
 
 	/**
@@ -193,10 +194,10 @@ class Gate
 	 * @param  array|mixed  $arguments
 	 * @return bool
 	 */
-	public static function allows($ability, $arguments = [])
+	/*public static function allows($ability, $arguments = [])
 	{
 		return self::check($ability, $arguments);
-	}
+	}*/
 
 	/**
 	 * Determine if the given ability should be denied for the current user.
@@ -205,10 +206,10 @@ class Gate
 	 * @param  array|mixed  $arguments
 	 * @return bool
 	 */
-	public static function denies($ability, $arguments = [])
+	/*public static function denies($ability, $arguments = [])
 	{
 		return ! self::allows($ability, $arguments);
-	}
+	}*/
 
 	/**
 	 * Method to check if a role is authorised to perform an action, optionally on an asset.
@@ -539,9 +540,9 @@ class Gate
 	/**
 	 * Method to return a list of actions from a file for which permissions can be set.
 	 *
-	 * @param   string  $file   The path to the XML file.
-	 * @param   string  $xpath  An optional xpath to search for the fields.
-	 * @return  boolean|array   False if case of error or the list of actions available.
+	 * @param   string  $file    The path to the XML file.
+	 * @param   string  $section An optional xpath to search for the fields.
+	 * @return  boolean|array    False if case of error or the list of actions available.
 	 */
 	public static function getActionsFromFile($file, $section = 'module') //"/access/section[@name='module']/")
 	{

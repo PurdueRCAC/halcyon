@@ -14,7 +14,6 @@ class CreateEnvFile implements SetupScript
     protected $env;
 
     /**
-     * @param Config        $config
      * @param EnvFileWriter $env
      */
     public function __construct(EnvFileWriter $env)

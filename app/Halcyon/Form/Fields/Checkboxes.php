@@ -49,8 +49,9 @@ class Checkboxes extends Field
 		$values = (array)$this->value;
 
 		// Build the checkbox field output.
+		$i = 0;
 		$html[] = '<ul>';
-		foreach ($options as $i => $option)
+		foreach ($options as $option)
 		{
 			// Initialize some option attributes.
 			$checked = (in_array((string) $option->value, $values) ? ' checked="checked"' : '');
@@ -91,6 +92,8 @@ class Checkboxes extends Field
 			$html[] = '<label for="' . $this->id . $i . '"' . $class . ' class="form-check-label">' . trans($option->text) . '</label>';
 			$html[] = '</span>';
 			$html[] = '</li>';
+
+			$i++;
 		}
 
 		if ($this->element['option_other'])
@@ -103,6 +106,10 @@ class Checkboxes extends Field
 			{
 				$checked = ' checked="checked"';
 			}
+			$class = ' class="form-check-input"';
+			$disabled = '';
+			$onclick = '';
+
 			$html[] = '<li>';
 			$html[] = '<span class="form-check">';
 			$html[] = '<input type="checkbox" id="' . $this->id . ($i + 1) . '" name="' . $this->name . '" value=""' . $checked . $class . $onclick . $disabled . '/>';

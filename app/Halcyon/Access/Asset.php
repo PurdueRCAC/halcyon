@@ -3,6 +3,7 @@
 namespace App\Halcyon\Access;
 
 use App\Halcyon\Models\Nested;
+use Exception;
 
 /**
  * Access asset
@@ -38,20 +39,10 @@ class Asset extends Nested
 	public static $orderDir = 'asc';
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array
-	 */
-	protected $rules = array(
-		'title' => 'required|string|max:50',
-		'name'  => 'required|string|max:100'
-	);
-
-	/**
 	 * Generates automatic rules field value
 	 *
-	 * @param   mixed  $rules
-	 * @return  string
+	 * @param   object|string  $rules
+	 * @return  void
 	 */
 	public function setRulesAttribute($rules)
 	{
@@ -91,7 +82,8 @@ class Asset extends Nested
 	/**
 	 * Method to load root node
 	 *
-	 * @return  integer
+	 * @return  object
+	 * @throws  Exception
 	 */
 	public static function getRoot()
 	{
@@ -115,7 +107,7 @@ class Asset extends Nested
 
 		if (!$result || !$result->id)
 		{
-			throw new \Exception('No base permissions found.');
+			throw new Exception('No base permissions found.');
 		}
 
 		return $result;

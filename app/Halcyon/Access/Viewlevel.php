@@ -67,7 +67,7 @@ class Viewlevel extends Model
 			->orderBy('ordering', 'desc')
 			->first();
 
-		return intval($last->ordering) + 1;
+		return ($last ? intval($last->ordering) + 1 : 1);
 	}
 
 	/**
@@ -89,8 +89,7 @@ class Viewlevel extends Model
 	/**
 	 * Get a list of the Roles for Viewing Access Levels
 	 *
-	 * @param   string  $rules  Roles in JSON format
-	 * @return  string  $groups  Comma separated list of Roles
+	 * @return  string  Comma separated list of Roles
 	 */
 	public function visibleByRoles()
 	{

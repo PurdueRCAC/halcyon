@@ -6,6 +6,8 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Routing\Router;
 use Throwable;
 
 class Handler extends ExceptionHandler

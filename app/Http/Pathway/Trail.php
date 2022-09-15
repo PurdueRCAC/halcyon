@@ -160,7 +160,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	 */
 	public function key()
 	{
-		return key($this->items);
+		return (int) key($this->items);
 	}
 
 	/**
@@ -176,7 +176,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Is current position valid?
 	 *
-	 * @return  voolean
+	 * @return  boolean
 	 */
 	public function valid()
 	{

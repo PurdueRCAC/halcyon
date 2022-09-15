@@ -148,7 +148,7 @@ class Rule implements Arrayable, Jsonable
 	 */
 	public function __toString()
 	{
-		return $this->toJson();
+		return (string)$this->toJson();
 	}
 
 	/**
