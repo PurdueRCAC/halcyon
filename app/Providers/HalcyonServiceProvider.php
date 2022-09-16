@@ -12,6 +12,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class HalcyonServiceProvider extends ServiceProvider
 {
+	/**
+	 * Register services
+	 *
+	 * @return void
+	 */
 	public function register()
 	{
 		$this->app->singleton('isAdmin', function ()
@@ -28,44 +33,17 @@ class HalcyonServiceProvider extends ServiceProvider
 		{
 			$config = (array)$app['config']->get('ldap', []);
 
-			return new Adldap();//$config);
+			return new Adldap();
 		});
-
-		/*if (class_exists(TranslationServiceProvider::class))
-		{
-			$this->app->register(TranslationServiceProvider::class);
-		}
-
-		$this->app->register(LaravelModulesServiceProvider::class);
-
-		$loader = AliasLoader::getInstance();
-		$loader->alias('Toolbar', Toolbar::class);*/
 	}
 
 	/**
 	 * Boot the package, in this case also discovering any themes required by stylist.
+	 *
+	 * @return void
 	 */
 	public function boot()
 	{
-		/*$manager = $this->app['themes'];
-
-		//$themePaths = $manager->all();
-		$client = $this->isAdmin() ? 'admin' : 'site';
-
-		$theme = $this->app['config']->get('app.' . $client . '-theme', null);
-
-		if (!is_null($theme))
-		{
-			$theme = $manager->find($theme);
-
-			$manager->activate($theme);
-
-			$this->publish($theme->getPath() . '/assets', $manager->getAssetPath($theme->getName()));
-
-			$this->publishes([
-				$theme->getPath() . '/assets' => $manager->getAssetPath($theme->getName()),
-			], 'public');
-		}*/
 		JsonResource::withoutWrapping();
 
 		Blade::directive('sliders', function ($expression) {
@@ -75,13 +53,16 @@ class HalcyonServiceProvider extends ServiceProvider
 
 	/**
 	 * Publish the assets
+	 *
+	 * @param string $sourcePath
+	 * @param string $destinationPath
+	 * @return void
 	 */
 	public function publish($sourcePath, $destinationPath)
 	{
 		if (!$this->app['files']->isDirectory($sourcePath))
 		{
-			$message = "Source path does not exist : {$sourcePath}";
-			throw new \InvalidArgumentException($message);
+			throw new \InvalidArgumentException("Source path does not exist : {$sourcePath}");
 		}
 
 		if (!$this->app['files']->isDirectory($destinationPath))
@@ -104,14 +85,11 @@ class HalcyonServiceProvider extends ServiceProvider
 				$this->app['files']->copy($file, $dest);
 			}
 		}
-		/*if ($this->app['files']->copyDirectory($sourcePath, $destinationPath))
-		{
-			return true;
-		}*/
 	}
 
 	/**
 	 * Checks if the current url matches the configured backend uri
+	 *
 	 * @return bool
 	 */
 	private function isAdmin()

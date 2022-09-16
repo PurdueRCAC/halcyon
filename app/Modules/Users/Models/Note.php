@@ -42,16 +42,6 @@ class Note extends Model
 	public static $orderDir = 'asc';
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array
-	 */
-	protected $rules = array(
-		'user_id' => 'positive|nonzero',
-		'body'    => 'notempty'
-	);
-
-	/**
 	 * The attributes that should be mutated to dates.
 	 *
 	 * @var  array
@@ -73,7 +63,7 @@ class Note extends Model
 		'deleted' => NoteDeleted::class,
 	];
 
-/**
+	/**
 	 * Runs extra setup code when creating/updating a new model
 	 *
 	 * @return  void
@@ -147,13 +137,15 @@ class Note extends Model
 
 	/**
 	 * Taggable namespace
+	 *
+	 * @var string
 	 */
-	static $entityNamespace = 'usernote';
+	public static $entityNamespace = 'usernote';
 
 	/**
 	 * Find all hashtags in the note
 	 *
-	 * @return  array
+	 * @return  string
 	 */
 	public function getHashtagsAttribute()
 	{

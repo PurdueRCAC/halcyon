@@ -43,7 +43,7 @@ abstract class RoutingServiceProvider extends ServiceProvider
 	abstract protected function getApiRoute();
 
 	/**
-	 * // [!] Legacy compatibility
+	 * [!] Legacy compatibility
 	 * 
 	 * @return string
 	 */
@@ -81,6 +81,7 @@ abstract class RoutingServiceProvider extends ServiceProvider
 
 	/**
 	 * @param Router $router
+	 * @return void
 	 */
 	private function loadSiteRoutes(Router $router)
 	{
@@ -103,6 +104,7 @@ abstract class RoutingServiceProvider extends ServiceProvider
 
 	/**
 	 * @param Router $router
+	 * @return void
 	 */
 	private function loadAdminRoutes(Router $router)
 	{
@@ -126,6 +128,7 @@ abstract class RoutingServiceProvider extends ServiceProvider
 
 	/**
 	 * @param Router $router
+	 * @return void
 	 */
 	private function loadApiRoutes(Router $router)
 	{

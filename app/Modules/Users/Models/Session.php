@@ -34,7 +34,7 @@ class Session extends Model
 	];
 
 	/**
-	 * Get notes
+	 * Get user
 	 *
 	 * @return  object
 	 */

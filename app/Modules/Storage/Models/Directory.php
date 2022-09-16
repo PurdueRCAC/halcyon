@@ -237,9 +237,9 @@ class Directory extends Model
 	}
 
 	/**
-	 * Get permissions
+	 * Get full path
 	 *
-	 * @return  object
+	 * @return  string
 	 */
 	public function getFullPathAttribute()
 	{
@@ -300,7 +300,7 @@ class Directory extends Model
 	}
 
 	/**
-	 * Get mode
+	 * Get Unix mode
 	 *
 	 * @return  string
 	 */

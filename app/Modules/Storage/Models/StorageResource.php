@@ -123,7 +123,7 @@ class StorageResource extends Model
 	 * Find a record by name
 	 *
 	 * @param   string  $name
-	 * @return  object
+	 * @return  StorageResource|null
 	 */
 	public static function findByName($name)
 	{
@@ -140,7 +140,7 @@ class StorageResource extends Model
 	/**
 	 * Set value in bytes
 	 *
-	 * @param   mixed  $value
+	 * @param   string|int  $value
 	 * @return  void
 	 */
 	public function setDefaultquotaspaceAttribute($value)

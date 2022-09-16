@@ -10,7 +10,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * The filters base class name.
      *
-     * @var array
+     * @var array<string, array>
      */
     protected $middleware = [
         'App' => [

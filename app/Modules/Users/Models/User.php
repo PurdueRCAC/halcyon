@@ -61,7 +61,13 @@ class User extends Model implements
 	 *
 	 * @var array
 	 */
-	protected $appends = ['username', 'unixid', 'datecreated', 'dateremoved', 'email'];
+	protected $appends = [
+		'username',
+		'unixid',
+		'datecreated',
+		'dateremoved',
+		'email'
+	];
 
 	/**
 	 * Fields and their validation criteria
@@ -89,7 +95,7 @@ class User extends Model implements
 	/**
 	 * The current UserUsername instance
 	 *
-	 * @var object
+	 * @var UserUsername
 	 */
 	protected $userusername = null;
 
@@ -184,7 +190,7 @@ class User extends Model implements
 	/**
 	 * Get the active UserUsername instance
 	 *
-	 * @return  object  UserUsername
+	 * @return  UserUsername
 	 **/
 	public function getUserUsername()
 	{
@@ -220,7 +226,7 @@ class User extends Model implements
 	 * Generate permissions for the modules provided
 	 *
 	 * @param  array $names
-	 * @return array
+	 * @return void
 	 */
 	public function setModulePermissionsAttribute(array $names)
 	{
@@ -287,7 +293,7 @@ class User extends Model implements
 	/**
 	 * Gets date created
 	 *
-	 * @return  string
+	 * @return  object
 	 */
 	public function getDatecreatedAttribute()
 	{
@@ -297,7 +303,7 @@ class User extends Model implements
 	/**
 	 * Gets an array of the authorised access levels for the user
 	 *
-	 * @return  string
+	 * @return  object
 	 */
 	public function getDateremovedAttribute()
 	{
@@ -329,7 +335,7 @@ class User extends Model implements
 	/**
 	 * Gets an array of the authorised access levels for the user
 	 *
-	 * @return  string
+	 * @return  object
 	 */
 	public function getCreatedAtAttribute()
 	{
@@ -365,7 +371,7 @@ class User extends Model implements
 	/**
 	 * Gets an array of the authorised access levels for the user
 	 *
-	 * @return  string
+	 * @return  object
 	 */
 	public function getLastVisitAttribute()
 	{
@@ -558,7 +564,9 @@ class User extends Model implements
 	 * Find a facet value
 	 *
 	 * @param   string  $key
-	 * @param   mixed   $default
+	 * @param   mixed   $val
+	 * @param   integer $access
+	 * @param   integer $locked
 	 * @return  string
 	 */
 	public function addFacet($key, $val, $access = 0, $locked = 0)
@@ -623,7 +631,7 @@ class User extends Model implements
 	 * Finds a user by organization ID
 	 *
 	 * @param   integer  $organization_id
-	 * @return  object
+	 * @return  object|null
 	 */
 	public static function findByOrganizationId($organization_id)
 	{
@@ -662,6 +670,7 @@ class User extends Model implements
 	/**
 	 * Save the record
 	 *
+	 * @param   array  $options
 	 * @return  boolean  False if error, True on success
 	 */
 	public function save(array $options = array())

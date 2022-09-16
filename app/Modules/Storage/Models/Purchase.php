@@ -303,9 +303,9 @@ class Purchase extends Model
 	}
 
 	/**
-	 * Get a list of usage
+	 * Get counter entry
 	 *
-	 * @return  object
+	 * @return  Purchase|null
 	 */
 	public function getCounterAttribute()
 	{

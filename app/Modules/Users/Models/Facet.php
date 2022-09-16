@@ -42,28 +42,17 @@ class Facet extends Model
 	public static $orderDir = 'asc';
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array
-	 */
-	public $rules = array(
-		'user_id' => 'required|integer|min:1',
-		'key'     => 'required|string|max:255',
-		'value'   => 'required|string|max:8096'
-	);
-
-	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string, string>
 	 */
 	protected $dispatchesEvents = [
-		'created'  => FacetCreated::class,
-		'deleted'  => FacetDeleted::class,
+		'created' => FacetCreated::class,
+		'deleted' => FacetDeleted::class,
 	];
 
 	/**
-	 * Get parent member
+	 * Get parent user
 	 *
 	 * @return  object
 	 */
@@ -77,7 +66,7 @@ class Facet extends Model
 	 *
 	 * @param   integer  $user_id
 	 * @param   string   $key
-	 * @return  mixed
+	 * @return  Facet|null
 	 */
 	public static function findByUserAndKey($user_id, $key)
 	{

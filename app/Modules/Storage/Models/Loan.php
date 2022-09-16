@@ -47,9 +47,9 @@ class Loan extends Purchase
 	}
 
 	/**
-	 * Get a list of usage
+	 * Get counter entry
 	 *
-	 * @return  object
+	 * @return  Loan|null
 	 */
 	public function getCounterAttribute()
 	{

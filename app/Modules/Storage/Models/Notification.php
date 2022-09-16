@@ -131,7 +131,7 @@ class Notification extends Model
 	/**
 	 * Get next notify datetime
 	 *
-	 * @return  string
+	 * @return  object
 	 */
 	public function getNextnotifyAttribute()
 	{

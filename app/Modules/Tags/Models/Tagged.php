@@ -36,17 +36,6 @@ class Tagged extends Model
 	public static $orderDir = 'desc';
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array
-	 */
-	protected $rules = array(
-		'tag_id'        => 'required|integer',
-		'taggable_type' => 'required|string',
-		'taggable_id'   => 'required|integer'
-	);
-
-	/**
 	 * Runs extra setup code when creating a new model
 	 *
 	 * @return  void
@@ -94,7 +83,7 @@ class Tagged extends Model
 	 * @param   integer  $scope_id  Object ID (e.g., resource ID, ticket ID)
 	 * @param   integer  $tag_id    Tag ID
 	 * @param   integer  $tagger    User ID of person adding tag
-	 * @return  mixed
+	 * @return  Tagged|null
 	 **/
 	public static function findByScoped($scope, $scope_id, $tag_id, $tagger=0)
 	{

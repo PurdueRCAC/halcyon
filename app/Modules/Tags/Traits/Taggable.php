@@ -8,12 +8,14 @@ use App\Modules\Tags\Models\Tag;
 trait Taggable
 {
 	/**
-	 * {@inheritdoc}
+	 * @var string
 	 */
 	protected static $tagsModel = Tag::class;
 
 	/**
-	 * {@inheritdoc}
+	 * Get the tags model class name
+	 *
+	 * @return string
 	 */
 	public static function getTagsModel()
 	{
@@ -21,7 +23,10 @@ trait Taggable
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Set the tags model class name
+	 *
+	 * @param string $model
+	 * @return void
 	 */
 	public static function setTagsModel($model)
 	{
@@ -29,7 +34,12 @@ trait Taggable
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Append ot a query where a tag is of type
+	 *
+	 * @param Builder $query
+	 * @param array|string $tags
+	 * @param string $type
+	 * @return object
 	 */
 	public function scopeWhereTag(Builder $query, $tags, $type = 'slug')
 	{
@@ -50,7 +60,12 @@ trait Taggable
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Append ot a query where object has tag
+	 *
+	 * @param Builder $query
+	 * @param array|string $tags
+	 * @param string $type
+	 * @return object Builder
 	 */
 	public function scopeWithTag(Builder $query, $tags, $type = 'slug')
 	{
@@ -66,7 +81,11 @@ trait Taggable
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Append ot a query where a tag is of type
+	 *
+	 * @param Builder $query
+	 * @param string $domain
+	 * @return object Builder
 	 */
 	public function scopeWhereDomain(Builder $query, $domain)
 	{
@@ -74,7 +93,9 @@ trait Taggable
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Get tags on object
+	 *
+	 * @return object
 	 */
 	public function tags()
 	{
@@ -105,7 +126,7 @@ trait Taggable
 
 	/**
 	 * Set the list of tags
-	 * 
+	 *
 	 * @param  array  $tags
 	 * @param  string $type
 	 * @return bool
@@ -141,7 +162,7 @@ trait Taggable
 
 	/**
 	 * Add a list of tags
-	 * 
+	 *
 	 * @param  array $tags
 	 * @return bool
 	 */
@@ -157,7 +178,7 @@ trait Taggable
 
 	/**
 	 * Add a tag
-	 * 
+	 *
 	 * @param  string $name
 	 * @return void
 	 */
@@ -200,8 +221,8 @@ trait Taggable
 
 	/**
 	 * Remove a list of tags
-	 * 
-	 * @param  array $tags
+	 *
+	 * @param  array|null $tags
 	 * @return bool
 	 */
 	public function untag($tags = null)
@@ -218,7 +239,7 @@ trait Taggable
 
 	/**
 	 * Remove a tag
-	 * 
+	 *
 	 * @param  string $name
 	 * @return void
 	 */
@@ -241,7 +262,7 @@ trait Taggable
 	 * Check if the given string is a tag
 	 * 
 	 * @param  string $name
-	 * @return mixed
+	 * @return bool|Tag
 	 */
 	public function isTag($name)
 	{
@@ -262,12 +283,14 @@ trait Taggable
 
 	/**
 	 * Check if the model has the specified tag
-	 * 
+	 *
 	 * @param  string $name
 	 * @return bool
 	 */
 	public function hasTag($name)
 	{
+		$model = $this->createTagsModel();
+
 		$tags = $this->tags->pluck('slug')->toArray();
 		$slug = $model->normalize($name);
 
@@ -276,7 +299,7 @@ trait Taggable
 
 	/**
 	 * Get class name
-	 * 
+	 *
 	 * @return string
 	 */
 	protected function getEntityClassName()

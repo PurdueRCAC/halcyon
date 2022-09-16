@@ -50,25 +50,14 @@ class Tag extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array
-	 */
-	protected $rules = array(
-		'name' => 'required|string|min:3|max:1500',
-		'slug' => 'nullable|string|max:100',
-		'parent_id' => 'nullable|integer'
-	);
-
-	/**
 	 * The event map for the model.
 	 *
 	 * @var array
 	 */
 	protected $dispatchesEvents = [
-		'created'  => TagCreated::class,
-		'updated'  => TagUpdated::class,
-		'deleted'  => TagDeleted::class,
+		'created' => TagCreated::class,
+		'updated' => TagUpdated::class,
+		'deleted' => TagDeleted::class,
 	];
 
 	/**
@@ -309,7 +298,7 @@ class Tag extends Model
 	 * Retrieves one row loaded by a tag field
 	 *
 	 * @param   string  $tag  The tag to load by
-	 * @return  mixed
+	 * @return  Tag|null
 	 **/
 	public static function findByTag($tag)
 	{
@@ -345,7 +334,6 @@ class Tag extends Model
 		// Attempt to delete the record
 		if (!$to->delete())
 		{
-			$this->addError($to->getError());
 			return false;
 		}
 
@@ -383,7 +371,6 @@ class Tag extends Model
 		// Attempt to store the new record
 		if (!$to->save())
 		{
-			$this->addError($to->getError());
 			return false;
 		}
 
@@ -402,7 +389,6 @@ class Tag extends Model
 	{
 		if (!$tag_id)
 		{
-			$this->addError(trans('tags::tags.error.Missing tag ID.'));
 			return false;
 		}
 
@@ -410,7 +396,6 @@ class Tag extends Model
 		// Loop through the associations and link them to a different tag
 		if (!Tagged::moveTo($this->id, $tag_id))
 		{
-			$this->addError(trans('tags::tags.error.Failed to move objects attached to tag.'));
 			return false;
 		}
 
@@ -418,7 +403,6 @@ class Tag extends Model
 		// Loop through the records and link them to a different tag
 		if (!self::moveTo($this->id, $tag_id))
 		{
-			$this->addError(trans('tags::tags.error.Failed to move aliases attached to tag.'));
 			return false;
 		}
 
@@ -455,7 +439,6 @@ class Tag extends Model
 	{
 		if (!$tag_id)
 		{
-			$this->addError(trans('tags::tags.error.Missing tag ID.'));
 			return false;
 		}
 
@@ -463,7 +446,6 @@ class Tag extends Model
 		// Loop through the associations and link them to a different tag
 		if (!Tagged::copyTo($this->id, $tag_id))
 		{
-			$this->addError($to->getError());
 			return false;
 		}
 

@@ -18,7 +18,7 @@ class Permissions extends Fluent
 	 * Method to get a form object.
 	 *
 	 * @param   array   $data  Data for the form.
-	 * @return  object
+	 * @return  Form
 	 */
 	public function getForm($data = array())
 	{
@@ -96,7 +96,7 @@ class Permissions extends Fluent
 	 * @param   object  $form   The form to validate against.
 	 * @param   array   $data   The data to validate.
 	 * @param   string  $group  The name of the field group to validate.
-	 * @return  mixed   Array of filtered data if valid, false otherwise.
+	 * @return  array|false   Array of filtered data if valid, false otherwise.
 	 */
 	public function validate($form, $data, $group = null)
 	{
@@ -129,7 +129,7 @@ class Permissions extends Fluent
 	/**
 	 * Method to save the configuration data.
 	 *
-	 * @param   array  An array containing all global config data.
+	 * @param   array  $data  An array containing all global config data.
 	 * @return  bool   True on success, false on failure.
 	 */
 	public function save($data)
