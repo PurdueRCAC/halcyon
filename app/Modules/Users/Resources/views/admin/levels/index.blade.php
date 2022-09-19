@@ -37,11 +37,7 @@ app('pathway')
 @section('content')
 
 @component('users::admin.submenu')
-	@if (request()->segment(3) == 'levels')
-		levels
-	@else
-		roles
-	@endif
+	levels
 @endcomponent
 
 <form action="{{ route('admin.users.levels') }}" method="post" name="adminForm" id="adminForm" class="form-inline">

@@ -37,7 +37,7 @@ app('pathway')
 @section('content')
 
 @component('users::admin.submenu')
-	<?php echo request()->segment(3); ?>
+	notes
 @endcomponent
 
 <form action="{{ route('admin.users.notes') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
