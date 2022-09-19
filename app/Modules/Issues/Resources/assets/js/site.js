@@ -690,31 +690,19 @@ function IssuesAddEntry() {
 /**
  * Callback for creating a new report
  *
- * @param   {object}  xml
- * @param   {array}   people
+ * @param   {object}  results
  * @return  {void}
  */
-function IssuesNewReport(xml) {
+function IssuesNewReport(results) {
 	document.getElementById("INPUT_add").disabled = false;
 
-	if (xml.status == 200) {
-		var results = JSON.parse(xml.responseText);
+	document.getElementById("NotesText").value = "";
 
-		document.getElementById("NotesText").value = "";
+	IssuesClearSearch();
 
-		IssuesClearSearch();
+	document.getElementById("id").value = results['id'];
 
-		document.getElementById("id").value = results['id'].replace(root + "/", '');
-
-		IssuesToggle('search', true);
-		/*setTimeout(function () {
-			IssuesSearch();
-		}, 250);*/
-	} else if (xml.status == 409) {
-		DisplayError('Invalid date.', 'Please pick the current date or a date in the past.');
-	} else {
-		DisplayError('Unable to create report.', 'Your session may have timed out. Copy your text and reload page.');
-	}
+	IssuesToggle('search', true);
 }
 
 /**
