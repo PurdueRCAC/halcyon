@@ -13,7 +13,7 @@ use PDOException;
 class ConfigureDatabase implements SetupScript
 {
     /**
-     * @var
+     * @var Config
      */
     protected $config;
 
@@ -93,6 +93,7 @@ class ConfigureDatabase implements SetupScript
     }
 
     /**
+     * @param string $driver
      * @return string
      */
     protected function askDatabasePort($driver)
@@ -118,7 +119,6 @@ class ConfigureDatabase implements SetupScript
     }
 
     /**
-     * @param
      * @return string
      */
     protected function askDatabaseUsername()
@@ -134,7 +134,6 @@ class ConfigureDatabase implements SetupScript
     }
 
     /**
-     * @param
      * @return string
      */
     protected function askDatabasePassword()

@@ -17,7 +17,7 @@ use Carbon\Carbon;
  */
 class Tag extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes;
+	use Historable, SoftDeletes;
 
 	/**
 	 * The table to which the class pertains

@@ -79,7 +79,7 @@ class SentryInstaller extends ProviderInstaller implements SetupScript
     }
 
     /**
-     * @param $password
+     * @param string $password
      * @return mixed
      */
     public function getHashedPassword($password)

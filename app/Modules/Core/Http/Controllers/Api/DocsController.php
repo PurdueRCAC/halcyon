@@ -53,7 +53,7 @@ class DocsController extends Controller
 		}*/
 
 		// generate documentation
-		$generator = new Generator(config('module.core.api_chache', false));
+		$generator = new Generator((bool)config('module.core.api_chache', false));
 		$docs = $generator->output('array');
 
 		$data = array();

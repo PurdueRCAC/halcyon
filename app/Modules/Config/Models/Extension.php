@@ -20,16 +20,9 @@ class Extension extends Model
 	/**
 	 * The name of the "created at" column.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	const CREATED_AT = null;
-
-	/**
-	 * The name of the "updated at" column.
-	 *
-	 * @var  string
-	 */
-	//const UPDATED_AT = 'modified';
 
 	/**
 	 * The table associated with the model.

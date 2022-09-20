@@ -54,7 +54,7 @@ class ProfileComposer
 			}
 			else
 			{
-				$groups = $user->groups()
+				$groups = $this->user->groups()
 					->whereIsManager()
 					->where('groupid', '>', 0)
 					->get();

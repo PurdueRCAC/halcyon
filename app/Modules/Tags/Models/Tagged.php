@@ -12,7 +12,7 @@ use App\Modules\History\Traits\Historable;
  */
 class Tagged extends Model
 {
-	use ErrorBag, Validatable, Historable;
+	use Historable;
 
 	/**
 	 * The table to which the class pertains
@@ -88,9 +88,9 @@ class Tagged extends Model
 	public static function findByScoped($scope, $scope_id, $tag_id, $tagger=0)
 	{
 		$instance = self::query()
-			->where('taggable_type', '=', $scope)
-			->where('taggable_id', '=', $scope_id)
-			->where('tag_id', '=', $tag_id);
+			->where('taggable_type', '=', (string)$scope)
+			->where('taggable_id', '=', (int)$scope_id)
+			->where('tag_id', '=', (int)$tag_id);
 
 		if ($tagger)
 		{

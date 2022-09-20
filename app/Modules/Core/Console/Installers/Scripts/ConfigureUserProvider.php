@@ -16,7 +16,7 @@ class ConfigureUserProvider implements SetupScript
     ];
 
     /**
-     * @var
+     * @var Application
      */
     private $application;
 
@@ -41,8 +41,8 @@ class ConfigureUserProvider implements SetupScript
     }
 
     /**
-     * @param $driver
-     * @param $command
+     * @param string $driver
+     * @param Command $command
      * @return mixed
      */
     protected function configure($driver, $command)
@@ -53,7 +53,7 @@ class ConfigureUserProvider implements SetupScript
     }
 
     /**
-     * @param $driver
+     * @param string $driver
      * @return mixed
      */
     protected function factory($driver)

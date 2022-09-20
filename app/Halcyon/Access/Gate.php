@@ -72,7 +72,7 @@ class Gate
 	{
 		// Sanitise inputs.
 		$userId = (int) $userId;
-		$action = trim($action);
+		$action = trim((string)$action);
 
 		if (strstr($action, ' '))
 		{
@@ -82,7 +82,7 @@ class Gate
 		}
 
 		$action = strtolower(preg_replace('#[\s\-]+#', '.', $action));
-		$asset  = $asset ? strtolower(preg_replace('#[\s\-]+#', '.', trim($asset))) : '';
+		$asset  = $asset ? strtolower(preg_replace('#[\s\-]+#', '.', trim((string)$asset))) : '';
 
 		// Temporary shim to get permissions working
 		$parts = explode('.', $asset);

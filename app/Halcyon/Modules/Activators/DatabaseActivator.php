@@ -3,6 +3,7 @@
 namespace App\Halcyon\Modules\Activators;
 
 use Illuminate\Cache\CacheManager;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Schema;
@@ -21,7 +22,7 @@ class DatabaseActivator implements ActivatorInterface
 	/**
 	 * Laravel database instance
 	 *
-	 * @var Database
+	 * @var DatabaseManager
 	 */
 	private $db;
 
@@ -52,7 +53,8 @@ class DatabaseActivator implements ActivatorInterface
 	/**
 	 * Database table used to store activation statuses
 	 *
-	 * @var string
+	 * @param Container $app
+	 * @return void
 	 */
 	public function __construct(Container $app)
 	{

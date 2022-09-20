@@ -65,7 +65,7 @@ class Extension extends Model
 	 * Get a module by name
 	 *
 	 * @param  string  $name
-	 * @return object
+	 * @return object|null
 	 */
 	public static function findByModule($name)
 	{

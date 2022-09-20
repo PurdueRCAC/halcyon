@@ -12,6 +12,8 @@ class CreateBaseTables extends Migration
 {
 	/**
 	 * Up
+	 *
+	 * @return void
 	 **/
 	public function up()
 	{
@@ -176,6 +178,8 @@ class CreateBaseTables extends Migration
 
 	/**
 	 * Down
+	 *
+	 * @return void
 	 **/
 	public function down()
 	{

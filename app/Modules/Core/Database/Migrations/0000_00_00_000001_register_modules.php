@@ -12,6 +12,8 @@ class RegisterModules extends Migration
 {
 	/**
 	 * Up
+	 *
+	 * @return void
 	 **/
 	public function up()
 	{
@@ -69,6 +71,8 @@ class RegisterModules extends Migration
 
 	/**
 	 * Down
+	 *
+	 * @return void
 	 **/
 	public function down()
 	{

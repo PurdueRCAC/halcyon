@@ -67,7 +67,7 @@ class Field extends Model
 	 * Retrieves one row loaded by name
 	 *
 	 * @param   string   $name
-	 * @return  object
+	 * @return  object|null
 	 */
 	public static function findByName($name)
 	{
@@ -117,7 +117,7 @@ class Field extends Model
 
 		static::deleted(function ($model)
 		{
-			foreach ($this->services as $service)
+			foreach ($model->services as $service)
 			{
 				$service->delete();
 			}

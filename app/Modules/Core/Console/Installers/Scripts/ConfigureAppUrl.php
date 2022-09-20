@@ -10,7 +10,7 @@ use Modules\Core\Console\Installers\Writers\EnvFileWriter;
 class ConfigureAppUrl implements SetupScript
 {
     /**
-     * @var
+     * @var Config
      */
     protected $config;
 

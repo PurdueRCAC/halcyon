@@ -98,7 +98,7 @@ class FieldOfScience extends Model
 	 *
 	 * @param  string $order
 	 * @param  string $dir
-	 * @return object
+	 * @return array
 	 */
 	public static function tree($order = 'name', $dir = 'asc')
 	{
@@ -211,12 +211,12 @@ class FieldOfScience extends Model
 	}
 
 	/**
-	 * Delete entry and associated data
+	 * Delete the model from the database.
 	 *
-	 * @param  array $options
-	 * @return bool
+	 * @return bool|null
+	 * @throws \LogicException
 	 */
-	public function delete(array $options = [])
+	public function delete()
 	{
 		foreach ($this->children as $row)
 		{
@@ -228,6 +228,6 @@ class FieldOfScience extends Model
 			$row->delete();
 		}
 
-		return parent::delete($options);
+		return parent::delete();
 	}
 }

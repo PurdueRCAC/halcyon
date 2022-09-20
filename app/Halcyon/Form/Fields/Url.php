@@ -24,7 +24,7 @@ class Url extends Text
 		// Initialize some field attributes.
 		$attributes = array(
 			'type'         => 'text',
-			'value'        => htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8'),
+			'value'        => htmlspecialchars((string)$this->value, ENT_COMPAT, 'UTF-8'),
 			'name'         => $this->name,
 			'id'           => $this->id,
 			'placeholder'  => 'http://',

@@ -45,33 +45,13 @@ class ModulesController extends Controller
 	/**
 	 * Store config changes
 	 *
+	 * @param  string  $module
 	 * @param  Request $request
 	 * @return Response
 	 */
 	public function update($module, Request $request)
 	{
-		/*$request->validate([
-			'name' => 'required'
-		]);
-
-		$order = new Extension([
-			'name'         => $request->get('name'),
-			'parentid'     => $request->get('parentid'),
-			'rolename'     => $request->get('rolename'),
-			'listname'     => $request->get('listname'),
-			'resourcetype' => $request->get('resourcetype'),
-			'producttype'  => $request->get('producttype')
-		]);
-
-		$order->save();
-
-		event('onAfterSaveOrder', $order);
-
-		return redirect(route('admin.resources.index'))->with('success', 'Resource saved!');*/
-
-		//$module  = new Extension();
-		$id     = $request->input('id');
-		//$option = $request->input('module');
+		$id = $request->input('id');
 
 		$module = Extension::findOrFail($id);
 
@@ -141,7 +121,7 @@ class ModulesController extends Controller
 				$asset->rules = (string) $rules;
 				if (!$asset->saveAsLastChildOf($root))
 				{
-					return redirect()->back()->withInput()->withError($asset->getError());
+					return redirect()->back()->withInput()->withError(trans('config::config.failed to save configuration'));
 				}
 			}
 			else
@@ -150,7 +130,7 @@ class ModulesController extends Controller
 
 				if (!$asset->save())
 				{
-					return redirect()->back()->withInput()->withError($asset->getError());
+					return redirect()->back()->withInput()->withError(trans('config::config.failed to save configuration'));
 				}
 			}
 
@@ -158,7 +138,6 @@ class ModulesController extends Controller
 			unset($data['rules']);
 		}
 
-		//$module->params = json_encode($data);
 		foreach ($data as $k => $v)
 		{
 			$module->params->set($k, $v);
@@ -167,7 +146,7 @@ class ModulesController extends Controller
 		// Attempt to save the configuration.
 		if (!$module->save())
 		{
-			return redirect()->back()->withInput()->withError($module->getError());
+			return redirect()->back()->withInput()->withError(trans('config::config.failed to save configuration'));
 		}
 
 		return redirect(route('admin.' . strtolower($module->element) . '.index'))->with('success', trans('config::config.configuration saved'));

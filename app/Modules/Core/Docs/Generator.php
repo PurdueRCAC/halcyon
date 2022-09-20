@@ -101,7 +101,7 @@ class Generator
 	 * Return documentation
 	 * 
 	 * @param   string  $format  Output format
-	 * @param   bool    $format  Force new version
+	 * @param   bool    $force  Force new version
 	 * @return  string
 	 */
 	public function output($format = 'json', $force = false)
@@ -192,6 +192,11 @@ class Generator
 		file_put_contents($cacheFile, json_encode($this->output));
 	}
 
+	/**
+	 * Get all modules that have API routes
+	 *
+	 * @return Illuminate\Collections\Collection
+	 */
 	public function modules()
 	{
 		$modules = collect(Module::all());

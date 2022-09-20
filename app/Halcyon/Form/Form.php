@@ -1885,7 +1885,7 @@ class Form
 				{
 					throw new Exception(trans('form.ERROR_XML_FILE_DID_NOT_LOAD'));
 
-					return false;
+					//return false;
 				}
 			}
 			else
@@ -1894,7 +1894,7 @@ class Form
 				{
 					throw new Exception(trans('form.ERROR_XML_FILE_DID_NOT_LOAD'));
 
-					return false;
+					//return false;
 				}
 			}
 		}
@@ -1905,8 +1905,8 @@ class Form
 	/**
 	 * Adds a new child SimpleXMLElement node to the source.
 	 *
-	 * @param   object  $source  The source element on which to append.
-	 * @param   object  $new     The new element to append.
+	 * @param   SimpleXMLElement  $source  The source element on which to append.
+	 * @param   SimpleXMLElement  $new     The new element to append.
 	 * @return  void
 	 * @throws  Exception if an error occurs.
 	 */
@@ -1931,8 +1931,8 @@ class Form
 	/**
 	 * Adds a new child SimpleXMLElement node to the source.
 	 *
-	 * @param   object  $source  The source element on which to append.
-	 * @param   object  $new     The new element to append.
+	 * @param   SimpleXMLElement  $source  The source element on which to append.
+	 * @param   SimpleXMLElement  $new     The new element to append.
 	 * @return  void
 	 */
 	protected static function mergeNode(SimpleXMLElement $source, SimpleXMLElement $new)
@@ -1956,8 +1956,8 @@ class Form
 	/**
 	 * Merges new elements into a source <fields> element.
 	 *
-	 * @param   object  $source  The source element.
-	 * @param   object  $new     The new element to merge.
+	 * @param   SimpleXMLElement  $source  The source element.
+	 * @param   SimpleXMLElement  $new     The new element to merge.
 	 * @return  void
 	 */
 	protected static function mergeNodes(SimpleXMLElement $source, SimpleXMLElement $new)
