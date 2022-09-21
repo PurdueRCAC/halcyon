@@ -189,7 +189,7 @@ class Ckeditor
 		}
 
 		// Height
-		if ($k = $params->get('height'))
+		if ($h = $params->get('height'))
 		{
 			$config->height = $h;
 		}
