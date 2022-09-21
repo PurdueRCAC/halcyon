@@ -628,7 +628,7 @@ class DirectoriesController extends Controller
 					'resourceid'  => $row->resourceid,
 					'storageresourceid'  => $row->storageresourceid,
 					'unixgroupid' => $row->unixgroupid,
-					'userid'      => $row->userid,
+					'owneruserid' => $member->userid,
 					'ownerread'   => 1,
 					'ownerwrite'  => 1,
 				];
@@ -1105,7 +1105,7 @@ class DirectoriesController extends Controller
 						'parentstoragedirid'      => $row->id,
 						'resourceid'  => $row->resourceid,
 						'unixgroupid' => $row->unixgroupid,
-						'userid'      => $row->userid,
+						'owneruserid' => $member->userid,
 						'ownerread'   => 1,
 						'ownerwrite'  => 1,
 					];
