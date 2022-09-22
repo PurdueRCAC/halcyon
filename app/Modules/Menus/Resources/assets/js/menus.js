@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
 							'</div>';
 					},
 					item: function (data, escape) {
-						return '<div title="' + escape(data.path) + '">' + escape(data.text) + '</div>';
+						return '<div title="' + escape(data.text) + '">' + escape(data.path) + '</div>';
 					}
 				}
 			});
