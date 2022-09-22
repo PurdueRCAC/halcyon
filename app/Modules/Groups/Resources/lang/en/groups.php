@@ -5,6 +5,7 @@ return [
 	'groups' => 'Groups',
 	'id' => 'ID',
 	'name' => 'Name',
+	'description' => 'Description',
 	'username' => 'Username',
 	'members' => 'Members',
 	'slug' => 'Slug',
