@@ -50,7 +50,23 @@ document.addEventListener('DOMContentLoaded', function () {
 	var pageid = document.getElementById('fields_page_id');
 	if (pageid) {
 		if (typeof TomSelect !== 'undefined') {
-			var sel = new TomSelect(pageid, { plugins: ['dropdown_input'] });
+			var sel = new TomSelect(pageid, {
+				plugins: ['dropdown_input'],
+				render: {
+					option: function (data, escape) {
+						return '<div>' +
+							'<span class="indent d-inline-block">' + escape(data.indent) + '</span>' +
+							'<span class="d-inline-block">' +
+							'<span class="text">' + escape(data.text.replace(data.indent, '')) + '</span><br />' +
+							'<span class="path text-muted">' + escape(data.path) + '</span>' +
+							'</span>' +
+							'</div>';
+					},
+					item: function (data, escape) {
+						return '<div title="' + escape(data.path) + '">' + escape(data.text) + '</div>';
+					}
+				}
+			});
 			sel.on('change', function () {
 				if (document.getElementById('fields_title').value == '') {
 					document.getElementById('fields_title').value = this.input.selectedOptions[0].innerHTML.replace(/\|— /g, '');

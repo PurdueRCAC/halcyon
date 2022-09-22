@@ -53,10 +53,10 @@ app('pathway')
 					<div class="form-group">
 						<label for="field-parent_id">{{ trans('pages::pages.parent') }}: <span class="required">{{ trans('global.required') }}</span></label>
 						<select name="fields[parent_id]" id="field-parent_id" class="form-control">
-							<option value="1" data-path="">{{ trans('pages::pages.home') }}</option>
+							<option value="1" data-indent="" data-path="">{{ trans('pages::pages.home') }}</option>
 							@foreach ($parents as $page)
 								<?php $selected = ($page->id == $row->parent_id ? ' selected="selected"' : ''); ?>
-								<option value="{{ $page->id }}"<?php echo $selected; ?> data-path="/{{ $page->path }}"><?php echo str_repeat('|&mdash; ', $page->level) . e($page->title); ?></option>
+								<option value="{{ $page->id }}"<?php echo $selected; ?> data-indent="<?php echo str_repeat('|&mdash; ', $page->level); ?>" data-path="/{{ $page->path }}"><?php echo str_repeat('|&mdash; ', $page->level) . e($page->title); ?></option>
 							@endforeach
 						</select>
 					</div>

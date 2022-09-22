@@ -2920,6 +2920,14 @@ html .select2-container--default .select2-selection--multiple .select2-selection
 html .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
   background: #febcae;
 }
+.ts-wrapper .option .indent {
+  vertical-align: top;
+  /*border-left: 1px solid var(--input-border);
+  border-bottom: 1px solid var(--input-border);
+  color: transparent;*/
+  margin-right: 0.5em;
+  opacity: 0.25;
+}
 .dialog {
   display: none;
 }
