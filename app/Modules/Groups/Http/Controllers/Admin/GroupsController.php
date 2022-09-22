@@ -160,6 +160,7 @@ class GroupsController extends Controller
 		//$request->validate([
 		$rules = [
 			'fields.name' => 'required|string|max:255',
+			'fields.description' => 'nullable|string|max:2000',
 			'fields.unixgroup' => 'nullable|string|max:48',
 			'fields.cascademanagers' => 'nullable|integer',
 			'fields.prefix_unixgroup' => 'nullable|integer',

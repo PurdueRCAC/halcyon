@@ -57,6 +57,11 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
+					<label for="field-description'">{{ trans('groups::groups.description') }}</label>
+					<textarea class="form-control" name="fields[description]" id="field-description" maxlength="2000">{{ $row->description' }}</textarea>
+				</div>
+
+				<div class="form-group">
 					<div class="form-check">
 						<input type="checkbox" name="fields[cascademanagers]" id="field-cascade" class="form-check-input" value="1"{{ $row->cascademanagers ? ' checked="checked"' : '' }} />
 						<label for="field-cascade" class="form-check-label">{{ trans('groups::groups.cascade managers') }}</label>

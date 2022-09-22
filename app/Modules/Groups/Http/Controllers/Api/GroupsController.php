@@ -421,6 +421,7 @@ class GroupsController extends Controller
 	{
 		$rules = [
 			'name' => 'required|string|max:48',
+			'description' => 'nullable|string|max:2000',
 			'unixgroup' => 'nullable|integer|max:10',
 			'userid' => 'nullable|integer',
 			'cascademanagers' => 'nullable|integer',
@@ -446,6 +447,11 @@ class GroupsController extends Controller
 		$row = new Group;
 		$row->cascademanagers = 1;
 		$row->name = $request->input('name');
+
+		if ($request->has('description'))
+		{
+			$row->description = $request->input('description');
+		}
 
 		if ($request->has('cascademanagers'))
 		{
@@ -671,6 +677,7 @@ class GroupsController extends Controller
 	{
 		$rules = [
 			'name' => 'nullable|string|max:48',
+			'description' => 'nullable|string|max:2000',
 			'unixgroup' => 'nullable|string|max:10',
 			'cascademanagers' => 'nullable|integer',
 		];
@@ -687,6 +694,11 @@ class GroupsController extends Controller
 		if ($request->has('cascademanagers'))
 		{
 			$row->cascademanagers = $request->input('cascademanagers');
+		}
+
+		if ($request->has('description'))
+		{
+			$row->description = $request->input('description');
 		}
 
 		if ($request->has('unixgroup'))
