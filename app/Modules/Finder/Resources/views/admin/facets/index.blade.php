@@ -37,7 +37,7 @@ app('pathway')
 
 @section('content')
 @component('finder::admin.submenu')
-	<?php echo request()->segment(3); ?>
+	facets
 @endcomponent
 
 <form action="{{ route('admin.finder.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">

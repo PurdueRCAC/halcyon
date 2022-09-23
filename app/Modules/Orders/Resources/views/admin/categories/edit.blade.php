@@ -46,9 +46,9 @@ app('pathway')
 					<label for="field-parentordercategoryid">{{ trans('orders::orders.parent category') }}</label>
 					<select name="fields[parentordercategoryid]" id="field-parentordercategoryid" class="form-control">
 						<option value="1"<?php if ($row->parentordercategoryid == 1): echo ' selected="selected"'; endif;?>>{{ trans('global.none') }}</option>
-						<?php foreach ($categories as $category) { ?>
-							<option value="{{ $category->id }}"<?php if ($row->parentordercategoryid == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
-						<?php } ?>
+						@foreach ($categories as $category)
+							<option value="{{ $category->id }}"{{ ($row->parentordercategoryid == $category->id) ? ' selected="selected"' : '' }}>{{ $category->name }}</option>
+						@endforeach
 					</select>
 				</div>
 
@@ -76,8 +76,6 @@ app('pathway')
 					</select>
 				</div>
 			</fieldset>
-
-			@include('history::admin.history')
 		</div>
 	</div>
 	<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />

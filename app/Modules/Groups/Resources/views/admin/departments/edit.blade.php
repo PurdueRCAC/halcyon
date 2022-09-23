@@ -46,7 +46,7 @@ app('pathway')
 @section('content')
 <form action="{{ route('admin.groups.departments.store') }}" method="post" name="adminForm" id="item-form" class="editform">
 	<div class="row">
-		<div class="col col-md-7">
+		<div class="col col-md-7 mx-auto">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
@@ -89,9 +89,6 @@ app('pathway')
 
 				<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
 			</fieldset>
-		</div>
-		<div class="col col-md-5">
-			@include('history::admin.history')
 		</div>
 	</div>
 

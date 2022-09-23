@@ -86,8 +86,6 @@ app('pathway')
 					<span class="form-text text-muted">{{ trans('users::notes.reviewed desc') }}</span>
 				</div>
 			</fieldset>
-
-			@include('history::admin.history')
 		</div>
 	</div>
 

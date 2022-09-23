@@ -30,7 +30,7 @@ app('pathway')
 @section('content')
 
 @component('history::admin.submenu')
-	<?php echo request()->segment(3); ?>
+	history
 @endcomponent
 
 <form action="{{ route('admin.history.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">

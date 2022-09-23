@@ -37,7 +37,7 @@ app('pathway')
 
 @section('content')
 @component('groups::admin.submenu')
-	<?php echo request()->segment(3); ?>
+	departments
 @endcomponent
 
 <form action="{{ route('admin.groups.departments') }}" method="post" name="adminForm" id="adminForm" class="form-inline">

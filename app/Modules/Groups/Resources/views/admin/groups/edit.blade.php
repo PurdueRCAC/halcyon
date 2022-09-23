@@ -22,7 +22,7 @@ app('pathway')
 		route('admin.groups.index')
 	)
 	->append(
-		($row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create'))
+		($row->id ? trans('global.edit') . ' #' . $row->id . ' - ' . $row->name : trans('global.create'))
 	);
 @endphp
 
@@ -40,7 +40,7 @@ app('pathway')
 @stop
 
 @section('title')
-{{ trans('groups::groups.module name') }}: {{ $row->id ?  trans('global.edit') . ': #' . $row->id : trans('global.create') }}
+{{ trans('groups::groups.module name') }}: {{ $row->id ?  trans('global.edit') . ': #' . $row->id . ' - ' . $row->name : trans('global.create') }}
 @stop
 
 @section('content')

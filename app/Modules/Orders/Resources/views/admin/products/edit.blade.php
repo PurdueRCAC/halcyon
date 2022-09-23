@@ -156,8 +156,6 @@ app('pathway')
 					</select>
 				</div>
 			</fieldset>
-
-			@include('history::admin.history')
 		</div>
 	</div>
 

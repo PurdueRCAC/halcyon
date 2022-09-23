@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	@endif
 
 	<div class="row">
-		<div class="col-md-7">
+		<div class="col-md-6">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
@@ -93,6 +93,11 @@ document.addEventListener('DOMContentLoaded', function () {
 					</div>
 					<span class="form-text text-muted" id="field-alias-hint">{{ trans('news::news.alias hint') }}</span>
 				</div>
+			</fieldset>
+		</div>
+		<div class="col col-md-6">
+			<fieldset class="adminform">
+				<legend>{{ trans('global.options') }}</legend>
 
 				<div class="row">
 					<div class="col col-md-6">
@@ -157,57 +162,6 @@ document.addEventListener('DOMContentLoaded', function () {
 					</div>
 				</div>
 			</fieldset>
-		</div>
-		<div class="col col-md-5">
-			@include('history::admin.history')
-			@if ($row->id)
-				<!-- <div class="card history">
-					<h4 class="card-header">{{ trans('history.title') }}</h4>
-					<div class="card-body">
-					<ul class="timeline">
-						<?php
-						$history = $row->history()
-							->orderBy('created_at', 'desc')
-							->get();
-
-						if (count($history)):
-							foreach ($history as $action):
-								$actor = trans('global.unknown');
-
-								if ($action->user):
-									$actor = e($action->user->name);
-								endif;
-
-								$created = $action->created_at ? $action->created_at : trans('global.unknown');
-
-								$fields = array_keys(get_object_vars($action->new));
-								foreach ($fields as $i => $k)
-								{
-									if (in_array($k, ['created_at', 'updated_at', 'deleted_at']))
-									{
-										unset($fields[$i]);
-									}
-								}
-								?>
-								<li>
-									<span class="history-date">{{ $created }}</span><br />
-									<span class="history-action">{{ trans('history.action by', ['user' => $actor, 'datetime' => $created]) }}</span><br />
-									<span class="history-diff">Changed fields: <?php echo implode(', ', $fields); ?></span>
-								</li>
-								<?php
-							endforeach;
-						else:
-							?>
-							<li>
-								<span class="history-diff">{{ trans('history.none') }}</span>
-							</li>
-							<?php
-						endif;
-						?>
-					</ul>
-					</div>
-				</div> -->
-			@endif
 		</div>
 	</div>
 

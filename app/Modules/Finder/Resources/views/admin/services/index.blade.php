@@ -51,7 +51,7 @@ app('pathway')
 
 @section('content')
 @component('finder::admin.submenu')
-	<?php echo request()->segment(3); ?>
+	services
 @endcomponent
 
 <form action="{{ route('admin.finder.services') }}" method="post" name="adminForm" id="adminForm" class="form-inline">

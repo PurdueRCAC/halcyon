@@ -33,7 +33,7 @@ app('pathway')
 <form action="{{ route('admin.menus.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
 
 	<div class="row">
-		<div class="col col-md-7">
+		<div class="col col-md-7 mx-auto">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
@@ -57,9 +57,6 @@ app('pathway')
 					<textarea name="fields[description]" id="field-description" class="form-control" rows="5" cols="40">{{ $row->description }}</textarea>
 				</div>
 			</fieldset>
-		</div>
-		<div class="col col-md-5">
-			@include('history::admin.history')
 		</div>
 	</div>
 

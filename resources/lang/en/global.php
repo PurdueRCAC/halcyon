@@ -107,6 +107,7 @@ return [
 	// Forms
 	'required' => 'Required',
 	'details' => 'Details',
+	'options' => 'Options',
 	'metadata' => 'Metadata',
 	'publishing' => 'Publishing',
 	'validation failed' => 'Something went wrong while trying to process the page.',

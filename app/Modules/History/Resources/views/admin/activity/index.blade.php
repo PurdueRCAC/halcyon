@@ -34,7 +34,7 @@ app('pathway')
 @section('content')
 
 @component('history::admin.submenu')
-	<?php echo request()->segment(3); ?>
+	activity
 @endcomponent
 
 <form action="{{ route('admin.history.activity') }}" method="get" name="adminForm" id="adminForm" class="form-inline">

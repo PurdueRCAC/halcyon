@@ -59,7 +59,7 @@ app('pathway')
 	<input type="hidden" name="fields[newsid]" value="{{ $article->id }}" />
 
 	<div class="row">
-		<div class="col-md-7">
+		<div class="col-md-7 mx-auto">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
@@ -69,21 +69,6 @@ app('pathway')
 					<span class="invalid-feedback">{{ trans('news::news.error.invalid body') }}</span>
 				</div>
 			</fieldset>
-		</div>
-		<div class="col-md-5">
-			<?php /*<fieldset class="adminform">
-				<legend><span>{{ trans('global.publishing') }}</span></legend>
-
-				<div class="input-wrap form-group">
-					<label for="field-published">{{ trans('pages::pages.state') }}:</label>
-					<select name="published" id="field-published" class="form-control">
-						<option value="published"<?php if (!$row->trashed()) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
-						<option value="trashed"<?php if ($row->trashed()) { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
-					</select>
-				</div>
-			</fieldset>*/ ?>
-
-			@include('history::admin.history')
 		</div>
 	</div>
 

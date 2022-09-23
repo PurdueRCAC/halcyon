@@ -21,7 +21,7 @@ app('pathway')
 		route('admin.groups.index')
 	)
 	->append(
-		'#' . $row->id
+		'#' . $row->id . ' - ' . $row->name
 	);
 @endphp
 
@@ -32,7 +32,7 @@ app('pathway')
 @stop
 
 @section('title')
-{{ trans('groups::groups.module name') }}: #{{ $row->id }}
+{{ trans('groups::groups.module name') }}: #{{ $row->id }} - {{ $row->name }}
 @stop
 
 @section('panel')
