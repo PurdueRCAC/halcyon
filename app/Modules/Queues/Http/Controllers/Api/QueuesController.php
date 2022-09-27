@@ -31,6 +31,24 @@ class QueuesController extends Controller
 	 * @apiUri    /queues
 	 * @apiParameter {
 	 * 		"in":            "query",
+	 * 		"name":          "expand",
+	 * 		"description":   "Comma-separated list of associated objects, such as group and resource, to include. Members, purchases, and loans are always included.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null,
+	 * 			"enum": [
+	 * 				"all",
+	 * 				"group",
+	 * 				"resource",
+	 * 				"subresource",
+	 * 				"schedulerpolicy",
+	 * 				"scheduler"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "state",
 	 * 		"description":   "Queue state.",
 	 * 		"required":      false,
@@ -654,6 +672,24 @@ class QueuesController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "expand",
+	 * 		"description":   "Comma-separated list of associated objects, such as group and resource, to include. Members, purchases, and loans are always included.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null,
+	 * 			"enum": [
+	 * 				"all",
+	 * 				"group",
+	 * 				"resource",
+	 * 				"subresource",
+	 * 				"schedulerpolicy",
+	 * 				"scheduler"
+	 * 			]
 	 * 		}
 	 * }
 	 * @apiResponse {
