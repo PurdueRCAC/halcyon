@@ -36,7 +36,7 @@ class QueuesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   null,
+	 * 			"default":   "subresource",
 	 * 			"enum": [
 	 * 				"all",
 	 * 				"group",
@@ -681,7 +681,7 @@ class QueuesController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"default":   null,
+	 * 			"default":   "subresource",
 	 * 			"enum": [
 	 * 				"all",
 	 * 				"group",

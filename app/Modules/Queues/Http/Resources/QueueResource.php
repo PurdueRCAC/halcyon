@@ -24,7 +24,7 @@ class QueueResource extends JsonResource
 
 		$now = Carbon::now();
 
-		$objs = $request->input('expand');
+		$objs = $request->input('expand', 'subresource');
 		$objs = explode(',', $objs);
 		$objs = array_map('trim', $objs);
 

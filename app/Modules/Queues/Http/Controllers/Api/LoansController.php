@@ -356,6 +356,15 @@ class LoansController extends Controller
 
 			if (!$count)
 			{
+				$count = Loan::query()
+					->where('queueid', '=', (int)$row->lenderqueueid)
+					->orderBy('datetimestart', 'asc')
+					->get()
+					->first();
+			}
+
+			if (!$count)
+			{
 				return response()->json(['message' => trans('queues::queues.error.queue is empty')], 409);
 			}
 			elseif ($count->datetimestart > $row->datetimestart)
