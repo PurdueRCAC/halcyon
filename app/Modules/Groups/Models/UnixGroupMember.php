@@ -109,6 +109,7 @@ class UnixGroupMember extends Model
 			{
 				$model->notice = 3;
 			}
+			$model->save();
 		});
 
 		self::deleted(function($model)
@@ -123,7 +124,7 @@ class UnixGroupMember extends Model
 				->where('id', '!=', $model->unixgroupid)
 				->first();
 
-			if ($altunixgroup && (!$unixgroup->unixgid || !$altunixgroup->unixgid))
+			if ($altunixgroup && (!$model->unixgroup->unixgid || !$altunixgroup->unixgid))
 			{
 				$altrow = self::query()
 					->withTrashed()
@@ -158,6 +159,36 @@ class UnixGroupMember extends Model
 	public function user()
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
+	}
+
+	/**
+	 * Get user that created this record
+	 *
+	 * @return  object
+	 */
+	public function addedBy()
+	{
+		$log = $this->history()
+			->where('action', '=', 'created')
+			->orderBy('id', 'desc')
+			->first();
+
+		return $log->user;
+	}
+
+	/**
+	 * Get user that deleted this record
+	 *
+	 * @return  object
+	 */
+	public function removedBy()
+	{
+		$log = $this->history()
+			->where('action', '=', 'deleted')
+			->orderBy('id', 'desc')
+			->first();
+
+		return $log->user;
 	}
 
 	/**

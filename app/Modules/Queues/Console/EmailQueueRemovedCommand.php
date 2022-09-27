@@ -46,6 +46,7 @@ class EmailQueueRemovedCommand extends Command
 		$s = (new Scheduler)->getTable();
 
 		$users = QueueUser::query()
+			->onlyTrashed()
 			->select($qu . '.*', $q . '.groupid')
 			->join($q, $q . '.id', $qu . '.queueid')
 			->whereIn($qu . '.membertype', [1, 4])
@@ -56,7 +57,7 @@ class EmailQueueRemovedCommand extends Command
 		$u = (new UnixGroup)->getTable();
 
 		$uusers = UnixGroupMember::query()
-			//->withTrashed()
+			->onlyTrashed()
 			->select($uu . '.*', $u . '.groupid')
 			->join($u, $u . '.id', $uu . '.unixgroupid')
 			->where($uu . '.notice', '=', 3)
@@ -74,6 +75,7 @@ class EmailQueueRemovedCommand extends Command
 		// Group activity by groupid so we can determine when to send the group mail
 		$group_activity = array();
 
+		$num = 0;
 		foreach ($users as $user)
 		{
 			if (!isset($group_activity[$user->groupid]))
@@ -82,6 +84,7 @@ class EmailQueueRemovedCommand extends Command
 			}
 
 			array_push($group_activity[$user->groupid], $user);
+			$num++;
 		}
 
 		foreach ($uusers as $user)
@@ -92,10 +95,16 @@ class EmailQueueRemovedCommand extends Command
 			}
 
 			array_push($group_activity[$user->groupid], $user);
+			$num++;
 		}
 
 		$now = date("U");
 		$threshold = 300; // threshold for when considering activity "done"
+
+		if ($debug || $this->output->isVerbose())
+		{
+			$this->comment('Found ' . $num . ' records.');
+		}
 
 		foreach ($group_activity as $groupid => $groupqueueusers)
 		{
@@ -152,14 +161,14 @@ class EmailQueueRemovedCommand extends Command
 						continue;
 					}
 
-					$existing = QueueUser::query()
-						->withTrashed()
+					/*$existing = QueueUser::query()
+						//->withTrashed()
 						->join($q, $q . '.id', $qu . '.queueid')
 						->join($s, $s . '.id', $q . '.schedulerid')
 						->where($qu . '.membertype', '=', 1)
 						->where($qu . '.userid', '=', $userid)
 						->where($qu . '.notice', '<>', 6)
-						->whereNull($qu . '.datetimeremoved')
+						//->whereNull($qu . '.datetimeremoved')
 						->whereNull($q . '.datetimeremoved')
 						->whereNull($s . '.datetimeremoved')
 						->get()
@@ -172,7 +181,8 @@ class EmailQueueRemovedCommand extends Command
 					if (!count($removing))
 					{
 						continue;
-					}
+					}*/
+					$removing = collect($queuestudents);
 
 					// Determine if any roles are being removed
 					$last_role = '';
@@ -209,7 +219,7 @@ class EmailQueueRemovedCommand extends Command
 					);
 
 					$keeping = QueueUser::query()
-						->withTrashed()
+						//->withTrashed()
 						->select($qu . '.*')
 						->join($q, $q . '.id', $qu . '.queueid')
 						->join($s, $s . '.id', $q . '.schedulerid')
@@ -217,7 +227,7 @@ class EmailQueueRemovedCommand extends Command
 						->where($qu . '.userid', '=', $userid)
 						->where($qu . '.notice', '<>', 6)
 						->whereNotIn($qu . '.queueid', $removing->pluck('queueid')->toArray())
-						->whereNull($qu . '.datetimeremoved')
+						//->whereNull($qu . '.datetimeremoved')
 						->whereNull($q . '.datetimeremoved')
 						->whereNull($s . '.datetimeremoved')
 						->get();
@@ -308,7 +318,6 @@ class EmailQueueRemovedCommand extends Command
 	 * Log email
 	 *
 	 * @param   integer $targetuserid
-	 * @param   integer $targetobjectid
 	 * @param   string  $uri
 	 * @param   mixed   $payload
 	 * @return  null

@@ -189,6 +189,36 @@ class User extends Model
 	}
 
 	/**
+	 * Get user that created this record
+	 *
+	 * @return  object
+	 */
+	public function addedBy()
+	{
+		$log = $this->history()
+			->where('action', '=', 'created')
+			->orderBy('id', 'desc')
+			->first();
+
+		return $log->user;
+	}
+
+	/**
+	 * Get user that deleted this record
+	 *
+	 * @return  object
+	 */
+	public function removedBy()
+	{
+		$log = $this->history()
+			->where('action', '=', 'deleted')
+			->orderBy('id', 'desc')
+			->first();
+
+		return $log->user;
+	}
+
+	/**
 	 * Set as a member
 	 *
 	 * @return  void

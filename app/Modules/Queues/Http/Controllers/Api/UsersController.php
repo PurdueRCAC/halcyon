@@ -585,7 +585,7 @@ class UsersController extends Controller
 			$row->notice = 3;
 		}
 
-		if ($row->groupid == 0)
+		if ($row->queue->groupid == 0)
 		{
 			// Only allow delete if no groupqueueuser entries are present
 			$gqusers = GroupUser::query()
@@ -610,7 +610,7 @@ class UsersController extends Controller
 			$row->notice = 0;
 		}
 
-		$row->update(['notice' => $row->notice]);
+		$row->save(); //update(['notice' => $row->notice]);
 
 		// Skip actually deleting the database entry if there are pending requests for this queue (but continue with deleting accounts)
 		/*$gqusers = GroupUser::query()
