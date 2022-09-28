@@ -9,8 +9,8 @@
 		Details
 	</div>
 	<div class="card-body panel-body">
-		<div class="form-inline row">
-			<label class="col-md-3" for="INPUT_name_{{ $group->id }}">Research Group Name:</label>
+		<div class="row">
+			<div class="col-md-3 text-right"><label for="INPUT_name_{{ $group->id }}">Research Group Name:</label></div>
 
 			<div class="col-md-7">
 				<span id="SPAN_name_{{ $group->id }}">{{ $group->name }}</span>
@@ -27,6 +27,30 @@
 					<span class="sr-only">{{ trans('global.save') }}</span>
 				</a>
 				<a href="{{ route('site.users.account.section', ['section' => 'groups']) }}" class="cancel-edit-property tip hide" id="CANCEL_name_{{ $group->id }}" data-prop="name" data-value="{{ $group->id }}" title="{{ trans('global.cancel') }}"><!--
+					--><span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only">{{ trans('global.cancel') }}</span><!--
+				--></a>
+				@endif
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-3 text-right"><label for="INPUT_name_{{ $group->id }}">Description:</label></div>
+
+			<div class="col-md-7">
+				<span id="SPAN_description_{{ $group->id }}">{{ $group->description ? $group->description : trans('global.none') }}</span>
+				<textarea class="form-control hide edit-property-input" id="INPUT_description_{{ $group->id }}" data-prop="description" maxlength="5000" rows="5" cols="50" data-value="{{ $group->id }}">{{ $group->description }}</textarea>
+			</div>
+			<div class="col-md-2 text-right">
+				@if ($canManage)
+				<a href="{{ route('site.users.account.section', ['section' => 'groups', 'edit' => 'description']) }}" class="edit-property tip" id="EDIT_description_{{ $group->id }}" data-prop="description" data-value="{{ $group->id }}" title="{{ trans('global.edit') }}"><!--
+					--><span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.edit') }}</span><!--
+				--></a>
+				<a href="{{ route('site.users.account.section', ['section' => 'groups']) }}#save-property" id="SAVE_description_{{ $group->id }}" class="btn save-property tip hide" data-prop="description" data-value="{{ $group->id }}" data-api="{{ route('api.groups.update', ['id' => $group->id]) }}" title="{{ trans('global.save') }}">
+					<span class="spinner-border spinner-border-sm" role="status"></span>
+					<span class="fa fa-save" aria-hidden="true"></span>
+					<span class="sr-only">{{ trans('global.save') }}</span>
+				</a>
+				<a href="{{ route('site.users.account.section', ['section' => 'groups']) }}" class="cancel-edit-property tip hide" id="CANCEL_description_{{ $group->id }}" data-prop="description" data-value="{{ $group->id }}" title="{{ trans('global.cancel') }}"><!--
 					--><span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only">{{ trans('global.cancel') }}</span><!--
 				--></a>
 				@endif
