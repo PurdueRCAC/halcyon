@@ -335,6 +335,15 @@ class GroupsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
+	 * 		"name":          "description",
+	 * 		"description":   "Group description",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "unixgroup",
 	 * 		"description":   "Unix group name",
 	 * 		"required":      false,
@@ -354,16 +363,6 @@ class GroupsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
-	 * 		"required":      false,
-	 * 		"schema": {
-	 * 			"type":      "integer",
-	 * 			"default":   0
-	 * 		}
-	 * }
-	 * @apiParameter {
-	 * 		"in":            "body",
 	 * 		"name":          "cascademanagers",
 	 * 		"description":   "Cascade manager memberships",
 	 * 		"required":      false,
@@ -374,11 +373,12 @@ class GroupsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "githuborgname",
-	 * 		"description":   "Github organization name",
+	 * 		"name":          "prefix_unixgroup",
+	 * 		"description":   "Enforce custom unix groups are prefixed",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "integer",
+	 * 			"default":   1
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -425,6 +425,7 @@ class GroupsController extends Controller
 			'unixgroup' => 'nullable|integer|max:10',
 			'userid' => 'nullable|integer',
 			'cascademanagers' => 'nullable|integer',
+			'prefix_unixgroup' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -446,6 +447,7 @@ class GroupsController extends Controller
 
 		$row = new Group;
 		$row->cascademanagers = 1;
+		$row->prefix_unixgroup = 1;
 		$row->name = $request->input('name');
 
 		if ($request->has('description'))
@@ -456,6 +458,11 @@ class GroupsController extends Controller
 		if ($request->has('cascademanagers'))
 		{
 			$row->cascademanagers = $request->input('cascademanagers');
+		}
+
+		if ($request->has('prefix_unixgroup'))
+		{
+			$row->prefix_unixgroup = $request->input('prefix_unixgroup');
 		}
 
 		// Verify UNIX group is sane - this is just a first pass,
@@ -599,6 +606,15 @@ class GroupsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
+	 * 		"name":          "description",
+	 * 		"description":   "Group description",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "unixgroup",
 	 * 		"description":   "Unix group name",
 	 * 		"required":      false,
@@ -617,20 +633,22 @@ class GroupsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "deptnumber",
-	 * 		"description":   "Organization department ID",
+	 * 		"name":          "cascademanagers",
+	 * 		"description":   "Cascade manager memberships",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "integer"
+	 * 			"type":      "integer",
+	 * 			"default":   1
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "githuborgname",
-	 * 		"description":   "Github organization name",
+	 * 		"name":          "prefix_unixgroup",
+	 * 		"description":   "Enforce custom unix groups are prefixed",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "integer",
+	 * 			"default":   1
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -680,6 +698,7 @@ class GroupsController extends Controller
 			'description' => 'nullable|string|max:2000',
 			'unixgroup' => 'nullable|string|max:10',
 			'cascademanagers' => 'nullable|integer',
+			'prefix_unixgroup' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -694,6 +713,11 @@ class GroupsController extends Controller
 		if ($request->has('cascademanagers'))
 		{
 			$row->cascademanagers = $request->input('cascademanagers');
+		}
+
+		if ($request->has('prefix_unixgroup'))
+		{
+			$row->prefix_unixgroup = $request->input('prefix_unixgroup');
 		}
 
 		if ($request->has('description'))
@@ -718,7 +742,8 @@ class GroupsController extends Controller
 
 				if (!$exists)
 				{
-					$exists = UnixGroup::findByLongname($unixgroup);
+					$ug = UnixGroup::findByLongname($unixgroup);
+					$exists = $ug->group;
 				}
 
 				// Check for a duplicate
@@ -747,7 +772,7 @@ class GroupsController extends Controller
 
 			$exists = Group::findByName($name);
 
-			if ($exists)
+			if ($exists && $exists->id != $row->id)
 			{
 				return response()->json(['message' => trans('groups::groups.error.name already exists', ['name' => $name])], 415);
 			}

@@ -266,16 +266,22 @@ class GroupsController extends Controller
 	 * Show the form for editing the specified resource.
 	 *
 	 * @param  integer  $id
+	 * @param  string|null  $section
 	 * @return Response
 	 */
-	public function show($id)
+	public function show($id, $section = 'overview', Request $request)
 	{
 		$row = Group::findOrFail($id);
 
 		$departments = Department::tree();
 		$fields = FieldOfScience::tree();
 
-		event($event = new GroupDisplay($row, 'details'));
+		if ($active = $request->input('active'))
+		{
+			$section = $active;
+		}
+
+		event($event = new GroupDisplay($row, $section));
 		$sections = collect($event->getSections());
 
 		return view('groups::admin.groups.show', [
@@ -283,6 +289,7 @@ class GroupsController extends Controller
 			'departments' => $departments,
 			'fields' => $fields,
 			'sections' => $sections,
+			'active' => $section,
 		]);
 	}
 

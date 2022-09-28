@@ -836,4 +836,83 @@ document.addEventListener('DOMContentLoaded', function () {
 		form.find('input:hidden[name=data]').val(data)*/
 		form.submit();
 	});
+
+	document.querySelectorAll('.btn-edit').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			var frm = el.closest('form');
+			frm.querySelectorAll('.edit-show').forEach(function (es) {
+				es.classList.toggle('d-none');
+			});
+			frm.querySelectorAll('.edit-hide').forEach(function (es) {
+				es.classList.toggle('d-none');
+			});
+		});
+	});
+
+	document.querySelectorAll('.btn-edit-cancel').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			var frm = el.closest('form');
+			frm.querySelectorAll('.edit-show').forEach(function (es) {
+				es.classList.toggle('d-none');
+			});
+			frm.querySelectorAll('.edit-hide').forEach(function (es) {
+				es.classList.toggle('d-none');
+			});
+		});
+	});
+
+	document.querySelectorAll('.btn-edit-save').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			el.parentNode.querySelector('.spinner-border').classList.add('processing');
+
+			var frm = el.closest('form');
+			var post = {},
+				fields = new FormData(frm);
+
+			for (var key of fields.keys()) {
+				if (key.substring(0, 6) != 'fields') {
+					continue;
+				}
+				post[key.replace('fields[', '').replace(']', '')] = fields.get(key);
+			}
+			if (typeof (post['cascademanagers']) == 'undefined') {
+				post['cascademanagers'] = 0;
+			}
+			if (typeof (post['prefix_unixgroup']) == 'undefined') {
+				post['prefix_unixgroup'] = 0;
+			}
+
+			fetch(frm.getAttribute('data-api'), {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+				},
+				body: JSON.stringify(post)
+			})
+				.then(function (response) {
+					if (response.ok) {
+						window.location.reload(true);
+						return;
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (error) {
+					el.parentNode.querySelector('.spinner-border').classList.remove('processing');
+					Halcyon.message('danger', error);
+				});
+		});
+	});
 });
