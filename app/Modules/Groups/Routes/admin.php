@@ -22,7 +22,7 @@ $router->group(['prefix' => 'groups', 'middleware' => 'can:manage groups'], func
 	$router->get('/{id}/{section?}', [
 		'as' => 'admin.groups.show',
 		'uses' => 'GroupsController@show',
-		'middleware' => 'can:view groups',
+		'middleware' => 'can:edit groups',
 	])->where('id', '[0-9]+');
 	$router->get('edit/{id}', [
 		'as' => 'admin.groups.edit',
