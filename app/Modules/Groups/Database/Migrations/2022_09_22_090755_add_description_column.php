@@ -18,8 +18,8 @@ class AddDescriptionColumn extends Migration
 			{
 				Schema::table('groups', function (Blueprint $table)
 				{
-					// ALTER TABLE `groups` ADD `description` VARCHAR(2000);
-					$table->string('description', 2000);
+					// ALTER TABLE `groups` ADD `description` VARCHAR(5000);
+					$table->string('description', 5000);
 				});
 			}
 		}
