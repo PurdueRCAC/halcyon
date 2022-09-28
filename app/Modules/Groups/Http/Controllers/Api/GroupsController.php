@@ -743,7 +743,7 @@ class GroupsController extends Controller
 				if (!$exists)
 				{
 					$ug = UnixGroup::findByLongname($unixgroup);
-					$exists = $ug->group;
+					$exists = $ug ? $ug->group : false;
 				}
 
 				// Check for a duplicate
