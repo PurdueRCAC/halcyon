@@ -58,7 +58,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-description'">{{ trans('groups::groups.description') }}</label>
-					<textarea class="form-control" name="fields[description]" id="field-description" cols="50" rows="5" maxlength="2000">{{ $row->description }}</textarea>
+					<textarea class="form-control" name="fields[description]" id="field-description" cols="50" rows="5" maxlength="5000">{{ $row->description }}</textarea>
 				</div>
 
 				<div class="form-group">
