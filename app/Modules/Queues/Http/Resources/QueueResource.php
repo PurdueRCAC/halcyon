@@ -30,14 +30,20 @@ class QueueResource extends JsonResource
 
 		if (in_array('group', $objs) || in_array('all', $objs))
 		{
-			$data['group'] = $this->group;
-			$data['group']['api'] = route('api.groups.read', ['id' => $data['group']['id']]);
+			$data['group'] = $this->group()->withTrashed()->get()->first();
+			if ($data['group'])
+			{
+				$data['group']['api'] = route('api.groups.read', ['id' => $data['group']['id']]);
+			}
 		}
 
 		if (in_array('resource', $objs) || in_array('all', $objs))
 		{
-			$data['resource'] = $this->resource()->get()->first();
-			$data['resource']['api'] = route('api.resources.read', ['id' => $data['resource']['id']]);
+			$data['resource'] = $this->resource()->withTrashed()->get()->first();
+			if ($data['resource'])
+			{
+				$data['resource']['api'] = route('api.resources.read', ['id' => $data['resource']['id']]);
+			}
 		}
 		elseif (isset($data['resource']))
 		{
@@ -46,8 +52,11 @@ class QueueResource extends JsonResource
 
 		if (in_array('subresource', $objs) || in_array('all', $objs))
 		{
-			$data['subresource'] = $this->subresource;
-			$data['subresource']['api'] = route('api.resources.subresources.read', ['id' => $data['subresource']['id']]);
+			$data['subresource'] = $this->subresource()->withTrashed()->get()->first();
+			if ($data['subresource'])
+			{
+				$data['subresource']['api'] = route('api.resources.subresources.read', ['id' => $data['subresource']['id']]);
+			}
 		}
 		elseif (isset($data['subresource']))
 		{
@@ -57,13 +66,16 @@ class QueueResource extends JsonResource
 		if (in_array('schedulerpolicy', $objs) || in_array('all', $objs))
 		{
 			$data['schedulerpolicy'] = $this->schedulerPolicy;
-			$data['schedulerpolicy']['api'] = route('api.queues.schedulerpolicies.read', ['id' => $data['schedulerpolicy']['id']]);
+			if ($data['schedulerpolicy'])
+			{
+				$data['schedulerpolicy']['api'] = route('api.queues.schedulerpolicies.read', ['id' => $data['schedulerpolicy']['id']]);
+			}
 		}
 
 		if (in_array('scheduler', $objs) || in_array('all', $objs))
 		{
-			$data['scheduler'] = $this->scheduler;
-			if ($this->scheduler)
+			$data['scheduler'] = $this->scheduler()->withTrashed()->get()->first();
+			if ($data['scheduler'])
 			{
 				$data['scheduler']['api'] = route('api.queues.schedulers.read', ['id' => $data['scheduler']['id']]);
 			}
