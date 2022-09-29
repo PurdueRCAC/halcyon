@@ -41,7 +41,7 @@ class Quotas
 			$rt['u'] = $user->id;
 		}
 
-		if ($event->getActive() == 'quotas' || app('isAdmin'))
+		if ($event->getActive() == 'quotas'  || $event->getActive() == 'myquota' || app('isAdmin'))
 		{
 			$d = (new Directory)->getTable();
 			$r = (new StorageResource)->getTable();
@@ -164,7 +164,7 @@ class Quotas
 		$event->addSection(
 			route('site.users.account.section', $rt),
 			trans('storage::storage.my quotas'),
-			($event->getActive() == 'quotas'),
+			($event->getActive() == 'quotas' || $event->getActive() == 'myquota'),
 			$content
 		);
 	}
