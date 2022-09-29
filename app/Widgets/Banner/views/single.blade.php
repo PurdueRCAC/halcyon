@@ -26,7 +26,7 @@
 
 		@if ($params->get('readmore'))
 			<div class="more">
-				<a href="{{ route('site.news.type', ['name' => $type2->alias]) }}">{{ trans('widget.banner::banner.previous') }}</a>
+				<a href="{{ route('site.news.type', ['name' => $type2->alias]) }}">{{ trans('widget.banner::banner.more') }}</a>
 			</div>
 		@endif
 	</div><!-- /.audienceTiles -->
