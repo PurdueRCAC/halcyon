@@ -5,6 +5,8 @@ use Illuminate\Support\ServiceProvider;
 use App\Modules\News\Console\CopyCommand;
 use App\Modules\News\Console\EventsTodayCommand;
 use App\Modules\News\Listeners\Registrations;
+use App\Modules\News\Listeners\RouteCollector;
+use Nwidart\Modules\Facades\Module;
 
 class NewsServiceProvider extends ServiceProvider
 {
@@ -38,6 +40,11 @@ class NewsServiceProvider extends ServiceProvider
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
 		$this->app['events']->subscribe(new Registrations);
+
+		if (Module::isEnabled('menus'))
+		{
+			$this->app['events']->subscribe(new RouteCollector);
+		}
 	}
 
 	/**

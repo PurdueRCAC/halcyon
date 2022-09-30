@@ -472,6 +472,7 @@ class Item extends Model
 		if ($this->type == 'module')
 		{
 			$data['page_id'] = $this->params->get('page_id');
+			$data['route_id'] = 'pages::' . $this->params->get('page_id');
 		}
 		$data['params'] = $this->params->all();
 

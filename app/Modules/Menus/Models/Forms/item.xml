@@ -76,7 +76,7 @@
 
 		<field
 			name="page_id"
-			type="App\Modules\Pages\Models\Fields\Page"
+			type="App\Modules\Menus\Models\Fields\MenuRoute"
 			label="menus::menus.item.page"
 			description="menus::menus.item.page description" />
 

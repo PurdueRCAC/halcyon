@@ -35,13 +35,6 @@ class MenuItem extends Groupedlist
 
 		// Get the menu items.
 		$items = array();
-		if (file_exists(PATH_CORE . '/components/menus/helpers/menus.php'))
-		{
-			// Import the com_menus helper.
-			require_once PATH_CORE . '/components/menus/helpers/menus.php';
-
-			$items = \Components\Menus\Helpers\Menus::getMenuLinks($menuType, 0, 0, $published, $language);
-		}
 
 		// Build group for a specific menu type.
 		if ($menuType)

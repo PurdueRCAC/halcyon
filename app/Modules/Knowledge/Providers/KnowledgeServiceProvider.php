@@ -3,6 +3,8 @@ namespace App\Modules\Knowledge\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Modules\Knowledge\Console\ImportCommand;
+use App\Modules\Knowledge\Listeners\RouteCollector;
+use Nwidart\Modules\Facades\Module;
 
 class KnowledgeServiceProvider extends ServiceProvider
 {
@@ -34,6 +36,11 @@ class KnowledgeServiceProvider extends ServiceProvider
 		$this->registerCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+		if (Module::isEnabled('menus'))
+		{
+			$this->app['events']->subscribe(new RouteCollector);
+		}
 	}
 
 	/**

@@ -9,10 +9,11 @@ use Illuminate\Auth\Events\Logout;
 use Illuminate\Session\SessionManager;
 use App\Modules\Orders\Console\RenewCommand;
 use App\Modules\Orders\Console\EmailStatusCommand;
+use App\Modules\Orders\Entities\Cart;
 use App\Modules\Orders\Listeners\GroupOrders;
 use App\Modules\Orders\Listeners\UserOrders;
-//use App\Modules\Orders\Composers\ProfileComposer;
-use App\Modules\Orders\Entities\Cart;
+use App\Modules\Orders\Listeners\RouteCollector;
+use Nwidart\Modules\Facades\Module;
 
 class OrdersServiceProvider extends ServiceProvider
 {
@@ -45,14 +46,19 @@ class OrdersServiceProvider extends ServiceProvider
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
-		if (is_dir(dirname(dirname(__DIR__))) . '/Groups')
+		if (Module::isEnabled('groups'))
 		{
 			$this->app['events']->subscribe(new GroupOrders);
 		}
 
-		if (is_dir(dirname(dirname(__DIR__))) . '/Users')
+		if (Module::isEnabled('users'))
 		{
 			$this->app['events']->subscribe(new UserOrders);
+		}
+
+		if (Module::isEnabled('menus'))
+		{
+			$this->app['events']->subscribe(new RouteCollector);
 		}
 	}
 

@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use App\Modules\Users\Console\SyncCommand;
 use App\Modules\Users\Console\CleanUpCommand;
+use App\Modules\Users\Listeners\RouteCollector;
+use Nwidart\Modules\Facades\Module;
 
 class UsersServiceProvider extends ServiceProvider
 {
@@ -37,6 +39,11 @@ class UsersServiceProvider extends ServiceProvider
 		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+		if (Module::isEnabled('menus'))
+		{
+			$this->app['events']->subscribe(new RouteCollector);
+		}
 	}
 
 	/**

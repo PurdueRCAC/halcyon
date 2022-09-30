@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\Facades\Blade;
 use App\Modules\Pages\Console\ImportStaffCommand;
+use App\Modules\Pages\Listeners\RouteCollector;
+use Nwidart\Modules\Facades\Module;
 
 class PagesServiceProvider extends ServiceProvider
 {
@@ -50,6 +52,11 @@ class PagesServiceProvider extends ServiceProvider
 		$this->commands([
 			ImportStaffCommand::class
 		]);
+
+		if (Module::isEnabled('menus'))
+		{
+			$this->app['events']->subscribe(new RouteCollector);
+		}
 	}
 
 	/**

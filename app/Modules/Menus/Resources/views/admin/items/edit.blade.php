@@ -72,6 +72,11 @@ app('pathway')
 				</div>
 
 				<div class="form-group menutype-dependant menutype-module">
+					<?php echo $form->getLabel('route_id'); ?>
+					<?php echo $form->getInput('route_id'); ?>
+				</div>
+
+				<div class="form-group menutype-dependant menutype-module">
 					<?php echo $form->getLabel('page_id'); ?>
 					<?php echo $form->getInput('page_id'); ?>
 				</div>
