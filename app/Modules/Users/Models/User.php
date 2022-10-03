@@ -621,6 +621,7 @@ class User extends Model implements
 	{
 		$username = UserUsername::query()
 			->where('email', '=', $email)
+			->orderBy('username', 'asc')
 			->orderBy('datecreated', 'asc')
 			->first();
 
