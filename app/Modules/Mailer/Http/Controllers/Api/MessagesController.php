@@ -7,7 +7,6 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Mailer\Models\Message;
@@ -785,12 +784,12 @@ class MessagesController extends Controller
 			'status'          => 200,
 			'transportmethod' => 'POST',
 			'servername'      => request()->getHttpHost(),
-			'uri'             => Str::limit($user->email, 128, ''),
+			'uri'             => $user->email,
 			'app'             => 'email',
 			'objectid'        => (int)$message->id,
 			'payload'         => $message->subject,
-			'classname'       => Str::limit('MessagesController', 32, ''),
-			'classmethod'     => Str::limit('send', 16, ''),
+			'classname'       => 'MessagesController',
+			'classmethod'     => 'send',
 			'targetuserid'    => (int)$user->id,
 		]);
 	}

@@ -3,7 +3,6 @@
 namespace App\Modules\History\Listeners;
 
 use Illuminate\Mail\Events\MessageSent;
-use Illuminate\Support\Facades\Str;
 use App\Modules\History\Models\Log;
 
 /**
@@ -37,11 +36,11 @@ class LogSentMessage
 			'status'          => 200,
 			'transportmethod' => 'POST',
 			'servername'      => 'localhost',
-			'uri'             => Str::limit($event->message->getTo(), 128, ''),
-			'app'             => Str::limit('email', 20, ''),
-			'payload'         => Str::limit($event->message->getSubject(), 2000, ''),
-			'classname'       => Str::limit($cmd, 32, ''),
-			'classmethod'     => Str::limit('handle', 16, ''),
+			'uri'             => $event->message->getTo(),
+			'app'             => 'email',
+			'payload'         => $event->message->getSubject(),
+			'classname'       => $cmd,
+			'classmethod'     => 'handle',
 		]);
 	}
 }

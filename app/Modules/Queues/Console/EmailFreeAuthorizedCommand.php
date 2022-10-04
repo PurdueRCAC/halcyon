@@ -5,7 +5,6 @@ namespace App\Modules\Queues\Console;
 //use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use App\Modules\History\Models\Log;
 use App\Modules\Queues\Mail\FreeAuthorized;
 use App\Modules\Queues\Mail\FreeAuthorizedManager;
@@ -299,11 +298,11 @@ class EmailFreeAuthorizedCommand extends Command
 			'status'          => 200,
 			'transportmethod' => 'POST',
 			'servername'      => request()->getHttpHost(),
-			'uri'             => Str::limit($uri, 128, ''),
-			'app'             => Str::limit('email', 20, ''),
-			'payload'         => Str::limit($payload, 2000, ''),
-			'classname'       => Str::limit('queues:emailfreeauthorized', 32, ''),
-			'classmethod'     => Str::limit('handle', 16, ''),
+			'uri'             => $uri,
+			'app'             => 'email',
+			'payload'         => $payload,
+			'classname'       => 'queues:emailfreeauthorized',
+			'classmethod'     => 'handle',
 			'targetuserid'    => (int)$targetuserid,
 			'targetobjectid'  => (int)$targetobjectid,
 			'objectid'        => (int)$targetobjectid,

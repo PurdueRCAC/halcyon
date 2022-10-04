@@ -4,7 +4,6 @@ namespace App\Modules\Resources\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use App\Modules\Resources\Models\Subresource;
 use App\Modules\Resources\Models\Child;
 use App\Modules\Resources\Models\Asset;
@@ -148,11 +147,11 @@ class EmailSchedulingCommand extends Command
 			'status'          => 200,
 			'transportmethod' => 'POST',
 			'servername'      => request()->getHttpHost(),
-			'uri'             => Str::limit($uri, 128, ''),
-			'app'             => Str::limit('email', 20, ''),
-			'payload'         => Str::limit($payload, 2000, ''),
-			'classname'       => Str::limit('resources:emailscheduling', 32, ''),
-			'classmethod'     => Str::limit('handle', 16, ''),
+			'uri'             => $uri,
+			'app'             => 'email',
+			'payload'         => $payload,
+			'classname'       => 'resources:emailscheduling',
+			'classmethod'     => 'handle',
 		]);
 	}
 }

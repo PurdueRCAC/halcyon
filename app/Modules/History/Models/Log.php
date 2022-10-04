@@ -5,14 +5,10 @@ namespace App\Modules\History\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\Users\Models\User;
 
 class Log extends Model
 {
-	use ErrorBag, Validatable;
-
 	/**
 	 * The name of the "created at" column.
 	 *
@@ -42,29 +38,6 @@ class Log extends Model
 	protected $guarded = [
 		'id'
 	];
-
-	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array
-	 */
-	protected $rules = array(
-		'ip' => 'nullable|string|max:39',
-		'hostname' => 'nullable|string|max:128',
-		'userid' => 'nullable|integer',
-		'status' => 'nullable|integer',
-		'transportmethod' => 'required|string|max:7',
-		'servername' => 'nullable|string|max:128',
-		'uri' => 'nullable|string|max:128',
-		'app' => 'nullable|string|max:20',
-		'classname' => 'nullable|string|max:32',
-		'classmethod' => 'nullable|string|max:16',
-		'objectid' => 'nullable|string|max:32',
-		'payload' => 'nullable|string|max:2000',
-		'groupid' => 'nullable|integer',
-		'targetuserid' => 'nullable|integer',
-		'targetobjectid' => 'nullable|integer',
-	);
 
 	/**
 	 * Default order by for model
@@ -124,8 +97,21 @@ class Log extends Model
 	 */
 	public function setServernameAttribute($value)
 	{
-		// limit appends "..." so we have to remove 3 characters from the limit
-		$this->attributes['servername'] = Str::limit($value, 125); // 128
+		$this->attributes['servername'] = Str::limit($value, 128, '');
+	}
+
+	/**
+	 * Set IP
+	 *
+	 * @param   string  $value
+	 * @return  void
+	 */
+	public function setIpAttribute($value)
+	{
+		$value = $value == 'localhost' ? '127.0.0.1' : $value;
+		$value = $value == '::1' ? '127.0.0.1' : $value;
+
+		$this->attributes['ip'] = Str::limit($value, 39, '');
 	}
 
 	/**
@@ -136,7 +122,7 @@ class Log extends Model
 	 */
 	public function setUriAttribute($value)
 	{
-		$this->attributes['uri'] = Str::limit($value, 125); // 128
+		$this->attributes['uri'] = Str::limit($value, 128, '');
 	}
 
 	/**
@@ -147,7 +133,7 @@ class Log extends Model
 	 */
 	public function setAppAttribute($value)
 	{
-		$this->attributes['app'] = Str::limit($value, 17); // 20
+		$this->attributes['app'] = Str::limit($value, 20, '');
 	}
 
 	/**
@@ -158,7 +144,7 @@ class Log extends Model
 	 */
 	public function setClassnameAttribute($value)
 	{
-		$this->attributes['classname'] = Str::limit($value, 29); // 32
+		$this->attributes['classname'] = Str::limit($value, 32, '');
 	}
 
 	/**
@@ -169,7 +155,18 @@ class Log extends Model
 	 */
 	public function setClassmethodAttribute($value)
 	{
-		$this->attributes['classmethod'] = Str::limit($value, 13); // 16
+		$this->attributes['classmethod'] = Str::limit($value, 16, '');
+	}
+
+	/**
+	 * Set payload
+	 *
+	 * @param   string  $value
+	 * @return  void
+	 */
+	public function setPayloadAttribute($value)
+	{
+		$this->attributes['payload'] = Str::limit($value, 2000, '');
 	}
 
 	/**

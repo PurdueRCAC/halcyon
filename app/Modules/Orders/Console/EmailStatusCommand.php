@@ -4,7 +4,6 @@ namespace App\Modules\Orders\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use App\Modules\Orders\Models\Order;
 use App\Modules\Orders\Mail\PendingPayment;
 use App\Modules\Orders\Mail\PendingAssignment;
@@ -775,11 +774,11 @@ class EmailStatusCommand extends Command
 			'status'          => 200,
 			'transportmethod' => 'POST',
 			'servername'      => request()->getHttpHost(),
-			'uri'             => Str::limit($uri, 128, ''),
-			'app'             => Str::limit('email', 20, ''),
-			'payload'         => Str::limit($payload, 2000, ''),
-			'classname'       => Str::limit('orders:emailstatus', 32, ''),
-			'classmethod'     => Str::limit('handle', 16, ''),
+			'uri'             => $uri,
+			'app'             => 'email',
+			'payload'         => $payload,
+			'classname'       => 'orders:emailstatus',
+			'classmethod'     => 'handle',
 			'targetuserid'    => (int)$targetuserid,
 			'targetobjectid'  => (int)$targetobjectid,
 			'objectid'        => (int)$targetobjectid,

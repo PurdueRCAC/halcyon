@@ -3,7 +3,6 @@
 namespace App\Modules\History\Traits;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use App\Modules\History\Models\Log;
 
 trait Loggable
@@ -48,11 +47,11 @@ trait Loggable
 			'status'          => (int)$status,
 			'transportmethod' => $method,
 			'servername'      => request()->getHttpHost(),
-			'uri'             => Str::limit($uri, 128, ''),
-			'app'             => Str::limit($app, 20, ''),
-			'payload'         => Str::limit(json_encode($payload), 2000, ''),
-			'classname'       => Str::limit($cls, 32, ''),
-			'classmethod'     => Str::limit($fnc, 16, ''),
+			'uri'             => $uri,
+			'app'             => $app,
+			'payload'         => json_encode($payload),
+			'classname'       => $cls,
+			'classmethod'     => $fnc,
 			'targetuserid'    => $targetuserid,
 			'groupid'         => $groupid,
 		]);

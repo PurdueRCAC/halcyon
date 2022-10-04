@@ -4,7 +4,6 @@ namespace App\Modules\ContactReports\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use App\Modules\History\Models\Log;
 use App\Modules\ContactReports\Mail\Followup;
 use App\Modules\ContactReports\Models\Report;
@@ -209,11 +208,11 @@ class EmailFollowupsCommand extends Command
 			'status'          => 200,
 			'transportmethod' => 'POST',
 			'servername'      => request()->getHttpHost(),
-			'uri'             => Str::limit($uri, 128, ''),
-			'app'             => Str::limit('email', 20, ''),
-			'payload'         => Str::limit($payload, 2000, ''),
-			'classname'       => Str::limit('crm:emailfollowups', 32, ''),
-			'classmethod'     => Str::limit('handle', 16, ''),
+			'uri'             => $uri,
+			'app'             => 'email',
+			'payload'         => $payload,
+			'classname'       => 'crm:emailfollowups',
+			'classmethod'     => 'handle',
 			'targetuserid'    => (int)$targetuserid,
 			'targetobjectid'  => (int)$targetobjectid,
 			'objectid'        => (int)$targetobjectid,

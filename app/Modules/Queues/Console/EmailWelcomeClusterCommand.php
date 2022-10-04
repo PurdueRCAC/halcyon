@@ -4,7 +4,6 @@ namespace App\Modules\Queues\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use App\Modules\History\Models\Log;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User;
@@ -174,11 +173,11 @@ class EmailWelcomeClusterCommand extends Command
 			'status'          => 200,
 			'transportmethod' => 'POST',
 			'servername'      => request()->getHttpHost(),
-			'uri'             => Str::limit($uri, 128, ''),
-			'app'             => Str::limit('email', 20, ''),
-			'payload'         => Str::limit($payload, 2000, ''),
-			'classname'       => Str::limit('queues:emailwelcomecluster', 32, ''),
-			'classmethod'     => Str::limit('handle', 16, ''),
+			'uri'             => $uri,
+			'app'             => 'email',
+			'payload'         => $payload,
+			'classname'       => 'queues:emailwelcomecluster',
+			'classmethod'     => 'handle',
 			'targetuserid'    => $targetuserid,
 		]);
 	}

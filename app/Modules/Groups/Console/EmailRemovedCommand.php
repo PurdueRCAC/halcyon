@@ -4,7 +4,6 @@ namespace App\Modules\Groups\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use App\Modules\History\Models\Log;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Member;
@@ -218,11 +217,11 @@ class EmailRemovedCommand extends Command
 			'status'          => 200,
 			'transportmethod' => 'POST',
 			'servername'      => request()->getHttpHost(),
-			'uri'             => Str::limit($uri, 128, ''),
-			'app'             => Str::limit('email', 20, ''),
-			'payload'         => Str::limit($payload, 2000, ''),
-			'classname'       => Str::limit('groups:emailremoved', 32, ''),
-			'classmethod'     => Str::limit('handle', 16, ''),
+			'uri'             => $uri,
+			'app'             => 'email',
+			'payload'         => $payload,
+			'classname'       => 'groups:emailremoved',
+			'classmethod'     => 'handle',
 			'targetuserid'    => $targetuserid,
 			'targetobjectid'  => $targetobjectid,
 		]);
