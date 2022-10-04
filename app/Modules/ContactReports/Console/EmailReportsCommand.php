@@ -88,7 +88,7 @@ class EmailReportsCommand extends Command
 
 				if ($debug || $this->output->isVerbose())
 				{
-					$this->info("Emailed report #{$report->id} to {$user->email}.");
+					$this->info("Emailed contact report #{$report->id} to {$user->email}.");
 				}
 
 				if ($debug)
@@ -107,7 +107,7 @@ class EmailReportsCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				$this->log($user->id, $report->id, $user->email, "Emailed report #{$report->id}.");
+				$this->log($user->id, $report->id, $user->email, "Emailed contact report #{$report->id}.");
 			}
 
 			if ($debug)
