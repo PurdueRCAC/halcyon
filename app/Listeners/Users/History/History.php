@@ -65,7 +65,7 @@ class History
 
 			$items = collect([]);
 
-			if (Module::has('groups') && Module::isEnabled('groups'))
+			if (Module::isEnabled('groups'))
 			{
 				/*$history = Log::query()
 					->where('userid', '=', $user->id)
@@ -123,7 +123,7 @@ class History
 				}
 			}
 
-			if (Module::has('queues') && Module::isEnabled('queues'))
+			if (Module::isEnabled('queues'))
 			{
 				$queues = \App\Modules\Queues\Models\User::query()
 					->withTrashed()
@@ -177,7 +177,7 @@ class History
 				}
 			}
 
-			if (Module::has('courses') && Module::isEnabled('courses'))
+			if (Module::isEnabled('courses'))
 			{
 				$courses = \App\Modules\Courses\Models\Member::query()
 					->withTrashed()
