@@ -3,9 +3,6 @@ namespace App\Modules\Users\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-//use App\Modules\Users\Events\UserUsernameCreating;
-//use App\Modules\Users\Events\UserUsernameCreated;
-//use App\Modules\Users\Events\UserUsernameDeleted;
 
 /**
  * User Usernames
@@ -17,35 +14,35 @@ class UserUsername extends Model
 	/**
 	 * The name of the "created at" column.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	const CREATED_AT = 'datecreated';
 
 	/**
 	 * The name of the "updated at" column.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	const UPDATED_AT = null;
 
 	/**
 	 * The name of the "deleted at" column.
 	 *
-	 * @var  string
+	 * @var string|null
 	 */
 	const DELETED_AT = 'dateremoved';
 
 	/**
 	 * The table to which the class pertains
 	 *
-	 * @var  string
+	 * @var string
 	 **/
 	protected $table = 'userusernames';
 
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $fillable = [
 		'username',
@@ -57,7 +54,7 @@ class UserUsername extends Model
 	/**
 	 * The attributes that should be mutated to dates.
 	 *
-	 * @var  array
+	 * @var  array<int,string>
 	 */
 	protected $dates = [
 		'datecreated',
@@ -65,28 +62,6 @@ class UserUsername extends Model
 		'datelastseen',
 		'dateverified',
 	];
-
-	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array
-	 */
-	protected $rules = array(
-		'username' => 'required|string|min:1,max:16',
-		'email' => 'nullable|string|max:255',
-		'userid' => 'required|integer'
-	);
-
-	/**
-	 * The event map for the model.
-	 *
-	 * @var array
-	 */
-	/*protected $dispatchesEvents = [
-		'creating' => UserUsernameCreating::class,
-		'created'  => UserUsernameCreated::class,
-		'deleted'  => UserUsernameDeleted::class,
-	];*/
 
 	/**
 	 * Get notes

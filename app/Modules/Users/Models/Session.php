@@ -18,7 +18,7 @@ class Session extends Model
 	/**
 	 * The attributes that should be mutated to dates.
 	 *
-	 * @var  array
+	 * @var  array<int,string>
 	 */
 	protected $dates = [
 		'last_activity',
@@ -27,7 +27,7 @@ class Session extends Model
 	/**
 	 * The attributes that should be cast to native types.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $casts = [
 		'id' => 'string',

@@ -40,14 +40,14 @@ class User extends Model implements
 	/**
 	 * The table to which the class pertains
 	 *
-	 * @var  string
+	 * @var string
 	 **/
 	protected $table = 'users';
 
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $fillable = [
 		'name',
@@ -59,7 +59,7 @@ class User extends Model implements
 	/**
 	 * The accessors to append to the model's array form.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $appends = [
 		'username',
@@ -70,19 +70,18 @@ class User extends Model implements
 	];
 
 	/**
-	 * Fields and their validation criteria
+	 * The attributes that should be hidden for serialization.
 	 *
-	 * @var  array
+	 * @var array<int,string>
 	 */
-	protected $rules = array(
-		'name'  => 'required|string|min:1,max:128',
-		'api_token' => 'nullable|string|max:100'
-	);
+	protected $hidden = [
+		'api_token',
+	];
 
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'creating' => UserCreating::class,
@@ -225,7 +224,7 @@ class User extends Model implements
 	/**
 	 * Generate permissions for the modules provided
 	 *
-	 * @param  array $names
+	 * @param  array $names List of module names
 	 * @return void
 	 */
 	public function setModulePermissionsAttribute(array $names)
@@ -360,12 +359,6 @@ class User extends Model implements
 	public function getEmailAttribute()
 	{
 		return $this->getUserUsername()->email;
-		/*if (!isset($this->attributes['email']))
-		{
-			$host = config('mail.from.address');
-			$this->attributes['email'] = $this->username . strstr($host, '@');
-		}
-		return $this->attributes['email'];*/
 	}
 
 	/**
@@ -394,7 +387,6 @@ class User extends Model implements
 	public function getSurnameAttribute()
 	{
 		$name = explode(' ', $this->name);
-		//$surname = end($name);
 
 		return array_pop($name);
 	}
@@ -567,7 +559,7 @@ class User extends Model implements
 	 * @param   mixed   $val
 	 * @param   integer $access
 	 * @param   integer $locked
-	 * @return  string
+	 * @return  User
 	 */
 	public function addFacet($key, $val, $access = 0, $locked = 0)
 	{
@@ -580,6 +572,8 @@ class User extends Model implements
 		$facet->save();
 
 		$this->facets->push($facet);
+
+		return $this;
 	}
 
 	/**
@@ -587,7 +581,7 @@ class User extends Model implements
 	 *
 	 * @param   string  $username
 	 * @param   bool    $includeTrashed
-	 * @return  object
+	 * @return  User
 	 */
 	public static function findByUsername($username, $includeTrashed = false)
 	{
@@ -615,7 +609,7 @@ class User extends Model implements
 	 * Finds a user by email
 	 *
 	 * @param   string  $email
-	 * @return  object
+	 * @return  User
 	 */
 	public static function findByEmail($email)
 	{
@@ -645,7 +639,7 @@ class User extends Model implements
 	 * Finds a user by activation token
 	 *
 	 * @param   string  $token
-	 * @return  object
+	 * @return  User
 	 */
 	public static function findByActivationToken($token)
 	{

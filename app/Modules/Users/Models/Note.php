@@ -44,7 +44,7 @@ class Note extends Model
 	/**
 	 * The attributes that should be mutated to dates.
 	 *
-	 * @var  array
+	 * @var  array<int,string>
 	 */
 	protected $dates = [
 		'created_at',
@@ -55,7 +55,7 @@ class Note extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'created' => NoteCreated::class,
