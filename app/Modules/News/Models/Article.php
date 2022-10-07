@@ -359,11 +359,11 @@ class Article extends Model
 	 */
 	public function getOriginalDatetimenewsendAttribute()
 	{
-		if (!$this->originalend)
+		if ($this->originalend === false)
 		{
-			$dt = null; //$this->datetimenewsend;
+			$dt = null;
 
-			if ($this->hasEnd() && $this->isModified())
+			if ($this->isModified())
 			{
 				// Find the first update datetime
 				$first = $this->updates()->orderBy('datetimecreated', 'asc')->first();
