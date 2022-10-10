@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	if (alias) {
 		document.getElementById('field-title').addEventListener('keyup', function () {
 			alias.value = this.value.toLowerCase()
-				.replace(/\s+/g, '_')
+				.replace(/\s+/g, '-')
 				.replace(/[^a-z0-9\-_.]+/g, '');
 		});
 	}

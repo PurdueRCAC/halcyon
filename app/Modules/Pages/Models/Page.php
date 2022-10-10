@@ -7,7 +7,6 @@ use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-//use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Pages\Events\PageCreating;
@@ -17,9 +16,6 @@ use App\Modules\Pages\Events\PageUpdated;
 use App\Modules\Pages\Events\PageDeleted;
 use App\Modules\Pages\Events\PageContentIsRendering;
 use App\Halcyon\Models\Casts\Params;
-//use App\Modules\Pages\Events\PageContentBeforeDisplay;
-//use App\Modules\Pages\Events\PageContentAfterDisplay;
-//use App\Modules\Pages\Events\PageTitleAfterDisplay;
 
 /**
  * Model class for a page
@@ -114,57 +110,6 @@ class Page extends Model
 	public static $orderDir = 'asc';
 
 	/**
-	 * Generates automatic alias field value
-	 *
-	 * @param   string  $value
-	 * @return  void
-	 */
-	/*public function something()
-	{
-		self::saving(function ($page)
-		{
-			if (!$page->parent_id)
-			{
-				$page->lft = 1;
-			}
-
-			if (!$page->rgt)
-			{
-				if (!$page->lft)
-				{
-					$page->lft = $this->automaticLft();
-				}
-				$page->rgt = $page->lft + 1;
-			}
-
-			if ($page->id)
-			{
-				$page->updated = Carbon\Carbon::now()->toDateTimeString();
-			}
-
-			return $page->isValid();
-		});
-	}*/
-
-	/**
-	 * Validate data
-	 *
-	 * @param   array $data
-	 * @return  bool
-	 */
-	/*public function isValid($data = array())
-	{
-		if (empty($data))
-		{
-			$data = $this->attributes;
-		}
-
-		$v = Validator::make($data, $this->rules);
-
-		return $v->passes();
-	}*/
-
-	/**
 	 * Does the page exist?
 	 *
 	 * @return  boolean
@@ -195,41 +140,6 @@ class Page extends Model
 	}
 
 	/**
-	 * Generates automatic lft value
-	 *
-	 * @param   array   $data  the data being saved
-	 * @return  string
-	 */
-	/*public function setLftAttribute($lft)
-	{
-		if (!$this->getAttribute('parent_id'))
-		{
-			$lft = 0;
-		}
-		return $lft;
-	}*/
-
-	/**
-	 * Generates automatic lft value
-	 *
-	 * @param   array   $data  the data being saved
-	 * @return  string
-	 */
-	/*public function setRgtAttribute($rgt)
-	{
-		if (!isset($rgt))
-		{
-			if (!$this->hasAttribute('lft'))
-			{
-				$lft = 0;
-				$lft = $this->setLftAttribute($lft);
-			}
-			$rgt = $lft + 1;
-		}
-		return $rgt;
-	}*/
-
-	/**
 	 * Get path
 	 *
 	 * @return  object
@@ -258,16 +168,6 @@ class Page extends Model
 	{
 		return array_filter((array)$this->params->get('scripts', []));
 	}
-
-	/**
-	 * Parses title string as directed
-	 *
-	 * @return  string
-	 */
-	/*public function getTitleAttribute()
-	{
-		return $this->current->title;
-	}*/
 
 	/**
 	 * Parses content string as directed
@@ -360,26 +260,6 @@ class Page extends Model
 	}
 
 	/**
-	 * Get metadesc from current version
-	 *
-	 * @return  string
-	 */
-	/*public function getMetadescAttribute()
-	{
-		return $this->current->metadesc;
-	}*/
-
-	/**
-	 * Get metakey from current version
-	 *
-	 * @return  string
-	 */
-	/*public function getMetakeyAttribute()
-	{
-		return $this->current->metakey;
-	}*/
-
-	/**
 	 * Retrieves one row loaded by an alias and parent_id fields
 	 *
 	 * @param   string   $alias
@@ -447,12 +327,7 @@ class Page extends Model
 	{
 		if (!$path)
 		{
-			//$root = self::rootNode();
-
-			//$rows = new Rows;
-			//$rows->push($root);
-
-			return collect([self::rootNode()]); //$rows;
+			return collect([self::rootNode()]);
 		}
 
 		$model = new self();
@@ -508,7 +383,7 @@ class Page extends Model
 	 */
 	public function creator()
 	{
-		return $this->belongsTo('App\Modules\Users\Models\User', 'created_by')->withDefault(); //app('request')->user()->toArray()
+		return $this->belongsTo('App\Modules\Users\Models\User', 'created_by')->withDefault();
 	}
 
 	/**
@@ -563,16 +438,6 @@ class Page extends Model
 	{
 		return $this->updated_at;
 	}
-
-	/**
-	 * Determine if record was updated
-	 * 
-	 * @return  boolean
-	 */
-	/*public function isDeleted()
-	{
-		return ($this->state == 2);
-	}*/
 
 	/**
 	 * Determine if record is published
@@ -656,30 +521,7 @@ class Page extends Model
 	public function children()
 	{
 		return $this->hasMany(self::class, 'parent_id');
-		/*return self::query()
-			->where('parent_id', '=', (int) $this->id)
-			->get();*/
 	}
-
-	/**
-	 * Get revision
-	 *
-	 * @return  object
-	 */
-	/*public function current()
-	{
-		return $this->hasOne(Version::class, 'id', 'version_id')->withDefault();
-	}*/
-
-	/**
-	 * Get revisions
-	 *
-	 * @return  object
-	 */
-	/*public function versions()
-	{
-		return $this->hasMany(Version::class, 'page_id');
-	}*/
 
 	/**
 	 * Copy an entry and associated data
@@ -715,31 +557,6 @@ class Page extends Model
 			return false;
 		}
 
-		// Create a version for the newly creatd page
-		/*$version = new Version(array(
-			'page_id'  => $this->id,
-			'version'  => 1,
-			'title'    => $old->title . ' (copy)',
-			'content'  => $old->content,
-			'metakey'  => $old->metakey,
-			'metadesc' => $old->metadesc,
-			'metadata' => $old->metadata,
-			'length'   => $old->length,
-		));
-
-		if (!$version->save())
-		{
-			$this->addError($version->getError());
-			return false;
-		}
-
-		$this->version_id = $version->id;
-
-		if (!$this->save())
-		{
-			return false;
-		}*/
-
 		if ($recursive)
 		{
 			// Copy children
@@ -763,6 +580,7 @@ class Page extends Model
 	/**
 	 * Save the record
 	 *
+	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
 	public function save(array $options = array())
@@ -771,18 +589,6 @@ class Page extends Model
 		{
 			$this->access = (int) config('access', 1);
 		}
-
-		/*$data = array();
-		foreach (array('title', 'content', 'metakey', 'metadesc', 'metadata') as $key)
-		{
-			$data[$key] = '';
-
-			if (array_key_exists($key, $this->attributes))
-			{
-				$data[$key] = (string)$this->attributes[$key];
-				unset($this->attributes[$key]);
-			}
-		}*/
 
 		$isNew = !$this->exists();
 
@@ -817,22 +623,10 @@ class Page extends Model
 				->where($reposition->left_where['col'], $reposition->left_where['op'], $reposition->left_where['val'])
 				->update(['lft' => DB::raw('lft + 2')]);
 
-			/*if (!$query)
-			{
-				$this->addError('Failed to update lft values');
-				return false;
-			}*/
-
 			// Shift right values.
 			$query = DB::table($this->getTable())
 				->where($reposition->right_where['col'], $reposition->right_where['op'], $reposition->right_where['val'])
 				->update(['rgt' => DB::raw('rgt + 2')]);
-
-			/*if (!$query)
-			{
-				$this->addError('Failed to update rgt values');
-				return false;
-			}*/
 
 			// Set all the nested data
 			$path = array();
@@ -856,8 +650,6 @@ class Page extends Model
 		else
 		{
 			// If unpublishing or trashing, cascade to children
-			//var_dump($this->getOriginal('state')); die();
-			//if ($this->wasChanged('state') && $this->state != 1)
 			if ($this->getOriginal('state') != $this->state && $this->state != 1)
 			{
 				foreach ($this->children as $child)
@@ -877,47 +669,7 @@ class Page extends Model
 
 		$this->level = $this->parent_id ? $parent->level + 1 : 0;
 
-		$result = parent::save($options);
-
-		// We don't want to mess with versions if doing
-		// something simple like toggling state
-		/*if ($result && !empty($data))
-		{
-			// Were any trackable fields changed?
-			$update = $this->id ? false : true;
-
-			if ($this->id)
-			{
-				foreach ($data as $key => $val)
-				{
-					if ($val != $this->current->{$key})
-					{
-						$update = true;
-						break;
-					}
-				}
-			}
-
-			if ($update)
-			{
-				// Create a new version
-				$version = new Version($data);
-				$version->page_id = $this->id;
-
-				if (!$version->save())
-				{
-					$this->addError($version->getError());
-					return false;
-				}
-
-				// Update necessary info
-				$this->version_id = $version->id;
-
-				return parent::save($options);
-			}
-		}*/
-
-		return $result;
+		return parent::save($options);
 	}
 
 	/**
@@ -1014,13 +766,6 @@ class Page extends Model
 				'level' => (int) $level,
 				'path'  => $path
 			));
-		//var_dump($query);
-		//echo $path . ', ' . $leftId . ',' . $rightId . '<br />';
-		// If there is an update failure, return false to break out of the recursion.
-		/*if (!$query)
-		{
-			return false;
-		}*/
 
 		// Return the right value of this node + 1.
 		return $rightId + 1;
