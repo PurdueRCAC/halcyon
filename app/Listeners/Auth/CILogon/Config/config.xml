@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="basic">
+			<field
+				name="client_id"
+				type="text"
+				default=""
+				label="listener.auth.cilogon::cilogon.client id"
+				description="listener.auth.cilogon::cilogon.client id desc">
+			</field>
+
+			<field
+				name="client_secret"
+				type="text"
+				default=""
+				label="listener.auth.cilogon::cilogon.client secret"
+				description="listener.auth.cilogon::cilogon.client secret desc">
+			</field>
+
+			<field
+				name="server"
+				type="list"
+				default="prod"
+				label="listener.auth.cilogon::cilogon.server"
+				description="listener.auth.cilogon::cilogon.server desc">
+				<option value="dev">testing</option>
+				<option value="test">development</option>
+				<option value="prod">production</option>
+			</field>
+
+			<field name="display_name" type="text" size="32" label="listener.auth.cilogon::cilogon.display name" description="listener.auth.cilogon::cilogon.display name desc" default="" />
+		</fieldset>
+	</fields>
+</config>
