@@ -139,22 +139,22 @@ class Ckeditor
 		$config->filebrowserWindowWidth        = 400;
 		$config->filebrowserWindowHeight       = 600;
 		$config->toolbarGroups = [
+			['name' => 'document', 'groups' => [ 'mode' ]], //, 'document', 'doctools' 
 			['name' => 'clipboard', 'groups' => ['clipboard', 'undo']],
-			['name' => 'editing', 'groups' => [ 'find', 'selection', 'spellchecker', 'editing' ]],
+			['name' => 'editing', 'groups' => [ 'find', 'selection', 'editing' ]],
 			['name' => 'links', 'groups' => [ 'links' ]],
 			['name' => 'insert', 'groups' => [ 'insert' ]],
-			['name' => 'forms', 'groups' => [ 'forms' ]],
+			//['name' => 'forms', 'groups' => [ 'forms' ]],
 			['name' => 'tools', 'groups' => [ 'tools' ]],
-			['name' => 'document', 'groups' => [ 'mode', 'document', 'doctools' ]],
 			['name' => 'others', 'groups' => [ 'others' ]],
 			'/',
 			['name' => 'basicstyles', 'groups' => [ 'basicstyles', 'cleanup' ]],
 			['name' => 'paragraph', 'groups' => [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ]],
-			['name' =>  'styles', 'groups' => [ 'styles' ]],
-			['name' => 'colors', 'groups' => [ 'colors' ]],
-			['name' => 'about', 'groups' => [ 'about' ]],
+			//['name' => 'styles', 'groups' => [ 'styles' ]],
+			//['name' => 'colors', 'groups' => [ 'colors' ]],
+			//['name' => 'about', 'groups' => [ 'about' ]],
 		];
-		$config->removeButtons = 'Scayt,About,Styles';
+		$config->removeButtons = 'NewPage,Preview,Print,Save,Scayt,About,Styles,Flash,PageBreak,Language';
 
 		// If minimal toolbar
 		/*if (in_array('minimal', $params->get('class')))
@@ -200,11 +200,12 @@ class Ckeditor
 			$config->bodyClass = $params->get('contentBodyClass');
 		}
 
-		// add stylesheets to ckeditor content
-		// Otherwise, do not style
-		if (is_array($params->get('contentCss')) && count($params->get('contentCss')))
+		// Add stylesheets to ckeditor content
+		$css = $params->get('contentCss');
+		$css = explode("\n", $css);
+		if (is_array($css) && count($css))
 		{
-			$config->contentsCss = $params->get('contentCss');
+			$config->contentsCss = $css;
 		}
 
 		// File browsing
