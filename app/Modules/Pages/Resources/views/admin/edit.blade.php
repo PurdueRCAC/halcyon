@@ -56,7 +56,7 @@ app('pathway')
 							<option value="1" data-indent="" data-path="">{{ trans('pages::pages.home') }}</option>
 							@foreach ($parents as $page)
 								<?php $selected = ($page->id == $row->parent_id ? ' selected="selected"' : ''); ?>
-								<option value="{{ $page->id }}"<?php echo $selected; ?> data-indent="<?php echo str_repeat('|&mdash; ', $page->level); ?>" data-path="/{{ $page->path }}"><?php echo str_repeat('|&mdash; ', $page->level) . e($page->title); ?></option>
+								<option value="{{ $page->id }}"<?php echo $selected; ?> data-indent="<?php echo str_repeat('|&mdash; ', $page->level); ?>" data-path="/{{ $page->path }}" data-access="{{ $page->access }}"><?php echo str_repeat('|&mdash; ', $page->level) . e($page->title); ?></option>
 							@endforeach
 						</select>
 					</div>

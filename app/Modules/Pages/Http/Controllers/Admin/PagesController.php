@@ -139,7 +139,7 @@ class PagesController extends Controller
 		}
 
 		$parents = Page::query()
-			->select('id', 'title', 'path', 'level')
+			->select('id', 'title', 'path', 'level', 'access')
 			->where('level', '>', 0)
 			->orderBy('lft', 'asc')
 			->get();
@@ -173,7 +173,7 @@ class PagesController extends Controller
 		}
 
 		$parents = Page::query()
-			->select('id', 'title', 'path', 'level')
+			->select('id', 'title', 'path', 'level', 'access')
 			->where('level', '>', 0)
 			->orderBy('path', 'asc')
 			->get();

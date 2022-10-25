@@ -74,10 +74,12 @@ document.addEventListener('DOMContentLoaded', function () {
 			});
 			sel.on('change', function () {
 				document.getElementById('parent-path').innerHTML = this.input.selectedOptions[0].getAttribute('data-path');
+				document.getElementById('field-access').value = this.input.selectedOptions[0].getAttribute('data-access');
 			});
 		} else {
 			select.addEventListener('change', function () {
 				document.getElementById('parent-path').innerHTML = this.selectedOptions[0].getAttribute('data-path');
+				document.getElementById('field-access').value = this.input.selectedOptions[0].getAttribute('data-access');
 			});
 		}
 	}
