@@ -32,7 +32,16 @@
 @if (count($page->styles))
 	@foreach ($page->styles as $v)
 		@push('styles')
-			<link rel="stylesheet" type="text/css" href="{{ substr($v, 0, 1) == '/' ? $v : asset($v) }}" />
+			@php
+			if (substr($v, 0, 4) != 'http' && substr($v, 0, 3) != '://'):
+				$pth = asset($v);
+				if (file_exists(public_path($v))):
+					$pth .= '?v=' . filemtime(public_path($v));
+				endif;
+				$v = $pth;
+			endif;
+			@endphp
+			<link rel="stylesheet" type="text/css" href="{{ $v }}" />
 		@endpush
 	@endforeach
 @endif
@@ -40,7 +49,16 @@
 @if (count($page->scripts))
 	@foreach ($page->scripts as $v)
 		@push('scripts')
-			<script src="{{ substr($v, 0, 1) == '/' ? $v : asset($v) }}"></script>
+			@php
+			if (substr($v, 0, 4) != 'http' && substr($v, 0, 3) != '://'):
+				$pth = asset($v);
+				if (file_exists(public_path($v))):
+					$pth .= '?v=' . filemtime(public_path($v));
+				endif;
+				$v = $pth;
+			endif;
+			@endphp
+			<script src="{{ $v }}"></script>
 		@endpush
 	@endforeach
 @endif
