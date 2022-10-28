@@ -129,7 +129,7 @@ app('pathway')
 						});
 
 						form = document.getElementById('item-form');
-						form.on('submit', function(e){
+						form.addEventListener('submit', function(e){
 							fb.mainView.saveForm();
 						});
 					});
