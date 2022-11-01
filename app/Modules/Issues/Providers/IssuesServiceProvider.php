@@ -3,6 +3,8 @@ namespace App\Modules\Issues\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Modules\Issues\Listeners\ResourceIssues;
+use App\Modules\Issues\LogProcessors\Issues;
+use Nwidart\Modules\Facades\Module;
 
 class IssuesServiceProvider extends ServiceProvider
 {
@@ -34,9 +36,14 @@ class IssuesServiceProvider extends ServiceProvider
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
-		if (is_dir(dirname(dirname(__DIR__))) . '/Resources')
+		if (Module::isEnabled('resources'))
 		{
 			$this->app['events']->subscribe(new ResourceIssues);
+		}
+
+		if (Module::isEnabled('history'))
+		{
+			\App\Modules\History\Models\Log::pushProcessor(new Issues);
 		}
 	}
 

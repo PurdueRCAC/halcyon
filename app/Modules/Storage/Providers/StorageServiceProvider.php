@@ -12,6 +12,8 @@ use App\Modules\Storage\Listeners\Notifications;
 use App\Modules\Storage\Listeners\UserStorage;
 use App\Modules\Storage\Console\EmailQuotaCommand;
 use App\Modules\Storage\Console\QuotaCheckCommand;
+use App\Modules\Storage\LogProcessors\Notifications as NotificationsLog;
+use Nwidart\Modules\Facades\Module;
 
 class StorageServiceProvider extends ServiceProvider
 {
@@ -46,25 +48,30 @@ class StorageServiceProvider extends ServiceProvider
 
 		$this->app['events']->subscribe(new Notifications);
 
-		if (is_dir(dirname(dirname(__DIR__))) . '/Messages')
+		if (Module::isEnabled('messages'))
 		{
 			$this->app['events']->subscribe(new Messages);
 		}
 
-		if (is_dir(dirname(dirname(__DIR__))) . '/Resources')
+		if (Module::isEnabled('resources'))
 		{
 			$this->app['events']->subscribe(new Resources);
 		}
 
-		if (is_dir(dirname(dirname(__DIR__))) . '/Groups')
+		if (Module::isEnabled('groups'))
 		{
 			$this->app['events']->subscribe(new GroupMembers);
 			$this->app['events']->subscribe(new UnixGroupMembers);
 		}
 
-		if (is_dir(dirname(dirname(__DIR__))) . '/Users')
+		if (Module::isEnabled('users'))
 		{
 			$this->app['events']->subscribe(new UserStorage);
+		}
+
+		if (Module::isEnabled('history'))
+		{
+			\App\Modules\History\Models\Log::pushProcessor(new NotificationsLog);
 		}
 	}
 

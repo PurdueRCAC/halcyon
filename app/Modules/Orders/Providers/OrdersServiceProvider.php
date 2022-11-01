@@ -13,6 +13,7 @@ use App\Modules\Orders\Entities\Cart;
 use App\Modules\Orders\Listeners\GroupOrders;
 use App\Modules\Orders\Listeners\UserOrders;
 use App\Modules\Orders\Listeners\RouteCollector;
+use App\Modules\Orders\LogProcessors\Orders as OrdersProcessor;
 use Nwidart\Modules\Facades\Module;
 
 class OrdersServiceProvider extends ServiceProvider
@@ -59,6 +60,11 @@ class OrdersServiceProvider extends ServiceProvider
 		if (Module::isEnabled('menus'))
 		{
 			$this->app['events']->subscribe(new RouteCollector);
+		}
+
+		if (Module::isEnabled('history'))
+		{
+			\App\Modules\History\Models\Log::pushProcessor(new OrdersProcessor);
 		}
 	}
 

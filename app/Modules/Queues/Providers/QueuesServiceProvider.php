@@ -19,6 +19,9 @@ use App\Modules\Queues\Console\StopCommand;
 use App\Modules\Queues\Console\StartCommand;
 use App\Modules\Queues\Listeners\GetUserQueues;
 use App\Modules\Queues\Listeners\RemoveMembershipsForDeletedUser;
+use App\Modules\Queues\LogProcessors\QueueMemberships;
+use App\Modules\Queues\LogProcessors\UserRequests;
+use Nwidart\Modules\Facades\Module;
 
 class QueuesServiceProvider extends ServiceProvider
 {
@@ -53,9 +56,15 @@ class QueuesServiceProvider extends ServiceProvider
 
 		$this->app['events']->subscribe(new RemoveMembershipsForDeletedUser);
 
-		if (is_dir(dirname(dirname(__DIR__))) . '/Users')
+		if (Module::isEnabled('users'))
 		{
 			$this->app['events']->subscribe(new GetUserQueues);
+		}
+
+		if (Module::isEnabled('history'))
+		{
+			\App\Modules\History\Models\Log::pushProcessor(new QueueMemberships);
+			\App\Modules\History\Models\Log::pushProcessor(new UserRequests);
 		}
 	}
 

@@ -40,6 +40,15 @@ class Log extends Model
 	];
 
 	/**
+	 * Processors that will process all log records
+	 *
+	 * To process records of a single handler instead, add the processor on that specific handler
+	 *
+	 * @var callable[]
+	 */
+	protected static $processors = array();
+
+	/**
 	 * Default order by for model
 	 *
 	 * @var string
@@ -52,6 +61,59 @@ class Log extends Model
 	 * @var string
 	 */
 	public static $orderDir = 'desc';
+
+	/**
+	 * Adds a processor on to the stack.
+	 */
+	public static function pushProcessor(callable $callback) //: self
+	{
+		array_unshift(self::$processors, $callback);
+
+		//return $this;
+	}
+
+	/**
+	 * Removes the processor on top of the stack and returns it.
+	 *
+	 * @throws \LogicException If empty processor stack
+	 * @return callable
+	 */
+	public static function popProcessor(): callable
+	{
+		if (!self::$processors)
+		{
+			throw new \LogicException('You tried to pop from an empty processor stack.');
+		}
+
+		return array_shift(self::$processors);
+	}
+
+	/**
+	 * @return callable[]
+	 */
+	public static function getProcessors(): array
+	{
+		return self::$processors;
+	}
+
+	/**
+	 * @param Log $record
+	 * @return Log
+	 */
+	public function process($record)
+	{
+		foreach (self::$processors as $processor)
+		{
+			$record = $processor($record);
+
+			if ($record->summary)
+			{
+				break;
+			}
+		}
+
+		return $record;
+	}
 
 	/**
 	 * User relationship

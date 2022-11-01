@@ -12,6 +12,11 @@ use App\Modules\Groups\Composers\ProfileComposer;
 use App\Modules\Groups\Console\EmailAuthorizedCommand;
 use App\Modules\Groups\Console\EmailRemovedCommand;
 use App\Modules\Groups\Console\SyncMembershipCommand;
+use App\Modules\Groups\LogProcessors\Groups;
+use App\Modules\Groups\LogProcessors\GroupMemberships;
+use App\Modules\Groups\LogProcessors\UnixGroupMemberships;
+use App\Modules\Groups\LogProcessors\UnixGroups;
+use Nwidart\Modules\Facades\Module;
 
 class GroupsServiceProvider extends ServiceProvider
 {
@@ -46,10 +51,18 @@ class GroupsServiceProvider extends ServiceProvider
 
 		$this->app['events']->subscribe(new RemoveMembershipsForDeletedUser);
 
-		if (is_dir(dirname(dirname(__DIR__)) . '/Queues'))
+		if (Module::isEnabled('queues'))
 		{
 			$this->app['events']->subscribe(new AddManagersToNewQueue);
 			$this->app['events']->subscribe(new AddUserToUnixGroup);
+		}
+
+		if (Module::isEnabled('history'))
+		{
+			\App\Modules\History\Models\Log::pushProcessor(new Groups);
+			\App\Modules\History\Models\Log::pushProcessor(new GroupMemberships);
+			\App\Modules\History\Models\Log::pushProcessor(new UnixGroups);
+			\App\Modules\History\Models\Log::pushProcessor(new UnixGroupMemberships);
 		}
 	}
 

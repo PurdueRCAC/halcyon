@@ -2,12 +2,12 @@
 
 namespace App\Modules\History\Providers;
 
-//use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
-//use App\Modules\History\Facades\History as HistoryFacade;
-//use App\Modules\History\Models\History;
 use App\Modules\History\Listeners\LogSentMessage;
 use App\Modules\History\Listeners\LogCommand;
+use App\Modules\History\Models\Log;
+use App\Modules\History\LogProcessors\TargetUsers;
+use App\Modules\History\LogProcessors\Emails;
 
 class HistoryServiceProvider extends ServiceProvider
 {
@@ -47,18 +47,9 @@ class HistoryServiceProvider extends ServiceProvider
 		//$this->app['events']->listen('Illuminate\Mail\Events\MessageSent', LogSentMessage::class);
 		$this->app['events']->listen('Illuminate\Console\Events\CommandFinished', LogCommand::class);
 
-		//AliasLoader::getInstance()->alias('History', HistoryFacade::class);
+		Log::pushProcessor(new TargetUsers);
+		Log::pushProcessor(new Emails);
 	}
-
-	/*public function register()
-	{
-		$app = $this->app;
-
-		// Register route service provider
-		$app->register(RouteServiceProvider::class);
-
-		//$app->bind('History', History::class);
-	}*/
 
 	/**
 	 * Register views.

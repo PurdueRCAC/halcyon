@@ -7,6 +7,8 @@ use App\Modules\ContactReports\Console\EmailFollowupsCommand;
 use App\Modules\ContactReports\Console\EmailReportsCommand;
 use App\Modules\ContactReports\Listeners\GroupReports;
 use App\Modules\ContactReports\Listeners\CourseReport;
+use App\Modules\ContactReports\LogProcessors\Reports;
+use Nwidart\Modules\Facades\Module;
 
 class ContactReportsServiceProvider extends ServiceProvider
 {
@@ -39,13 +41,18 @@ class ContactReportsServiceProvider extends ServiceProvider
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
-		if (is_dir(dirname(dirname(__DIR__))) . '/Groups')
+		if (Module::isEnabled('groups'))
 		{
 			$this->app['events']->subscribe(new GroupReports);
 		}
-		if (is_dir(dirname(dirname(__DIR__))) . '/Courses')
+		if (Module::isEnabled('courses'))
 		{
 			$this->app['events']->subscribe(new CourseReport);
+		}
+
+		if (Module::isEnabled('history'))
+		{
+			\App\Modules\History\Models\Log::pushProcessor(new Reports);
 		}
 	}
 
