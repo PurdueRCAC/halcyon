@@ -199,6 +199,6 @@ class Adminmenu extends Widget
 			});
 		}
 
-		return $widgets;
+		return $modules;
 	}
 }
