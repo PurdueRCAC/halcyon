@@ -165,8 +165,11 @@ app('pathway')
 				</td>
 				<td>
 					@if ($row->checked_out)
-						<a class="glyph icon-check-square warning" data-tip="{{ trans('widgets::widgets.checked out') }}">
-							{{ trans('widgets::widgets.checked out') }}
+						@php
+						$user = App\Modules\Users\Models\User::find($row->checked_out);
+						@endphp
+						<a class="glyph icon-check-square warning" data-tip="{{ trans('widgets::widgets.checked out', ['name' => $user ? $user->name : trans('global.unknown')]) }}">
+							{{ trans('widgets::widgets.checked out', ['name' => $user ? $user->name : trans('global.unknown')]) }}
 						</a>
 					@endif
 					@if (auth()->user()->can('edit widgets'))
