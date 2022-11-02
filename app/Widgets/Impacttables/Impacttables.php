@@ -58,8 +58,7 @@ class Impacttables extends Widget
 
 		$updatedatetime = Carbon::parse($updatedatetime->updated);
 
-		$layout = $this->params->get('layout');
-		$layout = $layout ?: 'index';
+		$layout = (string)$this->params->get('layout', 'index');
 
 		return view($this->getViewName($layout), [
 			'all_rows' => $all_rows->toArray(),

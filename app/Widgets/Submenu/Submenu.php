@@ -20,7 +20,7 @@ class Submenu extends Widget
 
 		if (empty($list))
 		{
-			return;
+			return null;
 		}
 
 		$layout = $this->params->get('layout');

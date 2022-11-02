@@ -30,8 +30,7 @@ class Feed extends Widget
 		$feed = $this->getFeed($rssurl);
 		$clss = htmlspecialchars($this->params->get('moduleclass_sfx'));
 
-		$layout = $this->params->get('layout');
-		$layout = $layout ?: 'index';
+		$layout = (string)$this->params->get('layout', 'index');
 
 		return view($this->getViewName($layout), [
 			'feed'   => $feed,

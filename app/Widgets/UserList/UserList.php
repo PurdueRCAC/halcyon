@@ -114,7 +114,6 @@ class UserList extends Widget
 					$dStart->modify('-6 month');
 					break;
 
-				case 'post_year':
 				case 'past_year':
 					$dStart->modify('-1 year');
 					break;
@@ -125,7 +124,7 @@ class UserList extends Widget
 					break;
 			}
 
-			if ($filters['range'] == 'post_year')
+			if ($range == 'past_year')
 			{
 				$query->where($u . '.datecreated', '<', $dStart->format('Y-m-d H:i:s'));
 			}
@@ -137,7 +136,7 @@ class UserList extends Widget
 		}
 
 		$users = $query
-			->orderBy($a . '.' . $this->params->get('order', 'name'), $this->params->get('order_dir', 'asc'))
+			->orderBy($a . '.' . (string)$this->params->get('order', 'name'), (string)$this->params->get('order_dir', 'asc'))
 			->limit($this->params->get('limit', 5))
 			->get();
 
@@ -159,8 +158,7 @@ class UserList extends Widget
 			$user->page = route('page', ['uri' => implode('/', $segments) . '/' . $user->username]);
 		});
 
-		$layout = $this->params->get('layout');
-		$layout = $layout ?: 'index';
+		$layout = (string)$this->params->get('layout', 'index');
 
 		return view($this->getViewName($layout), [
 			'users'  => $users,

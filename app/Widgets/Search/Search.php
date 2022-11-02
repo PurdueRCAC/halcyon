@@ -27,14 +27,13 @@ class Search extends Widget
 		$params      = $this->params;
 		$button      = $this->params->get('button', '');
 		$button_pos  = $this->params->get('button_pos', 'right');
-		$button_text = htmlspecialchars($this->params->get('button_text', trans('widget.search::search.search button text')));
+		$button_text = htmlspecialchars((string)$this->params->get('button_text', trans('widget.search::search.search button text')));
 		$width       = intval($this->params->get('width', 20));
-		$text        = htmlspecialchars($this->params->get('text', trans('widget.search::search.search box text')));
-		$label       = htmlspecialchars($this->params->get('label', trans('widget.search::search.search label text')));
-		$class       = htmlspecialchars($this->params->get('moduleclass_sfx'));
+		$text        = htmlspecialchars((string)$this->params->get('text', trans('widget.search::search.search box text')));
+		$label       = htmlspecialchars((string)$this->params->get('label', trans('widget.search::search.search label text')));
+		$class       = htmlspecialchars((string)$this->params->get('moduleclass_sfx'));
 
-		$layout = $this->params->get('layout');
-		$layout = $layout ?: 'index';
+		$layout = (string)$this->params->get('layout', 'index');
 
 		return view($this->getViewName($layout), [
 			'params'      => $this->params,

@@ -26,16 +26,16 @@ class News extends Widget
 
 		$type = new Type();
 
-		if ($id = (int)$this->params->get('catid'))
+		if ($id = $this->params->get('catid'))
 		{
-			$type = Type::findOrFail($id);
+			$type = Type::findOrFail((int)$id);
 
 			$query->where($a . '.newstypeid', '=', $id);
 		}
 
-		if ($location = (string)$this->params->get('location'))
+		if ($location = $this->params->get('location'))
 		{
-			$query->where($a . '.location', '=', $location);
+			$query->where($a . '.location', '=', (string)$location);
 		}
 
 		if ($resources = $this->params->get('resources'))

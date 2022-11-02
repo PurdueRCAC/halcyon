@@ -73,8 +73,7 @@ class Productlist extends Widget
 			$cats[] = $category;
 		}
 
-		$layout = $this->params->get('layout');
-		$layout = $layout ?: 'index';
+		$layout = (string)$this->params->get('layout', 'index');
 
 		return view($this->getViewName($layout), [
 			'categories' => $cats,

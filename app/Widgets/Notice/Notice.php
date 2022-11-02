@@ -19,16 +19,9 @@ class Notice extends Widget
 		// Set today's time and date
 		$now = Carbon::now();
 
-		//$database->setQuery("SELECT publish_up, publish_down FROM `#__modules` WHERE id=" . $this->module->id);
-		//$item = $database->loadObject();
-		//$this->module->publish_up   = (isset($item->publish_up))   ? $item->publish_up   : null;
-		//$this->module->publish_down = (isset($item->publish_down)) ? $item->publish_down : null;
-
 		// Get some initial parameters
 		$start = $this->params->get('start_publishing', $this->model->publish_up);
-		//$start = Date::of($start)->toLocal(Lang::txt('DATE_FORMAT_HZ1'));
 		$stop  = $this->params->get('stop_publishing', $this->model->publish_down);
-		//$stop  = Date::of($stop)->toLocal(Lang::txt('DATE_FORMAT_HZ1'));
 
 		$this->publish = false;
 		if (!$start || $start == '0000-00-00 00:00:00')
@@ -73,7 +66,7 @@ class Notice extends Widget
 			// get current unix timestamp
 			//$now = time() + (Config::get('offset') * 60 * 60);
 
-			$difference = $the_countdown_date - $now;
+			$difference = $the_countdown_date->timestamp - $now->timestamp;
 			if ($difference < 0)
 			{
 				$difference = 0;
@@ -82,7 +75,7 @@ class Notice extends Widget
 			$this->days_left = floor($difference/60/60/24);
 			$this->days_left = ($this->days_left ? $this->days_left : 7);
 
-			$expires = $now + 60*60*24*$this->days_left;
+			$expires = $now->timestamp + 60*60*24*$this->days_left;
 
 			$hide = request()->cookie($this->params->get('id', 'sitenotice'));
 
@@ -145,15 +138,14 @@ class Notice extends Widget
 			$publish = false;
 		}
 
-		$layout = $this->params->get('layout');
-		$layout = $layout ?: 'index';
+		$layout = (string)$this->params->get('layout', 'index');
 
 		return view($this->getViewName($layout), [
-			'params'  => $this->params,
-			'message' => $message,
-			'publish' => $this->publish,
-			'alertlevel' => $this->params->get('alertlevel', 'info'),
-			'id' => $this->params->get('htmlid', 'notices'),
+			'params'     => $this->params,
+			'message'    => $message,
+			'publish'    => $this->publish,
+			'alertlevel' => (string)$this->params->get('alertlevel', 'info'),
+			'id'         => (string)$this->params->get('htmlid', 'notices'),
 		]);
 	}
 

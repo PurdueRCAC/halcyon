@@ -22,19 +22,14 @@ class Menu extends Widget
 
 		$list = self::getList($menu, $this->params);
 
-		//$active    = $menu->getActive();
-		//$active_id = $active ? $active->id : 0;//$menu->getDefault()->id;
-		//$path      = isset($active) ? $active->tree : array();
 		$showAll   = $this->params->get('showAllChildren');
-		$class_sfx = htmlspecialchars($this->params->get('class_sfx'));
+		$class_sfx = $this->params->get('class_sfx');
+		$class_sfx = $class_sfx ? htmlspecialchars((string)$class_sfx) : '';
 
-		$layout = $this->params->get('layout');
-		$layout = $layout ?: 'index';
+		$layout = (string)$this->params->get('layout', 'index');
 
 		return view($this->getViewName($layout), [
 			'list'      => $list,
-			//'path'      => $path,
-			//'active_id' => $active_id,
 			'showAll'   => $showAll,
 			'class_sfx' => $class_sfx,
 			'params'    => $this->params,
