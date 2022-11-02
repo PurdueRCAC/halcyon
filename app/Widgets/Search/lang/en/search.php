@@ -27,6 +27,6 @@ return [
 	'right' => 'Right',
 	'top' => 'Top',
 	'search box text' => 'Search...',
-	'label text' => 'Search...',
+	'search label text' => 'Search...',
 	'search button text' => 'Search',
 ];

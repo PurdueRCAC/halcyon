@@ -11,7 +11,7 @@ class Googleanalytics extends Widget
 	/**
 	 * Display module
 	 *
-	 * @return  void
+	 * @return  null|\Illuminate\View\View
 	 */
 	public function run()
 	{

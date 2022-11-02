@@ -16,7 +16,7 @@ class Adminmenu extends Widget
 	/**
 	 * Display module contents
 	 *
-	 * @return  void
+	 * @return  null|\Illuminate\View\View
 	 */
 	public function run()
 	{
@@ -96,7 +96,7 @@ class Adminmenu extends Widget
 	/**
 	 * Get a list of the available menus.
 	 *
-	 * @return  array  An array of the available menus (from the menu types table).
+	 * @return  \Illuminate\Support\Collection
 	 */
 	public function getMenus()
 	{
@@ -144,7 +144,7 @@ class Adminmenu extends Widget
 	 * Get a list of the authorised, non-special components to display in the components menu.
 	 *
 	 * @param   boolean  $authCheck  An optional switch to turn off the auth check (to support custom layouts 'grey out' behaviour).
-	 * @return  array|Collection    A collection of objects and submenus
+	 * @return  \Illuminate\Support\Collection  A collection of objects and submenus
 	 */
 	public function getModules($authCheck = true)
 	{
@@ -177,21 +177,15 @@ class Adminmenu extends Widget
 		$result = array();
 		$langs  = array();
 
-		// Parse the list of extensions.
-		foreach ($modules as &$module)
+		if (!$authCheck)
 		{
-			// Only add this top level if it is authorised and enabled.
-			if ($authCheck == false)// || ($authCheck && auth()->user()->can('core.manage', $module->element)))
+			$modules->each(function ($module, $key) use ($lang)
 			{
-				// Root level.
-				$result[$module->id] = $module;
-
-				if (!isset($result[$module->id]->submenu))
+				if (!isset($module->submenu))
 				{
-					$result[$module->id]->submenu = array();
+					$module->submenu = array();
 				}
 
-				//$module->link = route('admin.' . substr($module->element, 4) . '.index');
 				$module->link = url(config('app.admin-prefix', 'admin') . '/' . strtolower($module->element));
 
 				if (!empty($module->element))
@@ -202,9 +196,9 @@ class Adminmenu extends Widget
 				$key = $module->element . '::system.' . $module->title;
 
 				$module->text = $lang->has($key) ? trans($key) : $module->alias;
-			}
+			});
 		}
 
-		return collect($result); //->sortBy('text');
+		return $widgets;
 	}
 }

@@ -12,7 +12,7 @@ class Menu extends Widget
 	/**
 	 * Display module
 	 *
-	 * @return  void
+	 * @return  null|\Illuminate\View\View
 	 */
 	public function run()
 	{
@@ -44,10 +44,11 @@ class Menu extends Widget
 	/**
 	 * Get a list of the menu items.
 	 *
+	 * @param   SiteMenu  $menu
 	 * @param   object  $params  The widget options.
 	 * @return  array
 	 */
-	protected static function getList($menu, &$params)
+	protected static function getList($menu, $params)
 	{
 		// If no active menu, use default
 		//$active = ($menu->getActive()) ? $menu->getActive() : $menu->getDefault();

@@ -12,7 +12,7 @@ class Feed extends Widget
 	/**
 	 * Display module
 	 *
-	 * @return  void
+	 * @return  null|\Illuminate\View\View
 	 */
 	public function run()
 	{
@@ -44,7 +44,7 @@ class Feed extends Widget
 	 * Get contents of a feed
 	 *
 	 * @param   string  $rssurl
-	 * @return  mixed
+	 * @return  bool|stdClass
 	 */
 	public function getFeed($rssurl)
 	{

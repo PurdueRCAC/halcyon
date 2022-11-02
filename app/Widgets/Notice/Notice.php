@@ -12,7 +12,7 @@ class Notice extends Widget
 	/**
 	 * Display
 	 *
-	 * @return  void
+	 * @return  null|\Illuminate\View\View
 	 */
 	public function run()
 	{
@@ -165,7 +165,7 @@ class Notice extends Widget
 	 * @param   integer  $day     Day
 	 * @param   integer  $hour    Hour
 	 * @param   integer  $minute  Minute
-	 * @return  array
+	 * @return  array<int,int>
 	 */
 	private function _countdown($year, $month, $day, $hour, $minute)
 	{
@@ -209,7 +209,7 @@ class Notice extends Widget
 	 * Break a timestamp into its parts
 	 *
 	 * @param   integer  $stime  Timestamp
-	 * @return  array
+	 * @return  array<string,string>
 	 */
 	private function _convert($stime)
 	{

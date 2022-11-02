@@ -11,7 +11,7 @@ class Node
 	/**
 	 * Parent node
 	 * 
-	 * @var  object
+	 * @var  Node|null
 	 */
 	protected $_parent = null;
 
@@ -25,35 +25,35 @@ class Node
 	/**
 	 * Node Title
 	 *
-	 * @var  string
+	 * @var  string|null
 	 */
 	public $title = null;
 
 	/**
 	 * Node Id
 	 *
-	 * @var  string
+	 * @var  string|null
 	 */
 	public $id = null;
 
 	/**
 	 * Node Link
 	 *
-	 * @var  string
+	 * @var  string|null
 	 */
 	public $link = null;
 
 	/**
 	 * Link Target
 	 *
-	 * @var  string
+	 * @var  string|null
 	 */
 	public $target = null;
 
 	/**
 	 * CSS Class for node
 	 *
-	 * @var  string
+	 * @var  string|null
 	 */
 	public $class = null;
 
@@ -97,7 +97,7 @@ class Node
 	 *
 	 * If the child already has a parent, the link is unset
 	 *
-	 * @param   object  &$child  The child to be added
+	 * @param   Node  &$child  The child to be added
 	 * @return  void
 	 */
 	public function addChild(&$child)
@@ -146,7 +146,7 @@ class Node
 	/**
 	 * Get the parent of this node
 	 *
-	 * @return  mixed   Node object with the parent or null for no parent
+	 * @return  Node|null   Node object with the parent or null for no parent
 	 */
 	public function &getParent()
 	{

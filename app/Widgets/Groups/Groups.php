@@ -12,7 +12,7 @@ class Groups extends Widget
 	/**
 	 * Display widget contents
 	 *
-	 * @return  void
+	 * @return  null|\Illuminate\View\View
 	 */
 	public function run()
 	{

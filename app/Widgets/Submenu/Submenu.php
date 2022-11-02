@@ -11,14 +11,14 @@ class Submenu extends Widget
 	/**
 	 * Get the items of the submenu and display them.
 	 *
-	 * @return  void
+	 * @return  null|\Illuminate\View\View
 	 */
 	public function run()
 	{
 		// Initialise variables.
 		$list = array(); //app('submenu')->all();
 
-		if (!is_array($list) || !count($list))
+		if (empty($list))
 		{
 			return;
 		}

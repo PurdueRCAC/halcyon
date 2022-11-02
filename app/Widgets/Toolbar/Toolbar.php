@@ -2,7 +2,7 @@
 namespace App\Widgets\Toolbar;
 
 use App\Modules\Widgets\Entities\Widget;
-use App\Halcyon\Facades\Toolbar;
+use App\Halcyon\Facades\Toolbar as Toolbelt;
 
 /**
  * Widget for displaying module toolbar
@@ -12,7 +12,7 @@ class Toolbar extends Widget
 	/**
 	 * Display contents
 	 *
-	 * @return  void
+	 * @return  null|\Illuminate\View\View
 	 */
 	public function run()
 	{
@@ -25,7 +25,7 @@ class Toolbar extends Widget
 		$layout = $layout ?: 'index';
 
 		return view($this->getViewName($layout), [
-			'toolbar' => Toolbar::render('toolbar')
+			'toolbar' => Toolbelt::render('toolbar')
 		]);
 	}
 }

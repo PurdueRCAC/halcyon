@@ -18,14 +18,14 @@ class Widget
 	/**
 	 * DB record
 	 *
-	 * @var  App\Modules\Widgets\Models\Widget
+	 * @var  \App\Modules\Widgets\Models\Widget
 	 */
 	protected $model;
 
 	/**
 	 * Params repository
 	 *
-	 * @var  Illuminate\Config\Repository
+	 * @var  \Illuminate\Config\Repository
 	 */
 	protected $params;
 
@@ -39,7 +39,7 @@ class Widget
 	/**
 	 * Constructor
 	 *
-	 * @param   object  $model
+	 * @param   \App\Modules\Widgets\Models\Widget  $model
 	 * @return  void
 	 */
 	public function __construct($model)
@@ -55,7 +55,7 @@ class Widget
 	/**
 	 * Display
 	 *
-	 * @return  string
+	 * @return  null|\Illuminate\View\View
 	 */
 	public function run()
 	{

@@ -11,7 +11,7 @@ class Title extends Widget
 	/**
 	 * Display title
 	 *
-	 * @return  void
+	 * @return  null|\Illuminate\View\View
 	 */
 	public function run()
 	{

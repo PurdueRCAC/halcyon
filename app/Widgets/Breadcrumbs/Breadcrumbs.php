@@ -12,7 +12,7 @@ class Breadcrumbs extends Widget
 	/**
 	 * Display module
 	 *
-	 * @return  void
+	 * @return  null|\Illuminate\View\View
 	 */
 	public function run()
 	{
@@ -39,7 +39,7 @@ class Breadcrumbs extends Widget
 	/**
 	 * Get the list of crumbs
 	 *
-	 * @return  array
+	 * @return  array<int,stdClass>
 	 */
 	public function getList()
 	{

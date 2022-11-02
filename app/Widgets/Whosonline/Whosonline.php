@@ -11,7 +11,7 @@ class Whosonline extends Widget
 	/**
 	 * Display module contents
 	 *
-	 * @return  void
+	 * @return  null|\Illuminate\View\View
 	 */
 	public function run()
 	{
@@ -31,7 +31,7 @@ class Whosonline extends Widget
 	/**
 	 * Display module contents
 	 *
-	 * @return  void
+	 * @return  null|\Illuminate\View\View
 	 */
 	private function site()
 	{
@@ -78,7 +78,7 @@ class Whosonline extends Widget
 	/**
 	 * Display module contents for Admin
 	 *
-	 * @return  void
+	 * @return  null|\Illuminate\View\View
 	 */
 	private function admin()
 	{
@@ -111,12 +111,12 @@ class Whosonline extends Widget
 
 		// Get the view
 		return view($this->getViewName('admin'), [
-			'rows'   => $sessions,
-			'widget' => $this->model,
-			'siteUserCount' => $siteUserCount,
+			'rows'           => $sessions,
+			'widget'         => $this->model,
+			'siteUserCount'  => $siteUserCount,
 			'adminUserCount' => $adminUserCount,
 			'editAuthorized' => $editAuthorized,
-			'params'        => $this->params
+			'params'         => $this->params
 		]);
 	}
 }

@@ -68,7 +68,6 @@ return [
 	'community' => 'Community Portal',
 	'developers' => 'Developer Resources',
 	'documentation' => 'Documentation',
-	'extensions' => 'Extensions',
 	'links' => 'Useful links',
 	'resources' => 'Resources',
 	'security' => 'Security Center',

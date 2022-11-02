@@ -16,16 +16,16 @@ class Tree
 	/**
 	 * Root node
 	 *
-	 * @var  object
+	 * @var  Node
 	 */
-	protected $_root = null;
+	protected $_root;
 
 	/**
 	 * Current working node
 	 *
-	 * @var  object
+	 * @var  Node
 	 */
-	protected $_current = null;
+	protected $_current;
 
 	/**
 	 * Constructor
@@ -41,7 +41,7 @@ class Tree
 	/**
 	 * Method to add a child
 	 *
-	 * @param   array    &$node       The node to process
+	 * @param   Node     $node       The node to process
 	 * @param   boolean  $setCurrent  True to set as current working node
 	 * @return  void
 	 */
@@ -58,31 +58,37 @@ class Tree
 	/**
 	 * Method to get the parent
 	 *
-	 * @return  void
+	 * @return  Tree
 	 */
 	public function getParent()
 	{
 		$this->_current = &$this->_current->getParent();
+
+		return $this;
 	}
 
 	/**
 	 * Method to get the parent
 	 *
-	 * @return  void
+	 * @return  Tree
 	 */
 	public function reset()
 	{
 		$this->_current = &$this->_root;
+
+		return $this;
 	}
 
 	/**
 	 * Add a separator
 	 *
-	 * @return  object
+	 * @return  Tree
 	 */
 	public function addSeparator()
 	{
 		$this->addChild(new Node(null, null, 'separator', false));
+
+		return $this;
 	}
 
 	/**
@@ -122,8 +128,7 @@ class Tree
 	/**
 	 * Render a menu level
 	 *
-	 * @param   string  $id     Menu ID
-	 * @param   string  $class  Menu class
+	 * @param   integer $depth
 	 * @return  void
 	 */
 	public function renderLevel($depth)

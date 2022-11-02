@@ -14,7 +14,7 @@ class Contactform extends Widget
 	/**
 	 * Display
 	 *
-	 * @return  void
+	 * @return  null|\Illuminate\View\View
 	 */
 	public function run()
 	{
