@@ -96,8 +96,13 @@ class GroupsController extends Controller
 		if ($filters['department'])
 		{
 			$gd = (new GroupDepartment)->getTable();
+
+			$dep = Department::find($filters['department']);
+			$deps = $dep->children->pluck('id')->toArray();
+			$deps[] = $filters['department'];
+
 			$query->join($gd, $gd . '.groupid', $g . '.id')
-				->where($gd . '.collegedeptid', $filters['department']);
+				->whereIn($gd . '.collegedeptid', $deps);
 		}
 
 		if ($filters['fieldofscience'])

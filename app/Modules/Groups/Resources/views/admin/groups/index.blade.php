@@ -212,7 +212,17 @@ app('pathway')
 					{{ number_format($row->members_count) }}
 				</td>
 				<td class="priority-6">
-					{{ implode(', ', $row->departmentList->pluck('name')->toArray()) }}
+					@php
+					$deps = array();
+					foreach ($row->departmentList as $dep):
+						$name  = $dep->parentid > 1 ? $dep->parent->name . ' > ' : '';
+						$name .= $dep->name;
+
+						$deps[] = $name;
+					endforeach;
+					//$row->departmentList->pluck('name')->toArray()
+					@endphp
+					{!! implode('<br />', $deps) !!}
 				</td>
 			</tr>
 		@endforeach
