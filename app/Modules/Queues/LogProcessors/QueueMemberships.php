@@ -42,10 +42,9 @@ class QueueMemberships
 				}
 			}
 
-			$payload = $record->jsonPayload;
-			if ($payload && isset($payload->queueid))
+			if ($queueid = $record->getExtraProperty('queueid'))
 			{
-				$queue = Queue::find($payload->queueid);
+				$queue = Queue::find($queueid);
 			}
 			else
 			{

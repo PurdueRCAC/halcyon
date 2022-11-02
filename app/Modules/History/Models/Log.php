@@ -64,12 +64,13 @@ class Log extends Model
 
 	/**
 	 * Adds a processor on to the stack.
+	 *
+	 * @param callable[] $callback
+	 * @return void
 	 */
-	public static function pushProcessor(callable $callback) //: self
+	public static function pushProcessor(callable $callback)
 	{
 		array_unshift(self::$processors, $callback);
-
-		//return $this;
 	}
 
 	/**
@@ -89,6 +90,8 @@ class Log extends Model
 	}
 
 	/**
+	 * Get the lsit of processors
+	 *
 	 * @return callable[]
 	 */
 	public static function getProcessors(): array
@@ -97,6 +100,8 @@ class Log extends Model
 	}
 
 	/**
+	 * Process a log entry
+	 *
 	 * @param Log $record
 	 * @return Log
 	 */
@@ -234,7 +239,7 @@ class Log extends Model
 	/**
 	 * Get the payload as JSON
 	 *
-	 * @return  object
+	 * @return  stdClass
 	 */
 	public function getJsonPayloadAttribute()
 	{
@@ -262,6 +267,22 @@ class Log extends Model
 		}
 
 		return $payload;
+	}
+
+	/**
+	 * Get a payload value
+	 *
+	 * @param string $propertyName
+	 * @param mixed $defaultValue
+	 * @return mixed
+	 */
+	public function getExtraProperty(string $propertyName, $defaultValue = null)
+	{
+		if (isset($this->jsonPayload->{$propertyName}))
+		{
+			return $this->jsonPayload->{$propertyName};
+		}
+		return $defaultValue;
 	}
 
 	/**

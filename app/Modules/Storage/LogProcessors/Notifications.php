@@ -25,12 +25,11 @@ class Notifications
 
 				$record->summary = 'Created <a href="' . $route . '">Storage Alert</a>';
 
-				$payload = $record->jsonPayload;
-				if ($payload && isset($payload->storagedirid))
+				if ($storagedirid = $record->getExtraProperty('storagedirid'))
 				{
-					$d = Directory::find($payload->storagedirid);
+					$d = Directory::find($storagedirid);
 
-					$record->summary .= ' for directory ' . $d->fullPath;
+					$record->summary .= $d ? ' for directory ' . $d->fullPath : '';
 				}
 			}
 			elseif ($record->transportmethod == 'DELETE')

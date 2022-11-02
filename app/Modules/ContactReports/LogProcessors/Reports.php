@@ -22,18 +22,16 @@ class Reports
 			{
 				$record->summary = 'Created Contact Report';
 
-				$payload = $record->jsonPayload;
-
-				if ($payload && isset($payload->datetimecontact))
+				if ($datetimecontact = $record->getExtraProperty('datetimecontact'))
 				{
-					$dt = Carbon::parse($payload->datetimecontact);
+					$dt = Carbon::parse($datetimecontact);
 					$record->summary .= ' for contact on ' . $dt->format('F j, Y');
 				}
 
-				if ($payload && isset($payload->users))
+				if ($userids = $record->getExtraProperty('users'))
 				{
 					$users = array();
-					foreach ($payload->users as $userid)
+					foreach ($userids as $userid)
 					{
 						$u = User::find($userid);
 						if ($u)

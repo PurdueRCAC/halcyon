@@ -16,11 +16,11 @@ class TargetUsers
 	{
 		if ($record->targetuserid <= 0 && $record->payload)
 		{
-			if (isset($record->jsonPayload->userid)
-			 && $record->jsonPayload->userid
-			 && is_numeric($record->jsonPayload->userid))
+			$userid = $record->getExtraProperty('userid');
+
+			if ($userid && is_numeric($userid))
 			{
-				$record->targetuserid = $record->jsonPayload->userid;
+				$record->targetuserid = $userid;
 				$record->save();
 			}
 		}

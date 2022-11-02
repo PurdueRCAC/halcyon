@@ -18,14 +18,12 @@ class UserRequests
 		if ($record->classname == 'UserRequestsController'
 		 || $record->classname == 'userrequest')
 		{
-			$payload = $record->jsonPayload;
-
 			$queuenames = array();
 			$queuename = '#' . $record->targetobjectid;
 
-			if ($payload && isset($payload->resources))
+			if ($resources = $record->getExtraProperty('resources', []))
 			{
-				foreach ($payload->resources as $resourceid)
+				foreach ($resources as $resourceid)
 				{
 					foreach ($group->queues as $queue)
 					{
