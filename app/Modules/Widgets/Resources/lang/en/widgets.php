@@ -12,7 +12,7 @@ return [
 	'error missing files' => 'Widget file(s) not found!',
 	'published' => 'Published',
 	'unpublished' => 'Unpublished',
-	'checked out' => 'Checked out',
+	'checked out' => 'Checked out by :name',
 	// Filters
 	'all states' => '- All States -',
 	'all widgets' => '- All Widgets -',
