@@ -44,7 +44,7 @@ class Page extends Select
 			$options->prepend(Dropdown::option('', trans('- Select -'), 'value', 'text'));
 		}
 
-		return $options->toArray();
+		return $options; //->toArray();
 	}
 
 	/**
@@ -83,7 +83,7 @@ class Page extends Select
 		$attr = implode(' ', $attr);
 
 		// Get the field options.
-		$options = (array) $this->getOptions();
+		$options = $this->getOptions();
 
 		// Create a read-only list (no name) with a hidden input to store the value.
 		if ((string) $this->element['readonly'] == 'true')
@@ -183,12 +183,20 @@ class Page extends Select
 		foreach ($data as $item)
 		{
 			$sel = '';
-			if ($item[$optKey] == $selected)
+			if ($item->{$optKey} == $selected)
 			{
 				$sel = ' selected="selected"';
 			}
-			$item['path'] = $item['path'] == '/' ? '' : $item['path'];
-			$html .= '<option value="' . $item[$optKey] . '" data-indent="' . $item['indent'] . '" data-path="/' . $item['path'] . '"' . $sel . '>' . $item[$optText] . '</option>';
+			if (!isset($item->path))
+			{
+				$item->path = '';
+			}
+			if (!isset($item->indent))
+			{
+				$item->indent = '';
+			}
+			$item->path = $item->path == '/' ? '' : $item->path;
+			$html .= '<option value="' . $item->{$optKey} . '" data-indent="' . $item->indent . '" data-path="/' . $item->path . '"' . $sel . '>' . $item->{$optText} . '</option>';
 		}
 		$html .= '</select>';
 
