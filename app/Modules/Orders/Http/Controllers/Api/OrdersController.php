@@ -762,10 +762,10 @@ class OrdersController extends Controller
 		// Ensure client is authorized
 		if (auth()->user()->id != $row->userid
 		 && auth()->user()->id != $row->submitteruserid
-		 && ($request->has('usernotes') && !$isApprover)
+		 && !$isApprover
 		 && !auth()->user()->can('manage orders'))
 		{
-			return response()->json(['message' => trans('global.error.not authorized')], 403);
+			return response()->json(['message' => trans('global.error 403 description')], 403);
 		}
 
 		if ($request->input('restore') && auth()->user()->can('manage orders'))
