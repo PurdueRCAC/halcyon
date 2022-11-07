@@ -529,10 +529,10 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 							</div>
 							<div class="col col-md-6 text-right">
 								<?php
-								if ($order->status == 'pending_payment'
+								if (($order->status == 'pending_payment'
 								|| $order->status == 'pending_boassignment'
 								|| (($order->status == 'pending_approval' || $order->status == 'pending_fulfillment') && auth()->user()->can('manage orders'))
-								|| ($order->status == 'pending_approval' && !$myorder)): ?>
+								|| ($order->status == 'pending_approval' && !$myorder)) && (auth()->user()->can('manage orders') || $myorder)): ?>
 									<button class="btn btn-sm btn-danger" id="cancelorder" data-confirm="Are you sure you wish to cancel this order?">Cancel Order</button>
 								<?php else: ?>
 									<button class="btn btn-sm tip" id="printorder" title="Print Order">
