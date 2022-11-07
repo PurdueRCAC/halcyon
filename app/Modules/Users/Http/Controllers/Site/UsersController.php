@@ -65,7 +65,10 @@ class UsersController extends Controller
 				route('site.users.account')
 			);
 
-		event($event = new UserDisplay($user, $request->segment(2)));
+		// `segment()` is NOT zero-indexed. "account" will be segment 1
+		$i = array_search('account', $request->segments()) + 2;
+
+		event($event = new UserDisplay($user, $request->segment($i)));
 		$sections = collect($event->getSections());
 		$parts = collect($event->getParts());
 
