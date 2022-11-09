@@ -24,7 +24,7 @@ class PagesController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		if ($request->expectsJson())
+		if ($request->wantsJson()) //$request->expectsJson())
 		{
 			return response()->json(['message' => trans('global.unacceptable header')], 406);
 		}
