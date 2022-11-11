@@ -39,11 +39,13 @@ class Orders
 
 			if ($record->classmethod == 'update')
 			{
+				$route = route('site.order.read', ['id' => $record->objectid]);
 				$record->summary = 'Order <a href="' . $route . '">#' . $record->objectid . '</a> <span class="text-info">updated</span>';
 			}
 
 			if ($record->classmethod == 'delete')
 			{
+				$route = route('site.order.read', ['id' => $record->objectid]);
 				$record->summary = 'Order <a href="' . $route . '">#' . $record->objectid . '</a> <span class="text-danger">cancelled</span>';
 			}
 		}
