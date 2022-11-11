@@ -39,14 +39,34 @@ class Orders
 
 			if ($record->classmethod == 'update')
 			{
-				$route = route('site.order.read', ['id' => $record->objectid]);
-				$record->summary = 'Order <a href="' . $route . '">#' . $record->objectid . '</a> <span class="text-info">updated</span>';
+				$id = $record->objectid;
+				$id = $id ?: $record->targetobjectid;
+				if ($id <= 0)
+				{
+					$id = explode('/', $record->uri);
+					$id = end($id);
+
+					$record->objectid = $id;
+					$record->save();
+				}
+
+				$record->summary = 'Order <a href="' . route('site.order.read', ['id' => $id]) . '">#' . $id . '</a> <span class="text-info">updated</span>';
 			}
 
 			if ($record->classmethod == 'delete')
 			{
-				$route = route('site.order.read', ['id' => $record->objectid]);
-				$record->summary = 'Order <a href="' . $route . '">#' . $record->objectid . '</a> <span class="text-danger">cancelled</span>';
+				$id = $record->objectid;
+				$id = $id ?: $record->targetobjectid;
+				if ($id <= 0)
+				{
+					$id = explode('/', $record->uri);
+					$id = end($id);
+
+					$record->objectid = $id;
+					$record->save();
+				}
+
+				$record->summary = 'Order <a href="' . route('site.order.read', ['id' => $id]) . '">#' . $id . '</a> <span class="text-danger">cancelled</span>';
 			}
 		}
 
