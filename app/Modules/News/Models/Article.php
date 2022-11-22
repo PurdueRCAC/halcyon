@@ -784,7 +784,7 @@ class Article extends Model
 			// Highlight unused variables for admins
 			if (auth()->user() && auth()->user()->can('manage news'))
 			{
-				$text = preg_replace("/%([\w\s]+)%/", '<span style="color:red">$0</span>', $text);
+				$text = preg_replace("/%([\w]+)%/", '<span style="color:red">$0</span>', $text);
 			}
 
 			$text = str_replace('<th>', '<th scope="col">', $text);
