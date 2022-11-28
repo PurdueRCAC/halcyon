@@ -21,9 +21,9 @@ class UnixGroupMemberships
 		{
 			if ($record->targetobjectid <= 0 && $record->payload)
 			{
-				if (isset($record->jsonPayload->unixgroupid) && $record->jsonPayload->unixgroupid)
+				if ($unixgroupid = $record->getExtraProperty('unixgroupid'))
 				{
-					$record->targetobjectid = $record->jsonPayload->unixgroupid;
+					$record->targetobjectid = $unixgroupid;
 					$record->save();
 				}
 			}

@@ -69,23 +69,21 @@ class GroupMemberships
 			break;
 
 			case 'MembersController':
-				$payload = $record->jsonPayload;
-
 				if ($record->classmethod == 'update')
 				{
 					$record->summary = 'Membership status changed in group ' . $group;
 
-					if ($payload && isset($payload->membertype))
+					if ($membertype = $record->getExtraProperty('membertype'))
 					{
-						if ($payload->membertype == 1)
+						if ($membertype == 1)
 						{
 							$record->summary = 'Status set to member ' . $group;
 						}
-						if ($payload->membertype == 2)
+						if ($membertype == 2)
 						{
 							$record->summary = 'Promoted to manager ' . $group;
 						}
-						if ($payload->membertype == 3)
+						if ($membertype == 3)
 						{
 							$record->summary = 'Promoted to usage viewer in group ' . $group;
 						}
@@ -96,17 +94,17 @@ class GroupMemberships
 				{
 					$record->summary = 'Added to group ' . $group;
 
-					if ($payload && isset($payload->membertype))
+					if ($membertype = $record->getExtraProperty('membertype'))
 					{
-						if ($payload->membertype == 2)
+						if ($membertype == 2)
 						{
 							$record->summary .= ' as a manager';
 						}
-						if ($payload->membertype == 1)
+						if ($membertype == 1)
 						{
 							$record->summary .= ' as a member';
 						}
-						if ($payload->membertype == 4)
+						if ($membertype == 4)
 						{
 							$record->summary = 'Submitted request to join group ' . $group;
 							$record->targetuserid = 0;

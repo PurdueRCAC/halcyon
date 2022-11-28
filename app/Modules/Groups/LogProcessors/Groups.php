@@ -21,12 +21,10 @@ class Groups
 
 		if ($record->classmethod == 'create')
 		{
-			$payload = $record->jsonPayload;
-
 			$group = '';
-			if ($payload && isset($payload->name))
+			if ($name = $record->getExtraProperty('name'))
 			{
-				$group = $payload->name;
+				$group = $name;
 			}
 
 			$record->summary = 'Created group ' . $group;

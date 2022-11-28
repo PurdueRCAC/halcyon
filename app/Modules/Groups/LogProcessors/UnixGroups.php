@@ -22,18 +22,19 @@ class UnixGroups
 
 			if ($record->targetobjectid <= 0 && $payload)
 			{
-				if (isset($record->jsonPayload->unixgroupid) && $record->jsonPayload->unixgroupid)
+				if ($unixgroupid = $record->getExtraProperty('unixgroupid'))
 				{
-					$record->targetobjectid = $record->jsonPayload->unixgroupid;
+					$record->targetobjectid = $unixgroupid;
 					$record->save();
 				}
 			}
 
-			if ($payload && isset($payload->longname))
+			$groupname = '';
+			if ($longname = $record->getExtraProperty('longname'))
 			{
-				$groupname = $payload->longname;
+				$groupname = $longname;
 			}
-			else
+			elseif ($record->targetobjectid > 0)
 			{
 				$g = UnixGroup::find($record->targetobjectid);
 
