@@ -60,7 +60,7 @@ class CreateWidgetsTables extends Migration
 					{
 						$info = json_decode(file_get_contents($manifest));
 						$name = $info->name;
-						$client_id = ($info->type == 'admin' ? 1 : 0);
+						$client_id = (isset($info->type) && $info->type == 'admin' ? 1 : 0);
 					}
 
 					DB::table('extensions')->insert([
