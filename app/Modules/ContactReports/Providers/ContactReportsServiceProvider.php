@@ -41,16 +41,16 @@ class ContactReportsServiceProvider extends ServiceProvider
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
-		if (Module::isEnabled('groups'))
+		if (Module::find('groups') && Module::isEnabled('groups'))
 		{
 			$this->app['events']->subscribe(new GroupReports);
 		}
-		if (Module::isEnabled('courses'))
+		if (Module::find('courses') && Module::isEnabled('courses'))
 		{
 			$this->app['events']->subscribe(new CourseReport);
 		}
 
-		if (Module::isEnabled('history'))
+		if (Module::find('history') && Module::isEnabled('history'))
 		{
 			\App\Modules\History\Models\Log::pushProcessor(new Reports);
 		}
