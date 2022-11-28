@@ -55,7 +55,8 @@ class CreateUsersTables extends Migration
 				DB::table('userusernames')->insert([
 					'userid' => $admin->id,
 					'username' => 'admin',
-					'datecreated' => Carbon::now()->toDateTimeString()
+					'datecreated' => Carbon::now()->toDateTimeString(),
+					'email' => 'admin@your.org',
 				]);
 			}
 		}
