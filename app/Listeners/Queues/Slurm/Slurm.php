@@ -620,13 +620,14 @@ class Slurm
 				'priority' => $qos->priority,
 				'usage_factor' => $qos->usage_factor ? $qos->usage_factor : 1.000000,
 				'usage_threshold' => $qos->usage_thres,
+				'flags' => [],
 				'preempt' => [
 					'list' => $qos->preemptList, //a list of other QOS's that it can preempt
 					'mode' => $qos->preemptModeList,
 					'exempt_time' => $qos->preempt_exempt_time,
 				],
 				'limits' => [
-					'grace_time' => $qos->grace_time,
+					'grace_time' => ($qos->grace_time ? $qos->grace_time : 0),
 					'max' => [
 						'active_jobs' => [
 							'accruing' => null,
@@ -637,50 +638,50 @@ class Slurm
 							],
 							'minutes' => [
 								'per' => [
-									'qos' => [$qos->grp_tres_run_mins],
-									'job' => [$qos->max_tres_mins_pj],
-									'account' => [$qos->max_tres_run_mins_pa],
-									'user' => [$qos->max_tres_run_mins_pu],
+									'qos' => ($qos->grp_tres_run_mins ? [$qos->grp_tres_run_mins] : []),
+									'job' => ($qos->max_tres_mins_pj ? [$qos->max_tres_mins_pj] : []),
+									'account' => ($qos->max_tres_run_mins_pa ? [$qos->max_tres_run_mins_pa] : []),
+									'user' => ($qos->max_tres_run_mins_pu ? [$qos->max_tres_run_mins_pu] : []),
 								]
 							],
 							'per' => [
-								'account' => [$qos->max_tres_pa],
-								'job' => [$qos->max_tres_pj],
-								'node' => [$qos->max_tres_pn],
-								'user' => [$qos->max_tres_pu],
+								'account' => ($qos->max_tres_pa ? [$qos->max_tres_pa] : []),
+								'job' => ($qos->max_tres_pj ? [$qos->max_tres_pj] : []),
+								'node' => ($qos->max_tres_pn ? [$qos->max_tres_pn] : []),
+								'user' => ($qos->max_tres_pu ? [$qos->max_tres_pu] : []),
 							]
 						],
 						'wall_clock' => [
 							'per' => [
 								'qos' => [],
-								'job' => [$qos->max_wall_duration_per_job],
+								'job' => ($qos->max_wall_duration_per_job ? $qos->max_wall_duration_per_job : 0),
 							]
 						],
 						'jobs' => [
 							'active_jobs' => [
 								'per' => [
-									'account' => [$qos->max_submit_jobs_pa],
-									'user' => [$qos->max_submit_jobs_per_user],
+									'account' => ($qos->max_submit_jobs_pa ? $qos->max_submit_jobs_pa : 0),
+									'user' => ($qos->max_submit_jobs_per_user ? $qos->max_submit_jobs_per_user : 0),
 								]
 							],
 							'per' => [
-								'account' => [$qos->max_jobs_pa],
-								'job' => [$qos->max_jobs_per_user],
+								'account' => ($qos->max_jobs_pa ? $qos->max_jobs_pa : 0),
+								'job' => ($qos->max_jobs_per_user ? $qos->max_jobs_per_user : 0),
 							]
 						],
 						'accruing' => [
 							'per' => [
-								'account' => [$qos->max_jobs_accrue_pa],
-								'job' => [$qos->max_jobs_accrue_pj],
+								'account' => ($qos->max_jobs_accrue_pa ? $qos->max_jobs_accrue_pa : 0),
+								'job' => ($qos->max_jobs_accrue_pj ? $qos->max_jobs_accrue_pj : 0),
 							]
 						],
 					],
 					'factor' => $qos->limit_factor,
 					'min' => [
-						'priority_threshold' => $qos->min_prio_thresh,
+						'priority_threshold' => ($qos->min_prio_thresh ? $qos->min_prio_thresh : 0),
 						'tres' => [
 							'per' => [
-								'job' => [$qos->min_tres_pj]
+								'job' => ($qos->min_tres_pj ? [$qos->min_tres_pj] : [])
 							]
 						]
 					]
@@ -688,7 +689,7 @@ class Slurm
 			);
 
 			$res = $client->request('POST', $config['url'], [
-				'json' => $body
+				'json' => ['QOS' => [$body]]
 			]);
 			$status = $res->getStatusCode();
 
