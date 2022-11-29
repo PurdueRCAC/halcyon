@@ -91,7 +91,7 @@ class Slurm
 			return false;
 		}
 
-		$config['url'] = $config['domain'] . '/slurmdb/' . $config['version'];
+		$config['url'] = $config['domain'] . ($config['port'] ? ':' . $config['port'] : '') . '/slurmdb/' . $config['version'];
 
 		return $config;
 	}
@@ -588,7 +588,7 @@ class Slurm
 			return;
 		}
 
-		$config['url'] = $config['domain'] . '/slurmdb/' . $config['version'] . '/qos';
+		$config['url'] = $config['domain'] . ($config['port'] ? ':' . $config['port'] : '') . '/slurmdb/' . $config['version'] . '/qos';
 
 		try
 		{
@@ -726,7 +726,7 @@ class Slurm
 		}
 
 		$qos = $event->qos;
-		$config['url'] = $config['domain'] . '/slurmdb/' . $config['version'] . '/qos/' . $qos->name;
+		$config['url'] = $config['domain'] . ($config['port'] ? ':' . $config['port'] : '') . '/slurmdb/' . $config['version'] . '/qos/' . $qos->name;
 
 		try
 		{
