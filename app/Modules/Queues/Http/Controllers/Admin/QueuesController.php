@@ -14,6 +14,8 @@ use App\Modules\Queues\Models\Scheduler;
 use App\Modules\Queues\Models\SchedulerPolicy;
 use App\Modules\Queues\Models\Walltime;
 use App\Modules\Queues\Models\Size;
+use App\Modules\Queues\Models\Qos;
+use App\Modules\Queues\Models\QueueQos;
 use App\Modules\Resources\Models\Subresource;
 use App\Modules\Resources\Models\Child;
 use App\Modules\Resources\Models\Asset;
@@ -391,6 +393,7 @@ class QueuesController extends Controller
 		$schedulerpolicies = SchedulerPolicy::orderBy('name', 'asc')->get();
 		$subresources = array();
 		$resources = (new Asset)->tree();
+		$qoses = Qos::query()->orderBy('name', 'asc')->get();
 
 		return view('queues::admin.queues.edit', [
 			'row'   => $row,
@@ -399,6 +402,7 @@ class QueuesController extends Controller
 			'schedulerpolicies' => $schedulerpolicies,
 			'resources' => $resources,
 			'subresources' => $subresources,
+			'qoses' => $qoses,
 		]);
 	}
 
@@ -431,6 +435,7 @@ class QueuesController extends Controller
 		$schedulerpolicies = SchedulerPolicy::orderBy('name', 'asc')->get();
 		$subresources = array();
 		$resources = (new Asset)->tree();
+		$qoses = Qos::query()->orderBy('name', 'asc')->get();
 
 		return view('queues::admin.queues.edit', [
 			'row'   => $row,
@@ -439,6 +444,7 @@ class QueuesController extends Controller
 			'schedulerpolicies' => $schedulerpolicies,
 			'resources' => $resources,
 			'subresources' => $subresources,
+			'qoses' => $qoses,
 		]);
 	}
 
@@ -542,6 +548,33 @@ class QueuesController extends Controller
 			$size->corecount = 20000;
 			$size->datetimestart = $row->datetimecreated;
 			$size->save();
+		}
+
+		// QoS
+		$applied_qos = $row->queueqoses->pluck('qosid')->toArray();
+
+		$qoses = $request->input('qos', []);
+		$remove = array_diff($applied_qos, $qoses);
+
+		foreach ($remove as $qosid)
+		{
+			$qos = QueueQos::find($qosid);
+			if (!$qos)
+			{
+				continue;
+			}
+			$qos->delete();
+		}
+
+		foreach ($qoses as $qosid)
+		{
+			if (!in_array($qosid, $applied_qos))
+			{
+				$qos = new QueueQos;
+				$qos->qosid = $qosid;
+				$qos->queueid = $row->id;
+				$qos->save();
+			}
 		}
 
 		return $this->cancel()->withSuccess($id ? trans('global.messages.item updated') : trans('global.messages.item created'));

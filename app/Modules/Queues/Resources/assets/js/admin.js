@@ -194,15 +194,23 @@ document.addEventListener('DOMContentLoaded', function () {
 	// Update the "cores" field based on the cores-per-node value
 	document.querySelectorAll('.nodes').forEach(function (el) {
 		el.addEventListener('change', function () {
-			var nodecores = this.getAttribute('data-nodes');
+			var nodecores = this.getAttribute('data-cores');
+			var nodegpus = this.getAttribute('data-gpus');
 
 			var cores = document.getElementById(this.getAttribute('data-cores-field'));
+			var gpus = document.getElementById(this.getAttribute('data-gpus-field'));
 			var nodes = this.value.replace(/(^\s+|\s+$)/g, '');
 
 			if (nodes.match(RegExp("^[-]?[0-9]+(.[0-9]{1,2})?$"))) {
-				cores.value = (nodes * nodecores);
+				cores.value = Math.round(nodes * nodecores);
+				if (gpus) {
+					gpus.value = Math.round(nodes * nodegpus);
+				}
 			} else {
 				cores.value = '';
+				if (gpus) {
+					gpus.value = '';
+				}
 			}
 		});
 	});
@@ -221,6 +229,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
 			if (cores.match(RegExp("^[-]?[0-9]+$"))) {
 				nodes.value = (cores / nodecores);
+			} else {
+				nodes.value = '';
+			}
+		});
+	});
+
+	// Update the "nodes" field based on the gpus-per-node value
+	document.querySelectorAll('.gpus').forEach(function (el) {
+		el.addEventListener('change', function () {
+			var nodegpus = this.getAttribute('data-gpus');
+
+			if (nodegpus == 0) {
+				return;
+			}
+
+			var gpus = this.value.replace(/(^\s+|\s+$)/g, '');
+			var nodes = document.getElementById(this.getAttribute('data-nodes-field'));
+
+			var cores = document.getElementById(nodes.getAttribute('data-cores-field'));
+
+			if (gpus.match(RegExp("^[-]?[0-9]+$"))) {
+				nodes.value = (gpus / nodegpus);
+				cores.value = Math.round(nodes.value * nodes.getAttribute('data-cores'));
 			} else {
 				nodes.value = '';
 			}

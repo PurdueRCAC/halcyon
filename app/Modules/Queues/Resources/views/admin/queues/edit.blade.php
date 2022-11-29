@@ -377,6 +377,20 @@ app('pathway')
 				</fieldset>
 
 				<fieldset class="adminform">
+					<legend>{{ trans('queues::queues.qos') }}</legend>
+
+					<?php
+					$applied_qoses = $row->queueqoses->pluck('qosid')->toArray();
+					?>
+					@foreach ($qoses as $qos)
+					<div class="form-check">
+						<input type="checkbox" name="qos[]" id="field-qos-{{ $qos->id }}" class="form-check-input" value="{{ $qos->id }}" <?php if (in_array($qos->id, $applied_qoses)) { echo ' checked'; } ?>/>
+						<label for="field-qos-{{ $qos->id }}" class="form-check-label">{{ $qos->name }}</label>
+					</div>
+					@endforeach
+				</fieldset>
+
+				<fieldset class="adminform">
 					<legend>{{ trans('global.publishing') }}</legend>
 
 					<div class="form-group">
@@ -458,7 +472,7 @@ app('pathway')
 						if ($item->serviceunits > 0):
 							$total += $item->serviceunits;
 						else:
-							$total += $nodecores ? round($item->corecount / $nodecores, 1) : 0;
+							$total += $item->corecount; //$nodecores ? round($item->corecount / $nodecores, 1) : 0;
 						endif;
 
 						$item->total = $total;
@@ -520,10 +534,11 @@ app('pathway')
 							if ($item->serviceunits > 0):
 								$amt = $item->serviceunits;
 							else:
-								$amt = $item->nodecount;
+								/*$amt = $item->nodecount;
 								if ($item->corecount):
 									$amt = $nodecores ? round($item->corecount / $nodecores, 1) : 0;
-								endif;
+								endif;*/
+								$amt = $item->corecount;
 							endif;
 
 							echo '<a href="#dialog-edit' . $item->id . '" class="dialog-btn">' . $what . '</a>';
@@ -592,13 +607,53 @@ app('pathway')
 											<div class="row">
 												<div class="col-md-12">
 													<div class="form-group">
-														<label for="loan-serviceunits{{ $item->id }}">{{ trans('queues::queues.service units') }}</label>
+														<label for="loan-serviceunits{{ $item->id }}">{{ trans('queues::queues.service units') }} <span class="required">{{ trans('global.required') }}</span></label>
 														<input type="number" name="serviceunits" class="form-control serviceunits" size="4" id="loan-serviceunits{{ $item->id }}" value="{{ $item->serviceunits }}" step="0.25" />
 													</div>
 												</div>
 											</div>
 											<input type="hidden" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $nodecores ? round($item->corecount / $nodecores, 1) : $item->nodecount }}" step="0.5" />
 											<input type="hidden" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
+											@elseif ($unit == 'gpus')
+											<!--
+											<div class="row">
+												<div class="col-md-6">
+													<div class="form-group">
+														<label for="loan-nodes{{ $item->id }}">{{ trans('queues::queues.nodes') }}</label>
+														<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" data-nodes="{{ $row->subresource->nodegpus }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $nodecores ? round($item->corecount / $row->subresource->nodegpus, 1) : $item->nodecount }}" step="0.5" />
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.' . $unit) }} <span class="text-muted">({{ trans('queues::queues.cores per nodes', ['cores' => $row->subresource->nodegpus]) }})</span> <span class="required">{{ trans('global.required') }}</span></label>
+														<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" data-cores="{{ $row->subresource->nodegpus }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
+													</div>
+												</div>
+											</div>
+											<input type="hidden" name="serviceunits" class="form-control serviceunits" size="4" id="loan-serviceunits{{ $item->id }}" value="{{ $item->serviceunits }}" step="0.25" />
+											-->
+											<div class="row">
+												<div class="col-md-3">
+													<div class="form-group">
+														<label for="loan-nodes{{ $item->id }}">{{ trans('queues::queues.nodes') }}</label>
+														<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" data-cores="{{ $row->subresource->nodecores }}" data-gpus="{{ $row->subresource->nodegpus }}" data-cores-field="loan-cores{{ $item->id }}" data-gpus-field="loan-serviceunits{{ $item->id }}" value="{{ $nodecores ? round($item->corecount / $nodecores, 1) : $item->nodecount }}" step="0.5" />
+													</div>
+												</div>
+												<div class="col-md-5">
+													<div class="form-group">
+														<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.cores') }} <span class="required">{{ trans('global.required') }}</span></label>
+														<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
+														<span class="text-muted">({{ trans('queues::queues.cores per nodes', ['cores' => $row->subresource->nodecores]) }})</span>
+													</div>
+												</div>
+												<div class="col-md-4">
+													<div class="form-group">
+														<label for="loan-serviceunits{{ $item->id }}">{{ trans('queues::queues.gpus') }} <span class="required">{{ trans('global.required') }}</span></label>
+														<input type="number" name="serviceunits" class="form-control gpus" size="4" id="loan-serviceunits{{ $item->id }}" data-gpus="{{ $row->subresource->nodegpus }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ round($item->serviceunits) }}" />
+														<span class="text-muted">({{ trans('queues::queues.cores per nodes', ['cores' => $row->subresource->nodegpus]) }})</span>
+													</div>
+												</div>
+											</div>
 											@else
 											<div class="row">
 												<div class="col-md-6">
@@ -609,8 +664,9 @@ app('pathway')
 												</div>
 												<div class="col-md-6">
 													<div class="form-group">
-														<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.cores') }} <span class="text-muted">({{ trans('queues::queues.cores per ' . $unit, ['cores' => $row->subresource->nodecores]) }})</span></label>
+														<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.cores') }} <span class="required">{{ trans('global.required') }}</span></label>
 														<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
+														<span class="text-muted">({{ trans('queues::queues.cores per ' . $unit, ['cores' => $row->subresource->nodecores]) }})</span>
 													</div>
 												</div>
 											</div>
@@ -620,7 +676,7 @@ app('pathway')
 											<div class="row">
 												<div class="col-md-6">
 													<div class="form-group">
-														<label for="loan-datetimestart{{ $item->id }}">{{ trans('queues::queues.start') }}</label>
+														<label for="loan-datetimestart{{ $item->id }}">{{ trans('queues::queues.start') }} <span class="required">{{ trans('global.required') }}</span></label>
 														<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart{{ $item->id }}" value="{{ $item->datetimestart->toDateTimeString() }}" />
 													</div>
 												</div>
@@ -675,13 +731,36 @@ app('pathway')
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
-									<label for="sell-serviceunits">{{ trans('queues::queues.service units') }}</label>
+									<label for="sell-serviceunits">{{ trans('queues::queues.service units') }} <span class="required">{{ trans('global.required') }}</span></label>
 									<input type="number" class="form-control serviceunits" size="4" id="sell-serviceunits" name="serviceunits" value="0.00" step="0.25" />
 								</div>
 							</div>
 						</div>
 						<input type="hidden" class="form-control nodes" size="4" id="sell-nodes" name="nodecount" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="sell-cores" value="0" step="0.5" />
 						<input type="hidden" class="form-control cores" size="4" id="sell-cores" name="corecount" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="sell-nodes" value="0" />
+						@elseif ($unit == 'gpus')
+							<div class="row">
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="sell-nodes">{{ trans('queues::queues.nodes') }}</label>
+										<input type="number" name="nodecount" class="form-control nodes" size="4" id="sell-nodes" data-cores="{{ $row->subresource->nodecores }}" data-gpus="{{ $row->subresource->nodegpus }}" data-cores-field="sell-cores" data-gpus-field="sell-serviceunits" value="0" step="0.5" />
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="sell-cores">{{ trans('queues::queues.cores') }} <span class="required">{{ trans('global.required') }}</span></label>
+										<input type="number" name="corecount" class="form-control cores" size="4" id="sell-cores" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="sell-nodes" value="0" />
+										<span class="text-muted">({{ trans('queues::queues.cores per nodes', ['cores' => $row->subresource->nodecores]) }})</span>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="sell-serviceunits">{{ trans('queues::queues.gpus') }} <span class="required">{{ trans('global.required') }}</span></label>
+										<input type="number" name="serviceunits" class="form-control gpus" size="4" id="sell-serviceunits" data-gpus="{{ $row->subresource->nodegpus }}" data-nodes-field="sell-nodes" value="0" />
+										<span class="text-muted">({{ trans('queues::queues.cores per nodes', ['cores' => $row->subresource->nodegpus]) }})</span>
+									</div>
+								</div>
+							</div>
 						@else
 						<div class="row">
 							<div class="col-md-6">
@@ -692,8 +771,9 @@ app('pathway')
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="sell-cores">{{ trans('queues::queues.cores') }} <span class="text-muted">({{ trans('queues::queues.cores per ' . $unit, ['cores' => $row->subresource->nodecores]) }})</span></label>
+									<label for="sell-cores">{{ trans('queues::queues.cores') }} <span class="required">{{ trans('global.required') }}</span></label>
 									<input type="number" class="form-control cores" size="4" id="sell-cores" name="corecount" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="sell-nodes" value="0" />
+									<span class="text-muted">({{ trans('queues::queues.cores per ' . $unit, ['cores' => $row->subresource->nodecores]) }})</span>
 								</div>
 							</div>
 						</div>
@@ -840,13 +920,36 @@ app('pathway')
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
-									<label for="sell-serviceunits">{{ trans('queues::queues.service units') }}</label>
+									<label for="sell-serviceunits">{{ trans('queues::queues.service units') }} <span class="required">{{ trans('global.required') }}</span></label>
 									<input type="number" name="serviceunits" class="form-control serviceunits" size="4" id="loan-serviceunits" value="0.00" step="0.25" />
 								</div>
 							</div>
 						</div>
 						<input type="hidden" name="nodecount" class="form-control nodes" size="4" id="loan-nodes" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores" value="0" step="0.5" />
 						<input type="hidden" name="corecount" class="form-control cores" size="4" id="loan-cores" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes" value="0" />
+						@elseif ($unit == 'gpus')
+							<div class="row">
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="loan-nodes">{{ trans('queues::queues.nodes') }}</label>
+										<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes" data-cores="{{ $row->subresource->nodecores }}" data-gpus="{{ $row->subresource->nodegpus }}" data-cores-field="loan-cores" data-gpus-field="loan-serviceunits" value="0" step="0.5" />
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="loan-cores">{{ trans('queues::queues.cores') }} <span class="required">{{ trans('global.required') }}</span></label>
+										<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes" value="0" />
+										<span class="text-muted">({{ trans('queues::queues.cores per nodes', ['cores' => $row->subresource->nodecores]) }})</span>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="loan-serviceunits">{{ trans('queues::queues.gpus') }} <span class="required">{{ trans('global.required') }}</span></label>
+										<input type="number" name="serviceunits" class="form-control gpus" size="4" id="loan-serviceunits" data-gpus="{{ $row->subresource->nodegpus }}" data-nodes-field="loan-nodes" value="0" />
+										<span class="text-muted">({{ trans('queues::queues.cores per nodes', ['cores' => $row->subresource->nodegpus]) }})</span>
+									</div>
+								</div>
+							</div>
 						@else
 						<div class="row">
 							<div class="col-md-6">
@@ -857,8 +960,9 @@ app('pathway')
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="loan-cores">{{ trans('queues::queues.cores') }} <span class="text-muted">({{ trans('queues::queues.cores per ' . $unit, ['cores' => $row->subresource->nodecores]) }})</span></label>
+									<label for="loan-cores">{{ trans('queues::queues.cores') }} <span class="required">{{ trans('global.required') }}</span></label>
 									<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes" value="0" />
+									<span class="text-muted">({{ trans('queues::queues.cores per ' . $unit, ['cores' => $row->subresource->nodecores]) }})</span>
 								</div>
 							</div>
 						</div>

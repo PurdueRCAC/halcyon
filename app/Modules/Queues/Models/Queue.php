@@ -282,6 +282,26 @@ class Queue extends Model
 	}
 
 	/**
+	 * Defines a direct relationship to queues
+	 *
+	 * @return object
+	 */
+	public function qos()
+	{
+		return $this->hasManyThrough(Qos::class, QueueQos::class, 'queueid', 'id', 'id', 'qosid');
+	}
+
+	/**
+	 * Defines a relationship to queue qos map
+	 *
+	 * @return  object
+	 */
+	public function queueqoses()
+	{
+		return $this->hasMany(QueueQos::class, 'queueid');
+	}
+
+	/**
 	 * Defines a relationship to sizes (purchases)
 	 *
 	 * @return  object

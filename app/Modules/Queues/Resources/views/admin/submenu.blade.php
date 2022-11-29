@@ -8,6 +8,9 @@
 			<a class="nav-link @if (trim($slot) == 'types') active @endif" href="{{ route('admin.queues.types') }}">{{ trans('queues::queues.types') }}</a>
 		</li>
 		<li class="nav-item">
+			<a class="nav-link @if (trim($slot) == 'qos') active @endif" href="{{ route('admin.queues.qos') }}">{{ trans('queues::queues.qos') }}</a>
+		</li>
+		<li class="nav-item">
 			<a class="nav-link @if (trim($slot) == 'schedulers') active @endif" href="{{ route('admin.queues.schedulers') }}">{{ trans('queues::queues.schedulers') }}</a>
 		</li>
 		<li class="nav-item">

@@ -32,6 +32,33 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		])->where('id', '[0-9]+');
 	});
 
+	$router->group(['prefix' => 'qos', 'middleware' => 'auth:api'], function (Router $router)
+	{
+		$router->get('/', [
+			'as' => 'api.queues.qos',
+			'uses' => 'QosController@index',
+		]);
+		$router->post('/', [
+			'as' => 'api.queues.qos.create',
+			'uses' => 'QosController@create',
+			'middleware' => 'can:manage queues',
+		]);
+		$router->get('{id}', [
+			'as' => 'api.queues.qos.read',
+			'uses' => 'QosController@read',
+		])->where('id', '[0-9]+');
+		$router->match(['put', 'patch'], '{id}', [
+			'as' => 'api.queues.qos.update',
+			'uses' => 'QosController@update',
+			'middleware' => 'can:manage queues',
+		])->where('id', '[0-9]+');
+		$router->delete('{id}', [
+			'as' => 'api.queues.qos.delete',
+			'uses' => 'QosController@delete',
+			'middleware' => 'can:manage queues',
+		])->where('id', '[0-9]+');
+	});
+
 	$router->group(['prefix' => 'walltimes', 'middleware' => 'auth:api'], function (Router $router)
 	{
 		$router->get('/', [

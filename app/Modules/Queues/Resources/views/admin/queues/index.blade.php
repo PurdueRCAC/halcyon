@@ -90,17 +90,24 @@ app('pathway')
 				<label class="sr-only" for="filter_resource">{{ trans('queues::queues.resource') }}</label>
 				<select name="resource" id="filter_resource" class="form-control filter filter-submit">
 					<option value="0">{{ trans('queues::queues.all resources') }}</option>
+					<?php
+					$units = array();
+					?>
 					@foreach ($resources as $resource)
 						<?php
 						$subresources = $resource->subresources()->orderBy('name', 'asc')->get();
 						if (!count($subresources)):
 							continue;
 						endif;
+						if ($facet = $resource->getFacet('allocation_unit')):
+							$unit = $facet->value;
+						endif;
 						$selected = ($resource->id == $filters['resource'] ? ' selected="selected"' : '');
 						?>
 						<option value="{{ $resource->id }}"<?php echo $selected; ?>>{{ str_repeat('- ', $resource->level) . $resource->name }}</option>
 						<?php
 						foreach ($subresources as $subresource):
+							$units[$subresource->id] = $unit;
 							$key = 's' . $subresource->id;
 							$selected = ($filters['resource'] && $key == (string)$filters['resource'] ? ' selected="selected"' : '');
 							?>
@@ -305,8 +312,23 @@ app('pathway')
 							@if ($row->serviceunits > 0)
 								{{ number_format($row->serviceunits) }} <span class="text-muted">SUs</span>
 							@else
+								<?php
+								$unit = 'nodes';
+								if (isset($units[$row->subresourceid])):
+									$unit = $units[$row->subresourceid];
+								else:
+									if ($facet = $row->resource->getFacet('allocation_unit')):
+										$unit = $facet->value;
+										$units[$row->subresourceid] = $unit;
+									endif;
+								endif;
+								?>
+								@if ($unit == 'gpus')
+								{{ number_format($row->totalcores) }} <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
+								@else
 								{{ number_format($row->totalcores) }} <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
 								{{ number_format($row->totalnodes) }} <span class="text-muted">{{ strtolower(trans('queues::queues.nodes')) }}</span>
+								@endif
 							@endif
 						@endif
 						</div>

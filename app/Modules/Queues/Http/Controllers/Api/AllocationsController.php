@@ -16,6 +16,8 @@ use App\Modules\Queues\Events\AllocationDelete;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Models\Child;
 use App\Modules\Resources\Models\Subresource;
+use App\Modules\Users\Models\UserUsername;
+use App\Halcyon\Access\Map;
 use Carbon\Carbon;
 
 /**
@@ -37,6 +39,19 @@ class AllocationsController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "format",
+	 * 		"description":   "Output format. JSON is the default but output can be formatted to accommodate schedulers such as SLURM.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"enum": [
+	 * 				"json",
+	 * 				"slurmcfg"
+	 * 			]
 	 * 		}
 	 * }
 	 * @param   Request  $request
@@ -244,6 +259,236 @@ class AllocationsController extends Controller
 
 			return $allocations <= 0;
 		});*/
+
+		if ($format = $request->input('format'))
+		{
+			if ($format == 'slurmcfg')
+			{
+				$admin_users = ['root', 'nagios', 'rcactest', 'rcacdata'];
+				$admin_groups = ['rcacadms', 'rcacsupp'];
+
+				// Get admins
+				$roles = config('module.queues.admins', []);
+
+				if (!empty($roles))
+				{
+					$admins = Map::query()
+						->whereIn('role_id', $roles)
+						->get()
+						->pluck('user_id')
+						->toArray();
+					$admins = array_unique($admins);
+
+					$usernames = UserUsername::query()
+						->whereIn('userid', $admins)
+						->get()
+						->pluck('username')
+						->toArray();
+
+					$admin_users = array_merge($admin_users, $usernames);
+				}
+
+				$scheduler = Scheduler::query()
+					->where('hostname', '=', $hostname)
+					->first();
+
+				$out = array();
+				$out[] = "# Cluster - 'cluster_name':MaxTRESPerJob=node=50";
+				$out[] = "# Followed by Accounts you want in this fashion (root is created by default)...";
+				$out[] = "# Parent - 'root'";
+				$out[] = "# Account - 'cs':MaxTRESPerJob=node=5:MaxJobs=4:MaxTRESMinsPerJob=cpu=20:FairShare=399:MaxWallDurationPerJob=40:Description='Computer Science':Organization='LC'";
+				$out[] = "# Any of the options after a ':' can be left out and they can be in any order.";
+				$out[] = "# If you want to add any sub accounts just list the Parent THAT HAS ALREADY";
+				$out[] = "# BEEN CREATED before the account line in this fashion...";
+				$out[] = "# Parent - 'cs'";
+				$out[] = "# Account - 'test':MaxTRESPerJob=node=1:MaxJobs=1:MaxTRESMinsPerJob=cpu=1:FairShare=1:MaxWallDurationPerJob=1:Description='Test Account':Organization='Test'";
+				$out[] = "# To add users to a account add a line like this after a Parent - 'line'";
+				$out[] = "# User - 'lipari':MaxTRESPerJob=node=2:MaxJobs=3:MaxTRESMinsPerJob=cpu=4:FairShare=1:MaxWallDurationPerJob=1";
+				$out[] = "Cluster - '" . $scheduler->resource->rolename . "'";
+				$out[] = "Parent - 'root'";
+				$out[] = "User - 'root':DefaultAccount='partner':AdminLevel='Administrator':Fairshare=1";
+
+				$users = array();
+
+				foreach ($queues as $queue)
+				{
+					$unit = 'cores';
+					$resource = $queue->resource;
+					if ($facet = $resource->getFacet('allocation_unit'))
+					{
+						$unit = $facet->value;
+					}
+
+					if (!$queue->totalcores && !$queue->totalnodes && !$queue->serviceunits)
+					{
+						// No resources!
+						continue;
+					}
+
+					if ($queue->groupid > 0 && !count($queue->users))
+					{
+						// No users!
+						continue;
+					}
+
+					$line = array();
+					$line[] = "Account - '" . $queue->name . "'";
+					$line[] = "Description='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
+					$line[] = "Organization='" . $queue->name . "'";
+					$line[] = "Fairshare=1";
+
+					//$line[] = "GrpTRES=cpu=128,gres/gpu=2";
+					$nodecores = $queue->subresource->nodecores;
+
+					$l = "GrpTRES=cpu=" . $queue->totalcores; //($nodecores ? round($queue->totalcores / $nodecores, 1) : 0);
+					if ($unit == 'gpus' && $queue->subresource->nodegpus)
+					{
+						//$tres['gres/gpu'] = $queue->totalcores;
+						$nodes = round($queue->totalcores / $nodecores, 1);
+						//$nodes = round($queue->totalcores / $queue->subresource->nodegpus, 1);
+						//$l  = "GrpTRES=cpu=" . ($nodecores ? $nodes * $nodecores : 0);
+						$l .= ',gres/gpu=' . ($queue->serviceunits ? $queue->serviceunits : round($nodes * $queue->subresource->nodegpus)); //$queue->totalcores;
+					}
+					elseif ($unit == 'sus')
+					{
+					}
+					$line[] = $l;
+
+					if ($queue->maxjobsqueued)
+					{
+						$line[] = "GrpSubmitJobs=" . $queue->maxjobsqueued;
+					}
+					if ($queue->maxjobsrunuser)
+					{
+						$line[] = "MaxJobs=" . $queue->maxjobsrunuser;
+					}
+					if ($queue->maxjobsqueueduser)
+					{
+						$line[] = "MaxSubmitJobs=" . $queue->maxjobsqueueduser;
+					}
+					if ($queue->walltime)
+					{
+						$line[] = "MaxWallDurationPerJob=" . ($queue->walltime / 60);
+					}
+					if ($queue->priority)
+					{
+						$line[] = "Priority=" . $queue->priority;
+					}
+
+					if (count($queue->qos))
+					{
+						$line[] = "QOS='+" . implode(',+', $queue->qos->pluck('name')->toArray()) . "'";
+					}
+
+					$out[] = implode(':', $line);
+
+					$users[] = "Parent - '" . $queue->name . "'";
+
+					// System queue - add all admins
+					if ($queue->groupid <= 0)
+					{
+						foreach ($admin_users as $username)
+						{
+							// User - 'aliaga':Partition='gilbreth-g':DefaultAccount='partner':Fairshare=1:GrpTRES=cpu=128:GrpSubmitJobs=12000:MaxSubmitJobs=5000:MaxWallDurationPerJob=20160:Priority=1000
+							$uline = ["User - '" . $username . "'"];
+							$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
+							$uline[] = "DefaultAccount='partner'";
+							$uline[] = "AdminLevel='Administrator'";
+							$uline[] = "Fairshare=1";
+							$uline[] = $l;
+							if ($queue->maxjobsqueued)
+							{
+								$uline[] = "GrpSubmitJobs=" . $queue->maxjobsqueued;
+							}
+							if ($queue->maxjobsrunuser)
+							{
+								$uline[] = "MaxJobs=" . $queue->maxjobsrunuser;
+							}
+							if ($queue->maxjobsqueueduser)
+							{
+								$uline[] = "MaxSubmitJobs=" . $queue->maxjobsqueueduser;
+							}
+							if ($queue->walltime)
+							{
+								$uline[] = "MaxWallDurationPerJob=" . ($queue->walltime / 60);
+							}
+							if ($queue->priority)
+							{
+								$uline[] = "Priority=" . $queue->priority;
+							}
+
+							$users[] = implode(':', $uline);
+						}
+					}
+
+					foreach ($queue->users as $queueuser)
+					{
+						if (!$queueuser->user)
+						{
+							continue;
+						}
+						//User - 'aliaga':Partition='gilbreth-g':DefaultAccount='partner':Fairshare=1:GrpTRES=cpu=128:GrpSubmitJobs=12000:MaxSubmitJobs=5000:MaxWallDurationPerJob=20160:Priority=1000
+						$uline = ["User - '" . $queueuser->user->username . "'"];
+						$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
+						$uline[] = "DefaultAccount='partner'";
+						if (in_array($queueuser->user->username, $admin_users))
+						{
+							$uline[] = "AdminLevel='Administrator'";
+						}
+						$uline[] = "Fairshare=1";
+						$uline[] = $l;
+						if ($queue->maxjobsqueued)
+						{
+							$uline[] = "GrpSubmitJobs=" . $queue->maxjobsqueued;
+						}
+						if ($queue->maxjobsrunuser)
+						{
+							$uline[] = "MaxJobs=" . $queue->maxjobsrunuser;
+						}
+						if ($queue->maxjobsqueueduser)
+						{
+							$uline[] = "MaxSubmitJobs=" . $queue->maxjobsqueueduser;
+						}
+						if ($queue->walltime)
+						{
+							$uline[] = "MaxWallDurationPerJob=" . ($queue->walltime / 60); // Minutes
+						}
+						if ($queue->priority)
+						{
+							$uline[] = "Priority=" . $queue->priority;
+						}
+
+						$users[] = implode(':', $uline);
+					}
+				}
+
+				$out = array_merge($out, $users);
+
+				$filename = $scheduler->resource->rolename . '.cfg';
+
+				$headers = array(
+					'Content-type' => 'text/plain',
+					'Content-Disposition' => 'attachment; filename=' . $filename,
+					'Pragma' => 'no-cache',
+					'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+					'Expires' => '0',
+					'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT'
+				);
+
+				$callback = function() use ($out)
+				{
+					$file = fopen('php://output', 'w');
+
+					foreach ($out as $datum)
+					{
+						fputs($file, $datum . "\n");
+					}
+					fclose($file);
+				};
+
+				return response()->streamDownload($callback, $filename, $headers);
+			}
+		}
 
 		return new AllocationResourceCollection($queues);
 	}

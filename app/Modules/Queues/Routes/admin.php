@@ -71,6 +71,39 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		]);
 	});
 
+	$router->group(['prefix' => 'qos'], function (Router $router)
+	{
+		$router->match(['get', 'post'], '/', [
+			'as' => 'admin.queues.qos',
+			'uses' => 'QosController@index',
+			'middleware' => 'can:manage queues.qos',
+		]);
+		$router->get('create', [
+			'as' => 'admin.queues.qos.create',
+			'uses' => 'QosController@create',
+			'middleware' => 'can:create queues.qos',
+		]);
+		$router->post('store', [
+			'as' => 'admin.queues.qos.store',
+			'uses' => 'QosController@store',
+			'middleware' => 'can:create queues.qos|edit queues.qos',
+		]);
+		$router->get('{id}', [
+			'as' => 'admin.queues.qos.edit',
+			'uses' => 'QosController@edit',
+			'middleware' => 'can:edit queues.qos',
+		])->where('id', '[0-9]+');
+		$router->match(['get', 'post'], '/delete/{id?}', [
+			'as'   => 'admin.queues.qos.delete',
+			'uses' => 'QosController@delete',
+			'middleware' => 'can:delete queues.qos',
+		]);
+		$router->match(['get', 'post'], 'cancel', [
+			'as' => 'admin.queues.qos.cancel',
+			'uses' => 'QosController@cancel',
+		]);
+	});
+
 	$router->group(['prefix' => 'schedulerpolicies'], function (Router $router)
 	{
 		$router->match(['get', 'post'], '/', [
