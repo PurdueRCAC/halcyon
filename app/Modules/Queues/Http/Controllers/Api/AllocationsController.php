@@ -340,17 +340,39 @@ class AllocationsController extends Controller
 					//$line[] = "GrpTRES=cpu=128,gres/gpu=2";
 					$nodecores = $queue->subresource->nodecores;
 
-					$l = "GrpTRES=cpu=" . $queue->totalcores; //($nodecores ? round($queue->totalcores / $nodecores, 1) : 0);
-					if ($unit == 'gpus' && $queue->subresource->nodegpus)
+					if ($queue->groupid <= 0)
 					{
-						//$tres['gres/gpu'] = $queue->totalcores;
-						$nodes = round($queue->totalcores / $nodecores, 1);
-						//$nodes = round($queue->totalcores / $queue->subresource->nodegpus, 1);
-						//$l  = "GrpTRES=cpu=" . ($nodecores ? $nodes * $nodecores : 0);
-						$l .= ',gres/gpu=' . ($queue->serviceunits ? $queue->serviceunits : round($nodes * $queue->subresource->nodegpus)); //$queue->totalcores;
+						$newhardware = $queue->sizes()->orderBy('datetimestart', 'asc')->first();
+						$totalcores = ($newhardware ? $newhardware->corecount : abs($queue->totalcores));
+						$l = "GrpTRES=cpu=" . $totalcores;
+
+						if ($unit == 'gpus' && $queue->subresource->nodegpus)
+						{
+							//$tres['gres/gpu'] = $queue->totalcores;
+							$nodes = round($totalcores / $nodecores, 1);
+							//$nodes = round($queue->totalcores / $queue->subresource->nodegpus, 1);
+							//$l  = "GrpTRES=cpu=" . ($nodecores ? $nodes * $nodecores : 0);
+							$l .= ',gres/gpu=' . ($queue->serviceunits ? $queue->serviceunits : round($nodes * $queue->subresource->nodegpus)); //$queue->totalcores;
+						}
+						elseif ($unit == 'sus')
+						{
+						}
 					}
-					elseif ($unit == 'sus')
+					else
 					{
+						$l = "GrpTRES=cpu=" . $queue->totalcores; //($nodecores ? round($queue->totalcores / $nodecores, 1) : 0);
+
+						if ($unit == 'gpus' && $queue->subresource->nodegpus)
+						{
+							//$tres['gres/gpu'] = $queue->totalcores;
+							$nodes = round($queue->totalcores / $nodecores, 1);
+							//$nodes = round($queue->totalcores / $queue->subresource->nodegpus, 1);
+							//$l  = "GrpTRES=cpu=" . ($nodecores ? $nodes * $nodecores : 0);
+							$l .= ',gres/gpu=' . ($queue->serviceunits ? $queue->serviceunits : round($nodes * $queue->subresource->nodegpus)); //$queue->totalcores;
+						}
+						elseif ($unit == 'sus')
+						{
+						}
 					}
 					$line[] = $l;
 
