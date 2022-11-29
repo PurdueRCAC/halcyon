@@ -17,6 +17,7 @@ use App\Modules\Queues\Console\EmailExpiredCommand;
 use App\Modules\Queues\Console\FixStatusCommand;
 use App\Modules\Queues\Console\StopCommand;
 use App\Modules\Queues\Console\StartCommand;
+use App\Modules\Queues\Listeners\ManageDefaultQos;
 use App\Modules\Queues\Listeners\GetUserQueues;
 use App\Modules\Queues\Listeners\RemoveMembershipsForDeletedUser;
 use App\Modules\Queues\LogProcessors\QueueMemberships;
@@ -55,6 +56,7 @@ class QueuesServiceProvider extends ServiceProvider
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
 		$this->app['events']->subscribe(new RemoveMembershipsForDeletedUser);
+		$this->app['events']->subscribe(new ManageDefaultQos);
 
 		if (Module::isEnabled('users'))
 		{

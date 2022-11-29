@@ -59,6 +59,15 @@ app('pathway')
 					<option value="enabled"<?php if ($filters['state'] == 'enabled'): echo ' selected="selected"'; endif;?>>{{ trans('queues::queues.enabled') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('queues::queues.trashed') }}</option>
 				</select>
+
+				<label class="sr-only" for="filter_scheduler">{{ trans('queues::queues.scheduler') }}:</label>
+				<select name="scheduler" id="filter_scheduler" class="form-control filter filter-submit">
+					<option value="0">{{ trans('queues::queues.all schedulers') }}</option>
+					<?php foreach ($schedulers as $scheduler): ?>
+						<?php $selected = ($scheduler->id == $filters['scheduler'] ? ' selected="selected"' : ''); ?>
+						<option value="{{ $scheduler->id }}"<?php echo $selected; ?>>{{ $scheduler->hostname }}</option>
+					<?php endforeach; ?>
+				</select>
 			</div>
 		</div>
 
@@ -91,6 +100,9 @@ app('pathway')
 				</th>
 				<th scope="col" class="text-right">
 					{!! Html::grid('sort', trans('queues::queues.priority'), 'priority', $filters['order_dir'], $filters['order']) !!}
+				</th>
+				<th scope="col">
+					{{ trans('queues::queues.scheduler') }}
 				</th>
 				<th scope="col" class="text-right">
 					{{ trans('queues::queues.queues') }}
@@ -125,6 +137,9 @@ app('pathway')
 				</td>
 				<td class="text-right">
 					{{ $row->priority }}
+				</td>
+				<td>
+					{{ $row->scheduler ? $row->scheduler->hostname : '' }}
 				</td>
 				<td class="text-right">
 					@if (auth()->user()->can('edit queues.qos'))

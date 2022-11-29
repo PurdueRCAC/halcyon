@@ -78,6 +78,16 @@ class Qos extends Model
 	];
 
 	/**
+	 * Defines a relationship to schedulers
+	 *
+	 * @return  object
+	 */
+	public function scheduler()
+	{
+		return $this->belongsTo(Scheduler::class, 'scheduler_id');
+	}
+
+	/**
 	 * Defines a direct relationship to queues
 	 *
 	 * @return object

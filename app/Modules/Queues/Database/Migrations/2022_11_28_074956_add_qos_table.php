@@ -17,6 +17,7 @@ class AddQosTable extends Migration
 			Schema::create('queueqos', function (Blueprint $table)
 			{
 				$table->increments('id');
+				$table->integer('scheduler_id')->unsigned()->default(0);
 				$table->string('name', 255);
 				$table->text('description')->nullable();
 				$table->integer('flags')->unsigned()->default(0);

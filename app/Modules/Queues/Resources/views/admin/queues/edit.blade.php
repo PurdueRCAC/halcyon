@@ -383,9 +383,11 @@ app('pathway')
 					$applied_qoses = $row->queueqoses->pluck('qosid')->toArray();
 					?>
 					@foreach ($qoses as $qos)
-					<div class="form-check">
-						<input type="checkbox" name="qos[]" id="field-qos-{{ $qos->id }}" class="form-check-input" value="{{ $qos->id }}" <?php if (in_array($qos->id, $applied_qoses)) { echo ' checked'; } ?>/>
-						<label for="field-qos-{{ $qos->id }}" class="form-check-label">{{ $qos->name }}</label>
+					<div class="form-group mb-0">
+						<div class="form-check">
+							<input type="checkbox" name="qos[]" id="field-qos-{{ $qos->id }}" class="form-check-input" value="{{ $qos->id }}" <?php if (in_array($qos->id, $applied_qoses)) { echo ' checked'; } ?>/>
+							<label for="field-qos-{{ $qos->id }}" class="form-check-label">{{ $qos->name }}</label>
+						</div>
 					</div>
 					@endforeach
 				</fieldset>

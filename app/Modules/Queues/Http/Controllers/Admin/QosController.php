@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Queues\Models\Qos;
 use App\Modules\Queues\Models\QueueQos;
+use App\Modules\Queues\Models\Scheduler;
 use App\Halcyon\Http\StatefulRequest;
 
 class QosController extends Controller
@@ -24,6 +25,7 @@ class QosController extends Controller
 		$filters = array(
 			'search'   => null,
 			'priority' => null,
+			'scheduler' => null,
 			'state' => 'enabled',
 			// Paging
 			'limit'    => config('list_limit', 20),
@@ -91,9 +93,12 @@ class QosController extends Controller
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
+		$schedulers = Scheduler::orderBy('hostname', 'asc')->get();
+
 		return view('queues::admin.qos.index', [
 			'rows'    => $rows,
 			'filters' => $filters,
+			'schedulers' => $schedulers,
 		]);
 	}
 
@@ -115,9 +120,12 @@ class QosController extends Controller
 			->orderBy('name', 'asc')
 			->get();
 
+		$schedulers = Scheduler::orderBy('hostname', 'asc')->get();
+
 		return view('queues::admin.qos.edit', [
 			'row' => $row,
 			'qoses' => $qoses,
+			'schedulers' => $schedulers,
 		]);
 	}
 
@@ -140,9 +148,12 @@ class QosController extends Controller
 			->orderBy('name', 'asc')
 			->get();
 
+		$schedulers = Scheduler::orderBy('hostname', 'asc')->get();
+
 		return view('queues::admin.qos.edit', [
 			'row' => $row,
 			'qoses' => $qoses,
+			'schedulers' => $schedulers,
 		]);
 	}
 
@@ -155,6 +166,7 @@ class QosController extends Controller
 	public function store(Request $request)
 	{
 		$rules = [
+			'scheduler_id' => 'required|integer',
 			'name' => 'required|string|max:255',
 			'description' => 'nullable|string',
 			'max_jobs_pa' => 'nullable|integer',

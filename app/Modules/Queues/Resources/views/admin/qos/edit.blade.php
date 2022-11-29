@@ -78,6 +78,17 @@ document.addEventListener('DOMContentLoaded', function () {
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
+					<label for="field-scheduler">{{ trans('queues::queues.scheduler') }} <span class="required">{{ trans('global.required') }}</span></label>
+					<select name="scheduler_id" id="field-scheduler" class="form-control">
+						<option value="0">{{ trans('global.none') }}</option>
+						<?php foreach ($schedulers as $scheduler): ?>
+							<?php $selected = ($scheduler->id == $row->scheduler_id ? ' selected="selected"' : ''); ?>
+							<option value="{{ $scheduler->id }}"<?php echo $selected; ?>>{{ $scheduler->hostname }}</option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+
+				<div class="form-group">
 					<label for="field-name">{{ trans('queues::queues.name') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="name" id="field-name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" maxlength="255" required value="{{ $row->name }}" />
 					<span class="invalid-feedback">{{ $errors->first('name') }}</span>

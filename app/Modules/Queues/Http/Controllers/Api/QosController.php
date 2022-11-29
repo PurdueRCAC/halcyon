@@ -136,6 +136,15 @@ class QosController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
+	 * 		"name":          "scheduler_id",
+	 * 		"description":   "Associate the QoS to a specific scheduler",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "name",
 	 * 		"description":   "Entry name",
 	 * 		"required":      true,
@@ -176,6 +185,7 @@ class QosController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
+			'scheduler_id' => 'required|integer',
 			'name' => 'required|string|max:255',
 			'description' => 'nullable|string',
 			'max_jobs_pa' => 'nullable|integer',
@@ -265,7 +275,7 @@ class QosController extends Controller
 	}
 
 	/**
-	 * Update a queue scheduler policy
+	 * Update a QoS
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /queues/qos/{id}
@@ -275,6 +285,15 @@ class QosController extends Controller
 	 * 		"name":          "id",
 	 * 		"description":   "Entry identifier",
 	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "scheduler_id",
+	 * 		"description":   "Associate the QoS to a specific scheduler",
+	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer"
 	 * 		}
@@ -325,6 +344,7 @@ class QosController extends Controller
 	public function update($id, Request $request)
 	{
 		$rules = [
+			'scheduler_id' => 'nullable|integer',
 			'name' => 'nullable|string|max:255',
 			'description' => 'nullable|string',
 			'max_jobs_pa' => 'nullable|integer',
