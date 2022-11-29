@@ -606,6 +606,10 @@ class Slurm
 			$tres = explode(',', $qos->grp_tres);
 			foreach ($tres as $i => $tr)
 			{
+				if (!$tr)
+				{
+					continue;
+				}
 				$bits = explode('=', $tr);
 				$tres[$i] = [
 					'type' => $bits[0],
