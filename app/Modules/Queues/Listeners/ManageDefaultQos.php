@@ -101,6 +101,51 @@ class ManageDefaultQos
 			$qos->name = $queue->name;
 			$qos->description = 'Default QoS for account ' . $queue->name;
 			$qos->scheduler_id = $queue->schedulerid;
+
+			$unit = 'cores';
+			$resource = $queue->resource;
+			if ($facet = $resource->getFacet('allocation_unit'))
+			{
+				$unit = $facet->value;
+			}
+
+			$nodecores = $queue->subresource->nodecores;
+
+			$l = "cpu=" . $queue->totalcores;
+
+			if ($unit == 'gpus' && $queue->subresource->nodegpus)
+			{
+				$nodes = round($queue->totalcores / $nodecores, 1);
+	
+				$l .= ',gres/gpu=' . ($queue->serviceunits ? $queue->serviceunits : round($nodes * $queue->subresource->nodegpus));
+			}
+			elseif ($unit == 'sus')
+			{
+			}
+
+			$qos->grp_tres = $l;
+
+			if ($queue->maxjobsqueued)
+			{
+				$qos->grp_submit_jobs = $queue->maxjobsqueued;
+			}
+			if ($queue->maxjobsrunuser)
+			{
+				$qos->max_jobs_per_user = $queue->maxjobsrunuser;
+			}
+			if ($queue->maxjobsqueueduser)
+			{
+				//$qos->max_submit_jobs_per_user = $queue->maxjobsqueueduser;
+				$qos->grp_jobs = $queue->maxjobsqueueduser;
+			}
+			if ($queue->walltime)
+			{
+				$qos->max_wall_duration_per_job = ($queue->walltime / 60);
+			}
+			if ($queue->priority)
+			{
+				$qos->priority = $queue->priority;
+			}
 			$qos->save();
 		}
 
