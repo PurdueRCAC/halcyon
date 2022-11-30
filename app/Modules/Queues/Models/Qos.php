@@ -78,6 +78,24 @@ class Qos extends Model
 	];
 
 	/**
+	 * Boot
+	 *
+	 * @return  void
+	 */
+	public static function boot()
+	{
+		parent::boot();
+
+		self::deleted(function($model)
+		{
+			foreach ($model->queueqoses as $queueqos)
+			{
+				$queueqos->delete();
+			}
+		});
+	}
+
+	/**
 	 * Defines a relationship to schedulers
 	 *
 	 * @return  object
@@ -106,28 +124,6 @@ class Qos extends Model
 	{
 		return $this->hasMany(QueueQos::class, 'qosid');
 	}
-
-	/**
-	 * Set grace time. Incoming value is expected to be # hours. Convert to minutes.
-	 *
-	 * @param   integer  $value
-	 * @return  void
-	 */
-	/*public function setGraceTimeAttribute($value)
-	{
-		$this->attributes['grace_time'] = $value * 60; // * 60;
-	}*/
-
-	/**
-	 * Set preempt_exempt_time. Incoming value is expected to be # hours. Convert to minutes.
-	 *
-	 * @param   integer  $value
-	 * @return  void
-	 */
-	/*public function setPreemptExemptTimeAttribute($value)
-	{
-		$this->attributes['preempt_exempt_time'] = $value * 60; // * 60;
-	}*/
 
 	/**
 	 * Get the list of preempts

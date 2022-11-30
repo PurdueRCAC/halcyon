@@ -251,13 +251,15 @@ class ManageDefaultQos
 
 		$nodecores = $queue->subresource->nodecores;
 
-		$l = "cpu=" . $queue->totalcores;
+		$l = 'cpu=' . $queue->totalcores;
 
 		if ($unit == 'gpus' && $queue->subresource->nodegpus)
 		{
 			$nodes = round($queue->totalcores / $nodecores, 1);
 
 			$l .= ',gres/gpu=' . ($queue->serviceunits ? $queue->serviceunits : round($nodes * $queue->subresource->nodegpus));
+
+			$qos->min_tres_pj = 'gres/gpu=1';
 		}
 		elseif ($unit == 'sus')
 		{

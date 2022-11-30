@@ -165,7 +165,7 @@ class QosController extends Controller
 
 		$rows->each(function($item, $key)
 		{
-			$item->cmd = $item->name . " Fairshare=1";
+			$item->cmd = $item->name . ' ';
 
 			$keys = [
 				'flags' => 'Flags',
@@ -183,7 +183,7 @@ class QosController extends Controller
 				'max_tres_mins_pj' => 'MaxTRESMinsPerJob',
 				//'max_tres_run_mins_pa' => 'MaxTRESMinsPerAccount',
 				//'max_tres_run_mins_pu' => 'MaxTRESMinsPerJob',
-				'min_tres_pj' => 'MaxTRESPerJob',
+				'min_tres_pj' => 'MinTRESPerJob',
 				'max_wall_duration_per_job' => 'MaxWallDurationPerJob',
 				'grp_jobs' => 'GrpJobs',
 				'grp_jobs_accrue' => 'GrpJobsAccrue',
