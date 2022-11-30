@@ -349,7 +349,7 @@ class AllocationsController extends Controller
 					//$line[] = "GrpTRES=cpu=128,gres/gpu=2";
 					$nodecores = $queue->subresource->nodecores;
 
-					if ($queue->groupid <= 0)
+					if ($queue->isSystem())
 					{
 						$newhardware = $queue->sizes()->orderBy('datetimestart', 'asc')->first();
 						$totalcores = ($newhardware ? $newhardware->corecount : abs($queue->totalcores));

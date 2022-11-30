@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Queues\Models\Qos;
+use App\Modules\Queues\Models\Scheduler;
 
 /**
  * Quality of Service
@@ -29,6 +30,24 @@ class QosController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "hostname",
+	 * 		"description":   "A scheduler hostname",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "scheduler_id",
+	 * 		"description":   "Filter by scheduler ID. If unknown, can use hostname.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -88,14 +107,16 @@ class QosController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
-			'priority'    => $request->input('priority'),
-			'search'      => $request->input('search'),
+			'priority'     => $request->input('priority'),
+			'scheduler_id' => $request->input('scheduler_id'),
+			'hostname'     => $request->input('hostname'),
+			'search'       => $request->input('search'),
 			// Paging
-			'limit'       => $request->input('limit', config('list_limit', 20)),
-			'page'        => $request->input('page', 1),
+			'limit'        => $request->input('limit', config('list_limit', 20)),
+			'page'         => $request->input('page', 1),
 			// Sorting
-			'order'       => $request->input('order', 'name'),
-			'order_dir'   => $request->input('order_dir', 'desc')
+			'order'        => $request->input('order', 'name'),
+			'order_dir'    => $request->input('order_dir', 'desc')
 		);
 
 		if (!in_array($filters['order'], ['id', 'name', 'description', 'priority']))
@@ -120,10 +141,77 @@ class QosController extends Controller
 			$query->where('priority', '=', $filters['priority']);
 		}
 
+		if ($filters['hostname'])
+		{
+			$scheduler = Scheduler::query()
+				->where('hostname', '=', $filters['hostname'])
+				->first();
+
+			if ($scheduler)
+			{
+				$filters['scheduler_id'] = $scheduler->id;
+			}
+		}
+
+		if ($filters['scheduler_id'])
+		{
+			$query->where('scheduler_id', '=', $filters['scheduler_id']);
+		}
+
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
+
+		$rows->each(function($item, $key)
+		{
+			$item->cmd = $item->name . " Fairshare=1";
+
+			$keys = [
+				'max_jobs_pa' => 'MaxJobsPerAccount',
+				'max_jobs_per_user' => 'MaxJobsPerUser',
+				'max_jobs_accrue_pa' => 'MaxJobsAccruePerAccount',
+				'max_jobs_accrue_pu' => 'MaxJobsAccruePerUser',
+				'min_prio_thresh' => 'MinPrioThreshold',
+				'max_submit_jobs_pa' => 'MaxSubmitJobsPerAccount',
+				'max_submit_jobs_per_user' => 'MaxSubmitJobsPerUser',
+				'max_tres_pa' => 'MaxTRESPerAccount',
+				'max_tres_pj' => 'MaxTRESPerJob',
+				'max_tres_pn' => 'MaxTRESPerNode',
+				'max_tres_pu' => 'MaxTRESPerUser',
+				'max_tres_mins_pj' => 'MaxTRESMinsPerJob',
+				//'max_tres_run_mins_pa' => 'MaxTRESMinsPerAccount',
+				//'max_tres_run_mins_pu' => 'MaxTRESMinsPerJob',
+				'min_tres_pj' => 'MaxTRESPerJob',
+				'max_wall_duration_per_job' => 'MaxWallDurationPerJob',
+				'grp_jobs' => 'GrpJobs',
+				'grp_jobs_accrue' => 'GrpJobsAccrue',
+				'grp_submit' => 'GrpSubmit',
+				'grp_submit_jobs' => 'GrpSubmitJobs',
+				'grp_tres' => 'GrpTRES',
+				'grp_tres_mins' => 'GrpTRESMins',
+				'grp_tres_run_mins' => 'GrpTRESRunMins',
+				'grp_wall' => 'GrpWall',
+				'preempt' => 'Preempt',
+				'preempt_mode' => 'PreemptMode',
+				'preempt_exempt_time' => 'PreemptExemptTime',
+				'priority' => 'Priority',
+				'usage_factor' => 'UsageFactor',
+				'usage_thres' => 'UsageThreshold',
+				'limit_factor' => 'LimitFactor',
+				'grace_time' => 'GraceTime',
+			];
+
+			foreach ($keys as $key => $val)
+			{
+				if ($item->{$key})
+				{
+					$line[] = "$val=" . $item->{$key};
+				}
+			}
+
+			$item->cmd .= ' ' . implode(' ', $line);
+		});
 
 		return new ResourceCollection($rows);
 	}
