@@ -325,16 +325,25 @@ class AllocationsController extends Controller
 						continue;
 					}
 
-					if ($queue->groupid > 0 && !count($queue->users))
+					if (!$queue->isSystem() && !count($queue->users))
 					{
 						// No users!
 						continue;
 					}
 
+					if ($queue->isSystem())
+					{
+						$name = $queue->name;
+					}
+					else
+					{
+						$name = $queue->nameWithSubcluster;
+					}
+
 					$line = array();
-					$line[] = "Account - '" . $queue->name . "'";
+					$line[] = "Account - '" . $name . "'";
 					$line[] = "Description='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
-					$line[] = "Organization='" . $queue->name . "'";
+					$line[] = "Organization='" . $name . "'";
 					$line[] = "Fairshare=1";
 
 					//$line[] = "GrpTRES=cpu=128,gres/gpu=2";
@@ -374,7 +383,7 @@ class AllocationsController extends Controller
 						{
 						}
 					}
-					$line[] = $l;
+					/*$line[] = $l;
 
 					if ($queue->maxjobsqueued)
 					{
@@ -395,7 +404,7 @@ class AllocationsController extends Controller
 					if ($queue->priority)
 					{
 						$line[] = "Priority=" . $queue->priority;
-					}
+					}*/
 
 					if (count($queue->qos))
 					{
@@ -404,10 +413,10 @@ class AllocationsController extends Controller
 
 					$out[] = implode(':', $line);
 
-					$users[] = "Parent - '" . $queue->name . "'";
+					$users[] = "Parent - '" . $name . "'";
 
 					// System queue - add all admins
-					if ($queue->groupid <= 0)
+					if ($queue->isSystem())
 					{
 						foreach ($admin_users as $username)
 						{
@@ -417,7 +426,7 @@ class AllocationsController extends Controller
 							$uline[] = "DefaultAccount='partner'";
 							$uline[] = "AdminLevel='Administrator'";
 							$uline[] = "Fairshare=1";
-							$uline[] = $l;
+							/*$uline[] = $l;
 							if ($queue->maxjobsqueued)
 							{
 								$uline[] = "GrpSubmitJobs=" . $queue->maxjobsqueued;
@@ -437,7 +446,7 @@ class AllocationsController extends Controller
 							if ($queue->priority)
 							{
 								$uline[] = "Priority=" . $queue->priority;
-							}
+							}*/
 
 							$users[] = implode(':', $uline);
 						}
@@ -458,7 +467,7 @@ class AllocationsController extends Controller
 							$uline[] = "AdminLevel='Administrator'";
 						}
 						$uline[] = "Fairshare=1";
-						$uline[] = $l;
+						/*$uline[] = $l;
 						if ($queue->maxjobsqueued)
 						{
 							$uline[] = "GrpSubmitJobs=" . $queue->maxjobsqueued;
@@ -478,7 +487,7 @@ class AllocationsController extends Controller
 						if ($queue->priority)
 						{
 							$uline[] = "Priority=" . $queue->priority;
-						}
+						}*/
 
 						$users[] = implode(':', $uline);
 					}

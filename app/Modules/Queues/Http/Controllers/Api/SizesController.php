@@ -660,9 +660,9 @@ class SizesController extends Controller
 			$updatecounter = true;
 
 			// Can't change corecount of a entry that has already started
-			if ($row->hasStarted())
+			if ($row->hasStarted() && $cores != $row->corecoun)
 			{
-				return response()->json(['message' => trans('queues::queues.error.corecount cannot be modified')], 409);
+				//return response()->json(['message' => trans('queues::queues.error.corecount cannot be modified')], 409);
 			}
 
 			// Don't allow swapping of sale direction or nullation of sale

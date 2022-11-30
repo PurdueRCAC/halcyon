@@ -309,6 +309,13 @@ $queues = $queues->reject(function($q) use ($canManage)
 						<td class="text-right" colspan="2">
 							{{ $q->serviceunits }} <span class="text-muted">SUs</span>
 						</div>
+					@elseif ($unit == 'gpus')
+						<td class="text-right">
+							{{ $q->totalcores }} <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>
+						</td>
+						<td class="text-right">
+							{{ $q->serviceunits ? $q->serviceunits : round($q->totalcores/$q->subresource->nodecores, 1) * $q->subresource->nodegpus }} <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
+						</td>
 					@else
 						<td class="text-right">
 							{{ $q->totalcores }} <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>
@@ -388,6 +395,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 									//$sold  = $q->sold;
 									$loans = $q->loans;
 									$nodecores = $q->subresource->nodecores;
+									$nodegpus = $q->subresource->nodegpus;
 									$total = 0;
 
 									$items = $purchases;//$purchases->merge($sold);
@@ -429,9 +437,15 @@ $queues = $queues->reject(function($q) use ($canManage)
 												{
 													$total += $nodecores ? round($item->corecount / $nodecores, 1) : 0;
 												}*/
-												if ($item->serviceunits > 0)
+												if ($unit == 'sus')
 												{
 													$total += $item->serviceunits;
+												}
+												elseif ($unit == 'gpus')
+												{
+													$nodes = round($item->corecount / $nodecores, 1);
+													$total += ($item->serviceunits ? $item->serviceunits : round($nodes * $nodegpus));
+													//$amt = $item->corecount;
 												}
 												else
 												{
@@ -444,7 +458,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 											$items = $items->sortByDesc('datetimestart')->slice(0, 20);
 
 											foreach ($items as $item): ?>
-											<tr<?php if ($item->hasEnd() && $item->hasEnded()) { echo ' class="trashed"'; } ?>>
+											<tr<?php if ($item->hasEnd() && $item->hasEnded()) { echo ' class="trashed text-danger"'; } ?>>
 												<td>
 													@if ($item->hasStart())
 														@if (!$item->hasStarted())
@@ -500,9 +514,15 @@ $queues = $queues->reject(function($q) use ($canManage)
 														}
 													}
 
-													if ($item->serviceunits > 0)
+													if ($unit == 'sus')
 													{
 														$amt = $item->serviceunits;
+													}
+													elseif ($unit == 'gpus')
+													{
+														$nodes = round($item->corecount / $nodecores, 1);
+														$gpus = ($item->serviceunits ? $item->serviceunits : ceil($nodes * $nodegpus));
+														$amt = $item->corecount;
 													}
 													else
 													{
@@ -539,11 +559,13 @@ $queues = $queues->reject(function($q) use ($canManage)
 													@endif
 												</td>
 												<td class="text-right">
-													<span class="{{ $cls }}">{{ ($cls == 'text-success' ? '+' : '-') }} {{ number_format(abs($amt), 1) }}</span>
 													@if ($unit == 'sus')
-														<span class="text-muted">SUs</span>
+														<span class="{{ $cls }}">{{ ($cls == 'text-success' ? '+' : '-') }} {{ number_format(abs($amt), 1) }}</span>
+													@elseif ($unit == 'gpus')
+														<span class="{{ $cls }}">{{ ($cls == 'text-success' ? '+' : '-') }} {{ number_format($amt) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
+														<span class="{{ $cls }}">{{ ($cls == 'text-success' ? '+' : '-') }} {{ number_format($gpus) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
 													@else
-														<span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
+														<span class="{{ $cls }}">{{ ($cls == 'text-success' ? '+' : '-') }} {{ number_format($amt) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
 													@endif
 												</td>
 												<td class="text-right">

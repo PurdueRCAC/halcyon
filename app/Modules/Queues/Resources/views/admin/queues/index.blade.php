@@ -99,6 +99,7 @@ app('pathway')
 						if (!count($subresources)):
 							continue;
 						endif;
+						$unit = 'nodes';
 						if ($facet = $resource->getFacet('allocation_unit')):
 							$unit = $facet->value;
 						endif;
@@ -297,20 +298,17 @@ app('pathway')
 							@endif
 						</td>
 						<td class="text-right">
-						@if (!$row->active)
-							@if ($upcoming = $row->getUpcomingLoanOrPurchase())
-								@if ($upcoming->serviceunits > 0)
-									{{ number_format($upcoming->serviceunits) }} <span class="text-muted">SUs</span>
+							@if (!$row->active)
+								@if ($upcoming = $row->getUpcomingLoanOrPurchase())
+									@if ($upcoming->serviceunits > 0)
+										{{ number_format($upcoming->serviceunits) }} <span class="text-muted">SUs</span>
+									@else
+										{{ number_format($upcoming->cores) }} <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>
+									@endif
+									<br /><span class="text-success">starts {{ $upcoming->datetimestart->diffForHumans() }}</span>
 								@else
-									{{ number_format($upcoming->cores) }} <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>
+									<span class="text-muted">-</span>
 								@endif
-								<br /><span class="text-success">starts {{ $upcoming->datetimestart->diffForHumans() }}</span>
-							@else
-								<span class="text-muted">-</span>
-							@endif
-						@else
-							@if ($row->serviceunits > 0)
-								{{ number_format($row->serviceunits) }} <span class="text-muted">SUs</span>
 							@else
 								<?php
 								$unit = 'nodes';
@@ -319,18 +317,25 @@ app('pathway')
 								else:
 									if ($facet = $row->resource->getFacet('allocation_unit')):
 										$unit = $facet->value;
-										$units[$row->subresourceid] = $unit;
 									endif;
+
+									$units[$row->subresourceid] = $unit;
 								endif;
 								?>
-								@if ($unit == 'gpus')
-								{{ number_format($row->totalcores) }} <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
+								@if ($unit == 'sus')
+									{{ number_format($row->serviceunits) }} <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
+								@elseif ($unit == 'gpus')
+									<?php
+									$nodes = round($row->totalcores / $row->subresource->nodecores, 1);
+									$gpus = ($row->serviceunits ? $row->serviceunits : round($nodes * $row->subresource->nodegpus));
+									?>
+									{{ number_format($row->totalcores) }} <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
+									{{ number_format($gpus) }} <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
 								@else
-								{{ number_format($row->totalcores) }} <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
-								{{ number_format($row->totalnodes) }} <span class="text-muted">{{ strtolower(trans('queues::queues.nodes')) }}</span>
+									{{ number_format($row->totalcores) }} <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
+									{{ number_format($row->totalnodes) }} <span class="text-muted">{{ strtolower(trans('queues::queues.nodes')) }}</span>
 								@endif
 							@endif
-						@endif
 						</div>
 						<?php
 							/*<td class="priority-5 text-right">

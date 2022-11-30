@@ -659,7 +659,7 @@ class LoansController extends Controller
 			// Can't change corecount of a entry that has already started
 			if ($row->hasStarted() && $cores != $row->corecount)
 			{
-				return response()->json(['message' => trans('queues::queues.error.corecount cannot be modified')], 409);
+				//return response()->json(['message' => trans('queues::queues.error.corecount cannot be modified')], 409);
 			}
 
 			// Don't allow swapping of sale direction or nullation of sale

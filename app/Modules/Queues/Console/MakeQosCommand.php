@@ -88,7 +88,7 @@ class MakeQosCommand extends Command
 					}
 
 					$qos = Qos::query()
-						->where('name', '=', $queue->name)
+						->where('name', '=', $queue->defaultQosName)
 						->where('scheduler_id', '=', $queue->schedulerid)
 						->first();
 

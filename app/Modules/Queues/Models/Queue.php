@@ -779,6 +779,53 @@ class Queue extends Model
 	}
 
 	/**
+	 * Get the name appended with the subcluster
+	 *
+	 * @return  string
+	 */
+	public function getNameWithSubclusterAttribute()
+	{
+		$name = $this->name;
+
+		if (substr($name, -strlen('-' . $this->cluster)) != '-' . $this->cluster)
+		{
+			$name .= '-' . $this->cluster;
+		}
+
+		return $name;
+	}
+
+	/**
+	 * Get the default QoS name
+	 *
+	 * @return  string
+	 */
+	public function getDefaultQosNameAttribute()
+	{
+		return ($this->isSystem() ? $this->name : $this->nameWithSubcluster) . '-default';
+	}
+
+	/**
+	 * Is this a system queue?
+	 *
+	 * @return  bool
+	 */
+	public function isSystem()
+	{
+		return ($this->groupid <= 0);
+	}
+
+	/**
+	 * Is this an owner queue?
+	 *
+	 * @return  bool
+	 */
+	public function isOwner()
+	{
+		return ($this->groupid > 0);
+	}
+
+	/**
 	 * Stop scheduling
 	 *
 	 * @return  bool

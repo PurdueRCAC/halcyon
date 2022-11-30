@@ -432,6 +432,7 @@ app('pathway')
 			//$sold  = $row->sold;
 			$loans = $row->loans;
 			$nodecores = $row->subresource->nodecores;
+			$nodegpus  = $row->subresource->nodegpus;
 			$total = 0;
 
 			$items = $purchases;//$purchases->merge($sold);
@@ -447,7 +448,7 @@ app('pathway')
 						<th scope="col">{{ trans('queues::queues.source') }}</th>
 						<th scope="col">{{ trans('queues::queues.resource') }}</th>
 						<th scope="col">{{ trans('queues::queues.queue') }}</th>
-						<th scope="col" class="text-right">{{ trans('queues::queues.' . $unit) }}</th>
+						<th scope="col" class="text-right">{{ trans('queues::queues.amount') }}</th>
 						<th scope="col" class="text-right">{{ trans('queues::queues.total') }}</th>
 						<th scope="col" class="text-right" colspan="2">{{ trans('queues::queues.options') }}</th>
 					</tr>
@@ -471,8 +472,11 @@ app('pathway')
 						{
 							$total += $nodecores ? round($item->corecount / $nodecores, 1) : 0;
 						}*/
-						if ($item->serviceunits > 0):
+						if ($unit == 'sus'):
 							$total += $item->serviceunits;
+						elseif ($unit == 'gpus'):
+							$nodes = round($item->corecount / $nodecores, 1);
+							$total += ($item->serviceunits > 0 ? $item->serviceunits : ceil($nodes * $nodegpus));
 						else:
 							$total += $item->corecount; //$nodecores ? round($item->corecount / $nodecores, 1) : 0;
 						endif;
@@ -533,8 +537,12 @@ app('pathway')
 
 							//$title  = $item->nodecount . " nodes / ";
 							//$title .= $item->corecount . " cores; ".$what.": ";
-							if ($item->serviceunits > 0):
+							if ($unit == 'sus'):
 								$amt = $item->serviceunits;
+							elseif ($unit == 'gpus'):
+								$nodes = round($item->corecount / $nodecores, 1);
+								$gpus = ($item->serviceunits ? $item->serviceunits : ceil($nodes * $nodegpus));
+								$amt = $item->corecount;
 							else:
 								/*$amt = $item->nodecount;
 								if ($item->corecount):
@@ -568,8 +576,16 @@ app('pathway')
 								{{ $item->source->name }}
 							@endif
 						</td>
-						<td class="text-right">
-							<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format(abs($amt), 1) }}</span>
+						<td class="text-right text-nowrap">
+							<!-- <span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format(abs($amt), 1) }}</span> -->
+							@if ($unit == 'sus')
+								<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format(abs($amt), 1) }}</span>
+							@elseif ($unit == 'gpus')
+								<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format($amt) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
+								<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format($gpus) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
+							@else
+								<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format($amt) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
+							@endif
 						</td>
 						<td class="text-right">
 							{{ number_format($item->total, 1) }}
