@@ -15,6 +15,7 @@ use App\Modules\Queues\Events\QueueSizeDeleted;
 use App\Modules\Queues\Events\QueueLoanCreated;
 use App\Modules\Queues\Events\QueueLoanUpdated;
 use App\Modules\Queues\Events\QueueLoanDeleted;
+use App\Modules\Queues\Events\Schedule;
 use App\Modules\History\Traits\Loggable;
 use App\Modules\Users\Models\User;
 use GuzzleHttp\Client;
@@ -55,6 +56,8 @@ class Slurm
 		$events->listen(QueueLoanUpdated::class, self::class . '@handleQueueAllocation');
 		$events->listen(QueueLoanDeleted::class, self::class . '@handleQueueAllocation');
 		*/
+
+		$events->listen(Schedule::class, self::class . '@handleSchedule');
 	}
 
 	/**
@@ -305,6 +308,7 @@ class Slurm
 		{
 			$aclgroups = explode(',', $queue->aclgroups);
 		}*/
+		$name = ($queue->isSystem() ? $queue->name : $queue->nameWithSubcluster);
 
 		// Gather the list of users (associations)
 		$associations = array();
@@ -312,7 +316,7 @@ class Slurm
 		{
 			$data = array(
 				'user'      => $queueuser->user->username,
-				'account'   => $queue->name,
+				'account'   => $name,
 				'cluster'   => $queue->resource->rolename,
 				'max'       => [
 					'tres' => $tres,
@@ -351,14 +355,14 @@ class Slurm
 		}
 
 		$body = array(
-			'name'         => $queue->name,
-			'description'  => $queue->name,
+			'name'         => $name,
+			'description'  => $name,
 			'organization' => $queue->group->name,
 			'associations' => $associations,
 			'coordinators' => [],
 			'flags'        => [],
 		);
-		print_r($body); die();
+
 		$res = $client->request('POST', $config['url'] . '/accounts', [
 			'json' => $body
 		]);
@@ -431,7 +435,9 @@ class Slurm
 	 */
 	private function getAssociation(Client $client, array $config, Queue $queue, User $user)
 	{
-		$res = $client->request('GET', $config['url'] . '/association?account=' . $queue->name . '&user=' . $user->username . '&cluster=' . $queue->resource->rolename . '&partition=' . $queue->cluster);
+		$name = ($queue->isSystem() ? $queue->name : $queue->nameWithSubcluster);
+
+		$res = $client->request('GET', $config['url'] . '/association?account=' . $name . '&user=' . $user->username . '&cluster=' . $queue->resource->rolename . '&partition=' . $queue->cluster);
 
 		if ($res->getStatusCode() == 404)
 		{
@@ -464,7 +470,7 @@ class Slurm
 
 			$data = array(
 				'user'      => $user->username,
-				'account'   => $queue->name,
+				'account'   => ($queue->isSystem() ? $queue->name : $queue->nameWithSubcluster),
 				'cluster'   => $queue->resource->rolename,
 				//'partition' => $queue->cluster,
 				'max'       => [
@@ -551,7 +557,7 @@ class Slurm
 			return;
 		}
 
-		$url = $config['url'] . '/account/' . $queue->name;
+		$url = $config['url'] . '/account/' . ($queue->isSystem() ? $queue->name : $queue->nameWithSubcluster);
 
 		try
 		{
@@ -597,12 +603,6 @@ class Slurm
 			// Check if a qos already exists
 			$qos = $event->qos;
 
-			/*$existing = $this->getQos($client, $config, $qos);
-
-			if (!$existing)
-			{
-				$this->setQos($client, $config, $qos);
-			}*/
 			$tres = explode(',', $qos->grp_tres);
 			foreach ($tres as $i => $tr)
 			{
@@ -611,9 +611,16 @@ class Slurm
 					continue;
 				}
 				$bits = explode('=', $tr);
+				$name = null;
+				if (strstr($bits[0], '/'))
+				{
+					$bots = explode('/', $bits[0]);
+					$bits[0] = $bots[0];
+					$name = $bots[1];
+				}
 				$tres[$i] = [
-					'type' => $bits[0],
-					'name' => (strstr($bits[0], '/') ? trim('/', strstr($bits[0], '/')) : null),
+					'type'  => $bits[0],
+					'name'  => $name,
 					'count' => $bits[1]
 				];
 			}
@@ -631,15 +638,14 @@ class Slurm
 					'exempt_time' => $qos->preempt_exempt_time,
 				],
 				'limits' => [
-					'grace_time' => ($qos->grace_time ? $qos->grace_time : 0),
+					'grace_time' => ($qos->grace_time ? $qos->grace_time : null),
 					'max' => [
 						'active_jobs' => [
 							'accruing' => null,
-							'count' => $qos->max_jobs_pa,
+							'count' => $qos->grp_jobs,
 						],
 						'tres' => [
-							'total' => [
-							],
+							'total' => $tres,
 							'minutes' => [
 								'per' => [
 									'qos' => ($qos->grp_tres_run_mins ? [$qos->grp_tres_run_mins] : []),
@@ -664,25 +670,26 @@ class Slurm
 						'jobs' => [
 							'active_jobs' => [
 								'per' => [
-									'account' => ($qos->max_submit_jobs_pa ? $qos->max_submit_jobs_pa : 0),
-									'user' => ($qos->max_submit_jobs_per_user ? $qos->max_submit_jobs_per_user : 0),
+									'account' => ($qos->max_submit_jobs_pa ? $qos->max_submit_jobs_pa : null),
+									'user' => ($qos->max_submit_jobs_per_user ? $qos->max_submit_jobs_per_user : null),
 								]
 							],
 							'per' => [
-								'account' => ($qos->max_jobs_pa ? $qos->max_jobs_pa : 0),
-								'job' => ($qos->max_jobs_per_user ? $qos->max_jobs_per_user : 0),
+								'account' => ($qos->max_jobs_pa ? $qos->max_jobs_pa : null),
+								'submitted' => ($qos->grp_submit_jobs ? $qos->grp_submit_jobs : null),
+								'job' => ($qos->max_jobs_per_user ? $qos->max_jobs_per_user : null),
 							]
 						],
 						'accruing' => [
 							'per' => [
-								'account' => ($qos->max_jobs_accrue_pa ? $qos->max_jobs_accrue_pa : 0),
-								'job' => ($qos->max_jobs_accrue_pj ? $qos->max_jobs_accrue_pj : 0),
+								'account' => ($qos->max_jobs_accrue_pa ? $qos->max_jobs_accrue_pa : null),
+								'job' => ($qos->max_jobs_accrue_pj ? $qos->max_jobs_accrue_pj : null),
 							]
 						],
 					],
 					'factor' => $qos->limit_factor,
 					'min' => [
-						'priority_threshold' => ($qos->min_prio_thresh ? $qos->min_prio_thresh : 0),
+						'priority_threshold' => ($qos->min_prio_thresh ? $qos->min_prio_thresh : null),
 						'tres' => [
 							'per' => [
 								'job' => ($qos->min_tres_pj ? [$qos->min_tres_pj] : [])
@@ -699,7 +706,7 @@ class Slurm
 
 			if ($status >= 400)
 			{
-				throw new \Exception('Slurm API: Failed to create association for queue "' . $queue->name . '"', $status);
+				throw new \Exception('Slurm API: Failed to create/update QoS for queue "' . $queue->name . '"', $status);
 			}
 		}
 		catch (\Exception $e)
@@ -814,7 +821,7 @@ class Slurm
 	}
 
 	/**
-	 * Remove the given user from the associated Rancher project
+	 * Remove the given user from the associated account
 	 *
 	 * @param   QueueUserDeleted  $event
 	 * @return  void
@@ -831,7 +838,7 @@ class Slurm
 
 		$body = '';
 		$user = $event->user->user;
-		$url = $config['url'] . '/association?user=' . $user->username . '&account=' . $queue->name . '&cluster=' . $queue->resource->rolename . '&partition=' . $queue->cluster;
+		$url = $config['url'] . '/association?user=' . $user->username . '&account=' . $queue->nameWithSubcluster . '&cluster=' . $queue->resource->rolename . '&partition=' . $queue->cluster;
 
 		try
 		{
@@ -874,7 +881,7 @@ class Slurm
 	}
 
 	/**
-	 * Update Rancher resource limits
+	 * Update resource limits
 	 *
 	 * @param   object  $event
 	 * @return  void
@@ -938,6 +945,45 @@ class Slurm
 			$event->errors[] = $e->getMessage();
 
 			//$this->log('slurm', __METHOD__, 'PUT', $status, $body, $url);
+		}
+	}
+
+	/**
+	 * Call endpoint on cluster admin to pull in the latest Slurm config
+	 *
+	 * @param   Schedule  $event
+	 * @return  void
+	 */
+	public function handleSchedule(Schedule $event)
+	{
+		$resource = $event->resource;
+		$client = new Client();
+
+		foreach ($resource->subresources as $subresource)
+		{
+			$schedulers = Scheduler::query()
+				->where('queuesubresourceid', '=', $subresource->id)
+				->get();
+
+			if (!count($schedulers))
+			{
+				continue;
+			}
+
+			foreach ($schedulers as $scheduler)
+			{
+				$url = 'http://' . $scheduler->hostname . ':81';
+
+				$res = $client->request('POST', $url, [
+					'json' => ['slurm' => 'reconfig']
+				]);
+				$status = $res->getStatusCode();
+
+				if ($status >= 400)
+				{
+					throw new \Exception('Scheduler returned error when asked to pull Slurm config', $status);
+				}
+			}
 		}
 	}
 }
