@@ -636,7 +636,7 @@ class Slurm
 				'preempt' => [
 					'list' => $qos->preemptList, //a list of other QOS's that it can preempt
 					'mode' => $qos->preemptModeList,
-					'exempt_time' => $qos->preempt_exempt_time,
+					'exempt_time' => ($qos->preempt_exempt_time ? $qos->preempt_exempt_time : null),
 				],
 				'limits' => [
 					'grace_time' => ($qos->grace_time ? $qos->grace_time : null),
