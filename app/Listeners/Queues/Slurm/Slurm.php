@@ -622,7 +622,7 @@ class Slurm
 				$tres[$i] = [
 					'type'  => $bits[0],
 					'name'  => $name,
-					'count' => $bits[1]
+					'count' => (int)$bits[1]
 				];
 			}
 
@@ -636,10 +636,10 @@ class Slurm
 				'preempt' => [
 					'list' => $qos->preemptList, //a list of other QOS's that it can preempt
 					'mode' => $qos->preemptModeList,
-					'exempt_time' => ($qos->preempt_exempt_time ? $qos->preempt_exempt_time : null),
+					'exempt_time' => ($qos->preempt_exempt_time ? $qos->preempt_exempt_time : '-1'),
 				],
 				'limits' => [
-					'grace_time' => ($qos->grace_time ? $qos->grace_time : null),
+					'grace_time' => ($qos->grace_time ? $qos->grace_time : '-1'),
 					'max' => [
 						'active_jobs' => [
 							'accruing' => null,
@@ -664,33 +664,34 @@ class Slurm
 						],
 						'wall_clock' => [
 							'per' => [
-								'qos' => [],
-								'job' => ($qos->max_wall_duration_per_job ? $qos->max_wall_duration_per_job : 0),
+								'qos' => ($qos->grp_wall ? $qos->grp_wall : '-1'),
+								'job' => ($qos->max_wall_duration_per_job ? $qos->max_wall_duration_per_job : '-1'),
 							]
 						],
 						'jobs' => [
 							'active_jobs' => [
 								'per' => [
-									'account' => ($qos->max_submit_jobs_pa ? $qos->max_submit_jobs_pa : null),
-									'user' => ($qos->max_submit_jobs_per_user ? $qos->max_submit_jobs_per_user : null),
+									'account' => ($qos->max_submit_jobs_pa ? $qos->max_submit_jobs_pa : '-1'),
+									'user' => ($qos->max_submit_jobs_per_user ? $qos->max_submit_jobs_per_user : '-1'),
 								]
 							],
 							'per' => [
-								'account' => ($qos->max_jobs_pa ? $qos->max_jobs_pa : null),
-								'submitted' => ($qos->grp_submit_jobs ? $qos->grp_submit_jobs : null),
-								'job' => ($qos->max_jobs_per_user ? $qos->max_jobs_per_user : null),
+								'account' => ($qos->max_jobs_pa ? $qos->max_jobs_pa : '-1'),
+								'submitted' => ($qos->grp_submit_jobs ? $qos->grp_submit_jobs : '-1'),
+								'user' => ($qos->max_jobs_per_user ? $qos->max_jobs_per_user : '-1'),
 							]
 						],
 						'accruing' => [
 							'per' => [
-								'account' => ($qos->max_jobs_accrue_pa ? $qos->max_jobs_accrue_pa : null),
-								'job' => ($qos->max_jobs_accrue_pj ? $qos->max_jobs_accrue_pj : null),
+								'account' => ($qos->max_jobs_accrue_pa ? $qos->max_jobs_accrue_pa : '-1'),
+								'job' => ($qos->max_jobs_accrue_pj ? $qos->max_jobs_accrue_pj : '-1'),
+								'user' => ($qos->max_jobs_accrue_pu ? $qos->max_jobs_accrue_pu : '-1'),
 							]
 						],
 					],
 					'factor' => $qos->limit_factor,
 					'min' => [
-						'priority_threshold' => ($qos->min_prio_thresh ? $qos->min_prio_thresh : null),
+						'priority_threshold' => ($qos->min_prio_thresh ? $qos->min_prio_thresh : '-1'),
 						'tres' => [
 							'per' => [
 								'job' => ($qos->min_tres_pj ? [$qos->min_tres_pj] : [])
