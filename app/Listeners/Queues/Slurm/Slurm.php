@@ -16,6 +16,7 @@ use App\Modules\Queues\Events\QueueLoanCreated;
 use App\Modules\Queues\Events\QueueLoanUpdated;
 use App\Modules\Queues\Events\QueueLoanDeleted;
 use App\Modules\Queues\Events\Schedule;
+use App\Modules\Queues\Models\Scheduler;
 use App\Modules\History\Traits\Loggable;
 use App\Modules\Users\Models\User;
 use GuzzleHttp\Client;
@@ -974,14 +975,19 @@ class Slurm
 			{
 				$url = 'http://' . $scheduler->hostname . ':81';
 
+				if ($event->isVerbose())
+				{
+					$event->command->comment('Calling ' . $url);
+				}
+
 				$res = $client->request('POST', $url, [
 					'json' => ['slurm' => 'reconfig']
 				]);
 				$status = $res->getStatusCode();
 
-				if ($status >= 400)
+				if ($status >= 400 && $event->isVerbose())
 				{
-					throw new \Exception('Scheduler returned error when asked to pull Slurm config', $status);
+					$event->command->error('Scheduler returned error when asked to pull Slurm config');
 				}
 			}
 		}

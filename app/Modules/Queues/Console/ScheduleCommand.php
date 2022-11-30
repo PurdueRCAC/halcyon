@@ -4,7 +4,7 @@ namespace App\Modules\Queues\Console;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
-use App\Modules\Queues\Events\QueueCreated;
+use App\Modules\Queues\Events\Schedule;
 use App\Modules\Resources\Models\Asset;
 
 class ScheduleCommand extends Command
@@ -47,6 +47,11 @@ class ScheduleCommand extends Command
 			return;
 		}
 
-		event($e = new Schedule($resource));
+		/*if ($this->output->isVerbose())
+		{
+			$this->line('Triggering Schedule event');
+		}*/
+
+		event($e = new Schedule($resource, $this, $this->output->isVerbose()));
 	}
 }

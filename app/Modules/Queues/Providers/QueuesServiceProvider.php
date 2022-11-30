@@ -16,6 +16,7 @@ use App\Modules\Queues\Console\EmailWelcomeFreeCommand;
 use App\Modules\Queues\Console\EmailExpiredCommand;
 use App\Modules\Queues\Console\FixStatusCommand;
 use App\Modules\Queues\Console\MakeQosCommand;
+use App\Modules\Queues\Console\ScheduleCommand;
 use App\Modules\Queues\Console\StopCommand;
 use App\Modules\Queues\Console\StartCommand;
 use App\Modules\Queues\Listeners\ManageDefaultQos;
@@ -92,6 +93,7 @@ class QueuesServiceProvider extends ServiceProvider
 			EmailExpiredCommand::class,
 			FixStatusCommand::class,
 			MakeQosCommand::class,
+			ScheduleCommand::class,
 			StopCommand::class,
 			StartCommand::class,
 		]);
