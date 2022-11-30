@@ -6,7 +6,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use App\Modules\Queues\Models\Scheduler;
 use App\Modules\Queues\Models\Qos;
-use App\Modules\Queues\Events\QueueCreated;
+//use App\Modules\Queues\Events\QueueCreated;
+use App\Modules\Queues\Events\QueueSizeCreated;
+use App\Modules\Queues\Events\QueueLoanCreated;
 use App\Modules\Resources\Models\Asset;
 
 class MakeQosCommand extends Command
@@ -102,6 +104,16 @@ class MakeQosCommand extends Command
 						continue;
 					}
 
+					if (!$queue->serviceunits && !$queue->totalcores)
+					{
+						if ($debug || $this->output->isVerbose())
+						{
+							$this->info('Queue "' . $queue->name . '" has no allocations. Skipping...');
+						}
+
+						continue;
+					}
+
 					if ($debug || $this->output->isVerbose())
 					{
 						$this->comment('Making default QoS for queue "' . $queue->name . '"');
@@ -111,7 +123,21 @@ class MakeQosCommand extends Command
 						}
 					}
 
-					event(new QueueCreated($queue));
+					$purchase = $queue->sizes()->first();
+
+					if ($purchase)
+					{
+						event(new QueueSizeCreated($purchase));
+					}
+					else
+					{
+						$loan = $queue->loans()->first();
+
+						if ($loan)
+						{
+							event(new QueueLoanCreated($loan));
+						}
+					}
 				}
 			}
 		}

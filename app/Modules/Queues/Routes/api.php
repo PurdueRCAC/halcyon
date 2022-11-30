@@ -32,7 +32,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		])->where('id', '[0-9]+');
 	});
 
-	$router->group(['prefix' => 'qos', 'middleware' => 'auth:api'], function (Router $router)
+	$router->group(['prefix' => 'qos', 'middleware' => 'auth.ip'], function (Router $router)
 	{
 		$router->get('/', [
 			'as' => 'api.queues.qos',

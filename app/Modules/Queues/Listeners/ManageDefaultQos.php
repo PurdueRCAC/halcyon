@@ -25,7 +25,7 @@ class ManageDefaultQos
 	 */
 	public function subscribe($events)
 	{
-		$events->listen(QueueCreated::class, self::class . '@handleQueueCreated');
+		//$events->listen(QueueCreated::class, self::class . '@handleQueueCreated');
 		$events->listen(QueueDeleted::class, self::class . '@handleQueueDeleted');
 
 		$events->listen(QueueSizeCreated::class, self::class . '@handleQueueAllocation');
@@ -218,14 +218,28 @@ class ManageDefaultQos
 			return;
 		}
 
-		$qos = $queue->qos()
-			->where('name', '=', $queue->defaultQosName)
+		$name = $queue->defaultQosName;
+
+		// Check for an existing QoS
+		$qos = Qos::query()
+			->withTrashed()
+			->where('name', '=', $name)
 			->where('scheduler_id', '=', $queue->schedulerid)
 			->first();
 
-		if (!$qos)
+		if ($qos)
 		{
-			return;
+			if ($qos->trashed())
+			{
+				$qos->restore();
+			}
+		}
+		else
+		{
+			$qos = new Qos;
+			$qos->name = $name;
+			$qos->description = 'Default QoS for account ' . $qos->name;
+			$qos->scheduler_id = $queue->schedulerid;
 		}
 
 		$unit = 'cores';
@@ -237,40 +251,18 @@ class ManageDefaultQos
 
 		$nodecores = $queue->subresource->nodecores;
 
-		// System queues
-		/*if ($queue->groupid <= 0)
+		$l = "cpu=" . $queue->totalcores;
+
+		if ($unit == 'gpus' && $queue->subresource->nodegpus)
 		{
-			$newhardware = $queue->sizes()
-				->orderBy('datetimestart', 'asc')
-				->first();
+			$nodes = round($queue->totalcores / $nodecores, 1);
 
-			$totalcores = ($newhardware ? $newhardware->corecount : abs($queue->totalcores));
-			$l = "GrpTRES=cpu=" . $totalcores;
-
-			if ($unit == 'gpus' && $queue->subresource->nodegpus)
-			{
-				$nodes = round($totalcores / $nodecores, 1);
-
-				$l .= ',gres/gpu=' . ($queue->serviceunits ? $queue->serviceunits : round($nodes * $queue->subresource->nodegpus));
-			}
-			elseif ($unit == 'sus')
-			{
-			}
+			$l .= ',gres/gpu=' . ($queue->serviceunits ? $queue->serviceunits : round($nodes * $queue->subresource->nodegpus));
 		}
-		else
-		{*/
-			$l = "cpu=" . $queue->totalcores;
+		elseif ($unit == 'sus')
+		{
+		}
 
-			if ($unit == 'gpus' && $queue->subresource->nodegpus)
-			{
-				$nodes = round($queue->totalcores / $nodecores, 1);
-	
-				$l .= ',gres/gpu=' . ($queue->serviceunits ? $queue->serviceunits : round($nodes * $queue->subresource->nodegpus));
-			}
-			elseif ($unit == 'sus')
-			{
-			}
-		//}
 		$qos->grp_tres = $l;
 
 		if ($queue->maxjobsqueued)

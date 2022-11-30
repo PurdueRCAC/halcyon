@@ -168,6 +168,7 @@ class QosController extends Controller
 			$item->cmd = $item->name . " Fairshare=1";
 
 			$keys = [
+				'flags' => 'Flags',
 				'max_jobs_pa' => 'MaxJobsPerAccount',
 				'max_jobs_per_user' => 'MaxJobsPerUser',
 				'max_jobs_accrue_pa' => 'MaxJobsAccruePerAccount',
@@ -212,6 +213,42 @@ class QosController extends Controller
 
 			$item->cmd .= ' ' . implode(' ', $line);
 		});
+
+		if ($format = $request->input('format'))
+		{
+			if ($format == 'slurmcfg')
+			{
+				$out = array();
+				foreach ($rows as $row)
+				{
+					$out[] = $row->cmd;
+				}
+
+				$filename = 'qos.cfg';
+
+				$headers = array(
+					'Content-type' => 'text/plain',
+					'Content-Disposition' => 'attachment; filename=' . $filename,
+					'Pragma' => 'no-cache',
+					'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+					'Expires' => '0',
+					'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT'
+				);
+
+				$callback = function() use ($out)
+				{
+					$file = fopen('php://output', 'w');
+
+					foreach ($out as $datum)
+					{
+						fputs($file, $datum . "\n");
+					}
+					fclose($file);
+				};
+
+				return response()->streamDownload($callback, $filename, $headers);
+			}
+		}
 
 		return new ResourceCollection($rows);
 	}
