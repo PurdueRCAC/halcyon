@@ -75,6 +75,7 @@ app('pathway')
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.option.all states') }}</option>
 					<option value="enabled"<?php if ($filters['state'] == 'enabled'): echo ' selected="selected"'; endif;?>>{{ trans('queues::queues.enabled') }}</option>
+					<option value="active"<?php if ($filters['state'] == 'active'): echo ' selected="selected"'; endif;?>>&nbsp; &nbsp; {{ trans('queues::queues.active allocations') }}</option>
 					<option value="disabled"<?php if ($filters['state'] == 'disabled'): echo ' selected="selected"'; endif;?>>{{ trans('queues::queues.disabled') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('queues::queues.trashed') }}</option>
 				</select>
@@ -326,7 +327,7 @@ app('pathway')
 									{{ number_format($row->serviceunits) }} <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
 								@elseif ($unit == 'gpus')
 									<?php
-									$nodes = round($row->totalcores / $row->subresource->nodecores, 1);
+									$nodes = ($row->subresource->nodecores ? round($row->totalcores / $row->subresource->nodecores, 1) : 0);
 									$gpus = ($row->serviceunits ? $row->serviceunits : round($nodes * $row->subresource->nodegpus));
 									?>
 									{{ number_format($row->totalcores) }} <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,

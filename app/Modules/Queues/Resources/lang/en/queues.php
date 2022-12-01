@@ -223,4 +223,5 @@ return [
 	'limit_factor desc' => '',
 	'grace_time' => 'Grace Time',
 	'grace_time desc' => 'Preemption grace time to be extended to a job which has been selected for preemption.',
+	'active allocations' => 'Active Allocations',
 ];

@@ -475,7 +475,7 @@ app('pathway')
 						if ($unit == 'sus'):
 							$total += $item->serviceunits;
 						elseif ($unit == 'gpus'):
-							$nodes = round($item->corecount / $nodecores, 1);
+							$nodes = ($nodecores ? round($item->corecount / $nodecores, 1) : 0);
 							$total += ($item->serviceunits > 0 ? $item->serviceunits : ceil($nodes * $nodegpus));
 						else:
 							$total += $item->corecount; //$nodecores ? round($item->corecount / $nodecores, 1) : 0;
@@ -540,7 +540,7 @@ app('pathway')
 							if ($unit == 'sus'):
 								$amt = $item->serviceunits;
 							elseif ($unit == 'gpus'):
-								$nodes = round($item->corecount / $nodecores, 1);
+								$nodes = ($nodecores ? round($item->corecount / $nodecores, 1) : 0);
 								$gpus = ($item->serviceunits ? $item->serviceunits : ceil($nodes * $nodegpus));
 								$amt = $item->corecount;
 							else:
@@ -581,10 +581,10 @@ app('pathway')
 							@if ($unit == 'sus')
 								<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format(abs($amt), 1) }}</span>
 							@elseif ($unit == 'gpus')
-								<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format($amt) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
+								<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format(abs($amt)) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
 								<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format($gpus) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
 							@else
-								<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format($amt) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
+								<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format(abs($amt)) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
 							@endif
 						</td>
 						<td class="text-right">

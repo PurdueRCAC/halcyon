@@ -536,10 +536,10 @@ class Queue extends Model
 				$soldnodes += $size->nodecount;
 			}
 
-			if ($size->corecount == 0)
+			/*if ($size->corecount == 0)
 			{
 				$active = 1;
-			}
+			}*/
 		}
 
 		$loans = $this->loans()
@@ -566,17 +566,18 @@ class Queue extends Model
 				$loanednodes += $loan->nodecount;
 			}
 
-			if ($loan->corecount == 0)
+			/*if ($loan->corecount == 0)
 			{
 				$active = 1;
-			}
+			}*/
 		}
 
 		$totalcores = $soldcores + $loanedcores;
 		$totalnodes = $soldnodes + $loanednodes;
 
 		// If we didn't get marked active by zero-core entry, set active if we have active noses
-		if ($active == 0 && $totalcores > 0)
+		//if ($active == 0 && ($totalcores > 0 || $serviceunits > 0))
+		if ($totalcores > 0 || $serviceunits > 0)
 		{
 			$active = 1;
 		}

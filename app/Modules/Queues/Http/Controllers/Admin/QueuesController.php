@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\Type;
@@ -14,11 +15,13 @@ use App\Modules\Queues\Models\Scheduler;
 use App\Modules\Queues\Models\SchedulerPolicy;
 use App\Modules\Queues\Models\Walltime;
 use App\Modules\Queues\Models\Size;
+use App\Modules\Queues\Models\Loan;
 use App\Modules\Queues\Models\Qos;
 use App\Modules\Queues\Models\QueueQos;
 use App\Modules\Resources\Models\Subresource;
 use App\Modules\Resources\Models\Child;
 use App\Modules\Resources\Models\Asset;
+use Carbon\Carbon;
 
 class QueuesController extends Controller
 {
@@ -103,6 +106,45 @@ class QueuesController extends Controller
 		elseif ($filters['state'] == 'enabled')
 		{
 			$query
+				->whereNull($q . '.datetimeremoved')
+				->where($q . '.enabled', '=', 1);
+		}
+		elseif ($filters['state'] == 'active')
+		{
+			$now = Carbon::now();
+			$s = (new Size)->getTable();
+			$l = (new Loan)->getTable();
+
+			$query
+				->whereIn($q . '.id', function($query) use ($s, $l, $now)
+				{
+					$query->select($s . '.queueid')
+						->from($s)
+						->where(function($where) use ($s, $now)
+						{
+							$where->where($s . '.corecount', '>', 0)
+								->orWhere($s . '.serviceunits', '>', 0);
+						})
+						->where(function($where) use ($s, $now)
+						{
+							$where->whereNull($s . '.datetimestop')
+								->orWhere($s . '.datetimestop', '>', $now->toDateTimeString());
+						})
+						->union(
+							DB::table($l)->select($l . '.queueid')
+								->from($l)
+								->where(function($where) use ($l, $now)
+								{
+									$where->where($l . '.corecount', '>', 0)
+										->orWhere($l . '.serviceunits', '>', 0);
+								})
+								->where(function($where) use ($l, $now)
+								{
+									$where->whereNull($l . '.datetimestop')
+										->orWhere($l . '.datetimestop', '>', $now->toDateTimeString());
+								})
+						);
+				})
 				->whereNull($q . '.datetimeremoved')
 				->where($q . '.enabled', '=', 1);
 		}
