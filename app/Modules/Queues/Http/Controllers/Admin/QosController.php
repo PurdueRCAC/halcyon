@@ -232,6 +232,10 @@ class QosController extends Controller
 			else
 			{
 				$row->{$key} = null;
+			}
+
+			if (!$row->{$key})
+			{
 				if ($key == 'preempt_mode' || $key == 'priority')
 				{
 					$row->{$key} = 0;
