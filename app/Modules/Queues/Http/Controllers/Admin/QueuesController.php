@@ -115,7 +115,7 @@ class QueuesController extends Controller
 			$s = (new Size)->getTable();
 			$l = (new Loan)->getTable();
 
-			$query
+			/*$query
 				->whereIn($q . '.id', function($query) use ($s, $l, $now)
 				{
 					$query->select($s . '.queueid')
@@ -144,7 +144,41 @@ class QueuesController extends Controller
 										->orWhere($l . '.datetimestop', '>', $now->toDateTimeString());
 								})
 						);
+				})*/
+
+			// The above query builder wraps each select in the union in parenthese,
+			// which causes a syntax error in MariaDB.
+			$q1 = DB::table($s)->select($s . '.queueid')
+				->from($s)
+				->where(function($where) use ($s, $now)
+				{
+					$where->where($s . '.corecount', '>', 0)
+						->orWhere($s . '.serviceunits', '>', 0);
 				})
+				->where(function($where) use ($s, $now)
+				{
+					$where->whereNull($s . '.datetimestop')
+						->orWhere($s . '.datetimestop', '>', $now->toDateTimeString());
+				});
+			$addSlashes = str_replace('?', "'?'", $q1->toSql());
+			$sql1 = vsprintf(str_replace('?', '%s', $addSlashes), $q1->getBindings());
+
+			$q2 = DB::table($l)->select($l . '.queueid')
+				->from($l)
+				->where(function($where) use ($l, $now)
+				{
+					$where->where($l . '.corecount', '>', 0)
+						->orWhere($l . '.serviceunits', '>', 0);
+				})
+				->where(function($where) use ($l, $now)
+				{
+					$where->whereNull($l . '.datetimestop')
+						->orWhere($l . '.datetimestop', '>', $now->toDateTimeString());
+				});
+			$addSlashes = str_replace('?', "'?'", $q2->toSql());
+			$sql2 = vsprintf(str_replace('?', '%s', $addSlashes), $q2->getBindings());
+
+			$query->whereRaw($q . '.id IN (' . $sql1 . ' UNION ' . $sql2 . ')')
 				->whereNull($q . '.datetimeremoved')
 				->where($q . '.enabled', '=', 1);
 		}
