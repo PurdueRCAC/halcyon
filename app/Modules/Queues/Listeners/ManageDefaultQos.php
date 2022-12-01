@@ -127,6 +127,7 @@ class ManageDefaultQos
 		}
 
 		$qos->grp_tres = $l;
+		$qos->flags = 'DenyOnLimit';
 
 		if ($queue->maxjobsqueued)
 		{
