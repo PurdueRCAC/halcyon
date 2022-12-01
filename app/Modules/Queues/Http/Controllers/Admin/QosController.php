@@ -229,6 +229,14 @@ class QosController extends Controller
 					$row->{$key} = $request->input($key);
 				}
 			}
+			else
+			{
+				$row->{$key} = null;
+				if ($key == 'preempt_mode' || $key == 'priority')
+				{
+					$row->{$key} = 0;
+				}
+			}
 		}
 
 		if (!$row->save())
