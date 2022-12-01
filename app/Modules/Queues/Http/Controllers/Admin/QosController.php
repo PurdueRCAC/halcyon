@@ -236,6 +236,10 @@ class QosController extends Controller
 				{
 					$row->{$key} = 0;
 				}
+				if ($key == 'usage_factor')
+				{
+					$row->{$key} = 1.0000;
+				}
 			}
 		}
 

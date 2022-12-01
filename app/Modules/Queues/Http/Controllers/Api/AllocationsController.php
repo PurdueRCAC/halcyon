@@ -306,7 +306,7 @@ class AllocationsController extends Controller
 				$out[] = "# User - 'lipari':MaxTRESPerJob=node=2:MaxJobs=3:MaxTRESMinsPerJob=cpu=4:FairShare=1:MaxWallDurationPerJob=1";
 				$out[] = "Cluster - '" . $scheduler->resource->rolename . "'";
 				$out[] = "Parent - 'root'";
-				$out[] = "User - 'root':DefaultAccount='partner':AdminLevel='Administrator':Fairshare=1";
+				$out[] = "User - 'root':DefaultAccount='standby':AdminLevel='Administrator':Fairshare=1";
 
 				$users = array();
 				$allusers = array();
@@ -445,10 +445,10 @@ class AllocationsController extends Controller
 					{
 						foreach ($admin_users as $username)
 						{
-							// User - 'aliaga':Partition='gilbreth-g':DefaultAccount='partner':Fairshare=1:GrpTRES=cpu=128:GrpSubmitJobs=12000:MaxSubmitJobs=5000:MaxWallDurationPerJob=20160:Priority=1000
+							// User - 'aliaga':Partition='gilbreth-g':DefaultAccount='standby':Fairshare=1:GrpTRES=cpu=128:GrpSubmitJobs=12000:MaxSubmitJobs=5000:MaxWallDurationPerJob=20160:Priority=1000
 							$uline = ["User - '" . $username . "'"];
 							$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
-							$uline[] = "DefaultAccount='partner'";
+							$uline[] = "DefaultAccount='standby'";
 							$uline[] = "AdminLevel='Administrator'";
 							$uline[] = "Fairshare=1";
 							/*$uline[] = $l;
@@ -476,7 +476,7 @@ class AllocationsController extends Controller
 							$users[] = implode(':', $uline);
 						}
 
-						if ($queue->name == 'standby')
+						if ($queue->name == 'standby' || $queue->name == 'debug')
 						{
 							foreach ($allusers as $username)
 							{
@@ -487,7 +487,7 @@ class AllocationsController extends Controller
 
 								$uline = ["User - '" . $username . "'"];
 								$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
-								$uline[] = "DefaultAccount='partner'";
+								$uline[] = "DefaultAccount='standby'";
 								$uline[] = "Fairshare=1";
 
 								$users[] = implode(':', $uline);
@@ -502,10 +502,10 @@ class AllocationsController extends Controller
 							continue;
 						}
 
-						//User - 'aliaga':Partition='gilbreth-g':DefaultAccount='partner':Fairshare=1:GrpTRES=cpu=128:GrpSubmitJobs=12000:MaxSubmitJobs=5000:MaxWallDurationPerJob=20160:Priority=1000
+						//User - 'aliaga':Partition='gilbreth-g':DefaultAccount='standby':Fairshare=1:GrpTRES=cpu=128:GrpSubmitJobs=12000:MaxSubmitJobs=5000:MaxWallDurationPerJob=20160:Priority=1000
 						$uline = ["User - '" . $queueuser->user->username . "'"];
 						$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
-						$uline[] = "DefaultAccount='partner'";
+						$uline[] = "DefaultAccount='standby'";
 						if (in_array($queueuser->user->username, $admin_users))
 						{
 							$uline[] = "AdminLevel='Administrator'";
