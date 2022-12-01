@@ -788,7 +788,7 @@ class Queue extends Model
 	{
 		$name = $this->name;
 
-		if (substr($name, -strlen('-' . $this->cluster)) != '-' . $this->cluster)
+		if ($this->cluster && substr($name, -strlen('-' . $this->cluster)) != '-' . $this->cluster)
 		{
 			$name .= '-' . $this->cluster;
 		}
