@@ -425,6 +425,14 @@ class AllocationsController extends Controller
 
 					if (count($queue->qos))
 					{
+						foreach ($queue->qos as $qos)
+						{
+							if (substr($qos->name, -strlen('-default')) == '-default')
+							{
+								$line[] = "DefaultQOS='" . $qos->name . "'";
+								break;
+							}
+						}
 						$line[] = "QOS='+" . implode(',+', $queue->qos->pluck('name')->toArray()) . "'";
 					}
 
