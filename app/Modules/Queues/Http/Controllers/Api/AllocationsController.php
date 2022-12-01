@@ -309,6 +309,20 @@ class AllocationsController extends Controller
 				$out[] = "User - 'root':DefaultAccount='partner':AdminLevel='Administrator':Fairshare=1";
 
 				$users = array();
+				$allusers = array();
+
+				foreach ($queues as $queue)
+				{
+					foreach ($queue->users as $queueuser)
+					{
+						if (!$queueuser->user)
+						{
+							continue;
+						}
+
+						$allusers[] = $queueuser->user->username;
+					}
+				}
 
 				foreach ($queues as $queue)
 				{
@@ -319,16 +333,19 @@ class AllocationsController extends Controller
 						$unit = $facet->value;
 					}
 
-					if (!$queue->totalcores && !$queue->totalnodes && !$queue->serviceunits)
+					if (!$queue->isSystem())
 					{
-						// No resources!
-						continue;
-					}
+						if (!$queue->totalcores && !$queue->totalnodes && !$queue->serviceunits)
+						{
+							// No resources!
+							continue;
+						}
 
-					if (!$queue->isSystem() && !count($queue->users))
-					{
-						// No users!
-						continue;
+						if (!count($queue->users))
+						{
+							// No users!
+							continue;
+						}
 					}
 
 					if ($queue->isSystem())
@@ -450,6 +467,24 @@ class AllocationsController extends Controller
 
 							$users[] = implode(':', $uline);
 						}
+
+						if ($queue->name == 'standby')
+						{
+							foreach ($allusers as $username)
+							{
+								if (in_array($username, $admin_users))
+								{
+									continue;
+								}
+
+								$uline = ["User - '" . $username . "'"];
+								$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
+								$uline[] = "DefaultAccount='partner'";
+								$uline[] = "Fairshare=1";
+
+								$users[] = implode(':', $uline);
+							}
+						}
 					}
 
 					foreach ($queue->users as $queueuser)
@@ -458,6 +493,7 @@ class AllocationsController extends Controller
 						{
 							continue;
 						}
+
 						//User - 'aliaga':Partition='gilbreth-g':DefaultAccount='partner':Fairshare=1:GrpTRES=cpu=128:GrpSubmitJobs=12000:MaxSubmitJobs=5000:MaxWallDurationPerJob=20160:Priority=1000
 						$uline = ["User - '" . $queueuser->user->username . "'"];
 						$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
