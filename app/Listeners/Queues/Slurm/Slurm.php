@@ -632,7 +632,7 @@ class Slurm
 				'priority' => $qos->priority,
 				'usage_factor' => $qos->usage_factor ? $qos->usage_factor : 1.000000,
 				'usage_threshold' => $qos->usage_thres,
-				'flags' => [],
+				'flags' => $qos->flagsList,
 				'preempt' => [
 					'list' => $qos->preemptList, //a list of other QOS's that it can preempt
 					'mode' => $qos->preemptModeList,

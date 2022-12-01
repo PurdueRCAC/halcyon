@@ -224,4 +224,6 @@ return [
 	'grace_time' => 'Grace Time',
 	'grace_time desc' => 'Preemption grace time to be extended to a job which has been selected for preemption.',
 	'active allocations' => 'Active Allocations',
+	'flags' => 'Flags',
+	'flags desc' => 'Used to override or enforce certain characteristics.',
 ];

@@ -104,41 +104,20 @@ document.addEventListener('DOMContentLoaded', function () {
 			<fieldset class="adminform">
 				<legend>{{ trans('queues::queues.limits') }}</legend>
 
-				<!-- <div class="form-group">
-					<label for="field-max_jobs_pa">{{ trans('queues::queues.max_jobs_pa') }}</label>
-					<input type="number" name="max_jobs_pa" id="field-max_jobs_pa" class="form-control{{ $errors->has('max_jobs_pa') ? ' is-invalid' : '' }}" value="{{ $row->max_jobs_pa }}" />
-					<span class="invalid-feedback">{{ $errors->first('max_jobs_pa') }}</span>
-				</div>
+				<fieldset>
+					<legend>{{ trans('queues::queues.flags') }}</legend>
 
-				<div class="form-group">
-					<label for="field-max_jobs_per_user">{{ trans('queues::queues.max_jobs_per_user') }}</label>
-					<input type="number" name="max_jobs_per_user" id="field-max_jobs_per_user" class="form-control{{ $errors->has('max_jobs_per_user') ? ' is-invalid' : '' }}" value="{{ $row->max_jobs_per_user }}" />
-					<span class="invalid-feedback">{{ $errors->first('max_jobs_per_user') }}</span>
-				</div>
+					<p class="form-text text-muted">{{ trans('queues::queues.flags desc') }}</p>
 
-				<div class="form-group">
-					<label for="field-max_jobs_accrue_pa">{{ trans('queues::queues.max_jobs_accrue_pa') }}</label>
-					<input type="number" name="max_jobs_accrue_pa" id="field-max_jobs_accrue_pa" class="form-control{{ $errors->has('max_jobs_accrue_pa') ? ' is-invalid' : '' }}" value="{{ $row->max_jobs_accrue_pa }}" />
-					<span class="invalid-feedback">{{ $errors->first('max_jobs_accrue_pa') }}</span>
-				</div>
-
-				<div class="form-group">
-					<label for="field-max_jobs_accrue_pu">{{ trans('queues::queues.max_jobs_accrue_pu') }}</label>
-					<input type="number" name="max_jobs_accrue_pu" id="field-max_jobs_accrue_pu" class="form-control{{ $errors->has('max_jobs_accrue_pu') ? ' is-invalid' : '' }}" value="{{ $row->max_jobs_accrue_pu }}" />
-					<span class="invalid-feedback">{{ $errors->first('max_jobs_accrue_pu') }}</span>
-				</div>
-
-				<div class="form-group">
-					<label for="field-max_submit_jobs_pa">{{ trans('queues::queues.max_submit_jobs_pa') }}</label>
-					<input type="number" name="max_submit_jobs_pa" 	id="field-max_submit_jobs_pa" class="form-control{{ $errors->has('max_submit_jobs_pa') ? ' is-invalid' : '' }}" value="{{ $row->max_submit_jobs_pa }}" />
-					<span class="invalid-feedback">{{ $errors->first('max_submit_jobs_pa') }}</span>
-				</div>
-
-				<div class="form-group">
-					<label for="field-max_submit_jobs_per_user">{{ trans('queues::queues.max_submit_jobs_per_user') }}</label>
-					<input type="number" name="max_submit_jobs_per_user" id="field-max_submit_jobs_per_user" class="form-control{{ $errors->has('max_submit_jobs_per_user') ? ' is-invalid' : '' }}" value="{{ $row->max_submit_jobs_per_user }}" />
-					<span class="invalid-feedback">{{ $errors->first('max_submit_jobs_per_user') }}</span>
-				</div> -->
+					@foreach (['DenyOnLimit', 'EnforceUsageThreshold', 'NoReserve', 'PartitionMaxNodes', 'PartitionMinNodes', 'OverPartQOS', 'PartitionTimeLimit', 'RequiresReservation', 'NoDecay', 'UsageFactorSafe'] as $key)
+					<div class="form-group mb-0">
+					<div class="form-check">
+						<input type="checkbox" name="flags[]" id="field-flags-{{ $key }}" class="form-check-input" value="{{ $key }}" <?php if (in_array($key, $row->flagsList)) { echo ' checked'; } ?>/>
+						<label for="field-flags-{{ $key }}" class="form-check-label">{{ $key }}</label>
+					</div>
+					</div>
+					@endforeach
+				</fieldset>
 
 				@foreach (['max_jobs_pa', 'max_jobs_per_user', 'max_jobs_accrue_pa', 'max_jobs_accrue_pu', 'min_prio_thresh', 'max_submit_jobs_pa', 'max_submit_jobs_per_user'] as $k)
 					<div class="form-group">

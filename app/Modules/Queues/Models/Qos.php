@@ -144,4 +144,14 @@ class Qos extends Model
 	{
 		return $this->preempt_mode ? explode(',', $this->preempt_mode) : [];
 	}
+
+	/**
+	 * Get the list of flags
+	 *
+	 * @return  array
+	 */
+	public function getFlagsListAttribute()
+	{
+		return $this->flags ? explode(',', $this->flags) : [];
+	}
 }

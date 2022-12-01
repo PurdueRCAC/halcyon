@@ -169,6 +169,7 @@ class QosController extends Controller
 			'scheduler_id' => 'required|integer',
 			'name' => 'required|string|max:255',
 			'description' => 'nullable|string',
+			'flags' => 'nullable|array',
 			'max_jobs_pa' => 'nullable|integer',
 			'max_jobs_per_user' => 'nullable|integer',
 			'max_jobs_accrue_pa' => 'nullable|integer',
@@ -219,7 +220,14 @@ class QosController extends Controller
 		{
 			if ($request->has($key))
 			{
-				$row->{$key} = $request->input($key);
+				if ($key == 'flags')
+				{
+					$row->{$key} = implode(',', $request->input($key, []));
+				}
+				else
+				{
+					$row->{$key} = $request->input($key);
+				}
 			}
 		}
 
