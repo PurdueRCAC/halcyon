@@ -20,7 +20,7 @@ class AddQosTable extends Migration
 				$table->integer('scheduler_id')->unsigned()->default(0);
 				$table->string('name', 255);
 				$table->text('description')->nullable();
-				$table->integer('flags')->unsigned()->default(0);
+				$table->string('flags', 500)->nullable();
 				$table->integer('grace_time')->unsigned()->nullable();
 				$table->integer('max_jobs_pa')->unsigned()->nullable();
 				$table->integer('max_jobs_per_user')->unsigned()->nullable();
