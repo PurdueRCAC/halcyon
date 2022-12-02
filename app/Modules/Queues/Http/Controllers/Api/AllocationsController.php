@@ -313,6 +313,21 @@ class AllocationsController extends Controller
 
 				foreach ($queues as $queue)
 				{
+					if (!$queue->isSystem())
+					{
+						if (!$queue->totalcores && !$queue->totalnodes && !$queue->serviceunits)
+						{
+							// No resources!
+							continue;
+						}
+
+						if (!count($queue->users))
+						{
+							// No users!
+							continue;
+						}
+					}
+
 					foreach ($queue->users as $queueuser)
 					{
 						if (!$queueuser->user)
