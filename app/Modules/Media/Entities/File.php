@@ -166,6 +166,11 @@ class File extends \SplFileInfo
 			}
 		}
 
+		if (!isset($this->dimensions[$dim]))
+		{
+			$this->dimensions[$dim] = 0;
+		}
+
 		return $this->dimensions[$dim];
 	}
 
