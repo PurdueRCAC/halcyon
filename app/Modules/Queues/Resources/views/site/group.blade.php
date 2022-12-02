@@ -526,11 +526,12 @@ $queues = $queues->reject(function($q) use ($canManage)
 													}
 													else
 													{
-														$amt = $item->nodecount;
-														if ($item->corecount)
+														$nodes = $nodecores ? round($item->corecount / $nodecores, 1) : 0;
+														$amt = $item->corecount;
+														/*if ($item->corecount)
 														{
 															$amt = $nodecores ? round($item->corecount / $nodecores, 1) : 0;
-														}
+														}*/
 													}
 
 													echo $what;
@@ -563,9 +564,10 @@ $queues = $queues->reject(function($q) use ($canManage)
 														<span class="{{ $cls }}">{{ ($cls == 'text-success' ? '+' : '-') }} {{ number_format(abs($amt), 1) }}</span>
 													@elseif ($unit == 'gpus')
 														<span class="{{ $cls }}">{{ ($cls == 'text-success' ? '+' : '-') }} {{ number_format($amt) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
-														<span class="{{ $cls }}">{{ ($cls == 'text-success' ? '+' : '-') }} {{ number_format($gpus) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
+														<span class="{{ $cls }}">{{ number_format($gpus) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
 													@else
 														<span class="{{ $cls }}">{{ ($cls == 'text-success' ? '+' : '-') }} {{ number_format($amt) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
+														<span class="{{ $cls }}">{{ number_format($nodes, 1) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.nodes')) }}</span>
 													@endif
 												</td>
 												<td class="text-right">
@@ -637,7 +639,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 																</div>
 																<div class="col-md-6">
 																	<div class="form-group">
-																		<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.cores') }} <span class="required">{{ trans('global.required') }}</span></label>
+																		<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.cores') }} <span class="required">*</span></label>
 																		<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
 																		<span class="text-muted">({{ trans('queues::queues.cores per nodes', ['cores' => $q->subresource->nodecores]) }})</span>
 																	</div>
