@@ -316,7 +316,7 @@ app('pathway')
 								if (isset($units[$row->subresourceid])):
 									$unit = $units[$row->subresourceid];
 								else:
-									if ($facet = $row->resource->getFacet('allocation_unit')):
+									if ($row->resource && $facet = $row->resource->getFacet('allocation_unit')):
 										$unit = $facet->value;
 									endif;
 
