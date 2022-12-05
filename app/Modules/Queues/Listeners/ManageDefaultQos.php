@@ -11,6 +11,7 @@ use App\Modules\Queues\Events\QueueLoanUpdated;
 use App\Modules\Queues\Events\QueueLoanDeleted;
 use App\Modules\Queues\Models\Qos;
 use App\Modules\Queues\Models\QueueQos;
+use App\Modules\Queues\Models\Queue;
 
 /**
  * Manage a default QoS for new Queues
@@ -25,7 +26,11 @@ class ManageDefaultQos
 	 */
 	public function subscribe($events)
 	{
+		// This is disabled because it will result in a QoS with zero values/limits.
+		// Since queues with no allocations don't get set, it's pointless to create
+		// a QoS for them. Instead, do it when an allocation is actually assigned.
 		//$events->listen(QueueCreated::class, self::class . '@handleQueueCreated');
+
 		$events->listen(QueueDeleted::class, self::class . '@handleQueueDeleted');
 
 		$events->listen(QueueSizeCreated::class, self::class . '@handleQueueAllocation');
@@ -69,7 +74,7 @@ class ManageDefaultQos
 	/**
 	 * Create a default Qos
 	 *
-	 * @param   object  $event  QueueCreated
+	 * @param   QueueCreated  $event
 	 * @return  void
 	 */
 	public function handleQueueCreated(QueueCreated $event)
@@ -81,96 +86,18 @@ class ManageDefaultQos
 			return;
 		}
 
-		$name = $queue->defaultQosName;
-
-		// Check for an existing QoS
-		$qos = Qos::query()
-			->withTrashed()
-			->where('name', '=', $name)
-			->where('scheduler_id', '=', $queue->schedulerid)
-			->first();
-
-		if ($qos)
+		if ($queue->isSystem())
 		{
-			if ($qos->trashed())
-			{
-				$qos->restore();
-			}
-		}
-		else
-		{
-			$qos = new Qos;
-			$qos->name = $name;
-			$qos->description = 'Default QoS for account ' . $qos->name;
-			$qos->scheduler_id = $queue->schedulerid;
+			return;
 		}
 
-		$unit = 'cores';
-		$resource = $queue->resource;
-		if ($facet = $resource->getFacet('allocation_unit'))
-		{
-			$unit = $facet->value;
-		}
-
-		$nodecores = $queue->subresource->nodecores;
-
-		$l = "cpu=" . $queue->totalcores;
-
-		if ($unit == 'gpus' && $queue->subresource->nodegpus)
-		{
-			$nodes = round($queue->totalcores / $nodecores, 1);
-
-			$l .= ',gres/gpu=' . ($queue->serviceunits ? $queue->serviceunits : round($nodes * $queue->subresource->nodegpus));
-		}
-		elseif ($unit == 'sus')
-		{
-		}
-
-		$qos->grp_tres = $l;
-		$qos->flags = 'DenyOnLimit';
-
-		if ($queue->maxjobsqueued)
-		{
-			$qos->grp_submit_jobs = $queue->maxjobsqueued;
-		}
-		if ($queue->maxjobsrunuser)
-		{
-			$qos->max_jobs_per_user = $queue->maxjobsrunuser;
-		}
-		if ($queue->maxjobsqueueduser)
-		{
-			//$qos->max_submit_jobs_per_user = $queue->maxjobsqueueduser;
-			$qos->grp_jobs = $queue->maxjobsqueueduser;
-		}
-		if ($queue->walltime)
-		{
-			$qos->max_wall_duration_per_job = ($queue->walltime / 60);
-		}
-		if ($queue->priority)
-		{
-			$qos->priority = $queue->priority;
-		}
-		$qos->save();
-
-		// Attach the QoS to the queue
-		$queueqos = QueueQos::query()
-			->where('qosid', '=', $qos->id)
-			->where('queueid', '=', $queue->id)
-			->first();
-
-		if (!$queueqos)
-		{
-			$queueqos = new QueueQos;
-			$queueqos->qosid = $qos->id;
-			$queueqos->queueid = $queue->id;
-			$queueqos->save();
-		}
+		$this->setDefaultQos($queue);
 	}
 
 	/**
 	 * Delete default Qos
 	 *
-	 * @param   object  $event  QueueDeleted
+	 * @param   QueueDeleted  $event
 	 * @return  void
 	 */
 	public function handleQueueDeleted(QueueDeleted $event)
@@ -189,9 +116,9 @@ class ManageDefaultQos
 	}
 
 	/**
-	 * Delete default Qos
+	 * Update QoS with new allocation information
 	 *
-	 * @param   object  $event  QueueDeleted
+	 * @param   object  $event
 	 * @return  void
 	 */
 	public function handleQueueAllocation($event)
@@ -219,6 +146,17 @@ class ManageDefaultQos
 			return;
 		}
 
+		$this->setDefaultQos($queue);
+	}
+
+	/**
+	 * Create and/or update the default QoS
+	 *
+	 * @param   Queue  $queue
+	 * @return  void
+	 */
+	private function setDefaultQos($queue)
+	{
 		$name = $queue->defaultQosName;
 
 		// Check for an existing QoS
@@ -292,5 +230,19 @@ class ManageDefaultQos
 		}
 
 		$qos->save();
+
+		// Attach the QoS to the queue
+		$queueqos = QueueQos::query()
+			->where('qosid', '=', $qos->id)
+			->where('queueid', '=', $queue->id)
+			->first();
+
+		if (!$queueqos)
+		{
+			$queueqos = new QueueQos;
+			$queueqos->qosid = $qos->id;
+			$queueqos->queueid = $queue->id;
+			$queueqos->save();
+		}
 	}
 }
