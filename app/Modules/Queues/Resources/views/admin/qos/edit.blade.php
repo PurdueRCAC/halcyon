@@ -109,51 +109,104 @@ document.addEventListener('DOMContentLoaded', function () {
 
 					<p class="form-text text-muted">{{ trans('queues::queues.flags desc') }}</p>
 
+					<div class="row">
 					@foreach (['DenyOnLimit', 'EnforceUsageThreshold', 'NoReserve', 'PartitionMaxNodes', 'PartitionMinNodes', 'OverPartQOS', 'PartitionTimeLimit', 'RequiresReservation', 'NoDecay', 'UsageFactorSafe'] as $key)
-					<div class="form-group mb-0">
-					<div class="form-check">
-						<input type="checkbox" name="flags[]" id="field-flags-{{ $key }}" class="form-check-input" value="{{ $key }}" <?php if (in_array($key, $row->flagsList)) { echo ' checked'; } ?>/>
-						<label for="field-flags-{{ $key }}" class="form-check-label">{{ $key }}</label>
-					</div>
-					</div>
+						<div class="col-md-6">
+						<div class="form-group">
+							<div class="form-check">
+								<input type="checkbox" name="flags[]" id="field-flags-{{ $key }}" class="form-check-input" value="{{ $key }}" <?php if (in_array($key, $row->flagsList)) { echo ' checked'; } ?>/>
+								<label for="field-flags-{{ $key }}" class="form-check-label">{{ $key }}</label><br />
+								<span class="form-text text-muted ml-4">{{ trans('queues::queues.flag ' . strtolower($key) . ' desc') }}</span>
+							</div>
+						</div>
+						</div>
 					@endforeach
+					</div>
 				</fieldset>
 
-				@foreach (['max_jobs_pa', 'max_jobs_per_user', 'max_jobs_accrue_pa', 'max_jobs_accrue_pu', 'min_prio_thresh', 'max_submit_jobs_pa', 'max_submit_jobs_per_user'] as $k)
-					<div class="form-group">
-						<label for="field-{{ $k }}">{{ trans('queues::queues.' . $k) }}</label>
-						<input type="number" name="{{ $k }}" id="field-{{ $k }}" class="form-control{{ $errors->has($k) ? ' is-invalid' : '' }}" value="{{ $row->{$k} }}" />
-						<span class="invalid-feedback">{{ $errors->first($k) }}</span>
-						<span class="form-text text-muted">{{ trans('queues::queues.' . $k . ' desc') }}</span>
+				<div class="row">
+				@foreach (['priority', 'min_prio_thresh'] as $k)
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="field-{{ $k }}">{{ trans('queues::queues.' . $k) }}</label>
+							<input type="number" name="{{ $k }}" id="field-{{ $k }}" class="form-control{{ $errors->has($k) ? ' is-invalid' : '' }}" value="{{ $row->{$k} }}" />
+							<span class="invalid-feedback">{{ $errors->first($k) }}</span>
+							<span class="form-text text-muted">{{ trans('queues::queues.' . $k . ' desc') }}</span>
+						</div>
 					</div>
 				@endforeach
+				</div>
 
+				<div class="row">
+				@foreach (['max_jobs_pa', 'max_jobs_per_user'] as $k)
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="field-{{ $k }}">{{ trans('queues::queues.' . $k) }}</label>
+							<input type="number" name="{{ $k }}" id="field-{{ $k }}" class="form-control{{ $errors->has($k) ? ' is-invalid' : '' }}" value="{{ $row->{$k} }}" />
+							<span class="invalid-feedback">{{ $errors->first($k) }}</span>
+							<span class="form-text text-muted">{{ trans('queues::queues.' . $k . ' desc') }}</span>
+						</div>
+					</div>
+				@endforeach
+				</div>
+
+				<div class="row">
+				@foreach (['max_jobs_accrue_pa', 'max_jobs_accrue_pu'] as $k)
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="field-{{ $k }}">{{ trans('queues::queues.' . $k) }}</label>
+							<input type="number" name="{{ $k }}" id="field-{{ $k }}" class="form-control{{ $errors->has($k) ? ' is-invalid' : '' }}" value="{{ $row->{$k} }}" />
+							<span class="invalid-feedback">{{ $errors->first($k) }}</span>
+							<span class="form-text text-muted">{{ trans('queues::queues.' . $k . ' desc') }}</span>
+						</div>
+					</div>
+				@endforeach
+				</div>
+
+				<div class="row">
+				@foreach (['max_submit_jobs_pa', 'max_submit_jobs_per_user'] as $k)
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="field-{{ $k }}">{{ trans('queues::queues.' . $k) }}</label>
+							<input type="number" name="{{ $k }}" id="field-{{ $k }}" class="form-control{{ $errors->has($k) ? ' is-invalid' : '' }}" value="{{ $row->{$k} }}" />
+							<span class="invalid-feedback">{{ $errors->first($k) }}</span>
+							<span class="form-text text-muted">{{ trans('queues::queues.' . $k . ' desc') }}</span>
+						</div>
+					</div>
+				@endforeach
+				</div>
+			</fieldset>
+			<fieldset class="adminform">
+				<legend>TRES</legend>
+
+				<p><strong>Maximum Values</strong></p>
+
+				<div class="row">
 				@foreach (['max_tres_pa', 'max_tres_pj', 'max_tres_pn', 'max_tres_pu'] as $k)
+				<div class="col-md-6">
 					<div class="form-group">
 						<label for="field-{{ $k }}">{{ trans('queues::queues.' . $k) }}</label>
-						<textarea name="{{ $k }}" id="field-{{ $k }}" class="form-control{{ $errors->has($k) ? ' is-invalid' : '' }}">{{ $row->{$k} }}</textarea>
+						<textarea name="{{ $k }}" id="field-{{ $k }}" row="2" cols="35" class="form-control{{ $errors->has($k) ? ' is-invalid' : '' }}">{{ $row->{$k} }}</textarea>
 						<span class="invalid-feedback">{{ $errors->first($k) }}</span>
 						<span class="form-text text-muted">{{ trans('queues::queues.' . $k . ' desc') }}</span>
 					</div>
+				</div>
 				@endforeach
+				</div>
 
 				@foreach (['max_tres_mins_pj', 'max_tres_run_mins_pa', 'max_tres_run_mins_pu'] as $k)
-					<?php
-					$val = $row->{$k}; // In minutes
-					if ($val):
-						$val = ($val/60); // Convert to hours
-					endif;
-					?>
 					<div class="form-group">
 						<label for="field-{{ $k }}">{{ trans('queues::queues.' . $k) }}</label>
 						<span class="input-group">
-							<input type="number" name="{{ $k }}" id="field-{{ $k }}" class="form-control{{ $errors->has($k) ? ' is-invalid' : '' }}" min="0" value="{{ $val }}" />
+							<input type="number" name="{{ $k }}" id="field-{{ $k }}" class="form-control{{ $errors->has($k) ? ' is-invalid' : '' }}" min="0" value="{{ $row->{$k} }}" />
 							<span class="input-group-append"><span class="input-group-text">{{ trans_choice('global.time.minutes', 2) }}</span></span>
 						</span>
 						<span class="invalid-feedback">{{ $errors->first($k) }}</span>
 						<span class="form-text text-muted">{{ trans('queues::queues.' . $k . ' desc') }}</span>
 					</div>
 				@endforeach
+
+				<p class="mt-4"><strong>Minimum Values</strong></p>
 
 				@foreach (['min_tres_pj'] as $k)
 					<div class="form-group">
@@ -163,8 +216,24 @@ document.addEventListener('DOMContentLoaded', function () {
 						<span class="form-text text-muted">{{ trans('queues::queues.' . $k . ' desc') }}</span>
 					</div>
 				@endforeach
+			</fieldset>
 
-				@foreach (['max_wall_duration_per_job', 'grp_jobs', 'grp_jobs_accrue', 'grp_submit_jobs'] as $k)
+			<fieldset class="adminform">
+				<legend>Group</legend>
+
+				@foreach (['max_wall_duration_per_job'] as $k)
+					<div class="form-group">
+						<label for="field-{{ $k }}">{{ trans('queues::queues.' . $k) }}</label>
+						<span class="input-group">
+							<input type="number" name="{{ $k }}" id="field-{{ $k }}" class="form-control{{ $errors->has($k) ? ' is-invalid' : '' }}" min="0" value="{{ $row->{$k} }}" />
+							<span class="input-group-append"><span class="input-group-text">{{ trans_choice('global.time.minutes', 2) }}</span></span>
+						</span>
+						<span class="invalid-feedback">{{ $errors->first($k) }}</span>
+						<span class="form-text text-muted">{{ trans('queues::queues.' . $k . ' desc') }}</span>
+					</div>
+				@endforeach
+
+				@foreach (['grp_jobs', 'grp_jobs_accrue', 'grp_submit_jobs'] as $k)
 					<div class="form-group">
 						<label for="field-{{ $k }}">{{ trans('queues::queues.' . $k) }}</label>
 						<input type="number" name="{{ $k }}" id="field-{{ $k }}" class="form-control{{ $errors->has($k) ? ' is-invalid' : '' }}" value="{{ $row->{$k} }}" />
@@ -183,27 +252,12 @@ document.addEventListener('DOMContentLoaded', function () {
 				@endforeach
 
 				@foreach (['grp_tres_mins', 'grp_tres_run_mins', 'grp_wall'] as $k)
-					<?php
-					$val = $row->{$k}; // In minutes
-					if ($val):
-						$val = ($val/60); // Convert to hours
-					endif;
-					?>
 					<div class="form-group">
 						<label for="field-{{ $k }}">{{ trans('queues::queues.' . $k) }}</label>
 						<span class="input-group">
-							<input type="number" name="{{ $k }}" id="field-{{ $k }}" class="form-control{{ $errors->has($k) ? ' is-invalid' : '' }}" min="0" value="{{ $val }}" />
+							<input type="number" name="{{ $k }}" id="field-{{ $k }}" class="form-control{{ $errors->has($k) ? ' is-invalid' : '' }}" min="0" value="{{ $row->{$k} }}" />
 							<span class="input-group-append"><span class="input-group-text">{{ trans_choice('global.time.minutes', 2) }}</span></span>
 						</span>
-						<span class="invalid-feedback">{{ $errors->first($k) }}</span>
-						<span class="form-text text-muted">{{ trans('queues::queues.' . $k . ' desc') }}</span>
-					</div>
-				@endforeach
-
-				@foreach (['priority'] as $k)
-					<div class="form-group">
-						<label for="field-{{ $k }}">{{ trans('queues::queues.' . $k) }}</label>
-						<input type="number" name="{{ $k }}" id="field-{{ $k }}" class="form-control{{ $errors->has($k) ? ' is-invalid' : '' }}" value="{{ $row->{$k} }}" />
 						<span class="invalid-feedback">{{ $errors->first($k) }}</span>
 						<span class="form-text text-muted">{{ trans('queues::queues.' . $k . ' desc') }}</span>
 					</div>
@@ -228,46 +282,6 @@ document.addEventListener('DOMContentLoaded', function () {
 					</div>
 				@endforeach
 
-				<?php /*<fieldset>
-					<legend>{{ trans('queues::queues.preempt_mode') }}</legend>
-
-					<p class="form-text text-muted">{{ trans('queues::queues.preempt_mode desc') }}</p>
-
-					<div class="form-group mb-0">
-					<div class="form-check">
-						<input type="checkbox" name="preempt_mode[]" id="field-preempt_mode-off" class="form-check-input" value="OFF" <?php if (in_array('OFF', $row->preemptModeList)) { echo ' checked'; } ?>/>
-						<label for="field-preempt_mode-off" class="form-check-label">OFF</label>
-					</div>
-					</div>
-
-					<div class="form-group mb-0">
-					<div class="form-check">
-						<input type="checkbox" name="preempt_mode[]" id="field-preempt_mode-cancel" class="form-check-input preempt_mode_time" value="CANCEL" <?php if (in_array('CANCEL', $row->preemptModeList)) { echo ' checked'; } ?>/>
-						<label for="field-preempt_mode-cancel" class="form-check-label">CANCEL</label>
-					</div>
-					</div>
-
-					<div class="form-group mb-0">
-					<div class="form-check">
-						<input type="checkbox" name="preempt_mode[]" id="field-preempt_mode-gang" class="form-check-input" value="GANG" <?php if (in_array('GANG', $row->preemptModeList)) { echo ' checked'; } ?>/>
-						<label for="field-preempt_mode-gang" class="form-check-label">GANG</label>
-					</div>
-					</div>
-
-					<div class="form-group mb-0">
-					<div class="form-check">
-						<input type="checkbox" name="preempt_mode[]" id="field-preempt_mode-requeue" class="form-check-input preempt_mode_time" value="REQUEUE" <?php if (in_array('REQUEUE', $row->preemptModeList)) { echo ' checked'; } ?>/>
-						<label for="field-preempt_mode-requeue" class="form-check-label">REQUEUE</label>
-					</div>
-					</div>
-
-					<div class="form-group">
-					<div class="form-check">
-						<input type="checkbox" name="preempt_mode[]" id="field-preempt_mode-suspend" class="form-check-input" value="SUSPEND" <?php if (in_array('SUSPEND', $row->preemptModeList)) { echo ' checked'; } ?>/>
-						<label for="field-preempt_mode-suspend" class="form-check-label">SUSPEND</label>
-					</div>
-					</div>
-				</fieldset>*/ ?>
 				@foreach (['preempt_mode'] as $k)
 					<div class="form-group">
 						<label for="field-{{ $k }}">{{ trans('queues::queues.' . $k) }}</label>
@@ -278,31 +292,19 @@ document.addEventListener('DOMContentLoaded', function () {
 				@endforeach
 
 				<div class="form-group d-none preempt_mode_show">
-					<?php
-					$val = $row->preempt_exempt_time; // In minutes
-					if ($val):
-						$val = ($val/60); // Convert to hours
-					endif;
-					?>
 					<label for="field-preempt_exempt_time">{{ trans('queues::queues.preempt_exempt_time') }}</label>
 					<span class="input-group">
-						<input type="number" name="preempt_exempt_time" id="field-preempt_exempt_time" class="form-control" min="0" step="0.25" value="{{ $val }}" />
+						<input type="number" name="preempt_exempt_time" id="field-preempt_exempt_time" class="form-control" min="0" step="0.25" value="{{ $row->preempt_exempt_time }}" />
 						<span class="input-group-append"><span class="input-group-text">{{ trans_choice('global.time.hours', 2) }}</span></span>
 					</span>
 					<span class="form-text text-muted">{{ trans('queues::queues.preempt_exempt_time desc') }}</span>
 				</div>
 
 				@foreach (['grace_time'] as $k)
-					<?php
-					$val = $row->{$k}; // In minutes
-					if ($val):
-						$val = ($val/60); // Convert to hours
-					endif;
-					?>
 					<div class="form-group">
 						<label for="field-{{ $k }}">{{ trans('queues::queues.' . $k) }}</label>
 						<span class="input-group">
-							<input type="number" name="{{ $k }}" id="field-{{ $k }}" class="form-control{{ $errors->has($k) ? ' is-invalid' : '' }}" value="{{ $val }}" />
+							<input type="number" name="{{ $k }}" id="field-{{ $k }}" class="form-control{{ $errors->has($k) ? ' is-invalid' : '' }}" value="{{ $row->{$k} }}" />
 							<span class="input-group-append"><span class="input-group-text">{{ trans_choice('global.time.hours', 2) }}</span></span>
 						</span>
 						<span class="invalid-feedback">{{ $errors->first($k) }}</span>
