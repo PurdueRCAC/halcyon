@@ -22,7 +22,50 @@ var UserRequests = {
 	 * @return  {void}
 	 */
 	Approve: function (requests, groupid, membership) {
+		// Filter empty values
+		// This can happen if the user request access to the
+		// group but not a specific resource/queue
+		requests = requests.filter(function (el) {
+			return (el != null && el != '');
+		});
+
+		// If no specific resources, at least approve access
+		// to the group.
+		if (requests.length <= 0) {
+			$.ajax({
+				url: membership,
+				type: 'put',
+				data: {
+					"membertype": 1
+				},
+				dataType: 'json',
+				async: false,
+				success: function () {
+					window.location.reload(true);
+				},
+				error: function (xhr) {
+					var msg = 'Failed to approve request.';
+
+					if (xhr.responseJSON) {
+						msg = xhr.responseJSON.message;
+						if (typeof msg === 'object') {
+							var lines = Object.values(msg);
+							msg = lines.join('<br />');
+						}
+					}
+
+					alert(msg);
+				}
+			});
+			return;
+		}
+
 		for (var i = 0; i < requests.length; i++) {
+			// Ensure we have a URL to work with
+			if (!requests[i]) {
+				continue;
+			}
+
 			UserRequests.approvepending++;
 
 			// Group ID isn't needed but is included for logging
@@ -95,7 +138,51 @@ var UserRequests = {
 	 * @return  {void}
 	 */
 	Reject: function (requests, membership) {
+		// Filter empty values
+		// This can happen if the user request access to the
+		// group but not a specific resource/queue
+		requests = requests.filter(function (el) {
+			return (el != null && el != '');
+		});
+
+		// If no specific resources, at least deny access
+		// to the group.
+		if (requests.length <= 0) {
+			$.ajax({
+				url: membership,
+				type: 'delete',
+				dataType: 'json',
+				async: false,
+				success: function () {
+					UserRequests.rejectpending--;
+
+					if (UserRequests.rejectpending == 0) {
+						window.location.reload(true);
+					}
+				},
+				error: function (xhr) {
+					var msg = 'Failed to approve request.';
+
+					if (xhr.responseJSON) {
+						msg = xhr.responseJSON.message;
+						if (typeof msg === 'object') {
+							var lines = Object.values(msg);
+							msg = lines.join('<br />');
+						}
+					}
+
+					alert(msg);
+				}
+			});
+			return;
+		}
+
 		for (var i = 0; i < requests.length; i++) {
+			// Ensure we have a URL to work with
+			if (!requests[i]) {
+				continue;
+			}
+
 			UserRequests.rejectpending++;
 
 			$.ajax({
