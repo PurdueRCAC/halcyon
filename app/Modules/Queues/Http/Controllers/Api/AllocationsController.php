@@ -330,7 +330,7 @@ class AllocationsController extends Controller
 
 					foreach ($queue->users as $queueuser)
 					{
-						if (!$queueuser->user)
+						if (!$queueuser->user || $queueuser->isPending())
 						{
 							continue;
 						}
@@ -512,7 +512,7 @@ class AllocationsController extends Controller
 
 					foreach ($queue->users as $queueuser)
 					{
-						if (!$queueuser->user)
+						if (!$queueuser->user || $queueuser->isPending())
 						{
 							continue;
 						}
