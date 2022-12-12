@@ -14,7 +14,7 @@ class CopyCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'news:copy {id} {start} {days=4} {--debug : Output actions that would be taken without making them}';
+	protected $signature = 'news:copy {id : ID of article to copy} {start : Date to start on (YYYY-mm-dd)} {days=4 : Number of days to copy to, counting from the start date} {--debug : Output actions that would be taken without making them}';
 
 	/**
 	 * The console command description.
