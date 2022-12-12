@@ -36,11 +36,11 @@ class RemoveMembershipsForDeletedUser
 		}
 
 		User::query()
-			->whereIn('userid', $event->user->id)
+			->where('userid', '=', $event->user->id)
 			->delete();
 
 		GroupUser::query()
-			->whereIn('userid', $event->user->id)
+			->where('userid', '=', $event->user->id)
 			->delete();
 	}
 }
