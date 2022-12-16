@@ -1084,13 +1084,13 @@ class Queue extends Model
 			// Look up the current username of the user being removed
 			$user = $row->user;
 
-			// Look up the role name of the resource to which access is being granted.
-			$resource = $this->resource;
-
 			if (!$user)
 			{
 				continue;
 			}
+
+			// Look up the role name of the resource to which access is being granted.
+			$resource = $this->resource;
 
 			// Ensure the client is authorized to manage a group with queues on the resource in question.
 			if (!auth()->user()->can('manage resources')
@@ -1123,19 +1123,19 @@ class Queue extends Model
 			// Check for other queue memberships on this resource that might conflict with removing the role
 			$rows = 0;
 
-			$resources = Asset::query()
+			/*$resources = Asset::query()
 				->where('rolename', '!=', '')
 				->where('listname', '!=', '')
 				->get();
 
 			foreach ($resources as $res)
 			{
-				$subresources = $res->subresources;
+				$subresources = $res->subresources;*/
 
-				foreach ($subresources as $sub)
+				foreach ($resource->subresources as $sub)
 				{
 					$queues = $sub->queues()
-						->whereIn('groupid', $owned)
+						//->whereIn('groupid', $owned)
 						->get();
 
 					foreach ($queues as $queue)
@@ -1151,7 +1151,7 @@ class Queue extends Model
 							->count();
 					}
 				}
-			}
+			//}
 
 			if ($rows <= 0)
 			{
