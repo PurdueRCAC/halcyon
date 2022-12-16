@@ -46,7 +46,7 @@ class AddQosTable extends Migration
 				$table->text('grp_tres_run_mins')->nullable();
 				$table->integer('grp_wall')->unsigned()->nullable();
 				$table->text('preempt')->nullable();
-				$table->text('preempt_mode')->default(0);
+				$table->text('preempt_mode')->nullable();
 				$table->integer('preempt_exempt_time')->unsigned()->nullable();
 				$table->integer('priority')->unsigned()->default(0);
 				$table->float('usage_factor', 9, 4)->default(0.00);
