@@ -288,9 +288,17 @@ document.addEventListener('DOMContentLoaded', function () {
 						.replace(/\{shortname\}/g, response.shortname);
 
 					template.html(content).insertBefore(li);
+					var total = parseInt($('#unix-used').html());
+					total = total + 1;
+					$('#unix-used').html(total);
+					if (total >= 26) {
+						btn.addClass('disabled')
+							.prop('disabled', true);
+					}
 					$('.dialog-help').dialog('close');
 				}
 
+				name.removeClass('is-valid');
 				name.val('');
 			},
 			error: function (xhr) {

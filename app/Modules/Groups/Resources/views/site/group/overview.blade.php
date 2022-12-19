@@ -454,7 +454,7 @@
 			</table>
 			<div class="row">
 				<div class="col-md-9">
-					<span class="text-sm text-muted">{{ $used }} custom unix {{ $used == 1 ? 'group' : 'groups' }} (of 26 allowed, not including base, <code>-data</code>, or <code>-apps</code>).</span>
+					<span class="text-sm text-muted"><span id="unix-used">{{ $used }}</span> custom unix {{ $used == 1 ? 'group' : 'groups' }} (of 26 allowed, not including base, <code>-data</code>, or <code>-apps</code>).</span>
 				</div>
 				<div class="col-md-3 text-right">
 					<button class="btn btn-sm reveal" data-toggle=".extendedinfo" data-text="<span class='fa fa-eye-slash'></span> Hide Extended Info</button>"><span class="fa fa-eye"></span> Show Extended Info</button>
