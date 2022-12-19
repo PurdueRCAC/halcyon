@@ -43,7 +43,7 @@ class Impact extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<sint,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -52,7 +52,7 @@ class Impact extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'name' => 'required|string|max:255',
@@ -63,10 +63,10 @@ class Impact extends Model
 	/**
 	 * The attributes that should be mutated to dates.
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
-	protected $dates = [
-		'updateddatetime',
+	protected $casts = [
+		'updateddatetime' => 'datetime:Y-m-d H:i:s',
 	];
 
 	/**
