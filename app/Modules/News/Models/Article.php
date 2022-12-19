@@ -171,25 +171,6 @@ class Article extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setBodyAttribute(string $value)
-	{
-		$host = request()->getHttpHost();
-
-		//$value = strip_tags($value);
-		$value = preg_replace("/(https?:\/\/)?" . $host . "\/news\/\?id=(\d+)/", "NEWS#$3$4", $value);
-		$value = preg_replace("/(https?:\/\/)?" . $host . "\/news\/\?id=(\d+)/", "NEWS#$3$4", $value);
-		$value = preg_replace("/(https?:\/\/)?" . $host . "\/news\/(\d+)/", "NEWS#$3$4", $value);
-		$value = preg_replace("/(https?:\/\/)?" . $host . "\/news\/(\d+)/", "NEWS#$3$4", $value);
-
-		$this->attributes['body'] = $value;
-	}
-
-	/**
-	 * Set body value
-	 *
-	 * @param   string  $value
-	 * @return  void
-	 */
 	public function setLocationAttribute($value)
 	{
 		$value = strip_tags($value);
@@ -809,78 +790,6 @@ class Article extends Model
 	public function getFormattedBodyAttribute()
 	{
 		return $this->toHtml();
-
-		if (is_null($this->formatted_body))
-		{
-			$body = $this->body;
-
-			// Auto-expand relative URLs to absolute
-			$body = preg_replace_callback('/\[.*?\]\(([^\)]+)\)/i', function($matches)
-			{
-				if (substr($matches[1], 0, 4) == 'http')
-				{
-					return $matches[0];
-				}
-
-				return str_replace($matches[1], asset(ltrim($matches[1], '/')), $matches[0]);
-			}, $body);
-
-			event($event = new ArticlePrepareContent($body));
-
-			$text = $event->getBody();
-
-			$converter = new CommonMarkConverter([
-				'html_input' => 'allow',
-			]);
-			$converter->getEnvironment()->addExtension(new TableExtension());
-			$converter->getEnvironment()->addExtension(new StrikethroughExtension());
-
-			$text = (string) $converter->convertToHtml($text);
-
-			// Separate code blocks as we don't want to do any processing on their content
-			$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/uis", [$this, 'stripPre'], $text);
-			$text = preg_replace_callback("/\<code\>(.*?)\<\/code\>/i", [$this, 'stripCode'], $text);
-
-			// Convert emails
-			$text = preg_replace('/([\w\.\-]+@((\w+\.)*\w{2,}\.\w{2,}))/', "<a target=\"_blank\" href=\"mailto:$1\">$1</a>", $text);
-
-			// Convert template variables
-			if (auth()->user() && auth()->user()->can('manage news'))
-			{
-				$text = preg_replace("/%%([\w\s]+)%%/", '<span style="color:red">$0</span>', $text);
-			}
-
-			$news = array_merge($this->getContentVars(), $this->getAttributes());
-
-			foreach ($news as $var => $value)
-			{
-				if (is_array($value))
-				{
-					$value = implode(', ', $value);
-				}
-				$text = preg_replace("/%" . $var . "%/", $value, $text);
-			}
-
-			// Highlight unused variables for admins
-			if (auth()->user() && auth()->user()->can('manage news'))
-			{
-				$text = preg_replace("/%([\w\s]+)%/", '<span style="color:red">$0</span>', $text);
-			}
-
-			$text = preg_replace_callback("/(news)\s*(story|item)?\s*#?(\d+)(\{.+?\})?/i", array($this, 'matchNews'), $text);
-
-			// Put code blocks back
-			$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
-			$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
-			$text = str_replace('<th>', '<th scope="col">', $text);
-
-			$text = preg_replace('/<p>([^\n]+)<\/p>\n(<table.*?>)(.*?<\/table>)/usm', '$2 <caption>$1</caption>$3', $text);
-			$text = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
-
-			$this->formatted_body = $text;
-		}
-
-		return $this->formatted_body;
 	}
 
 	/**
@@ -1098,7 +1007,7 @@ class Article extends Model
 	 * Format news date
 	 *
 	 * @param   string  $startdate
-	 * @param   string  $enddate
+	 * @param   string|null  $enddate
 	 * @return  string
 	 */
 	public function formatDate($startdate, $enddate=null)
