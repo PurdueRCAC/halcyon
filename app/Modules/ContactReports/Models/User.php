@@ -53,7 +53,7 @@ class User extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -62,17 +62,16 @@ class User extends Model
 	/**
 	 * The attributes that should be mutated to dates.
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
-	protected $dates = [
-		'datetimecreated',
-		'datetimelastnotify',
+	protected $casts = [
+		'datetimelastnotify' => 'datetime:Y-m-d H:i:s',
 	];
 
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'contactreportid' => 'required|integer',

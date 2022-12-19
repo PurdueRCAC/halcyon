@@ -51,7 +51,7 @@ class Listener extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'folder'  => 'notempty',
@@ -62,7 +62,7 @@ class Listener extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -71,7 +71,7 @@ class Listener extends Model
 	/**
 	 * The attributes that should be cast to native types.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $casts = [
 		'client_id' => 'integer',
@@ -79,21 +79,13 @@ class Listener extends Model
 		'access' => 'integer',
 		'protected' => 'integer',
 		'params' => Params::class,
-	];
-
-	/**
-	 * The attributes that should be cast to native types.
-	 *
-	 * @var array
-	 */
-	protected $dates = [
-		'checked_out_time',
+		'checked_out_time' => 'datetime:Y-m-d H:i:s',
 	];
 
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'updating' => ListenerUpdating::class,

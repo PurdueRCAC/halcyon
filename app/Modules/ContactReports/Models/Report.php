@@ -65,7 +65,7 @@ class Report extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -76,18 +76,17 @@ class Report extends Model
 	/**
 	 * The attributes that should be mutated to dates.
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
-	protected $dates = [
-		'datetimecreated',
-		'datetimecontact',
-		'datetimegroupid',
+	protected $casts = [
+		'datetimecontact' => 'datetime:Y-m-d H:i:s',
+		'datetimegroupid' => 'datetime:Y-m-d H:i:s',
 	];
 
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'headline' => 'required',
@@ -97,7 +96,7 @@ class Report extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'created' => ReportCreated::class,
@@ -108,7 +107,7 @@ class Report extends Model
 	/**
 	 * Code block replacements
 	 *
-	 * @var  array
+	 * @var  array<string,array>
 	 */
 	private $replacements = array(
 		'preblocks'  => array(),

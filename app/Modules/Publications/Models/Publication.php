@@ -42,7 +42,7 @@ class Publication extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -51,10 +51,10 @@ class Publication extends Model
 	/**
 	 * The attributes that should be mutated to dates.
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
-	protected $dates = [
-		'published_at',
+	protected $casts = [
+		'published_at' => 'datetime:Y-m-d H:i:s',
 	];
 
 	/**

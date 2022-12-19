@@ -60,7 +60,7 @@ class Comment extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -69,25 +69,16 @@ class Comment extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'body' => 'required|string'
 	);
 
 	/**
-	 * The attributes that should be mutated to dates.
-	 *
-	 * @var  array
-	 */
-	protected $dates = [
-		'datetimecreated',
-	];
-
-	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'created' => CommentCreated::class,
@@ -98,7 +89,7 @@ class Comment extends Model
 	/**
 	 * Code block replacements
 	 *
-	 * @var  array
+	 * @var  array<string,array>
 	 */
 	private $replacements = array(
 		'preblocks'  => array(),

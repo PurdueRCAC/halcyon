@@ -68,7 +68,7 @@ class Issue extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -77,19 +77,9 @@ class Issue extends Model
 	];
 
 	/**
-	 * The attributes that should be mutated to dates.
-	 *
-	 * @var  array
-	 */
-	protected $dates = [
-		'datetimecreated',
-		'datetimeremoved'
-	];
-
-	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'userid' => 'required|integer',
@@ -99,7 +89,7 @@ class Issue extends Model
 	/**
 	 * Code block replacements
 	 *
-	 * @var  array
+	 * @var  array<string,array>
 	 */
 	private $replacements = array(
 		'preblocks'  => array(),

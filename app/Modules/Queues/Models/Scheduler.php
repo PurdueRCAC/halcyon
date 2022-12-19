@@ -64,7 +64,7 @@ class Scheduler extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'hostname' => 'required|string|max:64',
@@ -77,18 +77,18 @@ class Scheduler extends Model
 	/**
 	 * The attributes that should be mutated to dates.
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
-	protected $dates = [
-		'datetimedraindown',
-		'datetimelastimportstart',
-		'datetimelastimportstop',
+	protected $casts = [
+		'datetimedraindown' => 'datetime:Y-m-d H:i:s',
+		'datetimelastimportstart' => 'datetime:Y-m-d H:i:s',
+		'datetimelastimportstop' => 'datetime:Y-m-d H:i:s',
 	];
 
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'

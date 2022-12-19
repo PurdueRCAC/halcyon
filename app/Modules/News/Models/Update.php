@@ -75,22 +75,11 @@ class Update extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'body' => 'required|string'
 	);
-
-	/**
-	 * The attributes that should be mutated to dates.
-	 *
-	 * @var  array
-	 */
-	protected $dates = [
-		'datetimecreated',
-		'datetimeedited',
-		'datetimeremoved',
-	];
 
 	/**
 	 * @var string

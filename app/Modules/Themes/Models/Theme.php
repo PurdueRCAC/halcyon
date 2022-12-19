@@ -47,7 +47,7 @@ class Theme extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'element' => 'required|string',
@@ -57,7 +57,7 @@ class Theme extends Model
 	/**
 	 * The attributes that should be cast to native types.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $casts = [
 		'client_id' => 'integer',
@@ -65,24 +65,16 @@ class Theme extends Model
 		'access' => 'integer',
 		'protected' => 'integer',
 		'params' => Params::class,
+		'checked_out_time' => 'datetime:Y-m-d H:i:s',
 	];
 
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
-	];
-
-	/**
-	 * The attributes that should be cast to native types.
-	 *
-	 * @var array
-	 */
-	protected $dates = [
-		'checked_out_time',
 	];
 
 	/**

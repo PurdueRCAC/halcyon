@@ -67,7 +67,7 @@ class Article extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var  array
+	 * @var  array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -76,21 +76,19 @@ class Article extends Model
 	/**
 	 * The attributes that should be mutated to dates.
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
-	protected $dates = [
-		'datetimenews',
-		'datetimenewsend',
-		'datetimeupdate',
-		'datetimecreated',
-		'datetimeedited',
-		'datetimemailed',
+	protected $casts = [
+		'datetimenews' => 'datetime:Y-m-d H:i:s',
+		'datetimenewsend' => 'datetime:Y-m-d H:i:s',
+		'datetimeupdate' => 'datetime:Y-m-d H:i:s',
+		'datetimemailed' => 'datetime:Y-m-d H:i:s',
 	];
 
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'newstypeid' => 'required|integer|in:0,1',
@@ -107,7 +105,7 @@ class Article extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'creating' => ArticleCreating::class,

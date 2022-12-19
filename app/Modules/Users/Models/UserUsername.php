@@ -54,13 +54,11 @@ class UserUsername extends Model
 	/**
 	 * The attributes that should be mutated to dates.
 	 *
-	 * @var  array<int,string>
+	 * @var  array<string,string>
 	 */
-	protected $dates = [
-		'datecreated',
-		'dateremoved',
-		'datelastseen',
-		'dateverified',
+	protected $casts = [
+		'datelastseen' => 'datetime:Y-m-d H:i:s',
+		'dateverified' => 'datetime:Y-m-d H:i:s',
 	];
 
 	/**

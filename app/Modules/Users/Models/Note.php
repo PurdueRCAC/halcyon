@@ -42,17 +42,6 @@ class Note extends Model
 	public static $orderDir = 'asc';
 
 	/**
-	 * The attributes that should be mutated to dates.
-	 *
-	 * @var  array<int,string>
-	 */
-	protected $dates = [
-		'created_at',
-		'updated_at',
-		'deleted_at',
-	];
-
-	/**
 	 * The event map for the model.
 	 *
 	 * @var array<string,string>

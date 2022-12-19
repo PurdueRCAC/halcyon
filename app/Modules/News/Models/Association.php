@@ -62,7 +62,7 @@ class Association extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var  array
+	 * @var  array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -71,7 +71,7 @@ class Association extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'created' => AssociationCreated::class,
@@ -79,20 +79,18 @@ class Association extends Model
 	];
 
 	/**
-	 * The attributes that should be mutated to dates.
+	 * The attributes that should be cast to native types.
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
-	protected $dates = [
-		'datetimecreated',
-		'datetimeremoved',
-		'datetimevisited',
+	protected $casts = [
+		'datetimevisited' => 'datetime:Y-m-d H:i:s',
 	];
 
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'newsid'  => 'required|integer',

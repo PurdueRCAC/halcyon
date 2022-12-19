@@ -55,7 +55,7 @@ class Widget extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'title'    => 'required',
@@ -65,7 +65,7 @@ class Widget extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -75,28 +75,20 @@ class Widget extends Model
 	/**
 	 * The attributes that should be cast to native types.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $casts = [
 		'published' => 'integer',
 		'access' => 'integer',
 		'params' => Params::class,
-	];
-
-	/**
-	 * The attributes that should be cast to native types.
-	 *
-	 * @var array
-	 */
-	protected $dates = [
-		'publish_up',
-		'publish_down',
+		'publish_up' => 'datetime:Y-m-d H:i:s',
+		'publish_down' => 'datetime:Y-m-d H:i:s',
 	];
 
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'creating' => WidgetCreating::class,

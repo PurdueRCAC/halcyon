@@ -76,16 +76,8 @@ class Extension extends Model
 		'published' => 'integer',
 		'access' => 'integer',
 		'params' => Params::class,
-	];
-
-	/**
-	 * The attributes that should be cast to native types.
-	 *
-	 * @var array
-	 */
-	protected $dates = [
-		'publish_up',
-		'publish_down',
+		'publish_up' => 'datetime:Y-m-d H:i:s',
+		'publish_down' => 'datetime:Y-m-d H:i:s',
 	];
 
 	/**

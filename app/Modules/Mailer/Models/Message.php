@@ -39,7 +39,7 @@ class Message extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -48,19 +48,11 @@ class Message extends Model
 	/**
 	 * The attributes that should be cast to native types.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $casts = [
 		'recipients' => Params::class,
-	];
-
-	/**
-	 * The attributes that should be mutated to dates.
-	 *
-	 * @var  array
-	 */
-	protected $dates = [
-		'sent_at',
+		'sent_at' => 'datetime:Y-m-d H:i:s',
 	];
 
 	/**

@@ -43,7 +43,7 @@ class Size extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'queueid' => 'required|integer|min:1'
@@ -52,7 +52,7 @@ class Size extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -61,17 +61,17 @@ class Size extends Model
 	/**
 	 * The attributes that should be mutated to dates.
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
-	protected $dates = [
-		'datetimestart',
-		'datetimestop',
+	protected $casts = [
+		'datetimestart' => 'datetime:Y-m-d H:i:s',
+		'datetimestop' => 'datetime:Y-m-d H:i:s',
 	];
 
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'created' => QueueSizeCreated::class,
