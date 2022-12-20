@@ -63,13 +63,14 @@ class InstallCommand extends Command
 			\App\Modules\Core\Console\Installers\Scripts\ConfigureDatabase::class,
 			\App\Modules\Core\Console\Installers\Scripts\ConfigureAppUrl::class,
 			\App\Modules\Core\Console\Installers\Scripts\SetAppKey::class,
-			\App\Modules\Core\Console\Installers\Scripts\ConfigureUserProvider::class,
-			\App\Modules\Core\Console\Installers\Scripts\ModuleMigrator::class,
-			\App\Modules\Core\Console\Installers\Scripts\ModuleSeeders::class,
+			//\App\Modules\Core\Console\Installers\Scripts\ConfigureUserProvider::class,
+			//\App\Modules\Core\Console\Installers\Scripts\ModuleMigrator::class,
+			//\App\Modules\Core\Console\Installers\Scripts\ModuleSeeders::class,
 			\App\Modules\Core\Console\Installers\Scripts\ModuleAssets::class,
 			\App\Modules\Core\Console\Installers\Scripts\ThemeAssets::class,
-			\App\Modules\Core\Console\Installers\Scripts\UnignoreComposerLock::class,
-			\App\Modules\Core\Console\Installers\Scripts\UnignorePackageLock::class,
+			\App\Modules\Core\Console\Installers\Scripts\ListenerAssets::class,
+			//\App\Modules\Core\Console\Installers\Scripts\UnignoreComposerLock::class,
+			//\App\Modules\Core\Console\Installers\Scripts\UnignorePackageLock::class,
 			\App\Modules\Core\Console\Installers\Scripts\SetInstalledFlag::class,
 		])->install($this);
 
@@ -79,6 +80,11 @@ class InstallCommand extends Command
 		}
 	}
 
+	/**
+	 * Define console options
+	 *
+	 * @return array
+	 */
 	protected function getOptions()
 	{
 		return [

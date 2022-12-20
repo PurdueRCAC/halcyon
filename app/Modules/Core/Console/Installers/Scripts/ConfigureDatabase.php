@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Core\Console\Installers\Scripts;
+namespace App\Modules\Core\Console\Installers\Scripts;
 
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Database\Connectors\ConnectionFactory;
 use Illuminate\Database\DatabaseManager;
-use Modules\Core\Console\Installers\SetupScript;
-use Modules\Core\Console\Installers\Writers\EnvFileWriter;
+use App\Modules\Core\Console\Installers\SetupScript;
+use App\Modules\Core\Console\Installers\Writers\EnvFileWriter;
 use PDOException;
 
 class ConfigureDatabase implements SetupScript
@@ -50,7 +50,8 @@ class ConfigureDatabase implements SetupScript
 
         $vars = [];
 
-        while (! $connected) {
+        while (! $connected)
+        {
             $vars['db_driver'] = $this->askDatabaseDriver();
             $vars['db_host'] = $this->askDatabaseHost();
             $vars['db_port'] = $this->askDatabasePort($vars['db_driver']);
@@ -60,9 +61,12 @@ class ConfigureDatabase implements SetupScript
 
             $this->setLaravelConfiguration($vars);
 
-            if ($this->databaseConnectionIsValid()) {
+            if ($this->databaseConnectionIsValid())
+            {
                 $connected = true;
-            } else {
+            }
+            else
+            {
                 $command->error("Please ensure your database credentials are valid.");
             }
         }
@@ -110,7 +114,8 @@ class ConfigureDatabase implements SetupScript
     {
         do {
             $name = $this->command->ask('Enter your database name', 'homestead');
-            if ($name == '') {
+            if ($name == '')
+            {
                 $this->command->error('Database name is required');
             }
         } while (!$name);
@@ -125,7 +130,8 @@ class ConfigureDatabase implements SetupScript
     {
         do {
             $user = $this->command->ask('Enter your database username', 'homestead');
-            if ($user == '') {
+            if ($user == '')
+            {
                 $this->command->error('Database username is required');
             }
         } while (!$user);
@@ -167,11 +173,14 @@ class ConfigureDatabase implements SetupScript
      */
     protected function databaseConnectionIsValid()
     {
-        try {
+        try
+        {
             app('db')->reconnect()->getPdo();
 
             return true;
-        } catch (PDOException $e) {
+        }
+        catch (PDOException $e)
+        {
             return false;
         }
     }

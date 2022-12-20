@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Core\Console\Installers\Scripts;
+namespace App\Modules\Core\Console\Installers\Scripts;
 
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Encryption\Encrypter;
-use Modules\Core\Console\Installers\SetupScript;
+use App\Modules\Core\Console\Installers\SetupScript;
 
 class SetAppKey implements SetupScript
 {
@@ -17,6 +17,9 @@ class SetAppKey implements SetupScript
      */
     private $application;
 
+    /**
+     * @param Application $application
+     */
     public function __construct(Application $application)
     {
         $this->application = $application;
@@ -24,6 +27,7 @@ class SetAppKey implements SetupScript
 
     /**
      * Fire the install script
+     *
      * @param  Command $command
      * @return mixed
      */
@@ -34,13 +38,15 @@ class SetAppKey implements SetupScript
         // Next, we will replace the application key in the environment file so it is
         // automatically setup for this developer. This key gets generated using a
         // secure random byte generator and is later base64 encoded for storage.
-        if (! $this->setKeyInEnvironmentFile($key)) {
+        if (! $this->setKeyInEnvironmentFile($key))
+        {
             return;
         }
 
         config()->set('app.key', $key);
 
-        if ($command->option('verbose')) {
+        if ($command->option('verbose'))
+        {
             $command->info("Application key [$key] set successfully.");
         }
     }
@@ -67,7 +73,8 @@ class SetAppKey implements SetupScript
     {
         $currentKey = config('app.key');
 
-        if (strlen($currentKey) !== 0 && (! $this->confirmToProceed())) {
+        if (strlen($currentKey) !== 0 && (! $this->confirmToProceed()))
+        {
             return false;
         }
 

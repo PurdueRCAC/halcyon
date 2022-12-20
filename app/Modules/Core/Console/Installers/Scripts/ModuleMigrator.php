@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Core\Console\Installers\Scripts;
+namespace App\Modules\Core\Console\Installers\Scripts;
 
 use Illuminate\Console\Command;
-use Modules\Core\Console\Installers\SetupScript;
+use App\Modules\Core\Console\Installers\SetupScript;
 
 class ModuleMigrator implements SetupScript
 {

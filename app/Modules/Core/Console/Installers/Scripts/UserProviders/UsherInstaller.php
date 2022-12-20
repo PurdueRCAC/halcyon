@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Core\Console\Installers\Scripts\UserProviders;
+namespace App\Modules\Core\Console\Installers\Scripts\UserProviders;
 
-use Modules\Core\Console\Installers\SetupScript;
+use App\Modules\Core\Console\Installers\SetupScript;
 
 class UsherInstaller extends ProviderInstaller implements SetupScript
 {

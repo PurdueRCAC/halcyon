@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Core\Console\Installers\Scripts;
+namespace App\Modules\Core\Console\Installers\Scripts;
 
 use Illuminate\Console\Command;
-use Modules\Core\Console\Installers\SetupScript;
+use App\Modules\Core\Console\Installers\SetupScript;
 
 class UnignoreComposerLock implements SetupScript
 {
-    const COMPOSER_LOCK = "composer.lock";
+    const COMPOSER_LOCK = 'composer.lock';
 
     /**
      * Fire the install script
@@ -19,12 +19,14 @@ class UnignoreComposerLock implements SetupScript
     {
         $gitignorePath = base_path('.gitignore');
 
-        if (!$this->gitignoreContainsComposerLock($gitignorePath)) {
+        if (!$this->gitignoreContainsComposerLock($gitignorePath))
+        {
             return;
         }
 
         $removeComposerLock = $command->confirm('Do you want to remove composer.lock from .gitignore ?', true);
-        if ($removeComposerLock) {
+        if ($removeComposerLock)
+        {
             $out = $this->getGitignoreLinesButComposerLock($gitignorePath);
             $this->writeNewGitignore($gitignorePath, $out);
         }
@@ -47,8 +49,10 @@ class UnignoreComposerLock implements SetupScript
     {
         $data = file($gitignorePath);
         $out = [];
-        foreach ($data as $line) {
-            if (trim($line) !== self::COMPOSER_LOCK) {
+        foreach ($data as $line)
+        {
+            if (trim($line) !== self::COMPOSER_LOCK)
+            {
                 $out[] = $line;
             }
         }
@@ -64,7 +68,8 @@ class UnignoreComposerLock implements SetupScript
     {
         $fp = fopen($gitignorePath, "w+");
         flock($fp, LOCK_EX);
-        foreach ($out as $line) {
+        foreach ($out as $line)
+        {
             fwrite($fp, $line);
         }
         flock($fp, LOCK_UN);

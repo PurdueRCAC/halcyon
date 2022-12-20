@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Core\Console\Installers\Scripts;
+namespace App\Modules\Core\Console\Installers\Scripts;
 
 use Illuminate\Console\Command;
-use Modules\Core\Console\Installers\SetupScript;
+use App\Modules\Core\Console\Installers\SetupScript;
 
 class ModuleAssets implements SetupScript
 {
@@ -14,6 +14,8 @@ class ModuleAssets implements SetupScript
         'Core',
         'Media',
         'Menu',
+        'Pages',
+        'Users',
     ];
 
     /**
@@ -23,16 +25,27 @@ class ModuleAssets implements SetupScript
      */
     public function fire(Command $command)
     {
-        if ($command->option('verbose')) {
+        if ($command->option('verbose'))
+        {
             $command->blockMessage('Module assets', 'Publishing module assets ...', 'comment');
         }
 
-        foreach ($this->modules as $module) {
-            if ($command->option('verbose')) {
+        /*foreach ($this->modules as $module)
+        {
+            if ($command->option('verbose'))
+            {
                 $command->call('module:publish', ['module' => $module]);
                 continue;
             }
             $command->callSilent('module:publish', ['module' => $module]);
+        }*/
+
+        if ($command->option('verbose'))
+        {
+            $command->call('module:publish');
+            return;
         }
+
+        $command->callSilent('module:publish');
     }
 }

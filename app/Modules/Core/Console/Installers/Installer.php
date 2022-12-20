@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Core\Console\Installers;
+namespace App\Modules\Core\Console\Installers;
 
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
-use Modules\Core\Services\Composer;
+use App\Modules\Core\Services\Composer;
 
 class Installer
 {
@@ -44,10 +44,14 @@ class Installer
      */
     public function install(Command $command)
     {
-        foreach ($this->scripts as $script) {
-            try {
+        foreach ($this->scripts as $script)
+        {
+            try
+            {
                 $this->app->make($script)->fire($command);
-            } catch (\Exception $e) {
+            }
+            catch (\Exception $e)
+            {
                 $command->error($e->getMessage());
 
                 return false;

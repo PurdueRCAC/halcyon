@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Core\Console\Installers\Scripts;
+namespace App\Modules\Core\Console\Installers\Scripts;
 
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config\Repository as Config;
-use Modules\Core\Console\Installers\SetupScript;
-use Modules\Core\Console\Installers\Writers\EnvFileWriter;
+use App\Modules\Core\Console\Installers\SetupScript;
+use App\Modules\Core\Console\Installers\Writers\EnvFileWriter;
 
 class ConfigureAppUrl implements SetupScript
 {
@@ -51,8 +51,9 @@ class ConfigureAppUrl implements SetupScript
 
         $this->env->write($vars);
 
-        if ($command->option('verbose')) {
-            $command->info('Application url successfully configured');
+        if ($command->option('verbose'))
+        {
+            $command->info('Application URL successfully configured');
         }
     }
 
@@ -68,7 +69,8 @@ class ConfigureAppUrl implements SetupScript
         do {
             $str = $this->command->ask('Enter you application url (e.g. http://localhost, http://dev.example.com)', 'http://localhost');
 
-            if ($str == '' || (strpos($str, 'http://') !== 0 && strpos($str, 'https://') !== 0)) {
+            if ($str == '' || (strpos($str, 'http://') !== 0 && strpos($str, 'https://') !== 0))
+            {
                 $this->command->error('A valid http:// or https:// url is required');
 
                 $str = false;

@@ -5,7 +5,7 @@ namespace App\Modules\Core\Console\Installers\Scripts;
 use Illuminate\Console\Command;
 use App\Modules\Core\Console\Installers\SetupScript;
 
-class ThemeAssets implements SetupScript
+class ListenerAssets implements SetupScript
 {
     /**
      * Fire the install script
@@ -16,17 +16,15 @@ class ThemeAssets implements SetupScript
     {
         if ($command->option('verbose'))
         {
-            $command->blockMessage('Themes', 'Publishing theme assets ...', 'comment');
+            $command->blockMessage('Listeners', 'Publishing listener assets ...', 'comment');
         }
 
         if ($command->option('verbose'))
         {
-            //$command->call('stylist:publish');
-            $command->call('theme:publish');
+            $command->call('listener:publish');
             return;
         }
 
-        //$command->callSilent('stylist:publish');
-        $command->callSilent('theme:publish');
+        $command->callSilent('listener:publish');
     }
 }

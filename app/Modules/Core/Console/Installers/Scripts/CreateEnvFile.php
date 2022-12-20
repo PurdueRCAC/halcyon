@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Core\Console\Installers\Scripts;
+namespace App\Modules\Core\Console\Installers\Scripts;
 
 use Illuminate\Console\Command;
-use Modules\Core\Console\Installers\SetupScript;
-use Modules\Core\Console\Installers\Writers\EnvFileWriter;
+use App\Modules\Core\Console\Installers\SetupScript;
+use App\Modules\Core\Console\Installers\Writers\EnvFileWriter;
 
 class CreateEnvFile implements SetupScript
 {

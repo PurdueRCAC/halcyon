@@ -1,16 +1,16 @@
 <?php
 
-namespace Modules\Core\Console\Installers\Scripts\UserProviders;
+namespace App\Modules\Core\Console\Installers\Scripts\UserProviders;
 
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
-use Modules\Core\Console\Installers\SetupScript;
-use Modules\Core\Providers\CoreServiceProvider;
-use Modules\Core\Services\Composer;
-use Modules\User\Contracts\Authentication;
-use Modules\User\Repositories\RoleRepository;
-use Modules\User\Repositories\UserRepository;
+use App\Modules\Core\Console\Installers\SetupScript;
+use App\Modules\Core\Providers\CoreServiceProvider;
+use App\Modules\Core\Services\Composer;
+use App\Modules\User\Contracts\Authentication;
+use App\Modules\User\Repositories\RoleRepository;
+use App\Modules\User\Repositories\UserRepository;
 
 abstract class ProviderInstaller implements SetupScript
 {

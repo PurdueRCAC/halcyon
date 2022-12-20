@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Console\Installers\Writers;
+namespace App\Modules\Core\Console\Installers\Writers;
 
 use Illuminate\Filesystem\Filesystem;
 
@@ -20,8 +20,8 @@ class EnvFileWriter
         'db_driver' => 'DB_CONNECTION=mysql',
         'db_host' => 'DB_HOST=127.0.0.1',
         'db_port' => 'DB_PORT=3306',
-        'db_database' => 'DB_DATABASE=homestead',
-        'db_username' => 'DB_USERNAME=homestead',
+        'db_database' => 'DB_DATABASE=halcyon',
+        'db_username' => 'DB_USERNAME=halcyon',
         'db_password' => 'DB_PASSWORD=secret',
         'app_url' => 'APP_URL=http://localhost',
         'installed' => 'INSTALLED=false',
@@ -67,11 +67,14 @@ class EnvFileWriter
      */
     public function write($vars)
     {
-        if (!empty($vars)) {
+        if (!empty($vars))
+        {
             $environmentFile = $this->finder->get($this->file);
 
-            foreach ($vars as $key => $value) {
-                if (isset($this->setable_variables[$key])) {
+            foreach ($vars as $key => $value)
+            {
+                if (isset($this->setable_variables[$key]))
+                {
                     $env_var_name = explode('=', $this->setable_variables[$key])[0];
 
                     $value = $env_var_name . '=' . $value;

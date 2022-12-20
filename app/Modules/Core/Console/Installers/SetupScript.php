@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Console\Installers;
+namespace App\Modules\Core\Console\Installers;
 
 use Illuminate\Console\Command;
 
