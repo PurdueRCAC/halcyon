@@ -241,18 +241,15 @@
 						<?php
 						if (in_array('content', $fields)):
 							$l = strlen($revision->new->content);
-							$changed = $l - strlen($revision->old->content);
-							if ($changed > 0):
-								?>
-								{{ number_format(abs($l)) }} bytes
+							$changed = $l - (isset($revision->old->content) ? strlen($revision->old->content) : 0);
+							?>
+							{{ number_format(abs($l)) }} bytes
+							@if ($changed > 0)
 								(<span class="text-success">+{{ number_format(abs($changed)) }}</span>)
-								<?php
-							elseif ($changed < 0):
-								?>
-								{{ number_format(abs($l)) }} bytes
+							@elseif ($changed < 0)
 								(<span class="text-danger">-{{ number_format(abs($changed)) }}</span>)
-								<?php
-							endif;
+							@endif
+							<?php
 						endif;
 						?>
 					</td>
