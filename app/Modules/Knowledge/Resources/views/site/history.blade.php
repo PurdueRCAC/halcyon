@@ -177,8 +177,8 @@
 										endif;
 
 										if (isset($revision->new->params)):
-											$orparams = isset($revision->old->params) ? json_decode($revision->old->params, true) : [];
-											$drparams = json_decode($revision->new->params, true);
+											$orparams = isset($revision->old->params) ? (array)$revision->old->params : [];
+											$drparams = (array)$revision->new->params;
 
 											// Params
 											$ota = [];
