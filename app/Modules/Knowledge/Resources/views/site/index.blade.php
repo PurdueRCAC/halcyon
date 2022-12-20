@@ -30,11 +30,17 @@
 @section('title'){{ trans('knowledge::knowledge.module name') }}: {{ ($node->guide ? $node->guide . ': ' : '') . $node->page->headline . ($all ? ': ' . trans('knowledge::knowledge.all topics') : '') }}@stop
 
 @push('styles')
+@if (auth()->user() && (auth()->user()->can('create knowledge') || auth()->user()->can('edit knowledge')))
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css?v=' . filemtime(public_path('/modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css'))) }}" />
+@endif
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/prism/prism.css') }}?v={{ filemtime(public_path('modules/core/vendor/prism/prism.css')) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/knowledge/css/knowledge.css') }}?v={{ filemtime(public_path('modules/knowledge/css/knowledge.css')) }}" />
 @endpush
 
 @push('scripts')
+@if (auth()->user() && (auth()->user()->can('create knowledge') || auth()->user()->can('edit knowledge')))
+<script src="{{ asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js?v=' . filemtime(public_path('/modules/core/vendor/tom-select/js/tom-select.complete.min.js'))) }}"></script>
+@endif
 <script src="{{ asset('modules/core/vendor/prism/prism.js?v=' . filemtime(public_path() . '/modules/core/vendor/prism/prism.js')) }}"></script>
 <script src="{{ asset('modules/knowledge/js/site.js?v=' . filemtime(public_path() . '/modules/knowledge/js/site.js')) }}"></script>
 @endpush
@@ -263,6 +269,20 @@
 				@if (auth()->user()->can('edit pages'))
 					<fieldset>
 						<legend>{{ trans('global.details') }}</legend>
+
+						<div class="form-group">
+							<label for="field-parent_id">{{ trans('knowledge::knowledge.parent') }}</label>
+							<select name="parent_id" id="field-parent_id" class="form-control searchable-select">
+							@if ($node->id && $node->isRoot())
+								<option value="0">{{ trans('global.none') }}</option>
+							@else
+								<?php foreach (App\Modules\Knowledge\Models\Page::tree() as $pa): ?>
+									<?php $selected = ($pa->id == $node->parent_id ? ' selected="selected"' : ''); ?>
+									<option value="{{ $pa->id }}"<?php echo $selected; ?> data-path="/{{ $pa->path }}" data-indent="<?php echo str_repeat('|&mdash; ', $pa->level); ?>"><?php echo str_repeat('|&mdash; ', $pa->level) . e(Illuminate\Support\Str::limit($pa->title, 70)); ?></option>
+								<?php endforeach; ?>
+							@endif
+							</select>
+						</div>
 
 						@if ($page->snippet)
 							<div class="alert alert-warning">

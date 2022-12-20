@@ -11,6 +11,9 @@ use App\Modules\Knowledge\Models\Associations;
 use App\Modules\Knowledge\Http\Resources\PageResource;
 use App\Modules\Knowledge\Http\Resources\PageResourceCollection;
 use Carbon\Carbon;
+use App\Modules\History\Helpers\Diff;
+use App\Modules\History\Models\History;
+use App\Modules\History\Helpers\Diff\Formatter\Table;
 
 /**
  * Pages
@@ -783,5 +786,172 @@ class PagesController extends Controller
 		}
 
 		return response()->json(null, 204);
+	}
+
+	/**
+	 * See a diff between two entries
+	 *
+	 * @apiMethod DELETE
+	 * @apiUri    /knowledge/diff
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "oldid",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "newid",
+	 * 		"description":   "Entry identifier",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful diff between entries"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		}
+	 * }
+	 * @return Response
+	 */
+	public function diff(Request $request)
+	{
+		$beforeid = $request->input('oldid');
+		$afterid  = $request->input('newid');
+
+		if (!$beforeid || !$afterid)
+		{
+			return response()->json(['message' => trans('knowledge::knowledge.error.missing history ID')], 409);
+		}
+
+		$before = History::findOrFail($beforeid);
+		$after  = History::findOrFail($afterid);
+
+		$page = Page::findOrFail($before->historable_id);
+		$revisions = $page->history()
+				->orderBy('created_at', 'asc')
+				->where('id', '>', $beforeid)
+				->where('id', '<', $afterid)
+				->get();
+
+		$title   = isset($before->new->title) ? $before->new->title : '';
+		$alias   = isset($before->new->alias) ? $before->new->alias : (isset($after->old->alias) ? $after->old->alias : '');
+		$content = isset($before->new->content) ? $before->new->content : (isset($after->old->content) ? $after->old->content : '');
+		$params  = isset($before->new->params) ? json_decode($before->new->params, true) : (isset($after->old->params) ? json_decode($after->old->params, true) : []);
+
+		foreach ($revisions as $revision)
+		{
+			if (!$title && isset($revision->new->title))
+			{
+				$title = $revision->new->title;
+			}
+			if (!$alias && isset($revision->new->alias))
+			{
+				$alias = $revision->new->alias;
+			}
+			if (!$content && isset($revision->new->content))
+			{
+				$content = $revision->new->content;
+			}
+			if (empty($params) && isset($revision->new->params))
+			{
+				$params = json_decode($revision->new->params, true);
+			}
+		}
+
+		$diff = '';
+		$formatter = new Table();
+
+		if (isset($after->new->title))
+		{
+			$ota = [$title];
+			$nta = [$after->new->title];
+
+			$diff .= '<h3>Title</h3>';
+			$diff .= $formatter->format(new Diff($ota, $nta));
+		}
+
+		if (isset($after->new->alias))
+		{
+			$ota = [$alias];
+			$nta = [$after->new->alias];
+
+			$diff .= '<h3>Page alias</h3>';
+			$diff .= $formatter->format(new Diff($ota, $nta));
+		}
+
+		if (isset($after->new->content))
+		{
+			$ota = $content ? explode("\n", $content) : [];
+			$nta = explode("\n", $after->new->content);
+
+			$diff .= '<h3>Content</h3>';
+			$diff .= $formatter->format(new Diff($ota, $nta));
+		}
+
+		if (isset($after->new->params))
+		{
+			$orparams = !empty($params) ? (array)$params : [];
+			$drparams = json_decode($after->new->params, true);
+
+			// Params
+			$ota = [];
+			$nta = [];
+			foreach (['show_title', 'show_toc'] as $p)
+			{
+				if (isset($orparams[$p]) || isset($drparams[$p]))
+				{
+					$ota[] = isset($orparams[$p]) ? $p . ': ' . ($orparams[$p] ? 'true' : 'false') : '';
+					$nta[] = isset($drparams[$p]) ? $p . ': ' . ($drparams[$p] ? 'true' : 'false') : '';
+				}
+			}
+
+			if (!empty($ota) && !empty($nta))
+			{
+				$diff .= '<h3>Options</h3>';
+				$diff .= $formatter->format(new Diff($ota, $nta));
+			}
+
+			// Variables
+			if (isset($orparams['variables']) || isset($drparams['variables']))
+			{
+				$ota = isset($orparams['variables']) ? $orparams['variables'] : [];
+				$nta = isset($drparams['variables']) ? $drparams['variables'] : [];
+
+				if ($ota != $nta)
+				{
+					$diff .= '<h3>Variables</h3>';
+					$diff .= $formatter->format(new Diff($ota, $nta));
+				}
+			}
+
+			// Tags
+			if (isset($orparams['tags']) || isset($drparams['tags']))
+			{
+				$ota = isset($orparams['tags']) ? $orparams['tags'] : [];
+				$nta = isset($drparams['tags']) ? $drparams['tags'] : [];
+
+				if ($ota != $nta)
+				{
+					$diff .= '<h3>Tags</h3>';
+					$diff .= $formatter->format(new Diff($ota, $nta));
+				}
+			}
+		}
+
+		$data = new \stdClass;
+		$data->before = $before;
+		$data->after = $after;
+		$data->diff = $diff;
+
+		return $data;
 	}
 }

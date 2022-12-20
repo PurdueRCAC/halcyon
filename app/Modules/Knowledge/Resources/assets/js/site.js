@@ -55,16 +55,44 @@ document.addEventListener('DOMContentLoaded', function () {
 				headers: headers,
 				body: JSON.stringify(post),
 			})
-				.then(function () {
-					document.getElementById('rating-done').classList.remove('hide');
-				})
-				.catch(function () {
-					document.getElementById('rating-error').classList.remove('hide');
-				});
+			.then(function () {
+				document.getElementById('rating-done').classList.remove('hide');
+			})
+			.catch(function () {
+				document.getElementById('rating-error').classList.remove('hide');
+			});
 		});
 	}
 
 	//----
+
+	var sselects = document.querySelectorAll('.searchable-select');
+	if (sselects.length) {
+		sselects.forEach(function (el) {
+			var sel = new TomSelect(el, {
+				plugins: ['dropdown_input'],
+				render: {
+					option: function (data, escape) {
+						return '<div>' +
+							'<span class="d-inline-block indent">' + escape(data.indent) + '</span>' +
+							'<span class="d-inline-block">' +
+								'<span class="text">' + escape(data.text.replace(data.indent, '')) + '</span><br />' +
+								'<span class="path text-muted">' + escape(data.path) + '</span>' +
+							'</span>' +
+						'</div>';
+					},
+					item: function (data, escape) {
+						return '<div>' +
+							'<span class="d-inline-block">' +
+								'<span class="text">' + escape(data.text.replace(data.indent, '')) + '</span><br />' +
+								'<span class="path text-muted">' + escape(data.path) + '</span>' +
+							'</span>' +
+						'</div>';
+					}
+				}
+			});
+		});
+	}
 
 	var alias = document.getElementById('field-alias'),
 		title = document.getElementById('field-title');
@@ -101,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 
 			if (e.target.matches('a.edit')
-				|| e.target.matches('a.cancel')) {
+			|| e.target.matches('a.cancel')) {
 				e.preventDefault();
 
 				var id = e.target.getAttribute('data-id');
@@ -173,20 +201,20 @@ document.addEventListener('DOMContentLoaded', function () {
 				headers: headers,
 				body: JSON.stringify(post),
 			})
-				.then(function (response) {
-					return response.json();
-				})
-				.then(function (data) {
-					if (data.url) {
-						window.location.href = data.url;
-					} else {
-						window.location.reload(true);
-					}
-				})
-				.catch(function (error) {
-					btn.classList.remove('processing');
-					frm.prepend('<div class="alert alert-danger">' + error + '</div>');
-				});
+			.then(function (response) {
+				return response.json();
+			})
+			.then(function (data) {
+				if (data.url) {
+					window.location.href = data.url;
+				} else {
+					window.location.reload(true);
+				}
+			})
+			.catch(function (error) {
+				btn.classList.remove('processing');
+				frm.prepend('<div class="alert alert-danger">' + error + '</div>');
+			});
 		});
 	}
 
@@ -214,6 +242,105 @@ document.addEventListener('DOMContentLoaded', function () {
 
 			document.querySelectorAll('tr[data-parent="' + this.getAttribute('data-id') + '"]').forEach(function (ele) {
 				ele.classList.toggle('d-none');
+			});
+		});
+	});
+
+	//----
+
+	var pageids = document.querySelectorAll('.page-revision-id');
+	if (pageids.length) {
+		pageids.forEach(function (radio) {
+			radio.addEventListener('change', function(){
+
+				if (!radio.checked) {
+					return;
+				}
+
+				var start, stop, i;
+				for (i = 0; i < pageids.length; i++) {
+					if (pageids[i].classList.contains('page-revision-oldid') && pageids[i].checked) {
+						stop = pageids[i].closest('tr').id;
+						pageids[i].classList.remove('d-none');
+						break;
+					}
+				}
+
+				for (i = 0; i < pageids.length; i++) {
+					if (pageids[i].classList.contains('page-revision-newid') && pageids[i].checked) {
+						start = pageids[i].closest('tr').id;
+						pageids[i].classList.remove('d-none');
+						break;
+					}
+				}
+
+				var hide = false, hideo = true;
+				for (i = 0; i < pageids.length; i++) {
+					if (pageids[i].closest('tr').id == stop) {
+						hide = true;
+					}
+					if (pageids[i].classList.contains('page-revision-newid')) {
+						if (hide) {
+							pageids[i].classList.add('d-none');
+						} else {
+							pageids[i].classList.remove('d-none');
+						}
+					} else {
+						if (hideo) {
+							pageids[i].classList.add('d-none');
+						} else {
+							pageids[i].classList.remove('d-none');
+						}
+					}
+					if (pageids[i].closest('tr').id == start) {
+						hideo = false;
+					}
+				}
+			});
+		});
+	}
+
+	document.querySelectorAll('.btn-diff').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			var oldid = 0,
+				newid = 0;
+
+			document.querySelectorAll('input[type=radio]').forEach(function(radio){
+				if (oldid && newid) {
+					return;
+				}
+				if (radio.name == 'oldid' && radio.checked) {
+					oldid = radio.value;
+				}
+				if (radio.name == 'newid' && radio.checked) {
+					newid = radio.value;
+				}
+			});
+
+			if (!oldid || !newid) {
+				return;
+			}
+
+			fetch(el.getAttribute('data-api') + '?oldid=' + oldid + '&newid=' + newid, {
+				method: 'GET',
+				headers: headers
+			})
+			.then(function (response) {
+				return response.json();
+			})
+			.then(function (data) {
+				if (data.diff) {
+					document.getElementById('page-diff').innerHTML = data.diff;
+				} else {
+					document.getElementById('page-diff').innerHTML = '<div class="alert alert-warning">' + el.getAttribute('data-emptydiff') + '</div>';
+				}
+			})
+			.catch(function (error) {
+				//btn.classList.remove('processing');
+				//frm.prepend('<div class="alert alert-danger">' + error + '</div>');
+				alert(error);
 			});
 		});
 	});

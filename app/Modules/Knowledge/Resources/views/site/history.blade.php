@@ -63,21 +63,25 @@
 		<h2>{{ $page->headline }}</h2>
 	@endif
 
+	<form method="POST" action="{{ route('site.knowledge.page', ['uri' => ($p ? $p : '/'), 'action' => 'history']) }}">
+
 	<table class="table" id="revisionhistory">
 		<caption>Change History</caption>
 		<thead>
 			<tr>
-				<th scope="col" colspan="2">Changed</th>
+				<th scope="col" colspan="2">
+					<a class="btn btn-sm btn-secondary btn-diff" href="#page-history" data-toggle="modal" data-api="{{ route('api.knowledge.diff') }}" data-emptydiff="No diffable values found between the revisions.">Compare</a>
+				</th>
 				<th scope="col">When</th>
+				<th scope="col">Changed</th>
+				<th scope="col">Length</th>
 				<th scope="col">Made by</th>
-				<?php /*@if (auth()->user()->can('edit knowledge'))
-					<th scope="col" class="text-center">Option</th>
-				@endif*/ ?>
 			</tr>
 		</thead>
 		<tbody>
 			<?php
 			$i = 0;
+			$comparefirst = true;
 
 			$revisions = $page->history()
 				->orderBy('created_at', 'desc')
@@ -106,31 +110,39 @@
 				endif;
 
 				$fields = array_keys($f);
-				foreach ($fields as $i => $k):
+				foreach ($fields as $j => $k):
 					if (in_array($k, ['created_at', 'updated_at', 'deleted_at'])):
-						unset($fields[$i]);
+						unset($fields[$j]);
 					endif;
 				endforeach;
 				?>
-				<tr>
+				<tr id="page-revision-{{ $revision->id }}">
+					@if ($i == 1)
+						<td>
+
+						</td>
+						<td>
+							<input type="radio" name="newid" value="{{ $revision->id }}" class="page-revision-id page-revision-newid" checked="checked" />
+						</td>
+					@else
+						<td>
+							<input type="radio" name="oldid" value="{{ $revision->id }}" class="page-revision-id page-revision-oldid"<?php
+							if ($comparefirst == true)
+							{
+								echo ' checked="checked"';
+								$comparefirst = false;
+							} ?> />
+						</td>
+						<td>
+							<input type="radio" name="newid" value="{{ $revision->id }}" class="page-revision-id page-revision-newid d-none" />
+						</td>
+					@endif
 					<td>
-						@if (in_array('title', $fields))
-							Title<br />
-						@endif
-						@if (in_array('alias', $fields))
-							Page alias<br />
-						@endif
-						@if (in_array('content', $fields))
-							Content<br />
-						@endif
-						@if (in_array('params', $fields))
-							Page options
-						@endif
-					</td>
-					<td>
-						<a href="#page-history{{ $revision->id }}" data-toggle="modal">View</a>
+						<a href="#page-history{{ $revision->id }}" data-toggle="modal" class="tip" title="View changes from previous version">
+							<time datetime="{{ $revision->created_at->toDateTimeString() }}">{{ $revision->created_at->toDateTimeString() }}</time>
+						</a>
 						<div id="page-history{{ $revision->id }}" class="modal fade" tabindex="-1" aria-labelledby="page-history-title{{ $revision->id }}" aria-hidden="true">
-							<div class="modal-dialog modal-lg modal-dialog-centered">
+							<div class="modal-dialog modal-xl modal-dialog-centered">
 								<div class="modal-content">
 									<div class="modal-header">
 										<h3 class="modal-title" id="page-history-title{{ $revision->id }}">Changes</h3>
@@ -165,8 +177,8 @@
 										endif;
 
 										if (isset($revision->new->params)):
-											$orparams = isset($revision->old->params) ? (array)$revision->old->params : [];
-											$drparams = (array)$revision->new->params;
+											$orparams = isset($revision->old->params) ? json_decode($revision->old->params, true) : [];
+											$drparams = json_decode($revision->new->params, true);
 
 											// Params
 											$ota = [];
@@ -212,36 +224,78 @@
 						</div>
 					</td>
 					<td>
-						<time datetime="{{ $revision->created_at->toDateTimeString() }}">{{ $revision->created_at->toDateTimeString() }}</time>
+						@if (in_array('title', $fields))
+							Title<br />
+						@endif
+						@if (in_array('alias', $fields))
+							Page alias<br />
+						@endif
+						@if (in_array('content', $fields))
+							Content<br />
+						@endif
+						@if (in_array('params', $fields))
+							Page options
+						@endif
+					</td>
+					<td>
+						<?php
+						if (in_array('content', $fields)):
+							$l = strlen($revision->new->content);
+							$changed = $l - strlen($revision->old->content);
+							if ($changed > 0):
+								?>
+								{{ number_format(abs($l)) }} bytes
+								(<span class="text-success">+{{ number_format(abs($changed)) }}</span>)
+								<?php
+							elseif ($changed < 0):
+								?>
+								{{ number_format(abs($l)) }} bytes
+								(<span class="text-danger">-{{ number_format(abs($changed)) }}</span>)
+								<?php
+							endif;
+						endif;
+						?>
 					</td>
 					<td>
 						{{ $actor }}
 					</td>
-					<?php /*<td class="text-center">
-						@if (auth()->user()->can('edit knowledge'))
-							@if ($latest->id == $revision->id)
-								(current)
-							@else
-							<form method="post" action="{{ route('site.knowledge.restore') }}" data-action="{{ route('site.knowledge.page', ['uri' => $node->path]) }}">
-								<button type="submit" class="btn btn-restore" data-id="{{ $revision->id }}" data-confirm="Are you sure you want to restore to this version?" title="Restore to this version">
-									<span class="fa fa-undo" aria-hidden="true"></span>
-									Restore
-								</button>
-								<input type="hidden" name="node" value="{{ $node->id }}" />
-								<input type="hidden" name="revision" value="{{ $revision->id }}" />
-								@csrf
-							</form>
-							@endif
-						@endif
-					</td>*/ ?>
 				</tr>
 				<?php
 			endforeach;
 			?>
 		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="2">
+					<a class="btn btn-sm btn-secondary btn-diff" href="#page-history" data-toggle="modal" data-api="{{ route('api.knowledge.diff') }}" data-emptydiff="No diffable values found between the revisions.">Compare</a>
+				</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</tfoot>
 	</table>
+	@csrf
 
 	{{ $revisions->render() }}
+
+	<div id="page-history" class="modal fade" tabindex="-1" aria-labelledby="page-history-title" aria-hidden="true">
+		<div class="modal-dialog modal-xl modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title" id="page-history-title">Changes</h3>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body" id="page-diff">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	</form>
 </div>
 </div>
 @stop

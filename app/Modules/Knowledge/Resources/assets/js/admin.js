@@ -35,14 +35,28 @@ document.addEventListener('DOMContentLoaded', function () {
 	var sselects = document.querySelectorAll('.searchable-select');
 	if (sselects.length) {
 		sselects.forEach(function (el) {
-			new TomSelect(el, {
-				plugins: ['dropdown_input']
-			});
-			/*sel.on('item_add', function () {
-				if (el.classList.contains('filter-submit')) {
-					el.closest('form').submit();
+			var sel = new TomSelect(el, {
+				plugins: ['dropdown_input'],
+				render: {
+					option: function (data, escape) {
+						return '<div>' +
+							'<span class="d-inline-block indent">' + escape(data.indent) + '</span>' +
+							'<span class="d-inline-block">' +
+							'<span class="text">' + escape(data.text.replace(data.indent, '')) + '</span><br />' +
+							'<span class="path text-muted">' + escape(data.path) + '</span>' +
+							'</span>' +
+							'</div>';
+					},
+					item: function (data, escape) {
+						return '<div>' +
+							'<span class="d-inline-block">' +
+								'<span class="text">' + escape(data.text.replace(data.indent, '')) + '</span><br />' +
+								'<span class="path text-muted">' + escape(data.path) + '</span>' +
+							'</span>' +
+						'</div>';
+					}
 				}
-			});*/
+			});
 		});
 	}
 
@@ -101,7 +115,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			a.setAttribute('data-toggle', 'modal');
 		}
 	}
-
 	// Snippet tree
 
 	document.querySelectorAll('.snippet-checkbox').forEach(function (el) {

@@ -28,6 +28,10 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 		'uses' => 'PagesController@delete',
 		'middleware' => ['auth:api', 'can:delete knowledge'],
 	])->where('id', '[0-9]+');
+	$router->get('diff', [
+		'as'   => 'api.knowledge.diff',
+		'uses' => 'PagesController@diff',
+	]);
 
 	// Page snippets
 	$router->group(['prefix' => '/snippets', 'middleware' => ['auth:api', 'can:manage knowledge']], function (Router $router)
