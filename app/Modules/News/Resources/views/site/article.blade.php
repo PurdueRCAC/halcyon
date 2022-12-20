@@ -161,14 +161,26 @@ app('pathway')
 		<div itemprop="description">
 		@if (count($article->updates))
 			@foreach ($article->updates()->orderBy('datetimecreated', 'desc')->get() as $update)
-				<section>
-					<h3 class="newsupdate">{{ strtoupper(trans('news::news.update')) }}: <time datetime="{{ $update->datetimecreated->toDateTimeLocalString() }}">{{ $update->formatDate($update->datetimecreated) }}</time></h3>
+				<section id="{{ str_replace(' ', '_', $update->datetimecreated->toDateTimeLocalString()) }}">
+					<h3 class="newsupdate">
+						<a href="#{{ str_replace(' ', '_', $update->datetimecreated->toDateTimeLocalString()) }}" class="heading-anchor" title="Link to update at {{ $update->formatDate($update->datetimecreated) }}">
+							<span class="fa fa-link" aria-hidden="true"></span>
+							<span class="sr-only">Link to update at {{ $update->formatDate($update->datetimecreated) }}</span>
+						</a>
+						{{ strtoupper(trans('news::news.update')) }}: <time datetime="{{ $update->datetimecreated->toDateTimeLocalString() }}">{{ $update->formatDate($update->datetimecreated) }}</time>
+					</h3>
 					{!! $update->toHtml() !!}
 				</section>
 			@endforeach
 
-			<section>
-				<h3 class="newsupdate">{{ strtoupper(trans('news::news.original')) }}: <time datetime="{{ $article->datetimenews->toDateTimeLocalString() }}">{{ $article->formatDate($article->datetimenews, $article->originalDatetimenewsend) }}</time></h3>
+			<section id="{{ str_replace(' ', '_', $article->datetimecreated->toDateTimeLocalString()) }}">
+				<h3 class="newsupdate">
+					<a href="#{{ str_replace(' ', '_', $article->datetimecreated->toDateTimeLocalString()) }}" class="heading-anchor" title="Link to original posting">
+						<span class="fa fa-link" aria-hidden="true"></span>
+						<span class="sr-only">Link to original posting</span>
+					</a>
+					{{ strtoupper(trans('news::news.original')) }}: <time datetime="{{ $article->datetimenews->toDateTimeLocalString() }}">{{ $article->formatDate($article->datetimenews, $article->originalDatetimenewsend) }}</time>
+				</h3>
 		@endif
 
 		{!! $article->toHtml() !!}
