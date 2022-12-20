@@ -897,7 +897,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 												<div class="col-md-5">
 													<div class="form-group">
 														<label for="loan-cores{{ $q->id }}">{{ trans('queues::queues.cores') }} <span class="required">*</span></label>
-														<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $q->id }}" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $q->id }}" value="{{ $item->corecount }}" />
+														<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $q->id }}" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $q->id }}" value="0" />
 														<span class="text-muted">({{ trans('queues::queues.cores per nodes', ['cores' => $q->subresource->nodecores]) }})</span>
 													</div>
 												</div>
