@@ -958,7 +958,7 @@ class DirectoriesController extends Controller
 		if ($request->has('quotaupdate'))
 		{
 			// Fetch message type
-			$type = MessageType::query()
+			/*$type = MessageType::query()
 				->where('resourceid', '=', $row->resourceid)
 				->where('name', 'like', 'get % quota')
 				->get()
@@ -967,10 +967,19 @@ class DirectoriesController extends Controller
 			if (!$type)
 			{
 				return response()->json(['message' => trans('Failed to retrieve messagequeuetype for resourceid :id', ['id' => $row->resourceid])], 415);
+			}*/
+			if (!$row->storageResource)
+			{
+				return response()->json(['message' => trans('Failed to retrieve storage resource for :id', ['id' => $row->storageresourceid])], 415);
 			}
 
-			// Form message queue
-			$row->addMessageToQueue($type->id, $row->userid);
+			$typeid = $row->storageResource->getquotatypeid;
+
+			if ($typeid)
+			{
+				// Form message queue
+				$row->addMessageToQueue($typeid, $row->userid);
+			}
 
 			return new DirectoryResource($row);
 		}
