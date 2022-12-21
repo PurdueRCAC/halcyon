@@ -281,13 +281,13 @@ var Roles = {
 		var resource = res[res.selectedIndex].value;
 
 		if (resource) {
-			fetch(resource.getAttribute('data-api') + "/" + resource + "." + userid, {
+			fetch(res.getAttribute('data-api') + "/" + resource + "." + userid, {
 				method: 'DELETE',
 				headers: headers
 			})
 				.then(function (response) {
 					if (response.ok) {
-						fetch(resource.getAttribute('data-api') + "/" + resource + "." + userid, {
+						fetch(res.getAttribute('data-api') + "/" + resource + "." + userid, {
 							method: 'GET',
 							headers: headers
 						})
