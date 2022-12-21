@@ -202,7 +202,17 @@
 
 												if ($ota != $nta):
 													echo '<h3>Variables</h3>';
-													echo $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));
+													$otaa = array();
+													foreach ($ota as $k => $v)
+													{
+														$otaa[] = $k . ': ' . $v;
+													}
+													$ntaa = array();
+													foreach ($nta as $k => $v)
+													{
+														$ntaa[] = $k . ': ' . $v;
+													}
+													echo $formatter->format(new App\Modules\History\Helpers\Diff($otaa, $ntaa));
 												endif;
 											endif;
 

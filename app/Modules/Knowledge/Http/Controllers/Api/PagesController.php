@@ -929,7 +929,17 @@ class PagesController extends Controller
 				if ($ota != $nta)
 				{
 					$diff .= '<h3>Variables</h3>';
-					$diff .= $formatter->format(new Diff($ota, $nta));
+					$otaa = array();
+					foreach ($ota as $k => $v)
+					{
+						$otaa[] = $k . ': ' . $v;
+					}
+					$ntaa = array();
+					foreach ($nta as $k => $v)
+					{
+						$ntaa[] = $k . ': ' . $v;
+					}
+					$diff .= $formatter->format(new Diff($otaa, $ntaa));
 				}
 			}
 
