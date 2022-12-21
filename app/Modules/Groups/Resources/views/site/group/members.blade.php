@@ -377,7 +377,14 @@ $i = 0;
 					foreach ($queues as $queue):
 						$csv_headers[] = $queue->name . ' (' . $queue->resource->name . ')';
 						?>
-						<th scope="col" class="col-queue text-nowrap text-center">{{ $queue->name }} ({{ $queue->resource->name }})</th>
+						<th scope="col" class="col-queue text-nowrap text-center">
+							{{ $queue->name }} ({{ $queue->resource->name }})
+							@if (!$queue->active)
+								<span class="fa fa-exclamation-triangle text-warning tip" title="{{ trans('queues::queues.inactive queue and membership is frozen') }}">
+									<span class="sr-only">{{ trans('queues::queues.inactive queue and membership is frozen') }}</span>
+								</span>
+							@endif
+						</th>
 						<?php
 					endforeach;
 
@@ -456,7 +463,7 @@ $i = 0;
 							endif;
 							$csv[] = $checked ? 'yes' : 'no';
 
-							if (!$member->user->enabled):
+							if (!$member->user->enabled || (!$checked && !$queue->active)):
 								$disable = ' disabled="disabled"';
 							endif;
 							?>
@@ -568,7 +575,14 @@ $i = 0;
 						<th scope="col">Username</th>
 						<th scope="col" class="text-center">Options</th>
 						@foreach ($queues as $queue)
-							<th scope="col" class="col-queue text-nowrap text-center">{{ $queue->name }} ({{ $queue->resource->name }})</th>
+							<th scope="col" class="col-queue text-nowrap text-center">
+								{{ $queue->name }} ({{ $queue->resource->name }})
+								@if (!$queue->active)
+									<span class="fa fa-exclamation-triangle text-warning tip" title="{{ trans('queues::queues.inactive queue and membership is frozen') }}">
+										<span class="sr-only">{{ trans('queues::queues.inactive queue and membership is frozen') }}</span>
+									</span>
+								@endif
+							</th>
 						@endforeach
 						@foreach ($unixgroups as $unix)
 							<th scope="col" class="col-unixgroup text-nowrap text-center">{{ $unix->longname }}</th>
@@ -648,7 +662,7 @@ $i = 0;
 
 								$csv[] = $checked ? 'yes' : 'no';
 
-								if (!$member->user || !$member->user->enabled):
+								if (!$member->user || !$member->user->enabled || (!$checked && !$queue->active)):
 									$disable = ' disabled';
 								endif;
 								?>
@@ -760,7 +774,14 @@ $i = 0;
 					<th scope="col">Username</th>
 					<th scope="col" class="text-center">Options</th>
 					@foreach ($queues as $queue)
-						<th scope="col" class="col-queue text-nowrap text-center">{{ $queue->name }} ({{ $queue->resource->name }})</th>
+						<th scope="col" class="col-queue text-nowrap text-center">
+							{{ $queue->name }} ({{ $queue->resource->name }})
+							@if (!$queue->active)
+								<span class="fa fa-exclamation-triangle text-warning tip" title="{{ trans('queues::queues.inactive queue and membership is frozen') }}">
+									<span class="sr-only">{{ trans('queues::queues.inactive queue and membership is frozen') }}</span>
+								</span>
+							@endif
+						</th>
 					@endforeach
 					@foreach ($unixgroups as $unix)
 						<th scope="col" class="col-unixgroup text-nowrap text-center">{{ $unix->longname }}</th>
@@ -824,7 +845,7 @@ $i = 0;
 
 							$csv[] = $checked ? 'yes' : 'no';
 
-							if (!$member->user->enabled):
+							if (!$member->user->enabled || (!$checked && !$queue->active)):
 								$disable = ' disabled';
 							endif;
 							?>

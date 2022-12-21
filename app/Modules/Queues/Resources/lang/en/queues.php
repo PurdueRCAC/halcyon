@@ -75,6 +75,7 @@ return [
 	'queue is running' => 'Queue is running.',
 	'queue is stopped' => 'Queue is stopped or disabled.',
 	'queue has not active resources' => 'Queue has no active resources. Remove queue or sell/loan nodes or service units.',
+	'inactive queue and membership is frozen' => 'Queue has no active allocations. Members can not be added to this queue, only removed.',
 	'max ijob factor' => 'Max Jobs per Iteration Factor',
 	'max ijob user factor' => 'Max Jobs per User Iteration Factor',
 	'cluster' => 'Subcluster(s)',
