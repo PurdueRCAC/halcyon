@@ -42,18 +42,18 @@ document.addEventListener('DOMContentLoaded', function () {
 						return '<div>' +
 							'<span class="d-inline-block indent">' + escape(data.indent) + '</span>' +
 							'<span class="d-inline-block">' +
-							'<span class="text">' + escape(data.text.replace(data.indent, '')) + '</span><br />' +
-							'<span class="path text-muted">' + escape(data.path) + '</span>' +
+							'<span class="text">' + escape(data.text.replace(data.indent, '')) + '</span>' +
+							(data.path ? '<br /><span class="path text-muted">' + escape(data.path) + '</span>' : '') +
 							'</span>' +
 							'</div>';
 					},
 					item: function (data, escape) {
 						return '<div>' +
 							'<span class="d-inline-block">' +
-								'<span class="text">' + escape(data.text.replace(data.indent, '')) + '</span><br />' +
-								'<span class="path text-muted">' + escape(data.path) + '</span>' +
+							'<span class="text">' + escape(data.text.replace(data.indent, '')) + '</span>' +
+							(data.path ? '<br /><span class="path text-muted">' + escape(data.path) + '</span>' : '') +
 							'</span>' +
-						'</div>';
+							'</div>';
 					}
 				}
 			});
