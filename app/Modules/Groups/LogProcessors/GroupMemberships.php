@@ -114,7 +114,22 @@ class GroupMemberships
 
 				if ($record->classmethod == 'delete')
 				{
-					$record->summary = 'Removed from group ' . $group;
+					$user = trans('global.unknown');
+					$parts = explode('/', $record->uri);
+					$id = end($parts);
+
+					$membership = Member::query()
+						->withTrashed()
+						->where('id', '=', $id)
+						->first();
+
+					if ($membership)
+					{
+						$record->targetuserid = $membership->userid;
+						$user = $membership->user ? $membership->user->username : $user;
+					}
+
+					$record->summary = 'Removed ' . $user . ' from group ' . $group;
 				}
 			break;
 
