@@ -4,6 +4,7 @@ namespace App\Modules\Groups\LogProcessors;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\UnixGroupMember;
 use App\Modules\Groups\Models\UnixGroup;
+use App\Modules\Groups\Models\Member;
 use App\Modules\History\Models\Log;
 
 /**
