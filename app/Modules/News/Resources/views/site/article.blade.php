@@ -107,25 +107,24 @@ app('pathway')
 			</div>
 		@endif
 		<ul class="news-meta text-muted">
+			@if (!$article->published)
+				<li><span class="badge badge-danger">{{ trans('news::news.draft') }}</span></li>
+			@endif
 			@if (!$article->template)
 				<li><span class="fa fa-fw fa-clock-o" aria-hidden="true"></span> <time datetime="{{ $article->datetimenews->toDateTimeLocalString() }}">{{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }}</time></li>
 			@endif
-
 			@if ($article->location)
 				<li><span class="fa fa-fw fa-map-marker" aria-hidden="true"></span> <span itemprop="location">{{ $article->location }}</span></li>
 			@endif
-
 			@if ($article->url)
 				<?php
 				$url = parse_url($article->url);
 				?>
 				<li><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="{{ $article->visitableUrl }}">{{ Illuminate\Support\Str::limit($url['host'], 70) . ($url['path'] || $url['query'] ? ' ...' : '') }}</a></li>
 			@endif
-
 			@if ($article->type)
 				<li><span class="fa fa-fw fa-folder" aria-hidden="true"></span> {{ $article->type->name }}</li>
 			@endif
-
 			<?php
 			$resources = $article->resourceList()->get();
 			if (count($resources) > 0):
