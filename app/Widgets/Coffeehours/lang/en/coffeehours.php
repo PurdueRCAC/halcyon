@@ -18,6 +18,10 @@ return [
 	'params' => [
 		'category desc' => 'Select Articles from a specific Category. If no selection, it will show all categories by default.',
 		'category' => 'Category',
+		'history' => 'Number of days in the past',
+		'history desc' => 'The number of days in the past to pull records.',
+		'future' => 'Number of days in the future',
+		'future desc' => 'The number of days in the future to pull records.',
 		'all categories' => '- All Categories -',
 		'link title desc' => 'Link the Article titles to Articles.',
 		'link title' => 'Linked Titles',

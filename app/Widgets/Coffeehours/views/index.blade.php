@@ -93,6 +93,11 @@ foreach ($rows as $event):
 	else:
 		$slot->backgroundColor = '#7F379A'; // purple
 		$slot->borderColor = '#7F379A';
+
+		if ($now->getTimestamp() >= $endregistration->getTimestamp()):
+			$slot->backgroundColor = '#757575'; // gray
+			$slot->borderColor = '#757575';
+		endif;
 	endif;
 
 	$events[] = $slot;
@@ -301,6 +306,7 @@ endforeach;
 			plugins: ['interaction', 'dayGrid', 'timeGrid'],
 			defaultView: 'timeGridWeek',
 			defaultDate: '<?php echo $week_start->format('Y-m-d'); ?>',
+			//initialDate: '<?php echo $week_start->format('Y-m-d'); ?>',
 			nowIndicator: true,
 			allDaySlot: false,
 			minTime: "06:00:00",

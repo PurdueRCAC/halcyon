@@ -5,6 +5,8 @@
 			<field name="catid" type="App\Modules\News\Models\Fields\Types" extension="news" default="" size="10" label="widget.coffeehours::coffeehours.params.category" description="widget.coffeehours::coffeehours.params.category desc" >
 				<option value="">widget.coffeehours::coffeehours.params.all categories</option>
 			</field>
+			<field name="history" type="text" default="14" label="widget.coffeehours::coffeehours.params.history" description="widget.coffeehours::coffeehours.params.history desc" />
+			<field name="future" type="text" default="30" label="widget.coffeehours::coffeehours.params.future" description="widget.coffeehours::coffeehours.params.future desc" />
 			<field name="item_heading" type="list" default="h4" label="widget.coffeehours::coffeehours.params.header level" description="widget.coffeehours::coffeehours.params.header level desc">
 				<option value="h1">H1</option>
 				<option value="h2">H2</option>

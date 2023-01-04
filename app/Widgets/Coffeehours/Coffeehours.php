@@ -27,9 +27,12 @@ class Coffeehours extends Widget
 
 		$day = date('w');
 		$week_start = Carbon::now()->modify('-' . $day . ' days');
-		$week_end   = Carbon::now()->modify('+' . 30 . ' days');
+		$week_end   = Carbon::now()->modify('+' . $this->params->get('future', 30) . ' days');
 
-		$start = $week_start->format('Y-m-d') . ' 00:00:00';
+		$history = $this->params->get('history', 14);
+		$start = $history
+			? Carbon::now()->modify('-' . ($day + $history) . ' days')->format('Y-m-d') . ' 00:00:00'
+			: $week_start->format('Y-m-d') . ' 00:00:00';
 		$stop  = $week_end->format('Y-m-d') . ' 00:00:00';
 
 		$rows = $type->articles()
