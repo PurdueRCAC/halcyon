@@ -174,7 +174,7 @@ class Article extends Model
 	public function setLocationAttribute($value)
 	{
 		$value = strip_tags($value);
-		$value = htmlentities($value, ENT_QUOTES, 'UTF-8');
+		//$value = htmlentities($value, ENT_QUOTES, 'UTF-8');
 
 		$this->attributes['location'] = $value;
 	}

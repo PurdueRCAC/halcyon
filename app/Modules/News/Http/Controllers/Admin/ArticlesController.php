@@ -471,17 +471,17 @@ class ArticlesController extends Controller
 			// Note: This is recursive and will also remove all descendents
 			$row = Article::findOrFail($id);
 
-			$start = Carbon::parse($s . ' ' . $row->datetimenews->format('h:i:s'));
+			$start = Carbon::parse($s . ' ' . $row->datetimenews->format('H:i:s'));
 
-			$end = Carbon::parse($s . ' ' . $row->datetimenews->format('h:i:s'));
+			$end = Carbon::parse($s . ' ' . $row->datetimenews->format('H:i:s'));
 			$end->modify('+ ' . ($row->datetimenewsend->timestamp - $row->datetimenews->timestamp) . ' seconds');
 
 			//for ($i = 1; $i <= $days; $i++)
 			//{
 				$payload = new Article;
-				$payload->datetimenews    = $start->format('Y-m-d h:i:s');
-				$payload->datetimenewsend = $end->format('Y-m-d h:i:s');
-				$payload->datetimecreated = $now->format('Y-m-d h:i:s');
+				$payload->datetimenews    = $start->format('Y-m-d H:i:s');
+				$payload->datetimenewsend = $end->format('Y-m-d H:i:s');
+				$payload->datetimecreated = $now->format('Y-m-d H:i:s');
 				$payload->userid          = $row->userid;
 				$payload->edituserid      = $row->edituserid;
 				$payload->published       = 1;
