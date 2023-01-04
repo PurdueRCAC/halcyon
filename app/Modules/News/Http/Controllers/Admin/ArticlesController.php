@@ -471,9 +471,9 @@ class ArticlesController extends Controller
 			// Note: This is recursive and will also remove all descendents
 			$row = Article::findOrFail($id);
 
-			$start = Carbon::parse($s . ' ' . $row->datetimenews->format('H:i:s'));
+			$start = Carbon::parse($s . ' ' . $row->datetimenews->format('h:i:s'));
 
-			$end = Carbon::parse($s . ' ' . $row->datetimenews->format('H:i:s'));
+			$end = Carbon::parse($s . ' ' . $row->datetimenews->format('h:i:s'));
 			$end->modify('+ ' . ($row->datetimenewsend->timestamp - $row->datetimenews->timestamp) . ' seconds');
 
 			//for ($i = 1; $i <= $days; $i++)
