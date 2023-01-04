@@ -25,6 +25,7 @@ return [
 	'published' => 'Published',
 	'unpublished' => 'Unpublished',
 	'trashed' => 'Trashed',
+	'draft' => 'Draft',
 	// Fields
 	'email' => 'Email',
 	'send email' => 'Email this article',
