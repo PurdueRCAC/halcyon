@@ -624,7 +624,7 @@ class ArticlesController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => $row->getError()], 500);
+			return response()->json(['message' => trans('global.messages.save failed')], 500);
 		}
 
 		if ($request->has('resources'))
@@ -943,7 +943,7 @@ class ArticlesController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => $row->getError()], 500);
+			return response()->json(['message' => trans('global.messages.save failed')], 500);
 		}
 
 		if ($request->has('resources'))

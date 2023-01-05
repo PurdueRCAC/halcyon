@@ -4,8 +4,6 @@ namespace App\Modules\Groups\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\Messages\Models\Message;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Storage\Models\Directory;
@@ -24,7 +22,7 @@ use Carbon\Carbon;
  */
 class Group extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes;
+	use Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.
@@ -71,7 +69,7 @@ class Group extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -80,7 +78,7 @@ class Group extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'name' => 'required|string|max:48'
@@ -89,7 +87,7 @@ class Group extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'creating' => GroupCreating::class,

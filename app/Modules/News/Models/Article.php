@@ -9,8 +9,6 @@ use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
 use League\CommonMark\Extension\Autolink\AutolinkExtension;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Utility\PorterStemmer;
 use App\Modules\History\Traits\Historable;
 use App\Modules\News\Events\ArticleCreating;
@@ -27,7 +25,7 @@ use Carbon\Carbon;
  */
 class Article extends Model
 {
-	use ErrorBag, Validatable, Historable, Notifiable;
+	use Historable, Notifiable;
 
 	/**
 	 * The name of the "created at" column.
@@ -976,11 +974,7 @@ class Article extends Model
 	{
 		foreach ($this->updates as $update)
 		{
-			if (!$update->delete($options))
-			{
-				$this->addError($update->getError());
-				return false;
-			}
+			$update->delete($options);
 		}
 
 		//if ($this->trashed())

@@ -544,9 +544,7 @@ class AuthorsController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-			return redirect()->back()->withError($error);
+			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
 		$root = Item::rootNode();
@@ -588,7 +586,7 @@ class AuthorsController extends Controller
 			{
 				if (!$row->forceDelete())
 				{
-					$request->session()->flash('error', $row->getError());
+					$request->session()->flash('error', trans('global.messages.delete failed'));
 					continue;
 				}
 			}
@@ -596,7 +594,7 @@ class AuthorsController extends Controller
 			{
 				if (!$row->delete())
 				{
-					$request->session()->flash('error', $row->getError());
+					$request->session()->flash('error', trans('global.messages.delete failed'));
 					continue;
 				}
 			}
@@ -652,7 +650,7 @@ class AuthorsController extends Controller
 
 			if (!$row->save())
 			{
-				$request->session()->flash('error', $row->getError());
+				$request->session()->flash('error', trans('global.messages.save failed'));
 				continue;
 			}
 
@@ -700,7 +698,7 @@ class AuthorsController extends Controller
 
 			if (!$row->restore())
 			{
-				$request->session()->flash('error', $row->getError());
+				$request->session()->flash('error', trans('global.messages.delete failed'));
 				continue;
 			}
 
@@ -731,7 +729,7 @@ class AuthorsController extends Controller
 
 		if (!$row->move($move))
 		{
-			$request->session()->flash('error', $row->getError());
+			$request->session()->flash('error', trans('global.messages.move failed'));
 		}
 
 		// Redirect

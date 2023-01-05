@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Config\Repository;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Knowledge\Events\PageCreating;
 use App\Modules\Knowledge\Events\PageCreated;
@@ -22,7 +20,7 @@ use Carbon\Carbon;
  */
 class Page extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes;
+	use Historable, SoftDeletes;
 
 	const REGEXP_VARIABLE = "/\\\$\{([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)(([\*\/\-\+])(\d+(\.\d+)?))?\}/";
 	const REGEXP_IF_STATEMENT = "/\{::if\s+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~)\s*([^\}]+)\s*\}(.+?)\{::\/\}/s";
@@ -41,7 +39,7 @@ class Page extends Model
 	/**
 	 * The model's default values for attributes.
 	 *
-	 * @var array
+	 * @var array<string,int>
 	 */
 	protected $attributes = [
 		'state' => 0,
@@ -50,7 +48,7 @@ class Page extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -59,7 +57,7 @@ class Page extends Model
 	/**
 	 * The attributes that should be cast to native types.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $casts = [
 		'state' => 'integer',
@@ -72,7 +70,7 @@ class Page extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'title' => 'required|string|max:255',
@@ -82,7 +80,7 @@ class Page extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'creating' => PageCreating::class,

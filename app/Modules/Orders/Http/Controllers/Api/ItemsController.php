@@ -792,7 +792,7 @@ class ItemsController extends Controller
 
 			if ($rows == 0)
 			{
-				$this->addError(__METHOD__ . '(): Failed to calculate paid until date');
+				throw new \Exception(__METHOD__ . '(): Failed to calculate paid until date');
 				return 500;
 			}
 
@@ -812,7 +812,7 @@ class ItemsController extends Controller
 
 					if ($rows == 0)
 					{
-						$this->addError(__METHOD__ . '(): Failed to calculate date');
+						throw new \Exception(__METHOD__ . '(): Failed to calculate date');
 						return 500;
 					}
 

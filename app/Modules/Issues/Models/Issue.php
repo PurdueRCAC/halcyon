@@ -8,8 +8,6 @@ use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
 use League\CommonMark\Extension\Autolink\AutolinkExtension;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use App\Halcyon\Utility\PorterStemmer;
 use App\Modules\Issues\Events\IssuePrepareContent;
@@ -21,7 +19,7 @@ use App\Modules\Tags\Traits\Taggable;
  */
 class Issue extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes, Taggable;
+	use Historable, SoftDeletes, Taggable;
 
 	/**
 	 * The name of the "created at" column.
@@ -333,20 +331,12 @@ class Issue extends Model
 	{
 		foreach ($this->comments as $comment)
 		{
-			if (!$comment->delete($options))
-			{
-				$this->addError($comment->getError());
-				return false;
-			}
+			$comment->delete($options);
 		}
 
 		foreach ($this->resources as $resource)
 		{
-			if (!$resource->delete($options))
-			{
-				$this->addError($resource->getError());
-				return false;
-			}
+			$resource->delete($options);
 		}
 
 		// Attempt to delete the record

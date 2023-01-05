@@ -4,8 +4,6 @@ namespace App\Modules\Widgets\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Traits\Checkable;
 use App\Halcyon\Form\Form;
 use App\Halcyon\Models\Casts\Params;
@@ -22,7 +20,7 @@ use Carbon\Carbon;
  */
 class Widget extends Model
 {
-	use ErrorBag, Validatable, Checkable, Historable;
+	use Checkable, Historable;
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -58,8 +56,8 @@ class Widget extends Model
 	 * @var  array<string,string>
 	 */
 	protected $rules = array(
-		'title'    => 'required',
-		'position' => 'required'
+		'title'    => 'required|string',
+		'position' => 'required|string'
 	);
 
 	/**
@@ -175,9 +173,9 @@ class Widget extends Model
 	/**
 	 * Method to change the title.
 	 *
-	 * @param   string   $title        The title.
-	 * @param   string   $position     The position.
-	 * @return  array    Contains the modified title.
+	 * @param   string  $title     The title.
+	 * @param   string  $position  The position.
+	 * @return  string
 	 */
 	public function generateNewTitle($title, $position)
 	{
@@ -192,7 +190,7 @@ class Widget extends Model
 			$title = self::incrementString($title);
 		}
 
-		return array($title);
+		return $title;
 	}
 
 	/**
@@ -290,7 +288,7 @@ class Widget extends Model
 	/**
 	 * Get a form
 	 *
-	 * @return  object
+	 * @return  Form
 	 */
 	public function getForm()
 	{
@@ -302,7 +300,7 @@ class Widget extends Model
 
 		if (!$form->loadFile($file, false, '//form'))
 		{
-			$this->addError(trans('global.load file failed'));
+			throw new \Exception(trans('global.load file failed'));
 		}
 
 		$paths = array();
@@ -315,7 +313,7 @@ class Widget extends Model
 				// Get the plugin form.
 				if (!$form->loadFile($file, false, '//config'))
 				{
-					$this->addError(trans('global.load file failed'));
+					throw new \Exception(trans('global.load file failed'));
 				}
 				break;
 			}
@@ -346,7 +344,7 @@ class Widget extends Model
 	/**
 	 * Get menu assignments
 	 *
-	 * @return  array
+	 * @return  array<int,int>
 	 */
 	public function menuAssigned()
 	{
@@ -360,7 +358,7 @@ class Widget extends Model
 	/**
 	 * Determine the assignment
 	 *
-	 * @return  array
+	 * @return  string|int
 	 */
 	public function menuAssignment()
 	{
@@ -410,7 +408,7 @@ class Widget extends Model
 		// Delete old widget to menu item associations
 		if (!Menu::deleteByWidget($this->id))
 		{
-			$this->addError('Failed to remove previous menu assignments.');
+			throw new \Exception('Failed to remove previous menu assignments.');
 			return false;
 		}
 
@@ -438,7 +436,6 @@ class Widget extends Model
 
 				if (!$menu->save())
 				{
-					$this->addError('Failed saving: ' . $menu->getError());
 					return false;
 				}
 			}
@@ -458,7 +455,6 @@ class Widget extends Model
 
 					if (!$menu->save())
 					{
-						$this->addError('Move failed: ' . $menu->getError());
 						return false;
 					}
 				}
@@ -588,7 +584,7 @@ class Widget extends Model
 		// Delete old widget to menu item associations
 		if (!Menu::deleteByWidget($this->id))
 		{
-			$this->addError('Failed to remove previous menu assignments.');
+			throw new \Exception('Failed to remove previous menu assignments.');
 			return false;
 		}
 

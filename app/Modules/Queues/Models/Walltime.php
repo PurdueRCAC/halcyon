@@ -2,8 +2,6 @@
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use Carbon\Carbon;
 
@@ -12,7 +10,7 @@ use Carbon\Carbon;
  */
 class Walltime extends Model
 {
-	use ErrorBag, Validatable, Historable;
+	use Historable;
 
 	/**
 	 * Timestamps
@@ -31,7 +29,7 @@ class Walltime extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'queueid' => 'required|integer|min:1'
@@ -40,7 +38,7 @@ class Walltime extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'

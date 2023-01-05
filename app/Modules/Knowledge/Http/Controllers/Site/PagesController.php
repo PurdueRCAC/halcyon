@@ -199,15 +199,13 @@ class PagesController extends Controller
 
 				if (!$row->save())
 				{
-					$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-					return redirect()->back()->withError($error);
+					return redirect()->back()->withError(trans('global.messages.save failed'));
 				}
 
 				// Rebuild the paths of the entry's children
 				if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
 				{
-					return redirect()->back()->withError($row->getError());
+					return redirect()->back()->withError(trans('knowledge::knowledge.rebuild failed'));
 				}
 
 				break;
@@ -511,7 +509,7 @@ class PagesController extends Controller
 
 			if (!$row->delete())
 			{
-				$request->session()->flash('error', $row->getError());
+				$request->session()->flash('error', trans('global.messages.delete failed'));
 				continue;
 			}
 

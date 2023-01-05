@@ -8,8 +8,6 @@ use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
 use League\CommonMark\Extension\Autolink\AutolinkExtension;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use App\Modules\News\Events\UpdatePrepareContent;
 use Carbon\Carbon;
@@ -19,7 +17,7 @@ use Carbon\Carbon;
  */
 class Update extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes;
+	use Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.
@@ -66,7 +64,7 @@ class Update extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -82,11 +80,15 @@ class Update extends Model
 	);
 
 	/**
+	 * MarkDown version of the entry
+	 *
 	 * @var string
 	 */
 	protected $markdown = null;
 
 	/**
+	 * HTML version of the entry
+	 *
 	 * @var string
 	 */
 	protected $html = null;
@@ -242,7 +244,7 @@ class Update extends Model
 	/**
 	 * Code block replacements
 	 *
-	 * @var  array
+	 * @var  array<string,array>
 	 */
 	private $replacements = array(
 		'preblocks'  => array(),

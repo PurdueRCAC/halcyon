@@ -3,8 +3,6 @@
 namespace App\Modules\Tags\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 
 /**

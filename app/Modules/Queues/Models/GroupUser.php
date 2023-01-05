@@ -3,8 +3,6 @@ namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Queues\Events\UserCreating;
 use App\Modules\Queues\Events\UserCreated;
@@ -19,7 +17,7 @@ use Carbon\Carbon;
  */
 class GroupUser extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes;
+	use Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.
@@ -52,7 +50,7 @@ class GroupUser extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'queueuserid' => 'required|integer|min:1',
@@ -65,7 +63,7 @@ class GroupUser extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -74,7 +72,7 @@ class GroupUser extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'creating' => UserCreating::class,
@@ -105,7 +103,7 @@ class GroupUser extends Model
 	}
 
 	/**
-	 * Defines a relationship to user
+	 * Defines a relationship to queue user
 	 *
 	 * @return  object
 	 */
@@ -115,7 +113,7 @@ class GroupUser extends Model
 	}
 
 	/**
-	 * Defines a relationship to membertype
+	 * Defines a relationship to member type
 	 *
 	 * @return  object
 	 */
@@ -125,7 +123,7 @@ class GroupUser extends Model
 	}
 
 	/**
-	 * Defines a relationship to userrequest
+	 * Defines a relationship to user request
 	 *
 	 * @return  object
 	 */
@@ -135,7 +133,7 @@ class GroupUser extends Model
 	}
 
 	/**
-	 * Defines a relationship to creator
+	 * Query scope where membership is pending
 	 *
 	 * @param   object $query
 	 * @return  object
@@ -190,7 +188,7 @@ class GroupUser extends Model
 	}
 
 	/**
-	 * Defines a relationship to userrequest
+	 * Set membership type to standard member
 	 *
 	 * @return  void
 	 */
@@ -200,7 +198,7 @@ class GroupUser extends Model
 	}
 
 	/**
-	 * Defines a relationship to userrequest
+	 * Set membership type to manager
 	 *
 	 * @return  void
 	 */
@@ -210,7 +208,7 @@ class GroupUser extends Model
 	}
 
 	/**
-	 * Defines a relationship to userrequest
+	 * Set membership type to viewer
 	 *
 	 * @return  void
 	 */
@@ -220,7 +218,7 @@ class GroupUser extends Model
 	}
 
 	/**
-	 * Defines a relationship to userrequest
+	 * Set membership type to pending
 	 *
 	 * @return  void
 	 */

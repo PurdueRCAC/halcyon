@@ -390,7 +390,7 @@ class ArticlesController extends Controller
 
 			if (!$row->update(['published' => $state]))
 			{
-				$request->session()->flash('error', $row->getError());
+				$request->session()->flash('error', trans('global.messages.save failed'));
 				continue;
 			}
 
@@ -432,7 +432,7 @@ class ArticlesController extends Controller
 
 			if (!$row->delete())
 			{
-				$request->session()->flash('error', $row->getError());
+				$request->session()->flash('error', trans('global.messages.delete failed'));
 				continue;
 			}
 

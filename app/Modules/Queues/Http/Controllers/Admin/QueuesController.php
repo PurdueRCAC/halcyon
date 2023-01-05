@@ -598,9 +598,7 @@ class QueuesController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-			return redirect()->back()->withError($error);
+			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
 		$walltime = Walltime::query()
@@ -690,7 +688,7 @@ class QueuesController extends Controller
 			{
 				if (!$row->update(['enabled' => $state]))
 				{
-					$request->session()->flash('error', $row->getError());
+					$request->session()->flash('error', trans('global.messages.save failed'));
 					continue;
 				}
 			}
@@ -788,7 +786,7 @@ class QueuesController extends Controller
 			{
 				if (!$row->update(['started' => $state]))
 				{
-					$request->session()->flash('error', $row->getError());
+					$request->session()->flash('error', trans('global.messages.save failed'));
 					continue;
 				}
 			}
@@ -861,7 +859,7 @@ class QueuesController extends Controller
 
 			if (!$row->delete())
 			{
-				$request->session()->flash('error', $row->getError());
+				$request->session()->flash('error', trans('global.messages.delete failed'));
 				continue;
 			}
 

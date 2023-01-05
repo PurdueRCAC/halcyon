@@ -159,9 +159,7 @@ class ModulesController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-			return redirect()->back()->withError($error);
+			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
 		return redirect(route('admin.modules.index'))->withSuccess(trans('global.messages.item updated'));
@@ -206,7 +204,7 @@ class ModulesController extends Controller
 
 			if (!$row->save())
 			{
-				$request->session()->flash('error', $row->getError());
+				$request->session()->flash('error', trans('global.messages.save failed'));
 				continue;
 			}
 
@@ -329,7 +327,7 @@ class ModulesController extends Controller
 
 			if (!$asset->save())
 			{
-				return redirect()->back()->withInput()->withError($asset->getError());
+				return redirect()->back()->withInput()->withError(trans('global.messages.save failed'));
 			}
 
 			// We don't need this anymore
@@ -345,7 +343,7 @@ class ModulesController extends Controller
 		// Attempt to save the configuration.
 		if (!$module->save())
 		{
-			return redirect()->back()->withInput()->withError($module->getError());
+			return redirect()->back()->withInput()->withError(trans('global.messages.save failed'));
 		}
 
 		return redirect(route('admin.' . strtolower($module->element) . '.index'))->with('success', trans('config::config.configuration saved'));

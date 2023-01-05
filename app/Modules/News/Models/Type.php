@@ -5,8 +5,6 @@ namespace App\Modules\News\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\Tags\Models\Tagged;
 use App\Modules\History\Traits\Historable;
 use App\Modules\News\Events\TypeCreated;
@@ -19,7 +17,7 @@ use Carbon\Carbon;
  */
 class Type extends Model
 {
-	use ErrorBag, Validatable, Historable;
+	use Historable;
 
 	/**
 	 * The table to which the class pertains
@@ -52,7 +50,7 @@ class Type extends Model
 	/**
 	 * The model's default values for attributes.
 	 *
-	 * @var array
+	 * @var array<string,int>
 	 */
 	protected $attributes = [
 		'future' => 0,
@@ -64,7 +62,7 @@ class Type extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -73,7 +71,7 @@ class Type extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'name' => 'required'
@@ -82,7 +80,7 @@ class Type extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'created'  => TypeCreated::class,
@@ -152,8 +150,7 @@ class Type extends Model
 		{
 			if (in_array(strtolower($model->name), ['rss', 'manage', 'search', 'calendar']))
 			{
-				$model->addError(trans('":name" is reserved and cannot be used.', ['name' => $model->name]));
-				return false;
+				throw new \Exception(trans('":name" is reserved and cannot be used.', ['name' => $model->name]));
 			}
 
 			$exist = self::query()
@@ -163,8 +160,7 @@ class Type extends Model
 
 			if ($exist && $exist->id)
 			{
-				$model->addError(trans('An entry with the name ":name" already exists.', ['name' => $model->name]));
-				return false;
+				throw new \Exception(trans('An entry with the name ":name" already exists.', ['name' => $model->name]));
 			}
 
 			return true;
@@ -266,20 +262,12 @@ class Type extends Model
 	{
 		foreach ($this->articles as $article)
 		{
-			if (!$article->delete($options))
-			{
-				$this->addError($article->getError());
-				return false;
-			}
+			$article->delete($options);
 		}
 
 		foreach ($this->children as $child)
 		{
-			if (!$child->delete($options))
-			{
-				$this->addError($child->getError());
-				return false;
-			}
+			$child->delete($options);
 		}
 
 		// Attempt to delete the record

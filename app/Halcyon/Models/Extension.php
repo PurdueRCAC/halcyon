@@ -3,8 +3,6 @@
 namespace App\Halcyon\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use Nwidart\Modules\Facades\Module;
 
@@ -13,7 +11,7 @@ use Nwidart\Modules\Facades\Module;
  */
 class Extension extends Model
 {
-	use ErrorBag, Validatable, Historable;
+	use Historable;
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -46,7 +44,7 @@ class Extension extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -55,7 +53,7 @@ class Extension extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'name' => 'required'

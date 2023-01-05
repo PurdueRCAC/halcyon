@@ -685,23 +685,19 @@ class User extends Model implements
 			// Save record
 			$result = parent::save($options);
 
-			if (!$result)
+			if ($result)
 			{
-				throw new Exception($this->getError());
-			}
+				// Update access groups
+				if ($roles && is_array($roles))
+				{
+					Map::destroyByUser($this->id);
 
-			// Update access groups
-			if ($roles && is_array($roles))
-			{
-				Map::destroyByUser($this->id);
-
-				Map::addUserToRole($this->id, $roles);
+					Map::addUserToRole($this->id, $roles);
+				}
 			}
 		}
 		catch (Exception $e)
 		{
-			$this->addError($e->getMessage());
-
 			$result = false;
 		}
 

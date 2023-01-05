@@ -171,9 +171,7 @@ class JobsController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-			return redirect()->back()->withError($error);
+			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
 		return $this->cancel()->with('success', trans('global.messages.item saved'));

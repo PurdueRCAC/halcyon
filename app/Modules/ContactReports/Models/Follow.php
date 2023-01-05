@@ -3,8 +3,6 @@
 namespace App\Modules\ContactReports\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 
 /**
@@ -12,7 +10,7 @@ use App\Modules\History\Traits\Historable;
  */
 class Follow extends Model
 {
-	use ErrorBag, Validatable, Historable;
+	use Historable;
 
 	/**
 	 * The name of the "created at" column.
@@ -59,7 +57,7 @@ class Follow extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -68,7 +66,7 @@ class Follow extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'targetuserid' => 'required|integer',

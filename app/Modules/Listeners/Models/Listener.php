@@ -4,8 +4,6 @@ namespace App\Modules\Listeners\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Traits\Checkable;
 use App\Halcyon\Form\Form;
 use App\Modules\Listeners\Events\ListenerUpdating;
@@ -18,7 +16,7 @@ use Carbon\Carbon;
  */
 class Listener extends Model
 {
-	use ErrorBag, Validatable, Checkable;
+	use Checkable;
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -202,7 +200,7 @@ class Listener extends Model
 
 		if (!$form->loadFile($file, false, '//form'))
 		{
-			$this->addError(trans('global.load file failed'));
+			throw new \Exception(trans('global.load file failed'));
 		}
 
 		$paths = array();
@@ -215,7 +213,7 @@ class Listener extends Model
 				// Get the plugin form.
 				if (!$form->loadFile($file, false, '//config'))
 				{
-					$this->addError(trans('global.load file failed'));
+					throw new \Exception(trans('global.load file failed'));
 				}
 				break;
 			}

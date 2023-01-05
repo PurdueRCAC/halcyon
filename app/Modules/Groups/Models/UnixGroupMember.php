@@ -3,8 +3,6 @@ namespace App\Modules\Groups\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Groups\Events\UnixGroupMemberCreating;
 use App\Modules\Groups\Events\UnixGroupMemberCreated;
@@ -15,7 +13,7 @@ use App\Modules\Groups\Events\UnixGroupMemberDeleted;
  */
 class UnixGroupMember extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes;
+	use Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.
@@ -62,7 +60,7 @@ class UnixGroupMember extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -71,7 +69,7 @@ class UnixGroupMember extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'unixgroupid' => 'required|integer',
@@ -81,7 +79,7 @@ class UnixGroupMember extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'creating' => UnixGroupMemberCreating::class,

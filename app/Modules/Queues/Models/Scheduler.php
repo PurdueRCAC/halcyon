@@ -3,8 +3,6 @@ namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Resources\Models\Batchsystem;
 use App\Modules\Resources\Models\Subresource;
@@ -17,7 +15,7 @@ use Carbon\Carbon;
  */
 class Scheduler extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes;
+	use Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.

@@ -7,8 +7,6 @@ use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
 use League\CommonMark\Extension\Autolink\AutolinkExtension;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Utility\PorterStemmer;
 use App\Modules\History\Traits\Historable;
 use App\Modules\ContactReports\Events\CommentCreated;
@@ -20,7 +18,7 @@ use App\Modules\ContactReports\Events\CommentDeleted;
  */
 class Comment extends Model
 {
-	use ErrorBag, Validatable, Historable;
+	use Historable;
 
 	/**
 	 * The name of the "created at" column.

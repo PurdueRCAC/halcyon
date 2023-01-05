@@ -4,8 +4,6 @@ namespace App\Modules\ContactReports\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 
 /**
@@ -13,7 +11,7 @@ use App\Modules\History\Traits\Historable;
  */
 class User extends Model
 {
-	use ErrorBag, Validatable, Historable;
+	use Historable;
 
 	/**
 	 * The table to which the class pertains

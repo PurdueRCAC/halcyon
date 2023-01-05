@@ -4,8 +4,6 @@ namespace App\Modules\Queues\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Models\Casts\Bytesize;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Queues\Events\QueueCreating;
@@ -29,7 +27,7 @@ use Carbon\Carbon;
  */
 class Queue extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes, HasFactory;
+	use Historable, SoftDeletes, HasFactory;
 
 	/**
 	 * The name of the "created at" column.
@@ -74,9 +72,9 @@ class Queue extends Model
 	public static $orderDir = 'asc';
 
 	/**
-	 * The attributes that should be mutated to dates.
+	 * The attributes that should be cast to native types.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $casts = [
 		'nodememmin' => Bytesize::class,
@@ -86,7 +84,7 @@ class Queue extends Model
 	/**
 	 * The model's default values for attributes.
 	 *
-	 * @var array
+	 * @var array<string,int>
 	 */
 	protected $attributes = [
 		'groupid' => 0,
@@ -97,7 +95,7 @@ class Queue extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -106,7 +104,7 @@ class Queue extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'creating' => QueueCreating::class,

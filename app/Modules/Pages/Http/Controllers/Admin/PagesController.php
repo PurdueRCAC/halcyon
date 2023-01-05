@@ -244,9 +244,7 @@ class PagesController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-			return redirect()->back()->withError($error);
+			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
 		// Rebuild the set
@@ -280,13 +278,13 @@ class PagesController extends Controller
 			{
 				if (!$row->forceDelete())
 				{
-					$request->session()->flash('error', $row->getError());
+					$request->session()->flash('error', trans('global.messages.delete failed'));
 					continue;
 				}
 			}
 			elseif (!$row->delete())
 			{
-				$request->session()->flash('error', $row->getError());
+				$request->session()->flash('error', trans('global.messages.delete failed'));
 				continue;
 			}
 
@@ -341,7 +339,7 @@ class PagesController extends Controller
 
 			if (!$row->save())
 			{
-				$request->session()->flash('error', $row->getError());
+				$request->session()->flash('error', trans('global.messages.save failed'));
 				continue;
 			}
 
@@ -389,7 +387,7 @@ class PagesController extends Controller
 
 			if (!$row->restore())
 			{
-				$request->session()->flash('error', $row->getError());
+				$request->session()->flash('error', trans('global.messages.restore failed'));
 				continue;
 			}
 
@@ -434,7 +432,7 @@ class PagesController extends Controller
 
 		if (!$model->move($move))
 		{
-			$request->session()->flash('error', $model->getError());
+			$request->session()->flash('error', trans('global.messages.move failed'));
 		}
 
 		// Redirect
@@ -454,7 +452,7 @@ class PagesController extends Controller
 
 		if (!$model->rebuild($model->id))
 		{
-			$request->session()->flash('error', $model->getError());
+			$request->session()->flash('error', trans('pages::pages.rebuild failed'));
 		}
 
 		// Redirect
@@ -494,7 +492,7 @@ class PagesController extends Controller
 		// Copy article
 		if (!$from->duplicate($to->id, $recursive))
 		{
-			$request->session()->flash('error', trans('pages::pages.error.copy failed') . ': ' . $from->getError());
+			$request->session()->flash('error', trans('pages::pages.error.copy failed'));
 			return $this->cancel();
 		}
 

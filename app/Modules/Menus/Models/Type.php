@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use App\Halcyon\Form\Form;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Menus\Events\TypeCreating;
 use App\Modules\Menus\Events\TypeCreated;
@@ -20,7 +18,7 @@ use App\Modules\Menus\Events\TypeDeleted;
  */
 class Type extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes;
+	use Historable, SoftDeletes;
 
 	/**
 	 * The table to which the class pertains
@@ -46,7 +44,7 @@ class Type extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -55,7 +53,7 @@ class Type extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'title'    => 'required|string|max:255',
@@ -65,7 +63,7 @@ class Type extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'creating' => TypeCreating::class,
@@ -107,8 +105,9 @@ class Type extends Model
 
 			if ($exist && $exist->id)
 			{
-				$model->addError(trans('An entry with the menutype ":menutype" already exists.', ['menutype' => $model->menutype]));
-				return false;
+				throw new \Exception(
+					trans('An entry with the menutype ":menutype" already exists.', ['menutype' => $model->menutype])
+				);
 			}
 
 			return true;
@@ -223,7 +222,7 @@ class Type extends Model
 
 		if (!$form->loadFile($file, false, '//form'))
 		{
-			$this->addError(trans('global.error.failed to load file'));
+			throw new \Exception(trans('global.error.failed to load file'));
 		}
 
 		$data = $this->toArray();
@@ -242,13 +241,7 @@ class Type extends Model
 		// Initialiase variables.
 		$items = new Item;
 
-		if (!$items->rebuild(1))
-		{
-			$this->addError($items->getError());
-			return false;
-		}
-
-		return true;
+		return $items->rebuild(1);
 	}
 
 	/**
@@ -333,10 +326,9 @@ class Type extends Model
 
 				if ($checked_out)
 				{
-					$this->addError(
+					throw new \Exception(
 						trans('core::core.error.save failed', get_class($this), trans('core::core.error.failed to checkout menu'))
 					);
-					return false;
 				}
 
 				// Verify that no module for this menu are checked out
@@ -347,10 +339,9 @@ class Type extends Model
 
 				if ($checked_out)
 				{
-					$this->addError(
+					throw new \Exception(
 						trans('core::core.error.save failed', get_class($this), trans('core::core.error.failed to checkout menu'))
 					);
-					return false;
 				}
 
 				DB::table((new Item)->getTable())
@@ -364,7 +355,6 @@ class Type extends Model
 
 					if (!$item->save())
 					{
-						$this->addError(trans('core::core.error.save failed', get_class($this), $item->getError()));
 						return false;
 					}
 				}*/
@@ -377,7 +367,6 @@ class Type extends Model
 
 					if (!$widget->save())
 					{
-						$this->addError(trans('core::core.error.save failed', get_class($this), $widget->getError()));
 						return false;
 					}
 				}
@@ -406,10 +395,9 @@ class Type extends Model
 
 		if ($checked_out)
 		{
-			$this->addError(
+			throw new \Exception(
 				trans('global.error.delete failed', get_class($this), trans('menus::menus.error.checked out'))
 			);
-			return false;
 		}
 
 		// Verify that no module for this menu are checked out
@@ -420,30 +408,21 @@ class Type extends Model
 
 		if ($checked_out)
 		{
-			$this->addError(
+			throw new \Exception(
 				trans('global.error.delete failed', get_class($this), trans('menus::menus.error.checked out'))
 			);
-			return false;
 		}
 
 		// Delete the menu items
 		foreach ($this->items as $item)
 		{
-			if (!$item->delete())
-			{
-				$this->addError($item->getError());
-				return false;
-			}
+			$item->delete();
 		}
 
 		// Delete the module items
 		foreach ($this->widgets() as $module)
 		{
-			if (!$module->delete())
-			{
-				$this->addError($module->getError());
-				return false;
-			}
+			$module->delete();
 		}
 
 		// Attempt to delete the record

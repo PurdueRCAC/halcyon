@@ -11,8 +11,6 @@ use App\Modules\Menus\Events\ItemUpdating;
 use App\Modules\Menus\Events\ItemUpdated;
 use App\Modules\Menus\Events\ItemDeleted;
 use App\Modules\History\Traits\Historable;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Traits\Checkable;
 use App\Halcyon\Models\Extension;
 use App\Halcyon\Form\Form;
@@ -25,7 +23,7 @@ use Exception;
  */
 class Item extends Model
 {
-	use ErrorBag, Validatable, Checkable, Historable, SoftDeletes;
+	use Checkable, Historable, SoftDeletes;
 
 	/**
 	 * The table to which the class pertains
@@ -51,7 +49,7 @@ class Item extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -60,7 +58,7 @@ class Item extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'title'    => 'required',
@@ -70,27 +68,19 @@ class Item extends Model
 	/**
 	 * The attributes that should be cast to native types.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $casts = [
 		'published' => 'integer',
 		'access' => 'integer',
 		'params' => Params::class,
-	];
-
-	/**
-	 * The attributes that should be mutated to dates.
-	 *
-	 * @var  array
-	 */
-	protected $dates = [
-		'checked_out_time',
+		'checked_out_time' => 'datetime:Y-m-d H:i:s',
 	];
 
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'creating' => ItemCreating::class,
@@ -155,11 +145,7 @@ class Item extends Model
 		// Remove children
 		foreach ($this->children as $child)
 		{
-			if (!$child->delete())
-			{
-				$this->addError($child->getError());
-				return false;
-			}
+			$child->delete();
 		}
 
 		// Attempt to delete the record
@@ -226,16 +212,11 @@ class Item extends Model
 
 			if (!$parent->id)
 			{
-				$this->addError(trans('Parent node does not exist.'));
-				return false;
+				throw new \Exception(trans('Parent node does not exist.'));
 			}
 
 			// Get the reposition data for shifting the tree and re-inserting the node.
-			if (!($reposition = $this->getTreeRepositionData($parent, 2, 'last-child')))
-			{
-				// Error message set in getNode method.
-				return false;
-			}
+			$reposition = $this->getTreeRepositionData($parent, 2, 'last-child');
 
 			// Shift left values.
 			$query = self::query()
@@ -246,7 +227,6 @@ class Item extends Model
 
 			/*if (!$query)
 			{
-				$this->addError($query->getError());
 				return false;
 			}*/
 
@@ -259,7 +239,6 @@ class Item extends Model
 
 			/*if (!$query)
 			{
-				$this->addError($query->getError());
 				return false;
 			}*/
 
@@ -286,7 +265,6 @@ class Item extends Model
 				// Rebuild the tree path.
 				if (!$child->rebuildPath())
 				{
-					$this->addError($child->getError());
 					return false;
 				}
 			}
@@ -451,7 +429,7 @@ class Item extends Model
 	/**
 	 * Get a form
 	 *
-	 * @return  object
+	 * @return  Form
 	 */
 	public function getForm()
 	{
@@ -464,7 +442,7 @@ class Item extends Model
 
 		if (!$form->loadFile($file, false, '//form'))
 		{
-			$this->addError(trans('global.load file failed'));
+			throw new \Exception(trans('global.load file failed'));
 		}
 
 		$data = $this->toArray();
@@ -715,7 +693,6 @@ class Item extends Model
 		// Check for a database error.
 		if (!$result)
 		{
-			$this->addError(trans('core::core.error.path rebuild failed'));
 			return false;
 		}
 
@@ -766,9 +743,7 @@ class Item extends Model
 			return $this->moveByReference($referenceId, $position, $this->id);
 		}
 
-		$this->addError(trans('global.error.move failed') . ': Reference not found for delta ' . $delta);
-
-		return false;
+		throw new \Exception(trans('global.error.move failed') . ': Reference not found for delta ' . $delta);
 	}
 
 	/**
@@ -790,8 +765,7 @@ class Item extends Model
 		if (!$node->id)
 		{
 			// Error message set in getNode method.
-			$this->addError(trans('global.error.move failed') . ': Node not found #' . $pk);
-			return false;
+			throw new \Exception(trans('global.error.move failed') . ': Node not found #' . $pk);
 		}
 
 		// Get the ids of child nodes.
@@ -804,8 +778,7 @@ class Item extends Model
 		// Cannot move the node to be a child of itself.
 		if (in_array($referenceId, $children))
 		{
-			$this->addError(trans('global.error.invalid node recursion'));
-			return false;
+			throw new \Exception(trans('global.error.invalid node recursion'));
 		}
 
 		// Move the sub-tree out of the nested sets by negating its left and right values.
@@ -840,16 +813,11 @@ class Item extends Model
 
 			if (!$reference)
 			{
-				$this->addError(trans('global.error.move failed') . ': Reference not found #' . $referenceId);
-				return false;
+				throw new \Exception(trans('global.error.move failed') . ': Reference not found #' . $referenceId);
 			}
 
 			// Get the reposition data for shifting the tree and re-inserting the node.
-			if (!$repositionData = $this->getTreeRepositionData($reference, ($node->rgt - $node->lft + 1), $position))
-			{
-				$this->addError(trans('global.error.move failed') . ': Reposition data');
-				return false;
-			}
+			$repositionData = $this->getTreeRepositionData($reference, ($node->rgt - $node->lft + 1), $position);
 		}
 		// We are moving the tree to be the last child of the root node
 		else
@@ -863,11 +831,7 @@ class Item extends Model
 				->first();
 
 			// Get the reposition data for re-inserting the node after the found root.
-			if (!$repositionData = $this->getTreeRepositionData($reference, ($node->rgt - $node->lft + 1), 'last-child'))
-			{
-				$this->addError(trans('global.error.move failed') . ': Reposition data');
-				return false;
-			}
+			$repositionData = $this->getTreeRepositionData($reference, ($node->rgt - $node->lft + 1), 'last-child');
 		}
 
 		// Create space in the nested sets at the new location for the moved sub-tree.

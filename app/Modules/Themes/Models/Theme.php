@@ -4,8 +4,6 @@ namespace App\Modules\Themes\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Halcyon\Models\Casts\Params;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Form\Form;
 use Carbon\Carbon;
 
@@ -14,8 +12,6 @@ use Carbon\Carbon;
  */
 class Theme extends Model
 {
-	use ErrorBag, Validatable;
-
 	/**
 	 * Indicates if the model should be timestamped.
 	 *
@@ -189,7 +185,7 @@ class Theme extends Model
 				// Get the template form.
 				if (!$form->loadFile($file, false, '//config'))
 				{
-					$this->addError(trans('global.load file failed'));
+					throw new \Exception(trans('global.load file failed'));
 				}
 				break;
 			}

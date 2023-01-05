@@ -146,7 +146,7 @@ class PermissionsController extends Controller
 
 			if (!$asset->save())
 			{
-				return redirect()->back()->withInput()->withError($asset->getError());
+				return redirect()->back()->withInput()->withError(trans('users::roles.error.asset save failed'));
 			}
 
 		return redirect(route('admin.' . strtolower($module->element) . '.index'))->with('success', trans('config::config.configuration saved'));

@@ -340,7 +340,7 @@ class ListenersController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => $row->getError()], 500);
+			return response()->json(['message' => trans('global.messages.save failed')], 500);
 		}
 
 		return new ListenerResource($row);
@@ -539,7 +539,7 @@ class ListenersController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => $row->getError()], 500);
+			return response()->json(['message' => trans('global.messages.save failed')], 500);
 		}
 
 		return new ListenerResource($row);

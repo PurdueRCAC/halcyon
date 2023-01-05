@@ -4,8 +4,6 @@ namespace App\Halcyon\Modules;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Halcyon\Models\Casts\Params;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Traits\Checkable;
 use App\Halcyon\Form\Form;
 use Carbon\Carbon;
@@ -15,7 +13,7 @@ use Carbon\Carbon;
  */
 class Extension extends Model
 {
-	use ErrorBag, Validatable, Checkable;
+	use Checkable;
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -51,7 +49,7 @@ class Extension extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'title'    => 'required',
@@ -61,7 +59,7 @@ class Extension extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -70,7 +68,7 @@ class Extension extends Model
 	/**
 	 * The attributes that should be cast to native types.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $casts = [
 		'published' => 'integer',
@@ -248,7 +246,7 @@ class Extension extends Model
 
 		if (!$form->loadFile($file, false, '//form'))
 		{
-			$this->addError(trans('global.load file failed'));
+			throw new \Exception(trans('global.load file failed'));
 		}
 
 		$paths = array();
@@ -268,7 +266,7 @@ class Extension extends Model
 				// Get the plugin form.
 				if (!$form->loadFile($file, false, '//config'))
 				{
-					$this->addError(trans('global.load file failed'));
+					throw new \Exception(trans('global.load file failed'));
 				}
 				break;
 			}

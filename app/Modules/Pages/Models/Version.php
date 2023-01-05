@@ -9,16 +9,12 @@ namespace App\Modules\Pages\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Blade;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 
 /**
  * Model class for a page version
  */
 class Version extends Model
 {
-	use ErrorBag, Validatable;
-
 	/**
 	 * Indicates if the model should be timestamped.
 	 *
@@ -28,10 +24,6 @@ class Version extends Model
 
 	/**
 	 * The table to which the class pertains
-	 *
-	 * This will default to #__{namespace}_{modelName} unless otherwise
-	 * overwritten by a given subclass. Definition of this property likely
-	 * indicates some derivation from standard naming conventions.
 	 *
 	 * @var  string
 	 **/
@@ -47,7 +39,7 @@ class Version extends Model
 	/**
 	 * The model's default values for attributes.
 	 *
-	 * @var array
+	 * @var array<string,int>
 	 */
 	protected $attributes = [
 		'version' => 1,
@@ -56,7 +48,7 @@ class Version extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -65,7 +57,7 @@ class Version extends Model
 	/**
 	 * The attributes that should be cast to native types.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $casts = [
 		'page_id' => 'integer',
@@ -77,11 +69,11 @@ class Version extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
-		'page_id' => 'required|integer|min:1', //'positive|nonzero',
-		'content' => 'required', //'notempty'
+		'page_id' => 'required|integer|min:1',
+		'content' => 'required|string',
 	);
 
 	/**

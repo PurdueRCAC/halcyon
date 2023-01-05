@@ -2,8 +2,6 @@
 
 namespace App\Modules\Pages\Models;
 
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +20,7 @@ use App\Halcyon\Models\Casts\Params;
  */
 class Page extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes;
+	use Historable, SoftDeletes;
 
 	/**
 	 * The table to which the class pertains
@@ -34,7 +32,7 @@ class Page extends Model
 	/**
 	 * The model's default values for attributes.
 	 *
-	 * @var array
+	 * @var array<string,int>
 	 */
 	protected $attributes = [
 		'state' => 0,
@@ -43,7 +41,7 @@ class Page extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -54,7 +52,7 @@ class Page extends Model
 	/**
 	 * The attributes that should be cast to native types.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $casts = [
 		'state' => 'integer',
@@ -75,7 +73,7 @@ class Page extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'alias' => 'required'
@@ -84,7 +82,7 @@ class Page extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'creating' => PageCreating::class,
@@ -142,7 +140,8 @@ class Page extends Model
 	/**
 	 * Get path
 	 *
-	 * @return  object
+	 * @param   string  $path
+	 * @return  string
 	 */
 	public function getPathAttribute($path)
 	{
@@ -150,9 +149,9 @@ class Page extends Model
 	}
 
 	/**
-	 * Get path
+	 * Get list of styles
 	 *
-	 * @return  object
+	 * @return  array
 	 */
 	public function getStylesAttribute()
 	{
@@ -160,9 +159,9 @@ class Page extends Model
 	}
 
 	/**
-	 * Get path
+	 * Get list of scripts
 	 *
-	 * @return  object
+	 * @return  array
 	 */
 	public function getScriptsAttribute()
 	{
@@ -568,7 +567,6 @@ class Page extends Model
 			{
 				if (!$child->duplicate($this->id, $recursive))
 				{
-					$this->addError($child->getError());
 					return false;
 				}
 			}
@@ -607,16 +605,11 @@ class Page extends Model
 
 			if (!$parent || !$parent->id)
 			{
-				$this->addError(trans('Parent node does not exist.'));
-				return false;
+				throw new \Exception(trans('Parent node does not exist.'));
 			}
 
 			// Get the reposition data for shifting the tree and re-inserting the node.
-			if (!($reposition = $this->getTreeRepositionData($parent, 2, 'last-child')))
-			{
-				// Error message set in getNode method.
-				return false;
-			}
+			$reposition = $this->getTreeRepositionData($parent, 2, 'last-child');
 
 			// Shift left values.
 			$query = DB::table($this->getTable())
@@ -656,7 +649,6 @@ class Page extends Model
 				{
 					if (!$child->update(['state' => $this->state]))
 					{
-						$this->addError($child->getError());
 						return false;
 					}
 				}
@@ -704,7 +696,7 @@ class Page extends Model
 		// Check for a database error.
 		if (!$query)
 		{
-			$this->addError(trans('pages::pages.error.path rebuild failed', get_class($this)));
+			//throw new \Exception(trans('pages::pages.error.path rebuild failed', get_class($this)));
 			return false;
 		}
 
@@ -893,7 +885,6 @@ class Page extends Model
 		{
 			if (!$row->delete($options))
 			{
-				$this->addError($row->getError());
 				return false;
 			}
 		}
@@ -944,7 +935,7 @@ class Page extends Model
 		// Make sure the location is valid.
 		if (!in_array($position, array('before', 'after', 'first-child', 'last-child')))
 		{
-			$this->addError(trans('core::core.error.invalid location', get_class($this)));
+			throw new \Exception(trans('core::core.error.invalid location', get_class($this)));
 			return false;
 		}
 
@@ -995,9 +986,7 @@ class Page extends Model
 			return $this->moveByReference($referenceId, $position, $this->id);
 		}
 
-		$this->addError(trans('Database error: Move failed') . ': Reference not found for delta ' . $delta);
-
-		return false;
+		throw new \Exception(trans('Database error: Move failed') . ': Reference not found for delta ' . $delta);
 	}
 
 	/**
@@ -1020,8 +1009,7 @@ class Page extends Model
 		if (!$node->id)
 		{
 			// Error message set in getNode method.
-			$this->addError(trans('Database error: Move failed') . ': Node not found #' . $pk);
-			return false;
+			throw new \Exception(trans('Database error: Move failed') . ': Node not found #' . $pk);
 		}
 
 		// Get the ids of child nodes.
@@ -1033,8 +1021,7 @@ class Page extends Model
 		// Cannot move the node to be a child of itself.
 		if (in_array($referenceId, $children))
 		{
-			$this->addError(trans('Database error: Invalid node recursion in :class', ['class' => get_class($this)]));
-			return false;
+			throw new \Exception(trans('Database error: Invalid node recursion in :class', ['class' => get_class($this)]));
 		}
 
 		// Move the sub-tree out of the nested sets by negating its left and right values.
@@ -1047,7 +1034,6 @@ class Page extends Model
 
 		if (!$query)
 		{
-			$this->addError(trans('Database error: Move failed'));
 			return false;
 		}
 
@@ -1062,7 +1048,6 @@ class Page extends Model
 
 		if (!$query)
 		{
-			$this->addError(trans('Database error: Move failed'));
 			return false;
 		}
 
@@ -1075,7 +1060,6 @@ class Page extends Model
 
 		if (!$query)
 		{
-			$this->addError(trans('Database error: Move failed'));
 			return false;
 		}
 
@@ -1087,14 +1071,13 @@ class Page extends Model
 
 			if (!$reference->id)
 			{
-				$this->addError(trans('Database error: Move failed') . ': Reference not found #' . $referenceId);
-				return false;
+				throw new \Exception(trans('Database error: Move failed') . ': Reference not found #' . $referenceId);
 			}
 
 			// Get the reposition data for shifting the tree and re-inserting the node.
 			if (!$repositionData = $this->getTreeRepositionData($reference, ($node->rgt - $node->lft + 1), $position))
 			{
-				$this->addError(trans('Database error: Move failed') . ': Reposition data');
+				//throw new \Exception(trans('Database error: Move failed') . ': Reposition data');
 				return false;
 			}
 		}
@@ -1112,7 +1095,7 @@ class Page extends Model
 			// Get the reposition data for re-inserting the node after the found root.
 			if (!$repositionData = $this->getTreeRepositionData($reference, ($node->rgt - $node->lft + 1), 'last-child'))
 			{
-				$this->addError(trans('Database error: Move failed') . ': Reposition data');
+				//throw new \Exception(trans('Database error: Move failed') . ': Reposition data');
 				return false;
 			}
 		}
@@ -1128,7 +1111,6 @@ class Page extends Model
 
 		if (!$query)
 		{
-			$this->addError(trans('Database error: Move failed'));
 			return false;
 		}
 
@@ -1141,7 +1123,6 @@ class Page extends Model
 
 		if (!$query)
 		{
-			$this->addError(trans('Database error: Move failed'));
 			return false;
 		}
 
@@ -1161,7 +1142,6 @@ class Page extends Model
 
 		if (!$query)
 		{
-			$this->addError(trans('Database error: Move failed'));
 			return false;
 		}
 
@@ -1176,7 +1156,6 @@ class Page extends Model
 
 			if (!$query)
 			{
-				$this->addError(trans('Database error: Move failed'));
 				return false;
 			}
 		}

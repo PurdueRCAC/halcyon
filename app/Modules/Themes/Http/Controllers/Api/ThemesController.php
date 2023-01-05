@@ -342,7 +342,7 @@ class ThemesController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json($row->getError(), 500);
+			return response()->json(['message' => trans('global.messages.save failed')], 500);
 		}
 
 		$row->api = route('api.themes.read', ['id' => $row->id]);
@@ -532,7 +532,7 @@ class ThemesController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => $row->getError()], 500);
+			return response()->json(['message' => trans('global.messages.save failed')], 500);
 		}
 
 		$row->api = route('api.themes.read', ['id' => $row->id]);

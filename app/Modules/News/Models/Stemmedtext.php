@@ -40,7 +40,7 @@ class Stemmedtext extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'stemmedtext' => 'required|string|max:20000'

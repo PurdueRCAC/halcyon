@@ -276,9 +276,7 @@ class SnippetsController extends Controller
 
 		if (!$page->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-			return redirect()->back()->withError($error);
+			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
 		$row->page_id = $page->id;
@@ -286,23 +284,21 @@ class SnippetsController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-			return redirect()->back()->withError($error);
+			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
 		if ($id && $parent_id != $orig_parent_id)
 		{
 			if (!$row->moveByReference($row->parent_id, 'last-child', $row->id))
 			{
-				return redirect()->back()->withError($row->getError());
+				return redirect()->back()->withError(trans('global.messages.move failed'));
 			}
 		}
 
 		// Rebuild the paths of the entry's children
 		if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
 		{
-			return redirect()->back()->withError($row->getError());
+			return redirect()->back()->withError(trans('knowledge::knowledge.errors.rebuild failed'));
 		}
 
 		return redirect(route('admin.knowledge.snippets'))->withSuccess(trans('global.messages.update success'));
@@ -380,7 +376,7 @@ class SnippetsController extends Controller
 
 				if (!$grow->save())
 				{
-					$request->session()->flash('error', $grow->getError());
+					$request->session()->flash('error', trans('global.messages.save failed'));
 					continue;
 				}
 			}
@@ -416,7 +412,7 @@ class SnippetsController extends Controller
 
 		if (!$row->move($move))
 		{
-			$request->session()->flash('error', $row->getError());
+			$request->session()->flash('error', trans('global.messages.move failed'));
 		}
 
 		// Redirect
@@ -444,7 +440,7 @@ class SnippetsController extends Controller
 
 			if (!$row->delete())
 			{
-				$request->session()->flash('error', $row->getError());
+				$request->session()->flash('error', trans('global.messages.delete failed'));
 				continue;
 			}
 

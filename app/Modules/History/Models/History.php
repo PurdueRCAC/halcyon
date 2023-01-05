@@ -5,16 +5,12 @@ namespace App\Modules\History\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Model;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\Users\Models\User;
 use App\Modules\History\Helpers\Diff\Formatter\Table;
 use App\Modules\History\Helpers\Diff;
 
 class History extends Model
 {
-	use ErrorBag, Validatable;
-
 	/**
 	 * The table to which the class pertains
 	 *
@@ -25,7 +21,7 @@ class History extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -35,7 +31,7 @@ class History extends Model
 	/**
 	 * Cast attributes
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $casts = [
 		'old' => 'object',
@@ -45,7 +41,7 @@ class History extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'action' => 'required'

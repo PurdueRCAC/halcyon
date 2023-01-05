@@ -302,11 +302,9 @@ class UsersController extends Controller
 
 		if (!$user->save())
 		{
-			$error = $user->getError() ? $user->getError() : trans('global.messages.save failed');
-
 			return redirect()
 				->back()
-				->withError($error);
+				->withError(trans('global.messages.save failed'));
 		}
 
 		if ($request->has('ufields'))
@@ -345,11 +343,9 @@ class UsersController extends Controller
 
 		/*if (!$user->setRoles($fields['roles']))
 		{
-			$error = $user->getError() ? $user->getError() : trans('global.messages.save failed');
-
 			return redirect()
 				->back()
-				->withError($error);
+				->withError(trans('global.messages.save failed'));
 		}*/
 
 		return $this->cancel()->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created')));
@@ -499,7 +495,7 @@ class UsersController extends Controller
 
 			if (!$user->save())
 			{
-				$request->session()->flash('error', $user->getError());
+				$request->session()->flash('error', trans('users::users.error.save failed'));
 				continue;
 			}
 

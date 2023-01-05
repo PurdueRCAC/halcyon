@@ -212,9 +212,7 @@ class ProductsController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-			return redirect()->back()->withInput()->withError($error);
+			return redirect()->back()->withInput()->withError(trans('global.messages.save failed'));
 		}
 
 		return $this->cancel()->withSuccess(trans('global.messages.update success'));
@@ -235,7 +233,7 @@ class ProductsController extends Controller
 
 		if (!$row->move($move))
 		{
-			$request->session()->flash('error', $row->getError());
+			$request->session()->flash('error', trans('global.messages.move failed'));
 		}
 
 		// Redirect
@@ -298,7 +296,7 @@ class ProductsController extends Controller
 
 			if (!$row->delete())
 			{
-				$request->session()->flash('error', $row->getError());
+				$request->session()->flash('error', trans('global.messages.delete failed'));
 				continue;
 			}
 

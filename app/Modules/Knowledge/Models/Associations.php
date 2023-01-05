@@ -4,15 +4,12 @@ namespace App\Modules\Knowledge\Models;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
-use App\Halcyon\Traits\ErrorBag;
 
 /**
  * Model for a page association mapping
  */
 class Associations extends Model
 {
-	use ErrorBag;
-
 	/**
 	 * States
 	 **/
@@ -321,8 +318,7 @@ class Associations extends Model
 
 			if (!$parent->id)
 			{
-				$this->addError(trans('Parent node does not exist.'));
-				return false;
+				throw new \Exception(trans('Parent node does not exist.'));
 			}
 
 			if (!$this->access)
@@ -331,11 +327,7 @@ class Associations extends Model
 			}
 
 			// Get the reposition data for shifting the tree and re-inserting the node.
-			if (!($reposition = $this->getTreeRepositionData($parent, 2, 'last-child')))
-			{
-				// Error message set in getNode method.
-				return false;
-			}
+			$reposition = $this->getTreeRepositionData($parent, 2, 'last-child');
 
 			// Shift left values.
 			$query = DB::table($this->getTable())
@@ -531,11 +523,7 @@ class Associations extends Model
 	{
 		foreach ($this->children as $row)
 		{
-			if (!$row->delete($options))
-			{
-				$this->addError($row->getError());
-				return false;
-			}
+			$row->delete($options);
 		}
 
 		// Attempt to delete the record
@@ -582,9 +570,7 @@ class Associations extends Model
 			return $this->moveByReference($referenceId, $position, $this->id);
 		}
 
-		$this->addError(trans('global.error.move failed') . ': Reference not found for delta ' . $delta);
-
-		return false;
+		throw new \Exception(trans('global.error.move failed') . ': Reference not found for delta ' . $delta);
 	}
 
 	/**
@@ -606,8 +592,7 @@ class Associations extends Model
 		if (!$node->id)
 		{
 			// Error message set in getNode method.
-			$this->addError(trans('global.error.move failed') . ': Node not found #' . $pk);
-			return false;
+			throw new \Exception(trans('global.error.move failed') . ': Node not found #' . $pk);
 		}
 
 		// Get the ids of child nodes.
@@ -620,8 +605,7 @@ class Associations extends Model
 		// Cannot move the node to be a child of itself.
 		if (in_array($referenceId, $children))
 		{
-			$this->addError(trans('global.error.invalid node recursion'));
-			return false;
+			throw new \Exception(trans('global.error.invalid node recursion'));
 		}
 
 		// Move the sub-tree out of the nested sets by negating its left and right values.
@@ -656,16 +640,11 @@ class Associations extends Model
 
 			if (!$reference)
 			{
-				$this->addError(trans('global.error.move failed') . ': Reference not found #' . $referenceId);
-				return false;
+				throw new \Exception(trans('global.error.move failed') . ': Reference not found #' . $referenceId);
 			}
 
 			// Get the reposition data for shifting the tree and re-inserting the node.
-			if (!($repositionData = $this->getTreeRepositionData($reference, ($node->rgt - $node->lft + 1), $position)))
-			{
-				$this->addError(trans('global.error.move failed') . ': Reposition data');
-				return false;
-			}
+			$repositionData = $this->getTreeRepositionData($reference, ($node->rgt - $node->lft + 1), $position);
 		}
 		// We are moving the tree to be the last child of the root node
 		else
@@ -679,11 +658,7 @@ class Associations extends Model
 				->first();
 
 			// Get the reposition data for re-inserting the node after the found root.
-			if (!($repositionData = $this->getTreeRepositionData($reference, ($node->rgt - $node->lft + 1), 'last-child')))
-			{
-				$this->addError(trans('global.error.move failed') . ': Reposition data');
-				return false;
-			}
+			$repositionData = $this->getTreeRepositionData($reference, ($node->rgt - $node->lft + 1), 'last-child');
 		}
 
 		// Create space in the nested sets at the new location for the moved sub-tree.

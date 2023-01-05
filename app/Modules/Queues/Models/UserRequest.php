@@ -2,8 +2,6 @@
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Queues\Events\UserRequestCreated;
 use App\Modules\Queues\Events\UserRequestUpdated;
@@ -14,7 +12,7 @@ use App\Modules\Queues\Events\UserRequestDeleted;
  */
 class UserRequest extends Model
 {
-	use ErrorBag, Validatable, Historable;
+	use Historable;
 
 	/**
 	 * The name of the "created at" column.
@@ -40,7 +38,7 @@ class UserRequest extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -49,7 +47,7 @@ class UserRequest extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'userid' => 'required|integer|min:1'
@@ -58,7 +56,7 @@ class UserRequest extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'created' => UserRequestCreated::class,

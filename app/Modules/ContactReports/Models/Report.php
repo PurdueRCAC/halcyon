@@ -7,8 +7,6 @@ use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
 use League\CommonMark\Extension\Autolink\AutolinkExtension;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Utility\PorterStemmer;
 use App\Halcyon\Access\Map;
 use App\Modules\Tags\Traits\Taggable;
@@ -25,7 +23,7 @@ use Carbon\Carbon;
  */
 class Report extends Model
 {
-	use ErrorBag, Validatable, Historable, Taggable;
+	use Historable, Taggable;
 
 	/**
 	 * The name of the "created at" column.

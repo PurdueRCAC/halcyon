@@ -4,8 +4,6 @@ namespace App\Modules\Tags\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Tags\Events\TagCreated;
 use App\Modules\Tags\Events\TagUpdated;
@@ -43,7 +41,7 @@ class Tag extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -52,7 +50,7 @@ class Tag extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'created' => TagCreated::class,
@@ -79,8 +77,26 @@ class Tag extends Model
 			}
 		});
 
+		static::deleting(function ($model)
+		{
+			if (!$model->deleted_by && auth()->user())
+			{
+				$model->deleted_by = auth()->user()->id;
+			}
+		});
+
 		static::deleted(function ($model)
 		{
+			foreach ($model->aliases as $row)
+			{
+				$row->delete();
+			}
+
+			foreach ($model->tagged as $row)
+			{
+				$row->delete();
+			}
+
 			if ($model->parent_id)
 			{
 				$total = self::query()
@@ -93,17 +109,15 @@ class Tag extends Model
 	}
 
 	/**
-	 * Generate stemmed report
+	 * Set tag name and slug
 	 *
 	 * @param   string  $value
-	 * @return  string
+	 * @return  void
 	 */
 	public function setNameAttribute($value)
 	{
 		$this->attributes['name'] = $value;
 		$this->attributes['slug'] = $this->normalize($value);
-
-		return $value;
 	}
 
 	/**
@@ -185,7 +199,7 @@ class Tag extends Model
 	}
 
 	/**
-	 * Creator profile
+	 * Define relationship to creator user
 	 *
 	 * @return  object
 	 */
@@ -269,29 +283,6 @@ class Tag extends Model
 	public function tagged()
 	{
 		return $this->hasMany(Tagged::class, 'tag_id');
-	}
-
-	/**
-	 * Delete the record and all associated data
-	 *
-	 * @param  array   $options
-	 * @return boolean False if error, True on success
-	 */
-	public function delete(array $options = [])
-	{
-		foreach ($this->aliases as $row)
-		{
-			$row->delete();
-		}
-
-		foreach ($this->tagged as $row)
-		{
-			$row->delete();
-		}
-
-		$this->deleted_by = auth()->user() ? auth()->user()->id : 0;
-
-		return parent::delete($options);
 	}
 
 	/**

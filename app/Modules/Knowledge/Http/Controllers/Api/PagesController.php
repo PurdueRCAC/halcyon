@@ -439,7 +439,7 @@ class PagesController extends Controller
 		{
 			if (!$row->moveByReference($row->parent_id, 'last-child', $row->id))
 			{
-				return redirect()->back()->withError($row->getError());
+				return redirect()->back()->withError(trans('knowledge::knowledge.error.move failed'));
 			}
 		}
 
@@ -729,7 +729,7 @@ class PagesController extends Controller
 		{
 			if (!$row->moveByReference($row->parent_id, 'last-child', $row->id))
 			{
-				return redirect()->back()->withError($row->getError());
+				return redirect()->back()->withError(trans('knowledge::knowledge.error.move failed'));
 			}
 		}
 

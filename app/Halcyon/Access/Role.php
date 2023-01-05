@@ -4,16 +4,12 @@ namespace App\Halcyon\Access;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 
 /**
  * User role
  */
 class Role extends Model
 {
-	use ErrorBag, Validatable;
-
 	/**
 	 * The table to which the class pertains
 	 *
@@ -45,7 +41,7 @@ class Role extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'title' => 'required|string|max:100'
@@ -54,7 +50,7 @@ class Role extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'

@@ -8,8 +8,6 @@ use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
 use League\CommonMark\Extension\Autolink\AutolinkExtension;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Halcyon\Utility\PorterStemmer;
 use App\Halcyon\Models\Timeperiod;
 use App\Modules\History\Traits\Historable;
@@ -22,7 +20,7 @@ use Carbon\Carbon;
  */
 class ToDo extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes;
+	use Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.
@@ -138,11 +136,7 @@ class ToDo extends Model
 	{
 		foreach ($this->issues as $issue)
 		{
-			if (!$issue->delete($options))
-			{
-				$this->addError($issue->getError());
-				return false;
-			}
+			$issue->delete($options);
 		}
 
 		// Attempt to delete the record

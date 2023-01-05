@@ -2,8 +2,6 @@
 namespace App\Modules\Groups\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use App\Halcyon\Models\FieldOfScience as Field;
 
@@ -12,7 +10,7 @@ use App\Halcyon\Models\FieldOfScience as Field;
  */
 class FieldOfScience extends Model
 {
-	use ErrorBag, Validatable, Historable;
+	use Historable;
 
 	/**
 	 * Timestamps
@@ -45,7 +43,7 @@ class FieldOfScience extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -54,7 +52,7 @@ class FieldOfScience extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'groupid' => 'required|integer',

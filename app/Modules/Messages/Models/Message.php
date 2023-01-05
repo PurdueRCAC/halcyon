@@ -4,8 +4,6 @@ namespace App\Modules\Messages\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Messages\Events\MessageCreating;
 use App\Modules\Messages\Events\MessageCreated;
@@ -18,7 +16,7 @@ use Carbon\Carbon;
 
 class Message extends Model
 {
-	use ErrorBag, Validatable, Historable, HasFactory;
+	use Historable, HasFactory;
 
 	/**
 	 * The name of the "created at" column.
@@ -44,7 +42,7 @@ class Message extends Model
 	/**
 	 * Fillable
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = array(
 		'id',
@@ -68,7 +66,7 @@ class Message extends Model
 	/**
 	 * Automatic fields to populate every time a row is created
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $dates = array(
 		'datetimesubmitted',
@@ -79,7 +77,7 @@ class Message extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'messagequeuetypeid' => 'required|integer',
@@ -89,7 +87,7 @@ class Message extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'creating' => MessageCreating::class,
@@ -211,8 +209,7 @@ class Message extends Model
 		{
 			if (!$this->type)
 			{
-				$this->addError('Invalid messagequeuetypeid');
-				return false;
+				throw new \Exception('Invalid messagequeuetypeid');
 			}
 		}
 

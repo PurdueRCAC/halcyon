@@ -238,9 +238,7 @@ class ListenersController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-			return redirect()->back()->withError($error);
+			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
 		$row->checkIn();
@@ -269,7 +267,7 @@ class ListenersController extends Controller
 
 			if (!$row->delete())
 			{
-				$request->session()->flash('error', $row->getError());
+				$request->session()->flash('error', trans('global.messages.delete failed'));
 				continue;
 			}
 
@@ -333,7 +331,7 @@ class ListenersController extends Controller
 
 			if (!$model->save())
 			{
-				$request->session()->flash('error', $model->getError());
+				$request->session()->flash('error', trans('global.messages.save failed'));
 				continue;
 			}
 
@@ -380,7 +378,7 @@ class ListenersController extends Controller
 
 			if (!$model->move($inc))
 			{
-				$request->session()->flash('error', trans('global.error.reorder failed', ['error' => $model->getError()]));
+				$request->session()->flash('error', trans('global.error.reorder failed'));
 				continue;
 			}
 
@@ -415,7 +413,7 @@ class ListenersController extends Controller
 
 		if (!$row->move($move))
 		{
-			$request->session()->flash('error', $row->getError());
+			$request->session()->flash('error', trans('global.messages.move failed'));
 		}
 
 		// Redirect
@@ -473,7 +471,7 @@ class ListenersController extends Controller
 
 			if (!$model->checkin())
 			{
-				$request->session()->flash('error', trans('global.error.checkin failed', ['error' => $model->getError()]));
+				$request->session()->flash('error', trans('global.error.checkin failed'));
 				continue;
 			}
 		}
@@ -501,7 +499,7 @@ class ListenersController extends Controller
 				// Check-in failed, go back to the record and display a notice.
 				if (!$model->checkin())
 				{
-					$request->session()->flash('error', trans('global.error.checkin failed', ['error' => $model->getError()]));
+					$request->session()->flash('error', trans('global.error.checkin failed'));
 				}
 			}
 		}

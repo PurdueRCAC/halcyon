@@ -93,7 +93,7 @@ class Association extends Model
 	 * @var  array<string,string>
 	 */
 	protected $rules = array(
-		'newsid'  => 'required|integer',
+		'newsid' => 'required|integer',
 		'associd' => 'required|integer',
 		'assoctype' => 'required|string|max:255',
 	);

@@ -4,8 +4,6 @@ namespace App\Modules\ContactReports\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use App\Modules\ContactReports\Events\TypeCreated;
 use App\Modules\ContactReports\Events\TypeDeleted;
@@ -16,7 +14,7 @@ use App\Halcyon\Models\Timeperiod;
  */
 class Type extends Model
 {
-	use ErrorBag, Validatable, Historable;
+	use Historable;
 
 	/**
 	 * The table to which the class pertains
@@ -49,7 +47,7 @@ class Type extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -58,7 +56,7 @@ class Type extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'name' => 'required|string|max:32'
@@ -67,11 +65,11 @@ class Type extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
-		'created'  => TypeCreated::class,
-		'deleted'  => TypeDeleted::class,
+		'created' => TypeCreated::class,
+		'deleted' => TypeDeleted::class,
 	];
 
 	/**
@@ -120,8 +118,7 @@ class Type extends Model
 
 			if ($exist && $exist->id)
 			{
-				$model->addError(trans('An entry with the name ":name" already exists.', ['name' => $model->name]));
-				return false;
+				throw new \Exception(trans('An entry with the name ":name" already exists.', ['name' => $model->name]));
 			}
 
 			return true;

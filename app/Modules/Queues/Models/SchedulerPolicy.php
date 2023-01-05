@@ -2,8 +2,6 @@
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 
 /**
@@ -11,7 +9,7 @@ use App\Modules\History\Traits\Historable;
  */
 class SchedulerPolicy extends Model
 {
-	use ErrorBag, Validatable, Historable;
+	use Historable;
 
 	/**
 	 * Use timestamps
@@ -44,7 +42,7 @@ class SchedulerPolicy extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'name' => 'required|string|min:1|max:64'
@@ -53,7 +51,7 @@ class SchedulerPolicy extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'

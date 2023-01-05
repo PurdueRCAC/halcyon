@@ -399,9 +399,7 @@ class WidgetsController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-			return redirect()->back()->withError($error);
+			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
 		// Update menu assignments
@@ -411,9 +409,7 @@ class WidgetsController extends Controller
 
 		if (!$row->saveAssignment($assignment, $assigned))
 		{
-			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-			return redirect()->back()->withError($error);
+			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
 		$row->checkin();
@@ -508,7 +504,7 @@ class WidgetsController extends Controller
 
 			if (!$row->delete())
 			{
-				$request->session()->flash('error', $row->getError());
+				$request->session()->flash('error', trans('global.messages.delete failed'));
 				continue;
 			}
 
@@ -552,7 +548,7 @@ class WidgetsController extends Controller
 
 			if (!$model->save())
 			{
-				$request->session()->flash('error', $model->getError());
+				$request->session()->flash('error', trans('global.messages.save failed'));
 				continue;
 			}
 
@@ -591,7 +587,7 @@ class WidgetsController extends Controller
 
 		if (!$row->move($move))
 		{
-			$request->session()->flash('error', $row->getError());
+			$request->session()->flash('error', trans('global.messages.move failed'));
 		}
 
 		// Redirect

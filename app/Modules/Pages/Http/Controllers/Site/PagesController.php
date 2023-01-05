@@ -192,9 +192,7 @@ class PagesController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-			return redirect()->back()->withError($error);
+			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
 		// Rebuild the set
@@ -262,13 +260,13 @@ class PagesController extends Controller
 			{
 				if (!$row->forceDelete())
 				{
-					$request->session()->flash('error', $row->getError());
+					$request->session()->flash('error', trans('global.messages.delete failed'));
 					continue;
 				}
 			}
 			elseif (!$row->delete())
 			{
-				$request->session()->flash('error', $row->getError());
+				$request->session()->flash('error', trans('global.messages.delete failed'));
 				continue;
 			}
 

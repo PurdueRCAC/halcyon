@@ -4,8 +4,6 @@ namespace App\Modules\Core\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Nwidart\Modules\Facades\Module;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use App\Halcyon\Form\Form;
 use App\Halcyon\Models\Casts\Params;
@@ -15,7 +13,7 @@ use App\Halcyon\Models\Casts\Params;
  */
 class Extension extends Model
 {
-	use ErrorBag, Validatable, Historable;
+	use Historable;
 
 	/**
 	 * The table associated with the model.
@@ -48,7 +46,7 @@ class Extension extends Model
 	/**
 	 * The attributes that should be cast to native types.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $casts = [
 		'client_id' => 'integer',
@@ -74,7 +72,7 @@ class Extension extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'element' => 'required|string|max:100',
@@ -278,7 +276,7 @@ class Extension extends Model
 
 		if (!$form->loadFile($file, false, '//config'))
 		{
-			$this->addError(trans('global.error.load file failed'));
+			throw new \Exception(trans('global.error.load file failed'));
 		}
 
 		//$data = $this->toArray();
@@ -317,7 +315,7 @@ class Extension extends Model
 			// Get the validation messages from the form.
 			foreach ($form->getErrors() as $message)
 			{
-				$this->setError(trans($message));
+				throw new \Exception(trans($message));
 			}
 
 			return false;

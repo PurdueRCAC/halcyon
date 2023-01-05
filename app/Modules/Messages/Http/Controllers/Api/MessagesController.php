@@ -388,7 +388,7 @@ class MessagesController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => $row->getError()], 409);
+			return response()->json(['message' => trans('global.messages.save failed')], 409);
 		}
 
 		return new MessageResource($row);
@@ -712,7 +712,7 @@ class MessagesController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => $row->getError()], 409);
+			return response()->json(['message' => trans('global.messages.save failed')], 409);
 		}
 
 		return new MessageResource($row);

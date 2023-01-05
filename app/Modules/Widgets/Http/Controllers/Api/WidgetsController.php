@@ -525,7 +525,7 @@ class WidgetsController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => $row->getError()], 500);
+			return response()->json(['message' => trans('global.messages.save failed')], 500);
 		}
 
 		// Save menu assignments
@@ -537,9 +537,7 @@ class WidgetsController extends Controller
 
 			if (!$row->saveAssignment($assignment, $assigned))
 			{
-				$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-				return response()->json(['message' => $error], 500);
+				return response()->json(['message' => trans('global.messages.save failed')], 500);
 			}
 		}
 
@@ -774,7 +772,7 @@ class WidgetsController extends Controller
 
 		if (!$row->save())
 		{
-			return response()->json(['message' => $row->getError()], 500);
+			return response()->json(['message' => trans('global.messages.save failed')], 500);
 		}
 
 		// Save menu assignments
@@ -786,9 +784,7 @@ class WidgetsController extends Controller
 
 			if (!$row->saveAssignment($assignment, $assigned))
 			{
-				$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-				return response()->json(['message' => $error], 500);
+				return response()->json(['message' => trans('global.messages.save failed')], 500);
 			}
 		}
 

@@ -30,7 +30,7 @@ class Permissions extends Fluent
 
 		if (!$form->loadFile($file, false, '//form'))
 		{
-			$this->addError(trans('global.error LOADFILE_FAILED'));
+			throw new \Exception(trans('global.error LOADFILE_FAILED'));
 		}
 
 		if (!empty($data))
@@ -107,7 +107,7 @@ class Permissions extends Fluent
 		// Check for an error.
 		if ($return instanceof \Exception)
 		{
-			$this->setError($return->getMessage());
+			//throw new \Exception($return->getMessage());
 			return false;
 		}
 
@@ -117,7 +117,7 @@ class Permissions extends Fluent
 			// Get the validation messages from the form.
 			foreach ($form->getErrors() as $message)
 			{
-				$this->setError(trans($message));
+				throw new \Exception(trans($message));
 			}
 
 			return false;
@@ -154,11 +154,7 @@ class Permissions extends Fluent
 			if ($asset->get('id'))
 			{
 				$asset->set('rules', (string) $rules);
-
-				if (!$asset->save())
-				{
-					Notify::error('SOME_ERROR_CODE', $asset->getError());
-				}
+				$asset->save();
 			}
 			else
 			{
@@ -178,10 +174,7 @@ class Permissions extends Fluent
 			if (!$extension->isNew())
 			{
 				$extension->params->set('filters', $data['filters']);
-				if (!$extension->save())
-				{
-					Notify::error('SOME_ERROR_CODE', $extension->getError());
-				}
+				$extension->save();
 			}
 			else
 			{

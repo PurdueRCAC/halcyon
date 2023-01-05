@@ -30,7 +30,7 @@ class Html
 	/**
 	 * Get a list of the available menus.
 	 *
-	 * @return  string
+	 * @return  array<int,array>
 	 */
 	public static function menus()
 	{
@@ -167,6 +167,8 @@ class Html
 	 */
 	public static function ordering(&$row, $id)
 	{
+		$ordering = '<input type="hidden" name="ordering" value="' . $row->ordering . '" />' . trans('global.NEWITEMSLAST_DESC');
+
 		if ($id)
 		{
 			$query = Item::query()
@@ -186,10 +188,6 @@ class Html
 					'list.select' => intval($row->ordering)
 				)
 			);
-		}
-		else
-		{
-			$ordering = '<input type="hidden" name="ordering" value="' . $row->ordering . '" />' . trans('global.NEWITEMSLAST_DESC');
 		}
 
 		return $ordering;

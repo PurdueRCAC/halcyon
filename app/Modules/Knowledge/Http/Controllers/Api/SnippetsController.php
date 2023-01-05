@@ -394,7 +394,7 @@ class SnippetsController extends Controller
 		{
 			if (!$row->moveByReference($row->parent_id, 'last-child', $row->id))
 			{
-				return redirect()->back()->withError($row->getError());
+				return redirect()->back()->withError(trans('lnowledge::knowledge.move failed'));
 			}
 		}
 
@@ -671,7 +671,7 @@ class SnippetsController extends Controller
 		{
 			if (!$row->moveByReference($row->parent_id, 'last-child', $row->id))
 			{
-				return redirect()->back()->withError($row->getError());
+				return redirect()->back()->withError(trans('knowledge::knowledge.move failed'));
 			}
 		}
 

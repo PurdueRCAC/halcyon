@@ -220,9 +220,7 @@ class RolesController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-			return redirect()->back()->withError($error);
+			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
 		return $this->cancel()->with('success', trans('global.messages.item saved'));
@@ -274,7 +272,7 @@ class RolesController extends Controller
 
 			if (!$row->delete())
 			{
-				$errors[] = $row->getError();
+				$errors[] = trans('global.messages.delete failed');
 				continue;
 			}
 
@@ -344,7 +342,7 @@ class RolesController extends Controller
 
 		if (!$asset->save())
 		{
-			return redirect()->back()->withInput()->withError($asset->getError());
+			return redirect()->back()->withInput()->withError(trans('users::roles.error.asset save failed'));
 		}
 
 		return $this->cancel()->with('success', trans('users::roles.configuration saved'));

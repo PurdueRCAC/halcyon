@@ -92,27 +92,14 @@ class FolderController extends Controller
 			$path = urldecode($path);
 
 			$fullPath = Filesystem::cleanPath(implode(DIRECTORY_SEPARATOR, array(storage_path(), $folder, $path)));
-			//$object_file = new \App\Halcyon\Base\Obj(array('filepath' => $fullPath));
+
 			if (is_dir($fullPath))
 			{
 				$contents = Filesystem::files($fullPath, '.', true, false, array('.svn', 'CVS', '.DS_Store', '__MACOSX', 'index.html'));
 
 				if (empty($contents))
 				{
-					// Trigger the onContentBeforeDelete event.
-					$result = event('content.onContentBeforeDelete', array('media.folder', &$object_file));
-					if (in_array(false, $result, true))
-					{
-						// There are some errors in the plugins
-						$errors[] = transs('media::media.error.before delete', count($errors = $object_file->getErrors()), implode('<br />', $errors));
-						continue;
-					}
-
-					$ret &= Filesystem::deleteDirectory($fullPath);
-
-					// Trigger the onContentAfterDelete event.
-					Event::trigger('content.onContentAfterDelete', array('com_media.folder', &$object_file));
-					$errors[] = trans('media::media.delete complete', substr($fullPath, strlen(storage_path())));
+					Filesystem::deleteDirectory($fullPath);
 				}
 				else
 				{
@@ -121,6 +108,8 @@ class FolderController extends Controller
 				}
 			}
 		}
+
+		event($event = new DirectoryDeleted($fullPath, $rm));
 
 		return redirect(route('admin.media.index', ['folder' => $folder]))->withError($errors);
 	}
