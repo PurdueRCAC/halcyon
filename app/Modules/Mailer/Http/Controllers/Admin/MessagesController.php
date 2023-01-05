@@ -374,7 +374,7 @@ class MessagesController extends Controller
 	 * @param Request $request
 	 * @return array
 	 */
-	protected function toEmails($str, $emails = array(), $request)
+	protected function toEmails($str, $emails, $request)
 	{
 		$str = explode(',', $str);
 		$str = array_map('trim', $str);

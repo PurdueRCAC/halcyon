@@ -735,7 +735,7 @@ class MessagesController extends Controller
 	 * @param Request $request
 	 * @return array
 	 */
-	protected function toEmails($str, $emails = array(), $request)
+	protected function toEmails($str, $emails, $request)
 	{
 		$str = explode(',', $str);
 		$str = array_map('trim', $str);
@@ -748,7 +748,7 @@ class MessagesController extends Controller
 
 				if (!$user)
 				{
-					return response()->json(['message' => 'Could not find account for user ID #' . $id], 415);
+					continue;
 				}
 
 				$emails[] = $user->email;
@@ -756,10 +756,6 @@ class MessagesController extends Controller
 			elseif (filter_var($id, FILTER_VALIDATE_EMAIL))
 			{
 				$emails[] = $id;
-			}
-			else
-			{
-				return response()->json(['message' => 'Invalid value: ' . $id], 415);
 			}
 		}
 
