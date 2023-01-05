@@ -45,20 +45,18 @@ class Item extends Model
 	protected $table = 'orderitems';
 
 	/**
-	 * Automatic fields to populate every time a row is created
+	 * The attributes that should be cast to native types.
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
-	protected $dates = array(
-		'datetimecreated',
-		'datetimeremoved',
-		'datetimefulfilled'
-	);
+	protected $casts = [
+		'datetimefulfilled' => 'datetime:Y-m-d H:i:s',
+	];
 
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -67,10 +65,10 @@ class Item extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $dispatchesEvents = [
-		'updated'  => ItemUpdated::class,
+		'updated' => ItemUpdated::class,
 	];
 
 	/**
@@ -206,7 +204,7 @@ class Item extends Model
 	}
 
 	/**
-	 * If item is trashed
+	 * Get paid until date
 	 *
 	 * @return  mixed  Carbon|null
 	 */
@@ -217,7 +215,7 @@ class Item extends Model
 	}
 
 	/**
-	 * If item is trashed
+	 * Get billed until date
 	 *
 	 * @return  mixed  Carbon|null
 	 */

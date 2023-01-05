@@ -43,23 +43,21 @@ class Account extends Model
 	const DELETED_AT = 'datetimeremoved';
 
 	/**
-	 * Automatic fields to populate every time a row is created
+	 * The attributes that should be cast to native types.
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
-	protected $dates = array(
-		'datetimecreated',
-		'datetimeremoved',
-		'datetimeapproved',
-		'datetimedenied',
-		'datetimepaid',
-		'datetimepaymentdoc'
-	);
+	protected $casts = [
+		'datetimeapproved' => 'datetime:Y-m-d H:i:s',
+		'datetimedenied' => 'datetime:Y-m-d H:i:s',
+		'datetimepaid' => 'datetime:Y-m-d H:i:s',
+		'datetimepaymentdoc' => 'datetime:Y-m-d H:i:s',
+	];
 
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -100,7 +98,7 @@ class Account extends Model
 	}
 
 	/**
-	 * If account is paid
+	 * If account is denied
 	 *
 	 * @return  bool
 	 */
@@ -110,7 +108,7 @@ class Account extends Model
 	}
 
 	/**
-	 * If account is documented
+	 * If account is collected
 	 *
 	 * @return  bool
 	 */

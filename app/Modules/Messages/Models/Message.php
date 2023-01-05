@@ -64,15 +64,15 @@ class Message extends Model
 	public static $orderDir = 'desc';
 
 	/**
-	 * Automatic fields to populate every time a row is created
+	 * The attributes that should be cast to native types.
 	 *
-	 * @var array<int,string>
+	 * @var  array<string,string>
 	 */
-	protected $dates = array(
-		'datetimesubmitted',
-		'datetimestarted',
-		'datetimecompleted'
-	);
+	protected $casts = [
+		'datetimesubmitted' => 'datetime:Y-m-d H:i:s',
+		'datetimestarted' => 'datetime:Y-m-d H:i:s',
+		'datetimecompleted' => 'datetime:Y-m-d H:i:s',
+	];
 
 	/**
 	 * Fields and their validation criteria

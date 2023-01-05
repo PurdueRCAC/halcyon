@@ -45,19 +45,9 @@ class Product extends Model
 	protected $table = 'orderproducts';
 
 	/**
-	 * Automatic fields to populate every time a row is created
-	 *
-	 * @var  array
-	 */
-	protected $dates = array(
-		'datetimecreated',
-		'datetimeremoved'
-	);
-
-	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'

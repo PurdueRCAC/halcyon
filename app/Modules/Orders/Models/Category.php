@@ -41,19 +41,9 @@ class Category extends Model
 	protected $table = 'ordercategories';
 
 	/**
-	 * Automatic fields to populate every time a row is created
-	 *
-	 * @var  array
-	 */
-	protected $dates = array(
-		'datetimecreated',
-		'datetimeremoved'
-	);
-
-	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -128,7 +118,7 @@ class Category extends Model
 	}
 
 	/**
-	 * Query scope where record is trashed
+	 * Get an alias (URL slug)
 	 *
 	 * @return  string
 	 */

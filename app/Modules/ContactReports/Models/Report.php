@@ -72,7 +72,7 @@ class Report extends Model
 	];
 
 	/**
-	 * The attributes that should be mutated to dates.
+	 * The attributes that should be cast to native types.
 	 *
 	 * @var  array<string,string>
 	 */

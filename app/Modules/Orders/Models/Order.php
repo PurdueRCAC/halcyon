@@ -48,19 +48,9 @@ class Order extends Model
 	protected $table = 'orders';
 
 	/**
-	 * The attributes that should be mutated to dates.
-	 *
-	 * @var array
-	 */
-	public $dates = array(
-		'datetimecreated',
-		'datetimeremoved'
-	);
-
-	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -71,11 +61,11 @@ class Order extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $dispatchesEvents = [
-		'created'  => OrderCreated::class,
-		'deleted'  => OrderDeleted::class,
+		'created' => OrderCreated::class,
+		'deleted' => OrderDeleted::class,
 	];
 
 	/**
@@ -103,7 +93,7 @@ class Order extends Model
 	}
 
 	/**
-	 * Defines a relationship to updates
+	 * Defines a relationship to accounts
 	 *
 	 * @return  object
 	 */
@@ -113,7 +103,7 @@ class Order extends Model
 	}
 
 	/**
-	 * Defines a relationship to updates
+	 * Defines a relationship to group
 	 *
 	 * @return  object
 	 */
@@ -123,7 +113,7 @@ class Order extends Model
 	}
 
 	/**
-	 * Defines a relationship to updates
+	 * Defines a relationship to user
 	 *
 	 * @return  object
 	 */
@@ -133,7 +123,7 @@ class Order extends Model
 	}
 
 	/**
-	 * Defines a relationship to updates
+	 * Defines a relationship to submitter
 	 *
 	 * @return  object
 	 */
@@ -238,7 +228,6 @@ class Order extends Model
 			}
 		}
 
-		//if ($this->trashed())
 		if ($this->trashed())
 		{
 			$status = 'canceled';
@@ -342,27 +331,6 @@ class Order extends Model
 	}
 
 	/**
-	 * Delete entry and associated data
-	 *
-	 * @param   array  $options
-	 * @return  bool
-	 */
-	/*public function delete(array $options = [])
-	{
-		foreach ($this->accounts as $row)
-		{
-			$row->delete();
-		}
-
-		foreach ($this->items as $row)
-		{
-			$row->delete();
-		}
-
-		return parent::delete($options);
-	}*/
-
-	/**
 	 * Format total
 	 *
 	 * @return  string
@@ -377,6 +345,7 @@ class Order extends Model
 	 *
 	 * @param   string  $start
 	 * @param   string  $stop
+	 * @param   int     $recurring
 	 * @return  array
 	 */
 	public static function stats($start, $stop, $recurring = -1)

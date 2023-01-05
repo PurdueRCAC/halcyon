@@ -16,21 +16,13 @@ class Session extends Model
 	protected $table = 'sessions';
 
 	/**
-	 * The attributes that should be mutated to dates.
-	 *
-	 * @var  array<int,string>
-	 */
-	protected $dates = [
-		'last_activity',
-	];
-
-	/**
-	 * The attributes that should be cast to native types.
+	 * TThe attributes that should be cast to native types.
 	 *
 	 * @var array<string,string>
 	 */
 	protected $casts = [
 		'id' => 'string',
+		'last_activity' => 'datetime',
 	];
 
 	/**
