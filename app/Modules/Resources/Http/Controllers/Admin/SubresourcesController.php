@@ -203,9 +203,7 @@ class SubresourcesController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-			return redirect()->back()->withError($error);
+			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
 		// Update/Create Resource/Subresource association
@@ -248,7 +246,7 @@ class SubresourcesController extends Controller
 			{
 				if (!$row->delete())
 				{
-					$request->session()->flash('error', $row->getError());
+					$request->session()->flash('error', trans('global.messages.delete failed'));
 					continue;
 				}
 			}
@@ -256,7 +254,7 @@ class SubresourcesController extends Controller
 			{
 				if (!$row->forceDelete())
 				{
-					$request->session()->flash('error', $row->getError());
+					$request->session()->flash('error', trans('global.messages.delete failed'));
 					continue;
 				}
 			}
@@ -293,7 +291,7 @@ class SubresourcesController extends Controller
 			{
 				if (!$row->restore())
 				{
-					$request->session()->flash('error', $row->getError());
+					$request->session()->flash('error', trans('global.messages.restore failed'));
 					continue;
 				}
 			}

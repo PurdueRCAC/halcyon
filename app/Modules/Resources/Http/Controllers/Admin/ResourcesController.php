@@ -311,9 +311,7 @@ class ResourcesController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-			return redirect()->back()->withError($error);
+			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
 		if ($facets = $request->input('facets', []))
@@ -374,7 +372,7 @@ class ResourcesController extends Controller
 			{
 				if (!$row->delete())
 				{
-					$request->session()->flash('error', $row->getError());
+					$request->session()->flash('error', trans('global.messages.delete failed'));
 					continue;
 				}
 			}
@@ -382,7 +380,7 @@ class ResourcesController extends Controller
 			{
 				if (!$row->forceDelete())
 				{
-					$request->session()->flash('error', $row->getError());
+					$request->session()->flash('error', trans('global.messages.delete failed'));
 					continue;
 				}
 			}
@@ -419,7 +417,7 @@ class ResourcesController extends Controller
 			{
 				if (!$row->restore())
 				{
-					$request->session()->flash('error', $row->getError());
+					$request->session()->flash('error', trans('global.messages.restore failed'));
 					continue;
 				}
 				else
