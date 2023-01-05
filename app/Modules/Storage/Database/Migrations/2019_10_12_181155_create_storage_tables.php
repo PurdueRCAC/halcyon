@@ -34,7 +34,7 @@ class CreateStorageTables extends Migration
 				$table->tinyInteger('publicwrite')->default(0);
 				$table->dateTime('datetimecreated')->nullable();
 				$table->dateTime('datetimeremoved')->nullable();
-				$table->dateTime('datetimeconfigured');
+				$table->dateTime('datetimeconfigured')->nullable();
 				$table->tinyInteger('autouser')->default(0);
 				$table->integer('files')->default(0);
 				$table->integer('autouserunixgroupid')->default(0)->comment('FK to unixgroups.id');
