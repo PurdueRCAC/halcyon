@@ -33,7 +33,7 @@ app('pathway')
 
 	{!!
 		Toolbar::spacer();
-		Toolbar::cancel(route('admin.storage.directories.cancel'));
+		Toolbar::cancel(route('admin.storage.directories'));
 	!!}
 
 	{!! Toolbar::render() !!}
@@ -239,55 +239,93 @@ app('pathway')
 			</div>
 		</div><!-- / #dir-details -->
 		<div class="tab-pane" role="tabpanel" aria-labelledby="dir-details-tab"  id="dir-messages">
-			<fieldset class="adminform">
-				<legend>{{ trans('storage::storage.messages') }}</legend>
-
-				<table class="table table-hover">
-					<caption class="sr-only">{{ trans('storage::storage.messages') }}</caption>
-					<thead>
-						<tr>
-							<th scope="col">{{ trans('storage::storage.status') }}</th>
-							<th scope="col">{{ trans('storage::storage.path') }}</th>
-							<th scope="col">{{ trans('storage::storage.action') }}</th>
-							<th scope="col">{{ trans('storage::storage.submitted') }}</th>
-							<th scope="col">{{ trans('storage::storage.completed') }}</th>
-							<th scope="col">{{ trans('storage::storage.runtime') }}</th>
-						</tr>
-					</thead>
-					<tbody>
-					@if (count($row->messages))
-						@foreach ($row->messages as $message)
+			@php
+			$messages = $row->messages()
+				->orderBy('datetimesubmitted', 'desc')
+				->paginate(20, ['*'], 'page', request()->input('page', 1));
+			@endphp
+			<div class="card mb-4">
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<caption class="sr-only">{{ trans('storage::storage.messages') }}</caption>
+						<thead>
 							<tr>
-								<td><span class="badge badge-{{ $message->status == 'completed' ? 'success' : 'warning' }}">{{ trans('messages::messages.' . $message->status) }}</span></td>
-								<td>{{ $message->target }}</td>
-								<td>{{ $message->type->name }}</td>
-								<td>{{ $message->datetimesubmitted->format('Y-m-d') }}</td>
-								<td>
-									@if ($message->completed())
-										{{ $message->datetimecompleted->format('Y-m-d') }}
-									@else
-										-
-									@endif
-								</td>
-								<td>
-									@if (strtotime($message->datetimesubmitted) <= date("U"))
-										{{ $message->runtime }}
-									@else
-										-
-									@endif
+								<th scope="col">{{ trans('storage::storage.action') }}</th>
+								<th scope="col">{{ trans('storage::storage.submitted') }}</th>
+								<th scope="col">{{ trans('storage::storage.completed') }}</th>
+								<th scope="col">{{ trans('storage::storage.status') }}</th>
+							</tr>
+						</thead>
+						<tbody>
+						@if (count($messages))
+							@foreach ($messages as $message)
+								<tr>
+									<td>{{ $message->type->name }}</td>
+									<td>
+										<time datetime="{{ $message->datetimesubmitted->toDateTimeLocalString() }}">
+											@if ($message->datetimesubmitted->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
+												{{ $message->datetimesubmitted->diffForHumans() }}
+											@else
+												{{ $message->datetimesubmitted->format('F j, Y') }}
+											@endif
+										</time>
+									</td>
+									<td>
+										<?php
+										$timetable  = '<div>';
+										$timetable .= '<strong>' . trans('messages::messages.started') . '</strong>: ';
+										if ($message->started()):
+											$timetable .= '<time datetime=\'' . $message->datetimestarted->toDateTimeLocalString() . '\'>' . $message->datetimestarted . '</time>';
+										else:
+											$timetable .= trans('messages::messages.not started');
+										endif;
+										$timetable .= '<br />';
+										$timetable .= '<strong>' . trans('messages::messages.completed') . '</strong>: ';
+										if ($message->completed()):
+											$timetable .= '<time datetime=\'' . $message->datetimecompleted->toDateTimeLocalString() . '\'>' . $message->datetimecompleted . '</time>';
+										else:
+											$timetable .= trans('messages::messages.not completed');
+										endif;
+										$timetable .= '</div>';
+										?>
+										@if ($message->completed())
+											<span class="badge badge-success has-tip" data-tip="{!! $timetable !!}">
+												<span class="fa fa-check" aria-hidden="true"></span> {{ $message->elapsed }}
+											</span>
+										@elseif ($message->started())
+											<span class="badge badge-warning has-tip" data-tip="{!! $timetable !!}">
+												<span class="fa fa-undo" aria-hidden="true"></span> {{ trans('messages::messages.processing') }}
+											</span>
+										@else
+											<span class="badge badge-info has-tip" data-tip="{!! $timetable !!}">
+												<span class="fa fa-ellipsis-h" aria-hidden="true"></span> {{ trans('messages::messages.pending') }}
+											</span>
+										@endif
+									</td>
+									<td>
+										@if ($message->completed())
+											@if ($message->returnstatus)
+												<span class="text-danger fa fa-exclamation-circle" aria-hidden="true"></span>
+											@else
+												<span class="text-success fa fa-check" aria-hidden="true"></span>
+											@endif
+											{{ $message->returnstatus }}
+										@endif
+									</td>
+								</tr>
+							@endforeach
+						@else
+							<tr>
+								<td colspan="6" class="text-center">
+									<span class="none">{{ trans('global.none') }}</span>
 								</td>
 							</tr>
-						@endforeach
-					@else
-						<tr>
-							<td colspan="6" class="text-center">
-								<span class="none">{{ trans('global.none') }}</span>
-							</td>
-						</tr>
-					@endif
-					</tbody>
-				</table>
-			</fieldset>
+						@endif
+						</tbody>
+					</table>
+				</div>
+			</div>
+			{{ $messages->render() }}
 		</div><!-- / #dir-messages -->
 	</div><!-- / .tabs -->
 

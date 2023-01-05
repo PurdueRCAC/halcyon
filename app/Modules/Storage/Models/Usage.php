@@ -30,13 +30,13 @@ class Usage extends Model
 	public $timestamps = false;
 
 	/**
-	 * Automatic fields to populate every time a row is created
+	 * The attributes that should be cast to native types.
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
-	protected $dates = array(
-		'datetimerecorded'
-	);
+	protected $casts = [
+		'datetimerecorded' => 'datetime:Y-m-d H:i:s',
+	];
 
 	/**
 	 * Defines a relationship to a directory

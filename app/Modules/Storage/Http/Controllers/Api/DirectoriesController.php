@@ -40,6 +40,71 @@ class DirectoriesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
+	 * 		"name":          "resourceid",
+	 * 		"description":   "ID of the resource to filter by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "storageresourceid",
+	 * 		"description":   "ID of the storage resource to filter by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "groupid",
+	 * 		"description":   "ID of the group to filter by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "parentstoragedirid",
+	 * 		"description":   "ID of the parent directory to filter by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "state",
+	 * 		"description":   "State of entries to retrieve.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "active",
+	 * 			"enum": [
+	 * 				"*",
+	 * 				"active",
+	 * 				"inactive"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "quota",
+	 * 		"description":   "Filter by if a quota is set on the directory",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null,
+	 * 			"enum": [
+	 * 				"true",
+	 * 				"false"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result per page.",
 	 * 		"required":      false,
@@ -397,12 +462,12 @@ class DirectoriesController extends Controller
 				'parentstorageid'     => 'nullable|integer',
 				'owneruserid'         => 'nullable|integer',
 				'unixgroupid'         => 'nullable|integer',
-				'ownerread'           => 'nullable|integer',
-				'ownerwrite'          => 'nullable|integer',
-				'groupread'           => 'nullable|integer',
-				'groupwrite'          => 'nullable|integer',
-				'publicread'          => 'nullable|integer',
-				'publicwrite'         => 'nullable|integer',
+				'ownerread'           => 'nullable|in:0,1',
+				'ownerwrite'          => 'nullable|in:0,1',
+				'groupread'           => 'nullable|in:0,1',
+				'groupwrite'          => 'nullable|in:0,1',
+				'publicread'          => 'nullable|in:0,1',
+				'publicwrite'         => 'nullable|in:0,1',
 				'autouser'            => 'nullable|in:0,1,2,3',
 				'files'               => 'nullable|integer',
 				'autouserunixgroupid' => 'nullable|integer',
@@ -910,11 +975,11 @@ class DirectoriesController extends Controller
 			'parentstorageid'     => 'nullable|integer',
 			'owneruserid'         => 'nullable|integer',
 			'unixgroupid'         => 'nullable|integer',
-			'ownerread'           => 'nullable|integer',
-			'groupread'           => 'nullable|integer',
-			'groupwrite'          => 'nullable|integer',
-			'publicread'          => 'nullable|integer',
-			'publicwrite'         => 'nullable|integer',
+			'ownerread'           => 'nullable|in:0,1',
+			'groupread'           => 'nullable|in:0,1',
+			'groupwrite'          => 'nullable|in:0,1',
+			'publicread'          => 'nullable|in:0,1',
+			'publicwrite'         => 'nullable|in:0,1',
 			'autouser'            => 'nullable|in:0,1,2,3',
 			'files'               => 'nullable|integer',
 			'autouserunixgroupid' => 'nullable|integer',
@@ -957,17 +1022,6 @@ class DirectoriesController extends Controller
 
 		if ($request->has('quotaupdate'))
 		{
-			// Fetch message type
-			/*$type = MessageType::query()
-				->where('resourceid', '=', $row->resourceid)
-				->where('name', 'like', 'get % quota')
-				->get()
-				->first();
-
-			if (!$type)
-			{
-				return response()->json(['message' => trans('Failed to retrieve messagequeuetype for resourceid :id', ['id' => $row->resourceid])], 415);
-			}*/
 			if (!$row->storageResource)
 			{
 				return response()->json(['message' => trans('Failed to retrieve storage resource for :id', ['id' => $row->storageresourceid])], 415);

@@ -109,7 +109,7 @@ app('pathway')
 								@if ($row->defaulttimeperiodid)
 									{{ $row->timeperiod->name }}
 								@else
-									<span class="none">{{ trans('global.none') }}</span>
+									<span class="text-muted">{{ trans('global.none') }}</span>
 								@endif
 							</td>
 							<td class="priority-4 text-right">

@@ -70,23 +70,26 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-importhostname">{{ trans('storage::storage.import hostname') }}:</label>
-					<input type="text" name="fields[importhostname]" id="field-listname" class="form-control" maxlength="64" value="{{ $row->importhostname ? $row->importhostname : '' }}" />
+					@php
+					$hardware = App\Modules\Storage\Models\Purchase::query()
+						->where('resourceid', '=', $row->parentresourceid)
+						->where('groupid', '=', '-1')
+						->where('sellergroupid', '=', 0)
+						->first();
+					@endphp
+					<label for="field-bytes">{{ trans('storage::storage.available space') }}:</label>
+					<input type="text" name="bytes" id="field-bytes" class="form-control" value="{{ $hardware ? $hardware->formattedBytes : '' }}" />
+					<span class="form-text text-muted">{{ trans('storage::storage.quota space desc') }}</span>
 				</div>
 
 				<div class="row">
 					<div class="col-md-6">
-						<div class="form-group mb-0">
-							@php
-							$hardware = App\Modules\Storage\Models\Purchase::query()
-								->where('resourceid', '=', $row->parentresourceid)
-								->where('groupid', '=', '-1')
-								->where('sellergroupid', '=', 0)
-								->first();
-							@endphp
-							<label for="field-bytes">{{ trans('storage::storage.available space') }}:</label>
-							<input type="text" name="bytes" id="field-bytes" class="form-control" value="{{ $hardware ? $hardware->formattedBytes : '' }}" />
-							<span class="form-text text-muted">{{ trans('storage::storage.quota space desc') }}</span>
+						<div class="form-group form-block mb-0">
+							<div class="form-check">
+								<input type="checkbox" name="fields[autouserdir]" id="field-autouserdir" class="form-check-input" value="1"<?php if ($row->autouserdir) { echo ' checked="checked"'; } ?> />
+								<label for="field-autouserdir" class="form-check-label">{{ trans('storage::storage.autouserdir') }}</label>
+								<span class="form-text text-muted">{{ trans('storage::storage.autouserdir desc') }}</span>
+							</div>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -116,6 +119,7 @@ app('pathway')
 						<div class="form-group">
 							<label for="field-defaultquotafile">{{ trans('storage::storage.quota file') }}:</label>
 							<input type="number" name="fields[defaultquotafile]" id="field-defaultquotafile" class="form-control" value="{{ $row->defaultquotafile }}" />
+							<span class="form-text text-muted">{{ trans('storage::storage.quota file desc') }}</span>
 						</div>
 					</div>
 				</div>

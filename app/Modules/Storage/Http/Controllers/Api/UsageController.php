@@ -407,7 +407,7 @@ class UsageController extends Controller
 	{
 		$rules = [
 			'storagedirid' => 'nullable|integer|min:1',
-			'storagedir'   => 'nullable|string',
+			'storagedir'   => 'nullable|integer',
 			'quota'        => 'nullable|integer',
 			'space'        => 'nullable|integer',
 			'filequota'    => 'nullable|integer',

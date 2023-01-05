@@ -16,7 +16,7 @@ class Messages
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  \Illuminate\Events\Dispatcher  $events
 	 * @return void
 	 */
 	public function subscribe($events)
@@ -26,9 +26,9 @@ class Messages
 	}
 
 	/**
-	 * Setup some directories for new resource members
+	 * Gather some information about the target directory
 	 *
-	 * @param   object  $event
+	 * @param   MessageReading  $event
 	 * @return  void
 	 */
 	public function handleMessageReading(MessageReading $event)
@@ -62,7 +62,7 @@ class Messages
 	/**
 	 * Add messages to the queue for new directories
 	 *
-	 * @param   object  $event
+	 * @param   DirectoryCreated  $event
 	 * @return  void
 	 */
 	public function handleDirectoryCreated(DirectoryCreated $event)
@@ -72,15 +72,17 @@ class Messages
 		if (!$row->bytes && $row->parent)
 		{
 			// Submit mkdir
-			$type = MessageType::query()
+			/*$type = MessageType::query()
 				->where('resourceid', '=', $row->resourceid)
 				->where('name', 'like', 'mkdir %')
 				->get()
-				->first();
+				->first();*/
 
-			if ($type)
+			$typeid = $row->storageResource->createtypeid;
+
+			if ($typeid)
 			{
-				$row->addMessageToQueue($type->id, $row->userid, 10);
+				$row->addMessageToQueue($typeid, $row->userid, 10);
 			}
 		}
 

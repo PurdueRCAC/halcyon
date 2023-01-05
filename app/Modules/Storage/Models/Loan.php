@@ -20,14 +20,14 @@ class Loan extends Purchase
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'created' => LoanCreated::class,
 	];
 
 	/**
-	 * Defines a relationship to a group
+	 * Defines a relationship to a lender group
 	 *
 	 * @return  object
 	 */
@@ -37,7 +37,7 @@ class Loan extends Purchase
 	}
 
 	/**
-	 * Defines a relationship to a group
+	 * Defines a relationship to a lender group
 	 *
 	 * @return  object
 	 */
@@ -63,7 +63,7 @@ class Loan extends Purchase
 	}
 
 	/**
-	 * Defines a relationship to a resource
+	 * Get the transaction type (loan|purchase)
 	 *
 	 * @return  string
 	 */

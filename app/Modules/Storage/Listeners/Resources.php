@@ -20,7 +20,7 @@ class Resources
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  \Illuminate\Events\Dispatcher  $events
 	 * @return void
 	 */
 	public function subscribe($events)
@@ -34,7 +34,7 @@ class Resources
 	 * Trash storage resources when the parent resource
 	 * is trashed.
 	 *
-	 * @param   object   $event
+	 * @param   AssetDeleted  $event
 	 * @return  void
 	 */
 	public function handleAssetDeleted(AssetDeleted $event)
@@ -52,7 +52,7 @@ class Resources
 	/**
 	 * Display user profile info
 	 *
-	 * @param   object  $event  AssetBeforeDisplay
+	 * @param   AssetBeforeDisplay  $event
 	 * @return  void
 	 */
 	public function handleAssetBeforeDisplay(AssetBeforeDisplay $event)
@@ -136,7 +136,7 @@ class Resources
 	/**
 	 * Setup some directories for new resource members
 	 *
-	 * @param   object   $event
+	 * @param   ResourceMemberCreated  $event
 	 * @return  void
 	 */
 	/*public function handleResourceMemberCreated(ResourceMemberCreated $event)

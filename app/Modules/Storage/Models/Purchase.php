@@ -55,16 +55,6 @@ class Purchase extends Model
 	];
 
 	/**
-	 * Automatic fields to populate every time a row is created
-	 *
-	 * @var  array
-	 */
-	protected $dates = array(
-		'datetimestart',
-		'datetimestop'
-	);
-
-	/**
 	 * The event map for the model.
 	 *
 	 * @var array
@@ -226,7 +216,7 @@ class Purchase extends Model
 	}
 
 	/**
-	 * Defines a relationship to a group
+	 * Defines a relationship to an owner group
 	 *
 	 * @return  object
 	 */
@@ -236,7 +226,7 @@ class Purchase extends Model
 	}
 
 	/**
-	 * Defines a relationship to a group
+	 * Defines a relationship to a gseller roup
 	 *
 	 * @return  object
 	 */
@@ -319,7 +309,7 @@ class Purchase extends Model
 	}
 
 	/**
-	 * Defines a relationship to a resource
+	 * Get the transaction type (loan|purchase)
 	 *
 	 * @return  string
 	 */

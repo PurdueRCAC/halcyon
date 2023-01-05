@@ -14,7 +14,7 @@ class GroupMembers
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  \Illuminate\Events\Dispatcher  $events
 	 * @return void
 	 */
 	public function subscribe($events)
@@ -26,7 +26,7 @@ class GroupMembers
 	/**
 	 * Create alerts for this user for any directory that has a quota and is owned by this group
 	 *
-	 * @param   object  $event
+	 * @param   GroupMemberCreated  $event
 	 * @return  void
 	 */
 	public function handleGroupMemberCreated(GroupMemberCreated $event)
@@ -61,14 +61,14 @@ class GroupMembers
 			{
 				$alert = new Notification;
 				$alert->userid = $event->member->userid;
-				$alert->storagedirquotanotificationtypeid = 3;
+				$alert->storagedirquotanotificationtypeid = 3; // Space Threshold - Percent
 				$alert->value = 99;
 				$alert->storagedirid = $dir->id;
 				$alert->save();
 
 				$alert = new Notification;
 				$alert->userid = $event->member->userid;
-				$alert->storagedirquotanotificationtypeid = 3;
+				$alert->storagedirquotanotificationtypeid = 3; // Space Threshold - Percent
 				$alert->value = 80;
 				$alert->storagedirid = $dir->id;
 				$alert->save();
@@ -79,7 +79,7 @@ class GroupMembers
 	/**
 	 * Remove storage notifications for user
 	 *
-	 * @param   object  $event
+	 * @param   GroupMemberDeleted  $event
 	 * @return  void
 	 */
 	public function handleGroupMemberDeleted(GroupMemberDeleted $event)

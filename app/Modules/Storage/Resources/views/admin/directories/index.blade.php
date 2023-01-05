@@ -50,16 +50,14 @@ if ($parent)
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col filter-search col-md-4">
-				<div class="form-group">
+		<div class="col filter-search col-md-3">
 				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 				<span class="input-group">
 					<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 					<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
 				</span>
 			</div>
-			</div>
-			<div class="col filter-select col-md-8 text-right">
+			<div class="col filter-select col-md-9 text-right">
 				<label class="sr-only" for="filter_state">{{ trans('global.state') }}</label>
 				<select name="state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.option.all states') }}</option>

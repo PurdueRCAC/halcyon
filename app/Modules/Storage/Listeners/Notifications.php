@@ -13,7 +13,7 @@ class Notifications
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  \Illuminate\Events\Dispatcher  $events
 	 * @return void
 	 */
 	public function subscribe($events)
@@ -24,7 +24,7 @@ class Notifications
 	/**
 	 * Setup default notifications for new directory
 	 *
-	 * @param   object   $event
+	 * @param   DirectoryCreated  $event
 	 * @return  void
 	 */
 	public function handleDirectoryCreated(DirectoryCreated $event)
@@ -51,7 +51,7 @@ class Notifications
 				{
 					Notification::create([
 						'storagedirid' => $row->id,
-						'storagedirquotanotificationtypeid' => 3,
+						'storagedirquotanotificationtypeid' => 3, // Space Threshold - Percent
 						'userid' => $member->userid,
 						'value' => 99,
 					]);
@@ -74,7 +74,7 @@ class Notifications
 				{
 					Notification::create([
 						'storagedirid' => $row->id,
-						'storagedirquotanotificationtypeid' => 3,
+						'storagedirquotanotificationtypeid' => 3, // Space Threshold - Percent
 						'userid' => $member->userid,
 						'value' => 99,
 					]);

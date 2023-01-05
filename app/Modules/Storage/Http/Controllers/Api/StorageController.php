@@ -302,7 +302,8 @@ class StorageController extends Controller
 	 * 		"description":   "Import hostname",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "boolean"
+	 * 			"type":      "string",
+	 * 			"maxLength": 64,
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -379,8 +380,8 @@ class StorageController extends Controller
 			'name'              => 'required|string|max:32',
 			'path'              => 'required|string|max:255',
 			'parentresourceid'  => 'nullable|integer',
-			'import'            => 'nullable|integer',
-			'importhostname'    => 'nullable|in:0,1',
+			'import'            => 'nullable|in:0,1',
+			'importhostname'    => 'nullable|string|max:64',
 			'autouserdir'       => 'nullable|in:0,1',
 			'defaultquotaspace' => 'nullable|integer',
 			'defaultquotafile'  => 'nullable|integer',
@@ -530,7 +531,8 @@ class StorageController extends Controller
 	 * 		"description":   "Import hostname",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "boolean"
+	 * 			"type":      "string",
+	 * 			"maxLength": 64,
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -610,8 +612,8 @@ class StorageController extends Controller
 			'name'              => 'nullable|string|max:32',
 			'path'              => 'nullable|string|max:255',
 			'parentresourceid'  => 'nullable|integer',
-			'import'            => 'nullable|integer',
-			'importhostname'    => 'nullable|in:0,1',
+			'import'            => 'nullable|in:0,1',
+			'importhostname'    => 'nullable|string|max:64',
 			'autouserdir'       => 'nullable|in:0,1',
 			'defaultquotaspace' => 'nullable|integer',
 			'defaultquotafile'  => 'nullable|integer',

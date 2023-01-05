@@ -14,7 +14,7 @@ class UnixGroupMembers
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  \Illuminate\Events\Dispatcher  $events
 	 * @return void
 	 */
 	public function subscribe($events)
@@ -24,9 +24,11 @@ class UnixGroupMembers
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Handle when a user is added to a unix group
 	 *
-	 * @param   object  $event
+	 * Some directories need to auto-create a subdirectory for each user.
+	 *
+	 * @param   UnixGroupMemberCreated  $event
 	 * @return  void
 	 */
 	public function handleUnixGroupMemberCreated(UnixGroupMemberCreated $event)
@@ -61,14 +63,14 @@ class UnixGroupMembers
 				$userdir->ownerread   = 1;
 				$userdir->ownerwrite  = 1;
 
-				if ($dir->autouser == '1')
+				if ($dir->autouser == 1)
 				{
 					// Group readable
 					$userdir->groupread  = 1;
 					$userdir->groupwrite = 0;
 					$userdir->publicread = 0;
 				}
-				elseif ($dir->autouser == '2')
+				elseif ($dir->autouser == 2)
 				{
 					// Private
 					$userdir->groupread  = 0;
@@ -109,7 +111,7 @@ class UnixGroupMembers
 			{
 				$alert = new Notification;
 				$alert->userid = $event->member->userid;
-				$alert->storagedirquotanotificationtypeid = 3;
+				$alert->storagedirquotanotificationtypeid = 3; // Space Threshold - Percent
 				$alert->value = 99;
 				$alert->storagedirid = $dir->id;
 				$alert->save();
@@ -120,7 +122,7 @@ class UnixGroupMembers
 	/**
 	 * Remove storage notifications for user
 	 *
-	 * @param   object  $event
+	 * @param   UnixGroupMemberDeleted  $event
 	 * @return  void
 	 */
 	public function handleUnixGroupMemberDeleted(UnixGroupMemberDeleted $event)

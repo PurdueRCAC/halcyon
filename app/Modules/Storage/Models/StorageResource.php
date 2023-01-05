@@ -43,19 +43,9 @@ class StorageResource extends Model
 	protected $table = 'storageresources';
 
 	/**
-	 * Automatic fields to populate every time a row is created
-	 *
-	 * @var  array
-	 */
-	protected $dates = array(
-		'datetimecreated',
-		'datetimeremoved'
-	);
-
-	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -72,6 +62,7 @@ class StorageResource extends Model
 	{
 		static::deleted(function ($model)
 		{
+			// Clean up any associated directories
 			foreach ($model->directories as $directory)
 			{
 				$directory->delete();
@@ -90,7 +81,7 @@ class StorageResource extends Model
 	}
 
 	/**
-	 * Defines a relationship to loans
+	 * Defines a relationship to a parent resource
 	 *
 	 * @return  object
 	 */
@@ -100,7 +91,7 @@ class StorageResource extends Model
 	}
 
 	/**
-	 * Defines a relationship to loans
+	 * Defines a relationship to a message queue type for retrieving quota info
 	 *
 	 * @return  object
 	 */
@@ -110,7 +101,7 @@ class StorageResource extends Model
 	}
 
 	/**
-	 * Defines a relationship to loans
+	 * Defines a relationship to a message queue type for creating a directory
 	 *
 	 * @return  object
 	 */
@@ -159,13 +150,14 @@ class StorageResource extends Model
 	}
 
 	/**
-	 * Set value in bytes
+	 * Set file quota
 	 *
 	 * @param   mixed  $value
 	 * @return  void
 	 */
 	public function setDefaultquotafileAttribute($value)
 	{
+		// Convert 9,000 -> 9000
 		$value = str_replace(',', '', $value);
 
 		$this->attributes['defaultquotafile'] = (int)$value;

@@ -5,8 +5,8 @@ namespace App\Modules\Storage\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
-use App\Halcyon\Models\Timeperiod;
 use App\Modules\Storage\Models\Notification\Type;
+use App\Halcyon\Models\Timeperiod;
 use App\Halcyon\Utility\Number;
 use Carbon\Carbon;
 
@@ -46,20 +46,18 @@ class Notification extends Model
 	protected $table = 'storagedirquotanotifications';
 
 	/**
-	 * Automatic fields to populate every time a row is created
+	 * The attributes that should be cast to native types.
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
-	protected $dates = array(
-		'datetimecreated',
-		'datetimeremoved',
-		'datetimelastnotify'
+	protected $casts = array(
+		'datetimelastnotify' => 'datetime:Y-m-d H:i:s',
 	);
 
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -156,7 +154,7 @@ class Notification extends Model
 			$dt->modify('+ ' . $seconds . ' seconds');
 		}
 
-		return $dt;//->toDateTimeString();
+		return $dt;
 	}
 
 	/**

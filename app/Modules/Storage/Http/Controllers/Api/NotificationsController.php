@@ -35,6 +35,58 @@ class NotificationsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
+	 * 		"name":          "enabled",
+	 * 		"description":   "Enabled state of the notifications",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "-1",
+	 * 			"enum": [
+	 * 				"-1",
+	 * 				"0",
+	 * 				"1"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "storagedirquotanotificationtypeid",
+	 * 		"description":   "ID of the notification type to filter by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "storagedirid",
+	 * 		"description":   "ID of the storage directory to filter by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "userid",
+	 * 		"description":   "ID of the user to filter by.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "timeperiodid",
+	 * 		"description":   "ID of the timeperiod to filter by",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   "-1"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "limit",
 	 * 		"description":   "Number of result to return.",
 	 * 		"required":      false,

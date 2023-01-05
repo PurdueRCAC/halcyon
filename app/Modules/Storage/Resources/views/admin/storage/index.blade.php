@@ -187,10 +187,12 @@ app('pathway')
 									{{ number_format($row->directories_count) }}
 								</a>
 							@else
-								<a class="btn btn-sm btn-success" href="{{ route('admin.storage.directories.create', ['resource' => $row->id, 'parent' => 0]) }}">
-									<span class="icon-plus"></span><span class="sr-only">{{ trans('global.add') }}</span>
-								</a>
-								<span class="none">0</span>
+								@if (!$row->trashed())
+									<a class="btn btn-sm btn-success" href="{{ route('admin.storage.directories.create', ['resource' => $row->id, 'parent' => 0]) }}">
+										<span class="icon-plus"></span><span class="sr-only">{{ trans('global.add') }}</span>
+									</a>
+								@endif
+								<span class="text-muted">0</span>
 							@endif
 						</td>
 					</tr>

@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Messages\Models\Message;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\UnixGroup;
-use App\Halcyon\Traits\ErrorBag;
-use App\Halcyon\Traits\Validatable;
 use App\Modules\History\Traits\Historable;
 use App\Halcyon\Utility\Number;
 use App\Modules\Storage\Events\DirectoryCreated;
@@ -21,7 +19,7 @@ use Carbon\Carbon;
  */
 class Directory extends Model
 {
-	use ErrorBag, Validatable, Historable, SoftDeletes;
+	use Historable, SoftDeletes;
 
 	/**
 	 * The name of the "created at" column.
@@ -52,20 +50,18 @@ class Directory extends Model
 	protected $table = 'storagedirs';
 
 	/**
-	 * Automatic fields to populate every time a row is created
+	 * The attributes that should be cast to native types.
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
-	protected $dates = array(
-		'datetimecreated',
-		'datetimeremoved',
-		'datetimeconfigured'
-	);
+	protected $casts = [
+		'datetimeconfigured' => 'datetime:Y-m-d H:i:s',
+	];
 
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -76,12 +72,12 @@ class Directory extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
-		'created'  => DirectoryCreated::class,
-		'updated'  => DirectoryUpdated::class,
-		'deleted'  => DirectoryDeleted::class,
+		'created' => DirectoryCreated::class,
+		'updated' => DirectoryUpdated::class,
+		'deleted' => DirectoryDeleted::class,
 	];
 
 	/**
@@ -125,7 +121,7 @@ class Directory extends Model
 	}
 
 	/**
-	 * Defines a relationship to a unixgroup
+	 * Defines a relationship to a auto-populating unixgroup
 	 *
 	 * @return  object
 	 */
@@ -135,7 +131,7 @@ class Directory extends Model
 	}
 
 	/**
-	 * Defines a relationship to a group
+	 * Defines a relationship to an owner user
 	 *
 	 * @return  object
 	 */
@@ -145,7 +141,7 @@ class Directory extends Model
 	}
 
 	/**
-	 * Defines a relationship to a group
+	 * Defines a relationship to a parent directory
 	 *
 	 * @return  object
 	 */
@@ -155,7 +151,7 @@ class Directory extends Model
 	}
 
 	/**
-	 * Defines a relationship to a group
+	 * Defines a relationship to child directories
 	 *
 	 * @return  object
 	 */
@@ -165,7 +161,7 @@ class Directory extends Model
 	}
 
 	/**
-	 * Defines a relationship to a group
+	 * Defines a relationship to notifications
 	 *
 	 * @return  object
 	 */
@@ -202,8 +198,7 @@ class Directory extends Model
 		if (!$message->messagequeuetypeid)
 		{
 			// We need a type.
-			error_log('Trying to add message for tagret #' . $message->targetobjectid . ' without MQ type id.');
-			return;
+			throw new \Exception('Trying to add message for target #' . $message->targetobjectid . ' without MQ type id.');
 		}
 		if ($offset)
 		{
@@ -227,7 +222,7 @@ class Directory extends Model
 	}
 
 	/**
-	 * Get a list of usage
+	 * Get a list of usage entries
 	 *
 	 * @return  object
 	 */
@@ -256,7 +251,7 @@ class Directory extends Model
 	}
 
 	/**
-	 * Get permissions
+	 * Get Unix permissions
 	 *
 	 * @return  object
 	 */
@@ -437,7 +432,7 @@ class Directory extends Model
 	}
 
 	/**
-	 * Get formatted bytes
+	 * Get quota as formatted bytes
 	 *
 	 * @return  string
 	 */
@@ -628,7 +623,7 @@ class Directory extends Model
 	 *
 	 * @param   bool   $expanded
 	 * @param   array  $active
-	 * @return  array
+	 * @return  array<string,mixed>
 	 */
 	public function tree($expanded = true, $active = [])
 	{

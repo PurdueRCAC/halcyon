@@ -158,7 +158,7 @@ class StorageController extends Controller
 			'fields.name' => 'required|string|max:32',
 			'fields.parentresourceid' => 'nullable|integer',
 			'fields.path' => 'nullable|string|max:255',
-			'fields.import' => 'nullable|in:0,1',
+			//'fields.import' => 'nullable|in:0,1',
 			'fields.autousedir' => 'nullable|in:0,1',
 		];
 
@@ -180,9 +180,7 @@ class StorageController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-			return redirect()->back()->withError($error);
+			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
 		$bytes = $request->input('bytes');
@@ -242,13 +240,13 @@ class StorageController extends Controller
 			{
 				if (!$row->forceDelete())
 				{
-					$request->session()->flash('error', $row->getError());
+					$request->session()->flash('error', trans('storage::storage.error.failed to delete'));
 					continue;
 				}
 			}
 			elseif (!$row->delete())
 			{
-				$request->session()->flash('error', $row->getError());
+				$request->session()->flash('error', trans('storage::storage.error.failed to delete'));
 				continue;
 			}
 
