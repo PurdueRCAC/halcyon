@@ -549,7 +549,7 @@ class Sanitize
 
 			foreach ($trans_tbl as $k => $v)
 			{
-				$ttr[$v] = utf8_encode($k);
+				$ttr[$v] = mb_convert_encoding($k, 'UTF-8', 'ISO-8859-1');
 			}
 		}
 
@@ -560,7 +560,7 @@ class Sanitize
 			'/&#(\d+);/m',
 			function ($matches)
 			{
-				return utf8_encode(chr($matches[1]));
+				return mb_convert_encoding(chr($matches[1]), 'UTF-8', 'ISO-8859-1');
 			},
 			$source
 		);
@@ -570,7 +570,7 @@ class Sanitize
 			'/&#x([a-f0-9]+);/mi',
 			function ($matches)
 			{
-				return utf8_encode(chr('0x' . $matches[1]));
+				return mb_convert_encoding(chr('0x' . $matches[1]), 'UTF-8', 'ISO-8859-1');
 			},
 			$source
 		);

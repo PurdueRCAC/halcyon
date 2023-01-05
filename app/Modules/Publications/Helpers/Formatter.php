@@ -191,7 +191,7 @@ class Formatter
 							break;
 						case 'journaltitle':
 							$jt = html_entity_decode($publication->$k);
-							$jt = (!preg_match('!\S!u', $jt)) ? utf8_encode($jt) : $jt;
+							$jt = (!preg_match('!\S!u', $jt)) ? mb_convert_encoding($jt, 'UTF-8', 'ISO-8859-1') : $jt;
 							$coins_data[] = self::$coins_keys[$k] . '=' . $jt;
 							break;
 						default:
@@ -214,7 +214,7 @@ class Formatter
 					$a = array();
 
 					$auth = html_entity_decode($publication->$k);
-					$auth = (!preg_match('!\S!u', $auth)) ? utf8_encode($auth) : $auth;
+					$auth = (!preg_match('!\S!u', $auth)) ? mb_convert_encoding($auth, 'UTF-8', 'ISO-8859-1') : $auth;
 
 					$author_string = $auth;
 					$authors = explode(';', $author_string);
@@ -278,7 +278,7 @@ class Formatter
 					}
 
 					$t = html_entity_decode($publication->$k);
-					$t = (!preg_match('!\S!u', $t)) ? utf8_encode($t) : $t;
+					$t = (!preg_match('!\S!u', $t)) ? mb_convert_encoding($t, 'UTF-8', 'ISO-8859-1') : $t;
 
 					$title = ($url != '' && preg_match('/http:|https:/', $url))
 							? '<a rel="external" class="publication-title" href="' . $url . '">' . $t . '</a>'

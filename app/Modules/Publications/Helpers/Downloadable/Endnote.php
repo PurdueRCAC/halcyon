@@ -42,14 +42,14 @@ class Endnote extends Downloadable
 		if ($row->booktitle)
 		{
 			$bt = html_entity_decode($row->booktitle);
-			$bt = (!preg_match('!\S!u', $bt)) ? utf8_encode($bt) : $bt;
+			$bt = (!preg_match('!\S!u', $bt)) ? mb_convert_encoding($bt, 'UTF-8', 'ISO-8859-1') : $bt;
 			$doc .= "%B " . $bt . "\r\n";
 		}
 
 		if ($row->journal)
 		{
 			$j = html_entity_decode($row->journal);
-			$j = (!preg_match('!\S!u', $j)) ? utf8_encode($j) : $j;
+			$j = (!preg_match('!\S!u', $j)) ? mb_convert_encoding($j, 'UTF-8', 'ISO-8859-1') : $j;
 			$doc .= "%J " . $j . "\r\n";
 		}
 
@@ -61,7 +61,7 @@ class Endnote extends Downloadable
 		if ($row->title)
 		{
 			$t = html_entity_decode($row->title);
-			$t = (!preg_match('!\S!u', $t)) ? utf8_encode($t) : $t;
+			$t = (!preg_match('!\S!u', $t)) ? mb_convert_encoding($t, 'UTF-8', 'ISO-8859-1') : $t;
 			$doc .= "%T " . $t . "\r\n";
 		}
 
@@ -78,7 +78,7 @@ class Endnote extends Downloadable
 		if ($row->editor)
 		{
 			$editor = html_entity_decode($row->editor);
-			$editor = (!preg_match('!\S!u', $editor)) ? utf8_encode($editor) : $editor;
+			$editor = (!preg_match('!\S!u', $editor)) ? mb_convert_encoding($editor, 'UTF-8', 'ISO-8859-1') : $editor;
 
 			$author_array = explode(';', stripslashes($editor));
 			foreach ($author_array as $auth)
@@ -90,7 +90,7 @@ class Endnote extends Downloadable
 		if ($row->publisher)
 		{
 			$p = html_entity_decode($row->publisher);
-			$p = (!preg_match('!\S!u', $p)) ? utf8_encode($p) : $p;
+			$p = (!preg_match('!\S!u', $p)) ? mb_convert_encoding($p, 'UTF-8', 'ISO-8859-1') : $p;
 			$doc .= "%I " . $p . "\r\n";
 		}
 
@@ -117,7 +117,7 @@ class Endnote extends Downloadable
 		if ($row->note)
 		{
 			$n = html_entity_decode($row->note);
-			$n = (!preg_match('!\S!u', $n)) ? utf8_encode($n) : $n;
+			$n = (!preg_match('!\S!u', $n)) ? mb_convert_encoding($n, 'UTF-8', 'ISO-8859-1') : $n;
 			$doc .= "%Z " . $n . "\r\n";
 		}
 
@@ -144,45 +144,45 @@ class Endnote extends Downloadable
 		/*if ($row->keywords)
 		{
 			$k = html_entity_decode($row->keywords);
-			$k = (!preg_match('!\S!u', $k)) ? utf8_encode($k) : $k;
+			$k = (!preg_match('!\S!u', $k)) ? mb_convert_encoding($k, 'UTF-8', 'ISO-8859-1') : $k;
 			$doc .= "%K " . $k . "\r\n";
 		}
 
 		if ($row->research_notes)
 		{
 			$rn = html_entity_decode($row->research_notes);
-			$rn = (!preg_match('!\S!u', $rn)) ? utf8_encode($rn) : $rn;
+			$rn = (!preg_match('!\S!u', $rn)) ? mb_convert_encoding($rn, 'UTF-8', 'ISO-8859-1') : $rn;
 			$doc .= "%< " . $rn . "\r\n";
 		}*/
 
 		if ($row->abstract)
 		{
 			$a = html_entity_decode($row->abstract);
-			$a = (!preg_match('!\S!u', $a)) ? utf8_encode($a) : $a;
+			$a = (!preg_match('!\S!u', $a)) ? mb_convert_encoding($a, 'UTF-8', 'ISO-8859-1') : $a;
 			$doc .= "%X " . $a . "\r\n";
 		}
 		/*if ($row->label)
 		{
 			$l = html_entity_decode($row->label);
-			$l = (!preg_match('!\S!u', $l)) ? utf8_encode($l) : $l;
+			$l = (!preg_match('!\S!u', $l)) ? mb_convert_encoding($l, 'UTF-8', 'ISO-8859-1') : $l;
 			$doc .= "%F " . $label . "\r\n";
 		}
 		if ($row->language)
 		{
 			$lan = html_entity_decode($row->language);
-			$lan = (!preg_match('!\S!u', $lan)) ? utf8_encode($lan) : $lan;
+			$lan = (!preg_match('!\S!u', $lan)) ? mb_convert_encoding($lan, 'UTF-8', 'ISO-8859-1') : $lan;
 			$doc .= "%G " . $lan . "\r\n";
 		}
 		if ($row->author_address)
 		{
 			$aa = html_entity_decode($row->author_address);
-			$aa = (!preg_match('!\S!u', $aa)) ? utf8_encode($aa) : $aa;
+			$aa = (!preg_match('!\S!u', $aa)) ? mb_convert_encoding($aa, 'UTF-8', 'ISO-8859-1') : $aa;
 			$doc .= "%+ " . $aa . "\r\n";
 		}
 		if ($row->accession_number)
 		{
 			$an = html_entity_decode($row->accession_number);
-			$an = (!preg_match('!\S!u', $an)) ? utf8_encode($an) : $an;
+			$an = (!preg_match('!\S!u', $an)) ? mb_convert_encoding($an, 'UTF-8', 'ISO-8859-1') : $an;
 			$doc .= "%M " . trim($an) . "\r\n";
 		}
 		if ($row->call_number)
@@ -192,7 +192,7 @@ class Endnote extends Downloadable
 		if ($row->short_title)
 		{
 			$st = html_entity_decode($row->short_title);
-			$st = (!preg_match('!\S!u', $st)) ? utf8_encode($st) : $st;
+			$st = (!preg_match('!\S!u', $st)) ? mb_convert_encoding($st, 'UTF-8', 'ISO-8859-1') : $st;
 			$doc .= "%! " . htmlspecialchars_decode(trim($st)) . "\r\n";
 		}*/
 
