@@ -194,7 +194,7 @@ class GroupsController extends Controller
 			$groupids = array_unique($groupids);
 
 			// Limit the query by the accumulated IDs
-			$query->whereIn('id', $groupids);
+			$query->whereIn($g . '.id', $groupids);
 		}
 		elseif ($filters['state'] == '*')
 		{
