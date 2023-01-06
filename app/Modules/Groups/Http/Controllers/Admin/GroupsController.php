@@ -5,6 +5,7 @@ namespace App\Modules\Groups\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use App\Halcyon\Http\StatefulRequest;
 use App\Halcyon\Models\FieldOfScience;
 use App\Modules\Groups\Models\Group;
@@ -13,6 +14,15 @@ use App\Modules\Groups\Models\GroupDepartment;
 use App\Modules\Groups\Models\GroupFieldOfScience;
 use App\Modules\Groups\Events\GroupDisplay;
 use App\Modules\Groups\Events\UnixGroupFetch;
+use App\Modules\Queues\Models\Queue;
+use App\Modules\Queues\Models\Size as QueueSize;
+use App\Modules\Queues\Models\Loan as QueueLoan;
+use App\Modules\Resources\Models\Subresource;
+use App\Modules\Resources\Models\Child;
+use App\Modules\Resources\Models\Asset;
+use App\Modules\Storage\Models\Purchase as StoragePurchase;
+use App\Modules\Storage\Models\Loan as StorageLoan;
+use Carbon\Carbon;
 
 class GroupsController extends Controller
 {
@@ -27,7 +37,7 @@ class GroupsController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
-			'state'     => 'active',
+			'state'     => 'enabled',
 			'department' => 0,
 			'fieldofscience' => 0,
 			// Paging
@@ -87,6 +97,104 @@ class GroupsController extends Controller
 		if ($filters['state'] == 'trashed')
 		{
 			$query->onlyTrashed();
+		}
+		elseif ($filters['state'] == 'active')
+		{
+			$now = Carbon::now();
+
+			// Get IDs of groups that have active queue allocations
+			$s = (new QueueSize)->getTable();
+			$l = (new QueueLoan)->getTable();
+
+			$q1 = DB::table($s)->select($s . '.queueid')
+				->from($s)
+				->where(function($where) use ($s, $now)
+				{
+					$where->where($s . '.corecount', '>', 0)
+						->orWhere($s . '.serviceunits', '>', 0);
+				})
+				->where(function($where) use ($s, $now)
+				{
+					$where->whereNull($s . '.datetimestop')
+						->orWhere($s . '.datetimestop', '>', $now->toDateTimeString());
+				});
+			$addSlashes = str_replace('?', "'?'", $q1->toSql());
+			$sql1 = vsprintf(str_replace('?', '%s', $addSlashes), $q1->getBindings());
+
+			$q2 = DB::table($l)->select($l . '.queueid')
+				->from($l)
+				->where(function($where) use ($l, $now)
+				{
+					$where->where($l . '.corecount', '>', 0)
+						->orWhere($l . '.serviceunits', '>', 0);
+				})
+				->where(function($where) use ($l, $now)
+				{
+					$where->whereNull($l . '.datetimestop')
+						->orWhere($l . '.datetimestop', '>', $now->toDateTimeString());
+				});
+			$addSlashes = str_replace('?', "'?'", $q2->toSql());
+			$sql2 = vsprintf(str_replace('?', '%s', $addSlashes), $q2->getBindings());
+
+			$q = (new Queue)->getTable();
+			$c = (new Child)->getTable();
+			$r = (new Asset)->getTable();
+
+			$groupids = Queue::query()
+				->select($q . '.groupid')
+				->join($g, $g . '.id', $q . '.groupid')
+				->join($c, $c . '.subresourceid', $q . '.subresourceid')
+				->join($r, $r . '.id', $c . '.resourceid')
+				->whereNull($r . '.datetimeremoved')
+				->withTrashed()
+				->whereRaw($q . '.id IN (' . $sql1 . ' UNION ' . $sql2 . ')')
+				->whereNull($q . '.datetimeremoved')
+				->whereNull($g . '.datetimeremoved')
+				->where($q . '.enabled', '=', 1)
+				->get()
+				->pluck('groupid')
+				->toArray();
+
+			$sp = (new StoragePurchase)->getTable();
+			$sl = (new StorageLoan)->getTable();
+
+			// Get IDs of groups that have active storage allocations
+			$spgroupids = StoragePurchase::query()
+				->select($sp . '.groupid')
+				->from($sp)
+				->join($g, $g . '.id', $sp . '.groupid')
+				->whereNull($g . '.datetimeremoved')
+				->where($sp . '.bytes', '>', 0)
+				->where($sp . '.groupid', '>', 0)
+				->where(function($where) use ($sp, $now)
+				{
+					$where->whereNull($sp . '.datetimestop')
+						->orWhere($sp . '.datetimestop', '>', $now->toDateTimeString());
+				})
+				->pluck('groupid')
+				->toArray();
+			$groupids = $groupids + $spgroupids;
+
+			$slgroupids = StorageLoan::query()
+				->select($sl . '.groupid')
+				->from($sl)
+				->join($g, $g . '.id', $sl . '.groupid')
+				->whereNull($g . '.datetimeremoved')
+				->where($sl . '.bytes', '>', 0)
+				->where($sl . '.groupid', '>', 0)
+				->where(function($where) use ($sl, $now)
+				{
+					$where->whereNull($sl . '.datetimestop')
+						->orWhere($sl . '.datetimestop', '>', $now->toDateTimeString());
+				})
+				->pluck('groupid')
+				->toArray();
+			$groupids = $groupids + $slgroupids;
+
+			$groupids = array_unique($groupids);
+
+			// Limit the query by the accumulated IDs
+			$query->whereIn('id', $groupids);
 		}
 		elseif ($filters['state'] == '*')
 		{

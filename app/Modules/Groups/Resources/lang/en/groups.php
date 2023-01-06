@@ -17,6 +17,7 @@ return [
 	'modified' => 'Modified',
 	'type' => 'Type',
 	'department' => 'Department',
+	'active allocation' => 'Active Allocation',
 	'base unix group' => 'Base Unix group',
 	'unix group base name' => 'Unix group base name',
 	'unix group' => 'Unix group',

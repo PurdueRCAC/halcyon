@@ -110,7 +110,8 @@ app('pathway')
 				<label class="sr-only" for="filter-state">{{ trans('groups::groups.state') }}</label>
 				<select name="state" id="filter-state" class="form-control filter filter-submit">
 					<option value="*">{{ trans('groups::groups.all states') }}</option>
-					<option value="active"<?php if ($filters['state'] == 'active') { echo ' selected="selected"'; } ?>>{{ trans('global.active') }}</option>
+					<option value="enabled"<?php if ($filters['state'] == 'enabled') { echo ' selected="selected"'; } ?>>{{ trans('global.enabled') }}</option>
+					<option value="active"<?php if ($filters['state'] == 'active') { echo ' selected="selected"'; } ?>>&nbsp; &nbsp; {{ trans('groups::groups.active allocation') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed') { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
 				</select>
 
