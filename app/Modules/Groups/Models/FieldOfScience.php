@@ -2,11 +2,11 @@
 namespace App\Modules\Groups\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use App\Modules\History\Traits\Historable;
-use App\Halcyon\Models\FieldOfScience as Field;
 
 /**
- * Group Field of Science map
+ * Field of Science
  */
 class FieldOfScience extends Model
 {
@@ -24,14 +24,14 @@ class FieldOfScience extends Model
 	 *
 	 * @var  string
 	 **/
-	protected $table = 'groupfieldofscience';
+	protected $table = 'fieldofscience';
 
 	/**
 	 * Default order by for model
 	 *
 	 * @var string
 	 */
-	public static $orderBy = 'id';
+	public static $orderBy = 'name';
 
 	/**
 	 * Default order direction for select queries
@@ -55,27 +55,174 @@ class FieldOfScience extends Model
 	 * @var  array<string,string>
 	 */
 	protected $rules = array(
-		'groupid' => 'required|integer',
-		'fieldofscienceid' => 'required|integer'
+		'name' => 'required|string|max:255',
+		'parentid' => 'nullable|integer'
 	);
+
+	/**
+	 * The "booted" method of the model.
+	 *
+	 * @return void
+	 */
+	protected static function booted()
+	{
+		static::creating(function ($model)
+		{
+			// The table is not setup for auto-increment
+			$result = self::query()
+				->select(DB::raw('MAX(id) + 1 AS seq'))
+				->get()
+				->first()
+				->seq;
+
+			$model->setAttribute('id', (int)$result);
+		});
+
+		static::deleted(function ($model)
+		{
+			foreach ($model->children as $row)
+			{
+				$row->delete();
+			}
+
+			foreach ($model->groups as $row)
+			{
+				$row->delete();
+			}
+		});
+	}
 
 	/**
 	 * Field of science
 	 *
 	 * @return  object
 	 */
-	public function field()
+	public function parent()
 	{
-		return $this->belongsTo(Field::class, 'fieldofscienceid');
+		return $this->belongsTo(self::class, 'parentid');
 	}
 
 	/**
-	 * Group
+	 * Defines a relationship to parent
+	 *
+	 * @param  string $order
+	 * @param  string $dir
+	 * @return array
+	 */
+	public static function tree($order = 'name', $dir = 'asc')
+	{
+		$rows = self::query()
+			->withCount('groups')
+			->orderBy($order, $dir)
+			->get();
+
+		$list = array();
+
+		if (count($rows) > 0)
+		{
+			$levellimit = 9999;
+			$list       = array();
+			$children   = array();
+
+			// First pass - collect children
+			foreach ($rows as $k)
+			{
+				$pt = $k->parentid;
+
+				if (!isset($children[$pt]))
+				{
+					$children[$pt] = array();
+				}
+				$children[$pt][] = $k;
+			}
+
+			// Second pass - get an indent list of the items
+			$list = self::treeRecurse(0, array(), $children, max(0, $levellimit-1));
+		}
+
+		return $list;
+	}
+
+	/**
+	 * Recursive function to build tree
+	 *
+	 * @param   integer  $id        Parent ID
+	 * @param   array    $list      List of records
+	 * @param   array    $children  Container for parent/children mapping
+	 * @param   integer  $maxlevel  Maximum levels to descend
+	 * @param   integer  $level     Indention level
+	 * @return  array
+	 */
+	protected static function treeRecurse($id, $list, $children, $maxlevel=9999, $level=0, string $prfx = '')
+	{
+		if (@$children[$id] && $level <= $maxlevel)
+		{
+			foreach ($children[$id] as $z => $v)
+			{
+				$vid = $v->id;
+
+				$v->level = $level;
+				$v->prefix = ($prfx ? $prfx . ' › ' : '');
+				$v->children_count = isset($children[$vid]) ? count($children[$vid]) : 0;
+
+				$list[$vid] = $v;
+
+				$p = '';
+				if ($v->parentid)
+				{
+					$p = $list[$vid]->prefix . $list[$vid]->name;
+				}
+
+				unset($children[$id][$z]);
+
+				$list = self::treeRecurse($vid, $list, $children, $maxlevel, $level+1, $p);
+			}
+			unset($children[$id]);
+		}
+		return $list;
+	}
+
+	/**
+	 * Get all parents
+	 *
+	 * @param   array  $ancestors
+	 * @return  array
+	 */
+	public function ancestors($ancestors = array())
+	{
+		$parent = $this->parent;
+
+		if ($parent)
+		{
+			if ($parent->parentid)
+			{
+				$ancestors = $parent->ancestors($ancestors);
+			}
+
+			$ancestors[] = $parent;
+		}
+
+		return $ancestors;
+	}
+
+	/**
+	 * Groups
 	 *
 	 * @return  object
 	 */
-	public function group()
+	public function children()
 	{
-		return $this->belongsTo(Group::class, 'groupid');
+		return $this->hasMany(self::class, 'parentid');
+	}
+
+	/**
+	 * Groups
+	 *
+	 * @return  object
+	 */
+	public function groups()
+	{
+		return $this->hasMany(GroupFieldOfScience::class, 'fieldofscienceid');
+		//return $this->hasOneThrough(GroupFieldOfScience::class, GroupDepartment::class, 'groupid', 'id', 'groupid', 'collegedeptid');
 	}
 }

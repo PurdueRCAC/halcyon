@@ -137,7 +137,7 @@ class Group extends Model
 	 */
 	public function fieldsOfScience()
 	{
-		return $this->hasMany(FieldOfScience::class, 'groupid');
+		return $this->hasMany(GroupFieldOfScience::class, 'groupid');
 	}
 
 	/**

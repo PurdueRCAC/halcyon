@@ -9,7 +9,7 @@ use Illuminate\Support\Fluent;
 use Illuminate\Support\Facades\Storage;
 use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 use App\Halcyon\Http\StatefulRequest;
-use App\Halcyon\Models\FieldOfScience;
+use App\Modules\Groups\Models\FieldOfScience;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Department;
 use App\Modules\Groups\Models\GroupDepartment;

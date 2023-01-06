@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Halcyon\Http\StatefulRequest;
-use App\Halcyon\Models\FieldOfScience;
-//use App\Modules\Groups\Models\FieldOfScience;
+use App\Modules\Groups\Models\FieldOfScience;
 
 class FieldsOfScienceController extends Controller
 {

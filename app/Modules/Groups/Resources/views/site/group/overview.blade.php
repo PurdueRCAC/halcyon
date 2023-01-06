@@ -262,7 +262,7 @@
 					<div class="col-md-11">
 						<select name="fieldofscience" id="new-fieldofscience" data-category="fieldofscienceid" class="form-control searchable-select">
 							<option value="">{{ trans('groups::groups.select field of science') }}</option>
-							<?php $fields = App\Halcyon\Models\FieldOfScience::tree(); ?>
+							<?php $fields = App\Modules\Groups\Models\FieldOfScience::tree(); ?>
 							@foreach ($fields as $f)
 								@php
 								if ($f->level == 0):

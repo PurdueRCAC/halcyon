@@ -8,7 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Validator;
-use App\Halcyon\Models\FieldOfScience;
+use App\Modules\Groups\Models\FieldOfScience;
 
 /**
  * Fields of science

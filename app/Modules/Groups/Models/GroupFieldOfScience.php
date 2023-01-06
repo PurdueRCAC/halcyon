@@ -63,7 +63,7 @@ class GroupFieldOfScience extends Model
 	 *
 	 * @return  object
 	 */
-	public function fieldOfScience()
+	public function field()
 	{
 		return $this->belongsTo(FieldOfScience::class, 'fieldofscienceid');
 	}
