@@ -268,11 +268,12 @@ class GroupsController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
+	 * @param  Request $request
 	 * @param  integer  $id
 	 * @param  string|null  $section
 	 * @return Response
 	 */
-	public function show($id, $section = 'overview', Request $request)
+	public function show(Request $request, $id, $section = 'overview')
 	{
 		$row = Group::findOrFail($id);
 
