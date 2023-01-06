@@ -2,17 +2,19 @@
 
 namespace App\Modules\Widgets\Entities;
 
+use Illuminate\Support\Collection;
 use Illuminate\Container\Container;
 use Illuminate\Support\Str;
 use App\Modules\Widgets\Models\Widget;
 use App\Modules\Widgets\Entities\Widget as BaseWidget;
+use Carbon\Carbon;
 
 class WidgetManager
 {
 	/**
 	 * Container
 	 *
-	 * @var  object
+	 * @var  Container
 	 */
 	public $app;
 
@@ -261,7 +263,7 @@ class WidgetManager
 			return $clean;
 		}
 
-		$now = \Carbon\Carbon::now()->toDateTimeString();
+		$now = Carbon::now()->toDateTimeString();
 
 		$w = (new Widget)->getTable();
 

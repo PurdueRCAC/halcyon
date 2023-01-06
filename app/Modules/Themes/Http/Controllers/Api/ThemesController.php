@@ -38,6 +38,15 @@ class ThemesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
+	 * 		"name":          "element",
+	 * 		"description":   "Theme element name.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"required":      false,
@@ -94,7 +103,7 @@ class ThemesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -300,7 +309,7 @@ class ThemesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return JsonResource|Response
 	 */
 	public function create(Request $request)
 	{
@@ -407,7 +416,7 @@ class ThemesController extends Controller
 	 * 		}
 	 * }
 	 * @param  integer  $id
-	 * @return Response
+	 * @return JsonResource
 	 */
 	public function read($id)
 	{
@@ -504,7 +513,7 @@ class ThemesController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   integer $id
-	 * @return  Response
+	 * @return  JsonResource|Response
 	 */
 	public function update(Request $request, $id)
 	{

@@ -4,6 +4,7 @@ namespace App\Modules\Themes\Entities;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
 use App\Modules\Themes\Models\Theme as Model;
 use Illuminate\Support\Facades\Schema;
 
@@ -81,14 +82,14 @@ class ThemeManager implements \Countable
 			}
 		}
 
-		return;
+		return null;
 	}
 
 	/**
 	 * Get only the public themes
 	 *
 	 * @param  string $type
-	 * @return array
+	 * @return Theme|null
 	 */
 	public function findEnabledByType($type = 'site')
 	{
@@ -96,6 +97,8 @@ class ThemeManager implements \Countable
 		{
 			return $theme;
 		}
+
+		return null;
 	}
 
 	/**
@@ -189,7 +192,7 @@ class ThemeManager implements \Countable
 	 * Get the theme directories
 	 *
 	 * @param  integer $state
-	 * @return array
+	 * @return Collection
 	 */
 	private function getThemes($state = null)
 	{
@@ -207,7 +210,7 @@ class ThemeManager implements \Countable
 	 * Get the themes from filesystem directories
 	 * 
 	 * @param  integer  $state
-	 * @return array
+	 * @return Collection
 	 */
 	private function getThemesFromFiles($state = null)
 	{
@@ -232,7 +235,7 @@ class ThemeManager implements \Countable
 	 *
 	 * @param  integer $state
 	 * @param  string  $type
-	 * @return array
+	 * @return Collection
 	 */
 	private function getThemesFromDatabase($state = null, $type = null)
 	{
@@ -276,7 +279,7 @@ class ThemeManager implements \Countable
 	 * Get the theme directories
 	 *
 	 * @param  object $theme
-	 * @return array
+	 * @return bool
 	 */
 	private function registerTheme(Theme $theme)
 	{
@@ -301,7 +304,7 @@ class ThemeManager implements \Countable
 	 * @param  string $theme
 	 * @return string
 	 */
-	public function getAssetPath($theme)
+	public function getAssetPath($theme): string
 	{
 		return public_path($this->getConfig()->get('module.themes.path.assets', 'themes') . '/' . $theme);
 	}
@@ -315,7 +318,7 @@ class ThemeManager implements \Countable
 	}
 
 	/**
-	 * @return \Illuminate\Filesystem\Filesystem
+	 * @return \Illuminate\Database\DatabaseManager
 	 */
 	protected function getDatabase()
 	{
@@ -333,7 +336,7 @@ class ThemeManager implements \Countable
 	/**
 	 * Counts all themes
 	 */
-	public function count()
+	public function count(): int
 	{
 		return count($this->all());
 	}

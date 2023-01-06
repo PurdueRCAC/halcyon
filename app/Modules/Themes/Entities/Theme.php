@@ -3,18 +3,10 @@
 namespace App\Modules\Themes\Entities;
 
 use Illuminate\Config\Repository;
-//use Illuminate\Container\Container;
 use Illuminate\Support\Str;
 
 class Theme
 {
-	/**
-	 * The laravel|lumen application instance.
-	 *
-	 * @var \Illuminate\Contracts\Foundation\Application|\Laravel\Lumen\Application
-	 */
-	//private $app;
-
 	/**
 	 * the theme name
 	 *
@@ -32,7 +24,7 @@ class Theme
 	/**
 	 * The theme params
 	 *
-	 * @var object
+	 * @var Repository
 	 */
 	private $params;
 
@@ -164,7 +156,7 @@ class Theme
 	 */
 	public function getRequires(): array
 	{
-		return $this->get('requires');
+		return $this->get('requires', []);
 	}
 
 	/**
@@ -230,74 +222,6 @@ class Theme
 	{
 		return $this->json()->get($key, $default);
 	}
-
-	/**
-	 * Determine whether the current module activated.
-	 *
-	 * @return bool
-	 */
-	/*public function isEnabled(): bool
-	{
-		return $this->activator->hasStatus($this, true);
-	}*/
-
-	/**
-	 *  Determine whether the current module not disabled.
-	 *
-	 * @return bool
-	 */
-	/*public function isDisabled(): bool
-	{
-		return !$this->isEnabled();
-	}*/
-
-	/**
-	 * Set active state for current module.
-	 *
-	 * @param bool $active
-	 *
-	 * @return bool
-	 */
-	/*public function setActive(bool $active): bool
-	{
-		return $this->activator->setActive($this, $active);
-	}*/
-
-	/**
-	 * Disable the current module.
-	 */
-	/*public function disable(): void
-	{
-		$this->fireEvent('disabling');
-
-		$this->activator->disable($this);
-		$this->flushCache();
-
-		$this->fireEvent('disabled');
-	}*/
-
-	/**
-	 * Enable the current module.
-	 */
-	/*public function enable(): void
-	{
-		$this->fireEvent('enabling');
-
-		$this->activator->enable($this);
-		$this->flushCache();
-
-		$this->fireEvent('enabled');
-	}*/
-
-	/**
-	 * Register the module event.
-	 *
-	 * @param string $event
-	 */
-	/*protected function fireEvent($event): void
-	{
-		$this->app['events']->dispatch(sprintf('themes.%s.' . $event, $this->getLowerName()), [$this]);
-	}*/
 
 	/**
 	 * Handle call __toString.
