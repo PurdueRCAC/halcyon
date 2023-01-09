@@ -145,7 +145,7 @@ class Url extends Rule
 
 		for ($i = 0; $i < $len; $i++)
 		{
-			$in = ord(substr($str, $i, $i + 1));
+			$in = ord(substr($str, $i, 1));
 
 			if ($mState == 0)
 			{
