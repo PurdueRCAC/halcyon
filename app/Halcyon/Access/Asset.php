@@ -82,7 +82,7 @@ class Asset extends Nested
 	/**
 	 * Method to load root node
 	 *
-	 * @return  object
+	 * @return  Asset
 	 * @throws  Exception
 	 */
 	public static function getRoot()

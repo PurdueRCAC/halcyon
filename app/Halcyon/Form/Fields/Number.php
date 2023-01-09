@@ -26,7 +26,7 @@ class Number extends Field
 		// Initialize some field attributes.
 		$attributes = array(
 			'type'         => 'number',
-			'value'        => htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8'),
+			'value'        => htmlspecialchars((string)$this->value, ENT_COMPAT, 'UTF-8'),
 			'name'         => $this->name,
 			'id'           => $this->id,
 			'min'          => (!is_null($this->element['min']) ? (int) $this->element['min'] : null),

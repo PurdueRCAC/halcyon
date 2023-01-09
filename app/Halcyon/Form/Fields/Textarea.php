@@ -50,6 +50,6 @@ class Textarea extends Field
 		}
 		$attr = implode(' ', $attr);
 
-		return '<textarea ' . $attr . '>' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '</textarea>';
+		return '<textarea ' . $attr . '>' . htmlspecialchars((string)$this->value, ENT_COMPAT, 'UTF-8') . '</textarea>';
 	}
 }

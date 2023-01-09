@@ -19,7 +19,7 @@ class Timezone extends Groupedlist
 	/**
 	 * The list of available timezone groups to use.
 	 *
-	 * @var  array
+	 * @var  array<int,string>
 	 */
 	protected static $zones = array(
 		'Africa',
@@ -37,7 +37,7 @@ class Timezone extends Groupedlist
 	/**
 	 * Method to get the time zone field option groups.
 	 *
-	 * @return  array  The field option objects as a nested array in groups.
+	 * @return  array<string,array>  The field option objects as a nested array in groups.
 	 */
 	protected function getGroups()
 	{

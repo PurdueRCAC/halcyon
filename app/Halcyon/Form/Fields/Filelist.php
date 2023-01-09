@@ -30,7 +30,7 @@ class Filelist extends Select
 		$options = array();
 
 		// Initialize some field attributes.
-		$filter = (string) $this->element['filter'];
+		//$filter = (string) $this->element['filter'];
 		$exclude = (string) $this->element['exclude'];
 		$stripExt = (string) $this->element['stripext'];
 		$hideNone = (string) $this->element['hide_none'];
@@ -46,15 +46,15 @@ class Filelist extends Select
 		// Prepend some default options based on field attributes.
 		if (!$hideNone)
 		{
-			$options[] = Dropdown::option('-1', app('filesystem')->alt('global.option.do not use', preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname)));
+			$options[] = Dropdown::option('-1', trans('global.option.do not use'));
 		}
 		if (!$hideDefault)
 		{
-			$options[] = Dropdown::option('', app('filesystem')->alt('global.option.use default', preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname)));
+			$options[] = Dropdown::option('', trans('global.option.use default'));
 		}
 
 		// Get a list of files in the search path with the given filter.
-		$files = app('filesystem')->files($path, $filter);
+		$files = app('filesystem')->files($path);
 
 		// Build the options list from the list of files.
 		if (is_array($files))
@@ -74,7 +74,7 @@ class Filelist extends Select
 				// If the extension is to be stripped, do it.
 				if ($stripExt)
 				{
-					$file = app('filesystem')->name($file);
+					$file = app('filesystem')->getDefaultDriver()->name($file);
 				}
 
 				$options[] = Dropdown::option($file, $file);

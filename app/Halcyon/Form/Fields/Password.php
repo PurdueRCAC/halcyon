@@ -36,7 +36,7 @@ class Password extends Field
 		$threshold = $this->element['threshold'] ? (int) $this->element['threshold'] : 66;
 
 		return '<input type="password" name="' . $this->name . '" id="' . $this->id . '"' .
-			' value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' .
+			' value="' . htmlspecialchars((string)$this->value, ENT_COMPAT, 'UTF-8') . '"' .
 			$auto . $class . $readonly . $disabled . $size . $maxLength . $meter . $required . ' autocomplete="off" />';
 	}
 }

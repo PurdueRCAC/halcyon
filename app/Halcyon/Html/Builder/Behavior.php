@@ -12,7 +12,7 @@ class Behavior
 	/**
 	 * Array containing information for loaded files
 	 *
-	 * @var  array
+	 * @var  array<string,bool|array>
 	 */
 	protected static $loaded = array();
 
@@ -889,31 +889,31 @@ class Behavior
 
 		if ($jsscript == 0)
 		{
-			$return = 'Calendar._DN = new Array ("' . trans('SUNDAY', true) . '", "' . trans('MONDAY', true) . '", "'
-				. trans('TUESDAY', true) . '", "' . trans('WEDNESDAY', true) . '", "' . trans('THURSDAY', true) . '", "'
-				. trans('FRIDAY', true) . '", "' . trans('SATURDAY', true) . '", "' . trans('SUNDAY', true) . '");'
-				. ' Calendar._SDN = new Array ("' . trans('SUN', true) . '", "' . trans('MON', true) . '", "' . trans('TUE', true) . '", "'
-				. trans('WED', true) . '", "' . trans('THU', true) . '", "' . trans('FRI', true) . '", "' . trans('SAT', true) . '", "'
-				. trans('SUN', true) . '");' . ' Calendar._FD = 0;' . ' Calendar._MN = new Array ("' . trans('JANUARY', true) . '", "'
-				. trans('FEBRUARY', true) . '", "' . trans('MARCH', true) . '", "' . trans('APRIL', true) . '", "' . trans('MAY', true)
-				. '", "' . trans('JUNE', true) . '", "' . trans('JULY', true) . '", "' . trans('AUGUST', true) . '", "'
-				. trans('SEPTEMBER', true) . '", "' . trans('OCTOBER', true) . '", "' . trans('NOVEMBER', true) . '", "'
-				. trans('DECEMBER', true) . '");' . ' Calendar._SMN = new Array ("' . trans('JANUARY_SHORT', true) . '", "'
-				. trans('FEBRUARY_SHORT', true) . '", "' . trans('MARCH_SHORT', true) . '", "' . trans('APRIL_SHORT', true) . '", "'
-				. trans('MAY_SHORT', true) . '", "' . trans('JUNE_SHORT', true) . '", "' . trans('JULY_SHORT', true) . '", "'
-				. trans('AUGUST_SHORT', true) . '", "' . trans('SEPTEMBER_SHORT', true) . '", "' . trans('OCTOBER_SHORT', true) . '", "'
-				. trans('NOVEMBER_SHORT', true) . '", "' . trans('DECEMBER_SHORT', true) . '");'
-				. ' Calendar._TT = {};Calendar._TT["INFO"] = "' . trans('core::html.BEHAVIOR_ABOUT_THE_CALENDAR', true) . '";'
+			$return = 'Calendar._DN = new Array ("' . trans('global.day.sunday') . '", "' . trans('global.day.monday') . '", "'
+				. trans('global.day.tuesday') . '", "' . trans('global.day.wednesday') . '", "' . trans('global.day.thursday') . '", "'
+				. trans('global.day.friday') . '", "' . trans('global.day.saturday') . '", "' . trans('global.day.sunday') . '");'
+				. ' Calendar._SDN = new Array ("' . trans('global.day.sun') . '", "' . trans('global.day.mon') . '", "' . trans('global.day.tues') . '", "'
+				. trans('global.day.wed') . '", "' . trans('global.day.thu') . '", "' . trans('global.day.fri') . '", "' . trans('global.day.sat') . '", "'
+				. trans('global.day.sun') . '");' . ' Calendar._FD = 0;' . ' Calendar._MN = new Array ("' . trans('global.month.january') . '", "'
+				. trans('global.month.february') . '", "' . trans('global.month.march') . '", "' . trans('global.month.april') . '", "' . trans('global.month.may')
+				. '", "' . trans('global.month.june') . '", "' . trans('global.month.july') . '", "' . trans('global.month.august') . '", "'
+				. trans('global.month.september') . '", "' . trans('global.month.october') . '", "' . trans('global.month.november') . '", "'
+				. trans('global.month.december') . '");' . ' Calendar._SMN = new Array ("' . trans('global.month.jan') . '", "'
+				. trans('global.month.feb') . '", "' . trans('global.month.mar') . '", "' . trans('global.month.apr') . '", "'
+				. trans('global.month.may') . '", "' . trans('global.month.jun') . '", "' . trans('global.month.jul') . '", "'
+				. trans('global.month.aug') . '", "' . trans('global.month.sep') . '", "' . trans('global.month.oct') . '", "'
+				. trans('global.month.nov') . '", "' . trans('global.month.dec') . '");'
+				. ' Calendar._TT = {};Calendar._TT["INFO"] = "' . trans('core::html.BEHAVIOR_ABOUT_THE_CALENDAR') . '";'
 				. ' Calendar._TT["ABOUT"] =
  "DHTML Date/Time Selector\n" +
  "(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n" +
 "For latest version visit: http://www.dynarch.com/projects/calendar/\n" +
 "Distributed under GNU LGPL.  See http://gnu.org/licenses/lgpl.html for details." +
 "\n\n" +
-"' . trans('core::html.BEHAVIOR_DATE_SELECTION', false, false) . '" +
-"' . trans('core::html.BEHAVIOR_YEAR_SELECT', false, false) . '" +
-"' . trans('core::html.BEHAVIOR_MONTH_SELECT', false, false) . '" +
-"' . trans('core::html.BEHAVIOR_HOLD_MOUSE', false, false)
+"' . trans('core::html.BEHAVIOR_DATE_SELECTION') . '" +
+"' . trans('core::html.BEHAVIOR_YEAR_SELECT') . '" +
+"' . trans('core::html.BEHAVIOR_MONTH_SELECT') . '" +
+"' . trans('core::html.BEHAVIOR_HOLD_MOUSE')
 				. '";
 Calendar._TT["ABOUT_TIME"] = "\n\n" +
 "Time selection:\n" +
@@ -921,26 +921,24 @@ Calendar._TT["ABOUT_TIME"] = "\n\n" +
 "- or Shift-click to decrease it\n" +
 "- or click and drag for faster selection.";
 
-		Calendar._TT["PREV_YEAR"] = "' . trans('core::html.BEHAVIOR_PREV_YEAR_HOLD_FOR_MENU', true) . '";' . ' Calendar._TT["PREV_MONTH"] = "'
-				. trans('core::html.BEHAVIOR_PREV_MONTH_HOLD_FOR_MENU', true) . '";' . ' Calendar._TT["GO_TODAY"] = "'
-				. trans('core::html.BEHAVIOR_GO_TODAY', true) . '";' . ' Calendar._TT["NEXT_MONTH"] = "'
-				. trans('core::html.BEHAVIOR_NEXT_MONTH_HOLD_FOR_MENU', true) . '";' . ' Calendar._TT["NEXT_YEAR"] = "'
-				. trans('core::html.BEHAVIOR_NEXT_YEAR_HOLD_FOR_MENU', true) . '";' . ' Calendar._TT["SEL_DATE"] = "'
-				. trans('core::html.BEHAVIOR_SELECT_DATE', true) . '";' . ' Calendar._TT["DRAG_TO_MOVE"] = "'
-				. trans('core::html.BEHAVIOR_DRAG_TO_MOVE', true) . '";' . ' Calendar._TT["PART_TODAY"] = "'
-				. trans('core::html.BEHAVIOR_TODAY', true) . '";' . ' Calendar._TT["DAY_FIRST"] = "'
-				. trans('core::html.BEHAVIOR_DISPLAY_S_FIRST', true) . '";' . ' Calendar._TT["WEEKEND"] = "0,6";' . ' Calendar._TT["CLOSE"] = "'
-				. trans('core::html.BEHAVIOR_CLOSE', true) . '";' . ' Calendar._TT["TODAY"] = "' . trans('core::html.BEHAVIOR_TODAY', true)
-				. '";' . ' Calendar._TT["TIME_PART"] = "' . trans('core::html.BEHAVIOR_SHIFT_CLICK_OR_DRAG_TO_CHANGE_VALUE', true) . '";'
+		Calendar._TT["PREV_YEAR"] = "' . trans('core::html.BEHAVIOR_PREV_YEAR_HOLD_FOR_MENU') . '";' . ' Calendar._TT["PREV_MONTH"] = "'
+				. trans('core::html.BEHAVIOR_PREV_MONTH_HOLD_FOR_MENU') . '";' . ' Calendar._TT["GO_TODAY"] = "'
+				. trans('core::html.BEHAVIOR_GO_TODAY') . '";' . ' Calendar._TT["NEXT_MONTH"] = "'
+				. trans('core::html.BEHAVIOR_NEXT_MONTH_HOLD_FOR_MENU') . '";' . ' Calendar._TT["NEXT_YEAR"] = "'
+				. trans('core::html.BEHAVIOR_NEXT_YEAR_HOLD_FOR_MENU') . '";' . ' Calendar._TT["SEL_DATE"] = "'
+				. trans('core::html.BEHAVIOR_SELECT_DATE') . '";' . ' Calendar._TT["DRAG_TO_MOVE"] = "'
+				. trans('core::html.BEHAVIOR_DRAG_TO_MOVE') . '";' . ' Calendar._TT["PART_TODAY"] = "'
+				. trans('core::html.BEHAVIOR_TODAY') . '";' . ' Calendar._TT["DAY_FIRST"] = "'
+				. trans('core::html.BEHAVIOR_DISPLAY_S_FIRST') . '";' . ' Calendar._TT["WEEKEND"] = "0,6";' . ' Calendar._TT["CLOSE"] = "'
+				. trans('core::html.BEHAVIOR_CLOSE') . '";' . ' Calendar._TT["TODAY"] = "' . trans('core::html.BEHAVIOR_TODAY')
+				. '";' . ' Calendar._TT["TIME_PART"] = "' . trans('core::html.BEHAVIOR_SHIFT_CLICK_OR_DRAG_TO_CHANGE_VALUE') . '";'
 				. ' Calendar._TT["DEF_DATE_FORMAT"] = "%Y-%m-%d";' . ' Calendar._TT["TT_DATE_FORMAT"] = "'
-				. trans('core::html.BEHAVIOR_TT_DATE_FORMAT', true) . '";' . ' Calendar._TT["WK"] = "' . trans('core::html.BEHAVIOR_WK', true) . '";'
-				. ' Calendar._TT["TIME"] = "' . trans('core::html.BEHAVIOR_TIME', true) . '";';
+				. trans('core::html.BEHAVIOR_TT_DATE_FORMAT') . '";' . ' Calendar._TT["WK"] = "' . trans('core::html.BEHAVIOR_WK') . '";'
+				. ' Calendar._TT["TIME"] = "' . trans('core::html.BEHAVIOR_TIME') . '";';
 			$jsscript = 1;
 			return $return;
 		}
-		else
-		{
-			return false;
-		}
+
+		return false;
 	}
 }

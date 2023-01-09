@@ -21,8 +21,6 @@ class Help extends Button
 	 *
 	 * @param   string   $type    Unused string.
 	 * @param   string   $url     The URL to open
-	 * @param   integer  $width   The window width
-	 * @param   integer  $height  The window height
 	 * @return  string
 	 */
 	public function fetchButton($type = 'Help', $url = '#')

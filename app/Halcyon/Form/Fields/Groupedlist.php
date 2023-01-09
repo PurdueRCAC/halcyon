@@ -105,7 +105,6 @@ class Groupedlist extends Field
 				// Unknown element type.
 				default:
 					abort(500, trans('global.error.groupedlist element name', $element->getName()));
-				break;
 			}
 		}
 
@@ -142,7 +141,7 @@ class Groupedlist extends Field
 		// Create a read-only list (no name) with a hidden input to store the value.
 		if ((string) $this->element['readonly'] == 'true')
 		{
-			$html[] = Dropdown::groupedlist($groups, null,
+			$html[] = Dropdown::groupedlist($groups, $this->name . '-readonly',
 				array(
 					'list.attr' => $attr, 'id' => $this->id, 'list.select' => $this->value, 'group.items' => null, 'option.key.toHtml' => false,
 					'option.text.toHtml' => false

@@ -15,7 +15,7 @@ class StatefulRequest extends Request
 	 * @param   string  $key      The key of the user state variable.
 	 * @param   string  $request  The name of the variable passed in a request.
 	 * @param   string  $default  The default value for the variable if not found. Optional.
-	 * @return  The request user state.
+	 * @return  mixed   The request user state.
 	 */
 	public function state($key, $request, $default = null)
 	{
@@ -44,7 +44,7 @@ class StatefulRequest extends Request
 	/**
 	 * Merge in incoming request
 	 *
-	 * @return  void
+	 * @return  StatefulRequest
 	 */
 	public function mergeWithBase()
 	{

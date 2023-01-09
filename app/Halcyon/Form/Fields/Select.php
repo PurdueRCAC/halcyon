@@ -75,7 +75,7 @@ class Select extends Field
 		if ((string) $this->element['readonly'] == 'true')
 		{
 			$html[] = Dropdown::genericlist($options, '', trim($attr), 'value', 'text', $this->value, $this->id);
-			$html[] = '<input type="hidden" name="' . $this->name . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" />';
+			$html[] = '<input type="hidden" name="' . $this->name . '" value="' . htmlspecialchars((string)$this->value, ENT_COMPAT, 'UTF-8') . '" />';
 		}
 		// Create a regular list.
 		else

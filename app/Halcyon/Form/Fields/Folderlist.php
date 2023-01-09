@@ -27,7 +27,7 @@ class Folderlist extends Select
 		$options = array();
 
 		// Initialize some field attributes.
-		$filter = (string) $this->element['filter'];
+		//$filter = (string) $this->element['filter'];
 		$exclude = (string) $this->element['exclude'];
 		$hideNone = (string) $this->element['hide_none'];
 		$hideDefault = (string) $this->element['hide_default'];
@@ -42,15 +42,15 @@ class Folderlist extends Select
 		// Prepend some default options based on field attributes.
 		if (!$hideNone)
 		{
-			$options[] = Dropdown::option( '-1', app('translator')->alt('global.option.do not use', preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname)));
+			$options[] = Dropdown::option( '-1', trans('global.option.do not use'));
 		}
 		if (!$hideDefault)
 		{
-			$options[] = Dropdown::option('', app('translator')->alt('global.option.use default', preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname)));
+			$options[] = Dropdown::option('', trans('global.option.use default'));
 		}
 
 		// Get a list of folders in the search path with the given filter.
-		$folders = app('filesystem')->directories($path, $filter);
+		$folders = app('filesystem')->directories($path);
 
 		// Build the options list from the list of folders.
 		if (is_array($folders))
