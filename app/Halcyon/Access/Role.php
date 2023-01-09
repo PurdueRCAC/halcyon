@@ -61,22 +61,24 @@ class Role extends Model
 	 *
 	 * @return  void
 	 */
-	public function setup()
+		/**
+	 * The "booted" method of the model.
+	 *
+	 * @return void
+	 */
+	protected static function booted()
 	{
-		$this->addRule('title', function($data)
+		static::creating(function ($model)
 		{
-			if (!isset($data['title']) || $data['title'] == '')
-			{
-				return 'Title is required.';
-			}
-
 			$exist = self::query()
-				->where('title', '=', $data['title'])
-				->where('parent_id', '=', $data['parent_id'])
-				->where('id', '<>', $data['id'])
+				->where('title', '=', $model->title)
+				->where('parent_id', '=', $model->parent_id)
 				->count();
 
-			return $exist ? 'Role already exists.' : false;
+			if ($exist)
+			{
+				throw new \Exception('Role already exists.');
+			}
 		});
 	}
 
@@ -117,7 +119,7 @@ class Role extends Model
 	 * Load a record by title
 	 *
 	 * @param   string  $title
-	 * @return  object
+	 * @return  Role|null
 	 */
 	public static function findByTitle($title)
 	{

@@ -4,12 +4,23 @@ namespace App\Halcyon\Cas\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+use App\Halcyon\Cas\CasManager;
 
 class RedirectCASAuthenticated
 {
+	/**
+	 * @var Guard
+	 */
 	protected $auth;
+
+	/**
+	 * @var CasManager
+	 */
 	protected $cas;
 
+	/**
+	 * @param Guard $auth
+	 */
 	public function __construct(Guard $auth)
 	{
 		$this->auth = $auth;
@@ -20,14 +31,17 @@ class RedirectCASAuthenticated
 	 * Handle an incoming request.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \Closure  $next
+	 * @param  Closure  $next
 	 * @return mixed
 	 */
 	public function handle($request, Closure $next)
 	{
 		if ($this->cas->checkAuthentication())
 		{
-			return redirect(config('cas.cas_redirect_path'));
+			$route = (string)config('cas.cas_redirect_path');
+			$route = $route ?: route('callback');
+
+			return redirect($route);
 		}
 
 		return $next($request);

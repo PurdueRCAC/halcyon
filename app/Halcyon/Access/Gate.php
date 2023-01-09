@@ -14,14 +14,14 @@ class Gate
 	/**
 	 * Array of view levels
 	 *
-	 * @var  array
+	 * @var  array<int,array>
 	 */
 	protected static $viewLevels = array();
 
 	/**
 	 * Array of rules for the asset
 	 *
-	 * @var  array
+	 * @var  array<string,Rules>
 	 */
 	protected static $assetRules = array();
 

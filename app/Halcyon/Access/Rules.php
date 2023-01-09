@@ -14,7 +14,7 @@ class Rules implements Arrayable, Jsonable
 	/**
 	 * A named array.
 	 *
-	 * @var  array
+	 * @var  array<string,Rule>
 	 */
 	protected $data = array();
 

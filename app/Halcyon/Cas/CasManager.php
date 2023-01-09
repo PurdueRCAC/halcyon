@@ -8,21 +8,27 @@ class CasManager
 {
 	/**
 	 * Array for storing configuration settings.
+	 *
+	 * @var array<string,mixed>
 	 */
 	protected $config;
 
 	/**
 	 * Attributes used for overriding or masquerading.
+	 *
+	 * @var array<string,mixed>
 	 */
 	protected $_attributes = [];
 
 	/**
 	 * Boolean flag used for masquerading as a user.
+	 *
+	 * @var bool
 	 */
 	protected $_masquerading = false;
 
 	/**
-	 * @param array $config
+	 * @param array<string,mixed> $config
 	 */
 	public function __construct(array $config)
 	{
@@ -86,7 +92,7 @@ class CasManager
 	/**
 	 * Configure CAS Client|Proxy
 	 *
-	 * @param $method
+	 * @param string $method
 	 */
 	protected function configureCas($method = 'client')
 	{
@@ -132,7 +138,7 @@ class CasManager
 	/**
 	 * Maintain backwards compatibility with config file
 	 *
-	 * @param array $config
+	 * @param array<string,mixed> $config
 	 */
 	protected function parseConfig(array $config)
 	{
@@ -201,7 +207,7 @@ class CasManager
 	/**
 	 * Returns the current config.
 	 *
-	 * @return array
+	 * @return array<string,mixed>
 	 */
 	public function getConfig()
 	{
@@ -239,7 +245,7 @@ class CasManager
 	 * attribute returned can be either a string or
 	 * an array based on matches.
 	 *
-	 * @param $key
+	 * @param string $key
 	 *
 	 * @return mixed
 	 */
@@ -261,7 +267,7 @@ class CasManager
 	/**
 	 * Check for the existence of a key in attributes.
 	 *
-	 * @param $key
+	 * @param string $key
 	 *
 	 * @return boolean
 	 */
@@ -315,7 +321,7 @@ class CasManager
 	/**
 	 * Logout the user using the provided URL.
 	 *
-	 * @param $url
+	 * @param string $url
 	 */
 	public function logoutWithUrl($url)
 	{
@@ -382,8 +388,8 @@ class CasManager
 	/**
 	 * Pass through undefined methods to phpCAS
 	 *
-	 * @param $method
-	 * @param $params
+	 * @param string $method
+	 * @param array $params
 	 *
 	 * @return mixed
 	 */

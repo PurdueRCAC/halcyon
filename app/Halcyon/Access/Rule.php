@@ -13,7 +13,7 @@ class Rule implements Arrayable, Jsonable
 	/**
 	 * A named array
 	 *
-	 * @var  array
+	 * @var  array<int,int>
 	 */
 	protected $data = array();
 

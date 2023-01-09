@@ -40,10 +40,10 @@ class Map extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
-		'user_id'  => 'positive|nonzero',
+		'user_id' => 'positive|nonzero',
 		'role_id' => 'positive|nonzero'
 	);
 
