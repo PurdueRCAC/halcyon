@@ -84,7 +84,7 @@ class Checkboxes extends Field
 			// Initialize some JavaScript option attributes.
 			$onclick = !empty($option->onclick) ? ' onclick="' . $option->onclick . '"' : '';
 
-			$html[] = '<li>';
+			$html[] = '<li' . (isset($this->element['inline']) ? ' class="d-inline mr-3"' : '') . '>';
 			$html[] = '<span class="form-check">';
 			$html[] = '<input type="checkbox" id="' . $this->id . $i . '" name="' . $this->name . '"' .
 				' value="' . htmlspecialchars($option->value, ENT_COMPAT, 'UTF-8') . '"' . $checked . $class . $onclick . $disabled . $dataAttributes . '/>';

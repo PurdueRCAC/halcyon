@@ -65,11 +65,13 @@ class Radio extends Field
 			// Initialize some JavaScript option attributes.
 			$onclick = !empty($option->onclick) ? ' onclick="' . $option->onclick . '"' : '';
 
-			$html[] = '<li><div class="form-check">';
+			$html[] = '<li' . (isset($this->element['inline']) ? ' class="d-inline mr-3"' : '') . '>';
+			$html[] = '<div class="form-check">';
 			$html[] = '<input type="radio" id="' . $this->id . $i . '" name="' . $this->name . '" value="' . htmlspecialchars($option->value, ENT_COMPAT, 'UTF-8') . '"' . $checked . $class . $onclick . $disabled . $dataAttributes . '/>';
 			//$html[] = '<label for="' . $this->id . $i . '"' . $class . '>' . trans($option->text, preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname)) . '</label>';
 			$html[] = '<label class="form-check-label" for="' . $this->id . $i . '"' . $class . '>' . trans($option->text) . '</label>';
-			$html[] = '</div></li>';
+			$html[] = '</div>';
+			$html[] = '</li>';
 		}
 
 		if ($this->element['option_other'])

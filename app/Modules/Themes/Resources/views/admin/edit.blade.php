@@ -70,59 +70,48 @@ app('pathway')
 			$fieldSets = $form->getFieldsets('params');
 
 			if (count($fieldSets)):
-				?>
-				<div class="accordion" id="parameters">
-					<?php
-					$i = 0;
+				$i = 0;
 
-					foreach ($fieldSets as $name => $fieldSet):
-						$i++;
-						$label = !empty($fieldSet->label) ? $fieldSet->label : 'widgets::widgets.' . $name . ' fieldset';
-						?>
-						<div class="card">
-							<div class="card-header" id="{{ $name }}-heading">
-								<h3 class="my-0 py-0">
-									<a href="#{{ $name }}-options" class="btn btn-link btn-block text-left" data-toggle="collapse" data-target="#{{ $name }}-options" aria-expanded="true" aria-controls="{{ $name }}-options">
-										<span class="fa fa-chevron-right" aria-hidden="true"></span>
-										{{ trans($label) }}
-									</a>
-								</h3>
-							</div>
-							<div id="{{ $name }}-options" class="collapse{{ ($i == 1 ? ' show' : '') }}" aria-labelledby="{{ $name }}-heading" data-parent="#parameters">
-								<fieldset class="card-body mb-0">
-									@if (isset($fieldSet->description) && trim($fieldSet->description))
-										<p class="tip">{{ trans($fieldSet->description) }}</p>
-									@endif
-
-									<?php
-									$hidden_fields = '';
-
-									foreach ($form->getFieldset($name) as $field):
-										if (!$field->hidden):
-											?>
-											<div class="form-group">
-												<?php echo $field->label; ?><br />
-												<?php echo $field->input; ?>
-												@if ($field->description)
-													<span class="form-text text-muted">{{ trans($field->description) }}</span>
-												@endif
-											</div>
-											<?php
-										else:
-											$hidden_fields .= $field->input;
-										endif;
-									endforeach;
-
-									echo $hidden_fields;
-									?>
-								</fieldset>
-							</div>
-						</div>
-						<?php
-					endforeach;
+				foreach ($fieldSets as $name => $fieldSet):
+					$i++;
+					$label = !empty($fieldSet->label) ? $fieldSet->label : 'widgets::widgets.' . $name . ' fieldset';
 					?>
-				</div>
-				<?php
+					<details class="card"<?php if ($i == 1) { echo ' open'; } ?>>
+						<summary class="card-header" id="{{ $name }}-heading">
+							{{ trans($label) }}
+						</summary>
+						<div id="{{ $name }}-options" aria-labelledby="{{ $name }}-heading">
+							<fieldset class="card-body mb-0">
+								@if (isset($fieldSet->description) && trim($fieldSet->description))
+									<p class="tip">{{ trans($fieldSet->description) }}</p>
+								@endif
+
+								<?php
+								$hidden_fields = '';
+
+								foreach ($form->getFieldset($name) as $field):
+									if (!$field->hidden):
+										?>
+										<div class="form-group">
+											<?php echo $field->label; ?><br />
+											<?php echo $field->input; ?>
+											@if ($field->description)
+												<span class="form-text text-muted">{{ trans($field->description) }}</span>
+											@endif
+										</div>
+										<?php
+									else:
+										$hidden_fields .= $field->input;
+									endif;
+								endforeach;
+
+								echo $hidden_fields;
+								?>
+							</fieldset>
+						</div>
+					</details>
+					<?php
+				endforeach;
 			else:
 				?>
 				<p class="alert alert-info">{{ trans('themes::themes.no options') }}</p>

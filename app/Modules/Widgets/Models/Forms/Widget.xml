@@ -31,6 +31,7 @@
 			default="1"
 			description="widgets::widgets.show title description"
 			label="widgets::widgets.show title"
+			inline="1"
 		>
 			<option value="1">global.show</option>
 			<option value="0">global.hide</option>
