@@ -149,7 +149,7 @@ class GroupsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return Response
+	 * @return  GroupResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -263,7 +263,7 @@ class GroupsController extends Controller
 			$query->join($uu, $uu . '.userid', $u . '.id');
 
 			$query->where($gu . '.membertype', '=', 2);
-			$query->where(function($where) use ($g, $u, $uu, $filters)
+			$query->where(function($where) use ($u, $uu, $filters)
 			{
 				$where->where($uu . '.username', '=', $filters['searchuser'])
 					->orWhere($uu . '.username', 'like', $filters['searchuser'] . '%')
@@ -415,7 +415,7 @@ class GroupsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  GroupResponse
+	 * @return  GroupResource
 	 */
 	public function create(Request $request)
 	{
@@ -689,7 +689,7 @@ class GroupsController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   integer $id
-	 * @return  Response
+	 * @return  GroupResource
 	 */
 	public function update(Request $request, int $id)
 	{

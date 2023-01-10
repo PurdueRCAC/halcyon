@@ -14,7 +14,7 @@ class TypeDeleted
 	/**
 	 * Constructor
 	 *
-	 * @param  Message $message
+	 * @param  Type $type
 	 * @return void
 	 */
 	public function __construct(Type $type)

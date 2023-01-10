@@ -317,7 +317,7 @@ class Message extends Model
 	}
 
 	/**
-	 * Defines a relationship to a subresource
+	 * Get the message target object
 	 *
 	 * @return  object
 	 */
@@ -525,7 +525,7 @@ class Message extends Model
 	}
 
 	/**
-	 * Query where resturn status > 0
+	 * Query where return status > 0
 	 *
 	 * @param   object  $query
 	 * @return  object

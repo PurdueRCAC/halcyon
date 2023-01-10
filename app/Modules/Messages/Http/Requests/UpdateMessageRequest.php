@@ -9,7 +9,7 @@ class UpdateMessageRequest extends BaseFormRequest
 	/**
 	 * Get the validation rules that apply to the request.
 	 *
-	 * @return array
+	 * @return array<string,string>
 	 */
 	public function rules()
 	{
@@ -38,7 +38,7 @@ class UpdateMessageRequest extends BaseFormRequest
 	/**
 	 * Get custom messages for validator errors.
 	 *
-	 * @return array
+	 * @return array<string,string>
 	 */
 	/*public function messages()
 	{

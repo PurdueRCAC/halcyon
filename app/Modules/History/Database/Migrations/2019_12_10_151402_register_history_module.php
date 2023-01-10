@@ -16,7 +16,7 @@ class RegisterHistoryModule extends Migration
 	/**
 	 * Run the migrations.
 	 *
-	 * @return null
+	 * @return void
 	 */
 	public function up()
 	{
@@ -62,7 +62,7 @@ class RegisterHistoryModule extends Migration
 	/**
 	 * Reverse the migrations.
 	 *
-	 * @return null
+	 * @return void
 	 */
 	public function down()
 	{

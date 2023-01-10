@@ -1,35 +1,35 @@
 <?php
 namespace App\Http\Pathway\Tests;
 
-use App\Http\Test\Basic;
+use PHPUnit_Framework_TestCase;
 use App\Http\Pathway\Trail;
 use App\Http\Pathway\Item;
 
 /**
  * Pathway trail tests
  */
-class TrailTest extends Basic
+class TrailTest extends PHPUnit_Framework_TestCase
 {
 	/**
 	 * Test ArrayAccess methods
 	 *
-	 * @covers  \Halcyon\Pathway\Trail::set
-	 * @covers  \Halcyon\Pathway\Trail::get
-	 * @covers  \Halcyon\Pathway\Trail::has
-	 * @covers  \Halcyon\Pathway\Trail::forget
-	 * @covers  \Halcyon\Pathway\Trail::offsetSet
-	 * @covers  \Halcyon\Pathway\Trail::offsetGet
-	 * @covers  \Halcyon\Pathway\Trail::offsetUnset
-	 * @covers  \Halcyon\Pathway\Trail::offsetExists
+	 * @covers  \App\Http\Pathway\Trail::set
+	 * @covers  \App\Http\Pathway\Trail::get
+	 * @covers  \App\Http\Pathway\Trail::has
+	 * @covers  \App\Http\Pathway\Trail::forget
+	 * @covers  \App\Http\Pathway\Trail::offsetSet
+	 * @covers  \App\Http\Pathway\Trail::offsetGet
+	 * @covers  \App\Http\Pathway\Trail::offsetUnset
+	 * @covers  \App\Http\Pathway\Trail::offsetExists
 	 * @return  void
 	 **/
 	public function testArrayAccessMethods()
 	{
 		$pathway = new Trail();
 
-		$crumb1 = new Item('Crumb 1', 'index.php?option=com_lorem');
-		$crumb2 = new Item('Crumb 2', 'index.php?option=com_ipsum');
-		$crumb3 = new Item('Crumb 3', 'index.php?option=com_dolor');
+		$crumb1 = new Item('Crumb 1', '/lorem');
+		$crumb2 = new Item('Crumb 2', '/ipsum');
+		$crumb3 = new Item('Crumb 3', '/dolor');
 
 		$pathway->set(0, $crumb1);
 		$pathway->set(1, $crumb2);
@@ -69,14 +69,14 @@ class TrailTest extends Basic
 	 *  3. append() adds an Halcyon\Pathway\Item object to the items list
 	 *  4. append() adds to the END of the items list
 	 *
-	 * @covers  \Halcyon\Pathway\Trail::append
+	 * @covers  \App\Http\Pathway\Trail::append
 	 * @return  void
 	 **/
 	public function testAppend()
 	{
 		$pathway = new Trail();
 
-		$this->assertInstanceOf('Halcyon\Pathway\Trail', $pathway->append('Crumb 1', 'index.php?option=com_lorem'));
+		$this->assertInstanceOf('App\Http\Pathway\Trail', $pathway->append('Crumb 1', 'index.php?option=com_lorem'));
 
 		$this->assertCount(1, $pathway->items(), 'List of crumbs should have returned one Item');
 
@@ -100,26 +100,26 @@ class TrailTest extends Basic
 	 *  3. prepend() adds an Halcyon\Pathway\Item object to the items list
 	 *  4. prepend() adds to the BEGINNING of the items list
 	 *
-	 * @covers  \Halcyon\Pathway\Trail::prepend
+	 * @covers  \App\Http\Pathway\Trail::prepend
 	 * @return  void
 	 **/
 	public function testPrepend()
 	{
 		$pathway = new Trail();
 
-		$this->assertInstanceOf('Halcyon\Pathway\Trail', $pathway->prepend('Crumb 1', 'index.php?option=com_lorem'));
+		$this->assertInstanceOf('App\Http\Pathway\Trail', $pathway->prepend('Crumb 1', 'index.php?option=com_lorem'));
 
 		$this->assertCount(1, $pathway->items(), 'List of crumbs should have returned one Item');
 
 		$name = 'Crumb 2';
-		$link = 'index.php?option=com_ipsum';
+		$link = '/ipsum';
 
 		$pathway->prepend($name, $link);
 
 		$items = $pathway->items();
 		$item = array_shift($items);
 
-		$this->assertInstanceOf('Halcyon\Pathway\Item', $item);
+		$this->assertInstanceOf(Item::class, $item);
 		$this->assertEquals($item->name, $name);
 		$this->assertEquals($item->link, $link);
 	}
@@ -127,14 +127,14 @@ class TrailTest extends Basic
 	/**
 	 * Test the count() method returns the number of items added
 	 *
-	 * @covers  \Halcyon\Pathway\Trail::count
+	 * @covers  \App\Http\Pathway\Trail::count
 	 * @return  void
 	 **/
 	public function testCount()
 	{
 		$pathway = new Trail();
-		$pathway->append('Crumb 1', 'index.php?option=com_lorem');
-		$pathway->append('Crumb 2', 'index.php?option=com_ipsum');
+		$pathway->append('Crumb 1', '/lorem');
+		$pathway->append('Crumb 2', '/ipsum');
 
 		$this->assertEquals(2, $pathway->count());
 		$this->assertEquals(2, count($pathway));
@@ -146,7 +146,7 @@ class TrailTest extends Basic
 	 *  2. the number of items in the array matches the number of items added
 	 *  3. the array returned contains just the names of the items added
 	 *
-	 * @covers  \Halcyon\Pathway\Trail::names
+	 * @covers  \App\Http\Pathway\Trail::names
 	 * @return  void
 	 **/
 	public function testNames()
@@ -157,8 +157,8 @@ class TrailTest extends Basic
 		];
 
 		$pathway = new Trail();
-		$pathway->append('Crumb 1', 'index.php?option=com_lorem');
-		$pathway->append('Crumb 2', 'index.php?option=com_ipsum');
+		$pathway->append('Crumb 1', '/lorem');
+		$pathway->append('Crumb 2', '/ipsum');
 
 		$names = $pathway->names();
 
@@ -173,19 +173,19 @@ class TrailTest extends Basic
 	 *  2. the number of items in the array matches the number of items added
 	 *  3. the array returned contains a Halcyon\Pathway\Item object for each entry added
 	 *
-	 * @covers  \Halcyon\Pathway\Trail::items
+	 * @covers  \App\Http\Pathway\Trail::items
 	 * @return  void
 	 **/
 	public function testItems()
 	{
 		$data = [
-			new Item('Crumb 1', 'index.php?option=com_lorem'),
-			new Item('Crumb 2', 'index.php?option=com_ipsum')
+			new Item('Crumb 1', '/lorem'),
+			new Item('Crumb 2', '/ipsum')
 		];
 
 		$pathway = new Trail();
-		$pathway->append('Crumb 1', 'index.php?option=com_lorem');
-		$pathway->append('Crumb 2', 'index.php?option=com_ipsum');
+		$pathway->append('Crumb 1', '/lorem');
+		$pathway->append('Crumb 2', '/ipsum');
 
 		$items = $pathway->items();
 
@@ -200,14 +200,14 @@ class TrailTest extends Basic
 	 *  2. the number of items in the array matches the number of items added
 	 *  3. the array returned contains just the names of the items added
 	 *
-	 * @covers  \Halcyon\Pathway\Trail::clear
+	 * @covers  \App\Http\Pathway\Trail::clear
 	 * @return  void
 	 **/
 	public function testClear()
 	{
 		$pathway = new Trail();
-		$pathway->append('Crumb 1', 'index.php?option=com_lorem');
-		$pathway->append('Crumb 2', 'index.php?option=com_ipsum');
+		$pathway->append('Crumb 1', '/lorem');
+		$pathway->append('Crumb 2', '/ipsum');
 		$pathway->clear();
 
 		$items = $pathway->items();
@@ -218,11 +218,11 @@ class TrailTest extends Basic
 	/**
 	 * Tests array traversing methods
 	 *
-	 * @covers  \Halcyon\Pathway\Trail::current
-	 * @covers  \Halcyon\Pathway\Trail::key
-	 * @covers  \Halcyon\Pathway\Trail::next
-	 * @covers  \Halcyon\Pathway\Trail::valid
-	 * @covers  \Halcyon\Pathway\Trail::rewind
+	 * @covers  \App\Http\Pathway\Trail::current
+	 * @covers  \App\Http\Pathway\Trail::key
+	 * @covers  \App\Http\Pathway\Trail::next
+	 * @covers  \App\Http\Pathway\Trail::valid
+	 * @covers  \App\Http\Pathway\Trail::rewind
 	 * @return  void
 	 **/
 	public function testIterator()

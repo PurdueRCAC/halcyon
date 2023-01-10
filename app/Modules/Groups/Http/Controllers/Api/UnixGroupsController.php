@@ -99,7 +99,7 @@ class UnixGroupsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return Response
+	 * @return  UnixGroupResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -236,7 +236,7 @@ class UnixGroupsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return Response
+	 * @return  UnixGroupResource
 	 */
 	public function create(Request $request)
 	{
@@ -438,8 +438,8 @@ class UnixGroupsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer $id
-	 * @return Response
+	 * @param   integer  $id
+	 * @return  UnixGroupResource
 	 */
 	public function read(int $id)
 	{
@@ -543,7 +543,7 @@ class UnixGroupsController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   integer $id
-	 * @return  Response
+	 * @return  UnixGroupResource
 	 */
 	public function update(Request $request, int $id)
 	{

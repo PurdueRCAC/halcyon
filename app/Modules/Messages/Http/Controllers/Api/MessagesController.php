@@ -134,7 +134,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return MessageResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -320,7 +320,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return MessageResource
 	 */
 	public function create(Request $request)
 	{
@@ -442,7 +442,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @param  integer $id
-	 * @return Response
+	 * @return MessageResource
 	 */
 	public function read($id): MessageResource
 	{
@@ -626,7 +626,7 @@ class MessagesController extends Controller
 	 * }
 	 * @param  Request $request
 	 * @param  integer $id
-	 * @return Response
+	 * @return MessageResource
 	 */
 	public function update(Request $request, int $id)
 	{

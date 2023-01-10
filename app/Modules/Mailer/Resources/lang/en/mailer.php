@@ -31,7 +31,6 @@ return [
 	'bcc' => 'BCC',
 	'send to' => 'Send to',
 	'sent by' => 'Sent by',
-	'options' => 'Options',
 	'templates' => 'Templates',
 	'template' => 'Template',
 	'use template' => 'Use this template',

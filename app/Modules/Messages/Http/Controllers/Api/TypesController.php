@@ -98,7 +98,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return TypeResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -205,7 +205,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return TypeResource
 	 */
 	public function create(Request $request)
 	{
@@ -285,7 +285,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param  integer $id
-	 * @return Response
+	 * @return TypeResource
 	 */
 	public function read(int $id)
 	{
@@ -359,7 +359,7 @@ class TypesController extends Controller
 	 * }
 	 * @param  Request $request
 	 * @param  integer $id
-	 * @return Response
+	 * @return TypeResource
 	 */
 	public function update(Request $request, int $id)
 	{

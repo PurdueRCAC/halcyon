@@ -1,13 +1,13 @@
 <?php
 namespace App\Http\Pathway\Tests;
 
-use App\Http\Test\Basic;
+use PHPUnit_Framework_TestCase;
 use App\Http\Pathway\Item;
 
 /**
  * Pathway trail item tests
  */
-class ItemTest extends Basic
+class ItemTest extends PHPUnit_Framework_TestCase
 {
 	/**
 	 * Tests that data passed in constructor is set to correct properties
@@ -17,7 +17,7 @@ class ItemTest extends Basic
 	public function testConstructor()
 	{
 		$name = 'Crumb';
-		$link = 'index.php?option=com_example';
+		$link = '/example';
 
 		$item = new Item($name, $link);
 

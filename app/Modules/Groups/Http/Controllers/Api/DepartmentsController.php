@@ -96,7 +96,7 @@ class DepartmentsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  ResourceCollection
 	 */
 	public function index(Request $request)
 	{

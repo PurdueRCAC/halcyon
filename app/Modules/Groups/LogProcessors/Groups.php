@@ -30,15 +30,25 @@ class Groups
 			$record->summary = 'Created group ' . $group;
 		}
 
-		if ($record->classmethod == 'update')
+		if ($record->classmethod == 'update'
+		 || $record->classmethod == 'delete')
 		{
-			$record->summary = 'Updated group ' . $group;
-		}
+			$uri = explode('/', $record->uri);
+			$id = end($uri);
 
-		if ($record->classmethod == 'delete')
-		{
-			$record->summary = 'Removed group ' . $group;
-	}
+			$g = Group::find($id);
+			$group = $g ? $g->name : '';
+
+			if ($record->classmethod == 'update')
+			{
+				$record->summary = 'Updated group ' . $group;
+			}
+
+			if ($record->classmethod == 'delete')
+			{
+				$record->summary = 'Removed group ' . $group;
+			}
+		}
 
 		return $record;
 	}

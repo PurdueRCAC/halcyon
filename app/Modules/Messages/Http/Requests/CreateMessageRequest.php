@@ -9,7 +9,7 @@ class CreateMessageRequest extends BaseFormRequest
 	/**
 	 * Get the validation rules that apply to the request.
 	 *
-	 * @return array
+	 * @return array<string,string>
 	 */
 	public function rules()
 	{
@@ -32,7 +32,7 @@ class CreateMessageRequest extends BaseFormRequest
 	/**
 	 * Get custom messages for validator errors.
 	 *
-	 * @return array
+	 * @return array<string,string>
 	 */
 	public function messages()
 	{
@@ -45,7 +45,7 @@ class CreateMessageRequest extends BaseFormRequest
 	/**
 	 *  Filters to be applied to the input.
 	 *
-	 * @return array
+	 * @return array<string,string>
 	 */
 	/*public function filters()
 	{

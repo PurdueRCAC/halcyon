@@ -23,7 +23,7 @@ class GroupDisplay
 	/**
 	 * Content sections
 	 *
-	 * @var array
+	 * @var array<int,array>
 	 */
 	public $sections;
 
@@ -54,7 +54,7 @@ class GroupDisplay
 	/**
 	 * Get all sections
 	 *
-	 * @return array
+	 * @return array<int,array>
 	 */
 	public function getSections()
 	{

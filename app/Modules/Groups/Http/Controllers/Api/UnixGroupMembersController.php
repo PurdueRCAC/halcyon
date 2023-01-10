@@ -111,7 +111,7 @@ class UnixGroupMembersController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return Response
+	 * @return  ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -231,7 +231,7 @@ class UnixGroupMembersController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return Response
+	 * @return  JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -402,7 +402,7 @@ class UnixGroupMembersController extends Controller
 	 * 		}
 	 * }
 	 * @param   integer $id
-	 * @return Response
+	 * @return  JsonResource
 	 */
 	public function read(int $id)
 	{
@@ -464,7 +464,7 @@ class UnixGroupMembersController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   integer $id
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function update(Request $request, int $id)
 	{

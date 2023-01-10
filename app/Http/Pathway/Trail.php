@@ -9,7 +9,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Container for items
 	 *
-	 * @var  array
+	 * @var  array<int,Item>
 	 */
 	private $items = array();
 
@@ -25,7 +25,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	 *
 	 * @param   string  $name  The name of the item.
 	 * @param   string  $link  The link to the item.
-	 * @return  object
+	 * @return  Trail
 	 */
 	public function append($name, $link = '')
 	{
@@ -39,7 +39,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	 *
 	 * @param   string  $name  The name of the item.
 	 * @param   string  $link  The link to the item.
-	 * @return  object
+	 * @return  Trail
 	 */
 	public function prepend($name, $link = '')
 	{
@@ -52,7 +52,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Create and return an array of the crumb names.
 	 *
-	 * @return  array
+	 * @return  array<int,string>
 	 */
 	public function names()
 	{
@@ -69,7 +69,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Return the list of crumbs
 	 *
-	 * @return  array
+	 * @return  array<int,Item>
 	 */
 	public function all()
 	{

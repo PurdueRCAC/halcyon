@@ -3,6 +3,8 @@
 namespace App\Modules\History\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\History\Models\History;
@@ -13,7 +15,7 @@ class HistoryController extends Controller
 	 * Display a listing of the resource.
 	 *
 	 * @param   StatefulRequest  $request
-	 * @return  Response
+	 * @return  View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -89,7 +91,7 @@ class HistoryController extends Controller
 	 * Show the form for editing the specified entry
 	 *
 	 * @param   integer   $id
-	 * @return  Response
+	 * @return  View
 	 */
 	public function show($id)
 	{

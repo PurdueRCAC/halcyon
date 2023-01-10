@@ -89,7 +89,7 @@ class GroupFieldsOfScienceController extends Controller
 	 * }
 	 * @param   Request  $request
 	 * @param   integer  $group
-	 * @return Response
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request, $group)
 	{

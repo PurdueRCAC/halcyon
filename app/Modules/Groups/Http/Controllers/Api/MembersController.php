@@ -116,7 +116,7 @@ class MembersController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return Response
+	 * @return  ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -177,7 +177,6 @@ class MembersController extends Controller
 		$rows->each(function ($item, $key)
 		{
 			$item->api = route('api.groups.members.read', ['id' => $item->id]);
-			$item->user;
 			$item->user->setHidden(['api_token']);
 		});
 
@@ -260,7 +259,7 @@ class MembersController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -428,7 +427,7 @@ class MembersController extends Controller
 	 * 		}
 	 * }
 	 * @param  integer  $id
-	 * @return Response
+	 * @return JsonResource
 	 */
 	public function read(int $id)
 	{
@@ -511,7 +510,7 @@ class MembersController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function update(Request $request, int $id)
 	{
@@ -570,7 +569,6 @@ class MembersController extends Controller
 		}
 
 		$row->api = route('api.groups.members.read', ['id' => $row->id]);
-		$row->user;
 		$row->user->setHidden(['api_token']);
 
 		return new JsonResource($row);

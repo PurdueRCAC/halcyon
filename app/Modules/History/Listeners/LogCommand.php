@@ -13,7 +13,7 @@ class LogCommand
 	/**
 	 * Plugin that loads module positions within content
 	 *
-	 * @param   object   $event
+	 * @param   CommandFinished  $event
 	 * @return  void
 	 */
 	public function handle(CommandFinished $event)

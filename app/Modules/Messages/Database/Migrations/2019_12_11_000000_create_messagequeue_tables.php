@@ -12,6 +12,8 @@ class CreateMessagequeueTables extends Migration
 {
 	/**
 	 * Up
+	 *
+	 * @return void
 	 **/
 	public function up()
 	{
@@ -52,6 +54,8 @@ class CreateMessagequeueTables extends Migration
 
 	/**
 	 * Down
+	 *
+	 * @return void
 	 **/
 	public function down()
 	{

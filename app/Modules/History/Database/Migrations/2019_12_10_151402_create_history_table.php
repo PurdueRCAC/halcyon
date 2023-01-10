@@ -9,7 +9,7 @@ class CreateHistoryTable extends Migration
 	/**
 	 * Run the migrations.
 	 *
-	 * @return null
+	 * @return void
 	 */
 	public function up()
 	{
@@ -63,7 +63,7 @@ class CreateHistoryTable extends Migration
 	/**
 	 * Reverse the migrations.
 	 *
-	 * @return null
+	 * @return void
 	 */
 	public function down()
 	{

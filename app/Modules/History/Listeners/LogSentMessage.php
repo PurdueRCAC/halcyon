@@ -13,7 +13,7 @@ class LogSentMessage
 	/**
 	 * Plugin that loads module positions within content
 	 *
-	 * @param   object   $event
+	 * @param   MessageSent  $event
 	 * @return  void
 	 */
 	public function handle(MessageSent $event)

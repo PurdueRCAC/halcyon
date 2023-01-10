@@ -10,7 +10,7 @@ class UnixGroupFetch
 	public $name;
 
 	/**
-	 * @var array
+	 * @var array<int,mixed>
 	 */
 	public $results;
 

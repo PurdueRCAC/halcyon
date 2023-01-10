@@ -13,9 +13,9 @@ class OptionalAuthenticate extends BaseAuthenticate
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @param  string[]  $guards
-     * @return mixed
+     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\AuthenticationException
      */
     public function handle($request, Closure $next, ...$guards)

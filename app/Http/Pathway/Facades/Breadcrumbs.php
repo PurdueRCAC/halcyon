@@ -2,13 +2,33 @@
 
 namespace App\Http\Pathway\Facades;
 
+use Illuminate\Support\Facades\Facade;
+
 /**
- * @method static bool has($key)
- * @method static mixed get($key, $default = null)
+ * @method static \SessionHandlerInterface getHandler()
  * @method static array all()
- * @method static void set($key, $value = null)
- * @method static void prepend($key, $value)
- * @method static void append($key, $value)
+ * @method static bool exists(string|array $key)
+ * @method static bool handlerNeedsRequest()
+ * @method static bool has(string|array $key)
+ * @method static bool isStarted()
+ * @method static bool migrate(bool $destroy = false)
+ * @method static bool save()
+ * @method static bool start()
+ * @method static mixed get(string $key, $default = null)
+ * @method static mixed flash(string $key, $value = true)
+ * @method static mixed pull(string $key, $default = null)
+ * @method static mixed remove(string $key)
+ * @method static string getId()
+ * @method static string getName()
+ * @method static string token()
+ * @method static string|null previousUrl()
+ * @method static void flush()
+ * @method static void forget(string|array $keys)
+ * @method static void push(string $key, mixed $value)
+ * @method static void put(string|array $key, $value = null)
+ * @method static void setId(string $id)
+ * @method static void setPreviousUrl(string $url)
+ * @method static void setRequestOnHandler(\Illuminate\Http\Request $request)
  *
  * @see \App\Http\Pathway
  */

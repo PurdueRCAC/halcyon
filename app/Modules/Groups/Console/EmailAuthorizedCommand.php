@@ -30,6 +30,8 @@ class EmailAuthorizedCommand extends Command
 
 	/**
 	 * Execute the console command.
+	 *
+	 * @return void
 	 */
 	public function handle()
 	{
@@ -81,7 +83,7 @@ class EmailAuthorizedCommand extends Command
 				}
 			}
 
-			if ($now - $latest < $threshold)
+			if (($now - $latest) < $threshold)
 			{
 				continue;
 			}
