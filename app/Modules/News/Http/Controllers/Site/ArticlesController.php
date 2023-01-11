@@ -4,6 +4,7 @@ namespace App\Modules\News\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Type;
@@ -20,7 +21,7 @@ class ArticlesController extends Controller
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @return Response
+	 * @return View
 	 */
 	public function index()
 	{
@@ -45,7 +46,7 @@ class ArticlesController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function search(Request $request)
 	{
@@ -101,7 +102,7 @@ class ArticlesController extends Controller
 	/**
 	 * Show the list of available feeds
 	 * 
-	 * @return Response
+	 * @return View
 	 */
 	public function rss()
 	{
@@ -225,7 +226,7 @@ class ArticlesController extends Controller
 	 * Show the form for creating a new resource.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function manage(Request $request)
 	{
@@ -270,7 +271,7 @@ class ArticlesController extends Controller
 	 *
 	 * @param   string  $name
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  View
 	 */
 	public function type($name, Request $request)
 	{
@@ -417,7 +418,7 @@ class ArticlesController extends Controller
 			$lines[] = $value;
 		}
 
-		return join($lines, "\n\t");
+		return join("\n\t", $lines);
 	}
 
 	/**
@@ -637,7 +638,7 @@ class ArticlesController extends Controller
 	 * Show the specified entry
 	 *
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  View
 	 */
 	public function show($id)
 	{
@@ -676,7 +677,7 @@ class ArticlesController extends Controller
 	 * Show the form for editing the specified resource.
 	 * 
 	 * @param  integer  $id
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id)
 	{
