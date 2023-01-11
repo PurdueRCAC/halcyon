@@ -122,6 +122,7 @@ class CasManager
 			$this->config['cas_hostname'],
 			(int) $this->config['cas_port'],
 			$this->config['cas_uri'],
+			$this->config['cas_base_url'],
 			$this->config['cas_control_session']
 		);
 
@@ -144,6 +145,7 @@ class CasManager
 	{
 		$defaults = [
 			'cas_hostname'         => '',
+			'cas_base_url'         => '',
 			'cas_session_name'     => 'CASAuth',
 			'cas_session_lifetime' => 7200,
 			'cas_session_path'     => '/',
@@ -165,6 +167,19 @@ class CasManager
 			'cas_verbose_errors'   => false,
 			'cas_masquerade'       => ''
 		];
+
+		if (!isset($config['cas_base_url']) || !$config['cas_base_url'])
+		{
+			/*$parts = explode('/', $config['cas_hostname']);
+			$host = $parts[0];
+
+			if ($host)
+			{
+				$config['cas_base_url'] = 'https://' . $host;
+			}*/
+
+			$config['cas_base_url'] = request()->getSchemeAndHttpHost();
+		}
 
 		$this->config = array_merge($defaults, $config);
 	}
