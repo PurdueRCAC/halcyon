@@ -69,10 +69,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 				<div class="form-group">
 					<label for="field-parentid">{{ trans('news::news.parent') }}:</label>
-					<select name="fields[parentid]" id="field-parentid" class="form-control" value="{{ $row->parent_id }}">
+					<select name="fields[parentid]" id="field-parentid" class="form-control">
 						<option value="0">{{ trans('global.none') }}</option>
 						@foreach ($parents as $parent)
-							<option value="{{ $parent->id }}"<?php if ($parent->id == $row->parent_id) { echo ' selected="selected"'; } ?>>{{ $parent->name }}</option>
+							<option value="{{ $parent->id }}"<?php if ($parent->id == $row->parentid) { echo ' selected="selected"'; } ?>>{{ $parent->name }}</option>
 						@endforeach
 					</select>
 				</div>

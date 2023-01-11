@@ -145,9 +145,11 @@ class TypesController extends Controller
 
 		foreach (['tagusers', 'tagresources', 'future', 'location', 'ongoing', 'calendar', 'url'] as $key)
 		{
-			if (!$request->has('fields.' . $key))
+			$row->{$key} = 0;
+
+			if ($request->has('fields.' . $key))
 			{
-				$row->{$key} = 0;
+				$row->{$key} = 1;
 			}
 		}
 
