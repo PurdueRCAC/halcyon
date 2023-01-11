@@ -26,7 +26,7 @@ class FacetType extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -35,7 +35,7 @@ class FacetType extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'name' => 'required|string|max:20'

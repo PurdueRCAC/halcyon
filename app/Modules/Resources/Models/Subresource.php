@@ -23,21 +23,21 @@ class Subresource extends Model
 	/**
 	 * The name of the "created at" column.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	const CREATED_AT = 'datetimecreated';
 
 	/**
 	 * The name of the "updated at" column.
 	 *
-	 * @var  string
+	 * @var string|null
 	 */
 	const UPDATED_AT = null;
 
 	/**
 	 * The name of the "deleted at" column.
 	 *
-	 * @var  string
+	 * @var string|null
 	 */
 	const DELETED_AT = 'datetimeremoved';
 
@@ -65,7 +65,7 @@ class Subresource extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -76,7 +76,7 @@ class Subresource extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'creating' => SubresourceCreating::class,
@@ -89,7 +89,7 @@ class Subresource extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'name'           => 'required|unique:subresource|max:32',
@@ -220,8 +220,8 @@ class Subresource extends Model
 	 */
 	private function sumCoresAndNodes()
 	{
-		$totalcores = 0;
-		$totalnodes = 0;
+		$totalcores  = 0;
+		$totalnodes  = 0;
 		$soldcores   = 0;
 		$soldnodes   = 0;
 		$loanedcores = 0;
@@ -374,7 +374,8 @@ class Subresource extends Model
 	/**
 	 * Set cluster
 	 *
-	 * @return  integer
+	 * @param   string  $val
+	 * @return  void
 	 */
 	public function setClusterAttribute($val)
 	{
@@ -384,16 +385,15 @@ class Subresource extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @param   bool  $options
 	 * @return  bool  False if error, True on success
 	 */
-	public function delete(array $options = [])
+	public function delete()
 	{
 		foreach ($this->queues as $row)
 		{
 			$row->delete();
 		}
 
-		return parent::delete($options);
+		return parent::delete();
 	}
 }

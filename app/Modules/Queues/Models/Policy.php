@@ -21,7 +21,7 @@ class Policy extends Model
 	/**
 	 * The table to which the class pertains
 	 *
-	 * @var  string
+	 * @var string
 	 **/
 	protected $table = 'schedulers';
 

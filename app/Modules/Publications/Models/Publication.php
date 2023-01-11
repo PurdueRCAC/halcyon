@@ -60,7 +60,7 @@ class Publication extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'created'  => PublicationCreated::class,
@@ -91,15 +91,14 @@ class Publication extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
-	public function delete(array $options = [])
+	public function delete()
 	{
 		$this->deleteAttachment();
 
 		// Attempt to delete the record
-		return parent::delete($options);
+		return parent::delete();
 	}
 
 	/**
@@ -125,7 +124,7 @@ class Publication extends Model
 	/**
 	 * Is the record published
 	 * 
-	 * @return string
+	 * @return bool
 	 */
 	public function isPublished()
 	{
@@ -135,7 +134,7 @@ class Publication extends Model
 	/**
 	 * Is the record unpublished
 	 * 
-	 * @return string
+	 * @return bool
 	 */
 	public function isUnpublished()
 	{
@@ -145,7 +144,7 @@ class Publication extends Model
 	/**
 	 * Get authors as an array
 	 * 
-	 * @return array
+	 * @return array<int,array>
 	 */
 	public function getAuthorListAttribute()
 	{
@@ -223,7 +222,7 @@ class Publication extends Model
 	/**
 	 * Does this have an attachment
 	 *
-	 * @return mixed
+	 * @return Attachment|false
 	 */
 	public function getAttachmentAttribute()
 	{

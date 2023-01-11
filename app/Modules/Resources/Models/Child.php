@@ -26,7 +26,7 @@ class Child extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'resourceid' => 'required|integer|min:1',

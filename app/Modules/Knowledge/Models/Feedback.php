@@ -20,7 +20,7 @@ class Feedback extends Model
 	/**
 	 * The model's default values for attributes.
 	 *
-	 * @var array
+	 * @var array<string,int>
 	 */
 	protected $attributes = [
 		'user_id' => 0,
@@ -29,7 +29,7 @@ class Feedback extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -38,7 +38,7 @@ class Feedback extends Model
 	/**
 	 * The attributes that should be cast to native types.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $casts = [
 		'user_id' => 'integer',
@@ -48,7 +48,7 @@ class Feedback extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'target_id' => 'required|integer',
@@ -61,7 +61,7 @@ class Feedback extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'created'  => FeedbackCreated::class,

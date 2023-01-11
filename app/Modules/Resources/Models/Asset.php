@@ -24,21 +24,21 @@ class Asset extends Model
 	/**
 	 * The name of the "created at" column.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	const CREATED_AT = 'datetimecreated';
 
 	/**
 	 * The name of the "updated at" column.
 	 *
-	 * @var  string
+	 * @var string|null
 	 */
 	const UPDATED_AT = null;
 
 	/**
 	 * The name of the "deleted at" column.
 	 *
-	 * @var  string
+	 * @var string|null
 	 */
 	const DELETED_AT = 'datetimeremoved';
 
@@ -52,7 +52,7 @@ class Asset extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -63,7 +63,7 @@ class Asset extends Model
 	/**
 	 * The attributes that should be cast to native types.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $casts = [
 		'parentid' => 'integer',
@@ -76,7 +76,7 @@ class Asset extends Model
 	/**
 	 * The model's default values for attributes.
 	 *
-	 * @var array
+	 * @var array<string,int>
 	 */
 	protected $attributes = [
 		'parentid' => 0
@@ -85,7 +85,7 @@ class Asset extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'creating' => AssetCreating::class,

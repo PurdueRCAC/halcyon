@@ -35,7 +35,7 @@ class Facet extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	public $rules = array(
 		'resource_id' => 'required|integer|min:1',

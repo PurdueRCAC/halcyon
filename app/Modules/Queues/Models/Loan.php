@@ -21,7 +21,7 @@ class Loan extends Size
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'created' => QueueLoanCreated::class,

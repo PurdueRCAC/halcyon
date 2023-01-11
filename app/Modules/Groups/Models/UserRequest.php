@@ -16,14 +16,14 @@ class UserRequest extends Model
 	/**
 	 * The name of the "created at" column.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	const CREATED_AT = 'datecreated';
 
 	/**
 	 * The name of the "updated at" column.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	const UPDATED_AT = null;
 

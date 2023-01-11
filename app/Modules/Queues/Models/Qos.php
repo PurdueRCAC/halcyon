@@ -25,21 +25,21 @@ class Qos extends Model
 	/**
 	 * The name of the "created at" column.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	const CREATED_AT = 'datetimecreated';
 
 	/**
 	 * The name of the "updated at" column.
 	 *
-	 * @var  string
+	 * @var string|null
 	 */
 	const UPDATED_AT = 'datetimeedited';
 
 	/**
 	 * The name of the "deleted at" column.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	const DELETED_AT = 'datetimeremoved';
 
@@ -60,7 +60,7 @@ class Qos extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -69,7 +69,7 @@ class Qos extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'created'  => QosCreated::class,

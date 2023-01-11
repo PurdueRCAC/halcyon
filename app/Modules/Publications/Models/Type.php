@@ -33,7 +33,7 @@ class Type extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -48,64 +48,4 @@ class Type extends Model
 	{
 		return $this->hasMany(Publication::class, 'type_id');
 	}
-
-	/*protected $types = [
-		'unknown',
-		'journal',
-		'proceedings',
-		'inbook',
-		'phdthesis',
-		'masterstheis',
-		'conference',
-		'techreport',
-		'magazine',
-		'article',
-		'preprint',
-		'xarchive',
-		'patent',
-		'notes',
-		'letter',
-		'syllabus',
-		'tutorial',
-		'arxiv',
-		'inproceedings',
-		'misc',
-		'techbrief',
-		'invited_conference',
-		'technical_review',
-		'invited_seminar',
-		'articles_citing_nemo',
-	];
-
-	public static function all()
-	{
-		foreach ($this->types as $type)
-		{
-			$item = new Fluent;
-			$item->alias = $type;
-			$item->name = trans('publications::publications.types.' . $type);
-
-			$items[] = $item;
-		}
-
-		return collect($items);
-	}
-	
-	public static function find($alias)
-	{
-		$item = null;
-
-		foreach ($this->types as $type)
-		{
-			if ($alias == $type)
-			{
-				$item = new Fluent;
-				$item->alias = $type;
-				$item->name = trans('publications::publications.types.' . $type);
-				break;
-			}
-		}
-
-		return $item;
-	}*/
 }

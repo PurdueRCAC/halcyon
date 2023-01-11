@@ -12,21 +12,21 @@ class Log extends Model
 	/**
 	 * The name of the "created at" column.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	const CREATED_AT = 'datetime';
 
 	/**
 	 * The name of the "updated at" column.
 	 *
-	 * @var  string
+	 * @var string|null
 	 */
 	const UPDATED_AT = null;
 
 	/**
 	 * The table to which the class pertains
 	 *
-	 * @var  string
+	 * @var string
 	 **/
 	protected $table = 'log';
 

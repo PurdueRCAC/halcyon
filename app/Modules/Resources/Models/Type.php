@@ -31,7 +31,7 @@ class Type extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -40,7 +40,7 @@ class Type extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'name' => 'required|string|max:20'
@@ -49,7 +49,7 @@ class Type extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'creating' => TypeCreating::class,
@@ -96,7 +96,7 @@ class Type extends Model
 	/**
 	 * Get an alias
 	 *
-	 * @return  object
+	 * @return  string
 	 */
 	public function getAliasAttribute()
 	{
@@ -109,7 +109,8 @@ class Type extends Model
 	/**
 	 * Find a record by name
 	 *
-	 * @return  object
+	 * @param  string  $name
+	 * @return Type|null
 	 */
 	public static function findByName($name)
 	{

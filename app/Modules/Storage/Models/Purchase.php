@@ -20,21 +20,21 @@ class Purchase extends Model
 	/**
 	 * The name of the "created at" column.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	const CREATED_AT = 'datetimestart';
 
 	/**
 	 * The name of the "updated at" column.
 	 *
-	 * @var  string
+	 * @var  string|null
 	 */
 	const UPDATED_AT = null;
 
 	/**
 	 * The name of the "updated at" column.
 	 *
-	 * @var  string
+	 * @var  string|null
 	 */
 	const DELETED_AT = 'datetimestop';
 
@@ -48,7 +48,7 @@ class Purchase extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -57,7 +57,7 @@ class Purchase extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'created' => PurchaseCreated::class,

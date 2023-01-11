@@ -26,7 +26,7 @@ class Batchsystem extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'name' => 'required|string|max:16'
