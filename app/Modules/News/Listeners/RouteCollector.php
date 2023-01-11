@@ -4,6 +4,7 @@ namespace App\Modules\News\Listeners;
 
 use App\Modules\News\Models\Type;
 use App\Modules\Menus\Events\CollectingRoutes;
+use Illuminate\Events\Dispatcher;
 
 /**
  * News listener for menu routes
@@ -13,10 +14,10 @@ class RouteCollector
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(CollectingRoutes::class, self::class . '@handleCollectingRoutes');
 	}
@@ -27,7 +28,7 @@ class RouteCollector
 	 * @param   CollectingRoutes $event
 	 * @return  void
 	 */
-	public function handleCollectingRoutes(CollectingRoutes $event)
+	public function handleCollectingRoutes(CollectingRoutes $event): void
 	{
 		$route = route('site.news.search');
 		$route = str_replace(request()->root(), '', $route);

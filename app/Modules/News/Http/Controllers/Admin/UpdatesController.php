@@ -4,6 +4,7 @@ namespace App\Modules\News\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\News\Models\Article;
@@ -18,7 +19,7 @@ class UpdatesController extends Controller
 	 *
 	 * @param  integer  $art  Article ID
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index($art, StatefulRequest $request)
 	{
@@ -92,7 +93,7 @@ class UpdatesController extends Controller
 	 * Show the form for creating a new article
 	 *
 	 * @param   integer  $art  Article ID
-	 * @return  Response
+	 * @return  View
 	 */
 	public function create($art)
 	{
@@ -117,7 +118,7 @@ class UpdatesController extends Controller
 	 *
 	 * @param   integer  $art  Article ID
 	 * @param   integer  $id   Update ID
-	 * @return  Response
+	 * @return  View
 	 */
 	public function edit($art, $id)
 	{

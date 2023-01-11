@@ -158,7 +158,7 @@ class ArticlesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return ArticleResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -540,7 +540,7 @@ class ArticlesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  Response|ArticleResource
 	 */
 	public function create(Request $request)
 	{
@@ -668,7 +668,7 @@ class ArticlesController extends Controller
 	 * 		}
 	 * }
 	 * @param  integer  $id
-	 * @return Response
+	 * @return ArticleResource
 	 */
 	public function read($id)
 	{
@@ -697,7 +697,7 @@ class ArticlesController extends Controller
 	 * 		}
 	 * }
 	 * @param  integer  $id
-	 * @return Response
+	 * @return Log
 	 */
 	public function views($id)
 	{
@@ -839,7 +839,7 @@ class ArticlesController extends Controller
 	 * }
 	 * @param   Request  $request
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  Response|ArticleResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -1034,7 +1034,7 @@ class ArticlesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  ArticleResource
 	 */
 	public function preview(Request $request)
 	{
@@ -1126,7 +1126,7 @@ class ArticlesController extends Controller
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  ArticleResource
 	 */
 	public function email($id, Request $request)
 	{

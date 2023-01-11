@@ -3,10 +3,8 @@
 namespace App\Modules\News\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Support\Facades\Validator;
 use App\Modules\News\Models\Association;
 use App\Modules\News\Models\Article;
 use App\Modules\Users\Models\User;

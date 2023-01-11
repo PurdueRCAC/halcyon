@@ -3,6 +3,7 @@
 namespace App\Modules\News\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -168,7 +169,7 @@ class AssociationsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -295,7 +296,7 @@ class AssociationsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  Response|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -386,7 +387,7 @@ class AssociationsController extends Controller
 	 * 		}
 	 * }
 	 * @param  integer  $id
-	 * @return Response
+	 * @return JsonResource
 	 */
 	public function read($id)
 	{
@@ -472,7 +473,7 @@ class AssociationsController extends Controller
 	 * }
 	 * @param   Request  $request
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  Response|JsonResource
 	 */
 	public function update(Request $request, $id)
 	{

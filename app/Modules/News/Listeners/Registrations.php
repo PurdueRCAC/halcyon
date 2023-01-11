@@ -2,6 +2,7 @@
 
 namespace App\Modules\News\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\History\Models\Log;
 use App\Modules\News\Events\AssociationCreated;
@@ -17,10 +18,10 @@ class Registrations
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(AssociationCreated::class, self::class . '@handleAssociationCreated');
 		$events->listen(AssociationDeleted::class, self::class . '@handleAssociationDeleted');
@@ -29,10 +30,10 @@ class Registrations
 	/**
 	 * Send email to event registrations
 	 *
-	 * @param   object  $event  AssociationCreated
+	 * @param   AssociationCreated  $event
 	 * @return  void
 	 */
-	public function handleAssociationCreated(AssociationCreated $event)
+	public function handleAssociationCreated(AssociationCreated $event): void
 	{
 		$association = $event->association;
 
@@ -45,8 +46,6 @@ class Registrations
 
 		$message = new Registered($association);
 
-		//echo $message->render();
-
 		Mail::to($user->email)->send($message);
 
 		$this->log($user->id, $association->id, $user->email, 'Emailed event reservation.');
@@ -55,10 +54,10 @@ class Registrations
 	/**
 	 * Send email to event registration cancellations
 	 *
-	 * @param   object  $event  AssociationDeleted
+	 * @param   AssociationDeleted  $event
 	 * @return  void
 	 */
-	public function handleAssociationDeleted(AssociationDeleted $event)
+	public function handleAssociationDeleted(AssociationDeleted $event): void
 	{
 		$association = $event->association;
 
@@ -71,8 +70,6 @@ class Registrations
 
 		$message = new Cancelled($association);
 
-		//echo $message->render();
-
 		Mail::to($user->email)->send($message);
 
 		$this->log($user->id, $association->id, $user->email, 'Emailed event reservation cancellation.');
@@ -84,10 +81,10 @@ class Registrations
 	 * @param   integer $targetuserid
 	 * @param   integer $targetobjectid
 	 * @param   string  $uri
-	 * @param   mixed   $payload
-	 * @return  null
+	 * @param   string  $payload
+	 * @return  void
 	 */
-	protected function log($targetuserid, $targetobjectid, $uri = '', $payload = '')
+	protected function log(int $targetuserid, int $targetobjectid, $uri = '', $payload = ''): void
 	{
 		Log::create([
 			'ip'              => request()->ip(),

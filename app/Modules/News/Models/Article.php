@@ -111,20 +111,19 @@ class Article extends Model
 		'updating' => ArticleUpdating::class,
 		'updated'  => ArticleUpdated::class,
 		'deleted'  => ArticleDeleted::class,
-		//'restored' => PageRestored::class,
 	];
 
 	/**
 	 * Original end date
 	 *
-	 * @var object
+	 * @var false|Carbon
 	 */
 	protected $originalend = false;
 
 	/**
 	 * Page metadata
 	 *
-	 * @var  object
+	 * @var  Repository
 	 */
 	protected $metadataRepository = null;
 
@@ -158,7 +157,6 @@ class Article extends Model
 	public function setHeadlineAttribute(string $value)
 	{
 		$value = strip_tags($value);
-		//$value = htmlentities($value, ENT_QUOTES, 'UTF-8');
 
 		$this->attributes['headline'] = $value;
 	}
@@ -172,7 +170,6 @@ class Article extends Model
 	public function setLocationAttribute($value)
 	{
 		$value = strip_tags($value);
-		//$value = htmlentities($value, ENT_QUOTES, 'UTF-8');
 
 		$this->attributes['location'] = $value;
 	}
@@ -232,7 +229,7 @@ class Article extends Model
 	 */
 	public function creator()
 	{
-		return $this->belongsTo('App\Modules\Users\Models\User', 'userid'); //->withDefault();
+		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
 	}
 
 	/**
@@ -242,7 +239,7 @@ class Article extends Model
 	 */
 	public function modifier()
 	{
-		return $this->belongsTo('App\Modules\Users\Models\User', 'edituserid'); //->withDefault();
+		return $this->belongsTo('App\Modules\Users\Models\User', 'edituserid');
 	}
 
 	/**
@@ -781,8 +778,9 @@ class Article extends Model
 	}
 
 	/**
-	 * Defines a relationship to type
+	 * Get the article body formatted as HTML
 	 *
+	 * @deprecated
 	 * @return string
 	 */
 	public function getFormattedBodyAttribute()
@@ -819,10 +817,9 @@ class Article extends Model
 	}
 
 	/**
-	 * Replace code block
+	 * Code block replacements
 	 *
-	 * @param   array  $match
-	 * @return  string
+	 * @var array<string,array>
 	 */
 	private $replacements = array(
 		'preblocks' => array(),
@@ -1078,7 +1075,7 @@ class Article extends Model
 	/**
 	 * Get news vars
 	 *
-	 * @return  array
+	 * @return  array<string,mixed>
 	 */
 	public function getContentVars()
 	{
