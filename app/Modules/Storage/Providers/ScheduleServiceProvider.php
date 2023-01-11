@@ -5,6 +5,7 @@ namespace App\Modules\Storage\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
 use App\Modules\Storage\Console\EmailQuotaCommand;
+use App\Modules\Storage\Console\QuotaUpdateCommand;
 
 class ScheduleServiceProvider extends ServiceProvider
 {
@@ -20,6 +21,7 @@ class ScheduleServiceProvider extends ServiceProvider
 			$schedule = $this->app->make(Schedule::class);
 
 			$schedule->command(EmailQuotaCommand::class)->cron(config('module.storage.schedule.emailquota', '*/30 * * * *'));
+			$schedule->command(QuotaUpdateCommand::class)->cron(config('module.storage.schedule.quotaupdate', '59 23 * * *'));
 		});
 	}
 }

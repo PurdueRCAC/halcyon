@@ -12,6 +12,7 @@ use App\Modules\Storage\Listeners\Notifications;
 use App\Modules\Storage\Listeners\UserStorage;
 use App\Modules\Storage\Console\EmailQuotaCommand;
 use App\Modules\Storage\Console\QuotaCheckCommand;
+use App\Modules\Storage\Console\QuotaUpdateCommand;
 use App\Modules\Storage\LogProcessors\Notifications as NotificationsLog;
 use Nwidart\Modules\Facades\Module;
 
@@ -95,6 +96,7 @@ class StorageServiceProvider extends ServiceProvider
 		$this->commands([
 			EmailQuotaCommand::class,
 			QuotaCheckCommand::class,
+			QuotaUpdateCommand::class,
 		]);
 	}
 
