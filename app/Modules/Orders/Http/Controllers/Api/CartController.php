@@ -8,7 +8,6 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Orders\Models\Product;
 use App\Modules\Orders\Http\Resources\CartResource;
-use App\Modules\Orders\Http\Resources\CartResourceCollection;
 
 /**
  * Shopping Cart
@@ -23,7 +22,7 @@ class CartController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /orders/cart
 	 * @param  Request $request
-	 * @return ProductResourcEcollection
+	 * @return CartResource
 	 */
 	public function index(Request $request)
 	{
@@ -69,7 +68,7 @@ class CartController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return ProductResource
+	 * @return Response|CartResource
 	 */
 	public function create(Request $request)
 	{
@@ -129,7 +128,7 @@ class CartController extends Controller
 	 * 		}
 	 * }
 	 * @param  integer $id
-	 * @return ProductResource
+	 * @return CartResource
 	 */
 	public function read($id)
 	{
@@ -187,7 +186,7 @@ class CartController extends Controller
 	 * }
 	 * @param   integer  $id
 	 * @param   Request $request
-	 * @return  ProductResource
+	 * @return  Response|CartResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -238,7 +237,7 @@ class CartController extends Controller
 	 * 		}
 	 * }
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  CartResource
 	 */
 	public function delete($id)
 	{

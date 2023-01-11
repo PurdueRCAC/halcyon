@@ -93,7 +93,7 @@ class CartItem implements Arrayable, Jsonable
 		$this->id       = $id;
 		$this->name     = $name;
 		$this->price    = floatval($price);
-		$this->options  = $options; //new CartItemOptions($options);
+		$this->options  = $options;
 		$this->rowId    = $this->generateRowId($id, $options);
 	}
 
@@ -194,20 +194,6 @@ class CartItem implements Arrayable, Jsonable
 	}
 
 	/**
-	 * Update the cart item from a Buyable.
-	 *
-	 * @param Buyable $item
-	 * @return void
-	 */
-	/*public function updateFromBuyable(Buyable $item)
-	{
-		$this->id       = $item->getBuyableIdentifier($this->options);
-		$this->name     = $item->getBuyableDescription($this->options);
-		$this->price    = $item->getBuyablePrice($this->options);
-		$this->priceTax = $this->price + $this->tax;
-	}*/
-
-	/**
 	 * Update the cart item from an array.
 	 *
 	 * @param array $attributes
@@ -220,7 +206,7 @@ class CartItem implements Arrayable, Jsonable
 		$this->name     = array_get($attributes, 'name', $this->name);
 		$this->price    = array_get($attributes, 'price', $this->price);
 		$this->priceTax = $this->price + $this->tax;
-		$this->options  = array_get($attributes, 'options', $this->options); //new CartItemOptions(array_get($attributes, 'options', $this->options));
+		$this->options  = array_get($attributes, 'options', $this->options);
 
 		$this->rowId = $this->generateRowId($this->id, $this->options->all());
 	}
@@ -297,18 +283,6 @@ class CartItem implements Arrayable, Jsonable
 	}
 
 	/**
-	 * Create a new instance from a Buyable.
-	 *
-	 * @param Buyable $item
-	 * @param array   $options
-	 * @return CartItem
-	 */
-	/*public static function fromBuyable(Buyable $item, array $options = [])
-	{
-		return new self($item->getBuyableIdentifier($options), $item->getBuyableDescription($options), $item->getBuyablePrice($options), $options);
-	}*/
-
-	/**
 	 * Create a new instance from the given array.
 	 *
 	 * @param array $attributes
@@ -352,7 +326,7 @@ class CartItem implements Arrayable, Jsonable
 	/**
 	 * Get the instance as an array.
 	 *
-	 * @return array
+	 * @return array<string,mixed>
 	 */
 	public function toArray()
 	{

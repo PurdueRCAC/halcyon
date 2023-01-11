@@ -55,6 +55,8 @@ class EmailStatusCommand extends Command
 
 	/**
 	 * Execute the console command.
+	 *
+	 * @return void
 	 */
 	public function handle()
 	{
@@ -763,8 +765,8 @@ class EmailStatusCommand extends Command
 	 * @param   integer $targetuserid
 	 * @param   integer $targetobjectid
 	 * @param   string  $uri
-	 * @param   mixed   $payload
-	 * @return  null
+	 * @param   string  $payload
+	 * @return  void
 	 */
 	protected function log($targetuserid, $targetobjectid = 0, $uri = '', $payload = '')
 	{

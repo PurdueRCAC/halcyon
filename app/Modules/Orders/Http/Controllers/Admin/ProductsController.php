@@ -4,6 +4,7 @@ namespace App\Modules\Orders\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Orders\Models\Order;
@@ -19,7 +20,7 @@ class ProductsController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param   StatefulRequest  $request
-	 * @return Response
+	 * @return  View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -133,7 +134,7 @@ class ProductsController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 * 
-	 * @return Response
+	 * @return View
 	 */
 	public function create()
 	{
@@ -159,7 +160,7 @@ class ProductsController extends Controller
 	 * Show the form for editing the specified resource.
 	 * 
 	 * @param  integer  $id
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id)
 	{

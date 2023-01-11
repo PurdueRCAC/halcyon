@@ -3,6 +3,7 @@
 namespace App\Modules\Orders\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Orders\Models\Category;
@@ -226,7 +227,7 @@ class CategoriesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return CategoryResource
+	 * @return Response|CategoryResource
 	 */
 	public function create(Request $request)
 	{
@@ -369,7 +370,7 @@ class CategoriesController extends Controller
 	 * }
 	 * @param   integer  $id
 	 * @param   Request $request
-	 * @return  CategoryResource
+	 * @return  Response|CategoryResource
 	 */
 	public function update($id, Request $request)
 	{

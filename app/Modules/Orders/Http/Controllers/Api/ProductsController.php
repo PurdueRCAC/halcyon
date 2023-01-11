@@ -308,7 +308,7 @@ class ProductsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return ProductResource
+	 * @return Response|ProductResource
 	 */
 	public function create(Request $request)
 	{
@@ -540,7 +540,7 @@ class ProductsController extends Controller
 	 * }
 	 * @param   integer  $id
 	 * @param   Request $request
-	 * @return  ProductResource
+	 * @return  Response|ProductResource
 	 */
 	public function update($id, Request $request)
 	{

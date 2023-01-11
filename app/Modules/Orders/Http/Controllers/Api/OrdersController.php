@@ -148,7 +148,7 @@ class OrdersController extends Controller
 	 * }
 	 * @apiAuthorization  true
 	 * @param  Request $request
-	 * @return Response
+	 * @return OrderResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -381,7 +381,7 @@ class OrdersController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return Response|OrderResource
 	 */
 	public function create(Request $request)
 	{
@@ -609,7 +609,7 @@ class OrdersController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @return Response
+	 * @return OrderResource
 	 */
 	public function read($id)
 	{
@@ -690,7 +690,7 @@ class OrdersController extends Controller
 	 * }
 	 * @param   integer $id
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  Response|OrderResource
 	 */
 	public function update($id, Request $request)
 	{

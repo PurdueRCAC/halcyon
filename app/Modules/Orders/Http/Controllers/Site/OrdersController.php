@@ -4,6 +4,7 @@ namespace App\Modules\Orders\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Fluent;
@@ -25,7 +26,7 @@ class OrdersController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param  Request  $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -581,7 +582,7 @@ class OrdersController extends Controller
 	 * Show the specified resource.
 	 * 
 	 * @param  StatefulRequest  $request
-	 * @return Response
+	 * @return View
 	 */
 	public function recurring(StatefulRequest $request)
 	{
@@ -717,7 +718,7 @@ class OrdersController extends Controller
 	 * Show the form for editing the specified resource.
 	 * 
 	 * @param  integer  $id
-	 * @return Response
+	 * @return View
 	 */
 	public function recurringitem($id)
 	{
@@ -734,7 +735,7 @@ class OrdersController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 * 
-	 * @return Response
+	 * @return View
 	 */
 	public function create()
 	{
@@ -755,7 +756,7 @@ class OrdersController extends Controller
 	 * Show the form for editing the specified resource.
 	 * 
 	 * @param  integer  $id
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id)
 	{
@@ -802,7 +803,7 @@ class OrdersController extends Controller
 	 * Remove the specified resource from storage.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function cart(Request $request)
 	{
@@ -818,7 +819,7 @@ class OrdersController extends Controller
 	 * Display the data being imported
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return Response|View
 	 */
 	public function import(Request $request)
 	{

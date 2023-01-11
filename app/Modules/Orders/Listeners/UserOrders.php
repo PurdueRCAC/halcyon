@@ -2,6 +2,7 @@
 
 namespace App\Modules\Orders\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Orders\Models\Order;
 
@@ -13,10 +14,10 @@ class UserOrders
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events)
 	{
 		$events->listen(UserBeforeDisplay::class, self::class . '@handleUserBeforeDisplay');
 	}
@@ -24,7 +25,7 @@ class UserOrders
 	/**
 	 * Display user profile info
 	 *
-	 * @param   object  $event  UserBeforeDisplay
+	 * @param   UserBeforeDisplay  $event
 	 * @return  void
 	 */
 	public function handleUserBeforeDisplay(UserBeforeDisplay $event)

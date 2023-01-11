@@ -2,6 +2,7 @@
 
 namespace App\Modules\Orders\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Groups\Events\GroupReading;
 use App\Modules\Orders\Models\Order;
 
@@ -13,10 +14,10 @@ class GroupOrders
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events)
 	{
 		$events->listen(GroupReading::class, self::class . '@handleGroupReading');
 	}
@@ -24,8 +25,7 @@ class GroupOrders
 	/**
 	 * Plugin that loads module positions within content
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin.
-	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @param   GroupReading  $event
 	 * @return  void
 	 */
 	public function handleGroupReading(GroupReading $event)
