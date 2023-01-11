@@ -193,12 +193,11 @@ class Role extends Model
 	}
 
 	/**
-	 * Delete this object and its dependencies
+	 * Delete the model from the database.
 	 *
-	 * @param  array $options
-	 * @return boolean
+	 * @return bool|null
 	 */
-	public function delete($options = [])
+	public function delete()
 	{
 		if ($this->id == 0)
 		{

@@ -903,6 +903,27 @@ class Article extends Model
 			$row->stemmedtext = $article->stemText();
 			$row->save();
 		});
+
+		static::deleted(function ($article)
+		{
+			foreach ($article->updates as $update)
+			{
+				$update->delete($options);
+			}
+
+			foreach ($article->resources as $resource)
+			{
+				$resource->delete($options);
+			}
+
+			foreach ($article->associations as $association)
+			{
+				$association->delete($options);
+			}
+
+			$row = Stemmedtext::find($article->id);
+			$row->delete();
+		});
 	}
 
 	/**
@@ -962,39 +983,6 @@ class Article extends Model
 		}
 
 		return $match[1] . ' ' . $match[2];
-	}
-
-	/**
-	 * Delete the record and all associated data
-	 *
-	 * @param   array    $options
-	 * @return  boolean  False if error, True on success
-	 */
-	public function delete(array $options = [])
-	{
-		foreach ($this->updates as $update)
-		{
-			$update->delete($options);
-		}
-
-		//if ($this->trashed())
-		//{
-			foreach ($this->resources as $resource)
-			{
-				$resource->delete($options);
-			}
-
-			foreach ($this->associations as $association)
-			{
-				$association->delete($options);
-			}
-
-			$row = Stemmedtext::find($this->id);
-			$row->delete();
-		//}
-
-		// Attempt to delete the record
-		return parent::delete($options);
 	}
 
 	/**

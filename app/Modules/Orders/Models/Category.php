@@ -85,6 +85,19 @@ class Category extends Model
 				$model->sequence = intval($sequence) + 1;
 			}
 		});
+
+		self::deleted(function($model)
+		{
+			foreach ($model->products as $row)
+			{
+				$row->delete();
+			}
+
+			foreach ($model->children as $row)
+			{
+				$row->delete();
+			}
+		});
 	}
 
 	/**
@@ -128,27 +141,6 @@ class Category extends Model
 		$alias = str_replace(' ', '-', $alias);
 		$alias = preg_replace('/[^a-z0-9\-_]+/', '', $alias);
 		return $alias;
-	}
-
-	/**
-	 * Delete entry and associated data
-	 *
-	 * @param   array  $options
-	 * @return  bool
-	 */
-	public function delete(array $options = [])
-	{
-		foreach ($this->products as $row)
-		{
-			$row->delete();
-		}
-
-		foreach ($this->children as $row)
-		{
-			$row->delete();
-		}
-
-		return parent::delete($options);
 	}
 
 	/**

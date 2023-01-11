@@ -121,6 +121,15 @@ class Widget extends Model
 
 			$model->setAttribute('ordering', (int)$result);
 		});
+
+		static::deleting(function ($model)
+		{
+			// Delete old widget to menu item associations
+			if (!Menu::deleteByWidget($model->id))
+			{
+				throw new \Exception('Failed to remove previous menu assignments.');
+			}
+		});
 	}
 
 	/**
@@ -571,24 +580,5 @@ class Widget extends Model
 		}
 
 		return true;
-	}
-
-	/**
-	 * Delete the record and all associated data
-	 *
-	 * @param   array    $options
-	 * @return  boolean  False if error, True on success
-	 */
-	public function delete(array $options = [])
-	{
-		// Delete old widget to menu item associations
-		if (!Menu::deleteByWidget($this->id))
-		{
-			throw new \Exception('Failed to remove previous menu assignments.');
-			return false;
-		}
-
-		// Attempt to delete the record
-		return parent::delete($options);
 	}
 }

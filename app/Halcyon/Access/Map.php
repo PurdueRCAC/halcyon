@@ -70,10 +70,9 @@ class Map extends Model
 	/**
 	 * Delete the specified record
 	 *
-	 * @param  array $options
 	 * @return bool
 	 */
-	public function delete($options = [])
+	public function delete()
 	{
 		return self::query()
 			->where('role_id', '=', $this->role_id)

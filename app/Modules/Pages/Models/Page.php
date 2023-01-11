@@ -118,6 +118,24 @@ class Page extends Model
 	}
 
 	/**
+	 * Boot
+	 *
+	 * @return  void
+	 */
+	public static function boot()
+	{
+		parent::boot();
+
+		self::deleted(function($model)
+		{
+			foreach ($model->children as $row)
+			{
+				$row->delete();
+			}
+		});
+	}
+
+	/**
 	 * Generates automatic alias field value
 	 *
 	 * @param   string  $value
@@ -263,7 +281,7 @@ class Page extends Model
 	 *
 	 * @param   string   $alias
 	 * @param   integer  $parent_id
-	 * @return  object
+	 * @return  Page|null
 	 */
 	public static function findByAlias($alias, $parent_id=0)
 	{
@@ -278,7 +296,7 @@ class Page extends Model
 	 * Retrieves one row loaded by path
 	 *
 	 * @param   string  $path
-	 * @return  object
+	 * @return  Page|null
 	 */
 	public static function findByPath($path)
 	{
@@ -353,7 +371,7 @@ class Page extends Model
 	/**
 	 * Get the root node
 	 *
-	 * @return  object
+	 * @return  Page|null
 	 */
 	public static function rootNode()
 	{
@@ -872,25 +890,6 @@ class Page extends Model
 		}
 
 		return $results;
-	}
-
-	/**
-	 * Delete the record and all associated data
-	 *
-	 * @return  boolean  False if error, True on success
-	 */
-	public function delete(array $options = [])
-	{
-		foreach ($this->children as $row)
-		{
-			if (!$row->delete($options))
-			{
-				return false;
-			}
-		}
-
-		// Attempt to delete the record
-		return parent::delete($options);
 	}
 
 	/**
