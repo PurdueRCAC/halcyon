@@ -91,6 +91,7 @@
 										<input type="text" id="new_dir_quota_deduct" class="form-control" size="3" />
 										<?php
 										$bucket = null;
+										var_dump($group->storageBuckets);
 										foreach ($group->storageBuckets as $bucket)
 										{
 											if ($bucket['resourceid'] == $row->storageResource->parentresourceid)
@@ -114,7 +115,7 @@
 										<input <?php echo $disabled; ?> type="radio" name="usequota" value="unalloc" id="unalloc_radio" class="form-check-input" />
 										<label class="form-check-label" for="unalloc_radio">
 											<span style="<?php echo $style; ?>" id="unalloc_span">
-												Deduct from unallocated space (<span name="unallocated"><?php echo App\Halcyon\Utility\Number::formatBytes($bucket['unallocatedbytes']); ?></span>):
+												Deduct from unallocated space (<span name="unallocated"><?php echo ($bucket ? App\Halcyon\Utility\Number::formatBytes($bucket['unallocatedbytes']) : '0'); ?></span>):
 											</span>
 										</label>
 										<input <?php echo $disabled; ?> type="text" id="new_dir_quota_unalloc" class="form-control" size="3" />
@@ -614,25 +615,29 @@
 									{{ trans('storage::storage.unallocated space') }}
 								</div>
 								<div class="col-md-8">
+									@if ($bucket)
 									<span name="unallocated"{!! $bucket['unallocatedbytes'] < 0 ? ' class="text-danger"' : '' !!}><?php echo App\Halcyon\Utility\Number::formatBytes($bucket['unallocatedbytes']); ?></span> / <span name="totalbytes"><?php echo App\Halcyon\Utility\Number::formatBytes($bucket['totalbytes']); ?></span>
+									@else
+									<span name="unallocated">0</span> / <span name="totalbytes">0</span>
+									@endif
 									<?php
-									if ($dir->bytes || (!$dir->bytes && !$dir->parentstoragedirid && $bucket['unallocatedbytes'] != 0))
+									if ($dir->bytes || (!$dir->bytes && !$dir->parentstoragedirid && $bucket && $bucket['unallocatedbytes'] != 0))
 									{
 										$cls = '';
-										if ($bucket['unallocatedbytes'] == 0)
+										if ($bucket && $bucket['unallocatedbytes'] == 0)
 										{
 											$cls = ' hide';
 										}
-										if ($bucket['unallocatedbytes'] < 0 && $row->bytes != 0)
+										if ($bucket && $bucket['unallocatedbytes'] < 0 && $row->bytes != 0)
 										{
 											$dir->quotaproblem = 1;
 										}
 
-										$dir->realquota = $bucket['totalbytes'] ? $dir->bytes - round((($dir->bytes / $bucket['totalbytes']) * -$bucket['unallocatedbytes'])) : 0;
+										$dir->realquota = ($bucket && $bucket['totalbytes'] ? $dir->bytes - round((($dir->bytes / $bucket['totalbytes']) * -$bucket['unallocatedbytes'])) : 0);
 
 										if ($dir->quotaproblem == 1 && $dir->bytes && $dir->realquota < $dir->bytes)
 										{
-											if (-$bucket['unallocatedbytes'] < $dir->bytes)
+											if ($bucket && -$bucket['unallocatedbytes'] < $dir->bytes)
 											{
 												?>
 												<span class="badge badge-warning">over-allocated</span>
