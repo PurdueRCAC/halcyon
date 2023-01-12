@@ -133,6 +133,16 @@ class PagesController extends Controller
 		$row->access = 1;
 		$row->state = 1;
 
+		foreach (['show_title', 'show_author', 'show_create_date', 'show_modify_date', 'show_publish_date', 'layout'] as $key)
+		{
+			$val = config('module.pages.' . $key);
+
+			if (!is_null($val))
+			{
+				$row->params->set($key, $val);
+			}
+		}
+
 		if ($fields = app('request')->old('fields'))
 		{
 			$row->fill($fields);

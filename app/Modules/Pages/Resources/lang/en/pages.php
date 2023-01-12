@@ -8,7 +8,7 @@ return [
 	'path' => 'Path',
 	'path hint' => 'Lowercase alpha-numeric characters, dashes, underscores. If left blank, one will be auto-generated from the title. Ex: "My Title" -> my_title',
 	'state' => 'State',
-	'created_at' => 'Created',
+	'created' => 'Created',
 	'creator' => 'Creator',
 	'updated' => 'Last Modified',
 	'modifier' => 'Modifier',
@@ -37,6 +37,7 @@ return [
 	'metakey' => 'Keywords',
 	'metadesc' => 'Description',
 	'file not found' => 'file not found',
+	'change history' => 'Change history',
 	// Site
 	'article not found' => 'Article not found',
 	'article hits' => 'Hits: :hits',

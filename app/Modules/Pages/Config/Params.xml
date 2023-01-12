@@ -50,16 +50,6 @@
 			<option	value="0">global.hide</option>
 			<option	value="1">global.show</option>
 		</field>
-
-		<field
-			name="show_hits"
-			type="radio"
-			label="pages::config.SHOW_HITS_LABEL"
-			description="pages::config.SHOW_HITS_DESC"
-			default="1">
-			<option	value="0">global.hide</option>
-			<option	value="1">global.show</option>
-		</field>
 	</fieldset>
 	<fieldset
 		name="permissions"

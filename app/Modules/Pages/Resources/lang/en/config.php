@@ -1,6 +1,7 @@
 <?php
 return [
 	'articles' => 'Articles',
+	'articles desc' => 'Default options for new articles.',
 	'SHOW_AUTHOR_DESC' => 'If set to Show, the Name of the article\'s Author will be displayed.  This is a global setting but can be changed at the Category, Menu and Article levels.',
 	'SHOW_AUTHOR_LABEL' => 'Show Author',
 	'SHOW_CREATE_DATE_DESC' => 'If set to Show, the date and time an Article was created will be displayed. This a global setting but can be changed at Menu and Article levels.',

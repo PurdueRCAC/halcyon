@@ -204,28 +204,20 @@ app('pathway')
 					<span class="datetime">
 						@if ($row->updated_at)
 							<time datetime="{{ $row->updated_at->toDateTimeLocalString() }}">
-								@if ($row->updated_at->toDateTimeString() > Carbon\Carbon::now()->toDateTimeString())
-									{{ $row->updated_at->diffForHumans() }}
-								@else
-									{{ $row->updated_at->format('Y-m-d') }}
-								@endif
+								{{ $row->updated_at->diffForHumans() }}
 							</time>
 						@elseif ($row->created_at)
 							<time datetime="{{ $row->created_at->toDateTimeLocalString() }}">
-								@if ($row->created_at->toDateTimeString() > Carbon\Carbon::now()->toDateTimeString())
-									{{ $row->created_at->diffForHumans() }}
-								@else
-									{{ $row->created_at->format('Y-m-d') }}
-								@endif
+								{{ $row->created_at->diffForHumans() }}
 							</time>
 						@else
-							<span class="never">{{ trans('global.unknown') }}</span>
+							<span class="text-muted">{{ trans('global.unknown') }}</span>
 						@endif
 					</span>
 				</td>
 				<td class="priority-6">
 					<a href="{{ route('admin.pages.history', ['id' => $row->id]) }}" data-href="#history{{ $row->id }}">
-						<span class="fa fa-clock-o" aria-hidden="true"></span><span class="sr-only">Change history</span>
+						<span class="fa fa-clock-o" aria-hidden="true"></span><span class="sr-only">{{ trans('pages::pages.change history') }}</span>
 					</a>
 				</td>
 				<?php /*<td class="priority-6">

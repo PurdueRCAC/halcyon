@@ -59,7 +59,7 @@ app('pathway')
 				$actor = trans('global.unknown');
 
 				if ($action->user):
-					$actor = e($action->user->name);
+					$actor = $action->user->name . ' (' . $action->user->username . ')';
 				endif;
 
 				$created = $action->created_at ? $action->created_at : trans('global.unknown');
@@ -117,7 +117,7 @@ app('pathway')
 						{{ $row->creator ? $row->creator->name : trans('global.unknown') }}
 					</td>
 					<td class="priority-2">
-						<span class="badge badge-success entry-action">created</span>
+						<span class="badge badge-success entry-action">{{ trans('pages::pages.created') }}</span>
 					</td>
 					<td class="priority-3">
 					</td>
