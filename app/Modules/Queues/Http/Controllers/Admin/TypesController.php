@@ -4,6 +4,7 @@ namespace App\Modules\Queues\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Queues\Models\Queue;
@@ -16,7 +17,7 @@ class TypesController extends Controller
 	 * Display a listing of the queue.
 	 * 
 	 * @param  StatefulRequest  $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -84,7 +85,7 @@ class TypesController extends Controller
 	/**
 	 * Show the form for creating a new queue.
 	 * 
-	 * @return Response
+	 * @return View
 	 */
 	public function create()
 	{
@@ -104,7 +105,7 @@ class TypesController extends Controller
 	 * Show the form for editing the specified queue.
 	 * 
 	 * @param  integer  $id
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id)
 	{

@@ -2,20 +2,12 @@
 
 namespace App\Modules\Queues\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Artisan;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\Type;
-use App\Modules\Queues\Models\Scheduler;
-use App\Modules\Queues\Models\SchedulerPolicy;
-use App\Modules\Queues\Models\Walltime;
-use App\Modules\Queues\Models\Size;
-use App\Modules\Resources\Models\Subresource;
-use App\Modules\Resources\Models\Child;
 use App\Modules\Resources\Models\Asset;
 
 class StatsController extends Controller
@@ -24,7 +16,7 @@ class StatsController extends Controller
 	 * Display a listing of the queue.
 	 * 
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{

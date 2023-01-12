@@ -85,7 +85,7 @@ class SizesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -237,7 +237,7 @@ class SizesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return Response|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -460,7 +460,7 @@ class SizesController extends Controller
 	 * 		}
 	 * }
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function read($id)
 	{
@@ -579,7 +579,7 @@ class SizesController extends Controller
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  Response|JsonResource
 	 */
 	public function update($id, Request $request)
 	{

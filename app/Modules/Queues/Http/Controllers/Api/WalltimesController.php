@@ -105,8 +105,8 @@ class WalltimesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
-	 * @param   Request  $request
-	 * @return Response
+	 * @param  Request  $request
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -221,8 +221,8 @@ class WalltimesController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
-	 * @param   Request  $request
-	 * @return Response
+	 * @param  Request  $request
+	 * @return Response|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -240,7 +240,6 @@ class WalltimesController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
-		//$row = Walltime::create($request->all());
 		$row = new Walltime;
 		foreach ($rules as $key => $rule)
 		{
@@ -284,7 +283,7 @@ class WalltimesController extends Controller
 	 * 		}
 	 * }
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function read($id)
 	{
@@ -358,7 +357,7 @@ class WalltimesController extends Controller
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  Response|JsonResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -377,7 +376,6 @@ class WalltimesController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
-		//$row->update($request->all());
 		foreach ($rules as $key => $rule)
 		{
 			if ($request->has($key))

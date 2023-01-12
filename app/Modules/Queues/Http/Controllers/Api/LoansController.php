@@ -116,7 +116,8 @@ class LoansController extends Controller
 	 * 			]
 	 * 		}
 	 * }
-	 * @return Response
+	 * @param  Request $request
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -274,7 +275,7 @@ class LoansController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return Response|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -491,7 +492,7 @@ class LoansController extends Controller
 	 * 		}
 	 * }
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function read($id)
 	{
@@ -589,7 +590,7 @@ class LoansController extends Controller
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  Response|JsonResource
 	 */
 	public function update($id, Request $request)
 	{

@@ -236,7 +236,7 @@ class UsersController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  JsonResource
+	 * @return  Response|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -488,7 +488,7 @@ class UsersController extends Controller
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
-	 * @return  JsonResource
+	 * @return  Response|JsonResource
 	 */
 	public function update($id, Request $request)
 	{

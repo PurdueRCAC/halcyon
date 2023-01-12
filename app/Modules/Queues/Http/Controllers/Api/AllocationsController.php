@@ -55,7 +55,8 @@ class AllocationsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @param   string   $hostname
+	 * @return  Response|AllocationResourceCollection
 	 */
 	public function index(Request $request, $hostname = null)
 	{
@@ -601,7 +602,7 @@ class AllocationsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -640,7 +641,7 @@ class AllocationsController extends Controller
 	 * }
 	 * @param   integer  $id
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function update($id, Request $request)
 	{

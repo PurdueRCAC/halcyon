@@ -4,6 +4,7 @@ namespace App\Modules\Queues\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Queues\Models\Qos;
@@ -17,7 +18,7 @@ class QosController extends Controller
 	 * Display a listing of the queue.
 	 * 
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -105,7 +106,7 @@ class QosController extends Controller
 	/**
 	 * Show the form for creating a new queue.
 	 * 
-	 * @return Response
+	 * @return View
 	 */
 	public function create()
 	{
@@ -131,8 +132,9 @@ class QosController extends Controller
 
 	/**
 	 * Show the form for editing the specified queue.
-	 * 
-	 * @return Response
+	 *
+	 * @param  integer $id
+	 * @return View
 	 */
 	public function edit($id)
 	{
@@ -257,7 +259,8 @@ class QosController extends Controller
 
 	/**
 	 * Remove the specified queue from storage.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @return Response
 	 */
 	public function delete(Request $request)

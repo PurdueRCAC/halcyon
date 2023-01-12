@@ -107,7 +107,7 @@ class UserRequestsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return UserRequestResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -219,7 +219,7 @@ class UserRequestsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return Response
+	 * @return  Response|UserRequestResource
 	 */
 	public function create(Request $request)
 	{
@@ -410,7 +410,7 @@ class UserRequestsController extends Controller
 	 * 		}
 	 * }
 	 * @param  integer  $id
-	 * @return Response
+	 * @return UserRequestResource
 	 */
 	public function read($id)
 	{
@@ -466,7 +466,7 @@ class UserRequestsController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   integer $id
-	 * @return  Response
+	 * @return  Response|UserRequestResource
 	 */
 	public function update(Request $request, $id)
 	{
