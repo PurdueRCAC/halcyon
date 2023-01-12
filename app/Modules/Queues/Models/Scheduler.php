@@ -163,6 +163,16 @@ class Scheduler extends Model
 	}
 
 	/**
+	 * Defines a relationship to QoS
+	 *
+	 * @return  object
+	 */
+	public function qoses()
+	{
+		return $this->hasMany(Qos::class, 'scheduler_id');
+	}
+
+	/**
 	 * Defines a relationship to subresource
 	 *
 	 * @return  object

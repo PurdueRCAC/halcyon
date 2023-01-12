@@ -379,16 +379,34 @@ app('pathway')
 				<fieldset class="adminform">
 					<legend>{{ trans('queues::queues.qos') }}</legend>
 
+					<div id="qoses-0" class="qos-list{{ $row->schedulerid ? ' hide' : '' }}">
+						<p class="text-center text-muted">Select a scheduler to view available QoS.</p>
+					</div>
 					<?php
 					$applied_qoses = $row->queueqoses->pluck('qosid')->toArray();
 					?>
-					@foreach ($qoses as $qos)
-					<div class="form-group mb-0">
-						<div class="form-check">
-							<input type="checkbox" name="qos[]" id="field-qos-{{ $qos->id }}" class="form-check-input" value="{{ $qos->id }}" <?php if (in_array($qos->id, $applied_qoses)) { echo ' checked'; } ?>/>
-							<label for="field-qos-{{ $qos->id }}" class="form-check-label">{{ $qos->name }}</label>
+					@foreach ($schedulers as $scheduler)
+						@php
+						$cls = ' hide';
+						if ($row->schedulerid == $scheduler->id):
+							$cls = '';
+						endif;
+						$qoses = $scheduler->qoses()->orderBy('name', 'asc')->get();
+						@endphp
+						<div id="qoses-{{ $scheduler->id }}" class="qos-list{{ $cls }}">
+							@if (count($qoses))
+								@foreach ($qoses as $qos)
+									<div class="form-group mb-0">
+										<div class="form-check">
+											<input type="checkbox" name="qos[]" id="field-qos-{{ $qos->id }}" class="form-check-input" value="{{ $qos->id }}" <?php if (in_array($qos->id, $applied_qoses)) { echo ' checked'; } ?>/>
+											<label for="field-qos-{{ $qos->id }}" class="form-check-label">{{ $qos->name }}</label>
+										</div>
+									</div>
+								@endforeach
+							@else
+								<p class="text-center text-muted">No active QoS found for this scheduler.</p>
+							@endif
 						</div>
-					</div>
 					@endforeach
 				</fieldset>
 

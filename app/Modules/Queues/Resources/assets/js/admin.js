@@ -72,6 +72,22 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
+	var scheduler = document.getElementById('field-schedulerid');
+	if (scheduler) {
+		scheduler.addEventListener('change', function () {
+			var opt = this.options[this.selectedIndex];
+
+			document.querySelectorAll('.qos-list').forEach(function (el) {
+				el.classList.add('hide');
+			});
+
+			var item = document.getElementById('qoses-' + opt.value);
+			if (item) {
+				item.classList.remove('hide');
+			}
+		});
+	}
+
 	// Clone the select to preserve all the optgroups
 	var select = document.getElementById("field-subresourceid");
 	if (select) {

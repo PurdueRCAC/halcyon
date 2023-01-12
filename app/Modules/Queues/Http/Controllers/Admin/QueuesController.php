@@ -469,7 +469,6 @@ class QueuesController extends Controller
 		$schedulerpolicies = SchedulerPolicy::orderBy('name', 'asc')->get();
 		$subresources = array();
 		$resources = (new Asset)->tree();
-		$qoses = Qos::query()->orderBy('name', 'asc')->get();
 
 		return view('queues::admin.queues.edit', [
 			'row'   => $row,
@@ -478,7 +477,6 @@ class QueuesController extends Controller
 			'schedulerpolicies' => $schedulerpolicies,
 			'resources' => $resources,
 			'subresources' => $subresources,
-			'qoses' => $qoses,
 		]);
 	}
 
@@ -511,7 +509,6 @@ class QueuesController extends Controller
 		$schedulerpolicies = SchedulerPolicy::orderBy('name', 'asc')->get();
 		$subresources = array();
 		$resources = (new Asset)->tree();
-		$qoses = Qos::query()->orderBy('name', 'asc')->get();
 
 		return view('queues::admin.queues.edit', [
 			'row'   => $row,
@@ -520,7 +517,6 @@ class QueuesController extends Controller
 			'schedulerpolicies' => $schedulerpolicies,
 			'resources' => $resources,
 			'subresources' => $subresources,
-			'qoses' => $qoses,
 		]);
 	}
 
