@@ -4,27 +4,6 @@ var headers = {
 	'Content-Type': 'application/json'
 };
 
-/*
-if (ERRORS === undefined) {
-	var ERRORS = Object();
-}
-ERRORS['queue'] = "Unable to create queue.";
-ERRORS['queueconflict'] = "A queue by this name for this scheduler already exists.";
-ERRORS['queueformat'] = "A required option is missing or in an incorrect format.";
-ERRORS['deletequeue'] = "An error occurred while deleting queue.";
-ERRORS['purchase'] = "An error occurred while creating purchase.";
-ERRORS['loan'] = "An error occurred while creating loan.";
-ERRORS['queueinvalid'] = "Invalid condition. Invalid date or source does not have enough cores for the duration of the purchase/loan.";
-ERRORS['modifyloan'] = "An error occurred while modifying loan. Reload page and try again.";
-ERRORS['modifypurchase'] = "An error occurred while modifying purchase. Reload page and try again.";
-ERRORS['deletepurchase'] = "An error occurred while deleting purchase.";
-ERRORS['deleteloan'] = "An error occurred while deleting loan.";
-ERRORS['accountingfailed'] = "Failed to maintain proper accounting. Ensure proper accounting before continuing.";
-ERRORS['accountingmissing'] = "Failed to find counter entry. Ensure proper accounting before continuing.";
-ERRORS['createreservation'] = "Unable to create a new reservation.";
-ERRORS['deletereservation'] = "An error occurred while deleting reservation.";
-*/
-
 /**
  * Pending items count
  *
@@ -184,33 +163,33 @@ function SetQueueStatus(subresource, state) {
 		headers: headers,
 		body: post
 	})
-	.then(function (response) {
-		if (response.ok) {
-			var results = response.json().then(function (data) {
-				return data;
-			});
-			if (typeof (results['resource']) != 'undefined') {
-				if (window.location.pathname == "/admin/queue/") {
-					window.location = "/admin/queue/#" + results['resource'];
-					location.reload(true);
+		.then(function (response) {
+			if (response.ok) {
+				var results = response.json().then(function (data) {
+					return data;
+				});
+				if (typeof (results['resource']) != 'undefined') {
+					if (window.location.pathname == "/admin/queue/") {
+						window.location = "/admin/queue/#" + results['resource'];
+						location.reload(true);
+					} else {
+						pending--;
+						setStatusIndicator(subresource + "_status", (results['queuestatus'] == "1" ? 'enabled' : 'disabled'));
+					}
 				} else {
-					pending--;
-					setStatusIndicator(subresource + "_status", (results['queuestatus'] == "1" ? 'enabled' : 'disabled'));
+					setStatusIndicator(subresource + "_status", (results['started'] == "1" ? 'enabled' : 'disabled'));
 				}
 			} else {
-				setStatusIndicator(subresource + "_status", (results['started'] == "1" ? 'enabled' : 'disabled'));
+				pending--;
+				setStatusIndicator(subresource + "_status", 'error');
 			}
-		} else {
-			pending--;
-			setStatusIndicator(subresource + "_status", 'error');
-		}
 
-		if (pending == 0) {
-			for (var i = 0; i < pending_resources.length; i++) {
-				setStatusIndicator(pending_resources[i] + "_total_status", (all_state == "1" ? 'enabled' : 'disabled'));
+			if (pending == 0) {
+				for (var i = 0; i < pending_resources.length; i++) {
+					setStatusIndicator(pending_resources[i] + "_total_status", (all_state == "1" ? 'enabled' : 'disabled'));
+				}
 			}
-		}
-	});
+		});
 }
 
 /**
@@ -243,149 +222,161 @@ function setStatusIndicator(id, status) {
 /**
  * Initiate event hooks
  */
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function () {
 	headers = {
 		'Content-Type': 'application/json',
 		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 	};
 
-	$('.set-queue-status').on('click', function (e) {
-		e.preventDefault();
-		SetQueueStatus(
-			$(this).data('resource'),
-			parseInt($(this).data('status'))
-		);
+	document.querySelectorAll('.set-queue-status').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+			SetQueueStatus(
+				this.getAttribute('data-resource'),
+				parseInt(this.getAttribute('data-status'))
+			);
+		});
 	});
 
-	$('.set-queue-all-status').on('click', function (e) {
-		e.preventDefault();
-		var queues = $(this).data('queues').split(',');
-		SetAllQueueStatus(
-			queues,
-			parseInt($(this).data('status')),
-			$(this).data('resource')
-		);
+	document.querySelectorAll('.set-queue-all-status').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+			var queues = this.getAttribute('data-queues').split(',');
+			SetAllQueueStatus(
+				queues,
+				parseInt(this.getAttribute('data-status')),
+				this.getAttribute('data-resource')
+			);
+		});
 	});
 
-	$('.set-queues-all-status').on('click', function (e) {
-		e.preventDefault();
-		var queues = $(this).data('queues').split(',');
-		var resources = $(this).data('resources').split(',');
-		SetAllQueueStatus(
-			queues,
-			parseInt($(this).data('status')),
-			'all',
-			resources
-		);
+	document.querySelectorAll('.set-queues-all-status').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+			var queues = this.getAttribute('data-queues').split(',');
+			var resources = this.getAttribute('data-resources').split(',');
+			SetAllQueueStatus(
+				queues,
+				parseInt(this.getAttribute('data-status')),
+				'all',
+				resources
+			);
+		});
 	});
 
-	$('.set-queue-subresource-status').on('click', function (e) {
-		e.preventDefault();
-		SetQueueAndSubresourceStatus(
-			$(this).data('queue'),
-			$(this).data('subresource'),
-			parseInt($(this).data('status')),
-			$(this).data('resource')
-		);
+	document.querySelectorAll('.set-queue-subresource-status').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+			SetQueueAndSubresourceStatus(
+				this.getAttribute('data-queue'),
+				this.getAttribute('data-subresource'),
+				parseInt(this.getAttribute('data-status')),
+				this.getAttribute('data-resource')
+			);
+		});
 	});
 
-	$('.delete-queue').on('click', function (e) {
-		e.preventDefault();
+	document.querySelectorAll('.delete-queue').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		if (confirm($(this).attr('data-confirm'))) {
-			fetch($(this).attr('data-api'), {
-				method: 'DELETE',
-				headers: headers
-			})
-			.then(function (response) {
-				if (response.ok) {
-					window.location.reload(true);
-					return;
-				}
-				return response.json().then(function (data) {
-					var msg = data.message;
-					if (typeof msg === 'object') {
-						msg = Object.values(msg).join('<br />');
-					}
-					throw msg;
-				});
-			})
-			.catch(function (err) {
-				alert(err);
-			});
-		}
+			if (confirm(this.getAttribute('data-confirm'))) {
+				fetch(this.getAttribute('data-api'), {
+					method: 'DELETE',
+					headers: headers
+				})
+					.then(function (response) {
+						if (response.ok) {
+							window.location.reload(true);
+							return;
+						}
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
+							}
+							throw msg;
+						});
+					})
+					.catch(function (err) {
+						alert(err);
+					});
+			}
+		});
 	});
 
 	// --- Purchases & Loans
 
-	$('.dialog-pl-btn').on('click', function (e) {
-		e.preventDefault();
+	document.querySelectorAll('.dialog-pl-btn').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		$($(this).attr('href')).dialog({
-			modal: true,
-			width: '550px',
-			open: function () {
-				//var d = $(this);
+			$(this.getAttribute('href')).dialog({
+				modal: true,
+				width: '550px',
+				open: function () {
+					//var d = $(this);
 
-				var groups = $(".form-group-queues");
-				if (groups.length) {
-					$(".form-group-queues")
-						.select2({})
-						.on('select2:select', function (e) {
-							e.preventDefault();
+					var groups = $(".form-group-queues");
+					if (groups.length) {
+						$(".form-group-queues")
+							.select2({})
+							.on('select2:select', function (e) {
+								e.preventDefault();
 
-							var group = $(this);
+								var group = $(this);
 
-							var queue = $('#' + group.data('update'));
-							//var dest_queue = group.attr('data-queueid');
+								var queue = $('#' + group.data('update'));
+								//var dest_queue = group.attr('data-queueid');
 
-							$.ajax({
-								url: group.data('queue-api'),
-								type: 'get',
-								data: {
-									'group': group.val(),
-									'subresource': group.attr('data-subresource')
-								},
-								dataType: 'json',
-								async: false,
-								success: function (data) {
-									if (data.data.length > 0) {
-										queue.prop('disabled', false);
-										queue.empty();//options.length = 0;
+								$.ajax({
+									url: group.data('queue-api'),
+									type: 'get',
+									data: {
+										'group': group.val(),
+										'subresource': group.attr('data-subresource')
+									},
+									dataType: 'json',
+									async: false,
+									success: function (data) {
+										if (data.data.length > 0) {
+											queue.prop('disabled', false);
+											queue.empty();//options.length = 0;
 
-										opt = document.createElement("option");
-										opt.value = 0;
-										opt.innerHTML = "(Select Queue)";
-										queue.append(opt);
-
-										var x, opt;
-										for (x in data.data) {
-											//if (data.data[x]['name'].match(/^(rcac|workq|debug)/)) {
-											//if (data.data[x]['id'] != dest_queue) {
 											opt = document.createElement("option");
-											opt.innerHTML = data.data[x]['name'] + " (" + data.data[x]['subresource']['name'] + ")";
-											opt.value = data.data[x]['id'];
-
+											opt.value = 0;
+											opt.innerHTML = "(Select Queue)";
 											queue.append(opt);
-											//}
-											//}
-										}
-									}
-								},
-								error: function (xhr) {
-									var msg = 'Failed to retrieve queues.';
-									if (xhr.responseJSON && xhr.responseJSON.message) {
-										msg = xhr.responseJSON.message;
-									}
-									alert(msg);
 
-									console.log(xhr.responseText);
-								}
+											var x, opt;
+											for (x in data.data) {
+												//if (data.data[x]['name'].match(/^(rcac|workq|debug)/)) {
+												//if (data.data[x]['id'] != dest_queue) {
+												opt = document.createElement("option");
+												opt.innerHTML = data.data[x]['name'] + " (" + data.data[x]['subresource']['name'] + ")";
+												opt.value = data.data[x]['id'];
+
+												queue.append(opt);
+												//}
+												//}
+											}
+										}
+									},
+									error: function (xhr) {
+										var msg = 'Failed to retrieve queues.';
+										if (xhr.responseJSON && xhr.responseJSON.message) {
+											msg = xhr.responseJSON.message;
+										}
+										alert(msg);
+
+										console.log(xhr.responseText);
+									}
+								});
+								return false;
 							});
-							return false;
-						});
+					}
 				}
-			}
+			});
 		});
 	});
 
@@ -456,185 +447,208 @@ $(document).ready(function () {
 		});
 	});
 
-	$('.queue-dialog-submit').on('click', function (e) {
-		e.preventDefault();
+	document.querySelectorAll('.queue-dialog-submit').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		var btn = this,
-			frm = $(this).closest('form'),
-			invalid = false;
+			var btn = this,
+				frm = this.closest('form'),
+				invalid = false;
 
-		if (frm.length) {
-			var elms = frm[0].querySelectorAll('input[required]');
-			elms.forEach(function (el) {
-				if (!el.value || !el.validity.valid) {
-					el.classList.add('is-invalid');
-					invalid = true;
-				} else {
-					el.classList.remove('is-invalid');
-				}
-			});
-			elms = frm[0].querySelectorAll('select[required]');
-			elms.forEach(function (el) {
-				if (!el.value || el.value <= 0) {
-					el.classList.add('is-invalid');
-					invalid = true;
-				} else {
-					el.classList.remove('is-invalid');
-				}
-			});
-			elms = frm[0].querySelectorAll('textarea[required]');
-			elms.forEach(function (el) {
-				if (!el.value || !el.validity.valid) {
-					el.classList.add('is-invalid');
-					invalid = true;
-				} else {
-					el.classList.remove('is-invalid');
-				}
-			});
+			if (frm) {
+				var elms = frm.querySelectorAll('input[required]');
+				elms.forEach(function (el) {
+					if (!el.value || !el.validity.valid) {
+						el.classList.add('is-invalid');
+						invalid = true;
+					} else {
+						el.classList.remove('is-invalid');
+					}
+				});
+				elms = frm.querySelectorAll('select[required]');
+				elms.forEach(function (el) {
+					if (!el.value || el.value <= 0) {
+						el.classList.add('is-invalid');
+						invalid = true;
+					} else {
+						el.classList.remove('is-invalid');
+					}
+				});
+				elms = frm.querySelectorAll('textarea[required]');
+				elms.forEach(function (el) {
+					if (!el.value || !el.validity.valid) {
+						el.classList.add('is-invalid');
+						invalid = true;
+					} else {
+						el.classList.remove('is-invalid');
+					}
+				});
 
-			if (invalid) {
-				return;
+				if (invalid) {
+					return;
+				}
 			}
-		}
 
-		$.ajax({
-			url: frm.attr('data-api'),
-			type: btn.getAttribute('data-action') == 'update' ? 'put' : 'post',
-			data: frm.serialize(),
-			dataType: 'json',
-			async: false,
-			success: function () {
-				window.location.reload(true);
-			},
-			error: function (xhr) { //xhr, reason, thrownError
-				var msg = 'Failed to create item.';
-				if (xhr.responseJSON && xhr.responseJSON.message) {
-					msg = xhr.responseJSON.message;
-				}
-				alert(msg);
+			fetch(frm.getAttribute('data-api'), {
+				method: btn.getAttribute('data-action') == 'update' ? 'PUT' : 'POST',
+				headers: headers,
+				body: $(frm).serialize()
+			})
+				.then(function (response) {
+					if (response.ok) {
+						window.location.reload(true);
+						return;
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (err) {
+					alert(err);
+				});
+		});
+	});
+
+	document.querySelectorAll('.queue-pl-delete').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			if (confirm(this.getAttribute('data-confirm'))) {
+				fetch(this.getAttribute('data-api'), {
+					method: 'DELETE',
+					headers: headers
+				})
+					.then(function (response) {
+						if (response.ok) {
+							window.location.reload(true);
+							return;
+						}
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
+							}
+							throw msg;
+						});
+					})
+					.catch(function (err) {
+						alert(err);
+					});
 			}
 		});
 	});
 
-	$('.queue-pl-delete').on('click', function (e) {
-		e.preventDefault();
+	document.querySelectorAll('.queue-pl-edit').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		var btn = this;
-
-		if (confirm(btn.getAttribute('data-confirm'))) {
-			$.ajax({
-				url: btn.getAttribute('data-api'),
-				type: 'delete',
-				dataType: 'json',
-				async: false,
-				success: function () {
-					window.location.reload(true);
-				},
-				error: function (xhr) {
-					var msg = 'Failed to delete item.';
-					if (xhr.responseJSON && xhr.responseJSON.message) {
-						msg = xhr.responseJSON.message;
-					}
-
-					alert(msg);
-				}
+			$(this.getAttribute('href')).dialog({
+				modal: true,
+				width: '550px'
 			});
-		}
-	});
-
-	$('.queue-pl-edit').on('click', function (e) {
-		e.preventDefault();
-
-		$($(this).attr('href')).dialog({
-			modal: true,
-			width: '550px'
 		});
 	});
 
 	// Create queue
-	$('#queue-name').on('keyup', function () {
-		var val = $(this).val();
+	var qname = document.getElementById('queue-name');
+	if (qname) {
+		qname.addEventListener('keyup', function () {
+			var val = this.value;
 
-		val = val.toLowerCase()
-			.replace(/\s+/g, '_')
-			.replace(/[^a-z0-9_-]+/g, '');
+			val = val.toLowerCase()
+				.replace(/\s+/g, '_')
+				.replace(/[^a-z0-9_-]+/g, '');
 
-		$(this).val(val);
-	});
+			this.value = val;
+		});
+	}
 
-	$('#queue-queueclass').on('change', function () {
-		var val = $(this).val();
+	var qclass = document.getElementById('queue-queueclass');
+	if (qclass) {
+		qclass.addEventListener('change', function () {
+			var val = this.value;
 
-		if (val == 'debug') {
-			$('#queue-reservation').prop('checked', true);
-		}
-	});
+			if (val == 'debug') {
+				document.getElementById('queue-reservation').checked = true;
+			}
+		});
+	}
 
-	$('#queue-subresourceid').on('change', function () {
-		var opt = this.options[this.selectedIndex];
+	var qsubresource = document.getElementById('queue-subresourceid');
+	if (qsubresource) {
+		qsubresource.addEventListener('change', function () {
+			var opt = this.options[this.selectedIndex];
 
-		var nodecores = document.getElementById("SPAN_nodecores");
-		var nodemem = document.getElementById("SPAN_nodemem");
-		var cluster = document.getElementById("queue-cluster");
+			var nodecores = document.getElementById("SPAN_nodecores");
+			var nodemem = document.getElementById("SPAN_nodemem");
+			var cluster = document.getElementById("queue-cluster");
 
-		document.getElementById('queue-clusterlabel').innerHTML = opt.getAttribute('data-clusterlabel');
+			document.getElementById('queue-clusterlabel').innerHTML = opt.getAttribute('data-clusterlabel');
 
-		nodecores.innerHTML = opt.getAttribute('data-nodecores');
-		nodemem.innerHTML = opt.getAttribute('data-nodemem');
+			nodecores.innerHTML = opt.getAttribute('data-nodecores');
+			nodemem.innerHTML = opt.getAttribute('data-nodemem');
 
-		var nodememmin = document.getElementById('queue-nodememmin');
-		nodememmin.value = opt.getAttribute('data-nodemem');
+			var nodememmin = document.getElementById('queue-nodememmin');
+			nodememmin.value = opt.getAttribute('data-nodemem');
 
-		var nodememmax = document.getElementById('queue-nodememmax');
-		nodememmax.value = opt.getAttribute('data-nodemem');
+			var nodememmax = document.getElementById('queue-nodememmax');
+			nodememmax.value = opt.getAttribute('data-nodemem');
 
-		var nodecoresmin = document.getElementById('queue-nodecoresmin');
-		nodecoresmin.value = opt.getAttribute('data-nodecores');
+			var nodecoresmin = document.getElementById('queue-nodecoresmin');
+			nodecoresmin.value = opt.getAttribute('data-nodecores');
 
-		var nodecoresmax = document.getElementById('queue-nodecoresmax');
-		nodecoresmax.value = opt.getAttribute('data-nodecores');
+			var nodecoresmax = document.getElementById('queue-nodecoresmax');
+			nodecoresmax.value = opt.getAttribute('data-nodecores');
 
-		cluster.value = opt.getAttribute('data-cluster');
-	});
+			cluster.value = opt.getAttribute('data-cluster');
+		});
+	}
 
 	// Clone the select to preserve all the optgroups
 	var select = document.getElementById("queue-subresourceid");
-	var sclone = $(select).clone().attr('id', $(select).attr('id') + '-clone');
+	var sclone = $(select).clone().attr('id', select.getAttribute('id') + '-clone');
 
-	$('#queue-schedulerid').on('change', function () {
-		if (this.selectedIndex == 0) {
-			return;
-		}
-
-		// Clear some values
-		document.getElementById("SPAN_nodecores").innerHTML = '-';
-		document.getElementById("SPAN_nodemem").innerHTML = '-';
-
-		var sched = this,
-			opt = sched.options[sched.selectedIndex];
-
-		// Start processing
-		sched.parentNode.className = sched.parentNode.className + ' loading';
-
-		// Set max wall time
-		document.getElementById("queue-maxwalltime").value = parseInt(opt.getAttribute('data-defaultmaxwalltime')) / 60 / 60;
-
-		// Set policy
-		var policies = document.getElementById("queue-schedulerpolicyid");
-
-		for (var x = 0; x < policies.options.length; x++) {
-			if (policies.options[x].value == opt.getAttribute('data-schedulerpolicyid')) {//results['defaultpolicy']['id']) {
-				policies.options[x].selected = "true";
-			} else {
-				policies.options[x].selected = "";
+	var qscheduler = document.getElementById('queue-schedulerid');
+	if (qscheduler) {
+		qscheduler.addEventListener('change', function () {
+			if (this.selectedIndex == 0) {
+				return;
 			}
-		}
 
-		// Get the optgroup for the selected resource
-		$(select).find("optgroup").remove();
-		$(select).append(sclone.find("optgroup[data-resourceid='" + opt.getAttribute('data-resourceid') + "']").clone());
+			// Clear some values
+			document.getElementById("SPAN_nodecores").innerHTML = '-';
+			document.getElementById("SPAN_nodemem").innerHTML = '-';
 
-		// Finished processing
-		sched.parentNode.className = sched.parentNode.className.replace(' loading', '');
-	});
+			var sched = this,
+				opt = sched.options[sched.selectedIndex];
+
+			// Start processing
+			sched.parentNode.className = sched.parentNode.className + ' loading';
+
+			// Set max wall time
+			document.getElementById("queue-maxwalltime").value = parseInt(opt.getAttribute('data-defaultmaxwalltime')) / 60 / 60;
+
+			// Set policy
+			var policies = document.getElementById("queue-schedulerpolicyid");
+
+			for (var x = 0; x < policies.options.length; x++) {
+				if (policies.options[x].value == opt.getAttribute('data-schedulerpolicyid')) {//results['defaultpolicy']['id']) {
+					policies.options[x].selected = "true";
+				} else {
+					policies.options[x].selected = "";
+				}
+			}
+
+			// Get the optgroup for the selected resource
+			$(select).find("optgroup").remove();
+			$(select).append(sclone.find("optgroup[data-resourceid='" + opt.getAttribute('data-resourceid') + "']").clone());
+
+			// Finished processing
+			sched.parentNode.className = sched.parentNode.className.replace(' loading', '');
+		});
+	}
 });
