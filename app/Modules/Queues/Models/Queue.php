@@ -1072,7 +1072,7 @@ class Queue extends Model
 	 * @param   array  $options
 	 * @return  bool
 	 */
-	public function delete(array $options = [])
+	public function delete()
 	{
 		foreach ($this->users as $row)
 		{
@@ -1158,6 +1158,6 @@ class Queue extends Model
 			}
 		}
 
-		return parent::delete($options);
+		return parent::delete();
 	}
 }

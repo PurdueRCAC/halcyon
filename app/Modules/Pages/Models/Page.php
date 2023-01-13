@@ -169,7 +169,7 @@ class Page extends Model
 	/**
 	 * Get list of styles
 	 *
-	 * @return  array
+	 * @return  array<int,string>
 	 */
 	public function getStylesAttribute()
 	{
@@ -179,7 +179,7 @@ class Page extends Model
 	/**
 	 * Get list of scripts
 	 *
-	 * @return  array
+	 * @return  array<int,string>
 	 */
 	public function getScriptsAttribute()
 	{
@@ -195,14 +195,8 @@ class Page extends Model
 	{
 		$content = $this->content;
 
-		//event($event = new PageContentBeforeDisplay($content));
-		//$content = $event->getBody();
-
 		event($event = new PageContentIsRendering($content));
 		$content = $event->getBody();
-
-		//event($event = new PageContentAfterDisplay($content));
-		//$content = $event->getBody();
 
 		// simple performance check to determine whether bot should process further
 		if (strpos($content, '@file') === false)

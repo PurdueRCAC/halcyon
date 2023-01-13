@@ -4,13 +4,11 @@ namespace App\Modules\Pages\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Config\Repository;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Pages\Models\Page;
-//use App\Modules\Pages\Events\PageContentIsRendering;
-//use App\Modules\Pages\Events\PageContentBeforeDisplay;
-//use App\Modules\Pages\Events\PageContentAfterDisplay;
 use App\Modules\Pages\Events\PageMetadata;
 use App\Modules\Pages\Events\PageTitleAfterDisplay;
 
@@ -20,7 +18,7 @@ class PagesController extends Controller
 	 * Display a page
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  View
 	 */
 	public function index(Request $request)
 	{
@@ -78,22 +76,12 @@ class PagesController extends Controller
 			}
 		}
 
-		//event($event = new PageContentIsRendering($page->content));
-		//$page->content = $event->getBody();
-
-		//$results = event('onContentPrepare', array('pages.article', &$page));
 		event($event = new PageMetadata($page));
 
 		$page->event = new \stdClass();
 
 		event($event = new PageTitleAfterDisplay($page));
 		$page->event->afterDisplayTitle = $event->getContent();
-
-		//event($event = new PageContentBeforeDisplay($page->content));
-		//$page->content = $event->getBody();
-
-		//event($event = new PageContentAfterDisplay($page->content));
-		//$page->content = $event->getBody();
 
 		$parents = array();
 		if (auth()->user() && auth()->user()->can('edit pages'))
@@ -117,7 +105,7 @@ class PagesController extends Controller
 	 * Show the specified page
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function show(Request $request)
 	{
@@ -127,7 +115,7 @@ class PagesController extends Controller
 	/**
 	 * Show the form for creating a new page.
 	 * 
-	 * @return Response
+	 * @return View
 	 */
 	public function create()
 	{
@@ -206,7 +194,7 @@ class PagesController extends Controller
 	 * Show the form for editing the specified page
 	 *
 	 * @param  integer  $id
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id)
 	{

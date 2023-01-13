@@ -16,14 +16,14 @@ class Html
 	/**
 	 * Cached array of the menus.
 	 *
-	 * @var  array
+	 * @var  array<int,array>
 	 */
 	protected static $menus = null;
 
 	/**
 	 * Cached array of the menus items.
 	 *
-	 * @var  array
+	 * @var  array<int,string>
 	 */
 	protected static $items = null;
 
@@ -58,7 +58,7 @@ class Html
 	 * Returns an array of menu items grouped by menu.
 	 *
 	 * @param   array  $config  An array of configuration options.
-	 * @return  array
+	 * @return  array<int,string>
 	 */
 	public static function menuitems($config = array())
 	{
@@ -161,11 +161,11 @@ class Html
 	/**
 	 * Build the select list for Menu Ordering
 	 *
-	 * @param   object   &$row  The row object
-	 * @param   integer  $id    The id for the row. Must exist to enable menu ordering
+	 * @param   object   $row  The row object
+	 * @param   integer  $id   The id for the row. Must exist to enable menu ordering
 	 * @return  string
 	 */
-	public static function ordering(&$row, $id)
+	public static function ordering($row, $id)
 	{
 		$ordering = '<input type="hidden" name="ordering" value="' . $row->ordering . '" />' . trans('global.NEWITEMSLAST_DESC');
 

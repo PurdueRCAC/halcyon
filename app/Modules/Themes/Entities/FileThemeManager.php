@@ -24,7 +24,8 @@ class FileThemeManager implements \Countable
 
 	/**
 	 * @param Application $app
-	 * @param $path
+	 * @param string $path
+	 * @return void
 	 */
 	public function __construct(Application $app, $path)
 	{
@@ -52,7 +53,8 @@ class FileThemeManager implements \Countable
 
 	/**
 	 * Return all available themes
-	 * @return array
+	 *
+	 * @return array<string,Theme>
 	 */
 	public function all()
 	{
@@ -80,7 +82,8 @@ class FileThemeManager implements \Countable
 
 	/**
 	 * Get only the public themes
-	 * @return array
+	 *
+	 * @return array<string,Theme>
 	 */
 	public function allByType($type = 'site')
 	{
@@ -113,6 +116,7 @@ class FileThemeManager implements \Countable
 
 	/**
 	 * Get the theme directories
+	 *
 	 * @return array
 	 */
 	private function getDirectories()
@@ -122,6 +126,7 @@ class FileThemeManager implements \Countable
 
 	/**
 	 * Return the theme assets path
+	 *
 	 * @param  string $theme
 	 * @return string
 	 */
@@ -148,6 +153,8 @@ class FileThemeManager implements \Countable
 
 	/**
 	 * Counts all themes
+	 *
+	 * @return int
 	 */
 	public function count()
 	{
@@ -155,10 +162,9 @@ class FileThemeManager implements \Countable
 	}
 
 	/**
-	 * Activate a theme. Activation can be done by the theme's name, or via a Theme object.
+	 * Get the active theme
 	 *
-	 * @param string|Theme $theme
-	 * @throws ThemeNotFoundException
+	 * @return Theme
 	 */
 	public function getActiveTheme()
 	{
@@ -169,6 +175,7 @@ class FileThemeManager implements \Countable
 	 * Activate a theme. Activation can be done by the theme's name, or via a Theme object.
 	 *
 	 * @param string|Theme $theme
+	 * @return void
 	 * @throws ThemeNotFoundException
 	 */
 	public function activate($theme)
@@ -189,6 +196,7 @@ class FileThemeManager implements \Countable
 	 * Activates the view finder paths for a theme and its parents.
 	 *
 	 * @param Theme $theme
+	 * @return void
 	 */
 	protected function activateFinderPaths(Theme $theme)
 	{
@@ -197,7 +205,8 @@ class FileThemeManager implements \Countable
 
 	/**
 	 * Returns the theme json file
-	 * @param $theme
+	 *
+	 * @param  string $theme
 	 * @return string
 	 * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
 	 */
@@ -207,7 +216,10 @@ class FileThemeManager implements \Countable
 	}
 
 	/**
-	 * @param $themeJson
+	 * Check if a theme is a specific type (site|admin)
+	 *
+	 * @param object $themeJson
+	 * @param string $type
 	 * @return bool
 	 */
 	private function isType($themeJson, $type = 'site')

@@ -2,20 +2,20 @@
 
 namespace App\Modules\Menus\Helpers;
 
+use Illuminate\Support\Fluent;
 use App\Modules\Menus\Models\Type;
 use App\Modules\Menus\Models\Item;
 use App\Halcyon\Access\Gate;
-use Illuminate\Support\Fluent;
 
 /**
- * Menus component helper.
+ * Menus helper.
  */
 class Menus
 {
 	/**
 	 * Defines the valid request variables for the reverse lookup.
 	 *
-	 * @var  array
+	 * @var  array<int,string>
 	 */
 	protected static $_filter = array('option', 'view', 'layout');
 
@@ -52,7 +52,7 @@ class Menus
 	 * Gets a standard form of a link for lookups.
 	 *
 	 * @param   mixed  $request  A link string or array of request variables.
-	 * @return  mixed  A link in standard option-view-layout form, or false if the supplied response is invalid.
+	 * @return  false|string  A link in standard option-view-layout form, or false if the supplied response is invalid.
 	 */
 	public static function getLinkKey($request)
 	{
@@ -94,7 +94,7 @@ class Menus
 	/**
 	 * Get the menu list for create a menu module
 	 *
-	 * @return  array  The menu array list
+	 * @return  array<int,string>  The menu array list
 	 */
 	public static function getMenuTypes()
 	{
@@ -223,7 +223,7 @@ class Menus
 	 * Get associations
 	 *
 	 * @param   integer  $pk
-	 * @return  array
+	 * @return  array<string,int>
 	 */
 	public static function getAssociations($pk)
 	{

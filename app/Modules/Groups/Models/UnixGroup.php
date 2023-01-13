@@ -183,17 +183,16 @@ class UnixGroup extends Model
 	/**
 	 * Delete entry and associated data
 	 *
-	 * @param   array  $options
 	 * @return  bool
 	 */
-	public function delete(array $options = [])
+	public function delete()
 	{
 		foreach ($this->members as $row)
 		{
 			$row->delete();
 		}
 
-		return parent::delete($options);
+		return parent::delete();
 	}
 
 	/**

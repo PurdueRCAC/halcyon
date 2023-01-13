@@ -3,6 +3,8 @@
 namespace App\Modules\Tags\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Tags\Models\Tag;
@@ -14,7 +16,7 @@ class TagsController extends Controller
 	 * Display a listing of tags
 	 *
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -95,7 +97,7 @@ class TagsController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 *
-	 * @return Response
+	 * @return View
 	 */
 	public function create()
 	{
@@ -115,7 +117,7 @@ class TagsController extends Controller
 	 * Show the form for editing the specified resource.
 	 *
 	 * @param  integer  $id
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id)
 	{

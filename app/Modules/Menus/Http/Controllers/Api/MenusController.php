@@ -79,7 +79,7 @@ class MenusController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -204,7 +204,8 @@ class MenusController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
-	 * @return Response
+	 * @param  Request $request
+	 * @return Response|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -275,7 +276,7 @@ class MenusController extends Controller
 	 * 		}
 	 * }
 	 * @param  integer  $id
-	 * @return Response
+	 * @return JsonResource
 	 */
 	public function read(int $id)
 	{
@@ -367,7 +368,7 @@ class MenusController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   integer $id
-	 * @return  Response
+	 * @return  Response|JsonResource
 	 */
 	public function update(Request $request, int $id)
 	{

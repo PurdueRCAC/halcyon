@@ -247,7 +247,7 @@ class Theme extends Model
 	 * Get active templates for specified client
 	 *
 	 * @param   integer  $client_id
-	 * @return  object
+	 * @return  Theme|null
 	 */
 	public function allActive($client_id = 0)
 	{

@@ -217,10 +217,9 @@ class Department extends Model
 	/**
 	 * Delete entry and associated data
 	 *
-	 * @param   array  $options
 	 * @return  bool
 	 */
-	public function delete(array $options = [])
+	public function delete()
 	{
 		foreach ($this->children as $row)
 		{
@@ -232,6 +231,6 @@ class Department extends Model
 			$row->delete();
 		}
 
-		return parent::delete($options);
+		return parent::delete();
 	}
 }

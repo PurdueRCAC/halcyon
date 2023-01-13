@@ -15,7 +15,7 @@ class Attachment extends \SplFileInfo
 	/**
 	 * Image file types
 	 *
-	 * @var  array
+	 * @var  array<int,string>
 	 */
 	private $imageExtensions = ['jpg', 'jpeg', 'jpe', 'png', 'gif', 'svg', 'bmp'];
 
@@ -119,7 +119,7 @@ class Attachment extends \SplFileInfo
 	/**
 	 * Get image width (if an image)
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getWidth(): int
 	{
@@ -129,7 +129,7 @@ class Attachment extends \SplFileInfo
 	/**
 	 * Get image height (if an image)
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getHeight(): int
 	{
@@ -140,7 +140,7 @@ class Attachment extends \SplFileInfo
 	 * Get image pixel dimension (width or height)
 	 *
 	 * @param   string  $dim
-	 * @return  integer
+	 * @return  int
 	 */
 	private function calculateDimension($dim): int
 	{

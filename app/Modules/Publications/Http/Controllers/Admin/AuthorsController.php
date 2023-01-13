@@ -4,6 +4,7 @@ namespace App\Modules\Publications\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Publications\Helpers\ItemType;
@@ -21,7 +22,7 @@ class AuthorsController extends Controller
 	 * 
 	 * @param  StatefulRequest $request
 	 * @param  string  $menutype
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request, $menutype = null)
 	{
@@ -382,7 +383,7 @@ class AuthorsController extends Controller
 	 * Show the form for creating a new article
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  View
 	 */
 	public function create(Request $request)
 	{
@@ -431,7 +432,7 @@ class AuthorsController extends Controller
 	 * Show the form for editing the specified entry
 	 *
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  View
 	 */
 	public function edit($id)
 	{
@@ -739,30 +740,10 @@ class AuthorsController extends Controller
 	/**
 	 * Return to default page
 	 *
-	 * @param   string  $menutype
 	 * @return  Response
 	 */
-	public function cancel($menutype = null)
+	public function cancel()
 	{
-		return redirect(route('admin.menus.items', ['menutype' => $menutype ? $menutype : request()->input('menutype', request()->input('fields.menutype'))]));
-	}
-
-	/**
-	 * Temporary method
-	 *
-	 * @param   Request $request
-	 * @return  Response
-	 */
-	public function types(Request $request)
-	{
-		$id = $request->input('recordId');
-
-		$model = new ItemType();
-		$types = $model->getTypeOptions();
-
-		return view('menus::admin.items.types', [
-			'id' => $id,
-			'types' => $types
-		]);
+		return redirect(route('admin.publications.authors'));
 	}
 }

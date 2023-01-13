@@ -905,17 +905,17 @@ class Article extends Model
 		{
 			foreach ($article->updates as $update)
 			{
-				$update->delete($options);
+				$update->delete();
 			}
 
 			foreach ($article->resources as $resource)
 			{
-				$resource->delete($options);
+				$resource->delete();
 			}
 
 			foreach ($article->associations as $association)
 			{
-				$association->delete($options);
+				$association->delete();
 			}
 
 			$row = Stemmedtext::find($article->id);

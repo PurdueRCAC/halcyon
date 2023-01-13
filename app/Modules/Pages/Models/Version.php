@@ -1,9 +1,4 @@
 <?php
-/**
- * @package   halcyon-cms
- * @copyright Copyright 2005-2015 Halcyon Foundation, LLC.
- * @license   http://opensource.org/licenses/MIT MIT
- */
 
 namespace App\Modules\Pages\Models;
 
@@ -109,6 +104,7 @@ class Version extends Model
 	/**
 	 * Parses content string as directed
 	 *
+	 * @param   string|null  $metadesc
 	 * @return  string
 	 */
 	public function setMetadescAttribute($metadesc)
@@ -119,6 +115,7 @@ class Version extends Model
 	/**
 	 * Parses content string as directed
 	 *
+	 * @param   string|null  $metakey
 	 * @return  string
 	 */
 	public function setMetakeyAttribute($metakey)
@@ -129,6 +126,7 @@ class Version extends Model
 	/**
 	 * Parses content string as directed
 	 *
+	 * @param   string|null  $metadata
 	 * @return  string
 	 */
 	public function setMetadataAttribute($metadata)
@@ -139,7 +137,8 @@ class Version extends Model
 	/**
 	 * Parses content string as directed
 	 *
-	 * @return  integer
+	 * @param   int  $version
+	 * @return  int
 	 */
 	public function setVersionAttribute($version)
 	{
@@ -156,21 +155,4 @@ class Version extends Model
 	{
 		return strlen($this->getAttribute('content'));
 	}
-
-	/**
-	 * Parses content string as directed
-	 *
-	 * @return  string
-	 */
-	/*public function getContentAttribute($content)
-	{
-		if (!isset($this->contentParsed))
-		{
-			//event('onPrepareContent', [&$content]);
-			//$this->contentParsed = view('pages::basic')->with(compact('content'))->render();
-			$this->contentParsed = Blade::compileString($content);
-		}
-
-		return $this->contentParsed;
-	}*/
 }

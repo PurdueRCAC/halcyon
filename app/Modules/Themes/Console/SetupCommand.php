@@ -23,7 +23,7 @@ class SetupCommand extends Command
 	/**
 	 * Execute the console command.
 	 *
-	 * @return  void
+	 * @return void
 	 */
 	public function handle()
 	{

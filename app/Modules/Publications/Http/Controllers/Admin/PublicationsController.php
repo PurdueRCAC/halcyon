@@ -4,6 +4,7 @@ namespace App\Modules\Publications\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Publications\Models\Type;
@@ -17,7 +18,7 @@ class PublicationsController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -146,7 +147,7 @@ class PublicationsController extends Controller
 	/**
 	 * Show the form for creating a new article
 	 *
-	 * @return  Response
+	 * @return  View
 	 */
 	public function create()
 	{
@@ -173,7 +174,7 @@ class PublicationsController extends Controller
 	 * Show the form for editing the specified entry
 	 *
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  View
 	 */
 	public function edit($id)
 	{

@@ -196,7 +196,7 @@ class Theme
 	 * Get json contents from the cache, setting as needed.
 	 *
 	 * @param  string $file
-	 * @return Json
+	 * @return Repository
 	 */
 	public function json($file = null): Repository
 	{

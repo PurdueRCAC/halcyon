@@ -205,7 +205,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return TypeResource
+	 * @return Response|TypeResource
 	 */
 	public function create(Request $request)
 	{
@@ -359,7 +359,7 @@ class TypesController extends Controller
 	 * }
 	 * @param  Request $request
 	 * @param  integer $id
-	 * @return TypeResource
+	 * @return Response|TypeResource
 	 */
 	public function update(Request $request, int $id)
 	{

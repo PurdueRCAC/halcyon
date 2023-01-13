@@ -3,6 +3,7 @@
 namespace App\Modules\Menus\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -78,7 +79,7 @@ class ItemsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -458,7 +459,8 @@ class ItemsController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
-	 * @return Response
+	 * @param  Request $request
+	 * @return Response|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -543,7 +545,8 @@ class ItemsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @return Response
+	 * @param  int $id
+	 * @return Response|JsonResource
 	 */
 	public function read(int $id)
 	{
@@ -663,7 +666,8 @@ class ItemsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
-	 * @return  Response
+	 * @param   int $id
+	 * @return  Response|JsonResource
 	 */
 	public function update(Request $request, int $id)
 	{
@@ -714,7 +718,7 @@ class ItemsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete(int $id)

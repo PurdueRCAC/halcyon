@@ -9,14 +9,22 @@ class ItemUpdating
 	/**
 	 * @var Item
 	 */
-	private $item;
+	public $item;
 
+	/**
+	 * Constructor
+	 *
+	 * @param Item $item
+	 * @return void
+	 */
 	public function __construct(Item $item)
 	{
 		$this->item = $item;
 	}
 
 	/**
+	 * Return the entity
+	 *
 	 * @return Item
 	 */
 	public function getItem()

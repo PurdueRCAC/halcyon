@@ -3,6 +3,7 @@
 namespace App\Modules\Pages\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Pages\Models\Page;
@@ -108,7 +109,8 @@ class PagesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
-	 * @return Response
+	 * @param  Request $request
+	 * @return PageResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -144,11 +146,6 @@ class PagesController extends Controller
 		$query = $p->query();
 
 		$page = $p->getTable();
-		/*$version = (new Version())->getTable();
-
-		$query
-			->select([$page . '.*', $version . '.title'])
-			->join($version, $version . '.id', $page . '.version_id');*/
 
 		if ($filters['search'])
 		{
@@ -194,7 +191,6 @@ class PagesController extends Controller
 		}
 
 		$rows = $query
-			//->withCount('versions')
 			->orderBy($page . '.' . $filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'])
 			->appends(array_filter($filters));
@@ -308,7 +304,7 @@ class PagesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return PageResource
 	 */
 	public function create(Request $request)
 	{
@@ -360,7 +356,7 @@ class PagesController extends Controller
 	 * 		}
 	 * }
 	 * @param  integer $id
-	 * @return Response
+	 * @return Response|PageResource
 	 */
 	public function read($id)
 	{
@@ -373,7 +369,7 @@ class PagesController extends Controller
 		{
 			if (!$page->isPublished())
 			{
-				abort(404, trans('pages::pages.article not found'));
+				return response()->json(['message' => trans('pages::pages.article not found')], 404);
 			}
 		}
 
@@ -382,7 +378,7 @@ class PagesController extends Controller
 
 		if (!in_array($page->access, $levels))
 		{
-			abort(403, trans('pages::pages.permission denied'));
+			return response()->json(['message' => trans('pages::pages.permission denied')], 403);
 		}
 
 		return new PageResource($page);
@@ -509,7 +505,7 @@ class PagesController extends Controller
 	 * }
 	 * @param  Request $request
 	 * @param  integer $id
-	 * @return Response
+	 * @return Response|PageResource
 	 */
 	public function update(Request $request, $id)
 	{

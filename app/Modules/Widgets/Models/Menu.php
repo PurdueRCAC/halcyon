@@ -133,10 +133,9 @@ class Menu extends Model
 	/**
 	 * Deletes the existing/current model
 	 *
-	 * @param  array  $options
 	 * @return bool
 	 */
-	public function delete(array $options = [])
+	public function delete()
 	{
 		$query = $this->query();
 

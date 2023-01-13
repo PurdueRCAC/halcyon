@@ -4,6 +4,7 @@ namespace App\Modules\Themes\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Themes\Models\Theme;
@@ -15,7 +16,7 @@ class ThemesController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -57,7 +58,6 @@ class ThemesController extends Controller
 
 		$query = Theme::query();
 
-		//$e = 'extensions';
 		//$l = 'languages';
 		//$m = 'menu_items';
 		$s = (new Theme)->getTable();
@@ -83,13 +83,6 @@ class ThemesController extends Controller
 		// Join over the language
 		//$query
 		//	->leftJoin($l, $l . '.lang_code', $s . '.home');
-
-		// Filter by extension enabled
-		/*$query
-			->leftJoin($e, $e . '.element', $s . '.template')
-			//->where($e . '.client_id', '=', $s . '.client_id')
-			->where($e . '.enabled', '=', 1)
-			->where($e . '.type', '=', 'theme');*/
 
 		if ($filters['search'])
 		{
@@ -155,7 +148,7 @@ class ThemesController extends Controller
 	 * 
 	 * @param  integer $id
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id, Request $request)
 	{

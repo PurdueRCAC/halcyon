@@ -21,12 +21,12 @@ class ThemeManager implements \Countable
 	private $path;
 
 	/**
-	 * @var string Path to scan for themes
+	 * @var object View manager
 	 */
-	private $view;
+	//private $view;
 
 	/**
-	 * @var string Path to scan for themes
+	 * @var string Current active theme
 	 */
 	private $activeTheme;
 
@@ -34,7 +34,8 @@ class ThemeManager implements \Countable
 	 * Constructor
 	 *
 	 * @param Application $app
-	 * @param $path
+	 * @param string $path
+	 * @return void
 	 */
 	public function __construct(Application $app, $path)
 	{
@@ -105,7 +106,7 @@ class ThemeManager implements \Countable
 	 * Return all available themes
 	 *
 	 * @param  integer $state
-	 * @return array
+	 * @return array<string,Theme>
 	 */
 	public function all($state = null)
 	{
@@ -136,7 +137,7 @@ class ThemeManager implements \Countable
 	/**
 	 * Return all enabled themes
 	 *
-	 * @return array
+	 * @return array<string,Theme>
 	 */
 	public function allEnabled()
 	{
@@ -146,7 +147,7 @@ class ThemeManager implements \Countable
 	/**
 	 * Return all disabled themes
 	 *
-	 * @return array
+	 * @return array<string,Theme>
 	 */
 	public function allDisabled()
 	{
@@ -157,7 +158,7 @@ class ThemeManager implements \Countable
 	 * Get only the front-end themes
 	 *
 	 * @param  string $type
-	 * @return array
+	 * @return array<string,Theme>
 	 */
 	public function allByType($type = 'site')
 	{
@@ -344,8 +345,7 @@ class ThemeManager implements \Countable
 	/**
 	 * Activate a theme. Activation can be done by the theme's name, or via a Theme object.
 	 *
-	 * @param string|Theme $theme
-	 * @throws ThemeNotFoundException
+	 * @return Theme
 	 */
 	public function getActiveTheme()
 	{
@@ -356,6 +356,7 @@ class ThemeManager implements \Countable
 	 * Activate a theme. Activation can be done by the theme's name, or via a Theme object.
 	 *
 	 * @param string|Theme $theme
+	 * @return void
 	 * @throws ThemeNotFoundException
 	 */
 	public function activate($theme)
@@ -383,6 +384,7 @@ class ThemeManager implements \Countable
 	 * Activates the view finder paths for a theme and its parents.
 	 *
 	 * @param Theme $theme
+	 * @return void
 	 */
 	protected function activateLangPaths(Theme $theme)
 	{
@@ -393,6 +395,7 @@ class ThemeManager implements \Countable
 	 * Activates the view finder paths for a theme and its parents.
 	 *
 	 * @param Theme $theme
+	 * @return void
 	 */
 	protected function activateViewPaths(Theme $theme)
 	{

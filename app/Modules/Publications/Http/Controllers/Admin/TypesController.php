@@ -4,6 +4,7 @@ namespace App\Modules\Publications\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Publications\Models\Type;
@@ -15,7 +16,7 @@ class TypesController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -89,7 +90,7 @@ class TypesController extends Controller
 	/**
 	 * Show the form for creating a new article
 	 *
-	 * @return  Response
+	 * @return  View
 	 */
 	public function create()
 	{
@@ -109,7 +110,7 @@ class TypesController extends Controller
 	 * Show the form for editing the specified entry
 	 *
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  View
 	 */
 	public function edit($id)
 	{
@@ -133,7 +134,6 @@ class TypesController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		//$request->validate([
 		$rules = [
 			'name' => 'required|string|max:50',
 			'alias' => 'nullable|string|max:50'

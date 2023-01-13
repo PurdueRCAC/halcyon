@@ -1,7 +1,7 @@
 <?php
 namespace App\Modules\Publications\Helpers;
 
-//use App\Modules\Publications\Helpers\Downloadable;
+use App\Modules\Publications\Helpers\Downloadable;
 use App\Modules\Publications\Models\Publication;
 use Exception;
 
@@ -48,7 +48,7 @@ class Download
 	/**
 	 * Constructor
 	 *
-	 * @param   object  $reference
+	 * @param   Publication  $reference
 	 * @param   string  $format
 	 * @return  void
 	 */
@@ -62,7 +62,7 @@ class Download
 	 * Set the format
 	 *
 	 * @param   string  $format
-	 * @return  void
+	 * @return  Download
 	 */
 	public function setFormat($format)
 	{
@@ -84,10 +84,10 @@ class Download
 	/**
 	 * Set the reference
 	 *
-	 * @param   object  $reference
-	 * @return  void
+	 * @param   Publication  $reference
+	 * @return  Download
 	 */
-	public function setReference($reference)
+	public function setReference(Publication $reference)
 	{
 		$this->_reference = $reference;
 
@@ -97,7 +97,7 @@ class Download
 	/**
 	 * Get the reference
 	 *
-	 * @return  object
+	 * @return  Publication
 	 */
 	public function getReference()
 	{
@@ -108,7 +108,7 @@ class Download
 	 * Set the mime type
 	 *
 	 * @param   string  $mime
-	 * @return  void
+	 * @return  Download
 	 */
 	public function setMimeType($mime)
 	{
@@ -131,11 +131,13 @@ class Download
 	 * Set the extension
 	 *
 	 * @param   string  $extension
-	 * @return  void
+	 * @return  Download
 	 */
 	public function setExtension($extension)
 	{
 		$this->_extension = $extension;
+
+		return $this;
 	}
 
 	/**
@@ -153,13 +155,15 @@ class Download
 	 *
 	 * @param   object  $formatter
 	 * @param   string  $format
-	 * @return  void
+	 * @return  Download
 	 */
 	public function setFormatter($formatter, $format='')
 	{
 		$format = ($format) ? $format : $this->_format;
 
 		$this->_formatter[$format] = $formatter;
+
+		return $this;
 	}
 
 	/**
@@ -180,6 +184,7 @@ class Download
 	 *
 	 * @param   object  $reference  Record to format
 	 * @return  string
+	 * @throws  Exception
 	 */
 	public function formatReference($reference=null)
 	{

@@ -516,18 +516,17 @@ class Associations extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
-	public function delete(array $options = [])
+	public function delete()
 	{
 		foreach ($this->children as $row)
 		{
-			$row->delete($options);
+			$row->delete();
 		}
 
 		// Attempt to delete the record
-		return parent::delete($options);
+		return parent::delete();
 	}
 
 	/**

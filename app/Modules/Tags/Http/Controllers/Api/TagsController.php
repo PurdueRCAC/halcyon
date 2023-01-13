@@ -96,7 +96,7 @@ class TagsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return TagResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -225,7 +225,7 @@ class TagsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return Response|TagResource
 	 */
 	public function create(Request $request)
 	{
@@ -300,7 +300,7 @@ class TagsController extends Controller
 	 * 		}
 	 * }
 	 * @param  integer  $id
-	 * @return Response
+	 * @return TagResource
 	 */
 	public function read($id)
 	{
@@ -397,7 +397,7 @@ class TagsController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   integer $id
-	 * @return  Response
+	 * @return  Response|TagResource
 	 */
 	public function update(Request $request, $id)
 	{

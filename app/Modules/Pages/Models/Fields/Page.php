@@ -21,7 +21,7 @@ class Page extends Select
 	/**
 	 * Method to get the field input markup.
 	 *
-	 * @return  string  The field input markup.
+	 * @return  array
 	 */
 	protected function getOptions()
 	{

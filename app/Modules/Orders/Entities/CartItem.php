@@ -4,6 +4,7 @@ namespace App\Modules\Orders\Entities;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
+use InvalidArgumentException;
 
 /**
  * Based on Gloudemans\Shoppingcart\CartItem
@@ -79,15 +80,15 @@ class CartItem implements Arrayable, Jsonable
 	{
 		if (empty($id))
 		{
-			throw new \InvalidArgumentException('Please supply a valid identifier.');
+			throw new InvalidArgumentException('Please supply a valid identifier.');
 		}
 		if (empty($name))
 		{
-			throw new \InvalidArgumentException('Please supply a valid name.');
+			throw new InvalidArgumentException('Please supply a valid name.');
 		}
 		if (strlen($price) < 0 || ! is_numeric($price))
 		{
-			throw new \InvalidArgumentException('Please supply a valid price.');
+			throw new InvalidArgumentException('Please supply a valid price.');
 		}
 
 		$this->id       = $id;
@@ -187,7 +188,7 @@ class CartItem implements Arrayable, Jsonable
 	{
 		if (empty($qty) || ! is_numeric($qty))
 		{
-			throw new \InvalidArgumentException('Please supply a valid quantity.');
+			throw new InvalidArgumentException('Please supply a valid quantity.');
 		}
 
 		$this->qty = $qty;

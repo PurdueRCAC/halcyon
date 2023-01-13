@@ -26,7 +26,7 @@ class ItemCreated
 	/**
 	 * Return the entity
 	 *
-	 * @return \Illuminate\Database\Eloquent\Model
+	 * @return Item
 	 */
 	public function getItem()
 	{

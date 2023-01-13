@@ -9,15 +9,23 @@ class TypeUpdating
 	/**
 	 * @var Type
 	 */
-	private $type;
+	public $type;
 
+	/**
+	 * Constructor
+	 *
+	 * @param Type $type
+	 * @return void
+	 */
 	public function __construct(Type $type)
 	{
 		$this->type = $type;
 	}
 
 	/**
-	 * @return Item
+	 * Return the entity
+	 *
+	 * @return Type
 	 */
 	public function getType()
 	{

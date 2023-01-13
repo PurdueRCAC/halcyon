@@ -2,6 +2,7 @@
 
 namespace App\Modules\Menus\Http\Middleware;
 
+use Illuminate\Http\Request;
 use Closure;
 
 class SetActiveMenu
@@ -9,19 +10,19 @@ class SetActiveMenu
 	/**
 	 * Handle an incoming request.
 	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \Closure  $next
+	 * @param  Request  $request
+	 * @param  Closure  $next
 	 * @param  string|null  $guard
 	 * @return mixed
 	 */
-	public function handle($request, Closure $next, $guard = null)
+	public function handle(Request $request, Closure $next, $guard = null)
 	{
 		if (!app()->has('menu') || app()->runningInConsole())
 		{
 			return $next($request);
 		}
 
-		$route = $request->path(); //app('router')->current();
+		$route = $request->path();
 		$route = trim($route, '/');
 
 		$menu = app('menu');
@@ -34,10 +35,6 @@ class SetActiveMenu
 			if (is_object($item))
 			{
 				// Set the information in the request
-				//$vars = $item->query;
-
-				// Get the itemid
-				//$vars['menuid'] = $item->id;
 				$request->merge(['itemid' => $item->id]);
 
 				// Set the active menu item
@@ -65,7 +62,6 @@ class SetActiveMenu
 			// Get the length of the route
 			$length = strlen($item->link);
 			$item->link = trim($item->link, '/');
-			//echo $route . ' -- '. $item->link . '<br />';
 
 			if ($length > 0 && strpos($route . '/', $item->link . '/') === 0
 			 && $item->type != 'alias'

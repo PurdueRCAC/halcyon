@@ -551,14 +551,13 @@ class Report extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @param  array   $options
 	 * @return boolean False if error, True on success
 	 */
-	public function delete(array $options = [])
+	public function delete()
 	{
 		foreach ($this->comments as $comment)
 		{
-			if (!$comment->delete($options))
+			if (!$comment->delete())
 			{
 				return false;
 			}
@@ -566,7 +565,7 @@ class Report extends Model
 
 		foreach ($this->resources as $resource)
 		{
-			if (!$resource->delete($options))
+			if (!$resource->delete())
 			{
 				return false;
 			}
@@ -574,14 +573,14 @@ class Report extends Model
 
 		foreach ($this->users as $user)
 		{
-			if (!$user->delete($options))
+			if (!$user->delete())
 			{
 				return false;
 			}
 		}
 
 		// Attempt to delete the record
-		return parent::delete($options);
+		return parent::delete();
 	}
 
 	/**

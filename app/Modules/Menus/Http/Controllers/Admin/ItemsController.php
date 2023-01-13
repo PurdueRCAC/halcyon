@@ -4,6 +4,7 @@ namespace App\Modules\Menus\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Menus\Helpers\ItemType;
@@ -21,7 +22,7 @@ class ItemsController extends Controller
 	 * 
 	 * @param  StatefulRequest $request
 	 * @param  string  $menutype
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request, $menutype = null)
 	{
@@ -410,7 +411,7 @@ class ItemsController extends Controller
 	 * Show the form for creating a new article
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  View
 	 */
 	public function create(Request $request)
 	{
@@ -459,7 +460,7 @@ class ItemsController extends Controller
 	 * Show the form for editing the specified entry
 	 *
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  View
 	 */
 	public function edit($id)
 	{

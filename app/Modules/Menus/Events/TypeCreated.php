@@ -15,7 +15,6 @@ class TypeCreated
 	 * Constructor
 	 *
 	 * @param Type $type
-	 * @param array $data
 	 * @return void
 	 */
 	public function __construct(Type $type)
@@ -26,7 +25,7 @@ class TypeCreated
 	/**
 	 * Return the entity
 	 *
-	 * @return \Illuminate\Database\Eloquent\Model
+	 * @return Type
 	 */
 	public function getType()
 	{

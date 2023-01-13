@@ -3,9 +3,10 @@
 namespace App\Modules\Orders\Entities;
 
 use Closure;
-use Illuminate\Support\Collection;
+use Illuminate\Collections\Collection;
 use Illuminate\Session\SessionManager;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Database\Connection;
 use Illuminate\Contracts\Events\Dispatcher;
 use App\Modules\Orders\Exceptions\UnknownModelException;
 use App\Modules\Orders\Exceptions\InvalidRowIDException;
@@ -17,34 +18,38 @@ use Carbon\Carbon;
  */
 class Cart
 {
+	/**
+	 * @var string
+	 */
 	const DEFAULT_INSTANCE = 'default';
 
 	/**
 	 * Instance of the session manager.
 	 *
-	 * @var \Illuminate\Session\SessionManager
+	 * @var SessionManager
 	 */
 	private $session;
 
 	/**
 	 * Instance of the event dispatcher.
 	 * 
-	 * @var \Illuminate\Contracts\Events\Dispatcher
+	 * @var Dispatcher
 	 */
 	private $events;
 
 	/**
 	 * Holds the current cart instance.
 	 *
-	 * @var string
+	 * @var Cart
 	 */
 	private $instance;
 
 	/**
 	 * Cart constructor.
 	 *
-	 * @param \Illuminate\Session\SessionManager      $session
-	 * @param \Illuminate\Contracts\Events\Dispatcher $events
+	 * @param SessionManager $session
+	 * @param Dispatcher $events
+	 * @return void
 	 */
 	public function __construct(SessionManager $session, Dispatcher $events)
 	{
@@ -223,7 +228,7 @@ class Cart
 	/**
 	 * Get the content of the cart.
 	 *
-	 * @return \Illuminate\Support\Collection
+	 * @return Collection
 	 */
 	public function content()
 	{
@@ -500,7 +505,7 @@ class Cart
 	/**
 	 * Get the carts content, if there is no cart content set yet, return a new empty Collection
 	 *
-	 * @return \Illuminate\Support\Collection
+	 * @return Collection
 	 */
 	protected function getContent()
 	{
@@ -573,7 +578,7 @@ class Cart
 	/**
 	 * Get the database connection.
 	 *
-	 * @return \Illuminate\Database\Connection
+	 * @return Connection
 	 */
 	private function getConnection()
 	{

@@ -247,7 +247,7 @@ class Type extends Model
 	/**
 	 * Gets a list of all mod_mainmenu modules and collates them by menutype
 	 *
-	 * @return  array
+	 * @return  array<string,array>
 	 */
 	public static function getWidgets()
 	{
@@ -379,10 +379,9 @@ class Type extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
-	public function delete(array $options = [])
+	public function delete()
 	{
 		// Get the user id
 		$userId = auth()->user()->id;
@@ -426,6 +425,6 @@ class Type extends Model
 		}
 
 		// Attempt to delete the record
-		return parent::delete($options);
+		return parent::delete();
 	}
 }

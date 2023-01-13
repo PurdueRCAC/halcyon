@@ -90,11 +90,11 @@ class InstallCommand extends Command
 	/**
 	 * Install the specified module.
 	 *
-	 * @param string $name
-	 * @param string $version
-	 * @param string $type
-	 * @param bool   $tree
-	 * @return  void
+	 * @param  string $name
+	 * @param  string $version
+	 * @param  string $type
+	 * @param  bool   $tree
+	 * @return void
 	 */
 	protected function install($name, $version = 'dev-master', $type = 'composer', $tree = false)
 	{
@@ -132,7 +132,7 @@ class InstallCommand extends Command
 	/**
 	 * Get the console command arguments.
 	 *
-	 * @return array
+	 * @return array<int,array>
 	 */
 	protected function getArguments()
 	{
@@ -145,7 +145,7 @@ class InstallCommand extends Command
 	/**
 	 * Get the console command options.
 	 *
-	 * @return array
+	 * @return array<int,array>
 	 */
 	protected function getOptions()
 	{

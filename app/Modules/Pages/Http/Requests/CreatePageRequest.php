@@ -6,8 +6,14 @@ use App\Modules\Core\Internationalisation\BaseFormRequest;
 
 class CreatePageRequest extends BaseFormRequest
 {
+	/**
+	 * @var string
+	 */
 	protected $translationsAttributesKey = 'page::pages.validation.attributes';
 
+	/**
+	 * @return array<string,string>
+	 */
 	public function rules()
 	{
 		return [
@@ -15,6 +21,9 @@ class CreatePageRequest extends BaseFormRequest
 		];
 	}
 
+	/**
+	 * @return array<string,string>
+	 */
 	public function translationRules()
 	{
 		return [
@@ -23,11 +32,17 @@ class CreatePageRequest extends BaseFormRequest
 		];
 	}
 
+	/**
+	 * @return true
+	 */
 	public function authorize()
 	{
 		return true;
 	}
 
+	/**
+	 * @return array<string,string>
+	 */
 	public function messages()
 	{
 		return [
@@ -36,6 +51,9 @@ class CreatePageRequest extends BaseFormRequest
 		];
 	}
 
+	/**
+	 * @return array<string,string>
+	 */
 	public function translationMessages()
 	{
 		return [

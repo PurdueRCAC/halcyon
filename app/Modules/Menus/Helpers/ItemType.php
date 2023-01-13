@@ -15,14 +15,14 @@ class ItemType
 	/**
 	 * A reverse lookup of the base link URL to Title
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rlu = array();
 
 	/**
 	 * Method to get the reverse lookup of the base link URL to Title
 	 *
-	 * @return  array  Array of reverse lookup of the base link URL to Title
+	 * @return  array<string,string>  Array of reverse lookup of the base link URL to Title
 	 */
 	public function getReverseLookup()
 	{
@@ -36,7 +36,7 @@ class ItemType
 	/**
 	 * Method to get the available menu item type options.
 	 *
-	 * @return  array  Array of groups with menu item types.
+	 * @return  array<string,array>  Array of groups with menu item types.
 	 */
 	public function getTypeOptions()
 	{
@@ -99,7 +99,7 @@ class ItemType
 	 *
 	 * @param   string  $file
 	 * @param   string  $module
-	 * @return  array
+	 * @return  false|array<int,stdClass>
 	 */
 	protected function getTypeOptionsFromXML($file, $module)
 	{
@@ -186,7 +186,7 @@ class ItemType
 	 * Method to get type options from MVC
 	 *
 	 * @param   object  $module
-	 * @return  array
+	 * @return  array<int,stdClass>
 	 */
 	protected function getTypeOptionsFromMVC($module)
 	{
@@ -298,7 +298,7 @@ class ItemType
 	 *
 	 * @param   object  $module
 	 * @param   string  $view
-	 * @return  array
+	 * @return  array<int,stdClass>
 	 */
 	protected function getTypeOptionsFromLayouts($module, $view = null)
 	{

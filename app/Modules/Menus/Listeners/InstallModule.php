@@ -2,6 +2,7 @@
 
 namespace App\Modules\Menus\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use Illuminate\Database\Events\MigrationEnded;
 use App\Modules\Core\Models\Extension;
 use App\Modules\Menus\Models\Item;
@@ -15,10 +16,10 @@ class InstallModule
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events)
 	{
 		//$events->listen(MigrationEnded::class, self::class . '@handleMigrationEnded');
 	}
@@ -26,8 +27,7 @@ class InstallModule
 	/**
 	 * Plugin that loads module positions within content
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin.
-	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @param   MigrationEnded $event
 	 * @return  void
 	 */
 	public function handleMigrationEnded(MigrationEnded $event)

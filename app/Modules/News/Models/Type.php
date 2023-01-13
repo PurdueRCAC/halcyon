@@ -255,23 +255,22 @@ class Type extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
-	public function delete(array $options = [])
+	public function delete()
 	{
 		foreach ($this->articles as $article)
 		{
-			$article->delete($options);
+			$article->delete();
 		}
 
 		foreach ($this->children as $child)
 		{
-			$child->delete($options);
+			$child->delete();
 		}
 
 		// Attempt to delete the record
-		return parent::delete($options);
+		return parent::delete();
 	}
 
 	/**

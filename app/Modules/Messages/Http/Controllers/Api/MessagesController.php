@@ -320,7 +320,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return MessageResource
+	 * @return Response|MessageResource
 	 */
 	public function create(Request $request)
 	{
@@ -626,7 +626,7 @@ class MessagesController extends Controller
 	 * }
 	 * @param  Request $request
 	 * @param  integer $id
-	 * @return MessageResource
+	 * @return Response|MessageResource
 	 */
 	public function update(Request $request, int $id)
 	{

@@ -95,7 +95,7 @@ class Item extends Model
 	 * Set alias field value
 	 *
 	 * @param   string  $alias
-	 * @return  string
+	 * @return  void
 	 */
 	public function setAliasAttribute(string $alias)
 	{
@@ -137,10 +137,9 @@ class Item extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
-	public function delete(array $options = [])
+	public function delete()
 	{
 		// Remove children
 		foreach ($this->children as $child)
@@ -149,7 +148,7 @@ class Item extends Model
 		}
 
 		// Attempt to delete the record
-		return parent::delete($options);
+		return parent::delete();
 	}
 
 	/**
@@ -335,7 +334,7 @@ class Item extends Model
 	/**
 	 * Get the root node
 	 *
-	 * @return  object
+	 * @return  Item|null
 	 */
 	public static function rootNode()
 	{
@@ -475,8 +474,9 @@ class Item extends Model
 	}
 
 	/**
-	 * @param   object  $form  A form object.
+	 * @param   Form    $form  A form object.
 	 * @param   mixed   $data  The data expected for the form.
+	 * @param   string  $group
 	 * @return  void
 	 * @throws  Exception if there is an error in the form event.
 	 */

@@ -116,7 +116,7 @@ class PublishCommand extends Command
 	/**
 	 * Get the console command arguments.
 	 *
-	 * @return array
+	 * @return array<int,array>
 	 */
 	protected function getArguments()
 	{

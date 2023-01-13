@@ -2,21 +2,22 @@
 
 namespace App\Modules\Pages\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Pages\Models\Page;
 use App\Modules\Menus\Events\CollectingRoutes;
 
 /**
- * Menu listener for sessions
+ * Menu listener for page routes
  */
 class RouteCollector
 {
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events)
 	{
 		$events->listen(CollectingRoutes::class, self::class . '@handleCollectingRoutes');
 	}

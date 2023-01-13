@@ -5,7 +5,7 @@ namespace App\Modules\Menus\Events;
 class CollectingRoutes
 {
 	/**
-	 * @var array
+	 * @var array<string,array>
 	 */
 	public $routes;
 
@@ -22,7 +22,12 @@ class CollectingRoutes
 	/**
 	 * Return the entity
 	 *
-	 * @return \Illuminate\Database\Eloquent\Model
+	 * @param  string  $group
+	 * @param  string  $text
+	 * @param  string  $value
+	 * @param  string  $path
+	 * @param  string  $indent
+	 * @return CollectingRoutes
 	 */
 	public function addRoute($group, $text, $value, $path = '', $indent = '')
 	{

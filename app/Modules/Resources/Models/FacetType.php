@@ -105,10 +105,9 @@ class FacetType extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @param   array    $options
 	 * @return  boolean  False if error, True on success
 	 */
-	public function delete(array $options = [])
+	public function delete()
 	{
 		foreach ($this->options as $row)
 		{
@@ -120,6 +119,6 @@ class FacetType extends Model
 			$row->delete();
 		}
 
-		return parent::delete($options);
+		return parent::delete();
 	}
 }

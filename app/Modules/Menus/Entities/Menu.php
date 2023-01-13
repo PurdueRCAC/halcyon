@@ -282,7 +282,7 @@ class Menu extends Fluent
 	/**
 	 * Loads the entire menu table into memory.
 	 *
-	 * @return  array
+	 * @return  void
 	 */
 	public function load()
 	{
