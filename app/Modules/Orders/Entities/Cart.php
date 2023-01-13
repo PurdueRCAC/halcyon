@@ -3,7 +3,7 @@
 namespace App\Modules\Orders\Entities;
 
 use Closure;
-use Illuminate\Collections\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Session\SessionManager;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Connection;

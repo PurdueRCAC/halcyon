@@ -195,7 +195,7 @@ class Generator
 	/**
 	 * Get all modules that have API routes
 	 *
-	 * @return Illuminate\Collections\Collection
+	 * @return Illuminate\Support\Collection
 	 */
 	public function modules()
 	{

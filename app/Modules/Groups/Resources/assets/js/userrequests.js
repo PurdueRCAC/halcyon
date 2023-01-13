@@ -1,4 +1,7 @@
-/* global $ */ // jquery.js
+
+var headers = {
+	'Content-Type': 'application/json'
+};
 
 var UserRequests = {
 	/**
@@ -32,30 +35,28 @@ var UserRequests = {
 		// If no specific resources, at least approve access
 		// to the group.
 		if (requests.length <= 0) {
-			$.ajax({
-				url: membership,
-				type: 'put',
-				data: {
+			fetch(membership, {
+				method: 'PUT',
+				headers: headers,
+				body: JSON.stringify({
 					"membertype": 1
-				},
-				dataType: 'json',
-				async: false,
-				success: function () {
+				})
+			})
+			.then(function (response) {
+				if (response.ok) {
 					window.location.reload(true);
-				},
-				error: function (xhr) {
-					var msg = 'Failed to approve request.';
-
-					if (xhr.responseJSON) {
-						msg = xhr.responseJSON.message;
-						if (typeof msg === 'object') {
-							var lines = Object.values(msg);
-							msg = lines.join('<br />');
-						}
-					}
-
-					alert(msg);
+					return;
 				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (err) {
+				alert(err);
 			});
 			return;
 		}
@@ -69,64 +70,54 @@ var UserRequests = {
 			UserRequests.approvepending++;
 
 			// Group ID isn't needed but is included for logging
-			$.ajax({
-				url: requests[i],
-				type: 'put',
-				data: {
+			fetch(requests[i], {
+				method: 'PUT',
+				headers: headers,
+				body: JSON.stringify({
 					"groupid": groupid
-				},
-				dataType: 'json',
-				async: false,
-				success: function () {
-					$.ajax({
-						url: membership,
-						type: 'put',
-						data: {
+				})
+			})
+			.then(function (response) {
+				if (response.ok) {
+					fetch(membership, {
+						method: 'PUT',
+						headers: headers,
+						body: JSON.stringify({
 							"membertype": 1
-						},
-						dataType: 'json',
-						async: false,
-						success: function () {
+						})
+					})
+					.then(function (response) {
+						if (response.ok) {
 							UserRequests.approvepending--;
 
 							if (UserRequests.approvepending == 0) {
 								window.location.reload(true);
 							}
-						},
-						error: function (xhr) {
-							var msg = 'Failed to approve request.';
-
-							if (xhr.responseJSON) {
-								msg = xhr.responseJSON.message;
-								if (typeof msg === 'object') {
-									var lines = Object.values(msg);
-									msg = lines.join('<br />');
-								}
+							return;
+						}
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
 							}
-
-							alert(msg);
-						}
+							throw msg;
+						});
+					})
+					.catch(function (err) {
+						alert(err);
 					});
-
-					/*UserRequests.approvepending--;
-
-					if (UserRequests.approvepending == 0) {
-						window.location.reload(true);
-					}*/
-				},
-				error: function (xhr) {
-					var msg = 'Failed to approve request.';
-
-					if (xhr.responseJSON) {
-						msg = xhr.responseJSON.message;
-						if (typeof msg === 'object') {
-							var lines = Object.values(msg);
-							msg = lines.join('<br />');
-						}
-					}
-
-					alert(msg);
+					return;
 				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (err) {
+				alert(err);
 			});
 		}
 	},
@@ -148,31 +139,29 @@ var UserRequests = {
 		// If no specific resources, at least deny access
 		// to the group.
 		if (requests.length <= 0) {
-			$.ajax({
-				url: membership,
-				type: 'delete',
-				dataType: 'json',
-				async: false,
-				success: function () {
+			fetch(membership, {
+				method: 'DELETE',
+				headers: headers
+			})
+			.then(function (response) {
+				if (response.ok) {
 					UserRequests.rejectpending--;
 
 					if (UserRequests.rejectpending == 0) {
 						window.location.reload(true);
 					}
-				},
-				error: function (xhr) {
-					var msg = 'Failed to approve request.';
-
-					if (xhr.responseJSON) {
-						msg = xhr.responseJSON.message;
-						if (typeof msg === 'object') {
-							var lines = Object.values(msg);
-							msg = lines.join('<br />');
-						}
-					}
-
-					alert(msg);
+					return;
 				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (err) {
+				alert(err);
 			});
 			return;
 		}
@@ -185,57 +174,48 @@ var UserRequests = {
 
 			UserRequests.rejectpending++;
 
-			$.ajax({
-				url: requests[i],
-				type: 'delete',
-				async: false,
-				success: function () {
-					$.ajax({
-						url: membership,
-						type: 'delete',
-						dataType: 'json',
-						async: false,
-						success: function () {
+			fetch(requests[i], {
+				method: 'DELETE',
+				headers: headers
+			})
+			.then(function (response) {
+				if (response.ok) {
+					fetch(membership, {
+						method: 'DELETE',
+						headers: headers
+					})
+					.then(function (response) {
+						if (response.ok) {
 							UserRequests.rejectpending--;
 
 							if (UserRequests.rejectpending == 0) {
 								window.location.reload(true);
 							}
-						},
-						error: function (xhr) {
-							var msg = 'Failed to approve request.';
-
-							if (xhr.responseJSON) {
-								msg = xhr.responseJSON.message;
-								if (typeof msg === 'object') {
-									var lines = Object.values(msg);
-									msg = lines.join('<br />');
-								}
+							return;
+						}
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
 							}
-
-							alert(msg);
-						}
+							throw msg;
+						});
+					})
+					.catch(function (err) {
+						alert(err);
 					});
-
-					/*UserRequests.rejectpending--;
-
-					if (UserRequests.rejectpending == 0) {
-						window.location.reload(true);
-					}*/
-				},
-				error: function (xhr) {
-					var msg = 'Failed to reject request.';
-
-					if (xhr.responseJSON) {
-						msg = xhr.responseJSON.message;
-						if (typeof msg === 'object') {
-							var lines = Object.values(msg);
-							msg = lines.join('<br />');
-						}
-					}
-
-					alert(msg);
+					return;
 				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (err) {
+				alert(err);
 			});
 		}
 	},
@@ -273,6 +253,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		return;
 	}
 
+	headers = {
+		'Content-Type': 'application/json',
+		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+	};
+
 	// Pending user requests
 	document.querySelectorAll('.toggle-requests').forEach(function (item) {
 		item.addEventListener('change', function () {
@@ -294,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		var inputs = document.querySelectorAll('.approve-request:checked');
 
 		if (!inputs) {
-			alert("Must select an option for all users before continuing.");
+			alert("Please select an option for all users before continuing.");
 			return;
 		}
 
