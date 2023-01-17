@@ -23,7 +23,6 @@ return [
 	'stop' => 'Stop',
 	'stop placeholder' => 'Now',
 	'started' => 'Started',
-	'completed' => 'Completed',
 	'submitted' => 'Submitted',
 	'type' => 'Type',
 	'return status' => 'Return status',
