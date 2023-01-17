@@ -1,3 +1,5 @@
+/* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
+
 /**
  * Convert title to URL segment
  *

@@ -617,7 +617,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// Clone the select to preserve all the optgroups
 	var select = document.getElementById("queue-subresourceid");
-	var sclone = $(select).clone().attr('id', select.getAttribute('id') + '-clone');
+	var sclone = select.cloneNode(true);
+	sclone.setAttribute('id', select.getAttribute('id') + '-clone');
 
 	var qscheduler = document.getElementById('queue-schedulerid');
 	if (qscheduler) {
@@ -651,8 +652,10 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 
 			// Get the optgroup for the selected resource
-			$(select).find("optgroup").remove();
-			$(select).append(sclone.find("optgroup[data-resourceid='" + opt.getAttribute('data-resourceid') + "']").clone());
+			select.querySelectorAll("optgroup").forEach(function (el) {
+				el.remove();
+			});
+			select.append(sclone.querySelector("optgroup[data-resourceid='" + opt.getAttribute('data-resourceid') + "']").cloneNode(true));
 
 			// Finished processing
 			sched.parentNode.className = sched.parentNode.className.replace(' loading', '');

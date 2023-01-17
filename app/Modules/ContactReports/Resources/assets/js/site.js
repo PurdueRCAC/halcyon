@@ -1,7 +1,5 @@
 /* global $ */ // jquery.js
 
-// date.js - used for month names
-
 var root = document.querySelector('meta[name="base-url"]').getAttribute('content') + "/api/";
 var keywords_pending = 0;
 var multi_group = false;
@@ -293,40 +291,49 @@ function CRMToggle(on, refresh) {
 		refresh = true;
 	}
 
-	$(".tab-add").addClass('d-none');
-	$(".tab-edit").addClass('d-none');
-	$(".tab-follow").addClass('d-none');
-	$(".tab-search").addClass('d-none');
-	$(".tab-" + on).removeClass('d-none');
+	document.querySelectorAll('.tab-add').forEach(function (el) {
+		el.classList.add('d-none');
+	});
+	document.querySelectorAll('.tab-edit').forEach(function (el) {
+		el.classList.add('d-none');
+	});
+	document.querySelectorAll('.tab-follow').forEach(function (el) {
+		el.classList.add('d-none');
+	});
+	document.querySelectorAll('.tab-search').forEach(function (el) {
+		el.classList.add('d-none');
+	});
+	document.querySelectorAll('.tab-' + on).forEach(function (el) {
+		el.classList.remove('d-none');
+	});
 
 	activetab = on;
 
-	$(".tab").removeClass('activeTab').removeClass('active');
+	document.querySelectorAll('.tab').forEach(function (el) {
+		el.classList.remove('activeTab');
+		el.classList.remove('active');
+	});
 
 	document.getElementById("INPUT_clear").value = document.getElementById("INPUT_clear").getAttribute('data-txt-' + on);
 	document.getElementById("INPUT_add").value = document.getElementById("INPUT_add").getAttribute('data-txt-' + on);
 	document.getElementById("TAB_add").innerHTML = document.getElementById("TAB_add").getAttribute('data-txt-' + on);
 	document.getElementById("SPAN_header").innerHTML = document.getElementById("SPAN_header").getAttribute('data-txt-' + on);
 
-	if (on == 'search') {
-		$("#TAB_" + on).addClass('activeTab').addClass('active');
+	var tab = document.getElementById("TAB_" + (on == 'edit' ? 'add' : on));
+	tab.classList.add('activeTab');
+	tab.classList.add('active');
 
+	if (on == 'search') {
 		document.getElementById("datestartshort").disabled = false;
 
 		multi_group = true;
 	} else if (on == 'add') {
-		$("#TAB_" + on).addClass('activeTab').addClass('active');
-
 		document.getElementById("datestartshort").disabled = false;
 
 		multi_group = false;
 	} else if (on == 'edit') {
-		$("#TAB_add").addClass('activeTab').addClass('active');
-
 		multi_group = false;
 	} else if (on == 'follow') {
-		$("#TAB_" + on).addClass('activeTab').addClass('active');
-
 		document.getElementById("datestartshort").disabled = false;
 
 		// resets users and groups when in follow context
@@ -783,8 +790,8 @@ function CRMAddEntry() {
 
 	notes = document.getElementById("NotesText").value;
 
-	var searchdata = $('#crm-search-data');
-	var sdata = JSON.parse(searchdata.html());
+	var searchdata = document.getElementById('crm-search-data');
+	var sdata = JSON.parse(searchdata.innerHTML);
 
 	var removeusers = Array();
 	var addusers = Array();
@@ -793,21 +800,17 @@ function CRMAddEntry() {
 		add = true;
 
 	if (window.location.href.match(/edit/)) {
-		var data = $('#crm-data');
+		var data = document.getElementById('crm-data');
 		var original = {};
-		//var originalusers = [];
-		//var originalcontactusers = [];
-		if (data.length) {
-			var orig = JSON.parse(data.html());
+
+		if (data) {
+			var orig = JSON.parse(data.innerHTML);
 			original = orig.original;
-			//originalusers = orig.originalusers;
-			//originalcontactusers = orig.originalcontactusers;
 		}
 
 		// update
-		//if (contactdate != original['datetimecontact']) {
 		post['datetimecontact'] = contactdate;
-		//}
+
 		if (groups.length > 0 && groups[0] != original['group']) {
 			post['groupid'] = groups[0];
 		}
@@ -1119,11 +1122,11 @@ function CRMUpdatedReport() {
  * @return  {void}
  */
 function CRMUpdatedFollowUser(results) {
-	var data = $('#crm-search-data');
-	var sdata = JSON.parse(data.html());
+	var data = document.getElementById('crm-search-data');
+	var sdata = JSON.parse(data.innerHTML);
 	sdata.followerofusers.push(results);
 
-	data.html(JSON.stringify(sdata));
+	data.innerHTML = JSON.stringify(sdata);
 
 	document.getElementById("INPUT_add").disabled = true;
 }
@@ -1131,32 +1134,26 @@ function CRMUpdatedFollowUser(results) {
 /**
  * Callback after following a group
  *
- * @param   {object}  xml
+ * @param   {object}  results
  * @return  {void}
  */
 function CRMUpdatedFollowGroup(results) {
-	//if (xml.status == 200) {
-	// add to cache
-	//var results = JSON.parse(xml.responseText);
-
-	var data = $('#crm-search-data');
-	var sdata = JSON.parse(data.html());
+	var data = document.getElementById('crm-search-data');
+	var sdata = JSON.parse(data.innerHTML);
 	sdata.followerofgroups.push(results);
 
-	data.html(JSON.stringify(sdata));
+	data.innerHTML = JSON.stringify(sdata);
 
 	document.getElementById("INPUT_add").disabled = true;
-	//}
 }
 
 /**
  * Callback for creating a new report
  *
  * @param   {object}  results
- * @param   {array}   people
  * @return  {void}
  */
-function CRMNewReport(results) { //people
+function CRMNewReport(results) {
 	document.getElementById("INPUT_add").disabled = false;
 
 	document.getElementById("NotesText").value = "";
@@ -1167,18 +1164,6 @@ function CRMNewReport(results) { //people
 
 	CRMToggle('search', true);
 }
-
-/**
- * Callback for adding new people
- *
- * @param   {object}  xml
- * @return  {void}
- */
-/*function CRMNewPeopleTag(xml) {
-	if (xml.status != 200) {
-		DisplayError('Unable to create report.', 'An error occurred during processing of new report.');
-	}
-}*/
 
 /**
  * Callback for JS MarkDown parsing
@@ -1460,9 +1445,8 @@ function CRMToggleAddButton() {
 	if (document.getElementById("TAB_add").className.match(/active/)) {
 		var start = document.getElementById("datestartshort").value;
 		var people = document.getElementById("people").value.split(',');
-		//var notes = document.getElementById("NotesText").value;
 
-		if (start != "" && people.length > 0) { // && notes != "") {
+		if (start != "" && people.length > 0) {
 			document.getElementById("INPUT_add").disabled = false;
 		} else {
 			document.getElementById("INPUT_add").disabled = true;
@@ -2193,14 +2177,11 @@ function CRMCancelReportText(id) {
  *
  * @param   {string}  reportid
  * @param   {array}   comments
- * @param   {string}  userid
  * @return  {void}
  */
-function CRMPrintComment(reportid, comment) { //, userid) {
-	//var page = document.location.href.split("/")[4];
-	//if (page == 'crm') {
+function CRMPrintComment(reportid, comment) {
 	comment['comment'] = HighlightMatches(comment['comment']);
-	//}
+
 	// determine if we should edit comment
 	var edit = false;
 	if (comment['can']['edit']) {
@@ -2368,12 +2349,10 @@ function CRMDeleteComment(commentid, reportid) {
 /**
  * Callback after deleting a report comment
  *
- * @param   {object}  xml
  * @param   {array}   arg
  * @return  {void}
  */
 function CRMDeletedComment(arg) {
-	//if (xml.status < 400) {
 	document.getElementById('comment_' + arg['commentid']).style.display = "none";
 
 	fetch(document.getElementById(arg['reportid']).getAttribute('data-api'), {
@@ -2647,6 +2626,7 @@ function CRMEditCommentTextOpen(comment) {
  * Save edited report text
  *
  * @param   {string}  report
+ * @param   {string}  api
  * @return  {void}
  */
 function CRMSaveReportText(report, api) {
@@ -2813,8 +2793,8 @@ function CRMClearSearch() {
 	document.getElementById("NotesText").value = "";
 	document.getElementById("NotesText").dispatchEvent(new Event('refreshEditor', { bubbles: true }));
 
-	var data = $('#crm-search-data');
-	var sdata = JSON.parse(data.html());
+	var data = document.getElementById('crm-search-data');
+	var sdata = JSON.parse(data.innerHTML);
 	var skip = false;
 
 	var groupsdata = document.getElementById("group").value.split(',');
@@ -2990,38 +2970,65 @@ document.addEventListener('DOMContentLoaded', function () {
 		//groupsearch = true;
 		multi_group = true;
 
-		$('.date-pick').on('change', function () {
-			CRMDateSearch();
+		document.querySelectorAll('.date-pick').forEach(function (el) {
+			el.addEventListener('change', function () {
+				CRMDateSearch();
+			});
 		});
-		$('#keywords,#id').on('keyup', function (event) {
-			CRMKeywordSearch(event.keyCode);
-		});
-		$('#NotesText').on('keyup', function () {
-			CRMToggleAddButton();
+		var keywords = document.getElementById('keywords');
+		if (keywords) {
+			keywords.addEventListener('keyup', function (event) {
+				CRMKeywordSearch(event.keyCode);
+			});
+		}
+		var id = document.getElementById('id');
+		if (id) {
+			id.addEventListener('keyup', function (event) {
+				CRMKeywordSearch(event.keyCode);
+			});
+		}
+		var notes = document.getElementById('NotesText');
+		if (notes) {
+			notes.addEventListener('keyup', function () {
+				CRMToggleAddButton();
+			});
+		}
+
+		document.querySelectorAll('.clickto').forEach(function (el) {
+			el.addEventListener('click', function (event) {
+				event.preventDefault();
+				CRMToggleSearch(this.getAttribute('data-subject'));
+			});
 		});
 
-		$('.clickto').on('click', function (event) {
-			event.preventDefault();
-			CRMToggleSearch($(this).data('subject'));
+		var btnsearch = document.getElementById('btn-search');
+		if (btnsearch) {
+			btnsearch.addEventListener('click', function (event) {
+				event.preventDefault();
+				CRMSearch();
+			});
+		}
+		document.querySelectorAll('.btn-clear').forEach(function (el) {
+			el.addEventListener('click', function (event) {
+				event.preventDefault();
+				CRMClearSearch();
+			});
 		});
 
-		$('#btn-search').on('click', function (event) {
-			event.preventDefault();
-			CRMSearch();
-		});
-		$('.btn-clear').on('click', function (event) {
-			event.preventDefault();
-			CRMClearSearch();
-		});
-
-		$('#INPUT_add').on('click', function (event) {
-			event.preventDefault();
-			CRMAddEntry();
-		});
-		$('#crmtype').on('change', function (event) {
-			event.preventDefault();
-			CRMSearch();
-		});
+		var inputadd = document.getElementById('INPUT_add');
+		if (inputadd) {
+			inputadd.addEventListener('click', function (event) {
+				event.preventDefault();
+				CRMAddEntry();
+			});
+		}
+		var crmtype = document.getElementById('crmtype');
+		if (crmtype) {
+			crmtype.addEventListener('click', function (event) {
+				event.preventDefault();
+				CRMSearch();
+			});
+		}
 
 		var tag = $("#tag");
 		if (tag.length) {
@@ -3175,8 +3182,8 @@ document.addEventListener('DOMContentLoaded', function () {
 				});
 		}
 
-		var data = $('#crm-search-data');
-		var sdata = JSON.parse(data.html());
+		var data = document.getElementById('crm-search-data');
+		var sdata = JSON.parse(data.innerHTML);
 		var x;
 
 		if (sdata.length) {
@@ -3263,10 +3270,10 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		}
 
-		data = $('#crm-data');
-		if (data.length) {
+		data = document.getElementById('crm-data');
+		if (data) {
 			//var edit = true;
-			var orig = JSON.parse(data.html());
+			var orig = JSON.parse(data.innerHTML);
 			var original = orig.original;
 
 			document.getElementById('datestartshort').value = original.datetimecontact;//.substring(0, 10);
@@ -3369,8 +3376,10 @@ document.addEventListener('DOMContentLoaded', function () {
 			}, 300);
 		}
 
-		$('.date-pick').on('change', function () {
-			CRMDateSearch();
+		document.querySelectorAll('.date-pick').forEach(function (el) {
+			el.addEventListener('change', function () {
+				CRMDateSearch();
+			});
 		});
 	}
 
