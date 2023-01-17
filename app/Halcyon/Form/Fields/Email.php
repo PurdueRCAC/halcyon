@@ -32,7 +32,7 @@ class Email extends Field
 		$required  = ((string) $this->element['required'] == 'true' ? ' required="required"' : '');
 
 		// " and \ are always forbidden in email unless escaped.
-		$this->value = str_replace(array('"','\\'), '', $this->value);
+		$this->value = str_replace(array('"','\\'), '', (string) $this->value);
 
 		// Initialize JavaScript field attributes.
 		$onchange = $this->element['onchange'] ? ' onchange="' . (string) $this->element['onchange'] . '"' : '';

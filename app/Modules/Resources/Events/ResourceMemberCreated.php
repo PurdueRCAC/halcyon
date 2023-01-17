@@ -23,7 +23,7 @@ class ResourceMemberCreated
 	public $status = 1;
 
 	/**
-	 * @var array
+	 * @var array<int,string>
 	 */
 	public $errors = array();
 

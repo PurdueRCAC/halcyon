@@ -18,7 +18,7 @@ class ResourceMemberDeleted
 	public $user;
 
 	/**
-	 * @var array
+	 * @var array<int,string>
 	 */
 	public $errors = array();
 

@@ -17,7 +17,7 @@ class MessageFactory extends Factory
     /**
      * Factory definition
      *
-     * @return  array
+     * @return  array<string,int|string>
      */
     public function definition()
     {

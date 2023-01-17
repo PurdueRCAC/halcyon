@@ -35,7 +35,7 @@ class CopyCommand extends Command
 		$debug = $this->option('debug') ? true : false;
 		$allocations = $this->option('allocations');
 
-		$id = $this->argument('id');
+		$id = intval($this->argument('id'));
 
 		$asset = Asset::find($id);
 

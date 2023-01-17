@@ -37,7 +37,7 @@ class GenericMessage extends Mailable
 	 *
 	 * @param  Message $message
 	 * @param  User $user
-	 * @param  array $from
+	 * @param  array<string,string> $from
 	 * @return void
 	 */
 	public function __construct(Message $message, User $user, $from = array())
@@ -50,7 +50,7 @@ class GenericMessage extends Mailable
 	/**
 	 * Build the message.
 	 *
-	 * @return $this
+	 * @return GenericMessage
 	 */
 	public function build()
 	{

@@ -21,7 +21,7 @@ class Sql extends Select
 	 * Method to get the custom field options.
 	 * Use the query attribute to supply a query to generate the list.
 	 *
-	 * @return  array  The field option objects.
+	 * @return  array<int,\stdClass>  The field option objects.
 	 */
 	protected function getOptions()
 	{

@@ -10,7 +10,7 @@ trait Historable
 	/**
 	 * boot method
 	 *
-	 * @return  null
+	 * @return  void
 	 */
 	public static function bootHistorable()
 	{
@@ -49,9 +49,9 @@ trait Historable
 	 * Write history
 	 *
 	 * @param   string  $action
-	 * @param   array   $old
-	 * @param   array   $new
-	 * @return  null
+	 * @param   array<string,mixed>   $old
+	 * @param   array<string,mixed>   $new
+	 * @return  void
 	 */
 	public function writeHistory($action, array $old = [], array $new = [])
 	{

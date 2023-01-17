@@ -137,7 +137,7 @@ class TypesController extends Controller
 	/**
 	 * Remove the specified entry
 	 *
-	 * @param   integer   $id
+	 * @param   Request $request
 	 * @return  Response
 	 */
 	public function delete(Request $request)

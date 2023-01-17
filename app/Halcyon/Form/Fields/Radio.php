@@ -74,8 +74,13 @@ class Radio extends Field
 			$html[] = '</li>';
 		}
 
+		$i = is_null($i) ? 0 : $i;
+
 		if ($this->element['option_other'])
 		{
+			$class    = ' class="form-check-input"';
+			$disabled = '';
+
 			$checked = '';
 			if (!$found && $this->value)
 			{
@@ -99,7 +104,7 @@ class Radio extends Field
 	/**
 	 * Method to get the field options for radio buttons.
 	 *
-	 * @return  array  The field option objects.
+	 * @return  array<int,\stdClass>  The field option objects.
 	 */
 	protected function getOptions()
 	{

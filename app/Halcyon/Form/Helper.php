@@ -21,7 +21,7 @@ class Helper
 	 * - /path/2
 	 * </code>
 	 *
-	 * @var  array
+	 * @var  array<string,array>
 	 */
 	protected static $paths;
 
@@ -36,7 +36,7 @@ class Helper
 	 * {KEY}: {OBJECT}
 	 * </code>
 	 *
-	 * @var  array
+	 * @var  array<string,array>
 	 */
 	protected static $entities = array();
 

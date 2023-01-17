@@ -3,7 +3,7 @@
 namespace App\Halcyon\Form\Rules;
 
 use App\Halcyon\Form\Form;
-use App\Halcyon\User\User;
+use App\Modules\Users\Models\User;
 use App\Halcyon\Form\Rule;
 
 /**

@@ -838,7 +838,7 @@ class MembersController extends Controller
 			$owned = auth()->user()->groups->pluck('id')->toArray();
 
 			$queues = array();
-			foreach ($resource->subresources as $sub)
+			foreach ($asset->subresources as $sub)
 			{
 				$queues += $sub->queues()
 					->whereIn('groupid', $owned)

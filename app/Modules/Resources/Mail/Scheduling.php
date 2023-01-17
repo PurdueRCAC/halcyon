@@ -5,6 +5,7 @@ namespace App\Modules\Resources\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use App\Modules\Resources\Models\Asset;
 
 class Scheduling extends Mailable
 {
@@ -20,20 +21,23 @@ class Scheduling extends Mailable
 	/**
 	 * List of started resources
 	 *
-	 * @var array
+	 * @var array<int,Asset>
 	 */
 	protected $started;
 
 	/**
 	 * List of stopped resources
 	 *
-	 * @var array
+	 * @var array<int,Asset>
 	 */
 	protected $stopped;
 
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param  string $action
+	 * @param  array<int,Asset> $started
+	 * @param  array<int,Asset> $stopped
 	 * @return void
 	 */
 	public function __construct($action, $started = array(), $stopped = array())
@@ -56,9 +60,5 @@ class Scheduling extends Mailable
 						'started' => $this->started,
 						'stopped' => $this->stopped,
 					]);
-					/*->withSwiftMessage(function ($message)
-					{
-						$message->getHeaders()->addTextHeader('X-Command', 'resources:emailscheduling');
-					});*/
 	}
 }

@@ -17,7 +17,7 @@ class Language extends Select
 	/**
 	 * Method to get the field options.
 	 *
-	 * @return  array  The field option objects.
+	 * @return  array<int,\stdClass>  The field option objects.
 	 */
 	protected function getOptions()
 	{

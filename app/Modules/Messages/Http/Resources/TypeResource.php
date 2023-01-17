@@ -14,8 +14,6 @@ class TypeResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		$this->type;
-
 		$data = parent::toArray($request);
 
 		// [!] Legacy compatibility

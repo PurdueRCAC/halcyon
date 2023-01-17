@@ -26,7 +26,7 @@ class Username extends Rule
 	{
 		$duplicate = User::query()
 			->where('username', '=', $value)
-			->where('id', '<>', (int) $userId)
+			//->where('id', '<>', (int) $userId)
 			->count();
 
 		if ($duplicate)

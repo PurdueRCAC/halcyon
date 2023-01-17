@@ -27,6 +27,8 @@ class EmailSchedulingCommand extends Command
 
 	/**
 	 * Execute the console command.
+	 *
+	 * @return void
 	 */
 	public function handle()
 	{
@@ -133,11 +135,9 @@ class EmailSchedulingCommand extends Command
 	/**
 	 * Log email
 	 *
-	 * @param   integer $targetuserid
-	 * @param   integer $targetobjectid
 	 * @param   string  $uri
 	 * @param   mixed   $payload
-	 * @return  null
+	 * @return  void
 	 */
 	protected function log($uri = '', $payload = '')
 	{

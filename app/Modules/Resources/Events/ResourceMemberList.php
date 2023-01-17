@@ -12,12 +12,12 @@ class ResourceMemberList
 	public $resource;
 
 	/**
-	 * @var array
+	 * @var array<int,mixed>
 	 */
 	public $results = array();
 
 	/**
-	 * @var array
+	 * @var array<int,string>
 	 */
 	public $errors = array();
 

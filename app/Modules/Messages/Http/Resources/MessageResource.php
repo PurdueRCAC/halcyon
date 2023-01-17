@@ -14,12 +14,11 @@ class MessageResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		$this->type;
-
 		$data = parent::toArray($request);
 
 		$data['api'] = route('api.messages.read', ['id' => $this->id]);
 		$data['target'] = $this->target;
+		$data['type'] = $this->type;
 
 		$data['can'] = array(
 			'edit'   => false,
