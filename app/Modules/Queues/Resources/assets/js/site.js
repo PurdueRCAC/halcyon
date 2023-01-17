@@ -489,10 +489,17 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 			}
 
+			var post = {},
+				fields = new FormData(frm);
+
+			for (var key of fields.keys()) {
+				post[key] = fields.get(key);
+			}
+
 			fetch(frm.getAttribute('data-api'), {
 				method: btn.getAttribute('data-action') == 'update' ? 'PUT' : 'POST',
 				headers: headers,
-				body: $(frm).serialize()
+				body: JSON.stringify(post)
 			})
 				.then(function (response) {
 					if (response.ok) {
