@@ -57,6 +57,8 @@ class TypesController extends Controller
 			$filters['order_dir'] = Type::$orderDir;
 		}
 
+		$query = Type::query();
+
 		if ($filters['search'])
 		{
 			if (is_numeric($filters['search']))
@@ -70,7 +72,7 @@ class TypesController extends Controller
 		}
 
 		// Build query
-		$rows = Type::query()
+		$rows = $query
 			->withCount('resources')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);

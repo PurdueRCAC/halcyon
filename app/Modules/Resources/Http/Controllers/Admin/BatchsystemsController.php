@@ -55,6 +55,8 @@ class BatchsystemsController extends Controller
 			$filters['order_dir'] = Batchsystem::$orderDir;
 		}
 
+		$query = Batchsystem::query();
+
 		if ($filters['search'])
 		{
 			if (is_numeric($filters['search']))
@@ -68,7 +70,7 @@ class BatchsystemsController extends Controller
 		}
 
 		// Build query
-		$rows = Batchsystem::query()
+		$rows = $query
 			->withCount('resources')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
