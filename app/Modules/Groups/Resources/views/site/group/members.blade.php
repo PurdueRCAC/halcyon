@@ -6,7 +6,61 @@ $q = (new \App\Modules\Queues\Models\Queue)->getTable();
 $s = (new \App\Modules\Resources\Models\Child)->getTable();
 $r = (new \App\Modules\Resources\Models\Asset)->getTable();
 
-$managers = collect([]);
+$limit = 200;
+
+$managers = $group->members()
+	->whereIsManager()
+	->join($u, $u . '.userid', $m . '.userid')
+	->whereNull($u . '.dateremoved')
+	->orderBy($u . '.username', 'asc')
+	->paginate($limit, ['*'], 'mgpage', request()->input('mgpage', 1));
+
+// Grab all manager IDs as we want to filter potential
+// duplicate member records from the members list
+$managerids = $group->members()
+	->select($m . '.userid')
+	->whereIsManager()
+	->join($u, $u . '.userid', $m . '.userid')
+	->whereNull($u . '.dateremoved')
+	->get()
+	->pluck('userid')
+	->toArray();
+
+$members = $group->members()
+	->whereIsMember()
+	->join($u, $u . '.userid', $m . '.userid')
+	->whereNull($u . '.dateremoved')
+	->whereNotIn($m . '.userid', $managerids)
+	->orderBy($u . '.username', 'asc')
+	->paginate($limit, ['*'], 'mbpage', request()->input('mbpage', 1));
+
+$viewers = $group->members()
+	->whereIsViewer()
+	->join($u, $u . '.userid', $m . '.userid')
+	->whereNull($u . '.dateremoved')
+	->orderBy($u . '.username', 'asc')
+	->paginate($limit, ['*'], 'vwpage', request()->input('vwpage', 1));
+
+$pending = $group->members()
+	->whereIsPending()
+	->join($u, $u . '.userid', $m . '.userid')
+	->whereNull($u . '.dateremoved')
+	->orderBy($u . '.username', 'asc')
+	->paginate($limit, ['*'], 'pdpage', request()->input('pdpage', 1));
+
+$disabled = $group->members()
+	->withTrashed()
+	->join($u, $u . '.userid', $m . '.userid')
+	->where(function($where) use ($m, $u)
+	{
+		$where->whereNotNull($m . '.dateremoved')
+			->orWhereNotNull($u . '.dateremoved');
+	})
+	->orderBy($u . '.username', 'asc')
+	->paginate($limit, ['*'], 'dspage', request()->input('dspage', 1));
+
+$processed = array();
+/*$managers = collect([]);
 $members = collect([]);
 $viewers = collect([]);
 $pending = collect([]);
@@ -14,9 +68,20 @@ $user_requests = array();
 $disabled = collect([]);
 $processed = array();
 
-$users = $group->members()
-	->orderBy('datecreated', 'desc')
-	->get();
+$total = $group->members()->count();
+
+if ($total > 500)
+{
+	$users = $group->members()
+		->orderBy('datecreated', 'desc')
+		->paginate(500, ['*'], 'page', request()->input('page', 1));
+}
+else
+{
+	$users = $group->members()
+		->orderBy('datecreated', 'desc')
+		->get();
+}
 
 foreach ($users as $me)
 {
@@ -74,7 +139,7 @@ foreach ($users as $me)
 	}
 
 	$processed[] = $me->userid;
-}
+}*/
 
 $resources = array();
 
@@ -159,9 +224,9 @@ foreach ($queues as $queue)
 					$viewers->push($me);
 				}
 			}
-		}
+		}*/
 
-		$processed[] = $queue->id . '_' . $me->userid;*/
+		$processed[] = $queue->id . '_' . $me->userid;
 	}
 
 	$queue->qu = $qu;
@@ -225,8 +290,8 @@ foreach ($unixgroups as $unixgroup)
 	$unixgroup->uu = $uu;
 }
 
-$managers = $managers->sortBy('username');
-$members = $members->sortBy('username');
+//$managers = $managers->sortBy('username');
+//$members = $members->sortBy('username');
 $i = 0;
 ?>
 <div class="row mb-3">
@@ -352,7 +417,7 @@ $i = 0;
 			<p class="alert alert-info">Managers are <strong>not</strong> automatically added to queues and unix groups.</p>
 		@endif
 
-		<table class="table datatable" data-length="{{ count($managers) }}">
+		<table class="table datatable" data-length="{{ $managers->total() }}">
 			<caption class="sr-only">Managers</caption>
 			<thead>
 				<tr>
@@ -529,6 +594,8 @@ $i = 0;
 			</tbody>
 		</table>
 
+		{{ $managers->render() }}
+
 		<div class="alert alert-danger hide" id="managers_error"></div>
 	</div>
 </div>
@@ -558,7 +625,7 @@ $i = 0;
 	</div>
 	<div class="card-body">
 		@if (count($members) > 0)
-			<table class="table datatable" data-length="{{ count($members) }}">
+			<table class="table datatable" data-length="{{ $members->total() }}">
 				<caption class="sr-only">Members</caption>
 				<thead>
 					<tr>
@@ -724,6 +791,8 @@ $i = 0;
 					@endforeach
 				</tbody>
 			</table>
+
+			{{ $members->render() }}
 		@else
 			<p class="alert alert-info">No members found.</p>
 		@endif
@@ -757,7 +826,7 @@ $i = 0;
 		</div>
 	</div>
 	<div class="card-body">
-		<table class="table datatable" data-length="{{ count($viewers) }}">
+		<table class="table datatable" data-length="{{ $viewers->total() }}">
 			<caption class="sr-only">Viewers</caption>
 			<thead>
 				<tr>
@@ -907,6 +976,8 @@ $i = 0;
 			</tbody>
 		</table>
 
+		{{ $viewers->render() }}
+
 		<div class="alert alert-danger hide" id="viewers_error"></div>
 	</div>
 </div>
@@ -938,7 +1009,7 @@ $i = 0;
 	</div>
 	<div class="card-body">
 		@if (count($disabled) > 0)
-			<table class="table table-hover hover datatable" data-length="{{ count($disabled) }}">
+			<table class="table table-hover hover datatable" data-length="{{ $disabled->total() }}">
 				<caption class="sr-only">Disabled Members</caption>
 				<thead>
 					<tr>
@@ -1048,6 +1119,8 @@ $i = 0;
 					@endforeach
 				</tbody>
 			</table>
+
+			{{ $disabled->render() }}
 		@else
 			<p class="alert alert-info">No members found.</p>
 		@endif
