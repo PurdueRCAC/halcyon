@@ -170,14 +170,14 @@
 			$(el).DataTable({
 				pageLength: 200,
 				pagingType: 'numbers',
-				paging: ($(el).attr('data-length') && parseInt($(el).attr('data-length')) > 200 ? true : false),
+				paging: false,//($(el).attr('data-length') && parseInt($(el).attr('data-length')) > 200 ? true : false),
 				scrollY: '50vh',
 				scrollCollapse: true,
 				headers: true,
 				info: true,
 				ordering: false,
 				lengthChange: false,
-				dom: "<'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'i>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'p><'col-sm-12 col-md-7'l>>",
+				dom: "<'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'" + ($(el).attr('data-length') && parseInt($(el).attr('data-length')) > 200 ? '' : 'i') + ">><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'p><'col-sm-12 col-md-7'l>>",
 				scrollX: true,
 				//autoWidth: false,
 				language: {
