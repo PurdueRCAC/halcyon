@@ -9,7 +9,7 @@ use App\Modules\Core\Console\Installers\SetupScript;
 class ConfigureUserProvider implements SetupScript
 {
     /**
-     * @var array
+     * @var array<int,string>
      */
     protected $drivers = [
         'Sentinel',

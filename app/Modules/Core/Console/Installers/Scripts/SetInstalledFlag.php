@@ -25,7 +25,7 @@ class SetInstalledFlag implements SetupScript
      * Fire the install script
      *
      * @param  Command $command
-     * @return mixed
+     * @return void
      */
     public function fire(Command $command)
     {

@@ -13,7 +13,7 @@
 <script src="{{ asset('modules/groups/js/userrequests.js?v=' . filemtime(public_path() . '/modules/groups/js/userrequests.js')) }}"></script>
 <script src="{{ asset('modules/groups/js/site.js?v=' . filemtime(public_path() . '/modules/groups/js/site.js')) }}"></script>
 <script>
-	$(document).ready(function() {
+	document.addEventListener('DOMContentLoaded', function () {
 		document.querySelectorAll('.reveal').forEach(function (item) {
 			item.addEventListener('click', function (e) {
 				document.querySelectorAll(this.getAttribute('data-toggle')).forEach(function(el) {
@@ -26,133 +26,116 @@
 			});
 		});
 
-		$('.list-group').on('click', '.delete-row', function(e){
-			e.preventDefault();
+		document.querySelectorAll('.list-group').forEach(function(el) {
+			el.addEventListener('click', '.delete-row', function(e){
+				e.preventDefault();
 
-			var result = confirm('Are you sure you want to remove this?');
+				var result = confirm('Are you sure you want to remove this?');
 
-			if (result) {
-				var container = $(this).closest('li');
-				container.remove();
-			}
-		});
-
-
-		/*$('#new_group_btn').on('click', function (event) {
-			event.preventDefault();
-
-			CreateNewGroup();
-		});
-		$('#new_group_input').on('keyup', function (event) {
-			if (event.keyCode == 13) {
-				CreateNewGroup();
-			}
-		});
-
-		$('#create_gitorg_btn').on('click', function (event) {
-			event.preventDefault();
-			CreateGitOrg($(this).data('value'));
-		});
-
-		$('.add-property').on('click', function(e){
-			e.preventDefault();
-
-			AddProperty($(this).data('prop'), $(this).data('value'));
-		});
-		$('.add-property-input').on('keyup', function(e){
-			e.preventDefault();
-
-			if (event.keyCode==13){
-				AddProperty($(this).data('prop'), $(this).data('value'));
-			}
-		});*/
-
-		$('.edit-property').on('click', function(e){
-			e.preventDefault();
-
-			var items = ['SPAN', 'INPUT', 'CANCEL', 'SAVE', 'EDIT'], item;
-			for (var i = 0; i < items.length; i++)
-			{
-				item = $('#' + items[i] + '_' + $(this).data('prop') + '_' + $(this).data('value'));
-				if (item.length) {
-					item.toggleClass('hide');
+				if (result) {
+					var container = this.closest('li');
+					container.remove();
 				}
-			}
+			});
 		});
 
-		$('.edit-property-input').on('keyup', function(event){
-			if (event.keyCode == 13) {
-				EditProperty($(this).data('prop'), $(this).data('value'));
-			}
-		});
+		document.querySelectorAll('.edit-property').forEach(function(el) {
+			el.addEventListener('click', function(e){
+				e.preventDefault();
 
-		$('.cancel-edit-property').on('click', function(e){
-			e.preventDefault();
-
-			var items = ['SPAN', 'INPUT', 'CANCEL', 'SAVE', 'EDIT'], item;
-			for (var i = 0; i < items.length; i++)
-			{
-				item = $('#' + items[i] + '_' + $(this).data('prop') + '_' + $(this).data('value'));
-				if (item.length) {
-					item.toggleClass('hide');
+				var items = ['SPAN', 'INPUT', 'CANCEL', 'SAVE', 'EDIT'], item;
+				for (var i = 0; i < items.length; i++)
+				{
+					item = document.getElementById(items[i] + '_' + this.getAttribute('data-prop') + '_' + this.getAttribute('data-value'));
+					if (item) {
+						item.classList.toggle('hide');
+					}
 				}
-			}
+			});
 		});
 
-		$('.save-property').on('click', function(e){
-			e.preventDefault();
-
-			var btn = $(this),
-				input = $('#INPUT_' + btn.data('prop') + '_' + btn.data('value'));
-
-			btn.attr('data-loading', true);
-			//btn.find('.spinner-border').toggleClass('hide');
-			//btn.find('.fa').toggleClass('hide');
-
-			var post = {};
-			post[btn.data('prop')] = input.val();
-
-			$.ajax({
-				url: btn.data('api'),
-				type: 'put',
-				data: post,
-				dataType: 'json',
-				async: false,
-				success: function (data) {
-					if (btn.data('reload')) {
-						window.location.reload(true);
-						return;
-					}
-
-					var span = $('#SPAN_' + btn.data('prop') + '_' + btn.data('value'));
-					if (span.length) {
-						span.toggleClass('hide');
-						span.html(data[btn.data('prop')]);
-					}
-					input.toggleClass('hide');
-
-					//btn.find('.spinner-border').toggleClass('hide');
-					//btn.find('.fa').toggleClass('hide');
-					btn.attr('data-loading', false);
-					btn.toggleClass('hide');
-
-					var cancel = $('#CANCEL_' + btn.data('prop') + '_' + btn.data('value'));
-					if (cancel.length) {
-						cancel.toggleClass('hide');
-					}
-					var edit = $('#EDIT_' + btn.data('prop') + '_' + btn.data('value'));
-					if (edit.length) {
-						edit.toggleClass('hide');
-					}
-				},
-				error: function (xhr, ajaxOptions, thrownError) {
-					//Halcyon.message('danger', xhr.response);
-					//btn.find('spinner-border').toggleClass('hide');
-					//btn.find('fa').toggleClass('hide');
-					btn.attr('data-loading', false);
-					alert(xhr.responseJSON.message);
-					//console.log(xhr);
+		document.querySelectorAll('.edit-property-input').forEach(function(el) {
+			el.addEventListener('keyup', function(event){
+				if (event.keyCode == 13) {
+					EditProperty(
+						this.getAttribute('data-prop'),
+						this.getAttribute('data-value')
+					);
 				}
+			});
+		});
+
+		document.querySelectorAll('.cancel-edit-property').forEach(function(el) {
+			el.addEventListener('click', function(e){
+				e.preventDefault();
+
+				var items = ['SPAN', 'INPUT', 'CANCEL', 'SAVE', 'EDIT'], item;
+				for (var i = 0; i < items.length; i++)
+				{
+					item = document.getElementById(items[i] + '_' + this.getAttribute('data-prop') + '_' + this.getAttribute('data-value'));
+					if (item) {
+						item.classList.toggle('hide');
+					}
+				}
+			});
+		});
+
+		document.querySelectorAll('.save-property').forEach(function(el) {
+			el.addEventListener('click', function(e){
+				e.preventDefault();
+
+				var btn = this,
+					input = document.getElementById('INPUT_' + btn.getAttribute('data-prop') + '_' + btn.getAttribute('data-value'));
+
+				btn.setAttribute('data-loading', true);
+				//btn.find('.spinner-border').toggleClass('hide');
+				//btn.find('.fa').toggleClass('hide');
+
+				var post = {};
+				post[btn.getAttribute('data-prop')] = input.value;
+
+				$.ajax({
+					url: btn.getAttribute('data-api'),
+					type: 'put',
+					data: post,
+					dataType: 'json',
+					async: false,
+					success: function (data) {
+						if (btn.getAttribute('data-reload')) {
+							window.location.reload(true);
+							return;
+						}
+
+						var span = document.getElementById('SPAN_' + btn.getAttribute('data-prop') + '_' + btn.getAttribute('data-value'));
+						if (span) {
+							span.classList.toggle('hide');
+							span.innerHTML = data[btn.getAttribute('data-prop')];
+						}
+						input.classList.toggle('hide');
+
+						//btn.find('.spinner-border').toggleClass('hide');
+						//btn.find('.fa').toggleClass('hide');
+						btn.setAttribute('data-loading', false);
+						btn.classList.toggle('hide');
+
+						var cancel = document.getElementById('CANCEL_' + btn.getAttribute('data-prop') + '_' + btn.getAttribute('data-value'));
+						if (cancel) {
+							cancel.classList.toggle('hide');
+						}
+						var edit = document.getElementById('EDIT_' + btn.getAttribute('data-prop') + '_' + btn.getAttribute('data-value'));
+						if (edit) {
+							edit.classList.toggle('hide');
+						}
+					},
+					error: function (xhr, ajaxOptions, thrownError) {
+						//Halcyon.message('danger', xhr.response);
+						//btn.find('spinner-border').toggleClass('hide');
+						//btn.find('fa').toggleClass('hide');
+						btn.setAttribute('data-loading', false);
+						alert(xhr.responseJSON.message);
+						//console.log(xhr);
+					}
+				});
 			});
 		});
 

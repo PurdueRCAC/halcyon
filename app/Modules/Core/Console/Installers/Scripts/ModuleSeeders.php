@@ -8,17 +8,24 @@ use App\Modules\Core\Console\Installers\SetupScript;
 class ModuleSeeders implements SetupScript
 {
     /**
-     * @var array
+     * @var array<int,string>
      */
     protected $modules = [
-        'Setting',
-        'Page',
+        'Core',
+        'Listeners',
+        'Mailer',
+        'Media',
+        'Menus',
+        'Pages',
+        'Themes',
+        'Users',
+        'Widgets',
     ];
 
     /**
      * Fire the install script
      * @param  Command $command
-     * @return mixed
+     * @return void
      */
     public function fire(Command $command)
     {

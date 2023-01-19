@@ -3,7 +3,7 @@
 namespace App\Modules\Groups\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -259,7 +259,7 @@ class MembersController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  JsonResource
+	 * @return  JsonResource|JsonResponse
 	 */
 	public function create(Request $request)
 	{
@@ -433,7 +433,6 @@ class MembersController extends Controller
 	{
 		$row = Member::findOrFail($id);
 		$row->api = route('api.groups.members.read', ['id' => $row->id]);
-		$row->user;
 		$row->user->setHidden(['api_token']);
 
 		return new JsonResource($row);
@@ -510,7 +509,7 @@ class MembersController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   integer  $id
-	 * @return  JsonResource
+	 * @return  JsonResource|JsonResponse
 	 */
 	public function update(Request $request, int $id)
 	{
@@ -598,7 +597,7 @@ class MembersController extends Controller
 	 * 		}
 	 * }
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete(int $id)
 	{

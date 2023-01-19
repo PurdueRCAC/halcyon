@@ -3,7 +3,7 @@
 namespace App\Modules\Groups\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -173,7 +173,7 @@ class GroupFieldsOfScienceController extends Controller
 	 * }
 	 * @param   Request  $request
 	 * @param   integer  $group
-	 * @return  JsonResponse
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function create(Request $request, int $group)
 	{
@@ -240,7 +240,7 @@ class GroupFieldsOfScienceController extends Controller
 	 * }
 	 * @param   integer  $group
 	 * @param   integer  $id
-	 * @return  JsonResponse
+	 * @return  JsonResource
 	 */
 	public function read($group, int $id)
 	{
@@ -309,7 +309,7 @@ class GroupFieldsOfScienceController extends Controller
 	 * @param   Request $request
 	 * @param   integer $group
 	 * @param   integer $id
-	 * @return  JsonResponse
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function update(Request $request, int $group, int $id)
 	{
@@ -372,7 +372,7 @@ class GroupFieldsOfScienceController extends Controller
 	 * }
 	 * @param   integer  $group
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete(int $group, int $id)
 	{

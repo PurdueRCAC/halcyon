@@ -22,7 +22,7 @@ class SentryInstaller extends ProviderInstaller implements SetupScript
 
     /**
      * Not called
-     * @return mixed
+     * @return void
      */
     public function composer()
     {
@@ -54,7 +54,7 @@ class SentryInstaller extends ProviderInstaller implements SetupScript
     }
 
     /**
-     * @return mixed
+     * @return void
      */
     public function configure()
     {
@@ -80,7 +80,7 @@ class SentryInstaller extends ProviderInstaller implements SetupScript
 
     /**
      * @param string $password
-     * @return mixed
+     * @return string
      */
     public function getHashedPassword($password)
     {

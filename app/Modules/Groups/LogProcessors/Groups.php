@@ -2,6 +2,7 @@
 namespace App\Modules\Groups\LogProcessors;
 
 use App\Modules\History\Models\Log;
+use App\Modules\Groups\Models\Group;
 
 /**
  * Groups log processor

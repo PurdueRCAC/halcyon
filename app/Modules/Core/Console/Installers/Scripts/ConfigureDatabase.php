@@ -40,7 +40,7 @@ class ConfigureDatabase implements SetupScript
     /**
      * Fire the install script
      * @param  Command $command
-     * @return mixed
+     * @return void
      */
     public function fire(Command $command)
     {
@@ -150,7 +150,7 @@ class ConfigureDatabase implements SetupScript
     }
 
     /**
-     * @param array $vars
+     * @param array<string,mixed> $vars
      */
     protected function setLaravelConfiguration($vars)
     {

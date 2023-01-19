@@ -133,11 +133,11 @@ class GroupMemberships
 					$record->summary = 'Removed ' . $user . ' from group ' . $group;
 				}
 			break;
+		}
 
-			if ($record->user)
-			{
-				$record->summary .= ' by ' . $record->user->name;
-			}
+		if ($record->user)
+		{
+			$record->summary .= ' by ' . $record->user->name;
 		}
 
 		return $record;

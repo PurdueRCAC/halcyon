@@ -35,7 +35,7 @@ class ProfileComposer
 			'content' => '',
 		);
 
-		if (request()->segments(2) == 'groups')
+		if (request()->segment(2) == 'groups')
 		{
 			app('pathway')
 				->append(
@@ -43,7 +43,7 @@ class ProfileComposer
 					route('site.users.account.section', ['section' => 'groups'])
 				);
 
-			if ($id = request()->segments(3))
+			if ($id = request()->segment(3))
 			{
 				$group = Group::findOrFail($id);
 

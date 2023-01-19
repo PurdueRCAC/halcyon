@@ -55,7 +55,7 @@ abstract class ProviderInstaller implements SetupScript
     /**
      * Fire the install script
      * @param  Command $command
-     * @return mixed
+     * @return void
      */
     public function fire(Command $command)
     {
@@ -136,8 +136,9 @@ abstract class ProviderInstaller implements SetupScript
     }
 
     /**
-     * @param $search
-     * @param $Driver
+     * @param string $search
+     * @param string $Driver
+     * @return void
      */
     protected function replaceCartalystUserModelConfiguration($search, $Driver)
     {
@@ -155,7 +156,8 @@ abstract class ProviderInstaller implements SetupScript
     /**
      * Set the correct repository binding on the fly for the current request
      *
-     * @param $driver
+     * @param string $driver
+     * @return void
      */
     protected function bindUserRepositoryOnTheFly($driver)
     {
@@ -175,6 +177,8 @@ abstract class ProviderInstaller implements SetupScript
 
     /**
      * Create a first admin user
+     *
+     * @return void
      */
     protected function createFirstUser()
     {

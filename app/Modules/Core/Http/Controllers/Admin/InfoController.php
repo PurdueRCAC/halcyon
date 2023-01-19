@@ -3,7 +3,7 @@
 namespace App\Modules\Core\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\View\View;
 use Illuminate\Routing\Controller;
 use App\Modules\Core\Entities\KnowItAll;
 
@@ -12,8 +12,8 @@ class InfoController extends Controller
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param   Request  $request
-	 * @return Response
+	 * @param  Request  $request
+	 * @return View
 	 */
 	public function index(Request $request)
 	{
@@ -27,8 +27,8 @@ class InfoController extends Controller
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param   Request  $request
-	 * @return Response
+	 * @param  Request  $request
+	 * @return View
 	 */
 	public function styles(Request $request)
 	{

@@ -23,7 +23,7 @@ class UsherInstaller extends ProviderInstaller implements SetupScript
 
     /**
      * Not called
-     * @return mixed
+     * @return void
      */
     public function composer()
     {
@@ -59,7 +59,7 @@ class UsherInstaller extends ProviderInstaller implements SetupScript
     }
 
     /**
-     * @return mixed
+     * @return void
      */
     public function configure()
     {
@@ -101,7 +101,7 @@ class UsherInstaller extends ProviderInstaller implements SetupScript
 
     /**
      * @param string $password
-     * @return mixed
+     * @return string
      */
     public function getHashedPassword($password)
     {

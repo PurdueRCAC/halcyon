@@ -3,7 +3,7 @@
 namespace App\Modules\Groups\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Groups\Models\Group;
@@ -236,7 +236,7 @@ class UnixGroupsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  UnixGroupResource
+	 * @return  UnixGroupResource|JsonResponse
 	 */
 	public function create(Request $request)
 	{
@@ -543,7 +543,7 @@ class UnixGroupsController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   integer $id
-	 * @return  UnixGroupResource
+	 * @return  UnixGroupResource|JsonResponse
 	 */
 	public function update(Request $request, int $id)
 	{
@@ -689,7 +689,7 @@ class UnixGroupsController extends Controller
 	 * 		}
 	 * }
 	 * @param   integer $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete(int $id)
 	{

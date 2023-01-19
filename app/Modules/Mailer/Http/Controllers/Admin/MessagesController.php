@@ -4,6 +4,7 @@ namespace App\Modules\Mailer\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
@@ -23,7 +24,7 @@ class MessagesController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -141,7 +142,8 @@ class MessagesController extends Controller
 	 * Store a newly created entry
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @param   int $id
+	 * @return  void
 	 */
 	public function preview(Request $request, $id)
 	{
@@ -157,8 +159,8 @@ class MessagesController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
-	 * @param   integer  $id
-	 * @return  Response
+	 * @param   Request $request
+	 * @return  View
 	 */
 	public function create(Request $request)
 	{
@@ -370,9 +372,9 @@ class MessagesController extends Controller
 	 * Convert a string of user IDs or emails into an array of emails
 	 *
 	 * @param string $str
-	 * @param array  $emails
+	 * @param array<int,string>  $emails
 	 * @param Request $request
-	 * @return array
+	 * @return array<int,string>
 	 */
 	protected function toEmails($str, $emails, $request)
 	{
@@ -440,7 +442,8 @@ class MessagesController extends Controller
 	 * Store a newly created entry
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @param   int $id
+	 * @return  View
 	 */
 	public function show(Request $request, $id)
 	{

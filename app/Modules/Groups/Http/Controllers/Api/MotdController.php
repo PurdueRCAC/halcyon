@@ -3,7 +3,7 @@
 namespace App\Modules\Groups\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -187,7 +187,7 @@ class MotdController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  JsonResource
+	 * @return  JsonResource|JsonResponse
 	 */
 	public function create(Request $request)
 	{
@@ -338,7 +338,7 @@ class MotdController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   integer $id
-	 * @return  JsonResource
+	 * @return  JsonResource|JsonResponse
 	 */
 	public function update(Request $request, int $id)
 	{
@@ -402,7 +402,7 @@ class MotdController extends Controller
 	 * 		}
 	 * }
 	 * @param   integer  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete(int $id)
 	{

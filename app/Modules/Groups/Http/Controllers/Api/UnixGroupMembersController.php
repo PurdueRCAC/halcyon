@@ -231,7 +231,7 @@ class UnixGroupMembersController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  JsonResource
+	 * @return  JsonResource|JsonResponse
 	 */
 	public function create(Request $request)
 	{
@@ -464,7 +464,7 @@ class UnixGroupMembersController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   integer $id
-	 * @return  JsonResource
+	 * @return  JsonResource|JsonResponse
 	 */
 	public function update(Request $request, int $id)
 	{
@@ -526,7 +526,7 @@ class UnixGroupMembersController extends Controller
 	 * 		}
 	 * }
 	 * @param   integer $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete(int $id)
 	{

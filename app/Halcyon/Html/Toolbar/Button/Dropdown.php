@@ -22,7 +22,7 @@ class Dropdown extends Button
 	 * @param   string   $type     Unused string, formerly button type.
 	 * @param   string   $name     Button name
 	 * @param   string   $text     The link text
-	 * @param   array    $items
+	 * @param   array<string,string>    $items
 	 * @return  string   HTML string for the button
 	 */
 	public function fetchButton($type = 'Dropdown', $name = '', $text = '', $items = array())

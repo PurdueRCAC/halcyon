@@ -275,7 +275,7 @@ class Article extends Model
 	/**
 	 * Is the entry published?
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function isPublished()
 	{
@@ -441,7 +441,7 @@ class Article extends Model
 	/**
 	 * Check if the event is available
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function isAvailable()
 	{
@@ -463,7 +463,7 @@ class Article extends Model
 	/**
 	 * Check if the event is happening today
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function isToday()
 	{
@@ -476,7 +476,7 @@ class Article extends Model
 	/**
 	 * Check if the event is happening now
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function isNow()
 	{
@@ -500,7 +500,7 @@ class Article extends Model
 	/**
 	 * Check if the event is tomorrow
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function isTomorrow()
 	{
@@ -513,7 +513,7 @@ class Article extends Model
 	/**
 	 * Check if the event is an outage
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function isOutage()
 	{
@@ -538,7 +538,7 @@ class Article extends Model
 	/**
 	 * Has the event started?
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function started()
 	{
@@ -561,7 +561,7 @@ class Article extends Model
 	/**
 	 * Has the event ended?
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function ended()
 	{

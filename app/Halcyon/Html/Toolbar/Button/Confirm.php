@@ -25,8 +25,8 @@ class Confirm extends Button
 	 * @param   string   $name      Name to be used as apart of the id
 	 * @param   string   $text      Button text
 	 * @param   string   $task      The task associated with the button
-	 * @param   boolean  $list      True to allow use of lists
-	 * @param   boolean  $hideMenu  True to hide the menu on click
+	 * @param   bool     $list      True to allow use of lists
+	 * @param   bool     $hideMenu  True to hide the menu on click
 	 * @return  string   HTML string for the button
 	 */
 	public function fetchButton($type = 'Confirm', $msg = '', $name = '', $text = '', $task = '', $list = true, $hideMenu = false)
@@ -69,8 +69,8 @@ class Confirm extends Button
 	 * @param   string   $name      Name to be used as apart of the id
 	 * @param   string   $text      Button text
 	 * @param   string   $task      The task associated with the button
-	 * @param   boolean  $list      True to allow use of lists
-	 * @param   boolean  $hideMenu  True to hide the menu on click
+	 * @param   bool     $list      True to allow use of lists
+	 * @param   bool     $hideMenu  True to hide the menu on click
 	 * @return  string  Button CSS Id
 	 */
 	public function fetchId($type = 'Confirm', $name = '', $text = '', $task = '', $list = true, $hideMenu = false)
@@ -81,7 +81,7 @@ class Confirm extends Button
 	/**
 	 * Get the JavaScript command for the button
 	 *
-	 * @param   object   $msg   The message to display.
+	 * @param   string   $msg   The message to display.
 	 * @param   string   $name  Not used.
 	 * @param   string   $task  The task used by the application
 	 * @param   boolean  $list  True is requires a list confirmation.

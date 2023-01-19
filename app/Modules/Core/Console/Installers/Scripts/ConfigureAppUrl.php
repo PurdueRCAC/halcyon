@@ -37,7 +37,7 @@ class ConfigureAppUrl implements SetupScript
     /**
      * Fire the install script
      * @param  Command $command
-     * @return mixed
+     * @return void
      */
     public function fire(Command $command)
     {
@@ -81,7 +81,8 @@ class ConfigureAppUrl implements SetupScript
     }
 
     /**
-     * @param $vars
+     * @param array<string,mixed> $vars
+     * @return void
      */
     protected function setLaravelConfiguration($vars)
     {

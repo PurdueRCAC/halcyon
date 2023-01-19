@@ -35,7 +35,7 @@ class CaptchaIsRendering
 	/**
 	 * Constructor
 	 *
-	 * @param  string $editor
+	 * @param  bool   $image
 	 * @param  array  $attributes
 	 * @return void
 	 */

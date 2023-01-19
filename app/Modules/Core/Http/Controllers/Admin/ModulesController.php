@@ -4,6 +4,7 @@ namespace App\Modules\Core\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Artisan;
@@ -16,7 +17,7 @@ class ModulesController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -106,7 +107,9 @@ class ModulesController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 * 
-	 * @return Response
+	 * @param Request $request
+	 * @param int $id
+	 * @return View
 	 */
 	public function edit(Request $request, $id)
 	{
@@ -353,7 +356,7 @@ class ModulesController extends Controller
 	 * Scan for new modules
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function scan(Request $request)
 	{
@@ -392,6 +395,7 @@ class ModulesController extends Controller
 	 * Scan for new modules
 	 *
 	 * @param  Request $request
+	 * @param  string $element
 	 * @return Response
 	 */
 	public function install(Request $request, $element)

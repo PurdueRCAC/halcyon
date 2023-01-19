@@ -17,7 +17,7 @@ class SentinelInstaller extends ProviderInstaller implements SetupScript
 
     /**
      * Not called
-     * @return mixed
+     * @return void
      */
     public function composer()
     {
@@ -51,7 +51,7 @@ class SentinelInstaller extends ProviderInstaller implements SetupScript
     }
 
     /**
-     * @return mixed
+     * @return void
      */
     public function configure()
     {
@@ -78,8 +78,8 @@ class SentinelInstaller extends ProviderInstaller implements SetupScript
     }
 
     /**
-     * @param $password
-     * @return mixed
+     * @param string $password
+     * @return string
      */
     public function getHashedPassword($password)
     {
@@ -87,7 +87,8 @@ class SentinelInstaller extends ProviderInstaller implements SetupScript
     }
 
     /**
-     * @param $driver
+     * @param string $driver
+     * @return void
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     private function changeDefaultUserProvider($driver)
