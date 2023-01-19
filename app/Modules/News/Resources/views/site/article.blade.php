@@ -194,9 +194,18 @@ app('pathway')
 
 			@if (auth()->user() && auth()->user()->can('manage news'))
 				<span itemprop="author">{{ trans('news::news.by author', ['author' => $article->creator->name]) }}</span>
+			@endif
 
+			@if ($article->isUpdated())
+				<br />{{ trans('news::news.last updated') }}: <time datetime="{{ $article->datetimeedited->toDateTimeLocalString() }}">{{ $article->formatDate($article->datetimeupdate) }}</time>
+				@if (auth()->user() && auth()->user()->can('manage news'))
+					{{ trans('news::news.by author', ['author' => $article->modifier ? $article->modifier->name : trans('global.unknown')]) }}
+				@endif
+			@endif
+
+			@if (auth()->user() && auth()->user()->can('manage news'))
 				@if ($article->isModified())
-					<br />{{ trans('news::news.last updated') }}: <time datetime="{{ $article->datetimeedited->toDateTimeLocalString() }}">{{ $article->formatDate($article->datetimeedited) }}</time>
+					<br />{{ trans('news::news.last edited') }}: <time datetime="{{ $article->datetimeedited->toDateTimeLocalString() }}">{{ $article->formatDate($article->datetimeedited) }}</time>
 					{{ trans('news::news.by author', ['author' => $article->modifier ? $article->modifier->name : trans('global.unknown')]) }}
 				@endif
 

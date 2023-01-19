@@ -55,6 +55,7 @@ return [
 	'update' => 'Update',
 	'updated at' => 'Updated :time',
 	'last updated' => 'Last updated',
+	'last edited' => 'Last edited',
 	'last mailing' => 'Last mailing',
 	'originally posted' => 'Originally posted',
 	'by author' => 'by :author',

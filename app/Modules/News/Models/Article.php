@@ -395,7 +395,7 @@ class Article extends Model
 	 */
 	public function isUpdated()
 	{
-		return !is_null($this->datetimeupdate);
+		return (!is_null($this->datetimeupdate) && $this->datetimeupdate != $this->datetimecreated);
 	}
 
 	/**

@@ -23,5 +23,5 @@ _**Update: {{ $article->formatDate($article->datetimeupdate) }}**_
 {!! $article->toMarkdown() !!}
 
 ---
-[Article #{{ $article->id }}]({{ route('site.news.show', ['id' => $article->id]) }}) posted on {{ $article->datetimenews->format('F j, Y g:ia T') }}.
+[Article #{{ $article->id }}]({{ route('site.news.show', ['id' => $article->id]) }}) posted on {{ $article->formatDate($article->datetimecreated) }}.
 @endcomponent
