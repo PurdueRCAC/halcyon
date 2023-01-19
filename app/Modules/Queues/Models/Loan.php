@@ -32,6 +32,9 @@ class Loan extends Size
 	/**
 	 * Defines a relationship to a lender
 	 *
+	 * Note: Thsi is an override from the Size class just to
+	 * ensure it returns the correct object.
+	 *
 	 * @return  object
 	 */
 	public function seller()
@@ -50,7 +53,7 @@ class Loan extends Size
 	}
 
 	/**
-	 * Defines a relationship to a lender
+	 * Defines a relationship to a source queue
 	 *
 	 * @return  object
 	 */

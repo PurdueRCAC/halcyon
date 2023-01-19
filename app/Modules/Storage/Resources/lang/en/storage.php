@@ -16,6 +16,7 @@ return [
 	'quota file desc' => 'The default max number of files a space can have. Set to zero for unlimited.',
 	'active' => 'Active',
 	'created' => 'Created',
+	'creator' => 'Creator',
 	'removed' => 'Removed',
 	'directories' => 'Directories',
 	'quota' => 'Quota',

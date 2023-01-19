@@ -18,6 +18,7 @@ return [
 	'disabled' => 'Disabled',
 	'trashed' => 'Trashed',
 	'created' => 'Created',
+	'creator' => 'Creator',
 	'removed' => 'Removed',
 	'default walltime' => 'Default Walltime',
 	'max walltime' => 'Max Walltime',

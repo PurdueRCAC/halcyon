@@ -672,6 +672,28 @@ $queues = $queues->reject(function($q) use ($canManage)
 																<textarea id="loan-comment{{ $item->id }}" name="comment" class="form-control" rows="3" cols="40">{{ $item->comment }}</textarea>
 															</div>
 
+															@php
+															$creation = $item->history()
+																->where('action', '=', 'created')
+																->first();
+															@endphp
+															@if ($creation)
+																<div class="row">
+																	<div class="col-md-6 mb-0">
+																		<div class="form-group mb-0">
+																			<label for="loan-created{{ $item->id }}">{{ trans('queues::queues.created') }}</label>
+																			<input type="text" name="created" id="loan-created{{ $item->id }}" class="form-control-plaintext" value="{{ $creation->created_at->format('M j, Y g:ia') }}" readonly />
+																		</div>
+																	</div>
+																	<div class="col-md-6 mb-0">
+																		<div class="form-group mb-0">
+																			<label for="loan-creator{{ $item->id }}">{{ trans('storage::storage.creator') }}</label>
+																			<input type="text" name="creator" id="loan-creator{{ $item->id }}" class="form-control-plaintext" value="{{ $creation->user ? $creation->user->name . ' (' . $creation->user->username . ')' : 'ID #' . $creation->user_id }}" readonly />
+																		</div>
+																	</div>
+																</div>
+															@endif
+
 															<div class="dialog-footer text-right">
 																<input type="submit" class="btn btn-success queue-dialog-submit" value="{{ trans('global.button.update') }}" data-action="update" data-success="{{ trans('queues::queues.item updated') }}" />
 															</div>

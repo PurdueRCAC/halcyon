@@ -5,6 +5,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Modules\Queues\Events\QueueSizeCreated;
 use App\Modules\Queues\Events\QueueSizeUpdated;
 use App\Modules\Queues\Events\QueueSizeDeleted;
+use App\Modules\History\Traits\Historable;
+use App\Modules\Users\Models\User;
 use Carbon\Carbon;
 
 /**
@@ -12,6 +14,8 @@ use Carbon\Carbon;
  */
 class Size extends Model
 {
+	use Historable;
+
 	/**
 	 * The table to which the class pertains
 	 *

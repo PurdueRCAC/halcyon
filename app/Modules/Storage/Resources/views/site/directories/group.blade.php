@@ -868,6 +868,9 @@
 
 											<?php
 											$t = $item->type;
+											$creation = $item->history()
+												->where('action', '=', 'created')
+												->first();
 											?>
 											<div class="dialog" id="dialog-edit-{{ $t . $item->id }}" title="{{ trans('storage::storage.edit ' . $t) }}">
 												<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.storage.' . ($item->type == 'loan' ? 'loans' : 'purchases'). '.update', ['id' => $item->id]) }}">
@@ -938,6 +941,23 @@
 														<label for="{{ $t }}-comment">{{ trans('storage::storage.comment') }}</label>
 														<textarea id="{{ $t }}-comment" name="comment" class="form-control" maxlength="2000" rows="3" cols="40">{{ $item->comment }}</textarea>
 													</div>
+
+													@if ($creation)
+														<div class="row">
+															<div class="col-md-6 mb-0">
+																<div class="form-group mb-0">
+																	<label for="{{ $t }}-created">{{ trans('storage::storage.created') }}</label>
+																	<input type="text" name="created" id="{{ $t }}-created" class="form-control-plaintext" value="{{ $creation->created_at->format('M j, Y g:ia') }}" readonly />
+																</div>
+															</div>
+															<div class="col-md-6 mb-0">
+																<div class="form-group mb-0">
+																	<label for="{{ $t }}-creator">{{ trans('storage::storage.creator') }}</label>
+																	<input type="text" name="creator" id="{{ $t }}-creator" class="form-control-plaintext" value="{{ $creation->user ? $creation->user->name . ' (' . $creation->user->username . ')' : 'ID #' . $creation->user_id }}" readonly />
+																</div>
+															</div>
+														</div>
+													@endif
 
 													<div id="error_{{ $t }}{{ $item->id }}" class="alert alert-danger hide"></div>
 
