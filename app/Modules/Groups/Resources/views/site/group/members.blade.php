@@ -48,7 +48,7 @@ $pending = $group->members()
 	->orderBy($u . '.username', 'asc')
 	->paginate($limit, ['*'], 'pdpage', request()->input('pdpage', 1));
 
-$disabled = $group->members()
+/*$disabled = $group->members()
 	->withTrashed()
 	->join($u, $u . '.userid', $m . '.userid')
 	->where(function($where) use ($m, $u)
@@ -57,7 +57,7 @@ $disabled = $group->members()
 			->orWhereNotNull($u . '.dateremoved');
 	})
 	->orderBy($u . '.username', 'asc')
-	->paginate($limit, ['*'], 'dspage', request()->input('dspage', 1));
+	->paginate($limit, ['*'], 'dspage', request()->input('dspage', 1));*/
 
 $processed = array();
 /*$managers = collect([]);
@@ -290,8 +290,6 @@ foreach ($unixgroups as $unixgroup)
 	$unixgroup->uu = $uu;
 }
 
-//$managers = $managers->sortBy('username');
-//$members = $members->sortBy('username');
 $i = 0;
 ?>
 <div class="row mb-3">
@@ -983,6 +981,7 @@ $i = 0;
 </div>
 @endif
 
+<?php /*
 @if (count($disabled))
 <div class="card">
 	<div class="card-header">
@@ -1129,7 +1128,8 @@ $i = 0;
 	</div>
 </div>
 @endif
-
+*/
+?>
 <div class="modal dialog" id="add_member_dialog" tabindex="-1" aria-labelledby="add_member_dialog-title" aria-hidden="true" title="Add users to {{ $group->name }}">
 	<div class="modal-dialog modal-dialog-centered">
 		<form id="form_{{ $group->id }}" method="post" class="modal-content dialog-content shadow-sm">
