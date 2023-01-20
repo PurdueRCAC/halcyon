@@ -26,8 +26,7 @@
 			});
 		});
 
-		document.querySelectorAll('.list-group').forEach(function(el) {
-			el.addEventListener('click', '.delete-row', function(e){
+		$('.list-group').on('click', '.delete-row', function(e){
 				e.preventDefault();
 
 				var result = confirm('Are you sure you want to remove this?');
@@ -36,7 +35,6 @@
 					var container = this.closest('li');
 					container.remove();
 				}
-			});
 		});
 
 		document.querySelectorAll('.edit-property').forEach(function(el) {
