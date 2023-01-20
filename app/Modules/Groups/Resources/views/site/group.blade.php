@@ -92,7 +92,57 @@
 				var post = {};
 				post[btn.getAttribute('data-prop')] = input.value;
 
-				$.ajax({
+				fetch(btn.getAttribute('data-api'), {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+					},
+					body: JSON.stringify(post)
+				})
+				.then(function (response) {
+					if (response.ok) {
+						if (btn.getAttribute('data-reload')) {
+							window.location.reload(true);
+							return;
+						}
+						return response.json();
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.then(data => {
+					var span = document.getElementById('SPAN_' + btn.getAttribute('data-prop') + '_' + btn.getAttribute('data-value'));
+					if (span) {
+						span.classList.toggle('hide');
+						span.innerHTML = data[btn.getAttribute('data-prop')];
+					}
+					input.classList.toggle('hide');
+
+					//btn.find('.spinner-border').toggleClass('hide');
+					//btn.find('.fa').toggleClass('hide');
+					btn.setAttribute('data-loading', false);
+					btn.classList.toggle('hide');
+
+					var cancel = document.getElementById('CANCEL_' + btn.getAttribute('data-prop') + '_' + btn.getAttribute('data-value'));
+					if (cancel) {
+						cancel.classList.toggle('hide');
+					}
+					var edit = document.getElementById('EDIT_' + btn.getAttribute('data-prop') + '_' + btn.getAttribute('data-value'));
+					if (edit) {
+						edit.classList.toggle('hide');
+					}
+				}).catch(function(err) {
+					btn.setAttribute('data-loading', false);
+					alert(err);
+				});
+
+				/*$.ajax({
 					url: btn.getAttribute('data-api'),
 					type: 'put',
 					data: post,
@@ -133,7 +183,7 @@
 						alert(xhr.responseJSON.message);
 						//console.log(xhr);
 					}
-				});
+				});*/
 			});
 		});
 
@@ -286,10 +336,12 @@
 			});
 		});*/
 
-		$('.membership-edit').on('click', function(e){
-			e.preventDefault();
+		document.querySelectorAll('.membership-edit').forEach(function(el) {
+			el.addEventListener('click', function(e){
+				e.preventDefault();
 
-			$($(this).attr('href')).toggleClass('hidden');
+				document.getElementById(this.getAttribute('href').replace('#', '')).classList.toggle('hidden');
+			});
 		});
 
 		/*
@@ -460,34 +512,40 @@
 			});
 		}
 
-		$('#new_membertype').on('change', function(e) {
-			var sel = $(this);
-			if (sel.val() == 2 && sel.attr('data-cascade')) {
-				$('.add-queue-member').each(function(i, el) {
-					$(el).prop('checked', true)
-						.attr('checked', 'checked')
-						.trigger('change');
-					if (sel.attr('data-disable')) {
-						$(el).prop('disabled', true);
-					}
-				});
-				$('.add-unixgroup-member').each(function(i, el) {
-					var bx = $(el);
-					bx.prop('checked', true)
-						.attr('checked', 'checked')
-						.trigger('change');
-					if (sel.attr('data-disable') && bx.attr('data-base') && bx.attr('data-base') == bx.attr('id')) {
-						bx.prop('disabled', true);
-					}
-				});
-			} else {
-				$('.add-queue-member').each(function(i, el) {
-					if (sel.attr('data-disable')) {
-						$(el).prop('disabled', false);
-					}
-				});
-			}
-		});
+		var newmembertype = document.getElementById('new_membertype');
+		if (newmembertype) {
+			newmembertype.addEventListener('change', function(e) {
+				var sel = this;
+				if (sel.value == 2 && sel.getAttribute('data-cascade')) {
+					document.querySelectorAll('.add-queue-member').forEach(function(el) {
+						el.checked = true;
+						const event = new Event('change');
+						el.dispatchEvent(event);
+
+						if (sel.getAttribute('data-disable')) {
+							el.disabled = true;
+						}
+					});
+					document.querySelectorAll('.add-unixgroup-member').forEach(function(el) {
+						el.checked = true;
+						const event = new Event('change');
+						el.dispatchEvent(event);
+
+						if (sel.getAttribute('data-disable')
+						&& el.getAttribute('data-base')
+						&& el.getAttribute('data-base') == el.getAttribute('id')) {
+							el.disabled = true;
+						}
+					});
+				} else {
+					document.querySelectorAll('.add-queue-member').forEach(function(el) {
+						if (sel.getAttribute('data-disable')) {
+							el.disabled = false;
+						}
+					});
+				}
+			});
+		}
 
 		$('.add-queue-member,.add-unixgroup-member').on('change', function(e){
 			e.preventDefault();
@@ -524,7 +582,7 @@
 			var post = {
 				'groupid': btn.data('group'),
 				'userid': 0,
-				'membertype': $('#new_membertype').val()
+				'membertype': (newmembertype ? newmembertype.value : 1)
 			};
 			var queues = $('.add-queue-member:checked');
 			var unixgroups = $('.add-unixgroup-member:checked');

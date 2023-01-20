@@ -1152,7 +1152,7 @@ $i = 0;
 
 				<div class="form-group">
 					<label for="new_membertype">Membership type</label>
-					<select class="form-control" id="new_membertype"{{ $group->cascademanagers ? ' data-cascade="1"' : '' }}{{ auth()->user()->can('manage groups') ? '0' : ' data-disable="1"' }}>
+					<select class="form-control" id="new_membertype"{!! $group->cascademanagers ? ' data-cascade="1"' : '' !!}{!! auth()->user()->can('manage groups') ? '0' : ' data-disable="1"' !!}>
 						<option value="1">Member</option>
 						<option value="2">Manager</option>
 						<option value="3">Usage Viewer</option>
