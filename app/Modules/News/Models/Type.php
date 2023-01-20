@@ -400,8 +400,8 @@ class Type extends Model
 		$a = (new Article)->getTable();
 		$s = (new Association)->getTable();
 
-		/*$now = Carbon::now();
 		$placed = array();
+		/*$now = Carbon::now();
 		for ($d = $timeframe; $d >= 0; $d--)
 		{
 			$yesterday = Carbon::now()->modify('- ' . $d . ' days');
