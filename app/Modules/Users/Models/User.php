@@ -380,13 +380,27 @@ class User extends Model implements
 	}
 
 	/**
+	 * Set name value
+	 *
+	 * @param   string  $value
+	 * @return  void
+	 */
+	public function setNameAttribute(string $value)
+	{
+		$value = trim($value);
+
+		$this->attributes['name'] = $value;
+	}
+
+	/**
 	 * Get surname
 	 *
 	 * @return  string
 	 */
 	public function getSurnameAttribute()
 	{
-		$name = explode(' ', $this->name);
+		$name = trim($this->name);
+		$name = explode(' ', $name);
 
 		return array_pop($name);
 	}
@@ -398,7 +412,8 @@ class User extends Model implements
 	 */
 	public function getGivenNameAttribute()
 	{
-		$name = explode(' ', $this->name);
+		$name = trim($this->name);
+		$name = explode(' ', $name);
 		$surname = array_pop($name);
 
 		return implode(' ', $name);
