@@ -97,7 +97,7 @@ class ListenerManager
 				$this->dispatcher->listen($event, $cls . '@' . $name);
 			}
 
-			config()->set('listener.' . $listener->folder . '.' . $listener->element, $listener->params->all());
+			config()->set('listener.' . strtolower($listener->folder) . '.' . strtolower($listener->element), $listener->params->all());
 		}
 	}
 
