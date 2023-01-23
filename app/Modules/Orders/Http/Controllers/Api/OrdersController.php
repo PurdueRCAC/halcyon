@@ -770,7 +770,7 @@ class OrdersController extends Controller
 
 		if ($request->input('restore') && auth()->user()->can('manage orders'))
 		{
-			$row->datetimeremoved = null;
+			$row->restore();
 		}
 
 		// Check if we need to actually do anything
