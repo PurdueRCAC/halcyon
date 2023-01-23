@@ -85,7 +85,6 @@ class QueuesController extends Controller
 			->with('group')
 			->leftJoin($c, $c . '.subresourceid', $q . '.subresourceid')
 			->leftJoin($r, $r . '.id', $c . '.resourceid')
-			->whereNull($r . '.datetimeremoved')
 			->withTrashed();
 
 		if ($filters['search'])
@@ -107,6 +106,7 @@ class QueuesController extends Controller
 		elseif ($filters['state'] == 'enabled')
 		{
 			$query
+				->whereNull($r . '.datetimeremoved')
 				->whereNull($q . '.datetimeremoved')
 				->where($q . '.enabled', '=', 1);
 		}
@@ -181,18 +181,21 @@ class QueuesController extends Controller
 
 			$query->whereRaw($q . '.id IN (' . $sql1 . ' UNION ' . $sql2 . ')')
 				->whereNull($q . '.datetimeremoved')
+				->whereNull($r . '.datetimeremoved')
 				->where($q . '.enabled', '=', 1);
 		}
 		elseif ($filters['state'] == 'disabled')
 		{
 			$query
 				->whereNull($q . '.datetimeremoved')
+				->whereNull($r . '.datetimeremoved')
 				->where($q . '.enabled', '=', 0);
 		}
 		else
 		{
-			$query
-				->whereNull($q . '.datetimeremoved');
+			$query->withTrashed();
+			//$query
+			//	->whereNull($q . '.datetimeremoved');
 		}
 
 		if ($filters['type'] > 0)
@@ -239,10 +242,21 @@ class QueuesController extends Controller
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
-		$resources = Asset::query()
-			->where('rolename', '!=', '')
-			->orderBy('name', 'asc')
-			->get();
+		if ($filters['state'] != 'active' && $filters['state'] != 'enabled')
+		{
+			$resources = Asset::query()
+				->withTrashed()
+				->where('rolename', '!=', '')
+				->orderBy('name', 'asc')
+				->get();
+		}
+		else
+		{
+			$resources = Asset::query()
+				->where('rolename', '!=', '')
+				->orderBy('name', 'asc')
+				->get();
+		}
 
 		$types = Type::orderBy('name', 'asc')->get();
 
