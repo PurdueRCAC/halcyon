@@ -91,7 +91,6 @@
 										<input type="text" id="new_dir_quota_deduct" class="form-control" size="3" />
 										<?php
 										$bucket = null;
-										var_dump($group->storageBuckets);
 										foreach ($group->storageBuckets as $bucket)
 										{
 											if ($bucket['resourceid'] == $row->storageResource->parentresourceid)
