@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/handlebars/handlebars.min-v4.7.6.js?v=' . filemtime(public_path() . '/modules/core/vendor/handlebars/handlebars.min-v4.7.6.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/handlebars/handlebars.min-v4.7.7.js?v=' . filemtime(public_path() . '/modules/core/vendor/handlebars/handlebars.min-v4.7.7.js')) }}"></script>
 <script src="{{ asset('modules/finder/js/admin.js?v=' . filemtime(public_path() . '/modules/finder/js/admin.js')) }}"></script>
 @endpush
 
