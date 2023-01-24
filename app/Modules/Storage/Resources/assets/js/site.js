@@ -967,7 +967,8 @@ document.addEventListener('DOMContentLoaded', function () {
 					width: '550px',
 					//position: { my: "left top", at: "left top", of: $( "#tree" ) },
 					close: function () {
-						$(".tree").fancytree("getActiveNode").setActive(false);
+						var tree = $.ui.fancytree.getTree($(el));
+						tree.getActiveNode().setActive(false);
 					}
 				});
 				//$("#" + did + "_dialog").dialog('open');
