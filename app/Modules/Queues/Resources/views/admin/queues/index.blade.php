@@ -328,7 +328,7 @@ app('pathway')
 								@elseif ($unit == 'gpus')
 									<?php
 									$nodes = ($row->subresource->nodecores ? round($row->totalcores / $row->subresource->nodecores, 1) : 0);
-									$gpus = ($row->serviceunits ? $row->serviceunits : round($nodes * $row->subresource->nodegpus));
+									$gpus = ($row->serviceunits ? $row->serviceunits && $row->serviceunits > 0 : round($nodes * $row->subresource->nodegpus));
 									?>
 									{{ number_format($row->totalcores) }} <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
 									{{ number_format($gpus) }} <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>

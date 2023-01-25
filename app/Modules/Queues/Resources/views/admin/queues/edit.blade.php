@@ -581,7 +581,7 @@ app('pathway')
 								$amt = $item->serviceunits;
 							elseif ($unit == 'gpus'):
 								$nodes = ($nodecores ? round($item->corecount / $nodecores, 1) : 0);
-								$gpus = ($item->serviceunits ? $item->serviceunits : ceil($nodes * $nodegpus));
+								$gpus = ($item->serviceunits && $item->serviceunits > 0 ? $item->serviceunits : ceil($nodes * $nodegpus));
 								$amt = $item->corecount;
 							else:
 								/*$amt = $item->nodecount;
