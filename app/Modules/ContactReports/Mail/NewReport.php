@@ -36,8 +36,10 @@ class NewReport extends Mailable
 	 */
 	public function build()
 	{
+		$append = ($this->report->groupid && $this->report->group ? $this->report->group->name . ', ' : '') . $this->report->usersAsString();
+
 		return $this->markdown('contactreports::mail.newreport')
-					->subject('Contact Report - ' . ($this->report->groupid && $this->report->group ? $this->report->group->name . ', ' : '') . $this->report->usersAsString())
+					->subject('Contact Report' . ($append ? ' - ' . $append : ''))
 					->with([
 						'report' => $this->report,
 					]);

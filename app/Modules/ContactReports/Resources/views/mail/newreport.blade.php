@@ -2,7 +2,9 @@
 @if ($report->groupid && $report->group)
 **Group:** {{ $report->group->name }}<br />
 @endif
-**People:** {{ $report->usersAsString() }}<br />
+@if ($people = $report->usersAsString())
+**People:** {{ $people }}<br />
+@endif
 **Date:** {{ $report->datetimecontact->format('F j, Y') }}
 
 {!! $report->toMarkdown() !!}
