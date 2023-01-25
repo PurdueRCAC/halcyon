@@ -17,7 +17,7 @@ use App\Modules\Orders\Models\Account;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
 use App\Halcyon\Http\StatefulRequest;
-use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
+use OpenSpout\Reader\Common\Creator\ReaderEntityFactory;
 use Carbon\Carbon;
 
 class OrdersController extends Controller
@@ -1001,7 +1001,7 @@ class OrdersController extends Controller
 		if ($extension == 'csv' || $extension == 'txt')
 		{
 			// CSV files get read as plain text and throw:
-			//     Box\Spout\Common\Exception\UnsupportedTypeException
+			//     OpenSpout\Common\Exception\UnsupportedTypeException
 			//     No readers supporting the given type: txt
 			$reader = ReaderEntityFactory::createCSVReader();
 		}
