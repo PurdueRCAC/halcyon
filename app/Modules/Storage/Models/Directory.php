@@ -662,7 +662,11 @@ class Directory extends Model
 			$new_quota = $this->parent ? $this->parent->quota : 0;
 		}
 
-		$children[] = array(
+		$item['data']['parentunixgroup'] = $this->unixgroup ? $this->unixgroup->longname : null;
+		$item['data']['path'] = $this->path;
+		$item['data']['parentquota'] = $new_quota;
+
+		/*$children[] = array(
 			'title' => trans('storage::storage.add new directory'),
 			'folder' => false,
 			'expanded' => false,
@@ -673,7 +677,7 @@ class Directory extends Model
 				'path'            => $this->path,
 				'parentquota'     => $new_quota
 			)
-		);
+		);*/
 
 		$item['children'] = $children;
 
@@ -684,15 +688,20 @@ class Directory extends Model
 	 * Get nested directory tree
 	 *
 	 * @param   array  $items
+	 * @param   int    $depth
 	 * @return  array
 	 */
-	public function nested($items = array())
+	public function nested($items = array(), $depth = 0)
 	{
+		$this->depth = $depth;
+
 		$items[] = $this;
+
+		$depth++;
 
 		foreach ($this->children()->orderBy('name', 'asc')->get() as $child)
 		{
-			$items = $child->nested($items);
+			$items = $child->nested($items, $depth);
 		}
 
 		return $items;

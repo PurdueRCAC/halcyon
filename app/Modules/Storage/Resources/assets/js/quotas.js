@@ -1,4 +1,3 @@
-/* global $ */ // jquery.js
 
 var headers = {
 	'Content-Type': 'application/json'
@@ -50,7 +49,7 @@ function check(api) {
 
 		if (checkcount >= 45) {
 			alert("Quota checking system is busy or filesystem is unavailable at the moment. Quota refresh has been scheduled so check back on this page later.");
-			location.reload(true);
+			window.location.reload(true);
 		}
 	}, 5000);
 }
@@ -62,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 	};
 
+	// Ask for confirmation when someone deletes something
 	document.querySelectorAll('.storagealert-confirm-delete').forEach(function(el) {
 		el.addEventListener('click', function(e) {
 			e.preventDefault();
@@ -91,73 +91,59 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
+	// Create a new alert button
 	let createalert = document.getElementById('create-newalert');
 
 	if (createalert) {
-		$('#newalert').dialog({
-			modal: true,
-			width: '400px',
-			autoOpen: false,
-			buttons: {
-				OK: {
-					text: 'Create Alert',
-					'class': 'btn btn-success',
-					autofocus: true,
-					click: function () {
-						var type = document.querySelector('input[name=newalert]:checked');
+		// Save new alert form button
+		let newalertsave = document.getElementById('newalert-save');
 
-						if (!type) {
-							return;
-						}
+		newalertsave.addEventListener('click', function(e) {
+			e.preventDefault();
 
-						var postdata = {
-							value: document.getElementById('newalertvalue').value,
-							storagedirquotanotificationtypeid: type.value,
-							userid: document.getElementById('HIDDEN_user').value,
-							storagedirid: document.querySelector('[name=newalertstorage]').value
-						};
+			var type = document.querySelector('input[name=newalert]:checked');
 
-						fetch(document.getElementById('newalert').getAttribute('data-api'), {
-							method: 'POST',
-							headers: headers,
-							body: JSON.stringify(postdata)
-						})
-						.then(function (response) {
-							if (response.ok) {
-								location.reload(true);
-								return;
-							}
-							return response.json().then(function (data) {
-								var msg = data.message;
-								if (typeof msg === 'object') {
-									msg = Object.values(msg).join("\n");
-								}
-								throw msg;
-							});
-						})
-						.catch(function (error) {
-							alert(error);
-						});
-					}
-				},
-				Cancel: {
-					text: 'Cancel',
-					'class': 'btn btn-link',
-					click: function () {
-						$(this).dialog('close');
-					}
-				}
+			if (!type) {
+				return;
 			}
+
+			var postdata = {
+				value: document.getElementById('newalertvalue').value,
+				storagedirquotanotificationtypeid: type.value,
+				userid: document.getElementById('HIDDEN_user').value,
+				storagedirid: document.querySelector('[name=newalertstorage]').value
+			};
+
+			fetch(this.getAttribute('data-api'), {
+				method: 'POST',
+				headers: headers,
+				body: JSON.stringify(postdata)
+			})
+				.then(function (response) {
+					if (response.ok) {
+						window.location.reload(true);
+						return;
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join("\n");
+						}
+						throw msg;
+					});
+				})
+				.catch(function (error) {
+					alert(error);
+				});
 		});
 
+		// Clear out any previous errors
 		createalert.addEventListener('click', function (e) {
 			e.preventDefault();
 
 			let err = document.getElementById('newalert_error');
 			err.classList.add('hide');
 			err.innerHTML = '';
-
-			$('#newalert').dialog('open');
 		});
 
 		document.querySelectorAll('input[name="newalert"]').forEach(function(input) {
@@ -168,64 +154,50 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
+	// Create new report button
 	let createreport = document.getElementById('create-newreport');
 
 	if (createreport) {
-		$('#newreport').dialog({
-			modal: true,
-			width: '400px',
-			autoOpen: false,
-			buttons: {
-				OK: {
-					text: 'Create Report',
-					'class': 'btn btn-success',
-					click: function () {
-						var postdata = {};
-						postdata['storagedirquotanotificationtypeid'] = '1';
-						postdata['userid'] = document.getElementById('HIDDEN_user').value;
-						postdata['timeperiodid'] = document.getElementById('newreportperiod').value;
-						postdata['periods'] = document.getElementById('newreportnumperiods').value;
-						postdata['value'] = 0;
-						postdata['storagedirid'] = document.querySelector('[name=newreportstorage]').value;
-						postdata['datetimelastnotify'] = document.getElementById('newreportdate').value;
+		// Save new report form button
+		let newreportsave = document.getElementById('newreport-save');
 
-						fetch(document.getElementById('newreport').getAttribute('data-api'), {
-							method: 'POST',
-							headers: headers,
-							body: JSON.stringify(postdata)
-						})
-						.then(function (response) {
-							if (response.ok) {
-								location.reload(true);
-								return;
-							}
-							return response.json().then(function (data) {
-								var msg = data.message;
-								if (typeof msg === 'object') {
-									msg = Object.values(msg).join('<br />');
-								}
-								throw msg;
-							});
-						})
-						.catch(function (error) {
-							alert(error);
-						});
-					}
-				},
-				Cancel: {
-					text: 'Cancel',
-					'class': 'btn btn-link',
-					click: function () {
-						$('#newreport').dialog('close');
-					}
+		newreportsave.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			var postdata = {};
+			postdata['storagedirquotanotificationtypeid'] = '1';
+			postdata['userid'] = document.getElementById('HIDDEN_user').value;
+			postdata['timeperiodid'] = document.getElementById('newreportperiod').value;
+			postdata['periods'] = document.getElementById('newreportnumperiods').value;
+			postdata['value'] = 0;
+			postdata['storagedirid'] = document.querySelector('[name=newreportstorage]').value;
+			postdata['datetimelastnotify'] = document.getElementById('newreportdate').value;
+
+			fetch(this.getAttribute('data-api'), {
+				method: 'POST',
+				headers: headers,
+				body: JSON.stringify(postdata)
+			})
+			.then(function (response) {
+				if (response.ok) {
+					window.location.reload(true);
+					return;
 				}
-			}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (error) {
+				alert(error);
+			});
 		});
 
 		createreport.addEventListener('click', function (e) {
 			e.preventDefault();
-
-			$('#newreport').dialog('open');
 
 			let err = document.getElementById('newreport_error');
 			err.classList.add('hide');
@@ -233,13 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
-	// Details dialogs
-	$('.dialog-storagealert').dialog({
-		autoOpen: false,
-		modal: true,
-		width: '450px'
-	});
-
+	// Edit buttons
 	document.querySelectorAll('.storagealert-edit').forEach(function(el) {
 		el.addEventListener('click', function (e) {
 			e.preventDefault();
@@ -250,12 +216,11 @@ document.addEventListener('DOMContentLoaded', function () {
 				let err = document.querySelector(this.getAttribute('href') + '_not_error');
 				err.classList.add('hide');
 				err.innerHTML = '';
-
-				$(this.getAttribute('href')).dialog('open');
 			}
 		});
 	});
 
+	// Save edit form buttons
 	document.querySelectorAll('.storagealert-edit-save').forEach(function (el) {
 		el.addEventListener('click', function (e) {
 			e.preventDefault();
@@ -275,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			})
 			.then(function (response) {
 				if (response.ok) {
-					location.reload(true);
+					window.location.reload(true);
 					return;
 				}
 				return response.json().then(function (data) {
@@ -296,7 +261,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// Quota checks
 	document.querySelectorAll('.updatequota').forEach(function (el) {
-		el.addEventListener('click', function () {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+
 			var btn = this;
 				//did = btn.getAttribute('data-id');
 

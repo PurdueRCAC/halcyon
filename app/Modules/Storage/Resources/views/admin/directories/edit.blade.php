@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/fancytree/skin-xp/ui.fancytree.css?v=' . filemtime(public_path() . '/modules/core/vendor/fancytree/skin-xp/ui.fancytree.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css?v=' . filemtime(public_path('/modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css'))) }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/fancytree/jquery.fancytree-all.js?v=' . filemtime(public_path() . '/modules/core/vendor/fancytree/jquery.fancytree-all.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js?v=' . filemtime(public_path('/modules/core/vendor/tom-select/js/tom-select.complete.min.js'))) }}"></script>
 <script src="{{ asset('modules/storage/js/admin.js?v=' . filemtime(public_path() . '/modules/storage/js/admin.js')) }}"></script>
 @endpush
 
@@ -93,19 +93,17 @@ app('pathway')
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="groupid">{{ trans('storage::storage.group') }}</label>
-									<span class="input-group">
-										<input type="text" name="fields[groupid]" id="groupid" class="form-control form-groups" data-uri="{{ url('/') }}/api/groups/?api_token={{ auth()->user()->api_token }}&search=%s" value="{{ ($row->group ? $row->group->name . ':' . $row->groupid : '') }}" />
-										<span class="input-group-append"><span class="input-group-text icon-users" aria-hidden="true"></span></span>
-									</span>
+									<select name="fields[groupid]" id="groupid" class="form-control form-groups" data-api="{{ route('api.groups.index', ['order' => 'name', 'order_by' => 'asc']) }}">
+										<option value="{{ $row->groupid }}" selected="selected">{{ $row->groupid && $row->group ? $row->group->name : trans('global.none') }}</option>
+									</select>
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="field-owneruserid">{{ trans('storage::storage.owner') }}</label>
-									<span class="input-group">
-										<input type="text" name="fields[owneruserid]" id="field-owneruserid" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" value="{{ ($row->owner ? $row->owner->name . ':' . $row->owneruserid : '') }}" />
-										<span class="input-group-append"><span class="input-group-text icon-user" aria-hidden="true"></span></span>
-									</span>
+									<select name="fields[owneruserid]" id="field-owneruserid" class="form-control form-users" data-api="{{ route('api.users.index', ['order' => 'name', 'order_by' => 'asc']) }}">
+										<option value="{{ $row->owneruserid }}" selected="selected">{{ $row->owneruserid && $row->owner ? $row->owner->name . ' (' . $row->owner->username . ')' : trans('global.none') }}</option>
+									</select>
 								</div>
 							</div>
 						</div>

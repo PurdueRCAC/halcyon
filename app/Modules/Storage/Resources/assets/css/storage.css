@@ -1,0 +1,119 @@
+/**
+ * @package  Storage
+ */
+.tree {
+	user-select: none;
+	-moz-user-select: none;
+}
+
+.tree a,
+.tree summary {
+	/*display: block;
+	width: fit-content;
+	width: -moz-fit-content;
+	border: solid 1px transparent;
+	padding: 0 2px;
+	outline: none;*/
+	font-weight: normal;
+	border: none;
+	text-decoration: none;
+	cursor: pointer;
+}
+.tree .tree-icon {
+	color: #e7c248;
+	margin-right: 0.5em;
+}
+.tree a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.tree ::-webkit-details-marker {
+	display: none;
+}
+
+.tree summary {
+	list-style-type: none;
+	outline: none;
+}
+.tree details {
+	margin-left: 1.2em;
+	margin-top: 0.1em;
+}
+.tree details>:not(details),
+.tree details {
+	position: relative;
+}
+/*
+.tree details :not(summary) {
+	margin-left: 20px;
+}
+
+.tree.nodots details :not(summary) {
+	margin-left: 12px;
+}
+
+.tree details::before,
+.tree details>:not(details)::before {
+	content: '';
+	width: 10px;
+	display: block;
+	position: absolute;
+}
+/*
+.tree details::before,
+.tree details>:not(details)::before {
+	background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 2 2" xmlns="http://www.w3.org/2000/svg"><g><rect x="0" y="0" width="1" height="1"/></g></svg>') left top / 2px 2px;
+}
+
+.tree.dark details::before,
+.tree.dark details>:not(summary)::before {
+	background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 2 2" xmlns="http://www.w3.org/2000/svg"><g><rect x="0" y="0" width="1" height="1" fill="white"/></g></svg>');
+}
+
+.tree.nodots details::before,
+.tree.nodots details>:not(summary)::before {
+	background-image: none;
+}
+
+.tree details::before {
+	top: 0;
+	height: 100%;
+	background-repeat: repeat-y;
+	left: 5px;
+	z-index: -1;
+}
+
+.tree details>:not(details)::before {
+	top: 8px;
+	height: calc(100% - 8px);
+	background-repeat: repeat-x;
+	left: -15px;
+}*/
+
+.tree details>summary::before {
+	content: '';
+	display: block;
+	position: absolute;
+	background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 64 48" xmlns="http://www.w3.org/2000/svg"><path d="M20.4,0.3c-1.2,0.5-1.8,1.5-1.8,2.8v41.8c0,1.3,0.6,2.2,1.8,2.8c1.2,0.5,2.3,0.3,3.2-0.6l20.9-20.9c0.6-0.7,0.9-1.4,0.8-2.2 c0-0.7-0.3-1.4-0.8-2.1L23.6,1C22.7,0,21.6-0.2,20.4,0.3z"/></svg>') center center / 12px 12px no-repeat;
+	left: -0.2em;
+	top: 2px;
+	width: 16px;
+	height: 16px;
+}
+
+.tree details[open]>summary::before {
+	background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 64 48" xmlns="http://www.w3.org/2000/svg"><path d="M9,15.6l20.9,20.9c0.7,0.6,1.4,0.8,2.1,0.8c0.8,0,1.5-0.2,2.2-0.8l20.9-20.9c0.9-0.9,1.2-2,0.6-3.2 c-0.5-1.2-1.4-1.8-2.8-1.8H11.1c-1.3,0-2.3,0.6-2.8,1.8C7.8,13.6,8,14.7,9,15.6z"/></svg>');
+}
+
+/* select tree */
+.select-tree .selected {
+	background-color: #beebff;
+	border-color: #99defd;
+	z-index: 1;
+}
+
+.select-tree.dark .selected {
+	background-color: #3a484e;
+	border-color: #99defd;
+}

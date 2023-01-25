@@ -77,7 +77,7 @@ function NewDirType() {
 		unixgroup_select.classList.add('hidden');
 		autouserunixgroup_row.classList.add('hidden');
 
-		$(unixgroup_select_decoy).empty();
+		unixgroup_select_decoy.innerHTML = '';
 		unixgroup_select_decoy.appendChild(opt);
 		unixgroup_select_decoy.disabled = true;
 	} else if (selected == "normal") {
@@ -334,11 +334,13 @@ function DeleteDir(btn) {
 		})
 		.then(function (response) {
 			if (response.ok) {
-				$('#' + btn.getAttribute('data-dir') + '_error')
-					.removeClass('alert-danger')
-					.addClass('alert-success')
-					.removeClass('hide')
-					.text('Directory removed!');
+				var er = document.getElementById(btn.getAttribute('data-dir') + '_error');
+				if (er) {
+					er.classList.remove('alert-danger');
+					er.classList.add('alert-success');
+					er.classList.remove('hide');
+					er.innerHTML = 'Directory removed!';
+				}
 				window.location.reload(true);
 				return;
 			}
@@ -405,52 +407,15 @@ function ResetPermissions(btn) {
  * Edit a unix group
  *
  * @param   {string}  dir
+ * @param   {string}  api
  * @return  {void}
  */
 function EditUnixGroup(dir, api) {
-	//var button = document.getElementById(dir + "_edit_button");
-	//var span = document.getElementById(dir + "_unixgroup_span");
 	var input = document.getElementById(dir + "_unixgroup_select");
-	//var auto_span = document.getElementById(dir + "_autouserunixgroup_span");
 	var auto_input = document.getElementById(dir + "_autouserunixgroup_select");
-	//var span_quota = document.getElementById(dir + "_quota_span");
 	var input_quota = document.getElementById(dir + "_quota_input");
-	//var span_other = document.getElementById(dir + "_other_read_span");
 	var input_otheryes = document.getElementById(dir + "_other_read_box");
-	//var input_otherno = document.getElementById(dir + "_other_read_box");
-
-	//var span_type = document.getElementById(dir + "_dir_type");
 	var input_type = document.getElementById(dir + "_dir_type_select");
-
-	/*if (button.value.match(/^Edit/)) {
-		// Turn on edit mode
-		//img.src = "/include/images/save.png";
-		button.value = "Save Changes";
-		if (input != null) {
-			span.style.display = "none";
-			input.style.display = "inline";
-			if (auto_span != null) {
-				auto_span.style.display = "none";
-				auto_input.style.display = "inline";
-			}
-		}
-		if (input_other != null) {
-			span_other.style.display = "none";
-			input_other.style.display = "inline";
-		}
-		if (input_quota != null) {
-			span_quota.style.display = "none";
-			input_quota.style.display = "inline";
-		}
-		if (input_type != null) {
-			span_type.style.display = "none";
-			input_type.style.display = "inline";
-		}
-	} else {*/
-	// Save quota
-	//img.src = "/include/images/loading.gif";
-	//img.style.width = "20px";
-	//img.style.height = "20px";
 
 	// Make WS call
 	var post = {};
@@ -526,10 +491,12 @@ function EditUnixGroup(dir, api) {
 			throw msg;
 		});
 	})
-	.catch(function () {
-		var error = document.getElementById(dir + "_error");
-		error.classList.remove('hide');
-		error.innerHTML = "An error occurred while setting unix group.";
+	.catch(function (err) {
+		var er = document.getElementById(dir + "_error");
+		if (er) {
+			er.classList.remove('hide');
+			er.innerHTML = err;
+		}
 	});
 }
 
@@ -543,12 +510,14 @@ var pending_dirs = 0;
 /**
  * Create default directories
  *
+ * @param   {string}  api
  * @param   {string}  group
  * @param   {string}  name
  * @param   {string}  resource
  * @param   {number}  quota
  * @param   {string}  base
  * @param   {string}  apps
+ * @param   {string}  etc
  * @param   {string}  data
  * @return  {void}
  */
@@ -812,204 +781,37 @@ document.addEventListener('DOMContentLoaded', function () {
 		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 	};
 
-	/*var autocompleteUsers = function(url) {
-		return function(request, response) {
-			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
-				response($.map(data.data, function (el) {
-					return {
-						label: el.name + ' (' + el.username + ')',
-						name: el.name,
-						id: el.id,
-					};
-				}));
-			});
-		};
-	};
+	var fieldname = document.getElementById('field-name');
+	if (fieldname) {
+		fieldname.addEventListener('keyup', function () {
+			var val = this.value;
 
-	var autocompleteGroups = function(url) {
-		return function(request, response) {
-			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
-				response($.map(data.data, function (el) {
-					return {
-						label: el.name,
-						name: el.name,
-						id: el.id,
-					};
-				}));
-			});
-		};
-	};
+			val = val.toLowerCase()
+				.replace(/\s+/g, '-')
+				.replace(/[^a-z0-9\-_]+/g, '');
 
-	var newsuser = $(".form-users");
-	if (newsuser.length) {
-		newsuser.tagsInput({
-			placeholder: 'Select user...',
-			importPattern: /([^:]+):(.+)/i,
-			'autocomplete': {
-				source: autocompleteUsers(newsuser.attr('data-uri')),
-				dataName: 'data',
-				height: 150,
-				delay: 100,
-				minLength: 1
-			},
-			limit: 1
+			this.value = val;
 		});
 	}
 
-	var newsuser = $(".form-groups");
-	if (newsuser.length) {
-		newsuser.tagsInput({
-			placeholder: 'Select group...',
-			importPattern: /([^:]+):(.+)/i,
-			'autocomplete': {
-				source: autocompleteGroups(newsuser.attr('data-uri')),
-				dataName: 'data',
-				height: 150,
-				delay: 100,
-				minLength: 1
-			},
-			limit: 1
-		});
-	}*/
+	document.querySelectorAll('summary').forEach(function (el) {
+		el.addEventListener('click', function () {
+			if (typeof (history.pushState) != 'undefined') {
+				var url = window.location.href.match(/\?.*/);
+				if (url != null) {
+					url = url[0].replace('?', '');
 
-	var users = $(".form-users");
-	if (users.length) {
-		users.each(function (i, user) {
-			user = $(user);
-			var cl = user.clone()
-				.attr('type', 'hidden')
-				.val(user.val().replace(/([^:]+):/, ''));
-			user
-				.attr('name', user.attr('id') + i)
-				.attr('id', user.attr('id') + i)
-				.val(user.val().replace(/(:\d+)$/, ''))
-				.after(cl);
-			user.autocomplete({
-				minLength: 2,
-				source: function (request, response) {
-					return $.getJSON(user.attr('data-uri').replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
-						response($.map(data.data, function (el) {
-							return {
-								label: el.name + ' (' + el.username + ')',
-								name: el.name,
-								id: el.id,
-							};
-						}));
-					});
-				},
-				select: function (event, ui) {
-					event.preventDefault();
-					// Set selection
-					user.val(ui.item.label); // display the selected text
-					cl.val(ui.item.id); // save selected id to input
-					return false;
-				}
-			});
-		});
-	}
+					var kvp = url.split('&');
+					var i = 0;
 
-	var groups = $(".form-groups");
-	if (groups.length) {
-		groups.each(function (i, group) {
-			group = $(group);
-			var cl = group.clone()
-				.attr('type', 'hidden')
-				.val(group.val().replace(/([^:]+):/, ''));
-			group
-				.attr('name', 'groupid' + i)
-				.attr('id', group.attr('id') + i)
-				.val(group.val().replace(/(:\d+)$/, ''))
-				.after(cl);
-			group.autocomplete({
-				minLength: 2,
-				source: function (request, response) {
-					return $.getJSON(group.attr('data-uri').replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
-						response($.map(data.data, function (el) {
-							return {
-								label: el.name,
-								name: el.name,
-								id: el.id,
-							};
-						}));
-					});
-				},
-				select: function (event, ui) {
-					event.preventDefault();
-					// Set selection
-					group.val(ui.item.label); // display the selected text
-					cl.val(ui.item.id); // save selected id to input
-					return false;
-				}
-			});
-		});
-	}
-
-	$('#field-name').on('keyup', function () {
-		var val = $(this).val();
-
-		val = val.toLowerCase()
-			.replace(/\s+/g, '-')
-			.replace(/[^a-z0-9\-_]+/g, '');
-
-		$(this).val(val);
-	});
-
-	$(".tree").each(function (i, el) {
-		var data = JSON.parse($('#' + $(el).attr('id') + '-data').html());
-
-		$(el).fancytree({
-			activate: function (event, data) {
-				var node = data.node;
-				var did = node.data.id;
-
-				$("#" + did + "_dialog").dialog({
-					modal: true,
-					width: '550px',
-					//position: { my: "left top", at: "left top", of: $( "#tree" ) },
-					close: function () {
-						var tree = $.ui.fancytree.getTree($(el));
-						tree.getActiveNode().setActive(false);
-					}
-				});
-				//$("#" + did + "_dialog").dialog('open');
-				$('#selected_dir').attr('value', node.data.parentdir);
-				$('#selected_dir_unixgroup').attr('value', node.data.parentunixgroup);
-				$('#new_dir_path').html(node.data.path + "/");
-				$('#new_dir_quota_available').html(node.data.parentquota);
-				$('#new_dir_quota_available2').html(node.data.parentquota);
-			},
-			persist: true,
-			extensions: ["table", "glyph"],
-			table: {
-				indentation: 20,      // indent 20px per node level
-				nodeColumnIdx: 0,     // render the node title into the 2nd column
-				checkboxColumnIdx: 0  // render the checkboxes into the 1st column
-			},
-			glyph: {
-				preset: "awesome4",
-				map: {
-					doc: "far fa-plus-circle",
-					folder: "far fa-folder",
-					folderOpen: "far fa-folder-open"
-				}
-			},
-			source: data,
-			collapse: function (event, data) {
-				if (typeof (history.pushState) != 'undefined') {
-					var url = window.location.href.match(/\?.*/);
-					if (url != null) {
-						url = url[0].replace('?', '');
-
-						var kvp = url.split('&');
-						var i = 0;
-
+					if (this.parentNode.open) {
 						for (; i < kvp.length; i++) {
 							if (kvp[i].startsWith('expanded=')) {
 								var pair = kvp[i].split('=');
 								var expanded = pair[1].split(','),
 									vals = [];
 								for (var j = 0; j < expanded.length; j++) {
-									if (expanded[j] == data.node.data.id) {
+									if (expanded[j] == this.getAttribute('data-id')) {
 										continue;
 									}
 									vals.push(expanded[j]);
@@ -1020,387 +822,326 @@ document.addEventListener('DOMContentLoaded', function () {
 							}
 						}
 						url = '?' + kvp.join('&');
-
 						history.pushState(null, null, encodeURI(url));
-					}
-				}
-			},
-			expand: function (event, data) {
-				if (typeof (history.pushState) != 'undefined') {
-					var url = window.location.href.match(/\?.*/);
-					if (url != null) {
-						url = url[0].replace('?', '');
-
-						var kvp = url.split('&');
-						var i = 0;
-
+					} else {
 						for (; i < kvp.length; i++) {
 							if (kvp[i].startsWith('expanded=')) {
 								var pair = kvp[i].split('=');
 								var expanded = pair[1].split(','),
 									vals = [];
 								for (var j = 0; j < expanded.length; j++) {
-									if (expanded[j] != data.node.data.id) {
+									if (expanded[j] != this.getAttribute('data-id')) {
 										vals.push(expanded[j]);
 									}
 								}
-								pair[1] = (vals.join(',') ? vals.join(',') + ',' : '') + data.node.data.id;
+								pair[1] = (vals.join(',') ? vals.join(',') + ',' : '') + this.getAttribute('data-id');
 								kvp[i] = pair.join('=');
 								break;
 							}
 						}
 
 						if (i >= kvp.length) {
-							kvp[kvp.length] = ['expanded', data.node.data.id].join('=');
+							kvp[kvp.length] = ['expanded', this.getAttribute('data-id')].join('=');
 						}
 						url = '?' + kvp.join('&');
-					} else {
-						url = "?expanded=" + data.node.data.id;
+						history.pushState(null, null, encodeURI(url));
 					}
-
+				} else if (!this.parentNode.open) {
+					url = "?expanded=" + this.getAttribute('data-id');
 					history.pushState(null, null, encodeURI(url));
 				}
-			},
-			renderColumns: function (event, data) {
-				var node = data.node,
-					$tdList = $(node.tr).find(">td");
-
-				if (node.data.quota == '0 B') {
-					$tdList.eq(1).text("-");
-				} else {
-					$tdList.eq(1).text(node.data.quota);
-					$tdList.eq(1).attr("id", node.key + "_quota_td");
-					if (node.data.quotaproblem == "1") {
-						if (node.data.quota != "-") {
-							$tdList.eq(1).addClass('quotaProblem');
-							$tdList.eq(1).html(node.data.quota + '<span class="icon-error">Storage space is over-allocated. Quotas reduced until allocation balanced.</span>');
-						}
-					}
-				}
-				$tdList.eq(1).addClass('quota');
-
-				if (typeof (node.data.futurequota) != 'undefined') {
-					$tdList.eq(2).html(node.data.futurequota);
-				}
-				$tdList.eq(2).addClass('quota');
-				// (index #2 is rendered by fancytree)
 			}
 		});
 	});
 
-	$('#new_dir_input').on('change', function () {
-		GuessDirUnixGroup();
-	});
-	$('#new_dir_type').on('change', function () {
-		NewDirType();
-	});
-	$('#new_dir_user_select').on('change', function () {
-		//NewDirUserSelected();
-		var input = document.getElementById("new_dir_input");
-		var selected = document.getElementById("new_dir_user_select");
-		selected = selected.options[selected.selectedIndex].innerHTML;
-		input.value = selected;
-	});
-	/*$('#new_dir_unixgroup_select').on('change', function (){
-		NewDirUser();
-	});
-	$('#new_dir_autouserunixgroup_select').on('change', function (){
-		NewDirUser();
+	document.querySelectorAll('.dir-modal').forEach(function (el) {
+		el.addEventListener('click', function () {
+			$(this.getAttribute('href')).modal('show');
+		});
 	});
 
-	$('#group').on('change', function (){
-		NewDirGroup($(this).data('resource'));
-	});
-	$('#new_top_dir_input').on('change', function (){
-		GuessTopDirUnixGroup();
-	});
-	$('#new_top_dir').on('click', function(e) {
-		e.preventDefault();
-		NewTopDir();
-	});*/
-
-	$('#new_dir').on('click', function (e) {
-		e.preventDefault();
-		NewDir(this);
+	document.querySelectorAll('.btn-newdir').forEach(function (el) {
+		el.addEventListener('click', function () {
+			document.getElementById('selected_dir').value = this.getAttribute('data-parent');
+			document.getElementById('selected_dir_unixgroup').value = this.getAttribute('data-parentunixgroup');
+			document.getElementById('new_dir_path').innerHTML = this.getAttribute('data-path') + "/";
+			document.getElementById('new_dir_quota_available').innerHTML = this.getAttribute('data-parentquota');
+			document.getElementById('new_dir_quota_available2').innerHTML = this.getAttribute('data-parentquota');
+		});
 	});
 
-	$('#deduct_radio').on('click', function () {
-		document.getElementById('new_dir_quota_deduct').focus();
+	var newdiri = document.getElementById('new_dir_input');
+	if (newdiri) {
+		newdiri.addEventListener('change', function () {
+			GuessDirUnixGroup();
+		});
+	}
+	var newdirt = document.getElementById('new_dir_type');
+	if (newdirt) {
+		newdirt.addEventListener('change', function () {
+			NewDirType();
+		});
+	}
+	var newdiru = document.getElementById('new_dir_user_select');
+	if (newdiru) {
+		newdiru.addEventListener('change', function () {
+			//NewDirUserSelected();
+			var input = document.getElementById("new_dir_input");
+			var selected = document.getElementById("new_dir_user_select");
+			selected = selected.options[selected.selectedIndex].innerHTML;
+			input.value = selected;
+		});
+	}
+
+	var newdir = document.getElementById('new_dir');
+	if (newdir) {
+		newdir.addEventListener('click', function (e) {
+			e.preventDefault();
+			NewDir(this);
+		});
+	}
+
+	var deductradio = document.getElementById('deduct_radio');
+	if (deductradio) {
+		deductradio.addEventListener('click', function () {
+			document.getElementById('new_dir_quota_deduct').focus();
+		});
+	}
+	var newdirdeduct = document.getElementById('new_dir_quota_deduct');
+	if (newdirdeduct) {
+		newdirdeduct.addEventListener('focus', function () {
+			document.getElementById('deduct_radio').checked = true;
+		});
+	}
+
+	var unallocradio = document.getElementById('unalloc_radio');
+	if (unallocradio) {
+		unallocradio.addEventListener('click', function () {
+			document.getElementById('new_dir_quota_unalloc').focus();
+		});
+	}
+	var newdirunallocradio = document.getElementById('new_dir_quota_unalloc');
+	if (newdirunallocradio) {
+		newdirunallocradio.addEventListener('focus', function () {
+			document.getElementById('unalloc_radio').checked = true;
+		});
+	}
+
+	/*document.querySelectorAll('.permissions-reset').forEach(function (el) {
+		el.addEventListener('click', function(e) {
+			e.preventDefault();
+			ResetPermissions(this.getAttribute('data-dir'), this.getAttribute('data-path'));
+		});
+	}*/
+	document.querySelectorAll('.unixgroup-edit').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+			EditUnixGroup(this.getAttribute('data-dir'), this.getAttribute('data-api'));
+		});
 	});
-	$('#new_dir_quota_deduct').on('focus', function () {
-		document.getElementById('deduct_radio').checked = true;
+	document.querySelectorAll('.unixgroup-create').forEach(function (el) {
+		el.addEventListener('click', function(e) {
+			e.preventDefault();
+
+			this.classList.add('processing');
+
+			CreateNewGroupVal(0, this, true);
+		});
+	});
+	document.querySelectorAll('.unixgroup-basename-set').forEach(function (el) {
+		el.addEventListener('click', function(e) {
+			e.preventDefault();
+			SetBaseName(this.getAttribute('data-api'));
+		});
+	});
+	document.querySelectorAll('.dir-delete').forEach(function(el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+			DeleteDir(this);
+		});
+	});
+	document.querySelectorAll('.dir-create-default').forEach(function (el) {
+		el.addEventListener('click', function(e) {
+			e.preventDefault();
+
+			this.classList.add('processing');
+
+			CreateDefaultDirs(
+				this.getAttribute('data-api'),
+				this.getAttribute('data-id'),
+				document.getElementById('new-name').value,
+				document.getElementById('new-resourceid').value,
+				this.getAttribute('data-quota'),
+				this.getAttribute('data-base'),
+				document.getElementById('new-apps').checked ? document.getElementById('new-apps').value : 0,
+				document.getElementById('new-etc').checked ? document.getElementById('new-etc').value : 0,
+				document.getElementById('new-data').checked ? document.getElementById('new-data').value : 0
+			);
+		});
 	});
 
-	$('#unalloc_radio').on('click', function () {
-		document.getElementById('new_dir_quota_unalloc').focus();
-	});
-	$('#new_dir_quota_unalloc').on('focus', function () {
-		document.getElementById('unalloc_radio').checked = true;
-	});
-
-	/*$('.permissions-reset').on('click', function(e) {
-		e.preventDefault();
-		ResetPermissions($(this).data('dir'), $(this).data('path'));
-	});*/
-	$('.unixgroup-edit').on('click', function (e) {
-		e.preventDefault();
-		EditUnixGroup($(this).data('dir'), $(this).data('api'));
-	});
-	$('.unixgroup-create').on('click', function(e) {
-		e.preventDefault();
-
-		$(this).addClass('processing');
-
-		CreateNewGroupVal(0, $(this), true);
-	});
-	$('.unixgroup-basename-set').on('click', function(e) {
-		e.preventDefault();
-		SetBaseName($(this).data('api'));
-	});
-	$('.dir-delete').on('click', function (e) {
-		e.preventDefault();
-		DeleteDir(this);
-	});
-	$('.dir-create-default').on('click', function(e) {
-		e.preventDefault();
-
-		$(this).addClass('processing');
-
-		CreateDefaultDirs(
-			$(this).data('api'),
-			$(this).data('id'),
-			$('#new-name').val(), //$(this).data('unixgroup'),
-			$('#new-resourceid').val(),
-			$(this).data('quota'),
-			$(this).data('base'),
-			$('#new-apps').is(':checked') ? $('#new-apps').val() : 0,
-			$('#new-etc').is(':checked') ? $('#new-etc').val() : 0,
-			$('#new-data').is(':checked') ? $('#new-data').val() : 0
-		);
+	document.querySelectorAll('.quota_upa').forEach(function (el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			DistributeQuota(this.getAttribute('data-dir'), this.getAttribute('data-api'));
+		});
 	});
 
-	$('.quota_upa').on('click', function(e){
-		e.preventDefault();
-		DistributeQuota($(this).data('dir'), $(this).data('api'));
+	document.querySelectorAll('.permissions-reset').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+			ResetPermissions(this);
+		});
 	});
 
-	$('.permissions-reset').on('click', function (e) {
-		e.preventDefault();
-		ResetPermissions(this);
-	});
-
-	$('body').on('change', '.form-control,.form-check-input', function () {
+	/*$('body').on('change', '.form-control,.form-check-input', function () {
 		var dialog = $(this).closest('.dialog');
 		if (dialog.length) {
 			$('#' + $(dialog).data('id') + '_save_button').prop('disabled', false);
 		}
-	});
+	});*/
 
-	$('.dialog-btn').on('click', function (e) {
-		e.preventDefault();
+	document.querySelectorAll('.form-group-storage').forEach(function (el) {
+		var sel = new TomSelect(el, {
+			maxItems: 1,
+			valueField: 'id',
+			labelField: 'name',
+			searchField: ['name'],
+			plugins: ['clear_button'],
+			persist: false,
+			// Fetch remote data
+			load: function (query, callback) {
+				var url = el.getAttribute('data-api') + '&api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content') + '&order=name&order_by=asc&search=' + encodeURIComponent(query);
 
-		$($(this).attr('href')).dialog({
-			modal: true,
-			width: '550px',
-			open: function () {
-
-				/*var groups = $(".form-group-storage");
-				if (groups.length) {
-					$(".form-group-storage").select2({
-						//placeholder: $(this).data('placeholder')
+				fetch(url)
+					.then(response => response.json())
+					.then(json => {
+						callback(json.data);
+					}).catch(() => {
+						callback();
 					});
-				}*/
-				$(".form-group-storage").each(function (i, el) {
-					$(el).select2({
-						//placeholder: $(el).attr('placeholder'),
-						ajax: {
-							url: $(el).data('api'),// + '&api_token=' + $('meta[name="api-token"]').attr('content'),
-							dataType: 'json',
-							maximumSelectionLength: 1,
-							data: function (params) {
-								var query = {
-									search: params.term,
-									order: 'name',
-									order_dir: 'asc'
-								}
-
-								return query;
-							},
-							processResults: function (data) {
-								for (var i = 0; i < data.data.length; i++) {
-									data.data[i].text = data.data[i].name;
-								}
-
-								var d = {};
-								d.id = -1;
-								d.text = el.options[1].innerHTML;
-								data.data.unshift(d);
-
-								return {
-									results: data.data
-								};
-							}
-						}
-					})
-					.on('select2:select', function (e) {
-						e.preventDefault();
-
-						var group = $(this);
-
-						var seller = $('#' + group.attr('data-update'));
-						//var dest_queue = document.getElementById("field-id").value;
-
-						if (group.val() == 0) {
-							seller.val(0);
-							seller.parent().addClass('d-none');
-							return;
-						} else {
-							seller.parent().removeClass('d-none');
-						}
-					});
-				});
-				/*var groups = $(".form-group-storage");
-				if (groups.length) {
-					groups.each(function (i, group) {
-						group = $(group);
-						var cl = group.clone()
-							.attr('type', 'hidden')
-							.val(group.val().replace(/([^:]+):/, ''));
-						group
-							.attr('name', 'groupid' + i)
-							.attr('id', group.attr('id') + i)
-							.val(group.val().replace(/(:\d+)$/, ''))
-							.after(cl);
-						group.autocomplete({
-							minLength: 2,
-							source: function (request, response) {
-								return $.getJSON(group.attr('data-uri').replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
-									response($.map(data.data, function (el) {
-										return {
-											label: el.name,
-											name: el.name,
-											id: el.id,
-										};
-									}));
-								});
-							},
-							select: function (event, ui) {
-								event.preventDefault();
-								// Set selection
-								group.val(ui.item.label); // display the selected text
-								cl.val(ui.item.id); // save selected id to input
-								return false;
-							}
-						});
-					});
-				}*/
 			}
 		});
-	});
-
-	$('.dialog-submit').on('click', function (e) {
-		e.preventDefault();
-
-		var btn = $(this),
-			frm = btn.closest('form'),
-			invalid = false;
-
-		if (frm.length) {
-			var elms = frm[0].querySelectorAll('input[required]');
-			elms.forEach(function (el) {
-				if (!el.value || !el.validity.valid) {
-					el.classList.add('is-invalid');
-					invalid = true;
-				} else {
-					el.classList.remove('is-invalid');
-				}
-			});
-			elms = frm[0].querySelectorAll('select[required]');
-			elms.forEach(function (el) {
-				if (!el.value || el.value <= 0) {
-					el.classList.add('is-invalid');
-					invalid = true;
-				} else {
-					el.classList.remove('is-invalid');
-				}
-			});
-			elms = frm[0].querySelectorAll('textarea[required]');
-			elms.forEach(function (el) {
-				if (!el.value || !el.validity.valid) {
-					el.classList.add('is-invalid');
-					invalid = true;
-				} else {
-					el.classList.remove('is-invalid');
-				}
-			});
-
-			if (invalid) {
+		/*sel.on('item_add', function (item, data) {
+			var seller = document.getElementById(el.getAttribute('data-update'));
+			//var dest_queue = document.getElementById("field-id").value;
+			console.log(el.getAttribute('data-update'));
+			if (item == 0) {
+				seller.value = 0;
+				seller.parentNode.classList.add('d-none');
 				return;
+			} else {
+				seller.parentNode.classList.remove('d-none');
 			}
-		}
+		});*/
+	});
 
-		$.ajax({
-			url: frm.data('api'),
-			type: btn.attr('data-id') ? 'put' : 'post',
-			data: frm.serialize(),
-			dataType: 'json',
-			async: false,
-			success: function () {
-				window.location.reload(true);
-			},
-			error: function (xhr) {
-				var msg = 'Failed to process item.';
-				if (xhr.responseJSON) {
-					msg = xhr.responseJSON.message;
-					if (typeof msg === 'object') {
-						var lines = Object.values(msg);
-						msg = lines.join('<br />');
+	document.querySelectorAll('.dialog-submit').forEach(function(btn) {
+		btn.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			var frm = btn.closest('form'),
+				invalid = false;
+
+			if (frm.length) {
+				var elms = frm[0].querySelectorAll('input[required]');
+				elms.forEach(function (el) {
+					if (!el.value || !el.validity.valid) {
+						el.classList.add('is-invalid');
+						invalid = true;
+					} else {
+						el.classList.remove('is-invalid');
 					}
+				});
+				elms = frm[0].querySelectorAll('select[required]');
+				elms.forEach(function (el) {
+					if (!el.value || el.value <= 0) {
+						el.classList.add('is-invalid');
+						invalid = true;
+					} else {
+						el.classList.remove('is-invalid');
+					}
+				});
+				elms = frm[0].querySelectorAll('textarea[required]');
+				elms.forEach(function (el) {
+					if (!el.value || !el.validity.valid) {
+						el.classList.add('is-invalid');
+						invalid = true;
+					} else {
+						el.classList.remove('is-invalid');
+					}
+				});
+
+				if (invalid) {
+					return;
 				}
-				$('#error_' + btn.attr('data-type') + btn.attr('data-id'))
-					.removeClass('hide')
-					.text(msg);
 			}
+
+			var post = {},
+				fields = new FormData(frm);
+
+			for (var i of fields.keys()) {
+				post[i] = fields.get(i);
+			}
+
+			fetch(frm.getAttribute('data-api'), {
+				method: btn.getAttribute('data-id') ? 'PUT' : 'POST',
+				headers: headers,
+				body: JSON.stringify(post)
+			})
+				.then(function (response) {
+					if (response.ok) {
+						window.location.reload(true);
+						return;
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (err) {
+					var er = document.getElementById('error_' + btn.getAttribute('data-type') + btn.getAttribute('data-id'));
+					if (er) {
+						er.classList.remove('hide');
+						er.innerHTML = err;
+					}
+				});
 		});
 	});
 
-	$('.storage-delete').on('click', function (e) {
-		e.preventDefault();
+	document.querySelectorAll('.storage-delete').forEach(function (btn) {
+		btn.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		var btn = this;
-
-		if (confirm(btn.getAttribute('data-confirm'))) {
-			$.ajax({
-				url: btn.getAttribute('data-api'),
-				type: 'delete',
-				dataType: 'json',
-				async: false,
-				success: function () {
-					window.location.reload(true);
-				},
-				error: function (xhr) {
-					var msg = 'Failed to delete item.';
-					if (xhr.responseJSON) {
-						msg = xhr.responseJSON.message;
-						if (typeof msg === 'object') {
-							var lines = Object.values(msg);
-							msg = lines.join('<br />');
-						}
+			if (confirm(btn.getAttribute('data-confirm'))) {
+				fetch(btn.getAttribute('data-api'), {
+					method: 'DELETE',
+					headers: headers
+				})
+				.then(function (response) {
+					if (response.ok) {
+						window.location.reload(true);
+						return;
 					}
-					$('#' + btn.attr('data-dir') + '_error')
-						.removeClass('hide')
-						.text(msg);
-				}
-			});
-		}
-	});
-
-	$('.storage-edit').on('click', function (e) {
-		e.preventDefault();
-
-		$($(this).attr('href')).dialog({
-			modal: true,
-			width: '550px'
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (err) {
+					var er = document.getElementById(btn.getAttribute('data-dir') + '_error');
+					if (er) {
+						er.classList.remove('hide');
+						er.innerHTML = err;
+					}
+				});
+			}
 		});
 	});
 
