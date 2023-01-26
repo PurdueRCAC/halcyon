@@ -314,7 +314,11 @@ $queues = $queues->reject(function($q) use ($canManage)
 							{{ $q->totalcores }} <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>
 						</td>
 						<td class="text-right">
-							{{ $q->serviceunits ? $q->serviceunits : round($q->totalcores/$q->subresource->nodecores, 1) * $q->subresource->nodegpus }} <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
+							<?php
+							$nodes = ($q->subresource->nodecores ? round($q->totalcores / $q->subresource->nodecores, 1) : 0);
+							$gpus = ($q->serviceunits && $q->serviceunits > 0 ? $q->serviceunits : round($nodes * $q->subresource->nodegpus));
+							?>
+							{{ number_format($gpus) }} <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
 						</td>
 					@else
 						<td class="text-right">
@@ -443,7 +447,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 												}
 												elseif ($unit == 'gpus')
 												{
-													$nodes = round($item->corecount / $nodecores, 1);
+													$nodes = $nodecores ? round($item->corecount / $nodecores, 1) : 0;
 													$total += ($item->serviceunits ? $item->serviceunits : round($nodes * $nodegpus));
 													//$amt = $item->corecount;
 												}
@@ -520,7 +524,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 													}
 													elseif ($unit == 'gpus')
 													{
-														$nodes = round($item->corecount / $nodecores, 1);
+														$nodes = $nodecores ? round($item->corecount / $nodecores, 1) : 0;
 														$gpus = ($item->serviceunits ? $item->serviceunits : ceil($nodes * $nodegpus));
 														$amt = $item->corecount;
 													}
