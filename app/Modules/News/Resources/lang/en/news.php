@@ -101,6 +101,13 @@ return [
 	'upcoming event at' => 'You have an upcoming :type at :time',
 	'no type articles' => 'There are no :type articles.',
 	'article id' => 'Article #:id',
+	'default state' => 'Default filter',
+	'default order dir' => 'Default sorting',
+	'all' => 'All',
+	'upcoming' => 'Upcoming',
+	'ended' => 'Ended',
+	'sort asc' => 'Oldest to Newest',
+	'sort desc' => 'Newest to Oldest',
 	// Calendar
 	'calendar options' => 'Calendar options',
 	'download' => 'Download',

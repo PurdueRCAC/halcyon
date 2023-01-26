@@ -41,6 +41,13 @@ document.addEventListener('DOMContentLoaded', function () {
 				.replace(/[^a-z0-9\-_]+/g, '');
 		});
 	}
+	var parent = document.getElementById('field-parentid');
+	if (parent) {
+		parent.addEventListener('change', function () {
+			document.getElementById('field-state').value = parent.selectedOptions[0].getAttribute('data-state');
+			document.getElementById('field-order_dir').value = parent.selectedOptions[0].getAttribute('data-orderdir');
+		});
+	}
 });
 </script>
 @endpush
@@ -72,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					<select name="fields[parentid]" id="field-parentid" class="form-control">
 						<option value="0">{{ trans('global.none') }}</option>
 						@foreach ($parents as $parent)
-							<option value="{{ $parent->id }}"<?php if ($parent->id == $row->parentid) { echo ' selected="selected"'; } ?>>{{ $parent->name }}</option>
+							<option value="{{ $parent->id }}" data-state="{{ $parent->state }}" data-orderdir="{{ $parent->order_dir }}"<?php if ($parent->id == $row->parentid) { echo ' selected="selected"'; } ?>>{{ $parent->name }}</option>
 						@endforeach
 					</select>
 				</div>
@@ -92,6 +99,28 @@ document.addEventListener('DOMContentLoaded', function () {
 						<input type="text" name="fields[alias]" id="field-alias" aria-describedby="field-alias-hint" class="form-control{{ $errors->has('fields.alias') ? ' is-invalid' : '' }}" maxlength="32" pattern="[a-z0-9\-_]{1,32}" value="{{ $row->alias }}" />
 					</div>
 					<span class="form-text text-muted" id="field-alias-hint">{{ trans('news::news.alias hint') }}</span>
+				</div>
+
+				<div class="row">
+					<div class="col col-md-6">
+						<div class="form-group">
+							<label for="field-state">{{ trans('news::news.default state') }}:</label>
+							<select name="fields[state]" id="field-state" class="form-control">
+								<option value="all"<?php if ($row->state == 'all') { echo ' selected="selected"'; } ?>>{{ trans('news::news.all') }}</option>
+								<option value="upcoming"<?php if ($row->state == 'upcoming') { echo ' selected="selected"'; } ?>>{{ trans('news::news.upcoming') }}</option>
+								<option value="ended"<?php if ($row->state == 'ended') { echo ' selected="selected"'; } ?>>{{ trans('news::news.ended') }}</option>
+							</select>
+						</div>
+					</div>
+					<div class="col col-md-6">
+						<div class="form-group">
+							<label for="field-order_dir">{{ trans('news::news.default order dir') }}:</label>
+							<select name="fields[order_dir]" id="field-order_dir" class="form-control">
+								<option value="asc"<?php if ($row->order == 'asc') { echo ' selected="selected"'; } ?>>{{ trans('news::news.sort asc') }}</option>
+								<option value="desc"<?php if ($row->order == 'desc') { echo ' selected="selected"'; } ?>>{{ trans('news::news.sort desc') }}</option>
+							</select>
+						</div>
+					</div>
 				</div>
 			</fieldset>
 		</div>
@@ -126,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						<div class="form-group form-check">
 							<input type="checkbox" name="fields[ongoing]" id="field-ongoing" class="form-check-input" value="1" <?php if ($row->ongoing): ?>checked="checked"<?php endif; ?> />
 							<label for="field-ongoing" class="form-check-label">{{ trans('news::news.ongoing') }}</label>
-							<span class="form-text">Allow for specifying a location on articles in this category?</span>
+							<span class="form-text">Articles do not have to specify an end time.</span>
 						</div>
 						</div>
 					</div>

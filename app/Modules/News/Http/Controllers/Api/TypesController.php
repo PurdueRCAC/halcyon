@@ -367,6 +367,35 @@ class TypesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "state",
+	 * 		"description":   "Default filter for listings",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 45,
+	 * 			"enum": [
+	 * 				"all",
+	 * 				"upcoming",
+	 * 				"ended"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Default sorting direction for listings",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 45,
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"200": {
 	 * 			"description": "Successful entry creation",
@@ -381,6 +410,9 @@ class TypesController extends Controller
 	 * 						"future":        1,
 	 * 						"calendar":      1,
 	 * 						"url":           1,
+	 * 						"parentid":      0,
+	 * 						"state":         "upcoming",
+	 * 						"order_dir":     "desc",
 	 * 						"api":           "https://example.com/api/news/types/1"
 	 * 					}
 	 * 				}
@@ -406,6 +438,8 @@ class TypesController extends Controller
 			'calendar'     => 'nullable|boolean',
 			'url'          => 'nullable|url',
 			'parentid'     => 'nullable|integer',
+			'state'        => 'nullable|string|max:45',
+			'order_dir'    => 'nullable|string|max:45',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -416,6 +450,16 @@ class TypesController extends Controller
 		}
 
 		$row = new Type($request->all());
+
+		if ($row->state && !in_array($row->state, ['all', 'upcoming', 'ended']))
+		{
+			return response()->json(['message' => 'invalid default state value'], 415);
+		}
+
+		if ($row->order_dir && !in_array($row->order_dir, ['asc', 'desc']))
+		{
+			return response()->json(['message' => 'invalid default sort value'], 415);
+		}
 
 		if (!$row->save())
 		{
@@ -455,6 +499,9 @@ class TypesController extends Controller
 	 * 						"future":        1,
 	 * 						"calendar":      1,
 	 * 						"url":           1,
+	 * 						"parentid":      0,
+	 * 						"state":         "upcoming",
+	 * 						"order_dir":     "desc",
 	 * 						"api":           "https://example.com/api/news/types/1"
 	 * 					}
 	 * 				}
@@ -598,6 +645,35 @@ class TypesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "state",
+	 * 		"description":   "Default filter for listings",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 45,
+	 * 			"enum": [
+	 * 				"all",
+	 * 				"upcoming",
+	 * 				"ended"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "order_dir",
+	 * 		"description":   "Default sorting direction for listings",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 45,
+	 * 			"enum": [
+	 * 				"asc",
+	 * 				"desc"
+	 * 			]
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"200": {
 	 * 			"description": "Successful entry modification",
@@ -612,6 +688,9 @@ class TypesController extends Controller
 	 * 						"future":        1,
 	 * 						"calendar":      1,
 	 * 						"url":           1,
+	 * 						"parentid":      0,
+	 * 						"state":         "upcoming",
+	 * 						"order_dir":     "desc",
 	 * 						"api":           "https://example.com/api/news/types/1"
 	 * 					}
 	 * 				}
@@ -638,6 +717,8 @@ class TypesController extends Controller
 			'calendar'     => 'nullable|boolean',
 			'url'          => 'nullable|url',
 			'parentid'     => 'nullable|integer',
+			'state'        => 'nullable|string|max:45',
+			'order_dir'    => 'nullable|string|max:45',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -654,6 +735,16 @@ class TypesController extends Controller
 			{
 				$row->{$key} = $request->input($key);
 			}
+		}
+
+		if ($row->state && !in_array($row->state, ['all', 'upcoming', 'ended']))
+		{
+			return response()->json(['message' => 'invalid default state value'], 415);
+		}
+
+		if ($row->order_dir && !in_array($row->order_dir, ['asc', 'desc']))
+		{
+			return response()->json(['message' => 'invalid default sort value'], 415);
 		}
 
 		if (!$row->save())

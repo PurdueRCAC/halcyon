@@ -275,22 +275,6 @@ class ArticlesController extends Controller
 	 */
 	public function type($name, Request $request)
 	{
-		// Get filters
-		$filters = array(
-			'search'    => null,
-			'resource'  => null,
-			'keyword'   => null,
-			'start'     => null,
-			'stop'      => null,
-			'limit'     => config('list_limit', 20),
-			'page'      => 1,
-		);
-
-		foreach ($filters as $key => $default)
-		{
-			$filters[$key] = $request->input($key, $default);
-		}
-
 		$row = Type::findByName($name);
 
 		if (!$row)
@@ -322,6 +306,37 @@ class ArticlesController extends Controller
 				->where('template', '=', 0);
 		}
 
+		if ($row->parentid)
+		{
+			if (!$row->state)
+			{
+				$row->state = $row->parent->state;
+			}
+			if (!$row->order_dir)
+			{
+				$row->order_dir = $row->parent->order_dir;
+			}
+		}
+
+		// Get filters
+		$filters = array(
+			'search'    => null,
+			'resource'  => null,
+			'keyword'   => null,
+			'start'     => null,
+			'stop'      => null,
+			'state'     => $row->state ? $row->state : 'upcoming',
+			'limit'     => config('list_limit', 20),
+			'order'     => 'datetimenews',
+			'order_dir' => $row->order_dir ? $row->order_dir : 'asc',
+			'page'      => 1,
+		);
+
+		foreach ($filters as $key => $default)
+		{
+			$filters[$key] = $request->input($key, $default);
+		}
+
 		if ($filters['start'])
 		{
 			$start = Carbon::parse($filters['start']);
@@ -351,11 +366,32 @@ class ArticlesController extends Controller
 				->whereIn($r . '.resourceid', $resource);
 		}
 
+		if ($filters['state'] == 'upcoming')
+		{
+			$now = Carbon::now();
+
+			$query->where(function($w) use ($now)
+			{
+				$w->where('datetimenews', '>=', $now->toDateTimeString())
+					->orWhere(function($where) use ($now)
+					{
+						$where->where('datetimenews', '<', $now->toDateTimeString())
+							->where('datetimenewsend', '>', $now->toDateTimeString());
+					});
+			});
+		}
+		elseif ($filters['state'] == 'ended')
+		{
+			$now = Carbon::now();
+
+			$query->where('datetimenewsend', '<', $now->toDateTimeString());
+		}
+
 		$row->title = trans('news::news.news') . ': ' . $row->name . ': Page ' . $filters['page'];
 		event($event = new ArticleMetadata($row));
 
 		$articles = $query
-			->orderBy('datetimenews', 'desc')
+			->orderBy($filters['order'], $filters['order_dir'])
 			->limit(20)
 			->paginate();
 

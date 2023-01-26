@@ -73,6 +73,24 @@ app('pathway')
 		</div>
 	</div>
 
+	<div id="filter-bar">
+		<div class="row">
+			<div class="col col-md-4 filter-search">
+				<div class="btn-group mr-2" role="group" aria-label="Filter options">
+					<a href="{{ route('site.news.type', ['name' => $type->alias, 'state' => 'all', 'order_dir' => 'desc']) }}" class="btn btn-outline-secondary<?php if ($filters['state'] == 'all'): echo ' active'; endif;?>">{{ trans('news::news.all') }}</a>
+					<a href="{{ route('site.news.type', ['name' => $type->alias, 'state' => 'upcoming', 'order_dir' => 'asc']) }}" class="btn btn-outline-secondary<?php if ($filters['state'] == 'upcoming'): echo ' active'; endif;?>">{{ trans('news::news.upcoming') }}</a>
+					<a href="{{ route('site.news.type', ['name' => $type->alias, 'state' => 'ended', 'order_dir' => 'desc']) }}" class="btn btn-outline-secondary<?php if ($filters['state'] == 'ended'): echo ' active'; endif;?>">{{ trans('news::news.ended') }}</a>
+				</div>
+			</div>
+			<div class="col col-md-8 filter-select text-right">
+				<div class="btn-group mr-2" role="group" aria-label="Sort options">
+					<a href="{{ route('site.news.type', ['name' => $type->alias, 'state' => $filters['state'], 'order_dir' => 'asc']) }}" class="btn btn-outline-secondary<?php if ($filters['order_dir'] == 'asc'): echo ' active'; endif;?>">{{ trans('news::news.sort asc') }}</a>
+					<a href="{{ route('site.news.type', ['name' => $type->alias, 'state' => $filters['state'], 'order_dir' => 'desc']) }}" class="btn btn-outline-secondary<?php if ($filters['order_dir'] == 'desc'): echo ' active'; endif;?>">{{ trans('news::news.sort desc') }}</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<?php
 	$dt = Carbon\Carbon::now();
 
@@ -143,7 +161,7 @@ app('pathway')
 		</ul>
 		<?php echo $articles->render(); ?>
 	<?php else: ?>
-		<p>{{ trans('news::news.no type articles', ['type' => $type->name]) }}</p>
+		<p class="mt-4">{{ trans('news::news.no type articles', ['type' => $type->name]) }}</p>
 	<?php endif; ?>
 </div>
 </div>
