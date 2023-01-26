@@ -171,6 +171,11 @@ class Item extends Model
 
 		if ($this->type == 'module' && $this->page_id)
 		{
+			if (strstr($this->page_id, '::'))
+			{
+				$bits = explode('::', $this->page_id);
+				$this->page_id = $bits[1];
+			}
 			$page = \App\Modules\Pages\Models\Page::find($this->page_id);
 
 			if ($page)

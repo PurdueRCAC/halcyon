@@ -2,6 +2,8 @@
 
 namespace App\Modules\Menus\Events;
 
+use App\Modules\Menus\Models\Type;
+
 class TypeCreating
 {
 	/**
