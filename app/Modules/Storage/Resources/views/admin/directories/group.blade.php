@@ -64,7 +64,7 @@
 								<form method="post">
 									<div class="modal-body dialog-body">
 										<div class="form-group">
-											<label for="new_dir_type">Name:</label>
+											<label for="new_dir_input">Name:</label>
 											<span class="input-group">
 												<span class="input-group-addon input-group-prepend"><span class="input-group-text">{{ $row->storageResource->path }}/<span id="new_dir_path"></span></span></span>
 												<input type="text" id="new_dir_input" name="new_dir_input" class="form-control" />
@@ -72,7 +72,7 @@
 										</div>
 										<div class="form-group">
 											<label for="new_dir_type">Type:</label>
-											<select id="new_dir_type" class="form-control">
+											<select id="new_dir_type" class="form-control dir_type" data-id="new">
 												<option value="normal">Group Shared</option>
 												<option value="autouserread">Auto User - Group Readable</option>
 												<option value="autouserreadwrite">Auto User - Group Readable & Writeable</option>
@@ -181,8 +181,8 @@
 					<?php
 					$data = array($row->tree(true, explode(',', request()->input('expanded', ''))));
 					?>
-					<input type="hidden" id="selected_dir" />
-					<input type="hidden" id="selected_dir_unixgroup" />
+					<input type="hidden" id="new_selected_dir" />
+					<input type="hidden" id="new_selected_dir_unixgroup" />
 
 					<div id="tree{{ $row->id }}" class="tree">
 						<div class="row">
@@ -265,12 +265,29 @@
 													</div>
 												</div><!--/ .row -->
 											<?php } ?>
+											<input type="hidden" id="{{ $dir->id }}_dir_input" name="{{ $dir->id }}_dir_input" value="{{ $dir->name }}" />
 											<div class="row mb-3">
 												<div class="col-md-4">
-													<label for="{{ $dir->id }}_unixgroup_select">Access Unix Group</label>
+													<label for="{{ $dir->id }}_dir_type">Type</label>
 												</div>
 												<div class="col-md-8">
-													<select id="{{ $dir->id }}_unixgroup_select" class="form-control">
+													<select id="{{ $dir->id }}_dir_type" class="form-control dir_type" data-id="{{ $dir->id }}">
+														<option value="normal">{{ trans('storage::storage.permissions type.group shared') }}</option>
+														<option value="autouserread" data-read="1" data-write="0"<?php if ($dir->autouser == 1) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.auto user group readable') }}</option>
+														<option value="autouserreadwrite" data-read="1" data-write="1"<?php if ($dir->autouser == 3) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.auto user group writeable') }}</option>
+														<option value="autouserprivate" data-read="0" data-write="0"<?php if ($dir->autouser == 2) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.auto user private') }}</option>
+														<option value="user" data-read="1" data-write="0"<?php if (!$dir->autouser && $dir->owneruserid && $dir->groupread && !$dir->groupwrite) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.user owned readable') }}</option>
+														<option value="userwrite" data-read="1" data-write="1"<?php if (!$dir->autouser && $dir->owneruserid && $dir->groupread && $dir->groupwrite) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.user owned writeable') }}</option>
+														<option value="userprivate" data-read="0" data-write="0"<?php if (!$dir->autouser && $dir->owneruserid && !$dir->groupread && !$dir->groupwrite) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.user owned private') }}</option>
+													</select>
+												</div>
+											</div><!--/ .row -->
+											<div class="row mb-3">
+												<div class="col-md-4">
+													<label for="{{ $dir->id }}_dir_unixgroup_select">Access Unix Group</label>
+												</div>
+												<div class="col-md-8">
+													<select id="{{ $dir->id }}_dir_unixgroup_select" class="form-control">
 														<option value="0">{{ trans('global.none') }}</option>
 														<?php
 														foreach ($dir->group->unixgroups as $unixgroup)
@@ -285,76 +302,52 @@
 														}
 														?>
 													</select>
+													<select id="{{ $dir->id }}_dir_unixgroup_select_decoy" class="form-control hidden">
+													</select>
 												</div>
 											</div><!--/ .row -->
-											<?php if ($dir->autouser) { ?>
-												<div class="row mb-3">
-													<div class="col-md-4">
-														<label for="{{ $dir->id }}_autouserunixgroup_select">Populating Unix Group</label>
-													</div>
-													<div class="col-md-8">
-														<select id="{{ $dir->id }}_autouserunixgroup_select" class="form-control">
-															<?php foreach ($dir->group->unixgroups as $unixgroup) { ?>
-																<?php
-																$selected = '';
-																if ($dir->autouserunixgroupid && $unixgroup->id == $dir->autouserunixgroupid)
-																{
-																	$selected = 'selected="selected"';
-																}
-																?>
-																<option <?php echo $selected; ?> value="<?php echo $unixgroup->id; ?>"><?php echo $unixgroup->longname; ?></option>
-															<?php } ?>
-														</select>
-													</div>
-												</div><!--/ .row -->
-											<?php } ?>
-											<?php if ($dir->owner && $dir->owner->name != 'root') { ?>
-												<div class="row mb-3">
-													<div class="col-md-4">
-														<label for="{{ $dir->id }}_owner_name">Owner</label>
-													</div>
-													<div class="col-md-8">
-														<input type="text" id="{{ $dir->id }}_owner_name" class="form-control-plaintext" value="{{ $dir->owner->name }}" />
-													</div>
-												</div><!--/ .row -->
-
-												<div class="row mb-3">
-													<div class="col-md-4">
-														<label for="{{ $dir->id }}_dir_type_select">Type</label>
-													</div>
-													<div class="col-md-8">
-														<select id="{{ $dir->id }}_dir_type_select" class="form-control">
-															<?php if ($dir->unixPermissions->group->write) { ?>
-																<option selected="selected" value="userwrite">User Owned - Group Writable</option>
-																<option value="user">User Owned - Group Readable</option>
-																<option value="userprivate">User Owned - Private</option>
-															<?php } elseif ($dir->unixPermissions->group->read) { ?>
-																<option selected="selected" value="user">User Owned - Group Readable</option>
-																<option value="userwrite">User Owned - Group Writable</option>
-																<option value="userprivate">User Owned - Private</option>
-															<?php } else { ?>
-																<option value="user">User Owned - Group Readable</option>
-																<option value="userwrite">User Owned - Group Writable</option>
-																<option selected="selected" value="userprivate">User Owned - Private</option>
-															<?php } ?>
-														</select>
-													</div>
-												</div><!--/ .row -->
-											<?php } ?>
-											<?php if ($dir->autouser) { ?>
-												<div class="row mb-3">
-													<div class="col-md-4">
-														<label for="{{ $dir->id }}_dir_type_select">Auto Populate User Default</label>
-													</div>
-													<div class="col-md-8">
-														<select id="{{ $dir->id }}_dir_type_select" class="form-control">
-															<option value="autouser"<?php if ($dir->autouser == '1') { ?> selected="selected"<?php } ?>>Auto User - Group Readable</option>
-															<option value="autouserreadwrite"<?php if ($dir->autouser == '3') { ?> selected="selected"<?php } ?>>Auto User - Group Readable Writable</option>
-															<option value="autouserprivate"<?php if ($dir->autouser == '2') { ?> selected="selected"<?php } ?>>Auto User - Private</option>
-														</select>
-													</div>
-												</div><!--/ .row -->
-											<?php } ?>
+											<div id="{{ $dir->id }}_dir_autouserunixgroup_row" class="row mb-3{{ ($dir->autouser ? '' : ' hidden') }}">
+												<div class="col-md-4">
+													<label for="{{ $dir->id }}_dir_autouserunixgroup_select">Populating Unix Group</label>
+												</div>
+												<div class="col-md-8">
+													<select id="{{ $dir->id }}_dir_autouserunixgroup_select" class="form-control">
+													<option value="">(Select Unix Group)</option>
+													<?php foreach ($group->unixgroups as $unixgroup) { ?>
+														<?php
+														$selected = '';
+														if ($dir->autouserunixgroupid && $unixgroup->id == $dir->autouserunixgroupid)
+														{
+															$selected = ' selected="selected"';
+														}
+														?>
+														<option value="{{ $unixgroup->id }}"<?php echo $selected; ?>>{{ $unixgroup->longname }}</option>
+													<?php } ?>
+													</select>
+												</div>
+											</div>
+											<div id="{{ $dir->id }}_dir_user_row" class="row mb-3{{ ($dir->owner && $dir->owner->name != 'root' ? '' : ' hidden') }}">
+												<div class="col-md-4">
+													<label for="{{ $dir->id }}_dir_user_select">User:</label>
+												</div>
+												<div class="col-md-8">
+													<select id="{{ $dir->id }}_dir_user_select" class="form-control">
+													<option value="">(Select User)</option>
+													<?php
+													$base = $group->unixgroups()->orderBy('id', 'asc')->first();
+													if ($base):
+														?>
+														@foreach ($base->members as $member)
+															<option value="{{ $member->userid }}"<?php echo ($dir->owneruserid == $member->userid ? ' selected="selected"' : ''); ?>>{{ $member->user ? $member->user->username : 'User ID #' . $member->userid }}</option>
+														@endforeach
+														<?php
+													endif;
+													?>
+												</select>
+												</div>
+											</div>
+											<input type="hidden" id="{{ $dir->id }}_selected_dir" />
+											<input type="hidden" id="{{ $dir->id }}_selected_dir_unixgroup" />
 											<?php
 											$child_dirs = array();
 											$check = array();
@@ -442,7 +435,7 @@
 											<?php } else if (!$dir->parentstoragedirid) { ?>
 												<div class="row mb-3">
 													<div class="col-md-4">
-														Public read access?
+														<strong>Public read access?</strong>
 													</div>
 													<div class="col-md-4">
 														<span class="form-check">
@@ -461,7 +454,7 @@
 
 											<div class="row mb-3">
 												<div class="col-md-4">
-													<p class="card-title">{{ trans('storage::storage.permissions') }}</p>
+													<strong>{{ trans('storage::storage.permissions') }}</strong>
 												</div>
 												<div class="col-md-8">
 													<table class="table table-bordered">
@@ -588,7 +581,7 @@
 											@if (count($dir->futurequotas) > 0)
 												<div class="row mb-3">
 													<div class="col-md-4">
-														{{ trans('storage::storage.future quota') }}
+														<strong>{{ trans('storage::storage.future quota') }}</strong>
 													</div>
 													<div class="col-md-8">
 														<table class="table table-hover">
@@ -615,7 +608,7 @@
 											@if (auth()->user()->can('manage storage'))
 											<div class="row mb-3">
 												<div class="col-md-4">
-													{{ trans('storage::storage.unallocated space') }}
+													<strong>{{ trans('storage::storage.unallocated space') }}</strong>
 												</div>
 												<div class="col-md-8">
 													@if ($bucket)
@@ -684,7 +677,7 @@
 													@endif
 												</div>
 												<div class="col-md-6 text-right">
-													<input disabled="disabled" id="{{ $dir->id }}_save_button" class="btn btn-success unixgroup-edit" data-dir="{{ $dir->id }}" data-api="{{ route('api.storage.directories.update', ['id' => $dir->id]) }}" type="button" value="{{ trans('global.button.save') }}" />
+													<input id="{{ $dir->id }}_save_button" class="btn btn-success unixgroup-edit" data-dir="{{ $dir->id }}" data-api="{{ route('api.storage.directories.update', ['id' => $dir->id]) }}" type="button" value="{{ trans('global.button.save') }}" />
 												</div>
 											</div><!--/ .row -->
 										</div>
