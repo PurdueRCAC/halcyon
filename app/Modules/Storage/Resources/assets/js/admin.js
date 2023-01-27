@@ -29,8 +29,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
+	var seluser = null;
 	document.querySelectorAll('.form-users').forEach(function (el) {
-		var sel = new TomSelect(el, {
+		seluser = new TomSelect(el, {
 			maxItems: 1,
 			valueField: 'id',
 			labelField: 'name',
@@ -164,6 +165,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 			var read = opt.getAttribute('data-read');
 			var write = opt.getAttribute('data-write');
+			var owner = opt.getAttribute('data-owner');
 
 			if (this.value != '0') {
 				document.querySelector(this.getAttribute('data-update')).classList.remove('hidden');
@@ -186,6 +188,17 @@ document.addEventListener('DOMContentLoaded', function () {
 				document.getElementById('field-groupwrite').checked = true;
 			} else {
 				document.getElementById('field-groupwrite').checked = false;
+			}
+
+			if (this.value != '1' && this.value != '2' && this.value != '3') {
+				document.getElementById('field-autouserunixgroupid').value = '';
+			}
+
+			if (owner == '0') {
+				document.getElementById('field-owneruserid').value = '0';
+				if (seluser) {
+					seluser.clear();
+				}
 			}
 		});
 	}

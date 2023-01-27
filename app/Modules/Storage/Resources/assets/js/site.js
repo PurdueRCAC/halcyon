@@ -7,19 +7,21 @@ var headers = {
 /**
  * New directory type
  *
+ * @param   {object} selected
  * @return  {void}
  */
-function NewDirType() {
-	var selected = document.getElementById("new_dir_type");
-	selected = selected.options[selected.selectedIndex].value;
+function NewDirType(sel) {
+	//var selected = document.getElementById("new_dir_type");
+	selected = sel.options[sel.selectedIndex].value;
+	var id = sel.getAttribute('data-id');
 
-	var user_row = document.getElementById("new_dir_user_row");
-	var user_select = document.getElementById("new_dir_user_select");
-	var input = document.getElementById("new_dir_input");
-	var unixgroup_select = document.getElementById("new_dir_unixgroup_select");
-	var autouserunixgroup_row = document.getElementById("new_dir_autouserunixgroup_row");
-	var unixgroup_select_decoy = document.getElementById("new_dir_unixgroup_select_decoy");
-	var parent_unixgroup = document.getElementById("selected_dir_unixgroup");
+	var user_row = document.getElementById(id + "_dir_user_row");
+	var user_select = document.getElementById(id + "_dir_user_select");
+	var input = document.getElementById(id + "_dir_input");
+	var unixgroup_select = document.getElementById(id + "_dir_unixgroup_select");
+	var autouserunixgroup_row = document.getElementById(id + "_dir_autouserunixgroup_row");
+	var unixgroup_select_decoy = document.getElementById(id + "_dir_unixgroup_select_decoy");
+	var parent_unixgroup = document.getElementById(id + "_selected_dir_unixgroup");
 	var x;
 
 	if (selected == "user") {
@@ -172,7 +174,7 @@ function NewDir(btn) {
 	var input = document.getElementById("new_dir_input");
 	var group = document.getElementById("groupid").value;
 	var resource = btn.getAttribute('data-resource');//document.getElementById("resourceid").value;
-	var parentdir = document.getElementById("selected_dir").value;
+	var parentdir = document.getElementById("new_selected_dir").value;
 	//var storageresource = document.getElementById("storageresource").value;
 
 	var type = document.getElementById("new_dir_type");
@@ -415,7 +417,7 @@ function EditUnixGroup(dir, api) {
 	var auto_input = document.getElementById(dir + "_autouserunixgroup_select");
 	var input_quota = document.getElementById(dir + "_quota_input");
 	var input_otheryes = document.getElementById(dir + "_other_read_box");
-	var input_type = document.getElementById(dir + "_dir_type_select");
+	var input_type = document.getElementById(dir + "_dir_type");
 
 	// Make WS call
 	var post = {};
@@ -862,8 +864,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	document.querySelectorAll('.btn-newdir').forEach(function (el) {
 		el.addEventListener('click', function () {
-			document.getElementById('selected_dir').value = this.getAttribute('data-parent');
-			document.getElementById('selected_dir_unixgroup').value = this.getAttribute('data-parentunixgroup');
+			document.getElementById('new_selected_dir').value = this.getAttribute('data-parent');
+			document.getElementById('new_selected_dir_unixgroup').value = this.getAttribute('data-parentunixgroup');
 			document.getElementById('new_dir_path').innerHTML = this.getAttribute('data-path') + "/";
 			document.getElementById('new_dir_quota_available').innerHTML = this.getAttribute('data-parentquota');
 			document.getElementById('new_dir_quota_available2').innerHTML = this.getAttribute('data-parentquota');
@@ -876,12 +878,18 @@ document.addEventListener('DOMContentLoaded', function () {
 			GuessDirUnixGroup();
 		});
 	}
-	var newdirt = document.getElementById('new_dir_type');
+	/*var newdirt = document.getElementById('new_dir_type');
 	if (newdirt) {
 		newdirt.addEventListener('change', function () {
-			NewDirType();
+			NewDirType(this);
 		});
-	}
+	}*/
+	document.querySelectorAll('.dir_type').forEach(function (el) {
+		el.addEventListener('change', function () {
+			NewDirType(this);
+		});
+	});
+
 	var newdiru = document.getElementById('new_dir_user_select');
 	if (newdiru) {
 		newdiru.addEventListener('change', function () {

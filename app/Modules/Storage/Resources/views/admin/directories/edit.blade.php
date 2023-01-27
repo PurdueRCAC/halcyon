@@ -94,7 +94,10 @@ app('pathway')
 								<div class="form-group">
 									<label for="groupid">{{ trans('storage::storage.group') }}</label>
 									<select name="fields[groupid]" id="groupid" class="form-control form-groups" data-api="{{ route('api.groups.index', ['order' => 'name', 'order_by' => 'asc']) }}">
-										<option value="{{ $row->groupid }}" selected="selected">{{ $row->groupid && $row->group ? $row->group->name : trans('global.none') }}</option>
+										<option value="0">{{ trans('global.none') }}</option>
+										@if ($row->groupid)
+										<option value="{{ $row->groupid }}" selected="selected">{{ $row->groupid && $row->group ? $row->group->name : trans('global.unknown') }}</option>
+										@endif
 									</select>
 								</div>
 							</div>
@@ -102,7 +105,14 @@ app('pathway')
 								<div class="form-group">
 									<label for="field-owneruserid">{{ trans('storage::storage.owner') }}</label>
 									<select name="fields[owneruserid]" id="field-owneruserid" class="form-control form-users" data-api="{{ route('api.users.index', ['order' => 'name', 'order_by' => 'asc']) }}">
-										<option value="{{ $row->owneruserid }}" selected="selected">{{ $row->owneruserid && $row->owner ? $row->owner->name . ' (' . $row->owner->username . ')' : trans('global.none') }}</option>
+										<option value="0">{{ trans('global.none') }}</option>
+										@if ($row->group)
+											@foreach ($row->group->members as $member)
+												<option value="{{ $member->userid }}"<?php if ($row->owneruserid == $member->userid) { echo ' selected="selected"'; } ?>>{{ $member->user ? $member->user->name . ' (' . $member->user->username . ')' : trans('global.none') }}</option>
+											@endforeach
+										@else
+											<option value="{{ $row->owneruserid }}" selected="selected">{{ $row->owneruserid && $row->owner ? $row->owner->name . ' (' . $row->owner->username . ')' : trans('global.none') }}</option>
+										@endif
 									</select>
 								</div>
 							</div>
@@ -151,13 +161,13 @@ app('pathway')
 						<div class="form-group">
 							<label for="field-autouser">{{ trans('storage::storage.type') }}</label>
 							<select id="field-autouser" name="fields[autouser]" data-update="#autouserunixgroupid" class="form-control">
-								<option value="0">{{ trans('storage::storage.permissions type.group shared') }}</option>
-								<option value="1" data-read="1" data-write="0"<?php if ($row->autouser == 1) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.auto user group readable') }}</option>
-								<option value="3" data-read="1" data-write="1"<?php if ($row->autouser == 3) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.auto user group writeable') }}</option>
-								<option value="2" data-read="0" data-write="0"<?php if ($row->autouser == 2) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.auto user private') }}</option>
-								<option value="0" data-read="1" data-write="0"<?php if (!$row->autouser && $row->groupread && !$row->groupwrite) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.user owned readable') }}</option>
-								<option value="0" data-read="1" data-write="1"<?php if (!$row->autouser && $row->groupread && $row->groupwrite) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.user owned writeable') }}</option>
-								<option value="0" data-read="0" data-write="0"<?php if (!$row->autouser && !$row->groupread && !$row->groupwrite) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.user owned private') }}</option>
+								<option value="0" data-owner="0">{{ trans('storage::storage.permissions type.group shared') }}</option>
+								<option value="1" data-read="1" data-write="0" data-owner="0"<?php if ($row->autouser == 1) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.auto user group readable') }}</option>
+								<option value="3" data-read="1" data-write="1" data-owner="0"<?php if ($row->autouser == 3) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.auto user group writeable') }}</option>
+								<option value="2" data-read="0" data-write="0" data-owner="0"<?php if ($row->autouser == 2) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.auto user private') }}</option>
+								<option value="0" data-read="1" data-write="0" data-owner="1"<?php if ($row->owneruserid && !$row->autouser && $row->groupread && !$row->groupwrite) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.user owned readable') }}</option>
+								<option value="0" data-read="1" data-write="1" data-owner="1"<?php if ($row->owneruserid && !$row->autouser && $row->groupread && $row->groupwrite) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.user owned writeable') }}</option>
+								<option value="0" data-read="0" data-write="0" data-owner="1"<?php if ($row->owneruserid && !$row->autouser && !$row->groupread && !$row->groupwrite) { echo ' selected="selected"'; } ?>>{{ trans('storage::storage.permissions type.user owned private') }}</option>
 							</select>
 							<span class="form-text text-muted">{{ trans('storage::storage.permissions type desc') }}</span>
 						</div>

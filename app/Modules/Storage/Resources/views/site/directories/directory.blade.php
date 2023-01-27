@@ -8,7 +8,7 @@
 				</a>
 			</div>
 			<div class="col-md-2 text-right">{{ isset($dir['data']['bytes']) && $dir['data']['bytes'] ? $dir['quota'] : '-' }}</div>
-			<div class="col-md-2 text-right">{{ isset($dir['data']['futurequota']) && $dir['data']['futurequota'] ? $dir['data']['futurequota'] : '-' }}</div>
+			<div class="col-md-2 text-right">{!! isset($dir['data']['futurequota']) && $dir['data']['futurequota'] ? $dir['data']['futurequota'] : '-' !!}</div>
 		</summary>
 		@if (isset($dir['children']))
 			@foreach ($dir['children'] as $child)

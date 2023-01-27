@@ -250,6 +250,20 @@ class DirectoriesController extends Controller
 
 		$row = $id ? Directory::findOrFail($id) : new Directory;
 
+		// Reset everything in case someone unchecked a box on the form
+		// Checked boxes will get set to 1 with the data fill below
+		$row->ownerread   = 0;
+		$row->ownerwrite  = 0;
+		$row->groupread   = 0;
+		$row->groupwrite  = 0;
+		$row->publicread  = 0;
+		$row->publicwrite = 0;
+		$row->owneruserid = 0;
+		$row->unixgroupid = 0;
+		$row->groupid     = 0;
+		$row->autouserunixgroupid = 0;
+		$row->autouser    = 0;
+
 		if (!$id)
 		{
 			// Set up permissions
@@ -261,10 +275,15 @@ class DirectoriesController extends Controller
 			$row->publicwrite = 0;
 		}
 
-		//$row->fill($request->input('fields'));
+		foreach ($data as $key => $val)
+		{
+			if (is_null($val) && in_array($key, ['groupid', 'unixgroupid', 'owneruserid', 'autouser', 'autouserunixgroupid']))
+			{
+				$data[$key] = 0;
+			}
+		}
 		$row->fill($data);
 		$row->resourceid = $row->storageResource->resource->id;
-		//$row->owneruserid = $row->owneruserid ?: auth()->user()->id;
 
 		if ($row->parent)
 		{
@@ -279,7 +298,7 @@ class DirectoriesController extends Controller
 				}
 			}
 
-			$row->publicread = 1;
+			//$row->publicread = 1;
 		}
 
 		// Make sure name is sane
@@ -439,7 +458,8 @@ class DirectoriesController extends Controller
 		{
 			$row->resourceid = $row->storageResource->resourceid;
 		}
-
+//echo '<pre>';
+//print_r($row->toArray());echo '</pre>';die();
 		if (!$row->save())
 		{
 			return redirect()->back()->withError(trans('global.messages.save failed'));
