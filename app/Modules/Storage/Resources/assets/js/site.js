@@ -728,14 +728,14 @@ var BASEGROUPS = Array('', 'data', 'apps');
  * @return  {void}
  */
 function CreateNewGroupVal(num, btn, all) {
-	var group = btn.data('group');
-	//var = base = btn.data('value');
+	var group = btn.getAttribute('data-group');
+	//var = base = btn.getAttribute('data-value');
 
 	if (typeof (all) == 'undefined') {
 		all = true;
 	}
 
-	fetch(btn.data('api'), {
+	fetch(btn.getAttribute('data-api'), {
 		method: 'POST',
 		headers: headers,
 		body: JSON.stringify({
@@ -1005,7 +1005,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	/*$('body').on('change', '.form-control,.form-check-input', function () {
 		var dialog = $(this).closest('.dialog');
 		if (dialog.length) {
-			$('#' + $(dialog).data('id') + '_save_button').prop('disabled', false);
+			$('#' + $(dialog).getAttribute('data-id') + '_save_button').prop('disabled', false);
 		}
 	});*/
 
