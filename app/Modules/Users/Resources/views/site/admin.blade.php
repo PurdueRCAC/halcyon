@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			//maxItems: 1,
 			valueField: 'id',
 			labelField: 'name',
-			searchField: ['name', 'username'],
+			searchField: ['name', 'username', 'email'],
 			plugins: {
 				clear_button:{
 					title: 'Remove selected',
