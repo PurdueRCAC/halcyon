@@ -673,7 +673,7 @@ class ArticlesController extends Controller
 	/**
 	 * Show the specified entry
 	 *
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  View
 	 */
 	public function show($id)
@@ -712,7 +712,7 @@ class ArticlesController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 * 
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return View
 	 */
 	public function edit($id)
@@ -745,7 +745,7 @@ class ArticlesController extends Controller
 	/**
 	 * Mark the associated user has having visited
 	 *
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function visit($id, $token)

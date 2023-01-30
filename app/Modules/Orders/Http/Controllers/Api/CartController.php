@@ -127,7 +127,7 @@ class CartController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return CartResource
 	 */
 	public function read($id)
@@ -184,7 +184,7 @@ class CartController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @param   Request $request
 	 * @return  Response|CartResource
 	 */
@@ -236,7 +236,7 @@ class CartController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  CartResource
 	 */
 	public function delete($id)

@@ -18,7 +18,7 @@ class ResourceMemberStatus
 	public $user;
 
 	/**
-	 * @var integer
+	 * @var int
 	 */
 	public $status = 1;
 

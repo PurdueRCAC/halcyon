@@ -115,7 +115,7 @@ class Job extends Model
 	/**
 	 * Is the entry published?
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function isPublished()
 	{
@@ -125,7 +125,7 @@ class Job extends Model
 	/**
 	 * Check if the job is available
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function isAvailable()
 	{

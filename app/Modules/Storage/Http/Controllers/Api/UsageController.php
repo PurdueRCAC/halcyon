@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Modules\Storage\Http\Resources\UsageResource;
 use App\Modules\Storage\Models\Usage;
 use App\Modules\Storage\Models\Directory;
+use App\Modules\Resources\Models\Asset;
 use Carbon\Carbon;
 
 /**
@@ -319,7 +320,7 @@ class UsageController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function read($id)
@@ -399,7 +400,7 @@ class UsageController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @param   Request  $request
 	 * @return  Response
 	 */
@@ -477,7 +478,7 @@ class UsageController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete($id)
@@ -490,5 +491,174 @@ class UsageController extends Controller
 		}
 
 		return response()->json(null, 204);
+	}
+
+	/**
+	 * Process a batch list of usage
+	 *
+	 * @apiMethod POST
+	 * @apiUri    /storage/usage/batch/{resource}/{dir}
+	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "file",
+	 * 		"description":   "Storage directory ID",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation"
+	 * 		},
+	 * 		"401": {
+	 * 			"description": "Unauthorized"
+	 * 		},
+	 * 		"409": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
+	 * @param  Request  $request
+	 * @return Response
+	 */
+	public function batch($resource, $dir, Request $request)
+	{
+		/*$rules = [
+			'files'        => 'nullable|integer',
+		];
+		// [!] Legacy compatibility
+		if (request()->segment(1) == 'ws')
+		{
+			$rules = [
+				'files'      => 'nullable|integer',
+			];
+		}
+		//$request->validate($rules);
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}*/
+
+		$contents = $request->getContent();
+
+		if (!$contents)
+		{
+			return response()->json(['message' => 'No content found.'], 415);
+		}
+
+		$s = (new StorageResource)->getTable();
+		$a = (new Asset)->getTable();
+
+		$storage = StorageResource::query()
+			->select($s . '.*')
+			->join($a, $a . '.id', $s . '.parentresourceid')
+			->where($s . '.path', '=', '/' . $dir)
+			->where($a . '.rolename', '=', $resource)
+			->whereNull($a . '.datetimeremoved')
+			->first();
+
+		if (!$storage)
+		{
+			$storage = StorageResource::query()
+				->select($s . '.*')
+				->join($a, $a . '.id', $s . '.parentresourceid')
+				->where($s . '.path', '=', '/' . $dir)
+				->whereNull($a . '.datetimeremoved')
+				->first();
+
+			if (!$storage)
+			{
+				return response()->json(['message' => 'Specified resource and directory not found.'], 415);
+			}
+		}
+
+		$data = explode("\n", $contents);
+
+		foreach ($data as $line)
+		{
+			$line = trim($line);
+
+			if (strstr($line, ','))
+			{
+				$datum = explode(',', $line);
+			}
+			elseif (strstr($line, "\t"))
+			{
+				$datum = explode("\t", $line);
+			}
+			else
+			{
+				$datum = explode(' ', $line);
+			}
+			$datum = array_map('trim', $datum);
+			$datum = array_filter($datum);
+
+			//{"storagedir":"\/ws\/storagedir\/95797","quota":"214748364800 KiB","space":"4 KiB","files":"1","filequota":"2000000"}
+			$username = null;
+			$quota = 0;
+			$space = 0;
+
+			foreach ($datum as $k => $v)
+			{
+				if (!is_numeric($v))
+				{
+					$username = $v;
+					continue;
+				}
+
+				if (!$quota)
+				{
+					$quota = $v;
+				}
+
+				if ($v > $quota)
+				{
+					
+				}
+			}
+
+			$directory = Directory::query()
+				->where('userid', '=', $user->id)
+				->where('storageresourceid', '=', $storage->id)
+				->get();
+
+			if (!$row->directory)
+			{
+				//return response()->json(['message' => trans('Invalid storagedirid specified')], 409);
+				$messages[] = trans('Invalid storage/resource/user specified');
+				continue;
+			}
+
+			$row = new Usage;
+			$row->quota = $quota;
+			$row->filequota = 0;
+			$row->files = 0;
+			$row->space = $space;
+			$row->storagedirid = $directory->id;
+
+			// Does the storagedir have any bytes yet?
+			$last = Usage::query()
+				->where('storagedirid', '=', $row->storagedirid)
+				->orderBy('datetimerecorded', 'desc')
+				->limit(1)
+				->get()
+				->first();
+
+			if ($last)
+			{
+				$row->lastinterval = Carbon::now()->timestamp - strtotime($last->datetimerecorded);
+			}
+
+			$row->datetimerecorded = Carbon::now()->toDateTimeString();
+			$row->save();
+
+			$rows[] = $row;
+		}
+
+		return new UsageResourceCollection($rows);
 	}
 }

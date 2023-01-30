@@ -43,7 +43,7 @@ class Operation
 	 *
 	 * Long description (if any) ...
 	 *
-	 * @return integer
+	 * @return int
 	 */
 	public function norig()
 	{
@@ -55,7 +55,7 @@ class Operation
 	 *
 	 * Long description (if any) ...
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function nclosing()
 	{

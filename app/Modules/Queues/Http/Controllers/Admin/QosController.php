@@ -133,7 +133,7 @@ class QosController extends Controller
 	/**
 	 * Show the form for editing the specified queue.
 	 *
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return View
 	 */
 	public function edit($id)

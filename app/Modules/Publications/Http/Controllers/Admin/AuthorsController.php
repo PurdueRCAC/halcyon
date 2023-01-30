@@ -431,7 +431,7 @@ class AuthorsController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  View
 	 */
 	public function edit($id)
@@ -561,7 +561,7 @@ class AuthorsController extends Controller
 	 * Remove the specified entry
 	 *
 	 * @param   Request  $request
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete(Request $request, $id = null)
@@ -615,7 +615,7 @@ class AuthorsController extends Controller
 	 * Sets the state of one or more entries
 	 * 
 	 * @param   Request $request
-	 * @param   integer $id
+	 * @param   int $id
 	 * @return  void
 	 */
 	public function state(Request $request, $id)
@@ -718,7 +718,7 @@ class AuthorsController extends Controller
 	/**
 	 * Reorder entries
 	 * 
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @param   Request $request
 	 * @return  Response
 	 */

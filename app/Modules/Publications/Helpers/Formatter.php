@@ -129,7 +129,7 @@ class Formatter
 	 *
 	 * @param   string   $key  Property name
 	 * @param   object   $row  Object to look in
-	 * @return  boolean  True if exists, false if not
+	 * @return  bool  True if exists, false if not
 	 */
 	public static function keyExistsOrIsNotEmpty($key, $row)
 	{

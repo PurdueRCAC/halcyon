@@ -64,7 +64,7 @@ class Facet extends Model
 	/**
 	 * Find record by user ID and key
 	 *
-	 * @param   integer  $user_id
+	 * @param   int  $user_id
 	 * @param   string   $key
 	 * @return  Facet|null
 	 */

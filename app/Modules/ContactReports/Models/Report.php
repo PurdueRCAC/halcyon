@@ -3,6 +3,8 @@
 namespace App\Modules\ContactReports\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
@@ -20,6 +22,17 @@ use Carbon\Carbon;
 
 /**
  * Contact report
+ *
+ * @property int    $id
+ * @property int    $groupid
+ * @property int    $userid
+ * @property string $report
+ * @property string $stemmedreport
+ * @property Carbon|null $datetimecontact
+ * @property Carbon|null $datetimecreated
+ * @property int    $notice
+ * @property Carbon|null $datetimegroupid
+ * @property int    $contactreporttypeid
  */
 class Report extends Model
 {
@@ -127,7 +140,7 @@ class Report extends Model
 	 *
 	 * @return  void
 	 */
-	protected static function boot()
+	protected static function boot(): void
 	{
 		parent::boot();
 
@@ -146,9 +159,9 @@ class Report extends Model
 	/**
 	 * Defines a relationship to comments
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function comments()
+	public function comments(): HasMany
 	{
 		return $this->hasMany(Comment::class, 'contactreportid');
 	}
@@ -156,9 +169,9 @@ class Report extends Model
 	/**
 	 * Defines a relationship to resources map
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function resources()
+	public function resources(): HasMany
 	{
 		return $this->hasMany(Reportresource::class, 'contactreportid');
 	}
@@ -166,9 +179,9 @@ class Report extends Model
 	/**
 	 * Defines a relationship to group
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function group()
+	public function group(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Groups\Models\Group', 'groupid');
 	}
@@ -176,9 +189,9 @@ class Report extends Model
 	/**
 	 * Defines a relationship to creator
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function creator()
+	public function creator(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
 	}
@@ -186,9 +199,9 @@ class Report extends Model
 	/**
 	 * Defines a relationship to tagged users
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function users()
+	public function users(): HasMany
 	{
 		return $this->hasMany(__NAMESPACE__ . '\\User', 'contactreportid');
 	}
@@ -196,9 +209,9 @@ class Report extends Model
 	/**
 	 * Defines a relationship to type
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function type()
+	public function type(): BelongsTo
 	{
 		return $this->belongsTo(Type::class, 'contactreporttypeid');
 	}
@@ -208,7 +221,7 @@ class Report extends Model
 	 *
 	 * @return  string
 	 */
-	public function link()
+	public function link(): string
 	{
 		if (app('isAdmin'))
 		{
@@ -223,7 +236,7 @@ class Report extends Model
 	 *
 	 * @return  string
 	 */
-	public function usersAsString()
+	public function usersAsString(): string
 	{
 		$tags = array();
 		foreach ($this->users as $u)
@@ -240,7 +253,7 @@ class Report extends Model
 	 *
 	 * @return string
 	 */
-	public function toMarkdown()
+	public function toMarkdown(): string
 	{
 		if (is_null($this->markdown))
 		{
@@ -312,7 +325,7 @@ class Report extends Model
 	 *
 	 * @return string
 	 */
-	public function toHtml()
+	public function toHtml(): string
 	{
 		if (is_null($this->html))
 		{
@@ -388,7 +401,7 @@ class Report extends Model
 	 * @deprecated
 	 * @return string
 	 */
-	public function getFormattedReportAttribute()
+	public function getFormattedReportAttribute(): string
 	{
 		return $this->toHtml();
 
@@ -503,10 +516,10 @@ class Report extends Model
 	/**
 	 * Strip code blocks
 	 *
-	 * @param   array  $match
+	 * @param   array<int,string>  $match
 	 * @return  string
 	 */
-	protected function stripCode($match)
+	protected function stripCode($match): string
 	{
 		array_push($this->replacements['codeblocks'], $match[0]);
 
@@ -516,10 +529,10 @@ class Report extends Model
 	/**
 	 * Strip pre blocks
 	 *
-	 * @param   array  $match
+	 * @param   array<int,string>  $match
 	 * @return  string
 	 */
-	protected function stripPre($match)
+	protected function stripPre($match): string
 	{
 		array_push($this->replacements['preblocks'], $match[0]);
 
@@ -551,9 +564,9 @@ class Report extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @return boolean False if error, True on success
+	 * @return bool False if error, True on success
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		foreach ($this->comments as $comment)
 		{
@@ -589,7 +602,7 @@ class Report extends Model
 	 * @param   string  $startdate
 	 * @return  string
 	 */
-	public function formatDate($startdate)
+	public function formatDate($startdate): string
 	{
 		$datestring = '';
 
@@ -617,9 +630,9 @@ class Report extends Model
 	/**
 	 * Get news vars
 	 *
-	 * @return  array
+	 * @return  array<string,string>
 	 */
-	protected function getContentVars()
+	protected function getContentVars(): array
 	{
 		$vars = array(
 			'date'           => "%date%",
@@ -697,7 +710,7 @@ class Report extends Model
 	 * @param   string  $value
 	 * @return  string
 	 */
-	public function setReportAttribute($value) //generateStemmedReport()
+	public function setReportAttribute($value)
 	{
 		$this->attributes['report'] = $value;
 
@@ -744,10 +757,10 @@ class Report extends Model
 	/**
 	 * Strip URL
 	 *
-	 * @param   array  $match
+	 * @param   array<int,string>  $match
 	 * @return  string
 	 */
-	private function stripURL($match)
+	private function stripURL($match): string
 	{
 		if (isset($match[12]))
 		{
@@ -761,9 +774,9 @@ class Report extends Model
 	 * Fetch list of people "subscribed" to a report's comments
 	 * This includes anybody with a comment and the report author
 	 *
-	 * @return  array
+	 * @return  array<int,int>
 	 */
-	public function commentSubscribers()
+	public function commentSubscribers(): array
 	{
 		$subscribers = array($this->userid);
 
@@ -804,9 +817,9 @@ class Report extends Model
 	 * Fetch list of people "subscribed" to a report
 	 * This includes report author, anyone tagged, and watchers
 	 *
-	 * @return  array
+	 * @return  array<int,int>
 	 */
-	public function subscribers()
+	public function subscribers(): array
 	{
 		$subscribers = array($this->userid);
 
@@ -858,7 +871,7 @@ class Report extends Model
 		return $subscribers;
 	}
 
-	/*public function getKeywordsAttribute()
+	/*public function getKeywordsAttribute(): string
 	{
 		$str = $this->report;
 
@@ -897,9 +910,9 @@ class Report extends Model
 	/**
 	 * Find all hashtags in the report
 	 *
-	 * @return  array
+	 * @return  string
 	 */
-	public function getHashtagsAttribute()
+	public function getHashtagsAttribute(): string
 	{
 		$str = $this->report;
 
@@ -941,7 +954,7 @@ class Report extends Model
 	 * @param   string  $stop
 	 * @return  array
 	 */
-	public static function stats($start, $stop)
+	public static function stats($start, $stop): array
 	{
 		$start = Carbon::parse($start);
 		$stop  = Carbon::parse($stop);

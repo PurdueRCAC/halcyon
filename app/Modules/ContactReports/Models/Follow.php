@@ -3,10 +3,20 @@
 namespace App\Modules\ContactReports\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
+use Carbon\Carbon;
 
 /**
  * Model for following users and groups
+ *
+ * @property int    $id
+ * @property int    $userid
+ * @property int    $targetuserid
+ * @property int    $membertype
+ * @property Carbon|null $datecreated
+ * @property Carbon|null $dateremoved
+ * @property Carbon|null $datelastseen
  */
 class Follow extends Model
 {
@@ -78,7 +88,7 @@ class Follow extends Model
 	 *
 	 * @return void
 	 */
-	protected static function booted()
+	protected static function booted(): void
 	{
 		static::creating(function ($model)
 		{
@@ -91,9 +101,9 @@ class Follow extends Model
 	/**
 	 * Defines a relationship to user following something
 	 *
-	 * @return  object User
+	 * @return  BelongsTo
 	 */
-	public function follower()
+	public function follower(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
 	}
@@ -101,9 +111,9 @@ class Follow extends Model
 	/**
 	 * Defines a relationship to object being followed
 	 *
-	 * @return  object User|Group
+	 * @return  BelongsTo
 	 */
-	public function following()
+	public function following(): BelongsTo
 	{
 		if ($this->groupid)
 		{

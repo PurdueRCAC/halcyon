@@ -274,7 +274,7 @@ class ProductsController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 * 
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return View
 	 */
 	public function edit($id)
@@ -344,7 +344,7 @@ class ProductsController extends Controller
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete($id)

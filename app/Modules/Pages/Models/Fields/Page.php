@@ -134,7 +134,7 @@ class Page extends Select
 	 * @param   string   $optText    The name of the object variable for the option text.
 	 * @param   mixed    $selected   The key that is selected (accepts an array or a string).
 	 * @param   mixed    $idtag      Value of the field id or null by default
-	 * @param   boolean  $translate  True to translate
+	 * @param   bool     $translate  True to translate
 	 * @return  string   HTML for the select list.
 	 */
 	public static function genericlist($data, $name, $attribs = null, $optKey = 'value', $optText = 'text', $selected = null, $idtag = false, $translate = false)

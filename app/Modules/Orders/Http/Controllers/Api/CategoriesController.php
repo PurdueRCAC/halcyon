@@ -296,7 +296,7 @@ class CategoriesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return CategoryResource
 	 */
 	public function read($id)
@@ -368,7 +368,7 @@ class CategoriesController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @param   Request $request
 	 * @return  Response|CategoryResource
 	 */
@@ -442,7 +442,7 @@ class CategoriesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete($id)

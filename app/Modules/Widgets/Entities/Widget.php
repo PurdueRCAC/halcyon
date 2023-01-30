@@ -32,7 +32,7 @@ class Widget
 	/**
 	 * Cache time
 	 *
-	 * @var  integer
+	 * @var  int
 	 */
 	protected $cacheTime = 0;
 

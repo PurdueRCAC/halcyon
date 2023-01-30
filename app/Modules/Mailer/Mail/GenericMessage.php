@@ -28,7 +28,7 @@ class GenericMessage extends Mailable
 	/**
 	 * From email and name
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $frominfo;
 

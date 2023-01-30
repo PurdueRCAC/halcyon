@@ -280,7 +280,7 @@ class PermissionsController extends Controller
 	 * 			"description": "Error deleting record"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete($id)

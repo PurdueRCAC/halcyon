@@ -17,7 +17,7 @@ class UpdatesController extends Controller
 	/**
 	 * Display a listing of entries
 	 *
-	 * @param  integer  $art  Article ID
+	 * @param  int  $art  Article ID
 	 * @param  StatefulRequest $request
 	 * @return View
 	 */
@@ -92,7 +92,7 @@ class UpdatesController extends Controller
 	/**
 	 * Show the form for creating a new article
 	 *
-	 * @param   integer  $art  Article ID
+	 * @param   int  $art  Article ID
 	 * @return  View
 	 */
 	public function create($art)
@@ -116,8 +116,8 @@ class UpdatesController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
-	 * @param   integer  $art  Article ID
-	 * @param   integer  $id   Update ID
+	 * @param   int  $art  Article ID
+	 * @param   int  $id   Update ID
 	 * @return  View
 	 */
 	public function edit($art, $id)

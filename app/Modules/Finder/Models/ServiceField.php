@@ -79,8 +79,8 @@ class ServiceField extends Model
 	/**
 	 * Retrieves one row loaded by service_id and field_id
 	 *
-	 * @param   integer  $service_id
-	 * @param   integer  $field_id
+	 * @param   int  $service_id
+	 * @param   int  $field_id
 	 * @return  object
 	 */
 	public static function findByServiceAndField($service_id, $field_id)

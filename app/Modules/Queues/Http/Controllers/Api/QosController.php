@@ -703,7 +703,7 @@ class QosController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  JsonResource
 	 */
 	public function read($id)
@@ -1067,7 +1067,7 @@ class QosController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @param   Request  $request
 	 * @return  Response|JsonResource
 	 */
@@ -1155,7 +1155,7 @@ class QosController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete($id)

@@ -91,7 +91,7 @@ class Publication extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @return  boolean  False if error, True on success
+	 * @return  bool  False if error, True on success
 	 */
 	public function delete()
 	{

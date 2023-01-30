@@ -169,7 +169,7 @@ class Size extends Model
 	/**
 	 * Calculate time left from a start time
 	 *
-	 * @param   integer  $start
+	 * @param   int  $start
 	 * @return  string
 	 */
 	private function calculateTimeLeft($start)
@@ -263,7 +263,7 @@ class Size extends Model
 	/**
 	 * Get type
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getTypeAttribute()
 	{

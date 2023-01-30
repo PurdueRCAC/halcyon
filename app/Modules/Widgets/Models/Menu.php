@@ -151,7 +151,7 @@ class Menu extends Model
 	/**
 	 * Remove all records for a widget
 	 *
-	 * @param   integer  $widgetid
+	 * @param   int  $widgetid
 	 * @return  bool
 	 */
 	public static function deleteByWidget($widgetid)
@@ -174,7 +174,7 @@ class Menu extends Model
 	/**
 	 * Remove all records for a menu
 	 *
-	 * @param   integer  $menuid
+	 * @param   int  $menuid
 	 * @return  bool
 	 */
 	public static function deleteByMenu($menuid)

@@ -15,6 +15,15 @@ use App\Modules\Menus\Events\TypeDeleted;
 
 /**
  * Model for news type
+ *
+ * @property int    $id
+ * @property string $menutype
+ * @property string $title
+ * @property string $description
+ * @property int    $client_id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  */
 class Type extends Model
 {
@@ -79,7 +88,7 @@ class Type extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setMenutypeAttribute(string $value)
+	public function setMenutypeAttribute(string $value): void
 	{
 		$value = str_replace(' ', '-', $value);
 		$value = preg_replace("/[^a-zA-Z0-9\-]/", '', strtolower($value));
@@ -92,7 +101,7 @@ class Type extends Model
 	 *
 	 * @return  void
 	 */
-	protected static function boot()
+	protected static function boot(): void
 	{
 		parent::boot();
 
@@ -117,9 +126,9 @@ class Type extends Model
 	/**
 	 * Get a list of menu items
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function items()
+	public function items(): HasMany
 	{
 		return $this->hasMany(Item::class, 'menutype', 'menutype');
 	}
@@ -167,9 +176,9 @@ class Type extends Model
 	/**
 	 * Get a count of published menu items
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
-	public function countPublishedItems()
+	public function countPublishedItems(): int
 	{
 		$total = $this->items()
 			->where('published', '=', 1)
@@ -181,9 +190,9 @@ class Type extends Model
 	/**
 	 * Get a count of unpublished menu items
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
-	public function countUnpublishedItems()
+	public function countUnpublishedItems(): int
 	{
 		$total = $this->items()
 			->where('published', '=', 0)
@@ -195,9 +204,9 @@ class Type extends Model
 	/**
 	 * Get a count of unpublished menu items
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
-	public function countTrashedItems()
+	public function countTrashedItems(): int
 	{
 		$total = $this->items()
 			->onlyTrashed()
@@ -209,9 +218,9 @@ class Type extends Model
 	/**
 	 * Get a form
 	 *
-	 * @return  object
+	 * @return  Form
 	 */
-	public function getForm()
+	public function getForm(): Form
 	{
 		$file = __DIR__ . '/Forms/menu.xml';
 		//$file = Filesystem::cleanPath($file);
@@ -234,7 +243,7 @@ class Type extends Model
 	/**
 	 * Method rebuild the entire nested set tree.
 	 *
-	 * @return  boolean  False on failure or error, true otherwise.
+	 * @return  bool  False on failure or error, true otherwise.
 	 */
 	public function rebuild()
 	{
@@ -303,8 +312,8 @@ class Type extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @param   array    $options
-	 * @return  boolean  False if error, True on success
+	 * @param   array  $options
+	 * @return  bool   False if error, True on success
 	 */
 	public function save(array $options = [])
 	{
@@ -379,7 +388,7 @@ class Type extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @return  boolean  False if error, True on success
+	 * @return  bool  False if error, True on success
 	 */
 	public function delete()
 	{

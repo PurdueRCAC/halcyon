@@ -23,14 +23,14 @@ class Menu extends Fluent
 	/**
 	 * Identifier of the default menu item
 	 *
-	 * @var  integer
+	 * @var  int
 	 */
 	protected $_default = array();
 
 	/**
 	 * Identifier of the active menu item
 	 *
-	 * @var  integer
+	 * @var  int
 	 */
 	protected $_active = 0;
 
@@ -58,7 +58,7 @@ class Menu extends Fluent
 	/**
 	 * Get menu item by id
 	 *
-	 * @param   integer  $id  The item id
+	 * @param   int  $id  The item id
 	 * @return  mixed    The item object, or null if not found
 	 */
 	public function getItem($id)
@@ -76,9 +76,9 @@ class Menu extends Fluent
 	/**
 	 * Set the default item by id and language code.
 	 *
-	 * @param   integer  $id        The menu item id.
+	 * @param   int  $id        The menu item id.
 	 * @param   string   $language  The language cod (since 1.6).
-	 * @return  boolean  True, if successful
+	 * @return  bool  True, if successful
 	 */
 	public function setDefault($id, $language = '')
 	{
@@ -115,7 +115,7 @@ class Menu extends Fluent
 	/**
 	 * Set the default item by id
 	 *
-	 * @param   integer  $id  The item id
+	 * @param   int  $id  The item id
 	 * @return  mixed    If successful the active item, otherwise null
 	 */
 	public function setActive($id)
@@ -151,7 +151,7 @@ class Menu extends Fluent
 	 * @param   mixed    $attributes  The field name(s).
 	 * @param   mixed    $values      The value(s) of the field. If an array, need to match field names
 	 *                                each attribute may have multiple values to lookup for.
-	 * @param   boolean  $firstonly   If true, only returns the first item found
+	 * @param   bool  $firstonly   If true, only returns the first item found
 	 * @return  array
 	 */
 	public function getItems($attributes, $values, $firstonly = false)
@@ -237,7 +237,7 @@ class Menu extends Fluent
 	/**
 	 * Gets the parameter object for a certain menu item
 	 *
-	 * @param   integer  $id  The item id
+	 * @param   int  $id  The item id
 	 * @return  object   A Repository object
 	 */
 	public function getParams($id)
@@ -264,8 +264,8 @@ class Menu extends Fluent
 	 * Method to check object authorization against an access control
 	 * object and optionally an access extension object
 	 *
-	 * @param   integer  $id  The menu id
-	 * @return  boolean  True if authorised
+	 * @param   int  $id  The menu id
+	 * @return  bool  True if authorised
 	 */
 	public function authorise($id)
 	{

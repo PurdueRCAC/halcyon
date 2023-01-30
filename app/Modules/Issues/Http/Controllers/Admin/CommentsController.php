@@ -68,7 +68,7 @@ class CommentsController extends Controller
 	/**
 	 * Show the form for creating a new report
 	 *
-	 * @param   integer  $report
+	 * @param   int  $report
 	 * @return  Response
 	 */
 	public function create($report)
@@ -92,8 +92,8 @@ class CommentsController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
-	 * @param   integer  $report
-	 * @param   integer  $id
+	 * @param   int  $report
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function edit($report, $id)
@@ -189,7 +189,7 @@ class CommentsController extends Controller
 	/**
 	 * Return to default page
 	 *
-	 * @param   integer  $report
+	 * @param   int  $report
 	 * @return  Response
 	 */
 	public function cancel($report)

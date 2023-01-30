@@ -667,7 +667,7 @@ class ArticlesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return ArticleResource
 	 */
 	public function read($id)
@@ -696,7 +696,7 @@ class ArticlesController extends Controller
 	 * 			"description": "Successful entry read"
 	 * 		}
 	 * }
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return Log
 	 */
 	public function views($id)
@@ -838,7 +838,7 @@ class ArticlesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response|ArticleResource
 	 */
 	public function update(Request $request, $id)
@@ -987,7 +987,7 @@ class ArticlesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete($id)
@@ -1124,7 +1124,7 @@ class ArticlesController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @param   Request  $request
 	 * @return  ArticleResource
 	 */

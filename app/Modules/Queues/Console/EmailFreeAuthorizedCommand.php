@@ -284,8 +284,8 @@ class EmailFreeAuthorizedCommand extends Command
 	/**
 	 * Log email
 	 *
-	 * @param   integer $targetuserid
-	 * @param   integer $targetobjectid
+	 * @param   int $targetuserid
+	 * @param   int $targetobjectid
 	 * @param   string  $uri
 	 * @param   mixed   $payload
 	 * @return  null

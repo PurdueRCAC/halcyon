@@ -3,10 +3,20 @@
 namespace App\Modules\Knowledge\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\Knowledge\Events\FeedbackCreated;
 
 /**
  * Model class for feedback
+ *
+ * @property int    $id
+ * @property int    $target_id
+ * @property string $ip
+ * @property string $type
+ * @property int    $user_id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property string $comments
  */
 class Feedback extends Model
 {
@@ -84,9 +94,9 @@ class Feedback extends Model
 	/**
 	 * Get the creator of this entry
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function submitter()
+	public function submitter(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'user_id');
 	}
@@ -94,9 +104,9 @@ class Feedback extends Model
 	/**
 	 * Get the target page
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function target()
+	public function target(): BelongsTo
 	{
 		return $this->belongsTo(Associations::class, 'target_id');
 	}
@@ -107,7 +117,7 @@ class Feedback extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setIpAttribute($value)
+	public function setIpAttribute($value): void
 	{
 		// Handle edge case
 		if ($value == '::1')

@@ -441,7 +441,7 @@ class MessagesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return MessageResource
 	 */
 	public function read($id): MessageResource
@@ -625,7 +625,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return Response|MessageResource
 	 */
 	public function update(Request $request, int $id)
@@ -741,7 +741,7 @@ class MessagesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer $id
+	 * @param   int $id
 	 * @return  Response
 	 */
 	public function delete(int $id)

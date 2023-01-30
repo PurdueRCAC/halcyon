@@ -3,7 +3,7 @@
 namespace App\Modules\Knowledge\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Knowledge\Models\Page;
@@ -126,7 +126,7 @@ class PagesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return PageResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -350,7 +350,7 @@ class PagesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return JsonResponse|PageResource
 	 */
 	public function create(Request $request)
 	{
@@ -505,8 +505,8 @@ class PagesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer $id
-	 * @return Response
+	 * @param  int $id
+	 * @return PageResource
 	 */
 	public function read($id)
 	{
@@ -640,8 +640,8 @@ class PagesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
-	 * @param   integer $id
-	 * @return  Response
+	 * @param   int $id
+	 * @return  JsonResponse|PageResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -765,8 +765,8 @@ class PagesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer $id
-	 * @return Response
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
 	public function delete($id)
 	{
@@ -820,7 +820,7 @@ class PagesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @return Response
+	 * @return \stdClass
 	 */
 	public function diff(Request $request)
 	{

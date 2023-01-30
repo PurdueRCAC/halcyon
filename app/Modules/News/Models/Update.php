@@ -3,6 +3,7 @@
 namespace App\Modules\News\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\Table\TableExtension;
@@ -14,6 +15,15 @@ use Carbon\Carbon;
 
 /**
  * Model for a news article update
+ *
+ * @property int    $id
+ * @property int    $userid
+ * @property int    $edituserid
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeedited
+ * @property Carbon|null $datetimeremoved
+ * @property string $body
+ * @property int    $newsid
  */
 class Update extends Model
 {
@@ -96,9 +106,9 @@ class Update extends Model
 	/**
 	 * Defines a relationship to creator
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function creator()
+	public function creator(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
 	}
@@ -106,9 +116,9 @@ class Update extends Model
 	/**
 	 * Defines a relationship to editor
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function modifier()
+	public function modifier(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'edituserid');
 	}
@@ -116,9 +126,9 @@ class Update extends Model
 	/**
 	 * Defines a relationship to article
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function article()
+	public function article(): BelongsTo
 	{
 		return $this->belongsTo(Article::class, 'newsid');
 	}
@@ -128,7 +138,7 @@ class Update extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isModified()
+	public function isModified(): bool
 	{
 		return !is_null($this->datetimeedited);
 	}

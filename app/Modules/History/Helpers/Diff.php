@@ -90,7 +90,7 @@ class Diff
 	 *
 	 * This is mostly for diagnostic purposed.
 	 *
-	 * @return  integer  The length of the LCS.
+	 * @return  int  The length of the LCS.
 	 */
 	public function lcs()
 	{

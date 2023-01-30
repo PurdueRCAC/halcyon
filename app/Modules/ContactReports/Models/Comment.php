@@ -3,6 +3,7 @@
 namespace App\Modules\ContactReports\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
@@ -12,9 +13,18 @@ use App\Modules\History\Traits\Historable;
 use App\Modules\ContactReports\Events\CommentCreated;
 use App\Modules\ContactReports\Events\CommentUpdated;
 use App\Modules\ContactReports\Events\CommentDeleted;
+use Carbon\Carbon;
 
 /**
  * Model for a contact report comment
+ *
+ * @property int    $id
+ * @property int    $contactreportid
+ * @property int    $userid
+ * @property string $comment
+ * @property string $stemmedcomment
+ * @property Carbon|null $datetimecreated
+ * @property int    $notice
  */
 class Comment extends Model
 {
@@ -38,7 +48,7 @@ class Comment extends Model
 	 * The table to which the class pertains
 	 *
 	 * @var  string
-	 **/
+	 */
 	protected $table = 'contactreportcomments';
 
 	/**
@@ -99,7 +109,7 @@ class Comment extends Model
 	 *
 	 * @return  object
 	 */
-	public function creator()
+	public function creator(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
 	}
@@ -109,7 +119,7 @@ class Comment extends Model
 	 *
 	 * @return  object
 	 */
-	public function report()
+	public function report(): BelongsTo
 	{
 		return $this->belongsTo(Report::class, 'contactreportid');
 	}
@@ -119,7 +129,7 @@ class Comment extends Model
 	 *
 	 * @return  string
 	 */
-	public function getFormattedDateAttribute()
+	public function getFormattedDateAttribute(): string
 	{
 		$startdate = $this->datetimecreated->toDateTimeString();
 
@@ -140,7 +150,7 @@ class Comment extends Model
 	 *
 	 * @return string
 	 */
-	public function getFormattedCommentAttribute()
+	public function getFormattedCommentAttribute(): string
 	{
 		$text = $this->comment;
 
@@ -223,10 +233,10 @@ class Comment extends Model
 	/**
 	 * Strip code blocks
 	 *
-	 * @param   array  $match
+	 * @param   array<int,string>  $match
 	 * @return  string
 	 */
-	protected function stripCode($match)
+	protected function stripCode($match): string
 	{
 		array_push($this->replacements['codeblocks'], $match[0]);
 
@@ -236,10 +246,10 @@ class Comment extends Model
 	/**
 	 * Strip pre blocks
 	 *
-	 * @param   array  $match
+	 * @param   array<int,string>  $match
 	 * @return  string
 	 */
-	protected function stripPre($match)
+	protected function stripPre($match): string
 	{
 		array_push($this->replacements['preblocks'], $match[0]);
 
@@ -252,7 +262,7 @@ class Comment extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function replaceCode($match)
+	protected function replaceCode($match): string
 	{
 		return array_shift($this->replacements['codeblocks']);
 	}
@@ -263,7 +273,7 @@ class Comment extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function replacePre($match)
+	protected function replacePre($match): string
 	{
 		return array_shift($this->replacements['preblocks']);
 	}
@@ -321,10 +331,10 @@ class Comment extends Model
 	/**
 	 * Strip URL
 	 *
-	 * @param   array  $match
+	 * @param   array<int,string>  $match
 	 * @return  string
 	 */
-	private function stripURL($match)
+	private function stripURL($match): string
 	{
 		if (isset($match[12]))
 		{

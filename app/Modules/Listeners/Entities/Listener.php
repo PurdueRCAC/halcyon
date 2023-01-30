@@ -1,6 +1,8 @@
 <?php
 namespace App\Modules\Listeners\Entities;
 
+use App\Modules\Listeners\Models\Listener as ListenerModel;
+
 /**
  * Base listener class
  */
@@ -16,21 +18,21 @@ class Listener
 	/**
 	 * DB record
 	 *
-	 * @var  App\Modules\Listeners\Models\Listener
+	 * @var  ListenerModel
 	 */
 	protected $model;
 
 	/**
 	 * Params registry
 	 *
-	 * @var  Illuminate\Config\Repository
+	 * @var  \Illuminate\Config\Repository
 	 */
 	protected $params;
 
 	/**
 	 * Cache time
 	 *
-	 * @var  integer
+	 * @var  int
 	 */
 	protected $cacheTime = 0;
 
@@ -40,7 +42,7 @@ class Listener
 	 * @param   object  $model
 	 * @return  void
 	 */
-	public function __construct($model)
+	public function __construct(ListenerModel $model)
 	{
 		$name = $model->element;
 
@@ -52,7 +54,7 @@ class Listener
 	/**
 	 * Display
 	 *
-	 * @return  string
+	 * @return  \Illuminate\Contracts\View\View
 	 */
 	public function run()
 	{
@@ -75,7 +77,7 @@ class Listener
 	 * @param   string  $layout  The layout name
 	 * @return  string
 	 */
-	public function getViewName($layout='index')
+	public function getViewName($layout='index'): string
 	{
 		return 'listener.' . $this->name . '::' . $layout;
 	}

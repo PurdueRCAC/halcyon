@@ -300,7 +300,7 @@ class ToDosController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return JsonResource
 	 */
 	public function read($id)
@@ -382,7 +382,7 @@ class ToDosController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  JsonResource
 	 */
 	public function update(Request $request, $id)
@@ -448,7 +448,7 @@ class ToDosController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete($id)

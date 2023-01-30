@@ -282,7 +282,7 @@ class sfYamlParser
   /**
    * Returns the current line number (takes the offset into account).
    *
-   * @return integer The current line number
+   * @return int The current line number
    */
   protected function getRealCurrentLineNb()
   {
@@ -292,7 +292,7 @@ class sfYamlParser
   /**
    * Returns the current line indentation.
    *
-   * @return integer The current line indentation
+   * @return int The current line indentation
    */
   protected function getCurrentLineIndentation()
   {
@@ -431,7 +431,7 @@ class sfYamlParser
    *
    * @param  string  $separator   The separator that was used to begin this folded scalar (| or >)
    * @param  string  $indicator   The indicator that was used to begin this folded scalar (+ or -)
-   * @param  integer $indentation The indentation that was used to begin this folded scalar
+   * @param  int $indentation The indentation that was used to begin this folded scalar
    *
    * @return string  The text value
    */

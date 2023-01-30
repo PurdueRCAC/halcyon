@@ -91,7 +91,7 @@ class UpdatesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
-	 * @param  integer  $news_id
+	 * @param  int  $news_id
 	 * @param  Request  $request
 	 * @return UpdateResourceCollection
 	 */
@@ -195,7 +195,7 @@ class UpdatesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $news_id
+	 * @param   int  $news_id
 	 * @param   Request  $request
 	 * @return  Response|UpdateResource
 	 */
@@ -278,8 +278,8 @@ class UpdatesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer  $news_id
-	 * @param  integer  $id
+	 * @param  int  $news_id
+	 * @param  int  $id
 	 * @return UpdateResource
 	 */
 	public function read($news_id, $id)
@@ -344,8 +344,8 @@ class UpdatesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $news_id
-	 * @param   integer  $id
+	 * @param   int  $news_id
+	 * @param   int  $id
 	 * @param   Request  $request
 	 * @return  Response|UpdateResource
 	 */
@@ -409,8 +409,8 @@ class UpdatesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $news_id
-	 * @param   integer  $id
+	 * @param   int  $news_id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete($news_id, $id)

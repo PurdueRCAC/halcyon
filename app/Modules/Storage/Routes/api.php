@@ -128,6 +128,10 @@ $router->group(['prefix' => 'storage', 'middleware' => 'auth:api'], function (Ro
 			'as' => 'api.storage.usage.delete',
 			'uses' => 'UsageController@delete',
 		])->where('id', '[0-9]+');
+		$router->post('/batch/{resource}/{dir}', [
+			'as' => 'api.storage.usage.batch',
+			'uses' => 'UsageController@batch',
+		]);
 	});
 
 	$router->group(['prefix' => 'directories'], function (Router $router)

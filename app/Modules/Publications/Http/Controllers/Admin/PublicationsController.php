@@ -173,7 +173,7 @@ class PublicationsController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  View
 	 */
 	public function edit($id)
@@ -337,7 +337,7 @@ class PublicationsController extends Controller
 	 * Remove the file for specified entry
 	 *
 	 * @param   Request  $request
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function deletefile(Request $request, $id)

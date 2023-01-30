@@ -157,7 +157,7 @@ class Order extends Model
 	/**
 	 * Get order total
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getTotalAttribute()
 	{
@@ -650,7 +650,7 @@ class Order extends Model
 	/**
 	 * Generate human readable time
 	 *
-	 * @param   integer  $avg
+	 * @param   int  $avg
 	 * @return  string
 	 */
 	public static function toHumanReadable($avg)

@@ -22,7 +22,7 @@ class Formatter
 	 * This should be left at zero for this class, but subclasses
 	 * may want to set this to other values.
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	public $leading_context_lines = 0;
 
@@ -32,7 +32,7 @@ class Formatter
 	 * This should be left at zero for this class, but subclasses
 	 * may want to set this to other values.
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	public $trailing_context_lines = 0;
 

@@ -198,7 +198,7 @@ class HistoryController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return JsonResource
 	 */
 	public function read($id)

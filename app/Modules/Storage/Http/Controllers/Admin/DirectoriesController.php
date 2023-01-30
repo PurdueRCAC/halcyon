@@ -173,7 +173,7 @@ class DirectoriesController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 * 
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -209,7 +209,7 @@ class DirectoriesController extends Controller
 	 * 
 	 * @param  Request  $request
 	 * @param  array    $data
-	 * @param  integer  $offset
+	 * @param  int  $offset
 	 * @return Response
 	 */
 	public function store(Request $request, $data = array(), $offset = 0)
@@ -556,7 +556,7 @@ class DirectoriesController extends Controller
 	/**
 	 * Return to default page
 	 *
-	 * @param   integer  $parent
+	 * @param   int  $parent
 	 * @return  Response
 	 */
 	public function cancel($parent = 0)

@@ -111,7 +111,7 @@ class Group extends Model
 	 * Determine if a user is a manager
 	 *
 	 * @param   object  $user
-	 * @return  boolean  True if modified, false if not
+	 * @return  bool  True if modified, false if not
 	 */
 	public function isManager($user)
 	{
@@ -688,8 +688,8 @@ class Group extends Model
 	/**
 	 * Add user as a manager
 	 *
-	 * @param   integer  $userid
-	 * @param   integer  $owner
+	 * @param   int  $userid
+	 * @param   int  $owner
 	 * @return  bool
 	 */
 	public function addManager(int $userid, int $owner = 0)
@@ -713,7 +713,7 @@ class Group extends Model
 	/**
 	 * Add user as a member
 	 *
-	 * @param   integer  $userid
+	 * @param   int  $userid
 	 * @return  bool
 	 */
 	public function addMember(int $userid)
@@ -737,7 +737,7 @@ class Group extends Model
 	/**
 	 * Add a user as Viewer
 	 *
-	 * @param   integer  $userid
+	 * @param   int  $userid
 	 * @return  bool
 	 */
 	public function addViewer(int $userid)
@@ -761,7 +761,7 @@ class Group extends Model
 	/**
 	 * Add a department
 	 *
-	 * @param   integer  $depid
+	 * @param   int  $depid
 	 * @return  bool
 	 */
 	public function addDepartment(int $depid)
@@ -777,7 +777,7 @@ class Group extends Model
 	/**
 	 * Add field of science
 	 *
-	 * @param   integer  $fid
+	 * @param   int  $fid
 	 * @return  bool
 	 */
 	public function addFieldOfScience(int $fid)

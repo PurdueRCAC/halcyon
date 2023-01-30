@@ -198,7 +198,7 @@ class UnixGroup extends Model
 	/**
 	 * Add user as a member
 	 *
-	 * @param   integer  $userid
+	 * @param   int  $userid
 	 * @return  bool
 	 */
 	public function addMember(int $userid)
@@ -234,7 +234,7 @@ class UnixGroup extends Model
 	/**
 	 * Remove user as a member
 	 *
-	 * @param   integer  $userid
+	 * @param   int  $userid
 	 * @return  bool
 	 */
 	public function removeMember(int $userid)

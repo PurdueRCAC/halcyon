@@ -272,7 +272,7 @@ class User extends Model implements
 	/**
 	 * Gets an array of the authorised access levels for the user
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getUnixidAttribute()
 	{
@@ -572,8 +572,8 @@ class User extends Model implements
 	 *
 	 * @param   string  $key
 	 * @param   mixed   $val
-	 * @param   integer $access
-	 * @param   integer $locked
+	 * @param   int $access
+	 * @param   int $locked
 	 * @return  User
 	 */
 	public function addFacet($key, $val, $access = 0, $locked = 0)
@@ -640,7 +640,7 @@ class User extends Model implements
 	/**
 	 * Finds a user by organization ID
 	 *
-	 * @param   integer  $organization_id
+	 * @param   int  $organization_id
 	 * @return  object|null
 	 */
 	public static function findByOrganizationId($organization_id)
@@ -681,7 +681,7 @@ class User extends Model implements
 	 * Save the record
 	 *
 	 * @param   array  $options
-	 * @return  boolean  False if error, True on success
+	 * @return  bool  False if error, True on success
 	 */
 	public function save(array $options = array())
 	{

@@ -96,7 +96,7 @@ class ReportsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return ReportResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -396,7 +396,7 @@ class ReportsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  Response|ApiReportResource
 	 */
 	public function create(Request $request)
 	{
@@ -522,7 +522,7 @@ class ReportsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  ApiReportResource
 	 */
 	public function preview(Request $request)
 	{
@@ -628,8 +628,8 @@ class ReportsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer  $id
-	 * @return Response
+	 * @param  int  $id
+	 * @return ApiReportResource
 	 */
 	public function read($id)
 	{
@@ -753,8 +753,8 @@ class ReportsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @param   integer  $id
-	 * @return  Response
+	 * @param   int  $id
+	 * @return  Response|ApiReportResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -1007,7 +1007,7 @@ class ReportsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete($id)

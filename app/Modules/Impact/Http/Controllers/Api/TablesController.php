@@ -208,7 +208,7 @@ class TablesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return Response
 	 */
 	public function read($id)
@@ -261,7 +261,7 @@ class TablesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id)
@@ -316,7 +316,7 @@ class TablesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete($id)

@@ -65,7 +65,7 @@ class Loan extends Size
 	/**
 	 * Get type
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getTypeAttribute()
 	{

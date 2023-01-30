@@ -242,8 +242,8 @@ class UnixGroupMember extends Model
 	/**
 	 * Get a record by unixgroup/user
 	 *
-	 * @param   integer  $unixgroupid
-	 * @param   integer  $userid
+	 * @param   int  $unixgroupid
+	 * @param   int  $userid
 	 * @return  object
 	 */
 	public static function findByGroupAndUser(int $unixgroupid, int $userid)

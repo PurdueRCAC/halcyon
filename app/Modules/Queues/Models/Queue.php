@@ -137,7 +137,7 @@ class Queue extends Model
 	/**
 	 * Set defaultwalltime. Incoming value is expected to be # hours.
 	 *
-	 * @param   integer  $value
+	 * @param   int  $value
 	 * @return  void
 	 */
 	public function setDefaultwalltimeAttribute($value)
@@ -148,7 +148,7 @@ class Queue extends Model
 	/**
 	 * Set maxwalltime. Incoming value is expected to be # hours.
 	 *
-	 * @param   integer  $value
+	 * @param   int  $value
 	 * @return  void
 	 */
 	public function setMaxwalltimeAttribute($value)
@@ -159,7 +159,7 @@ class Queue extends Model
 	/**
 	 * Set nodecoresmin.
 	 *
-	 * @param   integer  $value
+	 * @param   int  $value
 	 * @return  void
 	 */
 	public function setNodecoresminAttribute($value)
@@ -175,7 +175,7 @@ class Queue extends Model
 	/**
 	 * Set nodecoresmax.
 	 *
-	 * @param   integer  $value
+	 * @param   int  $value
 	 * @return  void
 	 */
 	public function setNodecoresmaxAttribute($value)
@@ -382,7 +382,7 @@ class Queue extends Model
 	/**
 	 * Get active
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getActiveAttribute()
 	{
@@ -594,7 +594,7 @@ class Queue extends Model
 	/**
 	 * Get total cores
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getTotalcoresAttribute()
 	{
@@ -609,7 +609,7 @@ class Queue extends Model
 	/**
 	 * Get total nodes
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getTotalnodesAttribute()
 	{
@@ -624,7 +624,7 @@ class Queue extends Model
 	/**
 	 * Get sold cores
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getSoldcoresAttribute()
 	{
@@ -639,7 +639,7 @@ class Queue extends Model
 	/**
 	 * Get sold nodes
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getSoldnodesAttribute()
 	{
@@ -654,7 +654,7 @@ class Queue extends Model
 	/**
 	 * Get loaned cores
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getLoanedcoresAttribute()
 	{
@@ -669,7 +669,7 @@ class Queue extends Model
 	/**
 	 * Get loaned nodes
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getLoanednodesAttribute()
 	{
@@ -684,7 +684,7 @@ class Queue extends Model
 	/**
 	 * Get service units
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getServiceunitsAttribute()
 	{
@@ -699,7 +699,7 @@ class Queue extends Model
 	/**
 	 * Get walltime
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getWalltimeAttribute()
 	{
@@ -849,8 +849,8 @@ class Queue extends Model
 	/**
 	 * Add a user
 	 *
-	 * @param   integer  $userid
-	 * @param   integer  $membertype
+	 * @param   int  $userid
+	 * @param   int  $membertype
 	 * @return  bool
 	 */
 	public function addUser($userid, $membertype = 1)
@@ -891,7 +891,7 @@ class Queue extends Model
 	/**
 	 * Remove a user
 	 *
-	 * @param   integer  $userid
+	 * @param   int  $userid
 	 * @return  bool
 	 */
 	public function removeUser($userid)
@@ -951,12 +951,12 @@ class Queue extends Model
 	/**
 	 * Add loan
 	 *
-	 * @param   integer $lenderqueueid
+	 * @param   int $lenderqueueid
 	 * @param   string  $start
 	 * @param   string  $stop
-	 * @param   integer $nodecount
-	 * @param   integer $corecount
-	 * @param   integer $serviceunits
+	 * @param   int $nodecount
+	 * @param   int $corecount
+	 * @param   int $serviceunits
 	 * @param   string  $comment
 	 * @return  bool
 	 */
@@ -992,12 +992,12 @@ class Queue extends Model
 	/**
 	 * Add purchase
 	 *
-	 * @param   integer $sellerqueueid
+	 * @param   int $sellerqueueid
 	 * @param   string  $start
 	 * @param   string  $stop
-	 * @param   integer $nodecount
-	 * @param   integer $corecount
-	 * @param   integer $serviceunits
+	 * @param   int $nodecount
+	 * @param   int $corecount
+	 * @param   int $serviceunits
 	 * @param   string  $comment
 	 * @return  bool
 	 */

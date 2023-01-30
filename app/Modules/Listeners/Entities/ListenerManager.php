@@ -14,7 +14,7 @@ class ListenerManager
 	/**
 	 * Container
 	 *
-	 * @var  object  Dispatcher
+	 * @var  Dispatcher
 	 */
 	public $dispatcher;
 
@@ -34,7 +34,7 @@ class ListenerManager
 	 *
 	 * @return  void
 	 */
-	public function subscribe()
+	public function subscribe(): void
 	{
 		foreach ($this->allEnabled() as $listener)
 		{
@@ -71,7 +71,7 @@ class ListenerManager
 	 * @param   object  $listener  Listener
 	 * @return  void
 	 */
-	protected function subscribeListener(Listener $listener)
+	protected function subscribeListener(Listener $listener): void
 	{
 		if (!$listener->path)
 		{

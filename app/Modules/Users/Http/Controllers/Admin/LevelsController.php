@@ -106,7 +106,7 @@ class LevelsController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 * 
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return Response
 	 */
 	public function edit($id)

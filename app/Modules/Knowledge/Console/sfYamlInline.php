@@ -163,8 +163,7 @@ class sfYamlInline
    * @param string  $delimiters
    * @param array   $stringDelimiter
    * @param integer $i
-   * @param boolean $evaluate
-   *
+   * @param bool $evaluate
    * @return string A YAML string
    */
   static public function parseScalar($scalar, $delimiters = null, $stringDelimiters = array('"', "'"), $i = 0, $evaluate = true)

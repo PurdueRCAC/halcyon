@@ -4,12 +4,27 @@ namespace App\Modules\Mailer\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 use App\Modules\History\Models\Log;
 use App\Halcyon\Models\Casts\Params;
+use Carbon\Carbon;
 
 /**
  * Mail message
+ *
+ * @property int    $id
+ * @property string $subject
+ * @property string $body
+ * @property string $alert
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property Carbon|null $sent_at
+ * @property int    $sent_by
+ * @property int    $template
+ * @property string $recipients
  */
 class Message extends Model
 {
@@ -58,9 +73,9 @@ class Message extends Model
 	/**
 	 * Get the creator of this entry
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function creator()
+	public function creator(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'created_by');
 	}
@@ -68,9 +83,9 @@ class Message extends Model
 	/**
 	 * Get the modifier of this entry
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function modifier()
+	public function modifier(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'updated_by');
 	}
@@ -78,9 +93,9 @@ class Message extends Model
 	/**
 	 * Defines a relationship to feedback
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function logs()
+	public function logs(): HasMany
 	{
 		return $this->hasMany(Log::class, 'objectid')->where('app', '=', 'mail');
 	}
@@ -88,9 +103,9 @@ class Message extends Model
 	/**
 	 * Get the creator of this entry
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function sender()
+	public function sender(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'sent_by');
 	}

@@ -74,7 +74,7 @@ class WidgetManager
 	 * Count the widgets based on the given condition
 	 *
 	 * @param   string   $condition  The condition to use
-	 * @return  integer  Number of widgets found
+	 * @return  int  Number of widgets found
 	 */
 	public function count($condition)
 	{
@@ -360,8 +360,8 @@ class WidgetManager
 	 * Find widgets
 	 *
 	 * @param   string  $name
-	 * @param   integer $client
-	 * @param   integer $state
+	 * @param   int $client
+	 * @param   int $state
 	 * @return  object  Collection
 	 */
 	public function find($name = null, $client = null, $state = null)

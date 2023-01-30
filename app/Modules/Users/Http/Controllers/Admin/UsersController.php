@@ -354,7 +354,7 @@ class UsersController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 * 
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -379,7 +379,7 @@ class UsersController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 * 
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return Response
 	 */
 	public function show($id)
@@ -470,7 +470,7 @@ class UsersController extends Controller
 	 * Sets the account state of a member to disabled
 	 *
 	 * @param   Request $request
-	 * @param   integer $state
+	 * @param   int $state
 	 * @return  Response
 	 */
 	public function disable(Request $request, $state = 0)
@@ -513,7 +513,7 @@ class UsersController extends Controller
 	/**
 	 * Debug user permissions
 	 *
-	 * @param  integer $id
+	 * @param  int $id
 	 * @param  Request $request
 	 * @return Response
 	 */

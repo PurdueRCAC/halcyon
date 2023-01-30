@@ -334,12 +334,12 @@ class Asset extends Model
 	/**
 	 * Recursive function to build tree
 	 *
-	 * @param   integer  $id        Parent ID
+	 * @param   int  $id        Parent ID
 	 * @param   array    $list      List of records
 	 * @param   array    $children  Container for parent/children mapping
-	 * @param   integer  $maxlevel  Maximum levels to descend
-	 * @param   integer  $level     Indention level
-	 * @param   integer  $type      Indention type
+	 * @param   int  $maxlevel  Maximum levels to descend
+	 * @param   int  $level     Indention level
+	 * @param   int  $type      Indention type
 	 * @return  array
 	 */
 	protected function treeRecurse($id, $list, $children, $maxlevel=9999, $level=0, $type=1)

@@ -3,10 +3,15 @@
 namespace App\Modules\News\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\Resources\Models\Asset;
 
 /**
  * News model mapping to resources
+ *
+ * @property int    $id
+ * @property int    $newsid
+ * @property int    $resourceid
  */
 class Newsresource extends Model
 {
@@ -60,9 +65,9 @@ class Newsresource extends Model
 	/**
 	 * Defines a relationship to news article
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function news()
+	public function news(): BelongsTo
 	{
 		return $this->belongsTo(Article::class, 'newsid');
 	}
@@ -70,9 +75,9 @@ class Newsresource extends Model
 	/**
 	 * Defines a relationship to a resource
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function resource()
+	public function resource(): BelongsTo
 	{
 		return $this->belongsTo(Asset::class, 'resourceid')->withTrashed();
 	}

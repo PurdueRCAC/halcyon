@@ -3,11 +3,19 @@
 namespace App\Modules\ContactReports\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 use App\Modules\History\Traits\Historable;
 
 /**
  * Model for contact report user
+ *
+ * @property int $id
+ * @property int $contactreportid
+ * @property int $userid
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimelastnotify
  */
 class User extends Model
 {
@@ -17,7 +25,7 @@ class User extends Model
 	 * The table to which the class pertains
 	 *
 	 * @var  string
-	 **/
+	 */
 	protected $table = 'contactreportusers';
 
 	/**
@@ -30,7 +38,7 @@ class User extends Model
 	/**
 	 * The name of the "updated at" column.
 	 *
-	 * @var  string|null
+	 * @var string|null
 	 */
 	const UPDATED_AT = null;
 
@@ -79,9 +87,9 @@ class User extends Model
 	/**
 	 * Defines a relationship to report
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function report()
+	public function report(): BelongsTo
 	{
 		return $this->belongsTo(Report::class, 'contactreportid');
 	}
@@ -89,9 +97,9 @@ class User extends Model
 	/**
 	 * Defines a relationship to user
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function user()
+	public function user(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
 	}
@@ -99,9 +107,9 @@ class User extends Model
 	/**
 	 * Defines a relationship to followers
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function followers()
+	public function followers(): HasMany
 	{
 		return $this->hasMany(Follow::class, 'targetuserid')->whereIsContactFollower();
 	}
@@ -111,7 +119,7 @@ class User extends Model
 	 *
 	 * @return  bool
 	 */
-	public function notified()
+	public function notified(): bool
 	{
 		return !is_null($this->datetimelastnotify);
 	}

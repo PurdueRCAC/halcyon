@@ -165,7 +165,7 @@ class PagesController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 * 
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return View
 	 */
 	public function edit($id)
@@ -199,7 +199,7 @@ class PagesController extends Controller
 	/**
 	 * Show history for the page
 	 * 
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return View
 	 */
 	public function history($id)
@@ -315,7 +315,7 @@ class PagesController extends Controller
 	 * Sets the state of one or more entries
 	 * 
 	 * @param   Request $request
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function state(Request $request, $id = null)

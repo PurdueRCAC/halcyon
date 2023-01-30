@@ -13,7 +13,7 @@ abstract class Admin
 	/**
 	 * Get a list of postions
 	 *
-	 * @param   integer  $clientId
+	 * @param   int  $clientId
 	 * @return  array    An array of option elements.
 	 */
 	public static function getPositions($clientId)
@@ -30,7 +30,7 @@ abstract class Admin
 	/**
 	 * Get a list of the unique widgets installed in the client application.
 	 *
-	 * @param   integer  $clientId  The client id.
+	 * @param   int  $clientId  The client id.
 	 * @return  array
 	 */
 	public static function getWidgets($clientId)
@@ -69,7 +69,7 @@ abstract class Admin
 	/**
 	 * Get a list of the assignment options for widgets to menus.
 	 *
-	 * @param   integer  $clientId  The client id.
+	 * @param   int  $clientId  The client id.
 	 * @return  array
 	 */
 	public static function getAssignmentOptions($clientId)

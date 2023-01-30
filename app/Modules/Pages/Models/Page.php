@@ -110,7 +110,7 @@ class Page extends Model
 	/**
 	 * Does the page exist?
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function exists()
 	{
@@ -274,7 +274,7 @@ class Page extends Model
 	 * Retrieves one row loaded by an alias and parent_id fields
 	 *
 	 * @param   string   $alias
-	 * @param   integer  $parent_id
+	 * @param   int  $parent_id
 	 * @return  Page|null
 	 */
 	public static function findByAlias($alias, $parent_id=0)
@@ -303,7 +303,7 @@ class Page extends Model
 	/**
 	 * Method to get a list of nodes from a given node to its root.
 	 *
-	 * @param   integer  $id  Primary key of the node for which to get the path.
+	 * @param   int  $id  Primary key of the node for which to get the path.
 	 * @return  mixed    Boolean false on failure or array of node objects on success.
 	 */
 	public static function stackById($id)
@@ -433,7 +433,7 @@ class Page extends Model
 	/**
 	 * Determine if record is the home page
 	 * 
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function isRoot()
 	{
@@ -443,7 +443,7 @@ class Page extends Model
 	/**
 	 * Determine if record was updated
 	 * 
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function isModified()
 	{
@@ -453,7 +453,7 @@ class Page extends Model
 	/**
 	 * Determine if record is published
 	 * 
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function isPublished()
 	{
@@ -537,9 +537,9 @@ class Page extends Model
 	/**
 	 * Copy an entry and associated data
 	 *
-	 * @param   integer  $parent_id  New version to copy to
-	 * @param   boolean  $recursive  Copy associated data?
-	 * @return  boolean  True on success, false on error
+	 * @param   int   $parent_id  New version to copy to
+	 * @param   bool  $recursive  Copy associated data?
+	 * @return  bool  True on success, false on error
 	 */
 	public function duplicate($parent_id=null, $recursive=true)
 	{
@@ -591,7 +591,7 @@ class Page extends Model
 	 * Save the record
 	 *
 	 * @param   array    $options
-	 * @return  boolean  False if error, True on success
+	 * @return  bool  False if error, True on success
 	 */
 	public function save(array $options = array())
 	{
@@ -680,7 +680,7 @@ class Page extends Model
 	 * Method to rebuild the node's path field from the alias values of the
 	 * nodes from the current node to the root node of the tree.
 	 *
-	 * @return  boolean  True on success.
+	 * @return  bool  True on success.
 	 */
 	public function rebuildPath()
 	{
@@ -721,11 +721,11 @@ class Page extends Model
 	/**
 	 * Method to recursively rebuild the whole nested set tree.
 	 *
-	 * @param   integer  $parentId  The root of the tree to rebuild.
-	 * @param   integer  $leftId    The left id to start with in building the tree.
-	 * @param   integer  $level     The level to assign to the current nodes.
+	 * @param   int  $parentId  The root of the tree to rebuild.
+	 * @param   int  $leftId    The left id to start with in building the tree.
+	 * @param   int  $level     The level to assign to the current nodes.
 	 * @param   string   $path      The path to the current nodes.
-	 * @return  integer  1 + value of root rgt on success, false on failure
+	 * @return  int  1 + value of root rgt on success, false on failure
 	 */
 	public function rebuild($parentId, $leftId = 0, $level = 0, $path = '')
 	{
@@ -783,7 +783,7 @@ class Page extends Model
 	 *
 	 * @param   object   $referenceNode  A node object with at least a 'lft' and 'rgt' with
 	 *                                   which to make room in the tree around for a new node.
-	 * @param   integer  $nodeWidth      The width of the node for which to make room in the tree.
+	 * @param   int  $nodeWidth      The width of the node for which to make room in the tree.
 	 * @param   string   $position       The position relative to the reference node where the room
 	 *                                   should be made.
 	 * @return  mixed    Boolean false on failure or data object on success.
@@ -891,8 +891,8 @@ class Page extends Model
 	 *
 	 * @param   array    $children  Container for parent/children mapping
 	 * @param   array    $list      List of records
-	 * @param   integer  $maxlevel  Maximum levels to descend
-	 * @param   integer  $level     Indention level
+	 * @param   int  $maxlevel  Maximum levels to descend
+	 * @param   int  $level     Indention level
 	 * @return  void
 	 */
 	protected function treeRecurse($children, $list, $maxlevel=9999, $level=0)
@@ -919,9 +919,9 @@ class Page extends Model
 	 * save the new location to the database, but will set it in the object so
 	 * that when the node is stored it will be stored in the new location.
 	 *
-	 * @param   integer  $referenceId  The primary key of the node to reference new location by.
+	 * @param   int  $referenceId  The primary key of the node to reference new location by.
 	 * @param   string   $position     Location type string. ['before', 'after', 'first-child', 'last-child']
-	 * @return  boolean  True on success.
+	 * @return  bool     True on success.
 	 */
 	/*public function setLocation($referenceId, $position = 'after')
 	{
@@ -943,7 +943,7 @@ class Page extends Model
 	 * Method to move a row in the ordering sequence of a group of rows defined by an SQL WHERE clause.
 	 * Negative numbers move the row up in the sequence and positive numbers move it down.
 	 *
-	 * @param   integer  $delta  The direction and magnitude to move the row in the ordering sequence.
+	 * @param   int  $delta  The direction and magnitude to move the row in the ordering sequence.
 	 * @param   string   $where  WHERE clause to use for limiting the selection of rows to compact the ordering values.
 	 * @return  mixed    Boolean true on success.
 	 */
@@ -985,10 +985,10 @@ class Page extends Model
 	/**
 	 * Method to move a node and its children to a new location in the tree.
 	 *
-	 * @param   integer  $referenceId  The primary key of the node to reference new location by.
+	 * @param   int  $referenceId  The primary key of the node to reference new location by.
 	 * @param   string   $position     Location type string. ['before', 'after', 'first-child', 'last-child']
-	 * @param   integer  $pk           The primary key of the node to move.
-	 * @return  boolean  True on success.
+	 * @param   int  $pk           The primary key of the node to move.
+	 * @return  bool     True on success.
 	 */
 	public function moveByReference($referenceId, $position = 'after', $pk = 0)
 	{

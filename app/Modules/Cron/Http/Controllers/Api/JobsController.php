@@ -258,7 +258,7 @@ class JobsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return Response
 	 */
 	public function read($id)
@@ -329,7 +329,7 @@ class JobsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id)
@@ -369,7 +369,7 @@ class JobsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete($id)

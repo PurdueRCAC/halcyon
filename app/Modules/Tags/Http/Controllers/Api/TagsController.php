@@ -299,7 +299,7 @@ class TagsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return TagResource
 	 */
 	public function read($id)
@@ -396,7 +396,7 @@ class TagsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
-	 * @param   integer $id
+	 * @param   int $id
 	 * @return  Response|TagResource
 	 */
 	public function update(Request $request, $id)
@@ -443,7 +443,7 @@ class TagsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer $id
+	 * @param   int $id
 	 * @return  Response
 	 */
 	public function delete($id)

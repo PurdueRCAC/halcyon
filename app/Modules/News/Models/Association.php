@@ -3,6 +3,7 @@
 namespace App\Modules\News\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Users\Models\User;
 use App\Modules\News\Events\AssociationCreated;
@@ -12,6 +13,15 @@ use Carbon\Carbon;
 
 /**
  * News model mapping to associations
+ *
+ * @property int    $id
+ * @property int    $newsid
+ * @property int    $associd
+ * @property int    $assoctype
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property Carbon|null $datetimevisited
+ * @property string $comment
  */
 class Association extends Model
 {
@@ -103,7 +113,7 @@ class Association extends Model
 	 *
 	 * @return  void
 	 */
-	protected static function boot()
+	protected static function boot(): void
 	{
 		parent::boot();
 
@@ -154,9 +164,9 @@ class Association extends Model
 	/**
 	 * Defines a relationship to news article
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function article()
+	public function article(): BelongsTo
 	{
 		return $this->belongsTo(Article::class, 'newsid');
 	}
@@ -180,7 +190,7 @@ class Association extends Model
 	 * Extract keywords from text
 	 *
 	 * @param  string  $string
-	 * @param  integer $limit
+	 * @param  int $limit
 	 * @return array
 	 */
 	public function extractKeywords($string, $limit = 10)
@@ -263,7 +273,7 @@ class Association extends Model
 	 *
 	 * @return bool
 	 */
-	public function visit()
+	public function visit(): bool
 	{
 		$this->datetimevisited = Carbon::now();
 
@@ -275,7 +285,7 @@ class Association extends Model
 	 *
 	 * @return bool
 	 */
-	public function hasVisited()
+	public function hasVisited(): bool
 	{
 		return is_null($this->datetimevisited);
 	}

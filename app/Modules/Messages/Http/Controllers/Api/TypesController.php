@@ -284,7 +284,7 @@ class TypesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return TypeResource
 	 */
 	public function read(int $id)
@@ -358,7 +358,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return Response|TypeResource
 	 */
 	public function update(Request $request, int $id)
@@ -426,7 +426,7 @@ class TypesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer $id
+	 * @param   int $id
 	 * @return  Response
 	 */
 	public function delete(int $id)

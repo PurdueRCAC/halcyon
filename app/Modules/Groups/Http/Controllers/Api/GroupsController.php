@@ -570,7 +570,7 @@ class GroupsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return GroupResponse
 	 */
 	public function read(int $id)
@@ -688,7 +688,7 @@ class GroupsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
-	 * @param   integer $id
+	 * @param   int $id
 	 * @return  JsonResponse|GroupResource
 	 */
 	public function update(Request $request, int $id)
@@ -821,7 +821,7 @@ class GroupsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  JsonResponse
 	 */
 	public function delete(int $id)

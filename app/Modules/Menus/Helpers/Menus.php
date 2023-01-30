@@ -22,7 +22,7 @@ class Menus
 	/**
 	 * Gets a list of the actions that can be performed.
 	 *
-	 * @param   integer  $parentId  The menu ID.
+	 * @param   int  $parentId  The menu ID.
 	 * @return  object
 	 */
 	public static function getActions($parentId = 0)
@@ -222,7 +222,7 @@ class Menus
 	/**
 	 * Get associations
 	 *
-	 * @param   integer  $pk
+	 * @param   int  $pk
 	 * @return  array<string,int>
 	 */
 	public static function getAssociations($pk)

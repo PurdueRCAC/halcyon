@@ -499,7 +499,7 @@ class QueuesController extends Controller
 	 * Show the form for editing the specified queue.
 	 * 
 	 * @param  Request $request
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return View
 	 */
 	public function edit(Request $request, $id)
@@ -669,7 +669,7 @@ class QueuesController extends Controller
 	 * Sets the state of one or more entries
 	 * 
 	 * @param  Request $request
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return  Response
 	 */
 	public function state(Request $request, $id = 0)
@@ -724,7 +724,7 @@ class QueuesController extends Controller
 	 * Sets the state of one or more entries
 	 * 
 	 * @param  Request $request
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return  Response
 	 */
 	public function scheduling(Request $request, $id = 0)
@@ -822,7 +822,7 @@ class QueuesController extends Controller
 	 * Sets the state of one or more entries
 	 * 
 	 * @param  Request $request
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return Response
 	 */
 	public function allscheduling(Request $request, $id = 0)

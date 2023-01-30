@@ -170,7 +170,7 @@ class ListenersController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 * 
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -286,7 +286,7 @@ class ListenersController extends Controller
 	 * Method to publish a list of items
 	 *
 	 * @param   Request  $request
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function publish(Request $request, $id = 0)
@@ -298,7 +298,7 @@ class ListenersController extends Controller
 	 * Method to unpublish a list of items
 	 *
 	 * @param   Request  $request
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function unpublish(Request $request, $id = 0)
@@ -310,8 +310,8 @@ class ListenersController extends Controller
 	 * Method to change the state of a list of items
 	 *
 	 * @param   Request  $request
-	 * @param   integer  $id
-	 * @param   integer  $value
+	 * @param   int  $id
+	 * @param   int  $value
 	 * @return  Response
 	 */
 	public function state(Request $request, $id = 0, $value = 1)
@@ -398,7 +398,7 @@ class ListenersController extends Controller
 	/**
 	 * Reorder entries
 	 * 
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @param   Request $request
 	 * @return  Response
 	 */

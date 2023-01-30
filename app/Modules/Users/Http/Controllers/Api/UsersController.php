@@ -412,7 +412,7 @@ class UsersController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return Response
 	 */
 	public function read(Request $request, $id)
@@ -538,7 +538,7 @@ class UsersController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
-	 * @param   integer $id
+	 * @param   int $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id)
@@ -695,7 +695,7 @@ class UsersController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete($id)

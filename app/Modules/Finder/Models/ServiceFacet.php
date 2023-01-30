@@ -78,8 +78,8 @@ class ServiceFacet extends Model
 	/**
 	 * Retrieves one row loaded by service_id and facet_id
 	 *
-	 * @param   integer  $service_id
-	 * @param   integer  $facet_id
+	 * @param   int  $service_id
+	 * @param   int  $facet_id
 	 * @return  object
 	 */
 	public static function findByServiceAndFacet($service_id, $facet_id)

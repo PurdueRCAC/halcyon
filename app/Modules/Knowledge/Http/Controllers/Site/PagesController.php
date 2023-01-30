@@ -4,6 +4,7 @@ namespace App\Modules\Knowledge\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Knowledge\Models\Page;
@@ -18,15 +19,11 @@ use App\Modules\History\Models\History;
 class PagesController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
-	 * @return Response
-	 */
-	/**
 	 * Display a page
 	 *
-	 * @return  Response
+	 * @return  View
 	 */
-	public function index(Request $request)
+	public function index(Request $request): View
 	{
 		$path = trim($request->path(), '/');
 
@@ -222,7 +219,7 @@ class PagesController extends Controller
 	 * @param  string $alias
 	 * @return void
 	 */
-	private function nestedset($nodes, $alias)
+	private function nestedset($nodes, $alias): void
 	{
 		foreach ($nodes as $node)
 		{
@@ -237,10 +234,12 @@ class PagesController extends Controller
 	}
 
 	/**
-	 * Display a listing of the resource.
-	 * @return Response
+	 * Display search results.
+	 *
+	 * @param  Request $request
+	 * @return View
 	 */
-	public function search(Request $request)
+	public function search(Request $request): View
 	{
 		$filters = array(
 			'search'    => null,
@@ -371,10 +370,11 @@ class PagesController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
-	 * 
-	 * @return Response
+	 *
+	 * @param  Request $request
+	 * @return View
 	 */
-	public function create(Request $request)
+	public function create(Request $request): View
 	{
 		$root = Associations::rootNode();
 
@@ -403,9 +403,9 @@ class PagesController extends Controller
 	 * Show the form for creating a new resource.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
-	public function select(Request $request)
+	public function select(Request $request): View
 	{
 		$root = Associations::rootNode();
 
@@ -487,6 +487,7 @@ class PagesController extends Controller
 	 * Remove the specified entry
 	 *
 	 * @param   Request $request
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete(Request $request, $id = null)

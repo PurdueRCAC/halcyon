@@ -105,7 +105,7 @@ class ThemeManager implements \Countable
 	/**
 	 * Return all available themes
 	 *
-	 * @param  integer $state
+	 * @param  int $state
 	 * @return array<string,Theme>
 	 */
 	public function all($state = null)
@@ -192,7 +192,7 @@ class ThemeManager implements \Countable
 	/**
 	 * Get the theme directories
 	 *
-	 * @param  integer $state
+	 * @param  int $state
 	 * @return Collection
 	 */
 	private function getThemes($state = null)
@@ -210,7 +210,7 @@ class ThemeManager implements \Countable
 	/**
 	 * Get the themes from filesystem directories
 	 * 
-	 * @param  integer  $state
+	 * @param  int  $state
 	 * @return Collection
 	 */
 	private function getThemesFromFiles($state = null)
@@ -234,7 +234,7 @@ class ThemeManager implements \Countable
 	/**
 	 * Get the themes from the database
 	 *
-	 * @param  integer $state
+	 * @param  int $state
 	 * @param  string  $type
 	 * @return Collection
 	 */
@@ -415,7 +415,7 @@ class ThemeManager implements \Countable
 	}*/
 
 	/**
-	 * @param  integer  $client_id
+	 * @param  int  $client_id
 	 * @param  string   $type
 	 * @return bool
 	 */

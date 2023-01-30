@@ -377,7 +377,7 @@ class IssuesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return Response
 	 */
 	public function read($id)
@@ -465,7 +465,7 @@ class IssuesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id)
@@ -604,7 +604,7 @@ class IssuesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete($id)

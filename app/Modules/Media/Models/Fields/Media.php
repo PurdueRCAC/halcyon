@@ -21,7 +21,7 @@ class Media extends Field
 	/**
 	 * The initialised state of the document object.
 	 *
-	 * @var  boolean
+	 * @var  bool
 	 */
 	protected static $initialised = false;
 

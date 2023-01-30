@@ -438,7 +438,7 @@ class UnixGroupsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  UnixGroupResource
 	 */
 	public function read(int $id)
@@ -542,7 +542,7 @@ class UnixGroupsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
-	 * @param   integer $id
+	 * @param   int $id
 	 * @return  UnixGroupResource|JsonResponse
 	 */
 	public function update(Request $request, int $id)
@@ -688,7 +688,7 @@ class UnixGroupsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer $id
+	 * @param   int $id
 	 * @return  JsonResponse
 	 */
 	public function delete(int $id)

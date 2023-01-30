@@ -116,7 +116,7 @@ class TypesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
-	 * @return Response
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -270,7 +270,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  Response|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -340,8 +340,8 @@ class TypesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer  $id
-	 * @return Response
+	 * @param  int  $id
+	 * @return JsonResource
 	 */
 	public function read($id)
 	{
@@ -449,8 +449,8 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @param   integer  $id
-	 * @return  Response
+	 * @param   int  $id
+	 * @return  Response|JsonResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -527,7 +527,7 @@ class TypesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete($id)

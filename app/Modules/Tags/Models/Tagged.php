@@ -78,9 +78,9 @@ class Tagged extends Model
 	 * Retrieves one row loaded by a tag field
 	 *
 	 * @param   string   $scope     Object type (ex: resource, ticket)
-	 * @param   integer  $scope_id  Object ID (e.g., resource ID, ticket ID)
-	 * @param   integer  $tag_id    Tag ID
-	 * @param   integer  $tagger    User ID of person adding tag
+	 * @param   int  $scope_id  Object ID (e.g., resource ID, ticket ID)
+	 * @param   int  $tag_id    Tag ID
+	 * @param   int  $tagger    User ID of person adding tag
 	 * @return  Tagged|null
 	 **/
 	public static function findByScoped($scope, $scope_id, $tag_id, $tagger=0)
@@ -101,9 +101,9 @@ class Tagged extends Model
 	/**
 	 * Move all references to one tag to another tag
 	 *
-	 * @param   integer  $oldtagid  ID of tag to be moved
-	 * @param   integer  $newtagid  ID of tag to move to
-	 * @return  boolean  True if records changed
+	 * @param   int  $oldtagid  ID of tag to be moved
+	 * @param   int  $newtagid  ID of tag to move to
+	 * @return  bool  True if records changed
 	 */
 	public static function moveTo(int $oldtagid, int $newtagid)
 	{
@@ -127,9 +127,9 @@ class Tagged extends Model
 	/**
 	 * Copy all tags on an object to another object
 	 *
-	 * @param   integer  $oldtagid  ID of tag to be copied
-	 * @param   integer  $newtagid  ID of tag to copy to
-	 * @return  boolean  True if records copied
+	 * @param   int  $oldtagid  ID of tag to be copied
+	 * @param   int  $newtagid  ID of tag to copy to
+	 * @return  bool  True if records copied
 	 */
 	public static function copyTo(int $oldtagid, int $newtagid)
 	{

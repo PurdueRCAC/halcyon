@@ -3,10 +3,15 @@
 namespace App\Modules\ContactReports\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 
 /**
  * ContactReports model mapping to resources
+ *
+ * @property int    $id
+ * @property int    $contactreportid
+ * @property int    $resourceid
  */
 class Reportresource extends Model
 {
@@ -16,7 +21,7 @@ class Reportresource extends Model
 	 * The table to which the class pertains
 	 *
 	 * @var  string
-	 **/
+	 */
 	protected $table = 'contactreportresources';
 
 	/**
@@ -62,9 +67,9 @@ class Reportresource extends Model
 	/**
 	 * Defines a relationship to a contact report
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function report()
+	public function report(): BelongsTo
 	{
 		return $this->belongsTo(Report::class, 'contactreportid');
 	}
@@ -72,9 +77,9 @@ class Reportresource extends Model
 	/**
 	 * Defines a relationship to resources
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function resource()
+	public function resource(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Resources\Models\Asset', 'resourceid');
 	}

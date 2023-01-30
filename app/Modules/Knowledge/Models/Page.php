@@ -3,6 +3,8 @@
 namespace App\Modules\Knowledge\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Config\Repository;
@@ -17,11 +19,29 @@ use Carbon\Carbon;
 
 /**
  * Model class for a page
+ *
+ * @property int    $id
+ * @property string $title
+ * @property string $alias
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property int    $state
+ * @property int    $access
+ * @property string $content
+ * @property string $params
+ * @property int    $main
+ * @property int    $snippet
  */
 class Page extends Model
 {
 	use Historable, SoftDeletes;
 
+	/**
+	 * Regex patterns for in-content IF statements
+	 *
+	 * @var string
+	 */
 	const REGEXP_VARIABLE = "/\\\$\{([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)(([\*\/\-\+])(\d+(\.\d+)?))?\}/";
 	const REGEXP_IF_STATEMENT = "/\{::if\s+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~)\s*([^\}]+)\s*\}(.+?)\{::\/\}/s";
 	const REGEXP_IF_ELSE = "/\{::elseif\s+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~)\s*([^\}]+)\s*\}(.+?)(?=\{::)/s";
@@ -121,7 +141,7 @@ class Page extends Model
 	/**
 	 * Does the Doc exist?
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function exists()
 	{
@@ -133,7 +153,7 @@ class Page extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isSeparator()
+	public function isSeparator(): bool
 	{
 		return ($this->alias == '-separator-');
 	}
@@ -144,7 +164,7 @@ class Page extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setAliasAttribute(string $value)
+	public function setAliasAttribute(string $value): void
 	{
 		$alias = strip_tags($value);
 		$alias = trim($alias);
@@ -163,7 +183,7 @@ class Page extends Model
 	 *
 	 * @return  Collection
 	 */
-	public function getVariablesAttribute()
+	public function getVariablesAttribute(): Collection
 	{
 		if (!($this->varsRepository instanceof Collection))
 		{
@@ -178,7 +198,7 @@ class Page extends Model
 	 *
 	 * @return  Repository
 	 */
-	public function getMetadataAttribute()
+	public function getMetadataAttribute(): Repository
 	{
 		if (!($this->metadataRepository instanceof Repository))
 		{
@@ -193,7 +213,7 @@ class Page extends Model
 	 *
 	 * @return  string
 	 */
-	public function getHeadlineAttribute()
+	public function getHeadlineAttribute(): string
 	{
 		$text = $this->title;
 		$text = preg_replace_callback(self::REGEXP_VARIABLE, array($this, 'replaceVariables'), $text);
@@ -206,7 +226,7 @@ class Page extends Model
 	 *
 	 * @return  string
 	 */
-	public function getBodyAttribute()
+	public function getBodyAttribute(): string
 	{
 		$text = $this->content;
 
@@ -313,17 +333,17 @@ class Page extends Model
 	/**
 	 * Nesting counter
 	 * 
-	 * @var  integer
+	 * @var  int
 	 */
 	private static $matches = 0;
 
 	/**
 	 * Add a token to IF statements to determine proper nesting
 	 *
-	 * @param   array  $matches
+	 * @param   array<int,string>  $matches
 	 * @return  string
 	 */
-	private function tokenizeIf(array $matches)
+	private function tokenizeIf(array $matches): string
 	{
 		self::$matches++;
 
@@ -338,9 +358,9 @@ class Page extends Model
 	/**
 	 * Get variables for replacement
 	 *
-	 * @return  array
+	 * @return  array<string,mixed>
 	 */
-	private function getVars()
+	private function getVars(): array
 	{
 		$vars = array();
 		$vars['myusername'] = 'myusername';
@@ -375,7 +395,7 @@ class Page extends Model
 	 * @param   mixed   $collection
 	 * @return  void
 	 */
-	public function mergeVariables($collection)
+	public function mergeVariables($collection): void
 	{
 		$merged = $this->variables->mergeRecursive($collection);
 		$this->varsRepository = $merged;
@@ -474,7 +494,7 @@ class Page extends Model
 	 * @param   array   $matches
 	 * @return  string
 	 */
-	protected function replaceIfStatement(array $matches)
+	protected function replaceIfStatement(array $matches): string
 	{
 		$vars = $this->variables->toArray();
 
@@ -641,7 +661,7 @@ class Page extends Model
 	 * @param   mixed  $path
 	 * @return  string
 	 */
-	public function getPathAttribute($path)
+	public function getPathAttribute($path): string
 	{
 		return $path ? $path : '/';
 	}
@@ -649,9 +669,9 @@ class Page extends Model
 	/**
 	 * Retrieves one row loaded by an alias and parent_id fields
 	 *
-	 * @param   string   $alias
-	 * @param   integer  $parent_id
-	 * @return  object
+	 * @param   string  $alias
+	 * @param   int     $parent_id
+	 * @return  Page|null
 	 */
 	public static function findByAlias(string $alias, int $parent_id=0)
 	{
@@ -666,7 +686,7 @@ class Page extends Model
 	 * Retrieves one row loaded by path
 	 *
 	 * @param   string  $path
-	 * @return  object
+	 * @return  Page|null
 	 */
 	public static function findByPath(string $path)
 	{
@@ -679,7 +699,7 @@ class Page extends Model
 	/**
 	 * Method to get a list of nodes from a given node to its root.
 	 *
-	 * @param   integer  $id  Primary key of the node for which to get the path.
+	 * @param   int  $id  Primary key of the node for which to get the path.
 	 * @return  mixed    Boolean false on failure or array of node objects on success.
 	 */
 	public static function stackById(int $id)
@@ -708,7 +728,7 @@ class Page extends Model
 	 * Method to get a list of nodes from a given node to its root.
 	 *
 	 * @param   string  $path  Primary key of the node for which to get the path.
-	 * @return  mixed   Boolean false on failure or array of node objects on success.
+	 * @return  array|bool   Boolean false on failure or array of node objects on success.
 	 */
 	public static function stackByPath(string $path)
 	{
@@ -781,10 +801,10 @@ class Page extends Model
 	/**
 	 * Recursive function to build tree
 	 *
-	 * @param   array    $list      List of records
-	 * @param   array    $children  Container for parent/children mapping
-	 * @param   integer  $maxlevel  Maximum levels to descend
-	 * @param   integer  $level     Indention level
+	 * @param   array  $list      List of records
+	 * @param   array  $children  Container for parent/children mapping
+	 * @param   int    $maxlevel  Maximum levels to descend
+	 * @param   int    $level     Indention level
 	 * @return  array
 	 */
 	protected static function treeRecurse($list, $children, int $maxlevel=9999, int $level=0)
@@ -808,7 +828,7 @@ class Page extends Model
 	/**
 	 * Get the root node
 	 *
-	 * @return  object
+	 * @return  Page|null
 	 */
 	public static function rootNode()
 	{
@@ -822,9 +842,9 @@ class Page extends Model
 	/**
 	 * Get the creator of this entry
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function creator()
+	public function creator(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'created_by');
 	}
@@ -832,9 +852,9 @@ class Page extends Model
 	/**
 	 * Get the modifier of this entry
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function modifier()
+	public function modifier(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'updated_by');
 	}
@@ -842,9 +862,9 @@ class Page extends Model
 	/**
 	 * Determine if record is the home Doc
 	 * 
-	 * @return  boolean
+	 * @return  bool
 	 */
-	public function isRoot()
+	public function isRoot(): bool
 	{
 		return ($this->main == 1);
 	}
@@ -852,9 +872,9 @@ class Page extends Model
 	/**
 	 * Determine if record was updated
 	 * 
-	 * @return  boolean
+	 * @return  bool
 	 */
-	public function isModified()
+	public function isModified(): bool
 	{
 		return !is_null($this->updated_at);
 	}
@@ -862,9 +882,9 @@ class Page extends Model
 	/**
 	 * Determine if record is published
 	 * 
-	 * @return  boolean
+	 * @return  bool
 	 */
-	public function isPublished()
+	public function isPublished(): bool
 	{
 		return ($this->state == 1);
 	}
@@ -872,9 +892,9 @@ class Page extends Model
 	/**
 	 * Determine if record is published
 	 * 
-	 * @return  boolean
+	 * @return  bool
 	 */
-	public function isArchived()
+	public function isArchived(): bool
 	{
 		return ($this->state == 2);
 	}
@@ -882,9 +902,9 @@ class Page extends Model
 	/**
 	 * Get the access level
 	 *
-	 * @return  object
+	 * @return  HasOne
 	 */
-	public function viewlevel()
+	public function viewlevel(): HasOne
 	{
 		return $this->hasOne('App\Halcyon\Access\Viewlevel', 'id', 'access');
 	}
@@ -940,9 +960,9 @@ class Page extends Model
 	/**
 	 * Get the count of associations
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
-	public function getUsedAttribute()
+	public function getUsedAttribute(): int
 	{
 		return Associations::query()
 			->where('page_id', '=', $this->page_id)

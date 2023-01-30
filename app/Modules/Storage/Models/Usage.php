@@ -51,7 +51,7 @@ class Usage extends Model
 	/**
 	 * Get total block usage
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getTotalBlockUsageAttribute()
 	{
@@ -61,7 +61,7 @@ class Usage extends Model
 	/**
 	 * Get block limit
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getBlockLimitAttribute()
 	{
@@ -71,7 +71,7 @@ class Usage extends Model
 	/**
 	 * Get normal variability
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getNormalvariabilityAttribute()
 	{
@@ -172,7 +172,7 @@ class Usage extends Model
 	 * Convert [!] Legacy string IDs to integers
 	 *
 	 * @param   mixed  $value
-	 * @return  integer
+	 * @return  int
 	 */
 	private function stringToInteger($value)
 	{

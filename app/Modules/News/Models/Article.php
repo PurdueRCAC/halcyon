@@ -3,6 +3,9 @@
 namespace App\Modules\News\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Config\Repository;
 use Illuminate\Notifications\Notifiable;
 use League\CommonMark\CommonMarkConverter;
@@ -22,6 +25,24 @@ use Carbon\Carbon;
 
 /**
  * News article
+ *
+ * @property int    $id
+ * @property int    $userid
+ * @property int    $edituserid
+ * @property int    $newstypeid
+ * @property int    $published
+ * @property int    $template
+ * @property string $headline
+ * @property string $body
+ * @property string $location
+ * @property Carbon|null $datetimenews
+ * @property Carbon|null $datetimenewsend
+ * @property Carbon|null $datetimeupdate
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeedited
+ * @property Carbon|null $datetimemailed
+ * @property int    $lastmailuserid
+ * @property string $url
  */
 class Article extends Model
 {
@@ -141,9 +162,9 @@ class Article extends Model
 	 * Route notifications for the Slack channel.
 	 *
 	 * @param  \Illuminate\Notifications\Notification  $notification
-	 * @return string
+	 * @return string|null
 	 */
-	public function routeNotificationForSlack($notification)
+	public function routeNotificationForSlack($notification): string|null
 	{
 		return env('SLACK_NOTIFICATION_NEWS');
 	}
@@ -154,7 +175,7 @@ class Article extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setHeadlineAttribute(string $value)
+	public function setHeadlineAttribute(string $value): void
 	{
 		$value = strip_tags($value);
 
@@ -167,7 +188,7 @@ class Article extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setLocationAttribute($value)
+	public function setLocationAttribute($value): void
 	{
 		$value = strip_tags($value);
 
@@ -177,9 +198,9 @@ class Article extends Model
 	/**
 	 * Defines a relationship to updates
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function updates()
+	public function updates(): HasMany
 	{
 		return $this->hasMany(Update::class, 'newsid');
 	}
@@ -187,9 +208,9 @@ class Article extends Model
 	/**
 	 * Defines a relationship to resources map
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function resources()
+	public function resources(): HasMany
 	{
 		return $this->hasMany(Newsresource::class, 'newsid');
 	}
@@ -215,9 +236,9 @@ class Article extends Model
 	/**
 	 * Defines a relationship to resources map
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function associations()
+	public function associations(): HasMany
 	{
 		return $this->hasMany(Association::class, 'newsid');
 	}
@@ -225,9 +246,9 @@ class Article extends Model
 	/**
 	 * Defines a relationship to creator
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function creator()
+	public function creator(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
 	}
@@ -235,9 +256,9 @@ class Article extends Model
 	/**
 	 * Defines a relationship to modifier
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function modifier()
+	public function modifier(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'edituserid');
 	}
@@ -245,9 +266,9 @@ class Article extends Model
 	/**
 	 * Defines a relationship to modifier
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function mailer()
+	public function mailer(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'lastmailuserid');
 	}
@@ -255,9 +276,9 @@ class Article extends Model
 	/**
 	 * Defines a relationship to type
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function type()
+	public function type(): BelongsTo
 	{
 		return $this->belongsTo(Type::class, 'newstypeid')->withDefault();
 	}
@@ -265,9 +286,9 @@ class Article extends Model
 	/**
 	 * Defines a relationship to stemmedtext
 	 *
-	 * @return  object
+	 * @return  HasOne
 	 */
-	public function stemmedtext()
+	public function stemmedtext(): HasOne
 	{
 		return $this->hasOne(Stemmedtext::Class, 'id');
 	}
@@ -277,7 +298,7 @@ class Article extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isPublished()
+	public function isPublished(): bool
 	{
 		return ($this->published == 1);
 	}
@@ -285,9 +306,9 @@ class Article extends Model
 	/**
 	 * Get the end time before any changes or updates
 	 *
-	 * @return  Carbon
+	 * @return  string
 	 */
-	public function getVisitableUrlAttribute()
+	public function getVisitableUrlAttribute(): string
 	{
 		$userid = auth()->user() ? auth()->user()->id : 0;
 
@@ -300,7 +321,7 @@ class Article extends Model
 	 * @param integer $userid
 	 * @return void
 	 */
-	public function markVisit($userid)
+	public function markVisit($userid): void
 	{
 		$found = false;
 
@@ -329,7 +350,7 @@ class Article extends Model
 	/**
 	 * Get the end time before any changes or updates
 	 *
-	 * @return  Carbon
+	 * @return  Carbon|null
 	 */
 	public function getOriginalDatetimenewsendAttribute()
 	{
@@ -383,7 +404,7 @@ class Article extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isModified()
+	public function isModified(): bool
 	{
 		return !is_null($this->datetimeedited);
 	}
@@ -393,7 +414,7 @@ class Article extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isUpdated()
+	public function isUpdated(): bool
 	{
 		return (!is_null($this->datetimeupdate) && $this->datetimeupdate != $this->datetimecreated);
 	}
@@ -403,7 +424,7 @@ class Article extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isMailed()
+	public function isMailed(): bool
 	{
 		return !is_null($this->datetimemailed);
 	}
@@ -413,7 +434,7 @@ class Article extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasStart()
+	public function hasStart(): bool
 	{
 		return !is_null($this->datetimenews);
 	}
@@ -423,7 +444,7 @@ class Article extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasEnd()
+	public function hasEnd(): bool
 	{
 		return !is_null($this->datetimenewsend);
 	}
@@ -433,7 +454,7 @@ class Article extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isSameDay()
+	public function isSameDay(): bool
 	{
 		return $this->hasStart() && $this->hasEnd() && ($this->datetimenewsend->format('Y-m-d') == $this->datetimenews->format('Y-m-d'));
 	}
@@ -443,7 +464,7 @@ class Article extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isAvailable()
+	public function isAvailable(): bool
 	{
 		// If it doesn't exist or isn't published
 		if (!$this->id || !$this->isPublished())
@@ -465,7 +486,7 @@ class Article extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isToday()
+	public function isToday(): bool
 	{
 		$now = Carbon::now()->format('Y-m-d');
 		$start = Carbon::parse($this->datetimenews)->format('Y-m-d');
@@ -478,7 +499,7 @@ class Article extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isNow()
+	public function isNow(): bool
 	{
 		if (!$this->isToday())
 		{
@@ -502,7 +523,7 @@ class Article extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isTomorrow()
+	public function isTomorrow(): bool
 	{
 		$now = Carbon::now()->modify('+1 day')->format('Y-m-d');
 		$start = Carbon::parse($this->datetimenews)->format('Y-m-d');
@@ -515,7 +536,7 @@ class Article extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isOutage()
+	public function isOutage(): bool
 	{
 		if (stristr($this->headline, 'outage'))
 		{
@@ -540,7 +561,7 @@ class Article extends Model
 	 *
 	 * @return  bool
 	 */
-	public function started()
+	public function started(): bool
 	{
 		if (!$this->id || !$this->isPublished())
 		{
@@ -563,7 +584,7 @@ class Article extends Model
 	 *
 	 * @return  bool
 	 */
-	public function ended()
+	public function ended(): bool
 	{
 		if (!$this->id || !$this->isPublished())
 		{
@@ -586,7 +607,7 @@ class Article extends Model
 	 *
 	 * @return  string
 	 */
-	public function link()
+	public function link(): string
 	{
 		if (app('isAdmin'))
 		{
@@ -601,7 +622,7 @@ class Article extends Model
 	 *
 	 * @return  string
 	 */
-	public function getDownloadCalendarLinkAttribute()
+	public function getDownloadCalendarLinkAttribute(): string
 	{
 		return route('site.news.calendar', ['name' => $this->id]);
 	}
@@ -611,7 +632,7 @@ class Article extends Model
 	 *
 	 * @return  string
 	 */
-	public function getSubscribeCalendarLinkAttribute()
+	public function getSubscribeCalendarLinkAttribute(): string
 	{
 		return str_replace(['http:', 'https:'], 'webcal:', route('site.news.calendar', ['name' => $this->id]));
 	}
@@ -658,9 +679,9 @@ class Article extends Model
 	/**
 	 * Get a metadata Repository object
 	 *
-	 * @return  object
+	 * @return  Repository
 	 */
-	public function getMetadataAttribute()
+	public function getMetadataAttribute(): Repository
 	{
 		if (!($this->metadataRepository instanceof Repository))
 		{
@@ -675,7 +696,7 @@ class Article extends Model
 	 *
 	 * @return string
 	 */
-	public function toMarkdown()
+	public function toMarkdown(): string
 	{
 		if (is_null($this->markdown))
 		{
@@ -727,7 +748,7 @@ class Article extends Model
 	 *
 	 * @return string
 	 */
-	public function toHtml()
+	public function toHtml(): string
 	{
 		if (is_null($this->html))
 		{
@@ -783,7 +804,7 @@ class Article extends Model
 	 * @deprecated
 	 * @return string
 	 */
-	public function getFormattedBodyAttribute()
+	public function getFormattedBodyAttribute(): string
 	{
 		return $this->toHtml();
 	}
@@ -792,10 +813,10 @@ class Article extends Model
 	 * Expand NEWS#123 to linked article titles
 	 * This resturns the linked title in MarkDown syntax
 	 *
-	 * @param   array  $match
+	 * @param   array<int,string>  $match
 	 * @return  string
 	 */
-	private function matchNews(array $match)
+	private function matchNews(array $match): string
 	{
 		$title = trans('news::news.news story number', ['number' => $match[3]]);
 
@@ -829,10 +850,10 @@ class Article extends Model
 	/**
 	 * Strip code blocks
 	 *
-	 * @param   array  $match
+	 * @param   array<int,string>  $match
 	 * @return  string
 	 */
-	protected function stripCode(array $match)
+	protected function stripCode(array $match): string
 	{
 		array_push($this->replacements['codeblocks'], $match[0]);
 
@@ -842,10 +863,10 @@ class Article extends Model
 	/**
 	 * Strip pre blocks
 	 *
-	 * @param   array  $match
+	 * @param   array<int,string>  $match
 	 * @return  string
 	 */
-	protected function stripPre(array $match)
+	protected function stripPre(array $match): string
 	{
 		array_push($this->replacements['preblocks'], $match[0]);
 
@@ -858,7 +879,7 @@ class Article extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function replaceCode(array $match)
+	protected function replaceCode(array $match): string
 	{
 		return array_shift($this->replacements['codeblocks']);
 	}
@@ -869,7 +890,7 @@ class Article extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function replacePre(array $match)
+	protected function replacePre(array $match): string
 	{
 		return array_shift($this->replacements['preblocks']);
 	}
@@ -879,7 +900,7 @@ class Article extends Model
 	 *
 	 * @return void
 	 */
-	protected static function booted()
+	protected static function booted(): void
 	{
 		static::created(function ($article)
 		{
@@ -928,7 +949,7 @@ class Article extends Model
 	 *
 	 * @return  string
 	 */
-	public function stemText()
+	public function stemText(): string
 	{
 		// Trim extra garbage and concatenate headline for searching
 		$news_text = preg_replace_callback('/(^|[^\w^@^\/^\.])(((http)(s)?(:\/\/))?(([\w\-\.]+)\.(com|edu|org|mil|gov|net|info|[a-zA-Z]{2})(\/([\w\/\?=\-\&~\.\#\$\+~%;\\,]*[A-Za-z0-9\/])?)?))(\{.+?\})?(?=[^\w^}]|$)/', [$this, 'stripURL'], $this->body);
@@ -969,10 +990,10 @@ class Article extends Model
 	/**
 	 * Strip URL
 	 *
-	 * @param   array  $match
+	 * @param   array<int,string>  $match
 	 * @return  string
 	 */
-	protected function stripURL(array $match)
+	protected function stripURL(array $match): string
 	{
 		if (isset($match[12]))
 		{
@@ -989,7 +1010,7 @@ class Article extends Model
 	 * @param   string|null  $enddate
 	 * @return  string
 	 */
-	public function formatDate($startdate, $enddate=null)
+	public function formatDate($startdate, $enddate=null): string
 	{
 		if (!$startdate || $startdate == '0000-00-00 00:00:00')
 		{
@@ -1077,7 +1098,7 @@ class Article extends Model
 	 *
 	 * @return  array<string,mixed>
 	 */
-	public function getContentVars()
+	public function getContentVars(): array
 	{
 		$vars = array(
 			'date'           => '%date%',
@@ -1285,7 +1306,7 @@ class Article extends Model
 	 * @param   array  $resources
 	 * @return  void
 	 */
-	public function setResources(array $resources = [])
+	public function setResources(array $resources = []): void
 	{
 		if (empty($resources))
 		{
@@ -1355,7 +1376,7 @@ class Article extends Model
 	 * @param   array  $associations
 	 * @return  void
 	 */
-	public function setAssociations($associations = [])
+	public function setAssociations($associations = []): void
 	{
 		if (empty($associations))
 		{

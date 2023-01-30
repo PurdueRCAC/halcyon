@@ -10,7 +10,7 @@ class Folder extends File
 	/**
 	 * Checks if the file is an image
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function isImage(): bool
 	{
@@ -20,7 +20,7 @@ class Folder extends File
 	/**
 	 * Get image width (if an image)
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getWidth(): int
 	{
@@ -30,7 +30,7 @@ class Folder extends File
 	/**
 	 * Get image height (if an image)
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getHeight(): int
 	{
@@ -61,6 +61,11 @@ class Folder extends File
 		return collect($files);
 	}
 
+	/**
+	 * Get data as a tree
+	 *
+	 * @return array
+	 */
 	public function tree()
 	{
 		$folders = self::nest($this->getPathname());
@@ -73,7 +78,7 @@ class Folder extends File
 	 *
 	 * @param   array   $folders
 	 * @param   string  $path
-	 * @return  void
+	 * @return  array
 	 */
 	public static function buildTree($folders, $parent_id = 0, $path = '')
 	{
@@ -104,9 +109,9 @@ class Folder extends File
 	 *
 	 * @param   string   $path      The path of the folder to read.
 	 * @param   string   $filter    A filter for folder names.
-	 * @param   integer  $maxLevel  The maximum number of levels to recursively read, defaults to three.
-	 * @param   integer  $level     The current level, optional.
-	 * @param   integer  $parent    Unique identifier of the parent folder, if any.
+	 * @param   int  $maxLevel  The maximum number of levels to recursively read, defaults to three.
+	 * @param   int  $level     The current level, optional.
+	 * @param   int  $parent    Unique identifier of the parent folder, if any.
 	 * @return  array
 	 */
 	public static function nest($path = null, $filter = '.', $maxLevel = 10, $level = 0, $parent = 0)

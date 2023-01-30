@@ -293,7 +293,7 @@ class CommentsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer  $comment
+	 * @param  int  $comment
 	 * @return CommentResource
 	 */
 	public function read($comment)
@@ -375,7 +375,7 @@ class CommentsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @param   integer  $comment
+	 * @param   int  $comment
 	 * @return  CommentResource
 	 */
 	public function update(Request $request, $comment)
@@ -446,7 +446,7 @@ class CommentsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $comment
+	 * @param   int  $comment
 	 * @return  Response
 	 */
 	public function delete($comment)

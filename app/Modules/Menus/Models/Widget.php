@@ -55,7 +55,7 @@ class Widget extends Model
 	/**
 	 * Get the list of widgets
 	 *
-	 * @param   integer  $pk
+	 * @param   int  $pk
 	 * @return  array    An array of module records (id, title, position)
 	 */
 	public static function forMenuId($pk = 0)

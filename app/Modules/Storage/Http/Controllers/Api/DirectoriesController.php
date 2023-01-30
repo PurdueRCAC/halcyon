@@ -446,7 +446,7 @@ class DirectoriesController extends Controller
 	 * }
 	 * @param  Request  $request
 	 * @param  array    $data
-	 * @param  integer  $offset
+	 * @param  int  $offset
 	 * @return Response
 	 */
 	public function create(Request $request, $data = array(), $offset = 0)
@@ -946,7 +946,7 @@ class DirectoriesController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @param   Request  $request
 	 * @return  Response
 	 */
@@ -1247,7 +1247,7 @@ class DirectoriesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete($id)

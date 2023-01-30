@@ -159,7 +159,7 @@ class ProductsController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 * 
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return View
 	 */
 	public function edit($id)
@@ -222,7 +222,7 @@ class ProductsController extends Controller
 	/**
 	 * Reorder entries
 	 * 
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @param   Request $request
 	 * @return  Response
 	 */

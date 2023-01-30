@@ -164,7 +164,7 @@ class TypesController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
-	 * @param   integer   $id
+	 * @param   int   $id
 	 * @return  View
 	 */
 	public function edit($id)
@@ -225,7 +225,7 @@ class TypesController extends Controller
 	/**
 	 * Reorder entries
 	 * 
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @param   Request $request
 	 * @return  Response
 	 */

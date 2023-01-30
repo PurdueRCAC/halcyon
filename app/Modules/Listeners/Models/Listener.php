@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use App\Halcyon\Traits\Checkable;
 use App\Halcyon\Form\Form;
+use App\Halcyon\Models\Casts\Params;
 use App\Modules\Listeners\Events\ListenerUpdating;
 use App\Modules\Listeners\Events\ListenerUpdated;
-use App\Halcyon\Models\Casts\Params;
 use Carbon\Carbon;
 
 /**
@@ -115,7 +115,7 @@ class Listener extends Model
 	 *
 	 * @return  string
 	 */
-	public function getPathAttribute()
+	public function getPathAttribute(): string
 	{
 		if (is_null($this->path))
 		{
@@ -140,7 +140,7 @@ class Listener extends Model
 	 *
 	 * @return  string
 	 */
-	public function getClassNameAttribute()
+	public function getClassNameAttribute(): string
 	{
 		return 'App\\Listeners\\' . Str::studly($this->folder) . '\\' . Str::studly($this->element) . '\\' . Str::studly($this->element);
 	}
@@ -150,7 +150,7 @@ class Listener extends Model
 	 *
 	 * @return  string
 	 */
-	public function getLowerFolder()
+	public function getLowerFolder(): string
 	{
 		return strtolower($this->folder);
 	}
@@ -160,7 +160,7 @@ class Listener extends Model
 	 *
 	 * @return  string
 	 */
-	public function getLowerName()
+	public function getLowerName(): string
 	{
 		return strtolower($this->element);
 	}
@@ -170,7 +170,7 @@ class Listener extends Model
 	 *
 	 * @return  string
 	 */
-	public function getAssetPath()
+	public function getAssetPath(): string
 	{
 		return $this->path . '/assets';
 	}
@@ -180,7 +180,7 @@ class Listener extends Model
 	 *
 	 * @return  string
 	 */
-	public function getPublicAssetPath()
+	public function getPublicAssetPath(): string
 	{
 		return public_path() . '/listeners/' . $this->getLowerFolder() . '/' . $this->getLowerName();
 	}
@@ -188,9 +188,10 @@ class Listener extends Model
 	/**
 	 * Get a form
 	 *
-	 * @return  object
+	 * @return  Form
+	 * @throws  \Exception
 	 */
-	public function getForm()
+	public function getForm(): Form
 	{
 		$file = __DIR__ . '/Forms/Listener.xml';
 
@@ -232,7 +233,7 @@ class Listener extends Model
 	 *
 	 * @return  void
 	 */
-	public function registerLanguage()
+	public function registerLanguage(): void
 	{
 		if ($path = $this->getPathAttribute())
 		{
@@ -244,11 +245,11 @@ class Listener extends Model
 	 * Method to move a row in the ordering sequence of a group of rows defined by an SQL WHERE clause.
 	 * Negative numbers move the row up in the sequence and positive numbers move it down.
 	 *
-	 * @param   integer  $delta  The direction and magnitude to move the row in the ordering sequence.
+	 * @param   int  $delta  The direction and magnitude to move the row in the ordering sequence.
 	 * @param   string   $where  WHERE clause to use for limiting the selection of rows to compact the ordering values.
 	 * @return  bool     True on success.
 	 */
-	public function move($delta, $where = '')
+	public function move($delta, $where = ''): bool
 	{
 		// If the change is none, do nothing.
 		if (empty($delta))
@@ -344,7 +345,7 @@ class Listener extends Model
 	 * @param   array  $order  An array of order values.
 	 * @return  bool
 	 */
-	public static function saveOrder($pks = null, $order = null)
+	public static function saveOrder($pks = null, $order = null): bool
 	{
 		if (empty($pks))
 		{

@@ -284,7 +284,7 @@ class PagesController extends Controller
 	/**
 	 * Copy the specified entry to the edit form to make a new entry.
 	 * 
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return Response
 	 */
 	public function copy($id)
@@ -314,7 +314,7 @@ class PagesController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 * 
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -465,7 +465,7 @@ class PagesController extends Controller
 	/**
 	 * Reorder entries
 	 * 
-	 * @param   integer $id
+	 * @param   int $id
 	 * @param   Request $request
 	 * @return  Response
 	 */
@@ -488,7 +488,7 @@ class PagesController extends Controller
 	 * Sets the state of one or more entries
 	 * 
 	 * @param   Request $request
-	 * @param   integer $id
+	 * @param   int $id
 	 * @return  Response
 	 */
 	public function state(Request $request, $id = null)

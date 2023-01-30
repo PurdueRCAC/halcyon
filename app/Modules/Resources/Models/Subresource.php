@@ -319,7 +319,7 @@ class Subresource extends Model
 	/**
 	 * Get total cores
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getTotalcoresAttribute()
 	{
@@ -334,7 +334,7 @@ class Subresource extends Model
 	/**
 	 * Get total nodes
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getTotalnodesAttribute()
 	{
@@ -349,7 +349,7 @@ class Subresource extends Model
 	/**
 	 * Get queue status
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getQueuestatusAttribute()
 	{

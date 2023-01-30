@@ -102,7 +102,7 @@ class Type extends Model
 	 * Convert [!] Legacy string IDs to integers
 	 *
 	 * @param   mixed  $value
-	 * @return  integer
+	 * @return  int
 	 */
 	private function stringToInteger($value)
 	{

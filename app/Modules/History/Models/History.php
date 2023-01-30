@@ -9,6 +9,20 @@ use App\Modules\Users\Models\User;
 use App\Modules\History\Helpers\Diff\Formatter\Table;
 use App\Modules\History\Helpers\Diff;
 
+/**
+ * Model for logging changes to objects
+ *
+ * @property int    $id
+ * @property int    $user_id
+ * @property int    $historable_id
+ * @property string $historable_type
+ * @property string $historable_table
+ * @property string $action
+ * @property string $old
+ * @property string $new
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ */
 class History extends Model
 {
 	/**
@@ -64,7 +78,7 @@ class History extends Model
 	/**
 	 * Historable relationship
 	 *
-	 * @return  object
+	 * @return  MorphTo
 	 */
 	public function historable(): MorphTo
 	{
@@ -74,7 +88,7 @@ class History extends Model
 	/**
 	 * User relationship
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
 	public function user(): BelongsTo
 	{

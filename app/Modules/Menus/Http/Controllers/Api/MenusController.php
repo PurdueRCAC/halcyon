@@ -275,7 +275,7 @@ class MenusController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return JsonResource
 	 */
 	public function read(int $id)
@@ -367,7 +367,7 @@ class MenusController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
-	 * @param   integer $id
+	 * @param   int $id
 	 * @return  Response|JsonResource
 	 */
 	public function update(Request $request, int $id)
@@ -423,7 +423,7 @@ class MenusController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete(int $id)

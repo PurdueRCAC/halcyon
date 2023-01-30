@@ -74,7 +74,7 @@ class Version extends Model
 	/**
 	 * Does the page exist?
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function exists()
 	{

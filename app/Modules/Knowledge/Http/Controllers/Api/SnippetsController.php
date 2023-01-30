@@ -3,7 +3,7 @@
 namespace App\Modules\Knowledge\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Knowledge\Models\Page;
@@ -126,7 +126,7 @@ class SnippetsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  SnippetResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -312,7 +312,7 @@ class SnippetsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return JsonResponse|SnippetResource
 	 */
 	public function create(Request $request)
 	{
@@ -459,8 +459,8 @@ class SnippetsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer $id
-	 * @return Response
+	 * @param  int $id
+	 * @return SnippetResource
 	 */
 	public function read($id)
 	{
@@ -593,8 +593,8 @@ class SnippetsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
-	 * @param   integer $id
-	 * @return  Response
+	 * @param   int $id
+	 * @return  JsonResponse|SnippetResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -707,8 +707,8 @@ class SnippetsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer $id
-	 * @return Response
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
 	public function delete($id)
 	{

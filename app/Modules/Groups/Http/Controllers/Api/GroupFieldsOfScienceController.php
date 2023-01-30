@@ -88,7 +88,7 @@ class GroupFieldsOfScienceController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @param   integer  $group
+	 * @param   int  $group
 	 * @return ResourceCollection
 	 */
 	public function index(Request $request, $group)
@@ -172,7 +172,7 @@ class GroupFieldsOfScienceController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @param   integer  $group
+	 * @param   int  $group
 	 * @return  JsonResponse|JsonResource
 	 */
 	public function create(Request $request, int $group)
@@ -238,8 +238,8 @@ class GroupFieldsOfScienceController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $group
-	 * @param   integer  $id
+	 * @param   int  $group
+	 * @param   int  $id
 	 * @return  JsonResource
 	 */
 	public function read($group, int $id)
@@ -307,8 +307,8 @@ class GroupFieldsOfScienceController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
-	 * @param   integer $group
-	 * @param   integer $id
+	 * @param   int $group
+	 * @param   int $id
 	 * @return  JsonResponse|JsonResource
 	 */
 	public function update(Request $request, int $group, int $id)
@@ -370,8 +370,8 @@ class GroupFieldsOfScienceController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $group
-	 * @param   integer  $id
+	 * @param   int  $group
+	 * @param   int  $id
 	 * @return  JsonResponse
 	 */
 	public function delete(int $group, int $id)

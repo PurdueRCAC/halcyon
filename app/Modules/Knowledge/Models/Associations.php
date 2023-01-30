@@ -4,9 +4,21 @@ namespace App\Modules\Knowledge\Models;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Model for a page association mapping
+ *
+ * @property int    $id
+ * @property int    $parent_id
+ * @property int    $page_id
+ * @property int    $lft
+ * @property int    $rgt
+ * @property int    $level
+ * @property string $path
+ * @property int    $state
+ * @property int    $access
  */
 class Associations extends Model
 {
@@ -48,9 +60,9 @@ class Associations extends Model
 	/**
 	 * Defines a relationship to a parent page
 	 *
-	 * @return  object
+	 * @return  int
 	 */
-	public function getUsedAttribute()
+	public function getUsedAttribute(): int
 	{
 		$root = self::rootNode();
 
@@ -66,7 +78,7 @@ class Associations extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isSeparator()
+	public function isSeparator(): bool
 	{
 		return (substr($this->path, -strlen('-separator-')) == '-separator-');
 	}
@@ -74,9 +86,9 @@ class Associations extends Model
 	/**
 	 * Defines a relationship to a parent page
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function parent()
+	public function parent(): BelongsTo
 	{
 		return $this->belongsTo(self::class, 'parent_id');
 	}
@@ -84,9 +96,9 @@ class Associations extends Model
 	/**
 	 * Defines a relationship to a page
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function page()
+	public function page(): BelongsTo
 	{
 		return $this->belongsTo(Page::class, 'page_id')->withTrashed();
 	}
@@ -94,9 +106,9 @@ class Associations extends Model
 	/**
 	 * Defines a relationship to child pages
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function children()
+	public function children(): HasMany
 	{
 		return $this->hasMany(self::class, 'parent_id');
 	}
@@ -104,9 +116,9 @@ class Associations extends Model
 	/**
 	 * Defines a relationship to feedback
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function feedback()
+	public function feedback(): HasMany
 	{
 		return $this->hasMany(Feedback::class, 'target_id');
 	}
@@ -150,7 +162,7 @@ class Associations extends Model
 	/**
 	 * Get the root node
 	 *
-	 * @return  object
+	 * @return  Associations|null
 	 */
 	public static function rootNode()
 	{
@@ -167,7 +179,7 @@ class Associations extends Model
 	 * Find a page by URI path
 	 *
 	 * @param   string  $path
-	 * @return  object|null
+	 * @return  Associations|null
 	 */
 	public static function findByPath(string $path)
 	{
@@ -243,9 +255,9 @@ class Associations extends Model
 	/**
 	 * Determine if record is the root page
 	 * 
-	 * @return  boolean
+	 * @return  bool
 	 */
-	public function isRoot()
+	public function isRoot(): bool
 	{
 		return ($this->level == 0);
 	}
@@ -253,9 +265,9 @@ class Associations extends Model
 	/**
 	 * Determine if record is published
 	 * 
-	 * @return  boolean
+	 * @return  bool
 	 */
-	public function isPublished()
+	public function isPublished(): bool
 	{
 		return ($this->state == self::STATE_PUBLISHED);
 	}
@@ -263,9 +275,9 @@ class Associations extends Model
 	/**
 	 * Determine if record is archived
 	 * 
-	 * @return  boolean
+	 * @return  bool
 	 */
-	public function isArchived()
+	public function isArchived(): bool
 	{
 		return ($this->state == self::STATE_ARCHIVED);
 	}
@@ -274,9 +286,9 @@ class Associations extends Model
 	 * Get all aprents
 	 *
 	 * @param   array  $ancestors
-	 * @return  array
+	 * @return  array<int,Associations>
 	 */
-	public function ancestors(array $ancestors = [])
+	public function ancestors(array $ancestors = []): array
 	{
 		$parent = $this->parent;
 
@@ -297,9 +309,9 @@ class Associations extends Model
 	 * Save the record
 	 *
 	 * @param   array    $options
-	 * @return  boolean  False if error, True on success
+	 * @return  bool     False if error, True on success
 	 */
-	public function save(array $options = [])
+	public function save(array $options = []): bool
 	{
 		$isNew = !$this->id;
 
@@ -375,11 +387,11 @@ class Associations extends Model
 	/**
 	 * Method to recursively rebuild the whole nested set tree.
 	 *
-	 * @param   integer  $parentId  The root of the tree to rebuild.
-	 * @param   integer  $leftId    The left id to start with in building the tree.
-	 * @param   integer  $level     The level to assign to the current nodes.
+	 * @param   int  $parentId  The root of the tree to rebuild.
+	 * @param   int  $leftId    The left id to start with in building the tree.
+	 * @param   int  $level     The level to assign to the current nodes.
 	 * @param   string   $path      The path to the current nodes.
-	 * @return  integer  1 + value of root rgt on success, false on failure
+	 * @return  int  1 + value of root rgt on success, false on failure
 	 */
 	public function rebuild(int $parentId, int $leftId = 0, int $level = 0, string $path = '')
 	{
@@ -441,10 +453,10 @@ class Associations extends Model
 	 *
 	 * @param   object   $referenceNode  A node object with at least a 'lft' and 'rgt' with
 	 *                                   which to make room in the tree around for a new node.
-	 * @param   integer  $nodeWidth      The width of the node for which to make room in the tree.
+	 * @param   int  $nodeWidth      The width of the node for which to make room in the tree.
 	 * @param   string   $position       The position relative to the reference node where the room
 	 *                                   should be made.
-	 * @return  mixed    Boolean false on failure or data object on success.
+	 * @return  bool|\stdClass    Boolean false on failure or data object on success.
 	 */
 	protected function getTreeRepositionData($referenceNode, int $nodeWidth, string $position = 'before')
 	{
@@ -516,9 +528,9 @@ class Associations extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @return  boolean  False if error, True on success
+	 * @return  bool  False if error, True on success
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		foreach ($this->children as $row)
 		{
@@ -533,9 +545,10 @@ class Associations extends Model
 	 * Method to move a row in the ordering sequence of a group of rows defined by an SQL WHERE clause.
 	 * Negative numbers move the row up in the sequence and positive numbers move it down.
 	 *
-	 * @param   integer  $delta  The direction and magnitude to move the row in the ordering sequence.
-	 * @param   string   $where  WHERE clause to use for limiting the selection of rows to compact the ordering values.
-	 * @return  mixed    Boolean true on success.
+	 * @param   int     $delta  The direction and magnitude to move the row in the ordering sequence.
+	 * @param   string  $where  WHERE clause to use for limiting the selection of rows to compact the ordering values.
+	 * @return  bool    Boolean true on success.
+	 * @throws \Exception
 	 */
 	public function move($delta, string $where = '')
 	{
@@ -575,10 +588,11 @@ class Associations extends Model
 	/**
 	 * Method to move a node and its children to a new location in the tree.
 	 *
-	 * @param   integer  $referenceId  The primary key of the node to reference new location by.
-	 * @param   string   $position     Location type string. ['before', 'after', 'first-child', 'last-child']
-	 * @param   integer  $pk           The primary key of the node to move.
-	 * @return  boolean  True on success.
+	 * @param   int     $referenceId  The primary key of the node to reference new location by.
+	 * @param   string  $position     Location type string. ['before', 'after', 'first-child', 'last-child']
+	 * @param   int     $pk           The primary key of the node to move.
+	 * @return  bool    True on success.
+	 * @throws \Exception
 	 */
 	public function moveByReference(int $referenceId, string $position = 'after', int $pk = 0)
 	{
@@ -712,9 +726,9 @@ class Associations extends Model
 	/**
 	 * Get positive rating
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
-	public function getPositiveRatingAttribute()
+	public function getPositiveRatingAttribute(): int
 	{
 		$total = $this->feedback()
 			->count();
@@ -734,9 +748,9 @@ class Associations extends Model
 	/**
 	 * Get negative rating
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
-	public function getNegativeRatingAttribute()
+	public function getNegativeRatingAttribute(): int
 	{
 		$total = $this->feedback()
 			->count();
@@ -756,9 +770,9 @@ class Associations extends Model
 	/**
 	 * Get neutral rating
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
-	public function getNeutralRatingAttribute()
+	public function getNeutralRatingAttribute(): int
 	{
 		$total = $this->feedback()
 			->count();

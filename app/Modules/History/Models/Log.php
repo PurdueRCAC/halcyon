@@ -6,7 +6,29 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use App\Modules\Users\Models\User;
+use stdClass;
 
+/**
+ * Access log
+ *
+ * @property int    $id
+ * @property Carbon|null $datetime
+ * @property string $ip
+ * @property string $hostname
+ * @property int    $userid
+ * @property int    $status
+ * @property string $transportmethod
+ * @property string $servername
+ * @property string $uri
+ * @property string $app
+ * @property string $classname
+ * @property string $classmethod
+ * @property string $objectid
+ * @property string $payload
+ * @property int    $groupid
+ * @property int    $targetuserid
+ * @property int    $targetobjectid
+ */
 class Log extends Model
 {
 	/**
@@ -33,7 +55,7 @@ class Log extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -105,7 +127,7 @@ class Log extends Model
 	 * @param Log $record
 	 * @return Log
 	 */
-	public function process($record)
+	public function process($record): Log
 	{
 		foreach (self::$processors as $processor)
 		{
@@ -123,7 +145,7 @@ class Log extends Model
 	/**
 	 * User relationship
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
 	public function user(): BelongsTo
 	{
@@ -133,7 +155,7 @@ class Log extends Model
 	/**
 	 * Target user relationship
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
 	public function targetuser(): BelongsTo
 	{
@@ -144,9 +166,9 @@ class Log extends Model
 	 * Set transport method
 	 *
 	 * @param   string  $value
-	 * @return  object
+	 * @return  void
 	 */
-	public function setTransportmethodAttribute($value)
+	public function setTransportmethodAttribute($value): void
 	{
 		$value = strtoupper($value);
 		if (!in_array($value, ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'CONNECT', 'OPTIONS', 'TRACE']))
@@ -162,7 +184,7 @@ class Log extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setServernameAttribute($value)
+	public function setServernameAttribute($value): void
 	{
 		$this->attributes['servername'] = Str::limit($value, 128, '');
 	}
@@ -173,7 +195,7 @@ class Log extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setIpAttribute($value)
+	public function setIpAttribute($value): void
 	{
 		$value = $value == 'localhost' ? '127.0.0.1' : $value;
 		$value = $value == '::1' ? '127.0.0.1' : $value;
@@ -187,7 +209,7 @@ class Log extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setUriAttribute($value)
+	public function setUriAttribute($value): void
 	{
 		$this->attributes['uri'] = Str::limit($value, 128, '');
 	}
@@ -198,7 +220,7 @@ class Log extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setAppAttribute($value)
+	public function setAppAttribute($value): void
 	{
 		$this->attributes['app'] = Str::limit($value, 20, '');
 	}
@@ -209,7 +231,7 @@ class Log extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setClassnameAttribute($value)
+	public function setClassnameAttribute($value): void
 	{
 		$this->attributes['classname'] = Str::limit($value, 32, '');
 	}
@@ -220,7 +242,7 @@ class Log extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setClassmethodAttribute($value)
+	public function setClassmethodAttribute($value): void
 	{
 		$this->attributes['classmethod'] = Str::limit($value, 16, '');
 	}
@@ -231,7 +253,7 @@ class Log extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setPayloadAttribute($value)
+	public function setPayloadAttribute($value): void
 	{
 		$this->attributes['payload'] = Str::limit($value, 2000, '');
 	}
@@ -248,7 +270,7 @@ class Log extends Model
 		if (substr($payload, 0, 1) != '{'
 		 && substr($payload, 0, 1) != '[')
 		{
-			$payload = new \stdClass;
+			$payload = new stdClass;
 			$payload->user_agent = $this->payload;
 		}
 		else
@@ -263,7 +285,7 @@ class Log extends Model
 
 		if (!$payload)
 		{
-			$payload = new \stdClass;
+			$payload = new stdClass;
 		}
 
 		return $payload;
@@ -290,7 +312,7 @@ class Log extends Model
 	 *
 	 * @return History
 	 */
-	public function toHistory()
+	public function toHistory(): History
 	{
 		$item = new History;
 		$item->created_at = $this->datetime;

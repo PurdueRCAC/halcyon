@@ -211,7 +211,7 @@ class Tag extends Model
 	/**
 	 * Determine if record was modified
 	 *
-	 * @return  boolean  True if modified, false if not
+	 * @return  bool  True if modified, false if not
 	 */
 	public function isUpdated()
 	{
@@ -308,9 +308,9 @@ class Tag extends Model
 	 * that specific user
 	 *
 	 * @param   string   $scope     Object type (ex: resource, ticket)
-	 * @param   integer  $scope_id  Object ID (e.g., resource ID, ticket ID)
-	 * @param   integer  $tagger    User ID of person to filter tag by
-	 * @return  boolean
+	 * @param   int  $scope_id  Object ID (e.g., resource ID, ticket ID)
+	 * @param   int  $tagger    User ID of person to filter tag by
+	 * @return  bool
 	 */
 	public function removeFrom($scope, $scope_id, $tagger=0)
 	{
@@ -337,10 +337,10 @@ class Tag extends Model
 	 * Add this tag to an object
 	 *
 	 * @param   string   $scope     Object type (ex: resource, ticket)
-	 * @param   integer  $scope_id  Object ID (e.g., resource ID, ticket ID)
-	 * @param   integer  $tagger    User ID of person adding tag
-	 * @param   integer  $strength  Tag strength
-	 * @return  boolean
+	 * @param   int  $scope_id  Object ID (e.g., resource ID, ticket ID)
+	 * @param   int  $tagger    User ID of person adding tag
+	 * @param   int  $strength  Tag strength
+	 * @return  bool
 	 */
 	public function addTo($scope, $scope_id, $tagger = 0, $strength = 1)
 	{
@@ -373,8 +373,8 @@ class Tag extends Model
 	/**
 	 * Move all data from this tag to another, including the tag itself
 	 *
-	 * @param   integer  $tag_id  ID of tag to merge with
-	 * @return  boolean
+	 * @param   int  $tag_id  ID of tag to merge with
+	 * @return  bool
 	 */
 	public function mergeWith($tag_id)
 	{
@@ -423,8 +423,8 @@ class Tag extends Model
 	/**
 	 * Copy associations from this tag to another
 	 *
-	 * @param   integer  $tag_id  ID of tag to copy associations to
-	 * @return  boolean
+	 * @param   int  $tag_id  ID of tag to copy associations to
+	 * @return  bool
 	 */
 	public function copyTo($tag_id)
 	{
@@ -453,7 +453,7 @@ class Tag extends Model
 	 * Save tag substitutions
 	 *
 	 * @param   string   $tag_string
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function saveAliases($tag_string='')
 	{

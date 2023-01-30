@@ -15,7 +15,7 @@ class MediaHelper
 	 *
 	 * @param   array    $file  File information
 	 * @param   string   $err   An error message to be returned
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public static function canUpload($file, &$err)
 	{
@@ -217,9 +217,9 @@ class MediaHelper
 	/**
 	 * Find new sizes for an image
 	 *
-	 * @param   integer  $width   Original width
-	 * @param   integer  $height  Original height
-	 * @param   integer  $target  Target size
+	 * @param   int  $width   Original width
+	 * @param   int  $height  Original height
+	 * @param   int  $target  Target size
 	 * @return  array
 	 */
 	public static function imageResize($width, $height, $target)
@@ -370,9 +370,9 @@ class MediaHelper
 	 *
 	 * @param   string   $path      The path of the folder to read.
 	 * @param   string   $filter    A filter for folder names.
-	 * @param   integer  $maxLevel  The maximum number of levels to recursively read, defaults to three.
-	 * @param   integer  $level     The current level, optional.
-	 * @param   integer  $parent    Unique identifier of the parent folder, if any.
+	 * @param   int  $maxLevel  The maximum number of levels to recursively read, defaults to three.
+	 * @param   int  $level     The current level, optional.
+	 * @param   int  $parent    Unique identifier of the parent folder, if any.
 	 * @return  array
 	 */
 	public static function getTree($path, $filter = '.', $maxLevel = 10, $level = 0, $parent = 0)

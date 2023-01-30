@@ -426,7 +426,7 @@ class MembersController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return JsonResource
 	 */
 	public function read(int $id)
@@ -508,7 +508,7 @@ class MembersController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  JsonResource|JsonResponse
 	 */
 	public function update(Request $request, int $id)
@@ -596,7 +596,7 @@ class MembersController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  JsonResponse
 	 */
 	public function delete(int $id)

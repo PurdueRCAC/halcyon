@@ -253,7 +253,7 @@ class ReportsController extends Controller
 	 * Show the form for editing the specified entry
 	 *
 	 * @param   Request  $request
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function edit(Request $request, $id)

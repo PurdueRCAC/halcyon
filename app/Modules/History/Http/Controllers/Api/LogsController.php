@@ -257,7 +257,7 @@ class LogsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return Response
 	 */
 	public function read($id)

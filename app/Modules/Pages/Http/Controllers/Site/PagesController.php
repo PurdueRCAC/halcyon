@@ -193,7 +193,7 @@ class PagesController extends Controller
 	/**
 	 * Show the form for editing the specified page
 	 *
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return View
 	 */
 	public function edit($id)

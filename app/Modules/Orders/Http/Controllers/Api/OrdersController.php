@@ -688,7 +688,7 @@ class OrdersController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
-	 * @param   integer $id
+	 * @param   int $id
 	 * @param   Request $request
 	 * @return  Response|OrderResource
 	 */
@@ -843,7 +843,7 @@ class OrdersController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer $id
+	 * @param   int $id
 	 * @return  Response
 	 */
 	public function delete($id)

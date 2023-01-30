@@ -3,9 +3,13 @@
 namespace App\Modules\News\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * News model for stemmed text
+ *
+ * @property int    $id
+ * @property string $stemmedtext
  */
 class Stemmedtext extends Model
 {
@@ -49,9 +53,9 @@ class Stemmedtext extends Model
 	/**
 	 * Defines a relationship to an article
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function article()
+	public function article(): BelongsTo
 	{
 		return $this->belongsTo(Article::class, 'id');
 	}

@@ -316,7 +316,7 @@ class EmailQueueRemovedCommand extends Command
 	/**
 	 * Log email
 	 *
-	 * @param   integer $targetuserid
+	 * @param   int $targetuserid
 	 * @param   string  $uri
 	 * @param   mixed   $payload
 	 * @return  null

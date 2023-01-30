@@ -582,7 +582,7 @@ class PublicationsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return Response
 	 */
 	public function read(int $id)
@@ -886,7 +886,7 @@ class PublicationsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
-	 * @param   integer $id
+	 * @param   int $id
 	 * @return  Response
 	 */
 	public function update(Request $request, int $id)
@@ -978,7 +978,7 @@ class PublicationsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete(int $id)

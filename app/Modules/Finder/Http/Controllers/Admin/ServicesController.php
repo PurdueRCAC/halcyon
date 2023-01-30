@@ -127,7 +127,7 @@ class ServicesController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -180,9 +180,7 @@ class ServicesController extends Controller
 
 		if (!$row->save())
 		{
-			$error = $row->getError() ? $row->getError() : trans('global.messages.save failed');
-
-			return redirect()->back()->withError($error);
+			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
 		if ($request->has('sfields'))
@@ -234,7 +232,7 @@ class ServicesController extends Controller
 
 			if (!$row->delete())
 			{
-				$request->session()->flash('error', $row->getError());
+				$request->session()->flash('error', trans('global.messages.delete failed'));
 				continue;
 			}
 
@@ -253,7 +251,7 @@ class ServicesController extends Controller
 	 * Sets the state of one or more entries
 	 * 
 	 * @param   Request $request
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function state(Request $request, $id = null)
@@ -289,7 +287,7 @@ class ServicesController extends Controller
 
 			if (!$row->save())
 			{
-				$request->session()->flash('error', $row->getError());
+				$request->session()->flash('error', trans('global.messages.save failed'));
 				continue;
 			}
 

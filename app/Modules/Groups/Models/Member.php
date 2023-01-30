@@ -272,8 +272,8 @@ class Member extends Model
 	/**
 	 * Get a record by group/user
 	 *
-	 * @param   integer  $groupid
-	 * @param   integer  $userid
+	 * @param   int  $groupid
+	 * @param   int  $userid
 	 * @return  object
 	 */
 	public static function findByGroupAndUser(int $groupid, int $userid)

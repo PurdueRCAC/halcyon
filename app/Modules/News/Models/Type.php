@@ -3,6 +3,8 @@
 namespace App\Modules\News\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Tags\Models\Tagged;
@@ -89,12 +91,12 @@ class Type extends Model
 	];
 
 	/**
-	 * Split event into plugin name and event
+	 * Set the type name
 	 *
-	 * @param   array   $data  the data being saved
-	 * @return  string
+	 * @param   string $value
+	 * @return  void
 	 **/
-	public function setNameAttribute(string $value)
+	public function setNameAttribute(string $value): void
 	{
 		$this->attributes['name'] = Str::limit(trim($value), 32);
 
@@ -109,28 +111,11 @@ class Type extends Model
 	}
 
 	/**
-	 * Split event into plugin name and event
-	 *
-	 * @return  string
-	 **/
-	/*public function setNameAttribute($value)
-	{
-		$alias = trim($value);
-
-		// Remove any '-' from the string since they will be used as concatenaters
-		$alias = str_replace('-', ' ', $alias);
-		$alias = preg_replace('/(\s|[^A-Za-z0-9\-])+/', '-', strtolower($alias));
-		$alias = trim($alias, '-');
-
-		return $alias;
-	}*/
-
-	/**
 	 * Runs extra setup code when creating a new model
 	 *
 	 * @return  void
 	 */
-	protected static function boot()
+	protected static function boot(): void
 	{
 		parent::boot();
 
@@ -162,17 +147,15 @@ class Type extends Model
 			{
 				throw new \Exception(trans('An entry with the name ":name" already exists.', ['name' => $model->name]));
 			}
-
-			return true;
 		});
 	}
 
 	/**
 	 * Defines a relationship to articles
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function articles()
+	public function articles(): HasMany
 	{
 		return $this->hasMany(Article::class, 'newstypeid');
 	}
@@ -192,9 +175,9 @@ class Type extends Model
 	/**
 	 * Defines a relationship to child types
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function children()
+	public function children(): HasMany
 	{
 		return $this->hasMany(self::class, 'parentid');
 	}
@@ -202,9 +185,9 @@ class Type extends Model
 	/**
 	 * Defines a relationship to parent type
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function parent()
+	public function parent(): BelongsTo
 	{
 		return $this->belongsTo(self::class, 'parentid');
 	}
@@ -214,7 +197,7 @@ class Type extends Model
 	 *
 	 * @return  string
 	 */
-	public function toHtml()
+	public function toHtml(): string
 	{
 		return '<p>' . $this->name . '</p>';
 	}
@@ -223,8 +206,8 @@ class Type extends Model
 	 * Find a model by its name.
 	 *
 	 * @param  string $name
-	 * @param  array  $columns
-	 * @return \Illuminate\Database\Eloquent\Model|null
+	 * @param  array<int,string>  $columns
+	 * @return Type|null
 	 */
 	public static function findByName(string $name, array $columns = ['*'])
 	{
@@ -257,7 +240,7 @@ class Type extends Model
 	 *
 	 * @return  bool  False if error, True on success
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		foreach ($this->articles as $article)
 		{
@@ -278,7 +261,7 @@ class Type extends Model
 	 *
 	 * @return  string
 	 */
-	public function getRssLinkAttribute()
+	public function getRssLinkAttribute(): string
 	{
 		return route('site.news.feed', ['name' => $this->name]);
 	}
@@ -288,7 +271,7 @@ class Type extends Model
 	 *
 	 * @return  string
 	 */
-	public function getSubscribeCalendarLinkAttribute()
+	public function getSubscribeCalendarLinkAttribute(): string
 	{
 		return preg_replace('/^https?:\/\//', 'webcal://', route('site.news.calendar', ['name' => strtolower($this->name)]));
 	}
@@ -298,7 +281,7 @@ class Type extends Model
 	 *
 	 * @return  string
 	 */
-	public function getDownloadCalendarLinkAttribute()
+	public function getDownloadCalendarLinkAttribute(): string
 	{
 		return route('site.news.calendar', ['name' => strtolower($this->name)]);
 	}
@@ -308,9 +291,9 @@ class Type extends Model
 	 *
 	 * @param  string $order Field to sort by
 	 * @param  string $dir   Direction to sort
-	 * @return array
+	 * @return array<int,array>
 	 */
-	public static function tree(string $order = 'ordering', string $dir = 'asc')
+	public static function tree(string $order = 'ordering', string $dir = 'asc'): array
 	{
 		$rows = self::query()
 			->orderBy($order, $dir)
@@ -346,16 +329,16 @@ class Type extends Model
 	/**
 	 * Recursive function to build tree
 	 *
-	 * @param   integer  $id        Parent ID
+	 * @param   int  $id        Parent ID
 	 * @param   array    $list      List of records
 	 * @param   array    $children  Container for parent/children mapping
-	 * @param   integer  $maxlevel  Maximum levels to descend
-	 * @param   integer  $level     Indention level
-	 * @param   integer  $type      Indention type
+	 * @param   int  $maxlevel  Maximum levels to descend
+	 * @param   int  $level     Indention level
+	 * @param   int  $type      Indention type
 	 * @param   string   $prfx
 	 * @return  array
 	 */
-	protected static function treeRecurse(int $id, array $list, array $children, int $maxlevel=9999, int $level=0, int $type=1, string $prfx = '')
+	protected static function treeRecurse(int $id, array $list, array $children, int $maxlevel=9999, int $level=0, int $type=1, string $prfx = ''): array
 	{
 		if (@$children[$id] && $level <= $maxlevel)
 		{
@@ -389,9 +372,9 @@ class Type extends Model
 	 *
 	 * @param   string  $start
 	 * @param   string  $stop
-	 * @return  array
+	 * @return  array<string,mixed>
 	 */
-	public function stats($start, $stop)
+	public function stats($start, $stop): array
 	{
 		$start = Carbon::parse($start);
 		$stop  = Carbon::parse($stop);
@@ -514,11 +497,11 @@ class Type extends Model
 	 * Method to move a row in the ordering sequence of a group of rows defined by an SQL WHERE clause.
 	 * Negative numbers move the row up in the sequence and positive numbers move it down.
 	 *
-	 * @param   integer  $delta  The direction and magnitude to move the row in the ordering sequence.
+	 * @param   int  $delta  The direction and magnitude to move the row in the ordering sequence.
 	 * @param   string   $where  WHERE clause to use for limiting the selection of rows to compact the ordering values.
 	 * @return  bool     True on success.
 	 */
-	public function move($delta, $where = '')
+	public function move($delta, $where = ''): bool
 	{
 		// If the change is none, do nothing.
 		if (empty($delta))
@@ -589,11 +572,11 @@ class Type extends Model
 	/**
 	 * Saves the manually set order of records.
 	 *
-	 * @param   array  $pks    An array of primary key ids.
-	 * @param   array  $order  An array of order values.
+	 * @param   array<int,int>  $pks    An array of primary key ids.
+	 * @param   array<int,int>  $order  An array of order values.
 	 * @return  bool
 	 */
-	public static function saveOrder($pks = null, $order = null)
+	public static function saveOrder($pks = null, $order = null): bool
 	{
 		if (empty($pks))
 		{

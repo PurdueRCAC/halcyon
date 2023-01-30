@@ -29,7 +29,7 @@ class Attachment extends \SplFileInfo
 	/**
 	 * Checks if the file is an image
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function isImage(): bool
 	{

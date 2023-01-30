@@ -13,10 +13,10 @@ trait Loggable
 	 * @param   string  $app
 	 * @param   string  $func
 	 * @param   string  $method
-	 * @param   integer $status
+	 * @param   int $status
 	 * @param   mixed   $payload
 	 * @param   string  $uri
-	 * @param   integer $targetuserid
+	 * @param   int $targetuserid
 	 * @return  null
 	 */
 	protected function log($app, $func, $method = 'GET', $status = 200, $payload = array(), $uri = '', $targetuserid = 0, $groupid = 0)

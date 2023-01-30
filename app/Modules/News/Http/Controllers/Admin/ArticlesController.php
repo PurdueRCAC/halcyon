@@ -22,7 +22,7 @@ class ArticlesController extends Controller
 	/**
 	 * Display templates?
 	 *
-	 * @var  integer
+	 * @var  int
 	 */
 	private $template = 0;
 
@@ -210,7 +210,7 @@ class ArticlesController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  View
 	 */
 	public function edit($id)
@@ -355,7 +355,7 @@ class ArticlesController extends Controller
 	 * Sets the state of one or more entries
 	 * 
 	 * @param  Request  $request
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return Response
 	 */
 	public function state(Request $request, $id)

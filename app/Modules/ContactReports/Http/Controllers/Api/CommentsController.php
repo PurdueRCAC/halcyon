@@ -95,7 +95,7 @@ class CommentsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return CommentResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -249,7 +249,7 @@ class CommentsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  Response|CommentResource
 	 */
 	public function create(Request $request)
 	{
@@ -336,8 +336,8 @@ class CommentsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer  $id
-	 * @return Response
+	 * @param  int  $id
+	 * @return CommentResource
 	 */
 	public function read($id)
 	{
@@ -426,8 +426,8 @@ class CommentsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @param   integer  $id
-	 * @return  Response
+	 * @param   int  $id
+	 * @return  Response|CommentResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -499,7 +499,7 @@ class CommentsController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $comment
+	 * @param   int  $comment
 	 * @return  Response
 	 */
 	public function delete($id)

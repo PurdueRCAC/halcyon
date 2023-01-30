@@ -86,7 +86,7 @@ class MembersController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
-	 * @param   integer $id
+	 * @param   int $id
 	 * @return  Response
 	 */
 	public function index(Request $request, $id)
@@ -955,7 +955,7 @@ class MembersController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer $id
+	 * @param   int $id
 	 * @return  Response
 	 */
 	public function read($id)

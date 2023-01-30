@@ -162,7 +162,7 @@ class Html
 	 * Build the select list for Menu Ordering
 	 *
 	 * @param   object   $row  The row object
-	 * @param   integer  $id   The id for the row. Must exist to enable menu ordering
+	 * @param   int  $id   The id for the row. Must exist to enable menu ordering
 	 * @return  string
 	 */
 	public static function ordering($row, $id)
@@ -196,8 +196,8 @@ class Html
 	/**
 	 * Build the multiple select list for Menu Links/Pages
 	 *
-	 * @param   boolean  $all         True if all can be selected
-	 * @param   boolean  $unassigned  True if unassigned can be selected
+	 * @param   bool  $all         True if all can be selected
+	 * @param   bool  $unassigned  True if unassigned can be selected
 	 * @return  string
 	 */
 	public static function linkoptions($all = false, $unassigned = false)
@@ -277,12 +277,12 @@ class Html
 	/**
 	 * Build the list representing the menu tree
 	 *
-	 * @param   integer  $id         Id of the menu item
+	 * @param   int  $id         Id of the menu item
 	 * @param   string   $indent     The indentation string
 	 * @param   array    $list       The list to process
 	 * @param   array    &$children  The children of the current item
-	 * @param   integer  $maxlevel   The maximum number of levels in the tree
-	 * @param   integer  $level      The starting level
+	 * @param   int  $maxlevel   The maximum number of levels in the tree
+	 * @param   int  $level      The starting level
 	 * @param   string   $type       Type of link: component, URL, alias, separator
 	 * @return  array
 	 */
@@ -329,9 +329,9 @@ class Html
 	/**
 	 * Returns a published state on a grid
 	 *
-	 * @param   integer  $value     The state value.
-	 * @param   integer  $i         The row index
-	 * @param   boolean  $enabled   An optional setting for access control on the action.
+	 * @param   int  $value     The state value.
+	 * @param   int  $i         The row index
+	 * @param   bool  $enabled   An optional setting for access control on the action.
 	 * @param   string   $checkbox  An optional prefix for checkboxes.
 	 * @return  string   The Html code
 	 */

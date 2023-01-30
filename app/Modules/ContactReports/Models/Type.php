@@ -3,6 +3,8 @@
 namespace App\Modules\ContactReports\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 use App\Modules\History\Traits\Historable;
 use App\Modules\ContactReports\Events\TypeCreated;
@@ -11,6 +13,14 @@ use App\Halcyon\Models\Timeperiod;
 
 /**
  * Model for Contact Report type
+ *
+ * @property int    $id
+ * @property string $name
+ * @property int    $timeperiodid
+ * @property int    $timeperiodcount
+ * @property int    $timeperiodlimit
+ * @property int    $waitperiodid
+ * @property int    $waitperiodcount
  */
 class Type extends Model
 {
@@ -20,7 +30,7 @@ class Type extends Model
 	 * The table to which the class pertains
 	 *
 	 * @var  string
-	 **/
+	 */
 	protected $table = 'contactreporttypes';
 
 	/**
@@ -73,22 +83,22 @@ class Type extends Model
 	];
 
 	/**
-	 * Split event into plugin name and event
+	 * Ensure name doesn't go past the length limit
 	 *
-	 * @param   string $value the data being saved
+	 * @param   string $value
 	 * @return  void
-	 **/
-	public function setNameAttribute($value)
+	 */
+	public function setNameAttribute($value): void
 	{
 		$this->attributes['name'] = Str::limit($value, 32);
 	}
 
 	/**
-	 * Split event into plugin name and event
+	 * Get a generated URL slug from the name
 	 *
 	 * @return  string
-	 **/
-	public function getAliasAttribute()
+	 */
+	public function getAliasAttribute(): string
 	{
 		$alias = trim($this->name);
 
@@ -105,7 +115,7 @@ class Type extends Model
 	 *
 	 * @return  void
 	 */
-	protected static function boot()
+	protected static function boot(): void
 	{
 		parent::boot();
 
@@ -128,9 +138,9 @@ class Type extends Model
 	/**
 	 * Defines a relationship to reports
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function reports()
+	public function reports(): HasMany
 	{
 		return $this->hasMany(Report::class, 'contactreporttypeid');
 	}
@@ -138,9 +148,9 @@ class Type extends Model
 	/**
 	 * Defines a relationship to timeperiod
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function timeperiod()
+	public function timeperiod(): BelongsTo
 	{
 		return $this->belongsTo(Timeperiod::class, 'timeperiodid');
 	}
@@ -148,9 +158,9 @@ class Type extends Model
 	/**
 	 * Defines a relationship to wait timeperiod
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function waitperiod()
+	public function waitperiod(): BelongsTo
 	{
 		return $this->belongsTo(Timeperiod::class, 'waitperiodid');
 	}
@@ -159,8 +169,8 @@ class Type extends Model
 	 * Find a model by its primary key.
 	 *
 	 * @param  string $name
-	 * @param  array  $columns
-	 * @return \Illuminate\Database\Eloquent\Model|null
+	 * @param  array<int,string>  $columns
+	 * @return Type|null
 	 */
 	public static function findByName($name, $columns = ['*'])
 	{
@@ -175,9 +185,9 @@ class Type extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @return boolean False if error, True on success
+	 * @return bool False if error, True on success
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		// Remove children
 		foreach ($this->reports as $report)

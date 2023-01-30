@@ -355,7 +355,7 @@ class PagesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return Response|PageResource
 	 */
 	public function read($id)
@@ -504,7 +504,7 @@ class PagesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return Response|PageResource
 	 */
 	public function update(Request $request, $id)
@@ -561,7 +561,7 @@ class PagesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer $id
+	 * @param   int $id
 	 * @return  Response
 	 */
 	public function delete($id)

@@ -3,7 +3,7 @@
 namespace App\Modules\Knowledge\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -154,7 +154,7 @@ class FeedbackController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -319,7 +319,7 @@ class FeedbackController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return JsonResponse|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -398,8 +398,8 @@ class FeedbackController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer $id
-	 * @return Response
+	 * @param  int $id
+	 * @return JsonResource
 	 */
 	public function read($id)
 	{
@@ -475,8 +475,8 @@ class FeedbackController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
-	 * @param   integer $id
-	 * @return  Response
+	 * @param   int $id
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -534,8 +534,8 @@ class FeedbackController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer $id
-	 * @return Response
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
 	public function delete($id)
 	{

@@ -298,7 +298,7 @@ class WidgetsController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 * 
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @param  Request $request
 	 * @return Response
 	 */
@@ -523,7 +523,7 @@ class WidgetsController extends Controller
 	 * Sets the state of one or more entries
 	 * 
 	 * @param  Request $request
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return Response
 	 */
 	public function state(Request $request, $id)
@@ -572,7 +572,7 @@ class WidgetsController extends Controller
 	/**
 	 * Reorder entries
 	 * 
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @param   Request $request
 	 * @return  Response
 	 */

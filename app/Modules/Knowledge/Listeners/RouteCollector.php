@@ -2,22 +2,23 @@
 
 namespace App\Modules\Knowledge\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Knowledge\Models\Page;
 use App\Modules\Knowledge\Models\Associations;
 use App\Modules\Menus\Events\CollectingRoutes;
 
 /**
- * Menu listener for sessions
+ * Route collecter for events
  */
 class RouteCollector
 {
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events)
 	{
 		$events->listen(CollectingRoutes::class, self::class . '@handleCollectingRoutes');
 	}

@@ -209,7 +209,7 @@ class ConstantsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return Response
 	 */
 	public function read($id)
@@ -262,7 +262,7 @@ class ConstantsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function update(Request $request, $id)
@@ -322,7 +322,7 @@ class ConstantsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete($id)

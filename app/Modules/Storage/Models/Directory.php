@@ -183,9 +183,9 @@ class Directory extends Model
 	/**
 	 * Add a message to the message queue
 	 *
-	 * @param   integer  $typeid
-	 * @param   integer  $userid
-	 * @param   integer  $offset
+	 * @param   int  $typeid
+	 * @param   int  $userid
+	 * @param   int  $offset
 	 * @return  void
 	 */
 	public function addMessageToQueue($typeid = null, $userid = 0, $offset = 0)

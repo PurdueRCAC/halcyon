@@ -189,13 +189,13 @@ class ResourcesController extends Controller
 	/**
 	 * Recursive function to build tree
 	 *
-	 * @param   integer  $id        Parent ID
+	 * @param   int  $id        Parent ID
 	 * @param   string   $indent    Indent text
 	 * @param   array    $list      List of records
 	 * @param   array    $children  Container for parent/children mapping
-	 * @param   integer  $maxlevel  Maximum levels to descend
-	 * @param   integer  $level     Indention level
-	 * @param   integer  $type      Indention type
+	 * @param   int  $maxlevel  Maximum levels to descend
+	 * @param   int  $level     Indention level
+	 * @param   int  $type      Indention type
 	 * @return  array
 	 */
 	protected function treeRecurse($id, $indent, $list, $children, $maxlevel=9999, $level=0, $type=1)
@@ -246,7 +246,7 @@ class ResourcesController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return Response
 	 */
 	public function edit($id)
@@ -449,7 +449,7 @@ class ResourcesController extends Controller
 	 * Display a listing of the resource.
 	 *
 	 * @param  StatefulRequest $request
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return Response
 	 */
 	public function members(Request $request, $id)
@@ -475,7 +475,7 @@ class ResourcesController extends Controller
 	 * Download a list of records
 	 * 
 	 * @param  array $rows
-	 * @param  integer $id
+	 * @param  int $id
 	 * @return Response
 	 */
 	public function export($rows, $id)

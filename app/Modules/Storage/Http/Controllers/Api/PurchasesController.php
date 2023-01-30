@@ -482,7 +482,7 @@ class PurchasesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  integer  $id
+	 * @param  int  $id
 	 * @return  Response
 	 */
 	public function read($id)
@@ -614,7 +614,7 @@ class PurchasesController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @param   Request  $request
 	 * @return  Response
 	 */
@@ -812,7 +812,7 @@ class PurchasesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   integer  $id
+	 * @param   int  $id
 	 * @return  Response
 	 */
 	public function delete($id)

@@ -29,7 +29,7 @@ class File extends \SplFileInfo
 	/**
 	 * Checks if the file is an image
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function isImage(): bool
 	{
@@ -119,7 +119,7 @@ class File extends \SplFileInfo
 	/**
 	 * Get image width (if an image)
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getWidth(): int
 	{
@@ -129,7 +129,7 @@ class File extends \SplFileInfo
 	/**
 	 * Get image height (if an image)
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function getHeight(): int
 	{
@@ -140,7 +140,7 @@ class File extends \SplFileInfo
 	 * Get image pixel dimension (width or height)
 	 *
 	 * @param   string  $dim
-	 * @return  integer
+	 * @return  int
 	 */
 	private function calculateDimension($dim): int
 	{

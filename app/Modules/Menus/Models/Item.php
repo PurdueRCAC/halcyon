@@ -4,6 +4,8 @@ namespace App\Modules\Menus\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Menus\Events\ItemCreating;
 use App\Modules\Menus\Events\ItemCreated;
@@ -19,7 +21,35 @@ use Carbon\Carbon;
 use Exception;
 
 /**
- * Model for a news article update
+ * Model for a menu item
+ *
+ * @property int    $id
+ * @property string $menutype
+ * @property string $title
+ * @property string $alias
+ * @property string $note
+ * @property string $path
+ * @property string $link
+ * @property string $type
+ * @property int    $published
+ * @property int    $parent_id
+ * @property int    $level
+ * @property int    $module_id
+ * @property int    $ordering
+ * @property int    $checked_out
+ * @property Carbon|null $checked_out_time
+ * @property int    $target
+ * @property int    $access
+ * @property string $class
+ * @property string $params
+ * @property int    $lft
+ * @property int    $rgt
+ * @property int    $home
+ * @property string $language
+ * @property int    $client_id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  */
 class Item extends Model
 {
@@ -97,7 +127,7 @@ class Item extends Model
 	 * @param   string  $alias
 	 * @return  void
 	 */
-	public function setAliasAttribute(string $alias)
+	public function setAliasAttribute(string $alias): void
 	{
 		$alias = trim($alias);
 
@@ -117,9 +147,9 @@ class Item extends Model
 	/**
 	 * Get parent
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function parent()
+	public function parent(): BelongsTo
 	{
 		return $this->belongsTo(self::class, 'parent_id');
 	}
@@ -127,9 +157,9 @@ class Item extends Model
 	/**
 	 * Get child entries
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function children()
+	public function children(): HasMany
 	{
 		return $this->hasMany(self::class, 'parent_id');
 	}
@@ -137,9 +167,9 @@ class Item extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @return  boolean  False if error, True on success
+	 * @return  bool  False if error, True on success
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		// Remove children
 		foreach ($this->children as $child)
@@ -154,8 +184,9 @@ class Item extends Model
 	/**
 	 * Save the record
 	 *
-	 * @param   array    $options
-	 * @return  boolean  False if error, True on success
+	 * @param   array  $options
+	 * @return  bool   False if error, True on success
+	 * @throws  Exception
 	 */
 	public function save(array $options = [])
 	{
@@ -216,7 +247,7 @@ class Item extends Model
 
 			if (!$parent->id)
 			{
-				throw new \Exception(trans('Parent node does not exist.'));
+				throw new Exception(trans('Parent node does not exist.'));
 			}
 
 			// Get the reposition data for shifting the tree and re-inserting the node.
@@ -280,12 +311,12 @@ class Item extends Model
 	/**
 	 * Method to recursively rebuild the whole nested set tree.
 	 *
-	 * @param   integer  $parentId  The root of the tree to rebuild.
-	 * @param   integer  $leftId    The left id to start with in building the tree.
-	 * @param   integer  $level     The level to assign to the current nodes.
+	 * @param   int  $parentId  The root of the tree to rebuild.
+	 * @param   int  $leftId    The left id to start with in building the tree.
+	 * @param   int  $level     The level to assign to the current nodes.
 	 * @param   string   $path      The path to the current nodes.
 	 * @param   string   $orderby
-	 * @return  integer  1 + value of root rgt on success, false on failure
+	 * @return  int  1 + value of root rgt on success, false on failure
 	 */
 	public function rebuild(int $parentId, int $leftId = 0, int $level = 0, string $path = '', string $orderby = 'lft')
 	{
@@ -358,10 +389,10 @@ class Item extends Model
 	 *
 	 * @param   object   $referenceNode  A node object with at least a 'lft' and 'rgt' with
 	 *                                   which to make room in the tree around for a new node.
-	 * @param   integer  $nodeWidth      The width of the node for which to make room in the tree.
+	 * @param   int  $nodeWidth      The width of the node for which to make room in the tree.
 	 * @param   string   $position       The position relative to the reference node where the room
 	 *                                   should be made.
-	 * @return  mixed    Boolean false on failure or data object on success.
+	 * @return  bool|\stdClass  Boolean false on failure or data object on success.
 	 */
 	protected function getTreeRepositionData($referenceNode, int $nodeWidth, string $position = 'before')
 	{
@@ -434,8 +465,9 @@ class Item extends Model
 	 * Get a form
 	 *
 	 * @return  Form
+	 * @throws  Exception
 	 */
-	public function getForm()
+	public function getForm(): Form
 	{
 		$file = __DIR__ . '/Forms/item.xml';
 
@@ -446,7 +478,7 @@ class Item extends Model
 
 		if (!$form->loadFile($file, false, '//form'))
 		{
-			throw new \Exception(trans('global.load file failed'));
+			throw new Exception(trans('global.load file failed'));
 		}
 
 		$data = $this->toArray();
@@ -482,10 +514,10 @@ class Item extends Model
 	 * @param   Form    $form  A form object.
 	 * @param   mixed   $data  The data expected for the form.
 	 * @param   string  $group
-	 * @return  void
+	 * @return  Form
 	 * @throws  Exception if there is an error in the form event.
 	 */
-	protected function preprocessForm(Form $form, $data, $group = 'content')
+	protected function preprocessForm(Form $form, $data, $group = 'content'): Form
 	{
 		// Initialise variables.
 		$link = $this->link;
@@ -670,9 +702,9 @@ class Item extends Model
 	 * Method to rebuild the node's path field from the alias values of the
 	 * nodes from the current node to the root node of the tree.
 	 *
-	 * @return  boolean  True on success.
+	 * @return  bool  True on success.
 	 */
-	public function rebuildPath()
+	public function rebuildPath(): bool
 	{
 		// Get the aliases for the path from the node to the root node.
 		$path = $this->parent->path;
@@ -711,11 +743,12 @@ class Item extends Model
 	 * Method to move a row in the ordering sequence of a group of rows defined by an SQL WHERE clause.
 	 * Negative numbers move the row up in the sequence and positive numbers move it down.
 	 *
-	 * @param   integer  $delta  The direction and magnitude to move the row in the ordering sequence.
+	 * @param   int  $delta  The direction and magnitude to move the row in the ordering sequence.
 	 * @param   string   $where  WHERE clause to use for limiting the selection of rows to compact the ordering values.
-	 * @return  mixed    Boolean true on success.
+	 * @return  bool    Boolean true on success.
+	 * @throws  \Exception
 	 */
-	public function move($delta, $where = '')
+	public function move($delta, $where = ''): bool
 	{
 		$query = self::query()
 			->where('parent_id', '=', $this->parent_id)
@@ -748,16 +781,17 @@ class Item extends Model
 			return $this->moveByReference($referenceId, $position, $this->id);
 		}
 
-		throw new \Exception(trans('global.error.move failed') . ': Reference not found for delta ' . $delta);
+		throw new Exception(trans('global.error.move failed') . ': Reference not found for delta ' . $delta);
 	}
 
 	/**
 	 * Method to move a node and its children to a new location in the tree.
 	 *
-	 * @param   integer  $referenceId  The primary key of the node to reference new location by.
-	 * @param   string   $position     Location type string. ['before', 'after', 'first-child', 'last-child']
-	 * @param   integer  $pk           The primary key of the node to move.
-	 * @return  boolean  True on success.
+	 * @param   int     $referenceId  The primary key of the node to reference new location by.
+	 * @param   string  $position     Location type string. ['before', 'after', 'first-child', 'last-child']
+	 * @param   int     $pk           The primary key of the node to move.
+	 * @return  bool    True on success.
+	 * @throws  \Exception
 	 */
 	public function moveByReference(int $referenceId, string $position = 'after', int $pk = 0)
 	{
@@ -770,7 +804,7 @@ class Item extends Model
 		if (!$node->id)
 		{
 			// Error message set in getNode method.
-			throw new \Exception(trans('global.error.move failed') . ': Node not found #' . $pk);
+			throw new Exception(trans('global.error.move failed') . ': Node not found #' . $pk);
 		}
 
 		// Get the ids of child nodes.
@@ -783,7 +817,7 @@ class Item extends Model
 		// Cannot move the node to be a child of itself.
 		if (in_array($referenceId, $children))
 		{
-			throw new \Exception(trans('global.error.invalid node recursion'));
+			throw new Exception(trans('global.error.invalid node recursion'));
 		}
 
 		// Move the sub-tree out of the nested sets by negating its left and right values.
@@ -818,7 +852,7 @@ class Item extends Model
 
 			if (!$reference)
 			{
-				throw new \Exception(trans('global.error.move failed') . ': Reference not found #' . $referenceId);
+				throw new Exception(trans('global.error.move failed') . ': Reference not found #' . $referenceId);
 			}
 
 			// Get the reposition data for shifting the tree and re-inserting the node.
@@ -895,7 +929,7 @@ class Item extends Model
 	 * @param   array  $order  An array of order values.
 	 * @return  bool
 	 */
-	public static function saveorder(array $pks = [], array $order = [])
+	public static function saveorder(array $pks = [], array $order = []): bool
 	{
 		if (empty($pks))
 		{

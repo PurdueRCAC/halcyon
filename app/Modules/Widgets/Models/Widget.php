@@ -107,8 +107,9 @@ class Widget extends Model
 	 * The "booted" method of the model.
 	 *
 	 * @return void
+	 * @throws \Exception
 	 */
-	protected static function booted()
+	protected static function booted(): void
 	{
 		static::creating(function ($model)
 		{
@@ -135,9 +136,9 @@ class Widget extends Model
 	/**
 	 * Determine if record is enabled
 	 * 
-	 * @return  boolean
+	 * @return  bool
 	 */
-	public function isEnabled()
+	public function isEnabled(): bool
 	{
 		return ($this->published == 1);
 	}
@@ -145,9 +146,9 @@ class Widget extends Model
 	/**
 	 * Determine if record is disabled
 	 * 
-	 * @return  boolean
+	 * @return  bool
 	 */
-	public function isDisabled()
+	public function isDisabled(): bool
 	{
 		return !$this->isEnabled();
 	}
@@ -155,9 +156,9 @@ class Widget extends Model
 	/**
 	 * Determine if record is published
 	 * 
-	 * @return  boolean
+	 * @return  bool
 	 */
-	public function isPublished()
+	public function isPublished(): bool
 	{
 		if ($this->published != 1)
 		{
@@ -186,7 +187,7 @@ class Widget extends Model
 	 * @param   string  $position  The position.
 	 * @return  string
 	 */
-	public function generateNewTitle($title, $position)
+	public function generateNewTitle($title, $position): string
 	{
 		// Alter the title & alias
 		$models = self::query()
@@ -212,10 +213,10 @@ class Widget extends Model
 	 *
 	 * @param   string   $string  The source string.
 	 * @param   string   $style   The the style (default|dash).
-	 * @param   integer  $n       If supplied, this number is used for the copy, otherwise it is the 'next' number.
+	 * @param   int  $n       If supplied, this number is used for the copy, otherwise it is the 'next' number.
 	 * @return  string   The incremented string.
 	 */
-	protected static function incrementString($string, $style = 'default', $n = 0)
+	protected static function incrementString($string, $style = 'default', $n = 0): string
 	{
 		$incrementStyles = array(
 			'dash' => array(
@@ -272,7 +273,7 @@ class Widget extends Model
 	 *
 	 * @return  string
 	 */
-	public function path()
+	public function path(): string
 	{
 		if (is_null($this->path))
 		{
@@ -298,8 +299,9 @@ class Widget extends Model
 	 * Get a form
 	 *
 	 * @return  Form
+	 * @throws  \Exception
 	 */
-	public function getForm()
+	public function getForm(): Form
 	{
 		$file = __DIR__ . '/Forms/Widget.xml';
 
@@ -343,7 +345,7 @@ class Widget extends Model
 	 *
 	 * @return  void
 	 */
-	public function registerLanguage()
+	public function registerLanguage(): void
 	{
 		$name = strtolower($this->widget);
 
@@ -406,11 +408,12 @@ class Widget extends Model
 	/**
 	 * Save menu assignments for a widget
 	 *
-	 * @param   integer  $assignment
+	 * @param   int  $assignment
 	 * @param   array    $assigned
 	 * @return  bool
+	 * @throws  \Exception
 	 */
-	public function saveAssignment($assignment, $assigned)
+	public function saveAssignment($assignment, $assigned): bool
 	{
 		$assignment = $assignment ? $assignment : 0;
 
@@ -418,7 +421,6 @@ class Widget extends Model
 		if (!Menu::deleteByWidget($this->id))
 		{
 			throw new \Exception('Failed to remove previous menu assignments.');
-			return false;
 		}
 
 		// If the assignment is numeric, then something is selected (otherwise it's none).
@@ -477,11 +479,11 @@ class Widget extends Model
 	 * Method to move a row in the ordering sequence of a group of rows defined by an SQL WHERE clause.
 	 * Negative numbers move the row up in the sequence and positive numbers move it down.
 	 *
-	 * @param   integer  $delta  The direction and magnitude to move the row in the ordering sequence.
+	 * @param   int  $delta  The direction and magnitude to move the row in the ordering sequence.
 	 * @param   string   $where  WHERE clause to use for limiting the selection of rows to compact the ordering values.
 	 * @return  bool     True on success.
 	 */
-	public function move($delta, $where = '')
+	public function move($delta, $where = ''): bool
 	{
 		// If the change is none, do nothing.
 		if (empty($delta))
@@ -556,7 +558,7 @@ class Widget extends Model
 	 * @param   array  $order  An array of order values.
 	 * @return  bool
 	 */
-	public static function saveOrder(array $pks, array $order)
+	public static function saveOrder(array $pks, array $order): bool
 	{
 		if (empty($pks))
 		{

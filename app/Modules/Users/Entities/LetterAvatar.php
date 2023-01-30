@@ -24,7 +24,7 @@ class LetterAvatar
 	private $string;
 
 	/**
-	 * @var  integer
+	 * @var  int
 	 */
 	private $size;
 
@@ -54,7 +54,7 @@ class LetterAvatar
 	/**
 	 * Set the image size
 	 *
-	 * @param   integer  $size
+	 * @param   int  $size
 	 * @return  object
 	 */
 	public function setSize($size)
