@@ -418,9 +418,9 @@ class EmailCloak
 	 * Simple email cloaker
 	 *
 	 * @param   string   $mail    The -mail address to cloak.
-	 * @param   boolean  $mailto  True if text and mailing address differ
+	 * @param   bool  $mailto  True if text and mailing address differ
 	 * @param   string   $text    Text for the link
-	 * @param   boolean  $email   True if text is an e-mail address
+	 * @param   bool  $email   True if text is an e-mail address
 	 * @return  string   The cloaked email.
 	 */
 	public function cloak($mail, $mailto = true, $text = '', $email = true)

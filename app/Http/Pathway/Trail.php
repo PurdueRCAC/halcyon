@@ -16,7 +16,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Cursor position
 	 *
-	 * @var  integer
+	 * @var  int
 	 */
 	private $position = 0;
 
@@ -79,7 +79,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Set an item in the list
 	 *
-	 * @param   integer  $offset
+	 * @param   int  $offset
 	 * @param   object   $value
 	 * @return  void
 	 */
@@ -91,7 +91,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Get an item from the list
 	 *
-	 * @param   integer  $offset
+	 * @param   int  $offset
 	 * @return  mixed
 	 */
 	public function get($offset)
@@ -102,8 +102,8 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Check if an item exists
 	 *
-	 * @param   integer  $offset
-	 * @return  boolean
+	 * @param   int  $offset
+	 * @return  bool
 	 */
 	public function has($offset)
 	{
@@ -113,7 +113,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Unset an item
 	 *
-	 * @param   integer  $offset
+	 * @param   int  $offset
 	 * @return  void
 	 */
 	public function forget($offset)
@@ -156,7 +156,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Return position key
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function key()
 	{
@@ -176,7 +176,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Is current position valid?
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 */
 	public function valid()
 	{
@@ -186,8 +186,8 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Check if an item exists
 	 *
-	 * @param   integer  $offset
-	 * @return  boolean
+	 * @param   int  $offset
+	 * @return  bool
 	 */
 	public function offsetExists($offset)
 	{
@@ -197,7 +197,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Set an item in the list
 	 *
-	 * @param   integer  $offset
+	 * @param   int  $offset
 	 * @param   object   $value
 	 * @return  void
 	 */
@@ -209,7 +209,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Get an item from the list
 	 *
-	 * @param   integer  $offset
+	 * @param   int  $offset
 	 * @return  mixed
 	 */
 	public function offsetGet($offset)
@@ -220,7 +220,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Unset an item
 	 *
-	 * @param   integer  $offset
+	 * @param   int  $offset
 	 * @return  void
 	 */
 	public function offsetUnset($offset)
@@ -231,7 +231,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Return a count of the number of items
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
 	public function count()
 	{

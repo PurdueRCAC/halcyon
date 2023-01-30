@@ -76,7 +76,7 @@ class Image
 	/**
 	 * Displays a CAPTCHA image
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 */
 	private function render()
 	{
@@ -94,7 +94,7 @@ class Image
 	 *
 	 * @param   string   $word        Supplied CAPTCHA response to check
 	 * @param   string   $instanceNo  CAPTCHA instance number
-	 * @return  boolean  True if valid
+	 * @return  bool  True if valid
 	 */
 	private function _confirm($word, $instanceNo='')
 	{
@@ -112,7 +112,7 @@ class Image
 	 * Checks for a CAPTCHA response and Calls the CAPTCHA validity check
 	 *
 	 * @param   string   $code  Answer provided by user. Not needed for the Recaptcha implementation
-	 * @return  boolean  True if valid CAPTCHA response
+	 * @return  bool  True if valid CAPTCHA response
 	 */
 	public function handleValidation($event)
 	{

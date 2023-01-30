@@ -13,7 +13,7 @@ class Ckeditor
 	/**
 	 * Number of instances, used to ensure assets only get added once
 	 *
-	 * @var  integer
+	 * @var  int
 	 */
 	private static $instances = 0;
 
