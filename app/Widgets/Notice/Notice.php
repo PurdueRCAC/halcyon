@@ -152,11 +152,11 @@ class Notice extends Widget
 	/**
 	 * Calculate the time left from a date time
 	 *
-	 * @param   integer  $year    Year
-	 * @param   integer  $month   Month
-	 * @param   integer  $day     Day
-	 * @param   integer  $hour    Hour
-	 * @param   integer  $minute  Minute
+	 * @param   int  $year    Year
+	 * @param   int  $month   Month
+	 * @param   int  $day     Day
+	 * @param   int  $hour    Hour
+	 * @param   int  $minute  Minute
 	 * @return  array<int,int>
 	 */
 	private function _countdown($year, $month, $day, $hour, $minute)
@@ -186,7 +186,7 @@ class Notice extends Widget
 	 * Turn datetime YYYY-MM-DD hh:mm:ss to time
 	 *
 	 * @param   string   $stime  Datetime to convert
-	 * @return  integer
+	 * @return  int
 	 */
 	private function _mkt($stime)
 	{
@@ -200,7 +200,7 @@ class Notice extends Widget
 	/**
 	 * Break a timestamp into its parts
 	 *
-	 * @param   integer  $stime  Timestamp
+	 * @param   int  $stime  Timestamp
 	 * @return  array<string,string>
 	 */
 	private function _convert($stime)

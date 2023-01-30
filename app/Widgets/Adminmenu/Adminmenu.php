@@ -143,7 +143,7 @@ class Adminmenu extends Widget
 	/**
 	 * Get a list of the authorised, non-special components to display in the components menu.
 	 *
-	 * @param   boolean  $authCheck  An optional switch to turn off the auth check (to support custom layouts 'grey out' behaviour).
+	 * @param   bool  $authCheck  An optional switch to turn off the auth check (to support custom layouts 'grey out' behaviour).
 	 * @return  \Illuminate\Support\Collection  A collection of objects and submenus
 	 */
 	public function getModules($authCheck = true)

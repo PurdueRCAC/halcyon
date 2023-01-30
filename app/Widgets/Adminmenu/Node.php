@@ -60,7 +60,7 @@ class Node
 	/**
 	 * Active Node?
 	 *
-	 * @var  boolean
+	 * @var  bool
 	 */
 	public $active = false;
 
@@ -156,7 +156,7 @@ class Node
 	/**
 	 * Test if this node has children
 	 *
-	 * @return   boolean  True if there are children
+	 * @return  bool  True if there are children
 	 */
 	public function hasChildren()
 	{
@@ -166,7 +166,7 @@ class Node
 	/**
 	 * Test if this node has a parent
 	 *
-	 * @return  boolean  True if there is a parent
+	 * @return  bool  True if there is a parent
 	 */
 	public function hasParent()
 	{

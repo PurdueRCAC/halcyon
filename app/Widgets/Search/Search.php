@@ -11,7 +11,7 @@ class Search extends Widget
 	/**
 	 * Number of instances of the widget
 	 *
-	 * @var  integer
+	 * @var  int
 	 */
 	public static $instances = 0;
 

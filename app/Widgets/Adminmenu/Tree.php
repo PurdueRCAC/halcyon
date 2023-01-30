@@ -41,8 +41,8 @@ class Tree
 	/**
 	 * Method to add a child
 	 *
-	 * @param   Node     $node       The node to process
-	 * @param   boolean  $setCurrent  True to set as current working node
+	 * @param   Node  $node       The node to process
+	 * @param   bool  $setCurrent  True to set as current working node
 	 * @return  void
 	 */
 	public function addChild($node, $setCurrent = false)
@@ -128,7 +128,7 @@ class Tree
 	/**
 	 * Render a menu level
 	 *
-	 * @param   integer $depth
+	 * @param   int $depth
 	 * @return  void
 	 */
 	public function renderLevel($depth)

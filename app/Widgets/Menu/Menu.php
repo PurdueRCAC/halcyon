@@ -89,7 +89,7 @@ class Menu extends Widget
 					$items[$lastitem]->level_diff = ($items[$lastitem]->level - $item->level);
 				}
 
-				$item->parent = (boolean) $menu->getItems('parent_id', (int) $item->id, true);
+				$item->parent = (bool) $menu->getItems('parent_id', (int) $item->id, true);
 
 				$lastitem = $i;
 				$item->active = false;

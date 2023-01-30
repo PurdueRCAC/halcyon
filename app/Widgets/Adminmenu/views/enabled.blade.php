@@ -1,7 +1,7 @@
 <?php
 use App\Widgets\Adminmenu\Node;
 
-$shownew = (boolean) $params->get('shownew', 1);
+$shownew = (bool) $params->get('shownew', 1);
 $user = auth()->user();
 $active = app('request')->segment(2);
 
