@@ -12,16 +12,16 @@ trait Validatable
 	/**
 	 * Validation errors
 	 *
-	 * @var  array
+	 * @var  array<int,string>
 	 **/
-	public $validationErrors;
+	public $validationErrors = array();
 
 	/**
 	 * Retrieves the model rules
 	 *
 	 * @return  array
 	 **/
-	public function getRules()
+	public function getRules(): array
 	{
 		if (!isset($this->rules))
 		{
@@ -36,9 +36,9 @@ trait Validatable
 	 *
 	 * @param   string  $key   The field to which the rule applies
 	 * @param   mixed   $rule  The rule to add
-	 * @return  $this
+	 * @return  self
 	 **/
-	public function addRule($key, $rule)
+	public function addRule($key, $rule): self
 	{
 		$this->getRules();
 
@@ -51,9 +51,9 @@ trait Validatable
 	 * Adds a new rule to the validation set
 	 *
 	 * @param   string  $key   The field to which the rule applies
-	 * @return  $this
+	 * @return  self
 	 **/
-	public function removeRule($key)
+	public function removeRule($key): self
 	{
 		$this->getRules();
 
@@ -71,7 +71,7 @@ trait Validatable
 	 * @param   array  $data
 	 * @return  bool
 	 **/
-	public function validate($data = array())
+	public function validate($data = array()): bool
 	{
 		if (!empty($this->rules))
 		{
@@ -98,7 +98,7 @@ trait Validatable
 	 *
 	 * @return  array
 	 **/
-	public function validationErrors()
+	public function validationErrors(): array
 	{
 		return $this->validationErrors;
 	}

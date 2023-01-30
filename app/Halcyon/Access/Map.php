@@ -3,9 +3,13 @@
 namespace App\Halcyon\Access;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * User/Role map
+ *
+ * @property int $user_id
+ * @property int $role_id
  */
 class Map extends Model
 {
@@ -50,9 +54,9 @@ class Map extends Model
 	/**
 	 * Defines a relationship to the User/Role Map
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function user()
+	public function user(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Model\User', 'user_id')->withDefault();
 	}
@@ -60,9 +64,9 @@ class Map extends Model
 	/**
 	 * Defines a relationship to the User/Role Map
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function role()
+	public function role(): BelongsTo
 	{
 		return $this->belongsTo(Role::class, 'role_id')->withDefault();
 	}
@@ -72,7 +76,7 @@ class Map extends Model
 	 *
 	 * @return bool
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		return self::query()
 			->where('role_id', '=', $this->role_id)
@@ -83,10 +87,10 @@ class Map extends Model
 	/**
 	 * Delete objects of this type by Role ID
 	 *
-	 * @param   mixed    $role_id  Integer or array of integers
-	 * @return  boolean
+	 * @param   mixed  $role_id  Integer or array of integers
+	 * @return  bool
 	 */
-	public static function destroyByRole($role_id)
+	public static function destroyByRole($role_id): bool
 	{
 		$role_id = (is_array($role_id) ? $role_id : array($role_id));
 
@@ -98,10 +102,10 @@ class Map extends Model
 	/**
 	 * Delete objects of this type by User ID
 	 *
-	 * @param   mixed    $user_id  Integer or array of integers
-	 * @return  boolean
+	 * @param   mixed  $user_id  Integer or array of integers
+	 * @return  bool
 	 */
-	public static function destroyByUser($user_id)
+	public static function destroyByUser($user_id): bool
 	{
 		$user_id = (is_array($user_id) ? $user_id : array($user_id));
 
@@ -113,11 +117,11 @@ class Map extends Model
 	/**
 	 * Add a user to access roles
 	 *
-	 * @param   mixed    $user_id   Integer
-	 * @param   mixed    $role_id  Integer or array of integers
-	 * @return  boolean
+	 * @param   mixed  $user_id  Integer
+	 * @param   mixed  $role_id  Integer or array of integers
+	 * @return  bool
 	 */
-	public static function addUserToRole($user_id, $role_id)
+	public static function addUserToRole($user_id, $role_id): bool
 	{
 		// Get the user's existing entries
 		$entries = self::query()
@@ -164,11 +168,11 @@ class Map extends Model
 	/**
 	 * Remove a user from an access roles
 	 *
-	 * @param   mixed    $user_id   Integer
-	 * @param   mixed    $role_id  Integer or array of integers
-	 * @return  boolean
+	 * @param   mixed  $user_id  Integer
+	 * @param   mixed  $role_id  Integer or array of integers
+	 * @return  bool
 	 */
-	public static function removeUserFromRole($user_id, $role_id)
+	public static function removeUserFromRole($user_id, $role_id): bool
 	{
 		$role_id = (is_array($role_id) ? $role_id : array($role_id));
 

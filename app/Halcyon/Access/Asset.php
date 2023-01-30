@@ -7,6 +7,19 @@ use Exception;
 
 /**
  * Access asset
+ * 
+ * An asset is an entry specifying permissions on some
+ * object. For example, an entry with name = 'page.123'
+ * refers to a Page entry with ID #123.
+ *
+ * @property int    $id
+ * @property int    $parent_id
+ * @property int    $lft
+ * @property int    $rgt
+ * @property int    $level
+ * @property string $name
+ * @property string $title
+ * @property string $rules
  */
 class Asset extends Nested
 {
@@ -44,7 +57,7 @@ class Asset extends Nested
 	 * @param   object|string  $rules
 	 * @return  void
 	 */
-	public function setRulesAttribute($rules)
+	public function setRulesAttribute($rules): void
 	{
 		if (!$rules)
 		{
@@ -63,9 +76,9 @@ class Asset extends Nested
 	 * Method to load an asset by it's name.
 	 *
 	 * @param   string  $name
-	 * @return  object
+	 * @return  self
 	 */
-	public static function findByName($name)
+	public static function findByName(string $name): self
 	{
 		$model = self::query()
 			->where('name', '=', $name)
@@ -82,10 +95,10 @@ class Asset extends Nested
 	/**
 	 * Method to load root node
 	 *
-	 * @return  Asset
+	 * @return  self
 	 * @throws  Exception
 	 */
-	public static function getRoot()
+	public static function getRoot(): self
 	{
 		$result = self::query()
 			->where('parent_id', '=', 0)
@@ -116,9 +129,9 @@ class Asset extends Nested
 	/**
 	 * Method to load root node ID
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
-	public static function getRootId()
+	public static function getRootId(): int
 	{
 		return self::getRoot()->id;
 	}

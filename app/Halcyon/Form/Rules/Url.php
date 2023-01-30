@@ -127,7 +127,7 @@ class Url extends Rule
 	 * Note: this function has been modified to simple return true or false.
 	 *
 	 * @param   string   $str  UTF-8 encoded string.
-	 * @return  boolean  true if valid
+	 * @return  bool  true if valid
 	 */
 	public static function valid($str)
 	{

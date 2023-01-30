@@ -88,9 +88,9 @@ class Extension extends Model
 	/**
 	 * Determine if record is published
 	 * 
-	 * @return  boolean
+	 * @return  bool
 	 */
-	public function isPublished()
+	public function isPublished(): bool
 	{
 		if ($this->published != 1)
 		{
@@ -119,7 +119,7 @@ class Extension extends Model
 	 * @param   string   $position     The position.
 	 * @return  array    Contains the modified title.
 	 */
-	public function generateNewTitle($title, $position)
+	public function generateNewTitle($title, $position): array
 	{
 		// Alter the title & alias
 		$models = self::query()
@@ -145,10 +145,10 @@ class Extension extends Model
 	 *
 	 * @param   string   $string  The source string.
 	 * @param   string   $style   The the style (default|dash).
-	 * @param   integer  $n       If supplied, this number is used for the copy, otherwise it is the 'next' number.
+	 * @param   int  $n       If supplied, this number is used for the copy, otherwise it is the 'next' number.
 	 * @return  string   The incremented string.
 	 */
-	protected static function incrementString($string, $style = 'default', $n = 0)
+	protected static function incrementString($string, $style = 'default', $n = 0): string
 	{
 		$incrementStyles = array(
 			'dash' => array(
@@ -205,7 +205,7 @@ class Extension extends Model
 	 *
 	 * @return  string
 	 */
-	public function path()
+	public function path(): string
 	{
 		if (is_null($this->path))
 		{
@@ -234,9 +234,10 @@ class Extension extends Model
 	/**
 	 * Get a form
 	 *
-	 * @return  object
+	 * @return  Form
+	 * @throws  \Exception
 	 */
-	public function getForm()
+	public function getForm(): Form
 	{
 		$file = __DIR__ . '/Forms/Widget.xml';
 
@@ -285,7 +286,7 @@ class Extension extends Model
 	 *
 	 * @return  void
 	 */
-	public function registerLanguage()
+	public function registerLanguage(): void
 	{
 		$name = $this->module;
 		if (substr($name, 0, 4) == 'mod_')

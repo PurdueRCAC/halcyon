@@ -284,7 +284,7 @@ class CasManager
 	 *
 	 * @param string $key
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function hasAttribute($key)
 	{
@@ -360,7 +360,7 @@ class CasManager
 	/**
 	 * Checks to see is user is authenticated locally
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isAuthenticated()
 	{
@@ -370,7 +370,7 @@ class CasManager
 	/**
 	 * Checks to see is user is globally in CAS
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function checkAuthentication()
 	{

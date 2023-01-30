@@ -19,8 +19,8 @@ class Contentlanguage
 	/**
 	 * Get a list of the available content language items.
 	 *
-	 * @param   boolean  $all        True to include All (*)
-	 * @param   boolean  $translate  True to translate All
+	 * @param   bool  $all        True to include All (*)
+	 * @param   bool  $translate  True to translate All
 	 * @return  string
 	 */
 	public static function existing($all = false, $translate = false)

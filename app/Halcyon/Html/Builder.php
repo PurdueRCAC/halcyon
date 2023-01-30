@@ -72,7 +72,7 @@ class Builder
 	 *
 	 * @param   string   $key       The name of the key
 	 * @param   array    $callable  Function or method
-	 * @return  boolean  True if the function is callable
+	 * @return  bool  True if the function is callable
 	 */
 	public function register($key, $callable)
 	{
@@ -89,7 +89,7 @@ class Builder
 	 * Removes a key for a method from registry.
 	 *
 	 * @param   string   $key  The name of the key
-	 * @return  boolean  True if a set key is unset
+	 * @return  bool  True if a set key is unset
 	 */
 	public function forget($key)
 	{
@@ -106,7 +106,7 @@ class Builder
 	 * Test if the key is registered.
 	 *
 	 * @param   string   $key  The name of the key
-	 * @return  boolean  True if the key is registered.
+	 * @return  bool  True if the key is registered.
 	 */
 	public function has($key)
 	{

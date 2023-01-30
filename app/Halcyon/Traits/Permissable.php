@@ -16,7 +16,7 @@ trait Permissable
 	 *
 	 * @return  string
 	 */
-	public function getAssetName()
+	public function getAssetName(): string
 	{
 		$name = (new \ReflectionClass($this))->getShortName();
 
@@ -32,7 +32,7 @@ trait Permissable
 	 *
 	 * @return  string  The string to use as the title in the asset table.
 	 */
-	public function getAssetTitle()
+	public function getAssetTitle(): string
 	{
 		return $this->getAssetName();
 	}
@@ -43,11 +43,11 @@ trait Permissable
 	 * By default, all assets are registered to the ROOT node with ID, which will default to 1 if none exists.
 	 * An extended class can define a table and ID to lookup.  If the asset does not exist it will be created.
 	 *
-	 * @param   Table    $table  A Table object for the asset parent.
-	 * @param   integer  $id     Id to look up
-	 * @return  integer
+	 * @param   Model  $model  A Table object for the asset parent.
+	 * @param   int    $id     ID to look up
+	 * @return  int
 	 */
-	public function getAssetParentId(Model $model = null, $id = null)
+	public function getAssetParentId(Model $model = null, $id = null): int
 	{
 		// For simple cases, parent to the asset root.
 		$assets = new Asset;

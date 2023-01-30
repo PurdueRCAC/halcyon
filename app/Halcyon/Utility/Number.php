@@ -22,11 +22,11 @@ class Number
 	 * larger size then what the PHP integer type will hold, then use a string.
 	 * It will be converted to a double, which should always have 64 bit length.
 	 *
-	 * @param   integer $bytes
-	 * @param   integer $decimals
+	 * @param   int $bytes
+	 * @param   int $decimals
 	 * @return  string
 	 */
-	public static function formatBytes($bytes = 0, $decimals = 2)
+	public static function formatBytes($bytes = 0, $decimals = 2): string
 	{
 		$quant = array(
 			'TB' => 1099511627776,  // pow(1024, 4)
@@ -58,10 +58,10 @@ class Number
 	/**
 	 * Convert a string to bytes
 	 *
-	 * @param   mixed  $value
+	 * @param   string  $value
 	 * @return  int
 	 */
-	public static function toBytes($value)
+	public static function toBytes($value): int
 	{
 		$value = str_replace(',', '', $value);
 		$neg = false;
@@ -125,11 +125,11 @@ class Number
 	 * echo Number::quantity(7500, 1); // 7.5K
 	 * </code>
 	 *
-	 * @param   integer $num
-	 * @param   integer $decimals
+	 * @param   int $num
+	 * @param   int $decimals
 	 * @return  string
 	 */
-	public static function quantity($num, $decimals = 0)
+	public static function quantity($num, $decimals = 0): string
 	{
 		if ($num >= 1000 && $num < 1000000)
 		{
@@ -162,7 +162,7 @@ class Number
 	 * @param   string $format the format to apply
 	 * @return  string
 	 */
-	public static function format($string = '', $format = '')
+	public static function format($string = '', $format = ''): string
 	{
 		if (empty($format) || empty($string))
 		{

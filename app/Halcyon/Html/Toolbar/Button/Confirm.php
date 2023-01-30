@@ -84,7 +84,7 @@ class Confirm extends Button
 	 * @param   string   $msg   The message to display.
 	 * @param   string   $name  Not used.
 	 * @param   string   $task  The task used by the application
-	 * @param   boolean  $list  True is requires a list confirmation.
+	 * @param   bool  $list  True is requires a list confirmation.
 	 * @return  string
 	 */
 	protected function _getCommand($msg, $name, $task, $list)

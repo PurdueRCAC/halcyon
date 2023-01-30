@@ -13,8 +13,8 @@ class Grid
 	/**
 	 * Display a boolean setting widget.
 	 *
-	 * @param   integer  $i        The row index.
-	 * @param   integer  $value    The value of the boolean field.
+	 * @param   int  $i        The row index.
+	 * @param   int  $value    The value of the boolean field.
 	 * @param   string   $taskOn   Task to turn the boolean setting on.
 	 * @param   string   $taskOff  Task to turn the boolean setting off.
 	 * @return  string   The boolean setting widget.
@@ -89,9 +89,9 @@ class Grid
 	/**
 	 * Method to create a checkbox for a grid row.
 	 *
-	 * @param   integer  $rowNum      The row index
-	 * @param   integer  $recId       The record id
-	 * @param   boolean  $checkedOut  True if item is checke out
+	 * @param   int  $rowNum      The row index
+	 * @param   int  $recId       The record id
+	 * @param   bool  $checkedOut  True if item is checke out
 	 * @param   string   $name        The name of the form element
 	 * @return  mixed    String of html with a checkbox if item is not checked out, null if checked out.
 	 */
@@ -114,7 +114,7 @@ class Grid
 	 * Displays a checked out icon.
 	 *
 	 * @param   object   &$row        A data object (must contain checkedout as a property).
-	 * @param   integer  $i           The index of the row.
+	 * @param   int  $i           The index of the row.
 	 * @param   string   $identifier  The property name of the primary key or index of the row.
 	 * @return  string
 	 */
@@ -167,7 +167,7 @@ class Grid
 	 * Method to create a clickable icon to change the state of an item
 	 *
 	 * @param   mixed    $value     Either the scalar value or an object (for backward compatibility, deprecated)
-	 * @param   integer  $i         The index
+	 * @param   int  $i         The index
 	 * @param   string   $prefix    An optional prefix for the task
 	 * @param   string   $checkbox  Checkbox ID prefix
 	 * @return  string
@@ -286,7 +286,7 @@ class Grid
 	 * Method to create a checked out icon with optional overlib in a grid.
 	 *
 	 * @param   object   &$row     The row object
-	 * @param   boolean  $tooltip  True if an overlib with checkout information should be created.
+	 * @param   bool  $tooltip  True if an overlib with checkout information should be created.
 	 * @return  string   HTML for the icon and tooltip
 	 */
 	protected static function _checkedOut(&$row, $tooltip = 1)
@@ -351,11 +351,11 @@ class Grid
 	/**
 	 * Returns a checked-out icon
 	 *
-	 * @param   integer       $i           The row index.
+	 * @param   int       $i           The row index.
 	 * @param   string        $editorName  The name of the editor.
 	 * @param   string        $time        The time that the object was checked out.
 	 * @param   string|array  $prefix      An optional task prefix or an array of options
-	 * @param   boolean       $enabled     True to enable the action.
+	 * @param   bool       $enabled     True to enable the action.
 	 * @param   string        $checkbox    An optional prefix for checkboxes.
 	 * @return  string  The required HTML.
 	 */
@@ -390,11 +390,11 @@ class Grid
 	 *                                    or ('task'=>task, 'text'=>text, 'active_title'=>active title,
 	 *                                    'inactive_title'=>inactive title, 'tip'=>boolean, 'active_class'=>html active class,
 	 *                                    'inactive_class'=>html inactive class)
-	 * @param   integer       $value      The state value.
-	 * @param   integer       $i          The row index
+	 * @param   int       $value      The state value.
+	 * @param   int       $i          The row index
 	 * @param   string|array  $prefix     An optional task prefix or an array of options
-	 * @param   boolean       $enabled    An optional setting for access control on the action.
-	 * @param   boolean       $translate  An optional setting for translation.
+	 * @param   bool       $enabled    An optional setting for access control on the action.
+	 * @param   bool       $translate  An optional setting for translation.
 	 * @param   string        $checkbox   An optional prefix for checkboxes.
 	 * @return  string        The Html code
 	 */
@@ -433,10 +433,10 @@ class Grid
 	/**
 	 * Returns a published state on a grid
 	 *
-	 * @param   integer       $value         The state value.
-	 * @param   integer       $i             The row index
+	 * @param   int       $value         The state value.
+	 * @param   int       $i             The row index
 	 * @param   string|array  $prefix        An optional task prefix or an array of options
-	 * @param   boolean       $enabled       An optional setting for access control on the action.
+	 * @param   bool       $enabled       An optional setting for access control on the action.
 	 * @param   string        $checkbox      An optional prefix for checkboxes.
 	 * @param   string        $publish_up    An optional start publishing date.
 	 * @param   string        $publish_down  An optional finish publishing date.
@@ -520,11 +520,11 @@ class Grid
 	/**
 	 * Creates a order-up action icon.
 	 *
-	 * @param   integer  $i         The row index.
+	 * @param   int  $i         The row index.
 	 * @param   string   $task      An optional task to fire.
 	 * @param   mixed    $prefix    An optional task prefix or an array of options
 	 * @param   string   $text      An optional text to display
-	 * @param   boolean  $enabled   An optional setting for access control on the action.
+	 * @param   bool  $enabled   An optional setting for access control on the action.
 	 * @param   string   $checkbox  An optional prefix for checkboxes.
 	 * @return  string   The required HTML.
 	 */
@@ -559,11 +559,11 @@ class Grid
 	/**
 	 * Creates a order-down action icon.
 	 *
-	 * @param   integer  $i         The row index.
+	 * @param   int  $i         The row index.
 	 * @param   string   $task      An optional task to fire.
 	 * @param   mixed    $prefix    An optional task prefix or an array of options
 	 * @param   string   $text      An optional text to display
-	 * @param   boolean  $enabled   An optional setting for access control on the action.
+	 * @param   bool  $enabled   An optional setting for access control on the action.
 	 * @param   string   $checkbox  An optional prefix for checkboxes.
 	 * @return  string   The required HTML.
 	 */
@@ -596,10 +596,10 @@ class Grid
 	/**
 	 * Returns a isDefault state on a grid
 	 *
-	 * @param   integer       $value     The state value.
-	 * @param   integer       $i         The row index
+	 * @param   int       $value     The state value.
+	 * @param   int       $i         The row index
 	 * @param   string|array  $prefix    An optional task prefix or an array of options
-	 * @param   boolean       $enabled   An optional setting for access control on the action.
+	 * @param   bool       $enabled   An optional setting for access control on the action.
 	 * @param   string        $checkbox  An optional prefix for checkboxes.
 	 * @return  string        The HTML code
 	 */
@@ -624,17 +624,17 @@ class Grid
 	/**
 	 * Returns an action on a grid
 	 *
-	 * @param   integer  $i               The row index
+	 * @param   int  $i               The row index
 	 * @param   string   $task            The task to fire
 	 * @param   mixed    $prefix          An optional task prefix or an array of options
 	 * @param   string   $text            An optional text to display
 	 * @param   string   $active_title    An optional active tooltip to display if $enable is true
 	 * @param   string   $inactive_title  An optional inactive tooltip to display if $enable is true
-	 * @param   boolean  $tip             An optional setting for tooltip
+	 * @param   bool  $tip             An optional setting for tooltip
 	 * @param   string   $active_class    An optional active HTML class
 	 * @param   string   $inactive_class  An optional inactive HTML class
-	 * @param   boolean  $enabled         An optional setting for access control on the action.
-	 * @param   boolean  $translate       An optional setting for translation.
+	 * @param   bool  $enabled         An optional setting for access control on the action.
+	 * @param   bool  $translate       An optional setting for translation.
 	 * @param   string   $checkbox        An optional prefix for checkboxes.
 	 * @return  string   The Html code
 	 */

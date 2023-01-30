@@ -215,7 +215,7 @@ class Sanitize
 	 * Replace discouraged characters introduced by Microsoft Word
 	 *
 	 * @param   string   $text        Text to clean
-	 * @param   boolean  $quotesOnly  Only clean quotes (single and double)
+	 * @param   bool  $quotesOnly  Only clean quotes (single and double)
 	 * @return  string
 	 */
 	public static function cleanMsChar($text, $quotesOnly=false)

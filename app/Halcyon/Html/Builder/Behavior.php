@@ -22,7 +22,7 @@ class Behavior
 	 * If debugging mode is on an uncompressed version of MooTools is included for easier debugging.
 	 *
 	 * @param   string   $extras  MooTools file to load
-	 * @param   boolean  $debug   Is debugging mode on? [optional]
+	 * @param   bool  $debug   Is debugging mode on? [optional]
 	 * @return  void
 	 */
 	public static function framework($extras = false, $debug = null)
@@ -77,11 +77,11 @@ class Behavior
 	/**
 	 * Push a script to a specific sport int he scripts list
 	 *
-	 * @param   integer $index
+	 * @param   int $index
 	 * @param   string  $url
 	 * @param   string  $type
-	 * @param   boolean $defer
-	 * @param   boolean $async
+	 * @param   bool $defer
+	 * @param   bool $async
 	 * @return  void
 	 */
 	private static function _pushScriptTo($index, $url, $type = 'text/javascript', $defer = false, $async = false)

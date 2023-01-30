@@ -93,7 +93,7 @@ class Access
 	 * @param   string   $name      The form field name.
 	 * @param   string   $selected  The name of the selected section.
 	 * @param   string   $attribs   Additional attributes to add to the select field.
-	 * @param   boolean  $allowAll  True to add "All Groups" option.
+	 * @param   bool  $allowAll  True to add "All Groups" option.
 	 * @return  string   The required HTML for the SELECT tag.
 	 */
 	public static function usergroup($name, $selected, $attribs = '', $allowAll = true)
@@ -162,7 +162,7 @@ class Access
 	 *
 	 * @param   string   $name             The name of the checkbox controls array
 	 * @param   array    $selected         An array of the checked boxes
-	 * @param   boolean  $checkSuperAdmin  If false only super admins can add to super admin groups
+	 * @param   bool  $checkSuperAdmin  If false only super admins can add to super admin groups
 	 * @return  string
 	 */
 	public static function roles($name, $selected, $checkSuperAdmin = false)

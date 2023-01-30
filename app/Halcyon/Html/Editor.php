@@ -138,9 +138,9 @@ class Editor
 	 * @param   string   $html     The contents of the text area.
 	 * @param   string   $width    The width of the text area (px or %).
 	 * @param   string   $height   The height of the text area (px or %).
-	 * @param   integer  $col      The number of columns for the textarea.
-	 * @param   integer  $row      The number of rows for the textarea.
-	 * @param   boolean  $buttons  True and the editor buttons will be displayed.
+	 * @param   int  $col      The number of columns for the textarea.
+	 * @param   int  $row      The number of rows for the textarea.
+	 * @param   bool  $buttons  True and the editor buttons will be displayed.
 	 * @param   string   $id       An optional ID for the textarea (note: since 1.6). If not supplied the name is used.
 	 * @param   string   $asset    The object asset
 	 * @param   object   $author   The author.

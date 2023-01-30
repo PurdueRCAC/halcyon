@@ -237,7 +237,7 @@ class Str
 	 * - `exact` If false, $text will not be cut mid-word
 	 *
 	 * @param   string   $text     String to truncate.
-	 * @param   integer  $length   Length of returned string, including ellipsis.
+	 * @param   int  $length   Length of returned string, including ellipsis.
 	 * @param   array    $options  An array of options.
 	 * @return  string   Trimmed string.
 	 */
@@ -278,7 +278,7 @@ class Str
 	 * - `html` If true, HTML tags would be handled correctly
 	 *
 	 * @param   string   $text     String to truncate.
-	 * @param   integer  $length   Length of returned string, including ellipsis.
+	 * @param   int  $length   Length of returned string, including ellipsis.
 	 * @param   array    $options  An array of html attributes and options.
 	 * @return  string   Trimmed string.
 	 */
@@ -407,7 +407,7 @@ class Str
 	 *
 	 * @param   string   $text      String to search the phrase in
 	 * @param   string   $phrase    Phrase that will be searched for
-	 * @param   integer  $radius    The amount of characters that will be returned on each side of the founded phrase
+	 * @param   int  $radius    The amount of characters that will be returned on each side of the founded phrase
 	 * @param   string   $ellipsis  Ending that will be appended
 	 * @return  string   Modified string
 	 */
@@ -485,8 +485,8 @@ class Str
 	/**
 	 * Format a number by prefixing or suffixing a character to a specificed length.
 	 *
-	 * @param   integer  $value   Number to format
-	 * @param   integer  $length  Final string length
+	 * @param   int  $value   Number to format
+	 * @param   int  $length  Final string length
 	 * @param   mixed    $char    Character to prepend
 	 * @param   bool     $prfx    Prefix or suffix string
 	 * @return  string

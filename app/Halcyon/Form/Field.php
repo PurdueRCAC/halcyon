@@ -44,21 +44,21 @@ abstract class Field
 	/**
 	 * The hidden state for the form field.
 	 *
-	 * @var    boolean
+	 * @var    bool
 	 */
 	protected $hidden = false;
 
 	/**
 	 * True to translate the field label string.
 	 *
-	 * @var  boolean
+	 * @var  bool
 	 */
 	protected $translateLabel = true;
 
 	/**
 	 * True to translate the field description string.
 	 *
-	 * @var  boolean
+	 * @var  bool
 	 */
 	protected $translateDescription = true;
 
@@ -87,7 +87,7 @@ abstract class Field
 	 * The multiple state for the form field.  If true then multiple values are allowed for the
 	 * field.  Most often used for list field types.
 	 *
-	 * @var  boolean
+	 * @var  bool
 	 */
 	protected $multiple = false;
 
@@ -116,7 +116,7 @@ abstract class Field
 	 * The required state for the form field.  If true then there must be a value for the field to
 	 * be considered valid.
 	 *
-	 * @var  boolean
+	 * @var  bool
 	 */
 	protected $required = false;
 
@@ -152,7 +152,7 @@ abstract class Field
 	/**
 	 * The count value for generated name field
 	 *
-	 * @var  integer
+	 * @var  int
 	 */
 	protected static $count = 0;
 
@@ -285,7 +285,7 @@ abstract class Field
 	 * @param   string  $group     The field name group control value. This acts as as an array container for the field.
 	 *                             For example if the field has name="foo" and the group value is set to "bar" then the
 	 *                             full field name would end up being "bar[foo]".
-	 * @return  boolean  True on success.
+	 * @return  bool  True on success.
 	 */
 	public function setup(&$element, $value, $group = null)
 	{

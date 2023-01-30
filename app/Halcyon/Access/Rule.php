@@ -42,7 +42,7 @@ class Rule implements Arrayable, Jsonable
 	 *
 	 * @return  array  A named array
 	 */
-	public function getData()
+	public function getData(): array
 	{
 		return $this->data;
 	}
@@ -53,7 +53,7 @@ class Rule implements Arrayable, Jsonable
 	 * @param   mixed  $identities  An integer or array of integers representing the identities to check.
 	 * @return  void
 	 */
-	public function mergeIdentities($identities)
+	public function mergeIdentities($identities): void
 	{
 		if ($identities instanceof Rule)
 		{
@@ -72,14 +72,14 @@ class Rule implements Arrayable, Jsonable
 	/**
 	 * Merges the values for an identity.
 	 *
-	 * @param   integer  $identity  The identity.
-	 * @param   boolean  $allow     The value for the identity (true == allow, false == deny).
+	 * @param   int   $identity  The identity.
+	 * @param   bool  $allow     The value for the identity (true == allow, false == deny).
 	 * @return  void
 	 */
-	public function mergeIdentity($identity, $allow)
+	public function mergeIdentity($identity, $allow): void
 	{
 		$identity = (int) $identity;
-		$allow = (int) ((boolean) $allow);
+		$allow = (int) ((bool) $allow);
 
 		// Check that the identity exists.
 		if (isset($this->data[$identity]))
@@ -126,7 +126,7 @@ class Rule implements Arrayable, Jsonable
 				// Check if the identity is known.
 				if (isset($this->data[$identity]))
 				{
-					$result = (boolean) $this->data[$identity];
+					$result = (bool) $this->data[$identity];
 
 					// An explicit deny wins.
 					if ($result === false)
@@ -146,7 +146,7 @@ class Rule implements Arrayable, Jsonable
 	 *
 	 * @return  string  JSON encoded string
 	 */
-	public function __toString()
+	public function __toString(): string
 	{
 		return (string)$this->toJson();
 	}
@@ -157,7 +157,7 @@ class Rule implements Arrayable, Jsonable
 	 * @param  int  $options
 	 * @return string
 	 */
-	public function toJson($options = 0)
+	public function toJson($options = 0): string
 	{
 		return json_encode($this->data, $options);
 	}
@@ -167,7 +167,7 @@ class Rule implements Arrayable, Jsonable
 	 *
 	 * @return array
 	 */
-	public function toArray()
+	public function toArray(): array
 	{
 		return $this->data;
 	}

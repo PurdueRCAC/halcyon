@@ -63,10 +63,10 @@ class Gate
 	/**
 	 * Method to check if a user is authorised to perform an action, optionally on an asset.
 	 *
-	 * @param   integer  $userId  Id of the user for which to check authorisation.
+	 * @param   int  $userId  Id of the user for which to check authorisation.
 	 * @param   string   $action  The name of the action to authorise.
 	 * @param   mixed    $asset   Integer asset id or the name of the asset as a string.  Defaults to the global asset node.
-	 * @return  boolean  True if authorised.
+	 * @return  bool  True if authorised.
 	 */
 	public static function check($userId, $action, $asset = null)
 	{
@@ -116,7 +116,7 @@ class Gate
 	/**
 	 * Determine if the given ability should be granted for the current user.
 	 *
-	 * @param  integer  $userId  Id of the user for which to check authorisation.
+	 * @param  int  $userId  Id of the user for which to check authorisation.
 	 * @param  string   $action  The name of the action to authorise.
 	 * @param  mixed    $asset   Integer asset id or the name of the asset as a string.  Defaults to the global asset node.
 	 * @return bool
@@ -214,10 +214,10 @@ class Gate
 	/**
 	 * Method to check if a role is authorised to perform an action, optionally on an asset.
 	 *
-	 * @param   integer  $roleId  The path to the role for which to check authorisation.
+	 * @param   int  $roleId  The path to the role for which to check authorisation.
 	 * @param   string   $action   The name of the action to authorise.
 	 * @param   mixed    $asset    Integer asset id or the name of the asset as a string.  Defaults to the global asset node.
-	 * @return  boolean  True if authorised.
+	 * @return  bool  True if authorised.
 	 */
 	public static function checkRole($roleId, $action, $asset = null)
 	{
@@ -308,7 +308,7 @@ class Gate
 	 * parent assets and explicit rules.
 	 *
 	 * @param   mixed    $asset      Integer asset id or the name of the asset as a string.
-	 * @param   boolean  $recursive  True to return the rules object with inherited rules.
+	 * @param   bool  $recursive  True to return the rules object with inherited rules.
 	 * @return  object   Rules object for the asset.
 	 */
 	public static function getAssetRules($asset, $recursive = false)
@@ -377,8 +377,8 @@ class Gate
 	 * only the roles explicitly mapped to the user or all roles both explicitly mapped and inherited
 	 * by the user.
 	 *
-	 * @param   integer  $userId     Id of the user for which to get the list of roles.
-	 * @param   boolean  $recursive  True to include inherited user roles.
+	 * @param   int  $userId     Id of the user for which to get the list of roles.
+	 * @param   bool  $recursive  True to include inherited user roles.
 	 * @return  array    List of user role ids to which the user is mapped.
 	 */
 	public static function getRolesByUser($userId, $recursive = true)
@@ -449,8 +449,8 @@ class Gate
 	/**
 	 * Method to return a list of user Ids contained in a Role
 	 *
-	 * @param   integer  $roleId    The role Id
-	 * @param   boolean  $recursive  Recursively include all child roles (optional)
+	 * @param   int  $roleId    The role Id
+	 * @param   bool  $recursive  Recursively include all child roles (optional)
 	 * @return  array
 	 * @todo    This method should move somewhere else
 	 */
@@ -485,7 +485,7 @@ class Gate
 	/**
 	 * Method to return a list of view levels for which the user is authorised.
 	 *
-	 * @param   integer  $userId  Id of the user for which to get the list of authorised view levels.
+	 * @param   int  $userId  Id of the user for which to get the list of authorised view levels.
 	 * @return  array    List of view levels for which the user is authorised.
 	 */
 	public static function getAuthorisedViewLevels($userId)
@@ -542,7 +542,7 @@ class Gate
 	 *
 	 * @param   string  $file    The path to the XML file.
 	 * @param   string  $section An optional xpath to search for the fields.
-	 * @return  boolean|array    False if case of error or the list of actions available.
+	 * @return  bool|array    False if case of error or the list of actions available.
 	 */
 	public static function getActionsFromFile($file, $section = 'module') //"/access/section[@name='module']/")
 	{
@@ -563,7 +563,7 @@ class Gate
 	 *
 	 * @param   string|SimpleXMLElement  $data   The XML string or an XML element.
 	 * @param   string                   $xpath  An optional xpath to search for the fields.
-	 * @return  boolean|array   False if case of error or the list of actions available.
+	 * @return  bool|array   False if case of error or the list of actions available.
 	 */
 	public static function getActionsFromData($data, $xpath = "/access/section[@name='module']/")
 	{
@@ -613,7 +613,7 @@ class Gate
 	 * Reads an XML file or string.
 	 *
 	 * @param   string   $data    Full path and file name.
-	 * @param   boolean  $isFile  true to load a file or false to load a string.
+	 * @param   bool  $isFile  true to load a file or false to load a string.
 	 * @return  mixed    SimpleXMLElement on success or false on error.
 	 * @todo    This may go in a separate class - error reporting may be improved.
 	 */

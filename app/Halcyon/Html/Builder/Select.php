@@ -68,7 +68,7 @@ class Select
 	 * @param   string   $optText    The name of the object variable for the option text.
 	 * @param   mixed    $selected   The key that is selected (accepts an array or a string).
 	 * @param   mixed    $idtag      Value of the field id or null by default
-	 * @param   boolean  $translate  True to translate
+	 * @param   bool  $translate  True to translate
 	 * @return  string   HTML for the select list.
 	 */
 	public static function genericlist($data, $name, $attribs = null, $optKey = 'value', $optText = 'text', $selected = null, $idtag = false, $translate = false)
@@ -257,9 +257,9 @@ class Select
 	/**
 	 * Generates a selection list of integers.
 	 *
-	 * @param   integer  $start     The start integer
-	 * @param   integer  $end       The end integer
-	 * @param   integer  $inc       The increment
+	 * @param   int  $start     The start integer
+	 * @param   int  $end       The end integer
+	 * @param   int  $inc       The increment
 	 * @param   string   $name      The value of the HTML name attribute
 	 * @param   mixed    $attribs   Additional HTML attributes for the <select> tag, an array of
 	 *                              attributes, or an array of options. Treated as options if it is the last
@@ -366,7 +366,7 @@ class Select
 	 *                             list of displayable scalars.
 	 * @param   string   $optText  The property that will hold the the displayed text. This
 	 *                             parameter is ignored if an options array is passed.
-	 * @param   boolean  $disable  Not used.
+	 * @param   bool  $disable  Not used.
 	 * @return  object
 	 */
 	public static function option($value, $text = '', $optKey = 'value', $optText = 'text', $disable = false)
@@ -461,7 +461,7 @@ class Select
 	 *                               list of displayable scalars.
 	 * @param   string   $optText    The name of the object variable for the option text.
 	 * @param   mixed    $selected   The key that is selected (accepts an array or a string)
-	 * @param   boolean  $translate  Translate the option values.
+	 * @param   bool  $translate  Translate the option values.
 	 * @return  string   HTML for the select list
 	 */
 	public static function options($arr, $optKey = 'value', $optText = 'text', $selected = null, $translate = false)
@@ -651,8 +651,8 @@ class Select
 	 * @param   mixed    $optKey     The key that is selected
 	 * @param   string   $optText    The name of the object variable for the option value
 	 * @param   string   $selected   The name of the object variable for the option text
-	 * @param   boolean  $idtag      Value of the field id or null by default
-	 * @param   boolean  $translate  True if options will be translated
+	 * @param   bool  $idtag      Value of the field id or null by default
+	 * @param   bool  $translate  True if options will be translated
 	 * @return  string   HTML for the select list
 	 */
 	public static function radiolist($data, $name, $attribs = null, $optKey = 'value', $optText = 'text', $selected = null, $idtag = false, $translate = false)
@@ -715,11 +715,11 @@ class Select
 	/**
 	 * Build the select list for Ordering derived from a query
 	 *
-	 * @param   integer  $name      The scalar value
+	 * @param   int  $name      The scalar value
 	 * @param   string   $query     The query
 	 * @param   string   $attribs   HTML tag attributes
 	 * @param   string   $selected  The selected item
-	 * @param   integer  $neworder  1 if new and first, -1 if new and last, 0  or null if existing item
+	 * @param   int  $neworder  1 if new and first, -1 if new and last, 0  or null if existing item
 	 * @param   string   $chop      The length of the truncated headline
 	 * @return  string   Html for the select list
 	 */
@@ -787,7 +787,7 @@ class Select
 	 * @param   array    $array         The array to map.
 	 * @param   string   $inner_glue    The glue (optional, defaults to '=') between the key and the value.
 	 * @param   string   $outer_glue    The glue (optional, defaults to ' ') between array elements.
-	 * @param   boolean  $keepOuterKey  True if final key should be kept.
+	 * @param   bool  $keepOuterKey  True if final key should be kept.
 	 * @return  string   The string mapped from the given array
 	 */
 	public static function toString($array = null, $inner_glue = '=', $outer_glue = ' ', $keepOuterKey = false)

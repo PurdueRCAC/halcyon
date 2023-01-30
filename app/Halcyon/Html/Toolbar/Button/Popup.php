@@ -24,10 +24,10 @@ class Popup extends Button
 	 * @param   string   $name     Button name
 	 * @param   string   $text     The link text
 	 * @param   string   $url      URL for popup
-	 * @param   integer  $width    Width of popup
-	 * @param   integer  $height   Height of popup
-	 * @param   integer  $top      Top attribute.
-	 * @param   integer  $left     Left attribute
+	 * @param   int  $width    Width of popup
+	 * @param   int  $height   Height of popup
+	 * @param   int  $top      Top attribute.
+	 * @param   int  $left     Left attribute
 	 * @param   string   $onClose  JavaScript for the onClose event.
 	 * @return  string   HTML string for the button
 	 */
@@ -65,10 +65,10 @@ class Popup extends Button
 	 *
 	 * @param   string   $name    Button name
 	 * @param   string   $url     URL for popup
-	 * @param   integer  $width   Unused formerly width.
-	 * @param   integer  $height  Unused formerly height.
-	 * @param   integer  $top     Unused formerly top attribute.
-	 * @param   integer  $left    Unused formerly left attribure.
+	 * @param   int  $width   Unused formerly width.
+	 * @param   int  $height  Unused formerly height.
+	 * @param   int  $top     Unused formerly top attribute.
+	 * @param   int  $left    Unused formerly left attribure.
 	 * @return  string   Command string
 	 */
 	protected function _getCommand($name, $url, $width, $height, $top, $left)

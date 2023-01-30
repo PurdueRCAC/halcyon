@@ -10,21 +10,21 @@ class Sliders
 	/**
 	 * Flag for if a pane is currently open or not
 	 *
-	 * @var  boolean
+	 * @var  bool
 	 */
 	public static $open = false;
 
 	/**
 	 * Flag for if a pane is currently open or not
 	 *
-	 * @var  boolean
+	 * @var  bool
 	 */
 	public static $group = 'sliders';
 
 	/**
 	 * Flag for if a pane is currently open or not
 	 *
-	 * @var  boolean
+	 * @var  bool
 	 */
 	private static $first = true;
 

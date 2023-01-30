@@ -10,7 +10,7 @@ class Tabs
 	/**
 	 * Flag for if a pane is currently open
 	 *
-	 * @var  boolean
+	 * @var  bool
 	 */
 	public static $open = false;
 

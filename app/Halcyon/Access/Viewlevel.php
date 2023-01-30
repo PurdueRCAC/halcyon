@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Viewlevel
+ *
+ * @property int    $id
+ * @property string $title
+ * @property int    $ordering
+ * @property string $rules
  */
 class Viewlevel extends Model
 {
@@ -58,9 +63,9 @@ class Viewlevel extends Model
 	/**
 	 * Generates ordering field value
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
-	public function incrementOrdering()
+	public function incrementOrdering(): int
 	{
 		$last = self::query()
 			->select('ordering')
@@ -76,7 +81,7 @@ class Viewlevel extends Model
 	 * @param   array  $options
 	 * @return  bool
 	 */
-	public function save(array $options = [])
+	public function save(array $options = []): bool
 	{
 		if (!$this->id && !$this->ordering)
 		{
@@ -91,7 +96,7 @@ class Viewlevel extends Model
 	 *
 	 * @return  string  Comma separated list of Roles
 	 */
-	public function visibleByRoles()
+	public function visibleByRoles(): string
 	{
 		$rules = is_string($this->rules) ? json_decode($this->rules) : $this->rules;
 

@@ -8,7 +8,7 @@ trait Sluggable
 	 * List of sluggable attributes
 	 *    source => result
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	public $sluggable = [
 		'title' => 'alias'
@@ -19,7 +19,7 @@ trait Sluggable
 	 *
 	 * @return  void
 	 */
-	public static function bootSluggable()
+	public static function bootSluggable(): void
 	{
 		static::saving(function ($model)
 		{
@@ -36,7 +36,7 @@ trait Sluggable
 	 * @param   string  $str
 	 * @return  string
 	 */
-	public function generateSlug($str)
+	public function generateSlug($str): string
 	{
 		return strtolower(preg_replace(
 			['/[^\w\s]+/', '/\s+/'],

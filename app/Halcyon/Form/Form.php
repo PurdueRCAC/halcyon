@@ -87,7 +87,7 @@ class Form
 	 * Method to bind data to the form.
 	 *
 	 * @param   mixed    $data  An array or object of data to bind to the form.
-	 * @return  boolean  True on success.
+	 * @return  bool  True on success.
 	 */
 	public function bind($data)
 	{
@@ -145,7 +145,7 @@ class Form
 	 * Method to determine if an array is an associative array.
 	 *
 	 * @param   array    $array  An array to test.
-	 * @return  boolean  True if the array is an associative array.
+	 * @return  bool  True if the array is an associative array.
 	 */
 	private static function isAssociative($array)
 	{
@@ -486,7 +486,7 @@ class Form
 	 * Method to get an array of Field objects in a given field group by name.
 	 *
 	 * @param   string   $group   The dot-separated form group path for which to get the form fields.
-	 * @param   boolean  $nested  True to also include fields in nested groups that are inside of the group for which to find fields.
+	 * @param   bool  $nested  True to also include fields in nested groups that are inside of the group for which to find fields.
 	 * @return  array    The array of Field objects in the field group.
 	 */
 	public function getGroup($group, $nested = false)
@@ -603,7 +603,7 @@ class Form
 	 * @param   string   $data     The name of an XML string or object.
 	 * @param   string   $replace  Flag to toggle whether form fields should be replaced if a field already exists with the same group/name.
 	 * @param   string   $xpath    An optional xpath to search for the fields.
-	 * @return  boolean  True on success, false otherwise.
+	 * @return  bool  True on success, false otherwise.
 	 */
 	public function load($data, $replace = true, $xpath = false)
 	{
@@ -715,7 +715,7 @@ class Form
 	 * @param   string   $reset  Flag to toggle whether form fields should be replaced if a field
 	 *                           already exists with the same group/name.
 	 * @param   string   $xpath  An optional xpath to search for the fields.
-	 * @return  boolean  True on success, false otherwise.
+	 * @return  bool  True on success, false otherwise.
 	 */
 	public function loadFile($file, $reset = true, $xpath = false)
 	{
@@ -736,7 +736,7 @@ class Form
 	 *
 	 * @param   string   $name   The name of the form field for which remove.
 	 * @param   string   $group  The optional dot-separated form group path on which to find the field.
-	 * @return  boolean  True on success.
+	 * @return  bool  True on success.
 	 */
 	public function removeField($name, $group = null)
 	{
@@ -764,7 +764,7 @@ class Form
 	 * Method to remove a group from the form definition.
 	 *
 	 * @param   string   $group  The dot-separated form group path for the group to remove.
-	 * @return  boolean  True on success.
+	 * @return  bool  True on success.
 	 */
 	public function removeGroup($group)
 	{
@@ -789,8 +789,8 @@ class Form
 	/**
 	 * Method to reset the form data store and optionally the form XML definition.
 	 *
-	 * @param   boolean  $xml  True to also reset the XML form definition.
-	 * @return  boolean  True on success.
+	 * @param   bool  $xml  True to also reset the XML form definition.
+	 * @return  bool  True on success.
 	 */
 	public function reset($xml = false)
 	{
@@ -813,8 +813,8 @@ class Form
 	 *
 	 * @param   object   &$element  The XML element object representation of the form field.
 	 * @param   string   $group     The optional dot-separated form group path on which to set the field.
-	 * @param   boolean  $replace   True to replace an existing field if one already exists.
-	 * @return  boolean  True on success.
+	 * @param   bool  $replace   True to replace an existing field if one already exists.
+	 * @return  bool  True on success.
 	 */
 	public function setField(&$element, $group = null, $replace = true)
 	{
@@ -880,7 +880,7 @@ class Form
 	 * @param   string   $attribute  The name of the attribute for which to set a value.
 	 * @param   mixed    $value      The value to set for the attribute.
 	 * @param   string   $group      The optional dot-separated form group path on which to find the field.
-	 * @return  boolean  True on success.
+	 * @return  bool  True on success.
 	 */
 	public function setFieldAttribute($name, $attribute, $value, $group = null)
 	{
@@ -918,8 +918,8 @@ class Form
 	 *
 	 * @param   object   &$elements  The array of XML element object representations of the form fields.
 	 * @param   string   $group      The optional dot-separated form group path on which to set the fields.
-	 * @param   boolean  $replace    True to replace existing fields if they already exist.
-	 * @return  boolean  True on success.
+	 * @param   bool  $replace    True to replace existing fields if they already exist.
+	 * @return  bool  True on success.
 	 */
 	public function setFields(&$elements, $group = null, $replace = true)
 	{
@@ -963,7 +963,7 @@ class Form
 	 * @param   string   $name   The name of the field for which to set the value.
 	 * @param   string   $group  The optional dot-separated form group path on which to find the field.
 	 * @param   mixed    $value  The value to set for the field.
-	 * @return  boolean  True on success.
+	 * @return  bool  True on success.
 	 */
 	public function setValue($name, $group = null, $value = null)
 	{
@@ -1429,7 +1429,7 @@ class Form
 	 * in a control group by name.
 	 *
 	 * @param   mixed    $group   The optional dot-separated form group path on which to find the fields. Null will return all fields. False will return fields not in a group.
-	 * @param   boolean  $nested  True to also include fields in nested groups that are inside of the group for which to find fields.
+	 * @param   bool  $nested  True to also include fields in nested groups that are inside of the group for which to find fields.
 	 * @return  mixed    Boolean false on error or array of SimpleXMLElement objects.
 	 */
 	protected function &findFieldsByGroup($group = null, $nested = false)
@@ -1654,7 +1654,7 @@ class Form
 	 * Proxy for Helper::loadFieldType().
 	 *
 	 * @param   string   $type  The field type.
-	 * @param   boolean  $new   Flag to toggle whether we should get a new instance of the object.
+	 * @param   bool  $new   Flag to toggle whether we should get a new instance of the object.
 	 * @return  mixed    Field object on success, false otherwise.
 	 */
 	protected function loadFieldType($type, $new = true)
@@ -1666,7 +1666,7 @@ class Form
 	 * Proxy for Helper::loadRuleType().
 	 *
 	 * @param   string   $type  The rule type.
-	 * @param   boolean  $new   Flag to toggle whether we should get a new instance of the object.
+	 * @param   bool  $new   Flag to toggle whether we should get a new instance of the object.
 	 * @return  mixed    Rule object on success, false otherwise.
 	 */
 	protected function loadRuleType($type, $new = true)
@@ -1677,7 +1677,7 @@ class Form
 	/**
 	 * Method to synchronize any field, form or rule paths contained in the XML document.
 	 *
-	 * @return  boolean  True on success.
+	 * @return  bool  True on success.
 	 */
 	protected function syncPaths()
 	{
@@ -2012,7 +2012,7 @@ class Form
 	 * Reads a XML file.
 	 *
 	 * @param   string   $data    Full path and file name.
-	 * @param   boolean  $isFile  true to load a file or false to load a string.
+	 * @param   bool  $isFile  true to load a file or false to load a string.
 	 * @return  mixed    XMLElement on success or false on error.
 	 */
 	public static function getXML($data, $isFile = true)

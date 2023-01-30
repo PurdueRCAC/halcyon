@@ -15,7 +15,7 @@ trait Checkable
 	 *
 	 * @return  bool
 	 **/
-	public function isCheckedOut()
+	public function isCheckedOut(): bool
 	{
 		return ($this->checked_out || $this->checked_out_time != null);//&& $this->checked_out != auth()->user()->id);
 	}
@@ -23,9 +23,9 @@ trait Checkable
 	/**
 	 * Checks out the current model
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 **/
-	public function checkOut()
+	public function checkOut(): bool
 	{
 		if ($this->{$this->primaryKey})
 		{
@@ -62,9 +62,9 @@ trait Checkable
 	/**
 	 * Checks back in the current model
 	 *
-	 * @return  boolean
+	 * @return  bool
 	 **/
-	public function checkIn()
+	public function checkIn(): bool
 	{
 		if ($this->{$this->primaryKey})
 		{

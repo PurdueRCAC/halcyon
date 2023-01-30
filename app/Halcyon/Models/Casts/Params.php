@@ -4,19 +4,20 @@ namespace App\Halcyon\Models\Casts;
 
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Database\Eloquent\Model;
 
 class Params implements CastsAttributes
 {
 	/**
 	 * Cast the given value.
 	 *
-	 * @param  \Illuminate\Database\Eloquent\Model  $model
+	 * @param  Model  $model
 	 * @param  string  $key
 	 * @param  mixed  $value
 	 * @param  array  $attributes
-	 * @return array
+	 * @return Repository
 	 */
-	public function get($model, $key, $value, $attributes)
+	public function get($model, $key, $value, $attributes): Repository
 	{
 		$value = $value ? json_decode($value, true) : array();
 
@@ -35,18 +36,18 @@ class Params implements CastsAttributes
 	/**
 	 * Prepare the given value for storage.
 	 *
-	 * @param  \Illuminate\Database\Eloquent\Model  $model
+	 * @param  Model  $model
 	 * @param  string  $key
 	 * @param  array  $value
 	 * @param  array  $attributes
 	 * @return string
 	 */
-	public function set($model, $key, $value, $attributes)
+	public function set($model, $key, $value, $attributes): string
 	{
 		if ($value instanceof Repository)
 		{
 			$value = $value->all();
 		}
-		return json_encode($value); //toString('json');
+		return json_encode($value);
 	}
 }

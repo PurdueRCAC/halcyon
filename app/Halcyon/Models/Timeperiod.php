@@ -3,11 +3,20 @@
 namespace App\Halcyon\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 use Carbon\Carbon;
 
 /**
  * Timeperiod
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $singular
+ * @property string $plural
+ * @property int    $unixtime
+ * @property int    $months
+ * @property int    $warningtimeperiodid
  */
 class Timeperiod extends Model
 {
@@ -53,11 +62,11 @@ class Timeperiod extends Model
 	);
 
 	/**
-	 * Field of science
+	 * Get the warning time period
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function warningTime()
+	public function warningTime(): BelongsTo
 	{
 		return $this->belongsTo(self::class, 'warningtimeperiodid');
 	}
@@ -68,7 +77,7 @@ class Timeperiod extends Model
 	 * @param   string  $dt
 	 * @return  string
 	 */
-	public function calculateDateFrom($dt)
+	public function calculateDateFrom($dt): string
 	{
 		$dt = Carbon::parse($dt);
 

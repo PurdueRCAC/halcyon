@@ -23,7 +23,7 @@ class Standard extends Button
 	 * @param   string   $name  The name of the button icon class.
 	 * @param   string   $text  Button text.
 	 * @param   string   $task  Task associated with the button.
-	 * @param   boolean  $list  True to allow lists
+	 * @param   bool  $list  True to allow lists
 	 * @return  string   HTML string for the button
 	 */
 	public function fetchButton($type = 'Standard', $name = 'secondary', $text = '', $task = '', $list = true)
@@ -64,8 +64,8 @@ class Standard extends Button
 	 * @param   string   $name      Name to be used as apart of the id
 	 * @param   string   $text      Button text
 	 * @param   string   $task      The task associated with the button
-	 * @param   boolean  $list      True to allow use of lists
-	 * @param   boolean  $hideMenu  True to hide the menu on click
+	 * @param   bool  $list      True to allow use of lists
+	 * @param   bool  $hideMenu  True to hide the menu on click
 	 * @return  string   Button CSS Id
 	 */
 	public function fetchId($type = 'Standard', $name = '', $text = '', $task = '', $list = true, $hideMenu = false)
@@ -78,7 +78,7 @@ class Standard extends Button
 	 *
 	 * @param   string   $name  The task name as seen by the user
 	 * @param   string   $task  The task used by the application
-	 * @param   boolean  $list  True is requires a list confirmation.
+	 * @param   bool  $list  True is requires a list confirmation.
 	 * @return  string
 	 */
 	protected function _getCommand($name, $task, $list)

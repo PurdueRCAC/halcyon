@@ -3,10 +3,18 @@
 namespace App\Halcyon\Access;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 /**
  * User role
+ *
+ * @property int    $id
+ * @property int    $parent_id
+ * @property int    $lft
+ * @property int    $rgt
+ * @property string $title
  */
 class Role extends Model
 {
@@ -57,14 +65,10 @@ class Role extends Model
 	];
 
 	/**
-	 * Sets up additional custom rules
-	 *
-	 * @return  void
-	 */
-		/**
 	 * The "booted" method of the model.
 	 *
 	 * @return void
+	 * @throws \Exception
 	 */
 	protected static function booted()
 	{
@@ -85,9 +89,9 @@ class Role extends Model
 	/**
 	 * Defines a relationship to the User/Role Map
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function maps()
+	public function maps(): HasMany
 	{
 		return $this->hasMany(Map::class, 'role_id');
 	}
@@ -95,9 +99,9 @@ class Role extends Model
 	/**
 	 * Get parent
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function parent()
+	public function parent(): BelongsTo
 	{
 		return $this->belongsTo(self::class, 'parent');
 	}
@@ -105,9 +109,9 @@ class Role extends Model
 	/**
 	 * Count descendents
 	 *
-	 * @return  integer
+	 * @return  int
 	 */
-	public function countDescendents()
+	public function countDescendents(): int
 	{
 		return static::query()
 				->where('lft', '<', $this->lft)
@@ -134,21 +138,21 @@ class Role extends Model
 	 * @param  array  $options
 	 * @return void
 	 */
-	protected function finishSave(array $options)
+	protected function finishSave(array $options): void
 	{
 		$this->rebuild();
 
-		return parent::finishSave($options);
+		parent::finishSave($options);
 	}
 
 	/**
 	 * Method to recursively rebuild the nested set tree.
 	 *
-	 * @param   integer  $parent_id  The root of the tree to rebuild.
-	 * @param   integer  $left       The left id to start with in building the tree.
-	 * @return  integer
+	 * @param   int  $parent_id  The root of the tree to rebuild.
+	 * @param   int  $left       The left id to start with in building the tree.
+	 * @return  int
 	 */
-	public function rebuild($parent_id = 0, $left = 0)
+	public function rebuild($parent_id = 0, $left = 0): int
 	{
 		// get all children of this node
 		$children = self::query()
@@ -165,12 +169,6 @@ class Role extends Model
 		{
 			// $right is the current right value, which is incremented on recursion return
 			$right = $this->rebuild($child->id, $right);
-
-			// if there is an update failure, return false to break out of the recursion
-			/*if ($right === false)
-			{
-				return false;
-			}*/
 		}
 
 		// we've got the left value, and now that we've processed
@@ -182,12 +180,6 @@ class Role extends Model
 				'rgt' => (int) $right
 			));
 
-		// if there is an update failure, return false to break out of the recursion
-		/*if (!$result)
-		{
-			return false;
-		}*/
-
 		// return the right value of this node + 1
 		return $right + 1;
 	}
@@ -195,9 +187,9 @@ class Role extends Model
 	/**
 	 * Delete the model from the database.
 	 *
-	 * @return bool|null
+	 * @return bool
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		if ($this->id == 0)
 		{

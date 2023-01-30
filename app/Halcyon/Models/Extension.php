@@ -8,6 +8,22 @@ use Nwidart\Modules\Facades\Module;
 
 /**
  * Extension
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $type
+ * @property string $element
+ * @property string $folder
+ * @property int    $clinet_id
+ * @property int    $enabled
+ * @property int    $access
+ * @property int    $protected
+ * @property string $params
+ * @property int    $checked_out
+ * @property Carbon|null $checked_out_time
+ * @property int    $ordering
+ * @property Carbon|null $updated_at
+ * @property int    $updated_by
  */
 class Extension extends Model
 {
@@ -63,7 +79,7 @@ class Extension extends Model
 	 * Get a module by name
 	 *
 	 * @param  string  $name
-	 * @return object|null
+	 * @return self|null
 	 */
 	public static function findByModule($name)
 	{
@@ -78,7 +94,7 @@ class Extension extends Model
 	 *
 	 * @return void
 	 */
-	public function registerLanguage()
+	public function registerLanguage(): void
 	{
 		if ($this->type == 'module' && Module::has($this->element))
 		{

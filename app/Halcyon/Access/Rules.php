@@ -54,7 +54,7 @@ class Rules implements Arrayable, Jsonable
 	 *
 	 * @return  array  A named array of Rule objects.
 	 */
-	public function getData()
+	public function getData(): array
 	{
 		return $this->data;
 	}
@@ -65,7 +65,7 @@ class Rules implements Arrayable, Jsonable
 	 * @param   mixed  $input  Rule or array of Rules
 	 * @return  void
 	 */
-	public function mergeCollection($input)
+	public function mergeCollection($input): void
 	{
 		// Check if the input is an array.
 		if (is_array($input))
@@ -83,7 +83,7 @@ class Rules implements Arrayable, Jsonable
 	 * @param   mixed  $actions  Rule object, an array of actions or a JSON string array of actions.
 	 * @return  void
 	 */
-	public function merge($actions)
+	public function merge($actions): void
 	{
 		if (is_string($actions))
 		{
@@ -115,7 +115,7 @@ class Rules implements Arrayable, Jsonable
 	 * @param   array   $identities  An array of identities
 	 * @return  void
 	 */
-	public function mergeAction($action, $identities)
+	public function mergeAction($action, $identities): void
 	{
 		if (isset($this->data[$action]))
 		{
@@ -154,9 +154,9 @@ class Rules implements Arrayable, Jsonable
 	 * Get the allowed actions for an identity.
 	 *
 	 * @param   mixed   $identity  An integer representing the identity or an array of identities
-	 * @return  object  Allowed actions for the identity or identities
+	 * @return  Fluent  Allowed actions for the identity or identities
 	 */
-	public function getAllowed($identity)
+	public function getAllowed($identity): Fluent
 	{
 		// Sweep for the allowed actions.
 		$allowed = new Fluent;
@@ -177,7 +177,7 @@ class Rules implements Arrayable, Jsonable
 	 *
 	 * @return  string  JSON representation of the actions array
 	 */
-	public function __toString()
+	public function __toString(): string
 	{
 		return $this->toJson();
 	}
@@ -188,7 +188,7 @@ class Rules implements Arrayable, Jsonable
 	 * @param  int  $options
 	 * @return string
 	 */
-	public function toJson($options = 0)
+	public function toJson($options = 0): string
 	{
 		$temp = array();
 
@@ -207,7 +207,7 @@ class Rules implements Arrayable, Jsonable
 	 *
 	 * @return array
 	 */
-	public function toArray()
+	public function toArray(): array
 	{
 		$temp = array();
 

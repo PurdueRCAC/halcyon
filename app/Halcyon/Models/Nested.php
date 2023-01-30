@@ -23,9 +23,9 @@ class Nested extends Model
 	 * @param   string  $pos   The position being updated, whether left or right
 	 * @param   int     $base  The base level after which values should be changed
 	 * @param   bool    $add   Whether or not we're adding or subtracted from existing
-	 * @return  Nested
+	 * @return  self
 	 **/
-	private function updateTrailing($pos = 'lft', $base = 0, $add = true)
+	private function updateTrailing($pos = 'lft', $base = 0, $add = true): self
 	{
 		// Reposition new values of displaced items
 		$query = self::query();//$this->newQuery();
@@ -44,9 +44,9 @@ class Nested extends Model
 	 *
 	 * @param   int    $base  The base level after which values should be changed
 	 * @param   bool   $add
-	 * @return  Nested
+	 * @return  self
 	 **/
-	private function resolveTrailing($base, $add = true)
+	private function resolveTrailing($base, $add = true): self
 	{
 		return $this->updateTrailing('lft', $base, $add)
 		            ->updateTrailing('rgt', $base, $add);
@@ -56,9 +56,9 @@ class Nested extends Model
 	 * Establishes the model as a proper object as needed
 	 *
 	 * @param   object|int  $model  The model to resolve
-	 * @return  Nested
+	 * @return  self
 	 **/
-	private function establishIsModel(&$model)
+	private function establishIsModel(&$model): self
 	{
 		// Turn model into an object if need be
 		if (!is_object($model))
@@ -73,9 +73,9 @@ class Nested extends Model
 	 * Sets the default scopes on the model
 	 *
 	 * @param   object|int  $parent  The parent of the child being created
-	 * @return  Nested
+	 * @return  self
 	 **/
-	private function establishBaseParametersFromParent($parent)
+	private function establishBaseParametersFromParent($parent): self
 	{
 		$this->parent_id = $parent->id;
 		$this->level = $parent->level + 1;
@@ -93,9 +93,9 @@ class Nested extends Model
 	 *
 	 * @param   object|int  $parent  The parent from which to inherit
 	 * @param   string      $method  The way in which scopes are applied
-	 * @return  Nested
+	 * @return  self
 	 **/
-	private function applyScopes($parent, $method = 'set')
+	private function applyScopes($parent, $method = 'set'): self
 	{
 		// Inherit scopes from parent
 		foreach ($this->scopes as $scope)
@@ -110,9 +110,9 @@ class Nested extends Model
 	 * Applies the scopes of the given model to the current pending query
 	 *
 	 * @param   object|int  $parent  The parent from which to inherit
-	 * @return  Nested
+	 * @return  self
 	 **/
-	private function applyScopesWhere($parent)
+	private function applyScopesWhere($parent): self
 	{
 		foreach ($this->scopes as $scope)
 		{
@@ -128,7 +128,7 @@ class Nested extends Model
 	 * @param   object|int  $parent  The parent of the child being created
 	 * @return  bool
 	 **/
-	public function saveAsChildOf($parent)
+	public function saveAsChildOf($parent): bool
 	{
 		$this->establishIsModel($parent)
 		     ->establishBaseParametersFromParent($parent);
@@ -155,7 +155,7 @@ class Nested extends Model
 	 * @param   object|int  $parent  The parent of the child being created
 	 * @return  bool
 	 **/
-	public function saveAsFirstChildOf($parent)
+	public function saveAsFirstChildOf($parent): bool
 	{
 		$this->establishIsModel($parent)
 		     ->establishBaseParametersFromParent($parent);
@@ -182,7 +182,7 @@ class Nested extends Model
 	 * @param   object|int  $parent  The parent of the child being created
 	 * @return  bool
 	 **/
-	public function saveAsLastChildOf($parent)
+	public function saveAsLastChildOf($parent): bool
 	{
 		return $this->saveAsChildOf($parent);
 	}
@@ -192,7 +192,7 @@ class Nested extends Model
 	 *
 	 * @return  bool
 	 **/
-	public function saveAsRoot()
+	public function saveAsRoot(): bool
 	{
 		// Compute the location where the item should reside
 		$this->parent_id = 0;
@@ -209,7 +209,7 @@ class Nested extends Model
 	 *
 	 * @return  bool
 	 **/
-	public function delete()
+	public function delete(): bool
 	{
 		if (!parent::delete())
 		{
@@ -236,7 +236,7 @@ class Nested extends Model
 	/**
 	 * Establishes the query for the immediate children of the current model
 	 *
-	 * @return  Nested
+	 * @return  object
 	 **/
 	public function children()
 	{
@@ -257,7 +257,7 @@ class Nested extends Model
 	 * Establishes the query for all of the descendants of the current model
 	 *
 	 * @param   int  $level  The level to limit to
-	 * @return  Nested
+	 * @return  object
 	 **/
 	public function descendants($level = null)
 	{

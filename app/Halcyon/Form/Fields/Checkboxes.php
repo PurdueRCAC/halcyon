@@ -22,7 +22,7 @@ class Checkboxes extends Field
 	/**
 	 * Flag to tell the field to always be in multiple values mode.
 	 *
-	 * @var  boolean
+	 * @var  bool
 	 */
 	protected $forceMultiple = true;
 
