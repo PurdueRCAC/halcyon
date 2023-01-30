@@ -508,7 +508,7 @@ $i = 0;
 						$qu = array();
 						$csv = array(
 							($member->user ? $member->user->name : trans('global.unknown')),
-							($member->user ? $member->username : trans('global.unknown')),
+							($member->user ? $member->user->username : trans('global.unknown')),
 							'Manager'
 						);
 						foreach ($queues as $queue):
@@ -707,7 +707,7 @@ $i = 0;
 							<?php
 							$csv = array(
 								($member->user ? $member->user->name : trans('global.unknown')),
-								($member->user ? $member->username : trans('global.unknown')),
+								($member->user ? $member->user->username : trans('global.unknown')),
 								'Member'
 							);
 							foreach ($queues as $queue):
@@ -901,7 +901,7 @@ $i = 0;
 						<?php
 						$csv = array(
 							($member->user ? $member->user->name : trans('global.unknown')),
-							($member->user ? $member->username : trans('global.unknown')),
+							($member->user ? $member->user->username : trans('global.unknown')),
 							'Viewer'
 						);
 						foreach ($queues as $queue):
@@ -1059,7 +1059,7 @@ $i = 0;
 							<?php
 							$csv = array(
 								($member->user ? $member->user->name : trans('global.unknown')),
-								($member->user ? $member->username : trans('global.unknown')),
+								($member->user ? $member->user->username : trans('global.unknown')),
 								'Disabled'
 							);
 							foreach ($queues as $queue):
