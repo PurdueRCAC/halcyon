@@ -201,6 +201,14 @@ document.addEventListener('DOMContentLoaded', function() {
 			AddNewProductRow();
 		});
 	});
+	document.querySelectorAll('.item-reset').forEach(function(el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			if (confirm(this.getAttribute('data-confirm'))) {
+				ResetItem(this.getAttribute('data-api'), this);
+			}
+		});
+	});
 
 	$('.contentInner')
 		.on('click', '.account-remove', function(e){
@@ -745,6 +753,11 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 											<td>
 												<div class="badge order-status fulfilled">{{ trans('orders::orders.fulfilled') }}</div>
 												<time datetime="{{ $item->datetimefulfilled->toDateTimeLocalString() }}">{{ $item->datetimefulfilled->format('M j, Y') }}</time>
+												@if (auth()->user()->can('manage orders'))
+													<div class="form-group mt-3 item-edit-hide" id="button_{{ $item->id }}">
+														<button name="adbutton" id="button_{{ $item->id }}_reset" class="btn btn-sm btn-warning item-reset" data-id="{{ $item->id }}" data-api="{{ route('api.orders.items.update', ['id' => $item->id]) }}" data-confirm="Are you sure you want to reset fullfilled status for this item?">Reset</button>
+													</div>
+												@endif
 											</td>
 										@endif
 										<td>

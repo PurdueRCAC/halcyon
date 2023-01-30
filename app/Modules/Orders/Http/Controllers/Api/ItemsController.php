@@ -507,6 +507,7 @@ class ItemsController extends Controller
 			'price' => 'nullable|integer',
 			'timeperiodcount' => 'nullable|integer',
 			'fulfilled' => 'nullable|integer',
+			'reset' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -563,6 +564,10 @@ class ItemsController extends Controller
 		if ($request->input('fulfilled'))
 		{
 			$row->datetimefulfilled = Carbon::now();
+		}
+		if ($request->input('reset'))
+		{
+			$row->datetimefulfilled = null;
 		}
 
 		$row->save();

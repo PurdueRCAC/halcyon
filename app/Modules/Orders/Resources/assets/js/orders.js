@@ -2077,6 +2077,42 @@ function FulfillItem(url, button) {
 	});
 }
 
+/**
+ * Reset an account
+ *
+ * @param   {string}  url
+ * @return  {void}
+ */
+/* exported ResetAccount */
+function ResetItem(url) {
+	var post = JSON.stringify({ "reset": 1 });
+
+	fetch(url, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+		},
+		body: post
+	})
+		.then(function (response) {
+			if (response.ok) {
+				window.location.reload();
+				return;
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.catch(function (error) {
+			alert(error);
+		});
+}
+
 var deleteaccounts = Array();
 var deleteitems = Array();
 var pendingupdates = 0;
