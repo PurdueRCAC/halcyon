@@ -2825,44 +2825,35 @@ function EditQuantities() {
 
 		// Alert the user that this will delete their order.
 		if (totalItems == 0) {
-			$('#error1').dialog({
-				modal: true,
-				width: 500,
-				buttons: {
-					"Cancel order": function() {
-						var order = document.getElementById("order").value;
+			if (confirm(b.getAttribute('data-confirm'))) {
+				var order = document.getElementById("order").value;
 
-						fetch(order, {
-							method: 'DELETE',
-							headers: {
-								'Content-Type': 'application/json',
-								'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-							}
-						})
-						.then(function (response) {
-							if (response.ok) {
-								window.location.reload();
-								return;
-							}
-							return response.json().then(function (data) {
-								var msg = data.message;
-								if (typeof msg === 'object') {
-									msg = Object.values(msg).join('<br />');
-								}
-								throw msg;
-							});
-						})
-						.catch(function (error) {
-							alert(error);
-						});
-					},
-					"Exit": function() {
-						$(this).dialog("close");
-						CancelEditAccounts();
+				fetch(order, {
+					method: 'DELETE',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 					}
-				}
-			});
-			$('#error1').dialog('open');
+				})
+				.then(function (response) {
+					if (response.ok) {
+						window.location.reload();
+						return;
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (error) {
+					alert(error);
+				});
+			} else {
+				CancelEditAccounts();
+			}
 			return;
 		}
 

@@ -3,6 +3,8 @@ namespace App\Modules\Orders\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 //use Illuminate\Support\Facades\DB;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Orders\Events\ItemUpdated;
@@ -10,7 +12,22 @@ use App\Modules\Orders\Helpers\Currency;
 use Carbon\Carbon;
 
 /**
- * NEws model mapping to resources
+ * Order item
+ *
+ * This represents each product in an order
+ *
+ * @property int    $id
+ * @property int    $orderid
+ * @property int    $orderproductid
+ * @property int    $origorderitemid
+ * @property int    $prevorderitemid
+ * @property int    $quantity
+ * @property int    $origunitprice
+ * @property int    $recurringtimeperiodid
+ * @property int    $timeperiodcount
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property Carbon|null $datetimefulfilled
  */
 class Item extends Model
 {
@@ -88,9 +105,9 @@ class Item extends Model
 	/**
 	 * Defines a relationship to order
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function order()
+	public function order(): BelongsTo
 	{
 		return $this->belongsTo(Order::class, 'orderid')->withTrashed();
 	}
@@ -98,9 +115,9 @@ class Item extends Model
 	/**
 	 * Defines a relationship to product
 	 *
-	 * @return  object
+	 * @return  HasOne
 	 */
-	public function product()
+	public function product(): HasOne
 	{
 		return $this->hasOne(Product::class, 'id', 'orderproductid')->withTrashed();
 	}
@@ -110,7 +127,7 @@ class Item extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isFulfilled()
+	public function isFulfilled(): bool
 	{
 		return (!is_null($this->datetimefulfilled));
 	}
@@ -120,7 +137,7 @@ class Item extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isRecurring()
+	public function isRecurring(): bool
 	{
 		return ($this->origorderitemid > 0);
 	}
@@ -130,7 +147,7 @@ class Item extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isOriginal()
+	public function isOriginal(): bool
 	{
 		return ($this->origorderitemid == $this->id);
 	}
@@ -140,7 +157,7 @@ class Item extends Model
 	 *
 	 * @return  array
 	 */
-	public function until()
+	public function until(): array
 	{
 		$datebilleduntil = null;
 		$datepaiduntil   = null;
@@ -394,7 +411,7 @@ class Item extends Model
 	 *
 	 * @return  string
 	 */
-	public function getFormattedPriceAttribute()
+	public function getFormattedPriceAttribute(): string
 	{
 		return $this->formatCurrency($this->origunitprice);
 	}
@@ -404,7 +421,7 @@ class Item extends Model
 	 *
 	 * @return  string
 	 */
-	public function getFormattedTotalAttribute()
+	public function getFormattedTotalAttribute(): string
 	{
 		return $this->formatCurrency($this->price);
 	}
@@ -415,7 +432,7 @@ class Item extends Model
 	 * @param   mixed  $val
 	 * @return  string
 	 */
-	public function formatCurrency($val)
+	public function formatCurrency($val): string
 	{
 		return Currency::formatNumber($val);
 	}

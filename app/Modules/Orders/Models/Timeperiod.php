@@ -2,9 +2,18 @@
 namespace App\Modules\Orders\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * Order model for timeperiod
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $singular
+ * @property string $plural
+ * @property int    $unixtime
+ * @property int    $months
+ * @property int    $warningtimeperiodid
  */
 class Timeperiod extends Model
 {
@@ -18,7 +27,7 @@ class Timeperiod extends Model
 	/**
 	 * Default order by for model
 	 *
-	 * @var string
+	 * @var  string
 	 */
 	public static $orderBy = 'id';
 
@@ -32,9 +41,9 @@ class Timeperiod extends Model
 	/**
 	 * Defines a relationship to a warning timeperiod
 	 *
-	 * @return  object
+	 * @return  HasOne
 	 */
-	public function warningtimeperiod()
+	public function warningtimeperiod(): HasOne
 	{
 		return $this->hasOne(self::class, 'id', 'warningtimeperiodid');
 	}

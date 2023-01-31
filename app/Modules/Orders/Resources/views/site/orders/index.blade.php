@@ -115,7 +115,7 @@ app('pathway')
 						</a>
 					</div>
 				</div>
-				<a href="#import-orders" class="btn btn-secondary btn-import">
+				<a href="#import-orders" data-toggle="modal" class="btn btn-secondary btn-import">
 					<span class="fa fa-upload" aria-hidden="true"></span> {{ trans('orders::orders.import') }}
 				</a>
 			</div>
@@ -294,6 +294,39 @@ app('pathway')
 	</div>
 </form>
 
+<div class="modal" id="import-orders" tabindex="-1" aria-labelledby="import-orders-title" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content dialog-content shadow-sm">
+			<div class="modal-header">
+				<div class="modal-title" id="import-orders-title">{{ trans('orders::orders.import') }}</div>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body dialog-body">
+				<form action="{{ route('site.orders.import') }}" method="post" enctype="multipart/form-data">
+					<p>CSV, XLSX (Excel), and ODS files are accepted. The first row must be headers with at least the following columns: order <code>ID</code>, <code>purchaseio</code> or <code>purchasewbse</code>, and <code>paymentdocid</code>.</p>
+
+					<div class="form-group dropzone">
+						<div id="uploader" class="fallback" data-instructions="Click or Drop files" data-list="#uploader-list">
+							<label for="upload">Choose a file<span class="dropzone__dragndrop"> or drag it here</span></label>
+							<input type="file" name="file" id="upload" class="form-control-file" multiple="multiple" />
+						</div>
+						<div class="file-list" id="uploader-list"></div>
+						<input type="hidden" name="tmp_dir" id="ticket-tmp_dir" value="{{ ('-' . time()) }}" />
+					</div>
+
+					<div class="text-center">
+						<input class="order btn btn-primary" type="submit" value="Import" />
+					</div>
+
+					@csrf
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 
 <div id="import-orders" class="dialog" title="{{ trans('orders::orders.import') }}">
 	<form action="{{ route('site.orders.import') }}" method="post" enctype="multipart/form-data">
 		<p>CSV, XLSX (Excel), and ODS files are accepted. The first row must be headers with at least the following columns: order <code>ID</code>, <code>purchaseio</code> or <code>purchasewbse</code>, and <code>paymentdocid</code>.</p>
@@ -314,6 +347,7 @@ app('pathway')
 		@csrf
 	</form>
 </div>
+			-->
 </div>
 </div>
 @stop

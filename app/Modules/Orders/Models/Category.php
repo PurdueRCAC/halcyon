@@ -3,10 +3,20 @@ namespace App\Modules\Orders\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Modules\History\Traits\Historable;
 
 /**
  * Model for news type
+ *
+ * @property int    $id
+ * @property int    $parentordercategoryid
+ * @property string $name
+ * @property string $description
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property int    $sequence
  */
 class Category extends Model
 {
@@ -68,7 +78,7 @@ class Category extends Model
 	 *
 	 * @return  void
 	 */
-	public static function boot()
+	public static function boot(): void
 	{
 		parent::boot();
 
@@ -103,9 +113,9 @@ class Category extends Model
 	/**
 	 * Defines a relationship to products
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function products()
+	public function products(): HasMany
 	{
 		return $this->hasMany(Product::class, 'ordercategoryid');
 	}
@@ -113,9 +123,9 @@ class Category extends Model
 	/**
 	 * Defines a relationship to parent category
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function parent()
+	public function parent(): BelongsTo
 	{
 		return $this->belongsTo(self::class, 'parentordercategoryid');
 	}
@@ -123,9 +133,9 @@ class Category extends Model
 	/**
 	 * Defines a relationship to child categories
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function children()
+	public function children(): HasMany
 	{
 		return $this->hasMany(self::class, 'parentordercategoryid');
 	}
@@ -135,7 +145,7 @@ class Category extends Model
 	 *
 	 * @return  string
 	 */
-	public function getAliasAttribute()
+	public function getAliasAttribute(): string
 	{
 		$alias = strtolower($this->name);
 		$alias = str_replace(' ', '-', $alias);
@@ -151,7 +161,7 @@ class Category extends Model
 	 * @param   string   $where  WHERE clause to use for limiting the selection of rows to compact the ordering values.
 	 * @return  bool     True on success.
 	 */
-	public function move($delta, $where = '')
+	public function move($delta, $where = ''): bool
 	{
 		// If the change is none, do nothing.
 		if (empty($delta))
@@ -226,7 +236,7 @@ class Category extends Model
 	 * @param   array  $order  An array of order values.
 	 * @return  bool
 	 */
-	public static function saveorder(array $pks = [], array $order = [])
+	public static function saveorder(array $pks = [], array $order = []): bool
 	{
 		if (empty($pks))
 		{

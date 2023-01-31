@@ -13,7 +13,7 @@ class Currency
 	 * @param   int  $value
 	 * @return  string
 	 */
-	public static function formatNumber($value)
+	public static function formatNumber($value): string
 	{
 		$number = preg_replace('/[^0-9\-]/', '', $value);
 

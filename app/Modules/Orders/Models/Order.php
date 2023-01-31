@@ -3,6 +3,8 @@ namespace App\Modules\Orders\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Groups\Models\Group;
@@ -14,6 +16,16 @@ use Carbon\Carbon;
 
 /**
  * Model for an order
+ *
+ * @property int    $id
+ * @property int    $userid
+ * @property int    $submitteruserid
+ * @property int    $groupid
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property string $usernotes
+ * @property string $staffnotes
+ * @property int    $notice
  */
 class Order extends Model
 {
@@ -85,9 +97,9 @@ class Order extends Model
 	/**
 	 * Defines a relationship to updates
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function items()
+	public function items(): HasMany
 	{
 		return $this->hasMany(Item::class, 'orderid')->where('quantity', '>', 0);
 	}
@@ -95,9 +107,9 @@ class Order extends Model
 	/**
 	 * Defines a relationship to accounts
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function accounts()
+	public function accounts(): HasMany
 	{
 		return $this->hasMany(Account::class, 'orderid');
 	}
@@ -105,9 +117,9 @@ class Order extends Model
 	/**
 	 * Defines a relationship to group
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function group()
+	public function group(): BelongsTo
 	{
 		return $this->belongsTo(Group::class, 'groupid');
 	}
@@ -115,9 +127,9 @@ class Order extends Model
 	/**
 	 * Defines a relationship to user
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function user()
+	public function user(): BelongsTo
 	{
 		return $this->belongsTo(User::class, 'userid');
 	}
@@ -125,9 +137,9 @@ class Order extends Model
 	/**
 	 * Defines a relationship to submitter
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function submitter()
+	public function submitter(): BelongsTo
 	{
 		return $this->belongsTo(User::class, 'submitteruserid');
 	}
@@ -138,7 +150,7 @@ class Order extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setUsernotesAttribute($value)
+	public function setUsernotesAttribute($value): void
 	{
 		$this->attributes['usernotes'] = strip_tags($value);
 	}
@@ -149,7 +161,7 @@ class Order extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setStaffnotesAttribute($value)
+	public function setStaffnotesAttribute($value): void
 	{
 		$this->attributes['staffnotes'] = strip_tags($value);
 	}
@@ -159,7 +171,7 @@ class Order extends Model
 	 *
 	 * @return  int
 	 */
-	public function getTotalAttribute()
+	public function getTotalAttribute(): int
 	{
 		$ordertotal = 0;
 
@@ -178,7 +190,7 @@ class Order extends Model
 	 * @param   mixed  $val
 	 * @return  string
 	 */
-	public function formatNumber($val)
+	public function formatNumber($val): string
 	{
 		return Currency::formatNumber($val);
 	}
@@ -188,7 +200,7 @@ class Order extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isCanceled()
+	public function isCanceled(): bool
 	{
 		return $this->trashed();
 	}
@@ -198,7 +210,7 @@ class Order extends Model
 	 *
 	 * @return  string
 	 */
-	public function getStatusAttribute()
+	public function getStatusAttribute(): string
 	{
 		if ($state = $this->getAttribute('state'))
 		{
@@ -325,7 +337,7 @@ class Order extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isActive()
+	public function isActive(): bool
 	{
 		return ($this->status != 'canceled' && $this->status != 'complete');
 	}
@@ -335,7 +347,7 @@ class Order extends Model
 	 *
 	 * @return  string
 	 */
-	public function getFormattedTotalAttribute()
+	public function getFormattedTotalAttribute(): string
 	{
 		return $this->formatNumber($this->total);
 	}
@@ -348,7 +360,7 @@ class Order extends Model
 	 * @param   int     $recurring
 	 * @return  array
 	 */
-	public static function stats($start, $stop, $recurring = -1)
+	public static function stats($start, $stop, $recurring = -1): array
 	{
 		$p = (new Product)->getTable();
 		$i = (new Item)->getTable();
@@ -653,7 +665,7 @@ class Order extends Model
 	 * @param   int  $avg
 	 * @return  string
 	 */
-	public static function toHumanReadable($avg)
+	public static function toHumanReadable($avg): string
 	{
 		$unit = '';
 

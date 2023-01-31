@@ -10,18 +10,24 @@
 <script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-	$('.edit-property').on('click', function(e){
-		e.preventDefault();
-		EditProperty($(this).data('prop'), $(this).data('value'));
+	document.querySelectorAll('.edit-property').forEach(function(el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			EditProperty(this.getAttribute('data-prop'), this.getAttribute('data-value'));
+		});
 	});
-	$('.edit-property-input').on('keyup', function(event){
-		if (event.keyCode == 13) {
-			EditProperty($(this).data('prop'), $(this).data('value'));
-		}
+	document.querySelectorAll('.edit-property-input').forEach(function(el) {
+		el.addEventListener('keyup', function(event){
+			if (event.keyCode == 13) {
+				EditProperty(this.getAttribute('data-prop'), this.getAttribute('data-value'));
+			}
+		});
 	});
-	$('.cancel-edit-property').on('click', function(e){
-		e.preventDefault();
-		CancelEditProperty($(this).data('prop'), $(this).data('value'));
+	document.querySelectorAll('.cancel-edit-property').forEach(function(el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			CancelEditProperty(this.getAttribute('data-prop'), this.getAttribute('data-value'));
+		});
 	});
 
 	var order_group_save = document.getElementById('order_group_save');
@@ -39,11 +45,15 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
-	$('.copy-doc').on('blur', function(e){
-		CopyDoc(this);
+	document.querySelectorAll('.copy-doc').forEach(function(el) {
+		el.addEventListener('blur', function(e){
+			CopyDoc(this);
+		});
 	});
-	$('.copy-docdate').on('change', function(e){
-		CopyDocDate(this);
+	document.querySelectorAll('.copy-docdate').forEach(function(el) {
+		el.addEventListener('change', function(e){
+			CopyDocDate(this);
+		});
 	});
 
 	$('.order')
@@ -65,26 +75,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		el.addEventListener('click', function(e){
 			e.preventDefault();
 			FulfillItem(this.getAttribute('data-api'), this);
-		});
-	});
-
-	$('#orderheaderpopup').dialog({
-		modal: true,
-		width: '550px',
-		autoOpen: false/*,
-		buttons : {
-			OK: {
-				text: 'OK',
-				click: function() {
-					$(this).dialog('close'); 
-				}
-			}
-		}*/
-	});
-	document.querySelectorAll('.order-status').forEach(function(el) {
-		el.addEventListener('click', function(e){
-			e.preventDefault();
-			$('#orderheaderpopup').dialog('open');
 		});
 	});
 
@@ -407,7 +397,8 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 			@if ($order->status == 'pending_payment')
 				<div class="alert alert-success">
 					<p>Your order has been submitted. Thank you for your order!</p>
-					<p><a href="#orderheaderpopup" class="order-status">Order status information</a></p>
+
+					<p><a href="#orderheaderpopup" data-toggle="modal" class="order-status">Order status information</a></p>
 				</div>
 				<ol class="steps">
 					<li class="text-success complete">Submit order</li>
@@ -423,15 +414,27 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 						<span id="remindorderspan"></span>
 					</p>
 				@endif
-				<div id="orderheaderpopup" class="stash" title="Order Submitted">
-					<p>Your order has been submitted. Thank you for your order! You should receive an email confirmation shortly.</p>
-					<p>Please review the order and enter account numbers to be used for payment below. You may also add any special instructions for the order in the notes box at the bottom of the page at any time.</p>
-					<p>Use the form directly below this box to enter your payment information. You or the person this order is for (if placing on behalf) may return to this page at a later time to enter payment information.</p>
+				<div class="modal" id="orderheaderpopup" tabindex="-1" aria-labelledby="orderheaderpopup-title" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content dialog-content shadow-sm">
+							<div class="modal-header">
+								<div class="modal-title" id="orderheaderpopup-title">Order Submitted</div>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body dialog-body">
+								<p>Your order has been submitted. Thank you for your order! You should receive an email confirmation shortly.</p>
+								<p>Please review the order and enter account numbers to be used for payment below. You may also add any special instructions for the order in the notes box at the bottom of the page at any time.</p>
+								<p>Use the form directly below this box to enter your payment information. You or the person this order is for (if placing on behalf) may return to this page at a later time to enter payment information.</p>
+							</div>
+						</div>
+					</div>
 				</div>
 			@elseif ($order->status == 'pending_boassignment')
 				<div class="alert alert-info">
 					<p>Payment information has been entered for this order.</p>
-					<p><a href="#orderheaderpopup" class="order-status">Order status information</a></p>
+					<p><a href="#orderheaderpopup" data-toggle="modal" class="order-status">Order status information</a></p>
 				</div>
 				<ol class="steps">
 					<li class="text-success complete">Submit order</li>
@@ -441,14 +444,26 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 					<li class="notmystep">Awaiting fulfillment by staff</li>
 					<li class="notmystep">Order Completion</li> 
 				</ol>
-				<div id="orderheaderpopup" class="stash" title="Payment Information Entered">
-					<p>Payment information has been entered. No further action is required.</p>
-					<p>Staff will assign this to your business office for approval. You will be updated on the progress of this order via email. You may return to this page at any time to view the current status.</p>
+				<div class="modal" id="orderheaderpopup" tabindex="-1" aria-labelledby="orderheaderpopup-title" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content dialog-content shadow-sm">
+							<div class="modal-header">
+								<div class="modal-title" id="orderheaderpopup-title">Payment Information Entered</div>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body dialog-body">
+								<p>Payment information has been entered. No further action is required.</p>
+								<p>Staff will assign this to your business office for approval. You will be updated on the progress of this order via email. You may return to this page at any time to view the current status.</p>
+							</div>
+						</div>
+					</div>
 				</div>
 			@elseif ($order->status == 'pending_approval')
 				<div class="alert alert-info">
 					<p>Order has been assigned to your business office and is awaiting their approval.</p>
-					<p><a href="#orderheaderpopup" class="order-status">Order status information</a></p>
+					<p><a href="#orderheaderpopup" data-toggle="modal" class="order-status">Order status information</a></p>
 				</div>
 				<ol class="steps">
 					<li class="text-success complete">Submit order</li>
@@ -458,14 +473,26 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 					<li class="notmystep">Awaiting fulfillment by staff</li>
 					<li class="notmystep">Order completion</li>
 				</ol>
-				<div id="orderheaderpopup" class="stash" title="Awaiting Business Office Approval">
-					<p>Order has been assigned to your business office and is awaiting their approval.</p>
-					<p>Please contact your business office directly if you have any questions about approval on this order. The assigned approver for each account is listed below.</p>
+				<div class="modal" id="orderheaderpopup" tabindex="-1" aria-labelledby="orderheaderpopup-title" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content dialog-content shadow-sm">
+							<div class="modal-header">
+								<div class="modal-title" id="orderheaderpopup-title">Awaiting Business Office Approval</div>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body dialog-body">
+								<p>Order has been assigned to your business office and is awaiting their approval.</p>
+								<p>Please contact your business office directly if you have any questions about approval on this order. The assigned approver for each account is listed below.</p>
+							</div>
+						</div>
+					</div>
 				</div>
 			@elseif ($order->status == 'pending_fulfillment')
 				<div class="alert alert-info">
 					<p>This order has been approved by your business office(s). Staff have begun the process of fulfilling this order.</p>
-					<p><a href="#orderheaderpopup" class="order-status">Order status information</a></p>
+					<p><a href="#orderheaderpopup" data-toggle="modal" class="order-status">Order status information</a></p>
 				</div>
 				<ol class="steps">
 					<li class="text-success complete">Submit order</li>
@@ -475,14 +502,26 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 					<li class="current step">Awaiting fulfillment by staff</li>
 					<li class="notmystep">Order completion</li>
 				</ol>
-				<div id="orderheaderpopup" class="stash" title="Awaiting Fulfillment">
-					<p>This order has been approved by your business office(s). Staff have begun the process of fulfilling this order.</p>
-					<p> You may be contacted directly by staff if further information is needed to fulfill the order or with information on how to access your new resources.</p>
+				<div class="modal" id="orderheaderpopup" tabindex="-1" aria-labelledby="orderheaderpopup-title" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content dialog-content shadow-sm">
+							<div class="modal-header">
+								<div class="modal-title" id="orderheaderpopup-title">Awaiting Fulfillment</div>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body dialog-body">
+								<p>This order has been approved by your business office(s). Staff have begun the process of fulfilling this order.</p>
+								<p>You may be contacted directly by staff if further information is needed to fulfill the order or with information on how to access your new resources.</p>
+							</div>
+						</div>
+					</div>
 				</div>
 			@elseif ($order->status == 'pending_collection')
 				<div class="alert alert-success">
 					<p>This order has been fulfilled. Please contact <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a> if you have questions on how to use new resources.</p>
-					<p><a href="#orderheaderpopup" class="order-status">Order status information</a></p>
+					<p><a href="#orderheaderpopup" data-toggle="modal" class="order-status">Order status information</a></p>
 				</div>
 				<ol class="steps">
 					<li class="text-success complete">Submit order</li>
@@ -492,9 +531,21 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 					<li class="text-success complete">Awaiting fulfillment by staff</li>
 					<li class="current step">Order completion</li>
 				</ol>
-				<div id="orderheaderpopup" class="stash" title="Order Complete">
-					<p>This order has been fulfilled. Please contact <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a> if you have  questions on how to use new resources.</p>
-					<p>The financial transactions may take several more weeks to process and complete between the business offices by this order is complete and resources are ready for you to use.</p>
+				<div class="modal" id="orderheaderpopup" tabindex="-1" aria-labelledby="orderheaderpopup-title" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content dialog-content shadow-sm">
+							<div class="modal-header">
+								<div class="modal-title" id="orderheaderpopup-title">Order Complete</div>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body dialog-body">
+								<p>This order has been fulfilled. Please contact <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a> if you have  questions on how to use new resources.</p>
+								<p>The financial transactions may take several more weeks to process and complete between the business offices by this order is complete and resources are ready for you to use.</p>
+							</div>
+						</div>
+					</div>
 				</div>
 			@elseif ($order->status == 'complete')
 				<ol class="steps">
@@ -505,9 +556,6 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 					<li class="text-success complete">Awaiting fulfillment by staff</li>
 					<li class="text-success complete">Order completion</li>
 				</ol>
-				<div id="orderheaderpopup" class="stash" title="Order Complete">
-					<p>This order is complete.</p>
-				</div>
 			@elseif ($order->status == 'canceled')
 				<p class="alert alert-danger">This order was canceled.</p>
 				<ol class="steps">
@@ -519,9 +567,6 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 					<li class="step"><del>Order completion</del></li>
 					<li class="text-success complete">Order Canceled</li>
 				</ol>
-				<div id="orderheaderpopup" class="stash" title="Order Canceled">
-					<p>This order was canceled.</p>
-				</div>
 			@endif
 			</div><!-- / .orderstatusblock -->
 		</div>
@@ -689,21 +734,27 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 								|| (
 									($order->status == 'pending_approval' || $order->status == 'pending_fulfillment') && auth()->user()->can('manage orders'))
 									|| ($order->status == 'pending_approval' && !$myorder)) && (auth()->user()->can('manage orders') || $myorder)): ?>
-									<a href="#help4" class="help icn tip" title="Help">
-										<span class="fa fa-question-circle" aria-hidden="true"></span> Help
+									<a href="#help4" data-toggle="modal" class="text-info tip" title="Help">
+										<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 									</a>
 
-									<button id="save_quantities" class="btn btn-sm btn-secondary" data-state="inactive" data-inactive="Edit Items" data-active="Save Changes">Edit Items</button>
+									<button id="save_quantities" class="btn btn-sm btn-secondary" data-state="inactive" data-inactive="Edit Items" data-active="Save Changes" data-confirm="Removing the last item will *cancel* your order. Do you wish to continue?">Edit Items</button>
 									<button id="cancel_quantities" class="btn btn-sm btn-link item-edit-show hide">Cancel Changes</button>
 
-									<div id="error1" title="Cancel Order?" class="dialog dialog-confirm">
-										<p>Removing the last item will <strong>cancel</strong> your order. Do you wish to continue?</p>
-									</div>
-
-									<div id="help4" title="Edit Quantities" class="dialog dialog-help">
-										<p>
-											Quantities may be edited while payment information is being approved. You will need to redistribute or remove the total cost difference from your accounts. Accounts that have already been approved may only be deleted.
-										</p>
+									<div class="modal" id="help4" tabindex="-1" aria-labelledby="help4-title" aria-hidden="true">
+										<div class="modal-dialog modal-dialog-centered">
+											<div class="modal-content dialog-content shadow-sm">
+												<div class="modal-header">
+													<div class="modal-title" id="help4-title">Edit Quantities</div>
+													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body dialog-body">
+													<p>Quantities may be edited while payment information is being approved. You will need to redistribute or remove the total cost difference from your accounts. Accounts that have already been approved may only be deleted.</p>
+												</div>
+											</div>
+										</div>
 									</div>
 								<?php endif; ?>
 							</div>
@@ -1168,8 +1219,8 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 							<tfoot>
 								<tr>
 									<td class="text-right" colspan="{{ count($order->accounts) == 0 ? 2 : 3 }}">
-										<a href="#help2" class="help icn"><!--
-											--><span id="balance_error" aria-hidden="true" class="fa fa-exclamation-triangle text-warning stash"></span><span class="sr-only">Balance should be $0.00 before saving changes.</span><!--
+										<a href="#help2" data-toggle="modal" class="text-warning"><!--
+											--><span id="balance_error" aria-hidden="true" class="fa fa-exclamation-triangle stash"></span><span class="sr-only">Balance should be $0.00 before saving changes.</span><!--
 										--></a>
 										<strong>{{ trans('orders::orders.balance remaining') }}</strong>
 									</td>
@@ -1187,16 +1238,28 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 							</tfoot>
 						</table>
 
-						<div id="help2" title="Payment Information" class="dialog dialog-help">
-							<p>
-								Please enter the accounts to be used for payment and the dollar amount to be charged to each account. Changes are not saved until you click the "Save Accounts" button.
-							</p>
-							<p>
-								Balance remaining must be <strong>$0.00</strong> after allocating amounts before you may save changes.
-							</p>
-							<p>
-								<img src="{{ asset('modules/orders/img/account_example.png') }}" alt="Example of payment allocation divided by multiple accounts." />
-							</p>
+						<div class="modal" id="help2" tabindex="-1" aria-labelledby="help2-title" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content dialog-content shadow-sm">
+									<div class="modal-header">
+										<div class="modal-title" id="help2-title">Payment Information</div>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body dialog-body">
+										<p>
+											Please enter the accounts to be used for payment and the dollar amount to be charged to each account. Changes are not saved until you click the "Save Accounts" button.
+										</p>
+										<p>
+											Balance remaining must be <strong>$0.00</strong> after allocating amounts before you may save changes.
+										</p>
+										<p>
+											<img src="{{ asset('modules/orders/img/account_example.png') }}" alt="Example of payment allocation divided by multiple accounts." />
+										</p>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div><!-- / .card -->
@@ -1209,8 +1272,8 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 								<div class="col-md-6">
 									<h3 class="panel-title card-title">
 										{{ trans('orders::orders.notes') }}
-										<a href="#help1" class="help icn tip" title="Help on Order Notes">
-											<span class="fa fa-question-circle" aria-hidden="true"></span> Help
+										<a href="#help1" data-toggle="modal" class="text-info tip" title="Help on Order Notes">
+											<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 										</a>
 									</h3>
 								</div>
@@ -1228,15 +1291,27 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 						@else
 							<h3 class="panel-title card-title">
 								{{ trans('orders::orders.notes') }}
-								<a href="#help1" class="help icn tip" title="Help on Order Notes">
-									<span class="fa fa-question-circle" aria-hidden="true"></span> Help
+								<a href="#help1" data-toggle="modal" class="text-info tip" title="Help on Order Notes">
+									<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 								</a>
 							</h3>
 						@endif
 					</div>
 					<div class="card-body">
-						<div id="help1" title="Order Notes" class="dialog dialog-help">
-							<p>Use this section to leave any special instructions, extra contact information, or any other notes for this order. {{ config('app.name') }} and your business office staff will be able to view these notes.</p>
+						<div class="modal" id="help1" tabindex="-1" aria-labelledby="help1-title" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content dialog-content shadow-sm">
+									<div class="modal-header">
+										<div class="modal-title" id="help1-title">Order Notes</div>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body dialog-body">
+										<p>Use this section to leave any special instructions, extra contact information, or any other notes for this order. {{ config('app.name') }} and your business office staff will be able to view these notes.</p>
+									</div>
+								</div>
+							</div>
 						</div>
 
 						<p class="ordernotes">
@@ -1251,7 +1326,7 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 					<div class="card-footer">
 						@foreach ($order->items as $item)
 							@if ($item->origorderitemid)
-								<a href="#recurringusernotes" class="help tip" title="Recurring item notes">
+								<a href="#recurringusernotes" data-toggle="modal" class="tip" title="Recurring item notes">
 									<span class="fa fa-sticky-note" aria-hidden="true"></span> Past Notes on recurring orders
 								</a>
 								@php
@@ -1262,37 +1337,49 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 					</div>
 				</div><!-- / .card -->
 
-				<div id="recurringusernotes" class="dialog dialog-help" title="Past User Notes">
-					@foreach ($order->items as $item)
-						@if ($item->origorderitemid)
-							<p>
-								User Notes for recurring item:
-								<br /><strong>{{ $item->product->name }}</strong>
-							</p>
-							<div class="card">
-								<ul class="list-group list-group-flush p-0">
-									<?php
-									foreach ($item->sequence() as $usernote):
-										if ($usernote->id == $item->id || $usernote->datetimecreated > $item->datetimecreated):
-											continue;
-										endif;
-										?>
-										<li class="list-group-item">
-											<div class="mb-1">
-												<strong>Order <a href="{{ route('site.orders.read', ['id' => $usernote->orderid]) }}">#{{ $usernote->orderid }}</a></strong>
-												<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
-											</div>
-											<blockquote>
-												<p>{!! $usernote->order->usernotes ? nl2br($usernote->order->usernotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
-											</blockquote>
-										</li>
-										<?php
-									endforeach;
-									?>
-								</ul>
+				<div class="modal" id="recurringusernotes" tabindex="-1" aria-labelledby="recurringusernotes-title" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content dialog-content shadow-sm">
+							<div class="modal-header">
+								<div class="modal-title" id="recurringusernotes-title">Past User Notes</div>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
 							</div>
-						@endif
-					@endforeach
+							<div class="modal-body dialog-body">
+								@foreach ($order->items as $item)
+									@if ($item->origorderitemid)
+										<p>
+											User Notes for recurring item:
+											<br /><strong>{{ $item->product->name }}</strong>
+										</p>
+										<div class="card">
+											<ul class="list-group list-group-flush p-0">
+												<?php
+												foreach ($item->sequence() as $usernote):
+													if ($usernote->id == $item->id || $usernote->datetimecreated > $item->datetimecreated):
+														continue;
+													endif;
+													?>
+													<li class="list-group-item">
+														<div class="mb-1">
+															<strong>Order <a href="{{ route('site.orders.read', ['id' => $usernote->orderid]) }}">#{{ $usernote->orderid }}</a></strong>
+															<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
+														</div>
+														<blockquote>
+															<p>{!! $usernote->order->usernotes ? nl2br($usernote->order->usernotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
+														</blockquote>
+													</li>
+													<?php
+												endforeach;
+												?>
+											</ul>
+										</div>
+									@endif
+								@endforeach
+							</div>
+						</div>
+					</div>
 				</div>
 
 				@if (auth()->user()->can('manage orders'))
@@ -1325,7 +1412,7 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 						<div class="card-footer">
 							@foreach ($order->items as $item)
 								@if ($item->origorderitemid)
-									<a href="#recurringstaffnotes" class="help tip" title="Recurring item notes">
+									<a href="#recurringstaffnotes" data-toggle="modal" class="tip" title="Recurring item notes">
 										<span class="fa fa-sticky-note" aria-hidden="true"></span> Past Notes on recurring orders
 									</a>
 									@php
@@ -1336,37 +1423,49 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 						</div>
 					</div><!-- / .card -->
 
-					<div id="recurringstaffnotes" class="dialog dialog-help" title="Past Staff Notes">
-						@foreach ($order->items as $item)
-							@if ($item->origorderitemid)
-								<p>
-									Staff Notes for recurring item:
-									<br /><strong>{{ $item->product->name }}</strong>
-								</p>
-								<div class="card">
-									<ul class="list-group list-group-flush p-0">
-										<?php
-										foreach ($item->sequence() as $usernote):
-											if ($usernote->id == $item->id || $usernote->datetimecreated > $item->datetimecreated):
-												continue;
-											endif;
-											?>
-											<li class="list-group-item">
-												<div class="mb-1">
-													<strong>Order <a href="{{ route('site.orders.read', ['id' => $usernote->orderid]) }}">#{{ $usernote->orderid }}</a></strong>
-													<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
-												</div>
-												<blockquote>
-													<p>{!! $usernote->order->staffnotes ? nl2br($usernote->order->staffnotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
-												</blockquote>
-											</li>
-											<?php
-										endforeach;
-										?>
-									</ul>
+					<div class="modal" id="recurringstaffnotes" tabindex="-1" aria-labelledby="recurringstaffnotes-title" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered">
+							<div class="modal-content dialog-content shadow-sm">
+								<div class="modal-header">
+									<div class="modal-title" id="recurringstaffnotes-title">Past Staff Notes</div>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
 								</div>
-							@endif
-						@endforeach
+								<div class="modal-body dialog-body">
+									@foreach ($order->items as $item)
+										@if ($item->origorderitemid)
+											<p>
+												Staff Notes for recurring item:
+												<br /><strong>{{ $item->product->name }}</strong>
+											</p>
+											<div class="card">
+												<ul class="list-group list-group-flush p-0">
+													<?php
+													foreach ($item->sequence() as $usernote):
+														if ($usernote->id == $item->id || $usernote->datetimecreated > $item->datetimecreated):
+															continue;
+														endif;
+														?>
+														<li class="list-group-item">
+															<div class="mb-1">
+																<strong>Order <a href="{{ route('site.orders.read', ['id' => $usernote->orderid]) }}">#{{ $usernote->orderid }}</a></strong>
+																<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
+															</div>
+															<blockquote>
+																<p>{!! $usernote->order->staffnotes ? nl2br($usernote->order->staffnotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
+															</blockquote>
+														</li>
+														<?php
+													endforeach;
+													?>
+												</ul>
+											</div>
+										@endif
+									@endforeach
+								</div>
+							</div>
+						</div>
 					</div>
 
 					<div id="order-history" class="card">

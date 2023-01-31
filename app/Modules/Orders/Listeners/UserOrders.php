@@ -17,7 +17,7 @@ class UserOrders
 	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe(Dispatcher $events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(UserBeforeDisplay::class, self::class . '@handleUserBeforeDisplay');
 	}
@@ -28,7 +28,7 @@ class UserOrders
 	 * @param   UserBeforeDisplay  $event
 	 * @return  void
 	 */
-	public function handleUserBeforeDisplay(UserBeforeDisplay $event)
+	public function handleUserBeforeDisplay(UserBeforeDisplay $event): void
 	{
 		$user = $event->getUser();
 

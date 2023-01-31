@@ -63,9 +63,9 @@ class Cart
 	 * Set the current cart instance.
 	 *
 	 * @param string|null $instance
-	 * @return Cart
+	 * @return self
 	 */
-	public function instance($instance = null)
+	public function instance($instance = null): self
 	{
 		$instance = $instance ?: self::DEFAULT_INSTANCE;
 
@@ -79,7 +79,7 @@ class Cart
 	 *
 	 * @return string
 	 */
-	public function currentInstance()
+	public function currentInstance(): string
 	{
 		return str_replace('cart.', '', $this->instance);
 	}
@@ -94,7 +94,7 @@ class Cart
 	 * @param array     $options
 	 * @return CartItem
 	 */
-	public function add($id, $name = null, $qty = null, $price = null, array $options = [])
+	public function add($id, $name = null, $qty = null, $price = null, array $options = []): CartItem
 	{
 		if ($this->isMulti($id))
 		{
@@ -127,7 +127,7 @@ class Cart
 	 *
 	 * @param string $rowId
 	 * @param mixed  $qty
-	 * @return CartItem
+	 * @return CartItem|null
 	 */
 	public function update($rowId, $qty)
 	{
@@ -183,7 +183,7 @@ class Cart
 	 * @param string $rowId
 	 * @return void
 	 */
-	public function remove($rowId)
+	public function remove($rowId): void
 	{
 		$cartItem = $this->get($rowId);
 
@@ -220,7 +220,7 @@ class Cart
 	 *
 	 * @return void
 	 */
-	public function destroy()
+	public function destroy(): void
 	{
 		$this->session->remove($this->instance);
 	}
@@ -260,7 +260,7 @@ class Cart
 	 * @param string $thousandSeperator
 	 * @return string
 	 */
-	public function total($decimals = null, $decimalPoint = null, $thousandSeperator = null)
+	public function total($decimals = null, $decimalPoint = null, $thousandSeperator = null): string
 	{
 		$content = $this->getContent();
 
@@ -280,7 +280,7 @@ class Cart
 	 * @param string $thousandSeperator
 	 * @return float
 	 */
-	public function tax($decimals = null, $decimalPoint = null, $thousandSeperator = null)
+	public function tax($decimals = null, $decimalPoint = null, $thousandSeperator = null): string
 	{
 		$content = $this->getContent();
 
@@ -316,7 +316,7 @@ class Cart
 	 * Search the cart content for a cart item matching the given search closure.
 	 *
 	 * @param \Closure $search
-	 * @return \Illuminate\Support\Collection
+	 * @return Collection
 	 */
 	public function search(Closure $search)
 	{
@@ -358,7 +358,7 @@ class Cart
 	 * @param int|float $taxRate
 	 * @return void
 	 */
-	public function setTax($rowId, $taxRate)
+	public function setTax($rowId, $taxRate): void
 	{
 		$cartItem = $this->get($rowId);
 
@@ -377,7 +377,7 @@ class Cart
 	 * @param mixed $identifier
 	 * @return void
 	 */
-	public function store($identifier)
+	public function store($identifier): void
 	{
 		$content = $this->getContent();
 
@@ -411,7 +411,7 @@ class Cart
 	 * @param mixed $identifier
 	 * @return void
 	 */
-	public function restore($identifier)
+	public function restore($identifier): void
 	{
 		$this->session->forget('cart');
 
@@ -457,7 +457,7 @@ class Cart
 	 * @param bool  $sessionOnly
 	 * @return void
 	 */
-	public function forget($identifier, $sessionOnly = false)
+	public function forget($identifier, $sessionOnly = false): void
 	{
 		$this->session->forget('cart');
 
@@ -526,7 +526,7 @@ class Cart
 	 * @param array     $options
 	 * @return CartItem
 	 */
-	private function createCartItem($id, $name, $qty, $price, array $options)
+	private function createCartItem($id, $name, $qty, $price, array $options): CartItem
 	{
 		if ($id instanceof Buyable)
 		{
@@ -556,7 +556,7 @@ class Cart
 	 * @param mixed $item
 	 * @return bool
 	 */
-	private function isMulti($item)
+	private function isMulti($item): bool
 	{
 		if (!is_array($item))
 		{
@@ -567,12 +567,15 @@ class Cart
 	}
 
 	/**
-	 * @param $identifier
+	 * @param mixed $identifier
 	 * @return bool
 	 */
-	private function storedCartWithIdentifierExists($identifier)
+	private function storedCartWithIdentifierExists($identifier): bool
 	{
-		return $this->getConnection()->table($this->getTableName())->where('identifier', $identifier)->exists();
+		return $this->getConnection()
+			->table($this->getTableName())
+			->where('identifier', $identifier)
+			->exists();
 	}
 
 	/**
@@ -602,7 +605,7 @@ class Cart
 	 *
 	 * @return string
 	 */
-	private function getConnectionName()
+	private function getConnectionName(): string
 	{
 		$connection = config('module.orders.database.connection');
 

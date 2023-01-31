@@ -3,12 +3,32 @@ namespace App\Modules\Orders\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Orders\Helpers\Currency;
 use Carbon\Carbon;
 
 /**
  * Model for an order purchase account
+ *
+ * @property int    $id
+ * @property int    $orderid
+ * @property string $purchasefund
+ * @property string $purchasecostcenter
+ * @property string $purchaseorder
+ * @property string $budgetjustification
+ * @property int    $amount
+ * @property int    $approveruserid
+ * @property int    $paymentdocid
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property Carbon|null $datetimeapproved
+ * @property Carbon|null $datetimedenied
+ * @property Carbon|null $datetimepaid
+ * @property Carbon|null $datetimepaymentdoc
+ * @property int    $notice
+ * @property string $purchaseio
+ * @property string $purchasewbse
  */
 class Account extends Model
 {
@@ -82,7 +102,7 @@ class Account extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isApproved()
+	public function isApproved(): bool
 	{
 		return (!is_null($this->datetimeapproved));
 	}
@@ -92,7 +112,7 @@ class Account extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isPaid()
+	public function isPaid(): bool
 	{
 		return (!is_null($this->datetimepaid));
 	}
@@ -102,7 +122,7 @@ class Account extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isDenied()
+	public function isDenied(): bool
 	{
 		return (!is_null($this->datetimedenied));
 	}
@@ -112,7 +132,7 @@ class Account extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isCollected()
+	public function isCollected(): bool
 	{
 		return (!is_null($this->datetimepaymentdoc));
 	}
@@ -120,9 +140,9 @@ class Account extends Model
 	/**
 	 * Defines a relationship to approver
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function approver()
+	public function approver(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'approveruserid');
 	}
@@ -130,9 +150,9 @@ class Account extends Model
 	/**
 	 * Defines a relationship to parent Order
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function order()
+	public function order(): BelongsTo
 	{
 		return $this->belongsTo(Order::class, 'orderid');
 	}
@@ -142,7 +162,7 @@ class Account extends Model
 	 *
 	 * @return  string
 	 */
-	public function getAccountAttribute()
+	public function getAccountAttribute(): string
 	{
 		if ($this->purchaseio)
 		{
@@ -162,7 +182,7 @@ class Account extends Model
 	 * @param   string  $purchasewbse
 	 * @return  string
 	 */
-	public function getPurchasewbseAttribute($purchasewbse)
+	public function getPurchasewbseAttribute($purchasewbse): string
 	{
 		$wbse = $purchasewbse;
 
@@ -183,7 +203,7 @@ class Account extends Model
 	 * @param   string  $purchasewbse
 	 * @return  void
 	 */
-	public function setPurchasewbseAttribute($purchasewbse)
+	public function setPurchasewbseAttribute($purchasewbse): void
 	{
 		$this->attributes['purchasewbse'] = str_replace('.', '', (string)$purchasewbse);
 	}
@@ -193,7 +213,7 @@ class Account extends Model
 	 *
 	 * @return  string
 	 */
-	public function getStatusAttribute()
+	public function getStatusAttribute(): string
 	{
 		if ($this->trashed())
 		{
@@ -228,7 +248,7 @@ class Account extends Model
 	 *
 	 * @return  string
 	 */
-	public function getFormattedAmountAttribute()
+	public function getFormattedAmountAttribute(): string
 	{
 		return Currency::formatNumber($this->amount);
 	}

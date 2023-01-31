@@ -1,36 +1,9 @@
 
 /* global $ */ // jquery.js
 
-$(document).ready(function () {
-	if ($("#export-orders").length) {
-		var dialoge = $("#export-orders").dialog({
-			autoOpen: false,
-			height: 'auto',
-			width: 250,
-			modal: true
-		});
-
-		$('.btn-export').off('click').on('click', function (e) {
-			e.preventDefault();
-
-			dialoge.dialog("open");
-		});
-	}
-
-	if ($("#import-orders").length) {
-		var dialogi = $("#import-orders").dialog({
-			autoOpen: false,
-			height: 'auto',
-			width: 500,
-			modal: true
-		});
-
-		$('.btn-import').off('click').on('click', function (e) {
-			e.preventDefault();
-
-			dialogi.dialog("open");
-		});
-
+document.addEventListener('DOMContentLoaded', function () {
+	var importorders = document.getElementById('import-orders');
+	if (importorders) {
 		// feature detection for drag&drop upload
 		var isAdvancedUpload = function () {
 			var div = document.createElement('div');

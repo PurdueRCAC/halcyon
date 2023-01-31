@@ -17,7 +17,7 @@ class GroupOrders
 	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe(Dispatcher $events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(GroupReading::class, self::class . '@handleGroupReading');
 	}
@@ -28,7 +28,7 @@ class GroupOrders
 	 * @param   GroupReading  $event
 	 * @return  void
 	 */
-	public function handleGroupReading(GroupReading $event)
+	public function handleGroupReading(GroupReading $event): void
 	{
 		$event->group->orders = Order::query()
 			->where('groupid', '=', $event->group->id)

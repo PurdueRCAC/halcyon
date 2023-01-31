@@ -3,6 +3,8 @@ namespace App\Modules\Orders\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Orders\Helpers\Currency;
 use App\Modules\History\Traits\Historable;
@@ -11,6 +13,24 @@ use Carbon\Carbon;
 
 /**
  * Model for order product
+ *
+ * @property int    $id
+ * @property int    $ordercategoryid
+ * @property string $name
+ * @property string $description
+ * @property string $mou
+ * @property string $unit
+ * @property int    $unitprice
+ * @property int    $recurringtimeperiodid
+ * @property int    $public
+ * @property int    $ticket
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property int    $sequence
+ * @property int    $successororderproductid
+ * @property string $terms
+ * @property int    $restricteddata
+ * @property int    $resourceid
  */
 class Product extends Model
 {
@@ -72,7 +92,7 @@ class Product extends Model
 	 *
 	 * @return  void
 	 */
-	public static function boot()
+	public static function boot(): void
 	{
 		parent::boot();
 
@@ -95,9 +115,9 @@ class Product extends Model
 	/**
 	 * Defines a relationship to a category
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function category()
+	public function category(): BelongsTo
 	{
 		return $this->belongsTo(Category::class, 'ordercategoryid');
 	}
@@ -105,9 +125,9 @@ class Product extends Model
 	/**
 	 * Defines a relationship to a resource
 	 *
-	 * @return  object
+	 * @return  HasOne
 	 */
-	public function resource()
+	public function resource(): HasOne
 	{
 		return $this->hasOne(Asset::class, 'id', 'resourceid');
 	}
@@ -115,9 +135,9 @@ class Product extends Model
 	/**
 	 * Defines a relationship to a timeperiod
 	 *
-	 * @return  object
+	 * @return  HasOne
 	 */
-	public function timeperiod()
+	public function timeperiod(): HasOne
 	{
 		return $this->hasOne(Timeperiod::class, 'id', 'recurringtimeperiodid');
 	}
@@ -125,9 +145,9 @@ class Product extends Model
 	/**
 	 * Get the access level
 	 *
-	 * @return  object
+	 * @return  HasOne
 	 */
-	public function viewlevel()
+	public function viewlevel(): HasOne
 	{
 		return $this->hasOne('App\Halcyon\Access\Viewlevel', 'id', 'public');
 	}
@@ -137,7 +157,7 @@ class Product extends Model
 	 *
 	 * @return  string
 	 */
-	public function getPriceAttribute()
+	public function getPriceAttribute(): string
 	{
 		return Currency::formatNumber($this->unitprice);
 	}
@@ -147,7 +167,7 @@ class Product extends Model
 	 *
 	 * @return  string
 	 */
-	public function getDecimalUnitpriceAttribute()
+	public function getDecimalUnitpriceAttribute(): string
 	{
 		return str_replace(',', '', Currency::formatNumber($this->unitprice));
 	}
@@ -158,7 +178,7 @@ class Product extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setUnitpriceAttribute($value)
+	public function setUnitpriceAttribute($value): void
 	{
 		$this->attributes['unitprice'] = preg_replace('/[^0-9]+/', '', $value);
 	}
@@ -171,7 +191,7 @@ class Product extends Model
 	 * @param   string   $where  WHERE clause to use for limiting the selection of rows to compact the ordering values.
 	 * @return  bool     True on success.
 	 */
-	public function move($delta, $where = '')
+	public function move($delta, $where = ''): bool
 	{
 		// If the change is none, do nothing.
 		if (empty($delta))
@@ -246,7 +266,7 @@ class Product extends Model
 	 * @param   array  $order  An array of order values.
 	 * @return  bool
 	 */
-	public static function saveorder(array $pks = [], array $order = [])
+	public static function saveorder(array $pks = [], array $order = []): bool
 	{
 		if (empty($pks))
 		{
