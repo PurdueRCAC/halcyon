@@ -555,10 +555,20 @@ class UserRequestsController extends Controller
 	 */
 	public function delete($id)
 	{
-		$row = UserRequest::findOrFail($id);
+		$row = UserRequest::find($id);
+
+		if (!$row)
+		{
+			return response()->json(null, 204);
+		}
 
 		$user = $row->userid;
-		$groups = auth()->user()->groups()->whereIsManager()->get()->pluck('groupid')->toArray();
+		$groups = auth()->user()
+			->groups()
+			->whereIsManager()
+			->get()
+			->pluck('groupid')
+			->toArray();
 
 		// Fetch count of queueuser entries to delete, and the groupid
 		$u = (new Member)->getTable();
