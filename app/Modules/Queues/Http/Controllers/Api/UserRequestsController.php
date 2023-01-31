@@ -3,7 +3,7 @@
 namespace App\Modules\Queues\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Queues\Models\Queue;
@@ -219,7 +219,7 @@ class UserRequestsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response|UserRequestResource
+	 * @return  JsonResponse|UserRequestResource
 	 */
 	public function create(Request $request)
 	{
@@ -466,7 +466,7 @@ class UserRequestsController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   int $id
-	 * @return  Response|UserRequestResource
+	 * @return  JsonResponse|UserRequestResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -551,7 +551,7 @@ class UserRequestsController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{
@@ -596,7 +596,7 @@ class UserRequestsController extends Controller
 
 					if (!$result)
 					{
-						return response()->json(['message' => trans('Failed to delete `queueusers` entries for request :id', ['id' => $id])], 500);
+						//return response()->json(['message' => trans('Failed to delete `queueusers` entries for request :id', ['id' => $id])], 500);
 					}
 				}
 				else
@@ -614,7 +614,7 @@ class UserRequestsController extends Controller
 
 					if (!$result)
 					{
-						return response()->json(['message' => trans('Failed to mark `queueusers` entries as removed for request :id', ['id' => $id])], 500);
+						//return response()->json(['message' => trans('Failed to mark `queueusers` entries as removed for request :id', ['id' => $id])], 500);
 					}
 				}
 			}
@@ -648,7 +648,7 @@ class UserRequestsController extends Controller
 
 					if (!$result)
 					{
-						return response()->json(['message' => trans('Failed to delete `queueusers` entries for request :id', ['id' => $id])], 500);
+						//return response()->json(['message' => trans('Failed to delete `queueusers` entries for request :id', ['id' => $id])], 500);
 					}
 				}
 				else
@@ -666,7 +666,7 @@ class UserRequestsController extends Controller
 
 					if (!$result)
 					{
-						return response()->json(['message' => trans('Failed to mark `queueusers` entries as removed for request :id', ['id' => $id])], 500);
+						//return response()->json(['message' => trans('Failed to mark `queueusers` entries as removed for request :id', ['id' => $id])], 500);
 					}
 				}
 			}
