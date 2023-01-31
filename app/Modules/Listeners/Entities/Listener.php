@@ -39,7 +39,7 @@ class Listener
 	/**
 	 * Constructor
 	 *
-	 * @param   object  $model
+	 * @param   ListenerModel  $model
 	 * @return  void
 	 */
 	public function __construct(ListenerModel $model)

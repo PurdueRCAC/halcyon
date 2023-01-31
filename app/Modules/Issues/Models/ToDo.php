@@ -4,6 +4,8 @@ namespace App\Modules\Issues\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
@@ -17,6 +19,14 @@ use Carbon\Carbon;
 
 /**
  * To-Do model
+ *
+ * @property int    $id
+ * @property int    $userid
+ * @property string $name
+ * @property string $description
+ * @property int    $recurringtimeperiodid
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
  */
 class ToDo extends Model
 {
@@ -99,9 +109,9 @@ class ToDo extends Model
 	/**
 	 * Defines a relationship to issues
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function issues()
+	public function issues(): HasMany
 	{
 		return $this->hasMany(Issue::class, 'issuetodoid');
 	}
@@ -109,9 +119,9 @@ class ToDo extends Model
 	/**
 	 * Defines a relationship to timeperiod
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function timeperiod()
+	public function timeperiod(): BelongsTo
 	{
 		return $this->belongsTo(Timeperiod::class, 'recurringtimeperiodid');
 	}
@@ -119,9 +129,9 @@ class ToDo extends Model
 	/**
 	 * Defines a relationship to creator
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function creator()
+	public function creator(): BelongsTo
 	{
 		return $this->belongsTo(User::class, 'userid');
 	}
@@ -131,7 +141,7 @@ class ToDo extends Model
 	 *
 	 * @return  bool  False if error, True on success
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		foreach ($this->issues as $issue)
 		{
@@ -147,7 +157,7 @@ class ToDo extends Model
 	 *
 	 * @return string
 	 */
-	public function getStatusAttribute()
+	public function getStatusAttribute(): string
 	{
 		if (!isset($this->attributes['state']))
 		{
@@ -205,7 +215,7 @@ class ToDo extends Model
 	 *
 	 * @return string
 	 */
-	public function getFormattedDescriptionAttribute()
+	public function getFormattedDescriptionAttribute(): string
 	{
 		$text = $this->description;
 
@@ -241,7 +251,7 @@ class ToDo extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function stripCode($match)
+	protected function stripCode($match): string
 	{
 		array_push($this->replacements['codeblocks'], $match[0]);
 
@@ -254,7 +264,7 @@ class ToDo extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function stripPre($match)
+	protected function stripPre($match): string
 	{
 		array_push($this->replacements['preblocks'], $match[0]);
 
@@ -267,7 +277,7 @@ class ToDo extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function replaceCode($match)
+	protected function replaceCode($match): string
 	{
 		return array_shift($this->replacements['codeblocks']);
 	}
@@ -278,7 +288,7 @@ class ToDo extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function replacePre($match)
+	protected function replacePre($match): string
 	{
 		return array_shift($this->replacements['preblocks']);
 	}

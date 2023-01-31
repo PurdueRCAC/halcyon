@@ -13,7 +13,7 @@ class Issues
 	 * @param  Log $record
 	 * @return Log
 	 */
-	public function __invoke($record)
+	public function __invoke(Log $record): Log
 	{
 		if ($record->classname == 'IssuesController')
 		{

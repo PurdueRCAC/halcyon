@@ -4,6 +4,7 @@ namespace App\Modules\Issues\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
@@ -13,6 +14,15 @@ use App\Halcyon\Utility\PorterStemmer;
 
 /**
  * Issue comment model
+ *
+ * @property int    $id
+ * @property int    $issueid
+ * @property int    $userid
+ * @property string $comment
+ * @property string $stemmedcomment
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property int    $resolution
  */
 class Comment extends Model
 {
@@ -91,9 +101,9 @@ class Comment extends Model
 	/**
 	 * Defines a relationship to creator
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function creator()
+	public function creator(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
 	}
@@ -101,9 +111,9 @@ class Comment extends Model
 	/**
 	 * Defines a relationship to issue
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function issue()
+	public function issue(): BelongsTo
 	{
 		return $this->belongsTo(Issue::class, 'issueid');
 	}
@@ -113,7 +123,7 @@ class Comment extends Model
 	 *
 	 * @return  string
 	 */
-	public function getFormattedDateAttribute()
+	public function getFormattedDateAttribute(): string
 	{
 		$startdate = $this->datetimecreated->format('Y-m-d h:i:s');
 
@@ -134,7 +144,7 @@ class Comment extends Model
 	 *
 	 * @return string
 	 */
-	public function getFormattedCommentAttribute()
+	public function getFormattedCommentAttribute(): string
 	{
 		$text = $this->comment;
 
@@ -220,10 +230,10 @@ class Comment extends Model
 	/**
 	 * Strip code blocks
 	 *
-	 * @param   array  $match
+	 * @param   array<int,string>  $match
 	 * @return  string
 	 */
-	protected function stripCode($match)
+	protected function stripCode($match): string
 	{
 		array_push($this->replacements['codeblocks'], $match[0]);
 
@@ -233,10 +243,10 @@ class Comment extends Model
 	/**
 	 * Strip pre blocks
 	 *
-	 * @param   array  $match
+	 * @param   array<int,string>  $match
 	 * @return  string
 	 */
-	protected function stripPre($match)
+	protected function stripPre($match): string
 	{
 		array_push($this->replacements['preblocks'], $match[0]);
 
@@ -249,7 +259,7 @@ class Comment extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function replaceCode($match)
+	protected function replaceCode($match): string
 	{
 		return array_shift($this->replacements['codeblocks']);
 	}
@@ -260,7 +270,7 @@ class Comment extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function replacePre($match)
+	protected function replacePre($match): string
 	{
 		return array_shift($this->replacements['preblocks']);
 	}
@@ -269,9 +279,9 @@ class Comment extends Model
 	 * Generate stemmed comment
 	 *
 	 * @param   string  $value
-	 * @return  string
+	 * @return  void
 	 */
-	public function setCommentAttribute($value)
+	public function setCommentAttribute($value): void
 	{
 		$this->attributes['comment'] = $value;
 
@@ -309,17 +319,15 @@ class Comment extends Model
 		{
 			$stemmedreport .= $stem . ' ';
 		}
-
-		return $stemmedreport;
 	}
 
 	/**
 	 * Strip URL
 	 *
-	 * @param   array  $match
+	 * @param   array<int,string>  $match
 	 * @return  string
 	 */
-	private function stripURL($match)
+	private function stripURL($match): string
 	{
 		if (isset($match[12]))
 		{

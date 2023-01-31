@@ -4,6 +4,8 @@ namespace App\Modules\Issues\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
@@ -16,6 +18,15 @@ use App\Modules\Tags\Traits\Taggable;
 
 /**
  * Issue model
+ *
+ * @property int    $id
+ * @property int    $issueid
+ * @property int    $userid
+ * @property string $comment
+ * @property string $stemmedcomment
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property int    $resolution
  */
 class Issue extends Model
 {
@@ -106,7 +117,7 @@ class Issue extends Model
 	 *
 	 * @return  void
 	 */
-	protected static function boot()
+	protected static function boot(): void
 	{
 		parent::boot();
 
@@ -149,9 +160,9 @@ class Issue extends Model
 	/**
 	 * Defines a relationship to comments
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function comments()
+	public function comments(): HasMany
 	{
 		return $this->hasMany(Comment::class, 'issueid');
 	}
@@ -159,9 +170,9 @@ class Issue extends Model
 	/**
 	 * Defines a relationship to resources map
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function resources()
+	public function resources(): HasMany
 	{
 		return $this->hasMany(Issueresource::class, 'issueid');
 	}
@@ -169,9 +180,9 @@ class Issue extends Model
 	/**
 	 * Defines a relationship to creator
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function creator()
+	public function creator(): BelongsTo
 	{
 		return $this->belongsTo(User::class, 'userid');
 	}
@@ -181,7 +192,7 @@ class Issue extends Model
 	 *
 	 * @return string
 	 */
-	public function getFormattedReportAttribute()
+	public function getFormattedReportAttribute(): string
 	{
 		$text = $this->report;
 
@@ -279,7 +290,7 @@ class Issue extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function stripCode($match)
+	protected function stripCode($match): string
 	{
 		array_push($this->replacements['codeblocks'], $match[0]);
 
@@ -292,7 +303,7 @@ class Issue extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function stripPre($match)
+	protected function stripPre($match): string
 	{
 		array_push($this->replacements['preblocks'], $match[0]);
 
@@ -305,7 +316,7 @@ class Issue extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function replaceCode($match)
+	protected function replaceCode($match): string
 	{
 		return array_shift($this->replacements['codeblocks']);
 	}
@@ -316,7 +327,7 @@ class Issue extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function replacePre($match)
+	protected function replacePre($match): string
 	{
 		return array_shift($this->replacements['preblocks']);
 	}
@@ -326,7 +337,7 @@ class Issue extends Model
 	 *
 	 * @return  bool  False if error, True on success
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		foreach ($this->comments as $comment)
 		{
@@ -345,10 +356,10 @@ class Issue extends Model
 	/**
 	 * Format date
 	 *
-	 * @param   string  $startdate
+	 * @param   string|null  $startdate
 	 * @return  string
 	 */
-	public function formatDate($startdate)
+	public function formatDate($startdate): string
 	{
 		$datestring = '';
 
@@ -376,9 +387,9 @@ class Issue extends Model
 	/**
 	 * Get content vars
 	 *
-	 * @return  array
+	 * @return  array<string,string>
 	 */
-	protected function getContentVars()
+	protected function getContentVars(): array
 	{
 		$vars = array(
 			'date'           => "%date%",
@@ -451,9 +462,9 @@ class Issue extends Model
 	 * Generate stemmed report
 	 *
 	 * @param   string  $value
-	 * @return  string
+	 * @return  void
 	 */
-	public function setReportAttribute($value) //generateStemmedReport()
+	public function setReportAttribute($value): void
 	{
 		$this->attributes['report'] = $value;
 
@@ -493,8 +504,6 @@ class Issue extends Model
 		}
 
 		$this->attributes['stemmedreport'] = $stemmedreport;
-
-		return $value;
 	}
 
 	/**
@@ -503,7 +512,7 @@ class Issue extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	private function stripURL($match)
+	private function stripURL($match): string
 	{
 		if (isset($match[12]))
 		{
@@ -518,7 +527,7 @@ class Issue extends Model
 	 *
 	 * @return string
 	 */
-	public function getResourcesStringAttribute()
+	public function getResourcesStringAttribute(): string
 	{
 		$names = array();
 

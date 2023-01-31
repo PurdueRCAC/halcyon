@@ -3,10 +3,15 @@
 namespace App\Modules\Issues\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 
 /**
  * Issues model mapping to resources
+ *
+ * @property int $id
+ * @property int $issueid
+ * @property int $resourceid
  */
 class Issueresource extends Model
 {
@@ -62,9 +67,9 @@ class Issueresource extends Model
 	/**
 	 * Defines a relationship to an issue
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function issue()
+	public function issue(): BelongsTo
 	{
 		return $this->belongsTo(Issue::class, 'issueid');
 	}
@@ -72,9 +77,9 @@ class Issueresource extends Model
 	/**
 	 * Defines a relationship to resources
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function resource()
+	public function resource(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Resources\Models\Asset', 'resourceid');
 	}

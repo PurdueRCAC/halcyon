@@ -35,7 +35,7 @@ class IssuePrepareContent
 	 *
 	 * @return string
 	 */
-	public function getBody()
+	public function getBody(): string
 	{
 		return $this->body;
 	}
@@ -46,7 +46,7 @@ class IssuePrepareContent
 	 * @param string $body
 	 * @return void
 	 */
-	public function setBody($body)
+	public function setBody($body): void
 	{
 		$this->body = $body;
 	}
@@ -56,7 +56,7 @@ class IssuePrepareContent
 	 *
 	 * @return mixed
 	 */
-	public function getOriginal()
+	public function getOriginal(): string
 	{
 		return $this->original;
 	}
@@ -66,7 +66,7 @@ class IssuePrepareContent
 	 *
 	 * @return string
 	 */
-	public function __toString()
+	public function __toString(): string
 	{
 		return $this->getBody();
 	}

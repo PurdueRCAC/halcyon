@@ -3,6 +3,8 @@
 namespace App\Modules\Messages\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Resources\Models\Asset;
@@ -14,6 +16,11 @@ use App\Modules\Messages\Events\TypeDeleted;
 
 /**
  * Model for message type
+ *
+ * @property int    $id
+ * @property int    $name
+ * @property int    $resourceid
+ * @property string $classname
  */
 class Type extends Model
 {
@@ -93,7 +100,7 @@ class Type extends Model
 	 * @param   mixed  $value
 	 * @return  void
 	 */
-	public function setResourceidAttribute($value)
+	public function setResourceidAttribute($value): void
 	{
 		$this->attributes['resourceid'] = $this->stringToInteger($value);
 	}
@@ -104,7 +111,7 @@ class Type extends Model
 	 * @param   mixed  $value
 	 * @return  int
 	 */
-	private function stringToInteger($value)
+	private function stringToInteger($value): int
 	{
 		if (is_string($value))
 		{
@@ -117,9 +124,9 @@ class Type extends Model
 	/**
 	 * Defines a relationship to messages
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function messages()
+	public function messages(): HasMany
 	{
 		return $this->hasMany(Message::class, 'messagequeuetypeid');
 	}
@@ -127,9 +134,9 @@ class Type extends Model
 	/**
 	 * Defines a relationship to resource
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function resource()
+	public function resource(): BelongsTo
 	{
 		return $this->belongsTo(Asset::class, 'resourceid')->withTrashed();
 	}

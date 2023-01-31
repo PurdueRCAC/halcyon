@@ -3,6 +3,7 @@
 namespace App\Modules\Messages\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Messages\Events\MessageCreating;
@@ -14,6 +15,20 @@ use App\Modules\Messages\Events\MessageReading;
 use App\Modules\Messages\Database\Factories\MessageFactory;
 use Carbon\Carbon;
 
+/**
+ * Message queue message
+ *
+ * @property int    $id
+ * @property int    $userid
+ * @property int    $targetobjectid
+ * @property int    $messagequeueoptionsid
+ * @property Carbon|null $datetimesubmitted
+ * @property Carbon|null $datetimestarted
+ * @property Carbon|null $datetimecompleted
+ * @property int    $pid
+ * @property int    $returnstatus
+ * @property string $output
+ */
 class Message extends Model
 {
 	use Historable, HasFactory;
@@ -113,7 +128,7 @@ class Message extends Model
 	 * @param   mixed  $value
 	 * @return  void
 	 */
-	public function setMessagequeuetypeidAttribute($value)
+	public function setMessagequeuetypeidAttribute($value): void
 	{
 		$this->attributes['messagequeuetypeid'] = (int)$value;
 	}
@@ -124,7 +139,7 @@ class Message extends Model
 	 * @param   mixed  $value
 	 * @return  void
 	 */
-	public function setTargetobjectidAttribute($value)
+	public function setTargetobjectidAttribute($value): void
 	{
 		$this->attributes['targetobjectid'] = $this->stringToInteger($value);
 	}
@@ -135,7 +150,7 @@ class Message extends Model
 	 * @param   mixed  $value
 	 * @return  void
 	 */
-	public function setUseridAttribute($value)
+	public function setUseridAttribute($value): void
 	{
 		$this->attributes['userid'] = $this->stringToInteger($value);
 	}
@@ -146,7 +161,7 @@ class Message extends Model
 	 * @param   mixed  $value
 	 * @return  void
 	 */
-	public function setMessagequeueoptionsidAttribute($value)
+	public function setMessagequeueoptionsidAttribute($value): void
 	{
 		$this->attributes['messagequeueoptionsid'] = $this->stringToInteger($value);
 	}
@@ -157,7 +172,7 @@ class Message extends Model
 	 * @param   mixed  $value
 	 * @return  int
 	 */
-	private function stringToInteger($value)
+	private function stringToInteger($value): int
 	{
 		if (is_string($value))
 		{
@@ -172,7 +187,7 @@ class Message extends Model
 	 *
 	 * @return  bool
 	 */
-	public function started()
+	public function started(): bool
 	{
 		return !is_null($this->datetimestarted);
 	}
@@ -182,7 +197,7 @@ class Message extends Model
 	 *
 	 * @return  bool
 	 */
-	public function completed()
+	public function completed(): bool
 	{
 		return !is_null($this->datetimecompleted);
 	}
@@ -190,9 +205,9 @@ class Message extends Model
 	/**
 	 * Defines a relationship to a type
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function type()
+	public function type(): BelongsTo
 	{
 		return $this->belongsTo(Type::class, 'messagequeuetypeid');
 	}
@@ -202,8 +217,9 @@ class Message extends Model
 	 *
 	 * @param   array  $options
 	 * @return  bool
+	 * @throws  \Exception
 	 */
-	public function save(array $options = array())
+	public function save(array $options = array()): bool
 	{
 		if ($this->messagequeuetypeid != $this->getOriginal('messagequeuetypeid'))
 		{
@@ -231,7 +247,7 @@ class Message extends Model
 	 *
 	 * @return  string
 	 */
-	public function getElapsedAttribute()
+	public function getElapsedAttribute(): string
 	{
 		return $this->diffForHumans($this->datetimestarted, $this->datetimecompleted);
 	}
@@ -244,7 +260,7 @@ class Message extends Model
 	 * @param   string  $unit   If a specific time unit is desired (e.g., seconds), name the unit [seconds, minutes, hours, days, weeks, months]
 	 * @return  string
 	 */
-	private function diffForHumans($start, $end = null, $unit = null)
+	private function diffForHumans($start, $end = null, $unit = null): string
 	{
 		if (!$start)
 		{
@@ -333,7 +349,7 @@ class Message extends Model
 	 *
 	 * @return  string
 	 */
-	public function getStatusAttribute()
+	public function getStatusAttribute(): string
 	{
 		$now = Carbon::now();
 
@@ -379,7 +395,7 @@ class Message extends Model
 	 *
 	 * @return  string
 	 */
-	public function getRuntimeAttribute()
+	public function getRuntimeAttribute(): string
 	{
 		if (!$this->completed())
 		{

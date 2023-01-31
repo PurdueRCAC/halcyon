@@ -68,7 +68,7 @@ class ListenerManager
 	/**
 	 * Subscribe the listener
 	 *
-	 * @param   object  $listener  Listener
+	 * @param   Listener  $listener
 	 * @return  void
 	 */
 	protected function subscribeListener(Listener $listener): void
