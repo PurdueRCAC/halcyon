@@ -277,10 +277,6 @@ app('pathway')
 		</div>
 	</div>
 
-	<div class="dialog">
-		@include('history::admin.history')
-	</div>
-
 	@csrf
 </form>
 @stop
