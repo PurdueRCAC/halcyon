@@ -5,6 +5,7 @@ use App\Modules\Widgets\Entities\Widget;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Type;
 use App\Modules\News\Models\Newsresource;
+use Carbon\Carbon;
 
 /**
  * Display news articles from selected category
@@ -45,12 +46,18 @@ class News extends Widget
 			$query->join($r, $r . '.newsid', $a . '.id');
 			$query->whereIn($r . '.resourceid', $resources);
 		}
+	
+		$now = Carbon::now()->toDateTimeString();
+		$query->where(function($where) use ($now, $a)
+		{
+			$where->whereNull($a . '.datetimenewsend')
+				->orWhere($a . '.datetimenewsend', '>', $now);
+		});
 
 		$articles = $query
 			->orderBy($a . '.datetimenews', 'desc')
 			->limit($this->params->get('limit', 5))
 			->get();
-
 		$layout = $this->params->get('layout');
 		$layout = $layout ?: 'index';
 
