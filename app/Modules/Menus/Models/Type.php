@@ -4,6 +4,7 @@ namespace App\Modules\Menus\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 use App\Halcyon\Form\Form;
 use App\Modules\History\Traits\Historable;
@@ -272,7 +273,7 @@ class Type extends Model
 		$query->select('a.position');
 		$query->whereEquals('module', Module::MODULE_NAME);
 		$query->select('ag.title', 'access_title');
-		$query->join('#__viewlevels AS ag', 'ag.id', 'a.access', 'left');
+		$query->join('viewlevels AS ag', 'ag.id', 'a.access', 'left');
 
 		$db->setQuery($query->toString());
 
@@ -302,7 +303,7 @@ class Type extends Model
 	 *
 	 * @param  string $type
 	 * @param  array  $columns
-	 * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|static[]|static|null
+	 * @return Model|\Illuminate\Database\Eloquent\Collection|static[]|static|null
 	 */
 	public static function findByMenutype(string $type, array $columns = ['*'])
 	{
@@ -315,7 +316,7 @@ class Type extends Model
 	 * @param   array  $options
 	 * @return  bool   False if error, True on success
 	 */
-	public function save(array $options = [])
+	public function save(array $options = []): bool
 	{
 		if ($this->id)
 		{
@@ -389,8 +390,9 @@ class Type extends Model
 	 * Delete the record and all associated data
 	 *
 	 * @return  bool  False if error, True on success
+	 * @throws  \Exception
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		// Get the user id
 		$userId = auth()->user()->id;
