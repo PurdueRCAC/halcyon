@@ -104,7 +104,7 @@ app('pathway')
 						</a>
 					</div>
 				</div>
-				<a href="#import-publications" class="btn btn-secondary btn-import">
+				<a href="#import-publications" data-toggle="modal" class="btn btn-secondary btn-import">
 					<span class="fa fa-upload" aria-hidden="true"></span> {{ trans('publications::publications.import') }}
 				</a>
 			</div>
@@ -226,26 +226,38 @@ app('pathway')
 	</div>
 </form>
 
-<div id="import-publications" class="dialog" title="{{ trans('publications::publications.import') }}">
-	<form action="{{ route('site.publications.import') }}" method="post" enctype="multipart/form-data">
-		<p>CSV, XLSX (Excel), and ODS files are accepted. The first row must be headers with at least the following columns: order <code>ID</code>, <code>purchaseio</code> or <code>purchasewbse</code>, and <code>paymentdocid</code>.</p>
+<div class="modal" id="import-publications" tabindex="-1" aria-labelledby="import-publications-title" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content shadow-sm">
+			<form action="{{ route('site.publications.import') }}" method="post" enctype="multipart/form-data">
+				<div class="modal-header">
+					<div class="modal-title" id="import-publications-title">{{ trans('publications::publications.import') }}</div>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>CSV, XLSX (Excel), and ODS files are accepted. The first row must be headers with at least the following columns: order <code>ID</code>, <code>purchaseio</code> or <code>purchasewbse</code>, and <code>paymentdocid</code>.</p>
 
-		<div class="form-group dropzone">
-			<div id="uploader" class="fallback" data-instructions="Click or Drop files" data-list="#uploader-list">
-				<label for="upload">Choose a file<span class="dropzone__dragndrop"> or drag it here</span></label>
-				<input type="file" name="file" id="upload" class="form-control-file" multiple="multiple" />
-			</div>
-			<div class="file-list" id="uploader-list"></div>
-			<input type="hidden" name="tmp_dir" id="ticket-tmp_dir" value="{{ ('-' . time()) }}" />
+					<div class="form-group dropzone">
+						<div id="uploader" class="fallback" data-instructions="Click or Drop files" data-list="#uploader-list">
+							<label for="upload">Choose a file<span class="dropzone__dragndrop"> or drag it here</span></label>
+							<input type="file" name="file" id="upload" class="form-control-file" multiple="multiple" />
+						</div>
+						<div class="file-list" id="uploader-list"></div>
+						<input type="hidden" name="tmp_dir" id="ticket-tmp_dir" value="{{ ('-' . time()) }}" />
+					</div>
+
+					@csrf
+				</div>
+				<div class="modal-footer text-center">
+					<input class="order btn btn-primary" type="submit" value="Import" />
+				</div>
+			</form>
 		</div>
-
-		<div class="text-center">
-			<input class="order btn btn-primary" type="submit" value="Import" />
-		</div>
-
-		@csrf
-	</form>
+	</div>
 </div>
+
 </div>
 </div>
 @stop
