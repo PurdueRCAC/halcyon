@@ -1,4 +1,4 @@
-FROM phpdockerio/php73-fpm:latest
+FROM phpdockerio/php:8.2-fpm
 WORKDIR "/var/www/html"
 
 # Fix debconf warnings upon build
@@ -9,15 +9,15 @@ WORKDIR "/var/www/html"
 # Install selected extensions and other stuff
 RUN apt-get update; \
     apt-get -y --no-install-recommends install \
-    php7.3-bcmath \ 
-    php7.3-gd \ 
-    php7.3-imagick \ 
-    php7.3-ldap \ 
-    php7.3-mysql \ 
-    php7.3-redis \ 
-    php7.3-sqlite3 \ 
-    php7.3-ssh2 \ 
-    php7.3-xdebug; \
+    php8.2-bcmath \ 
+    php8.2-gd \ 
+    php8.2-imagick \ 
+    php8.2-ldap \ 
+    php8.2-mysql \ 
+    php8.2-redis \ 
+    php8.2-sqlite3 \ 
+    php8.2-ssh2 \ 
+    php8.2-xdebug; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
