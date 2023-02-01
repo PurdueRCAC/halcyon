@@ -56,7 +56,7 @@ class ArticleUpdated extends Notification
 		$update = $article->updates()->orderBy('datetimecreated', 'desc')->first();
 
 		return (new SlackMessage)
-			->success()
+			->info()
 			->from(config('app.name'))
 			->content('News article *updated* at ' . ($update ? $update->formattedDatetimecreated : $article->datetimeedited->format('l, F j, Y g:ia')) . '.')
 			->attachment(function ($attachment) use ($notifiable, $article, $update)

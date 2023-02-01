@@ -54,7 +54,7 @@ class ArticleCreated extends Notification
 		$article = $this->article;
 
 		return (new SlackMessage)
-			->warning()
+			->success()
 			->from(config('app.name'))
 			->content('News article *created* at ' . $article->datetimecreated->format('l, F j, Y g:ia') . '.')
 			->attachment(function ($attachment) use ($notifiable, $article)
