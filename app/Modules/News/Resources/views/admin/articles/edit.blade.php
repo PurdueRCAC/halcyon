@@ -165,8 +165,8 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-body">{{ trans('news::news.body') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<span class="form-text text-muted">{!! trans('news::news.body formatting') !!} <button class="btn btn-link preview float-right" data-id="{{ $row->id }}" data-api="{{ route('api.news.preview') }}">Preview</button></span>
-					{!! markdown_editor('fields[body]', $row->body, ['rows' => 35, 'class' => ($errors->has('fields.body') ? 'is-invalid' : 'required'), 'required' => 'required']) !!}
+					<span class="form-text text-muted">{!! trans('news::news.body formatting') !!} <button class="btn btn-link preview float-right" data-target="#preview-modal" data-toggle="modal" data-id="{{ $row->id }}" data-api="{{ route('api.news.preview') }}">Preview</button></span>
+					{!! markdown_editor('fields[body]', $row->body, ['id' => 'field-body', 'rows' => 35, 'class' => ($errors->has('fields.body') ? 'is-invalid' : 'required'), 'required' => 'required']) !!}
 					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid body') }}</span>
 				</div>
 			</fieldset>
@@ -298,15 +298,43 @@ app('pathway')
 
 	@include('news::formatting')
 
-	<div id="preview" class="dialog" title="News Preview">
+	<div class="modal" id="preview-modal" tabindex="-1" aria-labelledby="preview-title" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content shadow-sm">
+				<div class="modal-header">
+					<div class="modal-title" id="preview-title">News Preview</div>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body" id="preview">
+					<div class="spinner-border" role="status">
+						<span class="sr-only">Loading...</span>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 
-	<div id="mailpreview" class="dialog" title="Mail Preview">
-	</div>
-
-	<div id="dialog-confirm" class="dialog" title="Unsaved Changes">
-		<p>You have unsaved changes that need to be saved before mailing news item.</p>
-		<p>Would you like to save the changes?</p>
+	<div class="modal" id="mailpreview-modal" tabindex="-1" aria-labelledby="mailpreview-title" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content shadow-sm">
+				<div class="modal-header">
+					<div class="modal-title" id="mailpreview-title">Mail Preview</div>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body" id="mailpreview">
+					<div class="spinner-border" role="status">
+						<span class="sr-only">Loading...</span>
+					</div>
+				</div>
+				<div class="modal-footer text-right">
+					<button id="mailsend" data-dismiss="modal" class="btn btn-success" data-confirm="You have unsaved changes that need to be saved before mailing news item. Would you like to save the changes?">Send mail</button>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	@csrf

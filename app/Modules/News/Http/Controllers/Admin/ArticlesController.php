@@ -136,9 +136,7 @@ class ArticlesController extends Controller
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
-		$types = Type::query()
-			->orderBy('name', 'asc')
-			->get();
+		$types = Type::tree();
 
 		return view('news::admin.articles.index', [
 			'filters' => $filters,
@@ -171,7 +169,11 @@ class ArticlesController extends Controller
 		$row = new Article();
 		$row->published = 1;
 
-		$types = Type::orderBy('name', 'asc')->get();
+		$types = Type::query()
+			->where('parentid', '=', 0)
+			->orderBy('ordering', 'asc')
+			->orderBy('name', 'asc')
+			->get();
 
 		if ($df = config('modules.news.default_type', 0))
 		{
@@ -194,11 +196,7 @@ class ArticlesController extends Controller
 			$row->fill($fields);
 		}
 
-		$templates = Article::query()
-			->where('published', '=', 1)
-			->where('template', '=', 1)
-			->orderBy('headline', 'asc')
-			->get();
+		$templates = Article::tree();
 
 		return view('news::admin.articles.edit', [
 			'row'   => $row,
@@ -222,7 +220,11 @@ class ArticlesController extends Controller
 			$row->fill($fields);
 		}
 
-		$types = Type::orderBy('name', 'asc')->get();
+		$types = Type::query()
+			->where('parentid', '=', 0)
+			->orderBy('ordering', 'asc')
+			->orderBy('name', 'asc')
+			->get();
 
 		$templates = Article::query()
 			->where('published', '=', 1)

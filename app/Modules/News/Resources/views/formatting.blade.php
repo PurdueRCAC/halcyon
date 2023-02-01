@@ -92,118 +92,134 @@ $help1i = 'Images can be included using a similar syntax as links but prefixing 
 ![Halcyon logo](/themes/admin/images/halcyon.svg)
 ';
 ?>
-	<div id="markdown-help" data-api="{{ route('api.news.preview') }}" class="dialog dialog-help tabs" data-width="700" title="MarkDown Help">
-		<ul>
-			<li><a href="#help1a">Fonts</a></li>
-			<li><a href="#help1b">Lists</a></li>
-			<li><a href="#help1c">Links</a></li>
-			<li><a href="#help1d">Other News</a></li>
-			<li><a href="#help1e">Line Breaks</a></li>
-			<li><a href="#help1f">Code</a></li>
-			<li><a href="#help1g">Tables</a></li>
-			<li><a href="#help1h">Variables</a></li>
-			<li><a href="#help1i">Images</a></li>
-		</ul>
-		<div id="help1a">
-			<?php
-			$article = new App\Modules\News\Models\Article(['body' => $help1a]);
-			?>
-			<div class="form-group">
-				<label for="help1ainput">Input text:</label>
-				<textarea id="help1ainput" class="form-control samplebox" rows="5" data-sample="a"><?php echo $help1a; ?></textarea>
+<div class="modal" id="markdown-help" tabindex="-1" aria-labelledby="markdown-help-title" aria-hidden="true" data-api="{{ route('api.news.preview') }}">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content shadow-sm">
+			<div class="modal-header">
+				<div class="modal-title" id="markdown-help-title">MarkDown Help</div>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
 			</div>
-			<p>Output text:<p>
-			<div id="help1aoutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
-		</div>
-		<div id="help1b">
-			<?php
-			$article = new App\Modules\News\Models\Article(['body' => $help1b]);
-			?>
-			<div class="form-group">
-				<label for="help1binput">Input text:</label>
-				<textarea id="help1binput" class="form-control samplebox" rows="5" data-sample="b"><?php echo $help1b; ?></textarea>
+			<div class="modal-body">
+				<div id="markdown-help-tabs" class="tabs">
+					<ul class="nav nav-tabs mb-3" id="help1" role="tablist">
+						<li class="nav-item" role="presentation"><a class="nav-link active" href="#help1a" data-toggle="tab" role="tab" id="help1-tab-1" aria-controls="help1a" aria-selected="true">Fonts</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1b" data-toggle="tab" role="tab" id="help1-tab-2" aria-controls="help1b" aria-selected="false">Lists</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1c" data-toggle="tab" role="tab" id="help1-tab-3" aria-controls="help1c" aria-selected="false">Links</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1d" data-toggle="tab" role="tab" id="help1-tab-4" aria-controls="help1d" aria-selected="false">Other News</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1e" data-toggle="tab" role="tab" id="help1-tab-5" aria-controls="help1e" aria-selected="false">Line Breaks</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1f" data-toggle="tab" role="tab" id="help1-tab-6" aria-controls="help1f" aria-selected="false">Code</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1g" data-toggle="tab" role="tab" id="help1-tab-7" aria-controls="help1g" aria-selected="false">Tables</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1h" data-toggle="tab" role="tab" id="help1-tab-8" aria-controls="help1h" aria-selected="false">Variables</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1i" data-toggle="tab" role="tab" id="help1-tab-9" aria-controls="help1i" aria-selected="false">Images</a></li>
+					</ul>
+					<div class="tab-content" id="help1-content">
+					<div class="tab-pane fade show active" role="tabpanel" aria-labelledby="help1-tab-1" id="help1a">
+						<?php
+						$article = new App\Modules\News\Models\Article(['body' => $help1a]);
+						?>
+						<div class="form-group">
+							<label for="help1ainput">Input text:</label>
+							<textarea id="help1ainput" class="form-control samplebox" rows="5" data-sample="a"><?php echo $help1a; ?></textarea>
+						</div>
+						<p>Output text:<p>
+						<div id="help1aoutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
+					</div>
+					<div class="tab-pane fade" role="tabpanel" aria-labelledby="help1-tab-2" id="help1b">
+						<?php
+						$article = new App\Modules\News\Models\Article(['body' => $help1b]);
+						?>
+						<div class="form-group">
+							<label for="help1binput">Input text:</label>
+							<textarea id="help1binput" class="form-control samplebox" rows="5" data-sample="b"><?php echo $help1b; ?></textarea>
+						</div>
+						<p>Output text:</p>
+						<div id="help1boutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
+					</div>
+					<div class="tab-pane fade" role="tabpanel" aria-labelledby="help1-tab-3" id="help1c">
+						<?php
+						$article = new App\Modules\News\Models\Article(['body' => $help1c]);
+						?>
+						<div class="form-group">
+							<label for="help1cinput">Input text:</label>
+							<textarea id="help1cinput" class="form-control samplebox" rows="5" data-sample="c"><?php echo $help1c; ?></textarea>
+						</div>
+						<p>Output text:</p>
+						<div id="help1coutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
+					</div>
+					<div class="tab-pane fade" role="tabpanel" aria-labelledby="help1-tab-4" id="help1d">
+						<?php
+						$article = new App\Modules\News\Models\Article(['body' => $help1d]);
+						?>
+						<div class="form-group">
+							<label for="help1dinput">Input text:</label>
+							<textarea id="help1dinput" class="form-control samplebox" rows="5" data-sample="d"><?php echo $help1d; ?></textarea>
+						</div>
+						<p>Output text:</p>
+						<div id="help1doutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
+					</div>
+					<div class="tab-pane fade" role="tabpanel" aria-labelledby="help1-tab-5" id="help1e">
+						<?php
+						$article = new App\Modules\News\Models\Article(['body' => $help1e]);
+						?>
+						<div class="form-group">
+							<label for="help1einput">Input text:</label>
+							<textarea id="help1einput" class="form-control samplebox" rows="5" data-sample="e"><?php echo $help1e; ?></textarea>
+						</div>
+						<p>Output text:</p>
+						<div id="help1eoutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
+					</div>
+					<div class="tab-pane fade" role="tabpanel" aria-labelledby="help1-tab-6" id="help1f">
+						<?php
+						$article = new App\Modules\News\Models\Article(['body' => $help1f]);
+						?>
+						<div class="form-group">
+							<label for="help1finput">Input text:</label>
+							<textarea id="help1finput" class="form-control samplebox" rows="5" data-sample="f"><?php echo $help1f; ?></textarea>
+						</div>
+						<p>Output text:</p>
+						<div id="help1foutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
+					</div>
+					<div class="tab-pane fade" role="tabpanel" aria-labelledby="help1-tab-7" id="help1g">
+						<?php
+						$article = new App\Modules\News\Models\Article(['body' => $help1g]);
+						?>
+						<div class="form-group">
+							<label for="help1ginput">Input text:</label>
+							<textarea id="help1ginput" class="form-control samplebox" rows="5" data-sample="g"><?php echo $help1g; ?></textarea>
+						</div>
+						<p>Output text:</p>
+						<div id="help1goutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
+					</div>
+					<div class="tab-pane fade" role="tabpanel" aria-labelledby="help1-tab-8" id="help1h">
+						<?php
+						$article = new App\Modules\News\Models\Article(['body' => $help1h]);
+						$article->datetimenews = Carbon\Carbon::now();
+						$article->datetimenewsend = Carbon\Carbon::now()->modify('+3 hours');
+						$article->location = '123 Some Street';
+						?>
+						<div class="form-group">
+							<label for="help1hinput">Input text:</label>
+							<textarea id="help1hinput" class="form-control samplebox" rows="5" data-sample="h"><?php echo $help1h; ?></textarea>
+						</div>
+						<p>Output text:</p>
+						<div id="help1goutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
+					</div>
+					<div class="tab-pane fade" role="tabpanel" aria-labelledby="help1-tab-9" id="help1i">
+						<?php
+						$article = new App\Modules\News\Models\Article(['body' => $help1i]);
+						?>
+						<div class="form-group">
+							<label for="help1ginput">Input text:</label>
+							<textarea id="help1ginput" class="form-control samplebox" rows="5" data-sample="g"><?php echo $help1i; ?></textarea>
+						</div>
+						<p>Output text:</p>
+						<div id="help1goutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
+					</div>
+				</div>
+				</div>
 			</div>
-			<p>Output text:</p>
-			<div id="help1boutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
-		</div>
-		<div id="help1c">
-			<?php
-			$article = new App\Modules\News\Models\Article(['body' => $help1c]);
-			?>
-			<div class="form-group">
-				<label for="help1cinput">Input text:</label>
-				<textarea id="help1cinput" class="form-control samplebox" rows="5" data-sample="c"><?php echo $help1c; ?></textarea>
-			</div>
-			<p>Output text:</p>
-			<div id="help1coutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
-		</div>
-		<div id="help1d">
-			<?php
-			$article = new App\Modules\News\Models\Article(['body' => $help1d]);
-			?>
-			<div class="form-group">
-				<label for="help1dinput">Input text:</label>
-				<textarea id="help1dinput" class="form-control samplebox" rows="5" data-sample="d"><?php echo $help1d; ?></textarea>
-			</div>
-			<p>Output text:</p>
-			<div id="help1doutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
-		</div>
-		<div id="help1e">
-			<?php
-			$article = new App\Modules\News\Models\Article(['body' => $help1e]);
-			?>
-			<div class="form-group">
-				<label for="help1einput">Input text:</label>
-				<textarea id="help1einput" class="form-control samplebox" rows="5" data-sample="e"><?php echo $help1e; ?></textarea>
-			</div>
-			<p>Output text:</p>
-			<div id="help1eoutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
-		</div>
-		<div id="help1f">
-			<?php
-			$article = new App\Modules\News\Models\Article(['body' => $help1f]);
-			?>
-			<div class="form-group">
-				<label for="help1finput">Input text:</label>
-				<textarea id="help1finput" class="form-control samplebox" rows="5" data-sample="f"><?php echo $help1f; ?></textarea>
-			</div>
-			<p>Output text:</p>
-			<div id="help1foutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
-		</div>
-		<div id="help1g">
-			<?php
-			$article = new App\Modules\News\Models\Article(['body' => $help1g]);
-			?>
-			<div class="form-group">
-				<label for="help1ginput">Input text:</label>
-				<textarea id="help1ginput" class="form-control samplebox" rows="5" data-sample="g"><?php echo $help1g; ?></textarea>
-			</div>
-			<p>Output text:</p>
-			<div id="help1goutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
-		</div>
-		<div id="help1h">
-			<?php
-			$article = new App\Modules\News\Models\Article(['body' => $help1h]);
-			$article->datetimenews = Carbon\Carbon::now();
-			$article->datetimenewsend = Carbon\Carbon::now()->modify('+3 hours');
-			$article->location = '123 Some Street';
-			?>
-			<div class="form-group">
-				<label for="help1hinput">Input text:</label>
-				<textarea id="help1hinput" class="form-control samplebox" rows="5" data-sample="h"><?php echo $help1h; ?></textarea>
-			</div>
-			<p>Output text:</p>
-			<div id="help1goutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
-		</div>
-		<div id="help1i">
-			<?php
-			$article = new App\Modules\News\Models\Article(['body' => $help1i]);
-			?>
-			<div class="form-group">
-				<label for="help1ginput">Input text:</label>
-				<textarea id="help1ginput" class="form-control samplebox" rows="5" data-sample="g"><?php echo $help1i; ?></textarea>
-			</div>
-			<p>Output text:</p>
-			<div id="help1goutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div>
 		</div>
 	</div>
+</div>

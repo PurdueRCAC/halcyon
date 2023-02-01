@@ -2359,53 +2359,53 @@ function CRMDeletedComment(arg) {
 		method: 'GET',
 		headers: headers
 	})
-	.then(function (response) {
-		if (response.ok) {
-			return response.json();
-		}
-		return response.json().then(function (data) {
-			var msg = data.message;
-			if (typeof msg === 'object') {
-				msg = Object.values(msg).join('<br />');
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
 			}
-			throw msg;
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (results) {
+			var div, a;
+
+			if (results['subscribed'] == '0') {
+				div = document.getElementById(arg['reportid'] + "_subscribed");
+
+				a = document.createElement("a");
+				a.href = "?id=" + arg['reportid'] + "&subscribe";
+				a.className = 'btn btn-default btn-sm';
+				a.onclick = function (e) {
+					e.preventDefault();
+					CRMSubscribeComment(arg['reportid']);
+				};
+				a.innerHTML = "Subscribe";
+
+				div.appendChild(a);
+			} else if (results['subscribed'] == '2') {
+				div = document.getElementById(arg['reportid'] + "_subscribed");
+
+				a = document.createElement("a");
+				a.href = "?id=" + arg['reportid'] + "&unsubscribe";
+				a.className = 'btn btn-default btn-sm';
+				a.onclick = function (e) {
+					e.preventDefault();
+					CRMUnsubscribeComment(results['subscribedcommentid'], arg['reportid']);
+				};
+				a.innerHTML = "Unsubscribe";
+
+				div.appendChild(a);
+			}
+		})
+		.catch(function (err) {
+			document.getElementById(arg['commentid'] + "_commentdeleteimg").className = "fa fa-exclamation-circle";
+			document.getElementById(arg['commentid'] + "_commentdeleteimg").parentNode.title = err; //"An error occurred while deleting comment.";
 		});
-	})
-	.then(function (results) {
-		var div, a;
-
-		if (results['subscribed'] == '0') {
-			div = document.getElementById(arg['reportid'] + "_subscribed");
-
-			a = document.createElement("a");
-			a.href = "?id=" + arg['reportid'] + "&subscribe";
-			a.className = 'btn btn-default btn-sm';
-			a.onclick = function (e) {
-				e.preventDefault();
-				CRMSubscribeComment(arg['reportid']);
-			};
-			a.innerHTML = "Subscribe";
-
-			div.appendChild(a);
-		} else if (results['subscribed'] == '2') {
-			div = document.getElementById(arg['reportid'] + "_subscribed");
-
-			a = document.createElement("a");
-			a.href = "?id=" + arg['reportid'] + "&unsubscribe";
-			a.className = 'btn btn-default btn-sm';
-			a.onclick = function (e) {
-				e.preventDefault();
-				CRMUnsubscribeComment(results['subscribedcommentid'], arg['reportid']);
-			};
-			a.innerHTML = "Unsubscribe";
-
-			div.appendChild(a);
-		}
-	})
-	.catch(function (err) {
-		document.getElementById(arg['commentid'] + "_commentdeleteimg").className = "fa fa-exclamation-circle";
-		document.getElementById(arg['commentid'] + "_commentdeleteimg").parentNode.title = err; //"An error occurred while deleting comment.";
-	});
 }
 
 /**
@@ -2420,23 +2420,23 @@ function CRMDeleteReport(reportid) {
 			method: 'DELETE',
 			headers: headers
 		})
-		.then(function (response) {
-			if (response.ok) {
-				document.getElementById(reportid).style.display = "none";
-				return;// response.json();
-			}
-			return response.json().then(function (data) {
-				var msg = data.message;
-				if (typeof msg === 'object') {
-					msg = Object.values(msg).join('<br />');
+			.then(function (response) {
+				if (response.ok) {
+					document.getElementById(reportid).style.display = "none";
+					return;// response.json();
 				}
-				throw msg;
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (err) {
+				document.getElementById(reportid + "_crmdeleteimg").className = "fa fa-exclamation-circle";
+				document.getElementById(reportid + "_crmdeleteimg").parentNode.title = err; //"An error occurred while deleting report.";
 			});
-		})
-		.catch(function (err) {
-			document.getElementById(reportid + "_crmdeleteimg").className = "fa fa-exclamation-circle";
-			document.getElementById(reportid + "_crmdeleteimg").parentNode.title = err; //"An error occurred while deleting report.";
-		});
 	}
 }
 
@@ -2837,11 +2837,8 @@ function CRMClearSearch() {
 
 	var resources = document.getElementById("crmresource");
 	if (resources) {
-		/*resources.value = '';
-		if ($('.tagsinput').length) {
-			$(resources).clearTags();
-		}*/
-		$(resources).val(null).trigger('change');
+		resources.value = '';
+		resources.dispatchEvent(new Event('change'));
 	}
 
 	var type = document.getElementById("crmtype");
@@ -2850,7 +2847,7 @@ function CRMClearSearch() {
 	}
 
 	if (window.location.href.match(/edit/)) {
-		window.location = window.location.href.replace(/&edit/, "&search");
+		window.location = window.location.href.replace(/&edit/, ""); //.replace(/id=\d+/, "");
 	} else if (document.getElementById("TAB_follow").className.match(/active/)) {
 		var xml = null;
 
@@ -3279,12 +3276,13 @@ document.addEventListener('DOMContentLoaded', function () {
 			document.getElementById('datestartshort').value = original.datetimecontact;//.substring(0, 10);
 			document.getElementById('NotesText').value = original.note;
 
-			$("#crmtype > option").each(function () {
+			document.getElementById('crmtype').value = original['contactreporttypeid'];
+			/*$("#crmtype > option").each(function () {
 				if (this.value == original['contactreporttypeid']) {
 					$('#crmtype > option:selected', 'select[name="options"]').removeAttr('selected');
 					$(this).attr('selected', true);
 				}
-			});
+			});*/
 
 			//CRMToggleSearch('people');
 			//CRMToggleSearch('none');
@@ -3382,8 +3380,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			});
 		});
 	}
-
-	$('#help1').tabs();
 
 	var container = document.getElementById('reports');
 	if (container && !window.location.href.match(/[&?](\w+)$/)) {

@@ -98,7 +98,7 @@ else
 				<select name="type" id="filter-type" class="form-control filter filter-submit">
 					<option value="0">{{ trans('news::news.select type') }}</option>
 					<?php foreach ($types as $type): ?>
-						<option value="<?php echo $type->id; ?>"<?php if ($filters['type'] == $type->id) { echo ' selected="selected"'; } ?>>{{ $type->name }}</option>
+						<option value="<?php echo $type->id; ?>"<?php if ($filters['type'] == $type->id) { echo ' selected="selected"'; } ?>>{{ ($type->level ? str_repeat('|_', $type->level) . ' ' : '') . $type->name }}</option>
 					<?php endforeach; ?>
 				</select>
 			</div>
@@ -247,7 +247,7 @@ else
 						</a>
 					</td>
 					<td class="priority-6 text-right">
-						<button class="btn news-mail" data-success="Email sent!" data-article="{{ route('api.news.read', ['id' => $row->id]) }}" data-api="{{ route('api.news.email', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.send email') }}">
+						<button class="btn news-mail" data-success="Email sent!" data-toggle="modal" data-target="#mailpreview-modal" data-article="{{ route('api.news.read', ['id' => $row->id]) }}" data-api="{{ route('api.news.email', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.send email') }}">
 							<span class="fa fa-envelope"><span class="sr-only">Email</span></span>
 						</button>
 					</td>
@@ -267,9 +267,9 @@ else
 	@endif
 
 	<script id="mailpreview-template" type="text/x-handlebars-template">
-		<div id="mail-recipients">To: <?php echo '{{resourcelist}}'; ?> Users</div>
-		<div id="mail-from">From: YOU via <?php echo config('app.name'); ?></div>
-		<div id="mail-subject">Subject: <?php echo '{{subject}} - {{formatteddate}}'; ?></div>
+		<div id="mail-recipients"><strong>To:</strong> <?php echo '{{resourcelist}}'; ?> Users</div>
+		<div id="mail-from"><strong>From:</strong> YOU via <?php echo config('app.name'); ?></div>
+		<div id="mail-subject"><strong>Subject:</strong> <?php echo '{{subject}} - {{formatteddate}}'; ?></div>
 		<hr />
 		<div id="mail-meta">
 			<strong><?php echo '{{subject}}'; ?></strong><br/>
@@ -292,7 +292,7 @@ else
 		Please reply to <a href="mailto:<?php echo config('mail.from.address'); ?>"><?php echo config('mail.from.address'); ?></a> with any questions or concerns.<br/>
 		<a href="<?php echo '{{uri}}'; ?>">View this article on the web.</a>
 
-		<div class="ui-dialog-pane-highlight">
+		<div class="modal-pane">
 			<?php echo '{{#if resources}}'; ?>
 				<fieldset class="option-group">
 					<legend>Send to resource mailing lists:</legend>
@@ -317,64 +317,95 @@ else
 			</div>
 		</div>
 	</script>
-	<div id="mailpreview" class="dialog" title="Mail Preview">
+
+	<div class="modal" id="mailpreview-modal" tabindex="-1" aria-labelledby="mailpreview-title" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content shadow-sm">
+				<div class="modal-header">
+					<div class="modal-title" id="mailpreview-title">Mail Preview</div>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body" id="mailpreview">
+					<div class="spinner-border" role="status">
+						<span class="sr-only">Loading...</span>
+					</div>
+				</div>
+				<div class="modal-footer text-right">
+					<button id="mailsend" data-dismiss="modal" class="btn btn-success" data-confirm="You have unsaved changes that need to be saved before mailing news item. Would you like to save the changes?">Send mail</button>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	@csrf
 	<input type="hidden" name="boxchecked" value="0" />
 </form>
 
-<dialog id="copy-article" class="dialog" title="{{ trans('news::news.copy article') }}">
-	<form method="post" action="{{ route('admin.news.copy') }}">
-		<h2 class="modal-title sr-only">{{ trans('news::news.copy article') }}</h2>
-
-		<div class="px-3">
-			<?php /*<div class="row">
-				<div class="col-md-6">*/ ?>
-			<div class="form-group">
-				<label for="copy-start">{{ trans('news::news.copy to') }}:</label>
-				<span class="input-group input-datetime">
-					<input type="text" class="form-control date" name="start" id="copy-start" value="{{ Carbon\Carbon::now()->modify('+1 day')->format('Y-m-d') }}" />
-					<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
-				</span>
+<div class="modal" id="copy-article" tabindex="-1" aria-labelledby="copy-article-title" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content shadow-sm">
+			<div class="modal-header">
+				<div class="modal-title" id="copy-article-title">{{ trans('news::news.copy article') }}</div>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
 			</div>
+			<div class="modal-body">
+				<form method="post" action="{{ route('admin.news.copy') }}">
+					<h2 class="modal-title sr-only">{{ trans('news::news.copy article') }}</h2>
 
-			<?php /*<div class="form-group">
-				<label for="copy-days">{{ trans('news::news.days to copy') }}:</label>
-				<input type="number" class="form-control" name="days" id="copy-days" value="1" />
-			</div>
+					<div class="px-3">
+						<?php /*<div class="row">
+							<div class="col-md-6">*/ ?>
+						<div class="form-group">
+							<label for="copy-start">{{ trans('news::news.copy to') }}:</label>
+							<span class="input-group input-datetime">
+								<input type="text" class="form-control date" name="start" id="copy-start" value="{{ Carbon\Carbon::now()->modify('+1 day')->format('Y-m-d') }}" />
+								<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
+							</span>
+						</div>
 
-				</div>
-				<div class="col-md-6">å
-					<div class="form-group">
-						<label for="copy-days">{{ trans('news::news.times to copy') }}:</label>
-						<select class="form-control datetime" name="times" id="copy-times" multiple size="7">
-							<?php
-							$now   = Carbon\Carbon::now();
-							$start = '07:00:00';
-							$end   = '19:00:00';
-							$date = Carbon\Carbon::parse($now->format('Y-m-d') . ' ' . $start);
-							$date_end = Carbon\Carbon::parse($now->format('Y-m-d') . ' ' . $end);
+						<?php /*<div class="form-group">
+							<label for="copy-days">{{ trans('news::news.days to copy') }}:</label>
+							<input type="number" class="form-control" name="days" id="copy-days" value="1" />
+						</div>
 
-							for ($date; $date <= $date_end; $date->modify('+30 Minutes'))
-							{
-								?>
-								<option value="<?php echo $date->format('h:i a'); ?>"><?php echo $date->format('h:i a'); ?></option>
-								<?php
-							}
-							?>
-						</select>
+							</div>
+							<div class="col-md-6">å
+								<div class="form-group">
+									<label for="copy-days">{{ trans('news::news.times to copy') }}:</label>
+									<select class="form-control datetime" name="times" id="copy-times" multiple size="7">
+										<?php
+										$now   = Carbon\Carbon::now();
+										$start = '07:00:00';
+										$end   = '19:00:00';
+										$date = Carbon\Carbon::parse($now->format('Y-m-d') . ' ' . $start);
+										$date_end = Carbon\Carbon::parse($now->format('Y-m-d') . ' ' . $end);
+
+										for ($date; $date <= $date_end; $date->modify('+30 Minutes'))
+										{
+											?>
+											<option value="<?php echo $date->format('h:i a'); ?>"><?php echo $date->format('h:i a'); ?></option>
+											<?php
+										}
+										?>
+									</select>
+								</div>
+							</div>
+						</div>*/ ?>
+
+						<p class="text-center">
+							<input type="submit" class="btn btn-primary" value="{{ trans('news::news.copy') }}" />
+						</p>
 					</div>
-				</div>
-			</div>*/ ?>
 
-			<p class="text-center">
-				<input type="submit" class="btn btn-primary" value="{{ trans('news::news.copy') }}" />
-			</p>
+					@csrf
+				</form>
+			</div>
 		</div>
-
-		@csrf
-	</form>
-</dialog>
+	</div>
+</div>
 
 @stop

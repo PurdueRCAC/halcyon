@@ -38,7 +38,7 @@ app('pathway')
 	<h2>Manage News &amp; Events</h2>
 
 	<div id="everything">
-		<ul class="nav nav-tabs">
+		<ul class="nav nav-tabs" id="tabs">
 			<li class="nav-item"><a id="TAB_search" class="nav-link active tab activeTab" href="#search">{{ trans('news::news.search') }}</a></li>
 			<li class="nav-item"><a id="TAB_add" class="nav-link tab" href="#add">Add New</a></li>
 		</ul>
@@ -248,7 +248,7 @@ app('pathway')
 						<div class="form-group row tab-search tab-add tab-edit" id="TR_published">
 							<label for="published" class="col-sm-2 col-form-label">
 								{{ trans('news::news.published') }}
-								<a href="#help2" class="text-info help tip" title="Help">
+								<a href="#help2" data-toggle="modal" class="text-info tip" title="Help">
 									<span class="fa fa-question-circle" aria-hidden="true"></span>
 									<span class="sr-only">Help</span>
 								</a>
@@ -266,7 +266,7 @@ app('pathway')
 						<div class="form-group row tab-add tab-edit" id="TR_use_template">
 							<label for="template_select" class="col-sm-2 col-form-label">
 								{{ trans('news::news.template') }}
-								<a href="#help4" class="text-info help tip" title="Help">
+								<a href="#help4" data-toggle="modal" class="text-info tip" title="Help">
 									<span class="fa fa-question-circle" aria-hidden="true"></span>
 									<span class="sr-only">Help</span>
 								</a>
@@ -302,7 +302,7 @@ app('pathway')
 						<div class="form-group row tab-add tab-edit" id="TR_notes">
 							<label for="NotesText" class="col-sm-2 col-form-label">
 								{{ trans('news::news.body') }}
-								<a href="#markdown-help" class="text-info help tip" title="Help">
+								<a href="#markdown-help" data-toggle="modal" class="text-info tip" title="Help">
 									<span class="fa fa-question-circle" aria-hidden="true"></span>
 									<span class="sr-only">Help</span>
 								</a>
@@ -330,7 +330,7 @@ app('pathway')
 							</div>
 							<div class="col-sm-10">
 								<input id="INPUT_add" type="submit" class="btn btn-primary" data-add="Add News" data-edit="Save Changes" value="Add News" disabled="true" />
-								<input id="INPUT_preview" type="button" class="btn btn-secondary" value="Preview" data-id="{{ request('id') }}" />
+								<input id="INPUT_preview" type="button" data-toggle="modal" data-target="#preview-modal" class="btn btn-secondary" value="Preview" data-id="{{ request('id') }}" />
 								<input id="INPUT_clear" type="reset" class="btn btn-danger" data-add="Add News" data-edit="Save Changes" value="Clear" />
 							</div>
 						</div>
@@ -381,63 +381,142 @@ app('pathway')
 
 	@include('news::formatting')
 
-	<div id="help2" class="dialog dialog-help" title="Published">
-		<p>Check this box if you wish to publish this new article to the website for the public to see. Leaving this box unchecked will create the article in draft mode where only other news editors can read it.</p>
-	</div>
-
-	<div id="help3" class="dialog dialog-help" title="Update">
-		<p>Check this box if you wish to publically flag this news article as being updated. Articles will be flagged as being updated with the current timestamp.</p>
-		<p>Typically this box is used when adding new information to an article. Minor corrections to articles, such as fixing typos, do not need to be publicized as being updated.</p>
-	</div>
-
-	<div id="help4" class="dialog dialog-help" title="Template">
-		<p>From this drop down, you may choose to create a new template, populate article from a template, or leave the selection alone and create an article from scratch.</p>
-	</div>
-
-	<div id="preview" class="dialog" title="News Preview">
-	</div>
-
-	<div id="mailpreview" class="dialog" title="Mail Preview">
-	</div>
-
-	<div id="mailwrite" class="dialog" title="Write Mail">
-		<form method="post" action="{{ route('site.news.manage') }}">
-			<div class="form-group row">
-				<label for="newsuser" class="col-sm-2 col-form-label">To</label>
-				<div class="col-sm-10">
-					<input name="to" id="mail-to" class="form-control" value="" data-uri="{{ route('api.users.index') }}/%s" />
+	<div class="modal" id="help2" tabindex="-1" aria-labelledby="help2-title" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content shadow-sm">
+				<div class="modal-header">
+					<div class="modal-title" id="help2-title">Published</div>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>Check this box if you wish to publish this new article to the website for the public to see. Leaving this box unchecked will create the article in draft mode where only other news editors can read it.</p>
 				</div>
 			</div>
-			<div class="form-group row">
-				<label for="mail-from" class="col-sm-2 col-form-label">From</label>
-				<div class="col-sm-10">
-					<input id="mail-from" name="from" type="text" disabled="disabled" readonly="readonly" class="form-control" value="{{ auth()->user()->name }} via Research Computing" />
-				</div>
-			</div>
-			<div class="form-group row">
-				<label for="mail-subject" class="col-sm-2 col-form-label">Subject</label>
-				<div class="col-sm-10">
-					<input id="mail-subject" name="subject" type="text" class="form-control" />
-				</div>
-			</div>
-			<div class="form-group row">
-				<label for="NotesText" class="col-sm-2 col-form-label">
-					Body
-					<a href="#help1" class="help icn tip" title="Help">
-						<span class="fa fa-question-circle" aria-hidden="true"></span> Help
-					</a>
-				</label>
-				<div class="col-sm-10">
-					<textarea name="body" id="mail-body" rows="15" cols="77" class="form-control"></textarea>
-				</div>
-			</div>
-			@csrf
-		</form>
+		</div>
 	</div>
 
-	<div id="dialog-confirm" class="dialog" title="Unsaved Changes">
-		<p>You have unsaved changes that need to be saved before mailing news item.</p>
-		<p>Would you like to save the changes?</p>
+	<div class="modal" id="help3" tabindex="-1" aria-labelledby="help3-title" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content shadow-sm">
+				<div class="modal-header">
+					<div class="modal-title" id="help3-title">Update</div>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>Check this box if you wish to publically flag this news article as being updated. Articles will be flagged as being updated with the current timestamp.</p>
+					<p>Typically this box is used when adding new information to an article. Minor corrections to articles, such as fixing typos, do not need to be publicized as being updated.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal" id="help4" tabindex="-1" aria-labelledby="help4-title" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content shadow-sm">
+				<div class="modal-header">
+					<div class="modal-title" id="help4-title">Template</div>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>From this drop down, you may choose to create a new template, populate article from a template, or leave the selection alone and create an article from scratch.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal" id="preview-modal" tabindex="-1" aria-labelledby="preview-title" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content shadow-sm">
+				<div class="modal-header">
+					<div class="modal-title" id="preview-title">News Preview</div>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body" id="preview">
+					<div class="spinner-border" role="status">
+						<span class="sr-only">Loading...</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal" id="mailpreview-modal" tabindex="-1" aria-labelledby="mailpreview-title" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content shadow-sm">
+				<div class="modal-header">
+					<div class="modal-title" id="mailpreview-title">Mail Preview</div>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body" id="mailpreview">
+					<div class="spinner-border" role="status">
+						<span class="sr-only">Loading...</span>
+					</div>
+				</div>
+				<div class="modal-footer text-right">
+					<button id="mailsend" data-dismiss="modal" class="btn btn-success" data-confirm="You have unsaved changes that need to be saved before mailing news item. Would you like to save the changes?">Send mail</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal" id="mailwrite-modal" tabindex="-1" aria-labelledby="mailwrite-title" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content dialog-content shadow-sm">
+				<div class="modal-header">
+					<div class="modal-title" id="mailwrite-title">Write Mail</div>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body dialog-body" id="mailwrite">
+					<form method="post" action="{{ route('site.news.manage') }}">
+						<div class="form-group row">
+							<label for="newsuser" class="col-sm-2 col-form-label">To</label>
+							<div class="col-sm-10">
+								<input name="to" id="mail-to" class="form-control" value="" data-uri="{{ route('api.users.index') }}/%s" />
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="mail-from" class="col-sm-2 col-form-label">From</label>
+							<div class="col-sm-10">
+								<input id="mail-from" name="from" type="text" disabled="disabled" readonly="readonly" class="form-control" value="{{ auth()->user()->name }}" />
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="mail-subject" class="col-sm-2 col-form-label">Subject</label>
+							<div class="col-sm-10">
+								<input id="mail-subject" name="subject" type="text" class="form-control" />
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="NotesText" class="col-sm-2 col-form-label">
+								Body
+								<a href="#help1" class="help icn tip" title="Help">
+									<span class="fa fa-question-circle" aria-hidden="true"></span> Help
+								</a>
+							</label>
+							<div class="col-sm-10">
+								<textarea name="body" id="mail-body" rows="15" cols="77" class="form-control"></textarea>
+							</div>
+						</div>
+						@csrf
+					</form>
+				</div>
+				<div class="modal-footer text-right">
+					<button id="mailsend-write" data-dismiss="modal" class="btn btn-success">Send mail</button>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<?php

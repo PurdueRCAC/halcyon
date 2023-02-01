@@ -2,24 +2,47 @@
 /* global Handlebars */ // handlebars.js
 /* global Halcyon */ // core.js
 
+var headers = {
+	'Content-Type': 'application/json'
+};
+
 /**
  * Send an email
  *
- * @param   {string}  news
+ * @param   {object}  btn
  * @return  {void}
  */
 function NEWSSendMail(btn) {
 	// Get text and updates
-	$.getJSON(btn.data('article'), function (data) {
+	fetch(btn.getAttribute('data-article'), {
+		method: 'GET',
+		headers: headers
+	})
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.then(function (data) {
 		// Gather some  variables from DOM
-		var resourcelist = [], x;
+		var resources = [],
+			resourcelist = [],
+			x;
 		if (data['resources'].length > 0) {
+			resources = data['resources'];
 			for (x = 0; x < data['resources'].length; x++) {
 				resourcelist.push(data['resources'][x]['name']);
 			}
 		}
 
-		var source = $('#mailpreview-template').html(),
+		var source = document.getElementById('mailpreview-template').innerHTML,
 			template = Handlebars.compile(source),
 			context = {
 				"subject": data.headline,
@@ -33,7 +56,7 @@ function NEWSSendMail(btn) {
 			},
 			html = template(context);
 
-		$('#mailpreview').html(html);
+		document.getElementById('mailpreview').innerHTML = html;
 
 		var to = $('#mail-to');
 		to.val('');
@@ -61,67 +84,64 @@ function NEWSSendMail(btn) {
 			}
 		}
 
-		$('#mailpreview').dialog({
-			modal: true,
-			width: '691px',
-			buttons: {
-				"Cancel": function () {
-					$(this).dialog("close");
-				},
-				"Send mail": function () {
-					$(this).dialog("close");
+		document.getElementById('mailsend').addEventListener('click', function (e) {
+			e.preventDefault();
 
-					var post = {
-						'mail': 1//,
-						//'lastedit': LASTEDIT[news]
-					};
+			var post = {
+				'mail': 1//,
+				//'lastedit': LASTEDIT[news]
+			};
 
-					var resources = [];
-					$('.preview-resource').each(function (i, el) {
-						if ($(el).is(':checked')) {
-							resources.push($(el).val());
-						}
-					});
+			var resources = [];
+			document.querySelectorAll('.preview-resource').forEach(function (el) {
+				if (el.checked) {
+					resources.push(el.value);
+				}
+			});
 
-					var usersto = document.querySelector("input[name=to]"),
-						associations = [];
+			var usersto = document.querySelector("input[name=to]"),
+				associations = [];
 
-					if (usersto) {
-						var usersdata = usersto.value.split(','),
-							i;
-						for (i = 0; i < usersdata.length; i++) {
-							if (usersdata[i] != "") {
-								associations.push(usersdata[i]);
-							}
-						}
+			if (usersto) {
+				var usersdata = usersto.value.split(','),
+					i;
+				for (i = 0; i < usersdata.length; i++) {
+					if (usersdata[i] != "") {
+						associations.push(usersdata[i]);
 					}
-
-					//if ($('.preview-resource').length != resources.length) {
-					post.resources = resources;
-					post.associations = associations;
-					//}
-
-					$.ajax({
-						url: btn.data('api'),
-						type: 'put',
-						data: post,
-						dataType: 'json',
-						async: false,
-						success: function () {
-							//document.getElementById("datetimemail_" + data.id).innerHTML = response.datetimemail;
-							Halcyon.message('success', btn.data('success'));
-						},
-						error: function (xhr) {
-							Halcyon.message('danger', xhr.responseJSON.message);
-						}
-					});
 				}
 			}
+
+			post.resources = resources;
+			post.associations = associations;
+
+			post = JSON.stringify(post);
+
+			fetch(btn.getAttribute('data-api'), {
+				method: 'PUT',
+				headers: headers,
+				body: post
+			})
+			.then(function (response) {
+				if (response.ok) {
+					Halcyon.message('success', btn.data('success'));
+					return;
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (err) {
+				Halcyon.message('danger', err);
+			});
 		});
-		if ($(".ui-dialog-buttonpane").find("div").length == 1) {
-			$(".ui-dialog-buttonpane").prepend('<div style="float:left;padding-top:1em;padding-left:18em">Send this email message?</div>');
-		}
-		$('#mailpreview').dialog('open');
+	})
+	.catch(function (err) {
+		alert(err);
 	});
 }
 
@@ -132,7 +152,7 @@ function NEWSSendMail(btn) {
  * @return  {void}
  */
 /*function NEWSWriteMail(news) {
-	$.getJSON(root + "news/" + news, function (data) {
+	$.getJSON(ROOT_URL + "news/" + news, function (data) {
 		$('#mail-subject').val(data.headline);
 
 		var body = '**Date:** ' + data.formatteddate.replace(/(<([^>]+)>)/ig, '').replace(/&nbsp;/g, ' ').replace('&#8211;', '-') + "\n";
@@ -200,33 +220,7 @@ function NEWSSendMail(btn) {
 						'news': $('#mail-body').val(),
 						'associations': associations
 					});
-
-					fetch(root + "news/" + news, {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-							'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-						},
-						body: post
-					})
-					.then(function (response) {
-						if (response.ok) {
-							return response.json();
-						}
-						return response.json().then(function (data) {
-							var msg = data.message;
-							if (typeof msg === 'object') {
-								msg = Object.values(msg).join('<br />');
-							}
-							throw msg;
-						});
-					})
-					.then(function (data) {
-						NEWSSentMail();
-					})
-					.catch(function (error) {
-						alert(error);
-					});
+					WSPostURL(ROOT_URL + "news/" + news, post, NEWSSentMail);
 				}
 			}
 		});
@@ -278,7 +272,7 @@ function NEWSPreviewVars() {
 			return v.innerHTML;
 		});
 
-		$.each(resources, function (i, el) {
+		resources.forEach(function(el){
 			preview_vars['resources'][i] = el;
 		});
 	}
@@ -300,10 +294,6 @@ function NEWSPreviewVars() {
  * @return  {void}
  */
 function NEWSPreview(btn) {
-	/*if (typeof (edit) == 'undefined') {
-		edit = false;
-	}*/
-
 	var text = document.getElementById("fields-body").value;
 
 	if (text == "") {
@@ -311,27 +301,38 @@ function NEWSPreview(btn) {
 	}
 
 	var post = {
-		'id': btn.data('id'),
+		'id': btn.getAttribute('data-id'),
 		'body': text
 	};
 
 	post['vars'] = NEWSPreviewVars();
-	post['news'] = btn.data('api');
+	post['news'] = btn.getAttribute('data-api');
 
-	$.ajax({
-		url: btn.data('api'),
-		type: 'post',
-		data: post,
-		dataType: 'json',
-		async: false,
-		success: function (response) {
-			document.getElementById("preview").innerHTML = response['formattedbody'];
-			$('#preview').dialog({ modal: true, width: '691px' });
-			$('#preview').dialog('open');
+	fetch(btn.getAttribute('data-api'), {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 		},
-		error: function (xhr) {
-			Halcyon.message('danger', xhr.responseJSON.message);
+		body: JSON.stringify(post)
+	})
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
 		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.then(function(json) {
+		document.getElementById("preview").innerHTML = json['formattedbody'];
+	})
+	.catch(function (error) {
+		Halcyon.message('danger', error);
 	});
 }
 
@@ -355,18 +356,28 @@ function PreviewExample(example) {
 		'vars': example_vars
 	};
 
-	$.ajax({
-		url: document.getElementById('markdown-help').getAttribute('data-api'),
-		type: 'post',
-		data: post,
-		dataType: 'json',
-		async: false,
-		success: function (response) {
-			document.getElementById('help1' + example + 'output').innerHTML = response['formattedbody'];
-		},
-		error: function (xhr) {
-			Halcyon.message('danger', xhr.responseJSON.message);
+	fetch(document.getElementById('markdown-help').getAttribute('data-api'), {
+		method: 'POST',
+		headers: headers,
+		body: JSON.stringify(post)
+	})
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
 		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.then(function (results) {
+		document.getElementById('help1' + example + 'output').innerHTML = results['formattedbody'];
+	})
+	.catch(function (err) {
+		Halcyon.message('danger', xhr.responseJSON.message);
 	});
 }
 
@@ -402,6 +413,11 @@ function autocompleteResources(url) {
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function () {
+	headers = {
+		'Content-Type': 'application/json',
+		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+	};
+
 	var newsuser = $(".form-users");
 	if (newsuser.length) {
 		newsuser.tagsInput({
@@ -417,149 +433,167 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
-	// Dialogs
-	if ($('.samplebox').length) {
-		$('.samplebox').on('keyup', function () {
-			PreviewExample($(this).data('sample'));
+	var template = document.getElementById('field-template');
+	if (template) {
+		template.addEventListener('change', function () {
+			if (this.checked) {
+				document.querySelectorAll('.template-hide').forEach(function(el) {
+					el.classList.add('hide');
+				});
+			} else {
+				document.querySelectorAll('.template-hide').forEach(function (el) {
+					el.classList.remove('hide');
+				});
+			}
 		});
-
-		$('#markdown-help').tabs();
-
-		//Load the formatting guide example variables into the text box.
-		//PreviewExample('h');
 	}
 
-	//$('#markdown').tabs();
+	document.querySelectorAll('.basic-multiple').forEach(function(el) {
+		$(el).select2({
+			placeholder: el.getAttribute('data-placeholder')
+		});
+	});
 
-	/*var newsresource = $(".form-resources");
-	if (newsresource.length) {
-		newsresource.tagsInput({
-			placeholder: 'Select resource...',
-			importPattern: /([^:]+):(.+)/i,
-			'autocomplete': {
-				source: autocompleteResources(newsresource.attr('data-uri')),
-				dataName: 'data',
-				height: 150,
-				delay: 100,
-				minLength: 1
+	var newstype = document.getElementById('field-newstypeid');
+	if (newstype) {
+		newstype.addEventListener('change', function () {
+			var selected = this.options[this.selectedIndex];
+
+			document.querySelectorAll('.type-option').forEach(function (el) {
+				el.classList.add('d-none');
+			});
+
+			if (selected.getAttribute('data-tagresources') == '1') {
+				document.querySelectorAll('.type-tagresources').forEach(function(el) {
+					el.classList.remove('d-none');
+				});
+			}
+
+			if (selected.getAttribute('data-tagusers') == '1') {
+				document.querySelectorAll('.type-tagusers').forEach(function (el) {
+					el.classList.remove('d-none');
+				});
+			}
+
+			if (selected.getAttribute('data-location') == '1') {
+				document.querySelectorAll('.type-location').forEach(function (el) {
+					el.classList.remove('d-none');
+				});
+			}
+
+			if (selected.getAttribute('data-url') == '1') {
+				document.querySelectorAll('.type-url').forEach(function (el) {
+					el.classList.remove('d-none');
+				});
 			}
 		});
-	}*/
-	$('#field-template').on('change', function () {
-		if ($(this).is(':checked')) {
-			$('.template-hide').addClass('hide');
-		} else {
-			$('.template-hide').removeClass('hide');
-		}
+	}
+
+	document.querySelectorAll('.preview').forEach(function(el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			NEWSPreview(this);
+		});
 	});
 
-	$('.basic-multiple').select2({
-		placeholder: $(this).data('placeholder')
+	document.querySelectorAll('.news-mail').forEach(function(el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+			NEWSSendMail(this);
+		});
 	});
 
-	$('#field-newstypeid').on('change', function () {
-		var selected = $($(this).children('option:selected'));
+	var templatesel = document.getElementById('template_select');
+	if (templatesel) {
+		templatesel.addEventListener('change', function () {
+			var template = this.options[this.selectedIndex].value;
 
-		$('.type-option').addClass('d-none');
-
-		if (selected.data('tagresources')) {
-			$('.type-tagresources').removeClass('d-none');
-		}
-
-		if (selected.data('tagusers')) {
-			$('.type-tagusers').removeClass('d-none');
-		}
-
-		if (selected.data('location')) {
-			$('.type-location').removeClass('d-none');
-		}
-
-		if (selected.data('url')) {
-			$('.type-url').removeClass('d-none');
-		}
-	});
-
-	$('.preview').on('click', function (e) {
-		e.preventDefault();
-
-		NEWSPreview($(this));
-	});
-
-	$('.news-mail').on('click', function (e) {
-		e.preventDefault();
-		NEWSSendMail($(this));
-	});
-
-	$('#template_select').on('change', function () {
-		var template = this.options[this.selectedIndex].value;
-
-		if (template == "0") {
-			return;
-		}
-
-		var overwrite = false;
-		if ($("#field-headline").val() != "") {
-			overwrite = true;
-		}
-		if ($("#field-body").val() != "") {
-			overwrite = true;
-		}
-
-		if (overwrite) {
-			if (!confirm("Are you sure you wish to overwrite text with this template? Any work will be lost.")) {
-				this.selectedIndex = 0;
+			if (template == "0") {
 				return;
 			}
-		}
 
-		$.ajax({
-			url: template,
-			type: 'get',
-			dataType: 'json',
-			async: false,
-			success: function (response) {
-				$("#field-headline").val(response.headline.replace(/&#039;/g, "'").replace(/&quot;/g, '"'));
-				$("#field-body").val(response.body.replace(/&#039;/g, "'").replace(/&quot;/g, '"'));
-				$('#field-location').val(response.location);
-				$('#field-url').val(response.url);
+			var overwrite = false;
+			if (document.getElementById("field-headline").value != "") {
+				overwrite = true;
+			}
+			if (document.getElementById("field-body").value != "") {
+				overwrite = true;
+			}
+
+			if (overwrite) {
+				if (!confirm("Are you sure you wish to overwrite text with this template? Any work will be lost.")) {
+					this.selectedIndex = 0;
+					return;
+				}
+			}
+
+			fetch(template, {
+				method: 'GET',
+				headers: headers
+			})
+			.then(function (response) {
+				if (response.ok) {
+					return response.json();
+				}
+
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.then(function (response) {
+				document.getElementById("field-headline").value = response.headline.replace(/&#039;/g, "'").replace(/&quot;/g, '"');
+				var body = document.getElementById("field-body");
+				body.value = response.body.replace(/&#039;/g, "'").replace(/&quot;/g, '"');
+				body.dispatchEvent(new Event('refreshEditor'));
+				document.getElementById('field-location').value = response.location;
+				document.getElementById('field-url').value = response.url;
 
 				var resources = [], x;
 				for (x = 0; x < response.resources.length; x++) {
 					resources.push(response.resources[x]['resourceid']);
 				}
 
-				$('#field-resources')
-					.val(resources)
-					.trigger('change');
+				var res = document.getElementById('field-resources');
+				res.value = resources;
+				res.dispatchEvent(new Event('change'));
 
-				$('#field-newstypeid')
-					.val(response.newstypeid)
-					.trigger('change');
-			},
-			error: function (xhr) {
-				Halcyon.message('danger', xhr.responseJSON.message);
-			}
-		});
-	});
-
-	if ($("#copy-article").length) {
-		var cdialog = $("#copy-article").dialog({
-			autoOpen: false,
-			height: 250,
-			width: 500,
-			modal: true
-		});
-
-		$('#toolbar-copy>.btn-copy').removeClass('toolbar-submit')
-			.off('click')
-			.on('click', function (e) {
-				e.preventDefault();
-				cdialog.dialog("open");
+				var newstype = document.getElementById('field-newstypeid');
+				newstype.value = response.newstypeid;
+				newstype.dispatchEvent(new Event('change'));
+			})
+			.catch(function (error) {
+				Halcyon.message('danger', error);
 			});
+		});
+	}
 
-		$("#copy-article").find('.btn').on('click', function (e) {
+	var copy = document.getElementById('copy-article');
+	if (copy) {
+		copy.querySelector('.btn').addEventListener('click', function (e) {
 			e.preventDefault();
-			$(this).closest('form').append($('#adminForm').find('input:checked')).submit();
+			var frm = this.closest('form');
+			document.getElementById('adminForm').querySelectorAll('input:checked').forEach(function(input) {
+				frm.appendChild(input);
+			})
+			frm.submit();
+		});
+
+		document.querySelectorAll('.btn-copy').forEach(function(btncopy){
+			btncopy.setAttribute('data-toggle', 'modal');
+			btncopy.setAttribute('href', '#copy-article');
+			btncopy.replaceWith(btncopy.cloneNode(true));
+			btncopy.addEventListener('click', function (e) {
+				e.preventDefault();
+				document.getElementById('adminForm').addEventListener('submit', function(e){
+					e.preventDefault();
+					return false;
+				});
+			});
 		});
 	}
 });

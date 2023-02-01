@@ -37,14 +37,14 @@ function HighlightMatches(text) {
 
 	var regx = new RegExp(/(<[^>]+>)|((^|\b)([^<]+?)(\b|$))/i);
 	var m;
-	//var prev = -1;
+	var prev = -1;
 	var txt = "";
 	var temp = "";
 	var keyid = 0;
-	//var lastMatch = 0;
+	var lastMatch = 0;
 	var color = "";
 	// iterate through matches
-	while ((m = regx.exec(text))) {
+	while (!!(m = regx.exec(text))) {
 		txt = m[0];
 		keyid = keywords.indexOf(stemmer(txt).toLowerCase());
 		if (keyid != -1) {
@@ -98,25 +98,25 @@ var stemmer = (function () {
 		"logi": "log"
 	},
 
-	step3list = {
-		"icate": "ic",
-		"ative": "",
-		"alize": "al",
-		"iciti": "ic",
-		"ical": "ic",
-		"ful": "",
-		"ness": ""
-	},
+		step3list = {
+			"icate": "ic",
+			"ative": "",
+			"alize": "al",
+			"iciti": "ic",
+			"ical": "ic",
+			"ful": "",
+			"ness": ""
+		},
 
-	c = "[^aeiou]",          // consonant
-	v = "[aeiouy]",          // vowel
-	C = c + "[^aeiouy]*",    // consonant sequence
-	V = v + "[aeiou]*",      // vowel sequence
+		c = "[^aeiou]",          // consonant
+		v = "[aeiouy]",          // vowel
+		C = c + "[^aeiouy]*",    // consonant sequence
+		V = v + "[aeiou]*",      // vowel sequence
 
-	mgr0 = "^(" + C + ")?" + V + C,               // [C]VC... is m>0
-	meq1 = "^(" + C + ")?" + V + C + "(" + V + ")?$",  // [C]VC[V] is m=1
-	mgr1 = "^(" + C + ")?" + V + C + V + C,       // [C]VCVC... is m>1
-	s_v = "^(" + C + ")?" + v;                   // vowel in stem
+		mgr0 = "^(" + C + ")?" + V + C,               // [C]VC... is m>0
+		meq1 = "^(" + C + ")?" + V + C + "(" + V + ")?$",  // [C]VC[V] is m=1
+		mgr1 = "^(" + C + ")?" + V + C + V + C,       // [C]VCVC... is m>1
+		s_v = "^(" + C + ")?" + v;                   // vowel in stem
 
 	return function (w) {
 		var stem,
@@ -126,7 +126,7 @@ var stemmer = (function () {
 			re2,
 			re3,
 			re4,
-			fp;
+			origword = w;
 
 		if (w.length < 3) {
 			return w;
@@ -154,14 +154,14 @@ var stemmer = (function () {
 		re = /^(.+?)eed$/;
 		re2 = /^(.+?)(ed|ing)$/;
 		if (re.test(w)) {
-			fp = re.exec(w);
+			var fp = re.exec(w);
 			re = new RegExp(mgr0);
 			if (re.test(fp[1])) {
 				re = /.$/;
 				w = w.replace(re, "");
 			}
 		} else if (re2.test(w)) {
-			fp = re2.exec(w);
+			var fp = re2.exec(w);
 			stem = fp[1];
 			re2 = new RegExp(s_v);
 			if (re2.test(stem)) {
@@ -185,7 +185,7 @@ var stemmer = (function () {
 		// Step 1c
 		re = /^(.+?)y$/;
 		if (re.test(w)) {
-			fp = re.exec(w);
+			var fp = re.exec(w);
 			stem = fp[1];
 			re = new RegExp(s_v);
 			if (re.test(stem)) {
@@ -196,7 +196,7 @@ var stemmer = (function () {
 		// Step 2
 		re = /^(.+?)(ational|tional|enci|anci|izer|bli|alli|entli|eli|ousli|ization|ation|ator|alism|iveness|fulness|ousness|aliti|iviti|biliti|logi)$/;
 		if (re.test(w)) {
-			fp = re.exec(w);
+			var fp = re.exec(w);
 			stem = fp[1];
 			suffix = fp[2];
 			re = new RegExp(mgr0);
@@ -208,7 +208,7 @@ var stemmer = (function () {
 		// Step 3
 		re = /^(.+?)(icate|ative|alize|iciti|ical|ful|ness)$/;
 		if (re.test(w)) {
-			fp = re.exec(w);
+			var fp = re.exec(w);
 			stem = fp[1];
 			suffix = fp[2];
 			re = new RegExp(mgr0);
@@ -221,14 +221,14 @@ var stemmer = (function () {
 		re = /^(.+?)(al|ance|ence|er|ic|able|ible|ant|ement|ment|ent|ou|ism|ate|iti|ous|ive|ize)$/;
 		re2 = /^(.+?)(s|t)(ion)$/;
 		if (re.test(w)) {
-			fp = re.exec(w);
+			var fp = re.exec(w);
 			stem = fp[1];
 			re = new RegExp(mgr1);
 			if (re.test(stem)) {
 				w = stem;
 			}
 		} else if (re2.test(w)) {
-			fp = re2.exec(w);
+			var fp = re2.exec(w);
 			stem = fp[1] + fp[2];
 			re2 = new RegExp(mgr1);
 			if (re2.test(stem)) {
@@ -239,7 +239,7 @@ var stemmer = (function () {
 		// Step 5
 		re = /^(.+?)e$/;
 		if (re.test(w)) {
-			fp = re.exec(w);
+			var fp = re.exec(w);
 			stem = fp[1];
 			re = new RegExp(mgr1);
 			re2 = new RegExp(meq1);
@@ -270,6 +270,7 @@ var stemmer = (function () {
  * Put an error into the action bar
  *
  * @param   {string}  message
+ * @return  {void}
  */
 function DisplayError(message) {
 	var span = document.getElementById("news_action");
@@ -281,6 +282,8 @@ function DisplayError(message) {
 
 /**
  * Hide any displayed errors
+ *
+ * @return  {void}
  */
 function ClearError() {
 	var span = document.getElementById("news_action");
@@ -294,12 +297,10 @@ function ClearError() {
  * Callback for JS MarkDown parsing
  *
  * @param   {string}  text
+ * @param   {object}  element
  * @return  {string}
  */
 /* exported customMarkdownParser */
-//    The above won't work due to the current .eslintrc.js
-//    see: https://stackoverflow.com/questions/37470918/eslint-exported-functionname-not-working-in-browser-env
-// eslint-disable-next-line no-unused-vars
 function customMarkdownParser(text, element) {
 	text = text.replaceAll(/(contact|CRM?)(\s+report)?\s*#?(\d+)/g, '<a href="?id=$3">Contact Report #$3</a>');
 	var matches = text.matchAll(/(news)\s*(story|item)?\s*#?(\d+)(\{.+?\})?/ig);
@@ -319,22 +320,6 @@ function customMarkdownParser(text, element) {
 		vars = {};
 	}
 
-	if (element.id == 'NotesText') {
-		vars = NEWSPreviewVars();
-
-		if (vars.resources.length > 2) {
-			vars.resources[vars.resources.length - 1] = 'and ' + vars.resources[vars.resources.length - 1];
-		}
-		for (var i = 0; i < vars.resources.length; i++) {
-			if (i == vars.resources.length - 1) {
-				continue;
-			}
-
-			vars.resources[i] = vars.resources[i] + ',';
-		}
-		vars.resources = vars.resources.join(' ');
-	}
-
 	var keywords = [
 		'%date%',
 		'%datetime%',
@@ -349,6 +334,59 @@ function customMarkdownParser(text, element) {
 		'%location%',
 		'%resources%'
 	];
+
+	if (element.id == 'NotesText') {
+		vars = NEWSPreviewVars();
+		/*var post = { 'body': text };
+		post['vars'] = NEWSPreviewVars();
+
+		fetch(root + "/preview", {
+			method: 'POST',
+			headers: headers,
+			body: JSON.stringify(post)
+		})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (results) {
+			vars = results.vars;
+
+			var k;
+			for (var x = 0; x < keywords.length; x++) {
+				k = keywords[x].replaceAll('%', '');
+
+				if (vars && typeof (vars[k]) != 'undefined') {
+					text = text.replaceAll(keywords[x], vars[k]);
+				} else {
+					text = text.replaceAll(keywords[x], '<span style="color:red;">' + keywords[x] + '</span>');
+				}
+			}
+		})
+		.catch(function (err) {
+			alert(err);
+		});
+	} else {*/
+		if (vars.resources.length > 2) {
+			vars.resources[vars.resources.length - 1] = 'and ' + vars.resources[vars.resources.length - 1];
+		}
+		for (var i = 0; i < vars.resources.length; i++) {
+			if (i == vars.resources.length - 1) {
+				continue;
+			}
+
+			vars.resources[i] = vars.resources[i] + ',';
+		}
+		vars.resources = vars.resources.join(' ');
+	}
 
 	var k;
 	for (var x = 0; x < keywords.length; x++) {
@@ -394,7 +432,7 @@ function NEWSToggle(on, refresh) {
 		header.innerHTML = header.getAttribute('data-' + on);
 	}
 
-	document.querySelectorAll('.tab-add').forEach(function (el) {
+	document.querySelectorAll('.tab-add').forEach(function(el) {
 		el.classList.add('d-none');
 	});
 	document.querySelectorAll('.tab-edit').forEach(function (el) {
@@ -457,7 +495,7 @@ function NEWSToggle(on, refresh) {
 		document.getElementById("INPUT_clear").value = "Clear";
 		document.getElementById("INPUT_add").value = "Add News";
 		document.getElementById("INPUT_preview").style.display = "inline";
-		document.getElementById("INPUT_preview").onclick = function () { NEWSPreview('new'); };
+		document.getElementById("INPUT_preview").addEventListener('click', function () { NEWSPreview('new'); });
 
 		document.getElementById("Headline").value = "";
 		document.getElementById("location").value = "";
@@ -533,15 +571,16 @@ function NEWSAddAssociation(association) {
 		results = association;
 	}
 
+	var newsuser = document.getElementById('newsuser');
 	if ($('.tagsinput').length) {
-		if (!$('#newsuser').tagExist(results['id'])) {
-			$('#newsuser').addTag({
+		if (!$(newsuser).tagExist(results['id'])) {
+			$(newsuser).addTag({
 				'id': results['associd'],
 				'label': results['assocname']
 			});
 		}
 	} else {
-		$('#newsuser').val($('#newsuser').val() + ($('#newsuser').val() ? ', ' : '') + results['name'] + ':' + results['id']);
+		newsuser.value = newsuser.value + (newsuser.value ? ', ' : '') + results['name'] + ':' + results['id'];
 	}
 }
 
@@ -780,7 +819,7 @@ function NEWSAddEntry() {
 	ClearError();
 
 	if (!newsdate.match(/^\d{4}-\d{2}-\d{2}$/) && !template) {
-		DisplayError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
+		SetError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
 		return;
 	}
 
@@ -828,7 +867,7 @@ function NEWSAddEntry() {
 	}
 
 	if (newsdateend && newsdateend != "0000-00-00 00:00:00" && newsdateend < newsdate) {
-		DisplayError('End date must come after start date', 'Please enter a valid end date');
+		SetError('End date must come after start date', 'Please enter a valid end date');
 		return;
 	}
 
@@ -900,40 +939,40 @@ function NEWSAddEntry() {
 				headers: headers,
 				body: post
 			})
-				.then(function (response) {
-					if (response.ok) {
-						document.getElementById("INPUT_add").disabled = true;
-						document.getElementById("location").value = "";
-						NEWSToggle('search', false);
-						document.getElementById("id").value = id;
-						NEWSSearch();
-						return;// response.json();
-					}
-					return response.json().then(function (data) {
-						var msg = data.message;
-						if (typeof msg === 'object') {
-							msg = Object.values(msg).join('<br />');
-						}
-						throw msg;
-					});
-				})
-				.catch(function (err) {
+			.then(function (response) {
+				if (response.ok) {
 					document.getElementById("INPUT_add").disabled = true;
-					NEWSToggle('search');
+					document.getElementById("location").value = "";
+					NEWSToggle('search', false);
 					document.getElementById("id").value = id;
 					NEWSSearch();
-					alert(err);
+					return;// response.json();
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
 				});
+			})
+			.catch(function (err) {
+				document.getElementById("INPUT_add").disabled = true;
+				NEWSToggle('search');
+				document.getElementById("id").value = id;
+				NEWSSearch();
+				alert(err);
+			});
 		}
 
 		return;
 	} else {
 		if (notes == "") {
-			DisplayError('Required field missing', 'Please enter content for the body.');
+			SetError('Required field missing', 'Please enter content for the body.');
 			return;
 		}
 		if (headline == "") {
-			DisplayError('Required field missing', 'Please enter a headline');
+			SetError('Required field missing', 'Please enter a headline');
 			return;
 		}
 		// new post
@@ -991,28 +1030,28 @@ function NEWSAddEntry() {
 			headers: headers,
 			body: post
 		})
-			.then(function (response) {
-				if (response.ok) {
-					return response.json();
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
 				}
-				return response.json().then(function (data) {
-					var msg = data.message;
-					if (typeof msg === 'object') {
-						msg = Object.values(msg).join('<br />');
-					}
-					throw msg;
-				});
-			})
-			.then(function (results) {
-				if (results.template) {
-					NEWSToggle('search', true);
-				} else {
-					window.location.href = results.uri;
-				}
-			})
-			.catch(function (err) {
-				alert(err);
+				throw msg;
 			});
+		})
+		.then(function (results) {
+			if (results.template) {
+				NEWSToggle('search', true);
+			} else {
+				window.location.href = results.uri;
+			}
+		})
+		.catch(function (err) {
+			alert(err);
+		});
 	}
 }
 
@@ -1103,7 +1142,7 @@ function NEWSSearch() {
 	// sanity checks
 	if (start != "") {
 		if (!start.match(/^\d{4}-\d{2}-\d{2}$/)) {
-			DisplayError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
+			SetError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
 			return;
 		} else {
 			ClearError();
@@ -1113,7 +1152,7 @@ function NEWSSearch() {
 
 	if (stop != "") {
 		if (!stop.match(/^\d{4}-\d{2}-\d{2}$/)) {
-			DisplayError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
+			SetError('Date format invalid', 'Please enter date as YYYY-MM-DD.');
 			return;
 		} else {
 			ClearError();
@@ -1123,7 +1162,7 @@ function NEWSSearch() {
 
 	if (newstypeid != "") {
 		if (!newstypeid.match(/^(-)?[0-9]+$/)) {
-			DisplayError('Invalid news type', 'Please select a news type');
+			SetError('Invalid news type', 'Please select a news type');
 			return;
 		}
 	}
@@ -1235,24 +1274,24 @@ function NEWSSearch() {
 		method: 'GET',
 		headers: headers
 	})
-		.then(function (response) {
-			if (response.ok) {
-				return response.json();
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
 			}
-			return response.json().then(function (data) {
-				var msg = data.message;
-				if (typeof msg === 'object') {
-					msg = Object.values(msg).join('<br />');
-				}
-				throw msg;
-			});
-		})
-		.then(function (data) {
-			NEWSSearched(data);
-		})
-		.catch(function (err) {
-			alert(err);
+			throw msg;
 		});
+	})
+	.then(function (data) {
+		NEWSSearched(data);
+	})
+	.catch(function (err) {
+		alert(err);
+	});
 }
 
 /**
@@ -1299,11 +1338,10 @@ function NEWSToggleAddButton() {
 /**
  * Builds the news div with results returned from the WS
  *
- * @param   {object}  xml
+ * @param   {object}  results
  * @return  {void}
  */
-function NEWSSearched(results) { //xml) {
-	//if (xml.status == 200) {
+function NEWSSearched(results) {
 	var news = document.getElementById("news");
 
 	// clear out reports
@@ -1426,7 +1464,6 @@ function NEWSSearched(results) { //xml) {
 		$('#page').val($(this).data('page'));
 		NEWSSearch();
 	});
-	//}
 }
 
 /**
@@ -1443,9 +1480,7 @@ function NEWSPrintRow(news) {
 		edit = false;
 	}
 
-	var id = news.id; //.split('/');
-	//id = id[id.length - 1];
-
+	var id = news.id;
 	var resources = news.resources;
 	var headline = news.headline;
 	var locale = news.location;
@@ -1506,22 +1541,22 @@ function NEWSPrintRow(news) {
 					headers: headers,
 					body: JSON.stringify(post)
 				})
-					.then(function (response) {
-						if (response.ok) {
-							document.getElementById("id").value = id;
-							return NEWSSearch();
+				.then(function (response) {
+					if (response.ok) {
+						document.getElementById("id").value = id;
+						return NEWSSearch();
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
 						}
-						return response.json().then(function (data) {
-							var msg = data.message;
-							if (typeof msg === 'object') {
-								msg = Object.values(msg).join('<br />');
-							}
-							throw msg;
-						});
-					})
-					.catch(function (err) {
-						alert(err);
+						throw msg;
 					});
+				})
+				.catch(function (err) {
+					alert(err);
+				});
 			};
 			a.appendChild(document.createTextNode("Published"));
 			a.className = 'badge badge-success badge-published ml-3';
@@ -1539,22 +1574,22 @@ function NEWSPrintRow(news) {
 					headers: headers,
 					body: JSON.stringify(post)
 				})
-					.then(function (response) {
-						if (response.ok) {
-							document.getElementById("id").value = id;
-							return NEWSSearch();
+				.then(function (response) {
+					if (response.ok) {
+						document.getElementById("id").value = id;
+						return NEWSSearch();
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
 						}
-						return response.json().then(function (data) {
-							var msg = data.message;
-							if (typeof msg === 'object') {
-								msg = Object.values(msg).join('<br />');
-							}
-							throw msg;
-						});
-					})
-					.catch(function (err) {
-						alert(err);
+						throw msg;
 					});
+				})
+				.catch(function (err) {
+					alert(err);
+				});
 			};
 			a.appendChild(document.createTextNode("Draft"));
 			a.className = 'badge badge-danger badge-unpublished ml-3';
@@ -1593,11 +1628,12 @@ function NEWSPrintRow(news) {
 		if (resources.length > 0 && published == "1") {
 			a = document.createElement("a");
 			a.className = 'edit news-mail tip';
-			a.href = "?mail&id=" + id;
-			a.onclick = function (e) {
+			a.href = '#mailpreview-modal'; //"?mail&id=" + id;
+			a.setAttribute('data-toggle', 'modal');
+			a.addEventListener('click', function (e) {
 				e.preventDefault();
 				NEWSSendMail(id);
-			};
+			});
 			a.id = "A_mail_" + id;
 			a.title = "Preview mail to mailing lists.";
 
@@ -1621,11 +1657,12 @@ function NEWSPrintRow(news) {
 		else if (users.length > 0 && published == "1") {
 			a = document.createElement("a");
 			a.className = 'edit news-mail tip';
-			a.href = "?mail&id=" + id;
-			a.onclick = function (e) {
+			a.href = '#mailwrite-modal'; //"?mail&id=" + id;
+			a.setAttribute('data-toggle', 'modal');
+			a.addEventListener('click', function (e) {
 				e.preventDefault();
 				NEWSWriteMail(id);
-			};
+			});
 			a.id = "A_mail_" + id;
 			a.title = "Write mail to users.";
 
@@ -2065,7 +2102,7 @@ function NEWSPrintRow(news) {
 	//var page = document.location.href.split("/")[4];
 	// if we are in news, we are doing report searches, so we should highlight matches
 	//if (page == 'news') {
-	body = HighlightMatches(body);
+		body = HighlightMatches(body);
 	//}
 
 	span = document.createElement("span");
@@ -2191,18 +2228,19 @@ function NEWSPrintRow(news) {
 
 		// help button
 		a = document.createElement("a");
-		a.href = "#help1";
-		a.onclick = function (e) {
+		a.href = "#markdown-help";
+		a.setAttribute('data-toggle', 'modal');
+		/*a.addEventListener('click', function (e) {
 			e.preventDefault();
-			$('#help1').dialog({ modal: true, width: '553px' });
-			$('#help1').dialog('open');
-		};
+			//$('#help1').dialog({ modal: true, width: '553px' });
+			//$('#help1').dialog('open');
+		});*/
 		a.id = id + "_texthelpicon";
-		a.className = 'help icn tip';
+		a.className = 'text-info tip';
 		a.style.display = "none";
 		a.title = 'Formatting news text';
 
-		img = document.createElement("i");
+		img = document.createElement("span");
 		img.className = "fa fa-question-circle";
 		img.id = id + "_texthelpiconimg";
 		img.setAttribute('aria-hidden', true);
@@ -2519,42 +2557,42 @@ function NEWSSaveNewsText(news) {
 		headers: headers,
 		body: post
 	})
-		.then(function (response) {
-			if (response.ok) {
-				return response.json();
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
 			}
-			return response.json().then(function (data) {
-				var msg = data.message;
-				if (typeof msg === 'object') {
-					msg = Object.values(msg).join('<br />');
-				}
-				throw msg;
-			});
-		})
-		.then(function (results) {
-			LASTEDIT[news] = results['lastedit'];
-
-			var icon = document.getElementById(news + "_textsaveicon");
-			icon.onclick = function () {
-				NEWSSaveNewsText(news);
-			};
-			icon.style.display = "none";
-
-			document.getElementById(news + "_textarea").parentNode.style.display = "none";
-			document.getElementById(news + "_textediticon").style.display = "block";
-			document.getElementById(news + "_textsaveupdate").style.display = "none";
-			document.getElementById(news + "_textsaveupdatebox").checked = false;
-			document.getElementById(news + "_textpreviewicon").style.display = "none";
-			document.getElementById(news + "_textcancelicon").style.display = "none";
-			document.getElementById(news + "_texthelpicon").style.display = "none";
-
-			var text = document.getElementById(news + "_text");
-			text.innerHTML = results['formattedbody'];
-			text.style.display = "block";
-		})
-		.catch(function (err) {
-			alert(err);
+			throw msg;
 		});
+	})
+	.then(function (results) {
+		LASTEDIT[news] = results['lastedit'];
+
+		var icon = document.getElementById(news + "_textsaveicon");
+		icon.onclick = function () {
+			NEWSSaveNewsText(news);
+		};
+		icon.style.display = "none";
+
+		document.getElementById(news + "_textarea").parentNode.style.display = "none";
+		document.getElementById(news + "_textediticon").style.display = "block";
+		document.getElementById(news + "_textsaveupdate").style.display = "none";
+		document.getElementById(news + "_textsaveupdatebox").checked = false;
+		document.getElementById(news + "_textpreviewicon").style.display = "none";
+		document.getElementById(news + "_textcancelicon").style.display = "none";
+		document.getElementById(news + "_texthelpicon").style.display = "none";
+
+		var text = document.getElementById(news + "_text");
+		text.innerHTML = results['formattedbody'];
+		text.style.display = "block";
+	})
+	.catch(function (err) {
+		alert(err);
+	});
 }
 
 /**
@@ -2972,11 +3010,8 @@ function NEWSClearSearch() {
 
 	var resources = document.getElementById("newsresource");
 	if (resources) {
-		$("#newsresource").val(null).trigger('change');
-		/*resources.value = '';
-		if ($('.tagsinput').length) {
-			$(resources).clearTags();
-		}*/
+		resources.value = '';
+		resources.dispatchEvent(new Event('change'));
 	}
 
 	if (window.location.href.match(/[&?]edit/)) {
@@ -3001,8 +3036,8 @@ function PreviewExample(example) {
 	var d = new Date();
 	d.setDate(d.getDate() + 1);
 	example_vars["endDate"] = d;
-	example_vars["resources"] = ["Cluster One", "Scratch Storage"];
-	example_vars["location"] = "Example Building, Room 123";
+	example_vars["resources"] = ["Foo", "Bar"];
+	example_vars["location"] = "Building 1, Room 2";
 
 	var post = {
 		'body': document.getElementById('help1' + example + 'input').value,
@@ -3142,8 +3177,8 @@ function NEWSPreview(news, edit) {
 		alert(err);
 	});
 
-	$('#preview').dialog({ modal: true, width: '691px' });
-	$('#preview').dialog('open');
+	//$('#preview').dialog({ modal: true, width: '691px' });
+	//$('#preview').dialog('open');
 }
 
 /**
@@ -3153,26 +3188,12 @@ function NEWSPreview(news, edit) {
  * @return  {void}
  */
 function NEWSSendMail(news) {
-	if ($('#' + news + '_textarea').parent().css('display') == 'block') {
+	var txt = document.getElementById(news + '_textarea');
+	if (txt && txt.parentNode.style.display == 'block') {
 		// We're still editing. Need to save first.
-		$("#dialog-confirm").dialog({
-			resizable: false,
-			modal: true,
-			height: 'auto',
-			width: 300,
-			buttons: {
-				"Yes": function () {
-					$(this).dialog('close');
-					NEWSSaveNewsText(news);
-					return;
-				},
-				"No": function () {
-					$(this).dialog('close');
-					return;
-				}
-			}
-		});
-		$("#dialog-confirm").dialog('open');
+		if (confirm(document.getElementById('mailsend').getAttribute('data-confirm'))) {
+			NEWSSaveNewsText(news);
+		}
 
 		return;
 	}
@@ -3182,133 +3203,138 @@ function NEWSSendMail(news) {
 		method: 'GET',
 		headers: headers
 	})
-		.then(function (response) {
-			if (response.ok) {
-				return response.json();
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
 			}
-			return response.json().then(function (data) {
-				var msg = data.message;
-				if (typeof msg === 'object') {
-					msg = Object.values(msg).join('<br />');
-				}
-				throw msg;
-			});
-		})
-		.then(function (data) {
-			var text = document.getElementById(news + "_textarea").value;
-			if (text == "") {
-				return;
-			}
-
-			var x = 0;
-
-			// Gather some  variables from DOM
-			var formatteddate = $('#' + news).find(".newsdate").first().html().replace(/<a href.*/, '');
-			var subject = $('#' + news + "_headline").text();
-			var locale = $('#' + news + "_location").text();
-			if (locale != '') {
-				locale = locale + "<br/>";
-			}
-			var resources = $('#' + news).find(".newspostresources").first().text().replace(/^Resources?: /, '');
-			var name = $(".login").find("a").first().text();
-
-			// set up header for email preview
-			var header = "To: " + resources + " Users<br />From: " + name + " via Research Computing<br/>Subject: " + subject + " - " + formatteddate + "<br/><hr /><strong>" + subject + "</strong><br/>" + formatteddate + "<br/>" + locale + "<br/>";
-
-			// set up foot for email preview
-			var footer = '<hr/><a href="/news/' + news + '">Article #' + news + '</a> posted on ' + data['formattedcreateddate'] + '.</a>';
-
-			var body = "";
-			if (data['updates'].length > 0) {
-				for (x = 0; x < data['updates'].length; x++) {
-					body = body + '<section><h3 class="newsupdate">UPDATE: ' + data['updates'][x]['formattedcreateddate'] + '</h3>' + data['updates'][x]['formattedbody'] + '</section>';
-				}
-				body = body + '<section><h3 class="newsupdate">ORIGINAL: ' + data['formattedcreateddate'] + '</h3>';
-			}
-			body = body + data['formattedbody'];
-			if (data['updates'].length > 0) {
-				body += '</section>';
-			}
-
-			if (data['resources'].length > 0) {
-				footer += '<hr /><p>Send to resource mailing lists:</p><div class="row">';
-				for (x = 0; x < data['resources'].length; x++) {
-					footer += '<div class="col-md-3"><label><input type="checkbox" checked="checked" value="' + data['resources'][x]['resourceid'] + '" class="preview-resource" /> ' + data['resources'][x]['name'] + '</label></div>';
-				}
-				footer += '</div>';
-			}
-
-			document.getElementById("mailpreview").innerHTML = header + body + footer;
-
-			$('#mailpreview').dialog({
-				modal: true,
-				width: '691px',
-				buttons: {
-					"Cancel": function () {
-						$(this).dialog("close");
-					},
-					"Send mail": function () {
-						$(this).dialog("close");
-
-						var post = {
-							'mail': 1,
-							'lastedit': LASTEDIT[news]
-						};
-
-						var resources = [];
-						$('.preview-resource').each(function (i, el) {
-							if ($(el).is(':checked')) {
-								resources.push($(el).val());
-							}
-						});
-
-						//if ($('.preview-resource').length != resources.length) {
-						post.resources = resources;
-						//}
-
-						post = JSON.stringify(post);
-
-						fetch(root + "/" + news + "/email", {
-							method: 'PUT',
-							headers: headers,
-							body: post
-						})
-							.then(function (response) {
-								if (response.ok) {
-									return response.json();
-								}
-								return response.json().then(function (data) {
-									var msg = data.message;
-									if (typeof msg === 'object') {
-										msg = Object.values(msg).join('<br />');
-									}
-									throw msg;
-								});
-							})
-							.then(function (results) {
-								document.getElementById("IMG_mail_" + news).className = "fa fa-check";
-								document.getElementById("A_mail_" + news).onclick = function () { };
-
-								LASTEDIT[news] = results['lastedit'];
-
-								NEWSSearch();
-							})
-							.catch(function (err) {
-								document.getElementById("IMG_mail_" + news).className = "fa fa-exclamation-circle";
-								document.getElementById("A_mail_" + news).onclick = function () { };
-								alert(err);
-							});
-					}
-				}
-			});
-			if ($(".ui-dialog-buttonpane").find("div").length == 1) {
-				$(".ui-dialog-buttonpane").prepend('<div style="float:left;padding-top:1em;padding-left:18em">Send this email message?</div>');
-			}
-			$('#mailpreview').dialog('open');
-		})
-		.catch(function (err) {
-			alert(err);
+			throw msg;
 		});
+	})
+	.then(function (data) {
+		var text = document.getElementById(news + "_textarea").value;
+		if (text == "") {
+			return;
+		}
+
+		var x = 0;
+
+		// Gather some  variables from DOM
+		var formatteddate = $('#' + news).find(".newsdate").first().html().replace(/<a href.*/, '');
+		var subject = $('#' + news + "_headline").text();
+		var locale = $('#' + news + "_location").text();
+		if (locale != '') {
+			locale = locale + "<br/>";
+		}
+		var resources = $('#' + news).find(".newspostresources").first().text().replace(/^Resources?: /, '');
+		var name = $(".login").find("a").first().text();
+
+		// set up header for email preview
+		var header = "<strong>To:</strong> " + resources + " Users<br />"
+			+ "<strong>From:</strong> " + name + "<br/>"
+			+ "<strong>Subject:</strong> " + subject + " - " + formatteddate + "<br/><hr />"
+			+ "<strong>" + subject + "</strong><br/>" + formatteddate + "<br/>" + locale + "<br/>";
+
+		// set up foot for email preview
+		var footer = '<hr/><a href="/news/' + news + '">Article #' + news + '</a> posted on ' + data['formattedcreateddate'] + '.</a>';
+
+		var body = "";
+		if (data['updates'].length > 0) {
+			for (x = 0; x < data['updates'].length; x++) {
+				body = body + '<section><h3 class="newsupdate">UPDATE: ' + data['updates'][x]['formattedcreateddate'] + '</h3>' + data['updates'][x]['formattedbody'] + '</section>';
+			}
+			body = body + '<section><h3 class="newsupdate">ORIGINAL: ' + data['formattedcreateddate'] + '</h3>';
+		}
+		body = body + data['formattedbody'];
+		if (data['updates'].length > 0) {
+			body += '</section>';
+		}
+
+		if (data['resources'].length > 0) {
+			footer += '<hr /><p>Send to resource mailing lists:</p><div class="row">';
+			for (x = 0; x < data['resources'].length; x++) {
+				footer += '<div class="col-md-3"><label><input type="checkbox" checked="checked" value="' + data['resources'][x]['resourceid'] + '" class="preview-resource" /> ' + data['resources'][x]['name'] + '</label></div>';
+			}
+			footer += '</div>';
+		}
+
+		document.getElementById("mailpreview").innerHTML = header + body + footer;
+
+		document.getElementById('mailsend').addEventListener('click', function(e) {
+			e.preventDefault();
+		/*$('#mailpreview').dialog({
+			modal: true,
+			width: '691px',
+			buttons: {
+				"Cancel": function () {
+					$(this).dialog("close");
+				},
+				"Send mail": function () {
+					$(this).dialog("close");*/
+
+					var post = {
+						'mail': 1,
+						'lastedit': LASTEDIT[news]
+					};
+
+					var resources = [];
+					document.querySelectorAll('.preview-resource').forEach(function (el) {
+						if (el.checked) {
+							resources.push(el.value);
+						}
+					});
+
+					//if ($('.preview-resource').length != resources.length) {
+					post.resources = resources;
+					//}
+
+					post = JSON.stringify(post);
+
+					fetch(root + "/" + news + "/email", {
+						method: 'PUT',
+						headers: headers,
+						body: post
+					})
+					.then(function (response) {
+						if (response.ok) {
+							document.getElementById("IMG_mail_" + news).className = "fa fa-check";
+							document.getElementById("A_mail_" + news).onclick = function () { };
+
+							var results = JSON.parse(xml.responseText);
+							LASTEDIT[news] = results['lastedit'];
+
+							NEWSSearch();
+							return;// response.json();
+						}
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
+							}
+							throw msg;
+						});
+					})
+					.catch(function (err) {
+						document.getElementById("IMG_mail_" + news).className = "fa fa-exclamation-circle";
+						document.getElementById("A_mail_" + news).onclick = function () { };
+						alert(err);
+					});
+		});
+				/*}
+			}
+		});
+		if ($(".ui-dialog-buttonpane").find("div").length == 1) {
+			$(".ui-dialog-buttonpane").prepend('<div style="float:left;padding-top:1em;padding-left:18em">Send this email message?</div>');
+		}
+		$('#mailpreview').dialog('open');*/
+	})
+	.catch(function (err) {
+		alert(err);
+	});
 }
 
 /**
@@ -3322,129 +3348,132 @@ function NEWSWriteMail(news) {
 		method: 'GET',
 		headers: headers
 	})
-		.then(function (response) {
-			if (response.ok) {
-				return response.json();
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
 			}
-			return response.json().then(function (data) {
-				var msg = data.message;
-				if (typeof msg === 'object') {
-					msg = Object.values(msg).join('<br />');
-				}
-				throw msg;
-			});
-		})
-		.then(function (data) {
-			document.getElementById('mail-subject').value = data.headline;
-
-			var body = '**Date:** ' + data.formatteddate.replace(/(<([^>]+)>)/ig, '').replace(/&nbsp;/g, ' ').replace('&#8211;', '-') + "\n";
-
-			if (data.location) {
-				body += '**Location:** ' + data.location + "\n";
-			}
-			if (data.url) {
-				body += '**URL:** ' + data.url + "\n";
-			}
-
-			//var name = $( ".login").find( "a" ).first().text();
-
-			document.getElementById('mail-body').value = body + "\n\n";
-
-			var to = $('#mail-to');
-			to.val('');
-			to.tagsInput({
-				placeholder: 'Select user...',
-				importPattern: /([^:]+):(.+)/i,
-				'autocomplete': {
-					source: autocompleteUsers(to.attr('data-uri')),
-					dataName: 'users',
-					height: 150,
-					delay: 100,
-					minLength: 1
-				}
-			});
-			to.clearTags();
-
-			var x;
-			for (x = 0; x < data.associations.length; x++) {
-				if ($('.tagsinput').length) {
-					if (!to.tagExist(data.associations[x]['id'])) {
-						to.addTag({
-							'id': data.associations[x]['associd'],
-							'label': data.associations[x]['name']
-						});
-					}
-				}
-			}
-
-			$('#mailwrite').dialog({
-				modal: true,
-				width: '691px',
-				buttons: {
-					"Cancel": function () {
-						$(this).dialog("close");
-					},
-					"Send mail": function () {
-						var usersdata = document.getElementById("mail-to").value.split(',');
-						var associations = [],
-							i;
-						for (i = 0; i < usersdata.length; i++) {
-							if (usersdata[i] != "") {
-								associations.push(usersdata[i]);
-							}
-						}
-
-						$(this).dialog("close");
-
-						var post = JSON.stringify({
-							'mail': 1,
-							'lastedit': LASTEDIT[news],
-							'headline': $('#mail-subject').val(),
-							'body': $('#mail-body').val(),
-							'associations': associations
-						});
-
-						fetch(root + "/" + news + "/email", {
-							method: 'PUT',
-							headers: headers,
-							body: JSON.stringify(post)
-						})
-							.then(function (response) {
-								if (response.ok) {
-									return response.json();
-								}
-								return response.json().then(function (data) {
-									var msg = data.message;
-									if (typeof msg === 'object') {
-										msg = Object.values(msg).join('<br />');
-									}
-									throw msg;
-								});
-							})
-							.then(function (results) {
-								document.getElementById("IMG_mail_" + news).className = "fa fa-check";
-								document.getElementById("A_mail_" + news).onclick = function () { };
-
-								LASTEDIT[news] = results['lastedit'];
-
-								NEWSSearch();
-							})
-							.catch(function (err) {
-								document.getElementById("IMG_mail_" + news).className = "fa fa-exclamation-circle";
-								document.getElementById("A_mail_" + news).onclick = function () { };
-								alert(err);
-							});
-					}
-				}
-			});
-			if ($(".ui-dialog-buttonpane").find("div").length == 1) {
-				$(".ui-dialog-buttonpane").prepend('<div style="float:left;padding-top:1em;padding-left:18em">Send this email message?</div>');
-			}
-			$('#mailwrite').dialog('open');
-		})
-		.catch(function (err) {
-			alert(err);
+			throw msg;
 		});
+	})
+	.then(function (data) {
+		document.getElementById('mail-subject').value = data.headline;
+
+		var body = '**Date:** ' + data.formatteddate.replace(/(<([^>]+)>)/ig, '').replace(/&nbsp;/g, ' ').replace('&#8211;', '-') + "\n";
+
+		if (data.location) {
+			body += '**Location:** ' + data.location + "\n";
+		}
+		if (data.url) {
+			body += '**URL:** ' + data.url + "\n";
+		}
+
+		//var name = $( ".login").find( "a" ).first().text();
+
+		document.getElementById('mail-body').value = body + "\n\n";
+
+		var to = $('#mail-to');
+		to.val('');
+		to.tagsInput({
+			placeholder: 'Select user...',
+			importPattern: /([^:]+):(.+)/i,
+			'autocomplete': {
+				source: autocompleteUsers(to.attr('data-uri')),
+				dataName: 'users',
+				height: 150,
+				delay: 100,
+				minLength: 1
+			}
+		});
+		to.clearTags();
+
+		var x;
+		for (x = 0; x < data.associations.length; x++) {
+			if ($('.tagsinput').length) {
+				if (!to.tagExist(data.associations[x]['id'])) {
+					to.addTag({
+						'id': data.associations[x]['associd'],
+						'label': data.associations[x]['name']
+					});
+				}
+			}
+		}
+
+		/*$('#mailwrite').dialog({
+			modal: true,
+			width: '691px',
+			buttons: {
+				"Cancel": function () {
+					$(this).dialog("close");
+				},
+				"Send mail": function () {*/
+		document.getElementById('mailsend-write').addEventListener('click', function (e) {
+			e.preventDefault();
+					var usersdata = document.getElementById("mail-to").value.split(',');
+					var associations = [],
+						i;
+					for (i = 0; i < usersdata.length; i++) {
+						if (usersdata[i] != "") {
+							associations.push(usersdata[i]);
+						}
+					}
+
+					//$(this).dialog("close");
+
+					var post = JSON.stringify({
+						'mail': 1,
+						'lastedit': LASTEDIT[news],
+						'headline': $('#mail-subject').val(),
+						'body': $('#mail-body').val(),
+						'associations': associations
+					});
+
+					fetch(root + "/" + news + "/email", {
+						method: 'PUT',
+						headers: headers,
+						body: JSON.stringify(post)
+					})
+					.then(function (response) {
+						if (response.ok) {
+							return response.json();
+						}
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
+							}
+							throw msg;
+						});
+					})
+					.then(function (results) {
+						document.getElementById("IMG_mail_" + news).className = "fa fa-check";
+						document.getElementById("A_mail_" + news).onclick = function () { };
+
+						LASTEDIT[news] = results['lastedit'];
+
+						NEWSSearch();
+					})
+					.catch(function (err) {
+						document.getElementById("IMG_mail_" + news).className = "fa fa-exclamation-circle";
+						document.getElementById("A_mail_" + news).onclick = function () { };
+						alert(err);
+					});
+				/*}
+			}
+		});
+		if ($(".ui-dialog-buttonpane").find("div").length == 1) {
+			$(".ui-dialog-buttonpane").prepend('<div style="float:left;padding-top:1em;padding-left:18em">Send this email message?</div>');
+		}
+		$('#mailwrite').dialog('open');*/
+		});
+	})
+	.catch(function (err) {
+		alert(err);
+	});
 }
 
 /**
@@ -3483,49 +3512,49 @@ function NEWSUseTemplate() {
 				method: 'GET',
 				headers: headers
 			})
-				.then(function (response) {
-					if (response.ok) {
-						return response.json();
+			.then(function (response) {
+				if (response.ok) {
+					return response.json();
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
 					}
-					return response.json().then(function (data) {
-						var msg = data.message;
-						if (typeof msg === 'object') {
-							msg = Object.values(msg).join('<br />');
-						}
-						throw msg;
-					});
-				})
-				.then(function (news) {
-					document.getElementById("Headline").value = news.headline.replace(/&#039;/g, "'").replace(/&quot;/g, '"');
-					document.getElementById("NotesText").value = news.body.replace(/&#039;/g, "'").replace(/&quot;/g, '"');
-					document.getElementById("NotesText").dispatchEvent(new Event('refreshEditor', { bubbles: true }));
-
-					var newstype = document.getElementById("newstype");
-					var x;
-
-					for (x = 0; x < newstype.options.length; x++) {
-						if (newstype.options[x].value == news.newstypeid) {
-							newstype.selectedIndex = x;
-						}
-					}
-
-					var resources = Array.prototype.slice.call(document.querySelectorAll('#newsresource option:checked'), 0).map(function (v) {
-						return v.value;
-					});
-
-					for (x = 0; x < news.resources.length; x++) {
-						resources.push(news.resources[x]['resourceid']);
-					}
-
-					$('#newsresource')
-						.val(resources)
-						.trigger('change');
-
-					NEWSSearch();
-				})
-				.catch(function (err) {
-					alert(err);
+					throw msg;
 				});
+			})
+			.then(function (news) {
+				document.getElementById("Headline").value = news.headline.replace(/&#039;/g, "'").replace(/&quot;/g, '"');
+				document.getElementById("NotesText").value = news.body.replace(/&#039;/g, "'").replace(/&quot;/g, '"');
+				document.getElementById("NotesText").dispatchEvent(new Event('refreshEditor', { bubbles: true }));
+
+				var newstype = document.getElementById("newstype");
+				var x;
+
+				for (x = 0; x < newstype.options.length; x++) {
+					if (newstype.options[x].value == news.newstypeid) {
+						newstype.selectedIndex = x;
+					}
+				}
+
+				var resources = Array.prototype.slice.call(document.querySelectorAll('#newsresource option:checked'), 0).map(function (v) {
+					return v.value;
+				});
+
+				for (x = 0; x < news.resources.length; x++) {
+					resources.push(news.resources[x]['resourceid']);
+				}
+
+				$('#newsresource')
+					.val(resources)
+					.trigger('change');
+
+				NEWSSearch();
+			})
+			.catch(function (err) {
+				alert(err);
+			});
 		} else {
 			document.getElementById("template_select").selectedIndex = 0;
 		}
@@ -3585,27 +3614,27 @@ function NewsPostUpdate(newsid) {
 		headers: headers,
 		body: post
 	})
-		.then(function (response) {
-			if (response.ok) {
-				return response.json();
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
+		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
 			}
-			return response.json().then(function (data) {
-				var msg = data.message;
-				if (typeof msg === 'object') {
-					msg = Object.values(msg).join('<br />');
-				}
-				throw msg;
-			});
-		})
-		.then(function (results) {
-			NewsPrintUpdate(newsid, results);
-			document.getElementById(newsid + "_newupdatebox").value = "";
-			NewsCollapseNewUpdate(newsid + "_newupdatebox");
-		})
-		.catch(function (err) {
-			document.getElementById(newsid + "_newupdateboxsave").className = "fa fa-exclamation-circle";
-			document.getElementById(newsid + "_newupdateboxsave").parentNode.title = err;
+			throw msg;
 		});
+	})
+	.then(function (results) {
+		NewsPrintUpdate(newsid, results);
+		document.getElementById(newsid + "_newupdatebox").value = "";
+		NewsCollapseNewUpdate(newsid + "_newupdatebox");
+	})
+	.catch(function (err) {
+		document.getElementById(newsid + "_newupdateboxsave").className = "fa fa-exclamation-circle";
+		document.getElementById(newsid + "_newupdateboxsave").parentNode.title = err;
+	});
 }
 
 /**
@@ -3817,7 +3846,7 @@ function NewsSaveUpdateText(newsid, update) {
 			throw msg;
 		});
 	})
-	.then(function (results) {
+	.then(function(results) {
 		var icon = document.getElementById(update + "_updatetextsaveicon");
 		icon.style.display = "none";
 		icon.onclick = function () {
@@ -3840,6 +3869,33 @@ function NewsSaveUpdateText(newsid, update) {
 			img.parentNode.title = error;
 		}
 	});
+}
+
+function joinDate(t, a, s) {
+	function format(m) {
+		let f = new Intl.DateTimeFormat('en', m);
+		return f.format(t);
+	}
+	return a.map(format).join(s);
+}
+
+function NEWSSetContentVars()
+{
+	var vars = NEWSPreviewVars();
+	var start = new Date(vars.startdate);
+	console.log(vars.startdate);
+	let a = [{ day: 'numeric' }, { month: 'short' }, { year: 'numeric' }];
+	vars.startdate = joinDate(start, a, '-');
+	//vars.startdate = start.getMonth() + ' ' + start.getDay() + ', ' + start.getFullYear();
+	vars.startdatetime = vars.startdate + ' at ' + start.getHours() + ':' + start.getMinutes();
+
+	if (vars.enddate) {
+		var end = new Date(vars.enddate);
+		vars.enddate = end.getMonth() + ' ' + end.getDay() + ', ' + end.getFullYear();
+		vars.enddatetime = vars.enddate + ' at ' + end.getHours() + ':' + end.getMinutes();
+	}
+
+	document.getElementById("NotesText").setAttribute('data-vars', JSON.stringify(vars));
 }
 
 /**
@@ -3902,7 +3958,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 	};
 
-	var tabs = document.querySelectorAll('.nav-tabs a');
+	var tabs = document.querySelectorAll('#tabs a');
 
 	for (i = 0; i < tabs.length; i++) {
 		tabs[i].addEventListener('click', function (event) {
@@ -3914,6 +3970,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// Date/time
 	$('.date-pick,.time-pick').on('change', function () {
+		//NEWSSetContentVars();
 		NEWSDateSearch($(this).attr('name'));
 	});
 
@@ -3933,76 +3990,115 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	// Dialogs
-	if ($('.samplebox').length) {
-		$('.samplebox').on('keyup', function () {
-			PreviewExample($(this).data('sample'));
+	document.querySelectorAll('.samplebox').forEach(function(el) {
+		el.addEventListener('keyup', function () {
+			PreviewExample(this.getAttribute('data-sample'));
 		});
+	});
 
-		$('#markdown-help').tabs();
-
-		//Load the formatting guide example variables into the text box.
-		//PreviewExample('h');
+	var location = document.getElementById('location');
+	if (location) {
+		location.addEventListener('keyup', function () {
+			NEWSToggleAddButton();
+		});
+	}
+	var newstype = document.getElementById('newstype');
+	if (newstype) {
+		newstype.addEventListener('change', function () {
+			NEWSNewstypeSearch(this.value);
+		});
+	}
+	var headline = document.getElementById('Headline');
+	if (headline) {
+		headline.addEventListener('keyup', function () {
+			NEWSToggleAddButton();
+		});
+	}
+	var notes = document.getElementById('NotesText');
+	if (notes) {
+		notes.addEventListener('change', function () {
+			NEWSToggleAddButton();
+		});
+	}
+	var keywords = document.getElementById('keywords');
+	if (keywords) {
+		keywords.addEventListener('keyup', function (event) {
+			NEWSKeywordSearch(event.keyCode);
+		});
+	}
+	var id = document.getElementById('id');
+	if (id) {
+		id.addEventListener('keyup', function (event) {
+			NEWSKeywordSearch(event.keyCode);
+		});
+	}
+	var templatesel = document.getElementById('template_select');
+	if (templatesel) {
+		templatesel.addEventListener('change', function () {
+			NEWSSearch();
+		});
+	}
+	var datesegmented = document.getElementById('datesegmented');
+	if (datesegmented) {
+		datesegmented.addEventListener('change', function () {
+			$('#TR_date').toggle();
+			$('#TR_newstime').toggle();
+		});
+	}
+	var template = document.getElementById('template');
+	if (template) {
+		template.addEventListener('change', function () {
+			NEWSSearch();
+		});
+	}
+	var published = document.getElementById('published');
+	if (published) {
+		published.addEventListener('change', function () {
+			NEWSSearch();
+		});
 	}
 
-	$('#location').on('keyup', function () {
-		NEWSToggleAddButton();
-	});
-	$('#newstype').on('change', function () {
-		NEWSNewstypeSearch($(this).val());
-	});
-	$('#Headline').on('keyup', function () {
-		NEWSToggleAddButton();
-	});
-	$('#NotesText').on('change', function () {
-		NEWSToggleAddButton();
-	});
-
-	$('#keywords').on('keyup', function (event) {
-		NEWSKeywordSearch(event.keyCode);
-	});
-	$('#id').on('keyup', function (event) {
-		NEWSKeywordSearch(event.keyCode);
-	});
-	$('#template_select').on('change', function () {
-		NEWSSearch();
-	});
-	$('#datesegmented').on('change', function () {
-		$('#TR_date').toggle();
-		$('#TR_newstime').toggle();
-	});
-	$('#template').on('change', function () {
-		NEWSSearch();
-	});
-	$('#published').on('change', function () {
-		NEWSSearch();
-	});
-
 	// Buttons
-	$('#INPUT_search').on('click', function (event) {
-		event.preventDefault();
-		NEWSSearch();
-	});
-	$('#INPUT_clear').on('click', function (event) {
-		event.preventDefault();
-		NEWSClearSearch();
-	});
-	$('#INPUT_add').on('click', function (event) {
-		event.preventDefault();
-		NEWSAddEntry();
-	});
-	$('#INPUT_preview').on('click', function (event) {
-		event.preventDefault();
-		NEWSPreview($(this).data('id'), true);
-	});
+	var search = document.getElementById('INPUT_search');
+	if (search) {
+		search.addEventListener('click', function (event) {
+			event.preventDefault();
+			NEWSSearch();
+		});
+	}
+	var clear = document.getElementById('INPUT_clearsearch');
+	if (clear) {
+		clear.addEventListener('click', function (event) {
+			event.preventDefault();
+			NEWSClearSearch();
+		});
+	}
+	var add = document.getElementById('INPUT_add');
+	if (add) {
+		add.addEventListener('click', function (event) {
+			event.preventDefault();
+			NEWSAddEntry();
+		});
+	}
+	var preview = document.getElementById('INPUT_preview');
+	if (preview) {
+		preview.addEventListener('click', function (event) {
+			event.preventDefault();
+			NEWSPreview(this.getAttribute('data-id'), true);
+		});
+	}
 
-	$('#DIV_news form').on('submit', function (e) {
-		e.preventDefault();
-		return false;
-	});
+	var searchfrm = document.querySelector('#DIV_news form');
+	if (searchfrm) {
+		searchfrm.addEventListener('submit', function (e) {
+			e.preventDefault();
+			return false;
+		});
+	}
 
 	var rselects = $(".searchable-select-multi");
 	if (rselects.length) {
-		$(".searchable-select-multi").select2({
+		rselects.select2({
 			multiple: true,
 			closeOnSelect: false,
 			templateResult: function (item) {
@@ -4034,9 +4130,11 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		})
 		.on('select2:select', function () {
+			//NEWSSetContentVars();
 			NEWSSearch();
 		})
 		.on('select2:unselect', function () {
+			//NEWSSetContentVars();
 			NEWSSearch();
 		});
 	}
@@ -4171,17 +4269,18 @@ document.addEventListener('DOMContentLoaded', function () {
 		on = url[1];
 	}
 
-	var data = $('#news-data');
-	if (data.length) {
-		var original = JSON.parse(data.html());
+	var data = document.getElementById('news-data');
+	if (data) {
+		var original = JSON.parse(data.innerHTML);
 		var i = 0;
 
-		$("#newstype > option").each(function () {
+		document.getElementById('newstype').value = original['newstypeid'];
+		/*$("#newstype > option").each(function () {
 			if (this.value == original['newstypeid']) {
 				$('#newstype > option:selected', 'select[name="options"]').removeAttr('selected');
 				$(this).attr('selected', true);
 			}
-		});
+		});*/
 
 		document.getElementById('datestartshort').value = original.startdate;
 		if (original.newsdateend != '0000-00-00 00:00:00') {

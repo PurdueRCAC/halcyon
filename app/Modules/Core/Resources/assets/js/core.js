@@ -761,8 +761,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	$('.tabs').tabs();
-
 	$('.dialog-help').dialog({
 		autoOpen: false,
 		modal: true,
@@ -919,7 +917,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			$('#permissions-rules .stop-propagation').on('click', function (e) {
 				e.stopPropagation();
 			});
-			$('.tabs').tabs();
+			//$('.tabs').tabs();
 		})
 		.catch(function (err) {
 			Halcyon.message('danger', err);

@@ -25,7 +25,7 @@ return [
 	'history edited' => 'Edited by :user @ :timestamp',
 	'search news' => 'Search ContactReports',
 	'contacted' => 'Contacted',
-	'report formatting' => 'Text is formatted in <a data-toggle="modal" data-target="#markdown" href="#markdown">MarkDown</a>. Tag words by preceeding with a hash (ex: #python).',
+	'report formatting' => 'Text is formatted in <a data-toggle="modal" data-target="#markdown-help" href="#markdown">MarkDown</a>. Tag words by preceeding with a hash (ex: #python).',
 	// Comment
 	'comment' => 'Comment',
 	'contactreport id' => 'Report ID',

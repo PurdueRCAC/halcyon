@@ -287,7 +287,7 @@ app('pathway')->append(
 							</label>
 							<div class="col-sm-10">
 								{!! markdown_editor('NotesText', '', ['rows' => 10, 'cols' => 80, 'class' => 'required', 'required' => 'required']) !!}
-								<span class="form-text text-muted">Reports can be formatted with <a href="#help1" class="help tip" title="MarkDown Formatting Help">MarkDown</a>. Hash tags (e.g., #python) can be used to tag entries.</span>
+								<span class="form-text text-muted">Reports can be formatted with <a href="#markdown-help" data-toggle="modal" class="tip" title="MarkDown Formatting Help">MarkDown</a>. Hash tags (e.g., #python) can be used to tag entries.</span>
 							</div>
 						</div>
 
@@ -304,7 +304,7 @@ app('pathway')->append(
 							<div class="col-sm-2">
 							</div>
 							<div class="col-sm-10">
-								<input id="INPUT_add" 
+								<input id="INPUT_add"
 									type="submit"
 									class="btn btn-primary"
 									data-txt-search="{{ trans('contactreports::contactreports.search') }}"
@@ -393,59 +393,74 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 | Carter-B | 16      | 64GB     |
 ";
 ?>
-		<div id="help1" class="dialog dialog-help" title="Text Formatting">
-			<ul>
-				<li><a href="#help1a">Fonts</a></li>
-				<li><a href="#help1b">Lists</a></li>
-				<li><a href="#help1c">Links</a></li>
-				<li><a href="#help1e">Line Breaks</a></li>
-				<li><a href="#help1f">Code</a></li>
-				<li><a href="#help1g">Tables</a></li>
-				<li><a href="#help1h">Variables</a></li>
-			</ul>
-			<div id="help1a">
-				<?php
-				$article = new App\Modules\ContactReports\Models\Report(['report' => $help1a]);
-				?>
-				<p>Input text: <textarea id="help1ainput" class="samplebox" data-sample="a"><?php echo $help1a; ?></textarea></p>
-				<p>Output text: <br/><div id="help1aoutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div></p>
+<div class="modal" id="markdown-help" tabindex="-1" aria-labelledby="markdown-help-title" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content shadow-sm">
+			<div class="modal-header">
+				<div class="modal-title" id="markdown-help-title">MarkDown Help</div>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
 			</div>
-			<div id="help1b">
-				<?php
-				$article = new App\Modules\ContactReports\Models\Report(['report' => $help1b]);
-				?>
-				<p>Input text: <textarea id="help1binput" class="samplebox" data-sample="b"><?php echo $help1b; ?></textarea></p>
-				<p>Output text: <br/><div id="help1boutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div></p>
-			</div>
-			<div id="help1c">
-				<?php
-				$article = new App\Modules\ContactReports\Models\Report(['report' => $help1c]);
-				?>
-				<p>Input text: <textarea id="help1cinput" class="samplebox" data-sample="c"><?php echo $help1c; ?></textarea></p>
-				<p>Output text: <br/><div id="help1coutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div></p>
-			</div>
-			<div id="help1e">
-				<?php
-				$article = new App\Modules\ContactReports\Models\Report(['report' => $help1e]);
-				?>
-				<p>Input text: <textarea id="help1einput" class="samplebox" data-sample="e"><?php echo $help1e; ?></textarea></p>
-				<p>Output text: <br/><div id="help1eoutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div></p>
-			</div>
-			<div id="help1f">
-				<?php
-				$article = new App\Modules\ContactReports\Models\Report(['report' => $help1f]);
-				?>
-				<p>Input text: <textarea id="help1finput" class="samplebox" data-sample="f"><?php echo $help1f; ?></textarea></p>
-				<p>Output text: <br/><div id="help1foutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div></p>
-			</div>
-			<div id="help1g">
-				<?php
-				$article = new App\Modules\ContactReports\Models\Report(['report' => $help1g]);
-				?>
-				<p>Input text: <textarea id="help1ginput" class="samplebox" data-sample="g"><?php echo $help1g; ?></textarea></p>
-				<p>Output text: <br/><div id="help1goutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div></p>
+			<div class="modal-body">
+				<div id="markdown-help-tabs" class="tabs">
+					<ul class="nav nav-tabs mb-3" id="help1" role="tablist">
+						<li class="nav-item" role="presentation"><a class="nav-link active" href="#help1a" data-toggle="tab" role="tab" id="help1-tab-1" aria-controls="help1a" aria-selected="true">Fonts</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1b" data-toggle="tab" role="tab" id="help1-tab-2" aria-controls="help1b" aria-selected="false">Lists</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1c" data-toggle="tab" role="tab" id="help1-tab-3" aria-controls="help1c" aria-selected="false">Links</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1e" data-toggle="tab" role="tab" id="help1-tab-5" aria-controls="help1e" aria-selected="false">Line Breaks</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1f" data-toggle="tab" role="tab" id="help1-tab-6" aria-controls="help1f" aria-selected="false">Code</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1g" data-toggle="tab" role="tab" id="help1-tab-7" aria-controls="help1g" aria-selected="false">Tables</a></li>
+					</ul>
+					<div class="tab-content" id="help1-content">
+						<div class="tab-pane fade show active" role="tabpanel" aria-labelledby="help1-tab-1" id="help1a">
+							<?php
+							$article = new App\Modules\ContactReports\Models\Report(['report' => $help1a]);
+							?>
+							<p>Input text: <textarea id="help1ainput" class="samplebox" data-sample="a"><?php echo $help1a; ?></textarea></p>
+							<p>Output text: <br/><div id="help1aoutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div></p>
+						</div>
+						<div class="tab-pane fade" role="tabpanel" aria-labelledby="help1-tab-2" id="help1b">
+							<?php
+							$article = new App\Modules\ContactReports\Models\Report(['report' => $help1b]);
+							?>
+							<p>Input text: <textarea id="help1binput" class="samplebox" data-sample="b"><?php echo $help1b; ?></textarea></p>
+							<p>Output text: <br/><div id="help1boutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div></p>
+						</div>
+						<div class="tab-pane fade" role="tabpanel" aria-labelledby="help1-tab-3" id="help1c">
+							<?php
+							$article = new App\Modules\ContactReports\Models\Report(['report' => $help1c]);
+							?>
+							<p>Input text: <textarea id="help1cinput" class="samplebox" data-sample="c"><?php echo $help1c; ?></textarea></p>
+							<p>Output text: <br/><div id="help1coutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div></p>
+						</div>
+						<div class="tab-pane fade" role="tabpanel" aria-labelledby="help1-tab-5" id="help1e">
+							<?php
+							$article = new App\Modules\ContactReports\Models\Report(['report' => $help1e]);
+							?>
+							<p>Input text: <textarea id="help1einput" class="samplebox" data-sample="e"><?php echo $help1e; ?></textarea></p>
+							<p>Output text: <br/><div id="help1eoutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div></p>
+						</div>
+						<div class="tab-pane fade" role="tabpanel" aria-labelledby="help1-tab-6" id="help1f">
+							<?php
+							$article = new App\Modules\ContactReports\Models\Report(['report' => $help1f]);
+							?>
+							<p>Input text: <textarea id="help1finput" class="samplebox" data-sample="f"><?php echo $help1f; ?></textarea></p>
+							<p>Output text: <br/><div id="help1foutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div></p>
+						</div>
+						<div class="tab-pane fade" role="tabpanel" aria-labelledby="help1-tab-7" id="help1g">
+							<?php
+							$article = new App\Modules\ContactReports\Models\Report(['report' => $help1g]);
+							?>
+							<p>Input text: <textarea id="help1ginput" class="samplebox" data-sample="g"><?php echo $help1g; ?></textarea></p>
+							<p>Output text: <br/><div id="help1goutput" class="sampleoutput"><?php echo $article->toHtml(); ?></div></p>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
+	</div>
+</div>
 
 		<?php
 		$valid_args = array('start', 'stop', 'id', 'group', 'people', 'resource', 'search', 'tag');

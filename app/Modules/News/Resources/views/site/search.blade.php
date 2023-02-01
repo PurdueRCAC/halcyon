@@ -272,8 +272,44 @@ app('pathway')
 			{{ trans('global.loading') }}
 		</div>
 
-		<div id="preview"></div>
-		<div id="mailpreview"></div>
+		<div class="modal" id="preview-modal" tabindex="-1" aria-labelledby="preview-title" aria-hidden="true">
+			<div class="modal-dialog modal-lg modal-dialog-centered">
+				<div class="modal-content shadow-sm">
+					<div class="modal-header">
+						<div class="modal-title" id="preview-title">News Preview</div>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" id="preview">
+						<div class="spinner-border" role="status">
+							<span class="sr-only">Loading...</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal" id="mailpreview-modal" tabindex="-1" aria-labelledby="mailpreview-title" aria-hidden="true">
+			<div class="modal-dialog modal-lg modal-dialog-centered">
+				<div class="modal-content shadow-sm">
+					<div class="modal-header">
+						<div class="modal-title" id="mailpreview-title">Mail Preview</div>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" id="mailpreview">
+						<div class="spinner-border" role="status">
+							<span class="sr-only">Loading...</span>
+						</div>
+					</div>
+					<div class="modal-footer text-right">
+						<button id="mailsend" data-dismiss="modal" class="btn btn-success" data-confirm="You have unsaved changes that need to be saved before mailing news item. Would you like to save the changes?">Send mail</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<?php /*<div id="app">

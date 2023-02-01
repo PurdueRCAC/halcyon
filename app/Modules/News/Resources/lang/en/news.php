@@ -35,7 +35,7 @@ return [
 	'alias hint' => 'Lowercase alpha-numeric characters, dashes, underscores. If left blank, one will be auto-generated from the name. Ex: "Outages and Maintenance" -> outages-and-maintenance',
 	'alias' => 'Alias',
 	'body' => 'Body',
-	'body formatting' => 'Text is formatted in <a class="help-dialog" href="#markdown-help">MarkDown</a>',
+	'body formatting' => 'Text is formatted in <a data-toggle="modal" href="#markdown-help">MarkDown</a>',
 	'state' => 'State',
 	'created' => 'Created',
 	'creator' => 'Creator',
