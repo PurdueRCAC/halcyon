@@ -688,11 +688,13 @@ class AccountsController extends Controller
 				}
 			}
 
-			if ($row->approveruserid && $row->approveruserid != $approveruserid)
+			if ($row->approveruserid != $approveruserid)
 			{
-				// New approver. Reset dates.
+				// New approver. Reset dates and notification status.
 				$row->datetimeapproved = null;
 				$row->datetimedenied = null;
+
+				$row->notice = 3;
 			}
 
 			$row->approveruserid = $approveruserid;
@@ -732,7 +734,7 @@ class AccountsController extends Controller
 		{
 			$row->amount = $request->input('amount');
 
-			// auto approve for orders less than 1000. Should not effect recurring orders.
+			// Auto approve for orders less than 1000. Should not effect recurring orders.
 			if (config('orders.admin_user') && $submitter != config('orders.admin_user'))
 			{
 				if ($row->amount > 5000 && $row->amount <= 100000)
@@ -749,8 +751,6 @@ class AccountsController extends Controller
 			{
 				return response()->json(['message' => trans('orders::orders.errors.invalid approverid')], 415);
 			}
-
-			$row->notice = 3;
 		}
 
 		if ($request->has('approved'))
