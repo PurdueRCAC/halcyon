@@ -483,7 +483,7 @@ app('pathway')
 						<div class="form-group row">
 							<label for="newsuser" class="col-sm-2 col-form-label">To</label>
 							<div class="col-sm-10">
-								<input name="to" id="mail-to" class="form-control" value="" data-uri="{{ route('api.users.index') }}/%s" />
+								<input name="to" id="mail-to" class="form-control" value="" data-uri="{{ route('api.users.index') }}?search=%s" />
 							</div>
 						</div>
 						<div class="form-group row">
@@ -501,8 +501,8 @@ app('pathway')
 						<div class="form-group row">
 							<label for="NotesText" class="col-sm-2 col-form-label">
 								Body
-								<a href="#help1" class="help icn tip" title="Help">
-									<span class="fa fa-question-circle" aria-hidden="true"></span> Help
+								<a href="#help1" data-toggle="modal" class="text-info tip" title="Help">
+									<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 								</a>
 							</label>
 							<div class="col-sm-10">
