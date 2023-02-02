@@ -3266,71 +3266,55 @@ function NEWSSendMail(news) {
 
 		document.getElementById('mailsend').addEventListener('click', function(e) {
 			e.preventDefault();
-		/*$('#mailpreview').dialog({
-			modal: true,
-			width: '691px',
-			buttons: {
-				"Cancel": function () {
-					$(this).dialog("close");
-				},
-				"Send mail": function () {
-					$(this).dialog("close");*/
 
-					var post = {
-						'mail': 1,
-						'lastedit': LASTEDIT[news]
-					};
+			var post = {
+				'mail': 1,
+				'lastedit': LASTEDIT[news]
+			};
 
-					var resources = [];
-					document.querySelectorAll('.preview-resource').forEach(function (el) {
-						if (el.checked) {
-							resources.push(el.value);
-						}
-					});
+			var resources = [];
+			document.querySelectorAll('.preview-resource').forEach(function (el) {
+				if (el.checked) {
+					resources.push(el.value);
+				}
+			});
 
-					//if ($('.preview-resource').length != resources.length) {
-					post.resources = resources;
-					//}
+			//if ($('.preview-resource').length != resources.length) {
+			post.resources = resources;
+			//}
 
-					post = JSON.stringify(post);
+			post = JSON.stringify(post);
 
-					fetch(root + "/" + news + "/email", {
-						method: 'PUT',
-						headers: headers,
-						body: post
-					})
-					.then(function (response) {
-						if (response.ok) {
-							document.getElementById("IMG_mail_" + news).className = "fa fa-check";
-							document.getElementById("A_mail_" + news).onclick = function () { };
+			fetch(root + "/" + news + "/email", {
+				method: 'PUT',
+				headers: headers,
+				body: post
+			})
+			.then(function (response) {
+				if (response.ok) {
+					document.getElementById("IMG_mail_" + news).className = "fa fa-check";
+					document.getElementById("A_mail_" + news).onclick = function () { };
 
-							var results = JSON.parse(xml.responseText);
-							LASTEDIT[news] = results['lastedit'];
+					var results = JSON.parse(xml.responseText);
+					LASTEDIT[news] = results['lastedit'];
 
-							NEWSSearch();
-							return;// response.json();
-						}
-						return response.json().then(function (data) {
-							var msg = data.message;
-							if (typeof msg === 'object') {
-								msg = Object.values(msg).join('<br />');
-							}
-							throw msg;
-						});
-					})
-					.catch(function (err) {
-						document.getElementById("IMG_mail_" + news).className = "fa fa-exclamation-circle";
-						document.getElementById("A_mail_" + news).onclick = function () { };
-						alert(err);
-					});
+					NEWSSearch();
+					return;// response.json();
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (err) {
+				document.getElementById("IMG_mail_" + news).className = "fa fa-exclamation-circle";
+				document.getElementById("A_mail_" + news).onclick = function () { };
+				alert(err);
+			});
 		});
-				/*}
-			}
-		});
-		if ($(".ui-dialog-buttonpane").find("div").length == 1) {
-			$(".ui-dialog-buttonpane").prepend('<div style="float:left;padding-top:1em;padding-left:18em">Send this email message?</div>');
-		}
-		$('#mailpreview').dialog('open');*/
 	})
 	.catch(function (err) {
 		alert(err);
@@ -3372,8 +3356,6 @@ function NEWSWriteMail(news) {
 			body += '**URL:** ' + data.url + "\n";
 		}
 
-		//var name = $( ".login").find( "a" ).first().text();
-
 		document.getElementById('mail-body').value = body + "\n\n";
 
 		var to = $('#mail-to');
@@ -3403,72 +3385,56 @@ function NEWSWriteMail(news) {
 			}
 		}
 
-		/*$('#mailwrite').dialog({
-			modal: true,
-			width: '691px',
-			buttons: {
-				"Cancel": function () {
-					$(this).dialog("close");
-				},
-				"Send mail": function () {*/
 		document.getElementById('mailsend-write').addEventListener('click', function (e) {
 			e.preventDefault();
-					var usersdata = document.getElementById("mail-to").value.split(',');
-					var associations = [],
-						i;
-					for (i = 0; i < usersdata.length; i++) {
-						if (usersdata[i] != "") {
-							associations.push(usersdata[i]);
-						}
-					}
 
-					//$(this).dialog("close");
-
-					var post = JSON.stringify({
-						'mail': 1,
-						'lastedit': LASTEDIT[news],
-						'headline': $('#mail-subject').val(),
-						'body': $('#mail-body').val(),
-						'associations': associations
-					});
-
-					fetch(root + "/" + news + "/email", {
-						method: 'PUT',
-						headers: headers,
-						body: JSON.stringify(post)
-					})
-					.then(function (response) {
-						if (response.ok) {
-							return response.json();
-						}
-						return response.json().then(function (data) {
-							var msg = data.message;
-							if (typeof msg === 'object') {
-								msg = Object.values(msg).join('<br />');
-							}
-							throw msg;
-						});
-					})
-					.then(function (results) {
-						document.getElementById("IMG_mail_" + news).className = "fa fa-check";
-						document.getElementById("A_mail_" + news).onclick = function () { };
-
-						LASTEDIT[news] = results['lastedit'];
-
-						NEWSSearch();
-					})
-					.catch(function (err) {
-						document.getElementById("IMG_mail_" + news).className = "fa fa-exclamation-circle";
-						document.getElementById("A_mail_" + news).onclick = function () { };
-						alert(err);
-					});
-				/*}
+			var usersdata = document.getElementById("mail-to").value.split(',');
+			var associations = [],
+				i;
+			for (i = 0; i < usersdata.length; i++) {
+				if (usersdata[i] != "") {
+					associations.push(usersdata[i]);
+				}
 			}
-		});
-		if ($(".ui-dialog-buttonpane").find("div").length == 1) {
-			$(".ui-dialog-buttonpane").prepend('<div style="float:left;padding-top:1em;padding-left:18em">Send this email message?</div>');
-		}
-		$('#mailwrite').dialog('open');*/
+
+			var post = JSON.stringify({
+				'mail': 1,
+				'lastedit': LASTEDIT[news],
+				'headline': document.getElementById('mail-subject').value,
+				'body': document.getElementById('mail-body').value,
+				'associations': associations
+			});
+
+			fetch(root + "/" + news + "/email", {
+				method: 'PUT',
+				headers: headers,
+				body: post
+			})
+			.then(function (response) {
+				if (response.ok) {
+					return response.json();
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.then(function (results) {
+				document.getElementById("IMG_mail_" + news).className = "fa fa-check";
+				document.getElementById("A_mail_" + news).onclick = function () { };
+
+				LASTEDIT[news] = results['lastedit'];
+
+				NEWSSearch();
+			})
+			.catch(function (err) {
+				document.getElementById("IMG_mail_" + news).className = "fa fa-exclamation-circle";
+				document.getElementById("A_mail_" + news).onclick = function () { };
+				alert(err);
+			});
 		});
 	})
 	.catch(function (err) {
