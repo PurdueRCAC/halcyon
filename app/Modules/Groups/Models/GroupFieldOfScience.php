@@ -2,10 +2,16 @@
 namespace App\Modules\Groups\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 
 /**
  * Group field of science association
+ *
+ * @property int    $id
+ * @property int    $groupid
+ * @property int    $fieldofscienceid
+ * @property int    $percentage
  */
 class GroupFieldOfScience extends Model
 {
@@ -42,7 +48,7 @@ class GroupFieldOfScience extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -51,7 +57,7 @@ class GroupFieldOfScience extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'groupid' => 'required|string',
@@ -61,9 +67,9 @@ class GroupFieldOfScience extends Model
 	/**
 	 * Field of science
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function field()
+	public function field(): BelongsTo
 	{
 		return $this->belongsTo(FieldOfScience::class, 'fieldofscienceid');
 	}
@@ -71,9 +77,9 @@ class GroupFieldOfScience extends Model
 	/**
 	 * Group
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function group()
+	public function group(): BelongsTo
 	{
 		return $this->belongsTo(Group::class, 'groupid');
 	}

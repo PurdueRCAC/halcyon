@@ -2,11 +2,17 @@
 namespace App\Modules\Groups\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
 use App\Modules\History\Traits\Historable;
 
 /**
  * Group department
+ *
+ * @property int    $id
+ * @property int    $parentid
+ * @property string $name
  */
 class Department extends Model
 {
@@ -63,7 +69,7 @@ class Department extends Model
 	 *
 	 * @return void
 	 */
-	protected static function booted()
+	protected static function booted(): void
 	{
 		static::creating(function ($model)
 		{
@@ -84,7 +90,7 @@ class Department extends Model
 	 * @param   string  $dir
 	 * @return  array
 	 */
-	public static function tree(string $order = 'name', string $dir = 'asc')
+	public static function tree(string $order = 'name', string $dir = 'asc'): array
 	{
 		$rows = self::query()
 			->withCount('groups')
@@ -121,16 +127,16 @@ class Department extends Model
 	/**
 	 * Recursive function to build tree
 	 *
-	 * @param   int  $id        Parent ID
+	 * @param   int      $id        Parent ID
 	 * @param   array    $list      List of records
 	 * @param   array    $children  Container for parent/children mapping
-	 * @param   int  $maxlevel  Maximum levels to descend
-	 * @param   int  $level     Indention level
-	 * @param   int  $type      Indention type
+	 * @param   int      $maxlevel  Maximum levels to descend
+	 * @param   int      $level     Indention level
+	 * @param   int      $type      Indention type
 	 * @param   string   $prfx
 	 * @return  array
 	 */
-	protected static function treeRecurse(int $id, array $list, array $children, int $maxlevel=9999, int $level=0, int $type=1, string $prfx = '')
+	protected static function treeRecurse(int $id, array $list, array $children, int $maxlevel=9999, int $level=0, int $type=1, string $prfx = ''): array
 	{
 		if (@$children[$id] && $level <= $maxlevel)
 		{
@@ -163,9 +169,9 @@ class Department extends Model
 	/**
 	 * Parent
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function parent()
+	public function parent(): BelongsTo
 	{
 		return $this->belongsTo(self::class, 'parentid');
 	}
@@ -173,10 +179,10 @@ class Department extends Model
 	/**
 	 * Get all parents
 	 *
-	 * @param   array  $ancestors
-	 * @return  array
+	 * @param   array<int,Department>  $ancestors
+	 * @return  array<int,Department>
 	 */
-	public function ancestors(array $ancestors = [])
+	public function ancestors(array $ancestors = []): array
 	{
 		$parent = $this->parent;
 
@@ -196,9 +202,9 @@ class Department extends Model
 	/**
 	 * Relationship to child records
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function children()
+	public function children(): HasMany
 	{
 		return $this->hasMany(self::class, 'parentid');
 	}
@@ -206,9 +212,9 @@ class Department extends Model
 	/**
 	 * Groups
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function groups()
+	public function groups(): HasMany
 	{
 		return $this->hasMany(GroupDepartment::class, 'collegedeptid');
 		//return $this->hasOneThrough(GroupFieldOfScience::class, GroupDepartment::class, 'groupid', 'id', 'groupid', 'collegedeptid');
@@ -219,7 +225,7 @@ class Department extends Model
 	 *
 	 * @return  bool
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		foreach ($this->children as $row)
 		{

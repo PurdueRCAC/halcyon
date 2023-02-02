@@ -8,6 +8,24 @@ use App\Halcyon\Models\Casts\Params;
 
 /**
  * News model mapping to resources
+ *
+ * @property int    $id
+ * @property string $title
+ * @property string $note
+ * @property string $content
+ * @property int    $ordering
+ * @property int    $position
+ * @property int    $checked_out
+ * @property Carbon|null $checked_out_time
+ * @property Carbon|null $publish_up
+ * @property Carbon|null $publish_down
+ * @property int    $published
+ * @property string $widget
+ * @property int    $access
+ * @property int    $showtitle
+ * @property string $params
+ * @property int    $client_id
+ * @property string $language
  */
 class Widget extends Model
 {

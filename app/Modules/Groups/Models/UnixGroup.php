@@ -2,6 +2,8 @@
 namespace App\Modules\Groups\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Groups\Events\UnixGroupCreating;
@@ -10,6 +12,14 @@ use App\Modules\Groups\Events\UnixGroupDeleted;
 
 /**
  * Unix Group model
+ *
+ * @property int    $id
+ * @property int    $groupid
+ * @property int    $unixgid
+ * @property string $shortname
+ * @property string $longname
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
  */
 class UnixGroup extends Model
 {
@@ -92,9 +102,9 @@ class UnixGroup extends Model
 	/**
 	 * Group
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function group()
+	public function group(): BelongsTo
 	{
 		return $this->belongsTo(Group::class, 'groupid');
 	}
@@ -102,9 +112,9 @@ class UnixGroup extends Model
 	/**
 	 * Get a list of users
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function members()
+	public function members(): HasMany
 	{
 		return $this->hasMany(UnixGroupMember::class, 'unixgroupid');
 	}
@@ -115,7 +125,7 @@ class UnixGroup extends Model
 	 * @param   string  $name
 	 * @return  string
 	 */
-	public function generateShortname(string $name)
+	public function generateShortname(string $name): string
 	{
 		$lastchar = '0';
 		if (preg_match('/^$/', $name))
@@ -185,7 +195,7 @@ class UnixGroup extends Model
 	 *
 	 * @return  bool
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		foreach ($this->members as $row)
 		{
@@ -201,7 +211,7 @@ class UnixGroup extends Model
 	 * @param   int  $userid
 	 * @return  bool
 	 */
-	public function addMember(int $userid)
+	public function addMember(int $userid): bool
 	{
 		$member = $this->members()
 			->withTrashed()
@@ -237,7 +247,7 @@ class UnixGroup extends Model
 	 * @param   int  $userid
 	 * @return  bool
 	 */
-	public function removeMember(int $userid)
+	public function removeMember(int $userid): bool
 	{
 		$member = $this->members()
 			->where('userid', '=', $userid)
@@ -292,7 +302,7 @@ class UnixGroup extends Model
 	 * Get a list of "message of the day"
 	 *
 	 * @param   string  $name
-	 * @return  mixed   object|null
+	 * @return  UnixGroup|null
 	 */
 	public static function findByLongname(string $name)
 	{
@@ -305,7 +315,7 @@ class UnixGroup extends Model
 	 * Get a list of "message of the day"
 	 *
 	 * @param   string  $name
-	 * @return  mixed   object|null
+	 * @return  UnixGroup|null
 	 */
 	public static function findByShortname(string $name)
 	{

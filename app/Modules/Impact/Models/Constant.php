@@ -3,10 +3,17 @@
 namespace App\Modules\Impact\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 
 /**
  * Impact contact
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $value
+ * @property int    $impacttableid
+ * @property int    $sequence
  */
 class Constant extends Model
 {
@@ -17,7 +24,7 @@ class Constant extends Model
 	 *
 	 * @var  string
 	 **/
-	protected $table = 'constants';
+	protected $table = 'impactconstants';
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -43,7 +50,7 @@ class Constant extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -52,7 +59,7 @@ class Constant extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'name' => 'required|string|max:255',
@@ -63,9 +70,9 @@ class Constant extends Model
 	/**
 	 * Defines a relationship to an impact table
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function table()
+	public function table(): BelongsTo
 	{
 		return $this->belongsTo(Table::class, 'impacttableid');
 	}

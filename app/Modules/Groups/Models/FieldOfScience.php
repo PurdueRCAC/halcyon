@@ -2,11 +2,17 @@
 namespace App\Modules\Groups\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
 use App\Modules\History\Traits\Historable;
 
 /**
  * Field of Science
+ *
+ * @property int    $id
+ * @property int    $parentid
+ * @property string $name
  */
 class FieldOfScience extends Model
 {
@@ -64,7 +70,7 @@ class FieldOfScience extends Model
 	 *
 	 * @return void
 	 */
-	protected static function booted()
+	protected static function booted(): void
 	{
 		static::creating(function ($model)
 		{
@@ -95,9 +101,9 @@ class FieldOfScience extends Model
 	/**
 	 * Field of science
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function parent()
+	public function parent(): BelongsTo
 	{
 		return $this->belongsTo(self::class, 'parentid');
 	}
@@ -109,7 +115,7 @@ class FieldOfScience extends Model
 	 * @param  string $dir
 	 * @return array
 	 */
-	public static function tree($order = 'name', $dir = 'asc')
+	public static function tree($order = 'name', $dir = 'asc'): array
 	{
 		$rows = self::query()
 			->withCount('groups')
@@ -153,7 +159,7 @@ class FieldOfScience extends Model
 	 * @param   int  $level     Indention level
 	 * @return  array
 	 */
-	protected static function treeRecurse($id, $list, $children, $maxlevel=9999, $level=0, string $prfx = '')
+	protected static function treeRecurse($id, $list, $children, $maxlevel=9999, $level=0, string $prfx = ''): array
 	{
 		if (@$children[$id] && $level <= $maxlevel)
 		{
@@ -185,10 +191,10 @@ class FieldOfScience extends Model
 	/**
 	 * Get all parents
 	 *
-	 * @param   array  $ancestors
-	 * @return  array
+	 * @param   array<int,FieldOfScience>  $ancestors
+	 * @return  array<int,FieldOfScience>
 	 */
-	public function ancestors($ancestors = array())
+	public function ancestors($ancestors = array()): array
 	{
 		$parent = $this->parent;
 
@@ -208,9 +214,9 @@ class FieldOfScience extends Model
 	/**
 	 * Groups
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function children()
+	public function children(): HasMany
 	{
 		return $this->hasMany(self::class, 'parentid');
 	}
@@ -218,9 +224,9 @@ class FieldOfScience extends Model
 	/**
 	 * Groups
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function groups()
+	public function groups(): HasMany
 	{
 		return $this->hasMany(GroupFieldOfScience::class, 'fieldofscienceid');
 		//return $this->hasOneThrough(GroupFieldOfScience::class, GroupDepartment::class, 'groupid', 'id', 'groupid', 'collegedeptid');

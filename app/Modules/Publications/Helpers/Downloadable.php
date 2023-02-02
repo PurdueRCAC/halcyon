@@ -27,7 +27,7 @@ abstract class Downloadable
 	 *
 	 * @return string
 	 */
-	public function mimetype()
+	public function mimetype(): string
 	{
 		return $this->mimetype;
 	}
@@ -37,7 +37,7 @@ abstract class Downloadable
 	 *
 	 * @return string
 	 */
-	public function extension()
+	public function extension(): string
 	{
 		return $this->extension;
 	}
@@ -48,7 +48,7 @@ abstract class Downloadable
 	 * @param  Publication $row
 	 * @return string
 	 */
-	public function format(Publication $row)
+	public function format(Publication $row): string
 	{
 		return $row->toString();
 	}

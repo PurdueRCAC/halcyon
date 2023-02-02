@@ -42,8 +42,8 @@ app('pathway')
 				</div>
 			</div>
 			<div class="col col-md-8 text-right filter-select">
-				<label class="sr-only" for="filter_clinet_id">{{ trans('themes::themes.type') }}</label>
-				<select name="clinet_id" id="filter_clinet_id" class="form-control filter filter-submit">
+				<label class="sr-only" for="filter_client_id">{{ trans('themes::themes.type') }}</label>
+				<select name="client_id" id="filter_client_id" class="form-control filter filter-submit">
 					<option value="*">{{ trans('themes::themes.all') }}</option>
 					<option value="0"<?php if ($filters['client_id'] == '0'): echo ' selected="selected"'; endif;?>>{{ trans('themes::themes.site') }}</option>
 					<option value="1"<?php if ($filters['client_id'] == '1'): echo ' selected="selected"'; endif;?>>{{ trans('themes::themes.admin') }}</option>

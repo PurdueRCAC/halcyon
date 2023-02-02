@@ -3,10 +3,23 @@
 namespace App\Modules\Pages\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Blade;
 
 /**
  * Model class for a page version
+ *
+ * @property int    $id
+ * @property int    $page_id
+ * @property int    $version
+ * @property Carbon|null $created_at
+ * @property int    $created_by
+ * @property string $title
+ * @property string $content
+ * @property string $metakey
+ * @property string $metadesc
+ * @property string $metadata
+ * @property int    $length
  */
 class Version extends Model
 {
@@ -76,7 +89,7 @@ class Version extends Model
 	 *
 	 * @return  bool
 	 */
-	public function exists()
+	public function exists(): bool
 	{
 		return !!$this->getAttribute('id');
 	}
@@ -84,9 +97,9 @@ class Version extends Model
 	/**
 	 * Defines a belongs to one relationship between task and liaison
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function creator()
+	public function creator(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'created_by');
 	}
@@ -94,9 +107,9 @@ class Version extends Model
 	/**
 	 * Defines a belongs to one relationship to the parent page
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function page()
+	public function page(): BelongsTo
 	{
 		return $this->belongsTo(Page::class, 'page_id');
 	}
@@ -107,7 +120,7 @@ class Version extends Model
 	 * @param   string|null  $metadesc
 	 * @return  string
 	 */
-	public function setMetadescAttribute($metadesc)
+	public function setMetadescAttribute($metadesc): string
 	{
 		return (is_null($metadesc) ? '' : $metadesc);
 	}
@@ -118,7 +131,7 @@ class Version extends Model
 	 * @param   string|null  $metakey
 	 * @return  string
 	 */
-	public function setMetakeyAttribute($metakey)
+	public function setMetakeyAttribute($metakey): string
 	{
 		return (is_null($metakey) ? '' : $metakey);
 	}
@@ -129,7 +142,7 @@ class Version extends Model
 	 * @param   string|null  $metadata
 	 * @return  string
 	 */
-	public function setMetadataAttribute($metadata)
+	public function setMetadataAttribute($metadata): string
 	{
 		return (is_null($metadata) ? '' : $metadata);
 	}
@@ -140,7 +153,7 @@ class Version extends Model
 	 * @param   int  $version
 	 * @return  int
 	 */
-	public function setVersionAttribute($version)
+	public function setVersionAttribute($version): int
 	{
 		$version = intval($version);
 		return $version++;
@@ -149,9 +162,10 @@ class Version extends Model
 	/**
 	 * Parses content string as directed
 	 *
-	 * @return  string
+	 * @param   int
+	 * @return  int
 	 */
-	public function setLengthAttribute($length)
+	public function setLengthAttribute($length): int
 	{
 		return strlen($this->getAttribute('content'));
 	}

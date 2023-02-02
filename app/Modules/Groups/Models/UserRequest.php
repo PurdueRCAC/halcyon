@@ -2,12 +2,18 @@
 namespace App\Modules\Groups\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Groups\Events\UserRequestCreated;
 use App\Modules\Groups\Events\UserRequestDeleted;
 
 /**
- * Group member model
+ * Use request model
+ *
+ * @property int    $id
+ * @property int    $userid
+ * @property string $comment
+ * @property Carbon|null $datetimecreated
  */
 class UserRequest extends Model
 {
@@ -82,7 +88,7 @@ class UserRequest extends Model
 	 *
 	 * @return  object
 	 */
-	public function setCommentAttribute(string $value)
+	public function setCommentAttribute(string $value): void
 	{
 		$this->attributes['comment'] = strip_tags($value);
 	}
@@ -90,9 +96,9 @@ class UserRequest extends Model
 	/**
 	 * Get member
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function member()
+	public function member(): BelongsTo
 	{
 		return $this->belongsTo(Member::class, 'userrequestid');
 	}
@@ -100,9 +106,9 @@ class UserRequest extends Model
 	/**
 	 * Get parent user
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function user()
+	public function user(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'userid')->withTrashed();
 	}

@@ -3,6 +3,7 @@
 namespace App\Modules\Tags\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Tags\Events\TagCreated;
@@ -12,6 +13,20 @@ use Carbon\Carbon;
 
 /**
  * Tag model
+ *
+ * @property int    $id
+ * @property int    $parent_id
+ * @property string $slug
+ * @property string $name
+ * @property string $domain
+ * @property int    $created_by
+ * @property Carbon|null $created_at
+ * @property int    $updated_by
+ * @property Carbon|null $updated_at
+ * @property int    $deleted_by
+ * @property Carbon|null $deleted_at
+ * @property int    $tagged_count
+ * @property int    $alias_count
  */
 class Tag extends Model
 {
@@ -63,7 +78,7 @@ class Tag extends Model
 	 *
 	 * @return  void
 	 */
-	protected static function booted()
+	protected static function booted(): void
 	{
 		static::created(function ($model)
 		{
@@ -114,7 +129,7 @@ class Tag extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setNameAttribute($value)
+	public function setNameAttribute($value): void
 	{
 		$this->attributes['name'] = $value;
 		$this->attributes['slug'] = $this->normalize($value);
@@ -126,7 +141,7 @@ class Tag extends Model
 	 * @param   string  $tag
 	 * @return  string
 	 */
-	public function normalize($name)
+	public function normalize($name): string
 	{
 		$transliterationTable = array(
 			'á' => 'a', 'Á' => 'A', 'à' => 'a', 'À' => 'A', 'ă' => 'a', 'Ă' => 'A', 'â' => 'a', 'Â' => 'A', 'å' => 'a', 'Å' => 'A', 'ã' => 'a', 'Ã' => 'A', 'ą' => 'a', 'Ą' => 'A', 'ā' => 'a', 'Ā' => 'A', 'ä' => 'ae', 'Ä' => 'AE', 'æ' => 'ae', 'Æ' => 'AE',
@@ -201,9 +216,9 @@ class Tag extends Model
 	/**
 	 * Define relationship to creator user
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function creator()
+	public function creator(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'created_by');
 	}
@@ -213,7 +228,7 @@ class Tag extends Model
 	 *
 	 * @return  bool  True if modified, false if not
 	 */
-	public function isUpdated()
+	public function isUpdated(): bool
 	{
 		if ($this->updated_at
 		 && $this->updated_at != $this->created_at)
@@ -226,9 +241,9 @@ class Tag extends Model
 	/**
 	 * Editor user record
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function updater()
+	public function updater(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'updated_by');
 	}
@@ -236,9 +251,9 @@ class Tag extends Model
 	/**
 	 * Deleter user record
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function trasher()
+	public function trasher(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'deleted_by');
 	}
@@ -246,9 +261,9 @@ class Tag extends Model
 	/**
 	 * Parent tag
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function parent()
+	public function parent(): BelongsTo
 	{
 		return $this->belongsTo(self::class, 'parent_id');
 	}
@@ -256,9 +271,9 @@ class Tag extends Model
 	/**
 	 * Get a list of aliases
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function aliases()
+	public function aliases(): HasMany
 	{
 		return $this->hasMany(self::class, 'parent_id');
 	}
@@ -268,7 +283,7 @@ class Tag extends Model
 	 *
 	 * @return  string
 	 */
-	public function getAliasStringAttribute()
+	public function getAliasStringAttribute(): string
 	{
 		$subs = $this->aliases->pluck('name')->toArray();
 
@@ -278,9 +293,9 @@ class Tag extends Model
 	/**
 	 * Get a list of tagged objects
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function tagged()
+	public function tagged(): HasMany
 	{
 		return $this->hasMany(Tagged::class, 'tag_id');
 	}
@@ -312,7 +327,7 @@ class Tag extends Model
 	 * @param   int  $tagger    User ID of person to filter tag by
 	 * @return  bool
 	 */
-	public function removeFrom($scope, $scope_id, $tagger=0)
+	public function removeFrom($scope, $scope_id, $tagger=0): bool
 	{
 		// Check if the relationship exists
 		$to = Tagged::findByScoped($scope, $scope_id, $this->id, $tagger);
@@ -342,7 +357,7 @@ class Tag extends Model
 	 * @param   int  $strength  Tag strength
 	 * @return  bool
 	 */
-	public function addTo($scope, $scope_id, $tagger = 0, $strength = 1)
+	public function addTo($scope, $scope_id, $tagger = 0, $strength = 1): bool
 	{
 		// Check if the relationship already exists
 		$to = Tagged::findByScoped($scope, $scope_id, $this->id, $tagger);
@@ -376,7 +391,7 @@ class Tag extends Model
 	 * @param   int  $tag_id  ID of tag to merge with
 	 * @return  bool
 	 */
-	public function mergeWith($tag_id)
+	public function mergeWith($tag_id): bool
 	{
 		if (!$tag_id)
 		{
@@ -426,7 +441,7 @@ class Tag extends Model
 	 * @param   int  $tag_id  ID of tag to copy associations to
 	 * @return  bool
 	 */
-	public function copyTo($tag_id)
+	public function copyTo($tag_id): bool
 	{
 		if (!$tag_id)
 		{
@@ -455,7 +470,7 @@ class Tag extends Model
 	 * @param   string   $tag_string
 	 * @return  bool
 	 */
-	public function saveAliases($tag_string='')
+	public function saveAliases($tag_string=''): bool
 	{
 		// Get the old list of substitutions
 		$subs = array();

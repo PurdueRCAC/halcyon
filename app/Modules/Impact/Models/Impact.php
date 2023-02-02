@@ -3,10 +3,18 @@
 namespace App\Modules\Impact\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 
 /**
  * Model for an impact entry
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $value
+ * @property int    $impacttableid
+ * @property int    $sequence
+ * @property Carbon|null $updateddatetime
  */
 class Impact extends Model
 {
@@ -72,9 +80,9 @@ class Impact extends Model
 	/**
 	 * Defines a relationship to an impact table
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function table()
+	public function table(): BelongsTo
 	{
 		return $this->belongsTo(Table::class, 'impacttableid');
 	}

@@ -72,7 +72,7 @@ abstract class Admin
 	 * @param   int  $clientId  The client id.
 	 * @return  array
 	 */
-	public static function getAssignmentOptions($clientId)
+	public static function getAssignmentOptions($clientId): array
 	{
 		$options = array();
 		$options['0'] = trans('widgets::widgets.option.all');

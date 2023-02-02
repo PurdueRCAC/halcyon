@@ -7,6 +7,12 @@ use App\Modules\History\Traits\Historable;
 
 /**
  * Model for Impact table
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $columnname
+ * @property int    $sequence
+ * @property string $updatekey
  */
 class Table extends Model
 {
@@ -43,7 +49,7 @@ class Table extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -52,7 +58,7 @@ class Table extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'name' => 'required|string|max:255',

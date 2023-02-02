@@ -2,6 +2,7 @@
 namespace App\Modules\Users\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\Table\TableExtension;
@@ -15,6 +16,15 @@ use App\Modules\Users\Events\NoteDeleted;
 
 /**
  * User note model
+ *
+ * @property int    $id
+ * @property int    $user_id
+ * @property string $body
+ * @property Carbon|null $created_at
+ * @property int    $created_by
+ * @property Carbon|null $updated_at
+ * @property int    $updated_by
+ * @property Carbon|null $deleted_at
  */
 class Note extends Model
 {
@@ -57,7 +67,7 @@ class Note extends Model
 	 *
 	 * @return  void
 	 */
-	protected static function boot()
+	protected static function boot(): void
 	{
 		parent::boot();
 
@@ -76,9 +86,9 @@ class Note extends Model
 	/**
 	 * Get user
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function user()
+	public function user(): BelongsTo
 	{
 		return $this->belongsTo(User::class, 'user_id');
 	}
@@ -86,9 +96,9 @@ class Note extends Model
 	/**
 	 * Get creator
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function creator()
+	public function creator(): BelongsTo
 	{
 		return $this->belongsTo(User::class, 'created_by');
 	}
@@ -96,9 +106,9 @@ class Note extends Model
 	/**
 	 * Get editor
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function editor()
+	public function editor(): BelongsTo
 	{
 		return $this->belongsTo(User::class, 'updated_by');
 	}
@@ -108,7 +118,7 @@ class Note extends Model
 	 *
 	 * @return string
 	 */
-	public function getFormattedBodyAttribute()
+	public function getFormattedBodyAttribute(): string
 	{
 		$text = $this->body;
 
@@ -136,7 +146,7 @@ class Note extends Model
 	 *
 	 * @return  string
 	 */
-	public function getHashtagsAttribute()
+	public function getHashtagsAttribute(): string
 	{
 		$str = $this->body;
 

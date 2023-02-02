@@ -26,10 +26,10 @@ class Endnote extends Downloadable
 	/**
 	 * Format the file
 	 *
-	 * @param  object $row Record to format
+	 * @param  Publication $row Record to format
 	 * @return string
 	 */
-	public function format(Publication $row)
+	public function format(Publication $row): string
 	{
 		//var to hold document conetnt
 		$doc = '';

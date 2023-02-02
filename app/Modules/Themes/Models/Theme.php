@@ -9,6 +9,22 @@ use Carbon\Carbon;
 
 /**
  * Module extension model
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $type
+ * @property string $element
+ * @property string $folder
+ * @property int    $clinet_id
+ * @property int    $enabled
+ * @property int    $access
+ * @property int    $protected
+ * @property string $params
+ * @property int    $checked_out
+ * @property Carbon|null $checked_out_time
+ * @property int    $ordering
+ * @property Carbon|null $updated_at
+ * @property int    $updated_by
  */
 class Theme extends Model
 {
@@ -98,7 +114,7 @@ class Theme extends Model
 	 *
 	 * @return  bool
 	 */
-	public function duplicate()
+	public function duplicate(): bool
 	{
 		// Reset the id to create a new record.
 		$this->id = 0;
@@ -123,7 +139,7 @@ class Theme extends Model
 	 * @param   string  $name  The name.
 	 * @return  string  New name.
 	 */
-	protected function generateNewTitle($name)
+	protected function generateNewTitle($name): string
 	{
 		// Alter the name
 		$style = self::query()
@@ -166,9 +182,9 @@ class Theme extends Model
 	/**
 	 * Get a form
 	 *
-	 * @return  object
+	 * @return  Form
 	 */
-	public function getForm()
+	public function getForm(): Form
 	{
 		Form::addFieldPath(__DIR__ . '/Fields');
 
@@ -204,7 +220,7 @@ class Theme extends Model
 	 *
 	 * @return  void
 	 */
-	public function registerLanguage()
+	public function registerLanguage(): void
 	{
 		$name = $this->element;
 
@@ -221,7 +237,7 @@ class Theme extends Model
 	 *
 	 * @return  string
 	 */
-	public function path()
+	public function path(): string
 	{
 		if (is_null($this->path))
 		{

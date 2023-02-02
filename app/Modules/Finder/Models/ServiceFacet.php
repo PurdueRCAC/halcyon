@@ -2,9 +2,14 @@
 namespace App\Modules\Finder\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Finder Service/Facet mapping
+ *
+ * @property int    $id
+ * @property int    $service_id
+ * @property int    $facet_id
  */
 class ServiceFacet extends Model
 {
@@ -39,7 +44,7 @@ class ServiceFacet extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -48,7 +53,7 @@ class ServiceFacet extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'service_id' => 'required|integer',
@@ -58,9 +63,9 @@ class ServiceFacet extends Model
 	/**
 	 * Field
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function facet()
+	public function facet(): BelongsTo
 	{
 		return $this->belongsTo(Facet::class, 'facet_id');
 	}
@@ -68,9 +73,9 @@ class ServiceFacet extends Model
 	/**
 	 * Service
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function service()
+	public function service(): BelongsTo
 	{
 		return $this->belongsTo(Service::class, 'service_id');
 	}
@@ -80,7 +85,7 @@ class ServiceFacet extends Model
 	 *
 	 * @param   int  $service_id
 	 * @param   int  $facet_id
-	 * @return  object
+	 * @return  ServiceFacet|null
 	 */
 	public static function findByServiceAndFacet($service_id, $facet_id)
 	{

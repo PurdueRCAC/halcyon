@@ -7,6 +7,13 @@ use App\Modules\History\Traits\Historable;
 
 /**
  * Impact award reports
+ *
+ * @property int    $id
+ * @property int    $fiscalyear
+ * @property int    $awards
+ * @property int    $totalawards
+ * @property int    $awardeecount
+ * @property int    $totalawardeecount
  */
 class AwardReport extends Model
 {
@@ -43,7 +50,7 @@ class AwardReport extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -52,7 +59,7 @@ class AwardReport extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'fiscalyear' => 'required|integer',

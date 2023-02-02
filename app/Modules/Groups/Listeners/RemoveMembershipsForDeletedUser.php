@@ -2,6 +2,7 @@
 
 namespace App\Modules\Groups\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Users\Events\UserDeleted;
 use App\Modules\Groups\Models\Member;
 use App\Modules\Groups\Models\UnixGroupMember;
@@ -14,10 +15,10 @@ class RemoveMembershipsForDeletedUser
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param   \Illuminate\Events\Dispatcher  $events
+	 * @param   Dispatcher  $events
 	 * @return  void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(UserDeleted::class, self::class . '@handleUserDeleted');
 	}
@@ -28,7 +29,7 @@ class RemoveMembershipsForDeletedUser
 	 * @param   UserDeleted  $event
 	 * @return  void
 	 */
-	public function handleUserDeleted(UserDeleted $event)
+	public function handleUserDeleted(UserDeleted $event): void
 	{
 		if (!$event->user || !$event->user->id)
 		{

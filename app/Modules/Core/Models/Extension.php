@@ -10,6 +10,22 @@ use App\Halcyon\Models\Casts\Params;
 
 /**
  * Extension model
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $type
+ * @property string $element
+ * @property string $folder
+ * @property int    $client_id
+ * @property int    $enabled
+ * @property int    $access
+ * @property int    $protected
+ * @property string $params
+ * @property int    $checked_out
+ * @property Carbon|null $checked_out_time
+ * @property int    $ordering
+ * @property Carbon|null $updated_at
+ * @property int    $updated_by
  */
 class Extension extends Model
 {
@@ -88,7 +104,7 @@ class Extension extends Model
 	 *
 	 * @param   string  $name
 	 * @param   string  $type
-	 * @return  object
+	 * @return  Extension|null
 	 */
 	public static function findByName($name, $type = 'module')
 	{
@@ -103,7 +119,7 @@ class Extension extends Model
 	 * Find a module by name
 	 *
 	 * @param   string  $name
-	 * @return  object
+	 * @return  Extension|null
 	 */
 	public static function findModuleByName($name)
 	{
@@ -114,7 +130,7 @@ class Extension extends Model
 	 * Find a module by name
 	 *
 	 * @param   string  $name
-	 * @return  object
+	 * @return  Extension|null
 	 */
 	public static function findWidgetByName($name)
 	{
@@ -125,7 +141,7 @@ class Extension extends Model
 	 * Find a record by element
 	 *
 	 * @param   string  $element
-	 * @return  object
+	 * @return  Extension|null
 	 */
 	public static function findByElement($element, $type = 'module')
 	{
@@ -139,7 +155,7 @@ class Extension extends Model
 	 * Find a module by element
 	 *
 	 * @param   string  $element
-	 * @return  object
+	 * @return  Extension|null
 	 */
 	public static function findModuleByElement($element)
 	{
@@ -151,7 +167,7 @@ class Extension extends Model
 	 *
 	 * @return void
 	 */
-	public function registerLanguage()
+	public function registerLanguage(): void
 	{
 		if ($this->type == 'module')
 		{
@@ -171,7 +187,7 @@ class Extension extends Model
 	 *
 	 * @return  string
 	 */
-	public function path()
+	public function path(): string
 	{
 		if (is_null($this->path))
 		{
@@ -259,9 +275,10 @@ class Extension extends Model
 	/**
 	 * Get a form
 	 *
-	 * @return  object
+	 * @return  Form
+	 * @throws  \Exception
 	 */
-	public function getForm()
+	public function getForm(): Form
 	{
 		$file = $this->path() . '/Core/Params.xml'; //__DIR__ . '/Forms/Application.xml';
 

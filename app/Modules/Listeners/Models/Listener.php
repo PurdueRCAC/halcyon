@@ -13,6 +13,22 @@ use Carbon\Carbon;
 
 /**
  * Module extension model
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $type
+ * @property string $element
+ * @property string $folder
+ * @property int    $client_id
+ * @property int    $enabled
+ * @property int    $access
+ * @property int    $protected
+ * @property string $params
+ * @property int    $checked_out
+ * @property Carbon|null $checked_out_time
+ * @property int    $ordering
+ * @property Carbon|null $updated_at
+ * @property int    $updated_by
  */
 class Listener extends Model
 {

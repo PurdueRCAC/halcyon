@@ -2,11 +2,23 @@
 namespace App\Modules\Finder\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 
 /**
  * Finder Node
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $control_type
+ * @property int    $parent
+ * @property int    $weight
+ * @property int    $status
+ * @property string $description
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  */
 class Facet extends Model
 {
@@ -36,7 +48,7 @@ class Facet extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -45,7 +57,7 @@ class Facet extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'name' => 'required|string|max:255',
@@ -56,9 +68,9 @@ class Facet extends Model
 	/**
 	 * Choices
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function choices()
+	public function choices(): HasMany
 	{
 		return $this->hasMany(self::class, 'parent');
 	}
@@ -66,9 +78,9 @@ class Facet extends Model
 	/**
 	 * Service Facet matches
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function services()
+	public function services(): HasMany
 	{
 		return $this->hasMany(ServiceFacet::class, 'facet_id');
 	}
@@ -78,7 +90,7 @@ class Facet extends Model
 	 * 
 	 * @return  array  the facet tree
 	 */
-	public static function tree()
+	public static function tree(): array
 	{
 		/*if (is_file(public_path('files/facettree.json')))
 		{
@@ -178,7 +190,7 @@ class Facet extends Model
 	 *
 	 * @return void
 	 */
-	protected static function booted()
+	protected static function booted(): void
 	{
 		static::creating(function ($model)
 		{

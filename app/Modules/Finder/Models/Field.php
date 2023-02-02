@@ -2,11 +2,21 @@
 namespace App\Modules\Finder\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 
 /**
  * Finder field
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $label
+ * @property int    $weight
+ * @property int    $status
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  */
 class Field extends Model
 {
@@ -36,7 +46,7 @@ class Field extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -45,7 +55,7 @@ class Field extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'name' => 'required|string|max:255',
@@ -56,9 +66,9 @@ class Field extends Model
 	/**
 	 * Field Services
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function services()
+	public function services(): HasMany
 	{
 		return $this->hasMany(ServiceField::class, 'field_id');
 	}
@@ -67,7 +77,7 @@ class Field extends Model
 	 * Retrieves one row loaded by name
 	 *
 	 * @param   string   $name
-	 * @return  object|null
+	 * @return  Field|null
 	 */
 	public static function findByName($name)
 	{
@@ -83,7 +93,7 @@ class Field extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setNameAttribute($value)
+	public function setNameAttribute($value): void
 	{
 		$alias = strip_tags($value);
 		$alias = trim($alias);
@@ -102,7 +112,7 @@ class Field extends Model
 	 *
 	 * @return void
 	 */
-	protected static function booted()
+	protected static function booted(): void
 	{
 		static::creating(function ($model)
 		{

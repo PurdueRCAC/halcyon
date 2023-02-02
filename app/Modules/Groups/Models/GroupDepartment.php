@@ -2,10 +2,16 @@
 namespace App\Modules\Groups\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 
 /**
  * Group department association
+ *
+ * @property int    $id
+ * @property int    $groupid
+ * @property int    $collegedeptid
+ * @property int    $percentage
  */
 class GroupDepartment extends Model
 {
@@ -42,7 +48,7 @@ class GroupDepartment extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -51,7 +57,7 @@ class GroupDepartment extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'groupid' => 'required|integer',
@@ -61,9 +67,9 @@ class GroupDepartment extends Model
 	/**
 	 * Department
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function department()
+	public function department(): BelongsTo
 	{
 		return $this->belongsTo(Department::class, 'collegedeptid');
 	}
@@ -71,9 +77,9 @@ class GroupDepartment extends Model
 	/**
 	 * Group
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function group()
+	public function group(): BelongsTo
 	{
 		return $this->belongsTo(Group::class, 'groupid');
 	}

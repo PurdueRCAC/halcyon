@@ -2,6 +2,7 @@
 namespace App\Modules\Groups\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Groups\Events\MemberCreating;
@@ -12,6 +13,17 @@ use App\Modules\Groups\Events\MemberDeleted;
 
 /**
  * Group member model
+ *
+ * @property int    $id
+ * @property int    $groupid
+ * @property int    $userid
+ * @property int    $userrequestid
+ * @property int    $membertype
+ * @property int    $owner
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property Carbon|null $datelastseen
+ * @property int    $notice
  */
 class Member extends Model
 {
@@ -104,9 +116,9 @@ class Member extends Model
 	/**
 	 * Get parent group
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function group()
+	public function group(): BelongsTo
 	{
 		return $this->belongsTo(Group::class, 'groupid');
 	}
@@ -114,9 +126,9 @@ class Member extends Model
 	/**
 	 * Get parent user
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function user()
+	public function user(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
 			/*->withDefault([
@@ -128,9 +140,9 @@ class Member extends Model
 	/**
 	 * Get user request
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function request()
+	public function request(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Groups\Models\UserRequest', 'userrequestid');
 	}
@@ -138,9 +150,9 @@ class Member extends Model
 	/**
 	 * Get member type
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function type()
+	public function type(): BelongsTo
 	{
 		return $this->belongsTo(Type::class, 'membertype');
 	}
@@ -150,7 +162,7 @@ class Member extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isMember()
+	public function isMember(): bool
 	{
 		return ($this->membertype == Type::MEMBER);
 	}
@@ -160,7 +172,7 @@ class Member extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isManager()
+	public function isManager(): bool
 	{
 		return ($this->membertype == Type::MANAGER);
 	}
@@ -170,7 +182,7 @@ class Member extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isViewer()
+	public function isViewer(): bool
 	{
 		return ($this->membertype == Type::VIEWER);
 	}
@@ -180,7 +192,7 @@ class Member extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isPending()
+	public function isPending(): bool
 	{
 		return ($this->membertype == Type::PENDING);
 	}
@@ -190,7 +202,7 @@ class Member extends Model
 	 *
 	 * @return  void
 	 */
-	public function setAsMember()
+	public function setAsMember(): void
 	{
 		$this->membertype = Type::MEMBER;
 	}
@@ -200,7 +212,7 @@ class Member extends Model
 	 *
 	 * @return  void
 	 */
-	public function setAsManager()
+	public function setAsManager(): void
 	{
 		$this->membertype = Type::MANAGER;
 	}
@@ -210,7 +222,7 @@ class Member extends Model
 	 *
 	 * @return  void
 	 */
-	public function setAsViewer()
+	public function setAsViewer(): void
 	{
 		$this->membertype = Type::VIEWER;
 	}
@@ -220,7 +232,7 @@ class Member extends Model
 	 *
 	 * @return  void
 	 */
-	public function setAsPending()
+	public function setAsPending(): void
 	{
 		$this->membertype = Type::PENDING;
 	}

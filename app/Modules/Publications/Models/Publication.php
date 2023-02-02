@@ -3,6 +3,8 @@
 namespace App\Modules\Publications\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use App\Modules\History\Traits\Historable;
@@ -13,6 +15,37 @@ use App\Modules\Publications\Helpers\Formatter;
 
 /**
  * Model for publication
+ *
+ * @property int    $id
+ * @property string $title
+ * @property int    $type_id
+ * @property string $author
+ * @property string $editor
+ * @property string $url
+ * @property string $series
+ * @property string $booktitle
+ * @property string $edition
+ * @property string $chapter
+ * @property string $issuetitle
+ * @property string $journal
+ * @property string $volume
+ * @property string $number
+ * @property string $pages
+ * @property string $publisher
+ * @property string $address
+ * @property string $institution
+ * @property string $organization
+ * @property string $school
+ * @property string $crossref
+ * @property string $isbn
+ * @property string $doi
+ * @property string $note
+ * @property int    $state
+ * @property Carbon|null $published_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property string $filename
  */
 class Publication extends Model
 {
@@ -71,9 +104,9 @@ class Publication extends Model
 	/**
 	 * Get a list of associated users
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	/*public function users()
+	/*public function users(): HasMany
 	{
 		return $this->hasMany(Map::class, 'publication_id');
 	}*/
@@ -81,9 +114,9 @@ class Publication extends Model
 	/**
 	 * Get a list of menu items
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function type()
+	public function type(): BelongsTo
 	{
 		return $this->belongsTo(Type::class, 'type_id');
 	}
@@ -93,7 +126,7 @@ class Publication extends Model
 	 *
 	 * @return  bool  False if error, True on success
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		$this->deleteAttachment();
 
@@ -106,7 +139,7 @@ class Publication extends Model
 	 * 
 	 * @return string
 	 */
-	public function toString()
+	public function toString(): string
 	{
 		return strip_tags($this->toHtml());
 	}
@@ -116,7 +149,7 @@ class Publication extends Model
 	 * 
 	 * @return string
 	 */
-	public function toHtml()
+	public function toHtml(): string
 	{
 		return Formatter::format($this);
 	}
@@ -126,7 +159,7 @@ class Publication extends Model
 	 * 
 	 * @return bool
 	 */
-	public function isPublished()
+	public function isPublished(): bool
 	{
 		return ($this->state == 1);
 	}
@@ -136,7 +169,7 @@ class Publication extends Model
 	 * 
 	 * @return bool
 	 */
-	public function isUnpublished()
+	public function isUnpublished(): bool
 	{
 		return !$this->isPublished();
 	}
@@ -146,7 +179,7 @@ class Publication extends Model
 	 * 
 	 * @return array<int,array>
 	 */
-	public function getAuthorListAttribute()
+	public function getAuthorListAttribute(): array
 	{
 		$authors = $this->author;
 		$items = array();
@@ -200,7 +233,7 @@ class Publication extends Model
 	 * @param bool $full
 	 * @return string
 	 */
-	public function path($full = true)
+	public function path($full = true): string
 	{
 		return storage_path('app/public/publications/' . $this->id . ($full ? '/' . $this->filename : ''));
 	}
@@ -210,7 +243,7 @@ class Publication extends Model
 	 *
 	 * @return bool
 	 */
-	public function hasAttachment()
+	public function hasAttachment(): bool
 	{
 		if (!$this->id)
 		{
@@ -250,7 +283,7 @@ class Publication extends Model
 	 * @param   string  $name
 	 * @return  string
 	 */
-	public function sanitize($name)
+	public function sanitize($name): string
 	{
 		if (!preg_match('/^[\x20-\x7e]*$/', $name))
 		{

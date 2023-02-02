@@ -2,11 +2,19 @@
 namespace App\Modules\Groups\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Resources\Models\Asset;
 
 /**
  * Group node model
+ *
+ * @property int    $id
+ * @property string $year
+ * @property int    $resourceid
+ * @property int    $groupid
+ * @property int    $maxnodes
+ * @property int    $proratednodes
  */
 class Node extends Model
 {
@@ -55,9 +63,9 @@ class Node extends Model
 	/**
 	 * Get parent group
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function group()
+	public function group(): BelongsTo
 	{
 		return $this->belongsTo(Group::class, 'groupid');
 	}
@@ -65,9 +73,9 @@ class Node extends Model
 	/**
 	 * Get associated resource
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function resource()
+	public function resource(): BelongsTo
 	{
 		return $this->belongsTo(Asset::class, 'resourceid');
 	}

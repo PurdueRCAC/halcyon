@@ -14,7 +14,7 @@ use Nwidart\Modules\Facades\Module;
  * @property string $type
  * @property string $element
  * @property string $folder
- * @property int    $clinet_id
+ * @property int    $client_id
  * @property int    $enabled
  * @property int    $access
  * @property int    $protected

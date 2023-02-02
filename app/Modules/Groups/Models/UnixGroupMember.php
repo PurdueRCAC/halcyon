@@ -2,6 +2,7 @@
 namespace App\Modules\Groups\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Groups\Events\UnixGroupMemberCreating;
@@ -10,6 +11,13 @@ use App\Modules\Groups\Events\UnixGroupMemberDeleted;
 
 /**
  * Unix Group member model
+ *
+ * @property int    $id
+ * @property int    $unixgroupid
+ * @property int    $userid
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property int    $notice
  */
 class UnixGroupMember extends Model
 {
@@ -92,7 +100,7 @@ class UnixGroupMember extends Model
 	 *
 	 * @return  void
 	 */
-	public static function boot()
+	public static function boot(): void
 	{
 		parent::boot();
 
@@ -142,9 +150,9 @@ class UnixGroupMember extends Model
 	/**
 	 * Get parent unix group
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function unixgroup()
+	public function unixgroup(): BelongsTo
 	{
 		return $this->belongsTo(UnixGroup::class, 'unixgroupid');
 	}
@@ -152,9 +160,9 @@ class UnixGroupMember extends Model
 	/**
 	 * Get associated user
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function user()
+	public function user(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
 	}
@@ -162,7 +170,7 @@ class UnixGroupMember extends Model
 	/**
 	 * Get user that created this record
 	 *
-	 * @return  object
+	 * @return  \App\Modules\Users\Models\User|null
 	 */
 	public function addedBy()
 	{
@@ -177,7 +185,7 @@ class UnixGroupMember extends Model
 	/**
 	 * Get user that deleted this record
 	 *
-	 * @return  object
+	 * @return  \App\Modules\Users\Models\User|null
 	 */
 	public function removedBy()
 	{
@@ -192,7 +200,7 @@ class UnixGroupMember extends Model
 	/**
 	 * Get member type
 	 *
-	 * @return  object
+	 * @return  Type|null
 	 */
 	public function getTypeAttribute()
 	{
@@ -204,7 +212,7 @@ class UnixGroupMember extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isMember()
+	public function isMember(): bool
 	{
 		return true;
 	}
@@ -214,7 +222,7 @@ class UnixGroupMember extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isManager()
+	public function isManager(): bool
 	{
 		return false;
 	}
@@ -224,7 +232,7 @@ class UnixGroupMember extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isViewer()
+	public function isViewer(): bool
 	{
 		return false;
 	}
@@ -234,7 +242,7 @@ class UnixGroupMember extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isPending()
+	public function isPending(): bool
 	{
 		return false;
 	}
@@ -244,7 +252,7 @@ class UnixGroupMember extends Model
 	 *
 	 * @param   int  $unixgroupid
 	 * @param   int  $userid
-	 * @return  object
+	 * @return  UnixGroupMember|null
 	 */
 	public static function findByGroupAndUser(int $unixgroupid, int $userid)
 	{

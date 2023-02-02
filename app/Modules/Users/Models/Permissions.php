@@ -11,6 +11,15 @@ use Illuminate\Config\Repository;
 
 /**
  * Permissions model
+ *
+ * @property int    $id
+ * @property int    $parent_id
+ * @property int    $lft
+ * @property int    $rgt
+ * @property int    $level
+ * @property string $name
+ * @property string $title
+ * @property string $rules
  */
 class Permissions extends Fluent
 {
@@ -20,7 +29,7 @@ class Permissions extends Fluent
 	 * @param   array   $data  Data for the form.
 	 * @return  Form
 	 */
-	public function getForm($data = array())
+	public function getForm($data = array()): Form
 	{
 		$file = __DIR__ . '/Forms/Permissions.xml';
 
@@ -50,7 +59,7 @@ class Permissions extends Fluent
 	 *
 	 * @return  array  An array containing all global config data.
 	 */
-	public function getData()
+	public function getData(): array
 	{
 		// Get the config data.
 		$data = config();
@@ -132,7 +141,7 @@ class Permissions extends Fluent
 	 * @param   array  $data  An array containing all global config data.
 	 * @return  bool   True on success, false on failure.
 	 */
-	public function save($data)
+	public function save($data): bool
 	{
 		// Save the rules
 		if (isset($data['rules']))

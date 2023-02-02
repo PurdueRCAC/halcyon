@@ -2,9 +2,17 @@
 namespace App\Modules\Users\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Session model
+ *
+ * @property int    $id
+ * @property int    $user_id
+ * @property string $ip_address
+ * @property string $user_agent
+ * @property string $payload
+ * @property int    $last_activity
  */
 class Session extends Model
 {
@@ -28,9 +36,9 @@ class Session extends Model
 	/**
 	 * Get user
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function user()
+	public function user(): BelongsTo
 	{
 		return $this->belongsTo(User::class, 'user_id');
 	}

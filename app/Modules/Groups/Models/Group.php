@@ -3,6 +3,7 @@ namespace App\Modules\Groups\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Messages\Models\Message;
 use App\Modules\History\Traits\Historable;
@@ -19,6 +20,18 @@ use Carbon\Carbon;
 
 /**
  * Group model
+ *
+ * @property int    $id
+ * @property string $name
+ * @property int    $owneruserid
+ * @property string $unixgroup
+ * @property int    $unixid
+ * @property string $githuborgname
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property int    $cascademanagers
+ * @property int    $prefix_unixgroup
+ * @property string $description
  */
 class Group extends Model
 {
@@ -100,9 +113,9 @@ class Group extends Model
 	/**
 	 * Owner
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function owner()
+	public function owner(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'owneruserid');
 	}
@@ -113,7 +126,7 @@ class Group extends Model
 	 * @param   object  $user
 	 * @return  bool  True if modified, false if not
 	 */
-	public function isManager($user)
+	public function isManager($user): bool
 	{
 		$managers = $this->managers->pluck('userid')->toArray();
 		return in_array($user->id, $managers);
@@ -122,9 +135,9 @@ class Group extends Model
 	/**
 	 * Department
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function departments()
+	public function departments(): HasMany
 	{
 		return $this->hasMany(GroupDepartment::class, 'groupid');
 		//return $this->hasOneThrough(Department::class, GroupDepartment::class, 'groupid', 'id', 'groupid', 'collegedeptid');
@@ -133,9 +146,9 @@ class Group extends Model
 	/**
 	 * Get a list of fields of science
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function fieldsOfScience()
+	public function fieldsOfScience(): HasMany
 	{
 		return $this->hasMany(GroupFieldOfScience::class, 'groupid');
 	}
@@ -153,9 +166,9 @@ class Group extends Model
 	/**
 	 * Get a list of users
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function members()
+	public function members(): HasMany
 	{
 		return $this->hasMany(Member::class, 'groupid');
 	}
@@ -163,9 +176,9 @@ class Group extends Model
 	/**
 	 * Get a list of managers
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	/*public function managers()
+	/*public function managers(): HasMany
 	{
 		return $this->hasMany(Member::class, 'groupid')->where('membertype', '=', 2);
 	}*/
@@ -196,9 +209,9 @@ class Group extends Model
 	/**
 	 * Get a list of "message of the day"
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function motds()
+	public function motds(): HasMany
 	{
 		return $this->hasMany(Motd::class, 'groupid');
 	}
@@ -206,9 +219,9 @@ class Group extends Model
 	/**
 	 * Get a list of storage directories
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function directories()
+	public function directories(): HasMany
 	{
 		return $this->hasMany(Directory::class, 'groupid');
 	}
@@ -230,7 +243,7 @@ class Group extends Model
 	 *
 	 * @return  array
 	 */
-	public function getStorageBucketsAttribute()
+	public function getStorageBucketsAttribute(): array
 	{
 		$buckets = array();
 		foreach ($this->loans()->whenAvailable()->get() as $dir)
@@ -416,9 +429,9 @@ class Group extends Model
 	/**
 	 * Get a list of storage loans
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function loans()
+	public function loans(): HasMany
 	{
 		return $this->hasMany(Loan::class, 'groupid');
 	}
@@ -426,9 +439,9 @@ class Group extends Model
 	/**
 	 * Get a list of storage purchases
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function purchases()
+	public function purchases(): HasMany
 	{
 		return $this->hasMany(Purchase::class, 'groupid');
 	}
@@ -436,9 +449,9 @@ class Group extends Model
 	/**
 	 * Get a list of queues
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function queues()
+	public function queues(): HasMany
 	{
 		return $this->hasMany(Queue::class, 'groupid');
 	}
@@ -446,9 +459,9 @@ class Group extends Model
 	/**
 	 * Get a list of unix groups
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function unixGroups()
+	public function unixGroups(): HasMany
 	{
 		return $this->hasMany(UnixGroup::class, 'groupid');
 	}
@@ -540,9 +553,9 @@ class Group extends Model
 	/**
 	 * Get a count of pending memberships
 	 *
-	 * @return  object
+	 * @return  int
 	 */
-	public function getPendingMembersCountAttribute()
+	public function getPendingMembersCountAttribute(): int
 	{
 		$q = (new Queue)->getTable();
 		$s = (new \App\Modules\Resources\Models\Child)->getTable();
@@ -623,7 +636,7 @@ class Group extends Model
 	 * Get a list of "message of the day"
 	 *
 	 * @param   string  $name
-	 * @return  object
+	 * @return  Group|null
 	 */
 	public static function findByName(string $name)
 	{
@@ -636,7 +649,7 @@ class Group extends Model
 	 * Get a list of "message of the day"
 	 *
 	 * @param   string  $unixgroup
-	 * @return  object
+	 * @return  Group|null
 	 */
 	public static function findByUnixgroup(string $unixgroup)
 	{
@@ -650,7 +663,7 @@ class Group extends Model
 	 *
 	 * @return  bool
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		foreach ($this->members as $row)
 		{
@@ -692,7 +705,7 @@ class Group extends Model
 	 * @param   int  $owner
 	 * @return  bool
 	 */
-	public function addManager(int $userid, int $owner = 0)
+	public function addManager(int $userid, int $owner = 0): bool
 	{
 		$member = Member::findByGroupAndUser($this->id, $userid);
 
@@ -716,7 +729,7 @@ class Group extends Model
 	 * @param   int  $userid
 	 * @return  bool
 	 */
-	public function addMember(int $userid)
+	public function addMember(int $userid): bool
 	{
 		$member = Member::findByGroupAndUser($this->id, $userid);
 
@@ -740,7 +753,7 @@ class Group extends Model
 	 * @param   int  $userid
 	 * @return  bool
 	 */
-	public function addViewer(int $userid)
+	public function addViewer(int $userid): bool
 	{
 		$member = Member::findByGroupAndUser($this->id, $userid);
 
@@ -764,7 +777,7 @@ class Group extends Model
 	 * @param   int  $depid
 	 * @return  bool
 	 */
-	public function addDepartment(int $depid)
+	public function addDepartment(int $depid): bool
 	{
 		$row = new GroupDepartment;
 		$row->groupid = $this->id;
@@ -780,7 +793,7 @@ class Group extends Model
 	 * @param   int  $fid
 	 * @return  bool
 	 */
-	public function addFieldOfScience(int $fid)
+	public function addFieldOfScience(int $fid): bool
 	{
 		$row = new GroupFieldOfScience;
 		$row->groupid = $this->id;

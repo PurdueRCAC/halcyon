@@ -3,10 +3,18 @@
 namespace App\Modules\Tags\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 
 /**
  * Tag object association
+ *
+ * @property int    $id
+ * @property int    $tag_id
+ * @property int    $taggable_id
+ * @property string $taggable_type
+ * @property int    $created_by
+ * @property Carbon|null $created_at
  */
 class Tagged extends Model
 {
@@ -38,7 +46,7 @@ class Tagged extends Model
 	 *
 	 * @return  void
 	 */
-	protected static function boot()
+	protected static function boot(): void
 	{
 		parent::boot();
 
@@ -57,9 +65,9 @@ class Tagged extends Model
 	/**
 	 * Get parent tag
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function tag()
+	public function tag(): BelongsTo
 	{
 		return $this->belongsTo(Tag::class, 'tag_id');
 	}
@@ -67,9 +75,9 @@ class Tagged extends Model
 	/**
 	 * Creator user
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function creator()
+	public function creator(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'created_by');
 	}
@@ -105,7 +113,7 @@ class Tagged extends Model
 	 * @param   int  $newtagid  ID of tag to move to
 	 * @return  bool  True if records changed
 	 */
-	public static function moveTo(int $oldtagid, int $newtagid)
+	public static function moveTo(int $oldtagid, int $newtagid): bool
 	{
 		if (!$oldtagid || !$newtagid)
 		{
@@ -131,7 +139,7 @@ class Tagged extends Model
 	 * @param   int  $newtagid  ID of tag to copy to
 	 * @return  bool  True if records copied
 	 */
-	public static function copyTo(int $oldtagid, int $newtagid)
+	public static function copyTo(int $oldtagid, int $newtagid): bool
 	{
 		if (!$oldtagid || !$newtagid)
 		{

@@ -82,7 +82,7 @@ class Formatter
 	 * @param  array $template_keys
 	 * @return void
 	 */
-	public static function setTemplateKeys($template_keys)
+	public static function setTemplateKeys($template_keys): void
 	{
 		if (!empty($template_keys))
 		{
@@ -95,7 +95,7 @@ class Formatter
 	 *
 	 * @return  array<string,string>
 	 */
-	public static function getTemplateKeys()
+	public static function getTemplateKeys(): array
 	{
 		return self::$template_keys;
 	}
@@ -107,7 +107,7 @@ class Formatter
 	 * @param   string   $template
 	 * @return  string   Formatted citation
 	 */
-	public static function format(Publication $publication, $template = null)
+	public static function format(Publication $publication, $template = null): string
 	{
 		$template = __NAMESPACE__ . '\\Formats\\' . self::getDefaultFormat();
 
@@ -119,7 +119,7 @@ class Formatter
 	 *
 	 * @return  string
 	 */
-	public static function getDefaultFormat()
+	public static function getDefaultFormat(): string
 	{
 		return config('module.publications.format', 'IEEE');
 	}
@@ -131,7 +131,7 @@ class Formatter
 	 * @param   object   $row  Object to look in
 	 * @return  bool  True if exists, false if not
 	 */
-	public static function keyExistsOrIsNotEmpty($key, $row)
+	public static function keyExistsOrIsNotEmpty($key, $row): bool
 	{
 		if (!is_null($row->$key))
 		{

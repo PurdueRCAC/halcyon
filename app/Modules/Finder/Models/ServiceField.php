@@ -2,9 +2,15 @@
 namespace App\Modules\Finder\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Finder Service/Field mapping
+ *
+ * @property int    $id
+ * @property int    $service_id
+ * @property int    $field_id
+ * @property string $value
  */
 class ServiceField extends Model
 {
@@ -39,7 +45,7 @@ class ServiceField extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -48,7 +54,7 @@ class ServiceField extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var  array
+	 * @var  array<string,string>
 	 */
 	protected $rules = array(
 		'service_id' => 'required|integer',
@@ -59,9 +65,9 @@ class ServiceField extends Model
 	/**
 	 * Field
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function field()
+	public function field(): BelongsTo
 	{
 		return $this->belongsTo(Field::class, 'field_id');
 	}
@@ -69,9 +75,9 @@ class ServiceField extends Model
 	/**
 	 * Service
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function service()
+	public function service(): BelongsTo
 	{
 		return $this->belongsTo(Service::class, 'service_id');
 	}
@@ -81,7 +87,7 @@ class ServiceField extends Model
 	 *
 	 * @param   int  $service_id
 	 * @param   int  $field_id
-	 * @return  object
+	 * @return  ServiceField|null
 	 */
 	public static function findByServiceAndField($service_id, $field_id)
 	{

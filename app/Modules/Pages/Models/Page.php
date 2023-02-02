@@ -3,6 +3,9 @@
 namespace App\Modules\Pages\Models;
 
 use App\Modules\History\Traits\Historable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +20,35 @@ use App\Halcyon\Models\Casts\Params;
 
 /**
  * Model class for a page
+ *
+ * @property int    $id
+ * @property string $title
+ * @property string $alias
+ * @property int    $state
+ * @property int    $access
+ * @property Carbon|null $created_at
+ * @property int    $created_by
+ * @property Carbon|null $updated_at
+ * @property int    $updated_by
+ * @property Carbon|null $deleted_at
+ * @property int    $checked_out
+ * @property Carbon|null $checked_out_time
+ * @property Carbon|null $publish_up
+ * @property Carbon|null $publish_down
+ * @property int    $parent_id
+ * @property int    $hits
+ * @property int    $left
+ * @property int    $rgt
+ * @property int    $level
+ * @property string $path
+ * @property string $language
+ * @property int    $asset_id
+ * @property int    $version_id
+ * @property string $params
+ * @property string $content
+ * @property string $metakey
+ * @property string $metadesc
+ * @property string $metadata
  */
 class Page extends Model
 {
@@ -112,7 +144,7 @@ class Page extends Model
 	 *
 	 * @return  bool
 	 */
-	public function exists()
+	public function exists(): bool
 	{
 		return !!$this->id;
 	}
@@ -122,7 +154,7 @@ class Page extends Model
 	 *
 	 * @return  void
 	 */
-	public static function boot()
+	public static function boot(): void
 	{
 		parent::boot();
 
@@ -141,7 +173,7 @@ class Page extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setAliasAttribute($value)
+	public function setAliasAttribute($value): void
 	{
 		$alias = strip_tags($value);
 		$alias = trim($alias);
@@ -161,7 +193,7 @@ class Page extends Model
 	 * @param   string  $path
 	 * @return  string
 	 */
-	public function getPathAttribute($path)
+	public function getPathAttribute($path): string
 	{
 		return $path ? $path : '/';
 	}
@@ -171,7 +203,7 @@ class Page extends Model
 	 *
 	 * @return  array<int,string>
 	 */
-	public function getStylesAttribute()
+	public function getStylesAttribute(): array
 	{
 		return array_filter((array)$this->params->get('styles', []));
 	}
@@ -181,7 +213,7 @@ class Page extends Model
 	 *
 	 * @return  array<int,string>
 	 */
-	public function getScriptsAttribute()
+	public function getScriptsAttribute(): array
 	{
 		return array_filter((array)$this->params->get('scripts', []));
 	}
@@ -191,7 +223,7 @@ class Page extends Model
 	 *
 	 * @return  string
 	 */
-	public function getBodyAttribute()
+	public function getBodyAttribute(): string
 	{
 		$content = $this->content;
 
@@ -380,9 +412,9 @@ class Page extends Model
 	/**
 	 * Establish relationship to asset
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function asset()
+	public function asset(): BelongsTo
 	{
 		return $this->belongsTo('App\Halcyon\Access\Asset', 'asset_id');
 	}
@@ -390,9 +422,9 @@ class Page extends Model
 	/**
 	 * Get the creator of this entry
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function creator()
+	public function creator(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'created_by')->withDefault();
 	}
@@ -400,9 +432,9 @@ class Page extends Model
 	/**
 	 * Get the modifier of this entry
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function modifier()
+	public function modifier(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'updated_by')->withDefault();
 	}
@@ -410,9 +442,9 @@ class Page extends Model
 	/**
 	 * Establish relationship to editor
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function editor()
+	public function editor(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'checked_out')->withDefault();
 	}
@@ -435,7 +467,7 @@ class Page extends Model
 	 * 
 	 * @return  bool
 	 */
-	public function isRoot()
+	public function isRoot(): bool
 	{
 		return ($this->id && $this->level == 0);
 	}
@@ -445,7 +477,7 @@ class Page extends Model
 	 * 
 	 * @return  bool
 	 */
-	public function isModified()
+	public function isModified(): bool
 	{
 		return $this->updated_at;
 	}
@@ -455,7 +487,7 @@ class Page extends Model
 	 * 
 	 * @return  bool
 	 */
-	public function isPublished()
+	public function isPublished(): bool
 	{
 		if ($this->state != 1)
 		{
@@ -480,9 +512,9 @@ class Page extends Model
 	/**
 	 * Get the access level
 	 *
-	 * @return  object
+	 * @return  HasOne
 	 */
-	public function viewlevel()
+	public function viewlevel(): HasOne
 	{
 		return $this->hasOne('App\Halcyon\Access\Viewlevel', 'id', 'access');
 	}
@@ -490,9 +522,9 @@ class Page extends Model
 	/**
 	 * Get parent
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function parent()
+	public function parent(): BelongsTo
 	{
 		return $this->belongsTo(self::class, 'parent_id')->withDefault();
 	}
@@ -527,9 +559,9 @@ class Page extends Model
 	/**
 	 * Get child entries
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function children()
+	public function children(): HasMany
 	{
 		return $this->hasMany(self::class, 'parent_id');
 	}
@@ -541,7 +573,7 @@ class Page extends Model
 	 * @param   bool  $recursive  Copy associated data?
 	 * @return  bool  True on success, false on error
 	 */
-	public function duplicate($parent_id=null, $recursive=true)
+	public function duplicate($parent_id=null, $recursive=true): bool
 	{
 		// Get some old info we may need
 		$o_id = $this->id;
@@ -593,7 +625,7 @@ class Page extends Model
 	 * @param   array    $options
 	 * @return  bool  False if error, True on success
 	 */
-	public function save(array $options = array())
+	public function save(array $options = array()): bool
 	{
 		if (!$this->access)
 		{
@@ -682,7 +714,7 @@ class Page extends Model
 	 *
 	 * @return  bool  True on success.
 	 */
-	public function rebuildPath()
+	public function rebuildPath(): bool
 	{
 		// Get the aliases for the path from the node to the root node.
 		$path = $this->parent->path;
@@ -861,7 +893,7 @@ class Page extends Model
 	 * @param   object  $rows
 	 * @return  array
 	 */
-	public function toTree($rows)
+	public function toTree($rows): array
 	{
 		$results = array();
 
@@ -895,7 +927,7 @@ class Page extends Model
 	 * @param   int  $level     Indention level
 	 * @return  void
 	 */
-	protected function treeRecurse($children, $list, $maxlevel=9999, $level=0)
+	protected function treeRecurse($children, $list, $maxlevel=9999, $level=0): array
 	{
 		if ($level <= $maxlevel)
 		{
@@ -946,6 +978,7 @@ class Page extends Model
 	 * @param   int  $delta  The direction and magnitude to move the row in the ordering sequence.
 	 * @param   string   $where  WHERE clause to use for limiting the selection of rows to compact the ordering values.
 	 * @return  mixed    Boolean true on success.
+	 * @throws  \Exception
 	 */
 	public function move($delta, $where = '')
 	{
@@ -989,8 +1022,9 @@ class Page extends Model
 	 * @param   string   $position     Location type string. ['before', 'after', 'first-child', 'last-child']
 	 * @param   int  $pk           The primary key of the node to move.
 	 * @return  bool     True on success.
+	 * @throws  \Exception
 	 */
-	public function moveByReference($referenceId, $position = 'after', $pk = 0)
+	public function moveByReference($referenceId, $position = 'after', $pk = 0): bool
 	{
 		// Initialise variables.
 		//$k = $this->_tbl_key;

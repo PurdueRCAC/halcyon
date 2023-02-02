@@ -2,6 +2,7 @@
 namespace App\Modules\Users\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\Users\Events\FacetCreated;
 use App\Modules\Users\Events\FacetDeleted;
 
@@ -10,6 +11,13 @@ use App\Modules\Users\Events\FacetDeleted;
  *
  * This should probably be called `Attribute` but
  * the name causes conflicts with Laravel
+ *
+ * @property int    $id
+ * @property int    $user_id
+ * @property string $key
+ * @property string $value
+ * @property int    $locked
+ * @property int    $access
  */
 class Facet extends Model
 {
@@ -54,9 +62,9 @@ class Facet extends Model
 	/**
 	 * Get parent user
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function user()
+	public function user(): BelongsTo
 	{
 		return $this->belongsTo(User::class, 'user_id');
 	}

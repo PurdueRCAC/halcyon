@@ -3,9 +3,14 @@
 namespace App\Modules\Publications\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Model for publication types
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $alias
  */
 class Type extends Model
 {
@@ -42,9 +47,9 @@ class Type extends Model
 	/**
 	 * Get a list of publications
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function publications()
+	public function publications(): HasMany
 	{
 		return $this->hasMany(Publication::class, 'type_id');
 	}

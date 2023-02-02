@@ -4,6 +4,7 @@ namespace App\Modules\Users\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -23,6 +24,12 @@ use Carbon\Carbon;
 
 /**
  * User model
+ *
+ * @property int    $id
+ * @property string $name
+ * @property int    $puid
+ * @property string $api_token
+ * @property int    $enabled
  */
 class User extends Model implements
 	AuthenticatableContract,
@@ -151,7 +158,7 @@ class User extends Model implements
 	 *
 	 * @return  bool
 	 **/
-	public function trashed()
+	public function trashed(): bool
 	{
 		return $this->getUserUsername()->trashed();
 	}
@@ -161,7 +168,7 @@ class User extends Model implements
 	 *
 	 * @return  bool
 	 **/
-	public function isCreated()
+	public function isCreated(): bool
 	{
 		return !is_null($this->getUserUsername()->datecreated);
 	}
@@ -171,7 +178,7 @@ class User extends Model implements
 	 *
 	 * @return  bool
 	 **/
-	public function isOnline()
+	public function isOnline(): bool
 	{
 		$lifetime = Carbon::now()->modify('- ' . config('session.lifetime', 120) . ' minutes')->timestamp;
 
@@ -191,7 +198,7 @@ class User extends Model implements
 	 *
 	 * @return  UserUsername
 	 **/
-	public function getUserUsername()
+	public function getUserUsername(): UserUsername
 	{
 		if (is_null($this->userusername))
 		{
@@ -216,7 +223,7 @@ class User extends Model implements
 	 *
 	 * @return  bool
 	 **/
-	public function hasVisited()
+	public function hasVisited(): bool
 	{
 		return !is_null($this->getUserUsername()->datelastseen);
 	}
@@ -227,7 +234,7 @@ class User extends Model implements
 	 * @param  array $names List of module names
 	 * @return void
 	 */
-	public function setModulePermissionsAttribute(array $names)
+	public function setModulePermissionsAttribute(array $names): void
 	{
 		$value = [];
 
@@ -274,7 +281,7 @@ class User extends Model implements
 	 *
 	 * @return  int
 	 */
-	public function getUnixidAttribute()
+	public function getUnixidAttribute(): int
 	{
 		return $this->getUserUsername()->unixid;
 	}
@@ -322,7 +329,7 @@ class User extends Model implements
 	 *
 	 * @return  string
 	 */
-	public function getUsernameAttribute()
+	public function getUsernameAttribute(): string
 	{
 		if (isset($this->attributes['username']))
 		{
@@ -385,7 +392,7 @@ class User extends Model implements
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setNameAttribute(string $value)
+	public function setNameAttribute(string $value): void
 	{
 		$value = trim($value);
 
@@ -397,7 +404,7 @@ class User extends Model implements
 	 *
 	 * @return  string
 	 */
-	public function getSurnameAttribute()
+	public function getSurnameAttribute(): string
 	{
 		$name = trim($this->name);
 		$name = explode(' ', $name);
@@ -410,7 +417,7 @@ class User extends Model implements
 	 *
 	 * @return  string
 	 */
-	public function getGivenNameAttribute()
+	public function getGivenNameAttribute(): string
 	{
 		$name = trim($this->name);
 		$name = explode(' ', $name);
@@ -466,7 +473,7 @@ class User extends Model implements
 	 * @param  array|mixed  $arguments
 	 * @return bool
 	 */
-	public function cant($ability, $arguments = [])
+	public function cant($ability, $arguments = []): bool
 	{
 		return ! $this->can($ability, $arguments);
 	}
@@ -478,7 +485,7 @@ class User extends Model implements
 	 * @param  array|mixed  $arguments
 	 * @return bool
 	 */
-	public function cannot($ability, $arguments = [])
+	public function cannot($ability, $arguments = []): bool
 	{
 		return $this->cant($ability, $arguments);
 	}
@@ -486,9 +493,9 @@ class User extends Model implements
 	/**
 	 * Get notes
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function notes()
+	public function notes(): HasMany
 	{
 		return $this->hasMany(Note::class, 'user_id');
 	}
@@ -496,9 +503,9 @@ class User extends Model implements
 	/**
 	 * Get sessions
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function sessions()
+	public function sessions(): HasMany
 	{
 		return $this->hasMany(Session::class, 'user_id');
 	}
@@ -506,9 +513,9 @@ class User extends Model implements
 	/**
 	 * Get access roles
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function roles()
+	public function roles(): HasMany
 	{
 		return $this->hasMany(Map::class, 'user_id');
 	}
@@ -516,9 +523,9 @@ class User extends Model implements
 	/**
 	 * Get groups
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function groups()
+	public function groups(): HasMany
 	{
 		return $this->hasMany('App\Modules\Groups\Models\Member', 'userid');
 	}
@@ -526,9 +533,9 @@ class User extends Model implements
 	/**
 	 * Get queues
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function queues()
+	public function queues(): HasMany
 	{
 		return $this->hasMany('App\Modules\Queues\Models\User', 'userid');
 	}
@@ -536,9 +543,9 @@ class User extends Model implements
 	/**
 	 * Get usernames
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function usernames()
+	public function usernames(): HasMany
 	{
 		return $this->hasMany(UserUsername::class, 'userid');
 	}
@@ -546,9 +553,9 @@ class User extends Model implements
 	/**
 	 * Get facets
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function facets()
+	public function facets(): HasMany
 	{
 		return $this->hasMany(Facet::class, 'user_id');
 	}
@@ -574,9 +581,9 @@ class User extends Model implements
 	 * @param   mixed   $val
 	 * @param   int $access
 	 * @param   int $locked
-	 * @return  User
+	 * @return  self
 	 */
-	public function addFacet($key, $val, $access = 0, $locked = 0)
+	public function addFacet($key, $val, $access = 0, $locked = 0): self
 	{
 		$facet = new Facet;
 		$facet->user_id = $this->id;
@@ -683,7 +690,7 @@ class User extends Model implements
 	 * @param   array  $options
 	 * @return  bool  False if error, True on success
 	 */
-	public function save(array $options = array())
+	public function save(array $options = array()): bool
 	{
 		// Allow an exception to be thrown.
 		try
@@ -725,7 +732,7 @@ class User extends Model implements
 	 * @param   string  $username
 	 * @return  User
 	 */
-	public static function createFromUsername($username)
+	public static function createFromUsername($username): User
 	{
 		$user = self::findByUsername($username);
 
@@ -807,7 +814,7 @@ class User extends Model implements
 	 * @param   bool $thumb
 	 * @return  string
 	 */
-	public function avatar($thumb = true)
+	public function avatar($thumb = true): string
 	{
 		$name = ($thumb ? 'thumb' : 'photo');
 

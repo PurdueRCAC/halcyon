@@ -16,7 +16,18 @@ use App\Modules\Widgets\Events\WidgetDeleted;
 use Carbon\Carbon;
 
 /**
- * Module extension model
+ * Widget model
+ *
+ * @property int    $id
+ * @property string $title
+ * @property string $note
+ * @property string $content
+ * @property int    $ordering
+ * @property string $position
+ * @property int    $checked_out
+ * @property Carbon|null $checked_out_time
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  */
 class Widget extends Model
 {

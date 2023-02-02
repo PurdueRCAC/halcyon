@@ -2,10 +2,21 @@
 namespace App\Modules\Users\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * User Usernames
+ *
+ * @property int    $id
+ * @property int    $userid
+ * @property string $username
+ * @property string $email
+ * @property int    $unixid
+ * @property Carbon|null $datecreated
+ * @property Carbon|null $dateremoved
+ * @property Carbon|null $datelastseen
+ * @property Carbon|null $dateverified
  */
 class UserUsername extends Model
 {
@@ -76,7 +87,7 @@ class UserUsername extends Model
 	 *
 	 * @return  bool
 	 **/
-	public function isCreated()
+	public function isCreated(): bool
 	{
 		return !is_null($this->datecreated);
 	}
@@ -86,7 +97,7 @@ class UserUsername extends Model
 	 *
 	 * @return  bool
 	 **/
-	public function hasVisited()
+	public function hasVisited(): bool
 	{
 		return !is_null($this->datelastseen);
 	}
@@ -96,7 +107,7 @@ class UserUsername extends Model
 	 *
 	 * @return  bool
 	 **/
-	public function isEmailVerified()
+	public function isEmailVerified(): bool
 	{
 		return !is_null($this->dateverified);
 	}

@@ -6,6 +6,9 @@ use App\Modules\History\Traits\Historable;
 
 /**
  * Group member type model
+ *
+ * @property int    $id
+ * @property string $name
  */
 class Type extends Model
 {

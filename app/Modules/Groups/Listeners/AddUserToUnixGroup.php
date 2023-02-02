@@ -2,6 +2,7 @@
 
 namespace App\Modules\Groups\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Queues\Events\UserRequestUpdated;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User as QueueUser;
@@ -16,10 +17,10 @@ class AddUserToUnixGroup
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param   \Illuminate\Events\Dispatcher  $events
+	 * @param   Dispatcher  $events
 	 * @return  void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(UserRequestUpdated::class, self::class . '@handleUserRequestUpdated');
 	}
@@ -30,7 +31,7 @@ class AddUserToUnixGroup
 	 * @param   UserRequestUpdated  $event
 	 * @return  void
 	 */
-	public function handleUserRequestUpdated(UserRequestUpdated $event)
+	public function handleUserRequestUpdated(UserRequestUpdated $event): void
 	{
 		if (!$event->userrequest)
 		{

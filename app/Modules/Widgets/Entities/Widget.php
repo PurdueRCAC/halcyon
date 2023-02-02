@@ -2,6 +2,7 @@
 namespace App\Modules\Widgets\Entities;
 
 use Illuminate\Support\Str;
+use App\Modules\Widgets\Models\Widget as WidgetModel;
 
 /**
  * Base widget class
@@ -18,7 +19,7 @@ class Widget
 	/**
 	 * DB record
 	 *
-	 * @var  \App\Modules\Widgets\Models\Widget
+	 * @var  WidgetModel
 	 */
 	protected $model;
 
@@ -39,10 +40,10 @@ class Widget
 	/**
 	 * Constructor
 	 *
-	 * @param   \App\Modules\Widgets\Models\Widget  $model
+	 * @param   WidgetModel  $model
 	 * @return  void
 	 */
-	public function __construct($model)
+	public function __construct(WidgetModel $model)
 	{
 		$name = $model->widget;
 		//$name = Str::studly($name);
@@ -78,7 +79,7 @@ class Widget
 	 * @param   string  $layout  The layout name
 	 * @return  string
 	 */
-	public function getViewName($layout='index')
+	public function getViewName($layout='index'): string
 	{
 		return 'widget.' . $this->getLowerName() . '::' . $layout;
 	}
@@ -88,7 +89,7 @@ class Widget
 	 *
 	 * @return  string
 	 */
-	public function getLowerName()
+	public function getLowerName(): string
 	{
 		return strtolower($this->name);
 	}
@@ -98,7 +99,7 @@ class Widget
 	 *
 	 * @return  string
 	 */
-	public function getStudlyName()
+	public function getStudlyName(): string
 	{
 		return Str::studly($this->name);
 	}
@@ -108,7 +109,7 @@ class Widget
 	 *
 	 * @return  string
 	 */
-	public function getPath()
+	public function getPath(): string
 	{
 		return app('config')->get('module.widgets.path', app_path('Widgets')) . '/' . $this->getStudlyName();
 	}

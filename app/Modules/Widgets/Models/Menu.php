@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Widget/Menu map model
+ *
+ * @property int    $widget_id
+ * @property int    $menu_id
  */
 class Menu extends Model
 {
@@ -61,7 +64,7 @@ class Menu extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $fillable = [
 		'widgetid',
@@ -73,7 +76,7 @@ class Menu extends Model
 	 *
 	 * @return  bool
 	 */
-	/*public function save(array $options = [])
+	/*public function save(array $options = []): bool
 	{
 		// Validate
 		if (!$this->validate())
@@ -104,7 +107,7 @@ class Menu extends Model
 	 *
 	 * @return  bool
 	 */
-	protected function createWithNoPk()
+	protected function createWithNoPk(): bool
 	{
 		// Add any automatic fields
 		//$this->parseAutomatics('initiate');
@@ -117,7 +120,7 @@ class Menu extends Model
 	 *
 	 * @return  bool
 	 */
-	protected function modifyWithNoPk()
+	protected function modifyWithNoPk(): bool
 	{
 		$query = $this->query();
 
@@ -135,7 +138,7 @@ class Menu extends Model
 	 *
 	 * @return bool
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		$query = $this->query();
 
@@ -154,7 +157,7 @@ class Menu extends Model
 	 * @param   int  $widgetid
 	 * @return  bool
 	 */
-	public static function deleteByWidget($widgetid)
+	public static function deleteByWidget($widgetid): bool
 	{
 		$rows = self::query()
 			->where('widgetid', '=', (int)$widgetid)
@@ -177,7 +180,7 @@ class Menu extends Model
 	 * @param   int  $menuid
 	 * @return  bool
 	 */
-	public static function deleteByMenu($menuid)
+	public static function deleteByMenu($menuid): bool
 	{
 		$rows = self::query()
 			->where('menuid', '=', (int)$menuid)

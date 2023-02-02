@@ -16,7 +16,7 @@ class APA implements Format
 	 * @param   string  $url
 	 * @return  string
 	 */
-	public static function cleanUrl($url)
+	public static function cleanUrl($url): string
 	{
 		$url = str_replace('&amp;', '&', $url);
 		$url = str_replace('&', '&amp;', $url);
@@ -31,7 +31,7 @@ class APA implements Format
 	 * @param   string  $punct  Punctuation to insert
 	 * @return  string
 	 */
-	public static function grammarCheck($html, $punct=',')
+	public static function grammarCheck($html, $punct=','): string
 	{
 		if (substr($html, -1) == '"')
 		{
@@ -50,7 +50,7 @@ class APA implements Format
 	 * @param   Publication $publication
 	 * @return  string
 	 */
-	public static function format(Publication $publication)
+	public static function format(Publication $publication): string
 	{
 		$html = '<p>';
 

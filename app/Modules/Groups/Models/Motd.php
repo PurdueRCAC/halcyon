@@ -2,11 +2,18 @@
 namespace App\Modules\Groups\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 
 /**
  * Group motd model
+ *
+ * @property int    $id
+ * @property int    $groupid
+ * @property string $motd
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
  */
 class Motd extends Model
 {
@@ -75,9 +82,9 @@ class Motd extends Model
 	/**
 	 * Get parent group
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function group()
+	public function group(): BelongsTo
 	{
 		return $this->belongsTo(Group::class, 'groupid');
 	}

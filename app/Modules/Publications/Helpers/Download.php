@@ -20,7 +20,7 @@ class Download
 	/**
 	 * Citation object
 	 *
-	 * @var object
+	 * @var Publication
 	 */
 	protected $_reference = null;
 
@@ -62,9 +62,9 @@ class Download
 	 * Set the format
 	 *
 	 * @param   string  $format
-	 * @return  Download
+	 * @return  self
 	 */
-	public function setFormat($format)
+	public function setFormat($format): self
 	{
 		$this->_format = ucfirst(trim(strtolower($format)));
 
@@ -76,7 +76,7 @@ class Download
 	 *
 	 * @return  string
 	 */
-	public function getFormat()
+	public function getFormat(): string
 	{
 		return $this->_format;
 	}
@@ -85,9 +85,9 @@ class Download
 	 * Set the reference
 	 *
 	 * @param   Publication  $reference
-	 * @return  Download
+	 * @return  self
 	 */
-	public function setReference(Publication $reference)
+	public function setReference(Publication $reference): self
 	{
 		$this->_reference = $reference;
 
@@ -99,7 +99,7 @@ class Download
 	 *
 	 * @return  Publication
 	 */
-	public function getReference()
+	public function getReference(): Publication
 	{
 		return $this->_reference;
 	}
@@ -108,9 +108,9 @@ class Download
 	 * Set the mime type
 	 *
 	 * @param   string  $mime
-	 * @return  Download
+	 * @return  self
 	 */
-	public function setMimeType($mime)
+	public function setMimeType($mime): self
 	{
 		$this->_mime = $mime;
 
@@ -122,7 +122,7 @@ class Download
 	 *
 	 * @return  string
 	 */
-	public function getMimeType()
+	public function getMimeType(): string
 	{
 		return $this->_mime;
 	}
@@ -131,9 +131,9 @@ class Download
 	 * Set the extension
 	 *
 	 * @param   string  $extension
-	 * @return  Download
+	 * @return  self
 	 */
-	public function setExtension($extension)
+	public function setExtension($extension): self
 	{
 		$this->_extension = $extension;
 
@@ -145,7 +145,7 @@ class Download
 	 *
 	 * @return  string
 	 */
-	public function getExtension()
+	public function getExtension(): string
 	{
 		return $this->_extension;
 	}
@@ -155,9 +155,9 @@ class Download
 	 *
 	 * @param   object  $formatter
 	 * @param   string  $format
-	 * @return  Download
+	 * @return  self
 	 */
-	public function setFormatter($formatter, $format='')
+	public function setFormatter($formatter, $format=''): self
 	{
 		$format = ($format) ? $format : $this->_format;
 
@@ -186,7 +186,7 @@ class Download
 	 * @return  string
 	 * @throws  Exception
 	 */
-	public function formatReference($reference=null)
+	public function formatReference($reference=null): string
 	{
 		if (!$reference)
 		{
