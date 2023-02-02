@@ -471,7 +471,9 @@ function EditUnixGroup(dir, api) {
 			post['groupread'] = "1";
 			post['groupwrite'] = "1";
 		} else {
-			post['groupread'] = "0";
+			//post['groupread'] = "0";
+			post['groupread'] = "1";
+			post['groupwrite'] = "1";
 		}
 	}
 
@@ -856,6 +858,28 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
+	var url = window.location.href.match(/\?.*/);
+	if (url != null) {
+		url = url[0].replace('?', '');
+
+		var kvp = url.split('&');
+		var i = 0, dir;
+
+		for (; i < kvp.length; i++) {
+			if (kvp[i].startsWith('expanded=')) {
+				var pair = kvp[i].split('=');
+				var expanded = pair[1].split(',');
+				for (var j = 0; j < expanded.length; j++) {
+					dir = document.getElementById('directory-' + expanded[j]);
+					if (dir) {
+						dir.open = true;
+					}
+				}
+				break;
+			}
+		}
+	}
+
 	document.querySelectorAll('.dir-modal').forEach(function (el) {
 		el.addEventListener('click', function () {
 			$(this.getAttribute('href')).modal('show');
@@ -1033,7 +1057,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		/*sel.on('item_add', function (item, data) {
 			var seller = document.getElementById(el.getAttribute('data-update'));
 			//var dest_queue = document.getElementById("field-id").value;
-			console.log(el.getAttribute('data-update'));
 			if (item == 0) {
 				seller.value = 0;
 				seller.parentNode.classList.add('d-none');
@@ -1097,26 +1120,26 @@ document.addEventListener('DOMContentLoaded', function () {
 				headers: headers,
 				body: JSON.stringify(post)
 			})
-				.then(function (response) {
-					if (response.ok) {
-						window.location.reload(true);
-						return;
+			.then(function (response) {
+				if (response.ok) {
+					window.location.reload(true);
+					return;
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
 					}
-					return response.json().then(function (data) {
-						var msg = data.message;
-						if (typeof msg === 'object') {
-							msg = Object.values(msg).join('<br />');
-						}
-						throw msg;
-					});
-				})
-				.catch(function (err) {
-					var er = document.getElementById('error_' + btn.getAttribute('data-type') + btn.getAttribute('data-id'));
-					if (er) {
-						er.classList.remove('hide');
-						er.innerHTML = err;
-					}
+					throw msg;
 				});
+			})
+			.catch(function (err) {
+				var er = document.getElementById('error_' + btn.getAttribute('data-type') + btn.getAttribute('data-id'));
+				if (er) {
+					er.classList.remove('hide');
+					er.innerHTML = err;
+				}
+			});
 		});
 	});
 
