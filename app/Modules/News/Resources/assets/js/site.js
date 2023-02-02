@@ -3292,14 +3292,7 @@ function NEWSSendMail(news) {
 			})
 			.then(function (response) {
 				if (response.ok) {
-					document.getElementById("IMG_mail_" + news).className = "fa fa-check";
-					document.getElementById("A_mail_" + news).onclick = function () { };
-
-					var results = JSON.parse(xml.responseText);
-					LASTEDIT[news] = results['lastedit'];
-
-					NEWSSearch();
-					return;// response.json();
+					return response.json();
 				}
 				return response.json().then(function (data) {
 					var msg = data.message;
@@ -3308,6 +3301,14 @@ function NEWSSendMail(news) {
 					}
 					throw msg;
 				});
+			})
+			.then(function (results) {
+				document.getElementById("IMG_mail_" + news).className = "fa fa-check";
+				document.getElementById("A_mail_" + news).onclick = function () { };
+
+				LASTEDIT[news] = results['lastedit'];
+
+				NEWSSearch();
 			})
 			.catch(function (err) {
 				document.getElementById("IMG_mail_" + news).className = "fa fa-exclamation-circle";
