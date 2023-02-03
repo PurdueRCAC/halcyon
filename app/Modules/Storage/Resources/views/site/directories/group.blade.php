@@ -389,7 +389,7 @@
 														break;
 													}
 
-													if (!$bottle_dir->unixPermissions->other->read)
+													if (!$bottle_dir->unixPermissions->other->read && $bottle_dir->unixgroup)
 													{
 														array_push($bottle_dirs, $bottle_dir->unixgroup->longname);
 													}
