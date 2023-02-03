@@ -68,7 +68,7 @@ class AddQosTable extends Migration
 				$table->integer('queueid')->unsigned()->default(0)->comment('FK to queues.id');
 				$table->index('qosid');
 				$table->index('queueid');
-				$table->index('qosqueue', ['qosid', 'queueid']);
+				$table->index(['qosid', 'queueid'], 'qosqueue');
 			});
 		}
 	}
