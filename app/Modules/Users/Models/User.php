@@ -281,7 +281,7 @@ class User extends Model implements
 	 *
 	 * @return  int
 	 */
-	public function getUnixidAttribute(): int
+	public function getUnixidAttribute(): ?int
 	{
 		return $this->getUserUsername()->unixid;
 	}
