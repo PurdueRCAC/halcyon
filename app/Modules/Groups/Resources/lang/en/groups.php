@@ -23,7 +23,6 @@ return [
 	'unix group' => 'Unix group',
 	'unix id' => 'Unix ID',
 	'history edited' => ':user edited the page @ :datetime',
-	'history' => 'History',
 	'overview' => 'Overview',
 	'user account removed' => 'User account was removed.',
 	'membership type' => 'Membership Type',
