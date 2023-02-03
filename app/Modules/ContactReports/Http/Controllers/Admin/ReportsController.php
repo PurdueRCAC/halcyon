@@ -423,6 +423,15 @@ class ReportsController extends Controller
 				$people = explode(',', $people);
 			}
 			$people = (array)$people;
+			foreach ($people as $i => $person)
+			{
+				if (strstr($person, ':'))
+				{
+					$person = strstr($person, ':');
+					$person = trim($person, ':');
+				}
+				$people[$i] = $person;
+			}
 
 			// Fetch current list of users
 			$prior = $row->users;
