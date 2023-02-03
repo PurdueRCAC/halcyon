@@ -112,7 +112,7 @@ cd halcyon
 Modify the database configuration in `config/database.php` or `.env`.
 If you are using Docker the `DB_HOST` name will be the container name of the MySQL service.
 
-NOTE: You can copy `.env.example` and rename it to `.env` that will have many of the variables pre-filled. 
+NOTE: You can copy `.env.example` and rename it to `.env` which will have many of the variables pre-filled. 
 
 This will perform the Composer install and initial database migration (found under the manual setup).
 
