@@ -3,6 +3,7 @@
 namespace App\Modules\Resources\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Modules\Resources\Events\TypeCreating;
 use App\Modules\Resources\Events\TypeCreated;
 use App\Modules\Resources\Events\TypeUpdating;
@@ -11,6 +12,10 @@ use App\Modules\Resources\Events\TypeDeleted;
 
 /**
  * Model for a resource type
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $description
  */
 class Type extends Model
 {
@@ -76,9 +81,9 @@ class Type extends Model
 	/**
 	 * Defines a relationship to resources
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function resources()
+	public function resources(): HasMany
 	{
 		return $this->hasMany(Asset::class, 'resourcetype');
 	}
@@ -86,9 +91,9 @@ class Type extends Model
 	/**
 	 * Defines a relationship to facet types
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function facetTypes()
+	public function facetTypes(): HasMany
 	{
 		return $this->hasMany(FacetType::class, 'type_id');
 	}
@@ -98,7 +103,7 @@ class Type extends Model
 	 *
 	 * @return  string
 	 */
-	public function getAliasAttribute()
+	public function getAliasAttribute(): string
 	{
 		$name = strtolower($this->getOriginal('name'));
 		$name = str_replace(' ', '-', $name);

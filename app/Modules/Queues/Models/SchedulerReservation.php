@@ -2,10 +2,18 @@
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 
 /**
  * Model for a scheduler reservation
+ *
+ * @property int    $id
+ * @property int    $schedulerid
+ * @property string $name
+ * @property string $nodes
+ * @property Carbon|null $datetimestart
+ * @property Carbon|null $datetimestop
  */
 class SchedulerReservation extends Model
 {
@@ -62,9 +70,9 @@ class SchedulerReservation extends Model
 	/**
 	 * Defines a relationship to scheduler
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function scheduler()
+	public function scheduler(): BelongsTo
 	{
 		return $this->belongsTo(Scheduler::class, 'schedulerid');
 	}

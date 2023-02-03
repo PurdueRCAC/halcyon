@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Captcha\Image;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Core\Events\CaptchaIsRendering;
 use App\Modules\Core\Events\ValidateCaptcha;
 
@@ -13,10 +14,10 @@ class Image
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(CaptchaIsRendering::class, self::class . '@handleRendering');
 		$events->listen(ValidateCaptcha::class, self::class . '@handleValidation');
@@ -39,16 +40,15 @@ class Image
 	/**
 	 * Displays either a CAPTCHA image or form field
 	 *
-	 * @param   string  $name   The name of the field. Not Used.
-	 * @param   string  $id     The id of the field.
-	 * @param   string  $class  The class of the field. This should be passed as 'class="required"'.
-	 * @return  string
+	 * @param   CaptchaIsRendering $event
+	 * @return  void
 	 */
-	public function handleRendering($event)
+	public function handleRendering(CaptchaIsRendering $event): void
 	{
 		if (request()->input('showCaptcha', ''))
 		{
-			return $this->render();
+			$this->render();
+			return;
 		}
 
 		$attr = $event->attributes;
@@ -69,24 +69,20 @@ class Image
 			//'total' => $GLOBALS['totalCaptchas'],
 			'atts' => $attr,
 		]));
-
-		return false;
 	}
 
 	/**
 	 * Displays a CAPTCHA image
 	 *
-	 * @return  bool
+	 * @return  void
 	 */
-	private function render()
+	private function render(): void
 	{
 		$imageFunction = '_createImage' . config('listener.captcha.image.imageFunction', 'Adv');
 		$imageFunction = (!method_exists($this, $imageFunction)) ? '_createImageAdv' : $imageFunction;
 
 		$this->$imageFunction();
 		exit;
-
-		return true;
 	}
 
 	/**
@@ -96,7 +92,7 @@ class Image
 	 * @param   string   $instanceNo  CAPTCHA instance number
 	 * @return  bool  True if valid
 	 */
-	private function _confirm($word, $instanceNo='')
+	private function _confirm($word, $instanceNo=''): bool
 	{
 		$securiy_code = request()->session()->get('captcha.key');
 
@@ -111,10 +107,10 @@ class Image
 	/**
 	 * Checks for a CAPTCHA response and Calls the CAPTCHA validity check
 	 *
-	 * @param   string   $code  Answer provided by user. Not needed for the Recaptcha implementation
+	 * @param   ValidateCaptcha $event Answer provided by user. Not needed for the Recaptcha implementation
 	 * @return  bool  True if valid CAPTCHA response
 	 */
-	public function handleValidation($event)
+	public function handleValidation(ValidateCaptcha $event): bool
 	{
 		$imgCatchaTxt     = strtolower(request('imgCaptchaTxt'));
 		$imgCatchaTxtInst = 1; //request('imgCaptchaTxtInst');
@@ -139,7 +135,7 @@ class Image
 	 *
 	 * @return  void
 	 */
-	private function _setColors()
+	private function _setColors(): void
 	{
 		$this->_bgColor   = config('listener.captcha.image.bgColor', $this->_bgColor);
 		$this->_textColor = config('listener.captcha.image.textColor', $this->_textColor);
@@ -150,7 +146,7 @@ class Image
 	 *
 	 * @return  void
 	 */
-	private function _createImageAdv()
+	private function _createImageAdv(): void
 	{
 		$alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
 		$allowed_symbols = "23456789abcdeghkmnpqsuvxyz";
@@ -410,7 +406,7 @@ class Image
 	 *
 	 * @return  void
 	 */
-	private function _createImagePlain()
+	private function _createImagePlain(): void
 	{
 		// Let's generate a totally random string using md5
 		$md5_hash = md5(rand(0, 999));
@@ -464,7 +460,7 @@ class Image
 	 * @param   string  $hex  Hex value to convert
 	 * @return  string
 	 */
-	private function _hexToRgb($hex)
+	private function _hexToRgb($hex): string
 	{
 		$hex = preg_replace("/#/", '', $hex);
 		$color = array();
@@ -493,7 +489,7 @@ class Image
 	 * @param   string  $b  B color to convert
 	 * @return  string
 	 */
-	private function _rgbToHex($r, $g, $b)
+	private function _rgbToHex($r, $g, $b): string
 	{
 		$hex  = '#';
 		$hex .= dechex($r);

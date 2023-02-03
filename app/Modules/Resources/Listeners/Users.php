@@ -2,6 +2,7 @@
 
 namespace App\Modules\Resources\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Users\Events\UserUpdated;
 use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Resources\Events\ResourceMemberDeleted;
@@ -16,10 +17,10 @@ class Users
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(UserUpdated::class, self::class . '@handleUserUpdated');
 	}
@@ -30,7 +31,7 @@ class Users
 	 * @param   UserUpdated  $event
 	 * @return  void
 	 */
-	public function handleUserUpdated(UserUpdated $event)
+	public function handleUserUpdated(UserUpdated $event): void
 	{
 		$user = $event->user;
 

@@ -132,7 +132,7 @@ class ModulesController extends Controller
 		$rules = [
 			'name'    => 'required|string|max:255',
 			'folder'  => 'nullable|string|max:255',
-			'enabled'  => 'nullable|integer',
+			'enabled' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -172,7 +172,7 @@ class ModulesController extends Controller
 	 * Sets the state of one or more entries
 	 * 
 	 * @param   Request $request
-	 * @param   integer  $id
+	 * @param   int     $id
 	 * @return  Response
 	 */
 	public function state(Request $request, $id = null)

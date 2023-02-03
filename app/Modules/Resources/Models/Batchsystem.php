@@ -3,9 +3,13 @@
 namespace App\Modules\Resources\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Model for a batch system
+ *
+ * @property int    $id
+ * @property string $name
  */
 class Batchsystem extends Model
 {
@@ -49,9 +53,9 @@ class Batchsystem extends Model
 	/**
 	 * Defines a relationship to resources
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function resources()
+	public function resources(): HasMany
 	{
 		return $this->hasMany(Asset::class, 'batchsystem');
 	}

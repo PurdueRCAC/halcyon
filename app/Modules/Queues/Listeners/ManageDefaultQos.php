@@ -2,6 +2,7 @@
 
 namespace App\Modules\Queues\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Queues\Events\QueueCreated;
 use App\Modules\Queues\Events\QueueSizeCreated;
 use App\Modules\Queues\Events\QueueSizeUpdated;
@@ -21,10 +22,10 @@ class ManageDefaultQos
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		// This is disabled because it will result in a QoS with zero values/limits.
 		// Since queues with no allocations don't get set, it's pointless to create
@@ -45,9 +46,9 @@ class ManageDefaultQos
 	 * Check if this listener should handle this Queue
 	 *
 	 * @param  Queue $queue
-	 * @return bool|array
+	 * @return bool
 	 */
-	private function canProcessQueue($queue)
+	private function canProcessQueue(Queue $queue): bool
 	{
 		if (!$queue)
 		{
@@ -77,7 +78,7 @@ class ManageDefaultQos
 	 * @param   QueueCreated  $event
 	 * @return  void
 	 */
-	public function handleQueueCreated(QueueCreated $event)
+	public function handleQueueCreated(QueueCreated $event): void
 	{
 		$queue = $event->queue;
 
@@ -100,7 +101,7 @@ class ManageDefaultQos
 	 * @param   QueueDeleted  $event
 	 * @return  void
 	 */
-	public function handleQueueDeleted(QueueDeleted $event)
+	public function handleQueueDeleted(QueueDeleted $event): void
 	{
 		$queue = $event->queue;
 
@@ -121,7 +122,7 @@ class ManageDefaultQos
 	 * @param   object  $event
 	 * @return  void
 	 */
-	public function handleQueueAllocation($event)
+	public function handleQueueAllocation($event): void
 	{
 		if ($event instanceof QueueSizeCreated
 		 || $event instanceof QueueSizeUpdated
@@ -155,7 +156,7 @@ class ManageDefaultQos
 	 * @param   Queue  $queue
 	 * @return  void
 	 */
-	private function setDefaultQos($queue)
+	private function setDefaultQos(Queue $queue): void
 	{
 		$name = $queue->defaultQosName;
 

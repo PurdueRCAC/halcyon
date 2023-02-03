@@ -2,6 +2,7 @@
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Modules\Queues\Events\TypeCreating;
 use App\Modules\Queues\Events\TypeCreated;
 use App\Modules\Queues\Events\TypeUpdating;
@@ -11,6 +12,9 @@ use App\Modules\History\Traits\Historable;
 
 /**
  * Model for a queue type
+ *
+ * @property int    $id
+ * @property string $name
  */
 class Type extends Model
 {
@@ -47,7 +51,7 @@ class Type extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'name' => 'required|string|min:1'
@@ -56,7 +60,7 @@ class Type extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'
@@ -65,7 +69,7 @@ class Type extends Model
 	/**
 	 * The event map for the model.
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
 		'creating' => TypeCreating::class,
@@ -78,9 +82,9 @@ class Type extends Model
 	/**
 	 * Defines a relationship to queues
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function queues()
+	public function queues(): HasMany
 	{
 		return $this->hasMany(Queue::class, 'queuetype');
 	}

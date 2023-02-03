@@ -5,21 +5,21 @@ namespace App\Modules\Core\Events;
 class CaptchaIsRendering
 {
 	/**
-	 * The rendered body of the page
+	 * The CAPTCHA name
 	 *
 	 * @var string
 	 */
-	public $image;
+	public $name;
 
 	/**
-	 * The original body of the page to render
+	 * Any attributes to apply
 	 *
-	 * @var string
+	 * @var array<string,mixed>
 	 */
 	public $attributes;
 
 	/**
-	 * The original body of the page to render
+	 * Is the captcha response valid
 	 *
 	 * @var string
 	 */
@@ -35,22 +35,22 @@ class CaptchaIsRendering
 	/**
 	 * Constructor
 	 *
-	 * @param  bool   $image
-	 * @param  array  $attributes
+	 * @param  string $name
+	 * @param  array<string,mixed>  $attributes
 	 * @return void
 	 */
-	public function __construct($image = false, $attributes = array())
+	public function __construct($name, $attributes = array())
 	{
-		$this->image = $image;
+		$this->name = $name;
 		$this->attributes = $attributes;
 	}
 
 	/**
 	 * Set the body
 	 *
-	 * @return void
+	 * @return string
 	 */
-	public function render()
+	public function render(): string
 	{
 		return $this->content;
 	}
@@ -61,8 +61,8 @@ class CaptchaIsRendering
 	 * @param string $content
 	 * @return void
 	 */
-	public function setContent($content)
+	public function setContent(string $content): void
 	{
-		$this->content = (string)$content;
+		$this->content = $content;
 	}
 }

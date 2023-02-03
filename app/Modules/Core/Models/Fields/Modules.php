@@ -22,7 +22,7 @@ class Modules extends Field
 	 *
 	 * @return  string
 	 */
-	protected function getInput()
+	protected function getInput(): string
 	{
 		/*$items = Extension::query()
 			->where('type', '=', 'module')

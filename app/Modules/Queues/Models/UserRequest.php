@@ -2,6 +2,7 @@
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Queues\Events\UserRequestCreated;
 use App\Modules\Queues\Events\UserRequestUpdated;
@@ -9,6 +10,11 @@ use App\Modules\Queues\Events\UserRequestDeleted;
 
 /**
  * Model for a user request
+ *
+ * @property int    $id
+ * @property int    $userid
+ * @property string $comment
+ * @property Carbon|null $datetimecreated
  */
 class UserRequest extends Model
 {
@@ -70,7 +76,7 @@ class UserRequest extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setCommentAttribute($value)
+	public function setCommentAttribute($value): void
 	{
 		$this->attributes['comment'] = strip_tags($value);
 	}
@@ -78,9 +84,9 @@ class UserRequest extends Model
 	/**
 	 * Defines a relationship to creator
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function user()
+	public function user(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
 	}

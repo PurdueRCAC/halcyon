@@ -2,6 +2,8 @@
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Halcyon\Models\Casts\Bytesize;
@@ -24,6 +26,39 @@ use Carbon\Carbon;
 
 /**
  * Queue queue
+ *
+ * @property int    $id
+ * @property int    $schedulerid
+ * @property int    $subresourceid
+ * @property string $name
+ * @property int    $groupid
+ * @property int    $queuetype
+ * @property int    $automatic
+ * @property int    $free
+ * @property int    $schedulerpolicyid
+ * @property int    $enabled
+ * @property int    $started
+ * @property int    $reservation
+ * @property string $cluster
+ * @property int    $priority
+ * @property int    $defaultwalltime
+ * @property int    $maxjobsqueued
+ * @property int    $maxjobsqueueduser
+ * @property int    $maxjobsrun
+ * @property int    $maxjobsrunuser
+ * @property int    $maxjobcores
+ * @property int    $nodecoresdefault
+ * @property int    $nodecoresmin
+ * @property int    $nodecoresmax
+ * @property int    $nodememmin
+ * @property int    $nodememmax
+ * @property int    $aclusersenabled
+ * @property string $aclgroups
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property Carbon|null $datetimelastseen
+ * @property int    $maxjobfactor
+ * @property int    $maxjobuserfactor
  */
 class Queue extends Model
 {
@@ -129,7 +164,7 @@ class Queue extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasLastSeenTime()
+	public function hasLastSeenTime(): bool
 	{
 		return !is_null($this->datetimelastseen);
 	}
@@ -140,7 +175,7 @@ class Queue extends Model
 	 * @param   int  $value
 	 * @return  void
 	 */
-	public function setDefaultwalltimeAttribute($value)
+	public function setDefaultwalltimeAttribute($value): void
 	{
 		$this->attributes['defaultwalltime'] = $value * 60 * 60;
 	}
@@ -151,7 +186,7 @@ class Queue extends Model
 	 * @param   int  $value
 	 * @return  void
 	 */
-	public function setMaxwalltimeAttribute($value)
+	public function setMaxwalltimeAttribute($value): void
 	{
 		$this->attributes['maxwalltime'] = $value * 60 * 60;
 	}
@@ -162,7 +197,7 @@ class Queue extends Model
 	 * @param   int  $value
 	 * @return  void
 	 */
-	public function setNodecoresminAttribute($value)
+	public function setNodecoresminAttribute($value): void
 	{
 		if (!is_numeric($value) || $value < 0)
 		{
@@ -178,7 +213,7 @@ class Queue extends Model
 	 * @param   int  $value
 	 * @return  void
 	 */
-	public function setNodecoresmaxAttribute($value)
+	public function setNodecoresmaxAttribute($value): void
 	{
 		if (!is_numeric($value) || $value < 0)
 		{
@@ -194,7 +229,7 @@ class Queue extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	/*public function setNodememminAttribute($value)
+	/*public function setNodememminAttribute($value): void
 	{
 		if (!preg_match('/^[0-9]+[BKMGTP]$/', $value))
 		{
@@ -210,7 +245,7 @@ class Queue extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	/*public function setNodememmaxAttribute($value)
+	/*public function setNodememmaxAttribute($value): void
 	{
 		if (!preg_match('/^[0-9]+[BKMGTP]$/', $value))
 		{
@@ -223,9 +258,9 @@ class Queue extends Model
 	/**
 	 * Defines a relationship to type
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function type()
+	public function type(): BelongsTo
 	{
 		return $this->belongsTo(Type::class, 'queuetype')->withDefault(['id' => 0, 'name' => trans('global.none')]);
 	}
@@ -233,9 +268,9 @@ class Queue extends Model
 	/**
 	 * Defines a relationship to group
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function group()
+	public function group(): BelongsTo
 	{
 		return $this->belongsTo(Group::class, 'groupid');
 	}
@@ -243,9 +278,9 @@ class Queue extends Model
 	/**
 	 * Defines a relationship to schedulers
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function scheduler()
+	public function scheduler(): BelongsTo
 	{
 		return $this->belongsTo(Scheduler::class, 'schedulerid');
 	}
@@ -253,9 +288,9 @@ class Queue extends Model
 	/**
 	 * Defines a relationship to subqueues
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function schedulerPolicy()
+	public function schedulerPolicy(): BelongsTo
 	{
 		return $this->belongsTo(SchedulerPolicy::class, 'schedulerpolicyid');
 	}
@@ -263,9 +298,9 @@ class Queue extends Model
 	/**
 	 * Defines a relationship to subresource
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function subresource()
+	public function subresource(): BelongsTo
 	{
 		return $this->belongsTo(Subresource::class, 'subresourceid')->withTrashed();
 		//return $this->hasOneThrough(Subresource::class, Child::class, 'subresourceid', 'id', 'subresourceid', 'subresourceid');
@@ -292,9 +327,9 @@ class Queue extends Model
 	/**
 	 * Defines a relationship to queue qos map
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function queueqoses()
+	public function queueqoses(): HasMany
 	{
 		return $this->hasMany(QueueQos::class, 'queueid');
 	}
@@ -302,9 +337,9 @@ class Queue extends Model
 	/**
 	 * Defines a relationship to sizes (purchases)
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function sizes()
+	public function sizes(): HasMany
 	{
 		return $this->hasMany(Size::class, 'queueid');
 	}
@@ -312,9 +347,9 @@ class Queue extends Model
 	/**
 	 * Defines a relationship to sizes where the queue is the seller
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function sold()
+	public function sold(): HasMany
 	{
 		return $this->hasMany(Size::class, 'sellerqueueid');
 	}
@@ -322,9 +357,9 @@ class Queue extends Model
 	/**
 	 * Defines a relationship to loans
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function loans()
+	public function loans(): HasMany
 	{
 		return $this->hasMany(Loan::class, 'queueid');
 	}
@@ -332,9 +367,9 @@ class Queue extends Model
 	/**
 	 * Defines a relationship to loans where the queue is the lender
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function loaned()
+	public function loaned(): HasMany
 	{
 		return $this->hasMany(Loan::class, 'lenderqueueid');
 	}
@@ -342,9 +377,9 @@ class Queue extends Model
 	/**
 	 * Defines a relationship to users
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function users()
+	public function users(): HasMany
 	{
 		return $this->hasMany(User::class, 'queueid');
 	}
@@ -372,9 +407,9 @@ class Queue extends Model
 	/**
 	 * Defines a relationship to walltimes
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function walltimes()
+	public function walltimes(): HasMany
 	{
 		return $this->hasMany(Walltime::class, 'queueid');
 	}
@@ -384,7 +419,7 @@ class Queue extends Model
 	 *
 	 * @return  int
 	 */
-	public function getActiveAttribute()
+	public function getActiveAttribute(): int
 	{
 		if (!array_key_exists('active', $this->attributes))
 		{
@@ -596,7 +631,7 @@ class Queue extends Model
 	 *
 	 * @return  int
 	 */
-	public function getTotalcoresAttribute()
+	public function getTotalcoresAttribute(): int
 	{
 		if (!array_key_exists('totalcores', $this->attributes))
 		{
@@ -611,7 +646,7 @@ class Queue extends Model
 	 *
 	 * @return  int
 	 */
-	public function getTotalnodesAttribute()
+	public function getTotalnodesAttribute(): int
 	{
 		if (!array_key_exists('totalnodes', $this->attributes))
 		{
@@ -626,7 +661,7 @@ class Queue extends Model
 	 *
 	 * @return  int
 	 */
-	public function getSoldcoresAttribute()
+	public function getSoldcoresAttribute(): int
 	{
 		if (!array_key_exists('soldcores', $this->attributes))
 		{
@@ -641,7 +676,7 @@ class Queue extends Model
 	 *
 	 * @return  int
 	 */
-	public function getSoldnodesAttribute()
+	public function getSoldnodesAttribute(): int
 	{
 		if (!array_key_exists('soldnodes', $this->attributes))
 		{
@@ -656,7 +691,7 @@ class Queue extends Model
 	 *
 	 * @return  int
 	 */
-	public function getLoanedcoresAttribute()
+	public function getLoanedcoresAttribute(): int
 	{
 		if (!array_key_exists('loanedcores', $this->attributes))
 		{
@@ -671,7 +706,7 @@ class Queue extends Model
 	 *
 	 * @return  int
 	 */
-	public function getLoanednodesAttribute()
+	public function getLoanednodesAttribute(): int
 	{
 		if (!array_key_exists('loanednodes', $this->attributes))
 		{
@@ -686,7 +721,7 @@ class Queue extends Model
 	 *
 	 * @return  int
 	 */
-	public function getServiceunitsAttribute()
+	public function getServiceunitsAttribute(): int
 	{
 		if (!array_key_exists('serviceunits', $this->attributes))
 		{
@@ -701,7 +736,7 @@ class Queue extends Model
 	 *
 	 * @return  int
 	 */
-	public function getWalltimeAttribute()
+	public function getWalltimeAttribute(): int
 	{
 		$walltime = 0;
 		$now = Carbon::now();
@@ -723,7 +758,7 @@ class Queue extends Model
 
 		if ($w)
 		{
-			$walltime = $w->walltime;
+			$walltime = (int)$w->walltime;
 		}
 
 		return $walltime;
@@ -734,7 +769,7 @@ class Queue extends Model
 	 *
 	 * @return  string
 	 */
-	public function getHumanWalltimeAttribute()
+	public function getHumanWalltimeAttribute(): string
 	{
 		$inputSeconds = $this->walltime;
 
@@ -782,7 +817,7 @@ class Queue extends Model
 	 *
 	 * @return  string
 	 */
-	public function getNameWithSubclusterAttribute()
+	public function getNameWithSubclusterAttribute(): string
 	{
 		$name = $this->name;
 
@@ -801,7 +836,7 @@ class Queue extends Model
 	 *
 	 * @return  string
 	 */
-	public function getDefaultQosNameAttribute()
+	public function getDefaultQosNameAttribute(): string
 	{
 		return ($this->isSystem() ? $this->name : $this->nameWithSubcluster) . '-default';
 	}
@@ -811,7 +846,7 @@ class Queue extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isSystem()
+	public function isSystem(): bool
 	{
 		return ($this->groupid <= 0);
 	}
@@ -821,7 +856,7 @@ class Queue extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isOwner()
+	public function isOwner(): bool
 	{
 		return ($this->groupid > 0);
 	}
@@ -831,7 +866,7 @@ class Queue extends Model
 	 *
 	 * @return  bool
 	 */
-	public function stop()
+	public function stop(): bool
 	{
 		return $this->update(['started' => 0]);
 	}
@@ -841,7 +876,7 @@ class Queue extends Model
 	 *
 	 * @return  bool
 	 */
-	public function start()
+	public function start(): bool
 	{
 		return $this->update(['started' => 1]);
 	}
@@ -853,7 +888,7 @@ class Queue extends Model
 	 * @param   int  $membertype
 	 * @return  bool
 	 */
-	public function addUser($userid, $membertype = 1)
+	public function addUser($userid, $membertype = 1): bool
 	{
 		$row = $this->users()
 			->withTrashed()
@@ -894,7 +929,7 @@ class Queue extends Model
 	 * @param   int  $userid
 	 * @return  bool
 	 */
-	public function removeUser($userid)
+	public function removeUser($userid): bool
 	{
 		$row = $this->users()
 			->where('userid', '=', $userid)
@@ -960,7 +995,7 @@ class Queue extends Model
 	 * @param   string  $comment
 	 * @return  bool
 	 */
-	public function addLoan($lenderqueueid, $start, $stop = null, $nodecount = 0, $corecount = 0, $serviceunits = 0, $comment = null)
+	public function addLoan($lenderqueueid, $start, $stop = null, $nodecount = 0, $corecount = 0, $serviceunits = 0, $comment = null): bool
 	{
 		$row = new Loan;
 		$row->queueid = $this->id;
@@ -1001,7 +1036,7 @@ class Queue extends Model
 	 * @param   string  $comment
 	 * @return  bool
 	 */
-	public function addPurchase($sellerqueueid, $start, $stop = null, $nodecount = 0, $corecount = 0, $serviceunits = 0, $comment = null)
+	public function addPurchase($sellerqueueid, $start, $stop = null, $nodecount = 0, $corecount = 0, $serviceunits = 0, $comment = null): bool
 	{
 		$row = new Size;
 		$row->queueid = $this->id;
@@ -1072,7 +1107,7 @@ class Queue extends Model
 	 * @param   array  $options
 	 * @return  bool
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		foreach ($this->users as $row)
 		{

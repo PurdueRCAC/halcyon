@@ -6,11 +6,19 @@ use App\Modules\History\Traits\Historable;
 
 /**
  * Model for a queue membertype
+ *
+ * @property int    $id
+ * @property string $name
  */
 class MemberType extends Model
 {
 	use Historable;
 
+	/**
+	 * Membership status
+	 *
+	 * @var int
+	 */
 	const MEMBER  = 1;
 	const MANAGER = 2;
 	const VIEWER  = 3;
@@ -20,7 +28,7 @@ class MemberType extends Model
 	 * The table to which the class pertains
 	 *
 	 * @var  string
-	 **/
+	 */
 	protected $table = 'membertypes';
 
 	/**
@@ -47,7 +55,7 @@ class MemberType extends Model
 	/**
 	 * Fields and their validation criteria
 	 *
-	 * @var array
+	 * @var array<string,string>
 	 */
 	protected $rules = array(
 		'name' => 'required|string|min:1|max:20'
@@ -56,7 +64,7 @@ class MemberType extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id'

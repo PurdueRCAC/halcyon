@@ -48,7 +48,7 @@ class EditorIsRendering
 	 * @param  string $formatting
 	 * @return void
 	 */
-	public function __construct($name, $value, $attributes = array(), $formatting = 'html')
+	public function __construct(string $name, string $value, array $attributes = array(), string $formatting = 'html')
 	{
 		$this->name = $name;
 		$this->value = $value;
@@ -61,7 +61,7 @@ class EditorIsRendering
 	 *
 	 * @return string
 	 */
-	public function getName()
+	public function getName(): string
 	{
 		return $this->name;
 	}
@@ -72,7 +72,7 @@ class EditorIsRendering
 	 * @param string $name
 	 * @return void
 	 */
-	public function setName($name)
+	public function setName(string $name): void
 	{
 		$this->name = $name;
 	}
@@ -82,7 +82,7 @@ class EditorIsRendering
 	 *
 	 * @return string
 	 */
-	public function getValue()
+	public function getValue(): string
 	{
 		return $this->value;
 	}
@@ -92,7 +92,7 @@ class EditorIsRendering
 	 *
 	 * @return string
 	 */
-	public function getFormatting()
+	public function getFormatting(): string
 	{
 		return $this->formatting;
 	}
@@ -102,7 +102,7 @@ class EditorIsRendering
 	 *
 	 * @return array
 	 */
-	public function getAttributes()
+	public function getAttributes(): array
 	{
 		return $this->attributes;
 	}
@@ -113,9 +113,9 @@ class EditorIsRendering
 	 * @param  array $attributes
 	 * @return void
 	 */
-	public function setAttributes($attributes)
+	public function setAttributes(array $attributes): void
 	{
-		$this->attributes = (array)$attributes;
+		$this->attributes = $attributes;
 	}
 
 	/**
@@ -124,17 +124,17 @@ class EditorIsRendering
 	 * @param string $content
 	 * @return void
 	 */
-	public function setContent($content)
+	public function setContent(string $content): void
 	{
-		$this->content = (string)$content;
+		$this->content = $content;
 	}
 
 	/**
 	 * Render the content
 	 *
-	 * @return void
+	 * @return string
 	 */
-	public function render()
+	public function render(): string
 	{
 		return $this->content;
 	}

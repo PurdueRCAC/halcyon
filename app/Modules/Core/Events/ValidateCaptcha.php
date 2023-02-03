@@ -14,14 +14,14 @@ class ValidateCaptcha
 	/**
 	 * Attributes for rendering
 	 *
-	 * @var string
+	 * @var array
 	 */
 	public $attributes;
 
 	/**
 	 * Validation state
 	 *
-	 * @var string
+	 * @var bool
 	 */
 	public $valid = true;
 
@@ -32,7 +32,7 @@ class ValidateCaptcha
 	 * @param  array  $attributes
 	 * @return void
 	 */
-	public function __construct($name, $attributes = array())
+	public function __construct(string $name, array $attributes = array())
 	{
 		$this->name = $name;
 		$this->attributes = $attributes;

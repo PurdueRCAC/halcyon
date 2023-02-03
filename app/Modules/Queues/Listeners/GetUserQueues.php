@@ -2,6 +2,7 @@
 
 namespace App\Modules\Queues\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Users\Events\UserDeleted;
 use App\Modules\Queues\Models\User as QueueUser;
@@ -14,10 +15,10 @@ class GetUserQueues
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(UserBeforeDisplay::class, self::class . '@handleUserBeforeDisplay');
 		$events->listen(UserDeleted::class, self::class . '@handleUserDeleted');
@@ -26,10 +27,10 @@ class GetUserQueues
 	/**
 	 * Display user profile info
 	 *
-	 * @param   object  $event  UserBeforeDisplay
+	 * @param   UserBeforeDisplay  $event
 	 * @return  void
 	 */
-	public function handleUserBeforeDisplay(UserBeforeDisplay $event)
+	public function handleUserBeforeDisplay(UserBeforeDisplay $event): void
 	{
 		$user = $event->getUser();
 
@@ -194,10 +195,10 @@ class GetUserQueues
 	/**
 	 * Mark membership as removed when a user is deleted
 	 *
-	 * @param   object  $event  UserDeleted
+	 * @param   UserDeleted  $event
 	 * @return  void
 	 */
-	public function handleUserDeleted(UserDeleted $event)
+	public function handleUserDeleted(UserDeleted $event): void
 	{
 		$memberships = QueueUser::query()
 			->where('userid', '=', $event->user->id)

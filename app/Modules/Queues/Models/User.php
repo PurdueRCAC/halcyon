@@ -2,6 +2,8 @@
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Queues\Events\UserCreating;
@@ -14,6 +16,16 @@ use Carbon\Carbon;
 
 /**
  * Model for a queue/user association
+ *
+ * @property int    $id
+ * @property int    $queueid
+ * @property int    $userid
+ * @property int    $userrequestid
+ * @property int    $membertype
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property Carbon|null $datetimelastseen
+ * @property int    $notice
  */
 class User extends Model
 {
@@ -83,7 +95,7 @@ class User extends Model
 	 *
 	 * @return  void
 	 */
-	public static function boot()
+	public static function boot(): void
 	{
 		parent::boot();
 
@@ -110,7 +122,7 @@ class User extends Model
 	 *
 	 * @return  bool
 	 */
-	public function wasLastseen()
+	public function wasLastseen(): bool
 	{
 		return !is_null($this->datetimelastseen);
 	}
@@ -118,9 +130,9 @@ class User extends Model
 	/**
 	 * Defines a relationship to queue
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function queue()
+	public function queue(): BelongsTo
 	{
 		return $this->belongsTo(Queue::class, 'queueid');
 	}
@@ -128,9 +140,9 @@ class User extends Model
 	/**
 	 * Defines a relationship to creator
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function user()
+	public function user(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'userid');
 	}
@@ -138,9 +150,9 @@ class User extends Model
 	/**
 	 * Defines a relationship to group
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function group()
+	public function group(): BelongsTo
 	{
 		return $this->belongsTo(Group::class, 'groupid');
 	}
@@ -148,9 +160,9 @@ class User extends Model
 	/**
 	 * Defines a relationship to group user
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function groupUser()
+	public function groupUser(): BelongsTo
 	{
 		return $this->belongsTo(GroupUser::class, 'queueuserid');
 	}
@@ -158,9 +170,9 @@ class User extends Model
 	/**
 	 * Defines a relationship to membertype
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function type()
+	public function type(): BelongsTo
 	{
 		return $this->belongsTo(MemberType::class, 'membertype');
 	}
@@ -168,9 +180,9 @@ class User extends Model
 	/**
 	 * Defines a relationship to userrequest
 	 *
-	 * @return  object
+	 * @return  HasOne
 	 */
-	public function request()
+	public function request(): HasOne
 	{
 		return $this->hasOne(UserRequest::class, 'id', 'userrequestid');
 	}
@@ -189,7 +201,7 @@ class User extends Model
 	/**
 	 * Get user that created this record
 	 *
-	 * @return  object
+	 * @return  \App\Modules\Users\Models\User|null
 	 */
 	public function addedBy()
 	{
@@ -204,7 +216,7 @@ class User extends Model
 	/**
 	 * Get user that deleted this record
 	 *
-	 * @return  object
+	 * @return  \App\Modules\Users\Models\User|null
 	 */
 	public function removedBy()
 	{
@@ -221,7 +233,7 @@ class User extends Model
 	 *
 	 * @return  void
 	 */
-	public function setAsMember()
+	public function setAsMember(): void
 	{
 		$this->membertype = MemberType::MEMBER;
 	}
@@ -231,7 +243,7 @@ class User extends Model
 	 *
 	 * @return  void
 	 */
-	public function setAsManager()
+	public function setAsManager(): void
 	{
 		$this->membertype = MemberType::MANAGER;
 	}
@@ -241,7 +253,7 @@ class User extends Model
 	 *
 	 * @return  void
 	 */
-	public function setAsViewer()
+	public function setAsViewer(): void
 	{
 		$this->membertype = MemberType::VIEWER;
 	}
@@ -251,7 +263,7 @@ class User extends Model
 	 *
 	 * @return  void
 	 */
-	public function setAsPending()
+	public function setAsPending(): void
 	{
 		$this->membertype = MemberType::PENDING;
 	}
@@ -305,7 +317,7 @@ class User extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isMember()
+	public function isMember(): bool
 	{
 		return ($this->membertype == MemberType::MEMBER);
 	}
@@ -315,7 +327,7 @@ class User extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isManager()
+	public function isManager(): bool
 	{
 		return ($this->membertype == MemberType::MANAGER);
 	}
@@ -325,7 +337,7 @@ class User extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isViewer()
+	public function isViewer(): bool
 	{
 		return ($this->membertype == MemberType::VIEWER);
 	}
@@ -335,7 +347,7 @@ class User extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isPending()
+	public function isPending(): bool
 	{
 		return ($this->membertype == MemberType::PENDING);
 	}

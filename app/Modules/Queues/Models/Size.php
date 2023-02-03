@@ -2,6 +2,7 @@
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\Queues\Events\QueueSizeCreated;
 use App\Modules\Queues\Events\QueueSizeUpdated;
 use App\Modules\Queues\Events\QueueSizeDeleted;
@@ -11,6 +12,16 @@ use Carbon\Carbon;
 
 /**
  * Model for a queue purchase
+ *
+ * @property int    $id
+ * @property int    $queueid
+ * @property Carbon|null $datetimestart
+ * @property Carbon|null $datetimestop
+ * @property int    $nodecount
+ * @property int    $corecount
+ * @property int    $sellerqueueid
+ * @property string $comment
+ * @property float  $serviceunits
  */
 class Size extends Model
 {
@@ -88,7 +99,7 @@ class Size extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasStart()
+	public function hasStart(): bool
 	{
 		return !is_null($this->datetimestart);
 	}
@@ -98,7 +109,7 @@ class Size extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasStarted()
+	public function hasStarted(): bool
 	{
 		// No start time means start immediately
 		if (!$this->hasStart())
@@ -113,7 +124,7 @@ class Size extends Model
 	 *
 	 * @return  string
 	 */
-	public function willStart()
+	public function willStart(): string
 	{
 		if (!$this->hasStart())
 		{
@@ -132,7 +143,7 @@ class Size extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasEnd()
+	public function hasEnd(): bool
 	{
 		return !is_null($this->datetimestop);
 	}
@@ -142,7 +153,7 @@ class Size extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasEnded()
+	public function hasEnded(): bool
 	{
 		return ($this->hasEnd() && $this->datetimestop->timestamp < Carbon::now()->timestamp);
 	}
@@ -152,7 +163,7 @@ class Size extends Model
 	 *
 	 * @return  string
 	 */
-	public function willEnd()
+	public function willEnd(): string
 	{
 		if (!$this->hasEnd())
 		{
@@ -172,7 +183,7 @@ class Size extends Model
 	 * @param   int  $start
 	 * @return  string
 	 */
-	private function calculateTimeLeft($start)
+	private function calculateTimeLeft($start): string
 	{
 		$inputSeconds = $start - Carbon::now()->timestamp;
 
@@ -221,7 +232,7 @@ class Size extends Model
 	 *
 	 * @return  bool
 	 */
-	public function endsAfterStarts()
+	public function endsAfterStarts(): bool
 	{
 		if (!$this->hasEnd())
 		{
@@ -233,9 +244,9 @@ class Size extends Model
 	/**
 	 * Defines a relationship to queue
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function queue()
+	public function queue(): BelongsTo
 	{
 		return $this->belongsTo(Queue::class, 'queueid');
 	}
@@ -243,9 +254,9 @@ class Size extends Model
 	/**
 	 * Defines a relationship to seller queue
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function seller()
+	public function seller(): BelongsTo
 	{
 		return $this->belongsTo(Queue::class, 'sellerqueueid');
 	}
@@ -253,9 +264,9 @@ class Size extends Model
 	/**
 	 * Defines a relationship to seller
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function source()
+	public function source(): BelongsTo
 	{
 		return $this->belongsTo(Queue::class, 'sellerqueueid');
 	}
@@ -265,7 +276,7 @@ class Size extends Model
 	 *
 	 * @return  int
 	 */
-	public function getTypeAttribute()
+	public function getTypeAttribute(): int
 	{
 		return 0;
 	}

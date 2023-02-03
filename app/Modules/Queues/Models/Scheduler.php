@@ -2,6 +2,8 @@
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Resources\Models\Batchsystem;
@@ -12,6 +14,20 @@ use Carbon\Carbon;
 
 /**
  * Model for a scheduler
+ *
+ * @property int    $id
+ * @property int    $queuesubresourceid
+ * @property string $hostname
+ * @property int    $batchsystem
+ * @property int    $schedulerpolicyid
+ * @property int    $defaultmaxwalltime
+ * @property int    $teragridresource
+ * @property int    $teragridaggregate
+ * @property Carbon|null $datetimedraindown
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property Carbon|null $datetimelastimportstart
+ * @property Carbon|null $datetimelastimportstop
  */
 class Scheduler extends Model
 {
@@ -97,7 +113,7 @@ class Scheduler extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasDraindownTime()
+	public function hasDraindownTime(): bool
 	{
 		return !is_null($this->datetimedraindown);
 	}
@@ -107,7 +123,7 @@ class Scheduler extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasLastImportStartTime()
+	public function hasLastImportStartTime(): bool
 	{
 		return !is_null($this->datetimelastimportstart);
 	}
@@ -117,7 +133,7 @@ class Scheduler extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasLastImportStopTime()
+	public function hasLastImportStopTime(): bool
 	{
 		return !is_null($this->datetimelastimportstop);
 	}
@@ -125,9 +141,9 @@ class Scheduler extends Model
 	/**
 	 * Defines a relationship to queues
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function queues()
+	public function queues(): HasMany
 	{
 		return $this->hasMany(Queue::class, 'schedulerid');
 	}
@@ -135,9 +151,9 @@ class Scheduler extends Model
 	/**
 	 * Defines a relationship to policy
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function policy()
+	public function policy(): BelongsTo
 	{
 		return $this->belongsTo(SchedulerPolicy::class, 'schedulerpolicyid');
 	}
@@ -145,9 +161,9 @@ class Scheduler extends Model
 	/**
 	 * Defines a relationship to bath systems
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function batchsystm()
+	public function batchsystm(): BelongsTo
 	{
 		return $this->belongsTo(Batchsystem::class, 'batchsystem');
 	}
@@ -155,9 +171,9 @@ class Scheduler extends Model
 	/**
 	 * Defines a relationship to reservations
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function reservations()
+	public function reservations(): HasMany
 	{
 		return $this->hasMany(SchedulerReservation::class, 'schedulerid');
 	}
@@ -165,9 +181,9 @@ class Scheduler extends Model
 	/**
 	 * Defines a relationship to QoS
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function qoses()
+	public function qoses(): HasMany
 	{
 		return $this->hasMany(Qos::class, 'scheduler_id');
 	}
@@ -175,9 +191,9 @@ class Scheduler extends Model
 	/**
 	 * Defines a relationship to subresource
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function subresource()
+	public function subresource(): BelongsTo
 	{
 		return $this->belongsTo(Child::class, 'queuesubresourceid', 'subresourceid');
 	}
@@ -197,7 +213,7 @@ class Scheduler extends Model
 	 *
 	 * @return  string
 	 */
-	public function humanDefaultmaxwalltime()
+	public function humanDefaultmaxwalltime(): string
 	{
 		$inputSeconds = $this->defaultmaxwalltime;
 
@@ -244,9 +260,9 @@ class Scheduler extends Model
 	 * Find a record by hostname
 	 *
 	 * @param   string  $hostname
-	 * @return  object
+	 * @return  Scheduler|null
 	 */
-	public static function findByHostname($hostname)
+	public static function findByHostname(string $hostname)
 	{
 		return self::query()
 			->where('hostname', '=', $hostname)

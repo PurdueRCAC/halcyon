@@ -2,6 +2,7 @@
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Queues\Events\QosCreated;
 use App\Modules\Queues\Events\QosUpdated;
@@ -82,7 +83,7 @@ class Qos extends Model
 	 *
 	 * @return  void
 	 */
-	public static function boot()
+	public static function boot(): void
 	{
 		parent::boot();
 
@@ -98,9 +99,9 @@ class Qos extends Model
 	/**
 	 * Defines a relationship to schedulers
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function scheduler()
+	public function scheduler(): BelongsTo
 	{
 		return $this->belongsTo(Scheduler::class, 'scheduler_id');
 	}
@@ -118,9 +119,9 @@ class Qos extends Model
 	/**
 	 * Defines a relationship to queue qos map
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function queueqoses()
+	public function queueqoses(): HasMany
 	{
 		return $this->hasMany(QueueQos::class, 'qosid');
 	}
@@ -130,7 +131,7 @@ class Qos extends Model
 	 *
 	 * @return  array
 	 */
-	public function getPreemptListAttribute()
+	public function getPreemptListAttribute(): array
 	{
 		return $this->preempt ? explode("\n", $this->preempt) : [];
 	}
@@ -140,7 +141,7 @@ class Qos extends Model
 	 *
 	 * @return  array
 	 */
-	public function getPreemptModeListAttribute()
+	public function getPreemptModeListAttribute(): array
 	{
 		return $this->preempt_mode ? explode(',', $this->preempt_mode) : [];
 	}
@@ -150,7 +151,7 @@ class Qos extends Model
 	 *
 	 * @return  array
 	 */
-	public function getFlagsListAttribute()
+	public function getFlagsListAttribute(): array
 	{
 		return $this->flags ? explode(',', $this->flags) : [];
 	}

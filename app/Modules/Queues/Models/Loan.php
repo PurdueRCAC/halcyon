@@ -1,6 +1,7 @@
 <?php
 namespace App\Modules\Queues\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\Queues\Events\QueueLoanCreated;
 use App\Modules\Queues\Events\QueueLoanUpdated;
 use App\Modules\Queues\Events\QueueLoanDeleted;
@@ -8,6 +9,16 @@ use Carbon\Carbon;
 
 /**
  * Model for a queue loan
+ *
+ * @property int    $id
+ * @property int    $queueid
+ * @property Carbon|null $datetimestart
+ * @property Carbon|null $datetimestop
+ * @property int    $nodecount
+ * @property int    $corecount
+ * @property int    $lenderqueueid
+ * @property string $comment
+ * @property float  $serviceunits
  */
 class Loan extends Size
 {
@@ -35,9 +46,9 @@ class Loan extends Size
 	 * Note: Thsi is an override from the Size class just to
 	 * ensure it returns the correct object.
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function seller()
+	public function seller(): BelongsTo
 	{
 		return $this->belongsTo(Queue::class, 'lenderqueueid');
 	}
@@ -45,9 +56,9 @@ class Loan extends Size
 	/**
 	 * Defines a relationship to a lender queue
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function lender()
+	public function lender(): BelongsTo
 	{
 		return $this->belongsTo(Queue::class, 'lenderqueueid');
 	}
@@ -55,9 +66,9 @@ class Loan extends Size
 	/**
 	 * Defines a relationship to a source queue
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function source()
+	public function source(): BelongsTo
 	{
 		return $this->belongsTo(Queue::class, 'lenderqueueid');
 	}
@@ -67,7 +78,7 @@ class Loan extends Size
 	 *
 	 * @return  int
 	 */
-	public function getTypeAttribute()
+	public function getTypeAttribute(): int
 	{
 		return 1;
 	}

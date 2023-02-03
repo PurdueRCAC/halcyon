@@ -3,9 +3,17 @@
 namespace App\Modules\Resources\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Model for a resource facet type option
+ *
+ * @property int    $id
+ * @property int    $facet_type_id
+ * @property string $value
+ * @property string $label
+ * @property int    $ordering
+ * @property int    $checked
  */
 class FacetOption extends Model
 {
@@ -58,9 +66,9 @@ class FacetOption extends Model
 	/**
 	 * Defines a relationship to facet type
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function facetType()
+	public function facetType(): BelongsTo
 	{
 		return $this->belongsTo(FacetType::class, 'facet_type_id');
 	}

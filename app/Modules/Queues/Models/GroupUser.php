@@ -2,6 +2,8 @@
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Queues\Events\UserCreating;
@@ -14,6 +16,15 @@ use Carbon\Carbon;
 
 /**
  * Model for a queue/user association
+ *
+ * @property int    $id
+ * @property int    $groupid
+ * @property int    $queueuserid
+ * @property int    $userrequestid
+ * @property int    $membertype
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property int    $notice
  */
 class GroupUser extends Model
 {
@@ -85,9 +96,9 @@ class GroupUser extends Model
 	/**
 	 * Defines a relationship to queue
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function queue()
+	public function queue(): BelongsTo
 	{
 		return $this->belongsTo(Queue::class, 'queueid');
 	}
@@ -95,9 +106,9 @@ class GroupUser extends Model
 	/**
 	 * Defines a relationship to group
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function group()
+	public function group(): BelongsTo
 	{
 		return $this->belongsTo(Group::class, 'groupid');
 	}
@@ -105,9 +116,9 @@ class GroupUser extends Model
 	/**
 	 * Defines a relationship to queue user
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function queueuser()
+	public function queueuser(): BelongsTo
 	{
 		return $this->belongsTo(User::class, 'queueuserid');
 	}
@@ -115,9 +126,9 @@ class GroupUser extends Model
 	/**
 	 * Defines a relationship to member type
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function type()
+	public function type(): BelongsTo
 	{
 		return $this->belongsTo(MemberType::class, 'membertype');
 	}
@@ -125,9 +136,9 @@ class GroupUser extends Model
 	/**
 	 * Defines a relationship to user request
 	 *
-	 * @return  object
+	 * @return  HasOne
 	 */
-	public function request()
+	public function request(): HasOne
 	{
 		return $this->hasOne(UserRequest::class, 'id', 'userrequestid');
 	}

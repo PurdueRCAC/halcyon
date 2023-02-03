@@ -2,6 +2,7 @@
 
 namespace App\Modules\Resources\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Resources\Events\AssetCreated;
 use App\Modules\Resources\Models\Subresource;
 use App\Modules\Resources\Models\Child;
@@ -14,10 +15,10 @@ class Subresources
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(AssetCreated::class, self::class . '@handleAssetCreated', 1000);
 	}
@@ -25,10 +26,10 @@ class Subresources
 	/**
 	 * Create a default subresource for new compute resources
 	 *
-	 * @param   object   $event
+	 * @param   AssetCreated  $event
 	 * @return  void
 	 */
-	public function handleAssetCreated(AssetCreated $event)
+	public function handleAssetCreated(AssetCreated $event): void
 	{
 		$asset = $event->asset;
 

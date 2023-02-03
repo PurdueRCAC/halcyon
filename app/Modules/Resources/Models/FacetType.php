@@ -3,9 +3,24 @@
 namespace App\Modules\Resources\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Model for a resource facet type
+ *
+ * @property int    $id
+ * @property int    $type_id
+ * @property string $type
+ * @property string $name
+ * @property string $label
+ * @property string $placeholder
+ * @property string $description
+ * @property string $default_value
+ * @property int    $ordering
+ * @property int    $required
+ * @property int    $min
+ * @property int    $max
  */
 class FacetType extends Model
 {
@@ -58,9 +73,9 @@ class FacetType extends Model
 	/**
 	 * Defines a relationship to options
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function type()
+	public function type(): BelongsTo
 	{
 		return $this->belongsTo(Type::class, 'type_id');
 	}
@@ -68,9 +83,9 @@ class FacetType extends Model
 	/**
 	 * Defines a relationship to options
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function options()
+	public function options(): HasMany
 	{
 		return $this->hasMany(FacetOption::class, 'facet_type_id');
 	}
@@ -78,9 +93,9 @@ class FacetType extends Model
 	/**
 	 * Defines a relationship to facets
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function facets()
+	public function facets(): HasMany
 	{
 		return $this->hasMany(Facet::class, 'facet_type_id');
 	}
@@ -91,7 +106,7 @@ class FacetType extends Model
 	 * @param   mixed  $value
 	 * @return  void
 	 */
-	public function setNameAttribute($value)
+	public function setNameAttribute($value): void
 	{
 		$value = strip_tags($value);
 		$value = trim($value);
@@ -107,7 +122,7 @@ class FacetType extends Model
 	 *
 	 * @return  bool  False if error, True on success
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		foreach ($this->options as $row)
 		{

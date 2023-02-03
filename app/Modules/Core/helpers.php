@@ -42,7 +42,7 @@ if (!function_exists('captcha'))
 	 * Render a CAPTCHA
 	 * 
 	 * @param   string  $name
-	 * @param   array   $atts
+	 * @param   array<string,mixed>   $atts
 	 * @return  Response
 	 */
 	function captcha($name, $atts = array())

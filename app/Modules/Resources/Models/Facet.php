@@ -2,12 +2,21 @@
 namespace App\Modules\Resources\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Resource facet model
  *
  * This should probably be called `Attribute` but
  * the name causes conflicts with Laravel
+ *
+ * @property int    $id
+ * @property int    $facet_type_id
+ * @property int    $asset_id
+ * @property string $value
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  */
 class Facet extends Model
 {
@@ -46,9 +55,9 @@ class Facet extends Model
 	/**
 	 * Get parent resource
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function asset()
+	public function asset(): BelongsTo
 	{
 		return $this->belongsTo(Asset::class, 'asset_id');
 	}
@@ -56,9 +65,9 @@ class Facet extends Model
 	/**
 	 * Get parent resource
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function facetType()
+	public function facetType(): BelongsTo
 	{
 		return $this->belongsTo(FacetType::class, 'facet_type_id');
 	}

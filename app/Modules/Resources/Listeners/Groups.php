@@ -2,6 +2,7 @@
 
 namespace App\Modules\Resources\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Groups\Events\MemberCreated;
 use App\Modules\Resources\Events\ResourceMemberStatus;
 use App\Modules\Resources\Events\ResourceMemberCreated;
@@ -17,10 +18,10 @@ class Groups
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(MemberCreated::class, self::class . '@handleMemberCreated');
 	}
@@ -31,7 +32,7 @@ class Groups
 	 * @param   MemberCreated $event
 	 * @return  void
 	 */
-	public function handleMemberCreated(MemberCreated $event)
+	public function handleMemberCreated(MemberCreated $event): void
 	{
 		$member = $event->member;
 

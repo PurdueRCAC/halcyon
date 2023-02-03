@@ -3,9 +3,14 @@
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Model for a queue/qos mapping
+ *
+ * @property int    $id
+ * @property int    $qosid
+ * @property int    $queueid
  */
 class QueueQos extends Model
 {
@@ -26,9 +31,9 @@ class QueueQos extends Model
 	/**
 	 * Defines a relationship to a qos
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function qos()
+	public function qos(): BelongsTo
 	{
 		return $this->belongsTo(Qos::class, 'qosid')->withTrashed();
 	}
@@ -36,9 +41,9 @@ class QueueQos extends Model
 	/**
 	 * Defines a relationship to a queue
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function queue()
+	public function queue(): BelongsTo
 	{
 		return $this->belongsTo(Queue::class, 'queueid')->withTrashed();
 	}

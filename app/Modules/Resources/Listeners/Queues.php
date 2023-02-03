@@ -2,6 +2,7 @@
 
 namespace App\Modules\Resources\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Queues\Events\QueueCreated;
 use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Resources\Events\ResourceMemberStatus;
@@ -14,10 +15,10 @@ class Queues
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(QueueCreated::class, self::class . '@handleQueueCreated');
 	}
@@ -28,7 +29,7 @@ class Queues
 	 * @param   QueueCreated $event
 	 * @return  void
 	 */
-	public function handleQueueCreated(QueueCreated $event)
+	public function handleQueueCreated(QueueCreated $event): void
 	{
 		$queue = $event->queue;
 

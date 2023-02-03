@@ -3,6 +3,8 @@
 namespace App\Modules\Resources\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Resources\Events\SubresourceCreating;
 use App\Modules\Resources\Events\SubresourceCreated;
@@ -15,6 +17,18 @@ use Carbon\Carbon;
 
 /**
  * Model for a subresource mapping
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $cluster
+ * @property int    $nodecores
+ * @property string $nodemem
+ * @property int    $nodegpus
+ * @property string $nodeattributes
+ * @property string $description
+ * @property Carbon|null $datetimeremoved
+ * @property Carbon|null $datetimecreated
+ * @property int    $notice
  */
 class Subresource extends Model
 {
@@ -115,9 +129,9 @@ class Subresource extends Model
 	/**
 	 * Get queues
 	 *
-	 * @return object
+	 * @return HasMany
 	 */
-	public function queues()
+	public function queues(): HasMany
 	{
 		return $this->hasMany(Queue::class, 'subresourceid');
 	}
@@ -125,9 +139,9 @@ class Subresource extends Model
 	/**
 	 * Get resource/subresource association record
 	 *
-	 * @return object
+	 * @return BelongsTo
 	 */
-	public function association()
+	public function association(): BelongsTo
 	{
 		return $this->belongsTo(Child::class, 'id', 'subresourceid');
 	}
@@ -137,7 +151,7 @@ class Subresource extends Model
 	 *
 	 * @return  void
 	 */
-	public function stopQueues()
+	public function stopQueues(): void
 	{
 		$tbl = $this->getTable();
 		$name = $this->name;
@@ -178,7 +192,7 @@ class Subresource extends Model
 	 *
 	 * @return  void
 	 */
-	public function startQueues()
+	public function startQueues(): void
 	{
 		$tbl = $this->getTable();
 		$name = $this->name;
@@ -218,7 +232,7 @@ class Subresource extends Model
 	 *
 	 * @return  void
 	 */
-	private function sumCoresAndNodes()
+	private function sumCoresAndNodes(): void
 	{
 		$totalcores  = 0;
 		$totalnodes  = 0;
@@ -321,7 +335,7 @@ class Subresource extends Model
 	 *
 	 * @return  int
 	 */
-	public function getTotalcoresAttribute()
+	public function getTotalcoresAttribute(): int
 	{
 		if (!array_key_exists('totalcores', $this->attributes))
 		{
@@ -336,7 +350,7 @@ class Subresource extends Model
 	 *
 	 * @return  int
 	 */
-	public function getTotalnodesAttribute()
+	public function getTotalnodesAttribute(): int
 	{
 		if (!array_key_exists('totalnodes', $this->attributes))
 		{
@@ -351,7 +365,7 @@ class Subresource extends Model
 	 *
 	 * @return  int
 	 */
-	public function getQueuestatusAttribute()
+	public function getQueuestatusAttribute(): int
 	{
 		$queuestatus = 1;
 
@@ -377,7 +391,7 @@ class Subresource extends Model
 	 * @param   string  $val
 	 * @return  void
 	 */
-	public function setClusterAttribute($val)
+	public function setClusterAttribute($val): void
 	{
 		$this->attributes['cluster'] = strtolower($val);
 	}
@@ -387,7 +401,7 @@ class Subresource extends Model
 	 *
 	 * @return  bool  False if error, True on success
 	 */
-	public function delete()
+	public function delete(): bool
 	{
 		foreach ($this->queues as $row)
 		{

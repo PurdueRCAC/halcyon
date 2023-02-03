@@ -3,6 +3,8 @@
 namespace App\Modules\Resources\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -16,6 +18,21 @@ use App\Halcyon\Models\Casts\Params;
 
 /**
  * Resource asset
+ *
+ * @property int    $id
+ * @property string $name
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property int    $parentid
+ * @property int    $batchsystem
+ * @property string $rolename
+ * @property string $listname
+ * @property int    $display
+ * @property int    $resourcetype
+ * @property int    $producttype
+ * @property string $status
+ * @property string $description
+ * @property string $params
  */
 class Asset extends Model
 {
@@ -100,7 +117,7 @@ class Asset extends Model
 	 *
 	 * @return  string
 	 */
-	public function getAliasAttribute()
+	public function getAliasAttribute(): string
 	{
 		return preg_replace('/[^a-z0-9\-_]/', '', strtolower($this->name));
 	}
@@ -110,7 +127,7 @@ class Asset extends Model
 	 *
 	 * @return  string
 	 */
-	public function getPictureAttribute()
+	public function getPictureAttribute(): string
 	{
 		$alias = $this->listname ? $this->listname : $this->alias;
 		$path = storage_path('app/public/resources/' . $alias . '/resource.jpg');
@@ -128,7 +145,7 @@ class Asset extends Model
 	 *
 	 * @return  string
 	 */
-	public function getThumbAttribute()
+	public function getThumbAttribute(): string
 	{
 		$alias = $this->listname ? $this->listname : $this->alias;
 		$path = storage_path('app/public/resources/' . $alias . '/thumb.png');
@@ -146,7 +163,7 @@ class Asset extends Model
 	 *
 	 * @return  string
 	 */
-	public function getMailinglistAttribute()
+	public function getMailinglistAttribute(): string
 	{
 		$host = config('module.resources.email_lists_host');
 
@@ -156,9 +173,9 @@ class Asset extends Model
 	/**
 	 * Defines a relationship to type
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function type()
+	public function type(): BelongsTo
 	{
 		return $this->belongsTo(Type::class, 'resourcetype')->withDefault(['id' => 0, 'name' => trans('global.none')]);
 	}
@@ -166,9 +183,9 @@ class Asset extends Model
 	/**
 	 * Defines a relationship to subresources
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function children()
+	public function children(): HasMany
 	{
 		return $this->hasMany(Child::class, 'resourceid');
 	}
@@ -176,9 +193,9 @@ class Asset extends Model
 	/**
 	 * Defines a relationship to child assets
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function descendents()
+	public function descendents(): HasMany
 	{
 		return $this->hasMany(self::class, 'parentid');
 	}
@@ -196,9 +213,9 @@ class Asset extends Model
 	/**
 	 * Defines a relationship to subresources
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function batchsystm()
+	public function batchsystm(): BelongsTo
 	{
 		return $this->belongsTo(Batchsystem::class, 'batchsystem');
 	}
@@ -206,9 +223,9 @@ class Asset extends Model
 	/**
 	 * Defines a relationship to parent
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function parent()
+	public function parent(): BelongsTo
 	{
 		return $this->belongsTo(self::class, 'parentid');
 	}
@@ -216,9 +233,9 @@ class Asset extends Model
 	/**
 	 * Defines a relationship to facets
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function facets()
+	public function facets(): HasMany
 	{
 		return $this->hasMany(Facet::class, 'asset_id');
 	}
@@ -229,7 +246,7 @@ class Asset extends Model
 	 * @param   string  $name
 	 * @return  bool
 	 */
-	public function hasFacet($name)
+	public function hasFacet($name): bool
 	{
 		$found = $this->getFacet($name);
 
@@ -259,7 +276,7 @@ class Asset extends Model
 	 *
 	 * @return void
 	 */
-	protected static function booted()
+	protected static function booted(): void
 	{
 		static::creating(function ($model)
 		{
@@ -295,7 +312,7 @@ class Asset extends Model
 	 * @param   string  $dir
 	 * @return  array
 	 */
-	public function tree($order = 'name', $dir = 'asc')
+	public function tree($order = 'name', $dir = 'asc'): array
 	{
 		$query = self::query();
 
@@ -342,7 +359,7 @@ class Asset extends Model
 	 * @param   int  $type      Indention type
 	 * @return  array
 	 */
-	protected function treeRecurse($id, $list, $children, $maxlevel=9999, $level=0, $type=1)
+	protected function treeRecurse($id, $list, $children, $maxlevel=9999, $level=0, $type=1): array
 	{
 		if (@$children[$id] && $level <= $maxlevel)
 		{
@@ -367,7 +384,7 @@ class Asset extends Model
 	 * @param  string  $value
 	 * @return void
 	 */
-	public function setListnameAttribute($value)
+	public function setListnameAttribute($value): void
 	{
 		$value = strip_tags((string)$value);
 		$value = str_replace(' ', '-', $value);
@@ -381,7 +398,7 @@ class Asset extends Model
 	 * @param  string  $value
 	 * @return void
 	 */
-	public function setRolenameAttribute($value)
+	public function setRolenameAttribute($value): void
 	{
 		$value = strip_tags((string)$value);
 		$value = str_replace(' ', '-', $value);
@@ -393,7 +410,7 @@ class Asset extends Model
 	 * Retrieve record by name
 	 *
 	 * @param   string  $name
-	 * @return  mixed   Asset|null
+	 * @return  Asset|null
 	 */
 	public static function findByName($name)
 	{

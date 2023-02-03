@@ -2,11 +2,18 @@
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 use Carbon\Carbon;
 
 /**
  * Model for a queue/user association
+ *
+ * @property int    $id
+ * @property int    $queueid
+ * @property Carbon|null $datetimestart
+ * @property Carbon|null $datetimestop
+ * @property int    $walltime
  */
 class Walltime extends Model
 {
@@ -49,7 +56,7 @@ class Walltime extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasStart()
+	public function hasStart(): bool
 	{
 		return !is_null($this->datetimestart);
 	}
@@ -59,7 +66,7 @@ class Walltime extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasEnd()
+	public function hasEnd(): bool
 	{
 		return !is_null($this->datetimestop);
 	}
@@ -69,7 +76,7 @@ class Walltime extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasEnded()
+	public function hasEnded(): bool
 	{
 		return ($this->hasEnd() && $this->datetimestop->timestamp < Carbon::now()->timestamp);
 	}
@@ -77,9 +84,9 @@ class Walltime extends Model
 	/**
 	 * Defines a relationship to queue
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function queue()
+	public function queue(): BelongsTo
 	{
 		return $this->belongsTo(Queue::class, 'queueid');
 	}
@@ -89,7 +96,7 @@ class Walltime extends Model
 	 *
 	 * @return  string
 	 */
-	public function getHumanWalltimeAttribute()
+	public function getHumanWalltimeAttribute(): string
 	{
 		$walltime = $this->walltime;
 		$unit = '';
