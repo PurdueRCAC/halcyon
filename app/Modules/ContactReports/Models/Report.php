@@ -147,12 +147,12 @@ class Report extends Model
 		// Parse out hashtags and tag the record
 		static::created(function ($model)
 		{
-			$model->hashTags;
+			$tags = $model->hashtags;
 		});
 
 		static::updated(function ($model)
 		{
-			$model->hashTags;
+			$tags = $model->hashtags;
 		});
 	}
 
@@ -361,7 +361,7 @@ class Report extends Model
 
 			if (count($this->tags))
 			{
-				preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $text, $matches);
+				preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_\.]+)/i', $text, $matches);
 
 				if (!empty($matches))
 				{
@@ -919,13 +919,17 @@ class Report extends Model
 		$str = preg_replace_callback("/```(.*?)```/uis", [$this, 'stripPre'], $str);
 		$str = preg_replace_callback("/`(.*?)`/i", [$this, 'stripCode'], $str);
 
-		preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $str, $matches);
+		preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_\.]+)/i', $str, $matches);
 
 		$hashtag = [];
 		if (!empty($matches[0]))
 		{
 			foreach ($matches[0] as $match)
 			{
+				// Trim trailing periods as this is most likely a hash
+				// at the end of a sentence
+				$match = trim($match, '.');
+
 				$match = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
 
 				// Ignore purely numeric items as this is most likely
