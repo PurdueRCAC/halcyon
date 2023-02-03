@@ -109,6 +109,10 @@ cd halcyon
 ```
 
 #### Docker
+Modify the database configuration in `config/database.php` or `.env`.
+If you are using Docker the `DB_HOST` name will be the container name of the MySQL service.
+
+NOTE: You can copy `.env.example` and rename it to `.env` that will have many of the variables pre-filled. 
 
 This will perform the Composer install and initial database migration (found under the manual setup).
 
@@ -122,10 +126,20 @@ Install needed libraries
 docker exec -it halcyon-php-fpm php /var/www/html/bin/composer install --prefer-dist
 ```
 
-Modify the database configuration in `config/database.php` or `.env`.
+Run the initial setup script
+
+```
+docker exec -it halcyon-php-fpm php /var/www/html/bin/composer run-script initial-setup
+```
+
+This should complete the setup as it runs through all the individual artisan commands listed below.
+However if you make changes/add Modules/ etc. the individual commands to launch the appropriate artisan command via Docker are 
+listed below.
+
+
+
 
 Run migrations to install tables and base data.
-
 ```
 docker exec -it halcyon-php-fpm php artisan migrate
 docker exec -it halcyon-php-fpm php artisan module:migrate

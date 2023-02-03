@@ -73,6 +73,18 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "initial-setup": [
+            "@php artisan migrate || true",
+            "@php artisan migrate || true",
+            "@php artisan module:migrate || true",
+            "@php artisan storage:link || true",
+            "@php artisan module:publish || true",
+            "@php artisan theme:publish || true",
+            "@php artisan listener:publish || true",
+            "@php artisan key:generate --ansi || true",
+            "chmod -R 777 storage/framework",
+            "chmod -R 777 storage/logs"
         ]
     }
 }
