@@ -9,14 +9,14 @@ if (!function_exists('editor'))
 	 * @param   string  $value
 	 * @param   array   $atts
 	 * @param   string  $formatting
-	 * @return  Response
+	 * @return  string
 	 */
 	function editor($name, $value, $atts = array(), $formatting = 'html')
 	{
+		$value = $value ?: '';
 		event($event = new App\Modules\Core\Events\EditorIsRendering($name, $value, $atts, $formatting));
 
 		return $event->render();
-		//return view('core::components.textarea', compact('name', 'value', 'atts'));
 	}
 }
 
@@ -28,10 +28,11 @@ if (!function_exists('markdown_editor'))
 	 * @param   string  $name
 	 * @param   string  $value
 	 * @param   array   $atts
-	 * @return  Response
+	 * @return  string
 	 */
 	function markdown_editor($name, $value, $atts = array())
 	{
+		$value = $value ?: '';
 		return editor($name, $value, $atts, 'markdown');
 	}
 }
@@ -43,7 +44,7 @@ if (!function_exists('captcha'))
 	 * 
 	 * @param   string  $name
 	 * @param   array<string,mixed>   $atts
-	 * @return  Response
+	 * @return  string
 	 */
 	function captcha($name, $atts = array())
 	{
@@ -60,7 +61,7 @@ if (!function_exists('validate_captcha'))
 	 * 
 	 * @param   string  $name
 	 * @param   array   $atts
-	 * @return  Response
+	 * @return  bool
 	 */
 	function validate_captcha($name, $atts = array())
 	{
