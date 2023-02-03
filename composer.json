@@ -6,19 +6,20 @@
     "license": "Purdue University Open Source License",
     "require": {
         "php": "^8.0.2",
-        "guzzlehttp/guzzle": "^7.2",
-        "laravel/framework": "^9.19",
-        "laravel/sanctum": "^3.0",
-        "laravel/tinker": "^2.7",
-        "lab404/laravel-impersonate": "^1.7.3",
         "adldap2/adldap2": "^10.4.3",
         "apereo/phpcas": "^1.6.0",
         "cilogon/oauth2-cilogon": "^1.1.6",
-        "phpdocumentor/reflection-docblock": "^5.3.0",
-        "openspout/openspout": "^4.12.1",
-        "nathanheffley/laravel-slack-blocks": "^2.3.0",
+        "doctrine/dbal": "^3.5",
+        "guzzlehttp/guzzle": "^7.2",
         "jenssegers/agent": "^2.6.4",
-        "nwidart/laravel-modules": "^9.0.6"
+        "lab404/laravel-impersonate": "^1.7.3",
+        "laravel/framework": "^9.19",
+        "laravel/sanctum": "^3.0",
+        "laravel/tinker": "^2.7",
+        "nathanheffley/laravel-slack-blocks": "^2.3.0",
+        "nwidart/laravel-modules": "^9.0.6",
+        "openspout/openspout": "^4.12.1",
+        "phpdocumentor/reflection-docblock": "^5.3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -72,6 +73,18 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "initial-setup": [
+            "@php artisan migrate || true",
+            "@php artisan migrate || true",
+            "@php artisan module:migrate || true",
+            "@php artisan storage:link || true",
+            "@php artisan module:publish || true",
+            "@php artisan theme:publish || true",
+            "@php artisan listener:publish || true",
+            "@php artisan key:generate --ansi || true",
+            "chmod -R 777 storage/framework",
+            "chmod -R 777 storage/logs"
         ]
     }
 }
