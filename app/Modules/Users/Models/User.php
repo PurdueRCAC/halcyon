@@ -289,7 +289,7 @@ class User extends Model implements
 	/**
 	 * Gets date created
 	 *
-	 * @return  string
+	 * @return  Carbon|null
 	 */
 	public function getDatelastseenAttribute()
 	{
@@ -299,7 +299,7 @@ class User extends Model implements
 	/**
 	 * Gets date created
 	 *
-	 * @return  object
+	 * @return  Carbon|null
 	 */
 	public function getDatecreatedAttribute()
 	{
@@ -309,7 +309,7 @@ class User extends Model implements
 	/**
 	 * Gets an array of the authorised access levels for the user
 	 *
-	 * @return  object
+	 * @return  Carbon|null
 	 */
 	public function getDateremovedAttribute()
 	{
@@ -327,9 +327,9 @@ class User extends Model implements
 	/**
 	 * Gets an array of the authorised access levels for the user
 	 *
-	 * @return  string
+	 * @return  string|null
 	 */
-	public function getUsernameAttribute(): string
+	public function getUsernameAttribute()
 	{
 		if (isset($this->attributes['username']))
 		{
@@ -361,7 +361,7 @@ class User extends Model implements
 	 * 
 	 * If not set, it assumes the same domain as the mail "From address" config option
 	 *
-	 * @return  string
+	 * @return  string|null
 	 */
 	public function getEmailAttribute()
 	{
