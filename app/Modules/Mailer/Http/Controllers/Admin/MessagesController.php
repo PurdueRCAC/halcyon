@@ -3,7 +3,7 @@
 namespace App\Modules\Mailer\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -95,7 +95,7 @@ class MessagesController extends Controller
 	 * Remove the specified entry
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -131,7 +131,7 @@ class MessagesController extends Controller
 	/**
 	 * Return to default page
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{
@@ -188,7 +188,7 @@ class MessagesController extends Controller
 	 * Store a newly created entry
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function send(Request $request)
 	{
@@ -376,7 +376,7 @@ class MessagesController extends Controller
 	 * @param Request $request
 	 * @return array<int,string>
 	 */
-	protected function toEmails($str, $emails, $request)
+	protected function toEmails(string $str, array $emails, Request $request)
 	{
 		$str = explode(',', $str);
 		$str = array_map('trim', $str);
@@ -416,11 +416,11 @@ class MessagesController extends Controller
 	/**
 	 * Log email
 	 *
-	 * @param   object $user
-	 * @param   object $message
+	 * @param   User $user
+	 * @param   Message $message
 	 * @return  void
 	 */
-	protected function log($user, $message)
+	protected function log(User $user, Message $message)
 	{
 		Log::create([
 			'ip'              => request()->ip(),

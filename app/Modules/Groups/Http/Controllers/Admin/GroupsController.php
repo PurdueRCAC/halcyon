@@ -268,7 +268,7 @@ class GroupsController extends Controller
 	 * Store a newly created resource in storage.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -338,7 +338,7 @@ class GroupsController extends Controller
 
 			if (count($rows) > 0)
 			{
-				return response()->json(['message' => trans('groups::groups.error.unixgroup name already exists', ['name' => $row->unixgroup])], 409);
+				return redirect()->back()->withError(trans('groups::groups.error.unixgroup name already exists', ['name' => $row->unixgroup]));
 			}
 		}
 
@@ -411,7 +411,7 @@ class GroupsController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param   Request  $request
-	 * @return Response
+	 * @return  RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -444,7 +444,7 @@ class GroupsController extends Controller
 	/**
 	 * Return to the main view
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{

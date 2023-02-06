@@ -3,7 +3,7 @@
 namespace App\Modules\Knowledge\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -145,7 +145,7 @@ class PagesController extends Controller
 	 * Restore to a specific version
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function restore(Request $request)
 	{
@@ -437,7 +437,7 @@ class PagesController extends Controller
 	 * Comment the specified entry
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function attach(Request $request)
 	{
@@ -488,7 +488,7 @@ class PagesController extends Controller
 	 *
 	 * @param   Request $request
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function delete(Request $request, $id = null)
 	{

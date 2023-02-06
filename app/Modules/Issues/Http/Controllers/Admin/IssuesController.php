@@ -3,7 +3,8 @@
 namespace App\Modules\Issues\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +22,7 @@ class IssuesController extends Controller
 	 * Display a listing of articles
 	 *
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -116,7 +117,7 @@ class IssuesController extends Controller
 	/**
 	 * Show the form for creating a new article
 	 *
-	 * @return  Response
+	 * @return  View
 	 */
 	public function create()
 	{
@@ -137,7 +138,7 @@ class IssuesController extends Controller
 	 * Show the form for editing the specified entry
 	 *
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  View
 	 */
 	public function edit($id)
 	{
@@ -157,7 +158,7 @@ class IssuesController extends Controller
 	 * Store a newly created entry
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -269,7 +270,7 @@ class IssuesController extends Controller
 	 * Remove the specified entry
 	 *
 	 * @param   Request  $requesy
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -304,7 +305,7 @@ class IssuesController extends Controller
 	/**
 	 * Return to default page
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{

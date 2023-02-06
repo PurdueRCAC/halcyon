@@ -3,7 +3,8 @@
 namespace App\Modules\Listeners\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Halcyon\Http\StatefulRequest;
@@ -17,7 +18,7 @@ class ListenersController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -149,7 +150,7 @@ class ListenersController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 * 
-	 * @return Response
+	 * @return View
 	 */
 	public function create()
 	{
@@ -172,7 +173,7 @@ class ListenersController extends Controller
 	 * 
 	 * @param  int  $id
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id, Request $request)
 	{
@@ -211,7 +212,7 @@ class ListenersController extends Controller
 	 * Update the specified resource in storage.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -250,7 +251,7 @@ class ListenersController extends Controller
 	 * Remove the specified resource from storage.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -287,7 +288,7 @@ class ListenersController extends Controller
 	 *
 	 * @param   Request  $request
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function publish(Request $request, $id = 0)
 	{
@@ -299,7 +300,7 @@ class ListenersController extends Controller
 	 *
 	 * @param   Request  $request
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function unpublish(Request $request, $id = 0)
 	{
@@ -312,7 +313,7 @@ class ListenersController extends Controller
 	 * @param   Request  $request
 	 * @param   int  $id
 	 * @param   int  $value
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function state(Request $request, $id = 0, $value = 1)
 	{
@@ -361,7 +362,7 @@ class ListenersController extends Controller
 	 * Changes the order of one or more records.
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	/*public function reorder(Request $request)
 	{
@@ -400,7 +401,7 @@ class ListenersController extends Controller
 	 * 
 	 * @param   int  $id
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function reorder($id, Request $request)
 	{
@@ -424,7 +425,7 @@ class ListenersController extends Controller
 	 * Method to save the submitted ordering values for records.
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function saveorder(Request $request)
 	{
@@ -458,7 +459,7 @@ class ListenersController extends Controller
 	 * Check in of one or more records.
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function checkin(Request $request)
 	{
@@ -483,7 +484,7 @@ class ListenersController extends Controller
 	/**
 	 * Return to the main view
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{

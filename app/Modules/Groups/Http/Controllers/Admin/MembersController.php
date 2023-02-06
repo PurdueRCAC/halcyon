@@ -3,7 +3,7 @@
 namespace App\Modules\Groups\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use App\Halcyon\Http\StatefulRequest;
@@ -157,7 +157,7 @@ class MembersController extends Controller
 	 * Store a newly created resource in storage.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -185,7 +185,7 @@ class MembersController extends Controller
 	 *
 	 * @param  Request $request
 	 * @param  int $group
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function delete(Request $request, $group)
 	{
@@ -219,7 +219,7 @@ class MembersController extends Controller
 	 * Return to the main view
 	 *
 	 * @param   int  $group
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel($group)
 	{

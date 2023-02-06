@@ -3,7 +3,8 @@
 namespace App\Modules\Knowledge\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Halcyon\Http\StatefulRequest;
@@ -18,7 +19,7 @@ class PagesController extends Controller
 	 * Display a listing of articles
 	 *
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -177,7 +178,7 @@ class PagesController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 * 
-	 * @return Response
+	 * @return View
 	 */
 	public function create(Request $request)
 	{
@@ -237,7 +238,7 @@ class PagesController extends Controller
 	 * Comment the specified entry
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function attach(Request $request)
 	{
@@ -315,7 +316,7 @@ class PagesController extends Controller
 	 * Show the form for editing the specified resource.
 	 * 
 	 * @param  int $id
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id)
 	{
@@ -340,7 +341,7 @@ class PagesController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -447,7 +448,7 @@ class PagesController extends Controller
 	/**
 	 * Rebuild the tree
 	 * 
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function rebuild()
 	{
@@ -467,7 +468,7 @@ class PagesController extends Controller
 	 * 
 	 * @param   int $id
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function reorder($id, Request $request)
 	{
@@ -489,7 +490,7 @@ class PagesController extends Controller
 	 * 
 	 * @param   Request $request
 	 * @param   int $id
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function state(Request $request, $id = null)
 	{
@@ -547,7 +548,7 @@ class PagesController extends Controller
 	 * Remove the specified entry
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -583,7 +584,7 @@ class PagesController extends Controller
 	/**
 	 * Return to default page
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{

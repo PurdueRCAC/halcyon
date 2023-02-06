@@ -9,15 +9,20 @@ use App\Modules\Groups\Console\EmailRemovedCommand;
 
 class ScheduleServiceProvider extends ServiceProvider
 {
-	public function boot()
+	/**
+	 * Boot scheduled events.
+	 *
+	 * @return void
+	 */
+	public function boot(): void
 	{
 		$this->app->booted(function ()
 		{
 			$schedule = $this->app->make(Schedule::class);
 
-			$schedule->command(EmailAuthorizedCommand::class)->cron(config('module.groups.schedule.emailauthorized', '*/20 * * * *'));
+			$schedule->command(EmailAuthorizedCommand::class)->cron((string)config('module.groups.schedule.emailauthorized', '*/20 * * * *'));
 
-			$schedule->command(EmailRemovedCommand::class)->cron(config('module.groups.schedule.emailremoved', '*/20 * * * *'));
+			$schedule->command(EmailRemovedCommand::class)->cron((string)config('module.groups.schedule.emailremoved', '*/20 * * * *'));
 		});
 	}
 }

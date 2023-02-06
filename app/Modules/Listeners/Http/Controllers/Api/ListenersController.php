@@ -3,7 +3,7 @@
 namespace App\Modules\Listeners\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Listeners\Models\Listener;
@@ -102,7 +102,7 @@ class ListenersController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  ListenerResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -314,7 +314,7 @@ class ListenersController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  ListenerResource|JsonResponse
 	 */
 	public function create(Request $request)
 	{
@@ -394,7 +394,7 @@ class ListenersController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  ListenerResource
 	 */
 	public function read(int $id)
 	{
@@ -508,7 +508,7 @@ class ListenersController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  ListenerResource|JsonResponse
 	 */
 	public function update(Request $request, int $id)
 	{
@@ -569,7 +569,7 @@ class ListenersController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete(int $id)
 	{
