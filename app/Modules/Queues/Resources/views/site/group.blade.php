@@ -546,9 +546,9 @@ $queues = $queues->reject(function($q) use ($canManage)
 												</td>
 												<td>
 													@if ($item->sellerqueueid == $q->id)
-														{{ $item->queue->group ? $item->queue->group->name : '(ITaP Owned)' }}
+														{{ $item->queue->group ? $item->queue->group->name : '(Organization Owned)' }}
 													@elseif ($item->source)
-														{{ $item->source->group ? $item->source->group->name : '(ITaP Owned)' }}
+														{{ $item->source->group ? $item->source->group->name : '(Organization Owned)' }}
 													@else
 														{{ trans('queues::queues.new hardware') }}
 													@endif

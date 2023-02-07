@@ -100,7 +100,7 @@ return [
 	'loan' => 'Loan',
 	'seller' => 'Seller',
 	'lender' => 'Lender',
-	'org owned' => '(ITaP-Owned)',
+	'org owned' => '(Organization Owned)',
 	'standby' => 'Standby',
 	'owner' => 'Owner',
 	'work' => 'Workq',

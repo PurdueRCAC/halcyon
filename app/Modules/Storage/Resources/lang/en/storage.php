@@ -113,7 +113,7 @@ return [
 	'loan space' => 'Loan Space',
 	'end of life' => '(end of system life)',
 	'select group' => '(select group)',
-	'org owned' => '(ITaP-Owned)',
+	'org owned' => '(Organization Owned)',
 	'seller' => 'Seller',
 	'lender' => 'Lender',
 	'sell to' => 'Sell to',

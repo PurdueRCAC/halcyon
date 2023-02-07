@@ -6,7 +6,7 @@
 <div class="audienceTiles col-lg-4 col-md-6 col-sm-12 col-xs-12 tiles-1">
 	<div class="tileRow">
 		<div class="tileContainer col-lg-12 col-md-12 col-sm-12 col-xs-12">
-			<img src="{{ asset('files/logo_white.png') }}" alt="ITaP Logo" id="itap-logo" height="150" />
+			<img src="{{ asset('files/logo_white.png') }}" alt="IT Logo" id="it-logo" height="150" />
 		</div>
 	</div><!-- /.tileRow -->
 </div><!-- /.audienceTiles -->
