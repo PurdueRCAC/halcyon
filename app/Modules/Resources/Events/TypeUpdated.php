@@ -27,7 +27,7 @@ class TypeUpdated
 	 *
 	 * @return Type
 	 */
-	public function getType()
+	public function getType(): Type
 	{
 		return $this->type;
 	}

@@ -23,11 +23,16 @@ class DeleteModuleCommand extends Command
      * @var string
      */
     protected $description = 'Delete a module and optionally its migrations';
+
     /**
      * @var Filesystem
      */
     private $finder;
 
+    /**
+     * @param Filesystem $finder
+     * @return void
+     */
     public function __construct(Filesystem $finder)
     {
         parent::__construct();
@@ -45,10 +50,12 @@ class DeleteModuleCommand extends Command
         $module = $this->argument('module');
 
         $extra = '';
-        if ($this->option('migrations') === true) {
+        if ($this->option('migrations') === true)
+        {
             $extra = ' and reset its tables';
         }
-        if ($this->confirm("Are you sure you wish to delete the [$module] module{$extra}?") === false) {
+        if ($this->confirm("Are you sure you wish to delete the [$module] module{$extra}?") === false)
+        {
             $this->info('Nothing was deleted');
 
             return;
@@ -56,19 +63,22 @@ class DeleteModuleCommand extends Command
 
         $modulePath = config('modules.paths.modules') . '/' . $module;
 
-        if ($this->finder->exists($modulePath) === false) {
+        if ($this->finder->exists($modulePath) === false)
+        {
             $this->error('This module does not exist');
 
             return;
         }
 
-        if (is_core_module($module) === true) {
+        if (is_core_module($module) === true)
+        {
             $this->error('You cannot remove a core module.');
 
             return;
         }
 
-        if ($this->option('migrations') === true) {
+        if ($this->option('migrations') === true)
+        {
             $this->call('module:migrate-reset', ['module' => $module]);
         }
 
@@ -78,6 +88,10 @@ class DeleteModuleCommand extends Command
         $this->info('Module successfully deleted');
     }
 
+    /**
+     * @param string $module
+     * @return void
+     */
     private function removePermissionsFor($module)
     {
         (new PermissionsRemover($module))->removeAll();

@@ -27,7 +27,7 @@ class AssetCreating
 	 *
 	 * @return Asset
 	 */
-	public function getAsset()
+	public function getAsset(): Asset
 	{
 		return $this->asset;
 	}

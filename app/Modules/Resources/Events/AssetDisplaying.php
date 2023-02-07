@@ -16,14 +16,14 @@ class AssetDisplaying
 	/**
 	 * Content sections
 	 *
-	 * @var string
+	 * @var array
 	 */
 	private $sections;
 
 	/**
 	 * Active content section
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $active;
 
@@ -31,7 +31,7 @@ class AssetDisplaying
 	 * Constructor
 	 *
 	 * @param  Asset $asset
-	 * @param  string $active
+	 * @param  string|null $active
 	 * @return void
 	 */
 	public function __construct(Asset $asset, $active = null)
@@ -46,7 +46,7 @@ class AssetDisplaying
 	 *
 	 * @return Asset
 	 */
-	public function getAsset()
+	public function getAsset(): Asset
 	{
 		return $this->asset;
 	}
@@ -56,7 +56,7 @@ class AssetDisplaying
 	 *
 	 * @return string
 	 */
-	public function getSections()
+	public function getSections(): array
 	{
 		return $this->sections;
 	}
@@ -64,7 +64,7 @@ class AssetDisplaying
 	/**
 	 * Get the active section
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function getActive()
 	{
@@ -77,10 +77,10 @@ class AssetDisplaying
 	 * @param  string  $route
 	 * @param  string  $name
 	 * @param  bool    $active
-	 * @param  string  $content
+	 * @param  string|null  $content
 	 * @return void
 	 */
-	public function addSection($route, $name, $active = false, $content = null)
+	public function addSection($route, $name, $active = false, $content = null): void
 	{
 		$this->sections[] = array(
 			'route'   => $route,

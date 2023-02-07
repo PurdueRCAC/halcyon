@@ -115,9 +115,9 @@ class Message extends Model
 	/**
 	 * Create a new factory instance for the model.
 	 *
-	 * @return \Illuminate\Database\Eloquent\Factories\Factory
+	 * @return MessageFactory
 	 */
-	protected static function newFactory()
+	protected static function newFactory(): MessageFactory
 	{
 		return new MessageFactory;
 	}

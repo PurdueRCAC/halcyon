@@ -3,6 +3,7 @@
 namespace App\Modules\Messages\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Messages\Http\Resources\TypeResource;
@@ -205,7 +206,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response|TypeResource
+	 * @return JsonResponse|TypeResource
 	 */
 	public function create(Request $request)
 	{
@@ -359,7 +360,7 @@ class TypesController extends Controller
 	 * }
 	 * @param  Request $request
 	 * @param  int $id
-	 * @return Response|TypeResource
+	 * @return JsonResponse|TypeResource
 	 */
 	public function update(Request $request, int $id)
 	{
@@ -427,7 +428,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete(int $id)
 	{

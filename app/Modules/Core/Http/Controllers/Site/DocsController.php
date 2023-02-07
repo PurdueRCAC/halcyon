@@ -3,7 +3,7 @@
 namespace App\Modules\Core\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use App\Modules\Core\Docs\Generator;
 use Nwidart\Modules\Facades\Module;
@@ -14,9 +14,9 @@ class DocsController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param   Request  $request
-	 * @return Response
+	 * @return  View
 	 */
-	public function index(Request $request)
+	public function index(Request $request): View
 	{
 		$modules = collect(Module::all());
 		$modules = $modules->filter(function($value, $key)

@@ -3,7 +3,7 @@
 namespace App\Modules\News\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -540,7 +540,7 @@ class ArticlesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response|ArticleResource
+	 * @return  JsonResponse|ArticleResource
 	 */
 	public function create(Request $request)
 	{
@@ -839,7 +839,7 @@ class ArticlesController extends Controller
 	 * }
 	 * @param   Request  $request
 	 * @param   int  $id
-	 * @return  Response|ArticleResource
+	 * @return  JsonResponse|ArticleResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -988,7 +988,7 @@ class ArticlesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

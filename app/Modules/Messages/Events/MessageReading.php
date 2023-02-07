@@ -12,7 +12,7 @@ class MessageReading
 	public $message;
 
 	/**
-	 * @var string
+	 * @var object
 	 */
 	public $target;
 

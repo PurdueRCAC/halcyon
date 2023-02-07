@@ -50,7 +50,6 @@ class Queues
 				if ($resourcemember->status <= 0)
 				{
 					throw new \Exception(__METHOD__ . '(): Bad status for `resourcemember` ' . $user->userid . '.' . $queue->scheduler->resource->id);
-					continue;
 				}
 
 				if ($resourcemember->noStatus()

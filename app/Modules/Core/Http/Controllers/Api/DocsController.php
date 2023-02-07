@@ -3,7 +3,7 @@
 namespace App\Modules\Core\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use App\Modules\Core\Docs\Generator;
 use Nwidart\Modules\Facades\Module;
@@ -21,9 +21,9 @@ class DocsController extends Controller
 	 * @apiMethod GET
 	 * @apiUri    /api
 	 * @param   Request  $request
-	 * @return Response
+	 * @return JsonResponse
 	 */
-	public function index(Request $request)
+	public function index(Request $request): JsonResponse
 	{
 		/*$modules = collect(Module::all());
 		$modules = $modules->filter(function($value, $key)

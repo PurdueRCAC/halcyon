@@ -3,7 +3,7 @@
 namespace App\Modules\News\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use App\Modules\News\Models\Association;
 use App\Modules\News\Models\Article;
@@ -135,7 +135,7 @@ class SlackController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return JsonResponse
 	 */
 	public function index(Request $request)
 	{

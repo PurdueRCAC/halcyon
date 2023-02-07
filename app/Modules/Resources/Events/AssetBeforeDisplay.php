@@ -29,7 +29,7 @@ class AssetBeforeDisplay
 	 *
 	 * @return Asset
 	 */
-	public function getAsset()
+	public function getAsset(): Asset
 	{
 		return $this->asset;
 	}
@@ -40,7 +40,7 @@ class AssetBeforeDisplay
 	 * @param Asset $asset
 	 * @return void
 	 */
-	public function setAsset(Asset $asset)
+	public function setAsset(Asset $asset): void
 	{
 		$this->asset = $asset;
 	}

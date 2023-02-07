@@ -3,7 +3,7 @@
 namespace App\Modules\Messages\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -220,7 +220,7 @@ class MessagesController extends Controller
 	 * Store a newly created entry
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -291,7 +291,7 @@ class MessagesController extends Controller
 	 * Remove the specified entry
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -328,7 +328,7 @@ class MessagesController extends Controller
 	 * Rerun the specified messages
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function rerun(Request $request)
 	{
@@ -374,7 +374,7 @@ class MessagesController extends Controller
 	/**
 	 * Return to default page
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{

@@ -3,7 +3,7 @@
 namespace App\Modules\News\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -150,7 +150,7 @@ class ArticlesController extends Controller
 	 * Display a listing of templates
 	 *
 	 * @param   StatefulRequest  $request
-	 * @return  Response
+	 * @return  View
 	 */
 	public function templates(StatefulRequest $request)
 	{
@@ -243,7 +243,7 @@ class ArticlesController extends Controller
 	 * Store a newly created entry
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -358,7 +358,7 @@ class ArticlesController extends Controller
 	 * 
 	 * @param  Request  $request
 	 * @param  int  $id
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function state(Request $request, $id)
 	{
@@ -417,7 +417,7 @@ class ArticlesController extends Controller
 	 * Remove the specified entry
 	 *
 	 * @param  Request  $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -454,7 +454,7 @@ class ArticlesController extends Controller
 	 * Copy specified items
 	 *
 	 * @param  Request  $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function copy(Request $request)
 	{
@@ -514,9 +514,9 @@ class ArticlesController extends Controller
 	/**
 	 * Return to default page
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
-	public function cancel()
+	public function cancel(): RedirectResponse
 	{
 		return redirect(route('admin.news.index'));
 	}
@@ -527,7 +527,7 @@ class ArticlesController extends Controller
 	 * @param  Request $request
 	 * @return View
 	 */
-	public function stats(Request $request)
+	public function stats(Request $request): View
 	{
 		$start = Carbon::now()->modify('-1 year'); //30 days
 		$today = Carbon::now()->modify('+1 day');

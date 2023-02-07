@@ -3,7 +3,7 @@
 namespace App\Modules\Core\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -125,7 +125,7 @@ class ModulesController extends Controller
 	 * Update the specified extension
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -173,7 +173,7 @@ class ModulesController extends Controller
 	 * 
 	 * @param   Request $request
 	 * @param   int     $id
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function state(Request $request, $id = null)
 	{
@@ -232,7 +232,7 @@ class ModulesController extends Controller
 	 *
 	 * @param  string  $module
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function update($module, Request $request)
 	{
@@ -396,7 +396,7 @@ class ModulesController extends Controller
 	 *
 	 * @param  Request $request
 	 * @param  string $element
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function install(Request $request, $element)
 	{

@@ -20,7 +20,7 @@ class Subresources
 	 */
 	public function subscribe(Dispatcher $events): void
 	{
-		$events->listen(AssetCreated::class, self::class . '@handleAssetCreated', 1000);
+		$events->listen(AssetCreated::class, self::class . '@handleAssetCreated');
 	}
 
 	/**

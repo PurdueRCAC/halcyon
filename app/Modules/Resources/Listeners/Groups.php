@@ -45,8 +45,15 @@ class Groups
 		$s = (new Child)->getTable();
 		$r = (new Asset)->getTable();
 
+		$group = $member->group;
+
+		if (!$group)
+		{
+			return;
+		}
+
 		// Get hosts this group has resources on
-		$data = $member->group->queues()
+		$data = $group->queues()
 			->withTrashed()
 			->select($s . '.resourceid')
 			->join($s, $s . '.subresourceid', $q . '.subresourceid')
@@ -76,8 +83,7 @@ class Groups
 
 			if ($resourcemember->status <= 0)
 			{
-				error_log(__METHOD__ . '(): Bad status for `resourcemember` ' . $copyobj->user);
-				continue;
+				throw new \Exception(__METHOD__ . '(): Bad status for `resourcemember` ' . $copyobj->user);
 			}
 
 			if ($resourcemember->noStatus()

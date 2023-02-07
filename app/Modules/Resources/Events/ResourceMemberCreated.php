@@ -45,7 +45,7 @@ class ResourceMemberCreated
 	 *
 	 * @return bool
 	 */
-	public function noStatus()
+	public function noStatus(): bool
 	{
 		return ($this->status == 1);
 	}
@@ -55,7 +55,7 @@ class ResourceMemberCreated
 	 *
 	 * @return bool
 	 */
-	public function isPending()
+	public function isPending(): bool
 	{
 		return ($this->status == 2);
 	}
@@ -65,7 +65,7 @@ class ResourceMemberCreated
 	 *
 	 * @return bool
 	 */
-	public function isReady()
+	public function isReady(): bool
 	{
 		return ($this->status == 3);
 	}
@@ -75,7 +75,7 @@ class ResourceMemberCreated
 	 *
 	 * @return bool
 	 */
-	public function isPendingRemoval()
+	public function isPendingRemoval(): bool
 	{
 		return ($this->status == 4);
 	}
@@ -85,7 +85,7 @@ class ResourceMemberCreated
 	 *
 	 * @return bool
 	 */
-	public function hasError()
+	public function hasError(): bool
 	{
 		return ($this->status == -1 || !empty($this->errors));
 	}

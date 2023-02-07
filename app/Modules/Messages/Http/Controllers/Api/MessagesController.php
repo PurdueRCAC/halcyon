@@ -3,7 +3,7 @@
 namespace App\Modules\Messages\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Messages\Models\Message;
@@ -320,7 +320,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response|MessageResource
+	 * @return JsonResponse|MessageResource
 	 */
 	public function create(Request $request)
 	{
@@ -626,7 +626,7 @@ class MessagesController extends Controller
 	 * }
 	 * @param  Request $request
 	 * @param  int $id
-	 * @return Response|MessageResource
+	 * @return JsonResponse|MessageResource
 	 */
 	public function update(Request $request, int $id)
 	{
@@ -742,7 +742,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete(int $id)
 	{

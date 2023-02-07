@@ -4,7 +4,7 @@ namespace App\Modules\Messages\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateMessageRequest extends BaseFormRequest
+class UpdateMessageRequest extends FormRequest
 {
 	/**
 	 * Get the validation rules that apply to the request.

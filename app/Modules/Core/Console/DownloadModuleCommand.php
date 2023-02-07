@@ -26,18 +26,22 @@ class DownloadModuleCommand extends Command
 
     /**
      * Execute the console command.
-     * @return mixed
+     * @return void
      * @throws \Symfony\Component\Process\Exception\LogicException
      */
     public function handle()
     {
         $downloader = new Downloader($this->getOutput());
-        try {
-            if ($this->hasOption('branch')) {
+        try
+        {
+            if ($this->hasOption('branch'))
+            {
                 $downloader->forBranch($this->option('branch'));
             }
             $downloader->download($this->argument('name'));
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e)
+        {
             $this->output->writeln("<error>{$e->getMessage()}</error>");
 
             return;
@@ -49,17 +53,21 @@ class DownloadModuleCommand extends Command
         $commands = [
             $composer . ' dump-autoload',
         ];
-        if ($this->option('migrations') === true || $this->option('demo') === true) {
+        if ($this->option('migrations') === true || $this->option('demo') === true)
+        {
             $commands[] = "php artisan module:migrate $name";
         }
-        if ($this->option('seeds') === true || $this->option('demo') === true) {
+        if ($this->option('seeds') === true || $this->option('demo') === true)
+        {
             $commands[] = "php artisan module:seed $name";
         }
-        if ($this->option('assets') === true || $this->option('demo') === true) {
+        if ($this->option('assets') === true || $this->option('demo') === true)
+        {
             $commands[] = "php artisan module:publish $name";
         }
         $process = new Process(implode(' && ', $commands));
-        if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
+        if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty'))
+        {
             $process->setTty(true);
         }
         $output = $this->getOutput();
@@ -96,9 +104,14 @@ class DownloadModuleCommand extends Command
         ];
     }
 
+    /**
+     * @param string $package
+     * @return string
+     */
     private function extractPackageNameFrom($package)
     {
-        if (str_contains($package, '/') === false) {
+        if (str_contains($package, '/') === false)
+        {
             throw new \Exception('You need to use vendor/name structure');
         }
 
@@ -112,7 +125,8 @@ class DownloadModuleCommand extends Command
      */
     protected function findComposer()
     {
-        if (file_exists(getcwd() . '/composer.phar')) {
+        if (file_exists(getcwd() . '/composer.phar'))
+        {
             return '"' . PHP_BINARY . '" composer.phar';
         }
 

@@ -13,8 +13,8 @@ class CaptchaController extends Controller
 	 * @param  Request  $request
 	 * @return void
 	 */
-	public function index(Request $request)
+	public function index(Request $request): void
 	{
-		captcha(true);
+		captcha('image');
 	}
 }

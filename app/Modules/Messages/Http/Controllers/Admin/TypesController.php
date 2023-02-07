@@ -3,7 +3,7 @@
 namespace App\Modules\Messages\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use App\Modules\Messages\Models\Type;
@@ -110,7 +110,7 @@ class TypesController extends Controller
 	 * Store a newly created resource in storage.
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -138,7 +138,7 @@ class TypesController extends Controller
 	 * Remove the specified entry
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -171,7 +171,7 @@ class TypesController extends Controller
 	/**
 	 * Return to the main view
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{

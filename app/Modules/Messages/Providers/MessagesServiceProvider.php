@@ -25,7 +25,7 @@ class MessagesServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	public function boot()
+	public function boot(): void
 	{
 		//$this->registerFactories();
 		$this->registerTranslations();
@@ -41,7 +41,7 @@ class MessagesServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	public function registerFactories()
+	public function registerFactories(): void
 	{
 		if (! app()->environment('production') && $this->app->runningInConsole())
 		{
@@ -54,7 +54,7 @@ class MessagesServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	protected function registerConfig()
+	protected function registerConfig(): void
 	{
 		$this->publishes([
 			__DIR__ . '/../Config/config.php' => config_path('module/' . $this->name . '.php'),
@@ -70,7 +70,7 @@ class MessagesServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	protected function registerAssets()
+	protected function registerAssets(): void
 	{
 		$this->publishes([
 			__DIR__ . '/../Resources/assets' => public_path() . '/modules/' . strtolower($this->name) . '/assets',
@@ -82,7 +82,7 @@ class MessagesServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	public function registerViews()
+	public function registerViews(): void
 	{
 		$viewPath = resource_path('views/modules/' . $this->name);
 
@@ -95,7 +95,7 @@ class MessagesServiceProvider extends ServiceProvider
 		$this->loadViewsFrom(array_merge(array_map(function ($path)
 		{
 			return $path . '/modules/' . $this->name;
-		}, config('view.paths')), [$sourcePath]), $this->name);
+		}, config('view.paths', [])), [$sourcePath]), $this->name);
 	}
 
 	/**
@@ -103,7 +103,7 @@ class MessagesServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	public function registerTranslations()
+	public function registerTranslations(): void
 	{
 		$langPath = resource_path('lang/modules/' . $this->name);
 

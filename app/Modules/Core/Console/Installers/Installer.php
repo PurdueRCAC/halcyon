@@ -28,7 +28,7 @@ class Installer
 
     /**
      * @param  array $scripts
-     * @return $this
+     * @return self
      */
     public function stack(array $scripts)
     {

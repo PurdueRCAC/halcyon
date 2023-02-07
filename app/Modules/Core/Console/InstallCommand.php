@@ -38,6 +38,7 @@ class InstallCommand extends Command
 	 * @internal param Filesystem $finder
 	 * @internal param Application $app
 	 * @internal param Composer $composer
+	 * @return void
 	 */
 	public function __construct(Installer $installer)
 	{
@@ -51,7 +52,7 @@ class InstallCommand extends Command
 	/**
 	 * Execute the actions
 	 *
-	 * @return mixed
+	 * @return void
 	 */
 	public function handle()
 	{

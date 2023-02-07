@@ -23,7 +23,7 @@ class UnixGroupMemberships
 			{
 				if ($unixgroupid = $record->getExtraProperty('unixgroupid'))
 				{
-					$record->targetobjectid = $unixgroupid;
+					$record->targetobjectid = intval($unixgroupid);
 					$record->save();
 				}
 			}

@@ -7,20 +7,36 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class PublishThemeAssetsCommand extends Command
 {
+    /**
+     * @var string
+     */
     protected $name = 'asgard:publish:theme';
+
+    /**
+     * @var string
+     */
     protected $description = 'Publish theme assets';
 
+    /**
+     * @return void
+     */
     public function handle()
     {
         $theme = $this->argument('theme', null);
 
-        if (!empty($theme)) {
+        if (!empty($theme))
+        {
             $this->call('stylist:publish', ['theme' => $this->argument('theme')]);
-        } else {
+        }
+        else
+        {
             $this->call('stylist:publish');
         }
     }
 
+    /**
+     * @return array
+     */
     protected function getArguments()
     {
         return [

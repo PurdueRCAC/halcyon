@@ -118,7 +118,7 @@ class Type extends Model
 			$value = preg_replace('/[a-zA-Z\/]+\/(\d+)/', "$1", $value);
 		}
 
-		return (int)$value;
+		return intval($value);
 	}
 
 	/**

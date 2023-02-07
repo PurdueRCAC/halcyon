@@ -3,7 +3,7 @@
 namespace App\Modules\Mailer\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
@@ -88,7 +88,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -219,7 +219,8 @@ class MessagesController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
-	 * @return Response
+	 * @param  Request $request
+	 * @return JsonResource|JsonResponse
 	 */
 	public function create(Request $request)
 	{
@@ -296,7 +297,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @param  int  $id
-	 * @return Response
+	 * @return JsonResource
 	 */
 	public function read(int $id)
 	{
@@ -398,7 +399,7 @@ class MessagesController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   int $id
-	 * @return  Response
+	 * @return  JsonResource|JsonResponse
 	 */
 	public function update(Request $request, int $id)
 	{
@@ -459,7 +460,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete(int $id)
 	{
@@ -584,8 +585,8 @@ class MessagesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  int  $id
-	 * @return Response
+	 * @param  Request $request
+	 * @return JsonResource
 	 */
 	public function send(Request $request)
 	{

@@ -37,7 +37,7 @@ class AssetIsRendering
 	 *
 	 * @return string
 	 */
-	public function getBody()
+	public function getBody(): string
 	{
 		return $this->body;
 	}
@@ -48,7 +48,7 @@ class AssetIsRendering
 	 * @param string $body
 	 * @return void
 	 */
-	public function setBody($body)
+	public function setBody($body): void
 	{
 		$this->body = $body;
 	}
@@ -58,7 +58,7 @@ class AssetIsRendering
 	 *
 	 * @return Asset
 	 */
-	public function getAsset()
+	public function getAsset(): Asset
 	{
 		return $this->asset;
 	}
@@ -68,7 +68,7 @@ class AssetIsRendering
 	 *
 	 * @return string
 	 */
-	public function __toString()
+	public function __toString(): string
 	{
 		return $this->getBody();
 	}

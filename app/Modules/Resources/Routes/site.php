@@ -3,6 +3,7 @@
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Schema;
 
+/** @var Router $router */
 if (Schema::hasTable('resourcetypes'))
 {
 	$types = App\Modules\Resources\Models\Type::all();

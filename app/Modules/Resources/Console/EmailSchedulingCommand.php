@@ -30,7 +30,7 @@ class EmailSchedulingCommand extends Command
 	 *
 	 * @return void
 	 */
-	public function handle()
+	public function handle(): void
 	{
 		$debug = $this->option('debug') ? true : false;
 		$email = config('module.resources.admin_email');
@@ -139,7 +139,7 @@ class EmailSchedulingCommand extends Command
 	 * @param   mixed   $payload
 	 * @return  void
 	 */
-	protected function log($uri = '', $payload = '')
+	protected function log($uri = '', $payload = ''): void
 	{
 		Log::create([
 			'ip'              => request()->ip(),
