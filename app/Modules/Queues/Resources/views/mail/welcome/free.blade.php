@@ -94,6 +94,6 @@ Please also review the [acceptable use]({{ route('page', ['uri' => 'policies/res
 <div class="alert alert-info">
 <h3>Need Help?</h3>
 
-<p>Informal, one-on-one help is available from Research Computing staff at <a href="{{ route('page', ['uri' => 'coffee']) }}">Coffee Break Consultations</a>. Check the schedule for available times.</p>
+<p>Informal, one-on-one help is available from {{ config('app.name') }} staff at <a href="{{ route('page', ['uri' => 'coffee']) }}">Coffee Break Consultations</a>. Check the schedule for available times.</p>
 </div>
 @endcomponent
