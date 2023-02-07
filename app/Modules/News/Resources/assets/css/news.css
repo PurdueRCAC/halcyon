@@ -4,6 +4,7 @@
 
 ul.newslist li {
 	margin-top: 0.5em;
+	margin-left: 0;
 }
 .news-list {
 	list-style: none;
