@@ -29,6 +29,8 @@ class PaymentDenied extends Mailable
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param  Order $order
+	 * @param  User $user
 	 * @return void
 	 */
 	public function __construct(Order $order, User $user)
@@ -40,12 +42,12 @@ class PaymentDenied extends Mailable
 	/**
 	 * Build the message.
 	 *
-	 * @return $this
+	 * @return self
 	 */
 	public function build()
 	{
 		return $this->markdown('orders::mail.paymentdenied')
-					->subject(config('app.name') . '- Order #' . $this->order->id . ' Payment Denied')
+					->subject(config('app.name') . ' - Order #' . $this->order->id . ' Payment Denied')
 					->with([
 						'order' => $this->order,
 						'user' => $this->user,

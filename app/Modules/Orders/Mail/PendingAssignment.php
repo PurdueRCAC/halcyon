@@ -29,6 +29,8 @@ class PendingAssignment extends Mailable
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param  Order $order
+	 * @param  User $user
 	 * @return void
 	 */
 	public function __construct(Order $order, User $user)
@@ -40,12 +42,12 @@ class PendingAssignment extends Mailable
 	/**
 	 * Build the message.
 	 *
-	 * @return $this
+	 * @return self
 	 */
 	public function build()
 	{
 		return $this->markdown('orders::mail.pendingassignment')
-					->subject(config('app.name') . '- Order #' . $this->order->id . ' Payment Information Entered')
+					->subject(config('app.name') . ' - Order #' . $this->order->id . ' Payment Information Entered')
 					->with([
 						'order' => $this->order,
 						'user' => $this->user,

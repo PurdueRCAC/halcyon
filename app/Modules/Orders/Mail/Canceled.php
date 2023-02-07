@@ -29,6 +29,8 @@ class Canceled extends Mailable
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param  Order $order
+	 * @param  User $user
 	 * @return void
 	 */
 	public function __construct(Order $order, User $user)
@@ -40,12 +42,12 @@ class Canceled extends Mailable
 	/**
 	 * Build the message.
 	 *
-	 * @return $this
+	 * @return self
 	 */
 	public function build()
 	{
 		return $this->markdown('orders::mail.canceled')
-					->subject(config('app.name') . '- Order #' . $this->order->id . ' Canceled')
+					->subject(config('app.name') . ' - Order #' . $this->order->id . ' Canceled')
 					->with([
 						'order' => $this->order,
 						'user' => $this->user,

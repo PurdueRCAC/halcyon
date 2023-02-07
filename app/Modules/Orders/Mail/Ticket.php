@@ -29,6 +29,8 @@ class Ticket extends Mailable
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param  Order $order
+	 * @param  User $user
 	 * @return void
 	 */
 	public function __construct(Order $order, User $user)
@@ -40,12 +42,12 @@ class Ticket extends Mailable
 	/**
 	 * Build the message.
 	 *
-	 * @return $this
+	 * @return self
 	 */
 	public function build()
 	{
 		return $this->markdown('orders::mail.ticket')
-					->subject(config('app.name') . '- Order #' . $this->order->id . ' Fulfillment Request')
+					->subject(config('app.name') . ' - Order #' . $this->order->id . ' Fulfillment Request')
 					->with([
 						'order' => $this->order,
 						'user' => $this->user,
