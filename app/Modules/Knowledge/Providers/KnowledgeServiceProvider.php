@@ -2,7 +2,6 @@
 namespace App\Modules\Knowledge\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Modules\Knowledge\Console\ImportCommand;
 use App\Modules\Knowledge\Listeners\RouteCollector;
 use Nwidart\Modules\Facades\Module;
 
@@ -27,13 +26,12 @@ class KnowledgeServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	public function boot()
+	public function boot(): void
 	{
 		$this->registerTranslations();
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
-		$this->registerCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
@@ -48,7 +46,7 @@ class KnowledgeServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	protected function registerConfig()
+	protected function registerConfig(): void
 	{
 		$this->publishes([
 			__DIR__ . '/../Config/config.php' => config_path('module/' . $this->name . '.php'),
@@ -64,7 +62,7 @@ class KnowledgeServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	protected function registerAssets()
+	protected function registerAssets(): void
 	{
 		$this->publishes([
 			__DIR__ . '/../Resources/assets' => public_path() . '/modules/' . strtolower($this->name) . '/assets',
@@ -76,7 +74,7 @@ class KnowledgeServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	public function registerViews()
+	public function registerViews(): void
 	{
 		$viewPath = resource_path('views/modules/' . $this->name);
 
@@ -97,7 +95,7 @@ class KnowledgeServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	public function registerTranslations()
+	public function registerTranslations(): void
 	{
 		$langPath = resource_path('lang/modules/' . $this->name);
 
@@ -107,17 +105,5 @@ class KnowledgeServiceProvider extends ServiceProvider
 		}
 
 		$this->loadTranslationsFrom($langPath, $this->name);
-	}
-
-	/**
-	 * Register console commands.
-	 *
-	 * @return void
-	 */
-	public function registerCommands()
-	{
-		$this->commands([
-			ImportCommand::class
-		]);
 	}
 }

@@ -15,7 +15,7 @@ class RouteServiceProvider extends CoreRoutingServiceProvider
 	/**
 	 * @return string
 	 */
-	protected function getSiteRoute()
+	protected function getSiteRoute(): string
 	{
 		return dirname(__DIR__) . '/Routes/site.php';
 	}
@@ -23,7 +23,7 @@ class RouteServiceProvider extends CoreRoutingServiceProvider
 	/**
 	 * @return string
 	 */
-	protected function getAdminRoute()
+	protected function getAdminRoute(): string
 	{
 		return dirname(__DIR__) . '/Routes/admin.php';
 	}
@@ -31,7 +31,7 @@ class RouteServiceProvider extends CoreRoutingServiceProvider
 	/**
 	 * @return string
 	 */
-	protected function getApiRoute()
+	protected function getApiRoute(): string
 	{
 		return dirname(__DIR__) . '/Routes/api.php';
 	}
