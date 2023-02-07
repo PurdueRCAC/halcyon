@@ -127,6 +127,7 @@ class Ckeditor
 			$css = explode("\n", $css);
 			foreach ($css as $c)
 			{
+				$c = trim($c);
 				$config->contentsCss[] = asset($c) . '?t=' . time();
 			}
 		}
