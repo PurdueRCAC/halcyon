@@ -178,7 +178,7 @@ foreach ($rows as $event):
 		<div class="sr-only">{!! $event->toHtml() !!}</div>
 
 		<div class="dialog-footer newsattend">
-			@if ($event->url)
+
 				@if (auth()->user() && $ignore && in_array($ignore, auth()->user()->getAuthorisedRoles()))
 					@if ($reserved)
 						<div class="text-success">{{ trans('widget.coffeehours::coffeehours.reserved by', ['name' => $reserved]) }}</div>
@@ -211,7 +211,7 @@ foreach ($rows as $event):
 										<div class="alert hide" data-success="You reserved this time." data-hide="#reserve-comment{{ $event->id }}" data-error="An error occurred. We were unable to reserve this time."></div>
 									</div>
 									<div class="col-md-6 text-right">
-										<a class="btn-attend btn btn-primary" href="{{ route('page', ['uri' => 'coffee', 'attend' => 1]) }}" data-comment="#comment{{ $event->id }}" data-newsid="{{ $event->id }}" data-assoc="{{ auth()->user()->id }}">Reserve this time</a>
+										<a class="btn-attend btn btn-primary" href="{{ route('page', ['uri' => 'coffee', 'attend' => 1]) }}" data-comment="#comment{{ $event->id }}" data-newsid="{{ $event->id }}" data-assoc="{{ auth()->user()->id }}">{{ $event->url ? 'Reserve this time' : 'I plan to attend' }}</a>
 									</div>
 								</div>
 							@elseif (!$attending && !$canAttend)
@@ -219,10 +219,11 @@ foreach ($rows as $event):
 							@else
 								<div class="row">
 									<div class="col-md-6">
-										<div class="text-success">You reserved this time.</div>
+										<div class="text-success">{{ $event->url ? 'You reserved this time.' : 'You will be attending.' }}
+										</div>
 									</div>
 									<div class="col-md-6 text-right">
-										<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $attending }}">Cancel reservation</a>
+										<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $attending }}">Cancel</a>
 									</div>
 								</div>
 								@if ($comment)
@@ -265,7 +266,6 @@ foreach ($rows as $event):
 						</div>
 					</div>
 				@endif*/ ?>
-			@endif
 		</div>
 	</section>
 	<?php
