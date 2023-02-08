@@ -11,7 +11,7 @@
         "cilogon/oauth2-cilogon": "^1.1.6",
         "doctrine/dbal": "^3.5",
         "guzzlehttp/guzzle": "^7.2",
-        "inertiajs/inertia-laravel": "^0.6.9",
+        "inertiajs/inertia-laravel": "*",
         "jenssegers/agent": "^2.6.4",
         "lab404/laravel-impersonate": "^1.7.3",
         "laravel/framework": "^9.19",
@@ -51,8 +51,7 @@
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/",
-            "Modules\\": "app/Modules"
+            "Database\\Seeders\\": "database/seeders/"
         }
     },
     "autoload-dev": {
