@@ -4,9 +4,13 @@ namespace App\Modules\Users\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Foundation\Console\AboutCommand;
 use App\Modules\Users\Console\SyncCommand;
 use App\Modules\Users\Console\CleanUpCommand;
 use App\Modules\Users\Listeners\RouteCollector;
+use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\UserUsername;
+use App\Modules\Users\Models\Session;
 use Nwidart\Modules\Facades\Module;
 
 class UsersServiceProvider extends ServiceProvider
@@ -44,6 +48,46 @@ class UsersServiceProvider extends ServiceProvider
 		{
 			$this->app['events']->subscribe(new RouteCollector);
 		}
+
+		AboutCommand::add('Users', [
+			'Accounts' => function()
+			{
+				$u = (new User)->getTable();
+				$uu = (new UserUsername)->getTable();
+
+				$rows = User::query()
+					->join($uu, $u . '.id', $uu . '.userid')
+					->whereNull($uu . '.dateremoved')
+					->count();
+
+				return number_format($rows);
+			},
+			'Sessions' => function()
+			{
+				$seconds = config('session.lifetime') * 60;
+
+				$dt = now()->modify('-' . $seconds . ' seconds')->timestamp;
+
+				$rows = Session::query()
+					->where('last_activity', '>', $dt)
+					->count();
+
+				return number_format($rows);
+			},
+			'Logged in' => function()
+			{
+				$seconds = config('session.lifetime') * 60;
+
+				$dt = now()->modify('-' . $seconds . ' seconds')->timestamp;
+
+				$rows = Session::query()
+					->whereNotNull('user_id')
+					->where('last_activity', '>', $dt)
+					->count();
+
+				return number_format($rows);
+			},
+		]);
 	}
 
 	/**
