@@ -27,17 +27,17 @@ return [
 
     'stubs' => [
         'enabled' => false,
-        'path' => base_path() . '/vendor/nwidart/laravel-modules/src/Commands/stubs',
+        'path' => base_path() . '/stubs',
         'files' => [
             'routes/web' => 'Routes/web.php',
             'routes/api' => 'Routes/api.php',
             'views/index' => 'Resources/views/index.blade.php',
-            'views/master' => 'Resources/views/layouts/master.blade.php',
+            'views/inertia' => 'Resources/views/inertia.blade.php',
             'scaffold/config' => 'Config/config.php',
-            'composer' => 'composer.json',
             'assets/js/app' => 'Resources/assets/js/app.js',
+            'assets/js/pages/welcome' => 'Resources/assets/js/Pages/Welcome.vue',
             'assets/sass/app' => 'Resources/assets/sass/app.scss',
-            'webpack' => 'webpack.mix.js',
+            'vite' => 'vite.config.js',
             'package' => 'package.json',
         ],
         'replacements' => [
@@ -46,17 +46,11 @@ return [
             'webpack' => ['LOWER_NAME'],
             'json' => ['LOWER_NAME', 'STUDLY_NAME', 'MODULE_NAMESPACE', 'PROVIDER_NAMESPACE'],
             'views/index' => ['LOWER_NAME'],
-            'views/master' => ['LOWER_NAME', 'STUDLY_NAME'],
-            'scaffold/config' => ['STUDLY_NAME'],
-            'composer' => [
-                'LOWER_NAME',
-                'STUDLY_NAME',
-                'VENDOR',
-                'AUTHOR_NAME',
-                'AUTHOR_EMAIL',
-                'MODULE_NAMESPACE',
-                'PROVIDER_NAMESPACE',
-            ],
+            'views/inertia' => ['LOWER_NAME'],
+            'vite' => ['LOWER_NAME'],
+            'assets/js/app' => ['STUDLY_NAME'],
+            'assets/js/pages/welcome' => ['LOWER_NAME'],
+            'scaffold/config' => ['STUDLY_NAME']
         ],
         'gitkeep' => true,
     ],
@@ -214,6 +208,5 @@ return [
             'cache-lifetime' => 604800,
         ],
     ],
-
-    'activator' => 'database',
+    'activator' => 'database'
 ];
