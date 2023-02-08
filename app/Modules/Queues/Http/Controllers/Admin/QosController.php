@@ -89,6 +89,11 @@ class QosController extends Controller
 			$query->where('priority', '=', $filters['priority']);
 		}
 
+		if ($filters['scheduler'])
+		{
+			$query->where('scheduler_id', '=', $filters['scheduler']);
+		}
+
 		$rows = $query
 			->withCount('queues')
 			->orderBy($filters['order'], $filters['order_dir'])
