@@ -62,6 +62,10 @@ class UsersServiceProvider extends ServiceProvider
 
 				return number_format($rows);
 			},
+			'Session Lifetime' => function()
+			{
+				return config('session.lifetime') . ' minutes';
+			},
 			'Sessions' => function()
 			{
 				$seconds = config('session.lifetime') * 60;
