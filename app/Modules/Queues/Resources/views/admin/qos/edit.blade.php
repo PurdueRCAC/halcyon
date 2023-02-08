@@ -56,6 +56,37 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		});
 	}
+
+	var sc = document.getElementById('field-scheduler');
+
+	if (sc) {
+		var pmt = document.getElementById('field-preempt');
+		var cl = pmt.cloneNode(true);
+		cl.id = cl.id + '-clone';
+		cl.classList.add('d-none');
+		pmt.parentNode.insertBefore(cl, pmt);
+
+		sc.addEventListener('change', function () {
+			pmt.innerHTML = '';
+
+			cl.querySelectorAll('optgroup').forEach(function(opt){
+				if (opt.id == 'scheduler-' + sc.value) {
+					pmt.append(opt.cloneNode(true));
+					return;
+				}
+			});
+		});
+
+		pmt.innerHTML = '';
+
+		cl.querySelectorAll('optgroup').forEach(function(opt){
+			console.log(opt);
+			if (opt.id == 'scheduler-' + sc.value) {
+				pmt.append(opt.cloneNode(true));
+				return;
+			}
+		});
+	}
 });
 </script>
 @endpush
@@ -217,7 +248,8 @@ document.addEventListener('DOMContentLoaded', function () {
 					</div>
 				@endforeach
 			</fieldset>
-
+		</div>
+		<div class="col-md-5">
 			<fieldset class="adminform">
 				<legend>Group</legend>
 
@@ -273,8 +305,20 @@ document.addEventListener('DOMContentLoaded', function () {
 					<div class="form-group">
 						<label for="field-{{ $k }}">{{ trans('queues::queues.' . $k) }}</label>
 						<select name="{{ $k }}" id="field-{{ $k }}" multiple size="5" class="form-control{{ $errors->has($k) ? ' is-invalid' : '' }}">
+							@php
+							$prev = 0;
+							@endphp
 							@foreach ($qoses as $qos)
+								@if ($qos->scheduler_id != $prev)
+									@php
+									$prev = $qos->scheduler_id;
+									@endphp
+								<optgroup id="scheduler-{{ $qos->scheduler_id }}" label="{{ $qos->scheduler->hostname }}">
+								@endif
 								<option value="{{ $qos->name }}"<?php if (in_array($qos->name, $row->preemptList)) { echo ' selected'; } ?>>{{ $qos->name }}</option>
+								@if ($qos->scheduler_id != $prev)
+								</optgroup>
+								@endif
 							@endforeach
 						</select>
 						<span class="invalid-feedback">{{ $errors->first($k) }}</span>
@@ -312,9 +356,8 @@ document.addEventListener('DOMContentLoaded', function () {
 					</div>
 				@endforeach
 			</fieldset>
-		</div>
-		<div class="col-md-5">
-			<table class="meta table table-bordered">
+
+			<?php /*<table class="meta table table-bordered">
 				<caption class="sr-only">{{ trans('global.metadata') }}</caption>
 				<tbody>
 					<tr>
@@ -322,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						<td class="text-right">{{ $row->queues()->count() }}</td>
 					</tr>
 				</tbody>
-			</table>
+			</table>*/ ?>
 		</div>
 	</div>
 

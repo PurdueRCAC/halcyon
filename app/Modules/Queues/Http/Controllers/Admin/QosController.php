@@ -123,6 +123,7 @@ class QosController extends Controller
 		}
 
 		$qoses = Qos::query()
+			->orderBy('scheduler_id', 'asc')
 			->orderBy('name', 'asc')
 			->get();
 
@@ -152,6 +153,7 @@ class QosController extends Controller
 
 		$qoses = Qos::query()
 			->where('id', '!=', $row->id)
+			->orderBy('scheduler_id', 'asc')
 			->orderBy('name', 'asc')
 			->get();
 
