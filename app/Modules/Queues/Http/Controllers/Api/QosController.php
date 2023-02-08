@@ -10,6 +10,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Queues\Models\Qos;
 use App\Modules\Queues\Models\Scheduler;
+use App\Modules\Queues\Events\QosList;
 
 /**
  * Quality of Service
@@ -138,7 +139,7 @@ class QosController extends Controller
 			'page'         => $request->input('page', 1),
 			// Sorting
 			'order'        => $request->input('order', 'name'),
-			'order_dir'    => $request->input('order_dir', 'desc')
+			'order_dir'    => $request->input('order_dir', 'asc')
 		);
 
 		if (!in_array($filters['order'], ['id', 'name', 'description', 'priority']))
@@ -185,91 +186,11 @@ class QosController extends Controller
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
-		$rows->each(function($item, $key)
+		event($event = new QosList($rows, $request->input('format', '')));
+
+		if ($event->response)
 		{
-			$item->cmd = $item->name . ' ';
-
-			$keys = [
-				'flags' => 'Flags',
-				'max_jobs_pa' => 'MaxJobsPerAccount',
-				'max_jobs_per_user' => 'MaxJobsPerUser',
-				'max_jobs_accrue_pa' => 'MaxJobsAccruePerAccount',
-				'max_jobs_accrue_pu' => 'MaxJobsAccruePerUser',
-				'min_prio_thresh' => 'MinPrioThreshold',
-				'max_submit_jobs_pa' => 'MaxSubmitJobsPerAccount',
-				'max_submit_jobs_per_user' => 'MaxSubmitJobsPerUser',
-				'max_tres_pa' => 'MaxTRESPerAccount',
-				'max_tres_pj' => 'MaxTRESPerJob',
-				'max_tres_pn' => 'MaxTRESPerNode',
-				'max_tres_pu' => 'MaxTRESPerUser',
-				'max_tres_mins_pj' => 'MaxTRESMinsPerJob',
-				//'max_tres_run_mins_pa' => 'MaxTRESMinsPerAccount',
-				//'max_tres_run_mins_pu' => 'MaxTRESMinsPerJob',
-				'min_tres_pj' => 'MinTRESPerJob',
-				'max_wall_duration_per_job' => 'MaxWallDurationPerJob',
-				'grp_jobs' => 'GrpJobs',
-				'grp_jobs_accrue' => 'GrpJobsAccrue',
-				'grp_submit' => 'GrpSubmit',
-				'grp_submit_jobs' => 'GrpSubmitJobs',
-				'grp_tres' => 'GrpTRES',
-				'grp_tres_mins' => 'GrpTRESMins',
-				'grp_tres_run_mins' => 'GrpTRESRunMins',
-				'grp_wall' => 'GrpWall',
-				'preempt' => 'Preempt',
-				'preempt_mode' => 'PreemptMode',
-				'preempt_exempt_time' => 'PreemptExemptTime',
-				'priority' => 'Priority',
-				'usage_factor' => 'UsageFactor',
-				'usage_thres' => 'UsageThreshold',
-				'limit_factor' => 'LimitFactor',
-				'grace_time' => 'GraceTime',
-			];
-
-			foreach ($keys as $key => $val)
-			{
-				if ($item->{$key})
-				{
-					$line[] = "$val=" . $item->{$key};
-				}
-			}
-
-			$item->cmd .= ' ' . implode(' ', $line);
-		});
-
-		if ($format = $request->input('format'))
-		{
-			if ($format == 'slurmcfg')
-			{
-				$out = array();
-				foreach ($rows as $row)
-				{
-					$out[] = $row->cmd;
-				}
-
-				$filename = 'qos.cfg';
-
-				$headers = array(
-					'Content-type' => 'text/plain',
-					'Content-Disposition' => 'attachment; filename=' . $filename,
-					'Pragma' => 'no-cache',
-					'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-					'Expires' => '0',
-					'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT'
-				);
-
-				$callback = function() use ($out)
-				{
-					$file = fopen('php://output', 'w');
-
-					foreach ($out as $datum)
-					{
-						fputs($file, $datum . "\n");
-					}
-					fclose($file);
-				};
-
-				return response()->streamDownload($callback, $filename, $headers);
-			}
+			return $event->response;
 		}
 
 		return new ResourceCollection($rows);
