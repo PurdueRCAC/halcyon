@@ -32,13 +32,23 @@ class Ckeditor
 	 * Display the editor area.
 	 *
 	 * @param   EditorIsRendering  $editor
-	 * @return  string
+	 * @return  void|bool
 	 */
 	public function handle(EditorIsRendering $editor)
 	{
 		if ($editor->getFormatting() != 'html')
 		{
 			return;
+		}
+
+		if (auth()->user())
+		{
+			$editorsetting = auth()->user()->facet('editor');
+
+			if ($editorsetting && $editorsetting != 'ckeditor')
+			{
+				return;
+			}
 		}
 
 		self::$instances++;

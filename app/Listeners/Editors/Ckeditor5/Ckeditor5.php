@@ -34,6 +34,16 @@ class Ckeditor5
 			return;
 		}
 
+		if (auth()->user())
+		{
+			$editorsetting = auth()->user()->facet('editor');
+
+			if ($editorsetting && $editorsetting != 'ckeditor5')
+			{
+				return;
+			}
+		}
+
 		$content = $editor->getValue();
 		$name = $editor->getName();
 		$attr = $editor->getAttributes();

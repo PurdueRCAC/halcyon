@@ -136,6 +136,42 @@ class EditorIsRendering
 	 */
 	public function render(): string
 	{
+		if (!$this->content)
+		{
+			$attr = $this->getAttributes();
+			$attr['name'] = $this->getName();
+
+			if (!isset($attr['cols']))
+			{
+				$attr['cols'] = 35;
+			}
+
+			if (!isset($attr['rows']))
+			{
+				$attr['rows'] = 5;
+			}
+
+			if (!isset($attr['id']))
+			{
+				$attr['id'] = str_replace(['[', ']'], ['-', ''], $attr['name']);
+			}
+
+			if (!isset($attr['class']))
+			{
+				$attr['class'] = '';
+			}
+			$attr['class'] .= ' form-control';
+			$attr['class'] = trim($attr['class']);
+
+			$attributes = '';
+			foreach ($attr as $k => $v)
+			{
+				$attributes .= ' ' . $k . '="' . e($v) . '"';
+			}
+
+			$this->content = '<textarea ' . $attributes . '>' . $this->content . '</textarea>';
+		}
+
 		return $this->content;
 	}
 }
