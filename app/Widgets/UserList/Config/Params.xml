@@ -25,6 +25,10 @@
 				<option value="1">global.yes</option>
 				<option value="0">global.no</option>
 			</field>
+			<field name="show_bio" type="radio" default="1" label="widget.userlist::userlist.params.show bio" description="widget.userlist::userlist.params.show bio desc">
+				<option value="1">global.yes</option>
+				<option value="0">global.no</option>
+			</field>
 			<field name="limit" type="text" default="5" label="widget.userlist::userlist.params.number of items" description="widget.userlist::userlist.params.number of items desc" />
 			<field name="order" type="list" default="name" label="widget.userlist::userlist.params.ordering" description="widget.userlist::userlist.params.ordering desc">
 				<option value="name">widget.userlist::userlist.params.order by name</option>

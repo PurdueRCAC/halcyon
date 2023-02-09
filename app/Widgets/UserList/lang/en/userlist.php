@@ -29,6 +29,8 @@ return [
 		'show phone' => 'Show phone',
 		'show office desc' => 'Show/hide office',
 		'show office' => 'Show office',
+		'show bio desc' => 'Show/hide bio',
+		'show bio' => 'Show bio',
 		'header level' => 'Header Level',
 		'header level desc' => 'Select the desired HTML header level for the entry titles.',
 		'separator desc' => 'Show separator after last entry',
