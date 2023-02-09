@@ -661,6 +661,11 @@ class UsersController extends Controller
 			foreach ($facets as $key => $value)
 			{
 				$facet = Facet::findByUserAndKey($user->id, $key);
+				if ($facet && !$value)
+				{
+					$facet->delete();
+					continue;
+				}
 				$facet = $facet ?: new Facet;
 				$facet->user_id = $user->id;
 				$facet->key     = $key;
