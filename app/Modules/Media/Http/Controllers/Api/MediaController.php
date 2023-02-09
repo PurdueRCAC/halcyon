@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Modules\Media\Helpers\MediaHelper;
+use App\Modules\Media\Helpers\ImageProcessor;
 use App\Modules\Media\Events\Updating;
 use App\Modules\Media\Events\Updated;
 use App\Modules\Media\Events\Deleting;
@@ -258,37 +259,66 @@ class MediaController extends Controller
 			if (!empty($allowedTypes)
 			 && !in_array(
 				$file->getClientOriginalExtension(),
-				$this->configRepository->getAllowFileTypes()
+				$allowedTypes
 			))
 			{
 				$fileNotUploaded = true;
 				continue;
 			}
 
+			$name = $file->getClientOriginalName();
+			if ($rename = $request->input('rename'))
+			{
+				$name = $rename . '.' . $file->getClientOriginalExtension();
+			}
+
 			// Overwrite or save file
 			Storage::disk($disk)->putFileAs(
 				$path,
 				$file,
-				$file->getClientOriginalName()
+				$name
 			);
+
+			if ($resize = $request->input('resize'))
+			{
+				$final = storage_path('app/' . $disk . '/' . $path . '/' . $name);
+
+				// Resize image
+				$hi = new ImageProcessor($final);
+				$hi->autoRotate();
+				$hi->resize($resize);
+				//$hi->setImageType(IMAGETYPE_PNG);
+				$hi->save($final);
+			}
 		}
 
 		event(new FilesUploaded($request));
 
 		$contents = Storage::disk($disk)->listContents($path);
+		$data = array();
 		foreach ($contents as $i => $content)
 		{
-			if (substr($content['path'], 0, 1) == '.')
+			$parts = explode('/', $content['path']);
+			$filename = end($parts);
+			if (substr($filename, 0, 1) == '.')
 			{
-				unset($contents[$i]);
+				//unset($contents[$i]);
 				continue;
 			}
-			$contents[$i]['url'] = asset('/files/' . ($path ? trim($path, '/') . '/' : '') . $content['path']);
+			$data[] = [
+				'type' => $content['type'],
+				'path' => $content['path'],
+				'fileSize' => $content['fileSize'],
+				'lastModified' => $content['lastModified'],
+				'mimeType' => $content['mimeType'],
+				'url' => asset('/files/' . ($path ? trim($path, '/') . '/' : '') . $content['path'])
+			];
+			//$contents[$i]['url'] = asset('/files/' . ($path ? trim($path, '/') . '/' : '') . $content['path']);
 		}
-		$contents = array_values($contents);
+		//$contents = array_values($contents);
 
 		$response = [
-			'data' => $contents,
+			'data' => $data, //$contents,
 			'uploaded' => true,
 		];
 
