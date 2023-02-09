@@ -32,6 +32,9 @@
 				</ul>
 			</div>
 		</div>
+		@if ($params->get('show_bio') && $user->bio)
+			{!! $user->bio !!}
+		@endif
 	</div>
 @else
 	<p>{{ trans('widget.userlist::userlist.no users found') }}</p>

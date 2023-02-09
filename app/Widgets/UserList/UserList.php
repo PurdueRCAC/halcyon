@@ -33,6 +33,7 @@ class UserList extends Widget
 				$user->specialty = $user->facet('specialty');
 				$user->office = $user->facet('office');
 				$user->phone = $user->facet('phone');
+				$user->bio = $user->facet('bio');
 				$user->thumb = asset('files/staff_thumb.png');
 
 				if (file_exists(storage_path('app/public/users/' . $user->username . '/photo.jpg')))
