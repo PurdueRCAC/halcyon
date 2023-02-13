@@ -306,12 +306,24 @@ $i = 0;
 	<div class="card-header">
 		<h4 class="m-0 p-0">
 			Managers
-			<a href="#help_managers_span_{{ $group->id }}" class="help help-dialog btn text-info" data-tip="Help">
+			<a href="#help_managers_span_{{ $group->id }}" data-toggle="modal" class="btn text-info" data-tip="Help">
 				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 			</a>
 		</h4>
-		<div class="dialog dialog-help" id="help_managers_span_{{ $group->id }}" title="Managers">
-			<p>Managers are the owners or <abbr title="Principle Investigators">PIs</abbr> of this group and any others they may choose to delegate to manage access to this group. Only Managers can access this interface and are able to grant queue access for other people in the group. Managers can also grant and remove Group Management privileges to and from others, although you cannot remove your own Group Management privileges.</p>
+		<div class="modal" id="help_managers_span_{{ $group->id }}" tabindex="-1" aria-labelledby="help_managers_span_{{ $group->id }}-title" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content shadow-sm">
+					<div class="modal-header">
+						<div class="modal-title" id="help_managers_span_{{ $group->id }}-title">Managers</div>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body dialog-body">
+						<p>Managers are the owners or <abbr title="Principle Investigators">PIs</abbr> of this group and any others they may choose to delegate to manage access to this group. Only Managers can access this interface and are able to grant queue access for other people in the group. Managers can also grant and remove Group Management privileges to and from others, although you cannot remove your own Group Management privileges.</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="card-body">
@@ -488,12 +500,24 @@ $i = 0;
 	<div class="card-header">
 		<h4 class="m-0 p-0">
 			Members
-			<a href="#help_members_span_{{ $group->id }}" class="help help-dialog btn text-info" data-tip="Help">
+			<a href="#help_members_span_{{ $group->id }}" data-toggle="modal" class="btn text-info" data-tip="Help">
 				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 			</a>
 		</h4>
-		<div class="dialog dialog-help" id="help_members_span_{{ $group->id }}" title="Members">
-			<p>Members are people that have access to some or all of this group's queues but have no other special privileges such as Group Usage Reporting privileges or Group Managment privileges. Enabling a queue for someone will also create an account for them on the appropriate resource if they do not already have one. New accounts on a cluster will be processed overnight and be ready use the next morning. The person will receive an email notification once their account is ready.</p>
+		<div class="modal" id="help_members_span_{{ $group->id }}" tabindex="-1" aria-labelledby="help_members_span_{{ $group->id }}-title" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content shadow-sm">
+					<div class="modal-header">
+						<div class="modal-title" id="help_members_span_{{ $group->id }}-title">Members</div>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body dialog-body">
+						<p>Members are people that have access to some or all of this group's queues but have no other special privileges such as Group Usage Reporting privileges or Group Managment privileges. Enabling a queue for someone will also create an account for them on the appropriate resource if they do not already have one. New accounts on a cluster will be processed overnight and be ready use the next morning. The person will receive an email notification once their account is ready.</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="card-body">
@@ -664,12 +688,24 @@ $i = 0;
 	<div class="card-header">
 		<h4 class="m-0 p-0">
 			Usage Reporting Viewers
-			<a href="#help_viewers_span_{{ $group->id }}" class="help help-dialog btn text-info" data-tip="Help">
+			<a href="#help_viewers_span_{{ $group->id }}" data-toggle="modal" class="btn text-info" data-tip="Help">
 				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 			</a>
 		</h4>
-		<div class="dialog dialog-help" id="help_viewers_span_{{ $group->id }}" title="Usage Reporting Viewers">
-			<p>Members are people that have access to some or all of this group's queues but have no other special privileges such as Group Usage Reporting privileges or Group Managment privileges. Enabling a queue for someone will also create an account for them on the appropriate resource if they do not already have one. New accounts on a cluster will be processed overnight and be ready use the next morning. The person will receive an email notification once their account is ready.</p>
+		<div class="modal" id="help_viewers_span_{{ $group->id }}" tabindex="-1" aria-labelledby="help_viewers_span_{{ $group->id }}-title" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content shadow-sm">
+					<div class="modal-header">
+						<div class="modal-title" id="help_viewers_span_{{ $group->id }}-title">Usage Reporting Viewers</div>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body dialog-body">
+						<p>Members are people that have access to some or all of this group's queues but have no other special privileges such as Group Usage Reporting privileges or Group Managment privileges. Enabling a queue for someone will also create an account for them on the appropriate resource if they do not already have one. New accounts on a cluster will be processed overnight and be ready use the next morning. The person will receive an email notification once their account is ready.</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="card-body">
@@ -820,12 +856,24 @@ $i = 0;
 	<div class="card-header">
 		<h4 class="m-0 p-0">
 			Disabled Members
-			<a href="#help_disabledmembers_span_{{ $group->id }}" class="help help-dialog text-info" data-tip="Help">
+			<a href="#help_disabledmembers_span_{{ $group->id }}" data-toggle="modal" class="btn text-info" data-tip="Help">
 				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 			</a>
 		</h4>
-		<div class="dialog dialog-help" id="help_disabledmembers_span_{{ $group->id }}" title="Disabled Members">
-			<p>Disabled Members are people that you have granted access to queues but who no longer have an active account. Although queues may be enabled for them, they cannot log into resources and use queues without an active account. If the people listed here have left the University and are no longer participating in research, please remove them from queues.</p>
+		<div class="modal" id="help_disabledmembers_span_{{ $group->id }}" tabindex="-1" aria-labelledby="help_disabledmembers_span_{{ $group->id }}-title" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content shadow-sm">
+					<div class="modal-header">
+						<div class="modal-title" id="help_disabledmembers_span_{{ $group->id }}-title">Disabled Members</div>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body dialog-body">
+						<p>Disabled Members are people that you have granted access to queues but who no longer have an active account. Although queues may be enabled for them, they cannot log into resources and use queues without an active account. If the people listed here have left the University and are no longer participating in research, please remove them from queues.</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="card-body">

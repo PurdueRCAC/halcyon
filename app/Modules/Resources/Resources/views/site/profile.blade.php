@@ -8,18 +8,31 @@
 			<div class="col-md-9">
 				<h3 class="card-title">
 					{{ trans('resources::assets.resources') }}
-					<a href="#roles_help" class="help help-dialog text-info tip" title="{{ trans('resources::assets.roles help') }}">
-						<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only"> {{ trans('resources::assets.roles help') }}</span>
+					<a href="#roles_help" data-toggle="modal" class="text-info tip" title="{{ trans('resources::assets.roles help') }}">
+						<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('resources::assets.roles help') }}</span>
 					</a>
 				</h3>
-				<div id="roles_help" class="dialog-help" title="Resources">
-					<p>{{ trans('resources::assets.roles explanation') }}</p>
-					<ul>
-						<li><span class="badge badge-secondary">{{ trans('resources::assets.no role') }}</span></li>
-						<li><span class="badge badge-info">{{ trans('resources::assets.role pending') }}</span></li>
-						<li><span class="badge badge-success">{{ trans('resources::assets.role ready') }}</span></li>
-						<li><span class="badge badge-danger">{{ trans('resources::assets.removal pending') }}</span></li>
-					</ul>
+
+				<div class="modal roles-dialog" id="roles_help" tabindex="-1" aria-labelledby="roles_help-title" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content shadow-sm">
+							<div class="modal-header">
+								<div class="modal-title" id="roles_help-title">Resources</div>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body dialog-body">
+								<p>{{ trans('resources::assets.roles explanation') }}</p>
+								<ul>
+									<li><span class="badge badge-secondary">{{ trans('resources::assets.no role') }}</span></li>
+									<li><span class="badge badge-info">{{ trans('resources::assets.role pending') }}</span></li>
+									<li><span class="badge badge-success">{{ trans('resources::assets.role ready') }}</span></li>
+									<li><span class="badge badge-danger">{{ trans('resources::assets.removal pending') }}</span></li>
+								</ul>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="col-md-3 text-right">
@@ -62,9 +75,9 @@
 </div>
 
 @if ($user->enabled)
-<div class="modal dialog roles-dialog" id="manage_roles_dialog" tabindex="-1" aria-labelledby="manage_roles_dialog-title" aria-hidden="true" title="{{ trans('resources::assets.manage access') }}">
+<div class="modal roles-dialog" id="manage_roles_dialog" tabindex="-1" aria-labelledby="manage_roles_dialog-title" aria-hidden="true" title="{{ trans('resources::assets.manage access') }}">
 	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content dialog-content shadow-sm">
+		<div class="modal-content shadow-sm">
 			<div class="modal-header">
 				<div class="modal-title" id="manage_roles_dialog-title">{{ trans('resources::assets.manage access') }}</div>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">

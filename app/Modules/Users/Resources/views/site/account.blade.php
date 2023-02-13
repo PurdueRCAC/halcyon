@@ -126,7 +126,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 						<div class="col-md-6 mb-2">
 							<dt>
 								Login Shell
-								<a href="#box1_account" class="help text-info tip" title="Help">
+								<a href="#box1_account" data-toggle="modal" class="text-info tip" title="Help">
 									<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 								</a>
 							</dt>
@@ -186,8 +186,20 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 										<div class="alert alert-danger hide" id="loginshell_error"></div>
 									</div>
 								@endif
-								<div id="box1_account" class="dialog-help" title="Login Shell">
-									<p>This is the interactive shell you are started with when logging into {{ config('app.name') }} resources. The default for new accounts is bash however you may use this to change it if desired. Supported options are <code>bash</code>, <code>tcsh</code>, and <code>zsh</code>. Once changed, it will take one to two hours for the changes to propagate to all systems.</p>
+								<div class="modal" id="box1_account" tabindex="-1" aria-labelledby="box1_account-title" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content shadow-sm">
+											<div class="modal-header">
+												<div class="modal-title" id="box1_account-title">Login Shell</div>
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body dialog-body">
+												<p>This is the interactive shell you are started with when logging into {{ config('app.name') }} resources. The default for new accounts is bash however you may use this to change it if desired. Supported options are <code>bash</code>, <code>tcsh</code>, and <code>zsh</code>. Once changed, it will take one to two hours for the changes to propagate to all systems.</p>
+											</div>
+										</div>
+									</div>
 								</div>
 							</dd>
 						</div>

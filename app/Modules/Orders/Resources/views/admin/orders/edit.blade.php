@@ -800,8 +800,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								|| (
 									($order->status == 'pending_approval' || $order->status == 'pending_fulfillment') && auth()->user()->can('manage orders'))
 									|| ($order->status == 'pending_approval' && !$myorder)) && (auth()->user()->can('manage orders') || $myorder)): ?>
-									<a href="#help4" class="help icn tip text-info" title="Help">
-										<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only"> Help</span>
+									<a href="#help4" data-toggle="modal" class="tip text-info" title="Help">
+										<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 									</a>
 
 									<button id="save_quantities" class="btn btn-sm btn-secondary" data-state="inactive" data-inactive="Edit Items" data-active="Save Changes">Edit Items</button>
@@ -811,10 +811,22 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										<p>Removing the last item will <strong>cancel</strong> your order. Do you wish to continue?</p>
 									</div>
 
-									<div id="help4" title="Edit Quantities" class="dialog dialog-help">
-										<p>
-											Quantities may be edited while payment information is being approved. You will need to redistribute or remove the total cost difference from your accounts. Accounts that have already been approved may only be deleted.
-										</p>
+									<div class="modal" id="help4" tabindex="-1" aria-labelledby="help4-title" aria-hidden="true">
+										<div class="modal-dialog modal-dialog-centered">
+											<div class="modal-content shadow-sm">
+												<div class="modal-header">
+													<div class="modal-title" id="help4-title">Edit Quantities</div>
+													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<p>
+														Quantities may be edited while payment information is being approved. You will need to redistribute or remove the total cost difference from your accounts. Accounts that have already been approved may only be deleted.
+													</p>
+												</div>
+											</div>
+										</div>
 									</div>
 								<?php endif; ?>
 							</div>
@@ -1274,7 +1286,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							<tfoot>
 								<tr>
 									<td class="text-right" colspan="{{ count($order->accounts) == 0 ? 2 : 3 }}">
-										<a href="#help2" class="help icn"><!--
+										<a href="#help2" data-toggle="modal" class="text-info"><!--
 											--><span id="balance_error" aria-hidden="true" class="fa fa-exclamation-triangle text-warning stash"></span><span class="sr-only">Balance should be $0.00 before saving changes.</span><!--
 										--></a>
 										<strong>{{ trans('orders::orders.balance remaining') }}</strong>
@@ -1293,16 +1305,28 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							</tfoot>
 						</table>
 
-						<div id="help2" title="Payment Information" class="dialog dialog-help">
-							<p>
-								Please enter the accounts to be used for payment and the dollar amount to be charged to each account. Changes are not saved until you click the "Save Accounts" button.
-							</p>
-							<p>
-								Balance remaining must be <strong>$0.00</strong> after allocating amounts before you may save changes.
-							</p>
-							<p>
-								<img src="{{ asset('modules/orders/img/account_example.png') }}" alt="Example of payment allocation divided by multiple accounts." />
-							</p>
+						<div class="modal" id="help2" tabindex="-1" aria-labelledby="help2-title" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content shadow-sm">
+									<div class="modal-header">
+										<div class="modal-title" id="help2-title">Payment Information</div>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body">
+										<p>
+											Please enter the accounts to be used for payment and the dollar amount to be charged to each account. Changes are not saved until you click the "Save Accounts" button.
+										</p>
+										<p>
+											Balance remaining must be <strong>$0.00</strong> after allocating amounts before you may save changes.
+										</p>
+										<p>
+											<img src="{{ asset('modules/orders/img/account_example.png') }}" alt="Example of payment allocation divided by multiple accounts." />
+										</p>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div><!-- / .card -->
@@ -1334,15 +1358,27 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 						@else
 							<h3 class="panel-title card-title">
 								{{ trans('orders::orders.notes') }}
-								<a href="#help1" class="help icn tip text-info" title="Help on Order Notes">
-									<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only"> Help</span>
+								<a href="#help1" data-toggle="modal" class="tip text-info" title="Help on Order Notes">
+									<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 								</a>
 							</h3>
 						@endif
 					</div>
 					<div class="card-body">
-						<div id="help1" title="Order Notes" class="dialog dialog-help">
-							<p>Use this section to leave any special instructions, extra contact information, or any other notes for this order. {{ config('app.name') }} and your business office staff will be able to view these notes.</p>
+						<div class="modal" id="help1" tabindex="-1" aria-labelledby="help1-title" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content shadow-sm">
+									<div class="modal-header">
+										<div class="modal-title" id="help1-title">Order Notes</div>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body">
+										<p>Use this section to leave any special instructions, extra contact information, or any other notes for this order. {{ config('app.name') }} and your business office staff will be able to view these notes.</p>
+									</div>
+								</div>
+							</div>
 						</div>
 
 						<p class="ordernotes">
@@ -1357,7 +1393,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 					<div class="card-footer">
 						@foreach ($order->items as $item)
 							@if ($item->origorderitemid)
-								<a href="#recurringusernotes" class="help tip" title="Recurring item notes">
+								<a href="#recurringusernotes" data-toggle="modal" class="text-info tip" title="Recurring item notes">
 									<span class="fa fa-sticky-note" aria-hidden="true"></span> Past Notes on recurring orders
 								</a>
 								@php
@@ -1368,37 +1404,49 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 					</div>
 				</div><!-- / .card -->
 
-				<div id="recurringusernotes" class="dialog dialog-help" title="Past User Notes">
-					@foreach ($order->items as $item)
-						@if ($item->origorderitemid)
-							<p>
-								User Notes for recurring item:
-								<br /><strong>{{ $item->product->name }}</strong>
-							</p>
-							<div class="card">
-								<ul class="list-group list-group-flush p-0">
-									<?php
-									foreach ($item->sequence() as $usernote):
-										if ($usernote->id == $item->id || $usernote->datetimecreated > $item->datetimecreated):
-											continue;
-										endif;
-										?>
-										<li class="list-group-item">
-											<div class="mb-1">
-												<strong>Order <a href="{{ route('site.orders.read', ['id' => $usernote->orderid]) }}">#{{ $usernote->orderid }}</a></strong>
-												<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
-											</div>
-											<blockquote>
-												<p>{!! $usernote->order->usernotes ? nl2br($usernote->order->usernotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
-											</blockquote>
-										</li>
-										<?php
-									endforeach;
-									?>
-								</ul>
+				<div class="modal" id="recurringusernotes" tabindex="-1" aria-labelledby="recurringusernotes-title" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content shadow-sm">
+							<div class="modal-header">
+								<div class="modal-title" id="recurringusernotes-title">Past User Notes</div>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
 							</div>
-						@endif
-					@endforeach
+							<div class="modal-body">
+								@foreach ($order->items as $item)
+									@if ($item->origorderitemid)
+										<p>
+											User Notes for recurring item:
+											<br /><strong>{{ $item->product->name }}</strong>
+										</p>
+										<div class="card">
+											<ul class="list-group list-group-flush p-0">
+												<?php
+												foreach ($item->sequence() as $usernote):
+													if ($usernote->id == $item->id || $usernote->datetimecreated > $item->datetimecreated):
+														continue;
+													endif;
+													?>
+													<li class="list-group-item">
+														<div class="mb-1">
+															<strong>Order <a href="{{ route('site.orders.read', ['id' => $usernote->orderid]) }}">#{{ $usernote->orderid }}</a></strong>
+															<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
+														</div>
+														<blockquote>
+															<p>{!! $usernote->order->usernotes ? nl2br($usernote->order->usernotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
+														</blockquote>
+													</li>
+													<?php
+												endforeach;
+												?>
+											</ul>
+										</div>
+									@endif
+								@endforeach
+							</div>
+						</div>
+					</div>
 				</div>
 
 				@if (auth()->user()->can('manage orders'))
@@ -1431,7 +1479,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 						<div class="card-footer">
 							@foreach ($order->items as $item)
 								@if ($item->origorderitemid)
-									<a href="#recurringstaffnotes" class="help tip" title="Recurring item notes">
+									<a href="#recurringstaffnotes" data-toggle="modal" class="text-info tip" title="Recurring item notes">
 										<span class="fa fa-sticky-note" aria-hidden="true"></span> Past Notes on recurring orders
 									</a>
 									@php
@@ -1442,37 +1490,49 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 						</div>
 					</div><!-- / .card -->
 
-					<div id="recurringstaffnotes" class="dialog dialog-help" title="Past Staff Notes">
-						@foreach ($order->items as $item)
-							@if ($item->origorderitemid)
-								<p>
-									Staff Notes for recurring item:
-									<br /><strong>{{ $item->product->name }}</strong>
-								</p>
-								<div class="card">
-									<ul class="list-group list-group-flush p-0">
-										<?php
-										foreach ($item->sequence() as $usernote):
-											if ($usernote->id == $item->id || $usernote->datetimecreated > $item->datetimecreated):
-												continue;
-											endif;
-											?>
-											<li class="list-group-item">
-												<div class="mb-1">
-													<strong>Order <a href="{{ route('site.orders.read', ['id' => $usernote->orderid]) }}">#{{ $usernote->orderid }}</a></strong>
-													<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
-												</div>
-												<blockquote>
-													<p>{!! $usernote->order->staffnotes ? nl2br($usernote->order->staffnotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
-												</blockquote>
-											</li>
-											<?php
-										endforeach;
-										?>
-									</ul>
+					<div class="modal" id="recurringstaffnotes" tabindex="-1" aria-labelledby="recurringstaffnotes-title" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered">
+							<div class="modal-content shadow-sm">
+								<div class="modal-header">
+									<div class="modal-title" id="recurringstaffnotes-title">Past Staff Notes</div>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
 								</div>
-							@endif
-						@endforeach
+								<div class="modal-body">
+									@foreach ($order->items as $item)
+										@if ($item->origorderitemid)
+											<p>
+												Staff Notes for recurring item:
+												<br /><strong>{{ $item->product->name }}</strong>
+											</p>
+											<div class="card">
+												<ul class="list-group list-group-flush p-0">
+													<?php
+													foreach ($item->sequence() as $usernote):
+														if ($usernote->id == $item->id || $usernote->datetimecreated > $item->datetimecreated):
+															continue;
+														endif;
+														?>
+														<li class="list-group-item">
+															<div class="mb-1">
+																<strong>Order <a href="{{ route('site.orders.read', ['id' => $usernote->orderid]) }}">#{{ $usernote->orderid }}</a></strong>
+																<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
+															</div>
+															<blockquote>
+																<p>{!! $usernote->order->staffnotes ? nl2br($usernote->order->staffnotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
+															</blockquote>
+														</li>
+														<?php
+													endforeach;
+													?>
+												</ul>
+											</div>
+										@endif
+									@endforeach
+								</div>
+							</div>
+						</div>
 					</div>
 
 					<div id="order-history" class="card">

@@ -3,12 +3,24 @@
 	<div class="card-header">
 		<h3 class="card-title my-0">
 			{{ trans('listener.users.sessions::sessions.sessions') }}
-			<a href="#sessions_help" class="help help-dialog text-info tip" title="Roles Help">
-				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only"> Help</span>
+			<a href="#sessions_help" data-toggle="modal" class="text-info tip" title="Roles Help">
+				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 			</a>
 		</h3>
-		<div id="sessions_help" class="dialog-help" title="{{ trans('listener.users.sessions::sessions.sessions') }}">
-			<p>{{ trans('listener.users.sessions::sessions.explanation') }}</p>
+		<div class="modal" id="sessions_help" tabindex="-1" aria-labelledby="sessions_help-title" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content shadow-sm">
+					<div class="modal-header">
+						<div class="modal-title" id="sessions_help-title">Sessions Help</div>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body dialog-body">
+						<p>{{ trans('listener.users.sessions::sessions.explanation') }}</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<ul class="list-group list-group-flush my-0">

@@ -144,14 +144,26 @@
 		<div id="forme" class="cancellable stash">
 			<p>
 				Are you placing this order on behalf of a faculty member?
-				<a href="#help1" class="help icn tip" title="Help">
+				<a href="#help1" data-toggle="modal" class="text-info tip" title="Help">
 					<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 				</a>
 			</p>
 
-			<div id="help1" class="dialog dialog-help" title="Placing order on behalf of someone else">
-				<p>You may place an order on behalf of another person. To do so select "Yes" and you will be prompted to search for this person.</p>
-				<p>If you are placing this order for yourself click "No" and then "Continue".</p>
+			<div class="modal" id="help1" tabindex="-1" aria-labelledby="help1-title" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content shadow-sm">
+						<div class="modal-header">
+							<div class="modal-title" id="help1-title">Placing order on behalf of someone else</div>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<p>You may place an order on behalf of another person. To do so select "Yes" and you will be prompted to search for this person.</p>
+							<p>If you are placing this order for yourself click "No" and then "Continue".</p>
+						</div>
+					</div>
+				</div>
 			</div>
 
 			<div class="row">
@@ -179,13 +191,25 @@
 		<div id="usersearch" class="cancellable stash">
 			<p>
 				Please use the search box below to select the faculty member this order is for:
-				<a href="#help2" class="help icn tip" title="Help">
+				<a href="#help2" data-toggle="modal" class="text-info tip" title="Help">
 					<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 				</a>
 			</p>
 
-			<div id="help2" class="dialog dialog-help" title="Placing order on behalf of someone else">
-				<p>Use this box to search for the person you are placing this order on behalf of. You may search by full name, email address, or Career account username. Once found click the person from the results to fill in the box.</p>
+			<div class="modal" id="help2" tabindex="-1" aria-labelledby="help2-title" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content shadow-sm">
+						<div class="modal-header">
+							<div class="modal-title" id="help2-title">Placing order on behalf of someone else</div>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<p>Use this box to search for the person you are placing this order on behalf of. You may search by full name, email address, or Career account username. Once found click the person from the results to fill in the box.</p>
+						</div>
+					</div>
+				</div>
 			</div>
 
 			<div class="form-group">
@@ -201,8 +225,20 @@
 		<div id="mouagree" class="cancellable stash">
 			<div><p>Please read and consent to the MOU Agreement for the following items.</p></div>
 
-			<div id="help3" class="dialog dialog-help" title="MOU Agreement">
-				<p>Please use the link provided to download the MOU Agreement. Please read the Agreement carefully and click the checkbox once you have read and consent to the Agreement.</p>
+			<div class="modal" id="help3" tabindex="-1" aria-labelledby="help3-title" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content shadow-sm">
+						<div class="modal-header">
+							<div class="modal-title" id="help3-title">MOU Agreement</div>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<p>Please use the link provided to download the MOU Agreement. Please read the Agreement carefully and click the checkbox once you have read and consent to the Agreement.</p><p>Use this box to search for the person you are placing this order on behalf of. You may search by full name, email address, or Career account username. Once found click the person from the results to fill in the box.</p>
+						</div>
+					</div>
+				</div>
 			</div>
 			<?php
 			foreach ($products as $product):
@@ -218,8 +254,8 @@
 							<p class="form-text text-muted">
 								<a href="{{ $product->mou }}" target="_blank">{{ $product->name }} - <abbr title="Memorandum of Understanding">MOU</abbr> Agreement</a>
 
-								<a href="#help3" class="help icn tip" title="Help">
-									<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Please click checkbox after reading and consenting to MOU Agreement.</span>
+								<a href="#help3" data-toggle="modal" class="text-info tip" title="Help">
+									<strong class="fa fa-question-circle" aria-hidden="true"></strong><span class="sr-only">Please click checkbox after reading and consenting to MOU Agreement.</span>
 								</a>
 							</p>
 						</div>

@@ -319,15 +319,27 @@
 		<div class="card-header">
 			<div class="card-title">
 				Storage Spaces
-				<a href="#storagespacehelp" class="help-dialog text-info tip" title="Help">
+				<a href="#storagespacehelp" data-toggle="modal" class="text-info tip" title="Help">
 					<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 				</a>
 			</div>
 		</div>
 		<div class="card-body panel-body">
-			<div id="storagespacehelp" class="dialog dialog-help" title="Storage Spaces">
-				<p>This table shows the storage spaces you have access to and your usage of these spaces. The data shown may not be immediately up to date but is updated periodically when you load this page.</p>
-				<p>Wait a few minutes and refresh this page to see the updated numbers.</p>
+			<div class="modal" id="storagespacehelp" tabindex="-1" aria-labelledby="storagespacehelp-title" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content shadow-sm">
+						<div class="modal-header">
+							<div class="modal-title" id="storagespacehelp-title">Storage Spaces</div>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body dialog-body">
+							<p>This table shows the storage spaces you have access to and your usage of these spaces. The data shown may not be immediately up to date but is updated periodically when you load this page.</p>
+							<p>Wait a few minutes and refresh this page to see the updated numbers.</p>
+						</div>
+					</div>
+				</div>
 			</div>
 
 			<?php
@@ -447,7 +459,7 @@
 				<div class="col col-md-6">
 					<div class="card-title">
 						Storage Alerts
-						<a href="#storagealerthelp" class="help-dialog text-info tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span></a>
+						<a href="#storagealerthelp" data-toggle="modal" class="text-info tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span></a>
 					</div>
 				</div>
 				<div class="col col-md-6 text-right">
@@ -456,8 +468,20 @@
 			</div>
 		</div>
 		<div class="card-body panel-body">
-			<div id="storagealerthelp" class="dialog dialog-help" title="Storage Spaces">
-				<p>You may define email alerts for your storage spaces. These alerts will send you email when your storage usage crosses the defined threshold. They may be set on an absolute value or on a percentage of your allocated space.</p>
+			<div class="modal" id="storagealerthelp" tabindex="-1" aria-labelledby="storagealerthelp-title" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content shadow-sm">
+						<div class="modal-header">
+							<div class="modal-title" id="storagealerthelp-title">Storage Alerts</div>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body dialog-body">
+							<p>You may define email alerts for your storage spaces. These alerts will send you email when your storage usage crosses the defined threshold. They may be set on an absolute value or on a percentage of your allocated space.</p>
+						</div>
+					</div>
+				</div>
 			</div>
 			<?php
 			$alerts = $storagenotifications->where('storagedirquotanotificationtypeid', '!=', 1);
@@ -742,7 +766,7 @@
 				<div class="col col-md-6">
 					<div class="card-title">
 						Storage Usage Reports
-						<a href="#storageusagehelp" class="help-dialog text-info tip" title="Help">
+						<a href="#storageusagehelp" data-toggle="modal" class="text-info tip" title="Help">
 							<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
 						</a>
 					</div>
@@ -753,8 +777,20 @@
 			</div>
 		</div>
 		<div class="card-body panel-body">
-			<div id="storageusagehelp" class="dialog dialog-help" title="Storage Spaces">
-				<p>You may request usage reports for a storage space be sent to you on regular basis. You may specify which space, when the first report be sent, and how often after that the report should be sent. For example, you may request a usage report be sent starting on Monday at 8am and then every Monday after that.</p>
+			<div class="modal" id="storageusagehelp" tabindex="-1" aria-labelledby="storageusagehelp-title" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content shadow-sm">
+						<div class="modal-header">
+							<div class="modal-title" id="storageusagehelp-title">Storage Usage Reports</div>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body dialog-body">
+							<p>You may request usage reports for a storage space be sent to you on regular basis. You may specify which space, when the first report be sent, and how often after that the report should be sent. For example, you may request a usage report be sent starting on Monday at 8am and then every Monday after that.</p>
+						</div>
+					</div>
+				</div>
 			</div>
 			<?php
 			$storagedirquotanotifications = array();

@@ -323,7 +323,7 @@
 			<div class="col col-md-6">
 				Unix Groups
 				@if ($canManage)
-					<a href="#box2_{{ $group->id }}" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span></a>
+					<a href="#box2_{{ $group->id }}" data-toggle="modal" class="text-info tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span></a>
 				@endif
 			</div>
 			<div class="col col-md-6 text-right">
@@ -335,7 +335,7 @@
 								<span class="fa fa-plus-circle" aria-hidden="true"></span> Add New Unix Group
 							</button>
 						@else
-							<a href="#new-unixgroup_{{ $group->id }}" class="btn btn-default btn-sm add-unix-group help">
+							<a href="#new-unixgroup_{{ $group->id }}" data-toggle="modal" class="btn btn-default btn-sm add-unix-group help">
 								<span class="fa fa-plus-circle" aria-hidden="true"></span> Add New Unix Group
 							</a>
 						@endif
@@ -348,7 +348,7 @@
 		<div class="card panel panel-default">
 			<div class="card-body panel-body">
 				<div class="form-inline row">
-					<label class="col-md-3" for="INPUT_unixgroup_{{ $group->id }}">Base Name: <a href="#box1_{{ $group->id }}" class="help icn tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span></a></label>
+					<label class="col-md-3" for="INPUT_unixgroup_{{ $group->id }}">Base Name: <a href="#box1_{{ $group->id }}" data-toggle="modal" class="text-info tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span></a></label>
 
 					<div class="col-md-5">
 						<span id="SPAN_unixgroup_{{ $group->id }}">{{ $group->unixgroup ? $group->unixgroup : trans('global.none') }}</span>
@@ -374,14 +374,26 @@
 			</div>
 		</div>
 
-		<div class="dialog dialog-help" id="box1_{{ $group->id }}" title="Base Unix Group">
-			<p>This is the base name for all of your group's Unix groups. Once set, this name is not easily changed so please carefully consider your choice. If you wish to change it, email <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a> to discuss your options. Group base names may be named with the following guidelines.</p>
-			<ul>
-				<li>Should typically be the same as your queue name for consistency.</li>
-				<li>May only contain lower case letters or numbers and must not begin with a number. Upper case letters and other characters are not permitted.</li>
-				<li>Names must be at least 2 characters and no more than 10 characters.</li>
-				<li>Must be unique.</li>
-			</ul>
+		<div class="modal" id="box1_{{ $group->id }}" tabindex="-1" aria-labelledby="box1_{{ $group->id }}-title" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content shadow-sm">
+					<div class="modal-header">
+						<div class="modal-title" id="box1_{{ $group->id }}-title">Base Unix Group</div>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<p>This is the base name for all of your group's Unix groups. Once set, this name is not easily changed so please carefully consider your choice. If you wish to change it, email <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a> to discuss your options. Group base names may be named with the following guidelines.</p>
+						<ul>
+							<li>Should typically be the same as your queue name for consistency.</li>
+							<li>May only contain lower case letters or numbers and must not begin with a number. Upper case letters and other characters are not permitted.</li>
+							<li>Names must be at least 2 characters and no more than 10 characters.</li>
+							<li>Must be unique.</li>
+						</ul>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		@if ($group->unixgroup && count($unixgroups) == 0 && $canManage)
@@ -464,40 +476,64 @@
 			<div id="deletegroup_{{ $group->id }}" class="alert alert-danger hide"></div>
 		@endif
 
-		<div class="dialog dialog-help" id="new-unixgroup_{{ $group->id }}" title="New Unix Group">
-			<div class="form-group">
-				<label for="longname" class="sr-only">{{ trans('groups::groups.name') }}</label>
-				<span class="input-group">
-					<span class="input-group-addon input-group-prepend"><span class="input-group-text">{{ $group->unixgroup }}-</span></span>
-					<input type="text" name="longname" id="longname" class="form-control input-unixgroup" maxlength="{{ (17 - strlen($group->unixgroup . '-')) }}" required pattern="[a-z0-9]+" value="" placeholder="{{ strtolower(trans('groups::groups.name')) }}" />
-				</span>
-				<span class="form-text text-muted">Lowercase letters and numbers only. Max length: {{ (17 - strlen($group->unixgroup . '-')) }} characters.</span>
-			</div>
-			<div class="alert alert-danger hide" id="new-unixgroup_{{ $group->id }}_error"></div>
-			<div class="text-right">
-				<a href="#longname" class="btn btn-secondary btn-success add-unixgroup"
-					data-group="{{ $group->id }}"
-					data-container="#actmaint_info"
-					data-error="#new-unixgroup_{{ $group->id }}_error"
-					data-api="{{ route('api.unixgroups.create') }}">
-					<span class="fa fa-plus-circle" aria-hidden="true"></span>
-					<span class="sr-only">{{ trans('global.create') }}</span>
-				</a>
+		<div class="modal" id="new-unixgroup_{{ $group->id }}" tabindex="-1" aria-labelledby="new-unixgroup_{{ $group->id }}-title" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content shadow-sm">
+					<div class="modal-header">
+						<div class="modal-title" id="new-unixgroup_{{ $group->id }}-title">New Unix Group</div>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="longname" class="sr-only">{{ trans('groups::groups.name') }}</label>
+							<span class="input-group">
+								<span class="input-group-addon input-group-prepend"><span class="input-group-text">{{ $group->unixgroup }}-</span></span>
+								<input type="text" name="longname" id="longname" class="form-control input-unixgroup" maxlength="{{ (17 - strlen($group->unixgroup . '-')) }}" required pattern="[a-z0-9]+" value="" placeholder="{{ strtolower(trans('groups::groups.name')) }}" />
+							</span>
+							<span class="form-text text-muted">Lowercase letters and numbers only. Max length: {{ (17 - strlen($group->unixgroup . '-')) }} characters.</span>
+						</div>
+						<div class="alert alert-danger hide" id="new-unixgroup_{{ $group->id }}_error"></div>
+						<div class="text-right">
+							<a href="#longname" class="btn btn-secondary btn-success add-unixgroup"
+								data-group="{{ $group->id }}"
+								data-container="#actmaint_info"
+								data-error="#new-unixgroup_{{ $group->id }}_error"
+								data-api="{{ route('api.unixgroups.create') }}">
+								<span class="fa fa-plus-circle" aria-hidden="true"></span>
+								<span class="sr-only">{{ trans('global.create') }}</span>
+							</a>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 
-		<div class="dialog dialog-help" id="box2_{{ $group->id }}" title="Unix Groups">
-			@if (count($group->unixgroups) > 0)
-				<p>These are your group's Unix groups. You may create and delete additional custom groups as you need them. Any custom groups will be prefixed by your base name. Groups may be named with the following guidelines.</p>
-				<ul>
-					<li>May only contain lower case letters and numbers. Upper case letters and other characters are not permitted.</li>
-					<li>Total name length, including prefix and hyphen may not exceed 17 characters.</li>
-					<li>Must be a unique name.</li>
-				</ul>
-			@else
-				<p>Your group's default groups may be created by pressing this button. You will need to create the default before creating any custom groups. Three groups will be created, a base group, apps, and data group. The names will be prefixed by your chosen group base name. Once these are created they are not easily changed to please carefully consider your base name choice.</p>
-				<p>If you have any existing Unix groups, please do not continue with creating the defaults. Contact <a href="{{ route('page', ['uri' => 'help']) }}">support</a> and staff will assist in importing existing groups into the management system and create any remaining groups.<p>
-			@endif
+		<div class="modal" id="box2_{{ $group->id }}" tabindex="-1" aria-labelledby="box2_{{ $group->id }}-title" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content shadow-sm">
+					<div class="modal-header">
+						<div class="modal-title" id="box2_{{ $group->id }}-title">Unix Groups</div>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						@if (count($group->unixgroups) > 0)
+							<p>These are your group's Unix groups. You may create and delete additional custom groups as you need them. Any custom groups will be prefixed by your base name. Groups may be named with the following guidelines.</p>
+							<ul>
+								<li>May only contain lower case letters and numbers. Upper case letters and other characters are not permitted.</li>
+								<li>Total name length, including prefix and hyphen may not exceed 17 characters.</li>
+								<li>Must be a unique name.</li>
+							</ul>
+						@else
+							<p>Your group's default groups may be created by pressing this button. You will need to create the default before creating any custom groups. Three groups will be created, a base group, apps, and data group. The names will be prefixed by your chosen group base name. Once these are created they are not easily changed to please carefully consider your base name choice.</p>
+							<p>If you have any existing Unix groups, please do not continue with creating the defaults. Contact <a href="{{ route('page', ['uri' => 'help']) }}">support</a> and staff will assist in importing existing groups into the management system and create any remaining groups.<p>
+						@endif
+					</div>
+				</div>
+			</div>
 		</div>
 	</div><!-- / .card-body -->
 </div><!-- / .card -->
