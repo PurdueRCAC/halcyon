@@ -15,6 +15,6 @@ class Footer extends Widget
 	 */
 	public function run()
 	{
-		return view('widgets.footer::index');
+		return view('widgets.footer::index')
 	}
 }
