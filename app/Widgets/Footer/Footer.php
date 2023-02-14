@@ -13,7 +13,7 @@ class Footer extends Widget
 	 *
 	 * @return  null|\Illuminate\View\View
 	 */
-	public function run(
+	public function run()
 	{
 		return view('widgets.footer::index');
 	}

@@ -118,14 +118,16 @@ app('pathway')
 						<label for="move-destination">Destination folder</label>
 						<select id="move-destination" class="form-control">
 							<option>/</option>
-							@foreach ($folders as $j => $fold)
-								<?php
+							<?php
+							foreach ($folders as $j => $fold):
 								if ($j == 0):
 									continue;
 								endif;
 								?>
 								<option>{{ '/' . trim($fold['relname'], '/') }}</option>
-							@endforeach
+								<?php
+							endforeach;
+							?>
 						</select>
 					</div>
 
