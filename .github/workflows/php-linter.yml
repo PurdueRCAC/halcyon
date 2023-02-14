@@ -26,7 +26,6 @@ jobs:
       #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Linting Code
-        uses: overtrue/phplint@8.2
+        uses: StephaneBour/actions-php-lint@8.0
         with:
-          path: .
-          options: --exclude=*.log
+          dir: .
