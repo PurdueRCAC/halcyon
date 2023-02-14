@@ -7,6 +7,8 @@ use Illuminate\Http\Response;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Modules\Orders\Helpers\Export;
 use App\Modules\Orders\Models\Order;
 use App\Modules\Orders\Models\Category;
 use App\Modules\Orders\Models\Product;
@@ -23,7 +25,7 @@ class OrdersController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param   StatefulRequest  $request
-	 * @return  View|Response
+	 * @return  View|StreamedResponse
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -301,7 +303,7 @@ class OrdersController extends Controller
 				->orderBy($filters['order'], $filters['order_dir'])
 				->get();
 
-			return $this->export($rows, $request->input('export'));
+			return Export::toCsv($rows, $request->input('export'));
 		}
 
 		$rows = $query
@@ -318,190 +320,6 @@ class OrdersController extends Controller
 			'rows'    => $rows,
 			'filters' => $filters,
 			'categories' => $categories
-		]);
-	}
-
-	/**
-	 * Download a list of records
-	 * 
-	 * @param  object  $rows
-	 * @return Response
-	 */
-	public function export($rows, $export)
-	{
-		$data = array();
-		$data[] = array(
-			//trans('orders::orders.type'),
-			trans('orders::orders.id'),
-			trans('orders::orders.created'),
-			trans('orders::orders.status'),
-			trans('orders::orders.submitter'),
-			trans('orders::orders.user'),
-			trans('orders::orders.group'),
-			trans('orders::orders.department'),
-			trans('orders::orders.quantity'),
-			trans('orders::orders.price'),
-			trans('orders::orders.total'),
-			'purchaseio',
-			'purchasewbse',
-			'paymentdocid',
-			trans('orders::orders.product'),
-			trans('orders::orders.notes'),
-		);
-
-		$orders = array();
-		foreach ($rows as $row)
-		{
-			if (in_array($row->id, $orders))
-			{
-				continue;
-			}
-
-			$orders[] = $row->id;
-
-			$submitter = '';
-			$user = '';
-			$group = '';
-			$department = '';
-
-			if ($row->groupid)
-			{
-				$group = $row->group ? $row->group->name : '';
-				if ($row->group)
-				{
-					$first = $row->group->departmentList()->first();
-					if ($first)
-					{
-						$department = $first->name;
-					}
-				}
-			}
-
-			if ($row->userid)
-			{
-				$user = $row->user ? $row->user->name : '';
-			}
-
-			if ($row->submitteruserid)
-			{
-				$submitter = $row->submitter ? $row->submitter->name : '';
-			}
-
-			//unset($row->state);
-
-			$products = '';
-			if ($export != 'items')
-			{
-				$products = array();
-				foreach ($row->items as $item)
-				{
-					$products[] = $item->product ? $item->product->name : 'product #' . $item->orderproductid;
-				}
-				$products = implode(', ', $products);
-			}
-
-			if ($export != 'accounts')
-			{
-				$data[] = array(
-					//'order',
-					$row->id,
-					$row->datetimecreated->format('Y-m-d'),
-					trans('orders::orders.' . $row->status),
-					$submitter,
-					$user,
-					$group,
-					$department,
-					'',
-					'',
-					$row->formatNumber($row->ordertotal),
-					'',
-					'',
-					'',
-					$products,
-					$row->usernotes
-				);
-			}
-
-			if ($export == 'items')
-			{
-				foreach ($row->items()->get() as $item)
-				{
-					$data[] = array(
-						//'item',
-						$item->orderid,
-						$item->datetimecreated->format('Y-m-d'),
-						$item->isFulfilled() ? 'fullfilled' : 'pending',
-						$submitter,
-						$user,
-						$group,
-						$department,
-						$item->quantity,
-						$row->formatNumber($item->origunitprice),
-						$row->formatNumber($item->price),
-						'',
-						'',
-						'',
-						$item->product ? $item->product->name : $item->orderproductid,
-						$row->usernotes
-					);
-				}
-			}
-
-			if ($export == 'accounts')
-			{
-				foreach ($row->accounts()->get() as $account)
-				{
-					$data[] = array(
-						//'account',
-						$account->orderid,
-						$account->datetimecreated->format('Y-m-d'),
-						trans('orders::orders.' . $account->status),
-						$submitter,
-						$user,
-						$group,
-						$department,
-						'',
-						'',
-						$row->formatNumber($account->amount),
-						($account->purchaseio ? $account->purchaseio : ''),
-						($account->purchasewbse ? $account->purchasewbse : ''),
-						($account->paymentdocid ? $account->paymentdocid : ''),
-						$products,
-						$row->usernotes
-					);
-				}
-			}
-		}
-
-		$filename = 'orders_data.csv';
-
-		$headers = array(
-			'Content-type' => 'text/csv',
-			'Content-Disposition' => 'attachment; filename=' . $filename,
-			'Pragma' => 'no-cache',
-			'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-			'Expires' => '0',
-			'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT'
-		);
-
-		$callback = function() use ($data)
-		{
-			$file = fopen('php://output', 'w');
-
-			foreach ($data as $datum)
-			{
-				fputcsv($file, $datum);
-			}
-			fclose($file);
-		};
-
-		return response()->streamDownload($callback, $filename, $headers);
-
-		// Set headers and output
-		return new Response($output, 200, [
-			'Content-Type' => 'text/csv;charset=UTF-8',
-			'Content-Disposition' => 'attachment; filename="' . $file . '.csv"',
-			'Last-Modified' => gmdate('D, d M Y H:i:s') . ' GMT'
 		]);
 	}
 
@@ -633,7 +451,7 @@ class OrdersController extends Controller
 	 */
 	public function stats(Request $request)
 	{
-		$start = Carbon::now()->modify('-30 days');
+		$start = Carbon::now()->modify('-1 month');
 		$today = Carbon::now()->modify('+1 day');
 
 		// Get filters
