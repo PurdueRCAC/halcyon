@@ -8,6 +8,7 @@ use App\Modules\Storage\Listeners\Messages;
 use App\Modules\Storage\Listeners\Resources;
 use App\Modules\Storage\Listeners\GroupMembers;
 use App\Modules\Storage\Listeners\UnixGroupMembers;
+use App\Modules\Storage\Listeners\DeletingUnixGroup;
 use App\Modules\Storage\Listeners\Notifications;
 use App\Modules\Storage\Listeners\UserStorage;
 use App\Modules\Storage\Console\EmailQuotaCommand;
@@ -63,6 +64,7 @@ class StorageServiceProvider extends ServiceProvider
 		{
 			$this->app['events']->subscribe(new GroupMembers);
 			$this->app['events']->subscribe(new UnixGroupMembers);
+			$this->app['events']->subscribe(new DeletingUnixGroup);
 		}
 
 		if (Module::isEnabled('users'))

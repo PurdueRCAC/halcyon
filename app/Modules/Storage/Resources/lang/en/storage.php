@@ -51,6 +51,7 @@ return [
 		'select items' => 'Select an entry to :action',
 		'invalid parent' => 'Please select a parent resource.',
 		'invalid name' => 'Please provide a name.',
+		'directories found using unix group' => '{1} :num directory found using this unix group. Re-assign or remove directory first.|[2,*] :num directories found using this unix group. Re-assign or remove directory first.',
 	],
 
 	// Fields

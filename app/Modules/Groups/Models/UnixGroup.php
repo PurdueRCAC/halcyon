@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Groups\Events\UnixGroupCreating;
 use App\Modules\Groups\Events\UnixGroupCreated;
+use App\Modules\Groups\Events\UnixGroupDeleting;
 use App\Modules\Groups\Events\UnixGroupDeleted;
 
 /**
@@ -96,6 +97,7 @@ class UnixGroup extends Model
 		'created'  => UnixGroupCreated::class,
 		//'updating' => UnixGroupUpdating::class,
 		//'updated'  => UnixGroupUpdated::class,
+		'deleting' => UnixGroupDeleting::class,
 		'deleted'  => UnixGroupDeleted::class,
 	];
 

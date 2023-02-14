@@ -329,14 +329,31 @@ document.addEventListener('DOMContentLoaded', function () {
 				success: function () {
 					window.location.reload(true);
 				},
-				error: function () { //xhr, ajaxOptions, thrownError
-					var notice = $("#deletegroup_" + obj['groupid']);
+				error: function (xhr, ajaxOptions, thrownError) {
+					var msg = "An error occured while deleting group.";
 
+					if (xhr.responseJSON && xhr.responseJSON.message) {
+						msg = xhr.responseJSON.message;
+					}
+
+					var tr = btn.closest('tr');
+					if (tr) {
+						var td = tr.querySelector('td');
+						if (td) {
+							var span = document.createElement("div");
+							span.classList.add('text-warning');
+							span.append(document.createTextNode(msg));
+							td.append(span);
+						}
+					}
+					btn.classList.add('hide');
+					//alert(msg);
+					/*var notice = $("#deletegroup_" + obj['groupid']);
 					if (notice.length) {
 						notice
 							.removeClass('hide')
-							.text("An error occured while deleting group.");
-					}
+							.text(msg);
+					}*/
 				}
 			});
 		}

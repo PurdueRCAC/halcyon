@@ -695,9 +695,16 @@ class UnixGroupsController extends Controller
 	{
 		$row = UnixGroup::findOrFail($id);
 
-		if (!$row->delete())
+		try
 		{
-			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+			if (!$row->delete())
+			{
+				return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
+			}
+		}
+		catch (\Exception $e)
+		{
+			return response()->json(['message' => $e->getMessage()], 500);
 		}
 
 		return response()->json(null, 204);
