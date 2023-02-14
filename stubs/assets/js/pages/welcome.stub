@@ -1,0 +1,17 @@
+<script>
+export default {
+  data() {
+    return {
+      count: 0
+    }
+  }
+}
+</script>
+<template>
+  <div>
+    <h1>Hello World! &lpar; InertiaJS Edition &rpar;</h1>
+    <p> This is a Vue component loaded from module: $LOWER_NAME$</p>
+    <p> The relative path to the file within this module: Resources/assets/js/Pages/Welcome.vue</p>
+    <button @click="count++">You clicked me {{ count }} times.</button>
+  </div>
+</template>

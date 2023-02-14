@@ -11,6 +11,7 @@
         "cilogon/oauth2-cilogon": "^1.1.6",
         "doctrine/dbal": "^3.5",
         "guzzlehttp/guzzle": "^7.2",
+        "inertiajs/inertia-laravel": "*",
         "jenssegers/agent": "^2.6.4",
         "lab404/laravel-impersonate": "^1.7.3",
         "laravel/framework": "^9.19",

@@ -1,0 +1,21 @@
+ii  php-cli                           2:7.4+75                              all          command-line interpreter for the PHP scripting language (default)
+ii  php-common                        2:75                                  all          Common files for PHP packages
+ii  php-composer-ca-bundle            1.2.6-1                               all          utility library to find a path to the system CA bundle
+ii  php-composer-semver               1.5.1-1                               all          utilities, version constraint parsing and validation
+ii  php-composer-spdx-licenses        1.5.3-1                               all          SPDX licenses list and validation library
+ii  php-composer-xdebug-handler       1.4.0-1                               all          Restarts a process without Xdebug
+ii  php-json-schema                   5.2.9-1                               all          implementation of JSON schema
+ii  php-mbstring                      2:7.4+75                              all          MBSTRING module for PHP [default]
+ii  php-psr-container                 1.0.0-2                               all          Common Container Interface (PHP FIG PSR-11)
+ii  php-psr-log                       1.1.2-1                               all          common interface for logging libraries
+ii  php-symfony-console               4.3.8+dfsg-1ubuntu1                   all          run tasks from the command line
+ii  php-symfony-filesystem            4.3.8+dfsg-1ubuntu1                   all          basic filesystem utilities
+ii  php-symfony-finder                4.3.8+dfsg-1ubuntu1                   all          find files and directories
+ii  php-symfony-process               4.3.8+dfsg-1ubuntu1                   all          execute commands in sub-processes
+ii  php-symfony-service-contracts     1.1.8-1                               all          Generic abstractions related to writing services
+ii  php7.4-cli                        7.4.3-4ubuntu2.17                     amd64        command-line interpreter for the PHP scripting language
+ii  php7.4-common                     7.4.3-4ubuntu2.17                     amd64        documentation, examples and common module for PHP
+ii  php7.4-json                       7.4.3-4ubuntu2.17                     amd64        JSON module for PHP
+ii  php7.4-mbstring                   7.4.3-4ubuntu2.17                     amd64        MBSTRING module for PHP
+ii  php7.4-opcache                    7.4.3-4ubuntu2.17                     amd64        Zend OpCache module for PHP
+ii  php7.4-readline                   7.4.3-4ubuntu2.17                     amd64        readline module for PHP

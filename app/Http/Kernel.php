@@ -40,6 +40,7 @@ class Kernel extends HttpKernel
             //\App\Modules\Listeners\Http\Middleware\RegisterListeners::class,
             \App\Modules\Users\Http\Middleware\LastActivity::class,
             \App\Modules\Menus\Http\Middleware\SetActiveMenu::class,
+            \App\Http\Middleware\HandleInertiaRequests::class
         ],
 
         'api' => [

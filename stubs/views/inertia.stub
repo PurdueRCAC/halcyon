@@ -1,0 +1,8 @@
+@extends('layouts.master')
+@push('scripts')
+    @inertiaHead
+    @vite('Resources/assets/js/app.js', 'modules/$LOWER_NAME$')
+@endpush
+@section('content')
+    @inertia
+@endsection
