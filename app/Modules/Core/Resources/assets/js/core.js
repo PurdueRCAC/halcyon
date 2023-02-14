@@ -761,20 +761,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	$('.dialog-help').dialog({
-		autoOpen: false,
-		modal: true,
-		width: 600
-	});
-
-	$('.help-dialog').on('click', function (e) {
-		e.preventDefault();
-
-		if ($($(this).attr('href')).length) {
-			$($(this).attr('href')).dialog('open');
-		}
-	});
-
 	$('.dropdown-toggle').on('click', function(event){
 		event.preventDefault();
 		event.stopPropagation();
