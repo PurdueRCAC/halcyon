@@ -1013,7 +1013,7 @@ function TotalOrder() {
 				yescount++;
 
 				if (box.getAttribute('data-dialog')) {
-					$(box.getAttribute('data-dialog')).dialog('open');
+					document.getElementById(box.getAttribute('data-dialog')).classList.remove('d-none');
 					return;
 				}
 			}

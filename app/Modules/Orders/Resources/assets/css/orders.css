@@ -5,9 +5,10 @@
 .nav-tabs {
 	margin-bottom: 1em;
 }
-/*.form-group label {
-	font-weight: bold;
-}*/
+ul .list-group-item {
+	margin-left: 0;
+}
+
 .badge {
 	white-space: normal !important;
 }
@@ -17,9 +18,6 @@
 .stash {
 	display: none;
 }
-/*.contentInner ul li.list-group-item {
-	margin: 0;
-}*/
 
 table tbody tr.selected td,
 table tbody tr.selected {

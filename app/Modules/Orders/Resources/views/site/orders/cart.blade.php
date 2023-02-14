@@ -279,11 +279,11 @@
 					<legend>{{ $product->name }} restricted data use. Please check all that apply:</legend>
 
 					<div class="form-check">
-						<input class="form-check-input restrict-agree" type="checkbox" data-id="{{ $product->id }}" data-dialog="#help_restrictagree1" id="{{ $product->id }}_restrictagree1" />
+						<input class="form-check-input restrict-agree" type="checkbox" data-id="{{ $product->id }}" data-dialog="help_restrictagree1" id="{{ $product->id }}_restrictagree1" />
 						<label class="form-check-label" for="{{ $product->id }}_restrictagree1">Government restricted or export-controlled data (eg., ITAR, EAR, 7012)</label>
 
-						<div id="help_restrictagree1" class="dialog dialog-help" title="Government restricted data">
-							<p>Storing or use of government restricted or export controlled data is prohibited.</p>
+						<div id="help_restrictagree1" class="d-none" title="Government restricted data">
+							<p class="alert alert-warning">Storing or use of government restricted or export controlled data is prohibited.</p>
 						</div>
 					</div>
 
