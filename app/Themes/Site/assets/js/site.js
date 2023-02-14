@@ -392,20 +392,6 @@ $(document).ready(function() {
 		}
 	}
 
-	$('.dialog-help').dialog({
-		autoOpen: false,
-		modal: true,
-		width: 550
-	});
-
-	$('.help').on('click', function(e){
-		e.preventDefault();
-
-		if ($($(this).attr('href')).length) {
-			$($(this).attr('href')).dialog('open');
-		}
-	});
-
 	$('.editicon').tooltip({
 		position: {
 			my: 'center bottom',
