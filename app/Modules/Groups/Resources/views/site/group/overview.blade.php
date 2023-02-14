@@ -335,7 +335,7 @@
 								<span class="fa fa-plus-circle" aria-hidden="true"></span> Add New Unix Group
 							</button>
 						@else
-							<a href="#new-unixgroup_{{ $group->id }}" data-toggle="modal" class="btn btn-default btn-sm add-unix-group help">
+							<a href="#new-unixgroup_{{ $group->id }}" data-toggle="modal" class="btn btn-default btn-sm add-unix-group">
 								<span class="fa fa-plus-circle" aria-hidden="true"></span> Add New Unix Group
 							</a>
 						@endif

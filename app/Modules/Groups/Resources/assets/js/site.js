@@ -1,5 +1,3 @@
-/* global $ */ // jquery.js
-/* global SetError */ // common.js
 /* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 
 /**
@@ -30,7 +28,7 @@ function CreateNewGroup() {
 		body: post
 	})
 	.then(function (response) {
-		$($('#new_group_btn').attr('data-indicator')).addClass('hide');
+		document.getElementById(document.getElementById('new_group_btn').getAttribute('data-indicator')).classList.add('hide');
 
 		if (response.ok) {
 			window.location.reload(true);
@@ -49,7 +47,7 @@ function CreateNewGroup() {
 		err.classList.remove('hide');
 		err.innerHTML = error;
 
-		$('#new_group_btn').prop('disabled', false);
+		document.getElementById('new_group_btn').disabled = false;
 	});
 }
 
@@ -84,13 +82,16 @@ function CreateNewGroupVal(num, btn, all) {
 		'groupid': group
 	};
 
-	$.ajax({
-		url: btn.data('api'),
-		type: 'post',
-		data: post,
-		dataType: 'json',
-		async: false,
-		success: function () {
+	fetch(input.getAttribute('data-api'), {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+		},
+		body: JSON.stringify(post)
+	})
+	.then(function (response) {
+		if (response.ok) {
 			num++;
 			if (all && num < BASEGROUPS.length) {
 				setTimeout(function () {
@@ -99,11 +100,19 @@ function CreateNewGroupVal(num, btn, all) {
 			} else {
 				window.location.reload(true);
 			}
-		},
-		error: function (xhr) {
-			btn.find('.spinner-border').addClass('d-none');
-			alert(xhr.responseJSON.message);
+			return;
 		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.catch(function (error) {
+		btn.querySelector('.spinner-border').classList.add('d-none');
+		alert(error);
 	});
 }
 
@@ -111,6 +120,9 @@ function CreateNewGroupVal(num, btn, all) {
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function () {
+	//---------
+	// Departments and Fields of Science
+
 	if (typeof TomSelect !== 'undefined') {
 		var sselects = document.querySelectorAll(".searchable-select");
 		if (sselects.length) {
@@ -120,311 +132,345 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	}
 
-	$('.input-unixgroup').on('keyup', function () {
-		var val = $(this).val();
+	document.querySelectorAll('.edit-categories').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		val = val.toLowerCase()
-			.replace(/\s+/g, '-')
-			.replace(/[^a-z0-9-]+/g, '');
+			var container = document.getElementById(this.getAttribute('href').replace('#', ''));
+			container.querySelectorAll('.edit-show').forEach(function (it) {
+				it.classList.remove('hide');
+			});
+			container.querySelectorAll('.edit-hide').forEach(function (it) {
+				it.classList.add('hide');
+			});
+		});
+	});
+	document.querySelectorAll('.cancel-categories').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		$(this).val(val);
+			var container = document.getElementById(this.getAttribute('href').replace('#', ''));
+			container.querySelectorAll('.edit-hide').forEach(function (it) {
+				it.classList.remove('hide');
+			});
+			container.querySelectorAll('.edit-show').forEach(function (it) {
+				it.classList.add('hide');
+			});
+		});
 	});
 
-	$('.create-default-unix-groups').on('click', function (e) {
-		e.preventDefault();
+	document.querySelectorAll('.add-category').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		$(this).attr('data-loading', true);
+			var select = document.getElementById(this.getAttribute('href').replace('#', ''));
+			var btn = this;
 
-		CreateNewGroupVal(0, $(this), parseInt($(this).data('all-groups')));
-	});
-
-	$('.edit-categories').on('click', function (e) {
-		e.preventDefault();
-
-		var container = $($(this).attr('href'));
-		container.find('.edit-show').removeClass('hide');
-		container.find('.edit-hide').addClass('hide');
-	});
-	$('.cancel-categories').on('click', function (e) {
-		e.preventDefault();
-
-		var container = $($(this).attr('href'));
-		container.find('.edit-hide').removeClass('hide');
-		container.find('.edit-show').addClass('hide');
-	});
-
-	$('.add-category').on('click', function (e) {
-		e.preventDefault();
-
-		var select = $($(this).attr('href'));
-		var btn = $(this);
-
-		// create new relationship
-		$.ajax({
-			url: btn.data('api'),
-			type: 'post',
-			data: {
-				'groupid': btn.data('group'),
-				[select.data('category')]: select.val()
-			},
-			dataType: 'json',
-			async: false,
-			success: function (response) {
+			// create new relationship
+			fetch(btn.getAttribute('data-api'), {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+				},
+				body: JSON.stringify({
+					'groupid': btn.getAttribute('data-group'),
+					[select.getAttribute('data-category')]: select.value
+				})
+			})
+			.then(function (response) {
+				if (response.ok) {
+					return response.json();
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.then(function (result) {
 				var c = select.closest('ul');
-				var li = c.find('li.hide');
+				var li = c.querySelector('li.hide');
 
-				if (typeof (li) !== 'undefined') {
-					var template = $(li)
-						.clone()
-						.removeClass('hide');
+				if (li) {
+					var template = li.cloneNode(true);
 
-					template
-						.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
-						.data('id', response.id);
+					template.classList.remove('hide');
+					template.id = template.id.replace(/\{id\}/g, result.id);
+					template.setAttribute('data-id', result.id);
 
-					template.find('a').each(function (i, el) {
-						$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.id));
+					template.querySelectorAll('a').forEach(function (a) {
+						a.setAttribute('data-api', a.getAttribute('data-api').replace(/\{id\}/g, result.id));
 					});
 
-					var content = template
-						.html()
-						.replace(/\{id\}/g, response.id)
-						.replace(/\{name\}/g, select.find('option:selected').text());
+					var content = template.innerHTML;
+					content = content.replace(/\{id\}/g, result.id);
+					content = content.replace(/\{name\}/g, select.options[select.selectedIndex].innerHTML);
+					
+					template.innerHTML = content;
 
-					template.html(content).insertBefore(li);
+					c.insertBefore(template, li);
 				}
 
-				select.val(0);
-			},
-			error: function (xhr) {
-				SetError(xhr.responseJSON.message);
-			}
+				select.value = 0;
+			})
+			.catch(function (error) {
+				var tr = btn.closest('tr');
+				if (tr) {
+					var td = tr.querySelector('td');
+					if (td) {
+						var span = document.createElement("div");
+						span.classList.add('text-warning');
+						span.append(document.createTextNode(error));
+						td.append(span);
+					}
+				}
+				btn.classList.add('hide');
+			});
 		});
 	});
 
-	$('body').on('click', '.remove-category', function (e) {
+	document.querySelector('body').addEventListener('click', function(e) {
+		if (!e.target.parentNode.matches('.remove-category')) {
+			return;
+		}
 		e.preventDefault();
 
-		var result = confirm($(this).data('confirm'));
+		var btn = e.target.parentNode;
+
+		var result = confirm(btn.getAttribute('data-confirm'));
 
 		if (result) {
-			var field = $($(this).attr('href'));
+			var field = document.getElementById(btn.getAttribute('href').replace('#', ''));
 
 			// delete relationship
-			$.ajax({
-				url: $(this).data('api'),
-				type: 'delete',
-				dataType: 'json',
-				async: false,
-				success: function () {
+			fetch(btn.getAttribute('data-api'), {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+				}
+			})
+			.then(function (response) {
+				if (response.ok) {
 					field.remove();
-				},
-				error: function (xhr) {
-					SetError(xhr.responseJSON.message);
+					return;
 				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (error) {
+				alert(error);
 			});
 		}
 	});
 
-	$('#longname').on('change', function () {
-		this.classList.remove('is-invalid');
-		this.classList.remove('is-valid');
+	//---------
+	// Unix Groups
 
-		if (this.value) {
-			if (this.validity.valid) {
-				this.classList.add('is-valid');
-			} else {
-				this.classList.add('is-invalid');
-			}
-		}
-	});
+	document.querySelectorAll('.input-unixgroup').forEach(function (el) {
+		el.addEventListener('keyup', function () {
+			var val = this.value;
 
-	$('.add-unixgroup').on('click', function (e) {
-		e.preventDefault();
+			val = val.toLowerCase()
+				.replace(/\s+/g, '-')
+				.replace(/[^a-z0-9-]+/g, '');
 
-		var name = $($(this).attr('href'));
-		var btn = $(this);
-
-		name.removeClass('is-invalid').removeClass('is-valid');
-
-		if (name.val() && name[0].validity.valid) {
-			name.addClass('is-valid');
-		} else {
-			name.addClass('is-invalid');
-			return false;
-		}
-
-		// create new relationship
-		$.ajax({
-			url: btn.data('api'),
-			type: 'post',
-			data: {
-				'groupid': btn.data('group'),
-				'longname': name.val()
-			},
-			dataType: 'json',
-			async: false,
-			success: function (response) {
-				var c = $(btn.data('container'));
-				var li = c.find('tr.hidden');
-
-				if (typeof (li) !== 'undefined') {
-					var template = $(li)
-						.clone()
-						.removeClass('hidden');
-
-					template
-						.attr('id', template.attr('id').replace(/\{id\}/g, response.id))
-						.data('id', response.id);
-
-					template.find('a').each(function (i, el) {
-						$(el).attr('data-api', $(el).attr('data-api').replace(/\{id\}/g, response.id));
-					});
-
-					var content = template
-						.html()
-						.replace(/\{id\}/g, response.id)
-						.replace(/\{longname\}/g, response.longname)
-						.replace(/\{shortname\}/g, response.shortname);
-
-					template.html(content).insertBefore(li);
-					var total = parseInt($('#unix-used').html());
-					total = total + 1;
-					$('#unix-used').html(total);
-					if (total >= 26) {
-						btn.addClass('disabled')
-							.prop('disabled', true);
-					}
-					$('.dialog-help').dialog('close');
-				}
-
-				name.removeClass('is-valid');
-				name.val('');
-			},
-			error: function (xhr) {
-				name.addClass('is-invalid');
-
-				$(btn.attr('data-error')).removeClass('hide').html(xhr.responseJSON.message);
-			}
+			this.value = val;
 		});
 	});
 
-	$('body').on('click', '.remove-unixgroup', function (e) {
+	document.querySelectorAll('.create-default-unix-groups').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			this.setAttribute('data-loading', true);
+
+			CreateNewGroupVal(0, this, parseInt(this.getAttribute('data-all-groups')));
+		});
+	});
+
+	var longname = document.getElementById('longname');
+	if (longname) {
+		longname.addEventListener('change', function () {
+			this.classList.remove('is-invalid');
+			this.classList.remove('is-valid');
+
+			if (this.value) {
+				if (this.validity.valid) {
+					this.classList.add('is-valid');
+				} else {
+					this.classList.add('is-invalid');
+				}
+			}
+		});
+	}
+
+	document.querySelectorAll('.add-unixgroup').forEach(function(el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			var name = document.getElementById(this.getAttribute('href').replace('#', ''));
+			var btn = this;
+
+			name.classList.remove('is-invalid');
+			name.classList.remove('is-valid');
+
+			if (name.value && name.validity.valid) {
+				name.classList.add('is-valid');
+			} else {
+				name.classList.add('is-invalid');
+				return false;
+			}
+
+			// create new relationship
+			fetch(btn.getAttribute('data-api'), {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+				},
+				body: JSON.stringify({
+					'groupid': btn.getAttribute('data-group'),
+					'longname': name.value
+				})
+			})
+			.then(function (response) {
+				if (response.ok) {
+					window.location.reload(true);
+					return; // response.json();
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			/*.then(function (result) {
+				var c = document.querySelector(btn.getAttribute('data-container'));
+				var li = c.querySelector('tr.hidden');
+
+				if (li) {
+					var template = li.cloneNode(true);
+					template.classList.remove('hidden');
+
+					template.id = template.id.replace(/\{id\}/g, result.id);
+					template.setAttribute('data-id', result.id);
+
+					template.querySelectorAll('a').forEach(function (a) {
+						a.setAttribute('data-api', a.getAttribute('data-api').replace(/\{id\}/g, result.id));
+					});
+
+					var content = template.innerHTML;
+					content = content.replace(/\{id\}/g, result.id);
+					content = content.replace(/\{longname\}/g, result.longname)
+					content = content.replace(/\{shortname\}/g, result.shortname);
+
+					template.innerHTML = content
+					
+					li.parentNode.insertBefore(template, li);
+
+					var uused = document.getElementById('unix-used');
+					var total = parseInt(uused.innerHTML);
+					total = total + 1;
+					uused.innerHTML = total;
+
+					if (total >= 26) {
+						btn.classList.add('disabled');
+						btn.disabled = true;
+					}
+				}
+
+				name.classList.remove('is-valid');
+				name.value = '';
+			})*/
+			.catch(function (error) {
+				name.classList.add('is-invalid');
+
+				var err = document.querySelector(btn.getAttribute('data-error'));
+				if (err) {
+					err.classList.remove('hide');
+					err.innerHTML = error;
+				}
+			});
+		});
+	});
+
+	document.querySelector('body').addEventListener('click', function (e) {
+		if (!e.target.parentNode.matches('.remove-unixgroup')) {
+			return;
+		}
 		e.preventDefault();
 
-		var result = confirm($(this).data('confirm'));
+		var btn = e.target.parentNode;
+		var result = confirm(btn.getAttribute('data-confirm'));
 
 		if (result) {
-			var obj = {
-				'groupid': $(this).data('value')
-			};
-
 			// delete relationship
-			$.ajax({
-				url: $(this).data('api'),
-				type: 'delete',
-				data: obj,
-				dataType: 'json',
-				async: false,
-				success: function () {
-					window.location.reload(true);
-				},
-				error: function (xhr, ajaxOptions, thrownError) {
-					var msg = "An error occured while deleting group.";
-
-					if (xhr.responseJSON && xhr.responseJSON.message) {
-						msg = xhr.responseJSON.message;
-					}
-
-					var tr = btn.closest('tr');
-					if (tr) {
-						var td = tr.querySelector('td');
-						if (td) {
-							var span = document.createElement("div");
-							span.classList.add('text-warning');
-							span.append(document.createTextNode(msg));
-							td.append(span);
-						}
-					}
-					btn.classList.add('hide');
-					//alert(msg);
-					/*var notice = $("#deletegroup_" + obj['groupid']);
-					if (notice.length) {
-						notice
-							.removeClass('hide')
-							.text(msg);
-					}*/
+			fetch(btn.getAttribute('data-api') + '?groupid=' + btn.getAttribute('data-value'), {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 				}
+			})
+			.then(function (response) {
+				if (response.ok) {
+					window.location.reload(true);
+					return;
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (error) {
+				var tr = btn.closest('tr');
+				if (tr) {
+					var td = tr.querySelector('td');
+					if (td) {
+						var span = document.createElement("div");
+						span.classList.add('text-warning');
+						span.append(document.createTextNode(error));
+						td.append(span);
+					}
+				}
+				btn.classList.add('hide');
 			});
 		}
 	});
-
-	/*$('[maxlength]').each(function (i, el) {
-		var container = $('<span class="char-counter-wrap"></span>');
-		var counter = $('<span class="char-counter"></span>');
-		var input = $(el);
-
-		if (input.attr('id') != '') {
-			counter.attr('id', input.attr('id') + '-counter');
-		}
-
-		if (input.parent().hasClass('input-group')) {
-			input.parent().wrap(container);
-			counter.insertAfter(input.parent());
-		} else {
-			input.wrap(container);
-			counter.insertAfter(input);
-		}
-		counter.text(input.val().length + ' / ' + input.attr('maxlength'));
-
-		input
-			.on('focus', function () {
-				var container = $(this).closest('.char-counter-wrap');
-				if (container.length) {
-					container.addClass('char-counter-focus');
-				}
-			})
-			.on('blur', function () {
-				var container = $(this).closest('.char-counter-wrap');
-				if (container.length) {
-					container.removeClass('char-counter-focus');
-				}
-			})
-			.on('keyup', function () {
-				var chars = $(this).val().length;
-				var counter = $('#' + $(this).attr('id') + '-counter');
-				if (counter.length) {
-					counter.text(chars + ' / ' + $(this).attr('maxlength'));
-				}
-			});
-	});*/
 
 	//---------
 	// New group
 
-	var ngdialog = $(".new-group-dialog").dialog({
-		autoOpen: false,
-		height: 'auto',
-		width: 500,
-		modal: true
-	});
-
-	$('.add-group').on('click', function (e) {
-		e.preventDefault();
-		ngdialog.dialog('open');
-	});
-
-	$('#new_group_btn')
-		.on('click', function (e) {
+	var newgroup = document.getElementById('new_group_btn');
+	if (newgroup) {
+		newgroup.addEventListener('click', function (e) {
 			e.preventDefault();
-			$($(this).attr('data-indicator')).removeClass('hide');
-			$(this).prop('disabled', true);
+			document.getElementById(this.getAttribute('data-indicator').replace('#', '')).classList.remove('hide');
+			this.disabled = true;
 			CreateNewGroup();
 		});
-	$('#new_group_input')
-		.on('keyup', function (e) {
+	}
+
+	var newgroupi = document.getElementById('new_group_input');
+	if (newgroupi) {
+		newgroupi.addEventListener('keyup', function (e) {
 			if (e.keyCode == 13) {
 				CreateNewGroup();
 			}
 		});
+	}
 });
