@@ -93,9 +93,7 @@ app('pathway')
 					<option value="0">{{ trans('queues::queues.all resources') }}</option>
 					<?php
 					$units = array();
-					?>
-					@foreach ($resources as $resource)
-						<?php
+					foreach ($resources as $resource):
 						$subresources = $resource->subresources()->orderBy('name', 'asc')->get();
 						if (!count($subresources)):
 							continue;
@@ -116,8 +114,8 @@ app('pathway')
 							<option value="{{ $key }}"<?php echo $selected; ?>>{{ str_repeat('- ', 1) . $subresource->name }}</option>
 							<?php
 						endforeach;
-						?>
-					@endforeach
+					endforeach;
+					?>
 				</select>
 
 				<label class="sr-only" for="filter_class">{{ trans('queues::queues.class') }}</label>
