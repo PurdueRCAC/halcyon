@@ -64,7 +64,7 @@ foreach ($rows as $event):
 		endif;
 	endforeach;
 
-	if (!$attending && isset($attendance[$event->datetimenews->format('Y-m-d')])):
+	if (!$attending && $event->url && isset($attendance[$event->datetimenews->format('Y-m-d')])):
 		$canAttend = false;
 	endif;
 
@@ -186,7 +186,7 @@ foreach ($rows as $event):
 						<div class="text-info">{{ trans('widget.coffeehours::coffeehours.not reserved') }}</div>
 					@endif
 				@else
-					@if ($reserved)
+					@if ($event->url && $reserved)
 						@if (auth()->user() && auth()->user()->can('manage news'))
 							<div class="text-success">{{ trans('widget.coffeehours::coffeehours.reserved by', ['name' => $reserved]) }}</div>
 							@if ($comment)
