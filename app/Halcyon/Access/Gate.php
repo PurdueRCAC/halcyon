@@ -63,10 +63,10 @@ class Gate
 	/**
 	 * Method to check if a user is authorised to perform an action, optionally on an asset.
 	 *
-	 * @param   int  $userId  Id of the user for which to check authorisation.
-	 * @param   string   $action  The name of the action to authorise.
-	 * @param   mixed    $asset   Integer asset id or the name of the asset as a string.  Defaults to the global asset node.
-	 * @return  bool  True if authorised.
+	 * @param  int    $userId  Id of the user for which to check authorisation.
+	 * @param  string $action  The name of the action to authorise.
+	 * @param  mixed  $asset   Asset ID or the name of the asset as a string. Defaults to the global asset node.
+	 * @return bool   True if authorised.
 	 */
 	public static function check($userId, $action, $asset = null)
 	{
@@ -116,9 +116,9 @@ class Gate
 	/**
 	 * Determine if the given ability should be granted for the current user.
 	 *
-	 * @param  int  $userId  Id of the user for which to check authorisation.
-	 * @param  string   $action  The name of the action to authorise.
-	 * @param  mixed    $asset   Integer asset id or the name of the asset as a string.  Defaults to the global asset node.
+	 * @param  int    $userId  Id of the user for which to check authorisation.
+	 * @param  string $action  The name of the action to authorise.
+	 * @param  mixed  $asset   Asset ID or the name of the asset as a string. Defaults to the global asset node.
 	 * @return bool
 	 */
 	public static function authorize($userId, $action, $asset = null)
@@ -214,10 +214,10 @@ class Gate
 	/**
 	 * Method to check if a role is authorised to perform an action, optionally on an asset.
 	 *
-	 * @param   int  $roleId  The path to the role for which to check authorisation.
-	 * @param   string   $action   The name of the action to authorise.
-	 * @param   mixed    $asset    Integer asset id or the name of the asset as a string.  Defaults to the global asset node.
-	 * @return  bool  True if authorised.
+	 * @param   int    $roleId  The path to the role for which to check authorisation.
+	 * @param   string $action  The name of the action to authorise.
+	 * @param   mixed  $asset   Asset ID or the name of the asset as a string. Defaults to the global asset node.
+	 * @return  bool   True if authorised.
 	 */
 	public static function checkRole($roleId, $action, $asset = null)
 	{
@@ -335,7 +335,7 @@ class Gate
 		if ($recursive)
 		{
 			//$query->joinRaw($model->getTable() . ' AS b', 'b.lft <= a.lft AND b.rgt >= a.rgt', 'left');
-			$query->leftJoin($model->getTable() . ' AS b', function($join)
+			$query->leftJoin($model->getTable() . ' AS b', function ($join)
 			{
 				$join->on('b.lft', '<=', 'a.lft')
 					->on('b.rgt', '>=', 'a.rgt');
@@ -366,7 +366,7 @@ class Gate
 		}
 
 		// Instantiate and return the Rules object for the asset rules.
-		$rules = new Rules;
+		$rules = new Rules();
 		$rules->mergeCollection($result);
 
 		return $rules;
@@ -544,7 +544,7 @@ class Gate
 	 * @param   string  $section An optional xpath to search for the fields.
 	 * @return  bool|array    False if case of error or the list of actions available.
 	 */
-	public static function getActionsFromFile($file, $section = 'module') //"/access/section[@name='module']/")
+	public static function getActionsFromFile($file, $section = 'module')
 	{
 		if (!is_file($file))
 		{
@@ -555,7 +555,7 @@ class Gate
 		$actions = include $file;
 
 		// Else return the actions from the xml.
-		return isset($actions[$section]) ? $actions[$section] : false;//self::getActionsFromData(self::getXml($file, true), $xpath);
+		return isset($actions[$section]) ? $actions[$section] : false;
 	}
 
 	/**
@@ -612,9 +612,9 @@ class Gate
 	/**
 	 * Reads an XML file or string.
 	 *
-	 * @param   string   $data    Full path and file name.
-	 * @param   bool  $isFile  true to load a file or false to load a string.
-	 * @return  mixed    SimpleXMLElement on success or false on error.
+	 * @param   string  $data    Full path and file name.
+	 * @param   bool    $isFile  true to load a file or false to load a string.
+	 * @return  mixed   SimpleXMLElement on success or false on error.
 	 * @todo    This may go in a separate class - error reporting may be improved.
 	 */
 	public static function getXml($data, $isFile = true)

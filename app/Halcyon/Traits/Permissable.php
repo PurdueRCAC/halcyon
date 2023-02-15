@@ -26,9 +26,9 @@ trait Permissable
 	/**
 	 * Method to return the title to use for the asset table.
 	 *
-	 * In tracking the assets a title is kept for each asset so that there is some context available in a unified access manager.
-	 * Usually this would just return $this->title or $this->name or whatever is being used for the primary name of the row.
-	 * If this method is not overridden, the asset name is used.
+	 * In tracking the assets a title is kept for each asset so that there is some context available in a unified
+	 * access manager. Usually this would just return $this->title or $this->name or whatever is being used for the
+	 * primary name of the row. If this method is not overridden, the asset name is used.
 	 *
 	 * @return  string  The string to use as the title in the asset table.
 	 */

@@ -77,7 +77,7 @@ class IssuesController extends Controller
 				$keyword = preg_replace('/[^A-Za-z0-9]/', ' ', $keyword);
 
 				// Calculate stem for the word
-				$stem = PorterStemmer::Stem($keyword);
+				$stem = PorterStemmer::stem($keyword);
 				$stem = substr($stem, 0, 1) . $stem;
 
 				$from_sql[] = "+" . $stem;

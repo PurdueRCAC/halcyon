@@ -18,16 +18,18 @@ class CasManager
 	 *
 	 * @var array<string,mixed>
 	 */
-	protected $_attributes = [];
+	protected $attributes = [];
 
 	/**
 	 * Boolean flag used for masquerading as a user.
 	 *
 	 * @var bool
 	 */
-	protected $_masquerading = false;
+	protected $masquerading = false;
 
 	/**
+	 * Constructor
+	 *
 	 * @param array<string,mixed> $config
 	 */
 	public function __construct(array $config)
@@ -45,7 +47,7 @@ class CasManager
 				// Fix for depreciation of setDebug
 				phpCAS::setLogger();
 			}
-			
+
 			phpCAS::log('Loaded configuration:' . PHP_EOL . serialize($this->config));
 		}
 
@@ -83,7 +85,7 @@ class CasManager
 
 		if ($this->config['cas_masquerade'])
 		{
-			$this->_masquerading = true;
+			$this->masquerading = true;
 
 			phpCAS::log('Masquerading as user: ' . $this->config['cas_masquerade']);
 		}
@@ -93,6 +95,7 @@ class CasManager
 	 * Configure CAS Client|Proxy
 	 *
 	 * @param string $method
+	 * @return void
 	 */
 	protected function configureCas($method = 'client')
 	{
@@ -140,6 +143,7 @@ class CasManager
 	 * Maintain backwards compatibility with config file
 	 *
 	 * @param array<string,mixed> $config
+	 * @return void
 	 */
 	protected function parseConfig(array $config)
 	{
@@ -170,14 +174,6 @@ class CasManager
 
 		if (!isset($config['cas_base_url']) || !$config['cas_base_url'])
 		{
-			/*$parts = explode('/', $config['cas_hostname']);
-			$host = $parts[0];
-
-			if ($host)
-			{
-				$config['cas_base_url'] = 'https://' . $host;
-			}*/
-
 			$config['cas_base_url'] = request()->getSchemeAndHttpHost();
 		}
 
@@ -189,6 +185,8 @@ class CasManager
 	 *
 	 * Having some kind of server cert validation in production
 	 * is highly recommended.
+	 *
+	 * @return void
 	 */
 	protected function configureCasValidation()
 	{
@@ -273,7 +271,7 @@ class CasManager
 
 		if ($this->hasAttribute($key))
 		{
-			return $this->_attributes[$key];
+			return $this->attributes[$key];
 		}
 
 		return;
@@ -288,8 +286,9 @@ class CasManager
 	 */
 	public function hasAttribute($key)
 	{
-		if ($this->isMasquerading()) {
-			return array_key_exists($key, $this->_attributes);
+		if ($this->isMasquerading())
+		{
+			return array_key_exists($key, $this->attributes);
 		}
 
 		return phpCAS::hasAttribute($key);
@@ -300,6 +299,7 @@ class CasManager
 	 *
 	 * @param string $url
 	 * @param string $service
+	 * @return void
 	 */
 	public function logout($url = '', $service = '')
 	{
@@ -337,6 +337,7 @@ class CasManager
 	 * Logout the user using the provided URL.
 	 *
 	 * @param string $url
+	 * @return void
 	 */
 	public function logoutWithUrl($url)
 	{
@@ -353,7 +354,7 @@ class CasManager
 	{
 		// We don't error check because phpCAS has its own error handling.
 		return $this->isMasquerading()
-			? $this->_attributes
+			? $this->attributes
 			: phpCAS::getAttributes();
 	}
 
@@ -384,7 +385,7 @@ class CasManager
 	 */
 	public function isMasquerading()
 	{
-		return $this->_masquerading;
+		return $this->masquerading;
 	}
 
 	/**
@@ -392,10 +393,11 @@ class CasManager
 	 * method has no effect when not masquerading.
 	 *
 	 * @param array $attr : the attributes of the user.
+	 * @return void
 	 */
 	public function setAttributes(array $attr)
 	{
-		$this->_attributes = $attr;
+		$this->attributes = $attr;
 
 		phpCAS::log('Forced setting of user masquerading attributes: ' . serialize($attr));
 	}
@@ -407,6 +409,7 @@ class CasManager
 	 * @param array $params
 	 *
 	 * @return mixed
+	 * @throws \BadMethodCallException
 	 */
 	public function __call($method, $params)
 	{

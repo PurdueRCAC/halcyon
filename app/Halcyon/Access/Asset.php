@@ -7,7 +7,7 @@ use Exception;
 
 /**
  * Access asset
- * 
+ *
  * An asset is an entry specifying permissions on some
  * object. For example, an entry with name = 'page.123'
  * refers to a Page entry with ID #123.

@@ -183,7 +183,7 @@ class Sanitize
 
 		$string = preg_replace('#(&\#*\w+)[\x00-\x20]+;#u', "$1;", $string);
 		$string = preg_replace('#(&\#x*)([0-9A-F]+);*#iu', "$1$2;", $string);
-		//$string = html_entity_decode($string, ENT_COMPAT, "UTF-8");
+		//$string = html_entitydecode($string, ENT_COMPAT, "UTF-8");
 
 		// Remove any attribute starting with "on" or xmlns
 		$string = preg_replace('#(<[^>]+[\x00-\x20\"\'])(on|xmlns)[^>]*>#iUu', "$1>", $string);
@@ -202,10 +202,25 @@ class Sanitize
 		$string = preg_replace('#</*\w+:\w[^>]*>#i', '', $string);
 
 		// Remove really unwanted tags
-		$string = self::stripTags($string,
-			'applet', 'meta', 'xml', 'blink', 'link', 'style',
-			'script', 'embed', 'object', 'iframe', 'frame', 'frameset',
-			'ilayer', 'layer', 'bgsound', 'title', 'base'
+		$string = self::stripTags(
+			$string,
+			'applet',
+			'meta',
+			'xml',
+			'blink',
+			'link',
+			'style',
+			'script',
+			'embed',
+			'object',
+			'iframe',
+			'frame',
+			'frameset',
+			'ilayer',
+			'layer',
+			'bgsound',
+			'title',
+			'base'
 		);
 
 		return $string;
@@ -214,48 +229,48 @@ class Sanitize
 	/**
 	 * Replace discouraged characters introduced by Microsoft Word
 	 *
-	 * @param   string   $text        Text to clean
-	 * @param   bool  $quotesOnly  Only clean quotes (single and double)
+	 * @param   string  $text        Text to clean
+	 * @param   bool    $quotesOnly  Only clean quotes (single and double)
 	 * @return  string
 	 */
-	public static function cleanMsChar($text, $quotesOnly=false)
+	public static function cleanMsChar($text, $quotesOnly = false)
 	{
 		$y = array(
-			"\x7f"=>'',
-			"\x80"=>'&#8364;',
-			"\x81"=>'',
-			"\x83"=>'&#402;',
-			"\x85"=>'&#8230;',
-			"\x86"=>'&#8224;',
-			"\x87"=>'&#8225;',
-			"\x88"=>'&#710;',
-			"\x89"=>'&#8240;',
-			"\x8a"=>'&#352;',
-			"\x8b"=>'&#8249;',
-			"\x8c"=>'&#338;',
-			"\x8d"=>'',
-			"\x8e"=>'&#381;',
-			"\x8f"=>'',
-			"\x90"=>'',
-			"\x95"=>'&#8226;',
-			"\x96"=>'&#8211;',
-			"\x97"=>'&#8212;',
-			"\x98"=>'&#732;',
-			"\x99"=>'&#8482;',
-			"\x9a"=>'&#353;',
-			"\x9b"=>'&#8250;',
-			"\x9c"=>'&#339;',
-			"\x9d"=>'',
-			"\x9e"=>'&#382;',
-			"\x9f"=>'&#376;',
+			"\x7f" => '',
+			"\x80" => '&#8364;',
+			"\x81" => '',
+			"\x83" => '&#402;',
+			"\x85" => '&#8230;',
+			"\x86" => '&#8224;',
+			"\x87" => '&#8225;',
+			"\x88" => '&#710;',
+			"\x89" => '&#8240;',
+			"\x8a" => '&#352;',
+			"\x8b" => '&#8249;',
+			"\x8c" => '&#338;',
+			"\x8d" => '',
+			"\x8e" => '&#381;',
+			"\x8f" => '',
+			"\x90" => '',
+			"\x95" => '&#8226;',
+			"\x96" => '&#8211;',
+			"\x97" => '&#8212;',
+			"\x98" => '&#732;',
+			"\x99" => '&#8482;',
+			"\x9a" => '&#353;',
+			"\x9b" => '&#8250;',
+			"\x9c" => '&#339;',
+			"\x9d" => '',
+			"\x9e" => '&#382;',
+			"\x9f" => '&#376;',
 		);
 		$x = array(
-			"\x82"=>'\'',
-			"\x84"=>'"',
-			"\x91"=>'\'',
-			"\x92"=>'\'',
-			"\x93"=>'"',
-			"\x94"=>'"'
+			"\x82" => '\'',
+			"\x84" => '"',
+			"\x91" => '\'',
+			"\x92" => '\'',
+			"\x93" => '"',
+			"\x94" => '"'
 		);
 		if (!$quotesOnly)
 		{
@@ -276,11 +291,11 @@ class Sanitize
 	 */
 	public static function html($text, $options = [])
 	{
-		$config = self::_buildHtmlPurifierConfig($options);
+		$config = self::buildHtmlPurifierConfig($options);
 		$htmlPurifierWhitelist  = $config->getHTMLDefinition(true);
 
-		self::_addElementsToHtmlPurifierWhitelist($htmlPurifierWhitelist);
-		self::_addAttributesToHtmlPurifierWhitelist($htmlPurifierWhitelist);
+		self::addElementsToHtmlPurifierWhitelist($htmlPurifierWhitelist);
+		self::addAttributesToHtmlPurifierWhitelist($htmlPurifierWhitelist);
 
 		$purifier = new \HTMLPurifier($config);
 
@@ -293,7 +308,7 @@ class Sanitize
 	 * @param    array    $options   Custom purifier configuration options
 	 * @return   object   $config    HTML purifier configuration
 	 */
-	protected static function _buildHtmlPurifierConfig($options)
+	protected static function buildHtmlPurifierConfig($options)
 	{
 		$config = \HTMLPurifier_Config::createDefault();
 		$root = str_replace(['http://', 'https://', '.'], ['', '', '\.'], \App::get('request')->root());
@@ -331,7 +346,7 @@ class Sanitize
 	{
 		$client = \App::get('client');
 		$clientAlias = isset($client->alias) ? $client->alias : $client->name;
-		$clientSerializerPath = PATH_APP . "/cache/$clientAlias/htmlpurifier";
+		$clientSerializerPath = storage_path() . "/cache/$clientAlias/htmlpurifier";
 
 		if (!is_dir($clientSerializerPath))
 		{
@@ -350,7 +365,7 @@ class Sanitize
 	 * @param    object   $htmlPurifierWhitelist HTML purifier whitelist
 	 * @return   void
 	 */
-	protected static function _addElementsToHtmlPurifierWhitelist($htmlPurifierWhitelist)
+	protected static function addElementsToHtmlPurifierWhitelist($htmlPurifierWhitelist)
 	{
 		$styleElement = [
 			'name' => 'style',
@@ -416,7 +431,7 @@ class Sanitize
 	 * @param    object   $htmlPurifierWhitelist HTML purifier whitelist
 	 * @return   void
 	 */
-	protected static function _addAttributesToHtmlPurifierWhitelist($htmlPurifierWhitelist)
+	protected static function addAttributesToHtmlPurifierWhitelist($htmlPurifierWhitelist)
 	{
 		$htmlPurifierWhitelist->addAttribute('img', 'usemap', 'CDATA');
 	}
@@ -477,7 +492,7 @@ class Sanitize
 				break;
 
 			case 'STRING':
-				$result = (string) self::clean(self::_decode((string) $source));
+				$result = (string) self::clean(self::decode((string) $source));
 				break;
 
 			case 'HTML':
@@ -507,7 +522,7 @@ class Sanitize
 						// filter element for XSS and other 'bad' code etc.
 						if (is_string($value))
 						{
-							$source[$key] = self::clean(self::_decode($value));
+							$source[$key] = self::clean(self::decode($value));
 						}
 					}
 					$result = $source;
@@ -518,7 +533,7 @@ class Sanitize
 					if (is_string($source) && !empty($source))
 					{
 						// filter source for XSS and other 'bad' code etc.
-						$result = self::clean(self::_decode($source));
+						$result = self::clean(self::decode($source));
 					}
 					else
 					{
@@ -538,7 +553,7 @@ class Sanitize
 	 * @param   string  $source  The source string.
 	 * @return  string  Plaintext string
 	 */
-	protected static function _decode($source)
+	protected static function decode($source)
 	{
 		static $ttr;
 

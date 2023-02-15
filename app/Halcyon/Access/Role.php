@@ -294,14 +294,26 @@ class Role extends Model
 		$map = new Map;
 
 		$results = DB::table($model->getTable() . ' AS a')
-			->select('a.id AS value', 'a.title AS text', DB::raw('COUNT(DISTINCT b.id) AS level'), 'a.parent_id', DB::raw('COUNT(DISTINCT m.user_id) AS maps_count'))
-			->leftJoin($model->getTable() . ' AS b', function($join)
+			->select(
+				'a.id AS value',
+				'a.title AS text',
+				DB::raw('COUNT(DISTINCT b.id) AS level'),
+				'a.parent_id',
+				DB::raw('COUNT(DISTINCT m.user_id) AS maps_count')
+			)
+			->leftJoin($model->getTable() . ' AS b', function ($join)
 			{
 				$join->on('a.lft', '>', 'b.lft')
 					->on('a.rgt', '<', 'b.rgt');
 			})
 			->leftJoin($map->getTable() . ' AS m', 'm.role_id', 'a.id')
-			->groupBy('a.id', 'a.title', 'a.lft', 'a.rgt', 'a.parent_id')
+			->groupBy(
+				'a.id',
+				'a.title',
+				'a.lft',
+				'a.rgt',
+				'a.parent_id'
+			)
 			->orderBy('a.lft', 'asc')
 			->get();
 

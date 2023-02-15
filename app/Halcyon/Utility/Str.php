@@ -140,7 +140,7 @@ class Str
 					$options['clean'] = array('method' => 'text');
 					$str = self::cleanInsert($str, $options);
 				}
-			break;
+				break;
 
 			case 'text':
 				$clean = array_merge(array(
@@ -161,7 +161,7 @@ class Str
 					preg_quote($options['after'], '/')
 				);
 				$str = preg_replace($kleenex, $clean['replacement'], $str);
-			break;
+				break;
 		}
 		return $str;
 	}
@@ -562,7 +562,7 @@ class Str
 				$match = true;
 
 				// Make sure the entire needle matches by going forward the length of the needle
-				for ($j=0; $j < strlen($needle); $j++)
+				for ($j = 0; $j < strlen($needle); $j++)
 				{
 					// If at any point we stop matching, break out
 					if (substr($needle, $j, 1) != substr($haystack, $i + $j, 1))

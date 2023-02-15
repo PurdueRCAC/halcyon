@@ -726,7 +726,7 @@ class Report extends Model
 		$stems = array();
 		foreach (explode(' ', $report_words) as $word)
 		{
-			$stem = PorterStemmer::Stem($word);
+			$stem = PorterStemmer::stem($word);
 			$stem = substr($stem, 0, 1) . $stem;
 
 			array_push($stems, $stem);
@@ -736,7 +736,7 @@ class Report extends Model
 			{
 				$word = preg_replace('/[^A-Za-z]/', '', $word);
 
-				$stem = PorterStemmer::Stem($word);
+				$stem = PorterStemmer::stem($word);
 				$stem = substr($stem, 0, 1) . $stem;
 
 				array_push($stems, $stem);

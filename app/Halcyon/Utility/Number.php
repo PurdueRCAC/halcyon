@@ -100,9 +100,9 @@ class Number
 			}
 
 			$mult = $num;
-			for ($i=0; $i<$power; $i++)
+			for ($i = 0; $i < $power; $i++)
 			{
-				$mult = $mult*1024;
+				$mult = $mult * 1024;
 			}
 
 			$value = $mult;
@@ -133,15 +133,15 @@ class Number
 	{
 		if ($num >= 1000 && $num < 1000000)
 		{
-			return sprintf('%01.'.$decimals.'f', (sprintf('%01.0f', $num) / 1000)).'K';
+			return sprintf('%01.' . $decimals . 'f', (sprintf('%01.0f', $num) / 1000)) . 'K';
 		}
 		elseif ($num >= 1000000 && $num < 1000000000)
 		{
-			return sprintf('%01.'.$decimals.'f', (sprintf('%01.0f', $num) / 1000000)).'M';
+			return sprintf('%01.' . $decimals . 'f', (sprintf('%01.0f', $num) / 1000000)) . 'M';
 		}
 		elseif ($num >= 1000000000)
 		{
-			return sprintf('%01.'.$decimals.'f', (sprintf('%01.0f', $num) / 1000000000)).'B';
+			return sprintf('%01.' . $decimals . 'f', (sprintf('%01.0f', $num) / 1000000000)) . 'B';
 		}
 
 		return $num;

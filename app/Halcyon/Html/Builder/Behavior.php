@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Halcyon\Html\Builder;
 
 use Lang;
@@ -21,8 +22,8 @@ class Behavior
 	 *
 	 * If debugging mode is on an uncompressed version of MooTools is included for easier debugging.
 	 *
-	 * @param   string   $extras  MooTools file to load
-	 * @param   bool  $debug   Is debugging mode on? [optional]
+	 * @param   string  $extras  MooTools file to load
+	 * @param   bool    $debug   Is debugging mode on? [optional]
 	 * @return  void
 	 */
 	public static function framework($extras = false, $debug = null)
@@ -58,7 +59,7 @@ class Behavior
 
 		if ($type == 'core')
 		{
-			self::_pushScriptTo(0, $path);
+			self::pushScriptTo(0, $path);
 
 			if (app()->get('isAdmin'))
 			{
@@ -67,7 +68,7 @@ class Behavior
 		}
 		else
 		{
-			self::_pushScriptTo(1, $path);
+			self::pushScriptTo(1, $path);
 		}
 		self::$loaded[__METHOD__][$type] = true;
 
@@ -84,7 +85,7 @@ class Behavior
 	 * @param   bool $async
 	 * @return  void
 	 */
-	private static function _pushScriptTo($index, $url, $type = 'text/javascript', $defer = false, $async = false)
+	private static function pushScriptTo($index, $url, $type = 'text/javascript', $defer = false, $async = false)
 	{
 		//if (!app('document'))
 		//{
@@ -281,9 +282,10 @@ class Behavior
 	/**
 	 * Add unobtrusive javascript support for charts
 	 *
+	 * @param string $type
 	 * @return  void
 	 */
-	public static function chart($type='core')
+	public static function chart($type = 'core')
 	{
 		if (isset(self::$loaded[__METHOD__][$type]))
 		{

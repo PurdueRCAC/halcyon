@@ -87,7 +87,7 @@ class Extension extends Model
 
 	/**
 	 * Determine if record is published
-	 * 
+	 *
 	 * @return  bool
 	 */
 	public function isPublished(): bool
@@ -115,9 +115,9 @@ class Extension extends Model
 	/**
 	 * Method to change the title.
 	 *
-	 * @param   string   $title        The title.
-	 * @param   string   $position     The position.
-	 * @return  array    Contains the modified title.
+	 * @param   string  $title        The title.
+	 * @param   string  $position     The position.
+	 * @return  array   Contains the modified title.
 	 */
 	public function generateNewTitle($title, $position): array
 	{
@@ -143,10 +143,10 @@ class Extension extends Model
 	 * default: "Label" becomes "Label (2)"
 	 * dash:    "Label" becomes "Label-2"
 	 *
-	 * @param   string   $string  The source string.
-	 * @param   string   $style   The the style (default|dash).
-	 * @param   int  $n       If supplied, this number is used for the copy, otherwise it is the 'next' number.
-	 * @return  string   The incremented string.
+	 * @param   string  $string  The source string.
+	 * @param   string  $style   The the style (default|dash).
+	 * @param   int     $n       If supplied, this number is used for the copy, otherwise it is the 'next' number.
+	 * @return  string  The incremented string.
 	 */
 	protected static function incrementString($string, $style = 'default', $n = 0): string
 	{
@@ -252,13 +252,6 @@ class Extension extends Model
 
 		$paths = array();
 		$paths[] = $this->path() . '/Config/Params.xml';
-
-		/*if (substr($this->module, 0, 4) == 'mod_')
-		{
-			$paths[] = $this->path() . '/' . substr($this->module, 4) . '.xml';
-		}
-
-		$paths[] = $this->path() . '/' . $this->module . '.xml';*/
 
 		foreach ($paths as $file)
 		{

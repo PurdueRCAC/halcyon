@@ -149,7 +149,7 @@ class CommentsController extends Controller
 
 				// Calculate stem for the word
 				$keywords = array();
-				$stem = PorterStemmer::Stem($keyword);
+				$stem = PorterStemmer::stem($keyword);
 				$stem = substr($stem, 0, 1) . $stem;
 				$keywords[] = $stem;
 

@@ -16,7 +16,7 @@ namespace App\Halcyon\Utility;
  *
  * Usage:
  *
- *  $stem = PorterStemmer::Stem($word);
+ *  $stem = PorterStemmer::stem($word);
  *
  * How easy is that?
  */
@@ -42,7 +42,7 @@ class PorterStemmer
 	 * @param   string  $word  Word to stem
 	 * @return  string         Stemmed word
 	 */
-	public static function Stem($word)
+	public static function stem($word): string
 	{
 		if (strlen($word) <= 2)
 		{
@@ -67,7 +67,7 @@ class PorterStemmer
 	 * @param   string  $word
 	 * @return  string
 	 */
-	private static function step1ab($word)
+	private static function step1ab($word): string
 	{
 		// Part a
 		if (substr($word, -1) == 's')
@@ -80,14 +80,14 @@ class PorterStemmer
 
 		// Part b
 		if (substr($word, -2, 1) != 'e' || !self::replace($word, 'eed', 'ee', 0))
-		{ // First rule
+		{
+			// First rule
 			$v = self::$regex_vowel;
 
 			// ing and ed
 			if (preg_match("#$v+#", substr($word, 0, -3)) && self::replace($word, 'ing', '')
 			 || preg_match("#$v+#", substr($word, 0, -2)) && self::replace($word, 'ed', ''))
-			{ // Note use of && and ||, for precedence reasons
-
+			{
 				// If one of above two test successful
 				if (!self::replace($word, 'at', 'ate')
 				 && !self::replace($word, 'bl', 'ble')
@@ -101,7 +101,7 @@ class PorterStemmer
 					{
 						$word = substr($word, 0, -1);
 					}
-					else if (self::m($word) == 1 && self::cvc($word))
+					elseif (self::m($word) == 1 && self::cvc($word))
 					{
 						$word .= 'e';
 					}
@@ -118,11 +118,12 @@ class PorterStemmer
 	 * @param   string  $word  Word to stem
 	 * @return  string
 	 */
-	private static function step1c($word)
+	private static function step1c($word): string
 	{
 		$v = self::$regex_vowel;
 
-		if (substr($word, -1) == 'y' && preg_match("#$v+#", substr($word, 0, -1))) {
+		if (substr($word, -1) == 'y' && preg_match("#$v+#", substr($word, 0, -1)))
+		{
 			self::replace($word, 'y', 'i');
 		}
 
@@ -135,7 +136,7 @@ class PorterStemmer
 	 * @param   string  $word  Word to stem
 	 * @return  string
 	 */
-	private static function step2($word)
+	private static function step2($word): string
 	{
 		switch (substr($word, -2, 1))
 		{
@@ -194,7 +195,7 @@ class PorterStemmer
 	 * @param   string  $word  String to stem
 	 * @return  string
 	 */
-	private static function step3($word)
+	private static function step3($word): string
 	{
 		switch (substr($word, -2, 1))
 		{
@@ -233,7 +234,7 @@ class PorterStemmer
 	 * @param   string  $word  Word to stem
 	 * @return  string
 	 */
-	private static function step4($word)
+	private static function step4($word): string
 	{
 		switch (substr($word, -2, 1))
 		{
@@ -308,7 +309,7 @@ class PorterStemmer
 	 * @param   string  $word  Word to stem
 	 * @return  string
 	 */
-	private static function step5($word)
+	private static function step5($word): string
 	{
 		// Part a
 		if (substr($word, -1) == 'e')
@@ -349,7 +350,7 @@ class PorterStemmer
 	 *                          of the $str string. True does not necessarily mean
 	 *                          that it was replaced.
 	 */
-	private static function replace(&$str, $check, $repl, $m = null)
+	private static function replace(&$str, $check, $repl, $m = null): bool
 	{
 		$len = 0 - strlen($check);
 
@@ -382,7 +383,7 @@ class PorterStemmer
 	 * @param   string  $str  The string to return the m count for
 	 * @return  int           The m count
 	*/
-	private static function m($str)
+	private static function m($str): int
 	{
 		$c = self::$regex_consonant;
 		$v = self::$regex_vowel;
@@ -406,7 +407,8 @@ class PorterStemmer
 	{
 		$c = self::$regex_consonant;
 
-		return preg_match('#' . substr($c, 2, 1) . '$#', $str, $matches) && substr($matches[0], 0, 1) == substr($matches[0], 1, 1);
+		return preg_match('#' . substr($c, 2, 1) . '$#', $str, $matches)
+			   && substr($matches[0], 0, 1) == substr($matches[0], 1, 1);
 	}
 
 	/**
@@ -415,7 +417,7 @@ class PorterStemmer
 	 * @param   string  $str  String to check
 	 * @return  bool          Result
 	 */
-	private static function cvc($str)
+	private static function cvc($str): bool
 	{
 		$c = self::$regex_consonant;
 		$v = self::$regex_vowel;

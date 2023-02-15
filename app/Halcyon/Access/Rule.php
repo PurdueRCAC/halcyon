@@ -134,7 +134,6 @@ class Rule implements Arrayable, Jsonable
 						break;
 					}
 				}
-
 			}
 		}
 
