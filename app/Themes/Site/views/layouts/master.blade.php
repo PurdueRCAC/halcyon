@@ -6,11 +6,11 @@
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="csrf-token" content="{{ csrf_token() }}">
-		<meta name="base-url" content="{{ rtrim(asset('/'), '/') }}">
-		<meta name="api-token" content="{{ (Auth::user() ? Auth::user()->api_token : '') }}">
-		<meta name="theme-color" content="#000000">
-		<meta name="color-scheme" content="light dark">
+		<meta name="csrf-token" content="{{ csrf_token() }}" />
+		<meta name="base-url" content="{{ rtrim(asset('/'), '/') }}" />
+		<meta name="api-token" content="{{ (Auth::user() ? Auth::user()->api_token : '') }}" />
+		<meta name="theme-color" content="#000000" />
+		<meta name="color-scheme" content="light dark" />
 
 		<title>{{ config('app.name') }}@hasSection('title') - @yield('title')@endif</title>
 
@@ -89,10 +89,6 @@
 
 						<nav class="my-2 my-md-0 mr-md-3" aria-label="Main Menu">
 							@widget('mainmenu')
-							<!--<a class="p-2 text-dark" href="#">Features</a>
-							<a class="p-2 text-dark" href="#">Enterprise</a>
-							<a class="p-2 text-dark" href="#">Support</a>
-							<a class="p-2 text-dark" href="#">Pricing</a>-->
 						</nav>
 
 						@if (Auth::check())
@@ -112,31 +108,7 @@
 				</div>
 			</div>
 
-			<!-- <div class="container">
-				<div class="row">
-					<div class="logo col">
-						<h1>
-							<a href="{{ route('home') }}">
-								{{ config('app.name') }}
-							</a>
-						</h1>
-					</div>
-
-					<div class="login col text-right">
-						@if (Auth::check())
-							<a href="{{ route('site.users.account') }}">{{ Auth::user()->name }}</a> &nbsp;|&nbsp; <a href="{{ route('logout') }}">{{ trans('theme::site.logout') }}</a>
-						@else
-							<a href="{{ route('login') }}" class="btn btn-secondary btn-inverse"><span class="fa fa-lock" aria-hidden="true"></span> {{ trans('theme::site.login') }}</a>
-						@endif
-					</div>
-				</div>
-			</div> -->
-
 			@widget('header')
-
-			<!-- <nav class="navbar navbar-light navbar-expand-lg" aria-label="Main Menu">
-				@widget('mainmenu')
-			</nav> -->
 
 			@if (!Request::is('/'))
 				@widget('breadcrumbs')
