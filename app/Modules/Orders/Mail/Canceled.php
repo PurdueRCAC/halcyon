@@ -47,7 +47,7 @@ class Canceled extends Mailable
 	public function build()
 	{
 		return $this->markdown('orders::mail.canceled')
-					->subject(config('app.name') . ' - Order #' . $this->order->id . ' Canceled')
+					->subject('Order #' . $this->order->id . ' Canceled')
 					->with([
 						'order' => $this->order,
 						'user' => $this->user,

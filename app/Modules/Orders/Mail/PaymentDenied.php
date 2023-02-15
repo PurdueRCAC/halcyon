@@ -47,7 +47,7 @@ class PaymentDenied extends Mailable
 	public function build()
 	{
 		return $this->markdown('orders::mail.paymentdenied')
-					->subject(config('app.name') . ' - Order #' . $this->order->id . ' Payment Denied')
+					->subject('Order #' . $this->order->id . ' Payment Denied')
 					->with([
 						'order' => $this->order,
 						'user' => $this->user,

@@ -47,7 +47,7 @@ class Ticket extends Mailable
 	public function build()
 	{
 		return $this->markdown('orders::mail.ticket')
-					->subject(config('app.name') . ' - Order #' . $this->order->id . ' Fulfillment Request')
+					->subject('Order #' . $this->order->id . ' Fulfillment Request')
 					->with([
 						'order' => $this->order,
 						'user' => $this->user,

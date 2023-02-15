@@ -485,7 +485,7 @@ class EmailStatusCommand extends Command
 			{
 				$user = new User;
 				$user->email = config('mail.from.address');
-				$user->name = config('app.name');
+				$user->name = config('mail.from.name');
 
 				// Prepare and send actual email
 				$message = new Ticket($order, $user);

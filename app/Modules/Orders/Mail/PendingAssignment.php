@@ -47,7 +47,7 @@ class PendingAssignment extends Mailable
 	public function build()
 	{
 		return $this->markdown('orders::mail.pendingassignment')
-					->subject(config('app.name') . ' - Order #' . $this->order->id . ' Payment Information Entered')
+					->subject('Order #' . $this->order->id . ' Payment Information Entered')
 					->with([
 						'order' => $this->order,
 						'user' => $this->user,

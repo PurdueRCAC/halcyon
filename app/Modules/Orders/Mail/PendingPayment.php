@@ -47,7 +47,7 @@ class PendingPayment extends Mailable
 	public function build()
 	{
 		return $this->markdown('orders::mail.pendingpayment')
-					->subject(config('app.name') . ' - Order #' . $this->order->id . ' Payment Information Request')
+					->subject('Order #' . $this->order->id . ' Payment Information Request')
 					->with([
 						'order' => $this->order,
 						'user' => $this->user,

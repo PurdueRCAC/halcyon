@@ -47,7 +47,7 @@ class PaymentApproved extends Mailable
 	public function build()
 	{
 		return $this->markdown('orders::mail.paymentapproved')
-					->subject(config('app.name') . ' - Order #' . $this->order->id . ' Payment Approved')
+					->subject('Order #' . $this->order->id . ' Payment Approved')
 					->with([
 						'order' => $this->order,
 						'user' => $this->user,

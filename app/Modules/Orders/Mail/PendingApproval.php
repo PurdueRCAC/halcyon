@@ -47,7 +47,7 @@ class PendingApproval extends Mailable
 	public function build()
 	{
 		return $this->markdown('orders::mail.pendingapproval')
-					->subject(config('app.name') . ' - Order #' . $this->order->id . ' Account Approval Required')
+					->subject('Order #' . $this->order->id . ' Account Approval Required')
 					->with([
 						'order' => $this->order,
 						'user' => $this->user,
