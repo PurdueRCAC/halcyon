@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Modules\Queues\LogProcessors;
 
 use App\Modules\Queues\Models\Queue;
 use App\Modules\History\Models\Log;
+use App\Modules\Groups\Models\Group;
 
 /**
  * User requests log processor
@@ -23,6 +25,8 @@ class UserRequests
 
 			if ($resources = $record->getExtraProperty('resources', []))
 			{
+				$group = Group::find($record->groupid);
+
 				foreach ($resources as $resourceid)
 				{
 					foreach ($group->queues as $queue)
