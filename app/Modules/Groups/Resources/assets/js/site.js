@@ -82,7 +82,7 @@ function CreateNewGroupVal(num, btn, all) {
 		'groupid': group
 	};
 
-	fetch(input.getAttribute('data-api'), {
+	fetch(btn.getAttribute('data-api'), {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

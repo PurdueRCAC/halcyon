@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				// Option list when searching
 				option: function (item, escape) {
 					if (item.name.match(/\([a-z0-9]+\)$/)) {
-						item.username = item.name.replace(/([^\(]+\()/, '').replace(/\)$/, '');
+						item.username = item.name.replace(/([^(]+\()/, '').replace(/\)$/, '');
 						item.name = item.name.replace(/\s(\([a-z0-9]+\))$/, '');
 					}
 					return `<div data-id="${escape(item.id)}">${escape(item.name)}&nbsp;<span class="text-muted">(${escape(item.username)})</span></div>`;
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						if (isNaN(item.id)) {
 							item.id = item.username;
 						}
-						item.username = item.name.replace(/([^\(]+\()/, '').replace(/\)$/, '');
+						item.username = item.name.replace(/([^(]+\()/, '').replace(/\)$/, '');
 						item.name = item.name.replace(/\s(\([a-z0-9]+\))$/, '');
 					}
 					return `<div data-id="${escape(item.id)}">${escape(item.name)}&nbsp;<span class="text-muted">(${escape(item.username)})</span></div>`;
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					});
 			}
 		});
-		sel.on('item_remove', function (e) {
+		sel.on('item_remove', function () {
 			var unix = document.getElementById('field-unixgroupid');
 			if (unix) {
 				unix.innerHTML = '<option value="">(Select Unix Group)</option>';

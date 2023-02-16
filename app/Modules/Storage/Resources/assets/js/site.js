@@ -1,4 +1,5 @@
 /* global $ */ // jquery.js
+/* global TomSelect */ // modules/core/vendor/tom-select/js/tom-select.complete.min.js
 
 var headers = {
 	'Content-Type': 'application/json'
@@ -12,7 +13,7 @@ var headers = {
  */
 function NewDirType(sel) {
 	//var selected = document.getElementById("new_dir_type");
-	selected = sel.options[sel.selectedIndex].value;
+	var selected = sel.options[sel.selectedIndex].value;
 	var id = sel.getAttribute('data-id');
 
 	var user_row = document.getElementById(id + "_dir_user_row");
@@ -807,14 +808,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
 					var kvp = url.split('&');
 					var i = 0;
+					var pair, expanded, vals, j = 0;
 
 					if (this.parentNode.open) {
 						for (; i < kvp.length; i++) {
 							if (kvp[i].startsWith('expanded=')) {
-								var pair = kvp[i].split('=');
-								var expanded = pair[1].split(','),
-									vals = [];
-								for (var j = 0; j < expanded.length; j++) {
+								pair = kvp[i].split('=');
+								expanded = pair[1].split(',');
+								vals = [];
+								for (j = 0; j < expanded.length; j++) {
 									if (expanded[j] == this.getAttribute('data-id')) {
 										continue;
 									}
@@ -830,10 +832,10 @@ document.addEventListener('DOMContentLoaded', function () {
 					} else {
 						for (; i < kvp.length; i++) {
 							if (kvp[i].startsWith('expanded=')) {
-								var pair = kvp[i].split('=');
-								var expanded = pair[1].split(','),
-									vals = [];
-								for (var j = 0; j < expanded.length; j++) {
+								pair = kvp[i].split('=');
+								expanded = pair[1].split(',');
+								vals = [];
+								for (j = 0; j < expanded.length; j++) {
 									if (expanded[j] != this.getAttribute('data-id')) {
 										vals.push(expanded[j]);
 									}
@@ -1033,8 +1035,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	});*/
 
+	var sels, sel;
 	document.querySelectorAll('.form-group-storage').forEach(function (el) {
-		var sel = new TomSelect(el, {
+		sel = new TomSelect(el, {
 			maxItems: 1,
 			valueField: 'id',
 			labelField: 'name',
@@ -1054,17 +1057,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					});
 			}
 		});
-		/*sel.on('item_add', function (item, data) {
-			var seller = document.getElementById(el.getAttribute('data-update'));
-			//var dest_queue = document.getElementById("field-id").value;
-			if (item == 0) {
-				seller.value = 0;
-				seller.parentNode.classList.add('d-none');
-				return;
-			} else {
-				seller.parentNode.classList.remove('d-none');
-			}
-		});*/
+		sels.push(sel);
 	});
 
 	document.querySelectorAll('.dialog-submit').forEach(function(btn) {

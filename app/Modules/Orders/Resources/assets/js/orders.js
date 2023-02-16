@@ -2083,7 +2083,7 @@ function FulfillItem(url, button) {
  * @param   {string}  url
  * @return  {void}
  */
-/* exported ResetAccount */
+/* exported ResetItem */
 function ResetItem(url) {
 	var post = JSON.stringify({ "reset": 1 });
 

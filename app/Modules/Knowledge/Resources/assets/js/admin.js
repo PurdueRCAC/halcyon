@@ -34,8 +34,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	var sselects = document.querySelectorAll('.searchable-select');
 	if (sselects.length) {
+		var sel, sels = new Array();
 		sselects.forEach(function (el) {
-			var sel = new TomSelect(el, {
+			sel = new TomSelect(el, {
 				plugins: ['dropdown_input'],
 				render: {
 					option: function (data, escape) {
@@ -57,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					}
 				}
 			});
+			sels.push(sel);
 		});
 	}
 

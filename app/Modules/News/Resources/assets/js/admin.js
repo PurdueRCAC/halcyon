@@ -32,11 +32,10 @@ function NEWSSendMail(btn) {
 	})
 	.then(function (data) {
 		// Gather some  variables from DOM
-		var resources = [],
-			resourcelist = [],
+		var resourcelist = [],
 			x;
 		if (data['resources'].length > 0) {
-			resources = data['resources'];
+			//resources = data['resources'];
 			for (x = 0; x < data['resources'].length; x++) {
 				resourcelist.push(data['resources'][x]['name']);
 			}
@@ -258,11 +257,34 @@ function NEWSPreviewVars() {
 
 	/* Grab the variables we need and populate the preview variables. */
 	if (document.getElementById("field-datetimenews").value != "") {
-		preview_vars["startdate"] = document.getElementById("field-datetimenews").value;
+		var startDate = document.getElementById("field-datetimenews").value;
+
+		var st = new Date(startDate);
+
+		preview_vars["startdate"] = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(st) + ', '
+			+ new Intl.DateTimeFormat("en-US", { month: "long" }).format(st) + ' ' + st.getDay() + ', '
+			+ st.getFullYear(); //startDate;
+		preview_vars["starttime"] = st.toLocaleTimeString('en-US').replace(':00 AM', ' AM').replace(':00 PM', ' PM');
+		preview_vars["startdatetime"] = preview_vars["startdate"] + ' at ' + preview_vars["starttime"];
+		preview_vars["time"] = preview_vars["starttime"];
+		preview_vars["date"] = preview_vars["startdate"];
+		preview_vars["datetime"] = preview_vars["date"] + ' at ' + preview_vars["time"];
 	}
 
 	if (document.getElementById("field-datetimenewsend").value != "") {
-		preview_vars["enddate"] = document.getElementById("field-datetimenewsend").value;
+		var endDate = document.getElementById("field-datetimenewsend").value;
+
+		var et = new Date(endDate);
+
+		preview_vars["enddate"] = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(et) + ', '
+			+ new Intl.DateTimeFormat("en-US", { month: "long" }).format(et) + ' ' + et.getDay() + ', '
+			+ et.getFullYear();
+		preview_vars["endtime"] = et.toLocaleTimeString('en-US').replace(':00 AM', ' AM').replace(':00 PM', ' PM');
+		preview_vars["enddatetime"] = preview_vars["enddate"] + ' at ' + preview_vars["endtime"];
+		if (preview_vars["starttime"] != preview_vars["endtime"]) {
+			preview_vars["time"] = preview_vars["starttime"] + ' - ' + preview_vars["endtime"];
+			preview_vars["datetime"] = preview_vars["date"] + ' from ' + preview_vars["time"];
+		}
 	}
 
 	if (type.getAttribute('data-tagresources') == 1) {
@@ -272,7 +294,7 @@ function NEWSPreviewVars() {
 			return v.innerHTML;
 		});
 
-		resources.forEach(function(el){
+		resources.forEach(function(el, i){
 			preview_vars['resources'][i] = el;
 		});
 	}
@@ -377,7 +399,7 @@ function PreviewExample(example) {
 		document.getElementById('help1' + example + 'output').innerHTML = results['formattedbody'];
 	})
 	.catch(function (err) {
-		Halcyon.message('danger', xhr.responseJSON.message);
+		Halcyon.message('danger', err);
 	});
 }
 

@@ -1,4 +1,5 @@
 /* global $ */ // jquery.js
+/* global SetError */ // common.js
 
 var keywords_pending = 0;
 var LASTEDIT = new Array();
@@ -37,11 +38,11 @@ function HighlightMatches(text) {
 
 	var regx = new RegExp(/(<[^>]+>)|((^|\b)([^<]+?)(\b|$))/i);
 	var m;
-	var prev = -1;
+	//var prev = -1;
 	var txt = "";
 	var temp = "";
 	var keyid = 0;
-	var lastMatch = 0;
+	//var lastMatch = 0;
 	var color = "";
 	// iterate through matches
 	while (!!(m = regx.exec(text))) {
@@ -126,7 +127,7 @@ var stemmer = (function () {
 			re2,
 			re3,
 			re4,
-			origword = w;
+			fp;
 
 		if (w.length < 3) {
 			return w;
@@ -154,14 +155,14 @@ var stemmer = (function () {
 		re = /^(.+?)eed$/;
 		re2 = /^(.+?)(ed|ing)$/;
 		if (re.test(w)) {
-			var fp = re.exec(w);
+			fp = re.exec(w);
 			re = new RegExp(mgr0);
 			if (re.test(fp[1])) {
 				re = /.$/;
 				w = w.replace(re, "");
 			}
 		} else if (re2.test(w)) {
-			var fp = re2.exec(w);
+			fp = re2.exec(w);
 			stem = fp[1];
 			re2 = new RegExp(s_v);
 			if (re2.test(stem)) {
@@ -185,7 +186,7 @@ var stemmer = (function () {
 		// Step 1c
 		re = /^(.+?)y$/;
 		if (re.test(w)) {
-			var fp = re.exec(w);
+			fp = re.exec(w);
 			stem = fp[1];
 			re = new RegExp(s_v);
 			if (re.test(stem)) {
@@ -196,7 +197,7 @@ var stemmer = (function () {
 		// Step 2
 		re = /^(.+?)(ational|tional|enci|anci|izer|bli|alli|entli|eli|ousli|ization|ation|ator|alism|iveness|fulness|ousness|aliti|iviti|biliti|logi)$/;
 		if (re.test(w)) {
-			var fp = re.exec(w);
+			fp = re.exec(w);
 			stem = fp[1];
 			suffix = fp[2];
 			re = new RegExp(mgr0);
@@ -208,7 +209,7 @@ var stemmer = (function () {
 		// Step 3
 		re = /^(.+?)(icate|ative|alize|iciti|ical|ful|ness)$/;
 		if (re.test(w)) {
-			var fp = re.exec(w);
+			fp = re.exec(w);
 			stem = fp[1];
 			suffix = fp[2];
 			re = new RegExp(mgr0);
@@ -221,14 +222,14 @@ var stemmer = (function () {
 		re = /^(.+?)(al|ance|ence|er|ic|able|ible|ant|ement|ment|ent|ou|ism|ate|iti|ous|ive|ize)$/;
 		re2 = /^(.+?)(s|t)(ion)$/;
 		if (re.test(w)) {
-			var fp = re.exec(w);
+			fp = re.exec(w);
 			stem = fp[1];
 			re = new RegExp(mgr1);
 			if (re.test(stem)) {
 				w = stem;
 			}
 		} else if (re2.test(w)) {
-			var fp = re2.exec(w);
+			fp = re2.exec(w);
 			stem = fp[1] + fp[2];
 			re2 = new RegExp(mgr1);
 			if (re2.test(stem)) {
@@ -239,7 +240,7 @@ var stemmer = (function () {
 		// Step 5
 		re = /^(.+?)e$/;
 		if (re.test(w)) {
-			var fp = re.exec(w);
+			fp = re.exec(w);
 			stem = fp[1];
 			re = new RegExp(mgr1);
 			re2 = new RegExp(meq1);
