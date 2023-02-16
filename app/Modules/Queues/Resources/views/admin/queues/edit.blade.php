@@ -1187,6 +1187,7 @@ app('pathway')
 
 					$created = $action->created_at ? $action->created_at : trans('global.unknown');
 
+					$f = array();
 					if (is_object($action->new)):
 						$f = get_object_vars($action->new);
 					elseif (is_array($action->new)):
