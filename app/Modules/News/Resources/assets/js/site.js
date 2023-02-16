@@ -3070,6 +3070,28 @@ function PreviewExample(example) {
 }
 
 /**
+ * Convert AM/PM to 24 hour format
+ *
+ * @param {string} time12h
+ * @returns string
+ */
+const convertTime12to24 = (time12h) => {
+	const [time, modifier] = time12h.split(' ');
+
+	let [hours, minutes] = time.split(':');
+
+	if (hours === '12') {
+		hours = '00';
+	}
+
+	if (modifier === 'PM') {
+		hours = parseInt(hours, 10) + 12;
+	}
+
+	return `${hours}:${minutes}`;
+}
+
+/**
  * Build vars for news preview
  *
  * @param   {string}  news
@@ -3083,20 +3105,42 @@ function NEWSPreviewVars() { // news
 	/* Grab the variables we need and populate the preview variables. */
 	if (document.getElementById("datestartshort").value != "") {
 		if (document.getElementById("timestartshort").value != "") {
-			startDate = document.getElementById("datestartshort").value + " " + document.getElementById("timestartshort").value;
+			var t = document.getElementById("timestartshort").value;
+			startDate = document.getElementById("datestartshort").value + " " + convertTime12to24(t) + ':00';
 		} else {
-			startDate = document.getElementById("datestartshort").value + " 12:00 AM"
+			startDate = document.getElementById("datestartshort").value + ' 00:00:00'; //" 12:00 AM"
 		}
-		preview_vars["startdate"] = startDate;
+		var st = new Date(startDate);
+
+		preview_vars["startdate"] = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(st) + ', '
+			+ new Intl.DateTimeFormat("en-US", { month: "long" }).format(st) + ' ' + st.getDay() + ', '
+			+ st.getFullYear(); //startDate;
+		preview_vars["starttime"] = st.toLocaleTimeString('en-US').replace(':00 AM', ' AM').replace(':00 PM', ' PM');
+		preview_vars["startdatetime"] = preview_vars["startdate"] + ' at ' + preview_vars["starttime"];
+		preview_vars["time"] = preview_vars["starttime"];
+		preview_vars["date"] = preview_vars["startdate"];
+		preview_vars["datetime"] = preview_vars["date"] + ' at ' + preview_vars["time"];
 	}
 
 	if (document.getElementById("datestopshort").value != "") {
 		if (document.getElementById("timestopshort").value != "") {
-			endDate = document.getElementById("datestopshort").value + " " + document.getElementById("timestopshort").value;
+			var ts = document.getElementById("timestopshort").value;
+			endDate = document.getElementById("datestopshort").value + " " + convertTime12to24(ts) + ':00';
 		} else {
-			endDate = document.getElementById("datestopshort").value + " 12:00 AM";
+			endDate = document.getElementById("datestopshort").value + ' 00:00:00'; //" 12:00 AM"
 		}
-		preview_vars["enddate"] = endDate;
+
+		var et = new Date(endDate);
+
+		preview_vars["enddate"] = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(et) + ', '
+			+ new Intl.DateTimeFormat("en-US", { month: "long" }).format(et) + ' ' + et.getDay() + ', '
+			+ et.getFullYear();
+		preview_vars["endtime"] = et.toLocaleTimeString('en-US').replace(':00 AM', ' AM').replace(':00 PM', ' PM');
+		preview_vars["enddatetime"] = preview_vars["enddate"] + ' at ' + preview_vars["endtime"];
+		if (preview_vars["starttime"] != preview_vars["endtime"]) {
+			preview_vars["time"] = preview_vars["starttime"] + ' - ' + preview_vars["endtime"];
+			preview_vars["datetime"] = preview_vars["date"] + ' from ' + preview_vars["time"];
+		}
 	}
 
 	preview_vars["resources"] = [];
@@ -3105,7 +3149,7 @@ function NEWSPreviewVars() { // news
 		return v.innerHTML;
 	});
 
-	$.each(resources, function (i, el) {
+	resources.forEach(function (el, i) {
 		preview_vars['resources'][i] = el;
 	});
 
