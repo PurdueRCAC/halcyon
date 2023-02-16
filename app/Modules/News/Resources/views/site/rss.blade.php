@@ -65,7 +65,7 @@ app('pathway')
 			foreach ($types as $n):
 				$info = '';
 				if ($n->tagresources == 0):
-					$info = '<span class="rssCheckbox"><span class="alert alert-warning">' . trans('news::news.error.selection will not filter') . '</span></span>';
+					$info = '<span class="rssCheckbox d-none"><span class="text-warning">' . trans('news::news.error.selection will not filter') . '</span></span>';
 				else:
 					// Keep track of all the resources that do require resources so that we know what 
 					// news to get when only grabbing a resources RSS.
@@ -76,7 +76,7 @@ app('pathway')
 					@if ($n->level > 0)
 						<span class="text-muted">{!! str_repeat('|&mdash;', $n->level) !!}</span>
 					@endif
-					<input class="form-check-input rssCheckbox" value="{{ $n->name }}" id="checkbox{{ str_replace(' ', '', $n->name) }}" type="checkbox" />
+					<input class="form-check-input rssCheckbox d-none" value="{{ $n->name }}" id="checkbox{{ str_replace(' ', '', $n->name) }}" type="checkbox" />
 					<label class="form-check-label" for="checkbox{{ str_replace(' ', '', $n->name) }}">
 						<a target="_blank" class="rss" href="{{ route('site.news.feed', ['name' => $n->name]) }}">
 							<span class="fa fa-rss-square" aria-hidden="true"></span> {{ $n->name }}
@@ -106,7 +106,7 @@ app('pathway')
 				foreach ($resources as $r):
 					?>
 					<li class="form-check">
-						<input class="form-check-input rssCheckbox" value="{{ $r->name }}" id="checkbox_{{ str_replace(' ', '', $r->name) }}" type="checkbox" />
+						<input class="form-check-input rssCheckbox d-none" value="{{ $r->name }}" id="checkbox_{{ str_replace(' ', '', $r->name) }}" type="checkbox" />
 						<label class="form-check-label" for="checkbox_{{ str_replace(' ', '', $r->name) }}">
 							<a target="_blank" id="{{ $r->name }}" class="rss" href="{{ route('site.news.feed', ['name' => implode(',', $resourceNewsTypes) . $r->name]) }}">
 								<span class="fa fa-rss-square" aria-hidden="true"></span> {{ $r->name }}
@@ -120,7 +120,7 @@ app('pathway')
 		</ul>
 	@endif
 
-	<div class="rssCheckbox">
+	<div class="rssCheckbox d-none">
 		<p>
 			<a target="_blank" id="customRSS" class="rssLogo" href="{{ route('site.news.rss') }}">{{ trans('news::news.custom feed') }}</a>
 		</p>

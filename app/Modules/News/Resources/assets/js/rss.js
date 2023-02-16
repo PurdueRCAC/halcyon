@@ -1,5 +1,3 @@
-/* global $ */ // jquery.js
-
 /**
  * List of resources
  *
@@ -29,34 +27,44 @@ function toggleResource(name) {
 /**
  * Initiate event hooks
  */
-$(document).ready(function() {
-	$('.rssCustomize').on('click', function(e){
-		e.preventDefault();
+document.addEventListener('DOMContentLoaded', function () {
+	document.querySelectorAll('.rssCustomize').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		var txt = $(this).text();
-		$(this).text($(this).data('txt'));
-		$(this).data('txt', txt);
+			var txt = this.innerHTML;
+			this.innerHTML = this.getAttribute('data-txt');
+			this.setAttribute('data-txt', txt);
 
-		$('.rssCheckbox').toggle();
-		$('.rssCheckboxInfo').toggle();
-		$('.customRSS').toggle();
+			document.querySelectorAll('.rssCheckbox').forEach(function (item) {
+				item.classList.toggle('d-none');
+			});
+			document.querySelectorAll('.rssCheckboxInfo').forEach(function (item) {
+				item.classList.toggle('d-none');
+			});
+			document.querySelectorAll('.customRSS').forEach(function (item) {
+				item.classList.toggle('d-none');
+			});
+		});
 	});
 
-	$('.rssCheckbox').on('change', function() {
-		toggleResource($(this).val());
+	document.querySelectorAll('.rssCheckbox').forEach(function (el) {
+		el.addEventListener('change', function () {
+			toggleResource(this.value);
 
-		var url = "";
-		for (var i = 0; i < resourceArray.length; i++) {
-			url += resourceArray[i];
-			if (i != resourceArray.length - 1) {
-				url += ",";
+			var url = "";
+			for (var i = 0; i < resourceArray.length; i++) {
+				url += resourceArray[i];
+				if (i != resourceArray.length - 1) {
+					url += ",";
+				}
 			}
-		}
 
-		if (resourceArray.length == 0) {
-			url = "#";
-		}
+			if (resourceArray.length == 0) {
+				url = "#";
+			}
 
-		$('#customRSS').attr('href', url);
+			document.getElementById('customRSS').href = url;
+		});
 	});
 });
