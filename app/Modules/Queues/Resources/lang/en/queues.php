@@ -159,6 +159,7 @@ return [
 	'status' => 'Status',
 	'retired' => 'Retired',
 	'export' => 'Export',
+	'history' => 'History',
 	// Qos
 	'limits' => 'Limits',
 	'description' => 'Description',

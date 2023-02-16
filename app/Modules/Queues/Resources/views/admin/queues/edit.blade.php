@@ -50,6 +50,7 @@ app('pathway')
 		<ul id="queue-tabs" class="nav nav-tabs" role="tablist">
 			<li class="nav-item" role="presentation"><a class="nav-link active" href="#queue-details" data-toggle="tab" role="tab" id="queue-details-tab" aria-controls="queue-details" aria-selected="true">{{ trans('queues::queues.queue') }}</a></li>
 			<li class="nav-item" role="presentation"><a class="nav-link" href="#queue-allocations" data-toggle="tab" role="tab" id="queue-allocation-tab" aria-controls="queue-allocations" aria-selected="false">{{ trans('queues::queues.purchases and loans') }}</a></li>
+			<li class="nav-item" role="presentation"><a class="nav-link" href="#queue-history" data-toggle="tab" role="tab" id="queue-history-tab" aria-controls="queue-history" aria-selected="false">{{ trans('queues::queues.history') }}</a></li>
 		</ul>
 	</nav>
 	<div class="tab-content" id="queue-tabs-contant">
@@ -482,6 +483,7 @@ app('pathway')
 				<caption class="sr-only">{{ trans('queues::queues.purchases and loans') }}</caption>
 				<thead>
 					<tr>
+						<th scope="col">{{ trans('queues::queues.id') }}</th>
 						<th scope="col">{{ trans('queues::queues.start') }}</th>
 						<th scope="col">{{ trans('queues::queues.end') }}</th>
 						<th scope="col">{{ trans('queues::queues.action') }}</th>
@@ -528,6 +530,9 @@ app('pathway')
 
 					foreach ($items as $item): ?>
 					<tr<?php if ($item->hasEnd() && $item->hasEnded()) { echo ' class="trashed"'; } ?>>
+						<td>
+							{{ $item->id }}
+						</td>
 						<td>
 							@if ($item->hasStart())
 								@if (!$item->hasStarted())
@@ -1131,6 +1136,159 @@ app('pathway')
 			</div>
 		</div>
 	</div><!-- / #queue-nodes -->
+	<div class="tab-pane" id="queue-history" role="tabpanel" aria-labelledby="queue-history-tab">
+		<?php
+		$history = $row->history()
+			->orderBy('created_at', 'desc')
+			->get();
+
+		if (!count($history)):
+			$created = new App\Modules\History\Models\History;
+			$created->created_at = $row->datetimecreated;
+			$created->action = 'created';
+			$created->historable_type = $row::class;
+			$created->historable_table = $row->getTable();
+			$created->new = json_encode($row->toArray());
+
+			$history->push($created);
+		endif;
+
+		foreach ($items as $item):
+			foreach ($item->history()->orderBy('created_at', 'desc')->get() as $ev):
+				$history->push($ev);
+			endforeach;
+		endforeach;
+
+		$users = $row->users()
+			->withTrashed()
+			->get();
+
+		foreach ($users as $user):
+			foreach ($user->history()->orderBy('created_at', 'desc')->get() as $ev):
+				$ev->name = $user->user ? $user->user->name : trans('global.unknown');
+				$ev->target_id = $user->userid;
+
+				$history->push($ev);
+			endforeach;
+		endforeach;
+
+		$sorted = $history->sortByDesc('created_at');
+		?>
+		<ul class="entry-log timeline">
+			<?php
+			if (count($sorted)):
+				foreach ($sorted as $action):
+					$actor = trans('global.unknown');
+					$target = trans('global.unknown');
+
+					if ($action->user):
+						$actor = '<a href="' . route('admin.users.show', ['id' => $action->user_id]) . '">' . e($action->user->name) . '</a>';
+					endif;
+
+					$created = $action->created_at ? $action->created_at : trans('global.unknown');
+
+					if (is_object($action->new)):
+						$f = get_object_vars($action->new);
+					elseif (is_array($action->new)):
+						$f = $action->new;
+					endif;
+
+					$fields = array_keys($f);
+					foreach ($fields as $i => $k):
+						if (in_array($k, ['created_at', 'updated_at', 'deleted_at'])):
+							unset($fields[$i]);
+						endif;
+					endforeach;
+
+					$msg = trans('history::history.action ' . $action->action, ['user' => $actor, 'entity' => $action->historable_table]);
+
+					if ($action->historable_table == 'queueusers'):
+						if ($action->name):
+							$target = '<a href="' . route('admin.users.show', ['id' => $action->target_id]) . '">' . e($action->name) . '</a>';
+						endif;
+
+						if ($action->action == 'created'):
+							$msg = $actor . ' <span class="text-success">added</span> ' . $target . ' to queue';
+						endif;
+						if ($action->action == 'deleted'):
+							$msg = $actor . ' <span class="text-danger">removed</span> ' . $target . ' from queue';
+						endif;
+						// Skip separate updates that are just setting notice state right after creation
+						if ($action->action == 'updated'):
+							if (isset($action->new->notice)):
+								continue;
+							endif;
+							if (isset($action->old->datetimeremoved)):
+								$msg = $actor . ' <span class="text-success">added</span> ' . $target . ' to queue';
+							endif;
+						endif;
+					endif;
+
+					if ($action->historable_table == 'queues'):
+						if ($action->action == 'created'):
+							$msg = $actor . ' <span class="text-success">created</span> queue';
+						endif;
+						if ($action->action == 'deleted'):
+							$msg = $actor . ' <span class="text-danger">removed</span> queue';
+						endif;
+						if ($action->action == 'updated'):
+							$msg = $actor . ' <span class="text-info">updated</span> queue';
+						endif;
+					endif;
+
+					if ($action->historable_table == 'queueloans'):
+						if ($action->action == 'created'):
+							$msg = $actor . ' <span class="text-success">created</span> loan #' . $action->historable_id;
+						endif;
+						if ($action->action == 'deleted'):
+							$msg = $actor . ' <span class="text-danger">removed</span> loan #' . $action->historable_id;
+						endif;
+						if ($action->action == 'updated'):
+							$msg = $actor . ' <span class="text-info">updated</span> loan #' . $action->historable_id;
+						endif;
+					endif;
+
+					if ($action->historable_table == 'queuesizes'):
+						if ($action->action == 'created'):
+							$msg = $actor . ' <span class="text-success">created</span> purchase #' . $action->historable_id;
+						endif;
+						if ($action->action == 'deleted'):
+							$msg = $actor . ' <span class="text-danger">removed</span> purchase #' . $action->historable_id;
+						endif;
+						if ($action->action == 'updated'):
+							$msg = $actor . ' <span class="text-info">updated</span> purchase #' . $action->historable_id;
+						endif;
+					endif;
+
+					$old = Carbon\Carbon::now()->subDays(2);
+					?>
+					<li class="{{ $action->action }}" data-id="{{ $action->id }}">
+						<span class="entry-action">{!! $msg !!}</span><br />
+						<span class="entry-date">
+							<time datetime="{{ $action->created_at->toDateTimeLocalString() }}">
+							@if ($action->created_at < $old)
+								{{ $action->created_at->format('d M Y @ g:ia T') }}
+							@else
+								{{ $action->created_at->diffForHumans() }}
+							@endif
+							</time>
+						</span>
+						@if ($action->action == 'updated' && $action->historable_table != 'queueusers')
+							<span class="entry-diff">{{ trans('history::history.changed fields') }}: <code><?php echo implode('</code>, <code>', $fields); ?></code></span>
+						@endif
+					</li>
+					<?php
+				endforeach;
+			else:
+				?>
+				<li>
+					<span class="entry-diff">{{ trans('history::history.none found') }}</span>
+				</li>
+				<?php
+			endif;
+			?>
+		</ul>
+	</div>
 </div><!-- / .tab-content -->
 @endif
 @stop
