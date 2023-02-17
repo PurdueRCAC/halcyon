@@ -1035,7 +1035,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	});*/
 
-	var sels, sel;
+	var sels = new Array(), sel;
 	document.querySelectorAll('.form-group-storage').forEach(function (el) {
 		sel = new TomSelect(el, {
 			maxItems: 1,
