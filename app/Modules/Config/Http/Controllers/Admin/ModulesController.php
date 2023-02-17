@@ -105,7 +105,10 @@ class ModulesController extends Controller
 		{
 			foreach ($data['rules'] as $k => $v)
 			{
-				$data['rules'][$k] = array_filter($v);
+				$data['rules'][$k] = array_filter($v, static function ($var)
+				{
+					return $var !== null;
+				});
 			}
 
 			$rules = new Rules($data['rules']);
