@@ -8,6 +8,7 @@ use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Queues\Models\GroupUser;
 use App\Modules\Groups\Models\UnixGroupMember;
+use App\Modules\Groups\Events\MemberUpdated;
 
 /**
  * Group listener to add a user to a unix group
@@ -23,6 +24,7 @@ class AddUserToUnixGroup
 	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(UserRequestUpdated::class, self::class . '@handleUserRequestUpdated');
+		$events->listen(MemberUpdated::class, self::class . '@handleMemberUpdated');
 	}
 
 	/**
@@ -102,6 +104,82 @@ class AddUserToUnixGroup
 					$baserow->userid = $event->userrequest->userid;
 					$baserow->notice = 0;
 					$baserow->save();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Auto add a promoted group member to all unix groups and queues
+	 *
+	 * @param   MemberUpdated  $event
+	 * @return  void
+	 */
+	public function handleMemberUpdated(MemberUpdated $event): void
+	{
+		if ($event->member->isManager()
+		 && $event->member->getOriginal('membertype') != $event->member->membertype)
+		{
+			$group = $event->member->group;
+
+			if (!$group || !$group->cascademanagers)
+			{
+				return;
+			}
+
+			foreach ($group->unixgroups as $unixgroup)
+			{
+				// Look for user's membership
+				$ugm = UnixGroupMember::query()
+					->withTrashed()
+					->where('unixgroupid', '=', $unixgroup->id)
+					->where('userid', '=', $event->member->userid)
+					->get()
+					->first();
+
+				// Restore or create as needed
+				if ($ugm)
+				{
+					if ($ugm->trashed())
+					{
+						$ugm->restore();
+					}
+				}
+				else
+				{
+					$ugm = new UnixGroupMember;
+					$ugm->unixgroupid = $unixgroup->id;
+					$ugm->userid = $event->member->userid;
+					$ugm->notice = 0;
+					$ugm->save();
+				}
+			}
+
+			foreach ($group->queues as $queue)
+			{
+				// Look for user's membership
+				$qu = QueueUser::query()
+					->withTrashed()
+					->where('queueid', '=', $queue->id)
+					->where('userid', '=', $event->member->userid)
+					->get()
+					->first();
+
+				// Restore or create as needed
+				if ($qu)
+				{
+					if ($qu->trashed())
+					{
+						$qu->restore();
+					}
+				}
+				else
+				{
+					$qu = new QueueUser;
+					$qu->queueid = $queue->id;
+					$qu->userid = $event->member->userid;
+					$qu->notice = 0;
+					$qu->save();
 				}
 			}
 		}
