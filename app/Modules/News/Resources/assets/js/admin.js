@@ -7,6 +7,78 @@ var headers = {
 };
 
 /**
+ * Callback for JS MarkDown parsing
+ *
+ * @param   {string}  text
+ * @param   {object}  element
+ * @return  {string}
+ */
+/* exported customMarkdownParser */
+function customMarkdownParser(text, element) {
+	text = text.replaceAll(/(contact|CRM?)(\s+report)?\s*#?(\d+)/g, '<a href="?id=$3">Contact Report #$3</a>');
+	var matches = text.matchAll(/(news)\s*(story|item)?\s*#?(\d+)(\{.+?\})?/ig);
+
+	for (const match of matches) {
+		if (match[4]) {
+			text = text.replace(match[0], '<a href="/news/' + match[3] + '">' + match[4].replace('{', '').replace('}', '') + '</a>');
+		} else {
+			text = text.replace(match[0], '<a href="/news/' + match[3] + '">News story #' + match[3] + '</a>');
+		}
+	}
+
+	var vars = element.getAttribute('data-vars');
+	if (vars) {
+		vars = JSON.parse(vars);
+	} else {
+		vars = {};
+	}
+
+	var keywords = [
+		'%date%',
+		'%datetime%',
+		'%time%',
+		'%updatedatetime%',
+		'%startdatetime%',
+		'%startdate%',
+		'%starttime%',
+		'%enddatetime%',
+		'%enddate%',
+		'%endtime%',
+		'%location%',
+		'%resources%'
+	];
+
+	if (element.id == 'field-body') {
+		vars = NEWSPreviewVars();
+
+		if (vars.resources.length > 2) {
+			vars.resources[vars.resources.length - 1] = 'and ' + vars.resources[vars.resources.length - 1];
+		}
+		for (var i = 0; i < vars.resources.length; i++) {
+			if (i == vars.resources.length - 1) {
+				continue;
+			}
+
+			vars.resources[i] = vars.resources[i] + ',';
+		}
+		vars.resources = vars.resources.join(' ');
+	}
+
+	var k;
+	for (var x = 0; x < keywords.length; x++) {
+		k = keywords[x].replaceAll('%', '');
+
+		if (vars && typeof (vars[k]) != 'undefined') {
+			text = text.replaceAll(keywords[x], vars[k]);
+		} else {
+			text = text.replaceAll(keywords[x], '<span style="color:red;">' + keywords[x] + '</span>');
+		}
+	}
+
+	return text;
+}
+
+/**
  * Send an email
  *
  * @param   {object}  btn
@@ -287,9 +359,8 @@ function NEWSPreviewVars() {
 		}
 	}
 
+	preview_vars["resources"] = [];
 	if (type.getAttribute('data-tagresources') == 1) {
-		preview_vars["resources"] = [];
-
 		var resources = Array.prototype.slice.call(document.querySelectorAll('#field-resources option:checked'), 0).map(function (v) {
 			return v.innerHTML;
 		});
@@ -316,7 +387,7 @@ function NEWSPreviewVars() {
  * @return  {void}
  */
 function NEWSPreview(btn) {
-	var text = document.getElementById("fields-body").value;
+	var text = document.getElementById("field-body").value;
 
 	if (text == "") {
 		return;
@@ -454,6 +525,12 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		});
 	}
+
+	document.querySelectorAll('.samplebox').forEach(function (el) {
+		el.addEventListener('keyup', function () {
+			PreviewExample(this.getAttribute('data-sample'));
+		});
+	});
 
 	var template = document.getElementById('field-template');
 	if (template) {

@@ -278,6 +278,8 @@ function DisplayError(message) {
 	if (span) {
 		span.classList.remove('d-none');
 		span.innerHTML = message;
+	} else {
+		alert(message);
 	}
 }
 
@@ -373,7 +375,7 @@ function customMarkdownParser(text, element) {
 			}
 		})
 		.catch(function (err) {
-			alert(err);
+			DisplayError(err);
 		});
 	} else {*/
 		if (vars.resources.length > 2) {
@@ -962,7 +964,8 @@ function NEWSAddEntry() {
 				NEWSToggle('search');
 				document.getElementById("id").value = id;
 				NEWSSearch();
-				alert(err);
+				//DisplayError(err);
+				DisplayError(err);
 			});
 		}
 
@@ -1051,7 +1054,7 @@ function NEWSAddEntry() {
 			}
 		})
 		.catch(function (err) {
-			alert(err);
+			DisplayError(err);
 		});
 	}
 }
@@ -1291,7 +1294,7 @@ function NEWSSearch() {
 		NEWSSearched(data);
 	})
 	.catch(function (err) {
-		alert(err);
+		DisplayError(err);
 	});
 }
 
@@ -1556,7 +1559,7 @@ function NEWSPrintRow(news) {
 					});
 				})
 				.catch(function (err) {
-					alert(err);
+					DisplayError(err);
 				});
 			};
 			a.appendChild(document.createTextNode("Published"));
@@ -1589,7 +1592,7 @@ function NEWSPrintRow(news) {
 					});
 				})
 				.catch(function (err) {
-					alert(err);
+					DisplayError(err);
 				});
 			};
 			a.appendChild(document.createTextNode("Draft"));
@@ -2345,7 +2348,7 @@ function NEWSPrintRow(news) {
 					document.getElementById(news['id'] + "_newupdatebox").focus();
 				})
 				.catch(function (err) {
-					alert(err);
+					DisplayError(err);
 				});
 			};
 
@@ -2592,7 +2595,7 @@ function NEWSSaveNewsText(news) {
 		text.style.display = "block";
 	})
 	.catch(function (err) {
-		alert(err);
+		DisplayError(err);
 	});
 }
 
@@ -3066,7 +3069,7 @@ function PreviewExample(example) {
 		document.getElementById('help1' + example + 'output').innerHTML = results['formattedbody'];
 	})
 	.catch(function (err) {
-		alert(err);
+		DisplayError(err);
 	});
 }
 
@@ -3219,7 +3222,7 @@ function NEWSPreview(news, edit) {
 		document.getElementById("preview").innerHTML = results['formattedbody'];
 	})
 	.catch(function (err) {
-		alert(err);
+		DisplayError(err);
 	});
 
 	//$('#preview').dialog({ modal: true, width: '691px' });
@@ -3358,12 +3361,12 @@ function NEWSSendMail(news) {
 			.catch(function (err) {
 				document.getElementById("IMG_mail_" + news).className = "fa fa-exclamation-circle";
 				document.getElementById("A_mail_" + news).onclick = function () { };
-				alert(err);
+				DisplayError(err);
 			});
 		});
 	})
 	.catch(function (err) {
-		alert(err);
+		DisplayError(err);
 	});
 }
 
@@ -3479,12 +3482,12 @@ function NEWSWriteMail(news) {
 			.catch(function (err) {
 				document.getElementById("IMG_mail_" + news).className = "fa fa-exclamation-circle";
 				document.getElementById("A_mail_" + news).onclick = function () { };
-				alert(err);
+				DisplayError(err);
 			});
 		});
 	})
 	.catch(function (err) {
-		alert(err);
+		DisplayError(err);
 	});
 }
 
@@ -3565,7 +3568,7 @@ function NEWSUseTemplate() {
 				NEWSSearch();
 			})
 			.catch(function (err) {
-				alert(err);
+				DisplayError(err);
 			});
 		} else {
 			document.getElementById("template_select").selectedIndex = 0;
