@@ -50,7 +50,7 @@ class CaptchaIsRendering
 	 *
 	 * @return string
 	 */
-	public function render(): string
+	public function render()
 	{
 		return $this->content;
 	}
