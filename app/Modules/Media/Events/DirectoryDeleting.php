@@ -29,14 +29,14 @@ class DirectoryDeleting
 	public function __construct(Request $request)
 	{
 		$this->disk = urldecode($request->input('disk', 'public'));
-		$this->path = urldecode($request->input('folder'));
+		$this->path = urldecode($request->input('folder', ''));
 		$this->name = basename($this->path);
 	}
 
 	/**
 	 * @return string
 	 */
-	public function disk()
+	public function disk(): string
 	{
 		return $this->disk;
 	}
@@ -44,7 +44,7 @@ class DirectoryDeleting
 	/**
 	 * @return string
 	 */
-	public function path()
+	public function path(): string
 	{
 		return $this->path;
 	}
@@ -52,7 +52,7 @@ class DirectoryDeleting
 	/**
 	 * @return string
 	 */
-	public function name()
+	public function name(): string
 	{
 		return $this->name;
 	}

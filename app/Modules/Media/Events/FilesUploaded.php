@@ -34,7 +34,7 @@ class FilesUploaded
 	public function __construct(Request $request)
 	{
 		$this->disk = $request->input('disk', 'public');
-		$this->path = $request->input('path');
+		$this->path = $request->input('path', '');
 		$this->files = $request->file('files');
 		$this->overwrite = $request->input('overwrite');
 	}
@@ -42,7 +42,7 @@ class FilesUploaded
 	/**
 	 * @return string
 	 */
-	public function disk()
+	public function disk(): string
 	{
 		return $this->disk;
 	}
@@ -50,7 +50,7 @@ class FilesUploaded
 	/**
 	 * @return string
 	 */
-	public function path()
+	public function path(): string
 	{
 		return $this->path;
 	}
@@ -60,7 +60,7 @@ class FilesUploaded
 	 */
 	public function files()
 	{
-		return array_map(function ($file)
+		return array_map(function ($file): array
 		{
 			return [
 				'name'      => $file->getClientOriginalName(),

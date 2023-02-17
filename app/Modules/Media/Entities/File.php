@@ -15,14 +15,14 @@ class File extends \SplFileInfo
 	/**
 	 * Image file types
 	 *
-	 * @var  array
+	 * @var  array<int,string>
 	 */
 	private $imageExtensions = ['jpg', 'jpeg', 'jpe', 'png', 'gif', 'svg', 'bmp'];
 
 	/**
 	 * Image pixel dimensions (width and height)
 	 *
-	 * @var  array
+	 * @var  array<string,int>
 	 */
 	private $dimensions = null;
 
@@ -109,9 +109,9 @@ class File extends \SplFileInfo
 	/**
 	 * Get last modified time
 	 *
-	 * @return  object  Carbon
+	 * @return  Carbon
 	 */
-	public function getLastModified()
+	public function getLastModified(): Carbon
 	{
 		return new Carbon($this->getMTime());
 	}

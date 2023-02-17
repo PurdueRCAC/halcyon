@@ -95,19 +95,12 @@
 	display: inline-block;
 	cursor: pointer;
 }
-.media-pagination {
-	padding: 0 1em;
-}
-.media-pagination .form-control {
-	display: inline-block;
-	width: auto;
-}
 .dir-separator {
 	width: 1em;
 	overflow: hidden;
 	display: inline-block;
 	white-space: nowrap;
-	margin: 0 0.25em;
+	margin: 0 0.15em;
 	vertical-align: middle;
 }
 .dir-separator:before {
@@ -174,96 +167,37 @@
 }
 
 /* Folder tree */
-.treeview,
-.treeview ul {
-	padding: 0;
+.panel-tree img {
+	width: 1.5em;
+	vertical-align: middle;
+	margin-right: 0.25em;
+}
+details {
 	margin: 0;
-	position: relative;
 }
-.treeview {
-	margin: 1em 0;
+.depth1 {
+	margin: 1em;
 }
-.treeview ul {
-	list-style: none;
-	margin: 0 0 0 1em;
+details>div {
+	margin-left: 1em;
 }
-.treeview li {
-	margin: 0;
-	padding: 0;
-	position: relative;
-	-webkit-transition: all 150ms ease-in-out;
-	-moz-transition: all 150ms ease-in-out;
-	-ms-transition: all 150ms ease-in-out;
-	-o-transition: all 150ms ease-in-out;
-	transition: all 150ms ease-in-out;
-}
-.treeview a {
+summary {
+	padding: 0.25em 1em 0.25em 0;
 	display: block;
-	padding: 0.25em 1em 0.25em 2.5em;
 	line-height: 1;
-	/*vertical-align: middle;*/
-	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
+	white-space: nowrap;
 }
-.treeview a:hover {
+summary a {
+	display: inline-block;
+}
+summary a:hover {
 	text-decoration: none;
 	border: none;
 	background-color: rgba(0, 0, 0, 0.6);
 	color: #fff;
 	margin: 0;
-}
-.treeview a:hover:before {
-	color: #fff;
-}
-.treeview .hitarea {
-	height: 1em;
-	width: 1em;
-	text-align: center;
-	cursor: pointer;
-	position: absolute;
-	top: 0;
-	left: 1em;
-}
-.treeview .hitarea:before {
-	content: '';
-	border: 5px solid transparent;
-	position: absolute;
-	width: 0;
-	height: 0;
-	display: block;
-	position: absolute;
-	top: 50%;
-	margin-top: -3px;
-	left: 3px;
-}
-.treeview .expandable-hitarea {
-	top: 0.3em;
-}
-.treeview .expandable-hitarea:before {
-	border-color: transparent transparent transparent #222;
-}
-.treeview .folder-icon {
-	margin-right: 0.4em;
-}
-.panel-tree img {
-	width: 1.5em;
-	vertical-align: middle;
-}
-
-.treeview .hitarea:hover {
-	color: #222;
-	border-color: #222;
-}
-.treeview .collapsable-hitarea {
-	top: 0.5em;
-}
-.treeview .collapsable-hitarea:before {
-	left: 0;
-	border-color: #222 transparent transparent transparent;
-}
-.treeview a.selected {
-	background-color: #eee;
 }
 
 /* Thumbs */
@@ -408,7 +342,6 @@
 /* List */
 .media-list {
 	padding: 0;
-	background-color: #fff;
 }
 .media-list tbody tr td,
 .media-list tbody tr th {

@@ -19,7 +19,8 @@ class Deleted
 	/**
 	 * Deleted constructor.
 	 *
-	 * @param Request $request
+	 * @param string $disk
+	 * @param array $items
 	 */
 	public function __construct($disk, $items)
 	{
@@ -30,7 +31,7 @@ class Deleted
 	/**
 	 * @return string
 	 */
-	public function disk()
+	public function disk(): string
 	{
 		return $this->disk;
 	}
@@ -38,7 +39,7 @@ class Deleted
 	/**
 	 * @return array
 	 */
-	public function items()
+	public function items(): array
 	{
 		return $this->items;
 	}

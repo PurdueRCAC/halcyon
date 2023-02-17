@@ -77,6 +77,7 @@ class Folder extends File
 	 * Build a folder tree
 	 *
 	 * @param   array   $folders
+	 * @param   int     $parent_id
 	 * @param   string  $path
 	 * @return  array
 	 */
@@ -101,17 +102,21 @@ class Folder extends File
 		return $branch;
 	}
 
-
+	/**
+	 * Level ID
+	 *
+	 * @var int
+	 */
 	private static $index = 0;
 
 	/**
 	 * Lists folder in format suitable for tree display.
 	 *
-	 * @param   string   $path      The path of the folder to read.
-	 * @param   string   $filter    A filter for folder names.
-	 * @param   int  $maxLevel  The maximum number of levels to recursively read, defaults to three.
-	 * @param   int  $level     The current level, optional.
-	 * @param   int  $parent    Unique identifier of the parent folder, if any.
+	 * @param   string  $path      The path of the folder to read.
+	 * @param   string  $filter    A filter for folder names.
+	 * @param   int     $maxLevel  The maximum number of levels to recursively read, defaults to three.
+	 * @param   int     $level     The current level, optional.
+	 * @param   int     $parent    Unique identifier of the parent folder, if any.
 	 * @return  array
 	 */
 	public static function nest($path = null, $filter = '.', $maxLevel = 10, $level = 0, $parent = 0)

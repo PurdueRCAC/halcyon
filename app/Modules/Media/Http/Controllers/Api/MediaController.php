@@ -3,7 +3,7 @@
 namespace App\Modules\Media\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Modules\Media\Helpers\MediaHelper;
@@ -49,7 +49,7 @@ class MediaController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return JsonResponse
 	 */
 	public function index(Request $request)
 	{
@@ -81,7 +81,7 @@ class MediaController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return JsonResponse
 	 */
 	public function tree(Request $request)
 	{
@@ -149,7 +149,7 @@ class MediaController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function layout(Request $request)
 	{
@@ -207,7 +207,7 @@ class MediaController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function upload(Request $request)
 	{
@@ -361,7 +361,7 @@ class MediaController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function update(Request $request)
 	{
@@ -426,7 +426,7 @@ class MediaController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -532,7 +532,7 @@ class MediaController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function url(Request $request)
 	{
@@ -554,7 +554,7 @@ class MediaController extends Controller
 	 * @param   string  $path
 	 * @return  string
 	 */
-	private function sanitize($path)
+	private function sanitize($path): string
 	{
 		/*$path = str_replace(' ', '_', $path);
 		$path = preg_replace('/[^a-zA-Z0-9\-_\/]+/', '', $path);
@@ -562,9 +562,7 @@ class MediaController extends Controller
 		if (!preg_match('/^[\x20-\x7e]*$/', $path))
 		{
 			$path = \Illuminate\Support\Facades\Str::ascii($path);
-		}
-
-		return $path;*/
+		}*/
 
 		$path = trim($path, '/');
 

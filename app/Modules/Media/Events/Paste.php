@@ -29,14 +29,14 @@ class Paste
 	public function __construct(Request $request)
 	{
 		$this->disk = $request->input('disk', 'public');
-		$this->path = $request->input('path');
-		$this->clipboard = $request->input('clipboard');
+		$this->path = $request->input('path', '');
+		$this->clipboard = $request->input('clipboard', []);
 	}
 
 	/**
 	 * @return string
 	 */
-	public function disk()
+	public function disk(): string
 	{
 		return $this->disk;
 	}
@@ -44,7 +44,7 @@ class Paste
 	/**
 	 * @return string
 	 */
-	public function path()
+	public function path(): string
 	{
 		return $this->path;
 	}
@@ -52,7 +52,7 @@ class Paste
 	/**
 	 * @return array
 	 */
-	public function clipboard()
+	public function clipboard(): array
 	{
 		return $this->clipboard;
 	}

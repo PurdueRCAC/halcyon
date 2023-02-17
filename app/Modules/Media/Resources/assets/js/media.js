@@ -4,7 +4,7 @@
 
 var _DEBUG = 0;
 
-if (typeof Dropzone !== 'undefined') {
+if (typeof ('Dropzone') !== undefined) {
 	Dropzone.autoDiscover = false;
 }
 
@@ -14,9 +14,9 @@ function bindContextModals() {
 		autoOpen: false,
 		modal: true,
 		close: function () {
-			$(this).dialog('close');
 			// We need to do this to avoid "cached" dialogs
 			// for folder contents that are reloaded via AJAX
+			$(this).dialog('close');
 			//$(this).dialog('destroy');
 			//$(this).html('');
 		},
@@ -34,16 +34,10 @@ function bindContextModals() {
 	});
 }
 
-function mediaUrl(base, layout, folder, page) {
-	base += (base.indexOf('?') == -1 ? '?' : '&');
-	return base + 'layout=' + layout + '&page=' + page + (folder ? '&folder=' + folder : '');
-}
-
 jQuery(document).ready(function () {
 	var contents = $('#media-items'),
 		layout = $('#layout'),
-		folder = $('#folder'),
-		page = $('#page');
+		folder = $('#folder');
 
 	_DEBUG = 1; //$('#system-debug').length;
 
@@ -90,7 +84,7 @@ jQuery(document).ready(function () {
 					window.console && console.log(response);
 				}
 
-				$.get(mediaUrl(contents.attr('data-list'), layout.val(), folder.val(), page.val()), function (data) {
+				$.get(contents.attr('data-list') + '?layout=' + layout.val() + '&folder=' + folder.val(), function (data) {
 					if (_DEBUG) {
 						window.console && console.log(data);
 					}
@@ -110,14 +104,14 @@ jQuery(document).ready(function () {
 		folder.val($(this).attr('data-folder'));
 
 		if (_DEBUG) {
-			window.console && console.log('Calling: ' + mediaUrl($(this).attr('href'), layout.val(), '', page.val()));
+			window.console && console.log('Calling: ' + $(this).attr('href') + '&layout=' + layout.val());
 		}
 
 		var fldr = $(this).attr('data-folder');
 
 		breadcrumbs(
 			fldr,
-			contents.attr('data-list') + '?layout=' + layout.val() + '&page=' + page.val() + '&folder='
+			contents.attr('data-list') + '?layout=' + layout.val() + '&folder='
 		);
 
 		$('.spinner').removeClass('d-none');
@@ -133,20 +127,20 @@ jQuery(document).ready(function () {
 	});
 
 	contents
-		.on('click', '.folder-item', function (e) {
+		.on('click', '.folder-item', function(e) {
 			e.preventDefault();
 
 			folder.val($(this).attr('data-folder'));
 
 			if (_DEBUG) {
-				window.console && console.log('Calling: ' + mediaUrl($(this).attr('href'), layout.val(), '', page.val()));
+				window.console && console.log('Calling: ' + $(this).attr('href') + '&layout=' + layout.val());
 			}
 
 			var fldr = $(this).attr('data-folder');
 
 			breadcrumbs(
 				fldr,
-				contents.attr('data-list') + '?layout=' + layout.val() + '&page=' + page.val() + '&folder='
+				contents.attr('data-list') + '?layout=' + layout.val() + '&folder='
 			);
 
 			$('.spinner').removeClass('d-none');
@@ -154,7 +148,7 @@ jQuery(document).ready(function () {
 			var url = $(this).attr('href'),
 				dataurl = $(this).attr('data-href');
 
-			$.get(mediaUrl(dataurl, layout.val(), '', page.val()), function (data) {
+			$.get(dataurl + '&layout=' + layout.val(), function (data) {
 				contents.html(data);
 
 				window.history.pushState({ dataurl: dataurl, folder: fldr, layout: layout.val() }, '', url);
@@ -237,7 +231,7 @@ jQuery(document).ready(function () {
 							window.console && console.log(response);
 						}
 
-						$.get(mediaUrl(contents.attr('data-list'), layout.val(), folder.val(), page.val()), function (data) {
+						$.get(contents.attr('data-list') + '?layout=' + layout.val() + '&folder=' + folder.val(), function (data) {
 							if (_DEBUG) {
 								window.console && console.log(data);
 							}
@@ -250,63 +244,6 @@ jQuery(document).ready(function () {
 					}
 				});
 			}
-		})
-		.on('click', '.media-opt-move', function (e) {
-			e.preventDefault();
-
-			$('.media-item').removeClass('ui-activated');
-			$('#media-move').dialog('open');
-
-			var name = $(this).data('name');
-			var before = $(this).data('path') + '/' + name;
-			var href = $(this).data('api');
-
-			before = '/' + before.replace(/^\.+/gm, '').replace(/^\/+/gm, '');
-
-			$('#mover').on('submit', function (e) {
-				e.preventDefault();
-
-				var after = $('#move-destination').val() + '/' + name;
-
-				if (before == after) {
-					alert('Cannot move to self.');
-				}
-
-				var data = {
-					'before': before,
-					'after': after
-				};
-
-				if (_DEBUG) {
-					window.console && console.log(data);
-				}
-
-				$('.spinner').removeClass('d-none');
-
-				$.ajax({
-					url: href,
-					type: 'PUT',
-					data: data,
-					success: function (response) {
-						if (_DEBUG) {
-							window.console && console.log(response);
-						}
-
-						$.get(mediaUrl(contents.attr('data-list'), layout.val(), folder.val(), page.val()), function (data) {
-							if (_DEBUG) {
-								window.console && console.log(data);
-							}
-							contents.html(data);
-
-							$('.spinner').addClass('d-none');
-
-							bindContextModals();
-
-							$('#media-move').dialog('close');
-						});
-					}
-				});
-			});
 		})
 		.on('click', '.media-opt-delete', function (e) {
 			e.preventDefault();
@@ -331,7 +268,7 @@ jQuery(document).ready(function () {
 						window.console && console.log(response);
 					}
 
-					$.get(mediaUrl(contents.attr('data-list'), layout.val(), folder.val(), page.val()), function (data) {
+					$.get(contents.attr('data-list') + '?layout=' + layout.val() + '&folder=' + folder.val(), function (data) {
 						if (_DEBUG) {
 							window.console && console.log(data);
 						}
@@ -374,6 +311,10 @@ jQuery(document).ready(function () {
 
 			folder.val($(this).attr('data-folder'));
 
+			if (_DEBUG) {
+				window.console && console.log('Calling: ' + $(this).attr('href') + '&layout=' + layout.val());
+			}
+
 			var fldr = $(this).attr('data-folder');
 
 			breadcrumbs(
@@ -386,11 +327,7 @@ jQuery(document).ready(function () {
 			var url = $(this).attr('href'),
 				dataurl = $(this).attr('data-href');
 
-			if (_DEBUG) {
-				window.console && console.log('Calling: ' + dataurl + '&layout=' + layout.val() + '&page=' + page.val());
-			}
-
-			$.get(dataurl + '&layout=' + layout.val() + '&page=' + page.val(), function (data) {
+			$.get(dataurl + '&layout=' + layout.val(), function (data) {
 				contents.html(data);
 
 				window.history.pushState({ dataurl: dataurl, folder: fldr, layout: layout.val() }, '', url);
@@ -400,20 +337,16 @@ jQuery(document).ready(function () {
 			});
 		});
 
-	$('#media-tree').treeview({
-		collapsed: true
-	});
-
 	$(window).on("popstate", function () {
 		if (history.state) {
 			$('.spinner').removeClass('d-none');
 
-			$.get(mediaUrl(history.state.dataurl, history.state.layout, '', page.val()), function (data) {
+			$.get(history.state.dataurl + '&layout=' + history.state.layout, function (data) {
 				contents.html(data);
 
 				breadcrumbs(
 					history.state.folder,
-					contents.attr('data-list') + '?layout=' + layout.val() + '&page=' + page.val() + '&folder='
+					contents.attr('data-list') + '?layout=' + layout.val() + '&folder='
 				);
 
 				$('.spinner').addClass('d-none');
@@ -438,7 +371,7 @@ jQuery(document).ready(function () {
 			});
 		},
 		queuecomplete: function () {
-			$.get(mediaUrl(contents.attr('data-list'), $('#layout').val(), $('#folder').val(), $('#page').val()), function (data) {
+			$.get(contents.attr('data-list') + '?layout=' + $('#layout').val() + '&folder=' + $('#folder').val(), function (data) {
 				contents.html(data);
 
 				bindContextModals();

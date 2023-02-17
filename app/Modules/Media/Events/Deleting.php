@@ -23,14 +23,14 @@ class Deleting
 	 */
 	public function __construct(Request $request)
 	{
-		$this->disk = $request->input('disk', 'public');
-		$this->items = $request->input('items');
+		$this->disk  = $request->input('disk', 'public');
+		$this->items = $request->input('items', []);
 	}
 
 	/**
 	 * @return string
 	 */
-	public function disk()
+	public function disk(): string
 	{
 		return $this->disk;
 	}
@@ -38,7 +38,7 @@ class Deleting
 	/**
 	 * @return array
 	 */
-	public function items()
+	public function items(): array
 	{
 		return $this->items;
 	}

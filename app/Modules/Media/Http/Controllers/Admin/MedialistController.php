@@ -4,6 +4,7 @@ namespace App\Modules\Media\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use App\Modules\Media\Models\Files;
 use App\Modules\Media\Helpers\MediaHelper;
@@ -17,16 +18,12 @@ class MedialistController extends Controller
 	 * Display a list of files
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  View
 	 */
 	public function index(Request $request)
 	{
 		$base = storage_path('app/public');
 		$folder = $request->input('folder', '');
-
-		//$state = ''; //$request->session()->get('folder')
-		//$folders = MediaHelper::getTree(app('files')->directories($base));
-		//$folderTree = MediaHelper::_buildFolderTree($folders);
 
 		$children = MediaHelper::getChildren($base, $folder);
 		$parent = MediaHelper::getParent($folder);
@@ -34,8 +31,6 @@ class MedialistController extends Controller
 		$style = $request->input('layout', 'thumbs');
 
 		return view('media::medialist.index', [
-			//'folderTree' => $folderTree,
-			//'folders' => $folders,
 			'folder' => $folder,
 			'children' => $children,
 			'parent' => $parent,
@@ -47,7 +42,7 @@ class MedialistController extends Controller
 	 * Display information about a file
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  View
 	 */
 	public function info(Request $request)
 	{
@@ -118,9 +113,9 @@ class MedialistController extends Controller
 
 	/**
 	 * Display a link to download a file
-	 * 
+	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function path(Request $request)
 	{

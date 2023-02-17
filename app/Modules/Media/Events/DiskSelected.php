@@ -13,7 +13,7 @@ class DiskSelected
 	/**
 	 * DiskSelected constructor.
 	 *
-	 * @param $disk
+	 * @param string $disk
 	 */
 	public function __construct($disk)
 	{
@@ -23,7 +23,7 @@ class DiskSelected
 	/**
 	 * @return string
 	 */
-	public function disk()
+	public function disk(): string
 	{
 		return $this->disk;
 	}

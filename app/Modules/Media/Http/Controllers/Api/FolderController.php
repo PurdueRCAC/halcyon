@@ -3,7 +3,7 @@
 namespace App\Modules\Media\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Arr;
@@ -35,7 +35,7 @@ class FolderController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return JsonResponse
 	 */
 	public function read(Request $request)
 	{
@@ -86,7 +86,7 @@ class FolderController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return JsonResponse
 	 */
 	public function create(Request $request)
 	{
@@ -158,7 +158,7 @@ class FolderController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return JsonResponse
 	 */
 	public function update(Request $request)
 	{
@@ -220,7 +220,7 @@ class FolderController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return JsonResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -268,7 +268,7 @@ class FolderController extends Controller
 	 * @param   string  $path
 	 * @return  string
 	 */
-	private function sanitize($path)
+	private function sanitize($path): string
 	{
 		/*$path = str_replace(' ', '_', $path);
 		$path = preg_replace('/[^a-zA-Z0-9\-_\/]+/', '', $path);
@@ -276,9 +276,7 @@ class FolderController extends Controller
 		if (!preg_match('/^[\x20-\x7e]*$/', $path))
 		{
 			$path = \Illuminate\Support\Facades\Str::ascii($path);
-		}
-
-		return $path;*/
+		}*/
 
 		$path = trim($path, '/');
 

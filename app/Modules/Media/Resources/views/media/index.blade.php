@@ -7,8 +7,6 @@
 
 @push('scripts')
 <script src="{{ asset('modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.js') . '?v=' . filemtime(public_path() . '/modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.js') }}"></script>
-<script src="{{ asset('modules/core/vendor/jquery-cookie/jquery.cookie.js') . '?v=' . filemtime(public_path() . '/modules/core/vendor/jquery-cookie/jquery.cookie.js') }}"></script>
-<script src="{{ asset('modules/media/vendor/jquery-treeview/jquery.treeview.js') . '?v=' . filemtime(public_path() . '/modules/media/vendor/jquery-treeview/jquery.treeview.js') }}"></script>
 <script src="{{ asset('modules/media/js/media.js') . '?v=' . filemtime(public_path() . '/modules/media/js/media.js') }}"></script>
 @endpush
 
@@ -63,18 +61,29 @@ app('pathway')
 								$fld .= '/' . $crumb;
 								?>
 								<span class="icon-chevron-right dir-separator">/</span>
-								<a href="{{ route('admin.media.medialist', ['folder' => $fld]) }}" data-folder="{{ $fld }}" class="media-breadcrumbs folder has-next-button" id="path_{{ $crumb }}">{{ $crumb }}</a>
+								<a href="{{ route('admin.media.medialist', ['folder' => $fld]) }}"
+									data-folder="{{ $fld }}"
+									class="media-breadcrumbs folder has-next-button"
+									id="path_{{ $crumb }}">{{ $crumb }}</a>
 								<?php
 							endforeach;
 							?>
 						</span>
 					</div>
 					<div class="media-header-buttons">
-						<a class="media-files-view thumbs-view hasTip <?php if (!$layout || $layout == 'thumbs') { echo 'active'; } ?>" data-view="thumbs" href="<?php echo route('admin.media.index', ['layout' => 'thumbs']); ?>" data-tip="{{ trans('media::media.thumbnail view') }}" title="{{ trans('media::media.thumbnail view') }}">
+						<a class="media-files-view thumbs-view hasTip <?php if (!$layout || $layout == 'thumbs') { echo 'active'; } ?>"
+							href="<?php echo route('admin.media.index', ['layout' => 'thumbs']); ?>"
+							data-view="thumbs"
+							data-tip="{{ trans('media::media.thumbnail view') }}"
+							title="{{ trans('media::media.thumbnail view') }}">
 							<span class="icon-grid"></span>
 							{{ trans('media::media.thumbnail view') }}
 						</a>
-						<a class="media-files-view hasTip listing-view <?php if ($layout == 'list') { echo 'active'; } ?>" data-view="list" href="<?php echo route('admin.media.index', ['layout' => 'list']); ?>" data-tip="{{ trans('media::media.detail view') }}" title="{{ trans('media::media.detail view') }}">
+						<a class="media-files-view hasTip listing-view <?php if ($layout == 'list') { echo 'active'; } ?>"
+							href="<?php echo route('admin.media.index', ['layout' => 'list']); ?>"
+							data-view="list"
+							data-tip="{{ trans('media::media.detail view') }}"
+							title="{{ trans('media::media.detail view') }}">
 							<span class="icon-list"></span>
 							{{ trans('media::media.detail view') }}
 						</a>
@@ -115,7 +124,7 @@ app('pathway')
 			<div class="dialog dialog-move" id="media-move" title="{{ trans('media::media.move') }}">
 				<form action="{{ route('api.media.move', ['api_token' => auth()->user()->api_token]) }}" id="mover">
 					<div class="form-group">
-						<label for="move-destination">Destination folder</label>
+						<label for="move-destination">{{ trans('media::media.destination folder') }}</label>
 						<select id="move-destination" class="form-control">
 							<option>/</option>
 							<?php

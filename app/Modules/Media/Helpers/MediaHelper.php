@@ -37,8 +37,10 @@ class MediaHelper
 
 		// Media file names should never have executable extensions buried in them.
 		$executable = array(
-			'php', 'js', 'exe', 'phtml', 'java', 'perl', 'py', 'asp','dll', 'go', 'ade', 'adp', 'bat', 'chm', 'cmd', 'com', 'cpl', 'hta', 'ins', 'isp',
-			'jse', 'lib', 'mde', 'msc', 'msp', 'mst', 'pif', 'scr', 'sct', 'shb', 'sys', 'vb', 'vbe', 'vbs', 'vxd', 'wsc', 'wsf', 'wsh'
+			'php', 'js', 'exe', 'phtml', 'java', 'perl', 'py', 'asp', 'dll', 'go',
+			'ade', 'adp', 'bat', 'chm', 'cmd', 'com', 'cpl', 'hta', 'ins', 'isp',
+			'jse', 'lib', 'mde', 'msc', 'msp', 'mst', 'pif', 'scr', 'sct', 'shb',
+			'sys', 'vb', 'vbe', 'vbs', 'vxd', 'wsc', 'wsf', 'wsh'
 		);
 
 		$explodedFileName = explode('.', $file['name']);
@@ -60,14 +62,14 @@ class MediaHelper
 
 		if ($format == '' || $format == false || (!in_array($format, $allowable) && !in_array($format, $ignored)))
 		{
-			$err = 'media::media.error.WARNFILETYPE';
+			$err = 'media::media.error.invalid file type';
 			return false;
 		}
 
 		$maxSize = (int) ($params->get('upload_maxsize', 0) * 1024 * 1024);
 		if ($maxSize > 0 && (int) $file['size'] > $maxSize)
 		{
-			$err = 'media::media.error.WARNFILETOOLARGE';
+			$err = 'media::media.error.file too large';
 			return false;
 		}
 
@@ -323,6 +325,7 @@ class MediaHelper
 	 * Build a folder tree
 	 *
 	 * @param   array   $folders
+	 * @param   int     $parent_id
 	 * @param   string  $path
 	 * @return  void
 	 */
@@ -368,11 +371,11 @@ class MediaHelper
 	/**
 	 * Lists folder in format suitable for tree display.
 	 *
-	 * @param   string   $path      The path of the folder to read.
-	 * @param   string   $filter    A filter for folder names.
-	 * @param   int  $maxLevel  The maximum number of levels to recursively read, defaults to three.
-	 * @param   int  $level     The current level, optional.
-	 * @param   int  $parent    Unique identifier of the parent folder, if any.
+	 * @param   string  $path      The path of the folder to read.
+	 * @param   string  $filter    A filter for folder names.
+	 * @param   int     $maxLevel  The maximum number of levels to recursively read, defaults to three.
+	 * @param   int     $level     The current level, optional.
+	 * @param   int     $parent    Unique identifier of the parent folder, if any.
 	 * @return  array
 	 */
 	public static function getTree($path, $filter = '.', $maxLevel = 10, $level = 0, $parent = 0)

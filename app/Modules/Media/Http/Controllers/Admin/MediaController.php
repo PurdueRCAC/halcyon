@@ -4,14 +4,13 @@ namespace App\Modules\Media\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Str;
 use App\Modules\Media\Entities\Folder;
 use App\Modules\Media\Helpers\MediaHelper;
-use App\Modules\Media\Events\Deleting;
 use App\Modules\Media\Events\Download;
-use App\Modules\Media\Events\FilesUploading;
-use App\Modules\Media\Events\FilesUploaded;
 
 /**
  * Media controller
@@ -20,9 +19,9 @@ class MediaController extends Controller
 {
 	/**
 	 * Display a listing of files
-	 * 
+	 *
 	 * @param  Request  $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(Request $request)
 	{
@@ -35,7 +34,7 @@ class MediaController extends Controller
 		$fold = array(
 			'id'       => 0,
 			'parent'   => -1,
-			'name'     => '',//basename($base),
+			'name'     => '',
 			'fullname' => $base,
 			'relname'  => substr($base, strlen(storage_path()))
 		);
@@ -44,19 +43,16 @@ class MediaController extends Controller
 
 		$folderTree = MediaHelper::_buildFolderTree($folders, -1);
 
-		//$root = new Folder(storage_path('app/public'));
-		//$folderTree = $root->tree();
-
 		$layout = session()->get('media.layout', $request->input('layout', 'thumbs'));
 
 		return view('media::media.index', [
-			'config' => config('media', []),
+			'config'     => config('media', []),
 			'folders_id' => ' id="media-tree"',
-			'folder' => $folder,
+			'folder'     => $folder,
 			'folderTree' => $folderTree,
-			'folders' => $folders,
-			'parent' => MediaHelper::getParent($folder),
-			'layout' => $layout
+			'folders'    => $folders,
+			'parent'     => MediaHelper::getParent($folder),
+			'layout'     => $layout
 		]);
 	}
 
@@ -76,7 +72,7 @@ class MediaController extends Controller
 		// if file name not in ASCII format
 		if (!preg_match('/^[\x20-\x7e]*$/', basename($path)))
 		{
-			$filename = \Illuminate\Support\Facades\Str::ascii(basename($path));
+			$filename = Str::ascii(basename($path));
 		}
 		else
 		{

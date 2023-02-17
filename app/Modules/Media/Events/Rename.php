@@ -29,14 +29,14 @@ class Rename
 	public function __construct(Request $request)
 	{
 		$this->disk = $request->input('disk', 'public');
-		$this->newName = $request->input('newName');
-		$this->oldName = $request->input('oldName');
+		$this->newName = $request->input('newName', '');
+		$this->oldName = $request->input('oldName', '');
 	}
 
 	/**
 	 * @return string
 	 */
-	public function disk()
+	public function disk(): string
 	{
 		return $this->disk;
 	}
@@ -44,7 +44,7 @@ class Rename
 	/**
 	 * @return string
 	 */
-	public function newName()
+	public function newName(): string
 	{
 		return $this->newName;
 	}
@@ -52,7 +52,7 @@ class Rename
 	/**
 	 * @return string
 	 */
-	public function oldName()
+	public function oldName(): string
 	{
 		return $this->oldName;
 	}

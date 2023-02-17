@@ -36,7 +36,7 @@ class FileUpdate
 	/**
 	 * @return string
 	 */
-	public function disk()
+	public function disk(): string
 	{
 		return $this->disk;
 	}
@@ -44,7 +44,7 @@ class FileUpdate
 	/**
 	 * @return string
 	 */
-	public function path()
+	public function path(): string
 	{
 		if ($this->path)
 		{

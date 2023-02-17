@@ -19,18 +19,19 @@ class DirectoryDeleted
 	/**
 	 * Deleted constructor.
 	 *
-	 * @param Request $request
+	 * @param string $disk
+	 * @param array  $items
 	 */
 	public function __construct($disk, $items)
 	{
-		$this->disk = $disk;
+		$this->disk  = $disk;
 		$this->items = $items;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function disk()
+	public function disk(): string
 	{
 		return $this->disk;
 	}
@@ -38,7 +39,7 @@ class DirectoryDeleted
 	/**
 	 * @return array
 	 */
-	public function items()
+	public function items(): array
 	{
 		return $this->items;
 	}

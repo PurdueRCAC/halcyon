@@ -3,6 +3,8 @@
 namespace App\Modules\Media\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Modules\Media\Events\DirectoryDeleting;
@@ -18,7 +20,7 @@ class FolderController extends Controller
 	 * New entry
 	 *
 	 * @param  Request  $request
-	 * @return Response
+	 * @return JsonResponse|RedirectResponse
 	 */
 	public function create(Request $request)
 	{
@@ -58,7 +60,7 @@ class FolderController extends Controller
 	 * Delete a folder
 	 *
 	 * @param  Request  $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function delete(Request $request)
 	{

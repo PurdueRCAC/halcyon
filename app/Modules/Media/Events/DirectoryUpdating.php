@@ -29,14 +29,14 @@ class DirectoryUpdating
 	public function __construct(Request $request)
 	{
 		$this->disk = $request->input('disk', 'public');
-		$this->before = $request->input('before');
-		$this->after = $request->input('after');
+		$this->before = $request->input('before', '');
+		$this->after = $request->input('after', '');
 	}
 
 	/**
 	 * @return string
 	 */
-	public function disk()
+	public function disk(): string
 	{
 		return $this->disk;
 	}
@@ -44,7 +44,7 @@ class DirectoryUpdating
 	/**
 	 * @return string
 	 */
-	public function before()
+	public function before(): string
 	{
 		return $this->before;
 	}
@@ -52,7 +52,7 @@ class DirectoryUpdating
 	/**
 	 * @return string
 	 */
-	public function after()
+	public function after(): string
 	{
 		return $this->after;
 	}

@@ -24,13 +24,13 @@ class Download
 	public function __construct(Request $request)
 	{
 		$this->disk = $request->input('disk', 'public');
-		$this->path = $request->input('path');
+		$this->path = $request->input('path', '');
 	}
 
 	/**
 	 * @return string
 	 */
-	public function disk()
+	public function disk(): string
 	{
 		return $this->disk;
 	}
@@ -38,7 +38,7 @@ class Download
 	/**
 	 * @return string
 	 */
-	public function path()
+	public function path(): string
 	{
 		return $this->path;
 	}

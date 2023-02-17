@@ -24,7 +24,9 @@ class Updated
 	/**
 	 * DirectoryCreating constructor.
 	 *
-	 * @param Request $request
+	 * @param string $disk
+	 * @param string $before
+	 * @param string $after
 	 */
 	public function __construct($disk, $before, $after)
 	{
@@ -36,7 +38,7 @@ class Updated
 	/**
 	 * @return string
 	 */
-	public function disk()
+	public function disk(): string
 	{
 		return $this->disk;
 	}
@@ -44,7 +46,7 @@ class Updated
 	/**
 	 * @return string
 	 */
-	public function before()
+	public function before(): string
 	{
 		return $this->before;
 	}
@@ -52,7 +54,7 @@ class Updated
 	/**
 	 * @return string
 	 */
-	public function after()
+	public function after(): string
 	{
 		return $this->after;
 	}

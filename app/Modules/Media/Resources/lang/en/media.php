@@ -43,6 +43,8 @@ return [
 		'file not found' => 'Specified file ":file" does not exist',
 		'directory not found' => 'Specified directory ":directory" does not exist',
 		'cannot read image dimensions' => 'There was a problem reading the image dimensions.',
+		'file too large' => 'File too large',
+		'invalid file type' => 'File type not allowed',
 	],
 
 	// Fields
@@ -86,6 +88,8 @@ return [
 	'start upload' => 'Start Upload',
 	'thumbnail view' => 'Thumbnail View',
 	'title' => 'Image Title',
+	'destination folder' => 'Destination folder',
+	'no subdirectories' => 'No sub-directories',
 
 	// Upload
 	'upload successful' => 'Upload Successful',

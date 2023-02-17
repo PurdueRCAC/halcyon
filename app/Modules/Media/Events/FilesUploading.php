@@ -42,7 +42,7 @@ class FilesUploading
 	/**
 	 * @return string
 	 */
-	public function disk()
+	public function disk(): string
 	{
 		return $this->disk;
 	}
@@ -50,7 +50,7 @@ class FilesUploading
 	/**
 	 * @return string
 	 */
-	public function path()
+	public function path(): string
 	{
 		return $this->path;
 	}
@@ -60,7 +60,7 @@ class FilesUploading
 	 */
 	public function files()
 	{
-		return array_map(function ($file)
+		return array_map(function ($file): array
 		{
 			return [
 				'name'      => $file->getClientOriginalName(),
