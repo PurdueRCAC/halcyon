@@ -71,10 +71,12 @@ app('pathway')
 
 					<div class="card">
 						<div class="card-header">
+							@if (auth()->user()->can('edit users') || (auth()->user()->can('edit.own users') && auth()->user()->id == $user->id))
 							<a class="btn btn-sm btn-link float-right" data-toggle="modal" href="#manage_details_dialog" data-tip="Edit User Info">
 								<span class="fa fa-pencil" aria-hidden="true"></span>
 								<span class="sr-only">Edit</span>
 							</a>
+							@endif
 							<div class="card-title">{{ trans('global.details') }}</div>
 						</div>
 						<div class="card-body">
@@ -177,74 +179,75 @@ app('pathway')
 
 					<div class="card">
 						<div class="card-header">
+							@if (auth()->user()->can('edit.state users'))
 							<a class="btn btn-sm btn-link float-right" data-toggle="modal" href="#manage_access_dialog" data-tip="Edit Assigned Roles">
 								<span class="fa fa-pencil" aria-hidden="true"></span>
 								<span class="sr-only">Edit</span>
 							</a>
+							@endif
 							<div class="card-title">{{ trans('users::users.assigned roles') }}</div>
 						</div>
 						<div class="card-body">
+							<div class="form-group">
+								<?php
+								$roles = $user->roles
+									->pluck('role_id')
+									->all();
 
-						<div class="form-group">
-							<?php
-							$roles = $user->roles
-								->pluck('role_id')
-								->all();
+								//echo App\Halcyon\Html\Builder\Access::roles('fields[newroles]', $roles, true);
 
-							//echo App\Halcyon\Html\Builder\Access::roles('fields[newroles]', $roles, true);
+								$ug = new App\Halcyon\Access\Role;
 
-							$ug = new App\Halcyon\Access\Role;
+								$options = App\Halcyon\Access\Role::query()
+									->select(['a.id', 'a.title', 'a.parent_id', Illuminate\Support\Facades\DB::raw('COUNT(DISTINCT b.id) AS level')])
+									->from($ug->getTable() . ' AS a')
+									->leftJoin($ug->getTable() . ' AS b', function($join)
+										{
+											$join->on('a.lft', '>', 'b.lft')
+												->on('a.rgt', '<', 'b.rgt');
+										})
+									->groupBy(['a.id', 'a.title', 'a.lft', 'a.rgt', 'a.parent_id'])
+									->orderBy('a.lft', 'asc')
+									->get();
 
-							$options = App\Halcyon\Access\Role::query()
-								->select(['a.id', 'a.title', 'a.parent_id', Illuminate\Support\Facades\DB::raw('COUNT(DISTINCT b.id) AS level')])
-								->from($ug->getTable() . ' AS a')
-								->leftJoin($ug->getTable() . ' AS b', function($join)
+								$html = array();
+								$html[] = '<ul class="checklist usergroups">';
+
+								foreach ($options as $i => $item)
+								{
+									// Setup  the variable attributes.
+									$eid = 'role_' . $item->id;
+									// Don't call in_array unless something is selected
+									$checked = '';
+									if ($roles)
 									{
-										$join->on('a.lft', '>', 'b.lft')
-											->on('a.rgt', '<', 'b.rgt');
-									})
-								->groupBy(['a.id', 'a.title', 'a.lft', 'a.rgt', 'a.parent_id'])
-								->orderBy('a.lft', 'asc')
-								->get();
+										$checked = in_array($item->id, $roles) ? ' checked="checked"' : '';
+									}
+									$rel = ($item->parent_id > 0) ? ' rel="role_' . $item->parent_id . '"' : '';
 
-							$html = array();
-							$html[] = '<ul class="checklist usergroups">';
-
-							foreach ($options as $i => $item)
-							{
-								// Setup  the variable attributes.
-								$eid = 'role_' . $item->id;
-								// Don't call in_array unless something is selected
-								$checked = '';
-								if ($roles)
-								{
-									$checked = in_array($item->id, $roles) ? ' checked="checked"' : '';
+									// Build the HTML for the item.
+									$html[] = '	<li>';
+									$html[] = '		<div class="form-check' . ($checked ? ' text-success' : '') . '">';
+									if ($checked)
+									{
+										$html[] = '			<span class="fa fa-check-square" aria-hidden="true"></span><span class="sr-only">' . trans('global.yes') . '</span>';
+									}
+									else
+									{
+										$html[] = '			<span class="fa fa-square" aria-hidden="true"></span><span class="sr-only">' . trans('global.no') . '</span>';
+									}
+									//$html[] = '		<input type="checkbox" class="form-check-input" disabled name="role[]" value="' . $item->id . '" id="' . $eid . '"' . $checked . $rel . ' />';
+									//$html[] = '		<label for="' . $eid . '" class="form-check-label">';
+									$html[] = '		' . str_repeat('<span class="gi">|&mdash;</span>', $item->level) . $item->title;
+									//$html[] = '		</label>';
+									$html[] = '		</div>';
+									$html[] = '	</li>';
 								}
-								$rel = ($item->parent_id > 0) ? ' rel="role_' . $item->parent_id . '"' : '';
+								$html[] = '</ul>';
 
-								// Build the HTML for the item.
-								$html[] = '	<li>';
-								$html[] = '		<div class="form-check' . ($checked ? ' text-success' : '') . '">';
-								if ($checked)
-								{
-									$html[] = '			<span class="fa fa-check-square" aria-hidden="true"></span><span class="sr-only">' . trans('global.yes') . '</span>';
-								}
-								else
-								{
-									$html[] = '			<span class="fa fa-square" aria-hidden="true"></span><span class="sr-only">' . trans('global.no') . '</span>';
-								}
-								//$html[] = '		<input type="checkbox" class="form-check-input" disabled name="role[]" value="' . $item->id . '" id="' . $eid . '"' . $checked . $rel . ' />';
-								//$html[] = '		<label for="' . $eid . '" class="form-check-label">';
-								$html[] = '		' . str_repeat('<span class="gi">|&mdash;</span>', $item->level) . $item->title;
-								//$html[] = '		</label>';
-								$html[] = '		</div>';
-								$html[] = '	</li>';
-							}
-							$html[] = '</ul>';
-
-							echo implode("\n", $html);
-							?>
-						</div>
+								echo implode("\n", $html);
+								?>
+							</div>
 						</div>
 					</div>
 					<!-- </fieldset> -->
@@ -563,6 +566,7 @@ app('pathway')
 	<input type="hidden" name="id" value="{{ $user->id }}" />
 </div>
 
+@if (auth()->user()->can('edit users') || (auth()->user()->can('edit.own users') && auth()->user()->id == $user->id))
 <div id="manage_details_dialog" data-id="{{ $user->id }}" title="Edit Details" class="modal dialog details-dialog" aria-hidden="true">
 	<div class="modal-dialog">
 		<form method="post" class="modal-content" action="{{ route('admin.users.store') }}">
@@ -625,7 +629,9 @@ app('pathway')
 		</form>
 	</div>
 </div>
+@endif
 
+@if (auth()->user()->can('edit.state users'))
 <div id="manage_access_dialog" data-id="{{ $user->id }}" title="Edit Assigned Roles" class="modal dialog access-dialog" aria-hidden="true">
 	<div class="modal-dialog">
 		<form method="post" class="modal-content" action="{{ route('admin.users.store') }}">
@@ -653,4 +659,5 @@ app('pathway')
 		</form>
 	</div>
 </div>
+@endif
 @stop

@@ -4,9 +4,10 @@ namespace App\Modules\Users\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\Modules\Users\Http\Resources\UserResourceCollection;
 use App\Modules\Users\Http\Resources\UserResource;
 use App\Modules\Users\Models\User;
@@ -349,12 +350,19 @@ class UsersController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		$request->validate(array(
+		$rules = [
 			'name' => 'required|string|max:128',
 			'puid' => 'nullable|integer',
 			'username' => 'nullable|string|max:16',
 			'email' => 'nullable|string|max:255',
-		));
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$user = new User;
 		$user->name = $request->input('name');
@@ -543,7 +551,7 @@ class UsersController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$request->validate([
+		$rules = [
 			'name' => 'nullable|string|max:128',
 			'puid' => 'nullable|integer',
 			'username' => 'nullable|string|max:16',
@@ -553,7 +561,14 @@ class UsersController extends Controller
 			'facets' => 'nullable|array',
 			'email' => 'nullable|string|max:255',
 			'apitoken' => 'nullable|string|max:100',
-		]);
+		];
+
+		$validator = Validator::make($request->all(), $rules);
+
+		if ($validator->fails())
+		{
+			return response()->json(['message' => $validator->messages()], 415);
+		}
 
 		$user = User::findOrFail($id);
 
@@ -575,7 +590,7 @@ class UsersController extends Controller
 				throw new \Exception(trans('users::users.error.cannot block self'));
 			}*/
 
-			if ($request->has('roles'))
+			if ($request->has('roles') && auth()->user()->can('edit.state users'))
 			{
 				$roles = $request->input('roles', []);
 

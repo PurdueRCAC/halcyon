@@ -147,32 +147,14 @@ app('pathway')
 		<tbody>
 		@foreach ($rows as $i => $row)
 			<?php
-			$canEdit   = auth()->user()->can('edit users');
+			$canDelete = auth()->user()->can('delete users');
 			$canChange = auth()->user()->can('edit.state users');
 
-			// If this group is super admin and this user is not super admin, $canEdit is false
+			// If this group is super admin and this user is not super admin, edit is false
 			if (!auth()->user()->can('admin') && App\Halcyon\Access\Gate::check($row->id, 'admin')):
-				$canEdit   = false;
+				$canDelete = false;
 				$canChange = false;
 			endif;
-
-			/*
-			if (!$row->surname && !$row->given_name):
-				$bits = explode(' ', $row->name);
-
-				$row->surname = array_pop($bits);
-
-				if (count($bits) >= 1):
-					$row->given_name = array_shift($bits);
-				endif;
-
-				if (count($bits) >= 1):
-					$row->middle_name = implode(' ', $bits);
-				endif;
-			endif;
-
-			$row->name = $row->given_name . ($row->middle_name ? ' ' . $row->middle_name : '') . ' ' . $row->surname;
-			*/
 
 			$groups = array();
 			foreach ($row->roles as $role):
@@ -185,7 +167,7 @@ app('pathway')
 			?>
 			<tr<?php if ($row->trashed()) { echo ' class="trashed"'; } ?>>
 				<td>
-					@if ($canEdit)
+					@if ($canDelete || $canChange)
 						{!! Html::grid('id', $i, $row->id) !!}
 					@endif
 				</td>
@@ -247,7 +229,7 @@ app('pathway')
 							@endif
 						</time>
 					@endif
-					@if (auth()->user()->can('manage users') && $row->isOnline())
+					@if ($row->isOnline())
 						<span class="badge badge-success">{{ trans('global.online') }}</span>
 					@endif
 				</td>
