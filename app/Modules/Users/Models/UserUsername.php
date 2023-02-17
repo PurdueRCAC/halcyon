@@ -73,6 +73,37 @@ class UserUsername extends Model
 	];
 
 	/**
+	 * Set username value
+	 *
+	 * @param   string  $value
+	 * @return  void
+	 */
+	public function setUsernameAttribute(string $value): void
+	{
+		$value = strip_tags($value);
+		$value = strtolower($value);
+		$value = preg_replace('/[^a-z0-9-]/', '', $value);
+
+		$this->attributes['username'] = $value;
+	}
+
+	/**
+	 * Set email value
+	 *
+	 * @param   string  $value
+	 * @return  void
+	 */
+	public function setEmailAttribute($value): void
+	{
+		if (!filter_var($value, FILTER_VALIDATE_EMAIL))
+		{
+			$value = null;
+		}
+
+		$this->attributes['email'] = $value;
+	}
+
+	/**
 	 * Get notes
 	 *
 	 * @return  object
