@@ -200,6 +200,12 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 			}
 
+			post.content = post.content.replace(/<mark class="kbif if">/g, '');
+			post.content = post.content.replace(/<mark class="kbif elseif">/g, '');
+			post.content = post.content.replace(/<mark class="kbif else">/g, '');
+			post.content = post.content.replace(/<mark class="kbif endif">/g, '');
+			post.content = post.content.replace(/<\/mark>/g, '');
+
 			fetch(frm.getAttribute('data-api'), {
 				method: (post['id'] ? 'PUT' : 'POST'),
 				headers: headers,
