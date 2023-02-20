@@ -319,6 +319,9 @@
 						</div>
 
 						<div class="form-group">
+							<a href="#var-help" data-toggle="modal" class="float-right">
+								Content Helpers
+							</a>
 							<label for="field-content">{{ trans('pages::pages.content') }} <span class="required">{{ trans('global.required') }}</span></label>
 							{!! editor('content', $page->content, ['rows' => 35, 'class' => 'required', 'id' => 'field-content']) !!}
 						</div>
@@ -390,6 +393,109 @@
 					<a href="{{ route('site.knowledge.page', ['uri' => ($p ? $p : '/')]) }}" data-id="{{ $page->id }}" class="cancel btn btn-link">{{ trans('global.button.cancel') }}</a>
 				</p>
 			</form>
+		</div>
+		<div class="modal" id="var-help" tabindex="-1" aria-labelledby="var-help-title" aria-hidden="true">
+			<div class="modal-dialog modal-lg modal-dialog-centered">
+				<div class="modal-content shadow-sm">
+					<div class="modal-header">
+						<div class="modal-title" id="var-help-title">Content Helpers</div>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div id="markdown-help-tabs" class="tabs">
+							<ul class="nav nav-tabs mb-3" id="help1" role="tablist">
+								<li class="nav-item" role="presentation"><a class="nav-link active" href="#help1a" data-toggle="tab" role="tab" id="help1-tab-1" aria-controls="help1a" aria-selected="true">If Statements</a></li>
+								<li class="nav-item" role="presentation"><a class="nav-link" href="#help1b" data-toggle="tab" role="tab" id="help1-tab-2" aria-controls="help1b" aria-selected="false">Variable Usage</a></li>
+								<li class="nav-item" role="presentation"><a class="nav-link" href="#help1c" data-toggle="tab" role="tab" id="help1-tab-3" aria-controls="help1c" aria-selected="false">Available Variables</a></li>
+							</ul>
+							<div class="tab-content" id="help1-content">
+								<div class="tab-pane fade show active" role="tabpanel" aria-labelledby="help1-tab-1" id="help1a">
+									<?php
+$help1a = '<p>Pages may contain basic <code>if</code> statements to display content programmatically.</p>
+
+{::if resource.name == Example}
+<p>This one is an example.</p>
+{::/}
+
+<p>Values should <strong>not</strong> be quoted and available evaluations are: <code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>=~</code>.</p>
+
+{::if resource.name == Example}
+<p>This one is still example.</p>
+{::elseif resource.name == Other}
+<p>This one is other.</p>
+{::/}
+
+{::if resource.name == Example}
+<p style="color:red;">Red</p>
+{::else}
+<p style="color:blue;">Blue</p>
+{::/}
+';
+
+$help1b = '<p>Here, we can output variables such as the resource name. This is useful for re-usable pages (snippets) and injecting user names into examples. Variables look like: <code>$&#123;resource.name}</code>.</p>
+<p>The name is ${resource.name} and your username is ${user.username}</p>';
+									$article = new App\Modules\Knowledge\Models\Page(['content' => $help1a, 'params' => '{"variables":{"name":"Example"}}']);
+									$article->params->set('variables', ['name' => 'Example']);
+									?>
+									<div class="form-group">
+										<label for="help1ainput">Input text:</label>
+										<textarea id="help1ainput" class="form-control samplebox" rows="5" data-sample="a"><?php echo $help1a; ?></textarea>
+									</div>
+									<p>Output text:<p>
+									<div id="help1aoutput" class="sampleoutput">{!! $article->body !!}</div>
+								</div>
+								<div class="tab-pane fade" role="tabpanel" aria-labelledby="help1-tab-2" id="help1b">
+									<?php
+									$article = new App\Modules\Knowledge\Models\Page(['content' => $help1b, 'params' => '{"variables":{"name":"Example"}}']);
+									$article->params->set('variables', ['name' => 'Example']);
+									?>
+									<div class="form-group">
+										<label for="help1binput">Input text:</label>
+										<textarea id="help1binput" class="form-control samplebox" rows="5" data-sample="b"><?php echo $help1b; ?></textarea>
+									</div>
+									<p>Output text:</p>
+									<div id="help1boutput" class="sampleoutput">{!! $article->body !!}</div>
+								</div>
+								<div class="tab-pane fade" role="tabpanel" aria-labelledby="help1-tab-3" id="help1c">
+									<table>
+										<caption>Variables</caption>
+										<thead>
+											<tr>
+												<th scope="col">Variable</th>
+												<th scope="col">Value</th>
+											</tr>
+										</thead>
+										<tbody>
+											@foreach ($page->variables->all() as $k => $v)
+												@if (is_array($v))
+													@foreach ($v as $kk => $vv)
+														@php
+														if (is_array($vv)):
+															$vv = $vv[0];
+														endif;
+														@endphp
+														<tr>
+															<td>${<?php echo $k . '.' . $kk; ?>}</td>
+															<td>{{ $vv }}</td>
+														</tr>
+													@endforeach
+												@else
+												<tr>
+													<td>${<?php echo $k; ?>}</td>
+													<td>{{ $v }}</td>
+												</tr>
+												@endif
+											@endforeach
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		@endif
 		@if (auth()->user()->can('create knowledge'))

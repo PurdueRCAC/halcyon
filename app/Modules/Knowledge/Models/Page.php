@@ -360,7 +360,7 @@ class Page extends Model
 	 *
 	 * @return  array<string,mixed>
 	 */
-	private function getVars(): array
+	protected function getVars(): array
 	{
 		$vars = array();
 		$vars['myusername'] = 'myusername';
