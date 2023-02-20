@@ -125,7 +125,7 @@ class Ckeditor
 		$config->startupMode                   = 'wysiwyg';
 		$config->tabSpaces                     = 4;
 		//$config->height                        = $params->get('height', '200px');
-		$config->extraPlugins                  = 'kbif';
+		$config->extraPlugins                  = 'kbif,codeTag';
 		$config->toolbarCanCollapse            = false;
 		$config->resize_enabled                = true;
 		$config->emailProtection               = '';
