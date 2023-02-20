@@ -1,0 +1,10 @@
+
+mark {
+	padding: 2px;
+}
+mark.kbif {
+	background-color: #e8f2ff;
+}
+mark.kbvar {
+	background-color: rgba(255,0,0,0.2);
+}

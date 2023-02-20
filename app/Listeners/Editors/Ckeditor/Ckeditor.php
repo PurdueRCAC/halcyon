@@ -125,10 +125,19 @@ class Ckeditor
 		$config->startupMode                   = 'wysiwyg';
 		$config->tabSpaces                     = 4;
 		//$config->height                        = $params->get('height', '200px');
+		$config->extraPlugins                  = 'kbif';
 		$config->toolbarCanCollapse            = false;
 		$config->resize_enabled                = true;
 		$config->emailProtection               = '';
-		$config->protectedSource               = array('/@widget(.*)}/gi', '/<map[^>]*>(.|\n)*<\/map>/ig', '/<area([^>]*)\/?>/ig');
+		$config->protectedSource               = array(
+			'/@widget(.*)}/gi',
+			'/{::if([^}]*)}/gi',
+			'/{::elseif([^}]*)}/gi',
+			'/{::else}/gi',
+			'/{::\/}/gi',
+			'/<map[^>]*>(.|\n)*<\/map>/ig',
+			'/<area([^>]*)\/?>/ig'
+		);
 		$config->extraAllowedContent           = 'img(*)[*]; style(*)[*]; mark(*)[*]; span(*)[*]; map(*)[*]; area(*)[*]; *(*)[*]{*}';
 		$config->bodyClass                     = 'ckeditor-body';
 		$config->contentsCss                   = [];
@@ -159,13 +168,13 @@ class Ckeditor
 			['name' => 'tools', 'groups' => [ 'tools' ]],
 			['name' => 'others', 'groups' => [ 'others' ]],
 			'/',
+			['name' => 'styles', 'groups' => [ 'styles' ]],
 			['name' => 'basicstyles', 'groups' => [ 'basicstyles', 'cleanup' ]],
 			['name' => 'paragraph', 'groups' => [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ]],
-			//['name' => 'styles', 'groups' => [ 'styles' ]],
 			//['name' => 'colors', 'groups' => [ 'colors' ]],
 			//['name' => 'about', 'groups' => [ 'about' ]],
 		];
-		$config->removeButtons = 'NewPage,Preview,Print,Save,Scayt,About,Styles,Flash,PageBreak,Language';
+		$config->removeButtons = 'NewPage,Preview,Print,Save,Scayt,About,Styles,Font,FontSize,Flash,PageBreak,Language';
 
 		// If minimal toolbar
 		/*if (in_array('minimal', $params->get('class')))
