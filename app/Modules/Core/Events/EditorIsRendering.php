@@ -169,7 +169,7 @@ class EditorIsRendering
 				$attributes .= ' ' . $k . '="' . e($v) . '"';
 			}
 
-			$this->content = '<textarea ' . $attributes . '>' . $this->content . '</textarea>';
+			$this->content = '<textarea ' . $attributes . '>' . e($this->value) . '</textarea>';
 		}
 
 		return $this->content;
