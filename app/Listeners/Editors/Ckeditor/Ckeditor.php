@@ -125,7 +125,44 @@ class Ckeditor
 		$config->startupMode                   = 'wysiwyg';
 		$config->tabSpaces                     = 4;
 		//$config->height                        = $params->get('height', '200px');
-		$config->extraPlugins                  = 'kbif,codeTag';
+		$config->format_tags = 'p;h1;h2;h3;h4;h5;h6;address'; // Remove pre;div
+		$config->extraPlugins                  = 'codeTag,codesnippet,kbif';
+		$config->codeSnippet_languages         = array(
+			//apache: 'Apache',
+			'shell-session' => 'Shell Session',
+			'bash' => 'Bash',
+			//coffeescript: 'CoffeeScript',
+			'cpp' => 'C++',
+			'cs' => 'C#',
+			'css' => 'CSS',
+			'csv' => 'CSV',
+			'docker' => 'Docker',
+			'fortran' => 'Fortran',
+			//diff: 'Diff',
+			'html' => 'HTML',
+			//http: 'HTTP',
+			'ini' => 'INI',
+			'java' => 'Java',
+			'javascript' => 'JavaScript',
+			'json' => 'JSON',
+			'julia' => 'Julia',
+			'lua' => 'Lua',
+			'makefile' => 'Makefile',
+			'markdown' => 'Markdown',
+			'matlab' => 'Matlab',
+			//nginx: 'Nginx',
+			'objectivec' => 'Objective-C',
+			'opencl' => 'OpenCL',
+			'perl' => 'Perl',
+			'php' => 'PHP',
+			'python' => 'Python',
+			'r' => 'R',
+			'ruby' => 'Ruby',
+			'sql' => 'SQL',
+			'vbscript' => 'VBScript',
+			//xhtml: 'XHTML',
+			'xml' => 'XML',
+		);
 		$config->toolbarCanCollapse            = false;
 		$config->resize_enabled                = true;
 		$config->emailProtection               = '';
@@ -147,6 +184,7 @@ class Ckeditor
 			foreach ($css as $c)
 			{
 				$c = trim($c);
+				$c = trim($c, "\r");
 				$config->contentsCss[] = asset($c) . '?t=' . time();
 			}
 		}
@@ -165,8 +203,8 @@ class Ckeditor
 			['name' => 'links', 'groups' => [ 'links' ]],
 			['name' => 'insert', 'groups' => [ 'insert' ]],
 			//['name' => 'forms', 'groups' => [ 'forms' ]],
-			['name' => 'tools', 'groups' => [ 'tools' ]],
-			['name' => 'others', 'groups' => [ 'others' ]],
+			//['name' => 'tools', 'groups' => [ 'tools' ]],
+			//['name' => 'others', 'groups' => [ 'others' ]],
 			'/',
 			['name' => 'styles', 'groups' => [ 'styles' ]],
 			['name' => 'basicstyles', 'groups' => [ 'basicstyles', 'cleanup' ]],
@@ -218,14 +256,6 @@ class Ckeditor
 		if ($params->get('contentBodyClass'))
 		{
 			$config->bodyClass = $params->get('contentBodyClass');
-		}
-
-		// Add stylesheets to ckeditor content
-		$css = $params->get('contentCss');
-		$css = explode("\n", $css);
-		if (is_array($css) && count($css))
-		{
-			$config->contentsCss = $css;
 		}
 
 		// File browsing
