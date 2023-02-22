@@ -1165,7 +1165,7 @@ app('pathway')
 
 		foreach ($users as $user):
 			foreach ($user->history()->orderBy('created_at', 'desc')->get() as $ev):
-				$ev->name = $user->user ? $user->user->name : trans('global.unknown');
+				$ev->name = $user->user ? $user->user->name . ' (' . $user->user->username . ')' : 'user ID #' . $user->userid;
 				$ev->target_id = $user->userid;
 
 				$history->push($ev);
@@ -1182,7 +1182,7 @@ app('pathway')
 					$target = trans('global.unknown');
 
 					if ($action->user):
-						$actor = '<a href="' . route('admin.users.show', ['id' => $action->user_id]) . '">' . e($action->user->name) . '</a>';
+						$actor = '<a href="' . route('admin.users.show', ['id' => $action->user_id]) . '">' . e($action->user->name) . ' (' . e($action->user->username) . ')</a>';
 					endif;
 
 					$created = $action->created_at ? $action->created_at : trans('global.unknown');
