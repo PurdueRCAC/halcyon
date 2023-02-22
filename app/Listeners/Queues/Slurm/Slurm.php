@@ -112,6 +112,11 @@ class Slurm
 			->where('hostname', '=', $event->hostname)
 			->first();
 
+		if (!$scheduler || !$scheduler->resource)
+		{
+			return;
+		}
+
 		$out = array();
 		$out[] = "# Cluster - 'cluster_name':MaxTRESPerJob=node=50";
 		$out[] = "# Followed by Accounts you want in this fashion (root is created by default)...";
