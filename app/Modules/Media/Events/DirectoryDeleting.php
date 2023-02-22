@@ -28,8 +28,8 @@ class DirectoryDeleting
 	 */
 	public function __construct(Request $request)
 	{
-		$this->disk = urldecode($request->input('disk', 'public'));
-		$this->path = urldecode($request->input('folder', ''));
+		$this->disk = urldecode((string)$request->input('disk', 'public'));
+		$this->path = urldecode((string)$request->input('folder', ''));
 		$this->name = basename($this->path);
 	}
 

@@ -28,9 +28,9 @@ class Rename
 	 */
 	public function __construct(Request $request)
 	{
-		$this->disk = $request->input('disk', 'public');
-		$this->newName = $request->input('newName', '');
-		$this->oldName = $request->input('oldName', '');
+		$this->disk = (string)$request->input('disk', 'public');
+		$this->newName = (string)$request->input('newName', '');
+		$this->oldName = (string)$request->input('oldName', '');
 	}
 
 	/**

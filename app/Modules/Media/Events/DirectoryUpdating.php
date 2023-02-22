@@ -28,9 +28,9 @@ class DirectoryUpdating
 	 */
 	public function __construct(Request $request)
 	{
-		$this->disk = $request->input('disk', 'public');
-		$this->before = $request->input('before', '');
-		$this->after = $request->input('after', '');
+		$this->disk   = (string)$request->input('disk', 'public');
+		$this->before = (string)$request->input('before', '');
+		$this->after  = (string)$request->input('after', '');
 	}
 
 	/**
