@@ -227,6 +227,10 @@ ol.steps li.notmystep {
 	background: rgba(82, 157, 35, 0.5);
 }
 
+.dropdown-dates {
+	width: 45em;
+}
+
 @media print {
 	.container {
 		width: 100% !important;

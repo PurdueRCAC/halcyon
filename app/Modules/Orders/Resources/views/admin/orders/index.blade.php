@@ -216,6 +216,119 @@ app('pathway')
 					<option value="canceled"<?php if ($filters['status'] == 'canceled'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.canceled') }}</option>
 				</select>
 
+				<div class="btn-group position-static" role="group" aria-label="Specific date range">
+					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						@if ($filters['start'] || $filters['end'])
+							@if ($filters['start'])
+								{{ $filters['start'] }}
+							@else
+								All past
+							@endif
+							-
+							@if ($filters['end'])
+								{{ $filters['end'] }}
+							@else
+								Now
+							@endif
+						@else
+							Date range
+						@endif
+					</button>
+					<div class="dropdown-menu dropdown-menu-right dropdown-dates">
+						<div class="row">
+							<div class="col-md-3">
+								<p class="mt-0 mx-4"><strong>To-Date</strong></p>
+								<a href="{{ route('admin.orders.index', ['start' => '', 'end' => '']) }}" class="dropdown-item{{ !$filters['start'] && !$filters['end'] ? ' active' : '' }}">All Time</a>
+								<?php
+								$start = Carbon\Carbon::now()->modify('-1 week')->format('Y-m-d');
+								$end = Carbon\Carbon::now()->modify('+1 day')->format('Y-m-d');
+								?>
+								<a href="{{ route('admin.orders.index', ['start' => $start, 'end' => $end]) }}" class="dropdown-item{{ $filters['start'] == $start && $filters['end'] == $end ? ' active' : '' }}">Week</a>
+								<?php
+								$start = Carbon\Carbon::now()->modify('-1 month')->format('Y-m-d');
+								?>
+								<a href="{{ route('admin.orders.index', ['start' => $start, 'end' => $end]) }}" class="dropdown-item{{ $filters['start'] == $start && $filters['end'] == $end ? ' active' : '' }}">Month</a>
+								<?php
+								$start = Carbon\Carbon::now()->modify('-6 months')->format('Y-m-d');
+								?>
+								<a href="{{ route('admin.orders.index', ['start' => $start, 'end' => $end]) }}" class="dropdown-item{{ $filters['start'] == $start && $filters['end'] == $end ? ' active' : '' }}">6 Months</a>
+								<?php
+								$start = Carbon\Carbon::now()->modify('-1 year')->format('Y-m-d');
+								?>
+								<a href="{{ route('admin.orders.index', ['start' => $start, 'end' => $end]) }}" class="dropdown-item{{ $filters['start'] == $start && $filters['end'] == $end ? ' active' : '' }}">Year</a>
+							</div>
+							<div class="col-md-3">
+								<p class="mt-0 mx-4"><strong>Fiscal</strong></p>
+								<?php
+								$fs = config('fiscal_start', 7);
+								$now = Carbon\Carbon::now();
+								$y = $now->format('Y');
+								if ((int)$now->format('m') < $fs)
+								{
+									$y = $now->modify('-1 year')->format('Y');
+								}
+								$fiscal_start = Carbon\Carbon::parse($y . '-' . Illuminate\Support\Str::padLeft($fs, 2, '0') . '-01');
+								$start = $fiscal_start->format('Y-m-d');
+								?>
+								<a href="{{ route('admin.orders.index', ['start' => $start, 'end' => $end]) }}" class="dropdown-item{{ $filters['start'] == $start && $filters['end'] == $end ? ' active' : '' }}">Year-to-date</a>
+								<?php
+								$now = Carbon\Carbon::now();
+								$q1 = clone $fiscal_start;
+								$end = $q1->modify('+3 months')->format('Y-m-d');
+								?>
+								<a href="{{ route('admin.orders.index', ['start' => $start, 'end' => $end]) }}" class="dropdown-item{{ $filters['start'] == $start && $filters['end'] == $end ? ' active' : '' }}">2023 quarter 1</a>
+								<?php
+								$q2 = clone $fiscal_start;
+								$start = $q2->modify('+3 months');
+								if ($start->timestamp < $now->timestamp):
+									$start = $q2->format('Y-m-d');
+									$end   = $q2->modify('+3 months')->format('Y-m-d');
+									?>
+									<a href="{{ route('admin.orders.index', ['start' => $start, 'end' => $end]) }}" class="dropdown-item{{ $filters['start'] == $start && $filters['end'] == $end ? ' active' : '' }}">2023 quarter 2</a>
+									<?php
+								endif;
+
+								$q3 = clone $fiscal_start;
+								$start = $q3->modify('+6 months')->format('Y-m-d');
+								if ($start < $now->format('Y-m-d')):
+									$end   = $q3->modify('+3 months')->format('Y-m-d');
+									?>
+									<a href="{{ route('admin.orders.index', ['start' => $start, 'end' => $end]) }}" class="dropdown-item{{ $filters['start'] == $start && $filters['end'] == $end ? ' active' : '' }}">2023 quarter 3</a>
+									<?php
+								endif;
+
+								$q4 = clone $fiscal_start;
+								$start = $q4->modify('+9 months')->format('Y-m-d');
+								if ($start < $now->format('Y-m-d')):
+									$end   = $q4->modify('+3 months')->format('Y-m-d');
+									?>
+									<a href="{{ route('admin.orders.index', ['start' => $start, 'end' => $end]) }}" class="dropdown-item{{ $filters['start'] == $start && $filters['end'] == $end ? ' active' : '' }}">2023 quarter 4</a>
+									<?php
+								endif;
+
+								$lastyear = clone $fiscal_start;
+								$end = $lastyear->format('Y-m-d');
+								$start = $lastyear->modify('-1 year')->format('Y-m-d');
+								?>
+								<a href="{{ route('admin.orders.index', ['start' => $start, 'end' => $end]) }}" class="dropdown-item{{ $filters['start'] == $start && $filters['end'] == $end ? ' active' : '' }}">2022</a>
+							</div>
+							<div class="col-md-6">
+								<p class="mt-0 mx-4"><strong>Specific</strong></p>
+								<div class="px-4 py-3">
+									<div class="form-group mb-3">
+										<label for="filter_start">{{ trans('orders::orders.start date') }}</label>
+										<input type="text" name="start" id="filter_start" class="form-control date filter filter-submit" value="{{ $filters['start'] }}" placeholder="Start date" />
+									</div>
+									<div class="form-group">
+										<label for="filter_end">{{ trans('orders::orders.end date') }}</label>
+										<input type="text" name="end" id="filter_end" class="form-control date filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<div class="btn-group">
 					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						<span class="fa fa-filter" aria-hidden="true"></span><span class="sr-only">Filters</span>
@@ -230,22 +343,6 @@ app('pathway')
 										<option value="<?php echo $category->id; ?>"<?php if ($filters['category'] == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
 									<?php endforeach; ?>
 								</select>
-							</div>
-
-							<div class="form-group mb-3">
-								<label class="sr-only" for="filter_start">{{ trans('orders::orders.start date') }}</label>
-								<span class="input-group">
-									<input type="text" name="start" id="filter_start" class="form-control date filter filter-submit" value="{{ $filters['start'] }}" placeholder="Start date" />
-									<span class="input-group-append"><span class="input-group-text"><span class="icon-calendar" aria-hidden="true"></span></span></span>
-								</span>
-							</div>
-
-							<div class="form-group">
-								<label class="sr-only" for="filter_end">{{ trans('orders::orders.end date') }}</label>
-								<span class="input-group">
-									<input type="text" name="end" id="filter_end" class="form-control date filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
-									<span class="input-group-append"><span class="input-group-text"><span class="icon-calendar" aria-hidden="true"></span></span></span>
-								</span>
 							</div>
 						</div>
 					</div>
