@@ -1126,7 +1126,8 @@ class DirectoriesController extends Controller
 				$row->unallocatedbytes = Number::formatBytes(-($bucket['unallocatedbytes'] + ($row->getOriginal('bytes') - $bytes)));
 				$row->overallocated    = 1;
 
-				return new DirectoryResource($row);
+				return response()->json(['message' => trans($row->parentstoragedirid ? 'Over allocated. Add a loan or purchase or reduce parent quota by the amount of increase desired.' : 'Over allocated. Add a loan or purchase of the amount of increase desired.')], 415);
+				//return new DirectoryResource($row);
 			}
 
 			// Send back new formatted number
