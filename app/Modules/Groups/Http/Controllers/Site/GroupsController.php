@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Fluent;
 use Illuminate\Support\Facades\Storage;
-use OpenSpout\Reader\Common\Creator\ReaderEntityFactory;
+use OpenSpout\Reader\CSV\Reader as CsvReader;
+use OpenSpout\Reader\XLSX\Reader as XlsxReader;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Groups\Models\FieldOfScience;
 use App\Modules\Groups\Models\Group;
@@ -414,14 +415,11 @@ class GroupsController extends Controller
 
 				if ($extension == 'csv' || $extension == 'txt')
 				{
-					// CSV files get read as plain text and throw:
-					//     OpenSpout\Common\Exception\UnsupportedTypeException
-					//     No readers supporting the given type: txt
-					$reader = ReaderEntityFactory::createCSVReader();
+					$reader = new CsvReader();
 				}
 				else
 				{
-					$reader = ReaderEntityFactory::createReaderFromFile($path);
+					$reader = new XlsxReader();
 				}
 				$reader->open($path);
 
