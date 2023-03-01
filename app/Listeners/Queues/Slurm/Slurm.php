@@ -117,6 +117,14 @@ class Slurm
 			return;
 		}
 
+		$facet = $scheduler->resource->getFacet('slurmapi');
+
+		$qosControlled = true;
+		if (!$facet || !$facet->value || strtolower($facet->value) == 'no')
+		{
+			$qosControlled = false;
+		}
+
 		$out = array();
 		$out[] = "# Cluster - 'cluster_name':MaxTRESPerJob=node=50";
 		$out[] = "# Followed by Accounts you want in this fashion (root is created by default)...";
@@ -197,6 +205,7 @@ class Slurm
 				$name = $queue->nameWithSubcluster;
 			}
 
+			//Account - 'chen4116':Description='gilbreth-e':Organization='chen4116':Fairshare=1:GrpTRES=cpu=8,gres/gpu=1:GrpSubmitJobs=12000:MaxSubmitJobs=5000:MaxWallDurationPerJob=20160:Priority=1000
 			$line = array();
 			$line[] = "Account - '" . $name . "'";
 			$line[] = "Description='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
@@ -254,6 +263,36 @@ class Slurm
 				$line[] = "QOS='+" . implode(',+', $queue->qos->pluck('name')->toArray()) . "'";
 			}
 
+			if (!$qosControlled)
+			{
+				if ($queue->maxjobsrunuser)
+				{
+					$line[] = 'MaxJobsPerUser=' . $queue->maxjobsrunuser;
+				}
+				/*
+				if ($queue->maxjobsqueueduser)
+				{
+					$line[] = 'GrpJobs=' . $queue->maxjobsqueueduser;
+				}*/
+				if ($queue->maxjobsqueued)
+				{
+					$line[] = 'GrpSubmitJobs=' . $queue->maxjobsqueued;
+				}
+				if ($queue->maxjobsqueueduser)
+				{
+					$line[] = 'MaxSubmitJobs=' . $queue->maxjobsqueueduser;
+				}
+				if ($queue->walltime)
+				{
+					// Value is stored in seconds and needs to be in minutes
+					$line[] = 'MaxWallDurationPerJob=' . ($queue->walltime / 60);
+				}
+				if ($queue->priority)
+				{
+					$line[] = 'Priority=' . $queue->priority;
+				}
+			}
+
 			$out[] = implode(':', $line);
 
 			$users[] = "Parent - '" . $name . "'";
@@ -264,7 +303,7 @@ class Slurm
 				foreach ($admin_users as $username)
 				{
 					// User - 'aliaga':Partition='gilbreth-g':DefaultAccount='standby':Fairshare=1:GrpTRES=cpu=128:GrpSubmitJobs=12000:MaxSubmitJobs=5000:MaxWallDurationPerJob=20160:Priority=1000
-					$uline = ["User - '" . $username . "'"];
+					$uline   = ["User - '" . $username . "'"];
 					$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
 					$uline[] = "DefaultAccount='standby'";
 					$uline[] = "AdminLevel='Administrator'";
@@ -282,7 +321,7 @@ class Slurm
 							continue;
 						}
 
-						$uline = ["User - '" . $username . "'"];
+						$uline   = ["User - '" . $username . "'"];
 						$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
 						$uline[] = "DefaultAccount='standby'";
 						$uline[] = "Fairshare=1";
@@ -300,7 +339,7 @@ class Slurm
 				}
 
 				//User - 'aliaga':Partition='gilbreth-g':DefaultAccount='standby':Fairshare=1:GrpTRES=cpu=128:GrpSubmitJobs=12000:MaxSubmitJobs=5000:MaxWallDurationPerJob=20160:Priority=1000
-				$uline = ["User - '" . $queueuser->user->username . "'"];
+				$uline   = ["User - '" . $queueuser->user->username . "'"];
 				$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
 				$uline[] = "DefaultAccount='standby'";
 				if (in_array($queueuser->user->username, $admin_users))
