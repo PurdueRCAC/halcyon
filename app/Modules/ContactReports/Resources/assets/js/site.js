@@ -1,4 +1,4 @@
-/* global $ */ // jquery.js
+/* global TomSelect */ // modules/core/vendor/tom-select/js/tom-select.complete.min.js
 
 var root = document.querySelector('meta[name="base-url"]').getAttribute('content') + "/api/";
 var keywords_pending = 0;
@@ -403,19 +403,9 @@ function CRMSearchGroup(results, flags) {
 		}
 	}
 
-	// reset search box
-	var group = $('#group');
+	var group = document.getElementById('group');
 
-	if ($('.tagsinput').length) {
-		if (!group.tagExist(results['id'])) {
-			group.addTag({
-				'id': results['id'],
-				'label': results['name']
-			});
-		}
-	} else {
-		group.val(group.val() + (group.val() ? ', ' : '') + results['name'] + ':' + results['id']);
-	}
+	group.value = results['id']; //group.value + (group.value ? ', ' : '') + results['name'] + ':' + results['id'];
 }
 
 /**
@@ -442,21 +432,9 @@ function CRMSearchUser(results, flags) {
 	}
 
 	// reset search box
-	var people = $('#people');
+	var people = document.getElementById('people');
 
-	if ($('.tagsinput').length) {
-		if (!people.tagExist(results.id)) {
-			people.addTag({
-				'id': results.id,
-				'label': results.name
-			}, {
-				focus: false,
-				callback: false
-			});
-		}
-	} else {
-		people.val(people.val() + (people.val() ? ', ' : '') + results.name + ':' + results.id);
-	}
+	people.value = people.value + (people.vallue ? ', ' : '') + results.name + ' (' + results.id + ')';
 }
 
 /**
@@ -483,9 +461,9 @@ function CRMSearchResource(results, flags) {
 	}
 
 	// reset search box
-	var resource = $('#crmresource');
+	var resource = document.getElementById('crmresource');
 
-	resource.val(results.id);
+	resource.value = results.id;
 }
 
 /**
@@ -495,27 +473,23 @@ function CRMSearchResource(results, flags) {
  * @param   {bool}    refresh
  * @return  {void}
  */
-function CRMRemoveGroup(group, refresh) {
-	var input = $('#group');
+/*function CRMRemoveGroup(group, refresh) {
+	var input = document.getElementById('group');
 
-	if ($('.tagsinput').length) {
-		input.removeTag(group);
-	} else {
-		var data = [];
-		var items = input.val().split(',');
-		var val;
-		for (var x = 0; x < items.length; x++) {
-			val = items[x];
-			if (items[x].includes(':')) {
-				val = items[x].split(':')[1];
-			}
-
-			if (val != group) {
-				data.push(items[x]);
-			}
+	var data = [];
+	var items = input.value.split(',');
+	var val;
+	for (var x = 0; x < items.length; x++) {
+		val = items[x];
+		if (items[x].includes(':')) {
+			val = items[x].split(':')[1];
 		}
-		input.val(data.join(', '));
+
+		if (val != group) {
+			data.push(items[x]);
+		}
 	}
+	input.value = data.join(', ');
 
 	if (document.getElementById("TAB_follow").className.match(/active/)) {
 		document.getElementById("INPUT_add").disabled = false;
@@ -524,7 +498,7 @@ function CRMRemoveGroup(group, refresh) {
 	if (refresh) {
 		CRMSearch();
 	}
-}
+}*/
 
 /**
  * Remove a user
@@ -533,27 +507,25 @@ function CRMRemoveGroup(group, refresh) {
  * @param   {bool}    refresh
  * @return  {void}
  */
-function CRMRemoveUser(user, refresh) {
-	var input = $('#people');
+/*function CRMRemoveUser(user, refresh) {
+	var input = document.getElementById('people');
 
-	if ($('.tagsinput').length) {
-		input.removeTag(user);
-	} else {
-		var data = [];
-		var items = input.val().split(',');
-		var val;
-		for (var x = 0; x < items.length; x++) {
-			val = items[x];
-			if (items[x].includes(':')) {
-				val = items[x].split(':')[1];
-			}
+	var data = [];
+	var items = input.value.split(',');
+	var val;
+	for (var x = 0; x < items.length; x++) {
+		val = items[x];
 
-			if (val != user) {
-				data.push(items[x]);
-			}
+		if (val.match(/\([a-z0-9]+\)$/)) {
+			val = val.replace(/([^(]+\()/, '').replace(/\)$/, '');
+			//item.name = item.name.replace(/\s(\([a-z0-9]+\))$/, '');
 		}
-		input.val(data.join(', '));
+
+		if (val != user) {
+			data.push(items[x]);
+		}
 	}
+	input.value = data.join(', ');
 
 	if (document.getElementById("TAB_follow").className.match(/active/)) {
 		document.getElementById("INPUT_add").disabled = false;
@@ -562,7 +534,7 @@ function CRMRemoveUser(user, refresh) {
 	if (refresh) {
 		CRMSearch();
 	}
-}
+}*/
 
 /**
  * Search by date
@@ -709,82 +681,26 @@ function CRMAddEntry() {
 	}
 	contactdate += " 00:00:00";
 
-	if ($('.tagsinput').length) {
-		groupsdata = document.getElementById("group").value.split(',');
-		for (i = 0; i < groupsdata.length; i++) {
-			if (groupsdata[i] != "") {
-				/*if (groupsdata[i].indexOf('/') !== -1) {
-					var res = groupsdata[i].split('/');
-					groups.push(res[res.length-1]);
-				} else {*/
-				groups.push(groupsdata[i]);
-				//}
-			}
+	groupsdata = document.getElementById("group").value.split(',');
+	for (i = 0; i < groupsdata.length; i++) {
+		if (groupsdata[i] != "") {
+			groups.push(groupsdata[i]);
 		}
-		peopledata = document.getElementById("people").value.split(',');
-		for (i = 0; i < peopledata.length; i++) {
-			if (peopledata[i] != "") {
-				/*if (usersdata[i].indexOf('/') !== -1) {
-					var res = usersdata[i].split('/');
-					people.push({
-						'userid' : res[res.length-1]
-					});
-				} else {*/
-				people.push(peopledata[i]);
-				/*people.push({
-					'userid': peopledata[i]
-				});*/
-				//}
-			}
+	}
+
+	peopledata = document.getElementById("people").value.split(',');
+	for (i = 0; i < peopledata.length; i++) {
+		if (peopledata[i] != "") {
+			people.push(peopledata[i]);
 		}
-		/*resourcedata = document.getElementById("crmresource").value.split(',');
-		for (i = 0; i < resourcedata.length; i++) {
-			if (resourcedata[i] != "") {
-				if (resourcedata[i].indexOf('/') !== -1) {
-					var res = resourcedata[i].split('/');
-					resources.push(res[res.length - 1]);
-				} else {
-					resources.push(resourcedata[i]);
-				}
-			}
-		}*/
-	} /*else {
-		groupsdata = document.getElementById("TD_group").getElementsByTagName("div");
-		peopledata = document.getElementById("TD_people").getElementsByTagName("div");
-		resourcedata = document.getElementById("TD_resource").getElementsByTagName("div");
-		for (i = 0; i < groupsdata.length; i++) {
-			if (groupsdata[i].id.search("GROUP_") == 0) {
-				groups.push(groupsdata[i].id.substr(6));
-			}
-		}
-		for (i = 0; i < peopledata.length; i++) {
-			if (peopledata[i].id.search("USER_") == 0) {
-				var name = peopledata[i].innerHTML.substr(peopledata[i].innerHTML.lastIndexOf(">") + 1);
-				name.replace(/^ +/, "");
-				name.replace(/ +$/, "");
-				people.push({
-					'userid': peopledata[i].id.substr(5),
-					'name': name
-				});
-			}
-		}
-		for (i = 0; i < resourcedata.length; i++) {
-			if (resourcedata[i].id.search("RESOURCE_") == 0) {
-				resources.push(resourcedata[i].id.substr(6));
-			}
-		}
-	}*/
+	}
+
 	resourcedata = Array.prototype.slice.call(document.querySelectorAll('#crmresource option:checked'), 0).map(function (v) {
 		return v.value;
 	});
 	for (i = 0; i < resourcedata.length; i++) {
 		if (resourcedata[i] != "") {
-			if (resourcedata[i].indexOf('/') !== -1) {
-				var resource = resourcedata[i].split('/');
-				resources.push(resource[resource.length - 1]);
-			} else {
-				resources.push(resourcedata[i]);
-			}
+			resources.push(resourcedata[i]);
 		}
 	}
 
@@ -1188,20 +1104,14 @@ function customMarkdownParser(text) {
  * @return  {void}
  */
 function CRMSearch() {
-	var groupsdata = new Array();
 	var groups = new Array();
-	var group = null;
 
 	var peopledata = new Array();
 	var people = new Array();
-	var person = null;
 
-	//var resourcedata = new Array();
 	var resources = new Array();
-	var resource = null;
 
 	var tags = new Array();
-	var tagdata = new Array();
 
 	var keywords = document.getElementById("keywords").value;
 	//var myuserid = document.getElementById("myuserid").value;
@@ -1209,96 +1119,31 @@ function CRMSearch() {
 	var stop = document.getElementById("datestopshort").value;
 	var id = document.getElementById("id").value;
 	var typeid = document.getElementById("crmtype").value;
-	var i = 0,
-		x = 0;
+	var i = 0;
 
-	if ($('.tagsinput').length) {
-		groupsdata = document.getElementById("group").value.split(',');
-		for (i = 0; i < groupsdata.length; i++) {
-			if (groupsdata[i] != "") {
-				if (groupsdata[i].indexOf('/') !== -1) {
-					group = groupsdata[i].split('/');
-					groups.push(group[group.length - 1]);
-				} else {
-					groups.push(groupsdata[i]);
-				}
-			}
+	groups = Array.prototype.slice.call(document.querySelectorAll('#group option:checked'), 0).map(function (v) {
+		return v.value;
+	}).filter(function (val) {
+		return (val != '');
+	});
+
+	peopledata = document.getElementById("people").value.split(',');
+	for (i = 0; i < peopledata.length; i++) {
+		if (peopledata[i].match(/\([a-z0-9]+\)$/)) {
+			peopledata[i] = peopledata[i].replace(/([^(]+\()/, '').replace(/\)$/, '');
 		}
-
-		peopledata = document.getElementById("people").value.split(',');
-		for (i = 0; i < peopledata.length; i++) {
-			if (peopledata[i] != "") {
-				if (peopledata[i].indexOf('/') !== -1) {
-					person = peopledata[i].split('/');
-					people.push(person[person.length - 1]);
-				} else {
-					people.push(peopledata[i]);
-				}
-			}
+		if (peopledata[i]) {
+			people.push(peopledata[i]);
 		}
-
-		tagdata = document.getElementById("tag").value.split(',');
-		for (i = 0; i < tagdata.length; i++) {
-			if (tagdata[i] != "") {
-				tags.push(tagdata[i]);
-			}
-		}
-
-		// Fetch list of selected resources
-		/*resourcedata = document.getElementById("crmresource").value.split(',');
-		for (i = 0; i < resourcedata.length; i++) {
-			if (resourcedata[i] != "") {
-				if (resourcedata[i].indexOf('/') !== -1) {
-					resource = resourcedata[i].split('/');
-					resources.push(resource[resource.length - 1]);
-				} else {
-					resources.push(resourcedata[i]);
-				}
-			}
-		}*/
-	} else {
-		groupsdata = document.getElementById("TD_group").getElementsByTagName("div");
-		peopledata = document.getElementById("TD_people").getElementsByTagName("div");
-		//resourcedata = document.getElementById("TD_resource").getElementsByTagName("div");
-
-		for (i = 0; i < groupsdata.length; i++) {
-			if (groupsdata[i].id.search("GROUP_") == 0) {
-				group = groupsdata[i].id.substr(6);
-				group = group.split('/');
-				groups.push(group[3]);
-			}
-		}
-
-		for (i = 0; i < peopledata.length; i++) {
-			if (peopledata[i].id.search("USER_") == 0) {
-				person = peopledata[i].id.substr(5);
-				person = person.split('/');
-				people.push(person[3]);
-			}
-		}
-
-		/*for (i = 0; i < resourcedata.length; i++) {
-			if (resourcedata[i].id.search("RESOURCE_") == 0) {
-				resource = resourcedata[i].id.substr(5);
-				resource = resource.split('/');
-				resources.push(resource[3]);
-			}
-		}*/
 	}
 
-	var resourcedata = Array.prototype.slice.call(document.querySelectorAll('#crmresource option:checked'), 0).map(function (v) {
+	tags = document.getElementById("tag").value.split(',').filter(function (val) {
+		return (val != '');
+	});
+
+	resources = Array.prototype.slice.call(document.querySelectorAll('#crmresource option:checked'), 0).map(function (v) {
 		return v.value;
 	});
-	for (i = 0; i < resourcedata.length; i++) {
-		if (resourcedata[i] != "") {
-			if (resourcedata[i].indexOf('/') !== -1) {
-				resource = resourcedata[i].split('/');
-				resources.push(resource[resource.length - 1]);
-			} else {
-				resources.push(resourcedata[i]);
-			}
-		}
-	}
 
 	// sanity checks
 	if (start != "") {
@@ -1335,33 +1180,17 @@ function CRMSearch() {
 		}
 	}
 	if (groups.length > 0) {
-		var qg = groups[0];
-		for (x = 1; x < groups.length; x++) {
-			qg += "," + groups[x];
-		}
-		querystring.push("group=" + qg);
+		querystring.push("group=" + groups.join(','));
 	}
 	if (people.length > 0) {
-		var qp = people[0];
-		for (x = 1; x < people.length; x++) {
-			qp += "," + people[x];
-		}
-		querystring.push("people=" + qp);
+		querystring.push("people=" + people.join(','));
 	}
 	if (tags.length > 0) {
-		var qt = tags[0];
-		for (x = 1; x < tags.length; x++) {
-			qt += "," + tags[x];
-		}
-		querystring.push("tag=" + qt);
+		querystring.push("tag=" + tags.join(','));
 	}
 	// Construct resource query
 	if (resources.length > 0) {
-		var qr = resources[0];
-		for (x = 1; x < resources.length; x++) {
-			qr += "," + resources[x];
-		}
-		querystring.push("resource=" + qr);
+		querystring.push("resource=" + resources.join(','));
 	}
 	if (typeid != '-1') {
 		querystring.push("type=" + typeid);
@@ -1400,12 +1229,6 @@ function CRMSearch() {
 
 		history.pushState(null, null, encodeURI('?' + querystring.join('&')));
 	}
-
-	//if (searchstring == "") {
-	//	searchstring = "start:0000-00-00";
-	//}
-
-	//console.log('Searching... ' + $("#reports").data('api') + encodeURI(querystring));
 
 	document.getElementById("reports").setAttribute('data-query', querystring.join('&'));//querystring.replace('?', ''));
 
@@ -1464,17 +1287,20 @@ function CRMSearched(results) {
 	//const DEFAULT_ENTRIES = 20;
 
 	//if (xml.status == 200) {
-	var reports = $("#reports");
+	var reports = document.getElementById("reports");
 	var count = 0;
 
 	//const results = JSON.parse(xml.responseText);
 
-	$("#matchingReports").html("Found " + results.data.length + " matching reports");
+	var matchingReports = document.getElementById("matchingReports");
+	if (matchingReports) {
+		matchingReports.innerHTML = "Found " + results.data.length + " matching reports";
+	}
 
 	if (results.data.length == 0) {
-		reports.html('<p class="alert alert-warning">No matching reports found.</p>');
+		reports.innerHTML = '<p class="alert alert-warning">No matching reports found.</p>';
 	} else {
-		reports.html('');
+		reports.innerHTML = '';
 
 		var keywords = document.getElementById("keywords").value;
 		for (var x = 0; x < results.data.length; x++, count++) {
@@ -1490,143 +1316,163 @@ function CRMSearched(results) {
 				'newEntries' //(x < DEFAULT_ENTRIES ? "newEntries" : "newEntriesHidden")
 			);
 		}
-		//document.dispatchEvent(new Event('initEditor', { bubbles: true }));
 
-		// Re-initialize tooltips
-		$('.tip').tooltip({
-			position: {
-				my: 'center bottom',
-				at: 'center top'
-			},
-			hide: false
+		reports.querySelectorAll(".alert").forEach(function (el) {
+			el.classList.add('d-none');
+		});
+		document.querySelectorAll(".newEntriesHidden").forEach(function (el) {
+			el.classList.add('d-none');
 		});
 
-		reports.find(".alert").hide();
-		$(".newEntriesHidden").hide();
 
-		/*var a = $("<a></a>")
-			.attr({
-				id: "showEntries",
-				href: "#"
-			})
-			.html("Show All Reports")
-			.on('click', function (e) {
-				e.preventDefault();
-				const flag = $(this).html().includes('Show All Reports');
-				$(this).html(flag ? "Show Less Reports" : "Show All Reports");
-				$(this).parent().text("Displaying all of CRM Reports...");
-				flag ? $(".newEntriesHidden").show() : $(".newEntriesHidden").hide();
-			});
-
-		var td = $("<p></p>")
-			.attr({
-				id: "displayEntries"
-			})
-			.html("Displaying " + Math.min(count, DEFAULT_ENTRIES) + " of " +
-				results.data.length + " CRM Reports...<br/>"
-			)
-			.append(a);
-
-		reports.append(td);*/
-
-		var q = reports.data('query');
+		var q = reports.getAttribute('data-query');
 		var query = q.replace(' ', '&').replace(':', '=');
 		var lastpage = Math.ceil(results.meta.total > results.meta.per_page ? results.meta.total / results.meta.per_page : 1);
 
 		// Pagination
-		var ul = $('<ul class="pagination"></ul>');
+		var ul = document.createElement("ul");
+		ul.classList.add('pagination');
 
-		var li = $('<li class="page-item page-first">');
-		var a = $('<a class="page-link" title="First page"><span aria-hidden="true">«</span></a>')
-			.attr('href', '?page=1&' + query)
-			.attr('data-page', 1);
-		if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
-			li.addClass('disabled');
-			a.attr('aria-disabled', 'true');
-		}
-		li.append(a);
-		ul.append(li);
+		var li = document.createElement("li");
+		li.classList.add('page-item');
+		li.classList.add('page-first');
 
-		li = $('<li class="page-item page-prev">');
-		a = $('<a class="page-link" title="Previous page"><span aria-hidden="true">‹</span></a>')
-			.attr('href', '?page=' + (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1) + '&' + query)
-			.attr('data-page', (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1));
+		var a = document.createElement("a");
+		a.classList.add('page-link');
+		a.title = 'First page';
+		a.href = '?page=1&' + query;
+		a.setAttribute('data-page', 1);
+		var span = document.createElement("span");
+		span.setAttribute('aria-hidden', true);
+		span.innerHTML = '«';
+		a.appendChild(span);
+
 		if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
-			li.addClass('disabled');
-			a.attr('aria-disabled', 'true');
+			li.classList.add('disabled');
+			a.setAttribute('aria-disabled', 'true');
 		}
-		li.append(a);
-		ul.append(li);
+		li.appendChild(a);
+		ul.appendChild(li);
+
+		li = document.createElement("li");
+		li.classList.add('page-item');
+		li.classList.add('page-prev');
+
+		a = document.createElement("a");
+		a.classList.add('page-link');
+		a.title = 'Previous page';
+		a.href = '?page=' + (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1) + '&' + query;
+		a.setAttribute('data-page', (results.meta.current_page > 1 ? results.meta.current_page - 1 : 1));
+		span = document.createElement("span");
+		span.setAttribute('aria-hidden', true);
+		span.innerHTML = '‹';
+		a.appendChild(span);
+
+		if (results.meta.total <= (results.meta.per_page * results.meta.current_page) || results.meta.current_page == 1) {
+			li.classList.add('disabled');
+			a.setAttribute('aria-disabled', 'true');
+		}
+		li.appendChild(a);
+		ul.appendChild(li);
 
 		if (results.meta.total <= results.meta.per_page) {
-			li = $('<li class="page-item">');
-			a = $('<a class="page-link"></a>')
-				.text('1')
-				.attr('href', '?page=1&' + query)
-				.attr('data-page', 1);
+			li = document.createElement("li");
+			li.classList.add('page-item');
+
+			a = document.createElement("a");
+			a.classList.add('page-link');
+			a.innerHTML = '1';
+			a.href = '?page=1&' + query;
+			a.setAttribute('data-page', 1);
 			if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
-				li.addClass('disabled');
-				a.attr('aria-disabled', 'true');
+				li.classList.add('disabled');
+				a.setAttribute('aria-disabled', 'true');
 			}
-			li.append(a);
-			ul.append(li);
+			li.appendChild(a);
+			ul.appendChild(li);
 		} else {
 			var c = 0;
 			for (var l = 1; l <= lastpage; l++) {
 				if (c >= 10) {
-					li = $('<li class="page-item">');
-					a = $('<span class="page-link"></span>')
-						.text('...')
-						.attr('aria-disabled', 'true');
-					li.append(a);
-					ul.append(li);
+					li = document.createElement("li");
+					li.classList.add('page-item');
+
+					a = document.createElement("a");
+					a.classList.add('page-link');
+					a.innerHTML = '...';
+					a.setAttribute('aria-disabled', true);
+					li.appendChild(a);
+					ul.appendChild(li);
 					break;
 				}
-				li = $('<li class="page-item">');
-				a = $('<a class="page-link"></a>')
-					.text(l)
-					.attr('href', '?page=' + l + '&' + query)
-					.attr('data-page', l);
+
+				li = document.createElement("li");
+				li.classList.add('page-item');
+
+				a = document.createElement("a");
+				a.classList.add('page-link');
+				a.innerHTML = l;
+				a.href = '?page=' + l + '&' + query;
+				a.setAttribute('data-page', l);
 				if (results.meta.current_page == l) {
-					li.addClass('active');
-					//a.attr('aria-disabled', 'true');
+					li.classList.add('active');
 				}
-				li.append(a);
-				ul.append(li);
+				li.appendChild(a);
+				ul.appendChild(li);
 				c++;
 			}
 		}
 
-		li = $('<li class="page-item page-next">');
-		a = $('<a class="page-link" title="Next page"><span aria-hidden="true">›</span></a>')
-			.attr('href', '?page=' + (results.meta.current_page < lastpage ? lastpage - 1 : 1) + '&' + query)
-			.attr('data-page', (results.meta.current_page > 1 ? lastpage - 1 : 1))
-			.attr('data-query', q.replace(/(page:\d+)/, 'page:' + (results.meta.current_page > 1 ? lastpage - 1 : 1)));
+		li = document.createElement("li");
+		li.classList.add('page-item');
+		li.classList.add('page-next');
+
+		a = document.createElement("a");
+		a.classList.add('page-link');
+		a.title = 'Next page';
+		a.href = '?page=' + (results.meta.current_page < lastpage ? lastpage - 1 : 1) + '&' + query;
+		a.setAttribute('data-page', (results.meta.current_page > 1 ? lastpage - 1 : 1));
+		a.setAttribute('data-query', q.replace(/(page:\d+)/, 'page:' + (results.meta.current_page > 1 ? lastpage - 1 : 1)));
+		span = document.createElement("span");
+		span.setAttribute('aria-hidden', true);
+		span.innerHTML = '›';
+		a.appendChild(span);
 		if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
-			li.addClass('disabled');
-			a.attr('aria-disabled', 'true');
+			li.classList.add('disabled');
+			a.setAttribute('aria-disabled', 'true');
 		}
-		li.append(a);
-		ul.append(li);
+		li.appendChild(a);
+		ul.appendChild(li);
 
-		li = $('<li class="page-item page-last">');
-		a = $('<a class="page-link" title="Last page"><span aria-hidden="true">»</span></a>')
-			.attr('href', '?page=' + lastpage + '&' + query)
-			.attr('data-page', lastpage)
-			.attr('data-query', q.replace(/(page:\d+)/, 'page:' + lastpage));
+		li = document.createElement("li");
+		li.classList.add('page-item');
+		li.classList.add('page-last');
+
+		a = document.createElement("a");
+		a.classList.add('page-link');
+		a.title = 'Last page';
+		a.href = '?page=' + lastpage + '&' + query;
+		a.setAttribute('data-page', lastpage);
+		a.setAttribute('data-query', q.replace(/(page:\d+)/, 'page:' + lastpage));
+		span = document.createElement("span");
+		span.setAttribute('aria-hidden', true);
+		span.innerHTML = '»';
+		a.appendChild(span);
 		if (results.meta.total <= (results.meta.per_page * results.meta.current_page)) {
-			li.addClass('disabled');
-			a.attr('aria-disabled', 'true');
+			li.classList.add('disabled');
+			a.setAttribute('aria-disabled', 'true');
 		}
-		li.append(a);
-		ul.append(li);
+		li.appendChild(a);
+		ul.appendChild(li);
 
-		reports.append(ul);
+		reports.appendChild(ul);
 
-		$('.page-link').on('click', function (e) {
-			e.preventDefault();
-			$('#page').val($(this).data('page'));
-			CRMSearch();
+		document.querySelectorAll('.page-link').forEach(function (el) {
+			el.addEventListener('click', function (e) {
+				e.preventDefault();
+				document.getElementById('page').value = this.getAttribute('data-page');
+				CRMSearch();
+			});
 		});
 	}
 	//}
@@ -1715,7 +1561,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 	var d = new Date(report['datetimecontact']);
 
-	td.innerHTML = d.getMonthName() + " " + d.getDate() + ", " + d.getFullYear();
+	td.innerHTML = new Intl.DateTimeFormat("en-US", { month: "long" }).format(d) + " " + d.getDate() + ", " + d.getFullYear();
 
 	if (edit) {
 		a = document.createElement("a");
@@ -1757,7 +1603,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 
 	span = document.createElement("span");
 	span.className = "crmpostdate";
-	span.innerHTML = "Posted on " + d.getMonthName() + " " + d.getDate() + ", " + d.getFullYear();
+	span.innerHTML = 'Posted on ' + new Intl.DateTimeFormat("en-US", { month: "long" }).format(d) + " " + d.getDate() + ", " + d.getFullYear();
 
 	li.appendChild(span);
 	ul.appendChild(li);
@@ -2301,7 +2147,7 @@ function CRMPrintComment(reportid, comment) {
 	var d = new Date(comment['datetimecreated']);
 
 	var div2 = document.createElement("div");
-	div2.innerHTML += "Posted by " + comment['username'] + " on " + d.getMonthName() + " " + d.getDate() + ", " + d.getFullYear();
+	div2.innerHTML += "Posted by " + comment['username'] + " on " + new Intl.DateTimeFormat("en-US", { month: "long" }).format(d) + " " + d.getDate() + ", " + d.getFullYear();
 	div2.className = "crmcommentpostedby";
 
 	div.appendChild(div2);
@@ -2797,7 +2643,18 @@ function CRMClearSearch() {
 	var sdata = JSON.parse(data.innerHTML);
 	var skip = false;
 
-	var groupsdata = document.getElementById("group").value.split(',');
+	var group = document.getElementById("group");
+	group.value = '';
+	if (group.tomselect) {
+		group.tomselect.setValue('');
+	}
+
+	var tags = document.getElementById("tag");
+	tags.value = '';
+	if (tags.tomselect) {
+		tags.tomselect.setValue('');
+	}
+	/*var groupsdata = document.getElementById("group").value.split(',');
 	for (x = 0; x < groupsdata.length; x++) {
 		if (groupsdata[x] != "") {
 			skip = false;
@@ -2814,9 +2671,14 @@ function CRMClearSearch() {
 				CRMRemoveGroup(groupsdata[x], false);
 			}
 		}
-	}
+	}*/
 
-	var people_divs = document.getElementById("people").value.split(',');
+	var people = document.getElementById("people");
+	people.value = '';
+	if (people.tomselect) {
+		people.tomselect.setValue('');
+	}
+	/*var people_divs = document.getElementById("people").value.split(',');
 	for (x = people_divs.length - 1; x >= 0; x--) {
 		if (people_divs[x] != "") {
 			skip = false;
@@ -2833,12 +2695,15 @@ function CRMClearSearch() {
 				CRMRemoveUser(people_divs[x], false);
 			}
 		}
-	}
+	}*/
 
 	var resources = document.getElementById("crmresource");
 	if (resources) {
 		resources.value = '';
 		resources.dispatchEvent(new Event('change'));
+		if (resources.tomselect) {
+			resources.tomselect.setValue('');
+		}
 	}
 
 	var type = document.getElementById("crmtype");
@@ -2850,6 +2715,7 @@ function CRMClearSearch() {
 		window.location = window.location.href.replace(/&edit/, ""); //.replace(/id=\d+/, "");
 	} else if (document.getElementById("TAB_follow").className.match(/active/)) {
 		var xml = null;
+		var groupsdata = document.getElementById("group").value.split(',');
 
 		for (x = 0; x < sdata.followerofgroups.length; x++) {
 			skip = false;
@@ -2869,6 +2735,7 @@ function CRMClearSearch() {
 			}
 		}
 
+		var people_divs = document.getElementById("people").value.split(',');
 		for (x = 0; x < sdata.followerofusers.length; x++) {
 			skip = false;
 
@@ -2898,55 +2765,6 @@ function CRMClearSearch() {
 }
 
 /**
- * Get and return array of objects
- *
- * @return  {array}
- */
-var autocompleteList = function (url) {
-	return function (request, response) {
-		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
-			response($.map(data.data, function (el) {
-				if (typeof (el.id) == 'undefined' && typeof (el.username) != 'undefined') {
-					el.id = el.username;
-				}
-				if (typeof (el.username) != 'undefined') {
-					el.name += ' (' + el.username + ')';
-				}
-				if (typeof (el.slug) != 'undefined') {
-					el.id = el.slug;
-				}
-				//var regEx = new RegExp("(" + request.term + ")(?!([^<]+)?>)", "gi");
-				//el.name = el.name.replace(regEx, '<span class="highlight">$1</span>');
-				return {
-					label: el.name,
-					name: el.name,
-					id: el.id,
-				};
-			}));
-		});
-	};
-};
-
-/**
- * Get and return array of resource objects
- *
- * @return  {array}
- */
-/*var autocompleteResource = function (url) {
-	return function (request, response) {
-		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
-			response($.map(data.data, function (el) {
-				return {
-					label: el.name,
-					name: el.name,
-					id: el.id,
-				};
-			}));
-		});
-	};
-};*/
-
-/**
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function () {
@@ -2955,12 +2773,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 	};
 
-	/*if (typeof (smdeConfig) !== 'undefined') {
-		smdeConfig.previewRender = function(plainText, preview) {
-			preview.innerHTML = plainText.replace('#', '???');
-			return preview;
-		};
-	}*/
 	var frm = document.getElementById('DIV_crm');
 	if (frm) {
 		//usersearch = false;
@@ -3021,162 +2833,176 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 		var crmtype = document.getElementById('crmtype');
 		if (crmtype) {
-			crmtype.addEventListener('click', function (event) {
-				event.preventDefault();
+			crmtype.addEventListener('change', function () {
 				CRMSearch();
 			});
 		}
 
-		var tag = $("#tag");
-		if (tag.length) {
-			tag.tagsInput({
-				placeholder: '',
-				importPattern: /([^:]+):(.+)/i,
-				'autocomplete': {
-					source: autocompleteList(tag.attr('data-uri') + '&api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content'), 'tags'),
-					dataName: 'tags',
-					height: 150,
-					delay: 100,
-					minLength: 1
-				},
-				'onAddTag': function () { //input, value
-					CRMSearch();
-				},
-				'onRemoveTag': function () { //input, value
-					CRMSearch();
-				}
-			});
-		}
+		var sels = new Array(), sel;
+		var tag = document.getElementById('tag');
+		if (tag) {
+			sel = new TomSelect(tag, {
+				//maxItems: 1,
+				valueField: 'slug',
+				labelField: 'slug',
+				searchField: ['name', 'slug'],
+				plugins: ['remove_button'],
+				persist: false,
+				// Fetch remote data
+				load: function (query, callback) {
+					var url = tag.getAttribute('data-api') + '?api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content') + '&search=' + encodeURIComponent(query);
 
-		var group = $("#group");
-		if (group.length) {
-			group.tagsInput({
-				placeholder: '',
-				importPattern: /([^:]+):(.+)/i,
-				limit: 1,
-				'autocomplete': {
-					source: autocompleteList(group.attr('data-uri') + '&api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content'), 'groups'),
-					dataName: 'groups',
-					height: 150,
-					delay: 100,
-					minLength: 1,
-					open: function () { //e, ui
-						var acData = $(this).data('ui-autocomplete');
-
-						acData
-							.menu
-							.element
-							.find('.ui-menu-item-wrapper')
-							.each(function () {
-								var me = $(this);
-								var regex = new RegExp('(' + acData.term + ')', "gi");
-								me.html(me.text().replace(regex, '<b>$1</b>'));
-							});
-					}
-					//maxLength: 1
-				},
-				'onAddTag': function () { //input, value
-					CRMSearch();
-				},
-				'onRemoveTag': function () { //input, value
-					CRMSearch();
-				}
-			});
-		}
-
-		var people = $("#people");
-		if (people.length) {
-			people.tagsInput({
-				placeholder: '',
-				importPattern: /([^:]+):(.+)/i,
-				'autocomplete': {
-					source: autocompleteList(people.attr('data-uri') + '&api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content'), 'users'),
-					dataName: 'users',
-					height: 150,
-					delay: 100,
-					minLength: 1,
-					open: function () { //e, ui
-						var acData = $(this).data('ui-autocomplete');
-
-						acData
-							.menu
-							.element
-							.find('.ui-menu-item-wrapper')
-							.each(function () {
-								var me = $(this);
-								var regex = new RegExp('(' + acData.term + ')', "gi");
-								me.html(me.text().replace(regex, '<b>$1</b>'));
-							});
-					}
-				},
-				'onAddTag': function () { //input, value
-					CRMSearch();
-				},
-				'onRemoveTag': function () { //input, value
-					CRMSearch();
-				}
-			});
-		}
-
-		var crmresource = $("#crmresource");
-		/*if (crmresource.length) {
-			crmresource.tagsInput({
-				placeholder: '',
-				importPattern: /([^:]+):(.+)/i,
-				'autocomplete': {
-					source: autocompleteResource(crmresource.attr('data-uri') + '&api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content')),
-					dataName: 'resources',
-					height: 150,
-					delay: 100,
-					minLength: 1
-				},
-				'onAddTag': function () {
-					CRMSearch();
-				},
-				'onRemoveTag': function () {
-					CRMSearch();
-				}
-			});
-		}*/
-		var rselects = $(".searchable-select-multi");
-		if (rselects.length) {
-			$(".searchable-select-multi").select2({
-				multiple: true,
-				closeOnSelect: false,
-				templateResult: function (item) {
-					if (typeof item.children != 'undefined') {
-						//var s = $(item.element).find('option').length - $(item.element).find('option:selected').length;
-						var el = $('<button class="btn btn-sm btn_select2_optgroup" data-group="' + item.text + '">Select All</span>');
-
-						// Click event
-						el.on('click', function (e) {
-							e.preventDefault();
-							// Select all optgroup child if there aren't, else deselect all
-							rselects.find('optgroup[label="' + $(this).data('group') + '"] option').prop(
-								'selected',
-								$(item.element).find('option').length - $(item.element).find('option:selected').length
-							);
-
-							// Trigger change event + close dropdown
-							rselects.trigger('change.select2');
-							rselects.select2('close');
-							CRMSearch();
+					fetch(url)
+						.then(response => response.json())
+						.then(json => {
+							callback(json.data);
+						}).catch(() => {
+							callback();
 						});
-
-						var elp = $('<span class="my_select2_optgroup">' + item.text + '</span>');
-						elp.append(el);
-
-						return elp;
-					}
-					return item.text;
 				}
-			})
-				.on('select2:select', function () {
-					CRMSearch();
-				})
-				.on('select2:unselect', function () {
-					CRMSearch();
-				});
+			});
+			sel.on('change', function () {
+				CRMSearch();
+			});
+			sels.push(sel);
+		}
+
+		var group = document.getElementById('group');
+		if (group) {
+			sel = new TomSelect(group, {
+				maxItems: 1,
+				valueField: 'id',
+				labelField: 'name',
+				searchField: ['name'],
+				plugins: ['clear_button'],
+				persist: false,
+				// Fetch remote data
+				load: function (query, callback) {
+					var url = group.getAttribute('data-api') + '?api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content') + '&search=' + encodeURIComponent(query);
+
+					fetch(url)
+						.then(response => response.json())
+						.then(json => {
+							callback(json.data);
+						}).catch(() => {
+							callback();
+						});
+				},
+				render: {
+					// Option list when searching
+					option: function (item, escape) {
+						if (item.name.match(/\([a-z0-9]+\)$/)) {
+							item.id = item.name.replace(/([^(]+\()/, '').replace(/\)$/, '');
+							item.name = item.name.replace(/\s(\([a-z0-9]+\))$/, '');
+						}
+						if (isNaN(item.id) && typeof item.name != 'undefined') {
+							item.disabled = true;
+							return `<div data-id="${escape(item.id)}">${escape(item.name)}
+									<span class="text-warning ml-1"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span></span></span>
+								</div>`;
+						}
+						return `<div data-id="${escape(item.id)}">${escape(item.name)}</div>`;
+					},
+					// Selected items
+					item: function (item, escape) {
+						if (item.name.match(/\([a-z0-9-]+\)$/)) {
+							item.id = item.name.replace(/([^(]+\()/, '').replace(/\)$/, '');
+							item.name = item.name.replace(/\s(\([a-z0-9-]+\))$/, '');
+						}
+						return `<div data-id="${escape(item.id)}">${escape(item.name)}</div>`;
+					}
+				}
+			});
+			sel.on('change', function () {
+				CRMSearch();
+			});
+
+			sels.push(sel);
+		}
+
+		var people = document.getElementById('people');
+		if (people) {
+			sel = new TomSelect(people, {
+				//maxItems: 1,
+				valueField: 'id',
+				labelField: 'name',
+				searchField: ['name', 'username', 'email'],
+				plugins: ['remove_button'],
+				persist: false,
+				// Fetch remote data
+				load: function (query, callback) {
+					var url = people.getAttribute('data-api') + '?api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content') + '&search=' + encodeURIComponent(query);
+
+					fetch(url)
+						.then(response => response.json())
+						.then(json => {
+							callback(json.data);
+						}).catch(() => {
+							callback();
+						});
+				},
+				render: {
+					// Option list when searching
+					option: function (item, escape) {
+						if (item.name.match(/\([a-z0-9]+\)$/)) {
+							item.username = item.name.replace(/([^(]+\()/, '').replace(/\)$/, '');
+							item.name = item.name.replace(/\s(\([a-z0-9]+\))$/, '');
+						}
+						if (isNaN(item.id) && typeof item.name != 'undefined') {
+							item.disabled = true;
+							return `<div data-id="${escape(item.id)}">${escape(item.name)} <span class="text-muted">(${escape(item.username)})</span>
+									<span class="text-warning ml-1"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span></span></span>
+								</div>`;
+						}
+						return `<div data-id="${escape(item.id)}">${escape(item.name)} <span class="text-muted">(${escape(item.username)})</span></div>`;
+					},
+					// Selected items
+					item: function (item, escape) {
+						if (item.name.match(/\([a-z0-9-]+\)$/)) {
+							if (isNaN(item.id)) {
+								item.id = item.username;
+							}
+							item.username = item.name.replace(/([^(]+\()/, '').replace(/\)$/, '');
+							item.name = item.name.replace(/\s(\([a-z0-9-]+\))$/, '');
+						}
+						return `<div data-id="${escape(item.id)}">${escape(item.name)}&nbsp;<span class="text-muted">(${escape(item.username)})</span></div>`;
+					}
+				}
+			});
+			sel.on('change', function () {
+				CRMSearch();
+			});
+
+			sels.push(sel);
+		}
+
+		var crmresource = document.getElementById('crmresource');
+		if (crmresource) {
+			sel = new TomSelect(crmresource, {
+				//maxItems: 1,
+				valueField: 'id',
+				labelField: 'name',
+				searchField: ['name', 'rolename', 'listname'],
+				plugins: ['remove_button'],
+				persist: false,
+				// Fetch remote data
+				load: function (query, callback) {
+					var url = crmresource.getAttribute('data-api') + '?api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content') + '&search=' + encodeURIComponent(query);
+
+					fetch(url)
+						.then(response => response.json())
+						.then(json => {
+							callback(json.data);
+						}).catch(() => {
+							callback();
+						});
+				}
+			});
+			sel.on('change', function () {
+				CRMSearch();
+			});
+
+			sels.push(sel);
 		}
 
 		var data = document.getElementById('crm-search-data');
@@ -3211,9 +3037,6 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 			}
 			if (sdata.people.length) {
-				//CRMToggleSearch('people');
-				//CRMToggleSearch('none');
-
 				for (x = 0; x < sdata.people.length; x++) {
 					fetch(people.data('api') + '/' + sdata.people[x], {
 						method: 'GET',
@@ -3241,7 +3064,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 			if (sdata.resources.length) {
 				for (x = 0; x < sdata.resources.length; x++) {
-					fetch(crmresource.data('api') + '/' + sdata.resources[x], {
+					fetch(crmresource.getAttribute('data-api') + '/' + sdata.resources[x], {
 						method: 'GET',
 						headers: headers
 					})
@@ -3269,26 +3092,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		data = document.getElementById('crm-data');
 		if (data) {
-			//var edit = true;
 			var orig = JSON.parse(data.innerHTML);
 			var original = orig.original;
 
-			document.getElementById('datestartshort').value = original.datetimecontact;//.substring(0, 10);
+			document.getElementById('datestartshort').value = original.datetimecontact;
 			document.getElementById('NotesText').value = original.note;
-
 			document.getElementById('crmtype').value = original['contactreporttypeid'];
-			/*$("#crmtype > option").each(function () {
-				if (this.value == original['contactreporttypeid']) {
-					$('#crmtype > option:selected', 'select[name="options"]').removeAttr('selected');
-					$(this).attr('selected', true);
-				}
-			});*/
-
-			//CRMToggleSearch('people');
-			//CRMToggleSearch('none');
 
 			for (x = 0; x < original.users.length; x++) {
-				fetch(people.data('api') + '/' + original.users[x]['userid'], {
+				people.value = original.users.join(',');
+				fetch(people.getAttribute('data-api') + '/' + original.users[x]['userid'], {
 					method: 'GET',
 					headers: headers
 				})
@@ -3305,7 +3118,16 @@ document.addEventListener('DOMContentLoaded', function () {
 						});
 					})
 					.then(function (results) {
-						CRMSearchUser(results, { 'pageload': true, 'disabled': false });
+						if (people.tomselect) {
+							people.tomselect.addOption({
+								'id': results.id,
+								'name': results.name,
+								'username': results.username,
+								'email': results.email
+							});
+							people.tomselect.addItem(results.id);
+						}
+						//CRMSearchUser(results, { 'pageload': true, 'disabled': false });
 					})
 					.catch(function (err) {
 						alert(err);
@@ -3315,37 +3137,21 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (original.groupid > 0) {
 				multi_group = false;
 
-				fetch(group.data('api') + '/' + original.groupid, {
-					method: 'GET',
-					headers: headers
-				})
-					.then(function (response) {
-						if (response.ok) {
-							return response.json();
-						}
-						return response.json().then(function (data) {
-							var msg = data.message;
-							if (typeof msg === 'object') {
-								msg = Object.values(msg).join('<br />');
-							}
-							throw msg;
-						});
-					})
-					.then(function (results) {
-						CRMSearchGroup(results, { 'pageload': true, 'disabled': false });
-					})
-					.catch(function (err) {
-						alert(err);
-					});
+				group.value = original.groupid;
+				if (group.tomselect) {
+					group.tomselect.setValue(original.groupid);
+				}
 			}
 
 			var vals = [];
 			for (x = 0; x < original.resources.length; x++) {
 				vals.push(original.resources[x]['resourceid']);
 			}
-			crmresource
-				.val(vals)
-				.trigger('change');
+			crmresource.value = vals;
+			crmresource.dispatchEvent(new Event('change'));
+			if (crmresource.tomselect) {
+				crmresource.tomselect.setValue(vals);
+			}
 
 			if (original.age > 86400) {
 				document.getElementById('datestartshort').disabled = true;

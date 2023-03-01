@@ -1,14 +1,21 @@
 @extends('layouts.master')
 
 @push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css?v=' . filemtime(public_path('/modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css'))) }}" />
+<!--
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.css')) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
+-->
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/contactreports/css/site.css?v=' . filemtime(public_path() . '/modules/contactreports/css/site.css')) }}" />
 @endpush
 
 @push('scripts')
+<script src="{{ asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js?v=' . filemtime(public_path('/modules/core/vendor/tom-select/js/tom-select.complete.min.js'))) }}"></script>
+<!--
 <script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
-<script src="{{ asset('modules/core/js/date.js?v=' . filemtime(public_path() . '/modules/core/js/date.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
+<script src="{{ asset('modules/core/js/date.js?v=' . filemtime(public_path() . '/modules/core/js/date.js')) }}"></script>
+-->
 <script src="{{ asset('modules/contactreports/js/site.js?v=' . filemtime(public_path() . '/modules/contactreports/js/site.js')) }}"></script>
 @endpush
 
@@ -116,19 +123,31 @@ app('pathway')->append(
 								{
 									foreach (explode(',', $groups) as $g)
 									{
-										if (trim($g))
+										$g = trim($g);
+										if (!$g)
 										{
-											/*if (!strstr($g, '/'))
-											{
-												$g = ROOT_URI . 'group/' . $g;
-											}*/
-											$grp = App\Modules\Groups\Models\Group::find($g);
-											$grps[] = $grp->name . ':' . $g . '';
+											continue;
 										}
+										//$grp = App\Modules\Groups\Models\Group::find($g);
+										//if ($grp)
+										//{
+											//$grps[$g] = $grp->name . ' (' . $g . ')';
+											$grps[] = $g; // $grp->name . ' (' . $g . ')';
+										//}
 									}
 								}
+								$groups = App\Modules\Groups\Models\Group::query()
+									->orderBy('name', 'asc')
+									->get();
 								?>
-								<input name="group" id="group" size="45" class="form-control" value="{{ implode(',', $grps) }}" data-uri="{{ route('api.groups.index') }}?search=%s" data-api="{{ route('api.groups.index') }}" />
+								<!-- <input name="group" id="group" size="45" class="form-control" value="{{ implode(',', $grps) }}" data-uri="{{ route('api.groups.index') }}?search=%s" data-api="{{ route('api.groups.index') }}" />
+								 -->
+								<select name="group" id="group" class="form-control" data-uri="{{ route('api.groups.index') }}?search=%s" data-api="{{ route('api.groups.index') }}">
+									<option value=""></option>
+									@foreach ($groups as $group)
+										<option value="{{ $group->id }}"<?php if (in_array($group->id, $grps)) { echo ' selected'; } ?>>{{ $group->name }}</option>
+									@endforeach
+								</select>
 							</div>
 						</div>
 
@@ -151,12 +170,18 @@ app('pathway')->append(
 											{
 												$usr = App\Modules\Users\Models\User::find($u);
 											}
-											$usrs[] = $usr->name . ':' . $u;
+											$usrs[$u] = $usr->name . ' (' . $usr->username . ')';
 										}
 									}
 								}
 								?>
 								<input name="people" id="people" size="45" class="form-control" value="{{ implode(',', $usrs) }}" data-uri="{{ route('api.users.index') }}?search=%s" data-api="{{ route('api.users.index') }}" />
+								<!-- <select name="people" id="people" class="form-control" data-uri="{{ route('api.users.index') }}?search=%s" data-api="{{ route('api.users.index') }}" multiple>
+									<option value=""></option>
+									@foreach ($usrs as $key => $value)
+										<option value="{{ $key }}" selected>{{ $value }}</option>
+									@endforeach
+								</select> -->
 							</div>
 						</div>
 
@@ -172,12 +197,12 @@ app('pathway')->append(
 										if (trim($t))
 										{
 											$tag = App\Modules\Tags\Models\Tag::query()->where('slug', '=', $t)->first();
-											$tags[] = $tag->name . ':' . $t;
+											$tags[] = $tag ? $tag->slug : $t;// . ':' . $t;
 										}
 									}
 								}
 								?>
-								<input name="tag" id="tag" size="45" class="form-control" value="{{ implode(', ', $tags) }}" data-uri="{{ route('api.tags.index') }}?search=%s" data-api="{{ route('api.tags.index') }}" />
+								<input name="tag" id="tag" size="45" class="form-control" value="{{ implode(',', $tags) }}" data-uri="{{ route('api.tags.index') }}?search=%s" data-api="{{ route('api.tags.index') }}" />
 							</div>
 						</div>
 
