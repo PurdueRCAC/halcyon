@@ -212,43 +212,7 @@ class Slurm
 			$line[] = "Organization='" . $name . "'";
 			$line[] = "Fairshare=1";
 
-			//$line[] = "GrpTRES=cpu=128,gres/gpu=2";
 			$nodecores = $queue->subresource->nodecores;
-
-			if ($queue->isSystem())
-			{
-				$newhardware = $queue->sizes()->orderBy('datetimestart', 'asc')->first();
-				$totalcores = ($newhardware ? $newhardware->corecount : abs($queue->totalcores));
-				$l = "GrpTRES=cpu=" . $totalcores;
-
-				if ($unit == 'gpus' && $queue->subresource->nodegpus)
-				{
-					//$tres['gres/gpu'] = $queue->totalcores;
-					$nodes = round($totalcores / $nodecores, 1);
-					//$nodes = round($queue->totalcores / $queue->subresource->nodegpus, 1);
-					//$l  = "GrpTRES=cpu=" . ($nodecores ? $nodes * $nodecores : 0);
-					$l .= ',gres/gpu=' . ($queue->serviceunits ? $queue->serviceunits : round($nodes * $queue->subresource->nodegpus)); //$queue->totalcores;
-				}
-				elseif ($unit == 'sus')
-				{
-				}
-			}
-			else
-			{
-				$l = "GrpTRES=cpu=" . $queue->totalcores; //($nodecores ? round($queue->totalcores / $nodecores, 1) : 0);
-
-				if ($unit == 'gpus' && $queue->subresource->nodegpus)
-				{
-					//$tres['gres/gpu'] = $queue->totalcores;
-					$nodes = round($queue->totalcores / $nodecores, 1);
-					//$nodes = round($queue->totalcores / $queue->subresource->nodegpus, 1);
-					//$l  = "GrpTRES=cpu=" . ($nodecores ? $nodes * $nodecores : 0);
-					$l .= ',gres/gpu=' . ($queue->serviceunits ? $queue->serviceunits : round($nodes * $queue->subresource->nodegpus)); //$queue->totalcores;
-				}
-				elseif ($unit == 'sus')
-				{
-				}
-			}
 
 			if (count($queue->qos))
 			{
@@ -265,6 +229,34 @@ class Slurm
 
 			if (!$qosControlled)
 			{
+				$line[0] = "Account - '" . $queue->name . "'";
+				$line[2] = "Organization='" . $queue->name . "'";
+
+				// GrpTRES=cpu=128,gres/gpu=2
+				if ($queue->isSystem())
+				{
+					$newhardware = $queue->sizes()->orderBy('datetimestart', 'asc')->first();
+					$totalcores = ($newhardware ? $newhardware->corecount : abs($queue->totalcores));
+				}
+				else
+				{
+					$totalcores = $queue->totalcores;
+				}
+
+				$l = "GrpTRES=cpu=" . $queue->totalcores;
+
+				if ($unit == 'gpus' && $queue->subresource->nodegpus)
+				{
+					$nodes = round($totalcores / $nodecores, 1);
+
+					$l .= ',gres/gpu=' . ($queue->serviceunits ? $queue->serviceunits : round($nodes * $queue->subresource->nodegpus));
+				}
+				elseif ($unit == 'sus')
+				{
+				}
+
+				$line[] = $l;
+
 				if ($queue->maxjobsrunuser)
 				{
 					$line[] = 'MaxJobsPerUser=' . $queue->maxjobsrunuser;
