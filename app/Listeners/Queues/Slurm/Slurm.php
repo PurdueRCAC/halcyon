@@ -229,8 +229,10 @@ class Slurm
 
 			if (!$qosControlled)
 			{
-				$line[0] = "Account - '" . $queue->name . "'";
-				$line[2] = "Organization='" . $queue->name . "'";
+				$name = $queue->name;
+
+				$line[0] = "Account - '" . $name . "'";
+				$line[2] = "Organization='" . $name . "'";
 
 				// GrpTRES=cpu=128,gres/gpu=2
 				if ($queue->isSystem())
