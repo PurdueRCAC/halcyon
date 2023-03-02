@@ -15,7 +15,7 @@ class Currency
 	 */
 	public static function formatNumber($value): string
 	{
-		$number = preg_replace('/[^0-9\-]/', '', $value);
+		$number = (int)preg_replace('/[^0-9\-]/', '', $value);
 
 		$neg = '';
 		if ($number < 0)
