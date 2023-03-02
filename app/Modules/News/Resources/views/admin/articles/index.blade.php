@@ -36,7 +36,7 @@ else
 	@if (auth()->user()->can('create news'))
 		{!! Toolbar::spacer() !!}
 		{!! Toolbar::custom(route('admin.news.copy'), 'copy', 'copy', trans('news::news.copy'), true) !!}
-		{!! Toolbar::addNew(route('admin.news.create')) !!}
+		{!! Toolbar::addNew($template ? route('admin.news.create', ['template' => 1]) : route('admin.news.create')) !!}
 	@endif
 
 	@if (auth()->user()->can('admin news'))

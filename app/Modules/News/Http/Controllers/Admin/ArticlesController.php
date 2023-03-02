@@ -162,12 +162,18 @@ class ArticlesController extends Controller
 	/**
 	 * Show the form for creating a new article
 	 *
+	 * @param  Request $request
 	 * @return  View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$row = new Article();
 		$row->published = 1;
+
+		if ($request->input('template'))
+		{
+			$row->template = 1;
+		}
 
 		$types = Type::query()
 			->where('parentid', '=', 0)
@@ -191,12 +197,16 @@ class ArticlesController extends Controller
 			$row->newstypeid = $types->first()->id;
 		}
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
 
-		$templates = Article::tree();
+		$templates = Article::query()
+			->where('published', '=', 1)
+			->where('template', '=', 1)
+			->orderBy('headline', 'asc')
+			->get();
 
 		return view('news::admin.articles.edit', [
 			'row'   => $row,
@@ -208,14 +218,15 @@ class ArticlesController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
+	 * @param  Request $request
 	 * @param   int  $id
 	 * @return  View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Article::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -350,7 +361,7 @@ class ArticlesController extends Controller
 			}
 		}
 
-		return $this->cancel()->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created')));
+		return $this->cancel($row->template)->with('success', trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**
@@ -514,11 +525,12 @@ class ArticlesController extends Controller
 	/**
 	 * Return to default page
 	 *
+	 * @param  int $template
 	 * @return  RedirectResponse
 	 */
-	public function cancel(): RedirectResponse
+	public function cancel($template = 0): RedirectResponse
 	{
-		return redirect(route('admin.news.index'));
+		return redirect(route('admin.news.' . ($template ? 'templates' : 'index')));
 	}
 
 	/**

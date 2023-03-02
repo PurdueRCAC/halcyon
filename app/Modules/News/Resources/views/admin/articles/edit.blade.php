@@ -35,7 +35,7 @@ app('pathway')
 
 	{!!
 		Toolbar::spacer();
-		Toolbar::cancel(route('admin.news.cancel'));
+		Toolbar::cancel(route('admin.news.' . ($row->template ? 'templates' : 'index')));
 	!!}
 
 	{!! Toolbar::render() !!}
