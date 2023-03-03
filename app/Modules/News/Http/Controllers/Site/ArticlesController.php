@@ -393,7 +393,8 @@ class ArticlesController extends Controller
 		$articles = $query
 			->orderBy($filters['order'], $filters['order_dir'])
 			->limit(20)
-			->paginate();
+			->paginate()
+			->appends(array_filter($filters));
 
 		$types = Type::query()
 			->where('name', 'NOT LIKE', 'coffee%')
