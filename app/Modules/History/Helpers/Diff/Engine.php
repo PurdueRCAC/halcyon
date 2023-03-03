@@ -261,21 +261,23 @@ class Engine
 				}
 				$matches = $ymatches[$line];
 				reset($matches);
-				while (list ($junk, $y) = each($matches))
+				//while (list ($junk, $y) = each($matches))
+				foreach ($matches as $junk => $y)
 				{
 					if (empty($this->in_seq[$y]))
 					{
 						$k = $this->_lcs_pos($y);
-						USE_ASSERTS && assert($k > 0);
+						//USE_ASSERTS && assert($k > 0);
 						$ymids[$k] = $ymids[$k-1];
 						break;
 					}
 				}
-				while (list (/* $junk */, $y) = each($matches))
+				//while (list (/* $junk */, $y) = each($matches))
+				foreach ($matches as $junk => $y)
 				{
 					if ($y > $this->seq[$k-1])
 					{
-						USE_ASSERTS && assert($y < $this->seq[$k]);
+						//USE_ASSERTS && assert($y < $this->seq[$k]);
 						// Optimization: this is a common case:
 						//	next match is just replacing previous match.
 						$this->in_seq[$this->seq[$k]] = false;
@@ -285,7 +287,7 @@ class Engine
 					else if (empty($this->in_seq[$y]))
 					{
 						$k = $this->_lcs_pos($y);
-						USE_ASSERTS && assert($k > 0);
+						//USE_ASSERTS && assert($k > 0);
 						$ymids[$k] = $ymids[$k-1];
 					}
 				}
@@ -442,7 +444,7 @@ class Engine
 		$i = 0;
 		$j = 0;
 
-		USE_ASSERTS && assert('count($lines) == count($changed)');
+		USE_ASSERTS && assert(count($lines) == count($changed));
 		$len = count($lines);
 		$other_len = count($other_changed);
 
@@ -464,7 +466,7 @@ class Engine
 
 			while ($i < $len && ! $changed[$i])
 			{
-				USE_ASSERTS && assert('$j < $other_len && ! $other_changed[$j]');
+				USE_ASSERTS && assert($j < $other_len && ! $other_changed[$j]);
 				$i++;
 				$j++;
 				while ($j < $other_len && $other_changed[$j])
@@ -503,12 +505,12 @@ class Engine
 					{
 						$start--;
 					}
-					USE_ASSERTS && assert('$j > 0');
+					USE_ASSERTS && assert($j > 0);
 					while ($other_changed[--$j])
 					{
 						continue;
 					}
-					USE_ASSERTS && assert('$j >= 0 && !$other_changed[$j]');
+					USE_ASSERTS && assert($j >= 0 && !$other_changed[$j]);
 				}
 
 				// Set CORRESPONDING to the end of the changed run, at the last
@@ -530,7 +532,7 @@ class Engine
 						$i++;
 					}
 
-					USE_ASSERTS && assert('$j < $other_len && ! $other_changed[$j]');
+					USE_ASSERTS && assert($j < $other_len && ! $other_changed[$j]);
 					$j++;
 					if ($j < $other_len && $other_changed[$j])
 					{
@@ -555,7 +557,7 @@ class Engine
 				{
 					continue;
 				}
-				USE_ASSERTS && assert('$j >= 0 && !$other_changed[$j]');
+				USE_ASSERTS && assert($j >= 0 && !$other_changed[$j]);
 			}
 		}
 	}
