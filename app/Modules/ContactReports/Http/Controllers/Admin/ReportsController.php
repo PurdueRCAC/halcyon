@@ -211,6 +211,40 @@ class ReportsController extends Controller
 	{
 		$row = new Report();
 
+		if ($groupid = $request->input('groupid'))
+		{
+			$row->groupid = $groupid;
+		}
+
+		if ($contactreporttypeid = $request->has('contactreporttypeid'))
+		{
+			$row->contactreporttypeid = $contactreporttypeid;
+		}
+
+		if ($resources = $request->input('resources'))
+		{
+			$resources = explode(',', $resources);
+			foreach ($resources as $r)
+			{
+				$resource = new Reportresource;
+				$resource->resourceid = $r;
+
+				$row->resources->push($resource);
+			}
+		}
+
+		if ($people = $request->input('people'))
+		{
+			$people = explode(',', $people);
+			foreach ($people as $p)
+			{
+				$user = new ReportUser;
+				$user->userid = $p;
+
+				$row->users->push($user);
+			}
+		}
+
 		$groups = \App\Modules\Groups\Models\Group::where('id', '>', 0)->orderBy('name', 'asc')->get();
 		$types = Type::all();
 

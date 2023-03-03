@@ -1548,6 +1548,28 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 		td.appendChild(a);
 	}
 
+	// Clone button
+	var people = new Array();
+	for (x = 0; x < report.users.length; x++) {
+		people.push(report.users[x].userid);
+	}
+	var resources = new Array();
+	for (x = 0; x < report.resources.length; x++) {
+		resources.push(report.resources[x].resourceid);
+	}
+	a = document.createElement("a");
+	a.href = "?type=" + report.contactreporttypeid + "&group=" + report.groupid + "&people=" + people.join(',') + "&resource=" + resources.join(',') + "&add";
+	a.className = 'add news-add tip float-right';
+	a.title = "Start new Contact Report with these details.";
+
+	img = document.createElement("span");
+	img.className = "crmeditadd fa fa-copy";
+	img.setAttribute('aria-hidden', true);
+	img.id = report['id'] + "_crmaddimg";
+
+	a.appendChild(img);
+	td.appendChild(a);
+
 	tr.appendChild(td);
 
 	panel.appendChild(tr);

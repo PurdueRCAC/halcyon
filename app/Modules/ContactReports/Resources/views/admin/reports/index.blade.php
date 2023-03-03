@@ -265,6 +265,12 @@ app('pathway')
 							@endif
 						</div>
 						<div class="flex-fill text-right">
+							@if (auth()->user()->can('create contactreports'))
+								<a href="{{ route('admin.contactreports.create', ['groupid' => $row->groupid, 'contactreporttypeid' => $row->contactreporttypeid, 'people' => implode(',', $uids), 'resources' => implode(',', $row->resources->pluck('resourceid')->toArray())]) }}" class="mr-2" title="Start new Contact Report with these details.">
+									<span class="fa fa-copy" aria-hidden="true"></span>
+									<span class="sr-only">Start new Contact Report with these details.</span>
+								</a>
+							@endif
 							@if (auth()->user()->can('edit contactreports'))
 								<a href="{{ route('admin.contactreports.edit', ['id' => $row->id]) }}">
 									<span class="fa fa-pencil" aria-hidden="true"></span>
