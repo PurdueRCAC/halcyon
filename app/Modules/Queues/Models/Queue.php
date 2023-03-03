@@ -1178,6 +1178,11 @@ class Queue extends Model
 							->where('userid', '=', $user->id)
 							->count();
 
+						if (!$queue->group)
+						{
+							continue;
+						}
+
 						$rows += $queue->group->members()
 							->whereIsManager()
 							->where('userid', '=', $user->id)
