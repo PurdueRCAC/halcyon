@@ -690,6 +690,9 @@ function CRMAddEntry() {
 
 	peopledata = document.getElementById("people").value.split(',');
 	for (i = 0; i < peopledata.length; i++) {
+		if (peopledata[i].match(/\([a-z0-9]+\)$/)) {
+			peopledata[i] = peopledata[i].replace(/([^(]+\()/, '').replace(/\)$/, '');
+		}
 		if (peopledata[i] != "") {
 			people.push(peopledata[i]);
 		}
@@ -2820,7 +2823,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 		var notes = document.getElementById('NotesText');
 		if (notes) {
-			notes.addEventListener('keyup', function () {
+			notes.addEventListener('change', function () {
 				CRMToggleAddButton();
 			});
 		}

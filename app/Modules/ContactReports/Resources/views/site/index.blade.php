@@ -2,20 +2,11 @@
 
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css?v=' . filemtime(public_path('/modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css'))) }}" />
-<!--
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.css')) }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
--->
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/contactreports/css/site.css?v=' . filemtime(public_path() . '/modules/contactreports/css/site.css')) }}" />
 @endpush
 
 @push('scripts')
 <script src="{{ asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js?v=' . filemtime(public_path('/modules/core/vendor/tom-select/js/tom-select.complete.min.js'))) }}"></script>
-<!--
-<script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
-<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
-<script src="{{ asset('modules/core/js/date.js?v=' . filemtime(public_path() . '/modules/core/js/date.js')) }}"></script>
--->
 <script src="{{ asset('modules/contactreports/js/site.js?v=' . filemtime(public_path() . '/modules/contactreports/js/site.js')) }}"></script>
 @endpush
 
@@ -140,8 +131,6 @@ app('pathway')->append(
 									->orderBy('name', 'asc')
 									->get();
 								?>
-								<!-- <input name="group" id="group" size="45" class="form-control" value="{{ implode(',', $grps) }}" data-uri="{{ route('api.groups.index') }}?search=%s" data-api="{{ route('api.groups.index') }}" />
-								 -->
 								<select name="group" id="group" class="form-control" data-uri="{{ route('api.groups.index') }}?search=%s" data-api="{{ route('api.groups.index') }}">
 									<option value=""></option>
 									@foreach ($groups as $group)
@@ -176,12 +165,6 @@ app('pathway')->append(
 								}
 								?>
 								<input name="people" id="people" size="45" class="form-control" value="{{ implode(',', $usrs) }}" data-uri="{{ route('api.users.index') }}?search=%s" data-api="{{ route('api.users.index') }}" />
-								<!-- <select name="people" id="people" class="form-control" data-uri="{{ route('api.users.index') }}?search=%s" data-api="{{ route('api.users.index') }}" multiple>
-									<option value=""></option>
-									@foreach ($usrs as $key => $value)
-										<option value="{{ $key }}" selected>{{ $value }}</option>
-									@endforeach
-								</select> -->
 							</div>
 						</div>
 
@@ -231,22 +214,6 @@ app('pathway')->append(
 							<label for="newsresource" class="col-sm-2 col-form-label">{{ trans('contactreports::contactreports.resources') }}</label>
 							<div class="col-sm-10">
 								<?php
-								/*$resources = array();
-								if ($rs = $filters['resource'])
-								{
-									foreach (explode(',', $rs) as $r)
-									{
-										if (trim($r))
-										{
-											$resource = App\Modules\Resources\Models\Asset::find($r);
-											$resources[] = $resource->name . ':' . $r;
-										}
-									}
-								}
-								?>
-								<input name="resource" id="crmresource" size="45" class="form-control" value="{{ implode(',', $resources) }}" data-uri="{{ route('api.resources.index') }}?search=%s" data-api="{{ route('api.resources.index') }}" />
-								<div class="col-sm-10">
-								<?php*/
 								$selected = array();
 								if ($res = $filters['resource'])
 								{
