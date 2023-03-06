@@ -51,7 +51,7 @@ app('pathway')
 			</div>
 			<div class="col filter-select col-md-8 text-right">
 				<label class="sr-only" for="filter_app">{{ trans('history::history.app') }}</label>
-				<select name="transport" id="filter_app" class="form-control filter filter-submit">
+				<select name="app" id="filter_app" class="form-control filter filter-submit">
 					<option value=""<?php if (!$filters['app']): echo ' selected="selected"'; endif;?>>{{ trans('history::history.all apps') }}</option>
 					@foreach ($apps as $app)
 						<option value="{{ $app->app }}"<?php if ($filters['app'] == $app->app): echo ' selected="selected"'; endif;?>>{{ $app->app }}</option>
