@@ -8,6 +8,8 @@ use App\Modules\History\Listeners\LogCommand;
 use App\Modules\History\Models\Log;
 use App\Modules\History\LogProcessors\TargetUsers;
 use App\Modules\History\LogProcessors\Emails;
+use App\Modules\History\Console\PurgeLogCommand;
+use App\Modules\History\Console\PurgeHistoryCommand;
 
 class HistoryServiceProvider extends ServiceProvider
 {
@@ -23,14 +25,14 @@ class HistoryServiceProvider extends ServiceProvider
 	 *
 	 * @var array
 	 */
-	protected $listen = [
-		/*'Illuminate\Mail\Events\MessageSending' => [
-			'App\Listeners\LogSendingMessage',
+	/*protected $listen = [
+		'Illuminate\Mail\Events\MessageSending' => [
+			'App\Modules\History\Listeners\LogSendingMessage',
 		],
 		'Illuminate\Mail\Events\MessageSent' => [
 			LogSentMessage::class,
-		],*/
-	];
+		],
+	];*/
 
 	/**
 	 * Boot the application events.
@@ -41,14 +43,31 @@ class HistoryServiceProvider extends ServiceProvider
 	{
 		$this->registerTranslations();
 		$this->registerViews();
+		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
+		// Log sent emails
 		//$this->app['events']->listen('Illuminate\Mail\Events\MessageSent', LogSentMessage::class);
+
+		// Log artisan commands
 		$this->app['events']->listen('Illuminate\Console\Events\CommandFinished', LogCommand::class);
 
 		Log::pushProcessor(new TargetUsers);
 		Log::pushProcessor(new Emails);
+	}
+
+	/**
+	 * Register console commands.
+	 *
+	 * @return void
+	 */
+	protected function registerConsoleCommands()
+	{
+		$this->commands([
+			PurgeLogCommand::class,
+			PurgeHistoryCommand::class,
+		]);
 	}
 
 	/**

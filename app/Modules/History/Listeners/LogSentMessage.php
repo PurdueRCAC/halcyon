@@ -11,14 +11,14 @@ use App\Modules\History\Models\Log;
 class LogSentMessage
 {
 	/**
-	 * Plugin that loads module positions within content
+	 * Log sent messages
 	 *
 	 * @param   MessageSent  $event
 	 * @return  void
 	 */
-	public function handle(MessageSent $event)
+	public function handle(MessageSent $event): void
 	{
-		$headers = $message->getHeaders();
+		/*$headers = $message->getHeaders();
 
 		$cmd = '';
 		foreach ($headers as $key => $value)
@@ -28,7 +28,7 @@ class LogSentMessage
 				$cmd = $value;
 				break;
 			}
-		}
+		}*/
 
 		Log::create([
 			'ip'              => '127.0.0.1',
@@ -39,7 +39,7 @@ class LogSentMessage
 			'uri'             => $event->message->getTo(),
 			'app'             => 'email',
 			'payload'         => $event->message->getSubject(),
-			'classname'       => $cmd,
+			'classname'       => 'LogSentMessage', //$cmd,
 			'classmethod'     => 'handle',
 		]);
 	}

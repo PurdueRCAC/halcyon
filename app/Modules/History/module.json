@@ -6,7 +6,8 @@
     "priority": 2,
     "providers": [
         "App\\Modules\\History\\Providers\\HistoryServiceProvider",
-        "App\\Modules\\History\\Providers\\RouteServiceProvider"
+        "App\\Modules\\History\\Providers\\RouteServiceProvider",
+        "App\\Modules\\History\\Providers\\ScheduleServiceProvider"
     ],
     "aliases": {},
     "files": [],
