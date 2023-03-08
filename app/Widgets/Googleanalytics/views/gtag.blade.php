@@ -3,7 +3,7 @@
  * Google Tag
  */
 ?>
-<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo $key; ?>}"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo $key; ?>"></script>
 <script>
 	window.dataLayer = window.dataLayer || [];
 	function gtag(){dataLayer.push(arguments);}
