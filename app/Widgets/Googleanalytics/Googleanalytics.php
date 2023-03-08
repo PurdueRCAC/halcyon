@@ -15,11 +15,16 @@ class Googleanalytics extends Widget
 	 */
 	public function run()
 	{
-		if (!$this->params->get('key'))
+		$key = $this->params->get('key');
+
+		if (!$key)
 		{
-			return '';
+			return;
 		}
 
-		return view($this->getViewName(), ['key' => $this->params->get('key')]);
+		$service = $this->params->get('service');
+		$service = $service ?: 'ga';
+
+		return view('widget.googleanalytics::' . $service, ['key' => $key]);
 	}
 }

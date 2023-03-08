@@ -2,6 +2,11 @@
 <config>
 	<fields name="params">
 		<fieldset name="basic">
+			<field name="service" type="list" default="gq" label="widget.googleanalytics::googleanalytics.service" description="widget.googleanalytics::googleanalytics.service description">
+				<option value="ga">Google Analytics</option>
+				<option value="gtag">Google Tag</option>
+				<option value="gtm">Google Tag Manager</option>
+			</field>
 			<field name="key" type="text" default="" label="widget.googleanalytics::googleanalytics.api key" description="widget.googleanalytics::googleanalytics.api key description" />
 		</fieldset>
 	</fields>
