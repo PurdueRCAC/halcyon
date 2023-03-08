@@ -205,7 +205,32 @@ class Slurm
 				$name = $queue->nameWithSubcluster;
 			}
 
-			//Account - 'chen4116':Description='gilbreth-e':Organization='chen4116':Fairshare=1:GrpTRES=cpu=8,gres/gpu=1:GrpSubmitJobs=12000:MaxSubmitJobs=5000:MaxWallDurationPerJob=20160:Priority=1000
+			/*
+			Example: Account - 'chen4116':Description='gilbreth-e':Organization='chen4116':Fairshare=1:GrpTRES=cpu=8,gres/gpu=1:GrpSubmitJobs=12000:MaxSubmitJobs=5000:MaxWallDurationPerJob=20160:Priority=1000
+
+			@see https://slurm.schedmd.com/resource_limits.html
+
+			Possible parameters:
+				Fairshare
+				GrpJobs
+				GrpJobsAccrue
+				GrpSubmitJobs
+				GrpTRES
+				GrpTRESMins
+				GrpTRESRunMins
+				GrpWall
+				MaxJobs
+				MaxJobsAccrue
+				MaxSubmitJobs
+				MaxTRESMinsPerJob
+				MaxTRESPerJob
+				MaxTRESPerNode
+				MaxWallDurationPerJob
+				MinPrioThreshold
+				DefaultQOS
+				QOS
+				Priority
+			*/
 			$line = array();
 			$line[] = "Account - '" . $name . "'";
 			$line[] = "Description='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
@@ -259,22 +284,21 @@ class Slurm
 
 				$line[] = $l;
 
+				if ($queue->maxjobsrun)
+				{
+					$line[] = 'GrpJobs=' . $queue->maxjobsrun;
+				}
 				if ($queue->maxjobsrunuser)
 				{
-					$line[] = 'MaxJobsPerUser=' . $queue->maxjobsrunuser;
+					$line[] = 'MaxSubmitJobs=' . $queue->maxjobsrunuser;
 				}
-				/*
-				if ($queue->maxjobsqueueduser)
-				{
-					$line[] = 'GrpJobs=' . $queue->maxjobsqueueduser;
-				}*/
 				if ($queue->maxjobsqueued)
 				{
 					$line[] = 'GrpSubmitJobs=' . $queue->maxjobsqueued;
 				}
 				if ($queue->maxjobsqueueduser)
 				{
-					$line[] = 'MaxSubmitJobs=' . $queue->maxjobsqueueduser;
+					$line[] = 'MaxJobs=' . $queue->maxjobsqueueduser;
 				}
 				if ($queue->walltime)
 				{
