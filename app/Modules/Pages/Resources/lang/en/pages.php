@@ -78,4 +78,6 @@ return [
 	'fields' => 'Fields',
 	'datetime' => 'Date',
 	'back' => 'Back',
+	'create sub page' => 'New sub-page',
+	'create page' => 'Create Page',
 ];

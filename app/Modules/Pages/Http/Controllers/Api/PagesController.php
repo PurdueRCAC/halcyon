@@ -130,7 +130,7 @@ class PagesController extends Controller
 			$filters[$key] = $request->input($key, $default);
 		}
 
-		if (!in_array($filters['order'], ['id', 'title', 'created_at', 'updated_at']))
+		if (!in_array($filters['order'], ['id', 'title', 'path', 'lft', 'rgt', 'level', 'state', 'access', 'created_at', 'updated_at']))
 		{
 			$filters['order'] = Page::$orderBy;
 		}

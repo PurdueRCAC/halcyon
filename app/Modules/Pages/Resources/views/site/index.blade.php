@@ -78,6 +78,11 @@
 								<span class="fa fa-pencil" aria-hidden="true"></span> {{ trans('global.button.edit') }}
 							</a>
 						@endif
+						@if (auth()->user()->can('create pages'))
+							<a href="{{ route('site.pages.create', ['parent_id' => $page->id]) }}" data-id="{{ $page->id }}" class="create dropdown-item tip" title="{{ trans('pages::pages.create sub page') }}">
+								<span class="fa fa-plus" aria-hidden="true"></span> {{ trans('pages::pages.create sub page') }}
+							</a>
+						@endif
 						@if (auth()->user()->can('delete pages'))
 							<a href="{{ route('site.pages.delete', ['id' => $page->id]) }}" data-id="{{ $page->id }}" class="delete dropdown-item tip" data-confirm="{{ trans('global.confirm delete') }}" data-api="{{ route('api.pages.delete', ['id' => $page->id]) }}" title="{{ trans('global.button.delete') }}">
 								<span class="fa fa-trash" aria-hidden="true"></span> {{ trans('global.button.delete') }}

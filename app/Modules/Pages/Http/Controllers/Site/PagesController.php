@@ -114,19 +114,44 @@ class PagesController extends Controller
 
 	/**
 	 * Show the form for creating a new page.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$row = new Page;
 		$row->access = 1;
 		$row->state = 1;
 
-		if ($fields = app('request')->old('fields'))
+		if ($parent_id = $request->input('parent_id'))
+		{
+			$row->parent_id = $parent_id;
+		}
+
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
+
+		$pages = Page::stackByPath($row->parent->path);
+
+		foreach ($pages as $page)
+		{
+			if ($page->parent_id)
+			{
+				app('pathway')->append(
+					$page->title,
+					route('page', ['uri' => $page->path])
+				);
+			}
+		}
+
+		app('pathway')
+			->append(
+				trans('pages::pages.create page'),
+				route('site.pages.create')
+			);
 
 		$parents = Page::query()
 			->select('id', 'title', 'path', 'level')
@@ -135,7 +160,7 @@ class PagesController extends Controller
 			->get();
 
 		return view('pages::site.edit', [
-			'row'     => $row,
+			'page'    => $row,
 			'parents' => $parents
 		]);
 	}
