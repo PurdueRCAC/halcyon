@@ -113,6 +113,8 @@ return [
 	'end' => 'End',
 	'free' => 'Free',
 	'free desc' => 'Can be reserved for free?',
+	'shared' => 'Shared',
+	'shared desc' => 'Shared queues will be available to everyone.',
 	'comment' => 'Comment',
 	'error' => [
 		'invalid name' => 'Please provide a valid name.',

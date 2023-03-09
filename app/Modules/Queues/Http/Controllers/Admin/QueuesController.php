@@ -606,6 +606,10 @@ class QueuesController extends Controller
 		{
 			$row->nodememmax = 0;
 		}
+		if (!$row->shared)
+		{
+			$row->shared = 0;
+		}
 
 		if (!$row->save())
 		{

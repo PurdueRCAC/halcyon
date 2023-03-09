@@ -612,6 +612,16 @@ class QueuesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "shared",
+	 * 		"description":   "Shared qeue",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"201": {
 	 * 			"description": "Successful entry creation"
@@ -654,6 +664,7 @@ class QueuesController extends Controller
 			'aclgroups'         => 'nullable|string|max:255',
 			'maxijobfactor'     => 'nullable|integer',
 			'maxijobuserfactor' => 'nullable|integer',
+			'shared'            => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -1056,6 +1067,16 @@ class QueuesController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "shared",
+	 * 		"description":   "Shared qeue",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"204": {
 	 * 			"description": "Successful entry modification"
@@ -1102,6 +1123,7 @@ class QueuesController extends Controller
 			'aclgroups'         => 'nullable|string|max:255',
 			'maxijobfactor'     => 'nullable|integer',
 			'maxijobuserfactor' => 'nullable|integer',
+			'shared'            => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);

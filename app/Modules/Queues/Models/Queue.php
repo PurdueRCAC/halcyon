@@ -852,6 +852,16 @@ class Queue extends Model
 	}
 
 	/**
+	 * Is this a shared queue?
+	 *
+	 * @return  bool
+	 */
+	public function isShared(): bool
+	{
+		return ($this->shared > 0);
+	}
+
+	/**
 	 * Is this an owner queue?
 	 *
 	 * @return  bool

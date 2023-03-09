@@ -243,7 +243,7 @@ app('pathway')
 					</div>
 
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-4">
 							<div class="form-group form-block mb-0">
 								<div class="form-check">
 									<input type="checkbox" name="fields[reservation]" id="field-reservation" class="form-check-input" value="1"<?php if ($row->reservation) { echo ' checked="checked"'; } ?> />
@@ -252,12 +252,21 @@ app('pathway')
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-4">
 							<div class="form-group form-block mb-0">
 								<div class="form-check">
 									<input type="checkbox" name="fields[free]" id="field-free" class="form-check-input" value="1"<?php if ($row->free) { echo ' checked="checked"'; } ?> />
 									<label for="field-free" class="form-check-label">{{ trans('queues::queues.free') }}</label>
 									<span class="form-text text-muted">{{ trans('queues::queues.free desc') }}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group form-block mb-0">
+								<div class="form-check">
+									<input type="checkbox" name="fields[shared]" id="field-shared" class="form-check-input" value="1"<?php if ($row->shared) { echo ' checked="checked"'; } ?> />
+									<label for="field-shared" class="form-check-label">{{ trans('queues::queues.shared') }}</label>
+									<span class="form-text text-muted">{{ trans('queues::queues.shared desc') }}</span>
 								</div>
 							</div>
 						</div>
