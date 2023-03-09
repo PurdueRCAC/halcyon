@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		sselects.forEach(function (el) {
 			sel = new TomSelect(el, {
 				plugins: ['dropdown_input'],
+				searchField: ['text', 'path'],
 				render: {
 					option: function (data, escape) {
 						return '<div>' +
