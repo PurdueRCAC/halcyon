@@ -122,8 +122,8 @@ app('pathway')->append(
 										//$grp = App\Modules\Groups\Models\Group::find($g);
 										//if ($grp)
 										//{
-											//$grps[$g] = $grp->name . ' (' . $g . ')';
-											$grps[] = $g; // $grp->name . ' (' . $g . ')';
+											//$grps[] = $grp->name . ' (' . $g . ')';
+											$grps[] = $g;
 										//}
 									}
 								}
@@ -134,7 +134,16 @@ app('pathway')->append(
 								<select name="group" id="group" class="form-control" data-uri="{{ route('api.groups.index') }}?search=%s" data-api="{{ route('api.groups.index') }}">
 									<option value=""></option>
 									@foreach ($groups as $group)
-										<option value="{{ $group->id }}"<?php if (in_array($group->id, $grps)) { echo ' selected'; } ?>>{{ $group->name }}</option>
+										@php
+										$managers = array();
+										foreach ($group->managers as $manager):
+											if (!$manager->user):
+												continue;
+											endif;
+											$managers[] = $manager->user->name . ' (' . $manager->user->username . ')';
+										endforeach;
+										@endphp
+										<option value="{{ $group->id }}" data-managers="{{ implode(',', $managers) }}" <?php if (in_array($group->id, $grps)) { echo ' selected'; } ?>>{{ $group->name }}</option>
 									@endforeach
 								</select>
 							</div>

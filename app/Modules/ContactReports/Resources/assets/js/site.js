@@ -2898,11 +2898,11 @@ document.addEventListener('DOMContentLoaded', function () {
 				maxItems: 1,
 				valueField: 'id',
 				labelField: 'name',
-				searchField: ['name'],
+				searchField: ['name', 'managers'],
 				plugins: ['clear_button'],
 				persist: false,
 				// Fetch remote data
-				load: function (query, callback) {
+				/*load: function (query, callback) {
 					var url = group.getAttribute('data-api') + '?api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content') + '&search=' + encodeURIComponent(query);
 
 					fetch(url)
@@ -2912,7 +2912,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						}).catch(() => {
 							callback();
 						});
-				},
+				},*/
 				render: {
 					// Option list when searching
 					option: function (item, escape) {
