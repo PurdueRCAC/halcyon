@@ -84,8 +84,9 @@ class Slurm
 
 		$queues = $event->queues;
 
-		$admin_users  = ['root', 'nagios', 'rcactest', 'rcacdata'];
-		$admin_groups = ['rcacadms', 'rcacsupp'];
+		$admin_users  = config('listener.slurm.admin_users', ['root']);
+		$admin_groups = config('listener.slurm.admin_groups', []);
+		$default_account = config('listener.slurm.default_account', 'standby');
 
 		// Get admins
 		$roles = config('module.queues.admins', []);
@@ -139,7 +140,7 @@ class Slurm
 		$out[] = "# User - 'lipari':MaxTRESPerJob=node=2:MaxJobs=3:MaxTRESMinsPerJob=cpu=4:FairShare=1:MaxWallDurationPerJob=1";
 		$out[] = "Cluster - '" . $scheduler->resource->rolename . "'";
 		$out[] = "Parent - 'root'";
-		$out[] = "User - 'root':DefaultAccount='standby':AdminLevel='Administrator':Fairshare=1";
+		$out[] = "User - 'root':DefaultAccount='" . $default_account . "':AdminLevel='Administrator':Fairshare=1";
 
 		$users = array();
 		$allusers = array();
@@ -315,37 +316,40 @@ class Slurm
 
 			$users[] = "Parent - '" . $name . "'";
 
-			// System queue - add all admins
+			// System queue
 			if ($queue->isSystem())
 			{
+				// Add all admins to all system queues
 				foreach ($admin_users as $username)
 				{
 					// User - 'aliaga':Partition='gilbreth-g':DefaultAccount='standby':Fairshare=1:GrpTRES=cpu=128:GrpSubmitJobs=12000:MaxSubmitJobs=5000:MaxWallDurationPerJob=20160:Priority=1000
 					$uline   = ["User - '" . $username . "'"];
 					$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
-					$uline[] = "DefaultAccount='standby'";
+					$uline[] = "DefaultAccount='" . $default_account . "'";
 					$uline[] = "AdminLevel='Administrator'";
 					$uline[] = "Fairshare=1";
 
 					$users[] = implode(':', $uline);
 				}
+			}
 
-				if ($queue->name == 'standby' || $queue->name == 'debug')
+			// Add all users?
+			if ($queue->isShared())
+			{
+				foreach ($allusers as $username)
 				{
-					foreach ($allusers as $username)
+					if (in_array($username, $admin_users))
 					{
-						if (in_array($username, $admin_users))
-						{
-							continue;
-						}
-
-						$uline   = ["User - '" . $username . "'"];
-						$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
-						$uline[] = "DefaultAccount='standby'";
-						$uline[] = "Fairshare=1";
-
-						$users[] = implode(':', $uline);
+						// Already added them in the amdin section above
+						continue;
 					}
+
+					$uline   = ["User - '" . $username . "'"];
+					$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
+					$uline[] = "DefaultAccount='" . $default_account . "'";
+					$uline[] = "Fairshare=1";
+
+					$users[] = implode(':', $uline);
 				}
 			}
 
@@ -359,7 +363,7 @@ class Slurm
 				//User - 'aliaga':Partition='gilbreth-g':DefaultAccount='standby':Fairshare=1:GrpTRES=cpu=128:GrpSubmitJobs=12000:MaxSubmitJobs=5000:MaxWallDurationPerJob=20160:Priority=1000
 				$uline   = ["User - '" . $queueuser->user->username . "'"];
 				$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
-				$uline[] = "DefaultAccount='standby'";
+				$uline[] = "DefaultAccount='" . $default_account . "'";
 				if (in_array($queueuser->user->username, $admin_users))
 				{
 					$uline[] = "AdminLevel='Administrator'";
