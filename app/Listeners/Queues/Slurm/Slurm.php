@@ -291,7 +291,7 @@ class Slurm
 				}
 				if ($queue->maxjobsrunuser)
 				{
-					$line[] = 'MaxSubmitJobs=' . $queue->maxjobsrunuser;
+					$line[] = 'MaxJobs=' . $queue->maxjobsrunuser;
 				}
 				if ($queue->maxjobsqueued)
 				{
@@ -299,7 +299,7 @@ class Slurm
 				}
 				if ($queue->maxjobsqueueduser)
 				{
-					$line[] = 'MaxJobs=' . $queue->maxjobsqueueduser;
+					$line[] = 'MaxSubmitJobs=' . $queue->maxjobsqueueduser;
 				}
 				if ($queue->walltime)
 				{
