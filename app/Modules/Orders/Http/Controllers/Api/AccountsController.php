@@ -657,18 +657,23 @@ class AccountsController extends Controller
 		if ($request->has('purchasefund'))
 		{
 			$row->purchasefund = $request->input('purchasefund');
+			$row->purchasefund = $row->purchasefund ?: '';
 		}
 		if ($request->has('purchasecostcenter'))
 		{
 			$row->purchasecostcenter = $request->input('purchasecostcenter');
+			$row->purchasecostcenter = $row->purchasecostcenter ?: '';
 		}
 		if ($request->has('purchaseorder'))
 		{
 			$row->purchaseorder = $request->input('purchaseorder');
+			$row->purchaseorder = $row->purchaseorder ?: '';
 		}
 		if ($request->has('budgetjustification'))
 		{
 			$row->budgetjustification = $request->input('budgetjustification');
+			// If removing a comment, the field is non-nullable, so set it to an empty string
+			$row->budgetjustification = $row->budgetjustification ?: '';
 		}
 		if ($request->has('approveruserid'))
 		{
@@ -706,6 +711,7 @@ class AccountsController extends Controller
 		if ($request->has('paymentdocid'))
 		{
 			$row->paymentdocid = $request->input('paymentdocid');
+			$row->paymentdocid = $row->paymentdocid ?: '';
 		}
 		if ($request->has('notice'))
 		{
