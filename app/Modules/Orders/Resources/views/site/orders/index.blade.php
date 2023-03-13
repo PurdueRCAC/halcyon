@@ -38,7 +38,7 @@ app('pathway')
 		<fieldset class="filters mt-0">
 			<div class="form-group">
 				<label for="filter_search">{{ trans('search.label') }}</label>
-				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="Find by account, user, or group" value="{{ $filters['search'] }}" />
+				<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="Find by account, user, or group" value="{{ $filters['search'] }}" />
 			</div>
 			<div class="form-group">
 				<label for="filter_status">{{ trans('orders::orders.status') }}</label>

@@ -38,7 +38,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="filter_search">{{ trans('search.label') }}</label>
-					<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('Find by ID, user, or group') }}" value="{{ $filters['search'] }}" />
+					<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('Find by ID, user, or group') }}" value="{{ $filters['search'] }}" />
 				</div>
 
 				<div class="form-group">

@@ -35,7 +35,7 @@ app('pathway')
 		<fieldset class="filters mt-0">
 			<div class="form-group">
 				<label for="filter_search">{{ trans('search.label') }}</label>
-				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="Find by author or title" value="{{ $filters['search'] }}" />
+				<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="Find by author or title" value="{{ $filters['search'] }}" />
 			</div>
 			@if (auth()->user() && auth()->user()->can('manage publications'))
 			<div class="form-group">

@@ -81,7 +81,7 @@ app('pathway')
 
 						<div class="form-group">
 							<label for="field_email" id="field_email-lbl">{{ trans('users::users.email') }}:</label>
-							<input type="text" name="ufields[email]" id="field_email" value="{{ $user->email }}" maxlength="250" class="form-control" />
+							<input type="email" name="ufields[email]" id="field_email" value="{{ $user->email }}" maxlength="250" class="form-control" />
 							<span class="invalid-feedback">{{ trans('users::users.invalid.email') }}</span>
 						</div>
 

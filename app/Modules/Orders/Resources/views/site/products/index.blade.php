@@ -45,7 +45,7 @@ app('pathway')
 						<div class="form-group">
 							<label for="filter_search">{{ trans('search.label') }}</label>
 							<span class="input-group">
-								<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('orders::orders.search products') }}" value="{{ $filters['search'] }}" />
+								<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('orders::orders.search products') }}" value="{{ $filters['search'] }}" />
 								<span class="input-group-append">
 									<span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span>
 								</span>

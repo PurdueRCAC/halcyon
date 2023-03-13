@@ -22,7 +22,7 @@
 				<div class="form-group">
 					<label class="sr-only" for="knowledge_search">{{ trans('knowledge::knowledge.search') }}</label>
 					<span class="input-group">
-						<input type="search" name="search" id="knowledge_search" class="form-control" placeholder="{{ trans('knowledge::knowledge.search placeholder') }}" value="{{ $filters['search'] }}" />
+						<input type="search" enterkeyhint="search" name="search" id="knowledge_search" class="form-control" placeholder="{{ trans('knowledge::knowledge.search placeholder') }}" value="{{ $filters['search'] }}" />
 						<span class="input-group-append">
 							<input type="submit" class="input-group-text" value="{{ trans('global.submit') }}" />
 						</span>
