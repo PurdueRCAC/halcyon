@@ -8,6 +8,7 @@ use App\Modules\Resources\Models\Subresource;
 use App\Modules\Resources\Models\Child;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Mail\Scheduling;
+use App\Modules\History\Models\Log;
 
 class EmailSchedulingCommand extends Command
 {
