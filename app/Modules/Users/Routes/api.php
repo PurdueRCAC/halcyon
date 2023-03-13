@@ -8,7 +8,7 @@ $router->group(['prefix' => 'users'], function (Router $router)
 	$router->get('/', [
 		'as' => 'api.users.index',
 		'uses' => 'UsersController@index',
-		//'middleware' => 'can:manage users',
+		'middleware' => ['auth:api'],
 	]);
 
 	$router->post('/', [

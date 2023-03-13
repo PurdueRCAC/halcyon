@@ -42,7 +42,10 @@ document.addEventListener('DOMContentLoaded', function () {
 			load: function (query, callback) {
 				var url = el.getAttribute('data-api') + '&search=' + encodeURIComponent(query);
 
-				fetch(url)
+				fetch(url, {
+						method: 'GET',
+						headers: headers
+					})
 					.then(response => response.json())
 					.then(json => {
 						for (var i = 0; i < json.data.length; i++) {

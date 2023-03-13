@@ -24,7 +24,13 @@ document.addEventListener('DOMContentLoaded', function() {
 			load: function(query, callback) {
 				var url = el.getAttribute('data-api') + '?order=name&order_dir=asc&search=' + encodeURIComponent(query);
 
-				fetch(url)
+				fetch(url, {
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+						}
+					})
 					.then(response => response.json())
 					.then(json => {
 						for (var i = 0; i < json.data.length; i++) {
