@@ -300,7 +300,7 @@ class PagesController extends Controller
 			});
 		}
 
-		if ($filters['parent'])
+		if ($filters['parent'] > 1)
 		{
 			$parent = Associations::find($filters['parent']);
 
@@ -329,6 +329,23 @@ class PagesController extends Controller
 
 			$query->where($a . '.lft', '>=', $parent->lft)
 					->where($a . '.rgt', '<=', $parent->rgt);
+		}
+		else
+		{
+			// Filter out retired trees
+			$retired = Associations::query()
+				->where('parent_id', '=', 1)
+				->where('state', '=', 2)
+				->get();
+
+			foreach ($retired as $re)
+			{
+				$query->where(function($query) use ($a, $re)
+				{
+					$query->where($a . '.lft', '<', $re->lft)
+						->orWhere($a . '.lft', '>', $re->rgt);
+				});
+			}
 		}
 
 		$query->where($a . '.state', '=', 1);
