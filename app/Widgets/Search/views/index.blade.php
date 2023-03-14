@@ -15,7 +15,7 @@
 
 		<?php
 		$output  = '<label for="searchword' . $instance . '" class="' . $class . 'searchword-label" id="searchword-label' . $instance . '">' . $label . '</label>';
-		$output .= '<input type="text" name="terms" class="' . $class . 'searchword" id="searchword' . $instance . '" size="' . $width . '" placeholder="' . $text . '" />';
+		$output .= '<input type="search" enterkeyhint="search" name="terms" class="' . $class . 'searchword" id="searchword' . $instance . '" size="' . $width . '" placeholder="' . $text . '" />';
 
 		if ($button):
 			$button = '<input type="submit" class="' . $class . 'searchsubmit" id="submitquery' . $instance . '" value="' . $button_text . '" />';
