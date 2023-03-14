@@ -126,6 +126,8 @@ return [
 	// Error pages
 	'error 403 title' => 'Not Authorized',
 	'error 403 description' => 'You are not authorized to perform this action.',
+	'error 410 title' => 'No Longer Available',
+	'error 410 description' => 'The page or file is no longer available.',
 	'error 404 title' => 'Page Not Found',
 	'error 404 description' => 'The page you are looking for was not found.',
 	'error 500 title' => 'Something went wrong',
