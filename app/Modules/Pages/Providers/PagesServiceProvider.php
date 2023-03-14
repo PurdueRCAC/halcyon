@@ -5,7 +5,6 @@ namespace App\Modules\Pages\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\Facades\Blade;
-use App\Modules\Pages\Console\ImportStaffCommand;
 use App\Modules\Pages\Listeners\RouteCollector;
 use Nwidart\Modules\Facades\Module;
 
@@ -32,26 +31,12 @@ class PagesServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		/*Blade::directive('file', function ($expression)
-		{
-			return "<?php echo asset('files/' . $expression); ?>";
-		});
-
-		Blade::directive('filesize', function ($expression)
-		{
-			return "<?php echo App\Halcyon\Utility\Number::formatBytes(filesize(storage_path($expression))); ?>";
-		});*/
-
 		$this->registerTranslations();
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
-
-		$this->commands([
-			ImportStaffCommand::class
-		]);
 
 		if (Module::isEnabled('menus'))
 		{
