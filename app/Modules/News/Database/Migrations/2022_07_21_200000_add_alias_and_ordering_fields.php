@@ -29,12 +29,12 @@ class AddAliasAndOrderingFields extends Migration
 			foreach ($types as $i => $type)
 			{
 				$type->ordering = ($i + 1);
-				$type->save();
+				$type->saveQuietly();
 
 				foreach ($type->children()->orderBy('id')->get() as $k => $child)
 				{
 					$child->ordering = ($k + 1);
-					$child->save();
+					$child->saveQuietly();
 				}
 			}
 		}
@@ -53,7 +53,7 @@ class AddAliasAndOrderingFields extends Migration
 			foreach ($types as $i => $type)
 			{
 				$type->name = $type->name;
-				$type->save();
+				$type->saveQuietly();
 			}
 		}
 	}
