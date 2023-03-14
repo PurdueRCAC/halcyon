@@ -92,4 +92,5 @@ return [
 	'all topics' => 'All topics',
 	'separator' => 'Separator',
 	'type separator' => '[ separator ]',
+	'add child page' => 'Add child page',
 ];
