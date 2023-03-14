@@ -157,7 +157,7 @@ class CreateNewsTables extends Migration
 				$table->index('newsid');
 
 				$table->foreign('newsid')->references('id')->on('news');
-				$table->foreign('resourceid')->references('id')->on('resources');
+				//$table->foreign('resourceid')->references('id')->on('resources');
 			});
 		}
 
