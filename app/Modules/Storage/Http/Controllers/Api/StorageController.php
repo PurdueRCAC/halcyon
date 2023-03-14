@@ -303,7 +303,7 @@ class StorageController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"maxLength": 64,
+	 * 			"maxLength": 64
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -532,7 +532,7 @@ class StorageController extends Controller
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"maxLength": 64,
+	 * 			"maxLength": 64
 	 * 		}
 	 * }
 	 * @apiParameter {

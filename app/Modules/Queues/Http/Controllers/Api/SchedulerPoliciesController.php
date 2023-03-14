@@ -117,6 +117,11 @@ class SchedulerPoliciesController extends Controller
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
+		$rows->each(function($item, $key)
+		{
+			$item->api = route('api.queues.schedulerpolicies.read', ['id' => $item->id]);
+		});
+
 		return new ResourceCollection($rows);
 	}
 
@@ -181,6 +186,8 @@ class SchedulerPoliciesController extends Controller
 		}
 		$row->save();
 
+		$row->api = route('api.queues.schedulerpolicies.read', ['id' => $row->id]);
+
 		return new JsonResource($row);
 	}
 
@@ -212,6 +219,8 @@ class SchedulerPoliciesController extends Controller
 	public function read($id)
 	{
 		$row = SchedulerPolicy::findOrFail($id);
+
+		$row->api = route('api.queues.schedulerpolicies.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -291,6 +300,8 @@ class SchedulerPoliciesController extends Controller
 			}
 		}
 		$row->save();
+
+		$row->api = route('api.queues.schedulerpolicies.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}

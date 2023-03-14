@@ -118,6 +118,11 @@ class TypesController extends Controller
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
+		$rows->each(function($item, $key)
+		{
+			$item->api = route('api.queues.types.read', ['id' => $item->id]);
+		});
+
 		return new ResourceCollection($rows);
 	}
 
@@ -171,6 +176,8 @@ class TypesController extends Controller
 		}
 		$row->save();
 
+		$row->api = route('api.queues.types.read', ['id' => $row->id]);
+
 		return new JsonResource($row);
 	}
 
@@ -203,6 +210,8 @@ class TypesController extends Controller
 	public function read($id)
 	{
 		$row = Type::findOrFail($id);
+
+		$row->api = route('api.queues.types.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -269,6 +278,8 @@ class TypesController extends Controller
 			}
 		}
 		$row->save();
+
+		$row->api = route('api.queues.types.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}

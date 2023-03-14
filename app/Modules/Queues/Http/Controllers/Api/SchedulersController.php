@@ -161,6 +161,11 @@ class SchedulersController extends Controller
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
+		$rows->each(function($item, $key)
+		{
+			$item->api = route('api.queues.schedulers.read', ['id' => $item->id]);
+		});
+
 		return new ResourceCollection($rows);
 	}
 
@@ -284,6 +289,8 @@ class SchedulersController extends Controller
 		}
 		$row->save();
 
+		$row->api = route('api.queues.schedulers.read', ['id' => $row->id]);
+
 		return new JsonResource($row);
 	}
 
@@ -316,6 +323,8 @@ class SchedulersController extends Controller
 	public function read($id)
 	{
 		$row = Scheduler::findOrFail($id);
+
+		$row->api = route('api.queues.schedulers.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}
@@ -460,6 +469,8 @@ class SchedulersController extends Controller
 			}
 		}
 		$row->save();
+
+		$row->api = route('api.queues.schedulers.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
 	}

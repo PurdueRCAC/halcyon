@@ -190,6 +190,8 @@ class UserStorage
 
 		foreach ($nots as $not)
 		{
+			$not->api = route('api.storage.notifications.read', ['id' => $not->id]);
+
 			$storagedirquotanotifications->add($not);
 		}
 

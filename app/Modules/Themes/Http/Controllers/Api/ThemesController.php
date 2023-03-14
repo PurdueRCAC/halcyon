@@ -223,6 +223,10 @@ class ThemesController extends Controller
 			->appends(array_filter($filters));
 
 		//$preview = $this->config->get('template_positions_display');
+		$rows->each(function($item, $key)
+		{
+			$item->api = route('api.themes.read', ['id' => $item->id]);
+		});
 
 		return new ResourceCollection($rows);
 	}
