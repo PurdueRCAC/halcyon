@@ -27,6 +27,12 @@
 	@endforeach
 @endif
 
+@if ($node->isArchived())
+	@push('meta')
+		<meta name="robots" content="noindex, nofollow" />
+	@endpush
+@endif
+
 @section('title'){{ trans('knowledge::knowledge.module name') }}: {{ ($node->guide ? $node->guide . ': ' : '') . $node->page->headline . ($all ? ': ' . trans('knowledge::knowledge.all topics') : '') }}@stop
 
 @push('styles')
