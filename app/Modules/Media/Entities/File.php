@@ -187,6 +187,7 @@ class File extends \SplFileInfo
 			$path = Str::replaceFirst('/public/', '/', $path);
 		}
 		$path = preg_replace('/\/{2,}/', '/', $path);
+		$path = str_replace(' ', '%20', $path);
 		return rtrim(config('filesystems.disks.public.url'), '/') . $path;
 	}
 
