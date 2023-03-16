@@ -54,7 +54,7 @@ class Adminmenu extends Widget
 				switch ($module->element)
 				{
 					case 'users':
-					case 'meneus':
+					case 'menus':
 					case 'dashboard':
 					case 'themes':
 						$module->folder = $module->element;
