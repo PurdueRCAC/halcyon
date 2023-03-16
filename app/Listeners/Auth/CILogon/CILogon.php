@@ -4,6 +4,7 @@ namespace App\Listeners\Auth\CILogon;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Events\Dispatcher;
 use App\Modules\Users\Events\Login;
 use App\Modules\Users\Events\Authenticate;
 use App\Modules\Users\Models\User;
@@ -23,12 +24,12 @@ class CILogon
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
-		$events->listen(Login::class, self::class . '@handleAuthenticate');
+		$events->listen(Login::class, self::class . '@handleLogin');
 		$events->listen(Authenticate::class, self::class . '@handleAuthenticate');
 		$events->listen(Logout::class, self::class . '@handleLogout');
 	}
@@ -38,7 +39,7 @@ class CILogon
 	 *
 	 * @return  Provider
 	 */
-	protected function provider()
+	protected function provider(): Provider
 	{
 		if (is_null($this->cilogon))
 		{
@@ -67,7 +68,7 @@ class CILogon
 	 * @param  Login $event
 	 * @return void
 	 */
-	public function handleLogin(Login $event)
+	public function handleLogin(Login $event): void
 	{
 		$request = $event->request;
 
@@ -88,6 +89,7 @@ class CILogon
 		$loginUrl = $provider->getAuthorizationUrl(array(
 			'scope' => ['openid', 'email', 'profile', 'org.cilogon.userinfo']
 		));
+		$returnUrl = $request->input('return', route(config('module.users.redirect_route_after_login', 'home')));
 
 		session()->put('cilogon.state', $provider->getState());
 		session()->put('cilogon.returnUrl', $returnUrl);
@@ -102,7 +104,7 @@ class CILogon
 	 * @param  Authenticate $event
 	 * @return void
 	 */
-	public function handleAuthenticate(Authenticate $event)
+	public function handleAuthenticate(Authenticate $event): void
 	{
 		$request = $event->request;
 
@@ -214,7 +216,7 @@ class CILogon
 	 * @param  Logout $event
 	 * @return void
 	 */
-	public function handleLogout(Logout $event)
+	public function handleLogout(Logout $event): void
 	{
 		session()->invalidate();
 		session()->regenerate();
