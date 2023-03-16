@@ -100,6 +100,13 @@ return [
 		'username' => 'Invalid username.',
 		'name' => 'Invalid name.',
 	],
+	'error' => [
+		'user not found' => 'User not found.',
+		'role set failed' => 'Failed to set roles for user :username',
+		'username taken' => 'User with the specified username alreaady exists.',
+		'email taken' => 'User with the specified email alreaady exists.',
+	],
+	'user created' => 'User created.',
 	'department' => 'Department',
 	'title' => 'Title',
 	'campus' => 'Campus',

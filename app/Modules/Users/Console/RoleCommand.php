@@ -32,18 +32,18 @@ class RoleCommand extends Command
 	/**
 	 * Execute the console command.
 	 */
-	public function handle()
+	public function handle(): void
 	{
-		$username = $this->argument('username');
-		$listRole = $this->option('list');
-		$addRole = $this->option('add');
+		$username   = $this->argument('username');
+		$listRole   = $this->option('list');
+		$addRole    = $this->option('add');
 		$removeRole = $this->option('remove');
 
 		$user = User::findByUsername($username);
 
 		if (!$user || !$user->id)
 		{
-			$this->danger('User not found.');
+			$this->error(trans('users::users.error.user not found'));
 			return;
 		}
 
@@ -51,16 +51,28 @@ class RoleCommand extends Command
 			->pluck('role_id')
 			->toArray();
 
+		$ug = new Role;
+
+		$allRoles = Role::query()
+			->select(['a.id', 'a.title', 'a.parent_id', DB::raw('COUNT(DISTINCT b.id) AS level')])
+			->from($ug->getTable() . ' AS a')
+			->leftJoin($ug->getTable() . ' AS b', function($join)
+				{
+					$join->on('a.lft', '>', 'b.lft')
+						->on('a.rgt', '<', 'b.rgt');
+				})
+			->groupBy(['a.id', 'a.title', 'a.lft', 'a.rgt', 'a.parent_id'])
+			->orderBy('a.lft', 'asc')
+			->get();
+
+		$allRoles->each(function($item)
+		{
+			$item->title = str_repeat('  ', $item->level) . $item->title;
+		});
+
 		if ($listRole)
 		{
-			$allroles = Role::query()->orderBy('lft', 'asc')->get();
-
-			$this->line('Roles for ' . $user->username . ':');
-
-			foreach ($allroles as $role)
-			{
-				$this->comment('    [' . (in_array($role->id, $roles) ? 'X' : ' ') . '] ' . ($role->id < 10 ? ' ' : '') . $role->id . ' : ' . $role->title);
-			}
+			$this->listRoles($allRoles, $user, $roles);
 			return;
 		}
 
@@ -102,19 +114,36 @@ class RoleCommand extends Command
 
 		if ($user->save())
 		{
-			$allroles = Role::query()->orderBy('lft', 'asc')->get();
-
-			$this->line('Roles for ' . $user->username . ':');
-
-			foreach ($allroles as $role)
-			{
-				$this->comment('    [' . (in_array($role->id, $roles) ? 'X' : ' ') . '] ' . ($role->id < 10 ? ' ' : '') . $role->id . ' : ' . $role->title);
-			}
-			return;
+			$this->listRoles($allRoles, $user, $roles);
 		}
 		else
 		{
-			$this->danger('Failed to set roles for user ' . $user->username);
+			$this->error(trans('users::users.error.role set failed', ['username' => $user->username]));
+		}
+	}
+
+	/**
+	 * Output the list of roles as a tree
+	 *
+	 * @param array $allRoles
+	 * @param User $user
+	 * @param array $roles
+	 * @return void
+	 */
+	private function listRoles($allRoles, $user, $roles): void
+	{
+		$this->line('Roles for ' . $user->username . ':');
+
+		foreach ($allRoles as $role)
+		{
+			if (in_array($role->id, $roles))
+			{
+				$this->info('  [X] ' . $role->title);
+			}
+			else
+			{
+				$this->comment('  [ ] ' . $role->title);
+			}
 		}
 	}
 }

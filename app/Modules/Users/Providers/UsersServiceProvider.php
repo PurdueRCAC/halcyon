@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Foundation\Console\AboutCommand;
 use App\Modules\Users\Console\SyncCommand;
 use App\Modules\Users\Console\CleanUpCommand;
+use App\Modules\Users\Console\CreateCommand;
 use App\Modules\Users\Console\RoleCommand;
 use App\Modules\Users\Listeners\RouteCollector;
 use App\Modules\Users\Models\User;
@@ -116,6 +117,7 @@ class UsersServiceProvider extends ServiceProvider
 			SyncCommand::class,
 			CleanUpCommand::class,
 			RoleCommand::class,
+			CreateCommand::class,
 		]);
 	}
 
