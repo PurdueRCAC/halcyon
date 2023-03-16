@@ -4649,6 +4649,10 @@ html div.dataTables_wrapper div.dataTables_info{
     border-color: var(--page-link-br-active);
   }
 
+  html .ui-state-highlight {
+    background-color: rgba(205, 211, 156, 0.15);
+  }
+
   .ui-state-default,
   .ui-widget-content .ui-state-default,
   .ui-widget-header .ui-state-default,

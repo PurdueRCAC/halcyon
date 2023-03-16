@@ -376,6 +376,7 @@ class MenusController extends Controller
 			'title' => 'nullable|string|max:48',
 			'menutype' => 'nullable|string|max:24',
 			'description' => 'nullable|string|max:255',
+			'ordering' => 'nullable|array',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -390,9 +391,41 @@ class MenusController extends Controller
 		$row->menutype = $request->input('menutype', $row->menutype);
 		$row->description = $request->input('description', $row->description);
 
-		if (!$row->save())
+		if ($request->has('title')
+		 || $request->has('menutype')
+		 || $request->has('description'))
 		{
-			return response()->json(['message' => trans('global.messages.save failed')], 500);
+			if (!$row->save())
+			{
+				return response()->json(['message' => trans('global.messages.save failed')], 500);
+			}
+		}
+
+		if ($request->has('ordering'))
+		{
+			$order = $request->input('ordering', []);
+
+			if (count($order))
+			{
+				foreach ($order as $i => $it)
+				{
+					list($parent_id, $id) = explode(':', $it);
+
+					$item = Item::find($id);
+					if (!$item)
+					{
+						continue;
+					}
+					$item->parent_id = $parent_id;
+					$item->ordering = $i;
+					$item->save();
+				}
+
+				if ($item)
+				{
+					$item->rebuild(1, 0, 0, '', 'ordering');
+				}
+			}
 		}
 
 		$row->api = route('api.menus.read', ['id' => $row->id]);

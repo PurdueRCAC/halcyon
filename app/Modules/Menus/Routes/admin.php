@@ -72,6 +72,11 @@ $router->group(['prefix' => 'menus'], function (Router $router)
 			'uses' => 'ItemsController@reorder',
 			'middleware' => 'can:edit.state menus',
 		])->where('id', '[0-9]+');
+		$router->post('/saveorder', [
+			'as'   => 'admin.menus.items.saveorder',
+			'uses' => 'ItemsController@saveorder',
+			'middleware' => 'can:edit.state menus',
+		]);
 
 		$router->get('/{id}/setdefault', [
 			'as'   => 'admin.menus.setdefault',

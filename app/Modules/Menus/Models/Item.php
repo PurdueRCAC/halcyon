@@ -324,7 +324,7 @@ class Item extends Model
 		$children = self::query()
 			->select(['id', 'alias'])
 			->where('parent_id', '=', (int) $parentId)
-			->orderBy('parent_id', 'asc')
+			->orderBy('menutype', 'asc')
 			->orderBy($orderby, 'asc')
 			->get();
 

@@ -3,7 +3,7 @@
 namespace App\Modules\Menus\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -255,13 +255,14 @@ class ItemsController extends Controller
 		// Get records
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
-			->appends(array_filter($filters));
+			->get();
+			//->paginate($filters['limit'], ['*'], 'page', $filters['page'])
+			//->appends(array_filter($filters));
 
 		// Preprocess the list of items to find ordering divisions.
 		$ordering = array();
 
-		$prev = null;
+		/*$prev = null;
 		if ($filters['page'] > 1)
 		{
 			$prev = $query
@@ -279,10 +280,14 @@ class ItemsController extends Controller
 		if ($prev)
 		{
 			$ordering[$prev->parent_id][] = $prev->id;
-		}
+		}*/
 
 		foreach ($rows as $item)
 		{
+			if (!isset($ordering[$item->parent_id]))
+			{
+				$ordering[$item->parent_id] = array();
+			}
 			$ordering[$item->parent_id][] = $item->id;
 
 			// item type text
@@ -380,10 +385,10 @@ class ItemsController extends Controller
 			$item->item_type = $value;
 		}
 
-		if ($next)
+		/*if ($next)
 		{
 			$ordering[$next->parent_id][] = $next->id;
-		}
+		}*/
 
 		// Levels filter.
 		$options = array();
@@ -540,7 +545,7 @@ class ItemsController extends Controller
 	 * Store a newly created entry
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -590,7 +595,7 @@ class ItemsController extends Controller
 	 *
 	 * @param   Request  $request
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function delete(Request $request, $id = null)
 	{
@@ -644,7 +649,7 @@ class ItemsController extends Controller
 	 * 
 	 * @param   Request $request
 	 * @param   int $id
-	 * @return  void
+	 * @return  RedirectResponse
 	 */
 	public function state(Request $request, $id)
 	{
@@ -703,7 +708,7 @@ class ItemsController extends Controller
 	 * Sets the state of one or more entries
 	 * 
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function restore(Request $request)
 	{
@@ -748,11 +753,10 @@ class ItemsController extends Controller
 	 * 
 	 * @param   int  $id
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function reorder($id, Request $request)
 	{
-		// Get the element being moved
 		$row = Item::findOrFail($id);
 		$move = ($request->segment(4) == 'orderup') ? -1 : +1;
 
@@ -761,26 +765,65 @@ class ItemsController extends Controller
 			$request->session()->flash('error', trans('global.messages.move failed'));
 		}
 
-		// Redirect
 		return $this->cancel($row->menutype);
+	}
+
+	/**
+	 * Method to save the submitted ordering values for records.
+	 *
+	 * @param   Request  $request
+	 * @return  RedirectResponse
+	 */
+	public function saveorder(Request $request)
+	{
+		// Get the input
+		$order = $request->input('order', []);
+
+		foreach ($order as $i => $it)
+		{
+			list($parent_id, $id) = explode(':', $it);
+
+			$item = Item::find($id);
+			$item->parent_id = $parent_id;
+			$item->ordering = $i;
+			$item->save();
+		}
+
+		$item->rebuild(1, 0, 0, '', 'ordering');
+
+		if ($return === false)
+		{
+			// Reorder failed
+			$request->session()->flash('success', trans('global.error.reorder failed'));
+		}
+		else
+		{
+			// Reorder succeeded.
+			$request->session()->flash('success', trans('global.messages.ordering saved'));
+		}
+
+		// Redirect back to the listing
+		return $this->cancel();
 	}
 
 	/**
 	 * Return to default page
 	 *
 	 * @param   string  $menutype
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel($menutype = null)
 	{
-		return redirect(route('admin.menus.items', ['menutype' => $menutype ? $menutype : request()->input('menutype', request()->input('fields.menutype'))]));
+		return redirect(route('admin.menus.items', [
+			'menutype' => $menutype ? $menutype : request()->input('menutype', request()->input('fields.menutype'))
+		]));
 	}
 
 	/**
 	 * Temporary method
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  View
 	 */
 	public function types(Request $request)
 	{

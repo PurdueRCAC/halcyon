@@ -1,17 +1,17 @@
+/* global $ */ // jquery.js
 /* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 
-/**
- * Set menu type
- *
- * @param   {string}  type
- * @return  {void}
- */
 function setmenutype(type) {
 	window.parent.Halcyon.submitbutton('items.setType', type);
 	window.parent.$.dialog.close();
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+	var headers = {
+		'Content-Type': 'application/json',
+		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+	};
+
 	var alias = document.getElementById('field-menutype');
 	if (alias && !alias.value) {
 		document.getElementById('field-title').addEventListener('keyup', function () {
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
 							'</div>';
 					},
 					item: function (data, escape) {
-						return '<div title="' + escape(data.text) + '">' + escape(data.path) + '</div>';
+						return '<div title="' + escape(data.title) + '">' + escape(data.path) + '</div>';
 					}
 				}
 			});
@@ -101,33 +101,56 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
-	/*var sortableHelper = function (e, ui) {
-		ui.children().each(function () {
-			$(this).width($(this).width());
-		});
-		return ui;
-	};
-	//var corresponding;
-	$('.sortable').sortable({
+	$('#sortable').sortable({
+		items: 'li',
+		listType: 'ul',
 		handle: '.draghandle',
-		cursor: 'move',
-		helper: sortableHelper,
-		containment: 'parent',
-		start: function (e, ui) {
-			var height = ui.helper.outerHeight();
-			$(this).find('> tr[data-parent=' + $(ui.item).data('id') + ']').each(function (idx, row) {
-				height += $(row).outerHeight();
+		placeholder: 'ui-state-highlight',
+		update: function () {
+			var p = document.getElementById('sortable');
+			var l = new Array();
+			p.querySelectorAll('li').forEach(function (item) {
+				l.push(item.parentNode.getAttribute('data-parent') + ':' + item.getAttribute('data-id'));
 			});
-			ui.placeholder.height(height);
+
+			var post = {
+				ordering: l
+			};
+
+			fetch(p.getAttribute('data-api'), {
+				method: 'PUT',
+				headers: headers,
+				body: JSON.stringify(post),
+			})
+			.then(function (response) {
+				if (response.ok) {
+					Halcyon.message('success', 'Menu updated');
+					return;
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
+				});
+			})
+			.catch(function (err) {
+				Halcyon.message('danger', err);
+			});
 		},
-		update: function () { //e, ui
-			$(this).find('> tr').each(function (idx, row) {
-				var uniqID = $(row).attr('data-id'),
-					correspondingFixedRow = $('tr[data-parent=' + uniqID + ']');
-				correspondingFixedRow.detach().insertAfter($(this));
-			});
-		}
-	}).disableSelection();*/
+		forcePlaceholderSize: true,
+		cursor: 'move'
+	}).disableSelection();
+
+	document.querySelectorAll('.toggle').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			el.classList.toggle('opened');
+			document.getElementById(el.getAttribute('data-target')).classList.toggle('d-none');
+		});
+	});
 
 	document.querySelectorAll('.choose_type').forEach(function (el) {
 		el.addEventListener('click', function (e) {
