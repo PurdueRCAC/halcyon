@@ -771,7 +771,7 @@ class Article extends Model
 			//$text = preg_replace('/([\w\.\-]+@((\w+\.)*\w{2,}\.\w{2,}))/', "<a target=\"_blank\" href=\"mailto:$1\">$1</a>", $text);
 
 			// Convert template variables
-			if (auth()->user() && auth()->user()->can('manage news'))
+			/*if (auth()->user() && auth()->user()->can('manage news'))
 			{
 				$text = preg_replace("/%%([\w\s]+)%%/", '<span style="color:red">$0</span>', $text);
 			}
@@ -780,7 +780,7 @@ class Article extends Model
 			if (auth()->user() && auth()->user()->can('manage news'))
 			{
 				$text = preg_replace("/%([\w]+)%/", '<span style="color:red">$0</span>', $text);
-			}
+			}*/
 
 			$text = str_replace('<th>', '<th scope="col">', $text);
 			$text = str_replace('align="right"', 'class="text-right"', $text);

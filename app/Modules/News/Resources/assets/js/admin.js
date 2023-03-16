@@ -70,9 +70,9 @@ function customMarkdownParser(text, element) {
 
 		if (vars && typeof (vars[k]) != 'undefined') {
 			text = text.replaceAll(keywords[x], vars[k]);
-		} else {
-			text = text.replaceAll(keywords[x], '<span style="color:red;">' + keywords[x] + '</span>');
-		}
+		} //else {
+			//text = text.replaceAll(keywords[x], '<span style="color:red;">' + keywords[x] + '</span>');
+		//}
 	}
 
 	return text;
