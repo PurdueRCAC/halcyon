@@ -227,6 +227,7 @@ app('pathway')
 								<tr>
 									<th scope="col">{{ trans('knowledge::knowledge.key') }}</th>
 									<th scope="col">{{ trans('knowledge::knowledge.value') }}</th>
+									<th scope="col"></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -295,7 +296,7 @@ app('pathway')
 							<thead>
 								<tr>
 									<th scope="col">{{ trans('knowledge::knowledge.key') }}</th>
-									<th scope="col">{{ trans('knowledge::knowledge.value') }}</th>
+									<th scope="col"></th>
 								</tr>
 							</thead>
 							<tbody>
