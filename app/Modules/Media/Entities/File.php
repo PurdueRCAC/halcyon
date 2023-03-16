@@ -187,7 +187,13 @@ class File extends \SplFileInfo
 			$path = Str::replaceFirst('/public/', '/', $path);
 		}
 		$path = preg_replace('/\/{2,}/', '/', $path);
-		$path = str_replace(' ', '%20', $path);
+		$parts = explode('/', $path);
+		foreach ($parts as $k => $part)
+		{
+			$part = urlencode($part);
+			$parts[$k] = str_replace('+', '%20', $part);
+		}
+		$path = implode('/', $parts);
 		return rtrim(config('filesystems.disks.public.url'), '/') . $path;
 	}
 
@@ -198,8 +204,7 @@ class File extends \SplFileInfo
 	 */
 	public function getPublicPath(): string
 	{
-		$base = config('filesystems.disks.public.url');
-		$path = str_replace($base, '', $this->getUrl());
+		$path = '/' . trim($this->getRelativePath(), '/');
 		$path = preg_replace('/\/{2,}/', '/', $path);
 		return $path;
 	}
