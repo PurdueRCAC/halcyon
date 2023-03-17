@@ -40,11 +40,11 @@ class ContactReports
 	{
 		$content = $event->getBody();
 
-		//$root  = app('request')->root();
 		$regex = '(contact|CRM?)(\s+report)?\s*#?(\d+)';
-		$replc = '<a href="' . route('site.contactreports.show', ['id' => "$3"]) . '">Contact Report #$3</a>';
-
-		$content = preg_replace("/$regex/i", $replc, $content);
+		$content = preg_replace_callback("/$regex/i", function ($results)
+		{
+			return '<a href="' . route('site.contactreports.index', ['id' => $results[3]]) . '">Contact Report #' . $results[3] . '</a>';
+		}, $content);
 
 		$event->setBody($content);
 	}
