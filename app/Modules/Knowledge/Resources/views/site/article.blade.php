@@ -9,7 +9,7 @@ $hasChildren = count($children);
 
 <section class="all-section" id="{{ str_replace('/', '_', $path) }}">
 	@if ($node->page->params->get('show_title', 1))
-		<h3>{{ $node->page->headline }}</h3>
+		<h2 id="{{ $node->id . '-' . $node->page->alias }}">{{ $node->page->headline }}</h2>
 	@endif
 
 	{!! $node->page->body !!}

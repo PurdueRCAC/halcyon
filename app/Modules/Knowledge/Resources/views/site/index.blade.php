@@ -148,7 +148,7 @@
 							@endphp
 							<section id="{{ str_replace('/', '_', $pa) }}">
 								@if ($n->page->params->get('show_title', 1))
-									<h3 id="{{ $n->id . '-' . $n->page->alias }}">{{ $n->page->headline }}</h3>
+									<h2 id="{{ $n->id . '-' . $n->page->alias }}">{{ $n->page->headline }}</h2>
 								@endif
 
 								{!! $n->page->body !!}
