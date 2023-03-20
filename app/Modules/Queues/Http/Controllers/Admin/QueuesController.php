@@ -289,6 +289,7 @@ class QueuesController extends Controller
 			trans('queues::queues.walltime'),
 		);
 
+		$units = array();
 		$queues = array();
 		foreach ($rows as $row)
 		{
@@ -349,35 +350,6 @@ class QueuesController extends Controller
 				$class = trans('queues::queues.owner');
 			}
 
-			$allocation = '';
-			if (!$row->active)
-			{
-				if ($upcoming = $row->getUpcomingLoanOrPurchase())
-				{
-					if ($upcoming->serviceunits > 0)
-					{
-						$allocation = number_format($upcoming->serviceunits) . ' SUs';
-					}
-					else
-					{
-						$allocation = number_format($upcoming->cores) . ' ' . strtolower(trans('queues::queues.cores'));
-					}
-					$allocation .= ' starts ' . $upcoming->datetimestart->diffForHumans();
-				}
-			}
-			else
-			{
-				if ($row->serviceunits > 0)
-				{
-					$allocation = number_format($row->serviceunits) . ' SUs';
-				}
-				else
-				{
-					$allocation  = number_format($row->totalcores) . ' ' . strtolower(trans('queues::queues.cores')) . ', ';
-					$allocation .= number_format($row->totalnodes) . ' ' . strtolower(trans('queues::queues.nodes'));
-				}
-			}
-
 			if ($row->subresourceid)
 			{
 				if ($row->subresource)
@@ -396,6 +368,59 @@ class QueuesController extends Controller
 			else
 			{
 				$resource = trans('global.none');
+			}
+
+			$allocation = '';
+
+			$unit = 'nodes';
+			if (isset($units[$row->subresourceid]))
+			{
+				$unit = $units[$row->subresourceid];
+			}
+			else
+			{
+				if ($row->resource && $facet = $row->resource->getFacet('allocation_unit'))
+				{
+					$unit = $facet->value;
+				}
+
+				$units[$row->subresourceid] = $unit;
+			}
+
+			if (!$row->active)
+			{
+				if ($upcoming = $row->getUpcomingLoanOrPurchase())
+				{
+					if ($upcoming->serviceunits > 0)
+					{
+						$allocation = number_format($upcoming->serviceunits) . ' ' . strtolower(trans('queues::queues.' . $unit));
+					}
+					else
+					{
+						$allocation = number_format($upcoming->cores) . ' ' . strtolower(trans('queues::queues.cores'));
+					}
+					$allocation .= ' starts ' . $upcoming->datetimestart->diffForHumans();
+				}
+			}
+			else
+			{
+				if ($unit == 'sus')
+				{
+					$allocation  = number_format($row->serviceunits) . ' ' . strtolower(trans('queues::queues.' . $unit));
+				}
+				elseif ($unit == 'gpus')
+				{
+					$nodes = ($row->subresource->nodecores ? round($row->totalcores / $row->subresource->nodecores, 1) : 0);
+					$gpus = ($row->serviceunits && $row->serviceunits > 0 ? $row->serviceunits : round($nodes * $row->subresource->nodegpus));
+
+					$allocation  = number_format($row->totalcores) . ' ' . strtolower(trans('queues::queues.cores')) . ', ';
+					$allocation .= number_format($gpus) . ' ' . strtolower(trans('queues::queues.' . $unit));
+				}
+				else
+				{
+					$allocation  = number_format($row->totalcores) . ' ' . strtolower(trans('queues::queues.cores')) . ', ';
+					$allocation .= number_format($row->totalnodes) . ' ' . strtolower(trans('queues::queues.nodes'));
+				}
 			}
 
 			$wtime = '';
