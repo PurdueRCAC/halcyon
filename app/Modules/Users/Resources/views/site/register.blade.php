@@ -9,7 +9,7 @@ app('pathway')
 @endphp
 
 @section('title')
-	{{ trans('user::auth.register') }} | @parent
+	{{ trans('users::auth.register') }} | @parent
 @stop
 
 @section('content')
