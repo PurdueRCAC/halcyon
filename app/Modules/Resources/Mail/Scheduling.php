@@ -4,6 +4,7 @@ namespace App\Modules\Resources\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Headers;
 use Illuminate\Queue\SerializesModels;
 use App\Modules\Resources\Models\Asset;
 
@@ -33,6 +34,13 @@ class Scheduling extends Mailable
 	protected $stopped;
 
 	/**
+	 * Message headers
+	 *
+	 * @var Headers
+	 */
+	protected $headers;
+
+	/**
 	 * Create a new message instance.
 	 *
 	 * @param  string $action
@@ -59,29 +67,10 @@ class Scheduling extends Mailable
 			$this->headers = new Headers(
 				messageId: null,
 				references: [],
-				text: [
-					'X-Target-Object' => $this->group->id,
-					'X-Target-User' => $this->user->id,
-				],
+				text: [],
 			);
 		}
 		return $this->headers;
-	}
-
-	/**
-	 * Get the message envelope.
-	 *
-	 * @return Envelope
-	 */
-	public function envelope(): Envelope
-	{
-		return new Envelope(
-			tags: ['storage', 'storage-expiring'],
-			metadata: [
-				'group_id' => $this->group->id,
-				'user_id' => $this->user->id,
-			],
-		);
 	}
 
 	/**
