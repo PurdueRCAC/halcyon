@@ -2,6 +2,7 @@
 
 namespace App\Modules\Queues\Mail;
 
+use App\Modules\Queues\Mail\Traits\HeadersAndTags;
 use App\Modules\Users\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -9,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 
 class FreeAuthorizedManager extends Mailable
 {
-	use Queueable, SerializesModels;
+	use Queueable, SerializesModels, HeadersAndTags;
 
 	/**
 	 * Group manager
@@ -34,6 +35,10 @@ class FreeAuthorizedManager extends Mailable
 	{
 		$this->user = $user;
 		$this->authorized = $authorized;
+
+		$this->mailTags[] = 'queue-authorized';
+		$this->mailTags[] = 'queue-free';
+		$this->mailTags[] = 'queue-manager';
 	}
 
 	/**

@@ -4,7 +4,6 @@ namespace App\Modules\ContactReports\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Modules\History\Models\Log;
 use App\Modules\ContactReports\Mail\NewReport;
 use App\Modules\ContactReports\Models\Report;
 use App\Modules\Users\Models\User;
@@ -80,6 +79,10 @@ class EmailReportsCommand extends Command
 				$emailed[] = $user->id;
 
 				$message = new NewReport($report);
+				$message->headers()->text([
+					'X-Command' => 'crm:emailreports',
+					'X-Target-User' => $user->id
+				]);
 
 				if ($this->output->isDebug())
 				{
@@ -106,8 +109,6 @@ class EmailReportsCommand extends Command
 				}
 
 				Mail::to($user->email)->send($message);
-
-				$this->log($user->id, $report->id, $user->email, "Emailed contact report #{$report->id}.");
 			}
 
 			if ($debug)
@@ -119,33 +120,5 @@ class EmailReportsCommand extends Command
 			$report->notice = 0;
 			$report->save();
 		}
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   int $targetuserid
-	 * @param   int $targetobjectid
-	 * @param   string  $uri
-	 * @param   mixed   $payload
-	 * @return  null
-	 */
-	protected function log($targetuserid, $targetobjectid, $uri = '', $payload = '')
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $uri,
-			'app'             => 'email',
-			'payload'         => $payload,
-			'classname'       => 'crm:emailreports',
-			'classmethod'     => 'handle',
-			'targetuserid'    => (int)$targetuserid,
-			'targetobjectid'  => (int)$targetobjectid,
-			'objectid'        => (int)$targetobjectid,
-		]);
 	}
 }

@@ -4,7 +4,6 @@ namespace App\Modules\Groups\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Modules\History\Models\Log;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Member;
 use App\Modules\Groups\Mail\OwnerAuthorized;
@@ -109,6 +108,9 @@ class EmailAuthorizedCommand extends Command
 				}
 
 				$message = new OwnerAuthorized($user, $group);
+				$message->headers()->text([
+					'X-Command' => 'groups:emailauthorized',
+				]);
 
 				if ($this->output->isDebug())
 				{
@@ -137,8 +139,6 @@ class EmailAuthorizedCommand extends Command
 				Mail::to($user->email)->send($message);
 
 				$groupuser->update(['notice' => 0]);
-
-				$this->log($user->id, $group->id, $user->email, "Emailed ownerauthorized.");
 			}
 
 			// Email managers
@@ -152,6 +152,9 @@ class EmailAuthorizedCommand extends Command
 				}
 
 				$message = new OwnerAuthorizedManager($user, $group, $people);
+				$message->headers()->text([
+					'X-Command' => 'groups:emailauthorized',
+				]);
 
 				if ($this->output->isDebug())
 				{
@@ -178,36 +181,7 @@ class EmailAuthorizedCommand extends Command
 				}
 
 				Mail::to($user->email)->send($message);
-
-				$this->log($user->id, $group->id, $user->email, "Emailed ownerauthorized to manager.");
 			}
 		}
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   int $targetuserid
-	 * @param   int $targetobjectid
-	 * @param   string  $uri
-	 * @param   mixed   $payload
-	 * @return  null
-	 */
-	protected function log($targetuserid, $targetobjectid, $uri = '', $payload = '')
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $uri,
-			'app'             => 'email',
-			'payload'         => $payload,
-			'classname'       => 'groups:emailauthorized',
-			'classmethod'     => 'handle',
-			'targetuserid'    => $targetuserid,
-			'targetobjectid'  => $targetobjectid,
-		]);
 	}
 }

@@ -6,6 +6,8 @@ use App\Modules\Groups\Models\Group;
 use App\Modules\Users\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Headers;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class OwnerAuthorized extends Mailable
@@ -27,6 +29,13 @@ class OwnerAuthorized extends Mailable
 	protected $group;
 
 	/**
+	 * Message headers
+	 *
+	 * @var Headers
+	 */
+	protected $headers;
+
+	/**
 	 * Create a new message instance.
 	 *
 	 * @param  User $user
@@ -37,6 +46,42 @@ class OwnerAuthorized extends Mailable
 	{
 		$this->user = $user;
 		$this->group = $group;
+	}
+
+	/**
+	 * Get the message headers.
+	 *
+	 * @return Headers
+	 */
+	public function headers(): Headers
+	{
+		if (!$this->headers)
+		{
+			$this->headers = new Headers(
+				messageId: null,
+				references: [],
+				text: [
+					'X-Target-Object' => $this->group->id,
+					'X-Target-User' => $this->user->id,
+				],
+			);
+		}
+		return $this->headers;
+	}
+
+	/**
+	 * Get the message envelope.
+	 *
+	 * @return Envelope
+	 */
+	public function envelope(): Envelope
+	{
+		return new Envelope(
+			tags: ['group'],
+			metadata: [
+				'group_id' => $this->group->id,
+			],
+		);
 	}
 
 	/**

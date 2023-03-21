@@ -2,10 +2,8 @@
 
 namespace App\Modules\Queues\Console;
 
-//use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Modules\History\Models\Log;
 use App\Modules\Queues\Mail\FreeAuthorized;
 use App\Modules\Queues\Mail\FreeAuthorizedManager;
 use App\Modules\Queues\Models\Queue;
@@ -181,6 +179,10 @@ class EmailFreeAuthorizedCommand extends Command
 
 					// Prepare and send actual email
 					$message = new FreeAuthorized($user, $queueusers, $roles[$userid]);
+					$message->headers()->text([
+						'X-Command' => 'queues:emailfreeauthorized',
+						'X-Target-Object' => $groupid
+					]);
 
 					if ($this->output->isDebug())
 					{
@@ -197,11 +199,9 @@ class EmailFreeAuthorizedCommand extends Command
 						}
 					}
 
-					if (!$user->email)
+					if ($user->email)
 					{
 						Mail::to($user->email)->send($message);
-
-						$this->log($user->id, $groupid, $user->email, 'Emailed freeauthorized.');
 					}
 					else
 					{
@@ -248,6 +248,10 @@ class EmailFreeAuthorizedCommand extends Command
 
 					// Prepare and send actual email
 					$message = new FreeAuthorizedManager($manager->user, $data);
+					$message->headers()->text([
+						'X-Command' => 'queues:emailfreeauthorized',
+						'X-Target-Object' => $groupid
+					]);
 
 					if ($this->output->isDebug())
 					{
@@ -274,38 +278,8 @@ class EmailFreeAuthorizedCommand extends Command
 					}
 
 					Mail::to($user->email)->send($message);
-
-					$this->log($user->id, $groupid, $user->email, 'Emailed freeauthorized to manager.');
 				}
 			}
 		}
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   int $targetuserid
-	 * @param   int $targetobjectid
-	 * @param   string  $uri
-	 * @param   mixed   $payload
-	 * @return  null
-	 */
-	protected function log($targetuserid, $targetobjectid, $uri = '', $payload = '')
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $uri,
-			'app'             => 'email',
-			'payload'         => $payload,
-			'classname'       => 'queues:emailfreeauthorized',
-			'classmethod'     => 'handle',
-			'targetuserid'    => (int)$targetuserid,
-			'targetobjectid'  => (int)$targetobjectid,
-			'objectid'        => (int)$targetobjectid,
-		]);
 	}
 }

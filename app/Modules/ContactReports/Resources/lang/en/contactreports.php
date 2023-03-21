@@ -3,6 +3,7 @@ return [
 	'module name' => 'Contact Reports Manager',
 	'module sections' => 'Module sections',
 	'contact reports' => 'Contact Reports',
+	'contact report' => 'Contact Report',
 	'configuration' => 'Configuration',
 	// Admin sub-menu
 	'reports' => 'Reports',
@@ -76,4 +77,5 @@ return [
 		'highlight staff' => 'Highlight users with roles',
 		'highlight staff desc' => 'User role IDs for those to be highlighted differently from other users.',
 	],
+	'survey' => 'Survey',
 ];

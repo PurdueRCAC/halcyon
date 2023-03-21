@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Mail;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
 use App\Modules\Groups\Models\Member;
-use App\Modules\History\Models\Log;
 use App\Modules\Mailer\Models\Message;
 use App\Modules\Mailer\Mail\GenericMessage;
 use App\Halcyon\Http\StatefulRequest;
@@ -349,8 +348,6 @@ class MessagesController extends Controller
 				->send($message);
 
 			$success++;
-
-			$this->log($user, $row);
 		}
 
 		$row->sent_at = Carbon::now();
@@ -411,31 +408,6 @@ class MessagesController extends Controller
 		$emails = array_unique($emails);
 
 		return $emails;
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   User $user
-	 * @param   Message $message
-	 * @return  void
-	 */
-	protected function log(User $user, Message $message)
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $user->email,
-			'app'             => 'email',
-			'objectid'        => (int)$message->id,
-			'payload'         => $message->subject,
-			'classname'       => 'MessagesController',
-			'classmethod'     => 'send',
-			'targetuserid'    => (int)$user->id,
-		]);
 	}
 
 	/**

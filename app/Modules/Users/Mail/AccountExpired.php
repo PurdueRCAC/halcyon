@@ -4,6 +4,8 @@ namespace App\Modules\Users\Mail;
 use App\Modules\Users\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Headers;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class AccountExpired extends Mailable
@@ -18,6 +20,13 @@ class AccountExpired extends Mailable
 	protected $user;
 
 	/**
+	 * Message headers
+	 *
+	 * @var Headers
+	 */
+	protected $headers;
+
+	/**
 	 * Create a new message instance.
 	 *
 	 * @param  User  $user
@@ -29,6 +38,41 @@ class AccountExpired extends Mailable
 	}
 
 	/**
+	 * Get the message headers.
+	 *
+	 * @return Headers
+	 */
+	public function headers(): Headers
+	{
+		if (!$this->headers)
+		{
+			$this->headers = new Headers(
+				messageId: null,
+				references: [],
+				text: [
+					'X-Target-User' => $this->user->id,
+				],
+			);
+		}
+		return $this->headers;
+	}
+
+	/**
+	 * Get the message envelope.
+	 *
+	 * @return Envelope
+	 */
+	public function envelope(): Envelope
+	{
+		return new Envelope(
+			tags: ['user', 'user-expired'],
+			metadata: [
+				'user_id' => $this->user->id,
+			],
+		);
+	}
+
+	/**
 	 * Build the message.
 	 *
 	 * @return $this
@@ -36,7 +80,7 @@ class AccountExpired extends Mailable
 	public function build()
 	{
 		return $this->markdown('users::mail.accountexpired')
-					->subject('Account Expired')
+					->subject(trans('users::users.account expired'))
 					->with([
 						'user' => $this->user,
 					]);

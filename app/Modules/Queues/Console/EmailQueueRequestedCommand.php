@@ -5,7 +5,6 @@ namespace App\Modules\Queues\Console;
 use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Modules\History\Models\Log;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Queues\Mail\QueueRequested;
@@ -139,6 +138,10 @@ class EmailQueueRequestedCommand extends Command
 				{
 					// Prepare and send actual email
 					$message = new QueueRequested($manager->user, $user_activity);
+					$message->headers()->text([
+						'X-Command' => 'queues:emailqueuerequested',
+						'X-Target-Object' => $groupid
+					]);
 
 					if ($this->output->isDebug())
 					{
@@ -165,8 +168,6 @@ class EmailQueueRequestedCommand extends Command
 					}
 
 					Mail::to($manager->user->email)->send($message);
-
-					$this->log($manager->user->id, $manager->user->email, "Emailed queue requested.");
 				}
 
 				if (!$debug)
@@ -182,31 +183,5 @@ class EmailQueueRequestedCommand extends Command
 				}
 			}
 		}
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   int $targetuserid
-	 * @param   int $targetobjectid
-	 * @param   string  $uri
-	 * @param   mixed   $payload
-	 * @return  null
-	 */
-	protected function log($targetuserid, $uri = '', $payload = '')
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $uri,
-			'app'             => 'email',
-			'payload'         => $payload,
-			'classname'       => 'queues:emailqueuerequested',
-			'classmethod'     => 'handle',
-			'targetuserid'    => $targetuserid,
-		]);
 	}
 }

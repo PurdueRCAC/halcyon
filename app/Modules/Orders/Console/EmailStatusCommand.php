@@ -16,7 +16,6 @@ use App\Modules\Orders\Mail\Complete;
 use App\Modules\Orders\Mail\Canceled;
 use App\Modules\Orders\Events\OrderFulfilled;
 use App\Modules\Users\Models\User;
-use App\Modules\History\Models\Log;
 use App\Halcyon\Access\Map;
 
 class EmailStatusCommand extends Command
@@ -150,8 +149,6 @@ class EmailStatusCommand extends Command
 				}
 
 				Mail::to($user->email)->send($message);
-
-				$this->log($user->id, $order->id, $user->email, "Emailed new order #{$order->id}.");
 			}
 
 			if ($debug)
@@ -236,8 +233,6 @@ class EmailStatusCommand extends Command
 				}
 
 				Mail::to($user->email)->send($message);
-
-				$this->log($user->id, $order->id, $user->email, "Emailed pending payment info order #{$order->id}.");
 			}
 
 			if ($debug)
@@ -325,8 +320,6 @@ class EmailStatusCommand extends Command
 				}
 
 				Mail::to($user->email)->send($message);
-
-				$this->log($user->id, $order->id, $user->email, "Emailed pending payment approval order #{$order->id}.");
 			}
 
 			// Send denied notice if needed
@@ -374,8 +367,6 @@ class EmailStatusCommand extends Command
 					}
 
 					Mail::to($user->email)->send($message);
-
-					$this->log($user->id, $order->id, $user->email, "Emailed payment denied for order #{$order->id}.");
 				}
 			}
 
@@ -464,8 +455,6 @@ class EmailStatusCommand extends Command
 				}
 
 				Mail::to($user->email)->send($message);
-
-				$this->log($user->id, $order->id, $user->email, "Emailed pending fulfillment order #{$order->id}.");
 			}
 
 			$ticket = false;
@@ -582,8 +571,6 @@ class EmailStatusCommand extends Command
 				}
 
 				Mail::to($user->email)->send($message);
-
-				$this->log($user->id, $order->id, $user->email, "Emailed pending collection order #{$order->id}.");
 			}
 
 			if ($debug)
@@ -663,8 +650,6 @@ class EmailStatusCommand extends Command
 				}
 
 				Mail::to($user->email)->send($message);
-
-				$this->log($user->id, $order->id, $user->email, "Emailed completed order #{$order->id}.");
 			}
 
 			if ($debug)
@@ -745,8 +730,6 @@ class EmailStatusCommand extends Command
 				}
 
 				Mail::to($user->email)->send($message);
-
-				$this->log($user->id, $order->id, $user->email, "Emailed canceled order #{$order->id}.");
 			}
 
 			if ($debug)
@@ -757,33 +740,5 @@ class EmailStatusCommand extends Command
 			// Change states
 			$order->update(['notice' => self::NO_NOTICE]);
 		}
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   int $targetuserid
-	 * @param   int $targetobjectid
-	 * @param   string  $uri
-	 * @param   string  $payload
-	 * @return  void
-	 */
-	protected function log($targetuserid, $targetobjectid = 0, $uri = '', $payload = '')
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $uri,
-			'app'             => 'email',
-			'payload'         => $payload,
-			'classname'       => 'orders:emailstatus',
-			'classmethod'     => 'handle',
-			'targetuserid'    => (int)$targetuserid,
-			'targetobjectid'  => (int)$targetobjectid,
-			'objectid'        => (int)$targetobjectid,
-		]);
 	}
 }

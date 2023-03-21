@@ -1225,22 +1225,6 @@ class ArticlesController extends Controller
 		{
 			Mail::to($emails)->send(new Message($row, $name));
 
-			foreach ($emails as $email)
-			{
-				Log::create([
-					'ip'              => request()->ip(),
-					'userid'          => (auth()->user() ? auth()->user()->id : 0),
-					'status'          => 200,
-					'transportmethod' => 'POST',
-					'servername'      => request()->getHttpHost(),
-					'uri'             => $email,
-					'app'             => 'email',
-					'payload'         => 'Emailed article #' . $row->id,
-					'classname'       => 'NewsArticlesController',
-					'classmethod'     => 'email',
-				]);
-			}
-
 			$row->update([
 				'datetimemailed' => Carbon::now()->toDateTimeString(),
 				'lastmailuserid' => (auth()->user() ? auth()->user()->id : 0)

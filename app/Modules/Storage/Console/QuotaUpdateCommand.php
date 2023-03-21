@@ -6,7 +6,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use App\Modules\History\Models\Log;
 use App\Modules\Storage\Models\Directory;
 use App\Modules\Storage\Models\Loan;
 use App\Modules\Storage\Models\Purchase;
@@ -189,6 +188,9 @@ class QuotaUpdateCommand extends Command
 				}
 
 				$message = new Expiring($expiring, $user, $group);
+				$message->headers()->text([
+					'X-Command' => 'storage:quotaupdate'
+				]);
 
 				if ($this->output->isDebug())
 				{
@@ -206,8 +208,6 @@ class QuotaUpdateCommand extends Command
 				}
 
 				Mail::to($user->email)->send($message);
-
-				$this->log($user->id, $user->email, 'Emailed expiring storage loans/purchases for group ' . $group->name);
 			}
 		}
 	}
@@ -373,32 +373,5 @@ class QuotaUpdateCommand extends Command
 				$dir->addMessageToQueue($typeid);
 			}
 		}
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   int $targetuserid
-	 * @param   int $targetobjectid
-	 * @param   string  $uri
-	 * @param   mixed   $payload
-	 * @return  null
-	 */
-	protected function log($targetuserid, $targetobjectid, $uri = '', $payload = '')
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $uri,
-			'app'             => 'email',
-			'payload'         => $payload,
-			'classname'       => 'storage:quotaupdate',
-			'classmethod'     => 'handle',
-			'targetuserid'    => $targetuserid,
-			'targetobjectid'  => $targetobjectid,
-		]);
 	}
 }

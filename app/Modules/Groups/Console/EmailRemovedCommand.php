@@ -127,6 +127,9 @@ class EmailRemovedCommand extends Command
 				}
 
 				$message = new OwnerRemoved($user, $group);
+				$message->headers()->text([
+					'X-Command' => 'groups:emailremoved',
+				]);
 
 				if ($this->output->isDebug())
 				{
@@ -155,8 +158,6 @@ class EmailRemovedCommand extends Command
 				Mail::to($user->email)->send($message);
 
 				$groupuser->update(['notice' => 0]);
-
-				$this->log($user->id, $group->id, $user->email, "Emailed ownerremoved.");
 			}
 
 			// Email managers
@@ -170,6 +171,9 @@ class EmailRemovedCommand extends Command
 				}
 
 				$message = new OwnerRemovedManager($user, $group, $people);
+				$message->headers()->text([
+					'X-Command' => 'groups:emailremoved',
+				]);
 
 				if ($this->output->isDebug())
 				{
@@ -196,36 +200,7 @@ class EmailRemovedCommand extends Command
 				}
 
 				Mail::to($user->email)->send($message);
-
-				$this->log($user->id, $group->id, $user->email, "Emailed ownerremoved to manager.");
 			}
 		}
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   int $targetuserid
-	 * @param   int $targetobjectid
-	 * @param   string  $uri
-	 * @param   mixed   $payload
-	 * @return  null
-	 */
-	protected function log($targetuserid, $targetobjectid, $uri = '', $payload = '')
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $uri,
-			'app'             => 'email',
-			'payload'         => $payload,
-			'classname'       => 'groups:emailremoved',
-			'classmethod'     => 'handle',
-			'targetuserid'    => $targetuserid,
-			'targetobjectid'  => $targetobjectid,
-		]);
 	}
 }

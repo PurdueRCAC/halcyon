@@ -5,7 +5,6 @@ namespace App\Modules\Queues\Console;
 use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Modules\History\Models\Log;
 use App\Modules\Queues\Mail\QueueRemoved;
 use App\Modules\Queues\Mail\QueueRemovedManager;
 use App\Modules\Queues\Models\Queue;
@@ -233,6 +232,10 @@ class EmailQueueRemovedCommand extends Command
 
 					// Prepare and send actual email
 					$message = new QueueRemoved($user, $removing, $keeping, $removals[$userid]);
+					$message->headers()->text([
+						'X-Command' => 'queues:emailqueueremoved',
+						'X-Target-Object' => $groupid
+					]);
 
 					if ($this->output->isDebug())
 					{
@@ -252,8 +255,6 @@ class EmailQueueRemovedCommand extends Command
 					if ($user->email)
 					{
 						Mail::to($user->email)->send($message);
-
-						$this->log($user->id, $user->email, "Emailed queueremoved.");
 					}
 					else
 					{
@@ -280,6 +281,10 @@ class EmailQueueRemovedCommand extends Command
 				{
 					// Prepare and send actual email
 					$message = new QueueRemovedManager($manager->user, $data);
+					$message->headers()->text([
+						'X-Command' => 'queues:emailqueueremoved',
+						'X-Target-Object' => $groupid
+					]);
 
 					if ($this->output->isDebug())
 					{
@@ -306,35 +311,8 @@ class EmailQueueRemovedCommand extends Command
 					}
 
 					Mail::to($manager->user->email)->send($message);
-
-					$this->log($manager->user->id, $manager->user->email, "Emailed queueremoved to manager.");
 				}
 			}
 		}
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   int $targetuserid
-	 * @param   string  $uri
-	 * @param   mixed   $payload
-	 * @return  null
-	 */
-	protected function log($targetuserid, $uri = '', $payload = '')
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $uri,
-			'app'             => 'email',
-			'payload'         => $payload,
-			'classname'       => 'queues:emailqueueremoved',
-			'classmethod'     => 'handle',
-			'targetuserid'    => $targetuserid,
-		]);
 	}
 }

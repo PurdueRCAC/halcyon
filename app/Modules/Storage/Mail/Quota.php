@@ -4,6 +4,8 @@ namespace App\Modules\Storage\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Headers;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use App\Modules\Storage\Models\Notification;
 use App\Modules\Storage\Models\Usage;
@@ -42,6 +44,13 @@ class Quota extends Mailable
 	protected $latest;
 
 	/**
+	 * Message headers
+	 *
+	 * @var Headers
+	 */
+	protected $headers;
+
+	/**
 	 * Create a new message instance.
 	 *
 	 * @return void
@@ -52,6 +61,43 @@ class Quota extends Mailable
 		$this->user = $user;
 		$this->notification = $notification;
 		$this->latest = $latest;
+	}
+
+	/**
+	 * Get the message headers.
+	 *
+	 * @return Headers
+	 */
+	public function headers(): Headers
+	{
+		if (!$this->headers)
+		{
+			$this->headers = new Headers(
+				messageId: null,
+				references: [],
+				text: [
+					'X-Target-Object' => $this->notification->id,
+					'X-Target-User' => $this->user->id,
+				],
+			);
+		}
+		return $this->headers;
+	}
+
+	/**
+	 * Get the message envelope.
+	 *
+	 * @return Envelope
+	 */
+	public function envelope(): Envelope
+	{
+		return new Envelope(
+			tags: ['storage', 'storage-quota'],
+			metadata: [
+				'user_id' => $this->user->id,
+				'notification_id' => $this->notification->id,
+			],
+		);
 	}
 
 	/**

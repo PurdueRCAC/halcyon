@@ -4,7 +4,6 @@ namespace App\Modules\Queues\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Modules\History\Models\Log;
 use App\Modules\Queues\Mail\FreeRemoved;
 use App\Modules\Queues\Mail\FreeRemovedManager;
 use App\Modules\Queues\Models\Queue;
@@ -215,6 +214,10 @@ class EmailFreeRemovedCommand extends Command
 
 					// Prepare and send actual email
 					$message = new FreeRemoved($user, $removing, $keeping, $removals[$userid]);
+					$message->headers()->text([
+						'X-Command' => 'queues:emailfreeremoved',
+						'X-Target-Object' => $groupid
+					]);
 
 					if ($this->output->isDebug())
 					{
@@ -281,6 +284,10 @@ class EmailFreeRemovedCommand extends Command
 				{
 					// Prepare and send actual email
 					$message = new FreeRemovedManager($manager->user, $data);
+					$message->headers()->text([
+						'X-Command' => 'queues:emailfreeremoved',
+						'X-Target-Object' => $groupid
+					]);
 
 					if ($this->output->isDebug())
 					{
@@ -307,36 +314,8 @@ class EmailFreeRemovedCommand extends Command
 					}
 
 					Mail::to($manager->user->email)->send($message);
-
-					$this->log($manager->user->id, $manager->user->email, "Emailed freeremoved to manager.");
 				}
 			}
 		}
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   int $targetuserid
-	 * @param   int $targetobjectid
-	 * @param   string  $uri
-	 * @param   mixed   $payload
-	 * @return  null
-	 */
-	protected function log($targetuserid, $uri = '', $payload = '')
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $uri,
-			'app'             => 'email',
-			'payload'         => $payload,
-			'classname'       => 'queues:emailfreeremoved',
-			'classmethod'     => 'handle',
-			'targetuserid'    => $targetuserid,
-		]);
 	}
 }

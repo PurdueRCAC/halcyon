@@ -4,10 +4,11 @@ namespace App\Modules\News\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Headers;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Association;
-//use App\Modules\Users\Models\User;
 
 class Cancelled extends Mailable
 {
@@ -28,6 +29,13 @@ class Cancelled extends Mailable
 	protected $association;
 
 	/**
+	 * Message headers
+	 *
+	 * @var Headers
+	 */
+	protected $headers;
+
+	/**
 	 * Create a new message instance.
 	 *
 	 * @param  Article  $article
@@ -38,6 +46,42 @@ class Cancelled extends Mailable
 	{
 		$this->article = $association->article;
 		$this->association = $association;
+	}
+
+	/**
+	 * Get the message headers.
+	 *
+	 * @return Headers
+	 */
+	public function headers(): Headers
+	{
+		if (!$this->headers)
+		{
+			$this->headers = new Headers(
+				messageId: null,
+				references: [],
+				text: [
+					'X-Target-Object' => $this->association->id,
+					'X-Object' => $this->article->id,
+				],
+			);
+		}
+		return $this->headers;
+	}
+
+	/**
+	 * Get the message envelope.
+	 *
+	 * @return Envelope
+	 */
+	public function envelope(): Envelope
+	{
+		return new Envelope(
+			tags: ['news', 'news-reservation-canceled'],
+			metadata: [
+				'news_id' => $this->article->id,
+			],
+		);
 	}
 
 	/**

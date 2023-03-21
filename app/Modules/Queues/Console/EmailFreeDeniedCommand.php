@@ -5,7 +5,6 @@ namespace App\Modules\Queues\Console;
 use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Modules\History\Models\Log;
 use App\Modules\Queues\Mail\FreeDenied;
 use App\Modules\Queues\Mail\FreeDeniedManager;
 use App\Modules\Queues\Models\Queue;
@@ -139,6 +138,10 @@ class EmailFreeDeniedCommand extends Command
 					);
 
 					$message = new FreeDenied($user, $queueusers);
+					$message->headers()->text([
+						'X-Command' => 'queues:emailfreedenied',
+						'X-Target-Object' => $groupid
+					]);
 
 					if ($this->output->isDebug())
 					{
@@ -158,8 +161,6 @@ class EmailFreeDeniedCommand extends Command
 					if ($user->email)
 					{
 						Mail::to($user->email)->send($message);
-
-						$this->log($user->id, $groupid, $user->email, 'Emailed freedenied.');
 					}
 					else
 					{
@@ -192,6 +193,10 @@ class EmailFreeDeniedCommand extends Command
 
 					// Prepare and send actual email
 					$message = new FreeDeniedManager($user, $data);
+					$message->headers()->text([
+						'X-Command' => 'queues:emailfreedenied',
+						'X-Target-Object' => $groupid
+					]);
 
 					if ($this->output->isDebug())
 					{
@@ -218,38 +223,8 @@ class EmailFreeDeniedCommand extends Command
 					}
 
 					Mail::to($user->email)->send($message);
-
-					$this->log($user->id, $groupid, $user->email, 'Emailed freedenied to manager.');
 				}
 			}
 		}
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   int $targetuserid
-	 * @param   int $targetobjectid
-	 * @param   string  $uri
-	 * @param   mixed   $payload
-	 * @return  null
-	 */
-	protected function log($targetuserid, $targetobjectid, $uri = '', $payload = '')
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $uri,
-			'app'             => 'email',
-			'payload'         => $payload,
-			'classname'       => 'queues:emailfreedenied',
-			'classmethod'     => 'handle',
-			'targetuserid'    => (int)$targetuserid,
-			'targetobjectid'  => (int)$targetobjectid,
-			'objectid'        => (int)$targetobjectid,
-		]);
 	}
 }

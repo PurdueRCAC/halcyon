@@ -70,8 +70,6 @@ class EmailSchedulingCommand extends Command
 					$this->info("Emailed stopped scheduling to {$email}.");
 				}
 
-				$this->log($email, "Emailed stopped scheduling.");
-
 				foreach ($stopped as $subresource)
 				{
 					$subresource->update(['notice' => 3]);
@@ -102,6 +100,9 @@ class EmailSchedulingCommand extends Command
 		if (count($started))
 		{
 			$message = new Scheduling('started', $started, $stopped);
+			$message->headers()->text([
+				'X-Command' => 'resources:emailscheduling',
+			]);
 
 			if ($this->output->isDebug())
 			{
@@ -120,8 +121,6 @@ class EmailSchedulingCommand extends Command
 
 			Mail::to($email)->send($message);
 
-			$this->log($email, 'Emailed started scheduling.');
-
 			foreach ($started as $subresource)
 			{
 				$subresource->update(['notice' => 0]);
@@ -131,28 +130,5 @@ class EmailSchedulingCommand extends Command
 		{
 			$this->info('No newly started queues found.');
 		}
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   string  $uri
-	 * @param   mixed   $payload
-	 * @return  void
-	 */
-	protected function log($uri = '', $payload = ''): void
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $uri,
-			'app'             => 'email',
-			'payload'         => $payload,
-			'classname'       => 'resources:emailscheduling',
-			'classmethod'     => 'handle',
-		]);
 	}
 }

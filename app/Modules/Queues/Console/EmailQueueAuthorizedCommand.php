@@ -4,7 +4,6 @@ namespace App\Modules\Queues\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Modules\History\Models\Log;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Queues\Mail\QueueAuthorized;
@@ -184,6 +183,10 @@ class EmailQueueAuthorizedCommand extends Command
 
 					// Prepare and send actual email
 					$message = new QueueAuthorized($user, $queueusers, $roles[$userid]);
+					$message->headers()->text([
+						'X-Command' => 'queues:emailqueueauthorized',
+						'X-Target-Object' => $groupid
+					]);
 
 					if ($this->output->isDebug())
 					{
@@ -203,8 +206,6 @@ class EmailQueueAuthorizedCommand extends Command
 					if ($user->email)
 					{
 						Mail::to($user->email)->send($message);
-
-						$this->log($user->id, $user->email, "Emailed queue authorized.");
 					}
 					else
 					{
@@ -241,6 +242,10 @@ class EmailQueueAuthorizedCommand extends Command
 				{
 					// Prepare and send actual email
 					$message = new QueueAuthorizedManager($manager->user, $data);
+					$message->headers()->text([
+						'X-Command' => 'queues:emailqueueauthorized',
+						'X-Target-Object' => $groupid
+					]);
 
 					if ($this->output->isDebug())
 					{
@@ -267,36 +272,8 @@ class EmailQueueAuthorizedCommand extends Command
 					}
 
 					Mail::to($manager->user->email)->send($message);
-
-					$this->log($manager->user->id, $manager->user->email, "Emailed queue authorized to manager.");
 				}
 			}
 		}
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   int $targetuserid
-	 * @param   int $targetobjectid
-	 * @param   string  $uri
-	 * @param   mixed   $payload
-	 * @return  null
-	 */
-	protected function log($targetuserid, $uri = '', $payload = '')
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $uri,
-			'app'             => 'email',
-			'payload'         => $payload,
-			'classname'       => 'queues:emailqueueauthorized',
-			'classmethod'     => 'handle',
-			'targetuserid'    => $targetuserid,
-		]);
 	}
 }

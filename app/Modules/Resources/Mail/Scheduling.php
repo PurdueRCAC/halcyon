@@ -48,6 +48,43 @@ class Scheduling extends Mailable
 	}
 
 	/**
+	 * Get the message headers.
+	 *
+	 * @return Headers
+	 */
+	public function headers(): Headers
+	{
+		if (!$this->headers)
+		{
+			$this->headers = new Headers(
+				messageId: null,
+				references: [],
+				text: [
+					'X-Target-Object' => $this->group->id,
+					'X-Target-User' => $this->user->id,
+				],
+			);
+		}
+		return $this->headers;
+	}
+
+	/**
+	 * Get the message envelope.
+	 *
+	 * @return Envelope
+	 */
+	public function envelope(): Envelope
+	{
+		return new Envelope(
+			tags: ['storage', 'storage-expiring'],
+			metadata: [
+				'group_id' => $this->group->id,
+				'user_id' => $this->user->id,
+			],
+		);
+	}
+
+	/**
 	 * Build the message.
 	 *
 	 * @return $this

@@ -6,7 +6,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
-use App\Modules\History\Models\Log;
 use App\Modules\Storage\Models\Notification;
 use App\Modules\Storage\Models\Directory;
 use App\Modules\Storage\Models\Usage;
@@ -214,6 +213,9 @@ class EmailQuotaCommand extends Command
 						$total++;
 
 						$message = new Quota('exceed', $user, $not, $last);
+						$message->headers()->text([
+							'X-Command' => 'storage:emailquota'
+						]);
 
 						if ($this->output->isDebug())
 						{
@@ -231,8 +233,6 @@ class EmailQuotaCommand extends Command
 						}
 
 						Mail::to($user->email)->send($message);
-
-						$this->log($user->id, $user->email, 'Emailed exceed quota.');
 					}
 
 					// Attempt to prevent weird situations of resetting report date.
@@ -256,6 +256,9 @@ class EmailQuotaCommand extends Command
 					if ($not->enabled)
 					{
 						/*$message = new Quota('below', $user, $not, $last);
+						$message->headers()->text([
+							'X-Command' => 'storage:emailquota'
+						]);
 
 						if ($debug)
 						{
@@ -264,9 +267,7 @@ class EmailQuotaCommand extends Command
 							continue;
 						}
 
-						Mail::to($user->email)->send($message);
-						
-						$this->log($user->id, $user->email, 'Emailed below quota.');*/
+						Mail::to($user->email)->send($message);*/
 					}
 
 					// Attempt to prevent weird situations of resetting report date.
@@ -310,6 +311,9 @@ class EmailQuotaCommand extends Command
 							$total++;
 
 							$message = new Quota('report', $user, $not, $last);
+							$message->headers()->text([
+								'X-Command' => 'storage:emailquota'
+							]);
 
 							if ($this->output->isDebug())
 							{
@@ -327,8 +331,6 @@ class EmailQuotaCommand extends Command
 							}
 
 							Mail::to($user->email)->send($message);
-
-							$this->log($user->id, $user->email, 'Emailed report quota, next report:' . $not->nextnotify);
 						}
 
 						unset($not->status);
@@ -362,31 +364,5 @@ class EmailQuotaCommand extends Command
 				$this->info('No reports to send at this time.');
 			}
 		}
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   int $targetuserid
-	 * @param   int $targetobjectid
-	 * @param   string  $uri
-	 * @param   mixed   $payload
-	 * @return  null
-	 */
-	protected function log($targetuserid, $uri = '', $payload = '')
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $uri,
-			'app'             => 'email',
-			'payload'         => $payload,
-			'classname'       => 'storage:emailquota',
-			'classmethod'     => 'handle',
-			'targetuserid'    => $targetuserid,
-		]);
 	}
 }

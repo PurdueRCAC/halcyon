@@ -4,7 +4,6 @@ namespace App\Modules\ContactReports\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Modules\History\Models\Log;
 use App\Modules\ContactReports\Models\Comment;
 use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Mail\NewComment;
@@ -95,6 +94,10 @@ class EmailCommentsCommand extends Command
 
 					// Prepare and send actual email
 					$message = new NewComment($comment);
+					$message->headers()->text([
+						'X-Command' => 'crm:emailcomments',
+						'X-Target-User' => $user->id
+					]);
 
 					if ($this->output->isDebug())
 					{
@@ -112,8 +115,6 @@ class EmailCommentsCommand extends Command
 					}
 
 					Mail::to($user->email)->send($message);
-
-					$this->log($user->id, $comment->id, $user->email, "Emailed comment #{$comment->id}.");
 				}
 			}
 
@@ -129,33 +130,5 @@ class EmailCommentsCommand extends Command
 				$comment->save();
 			}
 		}
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   int $targetuserid
-	 * @param   int $targetobjectid
-	 * @param   string  $uri
-	 * @param   mixed   $payload
-	 * @return  null
-	 */
-	protected function log($targetuserid, $targetobjectid, $uri = '', $payload = '')
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $uri,
-			'app'             => 'email',
-			'payload'         => $payload,
-			'classname'       => 'crm:emailcomments',
-			'classmethod'     => 'handle',
-			'targetuserid'    => (int)$targetuserid,
-			'targetobjectid'  => (int)$targetobjectid,
-			'objectid'        => (int)$targetobjectid,
-		]);
 	}
 }

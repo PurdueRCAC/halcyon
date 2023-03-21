@@ -5,6 +5,7 @@ use App\Modules\Users\Models\User;
 use App\Modules\Mailer\Models\Message;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Headers;
 use Illuminate\Queue\SerializesModels;
 
 class GenericMessage extends Mailable
@@ -45,6 +46,23 @@ class GenericMessage extends Mailable
 		$this->message = $message;
 		$this->user = $user;
 		$this->frominfo = (array)$from;
+	}
+
+	/**
+	 * Get the message headers.
+	 *
+	 * @return Headers
+	 */
+	public function headers(): Headers
+	{
+		return new Headers(
+			messageId: null,
+			references: [],
+			text: [
+				'X-Target-Object' => $this->message->id,
+				'X-Target-User' => $this->user->id,
+			],
+		);
 	}
 
 	/**

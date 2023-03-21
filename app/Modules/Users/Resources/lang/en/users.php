@@ -124,4 +124,6 @@ return [
 		'warning' => 'This action cannot be undone. This will permanently delete the account and remove all associations.',
 	],
 	'account suspended' => 'This account has been suspended.',
+	'welcome' => 'Welcome!',
+	'account expired' => 'Account Expired',
 ];

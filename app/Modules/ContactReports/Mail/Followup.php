@@ -6,6 +6,7 @@ use App\Modules\ContactReports\Models\Type;
 use App\Modules\ContactReports\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Headers;
 use Illuminate\Queue\SerializesModels;
 
 class Followup extends Mailable
@@ -27,6 +28,13 @@ class Followup extends Mailable
 	protected $user;
 
 	/**
+	 * Message headers
+	 *
+	 * @var Headers
+	 */
+	protected $headers;
+
+	/**
 	 * Create a new message instance.
 	 *
 	 * @param  Type $type
@@ -40,6 +48,26 @@ class Followup extends Mailable
 	}
 
 	/**
+	 * Get the message headers.
+	 *
+	 * @return Headers
+	 */
+	public function headers(): Headers
+	{
+		if (!$this->headers)
+		{
+			$this->headers = new Headers(
+				messageId: null,
+				references: [],
+				text: [
+					'X-Target-Object' => $this->type->id,
+				],
+			);
+		}
+		return $this->headers;
+	}
+
+	/**
 	 * Build the message.
 	 *
 	 * @return $this
@@ -47,7 +75,7 @@ class Followup extends Mailable
 	public function build()
 	{
 		return $this->markdown('contactreports::mail.followup')
-					->subject('Survey')
+					->subject(trans('contactreports::contactreports.survey'))
 					->with([
 						'type' => $this->type,
 						'user' => $this->user,

@@ -2,6 +2,7 @@
 
 namespace App\Modules\Queues\Mail;
 
+use App\Modules\Queues\Mail\Traits\HeadersAndTags;
 use App\Modules\Users\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -9,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 
 class QueueDenied extends Mailable
 {
-	use Queueable, SerializesModels;
+	use Queueable, SerializesModels, HeadersAndTags;
 
 	/**
 	 * The user
@@ -34,6 +35,8 @@ class QueueDenied extends Mailable
 	{
 		$this->user = $user;
 		$this->queueusers = $queueusers;
+
+		$this->mailTags[] = 'queue-denied';
 	}
 
 	/**

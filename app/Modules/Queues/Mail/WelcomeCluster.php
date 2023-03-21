@@ -2,6 +2,7 @@
 
 namespace App\Modules\Queues\Mail;
 
+use App\Modules\Queues\Mail\Traits\HeadersAndTags;
 use App\Modules\Users\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -10,7 +11,7 @@ use App\Modules\Queues\Events\WelcomeClusterBuild;
 
 class WelcomeCluster extends Mailable
 {
-	use Queueable, SerializesModels;
+	use Queueable, SerializesModels, HeadersAndTags;
 
 	/**
 	 * The Queue
@@ -35,6 +36,8 @@ class WelcomeCluster extends Mailable
 	{
 		$this->user = $user;
 		$this->activity = $activity;
+
+		$this->mailTags[] = 'queue-welcome-cluster';
 	}
 
 	/**

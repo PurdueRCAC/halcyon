@@ -4,7 +4,6 @@ namespace App\Modules\ContactReports\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Modules\History\Models\Log;
 use App\Modules\ContactReports\Mail\Followup;
 use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\Type;
@@ -149,6 +148,10 @@ class EmailFollowupsCommand extends Command
 				$emailed[] = $user->id;
 
 				$message = new Followup($type, $u);
+				$message->headers()->text([
+					'X-Command' => 'crm:emailfollowups',
+					'X-Target-User' => $user->id
+				]);
 
 				if ($this->output->isDebug())
 				{
@@ -176,8 +179,6 @@ class EmailFollowupsCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				$this->log($user->id, $type->id, $user->email, "Emailed {$type->name} followup.");
-
 				// Update the record
 				$u->update(['datetimelastnotify' => $now->toDateTimeString()]);
 
@@ -189,33 +190,5 @@ class EmailFollowupsCommand extends Command
 		{
 			$this->comment('No followups sent.');
 		}
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   int $targetuserid
-	 * @param   int $targetobjectid
-	 * @param   string  $uri
-	 * @param   mixed   $payload
-	 * @return  null
-	 */
-	protected function log($targetuserid, $targetobjectid, $uri = '', $payload = '')
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $uri,
-			'app'             => 'email',
-			'payload'         => $payload,
-			'classname'       => 'crm:emailfollowups',
-			'classmethod'     => 'handle',
-			'targetuserid'    => (int)$targetuserid,
-			'targetobjectid'  => (int)$targetobjectid,
-			'objectid'        => (int)$targetobjectid,
-		]);
 	}
 }

@@ -4,7 +4,6 @@ namespace App\Modules\Queues\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Modules\History\Models\Log;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User;
 use App\Modules\Queues\Models\GroupUser;
@@ -158,6 +157,9 @@ class EmailWelcomeFreeCommand extends Command
 
 			// Prepare and send actual email
 			$message = new WelcomeFree($u, $activity);
+			$message->headers()->text([
+				'X-Command' => 'queues:emailwelcomefree',
+			]);
 
 			if ($this->output->isDebug())
 			{
@@ -177,8 +179,6 @@ class EmailWelcomeFreeCommand extends Command
 			if ($u->email)
 			{
 				Mail::to($u->email)->send($message);
-
-				$this->log($u->id, $u->email, "Emailed welcome (free).");
 			}
 			else
 			{
@@ -193,31 +193,5 @@ class EmailWelcomeFreeCommand extends Command
 				$userqueue->update(['notice' => 0]);
 			}
 		}
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   int $targetuserid
-	 * @param   int $targetobjectid
-	 * @param   string  $uri
-	 * @param   mixed   $payload
-	 * @return  null
-	 */
-	protected function log($targetuserid, $uri = '', $payload = '')
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $uri,
-			'app'             => 'email',
-			'payload'         => $payload,
-			'classname'       => 'queues:emailwelcomefree',
-			'classmethod'     => 'handle',
-			'targetuserid'    => $targetuserid,
-		]);
 	}
 }

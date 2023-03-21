@@ -3,6 +3,7 @@
 namespace App\Modules\Orders\Mail;
 
 use App\Modules\Orders\Models\Order;
+use App\Modules\Orders\Mail\Traits\HeadersAndTags;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -10,7 +11,7 @@ use App\Modules\Users\Models\User;
 
 class PendingApproval extends Mailable
 {
-	use Queueable, SerializesModels;
+	use Queueable, SerializesModels, HeadersAndTags;
 
 	/**
 	 * The order instance.
@@ -27,6 +28,14 @@ class PendingApproval extends Mailable
 	protected $user;
 
 	/**
+	 * @inheritdoc
+	 */
+	/*protected $mailTags = [
+		'order',
+		'order-pending-approval',
+	];*/
+
+	/**
 	 * Create a new message instance.
 	 *
 	 * @param  Order $order
@@ -37,6 +46,8 @@ class PendingApproval extends Mailable
 	{
 		$this->order = $order;
 		$this->user = $user;
+
+		$this->mailTags[] = 'order-pending-approval';
 	}
 
 	/**

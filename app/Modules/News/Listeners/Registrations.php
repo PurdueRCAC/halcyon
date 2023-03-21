@@ -45,10 +45,13 @@ class Registrations
 		}
 
 		$message = new Registered($association);
+		$message->headers()->text([
+			'X-Command' => 'listener:reservations',
+			'X-Target-User' => $user->id,
+			'X-Target-Object' => $association->id,
+		]);
 
 		Mail::to($user->email)->send($message);
-
-		$this->log($user->id, $association->id, $user->email, 'Emailed event reservation.');
 	}
 
 	/**
@@ -69,37 +72,12 @@ class Registrations
 		}
 
 		$message = new Cancelled($association);
+		$message->headers()->text([
+			'X-Command' => 'listener:reservations',
+			'X-Target-User' => $user->id,
+			'X-Target-Object' => $association->id,
+		]);
 
 		Mail::to($user->email)->send($message);
-
-		$this->log($user->id, $association->id, $user->email, 'Emailed event reservation cancellation.');
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   int $targetuserid
-	 * @param   int $targetobjectid
-	 * @param   string  $uri
-	 * @param   string  $payload
-	 * @return  void
-	 */
-	protected function log(int $targetuserid, int $targetobjectid, $uri = '', $payload = ''): void
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $uri,
-			'app'             => 'email',
-			'payload'         => $payload,
-			'classname'       => 'listener:reservations',
-			'classmethod'     => 'handle',
-			'targetuserid'    => (int)$targetuserid,
-			'targetobjectid'  => (int)$targetobjectid,
-			'objectid'        => (int)$targetobjectid,
-		]);
 	}
 }

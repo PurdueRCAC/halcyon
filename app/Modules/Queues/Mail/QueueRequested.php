@@ -2,6 +2,7 @@
 
 namespace App\Modules\Queues\Mail;
 
+use App\Modules\Queues\Mail\Traits\HeadersAndTags;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -11,7 +12,7 @@ use App\Modules\Users\Models\User;
 
 class QueueRequested extends Mailable
 {
-	use Queueable, SerializesModels;
+	use Queueable, SerializesModels, HeadersAndTags;
 
 	/**
 	 * The user
@@ -36,6 +37,8 @@ class QueueRequested extends Mailable
 	{
 		$this->user = $user;
 		$this->userrequests = $userrequests;
+
+		$this->mailTags[] = 'queue-requested';
 	}
 
 	/**

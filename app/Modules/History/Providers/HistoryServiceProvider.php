@@ -3,7 +3,7 @@
 namespace App\Modules\History\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Modules\History\Listeners\LogSentMessage;
+use App\Modules\History\Listeners\LogSendingMessage;
 use App\Modules\History\Listeners\LogCommand;
 use App\Modules\History\Models\Log;
 use App\Modules\History\LogProcessors\TargetUsers;
@@ -27,7 +27,7 @@ class HistoryServiceProvider extends ServiceProvider
 	 */
 	/*protected $listen = [
 		'Illuminate\Mail\Events\MessageSending' => [
-			'App\Modules\History\Listeners\LogSendingMessage',
+			LogSentMessage::class,
 		],
 		'Illuminate\Mail\Events\MessageSent' => [
 			LogSentMessage::class,
@@ -48,7 +48,7 @@ class HistoryServiceProvider extends ServiceProvider
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
 		// Log sent emails
-		//$this->app['events']->listen('Illuminate\Mail\Events\MessageSent', LogSentMessage::class);
+		$this->app['events']->listen('Illuminate\Mail\Events\MessageSending', LogSendingMessage::class);
 
 		// Log artisan commands
 		$this->app['events']->listen('Illuminate\Console\Events\CommandFinished', LogCommand::class);

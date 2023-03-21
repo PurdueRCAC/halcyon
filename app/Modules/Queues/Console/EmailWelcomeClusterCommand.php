@@ -4,7 +4,6 @@ namespace App\Modules\Queues\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Modules\History\Models\Log;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User;
 use App\Modules\Storage\Models\StorageResource;
@@ -119,6 +118,9 @@ class EmailWelcomeClusterCommand extends Command
 
 			// Prepare and send actual email
 			$message = new WelcomeCluster($u, $activity);
+			$message->headers()->text([
+				'X-Command' => 'queues:emailwelcomecluster',
+			]);
 
 			if ($this->output->isDebug())
 			{
@@ -138,8 +140,6 @@ class EmailWelcomeClusterCommand extends Command
 			if ($u->email)
 			{
 				Mail::to($u->email)->send($message);
-
-				$this->log($u->id, $u->email, "Emailed welcome (cluster).");
 			}
 			else
 			{
@@ -154,31 +154,5 @@ class EmailWelcomeClusterCommand extends Command
 				$userqueue->update(['notice' => 0]);
 			}
 		}
-	}
-
-	/**
-	 * Log email
-	 *
-	 * @param   int $targetuserid
-	 * @param   int $targetobjectid
-	 * @param   string  $uri
-	 * @param   mixed   $payload
-	 * @return  null
-	 */
-	protected function log($targetuserid, $uri = '', $payload = '')
-	{
-		Log::create([
-			'ip'              => request()->ip(),
-			'userid'          => (auth()->user() ? auth()->user()->id : 0),
-			'status'          => 200,
-			'transportmethod' => 'POST',
-			'servername'      => request()->getHttpHost(),
-			'uri'             => $uri,
-			'app'             => 'email',
-			'payload'         => $payload,
-			'classname'       => 'queues:emailwelcomecluster',
-			'classmethod'     => 'handle',
-			'targetuserid'    => $targetuserid,
-		]);
 	}
 }

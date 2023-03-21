@@ -2,6 +2,7 @@
 
 namespace App\Modules\Queues\Mail;
 
+use App\Modules\Queues\Mail\Traits\HeadersAndTags;
 use App\Modules\Users\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -9,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 
 class FreeRemoved extends Mailable
 {
-	use Queueable, SerializesModels;
+	use Queueable, SerializesModels, HeadersAndTags;
 
 	/**
 	 * The user
@@ -50,6 +51,9 @@ class FreeRemoved extends Mailable
 		$this->removedqueues = $removedqueues;
 		$this->keptqueues = $keptqueues;
 		$this->removedroles = $removedroles;
+
+		$this->mailTags[] = 'queue-removed';
+		$this->mailTags[] = 'queue-free';
 	}
 
 	/**
