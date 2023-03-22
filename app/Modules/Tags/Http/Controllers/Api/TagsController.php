@@ -67,6 +67,15 @@ class TagsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
+	 * 		"name":          "domain",
+	 * 		"description":   "Namespace for tags",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
 	 * 		"required":      false,
@@ -103,6 +112,7 @@ class TagsController extends Controller
 		$filters = array(
 			'search'    => $request->input('search', ''),
 			'state'     => $request->input('state', 'active'),
+			'domain'    => $request->input('domain'),
 			// Paging
 			'limit'     => $request->input('limit', config('list_limit', 20)),
 			'page'      => $request->input('page', 1),
@@ -127,6 +137,11 @@ class TagsController extends Controller
 				$where->where('name', 'like', '%' . $filters['search'] . '%')
 					->orWhere('slug', 'like', '%' . $filters['search'] . '%');
 			});
+		}
+
+		if ($filters['domain'])
+		{
+			$query->where('domain', '=', $filters['domain']);
 		}
 
 		if ($filters['state'] == 'active')
@@ -180,11 +195,12 @@ class TagsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "namespace",
+	 * 		"name":          "domain",
 	 * 		"description":   "Namespace for tag",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 100
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -232,7 +248,8 @@ class TagsController extends Controller
 		$rules = [
 			'name' => 'required|string|min:3|max:1500',
 			'slug' => 'nullable|string|max:100',
-			'parent_id' => 'nullable|integer'
+			'parent_id' => 'nullable|integer',
+			'domain' => 'nullable|string|max:100',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -347,11 +364,12 @@ class TagsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "namespace",
+	 * 		"name":          "domain",
 	 * 		"description":   "Namespace for tag",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 100
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -404,6 +422,7 @@ class TagsController extends Controller
 		$validator = Validator::make($request->all(), [
 			'slug' => 'nullable|min:3|max:150',
 			'name' => 'nullable|min:3|max:100',
+			'domain' => 'nullable|string|max:100',
 		]);
 
 		if ($validator->fails())

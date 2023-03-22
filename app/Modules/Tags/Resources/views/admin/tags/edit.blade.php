@@ -53,6 +53,12 @@ app('pathway')
 					<input type="text" name="fields[slug]" id="field-slug" class="form-control" placeholder="{{ trans('tags::tags.slug placeholder') }}" pattern="[^a-zA-Z0-9]+" maxlength="250" value="{{ $row->slug }}" />
 					<span class="hint form-text text-muted">{{ trans('tags::tags.slug hint') }}</span>
 				</div>
+
+				<div class="form-group">
+					<label for="field-domain">{{ trans('tags::tags.domain') }}:</label>
+					<input type="text" name="fields[domain]" id="field-domain" class="form-control" pattern="[^a-zA-Z0-9]+" maxlength="250" value="{{ $row->domain }}" />
+					<span class="hint form-text text-muted">{{ trans('tags::tags.domain hint') }}</span>
+				</div>
 			</fieldset>
 		</div>
 		<div class="col-md-6">

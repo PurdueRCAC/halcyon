@@ -143,7 +143,8 @@ class TagsController extends Controller
 	{
 		$rules = [
 			'fields.name' => 'required|string|max:150',
-			'fields.slug' => 'nullable|string|max:100'
+			'fields.slug' => 'nullable|string|max:100',
+			'fields.domain' => 'nullable|string|max:100',
 		];
 
 		$validator = Validator::make($request->all(), $rules);

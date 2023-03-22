@@ -21,7 +21,7 @@ class CreateTagsTables extends Migration
 				$table->integer('parent_id')->unsigned()->default(0)->comment('Parent tags.id');
 				$table->string('name', 150);
 				$table->string('slug', 100);
-				$table->string('domain', 100);
+				$table->string('domain', 100)->nullable();
 				$table->dateTime('created_at')->nullable();
 				$table->integer('created_by')->unsigned()->default(0)->comment('FK to users.id');
 				$table->dateTime('updated_at')->nullable();
