@@ -17,7 +17,7 @@ class DomainIsNullable extends Migration
 		{
 			Schema::table('tags', function (Blueprint $table)
 			{
-				$table->string('domain', 100)->nullable();
+				$table->string('domain', 100)->nullable()->change();
 			});
 		}
 	}
@@ -33,7 +33,7 @@ class DomainIsNullable extends Migration
 		{
 			Schema::table('tags', function (Blueprint $table)
 			{
-				$table->string('domain', 100);
+				$table->string('domain', 100)->change();
 			});
 		}
 	}
