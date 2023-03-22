@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				var alias = document.querySelector(this.getAttribute('data-rel'));
 
 				alias.value = this.value.toLowerCase()
-					.replace(/\s+/g, '_')
+					.replace(/\s+/g, '-')
 					.replace(/[^a-z0-9_]+/g, '');
 			}
 		});
