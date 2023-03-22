@@ -24,9 +24,14 @@ class Custom extends Widget
 			$content = $event->content;
 		}*/
 
+		$cls = $this->params->get('css_class');
+		$cls = $cls ? htmlspecialchars((string)$cls) : '';
+
 		return view($this->getViewName(), [
 			'content' => $content,
-			'model' => $this->model
+			'model' => $this->model,
+			'params' => $this->params,
+			'cls' => $cls,
 		]);
 	}
 }
