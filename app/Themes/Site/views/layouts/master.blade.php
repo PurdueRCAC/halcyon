@@ -67,6 +67,7 @@
 
 	</head>
 	<body>
+		<div id="wrapper">
 		@widget('top')
 
 		@if (app()->has('impersonate') && app('impersonate')->isImpersonating())
@@ -139,5 +140,6 @@
 		</footer>
 
 		@widget('bottom')
+	</div>
 	</body>
 </html>
