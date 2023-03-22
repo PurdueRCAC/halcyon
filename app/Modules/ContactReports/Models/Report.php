@@ -545,7 +545,7 @@ class Report extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function replaceCode($match)
+	protected function replaceCode($match): string
 	{
 		return array_shift($this->replacements['codeblocks']);
 	}
@@ -556,7 +556,7 @@ class Report extends Model
 	 * @param   array  $match
 	 * @return  string
 	 */
-	protected function replacePre($match)
+	protected function replacePre($match): string
 	{
 		return array_shift($this->replacements['preblocks']);
 	}
@@ -708,9 +708,9 @@ class Report extends Model
 	 * Generate stemmed report
 	 *
 	 * @param   string  $value
-	 * @return  string
+	 * @return  void
 	 */
-	public function setReportAttribute($value)
+	public function setReportAttribute($value): void
 	{
 		$this->attributes['report'] = $value;
 
@@ -750,8 +750,6 @@ class Report extends Model
 		}
 
 		$this->attributes['stemmedreport'] = $stemmedreport;
-
-		return $value;
 	}
 
 	/**
@@ -956,7 +954,7 @@ class Report extends Model
 	 *
 	 * @param   string  $start
 	 * @param   string  $stop
-	 * @return  array
+	 * @return  array<string,mixed>
 	 */
 	public static function stats($start, $stop): array
 	{

@@ -282,9 +282,9 @@ class Comment extends Model
 	 * Generate stemmed comment
 	 *
 	 * @param   string  $value
-	 * @return  string
+	 * @return  void
 	 */
-	public function setCommentAttribute($value)
+	public function setCommentAttribute($value): void
 	{
 		$this->attributes['comment'] = $value;
 
@@ -324,8 +324,6 @@ class Comment extends Model
 		}
 
 		$this->attributes['stemmedcomment'] = $stemmedreport;
-
-		return $value;
 	}
 
 	/**
