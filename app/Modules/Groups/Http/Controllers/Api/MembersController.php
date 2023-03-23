@@ -332,9 +332,10 @@ class MembersController extends Controller
 			$rowuser = Member::query()
 				->where('userid', '=', auth()->user()->id)
 				->where('groupid', '=', $row->groupid)
+				->whereIsManager()
 				->first();
 
-			if (!$rowuser || !$rowuser->isManager())
+			if (!$rowuser)
 			{
 				return response()->json(['message' => trans('Unauthorized to create memberships')], 403);
 			}
@@ -532,9 +533,10 @@ class MembersController extends Controller
 			$rowuser = Member::query()
 				->where('userid', '=', auth()->user()->id)
 				->where('groupid', '=', $row->groupid)
+				->whereIsManager()
 				->first();
 
-			if (!$rowuser || !$rowuser->isManager())
+			if (!$rowuser)
 			{
 				return response()->json(['message' => trans('Unauthorized to alter memberships')], 403);
 			}
