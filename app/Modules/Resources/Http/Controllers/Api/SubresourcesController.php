@@ -107,7 +107,7 @@ class SubresourcesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return SubresourceResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -289,7 +289,7 @@ class SubresourcesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return JsonResponse|SubresourceResource
 	 */
 	public function create(Request $request)
 	{
@@ -344,7 +344,7 @@ class SubresourcesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  SubresourceResource
 	 */
 	public function read($id)
 	{
@@ -467,7 +467,7 @@ class SubresourcesController extends Controller
 	 * }
 	 * @param   int  $id
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  SubresourceResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -536,7 +536,7 @@ class SubresourcesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

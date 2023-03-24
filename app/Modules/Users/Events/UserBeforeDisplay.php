@@ -1,22 +1,24 @@
 <?php
 namespace App\Modules\Users\Events;
 
+use App\Modules\Users\Models\User;
+
 class UserBeforeDisplay
 {
 	/**
 	 * The user
 	 *
-	 * @var string
+	 * @var User
 	 */
 	private $user;
 
 	/**
 	 * Constructor
 	 *
-	 * @param  object $user
+	 * @param  User $user
 	 * @return void
 	 */
-	public function __construct($user)
+	public function __construct(User $user)
 	{
 		$this->user = $user;
 	}
@@ -24,7 +26,7 @@ class UserBeforeDisplay
 	/**
 	 * Get the user
 	 *
-	 * @return string
+	 * @return User
 	 */
 	public function getUser()
 	{
@@ -34,10 +36,10 @@ class UserBeforeDisplay
 	/**
 	 * Set the body
 	 *
-	 * @param string $body
+	 * @param  User $user
 	 * @return void
 	 */
-	public function setUser($user)
+	public function setUser(User $user)
 	{
 		$this->user = $user;
 	}

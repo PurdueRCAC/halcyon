@@ -3,7 +3,7 @@
 namespace App\Modules\Resources\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -78,7 +78,7 @@ class BatchsystemsController extends Controller
 	 * 			]
 	 * 		}
 	 * }
-	 * @return Response
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -148,7 +148,7 @@ class BatchsystemsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return JsonResource|JsonResponse
 	 */
 	public function create(Request $request)
 	{
@@ -192,7 +192,7 @@ class BatchsystemsController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function read($id)
 	{
@@ -242,7 +242,7 @@ class BatchsystemsController extends Controller
 	 * }
 	 * @param   int  $id
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResource|JsonResponse
 	 */
 	public function update($id, Request $request)
 	{
@@ -287,7 +287,7 @@ class BatchsystemsController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

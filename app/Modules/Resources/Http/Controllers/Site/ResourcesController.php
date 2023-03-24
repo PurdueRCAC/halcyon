@@ -3,7 +3,7 @@
 namespace App\Modules\Resources\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Models\Type;
@@ -16,7 +16,7 @@ class ResourcesController extends Controller
 	 * Display a listing of resources
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(Request $request)
 	{
@@ -60,7 +60,7 @@ class ResourcesController extends Controller
 	 * Display a listing of resources for a specific type
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function type(Request $request)
 	{
@@ -99,7 +99,7 @@ class ResourcesController extends Controller
 	 * Show the form for editing the specified resource.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function retired(Request $request)
 	{
@@ -152,7 +152,7 @@ class ResourcesController extends Controller
 	 * @param  Request $request
 	 * @param  string  $name
 	 * @param  string  $section
-	 * @return Response
+	 * @return View
 	 */
 	public function show(Request $request, $name, $section = null)
 	{

@@ -1,15 +1,17 @@
 <?php
 namespace App\Modules\Users\Events;
 
+use Illuminate\Http\Request;
+
 class Authenticate
 {
 	/**
-	 * @var object
+	 * @var Request
 	 */
 	public $request;
 
 	/**
-	 * @var string
+	 * @var bool
 	 */
 	public $authenticated;
 
@@ -19,7 +21,7 @@ class Authenticate
 	 * @param  Request $request
 	 * @return void
 	 */
-	public function __construct($request)
+	public function __construct(Request $request)
 	{
 		$this->request = $request;
 		$this->authenticated = false;

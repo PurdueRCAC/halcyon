@@ -2,6 +2,7 @@
 
 namespace App\Modules\Resources\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Resources\Events\AssetBeforeDisplay;
 use App\Modules\Queues\Models\Scheduler;
@@ -13,10 +14,10 @@ class AssetResource extends JsonResource
 	/**
 	 * Transform the resource collection into an array.
 	 *
-	 * @param   \Illuminate\Http\Request  $request
+	 * @param   Request  $request
 	 * @return  array
 	 */
-	public function toArray($request)
+	public function toArray(Request $request)
 	{
 		if ($this->extended)
 		{

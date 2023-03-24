@@ -3,9 +3,11 @@
 namespace App\Modules\Resources\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Models\Type;
 use App\Modules\Resources\Models\Batchsystem;
@@ -19,7 +21,7 @@ class ResourcesController extends Controller
 	 * Display a listing of the resource.
 	 *
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -223,7 +225,7 @@ class ResourcesController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 *
-	 * @return Response
+	 * @return View
 	 */
 	public function create()
 	{
@@ -247,7 +249,7 @@ class ResourcesController extends Controller
 	 * Show the form for editing the specified resource.
 	 *
 	 * @param  int $id
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id)
 	{
@@ -280,7 +282,7 @@ class ResourcesController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -354,7 +356,7 @@ class ResourcesController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -400,7 +402,7 @@ class ResourcesController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function restore(Request $request)
 	{
@@ -438,7 +440,7 @@ class ResourcesController extends Controller
 	/**
 	 * Return to default page
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{
@@ -476,7 +478,7 @@ class ResourcesController extends Controller
 	 * 
 	 * @param  array $rows
 	 * @param  int $id
-	 * @return Response
+	 * @return StreamedResponse
 	 */
 	public function export($rows, $id)
 	{

@@ -83,7 +83,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -185,7 +185,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return JsonResponse|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -358,7 +358,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function read($id)
 	{
@@ -436,7 +436,7 @@ class TypesController extends Controller
 	 * }
 	 * @param   int  $id
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -600,7 +600,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

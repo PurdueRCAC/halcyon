@@ -26,6 +26,11 @@ class UserSearching
 		$this->results = $results;
 	}
 
+	/**
+	 * Get results
+	 *
+	 * @return array
+	 */
 	public function getResults()
 	{
 		return $this->results;

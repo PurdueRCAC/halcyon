@@ -3,7 +3,8 @@
 namespace App\Modules\Resources\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Resources\Models\Batchsystem;
@@ -15,7 +16,7 @@ class BatchsystemsController extends Controller
 	 * Display a listing of the resource.
 	 *
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -84,7 +85,7 @@ class BatchsystemsController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 *
-	 * @return Response
+	 * @return View
 	 */
 	public function create()
 	{
@@ -104,7 +105,7 @@ class BatchsystemsController extends Controller
 	 * Show the form for editing the specified resource.
 	 *
 	 * @param  int $id
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id)
 	{
@@ -124,7 +125,7 @@ class BatchsystemsController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return Redirectesponse
 	 */
 	public function store(Request $request)
 	{
@@ -158,7 +159,7 @@ class BatchsystemsController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -197,7 +198,7 @@ class BatchsystemsController extends Controller
 	/**
 	 * Return to default page
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{

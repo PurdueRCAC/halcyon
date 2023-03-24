@@ -3,7 +3,7 @@
 namespace App\Modules\Resources\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Resources\Models\Asset;
@@ -113,7 +113,7 @@ class ResourcesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return AssetResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -257,7 +257,7 @@ class ResourcesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return JsonResponse|AssetResource
 	 */
 	public function create(Request $request)
 	{
@@ -344,7 +344,7 @@ class ResourcesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  AssetResource
 	 */
 	public function read($id)
 	{
@@ -448,7 +448,7 @@ class ResourcesController extends Controller
 	 * }
 	 * @param   int  $id
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResponse|AssetResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -542,7 +542,7 @@ class ResourcesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{
@@ -574,7 +574,7 @@ class ResourcesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  MemberResourceCollection
 	 */
 	public function members($id)
 	{

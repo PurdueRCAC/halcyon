@@ -2,6 +2,7 @@
 
 namespace App\Modules\Resources\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class SubresourceResourceCollection extends ResourceCollection
@@ -9,10 +10,10 @@ class SubresourceResourceCollection extends ResourceCollection
 	/**
 	 * Transform the resource collection into an array.
 	 *
-	 * @param   \Illuminate\Http\Request  $request
+	 * @param   Request  $request
 	 * @return  array
 	 */
-	public function toArray($request)
+	public function toArray(Request $request)
 	{
 		return parent::toArray($request);
 	}

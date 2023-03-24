@@ -8,7 +8,12 @@ use App\Modules\Resources\Console\EmailSchedulingCommand;
 
 class ScheduleServiceProvider extends ServiceProvider
 {
-	public function boot()
+	/**
+	 * Set up scheduled tasks
+	 *
+	 * @return void
+	 */
+	public function boot(): void
 	{
 		$this->app->booted(function ()
 		{

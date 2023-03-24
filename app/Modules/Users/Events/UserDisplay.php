@@ -98,6 +98,18 @@ class UserDisplay
 	}
 
 	/**
+	 * Append a content section
+	 *
+	 * @param  string  $name
+	 * @param  string  $content
+	 * @return void
+	 */
+	public function appendSection($name, $content)
+	{
+		$this->sections[$name]['content'] .= $content;
+	}
+
+	/**
 	 * Add a part
 	 *
 	 * @param  string  $content
