@@ -1,13 +1,13 @@
 <?php
 namespace App\Http\Pathway\Tests;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use App\Http\Pathway\Item;
 
 /**
  * Pathway trail item tests
  */
-class ItemTest extends PHPUnit_Framework_TestCase
+class ItemTest extends TestCase
 {
 	/**
 	 * Tests that data passed in constructor is set to correct properties

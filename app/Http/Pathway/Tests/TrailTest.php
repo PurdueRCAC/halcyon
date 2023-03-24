@@ -1,14 +1,14 @@
 <?php
 namespace App\Http\Pathway\Tests;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use App\Http\Pathway\Trail;
 use App\Http\Pathway\Item;
 
 /**
  * Pathway trail tests
  */
-class TrailTest extends PHPUnit_Framework_TestCase
+class TrailTest extends TestCase
 {
 	/**
 	 * Test ArrayAccess methods
