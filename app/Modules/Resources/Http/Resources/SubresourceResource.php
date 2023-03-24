@@ -13,7 +13,7 @@ class SubresourceResource extends JsonResource
 	 * @param   Request  $request
 	 * @return  array
 	 */
-	public function toArray(Request $request)
+	public function toArray($request)
 	{
 		$this->queues->each(function($item, $key)
 		{

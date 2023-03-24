@@ -17,7 +17,7 @@ class AssetResource extends JsonResource
 	 * @param   Request  $request
 	 * @return  array
 	 */
-	public function toArray(Request $request)
+	public function toArray($request)
 	{
 		if ($this->extended)
 		{

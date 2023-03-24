@@ -13,7 +13,7 @@ class AssetResourceCollection extends ResourceCollection
 	 * @param   Request  $request
 	 * @return  array
 	 */
-	public function toArray(Request $request)
+	public function toArray($request)
 	{
 		$this->collection->each(function($item, $key)
 		{
