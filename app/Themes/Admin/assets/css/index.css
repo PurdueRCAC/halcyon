@@ -2063,7 +2063,7 @@ body.menu-open {
   flex-grow: 0;
 }
 #main {
-  padding: 0 2em 2em 2em;
+  padding: 6em 2em 2em 2em;
 }
 /*button,
 input[type=submit] {
@@ -3287,6 +3287,9 @@ html .select2-container--default .select2-selection--multiple .select2-selection
 .menu-open #header .user-options a:hover {
   color: #fff;
 }
+.menu-open .toolbar-box {
+  left: 230px;
+}
 .admin-navigation {
   flex-grow: 1;
   margin: 0 0 1em 0;
@@ -3564,6 +3567,21 @@ select.filter_search {
 .toolbar-box {
   padding: 0;
   margin: 0;
+  position: fixed;
+  top: 0;
+  left: 76px;
+  right: 0;
+  z-index: 75;
+  transition: all ease-in-out 0.2s;
+  border-bottom: 1px solid transparent;
+}
+.toolbar-box.scrolled {
+  background-color: var(--panel);
+  border-color: var(--panel-border);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+#module-content>.toolbar-box {
+  width: auto;
 }
 .toolbar-box .breadcrumb-title {
   display: none;
@@ -3577,7 +3595,7 @@ select.filter_search {
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  margin: 5px 2em 2em 2em;
+  margin: 5px 2em;
   color: var(--input-color);
 }
 .toolbar-box .pagetitle h2 {
@@ -4459,6 +4477,9 @@ a.menulist:hover:before {
   background: var(--body-bg);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   display: none;
+}
+#panel .toolbar-box {
+  position: static;
 }
 #panel .toolbar-box .toolbar-btn-list {
   width: 100%;

@@ -149,6 +149,21 @@ OPTIONS:
 document.addEventListener('DOMContentLoaded', function () {
 	document.getElementsByTagName('html')[0].classList.remove('no-js');
 
+	document.querySelector('body').addEventListener('scroll', function () {
+		var y = this.scrollTop,
+			el = document.getElementById('toolbar-box');
+
+		if (!el) {
+			return;
+		}
+
+		if (y > 0) {
+			el.classList.add('scrolled');
+		} else {
+			el.classList.remove('scrolled');
+		}
+	});
+
 	document.querySelectorAll('.hamburger').forEach(function (item) {
 		item.addEventListener('click', function (e) {
 			e.preventDefault();
