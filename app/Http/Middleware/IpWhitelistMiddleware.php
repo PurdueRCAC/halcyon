@@ -40,11 +40,11 @@ class IpWhitelistMiddleware
 	/**
 	 * Constructor
 	 *
-	 * @param  Illuminate\Contracts\Auth\Factory $auth
-	 * @param  Illuminate\Session\Store $session
-	 * @param  Illuminate\Http\Request $request
-	 * @param  Illuminate\Routing\Redirector $redirect
-	 * @param  Illuminate\Foundation\Application $application
+	 * @param  Auth $auth
+	 * @param  Store $session
+	 * @param  Request $request
+	 * @param  Redirector $redirect
+	 * @param  Application $application
 	 * @return mixed
 	 */
 	public function __construct(Auth $auth, Store $session, Request $request, Redirector $redirect, Application $application)
