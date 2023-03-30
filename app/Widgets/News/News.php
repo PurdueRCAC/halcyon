@@ -65,7 +65,7 @@ class News extends Widget
 		else
 		{
 			$articles = $query
-				->paginate(5, ['*'], 'page', request()->input('page', 1));
+				->paginate(20, ['*'], 'page', request()->input('page', 1));
 		}
 
 		$layout = $this->params->get('layout');
