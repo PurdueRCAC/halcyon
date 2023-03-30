@@ -326,9 +326,11 @@ class Associations extends Model
 				$this->lft = $root->lft + 1;
 				$this->rgt = $root->lft + 2;
 				$this->parent_id = $root->id;
+
+				$parent = $this->parent;
 			}
 
-			if (!$parent->id)
+			if (!$parent || !$parent->id)
 			{
 				throw new \Exception(trans('Parent node does not exist.'));
 			}
