@@ -54,10 +54,20 @@ class News extends Widget
 				->orWhere($a . '.datetimenewsend', '>', $now);
 		});
 
-		$articles = $query
-			->orderBy($a . '.datetimenews', 'desc')
-			->limit($this->params->get('limit', 5))
-			->get();
+		$query->orderBy($a . '.datetimenews', 'desc');
+
+		$limit = $this->params->get('limit', 5);
+
+		if ($limit > 0)
+		{
+			$articles = $query->limit($limit)->get();
+		}
+		else
+		{
+			$articles = $query
+				->paginate(5, ['*'], 'page', request()->input('page', 1));
+		}
+
 		$layout = $this->params->get('layout');
 		$layout = $layout ?: 'index';
 
@@ -67,7 +77,8 @@ class News extends Widget
 		return view($this->getViewName($layout), [
 			'articles' => $articles,
 			'params'   => $this->params,
-			'type'     => $type
+			'type'     => $type,
+			'limit'    => $limit,
 		]);
 	}
 }

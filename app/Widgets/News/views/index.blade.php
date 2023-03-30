@@ -17,6 +17,13 @@
 		<ul class="newslist list-unstyled">
 			<?php foreach ($articles as $article): ?>
 				<li id="article-{{ $article->id }}" aria-labelledby="article-{{ $article->id }}-title" itemscope itemtype="https://schema.org/<?php echo ($type->calendar ? 'Event' : 'NewsArticle'); ?>">
+						<?php if ($params->get('show_image')): ?>
+							<?php if ($src = $article->firstImage): ?>
+								<div class="news-img float-left mr-3">
+									<img src="<?php echo $src; ?>" alt="" width="150" />
+								</div>
+							<?php endif; ?>
+						<?php endif; ?>
 						<p id="article-{{ $article->id }}-title" class="news-title mb-0">
 							<a href="{{ route('site.news.show', ['id' => $article->id]) }}">{{ $article->headline }}</a>
 						</p>
@@ -54,6 +61,9 @@
 				</li>
 			<?php endforeach; ?>
 		</ul>
+		<?php if (!$limit): ?>
+			<?php echo $articles->render(); ?>
+		<?php endif; ?>
 	<?php else: ?>
 		<ul class="newslist">
 			@if ($params->get('catid'))

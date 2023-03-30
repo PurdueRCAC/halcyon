@@ -18,6 +18,10 @@
 				<option value="1">global.yes</option>
 				<option value="0">global.no</option>
 			</field>
+			<field name="show_image" type="radio" default="0" label="widget.news::news.params.show image" description="widget.news::news.params.show image desc">
+				<option value="1">global.yes</option>
+				<option value="0">global.no</option>
+			</field>
 			<field name="link_titles" type="list" label="widget.news::news.params.link title" description="widget.news::news.params.link title desc">
 				<option value="">global.use global</option>
 				<option value="0">global.no</option>

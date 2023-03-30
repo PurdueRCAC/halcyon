@@ -810,6 +810,25 @@ class Article extends Model
 	}
 
 	/**
+	 * Get the first image in an article body
+	 *
+	 * @return string
+	 */
+	public function getFirstImageAttribute(): string
+	{
+		$content = $this->toHtml();
+
+		preg_match('/<img.+src=[\'"](?P<src>.+?)[\'"].*>/i', $content, $image);
+
+		if (!empty($image))
+		{
+			return $image['src'];
+		}
+
+		return '';
+	}
+
+	/**
 	 * Expand NEWS#123 to linked article titles
 	 * This resturns the linked title in MarkDown syntax
 	 *
