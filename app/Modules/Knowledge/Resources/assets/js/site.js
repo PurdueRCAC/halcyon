@@ -148,6 +148,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		pageform.addEventListener('submit', function (e) {
 			e.preventDefault();
 
+			document.dispatchEvent(new Event('refreshEditor', { bubbles: true }));
+
 			var frm = this,
 				invalid = false;
 

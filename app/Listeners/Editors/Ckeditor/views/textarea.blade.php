@@ -63,6 +63,12 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     });
+    document.addEventListener('refreshEditor', function (e) {
+        for (instance in CKEDITOR.instances) {
+            CKEDITOR.instances[instance].fire('beforeSave');
+            CKEDITOR.instances[instance].updateElement();
+        }
+    });
 });
 </script>
 @endpush
