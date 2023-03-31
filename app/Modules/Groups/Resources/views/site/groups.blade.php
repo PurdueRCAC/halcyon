@@ -10,33 +10,44 @@
 				<h2>{{ trans('groups::groups.groups') }}</h2>
 			</div>
 			<div class="col-md-3 text-right">
-				<a class="btn btn-outline-secondary float-right add-group" href="{{ route('site.users.account.section', ['section' => 'groups']) }}">
+				<a class="btn btn-outline-secondary float-right add-group" data-toggle="modal" href="#new_group_dialog">
 					<span class="fa fa-plus-circle" aria-hidden="true"></span> {{ trans('global.create') }}
 				</a>
 			</div>
 		</div>
 
-		<div id="new_group_dialog" title="Create new group" class="new-group-dialog">
-			<form method="post" action="{{ route('site.users.account.section', ['section' => 'groups']) }}">
-				<div class="form-group">
-					<label for="new_group_input">Enter a name for a new group:</label>
-					<input type="text" id="new_group_input" class="form-control" data-userid="{{ $user->id }}" data-api="{{ route('api.groups.create') }}" data-uri="{{ route('site.users.account.section', ['section' => 'groups']) }}" value="" required />
-					<div class="form-text text-muted">{{ $user->name }} will be added as a manager.</div>
-				</div>
-
-				<div id="new_group_action" class="alert alert-danger hide"></div>
-
-				<div class="dialog-footer">
-					<div class="row">
-						<div class="col-md-12 text-right">
-							<span id="new_group_spinner" class="spinner-border spinner-border-sm hide" role="status"><span class="sr-only">Sending...</span></span>
-							<button type="submit" id="new_group_btn" data-indicator="new_group_spinner" class="btn btn-success">
-								<span class="fa fa-plus-circle" aria-hidden="true"></span> {{ trans('global.button.create') }}
-							</button>
-						</div>
+		<div class="modal" id="new_group_dialog" tabindex="-1" aria-labelledby="new_group_dialog-title" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content shadow-sm">
+					<div class="modal-header">
+						<div class="modal-title" id="new_group_dialog-title">Create new group</div>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
 					</div>
+					<form method="post" action="{{ route('site.users.account.section', ['section' => 'groups']) }}">
+						<div class="modal-body">
+							<div class="form-group">
+								<label for="new_group_input">Enter a name for a new group:</label>
+								<input type="text" id="new_group_input" class="form-control" data-userid="{{ $user->id }}" data-api="{{ route('api.groups.create') }}" data-uri="{{ route('site.users.account.section', ['section' => 'groups']) }}" value="" required />
+								<div class="form-text text-muted">{{ $user->name }} will be added as a manager.</div>
+							</div>
+
+							<div id="new_group_action" class="alert alert-danger hide"></div>
+						</div>
+						<div class="modal-footer">
+							<div class="row">
+								<div class="col-md-12 text-right">
+									<span id="new_group_spinner" class="spinner-border spinner-border-sm hide" role="status"><span class="sr-only">Sending...</span></span>
+									<button type="submit" id="new_group_btn" data-indicator="new_group_spinner" class="btn btn-success">
+										<span class="fa fa-plus-circle" aria-hidden="true"></span> {{ trans('global.button.create') }}
+									</button>
+								</div>
+							</div>
+						</div>
+					</form>
 				</div>
-			</form>
+			</div>
 		</div>
 	@else
 		<h2>{{ trans('groups::groups.groups') }}</h2>
