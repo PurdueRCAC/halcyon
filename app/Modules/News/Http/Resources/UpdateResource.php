@@ -21,6 +21,7 @@ class UpdateResource extends JsonResource
 		$data['formattedbody'] = $this->toHtml();
 		$data['formattededitdate'] = $this->datetimeedited ? $this->formatDate($this->datetimeedited->toDateTimeString()) : null;
 		$data['formattedcreateddate'] = $this->datetimecreated ? $this->formatDate($this->datetimecreated->toDateTimeString()) : null;
+		$data['vars'] = $this->getContentVars();
 
 		$data['username'] = $this->creator ? $this->creator->name : trans('global.unknown');
 

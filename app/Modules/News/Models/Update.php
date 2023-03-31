@@ -154,6 +154,26 @@ class Update extends Model
 	}
 
 	/**
+	 * Get news vars
+	 *
+	 * @return  array<string,mixed>
+	 */
+	public function getContentVars(): array
+	{
+		$uvars = array(
+			'updatedatetime' => $this->datetimecreated->format('F j, Y g:ia T'),
+			'updatedate'     => $this->datetimecreated->format('l, F jS, Y'),
+			'updatetime'     => $this->datetimecreated->format('g:ia T')
+		);
+
+		$news = $this->article->getContentVars();
+
+		$vars = array_merge($news, $uvars);
+
+		return $vars;
+	}
+
+	/**
 	 * Format body as MarkDown
 	 *
 	 * @return string
@@ -169,17 +189,7 @@ class Update extends Model
 		$text = preg_replace_callback("/```(.*?)```/uis", [$this, 'stripPre'], $text);
 		$text = preg_replace_callback("/`(.*?)`/i", [$this, 'stripCode'], $text);
 
-		$uvars = array(
-			'updatedatetime' => $this->datetimecreated->format('F j, Y g:ia T'),
-			'updatedate'     => $this->datetimecreated->format('l, F jS, Y'),
-			'updatetime'     => $this->datetimecreated->format('g:ia T')
-		);
-
-		$news = $this->article->getContentVars();
-
-		$vars = array_merge($news, $uvars);
-
-		foreach ($vars as $var => $value)
+		foreach ($this->getContentVars() as $var => $value)
 		{
 			$text = preg_replace("/%" . $var . "%/", $value, $text);
 		}

@@ -335,7 +335,10 @@ function customMarkdownParser(text, element) {
 		'%enddate%',
 		'%endtime%',
 		'%location%',
-		'%resources%'
+		'%resources%',
+		'%updatedatetime%',
+		'%updatedate%',
+		'%updatetime%'
 	];
 
 	if (element.id == 'NotesText') {
@@ -2343,9 +2346,11 @@ function NEWSPrintRow(news) {
 					});
 				})
 				.then(function (data) {
-					document.getElementById(news['id'] + "_newupdatebox").value = data.body;
-					document.getElementById(news['id'] + "_newupdatebox").rows = 7;
-					document.getElementById(news['id'] + "_newupdatebox").focus();
+					var textarea = document.getElementById(news['id'] + "_newupdatebox");
+					textarea.value = data.body;
+					textarea.rows = 7;
+					textarea.focus();
+					textarea.dispatchEvent(new Event('refreshEditor', { bubbles: true }));
 				})
 				.catch(function (err) {
 					DisplayError(err);
@@ -2362,7 +2367,17 @@ function NEWSPrintRow(news) {
 		label.innerHTML = 'Post an update';
 
 		textarea = document.createElement("textarea");
-		textarea.className = "form-control crmupdatebox";
+		textarea.className = "form-control md crmupdatebox";
+
+		var st = new Date();
+
+		news.vars['updatedate'] = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(st) + ', '
+			+ new Intl.DateTimeFormat("en-US", { month: "long" }).format(st) + ' ' + st.getDay() + ', '
+			+ st.getFullYear();
+		news.vars['updatetime'] = st.toLocaleTimeString('en-US').replace(':00 AM', ' AM').replace(':00 PM', ' PM');
+		news.vars['updatedatetime'] = news.vars["updatedate"] + ' at ' + news.vars["updatetime"];
+
+		textarea.setAttribute('data-vars', JSON.stringify(news.vars));
 		textarea.placeholder = "Post an update...";
 		textarea.id = news['id'] + "_newupdatebox";
 		textarea.rows = 1;
@@ -2379,24 +2394,24 @@ function NEWSPrintRow(news) {
 
 		// Save button
 		a = document.createElement("a");
-		a.className = "news-save icn tip";
+		a.className = "news-save btn float-right tip";
 		a.href = "?update&id=" + id;
 		a.onclick = function (e) {
 			e.preventDefault();
 			NewsPostUpdate(news['id']);
 		};
-		a.title = "Post an update.";
+		a.title = "Post update";
 		a.id = news['id'] + "_newupdateboxsave";
-		a.style.display = "none";
+		//a.style.display = "none";
 
-		img = document.createElement("i");
+		img = document.createElement("span");
 		img.className = "crmnewcommentsave fa fa-save";
 		img.setAttribute('aria-hidden', true);
 		//img.style.display = "none";
 		//img.id = news['id'] + "_newupdateboxsave";
 
 		a.appendChild(img);
-		a.appendChild(document.createTextNode("Post an update."));
+		//a.appendChild(document.createTextNode("Post update"));
 		div.appendChild(a);
 
 		td.appendChild(div);
@@ -2407,6 +2422,8 @@ function NEWSPrintRow(news) {
 	article.appendChild(ul);
 
 	container.appendChild(article);
+
+	textarea.dispatchEvent(new Event('initEditor', { bubbles: true }));
 
 	//var c = Array();
 	for (x = 0; x < news.updates.length; x++) {
@@ -3751,6 +3768,7 @@ function NewsPrintUpdate(newsid, update, edit) {
 		textarea.innerHTML = update['body'];
 		//textarea.style.display = "none";
 		textarea.className = "form-control md newsupdateedittextbox";
+		textarea.setAttribute('data-vars', JSON.stringify(update.vars));
 
 		span = document.createElement("span");
 		span.appendChild(label);
@@ -3766,7 +3784,7 @@ function NewsPrintUpdate(newsid, update, edit) {
 			e.preventDefault();
 			NewsSaveUpdateText(newsid, update['id']);
 		};
-		a.className = "news-update-save tip";
+		a.className = "news-update-save btn float-right tip";
 		a.id = update['id'] + "_updatetextsaveicon";
 		a.style.display = "none";
 		a.title = "Save update text.";
