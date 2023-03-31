@@ -44,7 +44,8 @@ class History
 		if ($event->getActive() == 'history' || $client == 'admin')
 		{
 			$content = view('groups::site.group.history', [
-				'group' => $group
+				'group' => $group,
+				'client' => $client,
 			]);
 		}
 

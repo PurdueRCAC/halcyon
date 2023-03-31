@@ -1,4 +1,4 @@
-
+<form action="{{ $client == 'admin' ? route('admin.groups.show', ['id' => $group->id, 'section' => 'history']) : route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => 'history']) }}" method="get" name="adminForm" id="adminForm-history" class="editform form-validate">
 <p>Any actions taken by managers of this group are listed below. There may be a short delay in actions showing up in the log.</p>
 
 <?php
@@ -7,8 +7,7 @@ $l = App\Modules\History\Models\Log::query()
 	->whereIn('classname', ['groupowner', 'groupviewer', 'queuemember', 'groupqueuemember', 'unixgroupmember', 'unixgroup', 'userrequest', 'UsersController', 'UserRequestsController', 'UnixGroupsController', 'UnixGroupMembersController', 'MembersController', 'OrdersController'])
 	->where('classmethod', '!=', 'read')
 	->orderBy('datetime', 'desc')
-	->limit(20)
-	->paginate();
+	->paginate(request()->input('limit', 20), ['*'], 'page', request()->input('page', 1));
 
 if (app('isAdmin'))
 {
@@ -77,3 +76,6 @@ else
 	<p class="alert alert-warning">No activity found.</p>
 	<?php
 }
+?>
+	@csrf
+</form>
