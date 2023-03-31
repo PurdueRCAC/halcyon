@@ -1,5 +1,6 @@
 <div class="card">
 	<div class="card-body">
+		<form action="{{ route('admin.groups.show', ['id' => $group->id, 'active' => 'history']) }}" method="post" name="adminForm" id="adminForm-history" class="editform form-validate">
 		<p>{{ trans('groups::groups.history.description') }}</p>
 
 		<?php
@@ -171,6 +172,7 @@
 				</tbody>
 			</table>
 
+			@csrf
 			<?php
 			echo $l->render();
 		}
@@ -181,5 +183,6 @@
 			<?php
 		}
 		?>
+		</form>
 	</div>
 </div>
