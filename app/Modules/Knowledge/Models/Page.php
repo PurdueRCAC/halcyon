@@ -386,6 +386,12 @@ class Page extends Model
 			}
 		}
 
+		$vars['display'] = array('all' => false);
+		if (request()->input('all'))
+		{
+			$vars['display']['all'] = true;
+		}
+
 		return $vars;
 	}
 
