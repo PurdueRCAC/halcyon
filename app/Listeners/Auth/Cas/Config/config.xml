@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="basic">
+			<field name="name" type="text" size="32" label="listener.auth.cas::cas.display name" description="listener.auth.cas::cas.display name desc" default="" />
+		</fieldset>
+	</fields>
+</config>

@@ -6,185 +6,34 @@
 	margin: 5em auto;
 	width: 25em;
 }
+
 .auth h2.card-title {
 	margin-top: 0;
 }
-.auth .block {
-	display: block;
-}
-.auth .none {
-	display: none;
-}
-.auth .instructions {
-	font-size: 1.5em;
-	text-align: center;
-	margin: 60px 0 20px 0;
-}
+
 .auth .or {
-	width: 16em;
-	height: 2em;
-	margin: 1em auto;
+	margin: 2em auto;
 	overflow: hidden;
 	position: relative;
+	text-align: center;
+	text-transform: uppercase;
+	font-size: 85%;
 }
-.auth .or:before {
+
+.auth .or:before,
+.auth .or:after {
 	content: "";
 	position: absolute;
-	left: 0;
 	top: 50%;
-	width: 100%;
+	width: 45%;
 	height: 1px;
-	background: #aaa;
+	background: #eee;
 }
+
+.auth .or:before {
+	left: 0;
+}
+
 .auth .or:after {
-	content: "or";
-	font-size: 1.5em;
-	padding: 0.7em;
-	font-style: italic;
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	margin-left: -1.3em;
-	margin-top: -1.3em;
-	background: #F2F2F2;
-	z-index: 500;
-}
-.auth .local,
-.create {
-	font-size: 1.2em;
-	text-align: center;
-	margin-bottom: 20px;
-}
-.auth .existing-name {
-	font-size: 1.2em;
-	text-align: center;
-}
-.auth .existing-email {
-	font-size: 1.1em;
-	text-align: center;
-	margin-bottom: 10px;
-}
-.others {
-	text-align: center;
-	margin-bottom: 20px;
-}
-.auth .error {
-	display: none;
-	margin: 0 20px 0 20px;
-}
-.auth .label-input-pair {
-	position: relative;
-}
-.auth .label-input-pair label {
-	display: none;
-}
-.auth .forgots {
-	border-top: 1px solid #DFDFDF;
-	padding: 15px 0;
-}
-.auth .forgots a {
-	display: block;
-	text-align: center;
-	width: auto;
-	border-bottom: none;
-	padding: 0px;
-}
-.auth .remember-me-label {
-	vertical-align: middle;
-}
-.auth .input-wrap {
-	padding: 5px 10px;
-	margin: 0 10px;
-	border-color: transparent;
-	border-width: 1px;
-	border-style: solid;
-	background: transparent;
-	-webkit-transition: background ease-in-out 0.25s, border-color ease-in-out 0.25s;
-	-moz-transition: background ease-in-out 0.25s, border-color ease-in-out 0.25s;
-	-o-transition: background ease-in-out 0.25s, border-color ease-in-out 0.25s;
-	transition: background ease-in-out 0.25s, border-color ease-in-out 0.25s;
-}
-.auth .input-wrap-error {
-	-webkit-transition: background ease-in-out 0.25s, border-color ease-in-out 0.25s;
-	-moz-transition: background ease-in-out 0.25s, border-color ease-in-out 0.25s;
-	-o-transition: background ease-in-out 0.25s, border-color ease-in-out 0.25s;
-	transition: background ease-in-out 0.25s, border-color ease-in-out 0.25s;
-	border-color: #CC0000;
-	background: rgba(155, 0, 0, .2);
-}
-.auth .input-error {
-	display: none;
-	color: #CC0000;
-	font-style: italic;
-	text-align: center;
-	margin-top: 5px;
-}
-.auth .username {
-	margin-bottom: 10px;
-}
-.auth .submission {
-	padding: 0 20px;
-	text-align: center;
-}
-.auth input[type="text"],
-.auth input[type="password"] {
-	margin: 0;
-	padding: 10px;
-	border: 1px solid #CCCCCC;
-	background-color: #FFFFFF;
-	width: 100%;
-	outline: none;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-}
-.auth input[type="submit"] {
-	width: 100%;
-	margin: 5px 0 15px 0;
-}
-.auth input[type="submit"]:focus {
-	outline: none;
-}
-.auth .remember-wrap {
-	margin-bottom: 10px;
-}
-.primary {
-	display: block;
-	width: 400px;
-	margin: 0 auto;
-	border-bottom: none;
-	text-decoration: none;
-}
-.primary:hover {
-	border-bottom: none;
-	text-decoration: none;
-	cursor: pointer;
-}
-.primary .upper {
-	width: 402px;
-	height: 100px;
-	margin-top: 20px;
-	text-align: center;
-	padding-top: 40px;
-	-webkit-border-top-left-radius: 3px;
-	-moz-border-radius-topleft: 3px;
-	border-top-left-radius: 3px;
-	-webkit-border-top-right-radius: 3px;
-	-moz-border-radius-topright: 3px;
-	border-top-right-radius: 3px;
-}
-.primary .lower {
-	height: 60px;
-}
-.primary .auth {
-	margin-top: 0;
-	-webkit-border-top-left-radius: 0;
-	-moz-border-radius-topleft: 0;
-	border-top-left-radius: 0;
-	-webkit-border-top-right-radius: 0;
-	-moz-border-radius-topright: 0;
-	border-top-right-radius: 0;
-}
-.primary .instructions {
-	color: #888888;
+	right: 0;
 }

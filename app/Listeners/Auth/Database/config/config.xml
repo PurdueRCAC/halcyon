@@ -7,14 +7,6 @@
 				<option value="1">listener.auth.database::database.remember me checked</option>
 			</field>
 			<field name="display_name" type="text" size="32" label="listener.auth.database::database.display name" description="listener.auth.database::database.display name desc" default="" />
-			<field name="site_login"  type="radio" label="listener.auth.database::database.site login" default="1" description="listener.auth.database::database.site login desc">
-				<option value="0">global.no</option>
-				<option value="1">global.yes</option>
-			</field>
-			<field name="admin_login"  type="radio" label="listener.auth.database::database.admin login" default="1" description="listener.auth.database::database.admin login desc">
-				<option value="0">global.no</option>
-				<option value="1">global.yes</option>
-			</field>
 		</fieldset>
 	</fields>
 </config>

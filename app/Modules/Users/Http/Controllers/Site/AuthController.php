@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Halcyon\Access\Role;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
+use App\Modules\Users\Events\Authenticators;
 use App\Modules\Users\Events\Login;
 use App\Modules\Users\Events\Authenticate;
 use App\Modules\Users\Events\UserRegistered;
@@ -39,15 +40,30 @@ class AuthController extends Controller
 			}
 		}
 
-		event($event = new Login($request));
-
 		if (Auth::check())
 		{
 			return redirect($this->authenticatedRoute());
 		}
 
+		event($event = new Authenticators());
+
+		// If we only have one authenticator or a specific authenitcator has
+		// been given, go ahead and call the Login event
+		if (count($event->authenticators) == 1 || $request->has('authenticator'))
+		{
+			$authenticators = array_keys($event->authenticators);
+			$authenticator = $request->input('authenticator');
+			if (!in_array($authenticator, $authenticators))
+			{
+				$authenticator = array_shift($authenticators);
+			}
+
+			event(new Login($request, $authenticator));
+		}
+
 		return view('users::site.login', [
-			'return' => $return
+			'return' => $return,
+			'authenticators' => $event->authenticators,
 		]);
 	}
 
@@ -59,7 +75,17 @@ class AuthController extends Controller
 	 */
 	public function authenticate(Request $request)
 	{
-		event($event = new Authenticate($request));
+		$authenticator = $request->input('authenticator');
+
+		event($event = new Authenticators());
+		$authenticators = array_keys($event->authenticators);
+
+		if (!$authenticator || !in_array($authenticator, $authenticators))
+		{
+			$authenticator = array_shift($authenticators);
+		}
+
+		event($event = new Authenticate($request, $authenticator));
 
 		if (!$event->authenticated || !Auth::check())
 		{

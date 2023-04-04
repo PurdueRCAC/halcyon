@@ -5,6 +5,7 @@ use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Events\Dispatcher;
+use App\Modules\Users\Events\Authenticators;
 use App\Modules\Users\Events\Login;
 use App\Modules\Users\Events\Authenticate;
 use App\Modules\Users\Models\User;
@@ -29,6 +30,7 @@ class CILogon
 	 */
 	public function subscribe(Dispatcher $events): void
 	{
+		$events->listen(Authenticators::class, self::class . '@handleAuthenticators');
 		$events->listen(Login::class, self::class . '@handleLogin');
 		$events->listen(Authenticate::class, self::class . '@handleAuthenticate');
 		$events->listen(Logout::class, self::class . '@handleLogout');
@@ -39,21 +41,22 @@ class CILogon
 	 *
 	 * @return  Provider
 	 */
-	protected function provider(): Provider
+	protected function provider(): ?Provider
 	{
 		if (is_null($this->cilogon))
 		{
-			$config = [
-				'clientId'     => config('listener.auth.cilogon.client_id'),
-				'clientSecret' => config('listener.auth.cilogon.client_secret'),
-				'redirectUri'  => route('callback')
-			];
+			$config = config('listener.auth.cilogon', []);
 
-			$server = config('listener.auth.cilogon.server');
-
-			if (in_array($server, ['test', 'dev']))
+			if (empty($config) || !$config['clientId'] || !$config['clientSecret'])
 			{
-				$config['server'] = $server;
+				return null;
+			}
+
+			$config['redirectUri'] = route('callback');
+
+			if (!in_array($config['server'], ['test', 'dev']))
+			{
+				$config['server'] = null;
 			}
 
 			$this->cilogon = new Provider($config);
@@ -65,11 +68,40 @@ class CILogon
 	/**
 	 * Handle user login events.
 	 * 
+	 * @param  Authenticators $event
+	 * @return void
+	 */
+	public function handleAuthenticators(Authenticators $event): void
+	{
+		app('translator')->addNamespace(
+			'listener.auth.cilogon',
+			__DIR__ . '/lang'
+		);
+
+		app('view')->addNamespace(
+			'listener.auth.cilogon',
+			__DIR__ . '/views'
+		);
+
+		$event->addAuthenticator('cilogon', [
+			'label' => 'CILogon',
+			'view' => 'listener.auth.cilogon::index',
+		]);
+	}
+
+	/**
+	 * Handle user login events.
+	 * 
 	 * @param  Login $event
 	 * @return void
 	 */
 	public function handleLogin(Login $event): void
 	{
+		if ($event->authenticator != 'cilogon')
+		{
+			return;
+		}
+
 		$request = $event->request;
 
 		if ($request->ajax() || $request->wantsJson())
@@ -81,7 +113,7 @@ class CILogon
 
 		if (!$provider)
 		{
-			return;
+			abort(500, 'CILogon not configured.');
 		}
 
 		// If we don't have an authorization code then get one with all 
@@ -106,6 +138,11 @@ class CILogon
 	 */
 	public function handleAuthenticate(Authenticate $event): void
 	{
+		if ($event->authenticator != 'cilogon')
+		{
+			return;
+		}
+
 		$request = $event->request;
 
 		$provider = $this->provider();

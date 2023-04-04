@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Failed;
 use App\Modules\Users\Models\User;
+use App\Modules\Users\Events\Authenticators;
 use App\Modules\Users\Events\Login;
 use App\Modules\Users\Events\Authenticate;
 
@@ -21,8 +22,23 @@ class Database
 	 */
 	public function subscribe($events)
 	{
+		$events->listen(Authenticators::class, self::class . '@handleAuthenticators');
 		$events->listen(Login::class, self::class . '@handleLogin');
 		$events->listen(Authenticate::class, self::class . '@handleAuthenticate');
+	}
+
+	/**
+	 * Handle user login events.
+	 * 
+	 * @param  Authenticators $event
+	 * @return void
+	 */
+	public function handleAuthenticators(Authenticators $event): void
+	{
+		$event->addAuthenticator('database', [
+			'label' => 'Local Account',
+			'view'  => 'users::site.auth',
+		]);
 	}
 
 	/**
@@ -38,11 +54,16 @@ class Database
 	/**
 	 * This method should handle any authentication and report back to the subject
 	 *
-	 * @param   LoginAuthenticate $event
+	 * @param   Authenticate $event
 	 * @return  void
 	 */
 	public function handleAuthenticate(Authenticate $event)
 	{
+		if ($event->authenticator != 'database')
+		{
+			return;
+		}
+
 		$request = $event->request;
 
 		$request->validate([

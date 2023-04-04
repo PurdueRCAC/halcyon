@@ -3,7 +3,7 @@
 	<fields name="params">
 		<fieldset name="basic">
 			<field
-				name="client_id"
+				name="clientId"
 				type="text"
 				default=""
 				label="listener.auth.cilogon::cilogon.client id"
@@ -11,7 +11,7 @@
 			</field>
 
 			<field
-				name="client_secret"
+				name="clientSecret"
 				type="text"
 				default=""
 				label="listener.auth.cilogon::cilogon.client secret"

@@ -8,7 +8,7 @@ return [
     | Your organization's CILogon App ID
     |
     */
-    'client_id' => env('CILOGON_ID', '{cilogon-client-id}'),
+    'clientId' => env('CILOGON_ID'),
 
     /*
     |--------------------------------------------------------------------------
@@ -18,7 +18,7 @@ return [
     | Client Secret provided when your organization is registered on CILogon
     |
     */
-    'client_secret' => env('CILOGON_SECRET', '{cilogon-client-secret}'),
+    'clientSecret' => env('CILOGON_SECRET'),
 
     /*
     |--------------------------------------------------------------------------
@@ -31,5 +31,5 @@ return [
     | https://dev.cilogon.org.
     |
     */
-    'server' => env('CILOGON_SERVER', null),
+    'server' => env('CILOGON_SERVER', 'prod'),
 ];

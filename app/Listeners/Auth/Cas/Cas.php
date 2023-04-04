@@ -4,6 +4,7 @@ namespace App\Listeners\Auth\Cas;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Modules\Users\Events\Authenticators;
 use App\Modules\Users\Events\Login;
 use App\Modules\Users\Events\Authenticate;
 use App\Modules\Users\Models\User;
@@ -20,9 +21,34 @@ class Cas
 	 */
 	public function subscribe($events)
 	{
+		$events->listen(Authenticators::class, self::class . '@handleAuthenticators');
 		$events->listen(Login::class, self::class . '@handleAuthenticate');
 		$events->listen(Authenticate::class, self::class . '@handleAuthenticate');
 		$events->listen(Logout::class, self::class . '@handleLogout');
+	}
+
+	/**
+	 * Handle user login events.
+	 * 
+	 * @param  Authenticators $event
+	 * @return void
+	 */
+	public function handleAuthenticators(Authenticators $event): void
+	{
+		app('translator')->addNamespace(
+			'listener.auth.cas',
+			__DIR__ . '/lang'
+		);
+
+		app('view')->addNamespace(
+			'listener.auth.cas',
+			__DIR__ . '/views'
+		);
+
+		$event->addAuthenticator('cas', [
+			'label' => 'CAS',
+			'view' => 'listener.auth.cas::index',
+		]);
 	}
 
 	/**
@@ -34,7 +60,7 @@ class Cas
 	{
 		$request = $event->request;
 
-		if (!app()->has('cas'))
+		if (!app()->has('cas') || $event->authenticator != 'cas')
 		{
 			return;
 		}
@@ -62,16 +88,16 @@ class Cas
 	/**
 	 * Handle user login events.
 	 * 
-	 * @param $event
+	 * @param Login|Authenticate $event
 	 */
 	public function handleAuthenticate($event)
 	{
-		$request = $event->request;
-
-		if (!app()->has('cas'))
+		if (!app()->has('cas') || $event->authenticator != 'cas')
 		{
 			return;
 		}
+
+		$request = $event->request;
 
 		$cas = app('cas');
 

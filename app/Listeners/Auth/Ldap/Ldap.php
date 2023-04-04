@@ -1,11 +1,12 @@
 <?php
 namespace App\Listeners\Auth\Ldap;
 
-use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Illuminate\Auth\Events\Logout;
 use Illuminate\Auth\Events\Failed;
+use Illuminate\Events\Dispatcher;
 use Adldap\Models\User as LdapUser;
 use App\Listeners\Auth\Ldap\Events\DiscoveredWithCredentials;
 use App\Listeners\Auth\Ldap\Events\Authenticating;
@@ -15,6 +16,7 @@ use App\Listeners\Auth\Ldap\Events\AuthenticationSuccessful;
 use App\Listeners\Auth\Ldap\Events\AuthenticatedWithCredentials;
 use App\Listeners\Auth\Ldap\Events\AuthenticatedModelTrashed;
 use App\Listeners\Auth\Ldap\Events\Authenticated;
+use App\Modules\Users\Events\Authenticators;
 use App\Modules\Users\Events\Login;
 use App\Modules\Users\Events\Authenticate;
 use App\Modules\Users\Models\User;
@@ -27,11 +29,12 @@ class Ldap
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events)
 	{
+		$events->listen(Authenticators::class, self::class . '@handleAuthenticators');
 		//$events->listen(Login::class, self::class . '@handleAuthenticate');
 		$events->listen(Authenticate::class, self::class . '@handleAuthenticate');
 	}
@@ -59,10 +62,30 @@ class Ldap
 	/**
 	 * Handle user login events.
 	 * 
-	 * @param $event
+	 * @param  Authenticators $event
+	 * @return void
 	 */
-	public function handleLogin($event)
+	public function handleAuthenticators(Authenticators $event): void
 	{
+		$event->addAuthenticator('ldap', [
+			'label' => 'LDAP',
+			'view'  => 'users::site.auth',
+		]);
+	}
+
+	/**
+	 * Handle user login events.
+	 * 
+	 * @param Login $event
+	 * @return void
+	 */
+	public function handleLogin(Login $event): void
+	{
+		if ($event->authenticator != 'ldap')
+		{
+			return;
+		}
+
 		$config = $this->config();
 
 		if (empty($config))
@@ -92,10 +115,15 @@ class Ldap
 	/**
 	 * Handle user login events.
 	 * 
-	 * @param $event
+	 * @param Login|Authenticate $event
 	 */
 	public function handleAuthenticate($event)
 	{
+		if ($event->authenticator != 'ldap')
+		{
+			return;
+		}
+
 		$resolver = $this->resolver();
 
 		if (!$resolver)

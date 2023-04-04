@@ -1,6 +1,6 @@
 <?php
 return [
-	'listener name' => 'Database',
+	'listener name' => 'Authentication - Database',
 	'listener desc' => 'Handles user authentication against the database',
 
 	// Misc.,

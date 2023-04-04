@@ -11,13 +11,20 @@ class Login
 	public $request;
 
 	/**
+	 * @var string
+	 */
+	public $authenticator;
+
+	/**
 	 * Constructor
 	 *
 	 * @param  Request $request
+	 * @param  string $authenticator
 	 * @return void
 	 */
-	public function __construct(Request $request)
+	public function __construct(Request $request, $authenticator = '')
 	{
 		$this->request = $request;
+		$this->authenticator = $authenticator;
 	}
 }

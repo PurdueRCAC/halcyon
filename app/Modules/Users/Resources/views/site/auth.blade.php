@@ -1,32 +1,5 @@
-@extends('layouts.master')
 
-@push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/users/css/login.css?v=' . filemtime(public_path() . '/modules/users/css/login.css')) }}" />
-@endpush
-
-@php
-app('pathway')
-	->append(
-		trans('users::auth.login'),
-		route('login')
-	);
-@endphp
-
-@section('title')
-	{{ trans('users::auth.login') }} | @parent
-@stop
-
-@section('content')
-<div class="container-fluid">
-	<div class="row align-items-center justify-content-center">
-		<div class="login-box-body auth card">
-			<div class="card-header">
-				<h2 class="card-title">{{ trans('users::auth.login') }}</h2>
-				<p class="login-box-msg">{{ trans('users::auth.sign in welcome message') }}</p>
-			</div>
-
-			<div class="card-body">
-			<!-- <form method="post" action="{{ route('login.post') }}">
+			<form method="post" action="{{ route('login.post') }}" class="card-body">
 				<div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
 					<label for="login-username">{{ trans('users::auth.username or email') }}</label>
 					<input type="username" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" autofocus name="username" id="login-username" value="{{ old('username')}}">
@@ -58,30 +31,8 @@ app('pathway')
 				</div>
 
 				@if (config('module.users.allow_registration', true))
-					<p class="login-register text-muted text-center"><a href="{{ route('register')}}">{{ trans('users::auth.register')}}</a></p>
+					<p class="login-register mt-3 mb-0 text-muted text-center">{{ trans('users::auth.new to the site') }} <a href="{{ route('register')}}">{{ trans('users::auth.register') }}</a></p>
 				@endif
 
 				@csrf
-			</form>-->
-			@if (count($authenticators) > 0)
-				@php
-				$primary = array_shift($authenticators);
-				@endphp
-				@include($primary['view'])
-
-				@if (count($authenticators) > 0)
-					<p class="or">Or</p>
-					@foreach ($authenticators as $driver => $options)
-					<div class="mb-2">
-						@include($options['view'])
-					</div>
-					@endforeach
-				@endif
-			@else
-				<div class="alert alert-warning">Login is disabled.</div>
-			@endif
-			</div>
-		</div>
-	</div>
-</div>
-@stop
+			</form>

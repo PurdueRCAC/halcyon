@@ -1,6 +1,6 @@
 <?php
 return [
-	'listener name' => 'CILogon',
+	'listener name' => 'Authentication - CILogon',
 	'listener desc' => 'Handles user authentication against CILogon',
 
 	'error' => [

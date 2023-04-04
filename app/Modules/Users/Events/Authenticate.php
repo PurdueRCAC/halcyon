@@ -11,6 +11,11 @@ class Authenticate
 	public $request;
 
 	/**
+	 * @var string
+	 */
+	public $authenticator;
+
+	/**
 	 * @var bool
 	 */
 	public $authenticated;
@@ -19,11 +24,13 @@ class Authenticate
 	 * Constructor
 	 *
 	 * @param  Request $request
+	 * @param  string $authenticator
 	 * @return void
 	 */
-	public function __construct(Request $request)
+	public function __construct(Request $request, $authenticator = '')
 	{
 		$this->request = $request;
+		$this->authenticator = $authenticator;
 		$this->authenticated = false;
 	}
 }
