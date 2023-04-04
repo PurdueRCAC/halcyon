@@ -302,7 +302,7 @@ class SnippetsController extends Controller
 			return redirect()->back()->withError(trans('knowledge::knowledge.errors.rebuild failed'));
 		}
 
-		return redirect(route('admin.knowledge.snippets'))->withSuccess(trans('global.messages.update success'));
+		return redirect(route('admin.knowledge.snippets'))->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**
