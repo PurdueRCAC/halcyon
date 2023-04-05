@@ -6,10 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Modules\ContactReports\Events\ReportFrom;
 use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\Follow;
 use App\Modules\ContactReports\Models\Type;
+use App\Modules\ContactReports\Models\User;
 use App\Modules\Groups\Models\Member as GroupUser;
+use Carbon\Carbon;
 
 class ReportsController extends Controller
 {
@@ -141,6 +144,15 @@ class ReportsController extends Controller
 		}
 
 		$types = Type::query()->orderBy('name', 'asc')->get();
+
+		if ($request->has('add') && $request->has('from'))
+		{
+			$from = urldecode($request->input('from'));
+
+			event($event = new ReportFrom($from));
+
+			$row = $event->report;
+		}
 
 		return view('contactreports::site.index', [
 			'filters' => $filters,

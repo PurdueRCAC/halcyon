@@ -1,0 +1,11 @@
+{
+    "name": "Contact Reports - News",
+    "alias": "listener_contactreports_news",
+    "description": "Listener for connecting News and Contact Reports.",
+    "keywords": [],
+    "active": 1,
+    "priority": 0,
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

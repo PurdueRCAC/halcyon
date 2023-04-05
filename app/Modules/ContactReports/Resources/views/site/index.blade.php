@@ -541,7 +541,7 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 			{
 				"original": {
 					"id": "<?php echo $report->id; ?>",
-					"api": "<?php echo route('api.contactreports.update', ['id' => $report->id]); ?>",
+					"api": "<?php echo ($report->id ? route('api.contactreports.update', ['id' => $report->id]) : route('api.contactreports.create')); ?>",
 					"datetimecontact": "<?php echo $report->datetimecontact->format('Y-m-d'); ?>",
 					"groupid": "<?php echo $report->groupid; ?>",
 					"groupname": "<?php echo $report->group ? $report->group->name : ''; ?>",

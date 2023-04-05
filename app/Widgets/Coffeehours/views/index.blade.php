@@ -24,6 +24,8 @@ $ignore = $params->get('ignore_role');
 $events = array();
 $attend = array();
 
+$now = Carbon\Carbon::now();
+
 foreach ($rows as $event):
 	$slot = new stdClass;
 	$slot->title = (isset($event->location) && $event->location) ? $event->location : $event->headline;
@@ -40,6 +42,7 @@ foreach ($rows as $event):
 	$claimed   = false;
 	$comment   = null;
 	$canAttend = true;
+	$userid = 0;
 
 	foreach ($event->associations as $assoc):
 		if ($assoc->assoctype == 'staff'):
@@ -59,6 +62,7 @@ foreach ($rows as $event):
 
 			if ($u && (!$ignore || !in_array($ignore, $u->getAuthorisedRoles()))):
 				$reserved = $u->name;
+				$userid = $assoc->associd;
 				$comment = $assoc->comment;
 			endif;
 		endif;
@@ -195,6 +199,12 @@ foreach ($rows as $event):
 
 							@if ($claimed)
 								<div class="text-info">{{ trans('widget.coffeehours::coffeehours.claimed by', ['name' => $claimed->associated ? $claimed->associated->name . ' (' . $claimed->associated->username . ')' : trans('global.unknown')]) }}</div>
+							@endif
+
+							@if ($event->datetimenews->timestamp <= $now->timestamp)
+								<div class="text-center">
+									<a href="{{ route('site.contactreports.index', ['from' => 'news:' . $event->id]) . '&add' }}" class="btn btn-primary">New Contact Report</a>
+								</div>
 							@endif
 						@else
 							<div class="text-success">This time is reserved.</div>
