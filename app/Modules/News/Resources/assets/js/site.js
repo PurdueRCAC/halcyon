@@ -3974,8 +3974,8 @@ var autocompleteUsers = function (url) {
 		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
 			response($.map(data.data, function (el) {
 				return {
-					label: el.name,
-					name: el.name,
+					label: el.name + ' (' + el.username + ')',
+					name: el.name + ' (' + el.username + ')',
 					id: el.id,
 				};
 			}));

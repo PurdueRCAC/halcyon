@@ -142,7 +142,7 @@ app('pathway')
 				$users = array();
 				foreach ($article->associations as $i => $assoc):
 					if ($associated = $assoc->associated):
-						$users[] = $associated->name;
+						$users[] = $associated->name . ' (' . $associated->username . ')';
 					endif;
 				endforeach;
 

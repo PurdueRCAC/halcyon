@@ -242,7 +242,7 @@ app('pathway')
 									}
 								}
 								?>
-								<input name="user" id="newsuser" size="45" class="form-control" value="{{ implode(',', $usrs) }}" data-uri="{{ route('api.users.index') }}/%s" />
+								<input name="user" id="newsuser" size="45" class="form-control" value="{{ implode(',', $usrs) }}" data-uri="{{ route('api.users.index') }}?search=%s" />
 							</div>
 						</div>
 						<div class="form-group row tab-search tab-add tab-edit" id="TR_published">
@@ -616,7 +616,12 @@ app('pathway')
 					'resourcename' => $r->resource->name
 				);
 			}
-			$data->associations = $news->associations;
+			$data->associations = array();
+			foreach ($news->associations as $association)
+			{
+				$association->assocname = $association->associated ? $association->associated->name . ' (' . $association->associated->username . ')' : trans('global.unknown');
+				$data->associations[] = $association;
+			}
 			$data->lastedit = $news->datetimeedit ? $news->datetimeedit->toDateTimeString() : '0000-00-00 00:00:00';
 			?>
 			<script type="application/json" id="news-data">
