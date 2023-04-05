@@ -43,7 +43,16 @@
             @endif
         </ul>
         <p class="text-right">
-            @lang('pagination.results shown of total', ['start' => number_format(($paginator->currentPage()-1)*$paginator->perPage()+1), 'end' => number_format($paginator->total() > $paginator->perPage() ? $paginator->currentPage()*$paginator->perPage() : $paginator->total()), 'total' => number_format($paginator->total())])
+            <?php
+            $end = $paginator->total();
+            if ($paginator->total() > $paginator->perPage()):
+                $pages = (int) ceil($paginator->total() / $paginator->perPage());
+                if ($paginator->currentPage() < $pages):
+                    $end = $paginator->currentPage()*$paginator->perPage();
+                endif;
+            endif;
+            ?>
+            @lang('pagination.results shown of total', ['start' => number_format(($paginator->currentPage()-1)*$paginator->perPage()+1), 'end' => number_format($end), 'total' => number_format($paginator->total())])
             @if (app('isAdmin'))
                 <?php
                 $l = rand();
