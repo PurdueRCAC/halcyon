@@ -4369,6 +4369,13 @@ a.menulist:hover:before {
 .dropzone.has-advanced-upload .dropzone__dragndrop {
   display: inline;
 }
+[data-mode=dark] .dropzone.has-advanced-upload {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+[data-mode=dark] .dropzone.has-advanced-upload label {
+  color: #999;
+}
 
 /* Usage meter */
 .meter {
