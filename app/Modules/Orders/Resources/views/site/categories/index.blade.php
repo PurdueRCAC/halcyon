@@ -115,7 +115,7 @@ app('pathway')
 
 	<h2 class="sr-only">{{ trans('orders::orders.categories') }}</h2>
 
-	<form action="{{ route('site.orders.categories') }}" method="post" name="adminForm" id="adminForm" class="row">
+	<form action="{{ route('site.orders.categories') }}" method="get" name="adminForm" id="adminForm" class="row">
 		<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 			<fieldset class="filters mt-0">
 				<legend class="sr-only">Filter</legend>
@@ -276,7 +276,6 @@ app('pathway')
 				</div>
 			@endif
 
-			@csrf
 		</div>
 	</form>
 </div>

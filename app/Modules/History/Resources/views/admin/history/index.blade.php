@@ -33,7 +33,7 @@ app('pathway')
 	history
 @endcomponent
 
-<form action="{{ route('admin.history.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.history.index') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col filter-search col-md-4">
@@ -163,8 +163,6 @@ app('pathway')
 	@endif
 
 	<input type="hidden" name="boxchecked" value="0" />
-
-	@csrf
 </form>
 
 @stop

@@ -14,7 +14,7 @@
 
 @section('content')
 
-<form action="{{ route('admin.modules.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.modules.index') }}" method="gett" name="adminForm" id="adminForm" class="form-inline">
 
 	@if (count($rows))
 	<div class="card mb-4">
@@ -67,6 +67,5 @@
 	@endif
 
 	<input type="hidden" name="boxchecked" value="0" />
-	@csrf
 </form>
 @stop

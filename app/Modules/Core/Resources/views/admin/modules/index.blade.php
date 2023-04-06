@@ -23,7 +23,7 @@
 
 @section('content')
 
-<form action="{{ route('admin.modules.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.modules.index') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -154,6 +154,5 @@
 	@endif
 
 	<input type="hidden" name="boxchecked" value="0" />
-	@csrf
 </form>
 @stop

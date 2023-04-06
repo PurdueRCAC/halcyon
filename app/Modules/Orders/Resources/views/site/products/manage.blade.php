@@ -18,7 +18,7 @@
 	products
 @endcomponent
 <h2>Manage Products</h2>
-<form action="{{ route('admin.orders.products') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.orders.products') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -183,8 +183,6 @@
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
 	<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
-
-	@csrf
 </form>
 
 @stop

@@ -40,7 +40,7 @@ app('pathway')
 	facets
 @endcomponent
 
-<form action="{{ route('admin.finder.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.finder.index') }}" method="gett" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -146,7 +146,5 @@ app('pathway')
 
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />
-
-	@csrf
 </form>
 @stop

@@ -51,7 +51,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.widgets.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.widgets.index') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">

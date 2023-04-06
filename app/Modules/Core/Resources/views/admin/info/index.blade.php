@@ -24,7 +24,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.core.sysinfo') }}" method="post" name="adminForm" id="adminForm">
+<form action="{{ route('admin.core.sysinfo') }}" method="get" name="adminForm" id="adminForm">
 
 	<div id="config-document">
 		<nav class="container-fluid">
@@ -71,8 +71,6 @@ app('pathway')
 			</div>
 		</div>
 	</div>
-
-	@csrf
 
 </form>
 @stop

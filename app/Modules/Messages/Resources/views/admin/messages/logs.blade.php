@@ -36,7 +36,7 @@ app('pathway')
 	logs
 @endcomponent
 
-<form action="{{ route('admin.messages.logs') }}" method="post" name="adminForm" id="adminForm" class="form-inlin">
+<form action="{{ route('admin.messages.logs') }}" method="get" name="adminForm" id="adminForm" class="form-inlin">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -80,8 +80,6 @@ app('pathway')
 			</div>
 		@endif
 	</div>
-
-	@csrf
 </form>
 
 @stop

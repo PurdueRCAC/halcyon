@@ -155,7 +155,7 @@ app('pathway')
 	stats
 @endcomponent
 
-<form action="{{ route('admin.orders.stats') }}" method="post" name="adminForm" id="adminForm" class="form-inlin">
+<form action="{{ route('admin.orders.stats') }}" method="get" name="adminForm" id="adminForm" class="form-inlin">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -545,8 +545,6 @@ app('pathway')
 			</div>
 		</div>
 	</div>
-
-	@csrf
 </form>
 
 @stop
