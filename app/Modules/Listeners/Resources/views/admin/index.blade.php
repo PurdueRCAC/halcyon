@@ -34,7 +34,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.listeners.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.listeners.index') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row grid">
@@ -43,7 +43,7 @@ app('pathway')
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
@@ -143,10 +143,11 @@ app('pathway')
 					@else
 						@if ($canEdit)
 							<a href="{{ route('admin.listeners.edit', ['id' => $row->id]) }}">
-								{{ trans(strtolower('listener.' . $row->folder . '.' . $row->element . '::' . $row->element . '.listener name')) }}
+								<!-- {{ trans(strtolower('listener.' . $row->folder . '.' . $row->element . '::' . $row->element . '.listener name')) }} -->
+								{!! App\Halcyon\Utility\Str::highlight(e($row->name), $filters['search']) !!}
 							</a>
 						@else
-							{{ $row->name }}
+							{!! App\Halcyon\Utility\Str::highlight(e($row->name), $filters['search']) !!}
 						@endif
 					@endif
 					@if (!$path)
@@ -195,7 +196,7 @@ app('pathway')
 					{{ $row->folder }}
 				</td>
 				<td class="priority-5">
-					{{ $row->element }}
+					{!! App\Halcyon\Utility\Str::highlight(e($row->element), $filters['search']) !!}
 				</td>
 			</tr>
 		@endforeach
@@ -207,8 +208,6 @@ app('pathway')
 	{{ $rows->render() }}
 
 	<input type="hidden" name="boxchecked" value="0" />
-
-	@csrf
 </form>
 
 @stop

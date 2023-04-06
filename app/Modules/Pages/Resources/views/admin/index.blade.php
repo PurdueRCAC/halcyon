@@ -63,7 +63,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.pages.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.pages.index') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -71,7 +71,7 @@ app('pathway')
 				<div class="form-group">
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
-						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+						<input type="text" name="search" id="filter_search" enterkeyhint="search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
@@ -153,15 +153,15 @@ app('pathway')
 					@endif
 					@if (auth()->user()->can('edit pages'))
 						<a href="{{ route('admin.pages.edit', ['id' => $row->id]) }}">
-							{{ $row->title }}
+							{!! App\Halcyon\Utility\Str::highlight(e($row->title), $filters['search']) !!}
 						</a>
 					@else
-						{{ $row->title }}
+						{!! App\Halcyon\Utility\Str::highlight(e($row->title), $filters['search']) !!}
 					@endif
 				</td>
 				<td class="priority-4">
 					<a href="{{ route('admin.pages.edit', ['id' => $row->id]) }}">
-						/{{ ltrim($row->path, '/') }}
+						/{!! App\Halcyon\Utility\Str::highlight(e(ltrim($row->path, '/')), $filters['search']) !!}
 					</a>
 				</td>
 				<td class="priority-3">
@@ -256,8 +256,6 @@ app('pathway')
 	@endif
 
 	<input type="hidden" name="boxchecked" value="0" />
-
-	@csrf
 </form>
 
 @stop

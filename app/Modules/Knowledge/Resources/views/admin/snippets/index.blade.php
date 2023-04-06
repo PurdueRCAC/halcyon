@@ -50,7 +50,7 @@ app('pathway')
 	snippets
 @endcomponent
 
-<form action="{{ route('admin.knowledge.snippets') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.knowledge.snippets') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -58,8 +58,8 @@ app('pathway')
 				<div class="form-group">
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
-						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+						<input type="search" name="search" enterkeyhint="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
@@ -131,19 +131,33 @@ app('pathway')
 					{{ $row->id }}
 				</td>
 				<td>
-					{!! str_repeat('<span class="gi">|&mdash;</span>', $row->level - 1) !!}
+					@php
+					$title = Illuminate\Support\Str::limit($row->title, 70);
+					$title = App\Halcyon\Utility\Str::highlight(e($title), $filters['search']);
+					@endphp
+					{!! str_repeat('<span class="gi">|&mdash;</span>', $row->level) !!}
 					@if (auth()->user()->can('edit knowledge'))
 						<a href="{{ route('admin.knowledge.snippets.edit', ['id' => $row->id]) }}">
-							{{ Illuminate\Support\Str::limit($row->title, 70) }}
+							@if ($row->isSeparator())
+								<span class="unknown">{{ trans('knowledge::knowledge.type separator') }}</span>
+							@endif
+							{!! $title !!}
 						</a>
 					@else
 						<span>
-							{{ Illuminate\Support\Str::limit($row->title, 70) }}
+							@if ($row->isSeparator())
+								<span class="unknown">{{ trans('knowledge::knowledge.type separator') }}</span>
+							@endif
+							{!! $title !!}
 						</span>
 					@endif
 				</td>
 				<td>
-					{{ $row->path }}
+					@if ($row->isSeparator())
+						<span class="unknown">&mdash;</span>
+					@else
+						/{!! App\Halcyon\Utility\Str::highlight(e(trim($row->path, '/')), $filters['search']) !!}
+					@endif
 				</td>
 				<td class="priority-6">
 					<span class="datetime">
@@ -201,7 +215,5 @@ app('pathway')
 	@endif
 
 	<input type="hidden" name="boxchecked" value="0" />
-
-	@csrf
 </form>
 @stop

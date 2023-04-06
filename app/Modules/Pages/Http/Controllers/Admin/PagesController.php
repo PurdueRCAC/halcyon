@@ -8,6 +8,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Config\Repository;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use App\Modules\Pages\Models\Page;
 use App\Modules\Pages\Models\Version;
 use App\Halcyon\Http\StatefulRequest;
@@ -75,10 +76,22 @@ class PagesController extends Controller
 
 		if ($filters['search'])
 		{
+			$query->select(
+				$page . '.*',
+				DB::raw('IF(' . $page . '.title LIKE "' . $filters['search'] . '%", 20,
+						IF(' . $page . '.title LIKE "%' . $filters['search'] . '%", 10, 0)
+					)
+					+ IF(' . $page . '.content LIKE "%' . $filters['search'] . '%", 5, 0)
+					+ IF(' . $page . '.path    LIKE "%' . $filters['search'] . '%", 1, 0)
+					AS `weight`')
+				)
+				->orderBy('weight', 'desc');
 			$query->where(function($query) use ($filters, $page)
 			{
-				$query->where($page . '.content', 'like', '%' . $filters['search'] . '%')
-					->orWhere($page . '.title', 'like', '%' . $filters['search'] . '%');
+				$query->where($page . '.title', 'like', $filters['search'] . '%')
+					->orWhere($page . '.title', 'like', '%' . $filters['search'] . '%')
+					->orWhere($page . '.content', 'like', '%' . $filters['search'] . '%')
+					->orWhere($page . '.path', 'like', '%' . $filters['search'] . '%');
 			});
 		}
 

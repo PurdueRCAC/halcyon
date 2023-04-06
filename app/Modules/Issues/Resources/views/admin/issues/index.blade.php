@@ -117,7 +117,7 @@ app('pathway')
 @component('issues::admin.submenu')
 	issues
 @endcomponent
-<form action="{{ route('admin.issues.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.issues.index') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -298,7 +298,5 @@ app('pathway')
 	@endif
 
 	<input type="hidden" name="boxchecked" value="0" />
-
-	@csrf
 </form>
 @stop

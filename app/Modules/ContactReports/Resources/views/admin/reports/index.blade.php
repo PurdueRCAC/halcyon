@@ -45,7 +45,7 @@ app('pathway')
 @component('contactreports::admin.submenu')
 	reports
 @endcomponent
-<form action="{{ route('admin.contactreports.index') }}" data-api="{{ route('api.contactreports.index') }}" method="post" name="adminForm" id="adminForm" class="form-inlin">
+<form action="{{ route('admin.contactreports.index') }}" data-api="{{ route('api.contactreports.index') }}" method="get" name="adminForm" id="adminForm" class="form-inlin">
 
 	<div class="row">
 		<div class="col-md-3">
@@ -55,7 +55,7 @@ app('pathway')
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
@@ -367,8 +367,6 @@ app('pathway')
 		</div>
 		</div>
 	<input type="hidden" name="boxchecked" value="0" />
-
-	@csrf
 </form>
 
 @stop

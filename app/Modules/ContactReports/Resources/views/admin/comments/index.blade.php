@@ -29,7 +29,7 @@
 
 @section('content')
 
-<form action="{{ route('admin.contactreports.comments', ['report' => $report->id]) }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.contactreports.comments', ['report' => $report->id]) }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar">
 		<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
@@ -116,8 +116,6 @@
 	@endif
 
 	<input type="hidden" name="boxchecked" value="0" />
-
-	@csrf
 </form>
 
 @stop

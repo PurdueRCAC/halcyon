@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Knowledge\Models\Page;
 use App\Modules\Knowledge\Models\SnippetAssociation;
@@ -72,11 +73,24 @@ class SnippetsController extends Controller
 
 		if ($filters['search'])
 		{
-			$query->where(function($query) use ($filters, $p)
+			$query->select(
+				$p . '.title', $p . '.alias', $p . '.snippet', $p . '.updated_at', $a . '.*',
+				DB::raw('IF(' . $p . '.title LIKE "' . $filters['search'] . '%", 20,
+						IF(' . $p . '.title LIKE "%' . $filters['search'] . '%", 10, 0)
+					)
+					+ IF(' . $p . '.content LIKE "%' . $filters['search'] . '%", 5, 0)
+					+ IF(' . $a . '.path    LIKE "%' . $filters['search'] . '%", 1, 0)
+					AS `weight`')
+				)
+				->orderBy('weight', 'desc');
+			$query->where(function($query) use ($filters, $p, $a)
 			{
-				$query->where($p . '.title', 'like', '%' . $filters['search'] . '%')
-					->orWhere($p . '.content', 'like', '%' . $filters['search'] . '%');
+				$query->where($p . '.title', 'like', $filters['search'] . '%')
+					->orWhere($p . '.title', 'like', '%' . $filters['search'] . '%')
+					->orWhere($p . '.content', 'like', '%' . $filters['search'] . '%')
+					->orWhere($a . '.path', 'like', '%' . $filters['search'] . '%');
 			});
+
 		}
 
 		if ($filters['parent'])

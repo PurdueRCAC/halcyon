@@ -28,7 +28,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.themes.store') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.themes.store') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -37,7 +37,7 @@ app('pathway')
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
@@ -101,10 +101,10 @@ app('pathway')
 				<td>
 					@if ($canEdit)
 						<a href="{{ route('admin.themes.edit', ['id' => $row->id]) }}">
-							{{ $row->name }}
+							{!! App\Halcyon\Utility\Str::highlight(e($row->name), $filters['search']) !!}
 						</a>
 					@else
-						{{ $row->name }}
+						{!! App\Halcyon\Utility\Str::highlight(e($row->name), $filters['search']) !!}
 					@endif
 					@if (!$row->path())
 						<p class="smallsub">{{ trans('themes::themes.error.missing files') }}</p>
@@ -145,8 +145,6 @@ app('pathway')
 	@endif
 
 	<input type="hidden" name="boxchecked" value="0" />
-
-	@csrf
 </form>
 
 @stop

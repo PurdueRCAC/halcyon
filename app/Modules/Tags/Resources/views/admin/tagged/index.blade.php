@@ -32,7 +32,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.tags.tagged') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.tags.tagged') }}" method="gett" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar">
 		<div class="form-group filter-search">
@@ -119,7 +119,5 @@ app('pathway')
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 	<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
-
-	@csrf
 </form>
 @stop

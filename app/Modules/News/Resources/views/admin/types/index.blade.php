@@ -40,7 +40,7 @@ app('pathway')
 	types
 @endcomponent
 
-<form action="{{ route('admin.news.types') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.news.types') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -125,11 +125,11 @@ app('pathway')
 					@endif
 					@if (auth()->user()->can('edit news.types'))
 						<a href="{{ route('admin.news.types.edit', ['id' => $row->id]) }}">
-							{{ $row->name }}
+							{!! App\Halcyon\Utility\Str::highlight(e($row->name), $filters['search']) !!}
 						</a>
 					@else
 						<span>
-							{{ $row->name }}
+							{!! App\Halcyon\Utility\Str::highlight(e($row->name), $filters['search']) !!}
 						</span>
 					@endif
 				</td>
@@ -226,8 +226,6 @@ app('pathway')
 	@endif
 
 	<input type="hidden" name="boxchecked" value="0" />
-
-	@csrf
 </form>
 
 @stop

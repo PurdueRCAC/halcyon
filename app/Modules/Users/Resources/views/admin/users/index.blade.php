@@ -56,7 +56,7 @@ app('pathway')
 	<?php echo request()->segment(3); ?>
 @endcomponent
 
-<form action="{{ route('admin.users.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.users.index') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -176,13 +176,13 @@ app('pathway')
 				</td>
 				<td>
 					<a href="{{ route('admin.users.show', ['id' => $row->id]) }}">
-						{{ $row->name }}
+						{!! App\Halcyon\Utility\Str::highlight(e($row->name), $filters['search']) !!}
 					</a>
 				</td>
 				<td>
 					<a href="{{ route('admin.users.show', ['id' => $row->id]) }}">
 						@if ($row->username)
-							{{ $row->username }}
+							{!! App\Halcyon\Utility\Str::highlight(e($row->username), $filters['search']) !!}
 						@else
 							<span class="text-muted unknown">{{ trans('global.none') }}</span>
 						@endif
@@ -249,8 +249,6 @@ app('pathway')
 
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />
-
-	@csrf
 </form>
 
 @stop

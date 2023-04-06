@@ -60,7 +60,7 @@ app('pathway')
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
@@ -175,7 +175,7 @@ app('pathway')
 					@if (auth()->user()->can('edit widgets'))
 						<a href="{{ route('admin.widgets.edit', ['id' => $row->id]) }}">
 					@endif
-						{{ $row->title }}
+						{!! App\Halcyon\Utility\Str::highlight(e($row->title), $filters['search']) !!}
 					@if (auth()->user()->can('edit widgets'))
 						</a>
 					@endif
@@ -308,7 +308,5 @@ app('pathway')
 			</div>
 		</div>
 	</div>
-
-	@csrf
 </form>
 @stop

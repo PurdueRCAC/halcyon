@@ -111,7 +111,7 @@ class ListenersController extends Controller
 			}
 			else
 			{
-				$query->where(function($where) use ($filters)
+				$query->where(function($where) use ($filters, $p)
 				{
 					$where->where($p . '.name', 'like', '%' . $filters['search'] . '%')
 						->orWhere($p . '.element', 'like', '%' . $filters['search'] . '%');

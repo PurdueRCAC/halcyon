@@ -53,7 +53,7 @@
 	pages
 @endcomponent
 
-<form action="{{ route('admin.knowledge.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.knowledge.index') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -62,7 +62,7 @@
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" name="search" enterkeyhint="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
@@ -172,20 +172,24 @@
 					{{ $row->id }}
 				</td>
 				<td>
+					@php
+					$title = Illuminate\Support\Str::limit($row->title, 70);
+					$title = App\Halcyon\Utility\Str::highlight(e($title), $filters['search']);
+					@endphp
 					{!! str_repeat('<span class="gi">|&mdash;</span>', $row->level) !!}
 					@if (auth()->user()->can('edit knowledge'))
 						<a href="{{ route('admin.knowledge.edit', ['id' => $row->id]) }}">
 							@if ($row->isSeparator())
 								<span class="unknown">{{ trans('knowledge::knowledge.type separator') }}</span>
 							@endif
-							{{ Illuminate\Support\Str::limit($row->title, 70) }}
+							{!! $title !!}
 						</a>
 					@else
 						<span>
 							@if ($row->isSeparator())
 								<span class="unknown">{{ trans('knowledge::knowledge.type separator') }}</span>
 							@endif
-							{{ Illuminate\Support\Str::limit($row->title, 70) }}
+							{!! $title !!}
 						</span>
 					@endif
 				</td>
@@ -193,7 +197,7 @@
 					@if ($row->isSeparator())
 						<span class="unknown">&mdash;</span>
 					@else
-						/{{ trim($row->path, '/') }}
+						/{!! App\Halcyon\Utility\Str::highlight(e(trim($row->path, '/')), $filters['search']) !!}
 					@endif
 				</td>
 				<td>
@@ -309,7 +313,7 @@
 					</button>
 				</div>
 				<div class="modal-body dialog-body">
-					<div class="row">
+					<div class="row text-center">
 						<div class="col-md-4">
 							<a href="{{ route('admin.knowledge.create') }}" class="form-group form-block text-center">
 								<span class="icon-edit fa fa-pencil" aria-hidden="true"></span>
@@ -334,6 +338,5 @@
 		</div>
 	</div>
 	@endif
-	@csrf
 </form>
 @stop

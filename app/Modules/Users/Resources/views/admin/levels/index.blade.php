@@ -40,7 +40,7 @@ app('pathway')
 	levels
 @endcomponent
 
-<form action="{{ route('admin.users.levels') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.users.levels') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -103,10 +103,10 @@ app('pathway')
 				<td>
 					@if (auth()->user()->can('edit users.levels'))
 						<a href="{{ route('admin.users.levels.edit', ['id' => $row->id]) }}">
-							{{ $row->title }}
+							{!! App\Halcyon\Utility\Str::highlight(e($row->title), $filters['search']) !!}
 						</a>
 					@else
-						{{ $row->title }}
+						{!! App\Halcyon\Utility\Str::highlight(e($row->title), $filters['search']) !!}
 					@endif
 				</td>
 				<td>
@@ -161,8 +161,6 @@ app('pathway')
 	@endif
 
 	<input type="hidden" name="boxchecked" value="0" />
-
-	@csrf
 </form>
 
 @stop

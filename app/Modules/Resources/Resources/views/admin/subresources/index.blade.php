@@ -49,7 +49,7 @@ app('pathway')
 	<?php echo request()->segment(3); ?>
 @endcomponent
 
-<form action="{{ route('admin.resources.subresources') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.resources.subresources') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -145,7 +145,7 @@ app('pathway')
 					@if (auth()->user()->can('edit resources') || auth()->user()->can('delete resources'))
 						<a href="{{ route('admin.resources.subresources.edit', ['id' => $row->id]) }}">
 					@endif
-						{{ $row->name }}
+						{!! App\Halcyon\Utility\Str::highlight(e($row->name), $filters['search']) !!}
 					@if (auth()->user()->can('edit resources') || auth()->user()->can('delete resources'))
 						</a>
 					@endif
@@ -224,8 +224,6 @@ app('pathway')
 
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />
-
-	@csrf
 </form>
 
 @stop

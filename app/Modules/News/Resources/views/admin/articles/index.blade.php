@@ -63,7 +63,7 @@ else
 	@endif
 @endcomponent
 
-<form action="{{ $template ? route('admin.news.templates') : route('admin.news.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ $template ? route('admin.news.templates') : route('admin.news.index') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -161,17 +161,21 @@ else
 					{{ $row->id }}
 				</td>
 				<td>
+					@php
+					$headline = Illuminate\Support\Str::limit($row->headline, 70);
+					$headline = App\Halcyon\Utility\Str::highlight(e($headline), $filters['search']);
+					@endphp
 					@if (auth()->user()->can('edit news'))
 						<a href="{{ route('admin.news.edit', ['id' => $row->id]) }}">
 							@if ($row->headline)
-								{{ Illuminate\Support\Str::limit($row->headline, 70) }}
+								{!! $headline !!}
 							@else
 								<span class="none">{{ trans('global.none') }}</span>
 							@endif
 						</a>
 					@else
 						@if ($row->headline)
-							{{ Illuminate\Support\Str::limit($row->headline, 70) }}
+							{!! $headline !!}
 						@else
 							<span class="none">{{ trans('global.none') }}</span>
 						@endif
@@ -266,6 +270,10 @@ else
 		</div>
 	@endif
 
+	<input type="hidden" name="boxchecked" value="0" />
+</form>
+
+<form action="{{ $template ? route('admin.news.templates') : route('admin.news.index') }}" method="post" class="form-inline">
 	<script id="mailpreview-template" type="text/x-handlebars-template">
 		<div id="mail-recipients"><strong>To:</strong> <?php echo '{{resourcelist}}'; ?> Users</div>
 		<div id="mail-from"><strong>From:</strong> YOU via <?php echo config('app.name'); ?></div>
@@ -340,7 +348,6 @@ else
 	</div>
 
 	@csrf
-	<input type="hidden" name="boxchecked" value="0" />
 </form>
 
 <div class="modal" id="copy-article" tabindex="-1" aria-labelledby="copy-article-title" aria-hidden="true">

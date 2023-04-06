@@ -37,7 +37,7 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.menus.index') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.menus.index') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -113,10 +113,10 @@ app('pathway')
 				<td>
 					@if (auth()->user()->can('edit menus'))
 						<a href="{{ route('admin.menus.edit', ['id' => $row->id]) }}">
-							{{ $row->title }}
+							{!! App\Halcyon\Utility\Str::highlight(e($row->title), $filters['search']) !!}
 						</a>
 					@else
-						{{ $row->title }}
+						{!! App\Halcyon\Utility\Str::highlight(e($row->title), $filters['search']) !!}
 					@endif
 				</td>
 				<td class="priority-3">
@@ -179,7 +179,5 @@ app('pathway')
 	@endif
 
 	<input type="hidden" name="boxchecked" value="0" />
-
-	@csrf
 </form>
 @stop

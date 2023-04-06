@@ -40,7 +40,7 @@ app('pathway')
 	types
 @endcomponent
 
-<form action="{{ route('admin.publications.types') }}" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.publications.types') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -133,8 +133,6 @@ app('pathway')
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 	<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
-
-	@csrf
 </form>
 
 @stop
