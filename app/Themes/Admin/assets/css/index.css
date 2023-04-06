@@ -2405,6 +2405,14 @@ table.adminlist td.order input[type=number] {
   }
 }
 
+strong.highlight {
+  font-weight: normal;
+  background-color:rgba(237, 215, 67, 0.35);
+  display: inline-block;
+  padding: 0;
+  border-radius: 0.25em;
+}
+
 .sampleoutput {
   border: 1px solid var(--input-border);
   padding: 1em;
