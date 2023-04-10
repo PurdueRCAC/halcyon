@@ -4,6 +4,7 @@ namespace App\Modules\Tags\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use App\Modules\Tags\Models\Tag;
+use Carbon\Carbon;
 
 trait Taggable
 {
@@ -214,7 +215,10 @@ trait Taggable
 
 		if ($this->tags->contains($tag->id) === false)
 		{
-			$this->tags()->attach($tag);
+			$this->tags()->attach($tag, [
+				'created_at' => Carbon::now(),
+				'created_by' => auth()->user() ? auth()->user()->id : 0
+			]);
 			$this->tags->push($tag);
 		}
 	}
