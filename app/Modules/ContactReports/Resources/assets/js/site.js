@@ -1535,7 +1535,7 @@ function CRMPrintRow(report, cls) { //people, comments, userid, cls) {
 		// Delete button
 		a = document.createElement("a");
 		a.href = "?id=" + id + "&delete";
-		a.className = 'edit news-delete tip';
+		a.className = 'edit news-delete tip float-right';
 		a.onclick = function (e) {
 			e.preventDefault();
 			CRMDeleteReport(report['id']);
@@ -3182,7 +3182,11 @@ document.addEventListener('DOMContentLoaded', function () {
 				document.getElementById('datestartshort').disabled = true;
 			}
 
-			CRMToggle('edit', false);
+			if (original.id) {
+				CRMToggle('edit', false);
+			} else {
+				CRMToggle('add', false);
+			}
 		}
 	}
 
