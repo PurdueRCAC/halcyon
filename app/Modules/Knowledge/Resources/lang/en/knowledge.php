@@ -95,4 +95,7 @@ return [
 	'add child page' => 'Add child page',
 	'article not found' => 'Article not found.',
 	'article no longer available' => 'Article no longer available.',
+	'metadata' => 'Metadata',
+	'metakey' => 'Keywords',
+	'metadesc' => 'Description',
 ];

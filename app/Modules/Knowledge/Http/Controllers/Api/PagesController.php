@@ -307,6 +307,15 @@ class PagesController extends Controller
 	 * 			"default":   0
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "tags",
+	 * 		"description":   "A comma-separated list of keywords or phrases",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"201": {
 	 * 			"description": "Successful entry creation",
@@ -415,9 +424,19 @@ class PagesController extends Controller
 			}
 		}
 
+		$page->metakey = $request->input('metakey');
+		$page->metadesc = $request->input('metadesc');
+
 		if (!$page->save())
 		{
 			return response()->json(['message' => trans('global.messages.save failed')], 409);
+		}
+
+		if ($page->metakey)
+		{
+			$tags = explode(',', $page->metakey);
+			$tags = array_map('trim', $tags);
+			$page->setTags($tags);
 		}
 
 		$row->page_id = $page->id;
@@ -597,6 +616,15 @@ class PagesController extends Controller
 	 * 			"default":   0
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "tags",
+	 * 		"description":   "A comma-separated list of keywords or phrases. Pass an empty value to unset all tags.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"202": {
 	 * 			"description": "Successful entry modification",
@@ -708,6 +736,20 @@ class PagesController extends Controller
 		if (!$page->save())
 		{
 			return response()->json(['message' => trans('global.messages.save failed')], 409);
+		}
+
+		if ($request->has('metakey'))
+		{
+			$page->metakey = $request->input('metakey', '');
+
+			$tags = explode(',', $page->metakey);
+			$tags = array_map('trim', $tags);
+			$page->setTags($tags);
+		}
+
+		if ($request->has('metadesc'))
+		{
+			$page->metadesc = $request->input('metadesc');
 		}
 
 		$row->page_id = $page->id;

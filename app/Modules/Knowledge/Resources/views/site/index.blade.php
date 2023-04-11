@@ -359,7 +359,7 @@
 							</div>
 						</fieldset>
 					</div>
-					<div class="col-md-6">
+					<div class="col col-md-6">
 				@else
 					<div class="col col-md-12">
 				@endif
@@ -380,6 +380,21 @@
 									<option value="0"<?php if (!$page->params->get('show_toc', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 									<option value="1"<?php if ($page->params->get('show_toc', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
 								</select>
+							</div>
+						</fieldset>
+					</div>
+					<div class="col col-md-12">
+						<fieldset>
+							<legend>{{ trans('knowledge::knowledge.metadata') }}</legend>
+
+							<div class="form-group">
+								<label for="field-metakey">{{ trans('knowledge::knowledge.metakey') }}</label>
+								<input type="text" name="metakey" id="field-metakey" class="form-control taggable" data-api="{{ route('api.tags.index') }}" value="{{ implode(', ', $page->tags->pluck('name')->toArray()) }}" />
+							</div>
+
+							<div class="form-group">
+								<label for="field-metadesc">{{ trans('knowledge::knowledge.metadesc') }}</label>
+								<textarea class="form-control" name="metadesc" id="field-metadesc" rows="3" cols="40">{{ $page->metadesc }}</textarea>
 							</div>
 						</fieldset>
 					</div>

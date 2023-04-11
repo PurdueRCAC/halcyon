@@ -422,11 +422,17 @@ class PagesController extends Controller
 				$page->params->set($key, $val);
 			}
 		}
+		$page->metakey = $request->input('page.metakey');
+		$page->metadesc = $request->input('page.metadesc');
 
 		if (!$page->save())
 		{
 			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
+
+		$tags = explode(',', $page->metakey);
+		$tags = array_map('trim', $tags);
+		$page->setTags($tags);
 
 		$row->page_id = $page->id;
 		$row->path = '';

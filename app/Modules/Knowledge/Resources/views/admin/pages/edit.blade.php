@@ -145,49 +145,69 @@ app('pathway')
 			</fieldset>
 
 			@if (!$page->isSeparator())
-			<fieldset class="adminform">
-				<legend>{{ trans('knowledge::knowledge.options') }}</legend>
+			<details class="card" open="true">
+				<summary class="card-header" id="options-heading">
+					{{ trans('knowledge::knowledge.options') }}
+				</summary>
+				<fieldset class="card-body mb-0">
+					<fieldset>
+						<legend>{{ trans('knowledge::knowledge.show title') }}</legend>
 
-				<fieldset>
-					<legend>{{ trans('knowledge::knowledge.show title') }}</legend>
+						<div class="row">
+							<div class="col col-md-6 form-group">
+								<div class="form-check">
+									<input type="radio" name="params[show_title]" id="params-show_title_no" class="form-check-input" value="0"<?php if (!$page->params->get('show_title', 1)) { echo ' checked="checked"'; } ?> />
+									<label class="form-check-label" for="params-show_title_no">{{ trans('global.no') }}</label>
+								</div>
+							</div>
 
-					<div class="row">
-						<div class="col col-md-6 form-group">
-							<div class="form-check">
-								<input type="radio" name="params[show_title]" id="params-show_title_no" class="form-check-input" value="0"<?php if (!$page->params->get('show_title', 1)) { echo ' checked="checked"'; } ?> />
-								<label class="form-check-label" for="params-show_title_no">{{ trans('global.no') }}</label>
+							<div class="col col-md-6 form-group">
+								<div class="form-check">
+									<input type="radio" name="params[show_title]" id="params-show_title_yes" class="form-check-input" value="1"<?php if ($page->params->get('show_title', 1)) { echo ' checked="checked"'; } ?> />
+									<label class="form-check-label" for="params-show_title_yes">{{ trans('global.yes') }}</label>
+								</div>
 							</div>
 						</div>
+					</fieldset>
 
-						<div class="col col-md-6 form-group">
-							<div class="form-check">
-								<input type="radio" name="params[show_title]" id="params-show_title_yes" class="form-check-input" value="1"<?php if ($page->params->get('show_title', 1)) { echo ' checked="checked"'; } ?> />
-								<label class="form-check-label" for="params-show_title_yes">{{ trans('global.yes') }}</label>
+					<fieldset>
+						<legend>{{ trans('knowledge::knowledge.show toc') }}</legend>
+
+						<div class="row">
+							<div class="col col-md-6 form-group">
+								<div class="form-check">
+									<input type="radio" name="params[show_toc]" id="params-show_toc_no" class="form-check-input" value="0"<?php if (!$page->params->get('show_toc')) { echo ' checked="checked"'; } ?> />
+									<label class="form-check-label" for="params-show_toc_no">{{ trans('global.no') }}</label>
+								</div>
+							</div>
+
+							<div class="col col-md-6 form-group">
+								<div class="form-check">
+									<input type="radio" name="params[show_toc]" id="params-show_toc_yes" class="form-check-input" value="1"<?php if ($page->params->get('show_toc')) { echo ' checked="checked"'; } ?> />
+									<label class="form-check-label" for="params-show_toc_yes">{{ trans('global.yes') }}</label>
+								</div>
 							</div>
 						</div>
+					</fieldset>
+				</fieldset>
+			</details>
+
+			<details class="card">
+				<summary class="card-header" id="meta-heading">
+					{{ trans('knowledge::knowledge.metadata') }}
+				</summary>
+				<fieldset class="card-body mb-0">
+					<div class="form-group">
+						<label for="field-metakey">{{ trans('knowledge::knowledge.metakey') }}</label>
+						<input type="text" name="page[metakey]" id="field-metakey" class="form-control taggable" data-api="{{ route('api.tags.index') }}" value="{{ implode(', ', $page->tags->pluck('name')->toArray()) }}" />
+					</div>
+
+					<div class="form-group">
+						<label for="field-metadesc">{{ trans('knowledge::knowledge.metadesc') }}</label>
+						<textarea class="form-control" name="page[metadesc]" id="field-metadesc" rows="3" cols="40">{{ $page->metadesc }}</textarea>
 					</div>
 				</fieldset>
-
-				<fieldset>
-					<legend>{{ trans('knowledge::knowledge.show toc') }}</legend>
-
-					<div class="row">
-						<div class="col col-md-6 form-group">
-							<div class="form-check">
-								<input type="radio" name="params[show_toc]" id="params-show_toc_no" class="form-check-input" value="0"<?php if (!$page->params->get('show_toc')) { echo ' checked="checked"'; } ?> />
-								<label class="form-check-label" for="params-show_toc_no">{{ trans('global.no') }}</label>
-							</div>
-						</div>
-
-						<div class="col col-md-6 form-group">
-							<div class="form-check">
-								<input type="radio" name="params[show_toc]" id="params-show_toc_yes" class="form-check-input" value="1"<?php if ($page->params->get('show_toc')) { echo ' checked="checked"'; } ?> />
-								<label class="form-check-label" for="params-show_toc_yes">{{ trans('global.yes') }}</label>
-							</div>
-						</div>
-					</div>
-				</fieldset>
-			</fieldset>
+			</details>
 
 			@if (config('module.knowledge.collect_feedback', true))
 				<fieldset class="adminform">
@@ -219,15 +239,17 @@ app('pathway')
 				</fieldset>
 			@endif
 
-			@sliders('start', 'module-sliders')
-				@sliders('panel', trans('knowledge::knowledge.variables'), 'params-variables')
-					<fieldset class="car-body" id="param-variables">
+				<details class="card" open="true">
+					<summary class="card-header" id="param-variables">
+						{{ trans('knowledge::knowledge.variables') }}
+					</summary>
+					<fieldset class="card-body mb-0">
 						<table>
 							<thead>
 								<tr>
 									<th scope="col">{{ trans('knowledge::knowledge.key') }}</th>
 									<th scope="col">{{ trans('knowledge::knowledge.value') }}</th>
-									<th scope="col"></th>
+									<th scope="col"><span class="sr-only">{{ trans('knowledge::knowledge.options') }}</span></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -247,7 +269,7 @@ app('pathway')
 									<td>
 										<input type="text" name="params[variables][{{ $i }}][value]" id="params-variables-{{ $i }}-value" value="{{ $val }}" class="form-control" />
 									</td>
-									<td>
+									<td class="text-right">
 										<a href="#params-variables-{{ $i }}" class="btn text-danger delete-row">
 											<span class="fa fa-trash" aria-hidden="true"></span>
 											<span class="sr-only">{{ trans('global.delete') }}</span>
@@ -270,7 +292,7 @@ app('pathway')
 									<td>
 										<input type="text" name="params[variables][{{ $i }}][value]" id="params-variables-{{ $i }}-value" value="" class="form-control" />
 									</td>
-									<td>
+									<td class="text-right">
 										<a href="#params-variables-{{ $i }}" class="btn text-danger delete-row disabled">
 											<span class="fa fa-trash" aria-hidden="true"></span>
 											<span class="sr-only">{{ trans('global.delete') }}</span>
@@ -290,8 +312,13 @@ app('pathway')
 							</tfoot>
 						</table>
 					</fieldset>
-				@sliders('panel', trans('knowledge::knowledge.tags'), 'params-tags')
-					<fieldset class="panelform" id="param-tags">
+				</details>
+
+				<details class="card">
+					<summary class="card-header" id="param-tags">
+						{{ trans('knowledge::knowledge.tags') }}
+					</summary>
+					<fieldset class="card-body mb-0">
 						<table>
 							<thead>
 								<tr>
@@ -308,7 +335,7 @@ app('pathway')
 									<td>
 										<input type="text" name="params[tags][{{ $i }}]" id="params-tags-{{ $i }}-value" value="{{ $val }}" class="form-control" />
 									</td>
-									<td>
+									<td class="text-right">
 										<a href="#params-tags-{{ $i }}" class="btn text-danger delete-row">
 											<span class="fa fa-trash" aria-hidden="true"></span>
 											<span class="sr-only">{{ trans('global.delete') }}</span>
@@ -323,7 +350,7 @@ app('pathway')
 									<td>
 										<input type="text" name="params[tags][{{ $i }}]" id="params-tags-{{ $i }}-value" value="" class="form-control" />
 									</td>
-									<td>
+									<td class="text-right">
 										<a href="#params-tags-{{ $i }}" class="btn text-danger delete-row disabled">
 											<span class="fa fa-trash" aria-hidden="true"></span>
 											<span class="sr-only">{{ trans('global.delete') }}</span>
@@ -343,8 +370,13 @@ app('pathway')
 							</tfoot>
 						</table>
 					</fieldset>
-				@sliders('panel', trans('knowledge::knowledge.inherited variables'), 'params-inherited')
-					<fieldset class="panelform">
+				</details>
+
+				<details class="card">
+					<summary class="card-header" id="param-inherited">
+						{{ trans('knowledge::knowledge.inherited variables') }}
+					</summary>
+					<fieldset class="card-body mb-0">
 						<table>
 							<thead>
 								<tr>
@@ -368,7 +400,7 @@ app('pathway')
 							</tbody>
 						</table>
 					</fieldset>
-			@sliders('end')
+				</details>
 			@endif
 		</div>
 	</div>

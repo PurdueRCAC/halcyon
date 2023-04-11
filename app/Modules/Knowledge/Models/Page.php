@@ -14,6 +14,7 @@ use App\Modules\Knowledge\Events\PageCreated;
 use App\Modules\Knowledge\Events\PageUpdating;
 use App\Modules\Knowledge\Events\PageUpdated;
 use App\Modules\Knowledge\Events\PageDeleted;
+use App\Modules\Tags\Traits\Taggable;
 use App\Halcyon\Models\Casts\Params;
 use Carbon\Carbon;
 
@@ -35,7 +36,7 @@ use Carbon\Carbon;
  */
 class Page extends Model
 {
-	use Historable, SoftDeletes;
+	use Historable, SoftDeletes, Taggable;
 
 	/**
 	 * Regex patterns for in-content IF statements
