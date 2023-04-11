@@ -72,6 +72,8 @@ return [
 	'error' => [
 		'path rebuild failed' => 'Path rebuild failed',
 	],
+	'tags' => 'Tags',
+	'styles and scripts' => 'Styles and Scripts',
 	// History
 	'actor' => 'Actor',
 	'action' => 'Action',

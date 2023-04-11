@@ -309,9 +309,16 @@ class PagesController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
-			'title'   => 'required|max:255',
-			'content' => 'required',
-			'access'  => 'nullable|min:1'
+			'parent_id' => 'nullable|integer|min:1',
+			'title'   => 'required|string|max:255',
+			'alias' => 'nullable|string|max:255',
+			'content' => 'required|string',
+			'access'  => 'nullable|min:1',
+			'state'  => 'nullable|int',
+			'publish_up' => 'nullable|date',
+			'publish_down' => 'nullable|date',
+			'metakey' => 'nullable|string',
+			'metadesc' => 'nullable|string',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -512,8 +519,14 @@ class PagesController extends Controller
 		$validator = Validator::make($request->all(), [
 			'parent_id' => 'nullable|integer|min:1',
 			'title' => 'nullable|string|max:255',
+			'alias' => 'nullable|string|max:255',
+			'content' => 'nullable|string',
+			'access'  => 'nullable|min:1',
+			'state'  => 'nullable|int',
 			'publish_up' => 'nullable|date',
 			'publish_down' => 'nullable|date',
+			'metakey' => 'nullable|string',
+			'metadesc' => 'nullable|string',
 		]);
 
 		if ($validator->fails())
@@ -528,6 +541,20 @@ class PagesController extends Controller
 		if (!empty($params))
 		{
 			$row->params = json_encode($params);
+		}
+
+		if ($request->has('metakey'))
+		{
+			$row->metakey = $request->input('metakey', '');
+
+			$tags = explode(',', $row->metakey);
+			$tags = array_map('trim', $tags);
+			$row->setTags($tags);
+		}
+
+		if ($request->has('metadesc'))
+		{
+			$row->metadesc = $request->input('metadesc');
 		}
 
 		if (!$row->save())

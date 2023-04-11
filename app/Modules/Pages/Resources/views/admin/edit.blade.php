@@ -182,7 +182,14 @@ app('pathway')
 							</select>
 							<span class="form-text text-muted" id="params-layout-hint">{{ trans('pages::pages.params.layout desc') }}</span>
 						</div>
+					</fieldset>
+				</details>
 
+				<details class="card">
+					<summary class="card-header" id="assets-heading">
+						{{ trans('pages::pages.styles and scripts') }}
+					</summary>
+					<fieldset class="card-body mb-0">
 						<fieldset id="param-styles">
 							<legend>{{ trans('pages::pages.params.styles') }}</legend>
 							<div class="px-3 py-3">
@@ -256,10 +263,16 @@ app('pathway')
 						{{ trans('pages::pages.metadata') }}
 					</summary>
 					<fieldset class="card-body mb-0">
+
 						<div class="form-group">
 							<label for="field-metakey">{{ trans('pages::pages.metakey') }}:</label>
-							<textarea class="form-control" name="fields[metakey]" id="field-metakey" rows="3" cols="40">{{ $row->metakey }}</textarea>
+							<input type="text" name="tags" id="field-metakey" class="form-control taggable" data-api="{{ route('api.tags.index') }}" value="{{ implode(', ', $row->tags->pluck('name')->toArray()) }}" />
 						</div>
+
+						<!--<div class="form-group">
+							<label for="field-metakey">{{ trans('pages::pages.metakey') }}:</label>
+							<textarea class="form-control" name="fields[metakey]" id="field-metakey" rows="3" cols="40">{{ $row->metakey }}</textarea>
+						</div>-->
 
 						<div class="form-group">
 							<label for="field-metadesc">{{ trans('pages::pages.metadesc') }}:</label>

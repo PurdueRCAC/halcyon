@@ -257,6 +257,8 @@ class PagesController extends Controller
 		$row = $id ? Page::findOrFail($id) : new Page();
 		$row->fill($request->input('fields'));
 
+		$row->metakey = $request->input('tags');
+
 		if ($params = $request->input('params', []))
 		{
 			foreach ($params as $key => $val)
@@ -271,6 +273,10 @@ class PagesController extends Controller
 		{
 			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
+
+		$tags = explode(',', $row->metakey);
+		$tags = array_map('trim', $tags);
+		$row->setTags($tags);
 
 		// Rebuild the set
 		$root = Page::rootNode();

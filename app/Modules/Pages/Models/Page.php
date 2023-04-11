@@ -16,6 +16,7 @@ use App\Modules\Pages\Events\PageUpdating;
 use App\Modules\Pages\Events\PageUpdated;
 use App\Modules\Pages\Events\PageDeleted;
 use App\Modules\Pages\Events\PageContentIsRendering;
+use App\Modules\Tags\Traits\Taggable;
 use App\Halcyon\Models\Casts\Params;
 
 /**
@@ -52,7 +53,7 @@ use App\Halcyon\Models\Casts\Params;
  */
 class Page extends Model
 {
-	use Historable, SoftDeletes;
+	use Historable, SoftDeletes, Taggable;
 
 	/**
 	 * The table to which the class pertains

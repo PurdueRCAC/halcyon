@@ -83,4 +83,33 @@ document.addEventListener('DOMContentLoaded', function () {
 			});
 		}
 	}
+
+	var taggables = document.querySelectorAll('.taggable');
+	if (taggables.length) {
+		taggables.forEach(function (el) {
+			var sel = new TomSelect(el, {
+				plugins: {
+					remove_button: {
+						title: 'Remove this tag',
+					}
+				},
+				persist: false,
+				//createOnBlur: true,
+				create: true,
+				valueField: 'slug',
+				labelField: 'name',
+				searchField: 'name',
+				load: function (query, callback) {
+					var url = el.getAttribute('data-api') + '?search=' + encodeURIComponent(query);
+					fetch(url)
+						.then(response => response.json())
+						.then(json => {
+							callback(json.data);
+						}).catch(() => {
+							callback();
+						});
+				}
+			});
+		});
+	}
 });
