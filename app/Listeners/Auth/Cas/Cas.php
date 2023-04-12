@@ -119,13 +119,6 @@ class Cas
 		{
 			$user = User::findByUsername($cas->user(), config('module.users.restore_on_login', 0));
 
-			$newUsertype = config('module.users.new_usertype');
-
-			if (!$newUsertype)
-			{
-				$newUsertype = Role::findByTitle('Registered')->id;
-			}
-
 			// Create accounts on login?
 			if ((!$user || !$user->id) && config('module.users.create_on_login', 1))
 			{
@@ -139,10 +132,7 @@ class Cas
 					$user->puid = intval($attrs['puid']);
 				}
 
-				if ($newUsertype)
-				{
-					$user->newroles = array($newUsertype);
-				}
+				$user->setDefaultRole();
 
 				if ($user->save())
 				{
@@ -175,9 +165,9 @@ class Cas
 				}
 			}
 
-			if (!count($user->roles) && $newUsertype)
+			if (!count($user->roles))
 			{
-				$user->newroles = array($newUsertype);
+				$user->setDefaultRole();
 				$user->save();
 			}
 

@@ -60,17 +60,7 @@ class CreateCommand extends Command
 		$user->api_token = Str::random(60);
 		$user->password = Hash::make($password);
 
-		$newUsertype = config('module.users.new_usertype');
-
-		if (!$newUsertype)
-		{
-			$newUsertype = Role::findByTitle('Registered')->id;
-		}
-
-		if ($newUsertype)
-		{
-			$user->newroles = array($newUsertype);
-		}
+		$user->setDefaultRole();
 
 		if ($user->save())
 		{

@@ -727,6 +727,37 @@ class User extends Model implements
 	}
 
 	/**
+	 * Set default user role
+	 *
+	 * @return  self
+	 */
+	public function setDefaultRole(): User
+	{
+		$newUsertype = self::defaultRole();
+
+		$this->newroles = array($newUsertype);
+
+		return $this;
+	}
+
+	/**
+	 * Get default user role
+	 *
+	 * @return  int
+	 */
+	public static function defaultRole(): int
+	{
+		$newUsertype = config('module.users.new_usertype');
+
+		if (!$newUsertype)
+		{
+			$newUsertype = Role::findByTitle('Registered')->id;
+		}
+
+		return $newUsertype;
+	}
+
+	/**
 	 * Create a new user from a username
 	 *
 	 * @param   string  $username
@@ -773,14 +804,7 @@ class User extends Model implements
 		$user->name = $user->name ?: $username;
 		$user->api_token = Str::random(60);
 
-		$newUsertype = config('module.users.new_usertype');
-
-		if (!$newUsertype)
-		{
-			$newUsertype = Role::findByTitle('Registered')->id;
-		}
-
-		$user->newroles = array($newUsertype);
+		$user->setDefaultRole();
 
 		$userusername = $user->getUserUsername();
 

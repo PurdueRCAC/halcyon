@@ -254,16 +254,9 @@ class UsersController extends Controller
 		$user = $id ? User::findOrFail($id) : new User();
 		$user->fill($fields);
 
-		if (!$user->id)
+		if (!$user->id && empty($user->newroles))
 		{
-			$newUsertype = config('module.users.new_usertype');
-
-			if (!$newUsertype)
-			{
-				$newUsertype = Role::findByTitle('Registered')->id;
-			}
-
-			$user->newroles = array($newUsertype);
+			$user->setDefaultRole();
 			$user->api_token = Str::random(60);
 		}
 		if (!$user->puid)

@@ -178,13 +178,6 @@ class CILogon
 
 			$user = User::findByEmail($email, config('module.users.restore_on_login', 0));
 
-			$newUsertype = config('module.users.new_usertype');
-
-			if (!$newUsertype)
-			{
-				$newUsertype = Role::findByTitle('Registered')->id;
-			}
-
 			// Create accounts on login?
 			if ((!$user || !$user->id) && config('module.users.create_on_login', 1))
 			{
@@ -197,10 +190,7 @@ class CILogon
 				$user->api_token = Str::random(60);
 				//$user->puid = $cilogonResponse->getId();
 
-				if ($newUsertype)
-				{
-					$user->newroles = array($newUsertype);
-				}
+				$user->setDefaultRole();
 
 				if ($user->save())
 				{
@@ -229,9 +219,9 @@ class CILogon
 			}
 
 			// Check for missing data
-			if (!count($user->roles) && $newUsertype)
+			if (!count($user->roles))
 			{
-				$user->newroles = array($newUsertype);
+				$user->setDefaultRole();
 				$user->save();
 			}
 

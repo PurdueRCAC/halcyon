@@ -309,13 +309,7 @@ class Ldap
 			}
 		}
 
-		$newUsertype = config('module.users.new_usertype');
-		$newUsertype = !$newUsertype ? Role::findByTitle('Registered')->id : $newUsertype;
-
-		if ($newUsertype)
-		{
-			$user->newroles = array($newUsertype);
-		}
+		$user->setDefaultRole();
 
 		if ($user->save())
 		{

@@ -114,6 +114,10 @@ app('pathway')
 								->pluck('role_id')
 								->all();
 
+							if (empty($roles)):
+								$roles = [App\Modules\Users\Models\User::defaultRole()];
+							endif;
+
 							echo App\Halcyon\Html\Builder\Access::roles('fields[newroles]', $roles, true);
 							?>
 						</div>

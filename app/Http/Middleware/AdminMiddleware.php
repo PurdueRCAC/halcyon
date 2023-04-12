@@ -39,11 +39,11 @@ class AdminMiddleware
 	/**
 	 * Constructor
 	 *
-	 * @param  Illuminate\Contracts\Auth\Factory $auth
-	 * @param  Illuminate\Session\Store $session
-	 * @param  Illuminate\Http\Request $request
-	 * @param  Illuminate\Routing\Redirector $redirect
-	 * @param  Illuminate\Foundation\Application $application
+	 * @param  \Illuminate\Contracts\Auth\Factory $auth
+	 * @param  \Illuminate\Session\Store $session
+	 * @param  \Illuminate\Http\Request $request
+	 * @param  \Illuminate\Routing\Redirector $redirect
+	 * @param  \Illuminate\Foundation\Application $application
 	 * @return mixed
 	 */
 	public function __construct(Auth $auth, Store $session, Request $request, Redirector $redirect, Application $application)
@@ -96,13 +96,6 @@ class AdminMiddleware
 				{
 					$user = \App\Modules\Users\Models\User::findByUsername($cas->user(), config('module.users.restore_on_login', 0));
 
-					$newUsertype = config('module.users.new_usertype');
-
-					if (!$newUsertype)
-					{
-						$newUsertype = \App\Halcyon\Access\Role::findByTitle('Registered')->id;
-					}
-
 					if ((!$user || !$user->id) && config('module.users.create_on_login', 1))
 					{
 						$user = new \App\Modules\Users\Models\User;
@@ -115,10 +108,7 @@ class AdminMiddleware
 							$user->puid = intval($attrs['puid']);
 						}
 
-						if ($newUsertype)
-						{
-							$user->newroles = array($newUsertype);
-						}
+						$user->setDefaultRole();
 
 						if ($user->save())
 						{
@@ -144,9 +134,9 @@ class AdminMiddleware
 							}
 						}
 
-						if (!count($user->roles) && $newUsertype)
+						if (!count($user->roles))
 						{
-							$user->newroles = array($newUsertype);
+							$user->setDefaultRole();
 							$user->save();
 						}
 
