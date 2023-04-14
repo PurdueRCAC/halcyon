@@ -414,7 +414,7 @@ function ResetPermissions(btn) {
  * @return  {void}
  */
 function EditUnixGroup(dir, api) {
-	var input = document.getElementById(dir + "_unixgroup_select");
+	var input = document.getElementById(dir + "_dir_unixgroup_select");
 	var auto_input = document.getElementById(dir + "_autouserunixgroup_select");
 	var input_quota = document.getElementById(dir + "_quota_input");
 	var input_otheryes = document.getElementById(dir + "_other_read_box");
