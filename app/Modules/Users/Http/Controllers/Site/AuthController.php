@@ -58,6 +58,8 @@ class AuthController extends Controller
 				$authenticator = array_shift($authenticators);
 			}
 
+			session()->put('authenticator', 'cilogon');
+
 			event(new Login($request, $authenticator));
 		}
 
@@ -76,6 +78,7 @@ class AuthController extends Controller
 	public function authenticate(Request $request)
 	{
 		$authenticator = $request->input('authenticator');
+		$authenticator = $authenticator ?: session()->get('authenticator');
 
 		event($event = new Authenticators());
 		$authenticators = array_keys($event->authenticators);
@@ -263,6 +266,7 @@ class AuthController extends Controller
 		{
 			if (substr($url, -5) != 'login'
 			 && substr($url, -8) != 'register'
+			 && !strstr($url, '/callback')
 			 && $this->isInternal($url))
 			{
 				$route = $url;

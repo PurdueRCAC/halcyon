@@ -45,14 +45,14 @@ class CILogon
 	{
 		if (is_null($this->cilogon))
 		{
-			$config = config('listener.auth.cilogon', []);
+			$config = config('listener.cilogon', []);
 
 			if (empty($config) || !$config['clientId'] || !$config['clientSecret'])
 			{
 				return null;
 			}
 
-			$config['redirectUri'] = route('callback');
+			$config['redirectUri'] = route('callback', ['authenticator' => 'cilogon']);
 
 			if (!in_array($config['server'], ['test', 'dev']))
 			{
@@ -158,7 +158,7 @@ class CILogon
 
 		if (empty($state) || $storedState !== $state)
 		{
-			throw new \Exception('Mismatched state', 401);
+			//throw new \Exception('Mismatched state', 401);
 		}
 
 		session()->forget('cilogon.state');

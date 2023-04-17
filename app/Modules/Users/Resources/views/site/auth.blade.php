@@ -30,6 +30,8 @@
 					</div>
 				</div>
 
+				<input type="hidden" name="authenticator" value="{{ $authenticator ? $authenticator : 'database' }}" />
+
 				@if (config('module.users.allow_registration', true))
 					<p class="login-register mt-3 mb-0 text-muted text-center">{{ trans('users::auth.new to the site') }} <a href="{{ route('register')}}">{{ trans('users::auth.register') }}</a></p>
 				@endif
