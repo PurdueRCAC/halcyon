@@ -16,7 +16,7 @@
 	<?php if (count($articles)): ?>
 		<ul class="newslist list-unstyled">
 			<?php foreach ($articles as $article): ?>
-				<li id="article-{{ $article->id }}" aria-labelledby="article-{{ $article->id }}-title" itemscope itemtype="https://schema.org/<?php echo ($type->calendar ? 'Event' : 'NewsArticle'); ?>">
+				<li id="article-{{ $widget->id }}-{{ $article->id }}" aria-labelledby="article-{{ $widget->id }}-{{ $article->id }}-title" itemscope itemtype="https://schema.org/<?php echo ($type->calendar ? 'Event' : 'NewsArticle'); ?>">
 						<?php if ($params->get('show_image')): ?>
 							<?php if ($src = $article->firstImage): ?>
 								<div class="news-img float-left mr-3">
@@ -24,7 +24,7 @@
 								</div>
 							<?php endif; ?>
 						<?php endif; ?>
-						<p id="article-{{ $article->id }}-title" class="news-title mb-0">
+						<p id="article-{{ $widget->id }}-{{ $article->id }}-title" class="news-title mb-0">
 							<a href="{{ route('site.news.show', ['id' => $article->id]) }}">{{ $article->headline }}</a>
 						</p>
 						<ul class="news-meta list-inline text-muted">

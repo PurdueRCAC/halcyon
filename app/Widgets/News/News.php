@@ -79,6 +79,7 @@ class News extends Widget
 			'params'   => $this->params,
 			'type'     => $type,
 			'limit'    => $limit,
+			'widget'   => $this->model,
 		]);
 	}
 }
