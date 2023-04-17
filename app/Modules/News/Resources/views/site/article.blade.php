@@ -120,7 +120,7 @@ app('pathway')
 				<?php
 				$url = parse_url($article->url);
 				?>
-				<li><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="{{ $article->visitableUrl }}">{{ Illuminate\Support\Str::limit($url['host'], 70) . ($url['path'] || $url['query'] ? ' ...' : '') }}</a></li>
+				<li><span class="fa fa-fw fa-link" aria-hidden="true"></span> <a href="{{ $article->visitableUrl }}">{{ Illuminate\Support\Str::limit($url['host'], 70) . (isset($url['path']) || isset($url['query']) ? ' ...' : '') }}</a></li>
 			@endif
 			@if ($article->type)
 				<li><span class="fa fa-fw fa-folder" aria-hidden="true"></span> {{ $article->type->name }}</li>
