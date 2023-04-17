@@ -257,7 +257,7 @@ class PagesController extends Controller
 		$row = $id ? Page::findOrFail($id) : new Page();
 		$row->fill($request->input('fields'));
 
-		$row->metakey = $request->input('tags');
+		//$row->metakey = $request->input('tags');
 
 		if ($params = $request->input('params', []))
 		{

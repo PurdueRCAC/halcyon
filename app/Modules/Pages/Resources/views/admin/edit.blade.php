@@ -266,7 +266,7 @@ app('pathway')
 
 						<div class="form-group">
 							<label for="field-metakey">{{ trans('pages::pages.metakey') }}:</label>
-							<input type="text" name="tags" id="field-metakey" class="form-control taggable" data-api="{{ route('api.tags.index') }}" value="{{ implode(', ', $row->tags->pluck('name')->toArray()) }}" />
+							<input type="text" name="fields[metakey]" id="field-metakey" class="form-control taggable" data-api="{{ route('api.tags.index') }}" value="{{ implode(', ', $row->tags->pluck('name')->toArray()) }}" />
 						</div>
 
 						<!--<div class="form-group">
