@@ -86,7 +86,7 @@
 			$revisions = $page->history()
 				->orderBy('created_at', 'desc')
 				->paginate(20, ['*'], 'page', request()->input('page', 1))
-				->append(['action' => 'history']);
+				->appends(['action' => 'history']);
 
 			$latest = $revisions->first();
 
