@@ -10,7 +10,7 @@
 				<div class="form-group has-feedback {{ $errors->has('password') ? ' has-error' : '' }}">
 					<a class="float-right" href="{{ route('password.forgot') }}">{{ trans('users::auth.forgot password') }}</a>
 					<label for="login-password">{{ trans('users::auth.password') }}</label>
-					<input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" id="login-password" value="{{ old('password')}}">
+					<input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" autocomplete="off" name="password" id="login-password" value="{{ old('password')}}">
 					<span class="glyphicon glyphicon-lock form-control-feedback"></span>
 					{!! $errors->first('password', '<span class="help-block">:message</span>') !!}
 				</div>
