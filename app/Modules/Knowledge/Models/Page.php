@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Config\Repository;
 use App\Modules\History\Traits\Historable;
+use App\Modules\Knowledge\Events\PageContentIsRendering;
 use App\Modules\Knowledge\Events\PageCreating;
 use App\Modules\Knowledge\Events\PageCreated;
 use App\Modules\Knowledge\Events\PageUpdating;
@@ -81,22 +82,12 @@ class Page extends Model
 	 * @var array<string,string>
 	 */
 	protected $casts = [
-		'state' => 'integer',
-		'access' => 'integer',
-		'main' => 'integer',
+		'state'   => 'integer',
+		'access'  => 'integer',
+		'main'    => 'integer',
 		'snippet' => 'integer',
-		'params' => Params::class,
+		'params'  => Params::class,
 	];
-
-	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'title' => 'required|string|max:255',
-		'alias' => 'required|string|max:255'
-	);
 
 	/**
 	 * The event map for the model.
@@ -128,14 +119,14 @@ class Page extends Model
 	/**
 	 * Page variables
 	 *
-	 * @var  object
+	 * @var  Collection
 	 */
 	protected $varsRepository = null;
 
 	/**
 	 * Page metadata
 	 *
-	 * @var  object
+	 * @var  Repository
 	 */
 	protected $metadataRepository = null;
 
@@ -240,6 +231,9 @@ class Page extends Model
 		}
 		//$text = preg_replace_callback(self::REGEXP_IF_STATEMENT, array($this, 'replaceIfStatement'), $text);
 		//$text = preg_replace_callback(self::REGEXP_LINK, array($this, 'replaceLink'), $text);
+
+		event($event = new PageContentIsRendering($text));
+		$text = $event->getBody();
 
 		$text = preg_replace("/<p>(.*)<\/p>\n<(table.*)\n/m", "<$2 <caption>$1</caption>\n", $text);
 		$text = preg_replace("/<h2>(.*)<\/h2>/", "<h3>$1</h3>", $text);
@@ -449,49 +443,6 @@ class Page extends Model
 			return $val;
 		}
 
-		return $matches[0];
-	}
-
-	/**
-	 * Replace links
-	 *
-	 * @param   array   $matches
-	 * @return  string
-	 */
-	protected function replaceLink(array $matches)
-	{
-		$branch = '';
-
-		if (isset($_GET['branch']))
-		{
-			$branch = '?branch=' . str_replace(array('"', "'"), '', urldecode($_GET['branch']));
-		}
-
-		// Don't touch real links
-		// Don't touch links anchored at doc root
-		if (!preg_match("/^https?\:\/\//", $matches[2]) && !preg_match("/^\//", $matches[2]))
-		{
-				$path = preg_replace("/\/README.md/", '', $this->curItem->path);
-
-				// Append together, collapse any .. monikers
-				$realurl =  $this->getAbsolutePath($path . '/' . $matches[2]);
-
-				if (preg_match("@^" . $this->cwd . "@", $realurl))
-				{
-					// This is inside the current expansion, need anchor text
-					$anchor = preg_replace("@/@", '_', $realurl);
-					$url = '[' . $matches[1] . '](#' . $anchor . ')';
-				}
-				else
-				{
-					// This is outside current expansion, return as is
-					$url = '[' . $matches[1] . '](/knowledge/' . $this->tag . '/' . $realurl . $branch . ')';
-				}
-
-				return $url;
-		}
-
-		// Not touching it, return it back as it was
 		return $matches[0];
 	}
 
