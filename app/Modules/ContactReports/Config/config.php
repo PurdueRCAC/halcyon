@@ -10,6 +10,7 @@ return [
 	'schedule' => [
 		'emailreports' => '*/10 * * * *',
 		'emailcomments' => '*/10 * * * *',
+		'emailfollowups' => '0 10 * * 1-5',
 	],
 
 	/*

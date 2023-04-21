@@ -10,10 +10,20 @@ return [
 	|--------------------------------------------------------------------------
 	*/
 	'schedule' => [
-		'emailqueuedenied' => '*/20 * * * *',
 		'emailqueueauthorized' => '*/10 * * * *',
+		'emailfreeauthorized' => '*/20 * * * *',
+
+		'emailqueuedenied' => '*/20 * * * *',
+		'emailfreedenied' => '*/20 * * * *',
+
 		'emailqueueremoved' => '*/10 * * * *',
+		'emailfreeremoved' => '*/20 * * * *',
+
 		'emailqueuerequested' => '*/20 * * * *',
+		'emailfreerequested' => '*/20 * * * *',
+
+		'emailwelcomecluster' => '0 5 * * * ',
+		'emailwelcomefree' => '0 5 * * * ',
 	],
 
 	/*

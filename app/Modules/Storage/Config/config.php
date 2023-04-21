@@ -21,7 +21,10 @@ return [
 		// Every half hour
 		'emailquota' => '*/30 * * * *',
 
-		// Every day right before midnight
-		'quotaupdate' => '59 23 * * *',
+		// Every day at 4:00am
+		'quotaupdate' => '0 4 * * *',
+
+		// Every half hour
+		'quotacheck' => '*/30 * * * *',
 	],
 ];

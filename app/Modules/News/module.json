@@ -6,7 +6,8 @@
     "priority": 0,
     "providers": [
         "App\\Modules\\News\\Providers\\NewsServiceProvider",
-        "App\\Modules\\News\\Providers\\RouteServiceProvider"
+        "App\\Modules\\News\\Providers\\RouteServiceProvider",
+        "App\\Modules\\News\\Providers\\ScheduleServiceProvider"
     ],
     "aliases": {},
     "files": [],

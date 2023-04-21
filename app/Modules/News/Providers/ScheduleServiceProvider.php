@@ -1,22 +1,17 @@
 <?php
 
-namespace App\Modules\History\Providers;
+namespace App\Modules\News\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
 
 class ScheduleServiceProvider extends ServiceProvider
 {
-	/**
-	 * Register scheduled commands
-	 *
-	 * @return void
-	 */
-	public function boot(): void
+	public function boot()
 	{
 		$this->app->booted(function ()
 		{
-			$schedules = config('module.history.schedule', []);
+			$schedules = config('module.news.schedule', []);
 
 			if (!empty($schedules))
 			{
