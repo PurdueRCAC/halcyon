@@ -16,4 +16,9 @@ return [
 	'menu selection' => 'Menu Selection:',
 	'menu assignment' => 'Menu Assignment',
 	'no options' => 'No options found for this template.',
+	'error' => [
+		'failed to find theme' => 'Failed to find theme named :name',
+		'source path not found' => 'Theme source path not found: :path',
+		'failed to publish assets' => 'Failed to publish assets for :name',
+	],
 ];

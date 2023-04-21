@@ -25,7 +25,7 @@ class SetupCommand extends Command
 	 *
 	 * @return void
 	 */
-	public function handle()
+	public function handle(): void
 	{
 		$this->generateThemesFolder();
 
@@ -37,7 +37,7 @@ class SetupCommand extends Command
 	 *
 	 * @return  void
 	 */
-	public function generateThemesFolder()
+	public function generateThemesFolder(): void
 	{
 		$this->generateDirectory(
 			app_path('Themes'),
@@ -51,7 +51,7 @@ class SetupCommand extends Command
 	 *
 	 * @return  void
 	 */
-	public function generateAssetsFolder()
+	public function generateAssetsFolder(): void
 	{
 		$this->generateDirectory(
 			public_path('themes'),
@@ -68,7 +68,7 @@ class SetupCommand extends Command
 	 * @param  string $error
 	 * @return void
 	 */
-	protected function generateDirectory($dir, $success, $error)
+	protected function generateDirectory($dir, $success, $error): void
 	{
 		if (!$this->laravel['files']->isDirectory($dir))
 		{

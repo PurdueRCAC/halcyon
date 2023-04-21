@@ -3,6 +3,7 @@
 namespace App\Modules\Themes\Console;
 
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
 use App\Modules\Themes\Entities\Theme;
 //use App\Modules\Themes\Publishing\AssetPublisher;
 use Symfony\Component\Console\Input\InputArgument;
@@ -28,7 +29,7 @@ class PublishCommand extends Command
 	 *
 	 * @return  void
 	 */
-	public function handle()
+	public function handle(): void
 	{
 		if ($name = $this->argument('theme'))
 		{
@@ -45,7 +46,7 @@ class PublishCommand extends Command
 	 *
 	 * @return  void
 	 */
-	public function publishAll()
+	public function publishAll(): void
 	{
 		foreach ($this->laravel['themes']->allEnabled() as $theme)
 		{
@@ -59,7 +60,7 @@ class PublishCommand extends Command
 	 * @param  string $name
 	 * @return void
 	 */
-	public function publish($name)
+	public function publish($name): void
 	{
 		if ($name instanceof Theme)
 		{
@@ -72,7 +73,7 @@ class PublishCommand extends Command
 
 		if (!$theme)
 		{
-			$this->error('Failed to find theme named ' . $name);
+			$this->error(trans('themes::themes.error.failed to find theme', ['name' => $name]));
 			return;
 		}
 
@@ -81,12 +82,12 @@ class PublishCommand extends Command
 			->setConsole($this)
 			->publish();*/
 
-		$sourcePath = $theme->getPath() . '/assets'; //config('module.themes.paths.themes', app_path('Themes'));
+		$sourcePath = $theme->getPath() . '/assets';
 		$destinationPath = $this->laravel['themes']->getAssetPath($theme->getLowerName());
 
 		if (!$this->getFilesystem()->isDirectory($sourcePath))
 		{
-			$this->error('Themes source path not found: ' . $sourcePath);
+			$this->error(trans('themes::themes.error.source path not found', ['path' => $sourcePath]));
 			return;
 		}
 
@@ -97,18 +98,18 @@ class PublishCommand extends Command
 
 		if ($this->getFilesystem()->copyDirectory($sourcePath, $destinationPath))
 		{
-			$this->line("<info>Published</info>: {$theme->getStudlyName()}");
+			$this->components->task($theme->getStudlyName(), fn() => true);
 		}
 		else
 		{
-			$this->error('Failed to copy assets for ' . $theme->getStudlyName());
+			$this->error(trans('themes::themes.error.failed to publish assets', ['name' => $theme->getStudlyName()]));
 		}
 	}
 
 	/**
-	 * @return \Illuminate\Filesystem\Filesystem
+	 * @return Filesystem
 	 */
-	protected function getFilesystem()
+	protected function getFilesystem(): Filesystem
 	{
 		return $this->laravel['files'];
 	}
@@ -118,7 +119,7 @@ class PublishCommand extends Command
 	 *
 	 * @return array<int,array>
 	 */
-	protected function getArguments()
+	protected function getArguments(): array
 	{
 		return [
 			['theme', InputArgument::OPTIONAL, 'The name of the theme to be used.'],
