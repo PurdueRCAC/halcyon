@@ -239,8 +239,8 @@ app('pathway')
 				</fieldset>
 			@endif
 
-				<details class="card" open="true">
-					<summary class="card-header" id="param-variables">
+				<details class="card" open="true" id="param-variables">
+					<summary class="card-header">
 						{{ trans('knowledge::knowledge.variables') }}
 					</summary>
 					<fieldset class="card-body mb-0">
@@ -314,8 +314,8 @@ app('pathway')
 					</fieldset>
 				</details>
 
-				<details class="card">
-					<summary class="card-header" id="param-tags">
+				<details class="card" id="param-tags">
+					<summary class="card-header">
 						{{ trans('knowledge::knowledge.tags') }}
 					</summary>
 					<fieldset class="card-body mb-0">
@@ -372,8 +372,8 @@ app('pathway')
 					</fieldset>
 				</details>
 
-				<details class="card">
-					<summary class="card-header" id="param-inherited">
+				<details class="card" id="param-inherited">
+					<summary class="card-header">
 						{{ trans('knowledge::knowledge.inherited variables') }}
 					</summary>
 					<fieldset class="card-body mb-0">
