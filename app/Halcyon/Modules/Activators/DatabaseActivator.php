@@ -118,6 +118,10 @@ class DatabaseActivator implements ActivatorInterface
 	 */
 	public function setActiveByName(string $name, bool $status): void
 	{
+		if (!isset($this->modulesStatuses[strtolower($name)]))
+		{
+			$this->createDatabaseEntry($name);
+		}
 		$this->modulesStatuses[strtolower($name)] = $status;
 		$this->writeDatabase();
 		$this->flushCache();
@@ -133,8 +137,35 @@ class DatabaseActivator implements ActivatorInterface
 			return;
 		}
 		unset($this->modulesStatuses[$module->getLowerName()]);
-		$this->writeDatabase();
+		$this->deleteDatabaseEntry($module->getLowerName());
 		$this->flushCache();
+	}
+
+	/**
+	 * Add module entry to database if it doesn't already exist 
+	 */
+	private function createDatabaseEntry(string $name): void
+	{
+		$this->db->table('extensions')
+			->insert(
+				[
+					'element' => strtolower($name), 
+					'name' => $name, 
+					'type' => 'module',
+					'client_id' => 0
+				]
+			);
+	}
+
+	/**
+	 * Remove module from database. 
+	 */
+	private function deleteDatabaseEntry(string $name): void
+	{
+		$this->db->table('extensions')
+			->where('element', strtolower($name))
+			->where('type', 'module')
+			->delete();
 	}
 
 	/**
@@ -145,8 +176,8 @@ class DatabaseActivator implements ActivatorInterface
 		foreach ($this->modulesStatuses as $element => $enabled)
 		{
 			$this->db->table('extensions')
-				->update(['enabled' => $enabled])
-				->where('element', $element);
+				->where('element', $element)
+				->update(['enabled' => $enabled]);
 		}
 	}
 
