@@ -67,7 +67,7 @@ var BASEGROUPS = Array('', 'data', 'apps');
  * @return  {void}
  */
 function CreateNewGroupVal(num, btn, all) {
-	var group = btn.data('group');
+	var group = btn.getAttribute('data-group');
 	//var base = btn.data('value');
 
 	if (typeof (all) == 'undefined') {
