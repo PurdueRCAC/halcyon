@@ -98,4 +98,5 @@ return [
 	'metadata' => 'Metadata',
 	'metakey' => 'Keywords',
 	'metadesc' => 'Description',
+	'link to section' => 'Link to section \':section\' of \':headline\'',
 ];
