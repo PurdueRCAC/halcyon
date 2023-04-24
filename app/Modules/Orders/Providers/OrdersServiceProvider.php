@@ -96,8 +96,6 @@ class OrdersServiceProvider extends ServiceProvider
 	{
 		$this->commands([
 			RenewCommand::class,
-		]);
-		$this->commands([
 			EmailStatusCommand::class,
 		]);
 	}
