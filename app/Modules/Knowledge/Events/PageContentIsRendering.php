@@ -26,7 +26,7 @@ class PageContentIsRendering
 	 */
 	public function __construct($body)
 	{
-		$this->body = $body;
+		$this->body = (string) $body;
 		$this->original = $body;
 	}
 
