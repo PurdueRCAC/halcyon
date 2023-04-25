@@ -84,6 +84,16 @@ class Page extends Model
 	];
 
 	/**
+	 * The model's default values for attributes.
+	 *
+	 * @var array<int,string>
+	 */
+	protected $appends = [
+		'headline',
+		'body',
+	];
+
+	/**
 	 * The event map for the model.
 	 *
 	 * @var array<string,string>

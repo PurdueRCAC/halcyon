@@ -218,7 +218,10 @@ class Associations extends Model
 		}
 
 		$segments = explode('/', $path);
-		array_shift($segments);
+		if (isset($segments[0]) && $segments[0] == 'knowledge')
+		{
+			array_shift($segments);
+		}
 
 		if (empty($segments))
 		{

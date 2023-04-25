@@ -2,19 +2,39 @@
 
 namespace App\Modules\Knowledge\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Modules\Knowledge\Models\Associations;
 
 class PageResource extends JsonResource
 {
 	/**
 	 * Transform the resource collection into an array.
 	 *
-	 * @param   \Illuminate\Http\Request  $request
+	 * @param   Request  $request
 	 * @return  array
 	 */
 	public function toArray($request)
 	{
 		$data = parent::toArray($request);
+
+		// Get the ancestors' variables
+		$prev = null;
+		foreach (Associations::stackByPath($this->path) as $assoc)
+		{
+			if ($assoc->id == $this->id)
+			{
+				$this->page->mergeVariables($prev->page->variables);
+				break;
+			}
+
+			if ($prev && $prev->page)
+			{
+				$assoc->page->mergeVariables($prev->page->variables);
+			}
+
+			$prev = $assoc;
+		}
 
 		$data['page'] = $this->page;
 
