@@ -2,11 +2,10 @@
 
 namespace App\Modules\Pages\Models;
 
-use App\Modules\History\Traits\Historable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon;
+use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,8 +15,12 @@ use App\Modules\Pages\Events\PageUpdating;
 use App\Modules\Pages\Events\PageUpdated;
 use App\Modules\Pages\Events\PageDeleted;
 use App\Modules\Pages\Events\PageContentIsRendering;
+use App\Modules\Pages\Formatters\FilePath;
+use App\Modules\Pages\Formatters\FileSize;
+use App\Modules\History\Traits\Historable;
 use App\Modules\Tags\Traits\Taggable;
 use App\Halcyon\Models\Casts\Params;
+use Carbon\Carbon;
 
 /**
  * Model class for a page
@@ -102,15 +105,6 @@ class Page extends Model
 		'params' => Params::class,
 		'metadata' => Params::class,
 	];
-
-	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'alias' => 'required'
-	);
 
 	/**
 	 * The event map for the model.
@@ -231,74 +225,13 @@ class Page extends Model
 		event($event = new PageContentIsRendering($content));
 		$content = $event->getBody();
 
-		// simple performance check to determine whether bot should process further
-		if (strpos($content, '@file') === false)
-		{
-			return $content;
-		}
-
-		// expression to search for
-		$regex = "/@filesize\(([^\)]*)\)/i";
-
-		// find all instances of plugin and put in $matches
-		preg_match_all($regex, $content, $matches, PREG_SET_ORDER);
-
-		if ($matches)
-		{
-			foreach ($matches as $match)
-			{
-				// Trim whitespace
-				$path = trim($match[1]);
-				// Trim quotes
-				$path = trim($path, '"\'');
-
-				if (substr($path, 0, 6) == '/files')
-				{
-					$path = substr($path, 6);
-				}
-				$path = ltrim($path, '/');
-
-				$text = \storage_path('app/public/' . $path);
-
-				if (is_file($text))
-				{
-					$text = \App\Halcyon\Utility\Number::formatBytes(filesize($text));
-				}
-				else
-				{
-					$text = trans('pages::pages.file not found') . ' (app/public/' . $path . ')';
-				}
-
-				$content = str_replace($match[0], $text, $content);
-			}
-		}
-
-		// expression to search for
-		$regex = "/@file\(([^\)]*)\)/i";
-
-		// find all instances of plugin and put in $matches
-		preg_match_all($regex, $content, $matches, PREG_SET_ORDER);
-
-		if ($matches)
-		{
-			foreach ($matches as $match)
-			{
-				// Trim whitespace
-				$path = trim($match[1]);
-				// Trim quotes
-				$path = trim($path, '"\'');
-
-				if (substr($path, 0, 6) == '/files')
-				{
-					$path = substr($path, 6);
-				}
-				$path = ltrim($path, '/');
-
-				$text = \asset('files/' . $path);
-
-				$content = str_replace($match[0], $text, $content);
-			}
-		}
+		$content = app(Pipeline::class)
+				->send($content)
+				->through([
+					FileSize::class,
+					FilePath::class,
+				])
+				->thenReturn();
 
 		return $content;
 	}
