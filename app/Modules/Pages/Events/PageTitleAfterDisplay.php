@@ -1,13 +1,14 @@
 <?php
-
 namespace App\Modules\Pages\Events;
+
+use App\Modules\Pages\Models\Page;
 
 class PageTitleAfterDisplay
 {
 	/**
 	 * The page
 	 *
-	 * @var object
+	 * @var Page
 	 */
 	private $page;
 
@@ -24,9 +25,10 @@ class PageTitleAfterDisplay
 	 * @param  Page $page
 	 * @return void
 	 */
-	public function __construct($page)
+	public function __construct(Page $page)
 	{
 		$this->page = $page;
+		$this->content = $page->content;
 	}
 
 	/**
@@ -34,7 +36,7 @@ class PageTitleAfterDisplay
 	 *
 	 * @return string
 	 */
-	public function getContent()
+	public function getContent(): string
 	{
 		return $this->content;
 	}
@@ -45,7 +47,7 @@ class PageTitleAfterDisplay
 	 * @param string $title
 	 * @return void
 	 */
-	public function setContent($content)
+	public function setContent($content): void
 	{
 		$this->content = $content;
 	}
@@ -55,7 +57,7 @@ class PageTitleAfterDisplay
 	 *
 	 * @return mixed
 	 */
-	public function getPage()
+	public function getPage(): Page
 	{
 		return $this->page;
 	}
@@ -65,7 +67,7 @@ class PageTitleAfterDisplay
 	 *
 	 * @return string
 	 */
-	public function __toString()
+	public function __toString(): string
 	{
 		return $this->getContent();
 	}
