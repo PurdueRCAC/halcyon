@@ -28,7 +28,7 @@ class PageTitleAfterDisplay
 	public function __construct(Page $page)
 	{
 		$this->page = $page;
-		$this->content = $page->content;
+		$this->content = '';
 	}
 
 	/**
