@@ -53,15 +53,6 @@ class Timeperiod extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'name' => 'required'
-	);
-
-	/**
 	 * Get the warning time period
 	 *
 	 * @return  BelongsTo
@@ -79,9 +70,7 @@ class Timeperiod extends Model
 	 */
 	public function calculateDateFrom($dt): string
 	{
-		$dt = Carbon::parse($dt);
-
-		return $dt
+		return Carbon::parse($dt)
 			->modify('- ' + $this->months)
 			->modify('- ' + $this->unixtime)
 			->toDateTimeString();
