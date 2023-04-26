@@ -4,6 +4,8 @@ namespace App\Halcyon\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\History\Traits\Historable;
+use App\Halcyon\Traits\Checkable;
+use App\Halcyon\Models\Casts\Params;
 use Nwidart\Modules\Facades\Module;
 
 /**
@@ -27,7 +29,7 @@ use Nwidart\Modules\Facades\Module;
  */
 class Extension extends Model
 {
-	use Historable;
+	use Historable, Checkable;
 
 	/**
 	 * Indicates if the model should be timestamped.
@@ -67,23 +69,29 @@ class Extension extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
+	 * The attributes that should be cast to native types.
 	 *
-	 * @var  array<string,string>
+	 * @var array<string,string>
 	 */
-	protected $rules = array(
-		'name' => 'required'
-	);
+	protected $casts = [
+		'client_id' => 'integer',
+		'enabled' => 'integer',
+		'access' => 'integer',
+		'protected' => 'integer',
+		'params' => Params::class,
+		'checked_out_time' => 'datetime:Y-m-d H:i:s',
+	];
 
 	/**
 	 * Get a module by name
 	 *
 	 * @param  string  $name
-	 * @return self|null
+	 * @return Extension|null
 	 */
 	public static function findByModule($name)
 	{
-		return self::query()->where('element', '=', $name)
+		return self::query()
+			->where('element', '=', $name)
 			->where('type', '=', 'module')
 			->get()
 			->first();
