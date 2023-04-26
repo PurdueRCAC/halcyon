@@ -1,10 +1,9 @@
 <?php
 namespace App\Listeners\Content\Widgets;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Pages\Events\PageContentIsRendering;
-use App\Modules\Pages\Events\PageContentBeforeDisplay;
-use App\Modules\Pages\Events\PageContentAfterDisplay;
-use App\Modules\Pages\Events\PageTitleAfterDisplay;
+use App\Modules\Knowledge\Events\PageContentIsRendering as KbContentIsRendering;
 
 /**
  * Content listener for Widgets
@@ -14,21 +13,22 @@ class Widgets
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(PageContentIsRendering::class, self::class . '@handlePageContentIsRendering');
+		$events->listen(KbContentIsRendering::class, self::class . '@handlePageContentIsRendering');
 	}
 
 	/**
 	 * Plugin that loads module positions within content
 	 *
-	 * @param   PageContentIsRendering  $event
+	 * @param   PageContentIsRendering|KbContentIsRendering  $event
 	 * @return  void
 	 */
-	public function handlePageContentIsRendering(PageContentIsRendering $event)
+	public function handlePageContentIsRendering($event): void
 	{
 		$content = $event->getBody();
 
