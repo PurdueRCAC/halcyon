@@ -2,6 +2,7 @@
 
 namespace App\Halcyon\Traits;
 
+use Illuminate\Database\Eloquent\Model;
 use App\Halcyon\Access\Asset;
 
 /**
@@ -41,7 +42,7 @@ trait Permissable
 	 * Method to get the parent asset under which to register this one.
 	 *
 	 * By default, all assets are registered to the ROOT node with ID, which will default to 1 if none exists.
-	 * An extended class can define a table and ID to lookup.  If the asset does not exist it will be created.
+	 * An extended class can define a table and ID to lookup. If the asset does not exist it will be created.
 	 *
 	 * @param   Model  $model  A Table object for the asset parent.
 	 * @param   int    $id     ID to look up
