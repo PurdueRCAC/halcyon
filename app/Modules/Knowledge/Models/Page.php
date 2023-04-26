@@ -5,6 +5,7 @@ namespace App\Modules\Knowledge\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Config\Repository;
@@ -105,6 +106,13 @@ class Page extends Model
 		'updated'  => PageUpdated::class,
 		'deleted'  => PageDeleted::class,
 	];
+
+	/**
+	 * Cached attribute values
+	 *
+	 * @var array<string,mixed>
+	 */
+	protected $cachedAttributes = [];
 
 	/**
 	 * Default order by for model
@@ -211,18 +219,23 @@ class Page extends Model
 	 */
 	public function getHeadlineAttribute(): string
 	{
-		$data = app(Pipeline::class)
-				->send([
-					'content' => $this->title,
-					'headline' => $this->title,
-					'variables' => $this->variables->toArray(),
-				])
-				->through([
-					ReplaceVariables::class,
-				])
-				->thenReturn();
+		if (!isset($this->cachedAttributes['headline']))
+		{
+			$data = app(Pipeline::class)
+					->send([
+						'content' => $this->title,
+						'headline' => $this->title,
+						'variables' => $this->variables->toArray(),
+					])
+					->through([
+						ReplaceVariables::class,
+					])
+					->thenReturn();
 
-		return $data['content'];
+			$this->cachedAttributes['headline'] = $data['content'];
+		}
+
+		return $this->cachedAttributes['headline'];
 	}
 
 	/**
@@ -232,27 +245,32 @@ class Page extends Model
 	 */
 	public function getBodyAttribute(): string
 	{
-		$text = $this->content;
+		if (!isset($this->cachedAttributes['body']))
+		{
+			$text = $this->content;
 
-		event($event = new PageContentIsRendering($text));
-		$text = $event->getBody();
+			event($event = new PageContentIsRendering($text));
+			$text = $event->getBody();
 
-		$data = app(Pipeline::class)
-				->send([
-					'content' => $text,
-					'headline' => $this->headline,
-					'variables' => $this->variables->toArray(),
-				])
-				->through([
-					ReplaceVariables::class,
-					ReplaceIfStatements::class,
-					AdjustHeaderLevels::class,
-					AbsoluteFilePaths::class,
-					PermalinkHeaders::class,
-				])
-				->thenReturn();
+			$data = app(Pipeline::class)
+					->send([
+						'content' => $text,
+						'headline' => $this->headline,
+						'variables' => $this->variables->toArray(),
+					])
+					->through([
+						ReplaceVariables::class,
+						ReplaceIfStatements::class,
+						AdjustHeaderLevels::class,
+						AbsoluteFilePaths::class,
+						PermalinkHeaders::class,
+					])
+					->thenReturn();
 
-		return $data['content'];
+			$this->cachedAttributes['body'] = $data['content'];
+		}
+
+		return $this->cachedAttributes['body'];
 	}
 
 	/**
@@ -561,7 +579,7 @@ class Page extends Model
 	 *
 	 * @return  Collection
 	 */
-	public function publishedChildren()
+	public function publishedChildren(): Collection
 	{
 		$a = (new Associations)->getTable();
 
@@ -575,9 +593,9 @@ class Page extends Model
 	/**
 	 * Get parent entries
 	 *
-	 * @return  object
+	 * @return  HasManyThrough
 	 */
-	public function parents()
+	public function parents(): HasManyThrough
 	{
 		return $this->hasManyThrough(self::class, Associations::class, 'page_id', 'id', 'id', 'parent_id');
 	}
