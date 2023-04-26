@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css?v=' . filemtime(public_path('/modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css'))) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/knowledge/css/knowledge.css') }}?v={{ filemtime(public_path('modules/knowledge/css/knowledge.css')) }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js?v=' . filemtime(public_path('/modules/core/vendor/tom-select/js/tom-select.complete.min.js'))) }}"></script>
 <script src="{{ asset('modules/knowledge/js/site.js?v=' . filemtime(public_path() . '/modules/knowledge/js/site.js')) }}"></script>
 @endpush
 
@@ -43,7 +43,7 @@ app('pathway')
 	<div class="row">
 		<h2>{{ $node->page->headline }}</h2>
 
-		<form action="{{ route('site.knowledge.attach') }}" method="post" name="adminForm" id="item-form" class="editform form-validate">
+		<form action="{{ route('site.knowledge.attach') }}" method="post" name="adminForm" id="item-form" class="editform w-100">
 
 			@if ($errors->any())
 				<div class="alert alert-danger">
