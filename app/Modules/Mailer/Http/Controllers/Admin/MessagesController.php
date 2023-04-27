@@ -216,17 +216,15 @@ class MessagesController extends Controller
 
 		$cc  = [];
 
-		if ($request->has('cc'))
+		if ($ccs = $request->input('cc'))
 		{
-			$ccs = $request->input('cc');
 			$cc = $this->toEmails($ccs, $cc, $request);
 		}
 
 		$bcc = [];
 
-		if ($request->has('bcc'))
+		if ($bccs = $request->input('bcc'))
 		{
-			$bccs = $request->input('bcc');
 			$bcc = $this->toEmails($bccs, $bcc, $request);
 		}
 
