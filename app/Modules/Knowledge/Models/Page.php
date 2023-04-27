@@ -223,6 +223,7 @@ class Page extends Model
 		{
 			$data = app(Pipeline::class)
 					->send([
+						'id' => $this->id,
 						'content' => $this->title,
 						'headline' => $this->title,
 						'variables' => $this->variables->toArray(),
@@ -254,6 +255,7 @@ class Page extends Model
 
 			$data = app(Pipeline::class)
 					->send([
+						'id' => $this->id,
 						'content' => $text,
 						'headline' => $this->headline,
 						'variables' => $this->variables->toArray(),

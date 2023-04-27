@@ -37,7 +37,7 @@ class PermalinkHeaders
 					$title = strtolower($title);
 					$title = str_replace(' ', '_', $title);
 					$title = preg_replace('/[^a-z0-9\-_]+/', '', $title);
-					$title = (request('all') ? $this->id . '-' : '') . $title;
+					$title = (request('all') ? $data['id'] . '-' : '') . $title;
 
 					if (!isset($headers[$title]))
 					{
