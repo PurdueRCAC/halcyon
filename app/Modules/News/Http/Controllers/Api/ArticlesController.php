@@ -547,7 +547,7 @@ class ArticlesController extends Controller
 		$rules = [
 			'newstypeid'      => 'required|integer|min:1',
 			'headline'        => 'required|string|max:255',
-			'body'            => 'required|string|max:15000',
+			'body'            => 'required|string|max:25000',
 			'published'       => 'nullable|integer|in:0,1',
 			'template'        => 'nullable|integer|in:0,1',
 			'datetimenews'    => 'nullable|date',
@@ -846,7 +846,7 @@ class ArticlesController extends Controller
 		$rules = [
 			'newstypeid'      => 'nullable|integer',
 			'headline'        => 'nullable|string|max:255',
-			'body'            => 'nullable|string|max:15000',
+			'body'            => 'nullable|string|max:20000',
 			'published'       => 'nullable|integer|in:0,1',
 			'template'        => 'nullable|integer|in:0,1',
 			'datetimenews'    => 'nullable|date',
@@ -1039,7 +1039,7 @@ class ArticlesController extends Controller
 	public function preview(Request $request)
 	{
 		$request->validate([
-			'body' => 'required|string|max:15000',
+			'body' => 'required|string|max:20000',
 			'vars' => 'nullable|array'
 		]);
 

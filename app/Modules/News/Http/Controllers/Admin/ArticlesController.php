@@ -261,7 +261,7 @@ class ArticlesController extends Controller
 		$rules = [
 			'fields.newstypeid' => 'required|integer',
 			'fields.headline' => 'required|string|max:255',
-			'fields.body' => 'required|string|max:15000',
+			'fields.body' => 'required|string|max:20000',
 			'fields.published' => 'nullable|integer|in:0,1',
 			'fields.template' => 'nullable|integer|in:0,1',
 			'fields.datetimenews' => 'nullable|date',

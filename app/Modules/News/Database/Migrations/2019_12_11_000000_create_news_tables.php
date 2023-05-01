@@ -26,7 +26,7 @@ class CreateNewsTables extends Migration
 				$table->tinyInteger('published')->unsigned()->default(0);
 				$table->tinyInteger('template')->unsigned()->default(0);
 				$table->string('headline', 255);
-				$table->string('body', 15000);
+				$table->string('body', 20000);
 				$table->string('location', 32)->nullable();
 				$table->dateTime('datetimenews')->nullable();
 				$table->dateTime('datetimenewsend')->nullable();
@@ -48,7 +48,7 @@ class CreateNewsTables extends Migration
 			Schema::create('newsstemmedtext', function (Blueprint $table)
 			{
 				$table->increments('id')->comment('This should be the same as news.id');
-				$table->string('stemmedtext', 16200);
+				$table->string('stemmedtext', 20000);
 			});
 
 			DB::statement('ALTER TABLE newsstemmedtext ADD FULLTEXT (stemmedtext)');
