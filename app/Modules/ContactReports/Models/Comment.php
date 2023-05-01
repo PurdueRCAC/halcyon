@@ -4,15 +4,21 @@ namespace App\Modules\ContactReports\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use League\CommonMark\CommonMarkConverter;
+use Illuminate\Pipeline\Pipeline;
+/*use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
-use League\CommonMark\Extension\Autolink\AutolinkExtension;
+use League\CommonMark\Extension\Autolink\AutolinkExtension;*/
 use App\Halcyon\Utility\PorterStemmer;
 use App\Modules\History\Traits\Historable;
 use App\Modules\ContactReports\Events\CommentCreated;
 use App\Modules\ContactReports\Events\CommentUpdated;
 use App\Modules\ContactReports\Events\CommentDeleted;
+use App\Modules\ContactReports\Traits\HasPreformattedText;
+use App\Modules\ContactReports\Formatters\AbsoluteUrls;
+use App\Modules\ContactReports\Formatters\FixHtml;
+use App\Modules\ContactReports\Formatters\MarkdownToHtml;
+use App\Modules\ContactReports\Formatters\ReplaceVariables;
 use Carbon\Carbon;
 
 /**
@@ -28,7 +34,7 @@ use Carbon\Carbon;
  */
 class Comment extends Model
 {
-	use Historable;
+	use Historable, HasPreformattedText;
 
 	/**
 	 * The name of the "created at" column.
@@ -95,16 +101,6 @@ class Comment extends Model
 	];
 
 	/**
-	 * Code block replacements
-	 *
-	 * @var  array<string,array>
-	 */
-	private $replacements = array(
-		'preblocks'  => array(),
-		'codeblocks' => array()
-	);
-
-	/**
 	 * Defines a relationship to creator
 	 *
 	 * @return  object
@@ -146,136 +142,85 @@ class Comment extends Model
 	}
 
 	/**
-	 * Get the comment formatted as HTML
+	 * Get content variables
+	 *
+	 * @return array
+	 */
+	public function getContentVars(): array
+	{
+		$uvars = array(
+			'updatedatetime' => $this->datetimecreated->format('Y-m-d h:i:s'),
+			'updatedate'     => $this->datetimecreated->format('l, F jS, Y'),
+			'updatetime'     => $this->datetimecreated->format('g:ia')
+		);
+
+		$variables = array_merge($this->report->getContentVars(), $uvars);
+
+		return $variables;
+	}
+
+	/**
+	 * Get the comment formatted as MarkDown
 	 *
 	 * @return string
 	 */
-	public function getFormattedCommentAttribute(): string
+	public function toMarkdown(): string
 	{
 		$text = $this->comment;
 
-		$converter = new CommonMarkConverter([
-			'html_input' => 'allow',
-		]);
-		$converter->getEnvironment()->addExtension(new TableExtension());
-		$converter->getEnvironment()->addExtension(new StrikethroughExtension());
-		$converter->getEnvironment()->addExtension(new AutolinkExtension());
+		$text = $this->removePreformattedText($text);
 
-		$text = (string) $converter->convertToHtml($text);
+		$data = app(Pipeline::class)
+				->send([
+					'id' => $this->id,
+					'content' => $text,
+					'variables' => $this->getContentVars(),
+				])
+				->through([
+					AbsoluteUrls::class,
+					ReplaceVariables::class,
+				])
+				->thenReturn();
 
-		// separate code blocks
-		$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/uis", [$this, 'stripPre'], $text);
-		$text = preg_replace_callback("/\<code\>(.*?)\<\/code\>/i", [$this, 'stripCode'], $text);
+		$text = $data['content'];
 
-		// convert template variables
-		if (auth()->user() && auth()->user()->can('manage contactreports'))
-		{
-			$text = preg_replace("/%%([\w\s]+)%%/", '<span style="color:red">$0</span>', $text);
-		}
-
-		$uvars = array(
-			'updatedatetime' => $this->datetimecreated->format('Y-m-d h:i:s'), //$this->getOriginal('datetimecreated'),
-			'updatedate'     => $this->datetimecreated->format('l, F jS, Y'),// date('l, F jS, Y', strtotime($this->getOriginal('datetimecreated'))),
-			'updatetime'     => $this->datetimecreated->format('g:ia') //date("g:ia", strtotime($this->getOriginal('datetimecreated')))
-		);
-
-		$news = $this->report->getAttributes(); //$this->article->toArray();
-		$news['resources'] = $this->report->resources->toArray();
-		$resources = array();
-		foreach ($news['resources'] as $resource)
-		{
-			$resource['resourcename'] = $resource['resourceid'];
-			array_push($resources, $resource['resourcename']);
-		}
-
-		if (count($resources) > 1)
-		{
-			$resources[count($resources)-1] = 'and ' . $resources[count($resources)-1];
-		}
-
-		if (count($resources) > 2)
-		{
-			$news['resources'] = implode(', ', $resources);
-		}
-		else if (count($resources) == 2)
-		{
-			$news['resources'] = $resources[0] . ' ' . $resources[1];
-		}
-		else if (count($resources) == 1)
-		{
-			$news['resources'] = $resources[0];
-		}
-
-		$vars = array_merge($news, $uvars);
-
-		foreach ($vars as $var => $value)
-		{
-			if (is_array($value))
-			{
-				$value = implode(', ', $value);
-			}
-			$text = preg_replace("/%" . $var . "%/", $value, $text);
-		}
-
-		if (auth()->user() && auth()->user()->can('manage contactreports'))
-		{
-			$text = preg_replace("/%([\w\s]+)%/", '<span style="color:red">$0</span>', $text);
-		}
-
-		$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
-		$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
-
-		$text = preg_replace("/<p>(.*)(<table.*?>)(.*<\/table>)/m", "<p>$2 <caption>$1</caption>$3", $text);
+		$text = $this->putbackPreformattedText($text);
 
 		return $text;
 	}
 
 	/**
-	 * Strip code blocks
+	 * Get the comment formatted as HTML
 	 *
-	 * @param   array<int,string>  $match
-	 * @return  string
+	 * @return string
 	 */
-	protected function stripCode($match): string
+	public function toHtml(): string
 	{
-		array_push($this->replacements['codeblocks'], $match[0]);
+		$data = app(Pipeline::class)
+				->send([
+					'id' => $this->id,
+					'content' => $this->toMarkdown(),
+					'variables' => $this->getContentVars(),
+				])
+				->through([
+					MarkdownToHtml::class,
+					FixHtml::class,
+					//HighlightUnusedVariables::class,
+				])
+				->thenReturn();
 
-		return '{{CODE}}';
+		return $data['content'];
 	}
 
 	/**
-	 * Strip pre blocks
+	 * Get the comment formatted as HTML
 	 *
-	 * @param   array<int,string>  $match
-	 * @return  string
+	 * @deprecated
+	 * @return string
 	 */
-	protected function stripPre($match): string
+	public function getFormattedCommentAttribute(): string
 	{
-		array_push($this->replacements['preblocks'], $match[0]);
-
-		return '{{PRE}}';
-	}
-
-	/**
-	 * Replace code block
-	 *
-	 * @param   array  $match
-	 * @return  string
-	 */
-	protected function replaceCode($match): string
-	{
-		return array_shift($this->replacements['codeblocks']);
-	}
-
-	/**
-	 * Replace pre block
-	 *
-	 * @param   array  $match
-	 * @return  string
-	 */
-	protected function replacePre($match): string
-	{
-		return array_shift($this->replacements['preblocks']);
+		return $this->toHtml();
 	}
 
 	/**

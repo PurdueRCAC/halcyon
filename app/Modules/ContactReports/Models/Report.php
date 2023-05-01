@@ -5,10 +5,11 @@ namespace App\Modules\ContactReports\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use League\CommonMark\CommonMarkConverter;
+use Illuminate\Pipeline\Pipeline;
+/*use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
-use League\CommonMark\Extension\Autolink\AutolinkExtension;
+use League\CommonMark\Extension\Autolink\AutolinkExtension;*/
 use App\Halcyon\Utility\PorterStemmer;
 use App\Halcyon\Access\Map;
 use App\Modules\Tags\Traits\Taggable;
@@ -17,6 +18,11 @@ use App\Modules\ContactReports\Events\ReportPrepareContent;
 use App\Modules\ContactReports\Events\ReportCreated;
 use App\Modules\ContactReports\Events\ReportUpdated;
 use App\Modules\ContactReports\Events\ReportDeleted;
+use App\Modules\ContactReports\Traits\HasPreformattedText;
+use App\Modules\ContactReports\Formatters\AbsoluteUrls;
+use App\Modules\ContactReports\Formatters\FixHtml;
+use App\Modules\ContactReports\Formatters\MarkdownToHtml;
+use App\Modules\ContactReports\Formatters\ReplaceVariables;
 use App\Modules\Users\Models\User as SystemUser;
 use Carbon\Carbon;
 
@@ -36,7 +42,7 @@ use Carbon\Carbon;
  */
 class Report extends Model
 {
-	use Historable, Taggable;
+	use Historable, Taggable, HasPreformattedText;
 
 	/**
 	 * The name of the "created at" column.
@@ -114,16 +120,6 @@ class Report extends Model
 		'updated' => ReportUpdated::class,
 		'deleted' => ReportDeleted::class,
 	];
-
-	/**
-	 * Code block replacements
-	 *
-	 * @var  array<string,array>
-	 */
-	private $replacements = array(
-		'preblocks'  => array(),
-		'codeblocks' => array()
-	);
 
 	/**
 	 * @var string
@@ -258,61 +254,29 @@ class Report extends Model
 		if (is_null($this->markdown))
 		{
 			$this->hashTags;
-			$text = $this->report;
+
+			event($event = new ReportPrepareContent($this->report));
+
+			$text = $event->getBody();
 
 			// Separate code blocks as we don't want to do any processing on their content
-			$text = preg_replace_callback("/```(.*?)```/uis", [$this, 'stripPre'], $text);
-			$text = preg_replace_callback("/`(.*?)`/i", [$this, 'stripCode'], $text);
+			$text = $this->removePreformattedText($text);
 
-			$uvars = array(
-				'updatedatetime' => $this->datetimecreated,
-				'updatedate'     => date('l, F jS, Y', strtotime($this->datetimecreated)),
-				'updatetime'     => date("g:ia", strtotime($this->datetimecreated))
-			);
+			$data = app(Pipeline::class)
+				->send([
+					'id' => $this->id,
+					'content' => $text,
+					'variables' => $this->getContentVars(),
+				])
+				->through([
+					AbsoluteUrls::class,
+					ReplaceVariables::class,
+				])
+				->thenReturn();
 
-			$news = array_merge($this->getContentVars(), $this->getAttributes()); //$this->toArray();
-			$news['resources'] = $this->resources->toArray();
+			$text = $data['content'];
 
-			$resources = array();
-			foreach ($news['resources'] as $resource)
-			{
-				$resource['resourcename'] = $resource['resourceid'];
-				array_push($resources, $resource['resourcename']);
-			}
-
-			if (count($resources) > 1)
-			{
-				$resources[count($resources)-1] = 'and ' . $resources[count($resources)-1];
-			}
-
-			if (count($resources) > 2)
-			{
-				$news['resources'] = implode(', ', $resources);
-			}
-			else if (count($resources) == 2)
-			{
-				$news['resources'] = $resources[0] . ' ' . $resources[1];
-			}
-			else if (count($resources) == 1)
-			{
-				$news['resources'] = $resources[0];
-			}
-			else
-			{
-				$news['resources'] = implode('', $resources);
-			}
-
-			foreach ($news as $var => $value)
-			{
-				if (is_array($value))
-				{
-					continue;
-				}
-				$text = preg_replace("/%" . $var . "%/", $value, $text);
-			}
-
-			$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
-			$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
+			$text = $this->putbackPreformattedText($text);
 
 			$this->markdown = $text;
 		}
@@ -331,33 +295,20 @@ class Report extends Model
 		{
 			$text = $this->toMarkdown();
 
-			$converter = new CommonMarkConverter([
-				'html_input' => 'allow',
-			]);
-			$converter->getEnvironment()->addExtension(new TableExtension());
-			$converter->getEnvironment()->addExtension(new StrikethroughExtension());
-			$converter->getEnvironment()->addExtension(new AutolinkExtension());
+			$data = app(Pipeline::class)
+				->send([
+					'id' => $this->id,
+					'content' => $text,
+					'variables' => $this->getContentVars(),
+				])
+				->through([
+					MarkdownToHtml::class,
+					FixHtml::class,
+					//HighlightUnusedVariables::class,
+				])
+				->thenReturn();
 
-			$text = (string) $converter->convertToHtml($text);
-
-			// Separate code blocks as we don't want to do any processing on their content
-			$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/uis", [$this, 'stripPre'], $text);
-			$text = preg_replace_callback("/\<code\>(.*?)\<\/code\>/i", [$this, 'stripCode'], $text);
-
-			// Convert emails
-			$text = preg_replace('/([\w\.\-]+@((\w+\.)*\w{2,}\.\w{2,}))/', "<a target=\"_blank\" href=\"mailto:$1\">$1</a>", $text);
-
-			// Convert template variables
-			if (auth()->user() && auth()->user()->can('manage contactreports'))
-			{
-				$text = preg_replace("/%%([\w\s]+)%%/", '<span style="color:red">$0</span>', $text);
-			}
-
-			// Highlight unused variables for admins
-			if (auth()->user() && auth()->user()->can('manage contactreports'))
-			{
-				$text = preg_replace("/%([\w\s]+)%/", '<span style="color:red">$0</span>', $text);
-			}
+			$text = $data['content'];
 
 			if (count($this->tags))
 			{
@@ -376,19 +327,6 @@ class Report extends Model
 				}
 			}
 
-			$text = str_replace('<th>', '<th scope="col">', $text);
-			$text = str_replace('align="right"', 'class="text-right"', $text);
-
-			// Put code blocks back
-			$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
-			$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
-
-			$text = preg_replace('/<p>([^\n]+)<\/p>\n(<table.*?>)(.*?<\/table>)/usm', '$2 <caption>$1</caption>$3', $text);
-			$text = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
-
-			event($event = new ReportPrepareContent($text));
-			$text = $event->getBody();
-
 			$this->html = $text;
 		}
 
@@ -404,161 +342,6 @@ class Report extends Model
 	public function getFormattedReportAttribute(): string
 	{
 		return $this->toHtml();
-
-		$text = $this->report;
-
-		$converter = new CommonMarkConverter([
-			'html_input' => 'allow',
-		]);
-		$converter->getEnvironment()->addExtension(new TableExtension());
-		$converter->getEnvironment()->addExtension(new StrikethroughExtension());
-
-		$text = (string) $converter->convertToHtml($text);
-
-		// separate code blocks
-		$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/uis", [$this, 'stripPre'], $text);
-		$text = preg_replace_callback("/\<code\>(.*?)\<\/code\>/i", [$this, 'stripCode'], $text);
-
-		// convert emails
-		$text = preg_replace('/([\w\.\-]+@((\w+\.)*\w{2,}\.\w{2,}))/', "<a target=\"_blank\" href=\"mailto:$1\">$1</a>", $text);
-
-		// convert template variables
-		if (auth()->user() && auth()->user()->can('manage contactreports'))
-		{
-			$text = preg_replace("/%%([\w\s]+)%%/", '<span style="color:red">$0</span>', $text);
-		}
-
-		$uvars = array(
-			'updatedatetime' => $this->datetimecreated,
-			'updatedate'     => date('l, F jS, Y', strtotime($this->datetimecreated)),
-			'updatetime'     => date("g:ia", strtotime($this->datetimecreated))
-		);
-
-		$news = array_merge($this->getContentVars(), $this->getAttributes()); //$this->toArray();
-		$news['resources'] = $this->resources->toArray();
-
-		$resources = array();
-		foreach ($news['resources'] as $resource)
-		{
-			$resource['resourcename'] = $resource['resourceid'];
-			array_push($resources, $resource['resourcename']);
-		}
-
-		if (count($resources) > 1)
-		{
-			$resources[count($resources)-1] = 'and ' . $resources[count($resources)-1];
-		}
-
-		if (count($resources) > 2)
-		{
-			$news['resources'] = implode(', ', $resources);
-		}
-		else if (count($resources) == 2)
-		{
-			$news['resources'] = $resources[0] . ' ' . $resources[1];
-		}
-		else if (count($resources) == 1)
-		{
-			$news['resources'] = $resources[0];
-		}
-		else
-		{
-			$news['resources'] = implode('', $resources);
-		}
-
-		foreach ($news as $var => $value)
-		{
-			if (is_array($value))
-			{
-				continue;
-			}
-			$text = preg_replace("/%" . $var . "%/", $value, $text);
-		}
-
-		if (auth()->user() && auth()->user()->can('manage contactreports'))
-		{
-			$text = preg_replace("/%([\w\s]+)%/", '<span style="color:red">$0</span>', $text);
-		}
-
-		$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
-		$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
-		$text = str_replace('<th>', '<th scope="col">', $text);
-
-		//$text = preg_replace_callback("/\{\{CODE\}\}/", 'replaceCode', $text);
-
-		//$text = '<p>' . $text . '</p>';
-		$text = preg_replace("/<p>(.*)(<table.*?>)(.*?<\/table>)/m", "<p>$2 <caption>$1</caption>$3", $text);
-
-		event($event = new ReportPrepareContent($text));
-		$text = $event->getBody();
-
-		$this->hashTags;
-		if (count($this->tags))
-		{
-			preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_]+)/i', $text, $matches);
-
-			if (!empty($matches))
-			{
-				foreach ($matches[0] as $match)
-				{
-					$slug = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
-					if ($tag = $this->isTag($slug))
-					{
-						$text = str_replace($match, ' <a class="tag badge badge-sm badge-secondary" href="' . route((app('isAdmin') ? 'admin' : 'site') . '.contactreports.index', ['tag' => $tag->slug]) . '">' . $tag->name . '</a> ', $text);
-					}
-				}
-			}
-		}
-
-		return $text;
-	}
-
-	/**
-	 * Strip code blocks
-	 *
-	 * @param   array<int,string>  $match
-	 * @return  string
-	 */
-	protected function stripCode($match): string
-	{
-		array_push($this->replacements['codeblocks'], $match[0]);
-
-		return '{{CODE}}';
-	}
-
-	/**
-	 * Strip pre blocks
-	 *
-	 * @param   array<int,string>  $match
-	 * @return  string
-	 */
-	protected function stripPre($match): string
-	{
-		array_push($this->replacements['preblocks'], $match[0]);
-
-		return '{{PRE}}';
-	}
-
-	/**
-	 * Replace code block
-	 *
-	 * @param   array  $match
-	 * @return  string
-	 */
-	protected function replaceCode($match): string
-	{
-		return array_shift($this->replacements['codeblocks']);
-	}
-
-	/**
-	 * Replace pre block
-	 *
-	 * @param   array  $match
-	 * @return  string
-	 */
-	protected function replacePre($match): string
-	{
-		return array_shift($this->replacements['preblocks']);
 	}
 
 	/**
@@ -700,6 +483,8 @@ class Report extends Model
 				$vars['resources'] = $resources[0];
 			}
 		}
+
+		$vars = array_merge($vars, $this->getAttributes());
 
 		return $vars;
 	}
@@ -914,8 +699,7 @@ class Report extends Model
 	{
 		$str = $this->report;
 
-		$str = preg_replace_callback("/```(.*?)```/uis", [$this, 'stripPre'], $str);
-		$str = preg_replace_callback("/`(.*?)`/i", [$this, 'stripCode'], $str);
+		$str = $this->removePreformattedText($str);
 
 		preg_match_all('/(^|[^a-z0-9_])#([a-z0-9\-_\.]+)/i', $str, $matches);
 
@@ -943,8 +727,7 @@ class Report extends Model
 			$this->setTags($hashtag);
 		}
 
-		$str = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $str);
-		$str = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $str);
+		$str = $this->putbackPreformattedText($str);
 
 		return implode(', ', $hashtag);
 	}
