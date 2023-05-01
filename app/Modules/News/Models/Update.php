@@ -5,12 +5,15 @@ namespace App\Modules\News\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use League\CommonMark\CommonMarkConverter;
-use League\CommonMark\Extension\Table\TableExtension;
-use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
-use League\CommonMark\Extension\Autolink\AutolinkExtension;
+use Illuminate\Pipeline\Pipeline;
 use App\Modules\History\Traits\Historable;
 use App\Modules\News\Events\UpdatePrepareContent;
+use App\Modules\News\Formatters\AbsoluteUrls;
+use App\Modules\News\Formatters\FixHtml;
+use App\Modules\News\Formatters\MarkdownToHtml;
+use App\Modules\News\Formatters\NewsStory;
+use App\Modules\News\Formatters\ReplaceVariables;
+use App\Modules\News\Traits\HasPreformattedText;
 use Carbon\Carbon;
 
 /**
@@ -27,7 +30,7 @@ use Carbon\Carbon;
  */
 class Update extends Model
 {
-	use Historable, SoftDeletes;
+	use Historable, SoftDeletes, HasPreformattedText;
 
 	/**
 	 * The name of the "created at" column.
@@ -79,15 +82,6 @@ class Update extends Model
 	protected $guarded = [
 		'id'
 	];
-
-	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'body' => 'required|string'
-	);
 
 	/**
 	 * MarkDown version of the entry
@@ -180,26 +174,36 @@ class Update extends Model
 	 */
 	public function toMarkdown()
 	{
-		$text = $this->body;
-
-		event($event = new UpdatePrepareContent($text));
-
-		$text = $event->getBody();
-
-		$text = preg_replace_callback("/```(.*?)```/uis", [$this, 'stripPre'], $text);
-		$text = preg_replace_callback("/`(.*?)`/i", [$this, 'stripCode'], $text);
-
-		foreach ($this->getContentVars() as $var => $value)
+		if (!$this->markdown)
 		{
-			$text = preg_replace("/%" . $var . "%/", $value, $text);
+			event($event = new UpdatePrepareContent($this->body));
+
+			$text = $event->getBody();
+
+			$text = $this->removePreformattedText($text);
+
+			$data = app(Pipeline::class)
+					->send([
+						'id' => $this->id,
+						'content' => $text,
+						'headline' => $this->article->headline,
+						'variables' => $this->getContentVars(),
+					])
+					->through([
+						AbsoluteUrls::class,
+						ReplaceVariables::class,
+						NewsStory::class,
+					])
+					->thenReturn();
+
+			$text = $data['content'];
+
+			$text = $this->putbackPreformattedText($text);
+
+			$this->markdown = $text;
 		}
 
-		$text = preg_replace_callback("/(news)\s*(story|item)?\s*#?(\d+)(\{.+?\})?/i", array($this, 'matchNews'), $text);
-
-		$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
-		$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
-
-		return $text;
+		return $this->markdown;
 	}
 
 	/**
@@ -209,45 +213,28 @@ class Update extends Model
 	 */
 	public function toHtml()
 	{
-		$text = $this->toMarkdown();
-
-		$converter = new CommonMarkConverter([
-			'html_input' => 'allow',
-		]);
-		$converter->getEnvironment()->addExtension(new TableExtension());
-		$converter->getEnvironment()->addExtension(new StrikethroughExtension());
-		$converter->getEnvironment()->addExtension(new AutolinkExtension());
-
-		$text = (string) $converter->convertToHtml($text);
-
-		// separate code blocks
-		$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/uis", [$this, 'stripPre'], $text);
-		$text = preg_replace_callback("/\<code\>(.*?)\<\/code\>/i", [$this, 'stripCode'], $text);
-
-		// convert emails
-		//$text = preg_replace('/([\w\.\-]+@((\w+\.)*\w{2,}\.\w{2,}))/', "<a target=\"_blank\" href=\"mailto:$1\">$1</a>", $text);
-
-		// convert template variables
-		if (auth()->user() && auth()->user()->can('manage news'))
+		if (!$this->html)
 		{
-			$text = preg_replace("/%%([\w\s]+)%%/", '<span style="color:red">$0</span>', $text);
+			$text = $this->toMarkdown();
+
+			$data = app(Pipeline::class)
+				->send([
+					'id' => $this->id,
+					'content' => $text,
+					'headline' => $this->article->headline,
+					'variables' => $this->getContentVars(),
+				])
+				->through([
+					MarkdownToHtml::class,
+					FixHtml::class,
+					//HighlightUnusedVariables::class,
+				])
+				->thenReturn();
+
+			$this->html = $data['content'];
 		}
 
-		if (auth()->user() && auth()->user()->can('manage news'))
-		{
-			$text = preg_replace("/%([\w\s]+)%/", '<span style="color:red">$0</span>', $text);
-		}
-
-		$text = str_replace('<th>', '<th scope="col">', $text);
-		$text = str_replace('align="right"', 'class="text-right"', $text);
-
-		$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
-		$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
-
-		$text = preg_replace('/<p>([^\n]+)<\/p>\n(<table.*?>)(.*?<\/table>)/usm', '$2 <caption>$1</caption>$3', $text);
-		$text = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
-
-		return $text;
+		return $this->html;
 	}
 
 	/**
@@ -259,92 +246,6 @@ class Update extends Model
 	public function getFormattedBodyAttribute()
 	{
 		return $this->toHtml();
-	}
-
-	/**
-	 * Code block replacements
-	 *
-	 * @var  array<string,array>
-	 */
-	private $replacements = array(
-		'preblocks'  => array(),
-		'codeblocks' => array()
-	);
-
-	/**
-	 * Strip code blocks
-	 *
-	 * @param   array  $match
-	 * @return  string
-	 */
-	protected function stripCode(array $match)
-	{
-		array_push($this->replacements['codeblocks'], $match[0]);
-
-		return '{{CODE}}';
-	}
-
-	/**
-	 * Strip pre blocks
-	 *
-	 * @param   array  $match
-	 * @return  string
-	 */
-	protected function stripPre(array $match)
-	{
-		array_push($this->replacements['preblocks'], $match[0]);
-
-		return '{{PRE}}';
-	}
-
-	/**
-	 * Replace code block
-	 *
-	 * @param   array  $match
-	 * @return  string
-	 */
-	protected function replaceCode(array $match)
-	{
-		return array_shift($this->replacements['codeblocks']);
-	}
-
-	/**
-	 * Replace pre block
-	 *
-	 * @param   array  $match
-	 * @return  string
-	 */
-	protected function replacePre(array $match)
-	{
-		return array_shift($this->replacements['preblocks']);
-	}
-
-	/**
-	 * Expand NEWS#123 to linked article titles
-	 * This resturns the linked title in MarkDown syntax
-	 *
-	 * @param   array  $match
-	 * @return  string
-	 */
-	private function matchNews(array $match)
-	{
-		$title = trans('news::news.news story number', ['number' => $match[3]]);
-
-		$news = Article::find($match[3]);
-
-		if (!$news)
-		{
-			return $match[0];
-		}
-
-		$title = $news->headline;
-
-		if (isset($match[4]))
-		{
-			$title = preg_replace("/[{}]+/", '', $match[4]);
-		}
-
-		return '[' . $title . '](' . route('site.news.show', ['id' => $match[3]]) . ')';
 	}
 
 	/**
