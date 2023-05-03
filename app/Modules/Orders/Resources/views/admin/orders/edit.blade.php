@@ -593,7 +593,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 				</div>
 			@elseif ($order->status == 'pending_collection')
 				<div class="alert alert-success">
-					<p>This order has been fulfilled. Please contact <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a> if you have questions on how to use new resources.</p>
+					<p>This order has been fulfilled. Please contact support if you have questions on how to use new resources.</p>
 					<p><a href="#orderheaderpopup" class="order-status">Order status information</a></p>
 				</div>
 				<ol class="steps">
@@ -605,7 +605,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 					<li class="current step">Order completion</li>
 				</ol>
 				<div id="orderheaderpopup" class="hide" title="Order Complete">
-					<p>This order has been fulfilled. Please contact <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a> if you have  questions on how to use new resources.</p>
+					<p>This order has been fulfilled. Please contact support if you have  questions on how to use new resources.</p>
 					<p>The financial transactions may take several more weeks to process and complete between the business offices by this order is complete and resources are ready for you to use.</p>
 				</div>
 			@elseif ($order->status == 'complete')

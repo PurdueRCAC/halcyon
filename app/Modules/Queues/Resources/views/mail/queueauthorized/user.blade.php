@@ -28,9 +28,9 @@ if ($resource->name == 'HPSSUSER')
 @endforeach
 
 <?php if ($itar): ?>
-**Access to ITAR systems is only possible by public SSH key authentication. You will need to send a public SSH key, in OpenSSH format, to {{ config('mail.from.address') }}. New public key requests are generally handled within one business day after account creation.**
+**Access to ITAR systems is only possible by public SSH key authentication. You will need to send a public SSH key, in OpenSSH format, to support. New public key requests are generally handled within one business day after account creation.**
 
-SSH key-pairs must be generated on the machine you intend to connect to the ITAR cluster from. For Linux and Mac systems you can generate a SSH key-pair by typing the command `ssh-keygen -t rsa -b 2048` into the terminal. You will need to send the public key from the file `~/.ssh/id_rsa.pub` to {{ config('mail.from.address') }}. For Windows systems using PuTTY, a key-pair can be generated using puttygen. Select SSH-2 RSA with 2048 bits from the parameters and press Generate. 
+SSH key-pairs must be generated on the machine you intend to connect to the ITAR cluster from. For Linux and Mac systems you can generate a SSH key-pair by typing the command `ssh-keygen -t rsa -b 2048` into the terminal. You will need to send the public key from the file `~/.ssh/id_rsa.pub` to support. For Windows systems using PuTTY, a key-pair can be generated using puttygen. Select SSH-2 RSA with 2048 bits from the parameters and press Generate. 
 
 **You must choose a strong, unique, passphrase while generating the key-pair. The private key must remain secure and private. Do not send this file to anyone else or allow anyone else to access the file. This file is used to authenicate against the public key on the cluster. Anyone with access to this file could be able to compromise your account.**
 

@@ -7,6 +7,4 @@ Your request for access to {{ config('app.name') }} resources under the followin
 * {{ $groupqueue->group->name }}
 @endforeach
 
-If you have any questions about this process please contact {{ config('mail.from.address') }}.
-
 @endcomponent

@@ -295,10 +295,6 @@ else
 		<?php echo '{{{formattedbody}}}'; ?>
 
 		<hr/>
-		<a href="<?php echo '{{uri}}'; ?>"><?php echo config('app.name'); ?> News</a> from YOU<br/>
-		<br/>
-		Please reply to <a href="mailto:<?php echo config('mail.from.address'); ?>"><?php echo config('mail.from.address'); ?></a> with any questions or concerns.<br/>
-		<a href="<?php echo '{{uri}}'; ?>">View this article on the web.</a>
 
 		<div class="modal-pane">
 			<?php echo '{{#if resources}}'; ?>

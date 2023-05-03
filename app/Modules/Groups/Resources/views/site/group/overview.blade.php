@@ -384,7 +384,7 @@
 						</button>
 					</div>
 					<div class="modal-body">
-						<p>This is the base name for all of your group's Unix groups. Once set, this name is not easily changed so please carefully consider your choice. If you wish to change it, email <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a> to discuss your options. Group base names may be named with the following guidelines.</p>
+						<p>This is the base name for all of your group's Unix groups. Once set, this name is not easily changed so please carefully consider your choice. If you wish to change it, contact support to discuss your options. Group base names may be named with the following guidelines.</p>
 						<ul>
 							<li>Should typically be the same as your queue name for consistency.</li>
 							<li>May only contain lower case letters or numbers and must not begin with a number. Upper case letters and other characters are not permitted.</li>

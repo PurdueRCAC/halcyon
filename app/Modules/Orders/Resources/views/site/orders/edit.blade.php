@@ -520,7 +520,7 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 				</div>
 			@elseif ($order->status == 'pending_collection')
 				<div class="alert alert-success">
-					<p>This order has been fulfilled. Please contact <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a> if you have questions on how to use new resources.</p>
+					<p>This order has been fulfilled. Please contact support if you have questions on how to use new resources.</p>
 					<p><a href="#orderheaderpopup" data-toggle="modal" class="order-status">Order status information</a></p>
 				</div>
 				<ol class="steps">
@@ -541,7 +541,7 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 								</button>
 							</div>
 							<div class="modal-body dialog-body">
-								<p>This order has been fulfilled. Please contact <a href="mailto:{{ config('mail.from.address') }}">{{ config('mail.from.address') }}</a> if you have  questions on how to use new resources.</p>
+								<p>This order has been fulfilled. Please contact support if you have questions on how to use new resources.</p>
 								<p>The financial transactions may take several more weeks to process and complete between the business offices by this order is complete and resources are ready for you to use.</p>
 							</div>
 						</div>

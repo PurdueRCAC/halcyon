@@ -11,6 +11,5 @@ Please assign business office approvers on the [Order Management]({{ route('site
 
 ---
 
-You may view this order in detail from the [Order Management]({{ route('site.orders.read', ['id' => $order->id]) }}) page. If you have any questions about this process please contact {{ config('mail.from.address') }}.
-
+You may view this order in detail from the [Order Management]({{ route('site.orders.read', ['id' => $order->id]) }}) page.
 @endcomponent

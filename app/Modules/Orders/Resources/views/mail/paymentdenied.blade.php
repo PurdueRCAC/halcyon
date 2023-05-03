@@ -13,6 +13,6 @@ This is an automated message notifying that one or more purchase accounts on {{ 
 
 ---
 
-You may view this order in detail or edit this order from the [Order Management]({{ route('site.orders.read', ['id' => $order->id]) }}) page. If you have any questions about this process please contact {{ config('mail.from.address') }}.
+You may view this order in detail or edit this order from the [Order Management]({{ route('site.orders.read', ['id' => $order->id]) }}) page.
 
 @endcomponent
