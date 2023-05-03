@@ -51,13 +51,4 @@ class Type extends Model
 	protected $guarded = [
 		'id'
 	];
-
-	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'name' => 'required|string|max:20'
-	);
 }

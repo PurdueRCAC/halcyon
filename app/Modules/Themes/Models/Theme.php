@@ -3,6 +3,7 @@
 namespace App\Modules\Themes\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use App\Halcyon\Models\Casts\Params;
 use App\Halcyon\Form\Form;
 use Carbon\Carbon;
@@ -55,16 +56,6 @@ class Theme extends Model
 	 * @var  string
 	 */
 	public static $orderDir = 'asc';
-
-	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'element' => 'required|string',
-		'name'    => 'required|string'
-	);
 
 	/**
 	 * The attributes that should be cast to native types.
@@ -171,10 +162,10 @@ class Theme extends Model
 	/**
 	 * Where the extension is a theme
 	 *
-	 * @param   object  $query
-	 * @return  object
+	 * @param   Builder  $query
+	 * @return  Builder
 	 */
-	public function scopeWhereIsTheme($query)
+	public function scopeWhereIsTheme(Builder $query): Builder
 	{
 		return $query->where($this->getTable() . '.type', '=', 'theme');
 	}

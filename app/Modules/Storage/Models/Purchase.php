@@ -4,6 +4,8 @@ namespace App\Modules\Storage\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Storage\Events\PurchaseCreated;
 use App\Modules\History\Traits\Historable;
@@ -68,7 +70,7 @@ class Purchase extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasStart()
+	public function hasStart(): bool
 	{
 		return !is_null($this->datetimestart);
 	}
@@ -78,7 +80,7 @@ class Purchase extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasStarted()
+	public function hasStarted(): bool
 	{
 		return (!$this->hasStart() || $this->datetimestart->timestamp <= Carbon::now()->timestamp);
 	}
@@ -88,7 +90,7 @@ class Purchase extends Model
 	 *
 	 * @return  string
 	 */
-	public function willStart()
+	public function willStart(): string
 	{
 		if (!$this->hasStart())
 		{
@@ -107,7 +109,7 @@ class Purchase extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasEnd()
+	public function hasEnd(): bool
 	{
 		return !is_null($this->datetimestop);
 	}
@@ -117,7 +119,7 @@ class Purchase extends Model
 	 *
 	 * @return  bool
 	 */
-	public function hasEnded()
+	public function hasEnded(): bool
 	{
 		return ($this->hasEnd() && $this->datetimestop->timestamp <= Carbon::now()->timestamp);
 	}
@@ -127,7 +129,7 @@ class Purchase extends Model
 	 *
 	 * @return  bool
 	 */
-	public function endsAfterStarts()
+	public function endsAfterStarts(): bool
 	{
 		if (!$this->hasEnd())
 		{
@@ -141,7 +143,7 @@ class Purchase extends Model
 	 *
 	 * @return  string
 	 */
-	public function willEnd()
+	public function willEnd(): bool
 	{
 		if (!$this->hasEnd())
 		{
@@ -161,7 +163,7 @@ class Purchase extends Model
 	 * @param   int  $start
 	 * @return  string
 	 */
-	private function calculateTimeLeft(int $start)
+	private function calculateTimeLeft(int $start): string
 	{
 		$inputSeconds = $start - Carbon::now()->timestamp;
 
@@ -208,9 +210,9 @@ class Purchase extends Model
 	/**
 	 * Defines a relationship to a resource
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function resource()
+	public function resource(): BelongsTo
 	{
 		return $this->belongsTo(StorageResource::class, 'resourceid');
 	}
@@ -218,9 +220,9 @@ class Purchase extends Model
 	/**
 	 * Defines a relationship to an owner group
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function group()
+	public function group(): BelongsTo
 	{
 		return $this->belongsTo(Group::class, 'groupid');
 	}
@@ -228,9 +230,9 @@ class Purchase extends Model
 	/**
 	 * Defines a relationship to a gseller roup
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function seller()
+	public function seller(): BelongsTo
 	{
 		return $this->belongsTo(Group::class, 'sellergroupid');
 	}
@@ -238,10 +240,10 @@ class Purchase extends Model
 	/**
 	 * Set a query's WHERE clause to include published state
 	 *
-	 * @param   object  $query
-	 * @return  object
+	 * @param   Builder  $query
+	 * @return  Builder
 	 */
-	public function scopeWhenAvailable($query)
+	public function scopeWhenAvailable(Builder $query): Builder
 	{
 		$now = Carbon::now()->toDateTimeString();
 
@@ -260,10 +262,10 @@ class Purchase extends Model
 	/**
 	 * Set a query's WHERE clause to include published state
 	 *
-	 * @param   object  $query
-	 * @return  object
+	 * @param   Builder  $query
+	 * @return  Builder
 	 */
-	public function scopeWhenNotAvailable($query)
+	public function scopeWhenNotAvailable(Builder $query): Builder
 	{
 		$now = Carbon::now()->toDateTimeString();
 
@@ -277,7 +279,7 @@ class Purchase extends Model
 	 * @param   mixed  $value
 	 * @return  void
 	 */
-	public function setBytesAttribute($value)
+	public function setBytesAttribute($value): void
 	{
 		$this->attributes['bytes'] = Number::toBytes($value);
 	}
@@ -287,7 +289,7 @@ class Purchase extends Model
 	 *
 	 * @return  string
 	 */
-	public function getFormattedBytesAttribute()
+	public function getFormattedBytesAttribute(): string
 	{
 		return Number::formatBytes($this->bytes);
 	}
@@ -313,7 +315,7 @@ class Purchase extends Model
 	 *
 	 * @return  string
 	 */
-	public function getTypeAttribute()
+	public function getTypeAttribute(): string
 	{
 		return 'purchase';
 	}

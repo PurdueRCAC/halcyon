@@ -78,16 +78,6 @@ class UnixGroup extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'longname' => 'required|string|max:32',
-		'shortname' => 'nullable|string|max:8'
-	);
-
-	/**
 	 * The event map for the model.
 	 *
 	 * @var array<string,string>

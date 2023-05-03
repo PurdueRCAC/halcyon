@@ -75,16 +75,6 @@ class UnixGroupMember extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'unixgroupid' => 'required|integer',
-		'userid' => 'required|integer'
-	);
-
-	/**
 	 * The event map for the model.
 	 *
 	 * @var array<string,string>

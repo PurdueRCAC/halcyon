@@ -4,8 +4,11 @@ namespace App\Modules\Queues\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Collection;
 use App\Halcyon\Models\Casts\Bytesize;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Queues\Events\QueueCreating;
@@ -308,8 +311,10 @@ class Queue extends Model
 
 	/**
 	 * Get the resource
+	 *
+	 * @return  HasOneThrough
 	 */
-	public function resource()
+	public function resource(): HasOneThrough
 	{
 		return $this->hasOneThrough(Asset::class, Child::class, 'subresourceid', 'id', 'subresourceid', 'resourceid')->withTrashed();
 	}
@@ -317,9 +322,9 @@ class Queue extends Model
 	/**
 	 * Defines a direct relationship to queues
 	 *
-	 * @return object
+	 * @return  HasManyThrough
 	 */
-	public function qos()
+	public function qos(): HasManyThrough
 	{
 		return $this->hasManyThrough(Qos::class, QueueQos::class, 'queueid', 'id', 'id', 'qosid');
 	}
@@ -387,9 +392,9 @@ class Queue extends Model
 	/**
 	 * Defines a relationship to users
 	 *
-	 * @return  object
+	 * @return  Collection
 	 */
-	public function getActiveUsersAttribute()
+	public function getActiveUsersAttribute(): Collection
 	{
 		$now = Carbon::now();
 		$u = (new UserUsername)->getTable();
@@ -480,7 +485,7 @@ class Queue extends Model
 	/**
 	 * Get the next upcoming purchase or loan
 	 *
-	 * @return  mixed
+	 * @return  Carbon|null
 	 */
 	public function getAllocationStart()
 	{

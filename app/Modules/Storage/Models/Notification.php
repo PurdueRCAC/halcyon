@@ -4,6 +4,7 @@ namespace App\Modules\Storage\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Storage\Models\Notification\Type;
 use App\Halcyon\Models\Timeperiod;
@@ -71,7 +72,7 @@ class Notification extends Model
 	 * @param   mixed  $value
 	 * @return  void
 	 */
-	public function setValueAttribute($value)
+	public function setValueAttribute($value): void
 	{
 		$this->attributes['value'] = Number::toBytes($value);
 	}
@@ -81,7 +82,7 @@ class Notification extends Model
 	 *
 	 * @return  string
 	 */
-	public function getFormattedValueAttribute()
+	public function getFormattedValueAttribute(): string
 	{
 		return Number::formatBytes($this->value);
 	}
@@ -89,9 +90,9 @@ class Notification extends Model
 	/**
 	 * Defines a relationship to creator
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function creator()
+	public function creator(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'userid')->withDefault();
 	}
@@ -99,9 +100,9 @@ class Notification extends Model
 	/**
 	 * Defines a relationship to timeperiod
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function timeperiod()
+	public function timeperiod(): BelongsTo
 	{
 		return $this->belongsTo(Timeperiod::class, 'timeperiodid')->withDefault();
 	}
@@ -109,9 +110,9 @@ class Notification extends Model
 	/**
 	 * Defines a relationship to directory
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function directory()
+	public function directory(): BelongsTo
 	{
 		return $this->belongsTo(Directory::class, 'storagedirid');
 	}
@@ -119,9 +120,9 @@ class Notification extends Model
 	/**
 	 * Defines a relationship to notification type
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function type()
+	public function type(): BelongsTo
 	{
 		return $this->belongsTo(Type::class, 'storagedirquotanotificationtypeid');
 	}
@@ -129,9 +130,9 @@ class Notification extends Model
 	/**
 	 * Get next notify datetime
 	 *
-	 * @return  object
+	 * @return  Carbon
 	 */
-	public function getNextnotifyAttribute()
+	public function getNextnotifyAttribute(): Carbon
 	{
 		$months  = $this->periods * $this->timeperiod->months;
 		$seconds = $this->periods * $this->timeperiod->unixtime;
@@ -162,7 +163,7 @@ class Notification extends Model
 	 *
 	 * @return  bool
 	 */
-	public function wasNotified()
+	public function wasNotified(): bool
 	{
 		return !is_null($this->datetimelastnotify);
 	}

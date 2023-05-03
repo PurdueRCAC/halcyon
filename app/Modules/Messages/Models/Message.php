@@ -5,6 +5,7 @@ namespace App\Modules\Messages\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Messages\Events\MessageCreating;
 use App\Modules\Messages\Events\MessageCreated;
@@ -88,16 +89,6 @@ class Message extends Model
 		'datetimestarted' => 'datetime:Y-m-d H:i:s',
 		'datetimecompleted' => 'datetime:Y-m-d H:i:s',
 	];
-
-	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'messagequeuetypeid' => 'required|integer',
-		'targetobjectid' => 'required|integer',
-	);
 
 	/**
 	 * The event map for the model.
@@ -470,11 +461,11 @@ class Message extends Model
 	/**
 	 * Query for started items
 	 *
-	 * @param   object  $query
+	 * @param   Builder  $query
 	 * @param   string  $since
-	 * @return  object
+	 * @return  Builder
 	 */
-	public function scopeWhereStarted($query, $since = null)
+	public function scopeWhereStarted($query, $since = null): Builder
 	{
 		return $query->where(function($where) use ($since)
 		{
@@ -490,10 +481,10 @@ class Message extends Model
 	/**
 	 * Query for items that haven't started
 	 *
-	 * @param   object  $query
-	 * @return  object
+	 * @param   Builder  $query
+	 * @return  Builder
 	 */
-	public function scopeWhereNotStarted($query)
+	public function scopeWhereNotStarted(Builder $query): Builder
 	{
 		return $query->whereNull('datetimestarted');
 	}
@@ -501,11 +492,11 @@ class Message extends Model
 	/**
 	 * Query for completed items
 	 *
-	 * @param   object  $query
+	 * @param   Builder  $query
 	 * @param   string  $since
-	 * @return  object
+	 * @return  Builder
 	 */
-	public function scopeWhereCompleted($query, $since = null)
+	public function scopeWhereCompleted(Builder $query, $since = null): Builder
 	{
 		return $query->where(function($where) use ($since)
 		{
@@ -521,10 +512,10 @@ class Message extends Model
 	/**
 	 * Query for incomplete items
 	 *
-	 * @param   object  $query
-	 * @return  object
+	 * @param   Builder  $query
+	 * @return  Builder
 	 */
-	public function scopeWhereNotCompleted($query)
+	public function scopeWhereNotCompleted(Builder $query): Builder
 	{
 		return $query->whereNull('datetimecompleted');
 	}
@@ -532,10 +523,10 @@ class Message extends Model
 	/**
 	 * Query where return status == 0
 	 *
-	 * @param   object  $query
-	 * @return  object
+	 * @param   Builder  $query
+	 * @return  Builder
 	 */
-	public function scopeWhereSuccessful($query)
+	public function scopeWhereSuccessful(Builder $query): Builder
 	{
 		return $query->where('returnstatus', '=', 0);
 	}
@@ -543,10 +534,10 @@ class Message extends Model
 	/**
 	 * Query where return status > 0
 	 *
-	 * @param   object  $query
-	 * @return  object
+	 * @param   Builder  $query
+	 * @return  Builder
 	 */
-	public function scopeWhereNotSuccessful($query)
+	public function scopeWhereNotSuccessful(Builder $query): Builder
 	{
 		return $query->where('returnstatus', '>', 0);
 	}

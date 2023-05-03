@@ -2,6 +2,7 @@
 
 namespace App\Modules\Storage\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Storage\Events\LoanCreated;
 
@@ -29,9 +30,9 @@ class Loan extends Purchase
 	/**
 	 * Defines a relationship to a lender group
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function seller()
+	public function seller(): BelongsTo
 	{
 		return $this->belongsTo(Group::class, 'lendergroupid');
 	}
@@ -39,9 +40,9 @@ class Loan extends Purchase
 	/**
 	 * Defines a relationship to a lender group
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function lender()
+	public function lender(): BelongsTo
 	{
 		return $this->belongsTo(Group::class, 'lendergroupid');
 	}
@@ -67,7 +68,7 @@ class Loan extends Purchase
 	 *
 	 * @return  string
 	 */
-	public function getTypeAttribute()
+	public function getTypeAttribute(): string
 	{
 		return 'loan';
 	}

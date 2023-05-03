@@ -4,6 +4,7 @@ namespace App\Modules\Menus\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 use App\Halcyon\Models\Casts\Params;
 
 /**
@@ -74,9 +75,9 @@ class Widget extends Model
 	 * Get the list of widgets
 	 *
 	 * @param   int  $pk
-	 * @return  array    An array of module records (id, title, position)
+	 * @return  Collection  An list of widget records (id, title, position)
 	 */
-	public static function forMenuId($pk = 0)
+	public static function forMenuId($pk = 0): Collection
 	{
 		$query = DB::table((new self)->getTable() . ' AS a')
 			->select([

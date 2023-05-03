@@ -77,9 +77,7 @@ class FieldOfScience extends Model
 			// The table is not setup for auto-increment
 			$result = self::query()
 				->select(DB::raw('MAX(id) + 1 AS seq'))
-				->get()
-				->first()
-				->seq;
+				->value('seq');
 
 			$model->setAttribute('id', (int)$result);
 		});

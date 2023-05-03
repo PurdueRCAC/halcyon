@@ -86,16 +86,6 @@ class Item extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'title'    => 'required',
-		'menutype' => 'required',
-	);
-
-	/**
 	 * The attributes that should be cast to native types.
 	 *
 	 * @var array<string,string>
@@ -746,7 +736,7 @@ class Item extends Model
 	 * @param   int  $delta  The direction and magnitude to move the row in the ordering sequence.
 	 * @param   string   $where  WHERE clause to use for limiting the selection of rows to compact the ordering values.
 	 * @return  bool    Boolean true on success.
-	 * @throws  \Exception
+	 * @throws  Exception
 	 */
 	public function move($delta, $where = ''): bool
 	{
@@ -791,7 +781,7 @@ class Item extends Model
 	 * @param   string  $position     Location type string. ['before', 'after', 'first-child', 'last-child']
 	 * @param   int     $pk           The primary key of the node to move.
 	 * @return  bool    True on success.
-	 * @throws  \Exception
+	 * @throws  Exception
 	 */
 	public function moveByReference(int $referenceId, string $position = 'after', int $pk = 0)
 	{

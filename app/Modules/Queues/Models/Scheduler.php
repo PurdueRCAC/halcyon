@@ -4,6 +4,7 @@ namespace App\Modules\Queues\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Resources\Models\Batchsystem;
@@ -74,19 +75,6 @@ class Scheduler extends Model
 	 * @var  string
 	 */
 	public static $orderDir = 'asc';
-
-	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'hostname' => 'required|string|max:64',
-		'batchsystem' => 'integer',
-		'schedulerpolicyid' => 'integer',
-		'queuesubresourceid' => 'required|integer',
-		'defaultmaxwalltime' => 'required|integer',
-	);
 
 	/**
 	 * The attributes that should be cast to native types.
@@ -201,9 +189,9 @@ class Scheduler extends Model
 	/**
 	 * Get the resource
 	 *
-	 * @return object
+	 * @return  HasOneThrough
 	 */
-	public function resource()
+	public function resource(): HasOneThrough
 	{
 		return $this->hasOneThrough(Asset::class, Child::class, 'subresourceid', 'id', 'queuesubresourceid', 'resourceid')->withTrashed();
 	}

@@ -55,16 +55,6 @@ class GroupDepartment extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'groupid' => 'required|integer',
-		'collegedeptid' => 'required|integer'
-	);
-
-	/**
 	 * Department
 	 *
 	 * @return  BelongsTo

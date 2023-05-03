@@ -51,15 +51,6 @@ class UserRequest extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'userid' => 'required|integer|min:1'
-	);
-
-	/**
 	 * The event map for the model.
 	 *
 	 * @var array<string,string>

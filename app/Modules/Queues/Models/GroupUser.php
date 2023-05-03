@@ -4,6 +4,7 @@ namespace App\Modules\Queues\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Queues\Events\UserCreating;
@@ -57,19 +58,6 @@ class GroupUser extends Model
 	 * @var  string
 	 **/
 	protected $table = 'groupqueueusers';
-
-	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'queueuserid' => 'required|integer|min:1',
-		'groupid' => 'required|integer|min:1',
-		'userrequestid' => 'nullable|integer',
-		'membertype' => 'nullable|integer',
-		'notice' => 'nullable|integer'
-	);
 
 	/**
 	 * The attributes that are mass assignable.
@@ -146,10 +134,10 @@ class GroupUser extends Model
 	/**
 	 * Query scope where membership is pending
 	 *
-	 * @param   object $query
-	 * @return  object
+	 * @param   Builder $query
+	 * @return  Builder
 	 */
-	public function scopeWherePendingRequest($query)
+	public function scopeWherePendingRequest(Builder $query): Builder
 	{
 		return $query->where($this->getTable() . '.membertype', '=', 4);
 	}
@@ -157,10 +145,10 @@ class GroupUser extends Model
 	/**
 	 * Query scope where is member
 	 *
-	 * @param   object $query
-	 * @return  object
+	 * @param   Builder $query
+	 * @return  Builder
 	 */
-	public function scopeWhereIsMember($query)
+	public function scopeWhereIsMember(Builder $query): Builder
 	{
 		return $query->where('membertype', '=', MemberType::MEMBER);
 	}
@@ -168,10 +156,10 @@ class GroupUser extends Model
 	/**
 	 * Query scope where membership is manager
 	 *
-	 * @param   object $query
-	 * @return  object
+	 * @param   Builder $query
+	 * @return  Builder
 	 */
-	public function scopeWhereIsManager($query)
+	public function scopeWhereIsManager(Builder $query): Builder
 	{
 		return $query->where('membertype', '=', MemberType::MANAGER);
 	}
@@ -179,10 +167,10 @@ class GroupUser extends Model
 	/**
 	 * Query scope where membership is viewer
 	 *
-	 * @param   object $query
-	 * @return  object
+	 * @param   Builder $query
+	 * @return  Builder
 	 */
-	public function scopeWhereIsViewer($query)
+	public function scopeWhereIsViewer(Builder $query): Builder
 	{
 		return $query->where('membertype', '=', MemberType::VIEWER);
 	}
@@ -190,10 +178,10 @@ class GroupUser extends Model
 	/**
 	 * Query scope where membership is pending
 	 *
-	 * @param   object $query
-	 * @return  object
+	 * @param   Builder $query
+	 * @return  Builder
 	 */
-	public function scopeWhereIsPending($query)
+	public function scopeWhereIsPending(Builder $query): Builder
 	{
 		return $query->where('membertype', '=', MemberType::PENDING);
 	}
@@ -203,7 +191,7 @@ class GroupUser extends Model
 	 *
 	 * @return  void
 	 */
-	public function setAsMember()
+	public function setAsMember(): void
 	{
 		$this->membertype = 1;
 	}
@@ -213,7 +201,7 @@ class GroupUser extends Model
 	 *
 	 * @return  void
 	 */
-	public function setAsManager()
+	public function setAsManager(): void
 	{
 		$this->membertype = 2;
 	}
@@ -223,7 +211,7 @@ class GroupUser extends Model
 	 *
 	 * @return  void
 	 */
-	public function setAsViewer()
+	public function setAsViewer(): void
 	{
 		$this->membertype = 3;
 	}
@@ -233,7 +221,7 @@ class GroupUser extends Model
 	 *
 	 * @return  void
 	 */
-	public function setAsPending()
+	public function setAsPending(): void
 	{
 		$this->membertype = 4;
 	}

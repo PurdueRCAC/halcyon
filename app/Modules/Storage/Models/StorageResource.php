@@ -4,6 +4,8 @@ namespace App\Modules\Storage\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Modules\History\Traits\Historable;
 use App\Halcyon\Utility\Number;
 
@@ -58,7 +60,7 @@ class StorageResource extends Model
 	 *
 	 * @return void
 	 */
-	protected static function booted()
+	protected static function booted(): void
 	{
 		static::deleted(function ($model)
 		{
@@ -73,9 +75,9 @@ class StorageResource extends Model
 	/**
 	 * Defines a relationship to directories
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function directories()
+	public function directories(): HasMany
 	{
 		return $this->hasMany(Directory::class, 'storageresourceid');
 	}
@@ -83,9 +85,9 @@ class StorageResource extends Model
 	/**
 	 * Defines a relationship to a parent resource
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function resource()
+	public function resource(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Resources\Models\Asset', 'parentresourceid')->withTrashed();
 	}
@@ -93,9 +95,9 @@ class StorageResource extends Model
 	/**
 	 * Defines a relationship to a message queue type for retrieving quota info
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function quotaType()
+	public function quotaType(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Messages\Models\Type', 'getquotatypeid');
 	}
@@ -103,9 +105,9 @@ class StorageResource extends Model
 	/**
 	 * Defines a relationship to a message queue type for creating a directory
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function createType()
+	public function createType(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Messages\Models\Type', 'createtypeid');
 	}
@@ -134,7 +136,7 @@ class StorageResource extends Model
 	 * @param   string|int  $value
 	 * @return  void
 	 */
-	public function setDefaultquotaspaceAttribute($value)
+	public function setDefaultquotaspaceAttribute($value): void
 	{
 		$this->attributes['defaultquotaspace'] = Number::toBytes($value);
 	}
@@ -144,7 +146,7 @@ class StorageResource extends Model
 	 *
 	 * @return  string
 	 */
-	public function getFormattedDefaultquotaspaceAttribute()
+	public function getFormattedDefaultquotaspaceAttribute(): string
 	{
 		return Number::formatBytes($this->defaultquotaspace);
 	}
@@ -155,7 +157,7 @@ class StorageResource extends Model
 	 * @param   mixed  $value
 	 * @return  void
 	 */
-	public function setDefaultquotafileAttribute($value)
+	public function setDefaultquotafileAttribute($value): void
 	{
 		// Convert 9,000 -> 9000
 		$value = str_replace(',', '', $value);
@@ -168,7 +170,7 @@ class StorageResource extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isGroupManaged()
+	public function isGroupManaged(): bool
 	{
 		return ($this->groupmanaged > 0);
 	}

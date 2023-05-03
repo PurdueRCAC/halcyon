@@ -2,6 +2,7 @@
 namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Modules\History\Traits\Historable;
 
 /**
@@ -46,9 +47,9 @@ class Policy extends Model
 	/**
 	 * Defines a relationship to schedulers
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function schedulers()
+	public function schedulers(): HasMany
 	{
 		return $this->hasMany(Queue::class, 'schedulerpolicyid');
 	}

@@ -3,6 +3,7 @@ namespace App\Modules\Queues\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Queues\Events\QosCreated;
@@ -74,9 +75,9 @@ class Qos extends Model
 	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
-		'created'  => QosCreated::class,
-		'updated'  => QosUpdated::class,
-		'deleted'  => QosDeleted::class,
+		'created' => QosCreated::class,
+		'updated' => QosUpdated::class,
+		'deleted' => QosDeleted::class,
 	];
 
 	/**
@@ -110,9 +111,9 @@ class Qos extends Model
 	/**
 	 * Defines a direct relationship to queues
 	 *
-	 * @return object
+	 * @return HasManyThrough
 	 */
-	public function queues()
+	public function queues(): HasManyThrough
 	{
 		return $this->hasManyThrough(Queue::class, QueueQos::class, 'qosid', 'id', 'id', 'queueid');
 	}

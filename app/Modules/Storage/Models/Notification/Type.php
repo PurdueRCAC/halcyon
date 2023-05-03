@@ -2,8 +2,10 @@
 
 namespace App\Modules\Storage\Models\Notification;
 
-use App\Modules\Storage\Models\Notification as Notify;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Modules\Storage\Models\Notification as Notify;
 use App\Modules\History\Traits\Historable;
 use App\Halcyon\Models\Timeperiod;
 
@@ -31,7 +33,7 @@ class Type extends Model
 	/**
 	 * The attributes that are mass assignable.
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	protected $guarded = [
 		'id',
@@ -40,9 +42,9 @@ class Type extends Model
 	/**
 	 * Defines a relationship to creator
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function timeperiod()
+	public function timeperiod(): BelongsTo
 	{
 		return $this->belongsTo(Timeperiod::class, 'defaulttimeperiodid')->withDefault();
 	}
@@ -50,9 +52,9 @@ class Type extends Model
 	/**
 	 * Defines a relationship to notifications
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function notifications()
+	public function notifications(): HasMany
 	{
 		return $this->hasMany(Notify::class, 'storagedirquotanotificationtypeid');
 	}

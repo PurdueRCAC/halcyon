@@ -56,15 +56,6 @@ class Size extends Model
 	public static $orderDir = 'asc';
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'queueid' => 'required|integer|min:1'
-	);
-
-	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array<int,string>

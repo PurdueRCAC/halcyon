@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Queues\Events\UserCreating;
 use App\Modules\Queues\Events\UserCreated;
@@ -58,15 +59,6 @@ class User extends Model
 	 * @var  string
 	 **/
 	protected $table = 'queueusers';
-
-	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'name' => 'notempty'
-	);
 
 	/**
 	 * The attributes that are mass assignable.
@@ -190,10 +182,10 @@ class User extends Model
 	/**
 	 * Query scope for where is pending member
 	 *
-	 * @param   object  $query
-	 * @return  object
+	 * @param   Builder  $query
+	 * @return  Builder
 	 */
-	public function scopeWherePendingRequest($query)
+	public function scopeWherePendingRequest(Builder $query): Builder
 	{
 		return $query->where($this->getTable() . '.membertype', '=', MemberType::PENDING);
 	}
@@ -271,10 +263,10 @@ class User extends Model
 	/**
 	 * Query scope for where is member
 	 *
-	 * @param   object  $query
-	 * @return  object
+	 * @param   Builder  $query
+	 * @return  Builder
 	 */
-	public function scopeWhereIsMember($query)
+	public function scopeWhereIsMember(Builder $query): Builder
 	{
 		return $query->where($this->getTable() . '.membertype', '=', MemberType::MEMBER);
 	}
@@ -282,10 +274,10 @@ class User extends Model
 	/**
 	 * Query scope for where is manager
 	 *
-	 * @param   object  $query
-	 * @return  object
+	 * @param   Builder  $query
+	 * @return  Builder
 	 */
-	public function scopeWhereIsManager($query)
+	public function scopeWhereIsManager(Builder $query): Builder
 	{
 		return $query->where($this->getTable() . '.membertype', '=', MemberType::MANAGER);
 	}
@@ -293,10 +285,10 @@ class User extends Model
 	/**
 	 * Query scope for where is viewer
 	 *
-	 * @param   object  $query
-	 * @return  object
+	 * @param   Builder  $query
+	 * @return  Builder
 	 */
-	public function scopeWhereIsViewer($query)
+	public function scopeWhereIsViewer(Builder $query): Builder
 	{
 		return $query->where($this->getTable() . '.membertype', '=', MemberType::VIEWER);
 	}
@@ -304,10 +296,10 @@ class User extends Model
 	/**
 	 * Query scope for where is pending
 	 *
-	 * @param   object  $query
-	 * @return  object
+	 * @param   Builder  $query
+	 * @return  Builder
 	 */
-	public function scopeWhereIsPending($query)
+	public function scopeWhereIsPending(Builder $query): Builder
 	{
 		return $query->where($this->getTable() . '.membertype', '=', MemberType::PENDING);
 	}

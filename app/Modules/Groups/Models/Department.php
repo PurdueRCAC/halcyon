@@ -75,11 +75,24 @@ class Department extends Model
 		{
 			$result = self::query()
 				->select(DB::raw('MAX(id) + 1 AS seq'))
-				->get()
-				->first()
-				->seq;
+				->value('seq');
 
 			$model->setAttribute('id', (int)$result);
+		});
+
+		static::deleting(function ($model)
+		{
+			// Remove all group associations
+			foreach ($model->groups as $row)
+			{
+				$row->delete();
+			}
+
+			// Remove children
+			foreach ($model->children as $row)
+			{
+				$row->delete();
+			}
 		});
 	}
 
@@ -218,25 +231,5 @@ class Department extends Model
 	{
 		return $this->hasMany(GroupDepartment::class, 'collegedeptid');
 		//return $this->hasOneThrough(GroupFieldOfScience::class, GroupDepartment::class, 'groupid', 'id', 'groupid', 'collegedeptid');
-	}
-
-	/**
-	 * Delete entry and associated data
-	 *
-	 * @return  bool
-	 */
-	public function delete(): bool
-	{
-		foreach ($this->children as $row)
-		{
-			$row->delete();
-		}
-
-		foreach ($this->groups as $row)
-		{
-			$row->delete();
-		}
-
-		return parent::delete();
 	}
 }

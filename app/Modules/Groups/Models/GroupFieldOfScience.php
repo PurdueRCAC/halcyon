@@ -55,16 +55,6 @@ class GroupFieldOfScience extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'groupid' => 'required|string',
-		'fieldofscienceid' => 'required|string'
-	);
-
-	/**
 	 * Field of science
 	 *
 	 * @return  BelongsTo

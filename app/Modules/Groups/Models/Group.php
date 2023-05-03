@@ -89,15 +89,6 @@ class Group extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'name' => 'required|string|max:48'
-	);
-
-	/**
 	 * The event map for the model.
 	 *
 	 * @var array<string,string>
@@ -469,7 +460,7 @@ class Group extends Model
 	/**
 	 * Get the primary unix group
 	 *
-	 * @return  object
+	 * @return  UnixGroup|null
 	 */
 	public function getPrimaryUnixGroupAttribute()
 	{
@@ -481,7 +472,7 @@ class Group extends Model
 	/**
 	 * Get a list of "message of the day"
 	 *
-	 * @return  object
+	 * @return  Motd|null
 	 */
 	public function getMotdAttribute()
 	{

@@ -62,16 +62,6 @@ class Widget extends Model
 	public static $orderDir = 'asc';
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'title'    => 'required|string',
-		'position' => 'required|string'
-	);
-
-	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array<int,string>

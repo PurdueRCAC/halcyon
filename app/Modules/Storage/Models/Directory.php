@@ -4,6 +4,8 @@ namespace App\Modules\Storage\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Modules\Messages\Models\Message;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\UnixGroup;
@@ -13,6 +15,7 @@ use App\Modules\Storage\Events\DirectoryCreated;
 use App\Modules\Storage\Events\DirectoryUpdated;
 use App\Modules\Storage\Events\DirectoryDeleted;
 use Carbon\Carbon;
+use stdClass;
 
 /**
  * Storage model for a resource directory
@@ -85,7 +88,7 @@ class Directory extends Model
 	 *
 	 * @return  bool
 	 */
-	public function isConfigured()
+	public function isConfigured(): bool
 	{
 		return !is_null($this->datetimeconfigured);
 	}
@@ -93,9 +96,9 @@ class Directory extends Model
 	/**
 	 * Defines a relationship to a resource
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function storageResource()
+	public function storageResource(): BelongsTo
 	{
 		return $this->belongsTo(StorageResource::class, 'storageresourceid');
 	}
@@ -103,9 +106,9 @@ class Directory extends Model
 	/**
 	 * Defines a relationship to a group
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function group()
+	public function group(): BelongsTo
 	{
 		return $this->belongsTo(Group::class, 'groupid');
 	}
@@ -113,9 +116,9 @@ class Directory extends Model
 	/**
 	 * Defines a relationship to a unixgroup
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function unixgroup()
+	public function unixgroup(): BelongsTo
 	{
 		return $this->belongsTo(UnixGroup::class, 'unixgroupid');
 	}
@@ -123,9 +126,9 @@ class Directory extends Model
 	/**
 	 * Defines a relationship to a auto-populating unixgroup
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function autounixgroup()
+	public function autounixgroup(): BelongsTo
 	{
 		return $this->belongsTo(UnixGroup::class, 'autouserunixgroupid');
 	}
@@ -133,9 +136,9 @@ class Directory extends Model
 	/**
 	 * Defines a relationship to an owner user
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function owner()
+	public function owner(): BelongsTo
 	{
 		return $this->belongsTo('App\Modules\Users\Models\User', 'owneruserid');
 	}
@@ -143,9 +146,9 @@ class Directory extends Model
 	/**
 	 * Defines a relationship to a parent directory
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function parent()
+	public function parent(): BelongsTo
 	{
 		return $this->belongsTo(self::class, 'parentstoragedirid');
 	}
@@ -153,9 +156,9 @@ class Directory extends Model
 	/**
 	 * Defines a relationship to child directories
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function children()
+	public function children(): HasMany
 	{
 		return $this->hasMany(self::class, 'parentstoragedirid');
 	}
@@ -163,9 +166,9 @@ class Directory extends Model
 	/**
 	 * Defines a relationship to notifications
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function notifications()
+	public function notifications(): HasMany
 	{
 		return $this->hasMany(Notification::class, 'storagedirid');
 	}
@@ -173,9 +176,9 @@ class Directory extends Model
 	/**
 	 * Get a list of messages
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function messages()
+	public function messages(): HasMany
 	{
 		return $this->hasMany(Message::class, 'targetobjectid');
 	}
@@ -187,8 +190,9 @@ class Directory extends Model
 	 * @param   int  $userid
 	 * @param   int  $offset
 	 * @return  void
+	 * @throws \Exception
 	 */
-	public function addMessageToQueue($typeid = null, $userid = 0, $offset = 0)
+	public function addMessageToQueue($typeid = null, $userid = 0, $offset = 0): void
 	{
 		$message = new Message;
 		$message->userid = $userid ?: (auth()->user() ? auth()->user()->id : 0);
@@ -224,9 +228,9 @@ class Directory extends Model
 	/**
 	 * Get a list of usage entries
 	 *
-	 * @return  object
+	 * @return  HasMany
 	 */
-	public function usage()
+	public function usage(): HasMany
 	{
 		return $this->hasMany(Usage::class, 'storagedirid');
 	}
@@ -236,7 +240,7 @@ class Directory extends Model
 	 *
 	 * @return  string
 	 */
-	public function getFullPathAttribute()
+	public function getFullPathAttribute(): string
 	{
 		$path = $this->storageResource ? $this->storageResource->path : '';
 
@@ -253,9 +257,9 @@ class Directory extends Model
 	/**
 	 * Get Unix permissions
 	 *
-	 * @return  object
+	 * @return  stdClass
 	 */
-	public function getUnixPermissionsAttribute()
+	public function getUnixPermissionsAttribute(): stdClass
 	{
 		/*$permissions = [
 			'user' => [
@@ -274,19 +278,19 @@ class Directory extends Model
 				'execute' => $this->publicread,
 			],
 		];*/
-		$permissions = new \stdClass;
+		$permissions = new stdClass;
 
-		$permissions->user = new \stdClass;
+		$permissions->user = new stdClass;
 		$permissions->user->read = $this->ownerread;
 		$permissions->user->write = $this->ownerwrite;
 		$permissions->user->execute = $this->ownerread;
 
-		$permissions->group = new \stdClass;
+		$permissions->group = new stdClass;
 		$permissions->group->read = $this->groupread;
 		$permissions->group->write = $this->groupwrite;
 		$permissions->group->execute = $this->groupread;
 
-		$permissions->other = new \stdClass;
+		$permissions->other = new stdClass;
 		$permissions->other->read = $this->publicread;
 		$permissions->other->write = $this->publicwrite;
 		$permissions->other->execute = $this->publicread;
@@ -360,7 +364,7 @@ class Directory extends Model
 	 *
 	 * @return  string
 	 */
-	public function getAclAttribute()
+	public function getAclAttribute(): string
 	{
 		$permissions = $this->unixPermissions;
 
@@ -436,7 +440,7 @@ class Directory extends Model
 	 *
 	 * @return  string
 	 */
-	public function getQuotaAttribute()
+	public function getQuotaAttribute(): string
 	{
 		return Number::formatBytes($this->bytes);
 	}
@@ -444,7 +448,7 @@ class Directory extends Model
 	/**
 	 * Get storage buckets
 	 *
-	 * @return  array
+	 * @return  array<string,int>|null
 	 */
 	public function getBucketsAttribute()
 	{
@@ -491,9 +495,9 @@ class Directory extends Model
 	/**
 	 * Get resource total
 	 *
-	 * @return  array
+	 * @return  array<int,array>
 	 */
-	public function getResourceTotalAttribute()
+	public function getResourceTotalAttribute(): array
 	{
 		// Fetch storage buckets under this group
 		$purchases = Purchase::query()
@@ -561,9 +565,9 @@ class Directory extends Model
 	/**
 	 * Get future quotas
 	 *
-	 * @return  array
+	 * @return  array<int,array>
 	 */
-	public function getFuturequotasAttribute()
+	public function getFuturequotasAttribute(): array
 	{
 		// Find appropriate bucket
 		$this_bucket = $this->buckets;
@@ -625,7 +629,7 @@ class Directory extends Model
 	 * @param   array  $active
 	 * @return  array<string,mixed>
 	 */
-	public function tree($expanded = true, $active = [])
+	public function tree($expanded = true, $active = []): array
 	{
 		$item = array();
 		$item['id'] = $this->id;
@@ -691,7 +695,7 @@ class Directory extends Model
 	 * @param   int    $depth
 	 * @return  array
 	 */
-	public function nested($items = array(), $depth = 0)
+	public function nested($items = array(), $depth = 0): array
 	{
 		$this->depth = $depth;
 
@@ -713,7 +717,7 @@ class Directory extends Model
 	 * @param   mixed  $value
 	 * @return  void
 	 */
-	public function setBytesAttribute($value)
+	public function setBytesAttribute($value): void
 	{
 		$this->attributes['bytes'] = Number::toBytes($value);
 	}
@@ -723,7 +727,7 @@ class Directory extends Model
 	 *
 	 * @return  string
 	 */
-	public function getFormattedBytesAttribute()
+	public function getFormattedBytesAttribute(): string
 	{
 		return Number::formatBytes($this->bytes);
 	}
@@ -733,7 +737,7 @@ class Directory extends Model
 	 *
 	 * @return void
 	 */
-	protected static function booted()
+	protected static function booted(): void
 	{
 		static::deleted(function ($model)
 		{

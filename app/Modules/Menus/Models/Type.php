@@ -5,7 +5,9 @@ namespace App\Modules\Menus\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 use App\Halcyon\Form\Form;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Menus\Events\TypeCreating;
@@ -59,16 +61,6 @@ class Type extends Model
 	protected $guarded = [
 		'id',
 	];
-
-	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'title'    => 'required|string|max:255',
-		'menutype' => 'required|string|max:255'
-	);
 
 	/**
 	 * The event map for the model.
@@ -137,9 +129,9 @@ class Type extends Model
 	/**
 	 * Get a menu's items as a tree
 	 *
-	 * @return  object
+	 * @return  Collection
 	 */
-	public function getTreeAttribute()
+	public function getTreeAttribute(): Collection
 	{
 		$table = (new Item)->getTable();
 
@@ -163,9 +155,9 @@ class Type extends Model
 	/**
 	 * Get a list of widget menu items
 	 *
-	 * @return  object
+	 * @return  Builder
 	 */
-	public function widgets()
+	public function widgets(): Builder
 	{
 		$query = Widget::query()
 			->where('widget', '=', 'menu')
@@ -244,7 +236,7 @@ class Type extends Model
 	/**
 	 * Method rebuild the entire nested set tree.
 	 *
-	 * @return  bool  False on failure or error, true otherwise.
+	 * @return  int|false
 	 */
 	public function rebuild()
 	{
@@ -261,24 +253,6 @@ class Type extends Model
 	 */
 	public static function getWidgets()
 	{
-		/*$m = Widget::blank()->getTable();
-
-		$db = \App::get('db');
-
-		$query = $db->getQuery();
-		$query->from($m, 'a');
-		$query->select('a.id');
-		$query->select('a.title');
-		$query->select('a.params');
-		$query->select('a.position');
-		$query->whereEquals('module', Module::MODULE_NAME);
-		$query->select('ag.title', 'access_title');
-		$query->join('viewlevels AS ag', 'ag.id', 'a.access', 'left');
-
-		$db->setQuery($query->toString());
-
-		$modules = $db->loadObjectList();*/
-
 		$widgets = Widget::mainMenus();
 
 		$result = array();
@@ -307,7 +281,9 @@ class Type extends Model
 	 */
 	public static function findByMenutype(string $type, array $columns = ['*'])
 	{
-		return static::query()->where('menutype', '=', $type)->first($columns);
+		return static::query()
+			->where('menutype', '=', $type)
+			->first($columns);
 	}
 
 	/**

@@ -3,6 +3,7 @@
 namespace App\Modules\Storage\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
 use App\Modules\History\Traits\Historable;
 use App\Halcyon\Utility\Number;
@@ -41,9 +42,9 @@ class Usage extends Model
 	/**
 	 * Defines a relationship to a directory
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
-	public function directory()
+	public function directory(): BelongsTo
 	{
 		return $this->belongsTo(Directory::class, 'storagedirid');
 	}
@@ -53,7 +54,7 @@ class Usage extends Model
 	 *
 	 * @return  int
 	 */
-	public function getTotalBlockUsageAttribute()
+	public function getTotalBlockUsageAttribute(): int
 	{
 		return ($this->space / 1024);
 	}
@@ -63,7 +64,7 @@ class Usage extends Model
 	 *
 	 * @return  int
 	 */
-	public function getBlockLimitAttribute()
+	public function getBlockLimitAttribute(): int
 	{
 		return ($this->quota / 1024);
 	}
@@ -73,7 +74,7 @@ class Usage extends Model
 	 *
 	 * @return  int
 	 */
-	public function getNormalvariabilityAttribute()
+	public function getNormalvariabilityAttribute(): int
 	{
 		/*
 		SELECT resourceid, 
@@ -142,7 +143,7 @@ class Usage extends Model
 	 * @param   mixed  $value
 	 * @return  void
 	 */
-	public function setQuotaAttribute($value)
+	public function setQuotaAttribute($value): void
 	{
 		$this->attributes['quota'] = Number::toBytes($value);
 	}
@@ -152,7 +153,7 @@ class Usage extends Model
 	 *
 	 * @return  string
 	 */
-	public function getFormattedQuotaAttribute()
+	public function getFormattedQuotaAttribute(): string
 	{
 		return Number::formatBytes($this->quota);
 	}
@@ -163,7 +164,7 @@ class Usage extends Model
 	 * @param   mixed  $value
 	 * @return  void
 	 */
-	public function setStoragediridAttribute($value)
+	public function setStoragediridAttribute($value): void
 	{
 		$this->attributes['storagedirid'] = $this->stringToInteger($value);
 	}
@@ -174,7 +175,7 @@ class Usage extends Model
 	 * @param   mixed  $value
 	 * @return  int
 	 */
-	private function stringToInteger($value)
+	private function stringToInteger($value): int
 	{
 		if (is_string($value))
 		{
@@ -190,7 +191,7 @@ class Usage extends Model
 	 * @param   mixed  $value
 	 * @return  void
 	 */
-	public function setSpaceAttribute($value)
+	public function setSpaceAttribute($value): void
 	{
 		$this->attributes['space'] = Number::toBytes($value);
 	}
@@ -200,7 +201,7 @@ class Usage extends Model
 	 *
 	 * @return  string
 	 */
-	public function getFormattedSpaceAttribute()
+	public function getFormattedSpaceAttribute(): string
 	{
 		return Number::formatBytes($this->space);
 	}
