@@ -2,6 +2,7 @@
 
 namespace App\Modules\Storage\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Storage\Models\Directory;
 use App\Modules\Storage\Models\StorageResource;
@@ -20,10 +21,10 @@ class Resources
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  \Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		//$events->listen(ResourceMemberCreated::class, self::class . '@handleResourceMemberCreated');
 		$events->listen(AssetBeforeDisplay::class, self::class . '@handleAssetBeforeDisplay');
@@ -37,7 +38,7 @@ class Resources
 	 * @param   AssetDeleted  $event
 	 * @return  void
 	 */
-	public function handleAssetDeleted(AssetDeleted $event)
+	public function handleAssetDeleted(AssetDeleted $event): void
 	{
 		$data = StorageResource::query()
 			->where('parentresourceid', '=', $event->asset->id)
@@ -55,7 +56,7 @@ class Resources
 	 * @param   AssetBeforeDisplay  $event
 	 * @return  void
 	 */
-	public function handleAssetBeforeDisplay(AssetBeforeDisplay $event)
+	public function handleAssetBeforeDisplay(AssetBeforeDisplay $event): void
 	{
 		$asset = $event->getAsset();
 
@@ -139,7 +140,7 @@ class Resources
 	 * @param   ResourceMemberCreated  $event
 	 * @return  void
 	 */
-	/*public function handleResourceMemberCreated(ResourceMemberCreated $event)
+	/*public function handleResourceMemberCreated(ResourceMemberCreated $event): void
 	{
 		if (!$event->user->id)
 		{

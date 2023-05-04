@@ -2,9 +2,12 @@
 
 namespace App\Modules\Queues\Console;
 
-use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
+use App\Modules\Queues\Models\Queue;
+use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Resources\Models\Asset;
+use App\Modules\Resources\Models\Subresource;
+use App\Modules\Resources\Models\Child;
 use App\Modules\Resources\Events\ResourceMemberCreated;
 use App\Modules\Resources\Events\ResourceMemberStatus;
 use App\Modules\Users\Models\User;
@@ -29,14 +32,16 @@ class FixStatusCommand extends Command
 
 	/**
 	 * Execute the console command.
+	 *
+	 * @return void
 	 */
-	public function handle()
+	public function handle(): void
 	{
 		$debug = $this->option('debug') ? true : false;
 
 		$now = Carbon::now();
 
-		$items = \App\Modules\History\Models\Log::query()
+		$items = Log::query()
 			->where('app', '=', 'roleprovision')
 			->where('datetime', '>', $now->modify('-1 month')->toDateTimeString())
 			->where('status', '=', 500)
@@ -66,7 +71,9 @@ class FixStatusCommand extends Command
 
 			$resource = array_pop($parts);
 
-			$asset = \App\Modules\Resources\Models\Asset::query()->where('rolename', '=', $resource)->first();
+			$asset = Asset::query()
+				->where('rolename', '=', $resource)
+				->first();
 
 			 if (!$asset || !$asset->id)
 			{
@@ -74,13 +81,13 @@ class FixStatusCommand extends Command
 				continue;
 			}
 
-			$qu = (new \App\Modules\Queues\Models\User)->getTable();
-			$q = (new \App\Modules\Queues\Models\Queue)->getTable();
-			$s = (new \App\Modules\Resources\Models\Subresource)->getTable();
-			$c = (new \App\Modules\Resources\Models\Child)->getTable();
-			$a = (new \App\Modules\Resources\Models\Asset)->getTable();
+			$qu = (new QueueUser)->getTable();
+			$q = (new Queue)->getTable();
+			$s = (new Subresource)->getTable();
+			$c = (new Child)->getTable();
+			$a = (new Asset)->getTable();
 
-			$total = \App\Modules\Queues\Models\User::query()
+			$total = QueueUser::query()
 				->select($qu . '.*')
 				->join($q, $q . '.id', $qu . '.queueid')
 				->join($s, $s . '.id', $q . '.subresourceid')
@@ -98,11 +105,11 @@ class FixStatusCommand extends Command
 				continue;
 			}
 
-			event($event = new \App\Modules\Resources\Events\ResourceMemberStatus($asset, $user));
+			event($event = new ResourceMemberStatus($asset, $user));
 
 			if ($event->noStatus())
 			{
-				event($event = new \App\Modules\Resources\Events\ResourceMemberCreated($asset, $user));
+				event($event = new ResourceMemberCreated($asset, $user));
 
 				$this->comment('Adding role: ' . $resource . ' to user #' . $user->id . ' (' . $user->username . ')');
 			}
