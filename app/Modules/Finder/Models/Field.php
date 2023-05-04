@@ -53,17 +53,6 @@ class Field extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'name' => 'required|string|max:255',
-		'label' => 'required|string|max:255',
-		'status' => 'nullable|integer'
-	);
-
-	/**
 	 * Field Services
 	 *
 	 * @return  HasMany

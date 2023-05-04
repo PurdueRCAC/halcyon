@@ -108,23 +108,6 @@ class Article extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'newstypeid' => 'required|integer|in:0,1',
-		'headline' => 'required|string|max:255',
-		'body' => 'required|string|max:20000',
-		'published' => 'nullable|integer|in:0,1',
-		'template' => 'nullable|integer|in:0,1',
-		'datetimenews' => 'required|date',
-		'datetimenewsend' => 'nullable|date',
-		'location' => 'nullable|string|max:32',
-		'url' => 'nullable|url',
-	);
-
-	/**
 	 * The event map for the model.
 	 *
 	 * @var  array<string,string>

@@ -29,16 +29,6 @@ class Child extends Model
 	public $timestamps = false;
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'resourceid' => 'required|integer|min:1',
-		'subresourceid' => 'required|integer|min:1'
-	);
-
-	/**
 	 * Defines a relationship to a resource
 	 *
 	 * @return  BelongsTo

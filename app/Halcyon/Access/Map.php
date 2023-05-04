@@ -42,16 +42,6 @@ class Map extends Model
 	public $orderDir = 'asc';
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'user_id' => 'positive|nonzero',
-		'role_id' => 'positive|nonzero'
-	);
-
-	/**
 	 * Defines a relationship to the User/Role Map
 	 *
 	 * @return  BelongsTo

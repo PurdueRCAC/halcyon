@@ -56,19 +56,6 @@ class Feedback extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'target_id' => 'required|integer',
-		'ip' => 'required|string|max:10',
-		'type' => 'required|string',
-		'user_id' => 'nullable|integer',
-		'comments' => 'nullable|string',
-	);
-
-	/**
 	 * The event map for the model.
 	 *
 	 * @var array<string,string>

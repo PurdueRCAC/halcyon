@@ -55,16 +55,6 @@ class Reportresource extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'contactreportid' => 'required|integer',
-		'resourceid' => 'required|integer'
-	);
-
-	/**
 	 * Defines a relationship to a contact report
 	 *
 	 * @return  BelongsTo

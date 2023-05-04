@@ -74,16 +74,6 @@ class Follow extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'targetuserid' => 'required|integer',
-		'userid' => 'required|integer'
-	);
-
-	/**
 	 * The "booted" method of the model.
 	 *
 	 * @return void

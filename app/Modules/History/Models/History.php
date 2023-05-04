@@ -53,15 +53,6 @@ class History extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'action' => 'required'
-	);
-
-	/**
 	 * Default order by for model
 	 *
 	 * @var string

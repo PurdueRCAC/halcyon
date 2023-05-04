@@ -6,10 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Pipeline\Pipeline;
-/*use League\CommonMark\CommonMarkConverter;
-use League\CommonMark\Extension\Table\TableExtension;
-use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
-use League\CommonMark\Extension\Autolink\AutolinkExtension;*/
 use App\Halcyon\Utility\PorterStemmer;
 use App\Halcyon\Access\Map;
 use App\Modules\Tags\Traits\Taggable;
@@ -99,16 +95,6 @@ class Report extends Model
 		'datetimecontact' => 'datetime:Y-m-d H:i:s',
 		'datetimegroupid' => 'datetime:Y-m-d H:i:s',
 	];
-
-	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'headline' => 'required',
-		'body'     => 'required'
-	);
 
 	/**
 	 * The event map for the model.

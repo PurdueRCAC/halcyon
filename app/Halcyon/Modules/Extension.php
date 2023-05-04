@@ -22,9 +22,6 @@ class Extension extends Model
 	 */
 	public $timestamps = false;
 
-	//const CREATED_AT = 'created';
-	//const UPDATED_AT = 'modified';
-
 	/**
 	 * The table to which the class pertains
 	 *
@@ -45,16 +42,6 @@ class Extension extends Model
 	 * @var  string
 	 */
 	public $orderDir = 'asc';
-
-	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'title'    => 'required',
-		'position' => 'required'
-	);
 
 	/**
 	 * The attributes that are mass assignable.

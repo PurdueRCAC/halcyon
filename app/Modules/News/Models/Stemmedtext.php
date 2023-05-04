@@ -42,15 +42,6 @@ class Stemmedtext extends Model
 	public $orderDir = 'asc';
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'stemmedtext' => 'required|string|max:20000'
-	);
-
-	/**
 	 * Defines a relationship to an article
 	 *
 	 * @return  BelongsTo

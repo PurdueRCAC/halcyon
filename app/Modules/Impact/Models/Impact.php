@@ -58,17 +58,6 @@ class Impact extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'name' => 'required|string|max:255',
-		'value' => 'required|string|max:255',
-		'impacttableid' => 'required|integer',
-	);
-
-	/**
 	 * The attributes that should be cast to native types.
 	 *
 	 * @var  array<string,string>

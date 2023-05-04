@@ -48,15 +48,6 @@ class FacetType extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'name' => 'required|string|max:20'
-	);
-
-	/**
 	 * Default order by for model
 	 *
 	 * @var string

@@ -51,16 +51,6 @@ class ServiceFacet extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'service_id' => 'required|integer',
-		'facet_id' => 'required|integer'
-	);
-
-	/**
 	 * Field
 	 *
 	 * @return  BelongsTo

@@ -80,15 +80,6 @@ class Comment extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'body' => 'required'
-	);
-
-	/**
 	 * Code block replacements
 	 *
 	 * @var  array<string,array>

@@ -86,16 +86,6 @@ class Issue extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'userid' => 'required|integer',
-		'report' => 'required|string'
-	);
-
-	/**
 	 * Code block replacements
 	 *
 	 * @var  array<string,array>

@@ -53,16 +53,6 @@ class Newsresource extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'newsid'     => 'required|integer',
-		'resourceid' => 'required|integer'
-	);
-
-	/**
 	 * Defines a relationship to news article
 	 *
 	 * @return  BelongsTo

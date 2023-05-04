@@ -86,17 +86,6 @@ class ToDo extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'userid' => 'required|integer',
-		'name' => 'required|string|max:255',
-		'description' => 'required|string|max:2000'
-	);
-
-	/**
 	 * Code block replacements
 	 *
 	 * @var  array<string,array>

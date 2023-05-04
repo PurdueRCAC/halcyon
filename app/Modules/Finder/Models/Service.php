@@ -52,17 +52,6 @@ class Service extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'type' => 'required|string|max:255',
-		'summary' => 'nullable|string|max:1200',
-		'status' => 'nullable|integer',
-	);
-
-	/**
 	 * Field Service Paragraphs
 	 *
 	 * @return  HasMany

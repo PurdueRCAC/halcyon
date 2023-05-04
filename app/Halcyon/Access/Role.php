@@ -47,15 +47,6 @@ class Role extends Model
 	public static $orderDir = 'asc';
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'title' => 'required|string|max:100'
-	);
-
-	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array<int,string>

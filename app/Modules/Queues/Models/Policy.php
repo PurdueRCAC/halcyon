@@ -27,15 +27,6 @@ class Policy extends Model
 	protected $table = 'schedulers';
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'hostname' => 'notempty'
-	);
-
-	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array<int,string>

@@ -57,17 +57,6 @@ class Constant extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'name' => 'required|string|max:255',
-		'value' => 'required|string|max:255',
-		'impacttableid' => 'required|integer',
-	);
-
-	/**
 	 * Defines a relationship to an impact table
 	 *
 	 * @return  BelongsTo

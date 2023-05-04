@@ -56,16 +56,6 @@ class FieldOfScience extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'name' => 'required|string|max:255',
-		'parentid' => 'nullable|integer'
-	);
-
-	/**
 	 * The "booted" method of the model.
 	 *
 	 * @return void

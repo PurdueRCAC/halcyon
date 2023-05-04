@@ -55,17 +55,6 @@ class Facet extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'name' => 'required|string|max:255',
-		'description' => 'nullable|string|max:1200',
-		'status' => 'nullable|integer',
-	);
-
-	/**
 	 * Choices
 	 *
 	 * @return  HasMany

@@ -75,16 +75,6 @@ class User extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'contactreportid' => 'required|integer',
-		'userid' => 'required|integer'
-	);
-
-	/**
 	 * Defines a relationship to report
 	 *
 	 * @return  BelongsTo

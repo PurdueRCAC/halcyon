@@ -53,15 +53,6 @@ class MemberType extends Model
 	public static $orderDir = 'asc';
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'name' => 'required|string|min:1|max:20'
-	);
-
-	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array<int,string>

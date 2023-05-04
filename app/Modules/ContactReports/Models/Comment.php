@@ -81,15 +81,6 @@ class Comment extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'body' => 'required|string'
-	);
-
-	/**
 	 * The event map for the model.
 	 *
 	 * @var array<string,string>
@@ -103,7 +94,7 @@ class Comment extends Model
 	/**
 	 * Defines a relationship to creator
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
 	public function creator(): BelongsTo
 	{
@@ -113,7 +104,7 @@ class Comment extends Model
 	/**
 	 * Defines a relationship to contact report
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
 	public function report(): BelongsTo
 	{

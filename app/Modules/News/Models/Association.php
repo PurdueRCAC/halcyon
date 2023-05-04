@@ -98,17 +98,6 @@ class Association extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'newsid' => 'required|integer',
-		'associd' => 'required|integer',
-		'assoctype' => 'required|string|max:255',
-	);
-
-	/**
 	 * Runs extra setup code when creating/updating a new model
 	 *
 	 * @return  void

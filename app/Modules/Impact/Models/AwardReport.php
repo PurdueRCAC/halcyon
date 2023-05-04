@@ -55,15 +55,4 @@ class AwardReport extends Model
 	protected $guarded = [
 		'id'
 	];
-
-	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'fiscalyear' => 'required|integer',
-		'awards' => 'required|integer',
-		'totalawards' => 'required|integer',
-	);
 }

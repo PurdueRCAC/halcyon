@@ -86,23 +86,14 @@ class Type extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'name' => 'required'
-	);
-
-	/**
 	 * The event map for the model.
 	 *
 	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
-		'created'  => TypeCreated::class,
-		'updated'  => TypeUpdated::class,
-		'deleted'  => TypeDeleted::class,
+		'created' => TypeCreated::class,
+		'updated' => TypeUpdated::class,
+		'deleted' => TypeDeleted::class,
 	];
 
 	/**

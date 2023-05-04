@@ -101,22 +101,6 @@ class Subresource extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'name'           => 'required|unique:subresource|max:32',
-		'cluster'        => 'required|string|max:32',
-		'nodecores'      => 'nullable|integer',
-		'nodemem'        => 'nullable|string|max:5',
-		'nodegpus'       => 'nullable|integer',
-		'nodeattributes' => 'nullable|string|max:16',
-		'description'    => 'nullable|string|max:255',
-		'notice'         => 'nullable|integer',
-	);
-
-	/**
 	 * Get the resource
 	 *
 	 * @return object

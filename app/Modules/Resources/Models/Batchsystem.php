@@ -28,15 +28,6 @@ class Batchsystem extends Model
 	public $timestamps = false;
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'name' => 'required|string|max:16'
-	);
-
-	/**
 	 * Default order by for model
 	 *
 	 * @var string

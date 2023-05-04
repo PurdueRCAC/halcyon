@@ -64,15 +64,6 @@ class Type extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'name' => 'required|string|max:32'
-	);
-
-	/**
 	 * The event map for the model.
 	 *
 	 * @var array<string,string>

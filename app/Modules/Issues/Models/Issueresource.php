@@ -55,16 +55,6 @@ class Issueresource extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var array<string,string>
-	 */
-	protected $rules = array(
-		'issueid' => 'positive|nonzero',
-		'resourceid' => 'positive|nonzero'
-	);
-
-	/**
 	 * Defines a relationship to an issue
 	 *
 	 * @return  BelongsTo

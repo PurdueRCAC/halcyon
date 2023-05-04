@@ -52,17 +52,6 @@ class ServiceField extends Model
 	];
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array<string,string>
-	 */
-	protected $rules = array(
-		'service_id' => 'required|integer',
-		'field_id' => 'required|integer',
-		'value' => 'required|string|max:1200'
-	);
-
-	/**
 	 * Field
 	 *
 	 * @return  BelongsTo
