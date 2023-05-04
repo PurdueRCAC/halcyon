@@ -78,16 +78,6 @@ class Extension extends Model
 	protected $manifest = null;
 
 	/**
-	 * Fields and their validation criteria
-	 *
-	 * @var  array
-	 */
-	protected $rules = array(
-		'element' => 'required|string|max:100',
-		'name'    => 'required|string|max:100'
-	);
-
-	/**
 	 * Find a record by name
 	 *
 	 * @param   string  $name
