@@ -5,10 +5,11 @@ namespace App\Modules\Issues\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use League\CommonMark\CommonMarkConverter;
-use League\CommonMark\Extension\Table\TableExtension;
-use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
-use League\CommonMark\Extension\Autolink\AutolinkExtension;
+use Illuminate\Pipeline\Pipeline;
+use App\Modules\Issues\Formatters\AbsoluteUrls;
+use App\Modules\Issues\Formatters\FixHtml;
+use App\Modules\Issues\Formatters\MarkdownToHtml;
+use App\Modules\Issues\Formatters\ReplaceVariables;
 use App\Modules\History\Traits\Historable;
 use App\Halcyon\Utility\PorterStemmer;
 
@@ -90,6 +91,16 @@ class Comment extends Model
 	);
 
 	/**
+	 * @var string
+	 */
+	protected $markdown = null;
+
+	/**
+	 * @var string
+	 */
+	protected $html = null;
+
+	/**
 	 * Defines a relationship to creator
 	 *
 	 * @return  BelongsTo
@@ -131,91 +142,101 @@ class Comment extends Model
 	}
 
 	/**
+	 * Get content variables
+	 *
+	 * @return array
+	 */
+	public function getContentVars(): array
+	{
+		$uvars = array(
+			'updatedatetime' => $this->datetimecreated->format('Y-m-d h:i:s'),
+			'updatedate'     => $this->datetimecreated->format('l, F jS, Y'),
+			'updatetime'     => $this->datetimecreated->format('g:ia')
+		);
+
+		$variables = array_merge($this->issue->getContentVars(), $uvars);
+
+		return $variables;
+	}
+
+	/**
+	 * Get the comment formatted as MarkDown
+	 *
+	 * @return string
+	 */
+	public function toMarkdown(): string
+	{
+		if (is_null($this->markdown))
+		{
+			$text = $this->comment;
+
+			$text = preg_replace_callback("/```(.*?)```/i", [$this, 'stripPre'], $text);
+			$text = preg_replace_callback("/`(.*?)`/i", [$this, 'stripCode'], $text);
+
+			$data = app(Pipeline::class)
+					->send([
+						'id' => $this->id,
+						'content' => $text,
+						'variables' => $this->getContentVars(),
+					])
+					->through([
+						AbsoluteUrls::class,
+						ReplaceVariables::class,
+					])
+					->thenReturn();
+
+			$text = $data['content'];
+
+			$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
+			$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
+
+			$this->markdown = $text;
+		}
+
+		return $this->markdown;
+	}
+
+	/**
+	 * Get the comment formatted as HTML
+	 *
+	 * @return string
+	 */
+	public function toHtml(): string
+	{
+		if (is_null($this->html))
+		{
+			$text = $this->toMarkdown();
+
+			$data = app(Pipeline::class)
+				->send([
+					'id' => $this->id,
+					'content' => $text,
+					'variables' => $this->getContentVars(),
+				])
+				->through([
+					MarkdownToHtml::class,
+					FixHtml::class,
+					//HighlightUnusedVariables::class,
+				])
+				->thenReturn();
+
+			$text = $data['content'];
+
+			$this->html = $text;
+		}
+
+		return $this->html;
+	}
+
+	/**
 	 * Get formatted comment
 	 *
+	 * @deprecated
 	 * @return string
 	 */
 	public function getFormattedCommentAttribute(): string
 	{
-		$text = $this->comment;
-
-		$converter = new CommonMarkConverter([
-			'html_input' => 'allow',
-		]);
-		$converter->getEnvironment()->addExtension(new TableExtension());
-		$converter->getEnvironment()->addExtension(new StrikethroughExtension());
-		$converter->getEnvironment()->addExtension(new AutolinkExtension());
-
-		$text = (string) $converter->convertToHtml($text);
-
-		// separate code blocks
-		$text = preg_replace_callback("/\<pre\>(.*?)\<\/pre\>/i", [$this, 'stripPre'], $text);
-		$text = preg_replace_callback("/\<code\>(.*?)\<\/code\>/i", [$this, 'stripCode'], $text);
-
-		// convert template variables
-		if (auth()->user() && auth()->user()->can('manage issues'))
-		{
-			$text = preg_replace("/%%([\w\s]+)%%/", '<span style="color:red">$0</span>', $text);
-		}
-
-		$uvars = array(
-			'updatedatetime' => $this->getOriginal('datetimecreated'),
-			'updatedate'     => date('l, F jS, Y', strtotime($this->getOriginal('datetimecreated'))),
-			'updatetime'     => date("g:ia", strtotime($this->getOriginal('datetimecreated')))
-		);
-
-		$news = $this->issue->getAttributes();
-		$news['resources'] = $this->issue->resources->toArray();
-		$resources = array();
-		foreach ($news['resources'] as $resource)
-		{
-			$resource['resourcename'] = $resource['resourceid'];
-			array_push($resources, $resource['resourcename']);
-		}
-
-		if (count($resources) > 1)
-		{
-			$resources[count($resources)-1] = 'and ' . $resources[count($resources)-1];
-		}
-
-		if (count($resources) > 2)
-		{
-			$news['resources'] = implode(', ', $resources);
-		}
-		else if (count($resources) == 2)
-		{
-			$news['resources'] = $resources[0] . ' ' . $resources[1];
-		}
-		else if (count($resources) == 1)
-		{
-			$news['resources'] = $resources[0];
-		}
-
-		$vars = array_merge($news, $uvars);
-
-		foreach ($vars as $var => $value)
-		{
-			if (is_array($value))
-			{
-				$value = implode(', ', $value);
-			}
-			$text = preg_replace("/%" . $var . "%/", $value, $text);
-		}
-
-		if (auth()->user() && auth()->user()->can('manage issues'))
-		{
-			$text = preg_replace("/%([\w\s]+)%/", '<span style="color:red">$0</span>', $text);
-		}
-
-		$text = str_replace('<th>', '<th scope="col">', $text);
-		$text = str_replace('align="right"', 'class="text-right"', $text);
-
-		$text = preg_replace_callback("/\{\{PRE\}\}/", [$this, 'replacePre'], $text);
-		$text = preg_replace_callback("/\{\{CODE\}\}/", [$this, 'replaceCode'], $text);
-
-		$text = preg_replace("/<p>(.*)(<table.*?>)(.*<\/table>)/m", "<p>$2 <caption>$1</caption>$3", $text);
-
-		return $text;
+		return $this->toHtml();
 	}
 
 	/**
