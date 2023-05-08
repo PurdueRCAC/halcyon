@@ -401,7 +401,7 @@ class Report extends Model
 	 *
 	 * @return  array<string,string>
 	 */
-	protected function getContentVars(): array
+	public function getContentVars(): array
 	{
 		$vars = array(
 			'date'           => "%date%",
