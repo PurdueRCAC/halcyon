@@ -93,8 +93,6 @@ class Sliders
 		$content .= '	</div>';
 		$content .= '	<div id="' . $id . '-content" class="collapse' . (self::$first ? ' show' : '') . '" aria-labelledby="' . $id . '-heading" data-parent="#' . self::$group . '">';
 
-		//$content .= '<h3 class="pane-toggler title" id="' . $id . '"><a href="#' . $id . '"><span>' . $text . '</span></a></h3><div class="panel"><div class="pane-slider content">';
-
 		return $content;
 	}
 
@@ -122,17 +120,6 @@ class Sliders
 
 			$opt = array();
 			$opt['heightStyle'] = "'content'";
-			/*$opt['onActive'] = "function(toggler, i) {toggler.addClass('pane-toggler-down');" .
-				"toggler.removeClass('pane-toggler');i.addClass('pane-down');i.removeClass('pane-hide');Cookie.write('jpanesliders_" . $group . "',$('div#" . $group . ".pane-sliders > .panel > h3').indexOf(toggler));}";
-			$opt['onBackground'] = "function(toggler, i) {toggler.addClass('pane-toggler');" .
-				"toggler.removeClass('pane-toggler-down');i.addClass('pane-hide');i.removeClass('pane-down');if($('div#"
-				. $group . ".pane-sliders > .panel > h3').length==$('div#" . $group . ".pane-sliders > .panel > h3.pane-toggler').length) Cookie.write('jpanesliders_" . $group . "',-1);}";
-			$opt['duration']   = (isset($params['duration'])) ? (int) $params['duration'] : 300;
-			$opt['display']    = (isset($params['useCookie']) && $params['useCookie']) ? Request::getInt('jpanesliders_' . $group, $display, 'cookie')
-				: $display;
-			$opt['show']       = (isset($params['useCookie']) && $params['useCookie']) ? Request::getInt('jpanesliders_' . $group, $show, 'cookie') : $show;
-			$opt['opacity']    = (isset($params['opacityTransition']) && ($params['opacityTransition'])) ? 'true' : 'false';
-			$opt['alwaysHide'] = (isset($params['allowAllClose']) && (!$params['allowAllClose'])) ? 'false' : 'true';*/
 
 			$options = array();
 			foreach ($opt as $k => $v)
@@ -143,14 +130,6 @@ class Sliders
 				}
 			}
 			$options = '{' . implode(',', $options) . '}';
-
-			/*Behavior::framework(true);
-
-			\App::get('document')->addScriptDeclaration(
-				"jQuery(document).ready(function($){
-					$('div#" . $group . "').accordion(" . $options . ");
-				});"
-			);*/
 		}
 	}
 }

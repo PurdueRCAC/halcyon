@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Modules\Menus\Models\Fields;
 
 use App\Halcyon\Form\Fields\Select;
@@ -29,7 +28,7 @@ class MenuType extends Select
 		$html     = array();
 		$recordId = (int) $this->form->getValue('id');
 		$size     = ($v = $this->element['size']) ? ' size="'.$v.'"' : '';
-		$class    = ($v = $this->element['class']) ? ' class="form-control '.$v.'"' : 'class="form-control"';
+		$class    = ($v = $this->element['class']) ? ' class="form-control ' . $v . '"' : 'class="form-control"';
 
 		// Get a reverse lookup of the base link URL to Title
 		$model = new ItemType();
@@ -59,31 +58,14 @@ class MenuType extends Select
 				}
 				break;
 		}
-		// Load the javascript and css
-		/*Html::behavior('framework');
-		Html::behavior('modal');
-
-		Document::addScriptDeclaration("
-			jQuery(document).ready(function($){
-				$('input.modal').fancybox({
-					arrows: false,
-					type: 'iframe',
-					autoSize: false,
-					fitToView: false,
-					width: 600,
-					height: 450,
-					href: '" . route('admin.menus.menutypes', ['record' => $recordId]) . "'
-				});
-			});
-		");*/
 
 		$html[] = '<div class="input-group">';
 			//$html[] = '<div class="col">';
-				$html[] = '<input type="text" id="'.$this->id.'" readonly="readonly" disabled="disabled" value="'.$value.'"'.$size.$class.' />';
+				$html[] = '<input type="text" id="' . $this->id . '" readonly="readonly" disabled="disabled" value="' . $value . '"' . $size . $class . ' />';
 			//$html[] = '</span>';
 			$html[] = '<div class="input-group-append">';
-				$html[] = '<input type="button" class="btn btn-outline-secondary" value="'.trans('global.select').'" />';
-				$html[] = '<input type="hidden" name="'.$this->name.'" value="'.htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8').'" />';
+				$html[] = '<input type="button" class="btn btn-outline-secondary" value="' . trans('global.select') . '" />';
+				$html[] = '<input type="hidden" name="' . $this->name . '" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '" />';
 			$html[] = '</div>';
 		$html[] = '</div>';
 

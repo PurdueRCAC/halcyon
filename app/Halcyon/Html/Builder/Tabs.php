@@ -23,7 +23,6 @@ class Tabs
 	 */
 	public static function start($group = 'tabs', $params = array())
 	{
-		//self::behavior($group, $params);
 		self::$open = false;
 
 		return '<div class="tab-content" id="' . $group . '">';

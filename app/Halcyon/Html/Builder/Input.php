@@ -182,10 +182,6 @@ class Input
 
 		if (!$readonly && !$disabled)
 		{
-			// Load the calendar behavior
-			//Behavior::calendar();
-			//Behavior::tooltip();
-
 			$id = self::getIdAttribute($name, $options);
 
 			// Only display the triggers once for each control.
@@ -200,21 +196,6 @@ class Input
 				$options['class'] .= ' date' . ($time ? 'time' : '');
 
 				$format = (in_array($format, $altformats) ? 'yy-mm-dd' : $format);
-
-				/*app('document')->addScriptDeclaration("
-					jQuery(document).ready(function($){
-						" . ($time ? "$('#" . $id . "').datetimepicker({" : "$('#" . $id . "').datepicker({") . "
-							duration: '',
-							showTime: true,
-							constrainInput: false,
-							stepMinutes: 1,
-							stepHours: 1,
-							altTimeField: '',
-							time24h: true,
-							dateFormat: '" . $format . "'" . ($time ? ", timeFormat: 'HH:mm:00'" : "") . "
-						});
-					});
-				");*/
 
 				$done[] = $id;
 			}
@@ -261,9 +242,6 @@ class Input
 			// Only display the triggers once for each control.
 			if (!in_array($id, $done))
 			{
-				// Load the calendar behavior
-				Behavior::colorpicker();
-
 				$done[] = $id;
 			}
 

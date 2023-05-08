@@ -32,28 +32,6 @@ class Access
 	 */
 	public static function level($name, $selected, $attribs = '', $params = true, $id = false)
 	{
-		/*$db = App::get('db');
-
-		$query = $db->getQuery()
-			->select('a.id', 'value')
-			->select('a.title', 'text')
-			->from('#__viewlevels', 'a')
-			->group('a.id')
-			->group('a.title')
-			->group('a.ordering')
-			->order('a.ordering', 'asc')
-			->order('title', 'asc');
-
-		// Get the options.
-		$db->setQuery($query->toString());
-		$options = $db->loadObjectList();
-
-		// Check for a database error.
-		if ($db->getErrorNum())
-		{
-			throw new Exception($db->getErrorMsg(), 500, E_WARNING);
-			return null;
-		}*/
 		$options = Viewlevel::query()
 			->select(['id AS value', 'title AS text'])
 			->groupBy(['id', 'title', 'ordering'])
@@ -98,27 +76,6 @@ class Access
 	 */
 	public static function usergroup($name, $selected, $attribs = '', $allowAll = true)
 	{
-		/*$db = App::get('db');
-		$query = $db->getQuery()
-			->select('a.id', 'value')
-			->select('a.title', 'text')
-			->select('COUNT(DISTINCT b.id)', 'level')
-			->from('#__usergroups', 'a')
-			->joinRaw('#__usergroups AS b', 'a.lft > b.lft AND a.rgt < b.rgt', 'left')
-			->group('a.id')
-			->group('a.title')
-			->group('a.lft')
-			->group('a.rgt')
-			->order('a.lft', 'asc');
-		$db->setQuery($query->toString());
-		$options = $db->loadObjectList();
-
-		// Check for a database error.
-		if ($db->getErrorNum())
-		{
-			throw new Exception($db->getErrorMsg(), 500, E_WARNING);
-			return null;
-		}*/
 		$ug = new Role;
 
 		$options = Role::query()
@@ -133,11 +90,6 @@ class Access
 			->orderBy('a.lft', 'asc')
 			->get();
 
-		/*foreach ($options as $i => $option)
-		{
-			$options[$i]->text = str_repeat('- ', $options[$i]->level) . $options[$i]->text;
-		}*/
-
 		$options->transform(function ($item, $key)
 		{
 			$item->text = str_repeat('- ', $item->level) . $item->text;
@@ -147,7 +99,6 @@ class Access
 		// If all usergroups is allowed, push it into the array.
 		if ($allowAll)
 		{
-			//array_unshift($options, Select::option('', trans('access.show all groups')));
 			$options->prepend(Select::option('', trans('access.show all groups')));
 		}
 
@@ -281,27 +232,6 @@ class Access
 	{
 		if (empty(self::$asset_groups))
 		{
-			/*$db = App::get('db');
-
-			$query = $db->getQuery()
-				->select('a.id', 'value')
-				->select('a.title', 'text')
-				->from('#__viewlevels', 'a')
-				->group('a.id')
-				->group('a.title')
-				->group('a.ordering')
-				->order('a.ordering', 'asc');
-
-			$db->setQuery($query->toString());
-			self::$asset_groups = $db->loadObjectList();
-
-			// Check for a database error.
-			if ($db->getErrorNum())
-			{
-				throw new Exception($db->getErrorMsg(), 500, E_WARNING);
-				return false;
-			}*/
-
 			self::$asset_groups = Viewlevel::query()
 				->select(['id AS value', 'title AS text'])
 				->groupBy(['id', 'title', 'ordering'])

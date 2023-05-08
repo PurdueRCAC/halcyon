@@ -21,9 +21,6 @@ class Grid
 	 */
 	public static function boolean($i, $value, $taskOn = null, $taskOff = null)
 	{
-		// Load the behavior.
-		self::behavior();
-
 		// Build the <a> tag.
 		$bool   = ($value) ? 'true icon-true' : 'false icon-false';
 		//$bool  .= ($value) ? ' on' : ' off';
@@ -60,9 +57,6 @@ class Grid
 	 */
 	public static function sort($title, $order, $direction = 'asc', $selected = '', $new_direction = 'asc')
 	{
-		// Load the behavior.
-		//self::behavior();
-
 		$direction = strtolower($direction);
 		$index = intval($direction == 'desc');
 
@@ -274,9 +268,6 @@ class Grid
 	 */
 	public static function order($rows, $cls = 'saveoder', $task = 'saveorder')
 	{
-		// Load the behavior.
-		//self::behavior();
-
 		$href = '<a href="#" data-rows="' . (count($rows) - 1) . '" data-task="' . $task . '" class="grid-order-save ' . $cls . '" title="' . trans('global.save order') . '"><span class="fa fa-save" aria-hidden="true"></span></a>';
 
 		return $href;
@@ -304,48 +295,6 @@ class Grid
 		}
 
 		return $hover . trans('global.checked out') . '</span>';
-	}
-
-	/**
-	 * Method to build the behavior script and add it to the document head.
-	 *
-	 * @return  void
-	 */
-	public static function behavior()
-	{
-		static $loaded;
-
-		if (!$loaded)
-		{
-			// Add the behavior to the document head.
-			/*\App::get('document')->addScriptDeclaration(
-				'jQuery(document).ready(function($){
-					$("a.move_up, a.move_down, a.grid_true, a.grid_false, a.trash")
-						.on("click", function(){
-							if ($(this).attr("rel")) {
-								args = jQuery.parseJSON($(this).attr("rel").replace(/\'/g, \'"\'));
-								listItemTask(args.id, args.task);
-							}
-						});
-
-					$("input.check-all-toggle").on("click", function(){
-							if ($(this).checked) {
-								$($(this).closest("form")).find("input[type=checkbox]").each(function(i){
-									i.checked = true;
-								})
-							} else {
-								$($(this).closest("form")).find("input[type=checkbox]").each(function(i){
-									i.checked = false;
-								})
-							}
-					});
-				});'
-			);*/
-
-			Behavior::framework();
-
-			$loaded = true;
-		}
 	}
 
 	/**
@@ -640,9 +589,6 @@ class Grid
 	 */
 	public static function action($i, $task, $prefix = '', $text = '', $active_title = '', $inactive_title = '', $tip = false, $active_class = '', $inactive_class = '', $enabled = true, $translate = true, $checkbox = 'cb')
 	{
-		// Load the behavior.
-		//self::behavior();
-
 		if (is_array($prefix))
 		{
 			$options = $prefix;
@@ -658,10 +604,6 @@ class Grid
 			$prefix         = array_key_exists('prefix', $options) ? $options['prefix'] : '';
 		}
 
-		/*if ($tip)
-		{
-			Behavior::tooltip();
-		}*/
 
 		if ($enabled)
 		{
