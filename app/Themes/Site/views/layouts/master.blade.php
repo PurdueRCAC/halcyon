@@ -66,7 +66,11 @@
 		@yield('scripts')
 
 	</head>
+	@hasSection('class')
+	<body class="@yield('class')">
+	@else
 	<body>
+	@endif
 		<div id="wrapper">
 		@widget('top')
 
@@ -118,6 +122,10 @@
 
 		<main id="content">
 			@include('partials.notifications')
+
+			@if (app('widget')->count('hero'))
+				@widget('hero')
+			@endif
 
 			<div class="container">
 				@if (app('widget')->count('left'))

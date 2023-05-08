@@ -63,6 +63,8 @@
 	@endforeach
 @endif
 
+@section('class')page-{{ str_replace('/', '-', $page->path) }}@stop
+
 @section('content')
 	<article id="article-content{{ $page->id }}">
 		@if (auth()->user() && (auth()->user()->can('create pages') || auth()->user()->can('edit pages') || auth()->user()->can('edit.state pages') || auth()->user()->can('delete pages')))
