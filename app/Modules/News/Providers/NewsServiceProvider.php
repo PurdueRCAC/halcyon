@@ -3,6 +3,7 @@ namespace App\Modules\News\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Modules\News\Console\CopyCommand;
+use App\Modules\News\Console\CopyWeekCommand;
 use App\Modules\News\Console\EventsTodayCommand;
 use App\Modules\News\Listeners\Registrations;
 use App\Modules\News\Listeners\RouteCollector;
@@ -56,6 +57,7 @@ class NewsServiceProvider extends ServiceProvider
 	{
 		$this->commands([
 			CopyCommand::class,
+			CopyWeekCommand::class,
 			EventsTodayCommand::class,
 		]);
 	}
