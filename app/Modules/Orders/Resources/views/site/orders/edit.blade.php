@@ -1,11 +1,13 @@
 @extends('layouts.master')
 
 @push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.css?v=' . filemtime(public_path() . '/modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.css')) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/orders/css/orders.css?v=' . filemtime(public_path() . '/modules/orders/css/orders.css')) }}" />
 @endpush
 
 @push('scripts')
+<script src="{{ asset('modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.js')) }}"></script>
 <script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
 <script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
 <script>
@@ -370,6 +372,19 @@ document.addEventListener('DOMContentLoaded', function() {
 	}*/
 
 	AccountApproverSearch();
+
+	$('input.datetime').datetimepicker({
+		duration: '',
+		constrainInput: false,
+		dateFormat: 'yy-mm-dd',
+		controlType: 'select',
+		oneLine: true,
+		timeFormat: 'HH:mm:ss'
+	}).keyup(function (e) {
+		if (e.keyCode == 8 || e.keyCode == 46) {
+			$(this).val('').datetimepicker("refresh");
+		}
+	});
 });
 </script>
 @endpush
@@ -734,9 +749,9 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 								|| (
 									($order->status == 'pending_approval' || $order->status == 'pending_fulfillment') && auth()->user()->can('manage orders'))
 									|| ($order->status == 'pending_approval' && !$myorder)) && (auth()->user()->can('manage orders') || $myorder)): ?>
-									<a href="#help4" data-toggle="modal" class="text-info tip" title="Help">
-										<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
-									</a>
+									<a href="#help4" data-toggle="modal" class="text-info tip" title="Help"><!--
+										--><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span><!--
+									--></a>
 
 									<button id="save_quantities" class="btn btn-sm btn-secondary" data-state="inactive" data-inactive="Edit Items" data-active="Save Changes" data-confirm="Removing the last item will *cancel* your order. Do you wish to continue?">Edit Items</button>
 									<button id="cancel_quantities" class="btn btn-sm btn-link item-edit-show hide">Cancel Changes</button>
@@ -832,6 +847,9 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 													@endif
 												@endif
 											</p>
+											@if (auth()->user()->can('manage orders'))
+												<input type="text" name="datetimecreated" value="{{ $item->datetimecreated }}" class="datetime item-edit-show hide form-control" />
+											@endif
 										</td>
 										<td class="text-right">
 											<input type="hidden" name="item" value="{{ $item->id }}" data-api="{{ route('api.orders.items.update', ['id' => $item->id]) }}" />

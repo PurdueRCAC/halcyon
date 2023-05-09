@@ -1359,6 +1359,7 @@ function SaveQuantities() {
 	var originalprice = $('[name=original_total]');
 	var priceinputs = $('[name=linetotal]');
 	var items = $('[name=item]');
+	var createds = $('[name=datetimecreated]');
 	var num_changes = 0;
 
 	var post, id;
@@ -1378,6 +1379,9 @@ function SaveQuantities() {
 		&& priceinputs[x].value.replace(/[,.]/g, "").match(/^[0-9-]+$/)) {
 			post['price'] = priceinputs[x].value.replace(/[,.]/g, "");
 			post['price'] = post['price'] == '000' ? 0 : post['price'];
+		}
+		if (createds.length > 0) {
+			post['datetimecreated'] = createds[x].value;
 		}
 
 		post = JSON.stringify(post);

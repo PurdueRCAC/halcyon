@@ -467,6 +467,16 @@ class ItemsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
+	 * 		"name":          "datetimecreated",
+	 * 		"description":   "Date time created (restricted to managers)",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date/time"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "datetimefulfilled",
 	 * 		"description":   "Date time fulfilled",
 	 * 		"required":      false,
@@ -502,6 +512,7 @@ class ItemsController extends Controller
 	public function update($id, Request $request)
 	{
 		$rules = [
+			'datetimecreated' => 'nullable|date',
 			'datetimefulfilled' => 'nullable|date',
 			'quantity' => 'nullable|integer',
 			'price' => 'nullable|integer',
@@ -559,6 +570,11 @@ class ItemsController extends Controller
 			}
 
 			$row->price = $request->input('price');
+		}
+
+		if (auth()->user()->can('manage orders') && $request->has('datetimecreated'))
+		{
+			$row->datetimecreated = $request->input('datetimecreated');
 		}
 
 		if ($request->input('fulfilled'))
