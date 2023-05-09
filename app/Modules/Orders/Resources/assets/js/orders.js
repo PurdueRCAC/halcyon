@@ -2117,6 +2117,44 @@ function ResetItem(url) {
 		});
 }
 
+/**
+ * Update a fulfilled date
+ *
+ * @param   {string}  url
+ * @param   {object}  btn
+ * @return  {void}
+ */
+/* exported ResetAccount */
+function UpdateItem(url, btn) {
+	var input = document.getElementById('button_' + btn.getAttribute('data-id') + '_save');
+	var post = JSON.stringify({ "datetimefulfilled": input.value });
+
+	fetch(url, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+		},
+		body: post
+	})
+		.then(function (response) {
+			if (response.ok) {
+				window.location.reload();
+				return;
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.catch(function (error) {
+			alert(error);
+		});
+}
+
 var deleteaccounts = Array();
 var deleteitems = Array();
 var pendingupdates = 0;

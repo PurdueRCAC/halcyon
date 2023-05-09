@@ -201,6 +201,12 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 	});
+	document.querySelectorAll('.item-update').forEach(function(el) {
+		el.addEventListener('click', function(e){
+			e.preventDefault();
+			UpdateItem(this.getAttribute('data-api'), this);
+		});
+	});
 
 	$('.contentInner')
 		.on('click', '.account-remove', function(e){
@@ -820,6 +826,10 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 												<div class="badge order-status fulfilled">{{ trans('orders::orders.fulfilled') }}</div>
 												<time datetime="{{ $item->datetimefulfilled->toDateTimeLocalString() }}">{{ $item->datetimefulfilled->format('M j, Y') }}</time>
 												@if (auth()->user()->can('manage orders'))
+													<span class="input-group">
+														<input type="text" name="datetimefulfilled" value="{{ $item->datetimefulfilled }}" id="button_{{ $item->id }}_save" class="datetime form-control" />
+														<span class="input-group-append"><button type="submit" class="input-group-text item-update" data-id="{{ $item->id }}" data-api="{{ route('api.orders.items.update', ['id' => $item->id]) }}"><span class="fa fa-save" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.save') }}</span></button></span>
+													</span>
 													<div class="form-group mt-3 item-edit-hide" id="button_{{ $item->id }}">
 														<button name="adbutton" id="button_{{ $item->id }}_reset" class="btn btn-sm btn-warning item-reset" data-id="{{ $item->id }}" data-api="{{ route('api.orders.items.update', ['id' => $item->id]) }}" data-confirm="Are you sure you want to reset fullfilled status for this item?">Reset</button>
 													</div>

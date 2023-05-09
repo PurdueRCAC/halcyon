@@ -572,11 +572,6 @@ class ItemsController extends Controller
 			$row->price = $request->input('price');
 		}
 
-		if (auth()->user()->can('manage orders') && $request->has('datetimecreated'))
-		{
-			$row->datetimecreated = $request->input('datetimecreated');
-		}
-
 		if ($request->input('fulfilled'))
 		{
 			$row->datetimefulfilled = Carbon::now();
@@ -584,6 +579,18 @@ class ItemsController extends Controller
 		if ($request->input('reset'))
 		{
 			$row->datetimefulfilled = null;
+		}
+
+		if (auth()->user()->can('manage orders'))
+		{
+			if ($request->has('datetimecreated'))
+			{
+				$row->datetimecreated = $request->input('datetimecreated');
+			}
+			if ($request->has('datetimefulfilled'))
+			{
+				$row->datetimefulfilled = $request->input('datetimefulfilled');
+			}
 		}
 
 		$row->save();
