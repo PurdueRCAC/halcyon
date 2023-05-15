@@ -39,21 +39,21 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
-				<div class="row">
-					<div class="col col-xs-12 col-md-8">
+				<!-- <div class="row">
+					<div class="col col-xs-12 col-md-8"> -->
 				<div class="form-group">
 					<?php echo $form->getLabel('title'); ?>
 					<?php echo $form->getInput('title'); ?>
 				</div>
-</div>
-<div class="col col-xs-12 col-md-4">
-
+				<!-- </div>
+				<div class="col col-xs-12 col-md-4">
 				<div class="form-group">
 					<?php echo $form->getLabel('showtitle'); ?>
 					<?php echo $form->getInput('showtitle'); ?>
 				</div>
-</div>
-</div>
+					</div>
+				</div> -->
+
 				<div class="form-group">
 					<?php echo $form->getLabel('position'); ?>
 					<?php echo $form->getInput('position'); ?>

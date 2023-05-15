@@ -28,7 +28,7 @@
 		/>
 
 		<field name="showtitle" type="radio"
-			default="1"
+			default="0"
 			description="widgets::widgets.show title description"
 			label="widgets::widgets.show title"
 			inline="1"
