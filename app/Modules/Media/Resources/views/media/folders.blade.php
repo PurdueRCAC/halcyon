@@ -33,6 +33,11 @@ foreach ($folderTree as $fold):
 			$cls = ' open';
 		endif;
 	endif;
+
+	$name = preg_replace('#\.[^.]*$#', '', $fold['name']);
+	if (strlen($name) > 20):
+		$name = substr($name, 0, 15) . ' ... ';
+	endif;
 	?>
 	<details id="folder-{{ $fold['name'] . '-' . $folderDepth }}" class="{{ 'depth' . $folderDepth }}"<?php echo $cls; ?>>
 		<summary>
@@ -43,7 +48,7 @@ foreach ($folderTree as $fold):
 				<span class="folder-icon">
 					<img src="<?php echo $icon; ?>" alt="{{ $fold['name'] }}" />
 				</span>
-				{{ $fold['name'] }}
+				{{ $name }}
 			</a>
 		</summary>
 		<div id="{{ $fold['name'] . '-' . $folderDepth }}">
