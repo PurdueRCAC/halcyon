@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="advanced">
+			<field name="folder" type="App\Modules\Media\Models\Fields\Folder" extension="media" default="" size="10" label="widget.gallery::gallery.params.folder" description="widget.gallery::gallery.params.folder desc" >
+				<option value="/">/</option>
+			</field>
+			<field name="layout" type="list" default="thumbs" label="widget.gallery::gallery.params.layout" description="widget.gallery::gallery.params.layout desc" >
+				<option value="list">widget.gallery::gallery.params.layout list</option>
+				<option value="thumbs">widget.gallery::gallery.params.layout thumbs</option>
+				<option value="carousel">widget.gallery::gallery.params.layout carousel</option>
+			</field>
+			<field name="show_title" type="radio" default="0" label="widget.gallery::gallery.params.show title" description="widget.gallery::gallery.params.show title desc">
+				<option value="1">global.yes</option>
+				<option value="0">global.no</option>
+			</field>
+			<field name="heading_level" type="list" default="h3" label="widget.gallery::gallery.params.header level" description="widget.gallery::gallery.params.header level desc">
+				<option value="h1">H1</option>
+				<option value="h2">H2</option>
+				<option value="h3">H3</option>
+				<option value="h4">H4</option>
+				<option value="h5">H5</option>
+			</field>
+			<field name="class" type="text" label="widgets::widgets.field.class name" description="widgets::widgets.field.class name description" />
+		</fieldset>
+	</fields>
+</config>
