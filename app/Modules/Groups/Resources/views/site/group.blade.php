@@ -224,10 +224,11 @@
 					var table = this;
 					this.api().columns().every(function (i) {
 						if (i < 3) {
+							$('<select class="data-col-filter invisible" disabled></select><br />').prependTo($(this.header()));
 							return;
 						}
 						var column = this;
-						var select = $('<select class="data-col-filter" data-index="' + i + '"><option value="all">- All -</option><option value="selected">Selected</option><option value="not-selected">Not selected</option></select><br />')
+						var select = $('<select class="data-col-filter form-contro form-contro-sm" data-index="' + i + '"><option value="all">- All -</option><option value="selected">Selected</option><option value="not-selected">Not selected</option></select><br />')
 							.prependTo($(column.header()));
 					});
 

@@ -482,12 +482,12 @@ $i = 0;
 						<td>
 							{{ $member->user ? $member->user->username : trans('global.unknown') }}
 						</td>
-						<td class="text-center">
+						<td class="text-center pb-0">
 							@if ($member->user)
 								@if (!$member->user->enabled)
 									<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span>
 								@elseif ($member->userid != $user->id || auth()->user()->can('manage groups'))
-									<div class="dropdown dropright">
+									<div class="dropdown dropright mx-3">
 										<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 											<span class="sr-only">Options</span>
 										</button>
@@ -675,12 +675,12 @@ $i = 0;
 							<td class="text-nowrap">
 								{{ $member->user ? $member->user->username : trans('global.unknown') }}
 							</td>
-							<td class="text-center">
+							<td class="text-center pb-0">
 								@if ($member->user)
 									@if (!$member->user->enabled)
 										<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span>
 									@elseif ($member->userid != $user->id || auth()->user()->can('manage groups'))
-										<div class="dropdown dropleft">
+										<div class="dropdown dropleft mx-3">
 											<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 												<span class="sr-only">Options</span>
 											</button>
@@ -874,12 +874,12 @@ $i = 0;
 						<td class="text-nowrap">
 							{{ $member->user ? $member->user->username : trans('global.unknown') }}
 						</td>
-						<td class="text-right text-nowrap">
+						<td class="text-right pb-0">
 							@if ($member->user)
 								@if (!$member->user->enabled)
 									<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span>
 								@elseif ($member->userid != $user->id || auth()->user()->can('manage groups'))
-									<div class="dropdown dropright">
+									<div class="dropdown dropright mx-3">
 										<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 											<span class="sr-only">Options</span>
 										</button>
