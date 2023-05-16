@@ -49,7 +49,7 @@ class PurgeCommand extends Command
 
 		$query = Message::query()
 			->where('datetimesubmitted', '<', $cutOffDate)
-			->whereNull('datetimecompleted');
+			->whereNotNull('datetimecompleted');
 
 		if ($type)
 		{
