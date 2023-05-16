@@ -3,6 +3,7 @@ namespace App\Modules\Messages\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Modules\Messages\Console\PurgeCommand;
 
 class MessagesServiceProvider extends ServiceProvider
 {
@@ -32,8 +33,21 @@ class MessagesServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
+		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+	}
+
+	/**
+	 * Register console commands.
+	 *
+	 * @return void
+	 */
+	protected function registerConsoleCommands()
+	{
+		$this->commands([
+			PurgeCommand::class,
+		]);
 	}
 
 	/**

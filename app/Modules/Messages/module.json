@@ -6,7 +6,8 @@
     "priority": 0,
     "providers": [
         "App\\Modules\\Messages\\Providers\\MessagesServiceProvider",
-        "App\\Modules\\Messages\\Providers\\RouteServiceProvider"
+        "App\\Modules\\Messages\\Providers\\RouteServiceProvider",
+        "App\\Modules\\Messages\\Providers\\ScheduleServiceProvider"
     ],
     "aliases": {},
     "files": [],
