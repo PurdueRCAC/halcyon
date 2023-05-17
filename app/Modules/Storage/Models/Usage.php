@@ -5,7 +5,6 @@ namespace App\Modules\Storage\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
-use App\Modules\History\Traits\Historable;
 use App\Halcyon\Utility\Number;
 use Carbon\Carbon;
 
@@ -14,8 +13,6 @@ use Carbon\Carbon;
  */
 class Usage extends Model
 {
-	use Historable;
-
 	/**
 	 * The table to which the class pertains
 	 *
