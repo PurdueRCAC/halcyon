@@ -72,7 +72,7 @@ class PurgeCommand extends Command
 			break;
 		}
 
-		if ($debug || $this->output->isVerbose())
+		if ($debug)
 		{
 			$total = $query->count();
 			$total = number_format($total);
@@ -84,6 +84,9 @@ class PurgeCommand extends Command
 		$total = $query->delete();
 		$total = number_format($total);
 
-		$this->info('Deleted ' . $total . ' record(s) from the message queue.');
+		if ($this->output->isVerbose())
+		{
+			$this->info('Deleted ' . $total . ' record(s) from the message queue.');
+		}
 	}
 }
