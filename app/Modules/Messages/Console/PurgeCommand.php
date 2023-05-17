@@ -3,7 +3,7 @@
 namespace App\Modules\Messages\Console;
 
 use Illuminate\Console\Command;
-use App\Modules\Messages\Models\MEssage;
+use App\Modules\Messages\Models\Message;
 use Carbon\Carbon;
 
 class PurgeCommand extends Command
