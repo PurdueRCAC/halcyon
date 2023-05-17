@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
-use App\Modules\History\Traits\Historable;
 use App\Modules\Messages\Events\MessageCreating;
 use App\Modules\Messages\Events\MessageCreated;
 use App\Modules\Messages\Events\MessageUpdating;
@@ -32,7 +31,7 @@ use Carbon\Carbon;
  */
 class Message extends Model
 {
-	use Historable, HasFactory;
+	use HasFactory;
 
 	/**
 	 * The name of the "created at" column.
