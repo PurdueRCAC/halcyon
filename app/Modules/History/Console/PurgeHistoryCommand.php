@@ -57,7 +57,7 @@ class PurgeHistoryCommand extends Command
 			$query->where('historable_table', '=', $table);
 		}
 
-		if ($debug || $this->output->isVerbose())
+		if ($debug)
 		{
 			$total = $query->count();
 			$total = number_format($total);
@@ -69,6 +69,9 @@ class PurgeHistoryCommand extends Command
 		$total = $query->delete();
 		$total = number_format($total);
 
-		$this->info('Deleted ' . $total . ' record(s) from the history.');
+		if ($this->output->isVerbose())
+		{
+			$this->info('Deleted ' . $total . ' record(s) from the history.');
+		}
 	}
 }
