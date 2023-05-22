@@ -21,7 +21,8 @@
 				<option value="h4">H4</option>
 				<option value="h5">H5</option>
 			</field>
-			<field name="class" type="text" label="widgets::widgets.field.class name" description="widgets::widgets.field.class name description" />
+			<field name="height" type="text" default="400" label="widget.gallery::gallery.params.height" description="wwidget.gallery::gallery.params.height description" />
+			<field name="class" type="text" label="widgets::widgets.field.class name" description="widgets::widgets.field.height description" />
 		</fieldset>
 	</fields>
 </config>

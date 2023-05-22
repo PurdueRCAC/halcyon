@@ -13,19 +13,19 @@
 			$ext  = strtolower($file->getExtension());
 			$href = route('admin.media.download', ['path' => $path]);
 			?>
-			<div class="carousel-item<?php if ($i == 0) { echo ' active'; } ?>">
-				<img src="{{ $file->getUrl() }}" class="d-block w-100" alt="{{ trans('media::media.image title', ['name' => $file->getFilename(), 'size' => $file->getFormattedSize()]) }}" />
+			<div class="text-center carousel-item<?php if ($i == 0) { echo ' active'; } ?>">
+				<img src="{{ $file->getUrl() }}" class="d-block mx-auto" height="{{ $params->get('height', 400) }}" alt="{{ trans('media::media.image title', ['name' => $file->getFilename(), 'size' => $file->getFormattedSize()]) }}" />
 			</div>
 			<?php
 			$i++;
 		endforeach;
 		?>
 	</div>
-	<button class="carousel-control-prev" type="button" data-target="#wdgt-{{ $widget->id }}-carousel" data-slide="prev">
+	<button class="btn carousel-control-prev" type="button" data-target="#wdgt-{{ $widget->id }}-carousel" data-slide="prev">
 		<span class="carousel-control-prev-icon" aria-hidden="true"></span>
 		<span class="sr-only">Previous</span>
 	</button>
-	<button class="carousel-control-next" type="button" data-target="#wdgt-{{ $widget->id }}-carousel" data-slide="next">
+	<button class="btn carousel-control-next" type="button" data-target="#wdgt-{{ $widget->id }}-carousel" data-slide="next">
 		<span class="carousel-control-next-icon" aria-hidden="true"></span>
 		<span class="sr-only">Next</span>
 	</button>

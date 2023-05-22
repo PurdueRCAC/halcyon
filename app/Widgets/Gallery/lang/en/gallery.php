@@ -17,5 +17,7 @@ return [
 		'show title' => 'Show title',
 		'header level' => 'Title header Level',
 		'header level desc' => 'Select the desired HTML header level for the title.',
+		'height' => 'Height',
+		'height desc' => 'The max eight, in pixels, the images in the slider should take.',
 	],
 ];
