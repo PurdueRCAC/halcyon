@@ -19,5 +19,7 @@ return [
 		'header level desc' => 'Select the desired HTML header level for the title.',
 		'height' => 'Height',
 		'height desc' => 'The max eight, in pixels, the images in the slider should take.',
+		'limit' => 'Limit',
+		'limit desc' => 'Max number of images to display. Set to empty to display all.',
 	],
 ];

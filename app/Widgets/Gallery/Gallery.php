@@ -26,6 +26,10 @@ class Gallery extends Widget
 		{
 			return $v->isImage();
 		});
+		if ($limit = $this->params->get('limit'))
+		{
+			$files = array_slice($files, 0, $limit);
+		}
 
 		$layout = $this->params->get('layout', 'thumbs');
 

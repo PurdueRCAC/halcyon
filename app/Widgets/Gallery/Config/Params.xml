@@ -10,6 +10,7 @@
 				<option value="thumbs">widget.gallery::gallery.params.layout thumbs</option>
 				<option value="carousel">widget.gallery::gallery.params.layout carousel</option>
 			</field>
+			<field name="limit" type="text" default="" label="widget.gallery::gallery.params.limit" description="wwidget.gallery::gallery.params.limit description" />
 			<field name="show_title" type="radio" default="0" label="widget.gallery::gallery.params.show title" description="widget.gallery::gallery.params.show title desc">
 				<option value="1">global.yes</option>
 				<option value="0">global.no</option>
