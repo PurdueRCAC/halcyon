@@ -4,6 +4,7 @@ namespace App\Halcyon\Form\Fields;
 
 use App\Halcyon\Geocode\Geocode;
 use App\Halcyon\Html\Builder\Select as Dropdown;
+use stdClass;
 
 /**
  * Supports a list of country options.
@@ -20,7 +21,7 @@ class Country extends Select
 	/**
 	 * List of countries
 	 *
-	 * @var  array
+	 * @var  array<int,array>
 	 */
 	public static $countries = array(
 		array('code' => 'AF', 'name' => 'Afghanistan', 'continent' => 'Asia'),
@@ -273,7 +274,7 @@ class Country extends Select
 	/**
 	 * Method to get the field options.
 	 *
-	 * @return  array  The field option objects.
+	 * @return  array<int,stdClass>  The field option objects.
 	 */
 	protected function getOptions()
 	{

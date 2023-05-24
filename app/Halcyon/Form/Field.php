@@ -23,14 +23,14 @@ abstract class Field
 	/**
 	 * The SimpleXMLElement object of the <field /> XML element that describes the form field.
 	 *
-	 * @var  object
+	 * @var  SimpleXMLElement
 	 */
 	protected $element;
 
 	/**
 	 * The Form object of the form attached to the form field.
 	 *
-	 * @var  object
+	 * @var  Form
 	 */
 	protected $form;
 
@@ -44,7 +44,7 @@ abstract class Field
 	/**
 	 * The hidden state for the form field.
 	 *
-	 * @var    bool
+	 * @var  bool
 	 */
 	protected $hidden = false;
 
@@ -166,7 +166,7 @@ abstract class Field
 	/**
 	 * Method to instantiate the form field object.
 	 *
-	 * @param   object  $form  The form to attach to the form field object.
+	 * @param   Form  $form  The form to attach to the form field object.
 	 * @return  void
 	 */
 	public function __construct($form = null)
@@ -266,10 +266,10 @@ abstract class Field
 	/**
 	 * Method to attach a Form object to the field.
 	 *
-	 * @param   object  $form  The Form object to attach to the form field.
-	 * @return  object  The form field object so that the method can be used in a chain.
+	 * @param   Form  $form  The Form object to attach to the form field.
+	 * @return  self  The form field object so that the method can be used in a chain.
 	 */
-	public function setForm(Form $form)
+	public function setForm(Form $form): self
 	{
 		$this->form = $form;
 		$this->formControl = $form->getFormControl();
@@ -287,7 +287,7 @@ abstract class Field
 	 *                             full field name would end up being "bar[foo]".
 	 * @return  bool  True on success.
 	 */
-	public function setup(&$element, $value, $group = null)
+	public function setup(&$element, $value, $group = null): bool
 	{
 		// Make sure there is a valid JFormField XML element.
 		if (!($element instanceof SimpleXMLElement) || (string) $element->getName() != 'field')
@@ -375,7 +375,7 @@ abstract class Field
 	 * @param   string  $fieldName  The field element name.
 	 * @return  string  The id to be used for the field input tag.
 	 */
-	protected function getId($fieldId, $fieldName)
+	protected function getId($fieldId, $fieldName): string
 	{
 		// Initialise variables.
 		$id = '';

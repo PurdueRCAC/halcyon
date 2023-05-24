@@ -76,19 +76,19 @@ class TrailTest extends TestCase
 	{
 		$pathway = new Trail();
 
-		$this->assertInstanceOf('App\Http\Pathway\Trail', $pathway->append('Crumb 1', 'index.php?option=com_lorem'));
+		$this->assertInstanceOf('App\Http\Pathway\Trail', $pathway->append('Crumb 1', '/lorem'));
 
-		$this->assertCount(1, $pathway->items(), 'List of crumbs should have returned one Item');
+		$this->assertCount(1, $pathway->all(), 'List of crumbs should have returned one Item');
 
 		$name = 'Crumb 2';
 		$link = 'index.php?option=com_ipsum';
 
 		$pathway->append($name, $link);
 
-		$items = $pathway->items();
+		$items = $pathway->all();
 		$item = array_pop($items);
 
-		$this->assertInstanceOf('Halcyon\Pathway\Item', $item);
+		$this->assertInstanceOf('App\Http\Pathway\Item', $item);
 		$this->assertEquals($item->name, $name);
 		$this->assertEquals($item->link, $link);
 	}
@@ -107,16 +107,16 @@ class TrailTest extends TestCase
 	{
 		$pathway = new Trail();
 
-		$this->assertInstanceOf('App\Http\Pathway\Trail', $pathway->prepend('Crumb 1', 'index.php?option=com_lorem'));
+		$this->assertInstanceOf('App\Http\Pathway\Trail', $pathway->prepend('Crumb 1', '/lorem'));
 
-		$this->assertCount(1, $pathway->items(), 'List of crumbs should have returned one Item');
+		$this->assertCount(1, $pathway->all(), 'List of crumbs should have returned one Item');
 
 		$name = 'Crumb 2';
 		$link = '/ipsum';
 
 		$pathway->prepend($name, $link);
 
-		$items = $pathway->items();
+		$items = $pathway->all();
 		$item = array_shift($items);
 
 		$this->assertInstanceOf(Item::class, $item);
@@ -169,14 +169,14 @@ class TrailTest extends TestCase
 
 	/**
 	 * Tests:
-	 *  1. the items() method returns an array
+	 *  1. the all() method returns an array
 	 *  2. the number of items in the array matches the number of items added
 	 *  3. the array returned contains a Halcyon\Pathway\Item object for each entry added
 	 *
 	 * @covers  \App\Http\Pathway\Trail::items
 	 * @return  void
 	 **/
-	public function testItems()
+	public function testall()
 	{
 		$data = [
 			new Item('Crumb 1', '/lorem'),
@@ -187,10 +187,10 @@ class TrailTest extends TestCase
 		$pathway->append('Crumb 1', '/lorem');
 		$pathway->append('Crumb 2', '/ipsum');
 
-		$items = $pathway->items();
+		$items = $pathway->all();
 
-		$this->assertTrue(is_array($items), 'items() should return an array');
-		$this->assertCount(2, $items, 'items() should have returned two Items');
+		$this->assertTrue(is_array($items), 'all() should return an array');
+		$this->assertCount(2, $items, 'all() should have returned two Items');
 		$this->assertEquals($items, $data);
 	}
 
@@ -210,9 +210,9 @@ class TrailTest extends TestCase
 		$pathway->append('Crumb 2', '/ipsum');
 		$pathway->clear();
 
-		$items = $pathway->items();
+		$items = $pathway->all();
 
-		$this->assertTrue(empty($items), 'items() should return an empty array after calling clear()');
+		$this->assertTrue(empty($items), 'all() should return an empty array after calling clear()');
 	}
 
 	/**
@@ -228,11 +228,11 @@ class TrailTest extends TestCase
 	public function testIterator()
 	{
 		$items = array(
-			new Item('Crumb 1', 'index.php?option=com_lorem'),
-			new Item('Crumb 2', 'index.php?option=com_ipsum'),
-			new Item('Crumb 3', 'index.php?option=com_foo'),
-			new Item('Crumb 4', 'index.php?option=com_bar'),
-			new Item('Crumb 5', 'index.php?option=com_mollum')
+			new Item('Crumb 1', '/lorem'),
+			new Item('Crumb 2', '/ipsum'),
+			new Item('Crumb 3', '/foo'),
+			new Item('Crumb 4', '/bar'),
+			new Item('Crumb 5', '/mollum')
 		);
 
 		$pathway = new Trail();

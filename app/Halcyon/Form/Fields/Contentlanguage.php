@@ -2,6 +2,7 @@
 
 namespace App\Halcyon\Form\Fields;
 
+use Illuminate\Support\Fluent;
 use App\Halcyon\Html\Builder\Contentlanguage as ContentLang;
 
 /**
@@ -19,7 +20,7 @@ class Contentlanguage extends Select
 	/**
 	 * Method to get the field options for content languages.
 	 *
-	 * @return  array  The field option objects.
+	 * @return  array<int,Fluent>  The field option objects.
 	 */
 	protected function getOptions()
 	{

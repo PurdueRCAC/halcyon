@@ -3,7 +3,8 @@
 namespace App\Modules\Config\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Illuminate\Routing\Controller;
 use App\Modules\Config\Models\Extension;
 use App\Halcyon\Access\Asset;
@@ -15,7 +16,7 @@ class ModulesController extends Controller
 	 * Display config options for a module
 	 *
 	 * @param   string   $module
-	 * @return  Response
+	 * @return  View
 	 */
 	public function index($module)
 	{
@@ -47,7 +48,7 @@ class ModulesController extends Controller
 	 *
 	 * @param  string  $module
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function update($module, Request $request)
 	{

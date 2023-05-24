@@ -57,7 +57,7 @@ class Email extends Rule
 			$duplicate = User::query()
 				->where('email', '=', $value)
 				->where('id', '<>', (int) $userId)
-				->total();
+				->count();
 
 			if ($duplicate)
 			{

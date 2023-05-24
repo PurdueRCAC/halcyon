@@ -66,7 +66,7 @@ class Asset extends Nested
 
 		if (!is_string($rules))
 		{
-			$rules = (string)$rules;
+			$rules = $rules->toJson();
 		}
 
 		$this->attributes['rules'] = $rules;

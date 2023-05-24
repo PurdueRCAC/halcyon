@@ -9,7 +9,23 @@ use App\Modules\History\Traits\Historable;
 use App\Halcyon\Form\Form;
 
 /**
- * Plugin extension model
+ * Extension model
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $type
+ * @property string $element
+ * @property string $folder
+ * @property int    $client_id
+ * @property int    $enabled
+ * @property int    $access
+ * @property int    $protected
+ * @property string $params
+ * @property int    $checked_out
+ * @property Carbon|null $checked_out_time
+ * @property int    $ordering
+ * @property Carbon|null $updated_at
+ * @property int    $updated_by
  */
 class Extension extends Model
 {
@@ -145,7 +161,7 @@ class Extension extends Model
 	 *
 	 * @return void
 	 */
-	public function registerLanguage()
+	public function registerLanguage(): void
 	{
 		if ($this->type == 'module')
 		{
@@ -173,7 +189,7 @@ class Extension extends Model
 	 *
 	 * @return  string
 	 */
-	public function path()
+	public function path(): string
 	{
 		if (is_null($this->path))
 		{
@@ -201,11 +217,11 @@ class Extension extends Model
 			}
 			elseif ($this->type == 'listener')
 			{
-
+				$path = app_path() . '/Listeners/' . $this->folder . '/' . $element . '/' . $element . '.php';
 			}
 			elseif ($this->type == 'theme')
 			{
-
+				$path = app_path() . '/Themes/' . $element;
 			}
 		}
 
@@ -215,9 +231,10 @@ class Extension extends Model
 	/**
 	 * Get a form
 	 *
-	 * @return  object
+	 * @return Form
+	 * @throws Exception
 	 */
-	public function getForm()
+	public function getForm(): Form
 	{
 		$file = $this->path() . '/Config/Params.xml'; //__DIR__ . '/Forms/Application.xml';
 
@@ -247,7 +264,7 @@ class Extension extends Model
 	/**
 	 * Method to validate the form data.
 	 *
-	 * @param   object  $form   The form to validate against.
+	 * @param   Form  $form   The form to validate against.
 	 * @param   array   $data   The data to validate.
 	 * @param   string  $group  The name of the field group to validate.
 	 * @return  mixed   Array of filtered data if valid, false otherwise.
@@ -261,8 +278,7 @@ class Extension extends Model
 		// Check for an error.
 		if ($return instanceof \Exception)
 		{
-			$this->setError($return->getMessage());
-			return false;
+			throw new \Exception($return->getMessage());
 		}
 
 		// Check the validation results.

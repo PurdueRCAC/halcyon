@@ -67,18 +67,14 @@ class Editor extends Textarea
 			return parent::getInput();
 		}
 
-		return event($event = new EditorIsRendering($this->name, $this->form->getValue($authorField), [
+		event($event = new EditorIsRendering($this->name, $this->form->getValue($authorField), [
 			'width' => $width,
 			'height' => $height,
 			'cols' => $cols,
 			'rows' => $rows
 		]));
 
-		/*return $editor->display(
-			$this->name, htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8'), $width, $height, $cols, $rows,
-			$buttons ? (is_array($buttons) ? array_merge($buttons, $hide) : $hide) : false, $this->id, $asset,
-			$this->form->getValue($authorField)
-		);*/
+		return $event->render();
 	}
 
 	/**

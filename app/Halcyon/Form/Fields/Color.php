@@ -50,8 +50,6 @@ class Color extends Field
 
 		if (!$attributes['disabled'])
 		{
-			Behavior::colorpicker();
-
 			$attributes['class'] .= ' input-colorpicker';
 		}
 

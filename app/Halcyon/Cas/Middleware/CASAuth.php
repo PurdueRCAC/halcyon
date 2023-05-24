@@ -3,6 +3,8 @@
 namespace App\Halcyon\Cas\Middleware;
 
 use Closure;
+use App\Halcyon\Cas\CasManager;
+use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Guard;
 
 class CASAuth
@@ -29,7 +31,7 @@ class CASAuth
 	/**
 	 * Handle an incoming request.
 	 *
-	 * @param  \Illuminate\Http\Request $request
+	 * @param  Request $request
 	 * @param  Closure $next
 	 * @return mixed
 	 */

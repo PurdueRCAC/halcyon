@@ -40,7 +40,7 @@ class Rule implements Arrayable, Jsonable
 	/**
 	 * Get the data for the action.
 	 *
-	 * @return  array  A named array
+	 * @return  array<int,int>
 	 */
 	public function getData(): array
 	{
@@ -164,7 +164,7 @@ class Rule implements Arrayable, Jsonable
 	/**
 	 * Get the instance as an array.
 	 *
-	 * @return array
+	 * @return array<int,int>
 	 */
 	public function toArray(): array
 	{

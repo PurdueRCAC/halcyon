@@ -144,7 +144,7 @@ class Number
 			return sprintf('%01.' . $decimals . 'f', (sprintf('%01.0f', $num) / 1000000000)) . 'B';
 		}
 
-		return $num;
+		return number_format($num);
 	}
 
 	/**

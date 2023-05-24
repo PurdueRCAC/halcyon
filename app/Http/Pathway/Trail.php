@@ -25,9 +25,9 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	 *
 	 * @param   string  $name  The name of the item.
 	 * @param   string  $link  The link to the item.
-	 * @return  Trail
+	 * @return  self
 	 */
-	public function append($name, $link = '')
+	public function append($name, $link = ''): self
 	{
 		$this->items[] = new Item($name, $link);
 
@@ -39,9 +39,9 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	 *
 	 * @param   string  $name  The name of the item.
 	 * @param   string  $link  The link to the item.
-	 * @return  Trail
+	 * @return  self
 	 */
-	public function prepend($name, $link = '')
+	public function prepend($name, $link = ''): self
 	{
 		$b = new Item($name, $link);
 		array_unshift($this->items, $b);
@@ -54,7 +54,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	 *
 	 * @return  array<int,string>
 	 */
-	public function names()
+	public function names(): array
 	{
 		$names = array();
 
@@ -71,7 +71,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	 *
 	 * @return  array<int,Item>
 	 */
-	public function all()
+	public function all(): array
 	{
 		return $this->items;
 	}
@@ -80,21 +80,21 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	 * Set an item in the list
 	 *
 	 * @param   int  $offset
-	 * @param   object   $value
+	 * @param   Item   $value
 	 * @return  void
 	 */
-	public function set($offset, $value)
+	public function set($offset, Item $value): void
 	{
-		return $this->offsetSet($offset, $value);
+		$this->offsetSet($offset, $value);
 	}
 
 	/**
 	 * Get an item from the list
 	 *
 	 * @param   int  $offset
-	 * @return  mixed
+	 * @return  Item|null
 	 */
-	public function get($offset)
+	public function get($offset): ?Item
 	{
 		return $this->offsetGet($offset);
 	}
@@ -105,7 +105,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	 * @param   int  $offset
 	 * @return  bool
 	 */
-	public function has($offset)
+	public function has($offset): bool
 	{
 		return $this->offsetExists($offset);
 	}
@@ -116,17 +116,17 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	 * @param   int  $offset
 	 * @return  void
 	 */
-	public function forget($offset)
+	public function forget($offset): void
 	{
-		return $this->offsetUnset($offset);
+		$this->offsetUnset($offset);
 	}
 
 	/**
 	 * Clear out the list of items
 	 *
-	 * @return  object
+	 * @return  self
 	 */
-	public function clear()
+	public function clear(): self
 	{
 		$this->items = array();
 
@@ -136,19 +136,19 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Rewind position
 	 *
-	 * @return  array
+	 * @return  void
 	 */
-	public function rewind()
+	public function rewind(): void
 	{
-		return reset($this->items);
+		reset($this->items);
 	}
 
 	/**
 	 * Return current item
 	 *
-	 * @return  object
+	 * @return  mixed
 	 */
-	public function current()
+	public function current(): mixed
 	{
 		return current($this->items);
 	}
@@ -156,21 +156,21 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Return position key
 	 *
-	 * @return  int
+	 * @return  mixed
 	 */
-	public function key()
+	public function key(): mixed
 	{
-		return (int) key($this->items);
+		return key($this->items);
 	}
 
 	/**
 	 * Return next item
 	 *
-	 * @return  object
+	 * @return  void
 	 */
-	public function next()
+	public function next(): void
 	{
-		return next($this->items);
+		next($this->items);
 	}
 
 	/**
@@ -178,7 +178,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	 *
 	 * @return  bool
 	 */
-	public function valid()
+	public function valid(): bool
 	{
 		return key($this->items) !== null;
 	}
@@ -186,10 +186,10 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Check if an item exists
 	 *
-	 * @param   int  $offset
+	 * @param   mixed  $offset
 	 * @return  bool
 	 */
-	public function offsetExists($offset)
+	public function offsetExists(mixed $offset): bool
 	{
 		return isset($this->items[$offset]);
 	}
@@ -197,11 +197,11 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Set an item in the list
 	 *
-	 * @param   int  $offset
-	 * @param   object   $value
+	 * @param   mixed  $offset
+	 * @param   mixed  $value
 	 * @return  void
 	 */
-	public function offsetSet($offset, $value)
+	public function offsetSet(mixed $offset, mixed $value): void
 	{
 		$this->items[$offset] = $value;
 	}
@@ -209,10 +209,10 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Get an item from the list
 	 *
-	 * @param   int  $offset
+	 * @param   mixed $offset
 	 * @return  mixed
 	 */
-	public function offsetGet($offset)
+	public function offsetGet(mixed $offset): mixed
 	{
 		return isset($this->items[$offset]) ? $this->items[$offset] : null;
 	}
@@ -220,10 +220,10 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	/**
 	 * Unset an item
 	 *
-	 * @param   int  $offset
+	 * @param   mixed $offset
 	 * @return  void
 	 */
-	public function offsetUnset($offset)
+	public function offsetUnset(mixed $offset): void
 	{
 		unset($this->items[$offset]);
 	}
@@ -233,7 +233,7 @@ class Trail implements \Iterator, \ArrayAccess, \Countable
 	 *
 	 * @return  int
 	 */
-	public function count()
+	public function count(): int
 	{
 		return count($this->items);
 	}

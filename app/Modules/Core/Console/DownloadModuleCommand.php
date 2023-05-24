@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Console;
+namespace App\Modules\Core\Console;
 
 use Illuminate\Console\Command;
 use Modules\Core\Downloader\Downloader;
@@ -15,7 +15,7 @@ class DownloadModuleCommand extends Command
      *
      * @var string
      */
-    protected $name = 'asgard:download:module';
+    protected $name = 'download:module';
 
     /**
      * The console command description.

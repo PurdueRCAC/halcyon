@@ -10,17 +10,17 @@ trait ErrorBag
 	/**
 	 * Errors that have been declared
 	 *
-	 * @var  array
+	 * @var  array<int,string>
 	 **/
 	private $errors = array();
 
 	/**
 	 * Sets all errors at once, overwritting any existing errors
 	 *
-	 * @param   array  $errors  The errors to set
-	 * @return  $this
+	 * @param   array<int,string>  $errors  The errors to set
+	 * @return  self
 	 **/
-	public function setErrors($errors)
+	public function setErrors($errors): self
 	{
 		$this->errors = $errors;
 		return $this;
@@ -30,9 +30,9 @@ trait ErrorBag
 	 * Adds error to the existing set
 	 *
 	 * @param   string  $error  The error to add
-	 * @return  $this
+	 * @return  self
 	 **/
-	public function addError($error)
+	public function addError($error): self
 	{
 		$this->errors[] = $error;
 		return $this;
@@ -41,9 +41,9 @@ trait ErrorBag
 	/**
 	 * Returns all errors
 	 *
-	 * @return  array
+	 * @return  array<int,string>
 	 **/
-	public function getErrors()
+	public function getErrors(): array
 	{
 		return $this->errors;
 	}
@@ -53,7 +53,7 @@ trait ErrorBag
 	 *
 	 * @return bool
 	 */
-	public function hasErrors()
+	public function hasErrors(): bool
 	{
 		return count($this->errors) > 0;
 	}
@@ -63,7 +63,7 @@ trait ErrorBag
 	 *
 	 * @return  string
 	 **/
-	public function getError()
+	public function getError(): string
 	{
 		return $this->hasErrors() ? $this->errors[0] : '';
 	}

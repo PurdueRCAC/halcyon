@@ -36,7 +36,7 @@ class HttpLogger
 		$action = Route::currentRouteAction();
 		$cls = $action;
 		$method = '';
-		if (strstr($action, '@'))
+		if ($action && strstr($action, '@'))
 		{
 			$action = explode('@', $action);
 			$cls = array_shift($action);

@@ -13,12 +13,12 @@ use App\Modules\Users\Models\User;
 class IpWhitelistMiddleware
 {
 	/**
-	 * @var Authentication
+	 * @var Auth
 	 */
 	private $auth;
 
 	/**
-	 * @var SessionManager
+	 * @var Store
 	 */
 	private $session;
 

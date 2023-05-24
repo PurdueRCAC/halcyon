@@ -11,13 +11,23 @@ use Carbon\Carbon;
 trait Checkable
 {
 	/**
-	 * Checks to see if the current model is checked out by someone else
+	 * Checks to see if the current model is checked out
 	 *
 	 * @return  bool
 	 **/
 	public function isCheckedOut(): bool
 	{
-		return ($this->checked_out || $this->checked_out_time != null);//&& $this->checked_out != auth()->user()->id);
+		return ($this->checked_out || $this->checked_out_time != null);
+	}
+
+	/**
+	 * Checks to see if the current model is checked out by the current user
+	 *
+	 * @return  bool
+	 **/
+	public function isCheckedOutByMe(): bool
+	{
+		return ($this->isCheckedOut() && auth()->user() && $this->checked_out == auth()->user()->id);
 	}
 
 	/**
@@ -41,19 +51,17 @@ trait Checkable
 				$data['checked_out'] = (int) auth()->user()->id;
 			}
 
-			if (empty($data))
+			if (!empty($data))
 			{
-				// There is no 'checked_out_time' or 'checked_out' column
-				return true;
+				$result = $this->newQuery()
+					->where($this->primaryKey, '=', (int) $this->{$this->primaryKey})
+					->update($data);
+
+				if (!$result)
+				{
+					return false;
+				}
 			}
-
-			// we've got the left value, and now that we've processed
-			// the children of this node we also know the right value
-			$result = $this->newQuery()
-				->where($this->primaryKey, '=', (int) $this->{$this->primaryKey})
-				->update($data);
-
-			return $result;
 		}
 
 		return true;
@@ -80,19 +88,17 @@ trait Checkable
 				$data['checked_out'] = 0;
 			}
 
-			if (empty($data))
+			if (!empty($data))
 			{
-				// There is no 'checked_out_time' or 'checked_out' column
-				return true;
+				$result = $this->newQuery()
+					->where($this->primaryKey, '=', (int) $this->{$this->primaryKey})
+					->update($data);
+
+				if (!$result)
+				{
+					return false;
+				}
 			}
-
-			// we've got the left value, and now that we've processed
-			// the children of this node we also know the right value
-			$result = $this->newQuery()
-				->where($this->primaryKey, '=', (int) $this->{$this->primaryKey})
-				->update($data);
-
-			return $result;
 		}
 
 		return true;

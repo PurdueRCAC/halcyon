@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Core\Console;
+namespace App\Modules\Core\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Modules\User\Permissions\PermissionsRemover;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use App\Modules\Core\Models\Extension;
 
 class DeleteModuleCommand extends Command
 {
@@ -15,7 +15,7 @@ class DeleteModuleCommand extends Command
      *
      * @var string
      */
-    protected $name = 'asgard:delete:module';
+    protected $name = 'delete:module';
 
     /**
      * The console command description.
@@ -70,7 +70,7 @@ class DeleteModuleCommand extends Command
             return;
         }
 
-        if (is_core_module($module) === true)
+        if ($this->isCore($module) === true)
         {
             $this->error('You cannot remove a core module.');
 
@@ -97,6 +97,20 @@ class DeleteModuleCommand extends Command
         (new PermissionsRemover($module))->removeAll();
 
         $this->info("All permissions for [$module] have been removed");
+    }
+
+    /**
+     * @param string $module
+     * @return bool
+     */
+    private function isCore($module): bool
+    {
+        $mod = Extension::query()
+            ->where('type', '=', 'module')
+            ->where('element', '=', $module)
+            ->first();
+
+        return $mod->protected ? true : false;
     }
 
     /**
