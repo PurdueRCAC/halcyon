@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
-	document.querySelectorAll('[data-confirm]').forEach(function (item) {
+	document.querySelectorAll('.delete-page').forEach(function (item) {
 		item.addEventListener('click', function (e) {
 			e.preventDefault();
 

@@ -86,7 +86,7 @@
 							</a>
 						@endif
 						@if (auth()->user()->can('delete pages'))
-							<a href="{{ route('site.pages.delete', ['id' => $page->id]) }}" data-id="{{ $page->id }}" class="delete dropdown-item tip" data-confirm="{{ trans('global.confirm delete') }}" data-api="{{ route('api.pages.delete', ['id' => $page->id]) }}" title="{{ trans('global.button.delete') }}">
+							<a href="{{ route('site.pages.delete', ['id' => $page->id]) }}" data-id="{{ $page->id }}" class="delete-page dropdown-item tip" data-confirm="{{ trans('global.confirm delete') }}" data-api="{{ route('api.pages.delete', ['id' => $page->id]) }}" title="{{ trans('global.button.delete') }}">
 								<span class="fa fa-trash" aria-hidden="true"></span> {{ trans('global.button.delete') }}
 							</a>
 						@endif
