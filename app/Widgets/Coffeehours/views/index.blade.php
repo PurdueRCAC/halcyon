@@ -277,6 +277,23 @@ foreach ($rows as $event):
 					</div>
 				@endif*/ ?>
 		</div>
+		@if (auth()->user() && auth()->user()->can('edit news'))
+			<div class="row border-top mt-3 pt-3">
+				<div class="col-md-6">
+					ID #{{ $event->id }}
+				</div>
+				<div class="col-md-6 text-right">
+					<a class="edit tip" href="{{ route('site.news.manage', ['id' => $event->id]) }}&edit" title="{{ trans('global.edit') }}"><!--
+						--><span class="fa fa-fw fa-pencil" aria-hidden="true"></span><!--
+						--><span class="sr-only">{{ trans('global.button.edit') }}</span><!--
+					--></a>
+					<a href="#coffee{{ $event->id }}" class="delete-news tip text-danger ml-3" data-confirm="Are you sure you want to delete this event?" data-api="{{ route('api.news.delete', ['id' => $event->id]) }}" title="{{ trans('global.button.delete') }}"><!--
+						--><span class="fa fa-fw fa-trash" aria-hidden="true"></span><!--
+						--><span class="sr-only">{{ trans('global.button.delete') }}</span><!--
+					--></a>
+				</div>
+			</div>
+		@endif
 	</section>
 	<?php
 endforeach;
@@ -338,5 +355,40 @@ endforeach;
 		calendar.render();
 		$('.fallback').hide();
 		$('.dialog-event').dialog({ autoOpen: false, modal: true, width: 600 });
+
+		@if (auth()->user() && auth()->user()->can('edit news'))
+		document.querySelectorAll('.delete-news').forEach(function (el){
+			el.addEventListener('click', function (e) {
+				e.preventDefault();
+
+				if (confirm(this.getAttribute('data-confirm'))) {
+					fetch(this.getAttribute('data-api'), {
+						method: 'DELETE',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+						}
+					})
+					.then(function (response) {
+						if (response.ok) {
+							window.location.reload(true);
+							return;
+						}
+
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
+							}
+							throw msg;
+						});
+					})
+					.catch(function (error) {
+						alert(error);
+					});
+				}
+			});
+		});
+		@endif
 	});
 </script>
