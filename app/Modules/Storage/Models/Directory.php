@@ -19,6 +19,29 @@ use stdClass;
 
 /**
  * Storage model for a resource directory
+ *
+ * @property int    $id
+ * @property int    $resourceid
+ * @property int    $groupid
+ * @property int    $parentstoragedirid
+ * @property string $name
+ * @property string $path
+ * @property int    $bytes
+ * @property int    $owneruserid
+ * @property int    $unixgroupid
+ * @property int    $ownerread
+ * @property int    $ownerwrite
+ * @property int    $groupread
+ * @property int    $groupwrite
+ * @property int    $publicread
+ * @property int    $publicwrite
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property Carbon|null $datetimeconfigured
+ * @property int    $autouser
+ * @property int    $files
+ * @property int    $autouserunixgroupid
+ * @property int    $storageresourceid
  */
 class Directory extends Model
 {

@@ -10,7 +10,12 @@ use App\Modules\History\Traits\Historable;
 use App\Halcyon\Models\Timeperiod;
 
 /**
- * Model for news type
+ * Model for notification type
+ *
+ * @property int    $id
+ * @property string $name
+ * @property int    $defaulttimeperiodid
+ * @property int    $valuetype
  */
 class Type extends Model
 {

@@ -55,9 +55,9 @@ class LetterAvatar
 	 * Set the image size
 	 *
 	 * @param   int  $size
-	 * @return  object
+	 * @return  self
 	 */
-	public function setSize($size)
+	public function setSize($size): self
 	{
 		$this->size = (int)$size;
 
@@ -68,9 +68,10 @@ class LetterAvatar
 	 * Generate a hash fron the original string
 	 *
 	 * @param   string  $string
-	 * @return  object
+	 * @return  self
+	 * @throws Exception
 	 */
-	public function setString($string)
+	public function setString($string): self
 	{
 		if (!$string)
 		{
@@ -87,9 +88,9 @@ class LetterAvatar
 	 * 
 	 * @param string $backgroundColor
 	 * @param string $foregroundColor
-	 * @return object
+	 * @return self
 	 */
-	public function setColor($backgroundColor, $foregroundColor)
+	public function setColor($backgroundColor, $foregroundColor): self
 	{
 		$this->backgroundColor = $this->hexToRgb($backgroundColor);
 		$this->foregroundColor = $this->hexToRgb($foregroundColor);
@@ -101,9 +102,9 @@ class LetterAvatar
 	 * Convert hex to RGB
 	 * 
 	 * @param string $kex
-	 * @return array
+	 * @return array<string,string>
 	 */
-	private function hexToRgb($hex)
+	private function hexToRgb($hex): array
 	{
 		$hex      = str_replace('#', '', $hex);
 		$length   = strlen($hex);
@@ -118,7 +119,7 @@ class LetterAvatar
 	 * Convert a string to a color
 	 * 
 	 * @param string $string
-	 * @return string
+	 * @return array<string,string>
 	 */
 	private function stringToColor(string $string, $adjustPercent = 0.8): array
 	{
@@ -151,7 +152,7 @@ class LetterAvatar
 	 *
 	 * @return  void
 	 */
-	private function generate()
+	private function generate(): void
 	{
 		$initials = $this->getInitials($this->string);
 		$this->backgroundColor = $this->backgroundColor ?: $this->stringToColor($this->string, 0.8);
@@ -235,7 +236,7 @@ class LetterAvatar
 	 * The function will check if a part is , or blank
 	 *
 	 * @param string $name Name to be broken up
-	 * @return array Name broken up to an array
+	 * @return array<int,string> Name broken up to an array
 	 */
 	private function breakName(string $name): array
 	{
@@ -290,7 +291,7 @@ class LetterAvatar
 	 *
 	 * @return  void
 	 */
-	public function display()
+	public function display(): void
 	{
 		header("Content-Type: " . self::MIME_TYPE_PNG);
 		$this->generate();
@@ -301,7 +302,7 @@ class LetterAvatar
 	 *
 	 * @return  string
 	 */
-	public function data()
+	public function data(): string
 	{
 		ob_start();
 		$this->generate();

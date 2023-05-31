@@ -106,6 +106,27 @@ class User extends Model implements
 	protected $userusername = null;
 
 	/**
+	 * Is this the a core admin
+	 *
+	 * @var null|bool
+	 **/
+	protected $isRoot;
+
+	/**
+	 * List of authorized view levels for this user
+	 *
+	 * @var null|array<int,int>
+	 **/
+	protected $authLevels;
+
+	/**
+	 * List of authorized roles for this user
+	 *
+	 * @var null|array<int,int>
+	 **/
+	protected $authRoles;
+
+	/**
 	 * Determine if the entity has a given ability.
 	 *
 	 * @param  string  $ability
@@ -125,7 +146,7 @@ class User extends Model implements
 			$this->isRoot = false;
 
 			// Check for the configuration file failsafe.
-			$rootUser = config('root_user');
+			$rootUser = config('module.users.root_user');
 
 			// The root_user variable can be a numeric user ID or a username.
 			if (is_numeric($rootUser) && $this->id > 0 && $this->id == $rootUser)
@@ -429,7 +450,7 @@ class User extends Model implements
 	/**
 	 * Gets an array of the authorised access levels for the user
 	 *
-	 * @return  array
+	 * @return  array<int,int>
 	 */
 	public function getAuthorisedViewLevels()
 	{
@@ -449,7 +470,7 @@ class User extends Model implements
 	/**
 	 * Gets an array of the authorised user roles
 	 *
-	 * @return  array
+	 * @return  array<int,int>
 	 */
 	public function getAuthorisedRoles()
 	{
@@ -670,6 +691,41 @@ class User extends Model implements
 			->first();
 
 		return $user ?: new self;
+	}
+
+	/**
+	 * Method to return a list of user Ids contained in a Role
+	 *
+	 * @param   int   $roleId     The role Id
+	 * @param   bool  $recursive  Recursively include all child roles (optional)
+	 * @return  array<int,int>
+	 */
+	public static function findByRole($roleId, $recursive = false): array
+	{
+		$test = $recursive ? '>=' : '=';
+
+		// First find the users contained in the role
+		$db = app('db');
+
+		$result = $db->table('user_roles AS ug1')
+			->select('DISTINCT(user_id)')
+			->join('user_roles AS ug2', function($join) use ($test)
+			{
+				$join->on('ug2.lft', $test, 'ug1.lft')
+					->on('ug1.rgt', $test, 'ug2.rgt');
+			})
+			->join('user_role_map AS m', 'm.role_id', 'ug2.id')
+			->where('ug1.id', '=', $roleId)
+			->pluck('user_id')
+			->toArray();
+
+		// Clean up any NULL values, just in case
+		foreach ($result as $i => $v)
+		{
+			$result[$i] = (int) $v;
+		}
+
+		return $result;
 	}
 
 	/**

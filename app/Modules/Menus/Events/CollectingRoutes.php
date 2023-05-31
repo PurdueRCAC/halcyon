@@ -27,9 +27,9 @@ class CollectingRoutes
 	 * @param  string  $value
 	 * @param  string  $path
 	 * @param  string  $indent
-	 * @return CollectingRoutes
+	 * @return self
 	 */
-	public function addRoute($group, $text, $value, $path = '', $indent = '')
+	public function addRoute(string $group, string $text, string $value, string $path = '', string $indent = ''): self
 	{
 		if (!isset($this->routes[$group]))
 		{

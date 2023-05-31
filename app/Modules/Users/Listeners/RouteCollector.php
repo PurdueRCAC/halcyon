@@ -2,6 +2,7 @@
 
 namespace App\Modules\Users\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Menus\Events\CollectingRoutes;
 
 /**
@@ -12,10 +13,10 @@ class RouteCollector
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(CollectingRoutes::class, self::class . '@handleCollectingRoutes');
 	}
@@ -26,7 +27,7 @@ class RouteCollector
 	 * @param   CollectingRoutes $event
 	 * @return  void
 	 */
-	public function handleCollectingRoutes(CollectingRoutes $event)
+	public function handleCollectingRoutes(CollectingRoutes $event): void
 	{
 		$route = route('login');
 		$route = str_replace(request()->root(), '', $route);

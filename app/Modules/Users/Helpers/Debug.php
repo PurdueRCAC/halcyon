@@ -1,6 +1,7 @@
 <?php
 namespace App\Modules\Users\Helpers;
 
+use Illuminate\Support\Collection;
 use App\Halcyon\Facades\Html;
 use App\Halcyon\Access\Gate;
 
@@ -12,9 +13,9 @@ class Debug
 	/**
 	 * Get a list of the modules.
 	 *
-	 * @return  array
+	 * @return  Collection
 	 */
-	public static function getModules()
+	public static function getModules(): Collection
 	{
 		// Initialise variable.
 		$items = app('db')
@@ -46,9 +47,9 @@ class Debug
 	 * Get a list of the actions for the module or code actions.
 	 *
 	 * @param   string  $module  The name of the module.
-	 * @return  array
+	 * @return  array<string,array>
 	 */
-	public static function getActions($module = null)
+	public static function getActions($module = null): array
 	{
 		$actions = array();
 
@@ -128,9 +129,9 @@ class Debug
 	/**
 	 * Get a list of filter options for the levels.
 	 *
-	 * @return  array  An array of Option elements.
+	 * @return  array<int,string>  An array of Option elements.
 	 */
-	static function getLevelsOptions()
+	static function getLevelsOptions(): array
 	{
 		// Build the filter options.
 		$options = array();

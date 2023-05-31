@@ -36,7 +36,7 @@ class UserDisplay
 	/**
 	 * Constructor
 	 *
-	 * @param  object $user
+	 * @param  User $user
 	 * @param  string $active
 	 * @return void
 	 */
@@ -50,9 +50,9 @@ class UserDisplay
 	/**
 	 * Get active section
 	 *
-	 * @return string
+	 * @return string|null
 	 */
-	public function getActive()
+	public function getActive(): ?string
 	{
 		return $this->active;
 	}
@@ -62,7 +62,7 @@ class UserDisplay
 	 *
 	 * @return array
 	 */
-	public function getSections()
+	public function getSections(): array
 	{
 		return $this->sections;
 	}
@@ -72,7 +72,7 @@ class UserDisplay
 	 *
 	 * @return array
 	 */
-	public function getParts()
+	public function getParts(): array
 	{
 		return $this->parts;
 	}
@@ -86,7 +86,7 @@ class UserDisplay
 	 * @param  string  $content
 	 * @return void
 	 */
-	public function addSection($route, $name, $active = false, $content = null)
+	public function addSection($route, $name, $active = false, $content = null): void
 	{
 		$this->sections[$name] = array(
 			'route'   => $route,
@@ -104,7 +104,7 @@ class UserDisplay
 	 * @param  string  $content
 	 * @return void
 	 */
-	public function appendSection($name, $content)
+	public function appendSection($name, $content): void
 	{
 		$this->sections[$name]['content'] .= $content;
 	}
@@ -115,7 +115,7 @@ class UserDisplay
 	 * @param  string  $content
 	 * @return void
 	 */
-	public function addPart($content)
+	public function addPart($content): void
 	{
 		$this->parts[] = $content;
 	}
@@ -125,7 +125,7 @@ class UserDisplay
 	 *
 	 * @return User
 	 */
-	public function getUser()
+	public function getUser(): User
 	{
 		return $this->user;
 	}
@@ -136,7 +136,7 @@ class UserDisplay
 	 * @param  User  $user
 	 * @return void
 	 */
-	public function setUser(User $user)
+	public function setUser(User $user): void
 	{
 		$this->user = $user;
 	}

@@ -1,10 +1,12 @@
 <?php
 namespace App\Modules\Users\Events;
 
+use App\Modules\Users\Models\User;
+
 class UserSync
 {
 	/**
-	 * @var object
+	 * @var User
 	 */
 	public $user;
 
@@ -14,19 +16,19 @@ class UserSync
 	public $authorized;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	public $rolename;
 
 	/**
 	 * Constructor
 	 *
-	 * @param  object  $user
-	 * @param  bool    $authorized
-	 * @param  string  $rolename
+	 * @param  User  $user
+	 * @param  bool  $authorized
+	 * @param  string|null  $rolename
 	 * @return void
 	 */
-	public function __construct($user, $authorized = false, $rolename = null)
+	public function __construct(User $user, $authorized = false, $rolename = null)
 	{
 		$this->user = $user;
 		$this->authorized = $authorized;

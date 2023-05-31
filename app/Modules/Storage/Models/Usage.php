@@ -10,6 +10,15 @@ use Carbon\Carbon;
 
 /**
  * Storage usage
+ *
+ * @property int    $id
+ * @property int    $storagedirid
+ * @property int    $quota
+ * @property int    $filequota
+ * @property int    $space
+ * @property int    $files
+ * @property Carbon|null $datetimecreated
+ * @property int    $lastinterval
  */
 class Usage extends Model
 {

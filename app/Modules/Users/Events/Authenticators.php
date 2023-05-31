@@ -17,7 +17,7 @@ class Authenticators
 	 * @param  array $options
 	 * @return void
 	 */
-	public function addAuthenticator($name, $options = array())
+	public function addAuthenticator($name, $options = array()): void
 	{
 		$this->authenticators[$name] = $options;
 	}

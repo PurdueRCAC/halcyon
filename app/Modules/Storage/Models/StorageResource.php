@@ -11,6 +11,21 @@ use App\Halcyon\Utility\Number;
 
 /**
  * Storage resource model
+ *
+ * @property int    $id
+ * @property string $name
+ * @property \Carbon\Carbon|null $datetimecreated
+ * @property \Carbon\Carbon|null $datetimeremoved
+ * @property string $path
+ * @property int    $parentresourceid
+ * @property int    $import
+ * @property int    $autouserdir
+ * @property int    $defaultquotaspace
+ * @property int    $defaultquotafile
+ * @property string $importhostname
+ * @property int    $getquotatypeid
+ * @property int    $createtypeid
+ * @property int    $groupmanaged
  */
 class StorageResource extends Model
 {

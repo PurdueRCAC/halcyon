@@ -219,7 +219,7 @@ class Gate
 	 * @param   mixed  $asset   Asset ID or the name of the asset as a string. Defaults to the global asset node.
 	 * @return  bool   True if authorised.
 	 */
-	public static function checkRole($roleId, $action, $asset = null)
+	public static function checkRole($roleId, $action, $asset = null): bool
 	{
 		// Sanitize inputs.
 		$roleId = (int) $roleId;
@@ -259,7 +259,7 @@ class Gate
 	 * (including the leaf role id).
 	 *
 	 * @param   mixed  $roleId  An integer or array of integers representing the identities to check.
-	 * @return  mixed  True if allowed, false for an explicit deny, null for an implicit deny.
+	 * @return  mixed
 	 */
 	protected static function getRolePath($roleId)
 	{
@@ -307,11 +307,11 @@ class Gate
 	 * only the rules explicitly set for the asset or the summation of all inherited rules from
 	 * parent assets and explicit rules.
 	 *
-	 * @param   mixed    $asset      Integer asset id or the name of the asset as a string.
-	 * @param   bool  $recursive  True to return the rules object with inherited rules.
-	 * @return  object   Rules object for the asset.
+	 * @param   mixed  $asset      Integer asset id or the name of the asset as a string.
+	 * @param   bool   $recursive  True to return the rules object with inherited rules.
+	 * @return  Rules  Rules object for the asset.
 	 */
-	public static function getAssetRules($asset, $recursive = false)
+	public static function getAssetRules($asset, $recursive = false): Rules
 	{
 		// Build the database query to get the rules for the asset.
 		$model = new Asset();
@@ -379,9 +379,9 @@ class Gate
 	 *
 	 * @param   int  $userId     Id of the user for which to get the list of roles.
 	 * @param   bool  $recursive  True to include inherited user roles.
-	 * @return  array    List of user role ids to which the user is mapped.
+	 * @return  array<int,int>  List of user role ids to which the user is mapped.
 	 */
-	public static function getRolesByUser($userId, $recursive = true)
+	public static function getRolesByUser($userId, $recursive = true): array
 	{
 		// Creates a simple unique string for each parameter combination:
 		$storeId = $userId . ':' . (int) $recursive;
@@ -391,7 +391,7 @@ class Gate
 			// Guest user (if only the actually assigned role is requested)
 			if (empty($userId) && !$recursive)
 			{
-				$result = array(config('users.guest_userrole', 1));
+				$result = array(config('module.users.guest_role', 1));
 			}
 			// Registered user and guest if all roles are requested
 			else
@@ -402,7 +402,7 @@ class Gate
 				{
 					$query = $db->table('user_roles AS a')
 						->select($recursive ? 'b.id' : 'a.id')
-						->where('a.id', '=', (int) config('users.guest_role', 1));
+						->where('a.id', '=', (int) config('module.users.guest_role', 1));
 				}
 				else
 				{
@@ -430,13 +430,11 @@ class Gate
 					$result[$i] = (int) $v;
 				}
 
+				$result = array_unique($result);
+
 				if (empty($result))
 				{
 					$result = array(1);
-				}
-				else
-				{
-					$result = array_unique($result);
 				}
 			}
 
@@ -447,48 +445,12 @@ class Gate
 	}
 
 	/**
-	 * Method to return a list of user Ids contained in a Role
-	 *
-	 * @param   int  $roleId    The role Id
-	 * @param   bool  $recursive  Recursively include all child roles (optional)
-	 * @return  array
-	 * @todo    This method should move somewhere else
-	 */
-	public static function getUsersByRole($roleId, $recursive = false)
-	{
-		$test = $recursive ? '>=' : '=';
-
-		// First find the users contained in the role
-		$db = app('db');
-
-		$result = $db->table('user_roles AS ug1')
-			->select('DISTINCT(user_id)')
-			->join('user_roles AS ug2', function($join) use ($test)
-			{
-				$join->on('ug2.lft', $test, 'ug1.lft')
-					->on('ug1.rgt', $test, 'ug2.rgt');
-			})
-			->join('user_role_map AS m', 'm.role_id', 'ug2.id')
-			->where('ug1.id', '=', $roleId)
-			->pluck('user_id')
-			->toArray();
-
-		// Clean up any NULL values, just in case
-		foreach ($result as $i => $v)
-		{
-			$result[$i] = (int) $v;
-		}
-
-		return $result;
-	}
-
-	/**
 	 * Method to return a list of view levels for which the user is authorised.
 	 *
 	 * @param   int  $userId  Id of the user for which to get the list of authorised view levels.
-	 * @return  array    List of view levels for which the user is authorised.
+	 * @return  array<int,int>    List of view levels for which the user is authorised.
 	 */
-	public static function getAuthorisedViewLevels($userId)
+	public static function getAuthorisedViewLevels($userId): array
 	{
 		// Get all roles that the user is mapped to recursively.
 		$roles = self::getRolesByUser($userId);
@@ -563,7 +525,7 @@ class Gate
 	 *
 	 * @param   string|SimpleXMLElement  $data   The XML string or an XML element.
 	 * @param   string                   $xpath  An optional xpath to search for the fields.
-	 * @return  bool|array   False if case of error or the list of actions available.
+	 * @return  bool|array<int,\stdClass>   False if case of error or the list of actions available.
 	 */
 	public static function getActionsFromData($data, $xpath = "/access/section[@name='module']/")
 	{

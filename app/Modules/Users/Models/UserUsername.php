@@ -84,7 +84,7 @@ class UserUsername extends Model
 		$value = strtolower($value);
 		$value = preg_replace('/[^a-z0-9-]/', '', $value);
 
-		if (strlen($value) > 16)
+		if ($value && strlen($value) > 16)
 		{
 			$value = substr($value, 0, 16);
 		}

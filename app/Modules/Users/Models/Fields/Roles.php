@@ -20,16 +20,18 @@ class Roles extends Select
 	/**
 	 * Method to get the list of menus for the field options.
 	 *
-	 * @return  array  The field option objects.
+	 * @return  array<int,Role>  The field option objects.
 	 */
 	protected function getOptions()
 	{
-		$ug = new Role;
+		$none = new Role;
+		$none->value = 0;
+		$none->text = trans('global.none');
 
 		$options = Role::query()
 			->select(['a.id', 'a.title', 'a.parent_id', DB::raw('COUNT(DISTINCT b.id) AS level')])
-			->from($ug->getTable() . ' AS a')
-			->leftJoin($ug->getTable() . ' AS b', function($join)
+			->from($none->getTable() . ' AS a')
+			->leftJoin($none->getTable() . ' AS b', function ($join)
 				{
 					$join->on('a.lft', '>', 'b.lft')
 						->on('a.rgt', '<', 'b.rgt');
@@ -43,10 +45,6 @@ class Roles extends Select
 			$item->value = $item->id;
 			$item->text = str_repeat('|&mdash;', $item->level) . $item->title;
 		});
-
-		$none = new Role;
-		$none->value = 0;
-		$none->text = trans('global.none');
 
 		$options->prepend($none);
 

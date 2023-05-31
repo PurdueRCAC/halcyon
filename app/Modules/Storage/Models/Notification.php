@@ -13,6 +13,19 @@ use Carbon\Carbon;
 
 /**
  * Storage model for a notification
+ *
+ * @property int    $id
+ * @property int    $storagedirid
+ * @property int    $userid
+ * @property int    $storagedirquotanotificationtypeid
+ * @property int    $value
+ * @property int    $timeperiodid
+ * @property int    $periods
+ * @property int    $notice
+ * @property Carbon|null $datetimelastnotify
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property int    $enabled
  */
 class Notification extends Model
 {

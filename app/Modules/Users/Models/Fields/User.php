@@ -27,7 +27,7 @@ class User extends Field
 		$html = array();
 		$groups = $this->getGroups();
 		$excluded = $this->getExcluded();
-		$link = 'index.php?option=com_members&amp;layout=modal&amp;tmpl=component&amp;field=' . $this->id
+		$link = route('api.users.index', ['field' => $this->id]);
 			. (isset($groups) ? ('&amp;groups=' . base64_encode(json_encode($groups))) : '')
 			. (isset($excluded) ? ('&amp;excluded=' . base64_encode(json_encode($excluded))) : '');
 

@@ -14,6 +14,15 @@ use Carbon\Carbon;
 
 /**
  * Storage model for a resource purchase
+ *
+ * @property int    $id
+ * @property int    $resourceid
+ * @property int    $groupid
+ * @property Carbon|null $datetimestart
+ * @property Carbon|null $datetimestop
+ * @property int    $bytes
+ * @property int    $sellergroupid
+ * @property string $comment
  */
 class Purchase extends Model
 {
