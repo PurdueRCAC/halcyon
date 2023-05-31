@@ -707,6 +707,9 @@ class PagesController extends Controller
 		$row->parent_id = $parent_id;
 
 		$page = Page::find($row->page_id);
+
+		$original = $page->alias;
+
 		$page->title = $request->input('title', $page->title);
 		$page->alias = $request->input('alias', $page->alias);
 		$page->alias = $page->alias ?: $page->title;
@@ -779,6 +782,23 @@ class PagesController extends Controller
 		if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
 		{
 			return response()->json(['message' => trans('knowledge::knowledge.error.rebuild failed')], 409);
+		}
+
+		// Update all instances of this snippet
+		if ($page->alias != $original)
+		{
+			$instances = Associations::query()
+				->where('page_id', '=', $row->page_id)
+				->where('id', '!=', $row->id)
+				->get();
+
+			foreach ($instances as $inst)
+			{
+				$inst->path = trim($inst->parent->path . '/' . $page->alias, '/');
+				$inst->save();
+
+				$inst->rebuild($inst->id, $inst->lft, $inst->level, $inst->path);
+			}
 		}
 
 		return new PageResource($row);

@@ -394,6 +394,9 @@ class PagesController extends Controller
 		{
 			$page = new Page;
 		}
+
+		$original = $page->alias;
+
 		$page->title = $request->input('page.title');
 		$page->alias = $request->input('page.alias');
 		$page->alias = $page->alias ?: $page->title;
@@ -460,7 +463,24 @@ class PagesController extends Controller
 			return redirect()->back()->withError(trans('knowledge::knowledge.errors.rebuild failed'));
 		}
 
-		return redirect(route('admin.knowledge.index'))->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created')));
+		// Update all instances of this snippet
+		if ($page->alias != $original)
+		{
+			$instances = Associations::query()
+				->where('page_id', '=', $row->page_id)
+				->where('id', '!=', $row->id)
+				->get();
+
+			foreach ($instances as $inst)
+			{
+				$inst->path = trim($inst->parent->path . '/' . $page->alias, '/');
+				$inst->save();
+
+				$inst->rebuild($inst->id, $inst->lft, $inst->level, $inst->path);
+			}
+		}
+
+		//return redirect(route('admin.knowledge.index'))->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**

@@ -261,6 +261,9 @@ class SnippetsController extends Controller
 		{
 			$page = new Page;
 		}
+
+		$original = $page->alias;
+
 		$page->snippet = 1;
 		$page->access  = $request->input('fields.access');
 		$page->state   = $request->input('fields.state');
@@ -314,6 +317,22 @@ class SnippetsController extends Controller
 		if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
 		{
 			return redirect()->back()->withError(trans('knowledge::knowledge.errors.rebuild failed'));
+		}
+
+		// Update all instances of this snippet
+		if ($page->alias != $original)
+		{
+			$instances = Associations::query()
+				->where('page_id', '=', $row->page_id)
+				->get();
+
+			foreach ($instances as $inst)
+			{
+				$inst->path = trim($inst->parent->path . '/' . $page->alias, '/');
+				$inst->save();
+
+				$inst->rebuild($inst->id, $inst->lft, $inst->level, $inst->path);
+			}
 		}
 
 		return redirect(route('admin.knowledge.snippets'))->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created')));
