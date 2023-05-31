@@ -219,7 +219,7 @@ class Gate
 	 * @param   mixed  $asset   Asset ID or the name of the asset as a string. Defaults to the global asset node.
 	 * @return  bool   True if authorised.
 	 */
-	public static function checkRole($roleId, $action, $asset = null): bool
+	public static function checkRole($roleId, $action, $asset = null)
 	{
 		// Sanitize inputs.
 		$roleId = (int) $roleId;
