@@ -27,9 +27,17 @@ class User extends Field
 		$html = array();
 		$groups = $this->getGroups();
 		$excluded = $this->getExcluded();
-		$link = route('api.users.index', ['field' => $this->id]);
-			. (isset($groups) ? ('&amp;groups=' . base64_encode(json_encode($groups))) : '')
-			. (isset($excluded) ? ('&amp;excluded=' . base64_encode(json_encode($excluded))) : '');
+		$att = ['field' => $this->id];
+		if (isset($groups))
+		{
+			$att['groups'] = base64_encode(json_encode($groups));
+		}
+		if (isset($excluded))
+		{
+			$att['excluded'] = base64_encode(json_encode($excluded));
+		}
+
+		$link = route('api.users.index', $att);
 
 		// Initialize some field attributes.
 		$attr  = 'class="form-control' . ($this->element['class'] ? ' ' . (string) $this->element['class'] : '') . '"';
