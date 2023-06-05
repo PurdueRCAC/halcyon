@@ -496,6 +496,8 @@ class Gate
 			}
 		}
 
+		$authorised = array_unique($authorised);
+
 		return $authorised;
 	}
 
