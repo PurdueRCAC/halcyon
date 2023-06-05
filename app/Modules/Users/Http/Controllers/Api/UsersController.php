@@ -301,6 +301,7 @@ class UsersController extends Controller
 			{
 				$item->api = route('api.users.read', ['id' => $item->id]);
 				$item->email = $item->getUserUsername()->email;
+				$item->access = $item->getAuthorisedViewLevels();
 			}
 			$item->api_token = null;
 		});

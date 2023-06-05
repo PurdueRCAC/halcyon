@@ -461,7 +461,7 @@ class User extends Model implements
 
 		if (empty($this->_authLevels))
 		{
-			$this->authLevels = Gate::getAuthorisedViewLevels($this->id);
+			$this->authLevels = array_values(Gate::getAuthorisedViewLevels($this->id));
 		}
 
 		return $this->authLevels;

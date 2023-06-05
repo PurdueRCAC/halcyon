@@ -44,6 +44,7 @@ class UserResource extends JsonResource
 		{
 			$data['module_permissions'] = $this->module_permissions;
 		}
+		$data['access'] = $this->getAuthorisedViewLevels();
 
 		$user = auth()->user();
 		if (!$user)
