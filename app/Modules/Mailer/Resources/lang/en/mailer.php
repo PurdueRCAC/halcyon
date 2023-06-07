@@ -5,6 +5,8 @@ return [
 	'message' => 'Message',
 	'configuration' => 'Mail Configuration',
 	'id' => 'ID',
+	'name' => 'Name',
+	'name hint' => 'A short label for the template. This is used to differentiate templates that may have the same subject line. If none is provided, the subject line will be used.',
 	'subject' => 'Subject',
 	'body' => 'Body',
 	'body formatting' => 'Text is formatted in <a data-toggle="modal" data-target="#markdown" href="#markdown">MarkDown</a>.',
@@ -55,4 +57,5 @@ return [
 		'account not found' => 'Could not find account for user ID :id',
 	],
 	'role confirmation' => 'Selecting a role will email all users assigned that role. This could be a significant number of people so please be certain.',
+	'copy' => 'Copy',
 ];

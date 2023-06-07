@@ -38,6 +38,14 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
+					<label for="field-name">{{ trans('mailer::mailer.name') }}</label>
+					<input type="text" name="name" id="field-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" maxlength="255" value="{{ $row->name ? $row->name : $row->subject }}" />
+					<span class="form-text text-muted">{{ trans('mailer::mailer.name hint') }}</span>
+					<span class="invalid-feedback">{{ trans('mailer::mailer.invalid.name') }}</span>
+					{!! $errors->first('name', '<span class="form-text text-danger">:message</span>') !!}
+				</div>
+
+				<div class="form-group">
 					<label for="field-subject">{{ trans('mailer::mailer.subject') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="subject" id="field-subject" class="form-control{{ $errors->has('fields.subject') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->subject }}" />
 					<span class="invalid-feedback">{{ trans('mailer::mailer.invalid.subject') }}</span>

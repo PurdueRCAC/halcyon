@@ -29,23 +29,23 @@ $router->group(['prefix' => 'mailer'], function (Router $router)
 		'as'   => 'admin.mailer.show',
 		'uses' => 'MessagesController@show',
 	])->where('id', '[0-9]+');
+
 	$router->match(['get', 'post'], '/delete/{id?}', [
 		'as'   => 'admin.mailer.delete',
 		'uses' => 'MessagesController@delete',
 		'middleware' => 'can:delete mail',
 	]);
+
 	$router->match(['get', 'post'], 'cancel', [
 		'as' => 'admin.mailer.cancel',
 		'uses' => 'MessagesController@cancel',
 	]);
-	/*$router->get('/create', [
-		'as'   => 'admin.mailer.create',
-		'uses' => 'MessagesController@create',
-	])->where('id', '[0-9]+');*/
+
 	$router->get('/preview/{id}', [
 		'as'   => 'admin.mailer.preview',
 		'uses' => 'MessagesController@preview',
 	])->where('id', '[0-9]+');
+
 	$router->post('/send', [
 		'as'   => 'admin.mailer.send',
 		'uses' => 'MessagesController@send',
@@ -82,5 +82,10 @@ $router->group(['prefix' => 'mailer'], function (Router $router)
 			'as' => 'admin.mailer.templates.cancel',
 			'uses' => 'TemplatesController@cancel',
 		]);
+		$router->get('/copy/{id}', [
+			'as'   => 'admin.mailer.templates.copy',
+			'uses' => 'TemplatesController@copy',
+			'middleware' => 'can:create mail',
+		])->where('id', '[0-9]+');
 	});
 });

@@ -99,11 +99,12 @@ document.addEventListener('DOMContentLoaded', function () {
 	if (templates) {
 		templates.addEventListener('change', function () {
 			if (this.options[this.selectedIndex].value) {
-				var selected = document.getElementById(this.options[this.selectedIndex].value);
+				var body = document.getElementById(this.options[this.selectedIndex].value + 'body');
+				var subject = document.getElementById(this.options[this.selectedIndex].value + 'subject');
 
-				document.getElementById('field-subject').value = this.options[this.selectedIndex].innerHTML;
+				document.getElementById('field-subject').value = subject.value;
 
-				document.getElementById('field-body').value = selected.value;
+				document.getElementById('field-body').value = body.value;
 				document.getElementById('field-body').dispatchEvent(new Event('refreshEditor', { bubbles: true }));
 			}
 		});

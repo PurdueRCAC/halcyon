@@ -69,23 +69,26 @@ app('pathway')
 				<th>
 					{!! Html::grid('checkall') !!}
 				</th>
-				<th scope="col" class="priority-6">
+				<th scope="col">
 					{!! Html::grid('sort', trans('mailer::mailer.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
-					{!! Html::grid('sort', trans('mailer::mailer.subject'), 'subject', $filters['order_dir'], $filters['order']) !!}
+					{!! Html::grid('sort', trans('mailer::mailer.name'), 'name', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-3">
+				<th scope="col">
 					{!! Html::grid('sort', trans('mailer::mailer.created'), 'created_at', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4">
+				<th scope="col">
 					{!! Html::grid('sort', trans('mailer::mailer.modified'), 'updated_at', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-6">
+				<th scope="col">
 					{!! Html::grid('sort', trans('mailer::mailer.alert level'), 'alert', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-6 text-right">
+				<th scope="col" class="text-right">
 					{{ trans('mailer::mailer.options') }}
+				</th>
+				<th scope="col" class="text-right">
+					{{ trans('mailer::mailer.copy') }}
 				</th>
 			</tr>
 		</thead>
@@ -97,19 +100,19 @@ app('pathway')
 						{!! Html::grid('id', $i, $row->id) !!}
 					@endif
 				</td>
-				<td class="priority-6">
+				<td>
 					{{ $row->id }}
 				</td>
 				<td>
 					@if (auth()->user()->can('edit mail'))
 						<a href="{{ route('admin.mailer.templates.edit', ['id' => $row->id]) }}">
-							{{ $row->subject }}
+							{{ $row->name ? $row->name : $row->subject }}
 						</a>
 					@else
-						{{ $row->subject }}
+						{{ $row->name ? $row->name : $row->subject }}
 					@endif
 				</td>
-				<td class="priority-4">
+				<td>
 					<time datetime="{{ $row->created_at->toDateTimeLocalString() }}">
 						@if ($row->created_at->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
 							{{ $row->created_at->diffForHumans() }}
@@ -118,7 +121,7 @@ app('pathway')
 						@endif
 					</time>
 				</td>
-				<td class="priority-4">
+				<td>
 					@if ($row->updated_at)
 						<time datetime="{{ $row->updated_at->toDateTimeLocalString() }}">
 							@if ($row->updated_at->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
@@ -131,7 +134,7 @@ app('pathway')
 						<span class="text-muted never">{{ trans('global.never') }}</span>
 					@endif
 				</td>
-				<td class="priority-6">
+				<td>
 					@if ($row->alert)
 						<span class="text-{{ $row->alert }}">{{ trans('mailer::mailer.alert.' . $row->alert) }}</span>
 					@else
@@ -142,6 +145,12 @@ app('pathway')
 					<a class="btn btn-secondary" href="{{ route('admin.mailer.create', ['id' => $row->id]) }}">
 						<span class="fa fa-plus" aria-hidden="true"></span>
 						{{ trans('mailer::mailer.use template') }}
+					</a>
+				</td>
+				<td class="text-right">
+					<a href="{{ route('admin.mailer.templates.copy', ['id' => $row->id]) }}" data-hint="{{ trans('mailer::mailer.copy') }}">
+						<span class="fa fa-copy" aria-hidden="true"></span>
+						<span class="sr-only">{{ trans('mailer::mailer.copy') }}</span>
 					</a>
 				</td>
 			</tr>

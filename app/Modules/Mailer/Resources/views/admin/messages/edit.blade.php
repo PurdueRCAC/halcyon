@@ -81,11 +81,12 @@ app('pathway')
 					<select name="usetemplate" id="field-template" class="form-control">
 						<option value="">{{ trans('global.none') }}</option>
 						@foreach ($templates as $template)
-							<option value="template{{ $template->id }}"<?php if ($row->id == $template->id) { echo ' selected'; } ?>>{{ $template->subject }}</option>
+							<option value="template{{ $template->id }}"<?php if ($row->id == $template->id) { echo ' selected'; } ?>>{{ $template->name ? $template->name : $template->subject }}</option>
 						@endforeach
 					</select>
 					@foreach ($templates as $template)
-						<input type="hidden" name="template{{ $template->id }}" id="template{{ $template->id }}" value="{{ $template->body }}" />
+						<input type="hidden" name="template{{ $template->id }}body" id="template{{ $template->id }}body" value="{{ $template->body }}" />
+						<input type="hidden" name="template{{ $template->id }}subject" id="template{{ $template->id }}subject" value="{{ $template->subject }}" />
 					@endforeach
 				</div>
 

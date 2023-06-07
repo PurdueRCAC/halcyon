@@ -130,6 +130,29 @@ class TemplatesController extends Controller
 	}
 
 	/**
+	 * Copy the specified entry to the edit form to make a new entry.
+	 * 
+	 * @param  int $id
+	 * @return View
+	 */
+	public function copy($id)
+	{
+		$row = Message::findOrFail($id);
+
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
+		$row->id = null;
+		$row->subject .= ' (copy)';
+
+		return view('mailer::admin.templates.edit', [
+			'row'  => $row
+		]);
+	}
+
+	/**
 	 * Store a newly created entry
 	 *
 	 * @param   Request  $request
@@ -139,6 +162,7 @@ class TemplatesController extends Controller
 	{
 		//$request->validate([
 		$rules = [
+			'name' => 'nullable|string|max:255',
 			'subject' => 'required|string|max:255',
 			'body' => 'required|string|max:15000',
 			'alert' => 'nullable|string|max:50',
@@ -157,6 +181,11 @@ class TemplatesController extends Controller
 
 		$row = $id ? Message::findOrFail($id) : new Message();
 		$row->subject = $request->input('subject');
+		$row->name = $row->subject;
+		if ($request->has('name'))
+		{
+			$row->name = $request->input('name');
+		}
 		$row->body = $request->input('body');
 		if ($request->has('alert'))
 		{

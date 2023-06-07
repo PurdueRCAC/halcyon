@@ -75,7 +75,8 @@ class MessagesController extends Controller
 				$query->where(function($where) use ($filters)
 				{
 					$where->where('subject', 'like', '%' . strtolower((string)$filters['search']) . '%')
-						->orWhere('body', 'like', '%' . strtolower((string)$filters['search']) . '%');
+						->orWhere('body', 'like', '%' . strtolower((string)$filters['search']) . '%')
+						->orWhere('name', 'like', '%' . strtolower((string)$filters['search']) . '%');
 				});
 			}
 		}

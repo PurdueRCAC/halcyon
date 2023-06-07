@@ -124,8 +124,11 @@ class MessagesController extends Controller
 		{
 			$query->where(function($where) use ($filters)
 			{
+				$filters['search'] = strtolower((string)$filters['search']);
+
 				$where->where('subject', 'like', '%' . $filters['search'] . '%')
-					->orWhere('body', 'like', '%' . $filters['search'] . '%');
+					->orWhere('body', 'like', '%' . $filters['search'] . '%')
+					->orWhere('name', 'like', '%' . $filters['search'] . '%');
 			});
 		}
 
@@ -147,6 +150,16 @@ class MessagesController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /mail
 	 * @apiAuthorization  true
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "name",
+	 * 		"description":   "Short label for templates",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
+	 * 		}
+	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "subject",
@@ -224,6 +237,7 @@ class MessagesController extends Controller
 	public function create(Request $request)
 	{
 		$rules = [
+			'name' => 'nullable|string|max:255',
 			'subject' => 'required|string|max:255',
 			'body' => 'required|string|max:15000',
 			'template' => 'nullable|integer',
@@ -241,6 +255,11 @@ class MessagesController extends Controller
 		$row->subject = $request->input('subject');
 		$row->body = $request->input('body');
 		$row->template = $request->input('template', 0);
+		$row->name = $row->subject;
+		if ($row->template && $request->has('name'))
+		{
+			$row->name = $request->input('name');
+		}
 		if ($request->has('alert'))
 		{
 			$row->alert = $request->input('alert');
@@ -324,6 +343,16 @@ class MessagesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
+	 * 		"name":          "name",
+	 * 		"description":   "Short label for templates",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "subject",
 	 * 		"description":   "Message subject",
 	 * 		"required":      false,
@@ -403,6 +432,7 @@ class MessagesController extends Controller
 	public function update(Request $request, int $id)
 	{
 		$rules = [
+			'name' => 'nullable|string|max:255',
 			'subject' => 'nullable|string|max:255',
 			'body' => 'nullable|string|max:15000',
 			'template' => 'nullable|integer',
