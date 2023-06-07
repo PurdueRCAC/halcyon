@@ -91,6 +91,7 @@
   --link-hover: #014cc4; /*#000;*/
   --label: #333;
   --hr: #ccc;
+  --border: #d1d1d1;
   /* Tooltips */
   --tip-back: #383838;
   --tip-border: #383838;
@@ -207,6 +208,7 @@
   --link-hover: #5897fb;
   --label: #d3d3d3;
   --hr: rgba(255, 255, 255, 0.1);
+  --border: rgba(225, 231, 255, 0.1);
   --tip-back: #fff;
   --tip-border: #fff;
   --tip-color: #383838;
@@ -1210,6 +1212,7 @@ h4 {
 .icon-speaker:before {
   content: "\e8cc";
 }
+.fa-star-o:before,
 .icon-default:before,
 .icon-star:before {
   content: "\e8cd";
@@ -1413,6 +1416,7 @@ h4 {
 .icon-sliders:before {
   content: "\e90a";
 }
+.fa-star:before,
 .icon-star-on:before {
   content: "\e90b";
 }
@@ -1715,7 +1719,13 @@ table td .fltrt {
 .input-group + .char-counter {
   margin-top: -2.75em;
 }
-
+.border,
+.border-top,
+.border-bottom,
+.border-left,
+.border-right {
+  border-color: var(--border) !important;
+}
 .nav-tabs .nav-link {
   border-bottom: 2px solid transparent;
   -webkit-transition: all ease-in-out 0.2s;
