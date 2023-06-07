@@ -75,7 +75,8 @@ class TemplatesController extends Controller
 				$query->where(function($where) use ($filters)
 				{
 					$where->where('subject', 'like', '%' . strtolower((string)$filters['search']) . '%')
-						->orWhere('body', 'like', '%' . strtolower((string)$filters['search']) . '%');
+						->orWhere('body', 'like', '%' . strtolower((string)$filters['search']) . '%')
+						->orWhere('name', 'like', '%' . strtolower((string)$filters['search']) . '%');
 				});
 			}
 		}
@@ -145,7 +146,12 @@ class TemplatesController extends Controller
 		}
 
 		$row->id = null;
+		if (!$row->name)
+		{
+			$row->name = $row->subject;
+		}
 		$row->subject .= ' (copy)';
+		$row->name .= ' (copy)';
 
 		return view('mailer::admin.templates.edit', [
 			'row'  => $row
