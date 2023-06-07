@@ -34,6 +34,11 @@ document.addEventListener('DOMContentLoaded', function () {
 					})
 						.then(response => response.json())
 						.then(json => {
+							for (var i = 0; i < json.data.length; i++) {
+								if (!json.data[i].id) {
+									json.data[i].id = json.data[i].username;
+								}
+							}
 							callback(json.data);
 						}).catch(() => {
 							callback();
@@ -46,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						var caption = name ? item.username : null;
 						return '<div>' +
 							'<span class="label">' + escape(label) + '</span>' +
-							(caption ? '<span class="caption text-muted">(' + escape(caption) + ')</span>' : '') +
+							(caption ? '&nbsp;<span class="caption text-muted">(' + escape(caption) + ')</span>' : '') +
 							'</div>';
 					},
 					item: function (item) {

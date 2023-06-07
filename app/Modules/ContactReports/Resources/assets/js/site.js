@@ -2961,6 +2961,11 @@ document.addEventListener('DOMContentLoaded', function () {
 					fetch(url)
 						.then(response => response.json())
 						.then(json => {
+							for (var i = 0; i < json.data.length; i++) {
+								if (!json.data[i].id) {
+									json.data[i].id = json.data[i].username;
+								}
+							}
 							callback(json.data);
 						}).catch(() => {
 							callback();
@@ -2968,13 +2973,13 @@ document.addEventListener('DOMContentLoaded', function () {
 				},
 				render: {
 					// Option list when searching
-					option: function (item, escape) {
+					/*option: function (item, escape) {
 						if (item.name.match(/\([a-z0-9]+\)$/)) {
 							item.username = item.name.replace(/([^(]+\()/, '').replace(/\)$/, '');
 							item.name = item.name.replace(/\s(\([a-z0-9]+\))$/, '');
 						}
 						if (isNaN(item.id) && typeof item.name != 'undefined') {
-							item.disabled = true;
+							//item.disabled = true;
 							return `<div data-id="${escape(item.id)}">${escape(item.name)} <span class="text-muted">(${escape(item.username)})</span>
 									<span class="text-warning ml-1"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span></span></span>
 								</div>`;
@@ -2991,6 +2996,18 @@ document.addEventListener('DOMContentLoaded', function () {
 							item.name = item.name.replace(/\s(\([a-z0-9-]+\))$/, '');
 						}
 						return `<div data-id="${escape(item.id)}">${escape(item.name)}&nbsp;<span class="text-muted">(${escape(item.username)})</span></div>`;
+					}*/
+					option: function (item, escape) {
+						var name = item.name;
+						var label = name || item.username;
+						var caption = name ? item.username : null;
+						return '<div>' +
+							'<span class="label">' + escape(label) + '</span>' +
+							(caption ? '&nbsp;<span class="caption text-muted">(' + escape(caption) + ')</span>' : '') +
+							'</div>';
+					},
+					item: function (item) {
+						return `<div data-id="${escape(item.id)}">${item.name}&nbsp;(${item.username})</div>`;
 					}
 				}
 			});
