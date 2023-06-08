@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-//use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Orders\Events\ItemUpdated;
 use App\Modules\Orders\Helpers\Currency;
@@ -155,7 +155,7 @@ class Item extends Model
 	/**
 	 * Calculate billing and paid until...
 	 *
-	 * @return  array
+	 * @return  array<string,string>
 	 */
 	public function until(): array
 	{
@@ -223,7 +223,7 @@ class Item extends Model
 	/**
 	 * Get paid until date
 	 *
-	 * @return  mixed  Carbon|null
+	 * @return  Carbon|null
 	 */
 	public function getPaiduntilAttribute()
 	{
@@ -234,7 +234,7 @@ class Item extends Model
 	/**
 	 * Get billed until date
 	 *
-	 * @return  mixed  Carbon|null
+	 * @return  Carbon|null
 	 */
 	public function getBilleduntilAttribute()
 	{
@@ -245,9 +245,9 @@ class Item extends Model
 	/**
 	 * Recurrence range
 	 *
-	 * @return  array
+	 * @return  Collection
 	 */
-	public function recurrenceRange()
+	public function recurrenceRange(): Collection
 	{
 		$recur_months  = $this->product->timeperiod ? $this->product->timeperiod->months : 0;
 		$recur_seconds = $this->product->timeperiod ? $this->product->timeperiod->unixtime : 0;
@@ -339,7 +339,7 @@ class Item extends Model
 	/**
 	 * Get start datetime
 	 *
-	 * @return  object
+	 * @return  Carbon|null
 	 */
 	public function start()
 	{
@@ -374,7 +374,7 @@ class Item extends Model
 	/**
 	 * Get end datetime
 	 *
-	 * @return  mixed
+	 * @return  Carbon|null
 	 */
 	public function end()
 	{
@@ -440,9 +440,9 @@ class Item extends Model
 	/**
 	 * Get sequence
 	 *
-	 * @return  object
+	 * @return  Collection
 	 */
-	public function sequence()
+	public function sequence(): Collection
 	{
 		if (!$this->origorderitemid)
 		{

@@ -27,7 +27,7 @@ class Download
 	/**
 	 * List of formatters
 	 *
-	 * @var array
+	 * @var array<string,Downloadable>
 	 */
 	protected $_formatters = array();
 
@@ -153,15 +153,15 @@ class Download
 	/**
 	 * Set formatter for specified format
 	 *
-	 * @param   object  $formatter
+	 * @param   Downloadable  $formatter
 	 * @param   string  $format
 	 * @return  self
 	 */
-	public function setFormatter($formatter, $format=''): self
+	public function setFormatter(Downloadable $formatter, $format=''): self
 	{
 		$format = ($format) ? $format : $this->_format;
 
-		$this->_formatter[$format] = $formatter;
+		$this->_formatters[$format] = $formatter;
 
 		return $this;
 	}
@@ -170,19 +170,19 @@ class Download
 	 * Get the formatter object, if set
 	 *
 	 * @param   string  $format  Format to get
-	 * @return  mixed
+	 * @return  Downloadable|null
 	 */
 	public function getFormatter($format='')
 	{
 		$format = ($format) ? $format : $this->_format;
 
-		return (isset($this->_formatter[$format])) ? $this->_formatter[$format] : null;
+		return (isset($this->_formatters[$format])) ? $this->_formatters[$format] : null;
 	}
 
 	/**
 	 * Format a record
 	 *
-	 * @param   object  $reference  Record to format
+	 * @param   Publication|null  $reference  Record to format
 	 * @return  string
 	 * @throws  Exception
 	 */

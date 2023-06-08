@@ -5,6 +5,12 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Model for order cart
+ *
+ * @property string $identifier
+ * @property string $instance
+ * @property string $content
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class Cart extends Model
 {

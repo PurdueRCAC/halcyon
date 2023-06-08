@@ -44,15 +44,15 @@ trait HeadersAndTags
 	{
 		if (!$this->headers)
 		{
-			if (isset($this->user) && !isset($this->headers['X-Target-User']))
+			if (isset($this->user) && !isset($this->mailHeaders['X-Target-User']))
 			{
 				$this->mailHeaders['X-Target-User'] = $this->user->id;
 			}
-			if (isset($this->order) && !isset($this->headers['X-Target-Object']))
+			if (isset($this->order) && !isset($this->mailHeaders['X-Target-Object']))
 			{
 				$this->mailHeaders['X-Target-Object'] = $this->order->id;
 			}
-			if (!isset($this->headers['X-Command']))
+			if (!isset($this->mailHeaders['X-Command']))
 			{
 				$this->mailHeaders['X-Command'] = 'orders:emailstatus';
 			}

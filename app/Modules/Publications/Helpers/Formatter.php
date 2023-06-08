@@ -73,7 +73,6 @@ class Formatter
 		'author'       => 'rft.au',
 		'url'          => 'rft_id',
 		'doi'          => 'rft_id=info:doi/',
-		'author'       => 'rft.au'
 	);
 
 	/**
@@ -121,7 +120,10 @@ class Formatter
 	 */
 	public static function getDefaultFormat(): string
 	{
-		return config('module.publications.format', 'IEEE');
+		$val = config('module.publications.format', 'IEEE');
+		$val = $val ?: 'IEEE';
+
+		return $val;
 	}
 
 	/**

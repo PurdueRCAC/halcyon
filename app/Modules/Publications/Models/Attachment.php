@@ -22,7 +22,7 @@ class Attachment extends \SplFileInfo
 	/**
 	 * Image pixel dimensions (width and height)
 	 *
-	 * @var  array
+	 * @var  array<string,int>
 	 */
 	private $dimensions = null;
 
@@ -88,9 +88,9 @@ class Attachment extends \SplFileInfo
 	/**
 	 * Return human-readable file size
 	 *
-	 * @return  string
+	 * @return  string|null
 	 */
-	public function getFormattedSize(): string
+	public function getFormattedSize(): ?string
 	{
 		$size = $this->getSize();
 
@@ -109,7 +109,7 @@ class Attachment extends \SplFileInfo
 	/**
 	 * Get last modified time
 	 *
-	 * @return  object  Carbon
+	 * @return  Carbon
 	 */
 	public function getLastModified()
 	{

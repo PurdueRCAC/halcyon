@@ -12,6 +12,7 @@ use App\Modules\Publications\Events\PublicationCreated;
 use App\Modules\Publications\Events\PublicationUpdated;
 use App\Modules\Publications\Events\PublicationDeleted;
 use App\Modules\Publications\Helpers\Formatter;
+use Carbon\Carbon;
 
 /**
  * Model for publication
@@ -287,7 +288,7 @@ class Publication extends Model
 	{
 		if (!preg_match('/^[\x20-\x7e]*$/', $name))
 		{
-			$name = \Illuminate\Support\Facades\Str::ascii($name);
+			$name = \Illuminate\Support\Str::ascii($name);
 		}
 		$name = preg_replace(
 			'~

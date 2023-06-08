@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Modules\History\Traits\Historable;
 
 /**
- * Model for news type
+ * Order category
  *
  * @property int    $id
  * @property int    $parentordercategoryid
@@ -98,6 +98,7 @@ class Category extends Model
 
 		self::deleted(function($model)
 		{
+			// Clean up related objects
 			foreach ($model->products as $row)
 			{
 				$row->delete();

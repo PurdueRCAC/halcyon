@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailables\Envelope;
 trait HeadersAndTags
 {
 	/**
-	 * The order instance.
+	 * Headers object
 	 *
 	 * @var Headers
 	 */
@@ -44,7 +44,7 @@ trait HeadersAndTags
 	{
 		if (!$this->headers)
 		{
-			if (isset($this->user) && !isset($this->headers['X-Target-User']))
+			if (isset($this->user) && !isset($this->mailHeaders['X-Target-User']))
 			{
 				$this->mailHeaders['X-Target-User'] = $this->user->id;
 			}

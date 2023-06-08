@@ -34,7 +34,7 @@ class Endnote extends Downloadable
 		//var to hold document conetnt
 		$doc = '';
 
-		$type = $row->type->name;
+		$type = $row->type ? $row->type->name : 'Article';
 
 		//set the type
 		$doc .= "%0 {$type}" . "\r\n";
