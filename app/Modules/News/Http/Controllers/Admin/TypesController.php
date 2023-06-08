@@ -66,6 +66,8 @@ class TypesController extends Controller
 			$rows = $query
 				->orderBy($filters['order'], $filters['order_dir'])
 				->paginate($filters['limit'], ['*'], 'page', $filters['page']);
+
+			$total = $rows->total;
 		}
 		else
 		{
@@ -253,8 +255,8 @@ class TypesController extends Controller
 	public function saveorder(Request $request)
 	{
 		// Get the input
-		$pks   = $request->input('cid', []);
-		$order = $request->input('order', []);
+		$pks   = (array)$request->input('cid', []);
+		$order = (array)$request->input('order', []);
 
 		// Sanitize the input
 		$pks   = array_map('intval', $pks);
