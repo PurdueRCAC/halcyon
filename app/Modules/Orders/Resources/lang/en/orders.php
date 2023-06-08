@@ -120,7 +120,7 @@ return [
 		'category' => 'Category',
 		'product' => 'Product',
 		'start' => 'Created on or after',
-		'stop' => 'Created before',
+		'end' => 'Created before',
 		'public' => 'Visibility',
 		'restricteddata' => 'Restricted Data Prompt',
 		'state' => 'State',

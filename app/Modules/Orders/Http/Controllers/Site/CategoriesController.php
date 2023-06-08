@@ -34,11 +34,14 @@ class CategoriesController extends Controller
 		$request = $request->mergeWithBase();
 		foreach ($filters as $key => $default)
 		{
-			if ($key != 'page' && $request->has($key) && session()->get('orders.categories.filter_' . $key) != $request->input($key))
+			if ($key != 'page'
+			 && $request->has($key)
+			 && session()->has('orders.site.categories.filter_' . $key)
+			 && session()->get('orders.site.categories.filter_' . $key) != $request->input($key))
 			{
 				$reset = true;
 			}
-			$filters[$key] = $request->state('orders.categories.filter_' . $key, $key, $default);
+			$filters[$key] = $request->state('orders.site.categories.filter_' . $key, $key, $default);
 		}
 		$filters['page'] = $reset ? 1 : $filters['page'];
 

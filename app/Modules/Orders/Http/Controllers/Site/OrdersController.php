@@ -56,16 +56,16 @@ class OrdersController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('orders.filter_' . $key)
-			 && $request->input($key) != session()->get('orders.filter_' . $key))
+			 && $request->has($key) && session()->has('orders.site.filter_' . $key)
+			 && $request->input($key) != session()->get('orders.site.filter_' . $key))
 			{
 				$reset = true;
 			}
-			$filters[$key] = $request->state('orders.filter_' . $key, $key, $default);
+			$filters[$key] = $request->state('orders.site.filter_' . $key, $key, $default);
 		}
 		$filters['page'] = $reset ? 1 : $filters['page'];
 
-		if (!in_array($filters['order'], ['id', 'datetimecreated', 'datetimeremoved']))
+		if (!in_array($filters['order'], ['id', 'state', 'userid', 'datetimecreated', 'datetimeremoved']))
 		{
 			$filters['order'] = Order::$orderBy;
 		}
