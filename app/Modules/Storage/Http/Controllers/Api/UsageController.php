@@ -3,11 +3,12 @@
 namespace App\Modules\Storage\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Collection;
 use App\Modules\Storage\Http\Resources\UsageResource;
 use App\Modules\Storage\Models\Usage;
 use App\Modules\Storage\Models\Directory;
@@ -37,7 +38,7 @@ class UsageController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return Collection
 	 */
 	public function index(Request $request)
 	{
@@ -214,7 +215,7 @@ class UsageController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return JsonResponse|UsageResource
 	 */
 	public function create(Request $request)
 	{
@@ -321,7 +322,7 @@ class UsageController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  UsageResource
 	 */
 	public function read($id)
 	{
@@ -402,7 +403,7 @@ class UsageController extends Controller
 	 * }
 	 * @param   int  $id
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResponse|UsageResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -479,7 +480,7 @@ class UsageController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{
@@ -519,8 +520,10 @@ class UsageController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
-	 * @param  Request  $request
-	 * @return Response
+	 * @param  string  $resource
+	 * @param  string  $dir
+	 * @param  Request $request
+	 * @return UsageResourceCollection
 	 */
 	public function batch($resource, $dir, Request $request)
 	{
@@ -645,7 +648,6 @@ class UsageController extends Controller
 				->where('storagedirid', '=', $row->storagedirid)
 				->orderBy('datetimerecorded', 'desc')
 				->limit(1)
-				->get()
 				->first();
 
 			if ($last)

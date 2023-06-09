@@ -3,7 +3,7 @@
 namespace App\Modules\Storage\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -310,7 +310,7 @@ class NotificationsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return JsonResource
+	 * @return JsonResource|JsonResponse
 	 */
 	public function create(Request $request)
 	{
@@ -540,7 +540,7 @@ class NotificationsController extends Controller
 	 * }
 	 * @param   int  $id
 	 * @param   Request  $request
-	 * @return  JsonResource
+	 * @return  JsonResource|JsonResponse
 	 */
 	public function update($id, Request $request)
 	{
@@ -618,7 +618,7 @@ class NotificationsController extends Controller
 	 * 		}
 	 * }
 	 * @param  int  $id
-	 * @return Response
+	 * @return JsonResponse
 	 */
 	public function delete($id)
 	{

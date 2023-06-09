@@ -133,7 +133,7 @@ class StorageResource extends Model
 	 * @param   string  $name
 	 * @return  StorageResource|null
 	 */
-	public static function findByName($name)
+	public static function findByName(string $name): ?StorageResource
 	{
 		return self::query()
 			->where('name', '=', $name)

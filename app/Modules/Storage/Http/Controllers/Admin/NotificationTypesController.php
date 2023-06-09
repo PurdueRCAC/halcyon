@@ -3,7 +3,8 @@
 namespace App\Modules\Storage\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Storage\Models\Notification\Type;
@@ -16,9 +17,9 @@ class NotificationTypesController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(StatefulRequest $request): View
 	{
 		$filters = array(
 			'search'   => '',
@@ -75,9 +76,9 @@ class NotificationTypesController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 * 
-	 * @return Response
+	 * @return View
 	 */
-	public function create()
+	public function create(): View
 	{
 		$row = new Type;
 		$timeperiods = Timeperiod::all();
@@ -97,9 +98,9 @@ class NotificationTypesController extends Controller
 	 * Show the form for editing the specified resource.
 	 * 
 	 * @param  int  $id
-	 * @return Response
+	 * @return View
 	 */
-	public function edit($id)
+	public function edit($id): View
 	{
 		$row = Type::find($id);
 		$timeperiods = Timeperiod::all();
@@ -119,9 +120,9 @@ class NotificationTypesController extends Controller
 	 * Store a newly created resource in storage.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
-	public function store(Request $request)
+	public function store(Request $request): RedirectResponse
 	{
 		$rules = [
 			'fields.name' => 'required|string|max:100',
@@ -156,9 +157,9 @@ class NotificationTypesController extends Controller
 	 * Remove the specified items
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
-	public function delete(Request $request)
+	public function delete(Request $request): RedirectResponse
 	{
 		// Incoming
 		$ids = $request->input('id', array());
@@ -198,9 +199,9 @@ class NotificationTypesController extends Controller
 	/**
 	 * Return to the main view
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
-	public function cancel()
+	public function cancel(): RedirectResponse
 	{
 		return redirect(route('admin.storage.types'));
 	}

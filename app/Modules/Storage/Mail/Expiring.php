@@ -47,6 +47,7 @@ class Expiring extends Mailable
 	 *
 	 * @param  array $directories
 	 * @param  User  $user
+	 * @param  Group $group
 	 * @return void
 	 */
 	public function __construct($directories, User $user, Group $group)
@@ -96,7 +97,7 @@ class Expiring extends Mailable
 	/**
 	 * Build the message.
 	 *
-	 * @return Expiring
+	 * @return self
 	 */
 	public function build()
 	{

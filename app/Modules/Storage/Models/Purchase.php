@@ -152,7 +152,7 @@ class Purchase extends Model
 	 *
 	 * @return  string
 	 */
-	public function willEnd(): bool
+	public function willEnd(): string
 	{
 		if (!$this->hasEnd())
 		{
@@ -308,7 +308,7 @@ class Purchase extends Model
 	 *
 	 * @return  Purchase|null
 	 */
-	public function getCounterAttribute()
+	public function getCounterAttribute(): ?Purchase
 	{
 		return self::query()
 			->where('datetimestart', '=', $this->datetimestart)

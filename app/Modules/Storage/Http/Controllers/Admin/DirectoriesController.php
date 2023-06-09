@@ -3,7 +3,8 @@
 namespace App\Modules\Storage\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Storage\Models\Directory;
@@ -21,7 +22,7 @@ class DirectoriesController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -135,7 +136,7 @@ class DirectoriesController extends Controller
 	 * Show the form for creating a new resource.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function create(Request $request)
 	{
@@ -174,7 +175,7 @@ class DirectoriesController extends Controller
 	 * Show the form for editing the specified resource.
 	 * 
 	 * @param  int  $id
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id)
 	{
@@ -210,9 +211,9 @@ class DirectoriesController extends Controller
 	 * @param  Request  $request
 	 * @param  array    $data
 	 * @param  int  $offset
-	 * @return Response
+	 * @return RedirectResponse
 	 */
-	public function store(Request $request, $data = array(), $offset = 0)
+	public function store(Request $request, $data = array(), $offset = 0): RedirectResponse
 	{
 		$id = null;
 
@@ -436,7 +437,6 @@ class DirectoriesController extends Controller
 			$q->where('id', '!=', $id);
 		}
 		$exist = $q
-			->get()
 			->first();
 
 		if ($exist)
@@ -449,7 +449,6 @@ class DirectoriesController extends Controller
 		{
 			$sr = StorageResource::query()
 				->where('resourceid', '=', $row->resourceid)
-				->get()
 				->first();
 
 			$row->storageresourceid = $sr->resourceid;
@@ -458,8 +457,7 @@ class DirectoriesController extends Controller
 		{
 			$row->resourceid = $row->storageResource->resourceid;
 		}
-//echo '<pre>';
-//print_r($row->toArray());echo '</pre>';die();
+
 		if (!$row->save())
 		{
 			return redirect()->back()->withError(trans('global.messages.save failed'));
@@ -520,9 +518,9 @@ class DirectoriesController extends Controller
 	 * Remove the specified entry
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
-	public function delete(Request $request)
+	public function delete(Request $request): RedirectResponse
 	{
 		// Incoming
 		$ids = $request->input('id', array());
@@ -557,9 +555,9 @@ class DirectoriesController extends Controller
 	 * Return to default page
 	 *
 	 * @param   int  $parent
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
-	public function cancel($parent = 0)
+	public function cancel($parent = 0): RedirectResponse
 	{
 		return redirect(route('admin.storage.directories', ['parent' => $parent]));
 	}

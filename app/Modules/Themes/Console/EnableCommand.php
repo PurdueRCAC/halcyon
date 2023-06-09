@@ -26,7 +26,7 @@ class EnableCommand extends Command
 	 *
 	 * @return  void
 	 */
-	public function handle()
+	public function handle(): void
 	{
 		$theme = $this->laravel['themes']->findOrFail($this->argument('theme'));
 

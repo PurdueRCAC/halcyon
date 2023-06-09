@@ -55,7 +55,7 @@ class Quota extends Mailable
 	 *
 	 * @return void
 	 */
-	public function __construct($type, User $user, Notification $notification, Usage $latest)
+	public function __construct(string $type, User $user, Notification $notification, Usage $latest)
 	{
 		$this->type = $type;
 		$this->user = $user;
@@ -103,7 +103,7 @@ class Quota extends Mailable
 	/**
 	 * Build the message.
 	 *
-	 * @return $this
+	 * @return self
 	 */
 	public function build()
 	{

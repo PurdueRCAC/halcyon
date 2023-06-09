@@ -3,7 +3,7 @@
 namespace App\Modules\Storage\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Halcyon\Utility\Number;
@@ -159,7 +159,7 @@ class DirectoriesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return DirectoryResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -447,7 +447,7 @@ class DirectoriesController extends Controller
 	 * @param  Request  $request
 	 * @param  array    $data
 	 * @param  int  $offset
-	 * @return Response
+	 * @return JsonResponse|DirectoryResource
 	 */
 	public function create(Request $request, $data = array(), $offset = 0)
 	{
@@ -749,7 +749,7 @@ class DirectoriesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @return  Response
+	 * @return  DirectoryResource
 	 */
 	public function read($id)
 	{
@@ -948,7 +948,7 @@ class DirectoriesController extends Controller
 	 * }
 	 * @param   int  $id
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResponse|DirectoryResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -1249,7 +1249,7 @@ class DirectoriesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

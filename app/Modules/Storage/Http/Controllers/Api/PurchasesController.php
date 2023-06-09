@@ -3,7 +3,7 @@
 namespace App\Modules\Storage\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -113,7 +113,7 @@ class PurchasesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -279,7 +279,7 @@ class PurchasesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return JsonResource|JsonResponse
 	 */
 	public function create(Request $request)
 	{
@@ -355,7 +355,6 @@ class PurchasesController extends Controller
 				->where('resourceid', '=', $row->resourceid)
 				->orderBy('datetimestart', 'asc')
 				->limit(1)
-				->get()
 				->first();
 
 			// Haven't been sold anything and never will have anything, so don't bother.
@@ -384,7 +383,6 @@ class PurchasesController extends Controller
 				->where('sellergroupid', '=', $row->sellergroupid)
 				->where('datetimestart', '=', $row->datetimestart)
 				->where('datetimestop', '=', $row->datetimestop)
-				->get()
 				->first();
 
 		if ($first)
@@ -483,7 +481,7 @@ class PurchasesController extends Controller
 	 * 		}
 	 * }
 	 * @param  int  $id
-	 * @return  Response
+	 * @return JsonResponse|JsonResource
 	 */
 	public function read($id)
 	{
@@ -616,7 +614,7 @@ class PurchasesController extends Controller
 	 * }
 	 * @param   int  $id
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -726,7 +724,6 @@ class PurchasesController extends Controller
 					->where('resourceid', '=', $row->resourceid)
 					->orderBy('datetimestart', 'asc')
 					->limit(1)
-					->get()
 					->first();
 
 				// Haven't been sold anything and never will have anything, so don't bother.
@@ -813,7 +810,7 @@ class PurchasesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

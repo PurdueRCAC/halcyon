@@ -3,7 +3,7 @@
 namespace App\Modules\Tags\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Tags\Models\Tag;
@@ -241,7 +241,7 @@ class TagsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response|TagResource
+	 * @return JsonResponse|TagResource
 	 */
 	public function create(Request $request)
 	{
@@ -415,7 +415,7 @@ class TagsController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   int $id
-	 * @return  Response|TagResource
+	 * @return  JsonResponse|TagResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -463,7 +463,7 @@ class TagsController extends Controller
 	 * 		}
 	 * }
 	 * @param   int $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

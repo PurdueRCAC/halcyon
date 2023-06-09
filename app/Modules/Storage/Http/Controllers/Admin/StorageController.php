@@ -3,7 +3,8 @@
 namespace App\Modules\Storage\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Storage\Models\StorageResource;
@@ -18,9 +19,9 @@ class StorageController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(StatefulRequest $request): View
 	{
 		$filters = array(
 			'search'   => '',
@@ -98,9 +99,9 @@ class StorageController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 * 
-	 * @return Response
+	 * @return View
 	 */
-	public function create()
+	public function create(): View
 	{
 		$asset = new StorageResource;
 
@@ -124,9 +125,9 @@ class StorageController extends Controller
 	 * Show the form for editing the specified resource.
 	 * 
 	 * @param  int  $id
-	 * @return Response
+	 * @return View
 	 */
-	public function edit($id)
+	public function edit($id): View
 	{
 		$asset = StorageResource::find($id);
 
@@ -150,9 +151,9 @@ class StorageController extends Controller
 	 * Store a newly created resource in storage.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
-	public function store(Request $request)
+	public function store(Request $request): RedirectResponse
 	{
 		$rules = [
 			'fields.name' => 'required|string|max:32',
@@ -214,9 +215,9 @@ class StorageController extends Controller
 	 * Remove the specified items
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
-	public function delete(Request $request)
+	public function delete(Request $request): RedirectResponse
 	{
 		// Incoming
 		$ids = $request->input('id', array());
@@ -264,9 +265,9 @@ class StorageController extends Controller
 	/**
 	 * Return to the main view
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
-	public function cancel()
+	public function cancel(): RedirectResponse
 	{
 		return redirect(route('admin.storage.index'));
 	}

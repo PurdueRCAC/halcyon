@@ -3,7 +3,7 @@
 namespace App\Modules\Storage\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -261,7 +261,7 @@ class LoansController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return JsonResource
+	 * @return JsonResource|JsonResponse
 	 */
 	public function create(Request $request)
 	{
@@ -338,7 +338,6 @@ class LoansController extends Controller
 				->where('resourceid', '=', $row->resourceid)
 				->orderBy('datetimestart', 'asc')
 				->limit(1)
-				->get()
 				->first();
 
 			// Haven't been sold anything and never will have anything, so don't bother.
@@ -367,7 +366,6 @@ class LoansController extends Controller
 				->where('lendergroupid', '=', $row->lendergroupid)
 				->where('datetimestart', '=', $row->datetimestart)
 				->where('datetimestop', '=', $row->datetimestop)
-				->get()
 				->first();
 
 		if ($first)
@@ -465,7 +463,7 @@ class LoansController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  JsonResource
+	 * @return  JsonResource|JsonResponse
 	 */
 	public function read($id)
 	{
@@ -578,7 +576,7 @@ class LoansController extends Controller
 	 * }
 	 * @param   int  $id
 	 * @param   Request  $request
-	 * @return  JsonResource
+	 * @return  JsonResource|JsonResponse
 	 */
 	public function update($id, Request $request)
 	{
@@ -712,7 +710,6 @@ class LoansController extends Controller
 					->where('resourceid', '=', $row->resourceid)
 					->orderBy('datetimestart', 'asc')
 					->limit(1)
-					->get()
 					->first();
 
 				// Haven't been sold anything and never will have anything, so don't bother.
@@ -799,7 +796,7 @@ class LoansController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

@@ -52,7 +52,7 @@ class Loan extends Purchase
 	 *
 	 * @return  Loan|null
 	 */
-	public function getCounterAttribute()
+	public function getCounterAttribute(): ?Loan
 	{
 		return self::query()
 			->where('datetimestart', '=', $this->datetimestart)

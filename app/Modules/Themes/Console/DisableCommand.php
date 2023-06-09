@@ -26,7 +26,7 @@ class DisableCommand extends Command
 	 *
 	 * @return  void
 	 */
-	public function handle()
+	public function handle(): void
 	{
 		$module = $this->laravel['modules']->findOrFail($this->argument('module'));
 

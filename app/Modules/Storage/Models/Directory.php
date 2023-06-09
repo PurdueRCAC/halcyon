@@ -215,7 +215,7 @@ class Directory extends Model
 	 * @return  void
 	 * @throws \Exception
 	 */
-	public function addMessageToQueue($typeid = null, $userid = 0, $offset = 0): void
+	public function addMessageToQueue($typeid = null, int $userid = 0, int $offset = 0): void
 	{
 		$message = new Message;
 		$message->userid = $userid ?: (auth()->user() ? auth()->user()->id : 0);
@@ -284,23 +284,6 @@ class Directory extends Model
 	 */
 	public function getUnixPermissionsAttribute(): stdClass
 	{
-		/*$permissions = [
-			'user' => [
-				'read' => $this->ownerread,
-				'write' => $this->ownerwrite,
-				'execute' => $this->ownerread,
-			],
-			'group' => [
-				'read' => $this->groupread,
-				'write' => $this->groupwrite,
-				'execute' => $this->groupread,
-			],
-			'other' => [
-				'read' => $this->publicread,
-				'write' => $this->publicwrite,
-				'execute' => $this->publicread,
-			],
-		];*/
 		$permissions = new stdClass;
 
 		$permissions->user = new stdClass;
@@ -318,15 +301,15 @@ class Directory extends Model
 		$permissions->other->write = $this->publicwrite;
 		$permissions->other->execute = $this->publicread;
 
-		return (object)$permissions;
+		return $permissions;
 	}
 
 	/**
 	 * Get Unix mode
 	 *
-	 * @return  string
+	 * @return  int
 	 */
-	public function getModeAttribute()
+	public function getModeAttribute(): int
 	{
 		$permissions = $this->unixPermissions;
 
@@ -473,12 +456,11 @@ class Directory extends Model
 	 *
 	 * @return  array<string,int>|null
 	 */
-	public function getBucketsAttribute()
+	public function getBucketsAttribute(): ?array
 	{
-		// Fetch storage buckets under this group
 		$bucket = null;
-		//$now = Carbon::now();
 
+		// Fetch storage buckets under this group
 		$purchases = Purchase::query()
 			->where('groupid', $this->groupid)
 			->where('resourceid', $this->resourceid)
@@ -718,7 +700,7 @@ class Directory extends Model
 	 * @param   int    $depth
 	 * @return  array
 	 */
-	public function nested($items = array(), $depth = 0): array
+	public function nested(array $items = array(), int $depth = 0): array
 	{
 		$this->depth = $depth;
 

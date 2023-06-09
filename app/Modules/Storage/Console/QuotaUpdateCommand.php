@@ -32,10 +32,8 @@ class QuotaUpdateCommand extends Command
 
 	/**
 	 * Execute the console command.
-	 *
-	 * @return void
 	 */
-	public function handle()
+	public function handle(): void
 	{
 		$debug = $this->option('debug') ? true : false;
 		$noemail = $this->option('noemail') ? true : false;
@@ -54,7 +52,7 @@ class QuotaUpdateCommand extends Command
 	 * @param  bool $debug
 	 * @return void
 	 */
-	private function emailExpiring($debug = false)
+	private function emailExpiring(bool $debug = false): void
 	{
 		// Find all active directories with allocations that will expire in X timeperiod
 		//
@@ -218,7 +216,7 @@ class QuotaUpdateCommand extends Command
 	 * @param  bool $debug
 	 * @return void
 	 */
-	private function updateExpired($debug = false)
+	private function updateExpired(bool $debug = false): void
 	{
 		// Find all active directories with allocations that expired in the past X timeperiod
 		//

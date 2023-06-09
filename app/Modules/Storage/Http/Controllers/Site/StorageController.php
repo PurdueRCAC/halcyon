@@ -4,6 +4,7 @@ namespace App\Modules\Storage\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use App\Modules\Storage\Models\StorageResource;
 
@@ -12,7 +13,7 @@ class StorageController extends Controller
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @return Response
+	 * @return View
 	 */
 	public function index()
 	{
@@ -33,7 +34,7 @@ class StorageController extends Controller
 	 * 
 	 * @param  Request $request
 	 * @param  string  $name
-	 * @return Response
+	 * @return View
 	 */
 	public function show(Request $request, $name)
 	{

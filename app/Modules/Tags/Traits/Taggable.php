@@ -18,7 +18,7 @@ trait Taggable
 	 *
 	 * @return string
 	 */
-	public static function getTagsModel()
+	public static function getTagsModel(): string
 	{
 		return static::$tagsModel;
 	}
@@ -29,7 +29,7 @@ trait Taggable
 	 * @param string $model
 	 * @return void
 	 */
-	public static function setTagsModel($model)
+	public static function setTagsModel($model): void
 	{
 		static::$tagsModel = $model;
 	}
@@ -42,7 +42,7 @@ trait Taggable
 	 * @param string $type
 	 * @return object
 	 */
-	public function scopeWhereTag(Builder $query, $tags, $type = 'slug')
+	public function scopeWhereTag(Builder $query, $tags, $type = 'slug'): Builder
 	{
 		if (is_string($tags) === true)
 		{
@@ -66,11 +66,11 @@ trait Taggable
 	 * @param Builder $query
 	 * @param array|string $tags
 	 * @param string $type
-	 * @return object Builder
+	 * @return Builder
 	 */
-	public function scopeWithTag(Builder $query, $tags, $type = 'slug')
+	public function scopeWithTag(Builder $query, $tags, $type = 'slug'): Builder
 	{
-		if (is_string($tags) === true)
+		if (is_string($tags))
 		{
 			$tags = [$tags];
 		}
@@ -86,9 +86,9 @@ trait Taggable
 	 *
 	 * @param Builder $query
 	 * @param string $domain
-	 * @return object Builder
+	 * @return Builder
 	 */
-	public function scopeWhereDomain(Builder $query, $domain)
+	public function scopeWhereDomain(Builder $query, $domain): Builder
 	{
 		return $query->where('domain', $domain);
 	}
@@ -108,7 +108,7 @@ trait Taggable
 	 *
 	 * @return Tag
 	 */
-	public static function createTagsModel()
+	public static function createTagsModel(): Tag
 	{
 		return new static::$tagsModel;
 	}
@@ -132,7 +132,7 @@ trait Taggable
 	 * @param  string $type
 	 * @return bool
 	 */
-	public function setTags($tags, $type = 'slug')
+	public function setTags($tags, $type = 'slug'): bool
 	{
 		if (empty($tags))
 		{
@@ -167,7 +167,7 @@ trait Taggable
 	 * @param  array $tags
 	 * @return bool
 	 */
-	public function tag($tags)
+	public function tag($tags): bool
 	{
 		foreach ($tags as $tag)
 		{
@@ -183,7 +183,7 @@ trait Taggable
 	 * @param  string $name
 	 * @return void
 	 */
-	public function addTag($name)
+	public function addTag(string $name): void
 	{
 		$model = $this->createTagsModel();
 
@@ -229,7 +229,7 @@ trait Taggable
 	 * @param  array|null $tags
 	 * @return bool
 	 */
-	public function untag($tags = null)
+	public function untag($tags = null): bool
 	{
 		$tags = $tags ?: $this->tags->pluck('name')->all();
 
@@ -247,7 +247,7 @@ trait Taggable
 	 * @param  string $name
 	 * @return void
 	 */
-	public function removeTag($name)
+	public function removeTag(string $name): void
 	{
 		$model = $this->createTagsModel();
 
@@ -291,7 +291,7 @@ trait Taggable
 	 * @param  string $name
 	 * @return bool
 	 */
-	public function hasTag($name)
+	public function hasTag(string $name): bool
 	{
 		$model = $this->createTagsModel();
 
@@ -306,7 +306,7 @@ trait Taggable
 	 *
 	 * @return string
 	 */
-	protected function getEntityClassName()
+	protected function getEntityClassName(): string
 	{
 		if (isset(static::$entityNamespace))
 		{

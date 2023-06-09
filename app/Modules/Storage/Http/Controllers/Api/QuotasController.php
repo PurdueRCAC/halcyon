@@ -3,7 +3,7 @@
 namespace App\Modules\Storage\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -45,8 +45,8 @@ class QuotasController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @param  string  $username
-	 * @return Response
+	 * @param  string|null  $username
+	 * @return JsonResponse
 	 */
 	public function index(Request $request, $username = null)
 	{
@@ -158,7 +158,6 @@ class QuotasController extends Controller
 							$where->whereNull('datetimecompleted')
 								->orWhere('datetimecompleted', '>=', $recent->toDateTimeString());
 						})
-						->get()
 						->first();
 
 					if (!$message)
