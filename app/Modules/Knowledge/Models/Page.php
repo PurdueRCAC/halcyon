@@ -18,6 +18,7 @@ use App\Modules\Knowledge\Events\PageUpdating;
 use App\Modules\Knowledge\Events\PageUpdated;
 use App\Modules\Knowledge\Events\PageDeleted;
 use App\Modules\Knowledge\Formatters\ReplaceVariables;
+use App\Modules\Knowledge\Formatters\ControlStatements;
 use App\Modules\Knowledge\Formatters\ReplaceIfStatements;
 use App\Modules\Knowledge\Formatters\AdjustHeaderLevels;
 use App\Modules\Knowledge\Formatters\AbsoluteFilePaths;
@@ -427,7 +428,6 @@ class Page extends Model
 		{
 			$child = $parent->children()
 				->where($parent->getTable() . '.alias', '=', $segment)
-				->get()
 				->first();
 
 			if (!$child)
@@ -480,7 +480,6 @@ class Page extends Model
 		return self::query()
 			->where('main', '=', 1)
 			->limit(1)
-			->get()
 			->first();
 	}
 

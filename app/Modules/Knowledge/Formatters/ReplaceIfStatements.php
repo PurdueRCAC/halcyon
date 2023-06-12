@@ -100,36 +100,21 @@ class ReplaceIfStatements
 		$elses = array();
 		preg_match_all(self::REGEXP_IF_ELSE, $matches[0], $elses, PREG_SET_ORDER);
 
-		if (count($elses) == 0)
+		// Break out first if
+		$if = array();
+
+		preg_match(self::REGEXP_IF, $matches[0], $if);
+
+		array_push($clauses, array(
+			'tag'      => $if[1],
+			'var'      => $if[2],
+			'operator' => $if[3],
+			'value'    => $if[4],
+			'output'   => $if[5],
+		));
+
+		if (count($elses) > 0)
 		{
-			// Break out first if
-			$if = array();
-
-			preg_match(self::REGEXP_IF, $matches[0], $if);
-
-			array_push($clauses, array(
-				'tag'      => $if[1],
-				'var'      => $if[2],
-				'operator' => $if[3],
-				'value'    => $if[4],
-				'output'   => $if[5],
-			));
-		}
-		else
-		{
-			// Break out first if
-			$if = array();
-
-			preg_match(self::REGEXP_IF, $matches[0], $if);
-
-			array_push($clauses, array(
-				'tag'      => $if[1],
-				'var'      => $if[2],
-				'operator' => $if[3],
-				'value'    => $if[4],
-				'output'   => $if[5],
-			));
-
 			foreach ($elses as $else)
 			{
 				array_push($clauses, array(
@@ -145,80 +130,72 @@ class ReplaceIfStatements
 		// Process clauses
 		foreach ($clauses as $clause)
 		{
-			$operator = $clause['operator'];
-			$right    = trim($clause['value']);
-			$result   = false;
+			$op = 'or';
+			$conditions = array();
+			$cond_results = array();
+			$result = false;
 
-			if (isset($vars[$clause['tag']][$clause['var']]))
+			if (stristr($clause['value'], ' or '))
 			{
-				if (is_array($vars[$clause['tag']][$clause['var']]))
-				{
-					$vars[$clause['tag']][$clause['var']] = array_shift($vars[$clause['tag']][$clause['var']]);
-				}
-				$left = trim($vars[$clause['tag']][$clause['var']]);
+				$conditions = explode(' or ', $clause['value']);
+				$clause['value'] = array_shift($conditions);
+				$op = 'or';
+			}
+			elseif (stristr($clause['value'], ' and '))
+			{
+				$conditions = explode(' and ', $clause['value']);
+				$clause['value'] = array_shift($conditions);
+				$op = 'and';
+			}
 
-				$left = (is_integer($left) ? (int)$left : $left);
-				$left = (strtolower($left) === 'true' ? true : $left);
-				$left = (strtolower($left) === 'false' ? false : $left);
+			if (!empty($conditions))
+			{
+				foreach ($conditions as $condition)
+				{
+					$condition = trim($condition);
 
-				$right = (is_integer($right) ? (int)$right : $right);
-				$right = (strtolower($right) === 'true' ? true : $right);
-				$right = (strtolower($right) === 'false' ? false : $right);
-
-				if ($operator == '==')
-				{
-					if ($right === true)
+					if (preg_match('/([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~)\s*([^\}]+)/', $condition, $subclause))
 					{
-						$result = ($left ? true : false);
+						$cond_results[] = $this->condition(
+							$subclause[1],
+							$subclause[2],
+							$subclause[3],
+							$subclause[4]
+						);
 					}
-					elseif ($right === false)
-					{
-						$result = (!$left ? true : false);
-					}
-					else
-					{
-						$result = ($left == $right ? true : false);
-					}
-				}
-				elseif ($operator == '!=')
-				{
-					if ($right === true)
-					{
-						$result = (!$left ? true : false);
-					}
-					elseif ($right === false)
-					{
-						$result = ($left ? true : false);
-					}
-					else
-					{
-						$result = ($left != $right ? true : false);
-					}
-				}
-				elseif ($operator == '>')
-				{
-					$result = ($left > $right ? true : false);
-				}
-				elseif ($operator == '<')
-				{
-					$result = ($left < $right ? true : false);
-				}
-				elseif ($operator == '<=')
-				{
-					$result = ($left <= $right ? true : false);
-				}
-				elseif ($operator == '>=')
-				{
-					$result = ($left >= $right ? true : false);
-				}
-				elseif ($operator == '=~')
-				{
-					$result = (preg_match("/$right/i", $left) ? true : false);
 				}
 			}
-			else
+
+			$cond_results[] = $this->condition(
+				$clause['tag'],
+				$clause['var'],
+				$clause['operator'],
+				$clause['value']
+			);
+
+			if ($op == 'or')
 			{
-				$result = false;
+				foreach ($cond_results as $cond_result)
+				{
+					if ($cond_result)
+					{
+						$result = true;
+						break;
+					}
+				}
+			}
+			elseif ($op == 'and')
+			{
+				$result = true;
+
+				foreach ($cond_results as $cond_result)
+				{
+					if (!$cond_result)
+					{
+						$result = false;
+						break;
+					}
+				}
 			}
 
 			if ($result)
@@ -241,5 +218,98 @@ class ReplaceIfStatements
 		}
 
 		return '';
+	}
+
+	/**
+	 * Check if a condition is true or false
+	 *
+	 * @param string $tag
+	 * @param string $var
+	 * @param string $operator
+	 * @param string $right
+	 * @return bool
+	 */
+	private function condition($tag, $var, $operator, $right): bool
+	{
+		$result = false;
+
+		if (!isset($this->variables[$tag][$var]))
+		{
+			return $result;
+		}
+
+		if (is_array($this->variables[$tag][$var]))
+		{
+			$this->variables[$tag][$var] = array_shift($this->variables[$tag][$var]);
+		}
+
+		$left = $this->variables[$tag][$var];
+
+		$left = trim($left);
+		$left = (is_integer($left) ? (int)$left : $left);
+		$left = (strtolower($left) === 'true' ? true : $left);
+		$left = (strtolower($left) === 'false' ? false : $left);
+
+		$right = trim($right);
+		$right = (is_integer($right) ? (int)$right : $right);
+		$right = (strtolower($right) === 'true' ? true : $right);
+		$right = (strtolower($right) === 'false' ? false : $right);
+
+		if ($operator == '==')
+		{
+			if ($right === true)
+			{
+				$result = ($left ? true : false);
+			}
+			elseif ($right === false)
+			{
+				$result = (!$left ? true : false);
+			}
+			else
+			{
+				$result = ($left == $right ? true : false);
+			}
+		}
+		elseif ($operator == '!=')
+		{
+			if ($right === true)
+			{
+				$result = (!$left ? true : false);
+			}
+			elseif ($right === false)
+			{
+				$result = ($left ? true : false);
+			}
+			else
+			{
+				$result = ($left != $right ? true : false);
+			}
+		}
+		elseif ($operator == '>')
+		{
+			$result = ($left > $right ? true : false);
+		}
+		elseif ($operator == '<')
+		{
+			$result = ($left < $right ? true : false);
+		}
+		elseif ($operator == '<=')
+		{
+			$result = ($left <= $right ? true : false);
+		}
+		elseif ($operator == '>=')
+		{
+			$result = ($left >= $right ? true : false);
+		}
+		elseif ($operator == '=~')
+		{
+			$result = (preg_match("/$right/i", $left) ? true : false);
+		}
+		elseif ($operator == '||')
+		{
+			$result = (preg_match("/$right/i", $left) ? true : false);
+		}
+
+		return $result;
 	}
 }
