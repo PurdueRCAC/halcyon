@@ -26,7 +26,7 @@ class ScheduleCommand extends Command
 	/**
 	 * Execute the console command.
 	 */
-	public function handle()
+	public function handle(): int
 	{
 		$debug = $this->option('debug') ? true : false;
 
@@ -36,7 +36,7 @@ class ScheduleCommand extends Command
 		if (!$r)
 		{
 			$this->error('No resource provided');
-			return;
+			return Command::FAILURE;
 		}
 
 		$resource = Asset::findByName($r);
@@ -44,14 +44,11 @@ class ScheduleCommand extends Command
 		if (!$resource)
 		{
 			$this->error('Invalid resource provided ' . $r);
-			return;
+			return Command::FAILURE;
 		}
 
-		/*if ($this->output->isVerbose())
-		{
-			$this->line('Triggering Schedule event');
-		}*/
-
 		event($e = new Schedule($resource, $this, $this->output->isVerbose()));
+
+		return Command::SUCCESS;
 	}
 }

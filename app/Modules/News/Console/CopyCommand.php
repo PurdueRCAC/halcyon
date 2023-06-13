@@ -26,9 +26,9 @@ class CopyCommand extends Command
 	/**
 	 * Execute the console command.
 	 *
-	 * @return  void
+	 * @return  int
 	 */
-	public function handle()
+	public function handle(): int
 	{
 		$debug = $this->option('debug') ? true : false;
 
@@ -39,7 +39,8 @@ class CopyCommand extends Command
 		if (!$news || !$news->id)
 		{
 			$this->danger('Failed to find news entry for ID #' . $id);
-			return;
+
+			return Command::FAILURE;
 		}
 
 		if ($debug || $this->output->isVerbose())
@@ -115,5 +116,7 @@ class CopyCommand extends Command
 				$payload->save();
 			}
 		}
+
+		return Command::SUCCESS;
 	}
 }

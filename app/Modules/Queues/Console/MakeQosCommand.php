@@ -30,7 +30,7 @@ class MakeQosCommand extends Command
 	/**
 	 * Execute the console command.
 	 */
-	public function handle()
+	public function handle(): int
 	{
 		$debug = $this->option('debug') ? true : false;
 
@@ -40,7 +40,7 @@ class MakeQosCommand extends Command
 		if (!$r)
 		{
 			$this->error('No resource provided');
-			return;
+			return Command::FAILURE;
 		}
 
 		$resource = Asset::findByName($r);
@@ -48,7 +48,7 @@ class MakeQosCommand extends Command
 		if (!$resource)
 		{
 			$this->error('Invalid resource provided' . $r);
-			return;
+			return Command::FAILURE;
 		}
 
 		foreach ($resource->subresources as $subresource)
@@ -141,5 +141,7 @@ class MakeQosCommand extends Command
 				}
 			}
 		}
+
+		return Command::SUCCESS;
 	}
 }

@@ -30,9 +30,9 @@ class EventsTodayCommand extends Command
 	/**
 	 * Execute the console command.
 	 *
-	 * @return  void
+	 * @return  int
 	 */
-	public function handle()
+	public function handle(): int
 	{
 		$debug = $this->option('debug') ? true : false;
 		$summary = $this->option('summary') ? true : false;
@@ -44,7 +44,7 @@ class EventsTodayCommand extends Command
 		if (!$type || !$type->id)
 		{
 			$this->error('Failed to find news type for ID #' . $id);
-			return;
+			return Command::FAILURE;
 		}
 
 		$route = env('SLACK_NOTIFICATION_NEWS_TODAY');
@@ -52,7 +52,7 @@ class EventsTodayCommand extends Command
 		if (!$route)
 		{
 			$this->error('Slack notification webhook is not configured');
-			return;
+			return Command::FAILURE;
 		}
 
 		$week_start = Carbon::now();
@@ -98,10 +98,9 @@ class EventsTodayCommand extends Command
 			if ($debug || $this->output->isVerbose())
 			{
 				$this->line(trans('news::news.no events for today'));
-				return;
 			}
 
-			return;
+			return Command::SUCCESS;
 		}
 
 		$found = false;
@@ -168,11 +167,13 @@ class EventsTodayCommand extends Command
 			if ($debug || $this->output->isVerbose())
 			{
 				$this->line(trans('news::news.no registrations for today'));
-				return;
+				return Command::SUCCESS;
 			}
 
 			Notification::route('slack', $route)
 				->notify(new EventNoneRegistered());
 		}
+
+		return Command::SUCCESS;
 	}
 }

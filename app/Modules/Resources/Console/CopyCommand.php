@@ -29,10 +29,8 @@ class CopyCommand extends Command
 
 	/**
 	 * Execute the console command.
-	 *
-	 * @return void
 	 */
-	public function handle(): void
+	public function handle(): int
 	{
 		$debug = $this->option('debug') ? true : false;
 		$allocations = $this->option('allocations');
@@ -44,7 +42,7 @@ class CopyCommand extends Command
 		if (!$asset || !$asset->id)
 		{
 			$this->danger('Failed to find resource entry for ID #' . $id);
-			return;
+			return Command::FAILURE;
 		}
 
 		if ($debug || $this->output->isVerbose())
@@ -297,5 +295,7 @@ class CopyCommand extends Command
 				}
 			}
 		}
+
+		return Command::SUCCESS;
 	}
 }

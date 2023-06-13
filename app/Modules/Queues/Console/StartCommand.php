@@ -30,9 +30,9 @@ class StartCommand extends Command
 	/**
 	 * Execute the console command.
 	 * 
-	 * @return  void
+	 * @return  int
 	 */
-	public function handle()
+	public function handle(): int
 	{
 		$debug = $this->option('debug') ? true : false;
 
@@ -50,7 +50,7 @@ class StartCommand extends Command
 				if (!$s)
 				{
 					$this->error('A subresource must be specified when using a queue name');
-					return;
+					return Command::FAILURE;
 				}
 
 				if (is_numeric($s))
@@ -62,21 +62,19 @@ class StartCommand extends Command
 					$subresource = Subresource::query()
 						->where('name', '=', $name)
 						->limit(1)
-						->get()
 						->first();
 				}
 
 				if (!$subresource)
 				{
 					$this->error('Could not find specified subresource ' . $s);
-					return;
+					return Command::FAILURE;
 				}
 
 				$queue = Queue::query()
 					->where('subresourceid', '=', $subresourceid)
 					->where('name', '=', $name)
 					->limit(1)
-					->get()
 					->first();
 			}
 
@@ -114,7 +112,7 @@ class StartCommand extends Command
 			if (!$resource)
 			{
 				$this->error('Could not find specified resource ' . $r);
-				return;
+				return Command::FAILURE;
 			}
 
 			if ($debug || $this->output->isVerbose())
@@ -146,7 +144,6 @@ class StartCommand extends Command
 							->orWhere('hostname', 'LIKE', $resource->rolename . '.adm.%')
 							->orWhere('hostname', 'LIKE', 'adm.' . $resource->rolename . '.%');
 					})
-					->get()
 					->first();
 
 				if ($scheduler && config('module.queues.start_all_cmd'))
@@ -160,7 +157,7 @@ class StartCommand extends Command
 
 						if ($debug)
 						{
-							return;
+							return Command::SUCCESS;
 						}
 					}
 
@@ -189,5 +186,7 @@ class StartCommand extends Command
 				}
 			}
 		}
+
+		return Command::SUCCESS;
 	}
 }

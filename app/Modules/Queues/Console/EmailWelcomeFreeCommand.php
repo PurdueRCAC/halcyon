@@ -148,7 +148,6 @@ class EmailWelcomeFreeCommand extends Command
 
 					$activity[$queue->resource->id]->storage = StorageResource::query()
 						->where('parentresourceid', '=', $queue->resource->id)
-						->get()
 						->first();
 				}
 
