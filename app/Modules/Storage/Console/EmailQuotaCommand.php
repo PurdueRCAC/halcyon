@@ -23,7 +23,8 @@ class EmailQuotaCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'storage:emailquota {--debug}';
+	protected $signature = 'storage:emailquota
+							{--debug : Do not perform actions, only report what will happen}';
 
 	/**
 	 * The console command description.
@@ -35,13 +36,12 @@ class EmailQuotaCommand extends Command
 	/**
 	 * Execute the console command.
 	 */
-	public function handle(): void
+	public function handle(): int
 	{
 		$debug = $this->option('debug') ? true : false;
 
 		$users = Notification::query()
 			->select(DB::raw('DISTINCT(userid) AS userid'))
-			//->withTrashed()
 			->get()
 			->pluck('userid')
 			->toArray();
@@ -52,7 +52,8 @@ class EmailQuotaCommand extends Command
 			{
 				$this->info('No quota notifications found.');
 			}
-			return;
+
+			return Command::SUCCESS;
 		}
 
 		$n = (new Notification)->getTable();
@@ -364,5 +365,7 @@ class EmailQuotaCommand extends Command
 				$this->info('No reports to send at this time.');
 			}
 		}
+
+		return Command::SUCCESS;
 	}
 }

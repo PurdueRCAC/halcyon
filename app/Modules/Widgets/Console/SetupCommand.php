@@ -23,23 +23,31 @@ class SetupCommand extends Command
 	/**
 	 * Execute the console command.
 	 *
-	 * @return void
+	 * @return int
 	 */
-	public function handle()
+	public function handle(): int
 	{
-		$this->generateWidgetsFolder();
+		if (!$this->generateWidgetsFolder())
+		{
+			return Command::FAILURE;
+		}
 
-		$this->generateAssetsFolder();
+		if (!$this->generateAssetsFolder())
+		{
+			return Command::FAILURE;
+		}
+
+		return Command::SUCCESS;
 	}
 
 	/**
 	 * Generate the modules folder.
 	 *
-	 * @return void
+	 * @return bool
 	 */
-	public function generateWidgetsFolder()
+	public function generateWidgetsFolder(): bool
 	{
-		$this->generateDirectory(
+		return $this->generateDirectory(
 			app_path('Widgets'),
 			'Widgets directory created successfully',
 			'Widgets directory already exist'
@@ -49,11 +57,11 @@ class SetupCommand extends Command
 	/**
 	 * Generate the assets folder.
 	 *
-	 * @return void
+	 * @return bool
 	 */
-	public function generateAssetsFolder()
+	public function generateAssetsFolder(): bool
 	{
-		$this->generateDirectory(
+		return $this->generateDirectory(
 			public_path('widgets'),
 			'Assets directory created successfully',
 			'Assets directory already exist'
@@ -63,22 +71,27 @@ class SetupCommand extends Command
 	/**
 	 * Generate the specified directory by given $dir.
 	 *
-	 * @param $dir
-	 * @param $success
-	 * @param $error
-	 * @return void
+	 * @param string $dir
+	 * @param string $success
+	 * @param string $error
+	 * @return bool
 	 */
-	protected function generateDirectory($dir, $success, $error)
+	protected function generateDirectory(string $dir, string $success, string $error): bool
 	{
 		if (!$this->laravel['files']->isDirectory($dir))
 		{
-			$this->laravel['files']->makeDirectory($dir, 0755, true, true);
+			if ($this->laravel['files']->makeDirectory($dir, 0755, true, true))
+			{
+				$this->info($success);
 
-			$this->info($success);
+				return true;
+			}
 
-			return;
+			$error = 'Failed to create directory';
 		}
 
 		$this->comment($error);
+
+		return false;
 	}
 }

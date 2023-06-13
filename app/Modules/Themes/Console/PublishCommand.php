@@ -27,40 +27,53 @@ class PublishCommand extends Command
 	/**
 	 * Execute the console command.
 	 *
-	 * @return  void
+	 * @return  int
 	 */
-	public function handle(): void
+	public function handle(): int
 	{
 		if ($name = $this->argument('theme'))
 		{
-			$this->publish($name);
+			if (!$this->publish($name))
+			{
+				return Command::FAILURE;
+			}
 
-			return;
+			return Command::SUCCESS;
 		}
 
-		$this->publishAll();
+		if (!$this->publishAll())
+		{
+			return Command::FAILURE;
+		}
+
+		return Command::SUCCESS;
 	}
 
 	/**
 	 * Publish assets from all modules.
 	 *
-	 * @return  void
+	 * @return  bool
 	 */
-	public function publishAll(): void
+	public function publishAll(): bool
 	{
 		foreach ($this->laravel['themes']->allEnabled() as $theme)
 		{
-			$this->publish($theme);
+			if (!$this->publish($theme))
+			{
+				return false;
+			}
 		}
+
+		return true;
 	}
 
 	/**
 	 * Publish assets from the specified theme.
 	 *
 	 * @param  string $name
-	 * @return void
+	 * @return bool
 	 */
-	public function publish($name): void
+	public function publish($name): bool
 	{
 		if ($name instanceof Theme)
 		{
@@ -74,7 +87,7 @@ class PublishCommand extends Command
 		if (!$theme)
 		{
 			$this->error(trans('themes::themes.error.failed to find theme', ['name' => $name]));
-			return;
+			return false;
 		}
 
 		/*with(new AssetPublisher($theme))
@@ -88,7 +101,7 @@ class PublishCommand extends Command
 		if (!$this->getFilesystem()->isDirectory($sourcePath))
 		{
 			$this->error(trans('themes::themes.error.source path not found', ['path' => $sourcePath]));
-			return;
+			return false;
 		}
 
 		if (!$this->getFilesystem()->isDirectory($destinationPath))
@@ -103,7 +116,10 @@ class PublishCommand extends Command
 		else
 		{
 			$this->error(trans('themes::themes.error.failed to publish assets', ['name' => $theme->getStudlyName()]));
+			return false;
 		}
+
+		return true;
 	}
 
 	/**

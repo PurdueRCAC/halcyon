@@ -16,7 +16,8 @@ class QuotaCheckCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'storage:quotacheck {--debug}';
+	protected $signature = 'storage:quotacheck
+							{--debug : Do not perform actions, only report what will happen}';
 
 	/**
 	 * The console command description.
@@ -28,7 +29,7 @@ class QuotaCheckCommand extends Command
 	/**
 	 * Execute the console command.
 	 */
-	public function handle(): void
+	public function handle(): int
 	{
 		$debug = $this->option('debug') ? true : false;
 
@@ -97,7 +98,8 @@ class QuotaCheckCommand extends Command
 			{
 				$this->info('No storage directories found');
 			}
-			return;
+
+			return Command::SUCCESS;
 		}
 
 		$param = array(
@@ -129,7 +131,6 @@ class QuotaCheckCommand extends Command
 			$usage = $dir->usage()
 				->orderBy('datetimerecorded', 'desc')
 				->limit(1)
-				->get()
 				->first();
 
 			// Force refresh?
@@ -228,5 +229,7 @@ class QuotaCheckCommand extends Command
 				$this->line("\tmessagequeuetypeid: " . $key . ", count: " . $value);
 			}
 		}
+
+		return Command::SUCCESS;
 	}
 }

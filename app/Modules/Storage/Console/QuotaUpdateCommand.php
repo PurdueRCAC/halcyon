@@ -21,7 +21,9 @@ class QuotaUpdateCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'storage:quotaupdate {--debug} {--noemail}';
+	protected $signature = 'storage:quotaupdate
+							{--debug : Do not perform actions, only report what will happen}
+							{--noemail : Do not send warning emails}';
 
 	/**
 	 * The console command description.
@@ -33,26 +35,31 @@ class QuotaUpdateCommand extends Command
 	/**
 	 * Execute the console command.
 	 */
-	public function handle(): void
+	public function handle(): int
 	{
 		$debug = $this->option('debug') ? true : false;
 		$noemail = $this->option('noemail') ? true : false;
 
 		if (!$noemail)
 		{
-			$this->emailExpiring($debug);
+			if (!$this->emailExpiring($debug))
+			{
+				return Command::FAILURE;
+			}
 		}
 
-		$this->updateExpired($debug);
+		if (!$this->updateExpired($debug))
+		{
+			return Command::FAILURE;
+		}
+
+		return Command::SUCCESS;
 	}
 
 	/**
 	 * Email group managers about expiring loans/purchases
-	 *
-	 * @param  bool $debug
-	 * @return void
 	 */
-	private function emailExpiring(bool $debug = false): void
+	private function emailExpiring(bool $debug = false): int
 	{
 		// Find all active directories with allocations that will expire in X timeperiod
 		//
@@ -81,7 +88,8 @@ class QuotaUpdateCommand extends Command
 			{
 				$this->info('No expiring allocations found.');
 			}
-			return;
+
+			return Command::SUCCESS;
 		}
 
 		$storage = array();
@@ -207,16 +215,15 @@ class QuotaUpdateCommand extends Command
 
 				Mail::to($user->email)->send($message);
 			}
+
+			return Command::SUCCESS;
 		}
 	}
 
 	/**
 	 * Update quotas for directories with expired loans/purchases
-	 *
-	 * @param  bool $debug
-	 * @return void
 	 */
-	private function updateExpired(bool $debug = false): void
+	private function updateExpired(bool $debug = false): int
 	{
 		// Find all active directories with allocations that expired in the past X timeperiod
 		//
@@ -246,7 +253,8 @@ class QuotaUpdateCommand extends Command
 			{
 				$this->info('No expired allocations found.');
 			}
-			return;
+
+			return Command::SUCCESS;
 		}
 
 		$storage = array();
@@ -351,7 +359,6 @@ class QuotaUpdateCommand extends Command
 					$type = MessageType::query()
 						->where('resourceid', '=', $dir->resourceid)
 						->where('name', 'like', 'fileset %')
-						->get()
 						->first();
 
 					if ($type)
@@ -371,5 +378,7 @@ class QuotaUpdateCommand extends Command
 				$dir->addMessageToQueue($typeid);
 			}
 		}
+
+		return Command::SUCCESS;
 	}
 }

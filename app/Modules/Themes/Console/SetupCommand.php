@@ -25,21 +25,29 @@ class SetupCommand extends Command
 	 *
 	 * @return void
 	 */
-	public function handle(): void
+	public function handle(): int
 	{
-		$this->generateThemesFolder();
+		if (!$this->generateThemesFolder())
+		{
+			return Command::FAILURE;
+		}
 
-		$this->generateAssetsFolder();
+		if (!$this->generateAssetsFolder())
+		{
+			return Command::FAILURE;
+		}
+
+		return Command::SUCCESS;
 	}
 
 	/**
 	 * Generate the themes folder.
 	 *
-	 * @return  void
+	 * @return  bool
 	 */
-	public function generateThemesFolder(): void
+	public function generateThemesFolder(): bool
 	{
-		$this->generateDirectory(
+		return $this->generateDirectory(
 			app_path('Themes'),
 			'Themes directory created successfully',
 			'Themes directory already exist'
@@ -49,11 +57,11 @@ class SetupCommand extends Command
 	/**
 	 * Generate the assets folder.
 	 *
-	 * @return  void
+	 * @return  bool
 	 */
-	public function generateAssetsFolder(): void
+	public function generateAssetsFolder(): bool
 	{
-		$this->generateDirectory(
+		return $this->generateDirectory(
 			public_path('themes'),
 			'Assets directory created successfully',
 			'Assets directory already exist'
@@ -66,19 +74,24 @@ class SetupCommand extends Command
 	 * @param  string $dir
 	 * @param  string $success
 	 * @param  string $error
-	 * @return void
+	 * @return bool
 	 */
-	protected function generateDirectory($dir, $success, $error): void
+	protected function generateDirectory(string $dir, string $success, string $error): bool
 	{
 		if (!$this->laravel['files']->isDirectory($dir))
 		{
-			$this->laravel['files']->makeDirectory($dir, 0755, true, true);
+			if ($this->laravel['files']->makeDirectory($dir, 0755, true, true))
+			{
+				$this->info($success);
 
-			$this->info($success);
+				return true;
+			}
 
-			return;
+			$error = 'Failed to create directory';
 		}
 
 		$this->error($error);
+
+		return false;
 	}
 }

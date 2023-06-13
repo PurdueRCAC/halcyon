@@ -38,7 +38,7 @@ class DisableCommand extends Command
 		}
 		else
 		{
-			$this->comment("Theme [{$theme}] has already disabled.");
+			$this->comment("Theme [{$theme}] is already disabled.");
 		}
 	}
 
