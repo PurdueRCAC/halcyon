@@ -1032,7 +1032,7 @@ class DirectoriesController extends Controller
 			if ($typeid)
 			{
 				// Form message queue
-				$row->addMessageToQueue($typeid, $row->userid);
+				$row->addMessageToQueue($typeid, auth()->user() ? auth()->user()->id : 0);
 			}
 
 			return new DirectoryResource($row);
@@ -1219,7 +1219,7 @@ class DirectoriesController extends Controller
 			}
 
 			// Add to message queue
-			$row->addMessageToQueue($type->id, $row->userid);
+			$row->addMessageToQueue($type->id, auth()->user() ? auth()->user()->id : 0);
 		}
 
 		return new DirectoryResource($row);

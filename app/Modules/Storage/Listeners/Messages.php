@@ -2,6 +2,7 @@
 
 namespace App\Modules\Storage\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Storage\Models\Directory;
 use App\Modules\Storage\Models\StorageResource;
 use App\Modules\Messages\Events\MessageReading;
@@ -16,10 +17,10 @@ class Messages
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  \Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(MessageReading::class, self::class . '@handleMessageReading');
 		//$events->listen(DirectoryCreated::class, self::class . '@handleDirectoryCreated');
@@ -31,7 +32,7 @@ class Messages
 	 * @param   MessageReading  $event
 	 * @return  void
 	 */
-	public function handleMessageReading(MessageReading $event)
+	public function handleMessageReading(MessageReading $event): void
 	{
 		$message = $event->message;
 
@@ -65,7 +66,7 @@ class Messages
 	 * @param   DirectoryCreated  $event
 	 * @return  void
 	 */
-	public function handleDirectoryCreated(DirectoryCreated $event)
+	public function handleDirectoryCreated(DirectoryCreated $event): void
 	{
 		$row = $event->directory;
 
@@ -82,7 +83,7 @@ class Messages
 
 			if ($typeid)
 			{
-				$row->addMessageToQueue($typeid, $row->userid, 10);
+				$row->addMessageToQueue($typeid, (auth()->user() ? auth()->user()->id : 0), 10);
 			}
 		}
 
@@ -97,7 +98,7 @@ class Messages
 
 			if ($type)
 			{
-				$row->addMessageToQueue($type->id, $row->userid, 10);
+				$row->addMessageToQueue($type->id, (auth()->user() ? auth()->user()->id : 0), 10);
 			}
 		}
 	}
