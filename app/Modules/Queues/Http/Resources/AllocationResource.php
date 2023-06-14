@@ -24,7 +24,7 @@ class AllocationResource extends JsonResource
 
 		$now = Carbon::now();
 
-		/*$data['resource'] = $this->resource()->get()->first();
+		/*$data['resource'] = $this->resource()->first();
 		$data['resource']['api'] = route('api.resources.read', ['id' => $data['resource']['id']]);
 
 		$data['subresource'] = $this->subresource;

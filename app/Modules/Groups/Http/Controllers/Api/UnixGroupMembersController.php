@@ -267,7 +267,6 @@ class UnixGroupMembersController extends Controller
 			->withTrashed()
 			->where('unixgroupid', '=', $request->input('unixgroupid'))
 			->where('userid', '=', $userid)
-			->get()
 			->first();
 
 		// Set notice state
@@ -337,7 +336,6 @@ class UnixGroupMembersController extends Controller
 				->withTrashed()
 				->where('unixgroupid', '=', $altunixgroup->id)
 				->where('userid', '=', $row->userid)
-				->get()
 				->first();
 
 			if (!$altrow)

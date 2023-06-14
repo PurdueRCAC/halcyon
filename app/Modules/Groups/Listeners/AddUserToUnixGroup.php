@@ -86,7 +86,6 @@ class AddUserToUnixGroup
 					->withTrashed()
 					->where('unixgroupid', '=', $base->id)
 					->where('userid', '=', $event->userrequest->userid)
-					->get()
 					->first();
 
 				// Restore or create as needed
@@ -134,7 +133,6 @@ class AddUserToUnixGroup
 					->withTrashed()
 					->where('unixgroupid', '=', $unixgroup->id)
 					->where('userid', '=', $event->member->userid)
-					->get()
 					->first();
 
 				// Restore or create as needed
@@ -162,7 +160,6 @@ class AddUserToUnixGroup
 					->withTrashed()
 					->where('queueid', '=', $queue->id)
 					->where('userid', '=', $event->member->userid)
-					->get()
 					->first();
 
 				// Restore or create as needed

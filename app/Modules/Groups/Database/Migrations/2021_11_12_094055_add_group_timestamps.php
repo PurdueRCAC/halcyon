@@ -32,7 +32,6 @@ class AddGroupTimestamps extends Migration
 						->whereNotNull('datecreated')
 						->orderBy('id', 'asc')
 						->limit(1)
-						->get()
 						->first();
 
 					if (!$first)

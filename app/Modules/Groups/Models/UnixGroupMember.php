@@ -126,7 +126,6 @@ class UnixGroupMember extends Model
 					->withTrashed()
 					->where('unixgroupid', '=', $altunixgroup->id)
 					->where('userid', '=', $model->userid)
-					->get()
 					->first();
 
 				if ($altrow)

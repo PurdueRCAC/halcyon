@@ -30,7 +30,7 @@ class QueueResource extends JsonResource
 
 		if (in_array('group', $objs) || in_array('all', $objs))
 		{
-			$data['group'] = $this->group()->withTrashed()->get()->first();
+			$data['group'] = $this->group()->withTrashed()->first();
 			if ($data['group'])
 			{
 				$data['group']['api'] = route('api.groups.read', ['id' => $data['group']['id']]);
@@ -39,7 +39,7 @@ class QueueResource extends JsonResource
 
 		if (in_array('resource', $objs) || in_array('all', $objs))
 		{
-			$data['resource'] = $this->resource()->withTrashed()->get()->first();
+			$data['resource'] = $this->resource()->withTrashed()->first();
 			if ($data['resource'])
 			{
 				$data['resource']['api'] = route('api.resources.read', ['id' => $data['resource']['id']]);
@@ -52,7 +52,7 @@ class QueueResource extends JsonResource
 
 		if (in_array('subresource', $objs) || in_array('all', $objs))
 		{
-			$data['subresource'] = $this->subresource()->withTrashed()->get()->first();
+			$data['subresource'] = $this->subresource()->withTrashed()->first();
 			if ($data['subresource'])
 			{
 				$data['subresource']['api'] = route('api.resources.subresources.read', ['id' => $data['subresource']['id']]);
@@ -74,7 +74,7 @@ class QueueResource extends JsonResource
 
 		if (in_array('scheduler', $objs) || in_array('all', $objs))
 		{
-			$data['scheduler'] = $this->scheduler()->withTrashed()->get()->first();
+			$data['scheduler'] = $this->scheduler()->withTrashed()->first();
 			if ($data['scheduler'])
 			{
 				$data['scheduler']['api'] = route('api.queues.schedulers.read', ['id' => $data['scheduler']['id']]);

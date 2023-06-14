@@ -400,7 +400,6 @@ class Group extends Model
 				->where('groupid', '=', $this->id)
 				->where('resourceid', '=', $bucket['resourceid'])
 				->whereNull('datetimeremoved')
-				->get()
 				->first();
 
 			$allocatedbytes = 0;

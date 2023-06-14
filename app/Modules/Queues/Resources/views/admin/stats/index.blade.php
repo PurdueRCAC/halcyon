@@ -204,7 +204,7 @@ app('pathway')
 												$pquery->where($q . '.groupid', '>', 0);
 											}
 
-											$purchases = $pquery->get()->first();
+											$purchases = $pquery->first();
 
 											$soldnodes = 0;
 											if ($subresource->nodecores != 0)
@@ -243,7 +243,7 @@ app('pathway')
 												$lquery->where($q . '.groupid', '>', 0);
 											}
 
-											$loans = $lquery->get()->first();
+											$loans = $lquery->first();
 
 											$loaned['nodes'] += $loans->nodes;
 											$loaned['cores'] += $loans->cores;
@@ -477,7 +477,7 @@ app('pathway')
 									$pquery->where($q . '.groupid', '>', 0);
 								}
 
-								$purchases = $pquery->get()->first();
+								$purchases = $pquery->first();
 
 								$soldnodes = 0;
 								if ($subresource->nodecores != 0)
@@ -516,7 +516,7 @@ app('pathway')
 									$lquery->where($q . '.groupid', '>', 0);
 								}
 
-								$loans = $lquery->get()->first();
+								$loans = $lquery->first();
 
 								$loaned['nodes'] += $loans->nodes;
 								$loaned['cores'] += $loans->cores;

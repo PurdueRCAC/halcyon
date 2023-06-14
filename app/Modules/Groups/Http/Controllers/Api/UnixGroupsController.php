@@ -331,7 +331,6 @@ class UnixGroupsController extends Controller
 			->where('groupid', '=', $group->id)
 			->where('longname', '=', $base . $name)
 			->orderBy('id', 'desc')
-			->get()
 			->first();
 
 		if ($row && $row->id)
@@ -638,7 +637,6 @@ class UnixGroupsController extends Controller
 				->where('groupid', '=', $group->id)
 				->where('longname', '=', $row->longname)
 				->where('id', '!=', $row->id)
-				->get()
 				->first();
 
 			if ($exist && $exist->id)
