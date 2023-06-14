@@ -3,6 +3,8 @@
 namespace App\Modules\Users\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +23,7 @@ class RegisterController extends Controller
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @return Response
+	 * @return RedirectResponse|View
 	 */
 	public function index()
 	{
@@ -38,7 +40,7 @@ class RegisterController extends Controller
 	 * Store a newly created resource in storage.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function store(Request $request)
 	{

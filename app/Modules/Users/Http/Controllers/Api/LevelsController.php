@@ -3,6 +3,7 @@
 namespace App\Modules\Users\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -107,7 +108,7 @@ class LevelsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -212,7 +213,7 @@ class LevelsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return JsonResponse|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -270,7 +271,7 @@ class LevelsController extends Controller
 	 * 		}
 	 * }
 	 * @param  int  $id
-	 * @return Response
+	 * @return JsonResource
 	 */
 	public function read($id)
 	{
@@ -339,7 +340,7 @@ class LevelsController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   int $id
-	 * @return  Response
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -386,7 +387,7 @@ class LevelsController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

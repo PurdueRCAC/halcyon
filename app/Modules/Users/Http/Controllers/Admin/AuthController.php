@@ -3,7 +3,8 @@
 namespace App\Modules\Users\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 //use App\Modules\Users\Models\User;
@@ -14,7 +15,7 @@ class AuthController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse|View
 	 */
 	public function login(Request $request)
 	{

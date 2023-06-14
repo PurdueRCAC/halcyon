@@ -3,7 +3,8 @@
 namespace App\Modules\Users\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
@@ -28,7 +29,7 @@ class UsersController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -210,7 +211,7 @@ class UsersController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 * 
-	 * @return Response
+	 * @return View
 	 */
 	public function create()
 	{
@@ -230,7 +231,7 @@ class UsersController extends Controller
 	 * Store a newly created resource in storage.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -351,7 +352,7 @@ class UsersController extends Controller
 	 * Show the form for editing the specified resource.
 	 * 
 	 * @param  int  $id
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id)
 	{
@@ -376,7 +377,7 @@ class UsersController extends Controller
 	 * Show the form for editing the specified resource.
 	 * 
 	 * @param  int  $id
-	 * @return Response
+	 * @return View
 	 */
 	public function show($id)
 	{
@@ -410,7 +411,7 @@ class UsersController extends Controller
 	 * Remove the specified resource from storage.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -444,7 +445,7 @@ class UsersController extends Controller
 	/**
 	 * Return to the main view
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{
@@ -455,7 +456,7 @@ class UsersController extends Controller
 	 * Sets the account state of a member to enabled
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function enable(Request $request)
 	{
@@ -467,7 +468,7 @@ class UsersController extends Controller
 	 *
 	 * @param   Request $request
 	 * @param   int $state
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function disable(Request $request, $state = 0)
 	{
@@ -511,7 +512,7 @@ class UsersController extends Controller
 	 *
 	 * @param  int $id
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function debug($id, Request $request)
 	{

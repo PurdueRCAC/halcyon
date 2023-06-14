@@ -80,7 +80,7 @@ class Welcome extends Mailable
 	public function build()
 	{
 		return $this->markdown('users::mail.welcome')
-					->subject(trains('users::users.welcome'))
+					->subject(trans('users::users.welcome'))
 					->with([
 						'user' => $this->user,
 					]);

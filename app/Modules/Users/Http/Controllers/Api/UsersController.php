@@ -3,7 +3,7 @@
 namespace App\Modules\Users\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -347,7 +347,7 @@ class UsersController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return JsonResponse|UserResource
 	 */
 	public function create(Request $request)
 	{
@@ -422,7 +422,7 @@ class UsersController extends Controller
 	 * 		}
 	 * }
 	 * @param  int  $id
-	 * @return Response
+	 * @return UserResource
 	 */
 	public function read(Request $request, $id)
 	{
@@ -548,7 +548,7 @@ class UsersController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   int $id
-	 * @return  Response
+	 * @return  JsonResponse|UserResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -720,7 +720,7 @@ class UsersController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

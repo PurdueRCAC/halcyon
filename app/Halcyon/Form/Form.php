@@ -712,9 +712,9 @@ class Form
 	 * to false.
 	 *
 	 * @param   string   $file   The filesystem path of an XML file.
-	 * @param   string   $reset  Flag to toggle whether form fields should be replaced if a field
+	 * @param   bool     $reset  Flag to toggle whether form fields should be replaced if a field
 	 *                           already exists with the same group/name.
-	 * @param   string   $xpath  An optional xpath to search for the fields.
+	 * @param   string|false   $xpath  An optional xpath to search for the fields.
 	 * @return  bool  True on success, false otherwise.
 	 */
 	public function loadFile($file, $reset = true, $xpath = false)

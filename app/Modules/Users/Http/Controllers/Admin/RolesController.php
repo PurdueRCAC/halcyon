@@ -3,7 +3,8 @@
 namespace App\Modules\Users\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Halcyon\Access\Role;
@@ -17,7 +18,7 @@ class RolesController extends Controller
 	 * Display a listing of roles.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(Request $request)
 	{
@@ -113,7 +114,7 @@ class RolesController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 * 
-	 * @return Response
+	 * @return View
 	 */
 	public function create()
 	{
@@ -138,7 +139,7 @@ class RolesController extends Controller
 	 * Store a newly created entry
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -230,7 +231,7 @@ class RolesController extends Controller
 	 * Show the form for editing the specified resource.
 	 * 
 	 * @param  int  $id
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id)
 	{
@@ -256,7 +257,7 @@ class RolesController extends Controller
 	 * Remove the specified resource from storage.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -296,7 +297,7 @@ class RolesController extends Controller
 	 * Store config changes
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function update(Request $request)
 	{
@@ -351,7 +352,7 @@ class RolesController extends Controller
 	/**
 	 * Return to the main view
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{

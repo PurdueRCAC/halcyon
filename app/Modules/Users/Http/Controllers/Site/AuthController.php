@@ -4,6 +4,8 @@ namespace App\Modules\Users\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +25,7 @@ class AuthController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse|View
 	 */
 	public function login(Request $request)
 	{
@@ -73,7 +75,7 @@ class AuthController extends Controller
 	 * Show the form for creating a new resource.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function authenticate(Request $request)
 	{
@@ -108,7 +110,7 @@ class AuthController extends Controller
 	 * Callback for third-party auth
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return Response|RedirectResponse
 	 */
 	public function callback(Request $request)
 	{
@@ -213,7 +215,7 @@ class AuthController extends Controller
 	 * Logout
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function logout(Request $request)
 	{

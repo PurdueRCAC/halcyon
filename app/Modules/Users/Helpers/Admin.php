@@ -3,6 +3,7 @@ namespace App\Modules\Users\Helpers;
 
 use Illuminate\Support\Fluent;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 use App\Halcyon\Facades\Submenu;
 use App\Halcyon\Access\Role;
 
@@ -14,14 +15,14 @@ class Admin
 	/**
 	 * A cache for the available actions.
 	 *
-	 * @var  object
+	 * @var  Fluent
 	 */
 	protected static $actions;
 
 	/**
 	 * Gets a list of the actions that can be performed.
 	 *
-	 * @return  object  Object
+	 * @return  Fluent
 	 */
 	public static function getActions()
 	{
@@ -46,7 +47,7 @@ class Admin
 	/**
 	 * Get a list of filter options for the blocked state of a user.
 	 *
-	 * @return  array  An array of Option elements.
+	 * @return  array<int,string>  An array of Option elements.
 	 */
 	public static function getStateOptions()
 	{
@@ -61,7 +62,7 @@ class Admin
 	/**
 	 * Get a list of filter options for the activated state of a user.
 	 *
-	 * @return  array  An array of Option elements.
+	 * @return  array<int,string>  An array of Option elements.
 	 */
 	public static function getActiveOptions()
 	{
@@ -76,7 +77,7 @@ class Admin
 	/**
 	 * Get a list of filter options for the approved state of a user.
 	 *
-	 * @return  array  An array of Option elements.
+	 * @return  array<int,string>  An array of Option elements.
 	 */
 	public static function getApprovedOptions()
 	{
@@ -92,7 +93,7 @@ class Admin
 	/**
 	 * Get a list of the user groups for filtering.
 	 *
-	 * @return  array  An array of Option elements.
+	 * @return  Collection
 	 */
 	public static function getAccessRoles()
 	{
@@ -122,7 +123,7 @@ class Admin
 	 * Creates a list of range options used in filter select list
 	 * used in com_users on users view
 	 *
-	 * @return  array
+	 * @return  array<string,string>
 	 */
 	public static function getRangeOptions()
 	{

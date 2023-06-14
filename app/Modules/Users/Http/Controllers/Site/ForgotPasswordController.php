@@ -3,8 +3,10 @@
 namespace App\Modules\Users\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\ValidationException;
 
 class ForgotPasswordController extends Controller
 {
@@ -21,10 +23,9 @@ class ForgotPasswordController extends Controller
 	/**
 	 * Handle an incoming password reset link request.
 	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\RedirectResponse
-	 *
-	 * @throws \Illuminate\Validation\ValidationException
+	 * @param  Request  $request
+	 * @return RedirectResponse
+	 * @throws ValidationException
 	 */
 	public function store(Request $request)
 	{

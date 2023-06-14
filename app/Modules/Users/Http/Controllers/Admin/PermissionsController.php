@@ -3,7 +3,8 @@
 namespace App\Modules\Users\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use App\Modules\Users\Models\Permissions;
 use App\Halcyon\Access\Role;
@@ -14,7 +15,7 @@ class PermissionsController extends Controller
 	/**
 	 * Display config options for a module
 	 *
-	 * @return  Response
+	 * @return  View
 	 */
 	public function index()
 	{
@@ -67,7 +68,7 @@ class PermissionsController extends Controller
 	 * Display config options for a module
 	 *
 	 * @param   string   $module
-	 * @return  Response
+	 * @return  View
 	 */
 	public function module($module)
 	{
@@ -102,7 +103,7 @@ class PermissionsController extends Controller
 	 *
 	 * @param  string  $module
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function update($module, Request $request)
 	{
@@ -155,7 +156,7 @@ class PermissionsController extends Controller
 	/**
 	 * Return to the main view
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{

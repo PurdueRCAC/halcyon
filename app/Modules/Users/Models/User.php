@@ -252,7 +252,7 @@ class User extends Model implements
 	/**
 	 * Generate permissions for the modules provided
 	 *
-	 * @param  array $names List of module names
+	 * @param  array<int,string> $names List of module names
 	 * @return void
 	 */
 	public function setModulePermissionsAttribute(array $names): void

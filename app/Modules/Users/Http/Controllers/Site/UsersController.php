@@ -3,7 +3,8 @@
 namespace App\Modules\Users\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -20,7 +21,7 @@ class UsersController extends Controller
 	 * Show the specified resource.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function account(Request $request)
 	{
@@ -83,7 +84,7 @@ class UsersController extends Controller
 	 * Show the specified resource.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	/*public function request(Request $request)
 	{
@@ -114,7 +115,7 @@ class UsersController extends Controller
 	/**
 	 * Show confirmation form for deleting user
 	 * 
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
