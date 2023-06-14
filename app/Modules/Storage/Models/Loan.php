@@ -59,7 +59,6 @@ class Loan extends Purchase
 			->where('datetimestop', '=', ($this->hasEnd() ? $this->datetimestop : null))
 			->where('groupid', '=', $this->lendergroupid)
 			->where('lendergroupid', '=', $this->groupid)
-			->get()
 			->first();
 	}
 

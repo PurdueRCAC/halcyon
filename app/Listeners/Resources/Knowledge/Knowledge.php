@@ -41,7 +41,6 @@ class Knowledge
 			->where($a . '.path', '=', $event->asset->listname)
 			->where($a . '.state', '=', Associations::STATE_PUBLISHED)
 			->orderBy($a . '.id', 'asc')
-			->get()
 			->first();
 
 		if (!$assoc)
@@ -83,8 +82,8 @@ class Knowledge
 			->where($a . '.state', '=', Associations::STATE_PUBLISHED)
 			->whereIn($a . '.access', $access)
 			->orderBy($a . '.id', 'asc')
-			->get()
 			->first();
+
 		if (!$assoc)
 		{
 			return;
@@ -101,7 +100,6 @@ class Knowledge
 			->where('alias', '=', 'overview')
 			->where($a . '.state', '=', Associations::STATE_PUBLISHED)
 			->whereIn($a . '.access', $access)
-			->get()
 			->first();
 
 		if ($overview && $event->getActive() != 'guide')
@@ -152,7 +150,6 @@ class Knowledge
 			->where('alias', '=', 'faq')
 			->where($a . '.state', '=', Associations::STATE_PUBLISHED)
 			->whereIn($a . '.access', $access)
-			->get()
 			->first();
 
 		if ($faq)
@@ -170,7 +167,6 @@ class Knowledge
 			->where('alias', '=', 'bio')
 			->where($a . '.state', '=', Associations::STATE_PUBLISHED)
 			->whereIn($a . '.access', $access)
-			->get()
 			->first();
 
 		if ($bio)

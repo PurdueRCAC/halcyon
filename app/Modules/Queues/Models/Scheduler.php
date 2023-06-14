@@ -254,7 +254,6 @@ class Scheduler extends Model
 	{
 		return self::query()
 			->where('hostname', '=', $hostname)
-			->get()
 			->first();
 	}
 }

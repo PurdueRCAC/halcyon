@@ -25,7 +25,6 @@ class RegisterHistoryModule extends Migration
 			$found = DB::table('extensions')
 				->where('type', '=', 'module')
 				->where('element', '=', self::$name)
-				->get()
 				->first();
 
 			if (!$found || !$found->id)

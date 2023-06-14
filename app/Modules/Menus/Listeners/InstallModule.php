@@ -40,7 +40,6 @@ class InstallModule
 		$item = Item::query()
 				->where('menutype', '=', 'main')
 				->where('alias', '=', $event->migration->module)
-				->get()
 				->first();
 
 		if ($event->method == 'up' && !$item)

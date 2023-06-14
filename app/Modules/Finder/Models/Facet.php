@@ -186,7 +186,6 @@ class Facet extends Model
 			$result = self::query()
 				->select(DB::raw('MAX(weight) + 1 AS seq'))
 				->where('parent', '=', $model->parent)
-				->get()
 				->first()
 				->seq;
 

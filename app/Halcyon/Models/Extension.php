@@ -93,7 +93,6 @@ class Extension extends Model
 		return self::query()
 			->where('element', '=', $name)
 			->where('type', '=', 'module')
-			->get()
 			->first();
 	}
 

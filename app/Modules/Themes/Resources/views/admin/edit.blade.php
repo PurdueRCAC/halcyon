@@ -83,7 +83,7 @@ app('pathway')
 						<div id="{{ $name }}-options" aria-labelledby="{{ $name }}-heading">
 							<fieldset class="card-body mb-0">
 								@if (isset($fieldSet->description) && trim($fieldSet->description))
-									<p class="tip">{{ trans($fieldSet->description) }}</p>
+									<p>{{ trans($fieldSet->description) }}</p>
 								@endif
 
 								<?php

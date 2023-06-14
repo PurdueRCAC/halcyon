@@ -287,7 +287,7 @@ class Listener extends Model
 		}
 
 		// Select the first row with the criteria.
-		$row = $query->get()->first();
+		$row = $query->first();
 
 		// If a row is found, move the item.
 		if ($row && $row->id)

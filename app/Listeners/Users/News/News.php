@@ -44,7 +44,6 @@ class News
 			->where('type', '=', 'listener')
 			->where('folder', '=', 'users')
 			->where('element', '=', 'News')
-			->get()
 			->first();
 
 		if (auth()->user() && !in_array($listener->access, auth()->user()->getAuthorisedViewLevels()))

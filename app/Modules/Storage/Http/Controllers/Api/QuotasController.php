@@ -108,7 +108,6 @@ class QuotasController extends Controller
 			$data = $row->usage()
 				->orderBy('datetimerecorded', 'desc')
 				->limit(1)
-				->get()
 				->first();
 
 			$row->path              = $row->storageResource->path . '/' . $row->path;

@@ -209,7 +209,7 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 					</summary>
 					<fieldset class="card-body">
 						@if (isset($fieldSet->description) && trim($fieldSet->description))
-							<p class="tip">{{ trans($fieldSet->description) }}</p>
+							<p>{{ trans($fieldSet->description) }}</p>
 						@endif
 
 						<?php

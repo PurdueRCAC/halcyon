@@ -120,7 +120,7 @@ app('pathway')
 							<div id="{{ $name }}-options" class="collapse{{ ($i == 1 ? ' show' : '') }}" aria-labelledby="{{ $name }}-heading" data-parent="#parameters">
 								<fieldset class="card-body mb-0">
 									@if (isset($fieldSet->description) && trim($fieldSet->description))
-										<p class="tip">{{ trans($fieldSet->description) }}</p>
+										<p>{{ trans($fieldSet->description) }}</p>
 									@endif
 
 									<?php

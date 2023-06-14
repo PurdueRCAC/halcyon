@@ -141,7 +141,6 @@ class StorageResource extends Model
 			->orWhere('name', 'like', '%' . $name)
 			->orderBy('name', 'asc')
 			->limit(1)
-			->get()
 			->first();
 	}
 

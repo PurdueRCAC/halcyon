@@ -98,14 +98,13 @@ class Extension extends Model
 	 *
 	 * @param   string  $name
 	 * @param   string  $type
-	 * @return  object
+	 * @return  Extension|null
 	 */
 	public static function findByName($name, $type = 'module')
 	{
 		return self::query()
 			->where('name', '=', $name)
 			->where('type', '=', $type)
-			->get()
 			->first();
 	}
 
@@ -113,7 +112,7 @@ class Extension extends Model
 	 * Find a module by name
 	 *
 	 * @param   string  $name
-	 * @return  object
+	 * @return  Extension|null
 	 */
 	public static function findModuleByName($name)
 	{
@@ -124,7 +123,7 @@ class Extension extends Model
 	 * Find a module by name
 	 *
 	 * @param   string  $name
-	 * @return  object
+	 * @return  Extension|null
 	 */
 	public static function findWidgetByName($name)
 	{
@@ -135,7 +134,7 @@ class Extension extends Model
 	 * Find a record by element
 	 *
 	 * @param   string  $element
-	 * @return  object
+	 * @return  Extension|null
 	 */
 	public static function findByElement($element, $type = 'module')
 	{
@@ -149,7 +148,7 @@ class Extension extends Model
 	 * Find a module by element
 	 *
 	 * @param   string  $element
-	 * @return  object
+	 * @return  Extension|null
 	 */
 	public static function findModuleByElement($element)
 	{
@@ -268,6 +267,7 @@ class Extension extends Model
 	 * @param   array   $data   The data to validate.
 	 * @param   string  $group  The name of the field group to validate.
 	 * @return  mixed   Array of filtered data if valid, false otherwise.
+	 * @throws  Exception
 	 */
 	public function validateFormData($form, $data, $group = null)
 	{

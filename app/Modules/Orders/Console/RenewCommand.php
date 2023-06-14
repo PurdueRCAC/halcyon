@@ -113,7 +113,6 @@ class RenewCommand extends Command
 				->where('origorderitemid', '=', $sequence->origorderitemid)
 				->orderBy('datetimecreated', 'desc')
 				->limit(1)
-				->get()
 				->first();
 
 			// don't renew again if the last order was canceled

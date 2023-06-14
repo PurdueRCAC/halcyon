@@ -283,7 +283,6 @@ class Asset extends Model
 			$result = self::query()
 				->select(DB::raw('MAX(display) + 1 AS ordering'))
 				->where('parentid', '=', $model->parentid)
-				->get()
 				->first()
 				->ordering;
 			$result = $result ?: 1;
@@ -422,7 +421,6 @@ class Asset extends Model
 			->orWhere('name', '=', $name)
 			->orderBy('datetimeremoved', 'asc') // look for non-trashed entries first
 			->limit(1)
-			->get()
 			->first();
 	}
 }

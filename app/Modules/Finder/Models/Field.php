@@ -107,7 +107,6 @@ class Field extends Model
 		{
 			$result = self::query()
 				->select(DB::raw('MAX(weight) + 1 AS seq'))
-				->get()
 				->first()
 				->seq;
 

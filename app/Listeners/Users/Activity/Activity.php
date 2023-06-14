@@ -35,7 +35,6 @@ class Activity
 			->where('type', '=', 'listener')
 			->where('folder', '=', 'users')
 			->where('element', '=', 'Activity')
-			->get()
 			->first();
 
 		if (!$listener)

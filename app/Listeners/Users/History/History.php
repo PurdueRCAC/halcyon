@@ -35,7 +35,6 @@ class History
 			->where('type', '=', 'listener')
 			->where('folder', '=', 'users')
 			->where('element', '=', 'History')
-			->get()
 			->first();
 
 		if (auth()->user() && !in_array($listener->access, auth()->user()->getAuthorisedViewLevels()))

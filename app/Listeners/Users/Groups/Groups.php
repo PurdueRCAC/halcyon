@@ -248,7 +248,6 @@ class Groups
 				$membership = $group->members()
 					->where('userid', '=', $user->id)
 					->orderBy('membertype', 'desc')
-					->get()
 					->first();
 
 				if (!$membership)
@@ -261,7 +260,6 @@ class Groups
 					{
 						$membership = $queue->users()
 							->where('userid', '=', $user->id)
-							->get()
 							->first();
 
 						if ($membership)

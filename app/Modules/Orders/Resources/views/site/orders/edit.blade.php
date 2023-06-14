@@ -1354,7 +1354,7 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 					<div class="card-footer">
 						@foreach ($order->items as $item)
 							@if ($item->origorderitemid)
-								<a href="#recurringusernotes" data-toggle="modal" class="tip" title="Recurring item notes">
+								<a href="#recurringusernotes" data-toggle="modal">
 									<span class="fa fa-sticky-note" aria-hidden="true"></span> Past Notes on recurring orders
 								</a>
 								@php
@@ -1440,7 +1440,7 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 						<div class="card-footer">
 							@foreach ($order->items as $item)
 								@if ($item->origorderitemid)
-									<a href="#recurringstaffnotes" data-toggle="modal" class="tip" title="Recurring item notes">
+									<a href="#recurringstaffnotes" data-toggle="modal">
 										<span class="fa fa-sticky-note" aria-hidden="true"></span> Past Notes on recurring orders
 									</a>
 									@php

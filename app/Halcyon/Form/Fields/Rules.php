@@ -79,7 +79,6 @@ class Rules extends Field
 			// Need to find the asset id by the name of the module.
 			$asset = Asset::query()
 				->where('name', '=', $module)
-				->get()
 				->first();
 
 			$assetId = $asset ? (int) $asset->id : 0;

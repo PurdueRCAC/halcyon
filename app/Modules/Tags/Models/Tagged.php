@@ -103,7 +103,7 @@ class Tagged extends Model
 			$instance->where('created_by', '=', $tagger);
 		}
 
-		return $instance->limit(1)->get()->first();
+		return $instance->limit(1)->first();
 	}
 
 	/**

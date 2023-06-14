@@ -856,7 +856,6 @@ class Item extends Model
 				->select(['id', 'parent_id', 'level', 'lft', 'rgt'])
 				->where('parent_id', '=', 0)
 				->orderBy('lft', 'DESC')
-				->get()
 				->first();
 
 			// Get the reposition data for re-inserting the node after the found root.

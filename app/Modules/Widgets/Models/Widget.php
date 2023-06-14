@@ -117,7 +117,6 @@ class Widget extends Model
 			$result = self::query()
 				->select(DB::raw('MAX(ordering) + 1 AS seq'))
 				->where('position', '=', $model->position)
-				->get()
 				->first()
 				->seq;
 

@@ -505,7 +505,6 @@ app('pathway')
 						}
 
 						$val = $query
-							->get()
 							->first()->revenue;
 
 						$cats[$category->name] = $val;

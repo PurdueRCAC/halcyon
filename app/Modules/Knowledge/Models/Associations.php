@@ -171,7 +171,6 @@ class Associations extends Model
 			//->where('path', '=', 'ROOT')
 			->orderBy('lft', 'asc')
 			->limit(1)
-			->get()
 			->first();
 	}
 
@@ -672,7 +671,6 @@ class Associations extends Model
 				->select(['id', 'parent_id', 'level', 'lft', 'rgt'])
 				->where('parent_id', '=', 0)
 				->orderBy('lft', 'DESC')
-				->get()
 				->first();
 
 			// Get the reposition data for re-inserting the node after the found root.

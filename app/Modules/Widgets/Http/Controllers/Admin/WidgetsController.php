@@ -264,7 +264,6 @@ class WidgetsController extends Controller
 				->where('id', '=', $eid)
 				//->where('element', '=', $eid)
 				->where('type', '=', 'widget')
-				->get()
 				->first();
 
 			if ($ext)

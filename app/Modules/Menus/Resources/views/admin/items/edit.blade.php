@@ -193,7 +193,7 @@ app('pathway')
 					$label = !empty($fieldSet->label) ? $fieldSet->label : 'menus::menus.' . $name . ' fieldset';
 					echo app('html.builder')->sliders('panel', trans($label), 'request-options');
 						if (isset($fieldSet->description) && trim($fieldSet->description)) :
-							echo '<p class="tip">' . trans($fieldSet->description) . '</p>';
+							echo '<p>' . trans($fieldSet->description) . '</p>';
 						endif;
 						?>
 					<fieldset class="card-body panelform">
@@ -220,7 +220,7 @@ app('pathway')
 					$label = !empty($fieldSet->label) ? $fieldSet->label : 'menus::menus.' . $name . ' fieldset';
 					echo app('html.builder')->sliders('panel', trans($label), $name . '-options');
 						if (isset($fieldSet->description) && trim($fieldSet->description)) :
-							echo '<p class="tip">' . trans($fieldSet->description) . '</p>';
+							echo '<p>' . trans($fieldSet->description) . '</p>';
 						endif;
 						?>
 					<fieldset class="card-body panelform">

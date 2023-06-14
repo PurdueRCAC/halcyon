@@ -646,7 +646,6 @@ class DirectoriesController extends Controller
 			->where('parentstoragedirid', '=', $row->parentstoragedirid)
 			->where('name', '=', $row->name)
 			->where('datetimecreated', '<=', Carbon::now()->toDateTimeString())
-			->get()
 			->first();
 
 		if ($exist)
@@ -659,7 +658,6 @@ class DirectoriesController extends Controller
 		{
 			$sr = StorageResource::query()
 				->where('parentresourceid', '=', $row->resourceid)
-				->get()
 				->first();
 
 			$row->storageresourceid = $sr->id;
@@ -757,7 +755,6 @@ class DirectoriesController extends Controller
 			->withTrashed()
 			->where('id', '=', $id)
 			->limit(1)
-			->get()
 			->first();
 
 		if (!$row)
@@ -1152,7 +1149,6 @@ class DirectoriesController extends Controller
 					$exist = Directory::query()
 						->where('parentstoragedirid', '=', $row->id)
 						->where('name', '=', $member->user->username)
-						->get()
 						->first();
 
 					if ($exist)
@@ -1210,7 +1206,6 @@ class DirectoriesController extends Controller
 			$type = MessageType::query()
 				->where('resourceid', '=', $row->resourceid)
 				->where('name', 'like', 'fix %')
-				->get()
 				->first();
 
 			if (!$type)

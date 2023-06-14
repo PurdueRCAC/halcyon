@@ -283,7 +283,6 @@ class UsageController extends Controller
 			->where('storagedirid', '=', $row->storagedirid)
 			->orderBy('datetimerecorded', 'desc')
 			->limit(1)
-			->get()
 			->first();
 
 		if ($last)

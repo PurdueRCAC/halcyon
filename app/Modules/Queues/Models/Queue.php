@@ -1081,7 +1081,6 @@ class Queue extends Model
 		$count = Size::query()
 			->where('queueid', '=', (int)$row->queueid)
 			->orderBy('datetimestart', 'asc')
-			->get()
 			->first();
 
 		if (!$count)
@@ -1102,7 +1101,6 @@ class Queue extends Model
 			->where('datetimestart', '=', $row->datetimestart)
 			->where('datetimestop', '=', $row->datetimestop)
 			->orderBy('datetimestart', 'asc')
-			->get()
 			->first();
 
 		if ($exist)

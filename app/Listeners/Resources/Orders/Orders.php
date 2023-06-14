@@ -55,7 +55,6 @@ class Orders
 
 		$product = Product::query()
 			->where('resourceid', '=', $event->getAsset()->id)
-			->get()
 			->first();
 
 		if ($product)

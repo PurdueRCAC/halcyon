@@ -1,6 +1,7 @@
 <?php
 namespace App\Listeners\Users\Request;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Users\Events\UserDisplay;
 use App\Modules\Listeners\Models\Listener;
 
@@ -12,10 +13,10 @@ class Request
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  \Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(UserDisplay::class, self::class . '@handleUserDisplay');
 	}
@@ -26,7 +27,7 @@ class Request
 	 * @param   UserDisplay  $event
 	 * @return  void
 	 */
-	public function handleUserDisplay(UserDisplay $event)
+	public function handleUserDisplay(UserDisplay $event): void
 	{
 		if (app('isAdmin'))
 		{
@@ -37,7 +38,6 @@ class Request
 			->where('type', '=', 'listener')
 			->where('folder', '=', 'users')
 			->where('element', '=', 'Request')
-			->get()
 			->first();
 
 		if (auth()->user() && !in_array($listener->access, auth()->user()->getAuthorisedViewLevels()))

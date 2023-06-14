@@ -315,7 +315,6 @@ class Purchase extends Model
 			->where('datetimestop', '=', ($this->hasEnd() ? $this->datetimestop : null))
 			->where('groupid', '=', $this->sellergroupid)
 			->where('sellergroupid', '=', $this->groupid)
-			->get()
 			->first();
 	}
 

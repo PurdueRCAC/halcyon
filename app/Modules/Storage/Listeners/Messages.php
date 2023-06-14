@@ -76,7 +76,6 @@ class Messages
 			/*$type = MessageType::query()
 				->where('resourceid', '=', $row->resourceid)
 				->where('name', 'like', 'mkdir %')
-				->get()
 				->first();*/
 
 			$typeid = $row->storageResource->createtypeid;
@@ -93,7 +92,6 @@ class Messages
 			$type = MessageType::query()
 				->where('resourceid', '=', $row->resourceid)
 				->where('name', 'like', 'fileset %')
-				->get()
 				->first();
 
 			if ($type)
