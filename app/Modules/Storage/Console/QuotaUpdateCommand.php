@@ -59,7 +59,7 @@ class QuotaUpdateCommand extends Command
 	/**
 	 * Email group managers about expiring loans/purchases
 	 */
-	private function emailExpiring(bool $debug = false): int
+	private function emailExpiring(bool $debug = false): bool
 	{
 		// Find all active directories with allocations that will expire in X timeperiod
 		//
@@ -89,7 +89,7 @@ class QuotaUpdateCommand extends Command
 				$this->info('No expiring allocations found.');
 			}
 
-			return Command::SUCCESS;
+			return true;
 		}
 
 		$storage = array();
@@ -216,14 +216,14 @@ class QuotaUpdateCommand extends Command
 				Mail::to($user->email)->send($message);
 			}
 
-			return Command::SUCCESS;
+			return true;
 		}
 	}
 
 	/**
 	 * Update quotas for directories with expired loans/purchases
 	 */
-	private function updateExpired(bool $debug = false): int
+	private function updateExpired(bool $debug = false): bool
 	{
 		// Find all active directories with allocations that expired in the past X timeperiod
 		//
@@ -254,7 +254,7 @@ class QuotaUpdateCommand extends Command
 				$this->info('No expired allocations found.');
 			}
 
-			return Command::SUCCESS;
+			return true;
 		}
 
 		$storage = array();
@@ -379,6 +379,6 @@ class QuotaUpdateCommand extends Command
 			}
 		}
 
-		return Command::SUCCESS;
+		return true;
 	}
 }
