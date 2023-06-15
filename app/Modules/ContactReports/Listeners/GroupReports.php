@@ -2,6 +2,7 @@
 
 namespace App\Modules\ContactReports\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Groups\Events\GroupReading;
 use App\Modules\ContactReports\Models\Report;
 
@@ -13,22 +14,21 @@ class GroupReports
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(GroupReading::class, self::class . '@handleGroupReading');
 	}
 
 	/**
-	 * Plugin that loads module positions within content
+	 * Get a list of reports for this group
 	 *
-	 * @param   string   $context  The context of the content being passed to the plugin.
-	 * @param   object   $article  The article object.  Note $article->text is also available
+	 * @param   GroupReading $event
 	 * @return  void
 	 */
-	public function handleGroupReading(GroupReading $event)
+	public function handleGroupReading(GroupReading $event): void
 	{
 		$event->group->contactreports = Report::query()
 			->where('groupid', '=', $event->group->id)

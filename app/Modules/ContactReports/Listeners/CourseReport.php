@@ -2,6 +2,7 @@
 
 namespace App\Modules\ContactReports\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Courses\Events\AccountCreated;
 use App\Modules\ContactReports\Models\Report;
 use Carbon\Carbon;
@@ -14,10 +15,10 @@ class CourseReport
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(AccountCreated::class, self::class . '@handleAccountCreated');
 	}
@@ -25,10 +26,10 @@ class CourseReport
 	/**
 	 * Handle a Course account being created
 	 *
-	 * @param   object   $event  AccountCreated
+	 * @param   AccountCreated  $event
 	 * @return  void
 	 */
-	public function handleAccountCreated(AccountCreated $event)
+	public function handleAccountCreated(AccountCreated $event): void
 	{
 		// Does the course have a report?
 		if (!$event->account->report)

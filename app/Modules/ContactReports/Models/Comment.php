@@ -5,10 +5,6 @@ namespace App\Modules\ContactReports\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Pipeline\Pipeline;
-/*use League\CommonMark\CommonMarkConverter;
-use League\CommonMark\Extension\Table\TableExtension;
-use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
-use League\CommonMark\Extension\Autolink\AutolinkExtension;*/
 use App\Halcyon\Utility\PorterStemmer;
 use App\Modules\History\Traits\Historable;
 use App\Modules\ContactReports\Events\CommentCreated;

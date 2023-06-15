@@ -3,6 +3,7 @@
 namespace App\Modules\ContactReports\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -21,6 +22,7 @@ class FollowUsersController extends Controller
 	 * Display a listing of contact reports user followings
 	 *
 	 * @apiMethod GET
+	 * @apiAuthorization  true
 	 * @apiUri    /contactreports/followusers
 	 * @apiParameter {
 	 * 		"in":            "query",
@@ -153,6 +155,7 @@ class FollowUsersController extends Controller
 	 * Create a contact report user following
 	 *
 	 * @apiMethod POST
+	 * @apiAuthorization  true
 	 * @apiUri    /contactreports/followusers
 	 * @apiAuthorization  true
 	 * @apiParameter {
@@ -197,7 +200,7 @@ class FollowUsersController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response|JsonResource
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -231,6 +234,7 @@ class FollowUsersController extends Controller
 	 * Retrieve a contact report user following
 	 *
 	 * @apiMethod GET
+	 * @apiAuthorization  true
 	 * @apiUri    /contactreports/followusers/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -279,6 +283,7 @@ class FollowUsersController extends Controller
 	 * Update a contact report user following
 	 *
 	 * @apiMethod PUT
+	 * @apiAuthorization  true
 	 * @apiUri    /contactreports/followusers/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
@@ -335,7 +340,7 @@ class FollowUsersController extends Controller
 	 * }
 	 * @param   Request  $request
 	 * @param   int  $id
-	 * @return  Response|JsonResource
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -395,7 +400,7 @@ class FollowUsersController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

@@ -3,6 +3,7 @@
 namespace App\Modules\ContactReports\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -22,6 +23,7 @@ class FollowGroupsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /contactreports/followgroups
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "groupid",
@@ -202,7 +204,7 @@ class FollowGroupsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response|JsonResource
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -237,6 +239,7 @@ class FollowGroupsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /contactreports/followgroups/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -346,7 +349,7 @@ class FollowGroupsController extends Controller
 	 * }
 	 * @param   Request  $request
 	 * @param   int  $id
-	 * @return  Response|JsonResource
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function update(Request $request, $id)
 	{

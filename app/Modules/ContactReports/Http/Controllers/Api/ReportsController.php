@@ -3,7 +3,7 @@
 namespace App\Modules\ContactReports\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -28,6 +28,7 @@ class ReportsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /contactreports
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
@@ -49,12 +50,82 @@ class ReportsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
+	 * 		"name":          "group",
+	 * 		"description":   "Filter by group ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "start",
+	 * 		"description":   "Timestamp (YYYY-MM-DD or YYYY-MM-DD hh:mm:ss) for records on or after that date",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date",
+	 * 			"example":   "2021-01-30"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "stop",
+	 * 		"description":   "Timestamp (YYYY-MM-DD or YYYY-MM-DD hh:mm:ss) for records before that date",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date",
+	 * 			"example":   "2021-01-30"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "people",
+	 * 		"description":   "Filter by people associated with reports. Comma-separated list of usernames, emails, or user IDs",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"example":   "person1,person2,person3"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "resource",
+	 * 		"description":   "Filter by resources associated with reports. Comma-separated list of resource IDs",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"example":   "1,2,3"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "tag",
+	 * 		"description":   "Filter by tags associated with reports. Comma-separated list of tags",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"example":   "tag1,tag2,tag3"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
 	 * 			"default":   1
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "notice",
+	 * 		"description":   "Filter by notice value",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -289,11 +360,11 @@ class ReportsController extends Controller
 	 * 		"in":            "body",
 	 * 		"name":          "datetimecontact",
 	 * 		"description":   "Timestamp (YYYY-MM-DD or YYYY-MM-DD hh:mm:ss) of the contact",
-	 * 		"required":      false,
+	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "string",
-	 * 			"format":    "date-time",
-	 * 			"example":   "2021-01-30T08:30:00Z"
+	 * 			"format":    "date",
+	 * 			"example":   "2021-01-30"
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -308,8 +379,48 @@ class ReportsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
+	 * 		"name":          "datetimegroupid",
+	 * 		"description":   "Timestamp (YYYY-MM-DD or YYYY-MM-DD hh:mm:ss) of the contact",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"format":    "date",
+	 * 			"example":   "2021-01-30"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
 	 * 		"name":          "userid",
 	 * 		"description":   "ID of the user creating the entry",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "contactreporttypeid",
+	 * 		"description":   "Type ID for the entry",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "report",
+	 * 		"description":   "The report text",
+	 * 		"required":      true,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "notice",
+	 * 		"description":   "Notice state",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -396,7 +507,7 @@ class ReportsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response|ApiReportResource
+	 * @return  JsonResponse|ApiReportResource
 	 */
 	public function create(Request $request)
 	{
@@ -512,6 +623,7 @@ class ReportsController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /contactreports/preview
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "body",
@@ -543,6 +655,7 @@ class ReportsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /contactreports/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -673,6 +786,35 @@ class ReportsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "report",
+	 * 		"description":   "The report text",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "contactreporttypeid",
+	 * 		"description":   "Type ID for the entry",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "notice",
+	 * 		"description":   "Notice state",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"204": {
 	 * 			"description": "Successful entry modification",
@@ -754,7 +896,7 @@ class ReportsController extends Controller
 	 * }
 	 * @param   Request  $request
 	 * @param   int  $id
-	 * @return  Response|ApiReportResource
+	 * @return  JsonResponse|ApiReportResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -1008,7 +1150,7 @@ class ReportsController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

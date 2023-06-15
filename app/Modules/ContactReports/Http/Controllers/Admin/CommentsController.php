@@ -3,7 +3,8 @@
 namespace App\Modules\ContactReports\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Halcyon\Http\StatefulRequest;
@@ -17,7 +18,7 @@ class CommentsController extends Controller
 	 *
 	 * @param  int  $report
 	 * @param  StatefulRequest  $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index($report, StatefulRequest $request)
 	{
@@ -79,7 +80,7 @@ class CommentsController extends Controller
 	 * Show the form for creating a new report
 	 *
 	 * @param   int  $report
-	 * @return  Response
+	 * @return  View
 	 */
 	public function create($report)
 	{
@@ -104,7 +105,7 @@ class CommentsController extends Controller
 	 *
 	 * @param   int  $report
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  View
 	 */
 	public function edit($report, $id)
 	{
@@ -127,7 +128,7 @@ class CommentsController extends Controller
 	 * Store an entry
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -164,7 +165,7 @@ class CommentsController extends Controller
 	 * Remove the specified entry
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -201,7 +202,7 @@ class CommentsController extends Controller
 	 * Return to default page
 	 *
 	 * @param   int  $report
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel($report)
 	{

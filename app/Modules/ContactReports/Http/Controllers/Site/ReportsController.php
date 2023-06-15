@@ -3,7 +3,7 @@
 namespace App\Modules\ContactReports\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Modules\ContactReports\Events\ReportFrom;
@@ -20,7 +20,7 @@ class ReportsController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(Request $request)
 	{
@@ -168,7 +168,8 @@ class ReportsController extends Controller
 	 * Display a single entry
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @param  int  $id
+	 * @return View
 	 */
 	public function show(Request $request, $id)
 	{

@@ -3,6 +3,8 @@
 namespace App\Modules\ContactReports\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\ContactReports\Models\Type;
@@ -14,7 +16,7 @@ class TypesController extends Controller
 	 * Display a listing of the resource.
 	 *
 	 * @param   StatefulRequest  $request
-	 * @return  Response
+	 * @return  View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -72,7 +74,8 @@ class TypesController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 *
-	 * @return  Response
+	 * @param   Request  $request
+	 * @return  View
 	 */
 	public function create(Request $request)
 	{
@@ -92,8 +95,9 @@ class TypesController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
+	 * @param   Request  $request
 	 * @param   int   $id
-	 * @return  Response
+	 * @return  View
 	 */
 	public function edit(Request $request, $id)
 	{
@@ -113,7 +117,7 @@ class TypesController extends Controller
 	 * Store a newly created resource in storage.
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -161,7 +165,7 @@ class TypesController extends Controller
 	 * Remove the specified entry
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -194,7 +198,7 @@ class TypesController extends Controller
 	/**
 	 * Return to the main view
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{

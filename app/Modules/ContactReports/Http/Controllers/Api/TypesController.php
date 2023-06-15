@@ -21,6 +21,7 @@ class TypesController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /contactreports/types
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "tagresources",
@@ -116,6 +117,7 @@ class TypesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param  Request $request
 	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
@@ -270,7 +272,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response|JsonResource
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -308,6 +310,7 @@ class TypesController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /contactreports/types/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -450,7 +453,7 @@ class TypesController extends Controller
 	 * }
 	 * @param   Request  $request
 	 * @param   int  $id
-	 * @return  Response|JsonResource
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -528,7 +531,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

@@ -3,6 +3,7 @@
 namespace App\Modules\ContactReports\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -25,6 +26,7 @@ class CommentsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /contactreports/comments
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "contactreportid",
@@ -249,7 +251,7 @@ class CommentsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response|CommentResource
+	 * @return  JsonResponse|CommentResource
 	 */
 	public function create(Request $request)
 	{
@@ -302,6 +304,7 @@ class CommentsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /contactreports/comments/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -427,7 +430,7 @@ class CommentsController extends Controller
 	 * }
 	 * @param   Request  $request
 	 * @param   int  $id
-	 * @return  Response|CommentResource
+	 * @return  JsonResponse|CommentResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -500,7 +503,7 @@ class CommentsController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $comment
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

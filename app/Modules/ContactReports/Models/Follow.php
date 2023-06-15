@@ -4,6 +4,7 @@ namespace App\Modules\ContactReports\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 use App\Modules\History\Traits\Historable;
 use Carbon\Carbon;
 
@@ -115,10 +116,10 @@ class Follow extends Model
 	/**
 	 * Define a query scope
 	 *
-	 * @param  object $query
-	 * @return object
+	 * @param  Builder $query
+	 * @return Builder
 	 */
-	public function scopeWhereIsContactFollower($query)
+	public function scopeWhereIsContactFollower(Builder $query)
 	{
 		return $query->where('membertype', '=', 10);
 	}
