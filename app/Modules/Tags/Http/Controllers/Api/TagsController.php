@@ -433,7 +433,7 @@ class TagsController extends Controller
 		$data = $request->all();
 		$data['updated_by'] = auth()->user()->id;
 
-		$row = Type::findOrFail($id);
+		$row = Tag::findOrFail($id);
 		$row->update($data);
 
 		return new TagResource($row);

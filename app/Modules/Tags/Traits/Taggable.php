@@ -3,6 +3,7 @@
 namespace App\Modules\Tags\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use App\Modules\Tags\Models\Tag;
 use Carbon\Carbon;
 
@@ -40,7 +41,7 @@ trait Taggable
 	 * @param Builder $query
 	 * @param array|string $tags
 	 * @param string $type
-	 * @return object
+	 * @return Builder
 	 */
 	public function scopeWhereTag(Builder $query, $tags, $type = 'slug'): Builder
 	{
@@ -96,7 +97,7 @@ trait Taggable
 	/**
 	 * Get tags on object
 	 *
-	 * @return object
+	 * @return MorphToMany
 	 */
 	public function tags()
 	{
@@ -116,7 +117,7 @@ trait Taggable
 	/**
 	 * Get a list of all tags for a domain
 	 *
-	 * @return array|Collection
+	 * @return Builder
 	 */
 	public static function allTags()
 	{

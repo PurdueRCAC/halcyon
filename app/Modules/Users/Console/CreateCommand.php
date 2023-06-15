@@ -32,7 +32,7 @@ class CreateCommand extends Command
 	/**
 	 * Execute the console command.
 	 */
-	public function handle(): void
+	public function handle(): int
 	{
 		$username = $this->argument('username');
 		$name     = $this->option('name');
@@ -44,7 +44,7 @@ class CreateCommand extends Command
 		if ($user && $user->id)
 		{
 			$this->error(trans('users::users.error.username taken'));
-			return;
+			return Command::FAILURE;
 		}
 
 		$user = User::findByEmail($email);
@@ -52,7 +52,7 @@ class CreateCommand extends Command
 		if ($user && $user->id)
 		{
 			$this->error(trans('users::users.error.email taken'));
-			return;
+			return Command::FAILURE;
 		}
 
 		$user = new User;
@@ -72,5 +72,7 @@ class CreateCommand extends Command
 		}
 
 		$this->info(trans('users::users.error.user created'));
+
+		return Command::SUCCESS;
 	}
 }

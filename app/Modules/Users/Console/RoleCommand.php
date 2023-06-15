@@ -5,6 +5,7 @@ namespace App\Modules\Users\Console;
 use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 use App\Halcyon\Access\Role;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
@@ -32,7 +33,7 @@ class RoleCommand extends Command
 	/**
 	 * Execute the console command.
 	 */
-	public function handle(): void
+	public function handle(): int
 	{
 		$username   = $this->argument('username');
 		$listRole   = $this->option('list');
@@ -44,7 +45,7 @@ class RoleCommand extends Command
 		if (!$user || !$user->id)
 		{
 			$this->error(trans('users::users.error.user not found'));
-			return;
+			return Command::FAILURE;
 		}
 
 		$roles = $user->roles
@@ -73,7 +74,7 @@ class RoleCommand extends Command
 		if ($listRole)
 		{
 			$this->listRoles($allRoles, $user, $roles);
-			return;
+			return Command::SUCCESS;
 		}
 
 		if ($addRole)
@@ -119,15 +120,19 @@ class RoleCommand extends Command
 		else
 		{
 			$this->error(trans('users::users.error.role set failed', ['username' => $user->username]));
+
+			return Command::FAILURE;
 		}
+
+		return Command::SUCCESS;
 	}
 
 	/**
 	 * Output the list of roles as a tree
 	 *
-	 * @param array $allRoles
+	 * @param array|Collection $allRoles
 	 * @param User $user
-	 * @param array $roles
+	 * @param array<int,int> $roles
 	 * @return void
 	 */
 	private function listRoles($allRoles, $user, $roles): void

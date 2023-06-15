@@ -24,7 +24,7 @@ class Admin
 	 *
 	 * @return  Fluent
 	 */
-	public static function getActions()
+	public static function getActions(): Fluent
 	{
 		if (empty(self::$actions))
 		{
@@ -49,7 +49,7 @@ class Admin
 	 *
 	 * @return  array<int,string>  An array of Option elements.
 	 */
-	public static function getStateOptions()
+	public static function getStateOptions(): array
 	{
 		$options = array(
 			0 => trans('users::users.enabled'),
@@ -64,7 +64,7 @@ class Admin
 	 *
 	 * @return  array<int,string>  An array of Option elements.
 	 */
-	public static function getActiveOptions()
+	public static function getActiveOptions(): array
 	{
 		$options = array(
 			0 => trans('users::users.activated'),
@@ -79,7 +79,7 @@ class Admin
 	 *
 	 * @return  array<int,string>  An array of Option elements.
 	 */
-	public static function getApprovedOptions()
+	public static function getApprovedOptions(): array
 	{
 		$options = array(
 			0 => trans('users::users.unapproved'),
@@ -125,7 +125,7 @@ class Admin
 	 *
 	 * @return  array<string,string>
 	 */
-	public static function getRangeOptions()
+	public static function getRangeOptions(): array
 	{
 		$options = array(
 			'today'       => trans('users::users.range today'),

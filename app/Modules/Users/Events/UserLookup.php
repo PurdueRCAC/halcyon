@@ -1,6 +1,8 @@
 <?php
 namespace App\Modules\Users\Events;
 
+use App\Modules\Users\Models\User;
+
 class UserLookup
 {
 	/**
@@ -9,14 +11,14 @@ class UserLookup
 	public $criteria;
 
 	/**
-	 * @var object|array
+	 * @var array<int,User>
 	 */
 	public $results;
 
 	/**
 	 * Constructor
 	 *
-	 * @param  array<string,string>  $citeria
+	 * @param  array<string,string>  $criteria
 	 * @return void
 	 */
 	public function __construct(array $criteria)

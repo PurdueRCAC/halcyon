@@ -77,12 +77,12 @@ class TagsServiceProvider extends ServiceProvider
 
 		$this->publishes([
 			$sourcePath => $viewPath
-		],'views');
+		], 'views');
 
 		$this->loadViewsFrom(array_merge(array_map(function ($path)
 		{
 			return $path . '/modules/' . $this->name;
-		}, config('view.paths')), [$sourcePath]), $this->name);
+		}, config('view.paths', [])), [$sourcePath]), $this->name);
 	}
 
 	/**

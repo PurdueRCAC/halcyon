@@ -76,12 +76,12 @@ class CleanUpCommand extends Command
 
 			foreach ($users as $user)
 			{
-				if ($user->id == $first->id)
+				if ($first && $user->id == $first->id)
 				{
 					continue;
 				}
 
-				if ($user->username != $first->username)
+				if ($first && $user->username != $first->username)
 				{
 					$this->comment('Alternate username for user ID #' . $user->userid . ' (' . $first->username . ' / ' . $user->username . '). Skipping...');
 					continue;
@@ -110,7 +110,7 @@ class CleanUpCommand extends Command
 					$first->unixid = $user->unixid;
 				}
 
-				if ($first->trashed())
+				if ($first && $first->trashed())
 				{
 					$first->dateremoved = null;
 					//$first->restore();
@@ -119,7 +119,10 @@ class CleanUpCommand extends Command
 
 				if (!$debug)
 				{
-					$first->save();
+					if ($first)
+					{
+						$first->save();
+					}
 					$user->forceDelete();
 				}
 

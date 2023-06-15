@@ -28,7 +28,7 @@ class UserSync
 	 * @param  string|null  $rolename
 	 * @return void
 	 */
-	public function __construct(User $user, $authorized = false, $rolename = null)
+	public function __construct(User $user, bool $authorized = false, $rolename = null)
 	{
 		$this->user = $user;
 		$this->authorized = $authorized;

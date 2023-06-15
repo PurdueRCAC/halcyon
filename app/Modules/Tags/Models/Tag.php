@@ -3,6 +3,7 @@
 namespace App\Modules\Tags\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\History\Traits\Historable;
@@ -138,7 +139,7 @@ class Tag extends Model
 	/**
 	 * Normalize tag input
 	 *
-	 * @param   string  $tag
+	 * @param   string  $name
 	 * @return  string
 	 */
 	public function normalize($name): string
@@ -362,19 +363,19 @@ class Tag extends Model
 		// Check if the relationship already exists
 		$to = Tagged::findByScoped($scope, $scope_id, $this->id, $tagger);
 
-		if ($to->id)
+		if ($to && $to->id)
 		{
 			return true;
 		}
 
-		// Set some data
+		// Create a new relationship
+		$to = new Tagged;
 		$to->taggable_type = (string) $scope;
 		$to->taggable_id   = (int) $scope_id;
 		$to->tag_id        = (int) $this->id;
 		$to->strength      = (int) $strength;
 		$to->created_by    = $tagger ? $tagger : auth()->user()->id;
 
-		// Attempt to store the new record
 		if (!$to->save())
 		{
 			return false;
@@ -398,6 +399,13 @@ class Tag extends Model
 			return false;
 		}
 
+		$tag = self::find($tag_id);
+
+		if (!$tag)
+		{
+			return false;
+		}
+
 		// Get all the associations to this tag
 		// Loop through the associations and link them to a different tag
 		if (!Tagged::moveTo($this->id, $tag_id))
@@ -407,30 +415,19 @@ class Tag extends Model
 
 		// Get all the substitutions to this tag
 		// Loop through the records and link them to a different tag
-		if (!self::moveTo($this->id, $tag_id))
+		foreach ($this->aliases as $alias)
 		{
-			return false;
+			$alias->update(['parent_id' => $tag_id]);
 		}
 
 		// Make the current tag an alias for the new tag
-		$sub = new self;
-		$sub->update([
-			'name'      => $this->name,
-			'parent_id' => $tag_id
-		]);
+		$this->update(['parent_id' => $tag_id]);
 
 		// Update new tag's counts
-		$tag = self::find($tag_id);
 		$tag->update([
 			'tagged_count' => $tag->tagged()->count(),
 			'alias_count'  => $tag->aliases()->count()
 		]);
-
-		// Destroy the old tag
-		if (!$this->delete())
-		{
-			return false;
-		}
 
 		return true;
 	}
@@ -448,6 +445,13 @@ class Tag extends Model
 			return false;
 		}
 
+		$tag = self::find($tag_id);
+
+		if (!$tag)
+		{
+			return false;
+		}
+
 		// Get all the associations to this tag
 		// Loop through the associations and link them to a different tag
 		if (!Tagged::copyTo($this->id, $tag_id))
@@ -456,7 +460,6 @@ class Tag extends Model
 		}
 
 		// Update new tag's counts
-		$tag = self::find($tag_id);
 		$tag->update([
 			'tagged_count' => $tag->tagged()->count()
 		]);

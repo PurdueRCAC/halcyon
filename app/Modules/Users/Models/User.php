@@ -362,7 +362,7 @@ class User extends Model implements
 	/**
 	 * Gets an array of the authorised access levels for the user
 	 *
-	 * @return  object
+	 * @return  Carbon|null
 	 */
 	public function getCreatedAtAttribute()
 	{
@@ -392,7 +392,7 @@ class User extends Model implements
 	/**
 	 * Gets an array of the authorised access levels for the user
 	 *
-	 * @return  object
+	 * @return  Carbon|null
 	 */
 	public function getLastVisitAttribute()
 	{

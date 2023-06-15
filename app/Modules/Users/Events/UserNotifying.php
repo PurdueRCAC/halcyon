@@ -1,6 +1,7 @@
 <?php
 namespace App\Modules\Users\Events;
 
+use Illuminate\Support\Collection;
 use App\Modules\Users\Entities\Notification;
 use App\Modules\Users\Models\User;
 
@@ -12,7 +13,7 @@ class UserNotifying
 	public $user;
 
 	/**
-	 * @var array
+	 * @var Collection
 	 */
 	public $notifications;
 
@@ -34,7 +35,7 @@ class UserNotifying
 	 * @param Notification $item
 	 * @return void
 	 */
-	public function addNotification(Notification $item)
+	public function addNotification(Notification $item): void
 	{
 		$this->notifications->push($item);
 	}
