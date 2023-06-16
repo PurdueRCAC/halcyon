@@ -3,7 +3,7 @@
 namespace App\Modules\Issues\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Issues\Models\Issue;
@@ -14,8 +14,8 @@ class IssuesController extends Controller
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param   Request  $request
-	 * @return Response
+	 * @param  Request  $request
+	 * @return View
 	 */
 	public function index(Request $request)
 	{

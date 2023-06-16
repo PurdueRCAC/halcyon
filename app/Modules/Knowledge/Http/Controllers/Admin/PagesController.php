@@ -190,6 +190,7 @@ class PagesController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 * 
+	 * @param  Request $request
 	 * @return View
 	 */
 	public function create(Request $request)
@@ -221,7 +222,7 @@ class PagesController extends Controller
 	 * Show the form for creating a new resource.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function select(Request $request)
 	{
@@ -298,7 +299,7 @@ class PagesController extends Controller
 	 * Copy the specified entry to the edit form to make a new entry.
 	 * 
 	 * @param  int $id
-	 * @return Response
+	 * @return View
 	 */
 	public function copy($id)
 	{
@@ -480,7 +481,7 @@ class PagesController extends Controller
 			}
 		}
 
-		//return redirect(route('admin.knowledge.index'))->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created')));
+		return redirect(route('admin.knowledge.index'))->withSuccess(trans('global.messages.item ' . ($id ? 'updated' : 'created')));
 	}
 
 	/**

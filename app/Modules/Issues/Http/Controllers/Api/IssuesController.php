@@ -3,7 +3,7 @@
 namespace App\Modules\Issues\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +26,7 @@ class IssuesController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /issues
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
@@ -279,7 +280,7 @@ class IssuesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResponse|ApiIssueResource
 	 */
 	public function create(Request $request)
 	{
@@ -339,6 +340,7 @@ class IssuesController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /issues/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -378,7 +380,7 @@ class IssuesController extends Controller
 	 * 		}
 	 * }
 	 * @param  int  $id
-	 * @return Response
+	 * @return ApiIssueResource
 	 */
 	public function read($id)
 	{
@@ -466,7 +468,7 @@ class IssuesController extends Controller
 	 * }
 	 * @param   Request  $request
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse|ApiIssueResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -605,7 +607,7 @@ class IssuesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

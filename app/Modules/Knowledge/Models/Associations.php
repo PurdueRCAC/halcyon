@@ -3,9 +3,11 @@
 namespace App\Modules\Knowledge\Models;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Model for a page association mapping
@@ -126,9 +128,9 @@ class Associations extends Model
 	/**
 	 * Get published children
 	 *
-	 * @return  object
+	 * @return  Collection
 	 */
-	public function publishedChildren()
+	public function publishedChildren(): Collection
 	{
 		return $this->children()
 			->where('state', '=', self::STATE_PUBLISHED)
@@ -149,9 +151,9 @@ class Associations extends Model
 	/**
 	 * Get all descendant pages
 	 *
-	 * @return  object
+	 * @return  Builder
 	 */
-	public function descendants()
+	public function descendants(): Builder
 	{
 		return self::query()
 			->where('lft', '>', $this->lft)
@@ -164,7 +166,7 @@ class Associations extends Model
 	 *
 	 * @return  Associations|null
 	 */
-	public static function rootNode()
+	public static function rootNode(): ?Associations
 	{
 		return self::query()
 			->where('level', '=', 0)
@@ -180,7 +182,7 @@ class Associations extends Model
 	 * @param   string  $path
 	 * @return  Associations|null
 	 */
-	public static function findByPath(string $path)
+	public static function findByPath(string $path): ?Associations
 	{
 		$path = trim($path, '/');
 
@@ -397,7 +399,7 @@ class Associations extends Model
 	 * @param   string   $path      The path to the current nodes.
 	 * @return  int  1 + value of root rgt on success, false on failure
 	 */
-	public function rebuild(int $parentId, int $leftId = 0, int $level = 0, string $path = '')
+	public function rebuild(int $parentId, int $leftId = 0, int $level = 0, string $path = ''): int
 	{
 		$a = $this->getTable();
 		$p = (new Page)->getTable();
@@ -554,7 +556,7 @@ class Associations extends Model
 	 * @return  bool    Boolean true on success.
 	 * @throws \Exception
 	 */
-	public function move($delta, string $where = '')
+	public function move($delta, string $where = ''): bool
 	{
 		$query = self::query()
 			->where('parent_id', '=', $this->parent_id);
@@ -579,7 +581,7 @@ class Associations extends Model
 			$position = 'before';
 		}
 
-		$referenceId = $query->get()->first()->id;
+		$referenceId = $query->first()->id;
 
 		if ($referenceId)
 		{

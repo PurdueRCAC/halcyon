@@ -18,7 +18,7 @@ class RouteCollector
 	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe(Dispatcher $events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(CollectingRoutes::class, self::class . '@handleCollectingRoutes');
 	}
@@ -29,7 +29,7 @@ class RouteCollector
 	 * @param   CollectingRoutes $event
 	 * @return  void
 	 */
-	public function handleCollectingRoutes(CollectingRoutes $event)
+	public function handleCollectingRoutes(CollectingRoutes $event): void
 	{
 		$p = (new Page)->getTable();
 		$a = (new Associations)->getTable();

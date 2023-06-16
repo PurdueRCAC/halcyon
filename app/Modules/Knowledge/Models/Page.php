@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Config\Repository;
 use Illuminate\Pipeline\Pipeline;
@@ -346,7 +347,7 @@ class Page extends Model
 	 * @param   int     $parent_id
 	 * @return  Page|null
 	 */
-	public static function findByAlias(string $alias, int $parent_id=0)
+	public static function findByAlias(string $alias, int $parent_id=0): ?Page
 	{
 		return self::query()
 			->where('alias', '=', (string)$alias)
@@ -361,7 +362,7 @@ class Page extends Model
 	 * @param   string  $path
 	 * @return  Page|null
 	 */
-	public static function findByPath(string $path)
+	public static function findByPath(string $path): ?Page
 	{
 		return self::query()
 			->where('path', '=', (string)$path)
@@ -373,7 +374,7 @@ class Page extends Model
 	 * Method to get a list of nodes from a given node to its root.
 	 *
 	 * @param   int  $id  Primary key of the node for which to get the path.
-	 * @return  mixed    Boolean false on failure or array of node objects on success.
+	 * @return  false|Collection    Boolean false on failure or array of node objects on success.
 	 */
 	public static function stackById(int $id)
 	{
@@ -456,18 +457,16 @@ class Page extends Model
 	 * @param   array  $filters
 	 * @return  Collection
 	 */
-	public static function tree(array $filters = [])
+	public static function tree(array $filters = []): Collection
 	{
 		$p = (new self)->getTable();
 		$a = (new Associations)->getTable();
 
-		$results = self::query()
+		return self::query()
 			->join($a, $a . '.page_id', $p . '.id')
 			->select($p . '.title', $a . '.level', $a . '.lft', $a . '.rgt', $a . '.id', $a . '.path')
 			->orderBy('lft', 'asc')
 			->get();
-
-		return $results;
 	}
 
 	/**
@@ -475,7 +474,7 @@ class Page extends Model
 	 *
 	 * @return  Page|null
 	 */
-	public static function rootNode()
+	public static function rootNode(): ?Page
 	{
 		return self::query()
 			->where('main', '=', 1)
@@ -556,9 +555,9 @@ class Page extends Model
 	/**
 	 * Get child entries
 	 *
-	 * @return  object
+	 * @return  Builder
 	 */
-	public function children()
+	public function children(): Builder
 	{
 		$a = (new Associations)->getTable();
 		$p = $this->getTable();

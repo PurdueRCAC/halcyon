@@ -342,7 +342,7 @@ class SnippetsController extends Controller
 	 * Attach an entry to a parent entry
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function attach(Request $request)
 	{

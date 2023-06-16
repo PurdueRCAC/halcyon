@@ -11,7 +11,7 @@ class HighlightUnusedVariables
 	/**
 	 * Handle content
 	 *
-	 * @param  array $data
+	 * @param  array<string,string> $data
 	 * @param  Closure $next
 	 * @return array
 	 */

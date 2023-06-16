@@ -31,7 +31,7 @@ class ImportCommand extends Command
 	/**
 	 * Execute the console command.
 	 */
-	public function handle()
+	public function handle(): int
 	{
 		$debug = $this->option('debug') ? true : false;
 		$repo = $this->argument('repo');
@@ -49,7 +49,7 @@ class ImportCommand extends Command
 			{
 				$this->error('Failed to find guide with alias: ' . $slug);
 			}
-			return;
+			return Command::FAILURE;
 		}
 
 		// Clone the repo
@@ -70,7 +70,7 @@ class ImportCommand extends Command
 				{
 					$this->error('Failed to clone repository: ' . $repo);
 				}
-				return;
+				return Command::FAILURE;
 			}
 
 			if ($debug || $this->output->isVerbose())
@@ -130,6 +130,8 @@ class ImportCommand extends Command
 		{
 			$this->info('Done importing files.');
 		}
+
+		return Command::SUCCESS;
 	}
 
 	/**
@@ -138,7 +140,7 @@ class ImportCommand extends Command
 	 * @param string $document
 	 * @return string
 	 */
-	private function fixContent($document)
+	private function fixContent($document): string
 	{
 		//$document = preg_replace('/((http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?)/', '<a href="\1">\1</a>', $document);
 		//$document = str_replace(['<h5', '<h4', '<h3', '<h2', '<h1'], ['<h6', '<h5', '<h4', '<h3', '<h2'], $document);
@@ -161,14 +163,15 @@ class ImportCommand extends Command
 	/**
 	 * Import an RST page
 	 *
+	 * @param bool $debug
 	 * @param Parser $parser
 	 * @param object $files
 	 * @param object $file
 	 * @param Associations $parent
 	 * @param string $path
-	 * @return void
+	 * @return bool
 	 */
-	private function importPage($debug, $parser, $files, $file, $parent, $path)
+	private function importPage($debug, $parser, $files, $file, $parent, $path): bool
 	{
 		$contents = file_get_contents($file->getPathname());
 		$document = $parser->parse($contents);
@@ -196,7 +199,7 @@ class ImportCommand extends Command
 			{
 				$this->comment('No changes detected for page: ' . $parent->path . '/' . $row->alias);
 			}
-			return;
+			return false;
 		}
 
 		$row->content = $document;
@@ -212,7 +215,7 @@ class ImportCommand extends Command
 				{
 					$this->error('Failed to save page: ' . $title);
 				}
-				return;
+				return false;
 			}
 		}
 
@@ -283,5 +286,7 @@ class ImportCommand extends Command
 		}
 
 		//$assoc->rebuild($assoc->id, $assoc->lft, $assoc->level, $assoc->path);
+
+		return true;
 	}
 }

@@ -3,7 +3,7 @@
 namespace App\Modules\Issues\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -24,6 +24,7 @@ class ToDosController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /issues/todos
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
@@ -85,7 +86,7 @@ class ToDosController extends Controller
 	 * 			]
 	 * 		}
 	 * }
-	 * @param   Request  $request
+	 * @param  Request  $request
 	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
@@ -222,7 +223,7 @@ class ToDosController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  JsonResource
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -269,6 +270,7 @@ class ToDosController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /issues/todos/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -383,7 +385,7 @@ class ToDosController extends Controller
 	 * }
 	 * @param   Request  $request
 	 * @param   int  $id
-	 * @return  JsonResource
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -449,7 +451,7 @@ class ToDosController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{
