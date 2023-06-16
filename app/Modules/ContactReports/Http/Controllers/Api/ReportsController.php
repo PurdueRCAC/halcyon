@@ -58,7 +58,7 @@ class ReportsController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"in":            "body",
+	 * 		"in":            "query",
 	 * 		"name":          "start",
 	 * 		"description":   "Timestamp (YYYY-MM-DD or YYYY-MM-DD hh:mm:ss) for records on or after that date",
 	 * 		"required":      false,
@@ -69,7 +69,7 @@ class ReportsController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"in":            "body",
+	 * 		"in":            "query",
 	 * 		"name":          "stop",
 	 * 		"description":   "Timestamp (YYYY-MM-DD or YYYY-MM-DD hh:mm:ss) for records before that date",
 	 * 		"required":      false,
@@ -80,7 +80,7 @@ class ReportsController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"in":            "body",
+	 * 		"in":            "query",
 	 * 		"name":          "people",
 	 * 		"description":   "Filter by people associated with reports. Comma-separated list of usernames, emails, or user IDs",
 	 * 		"required":      false,
@@ -90,7 +90,7 @@ class ReportsController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"in":            "body",
+	 * 		"in":            "query",
 	 * 		"name":          "resource",
 	 * 		"description":   "Filter by resources associated with reports. Comma-separated list of resource IDs",
 	 * 		"required":      false,
@@ -100,7 +100,7 @@ class ReportsController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"in":            "body",
+	 * 		"in":            "query",
 	 * 		"name":          "tag",
 	 * 		"description":   "Filter by tags associated with reports. Comma-separated list of tags",
 	 * 		"required":      false,
