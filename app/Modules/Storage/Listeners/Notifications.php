@@ -2,6 +2,7 @@
 
 namespace App\Modules\Storage\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Storage\Models\Notification;
 use App\Modules\Storage\Events\DirectoryCreated;
 
@@ -13,10 +14,10 @@ class Notifications
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  \Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(DirectoryCreated::class, self::class . '@handleDirectoryCreated');
 	}
@@ -27,7 +28,7 @@ class Notifications
 	 * @param   DirectoryCreated  $event
 	 * @return  void
 	 */
-	public function handleDirectoryCreated(DirectoryCreated $event)
+	public function handleDirectoryCreated(DirectoryCreated $event): void
 	{
 		$row = $event->directory;
 

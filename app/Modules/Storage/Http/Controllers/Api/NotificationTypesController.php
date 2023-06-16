@@ -79,6 +79,7 @@ class NotificationTypesController extends Controller
 	 * 			]
 	 * 		}
 	 * }
+	 * @param  Request $request
 	 * @return ResourceCollection
 	 */
 	public function index(Request $request)

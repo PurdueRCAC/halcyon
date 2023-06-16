@@ -79,8 +79,6 @@ class UsageController extends Controller
 
 		foreach ($rows as $row)
 		{
-			$lastinterval = 0;
-
 			if ($row->lastinterval == 0)
 			{
 				$data = Usage::query()
@@ -95,14 +93,31 @@ class UsageController extends Controller
 				{
 					$lastinterval = strtotime($data[0]->datetimerecorded) - strtotime($data[1]->datetimerecorded);
 				}
-			}
-			else
-			{
-				$lastinterval = $row->lastinterval;
+
+				$row->lastinterval = $lastinterval;
 			}
 
-			$row->lastinterval = $lastinterval;
-			//$row->api = route('api.storage.usage.read', ['id' => $row->id]);
+			// Clean out old records
+			$data = Usage::query()
+				->select('id', 'storagedirid')
+				->where('storagedirid', '=', $row->storagedirid)
+				->orderBy('datetimerecorded', 'desc')
+				->limit(2)
+				->get();
+
+			if (count($data) == 2)
+			{
+				$oldest = 0;
+				foreach ($data as $datum)
+				{
+					$oldest = $datum->id;
+				}
+
+				Usage::query()
+					->where('storagedirid', '=', $row->storagedirid)
+					->where('id', '<', $oldest)
+					->delete();
+			}
 
 			// [!] Legacy compatibility
 			if (request()->segment(1) == 'ws')
@@ -293,6 +308,28 @@ class UsageController extends Controller
 		$row->datetimerecorded = Carbon::now()->toDateTimeString();
 
 		$row->save();
+
+		// Clean out old records
+		$data = Usage::query()
+			->select('id', 'storagedirid')
+			->where('storagedirid', '=', $row->storagedirid)
+			->orderBy('datetimerecorded', 'desc')
+			->limit(2)
+			->get();
+
+		if (count($data) == 2)
+		{
+			$oldest = 0;
+			foreach ($data as $datum)
+			{
+				$oldest = $datum->id;
+			}
+
+			Usage::query()
+				->where('storagedirid', '=', $row->storagedirid)
+				->where('id', '<', $oldest)
+				->delete();
+		}
 
 		return new UsageResource($row);
 	}

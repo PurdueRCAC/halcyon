@@ -1,6 +1,7 @@
 <?php
 namespace App\Modules\Storage\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Groups\Events\GroupMemberCreated;
 use App\Modules\Groups\Events\GroupMemberDeleted;
 use App\Modules\Storage\Models\Directory;
@@ -14,10 +15,10 @@ class GroupMembers
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  \Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(GroupMemberCreated::class, self::class . '@handleGroupMemberCreated');
 		$events->listen(GroupMemberDeleted::class, self::class . '@handleGroupMemberDeleted');
@@ -29,7 +30,7 @@ class GroupMembers
 	 * @param   GroupMemberCreated  $event
 	 * @return  void
 	 */
-	public function handleGroupMemberCreated(GroupMemberCreated $event)
+	public function handleGroupMemberCreated(GroupMemberCreated $event): void
 	{
 		// Only perform the following for owners
 		if (!$event->member->isManager())
@@ -82,7 +83,7 @@ class GroupMembers
 	 * @param   GroupMemberDeleted  $event
 	 * @return  void
 	 */
-	public function handleGroupMemberDeleted(GroupMemberDeleted $event)
+	public function handleGroupMemberDeleted(GroupMemberDeleted $event): void
 	{
 		$dirs = Directory::query()
 			->where('groupid', '=', $event->member->groupid)

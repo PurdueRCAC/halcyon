@@ -2,6 +2,7 @@
 
 namespace App\Modules\Storage\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Storage\Models\Directory;
 use App\Modules\Storage\Models\Notification;
@@ -16,10 +17,10 @@ class UserStorage
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  \Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(UserBeforeDisplay::class, self::class . '@handleUserBeforeDisplay');
 	}
@@ -30,7 +31,7 @@ class UserStorage
 	 * @param   UserBeforeDisplay  $event
 	 * @return  void
 	 */
-	public function handleUserBeforeDisplay(UserBeforeDisplay $event)
+	public function handleUserBeforeDisplay(UserBeforeDisplay $event): void
 	{
 		$user = $event->getUser();
 		$storagedirs = collect([]);

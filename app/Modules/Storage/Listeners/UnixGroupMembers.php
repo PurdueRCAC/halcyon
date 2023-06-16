@@ -1,6 +1,7 @@
 <?php
 namespace App\Modules\Storage\Listeners;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Groups\Events\UnixGroupMemberCreated;
 use App\Modules\Groups\Events\UnixGroupMemberDeleted;
 use App\Modules\Storage\Models\Directory;
@@ -14,10 +15,10 @@ class UnixGroupMembers
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  \Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(UnixGroupMemberCreated::class, self::class . '@handleUnixGroupMemberCreated');
 		$events->listen(UnixGroupMemberDeleted::class, self::class . '@handleUnixGroupMemberDeleted');
@@ -31,7 +32,7 @@ class UnixGroupMembers
 	 * @param   UnixGroupMemberCreated  $event
 	 * @return  void
 	 */
-	public function handleUnixGroupMemberCreated(UnixGroupMemberCreated $event)
+	public function handleUnixGroupMemberCreated(UnixGroupMemberCreated $event): void
 	{
 		// Check to see if we need to create storage dirs for this user
 		$dirs = Directory::query()
@@ -125,7 +126,7 @@ class UnixGroupMembers
 	 * @param   UnixGroupMemberDeleted  $event
 	 * @return  void
 	 */
-	public function handleUnixGroupMemberDeleted(UnixGroupMemberDeleted $event)
+	public function handleUnixGroupMemberDeleted(UnixGroupMemberDeleted $event): void
 	{
 		$dirs = Directory::query()
 			->where('unixgroupid', '=', $event->member->unixgroupid)

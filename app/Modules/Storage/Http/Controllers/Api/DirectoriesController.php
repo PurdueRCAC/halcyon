@@ -747,7 +747,8 @@ class DirectoriesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @return  DirectoryResource
+	 * @param   int  $id
+	 * @return  JsonResponse|DirectoryResource
 	 */
 	public function read($id)
 	{
