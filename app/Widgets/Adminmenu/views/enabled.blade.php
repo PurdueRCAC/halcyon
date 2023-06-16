@@ -19,7 +19,6 @@ $menu->getParent();
 //
 $chm = $user->can('manage messages');
 $cam = $user->can('manage cache');
-$cst = $user->can('manage cron');
 
 $menu->addChild(new Node(
 	trans('widget.adminmenu::adminmenu.system'),
@@ -37,16 +36,6 @@ if ($chm || $cam || $cst)
 			route('admin.messages.index'),
 			'class:maintenance',
 			($active == 'messages')
-		));
-	}
-
-	if ($cst && Module::isEnabled('cron'))
-	{
-		$menu->addChild(new Node(
-			trans('widget.adminmenu::adminmenu.scheduled tasks'),
-			route('admin.cron.index'),
-			'class:scheduled',
-			($active == 'cron')
 		));
 	}
 }
@@ -305,7 +294,7 @@ $pm = $user->can('manage listeners');
 if ($mm || $mw || $pm || count($modules['extensions']))
 {
 	$skip = array(
-		'core', 'cron', 'users', 'system', 'history',
+		'core', 'users', 'system', 'history',
 		'groups', 'messages', 'orders',
 		'resources', 'queues', 'storage',
 		'contactreports', 'knowledge', 'news'
