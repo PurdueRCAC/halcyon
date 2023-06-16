@@ -29,6 +29,7 @@ class GroupsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /groups
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "owneruserid",
@@ -528,6 +529,7 @@ class GroupsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /groups/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

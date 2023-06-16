@@ -24,6 +24,7 @@ class GroupDepartmentsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /groups/{group}/departments
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "group",
@@ -208,6 +209,7 @@ class GroupDepartmentsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /groups/{group}/departments/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

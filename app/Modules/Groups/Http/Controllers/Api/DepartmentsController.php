@@ -22,6 +22,7 @@ class DepartmentsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /groups/departments
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "parentid",
@@ -233,6 +234,7 @@ class DepartmentsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /groups/departments/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

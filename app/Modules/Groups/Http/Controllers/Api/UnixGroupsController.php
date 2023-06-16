@@ -25,6 +25,7 @@ class UnixGroupsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /unixgroups
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
@@ -382,6 +383,7 @@ class UnixGroupsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /unixgroups/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

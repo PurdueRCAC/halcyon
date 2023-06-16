@@ -24,6 +24,7 @@ class GroupFieldsOfScienceController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /groups/{group}/fieldsofscience
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "group",
@@ -209,6 +210,7 @@ class GroupFieldsOfScienceController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /groups/{group}/fieldsofscience/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

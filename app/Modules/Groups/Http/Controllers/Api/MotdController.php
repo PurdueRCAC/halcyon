@@ -23,6 +23,7 @@ class MotdController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /groups/motd
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "limit",
@@ -239,6 +240,7 @@ class MotdController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /groups/motd/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

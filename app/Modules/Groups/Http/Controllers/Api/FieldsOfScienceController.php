@@ -22,6 +22,7 @@ class FieldsOfScienceController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /groups/fieldsofscience
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "parentid",
@@ -233,6 +234,7 @@ class FieldsOfScienceController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /groups/fieldsofscience/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
