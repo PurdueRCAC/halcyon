@@ -101,7 +101,7 @@ class WidgetManager
 	 * Get by position
 	 *
 	 * @param   string  $position  The position of the widgets
-	 * @return  array   An array of widget objects
+	 * @return  string  An array of widget objects
 	 */
 	public function byPosition($position)
 	{
@@ -136,7 +136,7 @@ class WidgetManager
 	 *
 	 * @param   string  $name   The name of the widget
 	 * @param   string  $title  The title of the widget, optional
-	 * @return  object  The Module object
+	 * @return  string
 	 */
 	public function byName($name, $title = null)
 	{
@@ -176,7 +176,7 @@ class WidgetManager
 	 * Get by name (real, eg 'Breadcrumbs' or folder, eg 'mod_breadcrumbs')
 	 *
 	 * @param   object  $widget
-	 * @return  object  The Widget object
+	 * @return  BaseWidget|false
 	 */
 	protected function instantiateWidget($widget)
 	{
@@ -244,7 +244,7 @@ class WidgetManager
 	 * @param  string $widget
 	 * @return string
 	 */
-	public function getAssetPath($widget)
+	public function getAssetPath($widget): string
 	{
 		return public_path($this->app['config']->get('module.widgets.path.assets', 'widgets') . '/' . $widget);
 	}
@@ -252,9 +252,9 @@ class WidgetManager
 	/**
 	 * Load published widgets.
 	 *
-	 * @return  object  Collection
+	 * @return  Collection
 	 */
-	public function all()
+	public function all(): Collection
 	{
 		static $clean;
 
@@ -362,9 +362,9 @@ class WidgetManager
 	 * @param   string  $name
 	 * @param   int $client
 	 * @param   int $state
-	 * @return  object  Collection
+	 * @return  Collection
 	 */
-	public function find($name = null, $client = null, $state = null)
+	public function find($name = null, $client = null, $state = null): Collection
 	{
 		$query = Widget::query();
 

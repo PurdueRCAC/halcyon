@@ -95,7 +95,7 @@ class Admin
 	 *
 	 * @return  Collection
 	 */
-	public static function getAccessRoles()
+	public static function getAccessRoles(): Collection
 	{
 		$ug = new Role;
 

@@ -4,9 +4,9 @@ namespace App\Modules\History\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use App\Modules\History\Models\History;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Modules\History\Models\History;
 
 /**
  * Change History
@@ -20,6 +20,7 @@ class HistoryController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /history
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "action",
@@ -103,7 +104,7 @@ class HistoryController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -161,6 +162,7 @@ class HistoryController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /history/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

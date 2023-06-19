@@ -3,10 +3,11 @@
 namespace App\Modules\History\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use App\Modules\History\Models\Log;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Modules\History\Models\Log;
 
 /**
  * Logs
@@ -20,6 +21,7 @@ class LogsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /logs
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "action",
@@ -103,7 +105,7 @@ class LogsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -216,6 +218,7 @@ class LogsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /logs/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -258,7 +261,7 @@ class LogsController extends Controller
 	 * 		}
 	 * }
 	 * @param  int  $id
-	 * @return Response
+	 * @return JsonResource
 	 */
 	public function read($id)
 	{

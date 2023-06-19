@@ -4,6 +4,7 @@ namespace App\Modules\Widgets\Helpers;
 
 use App\Modules\Widgets\Models\Widget;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 /**
  * Widgets helper.
@@ -14,9 +15,9 @@ abstract class Admin
 	 * Get a list of postions
 	 *
 	 * @param   int  $clientId
-	 * @return  array    An array of option elements.
+	 * @return  Collection  An array of option elements.
 	 */
-	public static function getPositions($clientId)
+	public static function getPositions($clientId): Collection
 	{
 		$positions = Widget::query()
 			->select(DB::raw('DISTINCT(position)'))
@@ -31,9 +32,9 @@ abstract class Admin
 	 * Get a list of the unique widgets installed in the client application.
 	 *
 	 * @param   int  $clientId  The client id.
-	 * @return  array
+	 * @return  Collection
 	 */
-	public static function getWidgets($clientId)
+	public static function getWidgets($clientId): Collection
 	{
 		$m = (new Widget)->getTable();
 
@@ -70,7 +71,7 @@ abstract class Admin
 	 * Get a list of the assignment options for widgets to menus.
 	 *
 	 * @param   int  $clientId  The client id.
-	 * @return  array
+	 * @return  array<string,string>
 	 */
 	public static function getAssignmentOptions($clientId): array
 	{
@@ -80,7 +81,7 @@ abstract class Admin
 
 		if ($clientId == 0)
 		{
-			$options['1'] = trans('widgets::widgets.option.include');
+			$options['1']  = trans('widgets::widgets.option.include');
 			$options['-1'] = trans('widgets::widgets.option.exclude');
 		}
 
