@@ -535,6 +535,11 @@ $i = 0;
 							endif;
 							?>
 							<td class="col-queue text-nowrap text-center">
+							@if (!in_array($queue->resource->access, $member->user->getAuthorisedViewLevels()))
+								<span class="fa fa-exclamation-triangle text-warning tip" title="{{ trans('queues::queues.user does not have access') }}">
+									<span class="sr-only">{{ trans('queues::queues.user does not have access') }}</span>
+								</span>
+							@else
 								<input type="checkbox"
 									class="membership-toggle queue-toggle"
 									name="queue[{{ $i }}][{{ $queue->id }}]"{!! $checked !!}{!! $disable !!}
@@ -544,6 +549,7 @@ $i = 0;
 									data-api-create="{{ route('api.queues.users.create') }}"
 									data-api="{{ $checked && !$disable ? route('api.queues.users.delete', ['id' => $m]) : route('api.queues.users.create') }}"
 									value="1" />
+							@endif
 							</td>
 							<?php
 						endforeach;
@@ -574,11 +580,6 @@ $i = 0;
 								$disable = ' disabled="disabled"';
 							endif;
 							?>
-							@if ($queue->resource->access && !in_array($queue->resource->access, $member->user->getAuthorisedViewLevels()))
-								<span class="fa fa-exclamation-triangle text-warning tip" title="{{ trans('queues::queues.user does not have access') }}">
-									<span class="sr-only">{{ trans('queues::queues.user does not have access') }}</span>
-								</span>
-							@else
 							<td class="col-unixgroup text-nowrap text-center">
 								<input type="checkbox"
 									class="membership-toggle unixgroup-toggle"
@@ -591,7 +592,6 @@ $i = 0;
 									data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m]) : route('api.unixgroups.members.create') }}"
 									value="1" />
 							</td>
-							@endif
 							<?php
 						endforeach;
 						$csv_data[] = $csv;
