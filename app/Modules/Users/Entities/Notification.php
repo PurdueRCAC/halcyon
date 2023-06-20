@@ -14,14 +14,14 @@ class Notification
 	/**
 	 * The notification body
 	 *
-	 * @var  string
+	 * @var string
 	 */
 	public $content;
 
 	/**
 	 * The notificaiton level
 	 *
-	 * @var  string
+	 * @var string
 	 */
 	public $level;
 
@@ -33,7 +33,7 @@ class Notification
 	 * @param   string  $level
 	 * @return  void
 	 */
-	public function __construct($title, $content, $level = 'normal')
+	public function __construct(string $title, string $content, string $level = 'normal')
 	{
 		$this->title = $title;
 		$this->content = $content;
@@ -41,9 +41,9 @@ class Notification
 	}
 
 	/**
-	 * Get json contents from the cache, setting as needed.
+	 * Return data as an array
 	 *
-	 * @return array
+	 * @return array<string,string>
 	 */
 	public function toArray(): array
 	{
@@ -55,12 +55,15 @@ class Notification
 	}
 
 	/**
-	 * Handle call __toString.
+	 * Return data as a string
 	 *
 	 * @return string
 	 */
-	public function __toString()
+	public function __toString(): string
 	{
-		return json_encode($this->toArray());
+		$str = json_encode($this->toArray());
+		$str = $str ?: '{"title":"","content":"","level":"normal"}';
+
+		return $str;
 	}
 }

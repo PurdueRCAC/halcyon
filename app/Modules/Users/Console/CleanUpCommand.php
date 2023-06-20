@@ -27,7 +27,7 @@ class CleanUpCommand extends Command
 	/**
 	 * Execute the console command.
 	 */
-	public function handle()
+	public function handle(): void
 	{
 		$debug = $this->option('debug') ? true : false;
 
@@ -52,14 +52,14 @@ class CleanUpCommand extends Command
 
 		if (!count($subitems))
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->info('No users found');
 			}
 			return;
 		}
 
-		if ($debug)
+		if ($debug || $this->output->isVerbose())
 		{
 			$this->info('Found ' . count($subitems) . ' users with multiple usernames');
 		}
@@ -72,18 +72,26 @@ class CleanUpCommand extends Command
 				->orderBy('userid', 'asc')
 				->get();
 
+			if (count($users) <= 1)
+			{
+				continue;
+			}
+
 			$first = $users->first();
 
 			foreach ($users as $user)
 			{
-				if ($first && $user->id == $first->id)
+				if ($user->id == $first->id)
 				{
 					continue;
 				}
 
-				if ($first && $user->username != $first->username)
+				if ($user->username != $first->username)
 				{
-					$this->comment('Alternate username for user ID #' . $user->userid . ' (' . $first->username . ' / ' . $user->username . '). Skipping...');
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->comment('Alternate username for user ID #' . $user->userid . ' (' . $first->username . ' / ' . $user->username . '). Skipping...');
+					}
 					continue;
 				}
 
@@ -93,7 +101,10 @@ class CleanUpCommand extends Command
 					{
 						$user->forceDelete();
 					}
-					$this->line('<fg=red>Removed trashed duplicate (' . $user->username . ', ' . $user->userid . ') #' . $user->id . '</>');
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->line('<fg=red>Removed trashed duplicate (' . $user->username . ', ' . $user->userid . ') #' . $user->id . '</>');
+					}
 					continue;
 				}
 
@@ -110,23 +121,27 @@ class CleanUpCommand extends Command
 					$first->unixid = $user->unixid;
 				}
 
-				if ($first && $first->trashed())
+				if ($first->trashed())
 				{
 					$first->dateremoved = null;
-					//$first->restore();
-					$this->info('Restoring original (' . $user->username . ', ' . $user->userid . ') #' . $user->id);
+
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->info('Restoring original (' . $user->username . ', ' . $user->userid . ') #' . $user->id);
+					}
 				}
 
 				if (!$debug)
 				{
-					if ($first)
-					{
-						$first->save();
-					}
+					$first->save();
+
 					$user->forceDelete();
 				}
 
-				$this->line('<fg=red>Removed duplicate (' . $user->username . ', ' . $user->userid . ') #' . $user->id . '</>');
+				if ($debug || $this->output->isVerbose())
+				{
+					$this->line('<fg=red>Removed duplicate (' . $user->username . ', ' . $user->userid . ') #' . $user->id . '</>');
+				}
 			}
 		}
 	}

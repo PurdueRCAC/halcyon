@@ -12,7 +12,7 @@ class Select
 	/**
 	 * Default values for options. Organized by option group.
 	 *
-	 * @var  array
+	 * @var  array<string,array>
 	 */
 	static protected $optionDefaults = array(
 		'option' => array(
@@ -39,7 +39,7 @@ class Select
 	 * @param   string  $id        The id for the field
 	 * @return  string  HTML for the radio list
 	 */
-	public static function booleanlist($name, $attribs = null, $selected = null, $yes = 'globa.yes', $no = 'global.no', $id = false)
+	public static function booleanlist($name, $attribs = null, $selected = null, $yes = 'globa.yes', $no = 'global.no', $id = false): string
 	{
 		$arr = array(
 			self::option('0', trans($no)),
@@ -71,7 +71,7 @@ class Select
 	 * @param   bool  $translate  True to translate
 	 * @return  string   HTML for the select list.
 	 */
-	public static function genericlist($data, $name, $attribs = null, $optKey = 'value', $optText = 'text', $selected = null, $idtag = false, $translate = false)
+	public static function genericlist($data, $name, $attribs = null, $optKey = 'value', $optText = 'text', $selected = null, $idtag = false, $translate = false): string
 	{
 		// Set default options
 		$options = array('id' => false);
@@ -146,7 +146,7 @@ class Select
 	 * @return  string  HTML for the select list
 	 * @throws  Exception If a group has unprocessable contents.
 	 */
-	public static function groupedlist($data, $name, $options = array())
+	public static function groupedlist($data, $name, $options = array()): string
 	{
 		// Set default options and overwrite with anything passed in
 		$options = array_merge(
@@ -268,7 +268,7 @@ class Select
 	 * @param   string   $format    The printf format to be applied to the number
 	 * @return  string   HTML for the select list
 	 */
-	public static function integerlist($start, $end, $inc, $name, $attribs = null, $selected = null, $format = '')
+	public static function integerlist($start, $end, $inc, $name, $attribs = null, $selected = null, $format = ''): string
 	{
 		// Set default options
 		$options = array(
@@ -313,10 +313,10 @@ class Select
 	 * @param   string  $text     The text for the option
 	 * @param   string  $optKey   The returned object property name for the value
 	 * @param   string  $optText  The returned object property name for the text
-	 * @return  object
+	 * @return  stdClass
 	 * @deprecated  Use self::groupedList()
 	 */
-	public static function optgroup($text, $optKey = 'value', $optText = 'text')
+	public static function optgroup($text, $optKey = 'value', $optText = 'text'): stdClass
 	{
 		// Set initial state
 		static $state = 'open';
@@ -367,9 +367,9 @@ class Select
 	 * @param   string   $optText  The property that will hold the the displayed text. This
 	 *                             parameter is ignored if an options array is passed.
 	 * @param   bool  $disable  Not used.
-	 * @return  object
+	 * @return  stdClass
 	 */
-	public static function option($value, $text = '', $optKey = 'value', $optText = 'text', $disable = false)
+	public static function option($value, $text = '', $optKey = 'value', $optText = 'text', $disable = false): stdClass
 	{
 		$options = array(
 			'attr'           => null,
@@ -464,7 +464,7 @@ class Select
 	 * @param   bool  $translate  Translate the option values.
 	 * @return  string   HTML for the select list
 	 */
-	public static function options($arr, $optKey = 'value', $optText = 'text', $selected = null, $translate = false)
+	public static function options($arr, $optKey = 'value', $optText = 'text', $selected = null, $translate = false): string
 	{
 		$options = array_merge(
 			self::$optionDefaults['option'],
@@ -655,7 +655,7 @@ class Select
 	 * @param   bool  $translate  True if options will be translated
 	 * @return  string   HTML for the select list
 	 */
-	public static function radiolist($data, $name, $attribs = null, $optKey = 'value', $optText = 'text', $selected = null, $idtag = false, $translate = false)
+	public static function radiolist($data, $name, $attribs = null, $optKey = 'value', $optText = 'text', $selected = null, $idtag = false, $translate = false): string
 	{
 		reset($data);
 
@@ -707,7 +707,7 @@ class Select
 	 * @param   string  $text
 	 * @return  string
 	 */
-	protected static function escape($str)
+	protected static function escape($str): string
 	{
 		return htmlspecialchars($str, ENT_COMPAT, 'UTF-8');
 	}
@@ -723,7 +723,7 @@ class Select
 	 * @param   string   $chop      The length of the truncated headline
 	 * @return  string   Html for the select list
 	 */
-	public static function ordering($name, $query, $attribs = null, $selected = null, $neworder = null, $chop = null)
+	public static function ordering($name, $query, $attribs = null, $selected = null, $neworder = null, $chop = null): string
 	{
 		if (empty($attribs))
 		{
@@ -790,7 +790,7 @@ class Select
 	 * @param   bool  $keepOuterKey  True if final key should be kept.
 	 * @return  string   The string mapped from the given array
 	 */
-	public static function toString($array = null, $inner_glue = '=', $outer_glue = ' ', $keepOuterKey = false)
+	public static function toString($array = null, $inner_glue = '=', $outer_glue = ' ', $keepOuterKey = false): string
 	{
 		$output = array();
 

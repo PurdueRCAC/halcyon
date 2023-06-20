@@ -29,12 +29,12 @@ class LetterAvatar
 	private $size;
 
 	/**
-	 * @var string
+	 * @var array
 	 */
 	private $backgroundColor;
 
 	/**
-	 * @var string
+	 * @var array
 	 */
 	private $foregroundColor;
 
@@ -101,13 +101,14 @@ class LetterAvatar
 	/**
 	 * Convert hex to RGB
 	 * 
-	 * @param string $kex
+	 * @param string $hex
 	 * @return array<string,string>
 	 */
 	private function hexToRgb($hex): array
 	{
-		$hex      = str_replace('#', '', $hex);
-		$length   = strlen($hex);
+		$hex    = str_replace('#', '', $hex);
+		$length = strlen($hex);
+
 		$rgb = array();
 		$rgb['r'] = hexdec($length == 6 ? substr($hex, 0, 2) : ($length == 3 ? str_repeat(substr($hex, 0, 1), 2) : 0));
 		$rgb['g'] = hexdec($length == 6 ? substr($hex, 2, 2) : ($length == 3 ? str_repeat(substr($hex, 1, 1), 2) : 0));
@@ -120,6 +121,7 @@ class LetterAvatar
 	 * Convert a string to a color
 	 * 
 	 * @param string $string
+	 * @param float|int $adjustPercent
 	 * @return array<string,string>
 	 */
 	private function stringToColor(string $string, $adjustPercent = 0.8): array
@@ -151,7 +153,8 @@ class LetterAvatar
 	/**
 	 * Generate the image
 	 *
-	 * @return  void
+	 * @return void
+	 * @throws Exception
 	 */
 	private function generate(): void
 	{
@@ -164,6 +167,11 @@ class LetterAvatar
 		// Prepare the image
 		$image = imagecreatetruecolor($pixelRatio * 5, $pixelRatio * 5);
 
+		if (!$image)
+		{
+			throw new Exception('Failed to create initial image object');
+		}
+
 		// Prepage the color
 		$backgroundColor = imagecolorallocate(
 			$image,
@@ -171,6 +179,12 @@ class LetterAvatar
 			$this->backgroundColor['g'],
 			$this->backgroundColor['b']
 		);
+
+		if ($backgroundColor === false)
+		{
+			throw new Exception('Failed to allocate color for background');
+		}
+
 		imagefilledrectangle($image, 0, 0, $this->size, $this->size, $backgroundColor);
 
 		// Allocate A Color For The Text
@@ -180,6 +194,11 @@ class LetterAvatar
 			$this->foregroundColor['g'],
 			$this->foregroundColor['b']
 		);
+
+		if ($foregroundColor === false)
+		{
+			throw new Exception('Failed to allocate color for text');
+		}
 
 		$rnd = ceil($this->size / 20);
 
@@ -320,7 +339,10 @@ class LetterAvatar
 	 */
 	public function dataUri(): string
 	{
-		return sprintf('data:image/png;base64,%s', base64_encode($this->data()));
+		$data = $this->data();
+		$data = $data ?: '';
+
+		return sprintf('data:image/png;base64,%s', base64_encode($data));
 	}
 
 	/**

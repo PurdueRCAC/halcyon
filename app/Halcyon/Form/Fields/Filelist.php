@@ -3,6 +3,7 @@
 namespace App\Halcyon\Form\Fields;
 
 use App\Halcyon\Html\Builder\Select as Dropdown;
+use Illuminate\Support\Facades\File;
 
 /**
  * Supports an HTML select list of files
@@ -74,7 +75,7 @@ class Filelist extends Select
 				// If the extension is to be stripped, do it.
 				if ($stripExt)
 				{
-					$file = app('filesystem')->getDefaultDriver()->name($file);
+					$file = File::name($file);
 				}
 
 				$options[] = Dropdown::option($file, $file);

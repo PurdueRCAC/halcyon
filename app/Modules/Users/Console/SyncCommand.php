@@ -28,7 +28,7 @@ class SyncCommand extends Command
 	/**
 	 * Execute the console command.
 	 */
-	public function handle()
+	public function handle(): void
 	{
 		$debug = $this->option('debug') ? true : false;
 
@@ -50,14 +50,14 @@ class SyncCommand extends Command
 
 		if (!count($users))
 		{
-			if ($debug)
+			if ($debug || $this->output->isVerbose())
 			{
 				$this->info('No users found');
 			}
 			return;
 		}
 
-		if ($debug)
+		if ($debug || $this->output->isVerbose())
 		{
 			$this->info('Syncing ' . count($users) . ' users');
 		}
@@ -70,7 +70,10 @@ class SyncCommand extends Command
 
 			if (empty($e->results[0]))
 			{
-				$this->comment('No lookup results for #' . $u->id . ' (' . $u->username . '). Skipping...');
+				if ($debug || $this->output->isVerbose())
+				{
+					$this->comment('No lookup results for #' . $u->id . ' (' . $u->username . '). Skipping...');
+				}
 				continue;
 			}
 
@@ -82,7 +85,7 @@ class SyncCommand extends Command
 
 				$update = true;
 
-				if ($debug)
+				if ($debug || $this->output->isVerbose())
 				{
 					$this->info('Updating api_token for #' . $user->id . ' (' . $user->username . ')');
 				}
@@ -92,14 +95,14 @@ class SyncCommand extends Command
 			{
 				$update = true;
 
-				if ($debug)
+				if ($debug || $this->output->isVerbose())
 				{
 					$this->info('Updating puid for #' . $user->id . ' (' . $user->username . ')');
 				}
 			}
 			else
 			{
-				if ($debug)
+				if ($debug || $this->output->isVerbose())
 				{
 					$this->info('No change in puid for #' . $user->id . ' (' . $user->username . ')');
 				}

@@ -333,7 +333,7 @@ class Tag extends Model
 		// Check if the relationship exists
 		$to = Tagged::findByScoped($scope, $scope_id, $this->id, $tagger);
 
-		if (!$to->id)
+		if (!$to)
 		{
 			return true;
 		}
@@ -352,13 +352,12 @@ class Tag extends Model
 	/**
 	 * Add this tag to an object
 	 *
-	 * @param   string   $scope     Object type (ex: resource, ticket)
+	 * @param   string  $scope     Object type (ex: resource, ticket)
 	 * @param   int  $scope_id  Object ID (e.g., resource ID, ticket ID)
 	 * @param   int  $tagger    User ID of person adding tag
-	 * @param   int  $strength  Tag strength
 	 * @return  bool
 	 */
-	public function addTo($scope, $scope_id, $tagger = 0, $strength = 1): bool
+	public function addTo($scope, $scope_id, $tagger = 0): bool
 	{
 		// Check if the relationship already exists
 		$to = Tagged::findByScoped($scope, $scope_id, $this->id, $tagger);
@@ -373,7 +372,6 @@ class Tag extends Model
 		$to->taggable_type = (string) $scope;
 		$to->taggable_id   = (int) $scope_id;
 		$to->tag_id        = (int) $this->id;
-		$to->strength      = (int) $strength;
 		$to->created_by    = $tagger ? $tagger : auth()->user()->id;
 
 		if (!$to->save())
@@ -531,7 +529,10 @@ class Tag extends Model
 
 				// Get all the aliases to this tag
 				// Loop through the records and link them to a different tag
-				self::moveTo($tag->id, $this->id);
+				foreach ($tag->aliases as $alias)
+				{
+					$alias->update(['parent_id' => $this->id]);
+				}
 
 				// Delete the tag
 				$tag->delete();

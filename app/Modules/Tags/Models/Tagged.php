@@ -150,7 +150,7 @@ class Tagged extends Model
 			->where('tag_id', '=', $oldtagid)
 			->get();
 
-		if ($rows)
+		if (count($rows) > 0)
 		{
 			foreach ($rows as $row)
 			{

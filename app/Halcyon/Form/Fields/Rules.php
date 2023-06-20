@@ -2,6 +2,7 @@
 
 namespace App\Halcyon\Form\Fields;
 
+use Illuminate\Support\Collection;
 use App\Halcyon\Form\Field;
 use App\Halcyon\Access\Gate;
 use App\Halcyon\Access\Role;
@@ -275,7 +276,7 @@ class Rules extends Field
 	/**
 	 * Get a list of the user groups.
 	 *
-	 * @return  array
+	 * @return  Collection
 	 */
 	protected function getUserGroups()
 	{

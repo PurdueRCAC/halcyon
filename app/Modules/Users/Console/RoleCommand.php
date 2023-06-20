@@ -40,6 +40,12 @@ class RoleCommand extends Command
 		$addRole    = $this->option('add');
 		$removeRole = $this->option('remove');
 
+		if (!$username)
+		{
+			$this->error(trans('users::users.error.user not found'));
+			return Command::FAILURE;
+		}
+
 		$user = User::findByUsername($username);
 
 		if (!$user || !$user->id)

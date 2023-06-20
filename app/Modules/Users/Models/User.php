@@ -29,6 +29,7 @@ use Carbon\Carbon;
  * @property string $name
  * @property int    $puid
  * @property string $api_token
+ * @property string $password
  * @property int    $enabled
  */
 class User extends Model implements
@@ -83,6 +84,7 @@ class User extends Model implements
 	 */
 	protected $hidden = [
 		'api_token',
+		'password'
 	];
 
 	/**
