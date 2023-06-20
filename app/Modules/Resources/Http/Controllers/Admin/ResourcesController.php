@@ -230,6 +230,7 @@ class ResourcesController extends Controller
 	public function create()
 	{
 		$row = new Asset();
+		$row->access = config('module.resources.default_access', 0);
 
 		$types = Type::orderBy('name', 'asc')->get();
 		$batchsystems = Batchsystem::all();

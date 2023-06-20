@@ -274,7 +274,6 @@ class UsersController extends Controller
 			->withTrashed()
 			->where('queueid', '=', $request->input('queueid'))
 			->where('userid', '=', $userid)
-			->get()
 			->first();
 
 		// Set notice state
@@ -309,6 +308,11 @@ class UsersController extends Controller
 		if (!$user || !$user->id || $user->trashed())
 		{
 			return response()->json(['message' => trans('global.error.user not found')], 409);
+		}
+
+		if ($queue->resource->access && !in_array($queue->resource->access, $user->getAuthorisedViewLevels()))
+		{
+			return response()->json(['message' => trans('queues::queues.error.user does not have access')], 403);
 		}
 
 		if ($queue->groupid

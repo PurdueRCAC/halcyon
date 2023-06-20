@@ -103,4 +103,5 @@ return [
 		'pending removal' => 'Removal Pending',
 		'error' => 'Error',
 	],
+	'access' => 'Access Level',
 ];

@@ -367,7 +367,7 @@
 			var addmembersts = new TomSelect(addmembers, {
 				plugins: {
 					remove_button: {
-						title: 'Remove this email',
+						title: 'Remove this user',
 					}
 				},
 				valueField: 'id',
@@ -405,12 +405,15 @@
 						var caption = name ? item.username : null;
 						return '<div>' +
 							'<span class="label">' + escape(label) + '</span>' +
-							(caption ? ' <span class="caption text-muted">(' + escape(caption) + ')</span>' : '') +
+							(caption ? '&nbsp;<span class="caption text-muted">(' + escape(caption) + ')</span>' : '') +
 							'</div>';
+					},
+					item: function (item) {
+						return `<div data-id="${escape(item.id)}">${item.name}&nbsp;(${item.username})</div>`;
 					}
 				}
 			});
-			addmembersts.on('item_add', function (e) {
+			addmembersts.on('item_add', function () {
 				document.getElementById('add_member_save').disabled = false;
 			});
 		}

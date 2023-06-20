@@ -270,6 +270,7 @@ class ResourcesController extends Controller
 			'rolename'     => 'nullable|string|max:32',
 			'listname'     => 'nullable|string|max:32',
 			'facets'       => 'nullable|array',
+			'access'       => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -286,7 +287,18 @@ class ResourcesController extends Controller
 			return new AssetResource($exist);
 		}
 
-		$row = Asset::create($request->all());
+		$row = new Asset;
+		$row->access = config('module.resources.default_access', 0);
+
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
+		}
+
+		$row->save();
 
 		if ($facets = $request->input('facets', []))
 		{

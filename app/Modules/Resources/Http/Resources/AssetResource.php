@@ -52,7 +52,6 @@ class AssetResource extends JsonResource
 		$scheduler = Scheduler::query()
 			->whereIn('queuesubresourceid', $subs)
 			->limit(1)
-			->get()
 			->first();
 
 		if ($scheduler)

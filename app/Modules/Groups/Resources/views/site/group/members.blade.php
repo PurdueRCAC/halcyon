@@ -530,7 +530,7 @@ $i = 0;
 							endif;
 							$csv[] = $checked ? 'yes' : 'no';
 
-							if (!$member->user->enabled): // || (!$checked && !$queue->active)):
+							if (!$member->user->enabled || ($queue->resource->access && !in_array($queue->resource->access, $member->user->getAuthorisedViewLevels()))): // || (!$checked && !$queue->active)):
 								$disable = ' disabled="disabled"';
 							endif;
 							?>
@@ -570,10 +570,15 @@ $i = 0;
 								endif;
 							endif;
 
-							if (!$member->user->enabled):
+							if (!$member->user || !$member->user->enabled):
 								$disable = ' disabled="disabled"';
 							endif;
 							?>
+							@if ($queue->resource->access && !in_array($queue->resource->access, $member->user->getAuthorisedViewLevels()))
+								<span class="fa fa-exclamation-triangle text-warning tip" title="{{ trans('queues::queues.user does not have access') }}">
+									<span class="sr-only">{{ trans('queues::queues.user does not have access') }}</span>
+								</span>
+							@else
 							<td class="col-unixgroup text-nowrap text-center">
 								<input type="checkbox"
 									class="membership-toggle unixgroup-toggle"
@@ -586,6 +591,7 @@ $i = 0;
 									data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m]) : route('api.unixgroups.members.create') }}"
 									value="1" />
 							</td>
+							@endif
 							<?php
 						endforeach;
 						$csv_data[] = $csv;
@@ -736,6 +742,11 @@ $i = 0;
 								endif;
 								?>
 								<td class="text-center col-queue">
+									@if ($queue->resource->access && !in_array($queue->resource->access, $member->user->getAuthorisedViewLevels()))
+										<span class="fa fa-exclamation-triangle text-warning tip" title="{{ trans('queues::queues.user does not have access') }}">
+											<span class="sr-only">{{ trans('queues::queues.user does not have access') }}</span>
+										</span>
+									@else
 									<input type="checkbox"
 										class="membership-toggle queue-toggle"
 										name="queue[{{ $i }}][{{ $queue->id }}]"{!! $checked !!}{!! $disable !!}
@@ -745,6 +756,7 @@ $i = 0;
 										data-api-create="{{ route('api.queues.users.create') }}"
 										data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m]) : route('api.queues.users.create') }}"
 										value="1" />
+									@endif
 								</td>
 								<?php
 							endforeach;
@@ -768,7 +780,7 @@ $i = 0;
 									endif;
 								endif;
 
-								if (!$member->user->enabled):
+								if (!$member->user || !$member->user->enabled):
 									$disable = ' disabled';
 								endif;
 								?>
@@ -916,20 +928,26 @@ $i = 0;
 
 							$csv[] = $checked ? 'yes' : 'no';
 
-							if (!$member->user->enabled): // || (!$checked && !$queue->active)):
+							if (!$member->user || !$member->user->enabled): // || (!$checked && !$queue->active)):
 								$disable = ' disabled';
 							endif;
 							?>
 							<td class="text-center col-queue">
-								<input type="checkbox"
-									class="membership-toggle queue-toggle"
-									name="queue[{{ $i }}][{{ $queue->id }}]"{!! $checked !!}{!! $disable !!}
-									data-base="unix-{{ $i }}-{{ $base }}"
-									data-userid="{{ $member->userid }}"
-									data-objectid="{{ $queue->id }}"
-									data-api-create="{{ route('api.queues.users.create') }}"
-									data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m]) : route('api.queues.users.create') }}"
-									value="1" />
+								@if ($queue->resource->access && !in_array($queue->resource->access, $member->user->getAuthorisedViewLevels()))
+									<span class="fa fa-exclamation-triangle text-warning tip" title="{{ trans('queues::queues.user does not have access') }}">
+										<span class="sr-only">{{ trans('queues::queues.user does not have access') }}</span>
+									</span>
+								@else
+									<input type="checkbox"
+										class="membership-toggle queue-toggle"
+										name="queue[{{ $i }}][{{ $queue->id }}]"{!! $checked !!}{!! $disable !!}
+										data-base="unix-{{ $i }}-{{ $base }}"
+										data-userid="{{ $member->userid }}"
+										data-objectid="{{ $queue->id }}"
+										data-api-create="{{ route('api.queues.users.create') }}"
+										data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m]) : route('api.queues.users.create') }}"
+										value="1" />
+								@endif
 							</td>
 							<?php
 						endforeach;
@@ -952,7 +970,7 @@ $i = 0;
 								endif;
 							endif;
 
-							if (!$member->user->enabled):
+							if (!$member->user || !$member->user->enabled):
 								$disable = ' disabled';
 							endif;
 							?>
@@ -1172,7 +1190,7 @@ $i = 0;
 										<td class="rowData">
 										@foreach ($queues as $queue)
 											<div class="form-check">
-												<input type="checkbox" class="form-check-input add-queue-member" name="queue[]" data-base="unixgroup-{{ $base }}" id="queue{{ $queue->id }}" value="{{ $queue->id }}" />
+												<input type="checkbox" class="form-check-input add-queue-member" name="queue[]" data-access="{{ $queue->resource->access }}" data-base="unixgroup-{{ $base }}" id="queue{{ $queue->id }}" value="{{ $queue->id }}" />
 												<label class="form-check-label" for="queue{{ $queue->id }}">{{ $queue->name }}</label>
 											</div>
 										@endforeach

@@ -242,4 +242,5 @@ return [
 	'flag nodecay desc' => 'This allows a QOS to provide aggregate limits that, once consumed, will not be replenished automatically. Such a QOS will act as a time-limited quota of resources for an association that has access to it.',
 	'flag usagefactorsafe desc' => 'If set, and AccountingStorageEnforce includes Safe, jobs will only be able to run if the job can run to completion with the UsageFactor applied.',
 	'all schedulers' => '- All Schedulers -',
+	'user does not have access' => 'User does not have access to this resource',
 ];

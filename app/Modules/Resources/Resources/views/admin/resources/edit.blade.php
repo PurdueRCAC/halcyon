@@ -99,15 +99,30 @@ app('pathway')
 							</select>
 						</div>
 
-						<div class="form-group">
-							<label for="field-batchsystem">{{ trans('resources::assets.batchsystem') }}</label>
-							<select name="fields[batchsystem]" class="form-control">
-								<option value="0">{{ trans('global.none') }}</option>
-								@foreach ($batchsystems as $batchsystem)
-									<?php $selected = ($batchsystem->id == $row->batchsystem ? ' selected="selected"' : ''); ?>
-									<option value="{{ $batchsystem->id }}"<?php echo $selected; ?>>{{ $batchsystem->name }}</option>
-								@endforeach
-							</select>
+						<div class="row">
+							<div class="col-xs-12 col-md-6">
+								<div class="form-group">
+									<label for="field-batchsystem">{{ trans('resources::assets.batchsystem') }}</label>
+									<select name="fields[batchsystem]" class="form-control">
+										<option value="0">{{ trans('global.none') }}</option>
+										@foreach ($batchsystems as $batchsystem)
+											<?php $selected = ($batchsystem->id == $row->batchsystem ? ' selected="selected"' : ''); ?>
+											<option value="{{ $batchsystem->id }}"<?php echo $selected; ?>>{{ $batchsystem->name }}</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+							<div class="col-xs-12 col-md-6">
+								<div class="form-group">
+									<label for="field-access">{{ trans('resources::assets.access') }}:</label>
+									<select class="form-control" name="fields[access]" id="field-access">
+										<option value="0"<?php if ($row->access == 0) { echo ' selected="selected"'; } ?>>- {{ trans('global.all') }} -</option>
+										@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
+											<option value="{{ $access->id }}"<?php if ($row->access == $access->id) { echo ' selected="selected"'; } ?>>{{ $access->title }}</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
 						</div>
 
 						<div class="form-group">
