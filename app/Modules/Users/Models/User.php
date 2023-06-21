@@ -632,7 +632,7 @@ class User extends Model implements
 	{
 		if (filter_var($username, FILTER_VALIDATE_EMAIL))
 		{
-			return self::findByEmail($username);
+			return self::findByEmail($username, $includeTrashed);
 		}
 
 		$query = UserUsername::query();
@@ -654,11 +654,19 @@ class User extends Model implements
 	 * Finds a user by email
 	 *
 	 * @param   string  $email
+	 * @param   bool    $includeTrashed
 	 * @return  User
 	 */
-	public static function findByEmail($email)
+	public static function findByEmail($email, $includeTrashed = false)
 	{
-		$username = UserUsername::query()
+		$query = UserUsername::query();
+
+		if ($includeTrashed)
+		{
+			$query->withTrashed();
+		}
+
+		$username = $query
 			->where('email', '=', $email)
 			->orderBy('username', 'asc')
 			->orderBy('datecreated', 'asc')
@@ -823,10 +831,14 @@ class User extends Model implements
 	 */
 	public static function createFromUsername($username): User
 	{
-		$user = self::findByUsername($username);
+		$user = self::findByUsername($username, true);
 
 		if ($user && $user->id)
 		{
+			if ($user->getUserUsername()->trashed())
+			{
+				$user->getUserUsername()->restore();
+			}
 			return $user;
 		}
 
