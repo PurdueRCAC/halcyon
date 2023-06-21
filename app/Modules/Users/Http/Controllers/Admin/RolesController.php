@@ -193,7 +193,7 @@ class RolesController extends Controller
 		}
 
 		// Check for super-admin changing self to be non-super-admin
-		// First, are we a super admin>
+		// First, are we a super admin?
 		/*if ($iAmSuperAdmin)
 		{
 			// Next, are we a member of the current group?
@@ -224,7 +224,7 @@ class RolesController extends Controller
 			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
-		return $this->cancel()->with('success', trans('global.messages.item saved'));
+		return $this->cancel()->with('success', trans('global.messages.' . ($id ? 'item updated' : 'item created')));
 	}
 
 	/**
