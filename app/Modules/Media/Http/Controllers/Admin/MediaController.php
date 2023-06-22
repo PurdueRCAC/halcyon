@@ -34,7 +34,6 @@ class MediaController extends Controller
 
 		$folders = Cache::get('media_tree', function () use ($base)
 		{
-			die('here');
 			$f = MediaHelper::getTree($base);
 			Cache::forever('media_tree', $f);
 			return $f;
