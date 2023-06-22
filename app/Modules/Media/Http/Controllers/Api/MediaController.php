@@ -12,6 +12,7 @@ use App\Modules\Media\Events\Updating;
 use App\Modules\Media\Events\Updated;
 use App\Modules\Media\Events\Deleting;
 use App\Modules\Media\Events\Deleted;
+use App\Modules\Media\Events\DirectoryDeleted;
 use App\Modules\Media\Events\Download;
 use App\Modules\Media\Events\FilesUploading;
 use App\Modules\Media\Events\FilesUploaded;
@@ -449,6 +450,8 @@ class MediaController extends Controller
 			{
 				// delete directory
 				Storage::disk($disk)->deleteDirectory($item['path']);
+
+				event(new DirectoryDeleted($disk, [$item['path']]));
 			}
 			else
 			{

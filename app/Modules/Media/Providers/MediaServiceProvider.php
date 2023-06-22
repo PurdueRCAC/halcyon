@@ -2,6 +2,7 @@
 namespace App\Modules\Media\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Modules\Media\Listeners\CacheTree;
 
 class MediaServiceProvider extends ServiceProvider
 {
@@ -32,6 +33,8 @@ class MediaServiceProvider extends ServiceProvider
 		$this->registerViews();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+		$this->app['events']->subscribe(new CacheTree);
 	}
 
 	/**

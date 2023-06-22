@@ -8,6 +8,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Str;
+use Illuminate\Support\Facades\Cache;
 use App\Modules\Media\Entities\Folder;
 use App\Modules\Media\Helpers\MediaHelper;
 use App\Modules\Media\Events\Download;
@@ -29,7 +30,15 @@ class MediaController extends Controller
 		$filters = array();
 
 		$folder = $request->input('folder', '');
-		$folders = MediaHelper::getTree($base);
+		//$folders = MediaHelper::getTree($base);
+
+		$folders = Cache::get('media_tree', function () use ($base)
+		{
+			die('here');
+			$f = MediaHelper::getTree($base);
+			Cache::forever('media_tree', $f);
+			return $f;
+		});
 
 		$fold = array(
 			'id'       => 0,
