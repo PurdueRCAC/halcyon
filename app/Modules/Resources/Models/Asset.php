@@ -257,18 +257,19 @@ class Asset extends Model
 	 * Defines a relationship to facets
 	 *
 	 * @param   string  $name
-	 * @return  mixed
+	 * @return  null|Facet
 	 */
-	public function getFacet($name)
+	public function getFacet($name): ?Facet
 	{
-		$ft = $this->type->facetTypes->where('name', '=', $name)->first();
+		$f = (new Facet)->getTable();
+		$ft = (new FacetType)->getTable();
 
-		if (!$ft)
-		{
-			return null;
-		}
-
-		return $this->facets->where('facet_type_id', '=', $ft->id)->first();
+		return $this->facets()
+			->select($f . '.*')
+			->join($ft, $ft . '.id', $f . '.facet_type_id')
+			->where($ft . '.name', '=', $name)
+			->where($ft . '.type_id', '=', $this->resourcetype)
+			->first();
 	}
 
 	/**

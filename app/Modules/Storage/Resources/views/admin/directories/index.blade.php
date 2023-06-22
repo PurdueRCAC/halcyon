@@ -185,9 +185,9 @@ if ($parent)
 					@endif
 				</td>
 				<td class="text-right">
-					@if ($c = $row->children()->count())
+					@if ($row->children_count)
 						<a href="{{ route('admin.storage.directories', ['parent' => $row->id]) }}">
-							{{ number_format($c) }}
+							{{ number_format($row->children_count) }}
 						</a>
 					@else
 						<a class="btn btn-sm btn-success" href="{{ route('admin.storage.directories.create', ['parent' => $row->id, 'resource' => $row->storageresourceid]) }}">

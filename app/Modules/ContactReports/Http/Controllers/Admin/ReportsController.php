@@ -189,7 +189,10 @@ class ReportsController extends Controller
 		}
 
 		$rows = $query
-			->withCount('comments')
+			->with('comments')
+			->with('type')
+			->with('tags')
+			->with('resources')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 

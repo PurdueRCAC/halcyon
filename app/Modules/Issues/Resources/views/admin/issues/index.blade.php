@@ -254,7 +254,7 @@ app('pathway')
 			</div>
 
 			<?php
-			$comments = $row->comments()->orderBy('datetimecreated', 'asc')->get();
+			$comments = $row->comments->sortBy('datetimecreated');
 
 			if (count($comments) > 0):
 				?>

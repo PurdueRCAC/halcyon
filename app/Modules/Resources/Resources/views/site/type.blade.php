@@ -21,7 +21,7 @@
 @php
 app('pathway')
 	->append(
-		$type->getOriginal('name'),
+		$type->name,
 		($retired ? route('site.resources.type.' . $type->alias) : route('site.resources.' . $type->alias . '.show', ['name' => $type->alias]))
 	);
 
@@ -41,8 +41,8 @@ app('pathway')
 			<li class="nav-item">
 				@php
 				$url = route('site.resources.' . $type->alias . '.show', ['name' => ($row->listname ? $row->listname : $row->rolename)]);
-				if ($row->hasFacet('url')):
-					$url = $row->getFacet('url')->value;
+				if ($facet = $row->getFacet('url')):
+					$url = $facet->value;
 				endif;
 				@endphp
 				<a class="nav-link" href="{{ $url }}">{{ $row->name }}</a>

@@ -66,6 +66,7 @@ class TodosController extends Controller
 		}
 
 		$rows = $query
+			->with('timeperiod')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 

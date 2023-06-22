@@ -45,7 +45,7 @@ class ResourcesController extends Controller
 					->where('listname', '!=', '');
 			})
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate(20);
+			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
 		$types = Type::orderBy('name', 'asc')->get();
 
@@ -72,8 +72,9 @@ class ResourcesController extends Controller
 		}
 
 		$rows = $type->resources()
+			->with('facets')
 			->where('display', '>', 0)
-			->where(function($where)
+			->where(function ($where)
 			{
 				$where->whereNotNull('listname')
 					->where('listname', '!=', '');

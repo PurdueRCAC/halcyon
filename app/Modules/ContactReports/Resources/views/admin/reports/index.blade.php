@@ -312,8 +312,8 @@ app('pathway')
 						</div>
 						<div class="flex-fill text-right">
 							<span class="fa fa-comment" aria-hidden="true"></span>
-							@if ($row->comments_count)
-								<a href="#comments_{{ $row->id }}" class="comments-show">{{ number_format($row->comments_count) }}</a>
+							@if (count($row->comments))
+								<a href="#comments_{{ $row->id }}" class="comments-show">{{ number_format(count($row->comments)) }}</a>
 							@else
 								<span class="none">0</span>
 							@endif
@@ -322,7 +322,7 @@ app('pathway')
 				</div>
 			</div>
 			<?php
-			$comments = $row->comments()->orderBy('datetimecreated', 'asc')->get();
+			$comments = $row->comments->sortBy('datetimecreated');
 
 			if (count($comments) > 0):
 				?>

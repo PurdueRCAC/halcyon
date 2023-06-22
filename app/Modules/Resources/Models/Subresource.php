@@ -353,18 +353,23 @@ class Subresource extends Model
 	{
 		$queuestatus = 1;
 
-		foreach ($this->queues as $queue)
+		$tot = $this->queues()
+			->where('started', '=', 0)
+			->count();
+
+		if ($tot > 0)
 		{
-			if ($queue->started)
-			{
-				$queuestatus = 1;
-			}
-			elseif ($queuestatus == 1)
+			$queuestatus = 2;
+		}
+
+		/*foreach ($this->queues as $queue)
+		{
+			if (!$queue->started)
 			{
 				$queuestatus = 2;
 				break;
 			}
-		}
+		}*/
 
 		return $queuestatus;
 	}

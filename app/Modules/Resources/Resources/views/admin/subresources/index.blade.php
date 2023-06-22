@@ -167,20 +167,6 @@ app('pathway')
 				</td>
 				<td class="priority-5 text-right">
 					{{ $row->nodecores }}
-					<?php
-					/*$soldpercent = $row->totalcores ? round(($row->soldcores / $row->totalcores) * 100, 1) : 0;
-					$loanedpercent = $row->totalcores ? round(($row->loanedcores / $row->totalcores) * 100, 1) : 0;
-					echo 'total cores: ' . $row->totalcores . ' avail: ' . ($row->totalcores - $row->soldcores - $row->loanedcores);
-					?>
-					<!-- <div class="row">
-						<div class="col col-md-4">{{ $row->soldcores }} sold</div>
-						<div class="col col-md-4">{{ $row->loanedcores }} loaned</div>
-						<div class="col col-md-4">of {{ $row->totalcores }}</div>
-					</div> -->
-					<span class="progress" style="height: 0.2em">
-						<span class="progress-bar bg-info" style="width: <?php echo $soldpercent; ?>%" aria-valuenow="<?php echo $soldpercent; ?>" aria-valuemin="0" aria-valuemax="100"></span>
-						<span class="progress-bar bg-warning" style="width: <?php echo $loanedpercent; ?>%" aria-valuenow="<?php echo $loanedpercent; ?>" aria-valuemin="0" aria-valuemax="100"></span>
-					</span>*/?>
 				</td>
 				<td class="priority-5 text-right">
 					{{ $row->nodegpus }}

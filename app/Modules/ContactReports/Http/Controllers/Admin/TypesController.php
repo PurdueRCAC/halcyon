@@ -62,6 +62,8 @@ class TypesController extends Controller
 
 		$rows = $query
 			->withCount('reports')
+			->with('timeperiod')
+			->with('waitperiod')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 

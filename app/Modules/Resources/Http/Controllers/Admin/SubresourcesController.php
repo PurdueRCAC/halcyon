@@ -102,6 +102,7 @@ class SubresourcesController extends Controller
 
 		$rows = $query
 			->withCount('queues')
+			->with('association')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 

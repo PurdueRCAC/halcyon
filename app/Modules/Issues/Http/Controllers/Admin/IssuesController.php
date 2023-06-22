@@ -59,6 +59,7 @@ class IssuesController extends Controller
 			->with('creator')
 			->with('resources')
 			->with('tags')
+			->with('comments')
 			->where('issuetodoid', '=', 0);
 
 		if ($filters['tag'])
@@ -99,7 +100,7 @@ class IssuesController extends Controller
 		}
 
 		$rows = $query
-			->withCount('comments')
+			//->withCount('comments')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 

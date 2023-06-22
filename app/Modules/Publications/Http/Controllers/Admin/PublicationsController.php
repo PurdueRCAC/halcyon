@@ -111,6 +111,7 @@ class PublicationsController extends Controller
 		}
 
 		$rows = $query
+			->with('type')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 

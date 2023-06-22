@@ -81,6 +81,7 @@ class MessagesController extends Controller
 		}
 
 		$rows = $query
+			->with('sender')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
