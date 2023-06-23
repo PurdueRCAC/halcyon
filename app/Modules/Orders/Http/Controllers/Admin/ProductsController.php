@@ -115,6 +115,8 @@ class ProductsController extends Controller
 		}
 
 		$rows = $query
+			->with('timeperiod')
+			->with('resource')
 			->orderBy($p . '.' . $filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));

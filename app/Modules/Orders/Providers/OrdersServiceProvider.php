@@ -3,8 +3,6 @@
 namespace App\Modules\Orders\Providers;
 
 use Illuminate\Support\ServiceProvider;
-//use Illuminate\Support\Facades\View;
-//use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Session\SessionManager;
 use App\Modules\Orders\Console\RenewCommand;
@@ -13,6 +11,7 @@ use App\Modules\Orders\Entities\Cart;
 use App\Modules\Orders\Listeners\GroupOrders;
 use App\Modules\Orders\Listeners\UserOrders;
 use App\Modules\Orders\Listeners\RouteCollector;
+use App\Modules\Orders\Listeners\SyncItemsToProduct;
 use App\Modules\Orders\LogProcessors\Orders as OrdersProcessor;
 use Nwidart\Modules\Facades\Module;
 
@@ -46,6 +45,8 @@ class OrdersServiceProvider extends ServiceProvider
 		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+		$this->app['events']->subscribe(new SyncItemsToProduct);
 
 		if (Module::isEnabled('groups'))
 		{

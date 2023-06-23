@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Orders\Helpers\Currency;
 use App\Modules\History\Traits\Historable;
+use App\Modules\Orders\Events\ProductUpdated;
 use App\Modules\Resources\Models\Asset;
 use Carbon\Carbon;
 
@@ -71,6 +72,15 @@ class Product extends Model
 	 */
 	protected $guarded = [
 		'id'
+	];
+
+	/**
+	 * The event map for the model.
+	 *
+	 * @var  array<string,string>
+	 */
+	protected $dispatchesEvents = [
+		'updated' => ProductUpdated::class,
 	];
 
 	/**
