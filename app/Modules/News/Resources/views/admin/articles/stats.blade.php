@@ -10,47 +10,37 @@
 <script src="{{ Module::asset('core:vendor/chartjs/Chart.min.js') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.min.js') }}"></script>
 <script src="{{ Module::asset('news:vendor/github-heatmap-contribution-graph/js/github_contribution.js') . '?v=' . filemtime(public_path() . '/modules/news/vendor/github-heatmap-contribution-graph/js/github_contribution.js') }}"></script>
 <script>
-$(document).ready(function () {
-	$('.items-toggle').on('click', function(e){
-		e.preventDefault();
-		$($(this).attr('href')).toggle('collapse');
-	});
-
-	$('.heatmap').each(function(i, el) {
-		var data = $($(el).attr('data-src')).val();
+document.addEventListener('DOMContentLoaded', function () {
+	document.querySelectorAll('.heatmap').forEach(function(el) {
+		var data = document.getElementById(el.getAttribute('data-src')).value;
 		data = JSON.parse(data);
-		console.log(data);
 
 		for (var i = 0; i < data.length; i++)
 		{
 			data[i].timestamp = data[i].timestamp * 1000;
 		}
 
-		//var start_from_2022 = new Date(2022,00,00,0,0,0);
-
 		$(el).github_graph({
-			//start_date: start_from_2022,
 			data: data,
 			texts: ['reservation','reservations']
 		});
 	});
 
 	var charts = new Array;
-	$('.sparkline-chart').each(function (i, el) {
+	document.querySelectorAll('.sparkline-chart').forEach(function(el) {
 		const ctx = el.getContext('2d');
 		const chart = new Chart(ctx, {
 			type: 'line',
 			data: {
-				labels: JSON.parse($(el).attr('data-labels')),
+				labels: JSON.parse(el.getAttribute('data-labels')),
 				datasets: [
 					{
 						fill: true,
-						data: JSON.parse($(el).attr('data-values'))
+						data: JSON.parse(el.getAttribute('data-values'))
 					}
 				]
 			},
 			options: {
-				//responsive: false,
 				bezierCurve: false,
 				animation: {
 					duration: 0
@@ -60,21 +50,16 @@ $(document).ready(function () {
 				},
 				elements: {
 					line: {
-						borderColor: 'rgb(54, 162, 235)', //'#0091EB',
+						borderColor: 'rgb(54, 162, 235)',
 						backgroundColor: 'rgb(54, 162, 235)',
 						borderWidth: 1,
 						tension: 0
 					},
 					point: {
-						borderColor: 'rgb(54, 162, 235)'//'#0091EB'
+						borderColor: 'rgb(54, 162, 235)'
 					}
 				},
 				scales: {
-					/*yAxes: [
-						{
-							display: false
-						}
-					],*/
 					xAxes: [
 						{
 							display: false
@@ -86,15 +71,15 @@ $(document).ready(function () {
 		charts.push(chart);
 	});
 
-	$('.pie-chart').each(function (i, el) {
+	document.querySelectorAll('.pie-chart').forEach(function(el) {
 		const ctx = el.getContext('2d');
 		const pchart = new Chart(ctx, {
 			type: 'doughnut',
 			data: {
-				labels: JSON.parse($(el).attr('data-labels')),
+				labels: JSON.parse(el.getAttribute('data-labels')),
 				datasets: [
 					{
-						data: JSON.parse($(el).attr('data-values')),
+						data: JSON.parse(el.getAttribute('data-values')),
 						backgroundColor: [
 							'rgb(255, 99, 132)', // red
 							'rgb(54, 162, 235)', // blue
@@ -104,17 +89,14 @@ $(document).ready(function () {
 							'rgb(255, 159, 64)', // orange
 							'rgb(153, 102, 255)' // purple
 						],
-						borderColor: <?php echo (auth()->user()->facet('theme.admin.mode') == 'dark' ? '"rgba(0, 0, 0, 0.6)"' : '"#fff"'); ?>
+						borderColor: el.getAttribute('data-border')
 					}
 				]
 			},
 			options: {
 				animation: {
 					duration: 0
-				}/*,
-				legend: {
-					display: false
-				}*/
+				}
 			}
 		});
 		charts.push(pchart);
@@ -192,7 +174,7 @@ app('pathway')
 						$cats = array_filter($cats);
 						?>
 						<div>
-							<canvas id="news-categories" class="pie-chart" width="275" height="275" data-labels="{{ json_encode(array_keys($cats)) }}" data-values="{{ json_encode(array_values($cats)) }}">
+							<canvas id="news-categories" class="pie-chart" width="275" height="275" data-labels="{{ json_encode(array_keys($cats)) }}" data-values="{{ json_encode(array_values($cats)) }}" data-border="<?php echo (auth()->user()->facet('theme.admin.mode') == 'dark' ? '"rgba(0, 0, 0, 0.6)"' : '"#fff"'); ?>">
 								<table class="table">
 									<caption class="sr-only">Orders By Category</caption>
 									<thead>
@@ -238,7 +220,7 @@ app('pathway')
 								@endforeach
 							</canvas>*/ ?>
 
-							<div id="activity{{ $type->id }}" class="heatmap" data-src="#activity_data{{ $type->id }}">
+							<div id="activity{{ $type->id }}" class="heatmap" data-src="activity_data{{ $type->id }}">
 								<input type="hidden" id="activity_data{{ $type->id }}" value="{{ json_encode($stats['daily']) }}" />
 							</div>
 						</div>

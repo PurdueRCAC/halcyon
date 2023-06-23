@@ -6,29 +6,43 @@
 
 @push('scripts')
 <script>
-jQuery(document).ready(function($){
-	$('.filter-submit').on('change', function(e){
-		$(this).closest('form').submit();
+document.addEventListener('DOMContentLoaded', function () {
+	document.querySelectorAll('.filter-submit').forEach(function(el) {
+		el.addeventListener('click', function(e) {
+			this.closest('form').submit();
+		});
 	});
 
-	$('.category-delete').on('click', function(e){
-		e.preventDefault();
-		if (confirm($(this).attr('data-confirm'))) {
-			$.ajax({
-				url: $(this).attr('data-api'),
-				type: 'delete',
-				dataType: 'json',
-				async: false,
-				success: function (response) {
-					window.location.reload();
-				},
-				error: function (xhr, ajaxOptions, thrownError) {
-					console.log(xhr.responseJSON.message);
-					//btn.find('.spinner-border').addClass('d-none');
-					//alert(xhr.responseJSON.message);
-				}
-			});
-		}
+	document.querySelectorAll('.category-delete').forEach(function(el) {
+		el.addeventListener('click', function(e) {
+			e.preventDefault();
+
+			if (confirm(this.getAttribute('data-confirm'))) {
+				fetch(input.getAttribute('data-api'), {
+					method: 'DELETE',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+					}
+				})
+				.then(function (response) {
+					if (response.ok) {
+						window.location.reload(true);
+						return;
+					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (error) {
+					alert(error);
+				});
+			}
+		});
 	});
 
 	var sortableHelper = function (e, ui) {

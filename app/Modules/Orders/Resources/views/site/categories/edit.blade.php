@@ -2,7 +2,7 @@
 
 @push('scripts')
 <script>
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function () {
 	var frm = document.getElementById('category-form'),
 		invalid = false;
 

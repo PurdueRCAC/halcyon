@@ -1,51 +1,69 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css?v=' . filemtime(public_path('/modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css'))) }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
+<script src="{{ asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js?v=' . filemtime(public_path('/modules/core/vendor/tom-select/js/tom-select.complete.min.js'))) }}"></script>
 <script>
-$(document).ready(function() {
-	$('.searchable-select').select2({
-			width: '35%'
-		//placeholder: $(this).data('placeholder')
-		})
-		.on('select2:select', function (e) {
-			if ($(this).hasClass('filter-submit')) {
-				$(this).closest('form').submit();
-			}
+document.addEventListener('DOMContentLoaded', function () {
+
+	var sels = document.querySelectorAll(".searchable-select");
+	if (sels.length) {
+		sels.forEach(function (sel) {
+			new TomSelect(sel, {
+				plugins: ['dropdown_input']
+			});
 		});
+	}
 
-	$('#toolbar-plus').on('click', function(e){
+	var btnnew = document.getElementById('toolbar-plus');
+	if (btnnew) {
+		btnnew.setAttribute('data-toggle', 'modal');
+		btnnew.setAttribute('data-target', '#new-group');
+
+		btnnew.addEventListener('click', function (e) {
+			e.preventDefault();
+		});
+	}
+
+	document.getElementById('add-group').addEventListener('click', function(e){
 		e.preventDefault();
 
-		$('#new-group').modal();
-	});
+		var url = this.getAttribute('data-api');
+		var route = this.getAttribute('data-route');
+		var name = document.getElementById('field-name').value;
 
-	$('#add-group').on('click', function(e){
-		e.preventDefault();
-
-		var url = $(this).data('api');
-		var route = $(this).data('route');
-		var name = document.getElementById("field-name").value;
-
-		$.ajax({
-			url: url,
-			type: 'post',
-			data: {
+		fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+			},
+			body: JSON.stringify({
 				name: name
-			},
-			dataType: 'json',
-			async: false,
-			success: function(data) {
-				Halcyon.message('success', 'Created group ' + name);
-				window.location = route.replace('-id-', data.data.id);
-				//location.reload;
-			},
-			error: function(xhr, ajaxOptions, thrownError) {
-				Halcyon.message('danger', 'Failed to create group ' + name);
+			})
+		})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
+			});
+		})
+		.then(function (data) {
+			Halcyon.message('success', 'Created group ' + name);
+			window.location = route.replace('-id-', data.id);
+		})
+		.catch(function (err) {
+			if (err) {
+				Halcyon.message('danger', err);
 			}
 		});
 	});
