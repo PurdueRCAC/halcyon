@@ -92,7 +92,7 @@ class Department extends Model
 	 *
 	 * @param   string  $order
 	 * @param   string  $dir
-	 * @return  array
+	 * @return  array<int,Department>
 	 */
 	public static function tree(string $order = 'name', string $dir = 'asc'): array
 	{
@@ -131,13 +131,13 @@ class Department extends Model
 	/**
 	 * Recursive function to build tree
 	 *
-	 * @param   int      $id        Parent ID
-	 * @param   array    $list      List of records
-	 * @param   array    $children  Container for parent/children mapping
-	 * @param   int      $maxlevel  Maximum levels to descend
-	 * @param   int      $level     Indention level
-	 * @param   int      $type      Indention type
-	 * @param   string   $prfx
+	 * @param   int     $id        Parent ID
+	 * @param   array   $list      List of records
+	 * @param   array   $children  Container for parent/children mapping
+	 * @param   int     $maxlevel  Maximum levels to descend
+	 * @param   int     $level     Indention level
+	 * @param   int     $type      Indention type
+	 * @param   string  $prfx
 	 * @return  array
 	 */
 	protected static function treeRecurse(int $id, array $list, array $children, int $maxlevel=9999, int $level=0, int $type=1, string $prfx = ''): array

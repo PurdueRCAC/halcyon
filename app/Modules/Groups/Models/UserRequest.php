@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Groups\Events\UserRequestCreated;
 use App\Modules\Groups\Events\UserRequestDeleted;
+use Carbon\Carbon;
 
 /**
  * Use request model

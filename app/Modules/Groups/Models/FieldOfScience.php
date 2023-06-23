@@ -101,7 +101,7 @@ class FieldOfScience extends Model
 	 *
 	 * @param  string $order
 	 * @param  string $dir
-	 * @return array
+	 * @return array<int,FieldOfScience>
 	 */
 	public static function tree($order = 'name', $dir = 'asc'): array
 	{
@@ -140,14 +140,15 @@ class FieldOfScience extends Model
 	/**
 	 * Recursive function to build tree
 	 *
-	 * @param   int  $id        Parent ID
-	 * @param   array    $list      List of records
-	 * @param   array    $children  Container for parent/children mapping
-	 * @param   int  $maxlevel  Maximum levels to descend
-	 * @param   int  $level     Indention level
+	 * @param   int    $id        Parent ID
+	 * @param   array  $list      List of records
+	 * @param   array  $children  Container for parent/children mapping
+	 * @param   int    $maxlevel  Maximum levels to descend
+	 * @param   int    $level     Indention level
+	 * @param   string $prfx
 	 * @return  array
 	 */
-	protected static function treeRecurse($id, $list, $children, $maxlevel=9999, $level=0, string $prfx = ''): array
+	protected static function treeRecurse(int $id, array $list, array $children, int $maxlevel=9999, int $level=0, string $prfx = ''): array
 	{
 		if (@$children[$id] && $level <= $maxlevel)
 		{

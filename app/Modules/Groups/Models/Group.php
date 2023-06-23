@@ -4,7 +4,9 @@ namespace App\Modules\Groups\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 use App\Modules\Messages\Models\Message;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Storage\Models\Directory;
@@ -16,6 +18,7 @@ use App\Modules\Groups\Events\GroupCreated;
 use App\Modules\Groups\Events\GroupUpdating;
 use App\Modules\Groups\Events\GroupUpdated;
 use App\Modules\Groups\Events\GroupDeleted;
+use App\Modules\Users\Models\User;
 use Carbon\Carbon;
 
 /**
@@ -114,10 +117,10 @@ class Group extends Model
 	/**
 	 * Determine if a user is a manager
 	 *
-	 * @param   object  $user
+	 * @param   User  $user
 	 * @return  bool  True if modified, false if not
 	 */
-	public function isManager($user): bool
+	public function isManager(User $user): bool
 	{
 		$managers = $this->managers->pluck('userid')->toArray();
 		return in_array($user->id, $managers);
@@ -147,9 +150,9 @@ class Group extends Model
 	/**
 	 * Departments
 	 *
-	 * @return  object
+	 * @return  HasManyThrough
 	 */
-	public function departmentList()
+	public function departmentList(): HasManyThrough
 	{
 		return $this->hasManyThrough(Department::class, GroupDepartment::class, 'groupid', 'id', 'id', 'collegedeptid');
 	}
@@ -177,9 +180,9 @@ class Group extends Model
 	/**
 	 * Get a list of managers
 	 *
-	 * @return  object
+	 * @return  Collection
 	 */
-	public function getManagersAttribute()
+	public function getManagersAttribute(): Collection
 	{
 		$m = (new Member)->getTable();
 		$u = (new \App\Modules\Users\Models\UserUsername)->getTable();
@@ -232,7 +235,7 @@ class Group extends Model
 	/**
 	 * Get a list of storage buckets
 	 *
-	 * @return  array
+	 * @return  array<int,array>
 	 */
 	public function getStorageBucketsAttribute(): array
 	{
@@ -461,7 +464,7 @@ class Group extends Model
 	 *
 	 * @return  UnixGroup|null
 	 */
-	public function getPrimaryUnixGroupAttribute()
+	public function getPrimaryUnixGroupAttribute(): ?UnixGroup
 	{
 		return $this->unixGroups()
 			->where('longname', '=', $this->unixgroup)
@@ -473,7 +476,7 @@ class Group extends Model
 	 *
 	 * @return  Motd|null
 	 */
-	public function getMotdAttribute()
+	public function getMotdAttribute(): ?Motd
 	{
 		return $this->motds()
 			->orderBy('datetimecreated', 'desc')
@@ -483,9 +486,9 @@ class Group extends Model
 	/**
 	 * Get a list of resources
 	 *
-	 * @return  object
+	 * @return  Collection
 	 */
-	public function getResourcesAttribute()
+	public function getResourcesAttribute(): Collection
 	{
 		$resources = [];
 
@@ -513,9 +516,9 @@ class Group extends Model
 	/**
 	 * Get a list of prior (trashed) resources
 	 *
-	 * @return  object
+	 * @return  Collection
 	 */
-	public function getPriorResourcesAttribute()
+	public function getPriorResourcesAttribute(): Collection
 	{
 		$resources = [];
 
@@ -552,6 +555,7 @@ class Group extends Model
 		$r = (new \App\Modules\Resources\Models\Asset)->getTable();
 
 		$queues = $this->queues()
+			//->with('users')
 			->withTrashed()
 			->select($q . '.*')
 			->join($s, $s . '.subresourceid', $q . '.subresourceid')
@@ -572,6 +576,8 @@ class Group extends Model
 			$queueids = $queue->users()
 				->orderBy('membertype', 'asc')
 				->get();
+			/*$queueids = $queue->users
+				->sortBy('membertype');*/
 
 			foreach ($queueids as $queueid)
 			{
@@ -589,9 +595,7 @@ class Group extends Model
 				}
 			}
 
-			$users = $queue->users()
-				->whereIsPending()
-				->get();
+			$users = $queueids->where('membertype', '=', \App\Modules\Queues\Models\MemberType::PENDING);
 
 			foreach ($users as $me)
 			{
@@ -628,7 +632,7 @@ class Group extends Model
 	 * @param   string  $name
 	 * @return  Group|null
 	 */
-	public static function findByName(string $name)
+	public static function findByName(string $name): ?Group
 	{
 		return self::query()
 			->where('name', '=', $name)
@@ -641,7 +645,7 @@ class Group extends Model
 	 * @param   string  $unixgroup
 	 * @return  Group|null
 	 */
-	public static function findByUnixgroup(string $unixgroup)
+	public static function findByUnixgroup(string $unixgroup): ?Group
 	{
 		return self::query()
 			->where('unixgroup', '=', $unixgroup)

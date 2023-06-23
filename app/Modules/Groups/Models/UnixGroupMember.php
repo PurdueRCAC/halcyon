@@ -8,6 +8,8 @@ use App\Modules\History\Traits\Historable;
 use App\Modules\Groups\Events\UnixGroupMemberCreating;
 use App\Modules\Groups\Events\UnixGroupMemberCreated;
 use App\Modules\Groups\Events\UnixGroupMemberDeleted;
+use App\Modules\Users\Models\User;
+use Carbon\Carbon;
 
 /**
  * Unix Group member model
@@ -159,31 +161,31 @@ class UnixGroupMember extends Model
 	/**
 	 * Get user that created this record
 	 *
-	 * @return  \App\Modules\Users\Models\User|null
+	 * @return  User|null
 	 */
-	public function addedBy()
+	public function addedBy(): ?User
 	{
 		$log = $this->history()
 			->where('action', '=', 'created')
 			->orderBy('id', 'desc')
 			->first();
 
-		return $log->user;
+		return $log ? $log->user : null;
 	}
 
 	/**
 	 * Get user that deleted this record
 	 *
-	 * @return  \App\Modules\Users\Models\User|null
+	 * @return  User|null
 	 */
-	public function removedBy()
+	public function removedBy(): ?User
 	{
 		$log = $this->history()
 			->where('action', '=', 'deleted')
 			->orderBy('id', 'desc')
 			->first();
 
-		return $log->user;
+		return $log ? $log->user : null;
 	}
 
 	/**
@@ -191,7 +193,7 @@ class UnixGroupMember extends Model
 	 *
 	 * @return  Type|null
 	 */
-	public function getTypeAttribute()
+	public function getTypeAttribute(): ?Type
 	{
 		return Type::find(Type::MEMBER);
 	}
@@ -243,7 +245,7 @@ class UnixGroupMember extends Model
 	 * @param   int  $userid
 	 * @return  UnixGroupMember|null
 	 */
-	public static function findByGroupAndUser(int $unixgroupid, int $userid)
+	public static function findByGroupAndUser(int $unixgroupid, int $userid): ?UnixGroupMember
 	{
 		return self::query()
 			->where('unixgroupid', '=', $unixgroupid)

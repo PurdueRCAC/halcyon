@@ -10,6 +10,7 @@ use App\Modules\Groups\Events\UnixGroupCreating;
 use App\Modules\Groups\Events\UnixGroupCreated;
 use App\Modules\Groups\Events\UnixGroupDeleting;
 use App\Modules\Groups\Events\UnixGroupDeleted;
+use Carbon\Carbon;
 
 /**
  * Unix Group model
@@ -295,7 +296,7 @@ class UnixGroup extends Model
 	 * @param   string  $name
 	 * @return  UnixGroup|null
 	 */
-	public static function findByLongname(string $name)
+	public static function findByLongname(string $name): ?UnixGroup
 	{
 		return self::query()
 			->where('longname', '=', $name)
@@ -308,7 +309,7 @@ class UnixGroup extends Model
 	 * @param   string  $name
 	 * @return  UnixGroup|null
 	 */
-	public static function findByShortname(string $name)
+	public static function findByShortname(string $name): ?UnixGroup
 	{
 		return self::query()
 			->where('shortname', '=', $name)
