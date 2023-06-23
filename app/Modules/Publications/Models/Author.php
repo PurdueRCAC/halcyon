@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Publications\Events\AuthorCreated;
 use App\Modules\Publications\Events\AuthorUpdated;
 use App\Modules\Publications\Events\AuthorDeleted;
+use Carbon\Carbon;
 
 /**
  * Model for publication author
