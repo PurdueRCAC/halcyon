@@ -24,6 +24,7 @@ class ItemsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /menus/items
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "state",
 	 * 		"description":   "Listener enabled/disabled state",
@@ -493,6 +494,7 @@ class ItemsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /menus/items/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

@@ -22,6 +22,7 @@ class TypesController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /messages/types
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "search",
@@ -257,6 +258,7 @@ class TypesController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /messages/types/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

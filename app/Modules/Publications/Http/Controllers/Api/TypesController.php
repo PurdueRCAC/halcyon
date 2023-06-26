@@ -3,6 +3,7 @@
 namespace App\Modules\Publications\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -22,6 +23,7 @@ class TypesController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /publications/types
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
@@ -76,7 +78,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -186,7 +188,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return JsonResponse|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -222,6 +224,7 @@ class TypesController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /publications/types/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -250,7 +253,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param  int $id
-	 * @return Response
+	 * @return JsonResource
 	 */
 	public function read(int $id)
 	{
@@ -319,7 +322,7 @@ class TypesController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   int $id
-	 * @return  Response
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function update(Request $request, int $id)
 	{
@@ -374,7 +377,7 @@ class TypesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete(int $id)
 	{

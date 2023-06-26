@@ -3,7 +3,7 @@
 namespace App\Modules\Orders\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Orders\Models\Category;
@@ -23,6 +23,7 @@ class CategoriesController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /orders/categories
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "state",
@@ -227,7 +228,7 @@ class CategoriesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response|CategoryResource
+	 * @return JsonResponse|CategoryResource
 	 */
 	public function create(Request $request)
 	{
@@ -279,6 +280,7 @@ class CategoriesController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /orders/categories/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -370,7 +372,7 @@ class CategoriesController extends Controller
 	 * }
 	 * @param   int  $id
 	 * @param   Request $request
-	 * @return  Response|CategoryResource
+	 * @return  JsonResponse|CategoryResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -443,7 +445,7 @@ class CategoriesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

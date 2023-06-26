@@ -23,6 +23,7 @@ class MessagesController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /messages
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "state",
@@ -399,6 +400,7 @@ class MessagesController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /messages/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

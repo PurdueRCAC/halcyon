@@ -24,6 +24,7 @@ class MenusController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /menus
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "client_id",
 	 * 		"description":   "Client (admin = 1|site = 0) ID",
@@ -242,6 +243,7 @@ class MenusController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /menus/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

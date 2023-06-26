@@ -3,7 +3,7 @@
 namespace App\Modules\Publications\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -24,6 +24,7 @@ class PublicationsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /publications
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "client_id",
 	 * 		"description":   "Client (admin = 1|site = 0) ID",
@@ -97,7 +98,7 @@ class PublicationsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -476,7 +477,7 @@ class PublicationsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return JsonResponse|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -549,6 +550,7 @@ class PublicationsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /publications/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -583,7 +585,7 @@ class PublicationsController extends Controller
 	 * 		}
 	 * }
 	 * @param  int  $id
-	 * @return Response
+	 * @return JsonResponse
 	 */
 	public function read(int $id)
 	{
@@ -887,7 +889,7 @@ class PublicationsController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   int $id
-	 * @return  Response
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function update(Request $request, int $id)
 	{
@@ -979,7 +981,7 @@ class PublicationsController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete(int $id)
 	{

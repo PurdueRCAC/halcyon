@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'menus'], function (Router $router)
+$router->group(['prefix' => 'menus', 'middleware' => 'auth:api'], function (Router $router)
 {
 	$router->get('/', [
 		'as'   => 'api.menus.index',
@@ -12,6 +12,7 @@ $router->group(['prefix' => 'menus'], function (Router $router)
 	$router->post('/', [
 		'as' => 'api.menus.create',
 		'uses' => 'MenusController@create',
+		'middleware' => ['can:create menus'],
 	]);
 	$router->get('{id}', [
 		'as'   => 'api.menus.read',
@@ -20,14 +21,16 @@ $router->group(['prefix' => 'menus'], function (Router $router)
 	$router->match(['put', 'patch'], '{id}', [
 		'as'   => 'api.menus.update',
 		'uses' => 'MenusController@update',
+		'middleware' => ['can:edit menus'],
 	])->where('id', '[0-9]+');
 	$router->delete('{id}', [
 		'as' => 'api.menus.delete',
 		'uses' => 'MenusController@delete',
+		'middleware' => ['can:delete menus'],
 	])->where('id', '[0-9]+');
 
 	// Updates
-	$router->group(['prefix' => 'items'], function (Router $router)
+	$router->group(['prefix' => 'items', 'middleware' => ['can:edit menus'],], function (Router $router)
 	{
 		$router->get('/', [
 			'as'   => 'api.menus.items',

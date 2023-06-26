@@ -3,7 +3,7 @@
 namespace App\Modules\Orders\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -28,6 +28,7 @@ class OrdersController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /orders
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "state",
@@ -381,7 +382,7 @@ class OrdersController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response|OrderResource
+	 * @return JsonResponse|OrderResource
 	 */
 	public function create(Request $request)
 	{
@@ -592,6 +593,7 @@ class OrdersController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /orders/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -609,6 +611,7 @@ class OrdersController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
+	 * @param  int  $id
 	 * @return OrderResource
 	 */
 	public function read($id)
@@ -690,7 +693,7 @@ class OrdersController extends Controller
 	 * }
 	 * @param   int $id
 	 * @param   Request $request
-	 * @return  Response|OrderResource
+	 * @return  JsonResponse|OrderResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -826,6 +829,7 @@ class OrdersController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /orders/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -844,7 +848,7 @@ class OrdersController extends Controller
 	 * 		}
 	 * }
 	 * @param   int $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

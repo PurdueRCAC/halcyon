@@ -3,7 +3,7 @@
 namespace App\Modules\Orders\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -27,6 +27,7 @@ class ItemsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /orders/items
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "state",
@@ -312,7 +313,7 @@ class ItemsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response|JsonResource
+	 * @return JsonResponse|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -394,6 +395,7 @@ class ItemsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /orders/items/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -507,7 +509,7 @@ class ItemsController extends Controller
 	 * }
 	 * @param   int $id
 	 * @param   Request $request
-	 * @return  Response|JsonResource
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -625,7 +627,7 @@ class ItemsController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{
@@ -661,6 +663,7 @@ class ItemsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /orders/sequence/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -679,7 +682,7 @@ class ItemsController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function sequence($id)
 	{

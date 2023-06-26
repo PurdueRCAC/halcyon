@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'knowledge'], function (Router $router)
+$router->group(['prefix' => 'knowledge', 'middleware' => 'auth:api'], function (Router $router)
 {
 	$router->get('/', [
 		'as'   => 'api.knowledge.index',
@@ -12,7 +12,7 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 	$router->post('/', [
 		'as' => 'api.knowledge.create',
 		'uses' => 'PagesController@create',
-		'middleware' => ['auth:api', 'can:create knowledge'],
+		'middleware' => ['can:create knowledge'],
 	]);
 	$router->get('{id}', [
 		'as'   => 'api.knowledge.read',
@@ -21,12 +21,12 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 	$router->match(['put', 'patch'], '{id}', [
 		'as'   => 'api.knowledge.update',
 		'uses' => 'PagesController@update',
-		'middleware' => ['auth:api', 'can:edit knowledge'],
+		'middleware' => ['can:edit knowledge'],
 	])->where('id', '[0-9]+');
 	$router->delete('{id}', [
 		'as' => 'api.knowledge.delete',
 		'uses' => 'PagesController@delete',
-		'middleware' => ['auth:api', 'can:delete knowledge'],
+		'middleware' => ['can:delete knowledge'],
 	])->where('id', '[0-9]+');
 	$router->get('diff', [
 		'as'   => 'api.knowledge.diff',
@@ -34,7 +34,7 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 	]);
 
 	// Page snippets
-	$router->group(['prefix' => '/snippets', 'middleware' => ['auth:api', 'can:manage knowledge']], function (Router $router)
+	$router->group(['prefix' => '/snippets', 'middleware' => ['can:manage knowledge']], function (Router $router)
 	{
 		$router->get('/', [
 			'as'   => 'api.knowledge.snippets',
@@ -58,7 +58,7 @@ $router->group(['prefix' => 'knowledge'], function (Router $router)
 		])->where('id', '[0-9]+');
 	});
 
-	$router->group(['prefix' => '/feedback', 'middleware' => ['auth:api']], function (Router $router)
+	$router->group(['prefix' => '/feedback'], function (Router $router)
 	{
 		$router->get('/', [
 			'as'   => 'api.knowledge.feedback',

@@ -3,7 +3,7 @@
 namespace App\Modules\Orders\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Orders\Models\Category;
@@ -25,6 +25,7 @@ class ProductsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /orders/products
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "state",
@@ -193,6 +194,7 @@ class ProductsController extends Controller
 	 *
 	 * @apiMethod POST
 	 * @apiUri    /orders/products
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "name",
@@ -308,7 +310,7 @@ class ProductsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response|ProductResource
+	 * @return JsonResponse|ProductResource
 	 */
 	public function create(Request $request)
 	{
@@ -383,6 +385,7 @@ class ProductsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /orders/products/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -415,6 +418,7 @@ class ProductsController extends Controller
 	 *
 	 * @apiMethod PUT
 	 * @apiUri    /orders/products/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -540,7 +544,7 @@ class ProductsController extends Controller
 	 * }
 	 * @param   int  $id
 	 * @param   Request $request
-	 * @return  Response|ProductResource
+	 * @return  JsonResponse|ProductResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -609,6 +613,7 @@ class ProductsController extends Controller
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /orders/products/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -627,7 +632,7 @@ class ProductsController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

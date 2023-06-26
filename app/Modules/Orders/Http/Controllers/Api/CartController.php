@@ -21,6 +21,7 @@ class CartController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /orders/cart
+	 * @apiAuthorization  true
 	 * @param  Request $request
 	 * @return CartResource
 	 */
@@ -110,6 +111,7 @@ class CartController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /orders/cart/{id}
+	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",

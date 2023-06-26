@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'pages'], function (Router $router)
+$router->group(['prefix' => 'pages', 'middleware' => 'auth:api'], function (Router $router)
 {
 	$router->get('/', [
 		'as'   => 'api.pages.index',
@@ -12,7 +12,7 @@ $router->group(['prefix' => 'pages'], function (Router $router)
 	$router->post('/', [
 		'as' => 'api.pages.create',
 		'uses' => 'PagesController@create',
-		'middleware' => ['auth:api', 'can:create pages']
+		'middleware' => ['can:create pages']
 	]);
 	$router->get('{id}', [
 		'as'   => 'api.pages.read',
@@ -21,11 +21,11 @@ $router->group(['prefix' => 'pages'], function (Router $router)
 	$router->match(['put', 'patch'], '{id}', [
 		'as'   => 'api.pages.update',
 		'uses' => 'PagesController@update',
-		'middleware' => ['auth:api', 'can:edit pages']
+		'middleware' => ['can:edit pages']
 	])->where('id', '[0-9]+');
 	$router->delete('{id}', [
 		'as' => 'api.pages.delete',
 		'uses' => 'PagesController@delete',
-		'middleware' => ['auth:api', 'can:delete pages']
+		'middleware' => ['can:delete pages']
 	])->where('id', '[0-9]+');
 });
