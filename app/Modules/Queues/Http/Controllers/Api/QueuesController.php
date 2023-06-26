@@ -3,7 +3,7 @@
 namespace App\Modules\Queues\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -168,7 +168,7 @@ class QueuesController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  QueueResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -631,7 +631,7 @@ class QueuesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response
+	 * @return JsonResponse|QueueResource
 	 */
 	public function create(Request $request)
 	{
@@ -786,7 +786,7 @@ class QueuesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  QueueResource
 	 */
 	public function read($id)
 	{
@@ -1090,7 +1090,7 @@ class QueuesController extends Controller
 	 * }
 	 * @param   int  $id
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResponse|QueueResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -1171,7 +1171,7 @@ class QueuesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

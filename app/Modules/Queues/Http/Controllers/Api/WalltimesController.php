@@ -3,7 +3,7 @@
 namespace App\Modules\Queues\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -222,7 +222,7 @@ class WalltimesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response|JsonResource
+	 * @return JsonResponse|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -357,7 +357,7 @@ class WalltimesController extends Controller
 	 * }
 	 * @param   int  $id
 	 * @param   Request  $request
-	 * @return  Response|JsonResource
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -418,7 +418,7 @@ class WalltimesController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

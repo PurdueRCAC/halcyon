@@ -3,7 +3,7 @@
 use Illuminate\Routing\Router;
 
 /** @var Router $router */
-$router->group(['prefix' => 'resources'], function (Router $router)
+$router->group(['prefix' => 'resources', 'middleware' => 'auth:api'], function (Router $router)
 {
 	$router->group(['prefix' => 'types'], function (Router $router)
 	{
@@ -14,7 +14,7 @@ $router->group(['prefix' => 'resources'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.resources.types.create',
 			'uses' => 'TypesController@create',
-			'middleware' => ['auth:api', 'can:create resources.types'],
+			'middleware' => ['can:create resources.types'],
 		]);
 		$router->get('{id}', [
 			'as' => 'api.resources.types.read',
@@ -23,12 +23,12 @@ $router->group(['prefix' => 'resources'], function (Router $router)
 		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.resources.types.update',
 			'uses' => 'TypesController@update',
-			'middleware' => ['auth:api', 'can:edit resources.types'],
+			'middleware' => ['can:edit resources.types'],
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.resources.types.delete',
 			'uses' => 'TypesController@delete',
-			'middleware' => ['auth:api', 'can:delete resources.types'],
+			'middleware' => ['can:delete resources.types'],
 		])->where('id', '[0-9]+');
 	});
 
@@ -41,7 +41,7 @@ $router->group(['prefix' => 'resources'], function (Router $router)
 		$router->post('/', [
 			'as' => 'api.resources.batchsystems.create',
 			'uses' => 'BatchsystemsController@create',
-			'middleware' => ['auth:api', 'can:create resources.batchsystems'],
+			'middleware' => ['can:create resources.batchsystems'],
 		]);
 		$router->get('{id}', [
 			'as' => 'api.resources.batchsystems.read',
@@ -50,12 +50,12 @@ $router->group(['prefix' => 'resources'], function (Router $router)
 		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.resources.batchsystems.update',
 			'uses' => 'BatchsystemsController@update',
-			'middleware' => ['auth:api', 'can:edit resources.batchsystems'],
+			'middleware' => ['can:edit resources.batchsystems'],
 		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as' => 'api.resources.batchsystems.delete',
 			'uses' => 'BatchsystemsController@delete',
-			'middleware' => ['auth:api', 'can:delete resources.batchsystems'],
+			'middleware' => ['can:delete resources.batchsystems'],
 		])->where('id', '[0-9]+');
 	});
 
@@ -64,7 +64,6 @@ $router->group(['prefix' => 'resources'], function (Router $router)
 		$router->get('/', [
 			'as' => 'api.resources.subresources',
 			'uses' => 'SubresourcesController@index',
-			//'middleware' => 'can:manage resources.subresources',
 		]);
 		$router->post('/', [
 			'as' => 'api.resources.subresources.create',
@@ -74,7 +73,6 @@ $router->group(['prefix' => 'resources'], function (Router $router)
 		$router->get('{id}', [
 			'as' => 'api.resources.subresources.read',
 			'uses' => 'SubresourcesController@read',
-			//'middleware' => 'can:create resources.subresources',
 		])->where('id', '[0-9]+');
 		$router->match(['put', 'patch'], '{id}', [
 			'as' => 'api.resources.subresources.update',
@@ -88,7 +86,7 @@ $router->group(['prefix' => 'resources'], function (Router $router)
 		])->where('id', '[0-9]+');
 	});
 
-	$router->group(['prefix' => 'members', 'middleware' => 'auth:api'], function (Router $router)
+	$router->group(['prefix' => 'members'], function (Router $router)
 	{
 		$router->get('/{id?}', [
 			'as' => 'api.resources.members',
@@ -121,7 +119,7 @@ $router->group(['prefix' => 'resources'], function (Router $router)
 	$router->post('/', [
 		'as' => 'api.resources.create',
 		'uses' => 'ResourcesController@create',
-		'middleware' => ['auth:api', 'can:create resources'],
+		'middleware' => ['can:create resources'],
 	]);
 
 	$router->get('{id}', [
@@ -132,18 +130,18 @@ $router->group(['prefix' => 'resources'], function (Router $router)
 	$router->get('{id}/members', [
 		'as' => 'api.resources.read.members',
 		'uses' => 'ResourcesController@members',
-		'middleware' => ['auth:api', 'can:manage resources'],
+		'middleware' => ['can:manage resources'],
 	])->where('id', '[0-9]+');
 
 	$router->match(['put', 'patch'], '{id}', [
 		'as' => 'api.resources.update',
 		'uses' => 'ResourcesController@update',
-		'middleware' => ['auth:api', 'can:edit resources'],
+		'middleware' => ['can:edit resources'],
 	])->where('id', '[0-9]+');
 
 	$router->delete('{id}', [
 		'as' => 'api.resources.delete',
 		'uses' => 'ResourcesController@delete',
-		'middleware' => ['auth:api', 'can:delete resources'],
+		'middleware' => ['can:delete resources'],
 	])->where('id', '[0-9]+');
 });

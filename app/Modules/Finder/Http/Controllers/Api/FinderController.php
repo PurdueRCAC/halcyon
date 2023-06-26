@@ -3,7 +3,7 @@
 namespace App\Modules\Finder\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Finder\Models\Service;
@@ -44,7 +44,7 @@ class FinderController extends Controller
 	 * 			}
 	 * 		}
 	 * }
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function settings()
 	{
@@ -134,7 +134,7 @@ class FinderController extends Controller
 	 * 			}
 	 * 		}
 	 * }
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function servicelist()
 	{
@@ -213,7 +213,7 @@ class FinderController extends Controller
 	 * 			}
 	 * 		}
 	 * }
-	 * @return  Response
+	 * @return  JsonResource
 	 */
 	public function facettree()
 	{
@@ -239,7 +239,7 @@ class FinderController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function sendmail(Request $request)
 	{

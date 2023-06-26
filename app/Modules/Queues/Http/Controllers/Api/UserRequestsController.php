@@ -317,6 +317,7 @@ class UserRequestsController extends Controller
 		if ($group && count($resources))
 		{
 			// Gather the queues this group owns and are in the requested resources
+			// @TODO Remove hard-coded queue ID
 			$q = (new Queue)->getTable();
 			$c = (new Child)->getTable();
 
@@ -328,7 +329,7 @@ class UserRequestsController extends Controller
 					{
 						$where->where($q . '.groupid', '=', $group)
 							->orWhere($q . '.groupid', '=', 0)
-							->orWhere($q . '.groupid', '=', 33338);
+							->orWhere($q . '.id', '=', 33338);
 					})
 				->get();
 

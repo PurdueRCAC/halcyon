@@ -251,6 +251,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 	$router->get('/', [
 		'as' => 'api.queues.index',
 		'uses' => 'QueuesController@index',
+		'middleware' => ['auth:api'],
 	]);
 	$router->post('/', [
 		'as' => 'api.queues.create',
@@ -260,6 +261,7 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 	$router->get('{id}', [
 		'as' => 'api.queues.read',
 		'uses' => 'QueuesController@read',
+		'middleware' => ['auth:api'],
 	])->where('id', '[0-9]+');
 	$router->match(['put', 'patch'], '{id}', [
 		'as' => 'api.queues.update',

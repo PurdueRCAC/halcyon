@@ -3,7 +3,7 @@
 namespace App\Modules\Queues\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -275,7 +275,7 @@ class LoansController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response|JsonResource
+	 * @return JsonResponse|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -590,7 +590,7 @@ class LoansController extends Controller
 	 * }
 	 * @param   int  $id
 	 * @param   Request  $request
-	 * @return  Response|JsonResource
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -813,7 +813,7 @@ class LoansController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

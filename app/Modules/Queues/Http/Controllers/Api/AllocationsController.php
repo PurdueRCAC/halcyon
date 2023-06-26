@@ -4,6 +4,7 @@ namespace App\Modules\Queues\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Queues\Http\Resources\AllocationResourceCollection;
@@ -364,7 +365,7 @@ class AllocationsController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{

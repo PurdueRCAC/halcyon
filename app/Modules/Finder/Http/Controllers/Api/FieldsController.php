@@ -3,7 +3,7 @@
 namespace App\Modules\Finder\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -96,7 +96,7 @@ class FieldsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  ResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -220,8 +220,8 @@ class FieldsController extends Controller
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
-	 * @param   Request  $request
-	 * @return Response
+	 * @param  Request  $request
+	 * @return JsonResponse|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -296,7 +296,7 @@ class FieldsController extends Controller
 	 * 		}
 	 * }
 	 * @param  int  $id
-	 * @return Response
+	 * @return JsonResource
 	 */
 	public function read($id)
 	{
@@ -384,7 +384,7 @@ class FieldsController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   int $id
-	 * @return  Response
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function update(Request $request, $id)
 	{
@@ -451,7 +451,7 @@ class FieldsController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete($id)
 	{
