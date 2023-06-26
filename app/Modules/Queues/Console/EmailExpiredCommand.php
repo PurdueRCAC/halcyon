@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Modules\Queues\Mail\Expired;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User as QueueUser;
+use App\Modules\Queues\Models\MemberType;
 use App\Modules\Users\Models\UserUsername;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Resources\Events\ResourceMemberStatus;

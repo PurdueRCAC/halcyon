@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User;
+use App\Modules\Queues\Models\MemberType;
 use App\Modules\Storage\Models\StorageResource;
 use App\Modules\Resources\Models\Child;
 use App\Modules\Users\Models\User as SiteUser;
@@ -42,7 +43,7 @@ class EmailWelcomeClusterCommand extends Command
 		$users = User::query()
 			->select($u . '.*', $q . '.groupid')
 			->join($q, $q . '.id', $u . '.queueid')
-			->whereIn($u . '.membertype', [1, 4])
+			->whereIn($u . '.membertype', [MemberType::MEMBER, MemberType::PENDING])
 			->whereIn($u . '.notice', [8, 13])
 			->get();
 

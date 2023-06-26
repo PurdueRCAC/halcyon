@@ -54,6 +54,17 @@ class User extends Model
 	const DELETED_AT = 'datetimeremoved';
 
 	/**
+	 * Notice values
+	 *
+	 * @var int
+	 */
+	const NOTICE_NONE = 0;
+	const NOTICE_REQUEST_GRANTED = 2;
+	const NOTICE_REMOVED = 3;
+	const NOTICE_REQUESTED = 6;
+	const NOTICE_REQUEST_DENIED = 12;
+
+	/**
 	 * The table to which the class pertains
 	 *
 	 * @var  string
@@ -94,9 +105,9 @@ class User extends Model
 		self::deleting(function($model)
 		{
 			// Determine notice level
-			if ($model->notice == 2)
+			if ($model->notice == self::NOTICE_REQUEST_GRANTED)
 			{
-				$model->notice = 0;
+				$model->notice = self::NOTICE_NONE;
 			}
 			elseif ($model->notice == 10)
 			{
@@ -104,7 +115,7 @@ class User extends Model
 			}
 			else
 			{
-				$model->notice = 3;
+				$model->notice = self::NOTICE_REMOVED;
 			}
 		});
 	}

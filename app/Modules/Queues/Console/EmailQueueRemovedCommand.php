@@ -10,10 +10,11 @@ use App\Modules\Queues\Mail\QueueRemovedManager;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Queues\Models\Scheduler;
-use App\Modules\Users\Models\User;
+use App\Modules\Queues\Models\MemberType;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\UnixGroup;
 use App\Modules\Groups\Models\UnixGroupMember;
+use App\Modules\Users\Models\User;
 use App\Modules\Resources\Events\ResourceMemberStatus;
 
 class EmailQueueRemovedCommand extends Command
@@ -47,8 +48,8 @@ class EmailQueueRemovedCommand extends Command
 			->onlyTrashed()
 			->select($qu . '.*', $q . '.groupid')
 			->join($q, $q . '.id', $qu . '.queueid')
-			->whereIn($qu . '.membertype', [1, 4])
-			->where($qu . '.notice', '=', 3)
+			->whereIn($qu . '.membertype', [MemberType::MEMBER, MemberType::PENDING])
+			->where($qu . '.notice', '=', QueueUser::NOTICE_REMOVED)
 			->get();
 
 		$uu = (new UnixGroupMember)->getTable();

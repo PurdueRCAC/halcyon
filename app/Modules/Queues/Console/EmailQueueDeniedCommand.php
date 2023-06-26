@@ -8,6 +8,7 @@ use App\Modules\Queues\Mail\QueueDenied;
 use App\Modules\Queues\Mail\QueueDeniedManager;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User as QueueUser;
+use App\Modules\Queues\Models\MemberType;
 use App\Modules\Users\Models\User;
 use App\Modules\Groups\Models\Group;
 
@@ -44,8 +45,8 @@ class EmailQueueDeniedCommand extends Command
 		$users = QueueUser::query()
 			->select($qu . '.*', $q . '.groupid')
 			->join($q, $q . '.id', $qu . '.queueid')
-			->whereIn($qu . '.membertype', [1, 4])
-			->where($qu . '.notice', '=', 12)
+			->whereIn($qu . '.membertype', [MemberType::MEMBER, MemberType::PENDING])
+			->where($qu . '.notice', '=', QueueUser::NOTICE_REQUEST_DENIED)
 			->get();
 
 		if (!count($users))

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User;
 use App\Modules\Queues\Models\GroupUser;
+use App\Modules\Queues\Models\MemberType;
 use App\Modules\Storage\Models\StorageResource;
 use App\Modules\Resources\Models\Child;
 use App\Modules\Users\Models\User as SiteUser;
@@ -45,7 +46,7 @@ class EmailWelcomeFreeCommand extends Command
 			->select($gu . '.*', $u . '.queueid')
 			->join($gu, $gu . '.queueuserid', $u . '.id')
 			->join($q, $q . '.id', $u . '.queueid')
-			->whereIn($gu . '.membertype', [1, 4])
+			->whereIn($gu . '.membertype', [MemberType::MEMBER, MemberType::PENDING])
 			->whereIn($gu . '.notice', [8, 13])
 			->get();
 

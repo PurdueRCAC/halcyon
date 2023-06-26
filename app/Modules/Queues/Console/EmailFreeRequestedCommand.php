@@ -8,6 +8,7 @@ use App\Modules\Queues\Mail\FreeRequested;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\GroupUser;
 use App\Modules\Queues\Models\User as QueueUser;
+use App\Modules\Queues\Models\MemberType;
 use App\Modules\Users\Models\User;
 use App\Modules\Groups\Models\Group;
 
@@ -46,8 +47,8 @@ class EmailFreeRequestedCommand extends Command
 			->select($gu . '.*', $qu . '.queueid')
 			->join($qu, $qu . '.id', $gu . '.queueuserid')
 			->join($q, $q . '.id', $qu . '.queueid')
-			->whereIn($qu . '.membertype', [1, 4])
-			->where($qu . '.notice', '=', 6)
+			->whereIn($qu . '.membertype', [MemberType::MEMBER, MemberType::PENDING])
+			->where($qu . '.notice', '=', QueueUser::NOTICE_REQUESTED)
 			->get();
 
 		if (!count($users))

@@ -10,6 +10,7 @@ use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\GroupUser;
 use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Queues\Models\Scheduler;
+use App\Modules\Queues\Models\MemberType;
 use App\Modules\Users\Models\User;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Resources\Events\ResourceMemberStatus;
@@ -51,8 +52,8 @@ class EmailFreeRemovedCommand extends Command
 			->join($qu, $qu . '.id', $gu . '.queueuserid')
 			->join($q, $q . '.id', $qu . '.queueid')
 			->onlyTrashed()
-			->whereIn($qu . '.membertype', [1, 4])
-			->where($qu . '.notice', '=', 3)
+			->whereIn($qu . '.membertype', [MemberType::MEMBER, MemberType::PENDING])
+			->where($qu . '.notice', '=', QueueUser::NOTICE_REMOVED)
 			->get();
 
 		if (!count($users))

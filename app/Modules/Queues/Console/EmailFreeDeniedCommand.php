@@ -10,6 +10,7 @@ use App\Modules\Queues\Mail\FreeDeniedManager;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\GroupUser;
 use App\Modules\Queues\Models\User as QueueUser;
+use App\Modules\Queues\Models\MemberType;
 use App\Modules\Users\Models\User;
 use App\Modules\Groups\Models\Group;
 
@@ -49,8 +50,8 @@ class EmailFreeDeniedCommand extends Command
 			->join($qu, $qu . '.id', $gu . '.queueuserid')
 			->join($q, $q . '.id', $qu . '.queueid')
 			->withTrashed()
-			->whereIn($qu . '.membertype', [1, 4])
-			->where($qu . '.notice', '=', 12)
+			->whereIn($qu . '.membertype', [MemberType::MEMBER, MemberType::PENDING])
+			->where($qu . '.notice', '=', QueueUser::NOTICE_REQUEST_DENIED)
 			->get();
 
 		if (!count($groupqueueusers))
