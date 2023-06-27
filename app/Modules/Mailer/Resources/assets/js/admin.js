@@ -66,7 +66,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	var groups = document.querySelectorAll(".form-groups");
 	if (groups.length) {
 		groups.forEach(function (group) {
-			new TomSelect(group, {
+			var totalgroups = 0;
+			var sel = new TomSelect(group, {
 				plugins: {
 					remove_button: {
 						title: 'Remove this group',
@@ -90,6 +91,20 @@ document.addEventListener('DOMContentLoaded', function () {
 						}).catch(() => {
 							callback();
 						});
+				}
+			});
+			sel.on('item_add', function (item, data) {
+				totalgroups++;
+				var confirm = document.getElementById(group.getAttribute('id') + '-confirmation');
+				if (confirm) {
+					confirm.classList.remove('d-none');
+				}
+			});
+			sel.on('item_remove', function () {
+				totalgroups--;
+				var confirm = document.getElementById(group.getAttribute('id') + '-confirmation');
+				if (confirm && totalgroups <= 0) {
+					confirm.classList.add('d-none');
 				}
 			});
 		});

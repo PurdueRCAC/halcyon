@@ -173,18 +173,24 @@ app('pathway')
 					<span class="form-text text-muted">{{ trans('mailer::mailer.send to hint') }}</span>
 				</div>
 
-				<div class="form-group">
-					<label for="field-group">{{ trans('mailer::mailer.to group') }}</label>
-					<input type="text" name="group" id="field-group" class="form-control form-groups" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" value="" />
-				</div>
+				<details>
+					<summary class="mb-4">Bulk options</summary>
+					<div>
+						<div class="form-group">
+							<label for="field-group">{{ trans('mailer::mailer.to group') }}</label>
+							<input type="text" name="group" id="field-group" class="form-control form-groups" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" value="" />
+							<div class="alert alert-warning d-none" id="field-group-confirmation">{{ trans('mailer::mailer.group confirmation') }}</div>
+						</div>
 
-				<fieldset class="form-group" id="field-roles">
-					<legend>{{ trans('mailer::mailer.to role') }}</legend>
-					<div class="alert alert-warning d-none">{{ trans('mailer::mailer.role confirmation') }}</div>
-					<?php
-					echo App\Halcyon\Html\Builder\Access::roles('role', [], true);
-					?>
-				</fieldset>
+						<fieldset class="form-group" id="field-roles">
+							<legend>{{ trans('mailer::mailer.to role') }}</legend>
+							<div class="alert alert-warning d-none">{{ trans('mailer::mailer.role confirmation') }}</div>
+							<?php
+							echo App\Halcyon\Html\Builder\Access::roles('role', [], true);
+							?>
+						</fieldset>
+					</div>
+				</details>
 
 				<div class="form-group">
 					<label for="field-cc">{{ trans('mailer::mailer.cc') }}</label>

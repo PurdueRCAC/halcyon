@@ -56,6 +56,7 @@ return [
 	'error' => [
 		'account not found' => 'Could not find account for user ID :id',
 	],
+	'group confirmation' => 'Selecting a group will email all users in that gorup. This could be a significant number of people so please be certain.',
 	'role confirmation' => 'Selecting a role will email all users assigned that role. This could be a significant number of people so please be certain.',
 	'copy' => 'Copy',
 ];
