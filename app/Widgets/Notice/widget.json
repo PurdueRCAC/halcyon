@@ -3,5 +3,5 @@
 	"alias": "notice",
 	"description": "This widget shows a notice (when site will be down, etc.) box for site visitors",
 	"type": "site",
-	"version": "1.0.0"
+	"requires": []
 }

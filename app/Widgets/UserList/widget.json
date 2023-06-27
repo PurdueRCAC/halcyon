@@ -3,5 +3,7 @@
 	"alias": "userlist",
 	"description": "This displays a list users with a specified role",
 	"type": "site",
-	"version": "1.0.0"
+	"requires": [
+		"mod_users"
+	]
 }

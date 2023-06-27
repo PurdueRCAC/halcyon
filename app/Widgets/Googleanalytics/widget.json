@@ -2,7 +2,6 @@
     "name": "Google Analytics",
     "alias": "googleanalytics",
     "description": "This widget adds some Javascript to the page for Google Analytics reporting.",
-    "keywords": [],
-    "active": 1,
+    "type": "site",
     "requires": []
 }

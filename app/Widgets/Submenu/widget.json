@@ -2,7 +2,6 @@
     "name": "Admin Sub-menu",
     "alias": "submenu",
     "description": "This shows the sub-Menu in the admin interface",
-    "keywords": [],
-    "active": 1,
+    "type": "admin",
     "requires": []
 }

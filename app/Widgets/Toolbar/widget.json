@@ -2,7 +2,6 @@
     "name": "Toolbar",
     "alias": "toolbar",
     "description": "This shows the toolbar icons used to control actions throughout the administrator area.",
-    "keywords": [],
-    "active": 1,
+    "type": "admin",
     "requires": []
 }

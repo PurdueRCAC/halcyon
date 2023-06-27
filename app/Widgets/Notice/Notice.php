@@ -225,14 +225,14 @@ class Notice extends Widget
 	{
 		if ($stime[0] == 0 && $stime[1] == 0 && $stime[2] == 0)
 		{
-			$o  = trans('widget.notice::notice.IMMEDIATELY');
+			$o  = trans('widget.notice::notice.immediately');
 		}
 		else
 		{
-			$o  = trans('widget.notice::notice.IN') . ' ';
-			$o .= ($stime[0] > 0) ? $stime[0] . ' ' . trans('widget.notice::notice.DAYS') . ', '  : '';
-			$o .= ($stime[1] > 0) ? $stime[1] . ' ' . trans('widget.notice::notice.HOURS') . ', ' : '';
-			$o .= ($stime[2] > 0) ? $stime[2] . ' ' . trans('widget.notice::notice.MINUTES')      : '';
+			$o  = trans('widget.notice::notice.in') . ' ';
+			$o .= ($stime[0] > 0) ? $stime[0] . ' ' . trans('widget.notice::notice.days') . ', '  : '';
+			$o .= ($stime[1] > 0) ? $stime[1] . ' ' . trans('widget.notice::notice.hours') . ', ' : '';
+			$o .= ($stime[2] > 0) ? $stime[2] . ' ' . trans('widget.notice::notice.minutes')      : '';
 		}
 		return $o;
 	}
@@ -246,10 +246,18 @@ class Notice extends Widget
 	private static function autoLinkText($text)
 	{
 		// Replace email links
-		$text = preg_replace('/([_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3})/', '<a href="mailto:$1">$1</a>', $text);
+		$text = preg_replace(
+			'/([_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3})/',
+			'<a href="mailto:$1">$1</a>',
+			$text
+		);
 
 		// Replace url links
-		$text = preg_replace('#\b(([\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/)))#', '<a class="ext-link" rel="external" href="$1">$1</a>', $text);
+		$text = preg_replace(
+			'#\b(([\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/)))#',
+			'<a class="ext-link" rel="external" href="$1">$1</a>',
+			$text
+		);
 
 		// Return auto-linked text
 		return $text;

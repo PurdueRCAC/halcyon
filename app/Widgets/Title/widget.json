@@ -2,7 +2,6 @@
     "name": "Admin Module Title",
     "alias": "title",
     "description": "This shows the active module title in the admin interface.",
-    "keywords": [],
-    "active": 1,
+    "type": "admin",
     "requires": []
 }

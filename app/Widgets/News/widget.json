@@ -3,5 +3,7 @@
 	"alias": "news",
 	"description": "Display news articles from selected category",
 	"type": "site",
-	"version": "1.0.0"
+	"requires": [
+		"mod_news"
+	]
 }

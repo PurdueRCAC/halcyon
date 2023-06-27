@@ -2,7 +2,8 @@
     "name": "Members",
     "alias": "members",
     "description": "This widget shows on the Admin area dashboard and displays user data",
-    "keywords": [],
-    "active": 1,
-    "requires": []
+    "type": "admin",
+    "requires": [
+        "mod_users"
+    ]
 }

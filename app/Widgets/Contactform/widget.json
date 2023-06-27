@@ -3,5 +3,5 @@
 	"alias": "contactform",
 	"description": "This displays a contact form",
 	"type": "site",
-	"version": "1.0.0"
+	"requires": []
 }

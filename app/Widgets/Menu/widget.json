@@ -2,7 +2,8 @@
     "name": "Site Menu",
     "alias": "menu",
     "description": "This displays a menu on the frontend",
-    "keywords": [],
-    "active": 1,
-    "requires": []
+    "type": ["admin", "site"],
+    "requires": [
+        "mod_menus"
+    ]
 }

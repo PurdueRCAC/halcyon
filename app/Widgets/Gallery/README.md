@@ -1,3 +1,3 @@
-## Impact Tables Widget
+## Image Gallery Widget
 
-This displays tables of impact data.
+This displays a gallery (list or carousel) of images found in a target Media directory.

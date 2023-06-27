@@ -1,7 +1,9 @@
 {
-	"name": "Impact Tables",
-	"alias": "impacttables",
-	"description": "This displays tables of impact data",
+	"name": "Image Gallery",
+	"alias": "gallery",
+	"description": "This displays a gallery (list or carousel) of images found in a target Media directory",
 	"type": "site",
-	"version": "1.0.0"
+	"requires": [
+		"mod_media"
+	]
 }

@@ -6,6 +6,8 @@ return [
 	'staff' => 'Staff',
 	'staff directory' => 'Staff Directory',
 	'email' => 'Email',
+	'users profile photo' => ':name\'s Profile Photo',
+	'full profile for' => 'Full profile <span class="sr-only">for :name</span>',
 	// Misc.
 	'no articles found' => 'No articles found.',
 	'params' => [

@@ -3,5 +3,7 @@
 	"alias": "impacttables",
 	"description": "This displays tables of impact data",
 	"type": "site",
-	"version": "1.0.0"
+	"requires": [
+		"mod_impact"
+	]
 }

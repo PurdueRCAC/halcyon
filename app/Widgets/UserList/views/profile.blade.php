@@ -8,7 +8,7 @@
 		<div class="row">
 			<div class="col-md-2">
 				<div class="avatar mx-auto">
-					<img class="profile_teaser_photo vertical" src="{{ $user->thumb }}" alt="{{ $user->name }}'s Profile Photo" />
+					<img class="profile_teaser_photo vertical" src="{{ $user->thumb }}" alt="{{ trans('widget.userlist::userlist.users profile photo', ['name' => $user->name]) }}" />
 				</div>
 			</div>
 			<div class="col-md-10">

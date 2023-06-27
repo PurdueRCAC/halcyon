@@ -34,7 +34,7 @@ $ids = array();
 										<p class="card-title"><a class="purchase-resource" href="{{ route('site.orders.products', ['category' => $category->id]) }}">{{ $resource->name }}</a></p>
 									</div>
 									<div class="col-md-4 text-right">
-										<p><a class="btn btn-default btn-sm btn-purchase" href="{{ route('site.orders.products', ['category' => $category->id]) }}">Purchase <span class="sr-only">{{ $resource->name }} </span>Now</a></p>
+										<p><a class="btn btn-default btn-sm btn-purchase" href="{{ route('site.orders.products', ['category' => $category->id]) }}">{!! trans('widget.productlist::productlist.purchase now', ['name' => e($resource->name)]) !!}</a></p>
 									</div>
 								</div>
 
@@ -47,7 +47,7 @@ $ids = array();
 											<div class="row<?php if (!$prod->public) { echo ' orderproductitemprivate'; } ?>">
 												<div class="col-md-7">
 													@if (!$prod->public)
-														<span class="badge badge-warning">HIDDEN</span>
+														<span class="badge badge-warning">{{ trans('widget.productlist::productlist.hidden') }}</span>
 													@endif
 													{{ $prod->name }}
 												</div>
@@ -62,7 +62,7 @@ $ids = array();
 									@else
 										<div class="row">
 											<div class="col-md-12">
-												<span class="text-muted">Login to see pricing options.</span>
+												<span class="text-muted">{{ trans('widget.productlist::productlist.login to see pricing') }}</span>
 											</div>
 										</div>
 									@endif

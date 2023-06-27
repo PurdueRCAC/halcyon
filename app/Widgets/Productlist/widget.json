@@ -3,5 +3,7 @@
 	"alias": "productlist",
 	"description": "This displays a list of products",
 	"type": "site",
-	"version": "1.0.0"
+	"requires": [
+		"mod_orders"
+	]
 }

@@ -2,6 +2,6 @@
 	"name": "Breadcrumbs",
 	"alias": "breadcrumbs",
 	"description": "This displays a Breadcrumb trail",
-	"type": "site",
-	"version": "1.0.0"
+	"type": ["admin", "site"],
+	"requires": []
 }

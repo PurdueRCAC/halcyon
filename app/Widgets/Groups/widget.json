@@ -2,7 +2,8 @@
     "name": "Groups",
     "alias": "groups",
     "description": "This widget shows on the Admin area dashboard and displays information related to Groups.",
-    "keywords": [],
-    "active": 1,
-    "requires": []
+    "type": "admin",
+    "requires": [
+        "mod_groups"
+    ]
 }

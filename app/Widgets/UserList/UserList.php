@@ -5,8 +5,8 @@ use App\Halcyon\Access\Map;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
 use App\Modules\Widgets\Entities\Widget;
-use Carbon\Carbon;
 use App\Modules\Users\Events\UserBeforeDisplay;
+use Carbon\Carbon;
 
 /**
  * Widget for displaying a list of users
