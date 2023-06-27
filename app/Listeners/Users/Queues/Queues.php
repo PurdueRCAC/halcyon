@@ -53,6 +53,11 @@ class Queues
 		{
 			$group = $membership->group;
 
+			if (!$group)
+			{
+				continue;
+			}
+
 			$queues = $group->queues;
 
 			$queues = $group->queues()

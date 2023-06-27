@@ -1,6 +1,7 @@
 <?php
 namespace App\Listeners\Users\Groups;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Users\Events\UserDisplay;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Groups\Models\Group;
@@ -18,10 +19,10 @@ class Groups
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  \Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(UserBeforeDisplay::class, self::class . '@handleUserBeforeDisplay');
 		$events->listen(UserDisplay::class, self::class . '@handleUserDisplay');
@@ -34,7 +35,7 @@ class Groups
 	 * @param   UserBeforeDisplay  $event
 	 * @return  void
 	 */
-	public function handleUserBeforeDisplay(UserBeforeDisplay $event)
+	public function handleUserBeforeDisplay(UserBeforeDisplay $event): void
 	{
 		$user = $event->getUser();
 
@@ -138,7 +139,7 @@ class Groups
 	 * @param   UserDisplay  $event
 	 * @return  void
 	 */
-	public function handleUserDisplay(UserDisplay $event)
+	public function handleUserDisplay(UserDisplay $event): void
 	{
 		$content = null;
 		$user = $event->getUser();
@@ -333,6 +334,11 @@ class Groups
 					->orderBy('id', 'asc')
 					->get();
 
+				$rows = $rows->filter(function($value, $key)
+				{
+					return $value->group ? true : false;
+				});
+
 				/*$groups = array_unique($rows->pluck('groupid')->toArray());
 
 				foreach ($queueusers as $qu)
@@ -448,7 +454,7 @@ class Groups
 	 * @param   UserNotifying  $event
 	 * @return  void
 	 */
-	public function handleUserNotifying(UserNotifying $event)
+	public function handleUserNotifying(UserNotifying $event): void
 	{
 		$user = $event->user;
 
