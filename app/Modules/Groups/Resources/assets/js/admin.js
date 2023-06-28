@@ -1,6 +1,5 @@
 /* global $ */ // jquery.js
 /* global Halcyon */ // core.js
-/* global SetError */ // common.js
 
 /**
  * Unix base groups
@@ -697,7 +696,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				},
 				error: function (xhr) {
 					if (xhr.status == 416) {
-						SetError("Queue disabled for system/guest account.", null);
+						alert("Queue disabled for system/guest account.");
 					}
 				}
 			});
@@ -821,6 +820,19 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		});
 	});
+
+	/*function csvEscapeJSON(s) {
+		return s.replace(/./g, function (x) {
+			return {
+				'<': '&lt;',
+				'>': '&gt;',
+				'&': '&amp;',
+				'"': '&quot;',
+				'+': ' '
+			}
+			[x] || x;
+		});
+	}*/
 
 	$('#export_to_csv').on('click', function (e) {
 		e.preventDefault();

@@ -141,49 +141,6 @@
 					btn.setAttribute('data-loading', false);
 					alert(err);
 				});
-
-				/*$.ajax({
-					url: btn.getAttribute('data-api'),
-					type: 'put',
-					data: post,
-					dataType: 'json',
-					async: false,
-					success: function (data) {
-						if (btn.getAttribute('data-reload')) {
-							window.location.reload(true);
-							return;
-						}
-
-						var span = document.getElementById('SPAN_' + btn.getAttribute('data-prop') + '_' + btn.getAttribute('data-value'));
-						if (span) {
-							span.classList.toggle('hide');
-							span.innerHTML = data[btn.getAttribute('data-prop')];
-						}
-						input.classList.toggle('hide');
-
-						//btn.find('.spinner-border').toggleClass('hide');
-						//btn.find('.fa').toggleClass('hide');
-						btn.setAttribute('data-loading', false);
-						btn.classList.toggle('hide');
-
-						var cancel = document.getElementById('CANCEL_' + btn.getAttribute('data-prop') + '_' + btn.getAttribute('data-value'));
-						if (cancel) {
-							cancel.classList.toggle('hide');
-						}
-						var edit = document.getElementById('EDIT_' + btn.getAttribute('data-prop') + '_' + btn.getAttribute('data-value'));
-						if (edit) {
-							edit.classList.toggle('hide');
-						}
-					},
-					error: function (xhr, ajaxOptions, thrownError) {
-						//Halcyon.message('danger', xhr.response);
-						//btn.find('spinner-border').toggleClass('hide');
-						//btn.find('fa').toggleClass('hide');
-						btn.setAttribute('data-loading', false);
-						alert(xhr.responseJSON.message);
-						//console.log(xhr);
-					}
-				});*/
 			});
 		});
 

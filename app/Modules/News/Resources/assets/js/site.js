@@ -1,5 +1,4 @@
 /* global $ */ // jquery.js
-/* global SetError */ // common.js
 
 var keywords_pending = 0;
 var LASTEDIT = new Array();
@@ -7,6 +6,56 @@ var root = document.querySelector('meta[name="base-url"]').getAttribute('content
 var headers = {
 	'Content-Type': 'application/json'
 };
+
+/**
+ * gets the active tab
+ *
+ * @return  {void}
+ */
+function GetTab() {
+	var tabs = document.getElementById("tabMain");
+
+	// look for a tab that is not hidden
+	//var bits = tablist.split(",");
+	var t = tabs.getElementsByTagName("div");
+
+	//var i = 0;
+	for (var x = 0; x < t.length; x++) {
+		if (t[x].id.substring(0, 3) == "DIV") {
+			if (t[x].style.display != "none") {
+				return t[x].id.substring(4); //bits[i];
+			}
+			//i++;
+		}
+	}
+}
+
+/**
+ * Put an error into the action bar
+ *
+ * @param   {string}  text
+ * @param   {string}  small
+ * @return  {void}
+ */
+function SetError(message, small) {
+	var group = GetTab();
+
+	if (group) {
+		var span = document.getElementById(group + "_action");
+		if (span) {
+			span.className = "alert alert-error";
+			span.innerHTML = message + "<br />";
+
+			if (typeof (small) != 'undefined' && small != '') {
+				var span2 = document.createElement("span");
+				span2.innerHTML = small;
+				span2.className = "smallError";
+
+				span.appendChild(span2);
+			}
+		}
+	}
+}
 
 /**
  * Used to highlight stemmed keyword matches in news text

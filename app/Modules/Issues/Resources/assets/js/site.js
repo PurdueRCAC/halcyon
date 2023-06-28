@@ -393,62 +393,6 @@ function IssuesTabURL(tab) {
 }
 
 /**
- * Result handler function when selecting a group
- *
- * @param   {object}  xml
- * @param   {array}   flags
- * @return  {void}
- */
-/*function IssuesSearchResource(xml, flags) {
-	var pageload = false;
-	//var disabled = false;
-
-	if (typeof (flags) != 'undefined') {
-		pageload = flags['pageload'];
-		//disabled = flags['disabled'];
-	}
-
-	if (xml.status == 200) {
-		var results = JSON.parse(xml.responseText);
-
-		if (!pageload) {
-			IssuesSearch();
-			if (document.getElementById("TAB_follow").className.match(/active/)) {
-				document.getElementById("INPUT_add").disabled = false;
-			}
-		}
-
-		// reset search box
-		var resource = $('#resource');
-
-		if ($('.tagsinput').length) {
-			if (!resource.tagExist(results['id'])) {
-				resource.addTag({
-					'id': results['id'],
-					'label': results['name']
-				});
-			}
-		} else {
-			resource.val(resource.val() + (resource.val() ? ', ' : '') + results['name'] + ':' + results['id']);
-		}
-	} else {
-		// error handling
-		switch (xml.status) {
-			case 401:
-			case 403:
-				DisplayError(ERRORS['403_generic'], null);
-				break;
-			case 500:
-				DisplayError(ERRORS['500'], null);
-				break;
-			default:
-				DisplayError(ERRORS['generic'], ERRORS['unknown']);
-				break;
-		}
-	}
-}*/
-
-/**
  * Search by date
  *
  * @return  {void}

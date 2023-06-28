@@ -7,7 +7,7 @@ var headers = {
 };
 
 /**
- * Callback for JS MarkDown parsing
+ * Get a config value
  *
  * @param   {string}  text
  * @param   {object}  element
