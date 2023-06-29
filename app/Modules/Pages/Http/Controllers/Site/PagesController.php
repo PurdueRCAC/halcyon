@@ -3,7 +3,7 @@
 namespace App\Modules\Pages\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Config\Repository;
@@ -169,7 +169,7 @@ class PagesController extends Controller
 	 * Store a newly created resource in storage.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -253,7 +253,7 @@ class PagesController extends Controller
 	 * Remove the specified page
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function delete(Request $request)
 	{

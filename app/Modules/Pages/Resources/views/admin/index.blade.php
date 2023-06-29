@@ -87,8 +87,16 @@ app('pathway')
 
 				<label class="sr-only" for="filter-access">{{ trans('pages::pages.access level') }}</label>
 				<select name="access" id="filter-access" class="form-control filter filter-submit">
-					<option value="">{{ trans('pages::pages.access select') }}</option>
+					<option value="0">{{ trans('pages::pages.access select') }}</option>
+					@php
+					$levels = auth()->user() ? auth()->user()->getAuthorisedViewLevels() : array(1);
+					@endphp
 					@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
+						@php
+						if (!in_array($access->id, $levels)):
+							continue;
+						endif;
+						@endphp
 						<option value="{{ $access->id }}"<?php if ($filters['access'] == $access->id) { echo ' selected="selected"'; } ?>>{{ $access->title }}</option>
 					@endforeach
 				</select>

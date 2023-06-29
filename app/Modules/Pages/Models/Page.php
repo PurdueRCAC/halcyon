@@ -5,10 +5,11 @@ namespace App\Modules\Pages\Models;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Pipeline\Pipeline;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Facades\DB;
 use App\Modules\Pages\Events\PageCreating;
 use App\Modules\Pages\Events\PageCreated;
 use App\Modules\Pages\Events\PageUpdating;
@@ -1128,5 +1129,125 @@ class Page extends Model
 		$this->rgt       = $repositionData->new_rgt;
 
 		return true;
+	}
+
+	/**
+	 * Query scope with search
+	 *
+	 * @param   Builder  $query
+	 * @param   string   $search
+	 * @return  Builder
+	 */
+	public function scopeWhereSearch(Builder $query, $search): Builder
+	{
+		$page = $this->getTable();
+
+		$query->select(
+			$page . '.*',
+			DB::raw('IF(' . $page . '.title LIKE "' . $search . '%", 20,
+					IF(' . $page . '.title LIKE "%' . $search . '%", 10, 0)
+				)
+				+ IF(' . $page . '.content LIKE "%' . $search . '%", 5, 0)
+				+ IF(' . $page . '.path    LIKE "%' . $search . '%", 1, 0)
+				AS `weight`')
+			)
+			->orderBy('weight', 'desc');
+		$query->where(function($query) use ($search, $page)
+		{
+			$query->where($page . '.title', 'like', $search . '%')
+				->orWhere($page . '.title', 'like', '%' . $search . '%')
+				->orWhere($page . '.content', 'like', '%' . $search . '%')
+				->orWhere($page . '.path', 'like', '%' . $search . '%');
+		});
+
+		return $query;
+	}
+
+	/**
+	 * Query scope with parent ID
+	 *
+	 * @param   Builder  $query
+	 * @param   int  $parent_id
+	 * @return  Builder
+	 */
+	public function scopeWhereParent(Builder $query, $parent_id): Builder
+	{
+		$page = $this->getTable();
+
+		$parent = Page::findOrFail($parent_id);
+
+		$query
+			->where($page . '.lft', '>', $parent->lft)
+			->where($page . '.rgt', '<', $parent->rgt);
+
+		return $query;
+	}
+
+	/**
+	 * Query scope with access
+	 *
+	 * @param   Builder  $query
+	 * @param   int  $access
+	 * @param   mixed  $user
+	 * @return  Builder
+	 */
+	public function scopeWhereAccess(Builder $query, $access, $user): Builder
+	{
+		$levels = $user
+			? $user->getAuthorisedViewLevels()
+			: array(1);
+
+		if (!$access)
+		{
+			$query->whereIn($this->getTable() . '.access', $levels);
+		}
+		else
+		{
+			if (!in_array($access, $levels))
+			{
+				$access = 1;
+			}
+
+			$query->where($this->getTable() . '.access', '=', (int)$access);
+		}
+
+		return $query;
+	}
+
+	/**
+	 * Query scope with state
+	 *
+	 * @param   Builder  $query
+	 * @param   mixed  $state
+	 * @return  Builder
+	 */
+	public function scopeWhereState(Builder $query, $state): Builder
+	{
+		$page = $this->getTable();
+
+		switch ($state)
+		{
+			case '*':
+			case 'all':
+				$query->withTrashed();
+			break;
+
+			case 'trashed':
+			case 2:
+				$query->onlyTrashed();
+			break;
+
+			case 'unpublished':
+			case 0:
+				$query->where($page . '.state', '=', 0);
+			break;
+
+			case 'published':
+			case 1:
+			default:
+				$query->where($page . '.state', '=', 1);
+		}
+
+		return $query;
 	}
 }

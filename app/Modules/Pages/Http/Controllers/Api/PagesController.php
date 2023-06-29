@@ -54,7 +54,8 @@ class PagesController extends Controller
 	 * 			"enum": [
 	 * 				"published",
 	 * 				"unpublished",
-	 * 				"trashed"
+	 * 				"trashed",
+	 * 				"all"
 	 * 			]
 	 * 		}
 	 * }
@@ -140,54 +141,28 @@ class PagesController extends Controller
 			$filters['order_dir'] = Page::$orderDir;
 		}
 
+		if (!auth()->user() || !auth()->user()->can('edit.state pages'))
+		{
+			$filters['state'] = 'published';
+		}
+
 		// Get records
 		$p = new Page;
-
-		$query = $p->query();
-
 		$page = $p->getTable();
+
+		$query = $p->query()
+			->with('viewlevel')
+			->whereState($filters['state'])
+			->whereAccess($filters['access'], auth()->user());
 
 		if ($filters['search'])
 		{
-			$query->where(function($query) use ($filters, $page)
-			{
-				$query->where($page . '.content', 'like', '%' . $filters['search'] . '%')
-					->orWhere($page . '.title', 'like', '%' . $filters['search'] . '%');
-			});
-		}
-
-		if ($filters['state'] == 'published')
-		{
-			$query->where($page . '.state', '=', 1);
-		}
-		elseif ($filters['state'] == 'unpublished')
-		{
-			$query->where($page . '.state', '=', 0);
-		}
-		elseif ($filters['state'] == 'trashed')
-		{
-			$query->where($page . '.state', '=', 2);
-		}
-
-		$levels = auth()->user() ? auth()->user()->getAuthorisedViewLevels() : array(1);
-
-		if (!in_array($filters['access'], $levels))
-		{
-			$filters['access'] = 1;
-		}
-
-		if ($filters['access'] > 0)
-		{
-			$query->where($page . '.access', '=', (int)$filters['access']);
+			$query->whereSearch($filters['search']);
 		}
 
 		if ($filters['parent'])
 		{
-			$parent = Page::findOrFail($filters['parent']);
-
-			$query
-				->where($page . '.lft', '>', $parent->lft)
-				->where($page . '.rgt', '<', $parent->rgt);
+			$query->whereParent($filters['parent']);
 		}
 
 		$rows = $query

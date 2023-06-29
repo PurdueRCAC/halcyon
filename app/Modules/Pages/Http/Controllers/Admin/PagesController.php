@@ -3,7 +3,7 @@
 namespace App\Modules\Pages\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Config\Repository;
@@ -27,7 +27,7 @@ class PagesController extends Controller
 		$filters = array(
 			'search'   => null,
 			'state'    => 'published',
-			'access'   => null,
+			'access'   => 0,
 			'parent'   => 0,
 			// Paging
 			'limit'    => config('list_limit', 20),
@@ -52,7 +52,7 @@ class PagesController extends Controller
 		}
 		$filters['page'] = $reset ? 1 : $filters['page'];
 
-		if (!in_array($filters['order'], ['id', 'title', 'path', 'state', 'access', 'updated_at']))
+		if (!in_array($filters['order'], ['id', 'title', 'path', 'lft', 'rgt', 'level', 'state', 'access', 'created_at', 'updated_at']))
 		{
 			$filters['order'] = 'lft';
 		}
@@ -62,72 +62,31 @@ class PagesController extends Controller
 			$filters['order_dir'] = 'asc';
 		}
 
+		if (!auth()->user() || !auth()->user()->can('edit.state pages'))
+		{
+			$filters['state'] = 'published';
+		}
+
 		// Get records
 		$p = new Page;
-
-		$query = $p->query()->with('viewlevel');
-
 		$page = $p->getTable();
-		/*$version = (new Version())->getTable();
 
-		$query
-			->select([$page . '.*', $version . '.title AS name'])
-			->join($version, $version . '.id', $page . '.version_id');*/
+		$query = $p->query()
+			->with('viewlevel')
+			->whereState($filters['state'])
+			->whereAccess($filters['access'], auth()->user());
 
 		if ($filters['search'])
 		{
-			$query->select(
-				$page . '.*',
-				DB::raw('IF(' . $page . '.title LIKE "' . $filters['search'] . '%", 20,
-						IF(' . $page . '.title LIKE "%' . $filters['search'] . '%", 10, 0)
-					)
-					+ IF(' . $page . '.content LIKE "%' . $filters['search'] . '%", 5, 0)
-					+ IF(' . $page . '.path    LIKE "%' . $filters['search'] . '%", 1, 0)
-					AS `weight`')
-				)
-				->orderBy('weight', 'desc');
-			$query->where(function($query) use ($filters, $page)
-			{
-				$query->where($page . '.title', 'like', $filters['search'] . '%')
-					->orWhere($page . '.title', 'like', '%' . $filters['search'] . '%')
-					->orWhere($page . '.content', 'like', '%' . $filters['search'] . '%')
-					->orWhere($page . '.path', 'like', '%' . $filters['search'] . '%');
-			});
-		}
-
-		if ($filters['state'] == 'published')
-		{
-			$query->where($page . '.state', '=', 1);
-		}
-		elseif ($filters['state'] == 'unpublished')
-		{
-			$query->where($page . '.state', '=', 0);
-		}
-		elseif ($filters['state'] == 'trashed')
-		{
-			$query->onlyTrashed(); //->whereNotNull($page . '.deleted_at');
-		}
-		else
-		{
-			$query->withTrashed();
-		}
-
-		if ($filters['access'] > 0)
-		{
-			$query->where($page . '.access', '=', (int)$filters['access']);
+			$query->whereSearch($filters['search']);
 		}
 
 		if ($filters['parent'])
 		{
-			$parent = Page::findOrFail($filters['parent']);
-
-			$query
-				->where($page . '.lft', '>', $parent->lft)
-				->where($page . '.rgt', '<', $parent->rgt);
+			$query->whereParent($filters['parent']);
 		}
 
 		$rows = $query
-			//->withCount('versions')
 			->orderBy($page . '.' . $filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
@@ -233,7 +192,7 @@ class PagesController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -289,7 +248,7 @@ class PagesController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -335,7 +294,7 @@ class PagesController extends Controller
 	 * 
 	 * @param   Request $request
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function state(Request $request, $id = null)
 	{
@@ -394,7 +353,7 @@ class PagesController extends Controller
 	 * Sets the state of one or more entries
 	 * 
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function restore(Request $request)
 	{
@@ -438,7 +397,7 @@ class PagesController extends Controller
 	 * Reorder entries
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function reorder(Request $request)
 	{
@@ -474,7 +433,7 @@ class PagesController extends Controller
 	 * Rebuild the tree
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function rebuild(Request $request)
 	{
@@ -494,7 +453,7 @@ class PagesController extends Controller
 	 * Copy an entry and all associated data
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function copy(Request $request)
 	{
@@ -536,7 +495,7 @@ class PagesController extends Controller
 	/**
 	 * Return to default page
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{
