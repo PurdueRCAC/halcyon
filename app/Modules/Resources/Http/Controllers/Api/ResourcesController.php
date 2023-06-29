@@ -141,23 +141,12 @@ class ResourcesController extends Controller
 
 		$query = Asset::query()
 			->with('descendents')
-			->with('subresources');
+			->with('subresources')
+			->whereState($filters['state']);
 
 		if ($filters['search'])
 		{
-			$query->where('name', 'like', '%' . $filters['search'] . '%');
-		}
-
-		if ($filters['state'])
-		{
-			if ($filters['state'] == 'all')
-			{
-				$query->withTrashed();
-			}
-			elseif ($filters['state'] == 'inactive')
-			{
-				$query->onlyTrashed();
-			}
+			$query->whereSearch($filters['search']);
 		}
 
 		if (is_numeric($filters['type']))

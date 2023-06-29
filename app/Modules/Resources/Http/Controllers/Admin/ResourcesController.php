@@ -66,20 +66,8 @@ class ResourcesController extends Controller
 		}
 
 		// Build query
-		$query = Asset::query();
-
-		if ($filters['state'] == 'active')
-		{
-			// Default behavior
-		}
-		elseif ($filters['state'] == 'trashed')
-		{
-			$query->onlyTrashed();
-		}
-		else
-		{
-			$query->withTrashed();
-		}
+		$query = Asset::query()
+			->whereState($filters['state']);
 
 		if ($filters['type'] > 0)
 		{
@@ -98,19 +86,7 @@ class ResourcesController extends Controller
 
 		if ($filters['search'])
 		{
-			if (is_numeric($filters['search']))
-			{
-				$query->where('id', '=', $filters['search']);
-			}
-			else
-			{
-				$query->where(function ($where) use ($filters)
-				{
-					$where->where('name', 'like', '%' . strtolower($filters['search']) . '%')
-						->orWhere('rolename', 'like', '%' . strtolower($filters['search']) . '%')
-						->orWhere('listname', 'like', '%' . strtolower($filters['search']) . '%');
-				});
-			}
+			$query->whereSearch($filters['search']);
 		}
 
 		if ($filters['order'] == 'display')

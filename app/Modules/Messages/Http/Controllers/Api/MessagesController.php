@@ -167,22 +167,9 @@ class MessagesController extends Controller
 		}
 
 		$query = Message::query()
-			->with('type');
-
-		if ($filters['state'] == 'complete')
-		{
-			$query->whereNotNull('datetimestarted')
-				->whereNotNull('datetimecompleted');
-		}
-		elseif ($filters['state'] == 'incomplete')
-		{
-			$query->whereNull('datetimecompleted');
-		}
-		elseif ($filters['state'] == 'pending')
-		{
-			$query->whereNull('datetimestarted')
-				->whereNull('datetimecompleted');
-		}
+			->with('type')
+			->whereStatus($filters['returnstatus'])
+			->whereState($filters['state']);
 
 		if ($filters['start'])
 		{
@@ -197,11 +184,6 @@ class MessagesController extends Controller
 		if ($filters['type'])
 		{
 			$query->where('messagequeuetypeid', '=', $filters['type']);
-		}
-
-		if ($filters['returnstatus'] >= 0)
-		{
-			$query->where('returnstatus', '=', $filters['returnstatus']);
 		}
 
 		if (request()->segment(1) == 'ws')

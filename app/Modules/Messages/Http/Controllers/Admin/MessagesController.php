@@ -66,36 +66,13 @@ class MessagesController extends Controller
 		}
 
 		$query = Message::query()
-			->with('type');
-
-		if ($filters['state'] == 'complete')
-		{
-			$query->whereNotNull('datetimestarted')
-				->whereNotNull('datetimecompleted');
-		}
-		elseif ($filters['state'] == 'incomplete')
-		{
-			$query->whereNotNull('datetimestarted')
-				->whereNull('datetimecompleted');
-		}
-		elseif ($filters['state'] == 'pending')
-		{
-			$query->whereNull('datetimestarted')
-				->whereNull('datetimecompleted');
-		}
+			->with('type')
+			->whereStatus($filters['status'])
+			->whereState($filters['state']);
 
 		if ($filters['start'])
 		{
 			$query->where('datetimesubmitted', '>', $filters['start'] . ' 00:00:00');
-		}
-
-		if ($filters['status'] == 'success')
-		{
-			$query->where('returnstatus', '=', 0);
-		}
-		elseif ($filters['status'] == 'failure')
-		{
-			$query->where('returnstatus', '>', 0);
 		}
 
 		if ($filters['stop'])

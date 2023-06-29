@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Modules\Resources\Events\AssetCreating;
@@ -423,5 +424,65 @@ class Asset extends Model
 			->orderBy('datetimeremoved', 'asc') // look for non-trashed entries first
 			->limit(1)
 			->first();
+	}
+
+	/**
+	 * Query scope with search
+	 *
+	 * @param   Builder  $query
+	 * @param   string   $search
+	 * @return  Builder
+	 */
+	public function scopeWhereSearch(Builder $query, $search): Builder
+	{
+		$tbl = $this->getTable();
+
+		if (is_numeric($search))
+		{
+			$query->where($tbl . '.id', '=', $search);
+		}
+		else
+		{
+			$query->where(function ($where) use ($search, $tbl)
+			{
+				$search = strtolower($search);
+
+				$where->where($tbl . '.name', 'like', '%' . $search . '%')
+					->orWhere($tbl . '.rolename', 'like', '%' . $search . '%')
+					->orWhere($tbl . '.listname', 'like', '%' . $search . '%');
+			});
+		}
+
+		return $query;
+	}
+
+	/**
+	 * Query scope with state
+	 *
+	 * @param   Builder  $query
+	 * @param   mixed  $state
+	 * @return  Builder
+	 */
+	public function scopeWhereState(Builder $query, $state): Builder
+	{
+		switch ($state)
+		{
+			case '*':
+			case 'all':
+				$query->withTrashed();
+			break;
+
+			case 'trashed':
+			case 'inactive':
+				$query->onlyTrashed();
+			break;
+
+			case 'published':
+			case 'active':
+			default:
+				// Default
+		}
+
+		return $query;
 	}
 }

@@ -468,7 +468,8 @@ class Message extends Model
 	{
 		return $query->where(function($where) use ($since)
 		{
-			$where->whereNotNull('datetimestarted');
+			$where->whereNotNull('datetimestarted')
+				->whereNull('datetimecompleted');
 
 			if ($since)
 			{
@@ -485,7 +486,8 @@ class Message extends Model
 	 */
 	public function scopeWhereNotStarted(Builder $query): Builder
 	{
-		return $query->whereNull('datetimestarted');
+		return $query->whereNull('datetimestarted')
+					->whereNull('datetimecompleted');
 	}
 
 	/**
@@ -539,5 +541,58 @@ class Message extends Model
 	public function scopeWhereNotSuccessful(Builder $query): Builder
 	{
 		return $query->where('returnstatus', '>', 0);
+	}
+
+	/**
+	 * Query where return status is ...
+	 *
+	 * @param   Builder  $query
+	 * @param   mixed  $status
+	 * @return  Builder
+	 */
+	public function scopeWhereStatus(Builder $query, $status): Builder
+	{
+		if (is_numeric($status) && $status >= 0)
+		{
+			$query->where('returnstatus', '=', $status);
+		}
+		else
+		{
+			if ($status == 'success')
+			{
+				$query->whereSuccessful();
+			}
+			elseif ($status == 'failure')
+			{
+				$query->whereNotSuccessful();
+			}
+		}
+
+		return $query;
+	}
+
+	/**
+	 * Query where state
+	 *
+	 * @param   Builder  $query
+	 * @param   string   $state
+	 * @return  Builder
+	 */
+	public function scopeWhereState(Builder $query, $state): Builder
+	{
+		if ($state == 'complete')
+		{
+			$query->whereCompleted();
+		}
+		elseif ($state == 'incomplete')
+		{
+			$query->whereNotCompleted();
+		}
+		elseif ($state == 'pending')
+		{
+			$query->whereNotStarted();
+		}
+
+		return $query;
 	}
 }
