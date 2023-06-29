@@ -1,5 +1,27 @@
 @extends('layouts.master')
 
+@push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css?v=' . filemtime(public_path('/modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css'))) }}" />
+@endpush
+
+@push('scripts')
+<script src="{{ asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js?v=' . filemtime(public_path('/modules/core/vendor/tom-select/js/tom-select.complete.min.js'))) }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+	var sselects = document.querySelectorAll('.searchable-select');
+	if (sselects.length) {
+		var sel, sels = new Array();
+		sselects.forEach(function (el) {
+			sel = new TomSelect(el, {
+				plugins: ['dropdown_input']
+			});
+			sels.push(sel);
+		});
+	}
+});
+</script>
+@endpush
+
 @php
 app('pathway')
 	->append(
@@ -89,7 +111,7 @@ app('pathway')
 				</select>
 
 				<label class="sr-only" for="filter_resource">{{ trans('queues::queues.resource') }}</label>
-				<select name="resource" id="filter_resource" class="form-control filter filter-submit">
+				<select name="resource" id="filter_resource" class="form-control filter filter-submit searchable-select">
 					<option value="0">{{ trans('queues::queues.all resources') }}</option>
 					<?php
 					$units = array();
