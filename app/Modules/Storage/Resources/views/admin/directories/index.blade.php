@@ -186,7 +186,7 @@ if ($parent)
 				</td>
 				<td class="text-right">
 					@if ($row->children_count)
-						<a href="{{ route('admin.storage.directories', ['parent' => $row->id]) }}">
+						<a href="{{ route('admin.storage.directories', ['parent' => $row->id, 'search' => '']) }}">
 							{{ number_format($row->children_count) }}
 						</a>
 					@else
