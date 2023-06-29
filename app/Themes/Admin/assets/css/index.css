@@ -148,6 +148,8 @@
   --meta-br: rgba(255, 255, 255, 0.5);
   --pane-bg: #fff;
   --pane-br: #e9e9e9;
+  --diff-del-bg: #FFF2EF;
+  --diff-add-bg: #F2FFF2;
 }
 [data-mode=dark] {
   --panel: #26262d; /*#252529; /*rgba(225, 231, 255, 0.05);*/
@@ -264,6 +266,8 @@
   --meta-br: rgba(0, 0, 0, 0.2);
   --pane-bg: rgba(0, 0, 0, 0.2);
   --pane-br: rgb(255, 255, 255, 0.05);
+  --diff-del-bg: rgba(218, 52, 71, 0.1);
+  --diff-add-bg: rgb(164, 241, 164, 0.1);
 }
 
 html,
@@ -4600,6 +4604,51 @@ background-color: rgba(0, 0, 0, 0.025);
 }
 #pane .card {
   background: transparent;
+}
+
+/* Diffs */
+.diff-versions {
+  margin: 0;
+}
+.diff-versions dt {
+  font-weight: bold;
+  margin-top: 0.5em;
+}
+/*.diffs {
+  margin: 1em 0;
+  border: 1px solid #ccc;
+}
+.diffs td,
+.diffs th {
+  border: 1px solid #fff;
+  margin: 0;
+  padding: 0.2em 0.8em;
+}*/
+.diffs th {
+  text-align: right;
+  /*background-color: #efefef;*/
+}
+.diff-marker {
+  width: 1em;
+  text-align: center;
+}
+.diff-deletedline {
+  background: var(--diff-del-bg);
+  margin: 1em 0;
+  padding: 1em;
+  color: #CC0000;
+}
+.diff-addedline {
+  background: var(--diff-add-bg);
+  margin: 1em 0;
+  padding: 1em;
+  color: rgb(48, 166, 73);
+}
+del.diffchange {
+  color: #CC0000;
+}
+ins.diffchange {
+  color: rgb(48, 166, 73);
 }
 
 /* Datatable overrides */
