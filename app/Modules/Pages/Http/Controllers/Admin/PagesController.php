@@ -394,6 +394,46 @@ class PagesController extends Controller
 	}
 
 	/**
+	 * Revert to prior version
+	 * 
+	 * @param  int  $id
+	 * @param  int  $revision
+	 * @return RedirectResponse
+	 */
+	public function revert($id, $revision)
+	{
+		$row = Page::findOrFail($id);
+
+		$history = $row->history()
+			->orderBy('created_at', 'desc')
+			->get();
+
+		foreach ($history as $action)
+		{
+			if ($action->id == $revision)
+			{
+				break;
+			}
+
+			$changes = json_decode(json_encode($action->old), true);
+
+			foreach ($changes as $key => $val)
+			{
+				if ($key == 'created_at' || $key == 'updated_at' || $key == 'deleted_at')
+				{
+					continue;
+				}
+				$row->{$key} = $val;
+			}
+
+			$action->delete();
+		}
+		$row->saveQuietly();
+
+		return redirect(route('admin.pages.history', [$id]));
+	}
+
+	/**
 	 * Reorder entries
 	 *
 	 * @param   Request $request

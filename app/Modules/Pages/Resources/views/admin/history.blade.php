@@ -1,9 +1,5 @@
 @extends('layouts.master')
 
-@push('styles')
-<link rel="stylesheet" type="text/css" href="{{ Module::asset('core:vendor/chartjs/Chart.css') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.css') }}" />
-@endpush
-
 @push('scripts')
 <script src="{{ Module::asset('core:vendor/chartjs/Chart.min.js') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.min.js') }}"></script>
 <script src="{{ Module::asset('pages:js/pages.js') . '?v=' . filemtime(public_path() . '/modules/pages/js/pages.js') }}"></script>
@@ -44,16 +40,20 @@ app('pathway')
 					<th scope="col">
 						{!! trans('pages::pages.action') !!}
 					</th>
-					<th scope="col" class="priority-2">
+					<th scope="col">
 						{!! trans('pages::pages.fields') !!}
 					</th>
-					<th scope="col" class="priority-3">
+					<th scope="col">
 						{!! trans('pages::pages.datetime') !!}
 					</th>
 				</tr>
 			</thead>
 			<tbody>
 		@if (count($history))
+			<?php
+			$canEdit = auth()->user() && auth()->user()->can('edit pages');
+			$formatter = new App\Modules\History\Helpers\Diff\Formatter\Table();
+			?>
 			@foreach ($history as $i => $action)
 				<?php
 				$actor = trans('global.unknown');
@@ -72,9 +72,9 @@ app('pathway')
 
 				$fields = array_keys($f);
 
-				foreach ($fields as $i => $k):
+				foreach ($fields as $z => $k):
 					if (in_array($k, ['created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at'])):
-						unset($fields[$i]);
+						unset($fields[$z]);
 					endif;
 				endforeach;
 
@@ -100,14 +100,115 @@ app('pathway')
 							<span class="entry-diff"><code><?php echo implode('</code>, <code>', $fields); ?></code></span>
 						@endif
 					</td>
-					<td class="priority-4">
-						<time datetime="{{ $action->created_at->toDateTimeLocalString() }}">
-							@if ($action->created_at < $old)
-								{{ $action->created_at->format('d M Y') }}
-							@else
-								{{ $action->created_at->diffForHumans() }}
-							@endif
-						</time>
+					<td>
+						<a href="#page-history{{ $action->id }}" data-toggle="modal" class="tip" title="View changes from previous version">
+							<time datetime="{{ $action->created_at->toDateTimeLocalString() }}">
+								@if ($action->created_at < $old)
+									{{ $action->created_at->format('d M Y') }}
+								@else
+									{{ $action->created_at->diffForHumans() }}
+								@endif
+							</time>
+						</a>
+						<div id="page-history{{ $action->id }}" class="modal fade" tabindex="-1" aria-labelledby="page-history-title{{ $action->id }}" aria-hidden="true">
+							<div class="modal-dialog modal-xl modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h3 class="modal-title" id="page-history-title{{ $action->id }}">Changes</h3>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body">
+										<?php
+										if (isset($action->new->title)):
+											$ota = isset($action->old->title) ? [$action->old->title] : [];
+											$nta = [$action->new->title];
+
+											echo '<h3>Title</h3>';
+											echo $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));
+										endif;
+
+										if (isset($action->new->alias)):
+											$ota = isset($action->old->alias) ? [$action->old->alias] : [];
+											$nta = [$action->new->alias];
+
+											echo '<h3>Page alias</h3>';
+											echo $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));
+										endif;
+
+										if (isset($action->new->content)):
+											$ota = isset($action->old->content) ? explode("\n", $action->old->content) : [];
+											$nta = explode("\n", $action->new->content);
+
+											echo '<h3>Content</h3>';
+											echo $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));
+										endif;
+
+										if (isset($action->new->params)):
+											$orparams = isset($action->old->params) ? (array)$action->old->params : [];
+											$drparams = (array)$action->new->params;
+
+											// Params
+											$ota = [];
+											$nta = [];
+											foreach (['show_title', 'show_toc'] as $p):
+												if (isset($orparams[$p]) || isset($drparams[$p])):
+													$ota[] = isset($orparams[$p]) ? $p . ': ' . ($orparams[$p] ? 'true' : 'false') : '';
+													$nta[] = isset($drparams[$p]) ? $p . ': ' . ($drparams[$p] ? 'true' : 'false') : '';
+												endif;
+											endforeach;
+
+											if (!empty($ota) && !empty($nta)):
+												echo '<h3>Options</h3>';
+												echo $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));
+											endif;
+
+											// Variables
+											if (isset($orparams['variables']) || isset($drparams['variables'])):
+												$ota = isset($orparams['variables']) ? $orparams['variables'] : [];
+												$nta = isset($drparams['variables']) ? $drparams['variables'] : [];
+
+												if ($ota != $nta):
+													echo '<h3>Variables</h3>';
+													$otaa = array();
+													foreach ($ota as $k => $v)
+													{
+														$otaa[] = $k . ': ' . $v;
+													}
+													$ntaa = array();
+													foreach ($nta as $k => $v)
+													{
+														$ntaa[] = $k . ': ' . $v;
+													}
+													echo $formatter->format(new App\Modules\History\Helpers\Diff($otaa, $ntaa));
+												endif;
+											endif;
+
+											// Tags
+											if (isset($orparams['tags']) || isset($drparams['tags'])):
+												$ota = isset($orparams['tags']) ? $orparams['tags'] : [];
+												$nta = isset($drparams['tags']) ? $drparams['tags'] : [];
+
+												if ($ota != $nta):
+													echo '<h3>Tags</h3>';
+													echo $formatter->format(new App\Modules\History\Helpers\Diff($ota, $nta));
+												endif;
+											endif;
+										endif;
+										?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</td>
+					<td>
+						@if ($canEdit && $i > 0)
+						<a href="{{ route('admin.pages.revert', ['id' => $row->id, 'revision' => $action->id]) }}" class="tip" title="Revert to this version" data-confirm="Are you sure?">
+							<span class="fa fa-undo" aria-hidden="true"></span>
+							<span class="sr-only">Revert to this version</span>
+						</a>
+						@endif
 					</td>
 				</tr>
 			@endforeach

@@ -54,4 +54,9 @@ $router->group(['prefix' => 'pages'], function (Router $router)
 		'uses' => 'PagesController@history',
 		'middleware' => 'can:edit pages',
 	])->where('id', '[0-9]+');
+	$router->match(['get', 'post'], '/revert/{id}/{revision}', [
+		'as'   => 'admin.pages.revert',
+		'uses' => 'PagesController@revert',
+		'middleware' => 'can:edit pages',
+	])->where('id', '[0-9]+')->where('revision', '[0-9]+');
 });
