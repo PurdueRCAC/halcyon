@@ -52,6 +52,18 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
+	document.querySelectorAll('.confirm-revert').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			if (confirm(this.getAttribute('data-confirm'))) {
+				return true;
+			}
+
+			return false;
+		});
+	});
+
 	var select = document.getElementById('field-parent_id');
 	if (select) {
 		if (typeof TomSelect !== 'undefined') {

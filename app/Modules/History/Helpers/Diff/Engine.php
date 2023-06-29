@@ -117,8 +117,8 @@ class Engine
 		$xi = $yi = 0;
 		while ($xi < $n_from || $yi < $n_to)
 		{
-			USE_ASSERTS && assert($yi < $n_to || $this->xchanged[$xi]);
-			USE_ASSERTS && assert($xi < $n_from || $this->ychanged[$yi]);
+			//USE_ASSERTS && assert($yi < $n_to || $this->xchanged[$xi]);
+			//USE_ASSERTS && assert($xi < $n_from || $this->ychanged[$yi]);
 
 			// Skip matching "snake".
 			$copy = array();
@@ -339,7 +339,7 @@ class Engine
 			}
 		}
 
-		USE_ASSERTS && assert($ypos != $this->seq[$end]);
+		//USE_ASSERTS && assert($ypos != $this->seq[$end]);
 
 		$this->in_seq[$this->seq[$end]] = false;
 		$this->seq[$end] = $ypos;
@@ -444,7 +444,7 @@ class Engine
 		$i = 0;
 		$j = 0;
 
-		USE_ASSERTS && assert(count($lines) == count($changed));
+		//USE_ASSERTS && assert(count($lines) == count($changed));
 		$len = count($lines);
 		$other_len = count($other_changed);
 
@@ -466,7 +466,7 @@ class Engine
 
 			while ($i < $len && ! $changed[$i])
 			{
-				USE_ASSERTS && assert($j < $other_len && ! $other_changed[$j]);
+				//USE_ASSERTS && assert($j < $other_len && ! $other_changed[$j]);
 				$i++;
 				$j++;
 				while ($j < $other_len && $other_changed[$j])
@@ -505,12 +505,12 @@ class Engine
 					{
 						$start--;
 					}
-					USE_ASSERTS && assert($j > 0);
+					//USE_ASSERTS && assert($j > 0);
 					while ($other_changed[--$j])
 					{
 						continue;
 					}
-					USE_ASSERTS && assert($j >= 0 && !$other_changed[$j]);
+					//USE_ASSERTS && assert($j >= 0 && !$other_changed[$j]);
 				}
 
 				// Set CORRESPONDING to the end of the changed run, at the last
@@ -532,7 +532,7 @@ class Engine
 						$i++;
 					}
 
-					USE_ASSERTS && assert($j < $other_len && ! $other_changed[$j]);
+					//USE_ASSERTS && assert($j < $other_len && ! $other_changed[$j]);
 					$j++;
 					if ($j < $other_len && $other_changed[$j])
 					{
@@ -552,12 +552,12 @@ class Engine
 			{
 				$changed[--$start] = 1;
 				$changed[--$i] = 0;
-				USE_ASSERTS && assert('$j > 0');
+				//USE_ASSERTS && assert('$j > 0');
 				while ($other_changed[--$j])
 				{
 					continue;
 				}
-				USE_ASSERTS && assert($j >= 0 && !$other_changed[$j]);
+				//USE_ASSERTS && assert($j >= 0 && !$other_changed[$j]);
 			}
 		}
 	}
