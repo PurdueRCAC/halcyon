@@ -105,6 +105,7 @@ class FieldsOfScienceController extends Controller
 			'parentid' => $request->input('parentid'),
 			// Paging
 			'limit'    => $request->input('limit', config('list_limit', 20)),
+			'page'     => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', FieldOfScience::$orderBy),
 			'order_dir' => $request->input('order_dir', FieldOfScience::$orderDir)
@@ -119,9 +120,7 @@ class FieldsOfScienceController extends Controller
 
 		if ($filters['search'])
 		{
-			$filters['search'] = strtolower((string)$filters['search']);
-
-			$query->where('name', 'like', '%' . $filters['search'] . '%');
+			$query->whereSearch($filters['search']);
 		}
 
 		if ($filters['parentid'])
@@ -132,19 +131,19 @@ class FieldsOfScienceController extends Controller
 		}
 		else
 		{
+			// Exclude the ROOT node
 			$query->where('parentid', '!=', 0);
 		}
 
 		$rows = $query
 			->withCount('groups')
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		$rows->each(function ($row, $key)
 		{
 			$row->api = route('api.groups.fieldsofscience.read', ['id' => $row->id]);
-			$row->groups_count = $row->groups()->count();
 		});
 
 		return new ResourceCollection($rows);

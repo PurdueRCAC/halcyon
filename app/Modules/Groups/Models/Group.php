@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use App\Modules\Messages\Models\Message;
@@ -795,5 +796,93 @@ class Group extends Model
 		$row->percentage = 100;
 
 		return $row->save();
+	}
+
+	/**
+	 * Query scope with search
+	 *
+	 * @param   Builder  $query
+	 * @param   string   $search
+	 * @return  Builder
+	 */
+	public function scopeWhereSearch(Builder $query, $search): Builder
+	{
+		if ($search)
+		{
+			$g = $this->getTable();
+
+			if (is_numeric($search))
+			{
+				$query->where($g . '.id', '=', $search);
+			}
+			else
+			{
+				$search = trim((string)$search);
+				$search = strtolower($search);
+				$search = preg_replace('/ +/', ' ', $search);
+
+				// Skip matches on trailing "group" or we'll return a billion results
+				if (preg_match('/Group$/i', $search))
+				{
+					$search = preg_replace('/Group$/i', '', $search);
+				}
+
+				$query->where(function ($where) use ($search, $g)
+				{
+					$where->where($g . '.name', 'like', '%' . $search . '%')
+						->orWhere($g . '.unixgroup', 'like', '%' . $search . '%');
+				});
+			}
+		}
+
+		return $query;
+	}
+
+	/**
+	 * Query scope with department
+	 *
+	 * @param   Builder  $query
+	 * @param   int  $department
+	 * @return  Builder
+	 */
+	public function scopeWhereDepartment(Builder $query, $department): Builder
+	{
+		$dep = Department::find($department);
+
+		if ($dep)
+		{
+			// We need to include all children of this department
+			//
+			// This handles cases where the group is tagged with a child department
+			// and filtering by its parent department should include it
+			$deps = $dep->children->pluck('id')->toArray();
+			$deps[] = $department;
+
+			$g = $this->getTable();
+			$gd = (new GroupDepartment)->getTable();
+
+			$query->join($gd, $gd . '.groupid', $g . '.id')
+				->whereIn($gd . '.collegedeptid', $deps);
+		}
+
+		return $query;
+	}
+
+	/**
+	 * Query scope with field of science
+	 *
+	 * @param   Builder  $query
+	 * @param   int  $field
+	 * @return  Builder
+	 */
+	public function scopeWhereFieldOfScience(Builder $query, $field): Builder
+	{
+		$g = $this->getTable();
+		$gf = (new GroupFieldOfScience)->getTable();
+
+		$query->join($gf, $gf . '.groupid', $g . '.id')
+			->where($gf . '.fieldofscienceid', $field);
+
+		return $query;
 	}
 }

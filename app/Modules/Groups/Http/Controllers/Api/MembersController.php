@@ -10,6 +10,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Member;
+use App\Modules\Users\Models\UserUsername;
 use App\Modules\Users\Models\User;
 
 /**
@@ -121,14 +122,15 @@ class MembersController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
-			'search'   => $request->input('search', ''),
-			'groupid'   => $request->input('groupid', 0),
-			'userid'   => $request->input('userid', 0),
-			'userrequestid'   => $request->input('userrequestid', 0),
-			'membertype'   => $request->input('membertype', 0),
+			'search'        => $request->input('search', ''),
+			'groupid'       => $request->input('groupid', 0),
+			'userid'        => $request->input('userid', 0),
+			'userrequestid' => $request->input('userrequestid', 0),
+			'membertype'    => $request->input('membertype', 0),
+			'state'         => $request->input('state', 'active'),
 			// Paging
-			'limit'    => $request->input('limit', config('list_limit', 20)),
-			//'start' => $request->input('limitstart', 0),
+			'limit'     => $request->input('limit', config('list_limit', 20)),
+			'page'      => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', Member::$orderBy),
 			'order_dir' => $request->input('order_dir', Member::$orderDir)
@@ -139,7 +141,8 @@ class MembersController extends Controller
 			$filters['order_dir'] = Member::$orderDir;
 		}
 
-		$query = Member::query()->with('user');
+		/*$query = Member::query()
+			->with('user');
 
 		if ($filters['search'])
 		{
@@ -166,13 +169,70 @@ class MembersController extends Controller
 		if ($filters['userrequestid'])
 		{
 			$query->where('userrequestid', '=', $filters['userrequestid']);
+		}*/
+		$u = (new User)->getTable();
+		$uu = (new UserUsername)->getTable();
+		$m = (new Member)->getTable();
+
+		$query = Member::query()
+			->join($uu, $uu . '.userid', $m . '.userid')
+			->join($u, $u . '.id', $uu . '.userid')
+			->select($m . '.*', $u . '.name')
+			->with('user')
+			->with('type');
+
+		if ($filters['search'])
+		{
+			$filters['search'] = strtolower((string)$filters['search']);
+
+			$query->where($u . '.name', 'like', '%' . $filters['search'] . '%');
+		}
+
+		if ($filters['groupid'])
+		{
+			$query->where($m . '.groupid', '=', $filters['groupid']);
+		}
+
+		if ($filters['userid'])
+		{
+			$query->where($m . '.userid', '=', $filters['userid']);
+		}
+
+		if ($filters['membertype'])
+		{
+			$query->where($m . '.membertype', '=', $filters['membertype']);
+		}
+
+		if ($filters['userrequestid'])
+		{
+			$query->where($m . '.userrequestid', '=', $filters['userrequestid']);
+		}
+
+		if ($filters['state'] == 'active')
+		{
+			$query->withTrashed()
+				->whereNull($uu . '.dateremoved')
+				->whereNull($m . '.dateremoved');
+		}
+		elseif ($filters['state'] == 'trashed')
+		{
+			//$query->onlyTrashed();
+			$query->withTrashed()
+				->where(function($where) use ($uu, $m)
+				{
+					$where->whereNotNull($uu . '.dateremoved')
+						->orWhereNotNull($m . '.dateremoved');
+				});
+		}
+		else
+		{
+			$query->withTrashed();
 		}
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit']);
-
-		$rows->appends(array_filter($filters));
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
+			->appends(array_filter($filters));
 
 		$rows->each(function ($item, $key)
 		{

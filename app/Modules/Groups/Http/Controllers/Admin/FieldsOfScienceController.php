@@ -61,32 +61,13 @@ class FieldsOfScienceController extends Controller
 		{
 			$query = FieldOfScience::query();
 
-			if (is_numeric($filters['search']))
-			{
-				$query->where('id', '=', $filters['search']);
-			}
-			else
-			{
-				/*$filters['search'] = strtolower((string)$filters['search']);
-
-				$query->where('name', 'like', '%' . $filters['search'] . '%');*/
-
-				$query->where(function($where) use ($filters)
-				{
-					$search = strtolower((string)$filters['search']);
-					$skipmiddlename = preg_replace('/ /', '% ', $search);
-
-					$where->where('name', 'like', '% ' . $search . '%')
-						->orWhere('name', 'like', $search . '%')
-						->orWhere('name', 'like', '% ' . $skipmiddlename . '%')
-						->orWhere('name', 'like', $skipmiddlename . '%');
-				});
-			}
+			$query->whereSearch($filters['search']);
 
 			/*if ($filters['parent'])
 			{
 				$query->where('parentid', '=', $filters['parent']);
 			}*/
+			// Exclude the ROOT node
 			$query->where('parentid', '>', 0);
 
 			$rows = $query

@@ -220,4 +220,34 @@ class FieldOfScience extends Model
 		return $this->hasMany(GroupFieldOfScience::class, 'fieldofscienceid');
 		//return $this->hasOneThrough(GroupFieldOfScience::class, GroupDepartment::class, 'groupid', 'id', 'groupid', 'collegedeptid');
 	}
+
+	/**
+	 * Query scope with search
+	 *
+	 * @param   Builder  $query
+	 * @param   string  $search
+	 * @return  Builder
+	 */
+	public function scopeWhereSearch(Builder $query, $search): Builder
+	{
+		if (is_numeric($search))
+		{
+			$query->where('id', '=', $search);
+		}
+		else
+		{
+			$query->where(function ($where) use ($search)
+			{
+				$search = strtolower((string)$search);
+				$skipmiddlename = preg_replace('/ /', '% ', $search);
+
+				$where->where('name', 'like', '% ' . $search . '%')
+					->orWhere('name', 'like', $search . '%')
+					->orWhere('name', 'like', '% ' . $skipmiddlename . '%')
+					->orWhere('name', 'like', $skipmiddlename . '%');
+			});
+		}
+
+		return $query;
+	}
 }

@@ -108,7 +108,7 @@ app('pathway')
 					@if (auth()->user()->can('edit groups'))
 						<a href="{{ route('admin.groups.fieldsofscience.edit', ['id' => $row->id]) }}">
 					@endif
-						{{ $row->name }}
+						{!! App\Halcyon\Utility\Str::highlight(e($row->name), $filters['search']) !!}
 					@if (auth()->user()->can('edit groups'))
 						</a>
 					@endif

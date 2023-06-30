@@ -26,9 +26,14 @@ class GroupResource extends JsonResource
 
 		$data['api'] = route('api.groups.read', ['id' => $this->id]);
 
-		$data['department'] = $this->departments->each(function($item, $key)
+		$data['departments'] = $this->departments->each(function($item, $key)
 		{
 			$item->api = route('api.groups.departments.read', ['id' => $item->id]);
+		});
+
+		$data['fields_of_science'] = $this->fieldsofscience->each(function($item, $key)
+		{
+			$item->api = route('api.groups.fieldsofscience.read', ['id' => $item->id]);
 		});
 
 		if (!$request->input('minimal'))

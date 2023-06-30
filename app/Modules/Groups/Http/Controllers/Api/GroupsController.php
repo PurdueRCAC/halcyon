@@ -42,6 +42,26 @@ class GroupsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
+	 * 		"name":          "department",
+	 * 		"description":   "Filter by a department ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "fieldofscience",
+	 * 		"description":   "Filter by a Field of Science ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "state",
 	 * 		"description":   "Entry state",
 	 * 		"required":      false,
@@ -155,16 +175,18 @@ class GroupsController extends Controller
 	public function index(Request $request)
 	{
 		$filters = array(
-			'state'   => $request->input('state', 'active'),
-			'search'   => $request->input('search', ''),
-			'searchuser' => $request->input('searchuser', ''),
-			'owneruserid'   => $request->input('owneruserid', 0),
-			'unixgroup'   => $request->input('unixgroup', ''),
-			'unixid'   => $request->input('unixid', 0),
-			'datetimecreated'   => $request->input('datetimecreated'),
+			'state'           => $request->input('state', 'active'),
+			'search'          => $request->input('search', ''),
+			'searchuser'      => $request->input('searchuser', ''),
+			'owneruserid'     => $request->input('owneruserid', 0),
+			'department'      => $request->input('department', 0),
+			'fieldofscience'  => $request->input('fieldofscience', 0),
+			'unixgroup'       => $request->input('unixgroup', ''),
+			'unixid'          => $request->input('unixid', 0),
+			'datetimecreated' => $request->input('datetimecreated'),
 			// Paging
 			'limit'    => $request->input('limit', config('list_limit', 20)),
-			//'start' => $request->input('limitstart', 0),
+			'page'     => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', Group::$orderBy),
 			'order_dir' => $request->input('order_dir', Group::$orderDir)
@@ -179,6 +201,7 @@ class GroupsController extends Controller
 
 		$query = Group::query()
 			->with('departments')
+			->with('fieldsOfScience')
 			->select(DB::raw('DISTINCT ' . $g . '.id, ' . $g . '.name, ' . $g . '.owneruserid, ' . $g . '.unixgroup, ' . $g . '.unixid, ' . $g . '.githuborgname, ' . $g . '.datetimecreated, ' . $g . '.datetimeremoved'));
 
 		if ($filters['state'] == 'trashed')
@@ -305,6 +328,16 @@ class GroupsController extends Controller
 			$query->where($g . '.datetimecreated', '>=', $filters['datetimecreated']);
 		}
 
+		if ($filters['department'])
+		{
+			$query->whereDepartment($filters['department']);
+		}
+
+		if ($filters['fieldofscience'])
+		{
+			$query->whereFieldOfScience($filters['fieldofscience']);
+		}
+
 		/*if (auth()->user() && auth()->user()->can('manage groups'))
 		{
 			$query->withCount('members');
@@ -313,7 +346,7 @@ class GroupsController extends Controller
 		$rows = $query
 			//->with('motd')
 			->orderBy($g . '.' . $filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		return new GroupResourceCollection($rows);

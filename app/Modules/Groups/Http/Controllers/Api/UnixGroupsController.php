@@ -109,6 +109,7 @@ class UnixGroupsController extends Controller
 			'groupid'   => $request->input('groupid'),
 			// Paging
 			'limit'     => $request->input('limit', config('list_limit', 20)),
+			'page'      => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', UnixGroup::$orderBy),
 			'order_dir' => $request->input('order_dir', UnixGroup::$orderDir)
@@ -140,7 +141,7 @@ class UnixGroupsController extends Controller
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		return new UnixGroupResourceCollection($rows);

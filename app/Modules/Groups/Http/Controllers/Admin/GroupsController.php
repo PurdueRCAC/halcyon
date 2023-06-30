@@ -80,20 +80,7 @@ class GroupsController extends Controller
 
 		if ($filters['search'])
 		{
-			if (is_numeric($filters['search']))
-			{
-				$query->where($g . '.id', '=', $filters['search']);
-			}
-			else
-			{
-				$filters['search'] = strtolower((string)$filters['search']);
-
-				$query->where(function ($where) use ($filters, $g)
-				{
-					$where->where($g . '.name', 'like', '%' . $filters['search'] . '%')
-						->orWhere($g . '.unixgroup', 'like', '%' . $filters['search'] . '%');
-				});
-			}
+			$query->whereSearch($filters['search']);
 		}
 
 		if ($filters['state'] == 'trashed')
@@ -205,21 +192,12 @@ class GroupsController extends Controller
 
 		if ($filters['department'])
 		{
-			$gd = (new GroupDepartment)->getTable();
-
-			$dep = Department::find($filters['department']);
-			$deps = $dep->children->pluck('id')->toArray();
-			$deps[] = $filters['department'];
-
-			$query->join($gd, $gd . '.groupid', $g . '.id')
-				->whereIn($gd . '.collegedeptid', $deps);
+			$query->whereDepartment($filters['department']);
 		}
 
 		if ($filters['fieldofscience'])
 		{
-			$gf = (new GroupFieldOfScience)->getTable();
-			$query->join($gf, $gf . '.groupid', $g . '.id')
-				->where($gf . '.fieldofscienceid', $filters['fieldofscience']);
+			$query->whereFieldOfScience($filters['fieldofscience']);
 		}
 
 		$rows = $query
