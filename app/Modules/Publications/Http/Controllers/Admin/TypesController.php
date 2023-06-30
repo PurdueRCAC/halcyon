@@ -60,20 +60,7 @@ class TypesController extends Controller
 
 		if ($filters['search'])
 		{
-			if (is_numeric($filters['search']))
-			{
-				$query->where('id', '=', $filters['search']);
-			}
-			else
-			{
-				$filters['search'] = strtolower((string)$filters['search']);
-
-				$query->where(function ($where) use ($filters)
-				{
-					$where->where('name', 'like', '%' . $filters['search'] . '%')
-						->orWhere('alias', 'like', '%' . $filters['search'] . '%');
-				});
-			}
+			$query->whereSearch($filters['search']);
 		}
 
 		$rows = $query

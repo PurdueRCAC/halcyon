@@ -113,28 +113,16 @@ class TypesController extends Controller
 
 		if ($filters['search'])
 		{
-			if (is_numeric($filters['search']))
-			{
-				$query->where('id', '=', $filters['search']);
-			}
-			else
-			{
-				$filters['search'] = strtolower((string)$filters['search']);
-
-				$query->where(function ($where) use ($filters)
-				{
-					$where->where('name', 'like', '%' . $filters['search'] . '%')
-						->orWhere('alias', 'like', '%' . $filters['search'] . '%');
-				});
-			}
+			$query->whereSearch($filters['search']);
 		}
 
 		// Get records
 		$rows = $query
+			->withCount('publications')
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
+			->appends(array_filter($filters));
 
-		$rows->appends(array_filter($filters));
 		$rows->each(function($row, $key)
 		{
 			$row->api = route('api.publications.types.read', ['id' => $row->id]);
@@ -193,7 +181,7 @@ class TypesController extends Controller
 	public function create(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
-			'name' => 'required|string|max:50',
+			'name'  => 'required|string|max:50',
 			'alias' => 'nullable|string|max:50'
 		]);
 

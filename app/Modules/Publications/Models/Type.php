@@ -53,4 +53,31 @@ class Type extends Model
 	{
 		return $this->hasMany(Publication::class, 'type_id');
 	}
+
+	/**
+	 * Query scope with search
+	 *
+	 * @param   Builder  $query
+	 * @param   string   $search
+	 * @return  Builder
+	 */
+	public function scopeWhereSearch(Builder $query, $search): Builder
+	{
+		if (is_numeric($search))
+		{
+			$query->where('id', '=', $search);
+		}
+		else
+		{
+			$filters['search'] = strtolower((string)$search);
+
+			$query->where(function ($where) use ($search)
+			{
+				$where->where('name', 'like', '%' . $search . '%')
+					->orWhere('alias', 'like', '%' . $search . '%');
+			});
+		}
+
+		return $query;
+	}
 }

@@ -328,4 +328,73 @@ class Publication extends Model
 
 		return $name;
 	}
+
+	/**
+	 * Query scope with search
+	 *
+	 * @param   Builder  $query
+	 * @param   string   $search
+	 * @return  Builder
+	 */
+	public function scopeWhereSearch(Builder $query, $search): Builder
+	{
+		if (is_numeric($search))
+		{
+			$query->where('id', '=', $search);
+		}
+		else
+		{
+			$filters['search'] = strtolower((string)$search);
+
+			$query->where(function ($where) use ($search)
+			{
+				$where->where('author', 'like', '%' . $search . '%')
+					->orWhere('title', 'like', '%' . $search . '%');
+			});
+		}
+
+		return $query;
+	}
+
+	/**
+	 * Query scope with state
+	 *
+	 * @param   Builder  $query
+	 * @param   string   $state
+	 * @return  Builder
+	 */
+	public function scopeWhereState(Builder $query, $state): Builder
+	{
+		switch ($state)
+		{
+			case 'unpublished':
+				$query->where('state', '=', 0);
+			break;
+
+			case 'trashed':
+				$query->onlyTrashed();
+			break;
+
+			case 'published':
+			default:
+				$query->where('state', '=', 1);
+		}
+
+		return $query;
+	}
+
+	/**
+	 * Query scope with year
+	 *
+	 * @param   Builder  $query
+	 * @param   string   $year
+	 * @return  Builder
+	 */
+	public function scopeWhereYear(Builder $query, $year): Builder
+	{
+		$query->where('published_at', '>', $year . '-01-01 00:00:00')
+				->where('published_at', '<', Carbon::parse($year . '-01-01 00:00:00')->modify('+1 year')->format('Y') . '-01-01 00:00:00');
+
+		return $query;
+	}
 }

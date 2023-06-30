@@ -66,37 +66,12 @@ class PublicationsController extends Controller
 		}
 
 		// Get records
-		$query = Publication::query();
+		$query = Publication::query()
+			->whereState($filters['state']);
 
 		if ($filters['search'])
 		{
-			if (is_numeric($filters['search']))
-			{
-				$query->where('id', '=', $filters['search']);
-			}
-			else
-			{
-				$filters['search'] = strtolower((string)$filters['search']);
-
-				$query->where(function ($where) use ($filters)
-				{
-					$where->where('author', 'like', '%' . $filters['search'] . '%')
-						->orWhere('title', 'like', '%' . $filters['search'] . '%');
-				});
-			}
-		}
-
-		if ($filters['state'] == 'published')
-		{
-			$query->where('state', '=', 1);
-		}
-		elseif ($filters['state'] == 'unpublished')
-		{
-			$query->where('state', '=', 0);
-		}
-		elseif ($filters['state'] == 'trashed')
-		{
-			$query->onlyTrashed();
+			$query->whereSearch($filters['search']);
 		}
 
 		if ($filters['type'] && $filters['type'] != '*')
@@ -106,8 +81,7 @@ class PublicationsController extends Controller
 
 		if ($filters['year'] && $filters['year'] != '*')
 		{
-			$query->where('published_at', '>', $filters['year'] . '-01-01 00:00:00')
-				->where('published_at', '<', Carbon::parse($filters['year'] . '-01-01 00:00:00')->modify('+1 year')->format('Y') . '-01-01 00:00:00');
+			$query->whereYear($filters['year']);
 		}
 
 		$rows = $query
