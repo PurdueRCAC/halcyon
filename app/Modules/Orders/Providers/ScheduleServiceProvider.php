@@ -17,8 +17,18 @@ class ScheduleServiceProvider extends ServiceProvider
 		$this->app->booted(function ()
 		{
 			$schedule = $this->app->make(Schedule::class);
-			$schedule->command('orders:renew')->cron(config('module.orders.schedule.renew', '55 23 * * *'));
-			$schedule->command('orders:emailstatus')->cron(config('module.orders.schedule.emailstatus', '*/15 * * * *'));
+
+			$commands = config('module.orders.schedule', []);
+
+			foreach ($commands as $command => $cron)
+			{
+				if (!$cron)
+				{
+					continue;
+				}
+
+				$schedule->command('orders:' . $command)->cron($cron);
+			}
 		});
 	}
 }

@@ -4,8 +4,6 @@ namespace App\Modules\Groups\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
-use App\Modules\Groups\Console\EmailAuthorizedCommand;
-use App\Modules\Groups\Console\EmailRemovedCommand;
 
 class ScheduleServiceProvider extends ServiceProvider
 {
@@ -20,9 +18,17 @@ class ScheduleServiceProvider extends ServiceProvider
 		{
 			$schedule = $this->app->make(Schedule::class);
 
-			$schedule->command(EmailAuthorizedCommand::class)->cron((string)config('module.groups.schedule.emailauthorized', '*/20 * * * *'));
+			$commands = config('module.groups.schedule', []);
 
-			$schedule->command(EmailRemovedCommand::class)->cron((string)config('module.groups.schedule.emailremoved', '*/20 * * * *'));
+			foreach ($commands as $command => $cron)
+			{
+				if (!$cron)
+				{
+					continue;
+				}
+
+				$schedule->command('groups:' . $command)->cron($cron);
+			}
 		});
 	}
 }

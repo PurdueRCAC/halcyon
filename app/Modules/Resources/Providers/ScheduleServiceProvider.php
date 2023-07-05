@@ -4,7 +4,6 @@ namespace App\Modules\Resources\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
-use App\Modules\Resources\Console\EmailSchedulingCommand;
 
 class ScheduleServiceProvider extends ServiceProvider
 {
@@ -19,7 +18,17 @@ class ScheduleServiceProvider extends ServiceProvider
 		{
 			$schedule = $this->app->make(Schedule::class);
 
-			$schedule->command(EmailSchedulingCommand::class)->cron(config('module.resources.schedule.emailscheduling', '*/5 * * * *'));
+			$commands = config('module.resources.schedule', []);
+
+			foreach ($commands as $command => $cron)
+			{
+				if (!$cron)
+				{
+					continue;
+				}
+
+				$schedule->command('resources:' . $command)->cron($cron);
+			}
 		});
 	}
 }
