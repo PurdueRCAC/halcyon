@@ -281,6 +281,7 @@ function SubmitRequest() {
 	};
 
 	var error = document.getElementById('errors');
+	var ROOT_URL = document.querySelector('meta[name="base-url"]').getAttribute('content') + "/api/";
 
 	fetch(ROOT_URL + 'queues/requests', {
 		method: 'POST',
@@ -372,7 +373,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		filter: /^[a-z0-9\-_ .,@+]+$/i,
 		select: function (event, ui) {
 			var data = results[ui.item.id];
-
+console.log(data);
 			fetch(data['api'], {
 				method: 'GET',
 				headers: {
@@ -399,11 +400,13 @@ document.addEventListener('DOMContentLoaded', function () {
 				document.getElementById("groupname").innerHTML = res['name'];
 				document.getElementById("selected-group").value = res['id'];
 
-				var names = [];
-				for (var x = 0; x < res['department'].length; x++) {
-					names.push(res['department'][x]['name']);
+				if (typeof res['departments'] != false) {
+					var names = [];
+					for (var x = 0; x < res['departments'].length; x++) {
+						names.push(res['departments'][x]['name']);
+					}
+					document.getElementById("dept").innerHTML = names.join(', ');
 				}
-				document.getElementById("dept").innerHTML = names.join(', ');
 
 				PrintAccountResources(res);
 			})
