@@ -22,59 +22,6 @@ class RolesController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		// Get filters
-		/*$filters = array(
-			'search'   => null,
-			// Paging
-			'limit'     => config('list_limit', 20),
-			'page' => 1,
-			// Sorting
-			'order'     => Role::$orderBy,
-			'order_dir' => Role::$orderDir,
-		);
-
-		foreach ($filters as $key => $default)
-		{
-			$filters[$key] = $request->state('users.roles.filter_' . $key, $val);
-		}
-
-		if (!in_array($filters['order'], ['id', 'title', 'lft']))
-		{
-			$filters['order'] = Role::$orderBy;
-		}
-
-		if (!in_array($filters['order_dir'], ['asc', 'desc']))
-		{
-			$filters['order_dir'] = Role::$orderDir;
-		}
-
-		$query = Role::query();
-
-		if ($filters['search'])
-		{
-			if (is_numeric($filters['search']))
-			{
-				$query->where('id', '=', (int)$filters['search']);
-			}
-			else
-			{
-				$query->where('title', 'like', '%' . $filters['search'] . '%');
-			}
-		}
-
-		$rows = $query
-			->withCount('maps')
-			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
-
-		return view('users::admin.roles.index', [
-			'rows'    => $rows,
-			'filters' => $filters
-		]);*/
-
-		//$model = new Permissions;
-		//$form = $model->getForm();
-
 		// Initialise some field attributes.
 		$section = 'core';
 		$actions = null;
@@ -329,24 +276,24 @@ class RolesController extends Controller
 
 		if (!$hasSuperAdmin)
 		{
-			return redirect()->back()->withInput()->withError(trans('users::roles.error.removing super admin'));
+			return redirect()->back()->withInput()->withError(trans('users::users.error.removing super admin'));
 		}
 
 		$asset = Asset::getRoot();
 
 		if (!$asset->id)
 		{
-			return redirect()->back()->withInput()->withError(trans('users::roles.error.root asset not found'));
+			return redirect()->back()->withInput()->withError(trans('users::users.error.root asset not found'));
 		}
 
 		$asset->rules = (string) $rules;
 
 		if (!$asset->save())
 		{
-			return redirect()->back()->withInput()->withError(trans('users::roles.error.asset save failed'));
+			return redirect()->back()->withInput()->withError(trans('users::users.error.asset save failed'));
 		}
 
-		return $this->cancel()->with('success', trans('users::roles.configuration saved'));
+		return $this->cancel()->with('success', trans('users::users.configuration saved'));
 	}
 
 	/**

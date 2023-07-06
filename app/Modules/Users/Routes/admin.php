@@ -147,7 +147,6 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		$router->match(['get', 'post'], '/', [
 			'as' => 'admin.users.levels',
 			'uses' => 'LevelsController@index',
-			//'middleware' => 'can:users.levels',
 		]);
 		$router->get('create', [
 			'as' => 'admin.users.levels.create',
@@ -174,24 +173,6 @@ $router->group(['prefix' => 'users'], function (Router $router)
 			'uses' => 'LevelsController@cancel',
 		]);
 	});
-
-	/*$router->group(['prefix' => 'permissions'], function (Router $router)
-	{
-		$router->get('/', [
-			'as' => 'admin.users.permissions',
-			'uses' => 'PermissionsController@index',
-			//'middleware' => 'can:users.levels',
-		]);
-		$router->post('store', [
-			'as' => 'admin.users.permissions.store',
-			'uses' => 'PermissionsController@store',
-			//'middleware' => 'can:create users.levels|edit users.levels',
-		]);
-		$router->match(['get', 'post'], 'cancel', [
-			'as' => 'admin.users.permissions.cancel',
-			'uses' => 'PermissionsController@cancel',
-		]);
-	});*/
 
 	$router->get('{id}', [
 		'as' => 'admin.users.show',

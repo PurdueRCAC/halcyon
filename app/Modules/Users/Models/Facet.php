@@ -76,7 +76,7 @@ class Facet extends Model
 	 * @param   string   $key
 	 * @return  Facet|null
 	 */
-	public static function findByUserAndKey($user_id, $key)
+	public static function findByUserAndKey($user_id, $key): ?Facet
 	{
 		return self::query()
 			->where('user_id', '=', (int)$user_id)

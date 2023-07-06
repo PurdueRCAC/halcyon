@@ -61,9 +61,6 @@ class User extends Field
 		$script[] = '		$.fancybox.close();';
 		$script[] = '	}';
 
-		// Add the script to the document head.
-		//app('document')->addScriptDeclaration(implode("\n", $script));
-
 		// Load the current username if available.
 		$name = '';
 		if ($this->value)
@@ -91,7 +88,7 @@ class User extends Field
 		// Create the real field, hidden, that stored the user id.
 		$html[] = '<input type="hidden" id="' . $this->id . '_id" name="' . $this->name . '" value="' . (int) $this->value . '" />';
 
-		return implode("\n", $html);
+		return implode("\n", $html) . implode("\n", $script);
 	}
 
 	/**

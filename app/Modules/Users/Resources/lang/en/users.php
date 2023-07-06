@@ -126,4 +126,5 @@ return [
 	'account suspended' => 'This account has been suspended.',
 	'welcome' => 'Welcome!',
 	'account expired' => 'Account Expired',
+	'configuration saved' => 'Configuration saved',
 ];

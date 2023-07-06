@@ -13,6 +13,7 @@ use App\Modules\History\Traits\Historable;
 use App\Modules\Users\Events\NoteCreated;
 use App\Modules\Users\Events\NoteUpdated;
 use App\Modules\Users\Events\NoteDeleted;
+use Carbon\Carbon;
 
 /**
  * User note model
