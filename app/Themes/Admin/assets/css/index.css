@@ -491,9 +491,6 @@ p {
   widows: 3;
   margin: 1em 0;
 }
-.ie7 img {
-  -ms-interpolation-mode: bicubic;
-}
 img,
 embed,
 object,
@@ -539,7 +536,6 @@ input[type="radio"] {
 }
 input[type="checkbox"] {
   vertical-align: middle;
-  *vertical-align: baseline;
 }
 label,
 input[type=button],

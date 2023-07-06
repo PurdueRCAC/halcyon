@@ -27,12 +27,6 @@
 			<?php
 		endforeach;
 		?>
-		<!--[if lt IE 9]>
-			<script src="{{ asset('themes/admin/js/html5.js') }}"></script>
-		<![endif]-->
-		<!--[if lte IE 9]>
-			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('themes/admin/css/browser/ie.css') }}" />
-		<![endif]-->
 
 		<!-- Scripts -->
 		<?php

@@ -4,21 +4,48 @@
 		<!-- Metadata -->
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="csrf-token" content="{{ csrf_token() }}">
+		<meta name="csrf-token" content="{{ csrf_token() }}" />
+		<meta name="base-url" content="{{ rtrim(url('/'), '/') }}" />
+		<meta name="api-token" content="{{ (auth()->user() ? auth()->user()->api_token : '') }}" />
+		<meta name="theme-color" content="#000000" />
+		<meta name="color-scheme" content="light dark" />
 
 		<!-- Styles -->
-		<link rel="stylesheet" type="text/css" media="all" href="{{ asset('themes/admin/css/login.css?v=' . filemtime(public_path() . '/themes/admin/css/login.css')) }}" />
-		<!--[if lt IE 9]>
-			<script src="{{ asset('themes/admin/js/html5.js') }}"></script>
-		<![endif]-->
-		<!--[if lte IE 9]>
-			<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('themes/admin/css/browser/ie.css') }}" />
-		<![endif]-->
+		<?php
+		$styles = array(
+			'modules/core/vendor/bootstrap/bootstrap.min.css',
+			'modules/core/vendor/jquery-ui/jquery-ui.min.css',
+			'modules/core/vendor/jquery-datepicker/jquery.datepicker.css',
+			'modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.css',
+			'themes/admin/css/index.css',
+		);
+		foreach ($styles as $css):
+			?>
+			<link rel="stylesheet" type="text/css" media="all" href="{{ asset($css . '?v=' . filemtime(public_path() . '/' . $css)) }}" />
+			<?php
+		endforeach;
+		?>
 		@yield('styles')
+		@stack('styles')
 
 		<!-- Scripts -->
-		<script type="text/javascript" src="{{ asset('themes/admin/js/jquery.min.js?v=' . filemtime(public_path() . '/themes/admin/js/jquery.min.js')) }}"></script>
+		@include('partials.globals')
+		<?php
+		$scripts = array(
+			'modules/core/vendor/jquery/jquery.min.js',
+			'modules/core/vendor/bootstrap/bootstrap.bundle.min.js',
+			'modules/core/vendor/jquery-ui/jquery-ui.min.js',
+			'modules/core/js/core.js',
+			'themes/admin/js/index.js',
+		);
+		foreach ($scripts as $script):
+			?>
+			<script type="text/javascript" src="{{ asset($script . '?v=' . filemtime(public_path() . '/' . $script)) }}"></script>
+			<?php
+		endforeach;
+		?>
 		@yield('scripts')
+		@stack('scripts')
 	</head>
 	<body id="login-body" class="dark">
 
