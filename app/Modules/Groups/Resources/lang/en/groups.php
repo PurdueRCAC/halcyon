@@ -86,4 +86,6 @@ return [
 	'prefix unixgroup' => 'Enforce custom unix groups are prefixed',
 	'prefix unixgroup desc' => 'Enforce custom unix groups are prefixed with the base unix group.',
 	'user will be added as a manager' => ':user will be added as a manager.',
+	'add to group' => 'Add to group',
+	'choose group' => 'Choose group',
 ];
