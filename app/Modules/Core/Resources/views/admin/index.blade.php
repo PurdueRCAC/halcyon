@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
-@section('scripts')
+@push('scripts')
 <script src="{{ asset('modules/config/js/config.js') }}"></script>
-@stop
+@endpush
 
 @section('title')
 {!! config('config.name') !!}

@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
-@section('styles')
+@push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/ContactReports/css/news.css') }}" />
-@stop
+@endpush
 
 @section('content')
 <div class="row">

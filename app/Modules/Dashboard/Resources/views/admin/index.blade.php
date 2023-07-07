@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
-@section('styles')
+@push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/dashboard/css/dashboard.css?v=' . filemtime(public_path() . '/modules/dashboard/css/dashboard.css')) }}" />
-@stop
+@endpush
 
 @section('title')
 {!! config('dashboard.name') !!}

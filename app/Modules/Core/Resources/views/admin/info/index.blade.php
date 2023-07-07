@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('styles')
+@push('styles')
 <style>
 .writable {
 	color: green;
@@ -9,7 +9,7 @@
 	color: red;
 }
 </style>
-@stop
+@endpush
 
 @php
 app('pathway')
