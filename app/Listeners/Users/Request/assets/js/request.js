@@ -373,7 +373,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		filter: /^[a-z0-9\-_ .,@+]+$/i,
 		select: function (event, ui) {
 			var data = results[ui.item.id];
-console.log(data);
+
 			fetch(data['api'], {
 				method: 'GET',
 				headers: {
