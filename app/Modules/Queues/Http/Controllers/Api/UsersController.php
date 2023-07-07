@@ -312,7 +312,7 @@ class UsersController extends Controller
 
 		if ($queue->resource->access && !in_array($queue->resource->access, $user->getAuthorisedViewLevels()))
 		{
-			return response()->json(['message' => trans('queues::queues.error.user does not have access')], 403);
+			return response()->json(['message' => trans('queues::queues.user does not have access')], 403);
 		}
 
 		if ($queue->groupid
