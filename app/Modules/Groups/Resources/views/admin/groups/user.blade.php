@@ -86,7 +86,7 @@
 		<div class="card-body">
 			<p class="alert alert-info">This user does not appear to be a member of any groups.</p>
 
-			<h4>What is this page?</h4>
+			<h4>{{ trans('groups::groups.what is this page') }}</h4>
 			<p>If user a manager or member of a group, it will be listed here. You will also find groups listed where the user is a member of at least one of its resource queues or unix groups.</p>
 		</div>
 	</div>

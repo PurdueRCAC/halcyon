@@ -30,7 +30,7 @@
 							<div class="form-group">
 								<label for="new_group_input">Enter a name for a new group:</label>
 								<input type="text" id="new_group_input" class="form-control" data-userid="{{ $user->id }}" data-api="{{ route('api.groups.create') }}" data-uri="{{ route('site.users.account.section', ['section' => 'groups']) }}" value="" required />
-								<div class="form-text text-muted">{{ $user->name }} will be added as a manager.</div>
+								<div class="form-text text-muted">{{ trans('groups::groups.user will be added as a manager', ['name' => $user->name]) }}</div>
 							</div>
 
 							<div id="new_group_action" class="alert alert-danger hide"></div>
@@ -56,20 +56,20 @@
 	<div id="everything">
 	@if (count($groups))
 		<table class="table">
-			<caption class="sr-only">Active Groups</caption>
+			<caption class="sr-only">{{ trans('groups::groups.groups') }}</caption>
 			<thead>
 				<tr>
 					<th scope="col">
-						Group
+						{{ trans('groups::groups.group') }}
 					</th>
 					<th scope="col">
-						Base Unix group
+						{{ trans('groups::groups.base unix group') }}
 					</th>
 					<th scope="col">
-						Membership
+						{{ trans('groups::groups.membership type') }}
 					</th>
-					<th scope="col">
-						Joined
+					<th scope="col" class="text-right">
+						{{ trans('groups::groups.joined') }}
 					</th>
 				</tr>
 			</thead>
@@ -82,7 +82,7 @@
 					</a>
 				</td>
 				<td>
-					{!! $g->group->unixgroup ? $g->group->unixgroup : '<span class="none text-muted">' . trans('global.none') . '</span>' !!}
+					{!! $g->group->unixgroup ? $g->group->unixgroup : '' !!}
 				</td>
 				<td>
 					@if ($g->isManager())
@@ -97,7 +97,7 @@
 						{{ $g->type->name }}
 					</span>
 				</td>
-				<td>
+				<td class="text-right">
 					@if ($g->datecreated)
 						<time datetime="{{ $g->datecreated->toDateTimeLocalString() }}">
 							@if ($g->datecreated->getTimestamp() > Carbon\Carbon::now()->getTimestamp())
@@ -125,7 +125,7 @@
 	@else
 		<div class="card card-help">
 			<div class="card-body">
-				<h3 class="card-title">What is this page?</h3>
+				<h3 class="card-title">{{ trans('groups::groups.what is this page') }}</h3>
 				<p>If you're a manager or member of a group, you'll find it listed here. You will also find groups listed where you're a member of at least one of its resource queues or unix groups.</p>
 			</div>
 		</div>

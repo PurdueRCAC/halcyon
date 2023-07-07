@@ -19,7 +19,7 @@ if (count($managedgroups)):
 		?>
 		<div class="alert alert-warning">
 			<p>
-				The following groups have pending membership requests:
+				{{ trans('groups::groups.groups have pending requests') }}:
 			</p>
 			<ul>
 				<?php foreach ($groups as $group): ?>

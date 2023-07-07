@@ -47,7 +47,7 @@ $subsection = $subsection ?: 'overview';
 			<ul class="nav nav-tabs mb-3">
 				<li class="nav-item">
 					<a href="{{ route('site.users.account.section.show', ['section' => 'groups', 'id' => $group->id, 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}" id="group-overview" class="nav-link tab<?php if ($subsection == 'overview') { echo ' active activeTab'; } ?>">
-						Overview
+						{{ trans('groups::groups.overview') }}
 					</a>
 				</li>
 			@if ($canManage)
@@ -56,9 +56,9 @@ $subsection = $subsection ?: 'overview';
 				@endphp
 				<li class="nav-item">
 					<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => 'members', 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}" id="group-members" class="nav-link tab<?php if ($subsection == 'members') { echo ' active activeTab'; } ?>">
-						Members
+						{{ trans('groups::groups.members') }}
 						@if ($pending)
-							<span class="badge badge-warning tip" title="Pending membership requests">{{ $pending }}</span>
+							<span class="badge badge-warning tip" title="{{ trans('groups::groups.pending membership requests') }}">{{ $pending }}</span>
 						@endif
 					</a>
 				</li>
@@ -71,7 +71,7 @@ $subsection = $subsection ?: 'overview';
 			@if ($canManage)
 				<li class="nav-item">
 					<a href="{{ route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => 'motd', 'u' => $user->id != auth()->user()->id ? $user->id : null]) }}" id="group-motd" class="nav-link tab<?php if ($subsection == 'motd') { echo ' active activeTab'; } ?>">
-						Notices
+						{{ trans('groups::groups.motd') }}
 					</a>
 				</li>
 			@endif

@@ -88,4 +88,8 @@ return [
 	'user will be added as a manager' => ':user will be added as a manager.',
 	'add to group' => 'Add to group',
 	'choose group' => 'Choose group',
+	'groups have pending requests' => 'The following groups have pending membership requests',
+	'what is this page' => 'What is this page?',
+	'user will be added as a manager' => ':name will be added as a manager.',
+	'pending membership requests' => 'Pending membership requests',
 ];
