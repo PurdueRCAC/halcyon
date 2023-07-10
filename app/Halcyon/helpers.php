@@ -129,3 +129,35 @@ if (! function_exists('conf'))
 		return $default;
 	}
 }
+
+if (! function_exists('timestamped_asset'))
+{
+	/**
+	 * Get a timestamped asset
+	 *
+	 * This helps with browser cache busting when files change.
+	 *
+	 * @param  string  $path
+	 * @return string
+	 */
+	function timestamped_asset($path)
+	{
+		// Check if the URL is absolute
+		if (substr($path, 0, strlen('http')) == 'http'
+		 || substr($path, 0, strlen('://')) == '://'
+		 || substr($path, 0, strlen('//')) == '//')
+		{
+			return $path;
+		}
+
+		$p = public_path(ltrim($path, '/'));
+
+		if (file_exists($p))
+		{
+			$path = rtrim($path, '?');
+			$path .= '?v=' . filemtime($p);
+		}
+
+		return asset($path);
+	}
+}
