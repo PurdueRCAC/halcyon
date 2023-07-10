@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/dashboard/css/dashboard.css?v=' . filemtime(public_path() . '/modules/dashboard/css/dashboard.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/dashboard/css/dashboard.css') }}" />
 @endpush
 
 @section('title')

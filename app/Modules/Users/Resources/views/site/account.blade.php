@@ -8,7 +8,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 @endphp
 
 @push('scripts')
-<script src="{{ asset('modules/users/js/site.js?v=' . filemtime(public_path() . '/modules/users/js/site.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/users/js/site.js') }}"></script>
 @endpush
 
 @section('title'){{ $title }}@stop

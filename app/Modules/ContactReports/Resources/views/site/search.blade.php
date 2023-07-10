@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/ContactReports/css/news.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/contactreports/css/contactreports.css') }}" />
 @endpush
 
 @section('content')
@@ -25,7 +25,7 @@
 	<div id="app">
 		<example-component></example-component>
 	</div>
-	<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
+	<script type="text/javascript" src="{{ timestamped_asset('modules/contactreports/js/app.js') }}"></script>
 </div>
 </div>
 @stop

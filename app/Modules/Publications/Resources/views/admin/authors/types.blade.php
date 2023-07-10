@@ -1,5 +1,5 @@
 @push('scripts')
-<script src="{{ asset('modules/publications/js/publications.js?v=' . filemtime(public_path() . '/modules/publications/js/publications.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/publications/js/publications.js') }}"></script>
 @endpush
 
 <h2 class="modal-title">{{ trans('publications::publications.type choose') }}</h2>

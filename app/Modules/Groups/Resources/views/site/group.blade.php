@@ -5,24 +5,26 @@ $subsection = $subsection ?: 'overview';
 @endphp
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css?v=' . filemtime(public_path('/modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css'))) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css') }}" />
 @if ($subsection == 'members')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.css') . '?v=' . filemtime(public_path() . '/modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.css') }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.css?v=' . filemtime(public_path() . '/modules/core/vendor/datatables/dataTables.bootstrap4.min.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.css') }}" />
 @endif
 @endpush
 
+@script('modules/core/vendor/tom-select/js/tom-select.complete.min.js')
+
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js?v=' . filemtime(public_path('/modules/core/vendor/tom-select/js/tom-select.complete.min.js'))) }}"></script>
+<!--<script src="{{ timestamped_asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js') }}"></script>-->
 @if ($subsection == 'motd')
-<script src="{{ asset('modules/groups/js/motd.js?v=' . filemtime(public_path() . '/modules/groups/js/motd.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/groups/js/motd.js') }}"></script>
 @endif
 @if ($subsection == 'members')
-<script src="{{ asset('modules/core/vendor/datatables/datatables.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/datatables/datatables.min.js')) }}"></script>
-<script src="{{ asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/datatables/dataTables.bootstrap4.min.js')) }}"></script>
-<script src="{{ asset('modules/groups/js/userrequests.js?v=' . filemtime(public_path() . '/modules/groups/js/userrequests.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/core/vendor/datatables/datatables.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/groups/js/userrequests.js') }}"></script>
 @endif
-<script src="{{ asset('modules/groups/js/site.js?v=' . filemtime(public_path() . '/modules/groups/js/site.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/groups/js/site.js') }}"></script>
 @endpush
 
 	<div class="contentInner">

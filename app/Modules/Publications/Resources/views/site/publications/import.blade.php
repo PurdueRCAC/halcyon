@@ -1,14 +1,14 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.css?v=' . filemtime(public_path() . '/modules/core/vendor/datatables/dataTables.bootstrap4.min.css')) }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/orders/css/orders.css?v=' . filemtime(public_path() . '/modules/orders/css/orders.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/orders/css/orders.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/datatables/datatables.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/datatables/datatables.min.js')) }}"></script>
-<script src="{{ asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/datatables/dataTables.bootstrap4.min.js')) }}"></script>
-<script src="{{ asset('modules/orders/js/import.js?v=' . filemtime(public_path() . '/modules/orders/js/import.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/core/vendor/datatables/datatables.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/orders/js/import.js') }}"></script>
 @endpush
 
 @section('title'){{ trans('orders::orders.import') }}@stop

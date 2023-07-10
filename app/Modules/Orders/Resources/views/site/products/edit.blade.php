@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @push('scripts')
-<script src="{{ asset('modules/orders/js/orders.js?v=' . filemtime(public_path() . '/modules/orders/js/orders.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/orders/js/orders.js') }}"></script>
 <script>
 jQuery(document).ready(function ($) {
 	$('.btn-success').on('click', function () {

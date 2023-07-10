@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/publications/css/publications.css?v=' . filemtime(public_path('/modules/publications/css/publications.css'))) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/publications/css/publications.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/publications/js/site.js?v=' . filemtime(public_path() . '/modules/publications/js/site.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/publications/js/site.js') }}"></script>
 @endpush
 
 @section('title'){{ trans('publications::publications.publications') }}@stop

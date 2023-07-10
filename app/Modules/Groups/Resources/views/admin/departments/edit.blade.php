@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/select2/css/select2.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
-<script src="{{ asset('modules/groups/js/admin.js?v=' . filemtime(public_path() . '/modules/groups/js/admin.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/core/vendor/select2/js/select2.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/groups/js/admin.js') }}"></script>
 @endpush
 
 @php

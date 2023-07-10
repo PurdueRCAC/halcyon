@@ -1,12 +1,12 @@
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.css?v=' . filemtime(public_path() . '/modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.css')) }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/storage/css/storage.css?v=' . filemtime(public_path() . '/modules/storage/css/storage.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/storage/css/storage.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.js')) }}"></script>
-<script src="{{ asset('modules/storage/js/site.js?v=' . filemtime(public_path() . '/modules/storage/js/site.js')) }}"></script>
-<script src="{{ asset('modules/storage/js/quotas.js?v=' . filemtime(public_path() . '/modules/storage/js/quotas.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/storage/js/site.js') }}"></script>
+<script src="{{ timestamped_asset('modules/storage/js/quotas.js') }}"></script>
 @endpush
 
 <div class="row">

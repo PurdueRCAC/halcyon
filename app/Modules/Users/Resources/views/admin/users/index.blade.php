@@ -1,13 +1,13 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/select2/css/select2.css?v=' . filemtime(public_path() . '/modules/core/vendor/select2/css/select2.css')) }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/users/css/users.css?v=' . filemtime(public_path() . '/modules/users/css/users.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/select2/css/select2.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/users/css/users.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/select2/js/select2.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/select2/js/select2.min.js')) }}"></script>
-<script src="{{ asset('modules/users/js/users.js?v=' . filemtime(public_path() . '/modules/users/js/users.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/core/vendor/select2/js/select2.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/users/js/users.js') }}"></script>
 @endpush
 
 @php

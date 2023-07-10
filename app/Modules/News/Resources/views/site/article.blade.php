@@ -30,11 +30,11 @@
 @section('title'){{ $article->headline }} ({{ $article->formatDate($article->datetimenews, $article->datetimenewsend) }})@stop
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css?v=' . filemtime(public_path() . '/modules/news/css/news.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/news/css/news.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/news/js/site.js?v=' . filemtime(public_path() . '/modules/news/js/site.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/news/js/site.js') }}"></script>
 @endpush
 
 @php

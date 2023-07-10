@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @push('scripts')
-<script src="{{ asset('modules/resources/js/admin.js?v=' . filemtime(public_path() . '/modules/resources/js/admin.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/resources/js/admin.js') }}"></script>
 @endpush
 
 @php

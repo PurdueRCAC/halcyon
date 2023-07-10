@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @push('scripts')
-<script src="{{ asset('modules/config/js/config.js') }}"></script>
+<script src="{{ timestamped_asset('modules/config/js/config.js') }}"></script>
 @endpush
 
 @section('title')

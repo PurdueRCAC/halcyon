@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.css?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/tagsinput/jquery.tagsinput.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/tagsinput/jquery.tagsinput.js?v=' . filemtime(public_path() . '/modules/core/vendor/tagsinput/jquery.tagsinput.js')) }}"></script>
-<script src="{{ asset('modules/groups/js/admin.js?v=' . filemtime(public_path() . '/modules/groups/js/admin.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/core/vendor/tagsinput/jquery.tagsinput.js') }}"></script>
+<script src="{{ timestamped_asset('modules/groups/js/admin.js') }}"></script>
 <script>
 $(document).ready(function() {
 	var autocompleteUsers = function(url) {

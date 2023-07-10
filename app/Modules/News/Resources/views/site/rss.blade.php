@@ -23,11 +23,11 @@
 @section('title'){{ trans('news::news.feeds') }}@stop
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css?v=' . filemtime(public_path() . '/modules/news/css/news.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/news/css/news.css') }}" />
 @endpush
 
 @push('scripts')
-<script type="text/javascript" src="{{ asset('modules/news/js/rss.js?v=' . filemtime(public_path() . '/modules/news/js/rss.js')) }}"></script>
+<script type="text/javascript" src="{{ timestamped_asset('modules/news/js/rss.js') }}"></script>
 @endpush
 
 @php

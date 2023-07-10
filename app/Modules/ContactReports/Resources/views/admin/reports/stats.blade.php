@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" href="{{ Module::asset('core:vendor/chartjs/Chart.css') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ timestamped_asset('modules/core/vendor/chartjs/Chart.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ Module::asset('core:vendor/chartjs/Chart.min.js') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.min.js') }}"></script>
-<script src="{{ asset('modules/contactreports/js/stats.js?v=' . filemtime(public_path() . '/modules/contactreports/js/stats.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/core/vendor/chartjs/Chart.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/contactreports/js/stats.js') }}"></script>
 @endpush
 
 @php

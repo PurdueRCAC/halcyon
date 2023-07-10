@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
 @push('scripts')
-<script src="{{ asset('modules/users/js/users.js?v=' . filemtime(public_path() . '/modules/users/js/users.js')) }}"></script>
-<script src="{{ asset('modules/users/js/notes.js?v=' . filemtime(public_path() . '/modules/users/js/notes.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/users/js/users.js') }}"></script>
+<script src="{{ timestamped_asset('modules/users/js/notes.js') }}"></script>
 @endpush
 
 @php

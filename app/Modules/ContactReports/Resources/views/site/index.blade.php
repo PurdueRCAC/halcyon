@@ -1,13 +1,13 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css?v=' . filemtime(public_path('/modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css'))) }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/contactreports/css/site.css?v=' . filemtime(public_path() . '/modules/contactreports/css/site.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/contactreports/css/site.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js?v=' . filemtime(public_path('/modules/core/vendor/tom-select/js/tom-select.complete.min.js'))) }}"></script>
-<script src="{{ asset('modules/contactreports/js/site.js?v=' . filemtime(public_path() . '/modules/contactreports/js/site.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/contactreports/js/site.js') }}"></script>
 @endpush
 
 @php
@@ -54,7 +54,7 @@ app('pathway')->append(
 	<?php /*<div id="contactreports">
 		<reports></reports>
 	</div>
-	<script type="text/javascript" src="{{ asset('/modules/contactreports/js/app.js') }}"></script>*/ ?>
+	<script type="text/javascript" src="{{ timestamped_asset('/modules/contactreports/js/app.js') }}"></script>*/ ?>
 
 	<div id="everything">
 		<ul class="nav nav-tabs crm-tabs">

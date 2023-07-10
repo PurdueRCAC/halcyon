@@ -1,9 +1,5 @@
 @extends('layouts.master')
 
-@push('scripts')
-<script src="./js/resource.js"></script>
-@endpush
-
 @section('content')
 <h2>{!! config('resources.name') !!}</h2>
 

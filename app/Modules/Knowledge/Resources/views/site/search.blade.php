@@ -3,7 +3,7 @@
 @section('title'){{ trans('knowledge::knowledge.module name') }}: {{ trans('knowledge::knowledge.search') }}@stop
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/knowledge/css/knowledge.css') }}?v={{ filemtime(public_path('modules/knowledge/css/knowledge.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/knowledge/css/knowledge.css') }}" />
 @endpush
 
 @section('content')

@@ -14,19 +14,17 @@
 		<meta name="keywords" content="{{ config('app.name') }}, API, documentation" />
 
 		<!-- Styles -->
-		<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/bootstrap/bootstrap.min.css?v=' . filemtime(public_path() . '/modules/core/vendor/bootstrap/bootstrap.min.css')) }}" />
-		<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/prism/prism.css?v=' . filemtime(public_path() . '/modules/core/vendor/prism/prism.css')) }}" />
-		<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/css/api.css?v=' . filemtime(public_path() . '/modules/core/css/api.css')) }}" />
-		<?php /*<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/swagger/swagger-ui.css?v=' . filemtime(public_path() . '/modules/core/vendor/swagger/swagger-ui.css')) }}" />*/ ?>
-		@yield('styles')
+		<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/bootstrap/bootstrap.min.css') }}" />
+		<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/prism/prism.css') }}" />
+		<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/css/api.css') }}" />
+		<?php /*<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/swagger/swagger-ui.css') }}" />*/ ?>
 		@stack('styles')
 
 		<!-- Scripts -->
-		<script type="text/javascript" src="{{ asset('modules/core/vendor/jquery/jquery.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/jquery/jquery.min.js')) }}"></script>
-		<script type="text/javascript" src="{{ asset('modules/core/vendor/bootstrap/bootstrap.bundle.min.js?v=' . filemtime(public_path() . '/modules/core/vendor/bootstrap/bootstrap.bundle.min.js')) }}"></script>
-		<script type="text/javascript" src="{{ asset('modules/core/vendor/prism/prism.js?v=' . filemtime(public_path() . '/modules/core/vendor/prism/prism.js')) }}"></script>
-		<script type="text/javascript" src="{{ asset('modules/core/js/api.js?v=' . filemtime(public_path() . '/modules/core/js/api.js')) }}"></script>
-		@yield('scripts')
+		<script type="text/javascript" src="{{ timestamped_asset('modules/core/vendor/jquery/jquery.min.js') }}"></script>
+		<script type="text/javascript" src="{{ timestamped_asset('modules/core/vendor/bootstrap/bootstrap.bundle.min.js') }}"></script>
+		<script type="text/javascript" src="{{ timestamped_asset('modules/core/vendor/prism/prism.js') }}"></script>
+		<script type="text/javascript" src="{{ timestamped_asset('modules/core/js/api.js') }}"></script>
 		@stack('scripts')
 	</head>
 	<body>

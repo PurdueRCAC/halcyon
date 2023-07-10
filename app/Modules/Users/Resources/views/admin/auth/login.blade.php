@@ -1,7 +1,7 @@
 @extends('layouts.login')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/users/css/providers.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/users/css/providers.css') }}" />
 @endpush
 
 @section('title')

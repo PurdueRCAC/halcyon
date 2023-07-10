@@ -1,17 +1,17 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/finder/css/finder.css?v=' . filemtime(public_path() . '/modules/finder/css/finder.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/finder/css/finder.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/finder/js/contrib/jquery.ba-throttle-debounce.min.js?v=' . filemtime(public_path() . '/modules/finder/js/contrib/jquery.ba-throttle-debounce.min.js')) }}"></script>
-<script src="{{ asset('modules/finder/js/contrib/jquery.detect_swipe.js?v=' . filemtime(public_path() . '/modules/finder/js/contrib/jquery.detect_swipe.js')) }}"></script>
-<script src="{{ asset('modules/finder/js/cwd_popups.js?v=' . filemtime(public_path() . '/modules/finder/js/cwd_popups.js')) }}"></script>
-<script src="{{ asset('modules/finder/js/cwd_tables.js?v=' . filemtime(public_path() . '/modules/finder/js/cwd_tables.js')) }}"></script>
-<script src="{{ asset('modules/finder/js/jquery.mustache.js?v=' . filemtime(public_path() . '/modules/finder/js/jquery.mustache.js')) }}"></script>
-<script src="{{ asset('modules/finder/vendor/mustache/mustache.js?v=' . filemtime(public_path() . '/modules/finder/vendor/mustache/mustache.js')) }}"></script>
-<script src="{{ asset('modules/finder/js/app.js?v=' . filemtime(public_path() . '/modules/finder/js/app.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/finder/js/contrib/jquery.ba-throttle-debounce.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/finder/js/contrib/jquery.detect_swipe.js') }}"></script>
+<script src="{{ timestamped_asset('modules/finder/js/cwd_popups.js') }}"></script>
+<script src="{{ timestamped_asset('modules/finder/js/cwd_tables.js') }}"></script>
+<script src="{{ timestamped_asset('modules/finder/js/jquery.mustache.js') }}"></script>
+<script src="{{ timestamped_asset('modules/finder/vendor/mustache/mustache.js') }}"></script>
+<script src="{{ timestamped_asset('modules/finder/js/app.js') }}"></script>
 @endpush
 
 @push('meta')

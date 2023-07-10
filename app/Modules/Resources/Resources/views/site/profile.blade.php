@@ -1,5 +1,5 @@
 @push('scripts')
-<script src="{{ asset('modules/resources/js/roles.js?v=' . filemtime(public_path() . '/modules/resources/js/roles.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/resources/js/roles.js') }}"></script>
 @endpush
 
 <div class="card mb-3">

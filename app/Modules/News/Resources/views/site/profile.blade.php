@@ -1,5 +1,5 @@
 @push('scripts')
-<script src="{{ asset('modules/news/js/site.js?v=' . filemtime(public_path() . '/modules/news/js/site.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/news/js/site.js') }}"></script>
 @endpush
 
 <div class="contentInner">

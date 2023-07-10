@@ -1,6 +1,6 @@
 
 @push('scripts')
-<script src="{{ asset('modules/queues/js/site.js?v=' . filemtime(public_path() . '/modules/queues/js/site.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/queues/js/site.js') }}"></script>
 @endpush
 
 <?php

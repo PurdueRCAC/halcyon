@@ -23,7 +23,7 @@
 @section('title'){{ route('site.news.index') }}@stop
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css?v=' . filemtime(public_path() . '/modules/news/css/news.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/news/css/news.css') }}" />
 @endpush
 
 @php

@@ -1,6 +1,6 @@
 
 @push('scripts')
-<script src="{{ asset('modules/groups/js/site.js?v=' . filemtime(public_path() . '/modules/groups/js/site.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/groups/js/site.js') }}"></script>
 @endpush
 
 <div class="contentInner">

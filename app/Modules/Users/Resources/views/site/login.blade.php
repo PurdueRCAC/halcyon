@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/users/css/login.css?v=' . filemtime(public_path() . '/modules/users/css/login.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/users/css/login.css') }}" />
 @endpush
 
 @php

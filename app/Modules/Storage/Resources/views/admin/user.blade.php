@@ -1,11 +1,11 @@
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/core/vendor/jquery-timepicker/jquery.timepicker.css?v=' . filemtime(public_path() . '/modules/core/vendor/jquery-timepicker/jquery.timepicker.css')) }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/jquery-timepicker/jquery.timepicker.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('modules/core/vendor/jquery-timepicker/jquery.timepicker.js?v=' . filemtime(public_path() . '/modules/core/vendor/jquery-timepicker/jquery.timepicker.js')) }}"></script>
-<script src="{{ asset('modules/storage/js/quotas.js?v=' . filemtime(public_path() . '/modules/storage/js/quotas.js')) }}"></script>
+<script src="{{ timestamped_asset('modules/core/vendor/jquery-timepicker/jquery.timepicker.js') }}"></script>
+<script src="{{ timestamped_asset('modules/storage/js/quotas.js') }}"></script>
 @endpush
 
 <div class="contentInner">
