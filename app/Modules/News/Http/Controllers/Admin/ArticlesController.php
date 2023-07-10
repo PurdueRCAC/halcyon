@@ -125,6 +125,14 @@ class ArticlesController extends Controller
 		{
 			$query->where($n . '.published', '=', 0);
 		}
+		elseif ($filters['state'] == 'trashed')
+		{
+			$query->onlyTrashed();
+		}
+		elseif ($filters['state'] == '*')
+		{
+			$query->withTrashed();
+		}
 
 		if ($filters['type'])
 		{
@@ -566,5 +574,47 @@ class ArticlesController extends Controller
 			'filters' => $filters,
 			'stats' => $stats,
 		]);
+	}
+
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param  Request $request
+	 * @return RedirectResponse
+	 */
+	public function restore(Request $request)
+	{
+		$ids = $request->input('id', array());
+		$ids = (!is_array($ids) ? array($ids) : $ids);
+
+		$success = 0;
+
+		foreach ($ids as $id)
+		{
+			$row = Article::query()
+				->withTrashed()
+				->where('id', '=', $id)
+				->first();
+
+			if ($row && $row->trashed())
+			{
+				if (!$row->restore())
+				{
+					$request->session()->flash('error', trans('global.messages.restore failed'));
+					continue;
+				}
+				else
+				{
+					$success++;
+				}
+			}
+		}
+
+		if ($success)
+		{
+			$request->session()->flash('success', trans('global.messages.item restored', ['count' => $success]));
+		}
+
+		return $this->cancel();
 	}
 }

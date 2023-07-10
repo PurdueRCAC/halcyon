@@ -397,6 +397,14 @@ class ArticlesController extends Controller
 		{
 			$query->where($n . '.published', '=', 0);
 		}
+		elseif ($filters['state'] == 'trashed')
+		{
+			$query->onlyTrashed();
+		}
+		elseif ($filters['state'] == '*')
+		{
+			$query->withTrashed();
+		}
 
 		if ($filters['location'])
 		{

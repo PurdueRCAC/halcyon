@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Config\Repository;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Notifications\Notifiable;
@@ -44,12 +45,13 @@ use Carbon\Carbon;
  * @property Carbon|null $datetimecreated
  * @property Carbon|null $datetimeedited
  * @property Carbon|null $datetimemailed
+ * @property Carbon|null $datetimeremoved
  * @property int    $lastmailuserid
  * @property string $url
  */
 class Article extends Model
 {
-	use Historable, Notifiable, HasPreformattedText;
+	use Historable, SoftDeletes, Notifiable, HasPreformattedText;
 
 	/**
 	 * The name of the "created at" column.
@@ -64,6 +66,13 @@ class Article extends Model
 	 * @var  string|null
 	 */
 	const UPDATED_AT = 'datetimeedited';
+
+	/**
+	 * The name of the "deleted at" column.
+	 *
+	 * @var string|null
+	 */
+	const DELETED_AT = 'datetimeremoved';
 
 	/**
 	 * The table to which the class pertains

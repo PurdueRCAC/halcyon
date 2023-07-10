@@ -30,7 +30,11 @@ else
 
 @section('toolbar')
 	@if (auth()->user()->can('delete news'))
-		{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.news.delete')) !!}
+		@if ($filters['state'] == 'trashed')
+			{!! Toolbar::custom(route('admin.news.restore'), 'refresh', 'refresh', trans('global.button.restore'), true) !!}
+		@else
+			{!! Toolbar::deleteList(trans('global.confirm delete'), route('admin.news.delete')) !!}
+		@endif
 	@endif
 
 	@if (auth()->user()->can('create news'))
@@ -82,6 +86,7 @@ else
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('news::news.state_all') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('news::news.published') }}</option>
 					<option value="unpublished"<?php if ($filters['state'] == 'unpublished'): echo ' selected="selected"'; endif;?>>{{ trans('news::news.unpublished') }}</option>
+					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('global.trashed') }}</option>
 				</select>
 
 				<?php /*@if (!$template)
@@ -193,7 +198,11 @@ else
 				</td>
 				<td class="priority-2">
 					@if (auth()->user()->can('edit.state news'))
-						@if ($row->published)
+						@if ($row->trashed())
+							<a class="badge badge-danger" href="{{ route('admin.news.restore', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.click to restore') }}">
+								{{ trans('global.trashed') }}
+							</a>
+						@elseif ($row->published)
 							<a class="badge badge-success" href="{{ route('admin.news.unpublish', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.click to unpublish') }}">
 								{{ trans('global.published') }}
 							</a>
@@ -203,7 +212,11 @@ else
 							</a>
 						@endif
 					@else
-						@if ($row->published)
+						@if ($row->trashed())
+							<span class="badge badge-danger">
+								{{ trans('global.trashed') }}
+							</span>
+						@elseif ($row->published)
 							<span class="badge badge-success">
 								{{ trans('global.published') }}
 							</span>

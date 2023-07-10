@@ -49,6 +49,11 @@ $router->group(['prefix' => 'news', 'middleware' => 'can:manage news'], function
 		'uses' => 'ArticlesController@delete',
 		'middleware' => 'can:delete news',
 	]);
+	$router->match(['get', 'post'], '/restore', [
+		'as' => 'admin.news.restore',
+		'uses' => 'ArticlesController@restore',
+		'middleware' => 'can:edit.stte news',
+	]);
 	$router->post('/copy', [
 		'as'   => 'admin.news.copy',
 		'uses' => 'ArticlesController@copy',
