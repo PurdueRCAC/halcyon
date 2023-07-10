@@ -4,7 +4,7 @@
 <script type="application/json" id="{{ $id }}-ckeconfig">{!! $config !!}</script>
 
 @push('scripts')
-<script type="text/javascript" src="{{ asset('listeners/editors/ckeditor5/js/ckeditor.js?v=' . filemtime(public_path() . '/listeners/editors/ckeditor5/js/ckeditor.js')) }}"></script>
+<script type="text/javascript" src="{{ timestamped_asset('listeners/editors/ckeditor5/js/ckeditor.js') }}"></script>
 <script type="text/javascript">
 document.addEventListener('DOMContentLoaded', function () {
     ClassicEditor

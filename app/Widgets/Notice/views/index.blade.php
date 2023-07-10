@@ -1,5 +1,5 @@
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('widgets/notice/css/notice.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('widgets/notice/css/notice.css') }}" />
 @endpush
 
 @if ($publish)

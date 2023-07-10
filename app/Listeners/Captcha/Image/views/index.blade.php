@@ -9,11 +9,11 @@ $route = $current . htmlentities($append) . 'showCaptcha=True';
 $route = route('site.core.captcha', ['showCaptcha' => 1])
 ?>
 @push('styles')
-<link href="{{ asset('listeners/captcha/image/css/image.css?v=' . filemtime(public_path() . '/listeners/captcha/image/css/image.css')) }}" />
+<link href="{{ timestamped_asset('listeners/captcha/image/css/image.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ asset('listeners/captcha/image/js/image.js?v=' . filemtime(public_path() . '/listeners/captcha/image/js/image.js')) }}"></script>
+<script src="{{ timestamped_asset('listeners/captcha/image/js/image.js') }}"></script>
 @endpush
 
 <div class="captcha-block">

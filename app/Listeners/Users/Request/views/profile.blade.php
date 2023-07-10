@@ -1,5 +1,5 @@
 @push('scripts')
-	<script src="{{ asset('listeners/users/request/js/request.js?v=' . filemtime(public_path() . '/listeners/users/request/js/request.js')) }}"></script>
+	<script src="{{ timestamped_asset('listeners/users/request/js/request.js') }}"></script>
 @endpush
 
 	<div class="contentInner">

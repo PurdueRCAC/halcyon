@@ -23,7 +23,7 @@
 		);
 		foreach ($styles as $css):
 			?>
-			<link rel="stylesheet" type="text/css" media="all" href="{{ asset($css . '?v=' . filemtime(public_path() . '/' . $css)) }}" />
+			<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset($css) }}" />
 			<?php
 		endforeach;
 		?>
@@ -39,7 +39,7 @@
 		);
 		foreach ($scripts as $script):
 			?>
-			<script type="text/javascript" src="{{ asset($script . '?v=' . filemtime(public_path() . '/' . $script)) }}"></script>
+			<script type="text/javascript" src="{{ timestamped_asset($script) }}"></script>
 			<?php
 		endforeach;
 		?>

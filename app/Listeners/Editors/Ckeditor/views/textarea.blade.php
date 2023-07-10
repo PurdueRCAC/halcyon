@@ -5,7 +5,7 @@
 
 @if ($assets)
 @push('scripts')
-<script src="{{ asset('listeners/editors/ckeditor/ckeditor.js?v=' . filemtime(public_path() . '/listeners/editors/ckeditor/ckeditor.js')) }}"></script>
+<script src="{{ timestamped_asset('listeners/editors/ckeditor/ckeditor.js') }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.ckeditor-content').forEach(function(el){

@@ -36,9 +36,8 @@
 
 		foreach ($styles as $css => $attrs):
 			$attrs = $attrs ?: 'rel="stylesheet" type="text/css" media="all"';
-			$sfx = (substr($css, 0, 4) != 'http' ? '?v=' . filemtime(public_path() . '/' . $css) : '');
 			?>
-		<link {!! $attrs !!} href="{{ asset($css . $sfx) }}" />
+		<link {!! $attrs !!} href="{{ timestamped_asset($css) }}" />
 <?php
 		endforeach;
 		?>
@@ -56,7 +55,7 @@
 		);
 		foreach ($scripts as $script):
 			?>
-		<script src="{{ asset($script . '?v=' . filemtime(public_path() . '/' . $script)) }}"></script>
+		<script src="{{ timestamped_asset($script) }}"></script>
 <?php
 		endforeach;
 		?>

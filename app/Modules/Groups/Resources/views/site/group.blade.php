@@ -12,10 +12,8 @@ $subsection = $subsection ?: 'overview';
 @endif
 @endpush
 
-@script('modules/core/vendor/tom-select/js/tom-select.complete.min.js')
-
 @push('scripts')
-<!--<script src="{{ timestamped_asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js') }}"></script>-->
+<script src="{{ timestamped_asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js') }}"></script>
 @if ($subsection == 'motd')
 <script src="{{ timestamped_asset('modules/groups/js/motd.js') }}"></script>
 @endif
