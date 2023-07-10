@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Publications\Events\PublicationCreated;
 use App\Modules\Publications\Events\PublicationUpdated;
