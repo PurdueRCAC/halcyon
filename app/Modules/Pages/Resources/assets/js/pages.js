@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	var taggables = document.querySelectorAll('.taggable');
 	if (taggables.length) {
 		taggables.forEach(function (el) {
-			var sel = new TomSelect(el, {
+			new TomSelect(el, {
 				plugins: {
 					remove_button: {
 						title: 'Remove this tag',

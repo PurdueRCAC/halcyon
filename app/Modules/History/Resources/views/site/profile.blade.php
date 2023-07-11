@@ -6,9 +6,10 @@
 <script src="{{ timestamped_asset('modules/core/vendor/datatables/datatables.min.js') }}"></script>
 <script src="{{ timestamped_asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 <script>
-$(document).ready(function() {
-	if ($('.datatable').length) {
-		$('.datatable').DataTable({
+document.addEventListener('DOMContentLoaded', function () {
+	var tables = $('.memberships');
+	if (tables.length) {
+		tables.DataTable({
 			//pageLength: 20,
 			//pagingType: 'numbers',
 			paging: false,
@@ -60,7 +61,7 @@ $(document).ready(function() {
 	<h2>{{ trans('history::history.history') }}</h2>
 
 	@if (count($history) > 0)
-		<table class="table table-hover datatable">
+		<table class="table table-hover memberships datatable">
 			<caption>Memberships</caption>
 			<thead>
 				<tr>

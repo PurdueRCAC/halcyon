@@ -1,5 +1,6 @@
 /* global $ */ // jquery.js
-/* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
+/* global Halcyon */ // modules/core/js/core.js
+/* global TomSelect */ // modules/core/vendor/tom-select/js/tom-select.complete.min.js
 
 function setmenutype(type) {
 	window.parent.Halcyon.submitbutton('items.setType', type);

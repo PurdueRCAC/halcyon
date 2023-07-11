@@ -1,3 +1,5 @@
+/* global Chart */ // modules/core/vendor/chartjs/Chart.min.js
+
 document.addEventListener('DOMContentLoaded', function () {
 	document.querySelectorAll('.items-toggle').forEach(function (el) {
 		el.addEventListener('click', function (e) {

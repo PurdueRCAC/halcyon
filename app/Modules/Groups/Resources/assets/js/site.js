@@ -512,7 +512,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	// Group info
 
 	document.querySelectorAll('.reveal').forEach(function (item) {
-		item.addEventListener('click', function (e) {
+		item.addEventListener('click', function () {
 			document.querySelectorAll(this.getAttribute('data-toggle')).forEach(function (el) {
 				el.classList.toggle('hide');
 			});
@@ -540,10 +540,15 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.querySelectorAll('.edit-property-input').forEach(function (el) {
 		el.addEventListener('keyup', function (event) {
 			if (event.keyCode == 13) {
-				EditProperty(
-					this.getAttribute('data-prop'),
-					this.getAttribute('data-value')
-				);
+				var row = this.closest('.row');
+				if (!row) {
+					return;
+				}
+
+				var btn = row.querySelector('.save-property');
+				if (btn) {
+					btn.dispatchEvent(new Event('click'));
+				}
 			}
 		});
 	});
@@ -663,14 +668,14 @@ document.addEventListener('DOMContentLoaded', function () {
 							return;
 						}
 						var column = this;
-						var select = $('<select class="data-col-filter form-contro form-contro-sm" data-index="' + i + '"><option value="all">- All -</option><option value="selected">Selected</option><option value="not-selected">Not selected</option></select><br />')
-							.prependTo($(column.header()));
+						var select = $('<select class="data-col-filter form-contro form-contro-sm" data-index="' + i + '"><option value="all">- All -</option><option value="selected">Selected</option><option value="not-selected">Not selected</option></select><br />');
+						select.prependTo($(column.header()));
 					});
 
 					$('.data-col-filter').on('change', function () {
 						$.fn.dataTable.ext.search = [];//.pop();
 
-						$('.data-col-filter').each(function (k, el) {
+						$('.data-col-filter').each(function () {
 							var val = $(this).val(),
 								index = $(this).data('index');
 
@@ -789,7 +794,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	//$('.dataTables_filter input').addClass('form-control');
 
-	var dialog = $(".membership-dialog").dialog({
+	$(".membership-dialog").dialog({
 		autoOpen: false,
 		height: 'auto',
 		width: 500,
@@ -829,7 +834,7 @@ document.addEventListener('DOMContentLoaded', function () {
 							}
 						}
 						callback(json.data);
-					}).catch(function (err) {
+					}).catch(function () {
 						callback();
 					});
 			},
@@ -945,7 +950,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	var newmembertype = document.getElementById('new_membertype');
 	if (newmembertype) {
-		newmembertype.addEventListener('change', function (e) {
+		newmembertype.addEventListener('change', function () {
 			var sel = this;
 			if (sel.value == 2 && sel.getAttribute('data-cascade')) {
 				document.querySelectorAll('.add-queue-member').forEach(function (el) {
@@ -1061,13 +1066,11 @@ document.addEventListener('DOMContentLoaded', function () {
 							},
 							dataType: 'json',
 							async: false,
-							success: function (data) {
+							success: function () {
 								processed['queues']++;
 								checkprocessed(processed, pending);
 							},
-							error: function (xhr, ajaxOptions, thrownError) {
-								//Halcyon.message('danger', xhr.response);
-								//alert(xhr.responseJSON.message);
+							error: function (xhr) {
 								if (typeof xhr.responseJSON.message === 'object') {
 									var lines = Object.values(xhr.responseJSON.message);
 									for (var i = 0; i < lines.length; i++) {
@@ -1095,13 +1098,11 @@ document.addEventListener('DOMContentLoaded', function () {
 							},
 							dataType: 'json',
 							async: false,
-							success: function (data) {
+							success: function () {
 								processed['unixgroups']++;
 								checkprocessed(processed, pending);
 							},
-							error: function (xhr, ajaxOptions, thrownError) {
-								//Halcyon.message('danger', xhr.response);
-								//alert(xhr.responseJSON.message);
+							error: function (xhr) {
 								if (typeof xhr.responseJSON.message === 'object') {
 									var lines = Object.values(xhr.responseJSON.message);
 									for (var i = 0; i < lines.length; i++) {
@@ -1115,12 +1116,9 @@ document.addEventListener('DOMContentLoaded', function () {
 								checkprocessed(processed, pending);
 							}
 						});
-						//console.log(btn.data('api-unixgroupusers'));
 					});
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
-					//Halcyon.message('danger', xhr.response);
-					//alert(xhr.responseJSON.message);
+				error: function (xhr) {
 					if (typeof xhr.responseJSON.message === 'object') {
 						var lines = Object.values(xhr.responseJSON.message);
 						for (var i = 0; i < lines.length; i++) {
@@ -1159,9 +1157,9 @@ document.addEventListener('DOMContentLoaded', function () {
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function (data) {
+				success: function () {
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
+				error: function (xhr) {
 					if (xhr.status == 416) {
 						errors.push("Queue disabled for system/guest account.");
 					}
@@ -1183,10 +1181,10 @@ document.addEventListener('DOMContentLoaded', function () {
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function (data) {
+				success: function () {
 					location.reload(true);
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
+				error: function (xhr) {
 					if (typeof xhr.responseJSON.message === 'object') {
 						var lines = Object.values(xhr.responseJSON.message);
 						for (var i = 0; i < lines.length; i++) {
@@ -1226,10 +1224,10 @@ document.addEventListener('DOMContentLoaded', function () {
 				},
 				dataType: 'json',
 				async: false,
-				success: function (data) {
+				success: function () {
 					location.reload(true);
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
+				error: function (xhr) {
 					alert(xhr.responseJSON.message);
 				}
 			});
@@ -1304,7 +1302,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				type: 'delete',
 				dataType: 'json',
 				async: false,
-				success: function (data) {
+				success: function () {
 					// Nothing to do here
 					//bx.data('api', bx.data('api-create'));
 				},

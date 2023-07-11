@@ -6,17 +6,20 @@
  * @return void
  */
 function setAlias() {
-	document.getElementById('field-alias').value = this.value
-		.trim()
-		.toLowerCase()
-		.replace(/\s+/g, '-')
-		.replace(/[^a-z0-9\-_]+/g, '');
+	var alias = document.getElementById('field-alias');
+	if (alias) {
+		alias.value = this.value
+			.trim()
+			.toLowerCase()
+			.replace(/\s+/g, '_')
+			.replace(/[^a-z0-9\-_]+/g, '');
+		alias.dispatchEvent(new Event('change'));
+	}
 }
 
 document.addEventListener('DOMContentLoaded', function () {
 
 	// Edit page
-
 	var alias = document.getElementById('field-alias'),
 		title = document.getElementById('field-title');
 	if (alias && title) {
@@ -28,13 +31,28 @@ document.addEventListener('DOMContentLoaded', function () {
 		title.addEventListener('blur', function () {
 			title.removeEventListener('keyup', setAlias);
 		});
+		title.addEventListener('change', function () {
+			if (this.value) {
+				this.classList.add('is-valid');
+			} else {
+				this.classList.remove('is-valid');
+			}
+		});
 
 		alias.addEventListener('keyup', setAlias);
+		alias.addEventListener('change', function () {
+			if (this.value) {
+				this.classList.add('is-valid');
+			} else {
+				this.classList.remove('is-valid');
+			}
+		});
 	}
 
 	var sselects = document.querySelectorAll('.searchable-select');
 	if (sselects.length) {
-		var sel, sels = new Array();
+		var sels = new Array,
+			sel = null;
 		sselects.forEach(function (el) {
 			sel = new TomSelect(el, {
 				plugins: ['dropdown_input'],
@@ -44,18 +62,18 @@ document.addEventListener('DOMContentLoaded', function () {
 						return '<div>' +
 							'<span class="d-inline-block indent">' + escape(data.indent) + '</span>' +
 							'<span class="d-inline-block">' +
-							'<span class="text">' + escape(data.text.replace(data.indent, '')) + '</span>' +
-							(data.path ? '<br /><span class="path text-muted">' + escape(data.path) + '</span>' : '') +
+								'<span class="text">' + escape(data.text.replace(data.indent, '')) + '</span>' +
+								(data.path ? '<br /><span class="path text-muted">' + escape(data.path) + '</span>' : '') +
 							'</span>' +
-							'</div>';
+						'</div>';
 					},
 					item: function (data, escape) {
 						return '<div>' +
 							'<span class="d-inline-block">' +
-							'<span class="text">' + escape(data.text.replace(data.indent, '')) + '</span>' +
-							(data.path ? '<br /><span class="path text-muted">' + escape(data.path) + '</span>' : '') +
+								'<span class="text">' + escape(data.text.replace(data.indent, '')) + '</span>' +
+								(data.path ? '<br /><span class="path text-muted">' + escape(data.path) + '</span>' : '') +
 							'</span>' +
-							'</div>';
+						'</div>';
 					}
 				}
 			});
@@ -66,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	var taggables = document.querySelectorAll('.taggable');
 	if (taggables.length) {
 		taggables.forEach(function (el) {
-			var sel = new TomSelect(el, {
+			new TomSelect(el, {
 				plugins: {
 					remove_button: {
 						title: 'Remove this tag',

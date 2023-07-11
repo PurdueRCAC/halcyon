@@ -76,7 +76,7 @@ app('pathway')
 					@else
 						<?php foreach ($tree as $pa): ?>
 							<?php $selected = ($pa->id == $row->parent_id ? ' selected="selected"' : ''); ?>
-							<option value="{{ $pa->id }}"<?php echo $selected; ?> data-path="/{{ $pa->path }}" data-indent="<?php echo str_repeat('|&mdash; ', $pa->level); ?>"><?php echo str_repeat('|&mdash; ', $pa->level) . e(Illuminate\Support\Str::limit($pa->title, 70)); ?></option>
+							<option value="{{ $pa->id }}"<?php echo $selected; ?> data-path="/{{ ltrim($pa->path, '/') }}" data-indent="<?php echo str_repeat('|&mdash; ', $pa->level); ?>"><?php echo str_repeat('|&mdash; ', $pa->level) . e(Illuminate\Support\Str::limit($pa->title, 70)); ?></option>
 						<?php endforeach; ?>
 					@endif
 					</select>

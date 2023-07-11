@@ -94,7 +94,7 @@ function HighlightMatches(text) {
 	//var lastMatch = 0;
 	var color = "";
 	// iterate through matches
-	while (!!(m = regx.exec(text))) {
+	while ((m = regx.exec(text))) {
 		txt = m[0];
 		keyid = keywords.indexOf(stemmer(txt).toLowerCase());
 		if (keyid != -1) {
@@ -3953,7 +3953,7 @@ function NewsSaveUpdateText(newsid, update) {
 		}
 	});
 }
-
+/*
 function joinDate(t, a, s) {
 	function format(m) {
 		let f = new Intl.DateTimeFormat('en', m);
@@ -3979,7 +3979,7 @@ function NEWSSetContentVars()
 	}
 
 	document.getElementById("NotesText").setAttribute('data-vars', JSON.stringify(vars));
-}
+}*/
 
 /**
  * Delete a news update

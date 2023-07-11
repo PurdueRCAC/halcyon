@@ -2124,7 +2124,7 @@ function ResetItem(url) {
  * @param   {object}  btn
  * @return  {void}
  */
-/* exported ResetAccount */
+/* exported UpdateItem */
 function UpdateItem(url, btn) {
 	var input = document.getElementById('button_' + btn.getAttribute('data-id') + '_save');
 	var post = JSON.stringify({ "datetimefulfilled": input.value });

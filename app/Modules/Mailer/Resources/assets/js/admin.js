@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						});
 				}
 			});
-			sel.on('item_add', function (item, data) {
+			sel.on('item_add', function () {
 				totalgroups++;
 				var confirm = document.getElementById(group.getAttribute('id') + '-confirmation');
 				if (confirm) {

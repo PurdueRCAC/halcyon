@@ -8,7 +8,7 @@
 <script src="{{ timestamped_asset('modules/core/vendor/tagsinput/jquery.tagsinput.js') }}"></script>
 <script src="{{ timestamped_asset('modules/groups/js/admin.js') }}"></script>
 <script>
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function () {
 	var autocompleteUsers = function(url) {
 		return function(request, response) {
 			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
