@@ -5,8 +5,8 @@
 			name="collect_feedback"
 			type="radio"
 			default="1"
-			label="knowledge::config.params.collect feedback"
-			description="knowledge::config.params.collect feedback desc">
+			label="knowledge::knowledge.params.collect feedback"
+			description="knowledge::knowledge.params.collect feedback desc">
 			<option value="0">global.no</option>
 			<option value="1">global.yes</option>
 		</field>
