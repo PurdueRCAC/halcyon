@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
 @push('scripts')
-<script src="{{ Module::asset('core:vendor/chartjs/Chart.min.js') . '?v=' . filemtime(public_path() . '/modules/core/vendor/chartjs/Chart.min.js') }}"></script>
-<script src="{{ Module::asset('pages:js/pages.js') . '?v=' . filemtime(public_path() . '/modules/pages/js/pages.js') }}"></script>
+<script src="{{ timestamped_asset('modules/core/vendor/chartjs/Chart.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/pages/js/pages.js') }}"></script>
 @endpush
 
 @php

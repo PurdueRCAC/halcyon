@@ -83,6 +83,6 @@
 	</form>
 
 	@push('scripts')
-		<script src="{{ Module::asset('pages:js/site.js') . '?v=' . filemtime(public_path('modules/pages/js/site.js')) }}"></script>
+		<script src="{{ timestamped_asset('modules/pages/js/site.js') }}"></script>
 	@endpush
 @stop
