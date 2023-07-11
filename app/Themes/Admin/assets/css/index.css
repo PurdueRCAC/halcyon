@@ -1974,6 +1974,10 @@ button.loading .spinner-border,
   border-color: transparent;
   background-color: transparent;
 }
+.input-group .form-control.is-valid,
+.was-validated .form-control:valid {
+  border-color: #28a745;
+}
 /*.input-group .input-group-text,
 .input-group .input-group-prepend,
 .input-group .input-group-append {
