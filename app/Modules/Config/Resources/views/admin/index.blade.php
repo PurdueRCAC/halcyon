@@ -1,9 +1,5 @@
 @extends('layouts.master')
 
-@push('scripts')
-<script src="{{ timestamped_asset('modules/config/js/config.js') }}"></script>
-@endpush
-
 @php
 app('pathway')
 	->append(

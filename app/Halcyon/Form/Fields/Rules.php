@@ -119,12 +119,14 @@ class Rules extends Field
 		{
 			$difLevel = $group->level - $curLevel;
 
-			$html[] = '<h3 class="pane-toggler title">';
+			$html[] = '<details class="card mb-1">';
+			$html[] = '<summary class="card-header">';
 			//$html[] = '<input type="checkbox" name="cb' . $group->value . '" value="' . $group->value . '" /> &nbsp;';
 			$html[] = str_repeat('<span class="level">|&mdash;</span> ', $curLevel = $group->level) . $group->text;
-			$html[] = ' <span class="badge badge-secondary">' . number_format($group->maps_count) . '</span></h3>';
-			$html[] = '<div class="pane-slider">';
-			$html[] = '<div class="pane-slider content pane-hide">';
+			$html[] = ' <span class="badge badge-secondary float-right">' . number_format($group->maps_count) . '</span></summary>';
+
+			$html[] = '<div class="card-bpdy">';
+			//$html[] = '<div class="pane-slider content pane-hide">';
 
 			$html[] = '<table class="table group-rules">';
 			$html[] = '<thead>';
@@ -203,27 +205,27 @@ class Rules extends Field
 					{
 						if ($inheritedRule === null)
 						{
-							$html[] = '<span class="state no icon-unset">' . trans('access.rules.not allowed') . '</span>';
+							$html[] = '<span class="badge badge-warning">' . trans('access.rules.not allowed') . '</span>';
 						}
 						elseif ($inheritedRule === true)
 						{
-							$html[] = '<span class="state yes icon-allowed">' . trans('access.rules.allowed') . '</span>';
+							$html[] = '<span class="badge badge-success">' . trans('access.rules.allowed') . '</span>';
 						}
 						elseif ($inheritedRule === false)
 						{
 							if ($assetRule === false)
 							{
-								$html[] = '<span class="state no icon-denied">' . trans('access.rules.not allowed') . '</span>';
+								$html[] = '<span class="badge badge-warning">' . trans('access.rules.not allowed') . '</span>';
 							}
 							else
 							{
-								$html[] = '<span class="state no icon-denied"><span class="fa fa-lock"></span> ' . trans('access.rules.not allowed locked') . '</span>';
+								$html[] = '<span class="badge badge-danger"><span class="fa fa-lock" aria-hidden="true"></span> ' . trans('access.rules.not allowed locked') . '</span>';
 							}
 						}
 					}
 					elseif (!empty($module))
 					{
-						$html[] = '<span class="state yes icon-allowed"><span class="fa fa-lock"></span> ' . trans('access.rules.allowed admin') . '</span>';
+						$html[] = '<span class="badge badge-success"><span class="fa fa-lock" aria-hidden="true"></span> ' . trans('access.rules.allowed admin') . '</span>';
 					}
 					else
 					{
@@ -231,16 +233,16 @@ class Rules extends Field
 						// The admin rights can be changed.
 						if ($action['name'] === 'admin')
 						{
-							$html[] = '<span class="state yes icon-allowed">' . trans('access.rules.allowed') . '</span>';
+							$html[] = '<span class="badge badge-success">' . trans('access.rules.allowed') . '</span>';
 						}
 						elseif ($inheritedRule === false)
 						{
 							// Other actions cannot be changed.
-							$html[] = '<span class="state no icon-denied"><span class="fa fa-lock">' . trans('access.rules.not allowed admin conflict') . '</span></span>';
+							$html[] = '<span class="badge badge-danger"><span class="fa fa-lock" aria-hidden="true"></span> ' . trans('access.rules.not allowed admin conflict') . '</span>';
 						}
 						else
 						{
-							$html[] = '<span class="state yes icon-allowed"><span class="fa fa-lock">' . trans('access.rules.allowed admin') . '</span></span>';
+							$html[] = '<span class="badge badge-success"><span class="fa fa-lock" aria-hidden="true"></span> ' . trans('access.rules.allowed admin') . '</span>';
 						}
 					}
 
@@ -254,10 +256,10 @@ class Rules extends Field
 			$html[] = '</table>';
 
 			$html[] = '</div>';
-			$html[] = '</div>';
+			$html[] = '</details>';
 		}
 
-		$html[] = '</div>';
+		$html[] = '</div><!-- / #permissions-sliders -->';
 		$html[] = '<div class="rule-notes">';
 		if ($section == 'module' || $section == null)
 		{
@@ -268,7 +270,7 @@ class Rules extends Field
 			$html[] = trans('access.rules.setting notes item');
 		}
 		$html[] = '</div>';
-		$html[] = '</div>';
+		$html[] = '</div><!-- / #permissions-rules -->';
 
 		return implode("\n", $html);
 	}

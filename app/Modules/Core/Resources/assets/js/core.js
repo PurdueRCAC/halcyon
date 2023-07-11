@@ -894,16 +894,6 @@ document.addEventListener('DOMContentLoaded', function() {
 					Halcyon.message('danger', err);
 				});
 			});
-
-			$('#permissions-rules').accordion({
-				heightStyle: 'content',
-				collapsible: true,
-				active: false
-			});
-			$('#permissions-rules .stop-propagation').on('click', function (e) {
-				e.stopPropagation();
-			});
-			//$('.tabs').tabs();
 		})
 		.catch(function (err) {
 			Halcyon.message('danger', err);

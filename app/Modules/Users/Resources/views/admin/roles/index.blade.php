@@ -56,8 +56,8 @@ app('pathway')
 				$difLevel = $role->level - $curLevel;
 				$canCalculateSettings = ($role->parent_id);
 				?>
-				<div class="card">
-				<div class="card-header pane-toggler title" data-toggle="collapse" data-target="#collapse{{ $role->value }}" aria-expanded="false" aria-controls="collapse{{ $role->value }}">
+				<details class="card">
+				<summary class="card-header pane-toggler title" data-toggle="collapse" data-target="#collapse{{ $role->value }}" aria-expanded="false" aria-controls="collapse{{ $role->value }}">
 					@if ($canEdit)
 						<span class="form-check stop-propagation"><input type="checkbox" name="id[]" id="cb{{ $i }}" value="{{ $role->value }}" class="form-check-input checkbox-toggle" /><label for="cb{{ $i }}"></label></span>
 					@endif
@@ -73,7 +73,7 @@ app('pathway')
 					@endif
 
 					<span class="badge badge-secondary float-right">{{ number_format($role->maps_count) }}</span>
-				</div>
+				</summary>
 				<div class="card-body pane-slider collapse" id="collapse{{ $role->value }}" aria-labelledby="heading{{ $role->value }}" data-parent="#permissions-rules">
 					<div class="pane-slider content pane-hide">
 
@@ -150,8 +150,8 @@ app('pathway')
 						</table>
 
 					</div>
-						</div>
 				</div>
+				</details>
 				<?php
 			endforeach;
 			?>

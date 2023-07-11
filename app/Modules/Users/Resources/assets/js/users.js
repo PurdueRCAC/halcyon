@@ -148,13 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
-	// Roles
-	/*document.querySelectorAll('#permissions-rules .stop-propagation').forEach(function(el) {
-		el.addEventListener('click', function (e) {
-			e.stopPropagation();
-		});
-	});*/
-
 	// User Facets
 	document.querySelectorAll('.add-facet').forEach(function(el) {
 		el.addEventListener('click', function (e) {
