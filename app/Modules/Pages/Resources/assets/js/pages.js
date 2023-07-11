@@ -1,12 +1,38 @@
-/* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
+/* global TomSelect */ // modules/core/vendor/tom-select/js/tom-select.complete.min.js
 
 document.addEventListener('DOMContentLoaded', function () {
 	var alias = document.getElementById('field-alias');
-	if (alias && !alias.value) {
-		document.getElementById('field-title').addEventListener('keyup', function () {
-			alias.value = this.value.toLowerCase()
-				.replace(/\s+/g, '-')
-				.replace(/[^a-zA-Z0-9\-_.]+/g, '');
+	if (alias) {
+		alias.addEventListener('change', function () {
+			if (this.value) {
+				this.classList.add('is-valid');
+			} else {
+				this.classList.remove('is-valid');
+			}
+		});
+		if (!alias.value) {
+			document.getElementById('field-title').addEventListener('keyup', function () {
+				if (this.value) {
+					this.classList.add('is-valid');
+				} else {
+					this.classList.remove('is-valid');
+				}
+				alias.value = this.value.toLowerCase()
+					.replace(/\s+/g, '-')
+					.replace(/[^a-zA-Z0-9\-_.]+/g, '');
+				alias.dispatchEvent(new Event('change'));
+			});
+		}
+	}
+
+	var content = document.getElementById('field-content');
+	if (content) {
+		content.addEventListener('change', function () {
+			if (this.value) {
+				this.classList.add('is-valid');
+			} else {
+				this.classList.remove('is-valid');
+			}
 		});
 	}
 
