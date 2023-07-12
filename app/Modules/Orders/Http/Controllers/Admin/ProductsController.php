@@ -195,8 +195,17 @@ class ProductsController extends Controller
 		$validator = Validator::make($request->all(), [
 			'fields.name' => 'required|string|max:255',
 			'fields.ordercategoryid' => 'required|integer|min:1',
-			'fields.unitprice' => 'required|string',
-			'fields.unit' => 'required|string|min:1,max:16',
+			'fields.description' => 'nullable|string|max:2000',
+			'fields.mou' => 'nullable|string|max:255',
+			'fields.unit' => 'nullable|string|max:16',
+			'fields.unitprice' => 'nullable|string',
+			'fields.recurringtimeperiodid' => 'nullable|integer',
+			'fields.sequence' => 'nullable|integer|min:1',
+			'fields.successororderproductid' => 'nullable|integer|min:1',
+			'fields.terms' => 'nullable|string|max:2000',
+			'fields.restricteddata' => 'nullable|integer',
+			'fields.ticket' => 'nullable|integer',
+			'fields.resourceid' => 'nullable|integer',
 		]);
 
 		if ($validator->fails())
@@ -212,6 +221,8 @@ class ProductsController extends Controller
 		$row->mou = $row->mou ?: '';
 		$row->terms = $row->terms ?: '';
 		$row->description = $row->description ?: '';
+		$row->restricteddata = $request->has('fields.restricteddata') ? $request->input('fields.restricteddata') : 0;
+		$row->ticket = $request->has('fields.ticket') ? $request->input('fields.ticket') : 0;
 
 		if (!$row->save())
 		{

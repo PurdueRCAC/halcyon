@@ -306,7 +306,7 @@ class ProductsController extends Controller
 	public function store(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
-			'fields.name' => 'required|string|max:64',
+			'fields.name' => 'required|string|max:255',
 			'fields.ordercategoryid' => 'required|integer|min:1',
 			'fields.description' => 'nullable|string|max:2000',
 			'fields.mou' => 'nullable|string|max:255',
@@ -332,6 +332,7 @@ class ProductsController extends Controller
 		$row->terms = $row->terms ?: '';
 		$row->description = $row->description ?: '';
 		$row->mou = $row->mou ?: '';
+		$row->restricteddata = $request->has('fields.restricteddata') ? $request->input('fields.restricteddata') : 0;
 
 		if (!$row->save())
 		{

@@ -3,12 +3,12 @@
 @push('scripts')
 <script src="{{ timestamped_asset('modules/orders/js/orders.js') }}"></script>
 <script>
-jQuery(document).ready(function ($) {
-	$('.btn-success').on('click', function () {
+document.addEventListener('DOMContentLoaded', function () {
+	document.querySelector('.btn-success').addEventListener('click', function () {
 		//e.preventDefault();
 
 		var btn = this,
-			frm = $(this).closest('form'),
+			frm = this.closest('form'),
 			invalid = false;
 
 		if (frm.length) {
@@ -46,46 +46,6 @@ jQuery(document).ready(function ($) {
 		}
 
 		return true;
-	});
-
-	$('[maxlength]').each(function (i, el) {
-		var container = $('<span class="char-counter-wrap"></span>');
-		var counter = $('<span class="char-counter"></span>');
-		var input = $(this);
-
-		if (input.attr('id') != '') {
-			counter.attr('id', input.attr('id') + '-counter');
-		}
-		
-		if (input.parent().hasClass('input-group')) {
-			input.parent().wrap(container);
-			counter.insertAfter(input.parent());
-		} else {
-			input.wrap(container);
-			counter.insertAfter(input);
-		}
-		counter.text(input.val().length + ' / ' + input.attr('maxlength'));
-
-		input
-			.on('focus', function () {
-				var container = $(this).closest('.char-counter-wrap');
-				if (container.length) {
-					container.addClass('char-counter-focus');
-				}
-			})
-			.on('blur', function () {
-				var container = $(this).closest('.char-counter-wrap');
-				if (container.length) {
-					container.removeClass('char-counter-focus');
-				}
-			})
-			.on('keyup', function () {
-				var chars = $(this).val().length;
-				var counter = $('#' + $(this).attr('id') + '-counter');
-				if (counter.length) {
-					counter.text(chars + ' / ' + $(this).attr('maxlength'));
-				}
-			});
 	});
 });
 </script>
