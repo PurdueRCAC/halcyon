@@ -1,16 +1,12 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/select2/css/select2.css') }}" />
 @endpush
 
 @push('scripts')
 <script src="{{ timestamped_asset('modules/core/vendor/handlebars/handlebars.min-v4.7.7.js') }}"></script>
-<script src="{{ timestamped_asset('modules/core/vendor/datatables/datatables.min.js') }}"></script>
-<script src="{{ timestamped_asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ timestamped_asset('modules/core/vendor/select2/js/select2.min.js') }}"></script>
-<script src="{{ timestamped_asset('modules/groups/js/motd.js') }}"></script>
 <script src="{{ timestamped_asset('modules/groups/js/admin.js') }}"></script>
 @endpush
 

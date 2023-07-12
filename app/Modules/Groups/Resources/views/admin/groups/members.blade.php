@@ -229,6 +229,17 @@ $managers = $managers->sortBy('username');
 $members = $members->sortBy('username');
 $i = 0;
 ?>
+
+@push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.css') }}" />
+@endpush
+
+@push('scripts')
+<script src="{{ timestamped_asset('modules/core/vendor/datatables/datatables.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/groups/js/members.js') }}"></script>
+@endpush
+
 <div class="row mb-3">
 	<div class="col-md-6">
 		<button id="export_to_csv" data-id="{{ $group->id }}" class="btn btn-link btn-sm">

@@ -1,3 +1,6 @@
+@push('scripts')
+<script src="{{ timestamped_asset('modules/groups/js/motd.js') }}"></script>
+@endpush
 
 					<div class="card panel mb-4 panel-default">
 						<div class="card-header panel-heading">
