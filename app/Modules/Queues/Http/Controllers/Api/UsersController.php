@@ -245,6 +245,7 @@ class UsersController extends Controller
 			'userid'        => 'required',
 			'userrequestid' => 'nullable|integer',
 			'membertype'    => 'nullable|integer',
+			'notice'        => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -299,7 +300,7 @@ class UsersController extends Controller
 			}
 			$row->membertype = $request->input('membertype');
 			$row->membertype = $row->membertype ?: 1;
-			$row->notice = 2;
+			$row->notice = $request->has('notice') ? $request->input('notice') : 2;
 		}
 
 		// Look up the current username of the user being granted access.
@@ -350,7 +351,7 @@ class UsersController extends Controller
 			}
 			else
 			{
-				$row->notice = 2;
+				$row->notice = $request->has('notice') ? $request->input('notice') : 2;
 			}
 		}
 

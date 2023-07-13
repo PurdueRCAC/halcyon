@@ -360,6 +360,7 @@ class GroupsController extends Controller
 	public function import(Request $request)
 	{
 		$id = $request->input('id');
+		$notice = $request->input('notice');
 
 		$group = Group::findOrFail($id);
 
@@ -586,7 +587,7 @@ class GroupsController extends Controller
 
 							if ($val)
 							{
-								$queue->addUser($user->id);
+								$queue->addUser($user->id, 1, $notice);
 							}
 							else
 							{
@@ -607,7 +608,7 @@ class GroupsController extends Controller
 
 							if ($val)
 							{
-								$unix->addMember($user->id);
+								$unix->addMember($user->id, $notice);
 							}
 							else
 							{

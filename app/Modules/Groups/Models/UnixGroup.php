@@ -202,9 +202,10 @@ class UnixGroup extends Model
 	 * Add user as a member
 	 *
 	 * @param   int  $userid
+	 * @param   int|null  $notice
 	 * @return  bool
 	 */
-	public function addMember(int $userid): bool
+	public function addMember(int $userid, $notice = null): bool
 	{
 		$member = $this->members()
 			->withTrashed()
@@ -228,7 +229,7 @@ class UnixGroup extends Model
 			$member = new UnixGroupMember;
 			$member->unixgroupid = $this->id;
 			$member->userid = $userid;
-			$member->notice = 2;
+			$member->notice = is_null($notice) ? 2 : $notice;
 		}
 
 		return $member->save();

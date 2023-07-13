@@ -901,9 +901,10 @@ class Queue extends Model
 	 *
 	 * @param   int  $userid
 	 * @param   int  $membertype
+	 * @param   int  $notice
 	 * @return  bool
 	 */
-	public function addUser($userid, $membertype = 1): bool
+	public function addUser($userid, $membertype = 1, $notice = null): bool
 	{
 		$row = $this->users()
 			->withTrashed()
@@ -925,7 +926,7 @@ class Queue extends Model
 			$row->queueid = $this->id;
 			$row->userid = $userid;
 			$row->membertype = $membertype;
-			$row->notice = 2;
+			$row->notice = is_null($notice) ? 2 : $notice;
 		}
 
 		/*event($resourcemember = new ResourceMemberStatus($row->queue->scheduler->resource, $row->user));

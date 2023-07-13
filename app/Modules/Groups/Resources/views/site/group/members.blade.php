@@ -1219,6 +1219,15 @@ $i = 0;
 					</fieldset>
 				@endif
 
+				@if (auth()->user()->can('manage groups'))
+					<div class="card-body card-admin">
+						<div class="form-check">
+							<input type="checkbox" class="form-check-input notice" name="notice" id="notice" value="0" />
+							<label class="form-check-label" for="notice">Mute email notifications</label>
+						</div>
+					</div>
+				@endif
+
 				<div class="alert alert-danger hide" id="add_member_error"></div>
 			</div>
 			<div class="modal-footer dialog-footer text-right">
@@ -1266,6 +1275,14 @@ $i = 0;
 					<input type="hidden" name="id" value="{{ $group->id }}" />
 				</div>
 
+				@if (auth()->user()->can('manage groups'))
+					<div class="card-body card-admin">
+						<div class="form-check">
+							<input type="checkbox" class="form-check-input notice" name="notice" id="import-notice" value="0" />
+							<label class="form-check-label" for="import-notice">Mute email notifications</label>
+						</div>
+					</div>
+				@endif
 			</div>
 			<div class="modal-footer dialog-footer text-right">
 				<input type="submit" class="order btn btn-primary" data-group="{{ $group->id }}" value="Import" />

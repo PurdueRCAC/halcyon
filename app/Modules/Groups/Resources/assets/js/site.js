@@ -1015,10 +1015,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		btn.addClass('processing');
 
+		var notice = null;
+		var not = document.getElementById('notice');
+		if (not && not.checked) {
+			notice = 0;
+		}
 		var post = {
 			'groupid': btn.data('group'),
 			'userid': 0,
-			'membertype': (newmembertype ? newmembertype.value : 1)
+			'membertype': (newmembertype ? newmembertype.value : 1),
+			'notice': notice
 		};
 		var queues = $('.add-queue-member:checked');
 		var unixgroups = $('.add-unixgroup-member:checked');
@@ -1063,6 +1069,7 @@ document.addEventListener('DOMContentLoaded', function () {
 								'userid': userid,
 								'groupid': btn.data('group'),
 								'queueid': checkbox.value,
+								'notice': notice
 							},
 							dataType: 'json',
 							async: false,
@@ -1084,7 +1091,6 @@ document.addEventListener('DOMContentLoaded', function () {
 								checkprocessed(processed, pending);
 							}
 						});
-						//console.log(btn.data('api-queueusers'));
 					});
 
 					unixgroups.each(function (k, checkbox) {
@@ -1094,7 +1100,8 @@ document.addEventListener('DOMContentLoaded', function () {
 							data: {
 								'userid': userid,
 								'groupid': btn.data('group'),
-								'unixgroupid': checkbox.value
+								'unixgroupid': checkbox.value,
+								'notice': notice
 							},
 							dataType: 'json',
 							async: false,

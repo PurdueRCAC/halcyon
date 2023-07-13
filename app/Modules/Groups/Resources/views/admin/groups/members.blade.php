@@ -1079,6 +1079,15 @@ $i = 0;
 			</fieldset>
 		@endif
 
+		<div class="card">
+			<div class="card-body">
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input notice" name="notice" id="import-notice" value="0" />
+					<label class="form-check-label" for="import-notice">Mute email notifications</label>
+				</div>
+			</div>
+		</div>
+
 		<div class="dialog-footer">
 			<div class="row">
 				<div class="col-md-12 text-right">

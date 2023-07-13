@@ -290,12 +290,18 @@ document.addEventListener('DOMContentLoaded', function () {
 			e.preventDefault();
 
 			var btn = this;
-			var users = document.getElementById('addmembers').value;
+			var users = $('#addmembers').val();
 
+			var notice = null;
+			var not = document.getElementById('notice');
+			if (not && not.checked) {
+				notice = 0;
+			}
 			var post = {
 				'groupid': btn.getAttribute('data-group'),
 				'userid': 0,
-				'membertype': document.getElementById('new_membertype').value
+				'membertype': document.getElementById('new_membertype').value,
+				'notice': notice
 			};
 			var queues = document.querySelectorAll('.add-queue-member:checked');
 			var unixgroups = document.querySelectorAll('.add-unixgroup-member:checked');
@@ -332,22 +338,24 @@ document.addEventListener('DOMContentLoaded', function () {
 									'userid': userid,
 									'groupid': btn.getAttribute('data-group'),
 									'queueid': checkbox.value,
+									'notice': notice
 								})
 							})
 							.then(function (response) {
 								if (response.ok) {
 									processed['queues']++;
 									checkprocessed(processed, pending);
-									return;
 								}
 								return response.json();
 							})
 							.then(function (data) {
-								var msg = data.message;
-								if (typeof msg === 'object') {
-									msg = Object.values(msg).join('<br />');
+								if (typeof data.message !== 'undefined') {
+									var msg = data.message;
+									if (typeof msg === 'object') {
+										msg = Object.values(msg).join('<br />');
+									}
+									throw msg;
 								}
-								throw msg;
 							})
 							.catch(function (error) {
 								Halcyon.message('danger', error);
@@ -364,23 +372,25 @@ document.addEventListener('DOMContentLoaded', function () {
 								body: JSON.stringify({
 									'userid': userid,
 									'groupid': btn.getAttribute('data-group'),
-									'unixgroupid': checkbox.value
+									'unixgroupid': checkbox.value,
+									'notice': notice
 								})
 							})
 							.then(function (response) {
 								if (response.ok) {
 									processed['unixgroups']++;
 									checkprocessed(processed, pending);
-									return;
 								}
 								return response.json();
 							})
 							.then(function (data) {
-								var msg = data.message;
-								if (typeof msg === 'object') {
-									msg = Object.values(msg).join('<br />');
+								if (typeof data.message !== 'undefined') {
+									var msg = data.message;
+									if (typeof msg === 'object') {
+										msg = Object.values(msg).join('<br />');
+									}
+									throw msg;
 								}
-								throw msg;
 							})
 							.catch(function (error) {
 								Halcyon.message('danger', error);
@@ -389,16 +399,17 @@ document.addEventListener('DOMContentLoaded', function () {
 								checkprocessed(processed, pending);
 							});
 						});
-						return;
 					}
 					return response.json();
 				})
 				.then(function (data) {
-					var msg = data.message;
-					if (typeof msg === 'object') {
-						msg = Object.values(msg).join('<br />');
+					if (typeof data.message !== 'undefined') {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
 					}
-					throw msg;
 				})
 				.catch(function (error) {
 					Halcyon.message('danger', error);

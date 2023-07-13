@@ -288,7 +288,7 @@ class UnixGroupMembersController extends Controller
 			$row = new UnixGroupMember;
 			$row->unixgroupid = $request->input('unixgroupid');
 			$row->userid = $userid;
-			$row->notice = 2;
+			$row->notice = $request->has('notice') ? $request->input('notice') : 2;
 		}
 
 		// Look up the current username of the user being granted access.
