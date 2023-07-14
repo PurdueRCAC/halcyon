@@ -65,7 +65,7 @@ app('pathway')
 		</div>
 		<div class="col col-md-5">
 			<table class="meta">
-				<caption class="sr-only">Metadata</caption>
+				<caption class="sr-only">{{ trans('global.metadata') }}</caption>
 				<tbody>
 					<tr>
 						<th scope="row">{{ trans('tags::tags.id') }}:</th>
