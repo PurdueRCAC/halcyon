@@ -47,54 +47,56 @@
 	</div>
 </div>
 <script>
-var ctx = document.getElementById('users-pastmonth');
+document.addEventListener('DOMContentLoaded', function () {
+	var ctx = document.getElementById('users-pastmonth');
 
-if (ctx) {
-	new Chart(ctx, {
-		"type":"line",
-		"data":{
-			"labels":<?php
-				$x = array();
-				foreach ($data as $item)
-				{
-					$x[] = $item->x;
-				}
-				echo json_encode($x);
-			?>,
-			"datasets": [{
-				"label":"New Users",
-				"data":<?php
-					$y = array();
+	if (ctx) {
+		new Chart(ctx, {
+			"type":"line",
+			"data":{
+				"labels":<?php
+					$x = array();
 					foreach ($data as $item)
 					{
-						$y[] = $item->y;
+						$x[] = $item->x;
 					}
-					echo json_encode($y);
+					echo json_encode($x);
 				?>,
-				"fill":false,
-				"borderColor":"rgb(75, 192, 192)",
-				"lineTension":0.1
-			}]
-		},
-		options: {
-			responsive: true,
-			animation: {
-				duration: 0
+				"datasets": [{
+					"label":"New Users",
+					"data":<?php
+						$y = array();
+						foreach ($data as $item)
+						{
+							$y[] = $item->y;
+						}
+						echo json_encode($y);
+					?>,
+					"fill":false,
+					"borderColor":"rgb(75, 192, 192)",
+					"lineTension":0.1
+				}]
 			},
-			title: {
-				display: false
-			},
-			legend: {
-				display: false
-			},
-			scales: {
-				xAxes: [
-					{
-						display: false
-					}
-				]
+			options: {
+				responsive: true,
+				animation: {
+					duration: 0
+				},
+				title: {
+					display: false
+				},
+				legend: {
+					display: false
+				},
+				scales: {
+					xAxes: [
+						{
+							display: false
+						}
+					]
+				}
 			}
-		}
-	});
-}
+		});
+	}
+});
 </script>
