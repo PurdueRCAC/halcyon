@@ -58,76 +58,65 @@ document.addEventListener('DOMContentLoaded', function () {
 		modal: true
 	});
 
-	$('#toolbar-plus').on('click', function(e){
-		e.preventDefault();
+	var plus = document.getElementById('toolbar-plus');
+	if (plus) {
+		plus.addEventListener('click', function(e){
+			e.preventDefault();
 
-		dialog.dialog("open");
-	});
+			dialog.dialog("open");
+		});
+	}
 
-	$('#add-member').on('click', function(e){
-		e.preventDefault();
+	var addmem = document.getElementById('add-member');
+	if (addmem) {
+		addmem.addEventListener('click', function(e) {
+			e.preventDefault();
 
-		var url = $(this).data('api');
-		var group = document.getElementById("group").value;
-		var type = document.getElementById("membertype").value;
-		var name = "";
-		var processed = 0;
+			var url = this.getAttribute('data-api');
+			var group = document.getElementById('group').value;
+			var type = document.getElementById('membertype').value;
+			var name = '';
+			var processed = 0;
 
-		var users = $('.tagsinput').find('.tag');
-			users.each(function(i, el) {
-				name = $($(el).find('.tag-text')[0]).text();
+			var users = document.querySelector('.tagsinput').querySelectorAll('.tag');
+			users.forEach(function (el) {
+				name = el.querySelector('.tag-text').innerHTML;
 
-				$.ajax({
-					url: url,
-					type: 'post',
-					data: {
-						groupid: group,
-						userid: $(el).data('value'),
-						membertype: type
+				fetch(url, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 					},
-					dataType: 'json',
-					async: false,
-					success: function(data) {
+					body: JSON.stringify({
+						groupid: group,
+						userid: el.getAttribute('data-value'),
+						membertype: type
+					})
+				})
+				.then(function (response) {
+					if (response.ok) {
 						Halcyon.message('success', 'Added ' + name);
 						processed++;
-					},
-					error: function(xhr, ajaxOptions, thrownError) {
-						Halcyon.message('danger', 'Failed to add ' + name);
-						processed++;
+						return;
 					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						msg = (typeof msg === 'object' ? Object.values(msg).join('<br />') : msg);
+						throw msg;
+					});
+				})
+				.catch(function (error) {
+					Halcyon.message('danger', error);
+					processed++;
 				});
 			});
 
-		if (processed == users.length) {
-			location.reload();
-		}
-
-		/*var usersdata = document.getElementById("users").value.split(',');
-		for (i=0; i<usersdata.length; i++) {
-			if (!usersdata[i]) {
-				continue;
+			if (processed == users.length) {
+				location.reload();
 			}
-
-			$.ajax({
-				url: $(this).data('api'),
-				type: 'post',
-				data: {
-					groupid: group,
-					userid: usersdata[i],
-					membertype: type
-				},
-				dataType: 'json',
-				async: false,
-				success: function(data) {
-					Halcyon.message('success', 'added!');
-				},
-				error: function(xhr, ajaxOptions, thrownError) {
-					Halcyon.message('danger', 'Failed to add .');
-				}
-			});
-		}
-		});*/
-	});
+		});
+	}
 });
 </script>
 @endpush
