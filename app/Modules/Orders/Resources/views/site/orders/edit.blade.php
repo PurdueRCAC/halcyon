@@ -58,13 +58,18 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
-	$('.order')
-		.on('keyup', '.balance-update', function(e){
-			UpdateBalance(true);
-		})
-		.on('blur', '.balance-update', function(e){
-			UpdateBalance();
+	document.querySelectorAll('.order').forEach(function(el) {
+		el.addEventListener('keyup', function(e){
+			if (e.target.matches('.balance-update')) {
+				UpdateBalance(true);
+			}
 		});
+		el.addEventListener('blur', function(e){
+			if (e.target.matches('.balance-update')) {
+				UpdateBalance();
+			}
+		});
+	});
 
 	document.querySelectorAll('.balance-divide').forEach(function(el) {
 		el.addEventListener('click', function(e){
