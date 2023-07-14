@@ -8,6 +8,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
 use App\Modules\Users\Models\Facet;
@@ -116,11 +117,24 @@ class UsersController extends Controller
 			}
 			else
 			{
-				$query->where(function($where) use ($filters, $a, $u)
-				{
-					$search = strtolower((string)$filters['search']);
-					$skipmiddlename = preg_replace('/ /', '% ', $search);
+				$search = strtolower((string)$filters['search']);
+				$skipmiddlename = preg_replace('/ /', '% ', $search);
 
+				$query->select(
+					$a . '.*', $u . '.username', $u . '.datecreated', $u . '.dateremoved', $u . '.datelastseen',
+					DB::raw('IF(' . $u . '.username="' . $filters['search'] . '", 20,
+							IF(' . $u . '.username LIKE "' . $filters['search'] . '%", 10, 0)
+						)
+						+ IF(' . $a . '.name LIKE "%' . $search . '%", 5, 0)
+						+ IF(' . $a . '.name LIKE "' . $search . '%", 1, 0)
+						+ IF(' . $a . '.name LIKE "%' . $skipmiddlename . '%", 3, 0)
+						+ IF(' . $a . '.name LIKE "' . $skipmiddlename . '%", 1, 0)
+						AS `weight`')
+					)
+					->orderBy('weight', 'desc');
+
+				$query->where(function($where) use ($search, $skipmiddlename, $a, $u)
+				{
 					$where->where($a . '.name', 'like', '% ' . $search . '%')
 						->orWhere($a . '.name', 'like', $search . '%')
 						->orWhere($a . '.name', 'like', '% ' . $skipmiddlename . '%')

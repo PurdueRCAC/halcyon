@@ -1,12 +1,10 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/select2/css/select2.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/users/css/users.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ timestamped_asset('modules/core/vendor/select2/js/select2.min.js') }}"></script>
 <script src="{{ timestamped_asset('modules/users/js/users.js') }}"></script>
 @endpush
 
@@ -63,24 +61,10 @@ app('pathway')
 			<div class="col col-xs-12 col-sm-3 filter-search">
 				<div class="form-group">
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-					<select name="search" id="filter_search" class="form-control filter" multiple="multiple" data-placeholder="Select users..." data-api="{{ route('api.users.index') }}" data-url="{{ request()->url() }}">
-						@if ($filters['search'])
-							@php
-							$s = $filters['search'];
-							if (is_numeric($filters['search'])):
-								$u = App\Modules\Users\Models\User::find($filters['search']);
-								if ($u && $u->id):
-									$s = $u->name . ' (' . $u->username . ')';
-								endif;
-							endif;
-							@endphp
-							<option value="{{ $filters['search'] }}" selected="selected">{{ $s }}</option>
-						@endif
-					</select>
-					<!-- <span class="input-group">
-						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
-					</span> -->
+					<span class="input-group">
+						<input type="search" name="search" enterkeyhint="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+					</span>
 				</div>
 			</div>
 			<div class="col col-xs-12 col-sm-9 text-right filter-select">
