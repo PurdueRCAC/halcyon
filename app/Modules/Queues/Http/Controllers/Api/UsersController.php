@@ -301,6 +301,7 @@ class UsersController extends Controller
 			$row->membertype = $request->input('membertype');
 			$row->membertype = $row->membertype ?: 1;
 			$row->notice = $request->has('notice') ? $request->input('notice') : 2;
+			$row->notice = $row->notice ?: 0;
 		}
 
 		// Look up the current username of the user being granted access.

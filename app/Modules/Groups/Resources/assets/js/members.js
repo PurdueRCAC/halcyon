@@ -1,4 +1,5 @@
 /* global $ */ // jquery.js
+/* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 /* global Halcyon */ // core.js
 
 var headers = {
@@ -38,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		main.addEventListener('change', function (e) {
 			// User changing membertype
 			if (e.target.matches('.membertype')
-			|| e.target.parentNode.matches('.membertype')) {
+			 || e.target.parentNode.matches('.membertype')) {
 				var tar = e.target;
 				if (e.target.parentNode.matches('.membertype')) {
 					tar = e.target.parentNode;
@@ -188,52 +189,68 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
-	$(".membership-dialog").dialog({
-		autoOpen: false,
-		height: 'auto',
-		width: 500,
-		modal: true
-	});
-
 	document.querySelectorAll('.add_member').forEach(function (el) {
-		el.addEventListener('click', function (e) {
-			e.preventDefault();
+		el.addEventListener('click', function () {
 
-			$(this.getAttribute('href')).dialog("open");
 			document.getElementById('new_membertype').value = this.getAttribute('data-membertype');
-
-			var addmembers = $('#addmembers');
-			addmembers.select2({
-				ajax: {
-					url: addmembers.data('api'),
-					dataType: 'json',
-					//maximumSelectionLength: 1,
-					//theme: "classic",
-					data: function (params) {
-						var query = {
-							search: params.term,
-							order: 'surname',
-							order_dir: 'asc'
-						}
-
-						return query;
-					},
-					processResults: function (data) {
-						for (var i = 0; i < data.data.length; i++) {
-							data.data[i].text = data.data[i].name + ' (' + data.data[i].username + ')';
-						}
-
-						return {
-							results: data.data
-						};
-					}
-				}
-			});
-			addmembers.on('select2:select', function () {
-				document.getElementById('add_member_save').disabled = false;
-			});
 		});
 	});
+
+	var addmembers = document.getElementById("addmembers");
+	if (addmembers) {
+		var addmembersts = new TomSelect(addmembers, {
+			plugins: {
+				remove_button: {
+					title: 'Remove this user',
+				}
+			},
+			valueField: 'id',
+			labelField: 'name',
+			searchField: ['name', 'username', 'email'],
+			hidePlaceholder: true,
+			persist: false,
+			create: true,
+			load: function (query, callback) {
+				var url = addmembers.getAttribute('data-api') + '?search=' + encodeURIComponent(query);
+
+				fetch(url, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+					}
+				})
+				.then(response => response.json())
+				.then(json => {
+					for (var i = 0; i < json.data.length; i++) {
+						if (!json.data[i].id) {
+							json.data[i].id = json.data[i].username;
+						}
+					}
+					callback(json.data);
+				}).catch(function (err) {
+					callback();
+				});
+			},
+			render: {
+				option: function (item, escape) {
+					var name = item.name;
+					var label = name || item.username;
+					var caption = name ? item.username : null;
+					return '<div>' +
+						'<span class="label">' + escape(label) + '</span>' +
+						(caption ? '&nbsp;<span class="caption text-muted">(' + escape(caption) + ')</span>' : '') +
+						'</div>';
+				},
+				item: function (item) {
+					return `<div data-id="${escape(item.id)}">${item.name}&nbsp;(${item.username})</div>`;
+				}
+			}
+		});
+		addmembersts.on('item_add', function () {
+			document.getElementById('add_member_save').disabled = false;
+		});
+	}
 
 	var new_membertype = document.getElementById('new_membertype');
 	if (new_membertype) {
@@ -253,8 +270,8 @@ document.addEventListener('DOMContentLoaded', function () {
 					bx.dispatchEvent(new Event('change'));
 
 					if (sel.getAttribute('data-disable')
-					&& bx.getAttribute('data-base')
-					&& bx.getAttribute('data-base') == bx.getAttribute('id')) {
+					 && bx.getAttribute('data-base')
+					 && bx.getAttribute('data-base') == bx.getAttribute('id')) {
 						bx.disabled = true;
 					}
 				});
@@ -317,6 +334,9 @@ document.addEventListener('DOMContentLoaded', function () {
 				queues: queues.length * users.length,
 				unixgroups: unixgroups.length * users.length
 			};
+			queues.forEach(function (checkbox) {
+				console.log(checkbox);
+			});
 
 			users.forEach(function (userid) {
 				post['userid'] = userid;
@@ -424,7 +444,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		var tar;
 
 		if (e.target.matches('.membership-remove')
-		|| e.target.parentNode.matches('.membership-remove')) {
+		 || e.target.parentNode.matches('.membership-remove')) {
 			e.preventDefault();
 
 			tar = e.target;
@@ -483,7 +503,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 
 		if (e.target.matches('.membership-move')
-		|| e.target.parentNode.matches('.membership-move')) {
+		 || e.target.parentNode.matches('.membership-move')) {
 			e.preventDefault();
 
 			tar = e.target;
@@ -505,8 +525,8 @@ document.addEventListener('DOMContentLoaded', function () {
 					method: 'POST',
 					headers: headers,
 					body: JSON.stringify({
-						userid: this.getAttribute('data-userid'),
-						membertype: this.getAttribute('data-target'),
+						userid: tar.getAttribute('data-userid'),
+						membertype: tar.getAttribute('data-target'),
 						groupid: document.getElementById('groupid').value
 					})
 				})
@@ -531,11 +551,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 
 		if (e.target.matches('.membership-allqueues')
-		|| e.target.parentNode.matches('.membership-allqueues')) {
+		 || e.target.parentNode.matches('.membership-allqueues')) {
 			e.preventDefault();
 
 			tar = e.target;
-			if (e.target.matches('.membership-allqueues')) {
+			if (e.target.parentNode.matches('.membership-allqueues')) {
 				tar = e.target.parentNode;
 			}
 
@@ -552,11 +572,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	document.querySelector('body').addEventListener('change', function (e) {
 		if (e.target.matches('.membership-toggle')
-		|| e.target.parentNode.matches('.membership-toggle')) {
+		 || e.target.parentNode.matches('.membership-toggle')) {
 			e.preventDefault();
 
 			var bx = e.target;
-			if (e.target.matches('.membership-toggle')) {
+			if (e.target.parentNode.matches('.membership-toggle')) {
 				bx = e.target.parentNode;
 			}
 
@@ -574,7 +594,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					userid: bx.getAttribute('data-userid')
 				};
 				post['groupid'] = document.getElementById('groupid').value;
-				if (this.classList.contains('queue-toggle')) {
+				if (bx.classList.contains('queue-toggle')) {
 					post['queueid'] = bx.getAttribute('data-objectid');
 				} else {
 					post['unixgroupid'] = bx.getAttribute('data-objectid');

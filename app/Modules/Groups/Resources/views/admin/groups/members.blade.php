@@ -231,10 +231,12 @@ $i = 0;
 ?>
 
 @push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.css') }}" />
 @endpush
 
 @push('scripts')
+<script src="{{ timestamped_asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js') }}"></script>
 <script src="{{ timestamped_asset('modules/core/vendor/datatables/datatables.min.js') }}"></script>
 <script src="{{ timestamped_asset('modules/core/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ timestamped_asset('modules/groups/js/members.js') }}"></script>
@@ -247,7 +249,7 @@ $i = 0;
 		</button>
 	</div>
 	<div class="col-md-6 text-right">
-		<a href="#add_member_dialog" class="add_member btn btn-info btn-sm" data-membertype="1">
+		<a href="#add_member_dialog" data-toggle="modal" class="add_member btn btn-info btn-sm" data-membertype="1">
 			<span class="fa fa-plus-circle" ara-hidden="true"></span> Add Member
 		</a>
 	</div>
@@ -1015,93 +1017,103 @@ $i = 0;
 </div>
 @endif
 
-<div id="add_member_dialog" data-id="{{ $group->id }}" title="Add users to {{ $group->name }}" class="dialog membership-dialog">
-	<form id="form_{{ $group->id }}" method="post">
-		<fieldset>
-		<div class="form-group">
-			<label for="addmembers">Enter names, usernames, or email addresses</label>
-			<select class="form-control" name="members" id="addmembers" multiple="multiple" data-api="{{ route('api.users.index') }}" data-group="{{ $group->id }}" placeholder="Username, email address, etc.">
-			</select>
-		</div>
+<div class="modal modal-help" id="add_member_dialog" tabindex="-1" aria-labelledby="add_member_dialog-title" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+		<form id="form_{{ $group->id }}" method="post" class="modal-content shadow-sm">
+			<div class="modal-header">
+				<div class="modal-title" id="add_member_dialog-title">Add users to {{ $group->name }}</div>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			
+				<div class="modal-body">
 
-		<div class="form-group">
-			<label for="new_membertype">Membership type</label>
-			<select class="form-control" id="new_membertype"{{ $group->cascademanagers ? ' data-cascade="1"' : '' }}{{ auth()->user()->can('manage groups') ? '0' : ' data-disable="1"' }}>
-				<option value="1">Member</option>
-				<option value="2">Manager</option>
-				<option value="3">Usage Viewer</option>
-			</select>
-		</div>
+					<div class="form-group">
+						<label for="addmembers">Enter names, usernames, or email addresses</label>
+						<select class="form-control" name="members" id="addmembers" multiple="multiple" data-api="{{ route('api.users.index') }}" data-group="{{ $group->id }}" placeholder="Username, email address, etc.">
+						</select>
+					</div>
 
-		@if (count($resources))
-			<fieldset>
-				<legend>Queue Selection</legend>
-
-				<table id="queue-selection" class="table table-hover mb-0 groupSelect">
-					<caption class="sr-only">Queues by Resource</caption>
-					<tbody>
-						@foreach ($resources as $name => $queues)
-							<tr>
-								<th scope="row" class="rowHead">{{ $name }}</th>
-								<td class="rowData">
-								@foreach ($queues as $queue)
-								<div>
-									<div class="form-check">
-										<input type="checkbox" class="form-check-input add-queue-member" name="queue[]" id="queue{{ $queue->id }}" value="{{ $queue->id }}" />
-										<label class="form-check-label" for="queue{{ $queue->id }}">{{ $queue->name }}</label>
-									</div>
-								</div>
-								@endforeach
-								</td>
-							</tr>
-						@endforeach
-					</tbody>
-				</table>
-			</fieldset>
-		@endif
-
-		@if (count($unixgroups))
-			<fieldset>
-				<legend>Unix Group Selection</legend>
-
-				<div id="unix-group-selection" class="row groupSelect">
-					@foreach ($unixgroups as $name)
-						<div class="col-sm-4 unixData">
-							<div class="form-group">
-								<div class="form-check">
-									<input type="checkbox" data-base="unixgroup-{{ $base }}" <?php if ($group->cascademanagers && $name->longname == $group->unixgroup) { echo 'checked disabled'; } ?> class="form-check-input add-unixgroup-member" name="unixgroup[]" id="unixgroup-{{ $name->id }}" value="{{ $name->id }}" />
-									<label class="form-check-label" for="unixgroup-{{ $name->id }}">{{ $name->longname }}</label>
-								</div>
+					<div class="row">
+					<div class="col-md-8">
+					<div class="form-group">
+						<label for="new_membertype">Membership type</label>
+						<select class="form-control" id="new_membertype"{{ $group->cascademanagers ? ' data-cascade="1"' : '' }}{{ auth()->user()->can('manage groups') ? '0' : ' data-disable="1"' }}>
+							<option value="1">Member</option>
+							<option value="2">Manager</option>
+							<option value="3">Usage Viewer</option>
+						</select>
+					</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-check">
+								<input type="checkbox" class="form-check-input notice" name="notice" id="import-notice" value="0" />
+								<label class="form-check-label" for="import-notice">Mute email notifications</label>
 							</div>
 						</div>
-					@endforeach
-				</div>
-			</fieldset>
-		@endif
+					</div>
 
-		<div class="card">
-			<div class="card-body">
-				<div class="form-check">
-					<input type="checkbox" class="form-check-input notice" name="notice" id="import-notice" value="0" />
-					<label class="form-check-label" for="import-notice">Mute email notifications</label>
-				</div>
-			</div>
-		</div>
+					@if (count($resources))
+						<fieldset>
+							<legend>Queue Selection</legend>
 
-		<div class="dialog-footer">
-			<div class="row">
-				<div class="col-md-12 text-right">
-					<input type="button" disabled="disabled" id="add_member_save" class="btn btn-success"
-						data-group="{{ $group->id }}"
-						data-api="{{ route('api.groups.members.create') }}"
-						data-api-unixgroupusers="{{ route('api.unixgroups.members.create') }}"
-						data-api-queueusers="{{ route('api.queues.users.create') }}"
-						value="{{ trans('global.button.save') }}" />
+							<table id="queue-selection" class="table table-hover mb-0 groupSelect">
+								<caption class="sr-only">Queues by Resource</caption>
+								<tbody>
+									@foreach ($resources as $name => $queues)
+										<tr>
+											<th scope="row" class="rowHead">{{ $name }}</th>
+											<td class="rowData">
+											@foreach ($queues as $queue)
+											<div>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input add-queue-member" name="queue[]" id="queue{{ $queue->id }}" value="{{ $queue->id }}" />
+													<label class="form-check-label" for="queue{{ $queue->id }}">{{ $queue->name }}</label>
+												</div>
+											</div>
+											@endforeach
+											</td>
+										</tr>
+									@endforeach
+								</tbody>
+							</table>
+						</fieldset>
+					@endif
+
+					@if (count($unixgroups))
+						<fieldset>
+							<legend>Unix Group Selection</legend>
+
+							<div id="unix-group-selection" class="row groupSelect">
+								@foreach ($unixgroups as $name)
+									<div class="col-sm-4 unixData">
+										<div class="form-group">
+											<div class="form-check">
+												<input type="checkbox" data-base="unixgroup-{{ $base }}" <?php if ($group->cascademanagers && $name->longname == $group->unixgroup) { echo 'checked disabled'; } ?> class="form-check-input add-unixgroup-member" name="unixgroup[]" id="unixgroup-{{ $name->id }}" value="{{ $name->id }}" />
+												<label class="form-check-label" for="unixgroup-{{ $name->id }}">{{ $name->longname }}</label>
+											</div>
+										</div>
+									</div>
+								@endforeach
+							</div>
+						</fieldset>
+					@endif
 				</div>
-			</div>
-		</div>
-		</fieldset>
-	</form>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col-md-12 text-right">
+							<input type="button" disabled="disabled" id="add_member_save" class="btn btn-success"
+								data-group="{{ $group->id }}"
+								data-api="{{ route('api.groups.members.create') }}"
+								data-api-unixgroupusers="{{ route('api.unixgroups.members.create') }}"
+								data-api-queueusers="{{ route('api.queues.users.create') }}"
+								value="{{ trans('global.button.save') }}" />
+						</div>
+					</div>
+				</div>
+		</form>
+	</div>
 </div>
 
 <form id="csv_form_{{ $group->id }}" class="csv_form hide" method="post" action="{{ route('site.groups.export') }}">
