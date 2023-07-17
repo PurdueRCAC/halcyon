@@ -1,13 +1,11 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/tagsinput/jquery.tagsinput.css') }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/select2/css/select2.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ timestamped_asset('modules/core/vendor/tagsinput/jquery.tagsinput.js') }}"></script>
-<script src="{{ timestamped_asset('modules/core/vendor/select2/js/select2.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js') }}"></script>
 <script src="{{ timestamped_asset('modules/news/js/admin.js') }}"></script>
 @endpush
 
@@ -156,11 +154,11 @@ app('pathway')
 					$r = array();
 					foreach ($row->associations()->where('assoctype', '=', 'user')->get() as $assoc):
 						$u = App\Modules\Users\Models\User::find($assoc->associd);
-						$r[] = ($u ? $u->name : trans('global.unknown')) . ':' . $assoc->id;
+						$r[] = ($u ? $u->name : trans('global.unknown')) . ':' . $assoc->associd;
 					endforeach;
 					?>
 					<label for="field-users">{{ trans('news::news.tag users') }}:</label>
-					<input type="text" name="associations" id="field-users" class="form-control form-users" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" value="{{ implode(', ', $r) }}" />
+					<input type="text" name="associations" id="field-users" class="form-control form-users" data-api="{{ route('api.users.index') }}" value="{{ implode(', ', $r) }}" />
 				</div>
 
 				<div class="form-group">

@@ -1,14 +1,12 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/tagsinput/jquery.tagsinput.css') }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/select2/css/select2.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css') }}" />
 @endpush
 
 @push('scripts')
+<script src="{{ timestamped_asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js') }}"></script>
 <script src="{{ timestamped_asset('modules/core/vendor/handlebars/handlebars.min-v4.7.7.js') }}"></script>
-<script src="{{ timestamped_asset('modules/core/vendor/tagsinput/jquery.tagsinput.js') }}"></script>
-<script src="{{ timestamped_asset('modules/core/vendor/select2/js/select2.min.js') }}"></script>
 <script src="{{ timestamped_asset('modules/news/js/admin.js') }}"></script>
 @endpush
 
@@ -120,7 +118,6 @@ else
 	<script src="{{ timestamped_asset('modules/news/js/app-admin.js') }}"></script>
 	-->
 
-	
 	@if (count($rows))
 	<div class="card mb-4">
 		<div class="table-responsive">
@@ -286,7 +283,7 @@ else
 	<input type="hidden" name="boxchecked" value="0" />
 </form>
 
-<form action="{{ $template ? route('admin.news.templates') : route('admin.news.index') }}" method="post" class="form-inline">
+<form action="{{ $template ? route('admin.news.templates') : route('admin.news.index') }}" method="post" class="form-inlin">
 	<script id="mailpreview-template" type="text/x-handlebars-template">
 		<div id="mail-recipients"><strong>To:</strong> <?php echo '{{resourcelist}}'; ?> Users</div>
 		<div id="mail-from"><strong>From:</strong> YOU via <?php echo config('app.name'); ?></div>
@@ -329,7 +326,7 @@ else
 			<div class="form-group row">
 				<label for="newsuser" class="col-sm-2 col-form-label">Send to:</label>
 				<div class="col-sm-10">
-					<input type="text" name="to" id="mail-to" class="form-control form-users" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" value="" />
+					<input type="text" name="to" id="mail-to" class="form-control form-users" data-api="{{ route('api.users.index') }}" value="" />
 				</div>
 			</div>
 		</div>

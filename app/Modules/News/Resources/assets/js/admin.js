@@ -1,4 +1,5 @@
 /* global $ */ // jquery.js
+/* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 /* global Handlebars */ // handlebars.js
 /* global Halcyon */ // core.js
 
@@ -7,7 +8,7 @@ var headers = {
 };
 
 /**
- * Get a config value
+ * Callback for JS MarkDown parsing
  *
  * @param   {string}  text
  * @param   {object}  element
@@ -70,9 +71,9 @@ function customMarkdownParser(text, element) {
 
 		if (vars && typeof (vars[k]) != 'undefined') {
 			text = text.replaceAll(keywords[x], vars[k]);
-		} //else {
-			//text = text.replaceAll(keywords[x], '<span style="color:red;">' + keywords[x] + '</span>');
-		//}
+		} else {
+			text = text.replaceAll(keywords[x], '<span style="color:red;">' + keywords[x] + '</span>');
+		}
 	}
 
 	return text;
@@ -129,30 +130,68 @@ function NEWSSendMail(btn) {
 
 		document.getElementById('mailpreview').innerHTML = html;
 
-		var to = $('#mail-to');
-		to.val('');
-		to.tagsInput({
-			placeholder: 'Select user...',
-			importPattern: /([^:]+):(.+)/i,
-			'autocomplete': {
-				source: autocompleteUsers(to.attr('data-uri')),
-				dataName: 'users',
-				height: 150,
-				delay: 100,
-				minLength: 1
-			}
-		});
-		to.clearTags();
+		var to = document.getElementById('mail-to');
+		if (to) {
+			to.value = '';
 
-		for (x = 0; x < data.associations.length; x++) {
-			if ($('.tagsinput').length) {
-				if (!to.tagExist(data.associations[x]['id'])) {
-					to.addTag({
-						'id': data.associations[x]['associd'],
-						'label': data.associations[x]['name']
-					});
-				}
+			for (x = 0; x < data.associations.length; x++) {
+				to.value = (to.value ? to.value + ', ' : '') + data.associations[x]['name'] + ':' + data.associations[x]['associd'];
 			}
+
+			new TomSelect(to, {
+				plugins: {
+					remove_button: {
+						title: 'Remove this user',
+					}
+				},
+				valueField: 'id',
+				labelField: 'name',
+				searchField: ['name', 'username', 'email'],
+				hidePlaceholder: true,
+				persist: false,
+				create: true,
+				load: function (query, callback) {
+					var url = to.getAttribute('data-api') + '?search=' + encodeURIComponent(query);
+
+					fetch(url, {
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+						}
+					})
+					.then(response => response.json())
+					.then(json => {
+						for (var i = 0; i < json.data.length; i++) {
+							if (!json.data[i].id) {
+								json.data[i].id = json.data[i].username;
+							}
+						}
+						callback(json.data);
+					}).catch(function () {
+						callback();
+					});
+				},
+				render: {
+					option: function (item, escape) {
+						var name = item.name;
+						var label = name || item.username;
+						var caption = name ? item.username : null;
+						return '<div>' +
+							'<span class="label">' + escape(label) + '</span>' +
+							(caption ? '&nbsp;<span class="caption text-muted">(' + escape(caption) + ')</span>' : '') +
+							'</div>';
+					},
+					item: function (item) {
+						var match = item.name.match(/([^:]+):(.+)/i);
+						if (match) {
+							item.name = match[1];
+							item.id = match[2];
+						}
+						return `<div data-id="${escape(item.id)}">${item.name}</div>`;
+					}
+				}
+			});
 		}
 
 		document.getElementById('mailsend').addEventListener('click', function (e) {
@@ -474,34 +513,6 @@ function PreviewExample(example) {
 	});
 }
 
-function autocompleteUsers(url) {
-	return function (request, response) {
-		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
-			response($.map(data.data, function (el) {
-				return {
-					label: el.name + ' (' + el.username + ')',
-					name: el.name,
-					id: el.id,
-				};
-			}));
-		});
-	};
-}
-/*
-function autocompleteResources(url) {
-	return function (request, response) {
-		return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
-			response($.map(data.data, function (el) {
-				return {
-					label: el.name,
-					name: el.name,
-					id: el.id,
-				};
-			}));
-		});
-	};
-}*/
-
 /**
  * Initiate event hooks
  */
@@ -511,20 +522,62 @@ document.addEventListener('DOMContentLoaded', function () {
 		'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 	};
 
-	var newsuser = $(".form-users");
-	if (newsuser.length) {
-		newsuser.tagsInput({
-			placeholder: 'Select user...',
-			importPattern: /([^:]+):(.+)/i,
-			'autocomplete': {
-				source: autocompleteUsers(newsuser.attr('data-uri')),
-				dataName: 'data',
-				height: 150,
-				delay: 100,
-				minLength: 1
+	document.querySelectorAll('.form-users').forEach(function (el) {
+		var sel = new TomSelect(el, {
+			plugins: {
+				remove_button: {
+					title: 'Remove this user',
+				}
+			},
+			valueField: 'id',
+			labelField: 'name',
+			searchField: ['name', 'username', 'email'],
+			hidePlaceholder: true,
+			persist: false,
+			create: true,
+			load: function (query, callback) {
+				var url = el.getAttribute('data-api') + '?search=' + encodeURIComponent(query);
+
+				fetch(url, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+					}
+				})
+				.then(response => response.json())
+				.then(json => {
+					for (var i = 0; i < json.data.length; i++) {
+						if (!json.data[i].id) {
+							json.data[i].id = json.data[i].username;
+						}
+					}
+					callback(json.data);
+				}).catch(function (err) {
+					callback();
+				});
+			},
+			render: {
+				option: function (item, escape) {
+					var name = item.name;
+					var label = name || item.username;
+					var caption = name ? item.username : null;
+					return '<div>' +
+						'<span class="label">' + escape(label) + '</span>' +
+						(caption ? '&nbsp;<span class="caption text-muted">(' + escape(caption) + ')</span>' : '') +
+						'</div>';
+				},
+				item: function (item) {
+					var match = item.name.match(/([^:]+):(.+)/i);
+					if (match) {
+						item.name = match[1];
+						item.id = match[2];
+					}
+					return `<div data-id="${escape(item.id)}">${item.name}</div>`;
+				}
 			}
 		});
-	}
+	});
 
 	document.querySelectorAll('.samplebox').forEach(function (el) {
 		el.addEventListener('keyup', function () {
@@ -548,9 +601,62 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	document.querySelectorAll('.basic-multiple').forEach(function(el) {
-		$(el).select2({
+		/*$(el).select2({
 			placeholder: el.getAttribute('data-placeholder')
+		});*/
+
+		var sel = new TomSelect(el, {
+			plugins: {
+				remove_button: {
+					title: 'Remove this resource',
+				}
+			}/*,
+			valueField: 'id',
+			labelField: 'name',
+			searchField: ['name', 'username', 'email'],
+			hidePlaceholder: true,
+			persist: false,
+			create: true,
+			load: function (query, callback) {
+				var url = addmembers.getAttribute('data-api') + '?search=' + encodeURIComponent(query);
+
+				fetch(url, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+					}
+				})
+					.then(response => response.json())
+					.then(json => {
+						for (var i = 0; i < json.data.length; i++) {
+							if (!json.data[i].id) {
+								json.data[i].id = json.data[i].username;
+							}
+						}
+						callback(json.data);
+					}).catch(function (err) {
+						callback();
+					});
+			},
+			render: {
+				option: function (item, escape) {
+					var name = item.name;
+					var label = name || item.username;
+					var caption = name ? item.username : null;
+					return '<div>' +
+						'<span class="label">' + escape(label) + '</span>' +
+						(caption ? '&nbsp;<span class="caption text-muted">(' + escape(caption) + ')</span>' : '') +
+						'</div>';
+				},
+				item: function (item) {
+					return `<div data-id="${escape(item.id)}">${item.name}&nbsp;(${item.username})</div>`;
+				}
+			}*/
 		});
+		/*addmembersts.on('item_add', function () {
+			document.getElementById('add_member_save').disabled = false;
+		});*/
 	});
 
 	var newstype = document.getElementById('field-newstypeid');
