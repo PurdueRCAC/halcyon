@@ -65,7 +65,9 @@ document.addEventListener('DOMContentLoaded', function () {
 					throw msg;
 				})
 				.catch(function (error) {
-					Halcyon.message('danger', error);
+					if (error) {
+						Halcyon.message('danger', error);
+					}
 				});
 			}
 		});
@@ -378,7 +380,9 @@ document.addEventListener('DOMContentLoaded', function () {
 								}
 							})
 							.catch(function (error) {
-								Halcyon.message('danger', error);
+								if (error) {
+									Halcyon.message('danger', error);
+								}
 
 								processed['queues']++;
 								checkprocessed(processed, pending);
@@ -413,7 +417,9 @@ document.addEventListener('DOMContentLoaded', function () {
 								}
 							})
 							.catch(function (error) {
-								Halcyon.message('danger', error);
+								if (error) {
+									Halcyon.message('danger', error);
+								}
 
 								processed['unixgroups']++;
 								checkprocessed(processed, pending);
@@ -432,7 +438,9 @@ document.addEventListener('DOMContentLoaded', function () {
 					}
 				})
 				.catch(function (error) {
-					Halcyon.message('danger', error);
+					if (error) {
+						Halcyon.message('danger', error);
+					}
 				});
 			});
 			// Done?
@@ -473,7 +481,9 @@ document.addEventListener('DOMContentLoaded', function () {
 					throw msg;
 				})
 				.catch(function (error) {
-					Halcyon.message('danger', error);
+					if (error) {
+						Halcyon.message('danger', error);
+					}
 				});
 			});
 
@@ -497,7 +507,9 @@ document.addEventListener('DOMContentLoaded', function () {
 					throw msg;
 				})
 				.catch(function (error) {
-					Halcyon.message('danger', error);
+					if (error) {
+						Halcyon.message('danger', error);
+					}
 				});
 			}
 		}
@@ -545,7 +557,9 @@ document.addEventListener('DOMContentLoaded', function () {
 					throw msg;
 				})
 				.catch(function (error) {
-					Halcyon.message('danger', error);
+					if (error) {
+						Halcyon.message('danger', error);
+					}
 				});
 			}
 		}
@@ -606,16 +620,18 @@ document.addEventListener('DOMContentLoaded', function () {
 					body: JSON.stringify(post)
 				})
 				.then(function (response) {
-					if (!response.ok) {
-						return response.json();
-					}
+					return response.json();
 				})
 				.then(function (data) {
-					var msg = data.message;
-					if (typeof msg === 'object') {
-						msg = Object.values(msg).join('<br />');
+					if (typeof data.message !== 'undefined') {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					} else {
+						bx.setAttribute('data-api', data.api);
 					}
-					throw msg;
 				})
 				.catch(function (error) {
 					Halcyon.message('danger', error);
@@ -625,20 +641,10 @@ document.addEventListener('DOMContentLoaded', function () {
 					method: 'DELETE',
 					headers: headers
 				})
-				.then(function (response) {
-					if (!response.ok) {
-						return response.json();
-					}
-				})
-				.then(function (data) {
-					var msg = data.message;
-					if (typeof msg === 'object') {
-						msg = Object.values(msg).join('<br />');
-					}
-					throw msg;
-				})
 				.catch(function (error) {
-					Halcyon.message('danger', error);
+					if (error) {
+						Halcyon.message('danger', error);
+					}
 				});
 			}
 		}
