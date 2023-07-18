@@ -1532,7 +1532,7 @@ function SaveAccounts() {
 	var errors = 0;
 
 	for (var x=0;x<amounts.length-1;x++) {
-		if (accounts[x].value != "" && amounts[x].value.match(/^-?[0-9]+\.[0-9]{2}$/)) {
+		if (accounts[x].value != "" && amounts[x].value.replace(/[$,]/g, "").match(/^-?[0-9]+\.[0-9]{2}$/)) {
 			var account = accounts[x].value;
 			var amt = amounts[x].value;
 			amt = amt.replace(/[,.]/g, "");
@@ -1576,7 +1576,7 @@ function SaveAccounts() {
 			//account_errors[x].style.display = "inline";
 			accounts[x].classList.add('is-invalid');
 		}
-		if (!amounts[x].value.match(/^-?[0-9]+\.[0-9]{2}$/)) {
+		if (!amounts[x].value.replace(/[$,]/g, "").match(/^-?[0-9]+\.[0-9]{2}$/)) {
 			row_errors++;
 			accounts[x].classList.add('is-invalid');
 		}
@@ -2192,7 +2192,7 @@ function EditAccounts() {
 				//account_errors[x].style.display = "inline";
 				accountinputs[x].classList.add('is-invalid');
 			}
-			if (!amountinputs[x].value.match(/^-?[0-9]+\.[0-9]{2}$/)) {
+			if (!amountinputs[x].value.replace(/[$,]/g, "").match(/^-?[0-9]+\.[0-9]{2}$/)) {
 				row_errors++;
 				accountinputs[x].classList.add('is-invalid');
 			}
@@ -2357,7 +2357,7 @@ function EditAccounts() {
 		for (x=0;x<spans.length;x++) {
 			amount = amountinputs[x].value;
 			if (spans[x].innerHTML.replace(/[,.]/g, "") != amount.replace(/[,.]/g, "")) {
-				if (amountinputs[x].value.match(/^-?[0-9]+\.[0-9]{2}$/)) {
+				if (amountinputs[x].value.replace(/[$,]/g, "").match(/^-?[0-9]+\.[0-9]{2}$/)) {
 					id = accountstatus[x].getAttribute('data-api');
 					post = {'amount': amount.replace(/[,.]/g, "")};
 
