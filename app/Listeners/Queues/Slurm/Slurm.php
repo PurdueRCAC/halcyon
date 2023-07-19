@@ -1186,7 +1186,7 @@ class Slurm
 		{
 			$client = $this->getClient($config);
 
-			$res = $client->request('DELETE', $url);
+			$res = $client->request('DELETE', $config['url']);
 			$status = $res->getStatusCode();
 			if ($status >= 400)
 			{
@@ -1203,7 +1203,7 @@ class Slurm
 			$event->errors[] = $e->getMessage();
 		}
 
-		$this->log('slurm', __METHOD__, 'DELETE', $status, $body, $url);
+		$this->log('slurm', __METHOD__, 'DELETE', $status, $body, $config['url']);
 	}
 
 	/**
