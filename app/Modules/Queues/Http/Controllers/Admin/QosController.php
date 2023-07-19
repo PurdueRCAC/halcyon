@@ -144,7 +144,12 @@ class QosController extends Controller
 	 */
 	public function edit($id)
 	{
-		$row = Qos::findOrFail($id);
+		$row = Qos::withTrashed()->findOrFail($id);
+
+		if (!$row)
+		{
+			abort(404);
+		}
 
 		if ($fields = app('request')->old('fields'))
 		{
@@ -223,7 +228,7 @@ class QosController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Qos::findOrFail($id) : new Qos();
+		$row = $id ? Qos::withTrashed()->findOrFail($id) : new Qos();
 
 		foreach ($rules as $key => $rule)
 		{
@@ -281,7 +286,11 @@ class QosController extends Controller
 		{
 			$row = Qos::findOrFail($id);
 
-			if (!$row->delete())
+			if ($row->trashed())
+			{
+				$row->forceDelete();
+			}
+			elseif (!$row->delete())
 			{
 				$request->session()->flash('error', trans('global.messages.delete failed'));
 				continue;
@@ -293,6 +302,50 @@ class QosController extends Controller
 		if ($success)
 		{
 			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
+		}
+
+		return $this->cancel();
+	}
+
+	/**
+	 * Restore one or more trashed entries
+	 * 
+	 * @param   Request $request
+	 * @return  RedirectResponse
+	 */
+	public function restore(Request $request)
+	{
+		// Incoming
+		$ids = $request->input('id', array());
+		$ids = (!is_array($ids) ? array($ids) : $ids);
+
+		// Check for an ID
+		if (count($ids) < 1)
+		{
+			$request->session()->flash('warning', trans('menus::menus.select to restore'));
+			return $this->cancel();
+		}
+
+		$success = 0;
+
+		// Update record(s)
+		foreach ($ids as $id)
+		{
+			$row = Qos::withTrashed()->findOrFail(intval($id));
+
+			if (!$row->restore())
+			{
+				$request->session()->flash('error', trans('global.messages.restore failed'));
+				continue;
+			}
+
+			$success++;
+		}
+
+		// Set message
+		if ($success)
+		{
+			$request->session()->flash('success', trans('menus::menus.items restored', ['count' => $success]));
 		}
 
 		return $this->cancel();

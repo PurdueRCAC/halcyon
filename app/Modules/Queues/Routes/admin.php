@@ -98,6 +98,11 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 			'uses' => 'QosController@delete',
 			'middleware' => 'can:delete queues.qos',
 		]);
+		$router->match(['get', 'post'], '/restore/{id?}', [
+			'as'   => 'admin.queues.qos.restore',
+			'uses' => 'QosController@restore',
+			'middleware' => 'can:edit.state queues.qos',
+		])->where('id', '[0-9]+');
 		$router->match(['get', 'post'], 'cancel', [
 			'as' => 'admin.queues.qos.cancel',
 			'uses' => 'QosController@cancel',

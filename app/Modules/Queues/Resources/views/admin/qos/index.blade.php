@@ -12,14 +12,25 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('delete queues.qos'))
-		{!! Toolbar::deleteList('', route('admin.queues.qos.delete')) !!}
-	@endif
+	@if ($filters['state'] == 'trashed')
+		@if (auth()->user()->can('delete queues.qos'))
+			{!! Toolbar::deleteList('', route('admin.queues.qos.delete')) !!}
+		@endif
+		@if (auth()->user()->can('edit.state queues.qos'))
+			{!!
+				Toolbar::custom(route('admin.queues.qos.restore'), 'publish', 'publish', 'Restore', true);
+				Toolbar::spacer();
+			!!}
+		@endif
+	@else
+		@if (auth()->user()->can('delete queues.qos'))
+			{!! Toolbar::deleteList('', route('admin.queues.qos.delete')) !!}
+		@endif
 
-	@if (auth()->user()->can('create queues.qos'))
-		{!! Toolbar::addNew(route('admin.queues.qos.create')) !!}
+		@if (auth()->user()->can('create queues.qos'))
+			{!! Toolbar::addNew(route('admin.queues.qos.create')) !!}
+		@endif
 	@endif
-
 	@if (auth()->user()->can('admin queues'))
 		{!!
 			Toolbar::spacer();
