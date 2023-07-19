@@ -35,177 +35,185 @@ $queues = $queues->reject(function($q) use ($canManage)
 @if (auth()->user()->can('manage groups'))
 <div class="row mb-3">
 	<div class="col-md-12 text-right">
-		<a href="#add_queue_dialog" class="add_queue btn btn-secondary btn-sm dialog-pl-btn">
+		<a href="#add_queue_dialog" data-toggle="modal" class="add_queue btn btn-secondary btn-sm dialog-pl-btn">
 			<span class="fa fa-plus-circle"></span> Add Queue
 		</a>
 	</div>
 </div>
-<div class="modl dialog queue-dialog" id="add_queue_dialog" data-id="{{ $group->id }}" title="Add queue to {{ $group->name }}">
-	<form class="modl-content dialog-content" id="form_queue_{{ $group->id }}" method="post" data-api="{{ route('api.queues.create') }}">
-		<?php
-		$types = App\Modules\Queues\Models\Type::orderBy('name', 'asc')->get();
-		$schedulers = App\Modules\Queues\Models\Scheduler::orderBy('hostname', 'asc')->get();
-		$schedulerpolicies = App\Modules\Queues\Models\SchedulerPolicy::orderBy('name', 'asc')->get();
-		$subresources = array();
-		$resources = (new App\Modules\Resources\Models\Asset)->tree();
-		?>
-		<div class="modl-body dialog-body">
 
-					<div class="row">
-						<div class="col-md-6">
-							<div class="form-group">
-								<label for="queue-queuetype">{{ trans('queues::queues.type') }}</label>
-								<select name="queuetype" id="queue-queuetype" class="form-control">
-									@foreach ($types as $type)
-										<option value="{{ $type->id }}">{{ $type->name }}</option>
-									@endforeach
-								</select>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label for="queue-queueclass">{{ trans('queues::queues.class') }}</label>
-								<select name="queueclass" id="queue-queueclass" class="form-control">
-									<option value="owner">{{ trans('queues::queues.owner') }}</option>
-									<option value="standby">{{ trans('queues::queues.standby') }}</option>
-									<option value="workq">{{ trans('queues::queues.work') }}</option>
-									<option value="debug">{{ trans('queues::queues.debug') }}</option>
-								</select>
-							</div>
+<div class="modal" id="add_queue_dialog" data-id="{{ $group->id }}" tabindex="-1" aria-labelledby="add_queue_dialog-title">
+	<div class="modal-dialog modal-dialog-centered">
+		<form class="modal-content dialog-content shadow-sm" id="form_queue_{{ $group->id }}" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.create') }}">
+			<div class="modal-header">
+				<div class="modal-title" id="add_queue_dialog-title">Add queue to {{ $group->name }}</div>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<?php
+			$types = App\Modules\Queues\Models\Type::orderBy('name', 'asc')->get();
+			$schedulers = App\Modules\Queues\Models\Scheduler::orderBy('hostname', 'asc')->get();
+			$schedulerpolicies = App\Modules\Queues\Models\SchedulerPolicy::orderBy('name', 'asc')->get();
+			$subresources = array();
+			$resources = (new App\Modules\Resources\Models\Asset)->tree();
+			?>
+			<div class="modal-body dialog-body">
+
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="queue-queuetype">{{ trans('queues::queues.type') }}</label>
+							<select name="queuetype" id="queue-queuetype" class="form-control">
+								@foreach ($types as $type)
+									<option value="{{ $type->id }}">{{ $type->name }}</option>
+								@endforeach
+							</select>
 						</div>
 					</div>
-
-					<input type="hidden" name="groupid" id="queue-groupid" value="{{ $group->id }}" />
-
-					<div class="form-group">
-						<label for="queue-name">{{ trans('queues::queues.name') }} <span class="required">*</span></label>
-						<input type="text" name="name" id="queue-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required pattern="[a-zA-Z0-9_\-]{1,64}" maxlength="64" value="" data-invalid-msg="{{ trans('queues::queues.name error') }}" />
-						<span class="invalid-feedback">{{ trans('queues::queues.error.invalid name') }}</span>
-					</div>
-
-					<div class="row">
-						<div class="col-md-6">
-							<div class="form-group">
-								<label for="queue-schedulerid">{{ trans('queues::queues.scheduler') }}  <span class="required">*</span></label>
-								<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
-								<select name="schedulerid" id="queue-schedulerid" class="form-control{{ $errors->has('fields.schedulerid') ? ' is-invalid' : '' }}" required>
-									<option value="0">{{ trans('global.none') }}</option>
-									@foreach ($schedulers as $scheduler)
-										<option value="{{ $scheduler->id }}"
-											data-defaultmaxwalltime="{{ $scheduler->defaultmaxwalltime }}"
-											data-schedulerpolicyid="{{ $scheduler->schedulerpolicyid }}"
-											data-resourceid="{{ $scheduler->resource->id }}"
-											data-api="{{ route('api.resources.read', ['id' => $scheduler->resource->id]) }}">{{ $scheduler->hostname }}</option>
-									@endforeach
-								</select>
-								<span class="invalid-feedback">{{ trans('queues::queues.error.invalid scheduler') }}</span>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label for="queue-schedulerpolicyid">{{ trans('queues::queues.scheduler policy') }}</label>
-								<select name="schedulerpolicyid" id="queue-schedulerpolicyid" class="form-control">
-									<option value="0">{{ trans('global.none') }}</option>
-									@foreach ($schedulerpolicies as $schedulerpolicy)
-										<option value="{{ $schedulerpolicy->id }}">{{ $schedulerpolicy->name }}</option>
-									@endforeach
-								</select>
-							</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="queue-queueclass">{{ trans('queues::queues.class') }}</label>
+							<select name="queueclass" id="queue-queueclass" class="form-control">
+								<option value="owner">{{ trans('queues::queues.owner') }}</option>
+								<option value="standby">{{ trans('queues::queues.standby') }}</option>
+								<option value="workq">{{ trans('queues::queues.work') }}</option>
+								<option value="debug">{{ trans('queues::queues.debug') }}</option>
+							</select>
 						</div>
 					</div>
+				</div>
 
-					<div class="row">
-						<div class="col-md-6">
-							<div class="form-group">
-								<?php
-								$cores = '-';
-								$mem   = '-';
-								$dlabel = trans('queues::queues.cluster');
-								$clabel = $dlabel;
-								?>
-								<label for="queue-subresourceid">{{ trans('queues::queues.subresource') }} <span class="required">*</span></label>
-								<select name="subresourceid" id="queue-subresourceid" class="form-control{{ $errors->has('fields.subresourceid') ? ' is-invalid' : '' }}" required>
-									<option value="0">{{ trans('global.none') }}</option>
-									<?php foreach ($resources as $resource): ?>
-										<?php
-										$children = $resource->children()->get();
-										if (count($children)):
-											$label = $dlabel;
-											if ($facet = $resource->getFacet('cluster_label')):
-												$label = $facet->value;
-											endif;
-											?>
-											<optgroup data-resourceid="{{ $resource->id }}" label="{{ $resource->name }}">
-												<?php foreach ($children as $child): ?>
-													<option value="{{ $child->subresourceid }}"
-														data-clusterlabel="{{ $label }}"
-														data-nodecores="{{ $child->subresource && $child->subresource->nodecores ? $child->subresource->nodecores : 0 }}"
-														data-nodemem="{{ $child->subresource && $child->subresource->nodemem ? $child->subresource->nodemem : 0 }}"
-														data-cluster="{{ $child->subresource ? $child->subresource->cluster : '' }}">{{ $child->subresource ? $child->subresource->name : trans('global.unknown') }}</option>
-												<?php endforeach; ?>
-											</optgroup>
-										<?php endif; ?>
-									<?php endforeach; ?>
-								</select>
-								<span class="invalid-feedback">{{ trans('queues::queues.error.invalid subresource') }}</span>
-								<span class="form-text text-muted">
-									{!! trans('queues::queues.number cores', ['num' => '<span id="SPAN_nodecores">' . $cores . '</span>']) !!},
-									{!! trans('queues::queues.number memory', ['num' => '<span id="SPAN_nodemem">' . $mem . '</span>']) !!}
-								</span>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label for="queue-cluster" id="queue-clusterlabel" data-label="{{ $dlabel }}">{{ $clabel }}</label>
-								<input type="text" name="cluster" id="queue-cluster" class="form-control" maxlength="32" value="" />
-							</div>
+				<input type="hidden" name="groupid" id="queue-groupid" value="{{ $group->id }}" />
+
+				<div class="form-group">
+					<label for="queue-name">{{ trans('queues::queues.name') }} <span class="required">*</span></label>
+					<input type="text" name="name" id="queue-name" class="form-control{{ $errors->has('fields.name') ? ' is-invalid' : '' }}" required pattern="[a-zA-Z0-9_\-]{1,64}" maxlength="64" value="" data-invalid-msg="{{ trans('queues::queues.name error') }}" />
+					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid name') }}</span>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="queue-schedulerid">{{ trans('queues::queues.scheduler') }}  <span class="required">*</span></label>
+							<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
+							<select name="schedulerid" id="queue-schedulerid" class="form-control{{ $errors->has('fields.schedulerid') ? ' is-invalid' : '' }}" required>
+								<option value="0">{{ trans('global.none') }}</option>
+								@foreach ($schedulers as $scheduler)
+									<option value="{{ $scheduler->id }}"
+										data-defaultmaxwalltime="{{ $scheduler->defaultmaxwalltime }}"
+										data-schedulerpolicyid="{{ $scheduler->schedulerpolicyid }}"
+										data-resourceid="{{ $scheduler->resource->id }}"
+										data-api="{{ route('api.resources.read', ['id' => $scheduler->resource->id]) }}">{{ $scheduler->hostname }}</option>
+								@endforeach
+							</select>
+							<span class="invalid-feedback">{{ trans('queues::queues.error.invalid scheduler') }}</span>
 						</div>
 					</div>
-
-					<div class="row">
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label for="queue-defaultwalltime">{{ trans('queues::queues.default walltime') }}</label>
-								<span class="input-group">
-									<input type="number" name="defaultwalltime" id="queue-defaultwalltime" class="form-control" min="0" step="0.25" value="0.5" />
-									<span class="input-group-append"><span class="input-group-text">{{ trans_choice('global.time.hours', 2) }}</span></span>
-								</span>
-							</div>
-						</div>
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label for="queue-maxwalltime">{{ trans('queues::queues.max walltime') }}</label>
-								<span class="input-group">
-									<input type="number" name="maxwalltime" id="queue-maxwalltime" class="form-control" min="0" step="0.25" value="336" />
-									<span class="input-group-append"><span class="input-group-text">{{ trans_choice('global.time.hours', 2) }}</span></span>
-								</span>
-							</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="queue-schedulerpolicyid">{{ trans('queues::queues.scheduler policy') }}</label>
+							<select name="schedulerpolicyid" id="queue-schedulerpolicyid" class="form-control">
+								<option value="0">{{ trans('global.none') }}</option>
+								@foreach ($schedulerpolicies as $schedulerpolicy)
+									<option value="{{ $schedulerpolicy->id }}">{{ $schedulerpolicy->name }}</option>
+								@endforeach
+							</select>
 						</div>
 					</div>
+				</div>
 
-					<input type="hidden" name="priority" id="queue-priority" class="form-control" min="0" max="999999" value="1000" />
-					<input type="hidden" name="reservation" id="queue-reservation" class="form-check-input" value="0" />
-					<input type="hidden" name="free" id="queue-free" class="form-check-input" value="0" />
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<?php
+							$cores = '-';
+							$mem   = '-';
+							$dlabel = trans('queues::queues.cluster');
+							$clabel = $dlabel;
+							?>
+							<label for="queue-subresourceid">{{ trans('queues::queues.subresource') }} <span class="required">*</span></label>
+							<select name="subresourceid" id="queue-subresourceid" class="form-control{{ $errors->has('fields.subresourceid') ? ' is-invalid' : '' }}" required>
+								<option value="0">{{ trans('global.none') }}</option>
+								<?php foreach ($resources as $resource): ?>
+									<?php
+									$children = $resource->children()->get();
+									if (count($children)):
+										$label = $dlabel;
+										if ($facet = $resource->getFacet('cluster_label')):
+											$label = $facet->value;
+										endif;
+										?>
+										<optgroup data-resourceid="{{ $resource->id }}" label="{{ $resource->name }}">
+											<?php foreach ($children as $child): ?>
+												<option value="{{ $child->subresourceid }}"
+													data-clusterlabel="{{ $label }}"
+													data-nodecores="{{ $child->subresource && $child->subresource->nodecores ? $child->subresource->nodecores : 0 }}"
+													data-nodemem="{{ $child->subresource && $child->subresource->nodemem ? $child->subresource->nodemem : 0 }}"
+													data-cluster="{{ $child->subresource ? $child->subresource->cluster : '' }}">{{ $child->subresource ? $child->subresource->name : trans('global.unknown') }}</option>
+											<?php endforeach; ?>
+										</optgroup>
+									<?php endif; ?>
+								<?php endforeach; ?>
+							</select>
+							<span class="invalid-feedback">{{ trans('queues::queues.error.invalid subresource') }}</span>
+							<span class="form-text text-muted">
+								{!! trans('queues::queues.number cores', ['num' => '<span id="SPAN_nodecores">' . $cores . '</span>']) !!},
+								{!! trans('queues::queues.number memory', ['num' => '<span id="SPAN_nodemem">' . $mem . '</span>']) !!}
+							</span>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="queue-cluster" id="queue-clusterlabel" data-label="{{ $dlabel }}">{{ $clabel }}</label>
+							<input type="text" name="cluster" id="queue-cluster" class="form-control" maxlength="32" value="" />
+						</div>
+					</div>
+				</div>
 
-					<input type="hidden" name="maxjobsqueued" id="queue-maxjobsqueued" class="form-control" min="0" max="99999" value="12000" />
-					<input type="hidden" name="maxjobsqueueduser" id="queue-maxjobsqueueduser" class="form-control" min="0" max="99999" value="5000" />
-					<input type="hidden" name="maxjobsrun" id="queue-maxjobsrun" class="form-control" min="0" max="99999" value="0" />
-					<input type="hidden" name="maxjobsrunuser" id="queue-maxjobsrunuser" class="form-control" min="0" max="99999" value="0" />
-					<input type="hidden" name="maxjobcores" id="queue-maxjobcores" class="form-control" min="0" max="99999999" value="0" />
-					<input type="hidden" name="maxijobfactor" id="queue-maxijobfactor" class="form-control" min="0" max="99999" value="2" />
-					<input type="hidden" name="maxijobuserfactor" id="queue-maxijobuserfactor" class="form-control" min="0" max="99999" value="1" />
-					<input type="hidden" name="nodecoresdefault" id="queue-nodecoresdefault" class="form-control" min="0" max="999" value="0" />
-					<input type="hidden" name="nodecoresmin" id="queue-nodecoresmin" class="form-control" min="0" max="999" value="128" />
-					<input type="hidden" name="nodecoresmax" id="queue-nodecoresmax" class="form-control" min="0" max="999" value="128" />
-					<input type="hidden" name="nodememmin" id="queue-nodememmin" class="form-control" pattern="[0-9]{1,4}[PTGMKB]" value="256G" />
-					<input type="hidden" name="nodememmax" id="queue-nodememmax" class="form-control" pattern="[0-9]{1,4}[PTGMKB]" value="256G" />
-					<input type="hidden" name="aclusersenabled" id="queue-aclusersenabled" class="form-check-input" value="0" />
-					<input type="hidden" name="aclgroups" id="queue-aclgroups" class="form-control" value="" />
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="queue-defaultwalltime">{{ trans('queues::queues.default walltime') }}</label>
+							<span class="input-group">
+								<input type="number" name="defaultwalltime" id="queue-defaultwalltime" class="form-control" min="0" step="0.25" value="0.5" />
+								<span class="input-group-append"><span class="input-group-text">{{ trans_choice('global.time.hours', 2) }}</span></span>
+							</span>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="queue-maxwalltime">{{ trans('queues::queues.max walltime') }}</label>
+							<span class="input-group">
+								<input type="number" name="maxwalltime" id="queue-maxwalltime" class="form-control" min="0" step="0.25" value="336" />
+								<span class="input-group-append"><span class="input-group-text">{{ trans_choice('global.time.hours', 2) }}</span></span>
+							</span>
+						</div>
+					</div>
+				</div>
 
-					<input type="hidden" name="enabled" id="queue-enabled" class="form-control" value="1" />
-					<input type="hidden" name="started" id="queue-started" class="form-control" value="1" />
+				<input type="hidden" name="priority" id="queue-priority" class="form-control" min="0" max="999999" value="1000" />
+				<input type="hidden" name="reservation" id="queue-reservation" class="form-check-input" value="0" />
+				<input type="hidden" name="free" id="queue-free" class="form-check-input" value="0" />
 
-				<!-- <fieldset class="adminform hide">
+				<input type="hidden" name="maxjobsqueued" id="queue-maxjobsqueued" class="form-control" min="0" max="99999" value="12000" />
+				<input type="hidden" name="maxjobsqueueduser" id="queue-maxjobsqueueduser" class="form-control" min="0" max="99999" value="5000" />
+				<input type="hidden" name="maxjobsrun" id="queue-maxjobsrun" class="form-control" min="0" max="99999" value="0" />
+				<input type="hidden" name="maxjobsrunuser" id="queue-maxjobsrunuser" class="form-control" min="0" max="99999" value="0" />
+				<input type="hidden" name="maxjobcores" id="queue-maxjobcores" class="form-control" min="0" max="99999999" value="0" />
+				<input type="hidden" name="maxijobfactor" id="queue-maxijobfactor" class="form-control" min="0" max="99999" value="2" />
+				<input type="hidden" name="maxijobuserfactor" id="queue-maxijobuserfactor" class="form-control" min="0" max="99999" value="1" />
+				<input type="hidden" name="nodecoresdefault" id="queue-nodecoresdefault" class="form-control" min="0" max="999" value="0" />
+				<input type="hidden" name="nodecoresmin" id="queue-nodecoresmin" class="form-control" min="0" max="999" value="128" />
+				<input type="hidden" name="nodecoresmax" id="queue-nodecoresmax" class="form-control" min="0" max="999" value="128" />
+				<input type="hidden" name="nodememmin" id="queue-nodememmin" class="form-control" pattern="[0-9]{1,4}[PTGMKB]" value="256G" />
+				<input type="hidden" name="nodememmax" id="queue-nodememmax" class="form-control" pattern="[0-9]{1,4}[PTGMKB]" value="256G" />
+				<input type="hidden" name="aclusersenabled" id="queue-aclusersenabled" class="form-check-input" value="0" />
+				<input type="hidden" name="aclgroups" id="queue-aclgroups" class="form-control" value="" />
+
+				<input type="hidden" name="enabled" id="queue-enabled" class="form-control" value="1" />
+				<input type="hidden" name="started" id="queue-started" class="form-control" value="1" />
+
+				<?php /*<fieldset class="adminform hide">
 					<legend>{{ trans('global.publishing') }}</legend>
 
 					<div class="form-group">
@@ -223,12 +231,11 @@ $queues = $queues->reject(function($q) use ($canManage)
 							<option value="1" selected="selected">{{ trans('queues::queues.started') }}</option>
 						</select>
 					</div>
-				</fieldset> -->
+				</fieldset>*/ ?>
 
 				<div class="alert alert-danger hide" id="add_queue_error"></div>
 			</div>
-
-			<div class="modl-footer dialog-footer text-right">
+			<div class="modal-footer text-right">
 				<input type="submit" id="add_queue_save" class="btn btn-success queue-dialog-submit"
 					data-group="{{ $group->id }}"
 					data-api="{{ route('api.queues.create') }}"
@@ -236,7 +243,8 @@ $queues = $queues->reject(function($q) use ($canManage)
 			</div>
 
 			@csrf
-	</form>
+		</form>
+	</div>
 </div>
 @endif
 
@@ -388,8 +396,8 @@ $queues = $queues->reject(function($q) use ($canManage)
 											{{ trans('queues::queues.purchases and loans') }}
 										</div>
 										<div class="col-md-6 text-right">
-											<a href="#dialog-sell{{ $q->id }}" id="node-sell{{ $q->id }}" class="btn btn-secondary btn-sm dialog-pl-btn">{{ trans('queues::queues.sell') }}</a>
-											<a href="#dialog-loan{{ $q->id }}" id="node-loan{{ $q->id }}" class="btn btn-secondary btn-sm dialog-pl-btn">{{ trans('queues::queues.loan') }}</a>
+											<a href="#dialog-sell{{ $q->id }}" id="node-sell{{ $q->id }}" data-toggle="modal" class="btn btn-secondary btn-sm dialog-pl-btn">{{ trans('queues::queues.sell') }}</a>
+											<a href="#dialog-loan{{ $q->id }}" id="node-loan{{ $q->id }}" data-toggle="modal" class="btn btn-secondary btn-sm dialog-pl-btn">{{ trans('queues::queues.loan') }}</a>
 										</div>
 									</div>
 								</div>
@@ -578,7 +586,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 													{{ number_format($item->total, 1) }}
 												</td>
 												<td class="text-right">
-													<a href="#dialog-edit{{ $item->id }}" class="btn btn-sm queue-pl-edit"
+													<a href="#dialog-edit{{ $item->id }}" data-toggle="modal" class="btn btn-sm queue-pl-edit"
 														data-success="{{ trans('global.messages.item updated') }}"
 														data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes'). '.update', ['id' => $item->id]) }}"
 														data-id="{{ $item->id }}">
@@ -596,116 +604,124 @@ $queues = $queues->reject(function($q) use ($canManage)
 													</button>
 													@endif
 
-													<div class="modl dialog" id="dialog-edit{{ $item->id }}" title="{{ trans('queues::queues.edit ' . ($item->type == 1 ? 'loan' : 'size')) }} #{{ $item->id }}">
-														<form method="post" class="modl-content dialog-content" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes') . '.update', ['id' => $item->id]) }}">
-															<div class="modl-body dialog-body">
-															@if ($unit == 'sus')
-															<div class="row">
-																<div class="col-md-12">
-																	<div class="form-group">
-																		<label for="loan-serviceunits{{ $item->id }}">{{ trans('queues::queues.service units') }} <span class="required">*</span></label>
-																		<input type="number" class="form-control serviceunits" size="4" id="loan-serviceunits{{ $item->id }}" name="serviceunits" value="{{ $item->serviceunits }}" step="0.25" />
-																	</div>
-																</div>
+													<div class="modal" id="dialog-edit{{ $item->id }}" tabindex="-1" aria-labelledby="dialog-edit{{ $item->id }}-title">
+													<div class="modal-dialog modal-dialog-centered">
+														<form class="modal-content dialog-content shadow-sm" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes') . '.update', ['id' => $item->id]) }}">
+															<div class="modal-header">
+																<div class="modal-title" id="dialog-edit{{ $item->id }}-title">{{ trans('queues::queues.edit ' . ($item->type == 1 ? 'loan' : 'size')) }}</div>
+																<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																	<span aria-hidden="true">&times;</span>
+																</button>
 															</div>
-															<input type="hidden" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $nodecores ? round($item->corecount / $nodecores, 1) : $item->nodecount }}" step="0.5" />
-															<input type="hidden" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
-															@elseif ($unit == 'gpus')
-															<div class="row">
-																<div class="col-md-3">
-																	<div class="form-group">
-																		<label for="loan-nodes{{ $item->id }}">{{ trans('queues::queues.nodes') }}</label>
-																		<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" data-cores="{{ $q->subresource->nodecores }}" data-gpus="{{ $q->subresource->nodegpus }}" data-cores-field="loan-cores{{ $item->id }}" data-gpus-field="loan-serviceunits{{ $item->id }}" value="{{ $nodecores ? round($item->corecount / $nodecores, 1) : $item->nodecount }}" step="0.5" />
+															<div class="modal-body">
+																@if ($unit == 'sus')
+																	<div class="row">
+																		<div class="col-md-12">
+																			<div class="form-group">
+																				<label for="loan-serviceunits{{ $item->id }}">{{ trans('queues::queues.service units') }} <span class="required">*</span></label>
+																				<input type="number" class="form-control serviceunits" size="4" id="loan-serviceunits{{ $item->id }}" name="serviceunits" value="{{ $item->serviceunits }}" step="0.25" />
+																			</div>
+																		</div>
 																	</div>
-																</div>
-																<div class="col-md-5">
-																	<div class="form-group">
-																		<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.cores') }} <span class="required">*</span></label>
-																		<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
-																		<span class="text-muted">({{ trans('queues::queues.cores per nodes', ['cores' => $q->subresource->nodecores]) }})</span>
+																	<input type="hidden" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $nodecores ? round($item->corecount / $nodecores, 1) : $item->nodecount }}" step="0.5" />
+																	<input type="hidden" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
+																@elseif ($unit == 'gpus')
+																	<div class="row">
+																		<div class="col-md-3">
+																			<div class="form-group">
+																				<label for="loan-nodes{{ $item->id }}">{{ trans('queues::queues.nodes') }}</label>
+																				<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" data-cores="{{ $q->subresource->nodecores }}" data-gpus="{{ $q->subresource->nodegpus }}" data-cores-field="loan-cores{{ $item->id }}" data-gpus-field="loan-serviceunits{{ $item->id }}" value="{{ $nodecores ? round($item->corecount / $nodecores, 1) : $item->nodecount }}" step="0.5" />
+																			</div>
+																		</div>
+																		<div class="col-md-5">
+																			<div class="form-group">
+																				<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.cores') }} <span class="required">*</span></label>
+																				<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
+																				<span class="text-muted">({{ trans('queues::queues.cores per nodes', ['cores' => $q->subresource->nodecores]) }})</span>
+																			</div>
+																		</div>
+																		<div class="col-md-4">
+																			<div class="form-group">
+																				<label for="loan-serviceunits{{ $item->id }}">{{ trans('queues::queues.gpus') }}</label>
+																				<input type="number" name="serviceunits" class="form-control gpus" size="4" id="loan-serviceunits{{ $item->id }}" data-gpus="{{ $q->subresource->nodegpus }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ round($item->serviceunits) }}" />
+																				<span class="text-muted">({{ trans('queues::queues.cores per nodes', ['cores' => $q->subresource->nodegpus]) }})</span>
+																			</div>
+																		</div>
 																	</div>
-																</div>
-																<div class="col-md-4">
-																	<div class="form-group">
-																		<label for="loan-serviceunits{{ $item->id }}">{{ trans('queues::queues.gpus') }}</label>
-																		<input type="number" name="serviceunits" class="form-control gpus" size="4" id="loan-serviceunits{{ $item->id }}" data-gpus="{{ $q->subresource->nodegpus }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ round($item->serviceunits) }}" />
-																		<span class="text-muted">({{ trans('queues::queues.cores per nodes', ['cores' => $q->subresource->nodegpus]) }})</span>
+																@else
+																	<div class="row">
+																		<div class="col-md-6">
+																			<div class="form-group">
+																				<label for="loan-nodes{{ $item->id }}">{{ trans('queues::queues.' . $unit) }}</label>
+																				<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $nodecores ? round($item->corecount / $nodecores, 1) : $item->nodecount }}" step="0.5" />
+																			</div>
+																		</div>
+																		<div class="col-md-6">
+																			<div class="form-group">
+																				<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.cores') }} <span class="required">*</span></label>
+																				<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
+																				<span class="text-muted">({{ trans('queues::queues.cores per nodes', ['cores' => $q->subresource->nodecores]) }})</span>
+																			</div>
+																		</div>
 																	</div>
-																</div>
-															</div>
-															@else
-															<div class="row">
-																<div class="col-md-6">
-																	<div class="form-group">
-																		<label for="loan-nodes{{ $item->id }}">{{ trans('queues::queues.' . $unit) }}</label>
-																		<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" data-nodes="{{ $q->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $nodecores ? round($item->corecount / $nodecores, 1) : $item->nodecount }}" step="0.5" />
-																	</div>
-																</div>
-																<div class="col-md-6">
-																	<div class="form-group">
-																		<label for="loan-cores{{ $item->id }}">{{ trans('queues::queues.cores') }} <span class="required">*</span></label>
-																		<input type="number" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" data-cores="{{ $q->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
-																		<span class="text-muted">({{ trans('queues::queues.cores per nodes', ['cores' => $q->subresource->nodecores]) }})</span>
-																	</div>
-																</div>
-															</div>
-															<input type="hidden" class="form-control serviceunits" size="4" id="loan-serviceunits{{ $item->id }}" name="serviceunits" value="{{ $item->serviceunits }}" step="0.25" />
-															@endif
+																	<input type="hidden" class="form-control serviceunits" size="4" id="loan-serviceunits{{ $item->id }}" name="serviceunits" value="{{ $item->serviceunits }}" step="0.25" />
+																@endif
 
-															<div class="row">
-																<div class="col-md-6">
-																	<div class="form-group">
-																		<label for="loan-datetimestart{{ $item->id }}">{{ trans('queues::queues.start') }}</label>
-																		<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart{{ $item->id }}" name="datetimestart" value="{{ $item->datetimestart->toDateTimeString() }}" />
-																	</div>
-																</div>
-																<div class="col-md-6">
-																	<div class="form-group">
-																		<label for="loan-datetimestop{{ $item->id }}">{{ trans('queues::queues.end') }}</label>
-																		@if ($item->type == 1)
-																			<input type="text" name="datetimestop" class="form-control datetime" id="loan-datetimestop{{ $item->id }}" value="{{ $item->hasEnd() ? $item->datetimestop->toDateTimeString() : '' }}" placeholder="{{ trans('global.never') }}" />
-																		@else
-																			<input type="text" name="datetimestop" class="form-control datetime" id="sell-datetimestop{{ $item->id }}" disabled="disabled" placeholder="{{ trans('queues::queues.end of life') }}" value="" />
-																		@endif
-																	</div>
-																</div>
-															</div>
-
-															<div class="form-group">
-																<label for="loan-comment{{ $item->id }}">{{ trans('queues::queues.comment') }}</label>
-																<textarea id="loan-comment{{ $item->id }}" name="comment" class="form-control" rows="3" cols="40">{{ $item->comment }}</textarea>
-															</div>
-
-															@php
-															$creation = $item->history()
-																->where('action', '=', 'created')
-																->first();
-															@endphp
-															@if ($creation)
 																<div class="row">
-																	<div class="col-md-6 mb-0">
-																		<div class="form-group mb-0">
-																			<label for="loan-created{{ $item->id }}">{{ trans('queues::queues.created') }}</label>
-																			<input type="text" name="created" id="loan-created{{ $item->id }}" class="form-control-plaintext" value="{{ $creation->created_at->format('M j, Y g:ia') }}" readonly />
+																	<div class="col-md-6">
+																		<div class="form-group">
+																			<label for="loan-datetimestart{{ $item->id }}">{{ trans('queues::queues.start') }}</label>
+																			<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart{{ $item->id }}" name="datetimestart" value="{{ $item->datetimestart->toDateTimeString() }}" />
 																		</div>
 																	</div>
-																	<div class="col-md-6 mb-0">
-																		<div class="form-group mb-0">
-																			<label for="loan-creator{{ $item->id }}">{{ trans('storage::storage.creator') }}</label>
-																			<input type="text" name="creator" id="loan-creator{{ $item->id }}" class="form-control-plaintext" value="{{ $creation->user ? $creation->user->name . ' (' . $creation->user->username . ')' : 'ID #' . $creation->user_id }}" readonly />
+																	<div class="col-md-6">
+																		<div class="form-group">
+																			<label for="loan-datetimestop{{ $item->id }}">{{ trans('queues::queues.end') }}</label>
+																			@if ($item->type == 1)
+																				<input type="text" name="datetimestop" class="form-control datetime" id="loan-datetimestop{{ $item->id }}" value="{{ $item->hasEnd() ? $item->datetimestop->toDateTimeString() : '' }}" placeholder="{{ trans('global.never') }}" />
+																			@else
+																				<input type="text" name="datetimestop" class="form-control datetime" id="sell-datetimestop{{ $item->id }}" disabled="disabled" placeholder="{{ trans('queues::queues.end of life') }}" value="" />
+																			@endif
 																		</div>
 																	</div>
 																</div>
-															@endif
 
-															<div class="dialog-footer text-right">
-																<input type="submit" class="btn btn-success queue-dialog-submit" value="{{ trans('global.button.update') }}" data-action="update" data-success="{{ trans('queues::queues.item updated') }}" />
-															</div>
+																<div class="form-group">
+																	<label for="loan-comment{{ $item->id }}">{{ trans('queues::queues.comment') }}</label>
+																	<textarea id="loan-comment{{ $item->id }}" name="comment" class="form-control" rows="3" cols="40">{{ $item->comment }}</textarea>
+																</div>
 
-															<input type="hidden" name="id" value="{{ $item->id }}" />
-															@csrf
+																@php
+																$creation = $item->history()
+																	->where('action', '=', 'created')
+																	->first();
+																@endphp
+																@if ($creation)
+																	<div class="row">
+																		<div class="col-md-6 mb-0">
+																			<div class="form-group mb-0">
+																				<label for="loan-created{{ $item->id }}">{{ trans('queues::queues.created') }}</label>
+																				<input type="text" name="created" id="loan-created{{ $item->id }}" class="form-control-plaintext" value="{{ $creation->created_at->format('M j, Y g:ia') }}" readonly />
+																			</div>
+																		</div>
+																		<div class="col-md-6 mb-0">
+																			<div class="form-group mb-0">
+																				<label for="loan-creator{{ $item->id }}">{{ trans('storage::storage.creator') }}</label>
+																				<input type="text" name="creator" id="loan-creator{{ $item->id }}" class="form-control-plaintext" value="{{ $creation->user ? $creation->user->name . ' (' . $creation->user->username . ')' : 'ID #' . $creation->user_id }}" readonly />
+																			</div>
+																		</div>
+																	</div>
+																@endif
+
+																<div class="dialog-footer text-right">
+																	<input type="submit" class="btn btn-success queue-dialog-submit" value="{{ trans('global.button.update') }}" data-action="update" data-success="{{ trans('queues::queues.item updated') }}" />
+																</div>
+
+																<input type="hidden" name="id" value="{{ $item->id }}" />
+																@csrf
 															</div>
 														</form>
+													</div>
 													</div>
 												</td>
 											</tr>
@@ -716,9 +732,16 @@ $queues = $queues->reject(function($q) use ($canManage)
 								</div>
 							</div>
 
-							<div class="modl dialog" id="dialog-sell{{ $q->id }}" title="{{ trans('queues::queues.sell') }}">
-								<form class="modl-content dialog-content" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.sizes.create') }}">
-									<div class="modl-body dialog-body">
+							<div class="modal" id="dialog-sell{{ $q->id }}" tabindex="-1" aria-labelledby="dialog-sell{{ $q->id }}-title">
+								<div class="modal-dialog modal-dialog-centered">
+									<form class="modal-content dialog-content shadow-sm" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.sizes.create') }}">
+										<div class="modal-header">
+											<div class="modal-title" id="dialog-sell{{ $q->id }}-title">{{ trans('queues::queues.sell') }}</div>
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+									<div class="modal-body">
 										@if ($unit == 'sus')
 										<div class="row">
 											<div class="col-md-12">
@@ -890,17 +913,25 @@ $queues = $queues->reject(function($q) use ($canManage)
 										</div>
 									</div>
 
-									<div class="modl-footer dialog-footer text-right">
+									<div class="modal-footer text-right">
 										<input type="submit" class="btn btn-success queue-dialog-submit" value="{{ trans('global.button.create') }}" data-success="{{ trans('queues::queues.item created') }}" />
 									</div>
 
 									@csrf
 								</form>
 							</div>
+							</div>
 
-							<div class="modl dialog" id="dialog-loan{{ $q->id }}" title="{{ trans('queues::queues.loan') }}">
-								<form class="modl-content dialog-content" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.loans.create') }}">
-									<div class="modl-body dialog-body">
+							<div class="modal" id="dialog-loan{{ $q->id }}" tabindex="-1" aria-labelledby="dialog-loan{{ $q->id }}-title">
+								<div class="modal-dialog modal-dialog-centered">
+									<form class="modal-content dialog-content shadow-sm" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.loans.create') }}">
+										<div class="modal-header">
+											<div class="modal-title" id="dialog-loan{{ $q->id }}-title">{{ trans('queues::queues.loan') }}</div>
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+									<div class="modal-body">
 										@if ($unit == 'sus')
 										<div class="row">
 											<div class="col-md-12">
@@ -1041,12 +1072,13 @@ $queues = $queues->reject(function($q) use ($canManage)
 										</div>
 									</div>
 
-									<div class="modl-footer dialog-footer text-right">
+									<div class="modal-footer text-right">
 										<input type="submit" class="btn btn-success queue-dialog-submit" value="{{ trans('global.button.create') }}" data-success="{{ trans('queues::queues.item created') }}" />
 									</div>
 
 									@csrf
 								</form>
+							</div>
 							</div>
 						</td>
 					</tr>
