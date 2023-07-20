@@ -1,0 +1,14 @@
+{
+    "name": "Search - Resources",
+    "alias": "listener_search_resources",
+    "description": "Site-wide search results for Resources",
+    "keywords": [],
+    "active": 1,
+    "priority": 0,
+    "aliases": {},
+    "files": [],
+    "requires": [
+        "mod_resources",
+        "mod_search"
+    ]
+}

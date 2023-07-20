@@ -1,0 +1,14 @@
+{
+    "name": "Search - Knowledge",
+    "alias": "listener_search_knowledge",
+    "description": "Site-wide search results for Knowledge Base pages",
+    "keywords": [],
+    "active": 1,
+    "priority": 0,
+    "aliases": {},
+    "files": [],
+    "requires": [
+        "mod_knowledge",
+        "mod_search"
+    ]
+}

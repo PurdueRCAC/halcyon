@@ -1,0 +1,14 @@
+{
+    "name": "Search - News",
+    "alias": "listener_search_news",
+    "description": "Site-wide search results for News",
+    "keywords": [],
+    "active": 1,
+    "priority": 0,
+    "aliases": {},
+    "files": [],
+    "requires": [
+        "mod_news",
+        "mod_search"
+    ]
+}

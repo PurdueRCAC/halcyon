@@ -1,0 +1,14 @@
+{
+    "name": "Search - Orders",
+    "alias": "listener_search_orders",
+    "description": "Site-wide search results for Order Products",
+    "keywords": [],
+    "active": 1,
+    "priority": 0,
+    "aliases": {},
+    "files": [],
+    "requires": [
+        "mod_orders",
+        "mod_search"
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "name": "Search - Pages",
+    "alias": "listener_search_pages",
+    "description": "Site-wide search results for Pages",
+    "keywords": [],
+    "active": 1,
+    "priority": 0,
+    "aliases": {},
+    "files": [],
+    "requires": [
+        "mod_pages",
+        "mod_search"
+    ]
+}
