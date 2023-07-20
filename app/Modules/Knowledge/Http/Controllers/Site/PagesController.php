@@ -290,17 +290,25 @@ class PagesController extends Controller
 			$filters['order'] = 'weight';
 
 			$query->select($p . '.title', $p . '.content', $p . '.params', $p . '.snippet', $p . '.updated_at', $a . '.*',
-				DB::raw("IF(" . $a . ".path LIKE '%" . $filters['search'] . "', 10, 0) +
-					IF(" . $p . ".title LIKE '" . $filters['search'] . "%', 20, 
-						IF(" . $p . ".title LIKE '%" . $filters['search'] . "%', 10, 0)
-					)
-					+ IF(" . $p . ".content LIKE '%" . $filters['search'] . "%', 5, 0)
+				DB::raw("(
+					IF(" . $p . ".title = '" . $filters['search'] . "', 30, 
+						IF(" . $p . ".title LIKE '" . $filters['search'] . "%', 20, 
+							IF(" . $p . ".title LIKE '%" . $filters['search'] . "%', 10, 0)
+						)
+					) +
+					IF(" . $a . ".path LIKE '%" . $filters['search'] . "', 10, 0) +
+					IF(" . $a . ".path LIKE '%" . $filters['search'] . "%', 1, 0) +
+					IF(" . $p . ".content LIKE '%" . $filters['search'] . "%', 5, 0)
+				) * 2
 				AS `weight`"));
 
-			$query->where(function($query) use ($filters, $p)
+			$query->where(function($query) use ($filters, $p, $a)
 			{
-				$query->where($p . '.title', 'like', $filters['search'] . '%')
+				$query
+					->where($p . '.title', '=', $filters['search'])
+					->orWhere($p . '.title', 'like', $filters['search'] . '%')
 					->orWhere($p . '.title', 'like', '%' . $filters['search'] . '%')
+					->orWhere($a . '.path', 'like', '%' . $filters['search'] . '%')
 					->orWhere($p . '.content', 'like', '%' . $filters['search'] . '%');
 			});
 		}
