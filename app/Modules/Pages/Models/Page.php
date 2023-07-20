@@ -1144,11 +1144,15 @@ class Page extends Model
 
 		$query->select(
 			$page . '.*',
-			DB::raw('IF(' . $page . '.title LIKE "' . $search . '%", 20,
-					IF(' . $page . '.title LIKE "%' . $search . '%", 10, 0)
-				)
-				+ IF(' . $page . '.content LIKE "%' . $search . '%", 5, 0)
-				+ IF(' . $page . '.path    LIKE "%' . $search . '%", 1, 0)
+			DB::raw('(
+					IF(' . $page . '.title = "' . $search . '", 30,
+						IF(' . $page . '.title LIKE "' . $search . '%", 20,
+							IF(' . $page . '.title LIKE "%' . $search . '%", 10, 0)
+						)
+					)
+					+ IF(' . $page . '.content LIKE "%' . $search . '%", 5, 0)
+					+ IF(' . $page . '.path    LIKE "%' . $search . '%", 1, 0)
+				) * 2
 				AS `weight`')
 			)
 			->orderBy('weight', 'desc');
