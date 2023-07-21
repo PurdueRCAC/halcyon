@@ -383,7 +383,7 @@ $i = 0;
 			</thead>
 			<tbody>
 				@foreach ($managers as $member)
-					<tr id="manager-{{ $member->userid }}">
+					<tr id="manager-{{ $member->id }}">
 						<td class="text-nowrap">
 							@if (auth()->user()->can('manage users'))
 								<a href="{{ route('site.users.account', ['u' => $member->userid]) }}">
