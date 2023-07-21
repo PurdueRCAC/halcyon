@@ -31,6 +31,7 @@ app('pathway')
 				$drivers = array_keys($authenticators);
 				$driver = array_shift($drivers);
 				$primary = $authenticators[$driver];
+				unset($authenticators[$driver]);
 				@endphp
 				@include($primary['view'], ['authenticator' => $driver])
 
