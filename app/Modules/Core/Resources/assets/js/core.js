@@ -820,86 +820,105 @@ document.addEventListener('DOMContentLoaded', function() {
 		tooltipClass: 'tool-tip'
 	});*/
 
-	$('.btn-settings').on('click', function (e) {
-		e.preventDefault();
+	document.querySelectorAll('.btn-settings').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		$('<div class="ui-widget-overlay ui-front" style="z-index: 100;"></div>').appendTo('body');
-		$('<div id="panel" style="z-index: 101;"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>').appendTo('body');
-		var panel = $('#panel');
-		panel
-			.show("slide", { direction: "right" }, 500);
+			let overlay = document.createElement('div');
+			overlay.classList.add('ui-widget-overlay');
+			overlay.classList.add('ui-front');
+			overlay.style.zIndex = 100;
 
-		fetch(this.getAttribute('href'), {
-			method: 'GET',
-			headers: {
-				//'Content-Type': 'application/json',
-				'X-Requested-With': 'XMLHttpRequest',
-				'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-				'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-			}
-		})
-		.then(function (response) {
-			if (response.ok) {
-				return response.text();
-			}
-			return response.json().then(function (data) {
-				var msg = data.message;
-				if (typeof msg === 'object') {
-					msg = Object.values(msg).join('<br />');
+			document.querySelector('body').appendChild(overlay);
+
+			let panel = document.createElement('div');
+			panel.id = 'panel';
+			panel.style.zIndex = 101;
+
+			let spinner = document.createElement('div');
+			spinner.classList.add('spinner-border');
+			spinner.classList.add('mx-auto');
+			spinner.setAttribute('role', 'status');
+
+			panel.appendChild(spinner);
+
+			document.querySelector('body').appendChild(panel);
+
+			$(panel).show("slide", { direction: "right" }, 500);
+
+			fetch(this.getAttribute('href'), {
+				method: 'GET',
+				headers: {
+					//'Content-Type': 'application/json',
+					'X-Requested-With': 'XMLHttpRequest',
+					'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 				}
-				throw msg;
-			});
-		})
-		.then(function (result) {
-			panel
-				.html(result);
-
-			panel.find('.btn-cancel').on('click', function (e) {
-				e.preventDefault();
-				$('#panel').hide("slide", { direction: "right" }, 500);
-				$('.ui-widget-overlay').remove();
-			});
-
-			panel.find('.btn-save').on('click', function (e) {
-				e.preventDefault();
-
-				var frm = $(this).closest('form');
-				const formData = new FormData(frm[0]);
-
-				fetch(this.getAttribute('href'), {
-					method: 'POST',
-					headers: {
-						//'Content-Type': 'application/json',
-						'X-Requested-With': 'XMLHttpRequest',
-						'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-					},
-					body: formData//JSON.stringify(serializeFormData(formData))//frm.serialize())
-				})
-				.then(function (response) {
-					if (response.ok) {
-						$('#panel').hide("slide", { direction: "right" }, 500);
-						$('.ui-widget-overlay').remove();
-						return;
+			})
+			.then(function (response) {
+				if (response.ok) {
+					return response.text();
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
 					}
-					return response.json().then(function (data) {
-						var msg = data.message;
-						if (typeof msg === 'object') {
-							msg = Object.values(msg).join('<br />');
-						}
-						throw msg;
-					});
-				})
-				.catch(function (err) {
-					Halcyon.message('danger', err);
+					throw msg;
 				});
+			})
+			.then(function (result) {
+				panel.innerHTML = result;
+
+				panel.querySelectorAll('.btn-cancel').forEach(function(item) {
+					item.addEventListener('click', function (e) {
+						e.preventDefault();
+						$(panel).hide("slide", { direction: "right" }, 500);
+						document.querySelector('.ui-widget-overlay').remove();
+					});
+				});
+
+				panel.querySelector('.btn-save').addEventListener('click', function (e) {
+					e.preventDefault();
+
+					var frm = this.closest('form');
+					const formData = new FormData(frm[0]);
+
+					fetch(this.getAttribute('href'), {
+						method: 'POST',
+						headers: {
+							//'Content-Type': 'application/json',
+							'X-Requested-With': 'XMLHttpRequest',
+							'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+							'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+						},
+						body: formData//JSON.stringify(serializeFormData(formData))//frm.serialize())
+					})
+					.then(function (response) {
+						if (response.ok) {
+							$(panel).hide("slide", { direction: "right" }, 500);
+							document.querySelector('.ui-widget-overlay').remove();
+							return;
+						}
+						return response.json().then(function (data) {
+							var msg = data.message;
+							if (typeof msg === 'object') {
+								msg = Object.values(msg).join('<br />');
+							}
+							throw msg;
+						});
+					})
+					.catch(function (err) {
+						Halcyon.message('danger', err);
+					});
+				});
+			})
+			.catch(function (err) {
+				console.log(err);
+				Halcyon.message('danger', err);
 			});
-		})
-		.catch(function (err) {
-			Halcyon.message('danger', err);
 		});
 	});
-
 	/*
 	$('.input-datetime input').datetimepicker({
 		duration: '',
@@ -913,46 +932,49 @@ document.addEventListener('DOMContentLoaded', function() {
 		timeFormat: 'HH:mm:00'
 	});*/
 
-	$('[maxlength]').each(function (i, el) {
+	document.querySelectorAll('[maxlength]').forEach(function (el) {
 		if (el.getAttribute('data-counter') && el.getAttribute('data-counter') == 'false') {
 			return;
 		}
-		var container = $('<span class="char-counter-wrap"></span>');
-		var counter = $('<span class="char-counter"></span>');
-		var input = $(el);
+		var container = document.createElement('span');
+		container.classList.add('char-counter-wrap');
 
-		if (input.attr('id') != '') {
-			counter.attr('id', input.attr('id') + '-counter');
+		var counter = document.createElement('span');
+		counter.classList.add('char-counter');
+
+		if (el.getAttribute('id') != '') {
+			counter.setAttribute('id', el.getAttribute('id') + '-counter');
 		}
 
-		if (input.parent().hasClass('input-group')) {
-			input.parent().wrap(container);
-			counter.insertBefore(input.parent());
+		if (el.parentNode.classList.contains('input-group')) {
+			el.parentNode.parentNode.insertBefore(container, el.parentNode);
+			container.appendChild(counter);
+			container.appendChild(el.parentNode);
 		} else {
-			input.wrap(container);
-			counter.insertBefore(input);
+			el.parentNode.insertBefore(container, el);
+			container.appendChild(counter);
+			container.appendChild(el);
 		}
-		counter.text(input.val().length + ' / ' + input.attr('maxlength'));
+		counter.innerHTML = el.value.length + ' / ' + el.getAttribute('maxlength');
 
-		input
-			.on('focus', function () {
-				var container = $(this).closest('.char-counter-wrap');
-				if (container.length) {
-					container.addClass('char-counter-focus');
-				}
-			})
-			.on('blur', function () {
-				var container = $(this).closest('.char-counter-wrap');
-				if (container.length) {
-					container.removeClass('char-counter-focus');
-				}
-			})
-			.on('keyup', function () {
-				var chars = $(this).val().length;
-				var counter = $('#' + $(this).attr('id') + '-counter');
-				if (counter.length) {
-					counter.text(chars + ' / ' + $(this).attr('maxlength'));
-				}
-			});
+		el.addEventListener('focus', function () {
+			var container = this.closest('.char-counter-wrap');
+			if (container) {
+				container.classList.add('char-counter-focus');
+			}
+		});
+		el.addEventListener('blur', function () {
+			var container = this.closest('.char-counter-wrap');
+			if (container) {
+				container.classList.remove('char-counter-focus');
+			}
+		});
+		el.addEventListener('keyup', function () {
+			var chars = this.value.length;
+			var counter = document.getElementById(this.getAttribute('id') + '-counter');
+			if (counter) {
+				counter.innerHTML = chars + ' / ' + this.getAttribute('maxlength');
+			}
+		});
 	});
 });
