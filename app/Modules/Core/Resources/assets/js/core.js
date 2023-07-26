@@ -882,7 +882,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					e.preventDefault();
 
 					var frm = this.closest('form');
-					const formData = new FormData(frm[0]);
+					const formData = new FormData(frm);
 
 					fetch(this.getAttribute('href'), {
 						method: 'POST',
@@ -914,7 +914,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				});
 			})
 			.catch(function (err) {
-				console.log(err);
 				Halcyon.message('danger', err);
 			});
 		});
