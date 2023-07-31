@@ -2,10 +2,6 @@
 <config>
 	<fields name="params">
 		<fieldset name="basic">
-			<field name="prepare_content" type="radio" label="widget.custom::custom.prepare content" description="widget.custom::custom.prepare content description" default="0">
-				<option value="0">global.no</option>
-				<option value="1">global.yes</option>
-			</field>
 			<field name="css_class" type="text" label="widgets::widgets.field.class name" description="widgets::widgets.field.class name description" />
 		</fieldset>
 	</fields>
