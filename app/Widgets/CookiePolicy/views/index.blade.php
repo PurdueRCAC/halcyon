@@ -2,11 +2,11 @@
 <link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('widgets/cookiepolicy/css/cookiepolicy.css') }}" />
 @endpush
 
-<div class="cookiepolicy" id="{{ $id }}">
-	<div class="cookiepolicy-message">
+<div class="cookiepolicy fixed-bottom shadow-lg" id="{{ $id }}">
+	<div class="cookiepolicy-message text-center alert alert-warning m-0 p-4">
 		{!! $message !!}
 
-		<a class="cookiepolicy-close" href="{{ $uri }}" data-duration="{{ $duration }}" title="{{ trans('widget.cookiepolicy::cookiepolicy.close') }}">
+		<a class="btn btn-warning cookiepolicy-close" href="{{ $uri }}" data-target="{{ $id }}" data-duration="{{ $duration }}" title="{{ trans('widget.cookiepolicy::cookiepolicy.close') }}">
 			<span>{{ trans('widget.cookiepolicy::cookiepolicy.close') }}</span>
 		</a>
 	</div>

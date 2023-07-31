@@ -2,25 +2,28 @@
  * Cookie Policy scripts
  */
 
-jQuery(document).ready(function($){
+document.addEventListener('DOMContentLoaded', function () {
 
-	$('body').addClass('has-eprivacy-warning');
+	let bdy = document.querySelector('body');
+	bdy.classList.add('has-eprivacy-warning');
 
 	// Add an event to close the notice
-	$('.eprivacy-close').on('click', function(e) {
-		e.preventDefault();
+	document.querySelectorAll('.eprivacy-close').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		var id = $($(this).parent().parent()).attr('id'),
-			days = $(this).attr('data-duration');
+			let id = this.getAttribute('data-target'),
+				days = this.getAttribute('data-duration'),
+				date = new Date();
 
-		$($(this).parent().parent()).hide();
+			date.setTime(date.getTime()+(days*24*60*60*1000));
 
-		var date = new Date();
-		date.setTime(date.getTime()+(days*24*60*60*1000));
+			document.cookie = id + '=acknowledged; expires=' + date.toGMTString() + ';';
 
-		document.cookie = id + '=acknowledged; expires=' + date.toGMTString() + ';';
+			bdy.classList.remove('has-eprivacy-warning');
 
-		$('body').removeClass('has-eprivacy-warning');
+			document.getElementById(id).remove();
+		});
 	});
 
 });
