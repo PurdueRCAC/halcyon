@@ -1,69 +1,76 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/tagsinput/jquery.tagsinput.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ timestamped_asset('modules/core/vendor/tagsinput/jquery.tagsinput.js') }}"></script>
-<script src="{{ timestamped_asset('modules/groups/js/admin.js') }}"></script>
+<script src="{{ timestamped_asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js') }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-	var autocompleteUsers = function(url) {
-		return function(request, response) {
-			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)) + '&api_token=' + $('meta[name="api-token"]').attr('content'), function (data) {
-				response($.map(data.data, function (el) {
-					return {
-						label: el.name + ' (' + el.username + ')',
-						name: el.name,
-						id: el.id,
-					};
-				}));
-			});
-		};
-	};
+	var btnnew = document.getElementById('toolbar-plus');
+	if (btnnew) {
+		btnnew.setAttribute('data-toggle', 'modal');
+		btnnew.setAttribute('data-target', '#new-member');
 
-	var newsuser = $(".form-users");
-	if (newsuser.length) {
-		newsuser.tagsInput({
-			placeholder: 'Select user...',
-			importPattern: /([^:]+):(.+)/i,
-			'autocomplete': {
-				source: autocompleteUsers(newsuser.attr('data-uri')),
-				dataName: 'data',
-				height: 150,
-				delay: 100,
-				minLength: 1,
-				open: function (e, ui) {
-					var acData = $(this).data('ui-autocomplete');
-
-					acData
-						.menu
-						.element
-						.find('.ui-menu-item-wrapper')
-						.each(function () {
-							var me = $(this);
-							var regex = new RegExp('(' + acData.term + ')', "gi");
-							me.html(me.text().replace(regex, '<strong>$1</strong>'));
-						});
-				}
-			}
+		btnnew.addEventListener('click', function (e) {
+			e.preventDefault();
 		});
 	}
 
-	var dialog = $(".dialog").dialog({
-		autoOpen: false,
-		height: 'auto',
-		width: 500,
-		modal: true
-	});
+	var addmembers = document.getElementById("users");
+	if (addmembers) {
+		var addmembersts = new TomSelect(addmembers, {
+			plugins: {
+				remove_button: {
+					title: 'Remove this user',
+				}
+			},
+			valueField: 'id',
+			labelField: 'name',
+			searchField: ['name', 'username', 'email'],
+			hidePlaceholder: true,
+			persist: false,
+			create: true,
+			load: function (query, callback) {
+				var url = addmembers.getAttribute('data-api') + '?search=' + encodeURIComponent(query);
 
-	var plus = document.getElementById('toolbar-plus');
-	if (plus) {
-		plus.addEventListener('click', function(e){
-			e.preventDefault();
-
-			dialog.dialog("open");
+				fetch(url, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+					}
+				})
+				.then(response => response.json())
+				.then(json => {
+					for (var i = 0; i < json.data.length; i++) {
+						if (!json.data[i].id) {
+							json.data[i].id = json.data[i].username;
+						}
+					}
+					callback(json.data);
+				}).catch(function (err) {
+					callback();
+				});
+			},
+			render: {
+				option: function (item, escape) {
+					var name = item.name;
+					var label = name || item.username;
+					var caption = name ? item.username : null;
+					return '<div>' +
+						'<span class="label">' + escape(label) + '</span>' +
+						(caption ? '&nbsp;<span class="caption text-muted">(' + escape(caption) + ')</span>' : '') +
+						'</div>';
+				},
+				item: function (item) {
+					return `<div data-id="${escape(item.id)}">${item.name}&nbsp;(${item.username})</div>`;
+				}
+			}
+		});
+		addmembersts.on('item_add', function () {
+			document.getElementById('add-member').disabled = false;
 		});
 	}
 
@@ -78,9 +85,9 @@ document.addEventListener('DOMContentLoaded', function () {
 			var name = '';
 			var processed = 0;
 
-			var users = document.querySelector('.tagsinput').querySelectorAll('.tag');
+			var users = addmembers.value.split(',');
 			users.forEach(function (el) {
-				name = el.querySelector('.tag-text').innerHTML;
+				name = el;
 
 				fetch(url, {
 					method: 'POST',
@@ -377,31 +384,49 @@ app('pathway')
 		</tr>
 	</script>
 
-	<div class="dialog ui-front hide" title="{{ trans('groups::groups.add member') }}">
-		<h3 class="sr-only">{{ trans('groups::groups.add member') }}</h3>
-
-		<div class="form-group">
-			<label for="field-users">{{ trans('groups::groups.add users') }}</label>
-			<input type="text" name="users" id="users" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" value="" />
-		</div>
-
-		<div class="form-group">
-			<label for="field-membertype">{{ trans('groups::groups.member type') }}</label>
-			<select name="membertype" id="membertype" class="form-control">
-				@foreach ($types as $type)
-					@if ($type->id == 1 || $type->id == 2 || $type->id == 3)
-						<option value="{{ $type->id }}">{{ $type->name }}</option>
-					@endif
-				@endforeach
-			</select>
-		</div>
-
-		<div class="form-group text-center">
-			<button class="btn btn-primary" id="add-member" data-api="{{ route('api.groups.members.create') }}"><span class="icon-plus"></span> Add</button>
-		</div>
-	</div>
-
 	<input type="hidden" name="task" value="" autocomplete="off" />
 	<input type="hidden" name="boxchecked" value="0" />
 </form>
+
+<div class="modal modal-help" id="new-member" tabindex="-1" aria-labelledby="new-member-title" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+		<form id="form_{{ $group->id }}" action="{{ route('admin.groups.members.create', ['group' => $group->id]) }}" method="post" class="modal-content shadow-sm">
+			<div class="modal-header">
+				<div class="modal-title" id="new-member-title">Add users to {{ $group->name }}</div>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="field-users">{{ trans('groups::groups.add users') }}</label>
+					<input type="text" name="users" id="users" class="form-control form-users" data-api="{{ route('api.users.index') }}" data-group="{{ $group->id }}" placeholder="Username, email address, etc." value="" />
+				</div>
+
+				<div class="form-group">
+					<label for="field-membertype">{{ trans('groups::groups.member type') }}</label>
+					<select name="membertype" id="membertype" class="form-control">
+						@foreach ($types as $type)
+							@if ($type->id == 1 || $type->id == 2 || $type->id == 3)
+								<option value="{{ $type->id }}">{{ $type->name }}</option>
+							@endif
+						@endforeach
+					</select>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="row">
+					<div class="col-md-12 text-right">
+						<input type="button" disabled="disabled" id="add-member" class="btn btn-success"
+							data-group="{{ $group->id }}"
+							data-api="{{ route('api.groups.members.create') }}"
+							data-api-unixgroupusers="{{ route('api.unixgroups.members.create') }}"
+							data-api-queueusers="{{ route('api.queues.users.create') }}"
+							value="{{ trans('global.button.save') }}" />
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
 @stop
