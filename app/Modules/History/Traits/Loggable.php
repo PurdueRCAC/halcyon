@@ -10,16 +10,15 @@ trait Loggable
 	/**
 	 * boot method
 	 *
-	 * @param   string  $app
 	 * @param   string  $func
 	 * @param   string  $method
 	 * @param   int $status
 	 * @param   mixed   $payload
 	 * @param   string  $uri
 	 * @param   int $targetuserid
-	 * @return  null
+	 * @return  void
 	 */
-	protected function log($app, $func, $method = 'GET', $status = 200, $payload = array(), $uri = '', $targetuserid = 0, $groupid = 0)
+	protected function log($func, $method = 'GET', $status = 200, $payload = array(), $uri = '', $targetuserid = 0, $groupid = 0): void
 	{
 		$method = strtoupper($method);
 		$targetuserid = $targetuserid ?: 0;
@@ -48,12 +47,27 @@ trait Loggable
 			'transportmethod' => $method,
 			'servername'      => request()->getHttpHost(),
 			'uri'             => $uri,
-			'app'             => $app,
+			'app'             => $this->getLogApp(),
 			'payload'         => json_encode($payload),
 			'classname'       => $cls,
 			'classmethod'     => $fnc,
 			'targetuserid'    => $targetuserid,
 			'groupid'         => $groupid,
 		]);
+	}
+
+	/**
+	 * Get log app name
+	 *
+	 * @return string
+	 */
+	protected function getLogApp(): string
+	{
+		if (isset(static::$logApp))
+		{
+			return static::$logApp;
+		}
+
+		return 'web';
 	}
 }
