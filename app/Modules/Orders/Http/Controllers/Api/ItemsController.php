@@ -186,7 +186,7 @@ class ItemsController extends Controller
 
 		if ($filters['user'])
 		{
-			$query->where(function($where) use ($o)
+			$query->where(function($where) use ($o, $filters)
 				{
 					$where->where($o . '.userid', '=', $filters['user'])
 						->orWhere($o . '.submitteruserid', '=', $filters['user']);

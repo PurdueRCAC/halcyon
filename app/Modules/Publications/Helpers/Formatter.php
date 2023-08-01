@@ -78,7 +78,7 @@ class Formatter
 	/**
 	 * Function to set the template keys the formatter will use
 	 *
-	 * @param  array $template_keys
+	 * @param  array<string,string> $template_keys
 	 * @return void
 	 */
 	public static function setTemplateKeys($template_keys): void

@@ -743,7 +743,7 @@ class AccountsController extends Controller
 			$row->amount = $request->input('amount');
 
 			// Auto approve for orders less than 1000. Should not effect recurring orders.
-			if (config('orders.admin_user') && $submitter != config('orders.admin_user'))
+			if (config('orders.admin_user') && $row->order->submitteruserid != config('orders.admin_user'))
 			{
 				if ($row->amount > 5000 && $row->amount <= 100000)
 				{

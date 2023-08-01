@@ -22,6 +22,7 @@ use Carbon\Carbon;
  * @property int    $origorderitemid
  * @property int    $prevorderitemid
  * @property int    $quantity
+ * @property int    $price
  * @property int    $origunitprice
  * @property int    $recurringtimeperiodid
  * @property int    $timeperiodcount

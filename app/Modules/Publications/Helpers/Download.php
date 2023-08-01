@@ -52,10 +52,17 @@ class Download
 	 * @param   string  $format
 	 * @return  void
 	 */
-	public function __construct(Publication $reference=null, $format='Bibtex')
+	public function __construct(Publication $reference = null, $format = 'Bibtex')
 	{
-		$this->setFormat($format);
-		$this->setReference($reference);
+		if ($format)
+		{
+			$this->setFormat($format);
+		}
+
+		if ($reference)
+		{
+			$this->setReference($reference);
+		}
 	}
 
 	/**
@@ -157,7 +164,7 @@ class Download
 	 * @param   string  $format
 	 * @return  self
 	 */
-	public function setFormatter(Downloadable $formatter, $format=''): self
+	public function setFormatter(Downloadable $formatter, $format = ''): self
 	{
 		$format = ($format) ? $format : $this->_format;
 
@@ -172,7 +179,7 @@ class Download
 	 * @param   string  $format  Format to get
 	 * @return  Downloadable|null
 	 */
-	public function getFormatter($format='')
+	public function getFormatter($format = '')
 	{
 		$format = ($format) ? $format : $this->_format;
 
@@ -186,14 +193,11 @@ class Download
 	 * @return  string
 	 * @throws  Exception
 	 */
-	public function formatReference($reference=null): string
+	public function formatReference($reference = null): string
 	{
-		if (!$reference)
-		{
-			$reference = $this->getReference();
-		}
+		$reference = $reference ?: $this->getReference();
 
-		if (!$reference || (!is_array($reference) && !is_object($reference)))
+		if (!$reference)
 		{
 			return '';
 		}

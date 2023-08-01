@@ -28,7 +28,7 @@ class OrdersController extends Controller
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param  Request  $request
+	 * @param  StatefulRequest  $request
 	 * @return View|StreamedResponse
 	 */
 	public function index(StatefulRequest $request)
@@ -787,6 +787,7 @@ class OrdersController extends Controller
 		$parts = explode('.', $path);
 		$extension = end($parts);
 		$extension = strtolower($extension);
+		$headers = array();
 
 		/*$handle = fopen($path, 'r');
 

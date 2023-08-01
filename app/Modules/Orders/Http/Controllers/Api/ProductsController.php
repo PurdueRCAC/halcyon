@@ -370,7 +370,7 @@ class ProductsController extends Controller
 			}
 		}
 
-		$row->datetimecreated = Carbon::now()->toDateTimeString();
+		$row->datetimecreated = Carbon::now();
 
 		if (!$row->save())
 		{

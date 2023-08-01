@@ -3,7 +3,7 @@
 namespace App\Modules\Orders\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Orders\Models\Product;
@@ -69,7 +69,7 @@ class CartController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response|CartResource
+	 * @return JsonResponse|CartResource
 	 */
 	public function create(Request $request)
 	{
@@ -188,7 +188,7 @@ class CartController extends Controller
 	 * }
 	 * @param   int  $id
 	 * @param   Request $request
-	 * @return  Response|CartResource
+	 * @return  JsonResponse|CartResource
 	 */
 	public function update($id, Request $request)
 	{
