@@ -132,7 +132,6 @@ class Usage extends Model
 			->groupBy('id')
 			->groupBy('storagedirid')
 			->limit(1)
-			->get()
 			->first();
 
 		if (!$row)

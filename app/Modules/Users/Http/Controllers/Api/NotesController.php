@@ -90,6 +90,7 @@ class NotesController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
+			'user_id'   => 0,
 			// Paging
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
@@ -131,7 +132,7 @@ class NotesController extends Controller
 			}
 			else
 			{
-				$query->where(function ($where)
+				$query->where(function ($where) use ($filters)
 				{
 					$where->where('subject', 'like', '%' . $filters['search'] . '%')
 						->orWhere('body', 'like', '%' . $filters['search'] . '%');

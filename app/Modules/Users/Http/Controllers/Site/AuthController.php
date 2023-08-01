@@ -217,7 +217,7 @@ class AuthController extends Controller
 	 * @param  Request $request
 	 * @return RedirectResponse
 	 */
-	public function logout(Request $request)
+	public function logout(Request $request): RedirectResponse
 	{
 		Auth::logout();
 
@@ -230,7 +230,7 @@ class AuthController extends Controller
 	 * @param   string  $str
 	 * @return  bool
 	 **/
-	protected function isBase64($str)
+	protected function isBase64($str): bool
 	{
 		if (preg_match('/[^A-Za-z0-9\+\/\=]/', $str))
 		{
@@ -246,7 +246,7 @@ class AuthController extends Controller
 	 * @param   string  $str
 	 * @return  bool
 	 **/
-	protected function isInternal($str)
+	protected function isInternal($str): bool
 	{
 		return (stripos($str, request()->root()) !== false);
 	}

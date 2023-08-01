@@ -10,7 +10,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * The filters base class name.
      *
-     * @var array<string, array>
+     * @var array<string,array>
      */
     protected $middleware = [
         'App' => [
@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         //
     }
@@ -38,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->registerMiddleware($this->app['router']);
     }
@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
      * @param  Router $router
      * @return void
      */
-    public function registerMiddleware(Router $router)
+    public function registerMiddleware(Router $router): void
     {
         foreach ($this->middleware as $module => $middlewares)
         {

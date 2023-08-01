@@ -398,7 +398,13 @@ class StorageController extends Controller
 		}
 
 		$row = new StorageResource;
-		$row->fill($data);
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$row->$key = $request->input($key);
+			}
+		}
 
 		// Make sure name is sane
 		if (!preg_match("/^([a-zA-Z0-9]+\.?[\-_ ]*)*[a-zA-Z0-9]$/", $row->name))
@@ -606,8 +612,6 @@ class StorageController extends Controller
 	 */
 	public function update($id, Request $request)
 	{
-		$row = StorageResource::findOrFail($id);
-
 		$rules = [
 			'name'              => 'nullable|string|max:32',
 			'path'              => 'nullable|string|max:255',
@@ -629,7 +633,14 @@ class StorageController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
-		$row->fill($request->all());
+		$row = StorageResource::findOrFail($id);
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$row->$key = $request->input($key);
+			}
+		}
 
 		if ($request->has('parentresourceid'))
 		{

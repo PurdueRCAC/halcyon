@@ -101,7 +101,7 @@ class Resources
 
 				foreach ($storagebuckets as &$bucket)
 				{
-					if ($bucket['group']['id'] == $row->groupid)
+					if ($bucket['group'] && $bucket['group']->id == $row->groupid)
 					{
 						$bucket['loanedbytes'] = (int)$row->loanedbytes;
 						$bucket['totalbytes'] += (int)$row->loanedbytes;

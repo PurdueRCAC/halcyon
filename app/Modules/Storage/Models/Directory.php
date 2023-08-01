@@ -220,8 +220,13 @@ class Directory extends Model
 		$message = new Message;
 		$message->userid = $userid ?: (auth()->user() ? auth()->user()->id : 0);
 		$message->targetobjectid = $this->id;
-		$message->messagequeuetypeid = !is_null($typeid) ? $typeid : $this->storageResource->getquotatypeid;
-		$message->messagequeuetypeid = $message->messagequeuetypeid ?: $this->storageResource->createtypeid;
+		if (!$typeid && $this->storageResource)
+		{
+			$typeid = $this->storageResource->getquotatypeid
+				? $this->storageResource->getquotatypeid
+				: $this->storageResource->createtypeid;
+		}
+		$message->messagequeuetypeid = $typeid;
 		if (!$message->messagequeuetypeid)
 		{
 			// We need a type.
@@ -238,7 +243,6 @@ class Directory extends Model
 			->where('userid', '=', $message->userid)
 			->where('targetobjectid', '=', $message->targetobjectid)
 			->where('messagequeuetypeid', '=', $message->messagequeuetypeid)
-			//->where('datetimesubmitted', '=', $message->datetimesubmitted)
 			->whereNotCompleted()
 			->first();
 

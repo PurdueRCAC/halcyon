@@ -15,9 +15,9 @@ class Admin
 	/**
 	 * A cache for the available actions.
 	 *
-	 * @var  Fluent
+	 * @var  Fluent|null
 	 */
-	protected static $actions;
+	protected static $actions = null;
 
 	/**
 	 * Gets a list of the actions that can be performed.

@@ -28,28 +28,26 @@ class Listeners extends Select
 		// Initialise variables
 		$folder = (string)$this->element['folder'];
 
-		if (!empty($folder))
-		{
-			// Get list of listeners
-			$options = Listener::query()
-				->select('element AS value', 'name AS text')
-				->where('type', '=', 'listener')
-				->where('folder', '=', $folder)
-				->where('enabled', '=', '1')
-				->orderBy('ordering', 'asc')
-				->orderBy('name', 'asc')
-				->get();
-
-			foreach ($options as $item)
-			{
-				$item->registerLanguage();
-
-				$item->text = trans('plugin.' . $folder . '.' . $item->value . '::' . $item->value . '.widget name');
-			}
-		}
-		else
+		if (empty($folder))
 		{
 			abort(500, trans('global.error.listener directory empty'));
+		}
+
+		// Get list of listeners
+		$options = Listener::query()
+			->select('element AS value', 'name AS text')
+			->where('type', '=', 'listener')
+			->where('folder', '=', $folder)
+			->where('enabled', '=', '1')
+			->orderBy('ordering', 'asc')
+			->orderBy('name', 'asc')
+			->get();
+
+		foreach ($options as $item)
+		{
+			$item->registerLanguage();
+
+			$item->text = trans('plugin.' . $folder . '.' . $item->value . '::' . $item->value . '.widget name');
 		}
 
 		// Merge any additional options in the XML definition.

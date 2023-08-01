@@ -32,14 +32,14 @@ class Quota extends Mailable
 	/**
 	 * The Notification
 	 *
-	 * @var Order
+	 * @var Notification
 	 */
 	protected $notification;
 
 	/**
 	 * The Notification
 	 *
-	 * @var Order
+	 * @var Usage
 	 */
 	protected $latest;
 

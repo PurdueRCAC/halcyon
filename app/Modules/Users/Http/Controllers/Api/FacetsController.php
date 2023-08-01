@@ -114,12 +114,12 @@ class FacetsController extends Controller
 
 		if (!in_array($filters['order'], ['id', 'key', 'value', 'access', 'locked']))
 		{
-			$filters['order'] = Level::$orderBy;
+			$filters['order'] = Facet::$orderBy;
 		}
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
-			$filters['order_dir'] = Level::$orderDir;
+			$filters['order_dir'] = Facet::$orderDir;
 		}
 
 		$query = Facet::query();

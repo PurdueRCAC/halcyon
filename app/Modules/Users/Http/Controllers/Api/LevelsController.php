@@ -224,7 +224,11 @@ class LevelsController extends Controller
 
 		$row = new Level;
 		$row->fill($request->all());
-		$row->rules = array_map('intval', $row->rules);
+
+		if (is_array($row->rules))
+		{
+			$row->rules = array_map('intval', $row->rules);
+		}
 
 		if (!$row->save())
 		{

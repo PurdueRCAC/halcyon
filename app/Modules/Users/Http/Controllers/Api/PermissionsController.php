@@ -8,6 +8,8 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Halcyon\Access\Viewlevel as Level;
+use App\Halcyon\Access\Asset;
+use App\Halcyon\Models\Extension;
 
 /**
  * Permissions

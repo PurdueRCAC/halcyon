@@ -3,11 +3,12 @@
 namespace App\Modules\Listeners\Helpers;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 use App\Halcyon\Html\Builder\Select;
 use App\Modules\Listeners\Models\Listener;
 
 /**
- * Modules component helper.
+ * Select options helper.
  */
 abstract class Admin
 {
@@ -16,7 +17,7 @@ abstract class Admin
 	 *
 	 * @return  array
 	 */
-	public static function stateOptions()
+	public static function stateOptions(): array
 	{
 		// Build the active state filter options.
 		$options = array();
@@ -29,9 +30,9 @@ abstract class Admin
 	/**
 	 * Returns an array of standard published state filter options.
 	 *
-	 * @return  array
+	 * @return  Collection
 	 */
-	public static function folderOptions()
+	public static function folderOptions(): Collection
 	{
 		$options = Listener::query()
 			->select([DB::raw('DISTINCT(folder) AS value'), 'folder AS text'])

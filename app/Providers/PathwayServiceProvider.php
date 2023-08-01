@@ -14,7 +14,7 @@ class PathwayServiceProvider extends ServiceProvider
 	 *
 	 * @return  void
 	 */
-	public function register()
+	public function register(): void
 	{
 		$this->app->singleton('pathway', function ($app)
 		{
@@ -29,12 +29,17 @@ class PathwayServiceProvider extends ServiceProvider
 					$menus = $menu->getMenu();
 					$home  = $menu->getDefault();
 
-					if (is_object($home) && ($item->id != $home->id))
+					if ($home && $item->id != $home->id)
 					{
 						foreach ($item->tree as $menupath)
 						{
 							$url = '';
 							$link = $menu->getItem($menupath);
+
+							if (!$link)
+							{
+								continue;
+							}
 
 							switch ($link->type)
 							{
@@ -71,7 +76,6 @@ class PathwayServiceProvider extends ServiceProvider
 			}
 
 			return $pathway;
-			//return new Trail();
 		});
 	}
 }

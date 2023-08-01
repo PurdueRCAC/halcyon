@@ -2,7 +2,7 @@
 namespace App\Modules\Users\Helpers;
 
 use Illuminate\Support\Collection;
-use App\Halcyon\Facades\Html;
+use App\Halcyon\Html\Builder\Select;
 use App\Halcyon\Access\Gate;
 
 /**
@@ -46,7 +46,7 @@ class Debug
 	/**
 	 * Get a list of the actions for the module or code actions.
 	 *
-	 * @param   string  $module  The name of the module.
+	 * @param   string|null  $module  The name of the module.
 	 * @return  array<string,array>
 	 */
 	public static function getActions($module = null): array
@@ -133,14 +133,13 @@ class Debug
 	 */
 	static function getLevelsOptions(): array
 	{
-		// Build the filter options.
 		$options = array();
-		$options[] = Html::select('option', '1', trans('users::access.option.level module', ['level' => 1]));
-		$options[] = Html::select('option', '2', trans('users::access.option.level category', ['level' => 2]));
-		$options[] = Html::select('option', '3', trans('users::access.option.level deeper', ['level' => 3]));
-		$options[] = Html::select('option', '4', '4');
-		$options[] = Html::select('option', '5', '5');
-		$options[] = Html::select('option', '6', '6');
+		$options[] = Select::option('1', trans('users::access.option.level module', ['level' => 1]));
+		$options[] = Select::option('2', trans('users::access.option.level category', ['level' => 2]));
+		$options[] = Select::option('3', trans('users::access.option.level deeper', ['level' => 3]));
+		$options[] = Select::option('4', '4');
+		$options[] = Select::option('5', '5');
+		$options[] = Select::option('6', '6');
 
 		return $options;
 	}

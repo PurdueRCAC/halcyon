@@ -8,6 +8,15 @@ use App\Modules\Storage\Events\LoanCreated;
 
 /**
  * Storage model for a resource directory
+ *
+ * @property int    $id
+ * @property int    $resourceid
+ * @property int    $groupid
+ * @property Carbon|null $datetimestart
+ * @property Carbon|null $datetimestop
+ * @property int    $bytes
+ * @property int    $lendergroupid
+ * @property string $comment
  */
 class Loan extends Purchase
 {

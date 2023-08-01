@@ -27,17 +27,22 @@ class UsersController extends Controller
 	{
 		$user = auth()->user();
 
-		if (auth()->user()->can('manage users'))
+		if (!$user)
+		{
+			abort(404);
+		}
+
+		if ($user->can('manage users'))
 		{
 			if ($id = $request->input('u'))
 			{
 				if (is_numeric($id))
 				{
-					$user = User::findOrFail($id);
+					$user = User::findOrFail((int)$id);
 				}
 				else
 				{
-					$user = User::findByUsername($id);
+					$user = User::findByUsername((string)$id);
 
 					if ((!$user || !$user->id) && config('module.users.create_on_search'))
 					{

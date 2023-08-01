@@ -1,26 +1,23 @@
 <?php
 namespace App\Modules\Users\Events;
 
+use App\Modules\Users\Models\User;
+
 class UserSyncing
 {
 	/**
-	 * @var string
-	 */
-	public $uid;
-
-	/**
-	 * @var object|array
+	 * @var User
 	 */
 	public $user;
 
 	/**
 	 * Constructor
 	 *
-	 * @param  string  $uid
+	 * @param  User $user
 	 * @return void
 	 */
-	public function __construct($uid)
+	public function __construct(User $user)
 	{
-		$this->uid = $uid;
+		$this->user = $user;
 	}
 }

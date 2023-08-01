@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int    $id
  * @property string $title
  * @property int    $ordering
- * @property string $rules
+ * @property string|array<int,int> $rules JSON string converted to an array of integers
  */
 class Viewlevel extends Model
 {

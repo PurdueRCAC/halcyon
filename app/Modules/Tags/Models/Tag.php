@@ -132,6 +132,8 @@ class Tag extends Model
 	 */
 	public function setNameAttribute($value): void
 	{
+		$value = $value ?: '';
+
 		$this->attributes['name'] = $value;
 		$this->attributes['slug'] = $this->normalize($value);
 	}
@@ -367,12 +369,17 @@ class Tag extends Model
 			return true;
 		}
 
+		if (!$tagger)
+		{
+			$tagger = auth()->user() ? auth()->user()->id : 0;
+		}
+
 		// Create a new relationship
 		$to = new Tagged;
 		$to->taggable_type = (string) $scope;
 		$to->taggable_id   = (int) $scope_id;
 		$to->tag_id        = (int) $this->id;
-		$to->created_by    = $tagger ? $tagger : auth()->user()->id;
+		$to->created_by    = $tagger;
 
 		if (!$to->save())
 		{

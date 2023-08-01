@@ -147,8 +147,8 @@ class Notification extends Model
 	 */
 	public function getNextnotifyAttribute(): Carbon
 	{
-		$months  = $this->periods * $this->timeperiod->months;
-		$seconds = $this->periods * $this->timeperiod->unixtime;
+		$months  = $this->periods * ($this->timeperiod ? $this->timeperiod->months : 1);
+		$seconds = $this->periods * ($this->timeperiod ? $this->timeperiod->unixtime : 1);
 
 		if ($this->wasNotified())
 		{

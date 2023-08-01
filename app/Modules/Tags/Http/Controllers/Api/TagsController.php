@@ -431,7 +431,7 @@ class TagsController extends Controller
 		}
 
 		$data = $request->all();
-		$data['updated_by'] = auth()->user()->id;
+		$data['updated_by'] = auth()->user() ? auth()->user()->id : 0;
 
 		$row = Tag::findOrFail($id);
 		$row->update($data);

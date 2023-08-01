@@ -24,6 +24,7 @@ class TaggedController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
+			'tag_id'    => 0,
 			// Paging
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
@@ -56,9 +57,12 @@ class TaggedController extends Controller
 			$filters['order_dir'] = Tagged::$orderDir;
 		}
 
-		$tag = Tag::findOrFail($filters['tag_id']);
+		$query = Tagged::query();
 
-		$query = $tag->tagged();
+		if ($filters['tag_id'])
+		{
+			$query->where('tag_id', '=', $filters['tag_id']);
+		}
 
 		if ($filters['search'])
 		{

@@ -15,14 +15,14 @@ class Menu extends Fluent
 	/**
 	 * Array to hold the menu items
 	 *
-	 * @var  array
+	 * @var  array<int,Item>
 	 */
 	protected $_items = array();
 
 	/**
 	 * Identifier of the default menu item
 	 *
-	 * @var  int
+	 * @var  array<string,int>
 	 */
 	protected $_default = array();
 

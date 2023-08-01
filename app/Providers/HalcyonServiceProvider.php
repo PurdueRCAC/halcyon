@@ -2,13 +2,12 @@
 
 namespace App\Providers;
 
-//use App\Modules\Themes\Entities\ThemeManager;
-use App\Halcyon\Html\Builder;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Http\Request;
-use Adldap\Adldap;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Halcyon\Html\Builder;
+use Adldap\Adldap;
 
 class HalcyonServiceProvider extends ServiceProvider
 {
@@ -17,7 +16,7 @@ class HalcyonServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	public function register()
+	public function register(): void
 	{
 		$this->app->singleton('isAdmin', function ()
 		{
@@ -42,7 +41,7 @@ class HalcyonServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	public function boot()
+	public function boot(): void
 	{
 		JsonResource::withoutWrapping();
 
@@ -58,31 +57,38 @@ class HalcyonServiceProvider extends ServiceProvider
 	 * @param string $destinationPath
 	 * @return void
 	 */
-	public function publish($sourcePath, $destinationPath)
+	public function publish(string $sourcePath, string $destinationPath): void
 	{
-		if (!$this->app['files']->isDirectory($sourcePath))
+		if (!$this->app->has('files'))
+		{
+			return;
+		}
+
+		$fs = $this->app['files'];
+
+		if (!$fs->isDirectory($sourcePath))
 		{
 			throw new \InvalidArgumentException("Source path does not exist : {$sourcePath}");
 		}
 
-		if (!$this->app['files']->isDirectory($destinationPath))
+		if (!$fs->isDirectory($destinationPath))
 		{
-			$this->app['files']->makeDirectory($destinationPath, 0775, true);
+			$fs->makeDirectory($destinationPath, 0775, true);
 		}
 
-		foreach ($this->app['files']->allFiles($sourcePath) as $file)
+		foreach ($fs->allFiles($sourcePath) as $file)
 		{
 			$dest = str_replace($sourcePath, $destinationPath, $file);
 
-			if (!$this->app['files']->exists($dest)
-			 || $this->app['files']->lastModified($file) > $this->app['files']->lastModified($dest))
+			if (!$fs->exists($dest)
+			 || $fs->lastModified($file) > $fs->lastModified($dest))
 			{
-				if (!$this->app['files']->exists(dirname($dest)))
+				if (!$fs->exists(dirname($dest)))
 				{
-					$this->app['files']->makeDirectory(dirname($dest), 0775, true);
+					$fs->makeDirectory(dirname($dest), 0775, true);
 				}
 
-				$this->app['files']->copy($file, $dest);
+				$fs->copy($file, $dest);
 			}
 		}
 	}
@@ -92,11 +98,11 @@ class HalcyonServiceProvider extends ServiceProvider
 	 *
 	 * @return bool
 	 */
-	private function isAdmin()
+	private function isAdmin(): bool
 	{
 		$url = app(Request::class)->segment(1);
 
-		if ($url == $this->app['config']->get('app.admin-prefix', 'admin'))
+		if ($url == config('app.admin-prefix', 'admin'))
 		{
 			return true;
 		}

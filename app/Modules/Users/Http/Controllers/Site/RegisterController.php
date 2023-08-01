@@ -42,7 +42,7 @@ class RegisterController extends Controller
 	 * @param  Request $request
 	 * @return RedirectResponse
 	 */
-	public function store(Request $request)
+	public function store(Request $request): RedirectResponse
 	{
 		$rules = [
 			'name' => ['required', 'string', 'max:255'],
@@ -112,7 +112,7 @@ class RegisterController extends Controller
 	 * @param   string  $str
 	 * @return  bool
 	 **/
-	protected function isInternal($str)
+	protected function isInternal(string $str): bool
 	{
 		return (stripos($str, request()->root()) !== false);
 	}
