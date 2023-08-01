@@ -13,6 +13,45 @@ use App\Modules\History\Traits\Historable;
 
 /**
  * Model for a queue Quality of Service
+ *
+ * @property int $scheduler_id
+ * @property string $name
+ * @property string $description
+ * @property string $flags
+ * @property int $grace_time
+ * @property int $max_jobs_pa
+ * @property int $max_jobs_per_user
+ * @property int $max_jobs_accrue_pa
+ * @property int $max_jobs_accrue_pu
+ * @property int $min_prio_thresh
+ * @property int $max_submit_jobs_pa
+ * @property int $max_submit_jobs_per_user
+ * @property string $max_tres_pa
+ * @property string $max_tres_pj
+ * @property string $max_tres_pn
+ * @property string $max_tres_pu
+ * @property string $max_tres_mins_pj
+ * @property string $max_tres_run_mins_pa
+ * @property string $max_tres_run_mins_pu
+ * @property string $min_tres_pj
+ * @property int $max_wall_duration_per_job
+ * @property int $grp_jobs
+ * @property int $grp_jobs_accrue
+ * @property int $grp_submit_jobs
+ * @property string $grp_tres
+ * @property string $grp_tres_mins
+ * @property string $grp_tres_run_mins
+ * @property int $grp_wall
+ * @property string $preempt
+ * @property int $preempt_mode
+ * @property int $preempt_exempt_time
+ * @property int $priority
+ * @property float $usage_factor
+ * @property float $usage_thres
+ * @property float $limit_factor
+ * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimeremoved
+ * @property Carbon|null $datetimeedited
  */
 class Qos extends Model
 {

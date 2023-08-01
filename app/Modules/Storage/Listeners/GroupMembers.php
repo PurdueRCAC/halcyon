@@ -2,8 +2,8 @@
 namespace App\Modules\Storage\Listeners;
 
 use Illuminate\Events\Dispatcher;
-use App\Modules\Groups\Events\GroupMemberCreated;
-use App\Modules\Groups\Events\GroupMemberDeleted;
+use App\Modules\Groups\Events\MemberCreated as GroupMemberCreated;
+use App\Modules\Groups\Events\MemberDeleted as GroupMemberDeleted;
 use App\Modules\Storage\Models\Directory;
 use App\Modules\Storage\Models\Notification;
 

@@ -103,11 +103,13 @@ class StorageController extends Controller
 	 */
 	public function create(): View
 	{
-		$asset = new StorageResource;
+		$row = new StorageResource;
 
 		$resources = (new Asset)->tree();
 
-		$messagetypes = MessageType::query()->orderBy('name', 'asc')->get();
+		$messagetypes = MessageType::query()
+			->orderBy('name', 'asc')
+			->get();
 
 		if ($fields = app('request')->old('fields'))
 		{
@@ -115,7 +117,7 @@ class StorageController extends Controller
 		}
 
 		return view('storage::admin.storage.edit', [
-			'row'   => $asset,
+			'row'   => $row,
 			'resources' => $resources,
 			'messagetypes' => $messagetypes,
 		]);
@@ -129,11 +131,13 @@ class StorageController extends Controller
 	 */
 	public function edit($id): View
 	{
-		$asset = StorageResource::find($id);
+		$row = StorageResource::find($id);
 
 		$resources = (new Asset)->tree();
 
-		$messagetypes = MessageType::query()->orderBy('name', 'asc')->get();
+		$messagetypes = MessageType::query()
+			->orderBy('name', 'asc')
+			->get();
 
 		if ($fields = app('request')->old('fields'))
 		{
@@ -141,7 +145,7 @@ class StorageController extends Controller
 		}
 
 		return view('storage::admin.storage.edit', [
-			'row'   => $asset,
+			'row'   => $row,
 			'resources' => $resources,
 			'messagetypes' => $messagetypes,
 		]);

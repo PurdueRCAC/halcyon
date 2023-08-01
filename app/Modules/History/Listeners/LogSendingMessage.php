@@ -21,8 +21,8 @@ class LogSendingMessage
 		$headers = $event->message->getHeaders();
 
 		$classname = 'LogSendingMessage';
-		$targetuserid = -2;
-		$targetobjectid = -2;
+		$targetuserid = 0;
+		$targetobjectid = 0;
 		$objectid = '';
 
 		if ($headers->has('x-command'))

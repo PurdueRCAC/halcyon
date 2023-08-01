@@ -12,6 +12,7 @@ use Illuminate\Support\Collection;
 use App\Modules\Storage\Http\Resources\UsageResource;
 use App\Modules\Storage\Models\Usage;
 use App\Modules\Storage\Models\Directory;
+use App\Modules\Storage\Models\StorageResource;
 use App\Modules\Resources\Models\Asset;
 use Carbon\Carbon;
 
@@ -660,12 +661,14 @@ class UsageController extends Controller
 				}
 			}
 
+			$user = User::findByUsername($username);
+
 			$directory = Directory::query()
 				->where('userid', '=', $user->id)
 				->where('storageresourceid', '=', $storage->id)
-				->get();
+				->first();
 
-			if (!$row->directory)
+			if (!$directory)
 			{
 				//return response()->json(['message' => trans('Invalid storagedirid specified')], 409);
 				$messages[] = trans('Invalid storage/resource/user specified');

@@ -41,7 +41,7 @@ class CopyCommand extends Command
 
 		if (!$asset || !$asset->id)
 		{
-			$this->danger('Failed to find resource entry for ID #' . $id);
+			$this->error('Failed to find resource entry for ID #' . $id);
 			return Command::FAILURE;
 		}
 

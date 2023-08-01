@@ -1118,7 +1118,6 @@ class Queue extends Model
 	/**
 	 * Delete entry and associated data
 	 *
-	 * @param   array  $options
 	 * @return  bool
 	 */
 	public function delete(): bool

@@ -2,6 +2,7 @@
 
 namespace App\Modules\History\Traits;
 
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\History\Models\History;
 
@@ -70,7 +71,7 @@ trait Historable
 	/**
 	 * Model has history
 	 *
-	 * @return  object
+	 * @return  MorphMany
 	 */
 	public function history()
 	{

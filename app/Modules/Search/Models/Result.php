@@ -6,14 +6,6 @@ use Carbon\Carbon;
 
 /**
  * Model class for a search result
- *
- * @property string $category
- * @property int    $weight
- * @property string $title
- * @property string $text
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property string $route
  */
 class Result
 {
@@ -55,19 +47,27 @@ class Result
 	/**
 	 * Created
 	 *
-	 * @var  string
+	 * @var  Carbon|null
 	 */
 	public $created_at;
 
 	/**
 	 * Updated
 	 *
-	 * @var  string
+	 * @var  Carbon|null
 	 */
 	public $updated_at;
 
 	/**
 	 * Constructor
+	 *
+	 * @param string $category
+	 * @param int $weight
+	 * @param string $title
+	 * @param string $text
+	 * @param string $route
+	 * @param Carbon|null $created_at
+	 * @param Carbon|null $updated_at
 	 */
 	public function __construct(string $category, int $weight, string $title, string $text, string $route, $created_at = null, $updated_at = null)
 	{
