@@ -3,6 +3,7 @@
 namespace App\Modules\Orders\Helpers;
 
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Modules\Orders\Models\Order;
 
 /**
  * Helper for exporting records to a file
@@ -12,7 +13,7 @@ class Export
 	/**
 	 * Get the formatted number.
 	 *
-	 * @param   array $rows
+	 * @param   array<int,Order> $rows
 	 * @param   null|string $export accounts|items
 	 * @return  StreamedResponse
 	 */

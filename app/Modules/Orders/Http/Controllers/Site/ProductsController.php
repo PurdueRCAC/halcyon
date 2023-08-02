@@ -3,7 +3,7 @@
 namespace App\Modules\Orders\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -301,7 +301,7 @@ class ProductsController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -339,16 +339,17 @@ class ProductsController extends Controller
 			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
-		return $this->cancel()->withSuccess(trans('global.messages.item updated'));
+		return $this->cancel()->with('success', trans('global.messages.item updated'));
 	}
 
 	/**
 	 * Remove the specified resource from storage.
 	 *
+	 * @param   Request $request
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
-	public function delete($id)
+	public function delete(Request $request, $id)
 	{
 		// Incoming
 		$ids = $request->input('id', array());
@@ -382,7 +383,7 @@ class ProductsController extends Controller
 	/**
 	 * Return to default page
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{

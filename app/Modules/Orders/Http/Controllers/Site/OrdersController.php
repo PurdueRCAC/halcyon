@@ -3,7 +3,7 @@
 namespace App\Modules\Orders\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
@@ -75,7 +75,7 @@ class OrdersController extends Controller
 			$filters['order_dir'] = Order::$orderDir;
 		}
 
-		if (!auth()->user()->can('manage orders'))
+		if (auth()->user() && !auth()->user()->can('manage orders'))
 		{
 			$filters['userid'] = auth()->user()->id;
 		}
@@ -470,13 +470,16 @@ class OrdersController extends Controller
 			->whereNull($o . '.datetimeremoved')
 			->whereNull($p . '.datetimeremoved');
 
-		if (!auth()->user()->can('manage orders'))
+		if (auth()->user())
 		{
-			$query->where(function($where) use ($o)
+			if (!auth()->user()->can('manage orders'))
 			{
-				$where->where($o . '.userid', '=', auth()->user()->id)
-					->orWhere($o . '.submitteruserid', '=', auth()->user()->id);
-			});
+				$query->where(function($where) use ($o)
+				{
+					$where->where($o . '.userid', '=', auth()->user()->id)
+						->orWhere($o . '.submitteruserid', '=', auth()->user()->id);
+				});
+			}
 		}
 
 		if ($filters['search'])
@@ -638,7 +641,7 @@ class OrdersController extends Controller
 	 * Display the data being imported
 	 * 
 	 * @param  Request $request
-	 * @return Response|View
+	 * @return RedirectResponse|View
 	 */
 	public function import(Request $request)
 	{
@@ -683,7 +686,7 @@ class OrdersController extends Controller
 	 * Process the imported data
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function process(Request $request)
 	{
@@ -780,7 +783,7 @@ class OrdersController extends Controller
 	 * Read the data from the spreadsheet
 	 * 
 	 * @param  string  $path
-	 * @return object
+	 * @return Fluent
 	 */
 	private function getSpreadsheetData($path)
 	{
@@ -788,6 +791,7 @@ class OrdersController extends Controller
 		$extension = end($parts);
 		$extension = strtolower($extension);
 		$headers = array();
+		$data = array();
 
 		/*$handle = fopen($path, 'r');
 

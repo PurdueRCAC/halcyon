@@ -28,6 +28,8 @@ use stdClass;
  * @property int    $groupid
  * @property int    $targetuserid
  * @property int    $targetobjectid
+ *
+ * @property string $summary Dynamically generated human-readable text
  */
 class Log extends Model
 {

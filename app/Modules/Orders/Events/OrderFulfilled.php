@@ -28,9 +28,7 @@ class OrderFulfilled implements ShouldBroadcast
 	}
 
 	/**
-	 * Get the channels the event should broadcast on.
-	 *
-	 * @return Channel|array
+	 * @inheritdoc
 	 */
 	public function broadcastOn()
 	{

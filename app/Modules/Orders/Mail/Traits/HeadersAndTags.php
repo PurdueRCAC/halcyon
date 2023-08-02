@@ -17,7 +17,7 @@ trait HeadersAndTags
 	/**
 	 * List of headers to apply
 	 *
-	 * @var array<string,string>
+	 * @var array<string,int|string>.
 	 */
 	protected $mailHeaders = array();
 
@@ -31,7 +31,7 @@ trait HeadersAndTags
 	/**
 	 * List of metadata
 	 *
-	 * @var array<int,string>
+	 * @var array<int|string,int|string>
 	 */
 	protected $mailMetadata = array();
 

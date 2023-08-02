@@ -38,7 +38,6 @@ class Registered extends Mailable
 	/**
 	 * Create a new message instance.
 	 *
-	 * @param  Article  $article
 	 * @param  Association $association
 	 * @return void
 	 */

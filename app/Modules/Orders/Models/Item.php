@@ -26,9 +26,9 @@ use Carbon\Carbon;
  * @property int    $origunitprice
  * @property int    $recurringtimeperiodid
  * @property int    $timeperiodcount
- * @property Carbon|null $datetimecreated
- * @property Carbon|null $datetimeremoved
- * @property Carbon|null $datetimefulfilled
+ * @property Carbon|string|null $datetimecreated
+ * @property Carbon|string|null $datetimeremoved
+ * @property Carbon|string|null $datetimefulfilled
  */
 class Item extends Model
 {

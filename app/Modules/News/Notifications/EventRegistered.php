@@ -70,7 +70,8 @@ class EventRegistered extends Notification
 					->get();
 
 				$ids = array();
-				$allqueues = array();
+				//$allqueues = array();
+				$groups = array();
 				foreach ($memberships as $membership)
 				{
 					$group = $membership->group;
@@ -93,7 +94,8 @@ class EventRegistered extends Notification
 
 						$queue->status = 'member';
 
-						$allqueues[] = $queue;
+						//$allqueues[] = $queue;
+						$groups[] = $group->name . ' - ' . $queue->name . ($queue->resource ? ' (' . $queue->resource->name . ')' : '');
 					}
 				}
 
@@ -136,16 +138,17 @@ class EventRegistered extends Notification
 						$queue->status = 'member';
 					}
 
-					$allqueues[] = $queue;
-				}
-
-				$groups = array();
-				foreach ($allqueues as $queue)
-				{
+					//$allqueues[] = $queue;
 					$groups[] = $group->name . ' - ' . $queue->name . ($queue->resource ? ' (' . $queue->resource->name . ')' : '');
 				}
 
-				/*$attachment
+				/*$groups = array();
+				foreach ($allqueues as $queue)
+				{
+					$groups[] = $queue->group->name . ' - ' . $queue->name . ($queue->resource ? ' (' . $queue->resource->name . ')' : '');
+				}
+
+				$attachment
 					->title($event->headline, route('site.news.show', ['id' => $event->id]))
 					->author($user->name . ' (' . $user->username . ')', route('site.users.account', ['u' => $user->id]))
 					->content($assoc->comment)

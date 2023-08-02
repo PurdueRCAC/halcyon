@@ -20,12 +20,12 @@ use Carbon\Carbon;
  * @property int    $amount
  * @property int    $approveruserid
  * @property int    $paymentdocid
- * @property Carbon|null $datetimecreated
- * @property Carbon|null $datetimeremoved
- * @property Carbon|null $datetimeapproved
- * @property Carbon|null $datetimedenied
- * @property Carbon|null $datetimepaid
- * @property Carbon|null $datetimepaymentdoc
+ * @property Carbon|string|null $datetimecreated
+ * @property Carbon|string|null $datetimeremoved
+ * @property Carbon|string|null $datetimeapproved
+ * @property Carbon|string|null $datetimedenied
+ * @property Carbon|string|null $datetimepaid
+ * @property Carbon|string|null $datetimepaymentdoc
  * @property int    $notice
  * @property string $purchaseio
  * @property string $purchasewbse

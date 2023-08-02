@@ -30,6 +30,7 @@ use Carbon\Carbon;
  * @property string $chapter
  * @property string $issuetitle
  * @property string $journal
+ * @property string $issue
  * @property string $volume
  * @property string $number
  * @property string $pages

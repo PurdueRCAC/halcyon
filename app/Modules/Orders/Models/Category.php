@@ -14,8 +14,8 @@ use App\Modules\History\Traits\Historable;
  * @property int    $parentordercategoryid
  * @property string $name
  * @property string $description
- * @property Carbon|null $datetimecreated
- * @property Carbon|null $datetimeremoved
+ * @property Carbon|string|null $datetimecreated
+ * @property Carbon|string|null $datetimeremoved
  * @property int    $sequence
  */
 class Category extends Model

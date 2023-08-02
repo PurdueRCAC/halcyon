@@ -68,7 +68,7 @@ class EventClaimed extends Notification
 
 		$msg
 			->content($event->datetimenews->format('g:ia') . ' - ' . $event->datetimenewsend->format('g:ia T'))
-			->attachment(function ($attachment) use ($notifiable, $event, $claim)
+			->attachment(function ($attachment) use ($event, $claim)
 			{
 				$user = null;
 

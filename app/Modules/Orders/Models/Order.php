@@ -21,8 +21,8 @@ use Carbon\Carbon;
  * @property int    $userid
  * @property int    $submitteruserid
  * @property int    $groupid
- * @property Carbon|null $datetimecreated
- * @property Carbon|null $datetimeremoved
+ * @property Carbon|string|null $datetimecreated
+ * @property Carbon|string|null $datetimeremoved
  * @property string $usernotes
  * @property string $staffnotes
  * @property int    $notice

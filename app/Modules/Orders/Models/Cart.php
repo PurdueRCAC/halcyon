@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $identifier
  * @property string $instance
  * @property string $content
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
+ * @property Carbon|string|null $created_at
+ * @property Carbon|string|null $updated_at
  */
 class Cart extends Model
 {

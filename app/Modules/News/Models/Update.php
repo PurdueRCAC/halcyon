@@ -174,7 +174,7 @@ class Update extends Model
 	 */
 	public function toMarkdown()
 	{
-		if (!$this->markdown)
+		if (is_null($this->markdown))
 		{
 			event($event = new UpdatePrepareContent($this->body));
 
@@ -200,7 +200,7 @@ class Update extends Model
 
 			$text = $this->putbackPreformattedText($text);
 
-			$this->markdown = $text;
+			$this->markdown = $text ? $text : '';
 		}
 
 		return $this->markdown;
@@ -213,7 +213,7 @@ class Update extends Model
 	 */
 	public function toHtml()
 	{
-		if (!$this->html)
+		if (is_null($this->html))
 		{
 			$text = $this->toMarkdown();
 
@@ -232,6 +232,7 @@ class Update extends Model
 				->thenReturn();
 
 			$this->html = $data['content'];
+			$this->html = $this->html ? $this->html : '';
 		}
 
 		return $this->html;

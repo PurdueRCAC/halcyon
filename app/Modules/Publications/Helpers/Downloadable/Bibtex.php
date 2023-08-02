@@ -27,20 +27,22 @@ class Bibtex extends Downloadable
 	/**
 	 * Format the file
 	 *
-	 * @param      Publication $row Record to format
-	 * @return     string
+	 * @param  Publication $row Record to format
+	 * @return string
 	 */
 	public function format(Publication $row): string
 	{
 		$addarray = array();
 
-		$addarray['type']    = $row->type->name;
-		$addarray['title']   = $row->title;
-		$addarray['address'] = $row->address;
+		if ($row->type)
+		{
+			$addarray['type'] = $row->type->name;
+		}
+		$addarray['title']    = $row->title;
+		$addarray['address']  = $row->address;
+		$addarray['author']   = $row->authorList;
 
-		$addarray['author'] = $row->authorList;
-
-		if (!$row->cite)
+		if (!empty($addarray['author']))
 		{
 			$author = $addarray['author'][0];
 			$row->cite  = strtolower($author['last']);
@@ -54,13 +56,17 @@ class Bibtex extends Downloadable
 		$addarray['chapter']      = $row->chapter;
 		$addarray['edition']      = $row->edition;
 		$addarray['editor']       = $row->editor;
-		$addarray['eprint']       = $row->eprint;
-		$addarray['howpublished'] = $row->howpublished;
+		//$addarray['eprint']       = $row->eprint;
+		//$addarray['howpublished'] = $row->howpublished;
 		$addarray['institution']  = $row->institution;
 		$addarray['journal']      = $row->journal;
-		$addarray['key']          = $row->key;
-		$addarray['location']     = $row->location;
-		$addarray['month']        = $row->month;
+		//$addarray['key']          = $row->key;
+		//$addarray['location']     = $row->location;
+		if ($row->published_at)
+		{
+			$addarray['year']         = $row->published_at->format('Y');
+			$addarray['month']    = $row->published_at->format('M');
+		}
 		$addarray['note']         = $row->note;
 		$addarray['number']       = $row->number;
 		$addarray['organization'] = $row->organization;
@@ -70,7 +76,6 @@ class Bibtex extends Downloadable
 		$addarray['school']       = $row->school;
 		$addarray['url']          = $row->url;
 		$addarray['volume']       = $row->volume;
-		$addarray['year']         = $row->published_at->format('Y');
 		if ($row->journal)
 		{
 			$addarray['issn']     = $row->isbn;
@@ -83,11 +88,11 @@ class Bibtex extends Downloadable
 
 		/*$addarray['language']         = $row->language;
 		$addarray['accession_number'] = $row->accession_number;
-		$addarray['short_title']      = html_entity_decode($row->short_title);*/
+		$addarray['short_title']      = html_entity_decode($row->short_title);
 		$addarray['author_address']   = $row->author_address;
-		//$addarray['keywords']         = str_replace("\r\n", ', ', $row->keywords);
+		$addarray['keywords']         = str_replace("\r\n", ', ', $row->keywords);
 		$addarray['abstract']         = $row->abstract;
-		/*$addarray['call_number']      = $row->call_number;
+		$addarray['call_number']      = $row->call_number;
 		$addarray['label']            = $row->label;
 		$addarray['research_notes']   = $row->research_notes;*/
 

@@ -126,9 +126,9 @@ class Endnote extends Downloadable
 			$doc .= "%7 " . trim($row->edition) . "\r\n";
 		}
 
-		if ($row->month)
+		if ($row->published_at)
 		{
-			$doc .= "%8 " . trim($row->month) . "\r\n";
+			$doc .= "%8 " . trim($row->published_at->format('M')) . "\r\n";
 		}
 
 		if ($row->isbn)
@@ -153,7 +153,7 @@ class Endnote extends Downloadable
 			$rn = html_entity_decode($row->research_notes);
 			$rn = (!preg_match('!\S!u', $rn)) ? mb_convert_encoding($rn, 'UTF-8', 'ISO-8859-1') : $rn;
 			$doc .= "%< " . $rn . "\r\n";
-		}*/
+		}
 
 		if ($row->abstract)
 		{
@@ -161,34 +161,40 @@ class Endnote extends Downloadable
 			$a = (!preg_match('!\S!u', $a)) ? mb_convert_encoding($a, 'UTF-8', 'ISO-8859-1') : $a;
 			$doc .= "%X " . $a . "\r\n";
 		}
-		/*if ($row->label)
+
+		if ($row->label)
 		{
 			$l = html_entity_decode($row->label);
 			$l = (!preg_match('!\S!u', $l)) ? mb_convert_encoding($l, 'UTF-8', 'ISO-8859-1') : $l;
 			$doc .= "%F " . $label . "\r\n";
 		}
+
 		if ($row->language)
 		{
 			$lan = html_entity_decode($row->language);
 			$lan = (!preg_match('!\S!u', $lan)) ? mb_convert_encoding($lan, 'UTF-8', 'ISO-8859-1') : $lan;
 			$doc .= "%G " . $lan . "\r\n";
 		}
+
 		if ($row->author_address)
 		{
 			$aa = html_entity_decode($row->author_address);
 			$aa = (!preg_match('!\S!u', $aa)) ? mb_convert_encoding($aa, 'UTF-8', 'ISO-8859-1') : $aa;
 			$doc .= "%+ " . $aa . "\r\n";
 		}
+
 		if ($row->accession_number)
 		{
 			$an = html_entity_decode($row->accession_number);
 			$an = (!preg_match('!\S!u', $an)) ? mb_convert_encoding($an, 'UTF-8', 'ISO-8859-1') : $an;
 			$doc .= "%M " . trim($an) . "\r\n";
 		}
+
 		if ($row->call_number)
 		{
 			$doc .= "%L " . trim($row->call_number) . "\r\n";
 		}
+
 		if ($row->short_title)
 		{
 			$st = html_entity_decode($row->short_title);

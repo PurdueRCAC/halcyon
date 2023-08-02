@@ -7,7 +7,10 @@ use Illuminate\Console\Scheduling\Schedule;
 
 class ScheduleServiceProvider extends ServiceProvider
 {
-	public function boot()
+	/**
+	 * Set up scheduled services
+	 */
+	public function boot(): void
 	{
 		$this->app->booted(function ()
 		{

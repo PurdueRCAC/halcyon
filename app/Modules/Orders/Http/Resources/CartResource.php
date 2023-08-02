@@ -10,7 +10,7 @@ class CartResource extends JsonResource
 	 * Transform the resource collection into an array.
 	 *
 	 * @param   \Illuminate\Http\Request  $request
-	 * @return  array<string,mixed>
+	 * @return  array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
 	 */
 	public function toArray($request)
 	{
@@ -18,10 +18,10 @@ class CartResource extends JsonResource
 		//$data['api'] = route('api.orders.cart.read', ['id' => $this->rowId]);
 
 		$data = array();
-		$data['data'] = array_values($this->content()->sortBy('name')->toArray());
-		$data['tax'] = $this->tax();
-		$data['subtotal'] = $this->subtotal();
-		$data['total'] = $this->total();
+		$data['data'] = array_values($this->resource->content()->sortBy('name')->toArray());
+		$data['tax'] = $this->resource->tax();
+		$data['subtotal'] = $this->resource->subtotal();
+		$data['total'] = $this->resource->total();
 
 		return $data;
 	}

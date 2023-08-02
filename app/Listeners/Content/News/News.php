@@ -61,7 +61,7 @@ class News
 	 */
 	private function matchNews($match)
 	{
-		$title = trans('site.news.news story number', ['id' => $match[3]]);
+		$title = trans('site.news.news story number', ['number' => $match[3]]);
 
 		$article = Article::find($match[3]);
 

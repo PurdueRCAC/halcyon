@@ -57,7 +57,7 @@ class ArticleCreated extends Notification
 			->success()
 			->from(config('app.name'))
 			->content('News article *created* at ' . $article->datetimecreated->format('l, F j, Y g:ia') . '.')
-			->attachment(function ($attachment) use ($notifiable, $article)
+			->attachment(function ($attachment) use ($article)
 			{
 				$user = $article->creator;
 
@@ -66,9 +66,9 @@ class ArticleCreated extends Notification
 				$content = Str::limit($content, 150);
 
 				$resources = $article->resourceList()->get();
+				$resourceArray = array();
 				if (count($resources) > 0)
 				{
-					$resourceArray = array();
 					foreach ($resources as $resource)
 					{
 						$resourceArray[] = $resource->name;

@@ -101,9 +101,9 @@ class APA implements Format
 			$html .= $publication->editor;
 		}
 
-		if ($publication->year)
+		if ($publication->published_at)
 		{
-			$html .= ' (' . $publication->year . ')';
+			$html .= ' (' . $publication->published_at->format('Y') . ')';
 		}
 
 		if ($publication->title)
@@ -202,15 +202,15 @@ class APA implements Format
 			$html  = self::grammarCheck($html, ',');
 			$html .= ' ' . stripslashes($publication->school);
 		}
-		if ($publication->location)
+		/*if ($publication->location)
 		{
 			$html  = self::grammarCheck($html, ',');
 			$html .= ' ' . stripslashes($publication->location);
-		}
-		if ($publication->month)
+		}*/
+		if ($publication->published_at)
 		{
 			$html  = self::grammarCheck($html, ',');
-			$html .= ' ' . $publication->month;
+			$html .= ' ' . $publication->published_at->format('M');
 		}
 		if ($publication->isbn)
 		{

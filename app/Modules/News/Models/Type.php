@@ -297,7 +297,7 @@ class Type extends Model
 	 *
 	 * @param  string $order Field to sort by
 	 * @param  string $dir   Direction to sort
-	 * @return array<int,array>
+	 * @return array<int,Type>
 	 */
 	public static function tree(string $order = 'ordering', string $dir = 'asc'): array
 	{
@@ -342,7 +342,7 @@ class Type extends Model
 	 * @param   int     $level     Indention level
 	 * @param   int     $type      Indention type
 	 * @param   string  $prfx
-	 * @return  array
+	 * @return  array<int,Type>
 	 */
 	protected static function treeRecurse(int $id, array $list, array $children, int $maxlevel=9999, int $level=0, int $type=1, string $prfx = ''): array
 	{

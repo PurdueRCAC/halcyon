@@ -325,7 +325,7 @@ class AccountsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Response|JsonResource
+	 * @return JsonResponse|JsonResource
 	 */
 	public function create(Request $request)
 	{

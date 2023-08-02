@@ -54,90 +54,109 @@ class BibTex
 	/**
 	 * Array with the BibTex Data
 	 *
-	 * @var    array
+	 * @var    array<int,array>
 	 */
-	public $data;
+	public $data = array();
 
 	/**
 	 * String with the BibTex content
 	 *
 	 * @var    string
 	 */
-	public $content;
+	public $content = '';
 
 	/**
 	 * Array with possible Delimiters for the entries
 	 *
-	 * @var    array
+	 * @var    array<string,string>
 	 */
-	private $_delimiters;
+	private $_delimiters = array(
+		'"' => '"',
+		'{' => '}'
+	);
 
 	/**
 	 * Array to store warnings
 	 *
-	 * @var    array
+	 * @var    array<int,array>
 	 */
-	public $warnings;
+	public $warnings = array();
 
 	/**
 	 * Run-time configuration options
 	 *
-	 * @var    array
+	 * @var    array<string,mixed>
 	 */
-	private $_options;
+	private $_options = array(
+		'stripDelimiter'    => true,
+		'validate'          => true,
+		'unwrap'            => false,
+		'wordWrapWidth'     => false,
+		'wordWrapBreak'     => "\n",
+		'wordWrapCut'       => 0,
+		'removeCurlyBraces' => true,
+		'extractAuthors'    => true,
+	);
 
 	/**
 	 * RTF Format String
 	 *
 	 * @var    string
 	 */
-	public $rtfstring;
+	public $rtfstring = 'AUTHORS, "{\b TITLE}", {\i JOURNAL}, YEAR';
 
 	/**
 	 * HTML Format String
 	 *
 	 * @var    string
 	 */
-	public $htmlstring;
+	public $htmlstring = '<tr><td>AUTHORS, "<strong>TITLE</strong>", <em>JOURNAL</em>, VOLUME, PAGES, PUBLISHER, YEAR</td></tr>';
 
 	/**
 	 * Array with the "allowed" types
 	 *
-	 * @var    array
+	 * @var    array<int,string>
 	 */
-	public $allowedTypes;
+	public $allowedTypes = array(
+		'article',
+		'book',
+		'booklet',
+		'conference',
+		'inbook',
+		'incollection',
+		'inproceedings',
+		'manual',
+		'masterthesis',
+		'misc',
+		'phdthesis',
+		'proceedings',
+		'techreport',
+		'unpublished',
+		'xarchive',
+		'magazine',
+		'patent appl',
+		'book',
+		'chapter',
+		'notes',
+		'letter',
+		'manuscript'
+	);
 
 	/**
 	 * Author Format Strings
 	 *
 	 * @var    string
 	 */
-	public $authorstring;
+	public $authorstring = 'VON LAST JR, FIRST';
 
 	/**
 	 * Constructor
 	 *
-	 * @param  array  $options
+	 * @param  array<string,mixed>  $options
 	 * @return void
 	 */
 	public function __construct($options = array())
 	{
-		$this->_delimiters     = array('"' => '"', '{' => '}');
-		$this->data            = array();
-		$this->content         = '';
-		//$this->_stripDelimiter = $stripDel;
-		//$this->_validate       = $val;
-		$this->warnings        = array();
-		$this->_options        = array(
-			'stripDelimiter'    => true,
-			'validate'          => true,
-			'unwrap'            => false,
-			'wordWrapWidth'     => false,
-			'wordWrapBreak'     => "\n",
-			'wordWrapCut'       => 0,
-			'removeCurlyBraces' => true,
-			'extractAuthors'    => true,
-		);
 		foreach ($options as $option => $value)
 		{
 			$test = $this->setOption($option, $value);
@@ -146,33 +165,6 @@ class BibTex
 				//Currently nothing is done here, but it could for example raise an warning
 			}
 		}
-		$this->rtfstring    = 'AUTHORS, "{\b TITLE}", {\i JOURNAL}, YEAR';
-		$this->htmlstring   = '<tr><td>AUTHORS, "<strong>TITLE</strong>", <em>JOURNAL</em>, VOLUME, PAGES, PUBLISHER, YEAR</th></td>';
-		$this->allowedTypes = array(
-			'article',
-			'book',
-			'booklet',
-			'conference',
-			'inbook',
-			'incollection',
-			'inproceedings',
-			'manual',
-			'masterthesis',
-			'misc',
-			'phdthesis',
-			'proceedings',
-			'techreport',
-			'unpublished',
-			'xarchive',
-			'magazine',
-			'patent appl',
-			'book',
-			'chapter',
-			'notes',
-			'letter',
-			'manuscript'
-		);
-		$this->authorstring = 'VON LAST JR, FIRST';
 	}
 
 	/**
@@ -180,7 +172,7 @@ class BibTex
 	 *
 	 * @param  string $option option name
 	 * @param  mixed  $value  value for the option
-	 * @return mixed  true on success Exception on failure
+	 * @return true|Exception  true on success Exception on failure
 	 */
 	public function setOption($option, $value)
 	{
@@ -200,7 +192,7 @@ class BibTex
 	 * Reads a give BibTex File
 	 *
 	 * @param  string $filename Name of the file
-	 * @return mixed  true on success Exception on failure
+	 * @return true|Exception  true on success Exception on failure
 	 */
 	public function loadFile($filename)
 	{
@@ -225,7 +217,7 @@ class BibTex
 	 * Adds to the content string
 	 *
 	 * @param   string  $bibstring Name of the file
-	 * @return  mixed   True on success Exception on failure
+	 * @return  void   True on success Exception on failure
 	 */
 	public function addContent($bibstring)
 	{
@@ -235,7 +227,7 @@ class BibTex
 	/**
 	 * Parses what is stored in content and clears the content if the parsing is successful.
 	 *
-	 * @return bool true on success and Exception if there was a problem
+	 * @return true|Exception true on success and Exception if there was a problem
 	 */
 	public function parse()
 	{
@@ -372,7 +364,7 @@ class BibTex
 	 * If there is a problem false is returned.
 	 *
 	 * @param  string  $entry The entry
-	 * @return array   The representation of the entry or false if there is a problem
+	 * @return array<string,mixed>   The representation of the entry or false if there is a problem
 	 */
 	private function _parseEntry($entry)
 	{
@@ -557,7 +549,6 @@ class BibTex
 	/**
 	 * Checking if the type is allowed
 	 *
-	 * @access private
 	 * @param  string  $entry The entry to check
 	 * @return bool    true if allowed, false otherwise
 	 */
@@ -573,7 +564,6 @@ class BibTex
 	 * inside an entry. This is checked here. When it is most likely that the at is an opening
 	 * at of the next entry this method returns true.
 	 *
-	 * @access private
 	 * @param  string  $entry The text of the entry until the at
 	 * @return bool    true if the at is correct, false if the at is likely to begin the next entry.
 	 */
@@ -631,7 +621,6 @@ class BibTex
 	/**
 	 * Stripping Delimiter
 	 *
-	 * @access private
 	 * @param  string  $entry The entry where the Delimiter should be stripped from
 	 * @return string  Stripped entry
 	 */
@@ -690,7 +679,7 @@ class BibTex
 	 * Extracting the authors
 	 *
 	 * @param  string  $entry The entry with the authors
-	 * @return array   the extracted authors
+	 * @return array<int,array>   the extracted authors
 	 */
 	private function _extractAuthors($entry)
 	{
@@ -760,21 +749,21 @@ class BibTex
 									$inlast = true;
 									if (-1 == $case)
 									{ //Caseless belongs to the last
-										$last .= ' '.$tmparray[$j];
+										$last .= ' ' . $tmparray[$j];
 									}
 									else
 									{
-										$von  .= ' '.$tmparray[$j];
+										$von .= ' ' . $tmparray[$j];
 									}
 								}
 								else
 								{
-									$von    .= ' '.$tmparray[$j];
+									$von .= ' ' . $tmparray[$j];
 								}
 							}
 							else
 							{
-								$von .= ' '.$tmparray[$j];
+								$von .= ' ' . $tmparray[$j];
 							}
 						}
 						else
@@ -787,16 +776,16 @@ class BibTex
 							elseif (0 == $case)
 							{ //Change from first to von
 								$invon = true;
-								$von   .= ' '.$tmparray[$j];
+								$von .= ' ' . $tmparray[$j];
 							}
 							else
 							{
-								$first .= ' '.$tmparray[$j];
+								$first .= ' ' . $tmparray[$j];
 							}
 						}
 					}
 					//The last entry is always the last!
-					$last .= ' '.$tmparray[$size-1];
+					$last .= ' ' . $tmparray[$size-1];
 				}
 			}
 			else
@@ -841,16 +830,16 @@ class BibTex
 								if ($islast)
 								{
 									$inlast = true;
-									$last   .= ' '.$vonlastarray[$j];
+									$last .= ' ' . $vonlastarray[$j];
 								}
 								else
 								{
-									$von    .= ' '.$vonlastarray[$j];
+									$von .= ' ' . $vonlastarray[$j];
 								}
 							}
 							else
 							{
-								$von    .= ' '.$vonlastarray[$j];
+								$von .= ' ' . $vonlastarray[$j];
 							}
 						}
 					}
@@ -864,7 +853,12 @@ class BibTex
 				//Everything in the last entry is first
 				$first = $tmparray[count($tmparray)-1];
 			}
-			$authorarray[$i] = array('first'=>trim($first), 'von'=>trim($von), 'last'=>trim($last), 'jr'=>trim($jr));
+			$authorarray[$i] = array(
+				'first' => trim($first),
+				'von'   => trim($von),
+				'last'  => trim($last),
+				'jr'    => trim($jr)
+			);
 		}
 		return $authorarray;
 	}
@@ -879,7 +873,7 @@ class BibTex
 	 * - Caseless   (return value -1)
 	 *
 	 * @param  string  $word
-	 * @return int     The Case or Exception if there was a problem
+	 * @return int|Exception The Case or Exception if there was a problem
 	 */
 	private function _determineCase($word)
 	{
@@ -1018,6 +1012,7 @@ class BibTex
 	 * @param  string  $type       The type of the warning
 	 * @param  string  $entry      The line of the entry where the warning occurred
 	 * @param  string  $wholeentry OPTIONAL The whole entry where the warning occurred
+	 * @return void
 	 */
 	private function _generateWarning($type, $entry, $wholeentry='')
 	{

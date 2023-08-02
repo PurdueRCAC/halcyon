@@ -25,8 +25,8 @@ use Carbon\Carbon;
  * @property int    $recurringtimeperiodid
  * @property int    $public
  * @property int    $ticket
- * @property Carbon|null $datetimecreated
- * @property Carbon|null $datetimeremoved
+ * @property Carbon|string|null $datetimecreated
+ * @property Carbon|string|null $datetimeremoved
  * @property int    $sequence
  * @property int    $successororderproductid
  * @property string $terms

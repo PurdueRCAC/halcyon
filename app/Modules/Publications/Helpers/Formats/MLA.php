@@ -207,10 +207,10 @@ class MLA implements Format
 			$html  = self::grammarCheck($html, ',');
 			$html .= ' ' . stripslashes($publication->location);
 		}*/
-		if ($publication->month)
+		if ($publication->published_at)
 		{
 			$html  = self::grammarCheck($html, ',');
-			$html .= ' ' . $publication->month;
+			$html .= ' ' . $publication->published_at->format('M');
 		}
 		if ($publication->isbn)
 		{

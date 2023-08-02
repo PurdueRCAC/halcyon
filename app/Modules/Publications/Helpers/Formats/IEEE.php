@@ -197,9 +197,9 @@ class IEEE implements Format
 		if ($publication->published_at)
 		{
 			$html  = self::grammarCheck($html, ',');
-			if ($publication->month)
+			if ($publication->published_at->format('m'))
 			{
-				$html .= ' ' . $publication->month;
+				$html .= ' ' . $publication->published_at->format('M');
 			}
 			$html .= ' ' . $publication->published_at->format('Y');
 		}
@@ -219,11 +219,11 @@ class IEEE implements Format
 			$html  = self::grammarCheck($html, ',');
 			$html .= ' ' . stripslashes($publication->school);
 		}
-		if ($publication->location)
+		/*if ($publication->location)
 		{
 			$html  = self::grammarCheck($html, ',');
 			$html .= ' ' . stripslashes($publication->location);
-		}
+		}*/
 		if ($publication->isbn)
 		{
 			$html  = self::grammarCheck($html, '.');

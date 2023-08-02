@@ -60,6 +60,11 @@ trait HasPreformattedText
 			$text
 		);
 
+		if (is_null($text))
+		{
+			$text = '';
+		}
+
 		return $text;
 	}
 
@@ -82,6 +87,11 @@ trait HasPreformattedText
 			$text
 		);
 
+		if (is_null($text))
+		{
+			$text = '';
+		}
+
 		return $text;
 	}
 
@@ -102,6 +112,11 @@ trait HasPreformattedText
 			$text
 		);
 
+		if (is_null($text))
+		{
+			$text = '';
+		}
+
 		return $text;
 	}
 
@@ -121,6 +136,11 @@ trait HasPreformattedText
 			},
 			$text
 		);
+
+		if (is_null($text))
+		{
+			$text = '';
+		}
 
 		return $text;
 	}
