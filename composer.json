@@ -10,6 +10,7 @@
         "apereo/phpcas": "^1.6.0",
         "cilogon/oauth2-cilogon": "^1.1.6",
         "doctrine/dbal": "^3.5",
+        "doctrine/rst-parser": "^0.5.5",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "*",
         "jenssegers/agent": "^2.6.4",
