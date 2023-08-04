@@ -48,7 +48,19 @@ class ImportCommand extends Command
 	 */
 	private $parser = null;
 
+	/**
+	 * File base path
+	 *
+	 * @var string
+	 */
 	private $basepath = '';
+
+	/**
+	 * Page path
+	 *
+	 * @var string
+	 */
+	private $slug = '';
 
 	/**
 	 * Execute the console command.
@@ -83,6 +95,7 @@ class ImportCommand extends Command
 			}
 
 			$slug = trim($slug, '/');
+			$this->slug = $slug;
 
 			// Get the guide to populate
 			$guide = Associations::query()
@@ -159,7 +172,7 @@ class ImportCommand extends Command
 					continue;
 				}
 
-				$this->importPage($debug, $format, $files, $file, $guide, $path);
+				$this->importPage($debug, $format, $files, $file, $guide, $path, $slug);
 			}
 
 			if ($debug || $this->output->isVerbose())
@@ -252,7 +265,6 @@ class ImportCommand extends Command
 	 * Convert the content
 	 *
 	 * @param string $file
-	 * @param string $contents
 	 * @param string $format
 	 * @return string
 	 */
@@ -320,6 +332,62 @@ class ImportCommand extends Command
 			array('<p',  '</p>',  '<h6', '</h6>', '<h5', '</h5>', '<h4', '</h4>', '<h3', '</h3>'),
 			$document
 		);
+
+		$tags = array(
+			'a'    => '/<a\s+([^>]*)>/i',
+			'area' => '/<area\s+([^>]*)>/i'
+		);
+		foreach ($tags as $tag => $pattern)
+		{
+			$links = array();
+			preg_match_all($pattern, $document, $links, PREG_SET_ORDER);
+
+			foreach ($links as $link)
+			{
+				// Get attributes
+				$pattern = "/(\w+)(\s*=\s*(?:\".*?\"|'.*?'|[^'\">\s]+))?/i";
+				$attribs = array();
+				preg_match_all($pattern, $link[1], $attribs, PREG_SET_ORDER);
+
+				$list = array();
+				foreach ($attribs as $attrib)
+				{
+					if (!isset($attrib[2]))
+					{
+						// something wrong, may be js in email cloaking plugin
+						continue;
+					}
+
+					$att = strtolower(trim($attrib[1]));
+					$list[$att] = preg_replace("/=\s*[\"']?([^'\"]*)[\"']?/", "$1", $attrib[2]);
+					$list[$att] = trim($list[$att]);
+				}
+
+				// Skip if non http link or anchor
+				if (!isset($list['href']))
+				{
+					continue;
+				}
+
+				if (stripos($list['href'], 'http') === 0)
+				{
+					continue;
+				}
+
+				$list['href'] = '/knowledge/' . $this->slug . '/' . ltrim($list['href'], '/');
+				$list['href'] = strtolower($list['href']);
+				$list['href'] = str_replace('.html', '', $list['href']);
+
+				$ahref = "<$tag ";
+				foreach ($list as $k => $v)
+				{
+					$ahref .= "{$k}=\"{$v}\" ";
+				}
+				$ahref .= '>';
+
+				$document = str_replace($link[0], $ahref, $document);
+			}
+		}
 
 		return $document;
 	}
