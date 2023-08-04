@@ -4,10 +4,25 @@ namespace App\Modules\Knowledge\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Process;
+use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\Extension\Table\TableExtension;
+use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
+use League\CommonMark\Extension\Autolink\AutolinkExtension;
 use App\Modules\Knowledge\Models\Page;
 use App\Modules\Knowledge\Models\Associations;
 use App\Modules\Users\Models\User;
-use Gregwar\RST\Parser;
+//use Gregwar\RST\Parser;
+use Doctrine\RST\Parser;
+use Doctrine\RST\Configuration;
+use Doctrine\RST\Kernel;
+use Doctrine\RST\Builder\Documents;
+use Doctrine\RST\ErrorManager;
+use Doctrine\RST\Builder\ParseQueue;
+use Doctrine\RST\Builder\ParseQueueProcessor;
+use Doctrine\RST\Builder\Scanner;
+use Doctrine\RST\Meta\Metas;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 class ImportCommand extends Command
 {
@@ -17,8 +32,6 @@ class ImportCommand extends Command
 	 * @var string
 	 */
 	protected $signature = 'knowledge:import
-		{repo : Git repository URL}
-		{guide : Alias of the guide to populate}
 		{--debug : Output what changes will be made without making them}';
 
 	/**
@@ -26,7 +39,16 @@ class ImportCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'Import RST files into the knowledge base.';
+	protected $description = 'Sync a repo of RST or MD files to a path in the knowledge base.';
+
+	/**
+	 * Content parser
+	 *
+	 * @var CommonMarkConverter|Parser|string
+	 */
+	private $parser = null;
+
+	private $basepath = '';
 
 	/**
 	 * Execute the console command.
@@ -34,97 +56,119 @@ class ImportCommand extends Command
 	public function handle(): int
 	{
 		$debug = $this->option('debug') ? true : false;
-		$repo = $this->argument('repo');
-		$slug = $this->argument('guide');
+		$repos = config('module.knowledge.sync', []);
 
-		// Get the guide to populate
-		$guide = Associations::query()
-			->where('path', $slug ? $slug : '')
-			->where('parent_id', '=', 1)
-			->first();
-
-		if (!$guide)
+		if (empty($repos))
 		{
 			if ($debug || $this->output->isVerbose())
 			{
-				$this->error('Failed to find guide with alias: ' . $slug);
+				$this->info('No repos are configured for syncing');
 			}
-			return Command::FAILURE;
+			return Command::SUCCESS;
 		}
 
-		// Clone the repo
-		//$tm = time();
-		$tm = 1681916171;
-		$path = storage_path('app/temp/' . $tm);
-
-		if (!is_dir($path))
+		foreach ($repos as $import)
 		{
-			//$result = Process::run('git clone ' . $repo . ' ' . $path);
-			$output = array();
-			$retval = null;
-			$result = exec('git clone ' . $repo . ' ' . $path, $output, $retval);
+			$repo = $import['repo'];
+			$slug = $import['path'];
+			$format = isset($import['format']) && $import['format'] ? strtolower($import['format']) : 'md';
 
-			if ($retval) //$result->failed())
+			if (!$repo || !$slug)
 			{
 				if ($debug || $this->output->isVerbose())
 				{
-					$this->error('Failed to clone repository: ' . $repo);
+					$this->warning('No repo or path specified. repo: "' . $repo . '", path: "' . $path . '"');
+				}
+				continue;
+			}
+
+			$slug = trim($slug, '/');
+
+			// Get the guide to populate
+			$guide = Associations::query()
+				->where('path', $slug ? $slug : '')
+				//->where('parent_id', '!=', 0)
+				->first();
+
+			if (!$guide)
+			{
+				if ($debug || $this->output->isVerbose())
+				{
+					$this->error('Failed to find guide with alias: ' . $slug);
 				}
 				return Command::FAILURE;
 			}
 
-			if ($debug || $this->output->isVerbose())
+			// Clone the repo
+			$tm = time();
+			$path = storage_path('app/temp/' . $tm);
+
+			$this->basepath = $path;
+
+			if (!is_dir($path))
 			{
-				$this->info('Finished cloning repo.');
-			}
-		}
+				$output = array();
+				$retval = null;
+				$result = exec('git clone ' . $repo . ' ' . $path, $output, $retval);
 
-		$parser = new Parser;
-		$parser->registerDirective(new Warning);
-
-		$files = app('files');
-		$all = $files->files($path);
-
-		foreach ($all as $file)
-		{
-			if (substr($file->getFilename(), -4) != '.rst')
-			{
-				continue;
-			}
-
-			if ($file->getFilename() == 'index.rst')
-			{
-				$title = $file->getFilename();
-				$title = substr($title, 0, -4);
-
-				$contents = file_get_contents($file->getPathname());
-				$document = $parser->parse($contents);
-				$document = $this->fixContent($document);
-
-				$row = $guide->page;
-				$row->content = $document;
-				if (!$debug)
+				if ($retval)
 				{
-					$row->save();
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->error('Failed to clone repository: ' . $repo);
+					}
+					return Command::FAILURE;
 				}
 
 				if ($debug || $this->output->isVerbose())
 				{
-					$this->info('Updated page: ' . $guide->path);
+					$this->info('Finished cloning repo.');
 				}
-
-				continue;
 			}
 
-			$this->importPage($debug, $parser, $files, $file, $guide, $path);
-		}
+			$files = app('files');
+			$all = $files->files($path);
 
-		if ($debug || $this->output->isVerbose())
-		{
-			$this->comment('Cleaning up files...');
-		}
+			foreach ($all as $file)
+			{
+				if (substr($file->getFilename(), -(strlen($format) + 1)) != '.' . $format)
+				{
+					continue;
+				}
 
-		$files->deleteDirectory($path);
+				if ($file->getFilename() == 'index.' . $format)
+				{
+					$title = $file->getFilename();
+					$title = substr($title, 0, -4);
+
+					$document = $this->parse($file->getPathname(), $format);
+					$document = str_replace('<h1>' . $title . '</h1>', '', $document);
+
+					$row = $guide->page;
+					$row->content = $document;
+					if (!$debug)
+					{
+						$row->save();
+					}
+
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->info('Updated page: ' . $guide->path);
+					}
+
+					continue;
+				}
+
+				$this->importPage($debug, $format, $files, $file, $guide, $path);
+			}
+
+			if ($debug || $this->output->isVerbose())
+			{
+				$this->comment('Cleaning up files...');
+			}
+
+			$files->deleteDirectory($path);
+		}
 
 		if ($debug || $this->output->isVerbose())
 		{
@@ -132,6 +176,123 @@ class ImportCommand extends Command
 		}
 
 		return Command::SUCCESS;
+	}
+
+	/**
+	 * Get the content parser
+	 *
+	 * @param string $format
+	 * @return CommonMarkConverter|Parser|string
+	 */
+	private function parser($format)
+	{
+		if (is_null($this->parser))
+		{
+			switch ($format)
+			{
+				case 'rst':
+					$configuration = new Configuration();
+					//$configuration->setInitialHeaderLevel(2);
+
+					$kernel = new Kernel($configuration);
+					$metas = new Metas();
+					$filesystem = new Filesystem();
+					$documents = new Documents(
+						$filesystem,
+						$metas
+					);
+
+					$scanner = new Scanner(
+						$configuration->getSourceFileExtension(),
+						$this->basepath,
+						$metas,
+						new Finder()
+					);
+
+					$parseQueue = $scanner->scan();
+
+					$parseQueueProcessor = new ParseQueueProcessor(
+						$kernel,
+						new ErrorManager($configuration),
+						$metas,
+						$documents,
+						$this->basepath,
+						$this->basepath . '/rendered',
+						$configuration->getFileExtension()
+					);
+					$parseQueueProcessor->process($parseQueue);
+
+					$parser = $documents;
+					//$parser = new Parser($kernel);
+					//$parser->registerDirective(new Warning);
+				break;
+
+				case 'html':
+					// No parser needed
+					$parser = '';
+				break;
+
+				case 'md':
+				default:
+					$parser = new CommonMarkConverter([
+						'html_input' => 'allow',
+					]);
+					$parser->getEnvironment()->addExtension(new TableExtension());
+					$parser->getEnvironment()->addExtension(new StrikethroughExtension());
+					$parser->getEnvironment()->addExtension(new AutolinkExtension());
+				break;
+			}
+			$this->parser = $parser;
+		}
+
+		return $this->parser;
+	}
+
+	/**
+	 * Convert the content
+	 *
+	 * @param string $file
+	 * @param string $contents
+	 * @param string $format
+	 * @return string
+	 */
+	private function parse(string $file, string $format = 'md'): string
+	{
+		$contents = file_get_contents($file);
+		$document = '';
+		$parser = $this->parser($format);
+
+		switch ($format)
+		{
+			case 'rst':
+				//$parser->getEnvironment()->setCurrentDirectory(dirname($file));
+				//$document = (string) $parser->parse($contents)->render();
+				foreach ($parser->getAll() as $doc)
+				{
+					$current = $this->basepath . '/' . $doc->getEnvironment()->getCurrentFileName() . '.' . $format;
+
+					if ($current == $file)
+					{
+						$document = (string) $doc->render();
+						break;
+					}
+				}
+			break;
+
+			case 'html':
+				if (preg_match('/<body>(.*?)<\/body>/i', $contents, $matches))
+				{
+					$document = (string) $matches[1];
+				}
+			break;
+
+			case 'md':
+			default:
+				$document = (string) $parser->convertToHtml($contents);
+			break;
+		}
+
+		return $this->fixContent($document);
 	}
 
 	/**
@@ -143,8 +304,6 @@ class ImportCommand extends Command
 	private function fixContent($document): string
 	{
 		//$document = preg_replace('/((http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?)/', '<a href="\1">\1</a>', $document);
-		//$document = str_replace(['<h5', '<h4', '<h3', '<h2', '<h1'], ['<h6', '<h5', '<h4', '<h3', '<h2'], $document);
-		//$document = str_replace(['h5>', 'h4>', 'h3>', 'h2>', 'h1>'], ['h6>', 'h5>', 'h4>', 'h3>', 'h2>'], $document);
 		$document = str_replace('<a id="backbone-label"></a>', '', $document);
 		$document = preg_replace('/(<a id="title\.1"><\/a><h2>\w+<\/h2>)/', '', $document);
 		$document = str_replace([
@@ -156,29 +315,34 @@ class ImportCommand extends Command
 		], '<h3>', $document);
 		$document = str_replace('| For more information', 'For more information', $document);
 		$document = str_replace('| Home page', 'Home page', $document);
+		$document = str_replace(
+			array('<h6', '</h6>', '<h5', '</h5>', '<h4', '</h4>', '<h3', '</h3>', '<h2', '</h2>'),
+			array('<p',  '</p>',  '<h6', '</h6>', '<h5', '</h5>', '<h4', '</h4>', '<h3', '</h3>'),
+			$document
+		);
 
 		return $document;
 	}
 
 	/**
-	 * Import an RST page
+	 * Import a page
 	 *
 	 * @param bool $debug
-	 * @param Parser $parser
+	 * @param string $format
 	 * @param object $files
 	 * @param object $file
 	 * @param Associations $parent
 	 * @param string $path
 	 * @return bool
 	 */
-	private function importPage($debug, $parser, $files, $file, $parent, $path): bool
+	private function importPage($debug, $format, $files, $file, $parent, $path): bool
 	{
-		$contents = file_get_contents($file->getPathname());
-		$document = $parser->parse($contents);
-		$document = $this->fixContent($document);
-
 		$title = $file->getFilename();
 		$title = substr($title, 0, -4);
+
+		//$contents = file_get_contents($file->getPathname());
+		$document = $this->parse($file->getPathname(), $format);
+		$document = str_replace('<h1>' . $title . '</h1>', '', $document);
 
 		// We do this for the model's alias-parsing
 		$tmp = new Page;
@@ -205,6 +369,12 @@ class ImportCommand extends Command
 		$row->content = $document;
 		$row->state   = 1;
 		$row->access  = 1;
+		if (!$row->id)
+		{
+			$row->params->set('show_title', 1);
+			$row->params->set('show_toc', 0);
+		}
+
 		$id = $row->id;
 
 		if (!$debug)
@@ -256,12 +426,12 @@ class ImportCommand extends Command
 
 			foreach ($sub as $subfile)
 			{
-				if (substr($subfile->getFilename(), -4) != '.rst')
+				if (substr($subfile->getFilename(), -(strlen($format) + 1)) != '.' . $format)
 				{
 					continue;
 				}
 
-				$this->importPage($debug, $parser, $files, $subfile, $assoc, $path . '/' . $row->title);
+				$this->importPage($debug, $format, $files, $subfile, $assoc, $path . '/' . $row->title);
 			}
 
 			// Find sub-directories
@@ -275,12 +445,12 @@ class ImportCommand extends Command
 
 				foreach ($sub as $subfile)
 				{
-					if (substr($subfile->getFilename(), -4) != '.rst')
+					if (substr($subfile->getFilename(), -(strlen($format) + 1)) != '.' . $format)
 					{
 						continue;
 					}
 
-					$this->importPage($debug, $parser, $files, $subfile, $assoc, $path . '/' . $row->title . '/' . $dirname);
+					$this->importPage($debug, $format, $files, $subfile, $assoc, $path . '/' . $row->title . '/' . $dirname);
 				}
 			}
 		}
