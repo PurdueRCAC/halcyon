@@ -10,6 +10,9 @@ use App\Modules\Resources\Listeners\Groups;
 use App\Modules\Resources\Listeners\Queues;
 use App\Modules\Resources\Listeners\Subresources;
 use App\Modules\Resources\Listeners\Users;
+use App\Modules\Resources\Listeners\PageCollector;
+use App\Modules\Resources\Listeners\RouteCollector;
+use Nwidart\Modules\Facades\Module;
 
 class ResourcesServiceProvider extends ServiceProvider
 {
@@ -44,15 +47,21 @@ class ResourcesServiceProvider extends ServiceProvider
 
 		$this->app['events']->subscribe(new Subresources);
 		$this->app['events']->subscribe(new Users);
+		$this->app['events']->subscribe(new PageCollector);
 
-		if (is_dir(dirname(dirname(__DIR__))) . '/Queues')
+		if (Module::isEnabled('queues'))
 		{
 			$this->app['events']->subscribe(new Queues);
 		}
 
-		if (is_dir(dirname(dirname(__DIR__))) . '/Groups')
+		if (Module::isEnabled('groups'))
 		{
 			$this->app['events']->subscribe(new Groups);
+		}
+
+		if (Module::isEnabled('menus'))
+		{
+			$this->app['events']->subscribe(new RouteCollector);
 		}
 	}
 
