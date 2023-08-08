@@ -2,6 +2,7 @@
 namespace App\Modules\Knowledge\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Modules\Knowledge\Listeners\PageCollector;
 use App\Modules\Knowledge\Listeners\RouteCollector;
 use App\Modules\Knowledge\Console\ImportCommand;
 use Nwidart\Modules\Facades\Module;
@@ -41,6 +42,7 @@ class KnowledgeServiceProvider extends ServiceProvider
 		{
 			$this->app['events']->subscribe(new RouteCollector);
 		}
+		$this->app['events']->subscribe(new PageCollector);
 	}
 
 	/**

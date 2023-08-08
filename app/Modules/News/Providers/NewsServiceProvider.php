@@ -7,6 +7,7 @@ use App\Modules\News\Console\CopyWeekCommand;
 use App\Modules\News\Console\EventsTodayCommand;
 use App\Modules\News\Listeners\Registrations;
 use App\Modules\News\Listeners\RouteCollector;
+use App\Modules\News\Listeners\PageCollector;
 use Nwidart\Modules\Facades\Module;
 
 class NewsServiceProvider extends ServiceProvider
@@ -46,6 +47,7 @@ class NewsServiceProvider extends ServiceProvider
 		{
 			$this->app['events']->subscribe(new RouteCollector);
 		}
+		$this->app['events']->subscribe(new PageCollector);
 	}
 
 	/**

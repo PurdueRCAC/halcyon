@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\Facades\Blade;
 use App\Modules\Pages\Listeners\RouteCollector;
+use App\Modules\Pages\Listeners\PageCollector;
 use Nwidart\Modules\Facades\Module;
 
 class PagesServiceProvider extends ServiceProvider
@@ -42,6 +43,7 @@ class PagesServiceProvider extends ServiceProvider
 		{
 			$this->app['events']->subscribe(new RouteCollector);
 		}
+		$this->app['events']->subscribe(new PageCollector);
 	}
 
 	/**

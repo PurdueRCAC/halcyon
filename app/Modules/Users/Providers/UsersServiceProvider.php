@@ -9,6 +9,7 @@ use App\Modules\Users\Console\SyncCommand;
 use App\Modules\Users\Console\CleanUpCommand;
 use App\Modules\Users\Console\CreateCommand;
 use App\Modules\Users\Console\RoleCommand;
+use App\Modules\Users\Listeners\PageCollector;
 use App\Modules\Users\Listeners\RouteCollector;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
@@ -50,6 +51,8 @@ class UsersServiceProvider extends ServiceProvider
 		{
 			$this->app['events']->subscribe(new RouteCollector);
 		}
+
+		$this->app['events']->subscribe(new PageCollector);
 
 		AboutCommand::add('Users', [
 			'Accounts' => function()

@@ -3,6 +3,7 @@ namespace App\Modules\Core\Providers;
 
 use App\Modules\Core\Http\Middleware\PublicPath;
 use App\Modules\Core\Http\Middleware\LegacyFiles;
+use App\Modules\Core\Console\GenerateSitemapCommand;
 use Illuminate\Support\ServiceProvider;
 
 class CoreServiceProvider extends ServiceProvider
@@ -36,6 +37,7 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
+		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
@@ -43,6 +45,18 @@ class CoreServiceProvider extends ServiceProvider
 		$kernel = $this->app->make('Illuminate\Contracts\Http\Kernel');
 		$kernel->pushMiddleware(PublicPath::class);
 		$kernel->pushMiddleware(LegacyFiles::class);
+	}
+
+	/**
+	 * Register console commands.
+	 *
+	 * @return void
+	 */
+	protected function registerConsoleCommands()
+	{
+		$this->commands([
+			GenerateSitemapCommand::class,
+		]);
 	}
 
 	/**
