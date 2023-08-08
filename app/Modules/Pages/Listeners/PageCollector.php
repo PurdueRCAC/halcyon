@@ -18,7 +18,7 @@ class PageCollector
 	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe(Dispatcher $events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(GenerateSitemap::class, self::class . '@handleGenerateSitemap');
 	}
@@ -29,16 +29,29 @@ class PageCollector
 	 * @param   GenerateSitemap $event
 	 * @return  void
 	 */
-	public function handleGenerateSitemap(GenerateSitemap $event)
+	public function handleGenerateSitemap(GenerateSitemap $event): void
 	{
-		$options = Page::query()
-			->select('level', 'path', 'updated_at')
+		$this->pages(0, $event);
+	}
+
+	/**
+	 * Recursively add items to the sitemap
+	 *
+	 * @param   int $parent_id
+	 * @param   GenerateSitemap $event
+	 * @return  void
+	 */
+	public function pages(int $parent_id, GenerateSitemap $event): void
+	{
+		$pages = Page::query()
+			->select('id', 'level', 'path', 'updated_at')
+			->where('parent_id', '=', $parent_id)
 			->where('state', '=', 1)
 			->whereIn('access', [1])
 			->orderBy('path', 'asc')
 			->get();
 
-		foreach ($options as $page)
+		foreach ($pages as $page)
 		{
 			$priority = 0.5;
 
@@ -58,6 +71,8 @@ class PageCollector
 					->setChangeFrequency(Url::CHANGE_FREQUENCY_YEARLY)
 					->setPriority($priority)
 			);
+
+			$this->pages($page->id, $event);
 		}
 	}
 }
