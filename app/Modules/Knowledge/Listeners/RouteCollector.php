@@ -43,6 +43,11 @@ class RouteCollector
 
 		foreach ($options as $page)
 		{
+			if ($page->assoc_path == '-separator-')
+			{
+				continue;
+			}
+	
 			$indent = str_repeat('|— ', $page->level);
 
 			$event->addRoute(

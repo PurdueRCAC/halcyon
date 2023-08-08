@@ -30,7 +30,19 @@ class PageCollector
 	 * @param   GenerateSitemap $event
 	 * @return  void
 	 */
-	public function handleGenerateSitemap(GenerateSitemap $event)
+	public function handleGenerateSitemap(GenerateSitemap $event): void
+	{
+		$this->pages(0, $event);
+	}
+
+	/**
+	 * Recursively get pages
+	 *
+	 * @param int $parent_id
+	 * @param GenerateSitemap $event
+	 * @return void
+	 */
+	private function pages(int $parent_id, GenerateSitemap $event): void
 	{
 		$p = (new Page)->getTable();
 		$a = (new Associations)->getTable();
@@ -39,11 +51,18 @@ class PageCollector
 			->join($a, $a . '.page_id', $p . '.id')
 			->select($p . '.*', $a . '.level', $a . '.lft', $a . '.rgt', $a . '.id AS assoc_id', $a . '.path AS assoc_path')
 			->where($a . '.state', '=', 1)
+			->whereIn($a . '.access', [1])
+			->where($a . '.parent_id', '=', $parent_id)
 			->orderBy($a . '.lft', 'asc')
 			->get();
 
 		foreach ($options as $page)
 		{
+			if ($page->assoc_path == '-separator-')
+			{
+				continue;
+			}
+
 			$priority = 0.5;
 
 			if ($page->level == 0)
@@ -66,6 +85,8 @@ class PageCollector
 					->setChangeFrequency(Url::CHANGE_FREQUENCY_YEARLY)
 					->setPriority($priority)
 			);
+
+			$this->pages($page->assoc_id, $event);
 		}
 	}
 }
