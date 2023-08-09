@@ -19,7 +19,7 @@ class Add extends Operation
 	/**
 	 * Constructor
 	 *
-	 * @param   array $lines
+	 * @param   array<int,string> $lines
 	 * @return  void
 	 */
 	public function __construct($lines)
@@ -31,7 +31,7 @@ class Add extends Operation
 	/**
 	 * Reverse operation
 	 *
-	 * @return  object
+	 * @return Delete
 	 */
 	public function reverse()
 	{

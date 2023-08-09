@@ -27,9 +27,9 @@ class ControlStatements
 	private static $matches = 0;
 
 	/**
-	 * Nesting counter
+	 * Page variables
 	 * 
-	 * @var  array
+	 * @var  array<string,mixed>
 	 */
 	private $variables = array();
 
@@ -38,7 +38,7 @@ class ControlStatements
 	 *
 	 * @param  array<string,string> $data
 	 * @param  Closure $next
-	 * @return array
+	 * @return array<string,string>
 	 */
 	public function handle(array $data, Closure $next): array
 	{
@@ -49,7 +49,11 @@ class ControlStatements
 		for (self::$matches; self::$matches > 0; self::$matches--)
 		{
 			$m = self::$matches;
-			$text = preg_replace_callback("/\{::if\s+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~)\s*([^\}]+)\s*\}(_$m)(.+?)\{::\/\}/s", array($this, 'replaceIfStatement'), $text);
+			$text = preg_replace_callback(
+				"/\{::if\s+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~)\s*([^\}]+)\s*\}(_$m)(.+?)\{::\/\}/s",
+				array($this, 'replaceIfStatement'),
+				$text
+			);
 		}
 
 		$text = \Illuminate\Support\Facades\Blade::render(
@@ -84,7 +88,7 @@ class ControlStatements
 	/**
 	 * Replace "if" statements
 	 *
-	 * @param   array   $matches
+	 * @param   array<int,string>   $matches
 	 * @return  string
 	 */
 	protected function replaceIfStatement(array $matches): string

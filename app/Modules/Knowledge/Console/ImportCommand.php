@@ -81,8 +81,8 @@ class ImportCommand extends Command
 
 		foreach ($repos as $import)
 		{
-			$repo = $import['repo'];
-			$slug = $import['path'];
+			$repo   = isset($import['repo']) ? (string)$import['repo'] : '';
+			$slug   = isset($import['path']) ? (string)$import['path'] : '';
 			$format = isset($import['format']) && $import['format'] ? strtolower($import['format']) : 'md';
 
 			if (!$repo || !$slug)

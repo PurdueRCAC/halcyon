@@ -19,7 +19,7 @@ class Copy extends Operation
 	/**
 	 * Constructor
 	 *
-	 * @param  array   $orig
+	 * @param  array<int,string> $orig
 	 * @param  bool $closing
 	 * @return void
 	 */
@@ -36,7 +36,7 @@ class Copy extends Operation
 	/**
 	 * Reverse operation
 	 *
-	 * @return object
+	 * @return Copy
 	 */
 	public function reverse()
 	{

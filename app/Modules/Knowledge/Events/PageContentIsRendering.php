@@ -27,7 +27,7 @@ class PageContentIsRendering
 	public function __construct($body)
 	{
 		$this->body = (string) $body;
-		$this->original = $body;
+		$this->original = $this->body;
 	}
 
 	/**
@@ -54,7 +54,7 @@ class PageContentIsRendering
 	/**
 	 * Get the original, unaltered body
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public function getOriginal(): string
 	{

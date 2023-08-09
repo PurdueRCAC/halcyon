@@ -12,7 +12,7 @@ class CreateKnowledgeTables extends Migration
 	/**
 	 * Up
 	 **/
-	public function up()
+	public function up(): void
 	{
 		if (!Schema::hasTable('kb_pages'))
 		{
@@ -78,7 +78,7 @@ class CreateKnowledgeTables extends Migration
 	/**
 	 * Down
 	 **/
-	public function down()
+	public function down(): void
 	{
 		$tables = array(
 			'kb_pages',

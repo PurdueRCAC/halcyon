@@ -27,9 +27,9 @@ class ReplaceIfStatements
 	private static $matches = 0;
 
 	/**
-	 * Nesting counter
+	 * Page variables
 	 * 
-	 * @var  array
+	 * @var  array<string,mixed>
 	 */
 	private $variables = array();
 
@@ -38,7 +38,7 @@ class ReplaceIfStatements
 	 *
 	 * @param  array<string,string> $data
 	 * @param  Closure $next
-	 * @return array
+	 * @return array<string,string>
 	 */
 	public function handle(array $data, Closure $next): array
 	{
@@ -79,7 +79,7 @@ class ReplaceIfStatements
 	/**
 	 * Replace "if" statements
 	 *
-	 * @param   array   $matches
+	 * @param   array<int,string>   $matches
 	 * @return  string
 	 */
 	protected function replaceIfStatement(array $matches): string
@@ -246,14 +246,26 @@ class ReplaceIfStatements
 		$left = $this->variables[$tag][$var];
 
 		$left = trim($left);
-		$left = (is_integer($left) ? (int)$left : $left);
-		$left = (strtolower($left) === 'true' ? true : $left);
-		$left = (strtolower($left) === 'false' ? false : $left);
+		if (is_numeric($left))
+		{
+			$left = (int)$left;
+		}
+		else
+		{
+			$left = (strtolower($left) === 'true' ? true : $left);
+			$left = (strtolower($left) === 'false' ? false : $left);
+		}
 
 		$right = trim($right);
-		$right = (is_integer($right) ? (int)$right : $right);
-		$right = (strtolower($right) === 'true' ? true : $right);
-		$right = (strtolower($right) === 'false' ? false : $right);
+		if (is_numeric($right))
+		{
+			$right = (int)$right;
+		}
+		else
+		{
+			$right = (strtolower($right) === 'true' ? true : $right);
+			$right = (strtolower($right) === 'false' ? false : $right);
+		}
 
 		if ($operator == '==')
 		{

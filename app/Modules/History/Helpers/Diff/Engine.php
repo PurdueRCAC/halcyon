@@ -31,18 +31,63 @@ use App\Modules\History\Helpers\Diff\Operation\Delete;
 class Engine
 {
 	/**
-	 * Description for 'AX_XREF_LENGTH'
+	 * @var int
 	 */
 	const MAX_XREF_LENGTH =  10000;
+
+	/**
+	 * @var array
+	 */
+	public $xchanged = array();
+
+	/**
+	 * @var array
+	 */
+	public $ychanged = array();
+
+	/**
+	 * @var array
+	 */
+	public $xv = array();
+
+	/**
+	 * @var array
+	 */
+	public $yv = array();
+
+	/**
+	 * @var array
+	 */
+	public $xind = array();
+
+	/**
+	 * @var array
+	 */
+	public $yind = array();
+
+	/**
+	 * @var array|int
+	 */
+	public $seq = 0;
+
+	/**
+	 * @var array
+	 */
+	public $in_seq = array();
+
+	/**
+	 * @var int
+	 */
+	public $lcs;
 
 	/**
 	 * Short description for 'diff'
 	 *
 	 * Long description (if any) ...
 	 *
-	 * @param      array $from_lines Parameter description (if any) ...
-	 * @param      array $to_lines Parameter description (if any) ...
-	 * @return     array Return description (if any) ...
+	 * @param      array<int,string> $from_lines
+	 * @param      array<int,string> $to_lines
+	 * @return     array<int,Operation>
 	 */
 	public function diff($from_lines, $to_lines)
 	{
@@ -178,33 +223,29 @@ class Engine
 		return $line;
 	}
 
-	// Divide the Largest Common Subsequence (LCS) of the sequences
-	// [XOFF, XLIM) and [YOFF, YLIM) into NCHUNKS approximately equally
-	// sized segments.
-	//
-	// Returns (LCS, PTS).	LCS is the length of the LCS. PTS is an
-	// array of NCHUNKS+1 (X, Y) indexes giving the diving points between
-	// sub sequences.  The first sub-sequence is contained in [X0, X1),
-	// [Y0, Y1), the second in [X1, X2), [Y1, Y2) and so on.  Note
-	// that (X0, Y0) == (XOFF, YOFF) and
-	// (X[NCHUNKS], Y[NCHUNKS]) == (XLIM, YLIM).
-	//
-	// This function assumes that the first lines of the specified portions
-	// of the two files do not match, and likewise that the last lines do not
-	// match.  The caller must trim matching lines from the beginning and end
-	// of the portions it is going to specify.
-
 	/**
-	 * Short description for '_diag'
+	 * Divide the Largest Common Subsequence (LCS) of the sequences
+	 * [XOFF, XLIM) and [YOFF, YLIM) into NCHUNKS approximately equally
+	 * sized segments.
 	 *
-	 * Long description (if any) ...
+	 * Returns (LCS, PTS).	LCS is the length of the LCS. PTS is an
+	 * array of NCHUNKS+1 (X, Y) indexes giving the diving points between
+	 * sub sequences.  The first sub-sequence is contained in [X0, X1),
+	 * [Y0, Y1), the second in [X1, X2), [Y1, Y2) and so on.  Note
+	 * that (X0, Y0) == (XOFF, YOFF) and
+	 * (X[NCHUNKS], Y[NCHUNKS]) == (XLIM, YLIM).
 	 *
-	 * @param      number $xoff Parameter description (if any) ...
-	 * @param      number $xlim Parameter description (if any) ...
-	 * @param      number $yoff Parameter description (if any) ...
-	 * @param      number $ylim Parameter description (if any) ...
-	 * @param      number $nchunks Parameter description (if any) ...
-	 * @return     mixed Return description (if any) ...
+	 * This function assumes that the first lines of the specified portions
+	 * of the two files do not match, and likewise that the last lines do not
+	 * match.  The caller must trim matching lines from the beginning and end
+	 * of the portions it is going to specify.
+	 *
+	 * @param      int $xoff
+	 * @param      int $xlim
+	 * @param      int $yoff
+	 * @param      int $ylim
+	 * @param      int $nchunks
+	 * @return     array<int,mixed>
 	 */
 	public function _diag($xoff, $xlim, $yoff, $ylim, $nchunks)
 	{
@@ -312,8 +353,8 @@ class Engine
 	 *
 	 * Long description (if any) ...
 	 *
-	 * @param      unknown $ypos Parameter description (if any) ...
-	 * @return     integer Return description (if any) ...
+	 * @param      int $ypos
+	 * @return     int
 	 */
 	public function _lcs_pos($ypos)
 	{
@@ -360,10 +401,10 @@ class Engine
 	 * Note that XLIM, YLIM are exclusive bounds.
 	 * All line numbers are origin-0 and discarded lines are not counted.
 	 *
-	 * @param      number $xoff Parameter description (if any) ...
-	 * @param      number $xlim Parameter description (if any) ...
-	 * @param      number $yoff Parameter description (if any) ...
-	 * @param      number $ylim Parameter description (if any) ...
+	 * @param      int $xoff
+	 * @param      int $xlim
+	 * @param      int $yoff
+	 * @param      int $ylim
 	 * @return     void
 	 */
 	public function _compareseq($xoff, $xlim, $yoff, $ylim)
@@ -434,9 +475,9 @@ class Engine
 	 *
 	 * This is extracted verbatim from analyze.c (GNU diffutils-2.7).
 	 *
-	 * @param      array $lines Parameter description (if any) ...
-	 * @param      array &$changed Parameter description (if any) ...
-	 * @param      array $other_changed Parameter description (if any) ...
+	 * @param      array<int,string> $lines
+	 * @param      array<int,string> &$changed
+	 * @param      array<int,string> $other_changed
 	 * @return     void
 	 */
 	public function _shift_boundaries($lines, &$changed, $other_changed)

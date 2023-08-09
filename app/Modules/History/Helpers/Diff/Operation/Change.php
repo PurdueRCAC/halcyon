@@ -19,8 +19,8 @@ class Change extends Operation
 	/**
 	 * Constructor
 	 *
-	 * @param  array $orig
-	 * @param  array $closing
+	 * @param  array<int,string> $orig
+	 * @param  array<int,string> $closing
 	 * @return void
 	 */
 	public function __construct($orig, $closing)
@@ -32,7 +32,7 @@ class Change extends Operation
 	/**
 	 * Reverse operation
 	 *
-	 * @return object
+	 * @return Change
 	 */
 	public function reverse()
 	{

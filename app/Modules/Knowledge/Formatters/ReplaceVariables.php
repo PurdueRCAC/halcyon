@@ -13,7 +13,7 @@ class ReplaceVariables
 	 *
 	 * @param  array<string,string> $data
 	 * @param  Closure $next
-	 * @return array
+	 * @return array<string,string>
 	 */
 	public function handle(array $data, Closure $next): array
 	{
@@ -23,7 +23,7 @@ class ReplaceVariables
 			{
 				$vars = $data['variables'];
 
-				if (isset($vars[$matches[1]][$matches[2]]))
+				if (isset($vars[$matches[1]]) && isset($vars[$matches[1]][$matches[2]]))
 				{
 					$val = $vars[$matches[1]][$matches[2]];
 					if (is_array($val))

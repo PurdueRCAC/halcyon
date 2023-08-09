@@ -257,7 +257,7 @@ class SnippetsController extends Controller
 		$row->parent_id = $parent_id;
 
 		$page = Page::find($row->page_id);
-		if (!$row->page_id)
+		if (!$row->page_id || !$page)
 		{
 			$page = new Page;
 		}
@@ -390,7 +390,6 @@ class SnippetsController extends Controller
 
 		$success = 0;
 
-		// Comment record(s)
 		foreach ($ids as $id)
 		{
 			$row = SnippetAssociation::findOrFail(intval($id));
@@ -456,9 +455,10 @@ class SnippetsController extends Controller
 	/**
 	 * Remove the specified entry
 	 *
+	 * @param   Request $request
 	 * @return  RedirectResponse
 	 */
-	public function destroy()
+	public function destroy(Request $request)
 	{
 		// Incoming
 		$ids = $request->input('id', array());

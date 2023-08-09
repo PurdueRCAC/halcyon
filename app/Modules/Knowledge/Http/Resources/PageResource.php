@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Knowledge\Models\Associations;
 
+/**
+ * @mixin \App\Modules\Knowledge\Models\Associations
+ */
 class PageResource extends JsonResource
 {
 	/**

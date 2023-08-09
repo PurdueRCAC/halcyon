@@ -12,7 +12,7 @@ class AddMetaFields extends Migration
 	/**
 	 * Up
 	 **/
-	public function up()
+	public function up(): void
 	{
 		if (Schema::hasTable('kb_pages'))
 		{
@@ -37,7 +37,7 @@ class AddMetaFields extends Migration
 	/**
 	 * Down
 	 **/
-	public function down()
+	public function down(): void
 	{
 		if (Schema::hasTable('kb_pages'))
 		{

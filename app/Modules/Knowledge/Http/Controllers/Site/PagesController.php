@@ -193,19 +193,19 @@ class PagesController extends Controller
 			{
 				$page->save();
 
-				$row->path = '';
-				if ($row->parent)
+				$node->path = '';
+				if ($node->parent)
 				{
-					$row->path = trim($row->parent->path . '/' . $page->alias, '/');
+					$node->path = trim($node->parent->path . '/' . $page->alias, '/');
 				}
 
-				if (!$row->save())
+				if (!$node->save())
 				{
 					return redirect()->back()->withError(trans('global.messages.save failed'));
 				}
 
 				// Rebuild the paths of the entry's children
-				if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
+				if (!$node->rebuild($node->id, $node->lft, $node->level, $node->path))
 				{
 					return redirect()->back()->withError(trans('knowledge::knowledge.rebuild failed'));
 				}
@@ -215,27 +215,6 @@ class PagesController extends Controller
 		}
 
 		return redirect(route('site.knowledge.page', ['uri' => $node->path]))->withSuccess(trans('knowledge::knowledge.page restored'));
-	}
-
-	/**
-	 * Display a listing of the resource.
-	 * 
-	 * @param  array  $nodes
-	 * @param  string $alias
-	 * @return void
-	 */
-	private function nestedset($nodes, $alias): void
-	{
-		foreach ($nodes as $node)
-		{
-			$node->path = ($alias ? $alias . '/' : '') . $node->page->alias;
-
-			$node->save();
-
-			$children = $node->children()->orderBy('lft', 'asc')->get();
-
-			$this->nestedset($children, $node->path);
-		}
 	}
 
 	/**

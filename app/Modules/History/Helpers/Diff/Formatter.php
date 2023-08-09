@@ -39,7 +39,7 @@ class Formatter
 	/**
 	 * Description for 'i'
 	 *
-	 * @var mixed
+	 * @var int
 	 */
 	public $i = 0;
 
@@ -47,7 +47,7 @@ class Formatter
 	 * Format a diff.
 	 *
 	 * @param   object  $diff  A Diff object.
-	 * @param   Closure
+	 * @param   Closure|null
 	 * @return  string  The formatted output.
 	 */
 	public function format($diff, Closure $formatContextOutput = null)
@@ -155,11 +155,11 @@ class Formatter
 	 *
 	 * Long description (if any) ...
 	 *
-	 * @param      string  $xbeg Parameter description (if any) ...
-	 * @param      integer $xlen Parameter description (if any) ...
-	 * @param      string  $ybeg Parameter description (if any) ...
-	 * @param      integer $ylen Parameter description (if any) ...
-	 * @param      array   &$edits Parameter description (if any) ...
+	 * @param      int $xbeg
+	 * @param      int $xlen
+	 * @param      int $ybeg
+	 * @param      int $ylen
+	 * @param      array<int,Operation>   &$edits
 	 * @return     void
 	 */
 	public function _block($xbeg, $xlen, $ybeg, $ylen, &$edits)
@@ -217,9 +217,9 @@ class Formatter
 	 * Short description for '_block_header'
 	 *
 	 * @param      string  $xbeg
-	 * @param      integer $xlen
+	 * @param      int $xlen
 	 * @param      string  $ybeg
-	 * @param      integer $ylen
+	 * @param      int $ylen
 	 * @return     string
 	 */
 	public function _block_header($xbeg, $xlen, $ybeg, $ylen)
@@ -259,7 +259,7 @@ class Formatter
 	/**
 	 * Short description for '_lines'
 	 *
-	 * @param      array  $lines
+	 * @param      array<int,string>  $lines
 	 * @param      string $prefix
 	 * @return     void
 	 */
@@ -274,7 +274,7 @@ class Formatter
 	/**
 	 * Short description for '_context'
 	 *
-	 * @param      array $lines
+	 * @param      array<int,string> $lines
 	 * @return     void
 	 */
 	public function _context($lines)
@@ -285,7 +285,7 @@ class Formatter
 	/**
 	 * Short description for '_added'
 	 *
-	 * @param      array $lines
+	 * @param      array<int,string> $lines
 	 * @return     void
 	 */
 	public function _added($lines)
@@ -296,7 +296,7 @@ class Formatter
 	/**
 	 * Short description for '_deleted'
 	 *
-	 * @param      array $lines
+	 * @param      array<int,string> $lines
 	 * @return     void
 	 */
 	public function _deleted($lines)
@@ -307,8 +307,8 @@ class Formatter
 	/**
 	 * Short description for '_changed'
 	 *
-	 * @param      array $orig
-	 * @param      array $closing
+	 * @param      array<int,string> $orig
+	 * @param      array<int,string> $closing
 	 * @return     void
 	 */
 	public function _changed($orig, $closing)

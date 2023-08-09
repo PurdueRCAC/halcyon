@@ -3,25 +3,23 @@
 namespace App\Modules\History\Helpers\Diff;
 
 /**
- * Short description for 'WordLevelDiff'
- *
- * Long description (if any) ...
+ * Word level diff
  */
 class WordLevelDiff extends MappedDiff
 {
 	/**
 	 * Description for 'AX_LINE_LENGTH'
+	 *
+	 * @var int
 	 */
 	const MAX_LINE_LENGTH = 10000;
 
 	/**
-	 * Short description for 'WordLevelDiff'
+	 * Constructor
 	 *
-	 * Long description (if any) ...
-	 *
-	 * @param      unknown $orig_lines Parameter description (if any) ...
-	 * @param      unknown $closing_lines Parameter description (if any) ...
-	 * @return     void
+	 * @param  array<int,string> $orig_lines
+	 * @param  array<int,string> $closing_lines
+	 * @return void
 	 */
 	public function __construct($orig_lines, $closing_lines)
 	{
@@ -32,12 +30,10 @@ class WordLevelDiff extends MappedDiff
 	}
 
 	/**
-	 * Short description for '_split'
+	 * Split lines into words
 	 *
-	 * Long description (if any) ...
-	 *
-	 * @param      array $lines Parameter description (if any) ...
-	 * @return     array Return description (if any) ...
+	 * @param  array<int,string> $lines
+	 * @return array<int,array>
 	 */
 	public function _split($lines)
 	{
@@ -76,11 +72,9 @@ class WordLevelDiff extends MappedDiff
 	}
 
 	/**
-	 * Short description for 'orig'
+	 * Original lines
 	 *
-	 * Long description (if any) ...
-	 *
-	 * @return     unknown Return description (if any) ...
+	 * @return array<int,string>
 	 */
 	public function orig()
 	{
@@ -103,11 +97,9 @@ class WordLevelDiff extends MappedDiff
 	}
 
 	/**
-	 * Short description for 'closing'
+	 * Close the diff
 	 *
-	 * Long description (if any) ...
-	 *
-	 * @return     unknown Return description (if any) ...
+	 * @return array<int,string>
 	 */
 	public function closing()
 	{

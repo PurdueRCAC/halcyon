@@ -17,14 +17,14 @@ class Operation
 	/**
 	 * Description for 'orig'
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	public $orig;
 
 	/**
 	 * Description for 'closing'
 	 *
-	 * @var array
+	 * @var array<int,string>
 	 */
 	public $closing;
 
@@ -39,9 +39,7 @@ class Operation
 	}
 
 	/**
-	 * Short description for 'norig'
-	 *
-	 * Long description (if any) ...
+	 * Get a count of the number of original
 	 *
 	 * @return int
 	 */
@@ -51,9 +49,7 @@ class Operation
 	}
 
 	/**
-	 * Short description for 'nclosing'
-	 *
-	 * Long description (if any) ...
+	 * Get a count of the number of closing
 	 *
 	 * @return  int
 	 */

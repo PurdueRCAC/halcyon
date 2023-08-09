@@ -390,14 +390,6 @@ class SnippetsController extends Controller
 			return response()->json(['message' => trans('global.messages.save failed')], 409);
 		}
 
-		if ($id && $parent_id != $orig_parent_id)
-		{
-			if (!$row->moveByReference($row->parent_id, 'last-child', $row->id))
-			{
-				return redirect()->back()->withError(trans('lnowledge::knowledge.move failed'));
-			}
-		}
-
 		// Rebuild the paths of the entry's children
 		if (!$row->rebuild($row->id, $row->lft, $row->level, $row->path))
 		{
@@ -614,9 +606,11 @@ class SnippetsController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
+		$row = SnippetAssociation::findOrFail($id);
+
+		$orig_parent_id = $row->parent_id;
 		$parent_id = $request->input('parent_id', $row->parent_id);
 
-		$row = SnippetAssociation::findOrFail($id);
 		$row->page_id = $request->input('page_id', $row->page_id);
 		$row->parent_id = $parent_id;
 
@@ -674,7 +668,7 @@ class SnippetsController extends Controller
 		{
 			if (!$row->moveByReference($row->parent_id, 'last-child', $row->id))
 			{
-				return redirect()->back()->withError(trans('knowledge::knowledge.move failed'));
+				return response()->json(['message' => trans('knowledge::knowledge.move failed')], 409);
 			}
 		}
 

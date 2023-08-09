@@ -13,17 +13,22 @@ class AdjustHeaderLevels
 	 *
 	 * @param  array<string,string> $data
 	 * @param  Closure $next
-	 * @return array
+	 * @return array<string,string>
 	 */
 	public function handle(array $data, Closure $next): array
 	{
-		$text = preg_replace("/<p>(.*)<\/p>\n<(table.*)\n/m", "<$2 <caption>$1</caption>\n", $data['content']);
-		$text = preg_replace("/<h2>(.*)<\/h2>/", "<h3>$1</h3>", $text);
-		$text = preg_replace("/<h1>(.*)<\/h1>/", "<h2>$1</h2>", $text);
+		$text = $data['content'];
 
-		$text = preg_replace('/href="\/(.*?)"/i', 'href="' . url("$1") . '"', $text);
+		if ($text)
+		{
+			$text = preg_replace("/<p>(.*)<\/p>\n<(table.*)\n/m", "<$2 <caption>$1</caption>\n", $text);
+			$text = preg_replace("/<h2>(.*)<\/h2>/", "<h3>$1</h3>", $text);
+			$text = preg_replace("/<h1>(.*)<\/h1>/", "<h2>$1</h2>", $text);
 
-		$data['content'] = $text;
+			$text = preg_replace('/href="\/(.*?)"/i', 'href="' . url("$1") . '"', $text);
+
+			$data['content'] = $text;
+		}
 
 		return $next($data);
 	}

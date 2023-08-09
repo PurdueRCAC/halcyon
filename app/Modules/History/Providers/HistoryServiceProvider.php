@@ -23,16 +23,16 @@ class HistoryServiceProvider extends ServiceProvider
 	/**
 	 * The event listener mappings for the application.
 	 *
-	 * @var array
+	 * @var array<string,array>
 	 */
-	/*protected $listen = [
-		'Illuminate\Mail\Events\MessageSending' => [
+	protected $listen = [
+		/*'Illuminate\Mail\Events\MessageSending' => [
 			LogSentMessage::class,
 		],
 		'Illuminate\Mail\Events\MessageSent' => [
 			LogSentMessage::class,
-		],
-	];*/
+		],*/
+	];
 
 	/**
 	 * Boot the application events.
@@ -88,7 +88,7 @@ class HistoryServiceProvider extends ServiceProvider
 		$this->loadViewsFrom(array_merge(array_map(function ($path)
 		{
 			return $path . '/modules/' . $this->name;
-		}, config('view.paths')), [$sourcePath]), $this->name);
+		}, config('view.paths', [])), [$sourcePath]), $this->name);
 	}
 
 	/**

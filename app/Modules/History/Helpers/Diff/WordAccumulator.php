@@ -9,6 +9,26 @@ namespace App\Modules\History\Helpers\Diff;
 class WordAccumulator
 {
 	/**
+	 * @var array<int,string>
+	 */
+	public $_lines = array();
+
+	/**
+	 * @var string
+	 */
+	public $_line = '';
+
+	/**
+	 * @var string
+	 */
+	public $_group = '';
+
+	/**
+	 * @var string
+	 */
+	public $_tag = '';
+
+	/**
 	 * Constructor
 	 *
 	 * @return void
@@ -22,9 +42,7 @@ class WordAccumulator
 	}
 
 	/**
-	 * Short description for '_flushGroup'
-	 *
-	 * Long description (if any) ...
+	 * Flush out the group
 	 *
 	 * @param  string $new_tag
 	 * @return void
@@ -51,12 +69,10 @@ class WordAccumulator
 	}
 
 	/**
-	 * Short description for '_flushLine'
+	 * Flush the line
 	 *
-	 * Long description (if any) ...
-	 *
-	 * @param      string $new_tag
-	 * @return     void
+	 * @param  string $new_tag
+	 * @return void
 	 */
 	public function _flushLine($new_tag)
 	{
@@ -74,9 +90,7 @@ class WordAccumulator
 	}
 
 	/**
-	 * Short description for 'addWords'
-	 *
-	 * Long description (if any) ...
+	 * Add words to the group
 	 *
 	 * @param  array $words
 	 * @param  string $tag
@@ -107,11 +121,9 @@ class WordAccumulator
 	}
 
 	/**
-	 * Short description for 'getLines'
+	 * Get all the lines
 	 *
-	 * Long description (if any) ...
-	 *
-	 * @return  array
+	 * @return  array<int,string>
 	 */
 	public function getLines()
 	{

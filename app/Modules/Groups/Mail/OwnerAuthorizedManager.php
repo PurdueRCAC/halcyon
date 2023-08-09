@@ -31,7 +31,7 @@ class OwnerAuthorizedManager extends Mailable
 	/**
 	 * List of people authorized
 	 *
-	 * @var array
+	 * @var array<int,\App\Modules\Groups\Models\Member>
 	 */
 	protected $people;
 
@@ -47,7 +47,7 @@ class OwnerAuthorizedManager extends Mailable
 	 *
 	 * @param  User $user
 	 * @param  Group $group
-	 * @param  array $people
+	 * @param  array<int,\App\Modules\Groups\Models\Member> $people
 	 * @return void
 	 */
 	public function __construct(User $user, Group $group, $people = array())
@@ -96,7 +96,7 @@ class OwnerAuthorizedManager extends Mailable
 	/**
 	 * Build the message.
 	 *
-	 * @return $this
+	 * @return self
 	 */
 	public function build()
 	{

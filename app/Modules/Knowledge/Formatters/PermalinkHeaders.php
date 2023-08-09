@@ -13,7 +13,7 @@ class PermalinkHeaders
 	 *
 	 * @param  array<string,string> $data
 	 * @param  Closure $next
-	 * @return array
+	 * @return array<string,string>
 	 */
 	public function handle(array $data, Closure $next): array
 	{
@@ -22,7 +22,7 @@ class PermalinkHeaders
 
 		$text = preg_replace_callback(
 			'/(\<h[1-6](.*?))\>(.*)(<\/h[1-6]>)/i',
-			function($matches) use (&$headers, &$toc, $data)
+			function ($matches) use (&$headers, &$toc, $data)
 			{
 				$attr = trans('knowledge::knowledge.link to section', [
 					'section'  => e(strip_tags($matches[3])),
@@ -32,12 +32,16 @@ class PermalinkHeaders
 				if (!stripos($matches[0], 'id='))
 				{
 					$title = $matches[3];
-					$title = preg_replace('/<.*?>/', '', $title);
-					$title = trim($title);
-					$title = strtolower($title);
-					$title = str_replace(' ', '_', $title);
-					$title = preg_replace('/[^a-z0-9\-_]+/', '', $title);
-					$title = (request('all') ? $data['id'] . '-' : '') . $title;
+					$title = $title ?: '';
+					if ($title)
+					{
+						$title = preg_replace('/<.*?>/', '', $title);
+						$title = trim($title);
+						$title = strtolower($title);
+						$title = str_replace(' ', '_', $title);
+						$title = preg_replace('/[^a-z0-9\-_]+/', '', $title);
+						$title = (request('all') ? $data['id'] . '-' : '') . $title;
+					}
 
 					if (!isset($headers[$title]))
 					{

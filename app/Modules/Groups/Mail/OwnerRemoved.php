@@ -87,7 +87,7 @@ class OwnerRemoved extends Mailable
 	/**
 	 * Build the message.
 	 *
-	 * @return $this
+	 * @return self
 	 */
 	public function build()
 	{

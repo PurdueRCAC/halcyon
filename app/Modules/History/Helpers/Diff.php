@@ -28,7 +28,7 @@ class Diff
 	/**
 	 * Description for 'edits'
 	 *
-	 * @var  array
+	 * @var  array<int,\App\Modules\History\Helpers\Diff\Operation>
 	 */
 	public $edits;
 
@@ -36,8 +36,8 @@ class Diff
 	 * Constructor.
 	 * Computes diff between sequences of strings.
 	 *
-	 * @param   array  $from_lines  An array of strings. (Typically these are lines from a file.)
-	 * @param   array  $to_lines  An array of strings.
+	 * @param   array<int,string>  $from_lines  An array of strings. (Typically these are lines from a file.)
+	 * @param   array<int,string>  $to_lines  An array of strings.
 	 * @return  void
 	 */
 	public function __construct($from_lines, $to_lines)
@@ -110,7 +110,7 @@ class Diff
 	 *
 	 * This reconstructs the $from_lines parameter passed to the constructor.
 	 *
-	 * @return  array  The original sequence of strings.
+	 * @return  array<int,string>  The original sequence of strings.
 	 */
 	public function orig()
 	{
@@ -131,7 +131,7 @@ class Diff
 	 *
 	 * This reconstructs the $to_lines parameter passed to the constructor.
 	 *
-	 * @return  array  The sequence of strings.
+	 * @return  array<int,string>  The sequence of strings.
 	 */
 	public function closing()
 	{
@@ -152,8 +152,8 @@ class Diff
 	 *
 	 * This is here only for debugging purposes.
 	 *
-	 * @param   unknown $from_lines
-	 * @param   unknown $to_lines
+	 * @param   array<int,string> $from_lines
+	 * @param   array<int,string> $to_lines
 	 * @return  void
 	 */
 	public function _check($from_lines, $to_lines)

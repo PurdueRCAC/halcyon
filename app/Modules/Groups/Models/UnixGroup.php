@@ -180,7 +180,7 @@ class UnixGroup extends Model
 			}
 		}
 
-		return 'rcs' . str_pad($this->groupid, 4, '0', STR_PAD_LEFT) . $lastchar;
+		return 'rcs' . str_pad("{$this->groupid}", 4, '0', STR_PAD_LEFT) . $lastchar;
 	}
 
 	/**
@@ -288,7 +288,12 @@ class UnixGroup extends Model
 			}
 		}*/
 
-		return $member->delete();
+		if (!$member->delete())
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

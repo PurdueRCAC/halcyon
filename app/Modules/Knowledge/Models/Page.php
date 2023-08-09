@@ -40,7 +40,7 @@ use Carbon\Carbon;
  * @property int    $state
  * @property int    $access
  * @property string $content
- * @property string $params
+ * @property Params $params
  * @property int    $main
  * @property int    $snippet
  */

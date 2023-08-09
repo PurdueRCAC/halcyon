@@ -19,7 +19,7 @@ class Delete extends Operation
 	/**
 	 * Constructor
 	 *
-	 * @param  array $lines
+	 * @param  array<int,string> $lines
 	 * @return void
 	 */
 	public function __construct($lines)
@@ -31,7 +31,7 @@ class Delete extends Operation
 	/**
 	 * Reverse opration
 	 *
-	 * @return object
+	 * @return Add
 	 */
 	public function reverse()
 	{

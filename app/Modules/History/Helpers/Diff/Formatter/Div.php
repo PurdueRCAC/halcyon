@@ -32,11 +32,11 @@ class Div extends Formatter
 	 *
 	 * Long description (if any) ...
 	 *
-	 * @param      string $xbeg Parameter description (if any) ...
-	 * @param      unknown $xlen Parameter description (if any) ...
-	 * @param      string $ybeg Parameter description (if any) ...
-	 * @param      unknown $ylen Parameter description (if any) ...
-	 * @return     string Return description (if any) ...
+	 * @param      string $xbeg
+	 * @param      int $xlen
+	 * @param      string $ybeg
+	 * @param      int $ylen
+	 * @return     string
 	 */
 	public function _block_header($xbeg, $xlen, $ybeg, $ylen)
 	{
@@ -49,7 +49,7 @@ class Div extends Formatter
 	 *
 	 * Long description (if any) ...
 	 *
-	 * @param      unknown $header Parameter description (if any) ...
+	 * @param      string $header
 	 * @return     void
 	 */
 	public function _start_block($header)
@@ -73,9 +73,9 @@ class Div extends Formatter
 	 *
 	 * Long description (if any) ...
 	 *
-	 * @param      unknown $lines Parameter description (if any) ...
-	 * @param      string $prefix Parameter description (if any) ...
-	 * @param      string $color Parameter description (if any) ...
+	 * @param      array<int,string> $lines
+	 * @param      string $prefix
+	 * @param      string $color
 	 * @return     void
 	 */
 	public function _lines($lines, $prefix=' ', $color='white')
@@ -85,8 +85,8 @@ class Div extends Formatter
 	/**
 	 * HTML-escape parameter before calling this
 	 *
-	 * @param      unknown $line Parameter description (if any) ...
-	 * @return     string Return description (if any) ...
+	 * @param      string $line
+	 * @return     string
 	 */
 	public function addedLine($line)
 	{
@@ -96,8 +96,8 @@ class Div extends Formatter
 	/**
 	 * HTML-escape parameter before calling this
 	 *
-	 * @param      unknown $line Parameter description (if any) ...
-	 * @return     string Return description (if any) ...
+	 * @param      string $line
+	 * @return     string
 	 */
 	public function deletedLine($line)
 	{
@@ -107,8 +107,8 @@ class Div extends Formatter
 	/**
 	 * HTML-escape parameter before calling this
 	 *
-	 * @param      unknown $line Parameter description (if any) ...
-	 * @return     string Return description (if any) ...
+	 * @param      string $line
+	 * @return     string
 	 */
 	public function contextLine($line)
 	{
@@ -116,14 +116,12 @@ class Div extends Formatter
 	}
 
 	/**
-	 * Short description for 'wrapLine'
+	 * Wrap a line in a DIV
 	 *
-	 * Long description (if any) ...
-	 *
-	 * @param      unknown $marker Parameter description (if any) ...
-	 * @param      string $class Parameter description (if any) ...
-	 * @param      string $line Parameter description (if any) ...
-	 * @return     string Return description (if any) ...
+	 * @param      string $marker
+	 * @param      string $class
+	 * @param      string $line
+	 * @return     string
 	 */
 	private function wrapLine($marker, $class, $line)
 	{
@@ -137,11 +135,9 @@ class Div extends Formatter
 	}
 
 	/**
-	 * Short description for 'emptyLine'
+	 * Return an empty line
 	 *
-	 * Long description (if any) ...
-	 *
-	 * @return     string Return description (if any) ...
+	 * @return string
 	 */
 	public function emptyLine()
 	{
@@ -153,7 +149,7 @@ class Div extends Formatter
 	 *
 	 * Long description (if any) ...
 	 *
-	 * @param      array $lines Parameter description (if any) ...
+	 * @param      array<int,string> $lines
 	 * @return     void
 	 */
 	public function _added($lines)
@@ -169,7 +165,7 @@ class Div extends Formatter
 	 *
 	 * Long description (if any) ...
 	 *
-	 * @param      array $lines Parameter description (if any) ...
+	 * @param      array<int,string> $lines
 	 * @return     void
 	 */
 	public function _deleted($lines)
@@ -185,7 +181,7 @@ class Div extends Formatter
 	 *
 	 * Long description (if any) ...
 	 *
-	 * @param      array $lines Parameter description (if any) ...
+	 * @param      array<int,string> $lines
 	 * @return     void
 	 */
 	public function _context($lines)
@@ -204,8 +200,8 @@ class Div extends Formatter
 	 *
 	 * Long description (if any) ...
 	 *
-	 * @param      unknown $orig Parameter description (if any) ...
-	 * @param      unknown $closing Parameter description (if any) ...
+	 * @param      array<int,string> $orig
+	 * @param      array<int,string> $closing
 	 * @return     void
 	 */
 	public function _changed($orig, $closing)

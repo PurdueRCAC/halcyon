@@ -30,7 +30,6 @@ return [
 	'action updated' => ':user updated this entry',
 	'action created' => ':user created this entry',
 	'action deleted' => ':user trashed this entry',
-	'history' => 'History',
 	'activity' => 'Activity',
 	'ip' => 'IP',
 	'method' => 'Method',

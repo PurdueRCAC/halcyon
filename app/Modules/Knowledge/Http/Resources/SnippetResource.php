@@ -4,6 +4,9 @@ namespace App\Modules\Knowledge\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin \App\Modules\Pages\Models\SnippetAssociation
+ */
 class SnippetResource extends JsonResource
 {
 	/**

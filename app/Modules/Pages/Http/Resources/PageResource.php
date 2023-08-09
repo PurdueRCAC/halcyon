@@ -5,6 +5,9 @@ namespace App\Modules\Pages\Http\Resources;
 use App\Modules\Pages\Events\PageContentIsRendering;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin \App\Modules\Pages\Models\Page
+ */
 class PageResource extends JsonResource
 {
 	/**

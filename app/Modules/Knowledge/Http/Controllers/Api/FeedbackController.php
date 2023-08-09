@@ -399,14 +399,14 @@ class FeedbackController extends Controller
 	 * 		}
 	 * }
 	 * @param  int $id
-	 * @return JsonResource
+	 * @return JsonResource|JsonResponse
 	 */
 	public function read($id)
 	{
 		$row = Feedback::findOrFail((int)$id);
 
 		// If the user isn't a manager, force all feedback to just theirs
-		if (!auth()->user()->can('manage knowledge') && $row->user_id != auth()->user()->id)
+		if (!auth()->user() || (!auth()->user()->can('manage knowledge') && $row->user_id != auth()->user()->id))
 		{
 			return response()->json(['message' => trans('global.messages.not found')], 404);
 		}

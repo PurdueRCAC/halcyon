@@ -12,7 +12,7 @@ class CreateFeedbackTable extends Migration
 	/**
 	 * Up
 	 **/
-	public function up()
+	public function up(): void
 	{
 		if (!Schema::hasTable('kb_feedback'))
 		{
@@ -35,7 +35,7 @@ class CreateFeedbackTable extends Migration
 	/**
 	 * Down
 	 **/
-	public function down()
+	public function down(): void
 	{
 		$tables = array(
 			'kb_feedback',
