@@ -32,7 +32,7 @@ class Select
 	 * Generates a yes/no radio list.
 	 *
 	 * @param   string  $name      The value of the HTML name attribute
-	 * @param   array   $attribs   Additional HTML attributes for the <select> tag
+	 * @param   array<string,string>|string   $attribs   Additional HTML attributes for the <select> tag
 	 * @param   string  $selected  The key that is selected
 	 * @param   string  $yes       Language key for Yes
 	 * @param   string  $no        Language key for no
@@ -123,9 +123,9 @@ class Select
 	/**
 	 * Generates a grouped HTML selection list from nested arrays.
 	 *
-	 * @param   array   $data     An array of groups, each of which is an array of options.
+	 * @param   array<string,mixed>   $data     An array of groups, each of which is an array of options.
 	 * @param   string  $name     The value of the HTML name attribute
-	 * @param   array   $options  Options, an array of key/value pairs. Valid options are:
+	 * @param   array<string,mixed>   $options  Options, an array of key/value pairs. Valid options are:
 	 *                            Selection options.
 	 *                            group.id: The property in each group to use as the group id
 	 *                            attribute. Defaults to none.
@@ -324,18 +324,20 @@ class Select
 		// Toggle between open and close states:
 		switch ($state)
 		{
-			case 'open':
-				$obj = new stdClass;
-				$obj->$optKey = '<OPTGROUP>';
-				$obj->$optText = $text;
-				$state = 'close';
-				break;
 			case 'close':
 				$obj = new stdClass;
 				$obj->$optKey = '</OPTGROUP>';
 				$obj->$optText = $text;
 				$state = 'open';
-				break;
+			break;
+
+			case 'open':
+			default:
+				$obj = new stdClass;
+				$obj->$optKey = '<OPTGROUP>';
+				$obj->$optText = $text;
+				$state = 'close';
+			break;
 		}
 
 		return $obj;
@@ -647,7 +649,7 @@ class Select
 	 *
 	 * @param   array    $data       An array of objects
 	 * @param   string   $name       The value of the HTML name attribute
-	 * @param   string   $attribs    Additional HTML attributes for the <select> tag
+	 * @param   array<string,string>|string   $attribs    Additional HTML attributes for the <select> tag
 	 * @param   mixed    $optKey     The key that is selected
 	 * @param   string   $optText    The name of the object variable for the option value
 	 * @param   string   $selected   The name of the object variable for the option text
@@ -704,8 +706,7 @@ class Select
 	/**
 	 * Escape text
 	 *
-	 * @param   string  $text
-	 * @return  string
+	 * @param   string  $str
 	 */
 	protected static function escape($str): string
 	{
@@ -715,11 +716,11 @@ class Select
 	/**
 	 * Build the select list for Ordering derived from a query
 	 *
-	 * @param   int  $name      The scalar value
+	 * @param   int      $name      The scalar value
 	 * @param   string   $query     The query
 	 * @param   string   $attribs   HTML tag attributes
 	 * @param   string   $selected  The selected item
-	 * @param   int  $neworder  1 if new and first, -1 if new and last, 0  or null if existing item
+	 * @param   int      $neworder  1 if new and first, -1 if new and last, 0  or null if existing item
 	 * @param   string   $chop      The length of the truncated headline
 	 * @return  string   Html for the select list
 	 */
@@ -784,10 +785,10 @@ class Select
 	/**
 	 * Utility function to map an array to a string.
 	 *
-	 * @param   array    $array         The array to map.
+	 * @param   array<string,mixed>    $array         The array to map.
 	 * @param   string   $inner_glue    The glue (optional, defaults to '=') between the key and the value.
 	 * @param   string   $outer_glue    The glue (optional, defaults to ' ') between array elements.
-	 * @param   bool  $keepOuterKey  True if final key should be kept.
+	 * @param   bool     $keepOuterKey  True if final key should be kept.
 	 * @return  string   The string mapped from the given array
 	 */
 	public static function toString($array = null, $inner_glue = '=', $outer_glue = ' ', $keepOuterKey = false): string

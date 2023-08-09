@@ -41,6 +41,10 @@ class File extends Field
 		$attr = array();
 		foreach ($attributes as $key => $value)
 		{
+			if (!$value)
+			{
+				continue;
+			}
 			$attr[] = $key . '="' . e($value) . '"';
 		}
 		$attr = implode(' ', $attr);

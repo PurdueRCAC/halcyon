@@ -54,7 +54,7 @@ class Asset extends Nested
 	/**
 	 * Generates automatic rules field value
 	 *
-	 * @param   object|string  $rules
+	 * @param   Rules|string  $rules
 	 * @return  void
 	 */
 	public function setRulesAttribute($rules): void

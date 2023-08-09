@@ -44,14 +44,17 @@ class Params implements CastsAttributes
 	 * @param  string  $key
 	 * @param  array  $value
 	 * @param  array  $attributes
-	 * @return string
+	 * @return mixed
 	 */
-	public function set($model, $key, $value, $attributes): string
+	public function set($model, $key, $value, $attributes)
 	{
 		if ($value instanceof Repository)
 		{
 			$value = $value->all();
 		}
-		return json_encode($value);
+		$value = json_encode($value);
+		$value = $value ?: '[]';
+
+		return $value;
 	}
 }

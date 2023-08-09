@@ -217,7 +217,7 @@ class Gate
 	 * @param   int    $roleId  The path to the role for which to check authorisation.
 	 * @param   string $action  The name of the action to authorise.
 	 * @param   mixed  $asset   Asset ID or the name of the asset as a string. Defaults to the global asset node.
-	 * @return  bool   True if authorised.
+	 * @return  bool|null   True if authorised.
 	 */
 	public static function checkRole($roleId, $action, $asset = null)
 	{

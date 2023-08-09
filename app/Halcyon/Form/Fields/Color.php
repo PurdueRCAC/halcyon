@@ -24,13 +24,13 @@ class Color extends Field
 	 */
 	protected function getInput()
 	{
-		if (empty($this->value))
+		$this->value = is_string($this->value) ? '#' . ltrim((string)$this->value, '#') : '';
+
+		if (!$this->value)
 		{
 			// A color field can't be empty, we default to black. This is the same as the HTML5 spec.
 			$this->value = '#000000';
 		}
-
-		$this->value = '#' . ltrim((string)$this->value, '#');
 
 		// Initialize some field attributes.
 		$attributes = array(

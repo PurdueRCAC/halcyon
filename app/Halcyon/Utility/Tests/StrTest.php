@@ -2,13 +2,13 @@
 
 namespace App\Halcyon\Utility\Tests;
 
-use App\Halcyon\Test\Basic;
+use PHPUnit\Framework\TestCase;
 use App\Halcyon\Utility\Str;
 
 /**
  * Str utility test
  */
-class StrTest extends Basic
+class StrTest extends TestCase
 {
 	/**
 	 * Tests extracting key/value pairs out of a string with XML style attributes

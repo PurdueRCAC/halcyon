@@ -348,7 +348,7 @@ class CasManager
 	 * Get the attributes for for the currently connected user. This method
 	 * can only be called after authenticate() or an error wil be thrown.
 	 *
-	 * @return mixed
+	 * @return array
 	 */
 	public function getAttributes()
 	{

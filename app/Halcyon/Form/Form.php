@@ -25,14 +25,14 @@ class Form
 	/**
 	 * The Repository data store for form fields during display.
 	 *
-	 * @var  object
+	 * @var  Repository
 	 */
 	protected $data;
 
 	/**
 	 * The form object errors array.
 	 *
-	 * @var  array
+	 * @var  array<string,Exception>
 	 */
 	protected $errors = array();
 
@@ -46,7 +46,7 @@ class Form
 	/**
 	 * The form object options for use in rendering and validation.
 	 *
-	 * @var  array
+	 * @var  array<string,mixed>
 	 */
 	protected $options = array();
 
@@ -60,7 +60,7 @@ class Form
 	/**
 	 * Form instances.
 	 *
-	 * @var  array
+	 * @var  array<string,Form>
 	 */
 	protected static $forms = array();
 
@@ -254,7 +254,7 @@ class Form
 	/**
 	 * Return all errors, if any.
 	 *
-	 * @return  array  Array of error messages or Exception objects.
+	 * @return  array<string,Exception>  Array of error messages or Exception objects.
 	 */
 	public function getErrors()
 	{

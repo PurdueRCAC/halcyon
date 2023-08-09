@@ -26,6 +26,7 @@ class Combo extends Select
 		// Initialize variables.
 		$html = array();
 		$attr = '';
+		$value = is_string($this->value) ? $this->value : '';
 
 		// Initialize some field attributes.
 		$attr .= $this->element['class'] ? ' class="form-control combobox ' . (string) $this->element['class'] . '"' : ' class="form-control combobox"';
@@ -41,7 +42,7 @@ class Combo extends Select
 		$options = $this->getOptions();
 
 		// Build the input for the combo box.
-		$html[] = '<input type="text" name="' . $this->name . '" id="' . $this->id . '" list="' . $this->id . 'list" value="' . htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' . $attr . '/>';
+		$html[] = '<input type="text" name="' . $this->name . '" id="' . $this->id . '" list="' . $this->id . 'list" value="' . htmlspecialchars($value, ENT_COMPAT, 'UTF-8') . '"' . $attr . '/>';
 
 		// Build the list for the combo box.
 		$html[] = '<datalist id="' . $this->id . 'list">';

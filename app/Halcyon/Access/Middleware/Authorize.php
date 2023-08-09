@@ -19,7 +19,10 @@ class Authorize
 	 */
 	public function handle(Request $request, Closure $next, $ability)
 	{
-		Gate::authorize(auth()->id(), $ability);
+		$id = auth()->id();
+		$id = $id ?: 0;
+
+		Gate::authorize($id, $ability);
 
 		return $next($request);
 	}

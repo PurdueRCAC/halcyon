@@ -272,9 +272,7 @@ class Country extends Select
 	);
 
 	/**
-	 * Method to get the field options.
-	 *
-	 * @return  array<int,stdClass>  The field option objects.
+	 * @inheritdoc
 	 */
 	protected function getOptions()
 	{

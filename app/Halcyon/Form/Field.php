@@ -197,14 +197,7 @@ abstract class Field
 				//$parts = Str::splitCamel(get_class($this));
 				$parts = preg_split('/(?<=[^A-Z_])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][^A-Z_])/x', get_class($this));
 
-				if ($parts[0] == 'J')
-				{
-					$this->type = ucfirst($parts[count($parts) - 1], '_');
-				}
-				else
-				{
-					$this->type = ucfirst($parts[0], '_') . ucfirst($parts[count($parts) - 1], '_');
-				}
+				$this->type = ucfirst($parts[0]) . ucfirst($parts[count($parts) - 1]);
 			}
 		}
 	}
@@ -255,6 +248,7 @@ abstract class Field
 
 				return $this->label;
 				break;
+
 			case 'title':
 				return $this->getTitle();
 				break;
@@ -584,7 +578,7 @@ abstract class Field
 			$attributes = $this->element->attributes();
 
 			// Ensure that the attribute exists
-			if (property_exists($attributes, $name))
+			if ($attributes && property_exists($attributes, $name))
 			{
 				$value = $attributes->$name;
 

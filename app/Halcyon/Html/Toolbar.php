@@ -2,6 +2,8 @@
 
 namespace App\Halcyon\Html;
 
+use App\Halcyon\Html\Toolbar\Button;
+
 /**
  * ToolBar handler
  */
@@ -17,21 +19,21 @@ class Toolbar
 	/**
 	 * Toolbar array
 	 *
-	 * @var  array
+	 * @var  array<int,array>
 	 */
 	protected $_bar = array();
 
 	/**
 	 * Loaded buttons
 	 *
-	 * @var  array
+	 * @var  array<int,Button>
 	 */
 	protected $_buttons = array();
 
 	/**
 	 * Directories, where button types can be stored.
 	 *
-	 * @var  array
+	 * @var  array<int,string>
 	 */
 	protected $_buttonPath = array();
 
@@ -179,7 +181,7 @@ class Toolbar
 	 *
 	 * @param   string   $type  Button Type
 	 * @param   bool  $new   False by default
-	 * @return  object
+	 * @return  Button
 	 */
 	protected function loadButtonType($type, $new = false)
 	{
@@ -337,7 +339,7 @@ class Toolbar
 	 *
 	 * @param   string   $task   An override for the task.
 	 * @param   string   $alt    An override for the alt text.
-	 * @param   bool  $check  True if required to check that a standard list item is checked.
+	 * @param   bool     $check  True if required to check that a standard list item is checked.
 	 * @return  void
 	 */
 	public function addNew($task = 'add', $alt = 'global.toolbar.new', $check = false)
@@ -351,7 +353,7 @@ class Toolbar
 	 *
 	 * @param   string   $task   An override for the task.
 	 * @param   string   $alt    An override for the alt text.
-	 * @param   bool  $check  True if required to check that a standard list item is checked.
+	 * @param   bool     $check  True if required to check that a standard list item is checked.
 	 * @return  void
 	 */
 	public function publish($task = 'publish', $alt = 'global.toolbar.publish', $check = false)
@@ -376,7 +378,7 @@ class Toolbar
 	 *
 	 * @param   string   $task   An override for the task.
 	 * @param   string   $alt    An override for the alt text.
-	 * @param   bool  $check  True if required to check that a standard list item is checked.
+	 * @param   bool     $check  True if required to check that a standard list item is checked.
 	 * @return  void
 	 */
 	public function unpublish($task = 'unpublish', $alt = 'global.toolbar.unpublish', $check = false)
@@ -474,7 +476,7 @@ class Toolbar
 	 *
 	 * @param   string   $task
 	 * @param   string   $alt
-	 * @param   bool  $check  True if required to check that a standard list item is checked.
+	 * @param   bool     $check  True if required to check that a standard list item is checked.
 	 * @return  void
 	 */
 	public function checkin($task = 'checkin', $alt = 'global.toolbar.checkin', $check = true)
@@ -497,12 +499,12 @@ class Toolbar
 	/**
 	 * Writes a configuration button and invokes a cancel operation (eg a checkin).
 	 *
-	 * @param   string  $component  The name of the component, eg, com_content.
-	 * @param   int     $height     The height of the popup.
-	 * @param   int     $width      The width of the popup.
-	 * @param   string  $alt        The name of the button.
-	 * @param   string  $path       An alternative path for the configuation xml relative to PATH_ROOT.
-	 * @param   string  $onClose    Called on close
+	 * @param   string  $module  The name of the component, eg, com_content.
+	 * @param   int     $height  The height of the popup.
+	 * @param   int     $width   The width of the popup.
+	 * @param   string  $alt     The name of the button.
+	 * @param   string  $path    An alternative path for the configuation xml relative to PATH_ROOT.
+	 * @param   string  $onClose Called on close
 	 * @return  void
 	 */
 	public function preferences($module, $height = 550, $width = 875, $alt = 'global.toolbar.options', $path = '', $onClose = '')
@@ -532,7 +534,7 @@ class Toolbar
 	 * @param   string   $name  Name to be used as apart of the id
 	 * @param   string   $task  An override for the task.
 	 * @param   string   $alt   An override for the alt text.
-	 * @param   bool  $list  True to allow use of lists
+	 * @param   bool     $list  True to allow use of lists
 	 * @return  void
 	 */
 	public function confirm($msg = '', $name='delete', $task = 'remove', $alt = 'global.toolbar.delete', $list = true)
@@ -543,11 +545,10 @@ class Toolbar
 	/**
 	 * Writes a button that prompts for confirmation before executing a task
 	 *
-	 * @param   string   $msg   Postscript for the 'are you sure' message.
 	 * @param   string   $name  Name to be used as apart of the id
-	 * @param   string   $task  An override for the task.
 	 * @param   string   $alt   An override for the alt text.
-	 * @param   bool  $list  True to allow use of lists
+	 * @param   string   $url
+	 * @param   bool     $list  True to allow use of lists
 	 * @return  void
 	 */
 	public function link($name, $alt, $url, $list = true)
@@ -560,7 +561,7 @@ class Toolbar
 	 *
 	 * @param   string   $name  Name to be used as apart of the id
 	 * @param   string   $alt   An override for the alt text.
-	 * @param   array    $items
+	 * @param   array<string,string>    $items
 	 * @return  void
 	 */
 	public function dropdown($name='', $alt = 'global.toolbar.link', $items = array())

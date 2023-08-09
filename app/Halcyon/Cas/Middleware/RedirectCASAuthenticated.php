@@ -38,7 +38,9 @@ class RedirectCASAuthenticated
 	{
 		if ($this->cas->checkAuthentication())
 		{
-			$route = (string)config('cas.cas_redirect_path');
+			$config = config('cas.cas_redirect_path', []);
+
+			$route = isset($config['cas_redirect_path']) ? (string)$config['cas_redirect_path'] : '';
 			$route = $route ?: route('callback');
 
 			return redirect($route);

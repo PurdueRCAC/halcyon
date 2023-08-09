@@ -12,7 +12,7 @@ use Illuminate\Contracts\Auth\Factory as Auth;
 class AdminMiddleware
 {
 	/**
-	 * @var Authentication
+	 * @var Auth
 	 */
 	private $auth;
 
@@ -39,12 +39,12 @@ class AdminMiddleware
 	/**
 	 * Constructor
 	 *
-	 * @param  \Illuminate\Contracts\Auth\Factory $auth
-	 * @param  \Illuminate\Session\Store $session
-	 * @param  \Illuminate\Http\Request $request
-	 * @param  \Illuminate\Routing\Redirector $redirect
-	 * @param  \Illuminate\Foundation\Application $application
-	 * @return mixed
+	 * @param  Auth $auth
+	 * @param  Store $session
+	 * @param  Request $request
+	 * @param  Redirector $redirect
+	 * @param  Application $application
+	 * @return void
 	 */
 	public function __construct(Auth $auth, Store $session, Request $request, Redirector $redirect, Application $application)
 	{

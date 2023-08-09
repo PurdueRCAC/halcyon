@@ -74,7 +74,7 @@ class Radio extends Field
 			$html[] = '</li>';
 		}
 
-		$i = is_null($i) ? 0 : $i;
+		$i = empty($i) ? 0 : $i;
 
 		if ($this->element['option_other'])
 		{

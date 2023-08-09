@@ -17,7 +17,7 @@ class Sliders
 	/**
 	 * Flag for if a pane is currently open or not
 	 *
-	 * @var  bool
+	 * @var  string
 	 */
 	public static $group = 'sliders';
 

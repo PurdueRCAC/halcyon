@@ -13,7 +13,7 @@ class CreateContactReportsTables extends Migration
 	/**
 	 * Up
 	 **/
-	public function up()
+	public function up(): void
 	{
 		if (!Schema::hasTable('contactreports'))
 		{
@@ -133,7 +133,7 @@ class CreateContactReportsTables extends Migration
 	/**
 	 * Down
 	 **/
-	public function down()
+	public function down(): void
 	{
 		$tables = array(
 			'contactreports',

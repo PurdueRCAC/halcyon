@@ -25,8 +25,8 @@ class Str
 	 * - clean: A boolean or array with instructions for Str::cleanInsert
 	 *
 	 * @param   string  $str      A string containing variable placeholders
-	 * @param   array   $data     A key => val array where each key stands for a placeholder to be replaced with val
-	 * @param   array   $options  An array of options, see description above
+	 * @param   array<string,string>   $data     A key => val array where each key stands for a placeholder to be replaced with val
+	 * @param   array<string,mixed>   $options  An array of options, see description above
 	 * @return  string
 	 */
 	public static function insert($str, $data, $options = array())
@@ -101,7 +101,7 @@ class Str
 	 * by Str::insert().
 	 *
 	 * @param   string  $str
-	 * @param   array   $options
+	 * @param   array<string,mixed>   $options
 	 * @return  string
 	 * @see     Str::insert()
 	 */
@@ -178,7 +178,7 @@ class Str
 	 *
 	 * @param   string  $text     Text to search the phrase in
 	 * @param   string  $phrase   The phrase that will be searched
-	 * @param   array   $options  An array of html attributes and options.
+	 * @param   array<string,mixed>   $options  An array of html attributes and options.
 	 * @return  string  The highlighted text
 	 */
 	public static function highlight($text, $phrase, $options = array())
@@ -237,8 +237,8 @@ class Str
 	 * - `exact` If false, $text will not be cut mid-word
 	 *
 	 * @param   string   $text     String to truncate.
-	 * @param   int  $length   Length of returned string, including ellipsis.
-	 * @param   array    $options  An array of options.
+	 * @param   int      $length   Length of returned string, including ellipsis.
+	 * @param   array<string,mixed>    $options  An array of options.
 	 * @return  string   Trimmed string.
 	 */
 	public static function tail($text, $length = 100, $options = array())
@@ -278,8 +278,8 @@ class Str
 	 * - `html` If true, HTML tags would be handled correctly
 	 *
 	 * @param   string   $text     String to truncate.
-	 * @param   int  $length   Length of returned string, including ellipsis.
-	 * @param   array    $options  An array of html attributes and options.
+	 * @param   int      $length   Length of returned string, including ellipsis.
+	 * @param   array<string,mixed>    $options  An array of html attributes and options.
 	 * @return  string   Trimmed string.
 	 */
 	public static function truncate($text, $length = 100, $options = array())
@@ -407,7 +407,7 @@ class Str
 	 *
 	 * @param   string   $text      String to search the phrase in
 	 * @param   string   $phrase    Phrase that will be searched for
-	 * @param   int  $radius    The amount of characters that will be returned on each side of the founded phrase
+	 * @param   int      $radius    The amount of characters that will be returned on each side of the founded phrase
 	 * @param   string   $ellipsis  Ending that will be appended
 	 * @return  string   Modified string
 	 */
@@ -506,8 +506,7 @@ class Str
 	 *
 	 * @param   string  $needle    The item of interest
 	 * @param   string  $haystack  The text in which to look for the needle
-	 * @return  array
-	 * @since   2.0.0
+	 * @return  array<int,int>
 	 */
 	public static function findLiteral($needle, $haystack)
 	{
@@ -590,7 +589,6 @@ class Str
 	 * @param   string  $value
 	 * @param   string  $delimiter
 	 * @return  string
-	 * @since   2.0.0
 	 */
 	public static function snake($value, $delimiter = '_')
 	{
@@ -608,7 +606,6 @@ class Str
 	 *
 	 * @param   string  $value
 	 * @return  string
-	 * @since   2.0.0
 	 */
 	public static function camel($value)
 	{
@@ -622,8 +619,7 @@ class Str
 	 * ThisTextIsCamelCase -> "This Text Is Camel Case"
 	 *
 	 * @param   string  $string  The source string.
-	 * @return  array   The splitted string.
-	 * @since   2.0.0
+	 * @return  array<int,string>   The splitted string.
 	 */
 	public static function splitCamel($string)
 	{
@@ -636,7 +632,6 @@ class Str
 	 * @param   string  $haystack
 	 * @param   mixed   $needles   string|array
 	 * @return  bool
-	 * @since   2.0.0
 	 */
 	public static function contains($haystack, $needles)
 	{
@@ -657,7 +652,6 @@ class Str
 	 * @param   string  $haystack
 	 * @param   mixed   $needles   string|array
 	 * @return  bool
-	 * @since   2.0.0
 	 */
 	public static function startsWith($haystack, $needles)
 	{
@@ -678,7 +672,6 @@ class Str
 	 * @param   string  $haystack
 	 * @param   mixed   $needles   string|array
 	 * @return  bool
-	 * @since   2.0.0
 	 */
 	public static function endsWith($haystack, $needles)
 	{
@@ -715,7 +708,7 @@ class Str
 	 * Method to extract key/value pairs out of a string with XML style attributes
 	 *
 	 * @param   string  $string  String containing XML style attributes
-	 * @return  array   Key/Value pairs for the attributes
+	 * @return  array<string,string>   Key/Value pairs for the attributes
 	 */
 	public static function parseAttributes($string)
 	{

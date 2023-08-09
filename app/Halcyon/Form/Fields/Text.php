@@ -23,10 +23,17 @@ class Text extends Field
 	 */
 	protected function getInput()
 	{
+		$value = $this->value;
+		$value = is_null($value) ? '' : $value;
+		if (is_string($value))
+		{
+			$value = htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8');
+		}
+
 		// Initialize some field attributes.
 		$attributes = array(
 			'type'         => 'text',
-			'value'        => htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8'),
+			'value'        => $value,
 			'name'         => $this->name,
 			'id'           => $this->id,
 			'size'         => ($this->element['size']      ? (int) $this->element['size']      : ''),

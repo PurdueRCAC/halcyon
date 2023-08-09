@@ -13,7 +13,7 @@ class AddWaitPeriod extends Migration
 	/**
 	 * Up
 	 **/
-	public function up()
+	public function up(): void
 	{
 		if (Schema::hasTable('contactreporttypes') && !Schema::hasColumn('contactreporttypes', 'waitperiodid'))
 		{
@@ -35,7 +35,7 @@ class AddWaitPeriod extends Migration
 	/**
 	 * Down
 	 **/
-	public function down()
+	public function down(): void
 	{
 		if (Schema::hasTable('contactreporttypes') && Schema::hasColumn('contactreporttypes', 'waitperiodid'))
 		{

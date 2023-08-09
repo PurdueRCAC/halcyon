@@ -3,7 +3,7 @@
 namespace App\Halcyon\Form\Fields;
 
 //use App\Halcyon\Form\Field;
-//use App\Halcyon\Html\Editor as Wysiwyg;
+use App\Halcyon\Models\Extension;
 use App\Modules\Core\Events\EditorIsRendering;
 
 /**
@@ -21,7 +21,7 @@ class Editor extends Textarea
 	/**
 	 * The Editor object.
 	 *
-	 * @var  object
+	 * @var  Extension|null
 	 */
 	protected $editor;
 
@@ -80,7 +80,7 @@ class Editor extends Textarea
 	/**
 	 * Method to get a Editor object based on the form field.
 	 *
-	 * @return  object  The Editor object.
+	 * @return  Extension|null  The Editor object.
 	 */
 	protected function getEditor()
 	{
@@ -105,7 +105,7 @@ class Editor extends Textarea
 				foreach ($types as $element)
 				{
 					// Build the query.
-					$editor = $db->table('extensions')
+					$editor = Extension::query()
 						->select('element')
 						->where('element', '=', $element)
 						->where('folder', '=', 'editors')
@@ -122,7 +122,7 @@ class Editor extends Textarea
 			}
 
 			// Create the Editor instance based on the given editor.
-			$this->editor = $editor; //Wysiwyg::getInstance($editor);
+			$this->editor = $editor;
 		}
 
 		return $this->editor;
@@ -131,10 +131,12 @@ class Editor extends Textarea
 	/**
 	 * Method to get the Editor output for an onSave event.
 	 *
-	 * @return  string  The Editor object output.
+	 * @return  bool
 	 */
 	public function save()
 	{
-		return $this->getEditor()->save($this->id);
+		$editor = $this->getEditor();
+
+		return $editor ? $editor->save($this->id) : false;
 	}
 }

@@ -44,7 +44,7 @@ class Helper
 	 * Method to load a form field object given a type.
 	 *
 	 * @param   string   $type  The field type.
-	 * @param   bool  $new   Flag to toggle whether we should get a new instance of the object.
+	 * @param   bool     $new   Flag to toggle whether we should get a new instance of the object.
 	 * @return  mixed    Field object on success, false otherwise.
 	 */
 	public static function loadFieldType($type, $new = true)
@@ -56,7 +56,7 @@ class Helper
 	 * Method to load a form rule object given a type.
 	 *
 	 * @param   string   $type  The rule type.
-	 * @param   bool  $new   Flag to toggle whether we should get a new instance of the object.
+	 * @param   bool     $new   Flag to toggle whether we should get a new instance of the object.
 	 * @return  mixed    Rule object on success, false otherwise.
 	 */
 	public static function loadRuleType($type, $new = true)
@@ -71,7 +71,7 @@ class Helper
 	 *
 	 * @param   string   $entity  The entity.
 	 * @param   string   $type    The entity type.
-	 * @param   bool  $new     Flag to toggle whether we should get a new instance of the object.
+	 * @param   bool     $new     Flag to toggle whether we should get a new instance of the object.
 	 * @return  mixed    Entity object on success, false otherwise.
 	 */
 	protected static function loadType($entity, $type, $new = true)

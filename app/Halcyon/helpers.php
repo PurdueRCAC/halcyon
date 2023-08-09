@@ -6,7 +6,7 @@ if (! function_exists('parse_ini_string_m'))
 	 * Parse an INI file into an array
 	 *
 	 * @param   string  $str
-	 * @return  array
+	 * @return  array<string,mixed>|false
 	 */
 	function parse_ini_string_m($str)
 	{
@@ -103,7 +103,7 @@ if (! function_exists('conf'))
 	 * @param  string  $service
 	 * @param  string  $key
 	 * @param  mixed   $default
-	 * @return string
+	 * @return mixed
 	 */
 	function conf($service, $key, $default = null)
 	{

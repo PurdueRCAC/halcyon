@@ -103,7 +103,7 @@ class Select extends Field
 	/**
 	 * Method to get the field options.
 	 *
-	 * @return  array<int,\stdClass>  The field option objects.
+	 * @return  array<int,\stdClass|\Illuminate\Support\Fluent>  The field option objects.
 	 */
 	protected function getOptions()
 	{

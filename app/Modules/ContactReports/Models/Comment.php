@@ -114,15 +114,20 @@ class Comment extends Model
 	 */
 	public function getFormattedDateAttribute(): string
 	{
-		$startdate = $this->datetimecreated->toDateTimeString();
+		$datestring = '';
 
-		$starttime = explode(' ', $startdate);
-		$starttime = $starttime[1];
-
-		$datestring = $this->datetimecreated->format('F j, Y');
-		if ($starttime != '00:00:00')
+		if ($this->datetimecreated)
 		{
-			$datestring .= ' ' . $this->datetimecreated->format('g:ia');
+			$startdate = $this->datetimecreated->toDateTimeString();
+
+			$starttime = explode(' ', $startdate);
+			$starttime = $starttime[1];
+
+			$datestring = $this->datetimecreated->format('F j, Y');
+			if ($starttime != '00:00:00')
+			{
+				$datestring .= ' ' . $this->datetimecreated->format('g:ia');
+			}
 		}
 
 		return $datestring;
@@ -136,9 +141,9 @@ class Comment extends Model
 	public function getContentVars(): array
 	{
 		$uvars = array(
-			'updatedatetime' => $this->datetimecreated->format('Y-m-d h:i:s'),
-			'updatedate'     => $this->datetimecreated->format('l, F jS, Y'),
-			'updatetime'     => $this->datetimecreated->format('g:ia')
+			'updatedatetime' => $this->datetimecreated ? $this->datetimecreated->format('Y-m-d h:i:s') : '',
+			'updatedate'     => $this->datetimecreated ? $this->datetimecreated->format('l, F jS, Y') : '',
+			'updatetime'     => $this->datetimecreated ? $this->datetimecreated->format('g:ia') : ''
 		);
 
 		$variables = array_merge($this->report->getContentVars(), $uvars);
@@ -154,6 +159,7 @@ class Comment extends Model
 	public function toMarkdown(): string
 	{
 		$text = $this->comment;
+		$text = $text ?: '';
 
 		$text = $this->removePreformattedText($text);
 

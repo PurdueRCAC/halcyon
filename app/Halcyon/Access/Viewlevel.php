@@ -78,7 +78,7 @@ class Viewlevel extends Model
 	/**
 	 * Saves the current model to the database
 	 *
-	 * @param  array  $options
+	 * @param  array<string,mixed>  $options
 	 * @return  bool
 	 */
 	public function save(array $options = []): bool

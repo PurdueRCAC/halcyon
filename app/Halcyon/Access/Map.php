@@ -64,9 +64,9 @@ class Map extends Model
 	/**
 	 * Delete the specified record
 	 *
-	 * @return bool
+	 * @return bool|null
 	 */
-	public function delete(): bool
+	public function delete()
 	{
 		return self::query()
 			->where('role_id', '=', $this->role_id)
@@ -78,9 +78,9 @@ class Map extends Model
 	 * Delete objects of this type by Role ID
 	 *
 	 * @param   mixed  $role_id  Integer or array of integers
-	 * @return  bool
+	 * @return  bool|null
 	 */
-	public static function destroyByRole($role_id): bool
+	public static function destroyByRole($role_id)
 	{
 		$role_id = (is_array($role_id) ? $role_id : array($role_id));
 
@@ -93,9 +93,9 @@ class Map extends Model
 	 * Delete objects of this type by User ID
 	 *
 	 * @param   mixed  $user_id  Integer or array of integers
-	 * @return  bool
+	 * @return  bool|null
 	 */
-	public static function destroyByUser($user_id): bool
+	public static function destroyByUser($user_id)
 	{
 		$user_id = (is_array($user_id) ? $user_id : array($user_id));
 
@@ -160,9 +160,9 @@ class Map extends Model
 	 *
 	 * @param   mixed  $user_id  Integer
 	 * @param   mixed  $role_id  Integer or array of integers
-	 * @return  bool
+	 * @return  bool|null
 	 */
-	public static function removeUserFromRole($user_id, $role_id): bool
+	public static function removeUserFromRole($user_id, $role_id)
 	{
 		$role_id = (is_array($role_id) ? $role_id : array($role_id));
 

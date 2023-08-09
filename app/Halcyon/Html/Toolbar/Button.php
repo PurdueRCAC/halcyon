@@ -18,14 +18,14 @@ abstract class Button
 	/**
 	 * Reference to the object that instantiated the element
 	 *
-	 * @var  object  Button
+	 * @var  \App\Halcyon\Html\Toolbar
 	 */
 	protected $_parent = null;
 
 	/**
 	 * Constructor
 	 *
-	 * @param   object  $parent  The parent
+	 * @param   \App\Halcyon\Html\Toolbar  $parent
 	 * @return  void
 	 */
 	public function __construct($parent = null)
@@ -46,7 +46,7 @@ abstract class Button
 	/**
 	 * Get the HTML to render the button
 	 *
-	 * @param   array  &$definition  Parameters to be passed
+	 * @param   array<int,mixed>  &$definition  Parameters to be passed
 	 * @return  string
 	 */
 	public function render(&$definition)

@@ -288,8 +288,8 @@ class Grid
 		{
 			$text = addslashes(htmlspecialchars($row->editor, ENT_COMPAT, 'UTF-8'));
 
-			$date = with(new Carbon($row->checked_out_time))->format('l, d F Y');
-			$time = with(new Carbon($row->checked_out_time))->format('H:i');
+			$date = Carbon::parse($row->checked_out_time)->format('l, d F Y');
+			$time = Carbon::parse($row->checked_out_time)->format('H:i');
 
 			$hover = '<span class="editlinktip hasTip" title="' . trans('global.check out') . '::' . $text . '<br />' . $date . '<br />' . $time . '">';
 		}
@@ -319,8 +319,8 @@ class Grid
 		}
 
 		$text = addslashes(htmlspecialchars($editorName, ENT_COMPAT, 'UTF-8'));
-		$date = addslashes(htmlspecialchars(with(new Carbon($time))->format('l, d F Y'), ENT_COMPAT, 'UTF-8'));
-		$time = addslashes(htmlspecialchars(with(new Carbon($time))->format('H:i'), ENT_COMPAT, 'UTF-8'));
+		$date = addslashes(htmlspecialchars(Carbon::prase($time)->format('l, d F Y'), ENT_COMPAT, 'UTF-8'));
+		$time = addslashes(htmlspecialchars(Carbon::parse($time)->format('H:i'), ENT_COMPAT, 'UTF-8'));
 
 		$active_title   = trans('global.check in') . '::' . $text . '<br />' . $date . '<br />' . $time;
 		$inactive_title = trans('global.checked out') . '::' . $text . '<br />' . $date . '<br />' . $time;

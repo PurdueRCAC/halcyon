@@ -590,6 +590,6 @@ class Sanitize
 			$source
 		);
 
-		return $source;
+		return ($source ? $source : '');
 	}
 }

@@ -23,10 +23,12 @@ class Number extends Field
 	 */
 	protected function getInput()
 	{
+		$value = is_numeric($this->value) ? (int)$this->value : 0;
+
 		// Initialize some field attributes.
 		$attributes = array(
 			'type'         => 'number',
-			'value'        => htmlspecialchars((string)$this->value, ENT_COMPAT, 'UTF-8'),
+			'value'        => $value,
 			'name'         => $this->name,
 			'id'           => $this->id,
 			'min'          => (!is_null($this->element['min']) ? (int) $this->element['min'] : null),

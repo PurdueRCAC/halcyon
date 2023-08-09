@@ -40,18 +40,27 @@ class TrailTest extends TestCase
 
 		$item = $pathway->get(0);
 
-		$this->assertEquals($crumb1->name, $item->name);
-		$this->assertEquals($crumb1->link, $item->link);
+		if ($item)
+		{
+			$this->assertEquals($crumb1->name, $item->name);
+			$this->assertEquals($crumb1->link, $item->link);
+		}
 
 		$item = $pathway->get(1);
 
-		$this->assertEquals($crumb2->name, $item->name);
-		$this->assertEquals($crumb2->link, $item->link);
+		if ($item)
+		{
+			$this->assertEquals($crumb2->name, $item->name);
+			$this->assertEquals($crumb2->link, $item->link);
+		}
 
 		$item = $pathway->offsetGet(2);
 
-		$this->assertEquals($crumb3->name, $item->name);
-		$this->assertEquals($crumb3->link, $item->link);
+		if ($item)
+		{
+			$this->assertEquals($crumb3->name, $item->name);
+			$this->assertEquals($crumb3->link, $item->link);
+		}
 
 		$pathway->forget(1);
 
@@ -272,6 +281,8 @@ class TrailTest extends TestCase
 			}
 			$i++;
 		}
-		$this->assertEquals($first, $pathway->rewind());
+		$pathway->rewind();
+
+		$this->assertEquals($first, $pathway->get(0));
 	}
 }

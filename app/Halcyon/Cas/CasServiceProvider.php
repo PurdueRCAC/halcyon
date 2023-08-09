@@ -34,9 +34,10 @@ class CasServiceProvider extends ServiceProvider
 	{
 		$this->app->singleton('cas', function ()
 		{
-			$config = config('cas');
+			$config = config('cas', []);
 
-			if (!strstr($config['cas_redirect_path'], 'authenticator='))
+			if (isset($config['cas_redirect_path'])
+			 && !strstr($config['cas_redirect_path'], 'authenticator='))
 			{
 				$config['cas_redirect_path'] .= strstr($config['cas_redirect_path'], '?') ? '&' : '?';
 				$config['cas_redirect_path'] .= 'authenticator=cas';
