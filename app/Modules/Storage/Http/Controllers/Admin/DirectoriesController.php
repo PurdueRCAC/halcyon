@@ -251,7 +251,7 @@ class DirectoriesController extends Controller
 			unset($data['bytesource']);
 		}
 
-		$row = $id ? Directory::findOrFail($id) : new Directory;
+		$row = Directory::findOrNew($id);
 
 		// Reset everything in case someone unchecked a box on the form
 		// Checked boxes will get set to 1 with the data fill below

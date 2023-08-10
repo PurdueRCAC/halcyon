@@ -9,6 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Halcyon\Access\Viewlevel as Level;
 use App\Halcyon\Access\Asset;
+use App\Halcyon\Access\Rules;
 use App\Halcyon\Models\Extension;
 
 /**
@@ -191,7 +192,7 @@ class PermissionsController extends Controller
 
 		if ($return instanceof \Exception)
 		{
-			return redirect()->back()->withInput()->withError($return->getMessage());
+			return response()->json(['message' => $return->getMessage()], 500);
 		}
 
 		// Check the validation results.
@@ -210,7 +211,7 @@ class PermissionsController extends Controller
 				}
 			}
 
-			return redirect()->back()->withInput()->withErrors($errors);
+			return response()->json(['message' => $errors], 415);
 		}
 
 		// Save the rules.

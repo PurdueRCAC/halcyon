@@ -91,7 +91,8 @@ class RolesController extends Controller
 	public function store(Request $request)
 	{
 		$rules = [
-			'fields.title' => 'required|string|max:100'
+			'fields.title'     => 'required|string|max:100',
+			'fields.parent_id' => 'required|integer|min:1'
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -105,7 +106,7 @@ class RolesController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Role::findOrFail($id) : new Role();
+		$row = Role::findOrNew($id);
 		$row->fill($request->input('fields'));
 
 		// Check the super admin permissions for group

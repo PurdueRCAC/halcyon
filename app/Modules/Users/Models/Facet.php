@@ -18,6 +18,8 @@ use App\Modules\Users\Events\FacetDeleted;
  * @property string $value
  * @property int    $locked
  * @property int    $access
+ *
+ * @property string $api
  */
 class Facet extends Model
 {

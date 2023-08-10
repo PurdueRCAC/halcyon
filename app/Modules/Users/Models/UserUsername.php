@@ -3,7 +3,9 @@ namespace App\Modules\Users\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 /**
  * User Usernames
@@ -111,7 +113,7 @@ class UserUsername extends Model
 	/**
 	 * Get notes
 	 *
-	 * @return  object
+	 * @return  BelongsTo
 	 */
 	public function user()
 	{

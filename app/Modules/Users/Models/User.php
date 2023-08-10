@@ -5,6 +5,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -31,6 +32,12 @@ use Carbon\Carbon;
  * @property string $api_token
  * @property string $password
  * @property int    $enabled
+ *
+ * Temporary attributes
+ *
+ * @property array  $newroles
+ * @property string $loginShell
+ * @property string $api
  */
 class User extends Model implements
 	AuthenticatableContract,
@@ -287,7 +294,7 @@ class User extends Model implements
 	/**
 	 * Get permissions of the modules provided
 	 *
-	 * @return array
+	 * @return array<string,mixed>
 	 */
 	public function getModulePermissionsAttribute()
 	{
@@ -588,13 +595,15 @@ class User extends Model implements
 	 *
 	 * @param   string  $key
 	 * @param   mixed   $default
-	 * @return  string
+	 * @return  mixed
 	 */
 	public function facet($key, $default = null)
 	{
-		$facet = $this->facets->where('key', $key);
+		$facet = $this->facets
+			->where('key', $key)
+			->first();
 
-		return count($facet) ? $facet->first()->value : $default;
+		return $facet ? $facet->value : $default;
 	}
 
 	/**
@@ -741,10 +750,10 @@ class User extends Model implements
 	/**
 	 * Find users that are activated and non-blocked
 	 *
-	 * @param   object  $query  \Illuminate\Database\Eloquent\Builder
-	 * @return  object  \Illuminate\Database\Eloquent\Builder
+	 * @param   Builder $query
+	 * @return  Builder
 	 */
-	public function scopeActive($query)
+	public function scopeActive(Builder $query): Builder
 	{
 		return $query->where('blocked', '=', 0)
 			->where('activation', '>', 0);
@@ -784,7 +793,7 @@ class User extends Model implements
 				}
 			}
 		}
-		catch (Exception $e)
+		catch (\Exception $e)
 		{
 			$result = false;
 		}
@@ -817,7 +826,8 @@ class User extends Model implements
 
 		if (!$newUsertype)
 		{
-			$newUsertype = Role::findByTitle('Registered')->id;
+			$role = Role::findByTitle('Registered');
+			$newUsertype = $role ? $role->id : 1;
 		}
 
 		return $newUsertype;

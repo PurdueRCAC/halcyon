@@ -214,7 +214,7 @@ class UsersController extends Controller
 
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
+			->paginate((int)$filters['limit'], ['*'], 'page', (int)$filters['page']);
 
 		return view('users::admin.users.index', [
 			'rows' => $rows,
@@ -266,7 +266,7 @@ class UsersController extends Controller
 		$id = $request->input('id');
 		$fields = $request->input('fields');
 
-		$user = $id ? User::findOrFail($id) : new User();
+		$user = User::findOrNew($id);
 		$user->fill($fields);
 
 		if (!$user->id)
@@ -498,7 +498,7 @@ class UsersController extends Controller
 			$user = User::findOrFail(intval($id));
 			$user->enabled = $state;
 
-			if (!$user->enabled && $user->id == auth()->user()->id)
+			if (!$user->enabled && auth()->user() && $user->id == auth()->user()->id)
 			{
 				$request->session()->flash('error', trans('users::users.error.cannot disable self'));
 				continue;

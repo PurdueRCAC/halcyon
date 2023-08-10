@@ -158,7 +158,7 @@ class TagsController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Tag::findOrFail($id) : new Tag();
+		$row = Tag::findOrNew($id);
 		$row->fill($request->input('fields'));
 
 		if (!$row->created_by)

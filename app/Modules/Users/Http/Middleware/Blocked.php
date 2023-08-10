@@ -35,7 +35,9 @@ class Blocked
 	 */
 	public function handle($request, Closure $next)
 	{
-		if ($this->auth->check() && $this->auth->user()->blocked)
+		if ($this->auth->check()
+		 && $this->auth->user()
+		 && $this->auth->user()->blocked)
 		{
 			abort(403);
 		}

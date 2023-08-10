@@ -153,7 +153,7 @@ class LevelsController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Level::findOrFail($id) : new Level();
+		$row = Level::findOrNew($id);
 		$row->fill($request->input('fields'));
 		$row->rules = array_map('intval', $row->rules);
 

@@ -89,7 +89,7 @@ class TaggedController extends Controller
 	 */
 	public function create()
 	{
-		$row = new Tag();
+		$row = new Tagged();
 
 		if ($fields = app('request')->old('fields'))
 		{
@@ -110,7 +110,9 @@ class TaggedController extends Controller
 	public function store(Request $request)
 	{
 		$rules = [
-			'fields.name' => 'required|string'
+			'fields.tag_id' => 'required|integer',
+			'fields.taggable_id' => 'required|integer',
+			'fields.taggable_type' => 'required|string|max:255'
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -124,18 +126,12 @@ class TaggedController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Tag::findOrFail($id) : new Tag();
+		$row = Tagged::findOrNew($id);
 		$row->fill($request->input('fields'));
-		$row->slug = $row->normalize($row->name);
 
-		if (!$row->created_by)
+		if (!$row->created_by && auth()->user())
 		{
 			$row->created_by = auth()->user()->id;
-		}
-
-		if (!$row->updated_by)
-		{
-			$row->updated_by = auth()->user()->id;
 		}
 
 		if (!$row->save())
@@ -154,7 +150,7 @@ class TaggedController extends Controller
 	 */
 	public function edit($id)
 	{
-		$row = Tag::findOrFail($id);
+		$row = Tagged::findOrFail($id);
 
 		if ($fields = app('request')->old('fields'))
 		{
@@ -181,7 +177,7 @@ class TaggedController extends Controller
 
 		foreach ($ids as $id)
 		{
-			$row = Tag::findOrFail($id);
+			$row = Tagged::findOrFail($id);
 
 			if (!$row->delete())
 			{

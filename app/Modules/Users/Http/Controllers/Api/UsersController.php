@@ -18,6 +18,7 @@ use App\Modules\Users\Events\UserUpdated;
 use App\Modules\Users\Events\UserDeleted;
 use App\Halcyon\Access\Map;
 use App\Halcyon\Access\Gate;
+use Carbon\Carbon;
 
 /**
  * Users
@@ -421,7 +422,7 @@ class UsersController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param  int  $id
+	 * @param  int|string  $id
 	 * @return UserResource
 	 */
 	public function read(Request $request, $id)
@@ -586,12 +587,12 @@ class UsersController extends Controller
 			//$user->fill($fields);
 
 			// Can't block yourself
-			/*if ($user->block && $user->id == auth()->user()->id)
+			/*if ($user->block && auth()->user() && $user->id == auth()->user()->id)
 			{
 				throw new \Exception(trans('users::users.error.cannot block self'));
 			}*/
 
-			if ($request->has('roles') && auth()->user()->can('edit.state users'))
+			if ($request->has('roles') && auth()->user() && auth()->user()->can('edit.state users'))
 			{
 				$roles = $request->input('roles', []);
 

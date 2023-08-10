@@ -141,7 +141,7 @@ class NotificationTypesController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Type::findOrFail($id) : new Type;
+		$row = Type::findOrNew($id);
 
 		$row->fill($request->input('fields'));
 

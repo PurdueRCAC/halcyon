@@ -193,7 +193,7 @@ class ThemesController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Theme::findOrFail($id) : new Theme();
+		$row = Theme::findOrNew($id);
 		$row->fill($request->input('fields'));
 
 		if (!$row->save())

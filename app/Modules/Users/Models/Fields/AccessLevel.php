@@ -3,6 +3,7 @@ namespace App\Modules\Users\Models\Fields;
 
 use App\Halcyon\Access\Viewlevel;
 use App\Halcyon\Form\Fields\Select;
+use stdClass;
 
 /**
  * Access level select
@@ -19,26 +20,30 @@ class AccessLevel extends Select
 	/**
 	 * Method to get the list of menus for the field options.
 	 *
-	 * @return  array<int,Role>  The field option objects.
+	 * @return  array<int,\Illuminate\Support\Fluent|\stdClass>  The field option objects.
 	 */
 	protected function getOptions()
 	{
-		$all = new Viewlevel;
+		$all = new stdClass;
 		$all->value = 0;
 		$all->text = '- ' . trans('global.all') . ' -';
 
-		$options = Viewlevel::query()
+		$options = array();
+		$options[] = $all;
+
+		$levels = Viewlevel::query()
 			->orderBy('id', 'asc')
 			->get();
 
-		$options->each(function($item)
+		foreach ($levels as $level)
 		{
-			$item->value = $item->id;
-			$item->text = $item->title;
-		});
+			$option = new stdClass;
+			$option->value = $level->id;
+			$option->text  = $level->title;
 
-		$options->prepend($all);
+			$options[] = $option;
+		}
 
-		return $options->toArray();
+		return $options;
 	}
 }

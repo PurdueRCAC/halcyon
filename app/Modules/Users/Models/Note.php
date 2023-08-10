@@ -26,6 +26,8 @@ use Carbon\Carbon;
  * @property Carbon|null $updated_at
  * @property int    $updated_by
  * @property Carbon|null $deleted_at
+ *
+ * @property string $api
  */
 class Note extends Model
 {

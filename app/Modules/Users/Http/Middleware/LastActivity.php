@@ -30,19 +30,23 @@ class LastActivity
 	/**
 	 * Handle an incoming request.
 	 *
-	 * @param   equest  $request
+	 * @param   Request  $request
 	 * @param   Closure  $next
 	 * @return  mixed
 	 */
 	public function handle(Request $request, Closure $next)
 	{
 		if ($this->auth->check()
-		 && $this->auth->user()->last_visit < Carbon::now()->subMinutes(5)->toDateTimeString())
+		 && $this->auth->user())
 		{
 			$user = $this->auth->user();
-			//$user->update(['last_visit' => Carbon::now()->toDateTimeString()]);
-			$user->getUserUsername()->datelastseen = Carbon::now()->toDateTimeString();
-			$user->getUserUsername()->save();
+
+			if (!$user->last_visit || $user->last_visit->timestamp < Carbon::now()->subMinutes(5)->timestamp)
+			{
+				//$user->update(['last_visit' => Carbon::now()->toDateTimeString()]);
+				$user->getUserUsername()->datelastseen = Carbon::now();
+				$user->getUserUsername()->save();
+			}
 		}
 
 		return $next($request);

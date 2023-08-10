@@ -354,8 +354,15 @@ class LevelsController extends Controller
 		]);
 
 		$row = Level::findOrFail($id);
-		$row->fill($request->all());
-		$row->rules = array_map('intval', $row->rules);
+		if ($request->has('title'))
+		{
+			$row->title = $request->input('title');
+		}
+		if ($request->has('rules'))
+		{
+			$rules = $request->input('rules');
+			$row->rules = array_map('intval', $rules);
+		}
 
 		if (!$row->save())
 		{

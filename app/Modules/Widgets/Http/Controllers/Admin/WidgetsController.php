@@ -379,7 +379,7 @@ class WidgetsController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Widget::findOrFail($id) : new Widget();
+		$row = Widget::findOrNew($id);
 
 		$row->fill($request->input('fields'));
 		$row->note = '';

@@ -16,6 +16,8 @@ use Illuminate\Support\Collection;
  * @property int    $lft
  * @property int    $rgt
  * @property string $title
+ *
+ * @property string $api
  */
 class Role extends Model
 {

@@ -6,7 +6,7 @@ use App\Modules\Users\Models\User;
 class UserLookup
 {
 	/**
-	 * @var array<string,string>
+	 * @var array<string,mixed>
 	 */
 	public $criteria;
 
@@ -18,7 +18,7 @@ class UserLookup
 	/**
 	 * Constructor
 	 *
-	 * @param  array<string,string>  $criteria
+	 * @param  array<string,mixed>  $criteria
 	 * @return void
 	 */
 	public function __construct(array $criteria)

@@ -69,12 +69,13 @@ class Access
 	 * Displays a list of the available user groups.
 	 *
 	 * @param   string   $name      The form field name.
-	 * @param   string   $selected  The name of the selected section.
+	 * @param   string|array   $selected  The name of the selected section.
 	 * @param   string   $attribs   Additional attributes to add to the select field.
-	 * @param   bool  $allowAll  True to add "All Groups" option.
+	 * @param   bool     $allowAll  True to add "All Groups" option.
+	 * @param   string   $idtag
 	 * @return  string   The required HTML for the SELECT tag.
 	 */
-	public static function usergroup($name, $selected, $attribs = '', $allowAll = true)
+	public static function usergroup($name, $selected, $attribs = '', $allowAll = true, $idtag = false)
 	{
 		$ug = new Role;
 
@@ -103,6 +104,7 @@ class Access
 		}
 
 		return Select::genericlist($options, $name, array(
+			'id'          => $idtag,
 			'list.attr'   => $attribs,
 			'list.select' => $selected
 		));

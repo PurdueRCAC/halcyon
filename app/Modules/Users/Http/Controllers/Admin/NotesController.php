@@ -149,7 +149,7 @@ class NotesController extends Controller
 	public function store(Request $request)
 	{
 		$rules = [
-			'fields.subject' => 'required|string',
+			//'fields.subject' => 'required|string',
 			'fields.body' => 'required|string'
 		];
 
@@ -164,8 +164,7 @@ class NotesController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Note::findOrFail($id) : new Note();
-
+		$row = Note::findOrNew($id);
 		$row->fill($request->input('fields'));
 
 		if (!$row->save())

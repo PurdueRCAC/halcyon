@@ -4,6 +4,7 @@ namespace App\Modules\Users\Models\Fields;
 use App\Halcyon\Access\Role;
 use App\Halcyon\Form\Fields\Select;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 /**
  * Form Field class
@@ -20,15 +21,18 @@ class Roles extends Select
 	/**
 	 * Method to get the list of menus for the field options.
 	 *
-	 * @return  array<int,Role>  The field option objects.
+	 * @return  array<int,\Illuminate\Support\Fluent|\stdClass>  The field option objects.
 	 */
 	protected function getOptions()
 	{
-		$none = new Role;
+		$none = new stdClass;
 		$none->value = 0;
 		$none->text = trans('global.none');
 
-		$options = Role::query()
+		$options = array();
+		$options[] = $none;
+
+		$roles = Role::query()
 			->select(['a.id', 'a.title', 'a.parent_id', DB::raw('COUNT(DISTINCT b.id) AS level')])
 			->from($none->getTable() . ' AS a')
 			->leftJoin($none->getTable() . ' AS b', function ($join)
@@ -40,14 +44,15 @@ class Roles extends Select
 			->orderBy('a.lft', 'asc')
 			->get();
 
-		$options->each(function($item)
+		foreach ($roles as $role)
 		{
-			$item->value = $item->id;
-			$item->text = str_repeat('|&mdash;', $item->level) . $item->title;
-		});
+			$option = new stdClass;
+			$option->value = $role->id;
+			$option->text  = str_repeat('|&mdash;', $role->level) . $role->title;
 
-		$options->prepend($none);
+			$options[] = $option;
+		}
 
-		return $options->toArray();
+		return $options;
 	}
 }
