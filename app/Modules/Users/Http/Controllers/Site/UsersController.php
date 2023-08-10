@@ -73,7 +73,8 @@ class UsersController extends Controller
 
 		// `segment()` is NOT zero-indexed. "account" will be segment 1
 		$pos = array_search('account', $request->segments());
-		$i = $pos ? $pos + 2 : 0;
+		$i = is_int($pos) ? $pos : 0;
+		$i = $i + 2;
 
 		event($event = new UserDisplay($user, $request->segment($i)));
 		$sections = collect($event->getSections());
