@@ -12,10 +12,10 @@ use App\Modules\Knowledge\Models\Associations;
 class PageResource extends JsonResource
 {
 	/**
-	 * Transform the resource collection into an array.
+	 * Transform the resource into an array.
 	 *
-	 * @param   Request  $request
-	 * @return  array
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
 	 */
 	public function toArray($request)
 	{

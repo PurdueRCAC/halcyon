@@ -4,6 +4,9 @@ namespace App\Modules\Orders\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin \App\Modules\Orders\Models\Product
+ */
 class ProductResource extends JsonResource
 {
 	/**

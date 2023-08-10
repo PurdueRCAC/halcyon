@@ -7,15 +7,23 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Resources\Events\AssetBeforeDisplay;
 use App\Modules\Queues\Models\Scheduler;
 
+/**
+ * @mixin \App\Modules\Resources\Models\Asset
+ */
 class AssetResource extends JsonResource
 {
+	/**
+	 * Get extended data?
+	 *
+	 * @var bool
+	 */
 	public $extended = true;
 
 	/**
 	 * Transform the resource collection into an array.
 	 *
 	 * @param   Request  $request
-	 * @return  array
+	 * @return  array<string,mixed>
 	 */
 	public function toArray($request)
 	{

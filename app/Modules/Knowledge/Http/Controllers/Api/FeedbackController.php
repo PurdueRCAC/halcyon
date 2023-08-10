@@ -340,7 +340,10 @@ class FeedbackController extends Controller
 
 		$row = new Feedback;
 		$row->target_id = $request->input('target_id');
-		$row->ip = $request->ip();
+		if ($ip = $request->ip())
+		{
+			$row->ip = $ip;
+		}
 		$row->type = $request->input('type');
 		if (auth()->user())
 		{

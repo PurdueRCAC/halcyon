@@ -5,13 +5,16 @@ namespace App\Modules\Resources\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin \App\Modules\Resources\Models\Subresource
+ */
 class SubresourceResource extends JsonResource
 {
 	/**
 	 * Transform the resource collection into an array.
 	 *
 	 * @param   Request  $request
-	 * @return  array
+	 * @return  array<string,mixed>
 	 */
 	public function toArray($request)
 	{

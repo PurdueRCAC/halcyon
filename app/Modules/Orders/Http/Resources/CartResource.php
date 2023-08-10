@@ -4,6 +4,9 @@ namespace App\Modules\Orders\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin \App\Modules\Orders\Entities\Cart
+ */
 class CartResource extends JsonResource
 {
 	/**

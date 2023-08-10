@@ -30,6 +30,7 @@ use stdClass;
  * @property int    $targetobjectid
  *
  * @property string $summary Dynamically generated human-readable text
+ * @property string $api URL appended by API response
  */
 class Log extends Model
 {

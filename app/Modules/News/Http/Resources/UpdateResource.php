@@ -4,6 +4,9 @@ namespace App\Modules\News\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin \App\Modules\News\Models\Update
+ */
 class UpdateResource extends JsonResource
 {
 	/**

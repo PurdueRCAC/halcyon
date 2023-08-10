@@ -44,9 +44,13 @@ class AbsoluteFilePaths
 				},
 				$text
 			);
-			//$text = preg_replace('/src="(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
+			$text = $text ?: '';
+
 			$text = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);
+			$text = $text ?: '';
+
 			$text = preg_replace('/href="\/(.*?)"/i', 'href="' . url("$1") . '"', $text);
+			$text = $text ?: '';
 
 			$data['content'] = $text;
 		}

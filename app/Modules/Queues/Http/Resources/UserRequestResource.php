@@ -6,8 +6,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User as Member;
 use App\Modules\Queues\Models\GroupUser;
-use App\Modules\Queues\Models\UserRequest;
 
+/**
+ * @mixin \App\Modules\Queues\Models\UserRequest
+ */
 class UserRequestResource extends JsonResource
 {
 	/**

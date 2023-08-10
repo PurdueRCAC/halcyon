@@ -727,7 +727,7 @@ class SnippetsController extends Controller
 	{
 		$row = SnippetAssociation::findOrFail($id);
 
-		if (!$row->page->delete())
+		if ($row->page && !$row->page->delete())
 		{
 			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
 		}

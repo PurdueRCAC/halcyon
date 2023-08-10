@@ -4,13 +4,16 @@ namespace App\Modules\ContactReports\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin \App\Modules\ContactReports\Models\Comment
+ */
 class CommentResource extends JsonResource
 {
 	/**
 	 * Transform the resource collection into an array.
 	 *
 	 * @param   \Illuminate\Http\Request  $request
-	 * @return  array
+	 * @return  array<string,mixed>
 	 */
 	public function toArray($request)
 	{

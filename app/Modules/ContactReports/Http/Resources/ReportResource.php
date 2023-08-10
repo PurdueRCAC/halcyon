@@ -5,13 +5,16 @@ namespace App\Modules\ContactReports\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Carbon\Carbon;
 
+/**
+ * @mixin \App\Modules\ContactReports\Models\Report
+ */
 class ReportResource extends JsonResource
 {
 	/**
 	 * Transform the resource collection into an array.
 	 *
 	 * @param   \Illuminate\Http\Request  $request
-	 * @return  array
+	 * @return  array<string,mixed>
 	 */
 	public function toArray($request)
 	{

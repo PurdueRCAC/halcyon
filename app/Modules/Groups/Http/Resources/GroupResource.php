@@ -5,6 +5,9 @@ namespace App\Modules\Groups\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Groups\Events\GroupReading;
 
+/**
+ * @mixin \App\Modules\Groups\Models\Group
+ */
 class GroupResource extends JsonResource
 {
 	/**

@@ -17,6 +17,8 @@ use App\Modules\Knowledge\Events\FeedbackCreated;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string $comments
+ *
+ * @property string $api
  */
 class Feedback extends Model
 {

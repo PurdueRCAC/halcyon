@@ -4,6 +4,9 @@ namespace App\Modules\Tags\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin \App\Modules\Tags\Models\Tag
+ */
 class TagResource extends JsonResource
 {
 	/**

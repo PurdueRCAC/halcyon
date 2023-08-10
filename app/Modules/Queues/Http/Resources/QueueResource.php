@@ -6,6 +6,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Queues\Events\QueueReading;
 use Carbon\Carbon;
 
+/**
+ * @mixin \App\Modules\Queues\Models\Queue
+ */
 class QueueResource extends JsonResource
 {
 	/**

@@ -36,6 +36,8 @@ class PermalinkHeaders
 					if ($title)
 					{
 						$title = preg_replace('/<.*?>/', '', $title);
+						$title = $title ?: '';
+
 						$title = trim($title);
 						$title = strtolower($title);
 						$title = str_replace(' ', '_', $title);

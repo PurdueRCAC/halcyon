@@ -5,6 +5,9 @@ namespace App\Modules\Issues\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Carbon\Carbon;
 
+/**
+ * @mixin \App\Modules\Issues\Models\Issue
+ */
 class IssueResource extends JsonResource
 {
 	/**

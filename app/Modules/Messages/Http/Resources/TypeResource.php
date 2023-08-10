@@ -4,6 +4,9 @@ namespace App\Modules\Messages\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin \App\Modules\Messages\Models\Type
+ */
 class TypeResource extends JsonResource
 {
 	/**
