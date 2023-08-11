@@ -12,7 +12,7 @@ use App\Modules\Resources\Http\Resources\AssetResourceCollection;
 use App\Modules\Resources\Http\Resources\AssetResource;
 use App\Modules\Resources\Http\Resources\MemberResourceCollection;
 use App\Modules\Users\Models\User;
-use App\Modules\Users\Models\Userusername;
+use App\Modules\Users\Models\UserUsername;
 
 /**
  * Resources
@@ -601,7 +601,7 @@ class ResourcesController extends Controller
 		$userids = array_unique($userids);
 
 		$u = (new User)->getTable();
-		$uu = (new Userusername)->getTable();
+		$uu = (new UserUsername)->getTable();
 
 		$rows = User::query()
 			->select($u . '.*')

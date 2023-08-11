@@ -14,7 +14,7 @@ class Authenticators
 	 * Add an authenticators
 	 *
 	 * @param  string $name
-	 * @param  array $options
+	 * @param  array<string,array> $options
 	 * @return void
 	 */
 	public function addAuthenticator($name, $options = array()): void

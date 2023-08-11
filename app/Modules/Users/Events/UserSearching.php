@@ -9,7 +9,7 @@ class UserSearching
 	public $search;
 
 	/**
-	 * @var object|array
+	 * @var \Illuminate\Support\Collection|array<int,\App\Modules\Users\Moels\User>
 	 */
 	public $results;
 
@@ -17,7 +17,7 @@ class UserSearching
 	 * Constructor
 	 *
 	 * @param  string $search
-	 * @param  mixed  $results
+	 * @param  \Illuminate\Support\Collection|array<int,\App\Modules\Users\Moels\User>  $results
 	 * @return void
 	 */
 	public function __construct($search, $results)
@@ -29,7 +29,7 @@ class UserSearching
 	/**
 	 * Get results
 	 *
-	 * @return array
+	 * @return \Illuminate\Support\Collection|array<int,\App\Modules\Users\Moels\User>
 	 */
 	public function getResults()
 	{

@@ -19,7 +19,7 @@ class SubresourcesController extends Controller
 	 * Display a listing of the resource.
 	 *
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -119,7 +119,7 @@ class SubresourcesController extends Controller
 	 * Show the form for creating a new resource.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function create(Request $request)
 	{
@@ -143,7 +143,7 @@ class SubresourcesController extends Controller
 	 * Show the form for editing the specified resource.
 	 *
 	 * @param  int $id
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id)
 	{
@@ -169,7 +169,7 @@ class SubresourcesController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -231,7 +231,7 @@ class SubresourcesController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -276,7 +276,7 @@ class SubresourcesController extends Controller
 	 * Restore a removed item
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function restore(Request $request)
 	{
@@ -313,7 +313,7 @@ class SubresourcesController extends Controller
 	 * Restore a removed item
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function stop(Request $request)
 	{
@@ -342,7 +342,7 @@ class SubresourcesController extends Controller
 	 * Restore a removed item
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function start(Request $request)
 	{
@@ -370,7 +370,7 @@ class SubresourcesController extends Controller
 	/**
 	 * Return to default page
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{

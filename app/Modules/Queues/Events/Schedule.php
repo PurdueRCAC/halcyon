@@ -17,6 +17,11 @@ class Schedule
 	public $command;
 
 	/**
+	 * @var bool
+	 */
+	public $verbose;
+
+	/**
 	 * Constructor
 	 *
 	 * @param  Asset $resource

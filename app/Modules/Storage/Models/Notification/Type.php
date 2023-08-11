@@ -16,6 +16,8 @@ use App\Halcyon\Models\Timeperiod;
  * @property string $name
  * @property int    $defaulttimeperiodid
  * @property int    $valuetype
+ *
+ * @property string $api
  */
 class Type extends Model
 {

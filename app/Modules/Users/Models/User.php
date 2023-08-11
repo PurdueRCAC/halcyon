@@ -32,6 +32,7 @@ use Carbon\Carbon;
  * @property string $api_token
  * @property string $password
  * @property int    $enabled
+ * @property Carbon|null $last_visit
  *
  * Temporary attributes
  *
@@ -635,7 +636,7 @@ class User extends Model implements
 	 *
 	 * @param   string  $username
 	 * @param   bool    $includeTrashed
-	 * @return  User
+	 * @return  User|null
 	 */
 	public static function findByUsername($username, $includeTrashed = false)
 	{
@@ -656,7 +657,7 @@ class User extends Model implements
 			->orderBy('datecreated', 'asc')
 			->first();
 
-		return $username ? $username->user : new self;
+		return $username ? $username->user : null;
 	}
 
 	/**
@@ -664,7 +665,7 @@ class User extends Model implements
 	 *
 	 * @param   string  $email
 	 * @param   bool    $includeTrashed
-	 * @return  User
+	 * @return  User|null
 	 */
 	public static function findByEmail($email, $includeTrashed = false)
 	{
@@ -681,14 +682,14 @@ class User extends Model implements
 			->orderBy('datecreated', 'asc')
 			->first();
 
-		return $username ? $username->user : new self;
+		return $username ? $username->user : null;
 	}
 
 	/**
 	 * Finds a user by organization ID
 	 *
 	 * @param   int  $organization_id
-	 * @return  object|null
+	 * @return  User|null
 	 */
 	public static function findByOrganizationId($organization_id)
 	{
@@ -701,15 +702,13 @@ class User extends Model implements
 	 * Finds a user by activation token
 	 *
 	 * @param   string  $token
-	 * @return  User
+	 * @return  User|null
 	 */
 	public static function findByActivationToken($token)
 	{
-		$user = self::query()
+		return self::query()
 			->where('activation', '=', $token)
 			->first();
-
-		return $user ?: new self;
 	}
 
 	/**

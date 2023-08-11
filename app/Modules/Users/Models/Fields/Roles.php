@@ -32,10 +32,12 @@ class Roles extends Select
 		$options = array();
 		$options[] = $none;
 
+		$tbl = (new Role)->getTable();
+
 		$roles = Role::query()
 			->select(['a.id', 'a.title', 'a.parent_id', DB::raw('COUNT(DISTINCT b.id) AS level')])
-			->from($none->getTable() . ' AS a')
-			->leftJoin($none->getTable() . ' AS b', function ($join)
+			->from($tbl . ' AS a')
+			->leftJoin($tbl . ' AS b', function ($join)
 				{
 					$join->on('a.lft', '>', 'b.lft')
 						->on('a.rgt', '<', 'b.rgt');

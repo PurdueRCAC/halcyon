@@ -59,29 +59,26 @@ class Debug
 		}
 
 		// Try to get actions for the module
-		if (!empty($module))
+		$path = module_path($module) . '/Config/permissions.php'; //'xml';
+
+		$module_actions = Gate::getActionsFromFile($path);
+		//$module_actions ?: array();
+
+		if (!empty($module_actions))
 		{
-			$path = module_path($module) . '/Config/permissions.php'; //'xml';
-
-			$module_actions = Gate::getActionsFromFile($path);
-			//$module_actions ?: array();
-
-			if (!empty($module_actions))
+			/*foreach ($module_actions as $action)
 			{
-				/*foreach ($module_actions as $action)
+				$actions[$action->title] = array($action->name, $action->description);
+			}*/
+			foreach ($module_actions as $name => $title)
+			{
+				if (is_array($title))
 				{
-					$actions[$action->title] = array($action->name, $action->description);
-				}*/
-				foreach ($module_actions as $name => $title)
+					$actions[$title['title']] = array($name, $title['title']);
+				}
+				else
 				{
-					if (is_array($title))
-					{
-						$actions[$title['title']] = array($name, $title['title']);
-					}
-					else
-					{
-						$actions[$title] = array($name, $title);
-					}
+					$actions[$title] = array($name, $title);
 				}
 			}
 		}
@@ -129,7 +126,7 @@ class Debug
 	/**
 	 * Get a list of filter options for the levels.
 	 *
-	 * @return  array<int,string>  An array of Option elements.
+	 * @return  array<int,\stdClass>  An array of Option elements.
 	 */
 	static function getLevelsOptions(): array
 	{

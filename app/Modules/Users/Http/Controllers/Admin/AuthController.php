@@ -71,7 +71,7 @@ class AuthController extends Controller
 	 * Show the form for creating a new resource.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function authenticate(Request $request)
 	{
@@ -139,7 +139,7 @@ class AuthController extends Controller
 	 * Show the form for creating a new resource.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function logout(Request $request)
 	{

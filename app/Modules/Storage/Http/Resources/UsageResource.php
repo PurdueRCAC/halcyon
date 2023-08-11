@@ -5,7 +5,7 @@ namespace App\Modules\Storage\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin \App\Modules\Resources\Models\Usage
+ * @mixin \App\Modules\Storage\Models\Usage
  */
 class UsageResource extends JsonResource
 {

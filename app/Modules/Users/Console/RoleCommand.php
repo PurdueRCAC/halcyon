@@ -136,7 +136,7 @@ class RoleCommand extends Command
 	/**
 	 * Output the list of roles as a tree
 	 *
-	 * @param array|Collection $allRoles
+	 * @param array<int,Role>|Collection $allRoles
 	 * @param User $user
 	 * @param array<int,int> $roles
 	 * @return void

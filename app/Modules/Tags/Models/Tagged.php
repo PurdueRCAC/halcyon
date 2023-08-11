@@ -154,7 +154,7 @@ class Tagged extends Model
 		{
 			foreach ($rows as $row)
 			{
-				$row->id = null;
+				unset($row->id);
 				$row->tag_id = $newtagid;
 				$row->save();
 			}

@@ -284,11 +284,11 @@ class UsersController extends Controller
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 		
-		foreach ($rows as $row)
+		/*foreach ($rows as $row)
 		{
 			$row->username;
 			$row->email;
-		}
+		}*/
 
 		if (count($rows) < $filters['limit'] && $filters['search'])
 		{

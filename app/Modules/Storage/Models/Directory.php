@@ -42,6 +42,8 @@ use stdClass;
  * @property int    $files
  * @property int    $autouserunixgroupid
  * @property int    $storageresourceid
+ *
+ * @property string $api
  */
 class Directory extends Model
 {

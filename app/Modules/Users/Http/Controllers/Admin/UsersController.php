@@ -283,12 +283,12 @@ class UsersController extends Controller
 		}
 
 		// Can't block yourself
-		if ($user->block && $user->id == auth()->user()->id)
+		/*if ($user->block && $user->id == auth()->user()->id)
 		{
 			return redirect()
 				->back()
 				->withError(trans('users::users.error.cannot block self'));
-		}
+		}*/
 
 		// Make sure that we are not removing ourself from Super Admin role
 		$iAmSuperAdmin = auth()->user()->can('admin');

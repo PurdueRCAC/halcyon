@@ -276,7 +276,7 @@ class EmailQuotaCommand extends Command
 					{
 						unset($not->status);
 						unset($not->threshold);
-						$not->datetimelastnotify = Carbon::now()->toDateTimeString();
+						$not->datetimelastnotify = Carbon::now();
 						$not->notice = 0;
 						$not->save();
 					}
@@ -304,7 +304,7 @@ class EmailQuotaCommand extends Command
 					if (strtotime($last->datetimerecorded) != 0
 					 && $last->space != 0)
 					{
-						$not->datetimelastnotify = Carbon::now()->toDateTimeString();
+						$not->datetimelastnotify = Carbon::now();
 
 						// Only mail if enabled
 						if ($not->enabled)

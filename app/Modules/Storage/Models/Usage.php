@@ -17,7 +17,7 @@ use Carbon\Carbon;
  * @property int    $filequota
  * @property int    $space
  * @property int    $files
- * @property Carbon|null $datetimecreated
+ * @property Carbon|null $datetimerecorded
  * @property int    $lastinterval
  */
 class Usage extends Model
@@ -43,6 +43,11 @@ class Usage extends Model
 	 */
 	protected $casts = [
 		'datetimerecorded' => 'datetime:Y-m-d H:i:s',
+		'quota' => 'integer',
+		'filequota' => 'integer',
+		'space' => 'integer',
+		'files' => 'integer',
+		'lastinterval' => 'integer',
 	];
 
 	/**

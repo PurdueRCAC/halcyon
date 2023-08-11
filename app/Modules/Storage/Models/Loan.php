@@ -17,6 +17,8 @@ use App\Modules\Storage\Events\LoanCreated;
  * @property int    $bytes
  * @property int    $lendergroupid
  * @property string $comment
+ *
+ * @property string $api
  */
 class Loan extends Purchase
 {

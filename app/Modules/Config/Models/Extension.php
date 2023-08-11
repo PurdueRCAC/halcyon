@@ -20,7 +20,7 @@ use App\Halcyon\Form\Form;
  * @property int    $enabled
  * @property int    $access
  * @property int    $protected
- * @property string $params
+ * @property Params $params
  * @property int    $checked_out
  * @property Carbon|null $checked_out_time
  * @property int    $ordering

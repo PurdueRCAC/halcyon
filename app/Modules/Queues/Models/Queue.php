@@ -1017,15 +1017,15 @@ class Queue extends Model
 		$row->queueid = $this->id;
 		$row->lenderqueueid = $lenderqueueid;
 
-		$row->datetimestart = Carbon::now()->toDateTimeString();
+		$row->datetimestart = Carbon::now();
 		if ($start)
 		{
-			$row->datetimestart = Carbon::parse($start)->toDateTimeString();
+			$row->datetimestart = Carbon::parse($start);
 		}
 
 		if ($stop)
 		{
-			$row->datetimestop = Carbon::parse($stop)->toDateTimeString();
+			$row->datetimestop = Carbon::parse($stop);
 		}
 
 		$row->nodecount = $nodecount;
@@ -1058,15 +1058,15 @@ class Queue extends Model
 		$row->queueid = $this->id;
 		$row->sellerqueueid = $sellerqueueid;
 
-		$row->datetimestart = Carbon::now()->toDateTimeString();
+		$row->datetimestart = Carbon::now();
 		if ($start)
 		{
-			$row->datetimestart = Carbon::parse($start)->toDateTimeString();
+			$row->datetimestart = Carbon::parse($start);
 		}
 
 		if ($stop)
 		{
-			$row->datetimestop = Carbon::parse($stop)->toDateTimeString();
+			$row->datetimestop = Carbon::parse($stop);
 		}
 
 		$row->nodecount = $nodecount;

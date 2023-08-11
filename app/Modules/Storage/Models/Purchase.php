@@ -23,6 +23,8 @@ use Carbon\Carbon;
  * @property int    $bytes
  * @property int    $sellergroupid
  * @property string $comment
+ *
+ * @property string $api
  */
 class Purchase extends Model
 {

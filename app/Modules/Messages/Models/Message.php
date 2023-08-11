@@ -20,6 +20,7 @@ use Carbon\Carbon;
  *
  * @property int    $id
  * @property int    $userid
+ * @property int    $messagequeuetypeid
  * @property int    $targetobjectid
  * @property int    $messagequeueoptionsid
  * @property Carbon|null $datetimesubmitted

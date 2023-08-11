@@ -663,6 +663,11 @@ class UsageController extends Controller
 
 			$user = User::findByUsername($username);
 
+			if (!$user)
+			{
+				continue;
+			}
+
 			$directory = Directory::query()
 				->where('userid', '=', $user->id)
 				->where('storageresourceid', '=', $storage->id)

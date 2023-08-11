@@ -39,7 +39,7 @@ trait Taggable
 	 * Append ot a query where a tag is of type
 	 *
 	 * @param Builder $query
-	 * @param array|string $tags
+	 * @param array<int,string>|string $tags
 	 * @param string $type
 	 * @return Builder
 	 */
@@ -65,7 +65,7 @@ trait Taggable
 	 * Append ot a query where object has tag
 	 *
 	 * @param Builder $query
-	 * @param array|string $tags
+	 * @param array<int,string>|string $tags
 	 * @param string $type
 	 * @return Builder
 	 */
@@ -129,7 +129,7 @@ trait Taggable
 	/**
 	 * Set the list of tags
 	 *
-	 * @param  array  $tags
+	 * @param  array<int,string>  $tags
 	 * @param  string $type
 	 * @return bool
 	 */
@@ -165,7 +165,7 @@ trait Taggable
 	/**
 	 * Add a list of tags
 	 *
-	 * @param  array $tags
+	 * @param  array<int,string> $tags
 	 * @return bool
 	 */
 	public function tag($tags): bool
@@ -227,7 +227,7 @@ trait Taggable
 	/**
 	 * Remove a list of tags
 	 *
-	 * @param  array|null $tags
+	 * @param  array<int,string>|null $tags
 	 * @return bool
 	 */
 	public function untag($tags = null): bool

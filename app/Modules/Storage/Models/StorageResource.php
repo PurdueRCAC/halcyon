@@ -26,6 +26,8 @@ use App\Halcyon\Utility\Number;
  * @property int    $getquotatypeid
  * @property int    $createtypeid
  * @property int    $groupmanaged
+ *
+ * @property string $api
  */
 class StorageResource extends Model
 {

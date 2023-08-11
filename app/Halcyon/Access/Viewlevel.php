@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title
  * @property int    $ordering
  * @property string|array<int,int> $rules JSON string converted to an array of integers
+ *
+ * @property string $api
  */
 class Viewlevel extends Model
 {

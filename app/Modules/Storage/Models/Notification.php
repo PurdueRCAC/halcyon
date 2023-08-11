@@ -26,6 +26,8 @@ use Carbon\Carbon;
  * @property Carbon|null $datetimecreated
  * @property Carbon|null $datetimeremoved
  * @property int    $enabled
+ *
+ * @property string $api
  */
 class Notification extends Model
 {

@@ -15,6 +15,8 @@ use App\Modules\History\Traits\Historable;
  *
  * @property int    $id
  * @property string $name
+ *
+ * @property string $api
  */
 class Type extends Model
 {

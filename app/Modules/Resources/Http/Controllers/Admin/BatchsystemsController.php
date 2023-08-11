@@ -125,7 +125,7 @@ class BatchsystemsController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param  Request $request
-	 * @return Redirectesponse
+	 * @return RedirectResponse
 	 */
 	public function store(Request $request)
 	{

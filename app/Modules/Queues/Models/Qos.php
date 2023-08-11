@@ -49,9 +49,9 @@ use App\Modules\History\Traits\Historable;
  * @property float $usage_factor
  * @property float $usage_thres
  * @property float $limit_factor
- * @property Carbon|null $datetimecreated
- * @property Carbon|null $datetimeremoved
- * @property Carbon|null $datetimeedited
+ * @property \Carbon\Carbon|null $datetimecreated
+ * @property \Carbon\Carbon|null $datetimeremoved
+ * @property \Carbon\Carbon|null $datetimeedited
  */
 class Qos extends Model
 {
@@ -170,7 +170,7 @@ class Qos extends Model
 	/**
 	 * Get the list of preempts
 	 *
-	 * @return  array
+	 * @return  array<int,string>
 	 */
 	public function getPreemptListAttribute(): array
 	{
@@ -180,7 +180,7 @@ class Qos extends Model
 	/**
 	 * Get the list of preempt modes
 	 *
-	 * @return  array
+	 * @return  array<int,string>
 	 */
 	public function getPreemptModeListAttribute(): array
 	{
@@ -190,7 +190,7 @@ class Qos extends Model
 	/**
 	 * Get the list of flags
 	 *
-	 * @return  array
+	 * @return  array<int,string>
 	 */
 	public function getFlagsListAttribute(): array
 	{

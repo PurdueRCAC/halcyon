@@ -34,6 +34,9 @@ use App\Halcyon\Models\Casts\Params;
  * @property string $status
  * @property string $description
  * @property string $params
+ * @property int    $access
+ *
+ * @property string $api
  */
 class Asset extends Model
 {

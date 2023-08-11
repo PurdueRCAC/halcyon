@@ -29,12 +29,12 @@ class LetterAvatar
 	private $size;
 
 	/**
-	 * @var array
+	 * @var array<string,float|int>
 	 */
 	private $backgroundColor;
 
 	/**
-	 * @var array
+	 * @var array<string,float|int>
 	 */
 	private $foregroundColor;
 
@@ -102,7 +102,7 @@ class LetterAvatar
 	 * Convert hex to RGB
 	 * 
 	 * @param string $hex
-	 * @return array<string,string>
+	 * @return array<string,float|int>
 	 */
 	private function hexToRgb($hex): array
 	{
@@ -133,15 +133,15 @@ class LetterAvatar
 
 		$R16 = hexdec($R16);
 		$adjustAmount = ceil(($adjustPercent < 0 ? $R16 : 255 - $R16) * $adjustPercent);
-		$R = str_pad(dechex($R16 + $adjustAmount), 2, '0', STR_PAD_LEFT);
+		$R = str_pad(dechex(round($R16 + $adjustAmount)), 2, '0', STR_PAD_LEFT);
 
 		$G16 = hexdec($G16);
 		$adjustAmount = ceil(($adjustPercent < 0 ? $G16 : 255 - $G16) * $adjustPercent);
-		$G = str_pad(dechex($G16 + $adjustAmount), 2, '0', STR_PAD_LEFT);
+		$G = str_pad(dechex(round($G16 + $adjustAmount)), 2, '0', STR_PAD_LEFT);
 
 		$B16 = hexdec($B16);
 		$adjustAmount = ceil(($adjustPercent < 0 ? $B16 : 255 - $B16) * $adjustPercent);
-		$B = str_pad(dechex($B16 + $adjustAmount), 2, '0', STR_PAD_LEFT);
+		$B = str_pad(dechex(round($B16 + $adjustAmount)), 2, '0', STR_PAD_LEFT);
 
 		//$R = sprintf('%02X', floor(hexdec($R16) / $darker));
 		//$G = sprintf('%02X', floor(hexdec($G16) / $darker));
@@ -165,7 +165,7 @@ class LetterAvatar
 		$pixelRatio = round($this->size / 5);
 
 		// Prepare the image
-		$image = imagecreatetruecolor($pixelRatio * 5, $pixelRatio * 5);
+		$image = imagecreatetruecolor(round($pixelRatio * 5), round($pixelRatio * 5));
 
 		if (!$image)
 		{

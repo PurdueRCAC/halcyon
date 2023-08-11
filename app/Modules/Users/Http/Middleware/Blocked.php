@@ -37,7 +37,7 @@ class Blocked
 	{
 		if ($this->auth->check()
 		 && $this->auth->user()
-		 && $this->auth->user()->blocked)
+		 && !$this->auth->user()->enabled)
 		{
 			abort(403);
 		}

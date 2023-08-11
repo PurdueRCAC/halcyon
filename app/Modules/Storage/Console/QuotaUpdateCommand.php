@@ -215,9 +215,9 @@ class QuotaUpdateCommand extends Command
 
 				Mail::to($user->email)->send($message);
 			}
-
-			return true;
 		}
+
+		return true;
 	}
 
 	/**

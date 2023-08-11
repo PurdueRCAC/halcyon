@@ -211,7 +211,7 @@ class DirectoriesController extends Controller
 	 * Store a newly created resource in storage.
 	 * 
 	 * @param  Request  $request
-	 * @param  array    $data
+	 * @param  array<string,mixed>    $data
 	 * @param  int  $offset
 	 * @return RedirectResponse
 	 */

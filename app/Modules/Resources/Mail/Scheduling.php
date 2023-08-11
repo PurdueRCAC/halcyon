@@ -62,7 +62,7 @@ class Scheduling extends Mailable
 	 */
 	public function headers(): Headers
 	{
-		if (!$this->headers)
+		if (!($this->headers instanceof Headers))
 		{
 			$this->headers = new Headers(
 				messageId: null,
