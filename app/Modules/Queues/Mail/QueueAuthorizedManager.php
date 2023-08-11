@@ -23,13 +23,15 @@ class QueueAuthorizedManager extends Mailable
 	/**
 	 * List of authorized users and queues
 	 *
-	 * @var array
+	 * @var array<int,array>
 	 */
 	protected $authorized;
 
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param User $user
+	 * @param array<int,array> $authorized
 	 * @return void
 	 */
 	public function __construct(User $user, $authorized = array())

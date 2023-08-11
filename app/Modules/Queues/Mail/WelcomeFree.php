@@ -20,15 +20,17 @@ class WelcomeFree extends Mailable
 	protected $user;
 
 	/**
-	 * The Queue
+	 * List of activity
 	 *
-	 * @var Queue
+	 * @var array<int,\stdClass>
 	 */
 	protected $activity;
 
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param User $user
+	 * @param array<int,\stdClass> $activity
 	 * @return void
 	 */
 	public function __construct(User $user, $activity = array())

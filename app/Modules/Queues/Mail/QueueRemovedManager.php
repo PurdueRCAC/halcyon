@@ -20,15 +20,17 @@ class QueueRemovedManager extends Mailable
 	protected $user;
 
 	/**
-	 * The User
+	 * List of removals
 	 *
-	 * @var array
+	 * @var array<int,array>
 	 */
 	protected $removals;
 
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param User $user
+	 * @param array<int,array> $removals
 	 * @return void
 	 */
 	public function __construct(User $user, $removals = array())

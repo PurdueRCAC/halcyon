@@ -20,22 +20,25 @@ class QueueAuthorized extends Mailable
 	protected $user;
 
 	/**
-	 * The User
+	 * List of queue memberships
 	 *
-	 * @var array
+	 * @var array<int,\App\Modules\Queues\Models\User>
 	 */
 	protected $queueusers;
 
 	/**
-	 * The User
+	 * List of resources the user has been authorized for
 	 *
-	 * @var array
+	 * @var array<int,\App\Modules\Resources\Models\Asset>
 	 */
 	protected $roles;
 
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param User $user
+	 * @param array<int,\App\Modules\Queues\Models\User> $queueusers
+	 * @param array<int,\App\Modules\Resources\Models\Asset> $roles
 	 * @return void
 	 */
 	public function __construct(User $user, $queueusers, $roles)

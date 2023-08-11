@@ -42,7 +42,7 @@ trait HeadersAndTags
 	 */
 	public function headers(): Headers
 	{
-		if (!$this->headers)
+		if (!($this->headers instanceof Headers))
 		{
 			if (isset($this->user) && !isset($this->mailHeaders['X-Target-User']))
 			{

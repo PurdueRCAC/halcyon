@@ -22,13 +22,15 @@ class FreeDeniedManager extends Mailable
 	/**
 	 * Denied users
 	 *
-	 * @var array
+	 * @var array<int,array>
 	 */
 	protected $denials;
 
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param User $user
+	 * @param array<int,array> $denials
 	 * @return void
 	 */
 	public function __construct(User $user, $denials = array())

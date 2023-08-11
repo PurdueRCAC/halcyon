@@ -22,13 +22,15 @@ class Expired extends Mailable
 	/**
 	 * List of expired accounts
 	 *
-	 * @var array
+	 * @var array<int,\App\Modules\Queues\Models\User>
 	 */
 	protected $people;
 
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param User $user
+	 * @param array<int,\App\Modules\Queues\Models\User> $people
 	 * @return void
 	 */
 	public function __construct(User $user, $people = array())

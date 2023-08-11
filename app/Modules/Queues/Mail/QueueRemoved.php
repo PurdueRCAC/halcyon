@@ -20,29 +20,33 @@ class QueueRemoved extends Mailable
 	protected $user;
 
 	/**
-	 * The user
+	 * List of queue memberships that where removed
 	 *
-	 * @var array
+	 * @var array<int,\App\Modules\Queues\Models\User>
 	 */
 	protected $removedqueues;
 
 	/**
-	 * The user
+	 * List of queue memberships that are kept
 	 *
-	 * @var array
+	 * @var array<int,\App\Modules\Queues\Models\User>
 	 */
 	protected $keptqueues;
 
 	/**
-	 * The user
+	 * List of resources that were removed
 	 *
-	 * @var array
+	 * @var array<int,\App\Modules\Resources\Models\Asset>
 	 */
 	protected $removedroles;
 
 	/**
-	 * Create a new message instance.
+	 * Constructor
 	 *
+	 * @param User $user
+	 * @param array<int,\App\Modules\Queues\Models\User> $removedqueues
+	 * @param array<int,\App\Modules\Queues\Models\User> $keptqueues
+	 * @param array<int,\App\Modules\Resources\Models\Asset> $removedroles
 	 * @return void
 	 */
 	public function __construct(User $user, $removedqueues = array(), $keptqueues = array(), $removedroles = array())

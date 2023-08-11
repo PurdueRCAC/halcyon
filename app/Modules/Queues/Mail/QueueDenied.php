@@ -20,15 +20,17 @@ class QueueDenied extends Mailable
 	protected $user;
 
 	/**
-	 * The User
+	 * List of queue memberships
 	 *
-	 * @var array
+	 * @var array<int,\App\Modules\Queues\Models\User>
 	 */
 	protected $queueusers;
 
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param User $user
+	 * @param array<int,\App\Modules\Queues\Models\User>
 	 * @return void
 	 */
 	public function __construct(User $user, $queueusers = array())

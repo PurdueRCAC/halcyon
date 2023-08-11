@@ -24,13 +24,15 @@ class QueueRequested extends Mailable
 	/**
 	 * The user request
 	 *
-	 * @var UserRequest
+	 * @var array<int,array>
 	 */
 	protected $userrequests;
 
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param User $user
+	 * @param array<int,array>
 	 * @return void
 	 */
 	public function __construct(User $user, $userrequests)
