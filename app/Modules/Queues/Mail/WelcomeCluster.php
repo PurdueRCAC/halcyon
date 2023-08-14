@@ -14,9 +14,9 @@ class WelcomeCluster extends Mailable
 	use Queueable, SerializesModels, HeadersAndTags;
 
 	/**
-	 * The Queue
+	 * The User
 	 *
-	 * @var Queue
+	 * @var User
 	 */
 	protected $user;
 

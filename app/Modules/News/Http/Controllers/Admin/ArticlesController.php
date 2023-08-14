@@ -501,9 +501,9 @@ class ArticlesController extends Controller
 			//for ($i = 1; $i <= $days; $i++)
 			//{
 				$payload = new Article;
-				$payload->datetimenews    = $start->format('Y-m-d H:i:s');
-				$payload->datetimenewsend = $end->format('Y-m-d H:i:s');
-				$payload->datetimecreated = $now->format('Y-m-d H:i:s');
+				$payload->datetimenews    = $start;
+				$payload->datetimenewsend = $end;
+				$payload->datetimecreated = $now;
 				$payload->userid          = $row->userid;
 				$payload->edituserid      = $row->edituserid;
 				$payload->published       = 1;

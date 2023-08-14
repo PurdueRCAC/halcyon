@@ -169,12 +169,12 @@ class ResourcesController extends Controller
 	 *
 	 * @param   int  $id        Parent ID
 	 * @param   string   $indent    Indent text
-	 * @param   array    $list      List of records
-	 * @param   array    $children  Container for parent/children mapping
+	 * @param   array<int,Asset>    $list      List of records
+	 * @param   array<int,array>    $children  Container for parent/children mapping
 	 * @param   int  $maxlevel  Maximum levels to descend
 	 * @param   int  $level     Indention level
 	 * @param   int  $type      Indention type
-	 * @return  array
+	 * @return  array<int,Asset>
 	 */
 	protected function treeRecurse($id, $indent, $list, $children, $maxlevel=9999, $level=0, $type=1)
 	{
@@ -427,9 +427,9 @@ class ResourcesController extends Controller
 	/**
 	 * Display a listing of the resource.
 	 *
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @param  int  $id
-	 * @return Response
+	 * @return View
 	 */
 	public function members(Request $request, $id)
 	{
@@ -453,7 +453,7 @@ class ResourcesController extends Controller
 	/**
 	 * Download a list of records
 	 * 
-	 * @param  array $rows
+	 * @param  array<int,Asset> $rows
 	 * @param  int $id
 	 * @return StreamedResponse
 	 */

@@ -113,7 +113,9 @@ class Attachment extends \SplFileInfo
 	 */
 	public function getLastModified()
 	{
-		return new Carbon($this->getMTime());
+		$mtime = $this->getMTime();
+
+		return $mtime ? Carbon::createFromTimestamp($mtime) : Carbon::now();
 	}
 
 	/**

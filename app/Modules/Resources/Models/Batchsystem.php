@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @property int    $id
  * @property string $name
+ *
+ * @property string $api
+ * @property int    $resources_count
  */
 class Batchsystem extends Model
 {

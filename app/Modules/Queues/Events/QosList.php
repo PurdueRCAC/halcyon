@@ -3,11 +3,14 @@
 namespace App\Modules\Queues\Events;
 
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
+use App\Modules\Queues\Models\Qos;
 
 class QosList
 {
 	/**
-	 * @var array
+	 * @var array<int,Qos>|Collection<int,Qos>|LengthAwarePaginator<Qos>
 	 */
 	public $rows;
 
@@ -24,7 +27,7 @@ class QosList
 	/**
 	 * Constructor
 	 *
-	 * @param  array  $rows
+	 * @param  arrayarray<int,Qos>|Collection<int,Qos>|LengthAwarePaginator<Qos>  $rows
 	 * @param  string $format
 	 * @return void
 	 */

@@ -66,13 +66,13 @@ class InstallModule
 			$menu = Type::findByMenutype('main');
 			$menu->rebuild();
 
-			$event->migration->info(sprintf('Added menu entry for module "%s"', $alias));
+			//$event->migration->info(sprintf('Added menu entry for module "%s"', $alias));
 		}
 		elseif ($event->method == 'down' && $item)
 		{
 			$item->delete();
 
-			$event->migration->info(sprintf('Removed menu entry for module "%s"', $alias));
+			//$event->migration->info(sprintf('Removed menu entry for module "%s"', $alias));
 		}
 	}
 }

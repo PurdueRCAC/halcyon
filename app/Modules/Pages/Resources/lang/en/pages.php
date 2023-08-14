@@ -7,7 +7,6 @@ return [
 	'title' => 'Title',
 	'path' => 'Path',
 	'path hint' => 'Lowercase alpha-numeric characters, dashes, underscores. If left blank, one will be auto-generated from the title. Ex: "My Title" -> my_title',
-	'state' => 'State',
 	'created' => 'Created',
 	'creator' => 'Creator',
 	'updated' => 'Last Modified',

@@ -12,6 +12,7 @@ class CreateNewsTables extends Migration
 {
 	/**
 	 * Up
+	 * @return void
 	 **/
 	public function up()
 	{
@@ -181,6 +182,7 @@ class CreateNewsTables extends Migration
 
 	/**
 	 * Down
+	 * @return void
 	 **/
 	public function down()
 	{

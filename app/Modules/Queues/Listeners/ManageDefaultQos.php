@@ -4,6 +4,7 @@ namespace App\Modules\Queues\Listeners;
 
 use Illuminate\Events\Dispatcher;
 use App\Modules\Queues\Events\QueueCreated;
+use App\Modules\Queues\Events\QueueDeleted;
 use App\Modules\Queues\Events\QueueSizeCreated;
 use App\Modules\Queues\Events\QueueSizeUpdated;
 use App\Modules\Queues\Events\QueueSizeDeleted;
@@ -119,11 +120,13 @@ class ManageDefaultQos
 	/**
 	 * Update QoS with new allocation information
 	 *
-	 * @param   object  $event
+	 * @param   QueueSizeCreated|QueueSizeUpdated|QueueSizeDeleted|QueueLoanCreated|QueueLoanUpdated|QueueLoanDeleted  $event
 	 * @return  void
 	 */
 	public function handleQueueAllocation($event): void
 	{
+		$queue = null;
+
 		if ($event instanceof QueueSizeCreated
 		 || $event instanceof QueueSizeUpdated
 		 || $event instanceof QueueSizeDeleted)

@@ -5,7 +5,7 @@ namespace App\Modules\Queues\Events;
 class AllocationCreate
 {
 	/**
-	 * @var array
+	 * @var array<string,mixed>
 	 */
 	public $data;
 
@@ -17,7 +17,7 @@ class AllocationCreate
 	/**
 	 * Constructor
 	 *
-	 * @param  array $data
+	 * @param  array<string,mixed> $data
 	 * @return void
 	 */
 	public function __construct($data)

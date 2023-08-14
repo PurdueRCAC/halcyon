@@ -3,6 +3,8 @@
 namespace App\Modules\Queues\Events;
 
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
+use App\Modules\Queues\Models\Queue;
 
 class AllocationList
 {
@@ -12,7 +14,7 @@ class AllocationList
 	public $hostname = '';
 
 	/**
-	 * @var array
+	 * @var array<int,Queue>|Collection<int,Queue>
 	 */
 	public $queues;
 
@@ -30,7 +32,7 @@ class AllocationList
 	 * Constructor
 	 *
 	 * @param  string $hostname
-	 * @param  array  $queues
+	 * @param  array<int,Queue>|Collection<int,Queue>  $queues
 	 * @param  string $format
 	 * @return void
 	 */

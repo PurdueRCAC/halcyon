@@ -5,7 +5,7 @@ namespace App\Modules\Queues\Events;
 class AllocationDelete
 {
 	/**
-	 * @var array
+	 * @var int
 	 */
 	public $id;
 
@@ -17,7 +17,7 @@ class AllocationDelete
 	/**
 	 * Constructor
 	 *
-	 * @param  array $data
+	 * @param  int $id
 	 * @return void
 	 */
 	public function __construct($id)

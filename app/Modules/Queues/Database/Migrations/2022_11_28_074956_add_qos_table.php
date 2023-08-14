@@ -55,7 +55,7 @@ class AddQosTable extends Migration
 				$table->dateTime('datetimecreated')->nullable();
 				$table->dateTime('datetimeedited')->nullable();
 				$table->dateTime('datetimeremoved')->nullable();
-				$table->unique('named', ['scheduler_id', 'name', 'datetimeremoved']);
+				$table->unique(['scheduler_id', 'name', 'datetimeremoved'], 'named');
 			});
 		}
 

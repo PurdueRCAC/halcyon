@@ -12,9 +12,9 @@ class NewsStory
 	/**
 	 * Handle content
 	 *
-	 * @param  array $data
+	 * @param  array<string,mixed> $data
 	 * @param  Closure $next
-	 * @return array
+	 * @return array<string,mixed>
 	 */
 	public function handle(array $data, Closure $next): array
 	{

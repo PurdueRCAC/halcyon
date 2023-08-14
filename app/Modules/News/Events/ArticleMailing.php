@@ -14,7 +14,7 @@ class ArticleMailing
 	/**
 	 * From name
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $name;
 
@@ -29,7 +29,7 @@ class ArticleMailing
 	 * Constructor
 	 *
 	 * @param  Article $article
-	 * @param  string $name
+	 * @param  string|null $name
 	 * @return void
 	 */
 	public function __construct($article, $name = null)

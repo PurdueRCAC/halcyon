@@ -38,7 +38,6 @@ class Cancelled extends Mailable
 	/**
 	 * Create a new message instance.
 	 *
-	 * @param  Article  $article
 	 * @param  Association $association
 	 * @return void
 	 */
@@ -55,7 +54,7 @@ class Cancelled extends Mailable
 	 */
 	public function headers(): Headers
 	{
-		if (!$this->headers)
+		if (!($this->headers instanceof Headers))
 		{
 			$this->headers = new Headers(
 				messageId: null,

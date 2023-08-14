@@ -44,10 +44,7 @@ trait HeadersAndTags
 	{
 		if (!($this->headers instanceof Headers))
 		{
-			if (isset($this->user) && !isset($this->mailHeaders['X-Target-User']))
-			{
-				$this->mailHeaders['X-Target-User'] = $this->user->id;
-			}
+			$this->mailHeaders['X-Target-User'] = $this->user->id;
 
 			$this->headers = new Headers(
 				messageId: null,
@@ -65,10 +62,7 @@ trait HeadersAndTags
 	 */
 	public function envelope(): Envelope
 	{
-		if (isset($this->user) && !isset($this->mailMetadata['user_id']))
-		{
-			$this->mailMetadata['user_id'] = $this->user->id;
-		}
+		$this->mailMetadata['user_id'] = $this->user->id;
 
 		return new Envelope(
 			tags: $this->mailTags,

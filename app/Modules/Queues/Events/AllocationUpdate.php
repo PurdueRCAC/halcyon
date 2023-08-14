@@ -10,7 +10,7 @@ class AllocationUpdate
 	public $id;
 
 	/**
-	 * @var array
+	 * @var array<string,mixed>
 	 */
 	public $data;
 
@@ -22,7 +22,8 @@ class AllocationUpdate
 	/**
 	 * Constructor
 	 *
-	 * @param  array $data
+	 * @param  mixed  $id
+	 * @param  array<string,mixed> $data
 	 * @return void
 	 */
 	public function __construct($id, $data)

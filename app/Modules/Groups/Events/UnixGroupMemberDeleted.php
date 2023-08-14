@@ -28,9 +28,7 @@ class UnixGroupMemberDeleted implements ShouldBroadcast
 	}
 
 	/**
-	 * Get the channels the event should broadcast on.
-	 *
-	 * @return PrivateChannel|array
+	 * @inheritdoc
 	 */
 	public function broadcastOn()
 	{

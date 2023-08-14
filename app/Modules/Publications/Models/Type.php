@@ -4,6 +4,7 @@ namespace App\Modules\Publications\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Model for publication types
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int    $id
  * @property string $name
  * @property string $alias
+ *
+ * @property string $api
  */
 class Type extends Model
 {
@@ -58,7 +61,7 @@ class Type extends Model
 	 * Query scope with search
 	 *
 	 * @param   Builder  $query
-	 * @param   string   $search
+	 * @param   string|int   $search
 	 * @return  Builder
 	 */
 	public function scopeWhereSearch(Builder $query, $search): Builder

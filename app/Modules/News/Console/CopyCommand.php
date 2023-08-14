@@ -5,7 +5,7 @@ namespace App\Modules\News\Console;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\News\Models\Article;
-use DateTime;
+use Carbon\Carbon;
 
 class CopyCommand extends Command
 {
@@ -53,14 +53,14 @@ class CopyCommand extends Command
 		if (!$week_start)
 		{
 			$day = date('w');
-			$week_start = (new DateTime('now'))->modify('-' . $day . ' days');
-			$week_end   = (new DateTime('now'))->modify('+' . (6 - $day) . ' days');
+			$week_start = Carbon::now()->modify('-' . $day . ' days');
+			$week_end   = Carbon::now()->modify('+' . (6 - $day) . ' days');
 		}
 		else
 		{
-			$week_start = new DateTime($week_start);
+			$week_start = Carbon::parse($week_start);
 		}
-		$week_end = (new DateTime('now'))->modify('+6 days');
+		$week_end = Carbon::now()->modify('+6 days');
 
 		$start = $week_start;
 		$end   = $week_end->modify('-2 days');
@@ -92,7 +92,7 @@ class CopyCommand extends Command
 				$payload = new Article;
 				$payload->datetimenews    = $start->format('Y-m-d') . ' ' . $range['start'];
 				$payload->datetimenewsend = $start->format('Y-m-d') . ' ' . $range['end'];
-				$payload->datetimecreated = (new DateTime('now'))->format('Y-m-d h:m:s');
+				$payload->datetimecreated = Carbon::now();
 				$payload->userid          = $news->userid;
 				$payload->edituserid      = $news->edituserid;
 				$payload->published       = 1;

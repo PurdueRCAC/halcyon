@@ -22,7 +22,7 @@ class Article extends Mailable
 	/**
 	 * From name
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	protected $name;
 
@@ -30,7 +30,7 @@ class Article extends Mailable
 	 * Create a new message instance.
 	 *
 	 * @param  Art  $article
-	 * @param  string $name
+	 * @param  string|null $name
 	 * @return void
 	 */
 	public function __construct(Art $article, $name = null)

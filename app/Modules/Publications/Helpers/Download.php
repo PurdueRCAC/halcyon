@@ -197,7 +197,7 @@ class Download
 	{
 		$reference = $reference ?: $this->getReference();
 
-		if (!$reference)
+		if (is_null($reference))
 		{
 			return '';
 		}

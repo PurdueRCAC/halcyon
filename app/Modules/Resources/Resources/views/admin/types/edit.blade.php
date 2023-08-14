@@ -58,7 +58,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-description">{{ trans('resources::assets.description') }}</label>
-					{!! editor('fields[description]', $row->description, ['rows' => 7, 'maxlength' => 2000]) !!}
+					{!! editor('fields[description]', $row->description, ['rows' => 7, 'maxlength' => 2000, 'id' => 'field-description']) !!}
 				</div>
 			</fieldset>
 		</div>

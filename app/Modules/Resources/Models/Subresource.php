@@ -29,6 +29,8 @@ use Carbon\Carbon;
  * @property Carbon|null $datetimeremoved
  * @property Carbon|null $datetimecreated
  * @property int    $notice
+ *
+ * @property string $api
  */
 class Subresource extends Model
 {

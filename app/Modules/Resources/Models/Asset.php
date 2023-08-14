@@ -5,6 +5,7 @@ namespace App\Modules\Resources\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -207,9 +208,9 @@ class Asset extends Model
 	/**
 	 * Defines a direct relationship to subresources
 	 *
-	 * @return object
+	 * @return  HasManyThrough
 	 */
-	public function subresources()
+	public function subresources(): HasManyThrough
 	{
 		return $this->hasManyThrough(Subresource::class, Child::class, 'resourceid', 'id', 'id', 'subresourceid')->withTrashed();
 	}
@@ -250,7 +251,7 @@ class Asset extends Model
 	 * @param   string  $name
 	 * @return  bool
 	 */
-	public function hasFacet($name): bool
+	public function hasFacet(string $name): bool
 	{
 		$found = $this->getFacet($name);
 
@@ -263,7 +264,7 @@ class Asset extends Model
 	 * @param   string  $name
 	 * @return  null|Facet
 	 */
-	public function getFacet($name): ?Facet
+	public function getFacet(string $name): ?Facet
 	{
 		$f = (new Facet)->getTable();
 		$ft = (new FacetType)->getTable();
@@ -314,9 +315,9 @@ class Asset extends Model
 	 *
 	 * @param   string  $order
 	 * @param   string  $dir
-	 * @return  array
+	 * @return  array<int,Asset>
 	 */
-	public function tree($order = 'name', $dir = 'asc'): array
+	public function tree(string $order = 'name', string $dir = 'asc'): array
 	{
 		$query = self::query();
 
@@ -356,12 +357,12 @@ class Asset extends Model
 	 * Recursive function to build tree
 	 *
 	 * @param   int  $id        Parent ID
-	 * @param   array    $list      List of records
-	 * @param   array    $children  Container for parent/children mapping
+	 * @param   array<int,Asset>    $list      List of records
+	 * @param   array<int,array>    $children  Container for parent/children mapping
 	 * @param   int  $maxlevel  Maximum levels to descend
 	 * @param   int  $level     Indention level
 	 * @param   int  $type      Indention type
-	 * @return  array
+	 * @return  array<int,Asset>
 	 */
 	protected function treeRecurse($id, $list, $children, $maxlevel=9999, $level=0, $type=1): array
 	{
@@ -416,7 +417,7 @@ class Asset extends Model
 	 * @param   string  $name
 	 * @return  Asset|null
 	 */
-	public static function findByName($name)
+	public static function findByName(string $name): ?Asset
 	{
 		$name = str_replace('-', ' ', $name);
 
@@ -433,7 +434,7 @@ class Asset extends Model
 	 * Query scope with search
 	 *
 	 * @param   Builder  $query
-	 * @param   string   $search
+	 * @param   string|int   $search
 	 * @return  Builder
 	 */
 	public function scopeWhereSearch(Builder $query, $search): Builder

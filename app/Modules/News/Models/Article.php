@@ -48,6 +48,8 @@ use Carbon\Carbon;
  * @property Carbon|null $datetimeremoved
  * @property int    $lastmailuserid
  * @property string $url
+ *
+ * @property string $api
  */
 class Article extends Model
 {

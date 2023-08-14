@@ -76,20 +76,13 @@ class Asset extends Nested
 	 * Method to load an asset by it's name.
 	 *
 	 * @param   string  $name
-	 * @return  self
+	 * @return  Asset|null
 	 */
-	public static function findByName(string $name): self
+	public static function findByName(string $name): ?Asset
 	{
-		$model = self::query()
+		return self::query()
 			->where('name', '=', $name)
 			->first();
-
-		if (!$model)
-		{
-			$model = new self();
-		}
-
-		return $model;
 	}
 
 	/**

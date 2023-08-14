@@ -1,6 +1,8 @@
 <?php
 namespace App\Modules\Publications\Helpers\Parsers;
 
+use Exception;
+
 /**
  * Structures_BibTex
  *
@@ -482,7 +484,7 @@ class BibTex
 	 * If the '=' is inside braces it contains to a equation and therefore false is returned.
 	 *
 	 * @param  string  $entry The text of the whole remaining entry
-	 * @param  int     the    current used place of the '='
+	 * @param  int     $position current used place of the '='
 	 * @return bool    true if the '=' is correct, false if it contains to an equation
 	 */
 	private function _checkEqualSign($entry, $position)
@@ -972,7 +974,7 @@ class BibTex
 	 * Remove curly braces from entry
 	 *
 	 * @param  string  $value The value in which curly braces to be removed
-	 * @param  string  Value  with removed curly braces
+	 * @return string
 	 */
 	private function _removeCurlyBraces($value)
 	{
@@ -1164,7 +1166,7 @@ class BibTex
 	/**
 	 * Adds a new BibTex entry to the data
 	 *
-	 * @param  array  $newentry The new data to add
+	 * @param  array<string,mixed>  $newentry The new data to add
 	 * @return void
 	 */
 	public function addEntry($newentry)
@@ -1178,7 +1180,7 @@ class BibTex
 	 * This functions returns a hash table. The keys are the different
 	 * entry types and the values are the amount of these entries.
 	 *
-	 * @return array  Hash Table with the data
+	 * @return array<string,int>  Hash Table with the data
 	 */
 	public function getStatistic()
 	{
@@ -1289,6 +1291,9 @@ class BibTex
 			$title   = '';
 			$journal = '';
 			$year    = '';
+			$volume  = '';
+			$pages   = '';
+			$publisher =  '';
 			$authors = '';
 			if (array_key_exists('title', $entry))
 			{

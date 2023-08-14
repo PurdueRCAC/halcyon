@@ -49,6 +49,8 @@ use Carbon\Carbon;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  * @property string $filename
+ *
+ * @property string $api
  */
 class Publication extends Model
 {
@@ -335,7 +337,7 @@ class Publication extends Model
 	 * Query scope with search
 	 *
 	 * @param   Builder  $query
-	 * @param   string   $search
+	 * @param   string|int   $search
 	 * @return  Builder
 	 */
 	public function scopeWhereSearch(Builder $query, $search): Builder

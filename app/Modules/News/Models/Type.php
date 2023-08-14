@@ -31,6 +31,8 @@ use Carbon\Carbon;
  * @property int    $parentid
  * @property string $state
  * @property string $order_dir
+ *
+ * @property string $api
  */
 class Type extends Model
 {

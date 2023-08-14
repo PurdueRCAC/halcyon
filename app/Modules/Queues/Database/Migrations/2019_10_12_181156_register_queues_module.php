@@ -60,13 +60,11 @@ class RegisterQueuesModule extends Migration
 
 				// Register the module just under root in the assets table
 				$asset = new Asset;
-				$asset->name = $module;
+				$asset->name = $this->module;
 				$asset->parent_id = 1;
 				$asset->rules = json_encode($defaulRules);
 				$asset->title = $this->module;
 				$asset->save(); //AsChildOf(1);
-
-				//$this->info(sprintf('Added permissions entry for module "%s"', $this->module));
 			}
 		}
 	}

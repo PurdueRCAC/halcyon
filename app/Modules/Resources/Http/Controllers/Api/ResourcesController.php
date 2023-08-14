@@ -543,7 +543,8 @@ class ResourcesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @return  JsonResponse
+	 * @param  int $id
+	 * @return JsonResponse
 	 */
 	public function delete($id)
 	{

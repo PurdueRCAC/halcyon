@@ -11,9 +11,9 @@ class HighlightUnusedVariables
 	/**
 	 * Handle content
 	 *
-	 * @param  array $data
+	 * @param  array<string,mixed> $data
 	 * @param  Closure $next
-	 * @return array
+	 * @return array<string,mixed>
 	 */
 	public function handle(array $data, Closure $next): array
 	{
@@ -23,10 +23,6 @@ class HighlightUnusedVariables
 		if (auth()->user() && auth()->user()->can('manage news'))
 		{
 			$text = preg_replace("/%%([\w\s]+)%%/", '<span style="color:red">$0</span>', $text);
-		}
-
-		if (auth()->user() && auth()->user()->can('manage news'))
-		{
 			$text = preg_replace("/%([\w]+)%/", '<span style="color:red">$0</span>', $text);
 		}
 

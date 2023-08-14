@@ -3,7 +3,7 @@
 namespace App\Modules\Publications\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -121,7 +121,7 @@ class AuthorsController extends Controller
 	 * Store a newly created entry
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -158,7 +158,7 @@ class AuthorsController extends Controller
 	 *
 	 * @param   Request  $request
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function delete(Request $request, $id = null)
 	{
@@ -211,7 +211,7 @@ class AuthorsController extends Controller
 	 * Sets the state of one or more entries
 	 * 
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function restore(Request $request)
 	{
@@ -256,7 +256,7 @@ class AuthorsController extends Controller
 	 * 
 	 * @param   int  $id
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function reorder($id, Request $request)
 	{
@@ -276,7 +276,7 @@ class AuthorsController extends Controller
 	/**
 	 * Return to default page
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{

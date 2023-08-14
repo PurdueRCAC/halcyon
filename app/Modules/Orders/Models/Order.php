@@ -218,25 +218,24 @@ class Order extends Model
 			{
 				case 1:
 					return 'pending_fulfillment';
-				break;
+
 				case 2:
 					return 'pending_boassignment';
-				break;
+
 				case 3:
 					return 'pending_payment';
-				break;
+
 				case 4:
 					return 'pending_approval';
-				break;
+
 				case 5:
 					return 'pending_collection';
-				break;
+
 				case 6:
 					return 'complete';
-				break;
+
 				case 7:
 					return 'canceled';
-				break;
 			}
 		}
 

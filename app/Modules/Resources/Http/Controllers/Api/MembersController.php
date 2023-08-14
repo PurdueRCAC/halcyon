@@ -87,7 +87,7 @@ class MembersController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   int $id
-	 * @return  array
+	 * @return  array<int,array>
 	 */
 	public function index(Request $request, $id)
 	{
@@ -955,7 +955,7 @@ class MembersController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @param   int $id
+	 * @param   string $id
 	 * @return  JsonResource|JsonResponse
 	 */
 	public function read($id)
@@ -1168,7 +1168,7 @@ class MembersController extends Controller
 
 		if ($rows > 0)
 		{
-			return 202;
+			return response()->json(null, 202);
 		}
 
 		// Call to remove role from this user's account.

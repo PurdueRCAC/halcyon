@@ -747,6 +747,7 @@ class ArticlesController extends Controller
 	 * Mark the associated user has having visited
 	 *
 	 * @param   int  $id
+	 * @param   string  $token
 	 * @return  Response
 	 */
 	public function visit($id, $token)

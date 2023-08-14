@@ -18,6 +18,7 @@ use App\Modules\Resources\Events\TypeDeleted;
  * @property string $description
  *
  * @property string $api
+ * @property int    $resources_count
  */
 class Type extends Model
 {
@@ -110,7 +111,7 @@ class Type extends Model
 	 * @param  string  $name
 	 * @return Type|null
 	 */
-	public static function findByName($name)
+	public static function findByName(string $name): ?Type
 	{
 		$name = str_replace('-', ' ', $name);
 

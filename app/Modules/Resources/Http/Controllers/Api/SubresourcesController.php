@@ -3,7 +3,7 @@
 namespace App\Modules\Resources\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use App\Modules\Resources\Models\Child;
 use App\Modules\Resources\Models\Subresource;

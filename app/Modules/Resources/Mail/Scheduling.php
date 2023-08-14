@@ -6,7 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Headers;
 use Illuminate\Queue\SerializesModels;
-use App\Modules\Resources\Models\Asset;
+use Illuminate\Database\Eloquent\Collection;
+use App\Modules\Resources\Models\Subresource;
 
 class Scheduling extends Mailable
 {
@@ -22,14 +23,14 @@ class Scheduling extends Mailable
 	/**
 	 * List of started resources
 	 *
-	 * @var array<int,Asset>
+	 * @var array<int,Subresource>|Collection<int,Subresource>
 	 */
 	protected $started;
 
 	/**
 	 * List of stopped resources
 	 *
-	 * @var array<int,Asset>
+	 * @var array<int,Subresource>|Collection<int,Subresource>
 	 */
 	protected $stopped;
 
@@ -44,8 +45,8 @@ class Scheduling extends Mailable
 	 * Create a new message instance.
 	 *
 	 * @param  string $action
-	 * @param  array<int,Asset> $started
-	 * @param  array<int,Asset> $stopped
+	 * @param  array<int,Subresource>|Collection<int,Subresource> $started
+	 * @param  array<int,Subresource>|Collection<int,Subresource> $stopped
 	 * @return void
 	 */
 	public function __construct($action, $started = array(), $stopped = array())
