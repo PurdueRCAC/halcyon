@@ -3,6 +3,8 @@
 namespace App\Modules\Finder\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Halcyon\Http\StatefulRequest;
@@ -16,7 +18,7 @@ class ServicesController extends Controller
 	 * Display a listing of tags
 	 *
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -102,7 +104,7 @@ class ServicesController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 *
-	 * @return Response
+	 * @return View
 	 */
 	public function create()
 	{
@@ -128,7 +130,7 @@ class ServicesController extends Controller
 	 * Show the form for editing the specified resource.
 	 *
 	 * @param  int $id
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id)
 	{
@@ -154,7 +156,7 @@ class ServicesController extends Controller
 	 * Store a newly created resource in storage.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -196,14 +198,14 @@ class ServicesController extends Controller
 					continue;
 				}
 
-				$fs = ServiceField::findByServiceAndField($service->id, $field->id);
+				$fs = ServiceField::findByServiceAndField($row->id, $field->id);
 
 				if (!$fs || ! $fs->id)
 				{
 					$fs = new ServiceField;
 				}
 
-				$fs->service_id = $service->id;
+				$fs->service_id = $row->id;
 				$fs->field_id = $field->id;
 				$fs->value = $value;
 				$fs->save();
@@ -217,7 +219,7 @@ class ServicesController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -252,7 +254,7 @@ class ServicesController extends Controller
 	 * 
 	 * @param   Request $request
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function state(Request $request, $id = null)
 	{
@@ -310,7 +312,7 @@ class ServicesController extends Controller
 	/**
 	 * Return to the main view
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{

@@ -14,6 +14,8 @@ use App\Modules\History\Traits\Historable;
  * @property int    $id
  * @property int    $parentid
  * @property string $name
+ *
+ * @property string $api
  */
 class FieldOfScience extends Model
 {
@@ -147,7 +149,7 @@ class FieldOfScience extends Model
 	 * @param   int    $maxlevel  Maximum levels to descend
 	 * @param   int    $level     Indention level
 	 * @param   string $prfx
-	 * @return  array
+	 * @return  array<int,FieldOfScience>
 	 */
 	protected static function treeRecurse(int $id, array $list, array $children, int $maxlevel=9999, int $level=0, string $prfx = ''): array
 	{

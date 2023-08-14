@@ -40,6 +40,8 @@ abstract class ProviderInstaller implements SetupScript
     protected $application;
 
     /**
+     * Constructor
+     *
      * @param Filesystem     $finder
      * @param Composer       $composer
      * @param Application    $application
@@ -54,6 +56,7 @@ abstract class ProviderInstaller implements SetupScript
 
     /**
      * Fire the install script
+     *
      * @param  Command $command
      * @return void
      */
@@ -62,14 +65,19 @@ abstract class ProviderInstaller implements SetupScript
         $this->command = $command;
 
         // Publish asgard configs
-        if ($this->command->option('verbose')) {
+        if ($this->command->option('verbose'))
+        {
             $this->command->call('vendor:publish', ['--provider' => CoreServiceProvider::class]);
-        } else {
+        }
+        else
+        {
             $this->command->callSilent('vendor:publish', ['--provider' => CoreServiceProvider::class]);
         }
 
-        if (! $this->checkIsInstalled()) {
-            return $this->command->error('No user driver was installed. Please check the presence of a Service Provider');
+        if (! $this->checkIsInstalled())
+        {
+            $this->command->error('No user driver was installed. Please check the presence of a Service Provider');
+            return;
         }
 
         $this->publish();
@@ -80,7 +88,8 @@ abstract class ProviderInstaller implements SetupScript
 
         $this->createFirstUser();
 
-        if ($this->command->option('verbose')) {
+        if ($this->command->option('verbose'))
+        {
             $command->info($this->driver . ' succesfully configured');
         }
     }
@@ -123,12 +132,13 @@ abstract class ProviderInstaller implements SetupScript
     abstract public function getHashedPassword($password);
 
     /**
-     * @param $command
+     * @param object $command
      * @return mixed
      */
     private function migrateUserModule($command)
     {
-        if ($command->option('verbose')) {
+        if ($command->option('verbose'))
+        {
             return $command->call('module:migrate', ['module' => 'User']);
         }
 
@@ -159,7 +169,7 @@ abstract class ProviderInstaller implements SetupScript
      * @param string $driver
      * @return void
      */
-    protected function bindUserRepositoryOnTheFly($driver)
+    /*protected function bindUserRepositoryOnTheFly($driver)
     {
         $this->application->bind(
             UserRepository::class,
@@ -173,7 +183,7 @@ abstract class ProviderInstaller implements SetupScript
             Authentication::class,
             "Modules\\User\\Repositories\\$driver\\{$driver}Authentication"
         );
-    }
+    }*/
 
     /**
      * Create a first admin user
@@ -202,12 +212,15 @@ abstract class ProviderInstaller implements SetupScript
      */
     private function askForFirstName()
     {
-        do {
+        do
+        {
             $firstname = $this->command->ask('Enter your first name');
-            if ($firstname == '') {
+            if ($firstname == '')
+            {
                 $this->command->error('First name is required');
             }
-        } while (! $firstname);
+        }
+        while (! $firstname);
 
         return $firstname;
     }
@@ -217,12 +230,15 @@ abstract class ProviderInstaller implements SetupScript
      */
     private function askForLastName()
     {
-        do {
+        do
+        {
             $lastname = $this->command->ask('Enter your last name');
-            if ($lastname == '') {
+            if ($lastname == '')
+            {
                 $this->command->error('Last name is required');
             }
-        } while (! $lastname);
+        }
+        while (! $lastname);
 
         return $lastname;
     }
@@ -232,12 +248,15 @@ abstract class ProviderInstaller implements SetupScript
      */
     private function askForEmail()
     {
-        do {
+        do
+        {
             $email = $this->command->ask('Enter your email address');
-            if ($email == '') {
+            if ($email == '')
+            {
                 $this->command->error('Email is required');
             }
-        } while (! $email);
+        }
+        while (! $email);
 
         return $email;
     }
@@ -247,13 +266,16 @@ abstract class ProviderInstaller implements SetupScript
      */
     private function askForPassword()
     {
-        do {
+        do
+        {
             $password = $this->askForFirstPassword();
             $passwordConfirmation = $this->askForPasswordConfirmation();
-            if ($password != $passwordConfirmation) {
+            if ($password != $passwordConfirmation)
+            {
                 $this->command->error('Password confirmation doesn\'t match. Please try again.');
             }
-        } while ($password != $passwordConfirmation);
+        }
+        while ($password != $passwordConfirmation);
 
         return $password;
     }
@@ -263,12 +285,15 @@ abstract class ProviderInstaller implements SetupScript
      */
     private function askForFirstPassword()
     {
-        do {
+        do
+        {
             $password = $this->command->secret('Enter a password');
-            if ($password == '') {
+            if ($password == '')
+            {
                 $this->command->error('Password is required');
             }
-        } while (! $password);
+        }
+        while (! $password);
 
         return $password;
     }
@@ -278,12 +303,15 @@ abstract class ProviderInstaller implements SetupScript
      */
     private function askForPasswordConfirmation()
     {
-        do {
+        do
+        {
             $passwordConfirmation = $this->command->secret('Please confirm your password');
-            if ($passwordConfirmation == '') {
+            if ($passwordConfirmation == '')
+            {
                 $this->command->error('Password confirmation is required');
             }
-        } while (! $passwordConfirmation);
+        }
+        while (! $passwordConfirmation);
 
         return $passwordConfirmation;
     }

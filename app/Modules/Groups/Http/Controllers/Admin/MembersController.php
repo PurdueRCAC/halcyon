@@ -162,22 +162,26 @@ class MembersController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.name' => 'required',
-			'fields.unixid' => 'nullable|integer',
-			'fields.unixgroup' => 'nullable|string'
+			'fields.membertype' => 'nullable|integer',
+			'fields.userid' => 'required|integer',
+			'fields.groupid' => 'required|integer'
 		]);
 
 		$id = $request->input('id');
 
 		$row = $id ? Member::findOrFail($id) : new Member();
 		$row->fill($request->input('fields'));
+		if (!$row->membertype)
+		{
+			$row->membertype = 1;
+		}
 
 		if (!$row->save())
 		{
 			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
-		return $this->cancel()->with('success', trans('global.messages.item saved'));
+		return $this->cancel($row->groupid)->with('success', trans('global.messages.item saved'));
 	}
 
 	/**

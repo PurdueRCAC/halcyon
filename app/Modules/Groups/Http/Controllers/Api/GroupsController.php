@@ -606,7 +606,7 @@ class GroupsController extends Controller
 	 * 		}
 	 * }
 	 * @param  int  $id
-	 * @return GroupResponse
+	 * @return GroupResource
 	 */
 	public function read(int $id)
 	{

@@ -43,7 +43,7 @@ class DeleteModuleCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
     public function handle()
     {
@@ -116,7 +116,7 @@ class DeleteModuleCommand extends Command
     /**
      * Get the console command arguments.
      *
-     * @return array
+     * @return array<int,array{int,mixed}>
      */
     protected function getArguments()
     {
@@ -128,7 +128,7 @@ class DeleteModuleCommand extends Command
     /**
      * Get the console command options.
      *
-     * @return array
+     * @return array<int,array{int,mixed}>
      */
     protected function getOptions()
     {

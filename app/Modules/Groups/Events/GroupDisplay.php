@@ -23,7 +23,7 @@ class GroupDisplay
 	/**
 	 * Content sections
 	 *
-	 * @var array<int,array>
+	 * @var array<int,array{string,mixed}>
 	 */
 	public $sections;
 

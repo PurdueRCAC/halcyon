@@ -21,10 +21,12 @@ use App\Modules\Groups\Events\MemberDeleted;
  * @property int    $userrequestid
  * @property int    $membertype
  * @property int    $owner
- * @property Carbon|null $datetimecreated
- * @property Carbon|null $datetimeremoved
+ * @property Carbon|null $datecreated
+ * @property Carbon|null $dateremoved
  * @property Carbon|null $datelastseen
  * @property int    $notice
+ *
+ * @property string $api
  */
 class Member extends Model
 {

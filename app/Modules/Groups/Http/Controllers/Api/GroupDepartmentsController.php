@@ -106,7 +106,7 @@ class GroupDepartmentsController extends Controller
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
-			$filters['order_dir'] = Department::$orderDir;
+			$filters['order_dir'] = GroupDepartment::$orderDir;
 		}
 
 		$query = GroupDepartment::query();

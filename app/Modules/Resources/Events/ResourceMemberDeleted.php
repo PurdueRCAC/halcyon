@@ -18,6 +18,11 @@ class ResourceMemberDeleted
 	public $user;
 
 	/**
+	 * @var int
+	 */
+	public $status = 1;
+
+	/**
 	 * @var array<int,string>
 	 */
 	public $errors = array();
@@ -33,5 +38,15 @@ class ResourceMemberDeleted
 	{
 		$this->resource = $resource;
 		$this->user = $user;
+	}
+
+	/**
+	 * An error occurred determining status
+	 *
+	 * @return bool
+	 */
+	public function hasError(): bool
+	{
+		return ($this->status == -1 || !empty($this->errors));
 	}
 }

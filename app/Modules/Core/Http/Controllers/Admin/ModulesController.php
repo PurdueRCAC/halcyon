@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Artisan;
 use App\Modules\Core\Models\Extension;
 use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Access\Rules;
 
 class ModulesController extends Controller
 {
@@ -188,7 +189,7 @@ class ModulesController extends Controller
 		if (count($ids) < 1)
 		{
 			$request->session()->flash('warning', trans($state ? 'global.select to publish' : 'global.select to unpublish'));
-			return $this->cancel();
+			return redirect(route('admin.modules.index'));
 		}
 
 		$success = 0;

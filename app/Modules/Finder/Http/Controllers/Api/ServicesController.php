@@ -281,7 +281,7 @@ class ServicesController extends Controller
 				}
 
 				$fs = new ServiceField;
-				$fs->service_id = $service->id;
+				$fs->service_id = $row->id;
 				$fs->field_id = $field->id;
 				$fs->value = $value;
 				$fs->save();
@@ -463,14 +463,14 @@ class ServicesController extends Controller
 					continue;
 				}
 
-				$fs = ServiceField::findByServiceAndField($service->id, $field->id);
+				$fs = ServiceField::findByServiceAndField($row->id, $field->id);
 
 				if (!$fs || ! $fs->id)
 				{
 					$fs = new ServiceField;
 				}
 
-				$fs->service_id = $service->id;
+				$fs->service_id = $row->id;
 				$fs->field_id = $field->id;
 				$fs->value = $value;
 				$fs->save();

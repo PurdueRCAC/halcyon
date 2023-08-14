@@ -7,7 +7,7 @@ if (!function_exists('editor'))
 	 * 
 	 * @param   string  $name
 	 * @param   string  $value
-	 * @param   array   $atts
+	 * @param   array<string,mixed>   $atts
 	 * @param   string  $formatting
 	 * @return  string
 	 */
@@ -27,7 +27,7 @@ if (!function_exists('markdown_editor'))
 	 * 
 	 * @param   string  $name
 	 * @param   string  $value
-	 * @param   array   $atts
+	 * @param   array<string,mixed>   $atts
 	 * @return  string
 	 */
 	function markdown_editor($name, $value, $atts = array())
@@ -60,7 +60,7 @@ if (!function_exists('validate_captcha'))
 	 * Check if a CAPTCHA is valid
 	 * 
 	 * @param   string  $name
-	 * @param   array   $atts
+	 * @param   array<string,mixed>   $atts
 	 * @return  bool
 	 */
 	function validate_captcha($name, $atts = array())

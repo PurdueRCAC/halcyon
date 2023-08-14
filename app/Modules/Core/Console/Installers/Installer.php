@@ -10,11 +10,13 @@ use App\Modules\Core\Services\Composer;
 class Installer
 {
     /**
-     * @var array
+     * @var array<int,string>
      */
     protected $scripts = [];
 
     /**
+     * Constructor
+     *
      * @param Filesystem  $finder
      * @param Application $app
      * @param Composer    $composer
@@ -27,7 +29,9 @@ class Installer
     }
 
     /**
-     * @param  array $scripts
+     * Set the stack of scripts
+     *
+     * @param  array<int,string> $scripts
      * @return self
      */
     public function stack(array $scripts)
@@ -39,6 +43,7 @@ class Installer
 
     /**
      * Fire install scripts
+     *
      * @param  Command $command
      * @return bool
      */

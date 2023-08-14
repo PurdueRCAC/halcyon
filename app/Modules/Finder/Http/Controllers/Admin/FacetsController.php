@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Finder\Models\Facet;
 use App\Modules\Finder\Models\Service;
+use App\Modules\Finder\Models\ServiceFacet;
 
 class FacetsController extends Controller
 {
@@ -64,16 +65,16 @@ class FacetsController extends Controller
 		{
 			if (is_numeric($filters['search']))
 			{
-				$query->where($g . '.id', '=', $filters['search']);
+				$query->where('id', '=', $filters['search']);
 			}
 			else
 			{
 				$filters['search'] = strtolower((string)$filters['search']);
 
-				$query->where(function ($where) use ($filters, $g)
+				$query->where(function ($where) use ($filters)
 				{
-					$where->where($g . '.name', 'like', '%' . $filters['search'] . '%')
-						->orWhere($g . '.description', 'like', '%' . $filters['search'] . '%');
+					$where->where('name', 'like', '%' . $filters['search'] . '%')
+						->orWhere('description', 'like', '%' . $filters['search'] . '%');
 				});
 			}
 		}

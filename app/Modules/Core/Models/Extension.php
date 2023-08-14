@@ -81,7 +81,7 @@ class Extension extends Model
 	/**
 	 * XML manifest
 	 *
-	 * @var  object
+	 * @var  object|null
 	 */
 	protected $manifest = null;
 
@@ -126,6 +126,7 @@ class Extension extends Model
 	 * Find a record by element
 	 *
 	 * @param   string  $element
+	 * @param   string  $type
 	 * @return  Extension|null
 	 */
 	public static function findByElement($element, $type = 'module')
@@ -293,10 +294,11 @@ class Extension extends Model
 	/**
 	 * Method to validate the form data.
 	 *
-	 * @param   object  $form   The form to validate against.
-	 * @param   array   $data   The data to validate.
+	 * @param   Form  $form   The form to validate against.
+	 * @param   array<string,mixed>   $data   The data to validate.
 	 * @param   string  $group  The name of the field group to validate.
 	 * @return  mixed   Array of filtered data if valid, false otherwise.
+	 * @throws \Extension
 	 */
 	public function validateFormData($form, $data, $group = null)
 	{
@@ -307,8 +309,7 @@ class Extension extends Model
 		// Check for an error.
 		if ($return instanceof \Exception)
 		{
-			$this->setError($return->getMessage());
-			return false;
+			throw $return;
 		}
 
 		// Check the validation results.

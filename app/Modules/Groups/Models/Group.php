@@ -37,6 +37,8 @@ use Carbon\Carbon;
  * @property int    $cascademanagers
  * @property int    $prefix_unixgroup
  * @property string $description
+ *
+ * @property string $api
  */
 class Group extends Model
 {

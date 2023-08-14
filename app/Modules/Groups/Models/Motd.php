@@ -15,6 +15,8 @@ use Carbon\Carbon;
  * @property string $motd
  * @property Carbon|null $datetimecreated
  * @property Carbon|null $datetimeremoved
+ *
+ * @property string $api
  */
 class Motd extends Model
 {

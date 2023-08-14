@@ -64,6 +64,7 @@ class UnignorePackageLock implements SetupScript
     /**
      * @param string $gitignorePath
      * @param array<int,string> $out
+     * @return void
      */
     private function writeNewGitignore($gitignorePath, $out)
     {

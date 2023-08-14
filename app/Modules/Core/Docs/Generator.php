@@ -21,14 +21,14 @@ class Generator
 	/**
 	 * Var to hold sections
 	 * 
-	 * @var  array
+	 * @var  array<string,array{int,string}>
 	 */
 	private $sections = array();
 
 	/**
 	 * Var to hold output
 	 * 
-	 * @var  array
+	 * @var  array<string,mixed>
 	 */
 	private $output = array();
 
@@ -102,7 +102,7 @@ class Generator
 	 * 
 	 * @param   string  $format  Output format
 	 * @param   bool    $force  Force new version
-	 * @return  string
+	 * @return  string|array<string,mixed>
 	 */
 	public function output($format = 'json', $force = false)
 	{
@@ -131,7 +131,7 @@ class Generator
 	/**
 	 * Load from cache
 	 * 
-	 * @return  boolean
+	 * @return  bool
 	 */
 	private function cache()
 	{
@@ -195,7 +195,7 @@ class Generator
 	/**
 	 * Get all modules that have API routes
 	 *
-	 * @return Illuminate\Support\Collection
+	 * @return \Illuminate\Support\Collection
 	 */
 	public function modules()
 	{
@@ -226,8 +226,8 @@ class Generator
 	/** 
 	 * Process sections
 	 * 
-	 * @param   array  $sections  All the module api controllers grouped by module
-	 * @return  array
+	 * @param   array<string,array{int,string}>  $sections  All the module api controllers grouped by module
+	 * @return  array<string,mixed>
 	 */
 	private function processModuleSections($sections)
 	{
@@ -273,7 +273,7 @@ class Generator
 	 * Process an individual file
 	 * 
 	 * @param   string  $file  File path
-	 * @return  array   Processed endpoints
+	 * @return  array<string,mixed>   Processed endpoints
 	 */
 	private function processFile($file)
 	{

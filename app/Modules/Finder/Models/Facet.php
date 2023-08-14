@@ -19,6 +19,8 @@ use App\Modules\History\Traits\Historable;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ *
+ * @property string $api
  */
 class Facet extends Model
 {
@@ -77,7 +79,7 @@ class Facet extends Model
 	/** 
 	 * Return an array of the facets tree
 	 * 
-	 * @return  array  the facet tree
+	 * @return  array<int,array{string,mixed}>  the facet tree
 	 */
 	public static function tree(): array
 	{

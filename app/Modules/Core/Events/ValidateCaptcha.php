@@ -14,7 +14,7 @@ class ValidateCaptcha
 	/**
 	 * Attributes for rendering
 	 *
-	 * @var array
+	 * @var array<string,mixed>
 	 */
 	public $attributes;
 
@@ -29,7 +29,7 @@ class ValidateCaptcha
 	 * Constructor
 	 *
 	 * @param  string $name
-	 * @param  array  $attributes
+	 * @param  array<string,mixed>  $attributes
 	 * @return void
 	 */
 	public function __construct(string $name, array $attributes = array())

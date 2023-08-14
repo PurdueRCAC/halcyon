@@ -17,6 +17,8 @@ use App\Modules\History\Traits\Historable;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ *
+ * @property string $api
  */
 class Field extends Model
 {

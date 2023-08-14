@@ -16,10 +16,12 @@ use App\Modules\History\Traits\Historable;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ *
+ * @property string $api
  */
 class Service extends Model
 {
-	use Historable;
+	use Historable, SoftDeletes;
 
 	/**
 	 * The table to which the class pertains
@@ -74,7 +76,7 @@ class Service extends Model
 	/**
 	 * Field Facet Matches
 	 *
-	 * @return  array
+	 * @return  array<int,array{string,mixed}>
 	 */
 	public static function servicelist(): array
 	{

@@ -11,17 +11,17 @@ use Illuminate\Support\Facades\DB;
 class KnowItAll extends Fluent
 {
 	/**
-	 * @var  array|null  some php settings
+	 * @var  array<string,mixed>|null  some php settings
 	 */
 	protected $php_settings = null;
 
 	/**
-	 * @var  array|null config values
+	 * @var  array<string,mixed>|null config values
 	 */
 	protected $config = null;
 
 	/**
-	 * @var  array|null  somme system values
+	 * @var  array<string,mixed>|null  somme system values
 	 */
 	protected $info = null;
 
@@ -31,7 +31,7 @@ class KnowItAll extends Fluent
 	protected $php_info = null;
 
 	/**
-	 * @var  array|null  informations about writable state of directories
+	 * @var  array<string,array{string,mixed}>|null  informations about writable state of directories
 	 */
 	protected $directories = null;
 
@@ -73,7 +73,7 @@ class KnowItAll extends Fluent
 	/**
 	 * Method to get the config
 	 *
-	 * @return  array  Config values
+	 * @return  array<string,mixed>  Config values
 	 */
 	public function getConfig()
 	{
@@ -128,7 +128,7 @@ class KnowItAll extends Fluent
 	/**
 	 * Method to get the system information
 	 *
-	 * @return  array  System information values
+	 * @return  array<string,mixed>  System information values
 	 */
 	public function getInfo()
 	{
@@ -163,7 +163,7 @@ class KnowItAll extends Fluent
 	/**
 	 * Method to get the PHP info
 	 *
-	 * @return  string  PHP info
+	 * @return  string<string,mixed>  PHP info
 	 */
 	public function getPhpInfo()
 	{
@@ -192,7 +192,7 @@ class KnowItAll extends Fluent
 	/**
 	 * Method to get the directory states
 	 *
-	 * @return  array  states of directories
+	 * @return  array<string,array{string,mixed}>  states of directories
 	 */
 	public function getDirectory()
 	{

@@ -3,6 +3,8 @@
 namespace App\Modules\Finder\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Halcyon\Http\StatefulRequest;
@@ -14,7 +16,7 @@ class FieldsController extends Controller
 	 * Display a listing of tags
 	 *
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -100,7 +102,7 @@ class FieldsController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 *
-	 * @return Response
+	 * @return View
 	 */
 	public function create()
 	{
@@ -120,7 +122,7 @@ class FieldsController extends Controller
 	 * Show the form for editing the specified resource.
 	 *
 	 * @param  int $id
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id)
 	{
@@ -140,7 +142,7 @@ class FieldsController extends Controller
 	 * Store a newly created resource in storage.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -181,7 +183,7 @@ class FieldsController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -216,7 +218,7 @@ class FieldsController extends Controller
 	 * 
 	 * @param   Request $request
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function state(Request $request, $id = null)
 	{
@@ -274,7 +276,7 @@ class FieldsController extends Controller
 	/**
 	 * Return to the main view
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{

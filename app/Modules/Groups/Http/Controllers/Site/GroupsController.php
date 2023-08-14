@@ -3,7 +3,9 @@
 namespace App\Modules\Groups\Http\Controllers\Site;
 
 use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Fluent;
 use Illuminate\Support\Facades\Storage;
@@ -26,7 +28,7 @@ class GroupsController extends Controller
 	 * Display a listing of tags
 	 *
 	 * @param  StatefulRequest  $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -192,7 +194,7 @@ class GroupsController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 *
-	 * @return Response
+	 * @return View
 	 */
 	public function create()
 	{
@@ -213,7 +215,7 @@ class GroupsController extends Controller
 	 * Store a newly created resource in storage.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -259,7 +261,7 @@ class GroupsController extends Controller
 	 * Show the form for editing the specified resource.
 	 *
 	 * @param  int  $id
-	 * @return Response
+	 * @return View
 	 */
 	public function edit($id)
 	{
@@ -281,7 +283,7 @@ class GroupsController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param   Request  $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -355,7 +357,7 @@ class GroupsController extends Controller
 	 * Import
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function import(Request $request)
 	{

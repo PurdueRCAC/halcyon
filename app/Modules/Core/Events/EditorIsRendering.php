@@ -21,7 +21,7 @@ class EditorIsRendering
 	/**
 	 * The original body of the page to render
 	 *
-	 * @var string
+	 * @var array<string,mixed>
 	 */
 	private $attributes;
 
@@ -44,7 +44,7 @@ class EditorIsRendering
 	 *
 	 * @param  string $name
 	 * @param  string $value
-	 * @param  array  $attributes
+	 * @param  array<string,mixed> $attributes
 	 * @param  string $formatting
 	 * @return void
 	 */
@@ -100,7 +100,7 @@ class EditorIsRendering
 	/**
 	 * Get the attributes
 	 *
-	 * @return array
+	 * @return array<string,mixed>
 	 */
 	public function getAttributes(): array
 	{
@@ -110,7 +110,7 @@ class EditorIsRendering
 	/**
 	 * Set the attributes
 	 *
-	 * @param  array $attributes
+	 * @param  array<string,mixed> $attributes
 	 * @return void
 	 */
 	public function setAttributes(array $attributes): void

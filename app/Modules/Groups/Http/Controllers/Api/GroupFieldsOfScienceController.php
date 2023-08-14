@@ -106,7 +106,7 @@ class GroupFieldsOfScienceController extends Controller
 
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
-			$filters['order_dir'] = FieldOfScience::$orderDir;
+			$filters['order_dir'] = GroupFieldOfScience::$orderDir;
 		}
 
 		$query = GroupFieldOfScience::query();

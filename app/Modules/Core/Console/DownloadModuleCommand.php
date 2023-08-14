@@ -26,6 +26,7 @@ class DownloadModuleCommand extends Command
 
     /**
      * Execute the console command.
+     *
      * @return void
      * @throws \Symfony\Component\Process\Exception\LogicException
      */
@@ -79,7 +80,7 @@ class DownloadModuleCommand extends Command
     /**
      * Get the console command arguments.
      *
-     * @return array
+     * @return array<int,array{int,mixed}>
      */
     protected function getArguments()
     {
@@ -91,7 +92,7 @@ class DownloadModuleCommand extends Command
     /**
      * Get the console command options.
      *
-     * @return array
+     * @return array<int,array{int,mixed}>
      */
     protected function getOptions()
     {
@@ -107,6 +108,7 @@ class DownloadModuleCommand extends Command
     /**
      * @param string $package
      * @return string
+     * @throws \Exception
      */
     private function extractPackageNameFrom($package)
     {

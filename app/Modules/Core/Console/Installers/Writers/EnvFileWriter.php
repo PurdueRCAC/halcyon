@@ -14,7 +14,7 @@ class EnvFileWriter
     /**
      * Whitelist of variables in .env.example that can be written by the installer when it creates the .env file
      *
-     * @var array
+     * @var array<string,string>
      */
     protected $setable_variables = [
         'db_driver' => 'DB_CONNECTION=mysql',
@@ -61,7 +61,7 @@ class EnvFileWriter
     /**
      * Update the .env file
      *
-     * @param array $vars
+     * @param array<string,string> $vars
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      * @return void
      */
