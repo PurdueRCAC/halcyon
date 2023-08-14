@@ -52,7 +52,7 @@ class Integer extends Select
 		// Build the options array.
 		for ($i = $first; $i <= $last; $i += $step)
 		{
-			$options[] = Dropdown::option($i);
+			$options[] = Dropdown::option("$i");
 		}
 
 		// Merge any additional options in the XML definition.

@@ -12,14 +12,14 @@ class Builder
 	/**
 	 * An array to hold included paths
 	 *
-	 * @var  array
+	 * @var  array<int,string>
 	 */
 	protected static $paths = array();
 
 	/**
 	 * An array to hold method references
 	 *
-	 * @var  array
+	 * @var  array<int,array{int,string}>
 	 */
 	protected static $registry = array();
 
@@ -30,7 +30,7 @@ class Builder
 	 * Additional include paths are also able to be specified for third-party use
 	 *
 	 * @param   string  $method
-	 * @param   array   $parameters
+	 * @param   array<int,string>   $parameters
 	 * @return  mixed
 	 */
 	public function __call($method, $parameters)
@@ -71,7 +71,7 @@ class Builder
 	 * Registers a function to be called with a specific key
 	 *
 	 * @param   string   $key       The name of the key
-	 * @param   array    $callable  Function or method
+	 * @param   array<int,string>    $callable  Function or method
 	 * @return  bool  True if the function is callable
 	 */
 	public function register($key, $callable)
@@ -156,7 +156,7 @@ class Builder
 	 * either pass a string or an array of directories.
 	 *
 	 * @param   string  $path  A path to search.
-	 * @return  array   An array with directory elements
+	 * @return  array<int,string>   An array with directory elements
 	 */
 	public function addIncludePath($path = '')
 	{

@@ -19,7 +19,7 @@ class Toolbar
 	/**
 	 * Toolbar array
 	 *
-	 * @var  array<int,array>
+	 * @var  array<int,array{int,mixed}>
 	 */
 	protected $_bar = array();
 
@@ -54,7 +54,7 @@ class Toolbar
 	/**
 	 * Push button onto the end of the toolbar array.
 	 *
-	 * @return  object
+	 * @return  self
 	 */
 	public function append()
 	{
@@ -62,13 +62,13 @@ class Toolbar
 
 		array_push($this->_bar, $btn);
 
-		//return $this;
+		return $this;
 	}
 
 	/**
 	 * Get the list of toolbar links.
 	 *
-	 * @return  array
+	 * @return  array<int,array{int,mixed}>
 	 */
 	public function all()
 	{
@@ -88,7 +88,7 @@ class Toolbar
 	/**
 	 * Insert button into the front of the toolbar array.
 	 *
-	 * @return  object
+	 * @return  self
 	 */
 	public function prepend()
 	{

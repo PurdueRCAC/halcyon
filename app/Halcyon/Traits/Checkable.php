@@ -7,6 +7,9 @@ use Carbon\Carbon;
 
 /**
  * Database ORM trait for checking records in/out
+ *
+ * @property int $checked_out
+ * @property Carbon|null $checked_out_time
  */
 trait Checkable
 {

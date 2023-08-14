@@ -21,7 +21,7 @@ class Contentlanguage
 	 *
 	 * @param   bool  $all        True to include All (*)
 	 * @param   bool  $translate  True to translate All
-	 * @return  string
+	 * @return  array<int,object>
 	 */
 	public static function existing($all = false, $translate = false)
 	{

@@ -10,6 +10,22 @@ use Carbon\Carbon;
 
 /**
  * Module extension model
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $type
+ * @property string $element
+ * @property string $folder
+ * @property int    $client_id
+ * @property int    $enabled
+ * @property int    $access
+ * @property int    $protected
+ * @property string $params
+ * @property int    $checked_out
+ * @property Carbon|null $checked_out_time
+ * @property int    $ordering
+ * @property Carbon|null $updated_at
+ * @property int    $updated_by
  */
 class Extension extends Model
 {
@@ -104,7 +120,7 @@ class Extension extends Model
 	 *
 	 * @param   string  $title        The title.
 	 * @param   string  $position     The position.
-	 * @return  array   Contains the modified title.
+	 * @return  array<int,string>   Contains the modified title.
 	 */
 	public function generateNewTitle($title, $position): array
 	{
@@ -268,12 +284,6 @@ class Extension extends Model
 	 */
 	public function registerLanguage(): void
 	{
-		$name = $this->module;
-		if (substr($name, 0, 4) == 'mod_')
-		{
-			$name = substr($name, 4);
-		}
-
-		app('translator')->addNamespace('widget.' . $name, $this->path() . '/lang');
+		app('translator')->addNamespace('widget.' . $this->element, $this->path() . '/lang');
 	}
 }

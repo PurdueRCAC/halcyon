@@ -7,6 +7,8 @@ use App\Halcyon\Access\Gate;
 use App\Halcyon\Access\Role;
 use App\Halcyon\Access\Viewlevel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
+use stdClass;
 
 /**
  * Extended Utility class for all HTML drawing classes.
@@ -16,7 +18,7 @@ class Access
 	/**
 	 * A cached array of the asset groups
 	 *
-	 * @var  array
+	 * @var  Collection
 	 */
 	protected static $asset_groups = null;
 
@@ -26,7 +28,7 @@ class Access
 	 * @param   string  $name      The form field name.
 	 * @param   string  $selected  The name of the selected section.
 	 * @param   string  $attribs   Additional attributes to add to the select field.
-	 * @param   mixed   $params    True to add "All Sections" option or and array of options
+	 * @param   mixed   $params    True to add "All Sections" option or an array of options
 	 * @param   string  $id        The form field id
 	 * @return  string  The required HTML for the SELECT tag.
 	 */
@@ -69,7 +71,7 @@ class Access
 	 * Displays a list of the available user groups.
 	 *
 	 * @param   string   $name      The form field name.
-	 * @param   string|array   $selected  The name of the selected section.
+	 * @param   string|array<int,mixed>   $selected  The name of the selected section.
 	 * @param   string   $attribs   Additional attributes to add to the select field.
 	 * @param   bool     $allowAll  True to add "All Groups" option.
 	 * @param   string   $idtag
@@ -77,10 +79,18 @@ class Access
 	 */
 	public static function usergroup($name, $selected, $attribs = '', $allowAll = true, $idtag = false)
 	{
+		$options = array();
+
+		// If all usergroups is allowed, push it into the array.
+		if ($allowAll)
+		{
+			$options[] = Select::option('', trans('access.show all groups'));
+		}
+
 		$ug = new Role;
 
-		$options = Role::query()
-			->select(['a.id AS value', 'a.title AS text', DB::raw('COUNT(DISTINCT b.id) AS level')])
+		$roles = Role::query()
+			->select(['a.id', 'a.title', DB::raw('COUNT(DISTINCT b.id) AS level')])
 			->from($ug->getTable() . ' AS a')
 			->leftJoin($ug->getTable() . ' AS b', function($join)
 				{
@@ -91,16 +101,13 @@ class Access
 			->orderBy('a.lft', 'asc')
 			->get();
 
-		$options->transform(function ($item, $key)
+		foreach ($roles as $role)
 		{
-			$item->text = str_repeat('- ', $item->level) . $item->text;
-			return $item;
-		});
+			$opt = new stdClass;
+			$opt->value = $role->id;
+			$opt->text  = str_repeat('- ', $role->level) . $role->title;
 
-		// If all usergroups is allowed, push it into the array.
-		if ($allowAll)
-		{
-			$options->prepend(Select::option('', trans('access.show all groups')));
+			$options[] = $opt;
 		}
 
 		return Select::genericlist($options, $name, array(
@@ -114,7 +121,7 @@ class Access
 	 * Returns a UL list of user groups with check boxes
 	 *
 	 * @param   string   $name             The name of the checkbox controls array
-	 * @param   array    $selected         An array of the checked boxes
+	 * @param   array<int,mixed>    $selected         An array of the checked boxes
 	 * @param   bool  $checkSuperAdmin  If false only super admins can add to super admin groups
 	 * @return  string
 	 */
@@ -179,7 +186,7 @@ class Access
 	 * Returns a UL list of actions with check boxes
 	 *
 	 * @param   string  $name       The name of the checkbox controls array
-	 * @param   array   $selected   An array of the checked boxes
+	 * @param   array<int,mixed>   $selected   An array of the checked boxes
 	 * @param   string  $component  The component the permissions apply to
 	 * @param   string  $section    The section (within a component) the permissions apply to
 	 * @return  string
@@ -227,10 +234,9 @@ class Access
 	/**
 	 * Gets a list of the asset groups as an array of options.
 	 *
-	 * @param   array  $config  An array of options for the options
-	 * @return  mixed  An array or false if an error occurs
+	 * @return  Collection  An array or false if an error occurs
 	 */
-	public static function assetgroups($config = array())
+	public static function assetgroups()
 	{
 		if (empty(self::$asset_groups))
 		{
@@ -250,7 +256,7 @@ class Access
 	 * @param   string  $name      The name of the select element
 	 * @param   mixed   $selected  The selected asset group id
 	 * @param   string  $attribs   Optional attributes for the select field
-	 * @param   array   $config    An array of options for the control
+	 * @param   array<string,string>   $config    An array of options for the control
 	 * @return  mixed   An HTML string or null if an error occurs
 	 */
 	public static function assetgrouplist($name, $selected, $attribs = null, $config = array())

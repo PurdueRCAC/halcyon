@@ -67,7 +67,7 @@ class Url extends Rule
 		{
 			return false;
 		}
-		if (array_key_exists('port', $urlParts) && !is_int((int) $urlParts['port']))
+		if (array_key_exists('port', $urlParts) && !is_int($urlParts['port']))
 		{
 			return false;
 		}

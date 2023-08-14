@@ -14,7 +14,7 @@ class Params implements CastsAttributes
 	 * @param  Model  $model
 	 * @param  string  $key
 	 * @param  mixed  $value
-	 * @param  array  $attributes
+	 * @param  array<string,mixed>  $attributes
 	 * @return Repository
 	 */
 	public function get($model, $key, $value, $attributes): Repository
@@ -38,12 +38,12 @@ class Params implements CastsAttributes
 	}
 
 	/**
-	 * Prepare the given value for storage.
+	 * Transform the attribute to its underlying model values.
 	 *
 	 * @param  Model  $model
 	 * @param  string  $key
-	 * @param  array  $value
-	 * @param  array  $attributes
+	 * @param  mixed  $value
+	 * @param  array<string,mixed>  $attributes
 	 * @return mixed
 	 */
 	public function set($model, $key, $value, $attributes)

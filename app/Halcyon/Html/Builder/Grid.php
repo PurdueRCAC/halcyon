@@ -261,7 +261,7 @@ class Grid
 	/**
 	 * Method to create an icon for saving a new ordering in a grid
 	 *
-	 * @param   array   $rows  The array of rows of rows
+	 * @param   array<int,object>   $rows  The array of rows of rows
 	 * @param   string  $cls   Classname to apply
 	 * @param   string  $task  The task to use, defaults to save order
 	 * @return  string
@@ -280,7 +280,7 @@ class Grid
 	 * @param   bool  $tooltip  True if an overlib with checkout information should be created.
 	 * @return  string   HTML for the icon and tooltip
 	 */
-	protected static function _checkedOut(&$row, $tooltip = 1)
+	protected static function _checkedOut(&$row, $tooltip = true)
 	{
 		$hover = '<span class="checkedout">';
 
@@ -319,7 +319,7 @@ class Grid
 		}
 
 		$text = addslashes(htmlspecialchars($editorName, ENT_COMPAT, 'UTF-8'));
-		$date = addslashes(htmlspecialchars(Carbon::prase($time)->format('l, d F Y'), ENT_COMPAT, 'UTF-8'));
+		$date = addslashes(htmlspecialchars(Carbon::parse($time)->format('l, d F Y'), ENT_COMPAT, 'UTF-8'));
 		$time = addslashes(htmlspecialchars(Carbon::parse($time)->format('H:i'), ENT_COMPAT, 'UTF-8'));
 
 		$active_title   = trans('global.check in') . '::' . $text . '<br />' . $date . '<br />' . $time;
@@ -384,7 +384,7 @@ class Grid
 	 *
 	 * @param   int       $value         The state value.
 	 * @param   int       $i             The row index
-	 * @param   string|array  $prefix        An optional task prefix or an array of options
+	 * @param   string|array<string,mixed>  $prefix        An optional task prefix or an array of options
 	 * @param   bool       $enabled       An optional setting for access control on the action.
 	 * @param   string        $checkbox      An optional prefix for checkboxes.
 	 * @param   string        $publish_up    An optional start publishing date.
@@ -411,10 +411,8 @@ class Grid
 		// Special state for dates
 		if ($publish_up || $publish_down)
 		{
-			$nullDate = null; //\App::get('db')->getNullDate();
+			$nullDate = null;
 			$nowDate = Carbon::now()->timestamp;
-
-			$tz = new \DateTimeZone(User::getParam('timezone', \Config::get('offset')));
 
 			$publish_up   = ($publish_up != $nullDate)   ? Carbon::parse($publish_up)   : false;
 			$publish_down = ($publish_down != $nullDate) ? Carbon::parse($publish_down) : false;
@@ -423,11 +421,11 @@ class Grid
 			$tips = array();
 			if ($publish_up)
 			{
-				$tips[] = trans('global.start publishing', $publish_up->toDateTimeString());
+				$tips[] = trans('global.start publishing', ['start' => $publish_up->toDateTimeString()]);
 			}
 			if ($publish_down)
 			{
-				$tips[] = trans('global.finish publishing', $publish_down->toDateTimeString());
+				$tips[] = trans('global.finish publishing', ['stop' => $publish_down->toDateTimeString()]);
 			}
 			$tip = empty($tips) ? false : implode('<br/>', $tips);
 
@@ -439,12 +437,12 @@ class Grid
 				{
 					$states[$key][2] = $states[$key][3] = 'global.published';
 
-					if ($publish_up > $nullDate && $nowDate < $publish_up->toUnix())
+					if ($publish_up && $nowDate < $publish_up->toUnix())
 					{
 						$states[$key][2] = $states[$key][3] = 'global.published but pending';
 						$states[$key][5] = $states[$key][6] = 'pending';
 					}
-					if ($publish_down > $nullDate && $nowDate > $publish_down->toUnix())
+					if ($publish_down && $nowDate > $publish_down->toUnix())
 					{
 						$states[$key][2] = $states[$key][3] = 'global.published but expired';
 						$states[$key][5] = $states[$key][6] = 'expired';
@@ -469,13 +467,15 @@ class Grid
 	/**
 	 * Creates a order-up action icon.
 	 *
-	 * @param   int  $i         The row index.
-	 * @param   string   $task      An optional task to fire.
-	 * @param   mixed    $prefix    An optional task prefix or an array of options
-	 * @param   string   $text      An optional text to display
-	 * @param   bool  $enabled   An optional setting for access control on the action.
-	 * @param   string   $checkbox  An optional prefix for checkboxes.
-	 * @return  string   The required HTML.
+	 * @param   int     $limitstart
+	 * @param   int     $i         The row index.
+	 * @param   bool    $condition
+	 * @param   string  $task      An optional task to fire.
+	 * @param   mixed   $prefix    An optional task prefix or an array of options
+	 * @param   string  $text      An optional text to display
+	 * @param   bool    $enabled   An optional setting for access control on the action.
+	 * @param   string  $checkbox  An optional prefix for checkboxes.
+	 * @return  string  The required HTML.
 	 */
 	public static function orderUp($limitstart, $i, $condition = true, $task = 'orderup', $prefix = '', $text = 'global.move up', $enabled = true, $checkbox = 'cb')
 	{
@@ -508,13 +508,16 @@ class Grid
 	/**
 	 * Creates a order-down action icon.
 	 *
-	 * @param   int  $i         The row index.
-	 * @param   string   $task      An optional task to fire.
-	 * @param   mixed    $prefix    An optional task prefix or an array of options
-	 * @param   string   $text      An optional text to display
-	 * @param   bool  $enabled   An optional setting for access control on the action.
-	 * @param   string   $checkbox  An optional prefix for checkboxes.
-	 * @return  string   The required HTML.
+	 * @param   int     $limitstart
+	 * @param   int     $i         The row index.
+	 * @param   int     $total
+	 * @param   bool    $condition
+	 * @param   string  $task      An optional task to fire.
+	 * @param   mixed   $prefix    An optional task prefix or an array of options
+	 * @param   string  $text      An optional text to display
+	 * @param   bool    $enabled   An optional setting for access control on the action.
+	 * @param   string  $checkbox  An optional prefix for checkboxes.
+	 * @return  string  The required HTML.
 	 */
 	public static function orderDown($limitstart, $i, $total, $condition = true, $task = 'orderdown', $prefix = '', $text = 'global.move down', $enabled = true, $checkbox = 'cb')
 	{
@@ -604,26 +607,23 @@ class Grid
 			$prefix         = array_key_exists('prefix', $options) ? $options['prefix'] : '';
 		}
 
-
+		$html = array();
+		$html[] = '<a class="grid-action' . ($tip ? ' hasTip' : '') . '"';
 		if ($enabled)
 		{
-			$html[] = '<a class="grid-action' . ($tip ? ' hasTip' : '') . '"';
 			$html[] = ' href="#" data-id="' . $checkbox . $i . '" data-task="' . $prefix . $task . '"';
 			$html[] = ' title="' . addslashes(htmlspecialchars($translate ? trans($active_title) : $active_title, ENT_COMPAT, 'UTF-8')) . '">';
 			$html[] = '<span class="state ' . $active_class . '">';
-			$html[] = $text ? ('<span class="text">' . ($translate ? trans($text) : $text) . '</span>') : '';
-			$html[] = '</span>';
-			$html[] = '</a>';
 		}
 		else
 		{
-			$html[] = '<a class="grid-action' . ($tip ? ' hasTip' : '') . '"';
 			$html[] = ' title="' . addslashes(htmlspecialchars($translate ? trans($inactive_title) : $inactive_title, ENT_COMPAT, 'UTF-8')) . '">';
 			$html[] = '<span class="state ' . $inactive_class . '">';
-			$html[] = $text ? ('<span class="text">' . ($translate ? trans($text) : $text) . '</span>') :'';
-			$html[] = '</span>';
-			$html[] = '</a>';
 		}
+		$html[] = $text ? ('<span class="text">' . ($translate ? trans($text) : $text) . '</span>') :'';
+		$html[] = '</span>';
+		$html[] = '</a>';
+
 		return implode($html);
 	}
 }

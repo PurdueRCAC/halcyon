@@ -24,7 +24,7 @@ class Role extends Model
 	/**
 	 * The table to which the class pertains
 	 *
-	 * @var  string
+	 * @var  bool
 	 */
 	public $timestamps = false;
 
@@ -129,7 +129,7 @@ class Role extends Model
 	/**
 	 * Perform any actions that are necessary after the model is saved.
 	 *
-	 * @param  array  $options
+	 * @param  array<string,mixed>  $options
 	 * @return void
 	 */
 	protected function finishSave(array $options): void

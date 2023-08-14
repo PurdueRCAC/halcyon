@@ -32,7 +32,7 @@ class Sliders
 	 * Creates a panes and loads the javascript behavior for it.
 	 *
 	 * @param   string  $group   The pane identifier.
-	 * @param   array   $params  An array of options.
+	 * @param   array<string,mixed>   $params  An array of options.
 	 * @return  string
 	 */
 	public static function start($group = 'sliders', $params = array())
@@ -47,7 +47,7 @@ class Sliders
 	/**
 	 * Close the current pane.
 	 *
-	 * @return  string  hTML to close the pane
+	 * @return  string  HTML to close the pane
 	 */
 	public static function end()
 	{
@@ -100,7 +100,7 @@ class Sliders
 	 * Load the JavaScript behavior.
 	 *
 	 * @param   string  $group   The pane identifier.
-	 * @param   array   $params  Array of options.
+	 * @param   array<string,mixed>   $params  Array of options.
 	 * @return  void
 	 */
 	protected static function behavior($group, $params = array())

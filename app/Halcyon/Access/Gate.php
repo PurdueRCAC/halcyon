@@ -28,21 +28,21 @@ class Gate
 	/**
 	 * Array of user roles.
 	 *
-	 * @var  array
+	 * @var  array<int,Role>
 	 */
 	protected static $userRoles = array();
 
 	/**
 	 * Array of user role paths.
 	 *
-	 * @var  array
+	 * @var  array<int,array>
 	 */
 	protected static $userRolePaths = array();
 
 	/**
 	 * Array of cached roles by user.
 	 *
-	 * @var  array
+	 * @var  array<int,array>
 	 */
 	protected static $rolesByUser = array();
 
@@ -119,7 +119,7 @@ class Gate
 	 * @param  int    $userId  Id of the user for which to check authorisation.
 	 * @param  string $action  The name of the action to authorise.
 	 * @param  mixed  $asset   Asset ID or the name of the asset as a string. Defaults to the global asset node.
-	 * @return bool
+	 * @return Response
 	 */
 	public static function authorize($userId, $action, $asset = null)
 	{
@@ -161,14 +161,19 @@ class Gate
 			}
 		}
 
-		return $result ? self::allow() : self::deny();
+		if (!$result)
+		{
+			self::deny();
+		}
+
+		return self::allow();
 	}
 
 	/**
 	 * Create a new access response.
 	 *
 	 * @param  string  $message
-	 * @return \Illuminate\Auth\Access\Response
+	 * @return Response
 	 */
 	protected static function allow($message = '')
 	{
@@ -356,7 +361,8 @@ class Gate
 			$query->groupBy('a.lft');
 		}
 
-		$result = $query->get()->pluck('rules')->toArray();
+		//$result = $query->get()->pluck('rules')->toArray();
+		$result = [$query->value('rules')];
 
 		// Get the root even if the asset is not found and in recursive mode
 		if (empty($result) && $recursive)

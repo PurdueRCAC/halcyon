@@ -4,9 +4,15 @@ namespace App\Halcyon\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 /**
  * Database ORM class for implementing nested set records
+ *
+ * @property int $lft
+ * @property int $rgt
+ * @property int $level
+ * @property int $parent_id
  */
 class Nested extends Model
 {
@@ -236,7 +242,7 @@ class Nested extends Model
 	/**
 	 * Establishes the query for the immediate children of the current model
 	 *
-	 * @return  object
+	 * @return  self
 	 **/
 	public function children()
 	{
@@ -246,7 +252,7 @@ class Nested extends Model
 	/**
 	 * Grabs the immediate children of the current model
 	 *
-	 * @return  array
+	 * @return  Collection
 	 **/
 	public function getChildren()
 	{
@@ -257,7 +263,7 @@ class Nested extends Model
 	 * Establishes the query for all of the descendants of the current model
 	 *
 	 * @param   int  $level  The level to limit to
-	 * @return  object
+	 * @return  Nested
 	 **/
 	public function descendants($level = null)
 	{
@@ -279,7 +285,7 @@ class Nested extends Model
 	 * Grabs all of the descendants of the current model
 	 *
 	 * @param   int  $level  The level to limit to
-	 * @return  array
+	 * @return  Collection
 	 **/
 	public function getDescendants($level = null)
 	{

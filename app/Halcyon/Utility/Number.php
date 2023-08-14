@@ -158,7 +158,7 @@ class Number
 	 * </code>
 	 *
 	 * @link    http://snippets.symfony-project.org/snippet/157
-	 * @param   string $string the string to format
+	 * @param   string|int $string the string to format
 	 * @param   string $format the format to apply
 	 * @return  string
 	 */
@@ -171,7 +171,7 @@ class Number
 
 		if ($format == 'bytes')
 		{
-			return self::formatBytes($string);
+			return self::formatBytes(intval($string));
 		}
 
 		$result = '';

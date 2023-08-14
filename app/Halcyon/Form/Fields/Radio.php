@@ -36,6 +36,7 @@ class Radio extends Field
 		// Get the field options.
 		$options = $this->getOptions();
 		$found = false;
+		$onclick = '';
 
 		$html[] = '<ul>';
 
@@ -54,7 +55,7 @@ class Radio extends Field
 
 			// Add data attributes
 			$dataAttributes = '';
-			foreach ($option as $field => $value)
+			foreach (get_object_vars($option) as $field => $value)
 			{
 				$dataField = strtolower(substr($field, 0, 4));
 				if ($dataField == 'data')

@@ -51,18 +51,6 @@ class Input
 	}
 
 	/**
-	 * Displays a hidden token field to reduce the risk of CSRF exploits
-	 *
-	 * Use in conjunction with Session::checkToken
-	 *
-	 * @return  string  A hidden input field with a token
-	 */
-	public static function token()
-	{
-		return self::input('hidden', app('session')->getFormToken(), 1, array('id' => null)) . "\n";
-	}
-
-	/**
 	 * Create a text input field.
 	 *
 	 * @param   string  $name
@@ -204,9 +192,9 @@ class Input
 		}
 		else
 		{
-			$value = (0 !== (int) $value ? with(new Carbon($value))->format('Y-m-d H:i:s') : '');
+			$value = (0 !== (int) $value ? Carbon::parse($value)->format('Y-m-d H:i:s') : '');
 
-			return self::text($name . 'disabled', (0 !== (int) $value ? with(new Carbon($value))->format('Y-m-d H:i:s') : ''), $options) .
+			return self::text($name . 'disabled', $value, $options) .
 				   self::hidden($name, $value, $options);
 		}
 	}
@@ -282,7 +270,7 @@ class Input
 	/**
 	 * Build an HTML attribute string from an array.
 	 *
-	 * @param   array<string,string>  $attributes
+	 * @param   array<string,mixed>  $attributes
 	 * @return  string
 	 */
 	protected static function attributes($attributes)

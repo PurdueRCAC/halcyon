@@ -127,16 +127,4 @@ class Editor extends Textarea
 
 		return $this->editor;
 	}
-
-	/**
-	 * Method to get the Editor output for an onSave event.
-	 *
-	 * @return  bool
-	 */
-	public function save()
-	{
-		$editor = $this->getEditor();
-
-		return $editor ? $editor->save($this->id) : false;
-	}
 }

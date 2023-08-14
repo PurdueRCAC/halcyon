@@ -17,7 +17,7 @@ class Editor
 	/**
 	 * Editor Plugin object
 	 *
-	 * @var  object
+	 * @var  object|null
 	 */
 	protected $editor = null;
 
@@ -45,7 +45,7 @@ class Editor
 	/**
 	 * Editor instances container.
 	 *
-	 * @var  array
+	 * @var  array<int,Editor>
 	 */
 	protected static $instances = array();
 
@@ -65,7 +65,7 @@ class Editor
 	 * if it doesn't already exist.
 	 *
 	 * @param   string  $editor  The editor to use.
-	 * @return  object  The Editor object.
+	 * @return  Editor  The Editor object.
 	 */
 	public static function getInstance($editor = 'none')
 	{
@@ -287,12 +287,11 @@ class Editor
 				continue;
 			}
 
-			Plugin::import('editors-xtd', $plugin->name, false);
-			$className = 'plgButton' . $plugin->name;
+			$className = '\\App\\Listeners\\' . $plugin->folder . '\\' . $plugin->name . '\\' . $plugin->name;
 
 			if (class_exists($className))
 			{
-				$plugin = new $className; //($this, (array) $plugin);
+				$plugin = new $className;
 			}
 
 			// Try to authenticate
@@ -308,7 +307,7 @@ class Editor
 	/**
 	 * Load the editor
 	 *
-	 * @param   array  $config  Associative array of editor config paramaters
+	 * @param   array<string,mixed>  $config  Associative array of editor config paramaters
 	 * @return  mixed
 	 */
 	protected function load($config = array())
@@ -319,19 +318,6 @@ class Editor
 			return;
 		}
 
-		// Build the path to the needed editor plugin
-		/*$name = (string) preg_replace('/[^A-Z0-9_\.-]/i', '', $this->name);
-		$name = ltrim($name, '.');
-
-		$path = app_path() . '/Listeners/Editors/' . $name . '/' . $name . '.php';
-		if (!is_file($path))
-		{
-			return false;
-		}
-
-		// Require plugin file
-		require_once $path;*/
-
 		// Get the plugin
 		$plugin = Listener::findByType('editors', $this->name);
 
@@ -341,14 +327,12 @@ class Editor
 		$plugin->params = $params;
 
 		// Build editor plugin classname
-		$name = 'App\Listeners\Editors\\' . $this->name; //plgEditor' . $this->name;
+		$name = '\\App\\Listeners\\Editors\\' . $this->name . '\\' . $this->name;
 
-		if ($this->editor = new $name)//($this, (array) $plugin))
+		if ($this->editor = new $name)
 		{
 			// Load plugin parameters
 			$this->initialise();
-
-			//Plugin::import('editors-xtd');
 		}
 	}
 }

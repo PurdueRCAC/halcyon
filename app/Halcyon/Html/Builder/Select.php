@@ -2,6 +2,7 @@
 
 namespace App\Halcyon\Html\Builder;
 
+use Illuminate\Support\Facades\DB;
 use stdClass;
 
 /**
@@ -12,7 +13,7 @@ class Select
 	/**
 	 * Default values for options. Organized by option group.
 	 *
-	 * @var  array<string,array>
+	 * @var  array<string,array{string,mixed}>
 	 */
 	static protected $optionDefaults = array(
 		'option' => array(
@@ -32,11 +33,11 @@ class Select
 	 * Generates a yes/no radio list.
 	 *
 	 * @param   string  $name      The value of the HTML name attribute
-	 * @param   array<string,string>|string   $attribs   Additional HTML attributes for the <select> tag
-	 * @param   string  $selected  The key that is selected
+	 * @param   array<string,string>|string|null   $attribs   Additional HTML attributes for the <select> tag
+	 * @param   string|null  $selected  The key that is selected
 	 * @param   string  $yes       Language key for Yes
 	 * @param   string  $no        Language key for no
-	 * @param   string  $id        The id for the field
+	 * @param   string|bool  $id        The id for the field
 	 * @return  string  HTML for the radio list
 	 */
 	public static function booleanlist($name, $attribs = null, $selected = null, $yes = 'globa.yes', $no = 'global.no', $id = false): string
@@ -234,7 +235,7 @@ class Select
 			}
 			else
 			{
-				throw new Exception('Invalid group contents.', 1, E_WARNING);
+				throw new \Exception('Invalid group contents.', 1, E_WARNING);
 			}
 
 			if ($noGroup)
@@ -733,10 +734,7 @@ class Select
 
 		if (empty($neworder))
 		{
-			$db = app('db');
-			$db->setQuery($query);
-
-			$items = $db->loadObjectList();
+			$items = DB::select(DB::raw($query));
 
 			if (empty($items))
 			{

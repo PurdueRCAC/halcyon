@@ -71,8 +71,8 @@ class Timeperiod extends Model
 	public function calculateDateFrom($dt): string
 	{
 		return Carbon::parse($dt)
-			->modify('- ' + $this->months)
-			->modify('- ' + $this->unixtime)
+			->modify('- ' . $this->months)
+			->modify('- ' . $this->unixtime)
 			->toDateTimeString();
 	}
 }

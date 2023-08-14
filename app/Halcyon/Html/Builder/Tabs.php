@@ -18,10 +18,9 @@ class Tabs
 	 * Creates a panes and creates the JavaScript object for it.
 	 *
 	 * @param   string  $group   The pane identifier.
-	 * @param   array   $params  An array of option.
 	 * @return  string
 	 */
-	public static function start($group = 'tabs', $params = array())
+	public static function start($group = 'tabs')
 	{
 		self::$open = false;
 
