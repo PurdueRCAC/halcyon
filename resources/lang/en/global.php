@@ -223,4 +223,6 @@ return [
 		'please first make a selection from the list' => 'Please first make a selection from the list',
 	),
 	'no results' => 'No results found.',
+	'start publishing' => 'Start publishing at :start',
+	'finish publishing' => 'Stop publishing at :stop',
 ];
