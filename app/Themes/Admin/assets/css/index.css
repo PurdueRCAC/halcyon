@@ -4716,6 +4716,9 @@ html div.dataTables_wrapper div.dataTables_info{
     color: var(--input-color-disabled);
   }
 
+  .draghandle {
+    cursor: move;
+  }
   .draghandle svg {
     fill: currentColor;
   }
