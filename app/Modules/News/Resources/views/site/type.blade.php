@@ -20,7 +20,7 @@
 	@endforeach
 @endif
 
-@section('title'){{ trans('news::news.news') . ': ' . $type->name . ($articles->total() > $filters['limit'] ? ': Page ' . $filters['page'] : '') }}@stop
+@section('title'){{ trans('news::news.news') . ': ' . $type->name . ' (' . trans('news::news.' . $filters['state']) . ')' . ($articles->total() > $filters['limit'] ? ': Page ' . $filters['page'] : '') }}@stop
 
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/news/css/news.css') }}" />

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Str;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Type;
 use App\Modules\News\Models\Newsresource;
@@ -387,7 +388,7 @@ class ArticlesController extends Controller
 			$query->where('datetimenewsend', '<', $now->toDateTimeString());
 		}
 
-		$row->title = trans('news::news.news') . ': ' . $row->name . ': Page ' . $filters['page'];
+		$row->title = trans('news::news.news') . ': ' . $row->name . ' (' . trans('news::news.' . $filters['state']) . '): Page ' . $filters['page'];
 		event($event = new ArticleMetadata($row));
 
 		$articles = $query
@@ -693,6 +694,20 @@ class ArticlesController extends Controller
 				abort(404);
 			}
 		}
+
+		$content = str_replace(['&amp;', '&nbsp;'], ['&', ' '], $row->toHtml());
+		$content = strip_tags($content);
+		$content = str_replace(array("\n", "\t", "\r"), ' ', $content);
+		$content = preg_replace("/\s+/", ' ', $content);
+		if (!$content)
+		{
+			$content = $row->headline;
+		}
+		$content = '(' . $row->formatDate($row->datetimenews, $row->datetimenewsend) . ') ' . $content;
+		$content = Str::limit($content, 140);
+		$content = trim($content);
+
+		$row->metadesc = $content;
 
 		event($event = new ArticleMetadata($row));
 		$row = $event->page;
