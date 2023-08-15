@@ -1532,6 +1532,12 @@ function SaveAccounts() {
 	var errors = 0;
 
 	for (var x=0;x<amounts.length-1;x++) {
+		if (amounts[x].value.replace(/[$,]/g, "").match(/^-?[0-9]+$/)) {
+			amounts[x].value = amounts[x].value + '.00';
+		}
+		if (amounts[x].value.replace(/[$,]/g, "").match(/^-?[0-9]+\.[0-9]{1}$/)) {
+			amounts[x].value = amounts[x].value + '0';
+		}
 		if (accounts[x].value != "" && amounts[x].value.replace(/[$,]/g, "").match(/^-?[0-9]+\.[0-9]{2}$/)) {
 			var account = accounts[x].value;
 			var amt = amounts[x].value;
@@ -1578,7 +1584,7 @@ function SaveAccounts() {
 		}
 		if (!amounts[x].value.replace(/[$,]/g, "").match(/^-?[0-9]+\.[0-9]{2}$/)) {
 			row_errors++;
-			accounts[x].classList.add('is-invalid');
+			amounts[x].classList.add('is-invalid');
 		}
 
 		errors += row_errors;
@@ -2192,9 +2198,15 @@ function EditAccounts() {
 				//account_errors[x].style.display = "inline";
 				accountinputs[x].classList.add('is-invalid');
 			}
+			if (amountinputs[x].value.replace(/[$,]/g, "").match(/^-?[0-9]+$/)) {
+				amountinputs[x].value = amountinputs[x].value + '.00';
+			}
+			if (amountinputs[x].value.replace(/[$,]/g, "").match(/^-?[0-9]+\.[0-9]{1}$/)) {
+				amountinputs[x].value = amountinputs[x].value + '0';
+			}
 			if (!amountinputs[x].value.replace(/[$,]/g, "").match(/^-?[0-9]+\.[0-9]{2}$/)) {
 				row_errors++;
-				accountinputs[x].classList.add('is-invalid');
+				amountinputs[x].classList.add('is-invalid');
 			}
 			errors += row_errors;
 
