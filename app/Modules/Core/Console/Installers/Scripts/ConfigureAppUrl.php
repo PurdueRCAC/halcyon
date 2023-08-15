@@ -66,7 +66,8 @@ class ConfigureAppUrl implements SetupScript
      */
     protected function askAppUrl()
     {
-        do {
+        do
+        {
             $str = $this->command->ask('Enter you application url (e.g. http://localhost, http://dev.example.com)', 'http://localhost');
 
             if ($str == '' || (strpos($str, 'http://') !== 0 && strpos($str, 'https://') !== 0))
@@ -75,7 +76,8 @@ class ConfigureAppUrl implements SetupScript
 
                 $str = false;
             }
-        } while (!$str);
+        }
+        while (!$str);
 
         return $str;
     }

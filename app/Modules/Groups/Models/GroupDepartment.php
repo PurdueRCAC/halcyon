@@ -12,6 +12,8 @@ use App\Modules\History\Traits\Historable;
  * @property int    $groupid
  * @property int    $collegedeptid
  * @property int    $percentage
+ *
+ * @property string $api
  */
 class GroupDepartment extends Model
 {

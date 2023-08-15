@@ -15,6 +15,8 @@ use Carbon\Carbon;
  * @property int    $userid
  * @property string $comment
  * @property Carbon|null $datetimecreated
+ *
+ * @property string $api
  */
 class UserRequest extends Model
 {

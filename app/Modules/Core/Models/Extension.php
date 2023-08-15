@@ -282,9 +282,7 @@ class Extension extends Model
 			throw new \Exception(trans('global.error.load file failed'));
 		}
 
-		//$data = $this->toArray();
-		//$data['params'] = $this->params()->toArray();
-		$data = $this->params()->toArray();
+		$data = $this->params->all();
 
 		$form->bind($data);
 

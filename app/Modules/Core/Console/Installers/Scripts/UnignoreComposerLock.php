@@ -4,9 +4,12 @@ namespace App\Modules\Core\Console\Installers\Scripts;
 
 use Illuminate\Console\Command;
 use App\Modules\Core\Console\Installers\SetupScript;
+use App\Modules\Core\Console\Installers\Traits\BlockMessage;
 
 class UnignoreComposerLock implements SetupScript
 {
+    use BlockMessage;
+
     const COMPOSER_LOCK = 'composer.lock';
 
     /**
@@ -33,7 +36,7 @@ class UnignoreComposerLock implements SetupScript
     }
 
     /**
-     * @param $gitignorePath
+     * @param string $gitignorePath
      * @return bool
      */
     private function gitignoreContainsComposerLock($gitignorePath)
@@ -42,8 +45,8 @@ class UnignoreComposerLock implements SetupScript
     }
 
     /**
-     * @param $gitignorePath
-     * @return array
+     * @param string $gitignorePath
+     * @return array<int,string>
      */
     private function getGitignoreLinesButComposerLock($gitignorePath)
     {
@@ -61,8 +64,9 @@ class UnignoreComposerLock implements SetupScript
     }
 
     /**
-     * @param $gitignorePath
-     * @param $out
+     * @param string $gitignorePath
+     * @param array<int,string> $out
+     * @return void
      */
     private function writeNewGitignore($gitignorePath, $out)
     {

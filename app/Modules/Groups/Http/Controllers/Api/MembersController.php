@@ -342,14 +342,9 @@ class MembersController extends Controller
 
 		if (!is_numeric($userid))
 		{
-			//$user = User::findByUsername($userid);
+			$user = User::createFromUsername($userid);
 
-			//if (!$user || !$user->id)
-			//{
-				$user = User::createFromUsername($userid);
-			//}
-
-			if ($user && $user->id)
+			if ($user->id)
 			{
 				$userid = $user->id;
 			}

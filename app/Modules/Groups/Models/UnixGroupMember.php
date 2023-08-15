@@ -20,6 +20,8 @@ use Carbon\Carbon;
  * @property Carbon|null $datetimecreated
  * @property Carbon|null $datetimeremoved
  * @property int    $notice
+ *
+ * @property string $api
  */
 class UnixGroupMember extends Model
 {

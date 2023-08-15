@@ -52,9 +52,9 @@ class ConfigureDatabase implements SetupScript
 
         while (! $connected)
         {
-            $vars['db_driver'] = $this->askDatabaseDriver();
-            $vars['db_host'] = $this->askDatabaseHost();
-            $vars['db_port'] = $this->askDatabasePort($vars['db_driver']);
+            $vars['db_driver']   = $this->askDatabaseDriver();
+            $vars['db_host']     = $this->askDatabaseHost();
+            $vars['db_port']     = $this->askDatabasePort($vars['db_driver']);
             $vars['db_database'] = $this->askDatabaseName();
             $vars['db_username'] = $this->askDatabaseUsername();
             $vars['db_password'] = $this->askDatabasePassword();
@@ -112,13 +112,15 @@ class ConfigureDatabase implements SetupScript
      */
     protected function askDatabaseName()
     {
-        do {
+        do
+        {
             $name = $this->command->ask('Enter your database name', 'homestead');
             if ($name == '')
             {
                 $this->command->error('Database name is required');
             }
-        } while (!$name);
+        }
+        while (!$name);
 
         return $name;
     }
@@ -128,13 +130,15 @@ class ConfigureDatabase implements SetupScript
      */
     protected function askDatabaseUsername()
     {
-        do {
+        do
+        {
             $user = $this->command->ask('Enter your database username', 'homestead');
             if ($user == '')
             {
                 $this->command->error('Database username is required');
             }
-        } while (!$user);
+        }
+        while (!$user);
 
         return $user;
     }
@@ -157,8 +161,8 @@ class ConfigureDatabase implements SetupScript
         $driver = $vars['db_driver'];
 
         $this->config['database.default'] = $driver;
-        $this->config['database.connections.' . $driver . '.host'] = $vars['db_host'];
-        $this->config['database.connections.' . $driver . '.port'] = $vars['db_port'];
+        $this->config['database.connections.' . $driver . '.host']     = $vars['db_host'];
+        $this->config['database.connections.' . $driver . '.port']     = $vars['db_port'];
         $this->config['database.connections.' . $driver . '.database'] = $vars['db_database'];
         $this->config['database.connections.' . $driver . '.username'] = $vars['db_username'];
         $this->config['database.connections.' . $driver . '.password'] = $vars['db_password'];

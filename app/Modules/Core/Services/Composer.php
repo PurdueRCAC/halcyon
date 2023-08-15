@@ -50,10 +50,12 @@ class Composer extends \Illuminate\Support\Composer
      */
     public function update($package = null)
     {
-        $package = '"' . $package . '"';
+        $package = $package ? '"' . $package . '"' : '';
+
+        $cmd = implode(' ', $this->findComposer()) . ' update ' . $package;
 
         $process = $this->getProcess();
-        $process->setCommandLine(trim($this->findComposer() . ' update ' . $package));
+        $process->setCommandLine(trim($cmd));
         $process->run($this->output);
     }
 
@@ -67,8 +69,10 @@ class Composer extends \Illuminate\Support\Composer
     {
         $package = '"' . $package . '"';
 
+        $cmd = implode(' ', $this->findComposer()) . ' require ' . $package;
+
         $process = $this->getProcess();
-        $process->setCommandLine(trim($this->findComposer() . ' require ' . $package));
+        $process->setCommandLine(trim($cmd));
         $process->run($this->output);
     }
 
@@ -77,8 +81,10 @@ class Composer extends \Illuminate\Support\Composer
      */
     public function dumpAutoload()
     {
+        $cmd = implode(' ', $this->findComposer()) . ' dump-autoload -o';
+
         $process = $this->getProcess();
-        $process->setCommandLine(trim($this->findComposer() . ' dump-autoload -o'));
+        $process->setCommandLine(trim($cmd));
         $process->run($this->output);
     }
 
@@ -90,8 +96,10 @@ class Composer extends \Illuminate\Support\Composer
     {
         $package = '"' . $package . '"';
 
+        $cmd = implode(' ', $this->findComposer()) . ' remove ' . $package;
+
         $process = $this->getProcess();
-        $process->setCommandLine(trim($this->findComposer() . ' remove ' . $package));
+        $process->setCommandLine(trim($cmd));
         $process->run($this->output);
     }
 }

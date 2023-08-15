@@ -10,6 +10,7 @@ use App\Modules\Groups\Events\UnixGroupCreating;
 use App\Modules\Groups\Events\UnixGroupCreated;
 use App\Modules\Groups\Events\UnixGroupDeleting;
 use App\Modules\Groups\Events\UnixGroupDeleted;
+use App\Modules\Groups\Events\UnixGroupMemberCreated;
 use Carbon\Carbon;
 
 /**
@@ -22,6 +23,8 @@ use Carbon\Carbon;
  * @property string $longname
  * @property Carbon|null $datetimecreated
  * @property Carbon|null $datetimeremoved
+ *
+ * @property string $api
  */
 class UnixGroup extends Model
 {

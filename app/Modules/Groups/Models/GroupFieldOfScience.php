@@ -12,6 +12,8 @@ use App\Modules\History\Traits\Historable;
  * @property int    $groupid
  * @property int    $fieldofscienceid
  * @property int    $percentage
+ *
+ * @property string $api
  */
 class GroupFieldOfScience extends Model
 {

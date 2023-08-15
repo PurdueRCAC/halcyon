@@ -123,7 +123,7 @@ class FacetsController extends Controller
 		{
 			if (is_numeric($filters['search']))
 			{
-				$query->where($g . '.id', '=', $filters['search']);
+				$query->where('id', '=', $filters['search']);
 			}
 			else
 			{
@@ -131,8 +131,8 @@ class FacetsController extends Controller
 
 				$query->where(function ($where) use ($filters, $g)
 				{
-					$where->where($g . '.name', 'like', '%' . $filters['search'] . '%')
-						->orWhere($g . '.description', 'like', '%' . $filters['search'] . '%');
+					$where->where('name', 'like', '%' . $filters['search'] . '%')
+						->orWhere('description', 'like', '%' . $filters['search'] . '%');
 				});
 			}
 		}
@@ -423,7 +423,7 @@ class FacetsController extends Controller
 			return response()->json(['message' => trans('global.messages.create failed')], 500);
 		}
 
-		$old = $row->facets;
+		$old = $row->choices;
 		$current = array();
 
 		if ($request->has('choices'))

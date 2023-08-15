@@ -161,7 +161,7 @@ class FacetsController extends Controller
 			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
-		$old = $row->facets;
+		$old = $row->choices;
 		$current = array();
 
 		if ($request->has('choices'))

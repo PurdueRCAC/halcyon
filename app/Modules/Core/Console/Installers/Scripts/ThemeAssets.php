@@ -4,9 +4,12 @@ namespace App\Modules\Core\Console\Installers\Scripts;
 
 use Illuminate\Console\Command;
 use App\Modules\Core\Console\Installers\SetupScript;
+use App\Modules\Core\Console\Installers\Traits\BlockMessage;
 
 class ThemeAssets implements SetupScript
 {
+    use BlockMessage;
+
     /**
      * Fire the install script
      * @param  Command $command

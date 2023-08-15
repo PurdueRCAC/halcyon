@@ -17,8 +17,6 @@ class FacetResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		$this->resource = $event->group;
-
 		$data = parent::toArray($request);
 
 		$data['api'] = route('api.finder.facets.read', ['id' => $this->id]);

@@ -75,11 +75,14 @@ class EmailRemovedCommand extends Command
 
 			// Find the latest activity
 			$latest = 0;
-			foreach ($groupusers as $g)
+			if (!empty($groupusers))
 			{
-				if ($g->datecreated->timestamp > $latest)
+				foreach ($groupusers as $g)
 				{
-					$latest = $g->datecreated->timestamp;
+					if ($g->datecreated->timestamp > $latest)
+					{
+						$latest = $g->datecreated->timestamp;
+					}
 				}
 			}
 
@@ -90,29 +93,32 @@ class EmailRemovedCommand extends Command
 
 			// Condense people
 			$people = array();
-			foreach ($groupusers as $groupuser)
+			if (!empty($groupusers))
 			{
-				if (!isset($people[$groupuser->userid]))
+				foreach ($groupusers as $groupuser)
 				{
-					if (!$groupuser->user)
+					if (!isset($people[$groupuser->userid]))
 					{
-						continue;
+						if (!$groupuser->user)
+						{
+							continue;
+						}
+
+						$actor = Log::query()
+							->where('targetuserid', '=', $groupuser->userid)
+							->where('classname', '=', 'groupowner')
+							->where('classmethod', '=', 'delete')
+							->where('groupid', '=', $groupuser->groupid)
+							->limit(1)
+							->first();
+
+						if ($actor)
+						{
+							$groupuser->actor = $actor->user;
+						}
+
+						$people[$groupuser->userid] = $groupuser;
 					}
-
-					$actor = Log::query()
-						->where('targetuserid', '=', $groupuser->userid)
-						->where('classname', '=', 'groupowner')
-						->where('classmethod', '=', 'delete')
-						->where('groupid', '=', $groupuser->groupid)
-						->limit(1)
-						->first();
-
-					if ($actor)
-					{
-						$groupuser->actor = $actor->user;
-					}
-
-					$people[$groupuser->userid] = $groupuser;
 				}
 			}
 

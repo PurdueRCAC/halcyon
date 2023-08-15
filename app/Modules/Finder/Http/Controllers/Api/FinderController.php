@@ -250,7 +250,7 @@ class FinderController extends Controller
 			"We hope it was useful.\r\n\r\n" .
 			"Your selected criteria were:\r\n";
 
-		$questions = TermData::tree();//$this->createFacetTree();
+		/*$questions = TermData::tree();//$this->createFacetTree();
 
 		$facets = [];
 
@@ -323,7 +323,7 @@ class FinderController extends Controller
 		if ($result['result'] !== true)
 		{
 			return response()->json(trans('finder::finder.There was a problem sending your message and it was not sent.'), 500);
-		}
+		}*/
 
 		return response()->json(trans('finder::finder.Your message has been sent.'), 200);
 	}

@@ -145,7 +145,7 @@ class FieldOfScience extends Model
 	 *
 	 * @param   int    $id        Parent ID
 	 * @param   array<int,FieldOfScience>  $list      List of records
-	 * @param   array<int,FieldOfScience>  $children  Container for parent/children mapping
+	 * @param   array<int,array{int,FieldOfScience}>  $children  Container for parent/children mapping
 	 * @param   int    $maxlevel  Maximum levels to descend
 	 * @param   int    $level     Indention level
 	 * @param   string $prfx

@@ -207,7 +207,7 @@ class MotdController extends Controller
 
 		$group_id = $request->input('groupid');
 
-		$exists = Group::findOrFail($group_id);
+		$exists = Group::find($group_id);
 
 		if (!$exists)
 		{

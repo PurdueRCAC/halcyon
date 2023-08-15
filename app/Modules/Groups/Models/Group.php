@@ -239,7 +239,7 @@ class Group extends Model
 	/**
 	 * Get a list of storage buckets
 	 *
-	 * @return  array<int,array>
+	 * @return  array<int,array{string,int}>
 	 */
 	public function getStorageBucketsAttribute(): array
 	{
@@ -418,9 +418,9 @@ class Group extends Model
 
 			$bucket['unallocatedbytes'] = abs($bucket['totalbytes'] - $allocated[$bucket['resourceid']]);
 			$bucket['allocatedbytes'] = $allocatedbytes;
-		}*/
+		}
 
-		return $storagebuckets;
+		return $storagebuckets;*/
 	}
 
 	/**
@@ -514,7 +514,7 @@ class Group extends Model
 			}
 		}
 
-		return collect(array_values($resources));
+		return new Collection(array_values($resources));
 	}
 
 	/**
@@ -544,7 +544,7 @@ class Group extends Model
 			}
 		}
 
-		return collect(array_values($resources));
+		return new Collection(array_values($resources));
 	}
 
 	/**

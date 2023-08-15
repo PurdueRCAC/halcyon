@@ -126,7 +126,7 @@ abstract class ProviderInstaller implements SetupScript
     abstract public function configure();
 
     /**
-     * @param $password
+     * @param string $password
      * @return mixed
      */
     abstract public function getHashedPassword($password);

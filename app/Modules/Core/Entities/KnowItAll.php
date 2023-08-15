@@ -43,7 +43,7 @@ class KnowItAll extends Fluent
 	/**
 	 * Method to get the ChangeLog
 	 *
-	 * @return  array  some php settings
+	 * @return  array<string,mixed>  some php settings
 	 */
 	public function getPhpSettings()
 	{
@@ -79,7 +79,7 @@ class KnowItAll extends Fluent
 	{
 		if (is_null($this->config))
 		{
-			$config = config();
+			$config = config()->all();
 
 			/*foreach (array('components', 'plugins', 'templates') as $ignore)
 			{
@@ -111,6 +111,8 @@ class KnowItAll extends Fluent
 				}
 				else
 				{
+					$value = $data;
+
 					if (in_array($data, $blur)
 					 || substr($data, -strlen('password')) == 'password'
 					 || substr($data, -strlen('secret')) == 'secret')
@@ -163,7 +165,7 @@ class KnowItAll extends Fluent
 	/**
 	 * Method to get the PHP info
 	 *
-	 * @return  string<string,mixed>  PHP info
+	 * @return  string  PHP info
 	 */
 	public function getPhpInfo()
 	{

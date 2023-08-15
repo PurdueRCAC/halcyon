@@ -21,7 +21,7 @@ class CaptchaIsRendering
 	/**
 	 * Is the captcha response valid
 	 *
-	 * @var string
+	 * @var bool
 	 */
 	public $valid = false;
 

@@ -31,11 +31,6 @@ class RemoveMembershipsForDeletedUser
 	 */
 	public function handleUserDeleted(UserDeleted $event): void
 	{
-		if (!$event->user || !$event->user->id)
-		{
-			return;
-		}
-
 		Member::query()
 			->whereIn('userid', $event->user->id)
 			->delete();
