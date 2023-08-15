@@ -361,8 +361,8 @@ class Gate
 			$query->groupBy('a.lft');
 		}
 
-		//$result = $query->get()->pluck('rules')->toArray();
-		$result = [$query->value('rules')];
+		$result = $query->get()->pluck('rules')->toArray();
+		//$result = [$query->value('rules')];
 
 		// Get the root even if the asset is not found and in recursive mode
 		if (empty($result) && $recursive)
