@@ -29,6 +29,8 @@ use Carbon\Carbon;
  * @property Carbon|null $datetimeremoved
  * @property Carbon|null $datetimelastimportstart
  * @property Carbon|null $datetimelastimportstop
+ *
+ * @property string $api
  */
 class Scheduler extends Model
 {

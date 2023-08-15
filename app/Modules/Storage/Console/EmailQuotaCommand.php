@@ -241,7 +241,7 @@ class EmailQuotaCommand extends Command
 					{
 						unset($not->status);
 						unset($not->threshold);
-						$not->datetimelastnotify = Carbon::now()->toDateTimeString();
+						$not->datetimelastnotify = Carbon::now();
 						$not->notice = 1;
 						$not->save();
 					}

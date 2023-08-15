@@ -383,7 +383,7 @@ class NotificationsController extends Controller
 
 		if ($row->type->id == 1)
 		{
-			$row->datetimelastnotify = Carbon::now()->toDateTimeString();
+			$row->datetimelastnotify = Carbon::now();
 		}
 
 		$row->save();

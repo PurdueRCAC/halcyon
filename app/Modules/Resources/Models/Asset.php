@@ -287,13 +287,13 @@ class Asset extends Model
 		static::creating(function ($model)
 		{
 			$result = self::query()
-				->select(DB::raw('MAX(display) + 1 AS ordering'))
 				->where('parentid', '=', $model->parentid)
-				->first()
-				->ordering;
-			$result = $result ?: 1;
+				->orderBy('display', 'desc')
+				->first();
+			$result = $result ? (int)$result->display : 0;
+			$result = $result + 1;
 
-			$model->setAttribute('display', (int)$result);
+			$model->setAttribute('display', $result);
 		});
 
 		static::deleted(function ($model)

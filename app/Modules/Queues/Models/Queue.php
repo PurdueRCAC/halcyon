@@ -62,6 +62,7 @@ use Carbon\Carbon;
  * @property Carbon|null $datetimelastseen
  * @property int    $maxjobfactor
  * @property int    $maxjobuserfactor
+ * @property int    $shared
  */
 class Queue extends Model
 {

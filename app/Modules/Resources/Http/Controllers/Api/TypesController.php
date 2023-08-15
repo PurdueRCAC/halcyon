@@ -204,11 +204,6 @@ class TypesController extends Controller
 
 		$row = Type::create($request->all());
 
-		if (!$row)
-		{
-			return response()->json(['message' => trans('global.messages.create failed')], 500);
-		}
-
 		if ($request->has('facets'))
 		{
 			$facets = $request->input('facets', []);

@@ -27,6 +27,8 @@ use Carbon\Carbon;
  * @property Carbon|null $datetimeremoved
  * @property Carbon|null $datetimelastseen
  * @property int    $notice
+ *
+ * @property string $api
  */
 class User extends Model
 {

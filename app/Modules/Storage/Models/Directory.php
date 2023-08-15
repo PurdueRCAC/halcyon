@@ -44,6 +44,8 @@ use stdClass;
  * @property int    $storageresourceid
  *
  * @property string $api
+ * @property int    $unallocatedbytes
+ * @property int    $overallocated
  */
 class Directory extends Model
 {
@@ -637,7 +639,7 @@ class Directory extends Model
 	 * Get directory tree
 	 *
 	 * @param   bool   $expanded
-	 * @param   array  $active
+	 * @param   array<int,int>  $active
 	 * @return  array<string,mixed>
 	 */
 	public function tree($expanded = true, $active = []): array
@@ -702,9 +704,9 @@ class Directory extends Model
 	/**
 	 * Get nested directory tree
 	 *
-	 * @param   array  $items
+	 * @param   array<int,Directory>  $items
 	 * @param   int    $depth
-	 * @return  array
+	 * @return  array<int,Directory>
 	 */
 	public function nested(array $items = array(), int $depth = 0): array
 	{
@@ -730,7 +732,7 @@ class Directory extends Model
 	 */
 	public function setBytesAttribute($value): void
 	{
-		$this->attributes['bytes'] = Number::toBytes($value);
+		$this->attributes['bytes'] = is_int($value) ? $value : Number::toBytes($value);
 	}
 
 	/**

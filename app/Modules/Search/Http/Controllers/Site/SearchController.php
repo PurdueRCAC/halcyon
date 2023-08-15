@@ -27,16 +27,11 @@ class SearchController extends Controller
 			'order_dir' => 'desc',
 		);
 
-		$refresh = false;
 		foreach ($filters as $key => $default)
 		{
 			$filters[$key] = $request->input($key, $default);
 		}
 
-		if ($refresh)
-		{
-			$filters['page'] = 1;
-		}
 		$filters['start'] = ($filters['limit'] * $filters['page']) - $filters['limit'];
 
 		if (!in_array($filters['order'], ['title', 'weight', 'updated_at', 'created_at']))

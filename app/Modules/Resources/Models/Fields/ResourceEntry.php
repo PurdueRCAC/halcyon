@@ -20,7 +20,7 @@ class ResourceEntry extends Select
 	/**
 	 * Method to get the field options.
 	 *
-	 * @return  array
+	 * @return  array<int,array{string,mixed}>
 	 */
 	protected function getOptions()
 	{

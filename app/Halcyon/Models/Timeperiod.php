@@ -66,13 +66,12 @@ class Timeperiod extends Model
 	 * Calculate date from another date
 	 *
 	 * @param   string  $dt
-	 * @return  string
+	 * @return  Carbon
 	 */
-	public function calculateDateFrom($dt): string
+	public function calculateDateFrom($dt): Carbon
 	{
 		return Carbon::parse($dt)
 			->modify('- ' . $this->months)
-			->modify('- ' . $this->unixtime)
-			->toDateTimeString();
+			->modify('- ' . $this->unixtime);
 	}
 }

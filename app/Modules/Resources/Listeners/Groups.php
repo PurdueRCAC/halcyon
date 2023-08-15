@@ -36,7 +36,7 @@ class Groups
 	{
 		$member = $event->member;
 
-		if (!$member || !$member->isManager())
+		if (!$member->isManager())
 		{
 			return;
 		}

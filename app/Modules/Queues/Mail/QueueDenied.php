@@ -30,7 +30,7 @@ class QueueDenied extends Mailable
 	 * Create a new message instance.
 	 *
 	 * @param User $user
-	 * @param array<int,\App\Modules\Queues\Models\User>
+	 * @param array<int,\App\Modules\Queues\Models\User> $queueusers
 	 * @return void
 	 */
 	public function __construct(User $user, $queueusers = array())

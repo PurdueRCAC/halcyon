@@ -59,7 +59,7 @@ class Searching
 	/**
 	 * Add results
 	 *
-	 * @param  array|Collection $rows
+	 * @param  array<int,object>|Collection $rows
 	 * @return self
 	 */
 	public function add($rows): self

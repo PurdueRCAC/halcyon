@@ -159,7 +159,7 @@ class DirectoriesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return DirectoryResourceCollection
+	 * @return DirectoryResourceCollection|JsonResponse
 	 */
 	public function index(Request $request)
 	{
@@ -991,7 +991,7 @@ class DirectoriesController extends Controller
 			'path',
 			'resourceid',
 			'groupid',
-			'parentstorageid',
+			'parentstoragedirid',
 			'owneruserid',
 			'unixgroupid',
 			'ownerread',

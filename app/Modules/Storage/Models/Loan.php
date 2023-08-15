@@ -5,6 +5,7 @@ namespace App\Modules\Storage\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Storage\Events\LoanCreated;
+use Carbon\Carbon;
 
 /**
  * Storage model for a resource directory

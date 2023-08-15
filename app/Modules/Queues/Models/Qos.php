@@ -43,7 +43,7 @@ use App\Modules\History\Traits\Historable;
  * @property string $grp_tres_run_mins
  * @property int $grp_wall
  * @property string $preempt
- * @property int $preempt_mode
+ * @property string $preempt_mode
  * @property int $preempt_exempt_time
  * @property int $priority
  * @property float $usage_factor

@@ -134,7 +134,7 @@ class ResourcesServiceProvider extends ServiceProvider
 		$this->loadViewsFrom(array_merge(array_map(function ($path)
 		{
 			return $path . '/modules/' . $this->name;
-		}, config('view.paths')), [$sourcePath]), $this->name);
+		}, config('view.paths', [])), [$sourcePath]), $this->name);
 	}
 
 	/**
@@ -152,15 +152,5 @@ class ResourcesServiceProvider extends ServiceProvider
 		}
 
 		$this->loadTranslationsFrom($langPath, $this->name);
-	}
-
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return [];
 	}
 }

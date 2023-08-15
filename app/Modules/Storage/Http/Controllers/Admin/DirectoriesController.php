@@ -453,11 +453,11 @@ class DirectoriesController extends Controller
 				->where('resourceid', '=', $row->resourceid)
 				->first();
 
-			$row->storageresourceid = $sr->resourceid;
+			$row->storageresourceid = $sr ? $sr->parentresourceid : 0;
 		}
 		elseif (!$row->resourceid && $row->storageresourceid)
 		{
-			$row->resourceid = $row->storageResource->resourceid;
+			$row->resourceid = $row->storageResource->parentresourceid;
 		}
 
 		if (!$row->save())

@@ -132,7 +132,18 @@ class CopyCommand extends Command
 					}
 				}
 			}
-			elseif ($i == 0)
+			/*elseif ($i == 0)
+			{
+				$copyscheduler = new Scheduler;
+				$copyscheduler->hostname = $copy->rolename . '-adm.' . str_replace('www', '', request()->getHost());
+				$copyscheduler->queuesubresourceid = $copysubresource->id;
+				$copyscheduler->batchsystem = $copy->batchsystem;
+				$copyscheduler->schedulerpolicyid = 1;
+				$copyscheduler->defaultmaxwalltime = 1209600;
+				$copyscheduler->save();
+			}*/
+
+			if (!isset($copyscheduler))
 			{
 				$copyscheduler = new Scheduler;
 				$copyscheduler->hostname = $copy->rolename . '-adm.' . str_replace('www', '', request()->getHost());

@@ -31,6 +31,12 @@ use Carbon\Carbon;
  * @property int    $notice
  *
  * @property string $api
+ * @property int    $totalcores
+ * @property int    $totalnodes
+ * @property int    $soldcores
+ * @property int    $soldnodes
+ * @property int    $loanedcores
+ * @property int    $loanednodes
  */
 class Subresource extends Model
 {

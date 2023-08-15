@@ -144,8 +144,8 @@ class FieldOfScience extends Model
 	 * Recursive function to build tree
 	 *
 	 * @param   int    $id        Parent ID
-	 * @param   array  $list      List of records
-	 * @param   array  $children  Container for parent/children mapping
+	 * @param   array<int,FieldOfScience>  $list      List of records
+	 * @param   array<int,FieldOfScience>  $children  Container for parent/children mapping
 	 * @param   int    $maxlevel  Maximum levels to descend
 	 * @param   int    $level     Indention level
 	 * @param   string $prfx

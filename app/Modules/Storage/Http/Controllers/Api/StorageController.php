@@ -701,7 +701,7 @@ class StorageController extends Controller
 	 */
 	public function delete($id)
 	{
-		$row = Directory::findOrFail($id);
+		$row = StorageResource::findOrFail($id);
 
 		if ($row->directories()->count() > 0)
 		{
