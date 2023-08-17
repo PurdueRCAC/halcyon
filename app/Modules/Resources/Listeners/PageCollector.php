@@ -48,8 +48,8 @@ class PageCollector
 					->setPriority(0.1)
 			);
 
+			// Active
 			$rows = $type->resources()
-				->with('facets')
 				->where('display', '>', 0)
 				->where(function ($where)
 				{
@@ -80,6 +80,28 @@ class PageCollector
 							->setPriority(0.4)
 					);
 				}*/
+			}
+
+			// Retired
+			$rows = $type->resources()
+				->where('display', '>', 0)
+				->onlyTrashed()
+				->where(function($where)
+				{
+					$where->whereNotNull('listname')
+						->where('listname', '!=', '');
+				})
+				->whereNotNull('description')
+				->orderBy('display', 'desc')
+				->get();
+
+			foreach ($rows as $row)
+			{
+				$event->map->add(
+					Url::create(route('site.resources.' . $type->alias . '.show', ['name' => $row->listname]))
+						->setChangeFrequency(Url::CHANGE_FREQUENCY_YEARLY)
+						->setPriority(0.2)
+				);
 			}
 		}
 	}

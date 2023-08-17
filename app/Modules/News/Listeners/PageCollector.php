@@ -3,6 +3,7 @@
 namespace App\Modules\News\Listeners;
 
 use Illuminate\Events\Dispatcher;
+use Nwidart\Modules\Facades\Module;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Type;
 use App\Modules\Core\Events\GenerateSitemap;
@@ -130,6 +131,52 @@ class PageCollector
 					->setChangeFrequency($frequency)
 					->setPriority($priority)
 			);
+		}
+
+		if (Module::isEnabled('resources'))
+		{
+			// Active resources
+			$rows = \App\Modules\Resources\Models\Asset::query()
+				->where('display', '>', 0)
+				->where(function ($where)
+				{
+					$where->whereNotNull('listname')
+						->where('listname', '!=', '');
+				})
+				->whereNotNull('description')
+				->orderBy('display', 'desc')
+				->get();
+
+			foreach ($rows as $row)
+			{
+				$event->map->add(
+					Url::create(route('site.news.type', ['name' => $row->listname]))
+						->setChangeFrequency(Url::CHANGE_FREQUENCY_YEARLY)
+						->setPriority(0.5)
+				);
+			}
+
+			// Retired resources
+			$rows = \App\Modules\Resources\Models\Asset::query()
+				->where('display', '>', 0)
+				->onlyTrashed()
+				->where(function ($where)
+				{
+					$where->whereNotNull('listname')
+						->where('listname', '!=', '');
+				})
+				->whereNotNull('description')
+				->orderBy('display', 'desc')
+				->get();
+
+			foreach ($rows as $row)
+			{
+				$event->map->add(
+					Url::create(route('site.news.type', ['name' => $row->listname]))
+						->setChangeFrequency(Url::CHANGE_FREQUENCY_YEARLY)
+						->setPriority(0.1)
+				);
+			}
 		}
 	}
 }

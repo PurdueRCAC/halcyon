@@ -5,6 +5,7 @@ namespace App\Modules\News\Listeners;
 use App\Modules\News\Models\Type;
 use App\Modules\Menus\Events\CollectingRoutes;
 use Illuminate\Events\Dispatcher;
+use Nwidart\Modules\Facades\Module;
 
 /**
  * News listener for menu routes
@@ -90,6 +91,62 @@ class RouteCollector
 					'news::' . $child->id,
 					$route,
 					$indent,
+				);
+			}
+		}
+
+		if (Module::isEnabled('resources'))
+		{
+			// Active resources
+			$rows = \App\Modules\Resources\Models\Asset::query()
+				->where('display', '>', 0)
+				->where(function ($where)
+				{
+					$where->whereNotNull('listname')
+						->where('listname', '!=', '');
+				})
+				->whereNotNull('description')
+				->orderBy('display', 'desc')
+				->get();
+
+			foreach ($rows as $row)
+			{
+				$route = route('site.news.type', ['name' => $row->listname]);
+				$route = str_replace(request()->root(), '', $route);
+
+				$event->addRoute(
+					trans('news::news.module name'),
+					$row->name,
+					'news::resource_' . $child->id,
+					$route,
+					'',
+				);
+			}
+
+			// Retired resources
+			$rows = \App\Modules\Resources\Models\Asset::query()
+				->where('display', '>', 0)
+				->onlyTrashed()
+				->where(function ($where)
+				{
+					$where->whereNotNull('listname')
+						->where('listname', '!=', '');
+				})
+				->whereNotNull('description')
+				->orderBy('display', 'desc')
+				->get();
+
+			foreach ($rows as $row)
+			{
+				$route = route('site.news.type', ['name' => $row->listname]);
+				$route = str_replace(request()->root(), '', $route);
+
+				$event->addRoute(
+					trans('news::news.module name'),
+					$row->name,
+					'news::resource_' . $child->id,
+					$route,
+					'',
 				);
 			}
 		}
