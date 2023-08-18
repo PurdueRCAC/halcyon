@@ -79,16 +79,6 @@ class StorageServiceProvider extends ServiceProvider
 	}
 
 	/**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
-		//
-	}
-
-	/**
 	 * Register console commands.
 	 *
 	 * @return void
@@ -148,7 +138,7 @@ class StorageServiceProvider extends ServiceProvider
 		$this->loadViewsFrom(array_merge(array_map(function ($path)
 		{
 			return $path . '/modules/' . $this->name;
-		}, config('view.paths')), [$sourcePath]), $this->name);
+		}, config('view.paths', [])), [$sourcePath]), $this->name);
 	}
 
 	/**
@@ -166,15 +156,5 @@ class StorageServiceProvider extends ServiceProvider
 		}
 
 		$this->loadTranslationsFrom($langPath, $this->name);
-	}
-
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return [];
 	}
 }

@@ -10,10 +10,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Collection;
 use App\Modules\Storage\Http\Resources\UsageResource;
+use App\Modules\Storage\Http\Resources\UsageResourceCollection;
 use App\Modules\Storage\Models\Usage;
 use App\Modules\Storage\Models\Directory;
 use App\Modules\Storage\Models\StorageResource;
 use App\Modules\Resources\Models\Asset;
+use App\Modules\Users\Models\User;
 use Carbon\Carbon;
 
 /**
@@ -39,7 +41,7 @@ class UsageController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return Collection
+	 * @return Collection|array<int,\stdClass>
 	 */
 	public function index(Request $request)
 	{
@@ -560,7 +562,7 @@ class UsageController extends Controller
 	 * @param  string  $resource
 	 * @param  string  $dir
 	 * @param  Request $request
-	 * @return UsageResourceCollection
+	 * @return JsonResponse|UsageResourceCollection
 	 */
 	public function batch($resource, $dir, Request $request)
 	{
@@ -617,6 +619,7 @@ class UsageController extends Controller
 		}
 
 		$data = explode("\n", $contents);
+		$rows = array();
 
 		foreach ($data as $line)
 		{
@@ -699,7 +702,7 @@ class UsageController extends Controller
 				$row->lastinterval = Carbon::now()->timestamp - strtotime($last->datetimerecorded);
 			}
 
-			$row->datetimerecorded = Carbon::now()->toDateTimeString();
+			$row->datetimerecorded = Carbon::now();
 			$row->save();
 
 			$rows[] = $row;
