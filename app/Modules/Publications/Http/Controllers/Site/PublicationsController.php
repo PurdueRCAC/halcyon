@@ -4,6 +4,8 @@ namespace App\Modules\Publications\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
@@ -19,7 +21,7 @@ class PublicationsController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -137,15 +139,16 @@ class PublicationsController extends Controller
 	/**
 	 * Show the form for creating a new article
 	 *
-	 * @return  Response
+	 * @param   Request $request
+	 * @return  View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$row = new Publication();
 		$row->state = 1;
 		$row->published_at = Carbon::now();
 
-		if ($fields = app('request')->old())
+		if ($fields = $request->old())
 		{
 			$row->fill($fields);
 		}
@@ -163,14 +166,15 @@ class PublicationsController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
+	 * @param   Request $request
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Publication::findOrFail($id);
 
-		if ($fields = app('request')->old())
+		if ($fields = $request->old())
 		{
 			$row->fill($fields);
 		}
@@ -189,7 +193,7 @@ class PublicationsController extends Controller
 	 * Store a newly created entry
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -299,7 +303,9 @@ class PublicationsController extends Controller
 	/**
 	 * Download a citation
 	 *
-	 * @return  string
+	 * @param   Request $request
+	 * @param   int  $id
+	 * @return  Response
 	 */
 	public function download(Request $request, $id)
 	{

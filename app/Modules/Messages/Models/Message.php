@@ -206,7 +206,7 @@ class Message extends Model
 	/**
 	 * Save model data
 	 *
-	 * @param   array  $options
+	 * @param   array<string,mixed>  $options
 	 * @return  bool
 	 * @throws  \Exception
 	 */

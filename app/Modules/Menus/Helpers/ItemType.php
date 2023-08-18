@@ -72,7 +72,7 @@ class ItemType
 	 * Method to get type options by module
 	 *
 	 * @param   object  $module
-	 * @return  array
+	 * @return  array<int,stdClass>
 	 */
 	protected function getTypeOptionsByModule($module)
 	{
@@ -99,7 +99,7 @@ class ItemType
 	 *
 	 * @param   string  $file
 	 * @param   string  $module
-	 * @return  false|array<int,stdClass>
+	 * @return  array<int,stdClass>
 	 */
 	protected function getTypeOptionsFromXML($file, $module)
 	{
@@ -109,18 +109,16 @@ class ItemType
 		// Attempt to load the xml file.
 		if (!$xml = simplexml_load_file($file))
 		{
-			return false;
+			return $options;
 		}
 
 		// Look for the first menu node off of the root node.
 		if (!$menu = $xml->xpath('menu[1]'))
 		{
-			return false;
+			return $options;
 		}
-		else
-		{
-			$menu = $menu[0];
-		}
+
+		$menu = $menu[0];
 
 		// If we have no options to parse, just add the base component to the list of options.
 		if (!empty($menu['options']) && $menu['options'] == 'none')
@@ -139,43 +137,39 @@ class ItemType
 		// Look for the first options node off of the menu node.
 		if (!$optionsNode = $menu->xpath('options[1]'))
 		{
-			return false;
+			return $options;
 		}
-		else
-		{
-			$optionsNode = $optionsNode[0];
-		}
+
+		$optionsNode = $optionsNode[0];
 
 		// Make sure the options node has children.
 		if (!$children = $optionsNode->children())
 		{
-			return false;
+			return $options;
 		}
-		else
+
+		// Process each child as an option.
+		foreach ($children as $child)
 		{
-			// Process each child as an option.
-			foreach ($children as $child)
+			if ($child->getName() == 'option')
 			{
-				if ($child->getName() == 'option')
-				{
-					// Create the menu option for the module.
-					$o = new stdClass;
-					$o->title       = (string) $child['name'];
-					$o->description = (string) $child['msg'];
-					$o->request     = array('option' => $module, (string) $optionsNode['var'] => (string) $child['value']);
+				// Create the menu option for the module.
+				$o = new stdClass;
+				$o->title       = (string) $child['name'];
+				$o->description = (string) $child['msg'];
+				$o->request     = array('option' => $module, (string) $optionsNode['var'] => (string) $child['value']);
 
-					$options[] = $o;
-				}
-				elseif ($child->getName() == 'default')
-				{
-					// Create the menu option for the module.
-					$o = new stdClass;
-					$o->title       = (string) $child['name'];
-					$o->description = (string) $child['msg'];
-					$o->request     = array('option' => $module);
+				$options[] = $o;
+			}
+			elseif ($child->getName() == 'default')
+			{
+				// Create the menu option for the module.
+				$o = new stdClass;
+				$o->title       = (string) $child['name'];
+				$o->description = (string) $child['msg'];
+				$o->request     = array('option' => $module);
 
-					$options[] = $o;
-				}
+				$options[] = $o;
 			}
 		}
 
@@ -198,7 +192,7 @@ class ItemType
 
 		if (!is_dir($path))
 		{
-			return false;
+			return $options;
 		}
 
 		//$layouts = File::glob($path . '/*.xml');

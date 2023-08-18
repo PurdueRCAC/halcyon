@@ -506,7 +506,7 @@ class PublicationsController extends Controller
 		}
 		if ($request->has('year'))
 		{
-			$row->published_at = $request->input('year') . '-' . $request->input('month', '01') . ' -01 00:00:00';
+			$row->published_at = Carbon::parse($request->input('year') . '-' . $request->input('month', '01') . ' -01 00:00:00');
 		}
 
 		if (!$row->type)
@@ -564,7 +564,7 @@ class PublicationsController extends Controller
 	 * 		}
 	 * }
 	 * @param  int  $id
-	 * @return JsonResponse
+	 * @return JsonResource
 	 */
 	public function read(int $id)
 	{
@@ -918,7 +918,7 @@ class PublicationsController extends Controller
 		}
 		if ($request->has('year'))
 		{
-			$row->published_at = $request->input('year') . '-' . $request->input('month', '01') . ' -01 00:00:00';
+			$row->published_at = Carbon::parse($request->input('year') . '-' . $request->input('month', '01') . ' -01 00:00:00');
 		}
 
 		if (!$row->type)

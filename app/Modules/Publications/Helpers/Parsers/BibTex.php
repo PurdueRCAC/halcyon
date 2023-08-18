@@ -56,7 +56,7 @@ class BibTex
 	/**
 	 * Array with the BibTex Data
 	 *
-	 * @var    array<int,array>
+	 * @var    array<int,array{string,string}>
 	 */
 	public $data = array();
 
@@ -80,7 +80,7 @@ class BibTex
 	/**
 	 * Array to store warnings
 	 *
-	 * @var    array<int,array>
+	 * @var    array<int,array{string,string}>
 	 */
 	public $warnings = array();
 
@@ -150,6 +150,20 @@ class BibTex
 	 * @var    string
 	 */
 	public $authorstring = 'VON LAST JR, FIRST';
+
+	/**
+	 * Pos
+	 *
+	 * @var  int
+	 */
+	private $_pos;
+
+	/**
+	 * Old pos
+	 *
+	 * @var  int
+	 */
+	private $_oldpos;
 
 	/**
 	 * Constructor
@@ -1262,7 +1276,7 @@ class BibTex
 			}
 			else
 			{
-				$this->_generateWarning('WARNING_LINE_WAS_NOT_CONVERTED', '', $entry);
+				$this->_generateWarning('WARNING_LINE_WAS_NOT_CONVERTED', '', implode(',', $entry));
 			}
 		}
 		$ret .= '}';
@@ -1375,7 +1389,7 @@ class BibTex
 			}
 			else
 			{
-				$this->_generateWarning('WARNING_LINE_WAS_NOT_CONVERTED', '', $entry);
+				$this->_generateWarning('WARNING_LINE_WAS_NOT_CONVERTED', '', implode(',', $entry));
 			}
 		}
 		$ret  .= '</table>';

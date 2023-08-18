@@ -17,7 +17,7 @@ use Carbon\Carbon;
  * @property int    $id
  * @property int    $newsid
  * @property int    $associd
- * @property int    $assoctype
+ * @property string $assoctype
  * @property Carbon|null $datetimecreated
  * @property Carbon|null $datetimeremoved
  * @property Carbon|null $datetimevisited

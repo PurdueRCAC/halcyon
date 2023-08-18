@@ -1207,7 +1207,7 @@ class Queue extends Model
 				// If no queues found
 				if (count($queues) < 1) // && !in_array($resource->id, array(48, 2, 12, 66)))
 				{
-					return response()->json(null, 403);
+					return false;
 				}
 			}
 			else

@@ -557,7 +557,7 @@ class Page extends Model
 	/**
 	 * Save the record
 	 *
-	 * @param   array    $options
+	 * @param   array<string,mixed>  $options
 	 * @return  bool  False if error, True on success
 	 */
 	public function save(array $options = array()): bool

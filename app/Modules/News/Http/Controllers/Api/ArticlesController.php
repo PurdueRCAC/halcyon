@@ -714,7 +714,6 @@ class ArticlesController extends Controller
 			->where('transportmethod', '=', 'GET')
 			->where('status', '=', 200)
 			->where('uri', '=', str_replace(url('/'), '', route('site.news.show', ['id' => $id])))
-			->get()
 			->first();
 
 		return $row;
@@ -944,7 +943,7 @@ class ArticlesController extends Controller
 
 		if ($request->input('update'))
 		{
-			$row->datetimeupdate = Carbon::now()->toDateTimeString();
+			$row->datetimeupdate = Carbon::now();
 		}
 
 		$row->edituserid = auth()->user()->id;
@@ -1174,7 +1173,7 @@ class ArticlesController extends Controller
 
 				if (strstr('/', $association))
 				{
-					$association = str_replace(ROOT_URI, '', $association);
+					$association = str_replace($request->root(), '', $association);
 					$association = trim($association, '/');
 
 					$parts = explode('/', $association);

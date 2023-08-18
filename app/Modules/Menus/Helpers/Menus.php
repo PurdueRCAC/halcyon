@@ -23,7 +23,7 @@ class Menus
 	 * Gets a list of the actions that can be performed.
 	 *
 	 * @param   int  $parentId  The menu ID.
-	 * @return  object
+	 * @return  Fluent
 	 */
 	public static function getActions($parentId = 0)
 	{
@@ -42,7 +42,7 @@ class Menus
 
 		foreach ($actions as $action)
 		{
-			$result->set($action->name, auth()->user()->can($action->name . ' ' . $assetName));
+			$result->{$action->name} = auth()->user()->can($action->name . ' ' . $assetName);
 		}
 
 		return $result;

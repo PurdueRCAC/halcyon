@@ -178,15 +178,6 @@ class MessagesController extends Controller
 
 		$types = Type::orderBy('name', 'asc')->get();
 
-		foreach ($types as $type)
-		{
-			if ($type->id == config('modules.news.default_type', 0))
-			{
-				$row->newstypeid = $type->id;
-				break;
-			}
-		}
-
 		return view('messages::admin.messages.edit', [
 			'row'   => $row,
 			'types' => $types

@@ -35,7 +35,7 @@ class EventRegistered extends Notification
 	 * What methods can this notificaiton be sent
 	 * 
 	 * @param   object  $notifiable
-	 * @return  array
+	 * @return  array<int,string>
 	 */
 	public function via($notifiable)
 	{
@@ -56,7 +56,7 @@ class EventRegistered extends Notification
 			->from(config('app.name'))
 			->info()
 			->content($event->datetimenews->format('g:ia') . ' - ' . $event->datetimenewsend->format('g:ia T'))
-			->attachment(function ($attachment) use ($notifiable, $event)
+			->attachment(function ($attachment) use ($event)
 			{
 				$assoc = $event->associations->first();
 				$user = $assoc->associated;
@@ -192,7 +192,7 @@ class EventRegistered extends Notification
 						]);
 				});
 
-				$attachment->block(function ($block) use ($event, $assoc)
+				$attachment->block(function ($block) use ($assoc)
 				{
 					$block
 						->type('section')
@@ -202,7 +202,7 @@ class EventRegistered extends Notification
 						]);
 				});
 
-				$attachment->block(function ($block) use ($event, $groups, $user)
+				$attachment->block(function ($block) use ($groups, $user)
 				{
 					$block
 						->type('section')
@@ -249,7 +249,6 @@ class EventRegistered extends Notification
 				});
 			});
 
-		//print_r($msg); die();
 		return $msg;
 	}
 }

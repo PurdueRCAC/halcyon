@@ -87,7 +87,7 @@ class AuthorsController extends Controller
 	{
 		$row = new Author;
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -100,6 +100,7 @@ class AuthorsController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
+	 * @param   Request $request
 	 * @param   int  $id
 	 * @return  View
 	 */
@@ -107,7 +108,7 @@ class AuthorsController extends Controller
 	{
 		$row = Author::withTrashed()->findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -270,7 +271,7 @@ class AuthorsController extends Controller
 		}
 
 		// Redirect
-		return $this->cancel($row->menutype);
+		return $this->cancel();
 	}
 
 	/**

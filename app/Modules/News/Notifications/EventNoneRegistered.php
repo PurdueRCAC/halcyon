@@ -15,7 +15,7 @@ class EventNoneRegistered extends Notification
 	 * What methods can this notificaiton be sent
 	 * 
 	 * @param   object  $notifiable
-	 * @return  array
+	 * @return  array<int,string>
 	 */
 	public function via($notifiable)
 	{

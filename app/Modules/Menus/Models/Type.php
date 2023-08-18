@@ -276,7 +276,7 @@ class Type extends Model
 	 * Find a model by menutype
 	 *
 	 * @param  string $type
-	 * @param  array  $columns
+	 * @param  array<int,string>  $columns
 	 * @return Model|\Illuminate\Database\Eloquent\Collection|static[]|static|null
 	 */
 	public static function findByMenutype(string $type, array $columns = ['*'])
@@ -289,7 +289,7 @@ class Type extends Model
 	/**
 	 * Delete the record and all associated data
 	 *
-	 * @param   array  $options
+	 * @param   array<string,mixed>  $options
 	 * @return  bool   False if error, True on success
 	 */
 	public function save(array $options = []): bool

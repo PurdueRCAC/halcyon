@@ -117,7 +117,7 @@ class RouteCollector
 				$event->addRoute(
 					trans('news::news.module name'),
 					$row->name,
-					'news::resource_' . $child->id,
+					'news::resource_' . $row->id,
 					$route,
 					'',
 				);
@@ -144,7 +144,7 @@ class RouteCollector
 				$event->addRoute(
 					trans('news::news.module name'),
 					$row->name,
-					'news::resource_' . $child->id,
+					'news::resource_' . $row->id,
 					$route,
 					'',
 				);

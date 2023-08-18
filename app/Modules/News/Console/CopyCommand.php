@@ -38,7 +38,7 @@ class CopyCommand extends Command
 
 		if (!$news || !$news->id)
 		{
-			$this->danger('Failed to find news entry for ID #' . $id);
+			$this->error('Failed to find news entry for ID #' . $id);
 
 			return Command::FAILURE;
 		}
@@ -90,8 +90,8 @@ class CopyCommand extends Command
 			foreach ($times as $range)
 			{
 				$payload = new Article;
-				$payload->datetimenews    = $start->format('Y-m-d') . ' ' . $range['start'];
-				$payload->datetimenewsend = $start->format('Y-m-d') . ' ' . $range['end'];
+				$payload->datetimenews    = Carbon::parse($start->format('Y-m-d') . ' ' . $range['start']);
+				$payload->datetimenewsend = Carbon::parse($start->format('Y-m-d') . ' ' . $range['end']);
 				$payload->datetimecreated = Carbon::now();
 				$payload->userid          = $news->userid;
 				$payload->edituserid      = $news->edituserid;

@@ -16,7 +16,7 @@ class Html
 	/**
 	 * Cached array of the menus.
 	 *
-	 * @var  array<int,array>
+	 * @var  array<int,array{string,string}>
 	 */
 	protected static $menus = null;
 
@@ -57,7 +57,7 @@ class Html
 	/**
 	 * Returns an array of menu items grouped by menu.
 	 *
-	 * @param   array  $config  An array of configuration options.
+	 * @param   array<string,mixed>  $config  An array of configuration options.
 	 * @return  array<int,string>
 	 */
 	public static function menuitems($config = array())
@@ -137,7 +137,7 @@ class Html
 	 * @param   string  $name      The name of the control.
 	 * @param   string  $selected  The value of the selected option.
 	 * @param   string  $attribs   Attributes for the control.
-	 * @param   array   $config    An array of options for the control.
+	 * @param   array<string,mixed>   $config    An array of options for the control.
 	 * @return  string
 	 */
 	public static function menuitemlist($name, $selected = null, $attribs = null, $config = array())
@@ -198,7 +198,7 @@ class Html
 	 *
 	 * @param   bool  $all         True if all can be selected
 	 * @param   bool  $unassigned  True if unassigned can be selected
-	 * @return  string
+	 * @return  array<int,string>
 	 */
 	public static function linkoptions($all = false, $unassigned = false)
 	{
@@ -257,18 +257,18 @@ class Html
 			{
 				if ($tmpMenuType)
 				{
-					$mitems[] = Html::select('option', '</OPTGROUP>');
+					$mitems[] = Select::option('</OPTGROUP>');
 				}
-				$mitems[] = Html::select('option', '<OPTGROUP>', $list_a->menutype);
+				$mitems[] = Select::option('<OPTGROUP>', $list_a->menutype);
 				$lastMenuType = $list_a->menutype;
 				$tmpMenuType = $list_a->menutype;
 			}
 
-			$mitems[] = Html::select('option', $list_a->id, $list_a->title);
+			$mitems[] = Select::option($list_a->id, $list_a->title);
 		}
 		if ($lastMenuType !== null)
 		{
-			$mitems[] = Html::select('option', '</OPTGROUP>');
+			$mitems[] = Select::option('</OPTGROUP>');
 		}
 
 		return $mitems;
@@ -279,12 +279,12 @@ class Html
 	 *
 	 * @param   int  $id         Id of the menu item
 	 * @param   string   $indent     The indentation string
-	 * @param   array    $list       The list to process
+	 * @param   array<int,object>    $list       The list to process
 	 * @param   array    &$children  The children of the current item
 	 * @param   int  $maxlevel   The maximum number of levels in the tree
 	 * @param   int  $level      The starting level
 	 * @param   string   $type       Type of link: component, URL, alias, separator
-	 * @return  array
+	 * @return  array<int,object>
 	 */
 	public static function treerecurse($id, $indent, $list, &$children, $maxlevel = 9999, $level = 0, $type = 1)
 	{

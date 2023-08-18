@@ -135,7 +135,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return MessageResourceCollection
+	 * @return JsonResponse|MessageResourceCollection
 	 */
 	public function index(Request $request)
 	{

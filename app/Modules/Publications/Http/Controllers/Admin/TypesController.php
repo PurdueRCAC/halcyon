@@ -77,13 +77,14 @@ class TypesController extends Controller
 	/**
 	 * Show the form for creating a new article
 	 *
+	 * @param   Request $request
 	 * @return  View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$row = new Type();
 
-		if ($fields = app('request')->old())
+		if ($fields = $request->old())
 		{
 			$row->fill($fields);
 		}
@@ -96,14 +97,15 @@ class TypesController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
+	 * @param   Request $request
 	 * @param   int  $id
 	 * @return  View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Type::findOrFail($id);
 
-		if ($fields = app('request')->old())
+		if ($fields = $request->old())
 		{
 			$row->fill($fields);
 		}
