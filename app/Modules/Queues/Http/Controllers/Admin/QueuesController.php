@@ -561,6 +561,46 @@ class QueuesController extends Controller
 	}
 
 	/**
+	 * Show the form for editing the specified queue.
+	 * 
+	 * @param  Request $request
+	 * @param  int $id
+	 * @return View
+	 */
+	public function show(Request $request, $id)
+	{
+		$row = Queue::query()
+			->withTrashed()
+			->where('id', '=', $id)
+			->first();
+
+		if (!$row)
+		{
+			abort(404);
+		}
+
+		if ($fields = app('request')->old('fields'))
+		{
+			$row->fill($fields);
+		}
+
+		$types = Type::orderBy('name', 'asc')->get();
+		$schedulers = Scheduler::orderBy('hostname', 'asc')->get();
+		$schedulerpolicies = SchedulerPolicy::orderBy('name', 'asc')->get();
+		$subresources = array();
+		$resources = (new Asset)->tree();
+
+		return view('queues::admin.queues.show', [
+			'row'   => $row,
+			'types' => $types,
+			'schedulers' => $schedulers,
+			'schedulerpolicies' => $schedulerpolicies,
+			'resources' => $resources,
+			'subresources' => $subresources,
+		]);
+	}
+
+	/**
 	 * Update the specified queue in storage.
 	 * 
 	 * @param  Request $request
@@ -691,7 +731,7 @@ class QueuesController extends Controller
 			}
 		}
 
-		return $this->cancel()->withSuccess($id ? trans('global.messages.item updated') : trans('global.messages.item created'));
+		return redirect(route('admin.queues.show', ['id' => $row->id]))->withSuccess($id ? trans('global.messages.item updated') : trans('global.messages.item created'));
 	}
 
 	/**

@@ -211,9 +211,6 @@ app('pathway')
 					<th scope="col" class="priority-2">
 						{{ trans('queues::queues.resource') }}
 					</th>
-					<th scope="col" class="priority-6 text-right">
-						{{ trans('queues::queues.walltime') }}
-					</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -225,16 +222,14 @@ app('pathway')
 							@endif
 						</td>
 						<td class="priority-5">
-							{{ $row->id }}
+							<a href="{{ route('admin.queues.show', ['id' => $row->id]) }}">
+								{{ $row->id }}
+							</a>
 						</td>
 						<td>
-							@if (auth()->user()->can('edit queues'))
-							<a href="{{ route('admin.queues.edit', ['id' => $row->id]) }}">
-							@endif
+							<a href="{{ route('admin.queues.show', ['id' => $row->id]) }}">
 								{!! App\Halcyon\Utility\Str::highlight(e($row->name), $filters['search']) !!}
-							@if (auth()->user()->can('edit queues'))
 							</a>
-							@endif
 						</td>
 						<td>
 							@if ($row->trashed())
@@ -297,16 +292,16 @@ app('pathway')
 									</a>
 								@elseif (!$row->active)
 									<a class="glyph icon-alert-triangle text-warning" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.queue has not active resources') }}">
-										{{ trans('queues::queues.queue has not active resources') }}
+										{{ trans('queues::queues.queue has no active resources') }}
 									</a>
 								@endif
 							@endif
 						</td>
 						<td class="priority-4">
 							@if ($row->group)
-								<a href="{{ route('admin.groups.edit', ['id' => $row->groupid]) }}">
+								<!-- <a href="{{ route('admin.groups.show', ['id' => $row->groupid]) }}"> -->
 									{{ $row->group->name }}
-								</a>
+								<!-- </a> -->
 							@else
 								<span class="text-muted unknown">{{ trans('global.none') }}</span>
 							@endif
@@ -396,14 +391,6 @@ app('pathway')
 							@else
 								<span class="text-muted none">{{ trans('global.none') }}</span>
 							@endif
-						</td>
-						<td class="priority-6 text-right">
-							<?php
-							$walltime = $row->walltimes()->first();
-							if ($walltime):
-								echo $walltime->humanWalltime;
-							endif;
-							?>
 						</td>
 					</tr>
 				@endforeach

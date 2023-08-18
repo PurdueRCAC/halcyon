@@ -161,7 +161,12 @@ $router->group(['prefix' => 'queues'], function (Router $router)
 		'uses' => 'QueuesController@store',
 		'middleware' => 'can:create queues|edit queues',
 	]);
-	$router->get('/{id}', [
+	$router->match(['get', 'post'], '/{id}', [
+		'as'   => 'admin.queues.show',
+		'uses' => 'QueuesController@show',
+		'middleware' => 'can:edit queues',
+	])->where('id', '[0-9]+');
+	$router->get('/edit/{id}', [
 		'as'   => 'admin.queues.edit',
 		'uses' => 'QueuesController@edit',
 		'middleware' => 'can:edit queues',
