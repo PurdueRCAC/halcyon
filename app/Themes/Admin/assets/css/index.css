@@ -692,6 +692,7 @@ h4 {
 .icon-bell-off:before {
   content: "\e833";
 }
+.fa-battery:before,
 .icon-battery:before {
   content: "\e834";
 }
@@ -717,6 +718,7 @@ h4 {
 .icon-bookmark:before {
   content: "\e83b";
 }
+.fa-block:before,
 .icon-box:before {
   content: "\e83c";
 }
