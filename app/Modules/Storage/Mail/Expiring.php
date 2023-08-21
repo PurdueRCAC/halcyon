@@ -9,6 +9,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use App\Modules\Users\Models\User;
 use App\Modules\Groups\Models\Group;
+use App\Modules\Storage\Models\Directory;
 
 class Expiring extends Mailable
 {
@@ -31,7 +32,7 @@ class Expiring extends Mailable
 	/**
 	 * List of directories with expiring allocations
 	 *
-	 * @var array
+	 * @var array<int,Directory>
 	 */
 	protected $directories;
 
@@ -45,7 +46,7 @@ class Expiring extends Mailable
 	/**
 	 * Create a new message instance.
 	 *
-	 * @param  array $directories
+	 * @param  array<int,Directory> $directories
 	 * @param  User  $user
 	 * @param  Group $group
 	 * @return void

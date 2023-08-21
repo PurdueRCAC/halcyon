@@ -132,9 +132,8 @@ class Type extends Model
 			$result = self::query()
 				->select(DB::raw('MAX(ordering) + 1 AS seq'))
 				->where('parentid', '=', $model->parentid)
-				->get()
-				->first()
-				->seq;
+				->first();
+			$resule = $result ? $result->seq : 1;
 
 			$model->setAttribute('ordering', (int)$result);
 		});

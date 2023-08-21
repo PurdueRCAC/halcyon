@@ -358,7 +358,7 @@ class MessagesController extends Controller
 			}
 		}
 
-		$row->datetimesubmitted = Carbon::now()->toDateTimeString();
+		$row->datetimesubmitted = Carbon::now();
 
 		if ($row->datetimestarted == '0000-00-00 00:00:00' || $row->datetimestarted == '-0001-11-30 00:00:00')
 		{
@@ -652,7 +652,7 @@ class MessagesController extends Controller
 
 		if (isset($fields['retry']))
 		{
-			$row->datetimesubmitted = Carbon::now()->modify('+' . $fields['retry'] * 60)->toDateTimeString();
+			$row->datetimesubmitted = Carbon::now()->modify('+' . $fields['retry'] * 60);
 			$row->datetimestarted = null;
 			$row->datetimecompleted = null;
 			$row->pid = 0;

@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Fluent;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use OpenSpout\Reader\CSV\Reader as CsvReader;
 use OpenSpout\Reader\XLSX\Reader as XlsxReader;
 use App\Halcyon\Http\StatefulRequest;
@@ -239,16 +240,6 @@ class GroupsController extends Controller
 			$row->cascademanagers = 1;
 		}
 
-		if (!$row->created_by)
-		{
-			$row->created_by = auth()->user()->id;
-		}
-
-		if (!$row->updated_by)
-		{
-			$row->updated_by = auth()->user()->id;
-		}
-
 		if (!$row->save())
 		{
 			return redirect()->back()->withError(trans('global.messages.save failed'));
@@ -317,7 +308,7 @@ class GroupsController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return StreamedResponse
 	 */
 	public function export(Request $request)
 	{
@@ -425,6 +416,8 @@ class GroupsController extends Controller
 					$reader = new XlsxReader();
 				}
 				$reader->open($path);
+
+				$data = array();
 
 				foreach ($reader->getSheetIterator() as $sheet)
 				{

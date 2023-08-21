@@ -12,6 +12,10 @@ use App\Modules\Groups\Composers\ProfileComposer;
 use App\Modules\Groups\Console\EmailAuthorizedCommand;
 use App\Modules\Groups\Console\EmailRemovedCommand;
 use App\Modules\Groups\Console\SyncMembershipCommand;
+use App\Modules\Groups\Console\GroupAddMemberCommand;
+use App\Modules\Groups\Console\GroupRemoveMemberCommand;
+use App\Modules\Groups\Console\UnixGroupAddMemberCommand;
+use App\Modules\Groups\Console\UnixGroupRemoveMemberCommand;
 use App\Modules\Groups\LogProcessors\Groups;
 use App\Modules\Groups\LogProcessors\GroupMemberships;
 use App\Modules\Groups\LogProcessors\UnixGroupMemberships;
@@ -77,6 +81,10 @@ class GroupsServiceProvider extends ServiceProvider
 			EmailAuthorizedCommand::class,
 			EmailRemovedCommand::class,
 			SyncMembershipCommand::class,
+			GroupAddMemberCommand::class,
+			GroupRemoveMemberCommand::class,
+			UnixGroupAddMemberCommand::class,
+			UnixGroupRemoveMemberCommand::class,
 		]);
 	}
 

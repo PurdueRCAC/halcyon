@@ -22,6 +22,8 @@ use Carbon\Carbon;
  * @property Carbon|null $datetimeremoved
  * @property Carbon|null $datetimevisited
  * @property string $comment
+ *
+ * @property string $api
  */
 class Association extends Model
 {
@@ -180,7 +182,7 @@ class Association extends Model
 	 *
 	 * @param  string  $string
 	 * @param  int $limit
-	 * @return array
+	 * @return array<string,int>
 	 */
 	public function extractKeywords($string, $limit = 10)
 	{

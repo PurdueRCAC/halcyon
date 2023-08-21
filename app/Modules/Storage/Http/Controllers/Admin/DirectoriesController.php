@@ -417,7 +417,7 @@ class DirectoriesController extends Controller
 				$unallocatedbytes = Number::formatBytes($bucket['unallocatedbytes'] + ($row->getOriginal('bytes') - $bytes));
 			}
 
-			if ($unallocatedbytes < 0)
+			if (!is_null($bucket) && $unallocatedbytes < 0)
 			{
 				$row->unallocatedbytes = Number::formatBytes(-($bucket['unallocatedbytes'] + ($row->getOriginal('bytes') - $bytes)));
 				$row->overallocated    = 1;

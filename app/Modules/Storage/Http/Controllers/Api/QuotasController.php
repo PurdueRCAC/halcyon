@@ -46,7 +46,7 @@ class QuotasController extends Controller
 	 * }
 	 * @param  Request $request
 	 * @param  string|null  $username
-	 * @return JsonResponse
+	 * @return JsonResponse|ResourceCollection
 	 */
 	public function index(Request $request, $username = null)
 	{
@@ -71,7 +71,7 @@ class QuotasController extends Controller
 		$rows = Directory::query()
 			->withTrashed()
 			->with('storageResource')
-			->select($d . '.*', $r . '.getquotatypeid')
+			->select($d . '.*')//, $r . '.getquotatypeid')
 			->join($r, $r . '.id', $d . '.storageresourceid')
 			->where($d . '.owneruserid', '=', $user->id)
 			->where(function($where) use ($r, $d)
@@ -88,7 +88,7 @@ class QuotasController extends Controller
 		$rows2 = Directory::query()
 			->withTrashed()
 			->with('storageResource')
-			->select($d . '.*', $r . '.getquotatypeid')
+			->select($d . '.*')//, $r . '.getquotatypeid')
 			->join($r, $r . '.id', $d . '.storageresourceid')
 			->join($g, $g . '.unixgroupid', $d . '.unixgroupid')
 			->where($g . '.userid', '=', $user->id)
@@ -128,8 +128,8 @@ class QuotasController extends Controller
 				{
 					$row->total_block_usage = ($data->space / 1024);
 					$row->block_limit       = ($data->quota / 1024);
-					$row->space             = ($data->space);
-					$row->quota             = ($data->quota);
+					$row->space             = $data->space;
+					$row->quota             = $data->quota;
 				}
 
 				if ($data->filequota != 0)
@@ -145,7 +145,7 @@ class QuotasController extends Controller
 			if (!$data || date("U") - strtotime($data->datetimerecorded) > 900) // 15 minutes
 			{
 				// If we know how
-				if ($row->getquotatypeid)
+				if ($row->storageResource->getquotatypeid)
 				{
 					// Assuming no pending requests or recent checks
 					$message = $row->messages()

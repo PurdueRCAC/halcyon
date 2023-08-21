@@ -87,7 +87,7 @@ class MembersController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   int $id
-	 * @return  array<int,array>
+	 * @return  array<int,array{string,mixed}>
 	 */
 	public function index(Request $request, $id)
 	{

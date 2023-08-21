@@ -63,6 +63,8 @@ use Carbon\Carbon;
  * @property int    $maxjobfactor
  * @property int    $maxjobuserfactor
  * @property int    $shared
+ *
+ * @property string $api
  */
 class Queue extends Model
 {

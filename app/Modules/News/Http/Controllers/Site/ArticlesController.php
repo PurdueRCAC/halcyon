@@ -131,9 +131,9 @@ class ArticlesController extends Controller
 	 * @param  string  $name
 	 * @return Response
 	 */
-	public function feed(Request $request, $name = null)
+	public function feed(Request $request, $name = '')
 	{
-		$parts = explode(',', $name);
+		$parts = $name ? explode(',', $name) : array();
 
 		$types = array();
 		$resources = array();
@@ -532,7 +532,7 @@ class ArticlesController extends Controller
 		$tzName = date_default_timezone_get();
 
 		$timezone = new DateTimeZone($tzName);
-		$year = date('Y');
+		$year = intval(date('Y'));
 
 		$transitions = $timezone->getTransitions(mktime(0, 0, 0, 2, 1, $year), mktime(0, 0, 0, 11, 31, $year));
 		$transitions = $transitions ? array_slice($transitions, 1, 2) : array();
@@ -653,7 +653,7 @@ class ArticlesController extends Controller
 						}
 
 						$output .= "ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=TENTATIVE;CN=" . $user->name . "\r\n";
-						$output .= "\t:MAILTO:" . $user->mail . "\r\n";
+						$output .= "\t:MAILTO:" . $user->email . "\r\n";
 					}
 				}
 			}

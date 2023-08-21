@@ -11,6 +11,7 @@ use App\Modules\Groups\Events\MemberCreated;
 use App\Modules\Groups\Events\MemberUpdating;
 use App\Modules\Groups\Events\MemberUpdated;
 use App\Modules\Groups\Events\MemberDeleted;
+use Carbon\Carbon;
 
 /**
  * Group member model

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Config\Repository;
 use App\Modules\History\Traits\Historable;
 use App\Modules\History\Models\Log;
 use App\Halcyon\Models\Casts\Params;
@@ -24,7 +25,9 @@ use Carbon\Carbon;
  * @property Carbon|null $sent_at
  * @property int    $sent_by
  * @property int    $template
- * @property string $recipients
+ * @property Repository $recipients
+ *
+ * @property string $api
  */
 class Message extends Model
 {

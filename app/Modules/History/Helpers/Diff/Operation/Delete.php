@@ -25,7 +25,7 @@ class Delete extends Operation
 	public function __construct($lines)
 	{
 		$this->orig = $lines;
-		$this->closing = false;
+		//$this->closing = false;
 	}
 
 	/**

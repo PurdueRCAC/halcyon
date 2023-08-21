@@ -40,9 +40,12 @@ use Carbon\Carbon;
  * @property int    $state
  * @property int    $access
  * @property string $content
- * @property Params $params
+ * @property Repository $params
  * @property int    $main
  * @property int    $snippet
+ *
+ * @property string $metadesc
+ * @property string $metakey
  */
 class Page extends Model
 {

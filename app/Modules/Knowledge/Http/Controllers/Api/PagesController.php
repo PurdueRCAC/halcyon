@@ -458,7 +458,7 @@ class PagesController extends Controller
 		{
 			if (!$row->moveByReference($row->parent_id, 'last-child', $row->id))
 			{
-				return redirect()->back()->withError(trans('knowledge::knowledge.error.move failed'));
+				return response()->json(['message' => trans('knowledge::knowledge.error.move failed')], 409);
 			}
 		}
 
@@ -774,7 +774,7 @@ class PagesController extends Controller
 		{
 			if (!$row->moveByReference($row->parent_id, 'last-child', $row->id))
 			{
-				return redirect()->back()->withError(trans('knowledge::knowledge.error.move failed'));
+				return response()->json(['message' => trans('knowledge::knowledge.error.move failed')], 409);
 			}
 		}
 
@@ -882,7 +882,8 @@ class PagesController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
-	 * @return \stdClass
+	 * @param  Request $request
+	 * @return JsonResponse|\stdClass
 	 */
 	public function diff(Request $request)
 	{

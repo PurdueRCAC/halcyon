@@ -104,7 +104,7 @@ class AuthorsController extends Controller
 	 * @param   int  $id
 	 * @return  View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Author::withTrashed()->findOrFail($id);
 

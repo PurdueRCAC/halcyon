@@ -308,7 +308,7 @@ class UsageController extends Controller
 			$row->lastinterval = Carbon::now()->timestamp - strtotime($last->datetimerecorded);
 		}
 
-		$row->datetimerecorded = Carbon::now()->toDateTimeString();
+		$row->datetimerecorded = Carbon::now();
 
 		$row->save();
 

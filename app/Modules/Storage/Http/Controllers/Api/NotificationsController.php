@@ -334,11 +334,13 @@ class NotificationsController extends Controller
 		}
 
 		$row = new Notification;
-		$row->fill($request->all());
-
-		if (is_null($row->enabled))
+		$row->enabled = 1;
+		foreach ($rules as $key => $rule)
 		{
-			$row->enabled = 1;
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
 		}
 
 		if (!$row->userid)
@@ -565,7 +567,13 @@ class NotificationsController extends Controller
 		}
 
 		$row = Notification::findOrFail($id);
-		$row->fill($request->all());
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
+		}
 
 		if ($request->has('storagedirid') && !$row->directory)
 		{

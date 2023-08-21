@@ -10,7 +10,7 @@ class AllocationDelete
 	public $id;
 
 	/**
-	 * @var array
+	 * @var array<string,mixed>
 	 */
 	public $response = array();
 

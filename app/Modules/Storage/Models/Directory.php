@@ -317,7 +317,7 @@ class Directory extends Model
 	 *
 	 * @return  int
 	 */
-	public function getModeAttribute(): int
+	public function getModeAttribute()
 	{
 		$permissions = $this->unixPermissions;
 
@@ -508,7 +508,7 @@ class Directory extends Model
 	/**
 	 * Get resource total
 	 *
-	 * @return  array<int,array>
+	 * @return  array<int,array{string,mixed}>
 	 */
 	public function getResourceTotalAttribute(): array
 	{

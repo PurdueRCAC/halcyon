@@ -93,7 +93,7 @@ class CopyWeekCommand extends Command
 				$payload = new Article;
 				$payload->datetimenews    = $news->datetimenews->modify('+' . $i . ' weeks');
 				$payload->datetimenewsend = $news->datetimenewsend->modify('+' . $i . ' weeks');
-				$payload->datetimecreated = Carbon::now()->format('Y-m-d h:m:s');
+				$payload->datetimecreated = Carbon::now();
 				$payload->userid          = $news->userid;
 				$payload->edituserid      = $news->edituserid;
 				$payload->published       = $news->published;

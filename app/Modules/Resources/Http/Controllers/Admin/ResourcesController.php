@@ -429,7 +429,7 @@ class ResourcesController extends Controller
 	 *
 	 * @param  Request $request
 	 * @param  int  $id
-	 * @return View
+	 * @return View|StreamedResponse
 	 */
 	public function members(Request $request, $id)
 	{
@@ -453,7 +453,7 @@ class ResourcesController extends Controller
 	/**
 	 * Download a list of records
 	 * 
-	 * @param  array<int,Asset> $rows
+	 * @param  array<int,\stdClass> $rows
 	 * @param  int $id
 	 * @return StreamedResponse
 	 */

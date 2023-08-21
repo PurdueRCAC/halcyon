@@ -15,7 +15,7 @@ class AllocationUpdate
 	public $data;
 
 	/**
-	 * @var array
+	 * @var array<string,mixed>
 	 */
 	public $response = array();
 

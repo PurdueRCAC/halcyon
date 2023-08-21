@@ -50,6 +50,7 @@ use Carbon\Carbon;
  * @property string $url
  *
  * @property string $api
+ * @property string $metadesc
  */
 class Article extends Model
 {
@@ -309,7 +310,7 @@ class Article extends Model
 	{
 		$userid = auth()->user() ? auth()->user()->id : 0;
 
-		return route('site.news.visit', ['id' => $this->id, 'token' => urlencode(base64_encode($userid))]);
+		return route('site.news.visit', ['id' => $this->id, 'token' => urlencode(base64_encode("$userid"))]);
 	}
 
 	/**

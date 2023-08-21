@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Modules\Publications\Models\Type;
 use App\Modules\Publications\Models\Publication;
 use App\Modules\Publications\Helpers\Download;
@@ -305,7 +306,7 @@ class PublicationsController extends Controller
 	 *
 	 * @param   Request $request
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  StreamedResponse
 	 */
 	public function download(Request $request, $id)
 	{

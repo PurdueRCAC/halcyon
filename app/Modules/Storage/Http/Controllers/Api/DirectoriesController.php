@@ -445,7 +445,7 @@ class DirectoriesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @param  array    $data
+	 * @param  array<string,mixed>    $data
 	 * @param  int  $offset
 	 * @return JsonResponse|DirectoryResource
 	 */

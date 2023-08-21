@@ -310,7 +310,7 @@ class MessagesController extends Controller
 		{
 			if (is_numeric($id))
 			{
-				$user = User::find($id);
+				$user = User::findOrNew($id);
 			}
 			elseif (filter_var($id, FILTER_VALIDATE_EMAIL))
 			{
@@ -325,7 +325,7 @@ class MessagesController extends Controller
 				}
 			}
 
-			if (!$user || !$user->email)
+			if (!$user->email)
 			{
 				$request->session()->flash('warning', trans('mailer::mailer.error.account not found', ['id' => $id]));
 				continue;

@@ -12,7 +12,7 @@ class WelcomeClusterBuild
 	public $user;
 
 	/**
-	 * @var array
+	 * @var array<int,\stdClass>
 	 */
 	public $activity;
 
@@ -25,7 +25,7 @@ class WelcomeClusterBuild
 	 * Constructor
 	 *
 	 * @param  User $user
-	 * @param  array $activity
+	 * @param  array<int,\stdClass> $activity
 	 * @return void
 	 */
 	public function __construct(User $user, $activity)

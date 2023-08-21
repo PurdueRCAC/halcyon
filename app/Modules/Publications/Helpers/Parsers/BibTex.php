@@ -156,14 +156,14 @@ class BibTex
 	 *
 	 * @var  int
 	 */
-	private $_pos;
+	//private $_pos;
 
 	/**
 	 * Old pos
 	 *
 	 * @var  int
 	 */
-	private $_oldpos;
+	//private $_oldpos;
 
 	/**
 	 * Constructor
@@ -218,12 +218,12 @@ class BibTex
 			{
 				return new Exception('Could not open file ' . $filename);
 			}
-			else
+			/*else
 			{
 				$this->_pos    = 0;
 				$this->_oldpos = 0;
 				return true;
-			}
+			}*/
 		}
 
 		return new Exception('Could not find file ' . $filename);
@@ -695,7 +695,7 @@ class BibTex
 	 * Extracting the authors
 	 *
 	 * @param  string  $entry The entry with the authors
-	 * @return array<int,array>   the extracted authors
+	 * @return array<int,array{string,string}>   the extracted authors
 	 */
 	private function _extractAuthors($entry)
 	{

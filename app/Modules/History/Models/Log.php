@@ -90,7 +90,7 @@ class Log extends Model
 	/**
 	 * Adds a processor on to the stack.
 	 *
-	 * @param callable[] $callback
+	 * @param callable $callback
 	 * @return void
 	 */
 	public static function pushProcessor(callable $callback)

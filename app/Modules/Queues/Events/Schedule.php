@@ -25,7 +25,7 @@ class Schedule
 	 * Constructor
 	 *
 	 * @param  Asset $resource
-	 * @param  object $command
+	 * @param  ScheduleCommand $command
 	 * @param  bool $verbose
 	 * @return void
 	 */

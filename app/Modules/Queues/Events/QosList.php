@@ -27,7 +27,7 @@ class QosList
 	/**
 	 * Constructor
 	 *
-	 * @param  arrayarray<int,Qos>|Collection<int,Qos>|LengthAwarePaginator<Qos>  $rows
+	 * @param  array<int,Qos>|Collection<int,Qos>|LengthAwarePaginator<Qos>  $rows
 	 * @param  string $format
 	 * @return void
 	 */

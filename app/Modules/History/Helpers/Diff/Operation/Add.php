@@ -25,7 +25,7 @@ class Add extends Operation
 	public function __construct($lines)
 	{
 		$this->closing = $lines;
-		$this->orig = false;
+		//$this->orig = false;
 	}
 
 	/**

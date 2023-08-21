@@ -14,6 +14,8 @@ use App\Modules\History\Traits\Historable;
  * @property int    $id
  * @property int    $parentid
  * @property string $name
+ *
+ * @property string $api
  */
 class Department extends Model
 {

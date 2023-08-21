@@ -31,11 +31,12 @@ class Operation
 	/**
 	 * Reverse operation
 	 *
-	 * @return  void
+	 * @return  Operation
 	 */
 	public function reverse()
 	{
-		trigger_error('pure virtual', E_USER_ERROR);
+		//trigger_error('pure virtual', E_USER_ERROR);
+		return new self;
 	}
 
 	/**
