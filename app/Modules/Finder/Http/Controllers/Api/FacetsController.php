@@ -129,7 +129,7 @@ class FacetsController extends Controller
 			{
 				$filters['search'] = strtolower((string)$filters['search']);
 
-				$query->where(function ($where) use ($filters, $g)
+				$query->where(function ($where) use ($filters)
 				{
 					$where->where('name', 'like', '%' . $filters['search'] . '%')
 						->orWhere('description', 'like', '%' . $filters['search'] . '%');

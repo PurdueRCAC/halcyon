@@ -22,6 +22,8 @@ use Carbon\Carbon;
  * @property int    $sellerqueueid
  * @property string $comment
  * @property float  $serviceunits
+ *
+ * @property string $api
  */
 class Size extends Model
 {

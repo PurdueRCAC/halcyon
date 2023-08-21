@@ -352,7 +352,6 @@ class LoansController extends Controller
 			$count = Size::query()
 				->where('queueid', '=', (int)$row->lenderqueueid)
 				->orderBy('datetimestart', 'asc')
-				->get()
 				->first();
 
 			if (!$count)
@@ -360,7 +359,6 @@ class LoansController extends Controller
 				$count = Loan::query()
 					->where('queueid', '=', (int)$row->lenderqueueid)
 					->orderBy('datetimestart', 'asc')
-					->get()
 					->first();
 			}
 
@@ -391,7 +389,6 @@ class LoansController extends Controller
 
 		$exist = $cquery
 			->orderBy('datetimestart', 'asc')
-			->get()
 			->first();
 
 		if ($exist)
@@ -421,7 +418,6 @@ class LoansController extends Controller
 
 			$counter = $cquery
 				->orderBy('datetimestart', 'asc')
-				->get()
 				->first();
 
 			if ($counter)
@@ -631,7 +627,6 @@ class LoansController extends Controller
 
 		$counter = $cquery
 			->orderBy('datetimestart', 'asc')
-			->get()
 			->first();
 
 		if ($request->has('datetimestart'))
@@ -690,7 +685,6 @@ class LoansController extends Controller
 			$count = Size::query()
 				->where('queueid', '=', (int)$lenderid)
 				->orderBy('datetimestart', 'asc')
-				->get()
 				->first();
 
 			if (!$count)
@@ -813,6 +807,7 @@ class LoansController extends Controller
 	 * 			"description": "Record not found"
 	 * 		}
 	 * }
+	 * @param int $id
 	 * @return  JsonResponse
 	 */
 	public function delete($id)
@@ -835,7 +830,6 @@ class LoansController extends Controller
 
 		$counter = $cquery
 			->orderBy('datetimestart', 'asc')
-			->get()
 			->first();
 
 		if ($row->hasStarted())

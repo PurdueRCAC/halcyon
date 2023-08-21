@@ -593,7 +593,7 @@ class UserRequestsController extends Controller
 				 && !in_array($numqueue->groupid, $groups)
 				 && !auth()->user()->can('manage queues'))
 				{
-					return 403;
+					return response()->json(null, 403);
 				}
 
 				// If self deleting, we want to DELETE, otherwise managers should "end" queueusers (meaning rejected)
@@ -645,7 +645,7 @@ class UserRequestsController extends Controller
 				 && !in_array($numqueue->groupid, $groups)
 				 && !auth()->user()->can('edit.own queues'))
 				{
-					return 403;
+					return response()->json(null, 403);
 				}
 
 				// If self deleting, we want to DELETE, otherwise managers should "end" queueusers (meaning rejected)

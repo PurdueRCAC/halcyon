@@ -83,7 +83,7 @@ class Groups
 
 			if ($resourcemember->status <= 0)
 			{
-				throw new \Exception(__METHOD__ . '(): Bad status for `resourcemember` ' . $copyobj->user);
+				throw new \Exception(__METHOD__ . '(): Bad status for `resourcemember` ' . $member->user);
 			}
 
 			if ($resourcemember->noStatus()

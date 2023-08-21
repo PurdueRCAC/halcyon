@@ -37,7 +37,10 @@ class Str
 			'regex'  => "|%s|iu"
 		);
 		$options = array_merge($default, $options);
-		extract($options);
+
+		$format = $options['format'];
+		$html   = $options['html'];
+		$regex  = $options['regex'];
 
 		if (is_array($phrase))
 		{

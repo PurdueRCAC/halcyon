@@ -16,7 +16,7 @@ class AssetDisplaying
 	/**
 	 * Content sections
 	 *
-	 * @var array
+	 * @var array<int,array{string,mixed}>
 	 */
 	private $sections;
 
@@ -54,7 +54,7 @@ class AssetDisplaying
 	/**
 	 * Get the sections
 	 *
-	 * @return string
+	 * @return array<int,array{string,mixed}>
 	 */
 	public function getSections(): array
 	{

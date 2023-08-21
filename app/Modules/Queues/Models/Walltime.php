@@ -14,6 +14,8 @@ use Carbon\Carbon;
  * @property Carbon|null $datetimestart
  * @property Carbon|null $datetimestop
  * @property int    $walltime
+ *
+ * @property string $api
  */
 class Walltime extends Model
 {

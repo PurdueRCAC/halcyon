@@ -7,6 +7,7 @@ use App\Modules\History\Traits\Historable;
 use App\Modules\Queues\Events\UserRequestCreated;
 use App\Modules\Queues\Events\UserRequestUpdated;
 use App\Modules\Queues\Events\UserRequestDeleted;
+use Carbon\Carbon;
 
 /**
  * Model for a user request

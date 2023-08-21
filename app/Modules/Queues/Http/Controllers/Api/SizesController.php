@@ -268,7 +268,7 @@ class SizesController extends Controller
 		$row->datetimestart = $request->input('datetimestart');
 		if (!$row->datetimestart)
 		{
-			$row->datetimestart = Carbon::now()->toDateTimeFormat();
+			$row->datetimestart = Carbon::now();
 		}
 		if ($request->has('datetimestop'))
 		{
@@ -322,7 +322,6 @@ class SizesController extends Controller
 			$count = Size::query()
 				->where('queueid', '=', (int)$row->sellerqueueid)
 				->orderBy('datetimestart', 'asc')
-				->get()
 				->first();
 
 			if (!$count)
@@ -352,7 +351,6 @@ class SizesController extends Controller
 
 		$exist = $cquery
 			->orderBy('datetimestart', 'asc')
-			->get()
 			->first();
 
 		if ($exist)
@@ -382,7 +380,6 @@ class SizesController extends Controller
 
 			$counter = $cquery
 				->orderBy('datetimestart', 'asc')
-				->get()
 				->first();
 
 			if ($counter)
@@ -622,7 +619,6 @@ class SizesController extends Controller
 
 		$counter = $cquery
 			->orderBy('datetimestart', 'asc')
-			->get()
 			->first();
 
 		if ($request->has('datetimestart'))
@@ -692,7 +688,6 @@ class SizesController extends Controller
 			$count = Size::query()
 				->where('queueid', '=', (int)$sellerid)
 				->orderBy('datetimestart', 'asc')
-				->get()
 				->first();
 
 			if (!$count)
@@ -831,7 +826,6 @@ class SizesController extends Controller
 
 		$counter = $cquery
 			->orderBy('datetimestart', 'asc')
-			->get()
 			->first();
 
 		if ($row->hasStarted())

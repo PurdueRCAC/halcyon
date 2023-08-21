@@ -60,8 +60,8 @@ use Carbon\Carbon;
  * @property Carbon|null $datetimecreated
  * @property Carbon|null $datetimeremoved
  * @property Carbon|null $datetimelastseen
- * @property int    $maxjobfactor
- * @property int    $maxjobuserfactor
+ * @property int    $maxijobfactor
+ * @property int    $maxijobuserfactor
  * @property int    $shared
  *
  * @property string $api

@@ -22,14 +22,14 @@ class UserDisplay
 	/**
 	 * Content sections
 	 *
-	 * @var string
+	 * @var array<string,array{string,mixed}>
 	 */
 	private $sections;
 
 	/**
 	 * Content parts
 	 *
-	 * @var string
+	 * @var array<int,string>
 	 */
 	private $parts;
 
@@ -60,7 +60,7 @@ class UserDisplay
 	/**
 	 * Get sections
 	 *
-	 * @return array
+	 * @return array<string,array{string,mixed}>
 	 */
 	public function getSections(): array
 	{
@@ -70,7 +70,7 @@ class UserDisplay
 	/**
 	 * Get parts
 	 *
-	 * @return array
+	 * @return array<int,string>
 	 */
 	public function getParts(): array
 	{

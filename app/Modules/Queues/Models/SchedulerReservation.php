@@ -14,6 +14,8 @@ use App\Modules\History\Traits\Historable;
  * @property string $nodes
  * @property Carbon|null $datetimestart
  * @property Carbon|null $datetimestop
+ *
+ * @property string $api
  */
 class SchedulerReservation extends Model
 {

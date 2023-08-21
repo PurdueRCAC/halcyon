@@ -296,7 +296,7 @@ class Extension extends Model
 	 * @param   array<string,mixed>   $data   The data to validate.
 	 * @param   string  $group  The name of the field group to validate.
 	 * @return  mixed   Array of filtered data if valid, false otherwise.
-	 * @throws \Extension
+	 * @throws \Exception
 	 */
 	public function validateFormData($form, $data, $group = null)
 	{

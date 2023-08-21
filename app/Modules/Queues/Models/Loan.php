@@ -19,6 +19,8 @@ use Carbon\Carbon;
  * @property int    $lenderqueueid
  * @property string $comment
  * @property float  $serviceunits
+ *
+ * @property string $api
  */
 class Loan extends Size
 {
