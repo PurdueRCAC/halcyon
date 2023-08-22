@@ -301,7 +301,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 					</td>
 					<td>
 						@if (auth()->user()->can('manage queues'))
-							<a href="{{ route('admin.queues.edit', ['id' => $q->id]) }}">
+							<a href="{{ route('admin.queues.show', ['id' => $q->id]) }}">
 								{{ $q->name }}
 							</a>
 						@else

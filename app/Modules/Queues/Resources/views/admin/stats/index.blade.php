@@ -591,7 +591,7 @@ app('pathway')
 								$qu = App\Modules\Queues\Models\Queue::find($id);
 								?>
 								<tr>
-									<td><a href="{{ route('admin.queues.edit', ['id' => $qu->id]) }}">{{ $qu->name }}</a></td>
+									<td><a href="{{ route('admin.queues.show', ['id' => $qu->id]) }}">{{ $qu->name }}</a></td>
 									<td>{{ $qu->subresource->name }}</td>
 									<td class="text-right">
 										@if ($qu->totalcores)

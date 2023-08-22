@@ -42,7 +42,7 @@
 						</td>
 						<td>
 							@if (auth()->user()->can('manage queues'))
-								<a href="{{ route('admin.queues.edit', ['id' => $queue->id]) }}">
+								<a href="{{ route('admin.queues.show', ['id' => $queue->id]) }}">
 							@endif
 							{{ $queue->name }}
 							@if (auth()->user()->can('manage queues'))

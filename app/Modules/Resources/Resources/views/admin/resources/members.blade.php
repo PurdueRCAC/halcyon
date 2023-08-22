@@ -202,7 +202,7 @@ app('pathway')
 						<td>
 							@if (isset($row->queues))
 								@foreach ($row->queues as $queue)
-									<a href="{{ route('admin.queues.edit', ['id' => $queue->id]) }}">{{ $queue->name }}</a>
+									<a href="{{ route('admin.queues.show', ['id' => $queue->id]) }}">{{ $queue->name }}</a>
 								@endforeach
 							@endif
 							@if (isset($row->directories))
