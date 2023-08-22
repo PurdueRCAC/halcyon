@@ -21,7 +21,7 @@ class Country extends Select
 	/**
 	 * List of countries
 	 *
-	 * @var  array<int,array{string,string}>
+	 * @var  array<int,array{'code':string,'name':string}>
 	 */
 	public static $countries = array(
 		array('code' => 'AF', 'name' => 'Afghanistan', 'continent' => 'Asia'),

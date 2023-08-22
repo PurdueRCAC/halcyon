@@ -5,12 +5,9 @@ namespace App\Modules\Core\Console\Installers\Scripts;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Application;
 use App\Modules\Core\Console\Installers\SetupScript;
-use App\Modules\Core\Console\Installers\Traits\BlockMessage;
 
 class ConfigureUserProvider implements SetupScript
 {
-    use BlockMessage;
-
     /**
      * @var array<int,string>
      */

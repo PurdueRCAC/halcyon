@@ -37,7 +37,7 @@ class Timezone extends Groupedlist
 	/**
 	 * Method to get the time zone field option groups.
 	 *
-	 * @return  array<string,array{string,\stdClass}>  The field option objects as a nested array in groups.
+	 * @return  array<string,array{int,\stdClass}>  The field option objects as a nested array in groups.
 	 */
 	protected function getGroups()
 	{
@@ -82,7 +82,7 @@ class Timezone extends Groupedlist
 				// Only add options where a locale exists.
 				if (!empty($locale))
 				{
-					$groups[$group][$zone] = Dropdown::option($zone, str_replace('_', ' ', $locale), 'value', 'text', false);
+					$groups[$group][] = Dropdown::option($zone, str_replace('_', ' ', $locale), 'value', 'text', false);
 				}
 			}
 		}

@@ -21,7 +21,7 @@ class Helper
 	 * - /path/2
 	 * </code>
 	 *
-	 * @var  array<string,array>
+	 * @var  array<string,array{int,string}>
 	 */
 	protected static $paths;
 
@@ -36,7 +36,7 @@ class Helper
 	 * {KEY}: {OBJECT}
 	 * </code>
 	 *
-	 * @var  array<string,array>
+	 * @var  array<string,array{string,object}>
 	 */
 	protected static $entities = array();
 
@@ -237,7 +237,7 @@ class Helper
 	 * Method to add a path to the list of field include paths.
 	 *
 	 * @param   mixed  $new  A path or array of paths to add.
-	 * @return  array  The list of paths that have been added.
+	 * @return  array<int,string>  The list of paths that have been added.
 	 */
 	public static function addFieldPath($new = null)
 	{
@@ -248,7 +248,7 @@ class Helper
 	 * Method to add a path to the list of form include paths.
 	 *
 	 * @param   mixed  $new  A path or array of paths to add.
-	 * @return  array  The list of paths that have been added.
+	 * @return  array<int,string>  The list of paths that have been added.
 	 */
 	public static function addFormPath($new = null)
 	{
@@ -259,7 +259,7 @@ class Helper
 	 * Method to add a path to the list of rule include paths.
 	 *
 	 * @param   mixed  $new  A path or array of paths to add.
-	 * @return  array  The list of paths that have been added.
+	 * @return  array<int,string>  The list of paths that have been added.
 	 */
 	public static function addRulePath($new = null)
 	{
@@ -272,7 +272,7 @@ class Helper
 	 *
 	 * @param   string  $entity  Form's entity name for which paths will be added.
 	 * @param   mixed   $new     A path or array of paths to add.
-	 * @return  array   The list of paths that have been added.
+	 * @return  array<int,string>   The list of paths that have been added.
 	 */
 	protected static function addPath($entity, $new = null)
 	{

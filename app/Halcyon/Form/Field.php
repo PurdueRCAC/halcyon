@@ -84,6 +84,13 @@ abstract class Field
 	protected $label;
 
 	/**
+	 * The placeholder for the form field.
+	 *
+	 * @var  string
+	 */
+	protected $placeholder;
+
+	/**
 	 * The multiple state for the form field.  If true then multiple values are allowed for the
 	 * field.  Most often used for list field types.
 	 *
@@ -123,9 +130,9 @@ abstract class Field
 	/**
 	 * The form field type.
 	 *
-	 * @var  string
+	 * @var  string|null
 	 */
-	protected $type;
+	protected $type = null;
 
 	/**
 	 * The validation method for the form field.  This value will determine which method is used
@@ -179,7 +186,7 @@ abstract class Field
 		}
 
 		// Detect the field type if not set
-		if (!isset($this->type))
+		if (is_null($this->type))
 		{
 			// Get the reflection info
 			$r = new ReflectionClass($this);
@@ -227,7 +234,6 @@ abstract class Field
 			case 'fieldname':
 			case 'group':
 				return $this->$name;
-				break;
 
 			case 'input':
 				// If the input hasn't yet been generated, generate it.
@@ -237,7 +243,6 @@ abstract class Field
 				}
 
 				return $this->input;
-				break;
 
 			case 'label':
 				// If the label hasn't yet been generated, generate it.
@@ -247,11 +252,9 @@ abstract class Field
 				}
 
 				return $this->label;
-				break;
 
 			case 'title':
 				return $this->getTitle();
-				break;
 		}
 
 		return null;
@@ -290,8 +293,8 @@ abstract class Field
 		}
 
 		// Reset the input and label values.
-		$this->input = null;
-		$this->label = null;
+		$this->input = '';
+		$this->label = '';
 
 		// Set the XML element object.
 		$this->element = $element;

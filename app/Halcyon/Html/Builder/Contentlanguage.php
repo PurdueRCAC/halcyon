@@ -3,6 +3,7 @@
 namespace App\Halcyon\Html\Builder;
 
 use Illuminate\Support\Fluent;
+use Illuminate\Support\Collection;
 
 /**
  * Utility class working with content language select lists
@@ -12,7 +13,7 @@ class Contentlanguage
 	/**
 	 * Cached array of the content language items.
 	 *
-	 * @var  array
+	 * @var  Collection|null
 	 */
 	protected static $items = null;
 

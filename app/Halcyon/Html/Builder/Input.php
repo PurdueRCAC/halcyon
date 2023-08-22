@@ -106,7 +106,7 @@ class Input
 	 *
 	 * @param   string  $name
 	 * @param   string  $value
-	 * @param   array   $options
+	 * @param   array<string,string>   $options
 	 * @return  string
 	 */
 	public static function url($name, $value = null, $options = array())

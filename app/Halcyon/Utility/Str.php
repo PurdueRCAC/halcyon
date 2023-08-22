@@ -329,9 +329,9 @@ class Str
 	}
 
 	/**
-	 * Format a number by prefixing or suffixing a character to a specificed length.
+	 * Format by prefixing or suffixing a character to a specificed length.
 	 *
-	 * @param   int  $value   Number to format
+	 * @param   int|string  $value   Number to format
 	 * @param   int  $length  Final string length
 	 * @param   mixed    $char    Character to prepend
 	 * @param   bool     $prfx    Prefix or suffix string

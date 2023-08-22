@@ -119,17 +119,9 @@ class Sliders
 				: null;
 
 			$opt = array();
-			$opt['heightStyle'] = "'content'";
+			$opt['heightStyle'] = 'content';
 
-			$options = array();
-			foreach ($opt as $k => $v)
-			{
-				if ($v)
-				{
-					$options[] = $k . ': ' . $v;
-				}
-			}
-			$options = '{' . implode(',', $options) . '}';
+			$options = json_encode($options);
 		}
 	}
 }

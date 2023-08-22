@@ -112,7 +112,7 @@ class Rules implements Arrayable, Jsonable
 	 * Merges an array of identities for an action.
 	 *
 	 * @param   string  $action      The name of the action.
-	 * @param   array<int,int>   $identities  An array of identities
+	 * @param   Rule|array<int,int>   $identities  An array of identities
 	 * @return  void
 	 */
 	public function mergeAction($action, $identities): void
@@ -205,7 +205,7 @@ class Rules implements Arrayable, Jsonable
 	/**
 	 * Get the instance as an array.
 	 *
-	 * @return array<string,array>
+	 * @return array<string,array{int,int}>
 	 */
 	public function toArray(): array
 	{

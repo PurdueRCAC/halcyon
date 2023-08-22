@@ -4,12 +4,9 @@ namespace App\Modules\Core\Console\Installers\Scripts;
 
 use Illuminate\Console\Command;
 use App\Modules\Core\Console\Installers\SetupScript;
-use App\Modules\Core\Console\Installers\Traits\BlockMessage;
 
 class UnignoreComposerLock implements SetupScript
 {
-    use BlockMessage;
-
     const COMPOSER_LOCK = 'composer.lock';
 
     /**

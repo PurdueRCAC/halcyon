@@ -14,7 +14,7 @@ class Gate
 	/**
 	 * Array of view levels
 	 *
-	 * @var  array<int,array>
+	 * @var  array<int,array{int,int}>
 	 */
 	protected static $viewLevels = array();
 
@@ -35,14 +35,14 @@ class Gate
 	/**
 	 * Array of user role paths.
 	 *
-	 * @var  array<int,array>
+	 * @var  array<int,array{int,int}>
 	 */
 	protected static $userRolePaths = array();
 
 	/**
 	 * Array of cached roles by user.
 	 *
-	 * @var  array<int,array>
+	 * @var  array<string,array{int,int}>
 	 */
 	protected static $rolesByUser = array();
 

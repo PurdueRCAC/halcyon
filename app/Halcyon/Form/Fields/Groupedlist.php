@@ -43,7 +43,12 @@ class Groupedlist extends Field
 					// Create a new option object based on the <option /> element.
 					$tmp = Dropdown::option(
 						($element['value']) ? (string) $element['value'] : trim((string) $element),
-						app('translator')->alt(trim((string) $element), preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname)), 'value', 'text',
+						trans(
+							trim((string) $element)//,
+							//preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname)
+						),
+						'value',
+						'text',
 						((string) $element['disabled'] == 'true')
 					);
 
@@ -104,7 +109,7 @@ class Groupedlist extends Field
 
 				// Unknown element type.
 				default:
-					abort(500, trans('global.error.groupedlist element name', $element->getName()));
+					abort(500, trans('global.error.groupedlist element name', ['name' => $element->getName()]));
 			}
 		}
 

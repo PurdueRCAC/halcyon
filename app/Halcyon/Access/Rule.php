@@ -50,7 +50,7 @@ class Rule implements Arrayable, Jsonable
 	/**
 	 * Merges the identities
 	 *
-	 * @param   mixed  $identities  An integer or array of integers representing the identities to check.
+	 * @param   Rule|array<int,int>  $identities  An integer or array of integers representing the identities to check.
 	 * @return  void
 	 */
 	public function mergeIdentities($identities): void

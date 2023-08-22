@@ -4,12 +4,9 @@ namespace App\Modules\Core\Console\Installers\Scripts;
 
 use Illuminate\Console\Command;
 use App\Modules\Core\Console\Installers\SetupScript;
-use App\Modules\Core\Console\Installers\Traits\BlockMessage;
 
 class ModuleSeeders implements SetupScript
 {
-    use BlockMessage;
-
     /**
      * @var array<int,string>
      */
@@ -32,12 +29,15 @@ class ModuleSeeders implements SetupScript
      */
     public function fire(Command $command)
     {
-        if ($command->option('verbose')) {
+        if ($command->option('verbose'))
+        {
             $command->blockMessage('Seeds', 'Running the module seeds ...', 'comment');
         }
 
-        foreach ($this->modules as $module) {
-            if ($command->option('verbose')) {
+        foreach ($this->modules as $module)
+        {
+            if ($command->option('verbose'))
+            {
                 $command->call('module:seed', ['module' => $module]);
                 continue;
             }
