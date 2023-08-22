@@ -46,7 +46,6 @@ return [
 	'expand topics' => 'Expand Topics',
 	'search' => 'Search',
 	'search placeholder' => 'Search knowledge base...',
-	'variables' => 'Variables',
 	'show title' => 'Show Title',
 	'show toc' => 'Show Table of Contents',
 	'used' => 'Pages used',

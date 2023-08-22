@@ -4,6 +4,7 @@ namespace App\Modules\News\Models\Fields;
 
 use App\Modules\News\Models\Type;
 use App\Halcyon\Form\Fields\Select;
+use stdClass;
 
 /**
  * New Type form field
@@ -20,7 +21,7 @@ class Types extends Select
 	/**
 	 * Method to get the list of article types for the field options.
 	 *
-	 * @return  array  The field option objects.
+	 * @return  array<int,\stdClass|\Illuminate\Support\Fluent>  The field option objects.
 	 */
 	protected function getOptions()
 	{
@@ -29,13 +30,14 @@ class Types extends Select
 		$types = array();
 		foreach ($items as $item)
 		{
-			$item->value = $item->id;
-			$item->text  = $item->name;
+			$type = new stdClass;
+			$type->value = $item->id;
+			$type->text  = $item->name;
 			if ($item->level > 0)
 			{
-				$item->text = str_repeat('|&mdash;', $item->level) . ' ' . $item->name;
+				$type->text = str_repeat('|&mdash;', $item->level) . ' ' . $item->name;
 			}
-			$types[] = $item;
+			$types[] = $type;
 		}
 
 		// Merge any additional options in the XML definition.

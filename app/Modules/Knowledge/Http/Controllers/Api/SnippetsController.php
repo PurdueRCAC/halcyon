@@ -141,15 +141,9 @@ class SnippetsController extends Controller
 			'level'     => 0,
 		);
 
-		$refresh = false;
 		foreach ($filters as $key => $default)
 		{
 			$filters[$key] = $request->input($key, $default);
-		}
-
-		if ($refresh)
-		{
-			$filters['page'] = 1;
 		}
 
 		if (!in_array($filters['order'], ['id', 'lft', 'rgt', 'title', 'state', 'access', 'updated_at', 'created_at']))

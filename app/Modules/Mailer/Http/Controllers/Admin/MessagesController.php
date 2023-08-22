@@ -324,6 +324,10 @@ class MessagesController extends Controller
 					$user->email = $id;
 				}
 			}
+			else
+			{
+				$user = new User;
+			}
 
 			if (!$user->email)
 			{

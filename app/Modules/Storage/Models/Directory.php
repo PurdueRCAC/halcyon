@@ -46,6 +46,7 @@ use stdClass;
  * @property string $api
  * @property int    $unallocatedbytes
  * @property int    $overallocated
+ * @property int    $depth
  */
 class Directory extends Model
 {
@@ -238,7 +239,7 @@ class Directory extends Model
 		}
 		if ($offset)
 		{
-			$message->datetimesubmitted = Carbon::now()->add($offset . ' seconds')->toDateTimeString();
+			$message->datetimesubmitted = Carbon::now()->add($offset . ' seconds');
 		}
 
 		// Check for any pending messages
@@ -315,7 +316,7 @@ class Directory extends Model
 	/**
 	 * Get Unix mode
 	 *
-	 * @return  int
+	 * @return  string
 	 */
 	public function getModeAttribute()
 	{
@@ -578,7 +579,7 @@ class Directory extends Model
 	/**
 	 * Get future quotas
 	 *
-	 * @return  array<int,array>
+	 * @return  array<int,array{'time':int,'quota':int}>
 	 */
 	public function getFuturequotasAttribute(): array
 	{

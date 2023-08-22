@@ -457,10 +457,9 @@ class Page extends Model
 	/**
 	 * Method to get a list of nodes from a given node to its root.
 	 *
-	 * @param   array  $filters
 	 * @return  Collection
 	 */
-	public static function tree(array $filters = []): Collection
+	public static function tree(): Collection
 	{
 		$p = (new self)->getTable();
 		$a = (new Associations)->getTable();
@@ -611,7 +610,7 @@ class Page extends Model
 	public function getUsedAttribute(): int
 	{
 		return Associations::query()
-			->where('page_id', '=', $this->page_id)
+			->where('page_id', '=', $this->id)
 			->count();
 	}
 }

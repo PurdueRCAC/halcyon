@@ -354,7 +354,9 @@ class MessagesController extends Controller
 			}
 			if ($request->has('messagequeueoptionsid'))
 			{
-				$row->messagequeueoptionsid = preg_replace('/[a-zA-Z\/]+\/(\d+)/', "$1", $request->input('messagequeueoptions'));
+				$messagequeueoptionsid = preg_replace('/[a-zA-Z\/]+\/(\d+)/', "$1", $request->input('messagequeueoptions'));
+				$messagequeueoptionsid = $messagequeueoptionsid ? intval($messagequeueoptionsid) : 0;
+				$row->messagequeueoptionsid = $messagequeueoptionsid;
 			}
 		}
 

@@ -152,20 +152,6 @@ class BibTex
 	public $authorstring = 'VON LAST JR, FIRST';
 
 	/**
-	 * Pos
-	 *
-	 * @var  int
-	 */
-	//private $_pos;
-
-	/**
-	 * Old pos
-	 *
-	 * @var  int
-	 */
-	//private $_oldpos;
-
-	/**
 	 * Constructor
 	 *
 	 * @param  array<string,mixed>  $options

@@ -156,7 +156,7 @@ class PagesController extends Controller
 	{
 		$dest = $request->input('revision');
 
-		$node = Association::findOrFail($request->input('node'));
+		$node = Associations::findOrFail($request->input('node'));
 		$page = $node->page;
 
 		$revisions = $page->history()
