@@ -62,7 +62,7 @@ app('pathway')
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="all"<?php if ($filters['state'] == 'all'): echo ' selected="selected"'; endif;?>>{{ trans('resources::assets.all states') }}</option>
 					<option value="active"<?php if ($filters['state'] == 'active'): echo ' selected="selected"'; endif;?>>{{ trans('global.active') }}</option>
-					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('global.trashed') }}</option>
+					<option value="retired"<?php if ($filters['state'] == 'retired'): echo ' selected="selected"'; endif;?>>{{ trans('resources::assets.retired') }}</option>
 				</select>
 
 				<label class="sr-only" for="filter_type">{{ trans('resources::assets.type') }}</label>
@@ -148,9 +148,15 @@ app('pathway')
 				<th scope="col" class="priority-3">
 					{!! Html::grid('sort', trans('resources::assets.type'), 'resourcetype', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-6">
-					{!! Html::grid('sort', trans('resources::assets.batchsystem'), 'batchsystem', $filters['order_dir'], $filters['order']) !!}
+				<th scope="col">
+					{{ trans('global.state') }}
 				</th>
+				<th scope="col">
+					{!! Html::grid('sort', trans('global.access'), 'access', $filters['order_dir'], $filters['order']) !!}
+				</th>
+				<!-- <th scope="col" class="priority-6">
+					{!! Html::grid('sort', trans('resources::assets.batchsystem'), 'batchsystem', $filters['order_dir'], $filters['order']) !!}
+				</th> -->
 				<th scope="col" class="priority-4 text-right">
 					{{ trans('resources::assets.subresources') }}
 				</th>
@@ -168,7 +174,7 @@ app('pathway')
 			$disabled = false;
 			$trashed = $row->trashed();
 			$cls = $trashed ? 'trashed' : 'active';
-			if ($filters['state'] == 'trashed'):
+			if ($filters['state'] == 'retired'):
 				//$cls = '';
 				if (!$trashed):
 					$disabled = true;
@@ -186,9 +192,6 @@ app('pathway')
 				</td>
 				<td>
 					{!! $row->treename !!}
-					@if ($trashed)
-						<span class="glyph icon-trash text-danger" aria-hidden="true" data-tip="Removed on {{ $row->datetimeremoved->format('Y-m-d') }}"></span>
-					@endif
 					@if (!$disabled && auth()->user()->can('edit resources'))
 						<a href="{{ route('admin.resources.edit', ['id' => $row->id]) }}">
 					@endif
@@ -206,7 +209,7 @@ app('pathway')
 						</a>
 					@endif
 				</td>
-				<td class="priority-4">
+				<td>
 					@if (!$disabled && auth()->user()->can('edit resources'))
 						<a href="{{ route('admin.resources.edit', ['id' => $row->id]) }}">
 					@endif
@@ -215,7 +218,7 @@ app('pathway')
 						</a>
 					@endif
 				</td>
-				<td class="priority-3">
+				<td>
 					@if ($row->resourcetype)
 						@php
 						$t = $types->where('id', $row->resourcetype)->first();
@@ -225,12 +228,25 @@ app('pathway')
 						{{ trans('global.none') }}
 					@endif
 				</td>
-				<td class="priority-6">
+				<td>
+					@if ($trashed)
+						<!-- <span class="glyph icon-trash text-danger" aria-hidden="true" data-tip="Removed on {{ $row->datetimeremoved->format('Y-m-d') }}"></span> -->
+						<span class="badge badge-danger" data-tip="Removed on {{ $row->datetimeremoved->format('Y-m-d') }}">{{ trans('resources::assets.retired') }}</span>
+					@else
+						<span class="badge badge-success">{{ trans('global.active') }}</span>
+					@endif
+				</td>
+				<td>
+					@if ($row->access)
+						<span class="badge access {{ str_replace(' ', '', strtolower($row->viewlevel->title)) }}">{{ $row->viewlevel->title }}</span>
+					@endif
+				</td>
+				<!-- <td class="priority-6">
 					@php
 					$b = $batchsystems->where('id', $row->batchsystem)->first();
 					@endphp
 					{{ $b ? $b->name : '' }}
-				</td>
+				</td> -->
 				<td class="priority-4 text-right">
 					<a href="{{ route('admin.resources.subresources', ['resource' => $row->id]) }}">
 						{{ $row->children_count }}

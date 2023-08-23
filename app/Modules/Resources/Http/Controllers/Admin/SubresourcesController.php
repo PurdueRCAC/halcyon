@@ -27,11 +27,10 @@ class SubresourcesController extends Controller
 		$filters = array(
 			'search'   => null,
 			'resource' => 0,
-			'state'    => 'published',
+			'state'    => 'active',
 			// Paging
 			'limit'    => config('list_limit', 20),
 			'page'     => 1,
-			//'start'    => $request->input('limitstart', 0),
 			// Sorting
 			'order'     => Subresource::$orderBy,
 			'order_dir' => Subresource::$orderDir,
@@ -66,34 +65,15 @@ class SubresourcesController extends Controller
 		$c = (new Child)->getTable();
 
 		$query = Subresource::query()
-			->select($s . '.*', $c . '.resourceid');
+			->select($s . '.*', $c . '.resourceid')
+			->leftJoin($c, $c . '.subresourceid', $s . '.id');
 
-		if ($filters['state'] == 'trashed')
-		{
-			$query->onlyTrashed();
-		}
-		elseif ($filters['state'] == 'published')
-		{
-			// Default behavior
-		}
-		else
-		{
-			$query->withTrashed();
-		}
+		$query->whereState($filters['state']);
 
 		if ($filters['search'])
 		{
-			if (is_numeric($filters['search']))
-			{
-				$query->where($s . '.id', '=', $filters['search']);
-			}
-			else
-			{
-				$query->where($s . '.name', 'like', '%' . $filters['search'] . '%');
-			}
+			$query->whereSearch($filters['search']);
 		}
-
-		$query->leftJoin($c, $c . '.subresourceid', $s . '.id');
 
 		if ($filters['resource'])
 		{

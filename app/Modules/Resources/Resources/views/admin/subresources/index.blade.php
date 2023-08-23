@@ -71,7 +71,7 @@ app('pathway')
 				<label class="sr-only" for="filter_state">{{ trans('resources::assets.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="all"<?php if ($filters['state'] == 'all'): echo ' selected="selected"'; endif;?>>{{ trans('resources::assets.all states') }}</option>
-					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('global.published') }}</option>
+					<option value="active"<?php if ($filters['state'] == 'active'): echo ' selected="selected"'; endif;?>>{{ trans('global.active') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('global.trashed') }}</option>
 				</select>
 
@@ -97,11 +97,11 @@ app('pathway')
 		<thead>
 			<tr>
 				@if (auth()->user()->can('edit.state resources') || auth()->user()->can('delete resources'))
-					<th>
+					<th scope="col">
 						{!! Html::grid('checkall') !!}
 					</th>
 				@endif
-				<th scope="col" class="priority-5">
+				<th scope="col">
 					{!! Html::grid('sort', trans('resources::assets.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
@@ -113,17 +113,17 @@ app('pathway')
 				<th scope="col">
 					{{ trans('resources::assets.resource') }}
 				</th>
-				<th scope="col" class="priority-5 text-right">
+				<th scope="col" class="text-right">
 					{!! Html::grid('sort', trans('resources::assets.node mem'), 'nodemem', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-5 text-right">
+				<th scope="col" class="text-right">
 					{!! Html::grid('sort', trans('resources::assets.node cores'), 'nodecores', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-5 text-right">
+				<th scope="col" class="text-right">
 					{!! Html::grid('sort', trans('resources::assets.node gpus'), 'nodegpus', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-6">{{ trans('resources::assets.node attributes') }}</th>
-				<th scope="col" class="priority-4 text-center" colspan="2">{{ trans('resources::assets.queues') }}</th>
+				<th scope="col">{{ trans('global.state') }}</th>
+				<th scope="col" class="text-center" colspan="2">{{ trans('resources::assets.queues') }}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -162,17 +162,21 @@ app('pathway')
 				<td>
 					{{ $row->association ? $row->association->resource->name : '' }}
 				</td>
-				<td class="priority-5 text-right">
+				<td class="text-right">
 					{{ $row->nodemem }}
 				</td>
-				<td class="priority-5 text-right">
+				<td class="text-right">
 					{{ $row->nodecores }}
 				</td>
-				<td class="priority-5 text-right">
+				<td class="text-right">
 					{{ $row->nodegpus }}
 				</td>
-				<td class="priority-6">
-					{{ $row->nodeattributes }}
+				<td>
+					@if ($row->trashed())
+						<span class="badge badge-danger" data-tip="Removed on {{ $row->datetimeremoved->format('Y-m-d') }}">{{ trans('global.trashed') }}</span>
+					@else
+						<span class="badge badge-success">{{ trans('global.active') }}</span>
+					@endif
 				</td>
 				<td class="priority-4 text-right">
 					<a href="{{ route('admin.queues.index', ['resource' => 's' . $row->id]) }}">

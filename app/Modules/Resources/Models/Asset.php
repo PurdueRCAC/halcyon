@@ -4,6 +4,7 @@ namespace App\Modules\Resources\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -173,6 +174,16 @@ class Asset extends Model
 		$host = config('module.resources.email_lists_host');
 
 		return $this->listname && $host ? $this->listname . '-users@' . $host : '';
+	}
+
+	/**
+	 * Get the access level
+	 *
+	 * @return  HasOne
+	 */
+	public function viewlevel(): HasOne
+	{
+		return $this->hasOne('App\Halcyon\Access\Viewlevel', 'id', 'access');
 	}
 
 	/**
@@ -476,6 +487,7 @@ class Asset extends Model
 				$query->withTrashed();
 			break;
 
+			case 'retired':
 			case 'trashed':
 			case 'inactive':
 				$query->onlyTrashed();

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use App\Modules\Resources\Events\SubresourceCreating;
 use App\Modules\Resources\Events\SubresourceCreated;
 use App\Modules\Resources\Events\SubresourceUpdating;
@@ -406,5 +407,61 @@ class Subresource extends Model
 		}
 
 		return parent::delete();
+	}
+
+	/**
+	 * Query scope with search
+	 *
+	 * @param   Builder  $query
+	 * @param   string|int  $search
+	 * @return  Builder
+	 */
+	public function scopeWhereSearch(Builder $query, $search): Builder
+	{
+		$tbl = $this->getTable();
+
+		if (is_numeric($search))
+		{
+			$query->where($tbl . '.id', '=', $search);
+		}
+		else
+		{
+			$search = strtolower($search);
+
+			$query->where($tbl . '.name', 'like', '%' . $search . '%');
+		}
+
+		return $query;
+	}
+
+	/**
+	 * Query scope with state
+	 *
+	 * @param   Builder  $query
+	 * @param   mixed  $state
+	 * @return  Builder
+	 */
+	public function scopeWhereState(Builder $query, $state): Builder
+	{
+		switch ($state)
+		{
+			case '*':
+			case 'all':
+				$query->withTrashed();
+			break;
+
+			case 'retired':
+			case 'trashed':
+			case 'inactive':
+				$query->onlyTrashed();
+			break;
+
+			case 'published':
+			case 'active':
+			default:
+				// Default
+		}
+
+		return $query;
 	}
 }

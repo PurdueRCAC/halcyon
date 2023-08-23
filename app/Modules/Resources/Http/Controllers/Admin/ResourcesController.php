@@ -99,7 +99,7 @@ class ResourcesController extends Controller
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit']);*/
 
-		if ($filters['search'] || $filters['state'] == 'trashed')
+		if ($filters['search'] || $filters['state'] == 'retired')
 		{
 			$rows = $query
 				->withCount('children')

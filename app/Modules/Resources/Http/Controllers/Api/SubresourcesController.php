@@ -133,31 +133,19 @@ class SubresourcesController extends Controller
 			$filters['order_dir'] = Subresource::$orderDir;
 		}
 
+		if (!auth()->user() || !auth()->user()->can('manage resources'))
+
 		// Build query
 		$s = (new Subresource)->getTable();
 
 		$query = Subresource::query()
 			->with('queues');
 
-		if ($filters['state'] == 'trashed')
-		{
-			$query->onlyTrashed();
-		}
-		elseif ($filters['state'] == 'all')
-		{
-			$query->withTrashed();
-		}
+		$query->whereState($filters['state']);
 
 		if ($filters['search'])
 		{
-			if (is_numeric($filters['search']))
-			{
-				$query->where($s . '.id', '=', $filters['search']);
-			}
-			else
-			{
-				$query->where($s . '.name', 'like', '%' . $filters['search'] . '%');
-			}
+			$query->whereSearch($filters['search']);
 		}
 
 		if ($filters['resource'])
