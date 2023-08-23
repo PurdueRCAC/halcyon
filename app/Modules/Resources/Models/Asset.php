@@ -375,7 +375,7 @@ class Asset extends Model
 	 * @param   int  $type      Indention type
 	 * @return  array<int,Asset>
 	 */
-	protected function treeRecurse($id, $list, $children, $maxlevel=9999, $level=0, $type=1): array
+	protected function treeRecurse(int $id, array $list, array $children, int $maxlevel=9999, int $level=0, int $type=1): array
 	{
 		if (@$children[$id] && $level <= $maxlevel)
 		{
@@ -448,7 +448,7 @@ class Asset extends Model
 	 * @param   string|int   $search
 	 * @return  Builder
 	 */
-	public function scopeWhereSearch(Builder $query, $search): Builder
+	public function scopeWhereSearch(Builder $query, string|int $search): Builder
 	{
 		$tbl = $this->getTable();
 
@@ -475,10 +475,10 @@ class Asset extends Model
 	 * Query scope with state
 	 *
 	 * @param   Builder  $query
-	 * @param   mixed  $state
+	 * @param   string $state
 	 * @return  Builder
 	 */
-	public function scopeWhereState(Builder $query, $state): Builder
+	public function scopeWhereState(Builder $query, string $state): Builder
 	{
 		switch ($state)
 		{

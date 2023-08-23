@@ -21,7 +21,7 @@ class SubresourcesController extends Controller
 	 * @param  StatefulRequest $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(StatefulRequest $request): View
 	{
 		// Get filters
 		$filters = array(
@@ -101,7 +101,7 @@ class SubresourcesController extends Controller
 	 * @param  Request $request
 	 * @return View
 	 */
-	public function create(Request $request)
+	public function create(Request $request): View
 	{
 		$row = new Subresource();
 		$row->nodecores = 16;
@@ -122,14 +122,15 @@ class SubresourcesController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
+	 * @param  Request $request
 	 * @param  int $id
 	 * @return View
 	 */
-	public function edit($id)
+	public function edit(Request $request, int $id): View
 	{
 		$row = Subresource::find($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -176,7 +177,7 @@ class SubresourcesController extends Controller
 		$id = $request->input('id');
 
 		// Save Subresource
-		$row = $id ? Subresource::findOrFail($id) : new Subresource();
+		$row = Subresource::findOrNew($id);
 		$row->fill($request->input('fields'));
 		$row->nodeattributes = (string)$row->nodeattributes;
 		$row->description = $row->description ?: '';

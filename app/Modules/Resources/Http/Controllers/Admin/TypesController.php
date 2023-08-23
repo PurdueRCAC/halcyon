@@ -89,7 +89,7 @@ class TypesController extends Controller
 	 *
 	 * @return View
 	 */
-	public function create()
+	public function create(): view
 	{
 		$row = new Type();
 
@@ -101,14 +101,15 @@ class TypesController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
+	 * @param  Request $request
 	 * @param  int  $id
 	 * @return View
 	 */
-	public function edit($id)
+	public function edit(Request $request, int $id)
 	{
 		$row = Type::find($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -142,7 +143,7 @@ class TypesController extends Controller
 
 		$id = (int)$request->input('id');
 
-		$row = $id ? Type::findOrFail($id) : new Type();
+		$row = Type::findOrNew($id);
 		$row->name = $request->input('fields.name');
 		$row->description = $request->input('fields.description');
 

@@ -438,10 +438,10 @@ class Subresource extends Model
 	 * Query scope with state
 	 *
 	 * @param   Builder  $query
-	 * @param   mixed  $state
+	 * @param   string $state
 	 * @return  Builder
 	 */
-	public function scopeWhereState(Builder $query, $state): Builder
+	public function scopeWhereState(Builder $query, string $state): Builder
 	{
 		switch ($state)
 		{

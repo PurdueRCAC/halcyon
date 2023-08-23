@@ -99,11 +99,13 @@ class FacetType extends Model
 	 */
 	public function setNameAttribute($value): void
 	{
-		$value = strip_tags($value);
-		$value = trim($value);
-		$value = strtolower($value);
-		//$value = str_replace(' ', '-', $value);
-		$value = preg_replace("/[^a-zA-Z0-9_]/", '', $value);
+		if (is_string($value))
+		{
+			$value = strip_tags($value);
+			$value = trim($value);
+			$value = strtolower($value);
+			$value = preg_replace("/[^a-zA-Z0-9_]/", '', $value);
+		}
 
 		$this->attributes['name'] = $value;
 	}

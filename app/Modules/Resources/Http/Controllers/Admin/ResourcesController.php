@@ -23,7 +23,7 @@ class ResourcesController extends Controller
 	 * @param  StatefulRequest $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(StatefulRequest $request): View
 	{
 		// Get filters
 		$filters = array(
@@ -176,7 +176,7 @@ class ResourcesController extends Controller
 	 * @param   int  $type      Indention type
 	 * @return  array<int,Asset>
 	 */
-	protected function treeRecurse($id, $indent, $list, $children, $maxlevel=9999, $level=0, $type=1)
+	protected function treeRecurse(int $id, string $indent, array $list, array $children, int $maxlevel=9999, int $level=0, int $type=1): array
 	{
 		if (@$children[$id] && $level <= $maxlevel)
 		{
@@ -203,7 +203,7 @@ class ResourcesController extends Controller
 	 *
 	 * @return View
 	 */
-	public function create()
+	public function create(): view
 	{
 		$row = new Asset();
 		$row->access = config('module.resources.default_access', 0);
@@ -225,14 +225,15 @@ class ResourcesController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
+	 * @param  Request $request
 	 * @param  int $id
 	 * @return View
 	 */
-	public function edit($id)
+	public function edit(Request $request, int $id): View
 	{
 		$row = Asset::query()->withTrashed()->where('id', '=', $id)->first();
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -284,8 +285,7 @@ class ResourcesController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Asset::findOrFail($id) : new Asset();
-
+		$row = Asset::findOrNew($id);
 		$row->fill($request->input('fields'));
 
 		if (!$row->save())
@@ -431,7 +431,7 @@ class ResourcesController extends Controller
 	 * @param  int  $id
 	 * @return View|StreamedResponse
 	 */
-	public function members(Request $request, $id)
+	public function members(Request $request, int $id)
 	{
 		$rows = array();
 
@@ -457,7 +457,7 @@ class ResourcesController extends Controller
 	 * @param  int $id
 	 * @return StreamedResponse
 	 */
-	public function export($rows, $id)
+	public function export(array $rows, int $id)
 	{
 		$data = array();
 		$data[] = array(
