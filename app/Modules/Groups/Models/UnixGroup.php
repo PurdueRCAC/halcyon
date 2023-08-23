@@ -213,7 +213,7 @@ class UnixGroup extends Model
 		$member = $this->members()
 			->withTrashed()
 			->where('userid', '=', $userid)
-			->first(); //UnixGroupMember::findByGroupAndUser($this->id, $userid);
+			->first();
 
 		if ($member)
 		{
@@ -248,48 +248,12 @@ class UnixGroup extends Model
 	{
 		$member = $this->members()
 			->where('userid', '=', $userid)
-			->first();//UnixGroupMember::findByGroupAndUser($this->id, $userid);
+			->first();
 
-		if (!$member || !$member->id)
+		if (!$member)
 		{
 			return true;
 		}
-
-		// Determine notice level
-		/*if ($member->notice == 2)
-		{
-			$member->notice = 0;
-		}
-		else
-		{
-			$member->notice = 3;
-		}
-
-		$member->save();
-
-		// Check to see if another unix group by the same name exists
-		//
-		// This is a catch for a loophole condition that allowed for multiple
-		// unix groups by the same name. In such a case, only ONE should have
-		// a unixgid.
-		$altunixgroup = UnixGroup::query()
-			->where('longname', '=', $member->unixgroup->longname)
-			->where('id', '!=', $member->unixgroupid)
-			->first();
-
-		if ($altunixgroup && (!$unixgroup->unixgid || !$altunixgroup->unixgid))
-		{
-			$altrow = UnixGroupMember::query()
-				->withTrashed()
-				->where('unixgroupid', '=', $altunixgroup->id)
-				->where('userid', '=', $member->userid)
-				->first();
-
-			if ($altrow)
-			{
-				$altrow->delete();
-			}
-		}*/
 
 		if (!$member->delete())
 		{

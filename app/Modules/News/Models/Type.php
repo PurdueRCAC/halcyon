@@ -130,10 +130,10 @@ class Type extends Model
 		static::creating(function ($model)
 		{
 			$result = self::query()
-				->select(DB::raw('MAX(ordering) + 1 AS seq'))
 				->where('parentid', '=', $model->parentid)
+				->orderBy('ordering', 'desc')
 				->first();
-			$resule = $result ? $result->seq : 1;
+			$resule = $result ? $result->ordering + 1 : 1;
 
 			$model->setAttribute('ordering', (int)$result);
 		});

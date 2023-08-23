@@ -102,17 +102,22 @@ class DepartmentsController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 *
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$parents = Department::tree();
 
 		$row = new Department();
 
-		if ($fields = app('request')->old('fields'))
+		if ($name = $request->old('name'))
 		{
-			$row->fill($fields);
+			$row->name = $name;
+		}
+		if ($parentid = $request->old('parentid'))
+		{
+			$row->parentid = $parentid;
 		}
 
 		return view('groups::admin.departments.edit', [
@@ -124,18 +129,23 @@ class DepartmentsController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
+	 * @param  Request $request
 	 * @param  int $id
 	 * @return View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$parents = Department::tree();
 
 		$row = Department::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($name = $request->old('name'))
 		{
-			$row->fill($fields);
+			$row->name = $name;
+		}
+		if ($parentid = $request->old('parentid'))
+		{
+			$row->parentid = $parentid;
 		}
 
 		return view('groups::admin.departments.edit', [
@@ -152,9 +162,9 @@ class DepartmentsController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		//$request->validate([
 		$rules = [
-			'fields.name' => 'required|string|max:255'
+			'name' => 'required|string|max:255',
+			'parentid' => 'nullable|integer'
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -169,11 +179,17 @@ class DepartmentsController extends Controller
 		$id = $request->input('id');
 
 		$row = $id ? Department::findOrFail($id) : new Department();
-		$row->fill($request->input('fields'));
+		$row->name = $request->input('name');
+		if ($request->has('parentid'))
+		{
+			$row->parentid = $request->input('parentid');
+		}
+		$row->parentid = $row->parentid ? $row->parentid : 1;
 
 		if (!$row->save())
 		{
-			return redirect()->back()->withError(trans('global.messages.save failed'));
+			return redirect()->back()
+				->withError(trans('global.messages.save failed'));
 		}
 
 		return $this->cancel()->with('success', trans('global.messages.item saved'));

@@ -197,7 +197,7 @@ class Group extends Model
 			->join($u, $u . '.userid', $m . '.userid')
 			->whereNull($u . '.dateremoved')
 			->whereNull($m . '.dateremoved')
-			->where($m . '.membertype', '=', 2)
+			->where($m . '.membertype', '=', Type::MANAGER)
 			->orderBy($m . '.datecreated', 'desc')
 			->get();
 

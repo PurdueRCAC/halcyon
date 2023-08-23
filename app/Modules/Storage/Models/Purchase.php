@@ -25,6 +25,7 @@ use Carbon\Carbon;
  * @property string $comment
  *
  * @property string $api
+ * @property int    $soldbytes
  */
 class Purchase extends Model
 {

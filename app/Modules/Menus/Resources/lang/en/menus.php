@@ -11,7 +11,6 @@ return [
 		'type' => 'Please provide a valid menu type',
 	],
 	'description' => 'Description',
-	'state' => 'State',
 	'created' => 'Created',
 	'creator' => 'Creator',
 	'modified' => 'Last Modified',

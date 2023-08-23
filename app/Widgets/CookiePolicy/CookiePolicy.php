@@ -17,7 +17,7 @@ class CookiePolicy extends Widget
 	{
 		if (auth()->user())
 		{
-			//return;
+			return;
 		}
 
 		if (app('session')->has('cookiepolicy'))

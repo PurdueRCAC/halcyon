@@ -737,7 +737,7 @@ class BibTex
 								for ($k=($j+1); $k<($size-1); $k++)
 								{
 									$futurecase = $this->_determineCase($tmparray[$k]);
-									if ($case instanceof Exception)
+									if ($futurecase instanceof Exception)
 									{
 										// IGNORE?
 									}
@@ -813,7 +813,8 @@ class BibTex
 						}
 						else
 						{
-							if (0 != ($this->_determineCase($vonlastarray[$j])))
+							$cs = $this->_determineCase($vonlastarray[$j]);
+							if ($cs instanceof Exception || 0 != $cs)
 							{ //Change from von to last
 								$islast = true;
 								for ($k=($j+1); $k<($size-1); $k++)
@@ -1064,7 +1065,7 @@ class BibTex
 	 *
 	 * The Author is formatted as setted in the authorstring
 	 *
-	 * @param  array   $array Author array
+	 * @param  array<string,string>   $array Author array
 	 * @return string  the formatted author string
 	 */
 	private function _formatAuthor($array)

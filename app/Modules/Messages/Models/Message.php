@@ -406,7 +406,7 @@ class Message extends Model
 		// Less than a minute
 		if ($diff < 60)
 		{
-			return trans_choice('messages::messages.time.seconds', $diff, ['value' => $diff]);
+			return trans_choice('messages::messages.time.seconds', intval($diff), ['value' => $diff]);
 		}
 
 		// Round to minutes
@@ -415,7 +415,7 @@ class Message extends Model
 		// 1 to 59 minutes
 		if ($diff < 60)
 		{
-			return trans_choice('messages::messages.time.minutes', $diff, ['value' => $diff]);
+			return trans_choice('messages::messages.time.minutes', intval($diff), ['value' => $diff]);
 		}
 
 		// Round to hours
@@ -424,7 +424,7 @@ class Message extends Model
 		// 1 to 23 hours
 		if ($diff < 24)
 		{
-			return trans_choice('messages::messages.time.hours', $diff, ['value' => $diff]);
+			return trans_choice('messages::messages.time.hours', intval($diff), ['value' => $diff]);
 		}
 
 		// Round to days
@@ -433,7 +433,7 @@ class Message extends Model
 		// 1 to 6 days
 		if ($diff < 7)
 		{
-			return trans_choice('messages::messages.time.days', $diff, ['value' => $diff]);
+			return trans_choice('messages::messages.time.days', intval($diff), ['value' => $diff]);
 		}
 
 		// Round to weeks
@@ -442,7 +442,7 @@ class Message extends Model
 		// 1 to 4 weeks
 		if ($diff <= 4)
 		{
-			return trans_choice('messages::messages.time.weeks', $diff, ['value' => $diff]);
+			return trans_choice('messages::messages.time.weeks', intval($diff), ['value' => $diff]);
 		}
 
 		// Round to months
@@ -451,11 +451,11 @@ class Message extends Model
 		// 1 to 12 months
 		if ($diff <= 12)
 		{
-			return trans_choice('messages::messages.time.months', $diff, ['value' => $diff]);
+			return trans_choice('messages::messages.time.months', intval($diff), ['value' => $diff]);
 		}
 
 		// > 12 months
-		return trans_choice('messages::messages.time.years', $diff, ['value' => $diff]);
+		return trans_choice('messages::messages.time.years', intval($diff), ['value' => $diff]);
 	}
 
 	/**

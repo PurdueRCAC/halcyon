@@ -26,7 +26,7 @@ use stdClass;
  * @property int    $parentstoragedirid
  * @property string $name
  * @property string $path
- * @property int    $bytes
+ * @property int|string    $bytes
  * @property int    $owneruserid
  * @property int    $unixgroupid
  * @property int    $ownerread

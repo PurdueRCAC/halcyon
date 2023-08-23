@@ -109,73 +109,74 @@ class EmailQuotaCommand extends Command
 					->limit(1)
 					->first();
 
-				$not->status = '?';
+				$status = '?';
+				$nextreport = null;
 
 				if ($last)
 				{
 					switch ($not->type->id)
 					{
 						case 1:
-							$not->nextreport = $not->nextnotify;
+							$nextreport = $not->nextnotify;
 						break;
 
 						case 2:
 							if (!$last->quota)
 							{
-								$not->status = '?';
+								$status = '?';
 							}
 							else if ($last->space > $not->value)
 							{
-								$not->status = 0;
+								$status = 0;
 							}
 							else
 							{
-								$not->status = 1;
+								$status = 1;
 							}
 						break;
 
 						case 3:
 							if (!$last->quota)
 							{
-								$not->status = '?';
+								$status = '?';
 							}
 							else if (($last->space / $last->quota) * 100 > $not->value)
 							{
-								$not->status = 0;
+								$status = 0;
 							}
 							else
 							{
-								$not->status = 1;
+								$status = 1;
 							}
 						break;
 
 						case 4:
 							if (!$last->quota)
 							{
-								$not->status = '?';
+								$status = '?';
 							}
 							else if ($last->files > $not->value)
 							{
-								$not->status = 0;
+								$status = 0;
 							}
 							else
 							{
-								$not->status = 1;
+								$status = 1;
 							}
 						break;
 
 						case 5:
 							if (!$last->quota)
 							{
-								$not->status = '?';
+								$status = '?';
 							}
 							else if (($last->files / $last->filequota) * 100 > $not->value)
 							{
-								$not->status = 0;
+								$status = 0;
 							}
 							else
 							{
-								$not->status = 1;
+								$status = 1;
 							}
 						break;
 
@@ -207,7 +208,7 @@ class EmailQuotaCommand extends Command
 				}
 
 				// Exceeded quota
-				if ($not->status === 0 && $not->notice == 0)
+				if ($status === 0 && $not->notice == 0)
 				{
 					if ($not->enabled && $last && $last->space)
 					{
@@ -239,7 +240,6 @@ class EmailQuotaCommand extends Command
 					// Attempt to prevent weird situations of resetting report date.
 					if ($last && $last->space)
 					{
-						unset($not->status);
 						unset($not->threshold);
 						$not->datetimelastnotify = Carbon::now();
 						$not->notice = 1;
@@ -247,11 +247,11 @@ class EmailQuotaCommand extends Command
 					}
 				}
 				// Over threshold, have already notified. Nothing to do.
-				else if ($not->status === 0 && $not->notice == 1)
+				else if ($status === 0 && $not->notice == 1)
 				{
 				}
 				// Under threshold, haven't notified
-				else if ($not->status === 1 && $not->notice == 1)
+				else if ($status === 1 && $not->notice == 1)
 				{
 					// Only mail if enabled
 					if ($not->enabled)
@@ -274,7 +274,6 @@ class EmailQuotaCommand extends Command
 					// Attempt to prevent weird situations of resetting report date.
 					if ($last && $last->space > 0)
 					{
-						unset($not->status);
 						unset($not->threshold);
 						$not->datetimelastnotify = Carbon::now();
 						$not->notice = 0;
@@ -282,7 +281,7 @@ class EmailQuotaCommand extends Command
 					}
 				}
 				// Under threshold, never notified or have notified. Nothing to do.
-				else if ($not->status === 1 && $not->notice == 0)
+				else if ($status === 1 && $not->notice == 0)
 				{
 				}
 				else
@@ -293,7 +292,7 @@ class EmailQuotaCommand extends Command
 						continue;
 					}
 
-					if (!$not->nextreport || date("U") <= strtotime($not->nextreport))
+					if (!$nextreport || date("U") <= strtotime($nextreport))
 					{
 						continue;
 					}
@@ -301,7 +300,7 @@ class EmailQuotaCommand extends Command
 					$storagedir = $not->directory;
 
 					// Set notice
-					if (strtotime($last->datetimerecorded) != 0
+					if ($last->datetimerecorded->timestamp != 0
 					 && $last->space != 0)
 					{
 						$not->datetimelastnotify = Carbon::now();
@@ -334,19 +333,16 @@ class EmailQuotaCommand extends Command
 							Mail::to($user->email)->send($message);
 						}
 
-						unset($not->status);
 						unset($not->threshold);
-						unset($not->nextreport);
 
 						$not->save();
 
 						// Attempt to prevent weird situations of resetting report date.
-						/*if (strtotime($not->nextreport) > strtotime($not->datetimelastnotify))
+						/*if ($nextreport->timestamp > $not->datetimelastnotify->timestamp)
 						{
-							unset($not->status);
 							unset($not->threshold);
-							unset($not->nextreport);
-							$not->datetimelastnotify = $not->nextreport;
+
+							$not->datetimelastnotify = $nextreport;
 							$not->save();
 						}
 						else

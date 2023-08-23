@@ -664,7 +664,7 @@ class DirectoriesController extends Controller
 		}
 		elseif (!$row->resourceid && $row->storageresourceid)
 		{
-			$row->resourceid = $row->storageResource->resourceid;
+			$row->resourceid = $row->storageResource->parentresourceid;
 		}
 
 		$row->save();

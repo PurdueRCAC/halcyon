@@ -569,6 +569,10 @@ class NotificationsController extends Controller
 		$row = Notification::findOrFail($id);
 		foreach ($rules as $key => $rule)
 		{
+			if ($key == 'nextreport')
+			{
+				continue;
+			}
 			if ($request->has($key))
 			{
 				$row->{$key} = $request->input($key);

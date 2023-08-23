@@ -384,11 +384,11 @@ class LoansController extends Controller
 			// Convert to string to add negative or PHP will lose precision on large values
 			if ($row->bytes < 0)
 			{
-				$counter->bytes = abs($row->bytes);//ltrim($row->bytes, '-');
+				$counter->bytes = abs($row->bytes);
 			}
 			else
 			{
-				$counter->bytes = '-' . $row->bytes;
+				$counter->bytes = -$row->bytes;
 			}
 
 			if (!$counter->save())

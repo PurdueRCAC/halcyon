@@ -146,11 +146,7 @@ class News
 
 		$resource->news = $news;
 
-		if ($statusUpdate)
-		{
-			$resource->statusUpdate = $statusUpdate;
-		}
-
+		$event->updated_at = $statusUpdate;
 		$event->asset = $resource;
 	}
 }

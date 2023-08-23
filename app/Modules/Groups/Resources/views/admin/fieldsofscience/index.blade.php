@@ -69,17 +69,17 @@ app('pathway')
 		<thead>
 			<tr>
 				@if (auth()->user()->can('delete groups.fieldsofscience'))
-					<th>
+					<th scope="col">
 						{!! Html::grid('checkall') !!}
 					</th>
 				@endif
-				<th scope="col" class="priority-5">
+				<th scope="col">
 					{!! Html::grid('sort', trans('groups::groups.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
 					{!! Html::grid('sort', trans('groups::groups.name'), 'name', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4 text-right">
+				<th scope="col" class="text-right">
 					{{ trans('groups::groups.groups') }}
 				</th>
 			</tr>
@@ -92,7 +92,7 @@ app('pathway')
 						{!! Html::grid('id', $i, $row->id) !!}
 					</td>
 				@endif
-				<td class="priority-5">
+				<td>
 					@if (auth()->user()->can('edit groups'))
 						<a href="{{ route('admin.groups.fieldsofscience.edit', ['id' => $row->id]) }}">
 					@endif
@@ -113,7 +113,7 @@ app('pathway')
 						</a>
 					@endif
 				</td>
-				<td class="priority-4 text-right">
+				<td class="text-right">
 					<a href="{{ route('admin.groups.index', ['fieldofscience' => $row->id]) }}">
 						{{ number_format($row->groups_count) }}
 					</a>

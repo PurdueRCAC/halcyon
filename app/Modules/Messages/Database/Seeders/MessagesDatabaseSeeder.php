@@ -22,7 +22,7 @@ class MessagesDatabaseSeeder extends Seeder
         {
             Message::create([
                 'userid' => rand(1, 999999999),
-                'messagequeuetypeid' => $type->random(),
+                'messagequeuetypeid' => $types->random(),
                 'targetobjectid' => rand(1, 999999999),
             ]);
         }

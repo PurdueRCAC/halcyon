@@ -28,6 +28,7 @@ use App\Halcyon\Utility\Number;
  * @property int    $groupmanaged
  *
  * @property string $api
+ * @property int    $directories_count
  */
 class StorageResource extends Model
 {

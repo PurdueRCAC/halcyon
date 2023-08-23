@@ -101,17 +101,22 @@ class FieldsOfScienceController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 *
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$parents = FieldOfScience::tree();
 
 		$row = new FieldOfScience();
 
-		if ($fields = app('request')->old('fields'))
+		if ($name = $request->old('name'))
 		{
-			$row->fill($fields);
+			$row->name = $name;
+		}
+		if ($parentid = $request->old('parentid'))
+		{
+			$row->parentid = $parentid;
 		}
 
 		return view('groups::admin.fieldsofscience.edit', [
@@ -123,18 +128,23 @@ class FieldsOfScienceController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
+	 * @param  Request $request
 	 * @param  int $id
 	 * @return View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$parents = FieldOfScience::tree();
 
 		$row = FieldOfScience::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($name = $request->old('name'))
 		{
-			$row->fill($fields);
+			$row->name = $name;
+		}
+		if ($parentid = $request->old('parentid'))
+		{
+			$row->parentid = $parentid;
 		}
 
 		return view('groups::admin.fieldsofscience.edit', [
@@ -151,9 +161,9 @@ class FieldsOfScienceController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		//$request->validate([
 		$rules = [
-			'fields.name' => 'required|string|max:255'
+			'name' => 'required|string|max:255',
+			'parentid' => 'nullable|integer'
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -168,11 +178,17 @@ class FieldsOfScienceController extends Controller
 		$id = $request->input('id');
 
 		$row = $id ? FieldOfScience::findOrFail($id) : new FieldOfScience();
-		$row->fill($request->input('fields'));
+		$row->name = $request->input('name');
+		if ($request->has('parentid'))
+		{
+			$row->parentid = $request->input('parentid');
+		}
+		$row->parentid = $row->parentid ? $row->parentid : 1;
 
 		if (!$row->save())
 		{
-			return redirect()->back()->withError(trans('global.messages.save failed'));
+			return redirect()->back()
+				->withError(trans('global.messages.save failed'));
 		}
 
 		return $this->cancel()->with('success', trans('global.messages.item saved'));

@@ -30,5 +30,23 @@ return [
 			'title' => 'access.action.edit own',
 			'description' => 'access.action.edit own description',
 		],
+	],
+	'types' => [
+		'view' => [
+			'title' => 'news::news.view types',
+			'description' => 'news::news.view types description',
+		],
+		'create' => [
+			'title' => 'access.action.create',
+			'description' => 'access.action.create description',
+		],
+		'delete' => [
+			'title' => 'access.action.delete',
+			'description' => 'access.action.delete description',
+		],
+		'edit' => [
+			'title' => 'access.action.edit',
+			'description' => 'access.action.edit description',
+		],
 	]
 ];

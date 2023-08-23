@@ -4,6 +4,7 @@ namespace App\Modules\Resources\Models\Fields;
 
 use App\Halcyon\Form\Fields\Select;
 use App\Modules\Resources\Models\Asset;
+use stdClass;
 
 /**
  * Select field of available Resources
@@ -20,7 +21,7 @@ class ResourceEntry extends Select
 	/**
 	 * Method to get the field options.
 	 *
-	 * @return  array<int,array{string,mixed}>
+	 * @return  array<int,\Illuminate\Support\Fluent|stdClass>
 	 */
 	protected function getOptions()
 	{
@@ -29,12 +30,15 @@ class ResourceEntry extends Select
 			->orderBy('name', 'asc')
 			->get();
 
+		$options = array();
+
 		foreach ($rows as $row)
 		{
-			$options[] = array(
-				'value' => $row->id,
-				'text'  => $row->name
-			);
+			$item = new stdClass;
+			$item->value = $row->id;
+			$item->text = $row->name;
+
+			$options[] = $item;
 		}
 
 		return $options;

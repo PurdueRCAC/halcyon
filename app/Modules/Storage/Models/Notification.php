@@ -28,6 +28,7 @@ use Carbon\Carbon;
  * @property int    $enabled
  *
  * @property string $api
+ * @property string $threshold
  */
 class Notification extends Model
 {

@@ -170,7 +170,7 @@ class ResourcesController extends Controller
 	 * @param   int  $id        Parent ID
 	 * @param   string   $indent    Indent text
 	 * @param   array<int,Asset>    $list      List of records
-	 * @param   array<int,array>    $children  Container for parent/children mapping
+	 * @param   array<int,array{int,Asset}>    $children  Container for parent/children mapping
 	 * @param   int  $maxlevel  Maximum levels to descend
 	 * @param   int  $level     Indention level
 	 * @param   int  $type      Indention type

@@ -27,6 +27,8 @@ use App\Modules\Menus\Events\TypeDeleted;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ *
+ * @param string $api
  */
 class Type extends Model
 {
@@ -313,7 +315,7 @@ class Type extends Model
 				if ($checked_out)
 				{
 					throw new \Exception(
-						trans('core::core.error.save failed', get_class($this), trans('core::core.error.failed to checkout menu'))
+						trans('core::core.error.save failed', ['class' => get_class($this), 'error' => trans('core::core.error.failed to checkout menu')])
 					);
 				}
 
@@ -326,7 +328,7 @@ class Type extends Model
 				if ($checked_out)
 				{
 					throw new \Exception(
-						trans('core::core.error.save failed', get_class($this), trans('core::core.error.failed to checkout menu'))
+						trans('core::core.error.save failed', ['class' => get_class($this), 'error' => trans('core::core.error.failed to checkout menu')])
 					);
 				}
 
@@ -382,7 +384,7 @@ class Type extends Model
 		if ($checked_out)
 		{
 			throw new \Exception(
-				trans('global.error.delete failed', get_class($this), trans('menus::menus.error.checked out'))
+				trans('global.error.delete failed', ['class' => get_class($this), 'error' => trans('menus::menus.error.checked out')])
 			);
 		}
 
@@ -395,7 +397,7 @@ class Type extends Model
 		if ($checked_out)
 		{
 			throw new \Exception(
-				trans('global.error.delete failed', get_class($this), trans('menus::menus.error.checked out'))
+				trans('global.error.delete failed', ['class' => get_class($this), 'error' => trans('menus::menus.error.checked out')])
 			);
 		}
 

@@ -50,6 +50,8 @@ use Exception;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ *
+ * @property string $api
  */
 class Item extends Model
 {

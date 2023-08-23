@@ -20,6 +20,7 @@ use Carbon\Carbon;
  * @property string $comment
  *
  * @property string $api
+ * @property int    $loanedbytes
  */
 class Loan extends Purchase
 {
