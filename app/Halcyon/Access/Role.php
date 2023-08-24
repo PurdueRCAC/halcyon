@@ -18,6 +18,7 @@ use Illuminate\Support\Collection;
  * @property string $title
  *
  * @property string $api
+ * @property int    $level  Calculated in queries
  */
 class Role extends Model
 {
