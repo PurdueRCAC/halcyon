@@ -277,12 +277,11 @@ class OrdersController extends Controller
 
 		if ($filters['search'])
 		{
-			/*if (is_numeric($filters['search']))
+			if (is_numeric($filters['search']))
 			{
 				$query->where('tbaccounts.id', '=', $filters['search']);
 			}
-			else*/
-			if (!is_numeric($filters['search']) && !preg_match('/^[a-z]\d+$/', $filters['search']))
+			elseif (!is_numeric($filters['search']) && !preg_match('/^[a-z]\d+$/', $filters['search']))
 			{
 				$g = (new \App\Modules\Groups\Models\Group())->getTable();
 
