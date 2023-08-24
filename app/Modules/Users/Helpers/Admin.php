@@ -3,9 +3,9 @@ namespace App\Modules\Users\Helpers;
 
 use Illuminate\Support\Fluent;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Collection;
 use App\Halcyon\Facades\Submenu;
 use App\Halcyon\Access\Role;
+use stdClass;
 
 /**
  * Helper for some admin tasks
@@ -93,16 +93,18 @@ class Admin
 	/**
 	 * Get a list of the user groups for filtering.
 	 *
-	 * @return  Collection
+	 * @return  array<int,stdClass>
 	 */
-	public static function getAccessRoles(): Collection
+	public static function getAccessRoles(): array
 	{
-		$ug = new Role;
+		$ug = (new Role)->getTable();
 
-		$options = Role::query()
-			->select(['a.id AS value', 'a.title AS text', DB::raw('COUNT(DISTINCT b.id) AS level')])
-			->from($ug->getTable() . ' AS a')
-			->leftJoin($ug->getTable() . ' AS b', function($join)
+		$options = array();
+
+		$roles = Role::query()
+			->select(['a.id', 'a.title', DB::raw('COUNT(DISTINCT b.id) AS level')])
+			->from($ug . ' AS a')
+			->leftJoin($ug . ' AS b', function($join)
 				{
 					$join->on('a.lft', '>', 'b.lft')
 						->on('a.rgt', '<', 'b.rgt');
@@ -111,9 +113,13 @@ class Admin
 			->orderBy('a.lft', 'asc')
 			->get();
 
-		foreach ($options as &$option)
+		foreach ($roles as $role)
 		{
-			$option->text = str_repeat('- ', $option->level) . $option->text;
+			$option = new stdClass;
+			$option->value = $role->id;
+			$option->text  = str_repeat('- ', $role->level) . $role->title;
+
+			$options[] = $option;
 		}
 
 		return $options;
