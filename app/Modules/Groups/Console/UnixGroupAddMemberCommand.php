@@ -27,9 +27,9 @@ class UnixGroupAddMemberCommand extends Command
 	/**
 	 * Execute the console command.
 	 *
-	 * @return void
+	 * @return int
 	 */
-	public function handle()
+	public function handle(): int
 	{
 		$unixgroup = $this->argument('unixgroup');
 		$usernames = $this->argument('username');
@@ -54,7 +54,7 @@ class UnixGroupAddMemberCommand extends Command
 			return Command::FAILURE;
 		}
 
-		$usernames = explode(',', $username);
+		$usernames = explode(',', $usernames);
 
 		foreach ($usernames as $username)
 		{

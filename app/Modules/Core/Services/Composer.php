@@ -7,7 +7,7 @@ use Symfony\Component\Process\Process;
 class Composer extends \Illuminate\Support\Composer
 {
     /**
-     * @var \Closure
+     * @var \Closure|null
      */
     private $output;
 
@@ -45,17 +45,21 @@ class Composer extends \Illuminate\Support\Composer
     /**
      * Update all composer packages.
      *
-     * @param  string $package
+     * @param  string|null $package
      * @return void
      */
     public function update($package = null)
     {
         $package = $package ? '"' . $package . '"' : '';
 
-        $cmd = implode(' ', $this->findComposer()) . ' update ' . $package;
+        $cmd   = $this->findComposer();
+        $cmd[] = 'update';
+        if ($package)
+        {
+            $cmd[] = $package;
+        }
 
-        $process = $this->getProcess();
-        $process->setCommandLine(trim($cmd));
+        $process = $this->getProcess($cmd);
         $process->run($this->output);
     }
 
@@ -69,10 +73,11 @@ class Composer extends \Illuminate\Support\Composer
     {
         $package = '"' . $package . '"';
 
-        $cmd = implode(' ', $this->findComposer()) . ' require ' . $package;
+        $cmd   = $this->findComposer();
+        $cmd[] = 'require';
+        $cmd[] = $package;
 
-        $process = $this->getProcess();
-        $process->setCommandLine(trim($cmd));
+        $process = $this->getProcess($cmd);
         $process->run($this->output);
     }
 
@@ -81,10 +86,11 @@ class Composer extends \Illuminate\Support\Composer
      */
     public function dumpAutoload()
     {
-        $cmd = implode(' ', $this->findComposer()) . ' dump-autoload -o';
+        $cmd   = $this->findComposer();
+        $cmd[] = 'dump-autoload';
+        $cmd[] = '-o';
 
-        $process = $this->getProcess();
-        $process->setCommandLine(trim($cmd));
+        $process = $this->getProcess($cmd);
         $process->run($this->output);
     }
 
@@ -96,10 +102,11 @@ class Composer extends \Illuminate\Support\Composer
     {
         $package = '"' . $package . '"';
 
-        $cmd = implode(' ', $this->findComposer()) . ' remove ' . $package;
+        $cmd   = $this->findComposer();
+        $cmd[] = 'remove';
+        $cmd[] = $package;
 
-        $process = $this->getProcess();
-        $process->setCommandLine(trim($cmd));
+        $process = $this->getProcess($cmd);
         $process->run($this->output);
     }
 }

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Artisan;
 use App\Modules\Core\Models\Extension;
 use App\Halcyon\Http\StatefulRequest;
 use App\Halcyon\Access\Rules;
+use App\Halcyon\Access\Asset;
 
 class ModulesController extends Controller
 {

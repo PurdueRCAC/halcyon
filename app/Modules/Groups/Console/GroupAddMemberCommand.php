@@ -28,9 +28,9 @@ class GroupAddMemberCommand extends Command
 	/**
 	 * Execute the console command.
 	 *
-	 * @return void
+	 * @return int
 	 */
-	public function handle()
+	public function handle(): int
 	{
 		$group = $this->argument('group');
 		$usernames = $this->argument('username');
@@ -56,7 +56,7 @@ class GroupAddMemberCommand extends Command
 			return Command::FAILURE;
 		}
 
-		$usernames = explode(',', $username);
+		$usernames = explode(',', $usernames);
 
 		foreach ($usernames as $username)
 		{
