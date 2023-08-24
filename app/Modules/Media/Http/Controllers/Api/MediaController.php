@@ -309,9 +309,9 @@ class MediaController extends Controller
 			$data[] = [
 				'type' => $content['type'],
 				'path' => $content['path'],
-				'fileSize' => $content['fileSize'],
+				'fileSize' => $content->isFile() ? $content['fileSize'] : 0,
 				'lastModified' => $content['lastModified'],
-				'mimeType' => $content['mimeType'],
+				'mimeType' => $content->isFile() ? $content['mimeType'] : null,
 				'url' => asset('/files/' . ($path ? trim($path, '/') . '/' : '') . $content['path'])
 			];
 			//$contents[$i]['url'] = asset('/files/' . ($path ? trim($path, '/') . '/' : '') . $content['path']);
