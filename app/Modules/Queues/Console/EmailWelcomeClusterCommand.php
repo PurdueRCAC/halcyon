@@ -44,7 +44,7 @@ class EmailWelcomeClusterCommand extends Command
 			->select($u . '.*', $q . '.groupid')
 			->join($q, $q . '.id', $u . '.queueid')
 			->whereIn($u . '.membertype', [MemberType::MEMBER, MemberType::PENDING])
-			->whereIn($u . '.notice', [8, 13])
+			->whereIn($u . '.notice', [User::NOTICE_WELCOME, User::NOTICE_WELCOME_ERROR])
 			->get();
 
 		if (!count($users))
@@ -151,7 +151,7 @@ class EmailWelcomeClusterCommand extends Command
 
 			foreach ($userqueues as $userqueue)
 			{
-				$userqueue->update(['notice' => 0]);
+				$userqueue->update(['notice' => User::NO_NOTICE]);
 			}
 		}
 	}

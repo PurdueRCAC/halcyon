@@ -225,14 +225,14 @@ class UnixGroup extends Model
 			}
 
 			// Nothing to do, we are cancelling a removal
-			$member->notice = 0;
+			$member->notice = UnixGroupMember::NO_NOTICE;
 		}
 		else
 		{
 			$member = new UnixGroupMember;
 			$member->unixgroupid = $this->id;
 			$member->userid = $userid;
-			$member->notice = is_null($notice) ? 2 : $notice;
+			$member->notice = is_null($notice) ? UnixGroupMember::NOTICE_AUTHORIZED : $notice;
 		}
 
 		return $member->save();

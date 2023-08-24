@@ -10,6 +10,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Orders\Models\Account;
 use App\Modules\Orders\Models\Order;
+use App\Modules\Orders\Models\NoticeStatus;
 use App\Modules\Users\Models\User;
 use Carbon\Carbon;
 
@@ -408,7 +409,7 @@ class AccountsController extends Controller
 				return response()->json(['message' => trans('orders::orders.errors.invalid approverid')], 415);
 			}
 
-			$row->notice = 3;
+			$row->notice = NoticeStatus::PENDING_APPROVAL;
 		}
 
 		// auto approve for orders less than 1000. Should not effect recurring orders.
@@ -701,7 +702,7 @@ class AccountsController extends Controller
 				$row->datetimeapproved = null;
 				$row->datetimedenied = null;
 
-				$row->notice = 3;
+				$row->notice = NoticeStatus::PENDING_APPROVAL;
 			}
 
 			$row->approveruserid = $approveruserid;
@@ -766,7 +767,7 @@ class AccountsController extends Controller
 			if ($request->input('approved'))
 			{
 				$row->datetimeapproved = Carbon::now()->toDateTimeString();
-				$row->notice = 4;
+				$row->notice = NoticeStatus::PENDING_FULFILLMENT;
 			}
 		}
 
@@ -784,7 +785,7 @@ class AccountsController extends Controller
 		if ($request->input('denied'))
 		{
 			$row->datetimedenied = Carbon::now()->toDateTimeString();
-			$row->notice = 5;
+			$row->notice = NoticeStatus::ACCOUNT_DENIED;
 		}
 
 		if ($request->input('reset') && auth()->user()->can('manage orders'))
@@ -795,11 +796,11 @@ class AccountsController extends Controller
 
 			if ($row->approveruserid)
 			{
-				$row->notice = 3;
+				$row->notice = NoticeStatus::PENDING_APPROVAL;
 			}
 			else
 			{
-				$row->notice = 2;
+				$row->notice = NoticeStatus::PENDING_BOASSIGNMENT;
 			}
 		}
 

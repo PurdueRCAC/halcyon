@@ -28,6 +28,15 @@ class UnixGroupMember extends Model
 	use Historable, SoftDeletes;
 
 	/**
+	 * Unix Group notices
+	 *
+	 * @var int
+	 */
+	const NO_NOTICE = 0;
+	const NOTICE_AUTHORIZED = 2;
+	const NOTICE_REMOVED = 3;
+
+	/**
 	 * The name of the "created at" column.
 	 *
 	 * @var string|null
@@ -100,14 +109,16 @@ class UnixGroupMember extends Model
 
 		self::deleting(function($model)
 		{
-			// Set sequence value for new entries
-			if ($model->notice == 2)
+			if ($model->notice == self::NOTICE_AUTHORIZED)
 			{
-				$model->notice = 0;
+				// If we already have something that hasn't been notified yet
+				// just set it to no notice. No point in notifying the addition
+				// and then immediate removal.
+				$model->notice = self::NO_NOTICE;
 			}
 			else
 			{
-				$model->notice = 3;
+				$model->notice = self::NOTICE_REMOVED;
 			}
 			$model->save();
 		});

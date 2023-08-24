@@ -281,15 +281,15 @@ class UnixGroupMembersController extends Controller
 				$restore = true;
 			}
 			// Nothing to do, we are cancelling a removal
-			$row->notice = 0;
+			$row->notice = UnixGroupMember::NO_NOTICE;
 		}
 		else
 		{
 			$row = new UnixGroupMember;
 			$row->unixgroupid = $request->input('unixgroupid');
 			$row->userid = $userid;
-			$row->notice = $request->has('notice') ? $request->input('notice') : 2;
-			$row->notice = $row->notice ?: 0;
+			$row->notice = $request->has('notice') ? $request->input('notice') : UnixGroupMember::NOTICE_AUTHORIZED;
+			$row->notice = $row->notice ?: UnixGroupMember::NO_NOTICE;
 		}
 
 		// Look up the current username of the user being granted access.
@@ -353,7 +353,7 @@ class UnixGroupMembersController extends Controller
 				{
 					$altrow->restore();
 				}
-				$altrow->notice = 0;
+				$altrow->notice = UnixGroupMember::NO_NOTICE;
 				$altrow->save();
 			}
 		}

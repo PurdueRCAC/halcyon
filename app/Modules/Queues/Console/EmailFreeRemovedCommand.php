@@ -144,7 +144,7 @@ class EmailFreeRemovedCommand extends Command
 						->join($s, $s . '.id', $q . '.schedulerid')
 						->where($qu . '.membertype', '=', 1)
 						->where($qu . '.userid', '=', $userid)
-						->where($qu . '.notice', '<>', 6)
+						->where($qu . '.notice', '<>', QueueUser::NOTICE_REQUESTED)
 						->whereNull($qu . '.datetimeremoved')
 						->whereNull($q . '.datetimeremoved')
 						->whereNull($s . '.datetimeremoved')
@@ -206,7 +206,7 @@ class EmailFreeRemovedCommand extends Command
 						->join($s, $s . '.id', $q . '.schedulerid')
 						->where($qu . '.membertype', '=', 1)
 						->where($qu . '.userid', '=', $userid)
-						->where($qu . '.notice', '<>', 6)
+						->where($qu . '.notice', '<>', QueueUser::NOTICE_REQUESTED)
 						->whereNotIn($qu . '.queueid', $removing->pluck('queueid')->toArray())
 						->whereNull($qu . '.datetimeremoved')
 						->whereNull($q . '.datetimeremoved')
@@ -265,10 +265,10 @@ class EmailFreeRemovedCommand extends Command
 						// Determine which state to go to, depending on whether a new role was created
 						$q = $queueuser->queue->resource;
 
-						$notice = 0;
+						$notice = QueueUser::NO_NOTICE;
 						if (in_array($q->rolename, $r))
 						{
-							$notice = 9;
+							$notice = QueueUser::NOTICE_REMOVED_RESOURCE;
 						}
 
 						$groupqueue->update(['notice' => $notice]);

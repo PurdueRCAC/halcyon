@@ -47,7 +47,7 @@ class EmailWelcomeFreeCommand extends Command
 			->join($gu, $gu . '.queueuserid', $u . '.id')
 			->join($q, $q . '.id', $u . '.queueid')
 			->whereIn($gu . '.membertype', [MemberType::MEMBER, MemberType::PENDING])
-			->whereIn($gu . '.notice', [8, 13])
+			->whereIn($gu . '.notice', [User::NOTICE_WELCOME, User::NOTICE_WELCOME_ERROR])
 			->get();
 
 		if (!count($users))
@@ -190,7 +190,7 @@ class EmailWelcomeFreeCommand extends Command
 
 			foreach ($userqueues as $userqueue)
 			{
-				$userqueue->update(['notice' => 0]);
+				$userqueue->update(['notice' => User::NO_NOTICE]);
 			}
 		}
 	}

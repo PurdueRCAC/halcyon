@@ -144,13 +144,14 @@ class CategoriesController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.name' => 'required|string|max:64'
+			'fields.name' => 'required|string|max:64',
+			'fields.description' => 'nullable|string|max:2000',
+			'fields.parentordercategoryid' => 'nullable|integer',
 		]);
 
 		$id = $request->input('id');
 
-		$row = $id ? Category::findOrFail($id) : new Category();
-
+		$row = Category::findOrNew($id);
 		$row->fill($request->input('fields'));
 		if (!$row->description)
 		{

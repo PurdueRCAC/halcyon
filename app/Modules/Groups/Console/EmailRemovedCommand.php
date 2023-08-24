@@ -38,7 +38,7 @@ class EmailRemovedCommand extends Command
 		$debug = $this->option('debug') ? true : false;
 
 		$users = Member::query()
-			->where('notice', '=', 22)
+			->where('notice', '=', Member::MEMBERSHIP_REMOVED)
 			->get();
 
 		if (!count($users))
@@ -163,7 +163,7 @@ class EmailRemovedCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				$groupuser->update(['notice' => 0]);
+				$groupuser->update(['notice' => Member::NO_NOTICE]);
 			}
 
 			// Email managers

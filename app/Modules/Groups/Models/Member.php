@@ -34,6 +34,15 @@ class Member extends Model
 	use Historable, SoftDeletes;
 
 	/**
+	 * Notices
+	 *
+	 * @var int
+	 */
+	const NO_NOTICE = 0;
+	const MEMBERSHIP_AUTHORIZED = 21;
+	const MEMBERSHIP_REMOVED = 22;
+
+	/**
 	 * The name of the "created at" column.
 	 *
 	 * @var string|null

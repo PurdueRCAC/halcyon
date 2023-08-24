@@ -12,6 +12,7 @@ use App\Modules\Orders\Models\Category;
 use App\Modules\Orders\Models\Product;
 use App\Modules\Orders\Models\Item;
 use App\Modules\Orders\Models\Account;
+use App\Modules\Orders\Models\NoticeStatus;
 use App\Modules\Users\Models\User;
 use App\Modules\Orders\Http\Resources\OrderResource;
 use App\Modules\Orders\Http\Resources\OrderResourceCollection;
@@ -435,7 +436,7 @@ class OrdersController extends Controller
 		$row->submitteruserid = (int)$request->input('submitteruserid', auth()->user() ? auth()->user()->id : 0);
 		$row->usernotes = $request->input('usernotes', '');
 		$row->staffnotes = $request->input('staffnotes', '');
-		$row->notice = (int)$request->input('notice', 1);
+		$row->notice = (int)$request->input('notice', NoticeStatus::PENDING_PAYMENT);
 
 		// If we sent an itemsequence we are copying another order. GO and fetch all this
 		if ($request->has('orderitemsequence'))
@@ -815,7 +816,7 @@ class OrdersController extends Controller
 				$account->approveruserid = $account->approveruserid ?: 0;
 				if ($account->approveruserid)
 				{
-					$account->notice = 3;
+					$account->notice = NoticeStatus::PENDING_APPROVAL;
 				}
 				$account->save();
 			}

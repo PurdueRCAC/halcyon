@@ -54,7 +54,7 @@ class EmailQueueAuthorizedCommand extends Command
 		$uusers = UnixGroupMember::query()
 			->select($uu . '.*', $u . '.groupid')
 			->join($u, $u . '.id', $uu . '.unixgroupid')
-			->where($uu . '.notice', '=', 2)
+			->where($uu . '.notice', '=', UnixGroupMember::NOTICE_AUTHORIZED)
 			->get();
 
 		if (!count($users) && !count($uusers))
@@ -221,7 +221,7 @@ class EmailQueueAuthorizedCommand extends Command
 					// Change states
 					foreach ($queueusers as $queueuser)
 					{
-						$notice = 0;
+						$notice = QueueUser::NO_NOTICE;
 
 						// Determine which state to go to, depending on whether a new role was created
 						if ($queueuser->queue)
@@ -230,7 +230,7 @@ class EmailQueueAuthorizedCommand extends Command
 
 							if (in_array($rolename, $r))
 							{
-								$notice = 8;
+								$notice = QueueUser::NOTICE_WELCOME;
 							}
 						}
 

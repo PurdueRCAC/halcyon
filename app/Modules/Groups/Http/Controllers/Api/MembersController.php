@@ -409,16 +409,17 @@ class MembersController extends Controller
 			}
 		}
 
+		// Notify other managers of this person being made a manager
 		if ($row->isManager())
 		{
-			$row->notice = 21;
+			$row->notice = Member::MEMBERSHIP_AUTHORIZED;
 		}
 
 		// Do we have any owners?
 		// If not, there's no one else to notify
 		if (count($row->group->managers) == 0)
 		{
-			$row->notice = 0;
+			$row->notice = Member::NO_NOTICE;
 		}
 
 		$row->userrequestid = $request->input('userrequestid', 0);

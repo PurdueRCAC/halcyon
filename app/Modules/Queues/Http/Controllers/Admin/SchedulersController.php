@@ -198,6 +198,14 @@ class SchedulersController extends Controller
 
 		$walltime = $request->input('maxwalltime');
 
+		/*$row->defaultmaxwalltime = match ($request->input('unit'))
+		{
+			'days'    => ($walltime * 24 * 60 * 60),
+			'hours'   => ($walltime * 60 * 60),
+			'minutes' => ($walltime * 60),
+			default   => $walltime,
+		};*/
+
 		switch ($request->input('unit'))
 		{
 			case 'days':

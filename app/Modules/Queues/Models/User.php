@@ -63,8 +63,13 @@ class User extends Model
 	const NOTICE_NONE = 0;
 	const NOTICE_REQUEST_GRANTED = 2;
 	const NOTICE_REMOVED = 3;
+	const NOTICE_REMOVED_RESOURCE = 9;
 	const NOTICE_REQUESTED = 6;
 	const NOTICE_REQUEST_DENIED = 12;
+	const NOTICE_EXPIRED = 10;
+	const NOTICE_REMOVED_EXPIRED = 17;
+	const NOTICE_WELCOME = 8;
+	const NOTICE_WELCOME_ERROR = 13;
 
 	/**
 	 * The table to which the class pertains
@@ -111,9 +116,9 @@ class User extends Model
 			{
 				$model->notice = self::NOTICE_NONE;
 			}
-			elseif ($model->notice == 10)
+			elseif ($model->notice == self::NOTICE_EXPIRED)
 			{
-				$model->notice = 17;
+				$model->notice = self::NOTICE_REMOVED_EXPIRED;
 			}
 			else
 			{
@@ -231,6 +236,16 @@ class User extends Model
 			->first();
 
 		return $log->user;
+	}
+
+	/**
+	 * Set notice state to none
+	 *
+	 * @return  void
+	 */
+	public function doNotNofity(): void
+	{
+		$this->notice = self::NO_NOTICE;
 	}
 
 	/**

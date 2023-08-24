@@ -119,7 +119,7 @@ class EmailFreeRequestedCommand extends Command
 					// Change states
 					foreach ($activity as $queueuser)
 					{
-						$queueuser->update(['notice' => 0]);
+						$queueuser->update(['notice' => QueueUser::NO_NOTICE]);
 					}
 				}
 

@@ -5,6 +5,7 @@ namespace App\Modules\Orders\Console;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\Orders\Models\Order;
+use App\Modules\Orders\Models\NoticeStatus;
 use App\Modules\Orders\Mail\PendingPayment;
 use App\Modules\Orders\Mail\PendingAssignment;
 use App\Modules\Orders\Mail\PendingApproval;
@@ -35,29 +36,11 @@ class EmailStatusCommand extends Command
 	protected $description = 'Email order status as it changes.';
 
 	/**
-	 * Order notice states
-	 *
-	 * @var int
-	 */
-	const PENDING_PAYMENT = 1;
-	const PENDING_BOASSIGNMENT = 2;
-	const PENDING_APPROVAL = 3;
-	const PENDING_FULFILLMENT = 4;
-	const PENDING_COLLECTION = 6;
-	const COMPLETE = 7;
-	const CANCELED = -1;
-	const NO_NOTICE = 0;
-	const CANCELED_NOTICE = 8;
-	const ACCOUNT_ASSIGNED = 3;
-	const ACCOUNT_APPROVED = 4;
-	const ACCOUNT_DENIED = 5;
-
-	/**
 	 * Execute the console command.
 	 *
 	 * @return void
 	 */
-	public function handle()
+	public function handle(): void
 	{
 		$debug = $this->option('debug') ? true : false;
 
@@ -85,7 +68,7 @@ class EmailStatusCommand extends Command
 		}
 
 		$orders = Order::query()
-			->where('notice', '=', self::PENDING_PAYMENT)
+			->where('notice', '=', NoticeStatus::PENDING_PAYMENT)
 			->orderBy('id', 'asc')
 			->get();
 
@@ -160,12 +143,12 @@ class EmailStatusCommand extends Command
 			$order->offsetUnset('type');
 			if ($order->total > 0)
 			{
-				$order->update(['notice' => self::PENDING_BOASSIGNMENT]);
+				$order->update(['notice' => NoticeStatus::PENDING_BOASSIGNMENT]);
 			}
 			else
 			{
 				// If the order total is zero, skip "pending payment info" and "pending approval"
-				$order->update(['notice' => self::PENDING_COLLECTION]);
+				$order->update(['notice' => NoticeStatus::PENDING_COLLECTION]);
 			}
 			$processed[] = $order->id;
 		}
@@ -179,14 +162,14 @@ class EmailStatusCommand extends Command
 		}
 
 		$orders = Order::query()
-			->where('notice', '=', self::PENDING_BOASSIGNMENT)
+			->where('notice', '=', NoticeStatus::PENDING_BOASSIGNMENT)
 			->whereNotIn('id', $processed)
 			->orderBy('id', 'asc')
 			->get();
 
 		foreach ($orders as $order)
 		{
-			if (constant(self::class . '::' . strtoupper($order->status)) < self::PENDING_BOASSIGNMENT)
+			if (constant(NoticeStatus::class . '::' . strtoupper($order->status)) < NoticeStatus::PENDING_BOASSIGNMENT)
 			{
 				if ($debug || $this->output->isVerbose())
 				{
@@ -241,7 +224,7 @@ class EmailStatusCommand extends Command
 			}
 
 			// Change states
-			$order->update(['notice' => self::PENDING_APPROVAL]);
+			$order->update(['notice' => NoticeStatus::PENDING_APPROVAL]);
 			$processed[] = $order->id;
 		}
 
@@ -254,7 +237,12 @@ class EmailStatusCommand extends Command
 		}
 
 		$orders = Order::query()
-			->whereIn('notice', [self::PENDING_APPROVAL, self::PENDING_FULFILLMENT, self::PENDING_COLLECTION, self::COMPLETE])
+			->whereIn('notice', [
+				NoticeStatus::PENDING_APPROVAL,
+				NoticeStatus::PENDING_FULFILLMENT,
+				NoticeStatus::PENDING_COLLECTION,
+				NoticeStatus::COMPLETE
+			])
 			->whereNotIn('id', $processed)
 			->orderBy('id', 'asc')
 			->get();
@@ -267,12 +255,12 @@ class EmailStatusCommand extends Command
 			{
 				if ($account->approveruserid
 				 && !in_array($account->approveruserid, $approvers)
-				 && $account->notice == self::ACCOUNT_ASSIGNED)
+				 && $account->notice == NoticeStatus::ACCOUNT_ASSIGNED)
 				{
 					array_push($approvers, $account->approveruserid);
 				}
 
-				if ($account->notice == self::ACCOUNT_DENIED)
+				if ($account->notice == NoticeStatus::ACCOUNT_DENIED)
 				{
 					$denied = true;
 				}
@@ -378,13 +366,13 @@ class EmailStatusCommand extends Command
 			// Reset states on accounts
 			foreach ($order->accounts as $account)
 			{
-				$account->update(['notice' => self::NO_NOTICE]);
+				$account->update(['notice' => NoticeStatus::NO_NOTICE]);
 			}
 
 			// Change states
-			if ($order->notice == self::PENDING_APPROVAL)
+			if ($order->notice == NoticeStatus::PENDING_APPROVAL)
 			{
-				$order->update(['notice' => self::PENDING_FULFILLMENT]);
+				$order->update(['notice' => NoticeStatus::PENDING_FULFILLMENT]);
 			}
 		}
 
@@ -397,13 +385,13 @@ class EmailStatusCommand extends Command
 		}
 
 		$orders = Order::query()
-			->whereIn('notice', [self::PENDING_FULFILLMENT])
+			->whereIn('notice', [NoticeStatus::PENDING_FULFILLMENT])
 			->orderBy('id', 'asc')
 			->get();
 
 		foreach ($orders as $order)
 		{
-			if (constant(self::class . '::' . strtoupper($order->status)) < self::PENDING_FULFILLMENT)
+			if (constant(NoticeStatus::class . '::' . strtoupper($order->status)) < NoticeStatus::PENDING_FULFILLMENT)
 			{
 				if ($debug)
 				{
@@ -501,7 +489,7 @@ class EmailStatusCommand extends Command
 			}
 
 			// Change states
-			$order->update(['notice' => self::PENDING_COLLECTION]);
+			$order->update(['notice' => NoticeStatus::PENDING_COLLECTION]);
 		}
 
 		//--------------------------------------------------------------------------
@@ -513,13 +501,13 @@ class EmailStatusCommand extends Command
 		}
 
 		$orders = Order::query()
-			->whereIn('notice', [self::PENDING_COLLECTION])
+			->whereIn('notice', [NoticeStatus::PENDING_COLLECTION])
 			->orderBy('id', 'asc')
 			->get();
 
 		foreach ($orders as $order)
 		{
-			if (constant(self::class . '::' . strtoupper($order->status)) < self::PENDING_COLLECTION)
+			if (constant(NoticeStatus::class . '::' . strtoupper($order->status)) < NoticeStatus::PENDING_COLLECTION)
 			{
 				if ($debug || $this->output->isVerbose())
 				{
@@ -579,7 +567,7 @@ class EmailStatusCommand extends Command
 			}
 
 			// Change states
-			$order->update(['notice' => self::COMPLETE]);
+			$order->update(['notice' => NoticeStatus::COMPLETE]);
 
 			// Trigger order Fulfilled event
 			//
@@ -597,13 +585,13 @@ class EmailStatusCommand extends Command
 		}
 
 		$orders = Order::query()
-			->whereIn('notice', [self::COMPLETE])
+			->whereIn('notice', [NoticeStatus::COMPLETE])
 			->orderBy('id', 'asc')
 			->get();
 
 		foreach ($orders as $order)
 		{
-			if (constant(self::class . '::' . strtoupper($order->status)) < self::COMPLETE)
+			if (constant(NoticeStatus::class . '::' . strtoupper($order->status)) < NoticeStatus::COMPLETE)
 			{
 				if ($debug || $this->output->isVerbose())
 				{
@@ -658,7 +646,7 @@ class EmailStatusCommand extends Command
 			}
 
 			// Change states
-			$order->update(['notice' => self::NO_NOTICE]);
+			$order->update(['notice' => NoticeStatus::NO_NOTICE]);
 		}
 
 		//--------------------------------------------------------------------------
@@ -672,13 +660,13 @@ class EmailStatusCommand extends Command
 		$orders = Order::query()
 			->onlyTrashed()
 			//->where('notice', '>', 0)
-			->whereIn('notice', [self::CANCELED_NOTICE])
+			->whereIn('notice', [NoticeStatus::CANCELED_NOTICE])
 			->orderBy('id', 'asc')
 			->get();
 
 		foreach ($orders as $order)
 		{
-			if (constant(self::class . '::' . strtoupper($order->status)) > self::CANCELED_NOTICE)
+			if (constant(NoticeStatus::class . '::' . strtoupper($order->status)) > NoticeStatus::CANCELED_NOTICE)
 			{
 				if ($debug || $this->output->isVerbose())
 				{
@@ -738,7 +726,7 @@ class EmailStatusCommand extends Command
 			}
 
 			// Change states
-			$order->update(['notice' => self::NO_NOTICE]);
+			$order->update(['notice' => NoticeStatus::NO_NOTICE]);
 		}
 	}
 }

@@ -37,7 +37,7 @@ class EmailAuthorizedCommand extends Command
 		$debug = $this->option('debug') ? true : false;
 
 		$users = Member::query()
-			->where('notice', '=', 21)
+			->where('notice', '=', Member::MEMBERSHIP_AUTHORIZED)
 			->get();
 
 		if (!count($users))
@@ -138,7 +138,7 @@ class EmailAuthorizedCommand extends Command
 
 				Mail::to($user->email)->send($message);
 
-				$groupuser->update(['notice' => 0]);
+				$groupuser->update(['notice' => Member::NO_NOTICE]);
 			}
 
 			// Email managers

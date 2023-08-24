@@ -613,8 +613,8 @@ class Group extends Model
 					// If the user is already a group manager, then they're approved
 					if (in_array($me->userid, $managers))
 					{
-						$me->membertype = 1;
-						$me->notice = 0;
+						$me->setAsMember();
+						$me->doNotNotify();
 						$me->save();
 
 						continue;

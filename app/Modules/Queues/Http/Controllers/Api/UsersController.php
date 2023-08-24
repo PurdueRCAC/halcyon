@@ -287,7 +287,7 @@ class UsersController extends Controller
 				event(new UserCreated($row));
 			}
 			// Nothing to do, we are cancelling a removal
-			$row->notice = 0;
+			$row->notice = QueueUser::NOTICE_REQUEST_GRANTED;
 		}
 		else
 		{
@@ -299,9 +299,9 @@ class UsersController extends Controller
 				$row->userrequestid = $request->input('userrequestid');
 			}
 			$row->membertype = $request->input('membertype');
-			$row->membertype = $row->membertype ?: 1;
-			$row->notice = $request->has('notice') ? $request->input('notice') : 2;
-			$row->notice = $row->notice ?: 0;
+			$row->membertype = $row->membertype ?: $row->setAsMember();
+			$row->notice = $request->has('notice') ? $request->input('notice') : QueueUser::NOTICE_REQUEST_GRANTED;
+			$row->notice = $row->notice ?: QueueUser::NO_NOTICE;
 		}
 
 		// Look up the current username of the user being granted access.
@@ -348,11 +348,11 @@ class UsersController extends Controller
 
 			if ($groupuser)
 			{
-				$groupuser->update(['notice' => 0]);
+				$groupuser->update(['notice' => QueueUser::NO_NOTICE]);
 			}
 			else
 			{
-				$row->notice = $request->has('notice') ? $request->input('notice') : 2;
+				$row->notice = $request->has('notice') ? $request->input('notice') : QueueUser::NOTICE_REQUEST_GRANTED;
 			}
 		}
 
@@ -578,17 +578,17 @@ class UsersController extends Controller
 		$row = QueueUser::findOrFail($id);
 
 		// Determine notice level
-		/*if ($row->notice == 2)
+		/*if ($row->notice == QueueUser::NOTICE_REQUEST_GRANTED)
 		{
-			$row->notice = 0;
+			$row->notice = QueueUser::NO_NOTICE;
 		}
-		elseif ($row->notice == 10)
+		elseif ($row->notice == QueueUser::NOTICE_EXPIRED)
 		{
-			$row->notice = 17;
+			$row->notice = QueueUser::NOTICE_REMOVED_EXPIRED;
 		}
 		else
 		{
-			$row->notice = 3;
+			$row->notice = QueueUser::NOTICE_REMOVED;
 		}*/
 
 		if ($row->queue->groupid == 0)
@@ -613,7 +613,7 @@ class UsersController extends Controller
 			}
 
 			// Set notice to 0 for now
-			$row->notice = 0;
+			$row->notice = QueueUser::NO_NOTICE;
 		}
 
 		$row->save(); //update(['notice' => $row->notice]);

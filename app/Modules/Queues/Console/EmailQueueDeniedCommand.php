@@ -173,7 +173,7 @@ class EmailQueueDeniedCommand extends Command
 					// Change states
 					foreach ($queueusers as $queueuser)
 					{
-						$queueuser->update(['notice' => 0]);
+						$queueuser->update(['notice' => QueueUser::NO_NOTICE]);
 					}
 				}
 

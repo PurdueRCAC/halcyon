@@ -969,7 +969,7 @@ class Queue extends Model
 				$row->restore();
 			}
 			// Nothing to do, we are cancelling a removal
-			$row->notice = 0;
+			$row->notice = User::NO_NOTICE;
 		}
 		else
 		{
@@ -977,7 +977,7 @@ class Queue extends Model
 			$row->queueid = $this->id;
 			$row->userid = $userid;
 			$row->membertype = $membertype;
-			$row->notice = is_null($notice) ? 2 : $notice;
+			$row->notice = is_null($notice) ? User::NOTICE_REQUEST_GRANTED : $notice;
 		}
 
 		/*event($resourcemember = new ResourceMemberStatus($row->queue->scheduler->resource, $row->user));
@@ -1175,7 +1175,7 @@ class Queue extends Model
 	{
 		foreach ($this->users as $row)
 		{
-			$row->update(['notice' => 0]);
+			$row->update(['notice' => User::NO_NOTICE]);
 			$row->delete();
 
 			// Look up the current username of the user being removed

@@ -59,7 +59,7 @@ class EmailQueueRemovedCommand extends Command
 			->onlyTrashed()
 			->select($uu . '.*', $u . '.groupid')
 			->join($u, $u . '.id', $uu . '.unixgroupid')
-			->where($uu . '.notice', '=', 3)
+			->where($uu . '.notice', '=', UnixGroupMember::NOTICE_REMOVED)
 			->get();
 
 		if (!count($users) && !count($uusers))
@@ -166,7 +166,7 @@ class EmailQueueRemovedCommand extends Command
 						->join($s, $s . '.id', $q . '.schedulerid')
 						->where($qu . '.membertype', '=', 1)
 						->where($qu . '.userid', '=', $userid)
-						->where($qu . '.notice', '<>', 6)
+						->where($qu . '.notice', '<>', QueueUser::NOTICE_REQUESTED)
 						//->whereNull($qu . '.datetimeremoved')
 						->whereNull($q . '.datetimeremoved')
 						->whereNull($s . '.datetimeremoved')
@@ -224,7 +224,7 @@ class EmailQueueRemovedCommand extends Command
 						->join($s, $s . '.id', $q . '.schedulerid')
 						->where($qu . '.membertype', '=', 1)
 						->where($qu . '.userid', '=', $userid)
-						->where($qu . '.notice', '<>', 6)
+						->where($qu . '.notice', '<>', QueueUser::NOTICE_REQUESTED)
 						->whereNotIn($qu . '.queueid', $removing->pluck('queueid')->toArray())
 						//->whereNull($qu . '.datetimeremoved')
 						->whereNull($q . '.datetimeremoved')
@@ -268,7 +268,7 @@ class EmailQueueRemovedCommand extends Command
 					// Change states
 					foreach ($queuestudents as $queueuser)
 					{
-						$queueuser->update(['notice' => 0]);
+						$queueuser->update(['notice' => QueueUser::NO_NOTICE]);
 					}
 				}
 

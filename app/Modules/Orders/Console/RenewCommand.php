@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Modules\Orders\Models\Item;
 use App\Modules\Orders\Models\Order;
 use App\Modules\Orders\Models\Account;
+use App\Modules\Orders\Models\NoticeStatus;
 use Carbon\Carbon;
 
 class RenewCommand extends Command
@@ -30,7 +31,7 @@ class RenewCommand extends Command
 	 *
 	 * @return void
 	 */
-	public function handle()
+	public function handle(): void
 	{
 		$debug = $this->option('debug') ? true : false;
 
@@ -221,7 +222,7 @@ class RenewCommand extends Command
 			$row->groupid = $order->groupid;
 			$row->usernotes = '';//$order->usernotes ? 'Order #' . $order->id . " (" . $order->datetimecreated->format('Y-m-d') . "):\n\n" . $order->usernotes : '';
 			$row->staffnotes = ''; //$order->staffnotes ? 'Order #' . $order->id . " (" . $order->datetimecreated->format('Y-m-d') . "):\n\n" . $order->staffnotes : '';
-			$row->notice = 1;
+			$row->notice = NoticeStatus::PENDING_PAYMENT;
 
 			if ($debug)
 			{

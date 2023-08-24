@@ -10,6 +10,7 @@ use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\User as Member;
 use App\Modules\Queues\Models\GroupUser;
 use App\Modules\Queues\Models\UserRequest;
+use App\Modules\Queues\Models\MemberType;
 use App\Modules\Queues\Events\UserRequestUpdated;
 use App\Modules\Queues\Http\Resources\UserRequestResource;
 use App\Modules\Queues\Http\Resources\UserRequestResourceCollection;
@@ -116,7 +117,7 @@ class UserRequestsController extends Controller
 			'queueid'   => $request->input('queueid', 0),
 			// Paging
 			'limit'     => $request->input('limit', config('list_limit', 20)),
-			'page'     => $request->input('page', 1),
+			'page'      => $request->input('page', 1),
 			// Sorting
 			'order'     => $request->input('order', 'datetimecreated'),
 			'order_dir' => $request->input('order_dir', 'desc')
@@ -276,7 +277,6 @@ class UserRequestsController extends Controller
 					$queueuser = Member::query()
 						->where('queueid', '=', $queueid)
 						->where('userid', '=', $row->userid)
-						->get()
 						->first();
 				}
 
@@ -288,13 +288,13 @@ class UserRequestsController extends Controller
 					if (!$queue->groupid)
 					{
 						$queueuser->userrequestid = 0;
-						$queueuser->notice        = 0;
+						$queueuser->notice        = Member::NO_NOTICE;
 						$queueuser->setAsMember();
 					}
 					else
 					{
 						$queueuser->userrequestid = $row->id;
-						$queueuser->notice        = 6;
+						$queueuser->notice        = Member::NOTICE_REQUESTED;
 						$queueuser->setAsPending();
 					}
 					$queueuser->save();
@@ -307,7 +307,7 @@ class UserRequestsController extends Controller
 					$groupqueueuser->groupid       = $queue->groupid;
 					$groupqueueuser->queueuserid   = $queueuser->id;
 					$groupqueueuser->userrequestid = $row->id;
-					$groupqueueuser->notice        = 6;
+					$groupqueueuser->notice        = Member::NOTICE_REQUESTED;
 					$groupqueueuser->setAsPending();
 					$groupqueueuser->save();
 				}
@@ -329,7 +329,7 @@ class UserRequestsController extends Controller
 					{
 						$where->where($q . '.groupid', '=', $group)
 							->orWhere($q . '.groupid', '=', 0)
-							->orWhere($q . '.id', '=', 33338);
+							->orWhere($q . '.id', '=', 33338); // Legacy research storage queue @TODO: Remove this
 					})
 				->get();
 
@@ -358,13 +358,13 @@ class UserRequestsController extends Controller
 					if (!$queue->groupid)
 					{
 						$queueuser->userrequestid = 0;
-						$queueuser->notice        = 0;
+						$queueuser->notice        = Member::NO_NOTICE;
 						$queueuser->setAsMember();
 					}
 					else
 					{
 						$queueuser->userrequestid = $row->id;
-						$queueuser->notice        = 6;
+						$queueuser->notice        = Member::NOTICE_REQUESTED;
 						$queueuser->setAsPending();
 					}
 					$queueuser->save();
@@ -377,7 +377,7 @@ class UserRequestsController extends Controller
 					$groupqueueuser->groupid       = $queue->groupid;
 					$groupqueueuser->queueuserid   = $queueuser->id;
 					$groupqueueuser->userrequestid = $row->id;
-					$groupqueueuser->notice        = 6;
+					$groupqueueuser->notice        = Member::NOTICE_REQUESTED;
 					$groupqueueuser->setAsPending();
 					$groupqueueuser->save();
 				}
@@ -508,7 +508,7 @@ class UserRequestsController extends Controller
 		{
 			// Update membertypes
 			$queueuser->setAsMember();
-			$queueuser->notice = 2;
+			$queueuser->notice = Member::NOTICE_REQUEST_GRANTED;
 
 			if (!$queueuser->save())
 			{
@@ -579,7 +579,7 @@ class UserRequestsController extends Controller
 			->select($q . '.groupid')
 			->join($u, $u . '.queueid', $q . '.id')
 			->where($u . '.userrequestid', '=', $id)
-			->where($u . '.membertype', '=', 4)
+			->where($u . '.membertype', '=', MemberType::PENDING)
 			->where($u . '.userid', '=', $row->userid)
 			->groupBy($q . '.groupid')
 			->get();
@@ -621,7 +621,7 @@ class UserRequestsController extends Controller
 					$result = Member::where('userrequestid', '=', $row->id)
 						->where('userid', '=', $row->userid)
 						->wherePendingRequest()
-						->update(['notice' => 12]);
+						->update(['notice' => Member::NOTICE_REQUEST_DENIED]);
 
 					if (!$result)
 					{
@@ -673,7 +673,7 @@ class UserRequestsController extends Controller
 					$result = UserGroup::where('userrequestid', '=', $row->id)
 						->where('userid', '=', $row->userid)
 						->wherePendingRequest()
-						->update(['notice' => 12]);
+						->update(['notice' => Member::NOTICE_REQUEST_DENIED]);
 
 					if (!$result)
 					{

@@ -101,7 +101,7 @@ class AddUserToUnixGroup
 					$baserow = new UnixGroupMember;
 					$baserow->unixgroupid = $base->id;
 					$baserow->userid = $event->userrequest->userid;
-					$baserow->notice = 0;
+					$baserow->notice = UnixGroupMember::NO_NOTICE;
 					$baserow->save();
 				}
 			}
@@ -148,7 +148,7 @@ class AddUserToUnixGroup
 					$ugm = new UnixGroupMember;
 					$ugm->unixgroupid = $unixgroup->id;
 					$ugm->userid = $event->member->userid;
-					$ugm->notice = 0;
+					$ugm->notice = UnixGroupMember::NO_NOTICE;
 					$ugm->save();
 				}
 			}
@@ -175,7 +175,7 @@ class AddUserToUnixGroup
 					$qu = new QueueUser;
 					$qu->queueid = $queue->id;
 					$qu->userid = $event->member->userid;
-					$qu->notice = 0;
+					$qu->doNotNotify();
 					$qu->save();
 				}
 			}
