@@ -60,6 +60,7 @@ class User extends Model
 	 *
 	 * @var int
 	 */
+	const NO_NOTICE = 0;
 	const NOTICE_NONE = 0;
 	const NOTICE_REQUEST_GRANTED = 2;
 	const NOTICE_REMOVED = 3;

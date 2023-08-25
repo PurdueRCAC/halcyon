@@ -299,9 +299,12 @@ class UsersController extends Controller
 				$row->userrequestid = $request->input('userrequestid');
 			}
 			$row->membertype = $request->input('membertype');
-			$row->membertype = $row->membertype ?: $row->setAsMember();
+			if (!$row->membertype)
+			{
+				$row->setAsMember();
+			}
 			$row->notice = $request->has('notice') ? $request->input('notice') : QueueUser::NOTICE_REQUEST_GRANTED;
-			$row->notice = $row->notice ?: QueueUser::NO_NOTICE;
+			$row->notice = $row->notice ?: QueueUser::NOTICE_NONE;
 		}
 
 		// Look up the current username of the user being granted access.
@@ -348,7 +351,7 @@ class UsersController extends Controller
 
 			if ($groupuser)
 			{
-				$groupuser->update(['notice' => QueueUser::NO_NOTICE]);
+				$groupuser->update(['notice' => QueueUser::NOTICE_NONE]);
 			}
 			else
 			{
@@ -580,7 +583,7 @@ class UsersController extends Controller
 		// Determine notice level
 		/*if ($row->notice == QueueUser::NOTICE_REQUEST_GRANTED)
 		{
-			$row->notice = QueueUser::NO_NOTICE;
+			$row->notice = QueueUser::NOTICE_NONE;
 		}
 		elseif ($row->notice == QueueUser::NOTICE_EXPIRED)
 		{
@@ -613,7 +616,7 @@ class UsersController extends Controller
 			}
 
 			// Set notice to 0 for now
-			$row->notice = QueueUser::NO_NOTICE;
+			$row->notice = QueueUser::NOTICE_NONE;
 		}
 
 		$row->save(); //update(['notice' => $row->notice]);
