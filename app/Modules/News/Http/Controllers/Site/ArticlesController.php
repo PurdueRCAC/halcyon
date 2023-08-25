@@ -203,7 +203,7 @@ class ArticlesController extends Controller
 			->whereIn('newstypeid', $typeids)
 			->orderBy('datetimenews', 'desc')
 			->limit(20)
-			->paginate();
+			->paginate(20);
 
 		$meta = array(
 			'title'         => config('app.name') . ' - ' . implode(', ', $types->pluck('name')->toArray()),
@@ -393,8 +393,8 @@ class ArticlesController extends Controller
 
 		$articles = $query
 			->orderBy($filters['order'], $filters['order_dir'])
-			->limit(20)
-			->paginate()
+			->limit($filters['limit'])
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
 		$types = Type::query()
