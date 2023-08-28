@@ -44,6 +44,16 @@ class Subresource extends Model
 	use SoftDeletes, Historable;
 
 	/**
+	 * Notice values
+	 *
+	 * @var int
+	 */
+	const NO_NOTICE = 0;
+	const NOTICE_JUST_STARTED = 1;
+	const NOTICE_JUST_STOPPED = 2;
+	const NOTICE_STILL_STOPPED = 3;
+
+	/**
 	 * The name of the "created at" column.
 	 *
 	 * @var string|null
@@ -167,14 +177,14 @@ class Subresource extends Model
 		}
 
 		// If marked as just started, set back to still stopped
-		if ($this->notice == 1)
+		if ($this->notice == self::NOTICE_JUST_STARTED)
 		{
-			$this->notice = 3;
+			$this->notice = self::NOTICE_STILL_STOPPED;
 		}
 		else
 		{
-			// If 0, we are just now stopping
-			$this->notice = 2;
+			// If no notice, we are just now stopping
+			$this->notice = self::NOTICE_JUST_STOPPED;
 		}
 
 		$this->update(['notice' => $this->notice]);
@@ -208,13 +218,13 @@ class Subresource extends Model
 		}
 
 		// If marked as just started, set back to still stopped
-		if ($this->notice == 3)
+		if ($this->notice == self::NOTICE_STILL_STOPPED)
 		{
-			$this->notice = 1;
+			$this->notice = self::NOTICE_JUST_STARTED;
 		}
 		else
 		{
-			$this->notice = 0;
+			$this->notice = self::NO_NOTICE;
 		}
 
 		$this->update(['notice' => $this->notice]);
