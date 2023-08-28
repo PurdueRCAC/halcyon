@@ -36,7 +36,7 @@ class ControlStatements
 	/**
 	 * Handle content
 	 *
-	 * @param  array<string,string> $data
+	 * @param  array<string,mixed> $data
 	 * @param  Closure $next
 	 * @return array<string,string>
 	 */

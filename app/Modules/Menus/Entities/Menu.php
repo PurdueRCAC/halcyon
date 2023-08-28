@@ -34,16 +34,9 @@ class Menu extends Fluent
 	protected $_active = 0;
 
 	/**
-	 * Menu instances container.
-	 *
-	 * @var  array
-	 */
-	protected static $instances = array();
-
-	/**
 	 * Class constructor
 	 *
-	 * @param   array  $options  An array of configuration options.
+	 * @param   array<string,mixed>  $options  An array of configuration options.
 	 * @return  void
 	 */
 	public function __construct($options = array())
@@ -58,7 +51,7 @@ class Menu extends Fluent
 	 * Get menu item by id
 	 *
 	 * @param   int  $id  The item id
-	 * @return  mixed    The item object, or null if not found
+	 * @return  Item|null
 	 */
 	public function getItem($id): ?Item
 	{
@@ -151,7 +144,7 @@ class Menu extends Fluent
 	 * @param   mixed    $values      The value(s) of the field. If an array, need to match field names
 	 *                                each attribute may have multiple values to lookup for.
 	 * @param   bool  $firstonly   If true, only returns the first item found
-	 * @return  array|Item
+	 * @return  array<int,Item>|Item
 	 */
 	public function getItems($attributes, $values, $firstonly = false)
 	{
@@ -252,7 +245,7 @@ class Menu extends Fluent
 	/**
 	 * Getter for the menu array
 	 *
-	 * @return  array
+	 * @return  array<int,Item>
 	 */
 	public function getMenu(): array
 	{

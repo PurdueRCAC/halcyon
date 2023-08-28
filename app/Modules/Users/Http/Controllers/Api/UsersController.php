@@ -92,7 +92,7 @@ class UsersController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response
+	 * @return array<int,User>|\Illuminate\Pagination\LengthAwarePaginator<User>|\Illuminate\Support\Collection
 	 */
 	public function index(Request $request)
 	{
@@ -370,7 +370,7 @@ class UsersController extends Controller
 		$user->name = $request->input('name');
 		if ($request->has('puid'))
 		{
-			$user->puid = $request->inout('puid');
+			$user->puid = $request->input('puid');
 		}
 		$user->save();
 

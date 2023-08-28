@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Config\Repository;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Menus\Events\ItemCreating;
 use App\Modules\Menus\Events\ItemCreated;
@@ -41,7 +42,7 @@ use Exception;
  * @property int    $target
  * @property int    $access
  * @property string $class
- * @property string $params
+ * @property Repository $params
  * @property int    $lft
  * @property int    $rgt
  * @property int    $home

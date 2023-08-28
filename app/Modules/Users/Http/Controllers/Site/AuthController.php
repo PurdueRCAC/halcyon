@@ -75,7 +75,7 @@ class AuthController extends Controller
 	 * Show the form for creating a new resource.
 	 * 
 	 * @param  Request $request
-	 * @return RedirectResponse
+	 * @return Response|RedirectResponse
 	 */
 	public function authenticate(Request $request)
 	{
@@ -110,7 +110,7 @@ class AuthController extends Controller
 	 * Callback for third-party auth
 	 * 
 	 * @param  Request $request
-	 * @return Response|RedirectResponse
+	 * @return Response|RedirectResponse|bool
 	 */
 	public function callback(Request $request)
 	{

@@ -29,16 +29,17 @@ use Carbon\Carbon;
  * @property int    $id
  * @property string $name
  * @property int    $puid
- * @property string $api_token
+ * @property string|null $api_token
  * @property string $password
  * @property int    $enabled
  * @property Carbon|null $last_visit
  *
  * Temporary attributes
  *
- * @property array  $newroles
+ * @property array<int,int> $newroles
  * @property string $loginShell
  * @property string $api
+ * @property array<int,int> $access
  */
 class User extends Model implements
 	AuthenticatableContract,

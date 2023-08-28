@@ -327,7 +327,7 @@ class UsersController extends Controller
 			$username->fill($ufields);
 			if (!$id)
 			{
-				$username->datecreated = Carbon::now()->toDateTimeString();
+				$username->datecreated = Carbon::now();
 			}
 			$username->save();
 		}

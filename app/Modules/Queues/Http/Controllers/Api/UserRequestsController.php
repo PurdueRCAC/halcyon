@@ -346,7 +346,6 @@ class UserRequestsController extends Controller
 					$queueuser = Member::query()
 						->where('queueid', '=', $queue->id)
 						->where('userid', '=', $row->userid)
-						->get()
 						->first();
 				}
 
@@ -652,7 +651,7 @@ class UserRequestsController extends Controller
 				if ($row->userid != auth()->user()->id)
 				{
 					// Delete any queueuser entries tied to this userrequest
-					$result = UserGroup::where('userrequestid', '=', $row->id)
+					$result = GroupUser::where('userrequestid', '=', $row->id)
 						->where('userid', '=', $row->userid)
 						->wherePendingRequest()
 						->delete();
@@ -665,12 +664,12 @@ class UserRequestsController extends Controller
 				else
 				{
 					// End any queueuser entries tied to this userrequest
-					$result = UserGroup::where('userrequestid', '=', $row->id)
+					$result = GroupUser::where('userrequestid', '=', $row->id)
 						->where('userid', '=', $row->userid)
 						->wherePendingRequest()
 						->delete();
 
-					$result = UserGroup::where('userrequestid', '=', $row->id)
+					$result = GroupUser::where('userrequestid', '=', $row->id)
 						->where('userid', '=', $row->userid)
 						->wherePendingRequest()
 						->update(['notice' => Member::NOTICE_REQUEST_DENIED]);

@@ -289,7 +289,7 @@ class PermissionsController extends Controller
 	 */
 	public function delete($id)
 	{
-		$row = Asset::findByName($id);
+		$row = Asset::find($id);
 
 		if ($row)
 		{

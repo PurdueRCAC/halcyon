@@ -67,7 +67,7 @@ class TypesController extends Controller
 				->orderBy($filters['order'], $filters['order_dir'])
 				->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
-			$total = $rows->total;
+			$total = $rows->total();
 		}
 		else
 		{

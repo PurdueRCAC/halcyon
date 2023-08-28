@@ -15,7 +15,6 @@ class ItemCreated
 	 * Constructor
 	 *
 	 * @param Item $item
-	 * @param array $data
 	 * @return void
 	 */
 	public function __construct(Item $item)

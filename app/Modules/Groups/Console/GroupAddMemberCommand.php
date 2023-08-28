@@ -3,7 +3,7 @@
 namespace App\Modules\Groups\Console;
 
 use Illuminate\Console\Command;
-use App\Modules\Groups\Models\UnixGroup;
+use App\Modules\Groups\Models\Group;
 use App\Modules\Users\Models\User;
 
 class GroupAddMemberCommand extends Command

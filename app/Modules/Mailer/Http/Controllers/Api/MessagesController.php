@@ -615,7 +615,7 @@ class MessagesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return JsonResource
+	 * @return JsonResponse|JsonResource
 	 */
 	public function send(Request $request)
 	{
@@ -647,7 +647,7 @@ class MessagesController extends Controller
 		if ($request->has('cc'))
 		{
 			$ccs = $request->input('cc');
-			$cc = $this->toEmails($ccs, $cc, $request);
+			$cc = $this->toEmails($ccs, $cc);
 		}
 
 		$bcc = [];
@@ -655,7 +655,7 @@ class MessagesController extends Controller
 		if ($request->has('bcc'))
 		{
 			$bccs = $request->input('bcc');
-			$bcc = $this->toEmails($bccs, $bcc, $request);
+			$bcc = $this->toEmails($bccs, $bcc);
 		}
 
 		$to = [];
@@ -710,6 +710,8 @@ class MessagesController extends Controller
 		{
 			foreach ($users as $id)
 			{
+				$user = null;
+
 				if (is_numeric($id))
 				{
 					$user = User::find($id);
@@ -759,11 +761,10 @@ class MessagesController extends Controller
 	 * Convert a string of user IDs or emails into an array of emails
 	 *
 	 * @param string $str
-	 * @param array  $emails
-	 * @param Request $request
-	 * @return array
+	 * @param array<int,string>  $emails
+	 * @return array<int,string>
 	 */
-	protected function toEmails($str, $emails, $request)
+	protected function toEmails($str, $emails)
 	{
 		$str = explode(',', $str);
 		$str = array_map('trim', $str);

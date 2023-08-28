@@ -12,7 +12,7 @@ class CollectingRoutes
 	/**
 	 * Constructor
 	 *
-	 * @return void
+	 * @return void<string,array<string,mixed>>
 	 */
 	public function __construct()
 	{
