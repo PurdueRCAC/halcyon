@@ -30,7 +30,7 @@
 									$users = array();
 									foreach ($row->users as $u)
 									{
-										$users[] = '<a href="' . route('site.users.account', ['u' => $u->userid]). '">' . $u->user ? $u->user->name : trans('global.unknown') . ' (#' . $u->userid . ')' . '</a>';
+										$users[] = '<a href="' . route('site.users.account', ['u' => $u->userid]). '">' . ($u->user ? $u->user->name : trans('global.unknown') . ' (#' . $u->userid . ')') . '</a>';
 									}
 									?>
 									<li class="news-users"><span class="crmusers">{!! implode(', ', $users) !!}</span></li>
