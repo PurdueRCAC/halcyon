@@ -35,10 +35,20 @@ use Carbon\Carbon;
  * @property int    $notice
  * @property Carbon|null $datetimegroupid
  * @property int    $contactreporttypeid
+ *
+ * @property string $api
  */
 class Report extends Model
 {
 	use Historable, Taggable, HasPreformattedText;
+
+	/**
+	 * Notice values
+	 *
+	 * @var int
+	 */
+	const NO_NOTICE = 0;
+	const NOTICE_NEW = 23;
 
 	/**
 	 * The name of the "created at" column.

@@ -27,10 +27,20 @@ use Carbon\Carbon;
  * @property string $stemmedcomment
  * @property Carbon|null $datetimecreated
  * @property int    $notice
+ *
+ * @property string $api
  */
 class Comment extends Model
 {
 	use Historable, HasPreformattedText;
+
+	/**
+	 * Notice values
+	 *
+	 * @var int
+	 */
+	const NO_NOTICE = 0;
+	const NOTICE_NEW = 22;
 
 	/**
 	 * The name of the "created at" column.

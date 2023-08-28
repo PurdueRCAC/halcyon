@@ -16,6 +16,8 @@ use App\Modules\History\Traits\Historable;
  * @property int $userid
  * @property Carbon|null $datetimecreated
  * @property Carbon|null $datetimelastnotify
+ *
+ *'@property string $api
  */
 class User extends Model
 {

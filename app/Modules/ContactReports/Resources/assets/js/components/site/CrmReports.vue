@@ -1,5 +1,5 @@
 <template>
-	<div id="news">
+	<div>
 		<form method="get" action="/contactreports" class="editform">
 			<fieldset>
 				<legend>Search Contact Reports</legend>
@@ -34,7 +34,7 @@
 				<div class="form-group row" id="TR_keywords">
 					<label for="keywords" class="col-sm-2 col-form-label">Keywords</label>
 					<div class="col-sm-10">
-						<input type="text" v-model="keywords" v-on:keyup="read" name="keyword" id="keywords" size="45" class="form-control" value="" />
+						<input type="text" v-model="keywords" v-on:keyup="read" name="keyword" id="keywords" size="45" class="form-control" />
 					</div>
 				</div>
 				<div class="form-group row" id="TR_resource">
@@ -80,7 +80,7 @@
 	import CrmReport from './CrmReport.vue';
 	import ResourceList from './ResourceList.vue';
 
-    export default {
+	export default {
 		data() {
 			return {
 				reports: [],
@@ -93,15 +93,38 @@
 			create() {
 				console.log('Creating report');
 				this.mute = true;
-				window.axios.post(this.ROOT_URL + '/api/contactreports/create').then(({ data }) => {
+				/*window.axios.post(window.ROOT_URL + '/api/contactreports/create').then(({ data }) => {
 					this.reports.push(datum); //new Article(data));
 					this.mute = false;
-				});
+				});*/
 			},
 			read() {
 				console.log('Retrieving reports...');
 				this.mute = true;
-				window.axios.get(this.ROOT_URL + '/api/contactreports', {
+
+				let self = this;
+
+				fetch(window.ROOT_URL + '/api/contactreports', {
+					method: 'GET',
+					headers: window.fetch_headers
+				})
+				.then(function (response) {
+					return response.json();
+				})
+				.then(function (data) {
+					self.reports = [];
+					data.data.forEach(function (datum) {
+						self.reports.push(datum); //new Article(datum));
+					});
+					console.log(this.reports);
+					self.total = data.meta.total;
+					self.mute = false;
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+
+				/*window.axios.get(window.ROOT_URL + '/api/contactreports', {
 					params: {
 						search: this.keywords
 					}
@@ -113,24 +136,24 @@
 					//console.log(this.reports);
 					this.total = data.meta.total;
 					this.mute = false;
-				});
+				});*/
 			},
 			update(id, color) {
 				console.log('Updating report #' + id);
 				this.mute = true;
-				window.axios.put(`${this.ROOT_URL}/api/contactreports/${id}`, { color }).then(() => {
+				/*window.axios.put(`${window.ROOT_URL}/api/contactreports/${id}`, { color }).then(() => {
 					this.reports.find(datum => datum.id === id).color = color;
 					this.mute = false;
-				});
+				});*/
 			},
 			del(id) {
 				console.log('Deleting report #' + id);
 				this.mute = true;
-				window.axios.delete(`${this.ROOT_URL}/api/contactreports/${id}`).then(() => {
+				/*window.axios.delete(`${this.ROOT_URL}/api/contactreports/${id}`).then(() => {
 					let index = this.reports.findIndex(datum => datum.id === id);
 					this.reports.splice(index, 1);
 					this.mute = false;
-				});
+				});*/
 			}
 		},
 		watch: {

@@ -21,6 +21,8 @@ use App\Halcyon\Models\Timeperiod;
  * @property int    $timeperiodlimit
  * @property int    $waitperiodid
  * @property int    $waitperiodcount
+ *
+ * @property string $api
  */
 class Type extends Model
 {

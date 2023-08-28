@@ -32,7 +32,7 @@ class EmailReportsCommand extends Command
 		$debug = $this->option('debug') ? true : false;
 
 		// Get all new comments
-		$reports = Report::where('notice', '!=', 0)
+		$reports = Report::where('notice', '!=', Report::NO_NOTICE)
 			->orderBy('id', 'asc')
 			->get();
 
@@ -117,7 +117,7 @@ class EmailReportsCommand extends Command
 			}
 
 			// Change states
-			$report->notice = 0;
+			$report->notice = Report::NO_NOTICE;
 			$report->save();
 		}
 	}

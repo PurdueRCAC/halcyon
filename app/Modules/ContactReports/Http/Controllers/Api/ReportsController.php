@@ -543,7 +543,7 @@ class ReportsController extends Controller
 			$row->contactreporttypeid = $request->input('contactreporttypeid');
 		}
 		$row->groupid = $request->input('groupid', 0);
-		$row->notice = $request->input('notice', 23);
+		$row->notice = $request->input('notice', Report::NOTICE_NEW);
 
 		/*if ($row->datetimecontact > $now)
 		{

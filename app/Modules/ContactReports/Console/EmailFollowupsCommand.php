@@ -180,7 +180,7 @@ class EmailFollowupsCommand extends Command
 				Mail::to($user->email)->send($message);
 
 				// Update the record
-				$u->update(['datetimelastnotify' => $now->toDateTimeString()]);
+				$u->update(['datetimelastnotify' => $now]);
 
 				$total++;
 			}

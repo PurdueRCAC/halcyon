@@ -33,7 +33,9 @@ class EmailCommentsCommand extends Command
 		$debug = $this->option('debug') ? true : false;
 
 		// Get all new comments
-		$comments = Comment::where('notice', '!=', 0)->orderBy('id', 'desc')->get();
+		$comments = Comment::where('notice', '!=', Comment::NO_NOTICE)
+			->orderBy('id', 'desc')
+			->get();
 
 		if (!count($comments))
 		{
@@ -126,7 +128,7 @@ class EmailCommentsCommand extends Command
 			// Change states
 			foreach ($comments as $comment)
 			{
-				$comment->notice = 0;
+				$comment->notice = Comment::NO_NOTICE;
 				$comment->save();
 			}
 		}

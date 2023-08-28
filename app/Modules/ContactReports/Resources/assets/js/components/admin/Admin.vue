@@ -11,15 +11,15 @@
 			<div class="col col-md-8 filter-select text-right">
 				<label class="sr-only" for="filter_state">state</label>
 				<select name="state" class="form-control filter filter-submit">
-					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>all states</option>
-					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>published</option>
-					<option value="unpublished"<?php if ($filters['state'] == 'unpublished'): echo ' selected="selected"'; endif;?>>unpublished</option>
+					<option value="*">all states</option>
+					<option value="published">published</option>
+					<option value="unpublished">unpublished</option>
 				</select>
 
 				<label class="sr-only" for="filter-access">access level</label>
 				<select name="access" id="filter-access" class="form-control filter filter-submit">
 					<option value="*">select level</option>
-					<option v-for="level in levels" :value="level.id">{{ level.title }}</option>
+					<option v-for="(level, i) in levels" :key="i" :value="level.id">{{ level.title }}</option>
 				</select>
 
 				<label class="sr-only" for="filter-type">Type</label>
@@ -33,9 +33,10 @@
 	<table class="table table-hover adminlist">
 		<thead>
 			<tr>
-				<th>
+				<th scope="col">
+					Check
 				</th>
-				<th scope="col" class="priority-5">
+				<th scope="col">
 					ID
 				</th>
 				<th scope="col">
@@ -44,13 +45,13 @@
 				<th scope="col">
 					State
 				</th>
-				<th scope="col" class="priority-4">
+				<th scope="col">
 					Type
 				</th>
-				<th scope="col" colspan="2" class="priority-4">
+				<th scope="col" colspan="2">
 					Publish window
 				</th>
-				<th scope="col" class="priority-4 text-right">
+				<th scope="col" class="text-right">
 					Updates !
 				</th>
 			</tr>
@@ -117,7 +118,7 @@
 				this.mute = true;
 
 				if (!this.levels.length) {
-					window.axios.get(this.ROOT_URL + '/api/users/levels', {
+					window.axios.get(window.ROOT_URL + '/api/users/levels', {
 					}).then(({ data }) => {
 						this.levels = [];
 						data.data.forEach(datum => {
@@ -126,7 +127,7 @@
 					});
 				}
 
-				window.axios.get(this.ROOT_URL + '/api/news', {
+				window.axios.get(window.ROOT_URL + '/api/news', {
 					params: {
 						search: this.keywords
 					}

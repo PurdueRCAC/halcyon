@@ -13,7 +13,7 @@ window._ = require('lodash');
  * to our Laravel back-end. This library automatically handles sending the
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
-
+/*
 window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -44,7 +44,7 @@ window.axios.interceptors.request.use(
 		return Promise.reject(error);
 	}
 );
-
+*/
 const currentLocale = document.querySelector('html').getAttribute('lang');
 
 if (currentLocale) {
@@ -54,18 +54,23 @@ if (currentLocale) {
 }
 
 // Let's get the main Vue object
-window.Vue = require('vue');
+/*window.Vue = require('vue');*/
 
-let baseurl = document.head.querySelector('meta[name="base-url"]');
+const baseurl = document.head.querySelector('meta[name="base-url"]');
 
+window.ROOT_URL = '';
 if (baseurl) {
-	Vue.prototype.ROOT_URL = baseurl.content;
-} else {
-	Vue.prototype.ROOT_URL = '';
+	window.ROOT_URL = baseurl.content;
 }
+window.fetch_headers = {
+	'Content-Type': 'application/json',
+	'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+};
 
 // Import the app
+import { createApp } from 'vue';
 import CrmReports from './components/site/CrmReports.vue';
+//import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -73,7 +78,10 @@ import CrmReports from './components/site/CrmReports.vue';
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-new Vue({
+/*new Vue({
 	el: '#contactreports',
 	render: h => h(CrmReports)
-});
+});*/
+const app = createApp(CrmReports); //.component('font-awesome-icon', FontAwesomeIcon);
+
+app.mount('#contactreports');

@@ -282,11 +282,11 @@ class CommentsController extends Controller
 		}
 
 		// Set notice state
-		$row->notice = 0;
+		$row->notice = Comment::NO_NOTICE;
 
 		if ($row->comment != '')
 		{
-			$row->notice = 22;
+			$row->notice = Comment::NOTICE_NEW;
 		}
 
 		$row->datetimecreated = Carbon::now()->toDateTimeString();

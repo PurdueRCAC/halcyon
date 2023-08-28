@@ -168,7 +168,7 @@ app('pathway')->append(
 											{
 												$usr = App\Modules\Users\Models\User::find($u);
 											}
-											$usrs[$u] = $usr->name . ' (' . $usr->username . ')';
+											$usrs[$u] = $usr ? $usr->name . ' (' . $usr->username . ')' : $u;
 										}
 									}
 								}

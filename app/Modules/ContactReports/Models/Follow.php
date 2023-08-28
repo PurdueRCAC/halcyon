@@ -119,7 +119,7 @@ class Follow extends Model
 	 * @param  Builder $query
 	 * @return Builder
 	 */
-	public function scopeWhereIsContactFollower(Builder $query)
+	public function scopeWhereIsContactFollower(Builder $query): Builder
 	{
 		return $query->where('membertype', '=', 10);
 	}

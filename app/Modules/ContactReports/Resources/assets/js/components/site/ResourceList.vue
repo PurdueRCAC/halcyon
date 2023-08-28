@@ -1,6 +1,6 @@
 <template>
 	<select class="form-control searchable-select-multi" multiple="multiple" v-bind:name="name" v-bind:id="id">
-		<option v-for="option in options" v-bind:value="option.id">
+		<option v-for="(option, i) in options" v-bind:key="i" v-bind:value="option.id">
 			{{ option.name }}
 		</option>
 	</select>
@@ -21,20 +21,41 @@
 		},
 		methods: {
 			read() {
+				let self = this;
 				//console.log('Retrieving resources...');
 				this.mute = true;
-				window.axios.get(this.ROOT_URL + '/api/resources', {
+
+				fetch(window.ROOT_URL + '/api/resources?limit=50', {
+					method: 'GET',
+					headers: window.fetch_headers
+				})
+				.then(function (response) {
+					return response.json();
+				})
+				.then(function (data) {
+					self.options = [];
+					data.data.forEach(function (datum) {
+						self.options.push(datum);
+					});
+					self.total = data.meta.total;
+					self.mute = false;
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+	
+				/*window.axios.get(window.ROOT_URL + '/api/resources', {
 					params: {
 						limit: 50
 					}
 				}).then(({ data }) => {
 					this.options = [];
-					data.data.forEach(datum => {
+					data.data.forEach(function (datum) {
 						this.options.push(datum);
 					});
 					this.total = data.meta.total;
 					this.mute = false;
-				});
+				});*/
 			}
 		},
 		mounted() {
@@ -42,7 +63,7 @@
 
 			var vm = this;
 
-			$(this.$el)
+			/*$(this.$el)
 				// init select2
 				.select2({
 					multiple: true,
@@ -80,7 +101,30 @@
 				// emit event on change.
 				.on("change", function() {
 					vm.$emit("input", this.value);
-				});
+				});*/
+			let sel = new TomSelect(this.$el, {
+				//maxItems: 1,
+				valueField: 'id',
+				labelField: 'name',
+				searchField: ['name', 'rolename', 'listname'],
+				plugins: ['remove_button'],
+				persist: false,
+				// Fetch remote data
+				load: function (query, callback) {
+					var url = this.$el.getAttribute('data-api') + '?api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content') + '&search=' + encodeURIComponent(query);
+
+					fetch(url)
+						.then(response => response.json())
+						.then(json => {
+							callback(json.data);
+						}).catch(() => {
+							callback();
+						});
+				}
+			});
+			sel.on('change', function () {
+				
+			});
 		}
 	}
 </script>

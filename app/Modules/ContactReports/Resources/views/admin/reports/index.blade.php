@@ -112,7 +112,7 @@ app('pathway')
 							else:
 								$usr = App\Modules\Users\Models\User::find($u);
 							endif;
-							$usrs[] = $usr->name . ':' . $u;
+							$usrs[] = ($usr ? $usr->name : trans('global.unknown')) . ':' . $u;
 						endif;
 					endforeach;
 				endif;
