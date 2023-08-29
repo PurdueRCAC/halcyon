@@ -207,6 +207,17 @@ class MediaController extends Controller
 	 * 			"type":      "bool"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"201": {
+	 * 			"description": "Successful entry creation"
+	 * 		},
+	 * 		"401": {
+	 * 			"description": "Unauthorized"
+	 * 		},
+	 * 		"415": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return  JsonResponse
 	 */
@@ -215,13 +226,14 @@ class MediaController extends Controller
 		event(new FilesUploading($request));
 
 		$disk = $request->input('disk', 'public');
-		$path = $request->input('path');
+		$path = $request->input('path', '/');
+		$path = '/' . trim($path, '/');
 		$files = $request->file();
 		$overwrite = $request->input('overwrite', true);
 
 		if (empty($files))
 		{
-			return response()->json('No files submitted', 415);
+			return response()->json(['message' => 'No files submitted'], 415);
 		}
 
 		$fileNotUploaded = false;
@@ -230,7 +242,7 @@ class MediaController extends Controller
 		{
 			// Skip or overwrite files
 			if (!$overwrite
-			 && Storage::disk($disk)->exists($path . '/' . $file->getClientOriginalName()))
+			 && Storage::disk($disk)->exists(($path != '/' ? $path : '') . '/' . $file->getClientOriginalName()))
 			{
 				continue;
 			}
@@ -282,7 +294,7 @@ class MediaController extends Controller
 
 			if ($resize = $request->input('resize'))
 			{
-				$final = storage_path('app/' . $disk . '/' . $path . '/' . $name);
+				$final = storage_path('app/' . $disk . ($path != '/' ? $path : '') . '/' . $name);
 
 				// Resize image
 				$hi = new ImageProcessor($final);
@@ -301,25 +313,24 @@ class MediaController extends Controller
 		{
 			$parts = explode('/', $content['path']);
 			$filename = end($parts);
+
 			if (substr($filename, 0, 1) == '.')
 			{
-				//unset($contents[$i]);
 				continue;
 			}
+
 			$data[] = [
 				'type' => $content['type'],
 				'path' => $content['path'],
 				'fileSize' => $content->isFile() ? $content['fileSize'] : 0,
 				'lastModified' => $content['lastModified'],
 				'mimeType' => $content->isFile() ? $content['mimeType'] : null,
-				'url' => asset('/files/' . ($path ? trim($path, '/') . '/' : '') . $content['path'])
+				'url' => asset('/files' . ($path != '/' ? $path : '') . '/' . $content['path'])
 			];
-			//$contents[$i]['url'] = asset('/files/' . ($path ? trim($path, '/') . '/' : '') . $content['path']);
 		}
-		//$contents = array_values($contents);
 
 		$response = [
-			'data' => $data, //$contents,
+			'data' => $data,
 			'uploaded' => true,
 		];
 
@@ -335,6 +346,7 @@ class MediaController extends Controller
 	/**
 	 * Rename/move a file
 	 *
+	 * @apiMethod PUT
 	 * @apiUri    /media/rename
 	 * @apiUri    /media/move
 	 * @apiParameter {
@@ -361,6 +373,17 @@ class MediaController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"202": {
+	 * 			"description": "Successful entry modification"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"422": {
+	 * 			"description": "Invalid data"
+	 * 		}
+	 * }
 	 * @param   Request  $request
 	 * @return  JsonResponse
 	 */
@@ -382,17 +405,17 @@ class MediaController extends Controller
 
 		if (!$before || !$after)
 		{
-			return response()->json(['message' => trans('media::media.error.invalid name')], 415);
+			return response()->json(['message' => trans('media::media.error.invalid name')], 422);
 		}
 
 		if (!Storage::disk($disk)->exists($before))
 		{
-			return response()->json(['message' => trans('media::media.error.missing source', ['source' => $before])], 415);
+			return response()->json(['message' => trans('media::media.error.missing source', ['source' => $before])], 422);
 		}
 
 		if (Storage::disk($disk)->exists($after))
 		{
-			return response()->json(['message' => trans('media::media.error.destination exists')], 415);
+			return response()->json(['message' => trans('media::media.error.destination exists')], 422);
 		}
 
 		// Rename directory
@@ -409,6 +432,7 @@ class MediaController extends Controller
 	/**
 	 * Delete a file
 	 *
+	 * @apiMethod DELETE
 	 * @apiUri    /media/delete
 	 * @apiParameter {
 	 * 		"name":          "disk",
@@ -424,6 +448,11 @@ class MediaController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "array"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"204": {
+	 * 			"description": "Successful deletion"
 	 * 		}
 	 * }
 	 * @param   Request  $request
@@ -489,8 +518,16 @@ class MediaController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry download"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "File not found"
+	 * 		}
+	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  Response|JsonResponse
 	 */
 	public function download(Request $request)
 	{
@@ -507,6 +544,11 @@ class MediaController extends Controller
 		else
 		{
 			$filename = basename($path);
+		}
+
+		if (!Storage::disk($disk)->exists($path))
+		{
+			return response()->json(['message' => 'File not found'], 404);
 		}
 
 		// Get some data from the request
@@ -532,6 +574,11 @@ class MediaController extends Controller
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful entry download"
 	 * 		}
 	 * }
 	 * @param   Request  $request
