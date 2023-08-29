@@ -8,6 +8,7 @@
 				<option value="danger">widget.notice::notice.alertlevels.high</option>
 			</field>
 			<field name="htmlid" type="text" default="notices" label="widget.notice::notice.htmlid" description="widget.notice::notice.htmlid desc" />
+			<field name="htmlclass" type="text" default="" label="widget.notice::notice.htmlclass" description="widget.notice::notice.htmlclass desc" />
 			<field name="message" type="textarea" rows="5" cols="40" default="" label="widget.notice::notice.message" description="widget.notice::notice.message desc" />
 			<field name="allowClose" type="radio" default="0" label="widget.notice::notice.allow closing" description="widget.notice::notice.allow closing desc">
 				<option value="1">global.yes</option>

@@ -24,6 +24,8 @@ return [
 	],
 	'htmlid' => 'Widget ID',
 	'htmlid desc' => 'An ID to be applied to the css of the widget container, this allows individual widget styling',
+	'htmlclass' => 'CSS Classes',
+	'htmlclass desc' => 'Extra CSS classes to apply to the notice container. This allows for more targeted styling.',
 	'message' => 'Message',
 	'message desc' => 'The message to be displayed.',
 	'allow closing' => 'Allow closing',
