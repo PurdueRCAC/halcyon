@@ -21,7 +21,7 @@
 		$output .= '<input type="search" enterkeyhint="search" name="search" class="form-control ' . $class . 'searchword" id="searchword' . $instance . '" size="' . $width . '" placeholder="' . $text . '" />';
 
 		if ($button):
-			$button = '<input type="submit" class="' . $class . 'searchsubmit input-group-text" id="submitquery' . $instance . '" value="' . $button_text . '" />';
+			$button = '<input type="submit" class="' . $class . 'searchsubmit btn input-group-text" id="submitquery' . $instance . '" value="' . $button_text . '" />';
 		endif;
 
 		switch ($button_pos):
