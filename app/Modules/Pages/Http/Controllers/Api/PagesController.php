@@ -274,7 +274,7 @@ class PagesController extends Controller
 	 * 		"401": {
 	 * 			"description": "Unauthorized"
 	 * 		},
-	 * 		"409": {
+	 * 		"422": {
 	 * 			"description": "Invalid data"
 	 * 		}
 	 * }
@@ -300,17 +300,14 @@ class PagesController extends Controller
 
 		if ($validator->fails())
 		{
-			return response()->json(['message' => $validator->messages()], 415);
+			return response()->json(['message' => $validator->messages()], 422);
 		}
 
 		$row = new Page;
 		$row->fill($request->all());
 		$row->params = json_encode($request->input('params', []));
 
-		if (!$row->save())
-		{
-			return response()->json(['message' => trans('page::messages.page created')], 409);
-		}
+		$row->save();
 
 		return new PageResource($row);
 	}

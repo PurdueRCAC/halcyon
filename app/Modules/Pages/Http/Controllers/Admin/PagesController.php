@@ -262,7 +262,12 @@ class PagesController extends Controller
 		{
 			// Delete the entry
 			// Note: This is recursive and will also remove all descendents
-			$row = Page::findOrFail($id);
+			$row = Page::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if ($row->trashed())
 			{
@@ -283,7 +288,7 @@ class PagesController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('global.messages.item deleted', ['number' => $success]));
+			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
 		return redirect(route('admin.pages.index'));
