@@ -2,10 +2,10 @@
 <config>
 	<fields name="params">
 		<fieldset name="basic">
-			<field name="label" type="label" label="widget.search::search.label" description="widget.search::search.label desc" />
-			<field name="text" type="text" label="widget.search::search.text" description="widget.search::search.text desc" />
-			<field name="button" type="list" label="widget.search::search.button" description="widget.search::search.button desc">
-				<option value="">global.no</option>
+			<field name="label" type="label" value="Search this site" label="widget.search::search.label text" description="widget.search::search.label text desc" />
+			<field name="text" type="text" value="Search..." label="widget.search::search.text" description="widget.search::search.text desc" />
+			<field name="button" type="list" default="1" label="widget.search::search.button" description="widget.search::search.button desc">
+				<option value="0">global.no</option>
 				<option value="1">global.yes</option>
 			</field>
 			<field name="button_pos" type="list" default="right" label="widget.search::search.button position" description="widget.search::search.button position desc">
@@ -14,11 +14,11 @@
 				<option value="top">widget.search::search.top</option>
 				<option value="bottom">widget.search::search.bottom</option>
 			</field>
-			<field name="button_text" type="text" label="widget.search::search.button text" description="widget.search::search.button text desc" />
+			<field name="button_text" type="text" value="Go" label="widget.search::search.button text" description="widget.search::search.button text desc" />
 			<field name="opensearch_title" type="text" label="widget.search::search.open search text" description="widget.search::search.open search text desc" />
 		</fieldset>
 		<fieldset name="advanced">
-			<field name="class" type="text" label="widgets::widgets.field.class name" description="widgets::widgets.field.class name desc" />
+			<field name="class" type="text" label="widgets::widgets.field.class name" description="widgets::widgets.field.class name desccription" />
 			<field name="cache" type="list" default="1" label="widgets::widgets.field.caching" description="widgets::widgets.field.caching description">
 				<option value="1">widgets::widgets.use global</option>
 				<option value="0">widgets::widgets.no caching</option>
