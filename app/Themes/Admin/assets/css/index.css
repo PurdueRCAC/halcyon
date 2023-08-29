@@ -1164,6 +1164,7 @@ h4 {
 .icon-search:before {
   content: "\e8bd";
 }
+.fa-server:before,
 .icon-resources:before,
 .icon-server:before {
   content: "\e8be";
@@ -1171,12 +1172,15 @@ h4 {
 .icon-scissors:before {
   content: "\e8bf";
 }
+.fa-share-alt:before,
 .icon-share-2:before {
   content: "\e8c0";
 }
+.fa-share:before,
 .icon-share:before {
   content: "\e8c1";
 }
+.fa-shield:before,
 .icon-shield:before {
   content: "\e8c2";
 }
@@ -1196,9 +1200,11 @@ h4 {
 .icon-skip-forward:before {
   content: "\e8c7";
 }
+.fa-slack:before,
 .icon-slack:before {
   content: "\e8c8";
 }
+.fa-ban:before,
 .icon-false:before,
 .icon-unpublish:before,
 .icon-slash:before {
@@ -1222,6 +1228,7 @@ h4 {
 .icon-stop-circle:before {
   content: "\e8ce";
 }
+.fa-sun-o:before,
 .icon-sun:before {
   content: "\e8cf";
 }
@@ -1241,12 +1248,15 @@ h4 {
 .icon-target:before {
   content: "\e8d4";
 }
+.fa-thermometer:before,
 .icon-thermometer:before {
   content: "\e8d5";
 }
+.fa-thumbs-up:before,
 .icon-thumbs-up:before {
   content: "\e8d6";
 }
+.fa-thumbs-down:before,
 .icon-thumbs-down:before {
   content: "\e8d7";
 }
@@ -1275,6 +1285,7 @@ h4 {
 .icon-type:before {
   content: "\e8df";
 }
+.fa-twitter:before,
 .icon-twitter:before {
   content: "\e8e0";
 }
@@ -1287,6 +1298,7 @@ h4 {
 .icon-upload-cloud:before {
   content: "\e8e3";
 }
+.fa-unlock:before,
 .icon-unlock:before {
   content: "\e8e4";
 }
@@ -1328,12 +1340,14 @@ h4 {
 .icon-volume-1:before {
   content: "\e8f0";
 }
+.fa-volume-off:before,
 .icon-volume:before {
   content: "\e8f1";
 }
 .icon-watch:before {
   content: "\e8f2";
 }
+.fa-wifi:before,
 .icon-wifi:before {
   content: "\e8f3";
 }
@@ -1348,9 +1362,11 @@ h4 {
 .icon-x:before {
   content: "\e8f6";
 }
+.fa-times-circle:before,
 .icon-x-circle:before {
   content: "\e8f7";
 }
+.fa-bolt:before,
 .icon-zap:before {
   content: "\e8f8";
 }
@@ -1422,6 +1438,7 @@ h4 {
 .icon-star-on:before {
   content: "\e90b";
 }
+.fa-heart:before,
 .icon-heart-on:before {
   content: "\e90c";
 }
@@ -1453,15 +1470,18 @@ h4 {
 .icon-code:before {
   content: "\e915";
 }
+.fa-database:before,
 .icon-database:before {
   content: "\e916";
 }
+.fa-usd:before,
 .icon-dollar-sign:before {
   content: "\e917";
 }
 .icon-folder-plus:before {
   content: "\e918";
 }
+.fa-gift:before,
 .icon-gift:before {
   content: "\e919";
 }
@@ -1493,6 +1513,7 @@ h4 {
 .icon-more-horizontal:before {
   content: "\e922";
 }
+.fa-rss:before,
 .icon-rss:before {
   content: "\e923";
 }
@@ -1505,15 +1526,18 @@ h4 {
 .icon-shopping-bag:before {
   content: "\e926";
 }
+.fa-terminal:before,
 .icon-terminal:before {
   content: "\e927";
 }
+.fa-truck:before,
 .icon-truck:before {
   content: "\e928";
 }
 .icon-zap-off:before {
   content: "\e929";
 }
+.fa-youtube:before,
 .icon-youtube:before {
   content: "\e92a";
 }
