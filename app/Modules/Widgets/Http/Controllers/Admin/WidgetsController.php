@@ -678,7 +678,7 @@ class WidgetsController extends Controller
 					// Check-in failed, go back to the record and display a notice.
 					if (!$model->checkIn())
 					{
-						app('request')->session()->flash('error', trans('global.messages.checkin failed'));
+						$request->session()->flash('error', trans('global.messages.checkin failed'));
 					}
 				}
 			}
