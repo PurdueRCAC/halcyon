@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				method: 'POST',
 				headers: headers,
 				body: JSON.stringify({
-					'contactreportid': document.getElementById('field-id').value,
+					'contactreportid': btn.getAttribute('data-id'),
 					'comment': comment.value
 				})
 			})
@@ -228,10 +228,14 @@ document.addEventListener('DOMContentLoaded', function () {
 						template.setAttribute('data-api', data.api);
 
 						template.querySelectorAll('a').forEach(function (el) {
-							el.setAttribute('href', el.getAttribute('href').replace(/\{id\}/g, data.id));
+							if (el.getAttribute('href')) {
+								el.setAttribute('href', el.getAttribute('href').replace(/\{id\}/g, data.id));
+							}
 						});
 						template.querySelectorAll('textarea').forEach(function (el) {
-							el.setAttribute('id', el.getAttribute('id').replace(/\{id\}/g, data.id));
+							if (el.getAttribute('id')) {
+								el.setAttribute('id', el.getAttribute('id').replace(/\{id\}/g, data.id));
+							}
 						});
 						template.querySelectorAll('label').forEach(function (el) {
 							el.setAttribute('for', el.getAttribute('for').replace(/\{id\}/g, data.id));
@@ -243,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						template.querySelectorAll('.text-muted').forEach(function (el) {
 							el.innerHTML = el.innerHTML
 								.replace(/\{who\}/g, data.username)
-								.replace(/\{when\}/g, data.datetimecreated);
+								.replace(/\{when\}/g, data.formatteddate);
 						});
 
 						template.querySelectorAll('div').forEach(function (el) {
@@ -274,6 +278,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					comment.dispatchEvent(new Event('refreshEditor', { bubbles: true }));
 				})
 				.catch(function (error) {
+					console.log(error);
 					Halcyon.message('danger', error);
 				});
 		});
