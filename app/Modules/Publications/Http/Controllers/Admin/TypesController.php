@@ -139,7 +139,7 @@ class TypesController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Type::findOrFail($id) : new Type();
+		$row = Type::findOrNew($id);
 		$row->name = $request->input('name');
 		if ($request->has('alias'))
 		{
@@ -170,7 +170,12 @@ class TypesController extends Controller
 
 		foreach ($ids as $id)
 		{
-			$row = Type::findOrFail($id);
+			$row = Type::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if (!$row->delete())
 			{

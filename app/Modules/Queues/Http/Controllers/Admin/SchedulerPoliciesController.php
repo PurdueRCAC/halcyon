@@ -83,14 +83,15 @@ class SchedulerPoliciesController extends Controller
 
 	/**
 	 * Show the form for creating a new queue.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$row = new SchedulerPolicy();
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -102,15 +103,16 @@ class SchedulerPoliciesController extends Controller
 
 	/**
 	 * Show the form for editing the specified queue.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @param  int  $id
 	 * @return View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = SchedulerPolicy::find($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -143,7 +145,7 @@ class SchedulerPoliciesController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? SchedulerPolicy::findOrFail($id) : new SchedulerPolicy();
+		$row = SchedulerPolicy::findOrNew($id);
 		$row->name = $request->input('fields.name');
 
 		if (!$row->save())
@@ -169,7 +171,12 @@ class SchedulerPoliciesController extends Controller
 
 		foreach ($ids as $id)
 		{
-			$row = SchedulerPolicy::findOrFail($id);
+			$row = SchedulerPolicy::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if (!$row->delete())
 			{

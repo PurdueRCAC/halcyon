@@ -128,13 +128,14 @@ class MenusController extends Controller
 	/**
 	 * Show the form for creating a new article
 	 *
+	 * @param   Request  $request
 	 * @return  View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$row = new Type();
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -147,14 +148,15 @@ class MenusController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
+	 * @param   Request  $request
 	 * @param   int  $id
 	 * @return  View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Type::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -188,7 +190,7 @@ class MenusController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Type::findOrFail($id) : new Type();
+		$row = Type::findOrNew($id);
 		$row->fill($request->input('fields'));
 
 		if (!$row->save())
@@ -217,7 +219,12 @@ class MenusController extends Controller
 		{
 			// Delete the entry
 			// Note: This is recursive and will also remove all descendents
-			$row = Type::findOrFail($id);
+			$row = Type::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if (!$row->delete())
 			{

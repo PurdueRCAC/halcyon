@@ -172,7 +172,12 @@ class BatchsystemsController extends Controller
 
 		foreach ($ids as $id)
 		{
-			$row = Batchsystem::findOrFail($id);
+			$row = Batchsystem::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if ($row->resources()->count())
 			{

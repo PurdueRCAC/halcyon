@@ -110,14 +110,15 @@ class QosController extends Controller
 
 	/**
 	 * Show the form for creating a new queue.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$row = new Qos();
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -139,10 +140,11 @@ class QosController extends Controller
 	/**
 	 * Show the form for editing the specified queue.
 	 *
+	 * @param  Request $request
 	 * @param  int $id
 	 * @return View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Qos::withTrashed()->findOrFail($id);
 
@@ -151,7 +153,7 @@ class QosController extends Controller
 			abort(404);
 		}
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -284,7 +286,12 @@ class QosController extends Controller
 
 		foreach ($ids as $id)
 		{
-			$row = Qos::findOrFail($id);
+			$row = Qos::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if ($row->trashed())
 			{

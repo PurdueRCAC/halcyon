@@ -345,7 +345,12 @@ class ResourcesController extends Controller
 
 		foreach ($ids as $id)
 		{
-			$row = Asset::findOrFail($id);
+			$row = Asset::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if (!$row->trashed())
 			{

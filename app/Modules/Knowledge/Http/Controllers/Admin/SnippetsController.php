@@ -251,16 +251,12 @@ class SnippetsController extends Controller
 		$id = $request->input('id');
 		$parent_id = $request->input('fields.parent_id');
 
-		$row = $id ? SnippetAssociation::findOrFail($id) : new SnippetAssociation;
+		$row = SnippetAssociation::findOrNew($id);
 		$row->page_id = $request->input('fields.page_id');
 		$orig_parent_id = $row->parent_id;
 		$row->parent_id = $parent_id;
 
-		$page = Page::find($row->page_id);
-		if (!$row->page_id || !$page)
-		{
-			$page = new Page;
-		}
+		$page = Page::findOrNew($row->page_id);
 
 		$original = $page->alias;
 

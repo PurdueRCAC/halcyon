@@ -224,14 +224,15 @@ class UsersController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$user = new User;
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$user->fill($fields);
 		}
@@ -364,11 +365,12 @@ class UsersController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @param  int  $id
 	 * @return View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$user = User::findOrFail($id);
 
@@ -377,7 +379,7 @@ class UsersController extends Controller
 			$user->sourced = 1;
 		}
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$user->fill($fields);
 		}
@@ -389,11 +391,12 @@ class UsersController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @param  int  $id
 	 * @return View
 	 */
-	public function show($id)
+	public function show(Request $request, $id)
 	{
 		$user = User::findOrFail($id);
 
@@ -402,7 +405,7 @@ class UsersController extends Controller
 			$user->sourced = 1;
 		}
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$user->fill($fields);
 		}
@@ -436,7 +439,12 @@ class UsersController extends Controller
 
 		foreach ($ids as $id)
 		{
-			$row = User::findOrFail($id);
+			$row = User::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			foreach ($row->usernames as $username)
 			{

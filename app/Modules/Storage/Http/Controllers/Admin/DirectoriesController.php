@@ -175,11 +175,12 @@ class DirectoriesController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @param  int  $id
 	 * @return View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Directory::query()
 			->withTrashed()
@@ -191,7 +192,7 @@ class DirectoriesController extends Controller
 			abort(404);
 		}
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -534,7 +535,12 @@ class DirectoriesController extends Controller
 		{
 			// Delete the entry
 			// Note: This is recursive and will also remove all descendents
-			$row = Directory::findOrFail($id);
+			$row = Directory::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if (!$row->delete())
 			{

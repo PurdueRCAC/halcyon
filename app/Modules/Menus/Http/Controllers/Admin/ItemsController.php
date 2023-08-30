@@ -445,7 +445,7 @@ class ItemsController extends Controller
 				break;
 		}
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -464,10 +464,11 @@ class ItemsController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
+	 * @param   Request $request
 	 * @param   int  $id
 	 * @return  View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Item::withTrashed()->findOrFail($id);
 
@@ -477,7 +478,7 @@ class ItemsController extends Controller
 			return $this->cancel()->with('warning', trans('global.messages.item checked out'));
 		}
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -568,7 +569,7 @@ class ItemsController extends Controller
 
 		$id = $request->input('fields.id');
 
-		$row = $id ? Item::findOrFail($id) : new Item();
+		$row = Item::findNew($id);
 		$row->fill($request->input('fields'));
 		if ($request->has('fields.page_id'))
 		{

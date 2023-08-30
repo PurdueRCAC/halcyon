@@ -222,7 +222,7 @@ class PublicationsController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Publication::findOrFail($id) : new Publication();
+		$row = Publication::findOrNew($id);
 		foreach ($rules as $key => $rule)
 		{
 			if ($request->has($key))
@@ -281,7 +281,12 @@ class PublicationsController extends Controller
 
 		foreach ($ids as $id)
 		{
-			$row = Publication::findOrFail($id);
+			$row = Publication::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if (!$row->delete())
 			{

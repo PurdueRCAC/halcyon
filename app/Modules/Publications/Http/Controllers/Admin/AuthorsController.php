@@ -143,7 +143,7 @@ class AuthorsController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Author::findOrFail($id) : new Author();
+		$row = Author::findOrNew($id);
 		$row->fill($request->input('fields'));
 
 		if (!$row->save())

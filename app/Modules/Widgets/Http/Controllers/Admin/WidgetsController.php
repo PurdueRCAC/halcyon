@@ -305,7 +305,7 @@ class WidgetsController extends Controller
 	{
 		$row = Widget::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -499,7 +499,12 @@ class WidgetsController extends Controller
 		{
 			// Delete the entry
 			// Note: This is recursive and will also remove all descendents
-			$row = Widget::findOrFail($id);
+			$row = Widget::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if (!$row->delete())
 			{
@@ -527,7 +532,7 @@ class WidgetsController extends Controller
 	 */
 	public function state(Request $request, $id)
 	{
-		$action = app('request')->segment(count($request->segments()) - 1);
+		$action = $request->segment(count($request->segments()) - 1);
 		$value  = $action == 'publish' ? 1 : 0;
 
 		// Incoming

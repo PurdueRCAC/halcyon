@@ -205,7 +205,12 @@ class TypesController extends Controller
 
 		foreach ($ids as $id)
 		{
-			$row = Type::findOrFail($id);
+			$row = Type::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if (!$row->delete())
 			{

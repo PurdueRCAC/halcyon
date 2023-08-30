@@ -179,7 +179,12 @@ class CommentsController extends Controller
 		{
 			// Delete the entry
 			// Note: This is recursive and will also remove all descendents
-			$row = Comment::findOrFail($id);
+			$row = Comment::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if (!$row->delete())
 			{

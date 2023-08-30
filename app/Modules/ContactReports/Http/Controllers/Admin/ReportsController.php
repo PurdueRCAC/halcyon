@@ -520,7 +520,12 @@ class ReportsController extends Controller
 		foreach ($ids as $id)
 		{
 			// Delete the entry
-			$row = Report::findOrFail($id);
+			$row = Report::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if (!$row->delete())
 			{

@@ -84,14 +84,15 @@ class TypesController extends Controller
 
 	/**
 	 * Show the form for creating a new queue.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$row = new Type();
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -103,15 +104,16 @@ class TypesController extends Controller
 
 	/**
 	 * Show the form for editing the specified queue.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @param  int  $id
 	 * @return View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Type::find($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -144,7 +146,7 @@ class TypesController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Type::findOrFail($id) : new Type();
+		$row = Type::findOrNew($id);
 		$row->name = $request->input('fields.name');
 
 		if (!$row->save())
@@ -171,6 +173,11 @@ class TypesController extends Controller
 		foreach ($ids as $id)
 		{
 			$row = Type::findOrFail($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if (!$row->delete())
 			{

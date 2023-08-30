@@ -65,8 +65,8 @@ class ListenersController extends Controller
 			//->where('state', '>=', 0);
 
 		$p = (new Listener)->getTable();
-		$u = (new User)->getTable(); //'users';
-		$a = (new Viewlevel)->getTable();'viewlevels';
+		$u = (new User)->getTable();
+		$a = (new Viewlevel)->getTable();
 
 		$query->select([$p . '.*', $u . '.name AS editor', $a . '.title AS access_level']);
 
@@ -149,15 +149,16 @@ class ListenersController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
-	 * 
+	 *
+	 * @param Request $request
 	 * @return View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$row = new Listener;
 		$row->registerLanguage();
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -180,7 +181,7 @@ class ListenersController extends Controller
 		$row = Listener::findOrFail($id);
 		$row->registerLanguage();
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -233,7 +234,7 @@ class ListenersController extends Controller
  
 		$id = $request->input('id');
 
-		$row = $id ? Listener::findOrFail($id) : new Listener();
+		$row = Listener::findOrNew($id);
 
 		$row->fill($request->input('fields'));
 
@@ -264,7 +265,12 @@ class ListenersController extends Controller
 		foreach ($ids as $id)
 		{
 			// Delete the entry
-			$row = Listener::findOrFail($id);
+			$row = Listener::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if (!$row->delete())
 			{

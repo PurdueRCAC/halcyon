@@ -152,11 +152,11 @@ class ThemesController extends Controller
 	 */
 	public function edit($id, Request $request)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
+		$request->merge(['hidemainmenu' => 1]);
 
 		$row = Theme::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -223,6 +223,11 @@ class ThemesController extends Controller
 			// Delete the entry
 			// Note: This is recursive and will also remove all descendents
 			$row = Theme::findOrFail($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if (!$row->delete())
 			{

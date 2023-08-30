@@ -498,7 +498,7 @@ class QueuesController extends Controller
 		$row->enabled = 1;
 		$row->started = 1;
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -540,7 +540,7 @@ class QueuesController extends Controller
 			abort(404);
 		}
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -936,7 +936,12 @@ class QueuesController extends Controller
 
 		foreach ($ids as $id)
 		{
-			$row = Queue::findOrFail($id);
+			$row = Queue::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if (!$row->delete())
 			{

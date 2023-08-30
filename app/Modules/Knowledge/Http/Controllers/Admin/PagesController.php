@@ -377,7 +377,7 @@ class PagesController extends Controller
 		$id = $request->input('id');
 		$parent_id = $request->input('fields.parent_id');
 
-		$row = $id ? Associations::findOrFail($id) : new Associations;
+		$row = Associations::findOrNew($id);
 		if ($request->has('fields.access'))
 		{
 			$row->access = $request->input('fields.access');
@@ -390,11 +390,7 @@ class PagesController extends Controller
 		$orig_parent_id = $row->parent_id;
 		$row->parent_id = $parent_id;
 
-		$page = Page::find($row->page_id);
-		if (!$row->page_id)
-		{
-			$page = new Page;
-		}
+		$page = Page::findOrNew($row->page_id);
 
 		$original = $page->alias;
 
@@ -601,7 +597,12 @@ class PagesController extends Controller
 		{
 			// Delete the entry
 			// Note: This is recursive and will also remove all descendents
-			$row = Associations::findOrFail($id);
+			$row = Associations::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if (!$row->delete())
 			{

@@ -75,15 +75,16 @@ class NotificationTypesController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function create(): View
+	public function create(Request $request): View
 	{
 		$row = new Type;
 		$timeperiods = Timeperiod::all();
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -96,16 +97,17 @@ class NotificationTypesController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @param  int  $id
 	 * @return View
 	 */
-	public function edit($id): View
+	public function edit(Request $request, $id): View
 	{
 		$row = Type::find($id);
 		$timeperiods = Timeperiod::all();
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -171,7 +173,12 @@ class NotificationTypesController extends Controller
 		{
 			// Delete the entry
 			// Note: This is recursive and will also remove all descendents
-			$row = Type::findOrFail($id);
+			$row = Type::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if ($row->notifications()->count())
 			{

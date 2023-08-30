@@ -223,7 +223,12 @@ class SubresourcesController extends Controller
 
 		foreach ($ids as $id)
 		{
-			$row = Subresource::findOrFail($id);
+			$row = Subresource::find($id);
+
+			if (!$row)
+			{
+				continue;
+			}
 
 			if (!$row->trashed())
 			{
