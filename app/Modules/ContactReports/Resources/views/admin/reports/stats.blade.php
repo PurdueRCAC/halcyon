@@ -103,6 +103,8 @@ app('pathway')
 						->orderBy('total', 'desc')
 						->limit(5)
 						->get();
+
+					$i = 0;
 					?>
 					<div class="card mb-3">
 						<table class="table">

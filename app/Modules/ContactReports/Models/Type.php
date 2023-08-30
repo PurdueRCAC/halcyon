@@ -165,7 +165,7 @@ class Type extends Model
 	 * @param  array<int,string>  $columns
 	 * @return Type|null
 	 */
-	public static function findByName($name, $columns = ['*'])
+	public static function findByName($name, $columns = ['*']): ?Type
 	{
 		$name = str_replace('-', ' ', $name);
 

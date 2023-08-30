@@ -70,29 +70,137 @@ app('pathway')
 				</select>
 			</div>
 			<div class="form-group">
-				<label for="filter_start">{{ trans('contactreports::contactreports.start') }}</label>
-				<span class="input-group">
-					<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" />
-					<span class="input-group-append"><span class="input-group-text"><span class="fa fa-calendar" aria-hidden="true"></span></span>
-				</span>
-			</div>
-			<div class="form-group">
-				<label for="filter_stop">{{ trans('contactreports::contactreports.stop') }}</label>
-				<span class="input-group">
-					<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="{{ trans('global.never') }}" />
-					<span class="input-group-append"><span class="input-group-text"><span class="fa fa-calendar" aria-hidden="true"></span></span></span>
-				</span>
-			</div>
+				<div class="dropdown">
+					<?php
+					Carbon\Carbon::setWeekStartsAt(Carbon\Carbon::SUNDAY);
+					Carbon\Carbon::setWeekEndsAt(Carbon\Carbon::SATURDAY);
+					$thisweek = Carbon\Carbon::now();
+					$thismonth = Carbon\Carbon::now();
+					$thisyear = Carbon\Carbon::now();
+					$lastweek = Carbon\Carbon::now()->modify('-1 week');
+					$lastmonth = Carbon\Carbon::now()->modify('-1 month');
+					$lastyear = Carbon\Carbon::now()->modify('-1 year');
+					?>
+					Time range
+					<button class="btn btn-form-control btn-block dropdown-toggle text-left" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<?php
+						$active = 'all';
+						$text = 'All time';
 
+						if ($filters['start'] || $filters['stop'])
+						{
+							if ($filters['start'] == $thisweek->startOfWeek()->format('Y-m-d') && $filters['stop'] == $thisweek->endOfWeek()->format('Y-m-d'))
+							{
+								$text = 'This week <span class="text-muted float-right">' . $thisweek->startOfWeek()->format('d M') . ' - ' . $thisweek->endOfWeek()->format('d M') . ', ' . $thisweek->format('Y') . '</span>';
+								$active = 'thisweek';
+								$filters['start'] = '';
+								$filters['stop'] = '';
+							}
+							elseif ($filters['start'] == $thismonth->startOfMonth()->format('Y-m-d') && $filters['stop'] == $thismonth->endOfMonth()->format('Y-m-d'))
+							{
+								$text = 'This month <span class="text-muted float-right">' . $thismonth->startOfMonth()->format('M, Y') . '</span>';
+								$active = 'thismonth';
+								$filters['start'] = '';
+								$filters['stop'] = '';
+							}
+							elseif ($filters['start'] == $thisyear->format('Y-01-01') && $filters['stop'] == $thisyear->format('Y-12-31'))
+							{
+								$text = 'This year <span class="text-muted float-right">' . $thisyear->format('Y') . '</span>';
+								$active = 'thisyear';
+								$filters['start'] = '';
+								$filters['stop'] = '';
+							}
+							elseif ($filters['start'] == $lastweek->startOfWeek()->format('Y-m-d') && $filters['stop'] == $lastweek->endOfWeek()->format('Y-m-d'))
+							{
+								$text = 'Last week <span class="text-muted float-right">' . $lastweek->startOfWeek()->format('d M') . ' - ' . $lastweek->endOfWeek()->format('d M') . ', ' . $lastweek->format('Y') . '</span>';
+								$active = 'lastweek';
+								$filters['start'] = '';
+								$filters['stop'] = '';
+							}
+							elseif ($filters['start'] == $lastmonth->startOfMonth()->format('Y-m-d') && $filters['stop'] == $lastmonth->endOfMonth()->format('Y-m-d'))
+							{
+								$text = 'Last month <span class="text-muted float-right">' . $lastmonth->startOfMonth()->format('M, Y') . '</span>';
+								$active = 'lastmonth';
+								$filters['start'] = '';
+								$filters['stop'] = '';
+							}
+							elseif ($filters['start'] == $lastyear->format('Y-01-01') && $filters['stop'] == $lastyear->format('Y-12-31'))
+							{
+								$text = 'Last year <span class="text-muted float-right">' . $lastyear->format('Y') . '</span>';
+								$active = 'lastyear';
+								$filters['start'] = '';
+								$filters['stop'] = '';
+							}
+							else
+							{
+								$active = 'custom';
+
+								if ($filters['start'] && !$filters['stop'])
+								{
+									$text = $filters['start'] . ' to now';
+								}
+								elseif (!$filters['start'] && $filters['stop'])
+								{
+									$text = 'until ' . $filters['stop'];
+								}
+								elseif ($filters['start'] && $filters['stop'])
+								{
+									$text = $filters['start'] . ' - ' . $filters['stop'];
+								}
+							}
+						}
+
+						echo $text;
+						?>
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						@if ($active != 'all')
+						<a class="dropdown-item<?php if ($active == 'all') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => '', 'stop' => '']) }}">All time</span></a>
+						<div class="dropdown-divider"></div>
+						@endif
+						<a class="dropdown-item<?php if ($active == 'thisweek') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => $thisweek->startOfWeek()->format('Y-m-d'), 'stop' => $thisweek->endOfWeek()->format('Y-m-d')]) }}">This week <span class="text-muted float-right">{{ $thisweek->startOfWeek()->format('d M') }} - {{ $thisweek->endOfWeek()->format('d M') }}, {{ $thisweek->format('Y') }}</span></a>
+						<a class="dropdown-item<?php if ($active == 'thismonth') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => $thismonth->startOfMonth()->format('Y-m-d'), 'stop' => $thismonth->endOfMonth()->format('Y-m-d')]) }}">This month <span class="text-muted float-right">{{ $thismonth->format('M, Y') }}</span></a>
+						<a class="dropdown-item<?php if ($active == 'thisyear') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => $thisyear->format('Y') . '-01-01', 'stop' => $thisyear->format('Y-12-31')]) }}">This year <span class="text-muted float-right">{{ $thisyear->format('Y') }}</span></a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item<?php if ($active == 'lastweek') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => $lastweek->startOfWeek()->format('Y-m-d'), 'stop' => $lastweek->endOfWeek()->format('Y-m-d')]) }}">Last week <span class="text-muted float-right">{{ $lastweek->startOfWeek()->format('d M') }} - {{ $lastweek->endOfWeek()->format('d M') }}, {{ $lastweek->format('Y') }}</span></a>
+						<a class="dropdown-item<?php if ($active == 'lastmonth') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => $lastmonth->startOfMonth()->format('Y-m-d'), 'stop' => $lastmonth->endOfMonth()->format('Y-m-d')]) }}">Last month <span class="text-muted float-right">{{ $lastmonth->format('M, Y') }}</span></a>
+						<a class="dropdown-item<?php if ($active == 'lastyear') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => $lastyear->format('Y') . '-01-01', 'stop' => $lastyear->format('Y') . '-12-31']) }}">Last year <span class="text-muted float-right">{{ $lastyear->format('Y') }}</span></a>
+						<div class="dropdown-divider"></div>
+						<h6 class="dropdown-header">Custom range</h6>
+						<div class="px-4">
+							<div class="form-group">
+								<label for="filter_start">{{ trans('contactreports::contactreports.start') }}</label>
+								<span class="input-group">
+									<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" />
+									<span class="input-group-append"><span class="input-group-text"><span class="fa fa-calendar" aria-hidden="true"></span></span>
+								</span>
+							</div>
+							<div class="form-group">
+								<label for="filter_stop">{{ trans('contactreports::contactreports.stop') }}</label>
+								<span class="input-group">
+									<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="{{ trans('global.never') }}" />
+									<span class="input-group-append"><span class="input-group-text"><span class="fa fa-calendar" aria-hidden="true"></span></span></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 			<div class="form-group">
 				<label for="filter_group">{{ trans('contactreports::contactreports.group') }}</label>
 				<?php
 				$grps = array();
 				if ($groups = $filters['group']):
 					foreach (explode(',', $groups) as $g):
-						if (trim($g)):
+						$g = trim($g);
+						if (!$g):
+							continue;
+						endif;
+						if (strstr($g, ':')):
+							$grps[] = $g;
+						else:
 							$grp = App\Modules\Groups\Models\Group::find($g);
-							$grps[] = $grp->name . ':' . $g . '';
+							$grps[] = $grp->name . ':' . $g;
 						endif;
 					endforeach;
 				endif;
@@ -105,8 +213,14 @@ app('pathway')
 				<?php
 				$usrs = array();
 				if ($users = $filters['people']):
-					foreach ($users as $u):
-						if (trim($u)):
+					foreach (explode(',', $users) as $u):
+						$u = trim($u);
+						if (!$u):
+							continue;
+						endif;
+						if (strstr($u, ':')):
+							$usrs[] = $u;
+						else:
 							if (!is_numeric($u)):
 								$usr = App\Modules\Users\Models\User::findByUsername($u);
 							else:
@@ -194,11 +308,11 @@ app('pathway')
 		</fieldset>
 		</div>
 		<div class="col-md-9">
-	<div id="results">
 	@if (count($rows))
 		<?php
 		$highlight = config('module.contactreports.highlight', []);
 		?>
+		<div id="results">
 		@foreach ($rows as $i => $row)
 			<div class="card mb-3">
 				<div class="card-header">
@@ -212,7 +326,7 @@ app('pathway')
 							<span class="fa fa-calendar" aria-hidden="true"></span>
 							@if ($row->datetimecreated)
 								<time datetime="{{ $row->datetimecreated->toDateTimeLocalString() }}">
-									@if ($row->datetimecreated->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
+									@if ($row->datetimecreated->timestamp >= Carbon\Carbon::now()->modify('-1 day')->timestamp)
 										{{ $row->datetimecreated->diffForHumans() }}
 									@else
 										{{ $row->datetimecreated->format('M d, Y') }}
@@ -222,87 +336,106 @@ app('pathway')
 								<span class="never">{{ trans('global.unknown') }}</span>
 							@endif
 						</div>
-						<div class="text-muted ml-4">
-							<?php
-							$uids = $row->users->pluck('userid')->toArray();
-
-							$users = array();
-							$staff = array();
-							if ($row->userid && !in_array($row->userid, $uids)):
-								$staff[] = ($row->creator ? '<a href="' . route('admin.users.show', ['id' => $row->userid]) . '"class="badge badge-danger">' . $row->creator->name . '</a>' : $row->userid . ' <span class="unknown">' . trans('global.unknown') . '</span>');
-							endif;
-
-							foreach ($row->users as $user):
-								$cls = 'secondary';
-
-								if ($user->user):
-									foreach ($user->user->getAuthorisedRoles() as $role):
-										if (in_array($role, $highlight)):
-											$cls = 'danger';
-											break;
-										endif;
-									endforeach;
-								endif;
-
-								$u  = '<a href="' . route('admin.users.show', ['id' => $user->userid]) . '" class="badge badge-' . $cls . '">';
-								$u .= ($user->user ? $user->user->name : $user->userid . ' <span class="unknown">' . trans('global.unknown') . '</span>');
-
-								if ($user->notified()):
-									$u .= ' <span class="fa fa-envelope" data-tip="Followup email sent on ' . $user->datetimelastnotify->toDateTimeString() . '"><time class="sr-only" datetime="' . $user->datetimelastnotify->toDateTimeString() . '">' . $user->datetimelastnotify->format('Y-m-d') . '</time></span>';
-								endif;
-								$u .= '</a>';
-
-								if ($cls == 'danger'):
-									$staff[] = $u;
-								else:
-									$users[] = $u;
-								endif;
-							endforeach;
-							?>
-							@if (count($users))
-								<span class="fa fa-user" aria-hidden="true"></span>
-								{!! implode(', ', $staff) !!} {!! implode(', ', $users) !!}
-							@endif
-						</div>
+						<?php
+						$uids = $row->users->pluck('userid')->toArray();
+						?>
 						<div class="flex-fill text-right">
 							@if (auth()->user()->can('create contactreports'))
-								<a href="{{ route('admin.contactreports.create', ['groupid' => $row->groupid, 'contactreporttypeid' => $row->contactreporttypeid, 'people' => implode(',', $uids), 'resources' => implode(',', $row->resources->pluck('resourceid')->toArray())]) }}" class="mr-2" title="Start new Contact Report with these details.">
+								<a href="{{ route('admin.contactreports.create', ['groupid' => $row->groupid, 'contactreporttypeid' => $row->contactreporttypeid, 'people' => implode(',', $uids), 'resources' => implode(',', $row->resources->pluck('resourceid')->toArray())]) }}" class="bt bt-sm ml-3" title="Start new Contact Report with these details.">
 									<span class="fa fa-copy" aria-hidden="true"></span>
-									<span class="sr-only">Start new Contact Report with these details.</span>
+									<span class="sr-onl">Duplicate</span>
 								</a>
 							@endif
-							@if (auth()->user()->can('edit contactreports'))
-								<a href="{{ route('admin.contactreports.edit', ['id' => $row->id]) }}">
+							@if (auth()->user()->can('edit contactreports') || (auth()->user()->can('edit.own contactreports') && $row->userid = auth()->user()->id))
+								<a href="{{ route('admin.contactreports.edit', ['id' => $row->id]) }}" class="bt bt-sm ml-3" title="Edit this Contact Report.">
 									<span class="fa fa-pencil" aria-hidden="true"></span>
-									<span class="sr-only"># {{ $row->id }}</span>
+									<span class="sr-onl">{{ trans('global.button.edit') }}</span>
 								</a>
 							@else
 								# {{ $row->id }}
+							@endif
+							@if (auth()->user()->can('delete contactreports'))
+								<a href="{{ route('admin.contactreports.delete', ['id' => $row->id]) }}" class="bt bt-sm ml-3" data-confirm="Are you sure you want to remove this entry?" title="Delete this Contact Report.">
+									<span class="fa fa-trash" aria-hidden="true"></span>
+									<span class="sr-onl">{{ trans('global.button.delete') }}</span>
+								</a>
 							@endif
 						</div>
 					</div>
 				</div>
 				<div class="card-body">
-					{!! $row->toHtml() !!}
-					@if (count($row->resources))
-						<?php
-						$names = array();
+					<?php
+					$uids = $row->users->pluck('userid')->toArray();
 
-						foreach ($row->resources as $res):
-							if ($res->resource):
-								$names[] = '<span class="badge badge-info">' . e($res->resource->name) . '</span>';
-							else:
-								$names[] = $res->resourceid;
-							endif;
-						endforeach;
+					$users = array();
+					$staff = array();
+					if ($row->userid && !in_array($row->userid, $uids)):
+						$staff[] = ($row->creator ? '<a href="' . route('admin.users.show', ['id' => $row->userid]) . '"class="badge badge-danger">' . $row->creator->name . '</a>' : $row->userid . ' <span class="unknown">' . trans('global.unknown') . '</span>');
+					endif;
 
-						asort($names);
+					foreach ($row->users as $user):
+						$cls = 'secondary';
 
-						if (count($names)):
-							echo '<p>' . implode(' ', $names) . '</p>';
+						if ($user->user):
+							foreach ($user->user->getAuthorisedRoles() as $role):
+								if (in_array($role, $highlight)):
+									$cls = 'danger';
+									break;
+								endif;
+							endforeach;
 						endif;
-						?>
+
+						$u  = '<a href="' . route('admin.users.show', ['id' => $user->userid]) . '" class="badge badge-' . $cls . '">';
+						$u .= ($user->user ? $user->user->name : $user->userid . ' <span class="unknown">' . trans('global.unknown') . '</span>');
+
+						if ($user->notified()):
+							$u .= ' <span class="fa fa-envelope" data-tip="Followup email sent on ' . $user->datetimelastnotify->toDateTimeString() . '"><time class="sr-only" datetime="' . $user->datetimelastnotify->toDateTimeString() . '">' . $user->datetimelastnotify->format('Y-m-d') . '</time></span>';
+						endif;
+						$u .= '</a>';
+
+						if ($cls == 'danger'):
+							$staff[] = $u;
+						else:
+							$users[] = $u;
+						endif;
+					endforeach;
+					?>
+					@if (count($users) || count($row->resources))
+						<div class="pb-2">
+							@if (count($users))
+								<div class="text-muted mb-2">
+									<span class="fa fa-user" aria-hidden="true"></span>
+									{!! implode(', ', $staff) !!} {!! implode(', ', $users) !!}
+								</div>
+							@endif
+							@if (count($row->resources))
+								<?php
+								$names = array();
+
+								foreach ($row->resources as $res):
+									if ($res->resource):
+										$names[] = '<span class="badge badge-info">' . e($res->resource->name) . '</span>';
+									else:
+										$names[] = $res->resourceid;
+									endif;
+								endforeach;
+
+								asort($names);
+
+								if (count($names)):
+									?>
+									<div class="text-muted mb-2">
+										<span class="fa fa-server" aria-hidden="true"></span>
+										<?php echo implode(' ', $names); ?>
+									</div>
+									<?php
+								endif;
+								?>
+							@endif
+						</div>
 					@endif
+
+					{!! App\Halcyon\Utility\Str::highlight($row->toHtml(), $filters['search'], ['html' => true]) !!}
 				</div>
 				<div class="card-footer">
 					<div class="d-flex text-muted">
@@ -358,14 +491,18 @@ app('pathway')
 		@endforeach
 
 		{{ $rows->render() }}
+		</div>
 	@else
-		<div class="card mb-4">
-			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>
+		<div class="d-flex h-100 align-items-center">
+			<div class="text-center w-50 mx-auto">
+				<div class="display-4"><span class="fa fa-ban" aria-hidden="true"></span></div>
+				<p>{{ trans('global.no results') }}</p>
+			</div>
 		</div>
 	@endif
+	
+		</div>
 	</div>
-		</div>
-		</div>
 	<input type="hidden" name="boxchecked" value="0" />
 </form>
 

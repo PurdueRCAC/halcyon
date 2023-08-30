@@ -5,7 +5,9 @@ namespace App\Modules\ContactReports\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Facades\DB;
 use App\Halcyon\Utility\PorterStemmer;
 use App\Halcyon\Access\Map;
 use App\Modules\Tags\Traits\Taggable;
@@ -312,12 +314,12 @@ class Report extends Model
 
 				if (!empty($matches))
 				{
-					foreach ($matches[0] as $match)
+					foreach ($matches[0] as $j => $match)
 					{
 						$slug = preg_replace("/[^a-z0-9\-_]+/i", '', $match);
 						if ($tag = $this->isTag($slug))
 						{
-							$text = str_replace($match, ' <a class="tag badge badge-sm badge-secondary" href="' . route((app('isAdmin') ? 'admin' : 'site') . '.contactreports.index', ['tag' => $tag->slug]) . '">' . $tag->name . '</a> ', $text);
+							$text = str_replace($match, (isset($matches[1][$j]) ? $matches[1][$j] : '') . ' <a class="tag badge badge-sm badge-secondary" href="' . route((app('isAdmin') ? 'admin' : 'site') . '.contactreports.index', ['tag' => $tag->slug]) . '">' . $tag->name . '</a> ', $text);
 						}
 					}
 				}
@@ -760,5 +762,108 @@ class Report extends Model
 		);
 
 		return $stats;
+	}
+
+	/**
+	 * Query scope with search
+	 *
+	 * @param   Builder  $query
+	 * @param   string  $search
+	 * @return  Builder
+	 */
+	public function scopeWhereSearch(Builder $query, $search): Builder
+	{
+		if (is_numeric($search))
+		{
+			$query->where($this->getTable() . '.id', '=', (int)$search);
+		}
+		else
+		{
+			// Trim extra garbage
+			$keyword = preg_replace('/[^A-Za-z0-9]/', ' ', $search);
+
+			// Calculate stem for the word
+			$keywords = array();
+			$stem = PorterStemmer::stem($keyword);
+			$stem = substr($stem, 0, 1) . $stem;
+
+			$keywords[] = $stem;
+
+			$sql  = "(MATCH(stemmedreport) AGAINST ('+";
+			$sql .= $keywords[0];
+			for ($i=1; $i<count($keywords); $i++)
+			{
+				$sql .= " +" . $keywords[$i];
+			}
+			$sql .= "') * 10 + 2 * (1 / (DATEDIFF(NOW(), datetimecontact) + 1))) AS score";
+
+			$query->select([$this->getTable() . '.*', DB::raw($sql)]);
+
+			$sql  = "MATCH(stemmedreport) AGAINST ('+";
+			$sql .= $keywords[0];
+			for ($i = 1; $i < count($keywords); $i++)
+			{
+				$sql .= " +" . $keywords[$i];
+			}
+			$sql .= "' IN BOOLEAN MODE)";
+
+			$query->whereRaw($sql)
+				->orderBy('score', 'desc');
+		}
+
+		return $query;
+	}
+
+	/**
+	 * Query scope with people
+	 *
+	 * @param   Builder  $query
+	 * @param   string  $people
+	 * @return  Builder
+	 */
+	public function scopeWherePeople(Builder $query, $people): Builder
+	{
+		$people = explode(',', $people);
+
+		foreach ($people as $k => $person)
+		{
+			if (strstr($person, ':'))
+			{
+				$parts = explode(':', $person);
+				$person = end($parts);
+				$people[$k] = $person;
+			}
+			if (!is_numeric($person))
+			{
+				$user = SystemUser::findByUsername($person);
+
+				if ($user && $user->id)
+				{
+					$people[$k] = $user->id;
+				}
+			}
+		}
+
+		$cr = $this->getTable();
+		$cru = (new User)->getTable();
+
+		$query->join($cru, $cru . '.contactreportid', $cr . '.id');
+		$query->where(function ($where) use ($people, $cru, $cr)
+			{
+				$where->whereIn($cru . '.userid', $people)
+					->orWhereIn($cr . '.userid', $people);
+			})
+			->groupBy($cr . '.id')
+			->groupBy($cr . '.groupid')
+			->groupBy($cr . '.userid')
+			->groupBy($cr . '.report')
+			->groupBy($cr . '.stemmedreport')
+			->groupBy($cr . '.datetimecontact')
+			->groupBy($cr . '.datetimecreated')
+			->groupBy($cr . '.notice')
+			->groupBy($cr . '.datetimegroupid')
+			->groupBy($cr . '.contactreporttypeid');
+
+		return $query;
 	}
 }

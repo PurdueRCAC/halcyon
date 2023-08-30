@@ -146,7 +146,7 @@ class Comment extends Model
 	/**
 	 * Get content variables
 	 *
-	 * @return array
+	 * @return array<string,mixed>
 	 */
 	public function getContentVars(): array
 	{

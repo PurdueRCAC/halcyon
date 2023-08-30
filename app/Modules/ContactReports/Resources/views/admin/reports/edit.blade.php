@@ -57,20 +57,25 @@ app('pathway')
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
-				<div class="form-group">
-					<label for="field-datetimecontact">{{ trans('contactreports::contactreports.contacted') }} <span class="required">{{ trans('global.required') }}</span></label>
-					{!! Html::input('calendar', 'fields[datetimecontact]', $row->datetimecontact ? $row->datetimecontact->format('Y-m-d') : '', ['required' => true, 'time' => false]) !!}
-					<span class="invalid-feedback">{{ trans('contactreports::contactreports.invalid.contacted') }}</span>
-				</div>
-
-				<div class="form-group">
-					<label for="field-contactreporttypeid">{{ trans('contactreports::contactreports.type') }}</label>
-					<select name="fields[contactreporttypeid]" id="field-contactreporttypeid" class="form-control">
-						<option value="0"<?php if (!$row->contactreporttypeid) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
-						@foreach ($types as $type)
-							<option value="{{ $type->id }}"<?php if ($row->contactreporttypeid == $type->id) { echo ' selected="selected"'; } ?>>{{ $type->name }}</option>
-						@endforeach
-					</select>
+				<div class="row">
+					<div class="col-md-5">
+						<div class="form-group">
+							<label for="field-datetimecontact">{{ trans('contactreports::contactreports.contacted') }} <span class="required">{{ trans('global.required') }}</span></label>
+							{!! Html::input('calendar', 'fields[datetimecontact]', $row->datetimecontact ? $row->datetimecontact->format('Y-m-d') : '', ['required' => true, 'time' => false]) !!}
+							<span class="invalid-feedback">{{ trans('contactreports::contactreports.invalid.contacted') }}</span>
+						</div>
+					</div>
+					<div class="col-md-7">
+						<div class="form-group">
+							<label for="field-contactreporttypeid">{{ trans('contactreports::contactreports.type') }}</label>
+							<select name="fields[contactreporttypeid]" id="field-contactreporttypeid" class="form-control">
+								<option value="0"<?php if (!$row->contactreporttypeid) { echo ' selected="selected"'; } ?>>{{ trans('global.none') }}</option>
+								@foreach ($types as $type)
+									<option value="{{ $type->id }}"<?php if ($row->contactreporttypeid == $type->id) { echo ' selected="selected"'; } ?>>{{ $type->name }}</option>
+								@endforeach
+							</select>
+						</div>
+					</div>
 				</div>
 
 				<div class="form-group">
