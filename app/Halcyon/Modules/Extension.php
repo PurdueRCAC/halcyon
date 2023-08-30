@@ -95,19 +95,7 @@ class Extension extends Model
 	 */
 	public function isPublished(): bool
 	{
-		if ($this->published != 1)
-		{
-			return false;
-		}
-
-		if ($this->publish_up
-		 && $this->publish_up > Carbon::now()->toDateTimeString())
-		{
-			return false;
-		}
-
-		if ($this->publish_down
-		 && $this->publish_down <= Carbon::now()->toDateTimeString())
+		if ($this->enabled != 1)
 		{
 			return false;
 		}
@@ -191,7 +179,7 @@ class Extension extends Model
 		// Check if we are incrementing an existing pattern, or appending a new one.
 		if (preg_match($rxSearch, $string, $matches))
 		{
-			$n = empty($n) ? ($matches[1] + 1) : $n;
+			$n = empty($n) ? (intval($matches[1]) + 1) : $n;
 			$string = preg_replace($rxReplace, sprintf($oldFormat, $n), $string);
 		}
 		else
@@ -214,19 +202,49 @@ class Extension extends Model
 		{
 			$this->path = '';
 
-			if ($widget = $this->module)
+			if ($this->type == 'widget')
 			{
-				if (substr($widget, 0, 4) == 'mod_')
-				{
-					$widget = substr($widget, 4);
-				}
-				$widget = ucfirst($widget);
+				$element = ucfirst($this->element);
 
-				$path = app_path() . '/Widgets/' . $widget . '/' . $widget . '.php';
+				$path = app_path() . '/Widgets/' . $element . '/' . $element . '.php';
 
 				if (file_exists($path))
 				{
 					$this->path = dirname($path);
+				}
+			}
+			elseif ($this->type == 'module')
+			{
+				$element = ucfirst($this->element);
+
+				$path = app_path() . '/Modules/' . $element;
+
+				if (is_dir($path))
+				{
+					$this->path = $path;
+				}
+			}
+			elseif ($this->type == 'theme')
+			{
+				$element = ucfirst($this->element);
+
+				$path = app_path() . '/Themes/' . $element;
+
+				if (is_dir($path))
+				{
+					$this->path = $path;
+				}
+			}
+			elseif ($this->type == 'listener')
+			{
+				$folder = ucfirst($this->folder);
+				$element = ucfirst($this->element);
+
+				$path = app_path() . '/Listeners/' . $folder . '/' . $element;
+
+				if (is_dir($path))
+				{
+					$this->path = $path;
 				}
 			}
 		}

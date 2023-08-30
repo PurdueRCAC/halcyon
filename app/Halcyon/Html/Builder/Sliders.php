@@ -121,7 +121,7 @@ class Sliders
 			$opt = array();
 			$opt['heightStyle'] = 'content';
 
-			$options = json_encode($options);
+			$options = json_encode($opt);
 		}
 	}
 }

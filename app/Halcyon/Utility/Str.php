@@ -94,7 +94,9 @@ class Str
 			'exact'    => true
 		);
 		$options = array_merge($default, $options);
-		extract($options);
+
+		$ellipsis = $options['ellipsis'];
+		$exact = $options['exact'];
 
 		if (mb_strlen($text) <= $length)
 		{

@@ -3,6 +3,7 @@
 namespace App\Halcyon\Html\Builder;
 
 use Illuminate\Support\Facades\DB;
+use Exception;
 use stdClass;
 
 /**
@@ -235,7 +236,7 @@ class Select
 			}
 			else
 			{
-				throw new \Exception('Invalid group contents.', 1, E_WARNING);
+				throw new Exception('Invalid group contents.', 1, E_WARNING);
 			}
 
 			if ($noGroup)

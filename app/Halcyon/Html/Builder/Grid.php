@@ -53,6 +53,7 @@ class Grid
 	 * @param   string  $order          The order field for the column
 	 * @param   string  $direction      The current direction
 	 * @param   string  $selected       The selected ordering
+	 * @param   string  $new_direction
 	 * @return  string
 	 */
 	public static function sort($title, $order, $direction = 'asc', $selected = '', $new_direction = 'asc')
@@ -83,11 +84,11 @@ class Grid
 	/**
 	 * Method to create a checkbox for a grid row.
 	 *
-	 * @param   int  $rowNum      The row index
-	 * @param   int  $recId       The record id
-	 * @param   bool  $checkedOut  True if item is checke out
-	 * @param   string   $name        The name of the form element
-	 * @return  mixed    String of html with a checkbox if item is not checked out, null if checked out.
+	 * @param   int     $rowNum      The row index
+	 * @param   int     $recId       The record id
+	 * @param   bool    $checkedOut  True if item is checke out
+	 * @param   string  $name        The name of the form element
+	 * @return  string
 	 */
 	public static function id($rowNum, $recId, $checkedOut = false, $name = 'id')
 	{
@@ -185,7 +186,7 @@ class Grid
 	/**
 	 * Returns an array of standard published state filter options.
 	 *
-	 * @param   array   $config  An array of configuration options.
+	 * @param   array<string,mixed>   $config  An array of configuration options.
 	 *                           This array can contain a list of key/value pairs where values are boolean
 	 *                           and keys can be taken from 'published', 'unpublished', 'archived', 'trash', 'all'.
 	 *                           These pairs determine which values are displayed.

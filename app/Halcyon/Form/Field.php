@@ -14,6 +14,13 @@ use ReflectionClass;
 abstract class Field
 {
 	/**
+	 * CSS class
+	 *
+	 * @var  string
+	 */
+	protected $class;
+
+	/**
 	 * The description text for the form field.  Usually used in tooltips.
 	 *
 	 * @var  string

@@ -46,7 +46,7 @@ class Builder
 			{
 				$cls = $this->find($method);
 
-				if (!class_exists($cls))
+				if (!$cls || !class_exists($cls))
 				{
 					throw new InvalidArgumentException(sprintf('%s %s not found.', $cls, $func), 500);
 				}
@@ -148,20 +148,22 @@ class Builder
 			}
 		}
 
-		return null;
+		return '';
 	}
 
 	/**
 	 * Add a directory where Html should search for helpers. You may
 	 * either pass a string or an array of directories.
 	 *
-	 * @param   string  $path  A path to search.
+	 * @param   string|array<int,string>  $path  A path to search.
 	 * @return  array<int,string>   An array with directory elements
 	 */
 	public function addIncludePath($path = '')
 	{
-		// Force path to array
-		settype($path, 'array');
+		if (!is_array($path))
+		{
+			$path = [$path];
+		}
 
 		// Loop through the path directories
 		foreach ($path as $dir)

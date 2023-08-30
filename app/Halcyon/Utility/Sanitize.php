@@ -15,7 +15,7 @@ class Sanitize
 	 * Removes any non-alphanumeric characters.
 	 *
 	 * @param   string  $string   String to sanitize
-	 * @param   array   $allowed  An array of additional characters that are not to be removed.
+	 * @param   array<int,string>   $allowed  An array of additional characters that are not to be removed.
 	 * @return  string  Sanitized string
 	 */
 	public static function paranoid($string, $allowed = array())
@@ -165,7 +165,7 @@ class Sanitize
 		}
 
 		// strip out any KL_PHP, script, style, HTML comments
-		$string = preg_replace('/{kl_php}(.*?){\/kl_php}/is', '', $string);
+		$string = preg_replace('/{php}(.*?){\/php}/is', '', $string);
 		$regex =
 			'/(<link[^>]+rel="[^"]*stylesheet"[^>]*>|' .
 			'<script[^>]*>.*?<\/script>|' .
@@ -280,160 +280,6 @@ class Sanitize
 		$text = strtr($text, $x);
 
 		return $text;
-	}
-
-	/**
-	 * Run HTML through a purifier
-	 *
-	 * @param   string  $text     Text to clean
-	 * @param   array   $options  Array of key => value pairs
-	 * @return  string
-	 */
-	public static function html($text, $options = [])
-	{
-		$config = self::buildHtmlPurifierConfig($options);
-		$htmlPurifierWhitelist  = $config->getHTMLDefinition(true);
-
-		self::addElementsToHtmlPurifierWhitelist($htmlPurifierWhitelist);
-		self::addAttributesToHtmlPurifierWhitelist($htmlPurifierWhitelist);
-
-		$purifier = new \HTMLPurifier($config);
-
-		return $purifier->purify($text);
-	}
-
-	/**
-	 * Builds HTML purification configuration
-	 *
-	 * @param    array    $options   Custom purifier configuration options
-	 * @return   object   $config    HTML purifier configuration
-	 */
-	protected static function buildHtmlPurifierConfig($options)
-	{
-		$config = \HTMLPurifier_Config::createDefault();
-		$root = str_replace(['http://', 'https://', '.'], ['', '', '\.'], \App::get('request')->root());
-		$defaultSettings = [
-			'AutoFormat.Linkify' => false,
-			'AutoFormat.RemoveEmpty' => true,
-			'AutoFormat.RemoveEmpty.RemoveNbsp' => false,
-			'Output.CommentScriptContents' => false,
-			'Output.TidyFormat' => true,
-			'Attr.AllowedFrameTargets' => ['_blank'],
-			'Attr.EnableID' => true,
-			'HTML.AllowedCommentsRegexp' => '/./',
-			'HTML.SafeIframe' => true,
-			'URI.SafeIframeRegexp' => "%^(https?:)?//(www\.youtube(?:-nocookie)?\.com/embed/|player\.vimeo\.com/video/|$root)%",
-		];
-		$combinedSettings = array_merge($defaultSettings, $options);
-
-		self::_findOrCreateClientSerializerDirectory($combinedSettings);
-
-		foreach ($combinedSettings as $setting => $value)
-		{
-			$config->set($setting, $value);
-		}
-
-		return $config;
-	}
-
-	/**
-	 * Finds or creates client serializer directory
-	 *
-	 * @param    array   $purifierConfigSettings   HTML purifier configuration settings
-	 * @return   void
-	 */
-	protected static function _findOrCreateClientSerializerDirectory($purifierConfigSettings)
-	{
-		$client = \App::get('client');
-		$clientAlias = isset($client->alias) ? $client->alias : $client->name;
-		$clientSerializerPath = storage_path() . "/cache/$clientAlias/htmlpurifier";
-
-		if (!is_dir($clientSerializerPath))
-		{
-			\App::get('filesystem')->makeDirectory($clientSerializerPath);
-		}
-
-		if (is_dir($clientSerializerPath))
-		{
-			$purifierConfigSettings['Cache.SerializerPath'] = $clientSerializerPath;
-		}
-	}
-
-	/**
-	 * Adds elements to HTML purifier whitelist
-	 *
-	 * @param    object   $htmlPurifierWhitelist HTML purifier whitelist
-	 * @return   void
-	 */
-	protected static function addElementsToHtmlPurifierWhitelist($htmlPurifierWhitelist)
-	{
-		$styleElement = [
-			'name' => 'style',
-			'contentSet' => 'Block',
-			'allowedChildren' => 'Flow',
-			'attributeCollection' => 'Common',
-			'attributes' => [],
-			'excludes' => []
-		];
-
-		$mapElement = [
-			'name' => 'map',
-			'contentSet' => 'Block',
-			'allowedChildren' => 'Flow',
-			'attributeCollection' => 'Common',
-			'attributes' => [
-				'name'  => 'CDATA',
-				'id'    => 'ID',
-				'title' => 'CDATA',
-			],
-			'excludes' => ['map' => true]
-		];
-
-		$areaElement = [
-			'name' => 'area',
-			'contentSet' => 'Block',
-			'allowedChildren' => 'Empty',
-			'attributeCollection' => 'Common',
-			'attributes' => [
-				'name'      => 'CDATA',
-				'id'        => 'ID',
-				'alt'       => 'Text',
-				'coords'    => 'CDATA',
-				'accesskey' => 'Character',
-				'nohref'    => new \HTMLPurifier_AttrDef_Enum(['nohref']),
-				'href'      => 'URI',
-				'shape'     => new \HTMLPurifier_AttrDef_Enum(['rect','circle','poly','default']),
-				'tabindex'  => 'Number',
-				'target'    => new \HTMLPurifier_AttrDef_Enum(['_blank','_self','_target','_top'])
-			],
-			'excludes' => ['area' => true]
-		];
-
-		$elementSettings = [$styleElement, $mapElement, $areaElement];
-
-		foreach ($elementSettings as $settings)
-		{
-			$element = $htmlPurifierWhitelist->addElement(
-				$settings['name'],
-				$settings['contentSet'],
-				$settings['allowedChildren'],
-				$settings['attributeCollection'],
-				$settings['attributes']
-			);
-
-			$element->excludes = $settings['excludes'];
-		}
-	}
-
-	/**
-	 * Adds attributes to HTML purifier whitelist
-	 *
-	 * @param    object   $htmlPurifierWhitelist HTML purifier whitelist
-	 * @return   void
-	 */
-	protected static function addAttributesToHtmlPurifierWhitelist($htmlPurifierWhitelist)
-	{
-		$htmlPurifierWhitelist->addAttribute('img', 'usemap', 'CDATA');
 	}
 
 	/**
