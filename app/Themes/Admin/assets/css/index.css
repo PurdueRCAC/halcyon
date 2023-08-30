@@ -4703,6 +4703,7 @@ html div.dataTables_wrapper div.dataTables_info{
   html .full .ts-control,
   html .tagsinput,
   .form-control,
+  .btn-form-control,
   .input-group,
   html .select2-container--default .select2-search--dropdown .select2-search__field,
   html .select2-container--default .select2-selection--single,
