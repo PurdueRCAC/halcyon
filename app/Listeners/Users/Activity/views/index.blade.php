@@ -81,6 +81,9 @@
 						@endif
 					</td>
 					<td>
+						@if ($row->app == 'email')
+							Emailed:
+						@endif
 						{!! $row->summary ? $row->summary : $row->payload !!}
 					</td>
 				</tr>

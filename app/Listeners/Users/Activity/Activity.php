@@ -84,6 +84,7 @@ class Activity
 			$targetuserid = (auth()->user() ? auth()->user()->id : 0);
 
 			$query = Log::query()
+				->where('classmethod', '!=', 'cancel')
 				/*->where(function($where) use ($user)
 				{
 					$where->where('targetuserid', '=', $user->id)
