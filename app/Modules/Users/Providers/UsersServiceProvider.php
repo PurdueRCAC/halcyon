@@ -11,6 +11,8 @@ use App\Modules\Users\Console\CreateCommand;
 use App\Modules\Users\Console\RoleCommand;
 use App\Modules\Users\Listeners\PageCollector;
 use App\Modules\Users\Listeners\RouteCollector;
+use App\Modules\Users\LogProcessors\Users;
+use App\Modules\Users\LogProcessors\Roles;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
 use App\Modules\Users\Models\Session;
@@ -50,6 +52,12 @@ class UsersServiceProvider extends ServiceProvider
 		if (Module::isEnabled('menus'))
 		{
 			$this->app['events']->subscribe(new RouteCollector);
+		}
+
+		if (Module::isEnabled('history'))
+		{
+			\App\Modules\History\Models\Log::pushProcessor(new Users);
+			\App\Modules\History\Models\Log::pushProcessor(new Roles);
 		}
 
 		$this->app['events']->subscribe(new PageCollector);
