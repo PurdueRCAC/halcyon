@@ -23,10 +23,32 @@ class GroupMemberships
 			return $record;
 		}
 
-		$group = '#' . $record->groupid;
+		$membership = null;
 
-		if ($record->groupid)
+		if ($record->classmethod == 'delete')
 		{
+			$user = trans('global.unknown');
+			$parts = explode('/', $record->uri);
+			$id = end($parts);
+
+			$membership = Member::query()
+				->withTrashed()
+				->where('id', '=', $id)
+				->first();
+
+			if ($membership)
+			{
+				$record->targetuserid = $membership->userid;
+				$record->groupid = $membership->groupid;
+			}
+		}
+
+		$group = trans('global.unknown');
+
+		if ($record->groupid && $record->groupid > 0)
+		{
+			$group = '#' . $record->groupid;
+
 			$g = Group::query()
 				->withTrashed()
 				->where('id', '=', $record->groupid)
@@ -34,13 +56,16 @@ class GroupMemberships
 
 			$group = $g ? $g->name : $group;
 
-			$route = route('site.users.account.section.show.subsection', [
-				'section' => 'groups',
-				'id' => $record->groupid,
-				'subsection' => 'members',
-			]);
+			if (auth()->user() && auth()->user()->can('manage groups'))
+			{
+				$route = route('site.users.account.section.show.subsection', [
+					'section' => 'groups',
+					'id' => $record->groupid,
+					'subsection' => 'members',
+				]);
 
-			$group = '<a href="' . $route . '">' . $group . '</a>';
+				$group = '<a href="' . $route . '">' . $group . '</a>';
+			}
 		}
 
 		switch ($record->classname)
@@ -48,7 +73,7 @@ class GroupMemberships
 			case 'groupowner':
 				if ($record->classmethod == 'create')
 				{
-					$record->summary = 'Promoted to manager in group  ' . $group;
+					$record->summary = 'Promoted to manager of group  ' . $group;
 				}
 
 				if ($record->classmethod == 'delete')
@@ -60,12 +85,12 @@ class GroupMemberships
 			case 'groupviewer':
 				if ($record->classmethod == 'create')
 				{
-					$record->summary = 'Promoted to usage viewer in group  ' . $group;
+					$record->summary = 'Promoted to usage viewer of group  ' . $group;
 				}
 
 				if ($record->classmethod == 'delete')
 				{
-					$record->summary = 'Demoted as usage viewer in group  ' . $group;
+					$record->summary = 'Demoted as usage viewer of group  ' . $group;
 				}
 			break;
 
@@ -78,15 +103,15 @@ class GroupMemberships
 					{
 						if ($membertype == 1)
 						{
-							$record->summary = 'Status set to member ' . $group;
+							$record->summary = 'Status set to member of ' . $group;
 						}
 						if ($membertype == 2)
 						{
-							$record->summary = 'Promoted to manager ' . $group;
+							$record->summary = 'Promoted to manager of ' . $group;
 						}
 						if ($membertype == 3)
 						{
-							$record->summary = 'Promoted to usage viewer in group ' . $group;
+							$record->summary = 'Promoted to usage viewer of group ' . $group;
 						}
 					}
 				}
@@ -116,17 +141,9 @@ class GroupMemberships
 				if ($record->classmethod == 'delete')
 				{
 					$user = trans('global.unknown');
-					$parts = explode('/', $record->uri);
-					$id = end($parts);
-
-					$membership = Member::query()
-						->withTrashed()
-						->where('id', '=', $id)
-						->first();
 
 					if ($membership)
 					{
-						$record->targetuserid = $membership->userid;
 						$user = $membership->user ? $membership->user->username : $user;
 					}
 
@@ -137,7 +154,14 @@ class GroupMemberships
 
 		if ($record->user)
 		{
-			$record->summary .= ' by ' . $record->user->name;
+			if (auth()->user() && auth()->user()->can('manage users'))
+			{
+				$record->summary .= ' by <a href="' . route('site.users.account', ['u' => $record->user->id]) . '">' . $record->user->name . '</a>';
+			}
+			else
+			{
+				$record->summary .= ' by ' . $record->user->name;
+			}
 		}
 
 		return $record;

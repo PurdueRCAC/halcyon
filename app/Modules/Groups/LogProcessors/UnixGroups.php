@@ -60,10 +60,17 @@ class UnixGroups
 				$record->summary = 'Deleted Unix group ' . $groupname;
 			}
 
-			if ($record->user)
+			/*if ($record->user)
 			{
-				$record->summary .= ' by ' . $record->user->name;
-			}
+				if (auth()->user() && auth()->user()->can('manage users'))
+				{
+					$record->summary .= ' by <a href="' . route('site.users.account', ['u' => $record->user->id]) . '">' . $record->user->name . '</a>';
+				}
+				else
+				{
+					$record->summary .= ' by ' . $record->user->name;
+				}
+			}*/
 		}
 
 		return $record;

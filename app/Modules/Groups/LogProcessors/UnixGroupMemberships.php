@@ -50,6 +50,17 @@ class UnixGroupMemberships
 			if ($g)
 			{
 				$groupname = $g->longname;
+
+				if (auth()->user() && auth()->user()->can('manage groups') && $g->group)
+				{
+					$route = route('site.users.account.section.show.subsection', [
+						'section' => 'groups',
+						'id' => $g->groupid,
+						'subsection' => 'members',
+					]);
+
+					$groupname = '<a href="' . $route . '">' . $groupname . '</a>';
+				}
 			}
 
 			if ($record->classmethod == 'create')
@@ -64,7 +75,14 @@ class UnixGroupMemberships
 
 			if ($record->user)
 			{
-				$record->summary .= ' by ' . $record->user->name;
+				if (auth()->user() && auth()->user()->can('manage users'))
+				{
+					$record->summary .= ' by <a href="' . route('site.users.account', ['u' => $record->user->id]) . '">' . $record->user->name . '</a>';
+				}
+				else
+				{
+					$record->summary .= ' by ' . $record->user->name;
+				}
 			}
 		}
 

@@ -8,6 +8,7 @@ use App\Modules\ContactReports\Console\EmailReportsCommand;
 use App\Modules\ContactReports\Listeners\GroupReports;
 use App\Modules\ContactReports\Listeners\CourseReport;
 use App\Modules\ContactReports\LogProcessors\Reports;
+use App\Modules\ContactReports\LogProcessors\Comments;
 use Nwidart\Modules\Facades\Module;
 
 class ContactReportsServiceProvider extends ServiceProvider
@@ -53,6 +54,7 @@ class ContactReportsServiceProvider extends ServiceProvider
 		if (Module::find('history') && Module::isEnabled('history'))
 		{
 			\App\Modules\History\Models\Log::pushProcessor(new Reports);
+			\App\Modules\History\Models\Log::pushProcessor(new Comments);
 		}
 	}
 
