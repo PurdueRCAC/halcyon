@@ -18,17 +18,16 @@ $menu->getParent();
 // Site SubMenu
 //
 $chm = $user->can('manage messages');
-$cam = $user->can('manage cache');
 
-$menu->addChild(new Node(
-	trans('widget.adminmenu::adminmenu.system'),
-	route('admin.core.sysinfo'),
-	'class:' . (isset($groupings['system']) ? $groupings['system'] : 'settings'),
-	in_array($active, ['info', 'core', 'config', 'checkin', 'cache', 'redirect', 'history'])
-), true);
-
-if ($chm || $cam || $cst)
+if (($chm && Module::isEnabled('messages')) || $user->can('admin'))
 {
+	$menu->addChild(new Node(
+		trans('widget.adminmenu::adminmenu.system'),
+		route('admin.core.sysinfo'),
+		'class:' . (isset($groupings['system']) ? $groupings['system'] : 'settings'),
+		in_array($active, ['info', 'core', 'config', 'checkin', 'cache', 'redirect', 'history'])
+	), true);
+
 	if ($chm && Module::isEnabled('messages'))
 	{
 		$menu->addChild(new Node(
@@ -38,28 +37,28 @@ if ($chm || $cam || $cst)
 			($active == 'messages')
 		));
 	}
+
+	if ($user->can('admin'))
+	{
+		$menu->addChild(new Node(
+			trans('widget.adminmenu::adminmenu.activity log'),
+			route('admin.history.index'),
+			'class:history',
+			($active == 'history')
+		));
+
+		$menu->addSeparator();
+
+		$menu->addChild(new Node(
+			trans('widget.adminmenu::adminmenu.system info'),
+			route('admin.core.sysinfo'),
+			'class:sysinfo',
+			($active == 'core')
+		));
+	}
+
+	$menu->getParent();
 }
-
-if ($user->can('admin'))
-{
-	$menu->addChild(new Node(
-		trans('widget.adminmenu::adminmenu.activity log'),
-		route('admin.history.index'),
-		'class:history',
-		($active == 'history')
-	));
-
-	$menu->addSeparator();
-
-	$menu->addChild(new Node(
-		trans('widget.adminmenu::adminmenu.system info'),
-		route('admin.core.sysinfo'),
-		'class:sysinfo',
-		($active == 'core')
-	));
-}
-
-$menu->getParent();
 
 //
 // Users Submenu
