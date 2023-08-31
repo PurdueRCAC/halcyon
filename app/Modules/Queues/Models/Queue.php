@@ -755,7 +755,7 @@ class Queue extends Model
 		}*/
 		
 		$w = $this->walltimes()
-			->where('datetimestart', '<', $now->toDateTimeString())
+			->where('datetimestart', '<=', $now->toDateTimeString())
 			->where(function($where) use ($now)
 			{
 				$where->whereNull('datetimestop')

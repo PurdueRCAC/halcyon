@@ -692,32 +692,32 @@ class QueuesController extends Controller
 
 		if ($exists)
 		{
-			return response()->json(trans('queues::queues.error.queue already exists'), 409);
+			return response()->json(['message' => trans('queues::queues.error.queue already exists')], 409);
 		}
 
 		if ($queue->schedulerid && !$queue->scheduler)
 		{
-			return response()->json(trans('queues::queues.error.invalid scheduler id'), 409);
+			return response()->json(['message' => trans('queues::queues.error.invalid scheduler id')], 409);
 		}
 
 		if ($queue->subresourceid && !$queue->subresource)
 		{
-			return response()->json(trans('queues::queues.error.invalid subresource id'), 409);
+			return response()->json(['message' => trans('queues::queues.error.invalid subresource id')], 409);
 		}
 
 		if ($queue->groupid && !$queue->group)
 		{
-			return response()->json(trans('queues::queues.error.invalid group id'), 409);
+			return response()->json(['message' => trans('queues::queues.error.invalid group id')], 409);
 		}
 
 		if ($queue->schedulerpolicyid && !$queue->schedulerPolicy)
 		{
-			return response()->json(trans('queues::queues.error.invalid schedulerpolicy id'), 409);
+			return response()->json(['message' => trans('queues::queues.error.invalid schedulerpolicy id')], 409);
 		}
 
 		if (!$queue->save())
 		{
-			return response()->json(trans('queues::queues.error.creation failed'), 500);
+			return response()->json(['message' => trans('queues::queues.error.creation failed')], 500);
 		}
 
 		$walltime = Walltime::query()
