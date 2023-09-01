@@ -30,7 +30,7 @@
 							<div class="form-group">
 								<label for="new_group_input">Enter a name for a new group:</label>
 								<input type="text" id="new_group_input" class="form-control" data-userid="{{ $user->id }}" data-api="{{ route('api.groups.create') }}" data-uri="{{ route('site.users.account.section', ['section' => 'groups']) }}" value="" required />
-								<div class="form-text text-muted">{{ trans('groups::groups.user will be added as a manager', ['name' => $user->name]) }}</div>
+								<div class="form-text text-muted">{{ trans('groups::groups.user will be added as a manager', ['user' => $user->name]) }}</div>
 							</div>
 
 							<div id="new_group_action" class="alert alert-danger hide"></div>
