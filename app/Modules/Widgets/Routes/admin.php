@@ -78,7 +78,7 @@ $router->group(['prefix' => 'widgets'], function (Router $router)
 		'uses' => 'WidgetsController@saveorder',
 	]);
 
-	$router->post('/checkin', [
+	$router->match(['get', 'post'], '/checkin', [
 		'as'   => 'admin.widgets.checkin',
 		'uses' => 'WidgetsController@checkin',
 	]);

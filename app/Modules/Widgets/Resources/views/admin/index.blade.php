@@ -168,9 +168,15 @@ app('pathway')
 						@php
 						$user = App\Modules\Users\Models\User::find($row->checked_out);
 						@endphp
-						<a class="glyph icon-check-square warning" data-tip="{{ trans('widgets::widgets.checked out', ['name' => $user ? $user->name : trans('global.unknown')]) }}">
+						@if (auth()->user()->can('admin'))
+						<a href="{{ route('admin.widgets.checkin', ['id[]' => $row->id]) }}" class="glyph icon-check-square warning" data-tip="{{ trans('widgets::widgets.checked out', ['name' => $user ? $user->name : trans('global.unknown')]) }}">
 							{{ trans('widgets::widgets.checked out', ['name' => $user ? $user->name : trans('global.unknown')]) }}
 						</a>
+						@else
+						<span class="glyph icon-check-square warning" data-tip="{{ trans('widgets::widgets.checked out', ['name' => $user ? $user->name : trans('global.unknown')]) }}">
+							{{ trans('widgets::widgets.checked out', ['name' => $user ? $user->name : trans('global.unknown')]) }}
+						</span>
+						@endif
 					@endif
 					@if (auth()->user()->can('edit widgets'))
 						<a href="{{ route('admin.widgets.edit', ['id' => $row->id]) }}">

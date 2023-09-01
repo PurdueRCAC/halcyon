@@ -334,7 +334,7 @@ class WidgetsController extends Controller
 			}
 		}
 
-		if ($row->id)
+		/*if ($row->id)
 		{
 			// Checkout the record
 			if (!$row->checkOut())
@@ -342,7 +342,7 @@ class WidgetsController extends Controller
 				// Check-out failed, display a notice but allow the user to see the record.
 				return $this->cancel($request)->with('warning', trans('global.messages.check out failed'));
 			}
-		}
+		}*/
 
 		$row->registerLanguage();
 
