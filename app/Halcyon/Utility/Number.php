@@ -73,7 +73,7 @@ class Number
 			{
 				$neg = true;
 			}
-			$num  = abs((int)$matches[1][0]);
+			$num  = abs($matches[1][0]);
 			$unit = $matches[2][0];
 
 			$units = array(
