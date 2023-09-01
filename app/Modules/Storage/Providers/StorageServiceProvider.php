@@ -10,6 +10,7 @@ use App\Modules\Storage\Listeners\GroupMembers;
 use App\Modules\Storage\Listeners\UnixGroupMembers;
 use App\Modules\Storage\Listeners\DeletingUnixGroup;
 use App\Modules\Storage\Listeners\Notifications;
+use App\Modules\Storage\Listeners\DistributeQuota;
 use App\Modules\Storage\Listeners\UserStorage;
 use App\Modules\Storage\Console\EmailQuotaCommand;
 use App\Modules\Storage\Console\QuotaCheckCommand;
@@ -49,6 +50,7 @@ class StorageServiceProvider extends ServiceProvider
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
 		$this->app['events']->subscribe(new Notifications);
+		$this->app['events']->subscribe(new DistributeQuota);
 
 		if (Module::isEnabled('messages'))
 		{

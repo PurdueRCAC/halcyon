@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Builder;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Storage\Events\PurchaseCreated;
+use App\Modules\Storage\Events\PurchaseUpdated;
+use App\Modules\Storage\Events\PurchaseDeleted;
 use App\Modules\History\Traits\Historable;
 use App\Halcyon\Utility\Number;
 use Carbon\Carbon;
@@ -75,6 +77,22 @@ class Purchase extends Model
 	 */
 	protected $dispatchesEvents = [
 		'created' => PurchaseCreated::class,
+		'updated' => PurchaseUpdated::class,
+		'deleted' => PurchaseDeleted::class,
+	];
+
+	/**
+	 * The attributes that should be cast to native types.
+	 *
+	 * @var array<string,string>
+	 */
+	protected $casts = [
+		'resourceid' => 'integer',
+		'groupid' => 'integer',
+		'bytes' => 'integer',
+		'sellergroupid' => 'integer',
+		'datetimestart' => 'datetime',
+		'datetimestop' => 'datetime',
 	];
 
 	/**

@@ -5,6 +5,8 @@ namespace App\Modules\Storage\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Storage\Events\LoanCreated;
+use App\Modules\Storage\Events\LoanUpdated;
+use App\Modules\Storage\Events\LoanDeleted;
 use Carbon\Carbon;
 
 /**
@@ -38,6 +40,22 @@ class Loan extends Purchase
 	 */
 	protected $dispatchesEvents = [
 		'created' => LoanCreated::class,
+		'updated' => LoanUpdated::class,
+		'deleted' => LoanDeleted::class,
+	];
+
+	/**
+	 * The attributes that should be cast to native types.
+	 *
+	 * @var array<string,string>
+	 */
+	protected $casts = [
+		'resourceid' => 'integer',
+		'groupid' => 'integer',
+		'bytes' => 'integer',
+		'lendergroupid' => 'integer',
+		'datetimestart' => 'datetime',
+		'datetimestop' => 'datetime',
 	];
 
 	/**
