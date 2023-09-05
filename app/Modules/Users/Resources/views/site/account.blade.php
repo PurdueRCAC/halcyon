@@ -171,6 +171,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 													endif;
 													?>
 													<option value="/bin/zsh"<?php echo $selected; ?>>zsh</option>
+												@if (auth()->user()->can('manage users'))
 													<?php
 													$selected = '';
 													if (preg_match("/nologin$/", $user->loginShell)):
@@ -178,6 +179,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 													endif;
 													?>
 													<option value="/usr/sbin/nologin"<?php echo $selected; ?>>nologin</option>
+												@endif
 												</select>
 												<span class="input-group-append">
 													<a href="{{ auth()->user()->id != $user->id ? route('site.users.account', ['u' => $user->id]) : route('site.users.account') }}" data-api="{{ route('api.users.update', ['id' => $user->id]) }}" class="btn input-group-text text-success property-save" title="Save">
