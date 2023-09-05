@@ -92,7 +92,7 @@ class EventRegistered extends Notification
 							continue;
 						}
 
-						$queue->status = 'member';
+						//$queue->status = 'member';
 
 						//$allqueues[] = $queue;
 						$groups[] = $group->name . ' - ' . $queue->name . ($queue->resource ? ' (' . $queue->resource->name . ')' : '');
@@ -129,14 +129,14 @@ class EventRegistered extends Notification
 						continue;
 					}
 
-					if ($qu->isPending())
+					/*if ($qu->isPending())
 					{
 						$queue->status = 'pending';
 					}
 					else
 					{
 						$queue->status = 'member';
-					}
+					}*/
 
 					//$allqueues[] = $queue;
 					$groups[] = $group->name . ' - ' . $queue->name . ($queue->resource ? ' (' . $queue->resource->name . ')' : '');

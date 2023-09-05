@@ -134,6 +134,12 @@ class SubresourcesController extends Controller
 		}
 
 		if (!auth()->user() || !auth()->user()->can('manage resources'))
+		{
+			if ($filters['state'] != 'active')
+			{
+				$filters['state'] = 'active';
+			}
+		}
 
 		// Build query
 		$s = (new Subresource)->getTable();

@@ -4,6 +4,7 @@ namespace App\Modules\News\Http\Controllers\Site;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
@@ -763,7 +764,7 @@ class ArticlesController extends Controller
 	 *
 	 * @param   int  $id
 	 * @param   string  $token
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function visit($id, $token)
 	{

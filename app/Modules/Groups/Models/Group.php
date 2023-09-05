@@ -239,7 +239,7 @@ class Group extends Model
 	/**
 	 * Get a list of storage buckets
 	 *
-	 * @return  array<int,array{string,int}>
+	 * @return  array<int,array{resourceid:int,soldbytes:int,loanedbytes:int,totalbytes:int,unallocatedbytes:int,allocatedbytes:int}>
 	 */
 	public function getStorageBucketsAttribute(): array
 	{

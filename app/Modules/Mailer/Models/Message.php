@@ -15,7 +15,7 @@ use Carbon\Carbon;
 /**
  * Mail message
  *
- * @property int    $id
+ * @property int|null    $id
  * @property string $name
  * @property string $subject
  * @property string $body

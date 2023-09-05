@@ -466,7 +466,7 @@ class SnippetsController extends Controller
 		{
 			// Delete the entry
 			// Note: This is recursive and will also remove all descendents
-			$row = Report::findOrFail($id);
+			$row = SnippetAssociation::findOrFail($id);
 
 			if (!$row->delete())
 			{
@@ -479,7 +479,7 @@ class SnippetsController extends Controller
 
 		if ($success)
 		{
-			$request->session()->flash('success', trans('global.messages.item deleted', $success));
+			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
 		return $this->cancel();

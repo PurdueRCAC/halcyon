@@ -53,6 +53,8 @@ class Formatter
 	public function format($diff, Closure $formatContextOutput = null)
 	{
 		$xi = $yi = 1;
+		$x0 = 0;
+		$y0 = 0;
 		$block = false;
 		$context = array();
 
@@ -216,9 +218,9 @@ class Formatter
 	/**
 	 * Short description for '_block_header'
 	 *
-	 * @param      string  $xbeg
+	 * @param      int  $xbeg
 	 * @param      int $xlen
-	 * @param      string  $ybeg
+	 * @param      int  $ybeg
 	 * @param      int $ylen
 	 * @return     string
 	 */

@@ -19,6 +19,9 @@ use Carbon\Carbon;
  * @property int    $files
  * @property Carbon|null $datetimerecorded
  * @property int    $lastinterval
+ *
+ * @property int $max
+ * @property int $var
  */
 class Usage extends Model
 {

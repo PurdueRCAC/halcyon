@@ -23,7 +23,7 @@ class HistoryServiceProvider extends ServiceProvider
 	/**
 	 * The event listener mappings for the application.
 	 *
-	 * @var array<string,array>
+	 * @var array<string,array<int,string>>
 	 */
 	protected $listen = [
 		/*'Illuminate\Mail\Events\MessageSending' => [

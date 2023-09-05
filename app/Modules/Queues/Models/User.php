@@ -244,7 +244,7 @@ class User extends Model
 	 *
 	 * @return  void
 	 */
-	public function doNotNofity(): void
+	public function doNotNotify(): void
 	{
 		$this->notice = self::NO_NOTICE;
 	}

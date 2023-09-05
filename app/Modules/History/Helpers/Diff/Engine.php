@@ -36,12 +36,12 @@ class Engine
 	const MAX_XREF_LENGTH =  10000;
 
 	/**
-	 * @var array
+	 * @var array<int,int|bool>
 	 */
 	public $xchanged = array();
 
 	/**
-	 * @var array
+	 * @var array<int,int|bool>
 	 */
 	public $ychanged = array();
 
@@ -282,6 +282,7 @@ class Engine
 
 		$numer = $xlim - $xoff + $nchunks - 1;
 		$x = $xoff;
+		$k = 0;
 		for ($chunk = 0; $chunk < $nchunks; $chunk++)
 		{
 			if ($chunk > 0)

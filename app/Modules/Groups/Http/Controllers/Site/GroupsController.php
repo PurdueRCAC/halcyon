@@ -245,7 +245,7 @@ class GroupsController extends Controller
 			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
-		return $this->cancel()->with('success', trans('global.messages.item saved'));
+		return redirect(route('site.groups.show', ['id' => $row->id]))->with('success', trans('global.messages.item saved'));
 	}
 
 	/**
@@ -301,7 +301,7 @@ class GroupsController extends Controller
 			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
-		return $this->cancel();
+		return redirect(route('site.groups.index'));
 	}
 
 	/**

@@ -129,11 +129,11 @@ class Type extends Model
 
 		static::creating(function ($model)
 		{
-			$result = self::query()
+			$last = self::query()
 				->where('parentid', '=', $model->parentid)
 				->orderBy('ordering', 'desc')
 				->first();
-			$resule = $result ? $result->ordering + 1 : 1;
+			$resule = $last ? $last->ordering + 1 : 1;
 
 			$model->setAttribute('ordering', (int)$result);
 		});

@@ -7,6 +7,7 @@ use Nwidart\Modules\Facades\Module;
 use App\Halcyon\Models\Casts\Params;
 use App\Modules\History\Traits\Historable;
 use App\Halcyon\Form\Form;
+use Exception;
 
 /**
  * Extension model
@@ -20,7 +21,7 @@ use App\Halcyon\Form\Form;
  * @property int    $enabled
  * @property int    $access
  * @property int    $protected
- * @property Params $params
+ * @property \Illuminate\Support\Fluent $params
  * @property int    $checked_out
  * @property Carbon|null $checked_out_time
  * @property int    $ordering
@@ -134,6 +135,7 @@ class Extension extends Model
 	 * Find a record by element
 	 *
 	 * @param   string  $element
+	 * @param   string  $type
 	 * @return  Extension|null
 	 */
 	public static function findByElement($element, $type = 'module')
@@ -248,7 +250,7 @@ class Extension extends Model
 
 		if (!$form->loadFile($file, false, '//config'))
 		{
-			throw new \Exception(trans('global.error.load file failed'));
+			throw new Exception(trans('global.error.load file failed'));
 		}
 
 		//$data = $this->toArray();
@@ -276,9 +278,9 @@ class Extension extends Model
 		$return = $form->validate($data, $group);
 
 		// Check for an error.
-		if ($return instanceof \Exception)
+		if ($return instanceof Exception)
 		{
-			throw new \Exception($return->getMessage());
+			throw new Exception($return->getMessage());
 		}
 
 		// Check the validation results.
@@ -287,7 +289,7 @@ class Extension extends Model
 			// Get the validation messages from the form.
 			foreach ($form->getErrors() as $message)
 			{
-				throw new \Exception(trans($message));
+				throw new Exception(trans($message));
 			}
 
 			return false;

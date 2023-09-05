@@ -56,7 +56,7 @@ class BibTex
 	/**
 	 * Array with the BibTex Data
 	 *
-	 * @var    array<int,array{string,string}>
+	 * @var    array<int,array<string,string>>
 	 */
 	public $data = array();
 

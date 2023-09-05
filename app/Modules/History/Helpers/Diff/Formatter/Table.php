@@ -150,15 +150,14 @@ class Table extends Formatter
 	}
 
 	/**
-	 * Short description for 'emptyLine'
+	 * Generate an empty line
 	 *
-	 * Long description (if any) ...
-	 *
-	 * @return     void
+	 * @return     string
 	 */
 	public function emptyLine()
 	{
 		//return "\t\t\t".'<td colspan="2">&nbsp;</td>'."\n";
+		return "\n";
 	}
 
 	/**

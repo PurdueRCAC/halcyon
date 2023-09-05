@@ -207,7 +207,7 @@ class LogsController extends Controller
 
 		$rows->each(function ($row, $key)
 		{
-			$row->url = route('api.logs.read', ['id' => $row->id]);
+			$row->api = route('api.logs.read', ['id' => $row->id]);
 		});
 
 		return new ResourceCollection($rows);

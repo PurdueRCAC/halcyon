@@ -41,7 +41,7 @@ class PurgeHistoryCommand extends Command
 
 		if (!$maxAge)
 		{
-			$this->danger('No days specified.');
+			$this->error('No days specified.');
 			return;
 		}
 
@@ -52,7 +52,7 @@ class PurgeHistoryCommand extends Command
 		$query = History::query()
 			->where('created_at', '<', $cutOffDate);
 
-		if ($app)
+		if ($table)
 		{
 			$query->where('historable_table', '=', $table);
 		}

@@ -38,7 +38,10 @@ use App\Halcyon\Models\Casts\Params;
  * @property string $params
  * @property int    $access
  *
+ * Common dynamic properties
+ *
  * @property string $api
+ * @property int    $level
  */
 class Asset extends Model
 {

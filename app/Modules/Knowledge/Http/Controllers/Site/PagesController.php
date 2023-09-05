@@ -58,6 +58,7 @@ class PagesController extends Controller
 		$uri = '';
 		$guide = '';
 		$prev = null;
+		$node = null;
 		$parent = $root->id;
 		foreach ($pages as $i => $node)
 		{
@@ -116,6 +117,11 @@ class PagesController extends Controller
 			}
 
 			$prev = $node;
+		}
+
+		if (!$node)
+		{
+			abort(404, trans('knowledge::knowledge.article not found'));
 		}
 
 		event($event = new PageMetadata($node->page));

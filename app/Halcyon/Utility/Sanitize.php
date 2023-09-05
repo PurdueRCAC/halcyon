@@ -14,9 +14,9 @@ class Sanitize
 	/**
 	 * Removes any non-alphanumeric characters.
 	 *
-	 * @param   string  $string   String to sanitize
+	 * @param   string|array<int,string>  $string   String to sanitize
 	 * @param   array<int,string>   $allowed  An array of additional characters that are not to be removed.
-	 * @return  string  Sanitized string
+	 * @return  string|array<int,string>  Sanitized string
 	 */
 	public static function paranoid($string, $allowed = array())
 	{

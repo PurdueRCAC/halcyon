@@ -182,7 +182,7 @@ class Publication extends Model
 	/**
 	 * Get authors as an array
 	 * 
-	 * @return array<int,array{string,string}>
+	 * @return array<int,array<string,string>>
 	 */
 	public function getAuthorListAttribute(): array
 	{

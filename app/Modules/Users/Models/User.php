@@ -38,8 +38,11 @@ use Carbon\Carbon;
  *
  * @property array<int,int> $newroles
  * @property string $loginShell
+ * @property string $primarygroup
+ * @property string $pilogin
  * @property string $api
  * @property array<int,int> $access
+ * @property string $department
  */
 class User extends Model implements
 	AuthenticatableContract,

@@ -502,6 +502,7 @@ class DirectoriesController extends Controller
 		$row->publicread  = 0;
 		$row->publicwrite = 0;
 		$row->storageresourceid = 0;
+		$row->resourceid = 0;
 		$row->fill($data);
 
 		if ($row->parent)
@@ -1121,8 +1122,8 @@ class DirectoriesController extends Controller
 
 			if ($unallocatedbytes < 0)
 			{
-				$row->unallocatedbytes = Number::formatBytes(-($bucket['unallocatedbytes'] + ($row->getOriginal('bytes') - $bytes)));
-				$row->overallocated    = 1;
+				//$row->unallocatedbytes = Number::formatBytes(-($bucket['unallocatedbytes'] + ($row->getOriginal('bytes') - $bytes)));
+				//$row->overallocated    = 1;
 
 				return response()->json(['message' => trans($row->parentstoragedirid ? 'Over allocated. Add a loan or purchase or reduce parent quota by the amount of increase desired.' : 'Over allocated. Add a loan or purchase of the amount of increase desired.')], 415);
 				//return new DirectoryResource($row);
