@@ -793,6 +793,12 @@ class MembersController extends Controller
 	 * 		"201": {
 	 * 			"description": "Successful entry creation"
 	 * 		},
+	 * 		"403": {
+	 * 			"description": "Forbidden"
+	 * 		},
+	 * 		"404": {
+	 * 			"description": "User or Resource record not found"
+	 * 		},
 	 * 		"409": {
 	 * 			"description": "Invalid data"
 	 * 		}
@@ -850,7 +856,7 @@ class MembersController extends Controller
 			// If no queues found
 			if (count($queues) < 1) // && !in_array($resource->id, array(48, 2, 12, 66)))
 			{
-				return response()->json(null, 403);
+				return response()->json(['message' => trans('You do not have permission to add the specified user to this resource.')], 403);
 			}
 		}
 
@@ -887,6 +893,7 @@ class MembersController extends Controller
 			$user->primarygroup = $primarygroup;
 		}
 
+		// Trigger event so plugins can respond accordingly
 		event($event = new ResourceMemberCreated($asset, $user));
 
 		$status = trans('global.unknown');
@@ -951,8 +958,14 @@ class MembersController extends Controller
 	 * 		"200": {
 	 * 			"description": "Successful entry read"
 	 * 		},
+	 * 		"403": {
+	 * 			"description": "Forbidden"
+	 * 		},
 	 * 		"404": {
 	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"415": {
+	 * 			"description": "Missing or invalid ID format"
 	 * 		}
 	 * }
 	 * @param   string $id
@@ -998,10 +1011,10 @@ class MembersController extends Controller
 		// Ignore if rolename is not set
 		if (!$asset->rolename)
 		{
-			return response()->json(null, 404);
+			return response()->json(['message' => trans('Invalid resource for ID :id', ['id' => $resource])], 404);
 		}
 
-		// Call central accounting service to request status
+		// Retrieve status from any plugins/3rd-parties
 		event($event = new ResourceMemberStatus($asset, $user));
 
 		$status = trans('global.unknown');
@@ -1048,7 +1061,7 @@ class MembersController extends Controller
 	}
 
 	/**
-	 * Delete a resource/member association
+	 * Delete a member/resource association
 	 *
 	 * @apiMethod DELETE
 	 * @apiUri    /resources/members/{user id}.{resource id}
@@ -1069,6 +1082,15 @@ class MembersController extends Controller
 	 * 		},
 	 * 		"404": {
 	 * 			"description": "Record not found"
+	 * 		},
+	 * 		"403": {
+	 * 			"description": "Forbidden"
+	 * 		},
+	 * 		"412": {
+	 * 			"description": "User is still a member of one or more queues for the resource"
+	 * 		},
+	 * 		"415": {
+	 * 			"description": "Missing or invalid ID format"
 	 * 		}
 	 * }
 	 * @param  string $id
@@ -1080,7 +1102,7 @@ class MembersController extends Controller
 
 		if (count($parts) != 2)
 		{
-			return response()->json(['message' => trans('Missing or invalid value. Must be of format `resourceid.userid`')], 412);
+			return response()->json(['message' => trans('Missing or invalid value. Must be of format `resourceid.userid`')], 415);
 		}
 
 		$resourceid = $parts[0];
@@ -1119,7 +1141,7 @@ class MembersController extends Controller
 			// If no queues found
 			if (count($queues) < 1) // && !in_array($resource->id, array(48, 2, 12, 66)))
 			{
-				return response()->json(null, 403);
+				return response()->json(['message' => trans('You do not have permission to add the specified user to this resource.')], 403);
 			}
 		}
 		else
@@ -1130,48 +1152,36 @@ class MembersController extends Controller
 		// Check for other queue memberships on this resource that might conflict with removing the role
 		$rows = 0;
 
-		/*$resources = Asset::query()
-			->where('rolename', '!=', '')
-			->where('listname', '!=', '')
-			->get();
+		$subresources = $resource->subresources;
 
-		foreach ($resources as $res)
+		foreach ($subresources as $sub)
 		{
-			$subresources = $res->subresources;*/
-			$subresources = $resource->subresources;
+			$queues = $sub->queues()
+				->get();
 
-			foreach ($subresources as $sub)
+			foreach ($queues as $queue)
 			{
-				$queues = $sub->queues()
-					//->whereIn('groupid', $owned)
-					->get();
-					//->pluck('queuid')
-					//->toArray();
+				$rows += $queue->users()
+					->whereIsMember()
+					->where('userid', '=', $user->id)
+					->count();
 
-				foreach ($queues as $queue)
+				if ($queue->group)
 				{
-					$rows += $queue->users()
-						->whereIsMember()
+					$rows += $queue->group->members()
+						->whereIsManager()
 						->where('userid', '=', $user->id)
 						->count();
-
-					if ($queue->group)
-					{
-						$rows += $queue->group->members()
-							->whereIsManager()
-							->where('userid', '=', $user->id)
-							->count();
-					}
 				}
 			}
-		//}
+		}
 
 		if ($rows > 0)
 		{
-			return response()->json(null, 202);
+			return response()->json(['message' => 'User is a member of one or more queues. Remove all queue memberships first.'], 403);
 		}
 
-		// Call to remove role from this user's account.
+		// Trigger event so plugins can respond accordingly
 		event(new ResourceMemberDeleted($resource, $user));
 
 		return response()->json(null, 204);

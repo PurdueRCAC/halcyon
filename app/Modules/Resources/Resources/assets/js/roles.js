@@ -21,67 +21,67 @@ var Roles = {
 			method: 'GET',
 			headers: headers
 		})
-			.then(function (response) {
-				if (response.ok) {
-					return response.json();
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
 				}
-
-				return response.json().then(function (data) {
-					var msg = data.message;
-					if (typeof msg === 'object') {
-						msg = Object.values(msg).join('<br />');
-					}
-					throw msg;
-				});
-			})
-			.then(function (results) {
-				var userid = document.getElementById("userid").value;
-
-				for (var count = 0; count < results.data.length; count++) {
-					if (results.data[count]['rolename'] == '') {
-						continue;
-					}
-
-					var resource = results.data[count]['id'];
-
-					if (!results.data[count]['retired']) {
-						var indicator = document.createElement("span");
-						indicator.className = "spinner-border spinner-border-sm";
-						indicator.role = "status";
-						indicator.id = 'IMG_' + results.data[count]['id'];
-
-						var cell = document.getElementById("resource" + resource);
-
-						if (cell != null) {
-							cell.innerHTML = "";
-							cell.setAttribute('data-loading', true);
-							cell.appendChild(indicator);
-							console.log(cell.getAttribute('data-api') + "/" + resource + "." + userid);
-							fetch(cell.getAttribute('data-api') + "/" + resource + "." + userid, {
-								method: 'GET',
-								headers: headers
-							})
-								.then(function (response) {
-									if (response.ok) {
-										return response.json();
-									}
-
-									var img = document.getElementById('IMG_' + results.data[count]['id']);
-									if (img) {
-										img.className = 'fa fa-exclamation-circle text-danger';
-										img.alt = "Error fetching roles. May be invalid Career Account.";
-									}
-								})
-								.then(function (data) {
-									Roles.PopulateRole(data);
-								});
-						}
-					}
-				}
-			})
-			.catch(function (error) {
-				alert(error);
+				throw msg;
 			});
+		})
+		.then(function (results) {
+			var userid = document.getElementById("userid").value;
+
+			for (var count = 0; count < results.data.length; count++) {
+				if (results.data[count]['rolename'] == '') {
+					continue;
+				}
+
+				var resource = results.data[count]['id'];
+
+				if (!results.data[count]['retired']) {
+					var indicator = document.createElement("span");
+					indicator.className = "spinner-border spinner-border-sm";
+					indicator.role = "status";
+					indicator.id = 'IMG_' + results.data[count]['id'];
+
+					var cell = document.getElementById("resource" + resource);
+
+					if (cell != null) {
+						cell.innerHTML = "";
+						cell.setAttribute('data-loading', true);
+						cell.appendChild(indicator);
+
+						fetch(cell.getAttribute('data-api') + "/" + resource + "." + userid, {
+							method: 'GET',
+							headers: headers
+						})
+						.then(function (response) {
+							if (response.ok) {
+								return response.json();
+							}
+
+							var img = document.getElementById('IMG_' + results.data[count]['id']);
+							if (img) {
+								img.className = 'fa fa-exclamation-circle text-danger';
+								img.alt = "Error fetching roles. May be invalid Career Account.";
+							}
+						})
+						.then(function (data) {
+							Roles.PopulateRole(data);
+						});
+					}
+				}
+			}
+		})
+		.catch(function (error) {
+			alert(error);
+		});
 	},
 
 	/**
@@ -128,7 +128,6 @@ var Roles = {
 	/**
 	 * Get user role status
 	 *
-	 * @param   {string}  userid
 	 * @return  {void}
 	 */
 	GetUserStatus: function () {
@@ -140,25 +139,25 @@ var Roles = {
 				method: 'GET',
 				headers: headers
 			})
-				.then(function (response) {
-					if (response.ok) {
-						return response.json();
-					}
+			.then(function (response) {
+				if (response.ok) {
+					return response.json();
+				}
 
-					return response.json().then(function (data) {
-						var msg = data.message;
-						if (typeof msg === 'object') {
-							msg = Object.values(msg).join('<br />');
-						}
-						throw msg;
-					});
-				})
-				.then(function (results) {
-					Roles.GotUserStatus(results);
-				})
-				.catch(function (error) {
-					alert(error);
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
+					}
+					throw msg;
 				});
+			})
+			.then(function (results) {
+				Roles.GotUserStatus(results);
+			})
+			.catch(function (error) {
+				alert(error);
+			});
 		}
 	},
 
@@ -247,27 +246,28 @@ var Roles = {
 			headers: headers,
 			body: JSON.stringify(post)
 		})
-			.then(function (response) {
-				if (response.ok) {
-					return response.json();
-				}
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
 
-				return response.json().then(function (data) {
-					var msg = data.message;
-					if (typeof msg === 'object') {
-						msg = Object.values(msg).join('<br />');
-					}
-					throw msg;
-				});
-			})
-			.then(function (results) {
-				$('#manage_roles_dialog').modal('hide');
-				Roles.GotUserStatus(results);
-			})
-			.catch(function (error) {
-				err.classList.remove('hide');
-				err.innerHTML = error;
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
+				}
+				throw msg;
 			});
+		})
+		.then(function (results) {
+			$('#manage_roles_dialog').modal('hide');
+			Roles.GotUserStatus(results);
+			Roles.PopulateRole(results);
+		})
+		.catch(function (error) {
+			err.classList.remove('hide');
+			err.innerHTML = error;
+		});
 	},
 
 	/**
@@ -285,29 +285,32 @@ var Roles = {
 				method: 'DELETE',
 				headers: headers
 			})
-				.then(function (response) {
-					if (response.ok) {
-						fetch(res.getAttribute('data-api') + "/" + resource + "." + userid, {
-							method: 'GET',
-							headers: headers
-						})
-							.then(function (resp) {
-								if (resp.ok) {
-									return resp.json();
-								}
-								return Promise.reject(resp);
-							})
-							.then(function (results) {
-								Roles.GotUserStatus(results);
-							});
-					}
+			.then(function (response) {
+				if (response.ok) {
+					fetch(res.getAttribute('data-api') + "/" + resource + "." + userid, {
+						method: 'GET',
+						headers: headers
+					})
+					.then(function (resp) {
+						if (resp.ok) {
+							return resp.json();
+						}
+						return Promise.reject(resp);
+					})
+					.then(function (results) {
+						$('#manage_roles_dialog').modal('hide');
+						Roles.GotUserStatus(results);
+						Roles.PopulateRole(results);
+					});
+				} else {
 					return Promise.reject(response);
-				})
-				.catch(function (error) {
-					var err = document.getElementById("role_errors");
-					err.classList.remove('hide');
-					err.innerHTML = error;
-				});
+				}
+			})
+			.catch(function (error) {
+				var err = document.getElementById("role_errors");
+				err.classList.remove('hide');
+				err.innerHTML = error;
+			});
 		}
 	}
 }
