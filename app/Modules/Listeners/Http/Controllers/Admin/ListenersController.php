@@ -25,7 +25,7 @@ class ListenersController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
-			'state'     => 1,
+			'state'     => '',
 			'access'    => 0,
 			'folder'  => null,
 			'enabled'    => null,
@@ -62,7 +62,6 @@ class ListenersController extends Controller
 
 		$query = Listener::query()
 			->where('type', '=', 'listener');
-			//->where('state', '>=', 0);
 
 		$p = (new Listener)->getTable();
 		$u = (new User)->getTable();
@@ -72,12 +71,10 @@ class ListenersController extends Controller
 
 		// Join over the users for the checked out user.
 		$query
-			//->select([$u . '.name AS editor'])
 			->leftJoin($u, $u . '.id', $p . '.checked_out');
 
 		// Join over the access groups.
 		$query
-			//->select([$a . '.title AS access_level'])
 			->leftJoin($a, $a . '.id', $p . '.access');
 
 		// Filter by access level.

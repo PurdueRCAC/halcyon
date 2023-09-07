@@ -137,22 +137,19 @@ class ListenersController extends Controller
 
 		$query = Listener::query()
 			->where('type', '=', 'listener');
-			//->where('state', '>=', 0);
 
 		$p = (new Listener)->getTable();
-		$u = (new User)->getTable(); //'users';
-		$a = (new Viewlevel)->getTable();'viewlevels';
+		$u = (new User)->getTable();
+		$a = (new Viewlevel)->getTable();
 
 		$query->select([$p . '.*', $u . '.name AS editor', $a . '.title AS access_level']);
 
 		// Join over the users for the checked out user.
 		$query
-			//->select([$u . '.name AS editor'])
 			->leftJoin($u, $u . '.id', $p . '.checked_out');
 
 		// Join over the access groups.
 		$query
-			//->select([$a . '.title AS access_level'])
 			->leftJoin($a, $a . '.id', $p . '.access');
 
 		// Filter by access level.

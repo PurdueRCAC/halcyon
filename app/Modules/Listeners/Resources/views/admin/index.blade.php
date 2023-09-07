@@ -126,12 +126,12 @@ app('pathway')
 			$canCheckin = auth()->user()->can('manage listeners') || $row->checked_out == auth()->user()->id || $row->checked_out == 0;
 			$canChange  = auth()->user()->can('edit.state listeners') && $canCheckin;
 			?>
-			<tr>
+			<tr<?php if (!$path) { echo ' class="locked"'; } ?>>
 				<td class="text-center">
 					@if ($path && $canEdit)
 						{!! App\Halcyon\Html\Builder\Grid::id($i, $row->id) !!}
 					@elseif (!$path)
-						<span class="fa fa-exclamation-triangle text-warning"></span>
+						<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span>
 					@endif
 				</td>
 				<td class="priority-5">
