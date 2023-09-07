@@ -2,18 +2,18 @@
 <config>
 	<fields name="params">
 		<fieldset name="basic">
-			<field name="item_title" type="radio" default="0" label="widget.userlist::userlist.params.show title" description="widget.userlist::userlist.params.show title desc">
+			<field name="item_title" type="radio" default="0" label="widget.productlist::productlist.params.show title" description="widget.productlist::productlist.params.show title desc">
 				<option value="1">global.yes</option>
 				<option value="0">global.no</option>
 			</field>
-			<field name="item_heading" type="list" default="h4" label="widget.userlist::userlist.params.header level" description="widget.userlist::userlist.params.header level desc">
+			<field name="item_heading" type="list" default="h4" label="widget.productlist::productlist.params.header level" description="widget.productlist::productlist.params.header level desc">
 				<option value="h1">H1</option>
 				<option value="h2">H2</option>
 				<option value="h3">H3</option>
 				<option value="h4">H4</option>
 				<option value="h5">H5</option>
 			</field>
-			<field name="limit" type="text" default="5" label="widget.userlist::userlist.params.number of items" description="widget.userlist::userlist.params.number of items desc" />
+			<field name="limit" type="text" default="5" label="widget.productlist::productlist.params.number of items" description="widget.productlist::productlist.params.number of items desc" />
 		</fieldset>
 		<fieldset name="advanced">
 			<field name="class" type="text" label="widgets::widgets.field.class name" description="widgets::widgets.field.class name description" />
