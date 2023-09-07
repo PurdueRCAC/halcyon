@@ -1184,6 +1184,8 @@ h4 {
 .icon-shield:before {
   content: "\e8c2";
 }
+.fa-cog:before,
+.icon-cog:before,
 .icon-settings:before {
   content: "\e8c3";
 }
@@ -1430,6 +1432,7 @@ h4 {
 .icon-gitlab:before {
   content: "\e909";
 }
+.fa-sliders:before,
 .icon-options:before,
 .icon-sliders:before {
   content: "\e90a";
