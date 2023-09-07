@@ -71,6 +71,8 @@ return [
 	// Subresources
 	'description' => 'Description',
 	'options' => 'Options',
+	'options desc' => 'Resource types may have custom options that allow for finer control over display, functionality, and integrations.',
+	'no options' => 'This resource type has no custom options.',
 	'params' => [
 		'desktop' => 'Desktop',
 		'desktop desc' => 'URL for launching interactive desktops',

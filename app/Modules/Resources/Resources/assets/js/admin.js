@@ -4,7 +4,7 @@
  * @return  {void}
  */
 function formatName() {
-	var val = this.value;
+	let val = this.value;
 
 	val = val.toLowerCase()
 		.replace(/\s+/g, '_')
@@ -19,53 +19,66 @@ function formatName() {
  * @return  {void}
  */
 function setName() {
-	var resource = document.querySelector('#assoc-resourceid').selectedOptions[0].text.replace(/(- )+/, '');
-	var cluster = document.getElementById('field-cluster').value;
+	const resource = document.querySelector('#assoc-resourceid').selectedOptions[0].text.replace(/(- )+/, '');
+	const cluster = document.getElementById('field-cluster').value;
 	document.getElementById('field-name').value = resource + "-" + cluster;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
 	// Asset
-	var name = document.getElementById('field-name');
+	const rolename = document.getElementById('field-rolename');
+	if (rolename) {
+		rolename.addEventListener('keyup', formatName);
+	}
+	const listname = document.getElementById('field-listname');
+	if (listname) {
+		listname.addEventListener('keyup', formatName);
+	}
+
+	const name = document.getElementById('field-name');
 	if (name) {
 		name.addEventListener('keyup', function () {
-			var val = this.value;
+			let val = this.value;
 
 			val = val.toLowerCase()
 				.replace(/\s+/g, '_')
 				.replace(/[^a-z0-9-_]+/g, '');
 
-			var rolename = document.getElementById('field-rolename');
+			//var rolename = document.getElementById('field-rolename');
 			if (rolename) {
 				rolename.value = val;
 			}
-			var listname = document.getElementById('field-listname');
+			//var listname = document.getElementById('field-listname');
 			if (listname) {
 				listname.value = val;
 			}
 		});
 	}
 
-	var rolename = document.getElementById('field-rolename');
-	if (rolename) {
-		rolename.addEventListener('keyup', formatName);
-	}
-	var listname = document.getElementById('field-listname');
-	if (listname) {
-		listname.addEventListener('keyup', formatName);
+	const type = document.getElementById('field-resourcetype');
+	if (type) {
+		type.addEventListener('change', function () {
+			document.querySelectorAll('.type-dependent').forEach(function (el) {
+				if (el.classList.contains('type-' + type.value)) {
+					el.classList.remove('d-none');
+				} else {
+					el.classList.add('d-none');
+				}
+			});
+		});
 	}
 
 	// Subresource
-	var rid = document.getElementById('assoc-resourceid');
+	const rid = document.getElementById('assoc-resourceid');
 	if (rid) {
 		rid.addEventListener('change', setName);
 	}
-	var cluster = document.getElementById('field-cluster');
+	const cluster = document.getElementById('field-cluster');
 	if (cluster) {
 		cluster.addEventListener('change', setName);
 	}
 
-	var nodemem = document.getElementById('field-nodemem');
+	const nodemem = document.getElementById('field-nodemem');
 	if (nodemem) {
 		nodemem.addEventListener('keyup', function () {
 			this.value = this.value.toUpperCase().replace(/[^0-9]{1,4}[^PTGMKB]/g, '');

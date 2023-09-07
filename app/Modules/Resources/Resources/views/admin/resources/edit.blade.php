@@ -63,8 +63,8 @@ app('pathway')
 					<fieldset class="adminform">
 						<legend>{{ trans('global.details') }}</legend>
 
-						<div class="row">
-							<div class="col-md-6">
+						<!-- <div class="row">
+							<div class="col-md-6"> -->
 								<div class="form-group">
 									<label for="field-resourcetype">{{ trans('resources::assets.type') }}</label>
 									<select name="fields[resourcetype]" id="field-resourcetype" class="form-control">
@@ -74,7 +74,7 @@ app('pathway')
 										@endforeach
 									</select>
 								</div>
-							</div>
+							<!-- </div>
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="field-producttype">{{ trans('resources::assets.product type') }}</label>
@@ -86,7 +86,7 @@ app('pathway')
 									</select>
 								</div>
 							</div>
-						</div>
+						</div> -->
 
 						<div class="form-group">
 							<label for="field-parentid">{{ trans('resources::assets.parent') }}</label>
@@ -116,7 +116,7 @@ app('pathway')
 								<div class="form-group">
 									<label for="field-access">{{ trans('resources::assets.access') }}:</label>
 									<select class="form-control" name="fields[access]" id="field-access">
-										<option value="0"<?php if ($row->access == 0) { echo ' selected="selected"'; } ?>>- {{ trans('global.all') }} -</option>
+										<option value="0"<?php if ($row->access == 0) { echo ' selected="selected"'; } ?>>- {{ trans('global.default') }} -</option>
 										@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
 											<option value="{{ $access->id }}"<?php if ($row->access == $access->id) { echo ' selected="selected"'; } ?>>{{ $access->title }}</option>
 										@endforeach
@@ -150,7 +150,7 @@ app('pathway')
 
 						<div class="form-group">
 							<label for="field-description">{{ trans('resources::assets.description') }}</label>
-							<textarea name="fields[description]" id="field-description" cols="35" rows="5" class="form-control">{{ $row->description }}</textarea>
+							{!! editor('fields[description]', $row->description, ['rows' => 5, 'maxlength' => 2000, 'id' => 'field-description']) !!}
 						</div>
 					</fieldset>
 				</div>
@@ -159,14 +159,24 @@ app('pathway')
 						<legend>{{ trans('resources::assets.options') }}</legend>
 
 						<div class="type-dependent type-0 <?php if ($row->resourcetype) { echo 'd-none'; } ?>">
-							<p>{{ trans('global.none') }}</p>
+							<div class="text-center m-4">
+								<div class="display-4 text-muted"><span class="fa fa-sliders" aria-hidden="true"></span></div>
+								<p>{{ trans('resources::assets.options desc') }}</p>
+							</div>
 						</div>
 
 						@foreach ($types as $type)
 							<div class="type-dependent type-{{ $type->id }} <?php if ($type->id != $row->resourcetype) { echo 'd-none'; } ?>">
-							@foreach ($type->facetTypes as $field)
-								@include('resources::fields.' . $field->type)
-							@endforeach
+								@if (count($type->facetTypes))
+									@foreach ($type->facetTypes as $field)
+										@include('resources::fields.' . $field->type)
+									@endforeach
+								@else
+									<div class="text-center m-4">
+										<div class="display-4 text-muted"><span class="fa fa-sliders" aria-hidden="true"></span></div>
+										<p>{{ trans('resources::assets.no options') }}</p>
+									</div>
+								@endif
 							</div>
 						@endforeach
 					</fieldset>

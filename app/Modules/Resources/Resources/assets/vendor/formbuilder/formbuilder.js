@@ -1247,7 +1247,7 @@ this["Formbuilder"]["templates"]["view/description"] = function(obj) {
   obj || (obj = {});
   var __t, __p = '', __e = _.escape;
   with (obj) {
-    __p += '<span class=\'help-block\'>\n  ' +
+    __p += '<span class=\'help-block text-muted\'>\n  ' +
       ((__t = ( Formbuilder.helpers.simple_format(rf.get(Formbuilder.options.mappings.DESCRIPTION)) )) == null ? '' : __t) +
       '\n</span>\n';
   }
