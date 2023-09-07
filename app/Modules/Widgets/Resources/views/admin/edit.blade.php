@@ -199,44 +199,57 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 			$fieldSets = $form->getFieldsets('params');
 			$i = 0;
 
-			foreach ($fieldSets as $name => $fieldSet):
-				$i++;
-				$label = !empty($fieldSet->label) ? $fieldSet->label : 'widgets::widgets.' . $name . ' fieldset';
+			if (count($fieldSets) > 0):
+				foreach ($fieldSets as $name => $fieldSet):
+					$i++;
+					$label = !empty($fieldSet->label) ? $fieldSet->label : 'widgets::widgets.' . $name . ' fieldset';
+					?>
+					<details class="card" id="{{ $name }}-options"<?php if ($i == 1) { echo ' open'; } ?>>
+						<summary class="card-header">
+							{{ trans($label) }}
+						</summary>
+						<fieldset class="card-body">
+							@if (isset($fieldSet->description) && trim($fieldSet->description))
+								<p>{{ trans($fieldSet->description) }}</p>
+							@endif
+
+							<?php
+							$hidden_fields = '';
+
+							foreach ($form->getFieldset($name) as $field):
+								if (!$field->hidden):
+									?>
+									<div class="form-group">
+										<?php echo $field->label; ?><br />
+										<?php echo $field->input; ?>
+										@if ($field->description)
+											<span class="form-text text-muted">{{ trans($field->description) }}</span>
+										@endif
+									</div>
+									<?php
+								else:
+									$hidden_fields .= $field->input;
+								endif;
+							endforeach;
+
+							echo $hidden_fields;
+							?>
+						</fieldset>
+					</details>
+					<?php
+				endforeach;
+			else:
 				?>
-				<details class="card" id="{{ $name }}-options"<?php if ($i == 1) { echo ' open'; } ?>>
-					<summary class="card-header">
-						{{ trans($label) }}
-					</summary>
-					<fieldset class="card-body">
-						@if (isset($fieldSet->description) && trim($fieldSet->description))
-							<p>{{ trans($fieldSet->description) }}</p>
-						@endif
-
-						<?php
-						$hidden_fields = '';
-
-						foreach ($form->getFieldset($name) as $field):
-							if (!$field->hidden):
-								?>
-								<div class="form-group">
-									<?php echo $field->label; ?><br />
-									<?php echo $field->input; ?>
-									@if ($field->description)
-										<span class="form-text text-muted">{{ trans($field->description) }}</span>
-									@endif
-								</div>
-								<?php
-							else:
-								$hidden_fields .= $field->input;
-							endif;
-						endforeach;
-
-						echo $hidden_fields;
-						?>
-					</fieldset>
-				</details>
+				<div class="card">
+					<div class="card-body">
+						<div class="text-center m-4">
+							<div class="display-4 text-muted"><span class="fa fa-sliders" aria-hidden="true"></span></div>
+							<p>{{ trans('widgets::widgets.no options') }}</p>
+						</div>
+					</div>
+				</div>
 				<?php
-			endforeach;
+			endif;
 			?>
 		</div>
 	</div>

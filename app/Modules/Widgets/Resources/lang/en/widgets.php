@@ -41,6 +41,7 @@ return [
 		'none' => 'No pages',
 		'order position' => ':order. :title',
 	],
+	'no options' => 'This widget has no custom options.',
 	'click to publish' => 'Click to publish',
 	'click to unpublish' => 'Click to unpublish',
 	'invert selection' => 'Invert Selection',
