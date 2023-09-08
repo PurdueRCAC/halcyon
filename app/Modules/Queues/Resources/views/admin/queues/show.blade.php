@@ -126,7 +126,7 @@ endif;
 							<td>
 								@if (count($row->queueqoses) > 0)
 									@foreach ($row->queueqoses as $queueqos)
-										<a href="{{ route('admin.queues.qos.edit', ['id' => $queueqos->id]) }}">{{ $queueqos->qos->name }}</a><br />
+										<a href="{{ route('admin.queues.qos.edit', ['id' => $queueqos->qosid]) }}">{{ $queueqos->qos->name }}</a><br />
 									@endforeach
 								@endif
 							</td>
