@@ -4,35 +4,36 @@ namespace App\Modules\Themes\Process;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
-use Nwidart\Modules\Contracts\RepositoryInterface;
+use pp\Modules\Themes\Contracts\RepositoryInterface;
 use Symfony\Component\Process\Process;
 
 class Installer
 {
 	/**
-	 * The module name.
+	 * The theme name.
 	 *
 	 * @var string
 	 */
 	protected $name;
 
 	/**
-	 * The version of module being installed.
+	 * The version of theme being installed.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	protected $version;
 
 	/**
-	 * The module repository instance.
-	 * @var \Nwidart\Modules\Contracts\RepositoryInterface
+	 * The theme repository instance.
+	 *
+	 * @var RepositoryInterface
 	 */
 	protected $repository;
 
 	/**
 	 * The console command instance.
 	 *
-	 * @var \Illuminate\Console\Command
+	 * @var Command
 	 */
 	protected $console;
 
@@ -68,7 +69,7 @@ class Installer
 	 * @param string $type
 	 * @param bool   $tree
 	 */
-	public function __construct($name, $version = null, $type = null, $tree = false)
+	public function __construct(string $name, string $version = null, string $type = null, bool $tree = false)
 	{
 		$this->name = $name;
 		$this->version = $version;
@@ -80,10 +81,9 @@ class Installer
 	 * Set destination path.
 	 *
 	 * @param string $path
-	 *
 	 * @return $this
 	 */
-	public function setPath($path)
+	public function setPath(string $path): self
 	{
 		$this->path = $path;
 
@@ -91,11 +91,12 @@ class Installer
 	}
 
 	/**
-	 * Set the module repository instance.
-	 * @param \Nwidart\Modules\Contracts\RepositoryInterface $repository
+	 * Set the theme repository instance.
+	 *
+	 * @param RepositoryInterface $repository
 	 * @return $this
 	 */
-	public function setRepository(RepositoryInterface $repository)
+	public function setRepository(RepositoryInterface $repository): self
 	{
 		$this->repository = $repository;
 
@@ -105,11 +106,10 @@ class Installer
 	/**
 	 * Set console command instance.
 	 *
-	 * @param \Illuminate\Console\Command $console
-	 *
+	 * @param Command $console
 	 * @return $this
 	 */
-	public function setConsole(Command $console)
+	public function setConsole(Command $console): self
 	{
 		$this->console = $console;
 
@@ -120,10 +120,9 @@ class Installer
 	 * Set process timeout.
 	 *
 	 * @param int $timeout
-	 *
 	 * @return $this
 	 */
-	public function setTimeout($timeout)
+	public function setTimeout(int $timeout): self
 	{
 		$this->timeout = $timeout;
 
@@ -133,9 +132,9 @@ class Installer
 	/**
 	 * Run the installation process.
 	 *
-	 * @return \Symfony\Component\Process\Process
+	 * @return Process
 	 */
-	public function run()
+	public function run(): Process
 	{
 		$process = $this->getProcess();
 
@@ -155,9 +154,9 @@ class Installer
 	/**
 	 * Get process instance.
 	 *
-	 * @return \Symfony\Component\Process\Process
+	 * @return Process
 	 */
-	public function getProcess()
+	public function getProcess(): Process
 	{
 		if ($this->type)
 		{
@@ -177,7 +176,7 @@ class Installer
 	 *
 	 * @return string
 	 */
-	public function getDestinationPath()
+	public function getDestinationPath(): string
 	{
 		if ($this->path)
 		{
@@ -190,9 +189,9 @@ class Installer
 	/**
 	 * Get git repo url.
 	 *
-	 * @return string|null
+	 * @return string
 	 */
-	public function getRepoUrl()
+	public function getRepoUrl(): string
 	{
 		switch ($this->type)
 		{
@@ -204,13 +203,11 @@ class Installer
 
 			case 'gitlab':
 				return "git@gitlab.com:{$this->name}.git";
-				break;
 
 			case 'bitbucket':
 				return "git@bitbucket.org:{$this->name}.git";
 
 			default:
-
 				// Check of type 'scheme://host/path'
 				if (filter_var($this->type, FILTER_VALIDATE_URL))
 				{
@@ -222,10 +219,9 @@ class Installer
 				{
 					return "{$this->type}:{$this->name}.git";
 				}
-
-				return;
-				break;
 		}
+
+		return '';
 	}
 
 	/**
@@ -233,17 +229,17 @@ class Installer
 	 *
 	 * @return string
 	 */
-	public function getBranch()
+	public function getBranch(): string
 	{
 		return is_null($this->version) ? 'master' : $this->version;
 	}
 
 	/**
-	 * Get module name.
+	 * Get theme name.
 	 *
 	 * @return string
 	 */
-	public function getModuleName()
+	public function getThemeName(): string
 	{
 		$parts = explode('/', $this->name);
 
@@ -255,7 +251,7 @@ class Installer
 	 *
 	 * @return string
 	 */
-	public function getPackageName()
+	public function getPackageName(): string
 	{
 		if (is_null($this->version))
 		{
@@ -266,11 +262,11 @@ class Installer
 	}
 
 	/**
-	 * Install the module via git.
+	 * Install the theme via git.
 	 *
-	 * @return \Symfony\Component\Process\Process
+	 * @return Process
 	 */
-	public function installViaGit()
+	public function installViaGit(): Process
 	{
 		return Process::fromShellCommandline(sprintf(
 			'cd %s && git clone %s %s && cd %s && git checkout %s',
@@ -283,11 +279,11 @@ class Installer
 	}
 
 	/**
-	 * Install the module via git subtree.
+	 * Install the theme via git subtree.
 	 *
-	 * @return \Symfony\Component\Process\Process
+	 * @return Process
 	 */
-	public function installViaSubtree()
+	public function installViaSubtree(): Process
 	{
 		return Process::fromShellCommandline(sprintf(
 			'cd %s && git remote add %s %s && git subtree add --prefix=%s --squash %s %s',
@@ -301,11 +297,11 @@ class Installer
 	}
 
 	/**
-	 * Install the module via composer.
+	 * Install the theme via composer.
 	 *
-	 * @return \Symfony\Component\Process\Process
+	 * @return Process
 	 */
-	public function installViaComposer()
+	public function installViaComposer(): Process
 	{
 		return Process::fromShellCommandline(sprintf(
 			'cd %s && composer require %s',

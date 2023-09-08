@@ -2,110 +2,77 @@
 
 namespace App\Modules\Themes\Contracts;
 
+use Illuminate\Support\Collection;
 use App\Modules\Themes\Exceptions\ThemeNotFoundException;
 use App\Modules\Themes\Entities\Theme;
 
 interface RepositoryInterface
 {
 	/**
-	 * Get all themes.
-	 *
-	 * @return mixed
-	 */
-	public function all();
-
-	/**
-	 * Get cached themes.
-	 *
-	 * @return array
-	 */
-	public function getCached();
-
-	/**
 	 * Scan & get all available themes.
 	 *
-	 * @return array
+	 * @return array<int,string>
 	 */
-	public function scan();
+	public function scan(): array;
 
 	/**
-	 * Get themes as themes collection instance.
+	 * Get scan path.
 	 *
-	 * @return \Nwidart\Modules\Collection
+	 * @return string
 	 */
-	public function toCollection();
+	public function getScanPath(): string;
 
 	/**
-	 * Get scanned paths.
+	 * Get all themes.
 	 *
-	 * @return array
+	 * @return array<string,Theme>
 	 */
-	public function getScanPaths();
+	public function all(): array;
 
 	/**
 	 * Get list of enabled themes.
 	 *
-	 * @return mixed
+	 * @return array<string,Theme>
 	 */
-	public function allEnabled();
+	public function allEnabled(): array;
 
 	/**
 	 * Get list of disabled themes.
 	 *
-	 * @return mixed
+	 * @return array<string,Theme>
 	 */
-	public function allDisabled();
+	public function allDisabled(): array;
+
+	/**
+	 * Get themes as themes collection instance.
+	 *
+	 * @return Collection
+	 */
+	public function toCollection(): Collection;
 
 	/**
 	 * Get count from all themes.
 	 *
 	 * @return int
 	 */
-	public function count();
-
-	/**
-	 * Get all ordered themes.
-	 * @param string $direction
-	 * @return mixed
-	 */
-	public function getOrdered($direction = 'asc');
-
-	/**
-	 * Get themes by the given status.
-	 *
-	 * @param int $status
-	 *
-	 * @return mixed
-	 */
-	public function getByStatus($status);
+	public function count(): int;
 
 	/**
 	 * Find a specific theme.
 	 *
-	 * @param $name
-	 * @return Module|null
+	 * @param string $name
+	 * @return Theme|null
 	 */
-	public function find(string $name);
-
-	/**
-	 * Find all themes that are required by a theme. If the theme cannot be found, throw an exception.
-	 *
-	 * @param $name
-	 * @return array
-	 * @throws ModuleNotFoundException
-	 */
-	public function findRequirements($name): array;
+	public function find(string $name): ?Theme;
 
 	/**
 	 * Find a specific theme. If there return that, otherwise throw exception.
 	 *
-	 * @param $name
-	 *
-	 * @return mixed
+	 * @param string $name
+	 * @return Theme|null
+	 * @throws ThemeNotFoundException
 	 */
-	public function findOrFail(string $name);
-
-	public function getThemePath($themeName);
+	public function findOrFail(string $name): ?Theme;
 
 	/**
 	 * @return \Illuminate\Filesystem\Filesystem
@@ -113,67 +80,60 @@ interface RepositoryInterface
 	public function getFiles();
 
 	/**
-	 * Get a specific config data from a configuration file.
-	 * @param string $key
+	 * Activate a theme. Activation can be done by the theme's name, or via a Theme object.
 	 *
-	 * @param string|null $default
-	 * @return mixed
+	 * @param string|Theme $theme
+	 * @return void
+	 * @throws ThemeNotFoundException
 	 */
-	public function config(string $key, $default = null);
+	public function activate($theme): void;
 
 	/**
-	 * Get a theme path.
+	 * get Active theme
 	 *
+	 * @return Theme|null
+	 */
+	public function getActiveTheme(): ?Theme;
+
+	/**
+	 * Get path to the active theme
+	 *
+	 * @param  string $path
 	 * @return string
 	 */
-	public function getPath() : string;
+	public function getActiveThemePath(string $path = null): string;
 
 	/**
-	 * Find a specific theme by its alias.
-	 * @param string $alias
-	 * @return Module|void
-	 */
-	public function findByAlias(string $alias);
-
-	/**
-	 * Boot the themes.
-	 */
-	public function boot(): void;
-
-	/**
-	 * Register the themes.
-	 */
-	public function register(): void;
-
-	/**
-	 * Get asset path for a specific theme.
+	 * Return the theme assets path
 	 *
-	 * @param string $theme
+	 * @param  string $theme
 	 * @return string
 	 */
-	public function assetPath(string $theme): string;
+	public function getAssetPath(string $theme): string;
 
 	/**
 	 * Delete a specific theme.
+	 *
 	 * @param string $theme
 	 * @return bool
-	 * @throws \Nwidart\Modules\Exceptions\ModuleNotFoundException
 	 */
 	public function delete(string $theme): bool;
 
 	/**
 	 * Determine whether the given theme is activated.
+	 *
 	 * @param string $name
 	 * @return bool
-	 * @throws ModuleNotFoundException
+	 * @throws ThemeNotFoundException
 	 */
 	public function isEnabled(string $name) : bool;
 
 	/**
 	 * Determine whether the given theme is not activated.
+	 *
 	 * @param string $name
 	 * @return bool
-	 * @throws ModuleNotFoundException
+	 * @throws ThemeNotFoundException
 	 */
 	public function isDisabled(string $name) : bool;
 }

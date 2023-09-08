@@ -5,10 +5,11 @@ namespace App\Modules\Themes\Entities;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
-use App\Modules\Themes\Models\Theme as Model;
 use Illuminate\Support\Facades\Schema;
+use App\Modules\Themes\Models\Theme as Model;
+use App\Modules\Themes\Contracts\RepositoryInterface;
 
-class ThemeManager implements \Countable
+class ThemeManager implements RepositoryInterface, \Countable
 {
 	/**
 	 * @var Application
@@ -16,17 +17,16 @@ class ThemeManager implements \Countable
 	private $app;
 
 	/**
-	 * @var string Path to scan for themes
+	 * Path to scan for themes
+	 *
+	 * @var string
 	 */
 	private $path;
 
 	/**
-	 * @var object View manager
-	 */
-	//private $view;
-
-	/**
-	 * @var string Current active theme
+	 * Current active theme
+	 *
+	 * @var string
 	 */
 	private $activeTheme;
 
@@ -37,43 +37,39 @@ class ThemeManager implements \Countable
 	 * @param string $path
 	 * @return void
 	 */
-	public function __construct(Application $app, $path)
+	public function __construct(Application $app, string $path)
 	{
 		$this->app  = $app;
 		$this->path = $path;
 	}
 
 	/**
-	 * Get path
+	 * Scan & get all available themes.
+	 *
+	 * @return array<int,string>
+	 */
+	public function scan(): array
+	{
+		return $this->getFiles()->directories($this->getScanPath());
+	}
+
+	/**
+	 * Get the base path for themes
 	 *
 	 * @return  string
 	 */
-	public function getPath(): string
+	public function getScanPath(): string
 	{
 		return $this->path;
 	}
 
 	/**
-	 * Get path
-	 *
-	 * @return  string
-	 */
-	public function themePath($path): string
-	{
-		if ($theme = $this->getActiveTheme())
-		{
-			return $theme->getPath() . ($path ? '/' . trim($path, '/') : '');
-		}
-		return '';
-	}
-
-	/**
 	 * Find a theme by name
 	 *
-	 * @param  string     $name
+	 * @param  string $name
 	 * @return Theme|null
 	 */
-	public function find($name)
+	public function find(string $name): ?Theme
 	{
 		foreach ($this->allEnabled() as $theme)
 		{
@@ -87,12 +83,40 @@ class ThemeManager implements \Countable
 	}
 
 	/**
-	 * Get only the public themes
+	 * Find a specific theme. If there return that, otherwise throw exception.
+	 *
+	 * @param string $name
+	 * @return Theme|null
+	 * @throws ThemeNotFoundException
+	 */
+	public function findOrFail(string $name): ?Theme
+	{
+		foreach ($this->allEnabled() as $theme)
+		{
+			if ($theme->getLowerElement() == strtolower($name))
+			{
+				return $theme;
+			}
+		}
+
+		foreach ($this->allDisabled() as $theme)
+		{
+			if ($theme->getLowerElement() == strtolower($name))
+			{
+				return $theme;
+			}
+		}
+
+		throw new ThemeNotFoundException("Theme [{$name}] does not exist!");
+	}
+
+	/**
+	 * Get only enabled themes of a specific stype
 	 *
 	 * @param  string $type
 	 * @return Theme|null
 	 */
-	public function findEnabledByType($type = 'site')
+	public function findEnabledByType(string $type = 'site'): ?Theme
 	{
 		foreach ($this->allByType($type) as $theme)
 		{
@@ -108,11 +132,11 @@ class ThemeManager implements \Countable
 	 * @param  int $state
 	 * @return array<string,Theme>
 	 */
-	public function all($state = null)
+	public function all(int $state = null): array
 	{
 		$themes = [];
 
-		if (!$this->getFinder()->isDirectory($this->path))
+		if (!$this->getFiles()->isDirectory($this->path))
 		{
 			return $themes;
 		}
@@ -123,7 +147,7 @@ class ThemeManager implements \Countable
 		{
 			$name = Str::studly($theme->element);
 
-			if (!$this->getFinder()->isDirectory($this->path . '/' . $name))
+			if (!$this->getFiles()->isDirectory($this->path . '/' . $name))
 			{
 				continue;
 			}
@@ -139,7 +163,7 @@ class ThemeManager implements \Countable
 	 *
 	 * @return array<string,Theme>
 	 */
-	public function allEnabled()
+	public function allEnabled(): array
 	{
 		return $this->all(1);
 	}
@@ -149,7 +173,7 @@ class ThemeManager implements \Countable
 	 *
 	 * @return array<string,Theme>
 	 */
-	public function allDisabled()
+	public function allDisabled(): array
 	{
 		return $this->all(0);
 	}
@@ -164,7 +188,7 @@ class ThemeManager implements \Countable
 	{
 		$themes = [];
 
-		if (!$this->getFinder()->isDirectory($this->path))
+		if (!$this->getFiles()->isDirectory($this->path))
 		{
 			return $themes;
 		}
@@ -175,7 +199,7 @@ class ThemeManager implements \Countable
 		{
 			$name = Str::studly($theme->element);
 
-			if (!$this->getFinder()->isDirectory($this->path . '/' . $name))
+			if (!$this->getFiles()->isDirectory($this->path . '/' . $name))
 			{
 				continue;
 			}
@@ -190,12 +214,22 @@ class ThemeManager implements \Countable
 	}
 
 	/**
+	 * Get themes as themes collection instance
+	 *
+	 * @return Collection
+	 */
+	public function toCollection(): Collection
+	{
+		return collect($this->all());
+	}
+
+	/**
 	 * Get the theme directories
 	 *
 	 * @param  int $state
 	 * @return Collection
 	 */
-	private function getThemes($state = null)
+	private function getThemes(int $state = null): Collection
 	{
 		$s = (new Model)->getTable();
 
@@ -210,15 +244,14 @@ class ThemeManager implements \Countable
 	/**
 	 * Get the themes from filesystem directories
 	 * 
-	 * @param  int  $state
+	 * @param  int $state
 	 * @return Collection
 	 */
-	private function getThemesFromFiles($state = null)
+	private function getThemesFromFiles(int $state = null): Collection
 	{
-		$dirs = $this->getFinder()->directories($this->path);
-
 		$rows = array();
-		foreach ($dirs as $dir)
+
+		foreach ($this->scan() as $dir)
 		{
 			$theme = new Model;
 			$theme->name = basename($dir);
@@ -235,10 +268,10 @@ class ThemeManager implements \Countable
 	 * Get the themes from the database
 	 *
 	 * @param  int $state
-	 * @param  string  $type
+	 * @param  string $type
 	 * @return Collection
 	 */
-	private function getThemesFromDatabase($state = null, $type = null)
+	private function getThemesFromDatabase(int $state = null, string $type = null): Collection
 	{
 		$s = (new Model)->getTable();
 
@@ -279,10 +312,10 @@ class ThemeManager implements \Countable
 	/**
 	 * Get the theme directories
 	 *
-	 * @param  object $theme
+	 * @param  Theme $theme
 	 * @return bool
 	 */
-	private function registerTheme(Theme $theme)
+	private function registerTheme(Theme $theme): bool
 	{
 		$row = new Model;
 		$row->fill([
@@ -305,7 +338,7 @@ class ThemeManager implements \Countable
 	 * @param  string $theme
 	 * @return string
 	 */
-	public function getAssetPath($theme): string
+	public function getAssetPath(string $theme): string
 	{
 		return public_path($this->getConfig()->get('module.themes.path.assets', 'themes') . '/' . $theme);
 	}
@@ -313,7 +346,7 @@ class ThemeManager implements \Countable
 	/**
 	 * @return \Illuminate\Filesystem\Filesystem
 	 */
-	protected function getFinder()
+	public function getFiles()
 	{
 		return $this->app['files'];
 	}
@@ -345,11 +378,26 @@ class ThemeManager implements \Countable
 	/**
 	 * Activate a theme. Activation can be done by the theme's name, or via a Theme object.
 	 *
-	 * @return Theme
+	 * @return Theme|null
 	 */
-	public function getActiveTheme()
+	public function getActiveTheme(): ?Theme
 	{
 		return $this->activeTheme;
+	}
+
+	/**
+	 * Get path to the active theme
+	 *
+	 * @param  string $path
+	 * @return string
+	 */
+	public function getActiveThemePath(string $path = null): string
+	{
+		if ($theme = $this->getActiveTheme())
+		{
+			return $theme->getPath() . ($path ? '/' . trim($path, '/') : '');
+		}
+		return '';
 	}
 
 	/**
@@ -359,7 +407,7 @@ class ThemeManager implements \Countable
 	 * @return void
 	 * @throws ThemeNotFoundException
 	 */
-	public function activate($theme)
+	public function activate($theme): void
 	{
 		if (!$theme instanceof Theme)
 		{
@@ -386,7 +434,7 @@ class ThemeManager implements \Countable
 	 * @param Theme $theme
 	 * @return void
 	 */
-	protected function activateLangPaths(Theme $theme)
+	protected function activateLangPaths(Theme $theme): void
 	{
 		$this->app->make('translator')->addNamespace('theme', $theme->getPath() . '/lang');
 	}
@@ -397,7 +445,7 @@ class ThemeManager implements \Countable
 	 * @param Theme $theme
 	 * @return void
 	 */
-	protected function activateViewPaths(Theme $theme)
+	protected function activateViewPaths(Theme $theme): void
 	{
 		$this->app->get('view')->addLocation($theme->getPath() . '/views/');
 	}
@@ -405,13 +453,13 @@ class ThemeManager implements \Countable
 	/**
 	 * Returns the theme json file
 	 *
-	 * @param $theme
-	 * @return string
+	 * @param  string $theme
+	 * @return mixed
 	 * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
 	 */
 	/*private function getThemeJsonFile($theme)
 	{
-		return json_decode($this->getFinder()->get("$theme/theme.json"));
+		return json_decode($this->getFiles()->get("$theme/theme.json"));
 	}*/
 
 	/**
@@ -419,10 +467,84 @@ class ThemeManager implements \Countable
 	 * @param  string   $type
 	 * @return bool
 	 */
-	private function isType($client_id, $type = 'site')
+	private function isType(int $client_id, string $type = 'site'): bool
 	{
 		$type = $type == 'site' ? 0 : 1;
 
 		return ($client_id == $type);
+	}
+
+	/**
+	 * Determine whether the given module is activated.
+	 *
+	 * @param string $name
+	 * @return bool
+	 */
+	public function isEnabled(string $name): bool
+	{
+		$theme = $this->find($name);
+
+		return $theme ? true : false;
+	}
+
+	/**
+	 * Determine whether the given module is not activated.
+	 *
+	 * @param string $name
+	 * @return bool
+	 */
+	public function isDisabled(string $name): bool
+	{
+		$name = strtolower($name);
+
+		foreach ($this->allDisabled() as $theme)
+		{
+			if ($theme->name == $name)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Delete a specific theme.
+	 *
+	 * @param string $theme
+	 * @return bool
+	 */
+	public function delete(string $theme): bool
+	{
+		$target = null;
+		$theme = strtolower($theme);
+
+		foreach ($this->allEnabled() as $t)
+		{
+			if ($t->getLowerElement() == $theme)
+			{
+				$target = $t;
+				break;
+			}
+		}
+
+		if (!$target)
+		{
+			foreach ($this->allDisabled() as $t)
+			{
+				if ($theme->getLowerElement() == $theme)
+				{
+					$target = $t;
+					break;
+				}
+			}
+		}
+
+		if ($target)
+		{
+			$target->delete();
+		}
+
+		return true;
 	}
 }

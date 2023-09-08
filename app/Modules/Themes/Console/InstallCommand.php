@@ -53,9 +53,9 @@ class InstallCommand extends Command
 	 */
 	protected function installFromFile()
 	{
-		if (!file_exists($path = base_path('themes.json')))
-		{
-			$dirs = $this->laravel['files']->directories($this->laravel['themes']->getPath());
+		//if (!file_exists($path = base_path('themes.json')))
+		//{
+			$dirs = $this->laravel['themes']->scan();
 
 			foreach ($dirs as $dir)
 			{
@@ -66,9 +66,8 @@ class InstallCommand extends Command
 
 				$this->laravel['themes']->registerTheme(new Theme(basename($dir), $dir));
 			}
-			//$this->error("File 'themes.json' does not exist in your project root.");
 
-			return;
+			/*return;
 		}
 
 		$themes = Json::make($path);
@@ -84,7 +83,7 @@ class InstallCommand extends Command
 				$theme->get('version'),
 				$theme->get('type')
 			);
-		}
+		}*/
 	}
 
 	/**

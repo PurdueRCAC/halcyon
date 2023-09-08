@@ -4,6 +4,7 @@ namespace App\Modules\Themes\Entities;
 
 use Illuminate\Config\Repository;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Arr;
 
 class Theme
 {
@@ -31,7 +32,12 @@ class Theme
 	/**
 	 * @var ActivatorInterface
 	 */
-	private $activator;
+	//private $activator;
+
+	/**
+	 * @var array<string,Repository>
+	 */
+	private $themeJson;
 
 	/**
 	 * Constructor
@@ -152,7 +158,7 @@ class Theme
 	/**
 	 * Get theme requirements.
 	 *
-	 * @return array
+	 * @return array<int,string>
 	 */
 	public function getRequires(): array
 	{
@@ -183,7 +189,7 @@ class Theme
 	 * @param   mixed   $default
 	 * @return  mixed
 	 */
-	public function getParams($param = null, $default = null)
+	public function getParams(string $param = null, $default = null)
 	{
 		if ($param)
 		{
@@ -215,7 +221,7 @@ class Theme
 	 * Get a specific data from json file by given the key.
 	 *
 	 * @param  string $key
-	 * @param  null   $default
+	 * @param  mixed  $default
 	 * @return mixed
 	 */
 	public function get(string $key, $default = null)
