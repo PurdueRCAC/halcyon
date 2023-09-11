@@ -32,7 +32,7 @@
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
 	@if (count($history) > 0)
-		<table class="table table-hover adminlist">
+		<?php /*<table class="table table-hover adminlist">
 			<caption class="sr-only">{{ trans('history::history.activity') }}</caption>
 			<thead>
 				<tr>
@@ -89,10 +89,57 @@
 				</tr>
 			@endforeach
 			</tbody>
-		</table>
+		</table>*/ ?>
+
+		<dl class="timeline my-4">
+			<?php $prev = null; ?>
+			@foreach ($history as $i => $row)
+				<?php
+				$row = $row->process($row);
+
+				$cls = '';
+				if ($row->status >= 400):
+					$cls = ' error-danger text-danger';
+				endif;
+				?>
+				@if ($row->datetime && $row->datetime->format('Y-m-d') != $prev)
+					<dt class="timeline-day text-muted my-3">{{ $row->datetime->format('M j, Y') }}</dt>
+					<?php
+					$prev = $row->datetime->format('Y-m-d');
+					?>
+				@endif
+				<dd class="timeline-activity my-0 ml-4 p-2 border-left{!! $cls !!}" data-id="{{ $row->id }}">
+					<div class="row ml-4">
+						<div class="col-md-1 text-right">
+							@if ($row->datetime)
+								<time datetime="{{ $row->datetime->toDateTimeLocalString() }}">
+									<span class="sr-only">{{ $row->datetime->format('M j, Y') }}</span> {{ $row->datetime->format('g:ia') }}
+								</time>
+							@else
+								<span class="text-muted never">{{ trans('global.unknown') }}</span>
+							@endif
+						</div>
+						<div class="col-md-1 text-center">
+							@if ($row->status >= 400)
+								<span class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></span>
+								<span class="sr-only">{{ trans('listener.users.activity::activity.error') }} - {{ $row->status }}</span>
+							@else
+								<span class="fa fa-check-circle text-success" aria-hidden="true"></span>
+								<span class="sr-only">{{ trans('listener.users.activity::activity.success') }}</span>
+							@endif
+						</div>
+						<div class="col-md-10">
+							@if ($row->app == 'email')
+								Emailed:
+							@endif
+							{!! $row->summary ? $row->summary : $row->payload !!}
+						</div>
+					</div>
+				</dd>
+			@endforeach
+		</dl>
 
 		{{ $history->render() }}
-
 	@else
 		<div class="d-flex justify-content-center">
 			<div class="card card-help w-50">
