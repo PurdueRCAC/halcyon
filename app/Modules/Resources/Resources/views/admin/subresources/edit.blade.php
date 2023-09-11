@@ -48,7 +48,6 @@ app('pathway')
 				<div class="form-group">
 					<label for="assoc-resourceid">{{ trans('resources::assets.resource') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<select name="assoc[resourceid]" id="assoc-resourceid" class="form-control" required>
-						<option value="0">{{ trans('global.none') }}</option>
 						<?php foreach ($parents as $parent): ?>
 							<?php
 							$selected = ($parent->id == $resourceid ? ' selected="selected"' : '');
@@ -64,7 +63,7 @@ app('pathway')
 						<div class="form-group">
 							<div class="form-group">
 								<label for="field-cluster">{{ trans('resources::assets.cluster') }} <span class="required">{{ trans('global.required') }}</span></label>
-								<input type="text" name="fields[cluster]" id="field-cluster" class="form-control" maxlength="12" value="{{ $row->cluster }}" />
+								<input type="text" name="fields[cluster]" id="field-cluster" class="form-control" required maxlength="12" value="{{ $row->cluster }}" />
 							</div>
 						</div>
 					</div>

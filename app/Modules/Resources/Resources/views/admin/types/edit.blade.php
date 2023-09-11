@@ -7,6 +7,33 @@
 @push('scripts')
 <script src="{{ timestamped_asset('modules/resources/vendor/formbuilder/vendor.js') }}"></script>
 <script src="{{ timestamped_asset('modules/resources/vendor/formbuilder/formbuilder.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+	document.querySelectorAll('input[required],textarea[required]').forEach(function (item) {
+		if (item.value) {
+			if (item.validity.valid) {
+				item.classList.remove('is-invalid');
+				item.classList.add('is-valid');
+			}
+		}
+
+		item.addEventListener('blur', function(e){
+			if (this.value) {
+				if (this.validity.valid) {
+					this.classList.remove('is-invalid');
+					this.classList.add('is-valid');
+				} else {
+					this.classList.remove('is-valid');
+					this.classList.add('is-invalid');
+				}
+			} else {
+				this.classList.remove('is-valid');
+				this.classList.add('is-invalid');
+			}
+		});
+	});
+});
+</script>
 @endpush
 
 @php
