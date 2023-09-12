@@ -527,7 +527,7 @@ endif;
 														</div>
 													</div>
 												</div>
-												<input type="hidden" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $nodecores ? round($item->corecount / $nodecores, 1) : $item->nodecount }}" step="0.5" />
+												<input type="hidden" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" data-cores="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $nodecores ? round($item->corecount / $nodecores, 1) : $item->nodecount }}" step="0.5" />
 												<input type="hidden" name="corecount" class="form-control cores" size="4" id="loan-cores{{ $item->id }}" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes{{ $item->id }}" value="{{ $item->corecount }}" />
 												@elseif ($unit == 'gpus')
 												<div class="row">
@@ -557,7 +557,7 @@ endif;
 													<div class="col-md-6">
 														<div class="form-group">
 															<label for="loan-nodes{{ $item->id }}">{{ trans('queues::queues.' . $unit) }}</label>
-															<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $nodecores ? round($item->corecount / $nodecores, 1) : $item->nodecount }}" step="0.5" />
+															<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes{{ $item->id }}" data-cores="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores{{ $item->id }}" value="{{ $nodecores ? round($item->corecount / $nodecores, 1) : $item->nodecount }}" step="0.5" />
 														</div>
 													</div>
 													<div class="col-md-6">
@@ -656,7 +656,7 @@ endif;
 									</div>
 								</div>
 							</div>
-							<input type="hidden" class="form-control nodes" size="4" id="sell-nodes" name="nodecount" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="sell-cores" value="0" step="0.5" />
+							<input type="hidden" class="form-control nodes" size="4" id="sell-nodes" name="nodecount" data-cores="{{ $row->subresource->nodecores }}" data-cores-field="sell-cores" value="0" step="0.5" />
 							<input type="hidden" class="form-control cores" size="4" id="sell-cores" name="corecount" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="sell-nodes" value="0" />
 							@elseif ($unit == 'gpus')
 								<div class="row">
@@ -686,7 +686,7 @@ endif;
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="sell-nodes">{{ trans('queues::queues.' . $unit) }}</label>
-										<input type="number" class="form-control nodes" size="4" id="sell-nodes" name="nodecount" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="sell-cores" value="0" step="0.5" />
+										<input type="number" class="form-control nodes" size="4" id="sell-nodes" name="nodecount" data-cores="{{ $row->subresource->nodecores }}" data-cores-field="sell-cores" value="0" step="0.5" />
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -845,7 +845,7 @@ endif;
 									</div>
 								</div>
 							</div>
-							<input type="hidden" name="nodecount" class="form-control nodes" size="4" id="loan-nodes" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores" value="0" step="0.5" />
+							<input type="hidden" name="nodecount" class="form-control nodes" size="4" id="loan-nodes" data-cores="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores" value="0" step="0.5" />
 							<input type="hidden" name="corecount" class="form-control cores" size="4" id="loan-cores" data-cores="{{ $row->subresource->nodecores }}" data-nodes-field="loan-nodes" value="0" />
 							@elseif ($unit == 'gpus')
 								<div class="row">
@@ -875,7 +875,7 @@ endif;
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="loan-nodes">{{ trans('queues::queues.' . $unit) }}</label>
-										<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes" data-nodes="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores" value="0" step="0.5" />
+										<input type="number" name="nodecount" class="form-control nodes" size="4" id="loan-nodes" data-cores="{{ $row->subresource->nodecores }}" data-cores-field="loan-cores" value="0" step="0.5" />
 									</div>
 								</div>
 								<div class="col-md-6">
