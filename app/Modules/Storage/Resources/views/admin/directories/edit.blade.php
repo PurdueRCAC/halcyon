@@ -33,7 +33,7 @@ app('pathway')
 
 	{!!
 		Toolbar::spacer();
-		Toolbar::cancel(route('admin.storage.directories.cancel'));
+		Toolbar::link('cancel', trans('global.toolbar.cancel'), route('admin.storage.directories'), false);
 	!!}
 
 	{!! Toolbar::render() !!}

@@ -29,7 +29,7 @@ app('pathway')
 
 	{!!
 		Toolbar::spacer();
-		Toolbar::cancel(route('admin.storage.cancel'));
+		Toolbar::link('cancel', trans('global.toolbar.cancel'), route('admin.storage.index'), false);
 	!!}
 
 	{!! Toolbar::render() !!}

@@ -24,7 +24,7 @@ app('pathway')
 
 	{!!
 		Toolbar::spacer();
-		Toolbar::cancel(route('admin.storage.types'));
+		Toolbar::link('cancel', trans('global.toolbar.cancel'), route('admin.storage.types'), false);
 	!!}
 
 	{!! Toolbar::render() !!}
