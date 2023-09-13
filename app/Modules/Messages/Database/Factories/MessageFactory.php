@@ -5,6 +5,11 @@ namespace App\Modules\Messages\Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Modules\Messages\Models\Message;
 
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ *
+ * @method $this trashed()
+ */
 class MessageFactory extends Factory
 {
     /**

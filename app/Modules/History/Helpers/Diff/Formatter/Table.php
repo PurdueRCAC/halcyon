@@ -26,9 +26,9 @@ class Table extends Formatter
 	 *
 	 * Long description (if any) ...
 	 *
-	 * @param      string $xbeg
+	 * @param      int $xbeg
 	 * @param      int $xlen
-	 * @param      string $ybeg
+	 * @param      int $ybeg
 	 * @param      int $ylen
 	 * @return     string
 	 */

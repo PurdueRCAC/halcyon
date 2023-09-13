@@ -13,15 +13,25 @@ trait Historable
 	 *
 	 * @return  void
 	 */
-	public static function bootHistorable()
+	public static function bootHistorable(): void
 	{
 		static::created(function (Model $model)
 		{
+			if (!method_exists($model, 'writeHistory'))
+			{
+				return;
+			}
+
 			$model->writeHistory('created', [], $model->toArray());
 		});
 
 		static::updated(function (Model $model)
 		{
+			if (!method_exists($model, 'writeHistory'))
+			{
+				return;
+			}
+
 			$action = 'updated';
 
 			$new = [];
@@ -42,6 +52,11 @@ trait Historable
 
 		static::deleted(function (Model $model)
 		{
+			if (!method_exists($model, 'writeHistory'))
+			{
+				return;
+			}
+
 			$model->writeHistory('deleted', $model->toArray());
 		});
 	}
@@ -54,7 +69,7 @@ trait Historable
 	 * @param   array<string,mixed>   $new
 	 * @return  void
 	 */
-	public function writeHistory($action, array $old = [], array $new = [])
+	public function writeHistory(string $action, array $old = [], array $new = []): void
 	{
 		$data = [];
 		$data['historable_id'] = $this->getKey();
@@ -73,7 +88,7 @@ trait Historable
 	 *
 	 * @return  MorphMany
 	 */
-	public function history()
+	public function history(): MorphMany
 	{
 		return $this->morphMany(History::class, 'historable');
 	}

@@ -116,7 +116,7 @@ class FieldsOfScienceController extends Controller
 		}
 		if ($parentid = $request->old('parentid'))
 		{
-			$row->parentid = $parentid;
+			$row->parentid = intval($parentid);
 		}
 
 		return view('groups::admin.fieldsofscience.edit', [
@@ -144,7 +144,7 @@ class FieldsOfScienceController extends Controller
 		}
 		if ($parentid = $request->old('parentid'))
 		{
-			$row->parentid = $parentid;
+			$row->parentid = intval($parentid);
 		}
 
 		return view('groups::admin.fieldsofscience.edit', [

@@ -16,7 +16,7 @@ class ListenerAssets implements SetupScript
     {
         if ($command->option('verbose'))
         {
-            $command->blockMessage('Listeners', 'Publishing listener assets ...', 'comment');
+            $command->line('Publishing listener assets ...');
         }
 
         if ($command->option('verbose'))

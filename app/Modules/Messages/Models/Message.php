@@ -29,6 +29,8 @@ use Carbon\Carbon;
  * @property int    $pid
  * @property int    $returnstatus
  * @property string $output
+ *
+ * @property string $api
  */
 class Message extends Model
 {

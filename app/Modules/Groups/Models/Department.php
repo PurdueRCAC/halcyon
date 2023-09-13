@@ -16,6 +16,9 @@ use App\Modules\History\Traits\Historable;
  * @property string $name
  *
  * @property string $api
+ * @property int    $level
+ * @property string $prefix
+ * @property int    $groups_count
  */
 class Department extends Model
 {
@@ -136,7 +139,7 @@ class Department extends Model
 	 *
 	 * @param   int    $id        Parent ID
 	 * @param   array<int,Department>  $list      List of records
-	 * @param   array<int,array{int,Department}>  $children  Container for parent/children mapping
+	 * @param   array<int,array<int,Department>>  $children  Container for parent/children mapping
 	 * @param   int    $maxlevel  Maximum levels to descend
 	 * @param   int    $level     Indention level
 	 * @param   string $prfx

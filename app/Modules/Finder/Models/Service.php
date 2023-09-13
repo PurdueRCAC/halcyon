@@ -76,7 +76,7 @@ class Service extends Model
 	/**
 	 * Field Facet Matches
 	 *
-	 * @return  array<int,array{string,mixed}>
+	 * @return  array<int,array<string,mixed>>
 	 */
 	public static function servicelist(): array
 	{

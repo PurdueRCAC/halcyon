@@ -80,7 +80,7 @@ class Facet extends Model
 	/** 
 	 * Return an array of the facets tree
 	 * 
-	 * @return  array<int,array{string,mixed}>  the facet tree
+	 * @return  array<int,array<string,mixed>>  the facet tree
 	 */
 	public static function tree(): array
 	{
@@ -187,12 +187,13 @@ class Facet extends Model
 		static::creating(function ($model)
 		{
 			$result = self::query()
-				->select(DB::raw('MAX(weight) + 1 AS seq'))
+				->select(DB::raw('MAX(weight)'))
 				->where('parent', '=', $model->parent)
-				->first()
-				->seq;
+				->first();
 
-			$model->setAttribute('weight', (int)$result);
+			$seq = $result ? intval($result->weight) + 1 : 1;
+
+			$model->setAttribute('weight', $seq);
 		});
 
 		static::deleted(function ($model)

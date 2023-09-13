@@ -68,7 +68,7 @@ class EmailRemovedCommand extends Command
 		{
 			$group = Group::find($groupid);
 
-			if (!$group)
+			if (!$group || empty($groupusers))
 			{
 				continue;
 			}

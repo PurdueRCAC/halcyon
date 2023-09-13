@@ -47,7 +47,7 @@ class Formatter
 	 * Format a diff.
 	 *
 	 * @param   object  $diff  A Diff object.
-	 * @param   Closure|null
+	 * @param   Closure|null $formatContextOutput
 	 * @return  string  The formatted output.
 	 */
 	public function format($diff, Closure $formatContextOutput = null)

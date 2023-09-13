@@ -64,7 +64,6 @@ class InstallCommand extends Command
 			\App\Modules\Core\Console\Installers\Scripts\ConfigureDatabase::class,
 			\App\Modules\Core\Console\Installers\Scripts\ConfigureAppUrl::class,
 			\App\Modules\Core\Console\Installers\Scripts\SetAppKey::class,
-			//\App\Modules\Core\Console\Installers\Scripts\ConfigureUserProvider::class,
 			//\App\Modules\Core\Console\Installers\Scripts\ModuleMigrator::class,
 			//\App\Modules\Core\Console\Installers\Scripts\ModuleSeeders::class,
 			\App\Modules\Core\Console\Installers\Scripts\ModuleAssets::class,

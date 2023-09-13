@@ -3,6 +3,7 @@
 namespace App\Modules\Core\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Config\Repository;
 use Nwidart\Modules\Facades\Module;
 use App\Modules\History\Traits\Historable;
 use App\Halcyon\Form\Form;
@@ -20,7 +21,7 @@ use App\Halcyon\Models\Casts\Params;
  * @property int    $enabled
  * @property int    $access
  * @property int    $protected
- * @property string $params
+ * @property Repository $params
  * @property int    $checked_out
  * @property Carbon|null $checked_out_time
  * @property int    $ordering
@@ -92,7 +93,7 @@ class Extension extends Model
 	 * @param   string  $type
 	 * @return  Extension|null
 	 */
-	public static function findByName($name, $type = 'module')
+	public static function findByName(string $name, string $type = 'module'): ?Extension
 	{
 		return self::query()
 			->where('name', '=', $name)
@@ -106,18 +107,18 @@ class Extension extends Model
 	 * @param   string  $name
 	 * @return  Extension|null
 	 */
-	public static function findModuleByName($name)
+	public static function findModuleByName(string $name): ?Extension
 	{
 		return self::findByName($name, 'module');
 	}
 
 	/**
-	 * Find a module by name
+	 * Find a widget by name
 	 *
 	 * @param   string  $name
 	 * @return  Extension|null
 	 */
-	public static function findWidgetByName($name)
+	public static function findWidgetByName(string $name): ?Extension
 	{
 		return self::findByName($name, 'widget');
 	}
@@ -129,7 +130,7 @@ class Extension extends Model
 	 * @param   string  $type
 	 * @return  Extension|null
 	 */
-	public static function findByElement($element, $type = 'module')
+	public static function findByElement(string $element, string $type = 'module'): ?Extension
 	{
 		return self::query()
 			->where('element', '=', $element)
@@ -143,7 +144,7 @@ class Extension extends Model
 	 * @param   string  $element
 	 * @return  Extension|null
 	 */
-	public static function findModuleByElement($element)
+	public static function findModuleByElement(string $element): ?Extension
 	{
 		return self::findByElement($element, 'module');
 	}

@@ -46,22 +46,22 @@ class Engine
 	public $ychanged = array();
 
 	/**
-	 * @var array
+	 * @var array<int,string>
 	 */
 	public $xv = array();
 
 	/**
-	 * @var array
+	 * @var array<int,string>
 	 */
 	public $yv = array();
 
 	/**
-	 * @var array
+	 * @var array<int,int>
 	 */
 	public $xind = array();
 
 	/**
-	 * @var array
+	 * @var array<int,int>
 	 */
 	public $yind = array();
 
@@ -71,7 +71,7 @@ class Engine
 	public $seq = 0;
 
 	/**
-	 * @var array
+	 * @var array<int,int|bool>
 	 */
 	public $in_seq = array();
 
@@ -478,7 +478,7 @@ class Engine
 	 *
 	 * @param      array<int,string> $lines
 	 * @param      array<int,string> &$changed
-	 * @param      array<int,string> $other_changed
+	 * @param      array<int,int|bool> $other_changed
 	 * @return     void
 	 */
 	public function _shift_boundaries($lines, &$changed, $other_changed)

@@ -320,7 +320,7 @@ class FacetsController extends Controller
 	{
 		$row = Facet::findOrFail($id);
 		$row->api = route('api.finder.facets.read', ['id' => $row->id]);
-		$row->choices;
+		$choices = $row->choices;
 
 		return new JsonResource($row);
 	}

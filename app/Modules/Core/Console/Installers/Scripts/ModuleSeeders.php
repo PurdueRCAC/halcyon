@@ -31,7 +31,7 @@ class ModuleSeeders implements SetupScript
     {
         if ($command->option('verbose'))
         {
-            $command->blockMessage('Seeds', 'Running the module seeds ...', 'comment');
+            $command->line('Running the module seeds ...');
         }
 
         foreach ($this->modules as $module)

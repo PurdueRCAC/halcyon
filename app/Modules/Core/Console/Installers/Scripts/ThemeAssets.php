@@ -16,7 +16,7 @@ class ThemeAssets implements SetupScript
     {
         if ($command->option('verbose'))
         {
-            $command->blockMessage('Themes', 'Publishing theme assets ...', 'comment');
+            $command->line('Publishing theme assets ...');
         }
 
         if ($command->option('verbose'))

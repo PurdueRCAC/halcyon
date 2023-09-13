@@ -31,7 +31,7 @@ class ModuleAssets implements SetupScript
     {
         if ($command->option('verbose'))
         {
-            $command->blockMessage('Module assets', 'Publishing module assets ...', 'comment');
+            $command->line('Publishing module assets ...');
         }
 
         /*foreach ($this->modules as $module)

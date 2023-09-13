@@ -117,7 +117,7 @@ class DepartmentsController extends Controller
 		}
 		if ($parentid = $request->old('parentid'))
 		{
-			$row->parentid = $parentid;
+			$row->parentid = intval($parentid);
 		}
 
 		return view('groups::admin.departments.edit', [
@@ -145,7 +145,7 @@ class DepartmentsController extends Controller
 		}
 		if ($parentid = $request->old('parentid'))
 		{
-			$row->parentid = $parentid;
+			$row->parentid = intval($parentid);
 		}
 
 		return view('groups::admin.departments.edit', [

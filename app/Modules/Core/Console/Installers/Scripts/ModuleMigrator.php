@@ -31,7 +31,7 @@ class ModuleMigrator implements SetupScript
     {
         if ($command->option('verbose'))
         {
-            $command->blockMessage('Migrations', 'Starting the module migrations ...', 'comment');
+            $command->line('Starting the module migrations ...');
         }
 
         foreach ($this->modules as $module)
