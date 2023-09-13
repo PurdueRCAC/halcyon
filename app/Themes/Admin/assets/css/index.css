@@ -2213,6 +2213,9 @@ table tbody td {
   background-color: var(--ui-widget-bg);
   color: var(--body-text);
 }
+.dropdown-divider {
+  border-color: var(--ui-widget-br);
+}
 .dropdown-item {
   color: var(--link);
 }
