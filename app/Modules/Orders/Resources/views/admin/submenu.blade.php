@@ -11,6 +11,9 @@
 			<a class="nav-link @if (trim($slot) == 'categories') active @endif" href="{{ route('admin.orders.categories') }}">{{ trans('orders::orders.categories') }}</a>
 		</li>
 		<li class="nav-item">
+			<a class="nav-link @if (trim($slot) == 'approvers') active @endif" href="{{ route('admin.orders.approvers') }}">{{ trans('orders::orders.account approvers') }}</a>
+		</li>
+		<li class="nav-item">
 			<a class="nav-link @if (trim($slot) == 'stats') active @endif" href="{{ route('admin.orders.stats') }}">{{ trans('orders::orders.stats') }}</a>
 		</li>
 	</ul>

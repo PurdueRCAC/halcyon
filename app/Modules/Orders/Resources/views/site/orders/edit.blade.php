@@ -1197,6 +1197,40 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 									</tr>
 								<?php } ?>
 								@if ($canEdit)
+									<?php
+									$approver = null;
+
+									if ($user)
+									{
+										$department = $user->department;
+
+										if ($department)
+										{
+											$a = (new \App\Modules\Orders\Models\Approver)->getTable();
+											$d = (new \App\Modules\Groups\Models\Department)->getTable();
+
+											$approver = \App\Modules\Orders\Models\Approver::query()
+												->join($d, $d . '.id', $a . '.departmentid')
+												->where($d . '.name', '=', $department)
+												->where($a . '.userid', '!=', 0)
+												->orderBy($a . '.departmentid', 'desc')
+												->first();
+										}
+									}
+									elseif ($order->group)
+									{
+										$departments = $order->group->departments->pluck('collegedeptid')->toArray();
+
+										if (count($departments) > 0)
+										{
+											$approver = \App\Modules\Orders\Models\Approver::query()
+												->whereIn('departmentid', $departments)
+												->where('userid', '!=', 0)
+												->orderBy('departmentid', 'desc')
+												->first();
+										}
+									}
+									?>
 									@if (count($order->accounts) == 0)
 										<tr id="account0">
 											<td class="hide"></td>
@@ -1208,7 +1242,7 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 											</td>
 											<td>
 												<span class="approver_span hide" data-approverid=""></span>
-												<input type="text" name="approver" id="approver0" class="form-control form-users" value="" placeholder="Approver" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" />
+												<input type="text" name="approver" id="approver0" class="form-control form-users" value="{{ $approver && $approver->user ? $approver->user->name . ' (' . $approver->user->username . ')' : '' }}" placeholder="Approver" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" />
 											</td>
 											<td class="text-right text-nowrap">
 												<!-- <span class="input-group">
@@ -1232,7 +1266,7 @@ $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruser
 										</td>
 										<td>
 											<span class="approver_span hide" data-approverid=""></span>
-											<input type="text" name="approver" id="new_approver" class="form-control form-users" value="" placeholder="Approver" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" />
+											<input type="text" name="approver" id="new_approver" class="form-control form-users" value="{{ $approver && $approver->user ? $approver->user->name . ' (' . $approver->user->username . ')' : '' }}" placeholder="Approver" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" />
 										</td>
 										<td class="text-right text-nowrap">
 											<input type="text" name="account_amount" class="form-control balance-update" size="8" value="0.00" />

@@ -103,6 +103,55 @@ $router->group(['prefix' => 'orders', 'middleware' => 'can:manage orders'], func
 		]);
 	});
 
+	// Approvers
+	$router->group(['prefix' => 'approvers'], function (Router $router)
+	{
+		$router->match(['get', 'post'], '/', [
+			'as'   => 'admin.orders.approvers',
+			'uses' => 'ApproversController@index',
+			//'middleware' => 'can:manage orders',
+		]);
+		$router->get('/create', [
+			'as' => 'admin.orders.approvers.create',
+			'uses' => 'ApproversController@create',
+			'middleware' => 'can:create orders.approvers',
+		]);
+		$router->post('/store', [
+			'as' => 'admin.orders.approvers.store',
+			'uses' => 'ApproversController@store',
+			'middleware' => 'can:create orders.approvers|edit orders.approvers',
+		]);
+		$router->get('/edit/{id}', [
+			'as' => 'admin.orders.approvers.edit',
+			'uses' => 'ApproversController@edit',
+			'middleware' => 'can:edit orders.approvers',
+		]);
+		$router->match(['get', 'post'], '/delete/{id?}', [
+			'as'   => 'admin.orders.approvers.delete',
+			'uses' => 'ApproversController@delete',
+			'middleware' => 'can:delete orders.approvers',
+		]);
+		$router->match(['get', 'post'], '/orderup/{id}', [
+			'as'   => 'admin.orders.approvers.orderup',
+			'uses' => 'ApproversController@reorder',
+			'middleware' => 'can:edit.state orders',
+		])->where('id', '[0-9]+');
+		$router->match(['get', 'post'], '/orderdown/{id?}', [
+			'as'   => 'admin.orders.approvers.orderdown',
+			'uses' => 'ApproversController@reorder',
+			'middleware' => 'can:edit.state orders',
+		])->where('id', '[0-9]+');
+		$router->post('/saveorder', [
+			'as'   => 'admin.orders.approvers.saveorder',
+			'uses' => 'ApproversController@saveorder',
+			'middleware' => 'can:edit.state orders',
+		]);
+		$router->post('/cancel', [
+			'as' => 'admin.orders.approvers.cancel',
+			'uses' => 'ApproversController@cancel',
+		]);
+	});
+
 	// Orders
 	$router->match(['get', 'post'], '/', [
 		'as'   => 'admin.orders.index',

@@ -62,6 +62,7 @@ return [
 	'terms' => 'Terms',
 	'account' => 'Account',
 	'account approver' => 'Account Approver',
+	'account approvers' => 'Account Approvers',
 	'balance remaining' => 'Balance Remaining',
 	'order total' => 'Order Total',
 	'user notes' => 'Customer Order Notes',

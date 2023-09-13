@@ -172,4 +172,29 @@ $router->group(['prefix' => 'orders', 'middleware' => 'auth:api'], function (Rou
 			//'middleware' => 'can:edit orders',
 		])->where('id', '[0-9]+');
 	});
+
+	// Order approvers
+	$router->group(['prefix' => '/approvers'], function (Router $router)
+	{
+		$router->get('/', [
+			'as'   => 'api.orders.approvers',
+			'uses' => 'ApproversController@index',
+		]);
+		$router->post('/', [
+			'as' => 'api.orders.approvers.create',
+			'uses' => 'ApproversController@create',
+		]);
+		$router->get('{id}', [
+			'as' => 'api.orders.approvers.read',
+			'uses' => 'ApproversController@read',
+		])->where('id', '[0-9]+');
+		$router->match(['put', 'patch'], '{id}', [
+			'as' => 'api.orders.approvers.update',
+			'uses' => 'ApproversController@update',
+		])->where('id', '[0-9]+');
+		$router->delete('{id}', [
+			'as' => 'api.orders.approvers.delete',
+			'uses' => 'ApproversController@delete',
+		])->where('id', '[0-9]+');
+	});
 });
