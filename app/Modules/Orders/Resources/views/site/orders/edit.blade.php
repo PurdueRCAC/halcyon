@@ -406,6 +406,7 @@ document.addEventListener('DOMContentLoaded', function() {
 $myorder = (auth()->user()->id == $order->submitteruserid || auth()->user()->id == $order->userid);
 $canEdit = (auth()->user()->can('manage orders') || (auth()->user()->can('edit.own orders') && $myorder));
 $isApprover = in_array(auth()->user()->id, $order->accounts->pluck('approveruserid')->toArray());
+$user = null;
 @endphp
 
 @section('content')
