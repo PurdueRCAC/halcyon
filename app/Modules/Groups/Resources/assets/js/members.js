@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		main.addEventListener('change', function (e) {
 			// User changing membertype
 			if (e.target.matches('.membertype')
-			 || e.target.parentNode.matches('.membertype')) {
+			|| e.target.parentNode.matches('.membertype')) {
 				var tar = e.target;
 				if (e.target.parentNode.matches('.membertype')) {
 					tar = e.target.parentNode;
@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						}
 					}
 					callback(json.data);
-				}).catch(function (err) {
+				}).catch(function () {
 					callback();
 				});
 			},
@@ -272,8 +272,8 @@ document.addEventListener('DOMContentLoaded', function () {
 					bx.dispatchEvent(new Event('change'));
 
 					if (sel.getAttribute('data-disable')
-					 && bx.getAttribute('data-base')
-					 && bx.getAttribute('data-base') == bx.getAttribute('id')) {
+					&& bx.getAttribute('data-base')
+					&& bx.getAttribute('data-base') == bx.getAttribute('id')) {
 						bx.disabled = true;
 					}
 				});
@@ -449,10 +449,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// Listen for membership actions
 	document.querySelector('body').addEventListener('click', function (e) {
-		var tar;
+		var tar, parent;
 
 		if (e.target.matches('.membership-remove')
-		 || e.target.parentNode.matches('.membership-remove')) {
+		|| e.target.parentNode.matches('.membership-remove')) {
 			e.preventDefault();
 
 			tar = e.target;
@@ -515,7 +515,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 
 		if (e.target.matches('.membership-move')
-		 || e.target.parentNode.matches('.membership-move')) {
+		|| e.target.parentNode.matches('.membership-move')) {
 			e.preventDefault();
 
 			tar = e.target;
@@ -523,7 +523,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				tar = e.target.parentNode;
 			}
 
-			var parent = document.getElementById(tar.getAttribute('href').replace('#', ''));
+			parent = document.getElementById(tar.getAttribute('href').replace('#', ''));
 
 			parent.guerySelectorAll('.membership-toggle').forEach(function (el) {
 				if (el.checked) {
@@ -565,7 +565,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 
 		if (e.target.matches('.membership-allqueues')
-		 || e.target.parentNode.matches('.membership-allqueues')) {
+		|| e.target.parentNode.matches('.membership-allqueues')) {
 			e.preventDefault();
 
 			tar = e.target;
@@ -573,7 +573,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				tar = e.target.parentNode;
 			}
 
-			var parent = document.getElementById(tar.getAttribute('href').replace('#', ''));
+			parent = document.getElementById(tar.getAttribute('href').replace('#', ''));
 
 			parent.querySelectorAll('.membership-toggle').forEach(function (el) {
 				if (!el.checked) {
@@ -586,7 +586,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	document.querySelector('body').addEventListener('change', function (e) {
 		if (e.target.matches('.membership-toggle')
-		 || e.target.parentNode.matches('.membership-toggle')) {
+		|| e.target.parentNode.matches('.membership-toggle')) {
 			e.preventDefault();
 
 			var bx = e.target;

@@ -1,4 +1,3 @@
-/* global $ */ // jquery.js
 /* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 /* global Handlebars */ // handlebars.js
 /* global Halcyon */ // core.js
@@ -523,7 +522,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	};
 
 	document.querySelectorAll('.form-users').forEach(function (el) {
-		var sel = new TomSelect(el, {
+		new TomSelect(el, {
 			plugins: {
 				remove_button: {
 					title: 'Remove this user',
@@ -553,7 +552,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						}
 					}
 					callback(json.data);
-				}).catch(function (err) {
+				}).catch(function () {
 					callback();
 				});
 			},
@@ -605,7 +604,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			placeholder: el.getAttribute('data-placeholder')
 		});*/
 
-		var sel = new TomSelect(el, {
+		new TomSelect(el, {
 			plugins: {
 				remove_button: {
 					title: 'Remove this resource',
