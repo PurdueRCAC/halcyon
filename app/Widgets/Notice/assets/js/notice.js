@@ -1,20 +1,22 @@
 
-jQuery(document).ready(function($){
-	if (!$('html').hasClass('has-notice')) {
-		$('html').addClass('has-notice');
+document.addEventListener('DOMContentLoaded', function () {
+	if (!document.querySelector('html').classList.contains('has-notice')) {
+		document.querySelector('html').classList.add('has-notice');
 	}
 
-	$('.notice .close').on('click', function(e) {
-		e.preventDefault();
+	document.querySelectorAll('.notice .close').forEach(function (el) {
+		el.addEventListener('click', function (e) {
+			e.preventDefault();
 
-		var id = $($(this).parent().parent()).attr('id'),
-			days = $(this).attr('data-duration');
+			var id = this.parentNode.getAttribute('id'),
+				days = this.getAttribute('data-duration');
 
-		$($(this).parent().parent()).slideUp();
+			this.parentNode.parentNode.classList.add('d-none');
 
-		var date = new Date();
-		date.setTime(date.getTime()+(days*24*60*60*1000));
+			var date = new Date();
+			date.setTime(date.getTime()+(days*24*60*60*1000));
 
-		document.cookie = id + '=closed; expires=' + date.toGMTString() + ';';
+			document.cookie = id + '=closed; expires=' + date.toGMTString() + ';';
+		});
 	});
 });

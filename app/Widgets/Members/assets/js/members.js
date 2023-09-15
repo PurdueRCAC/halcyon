@@ -1,9 +1,9 @@
 
-jQuery(document).ready(function ($) {
+document.addEventListener('DOMContentLoaded', function () {
 	var mod_members_charts = [];
 
-	$('.mod_members-chart').each(function(i, el){
-		var data = $('#' + $(el).attr('data-datasets')).html();
+	document.querySelectorAll('.mod_members-chart').forEach(function(el){
+		var data = document.getElementById(el.getAttribute('data-datasets')).innerHTML;
 		var datasets = JSON.parse(data);
 		var mod_members_chart = $.plot(
 			$(el),
