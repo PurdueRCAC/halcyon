@@ -79,24 +79,31 @@ document.addEventListener('DOMContentLoaded', function () {
 		stop: function (e, ui) {
 			//corresponding.detach().insertAfter($(ui.item));
 
-			$(".sortable tr").each(function(i, el){
-				var url = $(el).data('api');
-				
-				$.ajax({
-					url: url,
-					type: 'put',
-					data: {
+			document.querySelectorAll(".sortable tr").forEach(function(el){
+				fetch(el.getAttribute('data-api'), {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+					},
+					body: JSON.stringify({
 						'sequence': (i + 1)
-					},
-					dataType: 'json',
-					async: false,
-					success: function (response) {
-					},
-					error: function (xhr, ajaxOptions, thrownError) {
-						console.log(xhr.responseJSON.message);
-						//btn.find('.spinner-border').addClass('d-none');
-						//alert(xhr.responseJSON.message);
+					})
+				})
+				.then(function (response) {
+					if (response.ok) {
+						return response.json();
 					}
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
+						}
+						throw msg;
+					});
+				})
+				.catch(function (err) {
+					alert(err);
 				});
 			});
 		}
