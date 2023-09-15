@@ -138,6 +138,7 @@ endif;
 		</div>
 
 		<input type="hidden" name="id" id="field-id" value="{{ $row->id }}" />
+		<input type="hidden" name="subresourceid" id="field-subresourceid" value="{{ $row->subresourceid }}" />
 	</div>
 	<div class="col-md-6">
 		<div class="row">
