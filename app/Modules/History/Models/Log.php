@@ -318,6 +318,7 @@ class Log extends Model
 	public function toHistory(): History
 	{
 		$item = new History;
+		$item->id = -($this->id);
 		$item->created_at = $this->datetime;
 		if ($this->transportmethod == 'POST')
 		{
