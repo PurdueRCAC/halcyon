@@ -82,9 +82,9 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('menus::menus.title'), 'title', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-3">
+				<?php /*<th scope="col" class="priority-3">
 					{{ trans('menus::menus.item type') }}
-				</th>
+				</th>*/ ?>
 				<th scope="col" class="priority-4 text-right">
 					{{ trans('menus::menus.published items') }}
 				</th>
@@ -111,6 +111,10 @@ app('pathway')
 					{{ $row->id }}
 				</td>
 				<td>
+					@if (!isset($widgets[$row->menutype]))
+						<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true" data-tip="Menu requires a published widget to be visible."></span>
+						<span class="sr-only">Menu requires a published widget to be visible.</span>
+					@endif
 					@if (auth()->user()->can('edit menus'))
 						<a href="{{ route('admin.menus.edit', ['id' => $row->id]) }}">
 							{!! App\Halcyon\Utility\Str::highlight(e($row->title), $filters['search']) !!}
@@ -119,7 +123,7 @@ app('pathway')
 						{!! App\Halcyon\Utility\Str::highlight(e($row->title), $filters['search']) !!}
 					@endif
 				</td>
-				<td class="priority-3">
+				<?php /*<td class="priority-3">
 					@if (auth()->user()->can('edit menus'))
 						<a href="{{ route('admin.menus.edit', ['id' => $row->id]) }}">
 							{{ $row->menutype }}
@@ -127,7 +131,7 @@ app('pathway')
 					@else
 						{{ $row->menutype }}
 					@endif
-				</td>
+				</td>*/ ?>
 				<td class="priority-4 text-right">
 					<a href="{{ route('admin.menus.items', ['menutype' => $row->menutype]) }}">
 						{{ number_format($row->countPublishedItems()) }}

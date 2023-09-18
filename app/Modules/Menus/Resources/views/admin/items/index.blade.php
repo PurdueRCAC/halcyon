@@ -82,7 +82,9 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 			<div class="col col-md-3">
 				<label class="sr-only" for="filter_menutype">{{ trans('menus::menus.menu type') }}</label>
 				<select name="menutype" id="filter_menutype" class="form-control filter filter-submit">
-					<?php echo \App\Halcyon\Html\Builder\Select::options(\App\Modules\Menus\Helpers\Html::menus(), 'value', 'text', $filters['menutype']); ?>
+					@foreach ($menus as $menu)
+						<option value="{{ $menu->menutype }}"<?php if ($menu->id == $filters['menutype']) { echo ' selected'; } ?>>{{ $menu->title }}</option>
+					@endforeach
 				</select>
 			</div>
 			<div class="col col-md-9 text-right filter-select">
@@ -97,7 +99,9 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 				<label class="sr-only" for="filter_access">{{ trans('global.access') }}</label>
 				<select name="access" id="filter_access" class="form-control filter filter-submit">
 					<option value="">{{ trans('menus::menus.all access levels') }}</option>
-					<?php echo \App\Halcyon\Html\Builder\Select::options(\App\Halcyon\Html\Builder\Access::assetgroups(), 'value', 'text', $filters['access']); ?>
+					@foreach (\App\Halcyon\Html\Builder\Access::assetgroups() as $viewlevel)
+						<option value="{{ $viewlevel->value }}"<?php if ($viewlevel->value == $filters['access']) { echo ' selected'; } ?>>{{ $viewlevel->text }}</option>
+					@endforeach
 				</select>
 			</div>
 		</div>

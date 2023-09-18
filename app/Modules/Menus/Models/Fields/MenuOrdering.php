@@ -4,6 +4,7 @@ namespace App\Modules\Menus\Models\Fields;
 
 use App\Halcyon\Form\Fields\Select;
 use App\Modules\Menus\Models\Item;
+use stdClass;
 
 /**
  * Form Field class
@@ -21,7 +22,7 @@ class MenuOrdering extends Select
 	 * Method to get the list of siblings in a menu.
 	 * The method requires that parent be set.
 	 *
-	 * @return  array  The field option objects or false if the parent field has not been set
+	 * @return  array<int,\stdClass|\Illuminate\Support\Fluent>  The field option objects or false if the parent field has not been set
 	 */
 	protected function getOptions()
 	{
@@ -33,12 +34,11 @@ class MenuOrdering extends Select
 
 		if (empty($parent_id))
 		{
-			return false;
+			return $options;
 		}
 
-		$db = app('db');
 		$query = Item::query()
-			->select(['id AS value', 'title AS text'])
+			->select('id', 'title')
 			->where('published', '>=', '0')
 			->where('parent_id', '=', (int) $parent_id);
 
@@ -53,12 +53,29 @@ class MenuOrdering extends Select
 
 		$query->orderBy('lft', 'asc');
 
-		$options = $query->get();
+		$opts = $query->get();
+
+		foreach ($opts as $opt)
+		{
+			$option = new stdClass;
+			$option->value = $opt->id;
+			$option->text = $opt->title;
+
+			$options[] = $option;
+		}
+
+		$first = new stdClass;
+		$first->value = -1;
+		$first->text = trans('menus::menus.item.ordering first');
+
+		$last = new stdClass;
+		$last->value = -2;
+		$last->text = trans('menus::menus.item.ordering last');
 
 		$options = array_merge(
-			array(array('value' => '-1', 'text' => trans('menus::menus.item.ordering first'))),
-			$options->toArray(),
-			array(array('value' => '-2', 'text' => trans('menus::menus.item.ordering last')))
+			array($first),
+			$options,
+			array($last)
 		);
 
 		// Merge any additional options in the XML definition.

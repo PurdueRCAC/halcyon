@@ -13,13 +13,6 @@ use App\Halcyon\Access\Gate;
 class Menus
 {
 	/**
-	 * Defines the valid request variables for the reverse lookup.
-	 *
-	 * @var  array<int,string>
-	 */
-	protected static $_filter = array('option', 'view', 'layout');
-
-	/**
 	 * Gets a list of the actions that can be performed.
 	 *
 	 * @param   int  $parentId  The menu ID.
@@ -46,61 +39,6 @@ class Menus
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Gets a standard form of a link for lookups.
-	 *
-	 * @param   mixed  $request  A link string or array of request variables.
-	 * @return  false|string  A link in standard option-view-layout form, or false if the supplied response is invalid.
-	 */
-	public static function getLinkKey($request)
-	{
-		if (empty($request))
-		{
-			return false;
-		}
-
-		// Check if the link is in the form of index.php?...
-		if (is_string($request))
-		{
-			$args = array();
-			if (strpos($request, 'index.php') === 0)
-			{
-				parse_str(parse_url(htmlspecialchars_decode($request), PHP_URL_QUERY), $args);
-			}
-			else
-			{
-				parse_str($request, $args);
-			}
-			$request = $args;
-		}
-
-		// Only take the option, view and layout parts.
-		foreach ($request as $name => $value)
-		{
-			if ((!in_array($name, self::$_filter)) && (!($name == 'task' && !array_key_exists('view', $request))))
-			{
-				// Remove the variables we want to ignore.
-				unset($request[$name]);
-			}
-		}
-
-		ksort($request);
-
-		return 'index.php?' . http_build_query($request, '', '&');
-	}
-
-	/**
-	 * Get the menu list for create a menu module
-	 *
-	 * @return  array<int,string>  The menu array list
-	 */
-	public static function getMenuTypes()
-	{
-		$rows = Type::all()->pluck('menutype')->toArray();
-
-		return $rows;
 	}
 
 	/**
@@ -217,36 +155,5 @@ class Menus
 		}
 
 		return $links;
-	}
-
-	/**
-	 * Get associations
-	 *
-	 * @param   int  $pk
-	 * @return  array<string,int>
-	 */
-	public static function getAssociations($pk)
-	{
-		$associations = array();
-
-		$db = app('db');
-		$table = (new Type)->getTable();
-
-		$query = $db->table($table . ' AS m')
-			->join('associations as a', 'a.id', 'm.id')
-			->where('a.context', '=', 'com_menus.item')
-			->join('associations as a2', 'a.key', 'a2.key')
-			->join('menu as m2', 'a2.id', 'm2.id')
-			->where('m.id', '=', (int)$pk)
-			->select(['m2.language', 'm2.id']);
-
-		$menuitems = $query->get();
-
-		foreach ($menuitems as $item)
-		{
-			$associations[$item->language] = $item->id;
-		}
-
-		return $associations;
 	}
 }

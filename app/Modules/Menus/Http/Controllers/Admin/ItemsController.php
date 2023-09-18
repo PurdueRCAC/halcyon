@@ -391,7 +391,7 @@ class ItemsController extends Controller
 		}*/
 
 		// Levels filter.
-		$options = array();
+		/*$options = array();
 		$options[] = Select::option('1', 1);
 		$options[] = Select::option('2', 2);
 		$options[] = Select::option('3', 3);
@@ -401,13 +401,18 @@ class ItemsController extends Controller
 		$options[] = Select::option('7', 7);
 		$options[] = Select::option('8', 8);
 		$options[] = Select::option('9', 9);
-		$options[] = Select::option('10', 10);
+		$options[] = Select::option('10', 10);*/
+
+		$menus = Type::query()
+			->orderBy('title', 'asc')
+			->get();
 
 		return view('menus::admin.items.index', [
-			'rows'    => $rows,
-			'filters' => $filters,
-			'menu'    => $menu,
-			'f_levels' => $options,
+			'rows'     => $rows,
+			'filters'  => $filters,
+			'menu'     => $menu,
+			'menus'    => $menus,
+			//'f_levels' => $options,
 			'ordering' => $ordering
 		]);
 	}

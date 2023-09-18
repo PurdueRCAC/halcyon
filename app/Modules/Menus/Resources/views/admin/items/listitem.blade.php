@@ -87,7 +87,6 @@
 							{{ trans('global.unpublished') }}
 						</span>
 					@endif
-					<?php //echo App\Modules\Menus\Helpers\Html::state($row->published, $i, $canChange, 'cb'); ?>
 				@endif
 			</div>
 			<div class="col-access text-center priority-4">

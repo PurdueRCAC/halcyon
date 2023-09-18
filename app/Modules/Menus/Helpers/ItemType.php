@@ -56,10 +56,7 @@ class ItemType
 				{
 					if (isset($option->route))
 					{
-						//$this->rlu[MenusHelper::getLinkKey($option->request)] = $option->title;
 						$this->rlu[$option->route] = $option->title;
-
-						//$module->registerLanguage();
 					}
 				}
 			}

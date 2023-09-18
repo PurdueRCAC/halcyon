@@ -22,7 +22,7 @@ class MenuRoute extends Groupedlist
 	/**
 	 * Method to get the field option groups.
 	 *
-	 * @return  array  The field option objects as a nested array in groups.
+	 * @return  array<string,array<int,string>>  The field option objects as a nested array in groups.
 	 */
 	protected function getGroups()
 	{
