@@ -22,7 +22,7 @@ class ItemsController extends Controller
 	 * 
 	 * @param  StatefulRequest $request
 	 * @param  string  $menutype
-	 * @return View
+	 * @return View|RedirectResponse
 	 */
 	public function index(StatefulRequest $request, $menutype = null)
 	{
@@ -574,13 +574,12 @@ class ItemsController extends Controller
 
 		$id = $request->input('fields.id');
 
-		$row = Item::findNew($id);
+		$row = Item::findOrNew($id);
 		$row->fill($request->input('fields'));
 		if ($request->has('fields.page_id'))
 		{
 			$row->page_id = $request->input('fields.page_id');
 		}
-		$row->params;
 
 		if (!$row->save())
 		{
@@ -784,20 +783,28 @@ class ItemsController extends Controller
 	{
 		// Get the input
 		$order = $request->input('order', []);
+		$ret = true;
 
 		foreach ($order as $i => $it)
 		{
 			list($parent_id, $id) = explode(':', $it);
 
 			$item = Item::find($id);
+			if (!$item)
+			{
+				continue;
+			}
 			$item->parent_id = $parent_id;
 			$item->ordering = $i;
-			$item->save();
+			if (!$item->save())
+			{
+				$ret = false;
+			}
 		}
 
 		$item->rebuild(1, 0, 0, '', 'ordering');
 
-		if ($return === false)
+		if ($ret === false)
 		{
 			// Reorder failed
 			$request->session()->flash('success', trans('global.error.reorder failed'));

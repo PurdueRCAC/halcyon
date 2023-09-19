@@ -3,7 +3,7 @@
 namespace App\Modules\Menus\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -170,7 +170,7 @@ class MenusController extends Controller
 	 * Store a newly created entry
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -205,7 +205,7 @@ class MenusController extends Controller
 	 * Remove the specified entry
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -246,7 +246,7 @@ class MenusController extends Controller
 	/**
 	 * Return to default page
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{
@@ -258,7 +258,7 @@ class MenusController extends Controller
 	 *
 	 * @param   Request $request
 	 * @param   string  $menutype
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function rebuild(Request $request, $menutype)
 	{
@@ -283,7 +283,7 @@ class MenusController extends Controller
 	 * Sets the state of one or more entries
 	 * 
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function restore(Request $request)
 	{

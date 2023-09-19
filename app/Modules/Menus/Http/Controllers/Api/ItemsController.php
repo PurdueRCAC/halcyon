@@ -3,14 +3,14 @@
 namespace App\Modules\Menus\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Modules\Menus\Models\Type;
-use App\Modules\Menus\Models\Item;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Modules\Menus\Models\Type;
+use App\Modules\Menus\Models\Item;
 
 /**
  * Menu items
@@ -218,7 +218,7 @@ class ItemsController extends Controller
 			}
 			else
 			{
-				$query->where(function($where) use ($search)
+				$query->where(function($where) use ($search, $a)
 				{
 					$where->where($a . '.title', 'like', '%' . $search . '%')
 						->orWhere($a . '.alias', 'like', '%' . $search . '%')
@@ -461,7 +461,7 @@ class ItemsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response|JsonResource
+	 * @return JsonResponse|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -548,7 +548,7 @@ class ItemsController extends Controller
 	 * 		}
 	 * }
 	 * @param  int $id
-	 * @return Response|JsonResource
+	 * @return JsonResponse|JsonResource
 	 */
 	public function read(int $id)
 	{
@@ -559,7 +559,7 @@ class ItemsController extends Controller
 		// Can non-managers view this article?
 		if (!$user || !$user->can('manage menus'))
 		{
-			if (!$row->isPublished())
+			if (!$row->published)
 			{
 				return response()->json(['message' => trans('menus::menus.item not found')], 404);
 			}
@@ -669,7 +669,7 @@ class ItemsController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   int $id
-	 * @return  Response|JsonResource
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function update(Request $request, int $id)
 	{
@@ -721,7 +721,7 @@ class ItemsController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete(int $id)
 	{
@@ -754,7 +754,7 @@ class ItemsController extends Controller
 	 * 		}
 	 * }
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function reorder(Request $request)
 	{
