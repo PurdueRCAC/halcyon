@@ -509,7 +509,7 @@ class Directory extends Model
 	/**
 	 * Get resource total
 	 *
-	 * @return  array<int,array{string,mixed}>
+	 * @return  array<int,array<string,mixed>>
 	 */
 	public function getResourceTotalAttribute(): array
 	{

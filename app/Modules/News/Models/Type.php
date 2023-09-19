@@ -33,6 +33,8 @@ use Carbon\Carbon;
  * @property string $order_dir
  *
  * @property string $api
+ * @property int    $level
+ * @property string $title Temp property used with Metadata events
  */
 class Type extends Model
 {
@@ -133,7 +135,7 @@ class Type extends Model
 				->where('parentid', '=', $model->parentid)
 				->orderBy('ordering', 'desc')
 				->first();
-			$resule = $last ? $last->ordering + 1 : 1;
+			$result = $last ? $last->ordering + 1 : 1;
 
 			$model->setAttribute('ordering', (int)$result);
 		});
@@ -337,15 +339,14 @@ class Type extends Model
 	 * Recursive function to build tree
 	 *
 	 * @param   int     $id        Parent ID
-	 * @param   array   $list      List of records
-	 * @param   array   $children  Container for parent/children mapping
+	 * @param   array<int,Type>   $list      List of records
+	 * @param   array<int,array<int,Type>>   $children  Container for parent/children mapping
 	 * @param   int     $maxlevel  Maximum levels to descend
 	 * @param   int     $level     Indention level
 	 * @param   int     $type      Indention type
-	 * @param   string  $prfx
 	 * @return  array<int,Type>
 	 */
-	protected static function treeRecurse(int $id, array $list, array $children, int $maxlevel=9999, int $level=0, int $type=1, string $prfx = ''): array
+	protected static function treeRecurse(int $id, array $list, array $children, int $maxlevel=9999, int $level=0, int $type=1): array
 	{
 		if (@$children[$id] && $level <= $maxlevel)
 		{
@@ -359,15 +360,9 @@ class Type extends Model
 				$list[$vid]->level = $level;
 				$list[$vid]->children_count = isset($children[$vid]) ? count(@$children[$vid]) : 0;
 
-				$p = '';
-				if ($v->parentid)
-				{
-					$p = $list[$vid]->prefix . $list[$vid]->name;
-				}
-
 				unset($children[$id][$z]);
 
-				$list = self::treeRecurse($vid, $list, $children, $maxlevel, $level+1, $type, $p);
+				$list = self::treeRecurse($vid, $list, $children, $maxlevel, $level+1, $type);
 			}
 			unset($children[$id]);
 		}

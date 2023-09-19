@@ -64,15 +64,14 @@ class InstallModule
 			]);
 
 			$menu = Type::findByMenutype('main');
-			$menu->rebuild();
-
-			//$event->migration->info(sprintf('Added menu entry for module "%s"', $alias));
+			if ($menu)
+			{
+				$menu->rebuild();
+			}
 		}
 		elseif ($event->method == 'down' && $item)
 		{
 			$item->delete();
-
-			//$event->migration->info(sprintf('Removed menu entry for module "%s"', $alias));
 		}
 	}
 }

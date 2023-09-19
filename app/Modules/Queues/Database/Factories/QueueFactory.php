@@ -10,14 +10,14 @@ class QueueFactory extends Factory
     /**
      * The name of the factory's corresponding model.
      *
-     * @var string
+     * @var class-string<\Illuminate\Database\Eloquent\Model|TModel>
      */
     protected $model = Queue::class;
 
     /**
-     * Factory definition
+     * Define the model's default state.
      *
-     * @return  array
+     * @return array<string,mixed>
      */
     public function definition()
     {

@@ -2,6 +2,7 @@
 
 namespace App\Modules\Queues\Events;
 
+use App\Modules\Queues\Console\ScheduleCommand;
 use App\Modules\Resources\Models\Asset;
 
 class Schedule
@@ -29,7 +30,7 @@ class Schedule
 	 * @param  bool $verbose
 	 * @return void
 	 */
-	public function __construct(Asset $resource, $command, $verbose = false)
+	public function __construct(Asset $resource, ScheduleCommand $command, bool $verbose = false)
 	{
 		$this->resource = $resource;
 		$this->command = $command;
@@ -41,7 +42,7 @@ class Schedule
 	 *
 	 * @return bool
 	 */
-	public function isVerbose()
+	public function isVerbose(): bool
 	{
 		return $this->verbose;
 	}

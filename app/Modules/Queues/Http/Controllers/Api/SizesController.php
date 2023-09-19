@@ -656,7 +656,7 @@ class SizesController extends Controller
 			$updatecounter = true;
 
 			// Can't change corecount of a entry that has already started
-			if ($row->hasStarted() && $cores != $row->corecoun)
+			if ($row->hasStarted() && $cores != $row->corecount)
 			{
 				//return response()->json(['message' => trans('queues::queues.error.corecount cannot be modified')], 409);
 			}

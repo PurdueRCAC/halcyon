@@ -51,6 +51,7 @@ use Carbon\Carbon;
  *
  * @property string $api
  * @property string $metadesc
+ * @property array<string,mixed> $vars
  */
 class Article extends Model
 {

@@ -29,6 +29,7 @@ use App\Modules\Menus\Events\TypeDeleted;
  * @property Carbon|null $deleted_at
  *
  * @param string $api
+ * @param array<int,Item> $links
  */
 class Type extends Model
 {
@@ -251,7 +252,7 @@ class Type extends Model
 	/**
 	 * Gets a list of all mod_mainmenu modules and collates them by menutype
 	 *
-	 * @return  array<string,array>
+	 * @return  array<string,array<int,Widget>>
 	 */
 	public static function getWidgets()
 	{
@@ -278,14 +279,13 @@ class Type extends Model
 	 * Find a model by menutype
 	 *
 	 * @param  string $type
-	 * @param  array<int,string>  $columns
-	 * @return Model|\Illuminate\Database\Eloquent\Collection|static[]|static|null
+	 * @return Type|null
 	 */
-	public static function findByMenutype(string $type, array $columns = ['*'])
+	public static function findByMenutype(string $type): ?Type
 	{
 		return static::query()
 			->where('menutype', '=', $type)
-			->first($columns);
+			->first();
 	}
 
 	/**

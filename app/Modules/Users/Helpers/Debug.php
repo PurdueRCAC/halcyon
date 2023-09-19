@@ -47,7 +47,7 @@ class Debug
 	 * Get a list of the actions for the module or code actions.
 	 *
 	 * @param   string|null  $module  The name of the module.
-	 * @return  array<string,array>
+	 * @return  array<string,array<int,string>>
 	 */
 	public static function getActions($module = null): array
 	{

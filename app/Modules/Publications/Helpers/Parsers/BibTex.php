@@ -80,7 +80,7 @@ class BibTex
 	/**
 	 * Array to store warnings
 	 *
-	 * @var    array<int,array{string,string}>
+	 * @var    array<int,array<string,string>>
 	 */
 	public $warnings = array();
 
@@ -221,7 +221,7 @@ class BibTex
 	 * @param   string  $bibstring Name of the file
 	 * @return  void   True on success Exception on failure
 	 */
-	public function addContent($bibstring)
+	public function addContent($bibstring): void
 	{
 		$this->content .= $bibstring;
 	}
@@ -368,7 +368,7 @@ class BibTex
 	 * @param  string  $entry The entry
 	 * @return array<string,mixed>   The representation of the entry or false if there is a problem
 	 */
-	private function _parseEntry($entry)
+	private function _parseEntry($entry): array
 	{
 		$entrycopy = '';
 		if ($this->_options['validate'])
@@ -487,7 +487,7 @@ class BibTex
 	 * @param  int     $position current used place of the '='
 	 * @return bool    true if the '=' is correct, false if it contains to an equation
 	 */
-	private function _checkEqualSign($entry, $position)
+	private function _checkEqualSign($entry, $position): bool
 	{
 		$ret = true;
 		//This is getting tricky
@@ -554,7 +554,7 @@ class BibTex
 	 * @param  string  $entry The entry to check
 	 * @return bool    true if allowed, false otherwise
 	 */
-	private function _checkAllowedType($entry)
+	private function _checkAllowedType($entry): bool
 	{
 		return in_array($entry, $this->allowedTypes);
 	}
@@ -569,7 +569,7 @@ class BibTex
 	 * @param  string  $entry The text of the entry until the at
 	 * @return bool    true if the at is correct, false if the at is likely to begin the next entry.
 	 */
-	private function _checkAt($entry)
+	private function _checkAt($entry): bool
 	{
 		$ret     = false;
 		$opening = array_keys($this->_delimiters);
@@ -626,7 +626,7 @@ class BibTex
 	 * @param  string  $entry The entry where the Delimiter should be stripped from
 	 * @return string  Stripped entry
 	 */
-	private function _stripDelimiter($entry)
+	private function _stripDelimiter($entry): string
 	{
 		$beginningdels = array_keys($this->_delimiters);
 		$length        = strlen($entry);
@@ -656,7 +656,7 @@ class BibTex
 	 * @param  string  $entry The entry to unwrap
 	 * @return string  unwrapped entry
 	 */
-	private function _unwrap($entry)
+	private function _unwrap($entry): string
 	{
 		$entry = preg_replace('/\s+/', ' ', $entry);
 		return trim($entry);
@@ -668,7 +668,7 @@ class BibTex
 	 * @param  string  $entry The entry to wrap
 	 * @return string  wrapped entry
 	 */
-	private function _wordwrap($entry)
+	private function _wordwrap($entry): string
 	{
 		if (('' != $entry) && (is_string($entry)))
 		{
@@ -681,9 +681,9 @@ class BibTex
 	 * Extracting the authors
 	 *
 	 * @param  string  $entry The entry with the authors
-	 * @return array<int,array{string,string}>   the extracted authors
+	 * @return array<int,array<string,string>>   the extracted authors
 	 */
-	private function _extractAuthors($entry)
+	private function _extractAuthors($entry): array
 	{
 		$entry       = $this->_unwrap($entry);
 		$authorarray = array();
@@ -936,7 +936,7 @@ class BibTex
 	 * @param  string  $wholeentry The whole BibTex Entry which the one line is part of
 	 * @return void
 	 */
-	private function _validateValue($entry, $wholeentry)
+	private function _validateValue($entry, $wholeentry): void
 	{
 		//There is no @ allowed if the entry is enclosed by braces
 		if (preg_match('/^{.*@.*}$/', $entry))
@@ -977,7 +977,7 @@ class BibTex
 	 * @param  string  $value The value in which curly braces to be removed
 	 * @return string
 	 */
-	private function _removeCurlyBraces($value)
+	private function _removeCurlyBraces($value): string
 	{
 		//First we save the delimiters
 		$beginningdels = array_keys($this->_delimiters);
@@ -1017,7 +1017,7 @@ class BibTex
 	 * @param  string  $wholeentry OPTIONAL The whole entry where the warning occurred
 	 * @return void
 	 */
-	private function _generateWarning($type, $entry, $wholeentry='')
+	private function _generateWarning($type, $entry, $wholeentry=''): void
 	{
 		$warning['warning']    = $type;
 		$warning['entry']      = $entry;
@@ -1030,7 +1030,7 @@ class BibTex
 	 *
 	 * @return void
 	 */
-	public function clearWarnings()
+	public function clearWarnings(): void
 	{
 		$this->warnings = array();
 	}
@@ -1040,7 +1040,7 @@ class BibTex
 	 *
 	 * @return bool  if there is, false otherwise
 	 */
-	public function hasWarning()
+	public function hasWarning(): bool
 	{
 		if (count($this->warnings) > 0)
 		{
@@ -1055,7 +1055,7 @@ class BibTex
 	 *
 	 * @return int    The amount of available BibTex entries
 	 */
-	public function amount()
+	public function amount(): int
 	{
 		return count($this->data);
 	}
@@ -1068,7 +1068,7 @@ class BibTex
 	 * @param  array<string,string>   $array Author array
 	 * @return string  the formatted author string
 	 */
-	private function _formatAuthor($array)
+	private function _formatAuthor($array): string
 	{
 		if (!array_key_exists('von', $array))
 		{
@@ -1118,7 +1118,7 @@ class BibTex
 	 *
 	 * @return string The BibTex string
 	 */
-	public function bibTex()
+	public function bibTex(): string
 	{
 		$bibtex = '';
 		foreach ($this->data as $entry)
@@ -1140,7 +1140,7 @@ class BibTex
 			//Author
 			if (array_key_exists('author', $entry))
 			{
-				if ($this->_options['extractAuthors'])
+				if ($this->_options['extractAuthors'] && is_array($entry['author']))
 				{
 					$tmparray = array(); //In this array the authors are saved and the joind with an and
 					foreach ($entry['author'] as $authorentry)
@@ -1170,7 +1170,7 @@ class BibTex
 	 * @param  array<string,mixed>  $newentry The new data to add
 	 * @return void
 	 */
-	public function addEntry($newentry)
+	public function addEntry($newentry): void
 	{
 		$this->data[] = $newentry;
 	}
@@ -1183,7 +1183,7 @@ class BibTex
 	 *
 	 * @return array<string,int>  Hash Table with the data
 	 */
-	public function getStatistic()
+	public function getStatistic(): array
 	{
 		$ret = array();
 		foreach ($this->data as $entry)
@@ -1214,7 +1214,7 @@ class BibTex
 	 *
 	 * @return string the RTF Strings
 	 */
-	public function rtf()
+	public function rtf(): string
 	{
 		$ret = "{\\rtf\n";
 		foreach ($this->data as $entry)
@@ -1238,7 +1238,7 @@ class BibTex
 			}
 			if (array_key_exists('author', $entry))
 			{
-				if ($this->_options['extractAuthors'])
+				if ($this->_options['extractAuthors'] && is_array($entry['author']))
 				{
 					$tmparray = array(); //In this array the authors are saved and the joind with an and
 					foreach ($entry['author'] as $authorentry)
@@ -1252,7 +1252,7 @@ class BibTex
 					$authors = $entry['author'];
 				}
 			}
-			if ((''!=$title) || (''!=$journal) || (''!=$year) || (''!=$authors))
+			if (('' != $title) || ('' != $journal) || ('' != $year) || ('' != $authors))
 			{
 				$line = str_replace("TITLE", $title, $line);
 				$line = str_replace("JOURNAL", $journal, $line);
@@ -1283,7 +1283,7 @@ class BibTex
 	 *
 	 * @return string the HTML Strings
 	 */
-	public function html()
+	public function html(): string
 	{
 		$ret = '<table>';
 		foreach ($this->data as $entry)
@@ -1322,7 +1322,7 @@ class BibTex
 			}
 			if (array_key_exists('author', $entry))
 			{
-				if ($this->_options['extractAuthors'])
+				if ($this->_options['extractAuthors'] && is_array($entry['author']))
 				{
 					$tmparray = array(); //In this array the authors are saved and the joind with an and
 					foreach ($entry['author'] as $authorentry)
@@ -1336,7 +1336,7 @@ class BibTex
 					$authors = $entry['author'];
 				}
 			}
-			if ((''!=$title) || (''!=$journal) || (''!=$year) || (''!=$authors))
+			if (('' != $title) || ('' != $journal) || ('' != $year) || ('' != $authors))
 			{
 				$line = str_replace("TITLE", $title, $line);
 				if (array_key_exists('journal', $entry))
@@ -1357,13 +1357,16 @@ class BibTex
 				{
 					$line = str_replace("PAGES,", '', $line);
 				}
-				if (array_key_exists('volume', $entry)){
+
+				if (array_key_exists('volume', $entry))
+				{
 					$line = str_replace("VOLUME", $volume, $line);
 				}
 				else
 				{
 					$line = str_replace("VOLUME,", '', $line);
 				}
+
 				if (array_key_exists('publisher', $entry))
 				{
 					$line = str_replace("PUBLISHER", $publisher, $line);

@@ -24,6 +24,7 @@ use Carbon\Carbon;
  * @property string $comment
  *
  * @property string $api
+ * @property string $name
  */
 class Association extends Model
 {

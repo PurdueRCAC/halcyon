@@ -3,6 +3,7 @@ namespace App\Modules\Users\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Carbon\Carbon;
 
 /**
  * Session model
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $ip_address
  * @property string $user_agent
  * @property string $payload
- * @property int    $last_activity
+ * @property Carbon|null $last_activity
  */
 class Session extends Model
 {

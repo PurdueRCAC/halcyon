@@ -22,7 +22,7 @@ class QueueRemovedManager extends Mailable
 	/**
 	 * List of removals
 	 *
-	 * @var array<int,array>
+	 * @var array<int,array<string,mixed>>
 	 */
 	protected $removals;
 
@@ -30,7 +30,7 @@ class QueueRemovedManager extends Mailable
 	 * Create a new message instance.
 	 *
 	 * @param User $user
-	 * @param array<int,array> $removals
+	 * @param array<int,array<string,mixed>> $removals
 	 * @return void
 	 */
 	public function __construct(User $user, $removals = array())

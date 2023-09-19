@@ -6,7 +6,7 @@ trait HasPreformattedText
 	/**
 	 * Code block replacements
 	 *
-	 * @var  array<string,array>
+	 * @var  array<string,array<int,string>>
 	 */
 	protected $replacements = array(
 		'preblocks'  => array(),

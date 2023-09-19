@@ -303,7 +303,7 @@ class LoansController extends Controller
 		$row->datetimestart = $request->input('datetimestart');
 		if (!$row->datetimestart)
 		{
-			$row->datetimestart = Carbon::now()->toDateTimeFormat();
+			$row->datetimestart = Carbon::now();
 		}
 		if ($request->has('datetimestop'))
 		{
