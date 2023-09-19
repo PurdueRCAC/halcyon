@@ -144,7 +144,7 @@ class ModulesController extends Controller
 
 		foreach ($data as $k => $v)
 		{
-			$module->params->set($k, $v);
+			$module->params->{$k} = $v;
 		}
 
 		// Attempt to save the configuration.
