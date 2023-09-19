@@ -19,7 +19,7 @@ class Builder
 	/**
 	 * An array to hold method references
 	 *
-	 * @var  array<int,array{int,string}>
+	 * @var  array<string,array{int,string}>
 	 */
 	protected static $registry = array();
 

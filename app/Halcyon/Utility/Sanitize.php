@@ -421,7 +421,7 @@ class Sanitize
 			'/&#(\d+);/m',
 			function ($matches)
 			{
-				return mb_convert_encoding(chr($matches[1]), 'UTF-8', 'ISO-8859-1');
+				return mb_convert_encoding(chr(intval($matches[1])), 'UTF-8', 'ISO-8859-1');
 			},
 			$source
 		);
@@ -431,7 +431,7 @@ class Sanitize
 			'/&#x([a-f0-9]+);/mi',
 			function ($matches)
 			{
-				return mb_convert_encoding(chr('0x' . $matches[1]), 'UTF-8', 'ISO-8859-1');
+				return mb_convert_encoding('0x' . $matches[1], 'UTF-8', 'ISO-8859-1');
 			},
 			$source
 		);

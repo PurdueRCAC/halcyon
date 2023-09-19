@@ -46,7 +46,7 @@ class DatabaseActivator implements ActivatorInterface
 	/**
 	 * Array of modules activation statuses
 	 *
-	 * @var array
+	 * @var array<string,bool>
 	 */
 	private $modulesStatuses;
 
@@ -184,7 +184,7 @@ class DatabaseActivator implements ActivatorInterface
 	/**
 	 * Reads the database table that contains the activation statuses.
 	 *
-	 * @return  array
+	 * @return  array<string,bool>
 	 */
 	private function readDatabase(): array
 	{
@@ -230,7 +230,7 @@ class DatabaseActivator implements ActivatorInterface
 	 * Get modules statuses, either from the cache or from
 	 * the database if the cache is disabled.
 	 *
-	 * @return  array
+	 * @return  array<string,bool>
 	 */
 	private function getModulesStatuses(): array
 	{

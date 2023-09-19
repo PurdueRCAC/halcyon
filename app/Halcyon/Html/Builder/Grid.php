@@ -108,9 +108,9 @@ class Grid
 	/**
 	 * Displays a checked out icon.
 	 *
-	 * @param   object   &$row        A data object (must contain checkedout as a property).
-	 * @param   int  $i           The index of the row.
-	 * @param   string   $identifier  The property name of the primary key or index of the row.
+	 * @param   object  &$row        A data object (must contain checkedout as a property).
+	 * @param   int     $i           The index of the row.
+	 * @param   string  $identifier  The property name of the primary key or index of the row.
 	 * @return  string
 	 */
 	public static function checkbox(&$row, $i, $identifier = 'id') //checkedOut
@@ -190,7 +190,7 @@ class Grid
 	 *                           This array can contain a list of key/value pairs where values are boolean
 	 *                           and keys can be taken from 'published', 'unpublished', 'archived', 'trash', 'all'.
 	 *                           These pairs determine which values are displayed.
-	 * @return  string  The HTML code for the select tag
+	 * @return  array<int,\stdClass>
 	 */
 	public static function publishedOptions($config = array())
 	{
@@ -277,9 +277,9 @@ class Grid
 	/**
 	 * Method to create a checked out icon with optional overlib in a grid.
 	 *
-	 * @param   object   &$row     The row object
-	 * @param   bool  $tooltip  True if an overlib with checkout information should be created.
-	 * @return  string   HTML for the icon and tooltip
+	 * @param   object  &$row     The row object
+	 * @param   bool    $tooltip  True if an overlib with checkout information should be created.
+	 * @return  string  HTML for the icon and tooltip
 	 */
 	protected static function _checkedOut(&$row, $tooltip = true)
 	{
@@ -287,12 +287,13 @@ class Grid
 
 		if ($tooltip && isset($row->checked_out_time))
 		{
-			$text = addslashes(htmlspecialchars($row->editor, ENT_COMPAT, 'UTF-8'));
+			$text = $row->editor;
 
-			$date = Carbon::parse($row->checked_out_time)->format('l, d F Y');
-			$time = Carbon::parse($row->checked_out_time)->format('H:i');
+			$dt = Carbon::parse($row->checked_out_time);
+			$date = $dt->format('l, d F Y');
+			$time = $dt->format('H:i');
 
-			$hover = '<span class="editlinktip hasTip" title="' . trans('global.check out') . '::' . $text . '<br />' . $date . '<br />' . $time . '">';
+			$hover = '<span class="editlinktip hasTip" title="' . trans('global.check out') . '::' . e($text) . '<br />' . $date . '<br />' . $time . '">';
 		}
 
 		return $hover . trans('global.checked out') . '</span>';
@@ -438,12 +439,12 @@ class Grid
 				{
 					$states[$key][2] = $states[$key][3] = 'global.published';
 
-					if ($publish_up && $nowDate < $publish_up->toUnix())
+					if ($publish_up && $nowDate < $publish_up->timestamp)
 					{
 						$states[$key][2] = $states[$key][3] = 'global.published but pending';
 						$states[$key][5] = $states[$key][6] = 'pending';
 					}
-					if ($publish_down && $nowDate > $publish_down->toUnix())
+					if ($publish_down && $nowDate > $publish_down->timestamp)
 					{
 						$states[$key][2] = $states[$key][3] = 'global.published but expired';
 						$states[$key][5] = $states[$key][6] = 'expired';
@@ -551,7 +552,7 @@ class Grid
 	 *
 	 * @param   int       $value     The state value.
 	 * @param   int       $i         The row index
-	 * @param   string|array  $prefix    An optional task prefix or an array of options
+	 * @param   string|array<string,mixed>  $prefix    An optional task prefix or an array of options
 	 * @param   bool       $enabled   An optional setting for access control on the action.
 	 * @param   string        $checkbox  An optional prefix for checkboxes.
 	 * @return  string        The HTML code

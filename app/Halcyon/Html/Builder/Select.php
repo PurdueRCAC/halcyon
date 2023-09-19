@@ -14,7 +14,7 @@ class Select
 	/**
 	 * Default values for options. Organized by option group.
 	 *
-	 * @var  array<string,array{string,mixed}>
+	 * @var  array<string,array<string,mixed>>
 	 */
 	static protected $optionDefaults = array(
 		'option' => array(
@@ -348,7 +348,7 @@ class Select
 	/**
 	 * Create an object that represents an option in an option list.
 	 *
-	 * @param   string   $value    The value of the option
+	 * @param   string|int|float   $value    The value of the option
 	 * @param   string   $text     The text for the option
 	 * @param   mixed    $optKey   If a string, the returned object property name for
 	 *                             the value. If an array, options. Valid options are:
@@ -433,7 +433,7 @@ class Select
 	 * Generates the option tags for an HTML select list (with no select tag
 	 * surrounding the options).
 	 *
-	 * @param   array    $arr        An array of objects, arrays, or values.
+	 * @param   array<mixed,mixed>    $arr        An array of objects, arrays, or values.
 	 * @param   mixed    $optKey     If a string, this is the name of the object variable for
 	 *                               the option value. If null, the index of the array of objects is used. If
 	 *                               an array, this is a set of options, as key/value pairs. Valid options are:
@@ -649,7 +649,7 @@ class Select
 	/**
 	 * Generates an HTML radio list.
 	 *
-	 * @param   array    $data       An array of objects
+	 * @param   array<int,object>    $data       An array of objects
 	 * @param   string   $name       The value of the HTML name attribute
 	 * @param   array<string,string>|string   $attribs    Additional HTML attributes for the <select> tag
 	 * @param   mixed    $optKey     The key that is selected
@@ -768,14 +768,13 @@ class Select
 		}
 		else
 		{
+			$text = trans('global.new items first');
+
 			if ($neworder > 0)
 			{
 				$text = trans('global.new items last');
 			}
-			elseif ($neworder <= 0)
-			{
-				$text = trans('global.new items first');
-			}
+
 			$html = '<input type="hidden" name="' . $name . '" value="' . (int) $selected . '" />' . '<span class="readonly">' . $text . '</span>';
 		}
 		return $html;

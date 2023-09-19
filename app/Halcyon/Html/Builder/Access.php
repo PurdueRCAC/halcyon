@@ -29,7 +29,7 @@ class Access
 	 * @param   string  $selected  The name of the selected section.
 	 * @param   string  $attribs   Additional attributes to add to the select field.
 	 * @param   mixed   $params    True to add "All Sections" option or an array of options
-	 * @param   string  $id        The form field id
+	 * @param   string|false  $id        The form field id
 	 * @return  string  The required HTML for the SELECT tag.
 	 */
 	public static function level($name, $selected, $attribs = '', $params = true, $id = false)
@@ -266,7 +266,7 @@ class Access
 		$options = self::assetgroups();
 		if (isset($config['title']))
 		{
-			array_unshift($options, Select::option('', $config['title']));
+			$options->prepend(Select::option('', $config['title']));
 		}
 
 		return Select::genericlist(

@@ -229,7 +229,7 @@ class Str
 
 				if ($spacepos !== false)
 				{
-					$lastWord = mb_strrpos($result, $spacepos);
+					$lastWord = substr($result, $spacepos);
 					// Some languages are written without word separation.
 					// We recognize a string as a word if it doesn't contain any full-width characters.
 					if (mb_strwidth($lastWord) === mb_strlen($lastWord))
