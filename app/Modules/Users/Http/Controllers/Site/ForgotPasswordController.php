@@ -59,6 +59,6 @@ class ForgotPasswordController extends Controller
 		// the current URI having nothing set in the session to indicate errors.
 		$user->sendPasswordResetNotification($token);
 
-		return back()->with('status', trans(Password::RESET_LINK_SEN));
+		return back()->with('status', trans(Password::RESET_LINK_SENT));
 	}
 }
