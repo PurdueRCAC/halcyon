@@ -88,6 +88,6 @@ class ResetPasswordController extends Controller
 
 		// If the password was successfully reset, we will redirect the user back to
 		// the application's home authenticated view.
-		return redirect()->route('login')->with('status', trans(Password::PASSWORD_RESET));
+		return redirect()->route('login')->with('success', trans(Password::PASSWORD_RESET));
 	}
 }
