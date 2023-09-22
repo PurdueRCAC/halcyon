@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
+use App\Modules\Users\Models\User;
 
 
 class ResetPasswordController extends Controller
@@ -24,7 +25,7 @@ class ResetPasswordController extends Controller
 	 */
 	public function index(Request $request): View
 	{
-		return view('users::auth.reset-password', [
+		return view('users::site.reset-password', [
 			'request' => $request
 		]);
 	}
@@ -47,28 +48,46 @@ class ResetPasswordController extends Controller
 		// Here we will attempt to reset the user's password. If it is successful we
 		// will update the password on an actual user model and persist it to the
 		// database. Otherwise we will parse the error and return the response.
-		$status = Password::reset(
+		/*$status = Password::reset(
 			$request->only('email', 'password', 'password_confirmation', 'token'),
 			function ($user) use ($request)
 			{
 				$user->forceFill([
-					'password' => Hash::make($request->password),
+					'password' => Hash::make($request->input('password')),
 					//'remember_token' => Str::random(60),
 				])->save();
-				/*$user->getUserUsername()->forceFill([
-					'password' => Hash::make($request->password),
-				])->save();*/
 
 				event(new PasswordReset($user));
 			}
-		);
+		);*/
+
+		$credentials = $request->only('email', 'password', 'password_confirmation', 'token');
+
+		$user = User::findByEmail($credentials['email']);
+
+		if (!$user)
+		{
+			return redirect()->back()
+				->withInput($request->input())
+				->withErrors(['email' => trans('users::auth.account not found for email')]);
+		}
+
+		if (! Password::getRepository()->exists($user, $credentials['token']))
+		{
+			return back()->withInput($request->only('email'))
+				->withErrors(['email' => trans(static::INVALID_TOKEN)]);
+		}
+
+		$user->forceFill([
+			'password' => Hash::make($request->input('password')),
+		])->save();
+
+		event(new PasswordReset($user));
+
+		Password::getRepository()->delete($user);
 
 		// If the password was successfully reset, we will redirect the user back to
-		// the application's home authenticated view. If there is an error we can
-		// redirect them back to where they came from with their error message.
-		return $status == Password::PASSWORD_RESET
-					? redirect()->route('login')->with('status', trans($status))
-					: back()->withInput($request->only('email'))
-							->withErrors(['email' => trans($status)]);
+		// the application's home authenticated view.
+		return redirect()->route('login')->with('status', trans(Password::PASSWORD_RESET));
 	}
 }

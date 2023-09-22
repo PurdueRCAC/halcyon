@@ -26,7 +26,8 @@ app('pathway')
 
 						<form method="post" action="{{ route('password.update') }}">
 
-							<input type="hidden" name="token" value="{{ $request->route('token') }}">
+							<input type="hidden" name="token" value="{{ $request->input('token') }}">
+							<input type="hidden" name="email" value="{{ $request->input('email') }}">
 
 							<div class="form-group has-feedback {{ $errors->has('password') ? ' has-error has-feedback' : '' }}">
 								<label for="register-password">{{ trans('users::auth.password') }}</label>
