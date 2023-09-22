@@ -20,4 +20,5 @@ return [
 	'forgotten password instructions' => 'Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.',
 	'terms confirmation' => 'I have read and agree to the <a href=":url" data-toggle="modal" data-target="#termscontent">:title</a>',
 	'new to the site' => 'New to our site?',
+	'account not found for email' => 'No account found for the given email',
 ];

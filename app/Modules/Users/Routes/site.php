@@ -52,11 +52,11 @@ $router->post('forgot-password', [
 // Reset password
 $router->get('reset-password', [
 	'as' => 'password.reset',
-	'uses' => 'NewPasswordController@index'
+	'uses' => 'ResetPasswordController@index'
 ]);
 $router->post('reset-password', [
 	'as' => 'password.update',
-	'uses' => 'NewPasswordController@store'
+	'uses' => 'ResetPasswordController@store'
 ]);
 
 $router->group(['prefix' => 'account', 'middleware' => 'auth'], function (Router $router)

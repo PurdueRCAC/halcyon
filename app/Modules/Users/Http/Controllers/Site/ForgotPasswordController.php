@@ -36,23 +36,29 @@ class ForgotPasswordController extends Controller
 
 		$user = User::findByEmail($request->input('email'));
 
-		if ($user && $user->id)
+		if (!$user)
 		{
 			return redirect()->back()
 				->withInput($request->input())
-				->withErrors(['email' => 'No account found for the given email']);
+				->withErrors(['email' => trans('users::auth.account not found for email')]);
 		}
 
 		// We will send the password reset link to this user. Once we have attempted
 		// to send the link, we will examine the response then see the message we
 		// need to show to the user. Finally, we'll send out a proper response.
-		$status = Password::sendResetLink(
-			$request->only('email')
-		);
+		if (Password::getRepository()->recentlyCreatedToken($user))
+		{
+			return back()->withInput($request->only('email'))
+				->withErrors(['email' => trans(Password::RESET_THROTTLED)]);
+		}
 
-		return $status == Password::RESET_LINK_SENT
-					? back()->with('status', trans($status))
-					: back()->withInput($request->only('email'))
-							->withErrors(['email' => trans($status)]);
+		$token = Password::getRepository()->create($user);
+
+		// Once we have the reset token, we are ready to send the message out to this
+		// user with a link to reset their password. We will then redirect back to
+		// the current URI having nothing set in the session to indicate errors.
+		$user->sendPasswordResetNotification($token);
+
+		return back()->with('status', trans(Password::RESET_LINK_SEN));
 	}
 }

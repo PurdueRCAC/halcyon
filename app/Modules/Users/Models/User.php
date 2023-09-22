@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Support\Str;
 use App\Halcyon\Access\Gate;
@@ -46,7 +47,8 @@ use Carbon\Carbon;
  */
 class User extends Model implements
 	AuthenticatableContract,
-	AuthorizableContract
+	AuthorizableContract,
+	CanResetPasswordContract
 {
 	use Authenticatable, Notifiable, Impersonate, CanResetPassword;
 
