@@ -1,5 +1,10 @@
 
+@push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css') }}" />
+@endpush
+
 @push('scripts')
+<script src="{{ timestamped_asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js') }}"></script>
 <script src="{{ timestamped_asset('modules/queues/js/site.js') }}"></script>
 @endpush
 
