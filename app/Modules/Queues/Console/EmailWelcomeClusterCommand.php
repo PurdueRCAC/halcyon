@@ -91,6 +91,15 @@ class EmailWelcomeClusterCommand extends Command
 			{
 				$queue = $userqueue->queue;
 
+				if (!$queue->resource)
+				{
+					if ($debug || $this->output->isVerbose())
+					{
+						$this->error("Resource (#{$queue->subresourceid}) not found for queue (#{$queue->id}).");
+					}
+					continue;
+				}
+
 				if (!isset($activity[$queue->resource->id]))
 				{
 					$activity[$queue->resource->id] = new \stdClass;

@@ -6,6 +6,7 @@ use Illuminate\Events\Dispatcher;
 use App\Modules\Users\Events\UserDeleted;
 use App\Modules\Queues\Models\User;
 use App\Modules\Queues\Models\GroupUser;
+use App\Modules\Queues\Models\Queue;
 use App\Modules\Groups\Events\MemberDeleted;
 
 /**
@@ -55,12 +56,38 @@ class RemoveMembershipsForDeletedUser
 	 */
 	public function handleMemberDeleted(MemberDeleted $event): void
 	{
+		if (!$event->member->group)
+		{
+			return;
+		}
+
+		$queues = Queue::query()
+			->where('groupid', '=', $event->member->groupid)
+			->pluck('id')
+			->toArray();
+
+		if (count($queues) > 0)
+		{
+			return;
+		}
+
+		$queueusers = User::query()
+			->where('userid', '=', $event->member->userid)
+			->whereIn('queueid', $queues)
+			->get()
+			->pluck('id')
+			->toArray();
+	
 		User::query()
 			->where('userid', '=', $event->member->userid)
+			->whereIn('queueid', $queues)
 			->delete();
 
-		GroupUser::query()
-			->where('userid', '=', $event->member->userid)
-			->delete();
+		if (count($queueusers) > 0)
+		{
+			GroupUser::query()
+				->whereIn('queueuserid', $queueusers)
+				->delete();
+		}
 	}
 }

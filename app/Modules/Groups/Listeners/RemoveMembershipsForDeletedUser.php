@@ -50,8 +50,20 @@ class RemoveMembershipsForDeletedUser
 	 */
 	public function handleMemberDeleted(MemberDeleted $event): void
 	{
+		if (!$event->member->group)
+		{
+			return;
+		}
+
+		$unixgroups = $event->member
+			->group
+			->unixGroups
+			->pluck('id')
+			->toArray();
+
 		UnixGroupMember::query()
-			->whereIn('userid', $event->member->userid)
+			->where('userid', '=', $event->member->userid)
+			->whereIn('unixgroupid', $unixgroups)
 			->delete();
 	}
 }
