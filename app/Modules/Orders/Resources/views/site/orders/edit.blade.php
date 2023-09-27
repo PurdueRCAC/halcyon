@@ -1564,11 +1564,11 @@ $user = null;
 								$multiples = array();
 
 								foreach ($sorted as $action):
-									if (!isset($multiples[$action->action . $action->created_at->timestamp])):
-										$multiples[$action->action . $action->created_at->timestamp] = array();
+									if (!isset($multiples[$action->action . $action->historable_type . $action->created_at->timestamp])):
+										$multiples[$action->action . $action->historable_type . $action->created_at->timestamp] = array();
 									endif;
 
-									$multiples[$action->action . $action->created_at->timestamp][] = $action;
+									$multiples[$action->action . $action->historable_type . $action->created_at->timestamp][] = $action;
 								endforeach;
 
 								foreach ($multiples as $key => $actions):
@@ -1593,7 +1593,7 @@ $user = null;
 												@if ($action->created_at)
 													<time datetime="{{ $action->created_at->toDateTimeLocalString() }}" class="entry-log-date">
 														@if ($action->created_at < $old)
-															{{ $action->created_at->format('d M Y') }}
+															{{ $action->created_at->format('d M Y - h:i a') }}
 														@else
 															{{ $action->created_at->diffForHumans() }}
 														@endif
