@@ -368,21 +368,22 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('orders::orders.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-6">
+				<th scope="col">
 					{!! Html::grid('sort', trans('orders::orders.created'), 'datetimecreated', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">{{ trans('orders::orders.status') }}</th>
-				<th scope="col" class="priority-5">
+				<th scope="col">
 					{!! Html::grid('sort', trans('orders::orders.submitter'), 'userid', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-2 numeric">
+				<th scope="col" class="text-right">
 					{!! Html::grid('sort', trans('orders::orders.total'), 'ordertotal', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-2 numeric">
+				<th scope="col">
+					<span class="sr-only">Items</span>
 				</th>
 			</tr>
 		</thead>
-		<tbody id="queues">
+		<tbody id="orders">
 		@foreach ($rows as $i => $row)
 			<tr>
 				@if (auth()->user()->can('delete orders'))
@@ -399,7 +400,7 @@ app('pathway')
 						{{ $row->id }}
 					@endif
 				</td>
-				<td class="priority-6">
+				<td>
 					@if (auth()->user()->can('edit orders'))
 						<a href="{{ route('admin.orders.edit', ['id' => $row->id]) }}">
 					@endif
@@ -423,7 +424,7 @@ app('pathway')
 						{{ trans('orders::orders.' . $row->status) }}
 					</span>
 				</td>
-				<td class="priority-5">
+				<td>
 					@if ($row->groupid)
 						@if (auth()->user()->can('manage groups'))
 							<a href="{{ route('admin.groups.edit', ['id' => $row->groupid]) }}">
@@ -442,22 +443,22 @@ app('pathway')
 						@endif
 					@endif
 				</td>
-				<td class="priority-2 numeric text-nowrap">
+				<td class="text-right text-nowrap">
 					{{ config('orders.currency', '$') }} {{ $row->formatNumber($row->ordertotal) }}
 				</td>
-				<td class="priority-2 numeric">
-					<a class="items-toggle" data-toggle="collapse" data-parent="#queues" href="#row{{ $row->id }}" title="Items in this order">
-						<span class="icon-list" aria-hidden="true"></span><span class="sr-only">Items</span>
+				<td>
+					<a class="items-toggle" data-toggle="collapse" data-parent="#orders" href="#row{{ $row->id }}" title="Items in this order">
+						<span class="fa fa-shopping-cart" aria-hidden="true"></span><span class="sr-only">Items</span>
 					</a>
 				</td>
 			</tr>
 			<tr class="details-row collapse" id="row{{ $row->id }}">
-				<td colspan="<?php echo (auth()->user()->can('delete orders') ? 8 : 7); ?>">
+				<td colspan="<?php echo (auth()->user()->can('delete orders') ? 7 : 6); ?>">
 					<table class="table">
 						<caption class="sr-only">{{ trans('orders::orders.items') }}</caption>
 						<thead>
 							<tr>
-								<th scope="col">{{ trans('orders::orders.status') }}</th>
+								<?php /*<th scope="col">{{ trans('orders::orders.status') }}</th>*/ ?>
 								<th scope="col">{{ trans('orders::orders.item') }}</th>
 								<th scope="col" class="text-right">{{ trans('orders::orders.quantity') }}</th>
 								<th scope="col" class="text-right">{{ trans('orders::orders.price') }}</th>
@@ -467,7 +468,7 @@ app('pathway')
 						<tbody>
 							@foreach ($row->items as $item)
 								<tr>
-									@if (!$item->isFulfilled())
+									<?php /*@if (!$item->isFulfilled())
 										@if ($row->status != 'canceled' && $row->status == 'pending_fulfillment')
 											<td>
 												<div class="badge order-status {{ str_replace(' ', '-', $row->status) }}" id="status_{{ $item->id }}">{{ trans('orders::orders.pending_fulfillment') }}</div>
@@ -488,7 +489,7 @@ app('pathway')
 											<div class="badge order-status fulfilled">{{ trans('orders::orders.fulfilled') }}</div>
 											<time datetime="{{ Carbon\Carbon::parse($item->fulfilled)->toDateTimeLocalString() }}">{{ Carbon\Carbon::parse($item->fulfilled)->format('M j, Y') }}</time>
 										</td>
-									@endif
+									@endif*/ ?>
 									<td>
 										<strong>{{ $item->product->name }}</strong>
 										<p class="form-text text-muted">

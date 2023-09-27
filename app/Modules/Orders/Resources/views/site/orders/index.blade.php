@@ -202,24 +202,27 @@ app('pathway')
 			<caption class="sr-only">{{ trans('orders::orders.orders placed') }}</caption>
 			<thead>
 				<tr>
-					<th scope="col" class="priority-5">
+					<th scope="col">
 						<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('orders::orders.id'), 'id', $filters['order_dir'], $filters['order']); ?>
 					</th>
-					<th scope="col" class="priority-4">
+					<th scope="col">
 						<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('orders::orders.created'), 'datetimecreated', $filters['order_dir'], $filters['order']); ?>
 					</th>
 					<th scope="col">
 						<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('orders::orders.status'), 'state', $filters['order_dir'], $filters['order']); ?>
 					</th>
-					<th scope="col" class="priority-4">
+					<th scope="col">
 						<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('orders::orders.submitter'), 'userid', $filters['order_dir'], $filters['order']); ?>
 					</th>
-					<th scope="col" class="priority-2 text-right text-nowrap">
+					<th scope="col" class="text-right text-nowrap">
 						{{ trans('orders::orders.total') }}
+					</th>
+					<th scope="col">
+						<span class="sr-only">Items</span>
 					</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody id="orders">
 			@foreach ($rows as $i => $row)
 				<tr>
 					<td class="priority-5">
@@ -248,7 +251,7 @@ app('pathway')
 					<td class="priority-4">
 						@if ($row->groupid)
 							@if (auth()->user()->can('manage groups'))
-								<a href="{{ route('admin.groups.edit', ['id' => $row->groupid]) }}">
+								<a href="{{ route('admin.groups.show', ['id' => $row->groupid]) }}">
 									<?php echo $row->group ? $row->group->name : ' <span class="unknown">' . trans('global.unknown') . '</span> (group ID: ' . $row->groupid . ')'; ?>
 								</a>
 							@else
@@ -272,8 +275,75 @@ app('pathway')
 							@endif
 						@endif
 					</td>
-					<td class="priority-2 text-right text-nowrap">
+					<td class="text-right text-nowrap">
 						{{ config('orders.currency', '$') }} {{ $row->formatNumber($row->ordertotal) }}
+					</td>
+					<td>
+						<a class="items-toggle tip" data-toggle="collapse" data-parent="#orders" href="#row{{ $row->id }}" title="Items in this order">
+							<span class="fa fa-shopping-cart" aria-hidden="true"></span><span class="sr-only">Items</span>
+						</a>
+					</td>
+				</tr>
+				<tr class="details-row collapse" id="row{{ $row->id }}">
+					<td colspan="6">
+						<table class="table">
+							<caption class="sr-only">{{ trans('orders::orders.items') }}</caption>
+							<thead>
+								<tr>
+									<th scope="col">{{ trans('orders::orders.item') }}</th>
+									<th scope="col" class="text-right">{{ trans('orders::orders.quantity') }}</th>
+									<th scope="col" class="text-right">{{ trans('orders::orders.price') }}</th>
+									<th scope="col" class="text-right">{{ trans('orders::orders.total') }}</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach ($row->items as $item)
+									<tr>
+										<td>
+											<strong>{{ $item->product->name }}</strong>
+											<p class="form-text text-muted">
+												@if ($item->origorderitemid)
+													@if ($item->start() && $item->end())
+														@if ($item->id == $item->origorderitemid)
+															{{ trans('orders::orders.new service', ['start' => $item->start()->format('M j, Y'), 'end' => $item->end()->format('M j, Y')]) }}
+														@else
+															{{ trans('orders::orders.service renewal', ['start' => $item->start()->format('M j, Y'), 'end' => $item->end()->format('M j, Y')]) }}
+														@endif
+													@else
+														{{ 'Service for ' . $item->timeperiodcount . ' ' }}
+														@if ($item->timeperiodcount > 1)
+															{{ $item->product->timeperiod->plural }}
+															{{ trans('orders::orders.service for', ['count' => $item->timeperiodcount, 'timeperiod' => $item->product->timeperiod->plural]) }}
+														@else
+															{{ trans('orders::orders.service for', ['count' => $item->timeperiodcount, 'timeperiod' => $item->product->timeperiod->singular]) }}
+														@endif
+													@endif
+												@endif
+											</p>
+										</td>
+										<td class="text-right">
+											<span class="item-edit-hide quantity_span">{{ $item->quantity }}</span>
+											@if ($item->product->timeperiod && $item->origorderitemid)
+												for<br/>
+												<span class="item-edit-hide periods_span">{{ $item->timeperiodcount }}</span>
+												@if ($item->timeperiodcount > 1)
+													{{ $item->product->timeperiod->plural }}
+												@else
+													{{ $item->product->timeperiod->singular }}
+												@endif
+											@endif
+										</td>
+										<td class="text-right">
+											{{ config('orders.currency', '$') }} <span name="price">{{ $item->formattedPrice }}</span><br/>
+											<span class="text-nowrap">per {{ $item->product->unit }}</span>
+										</td>
+										<td class="text-right text-nowrap">
+											<span class="item-edit-hide">{{ config('orders.currency', '$') }} <span name="itemtotal">{{ $item->formattedTotal }}</span></span>
+										</td>
+									</tr>
+								@endforeach
+							</tbody>
+						</table>
 					</td>
 				</tr>
 			@endforeach
