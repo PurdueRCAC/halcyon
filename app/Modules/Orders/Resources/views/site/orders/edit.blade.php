@@ -1542,243 +1542,65 @@ $user = null;
 						</div>
 						<ul class="list-group list-group-flush">
 							<?php
+							\App\Modules\History\Models\History::pushProcessor(new \App\Modules\Orders\HistoryProcessors\Orders);
+							\App\Modules\History\Models\History::pushProcessor(new \App\Modules\Orders\HistoryProcessors\Items);
+							\App\Modules\History\Models\History::pushProcessor(new \App\Modules\Orders\HistoryProcessors\Accounts);
+							\App\Modules\History\Models\History::pushProcessor(new \App\Modules\Orders\HistoryProcessors\Commands);
+
 							$emailed = \App\Modules\History\Models\Log::query()
 								->where('app', '=', 'email')
 								->where('classname', '=', 'orders:emailstatus')
 								->where('targetobjectid', '=', $order->id)
 								->get();
 
-							foreach ($emailed as $email)
-							{
+							foreach ($emailed as $email):
 								$history->push($email->toHistory());
-							}
+							endforeach;
 
 							if (count($history)):
 								$sorted = $history->sortByDesc('created_at');
 
+								$old = Carbon\Carbon::now()->subDays(2);
+								$multiples = array();
+
 								foreach ($sorted as $action):
-									$actor = trans('global.unknown');
-
-									if (!$action->user_id):
-										$actor = '[system]';
-										if ($action->historable_type != 'orders:emailstatus'):
-											continue;
-										endif;
+									if (!isset($multiples[$action->action . $action->created_at->timestamp])):
+										$multiples[$action->action . $action->created_at->timestamp] = array();
 									endif;
 
-									if ($action->user):
-										$actor = e($action->user->name);
+									$multiples[$action->action . $action->created_at->timestamp][] = $action;
+								endforeach;
+
+								foreach ($multiples as $key => $actions):
+									$action = array_pop($actions);
+
+									if (count($actions) > 0):
+										$action->multiples = $actions;
 									endif;
 
-									if ($action->action == 'created'):
-										$dt = $action->created_at;
-									elseif ($action->action == 'updated'):
-										$dt = $action->updated_at;
-									elseif ($action->action == 'deleted'):
-										$dt = $action->updated_at;
+									$action = $action->process($action, $order);
+
+									if ($action->skip):
+										continue;
 									endif;
-
-									$fields = is_object($action->new) ? array_keys(get_object_vars($action->new)) : array_keys($action->new);
-									foreach ($fields as $i => $k):
-										if (in_array($k, ['created_at', 'updated_at', 'deleted_at'])):
-											unset($fields[$i]);
-										endif;
-									endforeach;
-									$old = Carbon\Carbon::now()->subDays(2); //->toDateTimeString();
-
-									$type = $action->historable_type;
-									$type = explode('\\', $type);
-									$type = end($type);
-
-									$entity = strtolower($type);
-
-									$did = '';
-									if ($entity == 'account')
-									{
-										if ($action->action == 'created')
-										{
-											$acct = '#' . $action->historable_id;
-											foreach ($order->accounts as $account)
-											{
-												if ($account->id == $action->historable_id)
-												{
-													$acct = $account->purchaseio ? $account->purchaseio : $account->purchasewbse;
-												}
-											}
-											$did = '<span class="text-info">added</span> payment account ' . $acct;
-										}
-										if ($action->action == 'updated')
-										{
-											$did = '<span class="text-info">edited</span> ';
-											$changes = array();
-											$acct = '#' . $action->historable_id;
-											foreach ($order->accounts as $account)
-											{
-												if ($account->id == $action->historable_id)
-												{
-													$acct = $account->purchaseio ? $account->purchaseio : $account->purchasewbse;
-													if (in_array('amount', $fields))
-													{
-														$changes[] = 'amount';
-													}
-													if (in_array('budgetjustification', $fields))
-													{
-														$changes[] = 'budget justification';
-													}
-													if (in_array('approveruserid', $fields))
-													{
-														$changes[] = 'approver';
-													}
-												}
-											}
-											$did .= implode(', ', $changes) . ' on payment account ' . $acct;
-
-											if (in_array('datetimeapproved', $fields))
-											{
-												$acct = '#' . $action->historable_id;
-												foreach ($order->accounts as $account)
-												{
-													if ($account->id == $action->historable_id)
-													{
-														$acct = $account->purchaseio ? $account->purchaseio : $account->purchasewbse;
-													}
-												}
-												$did = '<span class="text-success">approved</span> account ' . $acct;
-											}
-											if (in_array('approveruserid', $fields))
-											{
-												$acct = '#' . $action->historable_id;
-												foreach ($order->accounts as $account)
-												{
-													if ($account->id == $action->historable_id)
-													{
-														$acct = $account->purchaseio ? $account->purchaseio : $account->purchasewbse;
-														$acct .= ' to ' . ($account->approver ? $account->approver->name : trans('global.none'));
-													}
-												}
-												$did = '<span class="text-info">set</span> approver for account ' . $acct;
-											}
-											if (in_array('datetimedenied', $fields))
-											{
-												$did = '<span class="text-danger">denied</span> account #' . $action->historable_id;
-											}
-											if (in_array('notice', $fields) && count($fields) == 1)
-											{
-												$acct = '#' . $action->historable_id;
-												foreach ($order->accounts as $account)
-												{
-													if ($account->id == $action->historable_id)
-													{
-														$acct = $account->purchaseio ? $account->purchaseio : $account->purchasewbse;
-													}
-												}
-												$did = '<span class="text-info">set</span> reminder on account ' . $acct;
-											}
-										}
-										if ($action->action == 'deleted')
-										{
-											$did = '<span class="text-danger">removed</span> a payment account';
-										}
-									}
-									if ($entity == 'item')
-									{
-										if ($action->action == 'created')
-										{
-											$did = '<span class="text-info">added</span> an item to the order';
-										}
-										if ($action->action == 'updated')
-										{
-											$did = '<span class="text-info">edited</span> an item';
-											$did .= ', changed: ' . implode(', ', $fields);
-
-											if (in_array('datetimefulfilled', $fields))
-											{
-												$acct = 'item #' . $action->historable_id;
-												foreach ($order->items as $item)
-												{
-													if ($item->id == $action->historable_id)
-													{
-														$acct = '"' . $item->product->name . '"';
-													}
-												}
-												$did = '<span class="text-success">fulfilled</span> item ' . $acct;
-											}
-										}
-										if ($action->action == 'deleted')
-										{
-											$did = '<span class="text-danger">removed</span> an item';
-										}
-									}
-									if ($entity == 'order')
-									{
-										if ($action->action == 'created')
-										{
-											$did = '<span class="text-success">placed</span> this order';
-										}
-										if ($action->action == 'updated')
-										{
-											$did = '<span class="text-info">edited</span> this order';
-
-											if (in_array('userid', $fields))
-											{
-												$did = '<span class="text-info">set</span> the user to ' . ($order->user ? $order->user->name : trans('global.none'));
-											}
-											if (in_array('groupid', $fields))
-											{
-												$did = '<span class="text-info">set</span> the group to ' . ($order->groupid && $order->group ? $order->group->name : trans('global.none'));
-											}
-											if (in_array('usernotes', $fields))
-											{
-												$did = '<span class="text-info">edited</span> user notes';
-											}
-											if (in_array('staffnotes', $fields))
-											{
-												$did = '<span class="text-info">edited</span> staff notes';
-											}
-											// Only updated notice state
-											if (isset($action->new->notice) && count($fields) == 1)
-											{
-												continue;
-											}
-										}
-										if ($action->action == 'deleted')
-										{
-											$did = '<span class="text-danger">canceled</span> this order';
-										}
-										if (!$action->user_id && isset($action->new->notice))
-										{
-											$did = '<span class="text-info">emailed</span> order status';
-										}
-									}
-									if ($entity == 'orders:emailstatus')
-									{
-										//if (!$action->user_id && isset($action->new->notice))
-										//{
-											if (isset($action->new->targetuserid) && $action->new->targetuserid)
-											{
-												$person = \App\Modules\Users\Models\User::find($action->new->targetuserid);
-											}
-											elseif (isset($action->new->uri))
-											{
-												$person = \App\Modules\Users\Models\User::findByEmail($action->new->uri);
-											}
-											$did = '<span class="text-info">emailed</span> order status to ' . ($person ? $person->name : $action->new->uri);
-										//}
-									}
 									?>
 									<li class="list-group-item" id="action_{{ $action->id }}">
 										<div class="row">
 											<div class="col-md-8">
-											{!! $actor . ' ' . $did !!}
+												{!! $action->summary !!}
 											</div>
 											<div class="col-md-4 text-right">
-												<time datetime="{{ $dt->toDateTimeLocalString() }}" class="entry-log-date">
-													@if ($dt < $old)
-														{{ $dt ? $dt->format('d M Y') : trans('global.unknown') }}
-													@else
-														{{ $dt->diffForHumans() }}
-													@endif
-												</time>
+												@if ($action->created_at)
+													<time datetime="{{ $action->created_at->toDateTimeLocalString() }}" class="entry-log-date">
+														@if ($action->created_at < $old)
+															{{ $action->created_at->format('d M Y') }}
+														@else
+															{{ $action->created_at->diffForHumans() }}
+														@endif
+													</time>
+												@else
+													{{ trans('global.unknown') }}
+												@endif
 											</div>
 										</div>
 									</li>
