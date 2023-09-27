@@ -715,6 +715,7 @@ h4 {
 .icon-calendar:before {
   content: "\e83a";
 }
+.fa-bookmark:before,
 .icon-bookmark:before {
   content: "\e83b";
 }
@@ -722,6 +723,7 @@ h4 {
 .icon-box:before {
   content: "\e83c";
 }
+.fa-camera:before,
 .icon-camera:before {
   content: "\e83d";
 }
@@ -759,15 +761,19 @@ h4 {
 .icon-chevron-up:before {
   content: "\e845";
 }
+.fa-chevron-down:before,
 .icon-chevrons-down:before {
   content: "\e846";
 }
+.fa-chevron-right:before,
 .icon-chevrons-right:before {
   content: "\e847";
 }
+.fa-chevron-up:before,
 .icon-chevrons-up:before {
   content: "\e848";
 }
+.fa-chevron-left:before,
 .icon-chevrons-left:before {
   content: "\e849";
 }
@@ -803,6 +809,7 @@ h4 {
 .icon-cloud-snow:before {
   content: "\e853";
 }
+.fa-compass:before,
 .icon-compass:before {
   content: "\e854";
 }
@@ -840,6 +847,7 @@ h4 {
 .icon-credit-card:before {
   content: "\e85f";
 }
+.fa-crosshairs:before,
 .icon-crosshair:before {
   content: "\e860";
 }
@@ -898,6 +906,7 @@ h4 {
 .icon-file-text:before {
   content: "\e870";
 }
+.fa-film:before,
 .icon-film:before {
   content: "\e871";
 }
@@ -917,9 +926,11 @@ h4 {
 .icon-filter:before {
   content: "\e875";
 }
+.fa-flag:before,
 .icon-flag:before {
   content: "\e876";
 }
+.fa-globe:before,
 .icon-globe:before {
   content: "\e877";
 }
@@ -928,9 +939,11 @@ h4 {
 .icon-grid:before {
   content: "\e878";
 }
+.fa-heart:before,
 .icon-heart:before {
   content: "\e879";
 }
+.fa-home:before,
 .icon-home:before {
   content: "\e87a";
 }
@@ -942,6 +955,7 @@ h4 {
 .icon-image:before {
   content: "\e87c";
 }
+.fa-inbox:before,
 .icon-inbox:before {
   content: "\e87d";
 }
@@ -968,6 +982,7 @@ h4 {
 .icon-link:before {
   content: "\e884";
 }
+.fa-sign-in:before,
 .icon-log-in:before {
   content: "\e885";
 }
@@ -982,9 +997,11 @@ h4 {
 .icon-lock:before {
   content: "\e887";
 }
+.fa-sign-out:before,
 .icon-log-out:before {
   content: "\e888";
 }
+.fa-spinner:before,
 .icon-loader:before {
   content: "\e889";
 }
@@ -995,9 +1012,11 @@ h4 {
 .icon-maximize-2:before {
   content: "\e88b";
 }
+.fa-map:before,
 .icon-map:before {
   content: "\e88c";
 }
+.fa-map-pin:before,
 .icon-map-pin:before {
   content: "\e88e";
 }
