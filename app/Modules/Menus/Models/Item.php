@@ -309,7 +309,7 @@ class Item extends Model
 	 * @param   int  $level     The level to assign to the current nodes.
 	 * @param   string   $path      The path to the current nodes.
 	 * @param   string   $orderby
-	 * @return  int  1 + value of root rgt on success, false on failure
+	 * @return  int|false  1 + value of root rgt on success, false on failure
 	 */
 	public function rebuild(int $parentId, int $leftId = 0, int $level = 0, string $path = '', string $orderby = 'lft')
 	{
@@ -402,8 +402,6 @@ class Item extends Model
 		}
 
 		// Initialise variables.
-		$k = $this->pk;
-
 		$data = new \stdClass;
 
 		// Run the calculations and build the data object by reference position.
@@ -415,7 +413,7 @@ class Item extends Model
 
 				$data->new_lft = $referenceNode->lft + 1;
 				$data->new_rgt = $referenceNode->lft + $nodeWidth;
-				$data->new_parent_id = $referenceNode->$k;
+				$data->new_parent_id = $referenceNode->id;
 				$data->new_level = $referenceNode->level + 1;
 			break;
 
@@ -425,7 +423,7 @@ class Item extends Model
 
 				$data->new_lft = $referenceNode->rgt;
 				$data->new_rgt = $referenceNode->rgt + $nodeWidth - 1;
-				$data->new_parent_id = $referenceNode->$k;
+				$data->new_parent_id = $referenceNode->id;
 				$data->new_level = $referenceNode->level + 1;
 			break;
 
@@ -525,12 +523,12 @@ class Item extends Model
 
 			// Parse the link arguments.
 			$args = array();
-			parse_str(parse_url(htmlspecialchars_decode($link), PHP_URL_QUERY), $args);
+			parse_str(parse_url(htmlspecialchars_decode($link), PHP_URL_QUERY), $args);*/
 
 			// Confirm that the option is defined.
 			$option = '';
 			$base = '';
-			if (isset($args['option']))
+			/*if (isset($args['option']))
 			{
 				// The option determines the base path to work with.
 				$option = $args['option'];
@@ -546,7 +544,7 @@ class Item extends Model
 
 			// Confirm a view is defined.
 			$formFile = false;
-			if (isset($args['view']))
+			/*if (isset($args['view']))
 			{
 				$view = $args['view'];
 
@@ -569,7 +567,7 @@ class Item extends Model
 				{
 					$formFile = $path;
 				}
-			}
+			}*/
 		}
 
 		if ($formFile)
@@ -917,8 +915,8 @@ class Item extends Model
 	/**
 	 * Saves the manually set order of records.
 	 *
-	 * @param   array  $pks    An array of primary key ids.
-	 * @param   array  $order  An array of order values.
+	 * @param   array<int,int>  $pks    An array of primary key ids.
+	 * @param   array<int,int>  $order  An array of order values.
 	 * @return  bool
 	 */
 	public static function saveorder(array $pks = [], array $order = []): bool

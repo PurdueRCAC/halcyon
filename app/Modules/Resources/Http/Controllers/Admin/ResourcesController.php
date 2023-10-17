@@ -168,7 +168,6 @@ class ResourcesController extends Controller
 	 * Recursive function to build tree
 	 *
 	 * @param   int  $id        Parent ID
-	 * @param   string   $indent    Indent text
 	 * @param   array<int,Asset>    $list      List of records
 	 * @param   array<int,array{int,Asset}>    $children  Container for parent/children mapping
 	 * @param   int  $maxlevel  Maximum levels to descend
@@ -176,7 +175,7 @@ class ResourcesController extends Controller
 	 * @param   int  $type      Indention type
 	 * @return  array<int,Asset>
 	 */
-	protected function treeRecurse(int $id, string $indent, array $list, array $children, int $maxlevel=9999, int $level=0, int $type=1): array
+	protected function treeRecurse(int $id, array $list, array $children, int $maxlevel=9999, int $level=0, int $type=1): array
 	{
 		if (@$children[$id] && $level <= $maxlevel)
 		{
@@ -184,15 +183,11 @@ class ResourcesController extends Controller
 			{
 				$id = $v->id;
 
-				$spacer = '&nbsp;&nbsp;';
-
-				$pt = $v->parentid;
-
 				$list[$id] = $v;
-				$list[$id]->treename = str_repeat('<span class="gi">|&mdash;</span>', $level);
+				$list[$id]->level = $level;
 				$list[$id]->children = isset($children[$id]) ? count($children[$id]) : 0;
 
-				$list = $this->treeRecurse($id, $indent . $spacer, $list, $children, $maxlevel, $level+1, $type);
+				$list = $this->treeRecurse($id, $list, $children, $maxlevel, $level+1, $type);
 			}
 		}
 		return $list;

@@ -30,7 +30,7 @@ class MenuOrdering extends Select
 		$options = array();
 
 		// Get the parent
-		$parent_id = $this->form->getValue('parent_id', 0);
+		$parent_id = $this->form->getValue('parent_id', null, 0);
 
 		if (empty($parent_id))
 		{

@@ -256,15 +256,15 @@ class Type extends Model
 	 */
 	public static function getWidgets()
 	{
-		$widgets = Widget::mainMenus();
+		$widgets = Widget::query()
+			->where('widget', '=', 'menu')
+			->get();
 
 		$result = array();
 
 		foreach ($widgets as $widget)
 		{
-			$params = new \Illuminate\Config\Repository(json_decode($widget->params, true));
-
-			$menuType = $params->get('menutype');
+			$menuType = $widget->params->get('menutype');
 			if (!isset($result[$menuType]))
 			{
 				$result[$menuType] = array();

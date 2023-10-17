@@ -5,6 +5,7 @@ namespace App\Modules\Queues\Mail;
 use App\Modules\Queues\Mail\Traits\HeadersAndTags;
 use App\Modules\Users\Models\User;
 use App\Modules\Queues\Models\UserRequest;
+use App\Modules\Queues\Models\User as QueueUser;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -31,7 +32,7 @@ class FreeRequested extends Mailable
 	 * Create a new message instance.
 	 *
 	 * @param User $user
-	 * @param array<int,array> $userrequests
+	 * @param array<int,array<int,QueueUser>> $userrequests
 	 * @return void
 	 */
 	public function __construct(User $user, $userrequests)

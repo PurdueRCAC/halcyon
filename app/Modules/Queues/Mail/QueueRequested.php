@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\Modules\Queues\Models\UserRequest;
 use App\Modules\Queues\Models\Queue;
+use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Users\Models\User;
 
 class QueueRequested extends Mailable
@@ -32,7 +33,7 @@ class QueueRequested extends Mailable
 	 * Create a new message instance.
 	 *
 	 * @param User $user
-	 * @param array<int,array>
+	 * @param array<int,array<int,QueueUser>> $userrequests
 	 * @return void
 	 */
 	public function __construct(User $user, $userrequests)

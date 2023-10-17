@@ -191,7 +191,7 @@ app('pathway')
 					{{ $row->id }}
 				</td>
 				<td>
-					{!! $row->treename !!}
+					{!! str_repeat('<span class="gi">|&mdash;</span>', $row->level) !!}
 					@if (!$disabled && auth()->user()->can('edit resources'))
 						<a href="{{ route('admin.resources.edit', ['id' => $row->id]) }}">
 					@endif

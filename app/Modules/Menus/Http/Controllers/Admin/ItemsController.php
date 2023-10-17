@@ -471,7 +471,7 @@ class ItemsController extends Controller
 	 *
 	 * @param   Request $request
 	 * @param   int  $id
-	 * @return  View
+	 * @return  View|RedirectResponse
 	 */
 	public function edit(Request $request, $id)
 	{
