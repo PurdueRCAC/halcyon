@@ -16,7 +16,7 @@ class IncreaseBodyLength extends Migration
 		{
 			Schema::table('news', function (Blueprint $table)
 			{
-				$table->string('body', 20000)->change();
+				$table->text('body')->change();
 			});
 		}
 
@@ -24,7 +24,7 @@ class IncreaseBodyLength extends Migration
 		{
 			Schema::table('newsstemmedtext', function (Blueprint $table)
 			{
-				$table->string('stemmedtext', 20000)->change();
+				$table->text('stemmedtext')->change();
 			});
 		}
 	}
