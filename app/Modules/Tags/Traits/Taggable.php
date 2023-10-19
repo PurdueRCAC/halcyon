@@ -123,7 +123,7 @@ trait Taggable
 	{
 		$instance = new static;
 
-		return $instance->createTagsModel()->whereDomain($instance->getEntityClassName());
+		return $instance::createTagsModel()->whereDomain($instance->getEntityClassName());
 	}
 
 	/**
