@@ -380,7 +380,7 @@ class Item extends Model
 	 * for SQL WHERE clauses for updating left and right id values to make room for
 	 * the node as well as the new left and right ids for the node.
 	 *
-	 * @param   object   $referenceNode  A node object with at least a 'lft' and 'rgt' with
+	 * @param   Item   $referenceNode  A node object with at least a 'lft' and 'rgt' with
 	 *                                   which to make room in the tree around for a new node.
 	 * @param   int  $nodeWidth      The width of the node for which to make room in the tree.
 	 * @param   string   $position       The position relative to the reference node where the room
@@ -513,6 +513,7 @@ class Item extends Model
 		// Initialise variables.
 		$link = $this->link;
 		$type = $this->type;
+		$path = '';
 
 		$formFile = false;
 
@@ -526,24 +527,24 @@ class Item extends Model
 			parse_str(parse_url(htmlspecialchars_decode($link), PHP_URL_QUERY), $args);*/
 
 			// Confirm that the option is defined.
-			$option = '';
+			/*$option = '';
 			$base = '';
-			/*if (isset($args['option']))
+			if (isset($args['option']))
 			{
 				// The option determines the base path to work with.
 				$option = $args['option'];
 				$base   = $option . '/Resources/views/site';
-			}*/
+			}
 			$module = Extension::find($this->module_id);
 
 			if ($module)
 			{
 				$option = $module->element;
 				$base   = module_path($option) . '/Resources/views/site';
-			}
+			}*/
 
 			// Confirm a view is defined.
-			$formFile = false;
+			$path = module_path($option) . '/Config/config.xml';
 			/*if (isset($args['view']))
 			{
 				$view = $args['view'];
@@ -596,7 +597,9 @@ class Item extends Model
 			if (file_exists($xmlFile))
 			{
 				// Attempt to load the xml file.
-				if (!$xmlFile || ($xmlFile && !$xml = simplexml_load_file($xmlFile)))
+				$xml = simplexml_load_file($xmlFile);
+
+				if (!$xml)
 				{
 					throw new Exception(trans('menus::menus.error.load file failed'));
 				}
@@ -619,18 +622,16 @@ class Item extends Model
 
 		// Now load the module params.
 		// TODO: Work out why 'fixing' this breaks Form
+		/*$path = '';
+
 		if ($isNew = false)
 		{
 			$path = module_path($option) . '/Config/config.xml';
-		}
-		else
-		{
-			$path = 'null';
-		}
+		}*/
 
 		if (file_exists($path))
 		{
-			// Add the component params last of all to the existing form.
+			// Add the module params last of all to the existing form.
 			if (!$form->load($path, true, '/config'))
 			{
 				throw new Exception(trans('menus::menus.error.load file failed'));
@@ -765,7 +766,9 @@ class Item extends Model
 			$position = 'before';
 		}
 
-		$referenceId = $query->get()->first()->id;
+		$first = $query->first();
+
+		$referenceId = $first ? $first->id : 0;
 
 		if ($referenceId)
 		{

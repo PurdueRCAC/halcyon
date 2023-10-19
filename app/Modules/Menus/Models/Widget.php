@@ -5,6 +5,7 @@ namespace App\Modules\Menus\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
+use Illuminate\Config\Repository;
 use App\Halcyon\Models\Casts\Params;
 
 /**
@@ -24,7 +25,7 @@ use App\Halcyon\Models\Casts\Params;
  * @property string $widget
  * @property int    $access
  * @property int    $showtitle
- * @property string $params
+ * @property Repository $params
  * @property int    $client_id
  * @property string $language
  */
