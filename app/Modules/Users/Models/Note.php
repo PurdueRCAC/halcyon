@@ -77,12 +77,12 @@ class Note extends Model
 		// Parse out hashtags and tag the record
 		static::created(function ($model)
 		{
-			$model->hashtags;
+			$tags = $model->hashtags;
 		});
 
 		static::updated(function ($model)
 		{
-			$model->hashtags;
+			$tags = $model->hashtags;
 		});
 	}
 

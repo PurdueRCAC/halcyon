@@ -51,7 +51,7 @@ use Carbon\Carbon;
  *
  * @property string $api
  * @property string $metadesc
- * @property array<string,mixed> $vars
+ * @property array<string,mixed>|null $vars
  */
 class Article extends Model
 {
@@ -663,7 +663,7 @@ class Article extends Model
 	 * Set a query's WHERE clause to include published state
 	 *
 	 * @param   object  $query
-	 * @param   array   $ids
+	 * @param   array<int,int>   $ids
 	 * @return  object
 	 */
 	public function scopeWhereResourceIn($query, $ids)
@@ -1203,7 +1203,7 @@ class Article extends Model
 	/**
 	 * Set resources list
 	 *
-	 * @param   array  $resources
+	 * @param   array<int,int>  $resources
 	 * @return  void
 	 */
 	public function setResources(array $resources = []): void
@@ -1212,8 +1212,6 @@ class Article extends Model
 		{
 			return;
 		}
-
-		$resources = (array)$resources;
 
 		// Remove and add resource-news mappings
 		// First calculate diff
@@ -1273,17 +1271,15 @@ class Article extends Model
 	/**
 	 * Set associations list
 	 *
-	 * @param   array  $associations
+	 * @param   array<int,int|array<string,mixed>>  $associations
 	 * @return  void
 	 */
-	public function setAssociations($associations = []): void
+	public function setAssociations(array $associations = []): void
 	{
 		if (empty($associations))
 		{
 			return;
 		}
-
-		$associations = (array)$associations;
 
 		$addassoc = array();
 		$delassoc = array();

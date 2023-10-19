@@ -35,6 +35,7 @@ use Carbon\Carbon;
  * @property string $api
  * @property int    $level
  * @property string $title Temp property used with Metadata events
+ * @property int    $children_count
  */
 class Type extends Model
 {
