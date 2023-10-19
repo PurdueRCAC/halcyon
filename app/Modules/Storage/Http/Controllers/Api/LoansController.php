@@ -252,7 +252,7 @@ class LoansController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return JsonResource|LoanResource
+	 * @return JsonResponse|LoanResource
 	 */
 	public function create(Request $request)
 	{
@@ -448,7 +448,7 @@ class LoansController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  LoanResource|JsonResponse
+	 * @return  JsonResponse|LoanResource
 	 */
 	public function read($id)
 	{
