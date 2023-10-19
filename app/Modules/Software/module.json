@@ -1,0 +1,14 @@
+{
+    "name": "Software",
+    "alias": "Software",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "App\\Modules\\Software\\Providers\\SoftwareServiceProvider",
+        "App\\Modules\\Software\\Providers\\RouteServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
