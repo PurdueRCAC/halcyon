@@ -16,7 +16,7 @@ use App\Modules\Software\Events\VersionDeleted;
  *
  * @property int    $id
  * @property int    $application_id
- * @property string $name
+ * @property string $title
  *
  * @property string $api
  */

@@ -188,14 +188,7 @@ class ApplicationsController extends Controller
 
 		if ($filters['type_id'])
 		{
-			foreach ($types as $type)
-			{
-				if ($type->alias == $filters['type'])
-				{
-					$query->where($a . '.type_id', '=', $type->id);
-					break;
-				}
-			}
+			$query->where($a . '.type_id', '=', $filters['type_id']);
 		}
 
 		if ($filters['resource_id'])
@@ -205,7 +198,7 @@ class ApplicationsController extends Controller
 
 			$query->join($v, $v . '.application_id', $a . '.id')
 				->join($r, $r . '.version_id', $v . '.id')
-				->where($r . '.resource_id', '=', $filters['resource'])
+				->where($r . '.resource_id', '=', $filters['resource_id'])
 				->groupBy($a . '.id');
 		}
 
