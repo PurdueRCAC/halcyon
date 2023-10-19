@@ -21,7 +21,7 @@ use Exception;
  * @property int    $enabled
  * @property int    $access
  * @property int    $protected
- * @property \Illuminate\Support\Fluent $params
+ * @property \Illuminate\Config\Repository $params
  * @property int    $checked_out
  * @property Carbon|null $checked_out_time
  * @property int    $ordering

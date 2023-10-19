@@ -19,7 +19,7 @@ class Nested extends Model
 	/**
 	 * Scopes to limit the realm of the nested set functions
 	 *
-	 * @var  array
+	 * @var  array<int,string>
 	 **/
 	protected $scopes = [];
 
@@ -78,7 +78,7 @@ class Nested extends Model
 	/**
 	 * Sets the default scopes on the model
 	 *
-	 * @param   object|int  $parent  The parent of the child being created
+	 * @param   object  $parent  The parent of the child being created
 	 * @return  self
 	 **/
 	private function establishBaseParametersFromParent($parent): self
@@ -97,8 +97,8 @@ class Nested extends Model
 	/**
 	 * Applies the scopes of the given model to the current
 	 *
-	 * @param   object|int  $parent  The parent from which to inherit
-	 * @param   string      $method  The way in which scopes are applied
+	 * @param   object  $parent  The parent from which to inherit
+	 * @param   string  $method  The way in which scopes are applied
 	 * @return  self
 	 **/
 	private function applyScopes($parent, $method = 'set'): self
@@ -115,7 +115,7 @@ class Nested extends Model
 	/**
 	 * Applies the scopes of the given model to the current pending query
 	 *
-	 * @param   object|int  $parent  The parent from which to inherit
+	 * @param   object  $parent  The parent from which to inherit
 	 * @return  self
 	 **/
 	private function applyScopesWhere($parent): self

@@ -579,7 +579,7 @@ class Directory extends Model
 	/**
 	 * Get future quotas
 	 *
-	 * @return  array<int,array{'time':int,'quota':int}>
+	 * @return  array<int,array{'time':string,'quota':int}>
 	 */
 	public function getFuturequotasAttribute(): array
 	{

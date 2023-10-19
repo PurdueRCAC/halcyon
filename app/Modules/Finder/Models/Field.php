@@ -109,11 +109,12 @@ class Field extends Model
 		static::creating(function ($model)
 		{
 			$result = self::query()
-				->select(DB::raw('MAX(weight) + 1 AS seq'))
-				->first()
-				->seq;
+				->select(DB::raw('MAX(weight)'))
+				->first();
 
-			$model->setAttribute('weight', (int)$result);
+			$weight = $result ? $result->weight + 1 : 1;
+
+			$model->setAttribute('weight', $weight);
 		});
 
 		static::deleted(function ($model)

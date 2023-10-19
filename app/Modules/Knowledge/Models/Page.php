@@ -383,13 +383,15 @@ class Page extends Model
 	{
 		$model = self::query();
 
+		$p = (new self)->getTable();
+
 		// Get the path from the node to the root.
 		$results = $model
 			->select('p.*')
-			->from($model->getTable() . ' AS n')
-			->join($model->getTable() . ' AS p', 'p.level', '>', '0')
+			->from($p . ' AS n')
+			->join($p . ' AS p', 'p.level', '>', '0')
 			->whereRaw('n.lft BETWEEN p.lft AND p.rgt')
-			->where('n.id', '=', (int) $id)
+			->where('n.id', '=', $id)
 			->orderBy('p.lft', 'asc')
 			->get();
 
@@ -405,7 +407,7 @@ class Page extends Model
 	 * Method to get a list of nodes from a given node to its root.
 	 *
 	 * @param   string  $path  Primary key of the node for which to get the path.
-	 * @return  array|bool   Boolean false on failure or array of node objects on success.
+	 * @return  array<int,Page>|bool   Boolean false on failure or array of node objects on success.
 	 */
 	public static function stackByPath(string $path)
 	{

@@ -5,6 +5,7 @@ namespace App\Modules\Knowledge\Models\Fields;
 use Illuminate\Support\Str;
 use App\Halcyon\Form\Fields\Select;
 use App\Modules\Knowledge\Models\Page;
+use stdClass;
 
 /**
  * Supports an article picker.
@@ -19,9 +20,7 @@ class Articles extends Select
 	protected $type = 'Articles';
 
 	/**
-	 * Method to get the field input markup.
-	 *
-	 * @return  array  The field input markup.
+	 * @inheritdoc
 	 */
 	protected function getOptions()
 	{
@@ -29,17 +28,19 @@ class Articles extends Select
 
 		$options = array();
 
-		$options[] = array(
-			'value' => 0,
-			'text' => trans('knowledge::knowledge.select page')
-		);
+		$opt = new stdClass;
+		$opt->value = 0;
+		$opt->text  = trans('knowledge::knowledge.select page');
+
+		$options[] = $opt;
 
 		foreach ($rows as $row)
 		{
-			$options[] = array(
-				'value' => $row->id,
-				'text' => str_repeat('|&mdash; ', $row->level) . e(Str::limit($row->title, 70))
-			);
+			$opt = new stdClass;
+			$opt->value = $row->id;
+			$opt->text  = str_repeat('|&mdash; ', $row->level) . e(Str::limit($row->title, 70));
+
+			$options[] = $opt;
 		}
 
 		return $options;

@@ -203,7 +203,7 @@ class Associations extends Model
 	 * Get the full page stack by path
 	 *
 	 * @param   string  $path
-	 * @return  array|bool
+	 * @return  array<int,Associations>|bool
 	 */
 	public static function stackByPath(string $path)
 	{
@@ -603,7 +603,7 @@ class Associations extends Model
 	public function moveByReference(int $referenceId, string $position = 'after', int $pk = 0)
 	{
 		// Initialise variables.
-		$pk = (is_null($pk)) ? $this->id : $pk;
+		$pk = $pk ?: $this->id;
 
 		// Get the node by id.
 		$node = self::find($pk);
