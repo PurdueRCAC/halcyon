@@ -10,6 +10,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Modules\Software\Models\Type;
 use App\Modules\Software\Models\Application;
+use App\Modules\Software\Models\Version;
+use App\Modules\Software\Models\VersionResource;
 use Carbon\Carbon;
 
 /**
@@ -27,14 +29,34 @@ class ApplicationsController extends Controller
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"name":          "type_id",
-	 * 		"description":   "Client (admin = 1|site = 0) ID",
+	 * 		"description":   "Filter by application type ID",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
-	 * 			"default":   "0",
+	 * 			"default":   "0"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "resource_id",
+	 * 		"description":   "Filter by resource ID",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   "0"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"name":          "state",
+	 * 		"description":   "Filter by state, if permissions allow. Otherwise, only accepted value is published.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "published",
 	 * 			"enum": [
-	 * 				"0",
-	 * 				"1"
+	 * 				"published",
+	 * 				"unpublished",
+	 * 				"trashed",
+	 * 				"all"
 	 * 			]
 	 * 		}
 	 * }
@@ -106,8 +128,8 @@ class ApplicationsController extends Controller
 		$filters = array(
 			'search'    => null,
 			'state'     => 'published',
-			'year'      => '*',
-			'type'      => 0,
+			'resource_id' => 0,
+			'type_id'   => 0,
 			// Paging
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
@@ -121,7 +143,7 @@ class ApplicationsController extends Controller
 			$filters[$key] = $request->input($key, $default);
 		}
 
-		if (!in_array($filters['order'], ['id', 'title', 'type_id', 'author', 'journal', 'booktitle', 'series', 'published_at', 'state']))
+		if (!in_array($filters['order'], ['id', 'title', 'type_id', 'state', 'alias']))
 		{
 			$filters['order'] = Application::$orderBy;
 		}
@@ -137,22 +159,54 @@ class ApplicationsController extends Controller
 		}
 
 		// Get records
+		$a = (new Application)->getTable();
+
 		$query = Application::query()
-			->whereState($filters['state']);
+			->select($a . '.*');
+
+		if ($filters['state'] == 'published')
+		{
+			$query->where($a . '.state', '=', 1);
+		}
+		elseif ($filters['state'] == 'unpublished')
+		{
+			$query->where($a . '.state', '=', 0);
+		}
+		elseif ($filters['state'] == 'trashed')
+		{
+			$query->onlyTrashed();
+		}
+		elseif ($filters['state'] == 'all')
+		{
+			$query->withTrashed();
+		}
 
 		if ($filters['search'])
 		{
 			$query->whereSearch($filters['search']);
 		}
 
-		if ($filters['type'] && $filters['type'] != '*')
+		if ($filters['type_id'])
 		{
-			$query->where('type_id', '=', $filters['type']);
+			foreach ($types as $type)
+			{
+				if ($type->alias == $filters['type'])
+				{
+					$query->where($a . '.type_id', '=', $type->id);
+					break;
+				}
+			}
 		}
 
-		if ($filters['year'] && $filters['year'] != '*')
+		if ($filters['resource_id'])
 		{
-			$query->whereYear($filters['year']);
+			$v = (new Version)->getTable();
+			$r = (new VersionResource)->getTable();
+
+			$query->join($v, $v . '.application_id', $a . '.id')
+				->join($r, $r . '.version_id', $v . '.id')
+				->where($r . '.resource_id', '=', $filters['resource'])
+				->groupBy($a . '.id');
 		}
 
 		$rows = $query

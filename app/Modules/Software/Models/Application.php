@@ -20,10 +20,13 @@ use Carbon\Carbon;
  * Model for Application
  *
  * @property int    $id
- * @property string $name
+ * @property int    $type_id
+ * @property string $title
  * @property string $alias
  * @property string $description
+ * @property string $content
  * @property int    $state
+ * @property int    $access
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
@@ -177,7 +180,7 @@ class Application extends Model
 	 */
 	public function toHtml(): string
 	{
-		return Formatter::format($this);
+		return $this->content;
 	}
 
 	/**
@@ -270,8 +273,6 @@ class Application extends Model
 			{
 				if (!isset($resources[$asset->name]))
 				{
-					//$asset->versions = array();
-					//$resources[$asset->id] = $asset;
 					$resources[$asset->name] = array();
 				}
 				$resources[$asset->name][] = $version;
