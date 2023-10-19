@@ -18,7 +18,7 @@ class AddAccessField extends Migration
 			if (!Schema::hasColumn('resources', 'access'))
 			{
 				//ALTER TABLE `resources` ADD COLUMN `access` int(11) unsigned NOT NULL DEFAULT 0;
-				Schema::table('access', function (Blueprint $table)
+				Schema::table('resources', function (Blueprint $table)
 				{
 					$table->integer('access')->unsigned()->default(0)->comment('FK to viewlevels.id');
 				});
@@ -36,7 +36,7 @@ class AddAccessField extends Migration
 		{
 			if (Schema::hasColumn('resources', 'access'))
 			{
-				Schema::table('access', function (Blueprint $table)
+				Schema::table('resources', function (Blueprint $table)
 				{
 					$table->dropColumn('access');
 				});
