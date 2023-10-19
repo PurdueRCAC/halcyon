@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Modules\Storage\Http\Resources\PurchaseResource;
+use App\Modules\Storage\Http\Resources\PurchaseResourceCollection;
 use App\Modules\Storage\Models\Purchase;
 use Carbon\Carbon;
 
@@ -113,7 +113,7 @@ class PurchasesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return ResourceCollection
+	 * @return PurchaseResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -181,16 +181,7 @@ class PurchasesController extends Controller
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends($filters);
 
-		$rows->each(function($item, $key)
-		{
-			if (!$item->hasEnd())
-			{
-				$item->datetimestop = null;
-			}
-			$item->api = route('api.storage.purchases.read', ['id' => $item->id]);
-		});
-
-		return new ResourceCollection($rows);
+		return new PurchaseResourceCollection($rows);
 	}
 
 	/**
@@ -279,7 +270,7 @@ class PurchasesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return JsonResource|JsonResponse
+	 * @return JsonResource|PurchaseResource
 	 */
 	public function create(Request $request)
 	{
@@ -448,9 +439,7 @@ class PurchasesController extends Controller
 			$counter->save();
 		}
 
-		$row->api = route('api.storage.purchases.read', ['id' => $row->id]);
-
-		return new JsonResource($row);
+		return new PurchaseResource($row);
 	}
 
 	/**
@@ -477,7 +466,7 @@ class PurchasesController extends Controller
 	 * 		}
 	 * }
 	 * @param  int  $id
-	 * @return JsonResponse|JsonResource
+	 * @return JsonResponse|PurchaseResource
 	 */
 	public function read($id)
 	{
@@ -501,12 +490,7 @@ class PurchasesController extends Controller
 			}
 		}
 
-		$row->seller;
-		$row->counter;
-
-		$row->api = route('api.storage.purchases.read', ['id' => $row->id]);
-
-		return new JsonResource($row);
+		return new PurchaseResource($row);
 	}
 
 	/**
@@ -606,7 +590,7 @@ class PurchasesController extends Controller
 	 * }
 	 * @param   int  $id
 	 * @param   Request  $request
-	 * @return  JsonResponse|JsonResource
+	 * @return  JsonResponse|PurchaseResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -769,9 +753,7 @@ class PurchasesController extends Controller
 			}
 		}
 
-		$row->api = route('api.storage.purchases.read', ['id' => $row->id]);
-
-		return new JsonResource($row);
+		return new PurchaseResource($row);
 	}
 
 	/**

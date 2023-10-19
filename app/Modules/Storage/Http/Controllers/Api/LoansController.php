@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Modules\Storage\Http\Resources\LoanResource;
+use App\Modules\Storage\Http\Resources\LoanResourceCollection;
 use App\Modules\Storage\Models\Loan;
 use Carbon\Carbon;
 
@@ -114,7 +114,7 @@ class LoansController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return ResourceCollection
+	 * @return LoanResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -182,16 +182,7 @@ class LoansController extends Controller
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends($filters);
 
-		$rows->each(function($item, $key)
-		{
-			if (!$item->hasEnd())
-			{
-				$item->datetimestop = null;
-			}
-			$item->api = route('api.storage.loans.read', ['id' => $item->id]);
-		});
-
-		return new ResourceCollection($rows);
+		return new LoanResourceCollection($rows);
 	}
 
 	/**
@@ -261,7 +252,7 @@ class LoansController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return JsonResource|JsonResponse
+	 * @return JsonResource|LoanResource
 	 */
 	public function create(Request $request)
 	{
@@ -430,9 +421,7 @@ class LoansController extends Controller
 			$counter->save();
 		}
 
-		$row->api = route('api.storage.loans.read', ['id' => $row->id]);
-
-		return new JsonResource($row);
+		return new LoanResource($row);
 	}
 
 	/**
@@ -483,12 +472,7 @@ class LoansController extends Controller
 			}
 		}
 
-		$row->lender;
-		$row->counter;
-
-		$row->api = route('api.storage.loans.read', ['id' => $row->id]);
-
-		return new JsonResource($row);
+		return new LoanResource($row);
 	}
 
 	/**
@@ -568,7 +552,7 @@ class LoansController extends Controller
 	 * }
 	 * @param   int  $id
 	 * @param   Request  $request
-	 * @return  JsonResource|JsonResponse
+	 * @return  JsonResource|LoanResource
 	 */
 	public function update($id, Request $request)
 	{
@@ -755,9 +739,7 @@ class LoansController extends Controller
 			}
 		}
 
-		$row->api = route('api.storage.loans.read', ['id' => $row->id]);
-
-		return new JsonResource($row);
+		return new LoanResource($row);
 	}
 
 	/**
