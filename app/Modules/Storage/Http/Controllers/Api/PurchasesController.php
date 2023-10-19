@@ -270,7 +270,7 @@ class PurchasesController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return JsonResource|PurchaseResource
+	 * @return JsonResponse|PurchaseResource
 	 */
 	public function create(Request $request)
 	{
@@ -406,7 +406,7 @@ class PurchasesController extends Controller
 
 			$row->api = route('api.storage.purchases.read', ['id' => $row->id]);
 
-			return new JsonResource($row);
+			return new PurchaseResource($row);
 		}
 
 		$row->save();

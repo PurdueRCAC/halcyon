@@ -387,7 +387,7 @@ class LoansController extends Controller
 				return response()->json(['message' => trans('Failed to update `storagedirloans` entry for :id', ['id' => $counter->id])], 500);
 			}
 
-			return new JsonResource($row);
+			return new LoanResource($row);
 		}
 
 		$row->save();
@@ -448,7 +448,7 @@ class LoansController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  JsonResource|JsonResponse
+	 * @return  LoanResource|JsonResponse
 	 */
 	public function read($id)
 	{
@@ -552,7 +552,7 @@ class LoansController extends Controller
 	 * }
 	 * @param   int  $id
 	 * @param   Request  $request
-	 * @return  JsonResource|LoanResource
+	 * @return  JsonResponse|LoanResource
 	 */
 	public function update($id, Request $request)
 	{
