@@ -161,7 +161,7 @@ class ApplicationsController extends Controller
 		}
 
 		return $query
-			->orderBy('display', 'desc')
+			->orderBy('name', 'asc')
 			->get();
 	}
 

@@ -167,7 +167,7 @@ class SoftwareController extends Controller
 		}
 
 		return $query
-			->orderBy('display', 'desc')
+			->orderBy('name', 'asc')
 			->get();
 	}
 
