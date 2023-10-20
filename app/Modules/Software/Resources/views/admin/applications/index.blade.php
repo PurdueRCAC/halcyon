@@ -74,6 +74,14 @@ app('pathway')
 						<option value="{{ $type->id }}"<?php if ($filters['type'] == $type->id): echo ' selected="selected"'; endif;?>>{{ $type->title }}</option>
 					@endforeach
 				</select>
+
+				<label class="sr-only" for="filter_resource">{{ trans('software::software.resources') }}</label>
+				<select class="filter_resource" name="resource" class="form-control filter filter-submit">
+					<option value="0">{{ trans('software::software.all resources') }}</option>
+					@foreach ($resources as $resource)
+						<option value="{{ $resource->id }}"<?php if ($filters['resource'] == $resource->id): echo ' selected="selected"'; endif;?>>{{ $resource->name }}</option>
+					@endforeach
+				</select>
 			</div>
 		</div>
 

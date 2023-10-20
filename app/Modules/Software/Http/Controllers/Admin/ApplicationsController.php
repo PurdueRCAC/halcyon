@@ -68,9 +68,9 @@ class ApplicationsController extends Controller
 			$filters['state'] = 'published';
 		}
 
-		$types = Type::query()
-			->orderby('title', 'asc')
-			->get();
+		$types = $this->getTypes();
+
+		$resources = $this->getResources();
 
 		// Get records
 		$a = (new Application)->getTable();
@@ -120,7 +120,49 @@ class ApplicationsController extends Controller
 			'rows' => $rows,
 			'filters' => $filters,
 			'types' => $types,
+			'resources' => $resources,
 		]);
+	}
+
+	/**
+	 * Get the list of types
+	 *
+	 * @return Collection
+	 */
+	private function getTypes()
+	{
+		return Type::query()
+			->withCount('applications')
+			->orderby('title', 'asc')
+			->get();
+	}
+
+	/**
+	 * Get the list of resources
+	 *
+	 * @return Collection
+	 */
+	private function getResources()
+	{
+		$query = Asset::query()
+			->where('display', '>', 0)
+			->where(function($where)
+			{
+				$where->whereNotNull('listname')
+					->where('listname', '!=', '');
+			})
+			->where('resourcetype', '!=', 0);
+
+		$limit = config('module.software.resource_type', []);
+
+		if (!empty($limit))
+		{
+			$query->whereIn('resourcetype', $limit);
+		}
+
+		return $query
+			->orderBy('display', 'desc')
+			->get();
 	}
 
 	/**
@@ -140,13 +182,9 @@ class ApplicationsController extends Controller
 			$row->fill($fields);
 		}
 
-		$types = Type::query()
-			->orderby('title', 'asc')
-			->get();
+		$types = $this->getTypes();
 
-		$resources = Asset::query()
-			->orderBy('name', 'asc')
-			->get();
+		$resources = $this->getResources();
 
 		return view('software::admin.applications.edit', [
 			'row' => $row,
@@ -171,13 +209,9 @@ class ApplicationsController extends Controller
 			$row->fill($fields);
 		}
 
-		$types = Type::query()
-			->orderby('title', 'asc')
-			->get();
+		$types = $this->getTypes();
 
-		$resources = Asset::query()
-			->orderBy('name', 'asc')
-			->get();
+		$resources = $this->getResources();
 
 		return view('software::admin.applications.edit', [
 			'row' => $row,
