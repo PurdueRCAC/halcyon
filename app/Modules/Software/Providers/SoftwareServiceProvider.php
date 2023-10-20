@@ -3,6 +3,7 @@
 namespace App\Modules\Software\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Modules\Software\Console\ImportCommand;
 
 class SoftwareServiceProvider extends ServiceProvider
 {
@@ -31,8 +32,21 @@ class SoftwareServiceProvider extends ServiceProvider
 		$this->registerConfig();
 		$this->registerAssets();
 		$this->registerViews();
+		$this->registerConsoleCommands();
 
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+	}
+
+	/**
+	 * Register console commands.
+	 *
+	 * @return void
+	 */
+	protected function registerConsoleCommands()
+	{
+		$this->commands([
+			ImportCommand::class,
+		]);
 	}
 
 	/**

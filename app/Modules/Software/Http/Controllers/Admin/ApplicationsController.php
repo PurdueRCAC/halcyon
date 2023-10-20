@@ -98,14 +98,7 @@ class ApplicationsController extends Controller
 
 		if ($filters['type'] && $filters['type'] != '*')
 		{
-			foreach ($types as $type)
-			{
-				if ($type->alias == $filters['type'])
-				{
-					$query->where($a . '.type_id', '=', $type->id);
-					break;
-				}
-			}
+			$query->where($a . '.type_id', '=', $filters['type']);
 		}
 
 		if ($filters['resource'] && $filters['resource'] != '*')
