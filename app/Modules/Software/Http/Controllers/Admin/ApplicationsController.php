@@ -44,12 +44,12 @@ class ApplicationsController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('software.filter_' . $key)
-			 && $request->input($key) != session()->get('software.filter_' . $key))
+			 && $request->has($key) //&& session()->has('software.admin.filter_' . $key)
+			 && $request->input($key) != session()->get('software.admin.filter_' . $key))
 			{
 				$reset = true;
 			}
-			$filters[$key] = $request->state('software.filter_' . $key, $key, $default);
+			$filters[$key] = $request->state('software.admin.filter_' . $key, $key, $default);
 		}
 		$filters['page'] = $reset ? 1 : $filters['page'];
 
