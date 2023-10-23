@@ -269,6 +269,15 @@ class Application extends Model
 
 		foreach ($this->versions()->orderBy('title', 'asc')->get() as $version)
 		{
+			if (!count($version->resources))
+			{
+				if (!isset($resources['Unspecified']))
+				{
+					$resources['Unspecified'] = array();
+				}
+				$resources['Unspecified'][] = $version;
+				continue;
+			}
 			foreach ($version->resources as $asset)
 			{
 				if (!isset($resources[$asset->name]))
