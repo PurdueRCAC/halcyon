@@ -25,7 +25,7 @@ app('pathway')
 
 @section('content')
 <div class="pull-right">
-	<a href="{{ route('site.software.index') }}" class="btn btn-secondary">Catalog</a>
+	<a href="{{ route('site.software.index') }}" class="btn btn-secondary">{{ trans('software::software.back') }}</a>
 </div>
 
 <h2>{{ trans('software::software.module name') }}: {{ $row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create') }}</h2>
@@ -72,7 +72,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-description">{{ trans('software::software.description') }}:</label>
-					<textarea name="description" id="field-description" class="form-control" rows="3" cols="50">{{ $row->description }}</textarea>
+					<textarea name="description" id="field-description" class="form-control" rows="3" cols="50" maxlength="500">{{ $row->description }}</textarea>
 					<span class="invalid-feedback">{{ trans('software::software.error.invalid description') }}</span>
 				</div>
 
@@ -177,7 +177,7 @@ app('pathway')
 		</div>
 		<div class="col col-md-8 text-center">
 			<input type="submit" class="btn btn-success" value="Save" />
-			<a href="{{ route('site.software.index') }}" class="btn btn-link">Cancel</a>
+			<a href="{{ route('site.software.index') }}" class="btn btn-link">{{ trans('global.button.cancel') }}</a>
 		</div>
 	</div>
 	

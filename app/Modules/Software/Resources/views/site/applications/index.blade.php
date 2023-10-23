@@ -1,5 +1,9 @@
 @extends('layouts.master')
 
+@section('meta')
+		<meta name="description" content="{{ trans('software::software.software catalog') }}" />
+@stop
+
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/software/css/software.css') }}" />
 @endpush
@@ -8,7 +12,7 @@
 <script src="{{ timestamped_asset('modules/software/js/site.js') }}"></script>
 @endpush
 
-@section('title'){{ trans('software::software.software') }}@stop
+@section('title'){{ trans('software::software.software') . ($rows->total() > $filters['limit'] ? ': Page ' . $filters['page'] : '') }}@stop
 
 @php
 app('pathway')
@@ -83,10 +87,6 @@ app('pathway')
 						$allfilters = collect($filters);
 
 						$keys = ['search', 'type', 'resource'];
-						/*if (auth()->user() && auth()->user()->can('manage software'))
-						{
-							$keys[] = 'state';
-						}*/
 
 						foreach ($keys as $key):
 							if (!isset($filters[$key]) || !$filters[$key] || $filters[$key] == '*'):
@@ -155,10 +155,10 @@ app('pathway')
 							<div class="card-title"><a href="{{ route('site.software.show', ['alias' => $row->alias]) }}">{{ $row->title }}</a></div>
 							<p>{!! App\Halcyon\Utility\Str::highlight(e($row->description), $filters['search']) !!}</p>
 							<details>
-								<summary>Available Versions</summary>
+								<summary>{{ trans('software::software.available versions') }}</summary>
 								<div>
 									<table class="table table-bordered">
-										<caption class="sr-only">Available Versions</caption>
+										<caption class="sr-only">{{ trans('software::software.available versions') }}</caption>
 										<tbody>
 											@foreach ($row->versionsByResource() as $resource => $versions)
 												<tr>

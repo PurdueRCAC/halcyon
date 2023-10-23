@@ -77,7 +77,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label for="field-description">{{ trans('software::software.description') }}:</label>
-					<textarea name="description" id="field-description" class="form-control" rows="3" cols="50">{{ $row->description }}</textarea>
+					<textarea name="description" id="field-description" class="form-control" rows="3" cols="50" maxlength="500">{{ $row->description }}</textarea>
 					<span class="invalid-feedback">{{ trans('software::software.error.invalid description') }}</span>
 				</div>
 

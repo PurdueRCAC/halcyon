@@ -2,6 +2,7 @@
 return [
 	'module name' => 'Software Catalog',
 	'software' => 'Software',
+	'software catalog' => 'Catalog of software and their versions available per resource.',
 	'applications' => 'Applications',
 	'configuration' => 'software Configuration',
 
@@ -21,6 +22,7 @@ return [
 	'content' => 'Content',
 	'filter' => 'Filter',
 	'versions' => 'Versions',
+	'available versions' => 'Available Versions',
 	'resource' => 'Resource',
 	'all resources' => '- All Resources -',
 	'created' => 'Created',
@@ -33,4 +35,5 @@ return [
 		'state' => 'State',
 	],
 	'search' => 'Search',
+	'back' => 'Back to Catalog',
 ];

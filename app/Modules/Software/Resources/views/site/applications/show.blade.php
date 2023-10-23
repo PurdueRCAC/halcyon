@@ -1,5 +1,9 @@
 @extends('layouts.master')
 
+@section('meta')
+		<meta name="description" content="{{ trans('software::software.software') . ': ' . $row->title . ($row->description ? ' - ' . $row->description : '') }}" />
+@stop
+
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/prism/prism.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/software/css/software.css') }}" />
@@ -26,7 +30,7 @@ app('pathway')
 
 @section('content')
 <div class="pull-right">
-	<a href="{{ route('site.software.index') }}" class="btn btn-secondary">Back to Catalog</a>
+	<a href="{{ route('site.software.index') }}" class="btn btn-secondary">{{ trans('software::software.back') }}</a>
 </div>
 
 <h2 class="mt-0">{{ trans('software::software.software') }}: {{ $row->title }}</h2>
@@ -75,12 +79,12 @@ app('pathway')
 	<div class="col col-md-9">
 		<h3 class="mt-0">Description</h3>
 
-		<p>{{ $row->description }}</p>
+		<p>{{ $row->description ? $row->description : '-' }}</p>
 
-		<h3>Available Versions</h3>
+		<h3>{{ trans('software::software.available versions') }}</h3>
 
 		<table class="table table-bordered">
-			<caption class="sr-only">Available Versions</caption>
+			<caption class="sr-only">{{ trans('software::software.available versions') }}</caption>
 			<tbody>
 				@foreach ($row->versionsByResource() as $resource => $versions)
 					<tr>
