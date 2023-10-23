@@ -3,7 +3,7 @@
 namespace App\Modules\Menus\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -206,7 +206,7 @@ class MenusController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return Response|JsonResource
+	 * @return JsonResponse|JsonResource
 	 */
 	public function create(Request $request)
 	{
@@ -370,7 +370,7 @@ class MenusController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   int $id
-	 * @return  Response|JsonResource
+	 * @return  JsonResponse|JsonResource
 	 */
 	public function update(Request $request, int $id)
 	{
@@ -459,7 +459,7 @@ class MenusController extends Controller
 	 * 		}
 	 * }
 	 * @param   int  $id
-	 * @return  Response
+	 * @return  JsonResponse
 	 */
 	public function delete(int $id)
 	{

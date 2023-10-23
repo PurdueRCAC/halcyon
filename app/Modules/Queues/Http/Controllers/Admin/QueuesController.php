@@ -152,7 +152,7 @@ class QueuesController extends Controller
 			// which causes a syntax error in MariaDB.
 			$q1 = DB::table($s)->select($s . '.queueid')
 				->from($s)
-				->where(function($where) use ($s, $now)
+				->where(function($where) use ($s)
 				{
 					$where->where($s . '.corecount', '>', 0)
 						->orWhere($s . '.serviceunits', '>', 0);
@@ -167,7 +167,7 @@ class QueuesController extends Controller
 
 			$q2 = DB::table($l)->select($l . '.queueid')
 				->from($l)
-				->where(function($where) use ($l, $now)
+				->where(function($where) use ($l)
 				{
 					$where->where($l . '.corecount', '>', 0)
 						->orWhere($l . '.serviceunits', '>', 0);

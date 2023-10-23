@@ -5,14 +5,14 @@ namespace App\Modules\Menus\Events;
 class CollectingRoutes
 {
 	/**
-	 * @var array<string,array>
+	 * @var array<string,array<string,mixed>>
 	 */
 	public $routes;
 
 	/**
 	 * Constructor
 	 *
-	 * @return void<string,array<string,mixed>>
+	 * @return void
 	 */
 	public function __construct()
 	{

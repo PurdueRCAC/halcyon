@@ -770,6 +770,24 @@ class Group extends Model
 	}
 
 	/**
+	 * Remove user
+	 *
+	 * @param   int  $userid
+	 * @return  bool
+	 */
+	public function removeMember(int $userid): bool
+	{
+		$member = Member::findByGroupAndUser($this->id, $userid);
+
+		if (!$member)
+		{
+			return true;
+		}
+
+		return $member->delete();
+	}
+
+	/**
 	 * Add a department
 	 *
 	 * @param   int  $depid

@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Collection;
 use App\Modules\Software\Models\Type;
 use App\Modules\Software\Models\Application;
 use App\Modules\Software\Models\Version;

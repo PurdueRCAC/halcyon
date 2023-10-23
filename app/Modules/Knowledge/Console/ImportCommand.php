@@ -89,7 +89,7 @@ class ImportCommand extends Command
 			{
 				if ($debug || $this->output->isVerbose())
 				{
-					$this->warning('No repo or path specified. repo: "' . $repo . '", path: "' . $slug . '"');
+					$this->error('No repo or path specified. repo: "' . $repo . '", path: "' . $slug . '"');
 				}
 				continue;
 			}
@@ -172,7 +172,7 @@ class ImportCommand extends Command
 					continue;
 				}
 
-				$this->importPage($debug, $format, $files, $file, $guide, $path, $slug);
+				$this->importPage($debug, $format, $files, $file, $guide, $path);
 			}
 
 			if ($debug || $this->output->isVerbose())

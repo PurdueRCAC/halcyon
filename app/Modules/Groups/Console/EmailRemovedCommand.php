@@ -75,14 +75,12 @@ class EmailRemovedCommand extends Command
 
 			// Find the latest activity
 			$latest = 0;
-			if (!empty($groupusers))
+
+			foreach ($groupusers as $g)
 			{
-				foreach ($groupusers as $g)
+				if ($g->datecreated->timestamp > $latest)
 				{
-					if ($g->datecreated->timestamp > $latest)
-					{
-						$latest = $g->datecreated->timestamp;
-					}
+					$latest = $g->datecreated->timestamp;
 				}
 			}
 

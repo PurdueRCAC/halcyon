@@ -27,6 +27,14 @@ class GroupResource extends JsonResource
 
 		$data = parent::toArray($request);
 
+		if ($request->has('search'))
+		{
+			$data['search'] = $request->input('search');
+		}
+		if ($request->has('searchuser'))
+		{
+			$data['search'] = $request->input('searchuser');
+		}
 		$data['api'] = route('api.groups.read', ['id' => $this->id]);
 
 		$data['departments'] = $this->departments->each(function($item, $key)

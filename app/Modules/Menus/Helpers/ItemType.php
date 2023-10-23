@@ -36,7 +36,7 @@ class ItemType
 	/**
 	 * Method to get the available menu item type options.
 	 *
-	 * @return  array<string,array>  Array of groups with menu item types.
+	 * @return  array<string,array<int,stdClass>>  Array of groups with menu item types.
 	 */
 	public function getTypeOptions()
 	{

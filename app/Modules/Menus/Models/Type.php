@@ -28,8 +28,8 @@ use App\Modules\Menus\Events\TypeDeleted;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  *
- * @param string $api
- * @param array<int,Item> $links
+ * @property string $api
+ * @property array<int,Item> $links
  */
 class Type extends Model
 {
