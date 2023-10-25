@@ -903,6 +903,7 @@ h4 {
   content: "\e86f";
 }
 .fa-lines:before,
+.fa-file-text:before,
 .icon-file-text:before {
   content: "\e870";
 }
