@@ -42,7 +42,7 @@ app('pathway')
 					<div class="form-group">
 						<label for="filter_search">{{ trans('search.label') }}</label>
 						<span class="input-group">
-							<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="Find by title and description" value="{{ $filters['search'] }}" />
+							<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('software::software.search placeholder') }}" value="{{ $filters['search'] }}" />
 							<span class="input-group-append">
 								<button class="btn input-group-text" type="submit">
 									{{ trans('software::software.filter') }}

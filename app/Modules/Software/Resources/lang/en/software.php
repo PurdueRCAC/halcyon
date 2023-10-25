@@ -35,5 +35,6 @@ return [
 		'state' => 'State',
 	],
 	'search' => 'Search',
+	'search placeholder' => 'Find by title and description',
 	'back' => 'Back to Catalog',
 ];
