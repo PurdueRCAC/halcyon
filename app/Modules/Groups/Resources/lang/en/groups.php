@@ -18,6 +18,9 @@ return [
 	'type' => 'Type',
 	'department' => 'Department',
 	'active allocation' => 'Active Allocation',
+	'create default unix groups' => 'Create Default Unix Groups',
+	'default unix groups desc' => 'This will create default Unix groups; A base group, <code>apps</code>, and <code>data</code> group will be created. These will prefixed by the base name chosen. Once these are created, the groups and base name cannot be easily changed.',
+	'create base unix group only' => 'Create Base Unix Group Only',
 	'base unix group' => 'Base Unix group',
 	'unix group base name' => 'Unix group base name',
 	'unix group' => 'Unix group',
@@ -90,5 +93,8 @@ return [
 	'choose group' => 'Choose group',
 	'groups have pending requests' => 'The following groups have pending membership requests',
 	'what is this page' => 'What is this page?',
+	'what this page is' => 'If you are a manager or member of a group, you will find it listed here. You will also find groups listed where you are a member of at least one of its resource queues or unix groups.',
 	'pending membership requests' => 'Pending membership requests',
+	'enter motd' => 'Enter the notice your group will see at login',
+	'delete notice' => 'Delete Notice',
 ];

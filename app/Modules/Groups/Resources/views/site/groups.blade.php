@@ -20,7 +20,7 @@
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content shadow-sm">
 					<div class="modal-header">
-						<div class="modal-title" id="new_group_dialog-title">Create new group</div>
+						<div class="modal-title" id="new_group_dialog-title">{{ trans('groups::groups.create group') }}</div>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -28,8 +28,8 @@
 					<form method="post" action="{{ route('site.users.account.section', ['section' => 'groups']) }}">
 						<div class="modal-body">
 							<div class="form-group">
-								<label for="new_group_input">Enter a name for a new group:</label>
-								<input type="text" id="new_group_input" class="form-control" data-userid="{{ $user->id }}" data-api="{{ route('api.groups.create') }}" data-uri="{{ route('site.users.account.section', ['section' => 'groups']) }}" value="" required />
+								<label for="new_group_input">{{ trans('groups::groups.name') }}</label>
+								<input type="text" id="new_group_input" class="form-control" maxlength="48" data-userid="{{ $user->id }}" data-api="{{ route('api.groups.create') }}" data-uri="{{ route('site.users.account.section', ['section' => 'groups']) }}" value="" required />
 								<div class="form-text text-muted">{{ trans('groups::groups.user will be added as a manager', ['user' => $user->name]) }}</div>
 							</div>
 
@@ -126,7 +126,7 @@
 		<div class="card card-help">
 			<div class="card-body">
 				<h3 class="card-title">{{ trans('groups::groups.what is this page') }}</h3>
-				<p>If you're a manager or member of a group, you'll find it listed here. You will also find groups listed where you're a member of at least one of its resource queues or unix groups.</p>
+				<p>{{ trans('groups::groups.what this page is') }}</p>
 			</div>
 		</div>
 	@endif

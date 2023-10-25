@@ -7,7 +7,7 @@
 		@if ($canManage)
 			<form method="post" action="{{ route('site.users.account.section', ['section' => 'groups']) }}">
 				<div class="form-group">
-					<label for="MotdText_{{ $group->id }}">Enter the notice your group will see at login</label>
+					<label for="MotdText_{{ $group->id }}">{{ trans('groups::groups.enter motd') }}</label>
 					<textarea id="MotdText_{{ $group->id }}" data-api="{{ route('api.groups.motd.create') }}" class="form-control" cols="38" rows="4">{{ $group->motd ? $group->motd->motd : '' }}</textarea>
 					@if ($group->motd)
 						<p class="form-text text-muted">Set on <time datimetime="{{ $group->motd->datetimecreated->toDateTimeLocalString() }}">{{ $group->motd->datetimecreated->format('F j, Y') }}</time></p>
@@ -22,7 +22,7 @@
 					</div>
 					<div class="col-sm-6 text-right">
 					@if ($group->motd)
-						<button class="motd-delete btn btn-danger" id="MotdText_delete_{{ $group->id }}" data-api="{{ route('api.groups.motd.delete', ['id' => $group->motd->id]) }}" data-group="{{ $group->id }}"><span class="fa fa-trash"></span> Delete Notice</button>
+						<button class="motd-delete btn btn-danger" id="MotdText_delete_{{ $group->id }}" data-api="{{ route('api.groups.motd.delete', ['id' => $group->motd->id]) }}" data-group="{{ $group->id }}"><span class="fa fa-trash"></span> {{ trans('groups::groups.delete notice') }}</button>
 					@endif
 					</div>
 				</div>
@@ -63,7 +63,7 @@ if (count($past)):
 						@if ($motd->trashed())
 							<time datimetime="{{ $motd->datetimeremoved->toDateTimeLocalString() }}">{{ $motd->datetimeremoved->format('F j, Y') }}</time>
 						@else
-							trans('global.never')
+							{{ trans('global.never') }}
 						@endif
 					</p>
 					<blockquote>

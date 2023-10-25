@@ -400,13 +400,13 @@
 			<div id="INPUT_groupsbutton">
 				<p class="text-center">
 					<button class="btn btn-secondary create-default-unix-groups" data-api="{{ route('api.unixgroups.create') }}" data-group="{{ $group->id }}" data-value="{{ $group->unixgroup }}" data-all-groups="1" id="INPUT_groupsbutton_{{ $group->id }}">
-						<span class="spinner-border spinner-border-sm" role="status"></span> Create Default Unix Groups
+						<span class="spinner-border spinner-border-sm" role="status"></span> {{ trans('groups::groups.create default unix groups') }}
 					</button>
 					<button class="btn create-default-unix-groups" data-api="{{ route('api.unixgroups.create') }}" data-group="{{ $group->id }}" data-value="{{ $group->unixgroup }}" data-all-groups="0">
-						<span class="spinner-border spinner-border-sm" role="status"></span> Create Base Group Only
+						<span class="spinner-border spinner-border-sm" role="status"></span> {{ trans('groups::groups.create base unix group only') }}
 					</button>
 				</p>
-				<p class="form-text">This will create default Unix groups; A base group, <code>apps</code>, and <code>data</code> group will be created. These will prefixed by the base name chosen. Once these are created, the groups and base name cannot be easily changed.</p>
+				<p class="form-text">{!! trans('groups::groups.default unix groups desc') !!}</p>
 			</div>
 		@endif
 

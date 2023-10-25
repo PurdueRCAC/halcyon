@@ -275,12 +275,12 @@ app('pathway')
 			<div class="modal-body">
 				<div class="form-group">
 					<label for="field-name">{{ trans('groups::groups.name') }} <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[name]" id="field-name" class="form-control required" required maxlength="250" value="" />
+					<input type="text" name="fields[name]" id="field-name" class="form-control required" required maxlength="48" value="" />
 				</div>
 			</div>
 			<div class="modal-footer">
 				<button class="btn btn-success" id="add-group" data-api="{{ route('api.groups.create') }}" data-route="{{ route('admin.groups.edit', ['id' => '-id-']) }}">
-					<span class="icon-plus"></span> Add
+					{{ trans('global.button.create') }}
 				</button>
 			</div>
 		</div>
