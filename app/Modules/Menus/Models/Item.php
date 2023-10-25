@@ -541,10 +541,10 @@ class Item extends Model
 			{
 				$option = $module->element;
 				$base   = module_path($option) . '/Resources/views/site';
-			}*/
+			}
 
 			// Confirm a view is defined.
-			$path = module_path($option) . '/Config/config.xml';
+			$path = module_path($option) . '/Config/config.xml';*/
 			/*if (isset($args['view']))
 			{
 				$view = $args['view'];
