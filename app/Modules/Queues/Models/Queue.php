@@ -552,6 +552,7 @@ class Queue extends Model
 		$serviceunits = 0.00;
 
 		$now = Carbon::now();
+		$soon = $now->modify('+5 minutes');
 
 		$purchases = $this->sizes()
 			->where(function($where) use ($now)
@@ -559,7 +560,7 @@ class Queue extends Model
 				$where->whereNull('datetimestop')
 					->orWhere('datetimestop', '>', $now->toDateTimeString());
 			})
-			->where('datetimestart', '<=', $now->toDateTimeString())
+			->where('datetimestart', '<=', $soon->toDateTimeString())
 			->get();
 
 		foreach ($purchases as $size)
@@ -589,7 +590,7 @@ class Queue extends Model
 				$where->whereNull('datetimestop')
 					->orWhere('datetimestop', '>', $now->toDateTimeString());
 			})
-			->where('datetimestart', '<=', $now->toDateTimeString())
+			->where('datetimestart', '<=', $soon->toDateTimeString())
 			->get();
 
 		foreach ($loans as $loan)

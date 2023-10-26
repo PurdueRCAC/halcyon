@@ -995,7 +995,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 												<div class="form-group">
 													<label for="loan-datetimestart{{ $q->id }}">{{ trans('queues::queues.start') }}</label>
 													<span class="input-group input-datetime">
-														<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart{{ $q->id }}" value="{{ Carbon\Carbon::now()->modify('+10 minutes')->toDateTimeString() }}" />
+														<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart{{ $q->id }}" value="{{ Carbon\Carbon::now()->modify('+3 minutes')->toDateTimeString() }}" />
 														<span class="input-group-append"><span class="input-group-text fa fa-calendar"></span></span>
 													</span>
 												</div>
