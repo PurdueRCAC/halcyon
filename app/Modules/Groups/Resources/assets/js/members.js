@@ -311,17 +311,15 @@ document.addEventListener('DOMContentLoaded', function () {
 			var btn = this;
 			var users = $('#addmembers').val();
 
-			var notice = null;
-			var not = document.getElementById('notice');
-			if (not && not.checked) {
-				notice = 0;
-			}
 			var post = {
 				'groupid': btn.getAttribute('data-group'),
 				'userid': 0,
-				'membertype': document.getElementById('new_membertype').value,
-				'notice': notice
+				'membertype': document.getElementById('new_membertype').value
 			};
+			var not = document.getElementById('notice');
+			if (not && not.checked) {
+				post['notice'] = 0;
+			}
 			var queues = document.querySelectorAll('.add-queue-member:checked');
 			var unixgroups = document.querySelectorAll('.add-unixgroup-member:checked');
 

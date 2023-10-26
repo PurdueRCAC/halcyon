@@ -304,7 +304,7 @@ class UsersController extends Controller
 				$row->setAsMember();
 			}
 			$row->notice = $request->has('notice') ? $request->input('notice') : QueueUser::NOTICE_REQUEST_GRANTED;
-			$row->notice = $row->notice ?: QueueUser::NOTICE_NONE;
+			$row->notice = !is_null($row->notice) ?: QueueUser::NOTICE_REQUEST_GRANTED;
 		}
 
 		// Look up the current username of the user being granted access.
