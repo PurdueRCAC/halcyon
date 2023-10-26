@@ -133,7 +133,7 @@ class ResourcesController extends Controller
 				}
 
 				// Second pass - get an indent list of the items
-				$list = $this->treeRecurse(0, '', array(), $children, max(0, $levellimit-1));
+				$list = $this->treeRecurse(0, array(), $children, max(0, $levellimit-1));
 			}
 
 			if ($filters['batchsystem'])
