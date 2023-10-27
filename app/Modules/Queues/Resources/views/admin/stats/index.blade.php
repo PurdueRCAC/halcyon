@@ -152,6 +152,12 @@ app('pathway')
 									<td><a href="{{ route('admin.queues.stats', ['resource' => $resource->id]) }}">{{ str_repeat('- ', $resource->level) . $resource->name }}</a></td>
 									<!-- <td class="text-right"> -->
 										<?php
+										$unit = 'nodes';
+
+										if ($facet = $resource->getFacet('allocation_unit')):
+											$unit = $facet->value;
+										endif;
+
 										$total = 0;
 										$purchased = array('nodes' => 0, 'cores' => 0, 'sus' => 0);
 										$loaned = array('nodes' => 0, 'cores' => 0, 'sus' => 0);
@@ -211,10 +217,11 @@ app('pathway')
 											{
 												$soldnodes = round($purchases->cores / $subresource->nodecores, 1);
 											}
+											$gpus = ($purchases->sus && $purchases->sus > 0 ? $purchases->sus : round($soldnodes * $subresource->nodegpus));
 
 											$purchased['nodes'] += ($soldnodes ? $soldnodes : $purchases->nodes);
 											$purchased['cores'] += $purchases->cores;
-											$purchased['sus'] += $purchases->sus;
+											$purchased['sus'] += $gpus;
 
 											$lquery = App\Modules\Queues\Models\Loan::query()
 												->select(Illuminate\Support\Facades\DB::raw('SUM(' . $l . '.nodecount) AS nodes, SUM(' . $l . '.corecount) AS cores, SUM(' . $l . '.serviceunits) AS sus'))
@@ -245,9 +252,16 @@ app('pathway')
 
 											$loans = $lquery->first();
 
-											$loaned['nodes'] += $loans->nodes;
+											$loannodes = 0;
+											if ($subresource->nodecores != 0)
+											{
+												$loannodes = round($loans->cores / $subresource->nodecores, 1);
+											}
+											$gpus = ($loans->sus && $loans->sus > 0 ? $loans->sus : round($loannodes * $subresource->nodegpus));
+
+											$loaned['nodes'] += ($loannodes ? $loannodes : $loans->nodes);
 											$loaned['cores'] += $loans->cores;
-											$loaned['sus'] += $loans->sus;
+											$loaned['sus'] += $gpus;
 										endforeach;
 
 										$ress[$resource->name] = $total;
@@ -256,21 +270,49 @@ app('pathway')
 										?>
 									<!-- </td> -->
 									<td class="text-right">
-										@if ($purchased['nodes'] || $purchased['cores'])
-											{{ number_format($purchased['nodes']) }} <span class="text-muted">nodes</span>, {{ number_format($purchased['cores']) }} <span class="text-muted">cores</span>
-										@elseif ($purchased['sus'])
-											{{ number_format($purchased['sus']) }} <span class="text-muted"><abbr title="Service Units">SUs</abbr></span>
+										@if ($unit == 'sus')
+											@if ($purchased['sus'])
+												{{ number_format($purchased['sus']) }} <span class="text-muted"><abbr title="Service Units">SUs</abbr></span>
+											@else
+												-
+											@endif
+										@elseif ($unit == 'gpus')
+											@if ($purchased['cores'] || $purchased['sus'])
+												{{ number_format($purchased['cores']) }} <span class="text-muted">cores</span>,
+												{{ number_format($purchased['sus']) }} <span class="text-muted">GPUs</span>
+											@else
+												-
+											@endif
 										@else
-											-
+											@if ($purchased['nodes'] || $purchased['cores'])
+												{{ number_format($purchased['nodes'], 1) }} <span class="text-muted">nodes</span>,
+												{{ number_format($purchased['cores']) }} <span class="text-muted">cores</span>
+											@else
+												-
+											@endif
 										@endif
 									</td>
 									<td class="text-right">
-										@if ($loaned['nodes'] || $loaned['cores'])
-											{{ number_format($loaned['nodes']) }} <span class="text-muted">nodes</span>, {{ number_format($loaned['cores']) }} <span class="text-muted">cores</span>
-										@elseif ($loaned['sus'])
-											{{ number_format($loaned['sus']) }} <span class="text-muted"><abbr title="Service Units">SUs</abbr></span>
+										@if ($unit == 'sus')
+											@if ($loaned['sus'])
+												{{ number_format($loaned['sus']) }} <span class="text-muted"><abbr title="Service Units">SUs</abbr></span>
+											@else
+												-
+											@endif
+										@elseif ($unit == 'gpus')
+											@if ($loaned['cores'] || $loaned['sus'])
+												{{ number_format($loaned['cores']) }} <span class="text-muted">cores</span>,
+												{{ number_format($loaned['sus']) }} <span class="text-muted">GPUs</span>
+											@else
+												-
+											@endif
 										@else
-											-
+											@if ($loaned['nodes'] || $loaned['cores'])
+												{{ number_format($loaned['nodes'], 1) }} <span class="text-muted">nodes</span>,
+												{{ number_format($loaned['cores']) }} <span class="text-muted">cores</span>
+											@else
+												-
+											@endif
 										@endif
 									</td>
 								</tr>
@@ -426,13 +468,21 @@ app('pathway')
 							<th scope="col" class="text-right">Queues</th>
 							<th scope="col" class="text-right">Sold</th>
 							<th scope="col" class="text-right">Loaned</th>
+							<th scope="col" class="text-right">Remaining</th>
 						</thead>
 						<tbody>
 							@foreach ($subresources as $subresource)
 								<?php
+								$unit = 'nodes';
+
+								if ($facet = $resource->getFacet('allocation_unit')):
+									$unit = $facet->value;
+								endif;
+
 								$total = 0;
 								$purchased = array('nodes' => 0, 'cores' => 0, 'sus' => 0);
-								$loaned = array('nodes' => 0, 'cores' => 0, 'sus' => 0);
+								$loaned    = array('nodes' => 0, 'cores' => 0, 'sus' => 0);
+								$remaining = array('nodes' => 0, 'cores' => 0, 'sus' => 0);
 
 								$s = (new App\Modules\Queues\Models\Size)->getTable();
 								$l = (new App\Modules\Queues\Models\Loan)->getTable();
@@ -454,6 +504,11 @@ app('pathway')
 									->select(Illuminate\Support\Facades\DB::raw('SUM(' . $s . '.nodecount) AS nodes, SUM(' . $s . '.corecount) AS cores, SUM(' . $s . '.serviceunits) AS sus'))
 									->join($q, $q . '.id', $s . '.queueid')
 									->where($q . '.subresourceid', '=', $subresource->id)
+									->where(function($where) use ($now, $q)
+									{
+										$where->whereNull($q . '.datetimeremoved')
+											->orWhere($q . '.datetimeremoved', '>', $now->toDateTimeString());
+									})
 									->where($s . '.corecount', '>=', 0)
 									->where($s . '.serviceunits', '>=', 0)
 									->where(function($where) use ($now, $s)
@@ -487,12 +542,17 @@ app('pathway')
 
 								$purchased['nodes'] += ($soldnodes ? $soldnodes : $purchases->nodes);
 								$purchased['cores'] += $purchases->cores;
-								$purchased['sus'] += $purchases->sus;
+								$purchased['sus']   += ($subresource->nodegpus ? $subresource->nodegpus * $purchased['nodes'] : $purchases->sus);
 
 								$lquery = App\Modules\Queues\Models\Loan::query()
 									->select(Illuminate\Support\Facades\DB::raw('SUM(' . $l . '.nodecount) AS nodes, SUM(' . $l . '.corecount) AS cores, SUM(' . $l . '.serviceunits) AS sus'))
 									->join($q, $q . '.id', $l . '.queueid')
 									->where($q . '.subresourceid', '=', $subresource->id)
+									->where(function($where) use ($now, $q)
+									{
+										$where->whereNull($q . '.datetimeremoved')
+											->orWhere($q . '.datetimeremoved', '>', $now->toDateTimeString());
+									})
 									->where($l . '.corecount', '>=', 0)
 									->where($l . '.serviceunits', '>=', 0)
 									->where(function($where) use ($now, $l)
@@ -518,29 +578,178 @@ app('pathway')
 
 								$loans = $lquery->first();
 
-								$loaned['nodes'] += $loans->nodes;
+								$loanednodes = 0;
+								if ($subresource->nodecores != 0 && $loans->cores)
+								{
+									//echo $subresource->nodecores . ' - ' . $loans->cores . '<Br />';
+									$loanednodes = round($loans->cores / $subresource->nodecores, 1);
+								}
+
+								$loaned['nodes'] += ($loanednodes ? $loanednodes : $loans->nodes);
 								$loaned['cores'] += $loans->cores;
-								$loaned['sus'] += $loans->sus;
+								$loaned['sus']   += ($subresource->nodegpus ? $subresource->nodegpus * $loaned['nodes'] : $loans->sus);
+
+								//----
+
+								$pquery = App\Modules\Queues\Models\Size::query()
+									->select(Illuminate\Support\Facades\DB::raw('SUM(' . $s . '.nodecount) AS nodes, SUM(' . $s . '.corecount) AS cores, SUM(' . $s . '.serviceunits) AS sus'))
+									->join($q, $q . '.id', $s . '.queueid')
+									->where($q . '.subresourceid', '=', $subresource->id)
+									->where(function($where) use ($now, $q)
+									{
+										$where->whereNull($q . '.datetimeremoved')
+											->orWhere($q . '.datetimeremoved', '>', $now->toDateTimeString());
+									})
+									->where($s . '.corecount', '>=', 0)
+									->where($s . '.serviceunits', '>=', 0)
+									->where(function($where) use ($now, $s)
+									{
+										$where->whereNull($s . '.datetimestop')
+											->orWhere($s . '.datetimestop', '>', $now->toDateTimeString());
+									})
+									->where($s . '.datetimestart', '<=', $now->toDateTimeString())
+									->where($q . '.groupid', '<=', 0);
+
+								$purchaser = $pquery->first();
+
+								$remaining['nodes'] += $purchaser->nodes;
+								$remaining['cores'] += $purchaser->cores;
+								$remaining['sus']   += $purchaser->sus;
+
+								$lquery = App\Modules\Queues\Models\Loan::query()
+									->select(Illuminate\Support\Facades\DB::raw('SUM(' . $l . '.nodecount) AS nodes, SUM(' . $l . '.corecount) AS cores, SUM(' . $l . '.serviceunits) AS sus'))
+									->join($q, $q . '.id', $l . '.queueid')
+									->where($q . '.subresourceid', '=', $subresource->id)
+									->where(function($where) use ($now, $q)
+									{
+										$where->whereNull($q . '.datetimeremoved')
+											->orWhere($q . '.datetimeremoved', '>', $now->toDateTimeString());
+									})
+									->where($l . '.corecount', '>=', 0)
+									->where($l . '.serviceunits', '>=', 0)
+									->where(function($where) use ($now, $l)
+									{
+										$where->whereNull($l . '.datetimestop')
+											->orWhere($l . '.datetimestop', '>', $now->toDateTimeString());
+									})
+									->where($l . '.datetimestart', '<=', $now->toDateTimeString())
+									->where($q . '.groupid', '<=', 0);
+
+								$loansr = $lquery->first();
+
+								$remaining['nodes'] += $loansr->nodes;
+								$remaining['cores'] += $loansr->cores;
+								$remaining['sus']   += $loansr->sus;
+
+								if ($subresource->nodecores != 0 && $remaining['cores'])
+								{
+									$remaining['nodes'] = round($remaining['cores'] / $subresource->nodecores, 1);
+								}
+								$remaining['sus'] = ($subresource->nodegpus ? $subresource->nodegpus * $remaining['nodes'] : $remaining['sus']);
+
+								$remaining['nodes'] = $remaining['nodes'] - ($purchased['nodes'] + $loaned['nodes']);
+								$remaining['cores'] = $remaining['cores'] - ($purchased['cores'] + $loaned['cores']);
+								$remaining['sus']   = $remaining['sus'] - ($purchased['sus'] + $loaned['sus']);
 								?>
 								<tr>
 									<td>{{ $subresource->name }}</td>
 									<td class="text-right">{{ $total }}</td>
 									<td class="text-right">
-										@if ($purchased['nodes'] || $purchased['cores'])
-											{{ number_format($purchased['nodes']) }} <span class="text-muted">nodes</span>, {{ number_format($purchased['cores']) }} <span class="text-muted">cores</span>
-										@elseif ($purchased['sus'])
-											{{ number_format($purchased['sus']) }} <span class="text-muted"><abbr title="Service Units">SUs</abbr></span>
+										@if ($unit == 'sus')
+											@if ($purchased['sus'])
+												{{ number_format($purchased['sus']) }} <span class="text-muted"><abbr title="Service Units">SUs</abbr></span>
+											@else
+												-
+											@endif
+										@elseif ($unit == 'gpus')
+											@if ($purchased['cores'])
+												{{ number_format($purchased['cores']) }} <span class="text-muted">cores</span><br />
+												{{ number_format($purchased['sus']) }} <span class="text-muted">GPUs</span>
+											@else
+												-
+											@endif
 										@else
-											-
+											@if ($purchased['nodes'] || $purchased['cores'])
+												{{ number_format($purchased['nodes'], 1) }} <span class="text-muted">nodes</span><br />
+												{{ number_format($purchased['cores']) }} <span class="text-muted">cores</span>
+											@else
+												-
+											@endif
 										@endif
 									</td>
 									<td class="text-right">
-										@if ($loaned['nodes'] || $loaned['cores'])
-											{{ number_format($loaned['nodes']) }} <span class="text-muted">nodes</span>, {{ number_format($loaned['cores']) }} <span class="text-muted">cores</span>
-										@elseif ($loaned['sus'])
-											{{ number_format($loaned['sus']) }} <span class="text-muted"><abbr title="Service Units">SUs</abbr></span>
+										@if ($unit == 'sus')
+											@if ($loaned['sus'])
+												{{ number_format($loaned['sus']) }} <span class="text-muted"><abbr title="Service Units">SUs</abbr></span>
+											@else
+												-
+											@endif
+										@elseif ($unit == 'gpus')
+											@if ($loaned['cores'])
+												{{ number_format($loaned['cores']) }} <span class="text-muted">cores</span><br />
+												{{ number_format($loaned['sus']) }} <span class="text-muted">GPUs</span>
+											@else
+												-
+											@endif
 										@else
-											-
+											@if ($loaned['nodes'] || $loaned['cores'])
+												{{ number_format($loaned['nodes'], 1) }} <span class="text-muted">nodes</span><br />
+												{{ number_format($loaned['cores']) }} <span class="text-muted">cores</span>
+											@else
+												-
+											@endif
+										@endif
+									</td>
+									<td class="text-right">
+										@if ($unit == 'sus')
+											@if ($remaining['sus'])
+												{{ number_format($remaining['sus']) }} <span class="text-muted"><abbr title="Service Units">SUs</abbr></span>
+											@else
+												-
+											@endif
+										@elseif ($unit == 'gpus')
+											@if ($remaining['cores'])
+												@if ($remaining['cores'] < 0)
+													<span class="text-danger">
+												@endif
+												{{ number_format($remaining['cores']) }}
+												@if ($remaining['cores'] < 0)
+													</span>
+												@endif
+												<span class="text-muted">cores</span><br />
+
+												@if ($remaining['sus'] < 0)
+													<span class="text-danger">
+												@endif
+												{{ number_format($remaining['sus']) }}
+												@if ($remaining['sus'] < 0)
+													</span>
+												@endif
+												<span class="text-muted">GPUs</span>
+											@else
+												-
+											@endif
+										@else
+											@if ($remaining['nodes'] || $remaining['cores'])
+												@if ($remaining['nodes'] < 0)
+													<span class="text-danger">
+												@endif
+												{{ number_format($remaining['nodes'], 1) }}
+												@if ($remaining['nodes'] < 0)
+													</span>
+												@endif
+												<span class="text-muted">nodes</span><br />
+												@if ($remaining['cores'] < 0)
+													<span class="text-danger">
+												@endif
+												{{ number_format($remaining['cores']) }}
+												@if ($remaining['cores'] < 0)
+													</span>
+												@endif
+												<span class="text-muted">cores</span>
+											@else
+												-
+											@endif
 										@endif
 									</td>
 								</tr>
@@ -594,12 +803,18 @@ app('pathway')
 									<td><a href="{{ route('admin.queues.show', ['id' => $qu->id]) }}">{{ $qu->name }}</a></td>
 									<td>{{ $qu->subresource->name }}</td>
 									<td class="text-right">
-										@if ($qu->totalcores)
-											{{ number_format($qu->totalnodes) }} <span class="text-muted">nodes</span>, {{ number_format($qu->totalcores) }} <span class="text-muted">cores</span>
-										@elseif ($qu->serviceunits)
+										@if ($unit == 'sus')
 											{{ number_format($qu->serviceunits) }} <span class="text-muted"><abbr title="Service Units">SUs</abbr></span>
+										@elseif ($unit == 'gpus')
+											<?php
+											$nodes = ($qu->subresource->nodecores ? round($qu->totalcores / $qu->subresource->nodecores, 1) : 0);
+											$gpus = ($qu->serviceunits && $qu->serviceunits > 0 ? $qu->serviceunits : round($nodes * $qu->subresource->nodegpus));
+											?>
+											{{ number_format($qu->totalcores) }} <span class="text-muted">cores</span>,
+											{{ number_format($gpus) }} <span class="text-muted">GPUs</span>
 										@else
-											-
+											{{ number_format($qu->totalnodes, 1) }} <span class="text-muted">nodes</span>,
+											{{ number_format($qu->totalcores) }} <span class="text-muted">cores</span>
 										@endif
 									</td>
 								</tr>

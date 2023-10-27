@@ -166,6 +166,38 @@ class Queue extends Model
 	}
 
 	/**
+	 * The "booted" method of the model.
+	 *
+	 * @return void
+	 */
+	protected static function booted(): void
+	{
+		// Clean up allocations
+		static::deleted(function ($model)
+		{
+			foreach ($model->sizes as $purchase)
+			{
+				$purchase->delete();
+			}
+
+			foreach ($model->sold as $purchase)
+			{
+				$purchase->delete();
+			}
+
+			foreach ($model->loans as $loan)
+			{
+				$loan->delete();
+			}
+
+			foreach ($model->loaned as $loan)
+			{
+				$loan->delete();
+			}
+		});
+	}
+
+	/**
 	 * Determine if entry has an end time
 	 *
 	 * @return  bool
@@ -565,6 +597,17 @@ class Queue extends Model
 
 		foreach ($purchases as $size)
 		{
+			if ($size->corecount < 0)
+			{
+				if ($size->serviceunits)
+				{
+					$size->serviceunits = -abs($size->serviceunits);
+				}
+				if ($size->nodecount)
+				{
+					$size->nodecount = -abs($size->nodecount);
+				}
+			}
 			$serviceunits += (float)$size->serviceunits;
 
 			$soldcores += (int) $size->corecount;
@@ -595,6 +638,17 @@ class Queue extends Model
 
 		foreach ($loans as $loan)
 		{
+			if ($loan->corecount < 0)
+			{
+				if ($loan->serviceunits)
+				{
+					$loan->serviceunits = -abs($loan->serviceunits);
+				}
+				if ($loan->nodecount)
+				{
+					$loan->nodecount = -abs($loan->nodecount);
+				}
+			}
 			$serviceunits += (float)$loan->serviceunits;
 
 			$loanedcores += (int) $loan->corecount;

@@ -196,7 +196,7 @@ endif;
 									@elseif ($unit == 'gpus')
 										<?php
 										$nodes = ($row->subresource->nodecores ? round($row->totalcores / $row->subresource->nodecores, 1) : 0);
-										$gpus = ($row->serviceunits && $row->serviceunits > 0 ? $row->serviceunits : round($nodes * $row->subresource->nodegpus));
+										$gpus = round($nodes * $row->subresource->nodegpus); //($row->serviceunits && $row->serviceunits > 0 ? $row->serviceunits : round($nodes * $row->subresource->nodegpus));
 										?>
 										{{ number_format($row->totalcores) }} <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
 										{{ number_format($gpus) }} <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
@@ -322,9 +322,9 @@ endif;
 			</div>
 			<div class="card-bod">
 				<?php
-				$purchases = $row->sizes;
-				//$sold  = $row->sold;
-				$loans = $row->loans;
+				$purchases = $row->sizes()->get();
+				$loans = $row->loans()->get();
+
 				$nodecores = $row->subresource->nodecores;
 				$nodegpus  = $row->subresource->nodegpus;
 				$total = 0;
@@ -379,10 +379,20 @@ endif;
 							$item->total = $total;
 						endforeach;
 
-						$items = $items->sortByDesc('datetimestart')->slice(0, 20);
+						$items = $items->sortByDesc('datetimestart'); //->slice(0, 20);
 
-						foreach ($items as $item): ?>
-						<tr<?php if ($item->hasEnd() && $item->hasEnded()) { echo ' class="trashed"'; } ?>>
+						foreach ($items as $item):
+							$cl = '';
+							if ($item->hasEnd() && $item->hasEnded())
+							{
+								$cl = 'trashed';
+							}
+							if ($item->hasStart() && !$item->hasStarted())
+							{
+								$cl = 'locked';
+							}
+						?>
+						<tr<?php if ($cl) { echo ' class="' . $cl . '"'; } ?>>
 							<td>
 								{{ $item->id }}
 							</td>
@@ -475,14 +485,19 @@ endif;
 								@endif
 							</td>
 							<td class="text-right text-nowrap">
-								<!-- <span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format(abs($amt), 1) }}</span> -->
+								@if ($item->hasEnd() && $item->hasEnded())
+									<del>
+								@endif
 								@if ($unit == 'sus')
 									<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format(abs($amt), 1) }}</span>
 								@elseif ($unit == 'gpus')
 									<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format(abs($amt)) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
-									<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format($gpus) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
+									<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format(abs($gpus)) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
 								@else
 									<span class="{{ $cls }}">{{ ($cls == 'increase' ? '+' : '-') }} {{ number_format(abs($amt)) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>,
+								@endif
+								@if ($item->hasEnd() && $item->hasEnded())
+									</del>
 								@endif
 							</td>
 							<td class="text-right">
