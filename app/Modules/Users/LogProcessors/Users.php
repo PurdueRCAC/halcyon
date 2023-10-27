@@ -18,6 +18,11 @@ class Users
 	 */
 	public function __invoke($record)
 	{
+		if ($record->app == 'api' && substr($record->uri, 0, strlen('/api/users')) != '/api/users')
+		{
+			return $record;
+		}
+
 		if ($record->classname == 'UsersController')
 		{
 			if (in_array($record->transportmethod, ['PUT', 'DELETE'])
