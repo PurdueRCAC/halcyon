@@ -347,14 +347,14 @@ class ArticlesController extends Controller
 			return redirect()->back()->with('error', trans('news::news.error.Failed to create item.'));
 		}
 
-		if ($request->has('resources'))
+		if ($resources = $request->input('resources'))
 		{
-			$row->setResources($request->input('resources'));
+			$row->setResources($resources);
 		}
 
-		if ($request->has('associations'))
+		if ($associations = $request->input('associations'))
 		{
-			$row->setAssociations($request->input('associations'));
+			$row->setAssociations($associations);
 		}
 
 		if ($row->published && !$row->template)
