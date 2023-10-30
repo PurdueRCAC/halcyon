@@ -175,24 +175,35 @@ class Queue extends Model
 		// Clean up allocations
 		static::deleted(function ($model)
 		{
-			foreach ($model->sizes as $purchase)
+			$now = Carbon::now()->toDateTimeString();
+
+			// End any purchases
+			foreach ($model->sizes()->whereNull('datetimestop')->get() as $purchase)
 			{
-				$purchase->delete();
+				$purchase->update(['datetimestop' => $now]);
 			}
 
-			foreach ($model->sold as $purchase)
+			// Only stop counter entries associated with purchases. If this queue
+			// sold something to another queue and it's still active, the sale should
+			// persist.
+			$sold = $model->sold()
+				->whereNull('datetimestop')
+				->where('corecount', '<', 0)
+				->get();
+			foreach ($sold as $purchase)
 			{
-				$purchase->delete();
+				$purchase->update(['datetimestop' => $now]);
 			}
 
-			foreach ($model->loans as $loan)
+			// End any loans
+			foreach ($model->loans()->whereNull('datetimestop')->get() as $loan)
 			{
-				$loan->delete();
+				$loan->update(['datetimestop' => $now]);
 			}
 
-			foreach ($model->loaned as $loan)
+			foreach ($model->loaned()->whereNull('datetimestop')->get() as $loan)
 			{
-				$loan->delete();
+				$loan->update(['datetimestop' => $now]);
 			}
 		});
 	}

@@ -391,6 +391,8 @@ endif;
 							{
 								$cl = 'locked';
 							}
+
+							$source = $item->source()->withTrashed()->first();
 						?>
 						<tr<?php if ($cl) { echo ' class="' . $cl . '"'; } ?>>
 							<td>
@@ -468,20 +470,20 @@ endif;
 							<td>
 								@if ($item->sellerqueueid == $row->id)
 									{{ $item->queue->group ? $item->queue->group->name : '(Organization Owned)' }}
-								@elseif ($item->source)
-									{{ $item->source->group ? $item->source->group->name : '(Organization Owned)' }}
+								@elseif ($source)
+									{{ $source->group ? $source->group->name : '(Organization Owned)' }}
 								@else
 									{{ trans('queues::queues.new hardware') }}
 								@endif
 							</td>
 							<td>
-								@if ($item->source)
-									{{ $item->source->subresource->name }}
+								@if ($source)
+									{{ $source->subresource->name }}
 								@endif
 							</td>
 							<td>
-								@if ($item->source)
-									{{ $item->source->name }}
+								@if ($source)
+									{{ $source->name }}
 								@endif
 							</td>
 							<td class="text-right text-nowrap">

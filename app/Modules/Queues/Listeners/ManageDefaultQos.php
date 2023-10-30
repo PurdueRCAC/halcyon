@@ -46,10 +46,10 @@ class ManageDefaultQos
 	/**
 	 * Check if this listener should handle this Queue
 	 *
-	 * @param  Queue $queue
+	 * @param  Queue|null $queue
 	 * @return bool
 	 */
-	private function canProcessQueue(Queue $queue): bool
+	private function canProcessQueue($queue): bool
 	{
 		if (!$queue)
 		{

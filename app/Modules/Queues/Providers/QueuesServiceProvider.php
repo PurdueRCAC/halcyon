@@ -3,6 +3,7 @@
 namespace App\Modules\Queues\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Modules\Queues\Console\AuditCommand;
 use App\Modules\Queues\Console\EmailFreeAuthorizedCommand;
 use App\Modules\Queues\Console\EmailFreeDeniedCommand;
 use App\Modules\Queues\Console\EmailFreeRemovedCommand;
@@ -80,6 +81,7 @@ class QueuesServiceProvider extends ServiceProvider
 	protected function registerConsoleCommands()
 	{
 		$this->commands([
+			AuditCommand::class,
 			EmailFreeAuthorizedCommand::class,
 			EmailFreeDeniedCommand::class,
 			EmailFreeRemovedCommand::class,
