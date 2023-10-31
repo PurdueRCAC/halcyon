@@ -104,6 +104,7 @@ class Menu extends Widget
 				switch ($item->type)
 				{
 					case 'separator':
+					case 'html':
 						// No further action needed.
 						continue 2;
 						break;

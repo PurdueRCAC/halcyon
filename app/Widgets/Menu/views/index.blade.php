@@ -78,6 +78,21 @@
 
 				?><div class="separator"<?php echo $title; ?>><?php //echo $linktype; ?></div><?php
 			break;
+			case 'html':
+				if ($item->menu_image):
+					$linktype = $item->params->get('menu_text', 1)
+						? '<img src="' . $item->menu_image . '" alt="' . $item->title . '" /><span class="image-title">' . $item->title . '</span> '
+						: '<img src="' . $item->menu_image . '" alt="' . $item->title . '" />';
+				else:
+					$linktype = $item->title;
+				endif;
+
+				$class = 'dropdown-toggle';
+				$class .= $item->anchor_css ? ' ' . $item->anchor_css : '';
+
+				?><div class="nav-item-content"><?php echo $item->content; ?></div><?php
+				/*?><a class="<?php echo $class; ?>" aria-expanded="false" id="item<?php echo $item->id; ?>" href="#item<?php echo $item->id; ?>dropdown"><?php echo $linktype; ?></a><ul class="dropdown-menu" aria-labelledby="item<?php echo $item->id; ?>" id="item<?php echo $item->id; ?>dropdown"><li><?php echo $item->content; ?></li></ul><?php*/
+			break;
 			case 'url':
 				if ($item->parent):
 					$item->anchor_css .= ' dropdown-toggle';
