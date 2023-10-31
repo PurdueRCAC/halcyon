@@ -579,6 +579,7 @@ class ItemsController extends Controller
 
 		$row = Item::findOrNew($id);
 		$row->fill($request->input('fields'));
+		$row->link = $row->link ? $row->link : '/';
 		if ($request->has('fields.page_id'))
 		{
 			$row->page_id = $request->input('fields.page_id');
