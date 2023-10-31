@@ -93,7 +93,7 @@ class ItemsController extends Controller
 			$a . '.menutype',
 			$a . '.title',
 			$a . '.alias',
-			$a . '.note',
+			$a . '.content',
 			$a . '.path',
 			$a . '.link',
 			$a . '.type',
@@ -209,7 +209,7 @@ class ItemsController extends Controller
 				{
 					$where->where($a . '.title', 'like', '%' . $search . '%')
 						->orWhere($a . '.alias', 'like', '%' . $search . '%')
-						->orWhere($a . '.note', 'like', '%' . $search . '%');
+						->orWhere($a . '.content', 'like', '%' . $search . '%');
 				});
 			}
 		}
@@ -437,6 +437,7 @@ class ItemsController extends Controller
 		switch ($row->type)
 		{
 			case 'separator':
+			case 'html':
 				$row->link = '';
 				$row->module_id = 0;
 				break;
@@ -498,6 +499,7 @@ class ItemsController extends Controller
 				break;
 
 			case 'separator':
+			case 'html':
 				$row->link = '';
 				$row->module_id = 0;
 				break;
@@ -559,6 +561,7 @@ class ItemsController extends Controller
 		$rules = [
 			'fields.menutype' => 'required|string|max:24',
 			'fields.title' => 'nullable|string|max:255',
+			'fields.content' => 'nullable|string',
 			'fields.path' => 'nullable|string|max:1024',
 			'fields.link' => 'nullable|string|max:1024',
 		];

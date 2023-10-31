@@ -111,4 +111,5 @@ return [
 		'page' => 'Page',
 	],
 	'linktype options label' => 'Link Type Options',
+	'content' => 'Content',
 ];

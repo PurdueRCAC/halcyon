@@ -48,6 +48,10 @@ class MenuType extends Select
 				$value = trans('menus::menus.type separator');
 				break;
 
+			case 'html':
+				$value = trans('menus::menus.type html');
+				break;
+
 			default:
 				$link = $this->form->getValue('link');
 				// Clean the link back to the option, view and layout

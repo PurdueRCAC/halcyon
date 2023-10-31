@@ -51,7 +51,7 @@ app('pathway')
 					{!! $errors->first('type', '<span class="form-text text-danger">:message</span>') !!}
 				</div>
 
-				<div class="form-group menutype-dependant menutype-url menutype-module{{ $errors->has('title') ? ' has-error' : '' }}">
+				<div class="form-group menutype-dependant menutype-url menutype-module menutype-html{{ $errors->has('title') ? ' has-error' : '' }}">
 					<?php echo $form->getLabel('title'); ?>
 					<?php echo $form->getInput('title'); ?>
 					{!! $errors->first('title', '<span class="form-text text-danger">:message</span>') !!}
@@ -81,6 +81,11 @@ app('pathway')
 					<?php echo $form->getInput('page_id'); ?>
 				</div>
 
+				<div class="form-group menutype-dependant menutype-html">
+					<?php echo $form->getLabel('content'); ?>
+					<?php echo $form->getInput('content'); ?>
+				</div>
+
 				<?php /*if ($row->type == 'alias'): ?>
 					<div class="form-group">
 						<?php echo $form->getLabel('aliastip'); ?>
@@ -92,14 +97,14 @@ app('pathway')
 						<?php echo $form->getLabel('alias'); ?>
 						<?php echo $form->getInput('alias'); ?>
 					</div>
-				<?php endif;*/ ?>
+				<?php endif;
 
 				<div class="form-group">
 					<?php echo $form->getLabel('note'); ?>
 					<?php echo $form->getInput('note'); ?>
 				</div>
 
-				<?php /*if ($row->type != 'url'): ?>
+				if ($row->type != 'url'): ?>
 					<div class="form-group">
 						<?php echo $form->getLabel('link'); ?>
 						<?php echo $form->getInput('link'); ?>

@@ -72,6 +72,8 @@
 				value="url">url</option>
 			<option
 				value="separator">separator</option>
+			<option
+				value="html">html</option>
 		</field>
 
 		<field
@@ -129,6 +131,14 @@
 			name="module_id"
 			type="hidden"
 			filter="int" />
+
+		<field
+			name="content"
+			type="textarea"
+			label="menus::menus.content"
+			description="menus::menus.content description"
+			rows="10"
+			class="inputbox"/>
 
 		<field
 			name="ordering"

@@ -466,9 +466,11 @@ class ItemsController extends Controller
 	public function create(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
+			'menutype' => 'required|string|max:24',
 			'parent_id' => 'nullable|integer|min:0',
 			'title' => 'required|string|max:255',
 			'type' => 'required|string|max:255',
+			'content' => 'nullable|string',
 		]);
 
 		if ($validator->fails()) //!$request->validated())
@@ -677,6 +679,7 @@ class ItemsController extends Controller
 			'parent_id' => 'nullable|integer|min:0',
 			'title' => 'nullable|string|max:255',
 			'type' => 'nullable|string|max:255',
+			'content' => 'nullable|string',
 		]);
 
 		if ($validator->fails()) //!$request->validated())

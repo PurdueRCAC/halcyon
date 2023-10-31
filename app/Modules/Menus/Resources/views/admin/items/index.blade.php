@@ -177,6 +177,8 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 						<div class="flex-grow-1">
 							@if ($row->type == 'separator')
 								<div class="smallsub">----</div>
+							@elseif ($row->type == 'html')
+								<div class="smallsub">&lt;  &gt; ... &lt;/  &gt;</div>
 							@else
 								<div class="smallsub" title="{{ $row->path }}">
 									@if ($row->type != 'url')
