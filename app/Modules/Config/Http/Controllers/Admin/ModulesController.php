@@ -115,10 +115,11 @@ class ModulesController extends Controller
 			$rules = new Rules($data['rules']);
 			$asset = Asset::findByName($module->element);
 
-			if (!$asset->id)
+			if (!$asset || !$asset->id)
 			{
 				$root = Asset::getRoot();
 
+				$asset = new Asset;
 				$asset->name  = $module->element;
 				$asset->title = $module->element;
 				$asset->parent_id = $root->id;
