@@ -45,6 +45,7 @@ class UserDisplay
 		$this->user = $user;
 		$this->active = $active;
 		$this->sections = array();
+		$this->parts = array();
 	}
 
 	/**
