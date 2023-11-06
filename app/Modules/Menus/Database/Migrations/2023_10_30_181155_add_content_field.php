@@ -13,7 +13,7 @@ class AddContentField extends Migration
 	 */
 	public function up()
 	{
-		if (Schema::hasTable('menu_items'))
+		if (Schema::hasTable('menu_items') && !Schema::hasColumn('menu_items', 'content'))
 		{
 			Schema::table('menu_items', function (Blueprint $table)
 			{
@@ -30,7 +30,7 @@ class AddContentField extends Migration
 	 */
 	public function down()
 	{
-		if (Schema::hasTable('menu_items'))
+		if (Schema::hasTable('menu_items') && !Schema::hasColumn('menu_items', 'note'))
 		{
 			Schema::table('menu_items', function (Blueprint $table)
 			{
