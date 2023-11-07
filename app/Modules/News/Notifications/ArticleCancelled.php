@@ -54,7 +54,7 @@ class ArticleCancelled extends Notification
 
 		return [
 			'title' => $article->type->name,
-			'data' => '<a href="' . route('site.news.show', ['id' => $this->association->id]) . '">Registration to ' . $title . ' cancelled.</a>'
+			'data' => '<a href="' . route('site.news.show', ['id' => $this->association->id]) . '">Registration for ' . $title . ' cancelled.</a>'
 		];
 	}
 

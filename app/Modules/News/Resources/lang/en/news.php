@@ -97,7 +97,7 @@ return [
 		'invalid body' => 'Please provide some content',
 		'selection will not filter' => 'Warning: will not filter based on the resources selected.',
 	],
-	'upcoming event at' => 'You have an upcoming :type at :time',
+	'upcoming event at' => 'You registered for :type at :time',
 	'no type articles' => 'There are no :type articles.',
 	'article id' => 'Article #:id',
 	'default state' => 'Default filter',
