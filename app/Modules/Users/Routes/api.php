@@ -135,11 +135,52 @@ $router->group(['prefix' => 'users'], function (Router $router)
 			'as' => 'api.users.notes.update',
 			'uses' => 'NotesController@update',
 			'middleware' => 'can:edit users',
-		]);
+		])->where('id', '[0-9]+');
 		$router->delete('{id}', [
 			'as'   => 'api.users.notes.delete',
 			'uses' => 'NotesController@delete',
 			'middleware' => 'can:edit users',
+		])->where('id', '[0-9]+');
+	});
+
+	$router->group(['prefix' => 'notifications', 'middleware' => 'auth:api'], function (Router $router)
+	{
+		$router->get('/', [
+			'as' => 'api.users.notifications',
+			'uses' => 'NotificationsController@index',
+		]);
+		/*$router->post('/', [
+			'as' => 'api.users.notifications.create',
+			'uses' => 'NotificationsController@create',
+		]);*/
+		$router->get('{id}', [
+			'as' => 'api.users.notifications.read',
+			'uses' => 'NotificationsController@read',
+		]);
+		$router->match(['put', 'patch'], '/mark-all-as-read', [
+			'as' => 'api.users.notifications.markallasread',
+			'uses' => 'NotificationsController@markAllRead',
+		]);
+		$router->match(['put', 'patch'], '/mark-all-as-unread', [
+			'as' => 'api.users.notifications.markallasunread',
+			'uses' => 'NotificationsController@markAllUnread',
+		]);
+		$router->match(['put', 'patch'], '{id}/mark-as-read', [
+			'as' => 'api.users.notifications.markasread',
+			'uses' => 'NotificationsController@markRead',
+		]);
+		$router->match(['put', 'patch'], '{id}/mark-as-unread', [
+			'as' => 'api.users.notifications.markasunread',
+			'uses' => 'NotificationsController@markUnead',
+		]);
+		$router->match(['put', 'patch'], '{id}', [
+			'as' => 'api.users.notifications.update',
+			'uses' => 'NotificationsController@update',
+		]);
+
+		$router->delete('{id}', [
+			'as'   => 'api.users.notifications.delete',
+			'uses' => 'NotificationsController@delete',
 		]);
 	});
 });
