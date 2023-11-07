@@ -26,7 +26,6 @@ class Groups
 	{
 		$events->listen(UserBeforeDisplay::class, self::class . '@handleUserBeforeDisplay');
 		$events->listen(UserDisplay::class, self::class . '@handleUserDisplay');
-		$events->listen(UserNotifying::class, self::class . '@handleUserNotifying');
 	}
 
 	/**
@@ -446,44 +445,5 @@ class Groups
 			($event->getActive() == 'groups'),
 			$content
 		);
-	}
-
-	/**
-	 * Display data for a user
-	 *
-	 * @param   UserNotifying  $event
-	 * @return  void
-	 */
-	public function handleUserNotifying(UserNotifying $event): void
-	{
-		$user = $event->user;
-
-		// Owner
-		$memberships = Member::query()
-			->with('group')
-			->where('userid', '=', $user->id)
-			->whereIsManager()
-			->orderBy('datecreated', 'asc')
-			->get();
-
-		foreach ($memberships as $membership)
-		{
-			$group = $membership->group;
-
-			$total = $group->pendingMembersCount;
-
-			if (!$total)
-			{
-				continue;
-			}
-
-			$title = trans('groups::groups.groups');
-
-			$content = '<a href="' . route('site.users.account.section.show.subsection', ['section' => 'groups', 'id' => $group->id, 'subsection' => 'members']) . '">' . trans('groups::groups.group has pending requests', ['group' => $group->name]) . '</a>';
-
-			$level = 'normal';
-
-			$event->addNotification(new Notification($title, $content, $level));
-		}
 	}
 }

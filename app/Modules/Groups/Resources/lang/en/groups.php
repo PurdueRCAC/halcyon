@@ -75,6 +75,7 @@ return [
 	'mail' => [
 		'ownerauthorized' => 'Manager Approved',
 		'ownerremoved' => 'Manager Removed',
+		'user request submitted' => 'New access request to group\'s resources',
 	],
 	'group member' => 'group member',
 	'error' => [

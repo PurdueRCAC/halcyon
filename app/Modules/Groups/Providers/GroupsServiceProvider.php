@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\View;
 use App\Modules\Groups\Listeners\AddManagersToNewQueue;
 use App\Modules\Groups\Listeners\AddUserToUnixGroup;
 use App\Modules\Groups\Listeners\RemoveMembershipsForDeletedUser;
+use App\Modules\Groups\Listeners\NotifyManagersOfUserRequest;
 use App\Modules\Groups\Composers\ProfileComposer;
 use App\Modules\Groups\Console\EmailAuthorizedCommand;
 use App\Modules\Groups\Console\EmailRemovedCommand;
@@ -54,6 +55,7 @@ class GroupsServiceProvider extends ServiceProvider
 		$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
 
 		$this->app['events']->subscribe(new RemoveMembershipsForDeletedUser);
+		$this->app['events']->subscribe(new NotifyManagersOfUserRequest);
 
 		if (Module::isEnabled('queues'))
 		{
