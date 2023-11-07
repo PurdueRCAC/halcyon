@@ -1,6 +1,7 @@
 <?php
 namespace App\Listeners\Users\News;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Users\Events\UserDisplay;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Association;
@@ -18,13 +19,12 @@ class News
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  \Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(UserDisplay::class, self::class . '@handleUserDisplay');
-		$events->listen(UserNotifying::class, self::class . '@handleUserNotifying');
 	}
 
 	/**
@@ -33,7 +33,7 @@ class News
 	 * @param   UserDisplay  $event
 	 * @return  void
 	 */
-	public function handleUserDisplay(UserDisplay $event)
+	public function handleUserDisplay(UserDisplay $event): void
 	{
 		if (app('isAdmin'))
 		{
@@ -120,55 +120,6 @@ class News
 				($event->getActive() == $type->alias),
 				$content
 			);
-		}
-	}
-
-	/**
-	 * Display data for a user
-	 *
-	 * @param   UserNotifying  $event
-	 * @return  void
-	 */
-	public function handleUserNotifying(UserNotifying $event)
-	{
-		$user = $event->user;
-
-		$a = (new Article)->getTable();
-		$u = (new Association)->getTable();
-		$now = Carbon::now();
-
-		$rows = Article::query()
-			->select($a . '.*', $u . '.id AS attending')
-			->join($u, $u . '.newsid', $a . '.id')
-			->where($u . '.associd', '=', $user->id)
-			->where($u . '.assoctype', '=', 'user')
-			->whereNull($u . '.datetimeremoved')
-			->where(function($where) use ($now, $a)
-			{
-				$where->where($a . '.datetimenews', '>=', $now->toDateTimeString())
-					->orWhere(function($wh) use ($now, $a)
-					{
-						$wh->whereNull($a . '.datetimenewsend')
-							->orWhere($a . '.datetimenewsend', '>', $now->toDateTimeString());
-					});
-			})
-			->whereIn($a . '.published', [1])
-			->orderBy($a . '.datetimenews', 'desc')
-			->get();
-
-		foreach ($rows as $row)
-		{
-			$title = $row->type->name;
-
-			$content = '<a href="' . route('site.news.show', ['id' => $row->id]) . '">' . trans('news::news.upcoming event at', ['type' => $row->type->name, 'time' => $row->formatDate($row->datetimenews, $row->datetimenewsend)]) . '</a>';
-
-			$level = 'normal';
-			if ($row->isNow())
-			{
-				$level = 'high';
-			}
-
-			$event->addNotification(new Notification($title, $content, $level));
 		}
 	}
 }

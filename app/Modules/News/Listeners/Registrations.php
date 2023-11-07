@@ -4,11 +4,13 @@ namespace App\Modules\News\Listeners;
 
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Mail;
-use App\Modules\History\Models\Log;
+//use App\Modules\History\Models\Log;
 use App\Modules\News\Events\AssociationCreated;
 use App\Modules\News\Events\AssociationDeleted;
-use App\Modules\News\Mail\Registered;
-use App\Modules\News\Mail\Cancelled;
+//use App\Modules\News\Mail\Registered;
+//use App\Modules\News\Mail\Cancelled;
+use App\Modules\News\Notifications\ArticleRegistered;
+use App\Modules\News\Notifications\ArticleCancelled;
 
 /**
  * News listener for registrations
@@ -44,14 +46,7 @@ class Registrations
 			return;
 		}
 
-		$message = new Registered($association);
-		$message->headers()->text([
-			'X-Command' => 'listener:reservations',
-			'X-Target-User' => $user->id,
-			'X-Target-Object' => $association->id,
-		]);
-
-		Mail::to($user->email)->send($message);
+		$user->notify(new ArticleRegistered($association));
 	}
 
 	/**
@@ -71,13 +66,6 @@ class Registrations
 			return;
 		}
 
-		$message = new Cancelled($association);
-		$message->headers()->text([
-			'X-Command' => 'listener:reservations',
-			'X-Target-User' => $user->id,
-			'X-Target-Object' => $association->id,
-		]);
-
-		Mail::to($user->email)->send($message);
+		$user->notify(new ArticleCancelled($association));
 	}
 }
