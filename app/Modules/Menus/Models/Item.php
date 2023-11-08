@@ -53,6 +53,7 @@ use Exception;
  * @property Carbon|null $deleted_at
  *
  * @property string $api
+ * @property array<int,int> $tree
  */
 class Item extends Model
 {
@@ -790,12 +791,12 @@ class Item extends Model
 	public function moveByReference(int $referenceId, string $position = 'after', int $pk = 0)
 	{
 		// Initialise variables.
-		$pk = (is_null($pk)) ? $this->id : $pk;
+		$pk = $pk ?: $this->id;
 
 		// Get the node by id.
 		$node = self::find($pk);
 
-		if (!$node->id)
+		if (!$node)
 		{
 			// Error message set in getNode method.
 			throw new Exception(trans('global.error.move failed') . ': Node not found #' . $pk);

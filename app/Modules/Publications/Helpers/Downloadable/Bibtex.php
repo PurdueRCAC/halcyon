@@ -45,13 +45,14 @@ class Bibtex extends Downloadable
 		if (!empty($addarray['author']))
 		{
 			$author = $addarray['author'][0];
-			$row->cite  = strtolower($author['last']);
-			$row->cite .= $row->published_at->format('Y');
+			$cite  = strtolower($author['last']);
+			$cite .= $row->published_at->format('Y');
 			$t = preg_replace('/[^a-zA-Z0-9]/', '', strtolower($row->title));
-			$row->cite .= (strlen($t) > 10 ? substr($t, 0, 10) : $t);
+			$cite .= (strlen($t) > 10 ? substr($t, 0, 10) : $t);
+
+			$addarray['cite']         = $cite;
 		}
 
-		$addarray['cite']         = $row->cite;
 		$addarray['booktitle']    = $row->booktitle;
 		$addarray['chapter']      = $row->chapter;
 		$addarray['edition']      = $row->edition;

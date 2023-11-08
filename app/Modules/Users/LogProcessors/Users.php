@@ -30,6 +30,7 @@ class Users
 			{
 				$parts = explode('/', $record->uri);
 				$id = end($parts);
+				$id = intval($id);
 
 				$record->targetuserid = $id;
 			}
@@ -100,6 +101,7 @@ class Users
 			{
 				$parts = explode('/', $record->uri);
 				$id = end($parts);
+				$id = intval($id);
 
 				$facet = Facet::find($id);
 

@@ -572,7 +572,7 @@ class Form
 	 * Method to get the value of a field.
 	 *
 	 * @param   string  $name     The name of the field for which to get the value.
-	 * @param   string  $group    The optional dot-separated form group path on which to get the value.
+	 * @param   string|null  $group    The optional dot-separated form group path on which to get the value.
 	 * @param   mixed   $default  The optional default value of the field value is empty.
 	 * @return  mixed   The value of the field or the default value if empty.
 	 */
@@ -601,8 +601,8 @@ class Form
 	 * method will move on to the next field to load.
 	 *
 	 * @param   string   $data     The name of an XML string or object.
-	 * @param   string   $replace  Flag to toggle whether form fields should be replaced if a field already exists with the same group/name.
-	 * @param   string   $xpath    An optional xpath to search for the fields.
+	 * @param   bool   $replace  Flag to toggle whether form fields should be replaced if a field already exists with the same group/name.
+	 * @param   string|false   $xpath    An optional xpath to search for the fields.
 	 * @return  bool  True on success, false otherwise.
 	 */
 	public function load($data, $replace = true, $xpath = false)

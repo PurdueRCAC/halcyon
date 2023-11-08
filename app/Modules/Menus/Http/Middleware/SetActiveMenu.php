@@ -45,6 +45,7 @@ class SetActiveMenu
 		}
 
 		$found = false;
+		$foundDepth = 0;
 		$route = strtolower($route);
 		$lang  = app('translator')->locale();
 		$items = array_reverse($menu->getMenu());

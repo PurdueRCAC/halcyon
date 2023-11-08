@@ -250,7 +250,7 @@ class Type extends Model
 	}
 
 	/**
-	 * Gets a list of all mod_mainmenu modules and collates them by menutype
+	 * Gets a list of all menu widgets and collates them by menutype
 	 *
 	 * @return  array<string,array<int,Widget>>
 	 */
@@ -265,11 +265,12 @@ class Type extends Model
 		foreach ($widgets as $widget)
 		{
 			$menuType = $widget->params->get('menutype');
+			$menuType = $menuType ?: '_unknown_';
 			if (!isset($result[$menuType]))
 			{
 				$result[$menuType] = array();
 			}
-			$result[$menuType][] = $widgets;
+			$result[$menuType][] = $widget;
 		}
 
 		return $result;
@@ -299,7 +300,10 @@ class Type extends Model
 		if ($this->id)
 		{
 			// Get the old value of the table just in case the 'menutype' changed
-			$prev = self::query()->withTrashed()->where('id', '=', $this->id)->first();
+			$prev = self::query()
+				->withTrashed()
+				->where('id', '=', $this->id)
+				->first();
 
 			if ($prev && ($this->menutype != $prev->menutype)) //$prev->getOriginal('menutype'))
 			{

@@ -4,6 +4,7 @@ namespace App\Modules\Widgets\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Config\Repository;
 use App\Halcyon\Traits\Checkable;
 use App\Halcyon\Form\Form;
 use App\Halcyon\Models\Casts\Params;
@@ -26,8 +27,17 @@ use Carbon\Carbon;
  * @property string $position
  * @property int    $checked_out
  * @property Carbon|null $checked_out_time
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
+ * @property Carbon|null $publish_up
+ * @property Carbon|null $publish_down
+ * @property int    $published
+ * @property string $widget
+ * @property int    $access
+ * @property int    $showtitle
+ * @property Repository $params
+ * @property int    $client_id
+ * @property string $language
+ *
+ * @property string $api
  */
 class Widget extends Model
 {
@@ -211,10 +221,10 @@ class Widget extends Model
 	 * default: "Label" becomes "Label (2)"
 	 * dash:    "Label" becomes "Label-2"
 	 *
-	 * @param   string   $string  The source string.
-	 * @param   string   $style   The the style (default|dash).
-	 * @param   int  $n       If supplied, this number is used for the copy, otherwise it is the 'next' number.
-	 * @return  string   The incremented string.
+	 * @param   string  $string  The source string.
+	 * @param   string  $style   The the style (default|dash).
+	 * @param   int     $n       If supplied, this number is used for the copy, otherwise it is the 'next' number.
+	 * @return  string  The incremented string.
 	 */
 	protected static function incrementString($string, $style = 'default', $n = 0): string
 	{
@@ -408,8 +418,8 @@ class Widget extends Model
 	/**
 	 * Save menu assignments for a widget
 	 *
-	 * @param   int  $assignment
-	 * @param   array    $assigned
+	 * @param   int    $assignment
+	 * @param   array<int,int>  $assigned
 	 * @return  bool
 	 * @throws  \Exception
 	 */
@@ -479,9 +489,9 @@ class Widget extends Model
 	 * Method to move a row in the ordering sequence of a group of rows defined by an SQL WHERE clause.
 	 * Negative numbers move the row up in the sequence and positive numbers move it down.
 	 *
-	 * @param   int  $delta  The direction and magnitude to move the row in the ordering sequence.
-	 * @param   string   $where  WHERE clause to use for limiting the selection of rows to compact the ordering values.
-	 * @return  bool     True on success.
+	 * @param   int     $delta  The direction and magnitude to move the row in the ordering sequence.
+	 * @param   string  $where  WHERE clause to use for limiting the selection of rows to compact the ordering values.
+	 * @return  bool    True on success.
 	 */
 	public function move($delta, $where = ''): bool
 	{
@@ -554,8 +564,8 @@ class Widget extends Model
 	/**
 	 * Saves the manually set order of records.
 	 *
-	 * @param   array  $pks    An array of primary key ids.
-	 * @param   array  $order  An array of order values.
+	 * @param   array<int,int>  $pks    An array of primary key ids.
+	 * @param   array<int,int>  $order  An array of order values.
 	 * @return  bool
 	 */
 	public static function saveOrder(array $pks, array $order): bool

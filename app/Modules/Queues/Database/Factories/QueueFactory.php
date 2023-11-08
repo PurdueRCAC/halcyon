@@ -5,6 +5,9 @@ namespace App\Modules\Queues\Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Modules\Queues\Models\Queue;
 
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ */
 class QueueFactory extends Factory
 {
     /**

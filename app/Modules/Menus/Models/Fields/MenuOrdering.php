@@ -91,7 +91,7 @@ class MenuOrdering extends Select
 	 */
 	protected function getInput()
 	{
-		if ($this->form->getValue('id', 0) == 0)
+		if ($this->form->getValue('id', null, 0) == 0)
 		{
 			return '<span class="readonly">' . trans('menus::menus.item.ordering hint') . '</span>';
 		}

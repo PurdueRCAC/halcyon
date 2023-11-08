@@ -6,6 +6,7 @@ use App\Halcyon\Form\Field;
 use App\Halcyon\Html\Builder\Select as Dropdown;
 use App\Halcyon\Form\Fields\Groupedlist;
 use App\Modules\Menus\Events\CollectingRoutes;
+use stdClass;
 
 /**
  * Supports an HTML grouped select list of menu item grouped by menu
@@ -22,7 +23,7 @@ class MenuRoute extends Groupedlist
 	/**
 	 * Method to get the field option groups.
 	 *
-	 * @return  array<string,array<int,string>>  The field option objects as a nested array in groups.
+	 * @return  array<string,array<int,\stdClass>>  The field option objects as a nested array in groups.
 	 */
 	protected function getGroups()
 	{
@@ -47,8 +48,18 @@ class MenuRoute extends Groupedlist
 					$item['path'] = '/' . $item['path'];
 				}
 
-				$selected = $item['value'] == $this->value ? ' selected="selected"' : '';
-				$groups[$group][] = '<option value="' . e($item['value']) . '" data-indent="' . e($item['indent']) . '" data-path="' . e($item['path']) . '"' . $selected . '>' . e($item['indent'] . $item['text']). '</option>';
+				//$selected = $item['value'] == $this->value ? ' selected="selected"' : '';
+
+				$opt = new stdClass;
+				$opt->value = $item['value'];
+				$opt->text = $item['indent'] . $item['text'];
+				$opt->indent = $item['indent'];
+				$opt->path = $item['path'];
+				$opt->selected = $item['value'] == $this->value ? ' selected="selected"' : '';
+
+				$groups[$group][] = $opt;
+
+				//$groups[$group][] = '<option value="' . e($item['value']) . '" data-indent="' . e($item['indent']) . '" data-path="' . e($item['path']) . '"' . $selected . '>' . e($item['indent'] . $item['text']). '</option>';
 			}
 		}
 
@@ -97,7 +108,8 @@ class MenuRoute extends Groupedlist
 			$html[] = '<optgroup label="' . e($title) . '">';
 			foreach ($items as $item)
 			{
-				$html[] = $item;
+				//$html[] = $item;
+				$html[] = '<option value="' . e($item->value) . '" data-indent="' . e($item->indent) . '" data-path="' . e($item->path) . '"' . $item->selected . '>' . e($item->text) . '</option>';
 			}
 			$html[] = '</optgroup>';
 		}
