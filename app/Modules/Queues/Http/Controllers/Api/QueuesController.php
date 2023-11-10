@@ -729,7 +729,14 @@ class QueuesController extends Controller
 			$walltime = new Walltime;
 		}
 		$walltime->queueid = $queue->id;
-		$walltime->walltime = intval(floatval($request->input('maxwalltime')) * 60 * 60);
+		if ($queue->scheduler->defaultmaxwalltime)
+		{
+			$walltime->walltime = intval(floatval($queue->scheduler->defaultmaxwalltime) * 60 * 60);
+		}
+		if ($request->has('maxwalltime'))
+		{
+			$walltime->walltime = intval(floatval($request->input('maxwalltime')) * 60 * 60);
+		}
 		$walltime->datetimestart = $queue->datetimecreated;
 		$walltime->save();
 
