@@ -276,11 +276,11 @@ class NotificationsController extends Controller
 		]);
 
 		$row = DatabaseNotification::findOrFail($id);
-		if ($mark == 'read')
+		if ($request->input('mark') == 'read')
 		{
 			$row->markAsRead();
 		}
-		elseif ($mark == 'unread')
+		elseif ($request->input('mark') == 'unread')
 		{
 			$row->markAsUnread();
 		}
