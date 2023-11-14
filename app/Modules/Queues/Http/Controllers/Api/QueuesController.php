@@ -731,7 +731,7 @@ class QueuesController extends Controller
 		$walltime->queueid = $queue->id;
 		if ($queue->scheduler->defaultmaxwalltime)
 		{
-			$walltime->walltime = intval(floatval($queue->scheduler->defaultmaxwalltime) * 60 * 60);
+			$walltime->walltime = $queue->scheduler->defaultmaxwalltime;
 		}
 		if ($request->has('maxwalltime'))
 		{
