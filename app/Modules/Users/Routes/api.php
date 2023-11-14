@@ -21,7 +21,7 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		'as' => 'api.users.read',
 		'uses' => 'UsersController@read',
 		'middleware' => ['auth:api'],
-	])->where('id', '^me$|[0-9]+');
+	])->where('id', '[a-z0-9]+');//->where('id', '^me$|[0-9]+');
 
 	$router->match(['put', 'patch'], '{id}', [
 		'as' => 'api.users.update',

@@ -433,7 +433,18 @@ class UsersController extends Controller
 		}
 		else
 		{
-			$user = User::findOrFail($id);
+			if (is_numeric($id))
+			{
+				$user = User::findOrFail($id);
+			}
+			else
+			{
+				$user = User::findByUsername($id);
+				if (!$user)
+				{
+					abort(404);
+				}
+			}
 		}
 		if ($request->has('module_permissions'))
 		{
