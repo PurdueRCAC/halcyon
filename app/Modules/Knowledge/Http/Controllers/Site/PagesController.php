@@ -26,6 +26,7 @@ class PagesController extends Controller
 	public function index(Request $request): View
 	{
 		$path = trim($request->path(), '/');
+		$allow_all = config('module.knowledge.allow_all');
 
 		if (substr($path, -4) == '/all')
 		{
@@ -132,7 +133,7 @@ class PagesController extends Controller
 		array_shift($path);
 		$node->guide = $guide;
 
-		$all = $request->input('all');
+		$all = $allow_all ? $request->input('all') : false;
 
 		$view = 'index';
 		if (auth()->user()
@@ -149,6 +150,7 @@ class PagesController extends Controller
 			'root' => $root,
 			'parent' => $parent,
 			'all' => $all,
+			'allow_all' => $allow_all,
 		]);
 	}
 

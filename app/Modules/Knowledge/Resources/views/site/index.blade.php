@@ -66,7 +66,7 @@
 
 <div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 	<div class="row">
-		<div class="col-md-9">
+		<div class="col-md-{{ $allow_all ? '9' : '12' }}">
 			<form method="get" action="{{ route('site.knowledge.search') }}">
 				<div class="form-group">
 					<label class="sr-only" for="knowledge_search">{{ trans('knowledge::knowledge.search') }}</label>
@@ -80,6 +80,7 @@
 				</div>
 			</form>
 		</div>
+	@if ($allow_all)
 		<div class="col-md-3 text-right">
 		@if ($p)
 			@if ($all)
@@ -89,6 +90,7 @@
 			@endif
 		@endif
 		</div>
+	@endif
 	</div>
 
 	<div class="warticle-wrap" id="page-content{{ $page->id }}">

@@ -14,6 +14,11 @@ use Spatie\Sitemap\Tags\Url;
 class PageCollector
 {
 	/**
+	 * @var bool
+	 */
+	private $allow_all = false;
+
+	/**
 	 * Register the listeners for the subscriber.
 	 *
 	 * @param  Dispatcher  $events
@@ -32,6 +37,8 @@ class PageCollector
 	 */
 	public function handleGenerateSitemap(GenerateSitemap $event): void
 	{
+		$this->allow_all = config('module.knowledge.allow_all');
+
 		$this->pages(0, $event);
 	}
 
@@ -85,6 +92,16 @@ class PageCollector
 					->setChangeFrequency(Url::CHANGE_FREQUENCY_YEARLY)
 					->setPriority($priority)
 			);
+
+			if ($this->allow_all)
+			{
+				$event->map->add(
+					Url::create($route . '?all=true')
+						->setLastModificationDate($page->updated_at)
+						->setChangeFrequency(Url::CHANGE_FREQUENCY_YEARLY)
+						->setPriority($priority)
+				);
+			}
 
 			$this->pages($page->assoc_id, $event);
 		}
