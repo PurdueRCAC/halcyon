@@ -1,6 +1,7 @@
 <?php
 namespace App\Listeners\Resources\Knowledge;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Resources\Events\AssetDisplaying;
 use App\Modules\Resources\Events\AssetDeleted;
 use App\Modules\Knowledge\Models\Page;
@@ -15,10 +16,10 @@ class Knowledge
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(AssetDisplaying::class, self::class . '@handleAssetDisplaying');
 		$events->listen(AssetDeleted::class, self::class . '@handleAssetDeleted');
@@ -30,7 +31,7 @@ class Knowledge
 	 * @param   AssetDeleted  $event
 	 * @return  void
 	 */
-	public function handleAssetDeleted(AssetDeleted $event)
+	public function handleAssetDeleted(AssetDeleted $event): void
 	{
 		$a = (new Associations)->getTable();
 		$p = (new Page)->getTable();
@@ -58,7 +59,7 @@ class Knowledge
 	 * @param   AssetDisplaying  $event
 	 * @return  void
 	 */
-	public function handleAssetDisplaying(AssetDisplaying $event)
+	public function handleAssetDisplaying(AssetDisplaying $event): void
 	{
 		if (app()->has('isAdmin') && app()->get('isAdmin'))
 		{

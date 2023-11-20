@@ -1,6 +1,7 @@
 <?php
 namespace App\Listeners\Resources\News;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Status\Events\StatusRetrieval;
 use App\Modules\Resources\Events\AssetDisplaying;
 use App\Modules\News\Models\Type;
@@ -16,10 +17,10 @@ class News
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(AssetDisplaying::class, self::class . '@handleAssetDisplaying');
 		$events->listen(StatusRetrieval::class, self::class . '@handleStatusRetrieval');
@@ -31,7 +32,7 @@ class News
 	 * @param   AssetDisplaying  $event
 	 * @return  void
 	 */
-	public function handleAssetDisplaying(AssetDisplaying $event)
+	public function handleAssetDisplaying(AssetDisplaying $event): void
 	{
 		if (app()->has('isAdmin') && app()->get('isAdmin'))
 		{
@@ -83,7 +84,7 @@ class News
 	 * @param   StatusRetrieval  $event
 	 * @return  void
 	 */
-	public function handleStatusRetrieval(StatusRetrieval $event)
+	public function handleStatusRetrieval(StatusRetrieval $event): void
 	{
 		$resource = $event->asset;
 

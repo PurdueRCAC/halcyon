@@ -1,6 +1,7 @@
 <?php
 namespace App\Listeners\Resources\Pages;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Resources\Events\AssetDisplaying;
 use App\Modules\Pages\Models\Page;
 
@@ -12,10 +13,10 @@ class Pages
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(AssetDisplaying::class, self::class . '@handleAssetDisplaying');
 	}
@@ -26,18 +27,23 @@ class Pages
 	 * @param   AssetDisplaying  $event
 	 * @return  void
 	 */
-	public function handleAssetDisplaying(AssetDisplaying $event)
+	public function handleAssetDisplaying(AssetDisplaying $event): void
 	{
 		if (app()->has('isAdmin') && app()->get('isAdmin'))
 		{
 			return;
 		}
 
-		$ids = config()->get('listener.resources.pages.display', [8]); // 8 = "Help" page
+		$paths = config()->get('listener.pages.display', []);
 
-		if (empty($ids))
+		if (empty($paths))
 		{
 			return;
+		}
+
+		foreach ($paths as $i => $path)
+		{
+			$paths[$i] = trim($path, '/');
 		}
 
 		$access = [1];
@@ -48,7 +54,7 @@ class Pages
 		}
 
 		$pages = Page::query()
-			->whereIn('id', $ids)
+			->whereIn('path', $paths)
 			->whereIn('access', $access)
 			->get();
 

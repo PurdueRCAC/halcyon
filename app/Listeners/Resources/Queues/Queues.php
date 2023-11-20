@@ -1,6 +1,7 @@
 <?php
 namespace App\Listeners\Resources\Queues;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Resources\Events\AssetDeleted;
 use App\Modules\Resources\Events\AssetCreated;
 use App\Modules\Resources\Events\SubresourceCreated;
@@ -16,10 +17,10 @@ class Queues
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(AssetCreated::class, self::class . '@handleAssetCreated');
 		$events->listen(SubresourceCreated::class, self::class . '@handleSubresourceCreated');
@@ -31,7 +32,7 @@ class Queues
 	 * @param   AssetCreated  $event
 	 * @return  void
 	 */
-	public function handleAssetCreated(AssetCreated $event)
+	public function handleAssetCreated(AssetCreated $event): void
 	{
 		if ($event->asset->resourcetype != 1)
 		{
@@ -58,7 +59,7 @@ class Queues
 	 * @param   AssetDeleted  $event
 	 * @return  void
 	 */
-	public function handleAssetDeleted(AssetDeleted $event)
+	public function handleAssetDeleted(AssetDeleted $event): void
 	{
 		$schedulers = Scheduler::query()
 			->where('queuesubresourceid', '=', $event->asset->id)
@@ -76,7 +77,7 @@ class Queues
 	 * @param   SubresourceCreated  $event
 	 * @return  void
 	 */
-	public function handleSubresourceCreated(SubresourceCreated $event)
+	public function handleSubresourceCreated(SubresourceCreated $event): void
 	{
 		$subresource = $event->subresource;
 
@@ -95,15 +96,12 @@ class Queues
 
 		$walltime = 0;
 
-		//if ($assoc = $subresource->association)
 		$scheduler = Scheduler::query()
 			->where('queuesubresourceid', '=', $subresource->id)
 			->first();
 
 		if ($scheduler)
 		{
-			//$resource = $assoc->resource;
-
 			$queue->schedulerid = $scheduler->id;
 			$queue->schedulerpolicyid = $scheduler->schedulerpolicyid;
 
