@@ -588,7 +588,7 @@ class Item extends Model
 			}
 
 			// Get the help data from the XML file if present.
-			$help = $xml->xpath('/metadata/layout/help');
+			//$help = $xml->xpath('/metadata/layout/help');
 		}
 		else
 		{
@@ -606,11 +606,11 @@ class Item extends Model
 				}
 
 				// Get the help data from the XML file if present.
-				$help = $xml->xpath('/form/help');
+				//$help = $xml->xpath('/form/help');
 			}
 		}
 
-		if (!empty($help))
+		/*if (!empty($help))
 		{
 			$helpKey = trim((string) $help[0]['key']);
 			$helpURL = trim((string) $help[0]['url']);
@@ -619,7 +619,7 @@ class Item extends Model
 			$this->helpKey = $helpKey ? $helpKey : $this->helpKey;
 			$this->helpURL = $helpURL ? $helpURL : $this->helpURL;
 			$this->helpLocal = (($helpLoc == 'true') || ($helpLoc == '1') || ($helpLoc == 'local')) ? true : false;
-		}
+		}*/
 
 		// Now load the module params.
 		// TODO: Work out why 'fixing' this breaks Form
@@ -747,10 +747,10 @@ class Item extends Model
 			->where('parent_id', '=', $this->parent_id)
 			->where('menutype', '=', $this->menutype);
 
-		/*if ($where)
+		if ($where)
 		{
-			$query->whereRaw($where);
-		}*/
+			$query->where(DB::raw($where));
+		}
 
 		$position = 'after';
 

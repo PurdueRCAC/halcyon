@@ -66,7 +66,7 @@ class Engine
 	public $yind = array();
 
 	/**
-	 * @var array|int
+	 * @var array<int,int>|int
 	 */
 	public $seq = 0;
 
@@ -410,6 +410,8 @@ class Engine
 	 */
 	public function _compareseq($xoff, $xlim, $yoff, $ylim)
 	{
+		$seps = array();
+
 		// Slide down the bottom initial diagonal.
 		while ($xoff < $xlim && $yoff < $ylim && $this->xv[$xoff] == $this->yv[$yoff])
 		{

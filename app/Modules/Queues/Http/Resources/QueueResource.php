@@ -176,7 +176,7 @@ class QueueResource extends JsonResource
 
 		if ($user)
 		{
-			$data['can']['edit']   = ($user->can('edit queues') || ($user->can('edit.own queues') && $item->userid == $user->id));
+			$data['can']['edit']   = ($user->can('edit queues') || ($user->can('edit.own queues') && $this->group->isManager($user)));
 			$data['can']['delete'] = $user->can('delete queues');
 		}
 

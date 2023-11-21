@@ -92,7 +92,7 @@ class WordAccumulator
 	/**
 	 * Add words to the group
 	 *
-	 * @param  array $words
+	 * @param  array<int,string> $words
 	 * @param  string $tag
 	 * @return void
 	 */

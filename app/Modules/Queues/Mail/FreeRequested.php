@@ -24,7 +24,7 @@ class FreeRequested extends Mailable
 	/**
 	 * The user request
 	 *
-	 * @var array<int,array>
+	 * @var array<int,array<int,QueueUser>>
 	 */
 	protected $userrequests;
 

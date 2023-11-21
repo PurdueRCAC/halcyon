@@ -326,9 +326,9 @@ class Message extends Model
 	}
 
 	/**
-	 * Get the message target object
+	 * Get the message target
 	 *
-	 * @return  object
+	 * @return  string
 	 */
 	public function getTargetAttribute()
 	{

@@ -51,7 +51,7 @@ class Resources
 	}
 
 	/**
-	 * Display user profile info
+	 * Gather information about storage usage if asset is type Storage.
 	 *
 	 * @param   AssetBeforeDisplay  $event
 	 * @return  void

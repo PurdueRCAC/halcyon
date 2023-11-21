@@ -6,13 +6,16 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Modules\Queues\Events\QueueReading;
 use Carbon\Carbon;
 
+/**
+ * @mixin \App\Modules\Queues\Models\Queue
+ */
 class AllocationResource extends JsonResource
 {
 	/**
 	 * Transform the queue collection into an array.
 	 *
 	 * @param   \Illuminate\Http\Request  $request
-	 * @return  array
+	 * @return  array<string,mixed>
 	 */
 	public function toArray($request)
 	{

@@ -149,7 +149,7 @@ class QuotasController extends Controller
 				{
 					// Assuming no pending requests or recent checks
 					$message = $row->messages()
-						->where('messagequeuetypeid', '=', $row->getquotatypeid)
+						->where('messagequeuetypeid', '=', $row->storageResource->getquotatypeid)
 						->where(function($where)
 						{
 							$recent = Carbon::now()->modify('-15 minutes');
@@ -161,7 +161,7 @@ class QuotasController extends Controller
 
 					if (!$message)
 					{
-						$row->addMessageToQueue($row->getquotatypeid, auth()->user() ? auth()->user()->id : 0);
+						$row->addMessageToQueue($row->storageResource->getquotatypeid, auth()->user() ? auth()->user()->id : 0);
 					}
 				}
 			}

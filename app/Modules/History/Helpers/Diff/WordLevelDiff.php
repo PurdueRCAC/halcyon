@@ -33,7 +33,7 @@ class WordLevelDiff extends MappedDiff
 	 * Split lines into words
 	 *
 	 * @param  array<int,string> $lines
-	 * @return array<int,array>
+	 * @return array<int,array<int,string>>
 	 */
 	public function _split($lines)
 	{

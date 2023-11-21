@@ -20,7 +20,7 @@ class Copy extends Operation
 	 * Constructor
 	 *
 	 * @param  array<int,string> $orig
-	 * @param  bool $closing
+	 * @param  bool|array<int,string> $closing
 	 * @return void
 	 */
 	public function __construct($orig, $closing = false)
