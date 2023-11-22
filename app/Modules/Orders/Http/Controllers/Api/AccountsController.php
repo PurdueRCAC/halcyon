@@ -208,7 +208,7 @@ class AccountsController extends Controller
 			}
 			else
 			{
-				$query->where($a . '.budgetjustifaction', 'like', '%' . $filters['search'] . '%');
+				$query->where($a . '.budgetjustifcation', 'like', '%' . $filters['search'] . '%');
 			}
 		}
 
@@ -612,6 +612,16 @@ class AccountsController extends Controller
 	 * 			"type":      "integer"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "deniedreason",
+	 * 		"description":   "Denied reason",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"maxLength": 2000
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"202": {
 	 * 			"description": "Successful entry modification"
@@ -642,6 +652,7 @@ class AccountsController extends Controller
 			'datetimepaymentdoc' => 'nullable|date',
 			'paymentdocid' => 'nullable|string',
 			'notice' => 'nullable|integer',
+			'deniedreason' => 'nullable|string|max:2000',
 			// Actions
 			'approved' => 'nullable|integer',
 			'paid' => 'nullable|integer',
@@ -786,6 +797,11 @@ class AccountsController extends Controller
 		{
 			$row->datetimedenied = Carbon::now()->toDateTimeString();
 			$row->notice = NoticeStatus::ACCOUNT_DENIED;
+
+			if ($request->has('deniedreason'))
+			{
+				$row->deniedreason = $request->input('deniedreason');
+			}
 		}
 
 		if ($request->input('reset') && auth()->user()->can('manage orders'))
@@ -793,6 +809,7 @@ class AccountsController extends Controller
 			$row->datetimepaid = null;
 			$row->datetimeapproved = null;
 			$row->datetimedenied = null;
+			$row->deniedreason = null;
 
 			if ($row->approveruserid)
 			{

@@ -165,8 +165,15 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.querySelectorAll('.account-deny').forEach(function(el) {
 		el.addEventListener('click', function(e){
 			e.preventDefault();
-			if (confirm(this.getAttribute('data-confirm'))) {
+			//if (confirm(this.getAttribute('data-confirm'))) {
 				DenyAccount(this.getAttribute('data-api'), this);
+			//}
+		});
+	});
+	document.querySelectorAll('.deniedreason').forEach(function(el) {
+		el.addEventListener('change', function(e){
+			if (this.value == 'other') {
+				document.getElementById(this.options[this.selectedIndex].getAttribute('data-target')).classList.remove('d-none');
 			}
 		});
 	});
@@ -1100,7 +1107,37 @@ $user = null;
 												<div class="form-group mt-3 account-edit-hide" id="button_{{ $account->id }}">
 													@if ($account->approveruserid == auth()->user()->id || auth()->user()->can('manage orders'))
 														<button name="adbutton" id="button_{{ $account->id }}_approve" class="btn btn-sm btn-success account-approve" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}" data-txt="Approved">Approve</button>
-														<button name="adbutton" id="button_{{ $account->id }}_deny" class="btn btn-sm btn-danger account-deny" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}" data-txt="Denied" data-confirm="Are you sure you want to deny payment with this account?">Deny</button>
+														<button name="denybutton" id="button_{{ $account->id }}_deny" class="btn btn-sm btn-danger" type="button" data-target="#modal_{{ $account->id }}_deny" data-toggle="modal">Deny</button>
+														<div class="modal" id="modal_{{ $account->id }}_deny" tabindex="-1" aria-labelledby="modal_{{ $account->id }}_deny-title" aria-hidden="true">
+															<div class="modal-dialog modal-dialog-centered">
+																<div class="modal-content dialog-content shadow-sm">
+																	<div class="modal-header">
+																		<div class="modal-title" id="modal_{{ $account->id }}_deny-title">Deny</div>
+																		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																			<span aria-hidden="true">&times;</span>
+																		</button>
+																	</div>
+																	<div class="modal-body">
+																		<div class="form-group">
+																			<label for="modal_{{ $account->id }}_deny-reason">Reason <span class="required">*</span></label>
+																			<select name="deniedreason" id="modal_{{ $account->id }}_deny-reason" class="form-control deniedreason" required>
+																				<option value="{{ trans('orders::orders.account expired') }}">{{ trans('orders::orders.account expired') }}</option>
+																				<option value="{{ trans('orders::orders.cancellation requested') }}">{{ trans('orders::orders.cancellation requested') }}</option>
+																				<option value="{{ trans('orders::orders.reassign') }}">{{ trans('orders::orders.reassign') }}</option>
+																				<option value="other" data-target="modal_{{ $account->id }}_deny-reasonother-group">{{ trans('orders::orders.other') }}</option>
+																			</select>
+																		</div>
+																		<div class="form-group d-none" id="modal_{{ $account->id }}_deny-reasonother-group">
+																			<label for="modal_{{ $account->id }}_deny-reasonother">Explanation <span class="required">*</span></label>
+																			<textarea name="deniedreasonother" id="modal_{{ $account->id }}_deny-reasonother" class="form-control" maxlength="2000"></textarea>
+																		</div>
+																		<div class="form-group text-right mb-0">
+																			<button name="adbutton" class="btn btn-sm btn-danger account-deny" data-field="modal_{{ $account->id }}_deny-reason" data-id="{{ $account->id }}" data-txt="Denied" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}" data-confirm="Are you sure you want to deny payment with this account?">Deny</button>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
 													@endif
 													@if (auth()->user()->can('manage orders'))
 														<button name="remind" id="button_{{ $account->id }}_remind" class="btn btn-sm btn-secondary account-remind" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}" data-txt="Reminded">Remind</button>
@@ -1114,6 +1151,9 @@ $user = null;
 													<button name="adbutton" id="button_{{ $account->id }}_reset" class="btn btn-sm btn-warning account-reset" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}" data-confirm="Are you sure you want to reset approved/denied status for this account?">Reset</button>
 												</div>
 											@elseif ($s == 'denied' && auth()->user()->can('manage orders'))
+												@if ($account->deniedreason)
+													<div class="text-danger">{{ $account->deniedreason }}</div>
+												@endif
 												<div class="form-group mt-3 account-edit-hide" id="button_{{ $account->id }}">
 													<button name="adbutton" id="button_{{ $account->id }}_reset" class="btn btn-sm btn-warning account-reset" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}" data-confirm="Are you sure you want to reset approved/denied status for this account?">Reset</button>
 												</div>

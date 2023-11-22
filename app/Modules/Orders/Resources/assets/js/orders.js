@@ -1910,7 +1910,13 @@ function RemindOrder(url, button) {
  */
 /* exported DenyAccount */
 function DenyAccount(url, button) {
-	var post = JSON.stringify({ "denied": 1 });
+	var post = {
+		"denied": 1,
+		"deniedreason": document.getElementById(button.getAttribute('data-field')).value
+	};
+	if (post.deniedreason == 'other') {
+		post.deniedreason = document.getElementById(button.getAttribute('data-field') + 'other').value;
+	}
 
 	fetch(url, {
 		method: 'PUT',
@@ -1918,14 +1924,14 @@ function DenyAccount(url, button) {
 			'Content-Type': 'application/json',
 			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 		},
-		body: post
+		body: JSON.stringify(post)
 	})
 	.then(function (response) {
 		if (response.ok) {
 			var id = button.getAttribute('data-id');
 
-			button.classList.add('hide');
-			button.disabled = true;
+			document.getElementById("button_" + id + "_deny").classList.add('hide');
+			document.getElementById("button_" + id + "_deny").disabled = true;
 
 			document.getElementById("status_" + id).innerHTML = button.getAttribute('data-txt');
 			//document.getElementById("button_" + id).classList.add('hide');
@@ -1945,6 +1951,7 @@ function DenyAccount(url, button) {
 					accountstatus[x].value = "DENIED";
 				}
 			}
+			$(button.closest('.modal')).modal('hide');
 			return;
 		}
 		return response.json().then(function (data) {

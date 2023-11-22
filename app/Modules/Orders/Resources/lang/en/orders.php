@@ -138,4 +138,8 @@ return [
 	'accounts updated' => ':count order account(s) updated.',
 	'remove filter' => 'Remove filter',
 	'stats' => 'Stats',
+	'account expired' => 'Account expired',
+	'cancellation requested' => 'Request to cancel service',
+	'reassign' => 'Assign to new approver',
+	'other' => 'Other...',
 ];
