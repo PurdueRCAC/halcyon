@@ -39,7 +39,7 @@ class DatabaseActivator implements ActivatorInterface
 	private $cacheKey;
 
 	/**
-	 * @var string
+	 * @var int|null
 	 */
 	private $cacheLifetime;
 
@@ -149,8 +149,8 @@ class DatabaseActivator implements ActivatorInterface
 		$this->db->table('extensions')
 			->insert(
 				[
-					'element' => strtolower($name), 
-					'name' => $name, 
+					'element' => strtolower($name),
+					'name' => $name,
 					'type' => 'module',
 					'client_id' => 0
 				]

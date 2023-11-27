@@ -53,7 +53,7 @@ class Form
 	/**
 	 * The form XML definition.
 	 *
-	 * @var  object
+	 * @var  object|null
 	 */
 	protected $xml;
 
@@ -68,7 +68,7 @@ class Form
 	 * Method to instantiate the form object.
 	 *
 	 * @param   string  $name     The name of the form.
-	 * @param   array   $options  An array of form options.
+	 * @param   array<string,mixed>   $options  An array of form options.
 	 * @return  void
 	 */
 	public function __construct($name, array $options = array())
@@ -114,7 +114,7 @@ class Form
 			elseif ($data instanceof Fluent)
 			{
 				// Handle an object.
-				$data = $data->getProperties();
+				$data = $data->getAttributes();
 			}
 			else
 			{
@@ -144,7 +144,7 @@ class Form
 	/**
 	 * Method to determine if an array is an associative array.
 	 *
-	 * @param   array    $array  An array to test.
+	 * @param   array<mixed,mixed>    $array  An array to test.
 	 * @return  bool  True if the array is an associative array.
 	 */
 	private static function isAssociative($array)
@@ -194,7 +194,7 @@ class Form
 	/**
 	 * Method to filter the form data.
 	 *
-	 * @param   array   $data   An array of field values to filter.
+	 * @param   array<string,mixed>   $data   An array of field values to filter.
 	 * @param   string  $group  The dot-separated form group path on which to filter the fields.
 	 * @return  mixed   Array or false.
 	 */
@@ -326,7 +326,7 @@ class Form
 	 * given then all fields are returned.
 	 *
 	 * @param   string  $set  The optional name of the fieldset.
-	 * @return  array   The array of Field objects in the fieldset.
+	 * @return  array<string,Field>   The array of Field objects in the fieldset.
 	 */
 	public function getFieldset($set = null)
 	{
@@ -371,8 +371,8 @@ class Form
 	/**
 	 * Method to get an array of fieldset objects optionally filtered over a given field group.
 	 *
-	 * @param   string  $group  The dot-separated form group path on which to filter the fieldsets.
-	 * @return  array   The array of fieldset objects.
+	 * @param   string|null  $group  The dot-separated form group path on which to filter the fieldsets.
+	 * @return  array<string,\stdClass>   The array of fieldset objects.
 	 */
 	public function getFieldsets($group = null)
 	{
@@ -487,7 +487,7 @@ class Form
 	 *
 	 * @param   string   $group   The dot-separated form group path for which to get the form fields.
 	 * @param   bool  $nested  True to also include fields in nested groups that are inside of the group for which to find fields.
-	 * @return  array    The array of Field objects in the field group.
+	 * @return  array<string,Field>    The array of Field objects in the field group.
 	 */
 	public function getGroup($group, $nested = false)
 	{
@@ -992,7 +992,7 @@ class Form
 	 * Validation warnings will be pushed into Form::errors and should be
 	 * retrieved with Form::getErrors() when validate returns boolean false.
 	 *
-	 * @param   array   $data   An array of field values to validate.
+	 * @param   array<string,mixed>   $data   An array of field values to validate.
 	 * @param   string  $group  The optional dot-separated form group path on which to filter the fields to be validated.
 	 * @return  mixed   True on sucess.
 	 */
@@ -1053,8 +1053,8 @@ class Form
 				}
 				else
 				{
-					throw new Exception($valid->getMessage());
-					return false;
+					//throw new Exception($valid->getMessage());
+					$return = false;
 				}
 			}
 		}
@@ -1819,7 +1819,7 @@ class Form
 	 * Proxy for Helper::addFieldPath().
 	 *
 	 * @param   mixed  $new  A path or array of paths to add.
-	 * @return  array  The list of paths that have been added.
+	 * @return  array<int,string>  The list of paths that have been added.
 	 */
 	public static function addFieldPath($new = null)
 	{
@@ -1830,7 +1830,7 @@ class Form
 	 * Proxy for Helper::addFormPath().
 	 *
 	 * @param   mixed  $new  A path or array of paths to add.
-	 * @return  array  The list of paths that have been added.
+	 * @return  array<int,string>  The list of paths that have been added.
 	 */
 	public static function addFormPath($new = null)
 	{
@@ -1841,7 +1841,7 @@ class Form
 	 * Proxy for Helper::addRulePath().
 	 *
 	 * @param   mixed  $new  A path or array of paths to add.
-	 * @return  array  The list of paths that have been added.
+	 * @return  array<int,string>  The list of paths that have been added.
 	 */
 	public static function addRulePath($new = null)
 	{
@@ -1852,11 +1852,11 @@ class Form
 	 * Method to get an instance of a form.
 	 *
 	 * @param   string  $name     The name of the form.
-	 * @param   string  $data     The name of an XML file or string to load as the form definition.
-	 * @param   array   $options  An array of form options.
-	 * @param   string  $replace  Flag to toggle whether form fields should be replaced if a field already exists with the same group/name.
-	 * @param   string  $xpath    An optional xpath to search for the fields.
-	 * @return  object  Form instance.
+	 * @param   string|null  $data     The name of an XML file or string to load as the form definition.
+	 * @param   array<string,mixed>   $options  An array of form options.
+	 * @param   string|false  $replace  Flag to toggle whether form fields should be replaced if a field already exists with the same group/name.
+	 * @param   string|false  $xpath    An optional xpath to search for the fields.
+	 * @return  Form  Form instance.
 	 * @throws  Exception if an error occurs.
 	 */
 	public static function getInstance($name, $data = null, $options = array(), $replace = true, $xpath = false)

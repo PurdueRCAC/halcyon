@@ -187,13 +187,12 @@ class Helper
 
 				if (class_exists($class))
 				{
-					break;
+					return $class;
 				}
 			}
 		}
 
-		// Check for all if the class exists.
-		return class_exists($class) ? $class : false;
+		return false;
 	}
 
 	/**

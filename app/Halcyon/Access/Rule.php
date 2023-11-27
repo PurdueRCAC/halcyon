@@ -73,7 +73,7 @@ class Rule implements Arrayable, Jsonable
 	 * Merges the values for an identity.
 	 *
 	 * @param   int   $identity  The identity.
-	 * @param   bool  $allow     The value for the identity (true == allow, false == deny).
+	 * @param   bool|int  $allow     The value for the identity (true|1 == allow, false|0 == deny).
 	 * @return  void
 	 */
 	public function mergeIdentity($identity, $allow): void

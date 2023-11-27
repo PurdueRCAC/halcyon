@@ -18,7 +18,7 @@ class Access
 	/**
 	 * A cached array of the asset groups
 	 *
-	 * @var  Collection
+	 * @var  Collection|null
 	 */
 	protected static $asset_groups = null;
 
@@ -38,12 +38,13 @@ class Access
 			->select(['id AS value', 'title AS text'])
 			->groupBy(['id', 'title', 'ordering'])
 			->orderBy('ordering', 'asc')
-			->get();
+			->get()
+			->toArray();
 
 		// If params is an array, push these options to the array
 		if (is_array($params))
 		{
-			$options = array_merge($params, $options->toArray());
+			$options = array_merge($params, $options);
 		}
 		// If all levels is allowed, push it into the array.
 		elseif ($params)
@@ -74,7 +75,7 @@ class Access
 	 * @param   string|array<int,mixed>   $selected  The name of the selected section.
 	 * @param   string   $attribs   Additional attributes to add to the select field.
 	 * @param   bool     $allowAll  True to add "All Groups" option.
-	 * @param   string   $idtag
+	 * @param   string|false   $idtag
 	 * @return  string   The required HTML for the SELECT tag.
 	 */
 	public static function usergroup($name, $selected, $attribs = '', $allowAll = true, $idtag = false)
@@ -270,7 +271,7 @@ class Access
 		}
 
 		return Select::genericlist(
-			$options,
+			$options->toArray(),
 			$name,
 			array(
 				'id' => isset($config['id']) ? $config['id'] : 'assetgroups_' . ++$count,

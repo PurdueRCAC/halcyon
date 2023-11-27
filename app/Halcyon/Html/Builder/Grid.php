@@ -15,8 +15,8 @@ class Grid
 	 *
 	 * @param   int  $i        The row index.
 	 * @param   int  $value    The value of the boolean field.
-	 * @param   string   $taskOn   Task to turn the boolean setting on.
-	 * @param   string   $taskOff  Task to turn the boolean setting off.
+	 * @param   string|null   $taskOn   Task to turn the boolean setting on.
+	 * @param   string|null   $taskOff  Task to turn the boolean setting off.
 	 * @return  string   The boolean setting widget.
 	 */
 	public static function boolean($i, $value, $taskOn = null, $taskOff = null)
@@ -305,7 +305,7 @@ class Grid
 	 * @param   int       $i           The row index.
 	 * @param   string        $editorName  The name of the editor.
 	 * @param   string        $time        The time that the object was checked out.
-	 * @param   string|array  $prefix      An optional task prefix or an array of options
+	 * @param   string|array<string,mixed>  $prefix      An optional task prefix or an array of options
 	 * @param   bool       $enabled     True to enable the action.
 	 * @param   string        $checkbox    An optional prefix for checkboxes.
 	 * @return  string  The required HTML.
@@ -336,14 +336,14 @@ class Grid
 	/**
 	 * Returns a state on a grid
 	 *
-	 * @param   array         $states     array of value/state. Each state is an array of the form
+	 * @param   array<int,array<string,mixed>>         $states     array of value/state. Each state is an array of the form
 	 *                                    (task, text, title,html active class, HTML inactive class)
 	 *                                    or ('task'=>task, 'text'=>text, 'active_title'=>active title,
 	 *                                    'inactive_title'=>inactive title, 'tip'=>boolean, 'active_class'=>html active class,
 	 *                                    'inactive_class'=>html inactive class)
 	 * @param   int       $value      The state value.
 	 * @param   int       $i          The row index
-	 * @param   string|array  $prefix     An optional task prefix or an array of options
+	 * @param   string|array<string,mixed>  $prefix     An optional task prefix or an array of options
 	 * @param   bool       $enabled    An optional setting for access control on the action.
 	 * @param   bool       $translate  An optional setting for translation.
 	 * @param   string        $checkbox   An optional prefix for checkboxes.

@@ -2,6 +2,7 @@
 
 namespace App\Halcyon\Modules;
 
+use Illuminate\Config\Repository;
 use Illuminate\Database\Eloquent\Model;
 use App\Halcyon\Models\Casts\Params;
 use App\Halcyon\Traits\Checkable;
@@ -20,7 +21,7 @@ use Carbon\Carbon;
  * @property int    $enabled
  * @property int    $access
  * @property int    $protected
- * @property string $params
+ * @property Repository $params
  * @property int    $checked_out
  * @property Carbon|null $checked_out_time
  * @property int    $ordering

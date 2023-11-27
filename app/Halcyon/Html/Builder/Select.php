@@ -35,7 +35,7 @@ class Select
 	 *
 	 * @param   string  $name      The value of the HTML name attribute
 	 * @param   array<string,string>|string|null   $attribs   Additional HTML attributes for the <select> tag
-	 * @param   string|null  $selected  The key that is selected
+	 * @param   string|int|null  $selected  The key that is selected
 	 * @param   string  $yes       Language key for Yes
 	 * @param   string  $no        Language key for no
 	 * @param   string|bool  $id        The id for the field
@@ -53,7 +53,7 @@ class Select
 	/**
 	 * Generates an HTML selection list.
 	 *
-	 * @param   array    $data       An array of objects, arrays, or scalars.
+	 * @param   array<mixed,mixed>    $data       An array of objects, arrays, or scalars.
 	 * @param   string   $name       The value of the HTML name attribute.
 	 * @param   mixed    $attribs    Additional HTML attributes for the <select> tag. This
 	 *                               can be an array of attributes, or an array of options. Treated as options

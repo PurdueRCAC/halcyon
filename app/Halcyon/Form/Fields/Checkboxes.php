@@ -60,7 +60,7 @@ class Checkboxes extends Field
 
 			// Add data attributes
 			$dataAttributes = '';
-			foreach ($option as $field => $value)
+			foreach (get_object_vars($option) as $field => $value)
 			{
 				$dataField = strtolower(substr($field, 0, 4));
 				if ($dataField == 'data')

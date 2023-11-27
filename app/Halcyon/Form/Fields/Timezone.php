@@ -37,7 +37,7 @@ class Timezone extends Groupedlist
 	/**
 	 * Method to get the time zone field option groups.
 	 *
-	 * @return  array<string,array{int,\stdClass}>  The field option objects as a nested array in groups.
+	 * @return  array<string,array<int,\stdClass>>  The field option objects as a nested array in groups.
 	 */
 	protected function getGroups()
 	{
