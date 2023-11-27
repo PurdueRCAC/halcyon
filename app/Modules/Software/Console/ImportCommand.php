@@ -473,7 +473,7 @@ class ImportCommand extends Command
 		{
 			if ($debug || $this->output->isVerbose())
 			{
-				$this->comment('No changes detected for page: ' . $parent->path . '/' . $row->alias);
+				$this->comment('No changes detected for page: ' . $row->alias);
 			}
 			return false;
 		}
