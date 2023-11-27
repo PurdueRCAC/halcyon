@@ -71,6 +71,7 @@ class ArticleRegistered extends Notification
 			'X-Target-User' => $notifiable->id,
 			'X-Target-Object' => $this->association->id,
 		]);
+		$message->to($notifiable->email);
 
 		return $message;
 	}
