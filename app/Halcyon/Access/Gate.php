@@ -512,7 +512,7 @@ class Gate
 	 *
 	 * @param   string  $file    The path to the XML file.
 	 * @param   string  $section An optional xpath to search for the fields.
-	 * @return  bool|array    False if case of error or the list of actions available.
+	 * @return  bool|array<string,array<string,string>>    False if case of error or the list of actions available.
 	 */
 	public static function getActionsFromFile($file, $section = 'module')
 	{

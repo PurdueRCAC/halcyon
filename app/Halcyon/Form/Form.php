@@ -1854,7 +1854,7 @@ class Form
 	 * @param   string  $name     The name of the form.
 	 * @param   string|null  $data     The name of an XML file or string to load as the form definition.
 	 * @param   array<string,mixed>   $options  An array of form options.
-	 * @param   string|false  $replace  Flag to toggle whether form fields should be replaced if a field already exists with the same group/name.
+	 * @param   string|bool  $replace  Flag to toggle whether form fields should be replaced if a field already exists with the same group/name.
 	 * @param   string|false  $xpath    An optional xpath to search for the fields.
 	 * @return  Form  Form instance.
 	 * @throws  Exception if an error occurs.

@@ -236,7 +236,7 @@ class Select
 			}
 			else
 			{
-				throw new Exception('Invalid group contents.', 1, E_WARNING);
+				throw new Exception('Invalid group contents.');
 			}
 
 			if ($noGroup)
@@ -654,7 +654,7 @@ class Select
 	 * @param   array<string,string>|string   $attribs    Additional HTML attributes for the <select> tag
 	 * @param   mixed    $optKey     The key that is selected
 	 * @param   string   $optText    The name of the object variable for the option value
-	 * @param   string   $selected   The name of the object variable for the option text
+	 * @param   string|int|null   $selected   The name of the object variable for the option text
 	 * @param   bool  $idtag      Value of the field id or null by default
 	 * @param   bool  $translate  True if options will be translated
 	 * @return  string   HTML for the select list
@@ -718,7 +718,7 @@ class Select
 	/**
 	 * Build the select list for Ordering derived from a query
 	 *
-	 * @param   int      $name      The scalar value
+	 * @param   string   $name      The name
 	 * @param   string   $query     The query
 	 * @param   string   $attribs   HTML tag attributes
 	 * @param   string   $selected  The selected item
@@ -743,7 +743,7 @@ class Select
 			}
 			else
 			{
-				$chop = '30';
+				$chop = 30;
 
 				$options[] = self::option(0, '0 ' . trans('global.order first'));
 				for ($i = 0, $n = count($items); $i < $n; $i++)
@@ -752,7 +752,7 @@ class Select
 
 					if (strlen($items[$i]->text) > $chop)
 					{
-						$text = substr($items[$i]->text, 0, $chop) . "...";
+						$text = substr($items[$i]->text, 0, $chop) . '...';
 					}
 					else
 					{

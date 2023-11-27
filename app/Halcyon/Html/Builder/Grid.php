@@ -336,7 +336,7 @@ class Grid
 	/**
 	 * Returns a state on a grid
 	 *
-	 * @param   array<int,array<string,mixed>>         $states     array of value/state. Each state is an array of the form
+	 * @param   array<int,array<int,mixed>>         $states     array of value/state. Each state is an array of the form
 	 *                                    (task, text, title,html active class, HTML inactive class)
 	 *                                    or ('task'=>task, 'text'=>text, 'active_title'=>active title,
 	 *                                    'inactive_title'=>inactive title, 'tip'=>boolean, 'active_class'=>html active class,
