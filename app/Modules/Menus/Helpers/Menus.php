@@ -47,8 +47,8 @@ class Menus
 	 * @param   string  $menuType   An option menu to filter the list on, otherwise all menu links are returned as a grouped array.
 	 * @param   int     $parentId   An optional parent ID to pivot results around.
 	 * @param   int     $mode       An optional mode. If parent ID is set and mode=2, the parent and children are excluded from the list.
-	 * @param   array   $published  An optional array of states
-	 * @param   array   $languages
+	 * @param   array<int,int>   $published  An optional array of states
+	 * @param   array<int,string>   $languages
 	 * @return  mixed
 	 */
 	public static function getMenuLinks($menuType = null, $parentId = 0, $mode = 0, $published=array(), $languages=array())
@@ -87,7 +87,7 @@ class Menus
 			if ($mode == 2)
 			{
 				// Prevent the parent and children from showing.
-				$query->leftJoin($table . ' AS p', 'p.id', (int) $parentId);
+				$query->leftJoin($table . ' AS p', 'p.id', "$parentId");
 				$query->where(function($q)
 				{
 					$q->where('a.lft', '<=', 'p.lft')

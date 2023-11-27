@@ -54,6 +54,8 @@ use Exception;
  *
  * @property string $api
  * @property array<int,int> $tree
+ * @property string $item_type
+ * @property string $item_type_desc
  */
 class Item extends Model
 {

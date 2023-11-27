@@ -118,7 +118,7 @@ class ItemsController extends Controller
 			//'l.title AS language_title',
 			//'l.image AS image',
 			'u.name AS editor',
-			'c.element AS componentname',
+			'c.element AS modulename',
 			'ag.title AS access_level',
 			'e.name AS name',
 			\DB::raw('CASE ' . $a . '.type' .
@@ -308,9 +308,9 @@ class ItemsController extends Controller
 				case 'module':
 				default:
 					// load language
-					if (!empty($item->componentname))
+					if (!empty($item->modulename))
 					{
-						$value = trans($item->componentname);
+						$value = trans($item->modulename);
 						$vars  = null;
 
 						parse_str($item->link, $vars);
@@ -318,7 +318,7 @@ class ItemsController extends Controller
 						if (isset($vars['view']))
 						{
 							// Attempt to load the view xml file.
-							$file = app_path() . '/Modules/' . $item->componentname . '/Resources/views/site/' . $vars['view'] . '/metadata.xml';
+							$file = app_path() . '/Modules/' . $item->modulename . '/Resources/views/site/' . $vars['view'] . '/metadata.xml';
 
 							if (file_exists($file) && $xml = simplexml_load_file($file))
 							{
@@ -335,12 +335,12 @@ class ItemsController extends Controller
 										{
 											// Use template folder for layout file
 											$temp = explode(':', $vars['layout']);
-											$file = app_path() . '/Themes/' . $temp[0] . '/html/' . $item->componentname . '/' . $vars['view'] . '/' . $temp[1] . '.xml';
+											$file = app_path() . '/Themes/' . $temp[0] . '/html/' . $item->modulename . '/' . $vars['view'] . '/' . $temp[1] . '.xml';
 										}
 										else
 										{
 											// Get XML file from component folder for standard layouts
-											$file = app_path() . '/Modules/' . $item->componentname . '/Resources/views/site/' . $vars['view'] . '/' . $vars['layout'] . '.xml';
+											$file = app_path() . '/Modules/' . $item->modulename . '/Resources/views/site/' . $vars['view'] . '/' . $vars['layout'] . '.xml';
 										}
 
 										if (file_exists($file) && $xml = simplexml_load_file($file))
@@ -365,7 +365,7 @@ class ItemsController extends Controller
 							else
 							{
 								// Special case for absent views
-								$value .= ' » ' . trans($item->componentname . '::' . $item->componentname . '.' . $vars['view'] . '.VIEW_DEFAULT_TITLE');
+								$value .= ' » ' . trans($item->modulename . '::' . $item->modulename . '.' . $vars['view'] . '.VIEW_DEFAULT_TITLE');
 							}
 						}
 					}
@@ -789,6 +789,8 @@ class ItemsController extends Controller
 		$order = $request->input('order', []);
 		$ret = true;
 
+		$item = null;
+
 		foreach ($order as $i => $it)
 		{
 			list($parent_id, $id) = explode(':', $it);
@@ -798,7 +800,7 @@ class ItemsController extends Controller
 			{
 				continue;
 			}
-			$item->parent_id = $parent_id;
+			$item->parent_id = intval($parent_id);
 			$item->ordering = $i;
 			if (!$item->save())
 			{

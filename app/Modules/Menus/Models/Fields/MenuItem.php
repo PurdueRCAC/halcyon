@@ -2,7 +2,7 @@
 
 namespace App\Modules\Menus\Models\Fields;
 
-use App\Halcyon\Form\Field;
+use App\Halcyon\Form\Fields\Groupedlist;
 use App\Halcyon\Html\Builder\Select as Dropdown;
 
 /**

@@ -409,6 +409,8 @@ class MenusController extends Controller
 
 			if (count($order))
 			{
+				$item = null;
+
 				foreach ($order as $i => $it)
 				{
 					list($parent_id, $id) = explode(':', $it);
@@ -418,7 +420,7 @@ class MenusController extends Controller
 					{
 						continue;
 					}
-					$item->parent_id = $parent_id;
+					$item->parent_id = intval($parent_id);
 					$item->ordering = $i;
 					$item->save();
 				}
