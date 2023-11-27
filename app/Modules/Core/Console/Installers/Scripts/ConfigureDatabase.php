@@ -155,6 +155,7 @@ class ConfigureDatabase implements SetupScript
 
     /**
      * @param array<string,mixed> $vars
+     * @return void
      */
     protected function setLaravelConfiguration($vars)
     {

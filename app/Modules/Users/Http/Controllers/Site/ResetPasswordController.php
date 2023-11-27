@@ -75,7 +75,7 @@ class ResetPasswordController extends Controller
 		if (! Password::getRepository()->exists($user, $credentials['token']))
 		{
 			return back()->withInput($request->only('email'))
-				->withErrors(['email' => trans(static::INVALID_TOKEN)]);
+				->withErrors(['email' => trans('users::auth.account not found')]);
 		}
 
 		$user->forceFill([

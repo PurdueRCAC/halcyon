@@ -7,7 +7,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
-//use App\Modules\Users\Models\User;
+use App\Modules\Users\Events\Authenticators;
+use App\Modules\Users\Events\Login;
+use App\Modules\Users\Events\Authenticate;
 
 class AuthController extends Controller
 {
@@ -21,44 +23,38 @@ class AuthController extends Controller
 	{
 		$return = $request->input('return');
 
-		$authenticators = [];
-		/*$plugins = \Plugin::byType('authentication');
-
-		foreach ($plugins as $p)
+		if ($return && $this->isBase64($return))
 		{
-			$pparams = $p->params;
+			$return = base64_decode($return);
 
-			// Make sure it supports admin login
-			if (!$pparams->get('admin_login', false))
+			// Assume redirect URLs are internal
+			if ($return && $this->isInternal($return))
 			{
-				continue;
+				session()->put('url.intended', $return);
 			}
+		}
 
-			// If it's the default plugin, don't include it in the list (we'll include it separately)
-			if ($p->name == 'halcyon')
-			{
-				$site_display = $pparams->get('display_name', \Config::get('sitename'));
-				$basic = true;
-			}
-			else
-			{
-				$display = $pparams->get('display_name', ucfirst($p->name));
-				$authenticators[$p->name] = array('name' => $p->name, 'display' => $display);
-			}
-		}*/
-		if (app()->has('cas'))
+		if (Auth::check())
 		{
-			$cas = app('cas');
+			return redirect($this->authenticatedRoute());
+		}
 
-			if (!$cas->checkAuthentication())
+		event($event = new Authenticators());
+
+		// If we only have one authenticator or a specific authenitcator has
+		// been given, go ahead and call the Login event
+		if (count($event->authenticators) == 1 || $request->has('authenticator'))
+		{
+			$authenticators = array_keys($event->authenticators);
+			$authenticator = $request->input('authenticator');
+			if (!in_array($authenticator, $authenticators))
 			{
-				return $cas->authenticate();
+				$authenticator = array_shift($authenticators);
 			}
-			else
-			{
-				//app('cas')->logout();
-				return redirect()->intended($this->authenticatedRoute());
-			}
+
+			session()->put('authenticator', 'cilogon');
+
+			event(new Login($request, $authenticator));
 		}
 
 		return view('users::admin.auth.login', [
@@ -75,84 +71,38 @@ class AuthController extends Controller
 	 */
 	public function authenticate(Request $request)
 	{
-		$request->validate([
-			'email'    => 'required|email',
-			'password' => 'required|min:3'
-		]);
+		$authenticator = $request->input('authenticator');
+		$authenticator = $authenticator ?: session()->get('authenticator');
 
-		$credentials = [
-			'email'    => $request->input('email'),
-			'password' => $request->input('password'),
-		];
+		event($event = new Authenticators());
+		$authenticators = array_keys($event->authenticators);
 
-		$remember = (bool) $request->input('remember_me', false);
-
-		$options = array(
-			'authenticator' => false,
-			// The minimum group
-			'group'         => 'Public Backend',
-			// Make sure users are not autoregistered
-			'autoregister'  => false,
-			// Set the access control action to check.
-			'action'        => 'login.admin'
-		);
-
-		// If a specific authenticator is specified try to call the login method for that plugin
-		if ($authenticator = $request->input('authenticator', false))
+		if (!$authenticator || !in_array($authenticator, $authenticators))
 		{
-			$className = 'App\\Listeners\\Auth\\' . ucfirst($authenticator) . '\\' . ucfirst($authenticator);
-
-			if (class_exists($className))
-			{
-				if (method_exists($className, 'login'))
-				{
-					$myplugin = new $className(); //$this, (array)$plugin);
-
-					$result = $myplugin->login($credentials, $options);
-
-					if (isset($options['return']))
-					{
-						$return = $options['return'];
-					}
-				}
-
-				$options['authenticator'] = $authenticator;
-			}
+			$authenticator = array_shift($authenticators);
 		}
 
-		if (!Auth::attempt($credentials, $remember))
+		event($event = new Authenticate($request, $authenticator));
+
+		if (!$event->authenticated || !Auth::check())
 		{
-			return redirect()
-				->back()
-				->withInput()
-				->withError('Authentication failed');
+			return response(trans('users::auth.authentication failed'), 401);
 		}
 
-		$route = app('session')->get('url.intended', route('admin.dashboard'));
-
-		return redirect()
-			->intended($route);
-			//->withSuccess(trans('users::messages.successfully logged in'));
+		return redirect($this->authenticatedRoute());
 	}
 
 	/**
-	 * Show the form for creating a new resource.
+	 * Logout
 	 * 
 	 * @param  Request $request
 	 * @return RedirectResponse
 	 */
-	public function logout(Request $request)
+	public function logout(Request $request): RedirectResponse
 	{
 		Auth::logout();
 
-		session()->flush();
-
-		/*if (app()->has('cas'))
-		{
-			app('cas')->logout('', route('admin.login'));
-		}*/
-
-		return redirect()->route('admin.login');
+		return redirect()->route(config('module.users.redirect_route_after_logout', 'login'));
 	}
 
 	/**

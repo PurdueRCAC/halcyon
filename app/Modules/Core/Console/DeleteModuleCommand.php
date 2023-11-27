@@ -7,6 +7,7 @@ use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use App\Modules\Core\Models\Extension;
+use App\Modules\Core\Entities\PermissionsRemover;
 
 class DeleteModuleCommand extends Command
 {
@@ -89,6 +90,8 @@ class DeleteModuleCommand extends Command
     }
 
     /**
+     * Remove the permissions for a module
+     *
      * @param string $module
      * @return void
      */
@@ -100,6 +103,8 @@ class DeleteModuleCommand extends Command
     }
 
     /**
+     * Is this a core/protected module?
+     *
      * @param string $module
      * @return bool
      */
@@ -116,7 +121,7 @@ class DeleteModuleCommand extends Command
     /**
      * Get the console command arguments.
      *
-     * @return array<int,array{int,mixed}>
+     * @return array<int,array<int,mixed>>
      */
     protected function getArguments()
     {
@@ -128,7 +133,7 @@ class DeleteModuleCommand extends Command
     /**
      * Get the console command options.
      *
-     * @return array<int,array{int,mixed}>
+     * @return array<int,array<int,mixed>>
      */
     protected function getOptions()
     {

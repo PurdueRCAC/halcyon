@@ -91,32 +91,30 @@ class EmailRemovedCommand extends Command
 
 			// Condense people
 			$people = array();
-			if (!empty($groupusers))
+
+			foreach ($groupusers as $groupuser)
 			{
-				foreach ($groupusers as $groupuser)
+				if (!isset($people[$groupuser->userid]))
 				{
-					if (!isset($people[$groupuser->userid]))
+					if (!$groupuser->user)
 					{
-						if (!$groupuser->user)
-						{
-							continue;
-						}
-
-						$actor = Log::query()
-							->where('targetuserid', '=', $groupuser->userid)
-							->where('classname', '=', 'groupowner')
-							->where('classmethod', '=', 'delete')
-							->where('groupid', '=', $groupuser->groupid)
-							->limit(1)
-							->first();
-
-						if ($actor)
-						{
-							$groupuser->actor = $actor->user;
-						}
-
-						$people[$groupuser->userid] = $groupuser;
+						continue;
 					}
+
+					$actor = Log::query()
+						->where('targetuserid', '=', $groupuser->userid)
+						->where('classname', '=', 'groupowner')
+						->where('classmethod', '=', 'delete')
+						->where('groupid', '=', $groupuser->groupid)
+						->limit(1)
+						->first();
+
+					if ($actor)
+					{
+						$groupuser->actor = $actor->user;
+					}
+
+					$people[$groupuser->userid] = $groupuser;
 				}
 			}
 

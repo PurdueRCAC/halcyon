@@ -83,7 +83,7 @@ class InstallCommand extends Command
 	/**
 	 * Define console options
 	 *
-	 * @return array
+	 * @return array<int,array<int,mixed>>
 	 */
 	protected function getOptions()
 	{

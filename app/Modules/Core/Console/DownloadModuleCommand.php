@@ -4,7 +4,7 @@ namespace App\Modules\Core\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
-use Modules\Core\Downloader\Downloader;
+use App\Modules\Core\Downloader\Downloader;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Process\Process;
@@ -82,7 +82,7 @@ class DownloadModuleCommand extends Command
     /**
      * Get the console command arguments.
      *
-     * @return array<int,array{int,mixed}>
+     * @return array<int,array<int,mixed>>
      */
     protected function getArguments()
     {
@@ -94,7 +94,7 @@ class DownloadModuleCommand extends Command
     /**
      * Get the console command options.
      *
-     * @return array<int,array{int,mixed}>
+     * @return array<int,array<int,mixed>>
      */
     protected function getOptions()
     {

@@ -21,7 +21,7 @@ class Generator
 	/**
 	 * Var to hold sections
 	 * 
-	 * @var  array<string,array{int,string}>
+	 * @var  array<string,array<int,string>>
 	 */
 	private $sections = array();
 
@@ -112,20 +112,22 @@ class Generator
 			$this->generate();
 		}
 
+		$output = $this->output;
+
 		// option to switch formats
 		switch ($format)
 		{
 			case 'array':
 				break;
 			case 'php':
-				$this->output = serialize($this->output);
+				$output = serialize($output);
 				break;
 			case 'json':
 			default:
-				$this->output = json_encode($this->output);
+				$output = json_encode($output);
 		}
 
-		return $this->output;
+		return $output;
 	}
 
 	/**
@@ -195,7 +197,7 @@ class Generator
 	/**
 	 * Get all modules that have API routes
 	 *
-	 * @return \Illuminate\Support\Collection
+	 * @return \Illuminate\Support\Collection|\Tightenco\Collect\Support\Collection
 	 */
 	public function modules()
 	{
@@ -226,7 +228,7 @@ class Generator
 	/** 
 	 * Process sections
 	 * 
-	 * @param   array<string,array{int,string}>  $sections  All the module api controllers grouped by module
+	 * @param   array<string,array<int,string>>  $sections  All the module api controllers grouped by module
 	 * @return  array<string,mixed>
 	 */
 	private function processModuleSections($sections)
