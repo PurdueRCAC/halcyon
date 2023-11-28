@@ -72,6 +72,11 @@ class EmailAuthorizedCommand extends Command
 				continue;
 			}
 
+			if (!count($groupusers))
+			{
+				continue;
+			}
+
 			// Find the latest activity
 			$latest = 0;
 			foreach ($groupusers as $g)

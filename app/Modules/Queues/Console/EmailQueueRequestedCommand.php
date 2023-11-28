@@ -72,6 +72,11 @@ class EmailQueueRequestedCommand extends Command
 
 		foreach ($group_activity as $groupid => $users)
 		{
+			if (!count($users))
+			{
+				continue;
+			}
+
 			$group = Group::find($groupid);
 
 			if (!$group)

@@ -34,7 +34,7 @@ class ProfileComposer
 			'content' => '',
 		);
 
-		if (request()->segments(2) == 'orders')
+		if (request()->segment(2) == 'orders')
 		{
 			$section['content'] = view('orders::site.profile', [
 				'user' => $this->user,

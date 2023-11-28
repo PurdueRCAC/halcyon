@@ -67,7 +67,7 @@ class FixStatusCommand extends Command
 				continue;
 			}
 
-			$this->comment('Username: ' . $u->id . ' (' . $u->username . ')');
+			$this->comment('Username: ' . $user->id . ' (' . $user->username . ')');
 
 			$resource = array_pop($parts);
 

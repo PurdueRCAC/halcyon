@@ -80,7 +80,7 @@ class ItemType
 
 		if (is_file($mainXML))
 		{
-			$options = $this->getTypeOptionsFromXML($mainXML, $module);
+			$options = $this->getTypeOptionsFromXML($mainXML, $module->getName());
 		}
 
 		if (empty($options))

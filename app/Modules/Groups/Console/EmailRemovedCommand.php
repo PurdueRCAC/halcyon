@@ -73,6 +73,11 @@ class EmailRemovedCommand extends Command
 				continue;
 			}
 
+			if (!count($groupusers))
+			{
+				continue;
+			}
+
 			// Find the latest activity
 			$latest = 0;
 

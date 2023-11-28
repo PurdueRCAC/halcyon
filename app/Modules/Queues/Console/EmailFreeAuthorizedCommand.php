@@ -87,6 +87,11 @@ class EmailFreeAuthorizedCommand extends Command
 				$this->info("Processing group ID #{$groupid}...");
 			}
 
+			if (!count($groupqueueusers))
+			{
+				continue;
+			}
+
 			// Find the latest activity
 			$latest = 0;
 			foreach ($groupqueueusers as $g)
@@ -230,7 +235,7 @@ class EmailFreeAuthorizedCommand extends Command
 					}
 				}
 
-				if (empty($data))
+				if (!count($data))
 				{
 					continue;
 				}

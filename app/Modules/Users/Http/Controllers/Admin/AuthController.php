@@ -106,6 +106,33 @@ class AuthController extends Controller
 	}
 
 	/**
+	 * Is the provided string base64 encoded?
+	 *
+	 * @param   string  $str
+	 * @return  bool
+	 **/
+	protected function isBase64($str): bool
+	{
+		if (preg_match('/[^A-Za-z0-9\+\/\=]/', $str))
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Is the provided url internal to the site?
+	 *
+	 * @param   string  $str
+	 * @return  bool
+	 **/
+	protected function isInternal($str): bool
+	{
+		return (stripos($str, request()->root()) !== false);
+	}
+
+	/**
 	 * Get route to redirect to after being authenticated
 	 * 
 	 * @return string

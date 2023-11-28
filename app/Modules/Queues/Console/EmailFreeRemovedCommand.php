@@ -83,6 +83,11 @@ class EmailFreeRemovedCommand extends Command
 
 		foreach ($group_activity as $groupid => $groupqueueusers)
 		{
+			if (!count($groupqueueusers))
+			{
+				continue;
+			}
+
 			// Find the latest activity
 			$latest = 0;
 			foreach ($groupqueueusers as $g)
@@ -126,6 +131,11 @@ class EmailFreeRemovedCommand extends Command
 				$removals = array();
 				foreach ($user_activity as $userid => $groupqueuestudents)
 				{
+					if (!count($groupqueuestudents))
+					{
+						continue;
+					}
+
 					// Start assembling email
 					$user = User::find($userid);
 
@@ -271,11 +281,11 @@ class EmailFreeRemovedCommand extends Command
 							$notice = QueueUser::NOTICE_REMOVED_RESOURCE;
 						}
 
-						$groupqueue->update(['notice' => $notice]);
+						$queueuser->update(['notice' => $notice]);
 					}
 				}
 
-				if (empty($data))
+				if (!count($data))
 				{
 					continue;
 				}

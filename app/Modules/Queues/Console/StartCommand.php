@@ -60,7 +60,7 @@ class StartCommand extends Command
 				else
 				{
 					$subresource = Subresource::query()
-						->where('name', '=', $name)
+						->where('name', '=', $s)
 						->limit(1)
 						->first();
 				}
@@ -72,8 +72,8 @@ class StartCommand extends Command
 				}
 
 				$queue = Queue::query()
-					->where('subresourceid', '=', $subresourceid)
-					->where('name', '=', $name)
+					->where('subresourceid', '=', $subresource->id)
+					->where('name', '=', $q)
 					->limit(1)
 					->first();
 			}
@@ -120,69 +120,66 @@ class StartCommand extends Command
 				$this->comment('Finding all subresources for resource ' . $resource->name . ' ...');
 			}
 
-			if ($resource)
+			foreach ($resource->subresources as $subresource)
 			{
-				foreach ($resource->subresources as $subresource)
+				if ($debug || $this->output->isVerbose())
 				{
-					if ($debug || $this->output->isVerbose())
+					$this->info('Starting all queues for subresource ' . $subresource->name);
+
+					if ($debug)
 					{
-						$this->info('Starting all queues for subresource ' . $subresource->name);
-
-						if ($debug)
-						{
-							continue;
-						}
+						continue;
 					}
-
-					$subresource->startQueues();
 				}
 
-				$scheduler = Scheduler::query()
-					->where(function($where) use ($resource)
-					{
-						$where->where('hostname', 'LIKE', $resource->rolename . '-adm.%')
-							->orWhere('hostname', 'LIKE', $resource->rolename . '.adm.%')
-							->orWhere('hostname', 'LIKE', 'adm.' . $resource->rolename . '.%');
-					})
-					->first();
+				$subresource->startQueues();
+			}
 
-				if ($scheduler && config('module.queues.start_all_cmd'))
+			$scheduler = Scheduler::query()
+				->where(function($where) use ($resource)
 				{
-					$command = config('module.queues.start_all_cmd');
-					$command = str_replace('$HOST', $scheduler->hostname, $command);
+					$where->where('hostname', 'LIKE', $resource->rolename . '-adm.%')
+						->orWhere('hostname', 'LIKE', $resource->rolename . '.adm.%')
+						->orWhere('hostname', 'LIKE', 'adm.' . $resource->rolename . '.%');
+				})
+				->first();
 
-					if ($debug || $this->output->isVerbose())
+			if ($scheduler && config('module.queues.start_all_cmd'))
+			{
+				$command = config('module.queues.start_all_cmd');
+				$command = str_replace('$HOST', $scheduler->hostname, $command);
+
+				if ($debug || $this->output->isVerbose())
+				{
+					$this->comment('Executing command "' . $command . '" ...');
+
+					if ($debug)
 					{
-						$this->comment('Executing command "' . $command . '" ...');
-
-						if ($debug)
-						{
-							return Command::SUCCESS;
-						}
+						return Command::SUCCESS;
 					}
+				}
 
-					$retval = true; // Assume success.
+				$retval = true; // Assume success.
 
-					$command = escapeshellcmd($command);
+				$command = escapeshellcmd($command);
 
-					exec($command, $results, $status);
+				exec($command, $results, $status);
 
-					if (is_array($results))
-					{
-						$results = implode('', $results);
-					}
-					$results = trim($results);
+				if (is_array($results))
+				{
+					$results = implode('', $results);
+				}
+				$results = trim($results);
 
-					// Check exec status
-					if ($status != 0)
-					{
-						// Uh-oh. Something went wrong...
-						$this->error($results);
-					}
-					else
-					{
-						$this->info($results);
-					}
+				// Check exec status
+				if ($status != 0)
+				{
+					// Uh-oh. Something went wrong...
+					$this->error($results);
+				}
+				else
+				{
+					$this->info($results);
 				}
 			}
 		}

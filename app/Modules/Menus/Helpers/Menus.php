@@ -18,7 +18,7 @@ class Menus
 	 * @param   int  $parentId  The menu ID.
 	 * @return  Fluent
 	 */
-	public static function getActions($parentId = 0)
+	public static function getActions(int $parentId = 0): Fluent
 	{
 		$result = new Fluent;
 
@@ -31,11 +31,14 @@ class Menus
 			$assetName = 'menus.item.' . (int) $parentId;
 		}
 
-		$actions = Gate::getActionsFromFile(dirname(__DIR__) . '/Config/access.xml');
+		$actions = Gate::getActionsFromFile(dirname(__DIR__) . '/Config/permissions.php');
 
-		foreach ($actions as $action)
+		if ($actions)
 		{
-			$result->{$action->name} = auth()->user()->can($action->name . ' ' . $assetName);
+			foreach ($actions as $action)
+			{
+				$result->{$action['name']} = auth()->user()->can($action['name'] . ' ' . $assetName);
+			}
 		}
 
 		return $result;

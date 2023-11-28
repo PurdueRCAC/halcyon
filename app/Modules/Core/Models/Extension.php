@@ -267,7 +267,7 @@ class Extension extends Model
 	 */
 	public function getForm(): Form
 	{
-		$file = $this->path() . '/Core/Params.xml'; //__DIR__ . '/Forms/Application.xml';
+		$file = $this->path() . '/Config/Params.xml';
 
 		Form::addFieldPath(__DIR__ . '/Fields');
 

@@ -78,6 +78,11 @@ class EmailFreeRequestedCommand extends Command
 
 		foreach ($group_activity as $groupid => $users)
 		{
+			if (!count($users))
+			{
+				continue;
+			}
+
 			// Find the latest activity
 			$latest = 0;
 			foreach ($users as $user)

@@ -81,6 +81,11 @@ class EmailFreeDeniedCommand extends Command
 
 		foreach ($group_activity as $groupid => $groupqueueusers)
 		{
+			if (!count($groupqueueusers))
+			{
+				continue;
+			}
+
 			// Find the latest activity
 			$latest = 0;
 			foreach ($groupqueueusers as $groupqueueuser)

@@ -73,6 +73,11 @@ class EmailWelcomeFreeCommand extends Command
 
 		foreach ($user_activity as $userid => $userqueues)
 		{
+			if (!count($userqueues))
+			{
+				continue;
+			}
+
 			$u = SiteUser::find($userid);
 
 			if (!$u)
