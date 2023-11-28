@@ -501,8 +501,8 @@ class DirectoriesController extends Controller
 		$row->groupwrite  = 1;
 		$row->publicread  = 0;
 		$row->publicwrite = 0;
-		$row->storageresourceid = 0;
-		$row->resourceid = 0;
+		//$row->storageresourceid = 0;
+		//$row->resourceid = 0;
 		$row->fill($data);
 
 		if ($row->parent)
@@ -640,20 +640,6 @@ class DirectoriesController extends Controller
 			return response()->json(['message' => trans('Missing or invalid bytes value')], 415);
 		}
 
-		// Look for this entry, duplicate name, etc.
-		$exist = Directory::query()
-			->where('resourceid', '=', $row->resourceid)
-			->where('groupid', '=', $row->groupid)
-			->where('parentstoragedirid', '=', $row->parentstoragedirid)
-			->where('name', '=', $row->name)
-			->where('datetimecreated', '<=', Carbon::now()->toDateTimeString())
-			->first();
-
-		if ($exist)
-		{
-			return response()->json(['message' => trans('Duplicate entry found for :name', ['name' => $row->name])], 409);
-		}
-
 		// Make sure both resourceid and storageresourceid are set
 		if ($row->resourceid && !$row->storageresourceid)
 		{
@@ -666,6 +652,20 @@ class DirectoriesController extends Controller
 		elseif (!$row->resourceid && $row->storageresourceid)
 		{
 			$row->resourceid = $row->storageResource->parentresourceid;
+		}
+
+		// Look for this entry, duplicate name, etc.
+		$exist = Directory::query()
+			->where('resourceid', '=', $row->resourceid)
+			->where('groupid', '=', $row->groupid)
+			->where('parentstoragedirid', '=', $row->parentstoragedirid)
+			->where('name', '=', $row->name)
+			->where('datetimecreated', '<=', Carbon::now()->toDateTimeString())
+			->first();
+
+		if ($exist)
+		{
+			return response()->json(['message' => trans('Duplicate entry found for :name', ['name' => $row->name])], 409);
 		}
 
 		$row->save();

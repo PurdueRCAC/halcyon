@@ -53,6 +53,7 @@ use Exception;
  * @property Carbon|null $deleted_at
  *
  * @property string $api
+ * @property int    $page_id
  * @property array<int,int> $tree
  * @property string $item_type
  * @property string $item_type_desc

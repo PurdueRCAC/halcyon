@@ -412,7 +412,7 @@ class Type extends Model
 		}*/
 
 		$assocs = Association::query()
-			->select($s . '.newsid', $s . '.associd', $a . '.datetimenews', $a . '.datetimenewsend') //, $s . '.assoctype', DB::raw('COUNT(*) as total'))
+			->select($s . '.newsid', $s . '.associd', $a . '.datetimenews')//, $a . '.datetimenewsend')
 			->join($a, $a . '.id', $s . '.newsid')
 			->where($a . '.newstypeid', '=', $this->id)
 			->where($s . '.assoctype', '=', 'user')

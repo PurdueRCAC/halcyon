@@ -18,8 +18,8 @@ use App\Modules\History\Helpers\Diff;
  * @property string $historable_type
  * @property string $historable_table
  * @property string $action
- * @property object $old
- * @property object $new
+ * @property object|array $old
+ * @property object|array $new
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */

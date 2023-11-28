@@ -266,7 +266,7 @@ class Extension extends Model
 	 * Method to validate the form data.
 	 *
 	 * @param   Form  $form   The form to validate against.
-	 * @param   array   $data   The data to validate.
+	 * @param   array<string,mixed>   $data   The data to validate.
 	 * @param   string  $group  The name of the field group to validate.
 	 * @return  mixed   Array of filtered data if valid, false otherwise.
 	 * @throws  Exception

@@ -236,7 +236,7 @@ class ImportCommand extends Command
 	 * Get the content parser
 	 *
 	 * @param string $format
-	 * @return CommonMarkConverter|Parser|string
+	 * @return CommonMarkConverter|Documents|string
 	 */
 	private function parser($format)
 	{
@@ -320,16 +320,19 @@ class ImportCommand extends Command
 		switch ($format)
 		{
 			case 'rst':
-				//$parser->getEnvironment()->setCurrentDirectory(dirname($file));
-				//$document = (string) $parser->parse($contents)->render();
-				foreach ($parser->getAll() as $doc)
+				if ($parser instanceof Documents)
 				{
-					$current = $this->basepath . '/' . $doc->getEnvironment()->getCurrentFileName() . '.' . $format;
-
-					if ($current == $file)
+					//$parser->getEnvironment()->setCurrentDirectory(dirname($file));
+					//$document = (string) $parser->parse($contents)->render();
+					foreach ($parser->getAll() as $doc)
 					{
-						$document = (string) $doc->render();
-						break;
+						$current = $this->basepath . '/' . $doc->getEnvironment()->getCurrentFileName() . '.' . $format;
+
+						if ($current == $file)
+						{
+							$document = (string) $doc->render();
+							break;
+						}
 					}
 				}
 			break;
@@ -343,7 +346,10 @@ class ImportCommand extends Command
 
 			case 'md':
 			default:
-				$document = (string) $parser->convertToHtml($contents);
+				if ($parser instanceof CommonMarkConverter)
+				{
+					$document = (string) $parser->convertToHtml($contents);
+				}
 			break;
 		}
 

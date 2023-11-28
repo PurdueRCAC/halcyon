@@ -57,11 +57,7 @@ class TypesController extends Controller
 		if ($filters['search'])
 		{
 			$query = Type::query();
-
-			if ($filters['search'])
-			{
-				$query->where('name', 'like', '%' . $filters['search'] . '%');
-			}
+			$query->where('name', 'like', '%' . $filters['search'] . '%');
 
 			$rows = $query
 				->orderBy($filters['order'], $filters['order_dir'])
