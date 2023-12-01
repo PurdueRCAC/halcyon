@@ -4,7 +4,6 @@ namespace App\Modules\Core\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
-use App\Modules\Core\Downloader\Downloader;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Process\Process;

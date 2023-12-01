@@ -2,6 +2,7 @@
 
 namespace App\Halcyon\Models;
 
+use Illuminate\Config\Repository;
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\History\Traits\Historable;
 use App\Halcyon\Traits\Checkable;
@@ -82,6 +83,13 @@ class Extension extends Model
 		'params' => Params::class,
 		'checked_out_time' => 'datetime:Y-m-d H:i:s',
 	];
+
+	/**
+	 * Extension path
+	 *
+	 * @var string|null
+	 */
+	protected $path = null;
 
 	/**
 	 * Get a module by name

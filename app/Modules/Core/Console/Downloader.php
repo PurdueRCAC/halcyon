@@ -3,6 +3,7 @@
 namespace App\odules\Core\Console;
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
 use GuzzleHttp\Client;
@@ -173,7 +174,12 @@ class Downloader
 		}
 		$response = \GuzzleHttp\json_decode($githubReleases->getBody()->getContents());
 
-		$this->tagName = $response->tag_name;
+		$this->tagName = isset($response->tag_name) ? $response->tag_name : '';
+
+		if (!isset($response->zipball_url))
+		{
+			throw new \Exception('Zip URL not found.');
+		}
 
 		return $response->zipball_url;
 	}
@@ -190,7 +196,7 @@ class Downloader
 			throw new \Exception('You need to use vendor/name structure');
 		}
 
-		return studly_case(substr(strrchr($package, '/'), 1));
+		return Str::studly(substr(strrchr($package, '/'), 1));
 	}
 
 	/**
