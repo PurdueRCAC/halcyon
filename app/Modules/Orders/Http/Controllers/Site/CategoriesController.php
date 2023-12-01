@@ -132,8 +132,7 @@ class CategoriesController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Category::findOrFail($id) : new Category();
-
+		$row = Category::findOrNew($id);
 		$row->fill($request->input('fields'));
 		if (!$row->description)
 		{

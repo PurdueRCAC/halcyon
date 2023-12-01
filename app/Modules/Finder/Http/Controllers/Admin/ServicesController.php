@@ -104,13 +104,14 @@ class ServicesController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 *
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$row = new Service();
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -129,14 +130,15 @@ class ServicesController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
+	 * @param  Request $request
 	 * @param  int $id
 	 * @return View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Service::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -177,7 +179,7 @@ class ServicesController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Service::findOrFail($id) : new Service();
+		$row = Service::findOrNew($id);
 		$row->fill($request->input('fields'));
 
 		if (!$row->save())

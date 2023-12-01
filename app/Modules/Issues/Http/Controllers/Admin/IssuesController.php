@@ -118,14 +118,15 @@ class IssuesController extends Controller
 	/**
 	 * Show the form for creating a new article
 	 *
+	 * @param   Request $request
 	 * @return  View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$row = new Issue();
 		$row->datetimecreated = Carbon::now();
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -138,14 +139,15 @@ class IssuesController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
+	 * @param   Request $request
 	 * @param   int  $id
 	 * @return  View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Issue::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -180,7 +182,7 @@ class IssuesController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Issue::findOrFail($id) : new Issue();
+		$row = Issue::findOrNew($id);
 		$row->fill($request->input('fields'));
 		if (!$row->userid)
 		{

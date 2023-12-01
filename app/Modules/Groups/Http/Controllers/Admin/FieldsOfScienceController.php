@@ -177,7 +177,7 @@ class FieldsOfScienceController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? FieldOfScience::findOrFail($id) : new FieldOfScience();
+		$row = FieldOfScience::findOrNew($id);
 		$row->name = $request->input('name');
 		if ($request->has('parentid'))
 		{

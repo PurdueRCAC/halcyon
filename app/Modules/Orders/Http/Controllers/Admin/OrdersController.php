@@ -382,13 +382,12 @@ class OrdersController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'fields.userid' => 'required'
+			'fields.userid' => 'required|integer'
 		]);
 
 		$id = $request->input('id');
 
-		$row = $id ? Order::findOrFail($id) : new Order();
-
+		$row = Order::findOrNew($id);
 		$row->fill($request->input('fields'));
 
 		if (!$row->save())

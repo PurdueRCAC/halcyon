@@ -94,13 +94,14 @@ class TemplatesController extends Controller
 	/**
 	 * Show the form for creating a new article
 	 *
+	 * @param   Request $request
 	 * @return  View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$row = new Message();
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -113,14 +114,15 @@ class TemplatesController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
+	 * @param   Request $request
 	 * @param   int  $id
 	 * @return  View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Message::findOrFail($id);
 
-		if ($fields = app('request')->old())
+		if ($fields = $request->old())
 		{
 			$row->fill($fields);
 		}
@@ -132,15 +134,16 @@ class TemplatesController extends Controller
 
 	/**
 	 * Copy the specified entry to the edit form to make a new entry.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @param  int $id
 	 * @return View
 	 */
-	public function copy($id)
+	public function copy(Request $request, $id)
 	{
 		$row = Message::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -185,7 +188,7 @@ class TemplatesController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Message::findOrFail($id) : new Message();
+		$row = Message::findOrNew($id);
 		$row->subject = $request->input('subject');
 		$row->name = $row->subject;
 		if ($request->has('name'))

@@ -174,9 +174,16 @@ class PagesController extends Controller
 	public function store(Request $request)
 	{
 		$rules = [
-			'title'   => 'required|string|max:255',
+			'parent_id' => 'nullable|integer|min:1',
+			'title' => 'required|string|max:255',
+			'alias' => 'nullable|string|max:255',
 			'content' => 'required|string',
-			'access'  => 'nullable|min:1'
+			'access' => 'nullable|min:1',
+			'state' => 'nullable|int',
+			'publish_up' => 'nullable|date',
+			'publish_down' => 'nullable|date',
+			'metakey' => 'nullable|string',
+			'metadesc' => 'nullable|string',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -190,8 +197,14 @@ class PagesController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Page::findOrFail($id) : new Page();
-		$row->fill($request->input('fields'));
+		$row = Page::findOrNew($id);
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
+		}
 
 		if ($params = $request->input('params', []))
 		{
@@ -218,14 +231,15 @@ class PagesController extends Controller
 	/**
 	 * Show the form for editing the specified page
 	 *
+	 * @param  Request $request
 	 * @param  int  $id
 	 * @return View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Page::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}

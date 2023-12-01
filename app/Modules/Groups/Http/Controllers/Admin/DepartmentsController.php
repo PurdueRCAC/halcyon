@@ -178,7 +178,7 @@ class DepartmentsController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Department::findOrFail($id) : new Department();
+		$row = Department::findOrNew($id);
 		$row->name = $request->input('name');
 		if ($request->has('parentid'))
 		{

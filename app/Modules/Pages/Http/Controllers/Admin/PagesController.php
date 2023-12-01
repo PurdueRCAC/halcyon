@@ -98,10 +98,11 @@ class PagesController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$row = new Page;
 		$row->access = 1;
@@ -117,7 +118,7 @@ class PagesController extends Controller
 			}
 		}
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -136,15 +137,16 @@ class PagesController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @param  int  $id
 	 * @return View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Page::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -197,9 +199,16 @@ class PagesController extends Controller
 	public function store(Request $request)
 	{
 		$rules = [
+			'fields.parent_id' => 'nullable|integer|min:1',
 			'fields.title' => 'required|string|max:255',
+			'fields.alias' => 'nullable|string|max:255',
 			'fields.content' => 'required|string',
-			'fields.access'  => 'nullable|min:1'
+			'fields.access' => 'nullable|min:1',
+			'fields.state' => 'nullable|int',
+			'fields.publish_up' => 'nullable|date',
+			'fields.publish_down' => 'nullable|date',
+			'fields.metakey' => 'nullable|string',
+			'fields.metadesc' => 'nullable|string',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -213,7 +222,7 @@ class PagesController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Page::findOrFail($id) : new Page();
+		$row = Page::findOrNew($id);
 		$row->fill($request->input('fields'));
 
 		//$row->metakey = $request->input('tags');

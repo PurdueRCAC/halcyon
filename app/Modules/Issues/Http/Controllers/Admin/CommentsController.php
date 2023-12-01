@@ -69,17 +69,18 @@ class CommentsController extends Controller
 	/**
 	 * Show the form for creating a new report
 	 *
+	 * @param   Request $request
 	 * @param   int  $report
 	 * @return  View
 	 */
-	public function create($report)
+	public function create(Request $request, $report)
 	{
 		$report = Issue::findOrFail($report);
 
 		$row = new Comment();
 		$row->contactreportid = $report->id;
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -93,17 +94,18 @@ class CommentsController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
+	 * @param   Request $request
 	 * @param   int  $report
 	 * @param   int  $id
 	 * @return  View
 	 */
-	public function edit($report, $id)
+	public function edit(Request $request, $report, $id)
 	{
 		$report = Issue::findOrFail($report);
 
 		$row = Comment::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -138,7 +140,7 @@ class CommentsController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Comment::findOrFail($id) : new Comment();
+		$row = Comment::findOrNew($id);
 		$row->fill($request->input('fields'));
 
 		if (!$row->save())

@@ -13,8 +13,8 @@ app('pathway')
 		route('admin.publications.index')
 	)
 	->append(
-		trans('publications::publications.items'),
-		route('admin.publications.items')
+		trans('publications::publications.authors'),
+		route('admin.publications.authors')
 	)
 	->append(
 		($row->id ? trans('global.edit') . ' #' . $row->id : trans('global.create'))
@@ -23,9 +23,9 @@ app('pathway')
 
 @section('toolbar')
 	@if (auth()->user()->can('edit publications'))
-		{!! Toolbar::save(route('admin.publications.items.store')) !!}
+		{!! Toolbar::save(route('admin.publications.authors.store')) !!}
 	@endif
-	{!! Toolbar::cancel(route('admin.publications.items.cancel')) !!}
+	{!! Toolbar::cancel(route('admin.publications.authors.cancel')) !!}
 	{!! Toolbar::render() !!}
 @stop
 
@@ -34,7 +34,17 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.publications.items.store') }}" method="post" name="adminForm" id="item-form" class="form-validate">
+<form action="{{ route('admin.publications.authors.store') }}" method="post" name="adminForm" id="item-form" class="form-validate">
+	@if ($errors->any())
+		<div class="alert alert-danger">
+			<ul>
+				@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
+	@endif
+
 	<div class="row">
 		<div class="col col-md-7">
 			<fieldset class="adminform">

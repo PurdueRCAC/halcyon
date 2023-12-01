@@ -169,7 +169,7 @@ class MembersController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Member::findOrFail($id) : new Member();
+		$row = Member::findOrNew($id);
 		$row->fill($request->input('fields'));
 		if (!$row->membertype)
 		{

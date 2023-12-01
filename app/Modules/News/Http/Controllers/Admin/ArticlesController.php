@@ -301,7 +301,7 @@ class ArticlesController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Article::findOrFail($id) : new Article();
+		$row = Article::findOrNew($id);
 		$row->fill($fields);
 
 		if (!$id)

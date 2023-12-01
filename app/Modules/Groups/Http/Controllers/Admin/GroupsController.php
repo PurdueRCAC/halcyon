@@ -271,7 +271,7 @@ class GroupsController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Group::findOrFail($id) : new Group;
+		$row = Group::findOrNew($id);
 		$row->fill($request->input('fields'));
 		$row->unixgroup = $row->unixgroup ? $row->unixgroup : '';
 		if (!$request->has('fields.cascademanagers') || !$request->input('fields.cascademanagers'))

@@ -148,7 +148,7 @@ class ModulesController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Extension::findOrFail($id) : new Extension;
+		$row = Extension::findOrNew($id);
 		if ($request->has('name'))
 		{
 			$row->name = $request->input('name');

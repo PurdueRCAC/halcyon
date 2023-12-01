@@ -297,15 +297,16 @@ class PagesController extends Controller
 
 	/**
 	 * Copy the specified entry to the edit form to make a new entry.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @param  int $id
 	 * @return View
 	 */
-	public function copy($id)
+	public function copy(Request $request, $id)
 	{
 		$row = Associations::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -327,15 +328,16 @@ class PagesController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @param  int $id
 	 * @return View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Associations::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}

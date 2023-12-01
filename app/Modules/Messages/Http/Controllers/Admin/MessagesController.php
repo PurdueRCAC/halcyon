@@ -210,7 +210,7 @@ class MessagesController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Message::findOrFail($id) : new Message();
+		$row = Message::findOrNew($id);
 		$row->messagequeuetypeid = $request->input('messagequeuetypeid');
 		$row->targetobjectid = $request->input('targetobjectid');
 		if ($request->has('userid'))

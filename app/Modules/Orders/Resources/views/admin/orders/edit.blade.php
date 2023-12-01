@@ -501,6 +501,16 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 <!-- <form action="{{ route('admin.orders.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate"> -->
 
 <form action="{{ route('admin.orders.store') }}" method="post" name="adminForm" id="item-form" class="editform order">
+	@if ($errors->any())
+		<div class="alert alert-danger">
+			<ul>
+				@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
+	@endif
+
 @if ($order->id)
 	<nav class="container-fluid">
 		<ul id="queue-tabs" class="nav nav-tabs" role="tablist">

@@ -72,6 +72,16 @@ app('pathway')
 
 @section('content')
 <form action="{{ route('admin.resources.types.store') }}" method="post" name="adminForm" id="item-form" class="editform">
+	@if ($errors->any())
+		<div class="alert alert-danger">
+			<ul>
+				@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
+	@endif
+
 	<div class="row">
 		<div class="col col-md-6">
 			<fieldset class="adminform">

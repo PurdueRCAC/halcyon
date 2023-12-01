@@ -132,7 +132,7 @@ class ImpactController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Department::findOrFail($id) : new Department();
+		$row = Department::findOrNew($id);
 		$row->fill($request->input('fields'));
 
 		if (!$row->save())

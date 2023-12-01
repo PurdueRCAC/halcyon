@@ -40,6 +40,16 @@ app('pathway')
 
 @section('content')
 <form action="{{ route('admin.menus.items.store') }}" method="post" name="adminForm" id="item-form" class="form-validate">
+	@if ($errors->any())
+		<div class="alert alert-danger">
+			<ul>
+				@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
+	@endif
+
 	<div class="row">
 		<div class="col col-md-7">
 			<fieldset class="adminform">

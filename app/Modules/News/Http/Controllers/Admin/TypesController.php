@@ -86,13 +86,14 @@ class TypesController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 *
+	 * @param   Request $request
 	 * @return  View
 	 */
 	public function create()
 	{
 		$row = new Type();
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -133,7 +134,7 @@ class TypesController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Type::findOrFail($id) : new Type();
+		$row = Type::findOrNew($id);
 		$row->name = $request->input('fields.name');
 		if ($request->has('fields.alias'))
 		{
@@ -162,14 +163,15 @@ class TypesController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
+	 * @param   Request $request
 	 * @param   int   $id
 	 * @return  View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Type::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}

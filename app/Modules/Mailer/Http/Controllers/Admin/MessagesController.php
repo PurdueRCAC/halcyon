@@ -166,9 +166,9 @@ class MessagesController extends Controller
 	{
 		$id = $request->input('id');
 
-		$row = $id ? Message::findOrFail($id) : new Message;
+		$row = Message::findOrNew($id);
 
-		if ($fields = app('request')->old())
+		if ($fields = $request->old())
 		{
 			$row->fill($fields);
 		}

@@ -50,6 +50,16 @@ app('pathway')
 	@endif
 
 	<form action="{{ route('admin.queues.store') }}" method="post" name="adminForm" id="adminForm" class="editform form-validate">
+		@if ($errors->any())
+			<div class="alert alert-danger">
+				<ul>
+					@foreach ($errors->all() as $error)
+						<li>{{ $error }}</li>
+					@endforeach
+				</ul>
+			</div>
+		@endif
+
 		<div class="row">
 			<div class="col-md-7">
 				<fieldset class="adminform">

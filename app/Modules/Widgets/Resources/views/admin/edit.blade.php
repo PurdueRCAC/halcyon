@@ -34,6 +34,16 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 
 @section('content')
 <form action="{{ route('admin.widgets.store') }}" method="post" name="adminForm" id="item-form" class="editform">
+	@if ($errors->any())
+		<div class="alert alert-danger">
+			<ul>
+				@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
+	@endif
+
 	<div class="row">
 		<div class="col col-xs-12 col-sm-7">
 			<fieldset class="adminform">

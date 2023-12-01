@@ -135,14 +135,15 @@ class ProductsController extends Controller
 
 	/**
 	 * Show the form for creating a new resource.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$row = new Product();
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -160,15 +161,16 @@ class ProductsController extends Controller
 
 	/**
 	 * Show the form for editing the specified resource.
-	 * 
+	 *
+	 * @param  Request $request
 	 * @param  int  $id
 	 * @return View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = Product::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -215,8 +217,7 @@ class ProductsController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Product::findOrFail($id) : new Product();
-
+		$row = Product::findOrNew($id);
 		$row->fill($request->input('fields'));
 		$row->mou = $row->mou ?: '';
 		$row->terms = $row->terms ?: '';

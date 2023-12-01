@@ -79,13 +79,14 @@ class TodosController extends Controller
 	/**
 	 * Show the form for creating a new article
 	 *
+	 * @param   Request $request
 	 * @return  View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
 		$row = new ToDo();
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -98,14 +99,15 @@ class TodosController extends Controller
 	/**
 	 * Show the form for editing the specified entry
 	 *
+	 * @param   Request $request
 	 * @param   int  $id
 	 * @return  View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
 		$row = ToDo::findOrFail($id);
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
@@ -141,7 +143,7 @@ class TodosController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? ToDo::findOrFail($id) : new ToDo();
+		$row = ToDo::findOrNew($id);
 		$row->fill($request->input('fields'));
 
 		if (!$row->save())

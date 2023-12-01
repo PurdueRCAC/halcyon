@@ -158,7 +158,7 @@ class DirectoriesController extends Controller
 			}
 		}
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}

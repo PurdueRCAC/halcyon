@@ -195,11 +195,12 @@ class GroupsController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 *
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function create()
+	public function create(Request $request)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
+		$request->merge(['hidemainmenu' => 1]);
 
 		$row = new Group();
 
@@ -228,7 +229,7 @@ class GroupsController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Group::findOrFail($id) : new Group;
+		$row = Group::findOrNew($id);
 		$row->fill($request->input('fields'));
 		//$row->slug = $row->normalize($row->name);
 		if (!$request->has('fields.cascademanagers') || !$request->input('fields.cascademanagers'))
@@ -251,12 +252,13 @@ class GroupsController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
+	 * @param  Request $request
 	 * @param  int  $id
 	 * @return View
 	 */
-	public function edit($id)
+	public function edit(Request $request, $id)
 	{
-		app('request')->merge(['hidemainmenu' => 1]);
+		$request->merge(['hidemainmenu' => 1]);
 
 		$row = Group::findOrFail($id);
 
@@ -273,7 +275,7 @@ class GroupsController extends Controller
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param   Request  $request
+	 * @param  Request  $request
 	 * @return RedirectResponse
 	 */
 	public function delete(Request $request)

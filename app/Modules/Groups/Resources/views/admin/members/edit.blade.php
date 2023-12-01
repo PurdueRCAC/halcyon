@@ -19,7 +19,18 @@
 
 @section('content')
 <form action="{{ route('admin.groups.members.store') }}" method="post" name="adminForm" id="item-form" class="editform form-validate" data-invalid-msg="{{ trans('global.VALIDATION_FORM_FAILED') }}">
+	@if ($errors->any())
+		<div class="alert alert-danger">
+			<ul>
+				@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
+	@endif
 
+	<div class="row">
+		<div class="col-md-7 mx-auto">
 			<fieldset class="adminform">
 				<legend><span>{{ trans('global.details') }}</span></legend>
 
@@ -66,6 +77,7 @@
 					</tbody>
 				</table>
 			</fieldset>
+		</div>
 	</div>
 
 	<input type="hidden" name="userid" value="{{ $row->userid }}" />

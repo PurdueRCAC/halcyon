@@ -238,7 +238,7 @@ class PublicationsController extends Controller
 
 		$id = $request->input('id');
 
-		$row = $id ? Publication::findOrFail($id) : new Publication();
+		$row = Publication::findOrNew($id);
 		foreach ($rules as $key => $rule)
 		{
 			if ($request->has($key))

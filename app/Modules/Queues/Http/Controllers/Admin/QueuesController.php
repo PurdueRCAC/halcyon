@@ -580,7 +580,7 @@ class QueuesController extends Controller
 			abort(404);
 		}
 
-		if ($fields = app('request')->old('fields'))
+		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
 		}
