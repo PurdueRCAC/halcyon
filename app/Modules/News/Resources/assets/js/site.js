@@ -2421,7 +2421,7 @@ function NEWSPrintRow(news) {
 		var st = new Date();
 
 		news.vars['updatedate'] = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(st) + ', '
-			+ new Intl.DateTimeFormat("en-US", { month: "long" }).format(st) + ' ' + st.getDay() + ', '
+			+ new Intl.DateTimeFormat("en-US", { month: "long" }).format(st) + ' ' + st.getDate() + ', '
 			+ st.getFullYear();
 		news.vars['updatetime'] = st.toLocaleTimeString('en-US').replace(':00 AM', ' AM').replace(':00 PM', ' PM');
 		news.vars['updatedatetime'] = news.vars["updatedate"] + ' at ' + news.vars["updatetime"];
@@ -3183,7 +3183,7 @@ function NEWSPreviewVars() { // news
 		var st = new Date(startDate);
 
 		preview_vars["startdate"] = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(st) + ', '
-			+ new Intl.DateTimeFormat("en-US", { month: "long" }).format(st) + ' ' + st.getDay() + ', '
+			+ new Intl.DateTimeFormat("en-US", { month: "long" }).format(st) + ' ' + st.getDate() + ', '
 			+ st.getFullYear(); //startDate;
 		preview_vars["starttime"] = st.toLocaleTimeString('en-US').replace(':00 AM', ' AM').replace(':00 PM', ' PM');
 		preview_vars["startdatetime"] = preview_vars["startdate"] + ' at ' + preview_vars["starttime"];
@@ -3203,7 +3203,7 @@ function NEWSPreviewVars() { // news
 		var et = new Date(endDate);
 
 		preview_vars["enddate"] = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(et) + ', '
-			+ new Intl.DateTimeFormat("en-US", { month: "long" }).format(et) + ' ' + et.getDay() + ', '
+			+ new Intl.DateTimeFormat("en-US", { month: "long" }).format(et) + ' ' + et.getDate() + ', '
 			+ et.getFullYear();
 		preview_vars["endtime"] = et.toLocaleTimeString('en-US').replace(':00 AM', ' AM').replace(':00 PM', ' PM');
 		preview_vars["enddatetime"] = preview_vars["enddate"] + ' at ' + preview_vars["endtime"];
@@ -3265,6 +3265,26 @@ function NEWSPreview(news, edit) {
 			post['vars'] = NEWSPreviewVars(news);
 		}
 		post['id'] = news;
+	}
+	if (document.getElementById("datestartshort").value != "") {
+		if (document.getElementById("timestartshort").value != "") {
+			var t = document.getElementById("timestartshort").value;
+			startDate = document.getElementById("datestartshort").value + " " + convertTime12to24(t) + ':00';
+		} else {
+			startDate = document.getElementById("datestartshort").value + ' 00:00:00';
+		}
+		post['datetimenews'] = startDate;
+	}
+
+	if (document.getElementById("datestopshort").value != "") {
+		if (document.getElementById("timestopshort").value != "") {
+			var ts = document.getElementById("timestopshort").value;
+			endDate = document.getElementById("datestopshort").value + " " + convertTime12to24(ts) + ':00';
+		} else {
+			endDate = document.getElementById("datestopshort").value + ' 00:00:00';
+		}
+
+		post['datetimenewsend'] = endDate;
 	}
 
 	fetch(root + "/preview", {
@@ -3969,12 +3989,12 @@ function NEWSSetContentVars()
 	console.log(vars.startdate);
 	let a = [{ day: 'numeric' }, { month: 'short' }, { year: 'numeric' }];
 	vars.startdate = joinDate(start, a, '-');
-	//vars.startdate = start.getMonth() + ' ' + start.getDay() + ', ' + start.getFullYear();
+	//vars.startdate = start.getMonth() + ' ' + start.getDate() + ', ' + start.getFullYear();
 	vars.startdatetime = vars.startdate + ' at ' + start.getHours() + ':' + start.getMinutes();
 
 	if (vars.enddate) {
 		var end = new Date(vars.enddate);
-		vars.enddate = end.getMonth() + ' ' + end.getDay() + ', ' + end.getFullYear();
+		vars.enddate = end.getMonth() + ' ' + end.getDate() + ', ' + end.getFullYear();
 		vars.enddatetime = vars.enddate + ' at ' + end.getHours() + ':' + end.getMinutes();
 	}
 

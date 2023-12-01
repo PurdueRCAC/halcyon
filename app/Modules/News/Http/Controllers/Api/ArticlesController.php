@@ -1055,13 +1055,27 @@ class ArticlesController extends Controller
 		$row->body = $request->input('body');
 		$row->datetimecreated = Carbon::now();
 		$row->vars = $request->input('vars');
-		if (isset($row->vars['startdate']))
+		if ($request->has('datetimenews'))
 		{
-			$row->datetimenews = $row->vars['startdate'];
+			$row->datetimenews = $request->input('datetimenews');
 		}
-		if (isset($row->vars['enddate']))
+		else
 		{
-			$row->datetimenewsend = $row->vars['enddate'];
+			if (isset($row->vars['startdate']))
+			{
+				$row->datetimenews = $row->vars['startdate'];
+			}
+		}
+		if ($request->has('datetimenewsend'))
+		{
+			$row->datetimenewsend = $request->input('datetimenewsend');
+		}
+		else
+		{
+			if (isset($row->vars['enddate']))
+			{
+				$row->datetimenewsend = $row->vars['enddate'];
+			}
 		}
 
 		return new ArticleResource($row);
