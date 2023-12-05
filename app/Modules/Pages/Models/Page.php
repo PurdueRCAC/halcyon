@@ -122,6 +122,13 @@ class Page extends Model
 	];
 
 	/**
+	 * Cached content has been parsed
+	 *
+	 * @var string|null
+	 */
+	private $parsedContent = null;
+
+	/**
 	 * Default order by for model
 	 *
 	 * @var string
@@ -221,20 +228,25 @@ class Page extends Model
 	 */
 	public function getBodyAttribute(): string
 	{
-		$content = $this->content;
+		if (is_null($this->parsedContent))
+		{
+			$content = $this->content;
 
-		event($event = new PageContentIsRendering($content));
-		$content = $event->getBody();
+			event($event = new PageContentIsRendering($content));
+			$content = $event->getBody();
 
-		$content = app(Pipeline::class)
-				->send($content)
-				->through([
-					FileSize::class,
-					FilePath::class,
-				])
-				->thenReturn();
+			$content = app(Pipeline::class)
+					->send($content)
+					->through([
+						FileSize::class,
+						FilePath::class,
+					])
+					->thenReturn();
 
-		return $content;
+			$this->parsedContent = $content ? $content : '';
+		}
+
+		return $this->parsedContent;
 	}
 
 	/**
