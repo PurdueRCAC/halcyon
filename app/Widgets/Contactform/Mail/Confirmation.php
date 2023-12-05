@@ -34,6 +34,9 @@ class Confirmation extends Mailable
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param array<string,mixed> $data
+	 * @param string $dest_email
+	 * @param string $dest_name
 	 * @return void
 	 */
 	public function __construct(array $data, string $dest_email, string $dest_name)
@@ -52,7 +55,6 @@ class Confirmation extends Mailable
 	{
 		return $this->markdown('widget.contactform::mail.confirmation')
 					->subject($this->data['subject'])
-					->from($this->dest_email, $this->dest_name)
 					->with([
 						'name'  => $this->data['name'],
 						'email' => $this->data['email'],

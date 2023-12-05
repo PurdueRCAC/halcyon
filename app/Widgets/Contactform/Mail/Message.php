@@ -34,6 +34,9 @@ class Message extends Mailable
 	/**
 	 * Create a new message instance.
 	 *
+	 * @param array<string,mixed> $data
+	 * @param string $dest_email
+	 * @param string $dest_name
 	 * @return void
 	 */
 	public function __construct(array $data, string $dest_email, string $dest_name)
@@ -52,7 +55,7 @@ class Message extends Mailable
 	{
 		return $this->markdown('widget.contactform::mail.message')
 					->subject($this->data['subject'])
-					->from($this->data['name'], $this->data['email'])
+					->from($this->data['email'], $this->data['name'])
 					->with([
 						'name'  => $this->data['name'],
 						'email' => $this->data['email'],

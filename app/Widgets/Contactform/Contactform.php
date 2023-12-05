@@ -57,13 +57,20 @@ class Contactform extends Widget
 
 				$message = new Message($data, $dest_email, $dest_name);
 
-				Mail::to([$dest_email, $dest_name])->send($message);
+				$recipient = new stdClass;
+				$recipient->email = $dest_email;
+				$recipient->name = $dest_name;
+
+				Mail::to($recipient)->send($message);
 
 				if ($this->params->get('send_confirmation'))
 				{
 					$message = new Confirmation($data, $dest_email, $dest_name);
 
-					Mail::to([$data['email'], $data['name']])->send($message);
+					$recipient->email = $data['email'];
+					$recipient->name = $data['name'];
+
+					Mail::to($recipient)->send($message);
 				}
 
 				$view = 'success';
