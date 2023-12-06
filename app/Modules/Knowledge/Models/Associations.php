@@ -21,6 +21,8 @@ use Illuminate\Database\Eloquent\Builder;
  * @property string $path
  * @property int    $state
  * @property int    $access
+ *
+ * @property string $alias Page alias
  */
 class Associations extends Model
 {
