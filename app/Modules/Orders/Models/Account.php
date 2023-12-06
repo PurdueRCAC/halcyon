@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Orders\Helpers\Currency;
+use App\Modules\Orders\Events\AccountCreating;
+use App\Modules\Orders\Events\AccountUpdating;
 use Carbon\Carbon;
 
 /**
@@ -72,6 +74,16 @@ class Account extends Model
 		'datetimedenied' => 'datetime:Y-m-d H:i:s',
 		'datetimepaid' => 'datetime:Y-m-d H:i:s',
 		'datetimepaymentdoc' => 'datetime:Y-m-d H:i:s',
+	];
+
+	/**
+	 * The event map for the model.
+	 *
+	 * @var  array<string,string>
+	 */
+	protected $dispatchesEvents = [
+		'creating' => AccountCreating::class,
+		'updating' => AccountUpdating::class,
 	];
 
 	/**
