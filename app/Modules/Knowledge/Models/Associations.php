@@ -289,7 +289,7 @@ class Associations extends Model
 	/**
 	 * Get all aprents
 	 *
-	 * @param   array  $ancestors
+	 * @param   array<int,Associations>  $ancestors
 	 * @return  array<int,Associations>
 	 */
 	public function ancestors(array $ancestors = []): array
