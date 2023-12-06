@@ -104,18 +104,6 @@ class RegisterModules extends Migration
 							$folder = strtolower($element);
 					}
 
-					/*$ordering = 0;
-
-					$last = DB::table('extensions')
-						->where('folder', '=', $folder)
-						->where('type', '=', 'module')
-						->orderBy('ordering', 'desc')
-						->first();
-					if ($last)
-					{
-						$ordering = $last->ordering;
-					}*/
-
 					$ordering++;
 
 					DB::table('extensions')->insert([

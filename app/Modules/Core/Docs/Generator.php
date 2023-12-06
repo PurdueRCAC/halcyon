@@ -38,7 +38,7 @@ class Generator
 	 * @param   bool  $cache  Cache results?
 	 * @return  void
 	 */
-	public function __construct($cache = true)
+	public function __construct(bool $cache = true)
 	{
 		$this->cache = (bool) $cache;
 
@@ -104,7 +104,7 @@ class Generator
 	 * @param   bool    $force  Force new version
 	 * @return  string|array<string,mixed>
 	 */
-	public function output($format = 'json', $force = false)
+	public function output(string $format = 'json', bool $force = false)
 	{
 		// generate output
 		if ($force || !$this->cache())
@@ -135,7 +135,7 @@ class Generator
 	 * 
 	 * @return  bool
 	 */
-	private function cache()
+	private function cache(): bool
 	{
 		if (!$this->cache)
 		{
@@ -168,7 +168,7 @@ class Generator
 	 * 
 	 * @return  void
 	 */
-	private function generate()
+	private function generate(): void
 	{
 		// only load sections if we dont have a cache
 		$this->discoverModuleSections();
@@ -217,7 +217,7 @@ class Generator
 	 * 
 	 * @return  void
 	 */
-	private function discoverModuleSections()
+	private function discoverModuleSections(): void
 	{
 		foreach ($this->modules() as $module)
 		{
@@ -231,7 +231,7 @@ class Generator
 	 * @param   array<string,array<int,string>>  $sections  All the module api controllers grouped by module
 	 * @return  array<string,mixed>
 	 */
-	private function processModuleSections($sections)
+	private function processModuleSections(array $sections): array
 	{
 		// var to hold output
 		$output = array();
@@ -277,27 +277,16 @@ class Generator
 	 * @param   string  $file  File path
 	 * @return  array<string,mixed>   Processed endpoints
 	 */
-	private function processFile($file)
+	private function processFile(string $file): array
 	{
 		// var to hold output
 		$output = array();
 
-		//require_once $file;
-
 		$className = $this->parseClassFromFile($file);
 		$module    = $this->parseClassFromFile($file, true)['module'];
-		//$version   = $this->parseClassFromFile($file, true)['version'];
 
 		// Push file to files array
 		$this->output['files'][] = $file;
-
-		// Push version to versions array
-		//$this->output['versions']['available'][] = $version;
-
-		/*if (!class_exists($className))
-		{
-			return $output;
-		}*/
 
 		$controller = basename($file);
 		$controller = preg_replace('/\.[^.]*$/', '', $controller);
@@ -325,7 +314,6 @@ class Generator
 		foreach ($classReflector->getMethods() as $method)
 		{
 			// Create docblock object & make sure we have something
-			//$phpdoc = new DocBlock($method);
 			$phpdoc = $docblock->create($method->getDocComment());
 
 			// Skip method in the parent class (already processed), 
@@ -342,10 +330,6 @@ class Generator
 				continue;
 			}
 
-			
-			//$parts = explode('v', $controller);
-			//$v = array_pop($parts);
-			//$controller = implode('v', $parts);
 			$skip = false;
 
 			// Create endpoint data array
@@ -361,7 +345,6 @@ class Generator
 				'_metadata'   => array(
 					'controller' => $controller,
 					'module'     => $module,
-					//'version'    => $version,
 					'method'     => $method->getName()
 				)
 			);
@@ -370,7 +353,7 @@ class Generator
 			foreach ($phpdoc->getTags() as $tag)
 			{
 				$name    = strtolower(str_replace('api', '', $tag->getName()));
-				$content = $tag->getDescription()->render(); //Content();
+				$content = $tag->getDescription()->render();
 
 				if ($name == 'skip')
 				{
@@ -423,11 +406,6 @@ class Generator
 					continue;
 				}
 
-				/*if ($name == 'uri' && $method->getName() == 'index')
-				{
-					$content .= $module;
-				}*/
-
 				// Add data to endpoint data
 				$endpoint[$name] = $content;
 			}
@@ -459,7 +437,7 @@ class Generator
 	 * @param   bool    $returnAsParts  Return as parts?
 	 * @return  mixed
 	 */
-	private function parseClassFromFile($file, $returnAsParts = false)
+	private function parseClassFromFile(string $file, bool $returnAsParts = false)
 	{
 		// replace some values in file path to get what we need
 		$file = str_replace(
@@ -473,22 +451,14 @@ class Generator
 
 		// split by "/"
 		$parts = explode('/', 'App' . $file);
-		//array_unshift($parts, 'Modules');
 
 		// do we want to return as parts?
 		if ($returnAsParts)
 		{
-			//$parts['namespace']  = $parts[0];
 			$parts['module']     = $parts[2];
-			//$parts['client']     = $parts[2];
-			$parts['controller'] = end($parts); //$parts[4];
-			//$b = explode('v', $parts[4]);
-			//$parts['version']    = end($b);//$parts[4];
+			$parts['controller'] = end($parts);
 			return $parts;
 		}
-
-		// capitalize first letter
-		//$parts = array_map('ucfirst', $parts);
 
 		// put all the pieces back together
 		return str_replace('.', '_', implode('\\', $parts));

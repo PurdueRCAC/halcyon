@@ -41,16 +41,6 @@ class CreateBaseTables extends Migration
 				$table->index(['element', 'folder', 'client_id']);
 				$table->index(['type', 'element', 'folder', 'client_id']);
 			});
-
-			/*DB::table('extensions')->insert([
-				'name' => 'core',
-				'type' => 'module',
-				'element' => 'core',
-				'client_id' => 0,
-				'enabled' => 1,
-				'access' => 1,
-				'protected' => 1,
-			]);*/
 		}
 
 		if (!Schema::hasTable('sessions'))
@@ -65,31 +55,6 @@ class CreateBaseTables extends Migration
 				$table->integer('last_activity');
 			});
 		}
-
-		/*if (!Schema::hasTable('languages'))
-		{
-			Schema::create('languages', function (Blueprint $table)
-			{
-				$table->increments('lang_id');
-				$table->char('lang_code', 7);
-				$table->string('title', 50);
-				$table->string('title_native', 50);
-				$table->string('sef', 50);
-				$table->string('image', 50);
-				$table->string('description', 512);
-				$table->text('metakey');
-				$table->text('metadesc');
-				$table->string('sitename', 1024);
-				$table->integer('published')->unsigned()->default(0);
-				$table->integer('access')->unsigned()->default(0);
-				$table->integer('ordering')->unsigned()->default(0);
-				$table->unique('sef');
-				$table->unique('image');
-				$table->unique('lang_code');
-				$table->index('access');
-				$table->index('ordering');
-			});
-		}*/
 
 		if (!Schema::hasTable('collegedept'))
 		{
@@ -185,7 +150,6 @@ class CreateBaseTables extends Migration
 	{
 		$tables = array(
 			'extensions',
-			'languages',
 			'collegedept',
 			'fieldofscience',
 			'timeperiods',

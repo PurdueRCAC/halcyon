@@ -21,7 +21,7 @@ class PermissionsRemover
 	 *
 	 * @param string $module
 	 */
-	public function __construct($module)
+	public function __construct(string $module)
 	{
 		$this->module = $module;
 	}

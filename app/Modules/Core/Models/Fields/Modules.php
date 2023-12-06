@@ -24,15 +24,7 @@ class Modules extends Field
 	 */
 	protected function getInput(): string
 	{
-		/*$items = Extension::query()
-			->where('type', '=', 'module')
-			->where('enabled', '=', 1)
-			->orderBy('folder', 'asc')
-			->orderBy('name', 'asc')
-			->get();*/
 		$values = $this->value;
-		//echo '<pre>';
-		//print_r($values); echo '</pre>';die();
 		$values = !is_array($values) ? array() : $values;
 
 		$groupings = [

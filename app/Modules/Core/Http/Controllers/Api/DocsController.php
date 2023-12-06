@@ -20,39 +20,11 @@ class DocsController extends Controller
 	 *
 	 * @apiMethod GET
 	 * @apiUri    /api
-	 * @param   Request  $request
+	 * @param  Request $request
 	 * @return JsonResponse
 	 */
 	public function index(Request $request): JsonResponse
 	{
-		/*$modules = collect(Module::all());
-		$modules = $modules->filter(function($value, $key)
-		{
-			$apiRoutes = $value->getPath() . '/Routes/api.php';
-
-			return file_exists($apiRoutes) && $value->isStatus(true);
-		});
-
-		$segments = $request->segments();
-
-		// Remove 'api'
-		array_shift($segments);
-
-		// Active module
-		$module = null;
-		$controller = null;
-
-		if (!empty($segments))
-		{
-			$module = array_shift($segments);
-
-			if (!empty($segments))
-			{
-				$controller = array_shift($segments);
-			}
-		}*/
-
-		// generate documentation
 		$generator = new Generator((bool)config('module.core.api_chache', false));
 		$docs = $generator->output('array');
 
