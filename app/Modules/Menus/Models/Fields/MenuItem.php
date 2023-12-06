@@ -34,7 +34,16 @@ class MenuItem extends Groupedlist
 		$language  = $this->element['translator'] ? explode(',', (string) $this->element['translator']) : array();
 
 		// Get the menu items.
-		$items = array();
+		$query = Item::query();
+
+		if ($menuType)
+		{
+			$query->where('menutype', '=', $menuType);
+		}
+
+		$items = $query
+			->orderBy('ordering', 'asc')
+			->get();
 
 		// Build group for a specific menu type.
 		if ($menuType)
@@ -45,7 +54,7 @@ class MenuItem extends Groupedlist
 			// Build the options array.
 			foreach ($items as $link)
 			{
-				$groups[$menuType][] = Dropdown::option($link->value, $link->text, 'value', 'text', in_array($link->type, $disable));
+				$groups[$menuType][] = Dropdown::option($link->path, $link->title, 'value', 'text', in_array($link->type, $disable));
 			}
 		}
 		// Build groups for all menu types.
