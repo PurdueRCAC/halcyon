@@ -49,6 +49,8 @@ class AuthController extends Controller
 
 		event($event = new Authenticators());
 
+		$authenticators = array();
+
 		// If we only have one authenticator or a specific authenitcator has
 		// been given, go ahead and call the Login event
 		if (count($event->authenticators) == 1 || $request->has('authenticator'))
@@ -94,16 +96,14 @@ class AuthController extends Controller
 
 		if (!$event->authenticated || !Auth::check())
 		{
-			return response(trans('users::auth.authentication failed'), 401);
-
-			/*return redirect()
+			//return response(trans('users::auth.authentication failed'), 401);
+			return redirect()
 				->back()
 				->withInput()
-				->withError(trans('users::auth.authentication failed'));*/
+				->withError(trans('users::auth.authentication failed'));
 		}
 
 		return redirect($this->authenticatedRoute());
-			//->intended($this->authenticatedRoute());
 	}
 
 	/**

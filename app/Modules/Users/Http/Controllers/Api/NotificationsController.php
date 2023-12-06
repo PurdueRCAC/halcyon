@@ -8,6 +8,8 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Notifications\DatabaseNotification;
+use App\Modules\Users\Http\Resources\NotificationResourceCollection;
+use App\Modules\Users\Http\Resources\NotificationResource;
 use App\Modules\Users\Models\User;
 
 /**
@@ -118,7 +120,7 @@ class NotificationsController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return ResourceCollection
+	 * @return NotificationResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -195,12 +197,7 @@ class NotificationsController extends Controller
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
-		$rows->each(function ($item, $key)
-		{
-			$item->api = route('api.users.notifications.read', ['id' => $item->id]);
-		});
-
-		return new ResourceCollection($rows);
+		return new NotificationResourceCollection($rows);
 	}
 
 	/**
@@ -219,16 +216,13 @@ class NotificationsController extends Controller
 	 * 		}
 	 * }
 	 * @param  int  $id
-	 * @return JsonResource
+	 * @return NotificationResource
 	 */
 	public function read($id)
 	{
 		$row = DatabaseNotification::findOrFail((int)$id);
 
-		$data = $row->toArray();
-		$data['api'] = route('api.users.notifications.read', ['id' => $row->id]);
-
-		return new JsonResource($data);
+		return new NotificationResource($row);
 	}
 
 	/**
@@ -267,7 +261,7 @@ class NotificationsController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   int $id
-	 * @return  JsonResource|JsonResponse
+	 * @return  NotificationResource|JsonResponse
 	 */
 	public function update(Request $request, $id)
 	{
@@ -285,10 +279,7 @@ class NotificationsController extends Controller
 			$row->markAsUnread();
 		}
 
-		$data = $row->toArray();
-		$data['api'] = route('api.users.notifications.read', ['id' => $row->id]);
-
-		return new JsonResource($data);
+		return new NotificationResource($row);
 	}
 
 	/**
@@ -302,7 +293,7 @@ class NotificationsController extends Controller
 	 * 			"description": "Successful deletion"
 	 * 		}
 	 * }
-	 * @return  ResourceCollection
+	 * @return  NotificationResourceCollection
 	 */
 	public function markAllRead()
 	{
@@ -311,13 +302,7 @@ class NotificationsController extends Controller
 			->whereNull('read_at')
 			->get();
 
-		$rows->each(function ($item, $key)
-		{
-			$item->markAsRead();
-			$item->api = route('api.users.notifications.read', ['id' => $item->id]);
-		});
-
-		return new ResourceCollection($rows);
+		return new NotificationResourceCollection($rows);
 	}
 
 	/**
@@ -331,7 +316,7 @@ class NotificationsController extends Controller
 	 * 			"description": "Successful deletion"
 	 * 		}
 	 * }
-	 * @return  ResourceCollection
+	 * @return  NotificationResourceCollection
 	 */
 	public function markAllUnread()
 	{
@@ -340,13 +325,7 @@ class NotificationsController extends Controller
 			->whereNotNull('read_at')
 			->get();
 
-		$rows->each(function ($item, $key)
-		{
-			$item->markAsUnread();
-			$item->api = route('api.users.notifications.read', ['id' => $item->id]);
-		});
-
-		return new ResourceCollection($rows);
+		return new NotificationResourceCollection($rows);
 	}
 
 	/**
