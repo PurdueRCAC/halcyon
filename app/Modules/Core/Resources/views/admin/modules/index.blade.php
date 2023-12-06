@@ -98,7 +98,7 @@
 				</td>
 				<td>
 					<a href="{{ route('admin.modules.edit', ['id' => $row->id]) }}">
-						{{ ($row->name == $row->element ? trans($row->name . '::' . $row->name . '.module name') : $row->name) }}
+						{{ ($row->name == $row->element ? trans(strtolower($row->name . '::' . $row->name . '.module name')) : $row->name) }}
 					</a>
 				</td>
 				<td class="priority-4">
