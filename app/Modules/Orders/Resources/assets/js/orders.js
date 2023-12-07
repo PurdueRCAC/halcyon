@@ -1795,11 +1795,17 @@ function ApproveAccount(url, button) {
 			document.getElementById("button_" + id + "_deny").classList.add('hide');
 			document.getElementById("button_" + id + "_deny").disabled = true;
 
-			document.getElementById("button_" + id + "_reset").classList.remove('hide');
-			document.getElementById("button_" + id + "_reset").disabled = false;
+			var reset = document.getElementById("button_" + id + "_reset");
+			if (reset) {
+				reset.classList.remove('hide');
+				reset.disabled = false;
+			}
 
-			document.getElementById("button_" + id + "_remind").classList.add('hide');
-			document.getElementById("button_" + id + "_remind").disabled = true;
+			var remind = document.getElementById("button_" + id + "_remind");
+			if (remind) {
+				remind.classList.add('hide');
+				remind.disabled = true;
+			}
 
 			var accountstatus = $('[name=accountid]');
 			for (var x = 0; x < accountstatus.length; x++) {
