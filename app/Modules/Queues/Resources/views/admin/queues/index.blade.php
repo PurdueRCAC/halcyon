@@ -291,9 +291,16 @@ app('pathway')
 										{{ trans('queues::queues.queue is stopped') }}
 									</a>
 								@elseif (!$row->active)
-									<a class="glyph icon-alert-triangle text-warning" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.queue has not active resources') }}">
-										{{ trans('queues::queues.queue has no active resources') }}
-									</a>
+									@if ($row->free)
+										<a class="text-info" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.queue is interactive') }}">
+											<span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+											<span class="sr-only">{{ trans('queues::queues.queue has dedicated reservation') }}</span>
+										</a>
+									@else
+										<a class="glyph icon-alert-triangle text-warning" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.queue has no active resources') }}">
+											{{ trans('queues::queues.queue has no active resources') }}
+										</a>
+									@endif
 								@endif
 							@endif
 						</td>

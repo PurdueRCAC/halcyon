@@ -169,21 +169,31 @@ endif;
 					<div class="card-body">
 						<div class="stat-block d-flex">
 							@if (!$row->active)
-							<div class="text-warning">
-								<span class="fa fa-exclamation-triangle display-4" aria-hidden="true"></span>
-							</div>
-							<div class="flex-grow-1">
-								<span class="text-muted">Allocation</span><br />
-								@if ($upcoming = $row->getUpcomingLoanOrPurchase())
-									@if ($upcoming->serviceunits > 0)
-										{{ number_format($upcoming->serviceunits) }} <span class="text-muted">SUs</span>
-									@else
-										{{ number_format($upcoming->cores) }} <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>
-									@endif
-									<br /><span class="text-success">starts {{ $upcoming->datetimestart->diffForHumans() }}</span>
+								@if ($row->free)
+									<div class="text-info">
+										<span class="fa fa-exclamation-circle display-4" aria-hidden="true"></span>
+									</div>
+								@else
+									<div class="text-warning">
+										<span class="fa fa-exclamation-triangle display-4" aria-hidden="true"></span>
+									</div>
 								@endif
-								{{ trans('queues::queues.queue has no active resources') }}
-							</div>
+								<div class="flex-grow-1">
+									<span class="text-muted">Allocation</span><br />
+									@if ($upcoming = $row->getUpcomingLoanOrPurchase())
+										@if ($upcoming->serviceunits > 0)
+											{{ number_format($upcoming->serviceunits) }} <span class="text-muted">SUs</span>
+										@else
+											{{ number_format($upcoming->cores) }} <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>
+										@endif
+										<br /><span class="text-success">starts {{ $upcoming->datetimestart->diffForHumans() }}</span>
+									@endif
+									@if ($row->free)
+										{{ trans('queues::queues.queue is interactive') }}
+									@else
+										{{ trans('queues::queues.queue has no active resources') }}
+									@endif
+								</div>
 							@else
 							<div class="text-success">
 								<span class="fa fa-battery display-4 float-left" aria-hidden="true"></span>

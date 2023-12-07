@@ -34,12 +34,19 @@ class Slurm
 	use Loggable;
 
 	/**
+	 * Name for the "app" field in logs
+	 *
+	 * @var string
+	 */
+	public static $logApp = 'slurm';
+
+	/**
 	 * Register the listeners for the subscriber.
 	 *
 	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe(Dispatcher $events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(AllocationList::class, self::class . '@handleAllocationList');
 		$events->listen(QosList::class, self::class . '@handleQosList');
@@ -48,9 +55,9 @@ class Slurm
 		//$events->listen(QueueCreated::class, self::class . '@handleQueueCreated');
 		//$events->listen(QueueDeleted::class, self::class . '@handleQueueDeleted');
 
-		$events->listen(QosCreated::class, self::class . '@handleQos');
-		$events->listen(QosUpdated::class, self::class . '@handleQos');
-		$events->listen(QosDeleted::class, self::class . '@handleQosDeleted');
+		//$events->listen(QosCreated::class, self::class . '@handleQos');
+		//$events->listen(QosUpdated::class, self::class . '@handleQos');
+		//$events->listen(QosDeleted::class, self::class . '@handleQosDeleted');
 
 		// Update Slurm account associations
 		/*
@@ -149,7 +156,12 @@ class Slurm
 		{
 			if (!$queue->isSystem())
 			{
-				if (!$queue->totalcores && !$queue->totalnodes && !$queue->serviceunits)
+				// If not interactive && no resources...
+				// Interactive (free) queues can exist without allocations.
+				if (!$queue->free
+				 && !$queue->totalcores
+				 && !$queue->totalnodes
+				 && !$queue->serviceunits)
 				{
 					// No resources!
 					continue;
@@ -162,14 +174,17 @@ class Slurm
 				}
 			}
 
-			foreach ($queue->users as $queueuser)
+			if (!$queue->free)
 			{
-				if (!$queueuser->user || $queueuser->isPending())
+				foreach ($queue->users as $queueuser)
 				{
-					continue;
-				}
+					if (!$queueuser->user || $queueuser->isPending())
+					{
+						continue;
+					}
 
-				$allusers[] = $queueuser->user->username;
+					$allusers[] = $queueuser->user->username;
+				}
 			}
 		}
 
@@ -184,7 +199,12 @@ class Slurm
 
 			if (!$queue->isSystem())
 			{
-				if (!$queue->totalcores && !$queue->totalnodes && !$queue->serviceunits)
+				// If not interactive && no resources...
+				// Interactive (free) queues can exist without allocations.
+				if (!$queue->free
+				 && !$queue->totalcores
+				 && !$queue->totalnodes
+				 && !$queue->serviceunits)
 				{
 					// No resources!
 					continue;
@@ -955,7 +975,7 @@ class Slurm
 	 * @param   QueueCreated   $event
 	 * @return  void
 	 */
-	public function handleQueueCreated(QueueCreated $event)
+	public function handleQueueCreated(QueueCreated $event): void
 	{
 		$queue = $event->queue;
 		$config = $this->canProcessQueue($queue);
@@ -980,7 +1000,7 @@ class Slurm
 			$event->errors[] = $e->getMessage();
 		}
 
-		$this->log('slurm', __METHOD__, 'POST', $status, $body, $config['url'] . '/accounts', $queue->id);
+		$this->log(__METHOD__, 'POST', $status, $body, $config['url'] . '/accounts', $queue->id);
 	}
 
 	/**
@@ -989,7 +1009,7 @@ class Slurm
 	 * @param   QueueDeleted   $event
 	 * @return  void
 	 */
-	public function handleQueueDeleted(QueueDeleted $event)
+	public function handleQueueDeleted(QueueDeleted $event): void
 	{
 		$queue = $event->queue;
 		$config = $this->canProcessQueue($queue);
@@ -1018,7 +1038,7 @@ class Slurm
 			$event->errors[] = $e->getMessage();
 		}
 
-		$this->log('slurm', __METHOD__, 'DELETE', $status, $body, $url, $queue->id);
+		$this->log(__METHOD__, 'DELETE', $status, $body, $url, $queue->id);
 	}
 
 	/**
@@ -1027,7 +1047,7 @@ class Slurm
 	 * @param   QosCreated|QosUpdated  $event
 	 * @return  void
 	 */
-	public function handleQos($event)
+	public function handleQos($event): void
 	{
 		$config = config('listener.slurm', []);
 
@@ -1161,7 +1181,7 @@ class Slurm
 			$event->errors[] = $e->getMessage();
 		}
 
-		$this->log('slurm', __METHOD__, 'POST', $status, $body, $config['url']);
+		$this->log(__METHOD__, 'POST', $status, $body, $config['url']);
 	}
 
 	/**
@@ -1170,7 +1190,7 @@ class Slurm
 	 * @param   QosCreated  $event
 	 * @return  void
 	 */
-	public function handleQosDeleted(QosDeleted $event)
+	public function handleQosDeleted(QosDeleted $event): void
 	{
 		$config = config('listener.slurm', []);
 
@@ -1203,7 +1223,7 @@ class Slurm
 			$event->errors[] = $e->getMessage();
 		}
 
-		$this->log('slurm', __METHOD__, 'DELETE', $status, $body, $config['url']);
+		$this->log(__METHOD__, 'DELETE', $status, $body, $config['url']);
 	}
 
 	/**
@@ -1212,7 +1232,7 @@ class Slurm
 	 * @param   QueueUserCreated  $event
 	 * @return  void
 	 */
-	public function handleQueueUserCreated(QueueUserCreated $event)
+	public function handleQueueUserCreated(QueueUserCreated $event): void
 	{
 		$queue = $event->user->queue;
 		$config = $this->canProcessQueue($queue);
@@ -1259,7 +1279,7 @@ class Slurm
 
 			$event->errors[] = $e->getMessage();
 
-			$this->log('slurm', __METHOD__, 'POST', $status, $body, $config['url'], $event->user->userid);
+			$this->log(__METHOD__, 'POST', $status, $body, $config['url'], $event->user->userid);
 		}
 	}
 
@@ -1269,7 +1289,7 @@ class Slurm
 	 * @param   QueueUserDeleted  $event
 	 * @return  void
 	 */
-	public function handleQueueUserDeleted(QueueUserDeleted $event)
+	public function handleQueueUserDeleted(QueueUserDeleted $event): void
 	{
 		$queue = $event->user->queue;
 		$config = $this->canProcessQueue($queue);
@@ -1320,7 +1340,7 @@ class Slurm
 			$event->errors[] = $e->getMessage();
 		}
 
-		$this->log('slurm', __METHOD__, 'DELETE', $status, $body, $url, $event->user->userid);
+		$this->log(__METHOD__, 'DELETE', $status, $body, $url, $event->user->userid);
 	}
 
 	/**
@@ -1329,7 +1349,7 @@ class Slurm
 	 * @param   object  $event
 	 * @return  void
 	 */
-	public function handleQueueAllocation($event)
+	public function handleQueueAllocation($event): void
 	{
 		$config = $this->config();
 
@@ -1387,7 +1407,7 @@ class Slurm
 
 			$event->errors[] = $e->getMessage();
 
-			//$this->log('slurm', __METHOD__, 'PUT', $status, $body, $url);
+			//$this->log(__METHOD__, 'PUT', $status, $body, $url);
 		}
 	}
 
@@ -1397,7 +1417,7 @@ class Slurm
 	 * @param   Schedule  $event
 	 * @return  void
 	 */
-	public function handleSchedule(Schedule $event)
+	public function handleSchedule(Schedule $event): void
 	{
 		$resource = $event->resource;
 		$client = new Client();
