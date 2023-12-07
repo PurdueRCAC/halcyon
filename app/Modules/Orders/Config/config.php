@@ -12,6 +12,7 @@ return [
 	'schedule' => [
 		'renew' => '55 23 * * *',
 		'emailstatus' => '*/15 * * * *',
+		'remind' => '5 1 * * *',
 	],
 
 	/*
