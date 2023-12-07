@@ -141,6 +141,7 @@ class Orders
 					->groupBy($o . '.groupid')
 					->groupBy($o . '.datetimecreated')
 					->groupBy($o . '.datetimeremoved')
+					->groupBy($o . '.datetimenotified')
 					->groupBy($o . '.usernotes')
 					->groupBy($o . '.staffnotes')
 					->groupBy($o . '.notice')
