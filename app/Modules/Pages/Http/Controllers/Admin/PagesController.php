@@ -199,7 +199,7 @@ class PagesController extends Controller
 	public function store(Request $request)
 	{
 		$rules = [
-			'fields.parent_id' => 'nullable|integer|min:1',
+			'fields.parent_id' => 'nullable|integer',
 			'fields.title' => 'required|string|max:255',
 			'fields.alias' => 'nullable|string|max:255',
 			'fields.content' => 'required|string',
