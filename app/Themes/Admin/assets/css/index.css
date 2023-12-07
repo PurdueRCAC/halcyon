@@ -963,6 +963,7 @@ h4 {
 .icon-layers:before {
   content: "\e87e";
 }
+.fa-info:before,
 .icon-info:before {
   content: "\e87f";
 }
