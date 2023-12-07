@@ -23,6 +23,7 @@ use Carbon\Carbon;
  * @property int    $groupid
  * @property Carbon|string|null $datetimecreated
  * @property Carbon|string|null $datetimeremoved
+ * @property Carbon|string|null $datetimenotified
  * @property string $usernotes
  * @property string $staffnotes
  * @property int    $notice
@@ -78,6 +79,15 @@ class Order extends Model
 	protected $dispatchesEvents = [
 		'created' => OrderCreated::class,
 		'deleted' => OrderDeleted::class,
+	];
+
+	/**
+	 * The attributes that should be cast to native types.
+	 *
+	 * @var  array<string,string>
+	 */
+	protected $casts = [
+		'datetimenotified' => 'datetime:Y-m-d H:i:s',
 	];
 
 	/**

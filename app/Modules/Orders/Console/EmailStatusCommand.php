@@ -18,6 +18,7 @@ use App\Modules\Orders\Mail\Canceled;
 use App\Modules\Orders\Events\OrderFulfilled;
 use App\Modules\Users\Models\User;
 use App\Halcyon\Access\Map;
+use Carbon\Carbon;
 
 class EmailStatusCommand extends Command
 {
@@ -143,12 +144,12 @@ class EmailStatusCommand extends Command
 			$order->offsetUnset('type');
 			if ($order->total > 0)
 			{
-				$order->update(['notice' => NoticeStatus::PENDING_BOASSIGNMENT]);
+				$order->update(['notice' => NoticeStatus::PENDING_BOASSIGNMENT, 'datetimenotified' => Carbon::now()]);
 			}
 			else
 			{
 				// If the order total is zero, skip "pending payment info" and "pending approval"
-				$order->update(['notice' => NoticeStatus::PENDING_COLLECTION]);
+				$order->update(['notice' => NoticeStatus::PENDING_COLLECTION, 'datetimenotified' => Carbon::now()]);
 			}
 			$processed[] = $order->id;
 		}
@@ -224,7 +225,7 @@ class EmailStatusCommand extends Command
 			}
 
 			// Change states
-			$order->update(['notice' => NoticeStatus::PENDING_APPROVAL]);
+			$order->update(['notice' => NoticeStatus::PENDING_APPROVAL, 'datetimenotified' => Carbon::now()]);
 			$processed[] = $order->id;
 		}
 
@@ -372,7 +373,7 @@ class EmailStatusCommand extends Command
 			// Change states
 			if ($order->notice == NoticeStatus::PENDING_APPROVAL)
 			{
-				$order->update(['notice' => NoticeStatus::PENDING_FULFILLMENT]);
+				$order->update(['notice' => NoticeStatus::PENDING_FULFILLMENT, 'datetimenotified' => Carbon::now()]);
 			}
 		}
 
@@ -489,7 +490,7 @@ class EmailStatusCommand extends Command
 			}
 
 			// Change states
-			$order->update(['notice' => NoticeStatus::PENDING_COLLECTION]);
+			$order->update(['notice' => NoticeStatus::PENDING_COLLECTION, 'datetimenotified' => Carbon::now()]);
 		}
 
 		//--------------------------------------------------------------------------
@@ -567,7 +568,7 @@ class EmailStatusCommand extends Command
 			}
 
 			// Change states
-			$order->update(['notice' => NoticeStatus::COMPLETE]);
+			$order->update(['notice' => NoticeStatus::COMPLETE, 'datetimenotified' => Carbon::now()]);
 
 			// Trigger order Fulfilled event
 			//
@@ -646,7 +647,7 @@ class EmailStatusCommand extends Command
 			}
 
 			// Change states
-			$order->update(['notice' => NoticeStatus::NO_NOTICE]);
+			$order->update(['notice' => NoticeStatus::NO_NOTICE, 'datetimenotified' => Carbon::now()]);
 		}
 
 		//--------------------------------------------------------------------------
@@ -726,7 +727,7 @@ class EmailStatusCommand extends Command
 			}
 
 			// Change states
-			$order->update(['notice' => NoticeStatus::NO_NOTICE]);
+			$order->update(['notice' => NoticeStatus::NO_NOTICE, 'datetimenotified' => Carbon::now()]);
 		}
 	}
 }

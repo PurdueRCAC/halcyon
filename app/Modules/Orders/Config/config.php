@@ -35,4 +35,13 @@ return [
 	| The month-day of the calendar year that the fiscal year starts on
 	*/
 	'fiscal_start' => 7,
+
+	/*
+	|--------------------------------------------------------------------------
+	| Remind Approvers Time interval
+	|--------------------------------------------------------------------------
+	| How long to wait before reminding account approvers. Set to an empty
+	| string or `null` to disable entirely.
+	*/
+	'remind_approvers_after' => '1 week',
 ];

@@ -7,6 +7,7 @@ use Illuminate\Auth\Events\Logout;
 use Illuminate\Session\SessionManager;
 use App\Modules\Orders\Console\RenewCommand;
 use App\Modules\Orders\Console\EmailStatusCommand;
+use App\Modules\Orders\Console\RemindApproversCommand;
 use App\Modules\Orders\Entities\Cart;
 use App\Modules\Orders\Listeners\GroupOrders;
 use App\Modules\Orders\Listeners\UserOrders;
@@ -97,6 +98,7 @@ class OrdersServiceProvider extends ServiceProvider
 		$this->commands([
 			RenewCommand::class,
 			EmailStatusCommand::class,
+			RemindApproversCommand::class,
 		]);
 	}
 
