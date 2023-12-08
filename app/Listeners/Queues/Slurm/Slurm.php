@@ -94,6 +94,7 @@ class Slurm
 		$admin_users  = config('listener.slurm.admin_users', ['root']);
 		$admin_groups = config('listener.slurm.admin_groups', []);
 		$default_account = config('listener.slurm.default_account', 'standby');
+		$interactive_account = config('listener.slurm.interactive_account', 'interactive');
 
 		// Get admins
 		$roles = config('module.queues.admins', []);
@@ -383,7 +384,7 @@ class Slurm
 				//User - 'aliaga':Partition='gilbreth-g':DefaultAccount='standby':Fairshare=1:GrpTRES=cpu=128:GrpSubmitJobs=12000:MaxSubmitJobs=5000:MaxWallDurationPerJob=20160:Priority=1000
 				$uline   = ["User - '" . $queueuser->user->username . "'"];
 				$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
-				$uline[] = "DefaultAccount='" . $default_account . "'";
+				$uline[] = "DefaultAccount='" . ($queue->free ? $interactive_account : $default_account) . "'";
 				if (in_array($queueuser->user->username, $admin_users))
 				{
 					$uline[] = "AdminLevel='Administrator'";
