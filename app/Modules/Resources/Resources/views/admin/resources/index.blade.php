@@ -32,7 +32,11 @@ app('pathway')
 		!!}
 	@endif
 
-	{!! Toolbar::render() !!}
+	{!! Toolbar::help('resources::admin.help.resources'); !!}
+
+	{!!
+		Toolbar::render()
+	!!}
 @stop
 
 @section('title')

@@ -28,6 +28,8 @@ app('pathway')
 		!!}
 	@endif
 
+	{!! Toolbar::help('resources::admin.help.types'); !!}
+
 	{!! Toolbar::render() !!}
 @stop
 
