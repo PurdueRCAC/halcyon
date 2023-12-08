@@ -3002,8 +3002,10 @@ html .select2-container--default .select2-selection--multiple .select2-selection
 .ui-dialog {
   padding: 0;
 }
+
 .modal-backdrop {
    background-color: #aaa;
+   z-index: 74;
 }
 .modal-title {
   font-size: 1.2em;
