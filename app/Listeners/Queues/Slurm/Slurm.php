@@ -384,7 +384,7 @@ class Slurm
 				//User - 'aliaga':Partition='gilbreth-g':DefaultAccount='standby':Fairshare=1:GrpTRES=cpu=128:GrpSubmitJobs=12000:MaxSubmitJobs=5000:MaxWallDurationPerJob=20160:Priority=1000
 				$uline   = ["User - '" . $queueuser->user->username . "'"];
 				$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
-				$uline[] = "DefaultAccount='" . ($queue->free ? $interactive_account : $default_account) . "'";
+				$uline[] = "DefaultAccount='" . ($queue->free && $interactive_account ? $interactive_account : $default_account) . "'";
 				if (in_array($queueuser->user->username, $admin_users))
 				{
 					$uline[] = "AdminLevel='Administrator'";
