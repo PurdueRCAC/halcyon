@@ -152,6 +152,7 @@ class Slurm
 
 		$users = array();
 		$allusers = array();
+		$interactiveusers = array();
 
 		foreach ($queues as $queue)
 		{
@@ -175,15 +176,19 @@ class Slurm
 				}
 			}
 
-			if (!$queue->free)
+			foreach ($queue->users as $queueuser)
 			{
-				foreach ($queue->users as $queueuser)
+				if (!$queueuser->user || $queueuser->isPending())
 				{
-					if (!$queueuser->user || $queueuser->isPending())
-					{
-						continue;
-					}
+					continue;
+				}
 
+				if ($queue->free && $interactive_account)
+				{
+					$interactiveusers[] = $queueuser->user->username;
+				}
+				else
+				{
 					$allusers[] = $queueuser->user->username;
 				}
 			}
@@ -346,7 +351,7 @@ class Slurm
 					// User - 'aliaga':Partition='gilbreth-g':DefaultAccount='standby':Fairshare=1:GrpTRES=cpu=128:GrpSubmitJobs=12000:MaxSubmitJobs=5000:MaxWallDurationPerJob=20160:Priority=1000
 					$uline   = ["User - '" . $username . "'"];
 					$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
-					$uline[] = "DefaultAccount='" . $default_account . "'";
+					$uline[] = "DefaultAccount='" . ($queue->name == $interactive_account ? $interactive_account : $default_account) . "'";
 					$uline[] = "AdminLevel='Administrator'";
 					$uline[] = "Fairshare=1";
 
@@ -357,20 +362,41 @@ class Slurm
 			// Add all users?
 			if ($queue->isShared())
 			{
-				foreach ($allusers as $username)
+				if ($queue->name == $interactive_account)
 				{
-					if (in_array($username, $admin_users))
+					foreach ($interactiveusers as $username)
 					{
-						// Already added them in the amdin section above
-						continue;
+						if (in_array($username, $admin_users))
+						{
+							// Already added them in the admin section above
+							continue;
+						}
+
+						$uline   = ["User - '" . $username . "'"];
+						$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
+						$uline[] = "DefaultAccount='" . ($interactive_account ? $interactive_account : $default_account) . "'";
+						$uline[] = "Fairshare=1";
+
+						$users[] = implode(':', $uline);
 					}
+				}
+				else
+				{
+					foreach ($allusers as $username)
+					{
+						if (in_array($username, $admin_users))
+						{
+							// Already added them in the admin section above
+							continue;
+						}
 
-					$uline   = ["User - '" . $username . "'"];
-					$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
-					$uline[] = "DefaultAccount='" . $default_account . "'";
-					$uline[] = "Fairshare=1";
+						$uline   = ["User - '" . $username . "'"];
+						$uline[] = "Partition='" . $scheduler->resource->rolename . "-" . $queue->cluster . "'";
+						$uline[] = "DefaultAccount='" . ($queue->free && $interactive_account ? $interactive_account : $default_account) . "'";
+						$uline[] = "Fairshare=1";
 
-					$users[] = implode(':', $uline);
+						$users[] = implode(':', $uline);
+					}
 				}
 			}
 
