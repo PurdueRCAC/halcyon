@@ -222,6 +222,16 @@ class Page extends Model
 	}
 
 	/**
+	 * Raw page content
+	 *
+	 * @return  string
+	 */
+	public function toHtml(): string
+	{
+		return $this->content;
+	}
+
+	/**
 	 * Parses content string as directed
 	 *
 	 * @return  string
