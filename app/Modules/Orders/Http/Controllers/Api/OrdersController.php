@@ -819,7 +819,15 @@ class OrdersController extends Controller
 				{
 					$account->notice = NoticeStatus::PENDING_APPROVAL;
 				}
-				$account->save();
+
+				try
+				{
+					$account->save();
+				}
+				catch (\Exception $e)
+				{
+					return response()->json(['message' => $e->getMessage()], 415);
+				}
 			}
 		}
 
