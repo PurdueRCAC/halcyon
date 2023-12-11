@@ -67,13 +67,13 @@
 			description="menus::menus.item.type description"
 			required="true">
 			<option
-				value="module">page</option>
+				value="module">menus::menus.item.type page</option>
 			<option
-				value="url">url</option>
+				value="url">menus::menus.item.type url</option>
 			<option
-				value="separator">separator</option>
+				value="separator">menus::menus.item.type separator</option>
 			<option
-				value="html">html</option>
+				value="html">menus::menus.item.type html</option>
 		</field>
 
 		<field

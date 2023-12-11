@@ -29,6 +29,8 @@ app('pathway')
 		!!}
 	@endif
 
+	{!! Toolbar::help('menus::admin.help.menus') !!}
+
 	{!! Toolbar::render() !!}
 @stop
 

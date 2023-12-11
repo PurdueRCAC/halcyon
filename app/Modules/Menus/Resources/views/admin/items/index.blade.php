@@ -64,6 +64,8 @@ app('pathway')
 		@endif
 	@endif
 
+	{!! Toolbar::help('menus::admin.help.items') !!}
+
 	{!! Toolbar::render() !!}
 @stop
 

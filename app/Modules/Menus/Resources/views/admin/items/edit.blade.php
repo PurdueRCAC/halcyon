@@ -31,6 +31,7 @@ app('pathway')
 		{!! Toolbar::save(route('admin.menus.items.store')) !!}
 	@endif
 	{!! Toolbar::cancel(route('admin.menus.items.cancel')) !!}
+
 	{!! Toolbar::render() !!}
 @stop
 
@@ -56,8 +57,35 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
-					<?php echo $form->getLabel('type'); ?>
-					<?php echo $form->getInput('type'); ?>
+					<label id="fields_type-lbl" for="fields_type" class="hasTip required-field" title="{{ trans('menus::menus.item.type desc') }}">{{ trans('menus::menus.item.type') }} <span class="required star">{{ trans('global.required') }}</span></label>
+					<fieldset id="fields_type" class="radio required">
+						<ul>
+							<li>
+								<div class="form-check">
+									<input type="radio" id="fields_type0" name="fields[type]" value="module" <?php if ($row->type == 'module') { echo ' checked="checked"'; } ?> class="form-check-input"/>
+									<label class="form-check-label" for="fields_type0" class="form-check-input">{{ trans('menus::menus.item.type page') }}<br /><span class="text-muted">{{ trans('menus::menus.item.type page desc') }}</span></label>
+								</div>
+							</li>
+							<li>
+								<div class="form-check">
+									<input type="radio" id="fields_type1" name="fields[type]" value="url" <?php if ($row->type == 'url') { echo ' checked="checked"'; } ?> class="form-check-input"/>
+									<label class="form-check-label" for="fields_type1" class="form-check-input">{{ trans('menus::menus.item.type url') }}<br /><span class="text-muted">{{ trans('menus::menus.item.type url desc') }}</span></label>
+								</div>
+							</li>
+							<li>
+								<div class="form-check">
+									<input type="radio" id="fields_type2" name="fields[type]" value="separator" <?php if ($row->type == 'separator') { echo ' checked="checked"'; } ?> class="form-check-input"/>
+									<label class="form-check-label" for="fields_type2" class="form-check-input">{{ trans('menus::menus.item.type separator') }}<br /><span class="text-muted">{{ trans('menus::menus.item.type separator desc') }}</span></label>
+								</div>
+							</li>
+							<li>
+								<div class="form-check">
+									<input type="radio" id="fields_type3" name="fields[type]" value="html" <?php if ($row->type == 'html') { echo ' checked="checked"'; } ?> class="form-check-input"/>
+									<label class="form-check-label" for="fields_type3" class="form-check-input">{{ trans('menus::menus.item.type html') }}<br /><span class="text-muted">{{ trans('menus::menus.item.type html desc') }}</span></label>
+								</div>
+							</li>
+						</ul>
+					</fieldset>
 					{!! $errors->first('type', '<span class="form-text text-danger">:message</span>') !!}
 				</div>
 
@@ -72,12 +100,7 @@ app('pathway')
 				<?php endif; ?>
 				<div class="form-group menutype-dependant menutype-url{{ $errors->has('link') ? ' has-error' : '' }}">
 					<?php echo $form->getLabel('link'); ?>
-					<!-- <div class="input-group mb-2 mr-sm-2">
-						<div class="input-group-prepend">
-							<div class="input-group-text">{{ url('/') }}</div>
-						</div> -->
-						<?php echo $form->getInput('link'); ?>
-					<!-- </div> -->
+					<?php echo $form->getInput('link'); ?>
 					{!! $errors->first('link', '<span class="form-text text-danger">:message</span>') !!}
 				</div>
 
@@ -139,14 +162,36 @@ app('pathway')
 				<div class="row menutype-dependant menutype-url menutype-module">
 					<div class="col col-md-6">
 						<div class="form-group">
-							<?php echo $form->getLabel('target'); ?>
-							<?php echo $form->getInput('target'); ?>
+							<?php
+							$field = $form->getField('target');
+							$desc = $field->description;
+
+							echo $field->label;
+							if ($desc):
+								echo ' <span class="fa fa-question-circle text-info" aria-hidden="true" data-tip="' . e(trans($desc)) . '"></span>';
+							endif;
+							echo $field->input;
+							if ($desc):
+								echo '<span class="sr-only">' . trans($desc) . '</span>';
+							endif;
+							?>
 						</div>
 					</div>
 					<div class="col col-md-6">
 						<div class="form-group{{ $errors->has('class') ? ' has-error' : '' }}">
-							<?php echo $form->getLabel('class'); ?>
-							<?php echo $form->getInput('class'); ?>
+							<?php
+							$field = $form->getField('class');
+							$desc = $field->description;
+
+							echo $field->label;
+							if ($desc):
+								echo ' <span class="fa fa-question-circle text-info" aria-hidden="true" data-tip="' . e(trans($desc)) . '"></span>';
+							endif;
+							echo $field->input;
+							if ($desc):
+								echo '<span class="sr-only">' . trans($desc) . '</span>';
+							endif;
+							?>
 							{!! $errors->first('class', '<span class="form-text text-danger">:message</span>') !!}
 						</div>
 					</div>
