@@ -69,7 +69,7 @@
 
 @if (auth()->user()->can('admin users'))
 	<h2 id="options">Options</h2>
-	<p>Click the Options button to open the <strong>User Manager Options</strong> window which lets you configure this component.
+	<p>Click the Options button to open the <strong>User Manager Options</strong> window which lets you configure this module.</p>
 
 	<h3 id="common-buttons">Buttons Common to All Tabs</h3>
 	<dl>
@@ -90,13 +90,11 @@
 
 	<h3 id="permissions">Permissions</h3>
 
-	<p>This screen allows you to set the component permissions. This is important to consider if you have sites with many different user categories all of whom need to have different accessibilities to the component. The screenshot below describes what you should see and the text below that describes what each permission level gives the user access to:</p>
+	<p>This screen allows you to set the module permissions. This is important to consider if you have sites with many different user categories all of whom need to have different accessibilities to the module. The screenshot below describes what you should see and the text below that describes what each permission level gives the user access to:</p>
 
 	<p>You work on one Role at a time by opening the slider for that role. You change the permissions in the Select New Settings drop-down list boxes.
-	The options for each value are Inherited, Allowed, or Denied. The Calculated Setting column shows you the setting in effect. It is either Not Allowed (the default), Allowed, or Denied.
+	The options for each value are <code>Inherited</code>, <code>Allowed</code>, or <code>Denied</code>. The Calculated Setting column shows you the setting in effect. It is either <span class="badge badge-warning">Not Allowed (the default)</span>, <span class="badge badge-success">Allowed</span>, or  <span class="badge badge-danger">Denied</span>.
 	Note that the Calculated Setting column is not updated until you press the Save button in the toolbar. To check that the settings are what you want, press the Save button and check the Calculated Settings column.</p>
-
-	<!-- <p>The default values used here are the ones set in the <a href="#" title="Help25:Site Global Configuration">Global Configuration Permissions Tab</a></p> -->
 
 	<dl>
 		<dt>Access Administration Interface</dt>
@@ -104,9 +102,9 @@
 		<dt>Configure</dt>
 		<dd>Open the Users Manager options screen (the modal window these options are in)</dd>
 		<dt>Create&#160;</dt>
-		<dd>Create new users in the component</dd>
-		<dt>Delete&#160;</dt><dd> Delete existing users in the component</dd>
-		<dt>Edit&#160;</dt><dd> Edit existing users in the component</dd>
+		<dd>Create new users</dd>
+		<dt>Delete&#160;</dt><dd> Delete existing users</dd>
+		<dt>Edit&#160;</dt><dd> Edit existing users</dd>
 		<dt>Edit State&#160;</dt><dd> Change a user's state (enabled/disabled).</dd>
 	</dl>
 
