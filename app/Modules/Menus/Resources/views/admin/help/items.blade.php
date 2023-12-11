@@ -18,7 +18,7 @@
 	<dl>
 		<dt>Checkbox</dt><dd>Check this box to select one or more items. To select all items, check the box in the column heading. After one or more boxes are checked, click a toolbar button to take an action on the selected item or items. Many toolbar actions, such as Publish and Unpublish, can work with multiple items. Others, such as Edit, only work on one item at a time. If multiple items are checked and you press Edit, the first item will be opened for editing.</dd>
 		<dt>Title</dt><dd>The name of the item. You can open the item for editing by clicking on the Title.</dd>
-		<dt>URL</dt><dd>The number of users in this role.</dd>
+		<dt>URL</dt><dd>The URL for the menu item.</dd>
 		<dt>Published</dt><dd>Whether the item has been published or not. You can change the Published state by clicking on the icon in this column.</dd>
 		<dt>Access</dt><dd>The viewing level access for this item.</dd>
 		<dt>Ordering</dt><dd>Menu items are always listed int he order they're displayed in the menu. Use the dots to drag menu items around to change the ordering.</dd>
