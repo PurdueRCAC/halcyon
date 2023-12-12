@@ -19,6 +19,23 @@ class WidgetManager
 	public $app;
 
 	/**
+	 * Asset stacks
+	 *
+	 * @var array<string,array<int,string>>
+	 */
+	protected $stacks = array(
+		'styles'  => array(),
+		'scripts' => array()
+	);
+
+	/**
+	 * Capture asset stacks?
+	 *
+	 * @var bool
+	 */
+	protected $captureStacks = false;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param   Container  $app
@@ -30,12 +47,60 @@ class WidgetManager
 	}
 
 	/**
+	 * Start capturing asset stacks
+	 *
+	 * @return  void
+	 */
+	public function startCapturingStacks(): void
+	{
+		$this->captureStacks = true;
+	}
+
+	/**
+	 * Stop capturing asset stacks
+	 *
+	 * @return  void
+	 */
+	public function stopCapturingStacks(): void
+	{
+		$this->captureStacks = false;
+	}
+
+	/**
+	 * Flush asset stacks
+	 *
+	 * @return  void
+	 */
+	public function flushStacks(): void
+	{
+		foreach ($this->stacks as $key => $data)
+		{
+			$this->stacks[$key] = array();
+		}
+	}
+
+	/**
+	 * Get an asset stack
+	 *
+	 * @return array<int,string>
+	 */
+	public function stack(string $type): array
+	{
+		$stack = array();
+		if (isset($this->stacks[$type]))
+		{
+			$stack = $this->stacks[$type];
+		}
+		return $stack;
+	}
+
+	/**
 	 * Make sure widget name follows naming conventions
 	 *
 	 * @param   string  $name  The element value for the extension
 	 * @return  string
 	 */
-	public function canonical($name)
+	public function canonical(string $name): string
 	{
 		$name = preg_replace('/[^A-Z0-9_\.-]/i', '', $name);
 		return strtolower($name);
@@ -47,7 +112,7 @@ class WidgetManager
 	 * @param   object  $widget
 	 * @return  string
 	 */
-	public function run($widget)
+	public function run($widget): string
 	{
 		if (!$widget)
 		{
@@ -65,9 +130,7 @@ class WidgetManager
 			app_path() . '/Widgets/' . Str::studly($widget->name) . '/views'
 		);
 
-		$content = $this->getContentFromCache($widget);
-
-		return $content;
+		return $this->getContentFromCache($widget);
 	}
 
 	/**
@@ -209,11 +272,28 @@ class WidgetManager
 	 * Make call and get return widget content.
 	 *
 	 * @param  object $widget
-	 * @return mixed
+	 * @return string
 	 */
 	protected function getContent($widget)
 	{
 		$content = $this->app->call([$widget, 'run']);
+
+		if ($this->captureStacks)
+		{
+			$output = $content->render(function ($view, $contents)
+			{
+				if ($styles = $view->getFactory()->yieldPushContent('styles'))
+				{
+					$this->stacks['styles'][] = $styles;
+				}
+				if ($scripts = $view->getFactory()->yieldPushContent('scripts'))
+				{
+					$this->stacks['scripts'][] = $scripts;
+				}
+			});
+
+			return $output ? $output : '';
+		}
 
 		return is_object($content) ? $content->__toString() : $content;
 	}
@@ -223,19 +303,23 @@ class WidgetManager
 	 * Runs widget class otherwise.
 	 *
 	 * @param  object $widget
-	 * @return mixed
+	 * @return string
 	 */
-	protected function getContentFromCache($widget)
+	protected function getContentFromCache($widget): string
 	{
 		if ($cacheTime = (float) $widget->getCacheTime())
 		{
-			return $this->app->cache($widget->cacheKey(), $cacheTime, $widget->cacheTags(), function ()
+			$content = $this->app->cache($widget->cacheKey(), $cacheTime, $widget->cacheTags(), function ()
 			{
 				return $this->getContent();
 			});
 		}
+		else
+		{
+			$content = $this->getContent($widget);
+		}
 
-		return $this->getContent($widget);
+		return $content ? $content : '';
 	}
 
 	/**
