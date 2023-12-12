@@ -4,9 +4,9 @@
  */
 ?>
 
-@push('scripts')
+@pushOnce('scripts')
 	<script src="{{ timestamped_asset('/modules/core/vendor/chartjs/Chart.min.js') }}"></script>
-@endpush
+@endpushOnce
 
 <div class="card widget {{ $widget->widget }}" id="{{ $widget->widget . $widget->id }}">
 	<div class="card-body">

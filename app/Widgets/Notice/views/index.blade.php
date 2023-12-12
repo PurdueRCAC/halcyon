@@ -1,6 +1,6 @@
-@push('styles')
+@pushOnce('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('widgets/notice/css/notice.css') }}" />
-@endpush
+@endpushOnce
 
 @if ($publish)
 <div class="notice-banner" role="banner">

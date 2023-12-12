@@ -1,6 +1,10 @@
-@push('styles')
+@pushOnce('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('widgets/cookiepolicy/css/cookiepolicy.css') }}" />
-@endpush
+@endpushOnce
+
+@pushOnce('scripts')
+<script src="{{ timestamped_asset('widgets/cookiepolicy/js/cookiepolicy.js') }}"></script>
+@endpushOnce
 
 <div class="cookiepolicy fixed-bottom shadow-lg" id="{{ $id }}">
 	<div class="cookiepolicy-message text-center alert alert-warning m-0 p-4">
@@ -11,4 +15,3 @@
 		</a>
 	</div>
 </div>
-<script src="{{ timestamped_asset('widgets/cookiepolicy/js/cookiepolicy.js') }}"></script>

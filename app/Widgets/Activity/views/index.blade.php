@@ -3,11 +3,11 @@
  * View for Activity widget
  */
 ?>
-@push('styles')
+@pushOnce('styles')
 <link rel="stylesheet" type="text/css" href="{{ timestamped_asset('modules/core/vendor/chartjs/Chart.css') }}" />
-@endpush
+@endpushOnce
 
-@push('scripts')
+@pushOnce('scripts')
 <script src="{{ timestamped_asset('modules/core/vendor/chartjs/Chart.min.js') }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 });
 </script>
-@endpush
+@endpushOnce
 
 <div class="card mb-4 widget {{ $widget->module }}">
 	<div class="card-body">

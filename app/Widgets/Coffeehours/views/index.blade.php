@@ -3,20 +3,21 @@
  * News widget layout
  */
 ?>
-@push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/vendor/fullcalendar/core/main.min.css?v=' . filemtime(public_path() . '/modules/news/vendor/fullcalendar/core/main.min.css')) }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/vendor/fullcalendar/daygrid/main.min.css?v=' . filemtime(public_path() . '/modules/news/vendor/fullcalendar/daygrid/main.min.css')) }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/vendor/fullcalendar/timegrid/main.min.css?v=' . filemtime(public_path() . '/modules/news/vendor/fullcalendar/timegrid/main.min.css')) }}" />
-<link rel="stylesheet" type="text/css" media="all" href="{{ asset('modules/news/css/news.css?v=' . filemtime(public_path() . '/modules/news/css/news.css')) }}" />
-@endpush
 
-@push('scripts')
-<script src="{{ asset('modules/news/vendor/fullcalendar/core/main.min.js?v=' . filemtime(public_path() . '/modules/news/vendor/fullcalendar/core/main.min.js')) }}"></script>
-<script src="{{ asset('modules/news/vendor/fullcalendar/interaction/main.min.js?v=' . filemtime(public_path() . '/modules/news/vendor/fullcalendar/interaction/main.min.js')) }}"></script>
-<script src="{{ asset('modules/news/vendor/fullcalendar/daygrid/main.min.js?v=' . filemtime(public_path() . '/modules/news/vendor/fullcalendar/daygrid/main.min.js')) }}"></script>
-<script src="{{ asset('modules/news/vendor/fullcalendar/timegrid/main.min.js?v=' . filemtime(public_path() . '/modules/news/vendor/fullcalendar/timegrid/main.min.js')) }}"></script>
-<script src="{{ asset('modules/news/js/site.js?v=' . filemtime(public_path() . '/modules/news/js/site.js')) }}"></script>
-@endpush
+@pushOnce('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/news/vendor/fullcalendar/core/main.min.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/news/vendor/fullcalendar/daygrid/main.min.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/news/vendor/fullcalendar/timegrid/main.min.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/news/css/news.css') }}" />
+@endpushOnce
+
+@pushOnce('scripts')
+<script src="{{ timestamped_asset('modules/news/vendor/fullcalendar/core/main.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/news/vendor/fullcalendar/interaction/main.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/news/vendor/fullcalendar/daygrid/main.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/news/vendor/fullcalendar/timegrid/main.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/news/js/site.js') }}"></script>
+@endpushOnce
 
 <?php
 $ignore = $params->get('ignore_role');
