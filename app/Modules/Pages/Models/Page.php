@@ -16,6 +16,7 @@ use App\Modules\Pages\Events\PageUpdating;
 use App\Modules\Pages\Events\PageUpdated;
 use App\Modules\Pages\Events\PageDeleted;
 use App\Modules\Pages\Events\PageContentIsRendering;
+use App\Modules\Pages\Events\PageMetadata;
 use App\Modules\Pages\Formatters\FilePath;
 use App\Modules\Pages\Formatters\FileSize;
 use App\Modules\History\Traits\Historable;
@@ -222,13 +223,13 @@ class Page extends Model
 	}
 
 	/**
-	 * Raw page content
+	 * Gather page metadata
 	 *
-	 * @return  string
+	 * @return  void
 	 */
-	public function toHtml(): string
+	public function gatherMetadata(): void
 	{
-		return $this->content;
+		event(new PageMetadata($this));
 	}
 
 	/**

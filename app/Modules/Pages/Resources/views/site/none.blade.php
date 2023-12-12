@@ -1,3 +1,6 @@
+@php
+$page->gatherMetadata();
+@endphp
 <!DOCTYPE html>
 <html dir="ltr" lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="no-js">
 	<head>
@@ -67,7 +70,6 @@
 		<article id="article-content{{ $page->id }}">
 			@if ($page->params->get('show_title', 1))
 				<h1>{{ $page->title }}</h1>
-				{!! $page->event->afterDisplayTitle; !!}
 			@endif
 
 			@if ($page->params->get('show_author') || $page->params->get('show_create_date') || $page->params->get('show_modify_date') || $page->params->get('show_hits'))

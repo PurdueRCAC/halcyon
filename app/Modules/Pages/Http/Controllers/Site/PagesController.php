@@ -9,8 +9,8 @@ use Illuminate\Routing\Controller;
 use Illuminate\Config\Repository;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Pages\Models\Page;
-use App\Modules\Pages\Events\PageMetadata;
-use App\Modules\Pages\Events\PageTitleAfterDisplay;
+//use App\Modules\Pages\Events\PageMetadata;
+//use App\Modules\Pages\Events\PageTitleAfterDisplay;
 
 class PagesController extends Controller
 {
@@ -76,12 +76,14 @@ class PagesController extends Controller
 			}
 		}
 
+		/*
 		event($event = new PageMetadata($page));
 
 		$page->event = new \stdClass();
 
 		event($event = new PageTitleAfterDisplay($page));
 		$page->event->afterDisplayTitle = $event->getContent();
+		*/
 
 		$parents = array();
 		if (auth()->user() && auth()->user()->can('edit pages'))

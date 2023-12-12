@@ -1,6 +1,5 @@
 @if ($page->params->get('show_title', 1))
 	<h1>{{ $page->title }}</h1>
-	{!! $page->event->afterDisplayTitle; !!}
 @endif
 
 @if ($page->params->get('show_author') || $page->params->get('show_create_date') || $page->params->get('show_modify_date') || $page->params->get('show_hits'))

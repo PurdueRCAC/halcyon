@@ -1,4 +1,7 @@
 @extends('layouts.master')
+@php
+$page->gatherMetadata();
+@endphp
 
 @section('title'){{ $page->title }}@stop
 
@@ -96,7 +99,6 @@
 		@endif
 		@if ($page->params->get('show_title', 1))
 			<h2>{{ $page->title }}</h2>
-			{!! $page->event->afterDisplayTitle; !!}
 		@endif
 		<div class="article-wrap" id="page-content{{ $page->id }}">
 			<?php
