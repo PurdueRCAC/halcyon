@@ -534,7 +534,14 @@ class Select
 						$dataField = strtolower(substr($property, 0, 4));
 						if ($dataField == 'data')
 						{
-							$dataAttributes .= ' ' . $property . '="' . $element->get($property) . '"';
+							if (method_exists($element, 'get'))
+							{
+								$dataAttributes .= ' ' . $property . '="' . e($element->get($property)) . '"';
+							}
+							elseif (property_exists($element, $property))
+							{
+								$dataAttributes .= ' ' . $property . '="' . e($element->{$property}) . '"';
+							}
 						}
 					}
 				}
@@ -579,7 +586,7 @@ class Select
 			$key = (string) $key;
 			if ($options['groups'] && $key == '<OPTGROUP>')
 			{
-				$html .= '<optgroup label="' . ($options['list.translate'] ? trans($text) : $text) . '">';
+				$html .= '<optgroup label="' . e($options['list.translate'] ? trans($text) : $text) . '">';
 			}
 			elseif ($options['groups'] && $key == '</OPTGROUP>')
 			{
@@ -612,7 +619,7 @@ class Select
 					$attr = trim($attr);
 				}
 
-				$extra = ($id ? ' id="' . $id . '"' : '') . ($label ? ' label="' . $label . '"' : '') . ($attr ? ' ' . $attr : '') . $dataAttributes . $extra;
+				$extra = ($id ? ' id="' . $id . '"' : '') . ($label ? ' label="' . e($label) . '"' : '') . ($attr ? ' ' . $attr : '') . $dataAttributes . $extra;
 				if (is_array($options['list.select']))
 				{
 					foreach ($options['list.select'] as $val)
