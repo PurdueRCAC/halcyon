@@ -348,7 +348,7 @@ class CasManager
 	 * Get the attributes for for the currently connected user. This method
 	 * can only be called after authenticate() or an error wil be thrown.
 	 *
-	 * @return array
+	 * @return array<string,mixed>
 	 */
 	public function getAttributes()
 	{
@@ -392,7 +392,7 @@ class CasManager
 	 * Set the attributes for a user when masquerading. This
 	 * method has no effect when not masquerading.
 	 *
-	 * @param array $attr : the attributes of the user.
+	 * @param array<string,mixed> $attr : the attributes of the user.
 	 * @return void
 	 */
 	public function setAttributes(array $attr)
@@ -406,7 +406,7 @@ class CasManager
 	 * Pass through undefined methods to phpCAS
 	 *
 	 * @param string $method
-	 * @param array $params
+	 * @param array<string,mixed> $params
 	 *
 	 * @return mixed
 	 * @throws \BadMethodCallException
