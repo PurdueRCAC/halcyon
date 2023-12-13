@@ -14,7 +14,7 @@ class Gate
 	/**
 	 * Array of view levels
 	 *
-	 * @var  array<int,array{int,int}>
+	 * @var  array<int,array<int,int>>
 	 */
 	protected static $viewLevels = array();
 
@@ -35,14 +35,14 @@ class Gate
 	/**
 	 * Array of user role paths.
 	 *
-	 * @var  array<int,array{int,int}>
+	 * @var  array<int,array<int,int>>
 	 */
 	protected static $userRolePaths = array();
 
 	/**
 	 * Array of cached roles by user.
 	 *
-	 * @var  array<string,array{int,int}>
+	 * @var  array<string,array<int,int>>
 	 */
 	protected static $rolesByUser = array();
 
@@ -185,7 +185,7 @@ class Gate
 	 *
 	 * @param  string  $message
 	 * @return void
-	 * @throws \Illuminate\Auth\Access\AuthorizationException
+	 * @throws AuthorizationException
 	 */
 	protected static function deny($message = 'This action is unauthorized.')
 	{
@@ -361,14 +361,13 @@ class Gate
 			$query->groupBy('a.lft');
 		}
 
-		$result = $query->get()->pluck('rules')->toArray();
-		//$result = [$query->value('rules')];
+		$result = $query->pluck('rules')->toArray();
 
 		// Get the root even if the asset is not found and in recursive mode
 		if (empty($result) && $recursive)
 		{
-			$result = Asset::findOrFail(Asset::getRootId());
-			$result = [$result->rules];
+			$root = Asset::getRoot();
+			$result = [$root->rules];
 		}
 
 		// Instantiate and return the Rules object for the asset rules.

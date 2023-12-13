@@ -5,6 +5,9 @@ namespace App\Halcyon\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Database ORM class for implementing nested set records
@@ -17,13 +20,6 @@ use Illuminate\Support\Collection;
 class Nested extends Model
 {
 	/**
-	 * Scopes to limit the realm of the nested set functions
-	 *
-	 * @var  array<int,string>
-	 **/
-	protected $scopes = [];
-
-	/**
 	 * Updates all subsequent vars after new child insertion
 	 *
 	 * @param   string  $pos   The position being updated, whether left or right
@@ -34,8 +30,7 @@ class Nested extends Model
 	private function updateTrailing($pos = 'lft', $base = 0, $add = true): self
 	{
 		// Reposition new values of displaced items
-		$query = self::query();//$this->newQuery();
-		$query//->table($this->getTable())
+		$query = self::query()
 			->where($pos, '>=', $base)
 			->where('id', '!=', $this->id)
 			->update([
@@ -48,8 +43,8 @@ class Nested extends Model
 	/**
 	 * Resolves the trailing left and right values for the new model
 	 *
-	 * @param   int    $base  The base level after which values should be changed
-	 * @param   bool   $add
+	 * @param   int   $base  The base level after which values should be changed
+	 * @param   bool  $add
 	 * @return  self
 	 **/
 	private function resolveTrailing($base, $add = true): self
@@ -76,7 +71,7 @@ class Nested extends Model
 	}
 
 	/**
-	 * Sets the default scopes on the model
+	 * Inherit some data from parent
 	 *
 	 * @param   object  $parent  The parent of the child being created
 	 * @return  self
@@ -86,46 +81,7 @@ class Nested extends Model
 		$this->parent_id = $parent->id;
 		$this->level = $parent->level + 1;
 
-		foreach ($this->scopes as $scope)
-		{
-			$this->$scope = $parent->$scope;
-		}
-
-		return $this->applyScopes($parent);
-	}
-
-	/**
-	 * Applies the scopes of the given model to the current
-	 *
-	 * @param   object  $parent  The parent from which to inherit
-	 * @param   string  $method  The way in which scopes are applied
-	 * @return  self
-	 **/
-	private function applyScopes($parent, $method = 'set'): self
-	{
-		// Inherit scopes from parent
-		foreach ($this->scopes as $scope)
-		{
-			$this->$method($scope, $parent->$scope);
-		}
-
 		return $this;
-	}
-
-	/**
-	 * Applies the scopes of the given model to the current pending query
-	 *
-	 * @param   object  $parent  The parent from which to inherit
-	 * @return  self
-	 **/
-	private function applyScopesWhere($parent): self
-	{
-		foreach ($this->scopes as $scope)
-		{
-			$this->where($scope, '=', $parent->$scope);
-		}
-		return $this;
-		//return $this->applyScopes($parent, 'where');
 	}
 
 	/**
@@ -200,13 +156,11 @@ class Nested extends Model
 	 **/
 	public function saveAsRoot(): bool
 	{
-		// Compute the location where the item should reside
 		$this->parent_id = 0;
 		$this->level = 0;
 		$this->lft = 0;
 		$this->rgt = 1;
 
-		// Save
 		return $this->save();
 	}
 
@@ -222,7 +176,7 @@ class Nested extends Model
 			return false;
 		}
 
-		foreach ($this->getDescendants() as $descendant)
+		foreach ($this->descendants as $descendant)
 		{
 			$descendant->delete();
 
@@ -240,55 +194,58 @@ class Nested extends Model
 	}
 
 	/**
-	 * Establishes the query for the immediate children of the current model
+	 * Defines a relationship to a parent page
 	 *
-	 * @return  self
-	 **/
-	public function children()
+	 * @return  BelongsTo
+	 */
+	public function parent(): BelongsTo
 	{
-		return $this->descendants(1);
+		return $this->belongsTo(self::class, 'parent_id');
 	}
 
 	/**
-	 * Grabs the immediate children of the current model
+	 * Defines a relationship to child pages
 	 *
-	 * @return  Collection
-	 **/
-	public function getChildren()
+	 * @return  HasMany
+	 */
+	public function children(): HasMany
 	{
-		return $this->children()->get();
+		return $this->hasMany(self::class, 'parent_id');
 	}
 
 	/**
-	 * Establishes the query for all of the descendants of the current model
+	 * Get all parents
 	 *
-	 * @param   int  $level  The level to limit to
-	 * @return  Nested
-	 **/
-	public function descendants($level = null)
+	 * @param   array<int,self>  $ancestors
+	 * @return  array<int,self>
+	 */
+	public function ancestors(array $ancestors = []): array
 	{
-		$instance = self::query();
-		$instance->where('level', '>', $this->level)
-		         ->orderBy('lft', 'asc');
+		$parent = $this->parent;
 
-		if (isset($level))
+		if ($parent && $parent->level > 0)
 		{
-			$instance->where('level', '<=', $this->level + $level);
+			$ancestors[] = $parent;
+
+			if ($parent->parent_id)
+			{
+				$ancestors = $parent->ancestors($ancestors);
+			}
 		}
 
-		return $instance->where('lft', '>', $this->lft)
-		                ->where('rgt', '<', $this->rgt)
-		                ->applyScopesWhere($this);
+		return $ancestors;
 	}
 
 	/**
-	 * Grabs all of the descendants of the current model
+	 * Get all descendants
 	 *
-	 * @param   int  $level  The level to limit to
-	 * @return  Collection
-	 **/
-	public function getDescendants($level = null)
+	 * @return  Builder
+	 */
+	public function descendants(): Builder
 	{
-		return $this->descendants($level)->get();
+		return self::query()
+			->where('lft', '>', $this->lft)
+			->where('rgt', '<', $this->rgt)
+			->orderBy('lft', 'asc');
 	}
 }

@@ -95,6 +95,7 @@ class Asset extends Nested
 	{
 		$result = self::query()
 			->where('parent_id', '=', 0)
+			->orderBy('lft', 'asc')
 			->first();
 
 		if (!$result || !$result->id)
