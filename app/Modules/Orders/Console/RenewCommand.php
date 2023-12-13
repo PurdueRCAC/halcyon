@@ -37,7 +37,7 @@ class RenewCommand extends Command
 
 		if ($debug || $this->output->isVerbose())
 		{
-			$this->info('Renewing orders...');
+			$this->info('Looking up orders to be renewed...');
 		}
 
 		$query = Item::query();
@@ -155,6 +155,11 @@ class RenewCommand extends Command
 			return;
 		}
 
+		if ($debug || $this->output->isVerbose())
+		{
+			$this->info('Starting renewals of ' . count($renews) . ' orders...');
+		}
+
 		foreach ($renews as $orderid => $sequences)
 		{
 			$items = array();
@@ -179,7 +184,7 @@ class RenewCommand extends Command
 				{
 					if ($debug || $this->output->isVerbose())
 					{
-						$this->error('Failed to find order information for orderitemid #' . $sequence);
+						$this->error('  Failed to find order information for orderitemid #' . $sequence);
 					}
 					continue;
 				}
@@ -204,7 +209,7 @@ class RenewCommand extends Command
 			{
 				if ($debug || $this->output->isVerbose())
 				{
-					$this->error('Could not find order #' . $orderid);
+					$this->error('  Could not find order #' . $orderid);
 				}
 				continue;
 			}
@@ -226,7 +231,7 @@ class RenewCommand extends Command
 
 			if ($debug)
 			{
-				$this->info('Copying order #' . $orderid);
+				$this->comment('  Copying order #' . $orderid);
 			}
 			else
 			{
@@ -270,7 +275,7 @@ class RenewCommand extends Command
 				{
 					if ($debug || $this->output->isVerbose())
 					{
-						$this->info('Copying order #' . $orderid . ' item #' . $i['id']);
+						$this->line('  |_ Copying item #' . $i['id']);
 					}
 					continue;
 				}
@@ -295,13 +300,18 @@ class RenewCommand extends Command
 
 					if ($debug || $this->output->isVerbose())
 					{
-						$this->info('Copying order #' . $orderid . ' account #' . $a['id']);
+						$this->line('  |_ Copying account #' . $a['id']);
 						continue;
 					}
 
 					$account->saveQuiety();
 				}
 			}
+		}
+
+		if ($debug || $this->output->isVerbose())
+		{
+			$this->info('Finished.');
 		}
 	}
 }

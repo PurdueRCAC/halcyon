@@ -115,7 +115,7 @@ class EmailStatusCommand extends Command
 
 				if ($debug || $this->output->isVerbose())
 				{
-					$this->info("Emailed new order #{$order->id} to {$user->email}.");
+					$this->comment("  Emailed new order #{$order->id} to {$user->email}.");
 
 					if ($debug)
 					{
@@ -127,7 +127,7 @@ class EmailStatusCommand extends Command
 				{
 					if ($debug || $this->output->isVerbose())
 					{
-						$this->error("Email address not found for user {$user->name}.");
+						$this->error("  Email address not found for user {$user->name}.");
 					}
 					continue;
 				}
@@ -174,7 +174,7 @@ class EmailStatusCommand extends Command
 			{
 				if ($debug || $this->output->isVerbose())
 				{
-					$this->line('skipping ' . $order->id . ' - ' . $order->status);
+					$this->line('  Skipping order #' . $order->id . ' - ' . $order->status);
 				}
 				continue;
 			}
@@ -199,7 +199,7 @@ class EmailStatusCommand extends Command
 
 				if ($debug || $this->output->isVerbose())
 				{
-					$this->info("Emailed pending payment info order #{$order->id} to {$user->email}.");
+					$this->comment("  Emailed pending payment info order #{$order->id} to {$user->email}.");
 
 					if ($debug)
 					{
@@ -211,7 +211,7 @@ class EmailStatusCommand extends Command
 				{
 					if ($debug || $this->output->isVerbose())
 					{
-						$this->error("Email address not found for user {$user->name}.");
+						$this->error("  Email address not found for user {$user->name}.");
 					}
 					continue;
 				}
@@ -291,7 +291,7 @@ class EmailStatusCommand extends Command
 
 				if ($debug || $this->output->isVerbose())
 				{
-					$this->info("Emailed pending payment approval order #{$order->id} to {$user->email}.");
+					$this->comment("  Emailed pending payment approval order #{$order->id} to {$user->email}.");
 
 					if ($debug)
 					{
@@ -303,7 +303,7 @@ class EmailStatusCommand extends Command
 				{
 					if ($debug || $this->output->isVerbose())
 					{
-						$this->error("Email address not found for user {$user->name}.");
+						$this->error("  Email address not found for user {$user->name}.");
 					}
 					continue;
 				}
@@ -338,7 +338,7 @@ class EmailStatusCommand extends Command
 
 					if ($debug || $this->output->isVerbose())
 					{
-						$this->info("Emailed payment denied for order #{$order->id} to {$user->email}.");
+						$this->comment("  Emailed payment denied for order #{$order->id} to {$user->email}.");
 
 						if ($debug)
 						{
@@ -350,7 +350,7 @@ class EmailStatusCommand extends Command
 					{
 						if ($debug || $this->output->isVerbose())
 						{
-							$this->error("Email address not found for user {$user->name}.");
+							$this->error("  Email address not found for user {$user->name}.");
 						}
 						continue;
 					}
@@ -396,7 +396,7 @@ class EmailStatusCommand extends Command
 			{
 				if ($debug)
 				{
-					$this->line('skipping ' . $order->id . ' - ' . $order->status);
+					$this->line('  Skipping order #' . $order->id . ' - ' . $order->status);
 				}
 				continue;
 			}
@@ -426,7 +426,7 @@ class EmailStatusCommand extends Command
 
 				if ($debug || $this->output->isVerbose())
 				{
-					$this->info("Emailed pending fulfillment order #{$order->id} to {$user->email}.");
+					$this->comment("  Emailed pending fulfillment order #{$order->id} to {$user->email}.");
 
 					if ($debug)
 					{
@@ -438,7 +438,7 @@ class EmailStatusCommand extends Command
 				{
 					if ($debug || $this->output->isVerbose())
 					{
-						$this->error("Email address not found for user {$user->name}.");
+						$this->error("  Email address not found for user {$user->name}.");
 					}
 					continue;
 				}
@@ -475,7 +475,7 @@ class EmailStatusCommand extends Command
 
 				if ($debug || $this->output->isVerbose())
 				{
-					$this->info("Emailed order #{$order->id} to {$user->email}.");
+					$this->info("  Emailed order #{$order->id} to {$user->email}.");
 				}
 
 				if (!$debug)
@@ -512,7 +512,7 @@ class EmailStatusCommand extends Command
 			{
 				if ($debug || $this->output->isVerbose())
 				{
-					$this->line('skipping ' . $order->id . ' - ' . $order->status);
+					$this->line('  Skipping order #' . $order->id . ' - ' . $order->status);
 				}
 				continue;
 			}
@@ -542,7 +542,7 @@ class EmailStatusCommand extends Command
 
 				if ($debug || $this->output->isVerbose())
 				{
-					$this->info("Emailed pending collection order #{$order->id} to {$user->email}.");
+					$this->comment("  Emailed pending collection order #{$order->id} to {$user->email}.");
 
 					if ($debug)
 					{
@@ -554,7 +554,7 @@ class EmailStatusCommand extends Command
 				{
 					if ($debug || $this->output->isVerbose())
 					{
-						$this->error("Email address not found for user {$user->name}.");
+						$this->error("  Email address not found for user {$user->name}.");
 					}
 					continue;
 				}
@@ -596,7 +596,7 @@ class EmailStatusCommand extends Command
 			{
 				if ($debug || $this->output->isVerbose())
 				{
-					$this->line('skipping ' . $order->id . ' - ' . $order->status);
+					$this->line('  Skipping order #' . $order->id . ' - ' . $order->status);
 				}
 				continue;
 			}
@@ -621,7 +621,7 @@ class EmailStatusCommand extends Command
 
 				if ($debug || $this->output->isVerbose())
 				{
-					$this->info("Emailed completed order #{$order->id} to {$user->email}.");
+					$this->comment("  Emailed completed order #{$order->id} to {$user->email}.");
 
 					if ($debug)
 					{
@@ -633,7 +633,7 @@ class EmailStatusCommand extends Command
 				{
 					if ($debug || $this->output->isVerbose())
 					{
-						$this->error("Email address not found for user {$user->name}.");
+						$this->error("  Email address not found for user {$user->name}.");
 					}
 					continue;
 				}
@@ -671,7 +671,7 @@ class EmailStatusCommand extends Command
 			{
 				if ($debug || $this->output->isVerbose())
 				{
-					$this->line('skipping ' . $order->id . ' - ' . $order->status);
+					$this->line('  Skipping order #' . $order->id . ' - ' . $order->status);
 				}
 				continue;
 			}
@@ -701,7 +701,7 @@ class EmailStatusCommand extends Command
 
 				if ($debug || $this->output->isVerbose())
 				{
-					$this->info("Emailed canceled order #{$order->id} to {$user->email}.");
+					$this->comment("  Emailed canceled order #{$order->id} to {$user->email}.");
 
 					if ($debug)
 					{
@@ -713,7 +713,7 @@ class EmailStatusCommand extends Command
 				{
 					if ($debug || $this->output->isVerbose())
 					{
-						$this->error("Email address not found for user {$user->name}.");
+						$this->error("  Email address not found for user {$user->name}.");
 					}
 					continue;
 				}
