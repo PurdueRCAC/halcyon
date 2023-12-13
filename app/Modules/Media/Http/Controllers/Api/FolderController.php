@@ -24,7 +24,7 @@ class FolderController extends Controller
 	 * Display a listing of files
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /media
+	 * @apiUri    /media/folder
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "path",
@@ -56,7 +56,7 @@ class FolderController extends Controller
 	 * Create a directory
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /media
+	 * @apiUri    /media/folder
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "disk",
@@ -199,7 +199,7 @@ class FolderController extends Controller
 	 * Delete a folder
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /media/folder/{path}
+	 * @apiUri    /media/folder/delete
 	 * @apiParameter {
 	 * 		"in":            "query",
 	 * 		"name":          "disk",
@@ -211,7 +211,7 @@ class FolderController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
-	 * 		"in":            "path",
+	 * 		"in":            "query",
 	 * 		"name":          "path",
 	 * 		"description":   "Folder path",
 	 * 		"required":      true,
@@ -227,7 +227,7 @@ class FolderController extends Controller
 		event($event = new DirectoryDeleting($request));
 
 		// Get some data from the request
-		$disk   = $event->disk();
+		$disk = $event->disk();
 		//$folder = $this->sanitize($event->name());
 		$path = $this->sanitize($event->path());
 
@@ -268,7 +268,7 @@ class FolderController extends Controller
 	 * @param   string  $path
 	 * @return  string
 	 */
-	private function sanitize($path): string
+	private function sanitize(string $path): string
 	{
 		/*$path = str_replace(' ', '_', $path);
 		$path = preg_replace('/[^a-zA-Z0-9\-_\/]+/', '', $path);
