@@ -4,10 +4,8 @@ namespace App\Http\Middleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Redirector;
-use Illuminate\Session\Store;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Auth\Factory as Auth;
-//use Symfony\Component\HttpFoundation\IpUtils;
 use App\Modules\Users\Models\User;
 
 class IpWhitelistMiddleware
@@ -18,21 +16,6 @@ class IpWhitelistMiddleware
 	private $auth;
 
 	/**
-	 * @var Store
-	 */
-	private $session;
-
-	/**
-	 * @var Request
-	 */
-	private $request;
-
-	/**
-	 * @var Redirector
-	 */
-	private $redirect;
-
-	/**
 	 * @var Application
 	 */
 	private $application;
@@ -41,29 +24,23 @@ class IpWhitelistMiddleware
 	 * Constructor
 	 *
 	 * @param  Auth $auth
-	 * @param  Store $session
-	 * @param  Request $request
-	 * @param  Redirector $redirect
 	 * @param  Application $application
-	 * @return mixed
+	 * @return void
 	 */
-	public function __construct(Auth $auth, Store $session, Request $request, Redirector $redirect, Application $application)
+	public function __construct(Auth $auth, Application $application)
 	{
 		$this->auth = $auth;
-		$this->session = $session;
-		$this->request = $request;
-		$this->redirect = $redirect;
 		$this->application = $application;
 	}
 
 	/**
 	 * Handle an incoming request.
 	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-	 * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+	 * @param  Request  $request
+	 * @param  \Closure(Request): (Response|RedirectResponse)  $next
+	 * @return Response|RedirectResponse
 	 */
-	public function handle($request, \Closure $next)
+	public function handle(Request $request, \Closure $next)
 	{
 		if (!$this->auth->check())
 		{
@@ -103,7 +80,7 @@ class IpWhitelistMiddleware
 
 			if ($existUser)
 			{
-				\Auth::loginUsingId($existUser->id);
+				\Illuminate\Support\Facades\Auth::loginUsingId($existUser->id);
 			}
 		}
 
@@ -118,7 +95,7 @@ class IpWhitelistMiddleware
 	 * @param  string $ip_address
 	 * @return bool
 	 */
-	private function ipInRange($lower, $upper, $ip_address)
+	private function ipInRange(string $lower, string $upper, string $ip_address): bool
 	{
 		// Get the numeric reprisentation of the IP Address with IP2long
 		$min    = ip2long($lower);

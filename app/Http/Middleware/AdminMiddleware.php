@@ -1,12 +1,10 @@
 <?php
 namespace App\Http\Middleware;
 
-use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Redirector;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Session\Store;
-//use App\Modules\User\Contracts\Authentication;
 use Illuminate\Contracts\Auth\Factory as Auth;
 
 class AdminMiddleware
@@ -17,52 +15,31 @@ class AdminMiddleware
 	private $auth;
 
 	/**
-	 * @var SessionManager
+	 * @var Store
 	 */
 	private $session;
-
-	/**
-	 * @var Request
-	 */
-	private $request;
-
-	/**
-	 * @var Redirector
-	 */
-	private $redirect;
-
-	/**
-	 * @var Application
-	 */
-	private $application;
 
 	/**
 	 * Constructor
 	 *
 	 * @param  Auth $auth
 	 * @param  Store $session
-	 * @param  Request $request
-	 * @param  Redirector $redirect
-	 * @param  Application $application
 	 * @return void
 	 */
-	public function __construct(Auth $auth, Store $session, Request $request, Redirector $redirect, Application $application)
+	public function __construct(Auth $auth, Store $session)
 	{
 		$this->auth = $auth;
 		$this->session = $session;
-		$this->request = $request;
-		$this->redirect = $redirect;
-		$this->application = $application;
 	}
 
 	/**
 	 * Handle an incoming request.
 	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-	 * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+	 * @param  Request  $request
+	 * @param  \Closure(Request): (Response|RedirectResponse)  $next
+	 * @return Response|RedirectResponse
 	 */
-	public function handle($request, \Closure $next)
+	public function handle(Request $request, \Closure $next)
 	{
 		// Check if the user is logged in
 		if (!$this->auth->check() && route('login') != $request->url())
@@ -73,10 +50,10 @@ class AdminMiddleware
 			}
 
 			// Store the current uri in the session
-			$this->session->put('url.intended', $this->request->url());
+			$this->session->put('url.intended', $request->url());
 
 			// Redirect to the login page
-			//return $this->redirect->route('login');
+			//return redirect('login');
 			if (app()->has('cas'))
 			{
 				$cas = app('cas');
@@ -171,7 +148,7 @@ class AdminMiddleware
 		/*if (! $this->auth->hasAccess('dashboard.index'))
 		{
 			// Show the insufficient permissions page
-			return $this->application->abort(Response::HTTP_FORBIDDEN);
+			return abort(Response::HTTP_FORBIDDEN);
 		}*/
 
 		return $next($request);
