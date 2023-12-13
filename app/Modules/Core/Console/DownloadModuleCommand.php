@@ -66,7 +66,7 @@ class DownloadModuleCommand extends Command
         {
             $commands[] = "php artisan module:publish $name";
         }
-        $process = new Process(implode(' && ', $commands));
+        $process = new Process($commands);
         if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty'))
         {
             $process->setTty(true);

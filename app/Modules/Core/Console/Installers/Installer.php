@@ -10,6 +10,21 @@ use App\Modules\Core\Services\Composer;
 class Installer
 {
     /**
+     * @var Composer
+     */
+    protected $composer;
+
+    /**
+     * @var Application
+     */
+    protected $app;
+
+    /**
+     * @var Filesystem
+     */
+    protected $finder;
+
+    /**
      * @var array<int,string>
      */
     protected $scripts = [];
