@@ -40,14 +40,9 @@ class Resources
 	 */
 	public function handleAssetDeleted(AssetDeleted $event): void
 	{
-		$data = StorageResource::query()
+		StorageResource::query()
 			->where('parentresourceid', '=', $event->asset->id)
-			->get();
-
-		foreach ($data as $row)
-		{
-			$row->delete();
-		}
+			->delete();
 	}
 
 	/**

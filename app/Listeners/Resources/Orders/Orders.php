@@ -1,22 +1,23 @@
 <?php
 namespace App\Listeners\Resources\Orders;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Resources\Events\AssetDeleted;
 use App\Modules\Resources\Events\AssetDisplaying;
 use App\Modules\Orders\Models\Product;
 
 /**
- * ORders listener for Resources
+ * Orders listener for Resources
  */
 class Orders
 {
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(AssetDisplaying::class, self::class . '@handleAssetDisplaying');
 		$events->listen(AssetDeleted::class, self::class . '@handleAssetDeleted');
@@ -28,16 +29,11 @@ class Orders
 	 * @param   AssetDeleted  $event
 	 * @return  void
 	 */
-	public function handleAssetDeleted(AssetDeleted $event)
+	public function handleAssetDeleted(AssetDeleted $event): void
 	{
-		$products = Product::query()
+		Product::query()
 			->where('resourceid', '=', $event->asset->id)
-			->get();
-
-		foreach ($products as $product)
-		{
-			$product->delete();
-		}
+			->delete();
 	}
 
 	/**
@@ -46,7 +42,7 @@ class Orders
 	 * @param   AssetDisplaying  $event
 	 * @return  void
 	 */
-	public function handleAssetDisplaying(AssetDisplaying $event)
+	public function handleAssetDisplaying(AssetDisplaying $event): void
 	{
 		if (app()->has('isAdmin') && app()->get('isAdmin'))
 		{

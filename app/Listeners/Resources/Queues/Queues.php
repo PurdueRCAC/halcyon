@@ -2,9 +2,9 @@
 namespace App\Listeners\Resources\Queues;
 
 use Illuminate\Events\Dispatcher;
-use App\Modules\Resources\Events\AssetDeleted;
 use App\Modules\Resources\Events\AssetCreated;
 use App\Modules\Resources\Events\SubresourceCreated;
+use App\Modules\Resources\Events\SubresourceDeleted;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\Walltime;
 use App\Modules\Queues\Models\Scheduler;
@@ -24,6 +24,7 @@ class Queues
 	{
 		$events->listen(AssetCreated::class, self::class . '@handleAssetCreated');
 		$events->listen(SubresourceCreated::class, self::class . '@handleSubresourceCreated');
+		$events->listen(SubresourceDeleted::class, self::class . '@handleSubresourceDeleted');
 	}
 
 	/**
@@ -51,24 +52,6 @@ class Queues
 		$scheduler->schedulerpolicyid = 1;
 		$scheduler->defaultmaxwalltime = 1209600;
 		$scheduler->save();
-	}
-
-	/**
-	 * Unpublish linked products when a resource is trashed
-	 *
-	 * @param   AssetDeleted  $event
-	 * @return  void
-	 */
-	public function handleAssetDeleted(AssetDeleted $event): void
-	{
-		$schedulers = Scheduler::query()
-			->where('queuesubresourceid', '=', $event->asset->id)
-			->get();
-
-		foreach ($schedulers as $scheduler)
-		{
-			$scheduler->delete();
-		}
 	}
 
 	/**
@@ -123,5 +106,22 @@ class Queues
 			$wtime->datetimestart = $queue->datetimecreated;
 			$wtime->save();
 		}
+	}
+
+	/**
+	 * Mark schedulers & queues when a subresource is deleted
+	 *
+	 * @param   SubresourceDeleted  $event
+	 * @return  void
+	 */
+	public function handleSubresourceDeleted(SubresourceDeleted $event): void
+	{
+		Scheduler::query()
+			->where('queuesubresourceid', '=', $event->subresource->id)
+			->delete();
+
+		Queue::query()
+			->where('subresourceid', '=', $event->subresource->id)
+			->delete();
 	}
 }

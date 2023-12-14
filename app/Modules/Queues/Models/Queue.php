@@ -178,33 +178,26 @@ class Queue extends Model
 			$now = Carbon::now()->toDateTimeString();
 
 			// End any purchases
-			foreach ($model->sizes()->whereNull('datetimestop')->get() as $purchase)
-			{
-				$purchase->update(['datetimestop' => $now]);
-			}
+			$model->sizes()
+				->whereNull('datetimestop')
+				->update(['datetimestop' => $now]);
 
 			// Only stop counter entries associated with purchases. If this queue
 			// sold something to another queue and it's still active, the sale should
 			// persist.
-			$sold = $model->sold()
+			$model->sold()
 				->whereNull('datetimestop')
 				->where('corecount', '<', 0)
-				->get();
-			foreach ($sold as $purchase)
-			{
-				$purchase->update(['datetimestop' => $now]);
-			}
+				->update(['datetimestop' => $now]);
 
 			// End any loans
-			foreach ($model->loans()->whereNull('datetimestop')->get() as $loan)
-			{
-				$loan->update(['datetimestop' => $now]);
-			}
+			$model->loans()
+				->whereNull('datetimestop')
+				->update(['datetimestop' => $now]);
 
-			foreach ($model->loaned()->whereNull('datetimestop')->get() as $loan)
-			{
-				$loan->update(['datetimestop' => $now]);
-			}
+			$model->loaned()
+				->whereNull('datetimestop')
+				->update(['datetimestop' => $now]);
 		});
 	}
 

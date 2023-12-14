@@ -405,21 +405,6 @@ class Subresource extends Model
 	}
 
 	/**
-	 * Delete the record and all associated data
-	 *
-	 * @return  bool  False if error, True on success
-	 */
-	public function delete(): bool
-	{
-		foreach ($this->queues as $row)
-		{
-			$row->delete();
-		}
-
-		return parent::delete();
-	}
-
-	/**
 	 * Query scope with search
 	 *
 	 * @param   Builder  $query

@@ -312,7 +312,10 @@ class Asset extends Model
 
 		static::deleted(function ($model)
 		{
-			foreach ($model->descendents as $child)
+			$model->descendents()->delete();
+			$model->subresources()->delete();
+
+			/*foreach ($model->descendents as $child)
 			{
 				$child->delete();
 			}
@@ -320,7 +323,7 @@ class Asset extends Model
 			foreach ($model->subresources as $subresource)
 			{
 				$subresource->delete();
-			}
+			}*/
 		});
 	}
 
@@ -372,7 +375,7 @@ class Asset extends Model
 	 *
 	 * @param   int  $id        Parent ID
 	 * @param   array<int,Asset>    $list      List of records
-	 * @param   array<int,array{int,Asset}>    $children  Container for parent/children mapping
+	 * @param   array<int,array<int,Asset>>    $children  Container for parent/children mapping
 	 * @param   int  $maxlevel  Maximum levels to descend
 	 * @param   int  $level     Indention level
 	 * @param   int  $type      Indention type
