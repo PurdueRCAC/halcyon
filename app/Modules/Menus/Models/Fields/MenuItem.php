@@ -4,6 +4,7 @@ namespace App\Modules\Menus\Models\Fields;
 
 use App\Halcyon\Form\Fields\Groupedlist;
 use App\Halcyon\Html\Builder\Select as Dropdown;
+use App\Modules\Menus\Models\Item;
 
 /**
  * Supports an HTML grouped select list of menu item grouped by menu
@@ -20,7 +21,7 @@ class MenuItem extends Groupedlist
 	/**
 	 * Method to get the field option groups.
 	 *
-	 * @return  array<string,array<int,string>>  The field option objects as a nested array in groups.
+	 * @return  array<string,array<int,\stdClass>>  The field option objects as a nested array in groups.
 	 */
 	protected function getGroups()
 	{

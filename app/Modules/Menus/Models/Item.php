@@ -53,7 +53,7 @@ use Exception;
  * @property Carbon|null $deleted_at
  *
  * @property string $api
- * @property int    $page_id
+ * @property string|int $page_id
  * @property array<int,int> $tree
  * @property string $item_type
  * @property string $item_type_desc
@@ -199,7 +199,7 @@ class Item extends Model
 
 		if ($this->type == 'module' && $this->page_id)
 		{
-			if (strstr($this->page_id, '::'))
+			if (is_string($this->page_id) && strstr($this->page_id, '::'))
 			{
 				$bits = explode('::', $this->page_id);
 				$this->page_id = $bits[1];
@@ -519,12 +519,12 @@ class Item extends Model
 		$type = $this->type;
 		$path = '';
 
-		$formFile = false;
+		/*$formFile = false;
 
 		// Initialise form with component view params if available.
 		if ($type == 'module')
 		{
-			/*$link = htmlspecialchars_decode($link);
+			$link = htmlspecialchars_decode($link);
 
 			// Parse the link arguments.
 			$args = array();
@@ -572,7 +572,7 @@ class Item extends Model
 				{
 					$formFile = $path;
 				}
-			}*/
+			}
 		}
 
 		if ($formFile)
@@ -594,7 +594,7 @@ class Item extends Model
 			//$help = $xml->xpath('/metadata/layout/help');
 		}
 		else
-		{
+		{*/
 			// We don't have a module. Load the form XML to get the help path
 			$xmlFile = __DIR__ . '/Forms/item_' . $type . '.xml';
 
@@ -611,9 +611,9 @@ class Item extends Model
 				// Get the help data from the XML file if present.
 				//$help = $xml->xpath('/form/help');
 			}
-		}
+		/*}
 
-		/*if (!empty($help))
+		if (!empty($help))
 		{
 			$helpKey = trim((string) $help[0]['key']);
 			$helpURL = trim((string) $help[0]['url']);
@@ -631,7 +631,7 @@ class Item extends Model
 		if ($isNew = false)
 		{
 			$path = module_path($option) . '/Config/config.xml';
-		}*/
+		}
 
 		if (file_exists($path))
 		{
@@ -640,7 +640,7 @@ class Item extends Model
 			{
 				throw new Exception(trans('menus::menus.error.load file failed'));
 			}
-		}
+		}*/
 
 		// Load the specific type file
 		if (!$form->loadFile(__DIR__ . '/Forms/item_' . $type . '.xml', false, false))
