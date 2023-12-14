@@ -2,6 +2,7 @@
 
 namespace App\Modules\Media\Helpers;
 
+use Illuminate\Support\Facades\File as Filesystem;
 use App\Modules\Media\Entities\File;
 use App\Modules\Media\Entities\Folder;
 
