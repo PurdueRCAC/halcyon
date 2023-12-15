@@ -174,7 +174,7 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		]);
 	});
 
-	$router->get('{id}', [
+	$router->get('{id}/{section?}', [
 		'as' => 'admin.users.show',
 		'uses' => 'UsersController@show',
 		'middleware' => 'can:edit users',

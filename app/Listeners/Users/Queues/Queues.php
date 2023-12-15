@@ -1,6 +1,7 @@
 <?php
 namespace App\Listeners\Users\Queues;
 
+use Illuminate\Events\Dispatcher;
 use App\Modules\Users\Events\UserDisplay;
 
 /**
@@ -11,10 +12,10 @@ class Queues
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  \Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(UserDisplay::class, self::class . '@handleUserDisplay');
 	}
@@ -25,7 +26,7 @@ class Queues
 	 * @param   UserDisplay  $event
 	 * @return  void
 	 */
-	public function handleUserDisplay(UserDisplay $event)
+	public function handleUserDisplay(UserDisplay $event): void
 	{
 		if (!auth()->user())
 		{

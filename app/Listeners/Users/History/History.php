@@ -1,6 +1,7 @@
 <?php
 namespace App\Listeners\Users\History;
 
+use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Fluent;
 use App\Modules\Users\Events\UserDisplay;
 use App\Modules\History\Models\Log;
@@ -15,10 +16,10 @@ class History
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  \Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(UserDisplay::class, self::class . '@handleUserDisplay');
 	}
@@ -29,7 +30,7 @@ class History
 	 * @param   UserDisplay  $event
 	 * @return  void
 	 */
-	public function handleUserDisplay(UserDisplay $event)
+	public function handleUserDisplay(UserDisplay $event): void
 	{
 		$listener = Listener::query()
 			->where('type', '=', 'listener')
@@ -51,7 +52,7 @@ class History
 			$r['u'] = $user->id;
 		}
 
-		if ($event->getActive() == 'history' || app('isAdmin'))
+		if ($event->getActive() == 'history')
 		{
 			if (!app('isAdmin'))
 			{
@@ -253,7 +254,7 @@ class History
 		}
 
 		$event->addSection(
-			route('site.users.account.section', $r),
+			app('isAdmin') ? route('admin.users.show', ['id' => $user->id, 'section' => 'history']) : route('site.users.account.section', $r),
 			trans('history::history.history'),
 			($event->getActive() == 'history'),
 			$content

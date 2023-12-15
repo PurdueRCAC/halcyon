@@ -1,6 +1,7 @@
 <?php
 namespace App\Listeners\Users\Sessions;
 
+use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Users\Events\UserDisplay;
 use App\Modules\Users\Events\UserDeleted;
@@ -13,10 +14,10 @@ class Sessions
 	/**
 	 * Register the listeners for the subscriber.
 	 *
-	 * @param  \Illuminate\Events\Dispatcher  $events
+	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe($events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(UserDeleted::class, self::class . '@handleUserDeleted');
 		$events->listen(UserDisplay::class, self::class . '@handleUserDisplay');
@@ -28,7 +29,7 @@ class Sessions
 	 * @param   UserDeleted  $event
 	 * @return  void
 	 */
-	public function handleUserDeleted(UserDeleted $event)
+	public function handleUserDeleted(UserDeleted $event): void
 	{
 		DB::table('sessions')
 			->where('user_id', '=', $event->user->id)
@@ -41,7 +42,7 @@ class Sessions
 	 * @param   UserDisplay  $event
 	 * @return  void
 	 */
-	public function handleUserDisplay(UserDisplay $event)
+	public function handleUserDisplay(UserDisplay $event): void
 	{
 		if (!auth()->user())
 		{

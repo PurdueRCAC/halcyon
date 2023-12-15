@@ -258,6 +258,8 @@ class Orders
 			]);
 
 			$total = ' (' . $total . ')';
+
+			$route = route('admin.users.show', ['id' => $user->id, 'section' => 'orders']);
 		}
 		else
 		{

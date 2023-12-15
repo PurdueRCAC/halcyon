@@ -396,7 +396,7 @@ class UsersController extends Controller
 	 * @param  int  $id
 	 * @return View
 	 */
-	public function show(Request $request, $id)
+	public function show(Request $request, int $id, $section = null)
 	{
 		$user = User::findOrFail($id);
 
@@ -410,10 +410,15 @@ class UsersController extends Controller
 			$user->fill($fields);
 		}
 
+		if ($active = $request->input('active'))
+		{
+			$section = $active;
+		}
+
 		event($event = new UserBeforeDisplay($user));
 		$user = $event->getUser();
 
-		event($event = new UserDisplay($user, ''));
+		event($event = new UserDisplay($user, $section));
 		$sections = collect($event->getSections());
 		$parts = collect($event->getParts());
 
@@ -421,6 +426,7 @@ class UsersController extends Controller
 			'user' => $user,
 			'sections' => $sections,
 			'parts' => $parts,
+			'active' => $section,
 		]);
 	}
 

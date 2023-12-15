@@ -60,7 +60,7 @@ class ContactReports
 			->where($u . '.userid', '=', $user->id)
 			->count();
 
-		if ($event->getActive() == 'contactreports' || app('isAdmin'))
+		if ($event->getActive() == 'contactreports')
 		{
 			if (!app('isAdmin'))
 			{
@@ -85,7 +85,7 @@ class ContactReports
 		}
 
 		$event->addSection(
-			route('site.users.account.section', $r),
+			app('isAdmin') ? route('admin.users.show', ['id' => $user->id, 'section' => 'contactreports']) : route('site.users.account.section', $r),
 			trans('contactreports::contactreports.contact reports') . (app('isAdmin') ? ' (' . $total . ')' : ' <span class="badge pull-right">' . $total . '</span>'),
 			($event->getActive() == 'contactreports'),
 			$content

@@ -2,10 +2,12 @@
 	<h2>{{ trans('contactreports::contactreports.contact reports') }}</h2>
 	<div id="reports">
 		@if (!count($reports))
-			<div class="card card-help">
-				<div class="card-body">
-					<h3 class="card-title">What is this page?</h3>
-					<p>Here you can find <a href="{{ route('site.contactreports.index') }}">Contact Reports</a> for {{ $user->name }}. Contact Reports are records of interactions with people using {{ config('app.name') }} resources and services. These records help staff gain insight into the needs of customers and how to potentially improve services.</p>
+			<div class="d-flex justify-content-center">
+				<div class="card card-help w-50">
+					<div class="card-body">
+						<h3 class="card-title mt-0">What is this page?</h3>
+						<p class="card-text">Here you can find <a href="{{ route('site.contactreports.index') }}">Contact Reports</a> for {{ $user->name }}. Contact Reports are records of interactions with people using {{ config('app.name') }} resources and services. These records help staff gain insight into the needs of customers and how to potentially improve services.</p>
+					</div>
 				</div>
 			</div>
 		@else

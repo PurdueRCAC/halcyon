@@ -220,7 +220,7 @@ class Groups
 			}
 		}*/
 
-		if (!$event->getActive() && !app('isAdmin'))
+		if (!$event->getActive())
 		{
 			$content = view('groups::site.profile', [
 				'user' => $user,
@@ -230,7 +230,7 @@ class Groups
 				$content
 			);
 		}
-		elseif ($event->getActive() == 'groups' || app('isAdmin'))
+		elseif ($event->getActive() == 'groups')
 		{
 			if (!app('isAdmin'))
 			{
@@ -440,7 +440,7 @@ class Groups
 		}
 
 		$event->addSection(
-			route('site.users.account.section', $r),
+			app('isAdmin') ? route('admin.users.show', ['id' => $user->id, 'section' => 'groups']) : route('site.users.account.section', $r),
 			trans('groups::groups.my groups') . (app('isAdmin') ? ' (' . $total . ')' : ' <span class="badge pull-right">' . $total . '</span>'),
 			($event->getActive() == 'groups'),
 			$content

@@ -61,7 +61,7 @@ class Activity
 			__DIR__ . '/lang'
 		);
 
-		if ($event->getActive() == 'activity' || app('isAdmin'))
+		if ($event->getActive() == 'activity')
 		{
 			if (!app('isAdmin'))
 			{
@@ -146,7 +146,7 @@ class Activity
 		}
 
 		$event->addSection(
-			route('site.users.account.section', $r),
+			app('isAdmin') ? route('admin.users.show', ['id' => $user->id, 'section' => 'activity']) : route('site.users.account.section', $r),
 			trans('listener.users.activity::activity.activity'),
 			($event->getActive() == 'activity'),
 			$content

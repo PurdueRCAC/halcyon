@@ -2,14 +2,15 @@
 <script src="{{ timestamped_asset('modules/orders/js/orders.js') }}"></script>
 @endpush
 
+
+@if (count($rows))
 <div class="card">
 	<div class="card-header">
 		<h3 class="card-title">{{ trans('orders::orders.orders') }}</h3>
 	</div>
 
-<div class="card-body">
+	<div class="card-body">
 
-	@if (count($rows))
 		<table class="table table-hover adminlist">
 			<caption class="sr-only">{{ trans('orders::orders.orders placed') }}</caption>
 			<thead>
@@ -89,10 +90,17 @@
 		</table>
 
 		{{ $rows->render() }}
-	@else
-		<p class="alert alert-info">No orders found.</p>
-	@endif
 
-	@csrf
+	</div>
 </div>
-</div>
+
+@else
+	<div class="d-flex justify-content-center">
+		<div class="card card-help w-50">
+			<div class="card-body">
+				<h3 class="card-title mt-0">What is this page?</h3>
+				<p class="card-text">Here you can find orders submitted by or related to this user.</p>
+			</div>
+		</div>
+	</div>
+@endif

@@ -105,6 +105,8 @@
   --tabs-border: #d7d7d7;
   --navtab-border-active: transparent transparent #000 transparent; /*#d7d7d7 #d7d7d7 #f5f5f5 #d7d7d7;*/
   --navtab-border-hover: transparent transparent #014cc4 transparent;
+  --nav-border-active: #000;
+  --nav-border-hover: #014cc4;
   /* States */
   --off-color: #686868;
   --off-border: #e7e7e7;
@@ -223,6 +225,8 @@
   --tabs-border: rgba(255, 255, 255, 0.2);
   --navtab-border-active: transparent transparent #F78166 transparent;
   --navtab-border-hover: transparent transparent #5897fb transparent;
+  --nav-border-active: #F78166;
+  --nav-border-hover: #5897fb;
   /* States */
   --off-color: #fff;
   --off-border: #444;
@@ -1775,6 +1779,15 @@ table td .fltrt {
 .border-left,
 .border-right {
   border-color: var(--border) !important;
+}
+.flex-column .nav-link {
+  border-left: 2px solid transparent;
+}
+.flex-column .nav-link:hover {
+  border-color: var(--nav-border-hover);
+}
+.flex-column .nav-link.active {
+  border-color: var(--nav-border-active);
 }
 .nav-tabs .nav-link {
   border-bottom: 2px solid transparent;
