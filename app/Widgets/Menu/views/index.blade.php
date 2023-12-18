@@ -15,28 +15,11 @@
 
 	foreach ($list as $i => $item):
 		$class = 'nav-item item-' . $item->id;
-		/*if ($item->id == $active_id)
-		{
-			$class .= ' current';
-		}*/
 
-		//if (in_array($item->id, $path))
-		if (trim($item->link, '/') == $current)
+		if (trim($item->link, '/') == $current && $item->type != 'separator')
 		{
 			$class .= ' active';
 		}
-		/*elseif ($item->type == 'alias')
-		{
-			$aliasToId = $item->params->get('aliasoptions');
-			if (count($path) > 0 && $aliasToId == $path[count($path)-1])
-			{
-				$class .= ' active';
-			}
-			elseif (in_array($aliasToId, $path))
-			{
-				$class .= ' alias-parent-active';
-			}
-		}*/
 
 		if ($item->deeper)
 		{
@@ -76,7 +59,7 @@
 					$linktype = $item->title;
 				endif;
 
-				?><div class="separator"<?php echo $title; ?>><?php //echo $linktype; ?></div><?php
+				?><div class="separator"<?php echo $title; ?>></div><?php
 			break;
 			case 'html':
 				if ($item->menu_image):
@@ -91,12 +74,10 @@
 				$class .= $item->anchor_css ? ' ' . $item->anchor_css : '';
 
 				?><div class="nav-item-content"><?php echo $item->content; ?></div><?php
-				/*?><a class="<?php echo $class; ?>" aria-expanded="false" id="item<?php echo $item->id; ?>" href="#item<?php echo $item->id; ?>dropdown"><?php echo $linktype; ?></a><ul class="dropdown-menu" aria-labelledby="item<?php echo $item->id; ?>" id="item<?php echo $item->id; ?>dropdown"><li><?php echo $item->content; ?></li></ul><?php*/
 			break;
 			case 'url':
 				if ($item->parent):
 					$item->anchor_css .= ' dropdown-toggle';
-					//$item->data['toggle'] = 'dropdown';
 				endif;
 
 				// Note. It is important to remove spaces between elements.
@@ -136,7 +117,6 @@
 			case 'module':
 				if ($item->parent):
 					$item->anchor_css .= ' dropdown-toggle';
-					//$item->data['toggle'] = 'dropdown';
 				endif;
 
 				$atts = array(
@@ -156,8 +136,6 @@
 				endforeach;
 
 				// Note. It is important to remove spaces between elements.
-				//$class = $item->anchor_css   ? 'class="' . $item->anchor_css . '" '   : '';
-				//$title = $item->anchor_title ? 'title="' . $item->anchor_title . '" ' : '';
 				if ($item->menu_image):
 					$linktype = $item->params->get('menu_text', 1)
 						? '<img src="' . $item->menu_image . '" alt="' . $item->title . '" /><span class="image-title">' . $item->title . '</span> '
