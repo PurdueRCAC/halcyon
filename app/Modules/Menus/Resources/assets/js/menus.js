@@ -39,6 +39,12 @@ document.addEventListener('DOMContentLoaded', function () {
 			document.querySelectorAll('.menutype-' + this.value).forEach(function (el) {
 				el.classList.remove('d-none');
 			});
+			if (item.value == 'separator') {
+				var title = document.getElementById('fields_title');
+				if (title) {
+					title.value = item.value;
+				}
+			}
 		});
 
 		if (item.checked) {
