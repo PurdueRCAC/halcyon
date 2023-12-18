@@ -40,4 +40,13 @@ return [
 	'all status' => '- All Statuses -',
 	'view' => 'View',
 	'app' => 'App',
+	'notifications' => 'Notifications',
+	'type' => 'Type',
+	'sent' => 'Sent',
+	'read' => 'Read',
+	'notifiable id' => 'Notifiable ID',
+	'notifiable type' => 'Notifiable type',
+	'recipient' => 'Recipient',
+	'data' => 'Data',
+	'message' => 'Message',
 ];

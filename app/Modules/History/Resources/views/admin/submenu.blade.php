@@ -7,5 +7,8 @@
 		<li class="nav-item">
 			<a class="nav-link @if (trim($slot) == 'activity') active @endif" href="{{ route('admin.history.activity') }}">{{ trans('history::history.activity') }}</a>
 		</li>
+		<li class="nav-item">
+			<a class="nav-link @if (trim($slot) == 'notifications') active @endif" href="{{ route('admin.history.notifications') }}">{{ trans('history::history.notifications') }}</a>
+		</li>
 	</ul>
 </nav>
