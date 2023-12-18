@@ -54,7 +54,7 @@ class MenuParent extends Select
 			$query->whereRaw('NOT(a.lft >= p.lft AND a.rgt <= p.rgt)');
 		}
 
-		$query->where('a.published', '!=', '-2')
+		$query->where('a.published', '=', '1')
 			->groupBy('a.id', 'a.title', 'a.level', 'a.lft', 'a.rgt', 'a.menutype', 'a.parent_id', 'a.published')
 			->orderBy('a.lft', 'asc');
 
