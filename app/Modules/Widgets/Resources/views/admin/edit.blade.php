@@ -141,7 +141,7 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 							<label id="field_menuselect-lbl" for="field_menuselect">{{ trans('widgets::widgets.menu selection') }}</label>
 
 							<div id="menu-assignment" class="accordian">
-								<?php $menuTypes = App\Modules\Menus\Helpers\Menus::getMenuLinks(); ?>
+								<?php $menuTypes = App\Modules\Menus\Helpers\Menus::getMenuLinks(null, 0, 0, [1]); ?>
 								<?php foreach ($menuTypes as &$type) : ?>
 									<h3 data-ref="{{ $type->menutype }}-details">
 										<a href="#{{ $type->menutype }}-details">
