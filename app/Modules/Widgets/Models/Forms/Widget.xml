@@ -16,8 +16,8 @@
 		/>
 
 		<field name="note" type="text"
-			description="widgets::widgets.note description"
-			label="widgets::widgets.note"
+			description="widgets::widgets.field.note description"
+			label="widgets::widgets.field.note"
 			maxlength="100"
 		/>
 
@@ -48,17 +48,17 @@
 		</field>
 
 		<field name="publish_up" type="calendar"
-			description="widgets::widgets.publish up description"
+			description="widgets::widgets.field.publish up description"
 			format="%Y-%m-%d %H:%M:%S"
 			placeholder="global.immediately"
-			label="widgets::widgets.publish up"
+			label="widgets::widgets.field.publish up"
 		/>
 
 		<field name="publish_down" type="calendar"
-			description="widgets::widgets.publish down description"
+			description="widgets::widgets.field.publish down description"
 			format="%Y-%m-%d %H:%M:%S"
 			placeholder="global.never"
-			label="widgets::widgets.publish down"
+			label="widgets::widgets.field.publish down"
 		/>
 
 		<field name="client_id" type="hidden"
@@ -69,14 +69,14 @@
 
 		<field name="position" type="App\Modules\Widgets\Models\Fields\WidgetPosition"
 			default=""
-			description="widgets::widgets.position description"
-			label="widgets::widgets.position"
+			description="widgets::widgets.field.position description"
+			label="widgets::widgets.field.position"
 			maxlength="50"
 			required="true"
 		/>
 
 		<field name="access" type="accesslevel"
-			description="widgets::widgets.access description"
+			description="widgets::widgets.field.access description"
 			label="widgets::widgets.access"
 		/>
 

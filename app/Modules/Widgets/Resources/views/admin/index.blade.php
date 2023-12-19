@@ -43,6 +43,8 @@ app('pathway')
 		!!}
 	@endif
 
+	{!! Toolbar::help('widgets::help.index') !!}
+
 	{!! Toolbar::render() !!}
 @stop
 

@@ -65,14 +65,20 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 				</div> -->
 
 				<div class="form-group">
-					<?php echo $form->getLabel('position'); ?>
-					<?php echo $form->getInput('position'); ?>
+					<?php
+					$field = $form->getField('position');
+					echo $field->label;
+					echo $field->input;
+					?>
+					@if ($field->description)
+						<span class="form-text text-muted">{{ trans($field->description) }}</span>
+					@endif
 				</div>
 
-				<div class="form-group">
+				<!-- <div class="form-group">
 					<?php echo $form->getLabel('ordering'); ?>
 					<?php echo $form->getInput('ordering'); ?>
-				</div>
+				</div> -->
 
 				<div class="row">
 					<div class="col col-xs-12 col-sm-6">
@@ -92,21 +98,39 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 				<div class="row">
 					<div class="col col-xs-12 col-sm-6">
 						<div class="form-group">
-							<?php echo $form->getLabel('publish_up'); ?>
-							<?php echo $form->getInput('publish_up'); ?>
+							<?php
+							$field = $form->getField('publish_up');
+							echo $field->label;
+							echo $field->input;
+							?>
+							@if ($field->description)
+								<span class="form-text text-muted">{{ trans($field->description) }}</span>
+							@endif
 						</div>
 					</div>
 					<div class="col col-xs-12 col-sm-6">
 						<div class="form-group">
-							<?php echo $form->getLabel('publish_down'); ?>
-							<?php echo $form->getInput('publish_down'); ?>
+							<?php
+							$field = $form->getField('publish_down');
+							echo $field->label;
+							echo $field->input;
+							?>
+							@if ($field->description)
+								<span class="form-text text-muted">{{ trans($field->description) }}</span>
+							@endif
 						</div>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<?php echo $form->getLabel('note'); ?>
-					<?php echo $form->getInput('note'); ?>
+					<?php
+					$field = $form->getField('note');
+					echo $field->label;
+					echo $field->input;
+					?>
+					@if ($field->description)
+						<span class="form-text text-muted">{{ trans($field->description) }}</span>
+					@endif
 				</div>
 
 				<input type="hidden" name="id" value="{{ $row->id }}" />
@@ -128,6 +152,8 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 				<?php $assignment = $row->menuAssignment(); ?>
 				<fieldset class="adminform">
 					<legend>{{ trans('widgets::widgets.menu assignment') }}</legend>
+
+					<p class="form-text text-muted">{{ trans('widgets::widgets.menu description') }}</p>
 
 					<div class="form-group">
 						<label for="menu_assignment">{{ trans('widgets::widgets.widget assignment') }}</label>
