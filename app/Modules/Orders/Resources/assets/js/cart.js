@@ -35,55 +35,66 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	UpdateOrderTotal();
 
-	var autocompleteName = function (url) {
-		return function (request, response) {
-			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
-				response($.map(data.data, function (el) {
-					return {
-						label: el.name,
-						name: el.name,
-						id: el.id,
-						username: el.username
-						//priorusernames: el.priorusernames
-					};
-				}));
-			});
-		};
-	};
-	$("#search_user").autocomplete({
-		source: autocompleteName($("#search_user").data('api')),
-		dataName: 'users',
-		height: 150,
-		delay: 100,
-		minLength: 2,
-		select: function (event, ui) {
-			event.preventDefault();
-			var thing = ui['item'].label;
-
-			if (typeof (ui['item'].username) != 'undefined') {
-				thing = thing + " (" + ui['item'].username + ")";
-			} else if (typeof (ui['item'].priorusername) != 'undefined') {
-				thing = thing + " (" + ui['item'].priorusername + ")";
-			}
-
-			$("#search_user").val(thing);
-		},
-		create: function () {
-			$(this).data('ui-autocomplete')._renderItem = function (ul, item) {
-				var thing = item.label;
-
-				if (typeof (item.username) != 'undefined') {
-					thing = thing + " (" + item.username + ")";
-				} else if (typeof (item.priorusername) != 'undefined') {
-					thing = thing + " (" + item.priorusername + ")";
+	let suser = document.getElementById('search_user');
+	if (suser) {
+		let sel = new TomSelect(suser, {
+			maxItems: 1,
+			valueField: 'id',
+			labelField: 'name',
+			searchField: ['name', 'username', 'email'],
+			plugins: {
+				clear_button: {
+					title: 'Remove selected',
 				}
-				return $("<li>")
-					.append($("<div>").text(thing))
-					.appendTo(ul);
-			};
-		}
-	});
-	//$("#search_user").on("autocompleteselect", SearchEventHandler);
+			},
+			persist: false,
+			// Fetch remote data
+			load: function (query, callback) {
+				var url = suser.getAttribute('data-api') + '?order=name&order_dir=asc&search=' + encodeURIComponent(query);
+
+				fetch(url, {
+					method: 'GET',
+					headers: headers
+				})
+					.then(response => response.json())
+					.then(json => {
+						for (var i = 0; i < json.data.length; i++) {
+							if (!json.data[i].id) {
+								json.data[i].id = json.data[i].username;
+							}
+						}
+						callback(json.data);
+					}).catch(() => {
+						callback();
+					});
+			},
+			// Custom rendering functions for options and items
+			render: {
+				// Option list when searching
+				option: function (item, escape) {
+					if (item.name.match(/\([a-z0-9]+\)$/)) {
+						item.username = item.name.replace(/([^\(]+\()/, '').replace(/\)$/, '');
+						item.name = item.name.replace(/\s(\([a-z0-9]+\))$/, '');
+					}
+					return `<div data-id="${escape(item.id)}">${escape(item.name)} <span class="text-muted">(${escape(item.username)})</span></div>`;
+				},
+				// Selected items
+				item: function (item, escape) {
+					if (item.name.match(/\([a-z0-9-]+\)$/)) {
+						if (isNaN(item.id)) {
+							item.id = item.username;
+						}
+						item.username = item.name.replace(/([^\(]+\()/, '').replace(/\)$/, '');
+						item.name = item.name.replace(/\s(\([a-z0-9-]+\))$/, '');
+					}
+					return `<div data-id="${escape(item.id)}">${escape(item.name)}&nbsp;<span class="text-muted">(${escape(item.username)})</span></div>`;
+				}
+			}
+		});
+		sel.on('item_add', function (item) {
+			document.getElementById(suser.id + '-ts-control').value = '';
+		});
+	}
 
 	let formeyes = document.getElementById('formeyes');
 	if (formeyes) {

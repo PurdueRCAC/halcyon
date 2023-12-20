@@ -719,7 +719,8 @@ function ForMe() {
 		document.getElementById("formeyes").checked = false;
 		document.getElementById("formeno").checked = false;
 	} else {
-		if (document.getElementById("search_user").value.match(/^.*?\(([a-z0-9]+)\)$/) || document.getElementById("formeno").checked == true) {
+		if (document.getElementById("search_user").value //.match(/^.*?\(([a-z0-9]+)\)$/)
+		|| document.getElementById("formeno").checked == true) {
 			//document.getElementById("forme_search_error").style.display = "none";
 			MouAgree();
 		} else {
@@ -954,9 +955,13 @@ function TotalOrder() {
 	order['submitteruserid'] = document.getElementById("userid").value;
 	order['userid'] = document.getElementById("userid").value;
 
-	var name = document.getElementById("search_user").value.match(/^.*?\(([a-z0-9]+)\)$/);
-	if (name) {
-		order['userid'] = name[1];
+	var user = document.getElementById("search_user").value;
+	if (user) {
+		order['userid'] = user;
+		var name = user.match(/^.*?\(([a-z0-9]+)\)$/);
+		if (name) {
+			order['userid'] = name[1];
+		}
 	}
 
 	var count = 0,
@@ -1029,24 +1034,28 @@ function TotalOrder() {
 	
 	var btn = document.getElementById('continue');
 
-	$.ajax({
-		url: btn.getAttribute('data-api'),
-		type: 'post',
-		data: {
-			submitteruserid: order['submitteruserid'],
-			userid: order['userid'],
-			items: order['items'],
-			usernotes: order['usernotes'],
-			staffnotes: order['staffnotes']
-		},
-		dataType: 'json',
-		async: false,
-		success: function(response) {
-			window.location = response.url;
-		},
-		error: function() {
-			alert("There was an error processing your order. Please wait a few minutes and try again or contact help.");
+	fetch(btn.getAttribute('data-api'), {
+		method: 'POST',
+		headers: headers,
+		body: JSON.stringify(order)
+	})
+	.then(function (response) {
+		if (response.ok) {
+			return response.json();
 		}
+		return response.json().then(function (data) {
+			var msg = data.message;
+			if (typeof msg === 'object') {
+				msg = Object.values(msg).join('<br />');
+			}
+			throw msg;
+		});
+	})
+	.then(function (results) {
+		window.location = results.url;
+	})
+	.catch(function (err) {
+		alert(err);
 	});
 }
 

@@ -1,10 +1,12 @@
 @extends('layouts.master')
 
 @push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/orders/css/orders.css') }}" />
 @endpush
 
 @push('scripts')
+<script src="{{ timestamped_asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js') }}"></script>
 <script src="{{ timestamped_asset('modules/orders/js/orders.js') }}"></script>
 <script src="{{ timestamped_asset('modules/orders/js/cart.js') }}"></script>
 @endpush
