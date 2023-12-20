@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function () {
 									'userid': userid,
 									'groupid': btn.getAttribute('data-group'),
 									'queueid': checkbox.value,
-									'notice': notice
+									'notice': post['notice']
 								})
 							})
 							.then(function (response) {
@@ -395,7 +395,7 @@ document.addEventListener('DOMContentLoaded', function () {
 									'userid': userid,
 									'groupid': btn.getAttribute('data-group'),
 									'unixgroupid': checkbox.value,
-									'notice': notice
+									'notice': post['notice']
 								})
 							})
 							.then(function (response) {

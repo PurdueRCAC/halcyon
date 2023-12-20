@@ -3267,6 +3267,7 @@ function NEWSPreview(news, edit) {
 		post['id'] = news;
 	}
 	if (document.getElementById("datestartshort").value != "") {
+		var startDate;
 		if (document.getElementById("timestartshort").value != "") {
 			var t = document.getElementById("timestartshort").value;
 			startDate = document.getElementById("datestartshort").value + " " + convertTime12to24(t) + ':00';
@@ -3277,6 +3278,7 @@ function NEWSPreview(news, edit) {
 	}
 
 	if (document.getElementById("datestopshort").value != "") {
+		var endDate;
 		if (document.getElementById("timestopshort").value != "") {
 			var ts = document.getElementById("timestopshort").value;
 			endDate = document.getElementById("datestopshort").value + " " + convertTime12to24(ts) + ':00';

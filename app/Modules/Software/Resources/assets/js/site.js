@@ -1,5 +1,4 @@
 /* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
-/* global Halcyon */ // core.js
 
 document.addEventListener('DOMContentLoaded', function () {
 	var alias = document.getElementById('field-alias');
@@ -43,10 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
 				var sel = template.querySelector('select');
 				sel.classList.add('resources-select');
 				new TomSelect(sel, { plugins: ['dropdown_input', 'remove_button'] });
-
-				/*template.find('a').each(function (i, el) {
-					el.setAttribute('data-api', el.getAttribute('data-api').replace(/\{id\}/g, data.id));
-				});*/
 
 				container.insertBefore(template, li);
 			}

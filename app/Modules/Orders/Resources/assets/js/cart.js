@@ -1,4 +1,4 @@
-/* global $ */ // jquery.js
+/* global TomSelect */ // vendor/tom-select/js/tom-select.complete.min.js
 /* global ForMe */ // orders.js
 /* global CancelMou */ // orders.js
 /* global UpdateOrderTotal */ // orders.js
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				// Option list when searching
 				option: function (item, escape) {
 					if (item.name.match(/\([a-z0-9]+\)$/)) {
-						item.username = item.name.replace(/([^\(]+\()/, '').replace(/\)$/, '');
+						item.username = item.name.replace(/([^(]+\()/, '').replace(/\)$/, '');
 						item.name = item.name.replace(/\s(\([a-z0-9]+\))$/, '');
 					}
 					return `<div data-id="${escape(item.id)}">${escape(item.name)} <span class="text-muted">(${escape(item.username)})</span></div>`;
@@ -84,14 +84,14 @@ document.addEventListener('DOMContentLoaded', function () {
 						if (isNaN(item.id)) {
 							item.id = item.username;
 						}
-						item.username = item.name.replace(/([^\(]+\()/, '').replace(/\)$/, '');
+						item.username = item.name.replace(/([^(]+\()/, '').replace(/\)$/, '');
 						item.name = item.name.replace(/\s(\([a-z0-9-]+\))$/, '');
 					}
 					return `<div data-id="${escape(item.id)}">${escape(item.name)}&nbsp;<span class="text-muted">(${escape(item.username)})</span></div>`;
 				}
 			}
 		});
-		sel.on('item_add', function (item) {
+		sel.on('item_add', function () {
 			document.getElementById(suser.id + '-ts-control').value = '';
 		});
 	}

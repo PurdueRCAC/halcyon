@@ -1036,7 +1036,10 @@ function TotalOrder() {
 
 	fetch(btn.getAttribute('data-api'), {
 		method: 'POST',
-		headers: headers,
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+		},
 		body: JSON.stringify(order)
 	})
 	.then(function (response) {
