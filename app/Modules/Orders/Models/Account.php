@@ -196,7 +196,7 @@ class Account extends Model
 	 */
 	public function getPurchasewbseAttribute($purchasewbse): string
 	{
-		$wbse = $purchasewbse;
+		$wbse = isset($purchasewbse) === true ? $purchasewbse : '';
 
 		// insert periods
 		if ($wbse)
