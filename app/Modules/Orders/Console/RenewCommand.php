@@ -304,7 +304,7 @@ class RenewCommand extends Command
 						continue;
 					}
 
-					$account->saveQuiety();
+					$account->saveQuietly();
 				}
 			}
 		}
