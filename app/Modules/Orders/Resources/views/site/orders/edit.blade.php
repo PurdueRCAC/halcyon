@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			return $.getJSON(url.replace('%s', encodeURIComponent(request.term)), function (data) {
 				response($.map(data.data, function (el) {
 					return {
-						label: el.purchasewbse ? el.purchasewbse : el.purchaseio,
+						label: el.purchasewbse != false ? el.purchasewbse : el.purchaseio,
 						purchaseorder: el.purchaseorder,
 						purchasefund: el.purchasefund,
 						order: el.order,
