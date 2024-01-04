@@ -1,7 +1,7 @@
 <?php
 return [
 	'widget name' => 'User List',
-	'widget desc' => 'This displays a list of users',
+	'widget desc' => 'This displays a list of users for selected roles.',
 
 	'staff' => 'Staff',
 	'staff directory' => 'Staff Directory',
