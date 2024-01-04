@@ -1,7 +1,7 @@
 {
 	"name": "Banner",
 	"alias": "banner",
-	"description": "This displays a slideshow unless there are outages",
+	"description": "Options for displaying one or more news articles or a banner image if no articles found.",
 	"type": "site",
 	"requires": [
 		"mod_news"

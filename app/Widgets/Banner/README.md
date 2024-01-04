@@ -1,3 +1,3 @@
 ## Banner Widget
 
-This displays a slideshow unless there are News outages.
+Options for displaying one or more news articles or a banner image if no articles found..

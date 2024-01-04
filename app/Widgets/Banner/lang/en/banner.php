@@ -1,7 +1,7 @@
 <?php
 return [
 	'widget name' => 'Banner',
-	'widget desc' => 'This displays a list of news articles',
+	'widget desc' => 'Options for displaying one or more news articles or a banner image if no articles found.',
 
 	// Misc.
 	'news' => 'News',
