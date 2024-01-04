@@ -280,7 +280,7 @@ app('pathway')
 	<input type="hidden" name="boxchecked" value="0" />
 
 	<div id="new-widget" class="modal fade" tabindex="-1" aria-labelledby="new-widget-title" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h3 class="modal-title" id="new-widget-title">{{ trans('widgets::widgets.choose type') }}</h3>
@@ -288,30 +288,33 @@ app('pathway')
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				 <div class="modal-body">
+				<div class="modal-body">
 
-					<table id="new-modules-list" class="table table-hover adminlist">
-						<caption class="sr-only">{{ trans('widgets::widgets.available widgets') }}</caption>
-						<thead>
-							<tr>
-								<th scope="col">{{ trans('widgets::widgets.title') }}</th>
-								<th scope="col">{{ trans('widgets::widgets.widget') }}</th>
-							</tr>
-						</thead>
-						<tbody>
+					<div class="form-group mb-3">
+						<label for="widget-search" class="sr-only">Search</label>
+						<input type="search" id="widget-search" class="form-control" placeholder="Search ..." value="" />
+					</div>
+
+					<div class="row" id="new-widgets-list">
 						@foreach ($widgets as $item)
-							<tr>
-								<td>
-									<span class="editlinktip hasTip" title="{{ $item->name }} :: {{ $item->desc }}"><a href="{{ route('admin.widgets.create', ['eid' => $item->id]) }}">{{ $item->name }}</a></span>
-								</td>
-								<td>
-									{{ $item->element }}
-								</td>
-							</tr>
+							<div class="col-md-4 mb-3 widget">
+								<div class="card h-100">
+									<img class="card-img-top" src="{{ $item->image }}" alt="" />
+									<div class="card-body">
+										<div class="card-title">{{ $item->name }}</div>
+										@if ($item->desc)
+										<p class="card-text">{{ $item->desc }}</p>
+										@endif
+									</div>
+									<div class="card-footer">
+										<a class="btn btn-block btn-outline-secondary" href="{{ route('admin.widgets.create', ['eid' => $item->id]) }}">
+											Select
+										</a>
+									</div>
+								</div>
+							</div>
 						@endforeach
-						</tbody>
-					</table>
-
+					</div>
 				</div>
 			</div>
 		</div>

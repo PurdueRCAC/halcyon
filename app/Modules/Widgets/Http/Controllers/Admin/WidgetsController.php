@@ -232,6 +232,11 @@ class WidgetsController extends Controller
 
 			$item->name = trans('widget.' . $name . '::' . $name . '.widget name');
 			$item->desc = trans('widget.' . $name . '::' . $name . '.widget desc');
+			$item->image = asset('modules/widgets/images/widget.svg');
+			if (is_file($path . '/assets/images/widget.svg'))
+			{
+				$item->image = asset('widgets/' . strtolower($item->element) . '/images/widget.svg');
+			}
 		}
 
 		$widgets = collect($items)->sortBy('name')->all();

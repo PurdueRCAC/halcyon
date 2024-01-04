@@ -129,7 +129,7 @@ class PublishCommand extends Command
 	/**
 	 * Get the console command arguments.
 	 *
-	 * @return array
+	 * @return array<int,string>
 	 */
 	protected function getArguments()
 	{

@@ -112,4 +112,33 @@ document.addEventListener('DOMContentLoaded', function () {
 			e.preventDefault();
 		});
 	}
+
+	let ws = document.getElementById('widget-search');
+	if (ws) {
+		ws.addEventListener('input', function () {
+			var txtValue, found;
+
+			let filter = this.value.toUpperCase();
+
+			document.querySelectorAll('#new-widgets-list .widget').forEach(function (el) {
+				if (!filter) {
+					el.classList.remove('d-none');
+				} else {
+					found = false;
+
+					txtValue = el.querySelector('.card-body').innerHTML;
+
+					if (txtValue && txtValue.toUpperCase().indexOf(filter) > -1) {
+						found = true;
+					}
+
+					if (found) {
+						el.classList.remove('d-none');
+					} else {
+						el.classList.add('d-none');
+					}
+				}
+			});
+		});
+	}
 });

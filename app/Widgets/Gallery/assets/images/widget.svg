@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 71.37 37.86">
+  <defs>
+    <style>
+      .cls-1 {
+        opacity: .15;
+      }
+
+      .cls-2 {
+        fill: #559f37;
+      }
+
+      .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9, .cls-10 {
+        stroke-width: 0px;
+      }
+
+      .cls-2, .cls-3, .cls-10 {
+        fill-rule: evenodd;
+      }
+
+      .cls-3, .cls-8 {
+        fill: #f0ce4c;
+      }
+
+      .cls-4 {
+        fill: #f2f0f3;
+      }
+
+      .cls-5 {
+        fill: #d5d5d5;
+      }
+
+      .cls-6 {
+        fill: #bebebe;
+      }
+
+      .cls-7 {
+        fill: #fff;
+      }
+
+      .cls-9 {
+        fill: #66c8e8;
+      }
+    </style>
+  </defs>
+  <rect class="cls-7" width="71.37" height="37.86"/>
+  <g>
+    <g id="Photo">
+      <rect class="cls-4" x="4.92" y="10.9" width="18.39" height="14.71" rx="1.23" ry="1.23"/>
+    </g>
+    <g id="Sky">
+      <rect class="cls-9" x="6.15" y="12.13" width="15.94" height="12.26"/>
+    </g>
+    <g id="Grass">
+      <polygon class="cls-2" points="16.26 16.11 12.89 19.48 11.36 17.95 6.15 23.16 6.15 24.38 22.08 24.38 22.08 21.93 16.26 16.11"/>
+    </g>
+    <g id="Sun">
+      <circle class="cls-8" cx="9.52" cy="15.5" r="1.53"/>
+    </g>
+    <g id="Shading" class="cls-1">
+      <polygon class="cls-10" points="14.02 18.35 12.89 19.48 11.36 17.95 17.79 24.38 14.02 18.35"/>
+    </g>
+  </g>
+  <g>
+    <g id="Photo-2" data-name="Photo">
+      <rect class="cls-4" x="26.41" y="10.94" width="18.39" height="14.71" rx="1.23" ry="1.23"/>
+    </g>
+    <g id="Sky-2" data-name="Sky">
+      <rect class="cls-9" x="27.63" y="12.17" width="15.94" height="12.26"/>
+    </g>
+    <g id="Grass-2" data-name="Grass">
+      <polygon class="cls-2" points="37.74 16.15 34.37 19.52 32.84 17.99 27.63 23.2 27.63 24.42 43.57 24.42 43.57 21.97 37.74 16.15"/>
+    </g>
+    <g id="Sun-2" data-name="Sun">
+      <path class="cls-3" d="m35.6,13.05c-.85,0-1.53.69-1.53,1.53s.69,1.53,1.53,1.53,1.53-.69,1.53-1.53-.69-1.53-1.53-1.53Z"/>
+    </g>
+    <g id="Shading-2" data-name="Shading" class="cls-1">
+      <path class="cls-10" d="m27.63,24.42h.74s2.17-4.14,2.17-4.14l-2.91,2.91v1.23Zm13.22-5.17l2.25,5.17h.47v-2.45l-2.71-2.71Z"/>
+    </g>
+  </g>
+  <g>
+    <g id="Photo-3" data-name="Photo">
+      <rect class="cls-4" x="47.75" y="10.94" width="18.39" height="14.71" rx="1.23" ry="1.23"/>
+    </g>
+    <g id="Sky-3" data-name="Sky">
+      <rect class="cls-9" x="48.98" y="12.17" width="15.94" height="12.26"/>
+    </g>
+    <g id="Grass-3" data-name="Grass">
+      <polygon class="cls-2" points="59.09 16.15 55.72 19.52 54.19 17.99 48.98 23.2 48.98 24.42 64.91 24.42 64.91 21.97 59.09 16.15"/>
+    </g>
+    <g id="Sun-3" data-name="Sun">
+      <path class="cls-3" d="m62.15,14c-.85,0-1.53.69-1.53,1.53s.69,1.53,1.53,1.53,1.53-.69,1.53-1.53-.69-1.53-1.53-1.53Z"/>
+    </g>
+    <g id="Shading-3" data-name="Shading" class="cls-1">
+      <polygon class="cls-10" points="55.72 19.52 55.11 18.91 52.93 22.51 56.85 18.39 55.72 19.52"/>
+    </g>
+  </g>
+  <circle class="cls-6" cx="31.19" cy="31.27" r="1.13"/>
+  <circle class="cls-5" cx="35.59" cy="31.27" r="1.13"/>
+  <circle class="cls-5" cx="39.98" cy="31.27" r="1.13"/>
+</svg>
