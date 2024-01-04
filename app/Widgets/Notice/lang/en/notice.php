@@ -2,7 +2,7 @@
 
 return [
 	'widget name' => 'Site Notices',
-	'widget desc' => 'This module shows a notice (when site will be down, etc.) box for site visitors.',
+	'widget desc' => 'This widget shows a notice (when site will be down, etc.) box for site visitors.',
 	// Misc.
 	'in' => 'in',
 	'years' => 'years',
