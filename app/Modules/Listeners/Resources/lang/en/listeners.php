@@ -56,5 +56,6 @@ return [
 	),
 	'no caching' => 'No caching',
 	'use global' => 'Use Global',
-	'no params' => 'No params found.',
+	'no options' => 'No custom options found for this extension.',
+	'protected' => 'Note: This is a core extension. It can be disabled but not uninstalled.',
 ];

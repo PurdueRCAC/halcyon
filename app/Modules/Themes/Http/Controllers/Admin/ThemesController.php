@@ -179,7 +179,8 @@ class ThemesController extends Controller
 	{
 		$rules = [
 			'fields.name' => 'required|string|max:255',
-			'fields.params' => 'nullable|array'
+			'fields.params' => 'nullable|array',
+			'fields.client_id' => 'nullable|integer'
 		];
 
 		$validator = Validator::make($request->all(), $rules);

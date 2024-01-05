@@ -67,10 +67,16 @@ app('pathway')
 
 				<div class="form-group">
 					<label>{{ trans('listeners::listeners.description') }}</label>
-					<p>
+					<div class="border rounded p-3">
 					{!! trans(strtolower('listener.' . $row->folder . '.' . $row->element . '::' . $row->element . '.listener desc')) !!}
-					</p>
+					</div>
 				</div>
+
+				@if ($row->protected)
+					<p class="text-muted text-center">
+						{{ trans('listeners::listeners.protected') }}
+					</p>
+				@endif
 			</fieldset>
 
 			<fieldset class="adminform">
@@ -90,18 +96,6 @@ app('pathway')
 						</div>
 					</div>
 				</div>
-
-				<?php /*<div class="form-group">
-					<?php echo $form->getLabel('ordering'); ?><br />
-					<?php echo $form->getInput('ordering'); ?>
-				</div>
-
-				@if ($row->extension_id)
-					<div class="form-group">
-						<?php echo $form->getLabel('id'); ?><br />
-						<?php echo $form->getInput('id'); ?>
-					</div>
-				@endif */ ?>
 			</fieldset>
 		</div>
 		<div class="col col-xs-12 col-sm-5">
@@ -164,7 +158,14 @@ app('pathway')
 				<?php
 			else:
 				?>
-				<p class="alert alert-info">{{ trans('listeners::listeners.no params') }}</p>
+				<div class="placeholder card bg-transparent text-center">
+					<div class="placeholder-body card-body">
+						<div class="m-4">
+							<div class="display-4 text-muted"><span class="fa fa-sliders" aria-hidden="true"></span></div>
+							<p>{{ trans('listeners::listeners.no options') }}</p>
+						</div>
+					</div>
+				</div>
 				<?php
 			endif;
 			?>
