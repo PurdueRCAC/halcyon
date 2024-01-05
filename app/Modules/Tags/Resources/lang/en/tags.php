@@ -21,6 +21,8 @@ return [
 	'taggable type' => 'Item type',
 	'taggable type hint' => 'The type of item being tagged. This typically corresponds to a module name such as "user", "page", etc.',
 	'aliases' => 'Aliases',
+	'alias desc' => 'Aliases are alternate tags that mean the same thing or a way to point to this tag. Whenever someone tags an item with an alias, the parent tag will show up in its place. This helps keep a more currated list. Example: A tag of "water" might have aliases of "H2O" and "aqua".',
+	'alias placeholder' => 'Word or phrase ...',
 	'history' => 'History',
 	'record id' => 'Tag #:id',
 	'item removed' => 'Item removed.',

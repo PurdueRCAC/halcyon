@@ -120,7 +120,7 @@ app('pathway')
 							<tr>
 								<td></td>
 								<td colspan="2">
-									<input type="text" name="name" id="name" class="form-control input-alias" placeholder="{{ trans('tags::tags.name') }}" />
+									<input type="text" name="name" id="name" class="form-control input-alias" placeholder="{{ trans('tags::tags.alias placeholder') }}" />
 								</td>
 								<td class="text-right">
 									<a href="#name" class="btn text-success alias-add"
@@ -133,6 +133,7 @@ app('pathway')
 							</tr>
 						</tfoot>
 					</table>
+					<p class="form-text text-muted">{{ trans('tags::tags.alias desc') }}</p>
 				</fieldset>
 			@endif
 		</div>
