@@ -48,7 +48,8 @@
 		<tbody>
 			<tr>
 				<td>
-					<a class="btn btn-secondary opposite icon-next" href="<?php echo route('admin.users.index'); ?>">
+					<a class="btn btn-secondary opposite" href="<?php echo route('admin.users.index'); ?>">
+						<span class="fa fa-arrow-right" aria-hidden="true"></span>
 						<?php echo trans('widget.whosonline::whosonline.VIEW_ALL_ACTIVITIY'); ?>
 					</a>
 				</td>

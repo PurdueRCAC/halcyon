@@ -22,8 +22,13 @@ class Grid
 	public static function boolean($i, $value, $taskOn = null, $taskOff = null)
 	{
 		// Build the <a> tag.
-		$bool   = ($value) ? 'true icon-true' : 'false icon-false';
-		//$bool  .= ($value) ? ' on' : ' off';
+		$bool = 'false';
+		$cls = 'ban';
+		if ($value)
+		{
+			$bool = 'true';
+			$cls = 'check';
+		}
 
 		$task   = ($value) ? $taskOff : $taskOn;
 		$toggle = (!$task) ? false : true;
@@ -36,11 +41,11 @@ class Grid
 		{
 			$title .= ' :: ' . trans('global.click to toggle state');
 
-			$html = '<a class="grid-action grid-boolean ' . $bool . ' hasTip" title="' . $title . '" data-id="cb' . $i . '" data-task="' . $task . '" href="#toggle" title="' . $title . '"><span>' . $txt . '</span></a>';
+			$html = '<a class="grid-action grid-boolean ' . $bool . ' hasTip" title="' . $title . '" data-id="cb' . $i . '" data-task="' . $task . '" href="#toggle" title="' . $title . '"><span class="fa fa-' . $cls . '" aria-hidden="true"></span><span class="sr-only">' . $txt . '</span></a>';
 		}
 		else
 		{
-			$html = '<a class="grid-action grid-boolean ' . $bool . '" title="' . $title . '"><span>' . $txt . '</span></a>';
+			$html = '<a class="grid-action grid-boolean ' . $bool . '" title="' . $title . '"><span class="fa fa-' . $cls . '" aria-hidden="true"></span><span class="sr-only">' . $txt . '</span></a>';
 		}
 
 		return $html;
@@ -498,7 +503,8 @@ class Grid
 			$html[] = '<a class="grid-actio"';
 			$html[] = ' href="' . $task . '" data-id="' . $checkbox . $i . '" data-task="' . $prefix . $task . '"';
 			$html[] = ' title="' . addslashes(htmlspecialchars(trans($text), ENT_COMPAT, 'UTF-8')) . '">';
-			$html[] = '<span class="icon-arrow-up" aria-hidden="true"></span>';
+			$html[] = '<span class="fa fa-arrow-up" aria-hidden="true"></span>';
+			$html[] = '<span class="sr-only" aria-hidden="true">Move up</span>';
 			$html[] = '</a>';
 
 			return implode("\n", $html); //self::action($i, $task, $prefix, $text, $text, $text, false, 'uparrow', 'uparrow_disabled', $enabled, true, $checkbox);
@@ -538,7 +544,8 @@ class Grid
 			$html[] = '<a class="grid-actio"';
 			$html[] = ' href="' . $task . '" data-id="' . $checkbox . $i . '" data-task="' . $prefix . $task . '"';
 			$html[] = ' title="' . addslashes(htmlspecialchars(trans($text), ENT_COMPAT, 'UTF-8')) . '">';
-			$html[] = '<span class="icon-arrow-down" aria-hidden="true"></span>';
+			$html[] = '<span class="fa fa-arrow-down" aria-hidden="true"></span>';
+			$html[] = '<span class="sr-only" aria-hidden="true">Move up</span>';
 			$html[] = '</a>';
 
 			return implode("\n", $html); //self::action($i, $task, $prefix, $text, $text, $text, false, 'downarrow', 'downarrow_disabled', $enabled, true, $checkbox);

@@ -188,7 +188,7 @@ class Input
 				$done[] = $id;
 			}
 
-			return '<span class="input-group input-datetime">' . self::text($name, $value, $options) . '<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span></span>';
+			return '<span class="input-group input-datetime">' . self::text($name, $value, $options) . '<span class="input-group-append"><span class="input-group-text fa fa-calendar"></span></span></span>';
 		}
 		else
 		{
