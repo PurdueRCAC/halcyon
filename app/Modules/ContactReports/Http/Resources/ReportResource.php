@@ -54,7 +54,7 @@ class ReportResource extends JsonResource
 		$staff[] = array(
 			'userid' => $this->userid,
 			'contactreportid' => $this->id,
-			'name' => $this->creator->name,
+			'name' => $this->creator ? $this->creator->name : trans('global.unknown'),
 			'datetimelastnotify' => null,
 			'highlight' => true,
 		);
