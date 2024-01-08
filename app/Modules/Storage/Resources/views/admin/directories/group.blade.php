@@ -770,8 +770,8 @@
 					@if (auth()->user()->can('manage storage'))
 						</div>
 						<div class="col-md-6 text-right">
-							<a href="#dialog-sell" id="space-sell" data-toggle="modal" class="btn btn-sm btn-secondary dialog-btn icon-dollar-sign">{{ trans('storage::storage.sell space') }}</a>
-							<a href="#dialog-loan" id="space-loan" data-toggle="modal" class="btn btn-sm btn-secondary dialog-btn icon-shuffle">{{ trans('storage::storage.loan space') }}</a>
+							<a href="#dialog-sell" id="space-sell" data-toggle="modal" class="btn btn-sm btn-secondary dialog-btn"><span class="fa fa-usd" aria-hidden="true"></span> {{ trans('storage::storage.sell space') }}</a>
+							<a href="#dialog-loan" id="space-loan" data-toggle="modal" class="btn btn-sm btn-secondary dialog-btn"><span class="fa fa-random" aria-hidden="true"></span> {{ trans('storage::storage.loan space') }}</a>
 						</div>
 					</div>
 					@endif

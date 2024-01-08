@@ -62,7 +62,7 @@ app('pathway')
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
@@ -171,12 +171,14 @@ app('pathway')
 						$user = App\Modules\Users\Models\User::find($row->checked_out);
 						@endphp
 						@if (auth()->user()->can('admin'))
-						<a href="{{ route('admin.widgets.checkin', ['id[]' => $row->id]) }}" class="glyph icon-check-square warning" data-tip="{{ trans('widgets::widgets.checked out', ['name' => $user ? $user->name : trans('global.unknown')]) }}">
-							{{ trans('widgets::widgets.checked out', ['name' => $user ? $user->name : trans('global.unknown')]) }}
+						<a href="{{ route('admin.widgets.checkin', ['id[]' => $row->id]) }}" class="text-warning" data-tip="{{ trans('widgets::widgets.checked out', ['name' => $user ? $user->name : trans('global.unknown')]) }}">
+							<span class="fa fa-check-square" aria-hidden="true"></span>
+							<span class="sr-only">{{ trans('widgets::widgets.checked out', ['name' => $user ? $user->name : trans('global.unknown')]) }}</span>
 						</a>
 						@else
-						<span class="glyph icon-check-square warning" data-tip="{{ trans('widgets::widgets.checked out', ['name' => $user ? $user->name : trans('global.unknown')]) }}">
-							{{ trans('widgets::widgets.checked out', ['name' => $user ? $user->name : trans('global.unknown')]) }}
+						<span class="text-warning" data-tip="{{ trans('widgets::widgets.checked out', ['name' => $user ? $user->name : trans('global.unknown')]) }}">
+							<span class="fa fa-check-square" aria-hidden="true"></span>
+							<span class="sr-only">{{ trans('widgets::widgets.checked out', ['name' => $user ? $user->name : trans('global.unknown')]) }}</span>
 						</span>
 						@endif
 					@endif
@@ -189,7 +191,7 @@ app('pathway')
 					@endif
 					@if (!$row->path())
 						<div class="smallsub">
-							<span class="icon-alert-triangle text-warning">{{ trans('widgets::widgets.error missing files') }}</span>
+							<span class="fa fa-exclamation-triangle text-warning">{{ trans('widgets::widgets.error missing files') }}</span>
 						</div>
 					@endif
 					@if ($row->note)

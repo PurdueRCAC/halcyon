@@ -54,7 +54,7 @@ if ($parent)
 				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 				<span class="input-group">
 					<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-					<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+					<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 				</span>
 			</div>
 			<div class="col filter-select col-md-9 text-right">
@@ -132,8 +132,9 @@ if ($parent)
 				</td>
 				<td>
 					@if ($row->trashed())
-						<span class="glyph icon-trash text-danger" data-tip="{{ trans('global.trashed') }}: {{ $row->datetimeremoved->format('Y-m-d') }}">
-							{{ trans('global.trashed') }}: <time datetime="{{ $row->datetimeremoved->toDateTimeString() }}">{{ $row->datetimeremoved->format('Y-m-d') }}</time>
+						<span class="text-danger" data-tip="{{ trans('global.trashed') }}: {{ $row->datetimeremoved->format('Y-m-d') }}">
+							<span class="fa fa-trash" aria-hidden="true"></span>
+							<span class="sr-only">{{ trans('global.trashed') }}: <time datetime="{{ $row->datetimeremoved->toDateTimeString() }}">{{ $row->datetimeremoved->format('Y-m-d') }}</time></span>
 						</span>
 					@endif
 					@if (auth()->user()->can('edit storage'))
@@ -191,7 +192,7 @@ if ($parent)
 						</a>
 					@else
 						<a class="btn btn-sm btn-success" href="{{ route('admin.storage.directories.create', ['parent' => $row->id, 'resource' => $row->storageresourceid]) }}">
-							<span class="icon-plus"></span><span class="sr-only">{{ trans('global.add') }}</span>
+							<span class="fa fa-plus" aria-hidden="true"></span><span class="sr-only">{{ trans('global.add') }}</span>
 						</a>
 						0
 					@endif

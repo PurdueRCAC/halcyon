@@ -74,7 +74,7 @@ else
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
@@ -376,7 +376,7 @@ else
 							<label for="copy-start">{{ trans('news::news.copy to') }}:</label>
 							<span class="input-group input-datetime">
 								<input type="text" class="form-control date" name="start" id="copy-start" value="{{ Carbon\Carbon::now()->modify('+1 day')->format('Y-m-d') }}" />
-								<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
+								<span class="input-group-append"><span class="input-group-text fa fa-calendar"></span></span>
 							</span>
 						</div>
 

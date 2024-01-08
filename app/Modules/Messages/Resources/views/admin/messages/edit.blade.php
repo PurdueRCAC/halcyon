@@ -76,7 +76,7 @@ app('pathway')
 					<label for="field-userid">{{ trans('messages::messages.user') }}:</label>
 					<span class="input-group">
 						<input type="text" name="fields[userid]" id="field-userid" class="form-control form-users" data-uri="{{ route('api.users.index') }}?search=%s" value="{{ ($row->user ? $row->user->name . ':' . $row->userid : '') }}" />
-						<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
+						<span class="input-group-append"><span class="input-group-text fa fa-user"></span></span>
 					</span>
 				</div>
 			</fieldset>
@@ -95,7 +95,7 @@ app('pathway')
 					<label for="field-datetimestarted">{{ trans('messages::messages.started') }}:</label>
 					<span class="input-group">
 						<input type="text" name="fields[datetimestarted]" id="field-datetimestarted" class="form-control date" value="{{ $row->started() ? $row->datetimestarted : '' }}" />
-						<span class="input-group-append"><span class="input-group-text"><span class="icon-calendar" aria-hidden="true"></span></span></span>
+						<span class="input-group-append"><span class="input-group-text"><span class="fa fa-calendar" aria-hidden="true"></span></span></span>
 					</span>
 				</div>
 
@@ -103,7 +103,7 @@ app('pathway')
 					<label for="field-datetimecompleted">{{ trans('messages::messages.completed') }}:</label>
 					<span class="input-group">
 						<input type="text" name="fields[datetimecompleted]" id="field-datetimecompleted" class="form-control date" value="{{ $row->completed() ? $row->datetimecompleted : '' }}" />
-						<span class="input-group-append"><span class="input-group-text"><span class="icon-calendar" aria-hidden="true"></span></span></span>
+						<span class="input-group-append"><span class="input-group-text"><span class="fa fa-calendar" aria-hidden="true"></span></span></span>
 					</span>
 				</div>
 			</fieldset>
@@ -112,7 +112,7 @@ app('pathway')
 					<label for="field-datetimesubmitted">{{ trans('messages::messages.submitted') }}:</label>
 					<span class="input-group">
 						<input type="text" name="fields[datetimesubmitted]" id="field-datetimesubmitted" class="form-control date" placeholder="{{ trans('messages::messages.now') }}" value="" />
-						<span class="input-group-append"><span class="input-group-text"><span class="icon-calendar" aria-hidden="true"></span></span></span>
+						<span class="input-group-append"><span class="input-group-text"><span class="fa fa-calendar" aria-hidden="true"></span></span></span>
 					</span>
 				</div>
 			</fieldset>

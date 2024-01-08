@@ -59,7 +59,7 @@ app('pathway')
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
@@ -133,7 +133,10 @@ app('pathway')
 				</td>
 				<td>
 					@if ($row->trashed())
-						<span class="glyph icon-trash text-danger">{{ trans('global.trashed') }}</span>
+						<span class="text-danger">
+							<span class="fa fa-trash" aria-hidden="true"></span>
+							<span class="sr-only">{{ trans('global.trashed') }}</span>
+						</span>
 					@endif
 					@if (auth()->user()->can('edit queues.qos'))
 						<a href="{{ route('admin.queues.qos.edit', ['id' => $row->id]) }}">

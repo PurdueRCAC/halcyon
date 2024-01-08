@@ -62,7 +62,7 @@
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" name="search" enterkeyhint="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
@@ -202,7 +202,10 @@
 				</td>
 				<td>
 					@if ($row->snippet)
-						<span class="icon-repeat" data-tip="{{ trans('knowledge::knowledge.snippet') }}"><span class="sr-only">{{ trans('knowledge::knowledge.snippet') }}</span></span>
+						<span data-tip="{{ trans('knowledge::knowledge.snippet') }}">
+							<span class="fa fa-repeat" aria-hidden="true"></span>
+							<span class="sr-only">{{ trans('knowledge::knowledge.snippet') }}</span>
+						</span>
 					@endif
 				</td>
 				<td class="priority-4">
@@ -271,8 +274,8 @@
 				<td class="priority-5 text-cente">
 					{!! str_repeat('<span class="gi">|&mdash;</span>', $row->level) !!}
 					<?php if (auth()->user()->can('edit knowledge')): ?>
-						<span class="glyph">{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, isset($ordering[$row->parent_id][$orderkey - 1]), route('admin.knowledge.orderup', ['id' => $row->id])) !!}</span>
-						<span class="glyph">{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), isset($ordering[$row->parent_id][$orderkey + 1]), route('admin.knowledge.orderdown', ['id' => $row->id])) !!}</span>
+						{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, isset($ordering[$row->parent_id][$orderkey - 1]), route('admin.knowledge.orderup', ['id' => $row->id])) !!}
+						{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), isset($ordering[$row->parent_id][$orderkey + 1]), route('admin.knowledge.orderdown', ['id' => $row->id])) !!}
 						<?php $originalOrders[] = $orderkey + 1; ?>
 					<?php else : ?>
 						<?php echo $orderkey + 1;?>
@@ -316,19 +319,19 @@
 					<div class="row text-center">
 						<div class="col-md-4">
 							<a href="{{ route('admin.knowledge.create') }}" class="form-group form-block text-center">
-								<span class="icon-edit fa fa-pencil" aria-hidden="true"></span>
+								<span class="fa fa-pencil" aria-hidden="true"></span>
 								{{ trans('knowledge::knowledge.new page') }}
 							</a>
 						</div>
 						<div class="col-md-4">
 							<a href="{{ route('admin.knowledge.select') }}" class="form-group form-block text-center">
-								<span class="icon-repeat fa fa-repeat" aria-hidden="true"></span>
+								<span class="fa fa-repeat" aria-hidden="true"></span>
 								{{ trans('knowledge::knowledge.snippet') }}
 							</a>
 						</div>
 						<div class="col-md-4">
 							<a href="{{ route('admin.knowledge.create', ['type' => 'separator']) }}" class="form-group form-block text-center">
-								<span class="icon-minus fa fa-minus" aria-hidden="true"></span>
+								<span class="fa fa-minus" aria-hidden="true"></span>
 								{{ trans('knowledge::knowledge.separator') }}
 							</a>
 						</div>

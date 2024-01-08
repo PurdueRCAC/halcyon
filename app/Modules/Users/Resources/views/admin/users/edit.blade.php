@@ -185,7 +185,8 @@ app('pathway')
 							<tr id="facet-{{ $facet->id }}">
 								<td>
 									@if ($facet->locked)
-										<span class="icon-lock glyph">{{ trans('users::users.locked') }}</span>
+										<span class="fa fa-lock" aria-hidden="true"></span>
+										<span class="sr-only">{{ trans('users::users.locked') }}</span>
 									@endif
 								</td>
 								<td><input type="text" name="facet[{{ $i }}][key]" class="form-control" value="{{ $facet->key }}" {{ $facet->locked ? ' readonly="readonly"' : '' }} /></td>
@@ -203,7 +204,8 @@ app('pathway')
 									<a href="#facet-{{ $facet->id }}" class="btn text-danger remove-facet"
 										data-api="{{ route('api.users.facets.delete', ['id' => $facet->id]) }}"
 										data-confirm="{{ trans('users::users.confirm delete') }}">
-										<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+										<span class="fa fa-trash" aria-hidden="true"></span>
+										<span class="sr-only">{{ trans('global.trash') }}</span>
 									</a>
 								</td>
 							</tr>
@@ -229,7 +231,8 @@ app('pathway')
 									<a href="#newfacet" class="btn btn-success add-facet"
 										data-userid="{{ $user->id }}"
 										data-api="{{ route('api.users.facets.create') }}">
-										<span class="icon-plus glyph">{{ trans('global.add') }}</span>
+										<span class="fa fa-plus" aria-hidden="true"></span>
+										<span class="sr-only">{{ trans('global.add') }}</span>
 									</a>
 								</td>
 							</tr>
@@ -253,7 +256,8 @@ app('pathway')
 								<a href="#facet-{id}" class="btn text-danger remove-facet"
 									data-api="{{ route('api.users.facets.create') }}/{id}"
 									data-confirm="{{ trans('users::users.confirm delete') }}">
-									<span class="icon-trash glyph">{{ trans('global.trash') }}</span>
+									<span class="fa fa-trash" aria-hidden="true"></span>
+									<span class="sr-only">{{ trans('global.trash') }}</span>
 								</a>
 							</td>
 						</tr>

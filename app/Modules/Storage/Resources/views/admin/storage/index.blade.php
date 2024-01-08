@@ -54,7 +54,7 @@ app('pathway')
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
@@ -136,8 +136,9 @@ app('pathway')
 						</td>
 						<td>
 							@if ($row->trashed())
-								<span class="glyph icon-trash text-danger" data-tip="{{ trans('global.trashed') }}: {{ $row->datetimeremoved->format('Y-m-d') }}">
-									{{ trans('global.trashed') }}: <time datetime="{{ $row->datetimeremoved->toDateTimeString() }}">{{ $row->datetimeremoved->format('Y-m-d') }}</time>
+								<span class="text-danger" data-tip="{{ trans('global.trashed') }}: {{ $row->datetimeremoved->format('Y-m-d') }}">
+									<span class="fa fa-trash" aria-hidden="true"></span>
+									<span class="sr-only">{{ trans('global.trashed') }}: <time datetime="{{ $row->datetimeremoved->toDateTimeString() }}">{{ $row->datetimeremoved->format('Y-m-d') }}</time></span>
 								</span>
 							@endif
 							@if (auth()->user()->can('edit storage'))
@@ -171,7 +172,7 @@ app('pathway')
 							@if ($row->parentresourceid)
 								@if ($row->resource)
 									@if ($row->resource->trashed())
-										<span class="icon-trash text-danger" aria-hidden="true"></span>
+										<span class="fa fa-trash text-danger" aria-hidden="true"></span>
 									@endif
 									<a href="{{ route('admin.resources.edit', ['id' => $row->parentresourceid]) }}">
 										{{ $row->resource->name }}
@@ -189,7 +190,7 @@ app('pathway')
 							@else
 								@if (!$row->trashed())
 									<a class="btn btn-sm btn-success" href="{{ route('admin.storage.directories.create', ['resource' => $row->id, 'parent' => 0]) }}">
-										<span class="icon-plus"></span><span class="sr-only">{{ trans('global.add') }}</span>
+										<span class="fa fa-plus" aria-hidden="true"></span><span class="sr-only">{{ trans('global.add') }}</span>
 									</a>
 								@endif
 								<span class="text-muted">0</span>

@@ -80,7 +80,7 @@ class User extends Field
 		if ($this->element['readonly'] != 'true')
 		{
 			$html[] = '<span class="input-group-append">';
-			$html[] = '		<a class="btn modal_' . $this->id . '" title="' . trans('users::users.change user') . '"' . ' href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 500}}"><span class="input-group-text icon-user"></span>' . trans('users::users.change user') . '</a>';
+			$html[] = '		<a class="btn modal_' . $this->id . '" title="' . trans('users::users.change user') . '"' . ' href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 500}}"><span class="input-group-text fa fa-user"></span>' . trans('users::users.change user') . '</a>';
 			$html[] = '</span>';
 			$html[] = '</span>';
 		}

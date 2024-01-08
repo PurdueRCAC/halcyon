@@ -59,7 +59,7 @@ app('pathway')
 					@else
 						<span class="input-group input-user">
 							<input type="text" name="fields[userid]" id="field-userid" class="form-control form-users" data-uri="{{ route('api.users.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" maxlength="250" value="" />
-							<span class="input-group-append"><span class="input-group-text icon-user"></span></span>
+							<span class="input-group-append"><span class="input-group-text fa fa-user"></span></span>
 						</span>
 					@endif
 				</div>

@@ -88,7 +88,7 @@ app('pathway')
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
@@ -267,28 +267,33 @@ app('pathway')
 						<td class="text-center">
 							@if ($row->trashed())
 								@if (auth()->user()->can('edit queues'))
-									<a class="glyph icon-trash text-danger" href="{{ route('admin.queues.restore', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.set state to', ['state' => trans('global.enabled')]) }}">
-										{{ trans('global.trashed') }}
+									<a class="text-danger" href="{{ route('admin.queues.restore', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.set state to', ['state' => trans('global.enabled')]) }}">
+										<span class="fa fa-trash" aria-hidden="true"></span>
+										<span class="sr-only">{{ trans('global.trashed') }}</span>
 									</a>
 								@else
-									<span class="glyph icon-trash text-danger" data-tip="{{ trans('global.trashed') }}: {{ $row->datetimeremoved->format('Y-m-d') }}">
-										{{ trans('global.trashed') }}: <time datetime="{{ $row->datetimeremoved->toDateTimeString() }}">{{ $row->datetimeremoved->format('Y-m-d') }}</time>
+									<span class="text-danger" data-tip="{{ trans('global.trashed') }}: {{ $row->datetimeremoved->format('Y-m-d') }}">
+										<span class="fa fa-trash" aria-hidden="true"></span>
+										<span class="sr-only">{{ trans('global.trashed') }}: <time datetime="{{ $row->datetimeremoved->toDateTimeString() }}">{{ $row->datetimeremoved->format('Y-m-d') }}</time></span>
 									</span>
 								@endif
 							@else
 								@if ($row->enabled && $row->started && $row->active)
 									@if ($row->reservation)
-										<a class="glyph icon-circle" href="{{ route('admin.queues.stop', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.queue has dedicated reservation') }}">
-											{{ trans('queues::queues.queue has dedicated reservation') }}
+										<a href="{{ route('admin.queues.stop', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.queue has dedicated reservation') }}">
+											<span class="fa fa-dot-circle-o" aria-hidden="true"></span>
+											<span class="sr-only">{{ trans('queues::queues.queue has dedicated reservation') }}</span>
 										</a>
 									@else
-										<a class="glyph icon-check-circle text-success" href="{{ route('admin.queues.stop', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.queue is running') }}">
-											{{ trans('queues::queues.queue is running') }}
+										<a class="text-success" href="{{ route('admin.queues.stop', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.queue is running') }}">
+											<span class="fa fa-check-circle" aria-hidden="true"></span>
+											<span class="sr-only">{{ trans('queues::queues.queue is running') }}</span>
 										</a>
 									@endif
 								@elseif ($row->active)
-									<a class="glyph icon-minus-circle text-danger" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.queue is stopped') }}">
-										{{ trans('queues::queues.queue is stopped') }}
+									<a class="text-danger" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.queue is stopped') }}">
+										<span class="fa fa-minus-circle" aria-hidden="true"></span>
+										<span class="sr-only">{{ trans('queues::queues.queue is stopped') }}</span>
 									</a>
 								@elseif (!$row->active)
 									@if ($row->free)
@@ -297,8 +302,9 @@ app('pathway')
 											<span class="sr-only">{{ trans('queues::queues.queue has dedicated reservation') }}</span>
 										</a>
 									@else
-										<a class="glyph icon-alert-triangle text-warning" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.queue has no active resources') }}">
-											{{ trans('queues::queues.queue has no active resources') }}
+										<a class="text-warning" href="{{ route('admin.queues.start', ['id' => $row->id]) }}" data-tip="{{ trans('queues::queues.queue has no active resources') }}">
+											<span class="fa fa-exclamation-triangle" aria-hidden="true"></span>
+											<span class="sr-only">{{ trans('queues::queues.queue has no active resources') }}</span>
 										</a>
 									@endif
 								@endif
@@ -315,9 +321,9 @@ app('pathway')
 						</td>
 						<td class="priority-6 text-center">
 							@if ($row->groupid <= 0)
-								<span class="icon-cpu" aria-hidden="true"></span> {{ trans('queues::queues.system') }}
+								<span class="fa fa-microchip" aria-hidden="true"></span> {{ trans('queues::queues.system') }}
 							@else
-								<span class="icon-user" aria-hidden="true"></span> {{ trans('queues::queues.owner') }}
+								<span class="fa fa-user" aria-hidden="true"></span> {{ trans('queues::queues.owner') }}
 							@endif
 						</td>
 						<td class="text-right">

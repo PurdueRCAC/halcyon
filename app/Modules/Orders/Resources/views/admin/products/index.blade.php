@@ -157,12 +157,14 @@ app('pathway')
 				</td>
 				<td>
 					@if ($row->trashed())
-						<span class="glyph icon-trash text-danger" aria-hidden="true" data-tip="{{ trans('global.trashed') }}">
+						<span class="text-danger" aria-hidden="true" data-tip="{{ trans('global.trashed') }}">
+							<span class="fa fa-trash" aria-hidden="true"></span>
 							<span class="sr-only">{{ trans('global.trashed') }}</span>
 						</span>
 					@endif
 					@if (!$row->public)
-						<span class="glyph icon-eye-off text-warning" aria-hidden="true" data-tip="{{ trans('orders::orders.hidden') }}">
+						<span class="text-warning" aria-hidden="true" data-tip="{{ trans('orders::orders.hidden') }}">
+							<span class="fa fa-eye-slash" aria-hidden="true"></span>
 							<span class="sr-only">{{ trans('orders::orders.hidden') }}</span>
 						</span>
 					@endif

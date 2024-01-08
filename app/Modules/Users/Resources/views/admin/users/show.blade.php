@@ -384,7 +384,8 @@ app('pathway')
 							<tr id="facet-{{ $facet->id }}">
 								<td>
 									@if ($facet->locked)
-										<span class="icon-lock glyph">{{ trans('users::users.locked') }}</span>
+										<span class="fa fa-lock" aria-hidden="true"></span>
+										<span class="sr-only">{{ trans('users::users.locked') }}</span>
 									@endif
 								</td>
 								<td><input type="text" name="facet[{{ $i }}][key]" id="facet-{{ $facet->id }}-key" class="form-control" value="{{ $facet->key }}" {{ $facet->locked ? ' readonly="readonly"' : '' }} /></td>
@@ -440,7 +441,8 @@ app('pathway')
 										data-success="Item added"
 										data-userid="{{ $user->id }}"
 										data-api="{{ route('api.users.facets.create') }}">
-										<span class="icon-plus glyph">{{ trans('global.add') }}</span>
+										<span class="fa fa-plus" aria-hidden="true"></span>
+										<span class="sr-only">{{ trans('global.add') }}</span>
 									</a>
 								</td>
 							</tr>

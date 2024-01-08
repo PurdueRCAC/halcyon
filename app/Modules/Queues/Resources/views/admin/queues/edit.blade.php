@@ -94,7 +94,7 @@ app('pathway')
 						<label for="field-groupid">{{ trans('queues::queues.group') }}</label>
 						<!-- <span class="input-group">
 							<input type="text" name="fields[groupid]" id="field-groupid" class="form-control form-groups" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&amp;search=%s" data-multiple="false" placeholder="{{ trans('queues::queues.search for group') }}" value="{{ ($row->group ? $row->group->name . ':' . $row->groupid : '') }}" />
-							<span class="input-group-append"><span class="input-group-text icon-users"></span></span>
+							<span class="input-group-append"><span class="input-group-text fa fa-users"></span></span>
 						</span> -->
 						<select name="fields[groupid]" id="field-groupid" class="form-control searchable-select">
 							<option	value="-1"<?php if ($row->groupid == '-1') { echo ' selected="selected"'; } ?>>{{ trans('global.none') . ' - ' . trans('queues::queues.system queues') }}</option>

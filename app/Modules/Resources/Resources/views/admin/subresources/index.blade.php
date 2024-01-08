@@ -60,7 +60,7 @@ app('pathway')
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 						<span class="input-group-append">
 							<button class="input-group-text" type="submit">
-								<span class="icon-search" aria-hidden="true"></span>
+								<span class="fa fa-search" aria-hidden="true"></span>
 								<span class="sr-only">{{ trans('search.submit') }}</span>
 							</button>
 						</span>
@@ -185,16 +185,19 @@ app('pathway')
 				</td>
 				<td class="priority-4">
 					@if ($row->queuestatus == 1)
-						<span class="glyph icon-check-circle text-success" data-tip="{{ trans('resources::resources.queue status.all queues running') }}">
-							{{ trans('resources::resources.queue status.all queues running') }}
+						<span class="text-success" data-tip="{{ trans('resources::resources.queue status.all queues running') }}">
+							<span class="fa fa-check-circle" aria-hidden="true"></span>
+							<span class="sr-only">{{ trans('resources::resources.queue status.all queues running') }}</span>
 						</span>
 					@elseif ($row->queuestatus == 0)
-						<span class="glyph icon-minus-circle text-danger tip" data-tip="{{ trans('resources::resources.queue status.all queues stopped') }}">
-							{{ trans('resources::resources.queue status.all queues stopped') }}
+						<span class="text-danger tip" data-tip="{{ trans('resources::resources.queue status.all queues stopped') }}">
+							<span class="fa fa-minus-circleh" aria-hidden="true"></span>
+							<span class="sr-only">{{ trans('resources::resources.queue status.all queues stopped') }}</span>
 						</span>
 					@else
-						<span class="glyph icon-alert-triangle text-warning tip" data-tip="{{ trans('resources::resources.queue status.stopped queues') }}">
-							{{ trans('resources::resources.queue status.stopped queues') }}
+						<span class="text-warning tip" data-tip="{{ trans('resources::resources.queue status.stopped queues') }}">
+							<span class="fa fa-exclamation-triangle" aria-hidden="true"></span>
+							<span class="sr-only">{{ trans('resources::resources.queue status.stopped queues') }}</span>
 						</span>
 					@endif
 				</td>

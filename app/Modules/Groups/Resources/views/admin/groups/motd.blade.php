@@ -19,7 +19,7 @@
 				<div class="form-group">
 					<button class="motd-set btn btn-success" data-group="{{ $group->id }}">{{ trans('groups::groups.set notice') }}</button>
 					@if ($group->motd)
-						<button class="motd-delete btn btn-danger" id="MotdText_delete_{{ $group->id }}" data-api="{{ route('api.groups.motd.delete', ['id' => $group->motd->id]) }}" data-group="{{ $group->id }}"><span class="icon-trash"></span> {{ trans('groups::groups.delete notice') }}</button>
+						<button class="motd-delete btn btn-danger" id="MotdText_delete_{{ $group->id }}" data-api="{{ route('api.groups.motd.delete', ['id' => $group->motd->id]) }}" data-group="{{ $group->id }}"><span class="fa fa-trash" aria-hidden="true"></span> {{ trans('groups::groups.delete notice') }}</button>
 					@endif
 				</div>
 			</fieldset>

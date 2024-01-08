@@ -59,7 +59,7 @@ app('pathway')
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" name="search" enterkeyhint="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
@@ -180,15 +180,15 @@ app('pathway')
 				</td>
 				<td class="priority-5 text-centr">
 					@if ($row->level > 1)
-					{!! str_repeat('<span class="gi">|&mdash;</span>', $row->level - 1) !!}
-					<?php $orderkey = array_search($row->id, $ordering[$row->parent_id]); ?>
-					<?php if (auth()->user()->can('edit knowledge')): ?>
-						<span class="glyph">{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, isset($ordering[$row->parent_id][$orderkey - 1]), route('admin.knowledge.snippets.orderup', ['id' => $row->id])) !!}</span>
-						<span class="glyph">{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), isset($ordering[$row->parent_id][$orderkey + 1]), route('admin.knowledge.snippets.orderdown', ['id' => $row->id])) !!}</span>
-						<?php $originalOrders[] = $orderkey + 1; ?>
-					<?php else : ?>
-						<?php echo $orderkey + 1;?>
-					<?php endif; ?>
+						{!! str_repeat('<span class="gi">|&mdash;</span>', $row->level - 1) !!}
+						<?php $orderkey = array_search($row->id, $ordering[$row->parent_id]); ?>
+						<?php if (auth()->user()->can('edit knowledge')): ?>
+							{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, isset($ordering[$row->parent_id][$orderkey - 1]), route('admin.knowledge.snippets.orderup', ['id' => $row->id])) !!}
+							{!! Html::grid('orderDown', (($rows->currentPage() - 1) * $rows->perPage()), $i, $rows->total(), isset($ordering[$row->parent_id][$orderkey + 1]), route('admin.knowledge.snippets.orderdown', ['id' => $row->id])) !!}
+							<?php $originalOrders[] = $orderkey + 1; ?>
+						<?php else : ?>
+							<?php echo $orderkey + 1; ?>
+						<?php endif; ?>
 					@endif
 				</td>
 				<td class="priority-2 text-right">

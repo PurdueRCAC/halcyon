@@ -315,7 +315,7 @@ app('pathway')
 					<div class="stat-block">
 						<div class="text-danger">
 							<strong class="float-right">{{ config('orders.currency', '$') }} {{ $stats['uncharged'] }}</strong>
-							<span class="icon-alert-triangle display-4 float-left" aria-hidden="true"></span>
+							<span class="fa fa-exclamation-triangle display-4 float-left" aria-hidden="true"></span>
 							<span class="value">{{ number_format($stats['canceled']) }}</span><br />
 							<span class="key">{{ trans('orders::orders.canceled') }}</span>
 						</div>

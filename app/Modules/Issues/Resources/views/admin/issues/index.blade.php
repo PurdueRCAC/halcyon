@@ -126,7 +126,7 @@ app('pathway')
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+						<span class="input-group-append"><span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span></span>
 					</span>
 				</div>
 			</div>
@@ -152,14 +152,14 @@ app('pathway')
 				<label class="sr-only" for="filter_start">{{ trans('issues::issues.start') }}</label>
 				<span class="input-group">
 					<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" size="10" value="{{ $filters['start'] }}" placeholder="{{ trans('issues::issues.start') }}" />
-					<span class="input-group-append"><span class="input-group-text"><span class="icon-calendar" aria-hidden="true"></span></span>
+					<span class="input-group-append"><span class="input-group-text"><span class="fa fa-calendar" aria-hidden="true"></span></span>
 				</span>
 			</div>
 			<div class="col col-md-3">
 				<label class="sr-only" for="filter_stop">{{ trans('issues::issues.stop') }}</label>
 				<span class="input-group">
 					<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" size="10" value="{{ $filters['stop'] }}" placeholder="{{ trans('issues::issues.stop') }}" />
-					<span class="input-group-append"><span class="input-group-text"><span class="icon-calendar" aria-hidden="true"></span></span></span>
+					<span class="input-group-append"><span class="input-group-text"><span class="fa fa-calendar" aria-hidden="true"></span></span></span>
 				</span>
 			</div>
 		</div>

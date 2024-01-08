@@ -57,7 +57,7 @@ app('pathway')
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
@@ -108,7 +108,7 @@ app('pathway')
 				<th colspan="4">
 					<span class="input-group input-group-sm">
 						<input type="text" name="search" id="filter_search" class="form-control form-control-sm filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+						<span class="input-group-append"><span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span></span>
 					</span>
 				</th>
 				<th>
@@ -234,7 +234,10 @@ app('pathway')
 				</td>
 				<td>
 					@if ($trashed)
-						<!-- <span class="glyph icon-trash text-danger" aria-hidden="true" data-tip="Removed on {{ $row->datetimeremoved->format('Y-m-d') }}"></span> -->
+						<!-- <span class="text-danger" data-tip="Removed on {{ $row->datetimeremoved->format('Y-m-d') }}">
+							<span class="fa fa-trash" aria-hidden="true"></span>
+							<span class="sr-only">Removed on {{ $row->datetimeremoved->format('Y-m-d') }}</span>
+						</span> -->
 						<span class="badge badge-danger" data-tip="Removed on {{ $row->datetimeremoved->format('Y-m-d') }}">{{ trans('resources::assets.retired') }}</span>
 					@else
 						<span class="badge badge-success">{{ trans('global.active') }}</span>

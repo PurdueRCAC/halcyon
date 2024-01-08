@@ -173,13 +173,13 @@ app('pathway')
 					<div class="col col-md-6">
 						<div class="form-group">
 							<?php echo $form->getLabel('access'); ?>
-							<span class="input-group input-access"><?php echo $form->getInput('access'); ?><span class="input-group-append"><span class="input-group-text icon-lock"></span></span></span>
+							<span class="input-group input-access"><?php echo $form->getInput('access'); ?><span class="input-group-append"><span class="input-group-text fa fa-lock"></span></span></span>
 						</div>
 					</div>
 					<div class="col col-md-6">
 						<div class="form-group">
 							<?php echo $form->getLabel('published'); ?>
-							<span class="input-group input-state"><?php echo $form->getInput('published'); ?><span class="input-group-append"><span class="input-group-text icon-check"></span></span></span>
+							<span class="input-group input-state"><?php echo $form->getInput('published'); ?><span class="input-group-append"><span class="input-group-text fa fa-check"></span></span></span>
 						</div>
 					</div>
 				</div>

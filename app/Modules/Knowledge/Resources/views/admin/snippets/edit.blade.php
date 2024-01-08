@@ -146,7 +146,7 @@ app('pathway')
 					<label for="field-publish_down">{{ trans('knowledge::knowledge.publish down') }}</label>
 					<span class="input-group input-datetime">
 						<input type="text" name="fields[publish_down]" id="field-publish_down" class="form-control datetime" value="<?php echo ($row->publish_down ? e(Carbon\Carbon::parse($row->publish_down)->toDateTimeString()) : ''); ?>" placeholder="<?php echo ($row->publish_down ? '' : trans('global.never')); ?>" />
-						<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
+						<span class="input-group-append"><span class="input-group-text fa fa-calendar"></span></span>
 					</span>
 				</div>
 				-->

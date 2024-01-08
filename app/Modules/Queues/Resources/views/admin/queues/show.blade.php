@@ -107,9 +107,9 @@ endif;
 							<th scope="row">{{ trans('queues::queues.class') }}</th>
 							<td>
 								@if ($row->groupid <= 0)
-									<span class="icon-cpu" aria-hidden="true"></span> {{ trans('queues::queues.system') }}
+									<span class="fa fa-microchip" aria-hidden="true"></span> {{ trans('queues::queues.system') }}
 								@else
-									<span class="icon-user" aria-hidden="true"></span> {{ trans('queues::queues.owner') }}
+									<span class="fa fa-user" aria-hidden="true"></span> {{ trans('queues::queues.owner') }}
 								@endif
 							</td>
 						</tr>
@@ -325,8 +325,8 @@ endif;
 		<div class="card">
 			<div class="card-header">
 				<div class="float-right">
-					<a href="#dialog-sell" id="node-sell" data-toggle="modal" data-target="#dialog-sell" class="btn btn-secondary dialog-btn icon-dollar-sign">{{ trans('queues::queues.sell') }}</a>
-					<a href="#dialog-loan" id="node-loan" data-toggle="modal" data-target="#dialog-loan" class="btn btn-secondary dialog-btn icon-shuffle">{{ trans('queues::queues.loan') }}</a>
+					<a href="#dialog-sell" id="node-sell" data-toggle="modal" data-target="#dialog-sell" class="btn btn-secondary dialog-btn"><span class="fa fa-usd" aria-hidden="true"></span> {{ trans('queues::queues.sell') }}</a>
+					<a href="#dialog-loan" id="node-loan" data-toggle="modal" data-target="#dialog-loan" class="btn btn-secondary dialog-btn"><span class="fa fa-random" aria-hidden="true"></span> {{ trans('queues::queues.loan') }}</a>
 				</div>
 				<h3 class="card-title">Allocations</h3>
 			</div>
@@ -522,7 +522,7 @@ endif;
 									data-id="{{ $item->id }}"
 									data-toggle="modal"
 									data-target="#dialog-edit{{ $item->id }}">
-									<span class="icon-edit" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
+									<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
 								</a>
 							</td>
 							<td>
@@ -532,7 +532,7 @@ endif;
 									data-success="{{ trans('global.messages.item deleted', ['count' => 1]) }}"
 									data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes'). '.delete', ['id' => $item->id]) }}"
 									data-id="{{ $item->id }}">
-									<span class="icon-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }}</span>
+									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }}</span>
 								</button>
 								@endif
 
@@ -734,7 +734,7 @@ endif;
 										<label for="sell-datetimestart">{{ trans('queues::queues.start') }}</label>
 										<span class="input-group input-datetime">
 											<input type="text" class="form-control datetime" id="sell-datetimestart" name="datetimestart" value="{{ Carbon\Carbon::now()->toDateTimeString() }}" />
-											<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
+											<span class="input-group-append"><span class="input-group-text fa fa-calendar"></span></span>
 										</span>
 									</div>
 								</div>
@@ -743,7 +743,7 @@ endif;
 										<label for="sell-datetimestop">{{ trans('queues::queues.end') }}</label>
 										<span class="input-group input-datetime">
 											<input type="text" class="form-control datetime" id="sell-datetimestop" name="datetimestop" placeholder="{{ trans('queues::queues.end of life') }}" value="" />
-											<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
+											<span class="input-group-append"><span class="input-group-text fa fa-calendar"></span></span>
 										</span>
 									</div>
 								</div>
@@ -923,7 +923,7 @@ endif;
 										<label for="loan-datetimestart">{{ trans('queues::queues.start') }}</label>
 										<span class="input-group input-datetime">
 											<input type="text" name="datetimestart" class="form-control datetime" id="loan-datetimestart" value="{{ Carbon\Carbon::now()->toDateTimeString() }}" />
-											<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
+											<span class="input-group-append"><span class="input-group-text fa fa-calendar"></span></span>
 										</span>
 									</div>
 								</div>
@@ -932,7 +932,7 @@ endif;
 										<label for="loan-datetimestop">{{ trans('queues::queues.end') }}</label>
 										<span class="input-group input-datetime">
 											<input type="text" name="datetimestop" class="form-control datetime" id="loan-datetimestop" value="" placeholder="{{ trans('global.never') }}" />
-											<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
+											<span class="input-group-append"><span class="input-group-text fa fa-calendar"></span></span>
 										</span>
 									</div>
 								</div>

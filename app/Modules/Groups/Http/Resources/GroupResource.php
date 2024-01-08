@@ -29,7 +29,7 @@ class GroupResource extends JsonResource
 
 		if ($request->has('search'))
 		{
-			$data['search'] = $request->input('search');
+			$data['search'] = $request->input('search') . '*';
 		}
 		if ($request->has('searchuser'))
 		{

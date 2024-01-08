@@ -135,7 +135,7 @@ app('pathway')
 	<div class="card">
 		<div class="card-body">
 			<a href="{{ route('admin.orders.index', ['status' => 'canceled', 'start' => $start->format('Y-m-d')]) }}" class="stat-block text-danger">
-				<span class="icon-alert-triangle display-4 float-left" aria-hidden="true"></span>
+				<span class="fa fa-exclamation-triangle display-4 float-left" aria-hidden="true"></span>
 				<span class="value">{{ number_format($stats['canceled']) }}</span><br />
 				<span class="key">{{ trans('orders::orders.canceled') }}</span>
 			</a>
@@ -198,7 +198,7 @@ app('pathway')
 					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="icon-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>

@@ -126,7 +126,7 @@ app('pathway')
 					<label for="field-publish_down">{{ trans('pages::pages.publish down') }}:</label>
 					<span class="input-group input-datetime">
 						<input type="text" name="fields[publish_down]" id="field-publish_down" class="form-control datetime" value="<?php echo ($row->publish_down ? e(Carbon\Carbon::parse($row->publish_down)->toDateTimeString()) : ''); ?>" placeholder="<?php echo ($row->publish_down ? '' : trans('global.never')); ?>" />
-						<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
+						<span class="input-group-append"><span class="input-group-text fa fa-calendar"></span></span>
 					</span>
 				</div>
 			</fieldset>
@@ -210,7 +210,10 @@ app('pathway')
 										<label class="sr-only" for="params-styles-{{ $i }}">{{ trans('pages::pages.styles') }}:</label>
 										<input type="text" class="form-control" name="params[styles][{{ $i }}]" id="params-styles-{{ $i }}" value="{{ $style }}" />
 										<div class="input-group-append">
-											<a href="#params-styles-{{ $i }}-row" class="btn btn-danger delete-row" id="params-styles-{{ $i }}-btn" data-id="params-styles-{{ $i }}"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
+											<a href="#params-styles-{{ $i }}-row" class="btn btn-danger delete-row" id="params-styles-{{ $i }}-btn" data-id="params-styles-{{ $i }}">
+												<span class="fa fa-trash" aria-hidden="true"></span>
+												<span class="sr-only">{{ trans('global.delete') }}</span>
+											</a>
 										</div>
 									</div>
 									@php
@@ -222,12 +225,18 @@ app('pathway')
 									<label class="sr-only" for="params-styles-{{ $i }}">{{ trans('pages::pages.styles') }}:</label>
 									<input type="text" class="form-control" name="params[styles][{{ $i }}]" id="params-styles-{{ $i }}" value="" />
 									<div class="input-group-append">
-										<a href="#params-styles-{{ $i }}" class="btn btn-danger delete-row disabled" id="params-styles-{{ $i }}-btn" data-id="params-styles-{{ $i }}"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
+										<a href="#params-styles-{{ $i }}" class="btn btn-danger delete-row disabled" id="params-styles-{{ $i }}-btn" data-id="params-styles-{{ $i }}">
+											<span class="fa fa-trash" aria-hidden="true"></span>
+											<span class="sr-only">{{ trans('global.delete') }}</span>
+										</a>
 									</div>
 								</div>
 
 								<div class="text-right">
-									<button data-type="style" data-container="param-styles" class="add-row btn btn-success param-style-new"><span class="glyph icon-plus">{{ trans('global.add') }}</span></button>
+									<button data-type="style" data-container="param-styles" class="add-row btn btn-success param-style-new">
+										<span class="fa fa-plus" aria-hidden="true"></span>
+										<span class="sr-only">{{ trans('global.add') }}</span>
+									</button>
 								</div>
 							</div>
 						</fieldset>
@@ -244,7 +253,10 @@ app('pathway')
 										<label class="sr-only" for="params-scripts-{{ $i }}">{{ trans('pages::pages.scripts') }}:</label>
 										<input type="text" class="form-control" name="params[scripts][{{ $i }}]" id="params-scripts-{{ $i }}" value="{{ $script }}" />
 										<div class="input-group-append">
-											<a href="#params-scripts-{{ $i }}-row" class="btn btn-danger delete-row" id="params-scripts-{{ $i }}-btn" data-id="params-scripts-{{ $i }}"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
+											<a href="#params-scripts-{{ $i }}-row" class="btn btn-danger delete-row" id="params-scripts-{{ $i }}-btn" data-id="params-scripts-{{ $i }}">
+												<span class="fa fa-trash" aria-hidden="true"></span>
+												<span class="sr-only">{{ trans('global.delete') }}</span>
+											</a>
 										</div>
 									</div>
 									@php
@@ -255,12 +267,18 @@ app('pathway')
 									<label class="sr-only" for="params-scripts-{{ $i }}">{{ trans('pages::pages.scripts') }}:</label>
 									<input type="text" class="form-control" name="params[scripts][{{ $i }}]" id="params-scripts-{{ $i }}" value="" />
 									<div class="input-group-append">
-										<a href="#params-scripts-{{ $i }}-row" class="btn btn-danger delete-row disabled" id="params-scripts-{{ $i }}-btn" data-id="params-scripts-{{ $i }}"><span class="glyph icon-trash">{{ trans('global.delete') }}</span></a>
+										<a href="#params-scripts-{{ $i }}-row" class="btn btn-danger delete-row disabled" id="params-scripts-{{ $i }}-btn" data-id="params-scripts-{{ $i }}">
+											<span class="fa fa-trash" aria-hidden="true"></span>
+											<span class="sr-only">{{ trans('global.delete') }}</span>
+										</a>
 									</div>
 								</div>
 
 								<div class="text-right">
-									<button data-type="script" data-container="param-scripts" class="add-row btn btn-success param-script-new"><span class="glyph icon-plus">{{ trans('global.add') }}</span></button>
+									<button data-type="script" data-container="param-scripts" class="add-row btn btn-success param-script-new">
+										<span class="fa fa-plus" aria-hidden="true"></span>
+										<span class="sr-only">{{ trans('global.add') }}</span>
+									</button>
 								</div>
 							</div>
 						</fieldset>

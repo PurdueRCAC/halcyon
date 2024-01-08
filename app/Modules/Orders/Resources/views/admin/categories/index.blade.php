@@ -56,7 +56,7 @@ app('pathway')
 				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
 				<span class="input-group">
 					<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-					<span class="input-group-append"><span class="input-group-text"><span class="icon-search" aria-hidden="true"></span></span></span>
+					<span class="input-group-append"><span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span></span>
 				</span>
 			</div>
 			<div class="col col-md-9 filter-select text-right">
@@ -119,7 +119,7 @@ app('pathway')
 				</td>
 				<td>
 					@if ($trashed)
-						<span class="glyph icon-trash text-muted" aria-hidden="true"></span>
+						<span class="fa fa-trash text-muted" aria-hidden="true"></span>
 					@endif
 					@if (auth()->user()->can('edit orders.categories'))
 						<a href="{{ route('admin.orders.categories.edit', ['id' => $row->id]) }}">
@@ -137,7 +137,9 @@ app('pathway')
 						<!-- <span class="drag-handle" draggable="true">
 							<svg class="MiniIcon DragMiniIcon DragHandle-icon" viewBox="0 0 24 24"><path d="M10,4c0,1.1-0.9,2-2,2S6,5.1,6,4s0.9-2,2-2S10,2.9,10,4z M16,2c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,2,16,2z M8,10 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,10,8,10z M16,10c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,10,16,10z M8,18 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,18,8,18z M16,18c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,18,16,18z"></path></svg>
 						</span>
-						<span class="drag-handle" draggable="true"><span class="glyph icon-more-vertical"></span></span>-->
+						<span class="drag-handle" draggable="true">
+							<span class="fa fa-ellipsis-v" aria-hidden="true"></span><span class="sr-only">Move</span>
+						</span>-->
 					@if (auth()->user()->can('edit orders') && $filters['order'] == 'sequence')
 						@if ($filters['order_dir'] == 'asc')
 							<span class="ordering-control">{!! Html::grid('orderUp', (($rows->currentPage() - 1) * $rows->perPage()), $i, (@$positions[$i-1] == $row->parentordercategoryid), route('admin.orders.categories.orderup', ['id' => $row->id])) !!}</span>

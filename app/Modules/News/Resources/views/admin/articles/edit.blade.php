@@ -185,7 +185,7 @@ app('pathway')
 					<label for="field-datetimenews">{{ trans('news::news.publish up') }}:</label>
 					<span class="input-group input-datetime">
 						<input type="text" class="form-control datetime" name="fields[datetimenews]" id="field-datetimenews" value="{{ $row->hasStart() ? $row->datetimenews->toDateTimeString() : '' }}" placeholder="{{ trans('news::news.now') }}" />
-						<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
+						<span class="input-group-append"><span class="input-group-text fa fa-calendar"></span></span>
 					</span>
 				</div>
 
@@ -193,7 +193,7 @@ app('pathway')
 					<label for="field-datetimenewsend">{{ trans('news::news.publish down') }}:</label>
 					<span class="input-group input-datetime">
 						<input type="text" class="form-control datetime" name="fields[datetimenewsend]" id="field-datetimenewsend" value="{{ $row->hasEnd() ? $row->datetimenewsend->toDateTimeString() : '' }}" placeholder="{{ trans('news::news.never') }}" />
-						<span class="input-group-append"><span class="input-group-text icon-calendar"></span></span>
+						<span class="input-group-append"><span class="input-group-text fa fa-calendar"></span></span>
 					</span>
 				</div>
 			</fieldset>

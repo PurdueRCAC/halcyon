@@ -18,7 +18,7 @@ app('pathway')
 	);
 
 	if (auth()->user()->can('create media')):
-		Toolbar::append('Custom', '<a class="btn toolbar-btn media-upload" data-title="' . trans('media::media.upload') . '" href="#media-upload" data-api="' . route('api.media.upload') . '"><span class="icon-upload">' . trans('media::media.upload') . '</span></a>', 'upload');
+		Toolbar::append('Custom', '<a class="btn toolbar-btn media-upload" data-title="' . trans('media::media.upload') . '" href="#media-upload" data-api="' . route('api.media.upload') . '"><span class="fa fa-upload">' . trans('media::media.upload') . '</span></a>', 'upload');
 		Toolbar::append('Custom', '<a class="btn toolbar-btn" data-title="' . trans('media::media.create folder') . '" href="' . route('admin.media.folder.create') . '" data-api="' . route('api.media.folder.create') . '" data-prompt="' . trans('media::media.folder name') . '"><span class="icon-folder-plus">' . trans('media::media.create folder') . '</span></a>', 'folder-new');
 	endif;
 	if (auth()->user()->can('admin media')):
