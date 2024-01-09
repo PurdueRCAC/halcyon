@@ -20,6 +20,7 @@ use App\Modules\News\Notifications\ArticleCreated;
 use App\Modules\News\Notifications\ArticleUpdated;
 use App\Modules\History\Models\Log;
 use App\Halcyon\Utility\PorterStemmer;
+use Nwidart\Modules\Facades\Module;
 use Carbon\Carbon;
 
 /**
@@ -377,7 +378,7 @@ class ArticlesController extends Controller
 			});
 		}
 
-		if ($filters['resource'])
+		if ($filters['resource'] && Module::isEnabled('resources'))
 		{
 			$filters['resource'] = explode(',', $filters['resource']);
 			$filters['resource'] = array_map('trim', $filters['resource']);

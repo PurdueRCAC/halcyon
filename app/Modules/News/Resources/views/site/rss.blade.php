@@ -93,7 +93,7 @@ app('pathway')
 		?>
 	</ul>
 
-	@if (class_exists('App\Modules\Resources\Models\Asset'))
+	@if (\Nwidart\Modules\Facades\Module::isEnabled('resources'))
 		<h3>{{ trans('news::news.resource feeds') }}</h3>
 		<ul class="rsscontainer">
 			<?php

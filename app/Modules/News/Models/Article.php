@@ -25,6 +25,7 @@ use App\Modules\News\Formatters\NewsStory;
 use App\Modules\News\Formatters\ReplaceVariables;
 use App\Modules\Resources\Models\Asset;
 use App\Modules\News\Traits\HasPreformattedText;
+use Nwidart\Modules\Facades\Module;
 use Carbon\Carbon;
 
 /**
@@ -1175,9 +1176,12 @@ class Article extends Model
 		{
 			$vars['resources'] = array();
 		}
-		foreach ($this->resourceList()->get() as $resource)
+		if (Module::isEnabled('resources'))
 		{
-			$vars['resources'][] = $resource->name;
+			foreach ($this->resourceList()->get() as $resource)
+			{
+				$vars['resources'][] = $resource->name;
+			}
 		}
 
 		if (count($vars['resources']) > 1)

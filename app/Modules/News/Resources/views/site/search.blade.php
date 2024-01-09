@@ -174,6 +174,7 @@ app('pathway')
 						<input type="text" v-model="keywords" v-on:keyup="read" name="keyword" id="keywords" size="45" class="form-control" value="{{ $filters['keyword'] }}" />
 					</div>
 				</div>
+			@if (\Nwidart\Modules\Facades\Module::isEnabled('resources'))
 				<div class="form-group row tab-search tab-add tab-edit" id="TR_resource">
 					<label for="newsresource" class="col-sm-2 col-form-label">{{ trans('news::news.resources') }}</label>
 					<div class="col-sm-10">
@@ -227,6 +228,7 @@ app('pathway')
 						</select>
 					</div>
 				</div>
+			@endif
 				<div class="form-group row tab-search tab-add tab-edit" id="TR_location">
 					<label for="location" class="col-sm-2 col-form-label">{{ trans('news::news.location') }}</label>
 					<div class="col-sm-10">

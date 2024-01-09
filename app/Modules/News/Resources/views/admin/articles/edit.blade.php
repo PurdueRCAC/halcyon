@@ -33,7 +33,8 @@ app('pathway')
 
 	{!!
 		Toolbar::spacer();
-		Toolbar::cancel(route('admin.news.' . ($row->template ? 'templates' : 'index')));
+		//Toolbar::cancel(route('admin.news.' . ($row->template ? 'templates' : 'index')));
+		Toolbar::link('cancel', trans('global.toolbar.cancel'), route('admin.news.' . ($row->template ? 'templates' : 'index')), false);
 	!!}
 
 	{!! Toolbar::render() !!}
@@ -120,6 +121,7 @@ app('pathway')
 					<input type="text" name="fields[url]" id="field-url" class="form-control" value="{{ $row->url }}" />
 				</div>
 
+			@if (\Nwidart\Modules\Facades\Module::isEnabled('resources'))
 				<div class="form-group type-option type-tagresources <?php if (!$row->type->tagresources) { echo ' d-none'; } ?>">
 					<?php
 					$r = array();
@@ -148,6 +150,7 @@ app('pathway')
 						?>
 					</select>
 				</div>
+			@endif
 
 				<div class="form-group type-option type-tagusers <?php if (!$row->type->tagusers) { echo ' d-none'; } ?>">
 					<?php
@@ -165,7 +168,7 @@ app('pathway')
 					<label for="field-body">{{ trans('news::news.body') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<span class="form-text text-muted">{!! trans('news::news.body formatting') !!} <button class="btn btn-link preview float-right" data-target="#preview-modal" data-toggle="modal" data-id="{{ $row->id }}" data-api="{{ route('api.news.preview') }}">Preview</button></span>
 					{!! markdown_editor('fields[body]', $row->body, ['id' => 'field-body', 'rows' => 35, 'class' => ($errors->has('fields.body') ? 'is-invalid' : 'required'), 'required' => 'required']) !!}
-					<span class="invalid-feedback">{{ trans('queues::queues.error.invalid body') }}</span>
+					<span class="invalid-feedback">{{ trans('news::news.error.invalid body') }}</span>
 				</div>
 			</fieldset>
 		</div>

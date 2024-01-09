@@ -169,6 +169,7 @@ app('pathway')
 								<input type="text" name="keyword" id="keywords" size="45" class="form-control" value="{{ request('keywords') }}" />
 							</div>
 						</div>
+					@if (\Nwidart\Modules\Facades\Module::isEnabled('resources'))
 						<div class="form-group row tab-search tab-add tab-edit" id="TR_resource">
 							<label for="newsresource" class="col-sm-2 col-form-label">{{ trans('news::news.resources') }}</label>
 							<div class="col-sm-10">
@@ -225,6 +226,7 @@ app('pathway')
 								</select>
 							</div>
 						</div>
+					@endif
 						<div class="form-group row tab-add tab-edit" id="TR_user">
 							<label for="newsuser" class="col-sm-2 col-form-label">User</label>
 							<div class="col-sm-10">
