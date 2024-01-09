@@ -360,7 +360,7 @@ jQuery(document).ready(function () {
 			href += '/' + trail[i];
 			fld += '/' + trail[i];
 
-			crumbs += '<span class="icon-chevron-right dir-separator">/</span>';
+			crumbs += '<span class="fa fa-chevron-right dir-separator">/</span>';
 			crumbs += '<a href="' + href + '" data-folder="' + fld + '" class="media-breadcrumbs folder has-next-button" id="path_' + trail[i] + '">' + trail[i] + '</a>';
 		}
 

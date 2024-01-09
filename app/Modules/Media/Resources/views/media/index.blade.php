@@ -18,8 +18,8 @@ app('pathway')
 	);
 
 	if (auth()->user()->can('create media')):
-		Toolbar::append('Custom', '<a class="btn toolbar-btn media-upload" data-title="' . trans('media::media.upload') . '" href="#media-upload" data-api="' . route('api.media.upload') . '"><span class="fa fa-upload">' . trans('media::media.upload') . '</span></a>', 'upload');
-		Toolbar::append('Custom', '<a class="btn toolbar-btn" data-title="' . trans('media::media.create folder') . '" href="' . route('admin.media.folder.create') . '" data-api="' . route('api.media.folder.create') . '" data-prompt="' . trans('media::media.folder name') . '"><span class="icon-folder-plus">' . trans('media::media.create folder') . '</span></a>', 'folder-new');
+		Toolbar::append('Custom', '<a class="btn toolbar-btn media-upload" data-title="' . trans('media::media.upload') . '" href="#media-upload" data-api="' . route('api.media.upload') . '"><span class="fa fa-upload" aria-hidden="true"></span> ' . trans('media::media.upload') . '</a>', 'upload');
+		Toolbar::append('Custom', '<a class="btn toolbar-btn" data-title="' . trans('media::media.create folder') . '" href="' . route('admin.media.folder.create') . '" data-api="' . route('api.media.folder.create') . '" data-prompt="' . trans('media::media.folder name') . '"><span class="fa fa-folder" aria-hidden="true"></span> ' . trans('media::media.create folder') . '</a>', 'folder-new');
 	endif;
 	if (auth()->user()->can('admin media')):
 		Toolbar::spacer();
@@ -60,7 +60,7 @@ app('pathway')
 							foreach ($trail as $crumb):
 								$fld .= '/' . $crumb;
 								?>
-								<span class="icon-chevron-right dir-separator">/</span>
+								<span class="fa fa-chevron-right dir-separator">/</span>
 								<a href="{{ route('admin.media.medialist', ['folder' => $fld]) }}"
 									data-folder="{{ $fld }}"
 									class="media-breadcrumbs folder has-next-button"
@@ -76,7 +76,7 @@ app('pathway')
 							data-view="thumbs"
 							data-tip="{{ trans('media::media.thumbnail view') }}"
 							title="{{ trans('media::media.thumbnail view') }}">
-							<span class="icon-grid"></span>
+							<span class="fa fa-table" aria-hidden="true"></span>
 							{{ trans('media::media.thumbnail view') }}
 						</a>
 						<a class="media-files-view hasTip listing-view <?php if ($layout == 'list') { echo 'active'; } ?>"
@@ -84,7 +84,7 @@ app('pathway')
 							data-view="list"
 							data-tip="{{ trans('media::media.detail view') }}"
 							title="{{ trans('media::media.detail view') }}">
-							<span class="icon-list"></span>
+							<span class="fa fa-list" aria-hidden="true"></span>
 							{{ trans('media::media.detail view') }}
 						</a>
 					</div>

@@ -28,14 +28,23 @@ $path = ltrim($file->getRelativePath(), '/');
 				<div class="media-options">
 					<ul>
 						<li>
-							<a class="icon-info media-opt-info" href="#fileinfo-{{ $file->getId() }}">{{ trans('media::media.file info') }}</a>
+							<a class="media-opt-info" href="#fileinfo-{{ $file->getId() }}">
+								<span class="fa fa-fw fa-info" aria-hidden="true"></span>
+								{{ trans('media::media.file info') }}
+							</a>
 						</li>
 						@if (auth()->user()->can('edit media'))
 							<li>
-								<a class="icon-edit media-opt-rename" href="{{ route('admin.media.medialist', ['folder' => '/' . $path]) }}" data-api="{{ route('api.media.rename') }}" data-path="{{ dirname($path) }}" data-name="{{ basename($path) }}" data-prompt="{{ trans('media::media.new name') }}">{{ trans('media::media.rename') }}</a>
+								<a class="media-opt-rename" href="{{ route('admin.media.medialist', ['folder' => '/' . $path]) }}" data-api="{{ route('api.media.rename') }}" data-path="{{ dirname($path) }}" data-name="{{ basename($path) }}" data-prompt="{{ trans('media::media.new name') }}">
+									<span class="fa fa-fw fa-pencil" aria-hidden="true"></span>
+									{{ trans('media::media.rename') }}
+								</a>
 							</li>
 							<li>
-								<a class="icon-move media-opt-move" href="{{ route('admin.media.medialist', ['folder' => '/' . $path]) }}" data-api="{{ route('api.media.move') }}" data-path="{{ dirname($path) }}" data-name="{{ basename($path) }}" data-prompt="{{ trans('media::media.move prompt') }}">{{ trans('media::media.move') }}</a>
+								<a class="media-opt-move" href="{{ route('admin.media.medialist', ['folder' => '/' . $path]) }}" data-api="{{ route('api.media.move') }}" data-path="{{ dirname($path) }}" data-name="{{ basename($path) }}" data-prompt="{{ trans('media::media.move prompt') }}">
+									<span class="fa fa-fw fa-arrows" aria-hidden="true"></span>
+									{{ trans('media::media.move') }}
+								</a>
 							</li>
 						@endif
 						@if (auth()->user()->can('delete media'))
@@ -43,7 +52,10 @@ $path = ltrim($file->getRelativePath(), '/');
 								<span class="separator"></span>
 							</li>
 							<li>
-								<a class="icon-trash media-opt-delete" href="{{ route('admin.media.delete', ['file' => $path]) }}" data-api="{{ route('api.media.delete', ['items[0][path]' => $path, 'items[0][type]' => 'dir']) }}">{{ trans('global.button.delete') }}</a>
+								<a class="media-opt-delete" href="{{ route('admin.media.delete', ['file' => $path]) }}" data-api="{{ route('api.media.delete', ['items[0][path]' => $path, 'items[0][type]' => 'dir']) }}">
+									<span class="fa fa-fw fa-trash" aria-hidden="true"></span>
+									{{ trans('global.button.delete') }}
+								</a>
 							</li>
 						@endif
 					</ul>

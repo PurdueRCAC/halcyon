@@ -172,7 +172,7 @@
 									</div>
 									<div class="modal-footer text-right">
 										<button id="new_dir" class="btn btn-success" data-resource="{{ $row->storageResource->parentresourceid }}" data-api="{{ route('api.storage.directories.create') }}">
-											<span id="new_dir_img" class="icon-plus"></span> Create directory
+											<span id="new_dir_img" class="fa fa-plus" aria-hidden="true"></span> Create directory
 										</button>
 									</div>
 								</form>
@@ -239,7 +239,7 @@
 											</div>
 											<div class="row mb-3">
 												<div class="col-md-4">
-													Actual quota <span class="icon-warning" data-tip="Storage space is over-allocated. Quotas reduced until allocation balanced."><span class="sr-only">Storage space is over-allocated. Quotas reduced until allocation balanced.</span></span>
+													Actual quota <span class="fa fa-exclamation-triangle" data-tip="Storage space is over-allocated. Quotas reduced until allocation balanced."><span class="sr-only">Storage space is over-allocated. Quotas reduced until allocation balanced.</span></span>
 												</div>
 												<div class="col-md-8">
 													{{ $dir->formattedBytes }}
@@ -1357,8 +1357,8 @@
 							<p class="alert alert-warning">You must create unix groups first.</p>
 						@elseif (!$purchases && !$loans)
 							<p>
-								<a href="#dialog-sell" data-toggle="modal" id="space-sell" class="btn btn-sm btn-secondary dialog-btn icon-dollar-sign">{{ trans('storage::storage.sell space') }}</a>
-								<a href="#dialog-loan" data-toggle="modal" id="space-loan" class="btn btn-sm btn-secondary dialog-btn icon-shuffle">{{ trans('storage::storage.loan space') }}</a>
+								<a href="#dialog-sell" data-toggle="modal" id="space-sell" class="btn btn-sm btn-secondary dialog-btn"><span class="fa fa-usd" aria-hidden="true"></span> {{ trans('storage::storage.sell space') }}</a>
+								<a href="#dialog-loan" data-toggle="modal" id="space-loan" class="btn btn-sm btn-secondary dialog-btn"><span class="fa fa-random" aria-hidden="true"></span> {{ trans('storage::storage.loan space') }}</a>
 							</p>
 
 							<div class="modal modal-help text-left" id="dialog-sell" tabindex="-1" aria-labelledby="dialog-sell-title" aria-hidden="true">

@@ -106,7 +106,7 @@ app('pathway')
 						?>
 						<li>
 							<strong>{{ trans('orders::orders.filters.' . $key) }}</strong>: {{ $val }}
-							<a href="{{ route('site.orders.recurring', $f) }}" class="icon-remove filters-x" title="{{ trans('orders::orders.remove filter') }}">
+							<a href="{{ route('site.orders.recurring', $f) }}" class="filters-x" title="{{ trans('orders::orders.remove filter') }}">
 								<span class="fa fa-times" aria-hidden="true"><span class="sr-only">{{ trans('orders::orders.remove filter') }}</span>
 							</a>
 						</li>

@@ -137,7 +137,7 @@ app('pathway')
 							?>
 							<li class="mb-3">
 								<strong>{{ trans('software::software.' . $key) }}</strong>: {{ $val }}
-								<a href="{{ route('site.software.index', $f) }}" class="icon-remove filters-x" title="{{ trans('software::software.remove filter') }}">
+								<a href="{{ route('site.software.index', $f) }}" class="filters-x" title="{{ trans('software::software.remove filter') }}">
 									<span class="fa fa-times" aria-hidden="true"><span class="sr-only">{{ trans('software::software.remove filter') }}</span>
 								</a>
 							</li>

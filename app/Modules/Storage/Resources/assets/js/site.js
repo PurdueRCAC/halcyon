@@ -203,7 +203,7 @@ function NewDir(btn) {
 			error.classList.remove('hide');
 			error.innerHTML = "Please select a unix group.";
 			//img.src = "/include/images/error.png";
-			img.className = 'icon-warning';
+			img.className = 'fa fa-exclamation-triangle';
 			return;
 		}
 	}
@@ -212,7 +212,7 @@ function NewDir(btn) {
 		error.classList.remove('hide');
 		error.innerHTML = "Please select a unix group.";
 
-		img.className = 'icon-warning';
+		img.className = 'fa fa-exclamation-triangle';
 		return;
 	}
 
@@ -230,7 +230,7 @@ function NewDir(btn) {
 			error.classList.remove('hide');
 			error.innerHTML = "Please select a user.";
 
-			img.className = 'icon-warning';
+			img.className = 'fa fa-exclamation-triangle';
 			return;
 		}
 	}

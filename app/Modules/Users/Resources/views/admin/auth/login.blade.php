@@ -22,14 +22,14 @@
 			<div class="form-group has-feedback {{ $errors->has('email') ? ' has-error' : '' }}">
 				<label for="login-email">{{ trans('users::auth.email') }}</label>
 				<input type="email" class="form-control" autofocus name="email" id="login-email" value="{{ old('email')}}">
-				<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+				<span class="form-control-feedback"></span>
 				{!! $errors->first('email', '<span class="help-block">:message</span>') !!}
 			</div>
 
 			<div class="form-group has-feedback {{ $errors->has('password') ? ' has-error' : '' }}">
 				<label for="login-password">{{ trans('users::auth.password') }}</label>
 				<input type="password" class="form-control" name="password" id="login-password" value="{{ old('password')}}">
-				<span class="glyphicon glyphicon-lock form-control-feedback"></span>
+				<span class="form-control-feedback"></span>
 				{!! $errors->first('password', '<span class="help-block">:message</span>') !!}
 			</div>
 

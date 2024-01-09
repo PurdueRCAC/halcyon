@@ -3,7 +3,7 @@
 				<div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
 					<label for="login-username">{{ trans('users::auth.username or email') }}</label>
 					<input type="username" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" autofocus name="username" id="login-username" value="{{ old('username')}}">
-					<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+					<span class="form-control-feedback"></span>
 					{!! $errors->first('username', '<span class="help-block">:message</span>') !!}
 				</div>
 
@@ -11,7 +11,7 @@
 					<a class="float-right" href="{{ route('password.forgot') }}">{{ trans('users::auth.forgot password') }}</a>
 					<label for="login-password">{{ trans('users::auth.password') }}</label>
 					<input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" autocomplete="off" name="password" id="login-password" value="{{ old('password')}}">
-					<span class="glyphicon glyphicon-lock form-control-feedback"></span>
+					<span class="form-control-feedback"></span>
 					{!! $errors->first('password', '<span class="help-block">:message</span>') !!}
 				</div>
 				

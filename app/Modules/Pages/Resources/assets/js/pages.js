@@ -37,10 +37,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	document.querySelector('body').addEventListener('click', function (e) {
-		if (e.target.matches('.delete-row') || e.target.matches('.icon-trash')) {
+		if (e.target.matches('.delete-row') || e.target.matches('.fa-trash')) {
 			e.preventDefault();
 			var el = e.target;
-			if (e.target.matches('.icon-trash')) {
+			if (e.target.matches('.fa-trash')) {
 				el = e.target.parentNode;
 			}
 			document.querySelector(el.getAttribute('href')).remove();

@@ -162,7 +162,7 @@ app('pathway')
 					?>
 					<li>
 						<strong>{{ trans('publications::publications.' . $key) }}</strong>: {{ $val }}
-						<a href="{{ route('site.publications.index', $f) }}" class="icon-remove filters-x" title="{{ trans('publications::publications.remove filter') }}">
+						<a href="{{ route('site.publications.index', $f) }}" class="filters-x" title="{{ trans('publications::publications.remove filter') }}">
 							<span class="fa fa-times" aria-hidden="true"><span class="sr-only">{{ trans('publications::publications.remove filter') }}</span>
 						</a>
 					</li>
