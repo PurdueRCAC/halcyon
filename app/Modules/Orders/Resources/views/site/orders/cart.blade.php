@@ -68,9 +68,18 @@
 							</tr>
 						</thead>
 						<tbody>
-						@foreach ($rows as $i => $item)
-							<?php
-							$product = App\Modules\Orders\Models\Product::find($item->id);
+						<?php
+						foreach ($rows as $i => $item):
+							$product = App\Modules\Orders\Models\Product::query()
+								->withTrashed()
+								->where('id', '=', $item->id)
+								->first();
+							if (!$product || $product->trashed()):
+								$cart->remove($item->rowId);
+								if (!$product):
+									continue;
+								endif;
+							endif;
 							$products[] = $product;
 							?>
 							<tr class="cart-item <?php if (!$product->public) { echo 'orderproductitemprivate'; } ?>" id="{{ $product->id }}_product">
@@ -95,33 +104,39 @@
 										@endif
 									@endif
 								</td>
-								<td class="orderproductitem text-right text-nowrap">
-									$&nbsp;{{ $product->price }}<br /> per {{ $product->unit }}
-									<input type="hidden" id="{{ $product->id }}_price" value="{{ $product->unitprice }}" />
-									<input type="hidden" id="{{ $product->id }}_category" value="{{ $product->ordercategoryid }}" />
-								</td>
-								<td class="orderproductitem text-center">
-									<input type="number" name="quantity[{{ $product->id }}][]" id="{{ $product->id }}_quantity" data-id="{{ $product->id }}" size="4" min="1" max="999" class="form-control quantity-input" value="{{ $item->qty }}" />
-								</td>
-								<td class="orderproductitem text-right text-nowrap">
-									@if (auth()->user() && auth()->user()->can('manage orders'))
-										<span class="form-inline">
-											<span class="input-group">
-												<span class="input-group-prepend"><span class="input-group-text">$</span></span>
-												<input type="text" name="subtotal[{{ $product->id }}][]" id="{{ $product->id }}_linetotal" size="10" class="form-control total-input text-right" value="{{ $item->total() }}" />
+								@if ($product->trashed())
+									<td colspan="3" class="orderproductitem">
+										<div class="alert alert-warning">Product is no longer available.</div>
+									</td>
+								@else
+									<td class="orderproductitem text-right text-nowrap">
+										$&nbsp;{{ $product->price }}<br /> per {{ $product->unit }}
+										<input type="hidden" id="{{ $product->id }}_price" value="{{ $product->unitprice }}" />
+										<input type="hidden" id="{{ $product->id }}_category" value="{{ $product->ordercategoryid }}" />
+									</td>
+									<td class="orderproductitem text-center">
+										<input type="number" name="quantity[{{ $product->id }}][]" id="{{ $product->id }}_quantity" data-id="{{ $product->id }}" size="4" min="1" max="999" class="form-control quantity-input" value="{{ $item->qty }}" />
+									</td>
+									<td class="orderproductitem text-right text-nowrap">
+										@if (auth()->user() && auth()->user()->can('manage orders'))
+											<span class="form-inline">
+												<span class="input-group">
+													<span class="input-group-prepend"><span class="input-group-text">$</span></span>
+													<input type="text" name="subtotal[{{ $product->id }}][]" id="{{ $product->id }}_linetotal" size="10" class="form-control total-input text-right" value="{{ $item->total() }}" />
+												</span>
 											</span>
-										</span>
-									@else
-										$&nbsp;<span id="{{ $product->id }}_linetotal">{{ $item->total }}</span>
-									@endif
-								</td>
+										@else
+											$&nbsp;<span id="{{ $product->id }}_linetotal">{{ $item->total }}</span>
+										@endif
+									</td>
+								@endif
 								<td class="text-nowrap">
 									<a href="{{ route('site.orders.products.delete', ['id' => $product->id]) }}" class="btn btn-sm btn-cart-remove text-danger" data-item="#{{ $product->id }}_product" data-api="{{ route('api.orders.cart.delete', ['id' => $item->rowId]) }}" title="{{ trans('orders::orders.remove from cart') }}">
 										&times;<span class="sr-only">{{ trans('orders::orders.remove from cart') }}</span>
 									</a>
 								</td>
 							</tr>
-						@endforeach
+						<?php endforeach; ?>
 						</tbody>
 						<tfoot>
 							<tr>

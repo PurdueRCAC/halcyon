@@ -99,20 +99,32 @@ app('pathway')
 
 					if (count($items)):
 						foreach ($items as $item):
-							$product = App\Modules\Orders\Models\Product::find($item->id);
-							if (!$product):
-								continue;
+							$product = App\Modules\Orders\Models\Product::query()
+								->withTrashed()
+								->where('id', '=', $item->id)
+								->first();
+							if (!$product || $product->trashed()):
+								$cart->remove($item->rowId);
+								if (!$product):
+									continue;
+								endif;
 							endif;
 							?>
 							<li class="list-group-item cart-item">
 								<div class="cart-item row">
 									<div class="col-md-12">{{ $product->name }}</div>
+								@if ($product->trashed())
+									<div class="col-md-12">
+										<div class="alert alert-warning">Product is no longer available.</div>
+									</div>
+								@else
 									<div class="col-md-7">
 										<span class="text-muted text-sm">{{ $item->qty }} &times; $&nbsp;{{ $product->price }}</span>
 									</div>
 									<div class="col-md-5 text-right text-nowrap">
 										$&nbsp;{{ number_format($item->total, 2) }}
 									</div>
+								@endif
 								</div>
 							</li>
 							<?php
