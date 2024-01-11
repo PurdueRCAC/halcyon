@@ -365,7 +365,7 @@ endif;
 								$item->total = $total;
 								continue;
 							endif;
-
+							$valueDirection = $item->sellerqueueid == $row->id || $item->corecount < 0 ? -1 : 1;
 							/*if (($item->sellerqueueid == $row->id && $item->corecount > 0)
 							|| ($item->corecount < 0 && $item->type == 0)
 							|| ($item->corecount < 0 && $item->type == 1))
@@ -381,7 +381,7 @@ endif;
 								$total += $item->serviceunits;
 							elseif ($unit == 'gpus'):
 								$nodes = ($nodecores ? round($item->corecount / $nodecores, 1) : 0);
-								$total += ($item->serviceunits > 0 ? $item->serviceunits : ceil($nodes * $nodegpus));
+								$total += ($item->serviceunits > 0 ? $item->serviceunits * $valueDirection : ceil($nodes * $nodegpus));
 							else:
 								$total += $item->corecount; //$nodecores ? round($item->corecount / $nodecores, 1) : 0;
 							endif;
