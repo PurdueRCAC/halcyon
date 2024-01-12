@@ -20,6 +20,11 @@ class Gallery extends Widget
 
 		//$folders = MediaHelper::getTree($base);
 		$folder = $this->params->get('folder');
+
+		if (!is_dir(storage_path() . '/app/public' . $folder))
+		{
+			return null;
+		}
 		$children = MediaHelper::getChildren(storage_path() . '/app/public' . $folder, '');
 
 		$files = array_filter($children['files'], function ($v)
