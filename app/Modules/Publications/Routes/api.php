@@ -57,7 +57,7 @@ $router->group(['prefix' => 'publications', 'middleware' => 'auth:api'], functio
 		]);
 	});
 
-	$router->group(['prefix' => 'authors', 'middleware' => ['can:manage publications']], function (Router $router)
+	/*$router->group(['prefix' => 'authors', 'middleware' => ['can:manage publications']], function (Router $router)
 	{
 		$router->get('/', [
 			'as'   => 'api.publications.authors',
@@ -79,5 +79,5 @@ $router->group(['prefix' => 'publications', 'middleware' => 'auth:api'], functio
 			'as' => 'api.publications.authors.delete',
 			'uses' => 'AuthorsController@delete',
 		])->where('id', '[0-9]+');
-	});
+	});*/
 });

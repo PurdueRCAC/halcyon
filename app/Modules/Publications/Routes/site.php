@@ -39,7 +39,7 @@ $router->group(['prefix' => 'publications'], function (Router $router)
 		'middleware' => ['auth', 'can:delete publications'],
 	]);
 
-	$router->group(['prefix' => 'authors'], function (Router $router)
+	/*$router->group(['prefix' => 'authors'], function (Router $router)
 	{
 		$router->match(['get', 'post'], '/restore/{id?}', [
 			'as'   => 'site.publications.authors.restore',
@@ -82,5 +82,5 @@ $router->group(['prefix' => 'publications'], function (Router $router)
 			'as' => 'site.publications.authors.cancel',
 			'uses' => 'AuthorsController@cancel',
 		]);
-	});
+	});*/
 });
