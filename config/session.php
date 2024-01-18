@@ -96,6 +96,8 @@ return [
     | list a cache store that should be used for these sessions. This value
     | must match with one of the application's configured cache "stores".
     |
+    | Affects: "apc", "dynamodb", "memcached", "redis"
+    |
     */
 
     'store' => env('SESSION_STORE'),
@@ -195,5 +197,18 @@ return [
     */
 
     'same_site' => 'lax',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Partitioned Cookies
+    |--------------------------------------------------------------------------
+    |
+    | Setting this value to true will tie the cookie to the top-level site for
+    | a cross-site context. Partitioned cookies are accepted by the browser
+    | when flagged "secure" and the Same-Site attribute is set to "none".
+    |
+    */
+
+    'partitioned' => false,
 
 ];

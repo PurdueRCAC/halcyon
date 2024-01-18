@@ -37,7 +37,6 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            //\App\Modules\Listeners\Http\Middleware\RegisterListeners::class,
             \App\Modules\Users\Http\Middleware\LastActivity::class,
             \App\Modules\Menus\Http\Middleware\SetActiveMenu::class,
             \App\Http\Middleware\HandleInertiaRequests::class
@@ -45,9 +44,8 @@ class Kernel extends HttpKernel
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            'throttle:api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            //\App\Modules\Listeners\Http\Middleware\RegisterListeners::class,
             \App\Modules\Core\Http\Middleware\ApiDocs::class,
         ],
     ];
@@ -70,6 +68,7 @@ class Kernel extends HttpKernel
         'can' => \App\Halcyon\Access\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         //'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+        //'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         //'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
