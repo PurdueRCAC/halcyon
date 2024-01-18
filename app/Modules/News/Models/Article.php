@@ -406,7 +406,7 @@ class Article extends Model
 	 */
 	public function isModified(): bool
 	{
-		return !is_null($this->datetimeedited);
+		return ($this->datetimeedited && $this->datetimeedited != $this->datetimecreated);
 	}
 
 	/**

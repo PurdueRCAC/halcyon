@@ -43,7 +43,11 @@ class ArticleResource extends JsonResource
 			$data['updates'][] = new UpdateResource($update);
 		}
 
-		$data['resources'] = $this->resourceList()->get();
+		$data['resources'] = array();
+		if (\Nwidart\Modules\Facades\Module::isEnabled('resources'))
+		{
+			$data['resources'] = $this->resourceList()->get();
+		}
 
 		$data['associations'] = $this->associations->each(function ($res, $key)
 		{

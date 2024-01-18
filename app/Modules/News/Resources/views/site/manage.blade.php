@@ -608,6 +608,8 @@ app('pathway')
 			$data->stoptime = $stoptime;
 			$data->resources = array();
 			$data->vars = $news->getContentVars();
+			if (\Nwidart\Modules\Facades\Module::isEnabled('resources'))
+			{
 			foreach ($news->resources as $r)
 			{
 				//$r->resourcename = $r->resource->name;
@@ -617,6 +619,7 @@ app('pathway')
 					'newsid' => $r->newsid,
 					'resourcename' => $r->resource->name
 				);
+			}
 			}
 			$data->associations = array();
 			foreach ($news->associations as $association)

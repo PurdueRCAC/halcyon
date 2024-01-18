@@ -126,14 +126,16 @@ app('pathway')
 				<li><span class="fa fa-fw fa-folder" aria-hidden="true"></span> {{ $article->type->name }}</li>
 			@endif
 			<?php
-			$resources = $article->resourceList()->get();
-			if (count($resources) > 0):
-				$resourceArray = array();
-				foreach ($resources as $resource):
-					$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->name)]) . '">' . e($resource->name) . '</a>';
-				endforeach;
+			if (\Nwidart\Modules\Facades\Module::isEnabled('resources')):
+				$resources = $article->resourceList()->get();
+				if (count($resources) > 0):
+					$resourceArray = array();
+					foreach ($resources as $resource):
+						$resourceArray[] = '<a href="' . route('site.news.type', ['name' => strtolower($resource->name)]) . '">' . e($resource->name) . '</a>';
+					endforeach;
 
-				echo '<li><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray) . '</li>';
+					echo '<li><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray) . '</li>';
+				endif;
 			endif;
 
 			if (auth()->user()
