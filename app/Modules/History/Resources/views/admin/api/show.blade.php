@@ -13,8 +13,8 @@ app('pathway')
 		route('admin.history.index')
 	)
 	->append(
-		trans('history::history.activity'),
-		route('admin.history.activity')
+		trans('history::history.api'),
+		route('admin.history.api')
 	)
 	->append(
 		'#' . $row->id
@@ -31,11 +31,11 @@ app('pathway')
 @stop
 
 @section('title')
-{{ trans('history::history.history manager') }}: {{ trans('history::history.activity') }}: {{ trans('history::history.view') }}: #{{ $row->id }}
+{{ trans('history::history.history manager') }}: {{ trans('history::history.api') }}: {{ trans('history::history.view') }}: #{{ $row->id }}
 @stop
 
 @section('content')
-<form action="{{ route('admin.history.activity') }}" method="post" name="adminForm" id="item-form" class="editform">
+<form action="{{ route('admin.history.api') }}" method="post" name="adminForm" id="item-form" class="editform">
 	<div class="row">
 		<div class="col-md-6">
 			<fieldset class="adminform">
@@ -76,6 +76,12 @@ app('pathway')
 					<input type="text" name="fields[userid]" id="field-userid" class="form-control" disabled="disabled" readonly="readonly" value="{{ $row->user ? $row->user->name : trans('global.unknown') }}" />
 				</div>
 
+				<?php
+				if (preg_match('/api_token=([a-zA-Z0-9]+)/', $row->uri, $matches))
+				{
+					$row->uri = str_replace($matches[1], '<TOKEN>', $row->uri);
+				}
+				?>
 				<div class="form-group">
 					<label for="field-uri">{{ trans('history::history.uri') }}</label>
 					<span class="input-group">

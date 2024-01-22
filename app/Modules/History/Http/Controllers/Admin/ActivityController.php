@@ -96,6 +96,7 @@ class ActivityController extends Controller
 
 		$apps = Log::query()
 			->select(DB::raw('DISTINCT(app)'))
+			->where('app', '!=', 'api')
 			->get();
 
 		return view('history::admin.activity.index', [

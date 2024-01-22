@@ -69,4 +69,28 @@ $router->group(['prefix' => 'history'], function (Router $router)
 			'uses' => 'NotificationsController@cancel',
 		]);
 	});
+
+	$router->group(['prefix' => 'api', 'middleware' => 'can:admin'], function (Router $router)
+	{
+		$router->match(['get', 'post'], '/', [
+			'as' => 'admin.history.api',
+			'uses' => 'ApiController@index',
+		]);
+		$router->get('stats', [
+			'as' => 'admin.history.api.stats',
+			'uses' => 'ApiController@stats',
+		]);
+		$router->get('{id}', [
+			'as' => 'admin.history.api.show',
+			'uses' => 'ApiController@show',
+		])->where('id', '[0-9]+');
+		/*$router->match(['get', 'post'], '/delete/{id?}', [
+			'as'   => 'admin.history.notifications.delete',
+			'uses' => 'NotificationsController@delete',
+		]);
+		$router->match(['get', 'post'], 'cancel', [
+			'as' => 'admin.history.notifications.cancel',
+			'uses' => 'NotificationsController@cancel',
+		]);*/
+	});
 });
