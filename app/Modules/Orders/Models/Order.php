@@ -27,6 +27,8 @@ use Carbon\Carbon;
  * @property string $usernotes
  * @property string $staffnotes
  * @property int    $notice
+ *
+ * @property float $ordertotal
  */
 class Order extends Model
 {

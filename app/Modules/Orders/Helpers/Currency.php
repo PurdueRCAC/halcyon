@@ -10,7 +10,7 @@ class Currency
 	/**
 	 * Get the formatted number.
 	 *
-	 * @param   int  $value
+	 * @param   int|string  $value
 	 * @return  string
 	 */
 	public static function formatNumber($value): string

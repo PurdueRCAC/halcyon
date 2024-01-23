@@ -29,6 +29,8 @@ use Carbon\Carbon;
  * @property Carbon|string|null $datetimecreated
  * @property Carbon|string|null $datetimeremoved
  * @property Carbon|string|null $datetimefulfilled
+ *
+ * @property string $api
  */
 class Item extends Model
 {

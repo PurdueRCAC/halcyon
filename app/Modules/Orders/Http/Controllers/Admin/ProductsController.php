@@ -3,7 +3,7 @@
 namespace App\Modules\Orders\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -190,7 +190,7 @@ class ProductsController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -238,7 +238,7 @@ class ProductsController extends Controller
 	 * 
 	 * @param   int  $id
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function reorder($id, Request $request)
 	{
@@ -259,7 +259,7 @@ class ProductsController extends Controller
 	 * Method to save the submitted ordering values for records.
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function saveorder(Request $request)
 	{
@@ -293,7 +293,7 @@ class ProductsController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -329,7 +329,7 @@ class ProductsController extends Controller
 	/**
 	 * Return to default page
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{

@@ -31,6 +31,8 @@ use Carbon\Carbon;
  * @property int    $notice
  * @property string $purchaseio
  * @property string $purchasewbse
+ *
+ * @property string $api
  */
 class Account extends Model
 {

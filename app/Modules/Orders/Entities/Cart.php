@@ -38,9 +38,9 @@ class Cart
 	private $events;
 
 	/**
-	 * Holds the current cart instance.
+	 * Current cart instance identifier.
 	 *
-	 * @var Cart
+	 * @var string
 	 */
 	private $instance;
 
@@ -523,18 +523,13 @@ class Cart
 	 * @param mixed     $name
 	 * @param int|float $qty
 	 * @param float     $price
-	 * @param array     $options
+	 * @param array<string,mixed>     $options
 	 * @return CartItem
 	 */
 	private function createCartItem($id, $name, $qty, $price, array $options): CartItem
 	{
-		if ($id instanceof Buyable)
-		{
-			$cartItem = CartItem::fromBuyable($id, $qty ?: []);
-			$cartItem->setQuantity($name ?: 1);
-			$cartItem->associate($id);
-		}
-		elseif (is_array($id))
+
+		if (is_array($id))
 		{
 			$cartItem = CartItem::fromArray($id);
 			$cartItem->setQuantity($id['qty']);
@@ -595,7 +590,7 @@ class Cart
 	 *
 	 * @return string
 	 */
-	private function getTableName()
+	private function getTableName(): string
 	{
 		return 'ordercarts';
 	}
@@ -616,12 +611,12 @@ class Cart
 	 * Get the Formated number
 	 *
 	 * @param mixed $value
-	 * @param string $decimals
-	 * @param string $decimalPoint
-	 * @param string $thousandSeperator
+	 * @param string|null $decimals
+	 * @param string|null $decimalPoint
+	 * @param string|null $thousandSeperator
 	 * @return string
 	 */
-	private function numberFormat($value, $decimals, $decimalPoint, $thousandSeperator)
+	private function numberFormat($value, $decimals = null, $decimalPoint = null, $thousandSeperator = null)
 	{
 		if (is_null($decimals))
 		{

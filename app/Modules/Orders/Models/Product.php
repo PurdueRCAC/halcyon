@@ -32,6 +32,8 @@ use Carbon\Carbon;
  * @property string $terms
  * @property int    $restricteddata
  * @property int    $resourceid
+ *
+ * @property string $api
  */
 class Product extends Model
 {

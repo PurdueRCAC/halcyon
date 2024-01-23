@@ -3,7 +3,7 @@
 namespace App\Modules\Orders\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use App\Modules\Orders\Models\Category;
@@ -139,7 +139,7 @@ class CategoriesController extends Controller
 	 * Store a newly created resource in storage.
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -188,7 +188,7 @@ class CategoriesController extends Controller
 	 * 
 	 * @param   int  $id
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function reorder($id, Request $request)
 	{
@@ -209,7 +209,7 @@ class CategoriesController extends Controller
 	 * Method to save the submitted ordering values for records.
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function saveorder(Request $request)
 	{
@@ -243,7 +243,7 @@ class CategoriesController extends Controller
 	 * Remove the specified entry
 	 *
 	 * @param   Request  $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -276,7 +276,7 @@ class CategoriesController extends Controller
 	/**
 	 * Return to the main view
 	 *
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function cancel()
 	{
