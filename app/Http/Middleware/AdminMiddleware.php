@@ -6,6 +6,7 @@ use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Session\Store;
 use Illuminate\Contracts\Auth\Factory as Auth;
+use phpCAS;
 
 class AdminMiddleware
 {
@@ -62,7 +63,7 @@ class AdminMiddleware
 				if ($seg != 'login'
 				 && $seg != 'logout')
 				{
-					$cas->setFixedServiceURL($request->url());
+					phpCAS::setFixedServiceURL($request->url());
 				}
 
 				if (!$cas->checkAuthentication())

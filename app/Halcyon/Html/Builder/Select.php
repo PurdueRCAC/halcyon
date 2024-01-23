@@ -742,7 +742,7 @@ class Select
 
 		if (empty($neworder))
 		{
-			$items = DB::select(DB::raw($query));
+			$items = DB::select($query);
 
 			if (empty($items))
 			{

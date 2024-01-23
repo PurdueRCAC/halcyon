@@ -54,7 +54,7 @@ class HttpLogger
 		$log->ip = $request->ip();
 		// Handle some localhost cases
 		$log->ip = $log->ip == '::1' ? '127.0.0.1' : $log->ip;
-		if ($log->transportmethod == 'GET' && ($app == 'ui' || $app == 'admin'))
+		if ($log->transportmethod == 'GET' && $app == 'ui')
 		{
 			// Collect some diagnostic info
 			$headers = $request->headers->all();
@@ -68,7 +68,6 @@ class HttpLogger
 				unset($headers['cookie']);
 			}
 			$log->payload = json_encode($headers);
-			$log->uri = '/' . $request->path();
 		}
 		else
 		{
@@ -81,8 +80,9 @@ class HttpLogger
 				}
 			}
 			$log->payload = json_encode($all);
-			$log->uri = str_replace($request->root(), '', $request->fullUrl());
 		}
+		$uri = str_replace($request->root(), '', $request->fullUrl());
+		$log->uri = $uri ? $uri : '/';
 		$log->payload = $log->payload ?: '';
 		if ($request->has('groupid'))
 		{

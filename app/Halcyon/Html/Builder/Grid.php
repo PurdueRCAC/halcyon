@@ -3,7 +3,6 @@
 namespace App\Halcyon\Html\Builder;
 
 use Carbon\Carbon;
-use App\Halcyon\Traits\Checkable;
 
 /**
  * Utility class for creating HTML Grids
@@ -123,7 +122,7 @@ class Grid
 		$userid = auth()->user()->id;
 
 		$result = false;
-		if ($row instanceof Checkable)
+		if (method_exists($row, 'isCheckedOut'))
 		{
 			$result = $row->isCheckedOut($userid);
 		}
@@ -292,7 +291,7 @@ class Grid
 
 		if ($tooltip && isset($row->checked_out_time))
 		{
-			$text = $row->editor;
+			$text = isset($row->editor) ? $row->editor : trans('global.unknown');
 
 			$dt = Carbon::parse($row->checked_out_time);
 			$date = $dt->format('l, d F Y');

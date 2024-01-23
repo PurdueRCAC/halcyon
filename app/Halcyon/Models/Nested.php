@@ -176,7 +176,7 @@ class Nested extends Model
 			return false;
 		}
 
-		foreach ($this->descendants as $descendant)
+		foreach ($this->descendants()->get() as $descendant)
 		{
 			$descendant->delete();
 
