@@ -19,7 +19,7 @@ use Carbon\Carbon;
 class PublicationsController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * Display a listing
 	 * 
 	 * @param  StatefulRequest $request
 	 * @return View
@@ -32,6 +32,7 @@ class PublicationsController extends Controller
 			'state'    => 'published',
 			'type'     => null,
 			'year'     => null,
+			'tag'      => null,
 			// Paging
 			'limit'    => config('list_limit', 20),
 			'page'     => 1,
@@ -105,6 +106,11 @@ class PublicationsController extends Controller
 					break;
 				}
 			}
+		}
+
+		if ($filters['tag'])
+		{
+			$query->withTag($filters['tag']);
 		}
 
 		$rows = $query
@@ -225,6 +231,7 @@ class PublicationsController extends Controller
 			'note' => 'nullable|string|max:2000',
 			'state' => 'nullable|integer',
 			'published_at' => 'nullable|datetime',
+			'tags' => 'nullable|array',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -254,6 +261,16 @@ class PublicationsController extends Controller
 		if (!$row->save())
 		{
 			return redirect()->back()->withError(trans('global.messages.save failed'));
+		}
+
+		if ($request->has('tags'))
+		{
+			$tags = $request->input('tags', []);
+			$tags = explode(',', $tags);
+			$tags = array_map('trim', $tags);
+			$tags = array_filter($tags);
+
+			$row->setTags($tags);
 		}
 
 		if ($request->has('file'))

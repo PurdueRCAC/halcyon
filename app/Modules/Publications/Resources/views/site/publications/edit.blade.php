@@ -246,6 +246,11 @@ app('pathway')
 					<label for="field-note">{{ trans('publications::publications.note') }}</label>
 					<textarea name="note" id="field-note" class="form-control" maxlength="2000" rows="3" cols="40">{{ $row->note }}</textarea>
 				</div>
+
+				<div class="form-group tab-search">
+					<label for="filter-tag">{{ trans('publications::publications.tags') }}</label>
+					<input name="tags" id="field-tags" size="45" class="form-control" value="{{ implode(',', $row->tags()->get()->pluck('name')->toArray()) }}" data-uri="{{ route('api.tags.index') }}?search=%s" data-api="{{ route('api.tags.index') }}" />
+				</div>
 			</fieldset>
 
 			<fieldset>

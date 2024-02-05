@@ -33,6 +33,36 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
+	var sels = new Array(), sel;
+	var tag = document.getElementById('field-tags');
+	if (tag) {
+		sel = new TomSelect(tag, {
+			valueField: 'slug',
+			labelField: 'slug',
+			searchField: ['name', 'slug'],
+			plugins: ['remove_button'],
+			persist: false,
+			// Fetch remote data
+			load: function (query, callback) {
+				var url = tag.getAttribute('data-api') + '?api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content') + '&search=' + encodeURIComponent(query);
+
+				fetch(url)
+					.then(response => response.json())
+					.then(json => {
+						callback(json.data);
+					}).catch(() => {
+						callback();
+					});
+			}
+		});
+		sel.on('change', function () {
+			if (tag.classList.contains('filter-submit')) {
+				tag.closest('form').submit();
+			}
+		});
+		sels.push(sel);
+	}
+
 	document.querySelectorAll('.btn-delete').forEack(function (el) {
 		el.addEventListener('click', function (e) {
 			e.preventDefault();

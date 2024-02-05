@@ -240,6 +240,15 @@ class PublicationsController extends Controller
 			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
 
+		if ($request->has('tags'))
+		{
+			$tags = $request->input('tags');
+			$tags = explode(',', $tags);
+			$tags = array_map('trim', $tags);
+			$tags = array_filter($tags);
+			$row->setTags($tags);
+		}
+
 		if ($request->has('file'))
 		{
 			// Doing this by file extension is iffy at best but

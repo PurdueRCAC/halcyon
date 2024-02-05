@@ -1,10 +1,12 @@
 @extends('layouts.master')
 
 @push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/publications/css/publications.css') }}" />
 @endpush
 
 @push('scripts')
+<script src="{{ timestamped_asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js') }}"></script>
 <script src="{{ timestamped_asset('modules/publications/js/site.js') }}"></script>
 @endpush
 
@@ -65,6 +67,10 @@ app('pathway')
 						<option value="{{ $year }}"<?php if ($filters['year'] == $year): echo ' selected="selected"'; endif;?>>{{ $year }}</option>
 					@endforeach
 				</select>
+			</div>
+			<div class="form-group">
+				<label for="filter_tag">{{ trans('publications::publications.tags') }}</label>
+				<input type="text" name="tag" id="field-tags" class="form-control filter-submit" placeholder="Find by tag" value="{{ $filters['tag'] }}" data-api="{{ route('api.tags.index') }}" />
 			</div>
 
 			<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
@@ -178,6 +184,11 @@ app('pathway')
 			<li class="publication">
 				<div id="publication{{ $row->id }}">
 					{!! $row->toHtml() !!}
+					@if ($row->tags()->count())
+						@foreach ($row->tags as $tag)
+							<span class="badge badge-secondary">{{ $tag->name }}</span>
+						@endforeach
+					@endif
 				</div>
 				<div class="row publication-options">
 					<div class="col-md-8">
@@ -222,7 +233,6 @@ app('pathway')
 		</div>
 	@endif
 
-	@csrf
 	</div>
 </form>
 

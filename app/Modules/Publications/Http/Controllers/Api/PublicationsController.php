@@ -431,6 +431,16 @@ class PublicationsController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "tags",
+	 * 		"description":   "A list of tags to apply to the entry",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "array",
+	 * 			"default":   null
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"201": {
 	 * 			"description": "Successful entry creation",
@@ -438,14 +448,37 @@ class PublicationsController extends Controller
 	 * 				"application/json": {
 	 * 					"example": {
 	 * 						"id": 2,
-	 * 						"menutype": "about",
-	 * 						"title": "About",
-	 * 						"description": "About Side Menu",
-	 * 						"client_id": 0,
-	 * 						"created_at": null,
-	 * 						"updated_at": null,
-	 * 						"deleted_at": null,
-	 * 						"items_count": 12,
+	 *						"title": "Praesent commodo cursus magna, vel scelerisque nisl consectetur et.",
+	 *						"type_id": 10,
+	 *						"author": "John Smith",
+	 *						"editor": null,
+	 *						"url": null,
+	 *						"series": null,
+	 *						"booktitle": null,
+	 *						"edition": null,
+	 *						"chapter": null,
+	 *						"issuetitle": null,
+	 *						"journal": null,
+	 *						"issue": null,
+	 *						"volume": null,
+	 *						"number": null,
+	 *						"pages": null,
+	 *						"publisher": null,
+	 *						"address": null,
+	 *						"institution": null,
+	 *						"organization": null,
+	 *						"school": null,
+	 *						"crossref": null,
+	 *						"isbn": null,
+	 *						"doi": null,
+	 *						"note": null,
+	 *						"state": 1,
+	 *						"published_at": "2022-06-01 00:00:00",
+	 *						"created_at": "2022-06-20T17:59:21.000000Z",
+	 *						"updated_at": "2022-06-20T17:59:21.000000Z",
+	 *						"deleted_at": null,
+	 *						"filename": "",
+	 * 						"tags": ["foo","bar"],
 	 * 						"api": "https://example.org/api/publications/2"
 	 * 					}
 	 * 				}
@@ -487,6 +520,7 @@ class PublicationsController extends Controller
 			'note'         => 'nullable|string|max:2000',
 			'state'        => 'nullable|integer',
 			'published_at' => 'nullable|datetime',
+			'tags'         => 'nullable|array',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -519,6 +553,16 @@ class PublicationsController extends Controller
 			return response()->json(['message' => trans('global.messages.save failed')], 500);
 		}
 
+		if ($request->has('tags'))
+		{
+			$tags = $request->input('tags', []);
+			$tags = explode(',', $tags);
+			$tags = array_map('trim', $tags);
+			$tags = array_filter($tags);
+
+			$row->setTags($tags);
+		}
+
 		$row->api = route('api.publications.read', ['id' => $row->id]);
 
 		return new JsonResource($row);
@@ -546,14 +590,37 @@ class PublicationsController extends Controller
 	 * 				"application/json": {
 	 * 					"example": {
 	 * 						"id": 2,
-	 * 						"menutype": "about",
-	 * 						"title": "About",
-	 * 						"description": "About Side Menu",
-	 * 						"client_id": 0,
-	 * 						"created_at": null,
-	 * 						"updated_at": null,
-	 * 						"deleted_at": null,
-	 * 						"items_count": 12,
+	 *						"title": "Praesent commodo cursus magna, vel scelerisque nisl consectetur et.",
+	 *						"type_id": 10,
+	 *						"author": "John Smith",
+	 *						"editor": null,
+	 *						"url": null,
+	 *						"series": null,
+	 *						"booktitle": null,
+	 *						"edition": null,
+	 *						"chapter": null,
+	 *						"issuetitle": null,
+	 *						"journal": null,
+	 *						"issue": null,
+	 *						"volume": null,
+	 *						"number": null,
+	 *						"pages": null,
+	 *						"publisher": null,
+	 *						"address": null,
+	 *						"institution": null,
+	 *						"organization": null,
+	 *						"school": null,
+	 *						"crossref": null,
+	 *						"isbn": null,
+	 *						"doi": null,
+	 *						"note": null,
+	 *						"state": 1,
+	 *						"published_at": "2022-06-01 00:00:00",
+	 *						"created_at": "2022-06-20T17:59:21.000000Z",
+	 *						"updated_at": "2022-06-20T17:59:21.000000Z",
+	 *						"deleted_at": null,
+	 *						"filename": "",
+	 * 						"tags": ["foo","bar"],
 	 * 						"api": "https://example.org/api/publications/2"
 	 * 					}
 	 * 				}
@@ -839,6 +906,16 @@ class PublicationsController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "tags",
+	 * 		"description":   "A list of tags to apply to the entry",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "array",
+	 * 			"default":   null
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"202": {
 	 * 			"description": "Successful entry modification",
@@ -846,14 +923,37 @@ class PublicationsController extends Controller
 	 * 				"application/json": {
 	 * 					"example": {
 	 * 						"id": 2,
-	 * 						"menutype": "about",
-	 * 						"title": "About",
-	 * 						"description": "About Side Menu",
-	 * 						"client_id": 0,
-	 * 						"created_at": null,
-	 * 						"updated_at": null,
-	 * 						"deleted_at": null,
-	 * 						"items_count": 12,
+	 *						"title": "Praesent commodo cursus magna, vel scelerisque nisl consectetur et.",
+	 *						"type_id": 10,
+	 *						"author": "John Smith",
+	 *						"editor": null,
+	 *						"url": null,
+	 *						"series": null,
+	 *						"booktitle": null,
+	 *						"edition": null,
+	 *						"chapter": null,
+	 *						"issuetitle": null,
+	 *						"journal": null,
+	 *						"issue": null,
+	 *						"volume": null,
+	 *						"number": null,
+	 *						"pages": null,
+	 *						"publisher": null,
+	 *						"address": null,
+	 *						"institution": null,
+	 *						"organization": null,
+	 *						"school": null,
+	 *						"crossref": null,
+	 *						"isbn": null,
+	 *						"doi": null,
+	 *						"note": null,
+	 *						"state": 1,
+	 *						"published_at": "2022-06-01 00:00:00",
+	 *						"created_at": "2022-06-20T17:59:21.000000Z",
+	 *						"updated_at": "2022-06-20T17:59:21.000000Z",
+	 *						"deleted_at": null,
+	 *						"filename": "",
+	 * 						"tags": ["foo","bar"],
 	 * 						"api": "https://example.org/api/publications/2"
 	 * 					}
 	 * 				}
@@ -899,6 +999,7 @@ class PublicationsController extends Controller
 			'note'         => 'nullable|string|max:2000',
 			'state'        => 'nullable|integer',
 			'published_at' => 'nullable|datetime',
+			'tags'         => 'nullable|array',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -929,6 +1030,16 @@ class PublicationsController extends Controller
 		if (!$row->save())
 		{
 			return response()->json(['message' => trans('global.messages.save failed')], 500);
+		}
+
+		if ($request->has('tags'))
+		{
+			$tags = $request->input('tags', []);
+			$tags = explode(',', $tags);
+			$tags = array_map('trim', $tags);
+			$tags = array_filter($tags);
+
+			$row->setTags($tags);
 		}
 
 		$row->api = route('api.publications.read', ['id' => $row->id]);

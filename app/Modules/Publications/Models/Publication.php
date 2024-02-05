@@ -13,6 +13,7 @@ use App\Modules\Publications\Events\PublicationCreated;
 use App\Modules\Publications\Events\PublicationUpdated;
 use App\Modules\Publications\Events\PublicationDeleted;
 use App\Modules\Publications\Helpers\Formatter;
+use App\Modules\Tags\Traits\Taggable;
 use Carbon\Carbon;
 
 /**
@@ -54,7 +55,7 @@ use Carbon\Carbon;
  */
 class Publication extends Model
 {
-	use Historable, SoftDeletes;
+	use Historable, SoftDeletes, Taggable;
 
 	/**
 	 * The table to which the class pertains
@@ -101,10 +102,17 @@ class Publication extends Model
 	 * @var array<string,string>
 	 */
 	protected $dispatchesEvents = [
-		'created'  => PublicationCreated::class,
-		'updated'  => PublicationUpdated::class,
-		'deleted'  => PublicationDeleted::class,
+		'created' => PublicationCreated::class,
+		'updated' => PublicationUpdated::class,
+		'deleted' => PublicationDeleted::class,
 	];
+
+	/**
+	 * Tag domain
+	 *
+	 * @var string
+	 */
+	protected static $entityNamespace = 'publications';
 
 	/**
 	 * Get a list of associated users

@@ -69,4 +69,5 @@ return [
 		'state' => 'State',
 	],
 	'attach' => 'Attach',
+	'tags' => 'Tags',
 ];

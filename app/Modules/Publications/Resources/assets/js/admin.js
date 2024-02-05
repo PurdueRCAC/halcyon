@@ -1,3 +1,4 @@
+/* global TomSelect */ // modules/core/vendor/tom-select/js/tom-select.complete.min.js
 
 document.addEventListener('DOMContentLoaded', function () {
 	var alias = document.getElementById('field-alias');
@@ -32,6 +33,32 @@ document.addEventListener('DOMContentLoaded', function () {
 			dep.classList.remove('d-none');
 		});
 	});
+
+	var sels = new Array(), sel;
+	var tag = document.getElementById('field-tags');
+	if (tag) {
+		sel = new TomSelect(tag, {
+			//maxItems: 1,
+			valueField: 'slug',
+			labelField: 'slug',
+			searchField: ['name', 'slug'],
+			plugins: ['remove_button'],
+			persist: false,
+			// Fetch remote data
+			load: function (query, callback) {
+				var url = tag.getAttribute('data-api') + '?api_token=' + document.querySelector('meta[name="api-token"]').getAttribute('content') + '&search=' + encodeURIComponent(query);
+
+				fetch(url)
+					.then(response => response.json())
+					.then(json => {
+						callback(json.data);
+					}).catch(() => {
+						callback();
+					});
+			}
+		});
+		sels.push(sel);
+	}
 
 	if (document.getElementById('upload')) {
 		// feature detection for drag&drop upload

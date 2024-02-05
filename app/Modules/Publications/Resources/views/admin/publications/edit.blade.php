@@ -1,6 +1,11 @@
 @extends('layouts.master')
 
+@push('styles')
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/core/vendor/tom-select/css/tom-select.bootstrap4.min.css') }}" />
+@endpush
+
 @push('scripts')
+<script src="{{ timestamped_asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js') }}"></script>
 <script src="{{ timestamped_asset('modules/publications/js/admin.js') }}"></script>
 @endpush
 
@@ -243,6 +248,11 @@ app('pathway')
 				<div class="form-group">
 					<label for="field-note">{{ trans('publications::publications.note') }}</label>
 					<textarea name="note" id="field-note" class="form-control" maxlength="2000" rows="3" cols="40">{{ $row->note }}</textarea>
+				</div>
+
+				<div class="form-group tab-search">
+					<label for="filter-tag">{{ trans('publications::publications.tags') }}</label>
+					<input name="tags" id="field-tags" size="45" class="form-control" value="{{ implode(',', $row->tags()->get()->pluck('name')->toArray()) }}" data-uri="{{ route('api.tags.index') }}?search=%s" data-api="{{ route('api.tags.index') }}" />
 				</div>
 			</fieldset>
 
