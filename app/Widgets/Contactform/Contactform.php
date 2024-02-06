@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Modules\Widgets\Entities\Widget;
 use App\Widgets\Contactform\Mail\Message;
 use App\Widgets\Contactform\Mail\Confirmation;
+use \stdClass;
 
 /**
  * Display a contact form
