@@ -23,7 +23,7 @@ class LogSendingMessage
 		$classname = 'LogSendingMessage';
 		$targetuserid = 0;
 		$targetobjectid = 0;
-		$objectid = '';
+		$objectid = 0;
 
 		if ($headers->has('x-command'))
 		{
