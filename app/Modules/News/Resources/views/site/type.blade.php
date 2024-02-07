@@ -137,6 +137,7 @@ app('pathway')
 									</span>
 								@endif
 							</li>
+						@if (\Nwidart\Modules\Facades\Module::isEnabled('resources'))
 							<?php
 							$resources = $article->resourceList()->get();
 							if (count($resources) > 0):
@@ -151,6 +152,7 @@ app('pathway')
 								echo '<li><span class="fa fa-fw fa-tags" aria-hidden="true"></span> ' .  implode(', ', $resourceArray) . '</li>';
 							endif;
 							?>
+						@endif
 						</ul>
 						<p itemprop="description">
 							{{ Illuminate\Support\Str::limit(strip_tags($article->toHtml()), 150) }}
