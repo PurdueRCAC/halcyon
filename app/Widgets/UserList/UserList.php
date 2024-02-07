@@ -136,9 +136,14 @@ class UserList extends Widget
 			}
 		}
 
+		$limit = $this->params->get('limit', 5);
+		if ($limit)
+		{
+			$query->limit($limit);
+		}
+
 		$users = $query
 			->orderBy($a . '.' . (string)$this->params->get('order', 'name'), (string)$this->params->get('order_dir', 'asc'))
-			->limit($this->params->get('limit', 5))
 			->get();
 
 		$users->each(function($user, $key) use ($segments)
@@ -151,9 +156,19 @@ class UserList extends Widget
 			$user->phone = $user->facet('phone');
 			$user->thumb = asset('files/staff_thumb.png');
 
-			if (file_exists(storage_path('app/public/users/' . $user->username . '/photo.jpg')))
+			$dir = 'users/' . $user->id;
+			if (is_dir(storage_path('app/public/users/' . $user->username)))
 			{
-				$user->thumb = asset('files/users/' . $user->username . '/photo.jpg');
+				$dir = 'users/' . $user->username;
+			}
+
+			foreach (['jpg', 'jpeg', 'png'] as $ext)
+			{
+				if (file_exists(storage_path('app/public/' . $dir . '/photo.' . $ext)))
+				{
+					$user->thumb = asset('files/' . $dir . '/photo.' . $ext);
+					break;
+				}
 			}
 
 			$user->page = route('page', ['uri' => implode('/', $segments) . '/' . $user->username]);

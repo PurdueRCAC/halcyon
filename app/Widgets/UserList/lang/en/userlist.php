@@ -42,4 +42,5 @@ return [
 		'direction new to old' => 'Newest to Oldest',
 		'direction old to new' => 'Oldest to Newest',
 	],
+	'no users found' => 'No users found.',
 ];
