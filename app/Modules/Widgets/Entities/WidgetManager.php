@@ -125,9 +125,17 @@ class WidgetManager
 			'widget.' . $name,
 			app_path() . '/Widgets/' . Str::studly($widget->name) . '/lang'
 		);
+
+		$sourcePath = app_path() . '/Widgets/' . Str::studly($widget->name) . '/views';
+
+		$paths = array_merge(array_map(function ($path) use ($widget)
+		{
+			return $path . '/widgets/' . Str::studly($widget->name);
+		}, config('view.paths')), [$sourcePath]);
+
 		$this->app->get('view')->addNamespace(
 			'widget.' . $name,
-			app_path() . '/Widgets/' . Str::studly($widget->name) . '/views'
+			$paths
 		);
 
 		return $this->getContentFromCache($widget);
