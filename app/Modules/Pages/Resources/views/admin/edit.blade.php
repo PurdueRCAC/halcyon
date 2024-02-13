@@ -199,6 +199,11 @@ app('pathway')
 						{{ trans('pages::pages.styles and scripts') }}
 					</summary>
 					<fieldset class="card-body mb-0">
+						<div class="form-group">
+							<label for="params-container_class">{{ trans('pages::pages.container class') }}:</label>
+							<input type="text" name="params[container_class]" id="params-container_class" class="form-control" value="{{ $row->params->get('container_class') }}" />
+						</div>
+
 						<fieldset id="param-styles">
 							<legend>{{ trans('pages::pages.params.styles') }}</legend>
 							<div class="px-3 py-3">

@@ -66,7 +66,7 @@ $page->gatherMetadata();
 	@endforeach
 @endif
 
-@section('class')page-{{ str_replace('/', '-', $page->path) }}@stop
+@section('class')page-{{ str_replace('/', '-', $page->path) . ($page->params->get('container_class') ? ' ' . $page->params->get('container_class') : '') }}@stop
 
 @section('content')
 	<article id="article-content{{ $page->id }}">
@@ -80,17 +80,17 @@ $page->gatherMetadata();
 						@if (auth()->user()->can('edit pages'))
 							<a href="#article-form{{ $page->id }}" data-toggle="modal"
 								data-target="#article-form{{ $page->id }}" data-id="{{ $page->id }}" class="edit dropdown-item tip" title="{{ trans('global.button.edit') }}">
-								<span class="fa fa-pencil" aria-hidden="true"></span> {{ trans('global.button.edit') }}
+								<span class="fa fa-fw fa-pencil mr-1" aria-hidden="true"></span>{{ trans('global.button.edit') }}
 							</a>
 						@endif
 						@if (auth()->user()->can('create pages'))
 							<a href="{{ route('site.pages.create', ['parent_id' => $page->id]) }}" data-id="{{ $page->id }}" class="create dropdown-item tip" title="{{ trans('pages::pages.create sub page') }}">
-								<span class="fa fa-plus" aria-hidden="true"></span> {{ trans('pages::pages.create sub page') }}
+								<span class="fa fa-fw fa-plus mr-1" aria-hidden="true"></span>{{ trans('pages::pages.create sub page') }}
 							</a>
 						@endif
 						@if (auth()->user()->can('delete pages'))
 							<a href="{{ route('site.pages.delete', ['id' => $page->id]) }}" data-id="{{ $page->id }}" class="delete-page dropdown-item tip" data-confirm="{{ trans('global.confirm delete') }}" data-api="{{ route('api.pages.delete', ['id' => $page->id]) }}" title="{{ trans('global.button.delete') }}">
-								<span class="fa fa-trash" aria-hidden="true"></span> {{ trans('global.button.delete') }}
+								<span class="fa fa-fw fa-trash mr-1" aria-hidden="true"></span>{{ trans('global.button.delete') }}
 							</a>
 						@endif
 					</div>

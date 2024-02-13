@@ -81,4 +81,5 @@ return [
 	'back' => 'Back',
 	'create sub page' => 'New sub-page',
 	'create page' => 'Create Page',
+	'container class' => 'Container class',
 ];
