@@ -142,12 +142,7 @@ class ModulesController extends Controller
 			// We don't need this anymore
 			unset($data['rules']);
 		}
-
-		foreach ($data as $k => $v)
-		{
-			$module->params->{$k} = $v;
-		}
-
+		$module->params = $data;
 		// Attempt to save the configuration.
 		if (!$module->save())
 		{

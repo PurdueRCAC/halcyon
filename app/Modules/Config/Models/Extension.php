@@ -4,7 +4,6 @@ namespace App\Modules\Config\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Nwidart\Modules\Facades\Module;
-use App\Halcyon\Models\Casts\Params;
 use App\Modules\History\Traits\Historable;
 use App\Halcyon\Form\Form;
 use Exception;
@@ -77,7 +76,7 @@ class Extension extends Model
 	protected $casts = [
 		'published' => 'integer',
 		'access' => 'integer',
-		'params' => Params::class,
+		'params' => 'array',
 	];
 
 	/**
@@ -255,7 +254,7 @@ class Extension extends Model
 
 		//$data = $this->toArray();
 		//$data['params'] = $this->params->all();
-		$data = $this->params->all();
+		$data = $this->params;
 
 		$form->bind($data);
 
