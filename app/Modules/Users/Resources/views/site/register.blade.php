@@ -54,6 +54,16 @@ app('pathway')
 								<input type="password" name="password_confirmation" id="register-password_confirmation" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" required />
 								{!! $errors->first('password_confirmation', '<span class="form-text text-danger invalid-feedback">:message</span>') !!}
 							</div>
+							@if (count($extraFields))
+								@foreach ($extraFields as $field)
+									<div class="form-group has-feedback {{ $errors->has('extras.' . $field->name) ? ' has-error has-feedback' : '' }}">
+										<label for="extra-{{ $field->name }}">{{ $field->name }}</label>
+										<input type="{{$field->type}}" name="extras[{{$field->name}}]" id="extra-{{ $field->name }}" 
+											class="form-control{{ $errors->has('extras.' . $field->name) ? ' is-invalid' : '' }}" {{ $field->required ? 'required' : ''}}/>
+										{!! $errors->first('extras.' . $field->name, '<span class="form-text text-danger invalid-feedback">:message</span>') !!}
+									</div>
+								@endforeach
+							@endif
 
 							@if ($pageid = config('module.users.terms'))
 								<?php

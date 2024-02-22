@@ -14,6 +14,12 @@
 		<li class="nav-item">
 			<a class="nav-link @if (trim($slot) == 'levels') active @endif" href="{{ route('admin.users.levels') }}">{{ trans('users::users.levels') }}</a>
 		</li>
+		@if (config('module.users.allow_registration'))
+		<li class="nav-item">
+			<a class="nav-link @if (trim($slot) == 'registration') active @endif" href="{{ route('admin.users.registration') }}">{{ trans('users::users.registration fields') }}</a>
+		</li>
+		@endif
+		
 	@endif
 	</ul>
 </nav><!-- / .sub-navigation -->

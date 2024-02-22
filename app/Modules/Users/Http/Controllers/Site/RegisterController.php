@@ -15,7 +15,9 @@ use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rule;
 use App\Halcyon\Access\Role;
 use App\Modules\Users\Models\User;
+use App\Modules\Users\Models\Facet;
 use App\Modules\Users\Models\UserUsername;
+use App\Modules\Users\Models\RegistrationField;
 
 
 class RegisterController extends Controller
@@ -33,7 +35,9 @@ class RegisterController extends Controller
 				->withSuccess(trans('users::messages.already registered'));
 		}
 
-		return view('users::site.register');
+		$extraFields = RegistrationField::all();
+
+		return view('users::site.register', ['extraFields' => $extraFields]);
 	}
 
 	/**
@@ -50,6 +54,13 @@ class RegisterController extends Controller
 			'email' => ['required', 'string', 'email', 'max:255'], //, 'unique:users'],
 			'password' => ['required', 'confirmed', Rules\Password::defaults()],
 		];
+		$extras = RegistrationField::all();
+		foreach ($extras as $extra)
+		{
+			if ($extra->required) {
+				$rules['extras.' . $extra->name] = ['required'];
+			}
+		}
 
 		if (config('module.users.terms'))
 		{
@@ -97,6 +108,19 @@ class RegisterController extends Controller
 			$userusername->username = $request->input('username');
 			$userusername->email = $request->input('email');
 			$userusername->save();
+			if (count($extras))
+			{
+				$extraInputs = $request->input('extras');
+
+				foreach ($extraInputs as $key => $value)
+				{
+					$facet = new Facet;
+					$facet->user_id = $user->id;
+					$facet->key = $key;
+					$facet->value = $value;
+					$facet->save();
+				}
+			}
 		}
 
 		event(new Registered($user));

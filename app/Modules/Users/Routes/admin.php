@@ -174,6 +174,38 @@ $router->group(['prefix' => 'users'], function (Router $router)
 		]);
 	});
 
+	$router->group(['prefix' => 'registration'], function (Router $router)
+	{
+		$router->match(['get', 'post'], '/', [
+			'as' => 'admin.users.registration',
+			'uses' => 'RegistrationFieldsController@index',
+		]);
+		$router->get('create', [
+			'as' => 'admin.users.registration.create',
+			'uses' => 'RegistrationFieldsController@create',
+			'middleware' => 'can:create users.registration',
+		]);
+		$router->post('store', [
+			'as' => 'admin.users.registration.store',
+			'uses' => 'RegistrationFieldsController@store',
+			'middleware' => 'can:create users.registration|edit users.registration',
+		]);
+		$router->get('{id}', [
+			'as' => 'admin.users.registration.edit',
+			'uses' => 'RegistrationFieldsController@edit',
+			'middleware' => 'can:edit users.registration',
+		])->where('id', '[0-9]+');
+		$router->match(['get', 'post'], '/delete/{id?}', [
+			'as'   => 'admin.users.registration.delete',
+			'uses' => 'RegistrationFieldsController@delete',
+			'middleware' => 'can:delete users.registration',
+		]);
+		$router->match(['get', 'post'], 'cancel', [
+			'as' => 'admin.users.registration.cancel',
+			'uses' => 'RegistrationFieldsController@cancel',
+		]);
+	});
+
 	$router->get('{id}/{section?}', [
 		'as' => 'admin.users.show',
 		'uses' => 'UsersController@show',

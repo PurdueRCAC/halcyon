@@ -5,6 +5,7 @@ return [
 	'allow registration desc' => 'If set to Yes, new Users allowed to self-register.',
 	'allow deletion' => 'Allow users to delete their accounts',
 	'allow deletion desc' => 'Allow users to delete their accounts.',
+	'allow disabled login' => 'Allow Disabled Login',
 	'change username' => 'Change Username',
 	'change username desc' => 'Allow users to change their username when editing their profile.',
 	'guest user role' => 'Guest Access Role',

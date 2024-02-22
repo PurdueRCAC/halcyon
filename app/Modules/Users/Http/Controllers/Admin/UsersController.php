@@ -9,9 +9,11 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Query\JoinClause;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
 use App\Modules\Users\Models\Facet;
+use App\Modules\Users\Models\RegistrationField;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Users\Events\UserDisplay;
 use App\Modules\Users\Events\UserDeleted;
@@ -51,6 +53,12 @@ class UsersController extends Controller
 			'order'     => 'name',
 			'order_dir' => 'asc',
 		);
+		$extraFields = RegistrationField::all()->where('include_admin', true);
+		$extraFieldKeys = array();
+		foreach ($extraFields as $extra)
+		{
+			$extraFieldKeys[] = $extra->name;
+		}
 
 		$reset = false;
 		$request = $request->mergeWithBase();
@@ -66,7 +74,7 @@ class UsersController extends Controller
 		}
 		$filters['page'] = $reset ? 1 : $filters['page'];
 
-		if (!in_array($filters['order'], ['id', 'name', 'username', 'email', 'access', 'datecreated', 'datelastseen']))
+		if (!in_array($filters['order'], ['id', 'name', 'username', 'email', 'access', 'datecreated', 'datelastseen', ...$extraFieldKeys]))
 		{
 			$filters['order'] = 'name';
 		}
@@ -79,9 +87,20 @@ class UsersController extends Controller
 		$a = (new User)->getTable();
 		$b = (new Map)->getTable();
 		$u = (new UserUsername)->getTable();
+		$f= (new Facet)->getTable();
 
 		$query = User::query()
-			->select($a . '.*', $u . '.username', $u . '.datecreated', $u . '.dateremoved', $u . '.datelastseen')
+			->select(
+				$a . '.*', $u . '.username', $u . '.datecreated', $u . '.dateremoved', $u . '.datelastseen', 
+				...array_map(
+					function($index, $value)
+					{
+						return 'facet-' . $index . '.value as ' . $value;
+					},
+					array_keys($extraFieldKeys),
+					array_values($extraFieldKeys)
+				)
+			)
 			->with('roles')
 			->join($u, $u . '.userid', $a . '.id');
 			/*->including(['notes', function ($note){
@@ -89,6 +108,22 @@ class UsersController extends Controller
 					->select('id')
 					->select('user_id');
 			}]);*/
+		if (count($extraFieldKeys))
+		{
+			foreach ($extraFieldKeys as $index => $extra)
+			{
+				$facetAlias = 'facet-' . $index;
+				$query
+					->leftJoin($f . " as $facetAlias", 
+						function (JoinClause $join) use ($a, $facetAlias, $extra)
+						{
+							$join->on($a . '.id', '=', $facetAlias . '.user_id')
+								->on($facetAlias . '.key', '=', DB::raw("'" . $extra . "'"));
+						}
+				
+					);
+			}
+		}
 
 		if ($filters['role_id'])
 		{
@@ -119,7 +154,6 @@ class UsersController extends Controller
 			{
 				$search = strtolower((string)$filters['search']);
 				$skipmiddlename = preg_replace('/ /', '% ', $search);
-
 				$query->select(
 					$a . '.*', $u . '.username', $u . '.datecreated', $u . '.dateremoved', $u . '.datelastseen',
 					DB::raw('IF(' . $u . '.username="' . $filters['search'] . '", 20,
@@ -129,11 +163,19 @@ class UsersController extends Controller
 						+ IF(' . $a . '.name LIKE "' . $search . '%", 1, 0)
 						+ IF(' . $a . '.name LIKE "%' . $skipmiddlename . '%", 3, 0)
 						+ IF(' . $a . '.name LIKE "' . $skipmiddlename . '%", 1, 0)
-						AS `weight`')
+						AS `weight`'),
+						...array_map(
+							function($index, $value)
+							{
+								return 'facet-' . $index . '.value as ' . $value;
+							},
+							array_keys($extraFieldKeys),
+							array_values($extraFieldKeys)
+						)
+
 					)
 					->orderBy('weight', 'desc');
-
-				$query->where(function($where) use ($search, $skipmiddlename, $a, $u)
+				$query->where(function($where) use ($search, $skipmiddlename, $a, $u, $extraFieldKeys)
 				{
 					$where->where($a . '.name', 'like', '% ' . $search . '%')
 						->orWhere($a . '.name', 'like', $search . '%')
@@ -141,6 +183,10 @@ class UsersController extends Controller
 						->orWhere($a . '.name', 'like', $skipmiddlename . '%')
 						->orWhere($u . '.username', 'like', '' . $search . '%')
 						->orWhere($u . '.username', 'like', '%' . $search . '%');
+						foreach (array_keys($extraFieldKeys) as $extraKey)
+						{
+							$where->orWhere('facet-' . $extraKey . '.value', 'like', '%' . $search . '%');
+						}
 				});
 			}
 		}
@@ -211,13 +257,13 @@ class UsersController extends Controller
 				$query->where($u . '.datecreated', '<=', $dNow->format('Y-m-d H:i:s'));
 			}
 		}
-
 		$rows = $query
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate((int)$filters['limit'], ['*'], 'page', (int)$filters['page']);
 
 		return view('users::admin.users.index', [
 			'rows' => $rows,
+			'extraFieldKeys' => $extraFieldKeys,
 			'filters' => $filters
 		]);
 	}

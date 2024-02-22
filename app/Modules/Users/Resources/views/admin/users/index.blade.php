@@ -119,6 +119,11 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('users::users.username'), 'username', $filters['order_dir'], $filters['order']) !!}
 				</th>
+				@foreach ($extraFieldKeys as $extraKey)
+				<th scope="col">
+					{!! Html::grid('sort', $extraKey, $extraKey, $filters['order_dir'], $filters['order']) !!}
+				</th>
+				@endforeach
 				<th scope="col" class="priority-3 nowrap"<?php /*if (auth()->user()->can('admin')) { echo ' colspan="2"'; }*/ ?>>
 					{{ trans('users::users.roles') }}
 				</th>
@@ -172,6 +177,12 @@ app('pathway')
 						@endif
 					</a>
 				</td>
+				@foreach ($extraFieldKeys as $extraIndex => $extraKey)
+				<td>
+					{{ $row[$extraKey] ?? '' }}
+				</td>
+				@endforeach
+
 				<?php /*@if ($canChange)
 				<td class="text-center priority-3">
 						<a class="permissions tip" href="{{ route('admin.users.debug', ['id' => $row->id]) }}" data-tip="{{ trans('users::users.debug user') }}">

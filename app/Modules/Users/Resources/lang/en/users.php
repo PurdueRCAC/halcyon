@@ -127,4 +127,5 @@ return [
 	'welcome' => 'Welcome!',
 	'account expired' => 'Account Expired',
 	'configuration saved' => 'Configuration saved',
+	'registration fields' => 'Registration Fields',
 ];
