@@ -9,7 +9,7 @@ app('pathway')
 		route('admin.users.index')
 	)
 	->append(
-		trans('users::users.registration'),
+		trans('users::users.registration fields'),
 		route('admin.users.registration')
 	)
 	->append(
