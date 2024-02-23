@@ -16,9 +16,10 @@ class Menu extends Widget
 	 */
 	public function run()
 	{
-		$menu = new SiteMenu([
+		/*$menu = new SiteMenu([
 			'access' => auth()->user() ? auth()->user()->getAuthorisedViewLevels() : array(1)
-		]);
+		]);*/
+		$menu = app('menu');
 
 		$list = self::getList($menu, $this->params);
 

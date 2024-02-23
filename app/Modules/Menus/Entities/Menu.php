@@ -281,10 +281,10 @@ class Menu extends Fluent
 		$w = (new Item)->getTable();
 		$e = 'extensions';
 
-		if (!Schema::hasTable($w))
+		/*if (!Schema::hasTable($w))
 		{
 			return;
-		}
+		}*/
 
 		$items = Item::query()
 			->leftJoin($e, $w . '.module_id', '=', $e . '.id')
