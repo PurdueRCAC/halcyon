@@ -22,7 +22,11 @@ class Breadcrumbs extends Widget
 
 		// Set the default separator
 		$separator = $this->setSeparator($this->params->get('separator'));
-		$class_sfx = htmlspecialchars($this->params->get('moduleclass_sfx'));
+		$class_sfx = '';
+		if ($cls = $this->params->get('moduleclass_sfx'))
+		{
+			$class_sfx = htmlspecialchars($cls);
+		}
 
 		$layout = $this->params->get('layout');
 		$layout = $layout ?: 'index';
