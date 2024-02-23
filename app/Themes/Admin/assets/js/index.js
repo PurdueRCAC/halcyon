@@ -1,150 +1,124 @@
-/* global $ */ // jquery.js
-/* global jQuery */ // jquery.js
 /* global Halcyon */ // core.js
 
-/*
-USAGE:
-
-	$.growl(title, msg);
-
-OPTIONS:
-
-	animate: Animate the slide in/out of the message
-	autoRemove: Automatically temove the message after a period of time
-*/
-
-(function ($) {
-	$.growl = function (type, message, animate, autoRemove) {
-		notify(type, message, animate, autoRemove);
-	}
-	$.growl.version = "1.0.2";
-
-	function create(rebuild) {
-		var instance = document.getElementById('toasts');
-
-		if (!instance || rebuild) {
-			instance = $(jQuery.growl.settings.dockTemplate)
-				.attr('id', 'toasts')
-				.addClass('toasts')
-				.addClass(jQuery.growl.settings.position);
-			$('body').append(instance);
-		} else {
-			instance = $(instance);
-		}
-
-		return instance;
+/**
+ * Toast alert
+ *
+ * @param {string} type
+ * @param {string} message
+ * @param {bool} animate
+ * @param {bool} autoRemove
+ * @return {void}
+ */
+function notify(type, message, animate, autoRemove) {
+	if (typeof animate == 'undefined') {
+		animate = true;
 	}
 
-	function notify(type, message, animate, autoRemove) {
-		var container = create();
+	if (typeof autoRemove == 'undefined') {
+		autoRemove = true;
+	}
 
-		/*
-		<!-- Example of the DOM we're creating for a notification -->
-		<div class="toast" role="alert" aria-atomic="true" aria-live="assertive">
-			<div class="d-flex">
-				<button class="btn-close close" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<div class="toast-body">
-					<div class="message">
-						Message here
-					</div>
+	let container = document.getElementById('toasts');
+
+	if (!container) {
+		container = document.createElement('div');
+		container.id = 'toasts';
+		container.classList.add('toasts');
+		container.classList.add('bottomright');
+		document.querySelector('body').append(container);
+	}
+
+	/*
+	<!-- Example of the DOM we're creating for a notification -->
+	<div class="toast" role="alert" aria-atomic="true" aria-live="assertive">
+		<div class="d-flex">
+			<button class="btn-close close" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<div class="toast-body">
+				<div class="message">
+					Message here
 				</div>
 			</div>
-			<div class="progressContainer">
-				<div class="progress"></div>
-			</div>
 		</div>
-		*/
-		var node = $('<div/>')
-			.addClass('toast')
-			.addClass('alert-' + type)
-			.attr('role', 'alert')
-			.attr('aria-atomic', 'true')
-			.attr('aria-live', 'assertive');
+		<div class="progressContainer">
+			<div class="progress"></div>
+		</div>
+	</div>
+	*/
 
-		var close = $('<button/>')
-			.addClass('btn-close')
-			.addClass('close')
-			.attr('aria-label', 'Close')
-			//.attr('data-bs-dismiss', 'toast')
-			.html('<span aria-hidden="true">&times;</span>');
+	let node = document.createElement('div');
+	node.classList.add('toast');
+	node.classList.add('alert-' + type);
+	node.setAttribute('role', 'alert');
+	node.setAttribute('aria-atomic', 'true');
+	node.setAttribute('aria-live', 'assertive');
 
-		var flex = $('<div/>')
-			.addClass('d-flex');
+	let close = document.createElement('button');
+	close.classList.add('btn-close');
+	close.classList.add('close');
+	close.setAttribute('aria-label', 'Close');
+	close.innerHTML = '<span aria-hidden="true">&times;</span>';
+	close.addEventListener('click', function () {
+		// animate when closing; then remove the DOM element entirely
+		var n = this.parentNode.parentNode;
+		n.remove();
+	});
 
-		var body = $('<div/>')
-			.addClass('toast-body');
+	var flex = document.createElement('div');
+	flex.classList.add('d-flex');
 
-		var msg = $('<div/>')
-			.addClass('message')
-			.html(message);
+	var body = document.createElement('div');
+	body.classList.add('toast-body');
 
-		// add close-notification click functionality
-		close.off('click').on('click', function () {
-			// animate when closing; then remove the DOM element entirely
-			var n = $(this).parent().parent();
-			n.animate({ left: '-=50px', opacity: "0" }, "fast", function () { n.remove(); });
-		});
+	var msg = document.createElement('div');
+	msg.classList.add('message')
+	msg.innerHTML = message;
 
-		var pC = $('<div/>')
-			.addClass('progressContainer');
+	var pC = document.createElement('div');
+	pC.classList.add('progressContainer');
 
-		var p = $('<div/>')
-			.addClass('progress');
+	var p = document.createElement('div');
+	p.classList.add('progress');
 
-		if (typeof animate == 'undefined') {
-			animate = jQuery.growl.settings.autoRemove;
-		}
-
-		if (typeof autoRemove == 'undefined') {
-			autoRemove = jQuery.growl.settings.autoRemove;
-		}
-
-		//if animation is turned on
-		if (animate === true) {
-			node.addClass("n-animate-in");
-		}
-
-		if (autoRemove === true) {
-			if (animate === true) {
-				//add the animation class to the notification...
-				node.addClass("n-animate");
-				//...and the progress bar
-				p.addClass('progress-animate');
-				//ensure the node removes itself after the animation finishes
-				node.on('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function () { $(this).remove(); });
-			} else {
-				//...and the progress bar
-				p.addClass('progress-animate');
-				//ensure the node removes itself after the progress-bar animation finishes
-				node.on('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function () { $(this).remove(); });
-			}
-		}
-
-		body.append(msg);
-
-		pC.append(p);
-
-		flex.append(body);
-		flex.append(close);
-		node.append(flex);
-		node.append(pC);
-
-		container.append(node);
+	// if animation is turned on
+	if (animate === true) {
+		node.classList.add("n-animate-in");
 	}
 
-	// default settings
-	$.growl.settings = {
-		dockTemplate: '<div></div>',
-		position: 'bottomright',
-		animate: true,
-		autoRemove: true,
-		noticeElement: function (el) {
-			$.growl.settings.noticeTemplate = $(el);
+	if (autoRemove === true) {
+		if (animate === true) {
+			//add the animation class to the notification...
+			node.classList.add("n-animate");
 		}
-	};
-})(jQuery);
+		//...and the progress bar
+		p.classList.add('progress-animate');
+		//ensure the node removes itself after the animation finishes
+		['animationend', 'webkitAnimationEnd', 'oAnimationEnd', 'MSAnimationEnd'].forEach(function (evt) {
+			node.addEventListener(evt, function () {
+				this.remove();
+			});
+		});
+	}
+
+	body.append(msg);
+
+	pC.append(p);
+
+	flex.append(body);
+	flex.append(close);
+	node.append(flex);
+	node.append(pC);
+
+	container.append(node);
+}
+
+function getOffsetTop(element) {
+	if (!element) {
+		return 0;
+	}
+	return getOffsetTop(element.offsetParent) + element.offsetTop;
+};
 
 document.addEventListener('DOMContentLoaded', function () {
 	document.getElementsByTagName('html')[0].classList.remove('no-js');
@@ -185,21 +159,21 @@ document.addEventListener('DOMContentLoaded', function () {
 					}
 				})
 			})
-				.then(function (response) {
-					if (response.ok) {
-						return;
+			.then(function (response) {
+				if (response.ok) {
+					return;
+				}
+				return response.json().then(function (data) {
+					var msg = data.message;
+					if (typeof msg === 'object') {
+						msg = Object.values(msg).join('<br />');
 					}
-					return response.json().then(function (data) {
-						var msg = data.message;
-						if (typeof msg === 'object') {
-							msg = Object.values(msg).join('<br />');
-						}
-						throw msg;
-					});
-				})
-				.catch(function (error) {
-					console.error('Error:', error);
+					throw msg;
 				});
+			})
+			.catch(function (error) {
+				console.error('Error:', error);
+			});
 		});
 	});
 
@@ -218,11 +192,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	document.querySelectorAll('.node>ul').forEach(function (el) {
-		var node = $(el);
-		var t = node.offset().top + node.height(),
-			h = $(window).height();
+		var t = getOffsetTop(el) + el.offsetHeight,
+			h = window.innerHeight;
 		if (t > h) {
-			node.addClass('drop-up');
+			el.classList.add('drop-up');
 		}
 	});
 
@@ -245,25 +218,24 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 			})
 		})
-			.then(function (response) {
-				if (response.ok) {
-					document.getElementsByTagName('html')[0].setAttribute('data-mode', mode);
+		.then(function (response) {
+			if (response.ok) {
+				document.getElementsByTagName('html')[0].setAttribute('data-mode', mode);
 
-					btn.setAttribute('data-mode', mode == 'dark' ? 'light' : 'dark');
-					return;
+				btn.setAttribute('data-mode', mode == 'dark' ? 'light' : 'dark');
+				return;
+			}
+			return response.json().then(function (data) {
+				var msg = data.message;
+				if (typeof msg === 'object') {
+					msg = Object.values(msg).join('<br />');
 				}
-				return response.json().then(function (data) {
-					var msg = data.message;
-					if (typeof msg === 'object') {
-						msg = Object.values(msg).join('<br />');
-					}
-					throw msg;
-				});
-			})
-			.catch(function (error) {
-				console.log(error);
-				Halcyon.error(btn.getAttribute('data-error'));
+				throw msg;
 			});
+		})
+		.catch(function (error) {
+			Halcyon.error(btn.getAttribute('data-error'));
+		});
 	});
 
 	// Display system messages in Growl-like way
@@ -277,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				type = el.classList.contains('alert-info') ? 'info' : type;
 				type = el.classList.contains('alert-success') ? 'success' : type;
 
-				$.growl(type, el.innerHTML);
+				notify(type, el.innerHTML);
 			});
 			msg.innerHTML = '';
 		}
