@@ -19,6 +19,7 @@ use App\Modules\Pages\Events\PageContentIsRendering;
 use App\Modules\Pages\Events\PageMetadata;
 use App\Modules\Pages\Formatters\FilePath;
 use App\Modules\Pages\Formatters\FileSize;
+use App\Modules\Pages\Formatters\IncludeSvg;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Tags\Traits\Taggable;
 use App\Halcyon\Models\Casts\Params;
@@ -251,6 +252,7 @@ class Page extends Model
 					->through([
 						FileSize::class,
 						FilePath::class,
+						IncludeSvg::class,
 					])
 					->thenReturn();
 
