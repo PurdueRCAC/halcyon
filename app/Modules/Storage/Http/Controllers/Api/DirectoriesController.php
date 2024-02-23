@@ -527,6 +527,11 @@ class DirectoriesController extends Controller
 			return response()->json(['message' => trans('Field `name` has invalid format')], 415);
 		}
 
+		if ($row->autouser == 0)
+		{
+			$row->autouserunixgroupid = 0;
+		}
+
 		if (!$row->autouserunixgroupid)
 		{
 			$row->autouserunixgroupid = $row->unixgroupid;
@@ -1196,6 +1201,10 @@ class DirectoriesController extends Controller
 
 					$this->create($request, $data);
 				}
+			}
+			else
+			{
+				$row->autouserunixgroupid = $row->unixgroupid;
 			}
 		}
 

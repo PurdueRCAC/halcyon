@@ -311,6 +311,11 @@ class DirectoriesController extends Controller
 			return redirect()->back()->withError(trans('Field `name` has invalid format'));
 		}
 
+		if ($row->autouser == 0)
+		{
+			$row->autouserunixgroupid = 0;
+		}
+
 		if (!$row->autouserunixgroupid)
 		{
 			$row->autouserunixgroupid = $row->unixgroupid;
