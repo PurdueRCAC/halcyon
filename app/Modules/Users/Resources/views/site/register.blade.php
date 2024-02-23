@@ -58,8 +58,22 @@ app('pathway')
 								@foreach ($extraFields as $field)
 									<div class="form-group has-feedback {{ $errors->has('extras.' . $field->name) ? ' has-error has-feedback' : '' }}">
 										<label for="extra-{{ $field->name }}">{{ $field->name }}</label>
+										@if ($field->type == 'text')
 										<input type="{{$field->type}}" name="extras[{{$field->name}}]" id="extra-{{ $field->name }}" 
 											class="form-control{{ $errors->has('extras.' . $field->name) ? ' is-invalid' : '' }}" {{ $field->required ? 'required' : ''}}/>
+										@elseif ($field->type == 'textarea')
+										<textarea name="extras[{{$field->name}}]" id="extra-{{ $field->name }}" 
+											class="form-control{{ $errors->has('extras.' . $field->name) ? ' is-invalid' : '' }}" {{ $field->required ? 'required' : ''}}>
+										</textarea>
+										@elseif ($field->type == 'select')
+										<select name="extras[{{$field->name}}]" id="extra-{{ $field->name }}" 
+											class="form-control{{ $errors->has('extras.' . $field->name) ? ' is-invalid' : '' }}" {{ $field->required ? 'required' : ''}}>
+											<option value>Select an option...</option>
+											@foreach ($field->options as $option)
+												<option value="{{$option}}">{{$option}}</option>
+											@endforeach
+										</select>
+										@endif
 										{!! $errors->first('extras.' . $field->name, '<span class="form-text text-danger invalid-feedback">:message</span>') !!}
 									</div>
 								@endforeach

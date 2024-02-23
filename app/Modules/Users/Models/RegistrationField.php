@@ -64,6 +64,15 @@ class RegistrationField extends Model
 	];
 
 	/**
+	 * The attributes that should be cast to native types.
+	 *
+	 * @var array<string,string>
+	 */
+	protected $casts = [
+		'options' => 'array',
+	];
+
+	/**
 	 * Get creator
 	 *
 	 * @return  BelongsTo
