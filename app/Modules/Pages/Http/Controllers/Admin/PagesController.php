@@ -68,10 +68,12 @@ class PagesController extends Controller
 		}
 
 		// Get records
-		$p = new Page;
-		$page = $p->getTable();
-
-		$query = $p->query()
+		$query = Page::query()
+			->select([
+				'id', 'title', 'alias', 'state',
+				'access', 'created_at', 'updated_at',
+				'parent_id', 'level', 'path'
+			])
 			->with('viewlevel')
 			->whereState($filters['state'])
 			->whereAccess($filters['access'], auth()->user());
@@ -87,7 +89,7 @@ class PagesController extends Controller
 		}
 
 		$rows = $query
-			->orderBy($page . '.' . $filters['order'], $filters['order_dir'])
+			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
 		return view('pages::admin.index', [
