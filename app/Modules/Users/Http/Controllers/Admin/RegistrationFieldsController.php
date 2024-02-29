@@ -131,18 +131,12 @@ class RegistrationFieldsController extends Controller
 	{
 		$rules = [
 			'fields.name' => 'required|string|max:100',
+			'fields.type' => 'required|string|max:100',
+			'fields.required' => 'nullable|integer',
+			'fields.include_admin' => 'nullable|integer',
 		];
-		$inputs = $request->all();
-		if ($inputs['fields']['type'] === 'select')
-		{
-			$rules['fields.options'] = 'required|array';
-		}
-		$inputs['fields']['options'] = array_filter($inputs['fields']['options']);
 
-		$validator = Validator::make($inputs, $rules, [
-			'fields.options.required' => 'At least one option must be provided.',
-			'fields.name.required' => 'You must provide a name for the text field.'
-		]);
+		$validator = Validator::make($request->all(), $rules);
 
 		if ($validator->fails())
 		{

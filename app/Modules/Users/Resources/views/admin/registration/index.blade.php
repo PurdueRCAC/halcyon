@@ -78,9 +78,12 @@ app('pathway')
 					{!! Html::grid('sort', trans('users::registration.name'), 'name', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
+					{!! Html::grid('sort', trans('users::registration.type'), 'type', $filters['order_dir'], $filters['order']) !!}
+				</th>
+				<th scope="col" class="text-center">
 					{!! Html::grid('sort', trans('users::registration.required'), 'required', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col">
+				<th scope="col" class="text-center">
 					{!! Html::grid('sort', trans('users::registration.include admin'), 'include_admin', $filters['order_dir'], $filters['order']) !!}
 				</th>
 			</tr>
@@ -92,12 +95,12 @@ app('pathway')
 		?>
 		@foreach ($rows as $i => $row)
 			<tr>
-				<td class="center">
+				<td>
 					@if (auth()->user()->can('edit users.registration'))
 						{!! Html::grid('id', $i, $row->id) !!}
 					@endif
 				</td>
-				<td class="center priority-4">
+				<td class="priority-4">
 					{{ $row->id }}
 				</td>
 				<td>
@@ -110,12 +113,15 @@ app('pathway')
 					@endif
 				</td>
 				<td>
-					<span class="badge {{$row->required ? 'badge-success' : 'badge-danger' }}">
+					{{ trans('users::registration.fieldtype.' . $row->type) }}
+				</td>
+				<td class="text-center">
+					<span class="badge badge-{{$row->required ? 'success' : 'danger' }}">
 						{{ $row->required ? 'Yes' : 'No' }}
 					</span>
 				</td>
-				<td>
-					<span class="badge {{$row->include_admin ? 'badge-success' : 'badge-danger' }}">
+				<td class="text-center">
+					<span class="badge badge-{{$row->include_admin ? 'success' : 'danger' }}">
 						{{ $row->include_admin ? 'Yes' : 'No' }}
 					</span>
 				</td>

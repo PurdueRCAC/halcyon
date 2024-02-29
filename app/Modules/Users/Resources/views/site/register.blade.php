@@ -23,7 +23,9 @@ app('pathway')
 
 					<div class="card-body p-4 p-md-5">
 						<h2 class="card-title mt-0 pt-0 mb-4 pb-2 pb-md-0 mb-md-5">{{ trans('users::auth.register') }}</h2>
-
+						@if (!$invite && config('module.users.invite_only'))
+							<p class="alert alert-warning">Registration is by invitation only.</p>
+						@else
 						<form method="post" action="{{ route('register.post') }}">
 							<div class="form-group has-feedback {{ $errors->has('name') ? ' has-error has-feedback' : '' }}">
 								<label for="register-name">{{ trans('users::auth.name') }}</label>
@@ -58,21 +60,12 @@ app('pathway')
 								@foreach ($extraFields as $field)
 									<div class="form-group has-feedback {{ $errors->has('extras.' . $field->name) ? ' has-error has-feedback' : '' }}">
 										<label for="extra-{{ $field->name }}">{{ $field->name }}</label>
-										@if ($field->type == 'text')
+										@if ($field->type == 'textarea')
+										<textarea name="extras[{{$field->name}}]" id="extra-{{ $field->name }}" 
+											class="form-control{{ $errors->has('extras.' . $field->name) ? ' is-invalid' : '' }}" {{ $field->required ? 'required' : ''}} col="45" rows="3"></textarea>
+										@else
 										<input type="{{$field->type}}" name="extras[{{$field->name}}]" id="extra-{{ $field->name }}" 
 											class="form-control{{ $errors->has('extras.' . $field->name) ? ' is-invalid' : '' }}" {{ $field->required ? 'required' : ''}}/>
-										@elseif ($field->type == 'textarea')
-										<textarea name="extras[{{$field->name}}]" id="extra-{{ $field->name }}" 
-											class="form-control{{ $errors->has('extras.' . $field->name) ? ' is-invalid' : '' }}" {{ $field->required ? 'required' : ''}}>
-										</textarea>
-										@elseif ($field->type == 'select')
-										<select name="extras[{{$field->name}}]" id="extra-{{ $field->name }}" 
-											class="form-control{{ $errors->has('extras.' . $field->name) ? ' is-invalid' : '' }}" {{ $field->required ? 'required' : ''}}>
-											<option value>Select an option...</option>
-											@foreach ($field->options as $option)
-												<option value="{{$option}}">{{$option}}</option>
-											@endforeach
-										</select>
 										@endif
 										{!! $errors->first('extras.' . $field->name, '<span class="form-text text-danger invalid-feedback">:message</span>') !!}
 									</div>
@@ -110,6 +103,8 @@ app('pathway')
 								@endif
 							@endif
 
+							<input type="hidden" name="token" value="{{ $invite ? $invite->token : '' }}" />
+
 							<div class="row mt-4 pt-2">
 								<div class="col-md-4">
 									<button type="submit" class="btn btn-primary btn-flat">{{ trans('users::auth.register') }}</button>
@@ -121,6 +116,7 @@ app('pathway')
 
 							@csrf
 						</form>
+						@endif
 					</div>
 
 				</div>
