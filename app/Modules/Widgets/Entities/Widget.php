@@ -51,6 +51,12 @@ class Widget
 		$this->name   = $name;
 		$this->model  = $model;
 		$this->params = $model->params;
+
+		if ($this->params->get('cache'))
+		{
+			$tm = $this->params->get('cache_time');
+			$this->cacheTime = $tm ? $tm : 0;
+		}
 	}
 
 	/**
@@ -71,6 +77,16 @@ class Widget
 	public function getCacheTime()
 	{
 		return $this->cacheTime ? $this->cacheTime : false;
+	}
+
+	/**
+	 * Get widget cache time or false if it's not meant to be cached.
+	 *
+	 * @return string
+	 */
+	public function getCacheKey(): string
+	{
+		return $this->model->cacheKey();
 	}
 
 	/**

@@ -317,9 +317,9 @@ class WidgetManager
 	{
 		if ($cacheTime = (float) $widget->getCacheTime())
 		{
-			$content = $this->app->cache($widget->cacheKey(), $cacheTime, $widget->cacheTags(), function ()
+			$content = $this->app['cache']->remember($widget->getCacheKey(), $cacheTime, function () use ($widget)
 			{
-				return $this->getContent();
+				return $this->getContent($widget);
 			});
 		}
 		else
@@ -359,7 +359,9 @@ class WidgetManager
 
 		$w = (new Widget)->getTable();
 
-		$query = Widget::where($w . '.published', 1)
+		$query = Widget::query()
+			->select($w . '.*')
+			->where($w . '.published', 1)
 			->where(function ($query) use ($now, $w) {
 				$query->whereNull($w . '.publish_up')
 					->orWhere($w . '.publish_up', '<=', $now);

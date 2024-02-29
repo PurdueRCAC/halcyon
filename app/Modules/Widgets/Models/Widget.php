@@ -4,6 +4,7 @@ namespace App\Modules\Widgets\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Config\Repository;
 use App\Halcyon\Traits\Checkable;
 use App\Halcyon\Form\Form;
@@ -133,6 +134,14 @@ class Widget extends Model
 			$model->setAttribute('ordering', (int)$result);
 		});
 
+		static::updated(function ($model)
+		{
+			if (Cache::has($model->cacheKey()))
+			{
+				Cache::forget($model->cacheKey());
+			}
+		});
+
 		static::deleting(function ($model)
 		{
 			// Delete old widget to menu item associations
@@ -141,6 +150,16 @@ class Widget extends Model
 				throw new \Exception('Failed to remove previous menu assignments.');
 			}
 		});
+	}
+
+	/**
+	 * Get cache key
+	 *
+	 * @return string
+	 */
+	public function cacheKey(): string
+	{
+		return 'widget.' . $this->widget . $this->id;
 	}
 
 	/**
