@@ -129,17 +129,20 @@ class ReportsController extends Controller
 				);
 			}
 
-			$data = GroupUser::query()
-				->where('membertype', '=', 10)
-				->where('userid', '=', auth()->user()->id)
-				->get();
-			foreach ($data as $d)
+			if (\Nwidart\Modules\Facades\Module::isEnabled('groups'))
 			{
-				$followinggroups[] = array(
-					'id' => $d->userid,
-					'api' => route('api.contactreports.followgroups.read', ['id' => $d->id]),
-					'name' => $d->group ? $d->group->name : trans('global.unknown')
-				);
+				$data = GroupUser::query()
+					->where('membertype', '=', 10)
+					->where('userid', '=', auth()->user()->id)
+					->get();
+				foreach ($data as $d)
+				{
+					$followinggroups[] = array(
+						'id' => $d->userid,
+						'api' => route('api.contactreports.followgroups.read', ['id' => $d->id]),
+						'name' => $d->group ? $d->group->name : trans('global.unknown')
+					);
+				}
 			}
 		}
 

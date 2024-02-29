@@ -186,6 +186,7 @@ app('pathway')
 					</div>
 				</div>
 			</div>
+			@if (\Nwidart\Modules\Facades\Module::isEnabled('groups'))
 			<div class="form-group">
 				<label for="filter_group">{{ trans('contactreports::contactreports.group') }}</label>
 				<?php
@@ -207,6 +208,7 @@ app('pathway')
 				?>
 				<input name="group" id="filter_group" size="45" class="form-control form-groups filter-submit" value="{{ implode(',', $grps) }}" data-uri="{{ route('api.groups.index') }}?search=%s" data-api="{{ route('api.groups.index') }}" />
 			</div>
+			@endif
 
 			<div class="form-group">
 				<label for="filter_people">{{ trans('contactreports::contactreports.users') }}</label>
@@ -234,6 +236,7 @@ app('pathway')
 				<input name="people" id="filter_people" size="45" class="form-control form-users filter-submit" value="{{ implode(',', $usrs) }}" data-uri="{{ route('api.users.index') }}?search=%s" data-api="{{ route('api.users.index') }}" />
 			</div>
 
+			@if (\Nwidart\Modules\Facades\Module::isEnabled('resources'))
 			<div class="form-group">
 				<label for="crmresource">{{ trans('contactreports::contactreports.resources') }}</label>
 				<?php
@@ -281,7 +284,9 @@ app('pathway')
 					?>
 				</select>
 			</div>
+			@endif
 
+			@if (\Nwidart\Modules\Facades\Module::isEnabled('tags'))
 			<div class="form-group">
 				<label for="filter_tag">{{ trans('contactreports::contactreports.tags') }}</label>
 				<?php
@@ -300,6 +305,7 @@ app('pathway')
 				?>
 				<input name="tag" id="filter_tag" size="45" class="form-control form-tags filter-submit" value="{{ implode(', ', $tags) }}" data-uri="{{ route('api.tags.index') }}?search=%s" data-api="{{ route('api.tags.index') }}" />
 			</div>
+			@endif
 
 			<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 			<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />

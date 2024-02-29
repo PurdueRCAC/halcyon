@@ -182,6 +182,17 @@ class ReportsController extends Controller
 			}
 		}
 
+		if ($resources = $request->old('resources'))
+		{
+			foreach ($resources as $r)
+			{
+				$resource = new Reportresource;
+				$resource->resourceid = $r;
+
+				$row->resources->push($resource);
+			}
+		}
+
 		if ($people = $request->input('people'))
 		{
 			$people = explode(',', $people);
@@ -194,23 +205,16 @@ class ReportsController extends Controller
 			}
 		}
 
-		$groups = \App\Modules\Groups\Models\Group::where('id', '>', 0)->orderBy('name', 'asc')->get();
+		$groups = array();
+		if (\Nwidart\Modules\Facades\Module::isEnabled('groups'))
+		{
+			$groups = \App\Modules\Groups\Models\Group::where('id', '>', 0)->orderBy('name', 'asc')->get();
+		}
 		$types = Type::all();
 
 		if ($fields = $request->old('fields'))
 		{
 			$row->fill($fields);
-		}
-
-		if ($resources = $request->old('resources'))
-		{
-			foreach ($resources as $r)
-			{
-				$resource = new Reportresource;
-				$resource->resourceid = $r;
-
-				$row->resources->push($resource);
-			}
 		}
 
 		if ($people = $request->old('people'))
@@ -273,7 +277,11 @@ class ReportsController extends Controller
 			}
 		}
 
-		$groups = \App\Modules\Groups\Models\Group::where('id', '>', 0)->orderBy('name', 'asc')->get();
+		$groups = array();
+		if (\Nwidart\Modules\Facades\Module::isEnabled('groups'))
+		{
+			$groups = \App\Modules\Groups\Models\Group::where('id', '>', 0)->orderBy('name', 'asc')->get();
+		}
 		$types = Type::all();
 
 		return view('contactreports::admin.reports.edit', [

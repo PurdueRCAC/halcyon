@@ -78,6 +78,7 @@ app('pathway')
 					</div>
 				</div>
 
+				@if (\Nwidart\Modules\Facades\Module::isEnabled('resources'))
 				<div class="form-group">
 					<label for="field-resources">{{ trans('contactreports::contactreports.resources') }}</label>
 					<select class="form-control basic-multiple" name="resources[]" multiple="multiple" data-placeholder="">
@@ -92,6 +93,7 @@ app('pathway')
 						?>
 					</select>
 				</div>
+				@endif
 
 				<div class="form-group">
 					<?php
@@ -104,6 +106,7 @@ app('pathway')
 					<input type="text" name="people" id="field-people" class="form-control form-users" data-uri="{{ url('/') }}/api/users/?api_token={{ auth()->user()->api_token }}&search=%s" value="{{ implode(',', $users) }}" />
 				</div>
 
+				@if (\Nwidart\Modules\Facades\Module::isEnabled('resources'))
 				<div class="form-group">
 					<label for="field-groupid">{{ trans('contactreports::contactreports.group') }}</label>
 					<select name="fields[groupid]" id="field-groupid" class="form-control searchable-select">
@@ -113,6 +116,7 @@ app('pathway')
 						@endforeach
 					</select>
 				</div>
+				@endif
 
 				<div class="form-group">
 					<label for="field-report">{{ trans('contactreports::contactreports.report') }} <span class="required">{{ trans('global.required') }}</span></label>

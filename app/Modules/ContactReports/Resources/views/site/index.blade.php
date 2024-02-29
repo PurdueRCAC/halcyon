@@ -105,6 +105,7 @@ app('pathway')->append(
 							</div>
 						</div>
 
+						@if (\Nwidart\Modules\Facades\Module::isEnabled('groups'))
 						<div class="form-group row tab-search tab-add tab-edit tab-follow" id="TR_group">
 							<label for="group" class="col-sm-2 col-form-label">{{ trans('contactreports::contactreports.group') }}</label>
 							<div class="col-sm-10">
@@ -148,6 +149,7 @@ app('pathway')->append(
 								</select>
 							</div>
 						</div>
+						@endif
 
 						<div class="form-group row tab-search tab-add tab-edit tab-follow" id="TR_people">
 							<label for="people" class="col-sm-2 col-form-label">{{ trans('contactreports::contactreports.users') }}</label>
@@ -177,6 +179,7 @@ app('pathway')->append(
 							</div>
 						</div>
 
+						@if (\Nwidart\Modules\Facades\Module::isEnabled('tags'))
 						<div class="form-group row tab-search" id="TR_tags">
 							<label for="people" class="col-sm-2 col-form-label">{{ trans('contactreports::contactreports.tags') }}</label>
 							<div class="col-sm-10">
@@ -197,6 +200,7 @@ app('pathway')->append(
 								<input name="tag" id="tag" size="45" class="form-control" value="{{ implode(',', $tags) }}" data-uri="{{ route('api.tags.index') }}?search=%s" data-api="{{ route('api.tags.index') }}" />
 							</div>
 						</div>
+						@endif
 
 						<div class="form-group row tab-search tab-add tab-edit" id="TR_type">
 							<label for="crmtype" class="col-sm-2 col-form-label">Category</label>
@@ -219,6 +223,7 @@ app('pathway')->append(
 							</div>
 						</div>
 
+						@if (\Nwidart\Modules\Facades\Module::isEnabled('resources'))
 						<div class="form-group row tab-search tab-add tab-edit" id="TR_resource">
 							<label for="newsresource" class="col-sm-2 col-form-label">{{ trans('contactreports::contactreports.resources') }}</label>
 							<div class="col-sm-10">
@@ -274,6 +279,7 @@ app('pathway')->append(
 								</select>
 							</div>
 						</div>
+						@endif
 
 						<div class="form-group row tab-search" id="TR_id">
 							<label for="id" class="col-sm-2 col-form-label">CR#</label>
