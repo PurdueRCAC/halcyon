@@ -101,6 +101,14 @@ class Type extends Model
 	{
 		parent::boot();
 
+		// Clear any cached admin menu widgets
+		// whenever a menu is added or deleted
+		// because the widget lists available menus.
+		static::created(function ($model)
+		{
+			$model->clearCachedWidgets();
+		});
+
 		static::creating(function ($model)
 		{
 			$exist = self::query()
@@ -117,6 +125,34 @@ class Type extends Model
 
 			return true;
 		});
+
+		static::deleted(function ($model)
+		{
+			$model->clearCachedWidgets();
+		});
+	}
+
+	/**
+	 * Clear any related widget caches
+	 *
+	 * @return void
+	 */
+	public function clearCachedWidgets(): void
+	{
+		$widgets = Widget::query()
+			->where('widget', '=', 'Adminmenu')
+			->get();
+
+		if (count($widgets))
+		{
+			foreach ($widgets as $widget)
+			{
+				if (Cache::has($widget->cacheKey()))
+				{
+					Cache::forget($widget->cacheKey());
+				}
+			}
+		}
 	}
 
 	/**
@@ -163,7 +199,7 @@ class Type extends Model
 	public function widgets(): Builder
 	{
 		$query = Widget::query()
-			->where('widget', '=', 'menu')
+			->where('widget', '=', 'Menu')
 			->where('params', 'like', '%"menutype":' . json_encode($this->menutype) . '%');
 
 		return $query;

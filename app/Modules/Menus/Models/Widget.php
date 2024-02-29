@@ -7,9 +7,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Illuminate\Config\Repository;
 use App\Halcyon\Models\Casts\Params;
+use App\Modules\Widgets\Models\Widget as BaseWidget;
 
 /**
- * News model mapping to resources
+ * Menu widget
  *
  * @property int    $id
  * @property string $title
@@ -29,49 +30,8 @@ use App\Halcyon\Models\Casts\Params;
  * @property int    $client_id
  * @property string $language
  */
-class Widget extends Model
+class Widget extends BaseWidget
 {
-	/**
-	 * The table to which the class pertains
-	 *
-	 * @var  string
-	 **/
-	protected $table = 'widgets';
-
-	/**
-	 * Default order by for model
-	 *
-	 * @var string
-	 */
-	public $orderBy = 'id';
-
-	/**
-	 * Default order direction for select queries
-	 *
-	 * @var  string
-	 */
-	public $orderDir = 'asc';
-
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array<int,string>
-	 */
-	protected $guarded = [
-		'id'
-	];
-
-	/**
-	 * The attributes that should be cast to native types.
-	 *
-	 * @var array<string,string>
-	 */
-	protected $casts = [
-		'published' => 'integer',
-		'access' => 'integer',
-		'params' => Params::class,
-	];
-
 	/**
 	 * Get the list of widgets
 	 *

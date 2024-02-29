@@ -155,7 +155,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 			<li data-parent="{{ $row->parent_id }}" data-id="{{ $row->id }}" class="mx-0">
 				<div class="card p-2 mb-1{{ !$row->state ? ' bg-transparent' : '' }}">
 					<div class="d-flex">
-						<div class="ml-3">
+						<div>
 							@if ($canChange)
 								{!! Html::grid('id', $i, $row->id) !!}
 							@endif

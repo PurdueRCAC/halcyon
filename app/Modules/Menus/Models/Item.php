@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Config\Repository;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use App\Modules\Menus\Events\ItemCreating;
 use App\Modules\Menus\Events\ItemCreated;
 use App\Modules\Menus\Events\ItemUpdating;
@@ -119,6 +120,48 @@ class Item extends Model
 	];
 
 	/**
+	 * The "booted" method of the model.
+	 *
+	 * @return void
+	 */
+	protected static function booted(): void
+	{
+		// Clear any cached menu widgets
+		// whenever a menu tiem is added,
+		// updated, or deleted
+		static::created(function ($model)
+		{
+			$model->clearCachedWidgets();
+		});
+
+		static::updated(function ($model)
+		{
+			$model->clearCachedWidgets();
+		});
+
+		static::deleted(function ($model)
+		{
+			$model->clearCachedWidgets();
+		});
+	}
+
+	/**
+	 * Clear any related widget caches
+	 *
+	 * @return void
+	 */
+	public function clearCachedWidgets(): void
+	{
+		foreach ($this->menu->widgets()->get() as $widget)
+		{
+			if (Cache::has($widget->cacheKey()))
+			{
+				Cache::forget($widget->cacheKey());
+			}
+		}
+	}
+
+	/**
 	 * Set alias field value
 	 *
 	 * @param   string  $alias
@@ -139,6 +182,16 @@ class Item extends Model
 		}
 
 		$this->attributes['alias'] = $alias;
+	}
+
+	/**
+	 * Get menu
+	 *
+	 * @return  BelongsTo
+	 */
+	public function menu(): BelongsTo
+	{
+		return $this->belongsTo(Type::class, 'menutype', 'menutype');
 	}
 
 	/**
