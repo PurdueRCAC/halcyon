@@ -113,7 +113,7 @@ app('pathway')
 					@endif
 				</td>
 				<td>
-					{{ trans('users::registration.fieldtype.' . $row->type) }}
+					{{ $row->type }}
 				</td>
 				<td class="text-center">
 					<span class="badge badge-{{$row->required ? 'success' : 'danger' }}">

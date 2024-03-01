@@ -63,6 +63,14 @@ app('pathway')
 										@if ($field->type == 'textarea')
 										<textarea name="extras[{{$field->name}}]" id="extra-{{ $field->name }}" 
 											class="form-control{{ $errors->has('extras.' . $field->name) ? ' is-invalid' : '' }}" {{ $field->required ? 'required' : ''}} col="45" rows="3"></textarea>
+										@elseif ($field->type == 'select')
+ 										<select name="extras[{{$field->name}}]" id="extra-{{ $field->name }}" 
+ 											class="form-control{{ $errors->has('extras.' . $field->name) ? ' is-invalid' : '' }}" {{ $field->required ? 'required' : ''}}>
+ 											<option value>Select an option...</option>
+ 											@foreach ($field->options as $option)
+ 												<option value="{{$option}}">{{$option}}</option>
+ 											@endforeach
+ 										</select>
 										@else
 										<input type="{{$field->type}}" name="extras[{{$field->name}}]" id="extra-{{ $field->name }}" 
 											class="form-control{{ $errors->has('extras.' . $field->name) ? ' is-invalid' : '' }}" {{ $field->required ? 'required' : ''}}/>
