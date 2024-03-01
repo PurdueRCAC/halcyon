@@ -3,7 +3,6 @@ namespace App\Widgets\Productlist;
 
 use App\Modules\Orders\Models\Category;
 use App\Modules\Widgets\Entities\Widget;
-use App\Modules\Resources\Models\Asset;
 
 /**
  * Widget for displaying products
@@ -26,7 +25,7 @@ class Productlist extends Widget
 
 		foreach ($categories as $category)
 		{
-			$query = $category->products();
+			$query = $category->products()->with('resource');
 
 			if (!auth()->user() || !auth()->user()->can('manage orders'))
 			{
@@ -47,7 +46,7 @@ class Productlist extends Widget
 			{
 				if (!isset($resources[$product->resourceid]))
 				{
-					$resource = Asset::find($product->resourceid);
+					$resource = $product->resource;
 
 					if (!$resource || $resource->trashed())
 					{

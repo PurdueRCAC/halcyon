@@ -97,11 +97,13 @@ class Knowledge
 			return;
 		}
 
-		$overview = $page->children()
-			->where('alias', '=', 'overview')
+		$children = $page->children()
+			->whereIn('alias', ['overview', 'faq', 'bio'])
 			->where($a . '.state', '=', Associations::STATE_PUBLISHED)
 			->whereIn($a . '.access', $access)
-			->first();
+			->get();
+
+		$overview = $children->where('alias', '=', 'overview')->first();
 
 		if ($overview && $event->getActive() != 'guide')
 		{
@@ -128,7 +130,6 @@ class Knowledge
 					foreach ($childs as $n)
 					{
 						$n->page->mergeVariables($page->variables->all());
-						//$pa = $p ? $p . '/' . $n->page->alias : $n->page->alias;
 
 						$page->content .= '<li>';
 						$page->content .= '<a href="' . route('site.knowledge.page', ['uri' => $n->path]) . '">' . $n->page->headline . '</a>';
@@ -147,11 +148,7 @@ class Knowledge
 		}
 
 		// FAQ page
-		$faq = $page->children()
-			->where('alias', '=', 'faq')
-			->where($a . '.state', '=', Associations::STATE_PUBLISHED)
-			->whereIn($a . '.access', $access)
-			->first();
+		$faq = $children->where('alias', '=', 'faq')->first();
 
 		if ($faq)
 		{
@@ -164,11 +161,7 @@ class Knowledge
 		}
 
 		// Bio
-		$bio = $page->children()
-			->where('alias', '=', 'bio')
-			->where($a . '.state', '=', Associations::STATE_PUBLISHED)
-			->whereIn($a . '.access', $access)
-			->first();
+		$bio = $children->where('alias', '=', 'bio')->first();
 
 		if ($bio)
 		{

@@ -13,7 +13,7 @@ app('pathway')
 @endphp
 
 @section('toolbar')
-	@if (auth()->user()->can('delete resources'))
+	@if (auth()->user()->can('delete resources.batchsystems'))
 		{!! Toolbar::deleteList('', route('admin.resources.batchsystems.delete')) !!}
 	@endif
 

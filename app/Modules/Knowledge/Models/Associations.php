@@ -231,7 +231,29 @@ class Associations extends Model
 			return $stack;
 		}
 
-		$p = '';
+		$tbl = (new self)->getTable();
+
+		$results = DB::table($tbl . ' AS a')
+			->select('b.*')
+			->leftJoin($tbl . ' AS b', function ($join)
+			{
+				$join->on('b.lft', '<=', 'a.lft')
+					->on('b.rgt', '>=', 'a.rgt');
+			})
+			->where('a.path', '=', implode('/', $segments))
+			->where('b.level', '>', 0) // We already have the root node
+			->orderBy('b.lft', 'asc')
+			->get();
+
+		if (count($results))
+		{
+			foreach (self::hydrate($results->toArray()) as $result)
+			{
+				$stack[] = $result;
+			}
+		}
+
+		/*$p = '';
 		foreach ($segments as $segment)
 		{
 			$p .= $p ? '/' . $segment : $segment;
@@ -247,8 +269,8 @@ class Associations extends Model
 
 			$stack[] = $child;
 
-			$parent = $child;
-		}
+			//$parent = $child;
+		}*/
 
 		if ((count($stack) - 1) != count($segments))
 		{

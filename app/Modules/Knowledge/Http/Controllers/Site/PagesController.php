@@ -54,7 +54,8 @@ class PagesController extends Controller
 			route('site.knowledge.index')
 		);
 
-		$root = Associations::rootNode();
+		//$root = Associations::rootNode();
+		$root = $pages[0];
 
 		$uri = '';
 		$guide = '';

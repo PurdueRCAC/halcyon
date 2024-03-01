@@ -122,6 +122,13 @@ class Asset extends Model
 	];
 
 	/**
+	 * Facet cache
+	 *
+	 * @var array<string,Facet|null>
+	 */
+	protected $facetCache = [];
+
+	/**
 	 * Get alias
 	 *
 	 * @return  string
@@ -280,15 +287,20 @@ class Asset extends Model
 	 */
 	public function getFacet(string $name): ?Facet
 	{
-		$f = (new Facet)->getTable();
-		$ft = (new FacetType)->getTable();
+		if (!isset($this->facetCache[$name]))
+		{
+			$f = (new Facet)->getTable();
+			$ft = (new FacetType)->getTable();
 
-		return $this->facets()
-			->select($f . '.*')
-			->join($ft, $ft . '.id', $f . '.facet_type_id')
-			->where($ft . '.name', '=', $name)
-			->where($ft . '.type_id', '=', $this->resourcetype)
-			->first();
+			$this->facetCache[$name] = $this->facets()
+				->select($f . '.*')
+				->join($ft, $ft . '.id', $f . '.facet_type_id')
+				->where($ft . '.name', '=', $name)
+				->where($ft . '.type_id', '=', $this->resourcetype)
+				->first();
+		}
+
+		return $this->facetCache[$name];
 	}
 
 	/**
