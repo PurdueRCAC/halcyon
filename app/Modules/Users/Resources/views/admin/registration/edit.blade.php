@@ -83,6 +83,7 @@ app('pathway')
 						<option value="date" {{ $row->type == 'date' ? 'selected' : '' }}>Date selector</option>
 						<option value="color" {{ $row->type == 'color' ? 'selected' : '' }}>Color picker</option>
  						<option value="select" {{ $row->type == 'select' ? 'selected' : '' }}>Select</option>
+						<option value="radio" {{ $row->type == 'radio' ? 'selected' : '' }}>Radio</option>
 					</select>
 				</div>
 				<div class="selectOptions {{ $row->type != 'select' ? 'hide' : '' }}" data-options="{{ json_encode($row->options) }}">
@@ -143,7 +144,7 @@ app('pathway')
 		const typeSelect = document.getElementById('field-type');
 		const option = typeSelect.value;
 		const optionsWindow = document.querySelector('.selectOptions');
-		if (option === 'select') {
+		if (option === 'select' || option === 'radio') {
 			optionsWindow.classList.remove('hide');
 		} else {
 			optionsWindow.classList.add('hide');
