@@ -4,6 +4,7 @@ namespace App\Widgets\Adminmenu;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 use App\Modules\Widgets\Entities\Widget;
 use App\Modules\Menus\Models\Item;
 use App\Modules\Menus\Models\Type;
@@ -22,7 +23,7 @@ class Adminmenu extends Widget
 	{
 		// Initialise variables.
 		$menu    = new Tree();
-		$enabled = Request::input('hidemainmenu') ? false : true;
+		$enabled = true; //Request::input('hidemainmenu') ? false : true;
 		$modules = $this->getModules(false);
 		$menus = $this->getMenus();
 		$user = auth()->user();
@@ -96,9 +97,9 @@ class Adminmenu extends Widget
 	/**
 	 * Get a list of the available menus.
 	 *
-	 * @return  \Illuminate\Support\Collection
+	 * @return  Collection
 	 */
-	public function getMenus()
+	public function getMenus(): Collection
 	{
 		$menus = (new Type)->getTable();
 		$items = (new Item)->getTable();
@@ -106,14 +107,10 @@ class Adminmenu extends Widget
 		return DB::table($menus)
 			->select(
 				$menus . '.*',
-				DB::raw('SUM(' . $items . '.home) AS home'),
-				$items . '.language'
-				//'languages.image',
-				//'languages.sef',
-				//'languages.title_native'
+				DB::raw('SUM(' . $items . '.home) AS home')//,
+				//$items . '.language'
 			)
 			->leftJoin($items, $items . '.menutype', '=', $menus . '.menutype')
-			//->leftJoin('languages', 'languages.lang_code', '=', $items . '.language')
 			->whereNull($menus . '.deleted_at')
 			->where(function($where) use ($items)
 			{
@@ -133,10 +130,7 @@ class Adminmenu extends Widget
 			->groupBy($menus . '.updated_at')
 			->groupBy($menus . '.deleted_at')
 			->groupBy($items . '.menutype')
-			->groupBy($items . '.language')
-			//->groupBy('languages.image')
-			//->groupBy('languages.sef')
-			//->groupBy('languages.title_native')
+			//->groupBy($items . '.language')
 			->get();
 	}
 
@@ -144,9 +138,9 @@ class Adminmenu extends Widget
 	 * Get a list of the authorised, non-special components to display in the components menu.
 	 *
 	 * @param   bool  $authCheck  An optional switch to turn off the auth check (to support custom layouts 'grey out' behaviour).
-	 * @return  \Illuminate\Support\Collection  A collection of objects and submenus
+	 * @return  Collection  A collection of objects and submenus
 	 */
-	public function getModules($authCheck = true)
+	public function getModules(bool $authCheck = true): Collection
 	{
 		$items = (new Item)->getTable();
 		$ext = 'extensions';
@@ -166,16 +160,12 @@ class Adminmenu extends Widget
 			->where($ext . '.client_id', '=', '1')
 			->where($ext . '.enabled', '=', '1')
 			->where($ext . '.type', '=', 'module')
-			//->where($ext . '.protected', '=', '0')
-			//->orderBy($ext . '.folder', 'asc')
 			->orderBy($ext . '.ordering', 'asc')
 			->orderBy($ext . '.name', 'asc')
 			->get();
 
 		// Initialise variables.
-		$lang   = app('translator');
-		$result = array();
-		$langs  = array();
+		$lang = app('translator');
 
 		if (!$authCheck)
 		{
