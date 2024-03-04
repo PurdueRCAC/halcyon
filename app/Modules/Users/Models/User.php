@@ -180,7 +180,7 @@ class User extends Model implements
 
 				array_unshift($identities, $this->id * -1);
 
-				if (Gate::getAssetRules(1)->allow('admin', $identities))
+				if (Gate::getAssetRules('root.1')->allow('admin', $identities))
 				{
 					$this->isRoot = true;
 				}
@@ -644,7 +644,7 @@ class User extends Model implements
 	 * @param   bool    $includeTrashed
 	 * @return  User|null
 	 */
-	public static function findByUsername($username, $includeTrashed = false)
+	public static function findByUsername(string $username, bool $includeTrashed = false): ?self
 	{
 		if (filter_var($username, FILTER_VALIDATE_EMAIL))
 		{
@@ -673,7 +673,7 @@ class User extends Model implements
 	 * @param   bool    $includeTrashed
 	 * @return  User|null
 	 */
-	public static function findByEmail($email, $includeTrashed = false)
+	public static function findByEmail(string $email, bool $includeTrashed = false): ?self
 	{
 		$query = UserUsername::query();
 
@@ -697,7 +697,7 @@ class User extends Model implements
 	 * @param   int  $organization_id
 	 * @return  User|null
 	 */
-	public static function findByOrganizationId($organization_id)
+	public static function findByOrganizationId(int $organization_id): ?self
 	{
 		return self::query()
 			->where('puid', '=', $organization_id)
@@ -710,7 +710,7 @@ class User extends Model implements
 	 * @param   string  $token
 	 * @return  User|null
 	 */
-	public static function findByActivationToken($token)
+	public static function findByActivationToken(string $token): ?self
 	{
 		return self::query()
 			->where('activation', '=', $token)
@@ -724,7 +724,7 @@ class User extends Model implements
 	 * @param   bool  $recursive  Recursively include all child roles (optional)
 	 * @return  array<int,int>
 	 */
-	public static function findByRole($roleId, $recursive = false): array
+	public static function findByRole(int $roleId, bool $recursive = false): array
 	{
 		$test = $recursive ? '>=' : '=';
 
@@ -844,7 +844,7 @@ class User extends Model implements
 	 * @param   string  $username
 	 * @return  User
 	 */
-	public static function createFromUsername($username): User
+	public static function createFromUsername(string $username): User
 	{
 		$user = self::findByUsername($username, true);
 
@@ -923,12 +923,12 @@ class User extends Model implements
 	 * @param   bool $thumb
 	 * @return  string
 	 */
-	public function avatar($thumb = true): string
+	public function avatar(bool $thumb = true): string
 	{
 		$name = ($thumb ? 'thumb' : 'photo');
 
-		/*$found = false;
-		foreach (['jpg', 'png'] as $ext)
+		$found = false;
+		foreach (['png', 'webp', 'jpg', 'jpeg', 'jpe', 'gif'] as $ext)
 		{
 			$file = 'users/' . $this->id . '/' . $name . '.' . $ext;
 			$path = storage_path('app/public/' . $file);
@@ -941,7 +941,7 @@ class User extends Model implements
 		}
 
 		if (!$found)
-		{*/
+		{
 			$file = 'users/' . $this->id . '/' . $name . '.png';
 			$path = storage_path('app/public/' . $file);
 
@@ -952,10 +952,11 @@ class User extends Model implements
 
 				if (!$avatar->saveAs($path))
 				{
+					// Failed to create an image. Return the default.
 					return asset('modules/users/images/' . $name . '.png');
 				}
 			}
-		//}
+		}
 
 		return asset('files/' . $file);
 	}
