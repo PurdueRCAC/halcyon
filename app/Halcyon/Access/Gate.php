@@ -101,16 +101,17 @@ class Gate
 		}
 
 		// Get the rules for the asset recursively to root if not already retrieved.
-		if (empty(self::$assetRules[$asset]))
+		/*if (empty(self::$assetRules[$asset]))
 		{
 			self::$assetRules[$asset] = self::getAssetRules($asset, true);
-		}
+		}*/
 
 		// Get all roles against which the user is mapped.
 		$identities = self::getRolesByUser($userId);
 		array_unshift($identities, $userId * -1);
 
-		return self::$assetRules[$asset]->allow($action, $identities);
+		//return self::$assetRules[$asset]->allow($action, $identities);
+		return self::getAssetRules($asset, true)->allow($action, $identities);
 	}
 
 	/**
@@ -140,7 +141,7 @@ class Gate
 
 			array_unshift($identities, $userId * -1);
 
-			if (self::getAssetRules(1)->allow('admin', $identities))
+			if (self::getAssetRules('root.1')->allow('admin', $identities))
 			{
 				$result = true;
 			}
@@ -251,12 +252,14 @@ class Gate
 		}
 
 		// Get the rules for the asset recursively to root if not already retrieved.
-		if (empty(self::$assetRules[$asset]))
+		/*if (empty(self::$assetRules[$asset]))
 		{
 			self::$assetRules[$asset] = self::getAssetRules($asset, true);
 		}
 
-		return self::$assetRules[$asset]->allow($action, $rolePath);
+		return self::$assetRules[$asset]->allow($action, $rolePath);*/
+
+		return self::getAssetRules($asset, true)->allow($action, $rolePath);
 	}
 
 	/**
@@ -318,6 +321,10 @@ class Gate
 	 */
 	public static function getAssetRules($asset, $recursive = false): Rules
 	{
+		$assetKey = $asset . ($recursive ? 1 : 0);
+
+		if (empty(self::$assetRules[$assetKey]))
+		{
 		// Build the database query to get the rules for the asset.
 		$model = new Asset();
 
@@ -374,7 +381,10 @@ class Gate
 		$rules = new Rules();
 		$rules->mergeCollection($result);
 
-		return $rules;
+			self::$assetRules[$assetKey] = $rules;
+		}
+
+		return self::$assetRules[$assetKey]; //$rules;
 	}
 
 	/**

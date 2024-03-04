@@ -78,19 +78,16 @@ class Viewlevel extends Model
 	}
 
 	/**
-	 * Saves the current model to the database
+	 * The "booted" method of the model.
 	 *
-	 * @param  array<string,mixed>  $options
-	 * @return  bool
+	 * @return void
 	 */
-	public function save(array $options = []): bool
+	protected static function booted(): void
 	{
-		if (!$this->id && !$this->ordering)
+		static::creating(function ($model)
 		{
-			$this->ordering = $this->incrementOrdering();
-		}
-
-		return parent::save($options);
+			$model->ordering = $model->incrementOrdering();
+		});
 	}
 
 	/**
@@ -100,20 +97,21 @@ class Viewlevel extends Model
 	 */
 	public function visibleByRoles(): string
 	{
-		$rules = is_string($this->rules) ? json_decode($this->rules) : $this->rules;
+		$groups = '';
 
-		if (!$rules)
+		$rules = is_string($this->rules)
+			? json_decode($this->rules)
+			: $this->rules;
+
+		if (!empty($rules))
 		{
-			return '';
+			$titles = Role::query()
+				->whereIn('id', $rules)
+				->pluck('title')
+				->toArray();
+
+			$groups = implode(', ', $titles);
 		}
-
-		$groups = Role::query()
-			->whereIn('id', $rules)
-			->get()
-			->pluck('title')
-			->toArray();
-
-		$groups = implode(', ', $groups);
 
 		return $groups;
 	}
