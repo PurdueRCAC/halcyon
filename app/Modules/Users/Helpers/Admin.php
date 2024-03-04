@@ -2,6 +2,7 @@
 namespace App\Modules\Users\Helpers;
 
 use Illuminate\Support\Fluent;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Halcyon\Facades\Submenu;
 use App\Halcyon\Access\Role;
@@ -93,13 +94,13 @@ class Admin
 	/**
 	 * Get a list of the user groups for filtering.
 	 *
-	 * @return  array<int,stdClass>
+	 * @return  Collection
 	 */
-	public static function getAccessRoles(): array
+	public static function getAccessRoles(): Collection
 	{
 		$ug = (new Role)->getTable();
 
-		$options = array();
+		//$options = array();
 
 		$roles = Role::query()
 			->select(['a.id', 'a.title', DB::raw('COUNT(DISTINCT b.id) AS level')])
@@ -113,16 +114,16 @@ class Admin
 			->orderBy('a.lft', 'asc')
 			->get();
 
-		foreach ($roles as $role)
+		/*foreach ($roles as $role)
 		{
 			$option = new stdClass;
 			$option->value = $role->id;
 			$option->text  = str_repeat('- ', $role->level) . $role->title;
 
 			$options[] = $option;
-		}
+		}*/
 
-		return $options;
+		return $roles; //$options;
 	}
 
 	/**

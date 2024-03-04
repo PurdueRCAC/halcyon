@@ -17,6 +17,8 @@ use App\Modules\Users\Models\RegistrationField;
 use App\Modules\Users\Events\UserBeforeDisplay;
 use App\Modules\Users\Events\UserDisplay;
 use App\Modules\Users\Events\UserDeleted;
+use App\Modules\Users\Helpers\Debug;
+use App\Modules\Users\Helpers\Admin;
 use App\Halcyon\Http\StatefulRequest;
 use App\Halcyon\Access\Map;
 use App\Halcyon\Access\Role;
@@ -24,7 +26,6 @@ use App\Halcyon\Access\Gate;
 use App\Halcyon\Access\Asset;
 use Carbon\Carbon;
 use App\Modules\Groups\Models\Member;
-use App\Modules\Users\Helpers\Debug;
 
 class UsersController extends Controller
 {
@@ -102,6 +103,7 @@ class UsersController extends Controller
 				)
 			)
 			->with('roles')
+			->with('sessions')
 			->join($u, $u . '.userid', $a . '.id');
 			/*->including(['notes', function ($note){
 				$note
@@ -120,7 +122,6 @@ class UsersController extends Controller
 							$join->on($a . '.id', '=', $facetAlias . '.user_id')
 								->on($facetAlias . '.key', '=', DB::raw("'" . $extra . "'"));
 						}
-				
 					);
 			}
 		}
@@ -183,10 +184,10 @@ class UsersController extends Controller
 						->orWhere($a . '.name', 'like', $skipmiddlename . '%')
 						->orWhere($u . '.username', 'like', '' . $search . '%')
 						->orWhere($u . '.username', 'like', '%' . $search . '%');
-						foreach (array_keys($extraFieldKeys) as $extraKey)
-						{
-							$where->orWhere('facet-' . $extraKey . '.value', 'like', '%' . $search . '%');
-						}
+					foreach (array_keys($extraFieldKeys) as $extraKey)
+					{
+						$where->orWhere('facet-' . $extraKey . '.value', 'like', '%' . $search . '%');
+					}
 				});
 			}
 		}
@@ -264,7 +265,8 @@ class UsersController extends Controller
 		return view('users::admin.users.index', [
 			'rows' => $rows,
 			'extraFieldKeys' => $extraFieldKeys,
-			'filters' => $filters
+			'filters' => $filters,
+			'roles' => Admin::getAccessRoles(),
 		]);
 	}
 

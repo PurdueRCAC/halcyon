@@ -79,8 +79,8 @@ app('pathway')
 				<label class="sr-only" for="filter-role_id">{{ trans('users::users.usergroup') }}:</label>
 				<select name="role_id" id="filter-role_id" class="form-control filter filter-submit">
 					<option value="0">{{ trans('users::users.all roles') }}</option>
-					<?php foreach (App\Modules\Users\Helpers\Admin::getAccessRoles() as $role): ?>
-						<option value="{{ $role->value }}"<?php if ($filters['role_id'] == $role->value): echo ' selected="selected"'; endif;?>>{{ $role->text }}</option>
+					<?php foreach ($roles as $role): ?>
+						<option value="{{ $role->id }}"<?php if ($filters['role_id'] == $role->id): echo ' selected="selected"'; endif;?>>{{ str_repeat('- ', $role->level) . $role->title }}</option>
 					<?php endforeach; ?>
 				</select>
 
@@ -134,20 +134,27 @@ app('pathway')
 			</tr>
 		</thead>
 		<tbody>
+		<?php
+		$canDelete = auth()->user()->can('delete users');
+		$canChange = auth()->user()->can('edit.state users');
+		?>
 		@foreach ($rows as $i => $row)
 			<?php
-			$canDelete = auth()->user()->can('delete users');
+			/*$canDelete = auth()->user()->can('delete users');
 			$canChange = auth()->user()->can('edit.state users');
 
 			// If this group is super admin and this user is not super admin, edit is false
 			if (!auth()->user()->can('admin') && App\Halcyon\Access\Gate::check($row->id, 'admin')):
 				$canDelete = false;
 				$canChange = false;
-			endif;
+			endif;*/
 
 			$groups = array();
 			foreach ($row->roles as $role):
-				$groups[] = $role->role->title; //$accessgroups->seek($agroup->group_id)->title;
+				$r = $roles->where('id', '=', $role->role_id)->first();
+				if ($r):
+					$groups[] = $r->title; //$role->role->title; //$accessgroups->seek($agroup->group_id)->title;
+				endif;
 			endforeach;
 			$row->role_names = implode('<br />', $groups);
 
