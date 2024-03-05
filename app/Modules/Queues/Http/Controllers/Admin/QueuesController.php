@@ -10,6 +10,8 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\Type;
@@ -272,8 +274,9 @@ class QueuesController extends Controller
 	/**
 	 * Download a list of records
 	 * 
-	 * @param  object  $rows
-	 * @return Response
+	 * @param  Collection $rows
+	 * @param  array<string,mixed>  $filters
+	 * @return StreamedResponse
 	 */
 	public function export($rows, $filters)
 	{

@@ -31,7 +31,7 @@ class EmailQueueRequestedCommand extends Command
 	/**
 	 * Execute the console command.
 	 */
-	public function handle()
+	public function handle(): void
 	{
 		$debug = $this->option('debug') ? true : false;
 
@@ -180,6 +180,11 @@ class EmailQueueRequestedCommand extends Command
 				{
 					foreach ($user_activity as $userid => $activity)
 					{
+						if (empty($activity['queueusers']))
+						{
+							continue;
+						}
+
 						// Change states
 						foreach ($activity['queueusers'] as $queueuser)
 						{

@@ -44,7 +44,7 @@ use Carbon\Carbon;
  * @property int    $reservation
  * @property string $cluster
  * @property int    $priority
- * @property int    $defaultwalltime
+ * @property int|float $defaultwalltime
  * @property int    $maxjobsqueued
  * @property int    $maxjobsqueueduser
  * @property int    $maxjobsrun

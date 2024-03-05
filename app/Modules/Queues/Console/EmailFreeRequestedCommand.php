@@ -35,7 +35,7 @@ class EmailFreeRequestedCommand extends Command
 	/**
 	 * Execute the console command.
 	 */
-	public function handle()
+	public function handle(): void
 	{
 		$debug = $this->option('debug') ? true : false;
 
