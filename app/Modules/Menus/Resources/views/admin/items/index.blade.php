@@ -85,7 +85,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 				<label class="sr-only" for="filter_menutype">{{ trans('menus::menus.menu type') }}</label>
 				<select name="menutype" id="filter_menutype" class="form-control filter filter-submit">
 					@foreach ($menus as $menu)
-						<option value="{{ $menu->menutype }}"<?php if ($menu->id == $filters['menutype']) { echo ' selected'; } ?>>{{ $menu->title }}</option>
+						<option value="{{ $menu->menutype }}"<?php if ($menu->menutype == $filters['menutype']) { echo ' selected'; } ?>>{{ $menu->title }}</option>
 					@endforeach
 				</select>
 			</div>
