@@ -172,26 +172,15 @@ class ItemsController extends Controller
 		{
 			$query->onlyTrashed();
 		}
-		/*else
+		else
 		{
 			$query->withTrashed();
 		}
-		if (is_numeric($published))
-		{
-			$query->withTrashed()->where($a . '.published', '=', (int) $published);
-		}
-		elseif ($published === '')
-		{
-			$query->withTrashed()->whereIn($a . '.published', array(0, 1));
-		}
-		elseif ($published == '*')
-		{
-			$query->withTrashed();
-		}*/
 
 		// Filter by search in title, alias or id
-		if ($search = trim($filters['search']))
+		if ($filters['search'])
 		{
+			$search = trim($filters['search']);
 			if (stripos($search, 'id:') === 0)
 			{
 				$query->where('a.id', '=', (int) substr($search, 3));

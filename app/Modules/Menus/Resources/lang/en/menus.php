@@ -18,7 +18,7 @@ return [
 	'access' => 'Access',
 	'all access levels' => '- All Access Levels -',
 	'state' => 'State',
-	'all states' => '- All States -',
+	'all states' => 'All',
 	'state_unpublish' => 'Unpublish',
 	'state_publish' => 'Publish',
 	'published' => 'Published',

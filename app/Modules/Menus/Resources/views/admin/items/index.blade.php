@@ -81,7 +81,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col col-md-3">
+			<div class="col-sm-12 col-md-3">
 				<label class="sr-only" for="filter_menutype">{{ trans('menus::menus.menu type') }}</label>
 				<select name="menutype" id="filter_menutype" class="form-control filter filter-submit">
 					@foreach ($menus as $menu)
@@ -89,15 +89,15 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 					@endforeach
 				</select>
 			</div>
-			<div class="col col-md-9 text-right filter-select">
-				<label class="sr-only" for="filter_state">{{ trans('global.state') }}</label>
-				<select name="state" id="filter_state" class="form-control filter filter-submit">
-					<option value="">{{ trans('menus::menus.all states') }}</option>
-					<option value="published"<?php if ($filters['state'] == 'published') { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
-					<option value="unpublished"<?php if ($filters['state'] == 'unpublished') { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
-					<option value="trashed"<?php if ($filters['state'] == 'trashed') { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
-				</select>
-
+			<div class="col-sm-12 col-md-6 text-center filter-select">
+				<div class="btn-group" role="group" aria-label="{{ trans('widgets::widgets.client type') }}">
+					<a href="{{ route('admin.menus.items', ['state' => '*']) }}" class="btn btn-secondary<?php if (!in_array($filters['state'], ['published', 'unpublished', 'trashed'])): echo ' active'; endif;?>">{{ trans('menus::menus.all states') }}</a>
+					<a href="{{ route('admin.menus.items', ['state' => 'published']) }}" class="btn btn-secondary<?php if ($filters['state'] == 'published'): echo ' active'; endif;?>">{{ trans('global.published') }}</a>
+					<a href="{{ route('admin.menus.items', ['state' => 'unpublished']) }}" class="btn btn-secondary<?php if ($filters['state'] == 'unpublished'): echo ' active'; endif;?>">{{ trans('global.unpublished') }}</a>
+					<a href="{{ route('admin.menus.items', ['state' => 'trashed']) }}" class="btn btn-secondary<?php if ($filters['state'] == 'trashed'): echo ' active'; endif;?>">{{ trans('global.trashed') }}</a>
+				</div>
+			</div>
+			<div class="col-sm-12 col-md-3 text-right filter-select">
 				<label class="sr-only" for="filter_access">{{ trans('global.access') }}</label>
 				<select name="access" id="filter_access" class="form-control filter filter-submit">
 					<option value="">{{ trans('menus::menus.all access levels') }}</option>
@@ -124,6 +124,28 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 		?>
 		<div class="container-fluid">
 			<ul data-parent="{{ $parent_id }}" id="sortable" data-api="{{ route('api.menus.update', ['id' => $menu->id]) }}">
+				<div class="card p-2 mb-1 bg-dark">
+					<div class="d-flex">
+						<div>
+							{!! Html::grid('checkall') !!}
+						</div>
+						<div class="w-25 ml-3">
+							{{ trans('menus::menus.item.title') }}
+						</div>
+						<div class="flex-grow-1">
+							{{ trans('menus::menus.item.link') }}
+						</div>
+						<div class="text-center" style="width: 10em;">
+							{{ trans('menus::menus.state') }}
+						</div>
+						<div class="text-center" style="width: 10em;">
+							{{ trans('menus::menus.access') }}
+						</div>
+						<div class="text-right">
+							<div style="width: 1em;"></div>
+						</div>
+					</div>
+				</div>
 		@foreach ($rows as $i => $row)
 			<?php
 			if ($row->parent_id != $parent_id)
@@ -153,7 +175,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 			$level = $row->level;
 			?>
 			<li data-parent="{{ $row->parent_id }}" data-id="{{ $row->id }}" class="mx-0">
-				<div class="card p-2 mb-1{{ !$row->state ? ' bg-transparent' : '' }}">
+				<div class="card p-2 mb-1{{ !$row->state ? ' bg-transparent' : '' }}{{ $row->trashed() ? ' trashed' : '' }}">
 					<div class="d-flex">
 						<div>
 							@if ($canChange)
@@ -241,6 +263,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 						</div>
 					</div>
 				</div>
+			</li>
 		@endforeach
 			</ul>
 		</div>
