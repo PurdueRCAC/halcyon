@@ -55,6 +55,17 @@ app('pathway')
 @section('content')
 <form action="{{ route('admin.widgets.index') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
+<nav class="container-fluid" aria-label="{{ trans('users::users.module sections') }}">
+	<ul class="nav nav-tabs">
+		<li class="nav-item">
+			<a href="{{ route('admin.widgets.index', ['client_id' => 0]) }}" class="nav-link<?php if ($filters['client_id'] == '0'): echo ' active'; endif;?>">{{ trans('widgets::widgets.client.site') }}</a>
+		</li>
+		<li class="nav-item">
+			<a href="{{ route('admin.widgets.index', ['client_id' => 1]) }}" class="nav-link<?php if ($filters['client_id'] == '1'): echo ' active'; endif;?>">{{ trans('widgets::widgets.client.admin') }}</a>
+		</li>
+	</ul>
+</nav><!-- / .sub-navigation -->
+
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col col-md-3 filter-search">
@@ -67,12 +78,6 @@ app('pathway')
 				</div>
 			</div>
 			<div class="col col-md-9 text-right filter-select">
-				<label class="sr-only" for="filter_client_id">{{ trans('widgets::widgets.client type') }}</label>
-				<select name="client_id" id="filter_client_id" class="form-control filter filter-submit">
-					<option value="0"<?php if ($filters['client_id'] == '0'): echo ' selected="selected"'; endif;?>>{{ trans('widgets::widgets.client.site') }}</option>
-					<option value="1"<?php if ($filters['client_id'] == '1'): echo ' selected="selected"'; endif;?>>{{ trans('widgets::widgets.client.admin') }}</option>
-				</select>
-
 				<label class="sr-only" for="filter_state">{{ trans('widgets::widgets.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('widgets::widgets.all states') }}</option>
