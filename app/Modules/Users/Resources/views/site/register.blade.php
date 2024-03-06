@@ -23,7 +23,7 @@ app('pathway')
 
 					<div class="card-body p-4 p-md-5">
 						<h2 class="card-title mt-0 pt-0 mb-4 pb-2 pb-md-0 mb-md-5">{{ trans('users::auth.register') }}</h2>
-						@if (!$invite && config('module.users.invite_only'))
+						@if (!($invite ?? null) && config('module.users.invite_only'))
 							<p class="alert alert-warning">Registration is by invitation only.</p>
 						@else
 						<form method="post" action="{{ route('register.post') }}">
@@ -126,7 +126,7 @@ app('pathway')
 								@endif
 							@endif
 
-							<input type="hidden" name="token" value="{{ $invite ? $invite->token : '' }}" />
+							<input type="hidden" name="token" value="{{ $invite ?? null ? $invite->token : '' }}" />
 
 							<div class="row mt-4 pt-2">
 								<div class="col-md-4">
