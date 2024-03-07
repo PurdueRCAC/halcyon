@@ -26,11 +26,13 @@ class MenusController extends Controller
 	 * @apiUri    /menus
 	 * @apiAuthorization  true
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       ""
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "limit",
@@ -43,26 +45,37 @@ class MenusController extends Controller
 	 * 		}
 	 * }
 	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "page",
 	 * 		"description":   "Number of where to start returning results.",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
-	 * 		"default":       1
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   1
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order",
 	 * 		"description":   "Field to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "datetimecreated",
-	 * 		"allowedValues": "id, motd, datetimecreated, datetimeremoved"
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "menutype",
+	 * 			"enum": [
+	 * 				"id",
+	 * 				"title",
+	 * 				"menutype",
+	 * 				"description",
+	 * 				"client_id",
+	 * 				"created_at",
+	 * 				"updated_at"
+	 * 			]
+	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"name":          "order_dir",
 	 * 		"description":   "Direction to sort results by.",
-	 * 		"type":          "string",
 	 * 		"required":      false,
-	 * 		"default":       "desc",
 	 * 		"schema": {
 	 * 			"type":      "string",
 	 * 			"default":   "asc",
@@ -70,6 +83,32 @@ class MenusController extends Controller
 	 * 				"asc",
 	 * 				"desc"
 	 * 			]
+	 * 		}
+	 * }
+	 * @apiResponse {
+	 * 		"200": {
+	 * 			"description": "Successful list cread",
+	 * 			"content": {
+	 * 				"application/json": {
+	 * 					"example": {"data":[{
+	 * 						"id": 2,
+	 * 						"menutype": "about",
+	 * 						"title": "About",
+	 * 						"description": "About Side Menu",
+	 * 						"client_id": 0,
+	 * 						"created_at": null,
+	 * 						"updated_at": null,
+	 * 						"deleted_at": null,
+	 * 						"items_count": 12,
+	 * 						"counts": {
+	 * 							"published": 0,
+	 * 							"unpublished": 0,
+	 * 							"trashed": 0
+	 * 						},
+	 * 						"api": "https://example.org/api/menus/2"
+	 * 					}]}
+	 * 				}
+	 * 			}
 	 * 		}
 	 * }
 	 * @param  Request  $request
@@ -192,11 +231,11 @@ class MenusController extends Controller
 	 * 						"updated_at": null,
 	 * 						"deleted_at": null,
 	 * 						"items_count": 12,
-	 * 						"counts": [
+	 * 						"counts": {
 	 * 							"published": 0,
 	 * 							"unpublished": 0,
 	 * 							"trashed": 0
-	 * 						],
+	 * 						},
 	 * 						"api": "https://example.org/api/menus/2"
 	 * 					}
 	 * 				}
@@ -275,11 +314,11 @@ class MenusController extends Controller
 	 * 						"updated_at": null,
 	 * 						"deleted_at": null,
 	 * 						"items_count": 12,
-	 * 						"counts": [
+	 * 						"counts": {
 	 * 							"published": 0,
 	 * 							"unpublished": 0,
 	 * 							"trashed": 0
-	 * 						],
+	 * 						},
 	 * 						"api": "https://example.org/api/menus/2"
 	 * 					}
 	 * 				}
@@ -374,11 +413,11 @@ class MenusController extends Controller
 	 * 						"updated_at": null,
 	 * 						"deleted_at": null,
 	 * 						"items_count": 12,
-	 * 						"counts": [
+	 * 						"counts": {
 	 * 							"published": 0,
 	 * 							"unpublished": 0,
 	 * 							"trashed": 0
-	 * 						],
+	 * 						},
 	 * 						"api": "https://example.org/api/menus/2"
 	 * 					}
 	 * 				}
