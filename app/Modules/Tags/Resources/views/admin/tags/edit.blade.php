@@ -77,13 +77,13 @@ app('pathway')
 					<legend>{{ trans('tags::tags.alias') }}</legend>
 
 					<table class="table table-hover">
-						<caption class="sr-only">{{ trans('tags::tags.alias') }}</caption>
+						<caption class="sr-only visually-hidden">{{ trans('tags::tags.alias') }}</caption>
 						<thead>
 							<tr>
 								<th scope="col">{{ trans('tags::tags.id') }}</th>
 								<th scope="col">{{ trans('tags::tags.name') }}</th>
 								<th scope="col">{{ trans('tags::tags.slug') }}</th>
-								<th scope="col" class="text-right"></th>
+								<th scope="col" class="text-right text-end"></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -92,12 +92,12 @@ app('pathway')
 									<td>{{ $u->id }}</td>
 									<td>{{ $u->name }}</td>
 									<td>{{ $u->slug }}</td>
-									<td class="text-right">
+									<td class="text-right text-end">
 										<a href="#alias-{{ $u->id }}" class="btn text-danger remove-alias"
 											data-api="{{ route('api.tags.delete', ['id' => $u->id]) }}"
 											data-confirm="{{ trans('global.confirm delete') }}"
 											data-success="{{ trans('tags::tags.item removed') }}">
-											<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.trash') }}</span>
+											<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.trash') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -106,12 +106,12 @@ app('pathway')
 								<td>{id}</td>
 								<td>{name}</td>
 								<td>{slug}</td>
-								<td class="text-right">
+								<td class="text-right text-end">
 									<a href="#alias-{id}" class="btn text-danger remove-alias"
 										data-api="{{ route('api.tags.create') }}/{id}"
 										data-confirm="{{ trans('global.confirm delete') }}"
 										data-success="{{ trans('tags::tags.item removed') }}">
-										<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.trash') }}</span>
+										<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.trash') }}</span>
 									</a>
 								</td>
 							</tr>
@@ -122,12 +122,12 @@ app('pathway')
 								<td colspan="2">
 									<input type="text" name="name" id="name" class="form-control input-alias" placeholder="{{ trans('tags::tags.alias placeholder') }}" />
 								</td>
-								<td class="text-right">
-									<a href="#name" class="btn text-success alias-add"
+								<td class="text-right text-end">
+									<a href="#name" class="btn btn-success alias-add"
 										data-id="{{ $row->id }}"
 										data-api="{{ route('api.tags.create') }}"
 										data-success="{{ trans('tags::tags.item added') }}">
-										<span class="fa fa-plus" aria-hidden="true"></span><span class="sr-only">{{ trans('global.add') }}</span>
+										<span class="fa fa-plus" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.add') }}</span>
 									</a>
 								</td>
 							</tr>

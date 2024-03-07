@@ -91,7 +91,7 @@ class Tagged extends Model
 	 * @param   int  $tagger    User ID of person adding tag
 	 * @return  Tagged|null
 	 **/
-	public static function findByScoped($scope, $scope_id, $tag_id, $tagger=0): ?Tagged
+	public static function findByScoped(string $scope, int $scope_id, int $tag_id, int $tagger=0): ?Tagged
 	{
 		$instance = self::query()
 			->where('taggable_type', '=', (string)$scope)

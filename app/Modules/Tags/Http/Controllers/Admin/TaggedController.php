@@ -14,7 +14,7 @@ use App\Halcyon\Http\StatefulRequest;
 class TaggedController extends Controller
 {
 	/**
-	 * Display a listing of tags
+	 * Display a listing of tagged items
 	 *
 	 * @param  StatefulRequest $request
 	 * @return View
@@ -38,7 +38,7 @@ class TaggedController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('tagged.filter_' . $key)
+			 && $request->has($key)
 			 && $request->input($key) != session()->get('tagged.filter_' . $key))
 			{
 				$reset = true;
@@ -72,95 +72,12 @@ class TaggedController extends Controller
 		}
 
 		$rows = $query
-			//->withCount('tagged')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
 		return view('tags::admin.tagged.index', [
 			'rows'    => $rows,
 			'filters' => $filters
-		]);
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @param  Request $request
-	 * @return View
-	 */
-	public function create(Request $request)
-	{
-		$row = new Tagged();
-
-		if ($fields = $request->old('fields'))
-		{
-			$row->fill($fields);
-		}
-
-		return view('tags::admin.tagged.edit', [
-			'row' => $row
-		]);
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  Request $request
-	 * @return RedirectResponse
-	 */
-	public function store(Request $request)
-	{
-		$rules = [
-			'fields.tag_id' => 'required|integer',
-			'fields.taggable_id' => 'required|integer',
-			'fields.taggable_type' => 'required|string|max:255'
-		];
-
-		$validator = Validator::make($request->all(), $rules);
-
-		if ($validator->fails())
-		{
-			return redirect()->back()
-				->withInput($request->input())
-				->withErrors($validator->messages());
-		}
-
-		$id = $request->input('id');
-
-		$row = Tagged::findOrNew($id);
-		$row->fill($request->input('fields'));
-
-		if (!$row->created_by && auth()->user())
-		{
-			$row->created_by = auth()->user()->id;
-		}
-
-		if (!$row->save())
-		{
-			return redirect()->back()->withError(trans('global.messages.save failed'));
-		}
-
-		return $this->cancel()->with('success', trans('global.messages.item saved'));
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  Request $request
-	 * @param  int $id
-	 * @return View
-	 */
-	public function edit(Request $request, $id)
-	{
-		$row = Tagged::findOrFail($id);
-
-		if ($fields = $request->old('fields'))
-		{
-			$row->fill($fields);
-		}
-
-		return view('tags::admin.tagged.edit', [
-			'row' => $row,
 		]);
 	}
 
@@ -210,6 +127,6 @@ class TaggedController extends Controller
 	 */
 	public function cancel()
 	{
-		return redirect(route('admin.tags.index'));
+		return redirect(route('admin.tags.tagged'));
 	}
 }

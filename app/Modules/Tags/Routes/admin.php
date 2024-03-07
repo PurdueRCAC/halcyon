@@ -34,4 +34,20 @@ $router->group(['prefix' => 'tags'], function (Router $router)
 		'as' => 'admin.tags.cancel',
 		'uses' => 'TagsController@cancel',
 	]);
+
+	$router->group(['prefix' => 'tagged', 'middleware' => 'can:manage tags'], function (Router $router)
+	{
+		$router->match(['get', 'post'], '/', [
+			'as' => 'admin.tags.tagged',
+			'uses' => 'TaggedController@index',
+		]);
+		$router->match(['get', 'post'], '/delete/{id?}', [
+			'as'   => 'admin.tags.tagged.delete',
+			'uses' => 'TaggedController@delete',
+		]);
+		$router->match(['get', 'post'], 'cancel', [
+			'as' => 'admin.tags.tagged.cancel',
+			'uses' => 'TaggedController@cancel',
+		]);
+	});
 });

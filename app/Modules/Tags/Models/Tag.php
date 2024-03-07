@@ -83,7 +83,7 @@ class Tag extends Model
 	{
 		static::created(function ($model)
 		{
-			if ($model->parent_id)
+			if ($model->parent_id && $model->parent)
 			{
 				$total = self::query()
 					->where('parent_id', '=', $model->parent_id)

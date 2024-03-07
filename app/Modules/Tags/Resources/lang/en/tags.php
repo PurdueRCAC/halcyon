@@ -11,9 +11,6 @@ return [
 	'slug placeholder' => 'This is a read-only field that will be filled in after saving.',
 	'slug hint' => 'To create the slug (used for URLs), all spaces, punctuation, and non-alpanumeric characters are stripped. "N.Y.", "NY", and "ny" will all have a normalized tag of "ny".',
 	'created' => 'Created',
-	'FIELD_CREATOR' => 'Creator',
-	'FIELD_MODIFIER' => 'Modifier',
-	'FIELD_MODIFIED' => 'Modified',
 	'tag id' => 'Tag ID',
 	'tag id hint' => 'The ID of the tag being linked.',
 	'taggable id' => 'Item ID',
@@ -27,6 +24,7 @@ return [
 	'record id' => 'Tag #:id',
 	'item removed' => 'Item removed.',
 	'item added' => 'Item added.',
+	'all domains' => '- All Domains -',
 	'domain' => 'Namespace',
 	'domain hint' => 'A namespace that allows for limiting queries to specific tag sets. This is typically a module name, such as "users" for tags associated with user profiles.',
 ];

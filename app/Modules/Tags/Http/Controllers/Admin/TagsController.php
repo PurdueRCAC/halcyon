@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use App\Modules\Tags\Models\Tag;
 use App\Halcyon\Http\StatefulRequest;
 
@@ -24,6 +25,7 @@ class TagsController extends Controller
 		$filters = array(
 			'search'    => null,
 			'state'     => 'active',
+			'domain'    => null,
 			// Paging
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
@@ -70,6 +72,11 @@ class TagsController extends Controller
 			});
 		}
 
+		if ($filters['domain'])
+		{
+			$query->where('domain', '=', $filters['domain']);
+		}
+
 		if ($filters['state'] == 'active')
 		{
 			// Laravel does this by default
@@ -85,12 +92,19 @@ class TagsController extends Controller
 
 		$rows = $query
 			//->withCount('tagged')
+			//->withCount('aliases')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
+		$domains = Tag::query()
+			->select(DB::raw('DISTINCT(domain)'))
+			->orderBy('domain', 'asc')
+			->get();
+
 		return view('tags::admin.tags.index', [
 			'rows'    => $rows,
-			'filters' => $filters
+			'filters' => $filters,
+			'domains' => $domains,
 		]);
 	}
 
