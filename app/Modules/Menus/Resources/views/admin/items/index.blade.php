@@ -77,19 +77,19 @@ app('pathway')
 <?php
 $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 ?>
-<form action="{{ route('admin.menus.items') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.menus.items') }}" method="get" name="adminForm" id="adminForm">
 
-	<fieldset id="filter-bar" class="container-fluid">
+	<fieldset id="filter-bar" class="container-fluid mb-3">
 		<div class="row">
-			<div class="col-sm-12 col-md-3">
-				<label class="sr-only" for="filter_menutype">{{ trans('menus::menus.menu type') }}</label>
+			<div class="col-sm-12 col-md-3 mb-2">
+				<label class="sr-only visually-hidden" for="filter_menutype">{{ trans('menus::menus.item.type') }}</label>
 				<select name="menutype" id="filter_menutype" class="form-control filter filter-submit">
 					@foreach ($menus as $menu)
 						<option value="{{ $menu->menutype }}"<?php if ($menu->menutype == $filters['menutype']) { echo ' selected'; } ?>>{{ $menu->title }}</option>
 					@endforeach
 				</select>
 			</div>
-			<div class="col-sm-12 col-md-6 text-center filter-select">
+			<div class="col-sm-12 col-md-6 mb-2 text-center filter-select">
 				<div class="btn-group" role="group" aria-label="{{ trans('widgets::widgets.client type') }}">
 					<a href="{{ route('admin.menus.items', ['state' => '*']) }}" class="btn btn-secondary<?php if (!in_array($filters['state'], ['published', 'unpublished', 'trashed'])): echo ' active'; endif;?>">{{ trans('menus::menus.all states') }}</a>
 					<a href="{{ route('admin.menus.items', ['state' => 'published']) }}" class="btn btn-secondary<?php if ($filters['state'] == 'published'): echo ' active'; endif;?>">{{ trans('global.published') }}</a>
@@ -97,8 +97,8 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 					<a href="{{ route('admin.menus.items', ['state' => 'trashed']) }}" class="btn btn-secondary<?php if ($filters['state'] == 'trashed'): echo ' active'; endif;?>">{{ trans('global.trashed') }}</a>
 				</div>
 			</div>
-			<div class="col-sm-12 col-md-3 text-right filter-select">
-				<label class="sr-only" for="filter_access">{{ trans('global.access') }}</label>
+			<div class="col-sm-12 col-md-3 mb-2 text-right filter-select">
+				<label class="sr-only visually-hidden" for="filter_access">{{ trans('global.access') }}</label>
 				<select name="access" id="filter_access" class="form-control filter filter-submit">
 					<option value="">{{ trans('menus::menus.all access levels') }}</option>
 					@foreach (\App\Halcyon\Html\Builder\Access::assetgroups() as $viewlevel)
@@ -111,13 +111,15 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
 		<?php
 		$originalOrders = array();
 		$canChange = auth()->user()->can('edit menus');
+		$canDelete = auth()->user()->can('delete menus');
+		$canEditState = auth()->user()->can('edit.state menus');
 		$parent_id = 1;
 		$level = 1;
 		$p = 1;
@@ -126,10 +128,12 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 			<ul data-parent="{{ $parent_id }}" id="sortable" data-api="{{ route('api.menus.update', ['id' => $menu->id]) }}">
 				<div class="card p-2 mb-1 bg-dark">
 					<div class="d-flex">
+						@if ($canEditState || $canDelete)
 						<div>
 							{!! Html::grid('checkall') !!}
 						</div>
-						<div class="w-25 ml-3">
+						@endif
+						<div class="w-25 ml-3 ms-3">
 							{{ trans('menus::menus.item.title') }}
 						</div>
 						<div class="flex-grow-1">
@@ -160,7 +164,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 				elseif ($row->level > $level)
 				{
 					?>
-					<ul data-parent="{{ $row->parent_id }}" class="ml-3">
+					<ul data-parent="{{ $row->parent_id }}" class="ml-3 ms-3">
 					<?php
 				}
 				$parent_id = $row->parent_id;
@@ -168,7 +172,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 			else
 			{
 				?>
-				<ul data-parent="{{ $row->parent_id }}" class="ml-3"></ul>
+				<ul data-parent="{{ $row->parent_id }}" class="ml-3 ms-3"></ul>
 				</li>
 				<?php
 			}
@@ -177,12 +181,12 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 			<li data-parent="{{ $row->parent_id }}" data-id="{{ $row->id }}" class="mx-0">
 				<div class="card p-2 mb-1{{ !$row->state ? ' bg-transparent' : '' }}{{ $row->trashed() ? ' trashed' : '' }}">
 					<div class="d-flex">
+						@if ($canEditState || $canDelete)
 						<div>
-							@if ($canChange)
-								{!! Html::grid('id', $i, $row->id) !!}
-							@endif
+							{!! Html::grid('id', $i, $row->id) !!}
 						</div>
-						<div class="w-25 ml-3">
+						@endif
+						<div class="w-25 ml-3 ms-3">
 							@if ($row->checked_out)
 								<?php echo \App\Halcyon\Html\Builder\Grid::checkedout($i, $row->editor, $row->checked_out_time, 'items.', $canCheckin); ?>
 							@endif
@@ -209,12 +213,12 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 										@if (empty($row->note))
 											<span class="text-muted">/{{ trim($row->link, '/') }}</span>
 										@else
-											{!! trans('global.LIST_ALIAS_NOTE', ['alias' => $row->alias, 'note' => $row->note]) !!}
+											{{ $row->note }}
 										@endif
 									@elseif ($row->type == 'url')
 										<span class="text-muted">{{ $row->link }}</span>
 										@if ($row->note)
-											{!! trans('global.LIST_NOTE', ['note' => $row->note]) !!}
+											{{ $row->note }}
 										@endif
 									@endif
 								</div>

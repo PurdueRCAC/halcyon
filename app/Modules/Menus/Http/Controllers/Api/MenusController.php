@@ -26,13 +26,6 @@ class MenusController extends Controller
 	 * @apiUri    /menus
 	 * @apiAuthorization  true
 	 * @apiParameter {
-	 * 		"name":          "client_id",
-	 * 		"description":   "Client (admin = 1|site = 0) ID",
-	 * 		"type":          "integer",
-	 * 		"required":      false,
-	 * 		"default":       null
-	 * }
-	 * @apiParameter {
 	 * 		"name":          "search",
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"type":          "string",
@@ -86,12 +79,9 @@ class MenusController extends Controller
 	{
 		// Get filters
 		$filters = array(
-			'search'   => null,
-			//'state'    => 'published',
-			//'access'   => null,
-			//'parent'   => 0,
+			'search'    => null,
 			// Paging
-			'limit'    => config('list_limit', 20),
+			'limit'     => config('list_limit', 20),
 			// Sorting
 			'order'     => Type::$orderBy,
 			'order_dir' => Type::$orderDir,
@@ -102,7 +92,7 @@ class MenusController extends Controller
 			$filters[$key] = $request->input($key, $default);
 		}
 
-		if (!in_array($filters['order'], ['id', 'title', 'published', 'access']))
+		if (!in_array($filters['order'], ['id', 'title', 'menutype', 'client_id', 'description', 'updated_at', 'created_at']))
 		{
 			$filters['order'] = Type::$orderBy;
 		}
@@ -120,6 +110,7 @@ class MenusController extends Controller
 			$query->where(function($where) use ($filters)
 			{
 				$where->where('title', 'like', '%' . $filters['search'] . '%')
+					->orWhere('menutype', 'like', '%' . $filters['search'] . '%')
 					->orWhere('description', 'like', '%' . $filters['search'] . '%');
 			});
 		}
@@ -129,9 +120,14 @@ class MenusController extends Controller
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'])
 			->appends(array_filter($filters))
-			->each(function($item, $key)
+			->each(function($row, $key)
 			{
-				$item->api = route('api.menus.read', ['id' => $item->id]);
+				$row->api = route('api.menus.read', ['id' => $row->id]);
+				$row->counts = [
+					'published' => number_format($row->countPublishedItems()),
+					'unpublished' => number_format($row->countUnpublishedItems()),
+					'trashed' => number_format($row->countTrashedItems()),
+				];
 			});
 
 		return new ResourceCollection($rows);
@@ -196,6 +192,11 @@ class MenusController extends Controller
 	 * 						"updated_at": null,
 	 * 						"deleted_at": null,
 	 * 						"items_count": 12,
+	 * 						"counts": [
+	 * 							"published": 0,
+	 * 							"unpublished": 0,
+	 * 							"trashed": 0
+	 * 						],
 	 * 						"api": "https://example.org/api/menus/2"
 	 * 					}
 	 * 				}
@@ -234,6 +235,12 @@ class MenusController extends Controller
 		}
 
 		$row->api = route('api.menus.read', ['id' => $row->id]);
+		$row->item_coutns = 0;
+		$row->counts = [
+			'published' => 0,
+			'unpublished' => 0,
+			'trashed' => 0,
+		];
 
 		return new JsonResource($row);
 	}
@@ -268,6 +275,11 @@ class MenusController extends Controller
 	 * 						"updated_at": null,
 	 * 						"deleted_at": null,
 	 * 						"items_count": 12,
+	 * 						"counts": [
+	 * 							"published": 0,
+	 * 							"unpublished": 0,
+	 * 							"trashed": 0
+	 * 						],
 	 * 						"api": "https://example.org/api/menus/2"
 	 * 					}
 	 * 				}
@@ -285,6 +297,12 @@ class MenusController extends Controller
 		$row = Type::findOrFail((int)$id);
 
 		$row->api = route('api.menus.read', ['id' => $row->id]);
+		$row->items_count = $row->items()->count();
+		$row->counts = [
+			'published' => number_format($row->countPublishedItems()),
+			'unpublished' => number_format($row->countUnpublishedItems()),
+			'trashed' => number_format($row->countTrashedItems()),
+		];
 
 		return new JsonResource($row);
 	}
@@ -356,6 +374,11 @@ class MenusController extends Controller
 	 * 						"updated_at": null,
 	 * 						"deleted_at": null,
 	 * 						"items_count": 12,
+	 * 						"counts": [
+	 * 							"published": 0,
+	 * 							"unpublished": 0,
+	 * 							"trashed": 0
+	 * 						],
 	 * 						"api": "https://example.org/api/menus/2"
 	 * 					}
 	 * 				}
@@ -433,6 +456,12 @@ class MenusController extends Controller
 		}
 
 		$row->api = route('api.menus.read', ['id' => $row->id]);
+		$row->items_count = $row->items()->count();
+		$row->counts = [
+			'published' => number_format($row->countPublishedItems()),
+			'unpublished' => number_format($row->countUnpublishedItems()),
+			'trashed' => number_format($row->countTrashedItems()),
+		];
 
 		return new JsonResource($row);
 	}

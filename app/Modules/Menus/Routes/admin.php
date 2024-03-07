@@ -107,10 +107,6 @@ $router->group(['prefix' => 'menus'], function (Router $router)
 			'as' => 'admin.menus.items.cancel',
 			'uses' => 'ItemsController@cancel',
 		]);
-		$router->get('/types', [
-			'as' => 'admin.menus.items.types',
-			'uses' => 'ItemsController@types',
-		]);
 		$router->match(['get', 'post'], '/{menutype?}', [
 			'as'   => 'admin.menus.items',
 			'uses' => 'ItemsController@index',

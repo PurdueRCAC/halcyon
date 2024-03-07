@@ -826,23 +826,4 @@ class ItemsController extends Controller
 			'menutype' => $menutype ? $menutype : request()->input('menutype', request()->input('fields.menutype'))
 		]));
 	}
-
-	/**
-	 * Temporary method
-	 *
-	 * @param   Request $request
-	 * @return  View
-	 */
-	public function types(Request $request)
-	{
-		$id = $request->input('recordId');
-
-		$model = new ItemType();
-		$types = $model->getTypeOptions();
-
-		return view('menus::admin.items.types', [
-			'id' => $id,
-			'types' => $types
-		]);
-	}
 }

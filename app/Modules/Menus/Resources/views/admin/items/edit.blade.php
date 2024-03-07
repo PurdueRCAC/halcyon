@@ -172,7 +172,7 @@ app('pathway')
 							endif;
 							echo $field->input;
 							if ($desc):
-								echo '<span class="sr-only">' . trans($desc) . '</span>';
+								echo '<span class="sr-only visually-hidden">' . trans($desc) . '</span>';
 							endif;
 							?>
 						</div>
@@ -189,7 +189,7 @@ app('pathway')
 							endif;
 							echo $field->input;
 							if ($desc):
-								echo '<span class="sr-only">' . trans($desc) . '</span>';
+								echo '<span class="sr-only visually-hidden">' . trans($desc) . '</span>';
 							endif;
 							?>
 							{!! $errors->first('class', '<span class="form-text text-danger">:message</span>') !!}

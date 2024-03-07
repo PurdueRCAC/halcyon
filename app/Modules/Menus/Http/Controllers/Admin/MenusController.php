@@ -68,6 +68,7 @@ class MenusController extends Controller
 			$query->where(function($where) use ($filters)
 			{
 				$where->where('title', 'like', '%' . $filters['search'] . '%')
+					->orWhere('menutype', 'like', '%' . $filters['search'] . '%')
 					->orWhere('description', 'like', '%' . $filters['search'] . '%');
 			});
 		}
