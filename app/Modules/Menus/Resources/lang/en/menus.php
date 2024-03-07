@@ -31,6 +31,7 @@ return [
 	'trashed items' => '# Trashed',
 	'access position' => ':title <small class="text-muted">(:access_title in :position)</small>',
 	'add menu widget' => 'Add Menu widget',
+	'create menu' => 'Create Menu',
 	'language' => 'Language',
 	'item type' => 'Menu Type',
 	'home' => 'Default',

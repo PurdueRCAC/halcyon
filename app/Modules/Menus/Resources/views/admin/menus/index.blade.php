@@ -104,9 +104,6 @@ app('pathway')
 						<th scope="col">
 							{!! Html::grid('sort', trans('menus::menus.title'), 'title', $filters['order_dir'], $filters['order']) !!}
 						</th>
-						<?php /*<th scope="col" class="priority-3">
-							{{ trans('menus::menus.item type') }}
-						</th>*/ ?>
 						<th scope="col" class="priority-4 text-right">
 							{{ trans('menus::menus.published items') }}
 						</th>
@@ -148,15 +145,6 @@ app('pathway')
 								<br /><span class="text-muted">{{ $row->description }}</span>
 							@endif
 						</td>
-						<?php /*<td class="priority-3">
-							@if (auth()->user()->can('edit menus'))
-								<a href="{{ route('admin.menus.edit', ['id' => $row->id]) }}">
-									{{ $row->menutype }}
-								</a>
-							@else
-								{{ $row->menutype }}
-							@endif
-						</td>*/ ?>
 						<td class="priority-4 text-right">
 							<a href="{{ route('admin.menus.items', ['menutype' => $row->menutype]) }}">
 								{{ number_format($row->countPublishedItems()) }}
@@ -221,27 +209,27 @@ app('pathway')
 			</div>
 			<div class="modal-body">
 				<form action="{{ route('admin.menus.store') }}" method="post">
-				<div class="form-group">
-					<label for="field-title">{{ trans('menus::menus.title') }} <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[title]" id="field-title" class="form-control" required maxlength="250" value="" />
-					<span class="invalid-feedback">{{ trans('menus::menus.invalid.title') }}</span>
-				</div>
+					<div class="form-group">
+						<label for="field-title">{{ trans('menus::menus.title') }} <span class="required">{{ trans('global.required') }}</span></label>
+						<input type="text" name="fields[title]" id="field-title" class="form-control" required maxlength="250" value="" />
+						<span class="invalid-feedback">{{ trans('menus::menus.invalid.title') }}</span>
+					</div>
 
-				<div class="form-group">
-					<label for="field-menutype">{{ trans('menus::menus.item type') }} <span class="required">{{ trans('global.required') }}</span></label>
-					<input type="text" name="fields[menutype]" id="field-menutype" class="form-control{{ $errors->has('fields.menutype') ? ' is-invalid' : '' }}" required maxlength="250" value="" />
-					<span class="form-text text-muted">{{ trans('menus::menus.menutype hint') }}</span>
-				</div>
+					<div class="form-group">
+						<label for="field-menutype">{{ trans('menus::menus.item type') }} <span class="required">{{ trans('global.required') }}</span></label>
+						<input type="text" name="fields[menutype]" id="field-menutype" class="form-control{{ $errors->has('fields.menutype') ? ' is-invalid' : '' }}" required maxlength="250" value="" />
+						<span class="form-text text-muted">{{ trans('menus::menus.menutype hint') }}</span>
+					</div>
 
-				<div class="form-group">
-					<label for="field-description">{{ trans('menus::menus.description') }}</label>
-					<textarea name="fields[description]" id="field-description" class="form-control" rows="5" cols="40">{{ $row->description }}</textarea>
-				</div>
+					<div class="form-group">
+						<label for="field-description">{{ trans('menus::menus.description') }}</label>
+						<textarea name="fields[description]" id="field-description" class="form-control" rows="5" cols="40"></textarea>
+					</div>
 
-				<div class="form-group mb-0 text-center">
-					<input type="submit" class="btn btn-success" value="{{ trans('global.button.save') }}" />
-				</div>
-				@csrf
+					<div class="form-group mb-0 text-center">
+						<input type="submit" class="btn btn-success" value="{{ trans('global.button.save') }}" />
+					</div>
+					@csrf
 				</form>
 			</div>
 		</div>
