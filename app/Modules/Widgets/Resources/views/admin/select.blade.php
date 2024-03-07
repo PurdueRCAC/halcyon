@@ -19,7 +19,7 @@
 @section('content')
 
 <table id="new-modules-list" class="table table-hover adminlist">
-	<caption class="sr-only">{{ config('widgets::widgets.choose type') }}</caption>
+	<caption class="sr-only visually-hidden">{{ config('widgets::widgets.choose type') }}</caption>
 	<thead>
 		<tr>
 			<th scope="col">{{ trans('widgets::widgets.title') }}</th>

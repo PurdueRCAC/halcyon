@@ -3,10 +3,12 @@
 namespace App\Modules\Widgets\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Contracts\View\View;
+use App\Modules\Widgets\Models\Extension;
 use App\Modules\Widgets\Models\Widget;
 use App\Modules\Widgets\Models\Menu;
 use App\Modules\Users\Models\User;
@@ -19,7 +21,7 @@ class WidgetsController extends Controller
 	 * Display a listing of the resource.
 	 * 
 	 * @param  StatefulRequest $request
-	 * @return Response
+	 * @return View
 	 */
 	public function index(StatefulRequest $request)
 	{
@@ -63,8 +65,6 @@ class WidgetsController extends Controller
 			$filters['order_dir'] = Widget::$orderDir;
 		}
 
-		//$rows = Widget::paginate($filters['limit']);
-
 		$query = Widget::query();
 
 		$p = (new Widget)->getTable();
@@ -72,11 +72,9 @@ class WidgetsController extends Controller
 		$a = (new Viewlevel)->getTable();
 		$m = (new Menu)->getTable();
 		$e = 'extensions';
-		//$l = 'languages';
 
 		$query->select(
 				$p . '.*',
-				//$l . '.title AS language_title',
 				$u . '.name AS editor',
 				$a . '.title AS access_level',
 				DB::raw('MIN(' . $m . '.menuid) AS pages'),
@@ -84,10 +82,6 @@ class WidgetsController extends Controller
 			)
 			->where($e . '.type', '=', 'widget')
 			->where($p . '.client_id', '=', $filters['client_id']);
-
-		// Join over the language
-		//$query
-			//->leftJoin($l, $l . '.lang_code', $p . '.language');
 
 		// Join over the users for the checked out user.
 		$query
@@ -120,11 +114,9 @@ class WidgetsController extends Controller
 				$p . '.showtitle',
 				$p . '.params',
 				$p . '.client_id',
-				//$l . '.title',
 				$u . '.name',
 				$a . '.title',
 				$e . '.name',
-				//$l . '.lang_code',
 				$u . '.id',
 				$a . '.id',
 				$m . '.widgetid',
@@ -216,28 +208,20 @@ class WidgetsController extends Controller
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);;
 
 		// Select the required fields from the table.
-		$items = app('db')->table('extensions')
-			->select(['id', 'name', 'element'])
+		$items = Extension::query()
+			->select(['id', 'name', 'element', 'type'])
 			->where('type', '=', 'widget')
 			->where('client_id', '=', (int) $filters['client_id'])
 			->where('enabled', '=', 1)
-			->get();
-
-		foreach ($items as $item)
-		{
-			$widget = ucfirst($item->element);
-			$path = app_path() . '/Widgets/' . $widget;
-			$name = strtolower($item->element);
-			app('translator')->addNamespace('widget.' . $name, $path . '/lang');
-
-			$item->name = trans('widget.' . $name . '::' . $name . '.widget name');
-			$item->desc = trans('widget.' . $name . '::' . $name . '.widget desc');
-			$item->image = asset('modules/widgets/images/widget.svg');
-			if (is_file($path . '/assets/images/widget.svg'))
+			->get()
+			->each(function($item, $key)
 			{
-				$item->image = asset('widgets/' . strtolower($item->element) . '/images/widget.svg');
-			}
-		}
+				$name = strtolower($item->element);
+
+				$item->registerLanguage();
+				$item->name = trans('widget.' . $name . '::' . $name . '.widget name');
+				$item->desc = trans('widget.' . $name . '::' . $name . '.widget desc');
+			});
 
 		$widgets = collect($items)->sortBy('name')->all();
 
@@ -252,7 +236,7 @@ class WidgetsController extends Controller
 	 * Show the form for creating a new resource.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function create(Request $request)
 	{
@@ -304,7 +288,7 @@ class WidgetsController extends Controller
 	 * 
 	 * @param  int  $id
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse|View
 	 */
 	public function edit($id, Request $request)
 	{
@@ -361,7 +345,7 @@ class WidgetsController extends Controller
 	 * Update the specified resource in storage.
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function store(Request $request)
 	{
@@ -425,7 +409,7 @@ class WidgetsController extends Controller
 	 * Method to edit an existing record.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return View
 	 */
 	public function select(Request $request)
 	{
@@ -490,7 +474,7 @@ class WidgetsController extends Controller
 	 * Remove the specified item
 	 * 
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function delete(Request $request)
 	{
@@ -533,7 +517,7 @@ class WidgetsController extends Controller
 	 * 
 	 * @param  Request $request
 	 * @param  int $id
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function state(Request $request, $id)
 	{
@@ -583,7 +567,7 @@ class WidgetsController extends Controller
 	 * 
 	 * @param   int  $id
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function reorder($id, Request $request)
 	{
@@ -607,7 +591,7 @@ class WidgetsController extends Controller
 	 * Method to save the submitted ordering values for records.
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function saveorder(Request $request)
 	{
@@ -641,7 +625,7 @@ class WidgetsController extends Controller
 	 * Check in one or more records.
 	 *
 	 * @param   Request $request
-	 * @return  Response
+	 * @return  RedirectResponse
 	 */
 	public function checkin(Request $request)
 	{
@@ -666,7 +650,7 @@ class WidgetsController extends Controller
 	 * Return to the main view
 	 *
 	 * @param  Request $request
-	 * @return Response
+	 * @return RedirectResponse
 	 */
 	public function cancel(Request $request)
 	{

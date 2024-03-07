@@ -41,29 +41,30 @@ app('pathway')
 
 @section('content')
 
-<form action="{{ route('admin.publications.index') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.publications.index') }}" method="get" name="adminForm" id="adminForm">
 
-	<fieldset id="filter-bar" class="container-fluid">
+	<fieldset id="filter-bar" class="container-fluid mb-3">
 		<div class="row">
-			<div class="col filter-search col-md-4">
-				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-					<span class="input-group">
-						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span></span>
-					</span>
-				</div>
+			<div class="col-md-3 mb-2 filter-search">
+				<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
+				<span class="input-group">
+					<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+					<span class="input-group-append"><span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span></span>
+				</span>
 			</div>
-			<div class="col filter-select col-md-8 text-right">
-				<label class="sr-only" for="filter_state">{{ trans('global.state') }}</label>
+			<div class="col-md-3">
+			</div>
+			<div class="col-md-3 mb-2">
+				<label class="sr-only visually-hidden" for="filter_state">{{ trans('global.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.all states') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('global.published') }}</option>
 					<option value="unpublished"<?php if ($filters['state'] == 'unpublished'): echo ' selected="selected"'; endif;?>>{{ trans('global.unpublished') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('global.trashed') }}</option>
 				</select>
-
-				<label class="sr-only" for="filter_type">{{ trans('publications::publications.type') }}</label>
+			</div>
+			<div class="col-md-3 mb-2">
+				<label class="sr-only visually-hidden" for="filter_type">{{ trans('publications::publications.type') }}</label>
 				<select name="type" id="filter_type" class="form-control filter filter-submit">
 					<option value="0">{{ trans('publications::publications.all types') }}</option>
 					@foreach ($types as $type)
@@ -76,14 +77,14 @@ app('pathway')
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
 	<div class="card mb-4">
 		<div class="table-responsive">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('publications::publications.publications') }}</caption>
+		<caption class="sr-only visually-hidden">{{ trans('publications::publications.publications') }}</caption>
 		<thead>
 			<tr>
 				<th>
@@ -101,7 +102,7 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('publications::publications.title'), 'title', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4 text-right">
+				<th scope="col" class="priority-4 text-right text-end">
 					{!! Html::grid('sort', trans('publications::publications.year'), 'published_at', $filters['order_dir'], $filters['order']) !!}
 				</th>
 			</tr>
@@ -146,8 +147,8 @@ app('pathway')
 						{{ $row->title }}
 					@endif
 				</td>
-				<td class="priority-4 text-right">
-					{{ $row->published_at->format('Y') }}
+				<td class="priority-4 text-right text-end">
+					<time>{{ $row->published_at->format('Y') }}</time>
 				</td>
 				<td class="priority-3">
 					@if ($row->trashed())

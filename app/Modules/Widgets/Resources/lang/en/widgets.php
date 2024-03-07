@@ -22,6 +22,7 @@ return [
 	'menu assignment' => 'Menu Assignment',
 	'all except selected' => 'All except selected',
 	'selected only' => 'Selected only',
+	'search' => 'Search',
 	// Fields
 	'id' => 'ID',
 	'created' => 'Created',

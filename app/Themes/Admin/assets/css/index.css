@@ -33,15 +33,15 @@
 [data-mode=light] {*/
 :root {
   color-scheme: light dark;
-  --panel: #fff;
-  --panel-border: #e5e5e5; /*ddd;*/
-  --body-bg: #f0f0f0; /* f5f5f5; */
-  --body-text: #444; /*#283351; #707070;*/
-  --menu-bg: #292930; /*#1a1a1c; /*#292930; */
+  --bs-body-bg: #fff;
+  --bs-border-color: #e5e5e5;
+  --body-bg: #f0f0f0;
+  --body-text: #444;
+  --menu-bg: #292930;
   --menu-br: #d1d1d1;
   --header-text: #5e5e5e;
-  --legend-text: #333; /* #283351 */
-  --legend-border: transparent; /*rgba(0, 0, 0, 0.1);*/
+  --legend-text: #333;
+  --legend-border: transparent;
   --input-back: rgba(0, 0, 0, 0.025);
   --input-back-disabled: #eee;
   --input-back-focus: #f5f5f5;
@@ -80,7 +80,7 @@
   --page-link-bg-active: #333;
   --page-link-br-active: #333;
   --indicator: #ddd;
-  --table-br: #e5e5e5; /* #e8e8e8 */
+  --table-br: #e5e5e5;
   --table: #656565;
   --table-th: #757575;
   --table-th-active: #333;
@@ -88,7 +88,7 @@
   --table-link: #757575;
   --table-tr-hover: #333;
   --link: #444;
-  --link-hover: #014cc4; /*#000;*/
+  --link-hover: #014cc4;
   --label: #333;
   --hr: #ccc;
   --border: #d1d1d1;
@@ -97,13 +97,13 @@
   --tip-border: #383838;
   --tip-color: #fff;
   /* Tabs */
-  --tab-back-active: transparent; /*#f5f5f5*/
+  --tab-back-active: transparent;
   --tab-border-active: #d7d7d7 #d7d7d7 #f5f5f5 #d7d7d7;
   --tab-border-hover: transparent;
   --tab-color: #656565;
   --tab-active: #222;
   --tabs-border: #d7d7d7;
-  --navtab-border-active: transparent transparent #000 transparent; /*#d7d7d7 #d7d7d7 #f5f5f5 #d7d7d7;*/
+  --navtab-border-active: transparent transparent #000 transparent;
   --navtab-border-hover: transparent transparent #014cc4 transparent;
   --nav-border-active: #000;
   --nav-border-hover: #014cc4;
@@ -145,7 +145,6 @@
   --ui-widget-br: #ddd;
   --ui-widget-footer-bg: #f5f5f5;
   --required: rgba(200, 0, 0, 0.4);
-  /*--page-link-border: #f5f5f5;*/
   --meta-bg: rgba(0, 0, 0, 0.1);
   --meta-br: rgba(255, 255, 255, 0.5);
   --pane-bg: #fff;
@@ -154,26 +153,26 @@
   --diff-add-bg: #F2FFF2;
 }
 [data-mode=dark] {
-  --panel: #26262d; /*#252529; /*rgba(225, 231, 255, 0.05);*/
-  --panel-border: #313136; /*transparent; */
-  --body-bg: #1c1b21; /*#2d2d32; /*#1c1b21;*/
-  --body-text: #b9b9bf; /*#95959f; /*#aaa;*/
-  --menu-bg: #292930; /*#1a1a1c; /*#292930;*/
+  --bs-body-bg: #26262d;
+  --bs-border-color: #313136;
+  --body-bg: #1c1b21;
+  --body-text: #b9b9bf;
+  --menu-bg: #292930;
   --menu-br: #111;
   --header-text: #5e5e5e;
   --legend-text: #fff;
   --legend-border: rgba(31, 16, 16, 0.1);
-  --input-back: rgba(225, 231, 255, 0.05); /*rgba(0, 0, 0, 0.25); /*rgba(255, 255, 255, 0.05);*/
-  --input-back-disabled: transparent; /*rgba(0, 0, 0, 0.15); /*rgba(255, 255, 255, 0.1);*/
-  --input-back-focus: rgba(225, 231, 255, 0.05); /*rgba(0, 0, 0, 0.25); rgba(255, 255, 255, 0.05);*/
-  --input-border: rgba(225, 231, 255, 0.1); /*rgba(255, 255, 255, 0.1);*/
+  --input-back: rgba(225, 231, 255, 0.05);
+  --input-back-disabled: transparent;
+  --input-back-focus: rgba(225, 231, 255, 0.05);
+  --input-border: rgba(225, 231, 255, 0.1);
   --input-border-focus: #5897fb;
   --input-border-disabled: rgba(255, 255, 255, 0.1);
   --input-color: rgba(255, 255, 255, 0.5);
   --input-color-disabled: rgba(255, 255, 255, 0.5);
   --input-prepend-back: rgba(255, 255, 255, 0.035);
   --input-prepend: rgba(255, 255, 255, 0.3);
-  --check-back: rgba(225, 231, 255, 0.1); /*rgba(255, 255, 255, 0.1);*/
+  --check-back: rgba(225, 231, 255, 0.1);
   --check-back-disabled: #eee;
   --check-border: rgba(225, 231, 255, 0.1);
   --check-back-checked: #5897fb;
@@ -190,18 +189,18 @@
   --btn-secondary-br-active: rgba(255, 255, 255, 0.5);
   --btn-secondary-cl-active: #fff;
   --footer-border: rgba(255, 255, 255, 0.1);
-  --fieldset-bg: #252529; /*#1c1b21;*/
-  --fieldset-br: #313136; /*rgba(0,0,0,.125);*/
-  --page-link-bg: #252529; /*rgba(255, 255, 255, 0.1);*/
-  --page-link-br: #313136; /*#1c1b21;*/
+  --fieldset-bg: #252529;
+  --fieldset-br: #313136;
+  --page-link-bg: #252529;
+  --page-link-br: #313136;
   --page-link: #888;
-  --page-link-bg-disabled: transparent; /*rgba(0,0,0,.1); /*rgba(255, 255, 255, 0.05);*/
-  --page-link-br-disabled: #313136; /*#1c1b21;*/
+  --page-link-bg-disabled: transparent;
+  --page-link-br-disabled: #313136;
   --page-link-disabled: #6c757d;
   --page-link-bg-active: rgba(92, 192, 215, 0.2);
-  --page-link-br-active: #313136; /*#1c1b21;*/
+  --page-link-br-active: #313136;
   --indicator: #555;
-  --table-br: #313136; /*#1d1d24;*/
+  --table-br: #313136;
   --table: #999;
   --table-th: #757575;
   --table-th-active: #fff;
@@ -247,24 +246,13 @@
   --accordian-color-active: #fff;
   --accordian-body-active: rgba(255, 255, 255, 0.1);
   --accordian-border-active: rgba(20, 106, 236, 0.5);
-  /*--badge-secondary-background: rgba(100, 100, 100, 0.5);
-  --badge-secondary: #ccc;
-  --badge-danger-background: rgba(218, 52, 71, 0.3);
-  --badge-danger: rgba(218, 52, 71, 1);
-  --badge-success-background: rgba(48, 166, 73, 0.2);
-  --badge-success: rgba(48, 166, 73, 1);
-  --badge-primary-background: rgba(30, 163, 183, 0.3);
-  --badge-primary: #fff;
-  --badge-warning-background: rgba(255, 191, 39, 0.3);
-  --badge-warning: rgba(255, 191, 39, 1);*/
-  --badge-info-background: rgba(30, 163, 163, 0.3); /* rgba(80,165,241,.18) */
-  --badge-info: rgba(30, 163, 163, 1); /* #50a5f1 */
+  --badge-info-background: rgba(30, 163, 163, 0.3);
+  --badge-info: rgba(30, 163, 163, 1);
   --none: #555;
   --tag-bg: rgb(248, 229, 175, 0.25);
-  /*--page-link-border: #1c1b21;*/
-  --ui-widget-bg: #0d0e13; /*#26262d; /*#252529; /*#1c1b21;*/
-  --ui-widget-br: #313136; /*#292930;*/
-  --ui-widget-footer-bg: #313136; /*rgb(255, 255, 255, 0.05);*/
+  --ui-widget-bg: #0d0e13;
+  --ui-widget-br: #313136;
+  --ui-widget-footer-bg: #313136;
   --required: #c00;
   --meta-bg: rgba(0, 0, 0, 0.2);
   --meta-br: rgba(0, 0, 0, 0.2);
@@ -431,12 +419,7 @@ samp {
   font-size: 87.5%;
   font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
 }
-/*body,
-select,
-input,
-textarea {
-  color: #7c7c7c;
-}*/
+
 b,
 strong,
 th {
@@ -2350,7 +2333,7 @@ table tbody td {
 .card {
   border-radius: 0.5rem;
   width: 100%;
-  background-color: var(--panel);
+  background-color: var(--bs-body-bg);
   /*border: none;
   border-radius: 0.25em;
   -webkit-box-shadow: 0px 2px 4px rgba(31,30,47,0.1);
@@ -2358,7 +2341,7 @@ table tbody td {
   margin-bottom: 1.875rem;
   border: 1px solid rgba(0,0,0,.125);
   box-shadow: 0 1px 15px 1px rgba(62,57,107,.07);*/
-  border: 1px solid var(--panel-border);
+  border: 1px solid var(--bs-border-color);
   /*border: none;
   box-shadow:rgba(0, 0, 0, 0) 0px 0px 0px 0px,
              rgba(0, 0, 0, 0) 0px 0px 0px 0px,
@@ -2368,7 +2351,7 @@ table tbody td {
 }
 .card-header {
   background-color: transparent;
-  border-bottom-color: var(--panel-border);
+  border-bottom-color: var(--bs-border-color);
 }
 .card-header .card-title {
   margin: 0;
@@ -2391,7 +2374,7 @@ table tbody td {
 }
 .card-footer {
   background-color: rgba(0, 0, 0, 0.03);
-  border-top-color: var(--panel-border);
+  border-top-color: var(--bs-border-color);
 }
 
 table caption,
@@ -2676,7 +2659,7 @@ fieldset.adminform>legend {
   text-indent: 0;
   color: var(--legend-text);
   font-weight: 700;
-  border-bottom: 1px solid var(--panel-border);
+  border-bottom: 1px solid var(--bs-border-color);
   position: absolute;
   top: 0;
   left: 0;
@@ -3104,7 +3087,7 @@ html .select2-container--default .select2-selection--multiple .select2-selection
 }
 .dialog-footer {
   padding-top: 1.5em;
-  border-top: 1px solid var(--panel-border);
+  border-top: 1px solid var(--bs-border-color);
 }
 .ui-dialog {
   padding: 0;
@@ -3301,8 +3284,32 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   bottom: 50%;
   margin-bottom: -1.2em;
   visibility: hidden\9;
+
+  /* tail dimension */
+  --b: 0.8em; /* base */
+  --h: 0.4em; /* height */
+  --r: 0.25em; /* radius */
+  --p: 50%; /* position  */
+  /*border-image: fill 0 // var(--h) conic-gradient(var(--tip-back) 0 0);*/
+  border-image: conic-gradient(var(--tip-back) 0 0) fill 0/
+    calc(50% - var(--b) / 2) 0 calc(50% - var(--b) / 2) 0 /* create a white box */
+    0 0 0 0.8em; /* nudge the box over */
+  /*clip-path:
+      polygon(0 100%, 0 0, 100% 0, 100% 100%,
+          calc(50% + var(--b) / 2) 100%,
+          50% calc(100% + var(--h)),
+          calc(50% - var(--b) / 2) 100%);*/
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 100%,
+    0 100%,
+    0 calc(50% + var(--b) / 2),
+    calc(0% - var(--h)) 50%,
+    0 calc(50% - var(--b) / 2)
+  );
 }
-#header [data-title]:before {
+/*#header [data-title]:before {
   content: "";
   padding: 0;
   margin-left: -10px;
@@ -3313,7 +3320,7 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   box-shadow: none;
   display: block;
   width: 0;
-}
+}*/
 #header [data-title]:hover:before,
 #header [data-title]:hover:after {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
@@ -3691,8 +3698,8 @@ select.filter_search {
   border-bottom: 1px solid transparent;
 }
 .toolbar-box.scrolled {
-  background-color: var(--panel);
-  border-color: var(--panel-border);
+  background-color: var(--bs-body-bg);
+  border-color: var(--bs-border-color);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
 }
 #module-content>.toolbar-box {
@@ -4213,9 +4220,11 @@ label[data-hint] {
   display: inline-block;
   width: 1.5em;
 }
+.card.trashed,
 tr.trashed {
   background-color: rgba(218, 52, 71, 0.05);
 }
+.card.locked,
 tr.locked {
   background-color: rgba(238, 193, 109, 0.09);
   opacity: 0.75;
@@ -4667,7 +4676,7 @@ body table.dataTable {
   margin: 0 !important;
 }
 body table.dataTable tr {
-	background-color: var(--panel);
+	background-color: var(--bs-body-bg);
 }
 body table.dataTable tr:first-child td {
 	border-top: none;
@@ -4770,7 +4779,7 @@ html div.dataTables_wrapper div.dataTables_info{
   }
   .list-group-item {
     background-color: transparent;
-    border-color: var(--panel-border);
+    border-color: var(--bs-border-color);
     color: var(--input-color);
   }
   .list-group-item ul {
@@ -4780,8 +4789,8 @@ html div.dataTables_wrapper div.dataTables_info{
 
   fieldset.adminform,
   .card {
-    background-color: var(--panel);
-    border-color: var(--panel-border);
+    background-color: var(--bs-body-bg);
+    border-color: var(--bs-border-color);
   }
 
   html .ts-control,
@@ -4825,7 +4834,7 @@ html div.dataTables_wrapper div.dataTables_info{
   }
 
   .custom-select.is-invalid, .was-validated .custom-select:invalid {
-    background-color: var(--panel);
+    background-color: var(--bs-body-bg);
     color: var(--input-color);
   }
 

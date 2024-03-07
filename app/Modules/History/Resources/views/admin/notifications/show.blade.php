@@ -79,7 +79,7 @@ app('pathway')
 		<div class="row">
 			<div class="col-md-12">
 				<div class="form-group">
-					<label for="field-data" class="sr-only">{{ trans('history::history.data') }}</label>
+					<label for="field-data" class="sr-only visually-hidden">{{ trans('history::history.data') }}</label>
 					<textarea name="fields[data]" id="field-data" class="form-control" disabled="disabled" readonly="readonly" rows="20" cols="40">{{ json_encode($row->data, JSON_PRETTY_PRINT) }}</textarea>
 				</div>
 			</div>

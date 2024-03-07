@@ -82,4 +82,5 @@ return [
 	'create sub page' => 'New sub-page',
 	'create page' => 'Create Page',
 	'container class' => 'Container class',
+	'access level' => 'Access level',
 ];

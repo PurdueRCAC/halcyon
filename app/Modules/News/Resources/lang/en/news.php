@@ -107,6 +107,8 @@ return [
 	'ended' => 'Ended',
 	'sort asc' => 'Oldest to Newest',
 	'sort desc' => 'Newest to Oldest',
+	'start date' => 'Start Date',
+	'end date' => 'End Date',
 	// Calendar
 	'calendar options' => 'Calendar options',
 	'download' => 'Download',

@@ -28,21 +28,21 @@ app('pathway')
 @stop
 
 @section('content')
-<form action="{{ route('admin.themes.store') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.themes.store') }}" method="get" name="adminForm" id="adminForm">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col col-md-4 filter-search">
-				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-					<span class="input-group">
-						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
-					</span>
-				</div>
+			<div class="col col-md-4">
+				<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
+				<span class="input-group">
+					<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+					<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
+				</span>
 			</div>
-			<div class="col col-md-8 text-right filter-select">
-				<label class="sr-only" for="filter_client_id">{{ trans('themes::themes.type') }}</label>
+			<div class="col col-md-5">
+			</div>
+			<div class="col col-md-3">
+				<label class="sr-only visually-hidden" for="filter_client_id">{{ trans('themes::themes.type') }}</label>
 				<select name="client_id" id="filter_client_id" class="form-control filter filter-submit">
 					<option value="*">{{ trans('themes::themes.all') }}</option>
 					<option value="0"<?php if ($filters['client_id'] == '0'): echo ' selected="selected"'; endif;?>>{{ trans('themes::themes.site') }}</option>
@@ -54,90 +54,90 @@ app('pathway')
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
-	<div class="card mb-4">
-		<div class="table-responsive">
-	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('themes::themes.themes') }}</caption>
-		<thead>
-			<tr>
-				@if (auth()->user()->can('delete themes'))
-					<th>
-						{!! Html::grid('checkall') !!}
-					</th>
-				@endif
-				<th scope="col" class="priority-5">
-					{!! Html::grid('sort', trans('themes::themes.id'), 'id', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col">
-					{!! Html::grid('sort', trans('themes::themes.title'), 'title', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col">
-					{!! Html::grid('sort', trans('themes::themes.type'), 'client_id', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('themes::themes.home'), 'home', $filters['order_dir'], $filters['order']) !!}
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-		<?php
-		$canEdit = auth()->user()->can('edit themes') || auth()->user()->can('edit.state themes');
-		$canDelete = auth()->user()->can('delete themes');
-		?>
-		@foreach ($rows as $i => $row)
-			<tr>
-				@if ($canDelete)
-					<td>
-						{!! Html::grid('id', $i, $row->id) !!}
-					</td>
-				@endif
-				<td class="priority-5">
-					{{ $row->id }}
-				</td>
-				<td>
-					@if ($canEdit)
-						<a href="{{ route('admin.themes.edit', ['id' => $row->id]) }}">
-							{!! App\Halcyon\Utility\Str::highlight(e($row->name), $filters['search']) !!}
-						</a>
-					@else
-						{!! App\Halcyon\Utility\Str::highlight(e($row->name), $filters['search']) !!}
-					@endif
-					@if (!$row->path())
-						<p class="smallsub">{{ trans('themes::themes.error.missing files') }}</p>
-					@endif
-				</td>
-				<td>
-					@if ($canEdit)
-						<a href="{{ route('admin.themes.edit', ['id' => $row->id]) }}">
-							{{ $row->client_id ? trans('themes::themes.admin') : trans('themes::themes.site') }}
-						</a>
-					@else
-						{{ $row->client_id ? trans('themes::themes.admin') : trans('themes::themes.site') }}
-					@endif
-				</td>
-				<td class="priority-4">
-					@if ($row->enabled)
-						<span class="badge badge-success">
-							{{ trans('global.yes') }}
-						</span>
-					@else
-						<span class="badge badge-secondary">
-							{{ trans('global.no') }}
-						</span>
-					@endif
-				</td>
-			</tr>
-		@endforeach
-		</tbody>
-	</table>
+		<div class="card mb-4">
+			<div class="table-responsive">
+				<table class="table table-hover adminlist">
+					<caption class="sr-only visually-hidden">{{ trans('themes::themes.themes') }}</caption>
+					<thead>
+						<tr>
+							@if (auth()->user()->can('delete themes'))
+								<th>
+									{!! Html::grid('checkall') !!}
+								</th>
+							@endif
+							<th scope="col" class="priority-5">
+								{!! Html::grid('sort', trans('themes::themes.id'), 'id', $filters['order_dir'], $filters['order']) !!}
+							</th>
+							<th scope="col">
+								{!! Html::grid('sort', trans('themes::themes.title'), 'title', $filters['order_dir'], $filters['order']) !!}
+							</th>
+							<th scope="col">
+								{!! Html::grid('sort', trans('themes::themes.type'), 'client_id', $filters['order_dir'], $filters['order']) !!}
+							</th>
+							<th scope="col" class="priority-4">
+								{!! Html::grid('sort', trans('themes::themes.home'), 'home', $filters['order_dir'], $filters['order']) !!}
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php
+					$canEdit = auth()->user()->can('edit themes') || auth()->user()->can('edit.state themes');
+					$canDelete = auth()->user()->can('delete themes');
+					?>
+					@foreach ($rows as $i => $row)
+						<tr>
+							@if ($canDelete)
+								<td>
+									{!! Html::grid('id', $i, $row->id) !!}
+								</td>
+							@endif
+							<td class="priority-5">
+								{{ $row->id }}
+							</td>
+							<td>
+								@if ($canEdit)
+									<a href="{{ route('admin.themes.edit', ['id' => $row->id]) }}">
+										{!! App\Halcyon\Utility\Str::highlight(e($row->name), $filters['search']) !!}
+									</a>
+								@else
+									{!! App\Halcyon\Utility\Str::highlight(e($row->name), $filters['search']) !!}
+								@endif
+								@if (!$row->path())
+									<p class="text-warning">{{ trans('themes::themes.error.source path not found', ['path' => app_path('Themes/' . $row->element)]) }}</p>
+								@endif
+							</td>
+							<td>
+								@if ($canEdit)
+									<a href="{{ route('admin.themes.edit', ['id' => $row->id]) }}">
+										{{ $row->client_id ? trans('themes::themes.admin') : trans('themes::themes.site') }}
+									</a>
+								@else
+									{{ $row->client_id ? trans('themes::themes.admin') : trans('themes::themes.site') }}
+								@endif
+							</td>
+							<td class="priority-4">
+								@if ($row->enabled)
+									<span class="badge badge-success">
+										{{ trans('global.yes') }}
+									</span>
+								@else
+									<span class="badge badge-secondary">
+										{{ trans('global.no') }}
+									</span>
+								@endif
+							</td>
+						</tr>
+					@endforeach
+					</tbody>
+				</table>
+			</div>
 		</div>
-	</div>
 
-	{{ $rows->render() }}
+		{{ $rows->render() }}
 	@else
 		<div class="card mb-4">
 			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>

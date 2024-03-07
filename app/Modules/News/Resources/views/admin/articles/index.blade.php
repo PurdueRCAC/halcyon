@@ -65,39 +65,30 @@ else
 	@endif
 @endcomponent
 
-<form action="{{ $template ? route('admin.news.templates') : route('admin.news.index') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ $template ? route('admin.news.templates') : route('admin.news.index') }}" method="get" name="adminForm" id="adminForm">
 
-	<fieldset id="filter-bar" class="container-fluid">
+	<fieldset id="filter-bar" class="container-fluid mb-3">
 		<div class="row">
-			<div class="col col-md-4 filter-search">
-				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-					<span class="input-group">
-						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
-					</span>
-				</div>
+			<div class="col-md-3 mb-2 filter-search">
+				<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
+				<span class="input-group">
+					<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+					<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
+				</span>
 			</div>
-			<div class="col col-md-8 filter-select text-right">
-				<label class="sr-only" for="filter_state">{{ trans('news::news.state') }}</label>
+			<div class="col-md-3">
+			</div>
+			<div class="col-md-3 mb-2">
+				<label class="sr-only visually-hidden" for="filter_state">{{ trans('news::news.state') }}</label>
 				<select name="state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('news::news.state_all') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('news::news.published') }}</option>
 					<option value="unpublished"<?php if ($filters['state'] == 'unpublished'): echo ' selected="selected"'; endif;?>>{{ trans('news::news.unpublished') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('global.trashed') }}</option>
 				</select>
-
-				<?php /*@if (!$template)
-				<label class="sr-only" for="filter-access">{{ trans('news::news.access level') }}</label>
-				<select name="access" id="filter-access" class="form-control filter filter-submit">
-					<option value="*">{{ trans('news::news.select access') }}</option>
-					<?php foreach (App\Halcyon\Access\Viewlevel::all() as $access): ?>
-						<option value="<?php echo $access->id; ?>"<?php if ($filters['access'] == $access->id) { echo ' selected="selected"'; } ?>>{{ $access->title }}</option>
-					<?php endforeach; ?>
-				</select>
-				@endif*/ ?>
-
-				<label class="sr-only" for="filter-type">{{ trans('news::news.type') }}</label>
+			</div>
+			<div class="col-md-3 mb-2">
+				<label class="sr-only visually-hidden" for="filter-type">{{ trans('news::news.type') }}</label>
 				<select name="type" id="filter-type" class="form-control filter filter-submit">
 					<option value="0">{{ trans('news::news.select type') }}</option>
 					<?php foreach ($types as $type): ?>
@@ -119,161 +110,161 @@ else
 	-->
 
 	@if (count($rows))
-	<div class="card mb-4">
-		<div class="table-responsive">
-	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ $template ? trans('news::news.articles') : trans('news::news.templates') }}</caption>
-		<thead>
-			<tr>
-				@if (auth()->user()->can('delete news'))
-					<th>
-						{!! Html::grid('checkall') !!}
-					</th>
-				@endif
-				<th scope="col" class="priority-5">
-					{!! Html::grid('sort', trans('news::news.id'), 'id', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col">
-					{!! Html::grid('sort', trans('news::news.headline'), 'headline', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-2">
-					{!! Html::grid('sort', trans('news::news.state'), 'state', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-5">
-					{!! Html::grid('sort', trans('news::news.type'), 'newstypeid', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				@if (!$template)
-					<th scope="col" colspan="3" class="text-center priority-4">
-						{!! Html::grid('sort', trans('news::news.publish window'), 'datetimenews', $filters['order_dir'], $filters['order']) !!}
-					</th>
-					<th scope="col" class="priority-6 text-right">{{ trans('news::news.updates') }}</th>
-					<th scope="col" class="priority-6 text-right">{{ trans('news::news.email') }}</th>
-				@endif
-			</tr>
-		</thead>
-		<tbody>
-		@foreach ($rows as $i => $row)
-			<tr>
-				@if (auth()->user()->can('delete news'))
-					<td>
-						{!! Html::grid('id', $i, $row->id) !!}
-					</td>
-				@endif
-				<td class="priority-5">
-					{{ $row->id }}
-				</td>
-				<td>
-					@php
-					$headline = Illuminate\Support\Str::limit($row->headline, 70);
-					$headline = App\Halcyon\Utility\Str::highlight(e($headline), $filters['search']);
-					@endphp
-					@if (auth()->user()->can('edit news'))
-						<a href="{{ route('admin.news.edit', ['id' => $row->id]) }}">
-							@if ($row->headline)
-								{!! $headline !!}
-							@else
-								<span class="none">{{ trans('global.none') }}</span>
+		<div class="card mb-4">
+			<div class="table-responsive">
+				<table class="table table-hover adminlist">
+					<caption class="sr-only visually-hidden">{{ $template ? trans('news::news.articles') : trans('news::news.templates') }}</caption>
+					<thead>
+						<tr>
+							@if (auth()->user()->can('delete news'))
+								<th>
+									{!! Html::grid('checkall') !!}
+								</th>
 							@endif
-						</a>
-					@else
-						@if ($row->headline)
-							{!! $headline !!}
-						@else
-							<span class="none">{{ trans('global.none') }}</span>
-						@endif
-					@endif
+							<th scope="col" class="priority-5">
+								{!! Html::grid('sort', trans('news::news.id'), 'id', $filters['order_dir'], $filters['order']) !!}
+							</th>
+							<th scope="col">
+								{!! Html::grid('sort', trans('news::news.headline'), 'headline', $filters['order_dir'], $filters['order']) !!}
+							</th>
+							<th scope="col" class="priority-2">
+								{!! Html::grid('sort', trans('news::news.state'), 'state', $filters['order_dir'], $filters['order']) !!}
+							</th>
+							<th scope="col" class="priority-5">
+								{!! Html::grid('sort', trans('news::news.type'), 'newstypeid', $filters['order_dir'], $filters['order']) !!}
+							</th>
+							@if (!$template)
+								<th scope="col" colspan="3" class="text-center priority-4">
+									{!! Html::grid('sort', trans('news::news.publish window'), 'datetimenews', $filters['order_dir'], $filters['order']) !!}
+								</th>
+								<th scope="col" class="priority-6 text-right">{{ trans('news::news.updates') }}</th>
+								<th scope="col" class="priority-6 text-right">{{ trans('news::news.email') }}</th>
+							@endif
+						</tr>
+					</thead>
+					<tbody>
+					@foreach ($rows as $i => $row)
+						<tr>
+							@if (auth()->user()->can('delete news'))
+								<td>
+									{!! Html::grid('id', $i, $row->id) !!}
+								</td>
+							@endif
+							<td class="priority-5">
+								{{ $row->id }}
+							</td>
+							<td>
+								@php
+								$headline = Illuminate\Support\Str::limit($row->headline, 70);
+								$headline = App\Halcyon\Utility\Str::highlight(e($headline), $filters['search']);
+								@endphp
+								@if (auth()->user()->can('edit news'))
+									<a href="{{ route('admin.news.edit', ['id' => $row->id]) }}">
+										@if ($row->headline)
+											{!! $headline !!}
+										@else
+											<span class="none">{{ trans('global.none') }}</span>
+										@endif
+									</a>
+								@else
+									@if ($row->headline)
+										{!! $headline !!}
+									@else
+										<span class="none">{{ trans('global.none') }}</span>
+									@endif
+								@endif
 
-					@if ($row->isMailed())
-						<div class="text-muted">
-							Last emailed:
-							<time datetime="{{ $row->datetimemailed->toDateTimeLocalString() }}">
-								{{ $row->datetimemailed->format('M j, Y g:ia T') }}
-							</time>
-							by {{ $row->mailer ? $row->mailer->name : trans('global.unknown') }}
-						</div>
-					@endif
-				</td>
-				<td class="priority-2">
-					@if (auth()->user()->can('edit.state news'))
-						@if ($row->trashed())
-							<a class="badge badge-danger" href="{{ route('admin.news.restore', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.click to restore') }}">
-								{{ trans('global.trashed') }}
-							</a>
-						@elseif ($row->published)
-							<a class="badge badge-success" href="{{ route('admin.news.unpublish', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.click to unpublish') }}">
-								{{ trans('global.published') }}
-							</a>
-						@else
-							<a class="badge badge-secondary" href="{{ route('admin.news.publish', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.click to publish') }}">
-								{{ trans('global.unpublished') }}
-							</a>
-						@endif
-					@else
-						@if ($row->trashed())
-							<span class="badge badge-danger">
-								{{ trans('global.trashed') }}
-							</span>
-						@elseif ($row->published)
-							<span class="badge badge-success">
-								{{ trans('global.published') }}
-							</span>
-						@else
-							<span class="badge badge-secondary">
-								{{ trans('global.unpublished') }}
-							</span>
-						@endif
-					@endif
-				</td>
-				<td class="priority-5">
-					{{ $row->type->name }}
-				</td>
-				@if (!$template)
-					<td class="priority-4 text-right text-nowrap">
-						@if ($row->hasStart())
-							<time datetime="{{ $row->datetimenews->toDateTimeLocalString() }}">
-								{{ $row->datetimenews->format('M j, Y g:ia T') }}
-							</time>
-						@else
-							<span class="none">{{ trans('global.none') }}</span>
-						@endif
-					</td>
-					<td>
-						@if ($row->hasStart())
-							&rarr;
-						@endif
-					</td>
-					<td class="priority-4 text-nowrap">
-						@if ($row->hasStart())
-							@if ($row->hasEnd())
-								<time datetime="{{ $row->datetimenewsend->toDateTimeLocalString() }}">
-									{{ $row->isSameDay() ? $row->datetimenewsend->format('g:ia T') : $row->datetimenewsend->format('M j, Y g:ia T') }}
-								</time>
-							@else
-								<span class="never">{{ trans('global.never') }}</span>
+								@if ($row->isMailed())
+									<div class="text-muted">
+										Last emailed:
+										<time datetime="{{ $row->datetimemailed->toDateTimeLocalString() }}">
+											{{ $row->datetimemailed->format('M j, Y g:ia T') }}
+										</time>
+										by {{ $row->mailer ? $row->mailer->name : trans('global.unknown') }}
+									</div>
+								@endif
+							</td>
+							<td class="priority-2">
+								@if (auth()->user()->can('edit.state news'))
+									@if ($row->trashed())
+										<a class="badge badge-danger" href="{{ route('admin.news.restore', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.click to restore') }}">
+											{{ trans('global.trashed') }}
+										</a>
+									@elseif ($row->published)
+										<a class="badge badge-success" href="{{ route('admin.news.unpublish', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.click to unpublish') }}">
+											{{ trans('global.published') }}
+										</a>
+									@else
+										<a class="badge badge-secondary" href="{{ route('admin.news.publish', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.click to publish') }}">
+											{{ trans('global.unpublished') }}
+										</a>
+									@endif
+								@else
+									@if ($row->trashed())
+										<span class="badge badge-danger">
+											{{ trans('global.trashed') }}
+										</span>
+									@elseif ($row->published)
+										<span class="badge badge-success">
+											{{ trans('global.published') }}
+										</span>
+									@else
+										<span class="badge badge-secondary">
+											{{ trans('global.unpublished') }}
+										</span>
+									@endif
+								@endif
+							</td>
+							<td class="priority-5">
+								{{ $row->type->name }}
+							</td>
+							@if (!$template)
+								<td class="priority-4 text-right text-nowrap">
+									@if ($row->hasStart())
+										<time datetime="{{ $row->datetimenews->toDateTimeLocalString() }}">
+											{{ $row->datetimenews->format('M j, Y g:ia T') }}
+										</time>
+									@else
+										<span class="none">{{ trans('global.none') }}</span>
+									@endif
+								</td>
+								<td>
+									@if ($row->hasStart())
+										&rarr;
+									@endif
+								</td>
+								<td class="priority-4 text-nowrap">
+									@if ($row->hasStart())
+										@if ($row->hasEnd())
+											<time datetime="{{ $row->datetimenewsend->toDateTimeLocalString() }}">
+												{{ $row->isSameDay() ? $row->datetimenewsend->format('g:ia T') : $row->datetimenewsend->format('M j, Y g:ia T') }}
+											</time>
+										@else
+											<span class="never">{{ trans('global.never') }}</span>
+										@endif
+									@else
+										<span class="none">{{ trans('global.none') }}</span>
+									@endif
+								</td>
+								<td class="priority-6 text-right">
+									<a href="{{ route('admin.news.updates', ['article' => $row->id]) }}">
+										{{ number_format($row->updates_count) }}
+									</a>
+								</td>
+								<td class="priority-6 text-right">
+									<button class="btn news-mail" data-success="Email sent!" data-toggle="modal" data-bs-toggle="modal" data-target="#mailpreview-modal" data-bs-target="#mailpreview-modal" data-article="{{ route('api.news.read', ['id' => $row->id]) }}" data-api="{{ route('api.news.email', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.send email') }}">
+										<span class="fa fa-envelope" ari-ahidden="true"></span><span class="sr-only visually-hidden">Email</span>
+									</button>
+								</td>
 							@endif
-						@else
-							<span class="none">{{ trans('global.none') }}</span>
-						@endif
-					</td>
-					<td class="priority-6 text-right">
-						<a href="{{ route('admin.news.updates', ['article' => $row->id]) }}">
-							{{ number_format($row->updates_count) }}
-						</a>
-					</td>
-					<td class="priority-6 text-right">
-						<button class="btn news-mail" data-success="Email sent!" data-toggle="modal" data-target="#mailpreview-modal" data-article="{{ route('api.news.read', ['id' => $row->id]) }}" data-api="{{ route('api.news.email', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.send email') }}">
-							<span class="fa fa-envelope"><span class="sr-only">Email</span></span>
-						</button>
-					</td>
-				@endif
-			</tr>
-		@endforeach
-		</tbody>
-	</table>
+						</tr>
+					@endforeach
+					</tbody>
+				</table>
+			</div>
 		</div>
-	</div>
 
-	{{ $rows->render() }}
+		{{ $rows->render() }}
 	@else
 		<div class="card mb-4">
 			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>
@@ -337,17 +328,17 @@ else
 			<div class="modal-content shadow-sm">
 				<div class="modal-header">
 					<div class="modal-title" id="mailpreview-title">Mail Preview</div>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
+					<button type="button" class="btn-close close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true" class="visually-hidden">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body" id="mailpreview">
 					<div class="spinner-border" role="status">
-						<span class="sr-only">Loading...</span>
+						<span class="sr-only visually-hidden">Loading...</span>
 					</div>
 				</div>
 				<div class="modal-footer text-right">
-					<button id="mailsend" data-dismiss="modal" class="btn btn-success" data-confirm="You have unsaved changes that need to be saved before mailing news item. Would you like to save the changes?">Send mail</button>
+					<button id="mailsend" data-bs-dismiss="modal" data-dismiss="modal" class="btn btn-success" data-confirm="You have unsaved changes that need to be saved before mailing news item. Would you like to save the changes?">Send mail</button>
 				</div>
 			</div>
 		</div>
@@ -361,13 +352,13 @@ else
 		<div class="modal-content shadow-sm">
 			<div class="modal-header">
 				<div class="modal-title" id="copy-article-title">{{ trans('news::news.copy article') }}</div>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<button type="button" class="btn-close close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">
 				<form method="post" action="{{ route('admin.news.copy') }}">
-					<h2 class="modal-title sr-only">{{ trans('news::news.copy article') }}</h2>
+					<h2 class="modal-title sr-only visually-hidden">{{ trans('news::news.copy article') }}</h2>
 
 					<div class="px-3">
 						<?php /*<div class="row">

@@ -212,12 +212,12 @@ app('pathway')
 								@endphp
 								@foreach ($row->params->get('styles', []) as $style)
 									<div class="input-group mb-3" id="params-styles-{{ $i }}-row">
-										<label class="sr-only" for="params-styles-{{ $i }}">{{ trans('pages::pages.styles') }}:</label>
+										<label class="sr-only visually-hidden" for="params-styles-{{ $i }}">{{ trans('pages::pages.styles') }}:</label>
 										<input type="text" class="form-control" name="params[styles][{{ $i }}]" id="params-styles-{{ $i }}" value="{{ $style }}" />
 										<div class="input-group-append">
 											<a href="#params-styles-{{ $i }}-row" class="btn btn-danger delete-row" id="params-styles-{{ $i }}-btn" data-id="params-styles-{{ $i }}">
 												<span class="fa fa-trash" aria-hidden="true"></span>
-												<span class="sr-only">{{ trans('global.delete') }}</span>
+												<span class="sr-only visually-hidden">{{ trans('global.button.delete') }}</span>
 											</a>
 										</div>
 									</div>
@@ -227,20 +227,20 @@ app('pathway')
 								@endforeach
 
 								<div class="d-none input-group mb-3" id="params-styles-{{ $i }}">
-									<label class="sr-only" for="params-styles-{{ $i }}">{{ trans('pages::pages.styles') }}:</label>
+									<label class="sr-only visually-hidden" for="params-styles-{{ $i }}">{{ trans('pages::pages.styles') }}:</label>
 									<input type="text" class="form-control" name="params[styles][{{ $i }}]" id="params-styles-{{ $i }}" value="" />
 									<div class="input-group-append">
 										<a href="#params-styles-{{ $i }}" class="btn btn-danger delete-row disabled" id="params-styles-{{ $i }}-btn" data-id="params-styles-{{ $i }}">
 											<span class="fa fa-trash" aria-hidden="true"></span>
-											<span class="sr-only">{{ trans('global.delete') }}</span>
+											<span class="sr-only visually-hidden">{{ trans('global.button.delete') }}</span>
 										</a>
 									</div>
 								</div>
 
-								<div class="text-right">
+								<div class="text-right text-end">
 									<button data-type="style" data-container="param-styles" class="add-row btn btn-success param-style-new">
 										<span class="fa fa-plus" aria-hidden="true"></span>
-										<span class="sr-only">{{ trans('global.add') }}</span>
+										<span class="sr-only visually-hidden">{{ trans('global.button.add') }}</span>
 									</button>
 								</div>
 							</div>
@@ -255,12 +255,12 @@ app('pathway')
 								@endphp
 								@foreach ($row->params->get('scripts', []) as $script)
 									<div class="input-group mb-3" id="params-scripts-{{ $i }}-row">
-										<label class="sr-only" for="params-scripts-{{ $i }}">{{ trans('pages::pages.scripts') }}:</label>
+										<label class="sr-only visually-hidden" for="params-scripts-{{ $i }}">{{ trans('pages::pages.scripts') }}:</label>
 										<input type="text" class="form-control" name="params[scripts][{{ $i }}]" id="params-scripts-{{ $i }}" value="{{ $script }}" />
 										<div class="input-group-append">
 											<a href="#params-scripts-{{ $i }}-row" class="btn btn-danger delete-row" id="params-scripts-{{ $i }}-btn" data-id="params-scripts-{{ $i }}">
 												<span class="fa fa-trash" aria-hidden="true"></span>
-												<span class="sr-only">{{ trans('global.delete') }}</span>
+												<span class="sr-only visually-hidden">{{ trans('global.button.delete') }}</span>
 											</a>
 										</div>
 									</div>
@@ -269,20 +269,20 @@ app('pathway')
 									@endphp
 								@endforeach
 								<div class="d-none input-group mb-3" id="params-scripts-{{ $i }}-row">
-									<label class="sr-only" for="params-scripts-{{ $i }}">{{ trans('pages::pages.scripts') }}:</label>
+									<label class="sr-only visually-hidden" for="params-scripts-{{ $i }}">{{ trans('pages::pages.scripts') }}:</label>
 									<input type="text" class="form-control" name="params[scripts][{{ $i }}]" id="params-scripts-{{ $i }}" value="" />
 									<div class="input-group-append">
 										<a href="#params-scripts-{{ $i }}-row" class="btn btn-danger delete-row disabled" id="params-scripts-{{ $i }}-btn" data-id="params-scripts-{{ $i }}">
 											<span class="fa fa-trash" aria-hidden="true"></span>
-											<span class="sr-only">{{ trans('global.delete') }}</span>
+											<span class="sr-only visually-hidden">{{ trans('global.button.delete') }}</span>
 										</a>
 									</div>
 								</div>
 
-								<div class="text-right">
+								<div class="text-right text-end">
 									<button data-type="script" data-container="param-scripts" class="add-row btn btn-success param-script-new">
 										<span class="fa fa-plus" aria-hidden="true"></span>
-										<span class="sr-only">{{ trans('global.add') }}</span>
+										<span class="sr-only visually-hidden">{{ trans('global.button.add') }}</span>
 									</button>
 								</div>
 							</div>

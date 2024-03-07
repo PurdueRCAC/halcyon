@@ -1,6 +1,6 @@
 
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('core::info.directory permissions') }}</caption>
+		<caption class="sr-only visually-hidden">{{ trans('core::info.directory permissions') }}</caption>
 		<thead>
 			<tr>
 				<th scope="col">

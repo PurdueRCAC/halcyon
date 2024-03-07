@@ -108,6 +108,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		btnnew.setAttribute('data-toggle', 'modal');
 		btnnew.setAttribute('data-target', '#new-widget');
 
+		btnnew.setAttribute('data-bs-toggle', 'modal');
+		btnnew.setAttribute('data-bs-target', '#new-widget');
+
 		btnnew.addEventListener('click', function (e) {
 			e.preventDefault();
 		});

@@ -30,16 +30,16 @@ app('pathway')
 		<nav class="container-fluid">
 			<ul id="info-tabs" class="nav nav-tabs info-list" role="tablist">
 				<li class="nav-item" role="presentation">
-					<a href="#page-site" class="nav-link active" data-toggle="tab" role="tab" id="site-tab" aria-controls="page-site" aria-selected="true">{{ trans('core::info.system information') }}</a>
+					<a href="#page-site" class="nav-link active" data-toggle="tab" data-bs-toggle="tab" role="tab" id="site-tab" aria-controls="page-site" aria-selected="true">{{ trans('core::info.system information') }}</a>
 				</li>
 				<li class="nav-item" role="presentation">
-					<a href="#page-phpsettings" class="nav-link" data-toggle="tab" role="tab" id="phpsettings-tab" aria-controls="page-phpsettings" aria-selected="false">{{ trans('core::info.php settings') }}</a>
+					<a href="#page-phpsettings" class="nav-link" data-toggle="tab" data-bs-toggle="tab" role="tab" id="phpsettings-tab" aria-controls="page-phpsettings" aria-selected="false">{{ trans('core::info.php settings') }}</a>
 				</li>
 				<li class="nav-item" role="presentation">
-					<a href="#page-directory" class="nav-link" data-toggle="tab" role="tab" id="directory-tab" aria-controls="page-directory" aria-selected="false">{{ trans('core::info.directory permissions') }}</a>
+					<a href="#page-directory" class="nav-link" data-toggle="tab" data-bs-toggle="tab" role="tab" id="directory-tab" aria-controls="page-directory" aria-selected="false">{{ trans('core::info.directory permissions') }}</a>
 				</li>
 				<li class="nav-item" role="presentation">
-					<a href="#page-phpinfo" class="nav-link" data-toggle="tab" role="tab" id="phpinfo-tab" aria-controls="page-phpinfo" aria-selected="false">{{ trans('core::info.php info') }}</a>
+					<a href="#page-phpinfo" class="nav-link" data-toggle="tab" data-bs-toggle="tab" role="tab" id="phpinfo-tab" aria-controls="page-phpinfo" aria-selected="false">{{ trans('core::info.php info') }}</a>
 				</li>
 			</ul>
 		</nav>

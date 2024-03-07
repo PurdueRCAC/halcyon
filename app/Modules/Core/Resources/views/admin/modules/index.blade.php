@@ -23,21 +23,21 @@
 
 @section('content')
 
-<form action="{{ route('admin.modules.index') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.modules.index') }}" method="get" name="adminForm" id="adminForm">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col-md-4">
-				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
-					<span class="input-group">
-						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span></span>
-					</span>
-				</div>
+				<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
+				<span class="input-group">
+					<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
+					<span class="input-group-append"><span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span></span>
+				</span>
 			</div>
-			<div class="col-md-8 text-right">
-				<label class="sr-only" for="filter_state">{{ trans('core::modules.state') }}</label>
+			<div class="col-md-5">
+			</div>
+			<div class="col-md-3">
+				<label class="sr-only visually-hidden" for="filter_state">{{ trans('core::modules.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('core::modules.all states') }}</option>
 					<option value="enabled"<?php if ($filters['state'] == 'enabled'): echo ' selected="selected"'; endif;?>>{{ trans('global.enabled') }}</option>
@@ -49,14 +49,14 @@
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
 	<div class="card mb-4">
 		<div class="table-responsive">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('core::modules.module manager') }}</caption>
+		<caption class="sr-only visually-hidden">{{ trans('core::modules.module name') }}</caption>
 		<thead>
 			<tr>
 				<th class="text-center">
@@ -88,7 +88,7 @@
 				<td class="text-center">
 					@if ($row->protected)
 						<span class="fa fa-lock" aria-hidden="true"></span>
-						<span class="sr-only">{{ trans('global.yes') }}</span>
+						<span class="sr-only visually-hidden">{{ trans('global.yes') }}</span>
 					@else
 						{!! Html::grid('id', $i, $row->id) !!}
 					@endif

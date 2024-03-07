@@ -138,16 +138,16 @@ app('pathway')
 	stats
 @endcomponent
 
-<form action="{{ route('admin.news.stats') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.news.stats') }}" method="get" name="adminForm" id="adminForm">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col col-md-12 text-right">
-				<label class="sr-only" for="filter_start">{{ trans('news::news.start date') }}</label>
-				<input type="text" name="start" id="filter_start" class="form-control date filter filter-submit" value="{{ $filters['start'] }}" placeholder="Start date" />
+			<div class="col col-md-12 text-right text-end">
+				<label class="sr-only visually-hidden" for="filter_start">{{ trans('news::news.start date') }}</label>
+				<input type="text" name="start" id="filter_start" class="form-control date filter filter-submit d-inline-block w-auto" value="{{ $filters['start'] }}" placeholder="Start date" />
 				to
-				<label class="sr-only" for="filter_end">{{ trans('news::news.end date') }}</label>
-				<input type="text" name="end" id="filter_end" class="form-control date filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
+				<label class="sr-only visually-hidden" for="filter_end">{{ trans('news::news.end date') }}</label>
+				<input type="text" name="end" id="filter_end" class="form-control date filter filter-submit d-inline-block w-auto" value="{{ $filters['end'] }}" placeholder="End date" />
 
 				<button type="submit" class="btn btn-secondary">Filter</button>
 			</div>
@@ -176,7 +176,7 @@ app('pathway')
 						<div>
 							<canvas id="news-categories" class="pie-chart" width="275" height="275" data-labels="{{ json_encode(array_keys($cats)) }}" data-values="{{ json_encode(array_values($cats)) }}" data-border="<?php echo (auth()->user()->facet('theme.admin.mode') == 'dark' ? '"rgba(0, 0, 0, 0.6)"' : '"#fff"'); ?>">
 								<table class="table">
-									<caption class="sr-only">Orders By Category</caption>
+									<caption class="sr-only visually-hidden">Orders By Category</caption>
 									<thead>
 										<tr>
 											<th scope="col">Category</th>
@@ -274,7 +274,7 @@ app('pathway')
 								<div class="card-body">
 									<h4>Most Reservations</h4>
 									<table class="table table-hover">
-										<caption class="sr-only">Most Reservations</caption>
+										<caption class="sr-only visually-hidden">Most Reservations</caption>
 										<thead>
 											<tr>
 												<th scope="col">Name</th>
@@ -328,7 +328,7 @@ app('pathway')
 									}
 									?>
 									<table class="table table-hover">
-										<caption class="sr-only">Top Topics</caption>
+										<caption class="sr-only visually-hidden">Top Topics</caption>
 										<thead>
 											<tr>
 												<th scope="col">Topic</th>
@@ -336,6 +336,9 @@ app('pathway')
 											</tr>
 										</thead>
 										<tbody>
+											@php
+											$i = 0;
+											@endphp
 											@foreach ($stats['tags'] as $i => $tag)
 												<tr>
 													<td><span class="badge badge-secondary">{{ $tag->tag->name }}</span></td>

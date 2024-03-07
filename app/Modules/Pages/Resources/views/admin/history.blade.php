@@ -206,7 +206,7 @@ app('pathway')
 						@if ($canEdit && $i > 0)
 						<a href="{{ route('admin.pages.revert', ['id' => $row->id, 'revision' => $action->id]) }}" class="tip confirm-revert" title="Revert to this version" data-confirm="Are you sure you want to revert the page to this version?">
 							<span class="fa fa-undo" aria-hidden="true"></span>
-							<span class="sr-only">Revert to this version</span>
+							<span class="sr-only visually-hidden">Revert to this version</span>
 						</a>
 						@endif
 					</td>

@@ -1,6 +1,9 @@
 @if (!request()->ajax())
+<?php
+$mode = auth()->user() ? auth()->user()->facet('theme.admin.mode', app('themes')->getActiveTheme()->getParams('mode', 'light')) : 'light';
+?>
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="no-js" data-mode="{{ auth()->user() ? auth()->user()->facet('theme.admin.mode', app('themes')->getActiveTheme()->getParams('mode', 'light')) : 'light' }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="no-js" data-mode="{{ $mode }}" data-bs-theme="{{ $mode }}">
 	<head>
 		<!-- Metadata -->
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -18,6 +21,7 @@
 		$styles = array(
 			//'themes/admin/vendor/font-awesome/font-awesome-css.min.css',
 			'modules/core/vendor/bootstrap/bootstrap.min.css',
+			//'modules/core/vendor/bootstrap-5.3.3-dist/css/bootstrap.min.css',
 			'modules/core/vendor/jquery-ui/jquery-ui.min.css',
 			'modules/core/vendor/jquery-datepicker/jquery.datepicker.css',
 			'modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.css',
@@ -38,6 +42,7 @@
 		$scripts = array(
 			'modules/core/vendor/jquery/jquery.min.js',
 			'modules/core/vendor/bootstrap/bootstrap.bundle.min.js',
+			//'modules/core/vendor/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js',
 			'modules/core/vendor/jquery-ui/jquery-ui.min.js',
 			'modules/core/vendor/jquery-timepicker-addon/jquery-ui-timepicker-addon.min.js',
 			'modules/core/js/core.js',
@@ -140,7 +145,7 @@
 				<main id="module-content">
 					<div id="toolbar-box" class="toolbar-box">
 						<div class="pagetitle">
-							<h2 class="sr-only">@yield('title')</h2>
+							<h2 class="sr-only visually-hidden">@yield('title')</h2>
 
 							@widget('breadcrumbs')
 

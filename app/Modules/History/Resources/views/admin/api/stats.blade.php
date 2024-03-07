@@ -204,7 +204,7 @@ app('pathway')
 					</div>
 				</div>
 	
-				<button type="submit" class="sr-only btn btn-secondary">Filter</button>
+				<button type="submit" class="sr-only visually-hidden btn btn-secondary">Filter</button>
 			</div>
 		</div>
 	</fieldset>
@@ -258,7 +258,7 @@ app('pathway')
 					<div>
 						<canvas id="methods" class="pie-chart" width="200" height="200" data-labels="{{ json_encode(array_keys($stats['methods'])) }}" data-values="{{ json_encode(array_values($stats['methods'])) }}">
 							<table class="table">
-								<caption class="sr-only">Trasnport Methods</caption>
+								<caption class="sr-only visually-hidden">Trasnport Methods</caption>
 								<thead>
 									<tr>
 										<th scope="col">Transport Method</th>
@@ -304,7 +304,7 @@ app('pathway')
 				<div class="card-body">
 					<h4>Top Requested URIs</h4>
 					<table class="table">
-						<caption class="sr-only">URIs</caption>
+						<caption class="sr-only visually-hidden">URIs</caption>
 						<thead>
 							<tr>
 								<th scope="col">URI</th>
@@ -328,7 +328,7 @@ app('pathway')
 									?>
 									<div class="progress bg-transparent" style="height: 3px">
 										<div class="progress-bar" role="progressbar" style="width: <?php echo $per; ?>%;" aria-valuenow="<?php echo $per; ?>" aria-valuemin="0" aria-valuemax="100" aria-label="<?php echo $per; ?>% of requests">
-											<span class="sr-only"><?php echo $per; ?>%</span>
+											<span class="sr-only visually-hidden"><?php echo $per; ?>%</span>
 										</div>
 									</div>
 								</td>
@@ -351,7 +351,7 @@ app('pathway')
 				<div class="card-body">
 					<h4>Top Requestor IPs</h4>
 					<table class="table">
-						<caption class="sr-only">IPs</caption>
+						<caption class="sr-only visually-hidden">IPs</caption>
 						<thead>
 							<tr>
 								<th scope="col">IP</th>
@@ -369,7 +369,7 @@ app('pathway')
 									?>
 									<div class="progress bg-transparent" style="height: 3px">
 										<div class="progress-bar" role="progressbar" style="width: <?php echo $per; ?>%;" aria-valuenow="<?php echo $per; ?>" aria-valuemin="0" aria-valuemax="100" aria-label="<?php echo $per; ?>% of requests">
-											<span class="sr-only"><?php echo $per; ?>%</span>
+											<span class="sr-only visually-hidden"><?php echo $per; ?>%</span>
 										</div>
 									</div>
 								</td>

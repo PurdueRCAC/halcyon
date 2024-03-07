@@ -40,11 +40,11 @@ class Grid
 		{
 			$title .= ' :: ' . trans('global.click to toggle state');
 
-			$html = '<a class="grid-action grid-boolean ' . $bool . ' hasTip" title="' . $title . '" data-id="cb' . $i . '" data-task="' . $task . '" href="#toggle" title="' . $title . '"><span class="fa fa-' . $cls . '" aria-hidden="true"></span><span class="sr-only">' . $txt . '</span></a>';
+			$html = '<a class="grid-action grid-boolean ' . $bool . ' hasTip" title="' . $title . '" data-id="cb' . $i . '" data-task="' . $task . '" href="#toggle" title="' . $title . '"><span class="fa fa-' . $cls . '" aria-hidden="true"></span><span class="sr-only visually-hidden">' . $txt . '</span></a>';
 		}
 		else
 		{
-			$html = '<a class="grid-action grid-boolean ' . $bool . '" title="' . $title . '"><span class="fa fa-' . $cls . '" aria-hidden="true"></span><span class="sr-only">' . $txt . '</span></a>';
+			$html = '<a class="grid-action grid-boolean ' . $bool . '" title="' . $title . '"><span class="fa fa-' . $cls . '" aria-hidden="true"></span><span class="sr-only visually-hidden">' . $txt . '</span></a>';
 		}
 
 		return $html;
@@ -103,7 +103,7 @@ class Grid
 
 		$html  = '<span class="form-check">';
 		$html .= '<input type="checkbox" id="cb' . $rowNum . '" name="' . $name . '[]" value="' . $recId . '" class="form-check-input checkbox-toggle" />';
-		$html .= '<label for="cb' . $rowNum . '" class="form-check-label"><span class="sr-only">' . trans('global.admin.record id', ['id' => $recId]) . '</span></label>';
+		$html .= '<label for="cb' . $rowNum . '" class="form-check-label"><span class="sr-only visually-hidden">' . trans('global.admin.record id', ['id' => $recId]) . '</span></label>';
 		$html .= '</span>';
 
 		return $html;
@@ -156,7 +156,7 @@ class Grid
 	{
 		$html  = '<span class="form-check">';
 		$html .= '<input type="checkbox" name="toggle" value="" id="toggle-all" class="form-check-input checkbox-toggle toggle-all" />';
-		$html .= '<label class="form-check-label" for="toggle-all"><span class="sr-only">' . trans('global.check all') . '</span></label>';
+		$html .= '<label class="form-check-label" for="toggle-all"><span class="sr-only visually-hidden">' . trans('global.check all') . '</span></label>';
 		$html .= '</span>';
 
 		return $html;
@@ -503,7 +503,7 @@ class Grid
 			$html[] = ' href="' . $task . '" data-id="' . $checkbox . $i . '" data-task="' . $prefix . $task . '"';
 			$html[] = ' title="' . addslashes(htmlspecialchars(trans($text), ENT_COMPAT, 'UTF-8')) . '">';
 			$html[] = '<span class="fa fa-arrow-up" aria-hidden="true"></span>';
-			$html[] = '<span class="sr-only" aria-hidden="true">Move up</span>';
+			$html[] = '<span class="sr-only visually-hidden" aria-hidden="true">Move up</span>';
 			$html[] = '</a>';
 
 			return implode("\n", $html); //self::action($i, $task, $prefix, $text, $text, $text, false, 'uparrow', 'uparrow_disabled', $enabled, true, $checkbox);
@@ -544,7 +544,7 @@ class Grid
 			$html[] = ' href="' . $task . '" data-id="' . $checkbox . $i . '" data-task="' . $prefix . $task . '"';
 			$html[] = ' title="' . addslashes(htmlspecialchars(trans($text), ENT_COMPAT, 'UTF-8')) . '">';
 			$html[] = '<span class="fa fa-arrow-down" aria-hidden="true"></span>';
-			$html[] = '<span class="sr-only" aria-hidden="true">Move up</span>';
+			$html[] = '<span class="sr-only visually-hidden" aria-hidden="true">Move up</span>';
 			$html[] = '</a>';
 
 			return implode("\n", $html); //self::action($i, $task, $prefix, $text, $text, $text, false, 'downarrow', 'downarrow_disabled', $enabled, true, $checkbox);

@@ -1,6 +1,6 @@
 
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('core::info.configuration file') }}</caption>
+		<caption class="sr-only visually-hidden">{{ trans('core::info.configuration file') }}</caption>
 		<thead>
 			<tr>
 				<th scope="col">

@@ -156,17 +156,21 @@ class Extension extends Model
 	 */
 	public function registerLanguage(): void
 	{
+		$name = $this->type . '.' . strtolower($this->element);
+		$path = $this->path() . '/lang';
+
 		if ($this->type == 'module')
 		{
-			if (Module::has($this->element))
+			$name = strtolower($this->element);
+			$path = $this->path() . '/Resources/lang';
+
+			if (!Module::has($this->element))
 			{
-				app('translator')->addNamespace($this->element, $this->path() . '/Resources/lang');
+				return;
 			}
 		}
-		else
-		{
-			app('translator')->addNamespace($this->type . '.' . $this->element, $this->path() . '/lang');
-		}
+
+		app('translator')->addNamespace($name, $path);
 	}
 
 	/**
@@ -187,10 +191,6 @@ class Extension extends Model
 			}
 			elseif ($this->type == 'widget')
 			{
-				if (substr($element, 0, 4) == 'mod_')
-				{
-					$element = substr($element, 4);
-				}
 				$element = ucfirst($element);
 
 				$path = app_path() . '/Widgets/' . $element . '/widget.json';
@@ -296,7 +296,7 @@ class Extension extends Model
 	 * @param   Form  $form   The form to validate against.
 	 * @param   array<string,mixed>   $data   The data to validate.
 	 * @param   string  $group  The name of the field group to validate.
-	 * @return  mixed   Array of filtered data if valid, false otherwise.
+	 * @return  array<string,mixed>|false   Array of filtered data if valid, false otherwise.
 	 * @throws \Exception
 	 */
 	public function validateFormData($form, $data, $group = null)
@@ -324,5 +324,43 @@ class Extension extends Model
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Publish an extension's assets
+	 */
+	public function publish(): void
+	{
+		$sourcePath = $this->path();
+
+		$path  = ucfirst($this->type) . 's';
+		if ($this->type == 'listener')
+		{
+			$path .= '/' . strtolower($item->folder);
+		}
+		$path .= '/' . strtolower($item->element);
+		$destinationPath = public_path($path);
+		$files = app('files');
+
+		if (!$files->isDirectory($destinationPath))
+		{
+			$files->makeDirectory($destinationPath, 0775, true);
+		}
+
+		foreach ($files->allFiles($sourcePath) as $file)
+		{
+			$dest = str_replace($sourcePath, $destinationPath, $file);
+
+			if (!$files->exists($dest)
+			|| $files->lastModified($file) > $files->lastModified($dest))
+			{
+				if (!$files->exists(dirname($dest)))
+				{
+					$files->makeDirectory(dirname($dest), 0775, true);
+				}
+
+				$files->copy($file, $dest);
+			}
+		}
 	}
 }

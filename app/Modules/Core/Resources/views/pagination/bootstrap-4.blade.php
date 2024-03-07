@@ -42,7 +42,7 @@
                 </li>
             @endif
         </ul>
-        <p class="text-right">
+        <p class="text-right text-end">
             <?php
             $end = $paginator->total();
             if ($paginator->total() > $paginator->perPage()):
@@ -65,7 +65,7 @@
                     500
                 );
                 ?>
-                <select class="form-control filter-submit ml-4" name="limit" id="limit-{{ $l }}">
+                <select class="form-control filter-submit ml-4 ms-4 d-inline-block w-auto" name="limit" id="limit-{{ $l }}">
                     @foreach ($limits as $limit)
                         <option value="{{ $limit }}"<?php if ($paginator->perPage() == $limit) { echo ' selected="slected"'; } ?>>{{ $limit }}</option>
                     @endforeach

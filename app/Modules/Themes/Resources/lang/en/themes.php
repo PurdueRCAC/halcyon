@@ -2,6 +2,7 @@
 return [
 	'module name' => 'Theme Manager',
 	'configuration' => 'Themes Configuration',
+	'themes' => 'Themes',
 	'title' => 'Title',
 	'type' => 'Type',
 	'assigned' => 'assigned',
