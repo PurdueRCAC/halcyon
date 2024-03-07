@@ -46,8 +46,9 @@ class DocsController extends Controller
 		}
 
 		// Generate documentation
-		$generator = new Generator(config('app.debug') ? false : config('module.core.api_chache', 720));
+		$generator = new Generator(config('app.debug') ? 0 : config('module.core.api_cache', 720));
 		$documentation = $generator->output('array');
+		$documentation['sections'] = $generator->sections();
 
 		return view('core::site.docs.index', [
 			'modules' => $modules,

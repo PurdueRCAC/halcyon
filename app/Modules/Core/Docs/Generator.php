@@ -12,22 +12,31 @@ use Nwidart\Modules\Facades\Module;
 class Generator
 {
 	/**
-	 * Cache results?
-	 * 
-	 * @var  bool
+	 * Cache time in minutes
+	 *
+	 * A time of zero effectively means no caching
+	 *
+	 * @var  int
 	 */
-	private $cache = true;
+	private $cacheTime = 0;
+
+	/**
+	 * Cache file name
+	 *
+	 * @var  string
+	 */
+	private $cacheFile = 'openapi';
 
 	/**
 	 * Var to hold sections
-	 * 
+	 *
 	 * @var  array<string,array<int,string>>
 	 */
 	private $sections = array();
 
 	/**
-	 * Var to hold output
-	 * 
+	 * Schema output
+	 *
 	 * @var  array<string,mixed>
 	 */
 	private $output = array();
@@ -35,12 +44,12 @@ class Generator
 	/**
 	 * Create sections from module api controllers
 	 *
-	 * @param   bool  $cache  Cache results?
+	 * @param   int  $cacheTime  Cache time in minutes
 	 * @return  void
 	 */
-	public function __construct(bool $cache = true)
+	public function __construct(int $cacheTime = 720)
 	{
-		$this->cache = (bool) $cache;
+		$this->cacheTime = $cacheTime * 60;
 
 		// create all needed keys in output
 		$this->output = array(
@@ -87,13 +96,7 @@ class Generator
 					),
 				),
 			),
-			'sections' => array(),
-			'versions' => array(
-				'max'       => '',
-				'available' => array()
-			),
-			'errors'   => array(),
-			'files'    => array()
+			'paths'    => array()
 		);
 	}
 
@@ -106,13 +109,7 @@ class Generator
 	 */
 	public function output(string $format = 'json', bool $force = false)
 	{
-		// generate output
-		if ($force || !$this->cache())
-		{
-			$this->generate();
-		}
-
-		$output = $this->output;
+		$output = $this->getOutputFromCache($force)->output;
 
 		// option to switch formats
 		switch ($format)
@@ -132,66 +129,156 @@ class Generator
 
 	/**
 	 * Load from cache
-	 * 
-	 * @return  bool
 	 */
-	private function cache(): bool
+	private function getOutputFromCache(bool $force = false): self
 	{
-		if (!$this->cache)
+		$output = null;
+
+		if (!$force)
 		{
-			return false;
-		}
+			// Check if we have a cache file
+			$cacheFile = public_path($this->cacheFile . '.json');
 
-		// Get developer params to get cache expiration
-		$cacheExpiration = config()->get('module.core.doc_expiration', 720);
-
-		// Check if we have a cache file
-		$cacheFile = storage_path('app/public/openapi.json');
-
-		if (file_exists($cacheFile))
-		{
-			// Check if its still valid
-			$cacheMakeTime = @filemtime($cacheFile);
-
-			if (time() - $cacheExpiration < $cacheMakeTime)
+			if (file_exists($cacheFile))
 			{
-				$this->output = json_decode(file_get_contents($cacheFile), true);
-				return true;
+				// Check if its still valid
+				$lastModified = @filemtime($cacheFile);
+
+				if (time() - $this->cacheTime < $lastModified)
+				{
+					$output = json_decode(file_get_contents($cacheFile), true);
+				}
 			}
 		}
 
-		return false;
+		if (!$output)
+		{
+			$output = $this->generate();
+
+			// create cache ffile
+			$cacheFile = public_path($this->cacheFile . '.json');
+
+			// save cache file
+			file_put_contents($cacheFile, json_encode($output));
+		}
+
+		$this->output = $output;
+
+		return $this;
 	}
 
 	/**
 	 * Generate Doc
 	 * 
-	 * @return  void
+	 * @return  array<string,mixed>
 	 */
-	private function generate(): void
+	private function generate(): array
 	{
 		// only load sections if we dont have a cache
 		$this->discoverModuleSections();
 
 		// generate output by processing sections
-		$this->output['sections'] = $this->processModuleSections($this->sections);
+		$sections = $this->processModuleSections($this->sections);
 
-		// remove duplicate available versions & order
-		$this->output['versions']['available'] = array_unique($this->output['versions']['available']);
+		$ignore = ['method', '_metadata', 'uri', 'authorization', 'param', 'return'];
+		$output = $this->output;
 
-		// get the highest version available
-		$this->output['versions']['max'] = end($this->output['versions']['available']);
-
-		// create cache folder
-		$cacheFile = storage_path('app/public/openapi.json');
-
-		/*if (!app('filesystem')->exists(dirname($cacheFile)))
+		foreach ($sections as $name => $section)
 		{
-			app('filesystem')->makeDirectory(dirname($cacheFile));
-		}*/
+			foreach ($section as $controller => $info)
+			{
+				foreach ($info['endpoints'] as $endpoint)
+				{
+					$path = $endpoint['uri'];
+					$method = strtolower($endpoint['method']);
 
-		// save cache file
-		file_put_contents($cacheFile, json_encode($this->output));
+					foreach ($ignore as $key)
+					{
+						if (isset($endpoint[$key]))
+						{
+							unset($endpoint[$key]);
+						}
+					}
+					
+					if (isset($endpoint['name']))
+					{
+						$endpoint['description'] = $endpoint['name'];
+						unset($endpoint['name']);
+					}
+
+					if (!isset($output['paths'][$path]))
+					{
+						$output['paths'][$path] = array();
+					}
+
+					if (isset($endpoint['response']) || array_key_exists('response', $endpoint))
+					{
+						if ($endpoint['response'])
+						{
+							$endpoint['responses'] = $endpoint['response'];
+						}
+						unset($endpoint['response']);
+					}
+
+					$requestbodies = array();
+					$req = array();
+
+					foreach ($endpoint['parameters'] as $k => $param)
+					{
+						if (isset($param['type']) && !isset($param['schema']))
+						{
+							$param['schema'] = array(
+								'type' => $param['type'],
+							);
+							unset($param['type']);
+						}
+
+						if (!isset($param['in']))
+						{
+							$param['in'] = 'body';
+						}
+
+						// Capture POST and PUT params
+						if ($param['in'] == 'body')
+						{
+							$requestbodies[$param['name']] = array(
+								'description' => $param['description'],
+								'type' => $param['schema']['type'],
+								'default' => isset($param['schema']['default']) ? $param['schema']['default'] : null
+							);
+							if ($param['required'])
+							{
+								$req[] = $param['name'];
+							}
+
+							unset($endpoint['parameters'][$k]);
+							continue;
+						}
+
+						$endpoint['parameters'][$k] = $param;
+					}
+
+					if (!empty($requestbodies))
+					{
+						$endpoint['requestBody'] = array(
+							'content' => array(
+								'*/*' => array( //application/x-www-form-urlencoded
+									'schema' => array(
+										'type' => 'object',
+										'properties' => $requestbodies,
+										'required' => $req
+									)
+								)
+							)
+						);
+					}
+
+					$output['paths'][$path][$method] = $endpoint;
+				}
+			}
+		}
+
+		return $output;
 	}
 
 	/**
@@ -223,6 +310,16 @@ class Generator
 		{
 			$this->sections[$module->getLowerName()] = glob(module_path($module->getName()) . '/Http/Controllers/Api/*.php');
 		}
+	}
+
+	/**
+	 * Get module sections
+	 *
+	 * @return array<string,mixed>
+	 */
+	public function sections(): array
+	{
+		return $this->sections;
 	}
 
 	/** 
@@ -267,6 +364,8 @@ class Generator
 			ksort($output[$module]);
 		}
 
+		$this->sections = $output;
+
 		// return output
 		return $output;
 	}
@@ -286,7 +385,7 @@ class Generator
 		$module    = $this->parseClassFromFile($file, true)['module'];
 
 		// Push file to files array
-		$this->output['files'][] = $file;
+		//$this->output['files'][] = $file;
 
 		$controller = basename($file);
 		$controller = preg_replace('/\.[^.]*$/', '', $controller);
