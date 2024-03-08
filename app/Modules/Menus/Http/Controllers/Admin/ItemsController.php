@@ -666,6 +666,7 @@ class ItemsController extends Controller
 		}
 
 		$success = 0;
+		$menutype = null;
 
 		// Update record(s)
 		foreach ($ids as $id)
@@ -687,19 +688,20 @@ class ItemsController extends Controller
 			}
 
 			$success++;
+			$menutype = $row->menutype;
 		}
 
 		// Set message
 		if ($success)
 		{
 			$msg = $state
-				? 'menus::menus.items published'
-				: 'menus::menus.items unpublished';
+				? 'global.messages.item published'
+				: 'global.messages.item unpublished';
 
 			$request->session()->flash('success', trans($msg, ['count' => $success]));
 		}
 
-		return $this->cancel();
+		return $this->cancel($menutype);
 	}
 
 	/**

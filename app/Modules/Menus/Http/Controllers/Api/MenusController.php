@@ -489,7 +489,8 @@ class MenusController extends Controller
 
 				if ($item)
 				{
-					$item->rebuild(1, 0, 0, '', 'ordering');
+					$root = Item::rootNode();
+					$item->rebuild($root->id, 0, 0, '', 'ordering');
 				}
 			}
 		}

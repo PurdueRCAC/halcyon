@@ -91,10 +91,10 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 			</div>
 			<div class="col-sm-12 col-md-6 mb-2 text-center filter-select">
 				<div class="btn-group" role="group" aria-label="{{ trans('widgets::widgets.client type') }}">
-					<a href="{{ route('admin.menus.items', ['state' => '*']) }}" class="btn btn-secondary<?php if (!in_array($filters['state'], ['published', 'unpublished', 'trashed'])): echo ' active'; endif;?>">{{ trans('menus::menus.all states') }}</a>
-					<a href="{{ route('admin.menus.items', ['state' => 'published']) }}" class="btn btn-secondary<?php if ($filters['state'] == 'published'): echo ' active'; endif;?>">{{ trans('global.published') }}</a>
-					<a href="{{ route('admin.menus.items', ['state' => 'unpublished']) }}" class="btn btn-secondary<?php if ($filters['state'] == 'unpublished'): echo ' active'; endif;?>">{{ trans('global.unpublished') }}</a>
-					<a href="{{ route('admin.menus.items', ['state' => 'trashed']) }}" class="btn btn-secondary<?php if ($filters['state'] == 'trashed'): echo ' active'; endif;?>">{{ trans('global.trashed') }}</a>
+					<a href="{{ route('admin.menus.items', ['menutype' => $filters['menutype'], 'state' => '*']) }}" class="btn btn-secondary<?php if (!in_array($filters['state'], ['published', 'unpublished', 'trashed'])): echo ' active'; endif;?>">{{ trans('menus::menus.all states') }}</a>
+					<a href="{{ route('admin.menus.items', ['menutype' => $filters['menutype'], 'state' => 'published']) }}" class="btn btn-secondary<?php if ($filters['state'] == 'published'): echo ' active'; endif;?>">{{ trans('global.published') }}</a>
+					<a href="{{ route('admin.menus.items', ['menutype' => $filters['menutype'], 'state' => 'unpublished']) }}" class="btn btn-secondary<?php if ($filters['state'] == 'unpublished'): echo ' active'; endif;?>">{{ trans('global.unpublished') }}</a>
+					<a href="{{ route('admin.menus.items', ['menutype' => $filters['menutype'], 'state' => 'trashed']) }}" class="btn btn-secondary<?php if ($filters['state'] == 'trashed'): echo ' active'; endif;?>">{{ trans('global.trashed') }}</a>
 				</div>
 			</div>
 			<div class="col-sm-12 col-md-3 mb-2 text-right filter-select">
