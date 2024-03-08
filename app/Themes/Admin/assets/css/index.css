@@ -3121,6 +3121,33 @@ html .select2-container--default .select2-selection--multiple .select2-selection
 .modal-content {
   background: var(--ui-widget-bg);
 }
+
+@media (max-width: 576px) {
+  .modal-dialog.modal-dialog-slideout {
+    width: 80%
+  }
+}
+.modal-dialog-slideout .modal-content {
+  border: 0;
+}
+.modal-dialog-slideout {
+  min-height: 100%;
+  margin: 0 0 0 auto;
+  background-color: var(--ui-widget-bg);
+}
+.modal.fade .modal-dialog.modal-dialog-slideout {
+  -webkit-transform: translate(100%, 0)scale(1);
+  transform: translate(100%, 0)scale(1);
+}
+.modal.fade.show .modal-dialog.modal-dialog-slideout {
+  -webkit-transform: translate(0, 0);
+  transform: translate(0, 0);
+  display: flex;
+  align-items: stretch;
+  -webkit-box-align: stretch;
+  height: 100%;
+}
+
 .ui-dialog.ui-widget-content {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border: none;
