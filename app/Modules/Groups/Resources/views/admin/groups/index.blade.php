@@ -142,7 +142,7 @@ app('pathway')
 							continue;
 						endif;
 						@endphp
-						<option value="{{ $field->id }}"<?php if ($filters['fieldofscience'] == $field->id) { echo ' selected="selected"'; } ?>>{{ str_repeat('|- ', ($field->level - 1)) . $field->name }} (<?php echo App\Modules\Groups\Models\GroupFieldOfScience::where('fieldofscienceid', '=', $field->id)->count(); ?>)</option>
+						<option value="{{ $field->id }}"<?php if ($filters['fieldofscience'] == $field->id) { echo ' selected="selected"'; } ?>>{{ str_repeat('|- ', ($field->level - 1)) . $field->name }} ({{ $field->groups_count }})</option>
 					@endforeach
 				</select>
 
@@ -155,7 +155,7 @@ app('pathway')
 							continue;
 						endif;
 						@endphp
-						<option value="{{ $department->id }}"<?php if ($filters['department'] == $department->id) { echo ' selected="selected"'; } ?>>{{ str_repeat('|- ', ($department->level - 1)) . $department->name }} (<?php echo App\Modules\Groups\Models\GroupDepartment::where('collegedeptid', '=', $department->id)->count(); ?>)</option>
+						<option value="{{ $department->id }}"<?php if ($filters['department'] == $department->id) { echo ' selected="selected"'; } ?>>{{ str_repeat('|- ', ($department->level - 1)) . $department->name }} ({{ $department->groups_count }})</option>
 					@endforeach
 				</select>
 			</div>
@@ -234,7 +234,7 @@ app('pathway')
 					@php
 					$deps = array();
 					foreach ($row->departmentList as $dep):
-						$name  = $dep->parentid > 1 ? $dep->parent->name . ' > ' : '';
+						$name  = $dep->parentid > 1 ? $dep->parent->name . ' &rsaquo; ' : '';
 						$name .= $dep->name;
 
 						$deps[] = $name;
