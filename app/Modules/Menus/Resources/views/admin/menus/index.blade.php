@@ -135,9 +135,49 @@ app('pathway')
 								<span class="sr-only visually-hidden">Menu requires a published widget to be visible.</span>
 							@endif
 							@if (auth()->user()->can('edit menus'))
-								<a href="{{ route('admin.menus.edit', ['id' => $row->id]) }}">
+								<a data-href="{{ route('admin.menus.edit', ['id' => $row->id]) }}" href="#item{{ $row->id }}" data-toggle="modal" data-bs-toggle="modal">
 									{!! App\Halcyon\Utility\Str::highlight(e($row->title), $filters['search']) !!}
 								</a>
+
+								<div id="item{{ $row->id }}" class="modal fade" tabindex="-1" aria-labelledby="item{{ $row->id }}-title" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-slideout modal-dialog-scrollable">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h3 class="modal-title" id="item{{ $row->id }}-title">{{ trans('global.edit') . ' #' . $row->id }}</h3>
+												<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												<form action="{{ route('admin.menus.store') }}" method="post">
+													<div class="form-group">
+														<label for="field-title">{{ trans('menus::menus.title') }} <span class="required">{{ trans('global.required') }}</span></label>
+														<input type="text" name="title" id="field-title" class="form-control" required maxlength="250" value="{{ $row->title }}" />
+														<span class="invalid-feedback">{{ trans('menus::menus.invalid.title') }}</span>
+													</div>
+
+													<div class="form-group">
+														<label for="field-menutype">{{ trans('menus::menus.item type') }} <span class="required">{{ trans('global.required') }}</span></label>
+														<input type="text" name="menutype" id="field-menutype" class="form-control{{ $errors->has('fields.menutype') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->menutype }}" />
+														<span class="form-text text-muted">{{ trans('menus::menus.menutype hint') }}</span>
+													</div>
+
+													<div class="form-group">
+														<label for="field-description">{{ trans('menus::menus.description') }}</label>
+														<textarea name="description" id="field-description" class="form-control" maxlength="255" rows="2" cols="40">{{ $row->description }}</textarea>
+													</div>
+
+													<div class="form-group mb-0 text-center">
+														<input type="submit" class="btn btn-success" value="{{ trans('global.button.save') }}" data-api="{{ route('api.menus.update', ['id' => $row->id]) }}" />
+													</div>
+
+													<input type="hidden" name="id" value="{{ $row->id }}" />
+													@csrf
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
 							@else
 								{!! App\Halcyon\Utility\Str::highlight(e($row->title), $filters['search']) !!}
 							@endif
@@ -211,19 +251,19 @@ app('pathway')
 				<form action="{{ route('admin.menus.store') }}" method="post">
 					<div class="form-group">
 						<label for="field-title">{{ trans('menus::menus.title') }} <span class="required">{{ trans('global.required') }}</span></label>
-						<input type="text" name="fields[title]" id="field-title" class="form-control" required maxlength="250" value="" />
+						<input type="text" name="title" id="field-title" class="form-control" required maxlength="250" value="" />
 						<span class="invalid-feedback">{{ trans('menus::menus.invalid.title') }}</span>
 					</div>
 
 					<div class="form-group">
 						<label for="field-menutype">{{ trans('menus::menus.item type') }} <span class="required">{{ trans('global.required') }}</span></label>
-						<input type="text" name="fields[menutype]" id="field-menutype" class="form-control{{ $errors->has('fields.menutype') ? ' is-invalid' : '' }}" required maxlength="250" value="" />
+						<input type="text" name="menutype" id="field-menutype" class="form-control{{ $errors->has('fields.menutype') ? ' is-invalid' : '' }}" required maxlength="250" value="" />
 						<span class="form-text text-muted">{{ trans('menus::menus.menutype hint') }}</span>
 					</div>
 
 					<div class="form-group">
 						<label for="field-description">{{ trans('menus::menus.description') }}</label>
-						<textarea name="fields[description]" id="field-description" class="form-control" rows="5" cols="40"></textarea>
+						<textarea name="description" id="field-description" class="form-control" maxlength="255" rows="2" cols="40"></textarea>
 					</div>
 
 					<div class="form-group mb-0 text-center">

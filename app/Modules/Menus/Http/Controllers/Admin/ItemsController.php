@@ -61,11 +61,6 @@ class ItemsController extends Controller
 		}
 		$filters['page'] = $reset ? 1 : $filters['page'];
 
-		/*if ($menutype)
-		{
-			$filters['menutype'] = $menutype;
-		}*/
-
 		if (!in_array($filters['order'], ['id', 'title', 'published', 'access']))
 		{
 			$filters['order'] = Item::$orderBy;
@@ -89,77 +84,35 @@ class ItemsController extends Controller
 		$a = (new Item)->getTable();
 
 		// Select all fields from the table.
-		$query->select([$a . '.id',
+		$query->select([
+			$a . '.id',
 			$a . '.menutype',
 			$a . '.title',
 			$a . '.alias',
-			$a . '.content',
 			$a . '.path',
 			$a . '.link',
 			$a . '.type',
 			$a . '.parent_id',
 			$a . '.level',
-			$a . '.published AS state',
+			$a . '.published',
 			$a . '.module_id',
 			$a . '.ordering',
 			$a . '.checked_out',
 			$a . '.checked_out_time',
-			$a . '.target',
 			$a . '.access',
-			$a . '.class',
-			//$a . '.template_style_id',
-			$a . '.params',
 			$a . '.lft',
 			$a . '.rgt',
 			$a . '.home',
 			$a . '.language',
 			$a . '.client_id',
 			$a . '.deleted_at',
-			//'l.title AS language_title',
-			//'l.image AS image',
-			'u.name AS editor',
-			'c.element AS modulename',
-			'ag.title AS access_level',
-			'e.name AS name',
-			\DB::raw('CASE ' . $a . '.type' .
-			' WHEN \'module\' THEN ' . $a . '.published+2*(e.enabled-1) ' .
-			' WHEN \'url\' THEN ' . $a . '.published+2 ' .
-			' WHEN \'alias\' THEN ' . $a . '.published+4 ' .
-			' WHEN \'separator\' THEN ' . $a . '.published+6 ' .
-			' END AS published')]);
-		//$query->from($query->getTableName(), 'a');
-
-		// Join over the language
-		//$query->leftJoin('languages AS l', 'l.lang_code', $a . '.language', 'left');
-
-		// Join over the users.
-		$query->leftJoin('users AS u', 'u.id', $a . '.checked_out');
-
-		// Join over components
-		$query->leftJoin('extensions AS c', 'c.id', $a . '.module_id');
-
-		// Join over the asset groups.
-		$query->leftJoin('viewlevels AS ag', 'ag.id', $a . '.access');
-
-		// Join over the associations.
-		/*$assoc = isset($app->menu_associations) ? $app->menu_associations : 0;
-		if ($assoc)
-		{
-			$query->select('COUNT(asso2.id)>1 AS association');
-			$query->leftJoin('associations AS asso', 'asso.id = ' . $a . '.id AND asso.context=\'com_menus.item\'');
-			$query->leftJoin('associations AS asso2', 'asso2.key', 'asso.key');
-			$query->groupBy($a . '.id');
-		}*/
-
-		// Join over the extensions
-		$query->leftJoin('extensions AS e', 'e.id', $a . '.module_id');
+		]);
 
 		// Exclude the root category.
 		$query->where($a . '.id', '>', 1);
 		$query->where($a . '.client_id', '=', 0);
 
 		// Filter on the published state.
-		//$published = $filters['state'];
 		if ($filters['state'] == 'published')
 		{
 			$query->where($a . '.published', '=', 1);
@@ -207,7 +160,7 @@ class ItemsController extends Controller
 		$parentId = $filters['parent'];
 		if (!empty($parentId))
 		{
-			$query->where('p.id', '=', (int)$parentId);
+			$query->where($a . '.parent_id', '=', (int)$parentId);
 		}
 
 		// Filter the items over the menu id if set.
@@ -243,154 +196,9 @@ class ItemsController extends Controller
 
 		// Get records
 		$rows = $query
+			->with('viewlevel')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->get();
-			//->paginate($filters['limit'], ['*'], 'page', $filters['page'])
-			//->appends(array_filter($filters));
-
-		// Preprocess the list of items to find ordering divisions.
-		$ordering = array();
-
-		/*$prev = null;
-		if ($filters['page'] > 1)
-		{
-			$prev = $query
-				->orderBy($filters['order'], $filters['order_dir'])
-				->limit(1)
-				->offset($filters['limit'] * ($filters['page'] - 1) - 1)
-				->first();
-		}
-		$next = $query
-			->orderBy($filters['order'], $filters['order_dir'])
-			->limit(1)
-			->offset($filters['limit'] * $filters['page'])
-			->first();
-
-		if ($prev)
-		{
-			$ordering[$prev->parent_id][] = $prev->id;
-		}*/
-
-		foreach ($rows as $item)
-		{
-			if (!isset($ordering[$item->parent_id]))
-			{
-				$ordering[$item->parent_id] = array();
-			}
-			$ordering[$item->parent_id][] = $item->id;
-
-			// item type text
-			switch ($item->type)
-			{
-				case 'url':
-					$value = trans('menus::menus.TYPE_EXTERNAL_URL');
-					break;
-
-				case 'alias':
-					$value = trans('menus::menus.TYPE_ALIAS');
-					break;
-
-				case 'separator':
-					$value = trans('menus::menus.TYPE_SEPARATOR');
-					break;
-
-				case 'module':
-				default:
-					// load language
-					if (!empty($item->modulename))
-					{
-						$value = trans($item->modulename);
-						$vars  = null;
-
-						parse_str($item->link, $vars);
-
-						if (isset($vars['view']))
-						{
-							// Attempt to load the view xml file.
-							$file = app_path() . '/Modules/' . $item->modulename . '/Resources/views/site/' . $vars['view'] . '/metadata.xml';
-
-							if (file_exists($file) && $xml = simplexml_load_file($file))
-							{
-								// Look for the first view node off of the root node.
-								if ($view = $xml->xpath('view[1]'))
-								{
-									if (!empty($view[0]['title']))
-									{
-										$vars['layout'] = isset($vars['layout']) ? $vars['layout'] : 'default';
-
-										// Attempt to load the layout xml file.
-										// If Alternative Menu Item, get template folder for layout file
-										if (strpos($vars['layout'], ':') > 0)
-										{
-											// Use template folder for layout file
-											$temp = explode(':', $vars['layout']);
-											$file = app_path() . '/Themes/' . $temp[0] . '/html/' . $item->modulename . '/' . $vars['view'] . '/' . $temp[1] . '.xml';
-										}
-										else
-										{
-											// Get XML file from component folder for standard layouts
-											$file = app_path() . '/Modules/' . $item->modulename . '/Resources/views/site/' . $vars['view'] . '/' . $vars['layout'] . '.xml';
-										}
-
-										if (file_exists($file) && $xml = simplexml_load_file($file))
-										{
-											// Look for the first view node off of the root node.
-											if ($layout = $xml->xpath('layout[1]'))
-											{
-												if (!empty($layout[0]['title']))
-												{
-													$value .= ' » ' . trans(trim((string) $layout[0]['title']));
-												}
-											}
-											if (!empty($layout[0]->message[0]))
-											{
-												$item->item_type_desc = trans(trim((string) $layout[0]->message[0]));
-											}
-										}
-									}
-								}
-								unset($xml);
-							}
-							else
-							{
-								// Special case for absent views
-								$value .= ' » ' . trans($item->modulename . '::' . $item->modulename . '.' . $vars['view'] . '.VIEW_DEFAULT_TITLE');
-							}
-						}
-					}
-					else
-					{
-						if (preg_match("/^index.php\?option=([a-zA-Z\-0-9_]*)/", $item->link, $result))
-						{
-							$value = trans('menus::menus.TYPE_UNEXISTING', ['type' => $result[1]]);
-						}
-						else
-						{
-							$value = trans('menus::menus.TYPE_UNKNOWN');
-						}
-					}
-					break;
-			}
-			$item->item_type = $value;
-		}
-
-		/*if ($next)
-		{
-			$ordering[$next->parent_id][] = $next->id;
-		}*/
-
-		// Levels filter.
-		/*$options = array();
-		$options[] = Select::option('1', 1);
-		$options[] = Select::option('2', 2);
-		$options[] = Select::option('3', 3);
-		$options[] = Select::option('4', 4);
-		$options[] = Select::option('5', 5);
-		$options[] = Select::option('6', 6);
-		$options[] = Select::option('7', 7);
-		$options[] = Select::option('8', 8);
-		$options[] = Select::option('9', 9);
-		$options[] = Select::option('10', 10);*/
 
 		$menus = Type::query()
 			->orderBy('title', 'asc')
@@ -401,8 +209,6 @@ class ItemsController extends Controller
 			'filters'  => $filters,
 			'menu'     => $menu,
 			'menus'    => $menus,
-			//'f_levels' => $options,
-			'ordering' => $ordering
 		]);
 	}
 
@@ -546,7 +352,6 @@ class ItemsController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		//$request->validate([
 		$rules = [
 			'fields.menutype' => 'required|string|max:24',
 			'fields.title' => 'nullable|string|max:255',
@@ -578,9 +383,6 @@ class ItemsController extends Controller
 		{
 			return redirect()->back()->withError(trans('global.messages.save failed'));
 		}
-
-		$root = Item::rootNode();
-		$row->rebuild($root->id);
 
 		// Set this to redirects work correctly.
 		$request->merge(['menutype' => $row->menutype]);

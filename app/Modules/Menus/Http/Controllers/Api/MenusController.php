@@ -8,6 +8,8 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Modules\Menus\Http\Resources\MenuResource;
+use App\Modules\Menus\Http\Resources\MenuResourceCollection;
 use App\Modules\Menus\Models\Type;
 use App\Modules\Menus\Models\Item;
 use App\Halcyon\Access\Viewlevel;
@@ -112,7 +114,7 @@ class MenusController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request  $request
-	 * @return ResourceCollection
+	 * @return MenuResourceCollection
 	 */
 	public function index(Request $request)
 	{
@@ -158,18 +160,9 @@ class MenusController extends Controller
 			->withCount('items')
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'])
-			->appends(array_filter($filters))
-			->each(function($row, $key)
-			{
-				$row->api = route('api.menus.read', ['id' => $row->id]);
-				$row->counts = [
-					'published' => number_format($row->countPublishedItems()),
-					'unpublished' => number_format($row->countUnpublishedItems()),
-					'trashed' => number_format($row->countTrashedItems()),
-				];
-			});
+			->appends(array_filter($filters));
 
-		return new ResourceCollection($rows);
+		return new MenuResourceCollection($rows);
 	}
 
 	/**
@@ -184,7 +177,8 @@ class MenusController extends Controller
 	 * 		"description":   "Menu title",
 	 * 		"required":      true,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 48
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -193,14 +187,14 @@ class MenusController extends Controller
 	 * 		"description":   "A description of the menu",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "client_id",
 	 * 		"description":   "Client (admin = 1|site = 0) ID",
-	 * 		"type":          "integer",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -213,7 +207,8 @@ class MenusController extends Controller
 	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 24
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -246,7 +241,7 @@ class MenusController extends Controller
 	 * 		}
 	 * }
 	 * @param  Request $request
-	 * @return JsonResponse|JsonResource
+	 * @return JsonResponse|MenuResource
 	 */
 	public function create(Request $request)
 	{
@@ -254,6 +249,7 @@ class MenusController extends Controller
 			'title' => 'required|string|max:48',
 			'menutype' => 'required|string|max:24',
 			'description' => 'nullable|string|max:255',
+			'client_id' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -264,24 +260,20 @@ class MenusController extends Controller
 		}
 
 		$row = new Type();
-		$row->title = $request->input('title');
-		$row->menutype = $request->input('menutype');
-		$row->description = $request->input('description');
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
+		}
 
 		if (!$row->save())
 		{
 			return response()->json(['message' => trans('global.messages.save failed')], 500);
 		}
 
-		$row->api = route('api.menus.read', ['id' => $row->id]);
-		$row->item_coutns = 0;
-		$row->counts = [
-			'published' => 0,
-			'unpublished' => 0,
-			'trashed' => 0,
-		];
-
-		return new JsonResource($row);
+		return new MenuResource($row);
 	}
 
 	/**
@@ -329,21 +321,13 @@ class MenusController extends Controller
 	 * 		}
 	 * }
 	 * @param  int  $id
-	 * @return JsonResource
+	 * @return MenuResource
 	 */
 	public function read(int $id)
 	{
-		$row = Type::findOrFail((int)$id);
+		$row = Type::findOrFail($id);
 
-		$row->api = route('api.menus.read', ['id' => $row->id]);
-		$row->items_count = $row->items()->count();
-		$row->counts = [
-			'published' => number_format($row->countPublishedItems()),
-			'unpublished' => number_format($row->countUnpublishedItems()),
-			'trashed' => number_format($row->countTrashedItems()),
-		];
-
-		return new JsonResource($row);
+		return new MenuResource($row);
 	}
 
 	/**
@@ -367,7 +351,8 @@ class MenusController extends Controller
 	 * 		"description":   "Menu title",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 48
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -376,7 +361,8 @@ class MenusController extends Controller
 	 * 		"description":   "A description of the menu",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 255
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -395,7 +381,8 @@ class MenusController extends Controller
 	 * 		"description":   "A short alias for the menu. If none provided, one will be generated from the title.",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "string",
+	 * 			"maxLength": 24
 	 * 		}
 	 * }
 	 * @apiResponse {
@@ -432,7 +419,7 @@ class MenusController extends Controller
 	 * }
 	 * @param   Request $request
 	 * @param   int $id
-	 * @return  JsonResponse|JsonResource
+	 * @return  JsonResponse|MenuResource
 	 */
 	public function update(Request $request, int $id)
 	{
@@ -440,7 +427,7 @@ class MenusController extends Controller
 			'title' => 'nullable|string|max:48',
 			'menutype' => 'nullable|string|max:24',
 			'description' => 'nullable|string|max:255',
-			'ordering' => 'nullable|array',
+			'client_id' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -450,14 +437,18 @@ class MenusController extends Controller
 			return response()->json(['message' => $validator->messages()], 415);
 		}
 
+		$update = false;
 		$row = Type::findOrFail($id);
-		$row->title = $request->input('title', $row->title);
-		$row->menutype = $request->input('menutype', $row->menutype);
-		$row->description = $request->input('description', $row->description);
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+				$update = true;
+			}
+		}
 
-		if ($request->has('title')
-		 || $request->has('menutype')
-		 || $request->has('description'))
+		if ($update)
 		{
 			if (!$row->save())
 			{
@@ -471,8 +462,6 @@ class MenusController extends Controller
 
 			if (count($order))
 			{
-				$item = null;
-
 				foreach ($order as $i => $it)
 				{
 					list($parent_id, $id) = explode(':', $it);
@@ -484,26 +473,15 @@ class MenusController extends Controller
 					}
 					$item->parent_id = intval($parent_id);
 					$item->ordering = $i;
-					$item->save();
+					$item->saveQuietly();
 				}
 
-				if ($item)
-				{
-					$root = Item::rootNode();
-					$item->rebuild($root->id, 0, 0, '', 'ordering');
-				}
+				$root = Item::rootNode();
+				$root->rebuild($root->id, 0, 0, '', 'ordering');
 			}
 		}
 
-		$row->api = route('api.menus.read', ['id' => $row->id]);
-		$row->items_count = $row->items()->count();
-		$row->counts = [
-			'published' => number_format($row->countPublishedItems()),
-			'unpublished' => number_format($row->countUnpublishedItems()),
-			'trashed' => number_format($row->countTrashedItems()),
-		];
-
-		return new JsonResource($row);
+		return new MenuResource($row);
 	}
 
 	/**

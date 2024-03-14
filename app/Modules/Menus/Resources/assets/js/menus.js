@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					});
 
 				for (var i = 0; i < menus[val].length; i++) {
-					document.getElementById('fields_parent_id').append('<option value="' + menus[val][i].value + '">' + menus[val][i].text + '</option>');
+					document.getElementById('fields_parent_id').insertAdjacentHTML('beforeend', '<option value="' + menus[val][i].value + '">' + menus[val][i].text + '</option>');
 				}
 			}
 		});

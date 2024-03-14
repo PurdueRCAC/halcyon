@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use App\Halcyon\Form\Form;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Menus\Events\TypeCreating;
@@ -31,6 +32,7 @@ use App\Modules\Menus\Events\TypeDeleted;
  *
  * @property string $api
  * @property array<int,Item> $links
+ * @property array<string,int> $counts
  */
 class Type extends Model
 {
@@ -89,6 +91,7 @@ class Type extends Model
 	{
 		$value = str_replace(' ', '-', $value);
 		$value = preg_replace("/[^a-zA-Z0-9\-]/", '', strtolower($value));
+		$value = Str::limit($value, 24);
 
 		$this->attributes['menutype'] = $value;
 	}
@@ -110,21 +113,25 @@ class Type extends Model
 			$model->clearCachedWidgets();
 		});
 
+		// Ensure the menutype is unique
 		static::creating(function ($model)
 		{
-			$exist = self::query()
-				->where('menutype', '=', $model->menutype)
-				->where('id', '!=', $model->id)
-				->first();
-
-			if ($exist && $exist->id)
+			do
 			{
-				throw new \Exception(
-					trans('An entry with the menutype ":menutype" already exists.', ['menutype' => $model->menutype])
-				);
+				$exist = self::query()
+					->where('menutype', '=', $model->menutype)
+					->where('id', '!=', $model->id)
+					->first();
+				if ($exist)
+				{
+					if (strlen($model->menutype) > 45)
+					{
+						$model->menutype = Str::limit($model->menutype, 45);
+					}
+					$model->menutype = $model->menutype . rand(0, 100);
+				}
 			}
-
-			return true;
+			while ($exist);
 		});
 
 		static::deleted(function ($model)
@@ -281,9 +288,9 @@ class Type extends Model
 	public function rebuild()
 	{
 		// Initialiase variables.
-		$items = new Item;
+		$root = Item::rootNode();
 
-		return $items->rebuild(1);
+		return $root->rebuild($root->id);
 	}
 
 	/**
@@ -373,20 +380,10 @@ class Type extends Model
 					);
 				}
 
+				// Update the menu items
 				DB::table((new Item)->getTable())
 					->where('menutype', '=', $prev->menutype)
 					->update(['menutype' => $this->menutype]);
-
-				// Update the menu items
-				/*foreach ($prev->items as $item)
-				{
-					$item->menutype = $this->menutype;
-
-					if (!$item->save())
-					{
-						return false;
-					}
-				}*/
 
 				// Update the module items
 				foreach ($prev->widgets()->get() as $widget)

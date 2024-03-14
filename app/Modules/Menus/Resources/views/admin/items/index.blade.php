@@ -179,7 +179,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 			$level = $row->level;
 			?>
 			<li data-parent="{{ $row->parent_id }}" data-id="{{ $row->id }}" class="mx-0">
-				<div class="card p-2 mb-1{{ !$row->state ? ' bg-transparent' : '' }}{{ $row->trashed() ? ' trashed' : '' }}">
+				<div class="card p-2 mb-1{{ !$row->published ? ' bg-transparent' : '' }}{{ $row->trashed() ? ' trashed' : '' }}">
 					<div class="d-flex">
 						@if ($canEditState || $canDelete)
 						<div>
@@ -235,7 +235,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 										{{ trans('global.trashed') }}
 									</span>
 								@endif
-							@elseif ($row->state)
+							@elseif ($row->published)
 								@if ($canChange)
 									<a class="badge badge-success" href="{{ route('admin.menus.items.unpublish', ['id' => $row->id]) }}" data-id="cb3" data-task="admin.menus.items.unpublish" data-tip="{{ trans('menus::menus.unpublish menu item') }}">
 										{{ trans('global.published') }}
@@ -258,7 +258,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 							@endif
 						</div>
 						<div class="text-center" style="width: 10em;">
-							<span class="badge access {{ preg_replace('/[^a-z0-9\-_]+/', '', strtolower($row->access_level)) }}">{{ $row->access_level }}</span>
+							<span class="badge access {{ preg_replace('/[^a-z0-9\-_]+/', '', strtolower($row->viewlevel->title)) }}">{{ $row->viewlevel->title }}</span>
 						</div>
 						<div class="text-right">
 							<div class="draghandle" draggable="true" style="width: 1em;">
@@ -276,7 +276,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>
 		</div>
 	@endif
-
+	
 	<input type="hidden" name="boxchecked" value="0" />
 </form>
 @stop

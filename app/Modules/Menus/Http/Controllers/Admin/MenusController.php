@@ -176,8 +176,9 @@ class MenusController extends Controller
 	public function store(Request $request)
 	{
 		$rules = [
-			'fields.menutype' => 'required|string|max:24',
-			'fields.title' => 'required|string|max:48'
+			'title' => 'required|string|max:48',
+			'menutype' => 'required|string|max:24',
+			'description' => 'nullable|string|max:255'
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -192,7 +193,13 @@ class MenusController extends Controller
 		$id = $request->input('id');
 
 		$row = Type::findOrNew($id);
-		$row->fill($request->input('fields'));
+		foreach ($rules as $key => $rule)
+		{
+			if ($request->has($key))
+			{
+				$row->{$key} = $request->input($key);
+			}
+		}
 
 		if (!$row->save())
 		{

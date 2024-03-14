@@ -5,6 +5,7 @@ namespace App\Modules\Menus\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Config\Repository;
 use Illuminate\Support\Facades\DB;
@@ -131,11 +132,21 @@ class Item extends Model
 		// updated, or deleted
 		static::created(function ($model)
 		{
+			$root = self::rootNode();
+			$root->rebuild($root->id);
+
 			$model->clearCachedWidgets();
 		});
 
 		static::updated(function ($model)
 		{
+			if ($model->parent_id != $model->getOriginal('parent_id')
+			 || $model->ordering != $model->getOriginal('ordering'))
+			{
+				$root = self::rootNode();
+				$root->rebuild($root->id);
+			}
+
 			$model->clearCachedWidgets();
 		});
 
@@ -215,6 +226,16 @@ class Item extends Model
 	}
 
 	/**
+	 * Get the access level
+	 *
+	 * @return  HasOne
+	 */
+	public function viewlevel(): HasOne
+	{
+		return $this->hasOne('App\Halcyon\Access\Viewlevel', 'id', 'access');
+	}
+
+	/**
 	 * Delete the record and all associated data
 	 *
 	 * @return  bool  False if error, True on success
@@ -234,11 +255,11 @@ class Item extends Model
 	/**
 	 * Save the record
 	 *
-	 * @param   array<string,mixed>  $options
+	 * @param   array<string,mixed>    $options
 	 * @return  bool   False if error, True on success
 	 * @throws  Exception
 	 */
-	public function save(array $options = [])
+	public function save(array $options = []): bool
 	{
 		if ($this->type == 'separator')
 		{
@@ -310,22 +331,12 @@ class Item extends Model
 					'lft' => DB::raw('lft + 2')
 				]);
 
-			/*if (!$query)
-			{
-				return false;
-			}*/
-
 			// Shift right values.
 			$query = $this->getQuery()
 				->where($reposition->right_where['col'], $reposition->right_where['op'], $reposition->right_where['val'])
 				->update([
 					'rgt' => DB::raw('rgt + 2')
 				]);
-
-			/*if (!$query)
-			{
-				return false;
-			}*/
 
 			// Set all the nested data
 			if (!$this->path)
@@ -337,25 +348,7 @@ class Item extends Model
 			$this->level = $parent->level + 1;
 		}
 
-		//$this->params = $this->params->toString();
-
-		$result = parent::save($options);
-
-		/*if ($result)
-		{
-			$this->rebuildPath();
-
-			foreach ($this->children as $child)
-			{
-				// Rebuild the tree path.
-				if (!$child->rebuildPath())
-				{
-					return false;
-				}
-			}
-		}*/
-
-		return $result;
+		return parent::save($options);
 	}
 
 	/**
@@ -388,7 +381,13 @@ class Item extends Model
 			// $rightId is the current right value, which is incremented on recursion return.
 			// Increment the level for the children.
 			// Add this item's alias to the path (but avoid a leading /)
-			$rightId = $this->rebuild($node->id, $rightId, $level + 1, $path . (empty($path) ? '' : '/') . $node->alias, $orderby);
+			$rightId = $this->rebuild(
+				$node->id,
+				$rightId,
+				$level + 1,
+				$path . (empty($path) ? '' : '/') . $node->alias,
+				$orderby
+			);
 
 			// If there is an update failure, return false to break out of the recursion.
 			if ($rightId === false)
@@ -423,7 +422,7 @@ class Item extends Model
 	 *
 	 * @return  Item|null
 	 */
-	public static function rootNode()
+	public static function rootNode(): ?Item
 	{
 		return self::query()
 			->where('level', '=', 0)
@@ -798,7 +797,7 @@ class Item extends Model
 	 * @return  bool    Boolean true on success.
 	 * @throws  Exception
 	 */
-	public function move($delta, $where = ''): bool
+	public function move(int $delta, string $where = ''): bool
 	{
 		$query = self::query()
 			->where('parent_id', '=', $this->parent_id)
