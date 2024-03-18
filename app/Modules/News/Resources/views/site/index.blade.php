@@ -81,7 +81,7 @@ app('pathway')->append(
 					<ul class="news-list">
 						<?php foreach ($articles as $article): ?>
 							<li>
-								<article id="article-{{ $article->id }}" aria-labelledby="article-{{ $article->id }}-title" itemscope itemtype="https://schema.org/<?php echo ($article->type->calendar ? 'Event' : 'NewsArticle'); ?>">
+								<article id="article-{{ $article->id }}" aria-labelledby="article-{{ $article->id }}-title" itemscope itemtype="https://schema.org/<?php echo ($type->calendar ? 'Event' : 'NewsArticle'); ?>">
 									<h3 id="article-{{ $article->id }}-title" class="news-title">
 										<a href="{{ route('site.news.show', ['id' => $article->id]) }}"><span class="sr-only">{{ trans('news::news.article id', ['id' => $article->id]) }}:</span> <span itemprop="name">{{ $article->headline }}</span></a>
 									</h3>
