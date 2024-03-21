@@ -52,8 +52,7 @@ class HttpLogger
 		$log->hostname = $this->getClientHost();
 		$log->servername = $this->getClientServer();
 		$log->ip = $request->ip();
-		// Handle some localhost cases
-		$log->ip = $log->ip == '::1' ? '127.0.0.1' : $log->ip;
+
 		if ($log->transportmethod == 'GET' && $app == 'ui')
 		{
 			// Collect some diagnostic info
