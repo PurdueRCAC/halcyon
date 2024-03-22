@@ -24,7 +24,7 @@ return [
 	'record id' => 'Tag #:id',
 	'item removed' => 'Item removed.',
 	'item added' => 'Item added.',
-	'all domains' => '- All Domains -',
+	'all domains' => '- All Namespaces -',
 	'domain' => 'Namespace',
 	'domain hint' => 'A namespace that allows for limiting queries to specific tag sets. This is typically a module name, such as "users" for tags associated with user profiles.',
 ];
