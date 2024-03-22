@@ -4,6 +4,7 @@ namespace App\Widgets\Adminmenu;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Collection;
 use App\Modules\Widgets\Entities\Widget;
 use App\Modules\Menus\Models\Item;
@@ -24,8 +25,25 @@ class Adminmenu extends Widget
 		// Initialise variables.
 		$menu    = new Tree();
 		$enabled = true; //Request::input('hidemainmenu') ? false : true;
-		$modules = $this->getModules(false);
-		$menus = $this->getMenus();
+
+		if ($this->params->get('cache_data'))
+		{
+			$modules = Cache::remember($this->getCacheKey() . '.modules', $this->params->get('cache_data_time', 3600), function()
+			{
+				return $this->getModules(false);
+			});
+
+			$menus = Cache::remember($this->getCacheKey() . '.menus', $this->params->get('cache_data_time', 3600), function()
+			{
+				return $this->getMenus();
+			});
+		}
+		else
+		{
+			$modules = $this->getModules(false);
+			$menus = $this->getMenus();
+		}
+
 		$user = auth()->user();
 
 		$groupings = array();
@@ -85,11 +103,11 @@ class Adminmenu extends Widget
 
 		// Render the module layout
 		return view($this->getViewName($enabled ? 'enabled' : 'disabled'), [
-			'enabled' => $enabled,
-			'menu'    => $menu,
-			'modules' => $mods,
-			'menus'   => $menus,
-			'params'  => $this->params,
+			'enabled'   => $enabled,
+			'menu'      => $menu,
+			'modules'   => $mods,
+			'menus'     => $menus,
+			'params'    => $this->params,
 			'groupings' => $groupings,
 		]);
 	}
@@ -107,8 +125,7 @@ class Adminmenu extends Widget
 		return DB::table($menus)
 			->select(
 				$menus . '.*',
-				DB::raw('SUM(' . $items . '.home) AS home')//,
-				//$items . '.language'
+				DB::raw('SUM(' . $items . '.home) AS home')
 			)
 			->leftJoin($items, $items . '.menutype', '=', $menus . '.menutype')
 			->whereNull($menus . '.deleted_at')
@@ -130,7 +147,6 @@ class Adminmenu extends Widget
 			->groupBy($menus . '.updated_at')
 			->groupBy($menus . '.deleted_at')
 			->groupBy($items . '.menutype')
-			//->groupBy($items . '.language')
 			->get();
 	}
 

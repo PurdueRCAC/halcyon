@@ -11,11 +11,11 @@
 				<option value="0">global.hide</option>
 				<option value="1">global.show</option>
 			</field>
-			<field name="cache" type="list" default="1" label="widgets::widgets.field.caching" description="widgets::widgets.field.caching description">
+			<field name="cache_data" type="list" default="1" label="widgets::widgets.field.caching" description="widgets::widgets.field.caching description">
 				<option value="1">global.yes</option>
 				<option value="0">global.no</option>
 			</field>
-			<field name="cache_time" type="text" default="3600" label="widgets::widgets.field.cache time" description="widgets::widgets.field.cache time description" />
+			<field name="cache_data_time" type="text" default="3600" label="widgets::widgets.field.cache time" description="widgets::widgets.field.cache time description" />
 		</fieldset>
 	</fields>
 </config>
