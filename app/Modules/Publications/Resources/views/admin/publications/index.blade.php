@@ -186,8 +186,11 @@ app('pathway')
 
 	{{ $rows->render() }}
 	@else
-		<div class="card mb-4">
-			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>
+		<div class="placeholder py-4 mx-auto text-center">
+			<div class="placeholder-body p-4">
+				<span class="fa fa-ban display-4 text-muted" aria-hidden="true"></span>
+				<p>{{ trans('global.no results') }}</p>
+			</div>
 		</div>
 	@endif
 
