@@ -126,7 +126,7 @@ class Subresource extends Model
 	 */
 	public function resource()
 	{
-		return $this->hasOneThrough(Asset::class, Child::class, 'subresourceid', 'id', 'subresourceid', 'resourceid')->withTrashed();
+		return $this->hasOneThrough(Asset::class, Child::class, 'subresourceid', 'id', 'id', 'resourceid')->withTrashed();
 	}
 
 	/**

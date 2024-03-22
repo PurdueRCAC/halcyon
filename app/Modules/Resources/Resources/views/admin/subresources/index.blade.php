@@ -160,7 +160,7 @@ app('pathway')
 					@endif
 				</td>
 				<td>
-					{{ $row->association ? $row->association->resource->name : '' }}
+					{{ $row->resource ? $row->resource->name : '' }}
 				</td>
 				<td class="text-right">
 					{{ $row->nodemem }}
