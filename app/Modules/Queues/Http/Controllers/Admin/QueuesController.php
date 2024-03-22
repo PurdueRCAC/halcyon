@@ -249,6 +249,7 @@ class QueuesController extends Controller
 		{
 			$resources = Asset::query()
 				->withTrashed()
+				->with('subresources')
 				->where('rolename', '!=', '')
 				->orderBy('name', 'asc')
 				->get();
@@ -256,6 +257,7 @@ class QueuesController extends Controller
 		else
 		{
 			$resources = Asset::query()
+				->with('subresources')
 				->where('rolename', '!=', '')
 				->orderBy('name', 'asc')
 				->get();

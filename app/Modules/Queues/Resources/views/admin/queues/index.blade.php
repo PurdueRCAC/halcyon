@@ -116,7 +116,7 @@ app('pathway')
 					<?php
 					$units = array();
 					foreach ($resources as $resource):
-						$subresources = $resource->subresources()->orderBy('name', 'asc')->get();
+						$subresources = $resource->subresources->sortBy('name');
 						if (!count($subresources)):
 							continue;
 						endif;
