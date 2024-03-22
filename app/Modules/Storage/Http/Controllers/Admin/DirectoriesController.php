@@ -116,7 +116,7 @@ class DirectoriesController extends Controller
 		}
 
 		$rows = $query
-			//->with('storageResource')
+			->with('storageResource')
 			->withCount('children')
 			->orderBy($d . '.' . $filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);

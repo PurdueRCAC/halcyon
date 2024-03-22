@@ -119,7 +119,7 @@ if ($parent)
 		<tbody>
 		@foreach ($rows as $i => $row)
 			<?php
-			$sr = $row->storageResource()->withTrashed()->first();
+			$sr = $row->storageResource;
 			?>
 			<tr<?php if ($row->trashed() || $sr->trashed()) { echo ' class="trashed"'; } ?>>
 				@if (auth()->user()->can('delete storage'))
@@ -177,7 +177,10 @@ if ($parent)
 				<td class="priority-4">
 					@if ($sr)
 						@if ($sr->trashed())
-							<del class="text-danger">{{ $sr->name }}</del>
+							<span class="text-danger">
+								<span class="fa fa-trash" aria-hidden="true"></span>
+								<del>{{ $sr->name }}</del>
+							</span>
 						@else
 							{{ $sr->name }}
 						@endif

@@ -128,7 +128,7 @@ class Directory extends Model
 	 */
 	public function storageResource(): BelongsTo
 	{
-		return $this->belongsTo(StorageResource::class, 'storageresourceid');
+		return $this->belongsTo(StorageResource::class, 'storageresourceid')->withTrashed();
 	}
 
 	/**

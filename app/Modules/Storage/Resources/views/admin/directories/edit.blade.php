@@ -115,8 +115,8 @@ app('pathway')
 									<label for="field-owneruserid">{{ trans('storage::storage.owner') }}</label>
 									<select name="fields[owneruserid]" id="field-owneruserid" class="form-control form-users" data-api="{{ route('api.users.index', ['order' => 'name', 'order_by' => 'asc']) }}">
 										<option value="0">{{ trans('global.none') }}</option>
-										@if ($row->group)
-											@foreach ($row->group->members as $member)
+										@if ($row->groupid && $row->group)
+											@foreach ($row->group->members()->with('user')->get() as $member)
 												<option value="{{ $member->userid }}"<?php if ($row->owneruserid == $member->userid) { echo ' selected="selected"'; } ?>>{{ $member->user ? $member->user->name . ' (' . $member->user->username . ')' : trans('global.none') }}</option>
 											@endforeach
 										@else
@@ -258,6 +258,7 @@ app('pathway')
 		<div class="tab-pane" role="tabpanel" aria-labelledby="dir-details-tab"  id="dir-messages">
 			@php
 			$messages = $row->messages()
+				->with('type')
 				->orderBy('datetimesubmitted', 'desc')
 				->paginate(20, ['*'], 'page', request()->input('page', 1));
 			@endphp
