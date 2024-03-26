@@ -16,6 +16,11 @@
 	foreach ($list as $i => $item):
 		$class = 'nav-item item-' . $item->id;
 
+		if ($item->class)
+		{
+			$class .= ' ' . trim($item->class);
+		}
+
 		if (trim($item->link, '/') == $current && $item->type != 'separator')
 		{
 			$class .= ' active';
@@ -52,27 +57,14 @@
 				$title = $item->anchor_title ? ' title="' . $item->anchor_title . '" ' : '';
 
 				if ($item->menu_image):
-					$linktype = $item->params->get('menu_text', 1)
-						? '<img src="' . $item->menu_image . '" alt="' . $item->title . '" /><span class="image-title">' . $item->title . '</span> '
-						: '<img src="' . $item->menu_image . '" alt="' . $item->title . '" />';
+					$linktype = '<img src="' . $item->menu_image . '" alt="' . e($item->title) . '" />';
 				else:
-					$linktype = $item->title;
+					$linktype = '';
 				endif;
 
-				?><div class="separator"<?php echo $title; ?>></div><?php
+				?><div class="separator"<?php echo $title; ?>>{{ $linktype }}</div><?php
 			break;
 			case 'html':
-				if ($item->menu_image):
-					$linktype = $item->params->get('menu_text', 1)
-						? '<img src="' . $item->menu_image . '" alt="' . $item->title . '" /><span class="image-title">' . $item->title . '</span> '
-						: '<img src="' . $item->menu_image . '" alt="' . $item->title . '" />';
-				else:
-					$linktype = $item->title;
-				endif;
-
-				$class = 'dropdown-toggle';
-				$class .= $item->anchor_css ? ' ' . $item->anchor_css : '';
-
 				?><div class="nav-item-content"><?php echo $item->content; ?></div><?php
 			break;
 			case 'url':
@@ -85,9 +77,13 @@
 				$title = $item->anchor_title ? 'title="' . $item->anchor_title . '" ' : '';
 
 				if ($item->menu_image):
-					$linktype = $item->params->get('menu_text', 1)
-						? '<img src="' . $item->menu_image . '" alt="' . $item->title . '" /><span class="image-title">' . $item->title . '</span> '
-						: '<img src="' . $item->menu_image . '" alt="' . $item->title . '" />';
+					if ($item->menu_image_position == 'prepend'):
+						$linktype = $item->menu_image . ' ' . $item->title;
+					elseif ($item->menu_image_position == 'append'):
+						$linktype = $item->title . ' ' . $item->menu_image;
+					elseif ($item->menu_image_position == 'replace'):
+						$linktype = $item->menu_image;
+					endif;
 				else:
 					$linktype = $item->title;
 				endif;
@@ -96,7 +92,6 @@
 					$linktype .= '<span class="caret"></span>';
 				endif;
 				$flink = $item->flink;
-				//$flink = \App\Halcyon\Utility\Str::ampReplace(htmlspecialchars($flink));
 
 				switch ($item->target) :
 					default:
@@ -109,8 +104,7 @@
 						break;
 					case 2:
 						// window.open
-						$options = 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,'.$params->get('window_open');
-							?><a <?php echo $class; ?>href="<?php echo $flink; ?>" onclick="window.open(this.href,'targetWindow','<?php echo $options;?>');return false;" <?php echo $title; ?>><?php echo $linktype; ?></a><?php
+						?><a <?php echo $class; ?>href="<?php echo $flink; ?>" onclick="window.open(this.href,'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,<?php echo $params->get('window_open'); ?>');return false;" <?php echo $title; ?>><?php echo $linktype; ?></a><?php
 						break;
 				endswitch;
 			break;
@@ -137,9 +131,13 @@
 
 				// Note. It is important to remove spaces between elements.
 				if ($item->menu_image):
-					$linktype = $item->params->get('menu_text', 1)
-						? '<img src="' . $item->menu_image . '" alt="' . $item->title . '" /><span class="image-title">' . $item->title . '</span> '
-						: '<img src="' . $item->menu_image . '" alt="' . $item->title . '" />';
+					if ($item->menu_image_position == 'prepend'):
+						$linktype = $item->menu_image . ' ' . $item->title;
+					elseif ($item->menu_image_position == 'append'):
+						$linktype = $item->title . ' ' . $item->menu_image;
+					elseif ($item->menu_image_position == 'replace'):
+						$linktype = $item->menu_image;
+					endif;
 				else:
 					$linktype = $item->title;
 				endif;
@@ -158,7 +156,7 @@
 						?><a <?php echo implode(' ', $atts); ?> rel="noopener" target="_blank"><?php echo $linktype; ?></a><?php
 						break;
 					case 2:
-					// window.open
+						// window.open
 						?><a <?php echo implode(' ', $atts); ?> onclick="window.open(this.href,'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes');return false;"><?php echo $linktype; ?></a><?php
 						break;
 				endswitch;
@@ -170,9 +168,13 @@
 				$title = $item->anchor_title ? 'title="' . $item->anchor_title . '" ' : '';
 
 				if ($item->menu_image):
-					$linktype = $item->params->get('menu_text', 1)
-						? '<img src="' . $item->menu_image . '" alt="' . $item->title . '" /><span class="image-title">' . $item->title . '</span> '
-						: '<img src="' . $item->menu_image . '" alt="' . $item->title . '" />';
+					if ($item->menu_image_position == 'prepend'):
+						$linktype = $item->menu_image . ' ' . $item->title;
+					elseif ($item->menu_image_position == 'append'):
+						$linktype = $item->title . ' ' . $item->menu_image;
+					elseif ($item->menu_image_position == 'replace'):
+						$linktype = $item->menu_image;
+					endif;
 				else:
 					$linktype = $item->title;
 				endif;
@@ -181,7 +183,6 @@
 					$linktype .= '<span class="caret"></span>';
 				endif;
 				$flink = $item->flink;
-				//$flink = \App\Halcyon\Utility\Str::ampReplace(htmlspecialchars($flink));
 
 				switch ($item->target) :
 					default:
@@ -194,8 +195,7 @@
 						break;
 					case 2:
 						// window.open
-						$options = 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,'.$params->get('window_open');
-							?><a <?php echo $class; ?>href="<?php echo $flink; ?>" onclick="window.open(this.href,'targetWindow','<?php echo $options;?>');return false;" <?php echo $title; ?>><?php echo $linktype; ?></a><?php
+						?><a <?php echo $class; ?>href="<?php echo $flink; ?>" onclick="window.open(this.href,'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,<?php echo $params->get('window_open'); ?>');return false;" <?php echo $title; ?>><?php echo $linktype; ?></a><?php
 						break;
 				endswitch;
 			break;

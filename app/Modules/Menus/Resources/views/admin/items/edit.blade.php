@@ -56,14 +56,19 @@ app('pathway')
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
-				<div class="form-group">
-					<?php echo $form->getLabel('menutype'); ?>
-					<?php echo $form->getInput('menutype'); ?>
-				</div>
-
-				<div class="form-group">
-					<?php echo $form->getLabel('parent_id'); ?>
-					<?php echo $form->getInput('parent_id'); ?>
+				<div class="row">
+					<div class="col col-md-6">
+						<div class="form-group">
+							<?php echo $form->getLabel('menutype'); ?>
+							<?php echo $form->getInput('menutype'); ?>
+						</div>
+					</div>
+					<div class="col col-md-6">
+						<div class="form-group">
+							<?php echo $form->getLabel('parent_id'); ?>
+							<?php echo $form->getInput('parent_id'); ?>
+						</div>
+					</div>
 				</div>
 
 				<div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
@@ -119,19 +124,46 @@ app('pathway')
 					<?php echo $form->getInput('route_id'); ?>
 				</div>
 
-				<div class="form-group menutype-dependant menutype-module">
+				<div class="form-group menutype-dependant menutype-module mb-0">
 					<?php echo $form->getLabel('page_id'); ?>
 					<?php echo $form->getInput('page_id'); ?>
 				</div>
 
-				<div class="form-group menutype-dependant menutype-html">
+				<div class="form-group menutype-dependant menutype-html mb-0">
 					<?php echo $form->getLabel('content'); ?>
 					<?php echo $form->getInput('content'); ?>
 				</div>
+			</fieldset>
+		</div>
+		<div class="col col-md-5">
+			<fieldset class="adminform">
+				<legend>{{ trans('global.publishing') }}</legend>
 
-				<div class="row menutype-dependant menutype-url menutype-module">
+				<div class="row">
 					<div class="col col-md-6">
-						<div class="form-group mb-0">
+						<div class="form-group">
+							<?php echo $form->getLabel('access'); ?>
+							<span class="input-group input-access">
+								<?php echo $form->getInput('access'); ?>
+								<span class="input-group-append"><span class="input-group-text fa fa-lock"></span></span>
+							</span>
+						</div>
+					</div>
+					<div class="col col-md-6">
+						<div class="form-group">
+							<?php echo $form->getLabel('published'); ?>
+							<span class="input-group input-state">
+								<?php echo $form->getInput('published'); ?>
+								<span class="input-group-append"><span class="input-group-text fa fa-check"></span></span>
+							</span>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset class="adminform menutype-dependant menutype-url menutype-module">
+				<legend>{{ trans('global.options') }}</legend>
+
+						<div class="form-group">
 							<?php
 							$field = $form->getField('target');
 							$desc = $field->description;
@@ -146,9 +178,8 @@ app('pathway')
 							endif;
 							?>
 						</div>
-					</div>
-					<div class="col col-md-6">
-						<div class="form-group mb-0">
+
+						<div class="form-group">
 							<?php
 							$field = $form->getField('class');
 							$desc = $field->description;
@@ -163,44 +194,29 @@ app('pathway')
 							endif;
 							?>
 						</div>
-					</div>
+
+				<div class="form-group">
+					<label for="params-menu_image">{{ trans('menus::menus.item.image') }} <span class="fa fa-question-circle text-info" aria-hidden="true" data-tip="{{ trans('menus::menus.item.image desc') }}"></span></label>
+					<input type="text" name="params[menu_image]" id="params-menu_image" class="form-control" value="{{ $row->params->get('menu_image', '') }}" />
+					<span class="sr-only visually-hidden">{{ trans('menus::menus.item.image desc') }}</span>
+				</div>
+
+				<div class="form-group mb-0">
+					<label for="params-menu_image_position">{{ trans('menus::menus.item.image position') }}</label>
+					<select name="params[menu_image_position]" id="params-menu_image_position" class="form-control">
+						<option value="prepend">{{ trans('menus::menus.item.image position prepend') }}</option>
+						<option value="append">{{ trans('menus::menus.item.image position append') }}</option>
+						<option value="replace">{{ trans('menus::menus.item.image position replace') }}</option>
+					</select>
 				</div>
 			</fieldset>
-		</div>
-		<div class="col col-md-5">
-			<fieldset class="adminform">
-				<legend>{{ trans('global.publishing') }}</legend>
-
-				<div class="row">
-					<div class="col col-md-6">
-						<div class="form-group mb-0">
-							<?php echo $form->getLabel('access'); ?>
-							<span class="input-group input-access">
-								<?php echo $form->getInput('access'); ?>
-								<span class="input-group-append"><span class="input-group-text fa fa-lock"></span></span>
-							</span>
-						</div>
-					</div>
-					<div class="col col-md-6">
-						<div class="form-group mb-0">
-							<?php echo $form->getLabel('published'); ?>
-							<span class="input-group input-state">
-								<?php echo $form->getInput('published'); ?>
-								<span class="input-group-append"><span class="input-group-text fa fa-check"></span></span>
-							</span>
-						</div>
-					</div>
-				</div>
-			</fieldset>
-
-			<input type="hidden" name="task" value="" />
-			<input type="hidden" name="fields[language]" value="{{ $row->language }}" />
-			<input type="hidden" name="fields[module_id]" value="{{ $row->module_id }}" />
-			<input type="hidden" name="fields[id]" value="{{ $row->id }}" />
-			<input type="hidden" name="fieldtype" value="" />
 		</div>
 	</div>
-
+	<input type="hidden" name="task" value="" />
+	<input type="hidden" name="fields[language]" value="{{ $row->language }}" />
+	<input type="hidden" name="fields[module_id]" value="{{ $row->module_id }}" />
+	<input type="hidden" name="fields[id]" value="{{ $row->id }}" />
+	<input type="hidden" name="fieldtype" value="" />
 	@csrf
 </form>
 @stop

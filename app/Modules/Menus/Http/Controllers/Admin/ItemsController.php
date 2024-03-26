@@ -358,6 +358,7 @@ class ItemsController extends Controller
 			'fields.content' => 'nullable|string',
 			'fields.path' => 'nullable|string|max:1024',
 			'fields.link' => 'nullable|string|max:1024',
+			'params' => 'nullable|array',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -377,6 +378,15 @@ class ItemsController extends Controller
 		if ($request->has('fields.page_id'))
 		{
 			$row->page_id = $request->input('fields.page_id');
+		}
+		if ($request->has('params'))
+		{
+			$params = $request->input('params', []);
+
+			foreach ($params as $key => $val)
+			{
+				$row->params->set($key, $val);
+			}
 		}
 
 		if (!$row->save())
@@ -451,7 +461,7 @@ class ItemsController extends Controller
 	 * @param   int $id
 	 * @return  RedirectResponse
 	 */
-	public function state(Request $request, $id)
+	public function state(Request $request, $id = null)
 	{
 		$action = app('request')->segment(count($request->segments()) - 1);
 		$state  = $action == 'publish' ? 1 : 0;

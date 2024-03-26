@@ -99,7 +99,8 @@ class Menu extends Widget
 				$item->title        = htmlspecialchars($item->title, ENT_COMPAT, 'UTF-8', false);
 				$item->anchor_css   = htmlspecialchars($item->params->get('menu-anchor_css', ''), ENT_COMPAT, 'UTF-8', false);
 				$item->anchor_title = htmlspecialchars($item->params->get('menu-anchor_title', ''), ENT_COMPAT, 'UTF-8', false);
-				$item->menu_image   = $item->params->get('menu_image', '') ? htmlspecialchars($item->params->get('menu_image', ''), ENT_COMPAT, 'UTF-8', false) : '';
+				$item->menu_image   = $item->params->get('menu_image', '');
+				$item->menu_image_position = $item->params->get('menu_image_position', 'prepend');
 
 				// Reverted back for CMS version 2.5.6
 				switch ($item->type)

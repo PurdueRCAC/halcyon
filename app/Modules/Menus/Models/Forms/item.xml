@@ -31,12 +31,12 @@
 			type="spacer"
 			label="menus::menus.item.alias hint"/>
 
-		<!-- <field
-			name="note"
+		<field
+			name="image"
 			type="text"
-			label="menus::menus.item.note"
-			description="menus::menus.item.note description"
-			/> -->
+			label="menus::menus.item.image"
+			description="menus::menus.item.image description"
+			/>
 
 		<field
 			name="link"
