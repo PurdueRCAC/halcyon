@@ -6,7 +6,7 @@ use Illuminate\Routing\Router;
 $router->group(['prefix' => 'search'], function (Router $router)
 {
 	$router->get('/', [
-		'as'   => 'api.knowledge.index',
-		'uses' => 'PagesController@index',
+		'as'   => 'api.search.index',
+		'uses' => 'SearchController@index',
 	]);
 });
