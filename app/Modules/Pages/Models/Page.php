@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 use App\Modules\Pages\Events\PageCreating;
 use App\Modules\Pages\Events\PageCreated;
 use App\Modules\Pages\Events\PageUpdating;
@@ -20,10 +21,12 @@ use App\Modules\Pages\Events\PageMetadata;
 use App\Modules\Pages\Formatters\FilePath;
 use App\Modules\Pages\Formatters\FileSize;
 use App\Modules\Pages\Formatters\IncludeSvg;
+use App\Modules\Users\Models\User;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Tags\Traits\Taggable;
 use App\Halcyon\Models\Casts\Params;
 use Carbon\Carbon;
+use stdClass;
 
 /**
  * Model class for a page
@@ -178,7 +181,7 @@ class Page extends Model
 	 * @param   string  $value
 	 * @return  void
 	 */
-	public function setAliasAttribute($value): void
+	public function setAliasAttribute(string $value): void
 	{
 		$alias = strip_tags($value);
 		$alias = trim($alias);
@@ -269,7 +272,7 @@ class Page extends Model
 	 * @param   int  $parent_id
 	 * @return  Page|null
 	 */
-	public static function findByAlias($alias, $parent_id=0)
+	public static function findByAlias(string $alias, int $parent_id=0): ?Page
 	{
 		return self::query()
 			->where('alias', '=', (string)$alias)
@@ -284,10 +287,10 @@ class Page extends Model
 	 * @param   string  $path
 	 * @return  Page|null
 	 */
-	public static function findByPath($path)
+	public static function findByPath(string $path): ?Page
 	{
 		return self::query()
-			->where('path', '=', (string)$path)
+			->where('path', '=', $path)
 			->limit(1)
 			->first();
 	}
@@ -296,37 +299,30 @@ class Page extends Model
 	 * Method to get a list of nodes from a given node to its root.
 	 *
 	 * @param   int  $id  Primary key of the node for which to get the path.
-	 * @return  mixed    Boolean false on failure or array of node objects on success.
+	 * @return  Collection
 	 */
-	public static function stackById($id)
+	public static function stackById(int $id): Collection
 	{
-		$model = self::query();
+		$tbl = (new self)->getTable();
 
 		// Get the path from the node to the root.
-		$results = $model
+		return self::query()
 			->select('p.*')
-			->from($model->getTable() . ' AS n')
-			->join($model->getTable() . ' AS p', 'p.level', '>', '0')
+			->from($tbl . ' AS n')
+			->join($tbl . ' AS p', 'p.level', '>', '0')
 			->whereRaw('n.lft BETWEEN p.lft AND p.rgt')
-			->where('n.id', '=', (int) $id)
+			->where('n.id', '=', $id)
 			->orderBy('p.lft', 'asc')
 			->get();
-
-		if (!$results)
-		{
-			return false;
-		}
-
-		return $results;
 	}
 
 	/**
 	 * Method to get a list of nodes from a given node to its root.
 	 *
 	 * @param   string  $path  Primary key of the node for which to get the path.
-	 * @return  mixed   Boolean false on failure or array of node objects on success.
+	 * @return  Collection
 	 */
-	public static function stackByPath($path)
+	public static function stackByPath(string $path): Collection
 	{
 		if (!$path)
 		{
@@ -336,7 +332,7 @@ class Page extends Model
 		$model = new self();
 
 		// Get the path from the node to the root.
-		$results = self::withTrashed()
+		return self::withTrashed()
 			->select('p.*')
 			->from($model->getTable() . ' AS n')
 			->join($model->getTable() . ' AS p', 'p.level', '>', DB::raw('0'))
@@ -345,13 +341,6 @@ class Page extends Model
 			->whereNull('p.deleted_at')
 			->orderBy('p.lft', 'asc')
 			->get();
-
-		if (!$results)
-		{
-			return array();
-		}
-
-		return $results;
 	}
 
 	/**
@@ -359,7 +348,7 @@ class Page extends Model
 	 *
 	 * @return  Page|null
 	 */
-	public static function rootNode()
+	public static function rootNode(): ?Page
 	{
 		return self::query()
 			->where('level', '=', 0)
@@ -412,7 +401,7 @@ class Page extends Model
 	/**
 	 * Establish relationship to log model
 	 *
-	 * @return  object
+	 * @return  Builder
 	 */
 	public function logs()
 	{
@@ -492,9 +481,9 @@ class Page extends Model
 	/**
 	 * Get all aprents
 	 *
-	 * @return  array
+	 * @return  Collection
 	 */
-	public function ancestors()
+	public function ancestors(): Collection
 	{
 		$page = $this->parent;
 
@@ -533,7 +522,7 @@ class Page extends Model
 	 * @param   bool  $recursive  Copy associated data?
 	 * @return  bool  True on success, false on error
 	 */
-	public function duplicate($parent_id=null, $recursive=true): bool
+	public function duplicate(int $parent_id=null, bool $recursive=true): bool
 	{
 		// Get some old info we may need
 		$o_id = $this->id;
@@ -719,7 +708,7 @@ class Page extends Model
 	 * @param   string   $path      The path to the current nodes.
 	 * @return  int  1 + value of root rgt on success, false on failure
 	 */
-	public function rebuild($parentId, $leftId = 0, $level = 0, $path = '')
+	public function rebuild(int $parentId, int $leftId = 0, int $level = 0, string $path = '')
 	{
 		// Assemble the query to find all children of this node.
 		$children = self::query()
@@ -773,31 +762,31 @@ class Page extends Model
 	 * for SQL WHERE clauses for updating left and right id values to make room for
 	 * the node as well as the new left and right ids for the node.
 	 *
-	 * @param   object   $referenceNode  A node object with at least a 'lft' and 'rgt' with
+	 * @param   Page   $referenceNode  A node object with at least a 'lft' and 'rgt' with
 	 *                                   which to make room in the tree around for a new node.
 	 * @param   int  $nodeWidth      The width of the node for which to make room in the tree.
 	 * @param   string   $position       The position relative to the reference node where the room
 	 *                                   should be made.
-	 * @return  mixed    Boolean false on failure or data object on success.
+	 * @return  stdClass|null    Boolean false on failure or data object on success.
 	 */
-	protected function getTreeRepositionData($referenceNode, $nodeWidth, $position = 'before')
+	protected function getTreeRepositionData(Page $referenceNode, int $nodeWidth, string $position = 'before'): ?stdClass
 	{
 		// Make sure the reference an object with a left and right id.
 		if (!is_object($referenceNode) && isset($referenceNode->lft) && isset($referenceNode->rgt))
 		{
-			return false;
+			return null;
 		}
 
 		// A valid node cannot have a width less than 2.
 		if ($nodeWidth < 2)
 		{
-			return false;
+			return null;
 		}
 
 		// Initialise variables.
 		$k = $this->pk;
 
-		$data = new \stdClass;
+		$data = new stdClass;
 
 		// Run the calculations and build the data object by reference position.
 		switch ($position)
@@ -850,8 +839,8 @@ class Page extends Model
 	/**
 	 * Turn a list of rows into a tree
 	 *
-	 * @param   object  $rows
-	 * @return  array
+	 * @param   Collection|array<int,Page>  $rows
+	 * @return  array<int,Page>
 	 */
 	public function toTree($rows): array
 	{
@@ -881,13 +870,13 @@ class Page extends Model
 	/**
 	 * Recursive function to build tree
 	 *
-	 * @param   array    $children  Container for parent/children mapping
-	 * @param   array    $list      List of records
+	 * @param   array<int,Page>  $children  Container for parent/children mapping
+	 * @param   array<int,Page>  $list      List of records
 	 * @param   int  $maxlevel  Maximum levels to descend
 	 * @param   int  $level     Indention level
-	 * @return  void
+	 * @return  array<int,Page>
 	 */
-	protected function treeRecurse($children, $list, $maxlevel=9999, $level=0): array
+	protected function treeRecurse(array $children, array $list, int $maxlevel=9999, int $level=0): array
 	{
 		if ($level <= $maxlevel)
 		{
@@ -907,40 +896,15 @@ class Page extends Model
 	}
 
 	/**
-	 * Method to set the location of a node in the tree object.  This method does not
-	 * save the new location to the database, but will set it in the object so
-	 * that when the node is stored it will be stored in the new location.
-	 *
-	 * @param   int  $referenceId  The primary key of the node to reference new location by.
-	 * @param   string   $position     Location type string. ['before', 'after', 'first-child', 'last-child']
-	 * @return  bool     True on success.
-	 */
-	/*public function setLocation($referenceId, $position = 'after')
-	{
-		// Make sure the location is valid.
-		if (!in_array($position, array('before', 'after', 'first-child', 'last-child')))
-		{
-			throw new \Exception(trans('core::core.error.invalid location', get_class($this)));
-			return false;
-		}
-
-		// Set the location properties.
-		$this->_location    = $position;
-		$this->_location_id = $referenceId;
-
-		return true;
-	}*/
-
-	/**
 	 * Method to move a row in the ordering sequence of a group of rows defined by an SQL WHERE clause.
 	 * Negative numbers move the row up in the sequence and positive numbers move it down.
 	 *
 	 * @param   int  $delta  The direction and magnitude to move the row in the ordering sequence.
 	 * @param   string   $where  WHERE clause to use for limiting the selection of rows to compact the ordering values.
-	 * @return  mixed    Boolean true on success.
+	 * @return  bool
 	 * @throws  \Exception
 	 */
-	public function move($delta, $where = '')
+	public function move(int $delta, string $where = ''): bool
 	{
 		$query = self::query()
 			->select('id')
@@ -956,7 +920,6 @@ class Page extends Model
 		{
 			$query->where('rgt', '>', $this->rgt);
 			$query->orderBy('rgt', 'ASC');
-			$position = 'after';
 		}
 		else
 		{
@@ -984,11 +947,10 @@ class Page extends Model
 	 * @return  bool     True on success.
 	 * @throws  \Exception
 	 */
-	public function moveByReference($referenceId, $position = 'after', $pk = 0): bool
+	public function moveByReference(int $referenceId, string $position = 'after', int $pk = 0): bool
 	{
 		// Initialise variables.
-		//$k = $this->_tbl_key;
-		$pk = (is_null($pk)) ? $this->id : $pk;
+		$pk = $pk ?? $this->id;
 
 		// Get the node by id.
 		$node = self::oneOrNew($pk);
@@ -1163,7 +1125,7 @@ class Page extends Model
 	 * @param   string   $search
 	 * @return  Builder
 	 */
-	public function scopeWhereSearch(Builder $query, $search): Builder
+	public function scopeWhereSearch(Builder $query, string $search): Builder
 	{
 		$page = $this->getTable();
 
@@ -1199,7 +1161,7 @@ class Page extends Model
 	 * @param   int  $parent_id
 	 * @return  Builder
 	 */
-	public function scopeWhereParent(Builder $query, $parent_id): Builder
+	public function scopeWhereParent(Builder $query, int $parent_id): Builder
 	{
 		$page = $this->getTable();
 
@@ -1217,10 +1179,10 @@ class Page extends Model
 	 *
 	 * @param   Builder  $query
 	 * @param   int  $access
-	 * @param   mixed  $user
+	 * @param   User|null  $user
 	 * @return  Builder
 	 */
-	public function scopeWhereAccess(Builder $query, $access, $user): Builder
+	public function scopeWhereAccess(Builder $query, int $access, User $user = null): Builder
 	{
 		$levels = $user
 			? $user->getAuthorisedViewLevels()
@@ -1237,7 +1199,7 @@ class Page extends Model
 				$access = 1;
 			}
 
-			$query->where($this->getTable() . '.access', '=', (int)$access);
+			$query->where($this->getTable() . '.access', '=', $access);
 		}
 
 		return $query;
@@ -1250,7 +1212,7 @@ class Page extends Model
 	 * @param   mixed  $state
 	 * @return  Builder
 	 */
-	public function scopeWhereState(Builder $query, $state): Builder
+	public function scopeWhereState(Builder $query, mixed $state): Builder
 	{
 		$page = $this->getTable();
 

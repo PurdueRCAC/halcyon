@@ -44,18 +44,18 @@ class PageTitleAfterDisplay
 	/**
 	 * Set the body
 	 *
-	 * @param string $title
+	 * @param string $content
 	 * @return void
 	 */
-	public function setContent($content): void
+	public function setContent(string $content): void
 	{
 		$this->content = $content;
 	}
 
 	/**
-	 * Get the original, unaltered title
+	 * Get the page model
 	 *
-	 * @return mixed
+	 * @return Page
 	 */
 	public function getPage(): Page
 	{

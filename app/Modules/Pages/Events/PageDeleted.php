@@ -17,7 +17,7 @@ class PageDeleted
 	 * @param Page $page
 	 * @return void
 	 */
-	public function __construct($page)
+	public function __construct(Page $page)
 	{
 		$this->page = $page;
 	}

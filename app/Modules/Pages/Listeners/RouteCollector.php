@@ -17,7 +17,7 @@ class RouteCollector
 	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe(Dispatcher $events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(CollectingRoutes::class, self::class . '@handleCollectingRoutes');
 	}
@@ -28,11 +28,10 @@ class RouteCollector
 	 * @param   CollectingRoutes $event
 	 * @return  void
 	 */
-	public function handleCollectingRoutes(CollectingRoutes $event)
+	public function handleCollectingRoutes(CollectingRoutes $event): void
 	{
 		$options = Page::query()
-			//->select(['id AS value', 'title AS text', 'level'])
-			//->where('level', '>', 0)
+			->select('id', 'title', 'level', 'path')
 			->where('state', '=', 1)
 			->orderBy('path', 'asc')
 			->get();

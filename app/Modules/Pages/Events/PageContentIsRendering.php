@@ -24,7 +24,7 @@ class PageContentIsRendering
 	 * @param  string $body
 	 * @return void
 	 */
-	public function __construct($body)
+	public function __construct(string $body)
 	{
 		$this->body = $body;
 		$this->original = $body;
@@ -35,7 +35,7 @@ class PageContentIsRendering
 	 *
 	 * @return string
 	 */
-	public function getBody()
+	public function getBody(): string
 	{
 		return $this->body;
 	}
@@ -46,7 +46,7 @@ class PageContentIsRendering
 	 * @param string $body
 	 * @return void
 	 */
-	public function setBody($body)
+	public function setBody(string $body): void
 	{
 		$this->body = $body;
 	}
@@ -54,9 +54,9 @@ class PageContentIsRendering
 	/**
 	 * Get the original, unaltered body
 	 *
-	 * @return mixed
+	 * @return string
 	 */
-	public function getOriginal()
+	public function getOriginal(): string
 	{
 		return $this->original;
 	}
@@ -66,7 +66,7 @@ class PageContentIsRendering
 	 *
 	 * @return string
 	 */
-	public function __toString()
+	public function __toString(): string
 	{
 		return $this->getBody();
 	}

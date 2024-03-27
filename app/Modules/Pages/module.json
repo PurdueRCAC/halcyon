@@ -1,7 +1,7 @@
 {
     "name": "Pages",
     "alias": "pages",
-    "description": "",
+    "description": "Handle management of site pages. This is for standard site content such as the home page resides.",
     "keywords": [],
     "priority": 9999,
     "order": 9999,
