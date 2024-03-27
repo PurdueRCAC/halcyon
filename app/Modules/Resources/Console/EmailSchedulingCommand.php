@@ -45,7 +45,7 @@ class EmailSchedulingCommand extends Command
 			->join($c, $c . '.subresourceid', $s . '.id')
 			->join($a, $a . '.id', $c . '.resourceid')
 			->whereNull($a . '.datetimeremoved')
-			->where($s . '.notice', '=', 2)
+			->where($s . '.notice', '=', Subresource::NOTICE_JUST_STOPPED)
 			->get();
 
 		if (count($stopped))
@@ -72,7 +72,7 @@ class EmailSchedulingCommand extends Command
 
 				foreach ($stopped as $subresource)
 				{
-					$subresource->update(['notice' => 3]);
+					$subresource->update(['notice' => Subresource::NOTICE_STILL_STOPPED]);
 				}
 			}
 		}
@@ -86,7 +86,7 @@ class EmailSchedulingCommand extends Command
 			->join($c, $c . '.subresourceid', $s . '.id')
 			->join($a, $a . '.id', $c . '.resourceid')
 			->whereNull($a . '.datetimeremoved')
-			->where($s . '.notice', '=', 1)
+			->where($s . '.notice', '=', Subresource::NOTICE_JUST_STARTED)
 			->get();
 
 		$stopped = Subresource::query()
@@ -94,7 +94,7 @@ class EmailSchedulingCommand extends Command
 			->join($c, $c . '.subresourceid', $s . '.id')
 			->join($a, $a . '.id', $c . '.resourceid')
 			->whereNull($a . '.datetimeremoved')
-			->where($s . '.notice', '=', 3)
+			->where($s . '.notice', '=', Subresource::NOTICE_STILL_STOPPED)
 			->get();
 
 		if (count($started))
@@ -123,7 +123,7 @@ class EmailSchedulingCommand extends Command
 
 			foreach ($started as $subresource)
 			{
-				$subresource->update(['notice' => 0]);
+				$subresource->update(['notice' => Subresource::NO_NOTICE]);
 			}
 		}
 		elseif ($debug || $this->output->isVerbose())
