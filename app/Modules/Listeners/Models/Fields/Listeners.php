@@ -21,7 +21,7 @@ class Listeners extends Select
 	/**
 	 * Method to get a list of options for a list input.
 	 *
-	 * @return  array  An array of Html options.
+	 * @return  array<int,\stdClass|\Illuminate\Support\Fluent>
 	 */
 	protected function getOptions()
 	{

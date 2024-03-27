@@ -152,7 +152,7 @@ class DatabaseActivator implements ActivatorInterface
 	/**
 	 * Reads the json file that contains the activation statuses.
 	 *
-	 * @return  array
+	 * @return  array<string,bool>
 	 */
 	private function readDatabase(): array
 	{

@@ -346,11 +346,11 @@ class Listener extends Model
 	/**
 	 * Saves the manually set order of records.
 	 *
-	 * @param   array  $pks    An array of primary key ids.
-	 * @param   array  $order  An array of order values.
+	 * @param   array<int,int>  $pks    An array of primary key ids.
+	 * @param   array<int,int>  $order  An array of order values.
 	 * @return  bool
 	 */
-	public static function saveOrder($pks = null, $order = null): bool
+	public static function saveOrder(array $pks = null, array $order = null): bool
 	{
 		if (empty($pks))
 		{

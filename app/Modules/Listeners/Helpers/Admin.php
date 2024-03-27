@@ -15,7 +15,7 @@ abstract class Admin
 	/**
 	 * Returns an array of standard published state filter options.
 	 *
-	 * @return  array
+	 * @return  array<int,\stdClass>
 	 */
 	public static function stateOptions(): array
 	{

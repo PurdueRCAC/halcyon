@@ -77,7 +77,7 @@ class Listener
 	 * @param   string  $layout  The layout name
 	 * @return  string
 	 */
-	public function getViewName($layout='index'): string
+	public function getViewName(string $layout='index'): string
 	{
 		return 'listener.' . $this->name . '::' . $layout;
 	}

@@ -5,6 +5,7 @@ namespace App\Modules\Listeners\Entities;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Str;
 use Illuminate\Support\Fluent;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 use App\Modules\Listeners\Models\Listener;
@@ -47,9 +48,9 @@ class ListenerManager
 	 *
 	 * @param   string  $folder   Listener type
 	 * @param   string  $element  Listener element
-	 * @return  object  collection
+	 * @return  Collection
 	 */
-	public function byType($folder, $element = null)
+	public function byType(string $folder, string $element = null): Collection
 	{
 		$listeners = $this->all()
 			->filter(function($value, $key) use ($folder, $element)
@@ -104,9 +105,9 @@ class ListenerManager
 	/**
 	 * Load all listeners.
 	 *
-	 * @return  object  Collection
+	 * @return  Collection
 	 */
-	public function all()
+	public function all(): Collection
 	{
 		static $listeners;
 
@@ -115,7 +116,9 @@ class ListenerManager
 			return $listeners;
 		}
 
-		$listeners = Schema::hasTable('extensions') ? $this->allByDatabase() : $this->allByFile();
+		$listeners = Schema::hasTable('extensions')
+			? $this->allByDatabase()
+			: $this->allByFile();
 
 		return $listeners;
 	}
@@ -123,9 +126,9 @@ class ListenerManager
 	/**
 	 * Load published listeners.
 	 *
-	 * @return  object  Collection
+	 * @return  Collection
 	 */
-	public function allEnabled()
+	public function allEnabled(): Collection
 	{
 		$levels = [];
 
@@ -151,9 +154,9 @@ class ListenerManager
 	/**
 	 * Load unpublished listeners.
 	 *
-	 * @return  object  Collection
+	 * @return  Collection
 	 */
-	public function allDisabled()
+	public function allDisabled(): Collection
 	{
 		$levels = [];
 
@@ -179,9 +182,9 @@ class ListenerManager
 	/**
 	 * Load published listeners by database.
 	 *
-	 * @return  object  Collection
+	 * @return  Collection
 	 */
-	public function allByDatabase()
+	public function allByDatabase(): Collection
 	{
 		$listeners = Listener::query()
 			->where('type', '=', 'listener')
@@ -207,9 +210,9 @@ class ListenerManager
 	/**
 	 * Load published listeners by files.
 	 *
-	 * @return  object  Collection
+	 * @return  Collection
 	 */
-	public function allByFile()
+	public function allByFile(): Collection
 	{
 		$files = app('files')->glob(app_path('Listeners') . '/*/*/listener.json');
 
