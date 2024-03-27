@@ -9,10 +9,10 @@ use App\Modules\History\Models\Log;
 class Emails
 {
 	/**
-	 * @param  Log $record
-	 * @return Log
+	 * Set the log summary to the email's subject,
+	 * stored in the payload, if logging an email
 	 */
-	public function __invoke($record)
+	public function __invoke(Log $record): Log
 	{
 		if ($record->app == 'email')
 		{

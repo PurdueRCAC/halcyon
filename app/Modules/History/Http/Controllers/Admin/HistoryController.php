@@ -27,7 +27,9 @@ class HistoryController extends Controller
 			'order'     => History::$orderBy,
 			'order_dir' => History::$orderDir,
 			'action'    => '',
-			'type'      => ''
+			'type'      => '',
+			'start'     => null,
+			'end'       => null,
 		);
 
 		$reset = false;
@@ -35,7 +37,7 @@ class HistoryController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('history.filter_' . $key)
+			 && $request->has($key)
 			 && $request->input($key) != session()->get('history.filter_' . $key))
 			{
 				$reset = true;
@@ -44,33 +46,11 @@ class HistoryController extends Controller
 		}
 		$filters['page'] = $reset ? 1 : $filters['page'];
 
-		if (!in_array($filters['order'], ['id', 'name']))
-		{
-			$filters['order'] = History::$orderBy;
-		}
+		$filters['order'] = History::getSortField($filters['order']);
+		$filters['order_dir'] = History::getSortDirection($filters['order_dir']);
 
-		if (!in_array($filters['order_dir'], ['asc', 'desc']))
-		{
-			$filters['order_dir'] = History::$orderDir;
-		}
-
-		$query = History::query();
-
-		if ($filters['search'])
-		{
-			$query->where(function($query) use ($filters)
-			{
-				$query->where('historable_type', 'like', '%' . $filters['search'] . '%')
-					->orWhere('historable_table', 'like', '%' . $filters['search'] . '%');
-			});
-		}
-
-		if ($filters['action'])
-		{
-			$query->where('action', '=', $filters['action']);
-		}
-
-		$rows = $query
+		$rows = History::query()
+			->withFilters($filters)
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
@@ -133,16 +113,6 @@ class HistoryController extends Controller
 			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
-		return $this->cancel();
-	}
-
-	/**
-	 * Return to the main view
-	 *
-	 * @return  RedirectResponse
-	 */
-	public function cancel()
-	{
 		return redirect(route('admin.history.index'));
 	}
 }

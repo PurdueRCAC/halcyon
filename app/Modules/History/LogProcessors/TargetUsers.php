@@ -9,10 +9,9 @@ use App\Modules\History\Models\Log;
 class TargetUsers
 {
 	/**
-	 * @param  Log $record
-	 * @return Log
+	 * Try to determine target user from payload data
 	 */
-	public function __invoke($record)
+	public function __invoke(Log $record): Log
 	{
 		if ($record->targetuserid <= 0 && $record->payload)
 		{
@@ -21,7 +20,7 @@ class TargetUsers
 			if ($userid && is_numeric($userid))
 			{
 				$record->targetuserid = $userid;
-				$record->save();
+				$record->saveQuietly();
 			}
 		}
 

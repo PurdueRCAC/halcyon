@@ -112,47 +112,26 @@ class HistoryController extends Controller
 		$filters = array(
 			'search'    => $request->input('search', null),
 			'limit'     => $request->input('limit', config('list_limit', 20)),
+			'page'      => $request->input('page', 1),
 			'order'     => $request->input('order', History::$orderBy),
 			'order_dir' => $request->input('order_dir', History::$orderDir),
 			'action'    => $request->input('action', null),
-			'type'      => $request->input('type', null)
+			'type'      => $request->input('type', null),
+			'start'     => $request->input('start', null),
+			'end'       => $request->input('end', null),
 		);
 
-		if (!in_array($filters['order'], ['id', 'created_at', 'action']))
-		{
-			$filters['order'] = History::$orderBy;
-		}
+		$filters['order'] = History::getSortField($filters['order']);
+		$filters['order_dir'] = History::getSortDirection($filters['order_dir']);
 
-		if (!in_array($filters['order_dir'], ['asc', 'desc']))
-		{
-			$filters['order_dir'] = History::$orderDir;
-		}
-
-		$query = History::query();
-
-		if ($filters['search'])
-		{
-			$query->where(function($query) use ($filters)
-			{
-				$query->where('historable_type', 'like', '%' . $filters['search'] . '%')
-					->orWhere('historable_table', 'like', '%' . $filters['search'] . '%');
-			});
-		}
-
-		if ($filters['action'])
-		{
-			$query->where('action', '=', $filters['action']);
-		}
-
-		$rows = $query
+		$rows = History::query()
+			->withFilters($filters)
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit']);
-
-		/*$rows->each(function ($row, $key)
-		{
-			$row->url = route('admin.history.show', ['id' => $row->id]);
-			$row->formattedreport = $row->report;
-		});*/
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
+			->each(function ($row, $key)
+			{
+				$row->api = route('api.history.read', ['id' => $id]);
+			});
 
 		return new ResourceCollection($rows);
 	}
@@ -191,7 +170,8 @@ class HistoryController extends Controller
 	 * 							"notice": 0
 	 * 						},
 	 * 						"created_at": "2021-11-18T18:14:07.000000Z",
-	 * 						"updated_at": "2021-11-18T18:14:07.000000Z"
+	 * 						"updated_at": "2021-11-18T18:14:07.000000Z",
+	 * 						"api": "https://example.org/api/history/270955"
 	 * 					}
 	 * 				}
 	 * 			}
@@ -206,6 +186,7 @@ class HistoryController extends Controller
 	public function read($id)
 	{
 		$row = History::findOrFail((int)$id);
+		$row->api = route('api.history.read', ['id' => $id]);
 
 		return new JsonResource($row);
 	}

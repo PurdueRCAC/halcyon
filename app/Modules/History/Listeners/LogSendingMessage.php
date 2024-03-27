@@ -20,7 +20,7 @@ class LogSendingMessage
 	{
 		$headers = $event->message->getHeaders();
 
-		$classname = 'LogSendingMessage';
+		$classname = substr(strrchr(get_class($this), '\\'), 1);
 		$targetuserid = 0;
 		$targetobjectid = 0;
 		$objectid = 0;

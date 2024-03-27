@@ -11,12 +11,9 @@ use App\Modules\History\Models\Log;
 class LogCommand
 {
 	/**
-	 * Plugin that loads module positions within content
-	 *
-	 * @param   CommandFinished  $event
-	 * @return  void
+	 * Log artisan commands
 	 */
-	public function handle(CommandFinished $event)
+	public function handle(CommandFinished $event): void
 	{
 		if ($this->shouldIgnore($event))
 		{
@@ -39,11 +36,8 @@ class LogCommand
 
 	/**
 	 * Determine if the event should be ignored.
-	 *
-	 * @param  mixed  $event
-	 * @return bool
 	 */
-	private function shouldIgnore($event)
+	private function shouldIgnore(CommandFinished $event): bool
 	{
 		return in_array($event->command, array_merge(config('module.history.ignore_commands', []), [
 			'schedule:run',

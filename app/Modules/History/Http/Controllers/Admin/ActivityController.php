@@ -29,8 +29,10 @@ class ActivityController extends Controller
 			'order'     => Log::$orderBy,
 			'order_dir' => Log::$orderDir,
 			'action'    => '',
-			'transport' => '',
+			'transportmethod' => '',
 			'status'    => '',
+			'start'     => null,
+			'end'       => null,
 		);
 
 		$reset = false;
@@ -38,7 +40,7 @@ class ActivityController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('history.activity.filter_' . $key)
+			 && $request->has($key)
 			 && $request->input($key) != session()->get('history.activity.filter_' . $key))
 			{
 				$reset = true;
@@ -47,44 +49,11 @@ class ActivityController extends Controller
 		}
 		$filters['page'] = $reset ? 1 : $filters['page'];
 
-		if (!in_array($filters['order'], ['id', 'name']))
-		{
-			$filters['order'] = Log::$orderBy;
-		}
+		$filters['order'] = Log::getSortField($filters['order']);
+		$filters['order_dir'] = Log::getSortDirection($filters['order_dir']);
 
-		if (!in_array($filters['order_dir'], ['asc', 'desc']))
-		{
-			$filters['order_dir'] = Log::$orderDir;
-		}
-
-		$query = Log::query();
-
-		if ($filters['search'])
-		{
-			$query->where(function($query) use ($filters)
-			{
-				$query->where('classname', 'like', '%' . $filters['search'] . '%')
-					->orWhere('classmethod', 'like', '%' . $filters['search'] . '%')
-					->orWhere('uri', 'like', '%' . $filters['search'] . '%');
-			});
-		}
-
-		if ($filters['transport'])
-		{
-			$query->where('transportmethod', '=', $filters['transport']);
-		}
-
-		if ($filters['status'])
-		{
-			$query->where('status', '=', $filters['status']);
-		}
-
-		if ($filters['app'])
-		{
-			$query->where('app', '=', $filters['app']);
-		}
-
-		$rows = $query
+		$rows = Log::query()
+			->withFilters($filters)
 			->orderBy($filters['order'], $filters['order_dir'])
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
@@ -153,16 +122,6 @@ class ActivityController extends Controller
 			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
-		return $this->cancel();
-	}
-
-	/**
-	 * Return to the main view
-	 *
-	 * @return  RedirectResponse
-	 */
-	public function cancel()
-	{
 		return redirect(route('admin.history.activity'));
 	}
 }

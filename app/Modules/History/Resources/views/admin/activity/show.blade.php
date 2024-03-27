@@ -23,8 +23,7 @@ app('pathway')
 
 @section('toolbar')
 	{!!
-		Toolbar::spacer();
-		Toolbar::link('back', trans('history::history.back'), route('admin.history.api'), false);
+		Toolbar::link('back', trans('history::history.back'), route('admin.history.activity'), false);
 	!!}
 
 	{!! Toolbar::render() !!}

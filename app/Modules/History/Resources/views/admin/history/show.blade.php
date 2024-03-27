@@ -19,8 +19,7 @@ app('pathway')
 
 @section('toolbar')
 	{!!
-		Toolbar::spacer();
-		Toolbar::cancel(route('admin.history.cancel'));
+		Toolbar::link('back', trans('history::history.back'), route('admin.history.index'), false);
 	!!}
 
 	{!! Toolbar::render() !!}

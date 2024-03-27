@@ -44,6 +44,67 @@ app('pathway')
 				</span>
 			</div>
 			<div class="col col-md-3">
+				<div class="btn-group position-static" role="group" aria-label="Specific date range">
+					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						@if ($filters['start'] || $filters['end'])
+							@if ($filters['start'])
+								{{ $filters['start'] }}
+							@else
+								All past
+							@endif
+							-
+							@if ($filters['end'])
+								{{ $filters['end'] }}
+							@else
+								Now
+							@endif
+						@else
+							Date range
+						@endif
+					</button>
+					<div class="dropdown-menu dropdown-menu-right dropdown-dates">
+						<div class="row">
+							<div class="col-md-5">
+								<p class="mt-0 mx-4"><strong>To-Date</strong></p>
+								<a href="{{ route('admin.history.index', ['start' => '', 'end' => '']) }}" class="dropdown-item{{ !$filters['start'] && !$filters['end'] ? ' active' : '' }}">All Time</a>
+								<?php
+								$start = Carbon\Carbon::now()->format('Y-m-d');
+								$end = Carbon\Carbon::now()->modify('+1 day')->format('Y-m-d');
+								?>
+								<a href="{{ route('admin.history.index', ['start' => $start, 'end' => $end]) }}" class="dropdown-item{{ $filters['start'] == $start && $filters['end'] == $end ? ' active' : '' }}">Past Day</a>
+								<?php
+								$start = Carbon\Carbon::now()->modify('-1 week')->format('Y-m-d');
+								?>
+								<a href="{{ route('admin.history.index', ['start' => $start, 'end' => $end]) }}" class="dropdown-item{{ $filters['start'] == $start && $filters['end'] == $end ? ' active' : '' }}">Week</a>
+								<?php
+								$start = Carbon\Carbon::now()->modify('-1 month')->format('Y-m-d');
+								?>
+								<a href="{{ route('admin.history.index', ['start' => $start, 'end' => $end]) }}" class="dropdown-item{{ $filters['start'] == $start && $filters['end'] == $end ? ' active' : '' }}">Month</a>
+								<?php
+								$start = Carbon\Carbon::now()->modify('-6 months')->format('Y-m-d');
+								?>
+								<a href="{{ route('admin.history.index', ['start' => $start, 'end' => $end]) }}" class="dropdown-item{{ $filters['start'] == $start && $filters['end'] == $end ? ' active' : '' }}">6 Months</a>
+								<?php
+								$start = Carbon\Carbon::now()->modify('-1 year')->format('Y-m-d');
+								?>
+								<a href="{{ route('admin.history.index', ['start' => $start, 'end' => $end]) }}" class="dropdown-item{{ $filters['start'] == $start && $filters['end'] == $end ? ' active' : '' }}">Year</a>
+							</div>
+							<div class="col-md-7">
+								<p class="mt-0 mx-4"><strong>Specific</strong></p>
+								<div class="px-4 py-3">
+									<div class="form-group mb-3">
+										<label for="filter_start">{{ trans('history::history.start date') }}</label>
+										<input type="text" name="start" id="filter_start" class="form-control date filter filter-submit" value="{{ $filters['start'] }}" placeholder="YYYY-MM-DD" />
+									</div>
+									<div class="form-group">
+										<label for="filter_end">{{ trans('history::history.end date') }}</label>
+										<input type="text" name="end" id="filter_end" class="form-control date filter filter-submit" value="{{ $filters['end'] }}" placeholder="YYYY-MM-DD" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="col col-md-3 mb-2">
 				<label class="sr-only visually-hidden" for="filter_action">{{ trans('history::history.action') }}</label>

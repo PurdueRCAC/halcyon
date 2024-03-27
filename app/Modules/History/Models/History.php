@@ -5,6 +5,7 @@ namespace App\Modules\History\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use App\Modules\Users\Models\User;
 use App\Modules\History\Helpers\Diff\Formatter\Table;
 use App\Modules\History\Helpers\Diff;
@@ -22,6 +23,8 @@ use App\Modules\History\Helpers\Diff;
  * @property object|array $new
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ *
+ * @property string $api URL appended by API response
  */
 class History extends Model
 {
@@ -222,7 +225,7 @@ class History extends Model
 	 * @param  Model|null $model
 	 * @return History
 	 */
-	public function process($record, Model $model = null): History
+	public function process(History $record, ?Model $model = null): History
 	{
 		foreach (self::$processors as $processor)
 		{
@@ -235,5 +238,106 @@ class History extends Model
 		}
 
 		return $record;
+	}
+
+	/**
+	 * Get a sane value for query ordering
+	 */
+	public static function getSortField(string $val): string
+	{
+		$attr = \Illuminate\Support\Facades\Schema::getColumnListing((new self)->getTable());
+
+		if (!in_array($val, $attr))
+		{
+			$val = self::$orderBy;
+		}
+
+		return $val;
+	}
+
+	/**
+	 * Get a sane value for query ordering direction
+	 */
+	public static function getSortDirection(string $val): string
+	{
+		$val = strtolower($val);
+
+		if (!in_array($val, ['asc', 'desc']))
+		{
+			$val = self::$orderDir;
+		}
+
+		return $val;
+	}
+
+	/**
+	 * Query scope with search
+	 *
+	 * @param   Builder  $query
+	 * @param   string|int   $search
+	 * @return  Builder
+	 */
+	public function scopeWhereSearch(Builder $query, string|int $search): Builder
+	{
+		if (is_numeric($search))
+		{
+			$query->where('id', '=', $search);
+		}
+		else
+		{
+			$search = strtolower((string)$search);
+
+			$query->where(function($query) use ($filters)
+			{
+				$query->where('historable_type', 'like', '%' . $search . '%')
+					->orWhere('historable_table', 'like', '%' . $search . '%');
+			});
+		}
+
+		return $query;
+	}
+
+	/**
+	 * Query scope with search
+	 *
+	 * @param   Builder  $query
+	 * @param   array<string,mixed> $filters
+	 * @return  Builder
+	 */
+	public function scopeWithFilters(Builder $query, array $filters = array()): Builder
+	{
+		if (!empty($filters['search']))
+		{
+			$query->whereSearch($filters['search']);
+		}
+
+		$keys = [
+			'action',
+			'user_id',
+			'historable_id',
+			'historable_type',
+			'historable_table',
+			'created_at',
+		];
+
+		foreach ($keys as $key)
+		{
+			if (!empty($filters[$key]))
+			{
+				$query->where($key, '=', $filters[$key]);
+			}
+		}
+
+		if (!empty($filters['start']))
+		{
+			$query->where('created_at', '>=', $filters['start']);
+		}
+
+		if (!empty($filters['end']))
+		{
+			$query->where('created_at', '<', $filters['end']);
+		}
+
+		return $query;
 	}
 }

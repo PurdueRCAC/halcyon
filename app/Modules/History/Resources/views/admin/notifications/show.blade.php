@@ -23,8 +23,7 @@ app('pathway')
 
 @section('toolbar')
 	{!!
-		Toolbar::spacer();
-		Toolbar::cancel(route('admin.history.notifications.cancel'));
+		Toolbar::link('back', trans('history::history.back'), route('admin.history.notifications'), false);
 	!!}
 
 	{!! Toolbar::render() !!}

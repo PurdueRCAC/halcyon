@@ -41,7 +41,7 @@ class NotificationsController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('history.notifications.filter_' . $key)
+			 && $request->has($key)
 			 && $request->input($key) != session()->get('history.notifications.filter_' . $key))
 			{
 				$reset = true;
@@ -99,7 +99,8 @@ class NotificationsController extends Controller
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
 		$types = DatabaseNotification::query()
-			->select(DB::raw('DISTINCT(type)'))
+			->select('type')
+			->distinct()
 			->get();
 
 		return view('history::admin.notifications.index', [
@@ -155,16 +156,6 @@ class NotificationsController extends Controller
 			$request->session()->flash('success', trans('global.messages.item deleted', ['count' => $success]));
 		}
 
-		return $this->cancel();
-	}
-
-	/**
-	 * Return to the main view
-	 *
-	 * @return  RedirectResponse
-	 */
-	public function cancel()
-	{
 		return redirect(route('admin.history.notifications'));
 	}
 }

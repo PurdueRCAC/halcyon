@@ -42,7 +42,7 @@ class LogsController extends Controller
 	 * 		"description":   "The type of item (model name) that the action was taken on.",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "search"
+	 * 			"type":      "string"
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -51,7 +51,7 @@ class LogsController extends Controller
 	 * 		"description":   "A word or phrase to search for.",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "search"
+	 * 			"type":      "string"
 	 * 		}
 	 * }
 	 * @apiParameter {
@@ -124,91 +124,26 @@ class LogsController extends Controller
 			'app'       => $request->input('app', null),
 			'search'    => $request->input('search', null),
 			'limit'     => $request->input('limit', config('list_limit', 20)),
+			'page'      => $request->input('page', 1),
 			'order'     => $request->input('order', Log::$orderBy),
 			'order_dir' => $request->input('order_dir', Log::$orderDir),
 			'action'    => $request->input('action', null),
-			'type'      => $request->input('type', null)
+			'type'      => $request->input('type', null),
+			'start'     => $request->input('start', null),
+			'end'       => $request->input('end', null),
 		);
 
-		if (!in_array($filters['order'], ['id', 'name']))
-		{
-			$filters['order'] = Log::$orderBy;
-		}
+		$filters['order'] = Log::getSortField($filters['order']);
+		$filters['order_dir'] = Log::getSortDirection($filters['order_dir']);
 
-		if (!in_array($filters['order_dir'], ['asc', 'desc']))
-		{
-			$filters['order_dir'] = Log::$orderDir;
-		}
-
-		$query = Log::query();
-
-		if ($filters['search'])
-		{
-			$query->where(function($query) use ($filters)
-			{
-				$query->where('uri', 'like', '%' . $filters['search'] . '%')
-					->orWhere('payload', 'like', '%' . $filters['search'] . '%');
-			});
-		}
-
-		if ($filters['ip'])
-		{
-			$query->where('ip', '=', $filters['ip']);
-		}
-
-		if ($filters['status'])
-		{
-			$query->where('status', '=', $filters['status']);
-		}
-
-		if ($filters['transportmethod'])
-		{
-			$query->where('transportmethod', '=', $filters['transportmethod']);
-		}
-
-		if ($filters['classname'])
-		{
-			$query->where('classname', '=', $filters['classname']);
-		}
-
-		if ($filters['classmethod'])
-		{
-			$query->where('classmethod', '=', $filters['classmethod']);
-		}
-
-		if ($filters['userid'])
-		{
-			$query->where('userid', '=', $filters['userid']);
-		}
-
-		if ($filters['objectid'])
-		{
-			$query->where('objectid', '=', $filters['objectid']);
-		}
-
-		if ($filters['groupid'])
-		{
-			$query->where('groupid', '=', $filters['groupid']);
-		}
-
-		if ($filters['targetuserid'])
-		{
-			$query->where('targetuserid', '=', $filters['targetuserid']);
-		}
-
-		if ($filters['targetobjectid'])
-		{
-			$query->where('targetobjectid', '=', $filters['targetobjectid']);
-		}
-
-		$rows = $query
+		$rows = Log::query()
+			->withFilters($filters)
 			->orderBy($filters['order'], $filters['order_dir'])
-			->paginate($filters['limit']);
-
-		$rows->each(function ($row, $key)
-		{
-			$row->api = route('api.logs.read', ['id' => $row->id]);
-		});
+			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
+			->each(function ($row, $key)
+			{
+				$row->api = route('api.logs.read', ['id' => $row->id]);
+			});
 
 		return new ResourceCollection($rows);
 	}
@@ -251,7 +186,7 @@ class LogsController extends Controller
 	 * 						"groupid": -2,
 	 * 						"targetuserid": -2,
 	 * 						"targetobjectid": -2,
-	 * 						"url": "https://example.org/api/logs/8703798"
+	 * 						"api": "https://example.org/api/logs/8703798"
 	 * 					}
 	 * 				}
 	 * 			}

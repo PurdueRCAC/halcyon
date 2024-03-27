@@ -71,16 +71,15 @@ trait Historable
 	 */
 	public function writeHistory(string $action, array $old = [], array $new = []): void
 	{
-		$data = [];
-		$data['historable_id'] = $this->getKey();
-		$data['historable_type'] = get_class($this);
-		$data['historable_table'] = $this->getTable();
-		$data['user_id'] = auth()->id();
-		$data['action'] = $action;
-		$data['old'] = $old;
-		$data['new'] = $new;
-
-		$foo = History::create($data);
+		History::create([
+			'historable_id' => $this->getKey(),
+			'historable_type' => get_class($this),
+			'historable_table' => $this->getTable(),
+			'user_id' => auth()->id(),
+			'action' => $action,
+			'old' => $old,
+			'new' => $new,
+		]);
 	}
 
 	/**
