@@ -33,7 +33,7 @@ class ThemesServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	public function boot()
+	public function boot(): void
 	{
 		$this->registerTranslations();
 		$this->registerConfig();
@@ -71,26 +71,28 @@ class ThemesServiceProvider extends ServiceProvider
 
 		if ($path = theme_path('views'))
 		{
-			$paths = array_merge([$path], config('view.paths'));
+			// Add module view overrides
+			$paths = array_merge([$path], config('view.paths', []));
 			config()->set('view.paths', $paths);
+
+			// Add mail view overrides, if present
+			$path .= '/mail';
+			if (is_dir($path))
+			{
+				$paths = array_merge([$path], config('mail.markdown.paths', []));
+				config()->set('mail.markdown.paths', $paths);
+			}
 		}
-
-		/*$paths = collect($paths);
-
-		View::replaceNamespace('errors', $paths->map(function ($path) {
-			return "{$path}/errors";
-		})->push(base_path('vendor/laravel/framework/src/Illuminate/Foundation/Exceptions') . '/views')->all());*/
 	}
 
 	/**
 	 * Publish the assets
 	 */
-	public function publish($sourcePath, $destinationPath)
+	public function publish(string $sourcePath, string $destinationPath): void
 	{
 		if (!$this->app['files']->isDirectory($sourcePath))
 		{
-			$message = "Source path does not exist : {$sourcePath}";
-			throw new \InvalidArgumentException($message);
+			throw new \InvalidArgumentException("Source path does not exist : {$sourcePath}");
 		}
 
 		if (!$this->app['files']->isDirectory($destinationPath))
@@ -120,7 +122,7 @@ class ThemesServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	public function register()
+	public function register(): void
 	{
 		$this->app->singleton('themes', function ($app)
 		{
@@ -135,7 +137,7 @@ class ThemesServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	protected function registerConsoleCommands()
+	protected function registerConsoleCommands(): void
 	{
 		$this->commands([
 			InstallCommand::class,
@@ -151,7 +153,7 @@ class ThemesServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	protected function registerConfig()
+	protected function registerConfig(): void
 	{
 		$this->publishes([
 			__DIR__ . '/../Config/config.php' => config_path('module/' . $this->name . '.php'),
@@ -167,7 +169,7 @@ class ThemesServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	protected function registerAssets()
+	protected function registerAssets(): void
 	{
 		$this->publishes([
 			__DIR__ . '/../Resources/assets' => public_path() . '/modules/' . strtolower($this->name) . '/assets',
@@ -179,7 +181,7 @@ class ThemesServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	public function registerViews()
+	public function registerViews(): void
 	{
 		$viewPath = resource_path('views/modules/' . $this->name);
 
@@ -200,7 +202,7 @@ class ThemesServiceProvider extends ServiceProvider
 	 *
 	 * @return void
 	 */
-	public function registerTranslations()
+	public function registerTranslations(): void
 	{
 		$langPath = resource_path('lang/modules/' . $this->name);
 
@@ -215,7 +217,7 @@ class ThemesServiceProvider extends ServiceProvider
 	/**
 	 * Get the services provided by the provider.
 	 *
-	 * @return array
+	 * @return array<int,string>
 	 */
 	public function provides()
 	{
