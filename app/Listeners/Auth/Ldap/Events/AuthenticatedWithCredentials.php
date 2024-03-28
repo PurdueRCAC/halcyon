@@ -2,23 +2,23 @@
 
 namespace App\Listeners\Auth\Ldap\Events;
 
-use Adldap\Models\User;
+use LdapRecord\Models\Entry as LdapUser;
 
 class AuthenticatedWithCredentials
 {
     /**
      * The authenticated LDAP user.
      *
-     * @var User
+     * @var LdapUser
      */
     public $user;
 
     /**
      * Constructor.
      *
-     * @param User $user
+     * @param LdapUser $user
      */
-    public function __construct(User $user)
+    public function __construct(LdapUser $user)
     {
         $this->user = $user;
     }

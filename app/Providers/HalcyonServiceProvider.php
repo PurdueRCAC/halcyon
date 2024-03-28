@@ -27,13 +27,6 @@ class HalcyonServiceProvider extends ServiceProvider
 		{
 			return new Builder();
 		});
-
-		$this->app->singleton('ldap', function ($app)
-		{
-			$config = (array)$app['config']->get('ldap', []);
-
-			return new Adldap();
-		});
 	}
 
 	/**

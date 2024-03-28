@@ -7,7 +7,9 @@ use Illuminate\Support\Arr;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Events\Dispatcher;
-use Adldap\Models\User as LdapUser;
+use LdapRecord\Models\Entry as LdapUser;
+use LdapRecord\Container;
+use LdapRecord\Connection;
 use App\Listeners\Auth\Ldap\Events\DiscoveredWithCredentials;
 use App\Listeners\Auth\Ldap\Events\Authenticating;
 use App\Listeners\Auth\Ldap\Events\AuthenticationRejected;
@@ -32,7 +34,7 @@ class Ldap
 	 * @param  Dispatcher  $events
 	 * @return void
 	 */
-	public function subscribe(Dispatcher $events)
+	public function subscribe(Dispatcher $events): void
 	{
 		$events->listen(Authenticators::class, self::class . '@handleAuthenticators');
 		//$events->listen(Login::class, self::class . '@handleAuthenticate');
@@ -42,21 +44,24 @@ class Ldap
 	/**
 	 * Establish LDAP connection
 	 *
-	 * @param   array  $config
-	 * @return  object
+	 * @return  Connection|null
 	 */
-	private function resolver()
+	private function resolver(): ?Connection
 	{
-		if (!app()->has('ldap'))
-		{
-			return false;
-		}
-
 		$config = config('listener.openldap.connection', []);
 
-		return app('ldap')
-				->addProvider($config, 'openldap')
-				->connect('openldap');
+		if (empty($config))
+		{
+			return null;
+		}
+
+		$connection = new Connection($config);
+
+		Container::addConnection($connection, 'openldap');
+
+		$connection->connect();
+
+		return $connection;
 	}
 
 	/**
@@ -81,43 +86,15 @@ class Ldap
 	 */
 	public function handleLogin(Login $event): void
 	{
-		if ($event->authenticator != 'ldap')
-		{
-			return;
-		}
-
-		$config = $this->config();
-
-		if (empty($config))
-		{
-			return;
-		}
-
-		$request = $event->request;
-
-		$ldap = $this->connect($config);
-
-		if ($cas->checkAuthentication())
-		{
-			$this->handleAuthentication($event);
-		}
-		else
-		{
-			if ($request->ajax() || $request->wantsJson())
-			{
-				abort(401, trans('global.unauthorized'));
-			}
-			
-			$cas->authenticate();
-		}
 	}
 
 	/**
-	 * Handle user login events.
-	 * 
-	 * @param Login|Authenticate $event
+	 * This method should handle any authentication and report back to the subject
+	 *
+	 * @param   Authenticate $event
+	 * @return  void
 	 */
-	public function handleAuthenticate($event)
+	public function handleAuthenticate(Authenticate $event)
 	{
 		if ($event->authenticator != 'ldap')
 		{
@@ -202,16 +179,19 @@ class Ldap
 	}
 
 	/**
-	 * @param array $credentials
+	 * Find a user by their credentials
+	 *
+	 * @param array<string,string> $credentials
 	 * @return null|LdapUser
+	 * @throws RuntimeException
 	 */
-	protected function findByCredentials(array $credentials = [])
+	protected function findByCredentials(array $credentials = []): ?LdapUser
 	{
 		$resolver = $this->resolver();
 
 		if (empty($credentials) || !$resolver)
 		{
-			return;
+			return null;
 		}
 
 		$attribute = $this->getLdapDiscoveryAttribute();
@@ -223,7 +203,7 @@ class Ldap
 			);
 		}
 
-		return $resolver->search()->users()->whereEquals(
+		return $resolver->query()->users()->whereEquals(
 			$attribute,
 			$credentials[$attribute]
 		)->first();
@@ -231,10 +211,10 @@ class Ldap
 
 	/**
 	 * @param LdapUser $user
-	 * @param array $credentials
+	 * @param array<string,string> $credentials
 	 * @return bool
 	 */
-	protected function authenticate(LdapUser $user, array $credentials = [])
+	protected function authenticate(LdapUser $user, array $credentials = []): bool
 	{
 		$attribute = $this->getLdapAuthAttribute();
 
@@ -264,12 +244,14 @@ class Ldap
 	}
 
 	/**
+	 * Retrieve a local user account by either email or username.
+	 *
 	 * @param LdapUser $ldapuser
-	 * @return User
+	 * @return User|null
 	 */
-	protected function getDatabaseUser(LdapUser $ldapuser)
+	protected function getDatabaseUser(LdapUser $ldapuser): ?User
 	{
-		$attribute = $this->getLdapDiscoveryAttribute(); //$ldapuser->getSchema()->distinguishedName();
+		$attribute = $this->getLdapDiscoveryAttribute();
 		$username = $ldapuser->getFirstAttribute($attribute);
 
 		if (filter_var($username, FILTER_VALIDATE_EMAIL))
@@ -281,10 +263,12 @@ class Ldap
 	}
 
 	/**
+	 * Create a local user instance in the database from the LDAP attributes.
+	 *
 	 * @param LdapUser $ldapuser
 	 * @return User
 	 */
-	protected function createDatabaseUser(LdapUser $ldapuser)
+	protected function createDatabaseUser(LdapUser $ldapuser): User
 	{
 		$user = new User;
 		$user->api_token = Str::random(60);
@@ -321,28 +305,32 @@ class Ldap
 	}
 
 	/**
+	 * This value is the users attribute you would like to locate LDAP users by in your directory.
+	 *
 	 * @return string
 	 */
 	protected function getLdapDiscoveryAttribute(): string
 	{
-		return config('listener.openldap.locate_users_by', 'userprincipalname');
+		return config('listener.ldap.locate_users_by', 'userprincipalname');
 	}
 
 	/**
+	 * This value is the users attribute you would like to use to bind to your LDAP server.
+	 *
 	 * @return string
 	 */
 	protected function getLdapAuthAttribute(): string
 	{
-		return config('listener.openldap.bind_users_by', 'distinguishedname');
+		return config('listener.ldap.bind_users_by', 'distinguishedname');
 	}
 
 	/**
 	 * Returns the password field to retrieve from the credentials.
 	 *
-	 * @param array $credentials
+	 * @param array<string,string> $credentials
 	 * @return string|null
 	 */
-	protected function getPasswordFromCredentials($credentials)
+	protected function getPasswordFromCredentials(array $credentials): ?string
 	{
 		return Arr::get($credentials, 'password');
 	}

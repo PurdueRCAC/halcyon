@@ -2,14 +2,14 @@
 
 namespace App\Listeners\Auth\Ldap\Events;
 
-use Adldap\Models\User;
+use LdapRecord\Models\Entry as LdapUser;
 
 class Authenticating
 {
     /**
      * The LDAP user that is authenticating.
      *
-     * @var User
+     * @var LdapUser
      */
     public $user;
 
@@ -23,10 +23,10 @@ class Authenticating
     /**
      * Constructor.
      *
-     * @param User   $user
+     * @param LdapUser   $user
      * @param string $username
      */
-    public function __construct(User $user, $username = '')
+    public function __construct(LdapUser $user, $username = '')
     {
         $this->user = $user;
         $this->username = $username;

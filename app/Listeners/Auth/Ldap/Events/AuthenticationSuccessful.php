@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Auth\Ldap\Events;
 
-use Adldap\Models\User;
+use LdapRecord\Models\Entry as LdapUser;
 use Illuminate\Database\Eloquent\Model;
 
 class AuthenticationSuccessful
@@ -10,7 +10,7 @@ class AuthenticationSuccessful
     /**
      * The LDAP user that has successfully authenticated.
      *
-     * @var User
+     * @var LdapUser
      */
     public $user;
 
@@ -24,10 +24,10 @@ class AuthenticationSuccessful
     /**
      * Constructor.
      *
-     * @param User       $user
+     * @param LdapUser   $user
      * @param Model|null $model
      */
-    public function __construct(User $user, Model $model = null)
+    public function __construct(LdapUser $user, Model $model = null)
     {
         $this->user = $user;
         $this->model = $model;

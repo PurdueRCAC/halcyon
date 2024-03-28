@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Auth\Ldap\Events;
 
-use Adldap\Models\User;
+use LdapRecord\Models\Entry as LdapUser;
 use Illuminate\Database\Eloquent\Model;
 
 class AuthenticationRejected
@@ -10,7 +10,7 @@ class AuthenticationRejected
     /**
      * The user that has been denied authentication.
      *
-     * @var User
+     * @var LdapUser
      */
     public $user;
 
@@ -24,10 +24,10 @@ class AuthenticationRejected
     /**
      * Constructor.
      *
-     * @param User       $user
+     * @param LdapUser   $user
      * @param Model|null $model
      */
-    public function __construct(User $user, Model $model = null)
+    public function __construct(LdapUser $user, Model $model = null)
     {
         $this->user = $user;
         $this->model = $model;

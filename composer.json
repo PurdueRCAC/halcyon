@@ -6,7 +6,7 @@
     "license": "Purdue University Open Source License",
     "require": {
         "php": "^8.1",
-        "adldap2/adldap2": "^10.4.3",
+        "directorytree/ldaprecord": "^3.5.1",
         "apereo/phpcas": "^1.6.0",
         "cilogon/oauth2-cilogon": "^1.1.6",
         "doctrine/dbal": "^3.5",
