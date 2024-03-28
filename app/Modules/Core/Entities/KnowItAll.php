@@ -147,7 +147,7 @@ class KnowItAll extends Fluent
 
 			$this->info = array();
 
-			$results = DB::select(DB::raw("SELECT version() AS ver"));
+			$results = DB::select("SELECT version() AS ver");
 			$this->info['dbversion'] = $results[0]->ver;
 			$this->info['php']         = php_uname();
 			//$this->info['dbversion']   = $db->getVersion();
