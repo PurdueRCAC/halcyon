@@ -760,19 +760,19 @@ h4 {
 .icon-chevron-up:before {
   content: "\e845";
 }
-.fa-chevron-down:before,
+.fa-chevrons-down:before,
 .icon-chevrons-down:before {
   content: "\e846";
 }
-.fa-chevron-right:before,
+.fa-chevrons-right:before,
 .icon-chevrons-right:before {
   content: "\e847";
 }
-.fa-chevron-up:before,
+.fa-chevrons-up:before,
 .icon-chevrons-up:before {
   content: "\e848";
 }
-.fa-chevron-left:before,
+.fa-chevrons-left:before,
 .icon-chevrons-left:before {
   content: "\e849";
 }
