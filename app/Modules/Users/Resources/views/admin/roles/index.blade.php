@@ -74,7 +74,7 @@ app('pathway')
 
 					<span class="badge badge-secondary float-right">{{ number_format($role->maps_count) }}</span>
 				</summary>
-				<div class="card-body pane-slider collapse" id="collapse{{ $role->value }}" aria-labelledby="heading{{ $role->value }}" data-parent="#permissions-rules">
+				<div class="card-body pane-slider" id="collapse{{ $role->value }}" aria-labelledby="heading{{ $role->value }}" data-parent="#permissions-rules">
 					<div class="pane-slider content pane-hide">
 
 						<table class="table table-hover role-rules">
