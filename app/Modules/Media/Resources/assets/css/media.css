@@ -2,18 +2,20 @@
  * Media styles
  */
 #main {
-	padding: 60px 30px 30px 30px;
+	padding-left: 0;
+	padding-right: 0;
+	padding-bottom: 0;
 	height: 100%;
 	align-self: stretch;
 	display: flex;
 	flex-grow: 1;
 	flex-flow: column;
 }
-#main > * {
+#main>* {
 	flex-grow: 1;
 	height: 100%;
 }
-#main > h2 {
+#main>h2 {
 	flex-grow: 0;
 }
 .spinner {
@@ -29,8 +31,7 @@
 .media-container {
 	display: flex;
 	flex-flow: column;
-	border: 1px solid rgba(0,0,0,0.1);
-	border-radius: 0.25em;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 /* Panels */
 .media-panels {
