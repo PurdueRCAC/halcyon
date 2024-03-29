@@ -1,2 +1,4 @@
 
-	<?php echo $info; ?>
+	<div class="table-responsive">
+		<?php echo $info; ?>
+	</div>
