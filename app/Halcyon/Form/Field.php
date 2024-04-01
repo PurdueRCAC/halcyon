@@ -470,9 +470,10 @@ abstract class Field
 		$text = $this->translateLabel ? trans($text) : $text;
 
 		// Build the class for the label.
-		$class = !empty($this->description) ? 'hasTip' : '';
-		$class = $this->required == true ? $class . ' required-field' : $class;
-		$class = !empty($this->labelClass) ? $class . ' ' . $this->labelClass : $class;
+		$class  = 'form-label';
+		$class .= !empty($this->description) ? ' hasTip' : '';
+		$class .= $this->required == true ? ' required-field' : '';
+		$class .= !empty($this->labelClass) ? ' ' . $this->labelClass : '';
 
 		// Add the opening label tag and main attributes attributes.
 		$label .= '<label id="' . $this->id . '-lbl" for="' . $this->id . '" class="' . $class . '"';
@@ -489,7 +490,7 @@ abstract class Field
 		// Add the label text and closing tag.
 		if ($this->required)
 		{
-			$label .= '>' . $text . ' <span class="required star">' . trans('global.required'). '</span></label>';
+			$label .= '>' . $text . ' <span class="required star">' . trans('global.required') . '</span></label>';
 		}
 		else
 		{
