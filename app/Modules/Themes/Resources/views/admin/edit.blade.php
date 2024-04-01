@@ -49,13 +49,13 @@ app('pathway')
 				<div class="row">
 					<div class="col-md-9">
 						<div class="form-group">
-							<label for="field-name">{{ trans('themes::themes.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
+							<label for="field-name" class="form-label">{{ trans('themes::themes.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
 							<input type="text" name="fields[name]" id="field-name" class="form-control required" required maxlength="250" value="{{ $row->name }}" />
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group">
-							<label id="field-client_id">{{ trans('themes::themes.type') }}:</label>
+							<label id="field-client_id" class="form-label">{{ trans('themes::themes.type') }}:</label>
 							<select name="fields[client_id]" id="field-client_id" class="form-control">
 								<option value="0"<?php if ($row->client_id == '0'): echo ' selected="selected"'; endif;?>>{{ trans('themes::themes.site') }}</option>
 								<option value="1"<?php if ($row->client_id == '1'): echo ' selected="selected"'; endif;?>>{{ trans('themes::themes.admin') }}</option>

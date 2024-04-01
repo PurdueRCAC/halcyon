@@ -4,6 +4,7 @@ namespace App\Modules\Themes\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use App\Halcyon\Models\Casts\Params;
 use App\Halcyon\Form\Form;
 use Carbon\Carbon;
@@ -26,6 +27,8 @@ use Carbon\Carbon;
  * @property int    $ordering
  * @property Carbon|null $updated_at
  * @property int    $updated_by
+ *
+ * @property string $api
  */
 class Theme extends Model
 {
@@ -130,7 +133,7 @@ class Theme extends Model
 	 * @param   string  $name  The name.
 	 * @return  string  New name.
 	 */
-	protected function generateNewTitle($name): string
+	protected function generateNewTitle(string $name): string
 	{
 		// Alter the name
 		$style = self::query()
@@ -254,9 +257,9 @@ class Theme extends Model
 	 * Get active templates for specified client
 	 *
 	 * @param   int  $client_id
-	 * @return  Theme|null
+	 * @return  Collection
 	 */
-	public function allActive($client_id = 0)
+	public function allActive(int $client_id = 0): Collection
 	{
 		return self::query()
 			->where('enabled', '=', 1)

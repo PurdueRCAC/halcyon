@@ -16,7 +16,7 @@ class AssetPublisher extends Publisher
 	 *
 	 * @return string
 	 */
-	public function getDestinationPath()
+	public function getDestinationPath(): string
 	{
 		return $this->repository->getAssetPath($this->theme->getLowerName());
 	}
@@ -26,7 +26,7 @@ class AssetPublisher extends Publisher
 	 *
 	 * @return string
 	 */
-	public function getSourcePath()
+	public function getSourcePath(): string
 	{
 		return config('module.themes.paths.themes', app_path('Themes'));
 	}

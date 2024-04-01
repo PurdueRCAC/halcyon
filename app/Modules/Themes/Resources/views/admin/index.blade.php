@@ -32,14 +32,14 @@ app('pathway')
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col col-md-4">
+			<div class="col col-md-3">
 				<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 				<span class="input-group">
 					<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 					<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
 				</span>
 			</div>
-			<div class="col col-md-5">
+			<div class="col col-md-6">
 			</div>
 			<div class="col col-md-3">
 				<label class="sr-only visually-hidden" for="filter_client_id">{{ trans('themes::themes.type') }}</label>

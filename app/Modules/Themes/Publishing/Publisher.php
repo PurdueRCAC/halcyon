@@ -3,6 +3,7 @@
 namespace App\Modules\Themes\Publishing;
 
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
 use App\Modules\Themes\Contracts\PublisherInterface;
 //use App\Modules\Themes\Contracts\RepositoryInterface;
 use App\Modules\Themes\Entities\Theme;
@@ -25,7 +26,7 @@ abstract class Publisher implements PublisherInterface
 	/**
 	 * The laravel console instance.
 	 *
-	 * @var \Illuminate\Console\Command
+	 * @var Command
 	 */
 	protected $console;
 
@@ -65,7 +66,7 @@ abstract class Publisher implements PublisherInterface
 	 *
 	 * @return self
 	 */
-	public function showMessage()
+	public function showMessage(): self
 	{
 		$this->showMessage = true;
 
@@ -77,7 +78,7 @@ abstract class Publisher implements PublisherInterface
 	 *
 	 * @return self
 	 */
-	public function hideMessage()
+	public function hideMessage(): self
 	{
 		$this->showMessage = false;
 
@@ -89,7 +90,7 @@ abstract class Publisher implements PublisherInterface
 	 *
 	 * @return Theme
 	 */
-	public function getTheme()
+	public function getTheme(): self
 	{
 		return $this->theme;
 	}
@@ -99,7 +100,7 @@ abstract class Publisher implements PublisherInterface
 	 * @param RepositoryInterface $repository
 	 * @return $this
 	 */
-	public function setRepository($repository)//RepositoryInterface 
+	public function setRepository(RepositoryInterface $repository): self
 	{
 		$this->repository = $repository;
 
@@ -111,7 +112,7 @@ abstract class Publisher implements PublisherInterface
 	 *
 	 * @return RepositoryInterface
 	 */
-	public function getRepository()
+	public function getRepository(): RepositoryInterface
 	{
 		return $this->repository;
 	}
@@ -119,11 +120,10 @@ abstract class Publisher implements PublisherInterface
 	/**
 	 * Set console instance.
 	 *
-	 * @param \Illuminate\Console\Command $console
-	 *
+	 * @param Command $console
 	 * @return $this
 	 */
-	public function setConsole(Command $console)
+	public function setConsole(Command $console): self
 	{
 		$this->console = $console;
 
@@ -133,9 +133,9 @@ abstract class Publisher implements PublisherInterface
 	/**
 	 * Get console instance.
 	 *
-	 * @return \Illuminate\Console\Command
+	 * @return Command
 	 */
-	public function getConsole()
+	public function getConsole(): Command
 	{
 		return $this->console;
 	}
@@ -143,9 +143,9 @@ abstract class Publisher implements PublisherInterface
 	/**
 	 * Get laravel filesystem instance.
 	 *
-	 * @return \Illuminate\Filesystem\Filesystem
+	 * @return Filesystem
 	 */
-	public function getFilesystem()
+	public function getFilesystem(): Filesystem
 	{
 		return $this->repository->getFiles();
 	}
@@ -155,19 +155,21 @@ abstract class Publisher implements PublisherInterface
 	 *
 	 * @return string
 	 */
-	abstract public function getDestinationPath();
+	abstract public function getDestinationPath(): string;
 
 	/**
 	 * Get source path.
 	 *
 	 * @return string
 	 */
-	abstract public function getSourcePath();
+	abstract public function getSourcePath(): string;
 
 	/**
 	 * Publish something.
+	 *
+	 * @throws \RuntimeException
 	 */
-	public function publish()
+	public function publish(): void
 	{
 		if (!$this->console instanceof Command)
 		{

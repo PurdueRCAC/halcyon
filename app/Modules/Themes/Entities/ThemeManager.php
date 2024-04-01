@@ -71,9 +71,11 @@ class ThemeManager implements RepositoryInterface, \Countable
 	 */
 	public function find(string $name): ?Theme
 	{
+		$lname = strtolower($name);
+
 		foreach ($this->allEnabled() as $theme)
 		{
-			if ($theme->getLowerElement() == strtolower($name))
+			if ($theme->getLowerElement() == $lname)
 			{
 				return $theme;
 			}
@@ -91,9 +93,11 @@ class ThemeManager implements RepositoryInterface, \Countable
 	 */
 	public function findOrFail(string $name): ?Theme
 	{
+		$lname = strtolower($name);
+
 		foreach ($this->allEnabled() as $theme)
 		{
-			if ($theme->getLowerElement() == strtolower($name))
+			if ($theme->getLowerElement() == $lname)
 			{
 				return $theme;
 			}
@@ -101,7 +105,7 @@ class ThemeManager implements RepositoryInterface, \Countable
 
 		foreach ($this->allDisabled() as $theme)
 		{
-			if ($theme->getLowerElement() == strtolower($name))
+			if ($theme->getLowerElement() == $lname)
 			{
 				return $theme;
 			}
@@ -184,7 +188,7 @@ class ThemeManager implements RepositoryInterface, \Countable
 	 * @param  string $type
 	 * @return array<string,Theme>
 	 */
-	public function allByType($type = 'site')
+	public function allByType(string $type = 'site')
 	{
 		$themes = [];
 
@@ -273,7 +277,7 @@ class ThemeManager implements RepositoryInterface, \Countable
 	 */
 	private function getThemesFromDatabase(int $state = null, string $type = null): Collection
 	{
-		$s = (new Model)->getTable();
+		/*$s = (new Model)->getTable();
 
 		$query = $this->getDatabase()
 			->table($s)
@@ -285,21 +289,32 @@ class ThemeManager implements RepositoryInterface, \Countable
 				$s . '.params',
 				$s . '.protected',
 				$s . '.client_id'
+			]);*/
+
+		$query = Model::query()
+			->select([
+				'id',
+				'enabled',
+				'name',
+				'element',
+				'params',
+				'protected',
+				'client_id'
 			]);
 
 		if (!is_null($state))
 		{
-			$query->where($s . '.enabled', '=', $state);
+			$query->where('enabled', '=', $state);
 		}
 		if (!is_null($type))
 		{
-			$query->where($s . '.client_id', '=', $type == 'admin' ? 1 : 0);
+			$query->where('client_id', '=', $type == 'admin' ? 1 : 0);
 		}
-		$query
-			->where($s . '.type', '=', 'theme')
-			->orderBy($s . '.enabled', 'desc');
 
-		$rows = $query->get();
+		$rows = $query
+			->where('type', '=', 'theme')
+			->orderBy('enabled', 'desc')
+			->get();
 
 		if (count($rows) <= 0)
 		{
@@ -354,10 +369,10 @@ class ThemeManager implements RepositoryInterface, \Countable
 	/**
 	 * @return \Illuminate\Database\DatabaseManager
 	 */
-	protected function getDatabase()
+	/*protected function getDatabase()
 	{
 		return $this->app['db'];
-	}
+	}*/
 
 	/**
 	 * @return \Illuminate\Config\Repository
