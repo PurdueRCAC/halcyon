@@ -55,160 +55,16 @@ class WidgetsController extends Controller
 		}
 		$filters['page'] = $reset ? 1 : $filters['page'];
 
-		if (!in_array($filters['order'], ['id', 'title', 'position', 'state', 'widget', 'access', 'ordering']))
-		{
-			$filters['order'] = Widget::$orderBy;
-		}
+		$filters['order'] = Widget::getSortField($filters['order']);
+		$filters['order_dir'] = Widget::getSortDirection($filters['order_dir']);
 
-		if (!in_array($filters['order_dir'], ['asc', 'desc']))
-		{
-			$filters['order_dir'] = Widget::$orderDir;
-		}
+		$rows = Widget::query()
+			->withFilters($filters)
+			->with('viewlevel')
+			->paginate($filters['limit'], ['*'], 'page', $filters['page']);
 
-		$query = Widget::query();
-
-		$p = (new Widget)->getTable();
-		$u = (new User)->getTable();
-		$a = (new Viewlevel)->getTable();
-		$m = (new Menu)->getTable();
-		$e = 'extensions';
-
-		$query->select(
-				$p . '.*',
-				$u . '.name AS editor',
-				$a . '.title AS access_level',
-				DB::raw('MIN(' . $m . '.menuid) AS pages'),
-				$e . '.name AS name'
-			)
-			->where($e . '.type', '=', 'widget')
-			->where($p . '.client_id', '=', $filters['client_id']);
-
-		// Join over the users for the checked out user.
-		$query
-			->leftJoin($u, $u . '.id', $p . '.checked_out');
-
-		// Join over the access groups.
-		$query
-			->leftJoin($a, $a . '.id', $p . '.access');
-
-		// Join over the access groups.
-		$query
-			->leftJoin($m, $m . '.widgetid', $p . '.id');
-
-		// Join over the extensions
-		$query
-			->join($e, $e . '.element', $p . '.widget', 'left')
-			->groupBy(
-				$p . '.id',
-				$p . '.title',
-				$p . '.note',
-				$p . '.position',
-				$p . '.widget',
-				$p . '.language',
-				$p . '.checked_out',
-				$p . '.checked_out_time',
-				$p . '.published',
-				$p . '.access',
-				$p . '.ordering',
-				$p . '.content',
-				$p . '.showtitle',
-				$p . '.params',
-				$p . '.client_id',
-				$u . '.name',
-				$a . '.title',
-				$e . '.name',
-				$u . '.id',
-				$a . '.id',
-				$m . '.widgetid',
-				$e . '.element',
-				$p . '.publish_up',
-				$p . '.publish_down',
-				$e . '.enabled'
-			);
-
-		// Filter by access level.
-		if ($filters['access'])
-		{
-			$query->where($p . '.access', '=', (int) $filters['access']);
-		}
-
-		// Filter by published state
-		if ($filters['state'] == 'published')
-		{
-			$query->where($p . '.published', '=', 1);
-		}
-		elseif ($filters['state'] == 'unpublished')
-		{
-			$query->where($p . '.published', '=', 0);
-		}
-		elseif ($filters['state'] == 'trashed')
-		{
-			$query->where($p . '.published', '=', -2);
-		}
-
-		// Filter by position
-		if ($filters['position'])
-		{
-			if ($filters['position'] == 'none')
-			{
-				$filters['position'] = '';
-			}
-			$query->where($p . '.position', '=', $filters['position']);
-		}
-
-		// Filter by module
-		if ($filters['widget'])
-		{
-			$query->where($p . '.widget', '=', $filters['widget']);
-		}
-
-		// Filter by search
-		if (!empty($filters['search']))
-		{
-			if (stripos($filters['search'], 'id:') === 0)
-			{
-				$query->where($p . '.id', '=', (int) substr($filters['search'], 3));
-			}
-			else
-			{
-				$query->where(function($where) use ($p, $filters)
-				{
-					$where->where($p . '.title', 'like', '%' . $filters['search'] . '%')
-						->orWhere($p . '.note', 'like', '%' . $filters['search'] . '%');
-				});
-			}
-		}
-
-		// Filter by module
-		if ($filters['language'])
-		{
-			$query->where($p . '.language', '=', $filters['language']);
-		}
-
-		// Order records
-		if ($filters['order'] == 'name')
-		{
-			$query->orderBy('name', $filters['order_dir']);
-			$query->orderBy('ordering', 'asc');
-		}
-		else if ($filters['order'] == 'ordering')
-		{
-			$query->orderBy('position', 'asc');
-			$query->orderBy('ordering', $filters['order_dir']);
-			$query->orderBy('name', 'asc');
-		}
-		else
-		{
-			$query->orderBy($filters['order'], $filters['order_dir']);
-			$query->orderBy('ordering', 'asc');
-			$query->orderBy('name', 'asc');
-		}
-
-		$rows = $query
-			->paginate($filters['limit'], ['*'], 'page', $filters['page']);;
-
-		// Select the required fields from the table.
-		$items = Extension::query()
+		// Get a list of all available widgets
+		$widgets = Extension::query()
 			->select(['id', 'name', 'element', 'type'])
 			->where('type', '=', 'widget')
 			->where('client_id', '=', (int) $filters['client_id'])
@@ -221,9 +77,9 @@ class WidgetsController extends Controller
 				$item->registerLanguage();
 				$item->name = trans('widget.' . $name . '::' . $name . '.widget name');
 				$item->desc = trans('widget.' . $name . '::' . $name . '.widget desc');
-			});
-
-		$widgets = collect($items)->sortBy('name')->all();
+			})
+			->sortBy('name')
+			->all();
 
 		return view('widgets::admin.index', [
 			'rows' => $rows,
@@ -246,12 +102,9 @@ class WidgetsController extends Controller
 
 		if ($eid = $request->input('eid', 0))
 		{
-			$db = app('db');
-
-			$ext = $db->table('extensions')
-				->select(['element', 'client_id'])
+			$ext = Extension::query()
+				->select('element', 'client_id')
 				->where('id', '=', $eid)
-				//->where('element', '=', $eid)
 				->where('type', '=', 'widget')
 				->first();
 
@@ -290,7 +143,7 @@ class WidgetsController extends Controller
 	 * @param  Request $request
 	 * @return RedirectResponse|View
 	 */
-	public function edit($id, Request $request)
+	public function edit(int $id, Request $request)
 	{
 		$row = Widget::findOrFail($id);
 
@@ -308,17 +161,15 @@ class WidgetsController extends Controller
 
 		if ($eid = $request->input('eid', 0))
 		{
-			$db = app('db');
-
-			$ext = $db->table('extensions')
-				->select('element, client_id')
+			$ext = Extension::query()
+				->select('element', 'client_id')
 				->where('id', '=', $eid)
-				->where('type', '=', 'module')
+				->where('type', '=', 'widget')
 				->first();
 
 			if ($ext)
 			{
-				$row->module = $ext->element;
+				$row->widget = $ext->element;
 				$row->client_id = $ext->client_id;
 			}
 		}
@@ -443,8 +294,8 @@ class WidgetsController extends Controller
 		}
 
 		// Select the required fields from the table.
-		$items = app('db')->table('extensions')
-			->select(['id', 'name', 'element'])
+		$items = Extension::query()
+			->select('id', 'name', 'element')
 			->where('type', '=', 'widget')
 			->where('client_id', '=', (int) $filters['client_id'])
 			->where('enabled', '=', 1)
@@ -453,16 +304,20 @@ class WidgetsController extends Controller
 
 		foreach ($items as $item)
 		{
-			$widget = ucfirst($item->element);
+			$item->registerLanguage();
+
+			/*$widget = ucfirst($item->element);
 			$path = app_path() . '/Widgets/' . $widget;
 			$name = strtolower($item->element);
-			app('translator')->addNamespace('widget.' . $name, $path . '/lang');
+			app('translator')->addNamespace('widget.' . $name, $path . '/lang');*/
 
 			$item->name = trans('widget.' . $name . '::' . $name . '.widget name');
 			$item->desc = trans('widget.' . $name . '::' . $name . '.widget desc');
 		}
 
-		$items = collect($items)->sortBy('name')->all();
+		$items = collect($items)
+			->sortBy('name')
+			->all();
 
 		return view('widgets::admin.select', [
 			'items'   => $items,
@@ -519,7 +374,7 @@ class WidgetsController extends Controller
 	 * @param  int $id
 	 * @return RedirectResponse
 	 */
-	public function state(Request $request, $id)
+	public function state(Request $request, int $id)
 	{
 		$action = $request->segment(count($request->segments()) - 1);
 		$value  = $action == 'publish' ? 1 : 0;
@@ -569,7 +424,7 @@ class WidgetsController extends Controller
 	 * @param   Request $request
 	 * @return  RedirectResponse
 	 */
-	public function reorder($id, Request $request)
+	public function reorder(int $id, Request $request)
 	{
 		// Incoming
 		//$id = $request->input('id');
@@ -609,7 +464,7 @@ class WidgetsController extends Controller
 		if ($return === false)
 		{
 			// Reorder failed
-			$request->session()->flash('success', trans('global.messages.items reordering failed'));
+			$request->session()->flash('error', trans('global.messages.items reordering failed'));
 		}
 		else
 		{

@@ -3,11 +3,15 @@
 namespace App\Modules\Widgets\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Config\Repository;
 use App\Halcyon\Traits\Checkable;
 use App\Halcyon\Form\Form;
+use App\Halcyon\Access\Viewlevel;
 use App\Halcyon\Models\Casts\Params;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Widgets\Events\WidgetCreating;
@@ -15,6 +19,7 @@ use App\Modules\Widgets\Events\WidgetCreated;
 use App\Modules\Widgets\Events\WidgetUpdating;
 use App\Modules\Widgets\Events\WidgetUpdated;
 use App\Modules\Widgets\Events\WidgetDeleted;
+use App\Modules\Users\Models\User;
 use Carbon\Carbon;
 
 /**
@@ -150,6 +155,16 @@ class Widget extends Model
 				throw new \Exception('Failed to remove previous menu assignments.');
 			}
 		});
+	}
+
+	/**
+	 * Get the access level
+	 *
+	 * @return  HasOne
+	 */
+	public function viewlevel(): HasOne
+	{
+		return $this->hasOne(Viewlevel::class, 'id', 'access');
 	}
 
 	/**
@@ -611,5 +626,174 @@ class Widget extends Model
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get a sane value for query ordering
+	 */
+	public static function getSortField(string $val): string
+	{
+		$attr = Schema::getColumnListing((new self)->getTable());
+
+		if (!in_array($val, $attr))
+		{
+			$val = self::$orderBy;
+		}
+
+		return $val;
+	}
+
+	/**
+	 * Get a sane value for query ordering direction
+	 */
+	public static function getSortDirection(string $val): string
+	{
+		$val = strtolower($val);
+
+		if (!in_array($val, ['asc', 'desc']))
+		{
+			$val = self::$orderDir;
+		}
+
+		return $val;
+	}
+
+	/**
+	 * Query scope with search
+	 *
+	 * @param   Builder  $query
+	 * @param   array<string,mixed> $filters
+	 * @return  Builder
+	 */
+	public function scopeWithFilters(Builder $query, array $filters = array()): Builder
+	{
+		$p = $this->getTable();
+		$u = (new User)->getTable();
+		$m = (new Menu)->getTable();
+		$e = (new Extension)->getTable();
+
+		$query->select(
+				$p . '.*',
+				$u . '.name AS editor',
+				DB::raw('MIN(' . $m . '.menuid) AS pages'),
+				$e . '.name AS name'
+			)
+			->where($e . '.type', '=', 'widget');
+		
+		if (!empty($filters['client_id']))
+		{
+			$query->where($p . '.client_id', '=', $filters['client_id']);
+		}
+
+		// Join over the users for the checked out user
+		$query->leftJoin($u, $u . '.id', $p . '.checked_out');
+
+		// Join over menus
+		$query->leftJoin($m, $m . '.widgetid', $p . '.id');
+
+		// Join over the extensions
+		$query
+			->leftJoin($e, $e . '.element', $p . '.widget')
+			->groupBy(
+				$p . '.id',
+				$p . '.title',
+				$p . '.note',
+				$p . '.position',
+				$p . '.widget',
+				$p . '.language',
+				$p . '.checked_out',
+				$p . '.checked_out_time',
+				$p . '.published',
+				$p . '.access',
+				$p . '.ordering',
+				$p . '.content',
+				$p . '.showtitle',
+				$p . '.params',
+				$p . '.client_id',
+				$u . '.name',
+				$e . '.name',
+				$u . '.id',
+				$m . '.widgetid',
+				$e . '.element',
+				$p . '.publish_up',
+				$p . '.publish_down',
+				$e . '.enabled'
+			);
+
+		// Filter by access level.
+		if (!empty($filters['access']) && $filters['access'])
+		{
+			$query->where($p . '.access', '=', (int) $filters['access']);
+		}
+
+		// Filter by published state
+		if (!empty($filters['state']))
+		{
+			if ($filters['state'] == 'published')
+			{
+				$query->where($p . '.published', '=', 1);
+			}
+			elseif ($filters['state'] == 'unpublished')
+			{
+				$query->where($p . '.published', '=', 0);
+			}
+			elseif ($filters['state'] == 'trashed')
+			{
+				$query->where($p . '.published', '=', -2);
+			}
+		}
+
+		// Filter by position
+		if (!empty($filters['position']) && $filters['position'])
+		{
+			if ($filters['position'] == 'none')
+			{
+				$filters['position'] = '';
+			}
+			$query->where($p . '.position', '=', $filters['position']);
+		}
+
+		// Filter by widget
+		if (!empty($filters['widget']) && $filters['widget'])
+		{
+			$query->where($p . '.widget', '=', $filters['widget']);
+		}
+
+		// Filter by search
+		if (!empty($filters['search']))
+		{
+			if (stripos($filters['search'], 'id:') === 0)
+			{
+				$query->where($p . '.id', '=', (int) substr($filters['search'], 3));
+			}
+			else
+			{
+				$query->where(function ($where) use ($p, $filters)
+				{
+					$where->where($p . '.title', 'like', '%' . $filters['search'] . '%')
+						->orWhere($p . '.note', 'like', '%' . $filters['search'] . '%');
+				});
+			}
+		}
+
+		if ($filters['order'] == 'name')
+		{
+			$query->orderBy($e . '.name', $filters['order_dir']);
+			$query->orderBy($p . '.ordering', 'asc');
+		}
+		else if ($filters['order'] == 'ordering')
+		{
+			$query->orderBy($p . '.position', 'asc');
+			$query->orderBy($p . '.ordering', $filters['order_dir']);
+			$query->orderBy($e . '.name', 'asc');
+		}
+		else
+		{
+			$query->orderBy($filters['order'], $filters['order_dir']);
+			$query->orderBy($p . '.ordering', 'asc');
+			$query->orderBy($e . '.name', 'asc');
+		}
+
+		return $query;
 	}
 }

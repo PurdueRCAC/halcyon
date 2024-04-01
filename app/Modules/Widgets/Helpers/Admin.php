@@ -17,11 +17,11 @@ abstract class Admin
 	 * @param   int  $clientId
 	 * @return  Collection  An array of option elements.
 	 */
-	public static function getPositions($clientId): Collection
+	public static function getPositions(int $clientId): Collection
 	{
 		$positions = Widget::query()
 			->select(DB::raw('DISTINCT(position)'))
-			->where('client_id', (int) $clientId)
+			->where('client_id', $clientId)
 			->orderBy('position', 'asc')
 			->get();
 
@@ -34,7 +34,7 @@ abstract class Admin
 	 * @param   int  $clientId  The client id.
 	 * @return  Collection
 	 */
-	public static function getWidgets($clientId): Collection
+	public static function getWidgets(int $clientId): Collection
 	{
 		$m = (new Widget)->getTable();
 
@@ -73,7 +73,7 @@ abstract class Admin
 	 * @param   int  $clientId  The client id.
 	 * @return  array<string,string>
 	 */
-	public static function getAssignmentOptions($clientId): array
+	public static function getAssignmentOptions(int $clientId): array
 	{
 		$options = array();
 		$options['0'] = trans('widgets::widgets.option.all');

@@ -3,6 +3,7 @@
 namespace App\Modules\Widgets\Models\Fields;
 
 use App\Halcyon\Form\Field;
+use App\Modules\Widgets\Models\Widget;
 
 /**
  * Form Field class for module ordering
@@ -42,28 +43,29 @@ class WidgetOrder extends Field
 		$data->id = $this->id;
 		$data->attr = $attr;
 
-		$db = app('db');
-		$orders = $db->table('widgets')
+		$orders = Widget::query()
 			->select('position', 'ordering', 'title')
 			->where('client_id', '=', (int) $clientId)
 			->orderBy('ordering', 'asc')
 			->get();
 
 		$orders2 = array();
-		for ($i = 0, $n = count($orders); $i < $n; $i++)
+		//for ($i = 0, $n = count($orders); $i < $n; $i++)
+		foreach ($orders as $i => $order)
 		{
-			if (!isset($orders2[$orders[$i]->position]))
+			if (!isset($orders2[$order->position]))
 			{
-				$orders2[$orders[$i]->position] = 0;
+				$orders2[$order->position] = 0;
 			}
-			$orders2[$orders[$i]->position]++;
-			$ord = $orders2[$orders[$i]->position];
+			$orders2[$order->position]++;
+
+			$ord = $orders2[$order->position];
 			$title = trans('widgets::widgets.option.order position', [
 				'order' => $ord,
-				'title' => addslashes($orders[$i]->title)
+				'title' => addslashes($order->title)
 			]);
 
-			$data->orders[$i] = array($orders[$i]->position, $ord, $title);
+			$data->orders[$i] = array($order->position, $ord, $title);
 		}
 
 		$html = array();

@@ -74,16 +74,6 @@ class PublishCommand extends Command
 		else
 		{
 			$widgets = $this->laravel['widget']->find($name);
-			/*$widgets = $this->laravel['widget']->all()
-				->filter(function($value, $key) use ($name)
-				{
-					if ($value->name == $name)
-					{
-						return true;
-					}
-
-					return false;
-				});*/
 
 			foreach ($widgets as $widget)
 			{
@@ -98,7 +88,6 @@ class PublishCommand extends Command
 
 			if (!$this->getFilesystem()->isDirectory($sourcePath))
 			{
-				//$this->error('[skipping] Widgets source path not found: ' . $sourcePath);
 				continue;
 			}
 

@@ -69,14 +69,14 @@ app('pathway')
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col col-md-3 filter-search">
-				<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
+				<label class="sr-only visually-hidden form-label" for="filter_search">{{ trans('search.label') }}</label>
 				<span class="input-group">
 					<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 					<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
 				</span>
 			</div>
 			<div class="col">
-				<label class="sr-only visually-hidden" for="filter_state">{{ trans('widgets::widgets.state') }}</label>
+				<label class="sr-only visually-hidden form-label" for="filter_state">{{ trans('widgets::widgets.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('widgets::widgets.all states') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('global.published') }}</option>
@@ -85,16 +85,16 @@ app('pathway')
 				</select>
 			</div>
 			<div class="col">
-				<label class="sr-only visually-hidden" for="filter_position">{{ trans('widgets::widgets.select position') }}</label>
+				<label class="sr-only visually-hidden form-label" for="filter_position">{{ trans('widgets::widgets.select position') }}</label>
 				<select name="position" id="filter_position" class="form-control filter filter-submit">
 					<option value="">{{ trans('widgets::widgets.all positions') }}</option>
 					@foreach (App\Modules\Widgets\Helpers\Admin::getPositions($filters['client_id']) as $position)
-						<option value="{{ $position->value }}"<?php if ($filters['position'] == $position->position) { echo ' selected="selected"'; } ?>>{{ $position->position }}</option>
+						<option value="{{ $position->position }}"<?php if ($filters['position'] == $position->position) { echo ' selected="selected"'; } ?>>{{ $position->position }}</option>
 					@endforeach
 				</select>
 			</div>
 			<div class="col">
-				<label class="sr-only visually-hidden" for="filter_widget">{{ trans('widgets::widgets.select widget') }}</label>
+				<label class="sr-only visually-hidden form-label" for="filter_widget">{{ trans('widgets::widgets.select widget') }}</label>
 				<select name="widget" id="filter_widget" class="form-control filter filter-submit">
 					<option value="">{{ trans('widgets::widgets.all widgets') }}</option>
 					@foreach (App\Modules\Widgets\Helpers\Admin::getWidgets($filters['client_id']) as $widget)
@@ -103,7 +103,7 @@ app('pathway')
 				</select>
 			</div>
 			<div class="col">
-				<label class="sr-only visually-hidden" for="filter_access">{{ trans('widgets::widgets.access level') }}</label>
+				<label class="sr-only visually-hidden form-label" for="filter_access">{{ trans('widgets::widgets.access level') }}</label>
 				<select name="access" id="filter_access" class="form-control filter filter-submit">
 					<option value="">{{ trans('widgets::widgets.all levels') }}</option>
 					@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
@@ -272,7 +272,7 @@ app('pathway')
 								?>
 							</td>
 							<td class="priority-4">
-								<span class="badge access {{ str_replace(' ', '', strtolower($row->access_level)) }}">{{ $row->access_level }}</span>
+								<span class="badge access {{ str_replace(' ', '', strtolower($row->viewlevel->title)) }}">{{ $row->viewlevel->title }}</span>
 							</td>
 						</tr>
 					@endforeach
@@ -305,7 +305,7 @@ app('pathway')
 				<div class="modal-body">
 
 					<div class="form-group mb-3">
-						<label for="widget-search" class="sr-only visually-hidden">{{ trans('widgets::widgets.search') }}</label>
+						<label for="widget-search" class="sr-only visually-hidden form-label">{{ trans('widgets::widgets.search') }}</label>
 						<input type="search" id="widget-search" class="form-control" placeholder="{{ trans('widgets::widgets.search') }} ..." value="" />
 					</div>
 

@@ -277,162 +277,11 @@ class WidgetsController extends Controller
 			$filters[$key] = $request->input($key, $default);
 		}
 
-		if (!in_array($filters['order'], ['id', 'title', 'position', 'state', 'access']))
-		{
-			$filters['order'] = Widget::$orderBy;
-		}
+		$filters['order'] = Widget::getSortField($filters['order']);
+		$filters['order_dir'] = Widget::getSortDirection($filters['order_dir']);
 
-		if (!in_array($filters['order_dir'], ['asc', 'desc']))
-		{
-			$filters['order_dir'] = Widget::$orderDir;
-		}
-
-		$rows = Widget::paginate($filters['limit']);
-
-		$query = Widget::query();
-
-		$p = (new Widget)->getTable();
-		$u = (new User)->getTable();
-		$a = (new Viewlevel)->getTable();
-		$m = (new Menu)->getTable();
-		$e = 'extensions';
-		//$l = 'languages';
-
-		$query->select(
-				$p . '.*',
-				//$l . '.title AS language_title',
-				$u . '.name AS editor',
-				$a . '.title AS access_level',
-				DB::raw('MIN(' . $m . '.menuid) AS pages'),
-				$e . '.name AS name'
-			)
-			->where($p . '.client_id', '=', $filters['client_id']);
-
-		// Join over the language
-		//$query
-		//	->leftJoin($l, $l . '.lang_code', $p . '.language');
-
-		// Join over the users for the checked out user.
-		$query
-			->leftJoin($u, $u . '.id', $p . '.checked_out');
-
-		// Join over the access groups.
-		$query
-			->leftJoin($a, $a . '.id', $p . '.access');
-
-		// Join over menus
-		$query
-			->leftJoin($m, $m . '.widgetid', $p . '.id');
-
-		// Join over the extensions
-		$query
-			->leftJoin($e, $e . '.element', $p . '.widget')
-			->where($e . '.type', '=', 'widget')
-			->groupBy(
-				$p . '.id',
-				$p . '.title',
-				$p . '.note',
-				$p . '.position',
-				$p . '.widget',
-				$p . '.language',
-				$p . '.checked_out',
-				$p . '.checked_out_time',
-				$p . '.published',
-				$p . '.access',
-				$p . '.ordering',
-				$p . '.content',
-				$p . '.showtitle',
-				$p . '.params',
-				$p . '.client_id',
-				//$l . '.title',
-				$u . '.name',
-				$a . '.title',
-				$e . '.name',
-				//$l . '.lang_code',
-				$u . '.id',
-				$a . '.id',
-				$m . '.widgetid',
-				$e . '.element',
-				$p . '.publish_up',
-				$p . '.publish_down',
-				$e . '.enabled'
-			);
-
-		// Filter by access level.
-		if ($filters['access'])
-		{
-			$query->where($p . '.access', '=', (int) $filters['access']);
-		}
-
-		// Filter by published state
-		if ($filters['state'] == 'published')
-		{
-			$query->where($p . '.published', '=', 1);
-		}
-		elseif ($filters['state'] == 'unpublished')
-		{
-			$query->where($p . '.published', '=', 0);
-		}
-
-		// Filter by position.
-		if ($filters['position'])
-		{
-			if ($filters['position'] == 'none')
-			{
-				$filters['position'] = '';
-			}
-			$query->where($p . '.position', '=', $filters['position']);
-		}
-
-		// Filter by module.
-		if ($filters['widget'])
-		{
-			$query->where($p . '.widget', '=', $filters['widget']);
-		}
-
-		// Filter by search
-		if (!empty($filters['search']))
-		{
-			if (stripos($filters['search'], 'id:') === 0)
-			{
-				$query->where($p . '.id', '=', (int) substr($filters['search'], 3));
-			}
-			else
-			{
-				$query->where(function($where) use ($p, $filters)
-				{
-					$where->where($p . '.title', 'like', '%' . $filters['search'] . '%')
-						->orWhere($p . '.note', 'like', '%' . $filters['search'] . '%');
-				});
-			}
-		}
-
-		// Filter by module.
-		if ($filters['language'])
-		{
-			$query->where($p . '.language', '=', $filters['language']);
-		}
-
-		// Order records
-		if ($filters['order'] == 'name')
-		{
-			$query->orderBy('name', $filters['order_dir']);
-			$query->orderBy('ordering', 'asc');
-		}
-		else if ($filters['order'] == 'ordering')
-		{
-			$query->orderBy('position', 'asc');
-			$query->orderBy('ordering', $filters['order_dir']);
-			$query->orderBy('name', 'asc');
-		}
-		else
-		{
-			$query->orderBy($filters['order'], $filters['order_dir']);
-			$query->orderBy('name', 'asc');
-			$query->orderBy('ordering', 'asc');
-		}
-
-		$rows = $query
+		$rows = Widget::query()
+			->withFilters($filters)
 			->paginate($filters['limit'], ['*'], 'page', $filters['page'])
 			->appends(array_filter($filters));
 
@@ -618,9 +467,9 @@ class WidgetsController extends Controller
 	 * @param  int  $id
 	 * @return WidgetResource
 	 */
-	public function read($id)
+	public function read(int $id)
 	{
-		$row = Widget::findOrFail((int)$id);
+		$row = Widget::findOrFail($id);
 
 		return new WidgetResource($row);
 	}
@@ -742,7 +591,7 @@ class WidgetsController extends Controller
 	 * @param   int $id
 	 * @return  JsonResponse|WidgetResource
 	 */
-	public function update(Request $request, $id)
+	public function update(Request $request, int $id)
 	{
 		$rules = [
 			'title'    => 'nullable|string|max:100',

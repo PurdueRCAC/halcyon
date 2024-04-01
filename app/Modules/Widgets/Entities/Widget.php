@@ -46,7 +46,6 @@ class Widget
 	public function __construct(WidgetModel $model)
 	{
 		$name = $model->widget;
-		//$name = Str::studly($name);
 
 		$this->name   = $name;
 		$this->model  = $model;
@@ -81,8 +80,6 @@ class Widget
 
 	/**
 	 * Get widget cache time or false if it's not meant to be cached.
-	 *
-	 * @return string
 	 */
 	public function getCacheKey(): string
 	{
@@ -91,19 +88,14 @@ class Widget
 
 	/**
 	 * Get the path of a layout for this widget
-	 *
-	 * @param   string  $layout  The layout name
-	 * @return  string
 	 */
-	public function getViewName($layout='index'): string
+	public function getViewName(string $layout='index'): string
 	{
 		return 'widget.' . $this->getLowerName() . '::' . $layout;
 	}
 
 	/**
 	 * Get the widget name in lowercase
-	 *
-	 * @return  string
 	 */
 	public function getLowerName(): string
 	{
@@ -112,8 +104,6 @@ class Widget
 
 	/**
 	 * Get the widget name in studly case
-	 *
-	 * @return  string
 	 */
 	public function getStudlyName(): string
 	{
@@ -122,11 +112,9 @@ class Widget
 
 	/**
 	 * Get the path of a layout for this widget
-	 *
-	 * @return  string
 	 */
 	public function getPath(): string
 	{
-		return app('config')->get('module.widgets.path', app_path('Widgets')) . '/' . $this->getStudlyName();
+		return config('module.widgets.path', app_path('Widgets')) . '/' . $this->getStudlyName();
 	}
 }

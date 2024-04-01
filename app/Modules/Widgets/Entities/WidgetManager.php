@@ -82,6 +82,7 @@ class WidgetManager
 	/**
 	 * Get an asset stack
 	 *
+	 * @param  string $type
 	 * @return array<int,string>
 	 */
 	public function stack(string $type): array
@@ -109,10 +110,10 @@ class WidgetManager
 	/**
 	 * Run widget
 	 *
-	 * @param   object  $widget
+	 * @param   BaseWidget  $widget
 	 * @return  string
 	 */
-	public function run($widget): string
+	public function run(BaseWidget $widget): string
 	{
 		if (!$widget)
 		{
@@ -147,7 +148,7 @@ class WidgetManager
 	 * @param   string   $condition  The condition to use
 	 * @return  int  Number of widgets found
 	 */
-	public function count($condition)
+	public function count(string $condition): int
 	{
 		$total = 0;
 		$words = explode(' ', $condition);
@@ -172,9 +173,9 @@ class WidgetManager
 	 * Get by position
 	 *
 	 * @param   string  $position  The position of the widgets
-	 * @return  string  An array of widget objects
+	 * @return  string
 	 */
-	public function byPosition($position)
+	public function byPosition(string $position): string
 	{
 		$position = strtolower($position);
 
@@ -190,7 +191,10 @@ class WidgetManager
 		{
 			try
 			{
-				$output .= $this->run($this->instantiateWidget($widget));
+				if ($instantiated = $this->instantiateWidget($widget))
+				{
+					$output .= $this->run($instantiated);
+				}
 			}
 			catch (InvalidWidgetClassException $e)
 			{
@@ -209,7 +213,7 @@ class WidgetManager
 	 * @param   string  $title  The title of the widget, optional
 	 * @return  string
 	 */
-	public function byName($name, $title = null)
+	public function byName(string $name, string $title = null): string
 	{
 		$name = $this->canonical($name);
 
@@ -231,7 +235,10 @@ class WidgetManager
 		{
 			try
 			{
-				$output .= $this->run($this->instantiateWidget($widget));
+				if ($instantiated = $this->instantiateWidget($widget))
+				{
+					$output .= $this->run($instantiated);
+				}
 			}
 			catch (InvalidWidgetClassException $e)
 			{
@@ -246,14 +253,15 @@ class WidgetManager
 	/**
 	 * Get by name (real, eg 'Breadcrumbs' or folder, eg 'mod_breadcrumbs')
 	 *
-	 * @param   object  $widget
-	 * @return  BaseWidget|false
+	 * @param   Widget  $widget
+	 * @return  BaseWidget|null
+	 * @throws  InvalidWidgetClassException
 	 */
-	protected function instantiateWidget($widget)
+	protected function instantiateWidget(Widget $widget): ?BaseWidget
 	{
 		if (!$widget->widget)
 		{
-			return false;
+			return null;
 		}
 
 		// Get just the file name
@@ -279,10 +287,10 @@ class WidgetManager
 	/**
 	 * Make call and get return widget content.
 	 *
-	 * @param  object $widget
+	 * @param  BaseWidget $widget
 	 * @return string
 	 */
-	protected function getContent($widget)
+	protected function getContent(BaseWidget $widget): string
 	{
 		$content = $this->app->call([$widget, 'run']);
 
@@ -310,17 +318,21 @@ class WidgetManager
 	 * Gets content from cache if it's turned on.
 	 * Runs widget class otherwise.
 	 *
-	 * @param  object $widget
+	 * @param  BaseWidget $widget
 	 * @return string
 	 */
-	protected function getContentFromCache($widget): string
+	protected function getContentFromCache(BaseWidget $widget): string
 	{
 		if ($cacheTime = (float) $widget->getCacheTime())
 		{
-			$content = $this->app['cache']->remember($widget->getCacheKey(), $cacheTime, function () use ($widget)
-			{
-				return $this->getContent($widget);
-			});
+			$content = $this->app['cache']->remember(
+				$widget->getCacheKey(),
+				$cacheTime,
+				function () use ($widget)
+				{
+					return $this->getContent($widget);
+				}
+			);
 		}
 		else
 		{
@@ -336,7 +348,7 @@ class WidgetManager
 	 * @param  string $widget
 	 * @return string
 	 */
-	public function getAssetPath($widget): string
+	public function getAssetPath(string $widget): string
 	{
 		return public_path($this->app['config']->get('module.widgets.path.assets', 'widgets') . '/' . $widget);
 	}
@@ -458,7 +470,7 @@ class WidgetManager
 	 * @param   int $state
 	 * @return  Collection
 	 */
-	public function find($name = null, $client = null, $state = null): Collection
+	public function find(string $name = null, int $client = null, int $state = null): Collection
 	{
 		$query = Widget::query();
 

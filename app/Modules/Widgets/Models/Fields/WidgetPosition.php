@@ -4,7 +4,6 @@ namespace App\Modules\Widgets\Models\Fields;
 
 use App\Halcyon\Form;
 use App\Halcyon\Form\Fields\Select;
-use App\Halcyon\Base\ClientManager;
 use App\Modules\Widgets\Models\Widget;
 use Illuminate\Support\Facades\DB;
 
@@ -77,8 +76,11 @@ class WidgetPosition extends select
 			$clientName = $this->element['client'];
 			if (isset($clientName))
 			{
-				$client = ClientManager::client($clientName, true);
-				$clientId = $client->id;
+				$clientId = 0;
+				if ($clientName == 'admin')
+				{
+					$clientId = 1;
+				}
 			}
 		}
 		if (!isset($clientId) && $this->form instanceof Form)

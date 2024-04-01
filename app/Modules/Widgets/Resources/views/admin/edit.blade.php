@@ -49,20 +49,10 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
-				<!-- <div class="row">
-					<div class="col col-xs-12 col-md-8"> -->
 				<div class="form-group">
 					<?php echo $form->getLabel('title'); ?>
 					<?php echo $form->getInput('title'); ?>
 				</div>
-				<!-- </div>
-				<div class="col col-xs-12 col-md-4">
-				<div class="form-group">
-					<?php echo $form->getLabel('showtitle'); ?>
-					<?php echo $form->getInput('showtitle'); ?>
-				</div>
-					</div>
-				</div> -->
 
 				<div class="form-group">
 					<?php
@@ -74,11 +64,6 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 						<span class="form-text text-muted">{{ trans($field->description) }}</span>
 					@endif
 				</div>
-
-				<!-- <div class="form-group">
-					<?php echo $form->getLabel('ordering'); ?>
-					<?php echo $form->getInput('ordering'); ?>
-				</div> -->
 
 				<div class="row">
 					<div class="col col-xs-12 col-sm-6">
@@ -156,7 +141,7 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 					<p class="form-text text-muted">{{ trans('widgets::widgets.menu description') }}</p>
 
 					<div class="form-group">
-						<label for="menu_assignment">{{ trans('widgets::widgets.widget assignment') }}</label>
+						<label for="menu_assignment" class="form-label">{{ trans('widgets::widgets.widget assignment') }}</label>
 						<select class="form-control" name="menu[assignment]" id="menu_assignment">
 							<?php echo App\Halcyon\Html\Builder\Select::options(App\Modules\Widgets\Helpers\Admin::getAssignmentOptions($row->client_id), 'value', 'text', $assignment, true);?>
 						</select>
@@ -164,7 +149,7 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 
 					<div id="menu_assignment-dependent">
 						<div class="form-group">
-							<label id="field_menuselect-lbl" for="field_menuselect">{{ trans('widgets::widgets.menu selection') }}</label>
+							<label id="field_menuselect-lbl" for="field_menuselect" class="form-label">{{ trans('widgets::widgets.menu selection') }}</label>
 
 							<div id="menu-assignment" class="accordian">
 								<?php $menuTypes = App\Modules\Menus\Helpers\Menus::getMenuLinks(null, 0, 0, [1]); ?>

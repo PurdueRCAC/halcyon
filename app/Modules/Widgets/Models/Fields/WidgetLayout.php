@@ -6,9 +6,10 @@ use App\Halcyon\Form\Field;
 use App\Halcyon\Form\Form;
 use App\Halcyon\Html\Builder\Select as Dropdown;
 use App\Halcyon\Filesystem\Util;
+use App\Modules\Widgets\Models\Extension;
 
 /**
- * Form Field to display a list of the layouts for module display from the module or template overrides.
+ * Form Field to display a list of the layouts for widget display from the widget or template overrides.
  */
 class WidgetLayout extends Field
 {
@@ -20,7 +21,7 @@ class WidgetLayout extends Field
 	protected $type = 'WidgetLayout';
 
 	/**
-	 * Method to get the field input for module layouts.
+	 * Method to get the field input for widget layouts.
 	 *
 	 * @return  string  The field input.
 	 */
@@ -35,17 +36,15 @@ class WidgetLayout extends Field
 		}
 		$clientId = (int) $clientId;
 
-		//$client = ClientManager::client($clientId);
+		// Get the widget.
+		$widget = (string) $this->element['widget'];
 
-		// Get the module.
-		$module = (string) $this->element['module'];
-
-		if (empty($module) && ($this->form instanceof Form))
+		if (empty($widget) && ($this->form instanceof Form))
 		{
-			$module = $this->form->getValue('module');
+			$widget = $this->form->getValue('widget');
 		}
 
-		$module = preg_replace('#\W#', '', $module);
+		$widget = preg_replace('#\W#', '', $widget);
 
 		// Get the template.
 		$template = (string) $this->element['template'];
@@ -60,67 +59,57 @@ class WidgetLayout extends Field
 		$template_style_id = preg_replace('#\W#', '', $template_style_id);
 
 		// If an extension and view are present build the options.
-		if ($module)// && $client)
+		if ($widget)// && $client)
 		{
 			// Load language file
-			app('translator')->addNamespace('widgets', app_path() . '/Widgets/' . $module . '/lang');
+			app('translator')->addNamespace('widgets', app_path() . '/Widgets/' . $widget . '/lang');
 
-			// Get the database object and a new query object.
-			$db = app('db');
-
-			// Build the query.
-			$query = $db
-				->table('extensions as e')
-				->select(['e.element', 'e.name'])
-				->where('e.client_id', '=', (int) $clientId)
-				->where('e.type', '=', 'template')
-				->where('e.enabled', '=', '1');
-
-			if ($template)
-			{
-				$query->where('e.element', '=', $template);
-			}
-
-			if ($template_style_id)
-			{
-				$query
-					->leftJoin('theme_styles as s', 's.template', 'e.element')
-					->where('s.id', '=', (int) $template_style_id);
-			}
-
-			// Set the query and load the templates.
-			$templates = $query->get();
-
-			// Build the search paths for module layouts.
-			$module_path = app_path() . '/Widgets/' . $module . '/views';
+			// Build the search paths for widget layouts.
+			$widget_path = app_path() . '/Widgets/' . $widget . '/views';
 
 			// Prepare array of component layouts
-			$module_layouts = array();
+			$widget_layouts = array();
 
 			// Prepare the grouped list
 			$groups = array();
 
-			// Add the layout options from the module path.
-			if (is_dir($module_path) && ($module_layouts = app('filesystem')->files($module_path, '^[^_]*\.php$')))
+			// Add the layout options from the widget path.
+			if (is_dir($widget_path) && ($widget_layouts = app('filesystem')->files($widget_path, '^[^_]*\.php$')))
 			{
-				// Create the group for the module
+				// Create the group for the widget
 				$groups['_'] = array();
 				$groups['_']['id'] = $this->id . '__';
 				$groups['_']['text'] = trans('widgets::widgets.from widget');
 				$groups['_']['items'] = array();
 
-				foreach ($module_layouts as $file)
+				foreach ($widget_layouts as $file)
 				{
-					// Add an option to the module group
+					// Add an option to the widget group
 					$value = app('filesystem')->name(ltrim($file, DIRECTORY_SEPARATOR));
-					$text = app('translator')->has($key = strtoupper($module . ' layout ' . $value)) ? trans($key) : $value;
+					$text = app('translator')->has($key = strtoupper($widget . ' layout ' . $value)) ? trans($key) : $value;
 
 					$groups['_']['items'][] = Dropdown::option('_:' . $value, $text);
 				}
 			}
 
 			// Loop on all templates
-			/*if ($templates)
+			/*
+			// Build the query.
+			$query = Extension::query()
+				->select('element', 'name')
+				->where('client_id', '=', (int) $clientId)
+				->where('type', '=', 'theme')
+				->where('enabled', '=', '1');
+
+			if ($template)
+			{
+				$query->where('element', '=', $template);
+			}
+
+			// Set the query and load the templates.
+			$templates = $query->get();
+
+			if (count($templates) > 0)
 			{
 				foreach ($templates as $template)
 				{
@@ -143,7 +132,7 @@ class WidgetLayout extends Field
 					// Load language file
 					$lang->load('tpl_' . $template->element . '.sys', $template->path, null, false, true);
 
-					$template_path = Util::normalizePath($template->path . '/html/' . $module);
+					$template_path = Util::normalizePath($template->path . '/html/' . $widget);
 
 					// Add the layout options from the template path.
 					if (is_dir($template_path) && ($files = app('filesystem')->files($template_path, '^[^_]*\.php$')))
@@ -151,7 +140,7 @@ class WidgetLayout extends Field
 						foreach ($files as $i => $file)
 						{
 							// Remove layout that already exist in component ones
-							if (in_array($file, $module_layouts))
+							if (in_array($file, $widget_layouts))
 							{
 								unset($files[$i]);
 							}
@@ -169,7 +158,7 @@ class WidgetLayout extends Field
 							{
 								// Add an option to the template group
 								$value = app('filesystem')->name(ltrim($file, DIRECTORY_SEPARATOR));
-								$text = $lang->hasKey($key = strtoupper('TPL_' . $template->element . '_' . $module . '_LAYOUT_' . $value))
+								$text = $lang->hasKey($key = strtoupper('TPL_' . $template->element . '_' . $widget . '_LAYOUT_' . $value))
 									? $lang->txt($key)
 									: $value;
 								$groups[$template->element]['items'][] = Dropdown::option($template->element . ':' . $value, $text);

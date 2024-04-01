@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Widget/Menu map model
  *
- * @property int    $widget_id
- * @property int    $menu_id
+ * @property int $widgetid
+ * @property int $menuid
  */
 class Menu extends Model
 {
@@ -32,13 +32,6 @@ class Menu extends Model
 	 * @var bool
 	 */
 	public $incrementing = false;
-
-	/**
-	 * The table namespace
-	 *
-	 * @var  string
-	 */
-	protected $namespace = 'modules';
 
 	/**
 	 * The table name, non-standard naming 
@@ -109,9 +102,6 @@ class Menu extends Model
 	 */
 	protected function createWithNoPk(): bool
 	{
-		// Add any automatic fields
-		//$this->parseAutomatics('initiate');
-
 		return $this->query()->insert($this->getAttributes());
 	}
 
@@ -129,7 +119,6 @@ class Menu extends Model
 			$query->where($key, '=', $val);
 		}
 
-		// Return the result of the query
 		return $query->update($this->getAttributes());
 	}
 
@@ -147,7 +136,6 @@ class Menu extends Model
 			$query->where($key, '=', $val);
 		}
 
-		// Return the result of the query
 		return $query->delete();
 	}
 
@@ -157,10 +145,10 @@ class Menu extends Model
 	 * @param   int  $widgetid
 	 * @return  bool
 	 */
-	public static function deleteByWidget($widgetid): bool
+	public static function deleteByWidget(int $widgetid): bool
 	{
 		$rows = self::query()
-			->where('widgetid', '=', (int)$widgetid)
+			->where('widgetid', '=', $widgetid)
 			->get();
 
 		foreach ($rows as $row)
@@ -180,10 +168,10 @@ class Menu extends Model
 	 * @param   int  $menuid
 	 * @return  bool
 	 */
-	public static function deleteByMenu($menuid): bool
+	public static function deleteByMenu(int $menuid): bool
 	{
 		$rows = self::query()
-			->where('menuid', '=', (int)$menuid)
+			->where('menuid', '=', $menuid)
 			->get();
 
 		foreach ($rows as $row)

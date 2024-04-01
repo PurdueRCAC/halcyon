@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		btn.addEventListener('click', function (e) {
 			e.preventDefault();
 			document.querySelectorAll(this.getAttribute('data-name')).forEach(function (el) {
-				el.checked = true;
+				el.checked = false;
 			});
 		});
 	});
