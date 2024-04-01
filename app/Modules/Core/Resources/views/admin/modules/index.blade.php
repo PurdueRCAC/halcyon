@@ -53,103 +53,106 @@
 	</fieldset>
 
 	@if (count($rows))
-	<div class="card mb-4">
-		<div class="table-responsive">
-	<table class="table table-hover adminlist">
-		<caption class="sr-only visually-hidden">{{ trans('core::modules.module name') }}</caption>
-		<thead>
-			<tr>
-				<th class="text-center">
-					{!! Html::grid('checkall') !!}
-				</th>
-				<th scope="col" class="priority-6">
-					{!! Html::grid('sort', trans('core::modules.id'), 'id', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col">
-					{!! Html::grid('sort', trans('core::modules.name'), 'name', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-4">
-					{!! Html::grid('sort', trans('core::modules.state'), 'state', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<!--<th scope="col" class="priority-6 text-center">
-					{!! Html::grid('sort', trans('core::modules.admin'), 'client_id', $filters['order_dir'], $filters['order']) !!}
-				</th>-->
-				<th scope="col" class="priority-5">
-					{!! Html::grid('sort', trans('core::modules.folder'), 'folder', $filters['order_dir'], $filters['order']) !!}
-				</th>
-				<th scope="col" class="priority-5 text-center">
-					{!! Html::grid('sort', trans('core::modules.ordering'), 'ordering', $filters['order_dir'], $filters['order']) !!}
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-		@foreach ($rows as $i => $row)
-			<tr{!! $row->protected ? ' class="locked"' : '' !!}>
-				<td class="text-center">
-					@if ($row->protected)
-						<span class="fa fa-lock" aria-hidden="true"></span>
-						<span class="sr-only visually-hidden">{{ trans('global.yes') }}</span>
-					@else
-						{!! Html::grid('id', $i, $row->id) !!}
-					@endif
-				</td>
-				<td class="priority-6">
-					{{ $row->id }}
-				</td>
-				<td>
-					<a href="{{ route('admin.modules.edit', ['id' => $row->id]) }}">
-						{{ ($row->name == $row->element ? trans(strtolower($row->name . '::' . $row->name . '.module name')) : $row->name) }}
-					</a>
-				</td>
-				<td class="priority-4">
-					@if ($row->protected)
-						@if ($row->enabled)
-							<span class="badge badge-success">
-								{{ trans('core::modules.enabled') }}
-							</span>
-						@else
-							<span class="badge badge-secondary">
-								{{ trans('core::modules.disabled') }}
-							</span>
-						@endif
-					@else
-						@if ($row->enabled)
-							<a class="badge badge-success btn-state" href="{{ route('admin.modules.disable', ['id' => $row->id]) }}" title="{{ trans('core::modules.set state to', ['state' => trans('global.unpublished')]) }}">
-								{{ trans('core::modules.enabled') }}
-							</a>
-						@else
-							<a class="badge badge-secondary btn-state" href="{{ route('admin.modules.enable', ['id' => $row->id]) }}" title="{{ trans('core::modules.set state to', ['state' => trans('global.published')]) }}">
-								{{ trans('core::modules.disabled') }}
-							</a>
-						@endif
-					@endif
-				</td>
-				<td class="priority-6">
-					<a href="{{ route('admin.modules.edit', ['id' => $row->id]) }}">
-						{{ $row->folder ? $row->folder : 'extensions' }}
-					</a>
-				</td>
-				<!-- <td class="priority-6 text-center">
-					@if ($row->client_id)
-						<span class="badge badge-success">{{ trans('global.yes') }}</span>
-					@else
-						<span class="badge badge-secondary">{{ trans('global.no') }}</span>
-					@endif
-				</td> -->
-				<td class="priority-5 text-center">
-					{{ $row->ordering }}
-				</td>
-			</tr>
-		@endforeach
-		</tbody>
-	</table>
-		</div>
-	</div>
-
-	{{ $rows->render() }}
-	@else
 		<div class="card mb-4">
-			<div class="card-body text-muted text-center">{{ trans('global.no results') }}</div>
+			<div class="table-responsive">
+				<table class="table table-hover adminlist">
+					<caption class="sr-only visually-hidden">{{ trans('core::modules.module name') }}</caption>
+					<thead>
+						<tr>
+							<th class="text-center">
+								{!! Html::grid('checkall') !!}
+							</th>
+							<th scope="col" class="priority-6">
+								{!! Html::grid('sort', trans('core::modules.id'), 'id', $filters['order_dir'], $filters['order']) !!}
+							</th>
+							<th scope="col">
+								{!! Html::grid('sort', trans('core::modules.name'), 'name', $filters['order_dir'], $filters['order']) !!}
+							</th>
+							<th scope="col" class="priority-4">
+								{!! Html::grid('sort', trans('core::modules.state'), 'state', $filters['order_dir'], $filters['order']) !!}
+							</th>
+							<!--<th scope="col" class="priority-6 text-center">
+								{!! Html::grid('sort', trans('core::modules.admin'), 'client_id', $filters['order_dir'], $filters['order']) !!}
+							</th>-->
+							<th scope="col" class="priority-5">
+								{!! Html::grid('sort', trans('core::modules.folder'), 'folder', $filters['order_dir'], $filters['order']) !!}
+							</th>
+							<th scope="col" class="priority-5 text-center">
+								{!! Html::grid('sort', trans('core::modules.ordering'), 'ordering', $filters['order_dir'], $filters['order']) !!}
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+					@foreach ($rows as $i => $row)
+						<tr{!! $row->protected ? ' class="locked"' : '' !!}>
+							<td class="text-center">
+								@if ($row->protected)
+									<span class="fa fa-lock" aria-hidden="true"></span>
+									<span class="sr-only visually-hidden">{{ trans('global.yes') }}</span>
+								@else
+									{!! Html::grid('id', $i, $row->id) !!}
+								@endif
+							</td>
+							<td class="priority-6">
+								{{ $row->id }}
+							</td>
+							<td>
+								<a href="{{ route('admin.modules.edit', ['id' => $row->id]) }}">
+									{{ ($row->name == $row->element ? trans(strtolower($row->name . '::' . $row->name . '.module name')) : $row->name) }}
+								</a>
+							</td>
+							<td class="priority-4">
+								@if ($row->protected)
+									@if ($row->enabled)
+										<span class="badge badge-success">
+											{{ trans('core::modules.enabled') }}
+										</span>
+									@else
+										<span class="badge badge-secondary">
+											{{ trans('core::modules.disabled') }}
+										</span>
+									@endif
+								@else
+									@if ($row->enabled)
+										<a class="badge badge-success btn-state" href="{{ route('admin.modules.disable', ['id' => $row->id]) }}" title="{{ trans('core::modules.set state to', ['state' => trans('global.unpublished')]) }}">
+											{{ trans('core::modules.enabled') }}
+										</a>
+									@else
+										<a class="badge badge-secondary btn-state" href="{{ route('admin.modules.enable', ['id' => $row->id]) }}" title="{{ trans('core::modules.set state to', ['state' => trans('global.published')]) }}">
+											{{ trans('core::modules.disabled') }}
+										</a>
+									@endif
+								@endif
+							</td>
+							<td class="priority-6">
+								<a href="{{ route('admin.modules.edit', ['id' => $row->id]) }}">
+									{{ $row->folder ? $row->folder : 'extensions' }}
+								</a>
+							</td>
+							<!-- <td class="priority-6 text-center">
+								@if ($row->client_id)
+									<span class="badge badge-success">{{ trans('global.yes') }}</span>
+								@else
+									<span class="badge badge-secondary">{{ trans('global.no') }}</span>
+								@endif
+							</td> -->
+							<td class="priority-5 text-center">
+								{{ $row->ordering }}
+							</td>
+						</tr>
+					@endforeach
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		{{ $rows->render() }}
+	@else
+		<div class="placeholder py-4 mx-auto text-center">
+			<div class="placeholder-body p-4">
+				<span class="fa fa-ban display-4 text-muted" aria-hidden="true"></span>
+				<p>{{ trans('global.no results') }}</p>
+			</div>
 		</div>
 	@endif
 

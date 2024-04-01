@@ -49,13 +49,13 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-name">{{ trans('core::modules.name') }} <span class="required">{{ trans('global.required') }}</span></label>
+					<label for="field-name" class="form-label">{{ trans('core::modules.name') }} <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="name" id="field-name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->name }}" />
 					<span class="invalid-feedback">{{ trans('core::modules.invalid.name') }}</span>
 				</div>
 
 				<div class="form-group">
-					<label for="field-folder">{{ trans('core::modules.folder') }}</label>
+					<label for="field-folder" class="form-label">{{ trans('core::modules.folder') }}</label>
 					<input type="text" name="folder" id="field-folder" class="form-control{{ $errors->has('folder') ? ' is-invalid' : '' }}" maxlength="250" value="{{ $row->folder }}" />
 					<span class="invalid-feedback">{{ trans('core::modules.invalid.folder') }}</span>
 				</div>
@@ -66,7 +66,7 @@ app('pathway')
 				<legend>{{ trans('global.publishing') }}</legend>
 
 				<div class="form-group">
-					<label for="field-enabled">{{ trans('knowledge::knowledge.state') }}</label>
+					<label for="field-enabled" class="form-label">{{ trans('core::modules.state') }}</label>
 					<select class="form-control" name="enabled" id="field-enabled"<?php if ($row->protected) { echo ' readonly="readonly" disabled="disabled"'; } ?>>
 						<option value="1"<?php if ($row->enabled == 1) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
 						<option value="0"<?php if ($row->enabled == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
