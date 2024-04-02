@@ -310,8 +310,7 @@ class WidgetManager
 
 			return $output ? $output : '';
 		}
-
-		return is_object($content) ? $content->__toString() : $content;
+		return is_object($content) ? $content->__toString() : $content ?? '';
 	}
 
 	/**
