@@ -23,7 +23,7 @@ class ThemesController extends Controller
 		// Get filters
 		$filters = array(
 			'search'    => null,
-			'element'  => null,
+			'element'   => null,
 			'client_id' => '*',
 			// Pagination
 			'limit'     => config('list_limit', 20),
@@ -37,7 +37,7 @@ class ThemesController extends Controller
 		foreach ($filters as $key => $default)
 		{
 			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('themes.filter_' . $key)
+			 && $request->has($key)
 			 && $request->input($key) != session()->get('themes.filter_' . $key))
 			{
 				$reset = true;
@@ -56,33 +56,8 @@ class ThemesController extends Controller
 			$filters['order_dir'] = 'asc';
 		}
 
-		$query = Theme::query();
-
-		//$l = 'languages';
-		//$m = 'menu_items';
-		$s = (new Theme)->getTable();
-
-		$query
-			/*->select([
-				$s . '.id AS id',
-				$s . '.element',
-				$s . '.name',
-				$s . '.enabled',
-				$s . '.client_id',
-				//'\'0\' AS assigned',
-				//$m . '.template_style_id AS assigned',
-				//$l . '.title AS language_title',
-				//$l . '.image'
-			])*/
+		$query = Theme::query()
 			->whereIsTheme();
-
-		// Join on menus.
-		//$query
-		//	->leftJoin($m, $m . '.template_style_id', $s . '.id');
-
-		// Join over the language
-		//$query
-		//	->leftJoin($l, $l . '.lang_code', $s . '.home');
 
 		if ($filters['search'])
 		{
@@ -90,52 +65,31 @@ class ThemesController extends Controller
 
 			if (stripos($filters['search'], 'id:') === 0)
 			{
-				$query->where($s . '.id', '=', (int) substr($filters['search'], 3));
+				$query->where('id', '=', (int) substr($filters['search'], 3));
 			}
 			else
 			{
-				$query->where(function($q) use ($filters)
+				$query->where(function ($q) use ($filters)
 				{
-					$q->where($s . '.name', 'like', $filters['search'])
-						->orWhere($s . '.element', 'like', $filters['search']);
+					$q->where('name', 'like', $filters['search'])
+						->orWhere('element', 'like', $filters['search']);
 				});
 			}
 		}
 
 		if ($filters['client_id'] != '*')
 		{
-			$query->where($s . '.client_id', '=', (int)$filters['client_id']);
+			$query->where('client_id', '=', (int)$filters['client_id']);
 		}
 
 		if ($filters['element'])
 		{
-			$query->where($s . '.element', '=', (int)$filters['element']);
+			$query->where('element', '=', (int)$filters['element']);
 		}
-
-		$query
-			->groupBy([
-				$s . '.id',
-				$s . '.element',
-				$s . '.folder',
-				$s . '.name',
-				$s . '.enabled',
-				$s . '.access',
-				$s . '.protected',
-				$s . '.client_id',
-				$s . '.type',
-				$s . '.checked_out',
-				$s . '.checked_out_time',
-				$s . '.ordering',
-				$s . '.updated_at',
-				$s . '.updated_by',
-				$s . '.params'
-			]);
 
 		// Get records
 		$rows = $query
 			->paginate($filters['limit'], ['*'], 'page', $filters['page']);;
-
-		//$preview = $this->config->get('template_positions_display');
 
 		return view('themes::admin.index', [
 			'rows'    => $rows,
@@ -150,7 +104,7 @@ class ThemesController extends Controller
 	 * @param  Request $request
 	 * @return View
 	 */
-	public function edit($id, Request $request)
+	public function edit(int $id, Request $request)
 	{
 		$request->merge(['hidemainmenu' => 1]);
 
