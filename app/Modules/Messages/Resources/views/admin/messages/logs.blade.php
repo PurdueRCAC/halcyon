@@ -42,9 +42,9 @@ app('pathway')
 		<div class="row">
 			<div class="col-md-10">
 			</div>
-			<div class="col-md-2 text-right">
+			<div class="col-md-2">
 				<div class="input-group">
-					<label class="sr-only visually-hidden" for="filter_lines">{{ trans('messages::messages.tail limit') }}</label>
+					<label class="form-label sr-only visually-hidden" for="filter_lines">{{ trans('messages::messages.tail limit') }}</label>
 					<select name="lines" id="filter_lines" class="form-control filter filter-submit">
 						<option value="10"<?php if ($filters['lines'] == 10): echo ' selected="selected"'; endif;?>>10</option>
 						<option value="20"<?php if ($filters['lines'] == 20): echo ' selected="selected"'; endif;?>>20</option>

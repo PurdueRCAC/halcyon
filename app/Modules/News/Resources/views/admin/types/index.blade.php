@@ -45,7 +45,7 @@ app('pathway')
 	<fieldset id="filter-bar" class="container-fluid mb-3">
 		<div class="row">
 			<div class="col-sm-12 col-md-3 mb-2 filter-search">
-				<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
+				<label class="form-label sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 				<span class="input-group">
 					<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 					<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>

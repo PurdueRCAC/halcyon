@@ -57,18 +57,18 @@ app('pathway')
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-name">{{ trans('messages::messages.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label class="form-label" for="field-name">{{ trans('messages::messages.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[name]" id="field-name" class="form-control required" required maxlength="24" value="{{ $row->name }}" />
 					<span class="invalid-feedback">{{ trans('messages::messages.errors.invalid name') }}</span>
 				</div>
 
 				<div class="form-group">
-					<label for="field-classname">{{ trans('messages::messages.classname') }}:</label>
+					<label class="form-label" for="field-classname">{{ trans('messages::messages.classname') }}:</label>
 					<input type="text" name="fields[classname]" id="field-classname" class="form-control" maxlength="24" value="{{ $row->classname }}" />
 				</div>
 
 				<div class="form-group">
-					<label for="field-resourceid">{{ trans('messages::messages.resource') }}:</label>
+					<label class="form-label" for="field-resourceid">{{ trans('messages::messages.resource') }}:</label>
 					<select name="fields[resourceid]" id="field-resourceid" class="form-control">
 						<option value="0">{{ trans('global.none') }}</option>
 						@foreach ($resources as $res)

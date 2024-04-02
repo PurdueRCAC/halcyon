@@ -143,10 +143,10 @@ app('pathway')
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col col-md-12 text-right text-end">
-				<label class="sr-only visually-hidden" for="filter_start">{{ trans('news::news.start date') }}</label>
+				<label class="form-label sr-only visually-hidden" for="filter_start">{{ trans('news::news.start date') }}</label>
 				<input type="text" name="start" id="filter_start" class="form-control date filter filter-submit d-inline-block w-auto" value="{{ $filters['start'] }}" placeholder="Start date" />
 				to
-				<label class="sr-only visually-hidden" for="filter_end">{{ trans('news::news.end date') }}</label>
+				<label class="form-label sr-only visually-hidden" for="filter_end">{{ trans('news::news.end date') }}</label>
 				<input type="text" name="end" id="filter_end" class="form-control date filter filter-submit d-inline-block w-auto" value="{{ $filters['end'] }}" placeholder="End date" />
 
 				<button type="submit" class="btn btn-secondary">Filter</button>
@@ -189,7 +189,7 @@ app('pathway')
 											<td>
 												<span class="legend-key"></span> {{ $name }}
 											</td>
-											<td class="text-right">
+											<td class="text-right text-end">
 												{{ number_format($val) }}
 											</td>
 										</tr>
@@ -278,7 +278,7 @@ app('pathway')
 										<thead>
 											<tr>
 												<th scope="col">Name</th>
-												<th scope="col" class="text-right">Reservations</th>
+												<th scope="col" class="text-right text-end">Reservations</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -290,7 +290,7 @@ app('pathway')
 												<td>
 													<a href="{{ route('admin.users.show', ['id' => $userid]) }}">{{ $user ? $user->name . ' (' . $user->username . ')' : $userid }}</a>
 												</td>
-												<td class="text-right">
+												<td class="text-right text-end">
 													{{ number_format($val) }}
 												</td>
 											</tr>
@@ -332,7 +332,7 @@ app('pathway')
 										<thead>
 											<tr>
 												<th scope="col">Topic</th>
-												<th scope="col" class="text-right">Occurrences</th>
+												<th scope="col" class="text-right text-end">Occurrences</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -342,7 +342,7 @@ app('pathway')
 											@foreach ($stats['tags'] as $i => $tag)
 												<tr>
 													<td><span class="badge badge-secondary">{{ $tag->tag->name }}</span></td>
-													<td class="text-right">{{ $tag->total }}</td>
+													<td class="text-right text-end">{{ $tag->total }}</td>
 												</tr>
 											@endforeach
 											@if ($i < 9)
@@ -352,7 +352,7 @@ app('pathway')
 												@for ($i; $i < 10; $i++)
 													<tr>
 														<th scope="row"><span class="text-muted">-</span></th>
-														<td class="text-right"></td>
+														<td class="text-right text-end"></td>
 													</tr>
 												@endfor
 											@endif

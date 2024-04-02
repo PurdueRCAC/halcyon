@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				<legend>{{ trans('global.details') }}</legend>
 
 				<div class="form-group">
-					<label for="field-parentid">{{ trans('news::news.parent') }}:</label>
+					<label class="form-label" for="field-parentid">{{ trans('news::news.parent') }}:</label>
 					<select name="fields[parentid]" id="field-parentid" class="form-control">
 						<option value="0">{{ trans('global.none') }}</option>
 						@foreach ($parents as $parent)
@@ -85,13 +85,13 @@ document.addEventListener('DOMContentLoaded', function () {
 				</div>
 
 				<div class="form-group">
-					<label for="field-name">{{ trans('news::news.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label class="form-label" for="field-name">{{ trans('news::news.name') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[name]" id="field-name" class="form-control required" required maxlength="32" value="{{ $row->name }}" />
 					<span class="invalid-feedback">{{ trans('news::news.error.invalid name') }}</span>
 				</div>
 
 				<div class="form-group">
-					<label for="field-alias">{{ trans('news::news.alias') }}:</label>
+					<label class="form-label" for="field-alias">{{ trans('news::news.alias') }}:</label>
 					<div class="input-group mb-2 mr-sm-2">
 						<div class="input-group-prepend">
 							<div class="input-group-text">{{ route('site.news.index') }}/</div>
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				<div class="row">
 					<div class="col col-md-6">
 						<div class="form-group">
-							<label for="field-state">{{ trans('news::news.default state') }}:</label>
+							<label class="form-label" for="field-state">{{ trans('news::news.default state') }}:</label>
 							<select name="fields[state]" id="field-state" class="form-control">
 								<option value="all"<?php if ($row->state == 'all') { echo ' selected="selected"'; } ?>>{{ trans('news::news.all') }}</option>
 								<option value="upcoming"<?php if ($row->state == 'upcoming') { echo ' selected="selected"'; } ?>>{{ trans('news::news.upcoming') }}</option>
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					</div>
 					<div class="col col-md-6">
 						<div class="form-group">
-							<label for="field-order_dir">{{ trans('news::news.default order dir') }}:</label>
+							<label class="form-label" for="field-order_dir">{{ trans('news::news.default order dir') }}:</label>
 							<select name="fields[order_dir]" id="field-order_dir" class="form-control">
 								<option value="asc"<?php if ($row->order == 'asc') { echo ' selected="selected"'; } ?>>{{ trans('news::news.sort asc') }}</option>
 								<option value="desc"<?php if ($row->order == 'desc') { echo ' selected="selected"'; } ?>>{{ trans('news::news.sort desc') }}</option>
@@ -131,20 +131,20 @@ document.addEventListener('DOMContentLoaded', function () {
 				<div class="row">
 					<div class="col col-md-6">
 						<div class="form-block">
-							<div class="form-group form-check">
+							<div class="form-check">
 								<input type="checkbox" name="fields[location]" id="field-location" class="form-check-input" value="1" <?php if ($row->location): ?>checked="checked"<?php endif; ?> />
 								<label for="field-location" class="form-check-label">{{ trans('news::news.location') }}</label>
-								<span class="form-text">Allow for specifying a location on articles in this category?</span>
 							</div>
+							<div class="form-text">Allow for specifying a location on articles in this category?</div>
 						</div>
 					</div>
 					<div class="col col-md-6">
 						<div class="form-block">
-							<div class="form-group form-check">
+							<div class="form-check">
 								<input type="checkbox" name="fields[future]" id="field-future" class="form-check-input" value="1" <?php if ($row->future): ?>checked="checked"<?php endif; ?> />
 								<label for="field-future" class="form-check-label">{{ trans('news::news.future') }}</label>
-								<span class="form-text">Display future events in listings?</span>
 							</div>
+							<div class="form-text">Display future events in listings?</div>
 						</div>
 					</div>
 				</div>
@@ -152,20 +152,20 @@ document.addEventListener('DOMContentLoaded', function () {
 				<div class="row">
 					<div class="col col-md-6">
 						<div class="form-block">
-						<div class="form-group form-check">
-							<input type="checkbox" name="fields[ongoing]" id="field-ongoing" class="form-check-input" value="1" <?php if ($row->ongoing): ?>checked="checked"<?php endif; ?> />
-							<label for="field-ongoing" class="form-check-label">{{ trans('news::news.ongoing') }}</label>
-							<span class="form-text">Articles do not have to specify an end time.</span>
-						</div>
+							<div class="form-check">
+								<input type="checkbox" name="fields[ongoing]" id="field-ongoing" class="form-check-input" value="1" <?php if ($row->ongoing): ?>checked="checked"<?php endif; ?> />
+								<label for="field-ongoing" class="form-check-label">{{ trans('news::news.ongoing') }}</label>
+							</div>
+							<div class="form-text">Articles do not have to specify an end time.</div>
 						</div>
 					</div>
 					<div class="col col-md-6">
 						<div class="form-block">
-						<div class="form-group form-check">
-							<input type="checkbox" name="fields[url]" id="field-url" class="form-check-input" value="1" <?php if ($row->url): ?>checked="checked"<?php endif; ?> />
-							<label for="field-url" class="form-check-label">{{ trans('news::news.url') }}</label>
-							<span class="form-text">Allow for specifying a URL on articles in this category?</span>
-						</div>
+							<div class="form-check">
+								<input type="checkbox" name="fields[url]" id="field-url" class="form-check-input" value="1" <?php if ($row->url): ?>checked="checked"<?php endif; ?> />
+								<label for="field-url" class="form-check-label">{{ trans('news::news.url') }}</label>
+							</div>
+							<div class="form-text">Allow for specifying a URL on articles in this category?</div>
 						</div>
 					</div>
 				</div>
@@ -173,20 +173,20 @@ document.addEventListener('DOMContentLoaded', function () {
 				<div class="row">
 					<div class="col col-md-6">
 						<div class="form-block">
-						<div class="form-group form-check">
-							<input type="checkbox" name="fields[tagresources]" id="field-tagresources" class="form-check-input" value="1" <?php if ($row->tagresources): ?>checked="checked"<?php endif; ?> />
-							<label for="field-tagresources" class="form-check-label">{{ trans('news::news.tag resources') }}</label>
-							<span class="form-text">Allow for tagging resources on articles in this category?</span>
-						</div>
+							<div class="form-check">
+								<input type="checkbox" name="fields[tagresources]" id="field-tagresources" class="form-check-input" value="1" <?php if ($row->tagresources): ?>checked="checked"<?php endif; ?> />
+								<label for="field-tagresources" class="form-check-label">{{ trans('news::news.tag resources') }}</label>
+							</div>
+							<div class="form-text">Allow for tagging resources on articles in this category?</div>
 						</div>
 					</div>
 					<div class="col col-md-6">
 						<div class="form-block">
-						<div class="form-group form-check">
-							<input type="checkbox" name="fields[tagusers]" id="field-tagusers" class="form-check-input" value="1" <?php if ($row->tagusers): ?>checked="checked"<?php endif; ?> />
-							<label for="field-tagusers" class="form-check-label">{{ trans('news::news.tag users') }}</label>
-							<span class="form-text">Allow for tagging users on articles in this category?</span>
-						</div>
+							<div class="form-check">
+								<input type="checkbox" name="fields[tagusers]" id="field-tagusers" class="form-check-input" value="1" <?php if ($row->tagusers): ?>checked="checked"<?php endif; ?> />
+								<label for="field-tagusers" class="form-check-label">{{ trans('news::news.tag users') }}</label>
+							</div>
+							<div class="form-text">Allow for tagging users on articles in this category?</div>
 						</div>
 					</div>
 				</div>

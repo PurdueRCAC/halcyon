@@ -120,39 +120,41 @@ app('pathway')
 	messages
 @endcomponent
 
-<form action="{{ route('admin.messages.index') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.messages.index') }}" method="get" name="adminForm" id="adminForm">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col-md-5 filter-select">
+			<div class="col-md-3 filter-select">
 				<div class="input-group">
-					<label class="sr-only visually-hidden" for="filter_start">{{ trans('messages::messages.start') }}</label>
+					<label class="form-label sr-only visually-hidden" for="filter_start">{{ trans('messages::messages.start') }}</label>
 					<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" placeholder="{{ trans('messages::messages.start placeholder') }}" />
 					<span class="input-group-prepend input-group-append">
 						<span class="input-group-text">&rarr;</span>
 					</span>
-					<label class="sr-only visually-hidden" for="filter_stop">{{ trans('messages::messages.stop') }}</label>
+					<label class="form-label sr-only visually-hidden" for="filter_stop">{{ trans('messages::messages.stop') }}</label>
 					<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="{{ trans('messages::messages.stop placeholder') }}" />
 				</div>
 			</div>
-			<div class="col-md-7 text-right">
-				<label class="sr-only visually-hidden" for="filter_state">{{ trans('messages::messages.state') }}</label>
+			<div class="col-md-3">
+				<label class="form-label sr-only visually-hidden" for="filter_state">{{ trans('messages::messages.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.all states') }}</option>
 					<option value="pending"<?php if ($filters['state'] == 'pending'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.pending') }}</option>
 					<option value="incomplete"<?php if ($filters['state'] == 'incomplete'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.incomplete') }}</option>
 					<option value="complete"<?php if ($filters['state'] == 'complete'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.complete') }}</option>
 				</select>
-
-				<label class="sr-only visually-hidden" for="filter_type">{{ trans('messages::messages.type') }}</label>
+			</div>
+			<div class="col-md-3">
+				<label class="form-label sr-only visually-hidden" for="filter_type">{{ trans('messages::messages.type') }}</label>
 				<select name="type" id="filter_type" class="form-control filter filter-submit">
 					<option value=""<?php if ($filters['type'] == ''): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.all types') }}</option>
 					@foreach ($types as $type)
 						<option value="{{ $type->id }}"<?php if ($filters['type'] == $type->id): echo ' selected="selected"'; endif;?>>{{ $type->name }}</option>
 					@endforeach
 				</select>
-
-				<label class="sr-only visually-hidden" for="filter_status">{{ trans('messages::messages.status') }}</label>
+			</div>
+			<div class="col-md-3">
+				<label class="form-label sr-only visually-hidden" for="filter_status">{{ trans('messages::messages.status') }}</label>
 				<select name="status" id="filter_status" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.all statuses') }}</option>
 					<option value="success"<?php if ($filters['status'] == 'success'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.success') }}</option>
@@ -177,7 +179,7 @@ app('pathway')
 								{!! Html::grid('checkall') !!}
 							</th>
 						@endif
-						<th scope="col" class="priority-5">
+						<th scope="col">
 							{!! Html::grid('sort', trans('messages::messages.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 						</th>
 						<th scope="col">
@@ -186,13 +188,13 @@ app('pathway')
 						<th scope="col">
 							{!! Html::grid('sort', trans('messages::messages.target object id'), 'targetobjectid', $filters['order_dir'], $filters['order']) !!}
 						</th>
-						<th scope="col" class="priority-4">
+						<th scope="col">
 							{!! Html::grid('sort', trans('messages::messages.submitted'), 'datetimesubmitted', $filters['order_dir'], $filters['order']) !!}
 						</th>
-						<th scope="col" class="priority-4">
+						<th scope="col">
 							{{ trans('messages::messages.processed') }}
 						</th>
-						<th scope="col" class="priority-4 text-right">
+						<th scope="col" class="text-right text-end">
 							{!! Html::grid('sort', trans('messages::messages.return status'), 'returnstatus', $filters['order_dir'], $filters['order']) !!}
 						</th>
 					</tr>
@@ -211,7 +213,7 @@ app('pathway')
 								{!! Html::grid('id', $i, $row->id) !!}
 							</td>
 						@endif
-						<td class="priority-5">
+						<td>
 							@if (auth()->user()->can('edit messages'))
 								<a href="{{ route('admin.messages.edit', ['id' => $row->id]) }}">
 									{{ $row->id }}
@@ -220,7 +222,7 @@ app('pathway')
 								{{ $row->id }}
 							@endif
 						</td>
-						<td class="priority-4">
+						<td>
 							@if ($row->type)
 								@if (auth()->user()->can('edit messages'))
 									<a href="{{ route('admin.messages.edit', ['id' => $row->id]) }}">
@@ -233,7 +235,7 @@ app('pathway')
 								<span class="unknown">{{ trans('global.unknown') }}</span>
 							@endif
 						</td>
-						<td class="priority-4">
+						<td>
 							@if ($target = $row->target)
 								<span data-id="{{ $row->targetobjectid }}">{{ $target }}</span>
 							@else
@@ -293,7 +295,7 @@ app('pathway')
 								</span>
 							@endif
 						</td>
-						<td class="priority-4 text-right">
+						<td class="text-right text-end">
 							@if ($row->completed())
 								@if ($row->returnstatus)
 									<span class="text-danger fa fa-exclamation-circle" aria-hidden="true"></span>

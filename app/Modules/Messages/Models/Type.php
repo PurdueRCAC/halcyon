@@ -21,6 +21,8 @@ use App\Modules\Messages\Events\TypeDeleted;
  * @property int    $name
  * @property int    $resourceid
  * @property string $classname
+ *
+ * @property string $api
  */
 class Type extends Model
 {

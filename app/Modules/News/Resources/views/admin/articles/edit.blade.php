@@ -71,7 +71,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group template-hide{{ $row->template ? ' hide' : '' }}">
-					<label for="template_select">Template</label>
+					<label class="form-label" for="template_select">Template</label>
 					<select id="template_select" name="template_select" class="form-control">
 						<option value="0">(No Template)</option>
 						@foreach ($templates as $template)
@@ -81,7 +81,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-newstypeid">{{ trans('news::news.type') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label class="form-label" for="field-newstypeid">{{ trans('news::news.type') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<select name="fields[newstypeid]" id="field-newstypeid" class="form-control required" required>
 						<?php foreach ($types as $type): ?>
 							<option value="{{ $type->id }}"<?php if ($row->newstypeid == $type->id): echo ' selected="selected"'; endif;?>
@@ -106,18 +106,18 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-headline">{{ trans('news::news.headline') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label class="form-label" for="field-headline">{{ trans('news::news.headline') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[headline]" id="field-headline" class="form-control required" required value="{{ $row->headline }}" />
 					<span class="invalid-feedback">{{ trans('news::news.error.invalid headline') }}</span>
 				</div>
 
 				<div class="form-group type-option type-location <?php if (!$row->type->location) { echo ' d-none'; } ?>">
-					<label for="field-location">{{ trans('news::news.location') }}:</label>
+					<label class="form-label" for="field-location">{{ trans('news::news.location') }}:</label>
 					<input type="text" name="fields[location]" id="field-location" class="form-control" value="{{ $row->location }}" />
 				</div>
 
 				<div class="form-group type-option type-url <?php if (!$row->type->url) { echo ' d-none'; } ?>">
-					<label for="field-url">{{ trans('news::news.url') }}:</label>
+					<label class="form-label" for="field-url">{{ trans('news::news.url') }}:</label>
 					<input type="text" name="fields[url]" id="field-url" class="form-control" value="{{ $row->url }}" />
 				</div>
 
@@ -130,7 +130,7 @@ app('pathway')
 						$r[] = $resource->resource->name . ':' . $resource->id;
 					}*/
 					?>
-					<label for="field-resources">{{ trans('news::news.tag resources') }}:</label>
+					<label class="form-label" for="field-resources">{{ trans('news::news.tag resources') }}:</label>
 					<!-- <input type="text" name="resources" id="field-resources" class="form-control form-resources" data-uri="{{ url('/') }}/api/resources/?api_token={{ auth()->user()->api_token }}&search=%s" value="{{ implode(', ', $r) }}" /> -->
 					<select class="form-control basic-multiple" name="resources[]" id="field-resources" multiple="multiple" data-placeholder="Select resource...">
 						<?php
@@ -160,12 +160,12 @@ app('pathway')
 						$r[] = ($u ? $u->name : trans('global.unknown')) . ':' . $assoc->associd;
 					endforeach;
 					?>
-					<label for="field-users">{{ trans('news::news.tag users') }}:</label>
+					<label class="form-label" for="field-users">{{ trans('news::news.tag users') }}:</label>
 					<input type="text" name="associations" id="field-users" class="form-control form-users" data-api="{{ route('api.users.index') }}" value="{{ implode(', ', $r) }}" />
 				</div>
 
 				<div class="form-group">
-					<label for="field-body">{{ trans('news::news.body') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label class="form-label" for="field-body">{{ trans('news::news.body') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<span class="form-text text-muted">{!! trans('news::news.body formatting') !!} <button class="btn btn-link preview float-right" data-target="#preview-modal" data-toggle="modal" data-id="{{ $row->id }}" data-api="{{ route('api.news.preview') }}">Preview</button></span>
 					{!! markdown_editor('fields[body]', $row->body, ['id' => 'field-body', 'rows' => 35, 'class' => ($errors->has('fields.body') ? 'is-invalid' : 'required'), 'required' => 'required']) !!}
 					<span class="invalid-feedback">{{ trans('news::news.error.invalid body') }}</span>
@@ -177,7 +177,7 @@ app('pathway')
 				<legend>{{ trans('global.publishing') }}</legend>
 
 				<div class="form-group">
-					<label for="field-published">{{ trans('pages::pages.state') }}:</label>
+					<label class="form-label" for="field-published">{{ trans('pages::pages.state') }}:</label>
 					<select name="fields[published]" id="field-published" class="form-control">
 						<option value="0"<?php if ($row->published == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
 						<option value="1"<?php if ($row->published == 1) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
@@ -185,7 +185,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group template-hide{{ $row->template ? ' hide' : '' }}">
-					<label for="field-datetimenews">{{ trans('news::news.publish up') }}:</label>
+					<label class="form-label" for="field-datetimenews">{{ trans('news::news.publish up') }}:</label>
 					<span class="input-group input-datetime">
 						<input type="text" class="form-control datetime" name="fields[datetimenews]" id="field-datetimenews" value="{{ $row->hasStart() ? $row->datetimenews->toDateTimeString() : '' }}" placeholder="{{ trans('news::news.now') }}" />
 						<span class="input-group-append"><span class="input-group-text fa fa-calendar"></span></span>
@@ -193,7 +193,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group template-hide{{ $row->template ? ' hide' : '' }}">
-					<label for="field-datetimenewsend">{{ trans('news::news.publish down') }}:</label>
+					<label class="form-label" for="field-datetimenewsend">{{ trans('news::news.publish down') }}:</label>
 					<span class="input-group input-datetime">
 						<input type="text" class="form-control datetime" name="fields[datetimenewsend]" id="field-datetimenewsend" value="{{ $row->hasEnd() ? $row->datetimenewsend->toDateTimeString() : '' }}" placeholder="{{ trans('news::news.never') }}" />
 						<span class="input-group-append"><span class="input-group-text fa fa-calendar"></span></span>
@@ -304,7 +304,7 @@ app('pathway')
 			<div class="modal-content shadow-sm">
 				<div class="modal-header">
 					<div class="modal-title" id="preview-title">News Preview</div>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
@@ -322,7 +322,7 @@ app('pathway')
 			<div class="modal-content shadow-sm">
 				<div class="modal-header">
 					<div class="modal-title" id="mailpreview-title">Mail Preview</div>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>

@@ -70,7 +70,7 @@ else
 	<fieldset id="filter-bar" class="container-fluid mb-3">
 		<div class="row">
 			<div class="col-md-3 mb-2 filter-search">
-				<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
+				<label class="form-label sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 				<span class="input-group">
 					<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 					<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
@@ -79,7 +79,7 @@ else
 			<div class="col-md-3">
 			</div>
 			<div class="col-md-3 mb-2">
-				<label class="sr-only visually-hidden" for="filter_state">{{ trans('news::news.state') }}</label>
+				<label class="form-label sr-only visually-hidden" for="filter_state">{{ trans('news::news.state') }}</label>
 				<select name="state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('news::news.state_all') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('news::news.published') }}</option>
@@ -88,7 +88,7 @@ else
 				</select>
 			</div>
 			<div class="col-md-3 mb-2">
-				<label class="sr-only visually-hidden" for="filter-type">{{ trans('news::news.type') }}</label>
+				<label class="form-label sr-only visually-hidden" for="filter-type">{{ trans('news::news.type') }}</label>
 				<select name="type" id="filter-type" class="form-control filter filter-submit">
 					<option value="0">{{ trans('news::news.select type') }}</option>
 					<?php foreach ($types as $type): ?>
@@ -121,24 +121,24 @@ else
 									{!! Html::grid('checkall') !!}
 								</th>
 							@endif
-							<th scope="col" class="priority-5">
+							<th scope="col">
 								{!! Html::grid('sort', trans('news::news.id'), 'id', $filters['order_dir'], $filters['order']) !!}
 							</th>
 							<th scope="col">
 								{!! Html::grid('sort', trans('news::news.headline'), 'headline', $filters['order_dir'], $filters['order']) !!}
 							</th>
-							<th scope="col" class="priority-2">
+							<th scope="col">
 								{!! Html::grid('sort', trans('news::news.state'), 'state', $filters['order_dir'], $filters['order']) !!}
 							</th>
-							<th scope="col" class="priority-5">
+							<th scope="col">
 								{!! Html::grid('sort', trans('news::news.type'), 'newstypeid', $filters['order_dir'], $filters['order']) !!}
 							</th>
 							@if (!$template)
-								<th scope="col" colspan="3" class="text-center priority-4">
+								<th scope="col" colspan="3" class="text-center">
 									{!! Html::grid('sort', trans('news::news.publish window'), 'datetimenews', $filters['order_dir'], $filters['order']) !!}
 								</th>
-								<th scope="col" class="priority-6 text-right">{{ trans('news::news.updates') }}</th>
-								<th scope="col" class="priority-6 text-right">{{ trans('news::news.email') }}</th>
+								<th scope="col" class="text-right text-end">{{ trans('news::news.updates') }}</th>
+								<th scope="col" class="text-right text-end">{{ trans('news::news.email') }}</th>
 							@endif
 						</tr>
 					</thead>
@@ -150,7 +150,7 @@ else
 									{!! Html::grid('id', $i, $row->id) !!}
 								</td>
 							@endif
-							<td class="priority-5">
+							<td>
 								{{ $row->id }}
 							</td>
 							<td>
@@ -184,7 +184,7 @@ else
 									</div>
 								@endif
 							</td>
-							<td class="priority-2">
+							<td>
 								@if (auth()->user()->can('edit.state news'))
 									@if ($row->trashed())
 										<a class="badge badge-danger" href="{{ route('admin.news.restore', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.click to restore') }}">
@@ -215,11 +215,11 @@ else
 									@endif
 								@endif
 							</td>
-							<td class="priority-5">
+							<td>
 								{{ $row->type->name }}
 							</td>
 							@if (!$template)
-								<td class="priority-4 text-right text-nowrap">
+								<td class="text-right text-end text-nowrap">
 									@if ($row->hasStart())
 										<time datetime="{{ $row->datetimenews->toDateTimeLocalString() }}">
 											{{ $row->datetimenews->format('M j, Y g:ia T') }}
@@ -233,7 +233,7 @@ else
 										&rarr;
 									@endif
 								</td>
-								<td class="priority-4 text-nowrap">
+								<td class="text-nowrap">
 									@if ($row->hasStart())
 										@if ($row->hasEnd())
 											<time datetime="{{ $row->datetimenewsend->toDateTimeLocalString() }}">
@@ -246,12 +246,12 @@ else
 										<span class="none">{{ trans('global.none') }}</span>
 									@endif
 								</td>
-								<td class="priority-6 text-right">
+								<td class="text-right text-end">
 									<a href="{{ route('admin.news.updates', ['article' => $row->id]) }}">
 										{{ number_format($row->updates_count) }}
 									</a>
 								</td>
-								<td class="priority-6 text-right">
+								<td class="text-right text-end">
 									<button class="btn news-mail" data-success="Email sent!" data-toggle="modal" data-bs-toggle="modal" data-target="#mailpreview-modal" data-bs-target="#mailpreview-modal" data-article="{{ route('api.news.read', ['id' => $row->id]) }}" data-api="{{ route('api.news.email', ['id' => $row->id]) }}" data-tip="{{ trans('news::news.send email') }}">
 										<span class="fa fa-envelope" ari-ahidden="true"></span><span class="sr-only visually-hidden">Email</span>
 									</button>
@@ -364,7 +364,7 @@ else
 						<?php /*<div class="row">
 							<div class="col-md-6">*/ ?>
 						<div class="form-group">
-							<label for="copy-start">{{ trans('news::news.copy to') }}:</label>
+							<label class="form-label" for="copy-start">{{ trans('news::news.copy to') }}:</label>
 							<span class="input-group input-datetime">
 								<input type="text" class="form-control date" name="start" id="copy-start" value="{{ Carbon\Carbon::now()->modify('+1 day')->format('Y-m-d') }}" />
 								<span class="input-group-append"><span class="input-group-text fa fa-calendar"></span></span>
@@ -372,14 +372,14 @@ else
 						</div>
 
 						<?php /*<div class="form-group">
-							<label for="copy-days">{{ trans('news::news.days to copy') }}:</label>
+							<label class="form-label" for="copy-days">{{ trans('news::news.days to copy') }}:</label>
 							<input type="number" class="form-control" name="days" id="copy-days" value="1" />
 						</div>
 
 							</div>
 							<div class="col-md-6">å
 								<div class="form-group">
-									<label for="copy-days">{{ trans('news::news.times to copy') }}:</label>
+									<label class="form-label" for="copy-days">{{ trans('news::news.times to copy') }}:</label>
 									<select class="form-control datetime" name="times" id="copy-times" multiple size="7">
 										<?php
 										$now   = Carbon\Carbon::now();
