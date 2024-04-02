@@ -20,7 +20,7 @@
 		<div class="card mb-4">
 			<div class="table-responsive">
 				<table class="table table-hover adminlist">
-					<caption class="sr-only">{{ trans('core::modules.module manager') }}</caption>
+					<caption class="sr-only visually-hidden">{{ trans('core::modules.module manager') }}</caption>
 					<thead>
 						<tr>
 							<th scope="col">

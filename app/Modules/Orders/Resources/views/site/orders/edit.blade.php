@@ -422,7 +422,7 @@ $user = null;
 	orders
 @endcomponent
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-	<h2 class="sr-only">{{ trans('orders::orders.orders') }}: #{{ $order->id }}</h2>
+	<h2 class="sr-only visually-hidden">{{ trans('orders::orders.orders') }}: #{{ $order->id }}</h2>
 
 	<div class="row">
 		<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
@@ -624,7 +624,7 @@ $user = null;
 								<?php else: ?>
 									<button class="btn btn-sm tip" id="printorder" title="Print Order">
 										<span class="fa fa-print" aria-hidden="true"></span>
-										<span class="sr-only">Print Order</span>
+										<span class="sr-only visually-hidden">Print Order</span>
 									</button>
 									@if ($order->status == 'canceled' && auth()->user()->can('manage orders'))
 										<button class="btn btn-sm btn-secondary" id="restoreorder">
@@ -678,7 +678,7 @@ $user = null;
 											</span>
 
 											<a href="#edit_user" id="order_user_save" class="order-edit" title="{{ trans('global.button.edit') }}" data-txt-save="Save Change">
-												<span id="user_save" class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
+												<span id="user_save" class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.edit') }}</span>
 											</a>
 										</p>
 										@if ($order->user)
@@ -734,7 +734,7 @@ $user = null;
 											<input type="text" name="search_group" id="search_group" class="form-control form-groups hide" data-groupid="{{ $order->groupid }}" value="{{ $order->groupid && $order->group ? $order->group->name : '' }}" data-uri="{{ route('api.groups.index') }}?api_token={{ auth()->user()->api_token }}&search=%s" placeholder="{{ trans('global.none') }}" />
 
 											<a href="#edit_group" id="order_group_save" class="order-edit" title="{{ trans('global.button.edit') }}" data-txt-save="Save Change">
-												<span id="group_save" class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
+												<span id="group_save" class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.edit') }}</span>
 											</a>
 										</p>
 									@else
@@ -769,7 +769,7 @@ $user = null;
 									($order->status == 'pending_approval' || $order->status == 'pending_fulfillment') && auth()->user()->can('manage orders'))
 									|| ($order->status == 'pending_approval' && !$myorder)) && (auth()->user()->can('manage orders') || $myorder)): ?>
 									<a href="#help4" data-toggle="modal" class="text-info tip" title="Help"><!--
-										--><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span><!--
+										--><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span><!--
 									--></a>
 
 									<button id="save_quantities" class="btn btn-sm btn-secondary" data-state="inactive" data-inactive="Edit Items" data-active="Save Changes" data-confirm="Removing the last item will *cancel* your order. Do you wish to continue?">Edit Items</button>
@@ -796,7 +796,7 @@ $user = null;
 					</div>
 					<div class="card-body">
 						<table class="table">
-							<caption class="sr-only">{{ trans('orders::orders.items') }}</caption>
+							<caption class="sr-only visually-hidden">{{ trans('orders::orders.items') }}</caption>
 							<thead>
 								<tr>
 									<th scope="col">{{ trans('orders::orders.status') }}</th>
@@ -841,7 +841,7 @@ $user = null;
 												@if (auth()->user()->can('manage orders'))
 													<span class="input-group">
 														<input type="text" name="datetimefulfilled" value="{{ $item->datetimefulfilled }}" id="button_{{ $item->id }}_save" class="datetime form-control" />
-														<span class="input-group-append"><button type="submit" class="input-group-text item-update" data-id="{{ $item->id }}" data-api="{{ route('api.orders.items.update', ['id' => $item->id]) }}"><span class="fa fa-save" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.save') }}</span></button></span>
+														<span class="input-group-append"><button type="submit" class="input-group-text item-update" data-id="{{ $item->id }}" data-api="{{ route('api.orders.items.update', ['id' => $item->id]) }}"><span class="fa fa-save" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.save') }}</span></button></span>
 													</span>
 													<div class="form-group mt-3 item-edit-hide" id="button_{{ $item->id }}">
 														<button name="adbutton" id="button_{{ $item->id }}_reset" class="btn btn-sm btn-warning item-reset" data-id="{{ $item->id }}" data-api="{{ route('api.orders.items.update', ['id' => $item->id]) }}" data-confirm="Are you sure you want to reset fullfilled status for this item?">Reset</button>
@@ -910,7 +910,7 @@ $user = null;
 											<span class="item-edit-hide">{{ config('orders.currency', '$') }} <span name="itemtotal">{{ $item->formattedTotal }}</span></span>
 											@if ($item->origorderitemid)
 												<a href="{{ route('site.orders.recurring.read', ['id' => $item->origorderitemid]) }}" class="text-success tip" title="This is a recurring item.">
-													<span class="fa fa-undo" aria-hidden="true"></span><span class="sr-only">This is a recurring item.</span>
+													<span class="fa fa-undo" aria-hidden="true"></span><span class="sr-only visually-hidden">This is a recurring item.</span>
 												</a>
 											@endif
 											@if (auth()->user()->can('manage orders'))
@@ -926,7 +926,7 @@ $user = null;
 													class="btn btn-dangerd text-danger item-remove tip"
 													data-api="{{ route('api.orders.items.delete', ['id' => $item->id]) }}"
 													data-confirm="{{ trans('orders::orders.confirm.item removal') }}">
-													<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">Remove product</span>
+													<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">Remove product</span>
 												</a>
 											</td>
 										@endif
@@ -970,7 +970,7 @@ $user = null;
 												class="btn btn-link text-danger item-remove tip"
 												data-api=""
 												data-confirm="{{ trans('orders::orders.confirm.account removal') }}">
-												<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">Remove product</span>
+												<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">Remove product</span>
 											</a>
 										</td>
 									</tr>
@@ -991,7 +991,7 @@ $user = null;
 												data-api="{{ route('api.orders.items.create') }}"
 												class="btn btn-successd text-success item-add tip"
 												title="Add product">
-												<span class="fa fa-plus-circle" aria-hidden="true"></span><span class="sr-only">Add</span>
+												<span class="fa fa-plus-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Add</span>
 											</a>
 										</td>
 									@endif
@@ -1030,7 +1030,7 @@ $user = null;
 					</div>
 					<div class="card-body">
 						<table class="table">
-							<caption class="sr-only">{{ trans('orders::orders.payment information') }}</caption>
+							<caption class="sr-only visually-hidden">{{ trans('orders::orders.payment information') }}</caption>
 							<thead>
 								<tr>
 									<th scope="col"{!! count($order->accounts) == 0 ? ' class="hide"' : '' !!}>{{ trans('orders::orders.status') }}</th>
@@ -1039,7 +1039,7 @@ $user = null;
 									<th scope="col" class="text-right text-nowrap">
 										@if (count($order->accounts) == 0 && $canEdit)
 											<button title="Divide total evenly." class="balance-divide btn btn-link tip">
-												<span class="fa fa-arrow-down" aria-hidde="true"></span><span class="sr-only">Divide total evenly.</span>
+												<span class="fa fa-arrow-down" aria-hidde="true"></span><span class="sr-only visually-hidden">Divide total evenly.</span>
 											</button>
 										@endif
 										{{ trans('orders::orders.amount') }}
@@ -1175,15 +1175,15 @@ $user = null;
 												<span class="account-edit-hide">Order: <span class="account_span">{{ $account->purchaseorder }}</span></span>
 											@endif
 											<br />
-											<label class="sr-only" for="justification{{ $account->id }}">Budget justification:</label>
+											<label class="sr-only visually-hidden" for="justification{{ $account->id }}">Budget justification:</label>
 											<span class="account-edit-hide form-text text-muted justification_span">{{ $account->budgetjustification ? $account->budgetjustification : '' }}</span>
 											<textarea name="justification" id="justification{{ $account->id }}" rows="3" maxlength="2000" cols="68" class="account-edit-show hide form-control balance-update">{{ $account->budgetjustification }}</textarea>
 											@if ($order->status == 'pending_collection' && auth()->user()->can('manage orders') && !$account->paymentdocid)
 												<div class="form-inline mt-3 account-edit-hide" id="button_{{ $account->id }}">
-													<label for="docid_{{ $account->id }}" class="sr-only">Doc ID</label>
+													<label for="docid_{{ $account->id }}" class="sr-only visually-hidden">Doc ID</label>
 													<input type="text" class="doc copy-doc form-control" name="docid" id="docid_{{ $account->id }}" value="{{ $account->paymentdocid }}" placeholder="Doc ID" size="15" maxlength="12" />
 
-													<label for="docdate_{{ $account->id }}" class="sr-only">Doc Date</label>
+													<label for="docdate_{{ $account->id }}" class="sr-only visually-hidden">Doc Date</label>
 													<input type="text" class="doc copy-docdate form-control date-pick" name="docdate" id="docdate_{{ $account->id }}" placeholder="Doc Date (YYYY-MM-DD)" value="{{ $account->isCollected() ? $account->datetimepaymentdoc->format('Y-m-d') : Carbon\Carbon::now()->format('Y-m-d') }}" size="10" />
 
 													<button class="btn btn-secondary account-collect" data-txt="Paid" data-id="{{ $account->id }}" data-api="{{ route('api.orders.accounts.update', ['id' => $account->id]) }}">{{ trans('orders::orders.collect') }}</button>
@@ -1219,7 +1219,7 @@ $user = null;
 										</td>
 										<td class="text-right text-nowrap">
 											<a href="#help2" class="help tip" title="Help">
-												<span class="amount_error stash"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span><span class="sr-only">Required field is missing or invalid format</span></span>
+												<span class="amount_error stash"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span><span class="sr-only visually-hidden">Required field is missing or invalid format</span></span>
 											</a>
 											<span class="account-edit-hide">{{ config('orders.currency', '$') }} <span class="account_amount_span">{{ $account->formattedAmount }}</span></span>
 											<input type="text" class="account-edit-show hide form-control balance-update" size="8" name="account_amount" value="{{ $account->formattedAmount }}" />
@@ -1231,7 +1231,7 @@ $user = null;
 													class="btn btn-link text-danger account-remove tip"
 													data-api="{{ route('api.orders.accounts.delete', ['id' => $account->id]) }}"
 													data-confirm="{{ trans('orders::orders.confirm.account removal') }}">
-													<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">Remove account</span>
+													<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">Remove account</span>
 												</a>
 											</td>
 										@endif
@@ -1278,7 +1278,7 @@ $user = null;
 											<td>
 												<input type="text" maxlength="17" class="form-control num8 balance-update" name="account" data-api="{{ route('api.orders.accounts.create') }}" placeholder="Account" value="" />
 												<br />
-												<label class="sr-only" for="justification0">Budget justification</label>
+												<label class="sr-only visually-hidden" for="justification0">Budget justification</label>
 												<textarea name="justification" id="justification0" rows="3" cols="35" maxlength="2000" placeholder="Budget justification (optional)" class="form-control balance-update"></textarea>
 											</td>
 											<td>
@@ -1302,7 +1302,7 @@ $user = null;
 										<td>
 											<input type="text" maxlength="17" class="form-control num8 balance-update" name="account" data-api="{{ route('api.orders.accounts.create') }}" placeholder="Account" value="" />
 											<br />
-											<label class="sr-only" for="new_justification">Budget justification</label>
+											<label class="sr-only visually-hidden" for="new_justification">Budget justification</label>
 											<textarea name="justification" id="new_justification" rows="3" cols="35" maxlength="2000" placeholder="Budget justification" class="form-control balance-update"></textarea>
 										</td>
 										<td>
@@ -1318,7 +1318,7 @@ $user = null;
 												class="btn btn-link text-danger account-remove tip"
 												data-api=""
 												data-confirm="{{ trans('orders::orders.confirm.account removal') }}">
-												<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">Remove account</span>
+												<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">Remove account</span>
 											</a>
 										</td>
 									</tr>
@@ -1328,7 +1328,7 @@ $user = null;
 								<tr>
 									<td class="text-right" colspan="{{ count($order->accounts) == 0 ? 2 : 3 }}">
 										<a href="#help2" data-toggle="modal" class="text-warning"><!--
-											--><span id="balance_error" aria-hidden="true" class="fa fa-exclamation-triangle stash"></span><span class="sr-only">Balance should be $0.00 before saving changes.</span><!--
+											--><span id="balance_error" aria-hidden="true" class="fa fa-exclamation-triangle stash"></span><span class="sr-only visually-hidden">Balance should be $0.00 before saving changes.</span><!--
 										--></a>
 										<strong>{{ trans('orders::orders.balance remaining') }}</strong>
 									</td>
@@ -1338,7 +1338,7 @@ $user = null;
 									@if ($canEdit)
 										<td class="account-edit-show{{ count($order->accounts) > 0 ? ' hide' : '' }}">
 											<a href="#account_new_row" title="Add account" class="btn btn-link text-success account-add tip">
-												<span class="fa fa-plus-circle" aria-hidden="true"></span><span class="sr-only">Add account</span>
+												<span class="fa fa-plus-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Add account</span>
 											</a>
 										</td>
 									@endif
@@ -1381,17 +1381,17 @@ $user = null;
 									<h3 class="panel-title card-title">
 										{{ trans('orders::orders.notes') }}
 										<a href="#help1" data-toggle="modal" class="text-info tip" title="Help on Order Notes">
-											<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+											<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 										</a>
 									</h3>
 								</div>
 								<div class="col-md-6 text-right">
 									@if ($order->status != 'canceled')
 									<a href="{{ route('site.orders.read', ['id' => $order->id, 'edit' => 'usernotes']) }}" class="edit-property tip" title="Edit" data-prop="usernotes" data-value="{{ $order->id }}">
-										<span class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_usernotes"></span><span class="sr-only">Edit</span>
+										<span class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_usernotes"></span><span class="sr-only visually-hidden">Edit</span>
 									</a>
 									<a href="{{ route('site.orders.read', ['id' => $order->id]) }}" id="CANCEL_{{ $order->id }}_usernotes" class="stash cancel-edit-property" title="Cancel" data-prop="usernotes" data-value="{{ $order->id }}">
-										<span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only">Cancel</span>
+										<span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only visually-hidden">Cancel</span>
 									</a>
 									@endif
 								</div>
@@ -1400,7 +1400,7 @@ $user = null;
 							<h3 class="panel-title card-title">
 								{{ trans('orders::orders.notes') }}
 								<a href="#help1" data-toggle="modal" class="text-info tip" title="Help on Order Notes">
-									<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+									<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 								</a>
 							</h3>
 						@endif
@@ -1426,7 +1426,7 @@ $user = null;
 							<span id="SPAN_{{ $order->id }}_usernotes">{!! $order->usernotes ? nl2br($order->usernotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</span>
 
 							@if ($canEdit || $isApprover)
-								<label for="INPUT_{{ $order->id }}_usernotes" class="sr-only">{{ trans('orders::orders.user notes') }}:</label>
+								<label for="INPUT_{{ $order->id }}_usernotes" class="sr-only visually-hidden">{{ trans('orders::orders.user notes') }}:</label>
 								<textarea name="fields[usernotes]" maxlength="2000" cols="80" rows="10" class="form-control stash" id="INPUT_{{ $order->id }}_usernotes">{{ $order->usernotes }}</textarea>
 							@endif
 						</p>
@@ -1500,10 +1500,10 @@ $user = null;
 								<div class="col-md-6 text-right">
 								@if ($order->status != 'canceled')
 									<a href="{{ route('site.orders.read', ['id' => $order->id, 'edit' => 'usernotes']) }}" class="edit-property tip" title="Edit" data-prop="staffnotes" data-value="{{ $order->id }}">
-										<span class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_staffnotes"></span><span class="sr-only">Edit</span>
+										<span class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_staffnotes"></span><span class="sr-only visually-hidden">Edit</span>
 									</a>
 									<a href="{{ route('site.orders.read', ['id' => $order->id]) }}" id="CANCEL_{{ $order->id }}_staffnotes" class="stash cancel-edit-property tip" title="Cancel" data-prop="staffnotes" data-value="{{ $order->id }}">
-										<span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only">Cancel</span>
+										<span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only visually-hidden">Cancel</span>
 									</a>
 								@endif
 								</div>
@@ -1513,7 +1513,7 @@ $user = null;
 							<p class="ordernotes">
 								<span id="SPAN_{{ $order->id }}_staffnotes">{!! $order->staffnotes ? nl2br($order->staffnotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</span>
 
-								<label for="INPUT_{{ $order->id }}_staffnotes" class="sr-only">{{ trans('orders::orders.staff notes') }}:</label>
+								<label for="INPUT_{{ $order->id }}_staffnotes" class="sr-only visually-hidden">{{ trans('orders::orders.staff notes') }}:</label>
 								<textarea name="fields[staffnotes]" maxlength="2000" cols="80" rows="10" class="form-control stash" id="INPUT_{{ $order->id }}_staffnotes">{{ $order->staffnotes }}</textarea>
 							</p>
 						</div>

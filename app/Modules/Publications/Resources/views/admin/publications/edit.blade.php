@@ -277,7 +277,7 @@ app('pathway')
 					<div class="text-right">
 						<a class="btn text-danger" href="{{ route('admin.publications.deletefile', ['id' => $row->id]) }}">
 							<span class="fa fa-trash" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('global.button.trash') }}</span>
+							<span class="sr-only visually-hidden">{{ trans('global.button.trash') }}</span>
 						</a>
 					</div>
 					<input type="hidden" name="filename" id="upload" value="{{ $row->filename }}" />

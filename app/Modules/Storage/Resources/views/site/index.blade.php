@@ -19,7 +19,7 @@
 			</div>
 			<div class="col-sm-6 filter-select span8">
 				<div class="form-group">
-					<label class="sr-only" for="filter_state"><?php echo __('resources::assets.STATE');?></label>
+					<label class="sr-only visually-hidden" for="filter_state"><?php echo __('resources::assets.STATE');?></label>
 					<select name="filter_state" class="form-control filter filter-submit">
 						<option value="*"><?php echo __('resources::assets.all_states');?></option>
 						<option value="active"><?php echo __('resources::assets.ACTIVE');?></option>
@@ -27,7 +27,7 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<label class="sr-only" for="filter_type"><?php echo __('resources::assets.TYPE');?></label>
+					<label class="sr-only visually-hidden" for="filter_type"><?php echo __('resources::assets.TYPE');?></label>
 					<select name="filter_type" class="form-control filter filter-submit">
 						<option value="0"><?php echo __('resources::assets.TYPE_ALL');?></option>
 					</select>

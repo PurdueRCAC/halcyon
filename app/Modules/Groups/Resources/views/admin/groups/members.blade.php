@@ -263,7 +263,7 @@ $i = 0;
 	<div class="card-body">
 		<form id="FORM_{{ $group->id }}">
 			<table class="table table-hover fitToPanel">
-				<caption class="sr-only">Membership Requests</caption>
+				<caption class="sr-only visually-hidden">Membership Requests</caption>
 				<thead>
 					<tr>
 						<th scope="col">Name(s)</th>
@@ -320,7 +320,7 @@ $i = 0;
 		<h4 class="m-0 p-0">
 			Managers
 			<a href="#help_managers_span_{{ $group->id }}" data-toggle="modal" class="btn text-info" data-tip="Help">
-				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 			</a>
 		</h4>
 		<div class="modal" id="help_managers_span_{{ $group->id }}" tabindex="-1" aria-labelledby="help_managers_span_{{ $group->id }}-title" aria-hidden="true">
@@ -341,7 +341,7 @@ $i = 0;
 	</div>
 	<div class="card-body">
 		<table class="table datatable">
-			<caption class="sr-only">Managers</caption>
+			<caption class="sr-only visually-hidden">Managers</caption>
 			<thead>
 				<tr>
 					<th scope="col" colspan="3">User Info</th>
@@ -400,7 +400,7 @@ $i = 0;
 							@if (auth()->user()->can('manage groups'))
 								<div class="dropdown dropright">
 									<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										<span class="sr-only">Options</span>
+										<span class="sr-only visually-hidden">Options</span>
 									</button>
 									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
 										<a href="#manager-{{ $member->id }}" class="dropdown-item btn membership-move demote" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-target="1" title="Remove manager privileges">
@@ -454,7 +454,7 @@ $i = 0;
 									data-api-create="{{ route('api.queues.users.create') }}"
 									data-api="{{ $checked && !$disable ? route('api.queues.users.delete', ['id' => $m]) : route('api.queues.users.create') }}"
 									value="1" />
-								<label for="queue-{{ $queue->id }}" class="form-check-label"><span class="sr-only">{{ $queue->name }}</span></label>
+								<label for="queue-{{ $queue->id }}" class="form-check-label"><span class="sr-only visually-hidden">{{ $queue->name }}</span></label>
 								</span>
 							</td>
 							<?php
@@ -494,7 +494,7 @@ $i = 0;
 									data-api-create="{{ route('api.unixgroups.members.create') }}"
 									data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m]) : route('api.unixgroups.members.create') }}"
 									value="1" />
-								<label for="unix-{{ $unix->id }}" class="form-check-label"><span class="sr-only">{{ $unix->name }}</span></label>
+								<label for="unix-{{ $unix->id }}" class="form-check-label"><span class="sr-only visually-hidden">{{ $unix->name }}</span></label>
 								</span>
 							</td>
 							<?php
@@ -514,7 +514,7 @@ $i = 0;
 		<h4 class="m-0 p-0">
 			Members
 			<a href="#help_members_span_{{ $group->id }}" data-toggle="modal" class="btn text-info" data-tip="Help">
-				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 			</a>
 		</h4>
 		<div class="modal" id="help_members_span_{{ $group->id }}" tabindex="-1" aria-labelledby="help_members_span_{{ $group->id }}-title" aria-hidden="true">
@@ -536,7 +536,7 @@ $i = 0;
 	<div class="card-body">
 		@if (count($members) > 0)
 			<table class="table datatable">
-				<caption class="sr-only">Members</caption>
+				<caption class="sr-only visually-hidden">Members</caption>
 				<thead>
 					<tr>
 						<th scope="col" colspan="3">User Info</th>
@@ -579,7 +579,7 @@ $i = 0;
 							<td class="text-center">
 								<div class="dropdown dropleft">
 									<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										<span class="sr-only">Options</span>
+										<span class="sr-only visually-hidden">Options</span>
 									</button>
 									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
 										@if (count($queues))
@@ -640,7 +640,7 @@ $i = 0;
 										data-api-create="{{ route('api.queues.users.create') }}"
 										data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m]) : route('api.queues.users.create') }}"
 										value="1" />
-									<label for="queue-{{ $queue->id }}" class="form-check-label"><span class="sr-only">{{ $queue->name }}</span></label>
+									<label for="queue-{{ $queue->id }}" class="form-check-label"><span class="sr-only visually-hidden">{{ $queue->name }}</span></label>
 									</span>
 								</td>
 								<?php
@@ -678,7 +678,7 @@ $i = 0;
 										data-api-create="{{ route('api.unixgroups.members.create') }}"
 										data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m]) : route('api.unixgroups.members.create') }}"
 										value="1" />
-									<label for="unix-{{ $i }}-{{ $unix->id }}" class="form-check-label"><span class="sr-only">{{ $unix->name }}</span></label>
+									<label for="unix-{{ $i }}-{{ $unix->id }}" class="form-check-label"><span class="sr-only visually-hidden">{{ $unix->name }}</span></label>
 									</span>
 								</td>
 								<?php
@@ -702,7 +702,7 @@ $i = 0;
 		<h4 class="m-0 p-0">
 			Usage Reporting Viewers
 			<a href="#help_viewers_span_{{ $group->id }}" data-toggle="modal" class="btn text-info" data-tip="Help">
-				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 			</a>
 		</h4>
 		<div class="modal" id="help_viewers_span_{{ $group->id }}" tabindex="-1" aria-labelledby="help_viewers_span_{{ $group->id }}-title" aria-hidden="true">
@@ -723,7 +723,7 @@ $i = 0;
 	</div>
 	<div class="card-body">
 		<table class="table datatable">
-			<caption class="sr-only">Members</caption>
+			<caption class="sr-only visually-hidden">Members</caption>
 			<thead>
 				<tr>
 					<th scope="col" colspan="3">User Info</th>
@@ -764,7 +764,7 @@ $i = 0;
 						<td class="text-right text-nowrap">
 							<div class="dropdown dropright">
 								<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<span class="sr-only">Options</span>
+									<span class="sr-only visually-hidden">Options</span>
 								</button>
 								<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
 									<a href="#member{{ $member->id }}" class="dropdown-item btn membership-allqueues allqueues" title="Enable all queues for this user">
@@ -811,7 +811,7 @@ $i = 0;
 									data-api-create="{{ route('api.queues.users.create') }}"
 									data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m]) : route('api.queues.users.create') }}"
 									value="1" />
-								<label for="queue-{{ $queue->id }}" class="form-check-label"><span class="sr-only">{{ $queue->name }}</span></label>
+								<label for="queue-{{ $queue->id }}" class="form-check-label"><span class="sr-only visually-hidden">{{ $queue->name }}</span></label>
 								</span>
 							</td>
 							<?php
@@ -848,7 +848,7 @@ $i = 0;
 									data-api-create="{{ route('api.unixgroups.members.create') }}"
 									data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m]) : route('api.unixgroups.members.create') }}"
 									value="1" />
-								<label for="unix-{{ $i }}-{{ $unix->id }}" class="form-check-label"><span class="sr-only">{{ $unix->name }}</span></label>
+								<label for="unix-{{ $i }}-{{ $unix->id }}" class="form-check-label"><span class="sr-only visually-hidden">{{ $unix->name }}</span></label>
 								</span>
 							</td>
 							<?php
@@ -870,7 +870,7 @@ $i = 0;
 		<h4 class="m-0 p-0">
 			Disabled Members
 			<a href="#help_disabledmembers_span_{{ $group->id }}" data-toggle="modal" class="btn text-info" data-tip="Help">
-				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 			</a>
 		</h4>
 		<div class="modal" id="help_disabledmembers_span_{{ $group->id }}" tabindex="-1" aria-labelledby="help_disabledmembers_span_{{ $group->id }}-title" aria-hidden="true">
@@ -892,7 +892,7 @@ $i = 0;
 	<div class="card-body">
 		@if (count($disabled) > 0)
 			<table class="table table-hover hover datatable">
-				<caption class="sr-only">Disabled Members</caption>
+				<caption class="sr-only visually-hidden">Disabled Members</caption>
 				<thead>
 					<tr>
 						<th scope="col">&nbsp;</th>
@@ -964,7 +964,7 @@ $i = 0;
 										data-api="{{ $checked ? route('api.queues.users.delete', ['id' => $m->id]) : route('api.queues.users.create') }}"
 										disabled="disabled"
 										value="1" />
-									<label for="queue-{{ $queue->id }}" class="form-check-label"><span class="sr-only">{{ $queue->name }}</span></label>
+									<label for="queue-{{ $queue->id }}" class="form-check-label"><span class="sr-only visually-hidden">{{ $queue->name }}</span></label>
 									</span>
 								</td>
 								<?php
@@ -995,7 +995,7 @@ $i = 0;
 										data-api="{{ $checked ? route('api.unixgroups.members.delete', ['id' => $m->id]) : route('api.unixgroups.members.create') }}"
 										disabled="disabled"
 										value="1" />
-									<label for="unix-{{ $i }}-{{ $unix->id }}" class="form-check-label"><span class="sr-only">{{ $unix->name }}</span></label>
+									<label for="unix-{{ $i }}-{{ $unix->id }}" class="form-check-label"><span class="sr-only visually-hidden">{{ $unix->name }}</span></label>
 									</span>
 								</td>
 								<?php
@@ -1004,7 +1004,7 @@ $i = 0;
 							$i++;
 							?>
 							<td class="text-right text-nowrap">
-								<a href="#member{{ $member->id }}" class="membership-remove delete tip" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group"><span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">Remove from group</span></a>
+								<a href="#member{{ $member->id }}" class="membership-remove delete tip" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group"><span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">Remove from group</span></a>
 							</td>
 						</tr>
 					@endforeach
@@ -1059,7 +1059,7 @@ $i = 0;
 							<legend>Queue Selection</legend>
 
 							<table id="queue-selection" class="table table-hover mb-0 groupSelect">
-								<caption class="sr-only">Queues by Resource</caption>
+								<caption class="sr-only visually-hidden">Queues by Resource</caption>
 								<tbody>
 									@foreach ($resources as $name => $queues)
 										<tr>

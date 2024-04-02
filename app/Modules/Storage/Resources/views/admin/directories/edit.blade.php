@@ -194,7 +194,7 @@ app('pathway')
 						</div>
 
 						<table class="table table-hover table-bordered mb-3">
-							<caption class="sr-only">{{ trans('storage::storage.permissions') }}</caption>
+							<caption class="sr-only visually-hidden">{{ trans('storage::storage.permissions') }}</caption>
 							<thead>
 								<tr>
 									<th scope="col">{{ trans('storage::storage.permission.level') }}</th>
@@ -208,13 +208,13 @@ app('pathway')
 									<td class="text-center">
 										<div class="form-check">
 											<input type="checkbox" name="fields[ownerread]" id="field-ownerread" <?php if ($row->ownerread) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
-											<label for="field-ownerread" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.read') }}</span></label>
+											<label for="field-ownerread" class="form-check-label"><span class="sr-only visually-hidden">{{ trans('storage::storage.permission.read') }}</span></label>
 										</div>
 									</td>
 									<td class="text-center">
 										<div class="form-check">
 											<input type="checkbox" name="fields[ownerwrite]" id="field-ownerwrite" <?php if ($row->ownerwrite) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
-											<label for="field-ownerwrite" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.write') }}</span></label>
+											<label for="field-ownerwrite" class="form-check-label"><span class="sr-only visually-hidden">{{ trans('storage::storage.permission.write') }}</span></label>
 										</div>
 									</td>
 								</tr>
@@ -223,13 +223,13 @@ app('pathway')
 									<td class="text-center">
 										<div class="form-check">
 											<input type="checkbox" name="fields[groupread]" id="field-groupread" <?php if ($row->groupread) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
-											<label for="field-groupread" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.read') }}</span></label>
+											<label for="field-groupread" class="form-check-label"><span class="sr-only visually-hidden">{{ trans('storage::storage.permission.read') }}</span></label>
 										</div>
 									</td>
 									<td class="text-center">
 										<div class="form-check">
 											<input type="checkbox" name="fields[groupwrite]" id="field-groupwrite" <?php if ($row->groupwrite) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
-											<label for="field-groupwrite" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.write') }}</span></label>
+											<label for="field-groupwrite" class="form-check-label"><span class="sr-only visually-hidden">{{ trans('storage::storage.permission.write') }}</span></label>
 										</div>
 									</td>
 								</tr>
@@ -238,13 +238,13 @@ app('pathway')
 									<td class="text-center">
 										<div class="form-check">
 											<input type="checkbox" name="fields[publicread]" id="field-publicread" <?php if ($row->publicread) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
-											<label for="field-publicread" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.read') }}</span></label>
+											<label for="field-publicread" class="form-check-label"><span class="sr-only visually-hidden">{{ trans('storage::storage.permission.read') }}</span></label>
 										</div>
 									</td>
 									<td class="text-center">
 										<div class="form-check">
 											<input type="checkbox" name="fields[publicwrite]" id="field-publicwrite" <?php if ($row->publicwrite) { echo 'checked="checked"'; } ?> value="1" class="form-check-input" />
-											<label for="field-publicwrite" class="form-check-label"><span class="sr-only">{{ trans('storage::storage.permission.write') }}</span></label>
+											<label for="field-publicwrite" class="form-check-label"><span class="sr-only visually-hidden">{{ trans('storage::storage.permission.write') }}</span></label>
 										</div>
 									</td>
 								</tr>
@@ -265,7 +265,7 @@ app('pathway')
 			<div class="card mb-4">
 				<div class="table-responsive">
 					<table class="table table-hover">
-						<caption class="sr-only">{{ trans('storage::storage.messages') }}</caption>
+						<caption class="sr-only visually-hidden">{{ trans('storage::storage.messages') }}</caption>
 						<thead>
 							<tr>
 								<th scope="col">{{ trans('storage::storage.action') }}</th>

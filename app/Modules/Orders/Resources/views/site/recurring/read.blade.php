@@ -30,7 +30,7 @@ app('pathway')
 	recur
 @endcomponent
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-	<h2 class="sr-only">{{ trans('orders::orders.recurring') }}</h2>
+	<h2 class="sr-only visually-hidden">{{ trans('orders::orders.recurring') }}</h2>
 
 	<form action="{{ route('site.orders.recurring.read', ['id' => $item->id]) }}" method="get" class="row">
 		<div class="contentInner col-lg-12 col-md-12 col-sm-12 col-xs-12">

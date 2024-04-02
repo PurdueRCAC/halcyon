@@ -30,7 +30,7 @@ app('pathway')
 
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-<h2 class="sr-only">{{ trans('orders::orders.orders') }}</h2>
+<h2 class="sr-only visually-hidden">{{ trans('orders::orders.orders') }}</h2>
 
 <form action="{{ route('site.orders.index') }}" method="get" class="row">
 	<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
@@ -122,7 +122,7 @@ app('pathway')
 		@endif
 
 		<div id="applied-filters" aria-label="{{ trans('orders::orders.applied filters') }}">
-			<p class="sr-only">{{ trans('orders::orders.applied filters') }}:</p>
+			<p class="sr-only visually-hidden">{{ trans('orders::orders.applied filters') }}:</p>
 			<ul class="filters-list">
 				<?php
 				$allfilters = collect($filters);
@@ -188,7 +188,7 @@ app('pathway')
 					<li>
 						<strong>{{ trans('orders::orders.filters.' . $key) }}</strong>: {{ $val }}
 						<a href="{{ route('site.orders.index', $f) }}" class="filters-x" title="{{ trans('orders::orders.remove filter') }}">
-							<span class="fa fa-times" aria-hidden="true"><span class="sr-only">{{ trans('orders::orders.remove filter') }}</span>
+							<span class="fa fa-times" aria-hidden="true"><span class="sr-only visually-hidden">{{ trans('orders::orders.remove filter') }}</span>
 						</a>
 					</li>
 					<?php
@@ -199,7 +199,7 @@ app('pathway')
 
 	@if (count($rows))
 		<table class="table table-hover mt-0">
-			<caption class="sr-only">{{ trans('orders::orders.orders placed') }}</caption>
+			<caption class="sr-only visually-hidden">{{ trans('orders::orders.orders placed') }}</caption>
 			<thead>
 				<tr>
 					<th scope="col">
@@ -218,7 +218,7 @@ app('pathway')
 						{{ trans('orders::orders.total') }}
 					</th>
 					<th scope="col">
-						<span class="sr-only">Items</span>
+						<span class="sr-only visually-hidden">Items</span>
 					</th>
 				</tr>
 			</thead>
@@ -280,14 +280,14 @@ app('pathway')
 					</td>
 					<td>
 						<a class="items-toggle tip" data-toggle="collapse" data-parent="#orders" href="#row{{ $row->id }}" title="Items in this order">
-							<span class="fa fa-shopping-cart" aria-hidden="true"></span><span class="sr-only">Items</span>
+							<span class="fa fa-shopping-cart" aria-hidden="true"></span><span class="sr-only visually-hidden">Items</span>
 						</a>
 					</td>
 				</tr>
 				<tr class="details-row collapse" id="row{{ $row->id }}">
 					<td colspan="6">
 						<table class="table">
-							<caption class="sr-only">{{ trans('orders::orders.items') }}</caption>
+							<caption class="sr-only visually-hidden">{{ trans('orders::orders.items') }}</caption>
 							<thead>
 								<tr>
 									<th scope="col">{{ trans('orders::orders.item') }}</th>

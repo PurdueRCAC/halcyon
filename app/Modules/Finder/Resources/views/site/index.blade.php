@@ -60,12 +60,12 @@ app('pathway')->append(
                                     </div>
                                 </div>
                                 <ol id="questionlist">
-                                    <li class="sr-only">Loading questions...</li>
+                                    <li class="sr-only visually-hidden">Loading questions...</li>
                                 </ol>
                             </div>
                         </div>
                         <div class="cd-cell cd-services">
-                            <div class="sr-only">
+                            <div class="sr-only visually-hidden">
                                 <h3 class="sub-heading">Services</h3>
 
                                 <div class="step-header services-header">
@@ -93,12 +93,12 @@ app('pathway')->append(
                         </h2>
 
                         <fieldset>
-                            <legend class="sr-only">Present in comparison table?</legend>
+                            <legend class="sr-only visually-hidden">Present in comparison table?</legend>
                             <div class="comparisonlist-wrapper"></div>
                         </fieldset>
                         <div class="comparisonchart-wrapper">
                             <table class="table table-striped table-bordered scrolling" id="comparisonchart">
-                                <caption class="sr-only">Comparison of services</caption>
+                                <caption class="sr-only visually-hidden">Comparison of services</caption>
                                 <thead><tr><th scope="col">Select from services above to see comparisons.</th></tr></thead>
                                 <tbody><tr><td>Select from services above to see comparisons.</td></tr></tbody>
                             </table>

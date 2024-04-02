@@ -118,7 +118,7 @@ app('pathway')
 		*/ ?>
 
 		<div id="applied-filters" aria-label="{{ trans('publications::publications.applied filters') }}">
-			<p class="sr-only">{{ trans('publications::publications.applied filters') }}:</p>
+			<p class="sr-only visually-hidden">{{ trans('publications::publications.applied filters') }}:</p>
 			<ul class="filters-list">
 				<?php
 				$allfilters = collect($filters);
@@ -169,7 +169,7 @@ app('pathway')
 					<li>
 						<strong>{{ trans('publications::publications.' . $key) }}</strong>: {{ $val }}
 						<a href="{{ route('site.publications.index', $f) }}" class="filters-x" title="{{ trans('publications::publications.remove filter') }}">
-							<span class="fa fa-times" aria-hidden="true"><span class="sr-only">{{ trans('publications::publications.remove filter') }}</span>
+							<span class="fa fa-times" aria-hidden="true"><span class="sr-only visually-hidden">{{ trans('publications::publications.remove filter') }}</span>
 						</a>
 					</li>
 					<?php
@@ -193,14 +193,14 @@ app('pathway')
 				<div class="row publication-options">
 					<div class="col-md-8">
 						<a href="{{ route('site.publications.download', ['id' => $row->id, 'format' => 'bibtex']) }}" class="btn btn-sm tip" title="{{ trans('publications::publications.download bibtex') }}">
-							<span class="fa fa-download" aria-hidden="true"></span> {{ trans('publications::publications.export options.bibtex') }}<span class="sr-only"> #{{ $row->id }}</span>
+							<span class="fa fa-download" aria-hidden="true"></span> {{ trans('publications::publications.export options.bibtex') }}<span class="sr-only visually-hidden"> #{{ $row->id }}</span>
 						</a>
 						<a href="{{ route('site.publications.download', ['id' => $row->id, 'format' => 'endnote']) }}" class="btn btn-sm tip" title="{{ trans('publications::publications.download endnote') }}">
-							<span class="fa fa-download" aria-hidden="true"></span> {{ trans('publications::publications.export options.endnote') }}<span class="sr-only"> #{{ $row->id }}</span>
+							<span class="fa fa-download" aria-hidden="true"></span> {{ trans('publications::publications.export options.endnote') }}<span class="sr-only visually-hidden"> #{{ $row->id }}</span>
 						</a>
 						@if ($row->hasAttachment())
 							<a href="{{ $row->attachment->route() }}" class="btn btn-sm btn-download tip" title="{{ trans('publications::publications.download') }} ({{ $row->attachment->getFormattedSize() }})">
-								<span class="fa fa-file" aria-hidden="true"></span> {{ trans('publications::publications.download') }}<span class="sr-only"> #{{ $row->id }}</span>
+								<span class="fa fa-file" aria-hidden="true"></span> {{ trans('publications::publications.download') }}<span class="sr-only visually-hidden"> #{{ $row->id }}</span>
 							</a>
 						@endif
 					</div>
@@ -208,12 +208,12 @@ app('pathway')
 					@if (auth()->user() && (auth()->user()->can('edit publications') || auth()->user()->can('delete publications')))
 						@if (auth()->user()->can('edit publications'))
 							<a href="{{ route('site.publications.edit', ['id' => $row->id]) }}" data-api="{{ route('api.publications.read', ['id' => $row->id]) }}" class="btn btn-sm btn-edit tip" title="{{ trans('global.button.edit') }}">
-								<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }} #{{ $row->id }}</span>
+								<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.edit') }} #{{ $row->id }}</span>
 							</a>
 						@endif
 						@if (auth()->user()->can('delete publications'))
 							<a href="{{ route('site.publications.delete', ['id' => $row->id]) }}" data-api="{{ route('api.publications.delete', ['id' => $row->id]) }}" class="btn btn-sm btn-delete text-danger tip" title="{{ trans('global.button.delete') }}" data-confirm="{{ trans('global.confirm delete') }}">
-								<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }} #{{ $row->id }}</span>
+								<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.delete') }} #{{ $row->id }}</span>
 							</a>
 						@endif
 					@endif

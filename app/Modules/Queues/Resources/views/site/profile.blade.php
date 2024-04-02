@@ -6,7 +6,7 @@
 	<div class="card-body">
 		@if (count($queues))
 			<table class="table table-hover">
-				<caption class="sr-only">{{ trans('queues::queues.queues') }}</caption>
+				<caption class="sr-only visually-hidden">{{ trans('queues::queues.queues') }}</caption>
 				<thead>
 					<tr>
 						<th scope="col" class="text-center">{{ trans('queues::queues.state') }}</th>
@@ -23,20 +23,20 @@
 							@if ($queue->enabled && $queue->started && $queue->active)
 								@if ($queue->reservation)
 									<span class="text-info tip" title="{{ trans('queues::queues.queue has dedicated reservation') }}">
-										<span class="fa fa-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('queues::queues.queue has dedicated reservation') }}</span>
+										<span class="fa fa-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('queues::queues.queue has dedicated reservation') }}</span>
 									</span>
 								@else
 									<span class="text-success tip" title="{{ trans('queues::queues.queue is running') }}">
-										<span class="fa fa-check" aria-hidden="true"></span><span class="sr-only">{{ trans('queues::queues.queue is running') }}</span>
+										<span class="fa fa-check" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('queues::queues.queue is running') }}</span>
 									</span>
 								@endif
 							@elseif ($queue->active)
 								<span class="text-danger tip" title="{{ trans('queues::queues.queue is stopped') }}">
-									<span class="fa fa-minus-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('queues::queues.queue is stopped') }}</span>
+									<span class="fa fa-minus-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('queues::queues.queue is stopped') }}</span>
 								</span>
 							@elseif (!$queue->active)
 								<span class="text-warning tip" title="{{ trans('queues::queues.queue has not active resources') }}">
-									<span class="fa fa-exclamation-triangle" aria-hidden="true"></span><span class="sr-only">{{ trans('queues::queues.queue has not active resources') }}</span>
+									<span class="fa fa-exclamation-triangle" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('queues::queues.queue has not active resources') }}</span>
 								</span>
 							@endif
 						</td>

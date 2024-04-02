@@ -53,14 +53,14 @@ app('pathway')
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col col-md-3 filter-search">
-				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+				<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 				<span class="input-group">
 					<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 					<span class="input-group-append"><span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span></span>
 				</span>
 			</div>
 			<div class="col col-md-9 filter-select text-right">
-				<label class="sr-only" for="filter_state">{{ trans('global.state') }}</label>
+				<label class="sr-only visually-hidden" for="filter_state">{{ trans('global.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.option.all states') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('global.published') }}</option>
@@ -138,7 +138,7 @@ app('pathway')
 							<svg class="MiniIcon DragMiniIcon DragHandle-icon" viewBox="0 0 24 24"><path d="M10,4c0,1.1-0.9,2-2,2S6,5.1,6,4s0.9-2,2-2S10,2.9,10,4z M16,2c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,2,16,2z M8,10 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,10,8,10z M16,10c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,10,16,10z M8,18 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,18,8,18z M16,18c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,18,16,18z"></path></svg>
 						</span>
 						<span class="drag-handle" draggable="true">
-							<span class="fa fa-ellipsis-v" aria-hidden="true"></span><span class="sr-only">Move</span>
+							<span class="fa fa-ellipsis-v" aria-hidden="true"></span><span class="sr-only visually-hidden">Move</span>
 						</span>-->
 					@if (auth()->user()->can('edit orders') && $filters['order'] == 'sequence')
 						@if ($filters['order_dir'] == 'asc')

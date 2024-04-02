@@ -51,21 +51,21 @@ if ($parent)
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 		<div class="col filter-search col-md-3">
-				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+				<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 				<span class="input-group">
 					<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-					<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+					<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
 				</span>
 			</div>
 			<div class="col filter-select col-md-9 text-right">
-				<label class="sr-only" for="filter_state">{{ trans('global.state') }}</label>
+				<label class="sr-only visually-hidden" for="filter_state">{{ trans('global.state') }}</label>
 				<select name="state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.option.all states') }}</option>
 					<option value="active"<?php if ($filters['state'] == 'active'): echo ' selected="selected"'; endif;?>>{{ trans('global.active') }}</option>
 					<option value="inactive"<?php if ($filters['state'] == 'inactive'): echo ' selected="selected"'; endif;?>>{{ trans('global.inactive') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_state">{{ trans('storage::storage.resource') }}</label>
+				<label class="sr-only visually-hidden" for="filter_state">{{ trans('storage::storage.resource') }}</label>
 				<select name="resource" class="form-control filter filter-submit">
 					<option value="0"<?php if (!$filters['resource']): echo ' selected="selected"'; endif;?>>{{ trans('storage::storage.all storage resources') }}</option>
 					@foreach ($storages as $s)
@@ -85,7 +85,7 @@ if ($parent)
 	<div class="card mb-4">
 		<div class="table-responsive">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('storage::storage.directories') }}</caption>
+		<caption class="sr-only visually-hidden">{{ trans('storage::storage.directories') }}</caption>
 		<thead>
 			<tr>
 				@if (auth()->user()->can('delete storage'))
@@ -134,7 +134,7 @@ if ($parent)
 					@if ($row->trashed())
 						<span class="text-danger" data-tip="{{ trans('global.trashed') }}: {{ $row->datetimeremoved->format('Y-m-d') }}">
 							<span class="fa fa-trash" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('global.trashed') }}: <time datetime="{{ $row->datetimeremoved->toDateTimeString() }}">{{ $row->datetimeremoved->format('Y-m-d') }}</time></span>
+							<span class="sr-only visually-hidden">{{ trans('global.trashed') }}: <time datetime="{{ $row->datetimeremoved->toDateTimeString() }}">{{ $row->datetimeremoved->format('Y-m-d') }}</time></span>
 						</span>
 					@endif
 					@if (auth()->user()->can('edit storage'))
@@ -195,7 +195,7 @@ if ($parent)
 						</a>
 					@else
 						<a class="btn btn-sm btn-success" href="{{ route('admin.storage.directories.create', ['parent' => $row->id, 'resource' => $row->storageresourceid]) }}">
-							<span class="fa fa-plus" aria-hidden="true"></span><span class="sr-only">{{ trans('global.add') }}</span>
+							<span class="fa fa-plus" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.add') }}</span>
 						</a>
 						0
 					@endif

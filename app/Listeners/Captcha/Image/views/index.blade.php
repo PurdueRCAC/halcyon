@@ -27,7 +27,7 @@ $route = route('site.core.captcha', ['showCaptcha' => 1])
 						<span class="input-group-text">
 							<a href="#captchaCode" class="captcha-refresh tip" title="{{ trans('listener.captcha.image::image.refresh captcha') }}">
 								<span class="fa fa-repeat" aria-hidden="true"></span>
-								<span class="sr-only">{{ trans('listener.captcha.image::image.refresh captcha') }}</span>
+								<span class="sr-only visually-hidden">{{ trans('listener.captcha.image::image.refresh captcha') }}</span>
 							</a>
 						</span>
 					</span>

@@ -18,7 +18,7 @@
 	{
 		?>
 		<table class="table table-hover history">
-			<caption class="sr-only">Group history</caption>
+			<caption class="sr-only visually-hidden">Group history</caption>
 			<thead>
 				<tr>
 					<th scope="col">Date</th>
@@ -55,7 +55,7 @@
 							@if (substr($log->status, 0, 1) != '2')
 								<span class="tip text-warning" title="An error occurred while performing this action. Action may not have completed.">
 									<span class="fa fa-exclamation-circle" aria-hidden="true"></span>
-									<span class="sr-only">An error occurred while performing this action. Action may not have completed.</span>
+									<span class="sr-only visually-hidden">An error occurred while performing this action. Action may not have completed.</span>
 								</span>
 							@endif
 							{!! $log->summary !!}

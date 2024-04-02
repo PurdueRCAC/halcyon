@@ -38,7 +38,7 @@
 						<div class="modal-footer">
 							<div class="row">
 								<div class="col-md-12 text-right">
-									<span id="new_group_spinner" class="spinner-border spinner-border-sm hide" role="status"><span class="sr-only">Sending...</span></span>
+									<span id="new_group_spinner" class="spinner-border spinner-border-sm hide" role="status"><span class="sr-only visually-hidden">Sending...</span></span>
 									<button type="submit" id="new_group_btn" data-indicator="new_group_spinner" class="btn btn-success">
 										<span class="fa fa-plus-circle" aria-hidden="true"></span> {{ trans('global.button.create') }}
 									</button>
@@ -56,7 +56,7 @@
 	<div id="everything">
 	@if (count($groups))
 		<table class="table">
-			<caption class="sr-only">{{ trans('groups::groups.groups') }}</caption>
+			<caption class="sr-only visually-hidden">{{ trans('groups::groups.groups') }}</caption>
 			<thead>
 				<tr>
 					<th scope="col">

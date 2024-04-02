@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			</fieldset>
 
 			<?php /*<table class="meta table table-bordered">
-				<caption class="sr-only">{{ trans('global.metadata') }}</caption>
+				<caption class="sr-only visually-hidden">{{ trans('global.metadata') }}</caption>
 				<tbody>
 					<tr>
 						<th scope="row">{{ trans('queues::queues.queues') }}</th>

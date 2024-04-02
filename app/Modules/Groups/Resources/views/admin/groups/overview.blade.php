@@ -8,16 +8,16 @@
 					<div class="float-right">
 						<a class="btn-edit edit-hide" href="{{ route('admin.groups.edit', ['id' => $row->id]) }}" data-tip="{{ trans('global.edit') }}">
 							<span class="fa fa-pencil" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('global.edit') }}</span>
+							<span class="sr-only visually-hidden">{{ trans('global.edit') }}</span>
 						</a>
-						<span class="spinner-border spinner-border-sm d-none" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
+						<span class="spinner-border spinner-border-sm d-none" role="status"><span class="sr-only visually-hidden">{{ trans('global.loading') }}</span></span>
 						<a class="btn-edit-save text-primary edit-show d-none ml-3" href="{{ route('admin.groups.edit', ['id' => $row->id]) }}" data-tip="{{ trans('global.save') }}">
 							<span class="fa fa-save" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('global.save') }}</span>
+							<span class="sr-only visually-hidden">{{ trans('global.save') }}</span>
 						</a>
 						<a class="btn-edit-cancel text-danger edit-show d-none ml-3" href="{{ route('admin.groups.show', ['id' => $row->id]) }}" data-tip="{{ trans('global.cancel') }}">
 							<span class="fa fa-ban" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('global.cancel') }}</span>
+							<span class="sr-only visually-hidden">{{ trans('global.cancel') }}</span>
 						</a>
 					</div>
 					@endif
@@ -120,7 +120,7 @@
 
 				@if (count($row->unixGroups))
 				<table class="table table-hover">
-					<caption class="sr-only">{{ trans('groups::groups.unix groups') }}</caption>
+					<caption class="sr-only visually-hidden">{{ trans('groups::groups.unix groups') }}</caption>
 					<thead>
 						<tr>
 							<th scope="col">{{ trans('groups::groups.id') }}</th>
@@ -141,7 +141,7 @@
 									<a href="#unixgroup-{{ $u->id }}" class="btn text-danger remove-unixgroup"
 										data-api="{{ route('api.unixgroups.delete', ['id' => $u->id]) }}"
 										data-confirm="{{ trans('groups::groups.confirm delete') }}">
-										<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.trash') }}</span>
+										<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.trash') }}</span>
 									</a>
 								</td>
 							</tr>
@@ -155,7 +155,7 @@
 								<a href="#unixgroup-{id}" class="btn text-danger remove-unixgroup"
 									data-api="{{ route('api.unixgroups.create') }}/{id}"
 									data-confirm="{{ trans('groups::groups.confirm delete') }}">
-									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.trash') }}</span>
+									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.trash') }}</span>
 								</a>
 							</td>
 						</tr>
@@ -178,7 +178,7 @@
 								<a href="#longname" class="btn text-success add-unixgroup"
 									data-group="{{ $row->id }}"
 									data-api="{{ route('api.unixgroups.create') }}">
-									<span class="fa fa-plus-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('global.add') }}</span>
+									<span class="fa fa-plus-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.add') }}</span>
 								</a>
 							</td>
 						</tr>
@@ -209,7 +209,7 @@
 				<legend>{{ trans('groups::groups.department') }}</legend>
 
 				<table class="table table-hover">
-					<caption class="sr-only">{{ trans('groups::groups.department') }}</caption>
+					<caption class="sr-only visually-hidden">{{ trans('groups::groups.department') }}</caption>
 					<tbody>
 					@foreach ($row->departments as $dept)
 						<tr id="department-{{ $dept->id }}" data-id="{{ $dept->id }}">
@@ -229,7 +229,7 @@
 								<a href="#department-{{ $dept->id }}" class="btn text-danger remove-category"
 									data-api="{{ route('api.groups.groupdepartments.delete', ['group' => $row->id, 'id' => $dept->id]) }}"
 									data-confirm="{{ trans('groups::groups.confirm delete') }}">
-									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.trash') }}</span>
+									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.trash') }}</span>
 								</a>
 							</td>
 						</tr>
@@ -240,7 +240,7 @@
 								<a href="#department-{id}" class="btn text-danger remove-category"
 									data-api="{{ route('api.groups.groupdepartments.create', ['group' => $row->id]) }}/{id}"
 									data-confirm="{{ trans('groups::groups.confirm delete') }}">
-									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.trash') }}</span>
+									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.trash') }}</span>
 								</a>
 							</td>
 						</tr>
@@ -275,7 +275,7 @@
 									class="btn text-success add-category"
 									data-group="{{ $row->id }}"
 									data-api="{{ route('api.groups.groupdepartments.create', ['group' => $row->id]) }}">
-									<span class="fa fa-plus-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('global.add') }}</span>
+									<span class="fa fa-plus-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.add') }}</span>
 								</a>
 							</td>
 						</tr>
@@ -288,7 +288,7 @@
 				<legend>{{ trans('groups::groups.field of science') }}</legend>
 
 				<table class="table table-hover">
-					<caption class="sr-only">{{ trans('groups::groups.field of science') }}</caption>
+					<caption class="sr-only visually-hidden">{{ trans('groups::groups.field of science') }}</caption>
 					<tbody>
 					@foreach ($row->fieldsOfScience as $field)
 						<tr id="fieldofscience-{{ $field->id }}" data-id="{{ $field->id }}">
@@ -308,7 +308,7 @@
 								<a href="#fieldofscience-{{ $field->id }}" class="btn text-danger remove-category"
 									data-api="{{ route('api.groups.groupfieldsofscience.delete', ['group' => $row->id, 'id' => $field->id]) }}"
 									data-confirm="{{ trans('groups::groups.confirm delete') }}">
-									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.trash') }}</span>
+									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.trash') }}</span>
 								</a>
 							</td>
 						</tr>
@@ -319,7 +319,7 @@
 								<a href="#fieldofscience-{id}" class="btn text-danger remove-category"
 									data-api="{{ route('api.groups.groupfieldsofscience.create', ['group' => $row->id]) }}/{id}"
 									data-confirm="{{ trans('groups::groups.confirm delete') }}">
-									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.trash') }}</span>
+									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.trash') }}</span>
 								</a>
 							</td>
 						</tr>
@@ -354,7 +354,7 @@
 									class="btn text-success add-category"
 									data-group="{{ $row->id }}"
 									data-api="{{ route('api.groups.groupfieldsofscience.create', ['group' => $row->id]) }}">
-									<span class="fa fa-plus-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('global.add') }}</span>
+									<span class="fa fa-plus-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.add') }}</span>
 								</a>
 							</td>
 						</tr>

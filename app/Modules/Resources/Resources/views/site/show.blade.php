@@ -168,7 +168,7 @@ $content = '';
 		<h3>{{ trans('resources::assets.lifetime service') }}</h3>
 
 		<table class="table table-bordered">
-			<caption class="sr-only">{{ trans('global.details') }}</caption>
+			<caption class="sr-only visually-hidden">{{ trans('global.details') }}</caption>
 			<tbody>
 				<tr>
 					<th scope="row">{{ trans('resources::assets.installed') }}</th>

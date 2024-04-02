@@ -69,7 +69,7 @@
 		<div class="col-md-{{ $allow_all ? '9' : '12' }}">
 			<form method="get" action="{{ route('site.knowledge.search') }}">
 				<div class="form-group">
-					<label class="sr-only" for="knowledge_search">{{ trans('knowledge::knowledge.search') }}</label>
+					<label class="sr-only visually-hidden" for="knowledge_search">{{ trans('knowledge::knowledge.search') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="knowledge_search" class="form-control" placeholder="{{ trans('knowledge::knowledge.search placeholder') }}" value="" />
 						<span class="input-group-append">
@@ -99,7 +99,7 @@
 		<div class="edit-controls">
 			<div class="dropdown btn-group">
 				<button class="btn ropdown-toggle" type="button" id="optionsbutton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<span class="fa fa-ellipsis-v" aria-hidden="true"></span><span class="sr-only"> {{ trans('knowledge::knowledge.options') }}</span>
+					<span class="fa fa-ellipsis-v" aria-hidden="true"></span><span class="sr-only visually-hidden"> {{ trans('knowledge::knowledge.options') }}</span>
 				</button>
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="optionsbutton">
 					@if (auth()->user()->can('create knowledge'))
@@ -224,7 +224,7 @@
 									aria-describedby="char_limit_counter"></textarea>
 								<span class="form-text text-muted">{{ trans('knowledge::knowledge.feedback desc') }}</span>
 								<div class="form-textbox-counter" id="char_limit_counter">
-									<span class="sr-only" id="char-limit-message">{{ trans('knowledge::knowledge.characters left') }}:</span>
+									<span class="sr-only visually-hidden" id="char-limit-message">{{ trans('knowledge::knowledge.characters left') }}:</span>
 									<span class="char-count text-muted hide">250</span>
 								</div>
 							</div>
@@ -411,7 +411,7 @@
 				<p class="text-center">
 					<button class="btn btn-success" id="save-page" type="submit">
 						{{ trans('global.save') }}
-						<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.saving') }}</span></span>
+						<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only visually-hidden">{{ trans('global.saving') }}</span></span>
 					</button>
 					<a href="{{ route('site.knowledge.page', ['uri' => ($p ? $p : '/')]) }}" data-id="{{ $page->id }}" class="cancel btn btn-link">{{ trans('global.button.cancel') }}</a>
 				</p>

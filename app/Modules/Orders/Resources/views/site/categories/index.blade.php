@@ -134,12 +134,12 @@ app('pathway')
 @endcomponent
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-	<h2 class="sr-only">{{ trans('orders::orders.categories') }}</h2>
+	<h2 class="sr-only visually-hidden">{{ trans('orders::orders.categories') }}</h2>
 
 	<form action="{{ route('site.orders.categories') }}" method="get" name="adminForm" id="adminForm" class="row">
 		<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 			<fieldset class="filters mt-0">
-				<legend class="sr-only">Filter</legend>
+				<legend class="sr-only visually-hidden">Filter</legend>
 
 				<div class="form-group">
 					<label for="filter_search">{{ trans('search.label') }}</label>
@@ -171,7 +171,7 @@ app('pathway')
 			@endif
 
 			<div id="applied-filters" aria-label="{{ trans('orders::orders.applied filters') }}">
-				<p class="sr-only">{{ trans('orders::orders.applied filters') }}:</p>
+				<p class="sr-only visually-hidden">{{ trans('orders::orders.applied filters') }}:</p>
 				<ul class="filters-list">
 					<?php
 					$allfilters = collect($filters);
@@ -210,7 +210,7 @@ app('pathway')
 						<li>
 							<strong>{{ trans('orders::orders.filters.' . $key) }}</strong>: {{ $val }}
 							<a href="{{ route('site.orders.products', $f) }}" class="filters-x" title="{{ trans('orders::orders.remove filter') }}">
-								<span class="fa fa-times" aria-hidden="true"><span class="sr-only">{{ trans('orders::orders.remove filter') }}</span>
+								<span class="fa fa-times" aria-hidden="true"><span class="sr-only visually-hidden">{{ trans('orders::orders.remove filter') }}</span>
 							</a>
 						</li>
 						<?php
@@ -221,7 +221,7 @@ app('pathway')
 
 			@if (count($rows))
 			<table class="table table-hover mt-0">
-				<caption class="sr-only">{{ trans('orders::orders.categories') }}</caption>
+				<caption class="sr-only visually-hidden">{{ trans('orders::orders.categories') }}</caption>
 				<thead>
 					<tr>
 						@if (auth()->user()->can('delete orders.categories'))
@@ -250,7 +250,7 @@ app('pathway')
 							@if (auth()->user()->can('delete orders.categories') && !$row->trashed())
 								<a class="btn text-danger btn-sm category-delete" href="{{ route('site.orders.categories.delete', ['id' => $row->id]) }}" data-confirm="{{ trans('global.confirm delete') }}" data-api="{{ route('api.orders.categories.delete', ['id' => $row->id]) }}" title="{{ trans('global.button.delete') }}">
 									<span class="fa fa-trash" aria-hidden="true"></span>
-									<span class="sr-only">{{ trans('global.button.delete') }}</span>
+									<span class="sr-only visually-hidden">{{ trans('global.button.delete') }}</span>
 								</a>
 							@endif
 						</td>
@@ -278,7 +278,7 @@ app('pathway')
 								<span class="draghandle" draggable="true">
 									<span class="fa fa-ellipsis-v" aria-hidde="true"></span>
 									<span class="fa fa-ellipsis-v" aria-hidde="true"></span>
-									<span class="sr-only">Move</span>
+									<span class="sr-only visually-hidden">Move</span>
 								</span>
 							@endif
 						</td>

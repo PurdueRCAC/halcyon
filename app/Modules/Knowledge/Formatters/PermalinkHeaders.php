@@ -57,7 +57,7 @@ class PermalinkHeaders
 					}
 					$toc[$title] = $matches[3];
 
-					$anchor = '<a href="#' . $title . '" class="heading-anchor" title="' . $attr . '"><span class="fa fa-link" aria-hidden="true"></span><span class="sr-only">' . $attr . '</span></a> ';
+					$anchor = '<a href="#' . $title . '" class="heading-anchor" title="' . $attr . '"><span class="fa fa-link" aria-hidden="true"></span><span class="sr-only visually-hidden">' . $attr . '</span></a> ';
 
 					$matches[0] = $matches[1] . ' id="' . $title . '">' . $anchor . $matches[3] . $matches[4];
 				}
@@ -67,7 +67,7 @@ class PermalinkHeaders
 
 					$title = $matcs[1];
 
-					$anchor = '<a href="#' . $title . '" class="heading-anchor" title="' . $attr . '"><span class="fa fa-link" aria-hidden="true"></span><span class="sr-only">' . $attr . '</span></a> ';
+					$anchor = '<a href="#' . $title . '" class="heading-anchor" title="' . $attr . '"><span class="fa fa-link" aria-hidden="true"></span><span class="sr-only visually-hidden">' . $attr . '</span></a> ';
 
 					$matches[0] = $matches[1] . '>' . $anchor . $matches[3] . $matches[4];
 				}

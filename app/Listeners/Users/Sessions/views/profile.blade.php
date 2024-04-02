@@ -4,7 +4,7 @@
 		<h3 class="card-title my-0">
 			{{ trans('listener.users.sessions::sessions.sessions') }}
 			<a href="#sessions_help" data-toggle="modal" class="text-info tip" title="Roles Help">
-				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 			</a>
 		</h3>
 		<div class="modal" id="sessions_help" tabindex="-1" aria-labelledby="sessions_help-title" aria-hidden="true">

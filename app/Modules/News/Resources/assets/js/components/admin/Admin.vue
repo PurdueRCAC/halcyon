@@ -3,26 +3,26 @@
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col col-md-4 filter-search">
-				<label class="sr-only" for="filter_search">search</label>
+				<label class="sr-only visually-hidden" for="filter_search">search</label>
 				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="keyword or phrase..." value="" />
 
 				<button class="btn btn-secondary" type="submit">submit</button>
 			</div>
 			<div class="col col-md-8 filter-select text-right">
-				<label class="sr-only" for="filter_state">state</label>
+				<label class="sr-only visually-hidden" for="filter_state">state</label>
 				<select name="state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>all states</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>published</option>
 					<option value="unpublished"<?php if ($filters['state'] == 'unpublished'): echo ' selected="selected"'; endif;?>>unpublished</option>
 				</select>
 
-				<label class="sr-only" for="filter-access">access level</label>
+				<label class="sr-only visually-hidden" for="filter-access">access level</label>
 				<select name="access" id="filter-access" class="form-control filter filter-submit">
 					<option value="*">select level</option>
 					<option v-for="level in levels" :value="level.id">{{ level.title }}</option>
 				</select>
 
-				<label class="sr-only" for="filter-type">Type</label>
+				<label class="sr-only visually-hidden" for="filter-type">Type</label>
 				<select name="type" id="filter-type" class="form-control filter filter-submit">
 					<option value="0">all categories</option>
 				</select>

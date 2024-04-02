@@ -81,7 +81,7 @@ app('pathway')
 		</div>
 		<div class="col col-md-5">
 			<table class="meta">
-				<caption class="sr-only">{{ trans('global.metadata') }}</caption>
+				<caption class="sr-only visually-hidden">{{ trans('global.metadata') }}</caption>
 				<tbody>
 					<tr>
 						<th scope="row">{{ trans('storage::storage.notifications') }}</th>

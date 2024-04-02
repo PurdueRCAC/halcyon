@@ -23,11 +23,11 @@
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col col-md-4 filter-search">
-				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+				<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 				<input type="text" name="filter_search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 			</div>
 			<div class="col col-md-8 filter-select text-right">
-				<label class="sr-only" for="filter_access">{{ trans('orders::orders.access') }}</label>
+				<label class="sr-only visually-hidden" for="filter_access">{{ trans('orders::orders.access') }}</label>
 				<select name="filter_access" id="filter_access" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['access'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all accesses') }}</option>
 					<?php foreach (App\Halcyon\Access\Viewlevel::all() as $access): ?>
@@ -35,21 +35,21 @@
 					<?php endforeach; ?>
 				</select>
 
-				<label class="sr-only" for="filter_state">{{ trans('global.state') }}</label>
+				<label class="sr-only visually-hidden" for="filter_state">{{ trans('global.state') }}</label>
 				<select name="filter_state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.option.all states') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('global.published') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('global.trashed') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_restricteddata">{{ trans('orders::orders.restricted data') }}</label>
+				<label class="sr-only visually-hidden" for="filter_restricteddata">{{ trans('orders::orders.restricted data') }}</label>
 				<select name="filter_restricteddata" id="filter_restricteddata" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['restricteddata'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.option.all restricted data') }}</option>
 					<option value="0"<?php if ($filters['restricteddata'] == 0): echo ' selected="selected"'; endif;?>>{{ trans('global.no') }}</option>
 					<option value="1"<?php if ($filters['restricteddata'] == 1): echo ' selected="selected"'; endif;?>>{{ trans('global.yes') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_category">{{ trans('orders::orders.category') }}</label>
+				<label class="sr-only visually-hidden" for="filter_category">{{ trans('orders::orders.category') }}</label>
 				<select name="filter_category" id="filter_category" class="form-control filter filter-submit">
 					<option value="0"<?php if (!$filters['category']): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
 					<?php foreach ($categories as $category) { ?>

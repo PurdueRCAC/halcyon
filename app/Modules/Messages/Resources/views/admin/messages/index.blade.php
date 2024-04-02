@@ -54,7 +54,7 @@ app('pathway')
 		</div>
 		@if (count($stats->pendingtypes))
 			<table class="table">
-				<caption class="sr-only">{{ trans('messages::messages.message types') }}</caption>
+				<caption class="sr-only visually-hidden">{{ trans('messages::messages.message types') }}</caption>
 				<tbody>
 					@foreach ($stats->pendingtypes as $t)
 						<tr>
@@ -77,7 +77,7 @@ app('pathway')
 		</div>
 		@if (count($stats->failedtypes))
 			<table class="table">
-				<caption class="sr-only">{{ trans('messages::messages.message types') }}</caption>
+				<caption class="sr-only visually-hidden">{{ trans('messages::messages.message types') }}</caption>
 				<tbody>
 					@foreach ($stats->failedtypes as $t)
 						<tr>
@@ -100,7 +100,7 @@ app('pathway')
 		</div>
 		@if (count($stats->succeededtypes))
 			<table class="table">
-				<caption class="sr-only">{{ trans('messages::messages.message types') }}</caption>
+				<caption class="sr-only visually-hidden">{{ trans('messages::messages.message types') }}</caption>
 				<tbody>
 					@foreach ($stats->succeededtypes as $t)
 						<tr>
@@ -126,17 +126,17 @@ app('pathway')
 		<div class="row">
 			<div class="col-md-5 filter-select">
 				<div class="input-group">
-					<label class="sr-only" for="filter_start">{{ trans('messages::messages.start') }}</label>
+					<label class="sr-only visually-hidden" for="filter_start">{{ trans('messages::messages.start') }}</label>
 					<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" value="{{ $filters['start'] }}" placeholder="{{ trans('messages::messages.start placeholder') }}" />
 					<span class="input-group-prepend input-group-append">
 						<span class="input-group-text">&rarr;</span>
 					</span>
-					<label class="sr-only" for="filter_stop">{{ trans('messages::messages.stop') }}</label>
+					<label class="sr-only visually-hidden" for="filter_stop">{{ trans('messages::messages.stop') }}</label>
 					<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" value="{{ $filters['stop'] }}" placeholder="{{ trans('messages::messages.stop placeholder') }}" />
 				</div>
 			</div>
 			<div class="col-md-7 text-right">
-				<label class="sr-only" for="filter_state">{{ trans('messages::messages.state') }}</label>
+				<label class="sr-only visually-hidden" for="filter_state">{{ trans('messages::messages.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.all states') }}</option>
 					<option value="pending"<?php if ($filters['state'] == 'pending'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.pending') }}</option>
@@ -144,7 +144,7 @@ app('pathway')
 					<option value="complete"<?php if ($filters['state'] == 'complete'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.complete') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_type">{{ trans('messages::messages.type') }}</label>
+				<label class="sr-only visually-hidden" for="filter_type">{{ trans('messages::messages.type') }}</label>
 				<select name="type" id="filter_type" class="form-control filter filter-submit">
 					<option value=""<?php if ($filters['type'] == ''): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.all types') }}</option>
 					@foreach ($types as $type)
@@ -152,7 +152,7 @@ app('pathway')
 					@endforeach
 				</select>
 
-				<label class="sr-only" for="filter_status">{{ trans('messages::messages.status') }}</label>
+				<label class="sr-only visually-hidden" for="filter_status">{{ trans('messages::messages.status') }}</label>
 				<select name="status" id="filter_status" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.all statuses') }}</option>
 					<option value="success"<?php if ($filters['status'] == 'success'): echo ' selected="selected"'; endif;?>>{{ trans('messages::messages.success') }}</option>
@@ -169,7 +169,7 @@ app('pathway')
 		<div class="table-responsive">
 		@if (count($rows) > 0)
 			<table class="table table-hover adminlist">
-				<caption class="sr-only">{{ trans('messages::messages.messages') }}</caption>
+				<caption class="sr-only visually-hidden">{{ trans('messages::messages.messages') }}</caption>
 				<thead>
 					<tr>
 						@if (auth()->user()->can('delete messages'))

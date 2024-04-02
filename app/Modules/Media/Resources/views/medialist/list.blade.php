@@ -8,7 +8,7 @@ endif;
 	<div action="{{ route('admin.media.medialist', ['folder' => $folder]) }}" method="post" id="media-form-list" name="media-form-list">
 		<div class="manager">
 			<table>
-				<caption class="sr-only">{{ trans('media::media.files') }}</caption>
+				<caption class="sr-only visually-hidden">{{ trans('media::media.files') }}</caption>
 				<thead>
 					<tr>
 						<th scope="col">{{ trans('media::media.list.name') }}</th>

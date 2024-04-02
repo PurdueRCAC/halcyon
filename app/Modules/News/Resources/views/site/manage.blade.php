@@ -132,7 +132,7 @@ app('pathway')
 									<input id="datestartshort" type="text" class="date-pick form-control" name="start" placeholder="YYYY-MM-DD" data-start="{{ $startdate }}" value="{{ $startdate }}" />
 								</div>
 								<div class="input-group input-time tab-add tab-edit">
-									<label for="timestartshort" class="sr-only">{{ trans('news::news.time from') }}</label>
+									<label for="timestartshort" class="sr-only visually-hidden">{{ trans('news::news.time from') }}</label>
 									<span class="input-group-prepend"><span class="input-group-text fa fa-clock-o" aria-hidden="true"></span></span>
 									<input id="timestartshort" type="text" class="time-pick form-control" name="starttime" placeholder="h:mm AM/PM" value="{{ $starttime }}" />
 								</div>
@@ -145,7 +145,7 @@ app('pathway')
 									<input id="datestopshort" type="text" class="date-pick form-control" name="stop" placeholder="YYYY-MM-DD" data-stop="{{ $stopdate }}" value="{{ $stopdate }}">
 								</div>
 								<div class="input-group input-time tab-add tab-edit">
-									<label for="timestopshort" class="sr-only">{{ trans('news::news.time to') }}</label>
+									<label for="timestopshort" class="sr-only visually-hidden">{{ trans('news::news.time to') }}</label>
 									<span class="input-group-prepend"><span class="input-group-text fa fa-clock-o" aria-hidden="true"></span></span>
 									<input id="timestopshort" type="text" class="time-pick form-control" name="stoptime" placeholder="h:mm AM/PM" value="{{ $stoptime }}" />
 								</div>
@@ -252,7 +252,7 @@ app('pathway')
 								{{ trans('news::news.published') }}
 								<a href="#help2" data-toggle="modal" class="text-info tip" title="Help">
 									<span class="fa fa-question-circle" aria-hidden="true"></span>
-									<span class="sr-only">Help</span>
+									<span class="sr-only visually-hidden">Help</span>
 								</a>
 							</label>
 							<div class="col-sm-10">
@@ -270,7 +270,7 @@ app('pathway')
 								{{ trans('news::news.template') }}
 								<a href="#help4" data-toggle="modal" class="text-info tip" title="Help">
 									<span class="fa fa-question-circle" aria-hidden="true"></span>
-									<span class="sr-only">Help</span>
+									<span class="sr-only visually-hidden">Help</span>
 								</a>
 							</label>
 							<div class="col-sm-10">
@@ -306,7 +306,7 @@ app('pathway')
 								{{ trans('news::news.body') }}
 								<a href="#markdown-help" data-toggle="modal" class="text-info tip" title="Help">
 									<span class="fa fa-question-circle" aria-hidden="true"></span>
-									<span class="sr-only">Help</span>
+									<span class="sr-only visually-hidden">Help</span>
 								</a>
 							</label>
 							<div class="col-sm-10">
@@ -443,7 +443,7 @@ app('pathway')
 				</div>
 				<div class="modal-body" id="preview">
 					<div class="spinner-border" role="status">
-						<span class="sr-only">Loading...</span>
+						<span class="sr-only visually-hidden">Loading...</span>
 					</div>
 				</div>
 			</div>
@@ -461,7 +461,7 @@ app('pathway')
 				</div>
 				<div class="modal-body" id="mailpreview">
 					<div class="spinner-border" role="status">
-						<span class="sr-only">Loading...</span>
+						<span class="sr-only visually-hidden">Loading...</span>
 					</div>
 				</div>
 				<div class="modal-footer text-right">
@@ -504,7 +504,7 @@ app('pathway')
 							<label for="NotesText" class="col-sm-2 col-form-label">
 								Body
 								<a href="#help1" data-toggle="modal" class="text-info tip" title="Help">
-									<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+									<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 								</a>
 							</label>
 							<div class="col-sm-10">

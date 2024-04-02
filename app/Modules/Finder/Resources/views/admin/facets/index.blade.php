@@ -46,15 +46,15 @@ app('pathway')
 		<div class="row">
 			<div class="col-md-3 filter-search">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="btn input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="btn input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
 			<div class="col col-md-9 text-right">
-				<label class="sr-only" for="filter_state">{{ trans('finder::finder.state') }}</label>
+				<label class="sr-only visually-hidden" for="filter_state">{{ trans('finder::finder.state') }}</label>
 				<select name="state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('finder::finder.state_all') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('global.published') }}</option>
@@ -71,7 +71,7 @@ app('pathway')
 	<div class="card mb-4">
 		<div class="table-responsive">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('finder::finder.finder') }}</caption>
+		<caption class="sr-only visually-hidden">{{ trans('finder::finder.finder') }}</caption>
 		<thead>
 			<tr>
 				@if (auth()->user()->can('delete finder'))

@@ -31,6 +31,6 @@ $paginator->withPath(route('admin.media.index', ['folder' => $folder, 'layout' =
 
 <div class="spinner d-none">
 	<div class="spinner-border" role="status">
-		<span class="sr-only">{{ trans('global.loading') }}</span>
+		<span class="sr-only visually-hidden">{{ trans('global.loading') }}</span>
 	</div>
 </div>

@@ -69,10 +69,10 @@ app('pathway')
 			<div class="col-sm-12 col-md-2 text-right">
 				<div class="btn-group" role="navigation" aria-label="{{ trans('news::news.calendar options') }}">
 					<a target="_blank" class="btn btn-default calendar calendar-subscribe tip" href="{{ $article->subscribeCalendarLink }}" title="{{ trans('news::news.subscribe event') }}"><!--
-						--><span class="fa fa-fw fa-calendar" aria-hidden="true"></span><span class="sr-only">{{ trans('news::news.subscribe') }}</span><!--
+						--><span class="fa fa-fw fa-calendar" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('news::news.subscribe') }}</span><!--
 					--></a>
 					<a target="_blank" class="btn btn-default calendar calendar-download tip" href="{{ $article->downloadCalendarLink }}" title="{{ trans('news::news.download event') }}"><!--
-						--><span class="fa fa-fw fa-download" aria-hidden="true"></span><span class="sr-only">{{ trans('news::news.download') }}</span><!--
+						--><span class="fa fa-fw fa-download" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('news::news.download') }}</span><!--
 					--></a>
 				</div>
 			</div>
@@ -166,7 +166,7 @@ app('pathway')
 					<h3 class="newsupdate">
 						<a href="#{{ str_replace(' ', '_', $update->datetimecreated->toDateTimeLocalString()) }}" class="heading-anchor" title="Link to update at {{ $update->formatDate($update->datetimecreated) }}">
 							<span class="fa fa-link" aria-hidden="true"></span>
-							<span class="sr-only">Link to update at {{ $update->formatDate($update->datetimecreated) }}</span>
+							<span class="sr-only visually-hidden">Link to update at {{ $update->formatDate($update->datetimecreated) }}</span>
 						</a>
 						{{ strtoupper(trans('news::news.update')) }}: <time datetime="{{ $update->datetimecreated->toDateTimeLocalString() }}">{{ $update->formatDate($update->datetimecreated) }}</time>
 					</h3>
@@ -178,7 +178,7 @@ app('pathway')
 				<h3 class="newsupdate">
 					<a href="#{{ str_replace(' ', '_', $article->datetimecreated->toDateTimeLocalString()) }}" class="heading-anchor" title="Link to original posting">
 						<span class="fa fa-link" aria-hidden="true"></span>
-						<span class="sr-only">Link to original posting</span>
+						<span class="sr-only visually-hidden">Link to original posting</span>
 					</a>
 					{{ strtoupper(trans('news::news.original')) }}: <time datetime="{{ $article->datetimenews->toDateTimeLocalString() }}">{{ $article->formatDate($article->datetimenews, $article->originalDatetimenewsend) }}</time>
 				</h3>
@@ -223,7 +223,7 @@ app('pathway')
 				<div class="card-body">
 					@if (auth()->user() && auth()->user()->can('edit news'))
 						<a class="edit float-right btn tip" href="{{ route('site.news.manage', ['id' => $article->id]) }}&edit" title="{{ trans('global.edit') }}">
-							<span class="fa fa-fw fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.edit') }}</span>
+							<span class="fa fa-fw fa-pencil" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.edit') }}</span>
 						</a>
 					@endif
 					<strong>{{ trans('news::news.view count') }}:</strong> <span id="viewcount"><span class="spinner">{{ trans('global.loading') }}</span></span>,

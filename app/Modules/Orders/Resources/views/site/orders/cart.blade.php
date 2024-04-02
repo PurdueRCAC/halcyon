@@ -46,7 +46,7 @@
 				?>
 				@if (count($rows))
 					<table class="table order-products mt-0">
-						<caption class="sr-only">{{ trans('orders::orders.products') }}</caption>
+						<caption class="sr-only visually-hidden">{{ trans('orders::orders.products') }}</caption>
 						<thead>
 							<tr>
 								<th scope="col">
@@ -132,7 +132,7 @@
 								@endif
 								<td class="text-nowrap">
 									<a href="{{ route('site.orders.products.delete', ['id' => $product->id]) }}" class="btn btn-sm btn-cart-remove text-danger" data-item="#{{ $product->id }}_product" data-api="{{ route('api.orders.cart.delete', ['id' => $item->rowId]) }}" title="{{ trans('orders::orders.remove from cart') }}">
-										&times;<span class="sr-only">{{ trans('orders::orders.remove from cart') }}</span>
+										&times;<span class="sr-only visually-hidden">{{ trans('orders::orders.remove from cart') }}</span>
 									</a>
 								</td>
 							</tr>
@@ -162,7 +162,7 @@
 			<p>
 				Are you placing this order on behalf of a faculty member?
 				<a href="#help1" data-toggle="modal" class="text-info tip" title="Help">
-					<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+					<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 				</a>
 			</p>
 
@@ -209,7 +209,7 @@
 			<p>
 				Please use the search box below to select the faculty member this order is for:
 				<a href="#help2" data-toggle="modal" class="text-info tip" title="Help">
-					<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+					<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 				</a>
 			</p>
 
@@ -272,7 +272,7 @@
 								<a href="{{ $product->mou }}" target="_blank">{{ $product->name }} - <abbr title="Memorandum of Understanding">MOU</abbr> Agreement</a>
 
 								<a href="#help3" data-toggle="modal" class="text-info tip" title="Help">
-									<strong class="fa fa-question-circle" aria-hidden="true"></strong><span class="sr-only">Please click checkbox after reading and consenting to MOU Agreement.</span>
+									<strong class="fa fa-question-circle" aria-hidden="true"></strong><span class="sr-only visually-hidden">Please click checkbox after reading and consenting to MOU Agreement.</span>
 								</a>
 							</p>
 						</div>

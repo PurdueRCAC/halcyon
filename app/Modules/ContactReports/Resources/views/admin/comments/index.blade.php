@@ -32,7 +32,7 @@
 <form action="{{ route('admin.contactreports.comments', ['report' => $report->id]) }}" method="get" name="adminForm" id="adminForm" class="form-inline">
 
 	<fieldset id="filter-bar">
-		<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+		<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 		<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />

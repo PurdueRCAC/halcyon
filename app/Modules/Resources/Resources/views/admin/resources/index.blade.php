@@ -54,22 +54,22 @@ app('pathway')
 		<div class="row">
 			<div class="col filter-search col-md-4">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
 			<div class="col filter-select col-md-8 text-right">
-				<label class="sr-only" for="filter_state">{{ trans('resources::assets.state') }}</label>
+				<label class="sr-only visually-hidden" for="filter_state">{{ trans('resources::assets.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="all"<?php if ($filters['state'] == 'all'): echo ' selected="selected"'; endif;?>>{{ trans('resources::assets.all states') }}</option>
 					<option value="active"<?php if ($filters['state'] == 'active'): echo ' selected="selected"'; endif;?>>{{ trans('global.active') }}</option>
 					<option value="retired"<?php if ($filters['state'] == 'retired'): echo ' selected="selected"'; endif;?>>{{ trans('resources::assets.retired') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_type">{{ trans('resources::assets.type') }}</label>
+				<label class="sr-only visually-hidden" for="filter_type">{{ trans('resources::assets.type') }}</label>
 				<select name="type" id="filter_type" class="form-control filter filter-submit">
 					<option value="0">{{ trans('resources::assets.all types') }}</option>
 					@foreach ($types as $type)
@@ -77,7 +77,7 @@ app('pathway')
 					@endforeach
 				</select>
 
-				<label class="sr-only" for="filter_batchsystem">{{ trans('resources::assets.batchsystem') }}</label>
+				<label class="sr-only visually-hidden" for="filter_batchsystem">{{ trans('resources::assets.batchsystem') }}</label>
 				<select name="batchsystem" id="filter_batchsystem" class="form-control filter filter-submit">
 					<option value="0">{{ trans('resources::assets.all batchsystems') }}</option>
 					@foreach ($batchsystems as $batchsystem)
@@ -97,7 +97,7 @@ app('pathway')
 	<div class="card mb-4">
 		<div class="table-responsive">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('resources::resources.resources') }}</caption>
+		<caption class="sr-only visually-hidden">{{ trans('resources::resources.resources') }}</caption>
 		<thead>
 			<?php
 			/* Experimental reworking of filters
@@ -236,7 +236,7 @@ app('pathway')
 					@if ($trashed)
 						<!-- <span class="text-danger" data-tip="Removed on {{ $row->datetimeremoved->format('Y-m-d') }}">
 							<span class="fa fa-trash" aria-hidden="true"></span>
-							<span class="sr-only">Removed on {{ $row->datetimeremoved->format('Y-m-d') }}</span>
+							<span class="sr-only visually-hidden">Removed on {{ $row->datetimeremoved->format('Y-m-d') }}</span>
 						</span> -->
 						<span class="badge badge-danger" data-tip="Removed on {{ $row->datetimeremoved->format('Y-m-d') }}">{{ trans('resources::assets.retired') }}</span>
 					@else
@@ -278,7 +278,7 @@ app('pathway')
 					@if ($row->children_count)
 						<a href="{{ route('admin.resources.members', ['id' => $row->id]) }}" data-tip="{{ trans('resources::assets.active users') }}">
 							<span class="fa fa-users" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('resources::assets.active users') }}</a>
+							<span class="sr-only visually-hidden">{{ trans('resources::assets.active users') }}</a>
 						</a>
 					@endif
 				</td>

@@ -51,10 +51,10 @@ app('pathway')
 		<div class="row">
 			<div class="col filter-search col-md-4">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
@@ -65,14 +65,14 @@ app('pathway')
 					<a class="btn btn-outline-secondary<?php if ($filters['state'] == 'inactive'): echo ' active"'; endif; ?>" href="{{ route('admin.storage.index', ['state' => 'inactive']) }}">{{ trans('global.inactive') }}</a>
 				</div> -->
 
-				<label class="sr-only" for="filter_state">{{ trans('global.state') }}</label>
+				<label class="sr-only visually-hidden" for="filter_state">{{ trans('global.state') }}</label>
 				<select name="state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.option.all states') }}</option>
 					<option value="active"<?php if ($filters['state'] == 'active'): echo ' selected="selected"'; endif;?>>{{ trans('global.active') }}</option>
 					<option value="inactive"<?php if ($filters['state'] == 'inactive'): echo ' selected="selected"'; endif;?>>{{ trans('global.inactive') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_resource">{{ trans('storage::storage.resource') }}</label>
+				<label class="sr-only visually-hidden" for="filter_resource">{{ trans('storage::storage.resource') }}</label>
 				<select name="resource" id="filter_resource" class="form-control filter filter-submit searchable-select">
 					<option value="0">{{ trans('storage::storage.all resources') }}</option>
 					@foreach ($resources as $resource)
@@ -92,7 +92,7 @@ app('pathway')
 	<div class="card mb-4">
 		<div class="table-responsive">
 		<table class="table table-hover adminlist">
-			<caption class="sr-only">{{ trans('storage::storage.module name') }}</caption>
+			<caption class="sr-only visually-hidden">{{ trans('storage::storage.module name') }}</caption>
 			<thead>
 				<tr>
 					@if (auth()->user()->can('delete storage'))
@@ -138,7 +138,7 @@ app('pathway')
 							@if ($row->trashed())
 								<span class="text-danger" data-tip="{{ trans('global.trashed') }}: {{ $row->datetimeremoved->format('Y-m-d') }}">
 									<span class="fa fa-trash" aria-hidden="true"></span>
-									<span class="sr-only">{{ trans('global.trashed') }}: <time datetime="{{ $row->datetimeremoved->toDateTimeString() }}">{{ $row->datetimeremoved->format('Y-m-d') }}</time></span>
+									<span class="sr-only visually-hidden">{{ trans('global.trashed') }}: <time datetime="{{ $row->datetimeremoved->toDateTimeString() }}">{{ $row->datetimeremoved->format('Y-m-d') }}</time></span>
 								</span>
 							@endif
 							@if (auth()->user()->can('edit storage'))
@@ -190,7 +190,7 @@ app('pathway')
 							@else
 								@if (!$row->trashed())
 									<a class="btn btn-sm btn-success" href="{{ route('admin.storage.directories.create', ['resource' => $row->id, 'parent' => 0]) }}">
-										<span class="fa fa-plus" aria-hidden="true"></span><span class="sr-only">{{ trans('global.add') }}</span>
+										<span class="fa fa-plus" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.add') }}</span>
 									</a>
 								@endif
 								<span class="text-muted">0</span>

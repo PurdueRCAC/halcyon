@@ -68,7 +68,7 @@ app('pathway')
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col col-md-4 filter-search">
-				<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
+				<label class="form-label sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 				<span class="input-group">
 					<input type="text" name="search" id="filter_search" enterkeyhint="search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 					<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
@@ -77,7 +77,7 @@ app('pathway')
 			<div class="col col-sm-12 col-md-4">
 			</div>
 			<div class="col filter-select text-right text-end">
-				<label class="sr-only visually-hidden" for="filter_state">{{ trans('pages::pages.state') }}</label>
+				<label class="form-label sr-only visually-hidden" for="filter_state">{{ trans('pages::pages.state') }}</label>
 				<select name="state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('pages::pages.state_all') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('global.published') }}</option>
@@ -86,7 +86,7 @@ app('pathway')
 				</select>
 			</div>
 			<div class="col filter-select text-right text-end">
-				<label class="sr-only visually-hidden" for="filter-access">{{ trans('pages::pages.access level') }}</label>
+				<label class="form-label sr-only visually-hidden" for="filter-access">{{ trans('pages::pages.access level') }}</label>
 				<select name="access" id="filter-access" class="form-control filter filter-submit">
 					<option value="0">{{ trans('pages::pages.access select') }}</option>
 					@php

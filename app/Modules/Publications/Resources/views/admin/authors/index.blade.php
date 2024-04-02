@@ -81,7 +81,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 		<div class="row">
 			<div class="col col-md-3">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 						<span class="input-group-append"><span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span></span>
@@ -89,18 +89,18 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 				</div>
 			</div>
 			<div class="col col-md-9 text-right filter-select">
-				<label class="sr-only" for="filter_menutype">{{ trans('publications::publications.menu type') }}</label>
+				<label class="sr-only visually-hidden" for="filter_menutype">{{ trans('publications::publications.menu type') }}</label>
 				<select name="menutype" id="filter_menutype" class="form-control filter filter-submit">
 					<?php echo \App\Halcyon\Html\Builder\Select::options(\App\Modules\Publications\Helpers\Html::publications(), 'value', 'text', $filters['menutype']); ?>
 				</select>
 
-				<label class="sr-only" for="filter_level">{{ trans('publications::publications.level') }}</label>
+				<label class="sr-only visually-hidden" for="filter_level">{{ trans('publications::publications.level') }}</label>
 				<select name="level" id="filter_level" class="form-control filter filter-submit">
 					<option value="">{{ trans('publications::publications.all levels') }}</option>
 					<?php echo \App\Halcyon\Html\Builder\Select::options($f_levels, 'value', 'text', $filters['level']); ?>
 				</select>
 
-				<label class="sr-only" for="filter_state">{{ trans('global.state') }}</label>
+				<label class="sr-only visually-hidden" for="filter_state">{{ trans('global.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="">{{ trans('publications::publications.all states') }}</option>
 					<?php //echo \App\Halcyon\Html\Builder\Select::options(\App\Halcyon\Html\Builder\Grid::publishedOptions(array('archived' => false)), 'value', 'text', $filters['state'], true); ?>
@@ -109,7 +109,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 					<option value="trashed"<?php if ($filters['state'] == 'trashed') { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_access">{{ trans('global.access') }}</label>
+				<label class="sr-only visually-hidden" for="filter_access">{{ trans('global.access') }}</label>
 				<select name="access" id="filter_access" class="form-control filter filter-submit">
 					<option value="">{{ trans('publications::publications.all access levels') }}</option>
 					<?php echo \App\Halcyon\Html\Builder\Select::options(\App\Halcyon\Html\Builder\Access::assetgroups(), 'value', 'text', $filters['access']); ?>
@@ -127,11 +127,11 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 	<div class="card mb-4">
 		<div class="table-responsive">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('publications::publications.items') }}</caption>
+		<caption class="sr-only visually-hidden">{{ trans('publications::publications.items') }}</caption>
 		<thead>
 			<tr>
 				<th>
-					<span class="form-check"><input type="checkbox" name="toggle" value="" id="toggle-all" class="form-check-input checkbox-toggle toggle-all" /> <label for="toggle-all" class="sr-only">Check all</label></span>
+					<span class="form-check"><input type="checkbox" name="toggle" value="" id="toggle-all" class="form-check-input checkbox-toggle toggle-all" /> <label for="toggle-all" class="sr-only visually-hidden">Check all</label></span>
 				</th>
 				<th scope="col" class="priority-5">{{ trans('publications::publications.id') }}</th>
 				<th scope="col">{{ trans('publications::publications.title') }}</th>

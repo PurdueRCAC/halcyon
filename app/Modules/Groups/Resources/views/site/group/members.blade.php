@@ -320,7 +320,7 @@ $i = 0;
 	<div class="card-body">
 		<form id="FORM_{{ $group->id }}" method="post">
 			<table class="table table-hover fitToPanel">
-				<caption class="sr-only">Membership Requests</caption>
+				<caption class="sr-only visually-hidden">Membership Requests</caption>
 				<thead>
 					<tr>
 						<th scope="col">Name(s)</th>
@@ -378,7 +378,7 @@ $i = 0;
 						<td colspan="2" class="text-center">
 							<button id="submit-requests" data-groupid="{{ $group->id }}" class="btn btn-success" disabled>
 								{{ trans('global.button.save') }}
-								<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.saving') }}</span></span>
+								<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only visually-hidden">{{ trans('global.saving') }}</span></span>
 							</button>
 						</td>
 					</tr>
@@ -396,7 +396,7 @@ $i = 0;
 		Managers
 		<a href="#help_managers_span_{{ $group->id }}" data-toggle="modal" class="text-info tip" title="Help">
 			<span class="fa fa-question-circle" aria-hidden="true"></span>
-			<span class="sr-only">Help</span>
+			<span class="sr-only visually-hidden">Help</span>
 		</a>
 		<div class="modal dialog" id="help_managers_span_{{ $group->id }}" tabindex="-1" aria-labelledby="help_managers_span_{{ $group->id }}-title" aria-hidden="true" title="Managers">
 			<div class="modal-dialog modal-dialog-centered">
@@ -420,7 +420,7 @@ $i = 0;
 		@endif
 
 		<table class="table datatable" data-length="{{ $managers->total() }}">
-			<caption class="sr-only">Managers</caption>
+			<caption class="sr-only visually-hidden">Managers</caption>
 			<thead>
 				<tr>
 					<th scope="col" colspan="3">User Info</th>
@@ -448,7 +448,7 @@ $i = 0;
 							{{ $queue->name }} ({{ $queue->resource->name }})
 							@if (!$queue->active)
 								<!-- <span class="fa fa-exclamation-triangle text-warning tip" title="{{ trans('queues::queues.inactive queue and membership is frozen') }}">
-									<span class="sr-only">{{ trans('queues::queues.inactive queue and membership is frozen') }}</span>
+									<span class="sr-only visually-hidden">{{ trans('queues::queues.inactive queue and membership is frozen') }}</span>
 								</span> -->
 							@endif
 						</th>
@@ -489,7 +489,7 @@ $i = 0;
 								@elseif ($member->userid != $user->id || auth()->user()->can('manage groups'))
 									<div class="dropdown dropright mx-3">
 										<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-											<span class="sr-only">Options</span>
+											<span class="sr-only visually-hidden">Options</span>
 										</button>
 										<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
 											<a href="#manager-{{ $member->id }}" class="dropdown-item btn membership-move demote" data-api="{{ route('api.groups.members.update', ['id' => $member->id]) }}" data-userid="{{ $member->userid }}" data-target="1" data-method="{{ $member->groupid ? 'put' : 'post' }}" title="Remove manager privileges">
@@ -537,7 +537,7 @@ $i = 0;
 							<td class="col-queue text-nowrap text-center">
 							@if (!in_array($queue->resource->access, $member->user->getAuthorisedViewLevels()))
 								<span class="fa fa-exclamation-triangle text-warning tip" title="{{ trans('queues::queues.user does not have access') }}">
-									<span class="sr-only">{{ trans('queues::queues.user does not have access') }}</span>
+									<span class="sr-only visually-hidden">{{ trans('queues::queues.user does not have access') }}</span>
 								</span>
 							@else
 								<input type="checkbox"
@@ -613,7 +613,7 @@ $i = 0;
 		Members
 		<a href="#help_members_span_{{ $group->id }}" data-toggle="modal" class="text-info tip" title="Help">
 			<span class="fa fa-question-circle" aria-hidden="true"></span>
-			<span class="sr-only">Help</span>
+			<span class="sr-only visually-hidden">Help</span>
 		</a>
 		<div class="modal dialog" id="help_members_span_{{ $group->id }}" tabindex="-1" aria-labelledby="help_members_span_{{ $group->id }}-title" aria-hidden="true" title="Members">
 			<div class="modal-dialog modal-dialog-centered">
@@ -634,7 +634,7 @@ $i = 0;
 	<div class="card-body">
 		@if (count($members) > 0)
 			<table class="table datatable" data-length="{{ $members->total() }}">
-				<caption class="sr-only">Members</caption>
+				<caption class="sr-only visually-hidden">Members</caption>
 				<thead>
 					<tr>
 						<th scope="col" colspan="3">User Info</th>
@@ -654,7 +654,7 @@ $i = 0;
 								{{ $queue->name }} ({{ $queue->resource->name }})
 								@if (!$queue->active)
 									<!-- <span class="fa fa-exclamation-triangle text-warning tip" title="{{ trans('queues::queues.inactive queue and membership is frozen') }}">
-										<span class="sr-only">{{ trans('queues::queues.inactive queue and membership is frozen') }}</span>
+										<span class="sr-only visually-hidden">{{ trans('queues::queues.inactive queue and membership is frozen') }}</span>
 									</span> -->
 								@endif
 							</th>
@@ -688,7 +688,7 @@ $i = 0;
 									@elseif ($member->userid != $user->id || auth()->user()->can('manage groups'))
 										<div class="dropdown dropleft mx-3">
 											<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												<span class="sr-only">Options</span>
+												<span class="sr-only visually-hidden">Options</span>
 											</button>
 											<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
 												@if (count($queues))
@@ -744,7 +744,7 @@ $i = 0;
 								<td class="text-center col-queue">
 									@if ($queue->resource->access && !in_array($queue->resource->access, $member->user->getAuthorisedViewLevels()))
 										<span class="fa fa-exclamation-triangle text-warning tip" title="{{ trans('queues::queues.user does not have access') }}">
-											<span class="sr-only">{{ trans('queues::queues.user does not have access') }}</span>
+											<span class="sr-only visually-hidden">{{ trans('queues::queues.user does not have access') }}</span>
 										</span>
 									@else
 									<input type="checkbox"
@@ -821,7 +821,7 @@ $i = 0;
 		Usage Reporting Viewers
 		<a href="#help_viewers_span_{{ $group->id }}" data-toggle="modal" class="text-help tip" title="Help">
 			<span class="fa fa-question-circle" aria-hidden="true"></span>
-			<span class="sr-only">Help</span>
+			<span class="sr-only visually-hidden">Help</span>
 		</a>
 		<div class="modal dialog" id="help_viewers_span_{{ $group->id }}" tabindex="-1" aria-labelledby="help_viewers_span_{{ $group->id }}-title" aria-hidden="true" title="Usage Reporting Viewers">
 			<div class="modal-dialog modal-dialog-centered">
@@ -841,7 +841,7 @@ $i = 0;
 	</div>
 	<div class="card-body">
 		<table class="table datatable" data-length="{{ $viewers->total() }}">
-			<caption class="sr-only">Viewers</caption>
+			<caption class="sr-only visually-hidden">Viewers</caption>
 			<thead>
 				<tr>
 					<th scope="col" colspan="3">User Info</th>
@@ -861,7 +861,7 @@ $i = 0;
 							{{ $queue->name }} ({{ $queue->resource->name }})
 							@if (!$queue->active)
 								<!-- <span class="fa fa-exclamation-triangle text-warning tip" title="{{ trans('queues::queues.inactive queue and membership is frozen') }}">
-									<span class="sr-only">{{ trans('queues::queues.inactive queue and membership is frozen') }}</span>
+									<span class="sr-only visually-hidden">{{ trans('queues::queues.inactive queue and membership is frozen') }}</span>
 								</span> -->
 							@endif
 						</th>
@@ -893,7 +893,7 @@ $i = 0;
 								@elseif ($member->userid != $user->id || auth()->user()->can('manage groups'))
 									<div class="dropdown dropright mx-3">
 										<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-											<span class="sr-only">Options</span>
+											<span class="sr-only visually-hidden">Options</span>
 										</button>
 										<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
 											<a href="#member{{ $member->id }}" class="dropdown-item btn membership-allqueues allqueues" title="Enable all queues for this user">
@@ -935,7 +935,7 @@ $i = 0;
 							<td class="text-center col-queue">
 								@if ($queue->resource->access && !in_array($queue->resource->access, $member->user->getAuthorisedViewLevels()))
 									<span class="fa fa-exclamation-triangle text-warning tip" title="{{ trans('queues::queues.user does not have access') }}">
-										<span class="sr-only">{{ trans('queues::queues.user does not have access') }}</span>
+										<span class="sr-only visually-hidden">{{ trans('queues::queues.user does not have access') }}</span>
 									</span>
 								@else
 									<input type="checkbox"
@@ -1010,7 +1010,7 @@ $i = 0;
 		Disabled Members
 		<a href="#help_disabledmembers_span_{{ $group->id }}" data-toggle="modal" class="text-help tip" title="Help">
 			<span class="fa fa-question-circle" aria-hidden="true"></span>
-			<span class="sr-only">Help</span>
+			<span class="sr-only visually-hidden">Help</span>
 		</a>
 		<div class="modal dialog" id="help_disabledmembers_span_{{ $group->id }}" tabindex="-1" aria-labelledby="help_disabledmembers_span_{{ $group->id }}-title" aria-hidden="true" title="Disabled Members">
 			<div class="modal-dialog modal-dialog-centered">
@@ -1031,7 +1031,7 @@ $i = 0;
 	<div class="card-body">
 		@if (count($disabled) > 0)
 			<table class="table table-hover hover datatable" data-length="{{ $disabled->total() }}">
-				<caption class="sr-only">Disabled Members</caption>
+				<caption class="sr-only visually-hidden">Disabled Members</caption>
 				<thead>
 					<tr>
 						<th scope="col" colspan="3">User Info</th>
@@ -1071,7 +1071,7 @@ $i = 0;
 							</td>
 							<td class="text-center">
 								<a href="#member{{ $member->id }}" class="membership-remove delete tip" data-api="{{ $member->groupid ? route('api.groups.members.delete', ['id' => $member->id]) : '' }}" title="Remove from group">
-									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">Remove from group</span>
+									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">Remove from group</span>
 								</a>
 							</td>
 							<?php
@@ -1182,7 +1182,7 @@ $i = 0;
 						<legend>Queue Selection</legend>
 
 						<table id="queue-selection" class="table table-hover mb-0 groupSelect">
-							<caption class="sr-only">Queues by Resource</caption>
+							<caption class="sr-only visually-hidden">Queues by Resource</caption>
 							<tbody>
 								@foreach ($resources as $name => $queues)
 									<tr>
@@ -1237,7 +1237,7 @@ $i = 0;
 					data-api-unixgroupusers="{{ route('api.unixgroups.members.create') }}"
 					data-api-queueusers="{{ route('api.queues.users.create') }}"
 					>
-					<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.saving') }}</span></span>
+					<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only visually-hidden">{{ trans('global.saving') }}</span></span>
 					{{ trans('global.button.save') }}
 				</button>
 			</div>

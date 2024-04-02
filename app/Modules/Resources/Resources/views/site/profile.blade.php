@@ -9,7 +9,7 @@
 				<h3 class="card-title">
 					{{ trans('resources::assets.resources') }}
 					<a href="#roles_help" data-toggle="modal" class="text-info tip" title="{{ trans('resources::assets.roles help') }}">
-						<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('resources::assets.roles help') }}</span>
+						<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('resources::assets.roles help') }}</span>
 					</a>
 				</h3>
 
@@ -46,7 +46,7 @@
 	</div>
 	<div class="card-body">
 		<table class="table table-hover" id="roles" data-api="{{ route('api.resources.index', ['limit' => 100]) }}">
-			<caption class="sr-only">{{ trans('resources::assets.resource membership') }}</caption>
+			<caption class="sr-only visually-hidden">{{ trans('resources::assets.resource membership') }}</caption>
 			<thead>
 				<tr>
 					<th scope="col">{{ trans('resources::assets.resource') }}</th>
@@ -65,7 +65,7 @@
 					<td id="resource{{ $resource->id }}_pi"></td>
 					<td id="resource{{ $resource->id }}" data-api="{{ route('api.resources.members') }}">
 						<span class="fa fa-exclamation-triangle text-warning" aria-hidde="true"></span>
-						<span class="sr-only">{{ trans('global.loading') }}</span>
+						<span class="sr-only visually-hidden">{{ trans('global.loading') }}</span>
 					</td>
 				</tr>
 			@endforeach

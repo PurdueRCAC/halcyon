@@ -20,7 +20,7 @@
 		{
 			?>
 			<table class="table table-hover history">
-				<caption class="sr-only">{{ trans('groups::groups.history.title') }}</caption>
+				<caption class="sr-only visually-hidden">{{ trans('groups::groups.history.title') }}</caption>
 				<thead>
 					<tr>
 						<th scope="col">{{ trans('groups::groups.history.date') }}</th>

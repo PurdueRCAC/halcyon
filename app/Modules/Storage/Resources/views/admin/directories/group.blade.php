@@ -239,7 +239,7 @@
 											</div>
 											<div class="row mb-3">
 												<div class="col-md-4">
-													Actual quota <span class="fa fa-exclamation-triangle" data-tip="Storage space is over-allocated. Quotas reduced until allocation balanced."><span class="sr-only">Storage space is over-allocated. Quotas reduced until allocation balanced.</span></span>
+													Actual quota <span class="fa fa-exclamation-triangle" data-tip="Storage space is over-allocated. Quotas reduced until allocation balanced."><span class="sr-only visually-hidden">Storage space is over-allocated. Quotas reduced until allocation balanced.</span></span>
 												</div>
 												<div class="col-md-8">
 													{{ $dir->formattedBytes }}
@@ -459,7 +459,7 @@
 											</div>
 											<div class="col-md-8">
 												<table class="table table-bordered">
-													<caption class="sr-only">{{ trans('storage::storage.permissions') }}</caption>
+													<caption class="sr-only visually-hidden">{{ trans('storage::storage.permissions') }}</caption>
 													<thead>
 														<tr>
 															<th scope="col">{{ trans('storage::storage.group') }}</th>
@@ -544,16 +544,16 @@
 															</td>
 															<td class="text-center">
 																@if ($child['permissions']['group']['read'])
-																	<span class="fa fa-check text-success success dirperm"><span class="sr-only">{{ trans('global.yes') }}</span></span>
+																	<span class="fa fa-check text-success success dirperm"><span class="sr-only visually-hidden">{{ trans('global.yes') }}</span></span>
 																@else
-																	<span class="fa fa-times text-danger failed dirperm"><span class="sr-only">{{ trans('global.no') }}</span></span>
+																	<span class="fa fa-times text-danger failed dirperm"><span class="sr-only visually-hidden">{{ trans('global.no') }}</span></span>
 																@endif
 															</td>
 															<td class="text-center">
 																@if ($child['permissions']['group']['write'])
-																	<span class="fa fa-check text-success success dirperm"><span class="sr-only">{{ trans('global.yes') }}</span></span>
+																	<span class="fa fa-check text-success success dirperm"><span class="sr-only visually-hidden">{{ trans('global.yes') }}</span></span>
 																@else
-																	<span class="fa fa-times text-danger failed dirperm"><span class="sr-only">{{ trans('global.no') }}</span></span>
+																	<span class="fa fa-times text-danger failed dirperm"><span class="sr-only visually-hidden">{{ trans('global.no') }}</span></span>
 																@endif
 															</td>
 														</tr>
@@ -586,7 +586,7 @@
 												</div>
 												<div class="col-md-8">
 													<table class="table table-hover">
-														<caption class="sr-only">{{ trans('storage::storage.future quota') }}</caption>
+														<caption class="sr-only visually-hidden">{{ trans('storage::storage.future quota') }}</caption>
 														<thead>
 															<tr>
 																<th scope="col">Date</th>
@@ -639,7 +639,7 @@
 															?>
 															<span class="badge badge-warning">over-allocated</span>
 															<button id="{{ $dir->id }}_quota_upa" class="btn tip text-danger quota_upa<?php echo $cls; ?>" data-dir="{{ $dir->id }}" data-api="{{ route('api.storage.directories.update', ['id' => $dir->id]) }}" title="{{ trans('storage::storage.remove overallocated') }}">
-																<span id="{{ $dir->id }}_quota_up" class="fa fa-arrow-down" aria-hidden="true"></span><span class="sr-only">{{ trans('storage::storage.remove overallocated') }}</span>
+																<span id="{{ $dir->id }}_quota_up" class="fa fa-arrow-down" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('storage::storage.remove overallocated') }}</span>
 															</button>
 															<?php
 														}
@@ -648,7 +648,7 @@
 													{
 														?>
 														<button id="{{ $dir->id }}_quota_upa" class="btn text-info tip quota_upa<?php echo $cls; ?>" data-dir="{{ $dir->id }}" data-api="{{ route('api.storage.directories.update', ['id' => $dir->id]) }}" title="{{ trans('storage::storage.distribute remaining') }}">
-															<span id="{{ $dir->id }}_quota_up" class="fa fa-arrow-up" aria-hidden="true"></span><span class="sr-only">{{ trans('storage::storage.distribute remaining') }}</span>
+															<span id="{{ $dir->id }}_quota_up" class="fa fa-arrow-up" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('storage::storage.distribute remaining') }}</span>
 														</button>
 														<?php
 													}
@@ -714,7 +714,7 @@
 									?>
 									<div class="progress" style="height: 3px">
 										<div class="progress-bar <?php echo $cls; ?>" role="progressbar" style="width: <?php echo $val; ?>%;" aria-valuenow="<?php echo $val; ?>" aria-valuemin="0" aria-valuemax="100" aria-label="<?php echo $val; ?>% space used">
-											<span class="sr-only"><?php echo $val; ?>%</span>
+											<span class="sr-only visually-hidden"><?php echo $val; ?>%</span>
 										</div>
 									</div>
 								@endif
@@ -729,8 +729,8 @@
 							<div class="col-md-1 text-right">
 								<a href="#{{ $dir->id }}_dialog" class="details updatequota tip" data-api="{{ route('api.storage.directories.update', ['id' => $top]) }}" data-id="{{ $top }}" title="Update usage now"><!--
 								--><span class="fa fa-undo updater" aria-hidden="true"></span><!--
-								--><span class="spinner-border spinner-border-sm hide" role="status"><span class="sr-only">Loading...</span></span><!--
-								--><span class="sr-only">Update usage now</span><!--
+								--><span class="spinner-border spinner-border-sm hide" role="status"><span class="sr-only visually-hidden">Loading...</span></span><!--
+								--><span class="sr-only visually-hidden">Update usage now</span><!--
 							--></a>
 							</div>
 						</div>
@@ -750,7 +750,7 @@
 							{{ trans('storage::storage.history') }}
 							<a href="#help_history" data-toggle="modal" class="text-info tip" title="Help">
 								<span class="fa fa-question-circle" aria-hidden="true"></span>
-								<span class="sr-only">Help</span>
+								<span class="sr-only visually-hidden">Help</span>
 							</a>
 							<div class="modal modal-help text-left" id="help_history" tabindex="-1" aria-labelledby="help_history-title" aria-hidden="true">
 								<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
@@ -804,7 +804,7 @@
 					?>
 					@if (count($history))
 						<table class="table table-hover">
-							<caption class="sr-only">{{ trans('storage::storage.history') }}</caption>
+							<caption class="sr-only visually-hidden">{{ trans('storage::storage.history') }}</caption>
 							<thead>
 								<tr>
 									<th scope="col">{{ trans('storage::storage.type') }}</th>
@@ -876,7 +876,7 @@
 												data-toggle="modal"
 												data-api="{{ route('api.storage.' . ($item->type == 'loan' ? 'loans' : 'purchases'). '.update', ['id' => $item->id]) }}"
 												data-id="{{ $item->id }}">
-												<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
+												<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.edit') }}</span>
 											</a>
 
 											<?php
@@ -1002,7 +1002,7 @@
 												data-confirm="{{ trans('global.confirm delete') }}"
 												data-api="{{ route('api.storage.' . ($item->type == 'loan' ? 'loans' : 'purchases'). '.delete', ['id' => $item->id]) }}"
 												data-id="{{ $item->id }}">
-												<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }}</span>
+												<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.delete') }}</span>
 											</button>
 										</td>
 										@endif
@@ -1194,7 +1194,7 @@
 					{{ trans('storage::storage.messages') }}
 					<a href="#help_messages" data-toggle="modal" class="text-info tip" title="Help">
 						<span class="fa fa-question-circle" aria-hidden="true"></span>
-						<span class="sr-only">Help</span>
+						<span class="sr-only visually-hidden">Help</span>
 					</a>
 					<div class="modal modal-help text-left" id="help_messages" tabindex="-1" aria-labelledby="help_messages-title" aria-hidden="true">
 						<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
@@ -1215,7 +1215,7 @@
 				<div class="card-body panel-body">
 					@if ($group->messages->count())
 						<table class="table table-hover">
-							<caption class="sr-only">{{ trans('storage::storage.messages') }}</caption>
+							<caption class="sr-only visually-hidden">{{ trans('storage::storage.messages') }}</caption>
 							<thead>
 								<tr>
 									<th scope="col">{{ trans('storage::storage.status') }}</th>
@@ -1241,7 +1241,7 @@
 											@elseif ($message->status == 'queued')
 												<span class="fa fa-ellipsis-h text-info tip" aria-hidden="true" title="{{ trans('messages::messages.' . $message->status) }}"></span>
 											@endif
-											<span class="sr-only">{{ trans('messages::messages.' . $message->status) }}</span>
+											<span class="sr-only visually-hidden">{{ trans('messages::messages.' . $message->status) }}</span>
 										</td>
 										<td>{{ $message->target }}</td>
 										<td>{{ $message->type->name }}</td>
@@ -1289,7 +1289,7 @@
 									<input type="text" class="form-control" id="unixgroup" value="" />
 									<span class="input-group-append">
 										<button class="input-group-text btn btn-primary unixgroup-basename-set" data-api="{{ route('api.groups.update', ['id' => $group->id]) }}" data-id="{{ $group->id }}">
-											<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
+											<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only visually-hidden">{{ trans('global.loading') }}</span></span>
 											{{ trans('global.button.save') }}
 										</button>
 									</span>
@@ -1318,7 +1318,7 @@
 						?>
 						<p>
 							<button <?php echo $disabled; ?> class="btn btn-primary unixgroup-create" data-api="{{ route('api.unixgroups.create') }}" data-value="{{ $group->unixgroup }}" data-group="{{ $group->id }}">
-								<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
+								<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only visually-hidden">{{ trans('global.loading') }}</span></span>
 								Create Unix Groups
 							</button>
 						</p>
@@ -1615,7 +1615,7 @@
 									data-base="{{ $group->primaryUnixGroup ? $group->primaryUnixGroup->id : 0 }}"
 									data-apps="{{ $apps ? $apps->id : 0 }}"
 									data-data="{{ $data ? $data->id : 0 }}">
-									<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
+									<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only visually-hidden">{{ trans('global.loading') }}</span></span>
 									{{ trans('Create Directories') }}
 								</button>
 							</div>

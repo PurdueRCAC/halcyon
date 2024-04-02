@@ -189,10 +189,10 @@ app('pathway')
 		<div class="row">
 			<div class="col col-md-12">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 
@@ -208,7 +208,7 @@ app('pathway')
 	<div class="card mb-4">
 		<div class="table-responsive">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('orders::orders.approvers') }}</caption>
+		<caption class="sr-only visually-hidden">{{ trans('orders::orders.approvers') }}</caption>
 		<thead>
 			<tr>
 				@if (auth()->user()->can('delete orders.approvers'))
@@ -259,7 +259,7 @@ app('pathway')
 					@if (auth()->user()->can('manage orders'))
 						<div class="approver-edit-controls d-none" id="user{{ $row->id }}-field">
 							<span class="input-group">
-								<label for="field-userid" class="sr-only">{{ trans('orders::orders.account approver') }}</label>
+								<label for="field-userid" class="sr-only visually-hidden">{{ trans('orders::orders.account approver') }}</label>
 								<select name="userid" id="userid{{ $row->id }}" class="form-control form-control-s form-user" data-api="{{ route('api.users.index') }}">
 									@if ($user)
 										<option value="{{ $user->id }}">{{ $user->name }} ({{ $user->username}})</option>
@@ -273,7 +273,7 @@ app('pathway')
 										data-departmentid="{{ $row->id }}"
 										data-name="{{ $user ? $user->name . ' (' . $user->username . ')' : '' }}">
 										<span class="fa fa-save" aria-hidden="true"></span>
-										<span class="sr-only">{{ trans('global.save') }}</span>
+										<span class="sr-only visually-hidden">{{ trans('global.save') }}</span>
 									</button>
 								</span>
 							</span>
@@ -284,11 +284,11 @@ app('pathway')
 					@if (auth()->user()->can('manage orders'))
 						<a class="approver-edit-controls approver-edit" href="#user{{ $row->id }}-field" data-hide="user{{ $row->id }}" data-show="user{{ $row->id }}-cancel" id="user{{ $row->id }}-edit" title="{{ trans('global.button.edit') }}">
 							<span class="fa fa-pencil" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('global.button.edit') }}</span>
+							<span class="sr-only visually-hidden">{{ trans('global.button.edit') }}</span>
 						</a>
 						<a class="approver-edit-controls approver-cancel d-none" href="#user{{ $row->id }}" id="user{{ $row->id }}-cancel" title="{{ trans('global.button.cancel') }}">
 							<span class="fa fa-ban" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('global.button.cancel') }}</span>
+							<span class="sr-only visually-hidden">{{ trans('global.button.cancel') }}</span>
 						</a>
 					@endif
 				</td>

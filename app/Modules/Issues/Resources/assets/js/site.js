@@ -1105,7 +1105,7 @@ function IssuesPrintRow(report, userid, cls) {
 	span = document.createElement("span");
 
 	var label = document.createElement("label");
-	label.className = "sr-only";
+	label.className = "sr-only visually-hidden";
 	label.innerHTML = "Report";
 	label.setAttribute('for', report['id'] + "_textarea");
 
@@ -1139,7 +1139,7 @@ function IssuesPrintRow(report, userid, cls) {
 	div.id = report['id'] + "_newupdate";
 
 	label = document.createElement("label");
-	label.className = "sr-only";
+	label.className = "sr-only visually-hidden";
 	label.innerHTML = "Comment";
 	label.setAttribute('for', report['id'] + "_newcommentbox");
 
@@ -1350,7 +1350,7 @@ function IssuesPrintComment(issueid, comment, userid) {
 		span = document.createElement("span");
 
 		var label = document.createElement("label");
-		label.className = "sr-only";
+		label.className = "sr-only visually-hidden";
 		label.innerHTML = "Comment";
 		label.setAttribute('for', comment['id'] + "_commenttextarea");
 

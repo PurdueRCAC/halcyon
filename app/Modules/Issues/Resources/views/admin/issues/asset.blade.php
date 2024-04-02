@@ -1,6 +1,6 @@
 <div class="card mb-4">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('issues::issues.issues') }}</caption>
+		<caption class="sr-only visually-hidden">{{ trans('issues::issues.issues') }}</caption>
 		<thead>
 			<tr>
 				<th scope="col" class="priority-5">

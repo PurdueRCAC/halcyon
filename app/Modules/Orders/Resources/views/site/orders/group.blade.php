@@ -6,7 +6,7 @@
 	<div class="col-md-12">
 
 		<table class="table table-hover">
-			<caption class="sr-only">{{ trans('orders::orders.orders') }}</caption>
+			<caption class="sr-only visually-hidden">{{ trans('orders::orders.orders') }}</caption>
 			<thead>
 				<tr>
 					<th scope="col">{{ trans('orders::orders.id') }}</th>

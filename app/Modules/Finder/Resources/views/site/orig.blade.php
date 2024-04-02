@@ -86,7 +86,7 @@ app('pathway')->append(
                     <button class="btn btn-sm btn-primary chart-select-none clear-button">Clear Selections</button>
                 </div>
                 <fieldset>
-                    <legend class="sr-only">Present in comparison table?</legend>
+                    <legend class="sr-only visually-hidden">Present in comparison table?</legend>
                     <div class="comparisonlist-wrapper"></div>
                 </fieldset>
                 <div class="comparisonchart-wrapper">

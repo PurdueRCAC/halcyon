@@ -19,7 +19,7 @@
 				Storage Spaces
 				<a href="#storagespacehelp" data-toggle="modal" class="text-info tip" title="Help">
 					<span class="fa fa-question-circle" aria-hidden="true"></span>
-					<span class="sr-only">Help</span>
+					<span class="sr-only visually-hidden">Help</span>
 				</a>
 			</h3>
 		</div>
@@ -47,7 +47,7 @@
 			if ($storagedirquota):
 				?>
 				<table class="table table-hover storage">
-					<caption class="sr-only">
+					<caption class="sr-only visually-hidden">
 						Resource Storage Spaces
 					</caption>
 					<thead>
@@ -87,7 +87,7 @@
 										?>
 										<div class="progress" style="height: 3px">
 											<div class="progress-bar <?php echo $cls; ?>" role="progressbar" style="width: <?php echo $val; ?>%;" aria-valuenow="<?php echo $val; ?>" aria-valuemin="0" aria-valuemax="100" aria-label="<?php echo $val; ?>% space used">
-												<span class="sr-only"><?php echo $val; ?>%</span>
+												<span class="sr-only visually-hidden"><?php echo $val; ?>%</span>
 											</div>
 										</div>
 									@endif
@@ -107,7 +107,7 @@
 										?>
 										<div class="progress" style="height: 3px">
 											<div class="progress-bar <?php echo $cls; ?>" role="progressbar" style="width: <?php echo $val; ?>%;" aria-valuenow="<?php echo $val; ?>" aria-valuemin="0" aria-valuemax="100" aria-label="<?php echo $val; ?>% files allowed used">
-												<span class="sr-only"><?php echo $val; ?>%</span>
+												<span class="sr-only visually-hidden"><?php echo $val; ?>%</span>
 											</div>
 										</div>
 									@endif
@@ -126,8 +126,8 @@
 										data-id="{{ $dir->id }}"
 										title="Update usage now"><!--
 									--><span class="fa fa-undo updater" aria-hidden="true"></span><!--
-									--><span class="spinner-border spinner-border-sm hide" role="status"><span class="sr-only">Loading...</span></span><!--
-									--><span class="sr-only">Update usage now</span><!--
+									--><span class="spinner-border spinner-border-sm hide" role="status"><span class="sr-only visually-hidden">Loading...</span></span><!--
+									--><span class="sr-only visually-hidden">Update usage now</span><!--
 								--></a>
 								</td>
 							</tr>
@@ -159,7 +159,7 @@
 						Storage Alerts
 						<a href="#storagealerthelp" data-toggle="modal" class="text-info tip" title="Help">
 							<span class="fa fa-question-circle" aria-hidden="true"></span>
-							<span class="sr-only">Help</span>
+							<span class="sr-only visually-hidden">Help</span>
 						</a>
 					</h3>
 				</div>
@@ -208,7 +208,7 @@
 			if (count($als) > 0):
 				?>
 				<table class="table table-hover storage">
-					<caption class="sr-only">Current Storage Alerts</caption>
+					<caption class="sr-only visually-hidden">Current Storage Alerts</caption>
 					<thead>
 						<tr>
 							<th scope="col">Location</th>
@@ -274,7 +274,7 @@
 											data-toggle="modal"
 											class="storagealert-edit tip"
 											title="{{ trans('global.button.edit') }}"><!--
-											--><span class="fa fa-pencil"></span><span class="sr-only">{{ trans('global.button.edit') }}</span><!--
+											--><span class="fa fa-pencil"></span><span class="sr-only visually-hidden">{{ trans('global.button.edit') }}</span><!--
 										--></a>
 									</td>
 									<td class="text-right">
@@ -284,7 +284,7 @@
 											data-id="{{ $not->id }}"
 											data-api="{{ route('api.storage.notifications.delete', ['id' => $not->id]) }}"
 											data-confirm="Are you sure you wish to delete this notification?"><!--
-											--><span class="fa fa-trash"></span><span class="sr-only">{{ trans('global.button.delete') }}</span><!--
+											--><span class="fa fa-trash"></span><span class="sr-only visually-hidden">{{ trans('global.button.delete') }}</span><!--
 										--></a>
 									</td>
 								@endif
@@ -479,7 +479,7 @@
 					<h3 class="card-title my-0">
 						Storage Usage Reports
 						<a href="#storageusagehelp" data-toggle="modal" class="text-info tip" title="Help">
-							<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+							<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 						</a>
 					</h3>
 				</div>
@@ -533,7 +533,7 @@
 				//$dir = $sdirs[$not->storagedirid];
 				?>
 				<table class="table table-hover storage">
-					<caption class="sr-only">
+					<caption class="sr-only visually-hidden">
 						Current Storage Usage Reports
 					</caption>
 					<thead>
@@ -587,7 +587,7 @@
 											data-toggle="modal"
 											class="storagealert-edit tip"
 											title="Edit usage report"><!--
-											--><span class="fa fa-pencil"></span><span class="sr-only">Edit</span><!--
+											--><span class="fa fa-pencil"></span><span class="sr-only visually-hidden">Edit</span><!--
 										--></a>
 									</td>
 									<td class="text-right">
@@ -597,7 +597,7 @@
 											data-id="{{ $not->id }}"
 											data-api="{{ route('api.storage.notifications.delete', ['id' => $not->id]) }}"
 											data-confirm="Are you sure you wish to delete this report?"><!--
-											--><span class="fa fa-trash"></span><span class="sr-only">{{ trans('global.button.delete') }}</span><!--
+											--><span class="fa fa-trash"></span><span class="sr-only visually-hidden">{{ trans('global.button.delete') }}</span><!--
 										--></a>
 									</td>
 								@endif

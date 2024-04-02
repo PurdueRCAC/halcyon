@@ -262,7 +262,7 @@ app('pathway')
 
 					<button class="btn btn-delete text-danger">
 						<span class="fa fa-trash" aria-hidden="true"></span>
-						<span class="sr-only">{{ trans('global.button.delete') }}</span>
+						<span class="sr-only visually-hidden">{{ trans('global.button.delete') }}</span>
 					</button>
 				</div>
 				@endif

@@ -271,7 +271,7 @@ $(document).ready(function () {
         // instead of labels, we have field_data[field]["label"]
 
         var help_text_counter = 0;
-        var chart = '<caption class="sr-only">Comparison of services</caption><thead><tr><td></td>';
+        var chart = '<caption class="sr-only visually-hidden">Comparison of services</caption><thead><tr><td></td>';
         for (i = 0; i < servicelist.length; i++) {
             chart = chart + "<th class='service service-" + servicelist[i].id + "' scope='col'>" + servicelist[i]["title"] + "</th>";
         }

@@ -207,7 +207,7 @@ app('pathway')
 				<p>Variables can be included in the headline or body of an article. These allow for inserting information set in other fields, such as start date, end date, location, and/or resources.</p>
 
 				<table class="table table-bordered">
-					<caption class="sr-only">Available Variables</caption>
+					<caption class="sr-only visually-hidden">Available Variables</caption>
 					<tbody>
 						<tr>
 							<th scope="row">%date%</th>
@@ -310,7 +310,7 @@ app('pathway')
 				</div>
 				<div class="modal-body" id="preview">
 					<div class="spinner-border" role="status">
-						<span class="sr-only">Loading...</span>
+						<span class="sr-only visually-hidden">Loading...</span>
 					</div>
 				</div>
 			</div>
@@ -328,7 +328,7 @@ app('pathway')
 				</div>
 				<div class="modal-body" id="mailpreview">
 					<div class="spinner-border" role="status">
-						<span class="sr-only">Loading...</span>
+						<span class="sr-only visually-hidden">Loading...</span>
 					</div>
 				</div>
 				<div class="modal-footer text-right">

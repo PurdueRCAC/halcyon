@@ -127,7 +127,7 @@ var msie = document.documentMode;
 			$(main_nav_focus_target).focus();
 		});
 	});
-	$('#mobile-home').after('<a id="mobile-close" href="#"><span class="sr-only">Close Menu</span></a>');
+	$('#mobile-home').after('<a id="mobile-close" href="#"><span class="sr-only visually-hidden">Close Menu</span></a>');
 	$('#mobile-close').click(function(e) {
 		e.preventDefault();
 		$('#main-navigation, #mobile-nav-dimmer').fadeOut(100,function() {

@@ -58,7 +58,7 @@ app('pathway')
 		<div class="row">
 			<div class="col-md-4 filter-search">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 						<span class="input-group-append"><span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span></span>
@@ -66,7 +66,7 @@ app('pathway')
 				</div>
 			</div>
 			<?php /*<div class="col-md-8 filter-select text-right">
-				<label class="sr-only" for="filter_state">{{ trans('news::news.state') }}</label>
+				<label class="sr-only visually-hidden" for="filter_state">{{ trans('news::news.state') }}</label>
 				<select name="state" class="filter filter-submit form-control">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('news::news.state_all') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('news::news.published') }}</option>

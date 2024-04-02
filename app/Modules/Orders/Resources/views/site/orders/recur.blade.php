@@ -28,12 +28,12 @@ app('pathway')
 	recur
 @endcomponent
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-	<h2 class="sr-only">{{ trans('orders::orders.recurring') }}</h2>
+	<h2 class="sr-only visually-hidden">{{ trans('orders::orders.recurring') }}</h2>
 
 	<form action="{{ route('site.orders.recurring') }}" method="get" class="row">
 		<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 			<fieldset class="filters mt-0">
-				<legend class="sr-only">Filter</legend>
+				<legend class="sr-only visually-hidden">Filter</legend>
 
 				<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
 				<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
@@ -57,7 +57,7 @@ app('pathway')
 		<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 			@if (count($rows))
 				<table class="table table-hover mt-0">
-					<caption class="sr-only">{{ trans('orders::orders.recurring items') }}</caption>
+					<caption class="sr-only visually-hidden">{{ trans('orders::orders.recurring items') }}</caption>
 					<thead>
 						<tr>
 							<th scope="col" class="priority-5">

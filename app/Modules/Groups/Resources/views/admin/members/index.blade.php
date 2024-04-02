@@ -178,10 +178,10 @@ app('pathway')
 		<div class="row">
 			<div class="col col-md-4 filter-search">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 
@@ -192,14 +192,14 @@ app('pathway')
 				<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
 			</div>
 			<div class="col col-md-8 filter-select text-right">
-				<label class="sr-only" for="filter-state">{{ trans('groups::groups.state') }}</label>
+				<label class="sr-only visually-hidden" for="filter-state">{{ trans('groups::groups.state') }}</label>
 				<select name="state" id="filter-state" class="form-control filter filter-submit">
 					<option value="*">{{ trans('groups::groups.all states') }}</option>
 					<option value="active"<?php if ($filters['state'] == 'active') { echo ' selected="selected"'; } ?>>{{ trans('global.active') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed') { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter-type">{{ trans('groups::groups.membership type') }}</label>
+				<label class="sr-only visually-hidden" for="filter-type">{{ trans('groups::groups.membership type') }}</label>
 				<select name="type" id="filter-type" class="form-control filter filter-submit">
 					<option value="0">{{ trans('groups::groups.select membership type') }}</option>
 					<?php foreach ($types as $type): ?>
@@ -216,7 +216,7 @@ app('pathway')
 	<div class="card mb-4">
 		<div class="table-responsive">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ $group->name }} &rsaquo; trans('groups::groups.members')</caption>
+		<caption class="sr-only visually-hidden">{{ $group->name }} &rsaquo; trans('groups::groups.members')</caption>
 		<thead>
 			<tr>
 				@if (auth()->user()->can('edit groups'))

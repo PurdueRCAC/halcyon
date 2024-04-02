@@ -100,7 +100,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="queue-schedulerid">{{ trans('queues::queues.scheduler') }}  <span class="required">*</span></label>
-							<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
+							<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only visually-hidden">{{ trans('global.loading') }}</span></span>
 							<select name="schedulerid" id="queue-schedulerid" class="form-control{{ $errors->has('fields.schedulerid') ? ' is-invalid' : '' }}" required>
 								<option value="0">{{ trans('global.none') }}</option>
 								@foreach ($schedulers as $scheduler)
@@ -254,7 +254,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 @endif
 
 <table class="table">
-	<caption class="sr-only">{{ trans('queues::queues.list of queues') }}</caption>
+	<caption class="sr-only visually-hidden">{{ trans('queues::queues.list of queues') }}</caption>
 	<thead>
 		<tr>
 			<th scope="col" class="text-center">{{ trans('queues::queues.state') }}</th>
@@ -284,20 +284,20 @@ $queues = $queues->reject(function($q) use ($canManage)
 						@if ($q->enabled && $q->started && $q->active)
 							@if ($q->reservation)
 								<span class="text-info tip" title="{{ trans('queues::queues.queue has dedicated reservation') }}">
-									<span class="fa fa-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('queues::queues.queue has dedicated reservation') }}</span>
+									<span class="fa fa-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('queues::queues.queue has dedicated reservation') }}</span>
 								</span>
 							@else
 								<span class="text-success tip" title="{{ trans('queues::queues.queue is running') }}">
-									<span class="fa fa-check" aria-hidden="true"></span><span class="sr-only">{{ trans('queues::queues.queue is running') }}</span>
+									<span class="fa fa-check" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('queues::queues.queue is running') }}</span>
 								</span>
 							@endif
 						@elseif ($q->active)
 							<span class="text-danger tip" title="{{ trans('queues::queues.queue is stopped') }}">
-								<span class="fa fa-minus-circle" aria-hidden="true"></span><span class="sr-only">{{ trans('queues::queues.queue is stopped') }}</span>
+								<span class="fa fa-minus-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('queues::queues.queue is stopped') }}</span>
 							</span>
 						@elseif (!$q->active)
 							<span class="text-warning tip" title="{{ trans('queues::queues.queue has not active resources') }}">
-								<span class="fa fa-exclamation-triangle" aria-hidden="true"></span><span class="sr-only">{{ trans('queues::queues.queue has not active resources') }}</span>
+								<span class="fa fa-exclamation-triangle" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('queues::queues.queue has not active resources') }}</span>
 							</span>
 						@endif
 					</td>
@@ -374,7 +374,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 					<td class="text-right">
 						@if (auth()->user()->can('edit queues'))
 						<a class="btn tip" data-toggle="collapse" data-parent="#queues" href="#collapse{{ $q->id }}" title="{{ trans('queues::queues.purchases and loans') }}">
-							<span class="fa fa-list"></span><span class="sr-only">{{ trans('queues::queues.purchases and loans') }}</span>
+							<span class="fa fa-list"></span><span class="sr-only visually-hidden">{{ trans('queues::queues.purchases and loans') }}</span>
 						</a>
 						@endif
 						@if (auth()->user()->can('delete queues'))
@@ -384,7 +384,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 							data-queue="{{ $q->id }}"
 							data-confirm="{{ trans('queues::queues.confirm delete queue') }}"
 							title="{{ trans('global.button.delete') }}">
-							<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }}</span>
+							<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.delete') }}</span>
 						</a>
 						@endif
 					</td>
@@ -419,7 +419,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 									$items = $items->merge($loans)->sortBy('datetimestart');
 									?>
 									<table class="table table-hover">
-										<caption class="sr-only">{{ trans('queues::queues.purchases and loans') }}</caption>
+										<caption class="sr-only visually-hidden">{{ trans('queues::queues.purchases and loans') }}</caption>
 										<thead>
 											<tr>
 												<th scope="col">{{ trans('queues::queues.start') }}</th>
@@ -595,7 +595,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 														data-success="{{ trans('global.messages.item updated') }}"
 														data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes'). '.update', ['id' => $item->id]) }}"
 														data-id="{{ $item->id }}">
-														<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
+														<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.edit') }}</span>
 													</a>
 												</td>
 												<td class="text-right">
@@ -605,7 +605,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 														data-success="{{ trans('global.messages.item deleted', ['count' => 1]) }}"
 														data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes'). '.delete', ['id' => $item->id]) }}"
 														data-id="{{ $item->id }}">
-														<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }}</span>
+														<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.delete') }}</span>
 													</button>
 													@endif
 

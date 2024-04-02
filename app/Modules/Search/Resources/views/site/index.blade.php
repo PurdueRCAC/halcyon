@@ -32,7 +32,7 @@ if ($filters['search'])
 			<div class="col-md-12">
 				<form method="get" action="{{ route('site.search.index') }}">
 					<div class="form-group">
-						<label class="sr-only" for="site_search">{{ trans('search::search.search') }}</label>
+						<label class="sr-only visually-hidden" for="site_search">{{ trans('search::search.search') }}</label>
 						<span class="input-group">
 							<input type="search" enterkeyhint="search" name="search" id="site_search" class="form-control" placeholder="{{ trans('search::search.search placeholder') }}" value="{{ $filters['search'] }}" />
 							<span class="input-group-append">

@@ -60,7 +60,7 @@ app('pathway')
 
 				@if ($row->alias != 'home')
 					<div class="form-group">
-						<label for="field-parent_id">{{ trans('pages::pages.parent') }}: <span class="required">{{ trans('global.required') }}</span></label>
+						<label class="form-label" for="field-parent_id">{{ trans('pages::pages.parent') }}: <span class="required">{{ trans('global.required') }}</span></label>
 						<select name="fields[parent_id]" id="field-parent_id" class="form-control">
 							<option value="1" data-indent="" data-path="">{{ trans('pages::pages.home') }}</option>
 							@foreach ($parents as $page)
@@ -74,13 +74,13 @@ app('pathway')
 				@endif
 
 				<div class="form-group">
-					<label for="field-title">{{ trans('pages::pages.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label class="form-label" for="field-title">{{ trans('pages::pages.title') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					<input type="text" name="fields[title]" id="field-title" class="form-control{{ $errors->has('fields.title') ? ' is-invalid' : '' }}" required maxlength="250" value="{{ $row->title }}" />
 					<span class="invalid-feedback">{{ trans('pages::pages.invalid.title') }}</span>
 				</div>
 
 				<div class="form-group">
-					<label for="field-alias">{{ trans('pages::pages.path') }}:</label>
+					<label class="form-label" for="field-alias">{{ trans('pages::pages.path') }}:</label>
 					<div class="input-group mb-2 mr-sm-2">
 						<div class="input-group-prepend">
 							<div class="input-group-text">{{ url('/') }}<span id="parent-path">{{ ($row->parent && trim($row->parent->path, '/') ? '/' . $row->parent->path : '') }}</span>/</div>
@@ -91,7 +91,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group{{ $errors->has('content') ? ' is-invalid' : '' }}">
-					<label for="field-content">{{ trans('pages::pages.content') }}: <span class="required">{{ trans('global.required') }}</span></label>
+					<label class="form-label" for="field-content">{{ trans('pages::pages.content') }}: <span class="required">{{ trans('global.required') }}</span></label>
 					{!! editor('fields[content]', $row->content, ['rows' => 45, 'class' => 'required', 'required' => 'required', 'id' => 'field-content']) !!}
 				</div>
 			</fieldset>
@@ -101,7 +101,7 @@ app('pathway')
 				<legend>{{ trans('global.publishing') }}</legend>
 
 				<div class="form-group">
-					<label for="field-access">{{ trans('pages::pages.access') }}:</label>
+					<label class="form-label" for="field-access">{{ trans('pages::pages.access') }}:</label>
 					<select class="form-control" name="fields[access]" id="field-access"<?php if ($row->isRoot()) { echo ' readonly="readonly" disabled="disabled"'; } ?>>
 						@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
 							<option value="{{ $access->id }}"<?php if ($row->access == $access->id) { echo ' selected="selected"'; } ?>>{{ $access->title }}</option>
@@ -110,7 +110,7 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-state">{{ trans('pages::pages.state') }}:</label>
+					<label class="form-label" for="field-state">{{ trans('pages::pages.state') }}:</label>
 					<select class="form-control" name="fields[state]" id="field-state"<?php if ($row->isRoot()) { echo ' readonly="readonly" disabled="disabled"'; } ?>>
 						<option value="0"<?php if ($row->state == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
 						<option value="1"<?php if ($row->state == 1) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
@@ -118,12 +118,12 @@ app('pathway')
 				</div>
 
 				<div class="form-group">
-					<label for="field-publish_up">{{ trans('pages::pages.publish up') }}:</label>
+					<label class="form-label" for="field-publish_up">{{ trans('pages::pages.publish up') }}:</label>
 					{!! Html::input('calendar', 'fields[publish_up]', Carbon\Carbon::parse($row->publish_up ? $row->publish_up : $row->created)) !!}
 				</div>
 
 				<div class="form-group">
-					<label for="field-publish_down">{{ trans('pages::pages.publish down') }}:</label>
+					<label class="form-label" for="field-publish_down">{{ trans('pages::pages.publish down') }}:</label>
 					<span class="input-group input-datetime">
 						<input type="text" name="fields[publish_down]" id="field-publish_down" class="form-control datetime" value="<?php echo ($row->publish_down ? e(Carbon\Carbon::parse($row->publish_down)->toDateTimeString()) : ''); ?>" placeholder="<?php echo ($row->publish_down ? '' : trans('global.never')); ?>" />
 						<span class="input-group-append"><span class="input-group-text fa fa-calendar"></span></span>
@@ -138,7 +138,7 @@ app('pathway')
 					</summary>
 					<fieldset class="card-body mb-0">
 						<div class="form-group">
-							<label for="params-show_title">{{ trans('pages::pages.params.show title') }}:</label>
+							<label class="form-label" for="params-show_title">{{ trans('pages::pages.params.show title') }}:</label>
 							<select class="form-control" aria-describedby="params-show_title" name="params[show_title]" id="params-show_title">
 								<option value="0"<?php if (!$row->params->get('show_title', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 								<option value="1"<?php if ($row->params->get('show_title', 1)) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
@@ -147,7 +147,7 @@ app('pathway')
 						</div>
 
 						<div class="form-group">
-							<label for="params-show_author">{{ trans('pages::pages.params.show author') }}:</label>
+							<label class="form-label" for="params-show_author">{{ trans('pages::pages.params.show author') }}:</label>
 							<select class="form-control" aria-describedby="params-show_author" name="params[show_author]" id="params-show_author">
 								<option value="0"<?php if (!$row->params->get('show_author')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 								<option value="1"<?php if ($row->params->get('show_author')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
@@ -156,7 +156,7 @@ app('pathway')
 						</div>
 
 						<div class="form-group">
-							<label for="params-show_create_date">{{ trans('pages::pages.params.show create date') }}:</label>
+							<label class="form-label" for="params-show_create_date">{{ trans('pages::pages.params.show create date') }}:</label>
 							<select class="form-control" aria-describedby="params-show_create_date-hint" name="params[show_create_date]" id="params-show_create_date">
 								<option value="0"<?php if (!$row->params->get('show_create_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 								<option value="1"<?php if ($row->params->get('show_create_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
@@ -165,7 +165,7 @@ app('pathway')
 						</div>
 
 						<div class="form-group">
-							<label for="params-show_modify_date">{{ trans('pages::pages.params.show modify date') }}:</label>
+							<label class="form-label" for="params-show_modify_date">{{ trans('pages::pages.params.show modify date') }}:</label>
 							<select class="form-control" aria-describedby="params-show_modify_date-hint" name="params[show_modify_date]" id="params-show_modify_date">
 								<option value="0"<?php if (!$row->params->get('show_modify_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 								<option value="1"<?php if ($row->params->get('show_modify_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
@@ -174,7 +174,7 @@ app('pathway')
 						</div>
 
 						<div class="form-group">
-							<label for="params-show_publish_date">{{ trans('pages::pages.params.show publish date') }}:</label>
+							<label class="form-label" for="params-show_publish_date">{{ trans('pages::pages.params.show publish date') }}:</label>
 							<select class="form-control" aria-describedby="params-show_publish_date" name="params[show_publish_date]" id="params-show_publish_date">
 								<option value="0"<?php if (!$row->params->get('show_publish_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.no') }}</option>
 								<option value="1"<?php if ($row->params->get('show_publish_date')) { echo ' selected="selected"'; } ?>>{{ trans('global.yes') }}</option>
@@ -183,7 +183,7 @@ app('pathway')
 						</div>
 
 						<div class="form-group">
-							<label for="params-layout">{{ trans('pages::pages.params.layout') }}:</label>
+							<label class="form-label" for="params-layout">{{ trans('pages::pages.params.layout') }}:</label>
 							<select class="form-control" aria-describedby="params-layout" name="params[layout]" id="params-layout">
 								<option value=""<?php if (!$row->params->get('layout')) { echo ' selected="selected"'; } ?>>{{ trans('pages::pages.params.default layout') }}</option>
 								<option value="none"<?php if ($row->params->get('layout') == 'none') { echo ' selected="selected"'; } ?>>{{ trans('pages::pages.params.no layout') }}</option>
@@ -200,7 +200,7 @@ app('pathway')
 					</summary>
 					<fieldset class="card-body mb-0">
 						<div class="form-group">
-							<label for="params-container_class">{{ trans('pages::pages.container class') }}:</label>
+							<label class="form-label" for="params-container_class">{{ trans('pages::pages.container class') }}:</label>
 							<input type="text" name="params[container_class]" id="params-container_class" class="form-control" value="{{ $row->params->get('container_class') }}" />
 						</div>
 
@@ -212,7 +212,7 @@ app('pathway')
 								@endphp
 								@foreach ($row->params->get('styles', []) as $style)
 									<div class="input-group mb-3" id="params-styles-{{ $i }}-row">
-										<label class="sr-only visually-hidden" for="params-styles-{{ $i }}">{{ trans('pages::pages.styles') }}:</label>
+										<label class="form-label" class="sr-only visually-hidden" for="params-styles-{{ $i }}">{{ trans('pages::pages.styles') }}:</label>
 										<input type="text" class="form-control" name="params[styles][{{ $i }}]" id="params-styles-{{ $i }}" value="{{ $style }}" />
 										<div class="input-group-append">
 											<a href="#params-styles-{{ $i }}-row" class="btn btn-danger delete-row" id="params-styles-{{ $i }}-btn" data-id="params-styles-{{ $i }}">
@@ -227,7 +227,7 @@ app('pathway')
 								@endforeach
 
 								<div class="d-none input-group mb-3" id="params-styles-{{ $i }}">
-									<label class="sr-only visually-hidden" for="params-styles-{{ $i }}">{{ trans('pages::pages.styles') }}:</label>
+									<label class="form-label" class="sr-only visually-hidden" for="params-styles-{{ $i }}">{{ trans('pages::pages.styles') }}:</label>
 									<input type="text" class="form-control" name="params[styles][{{ $i }}]" id="params-styles-{{ $i }}" value="" />
 									<div class="input-group-append">
 										<a href="#params-styles-{{ $i }}" class="btn btn-danger delete-row disabled" id="params-styles-{{ $i }}-btn" data-id="params-styles-{{ $i }}">
@@ -255,7 +255,7 @@ app('pathway')
 								@endphp
 								@foreach ($row->params->get('scripts', []) as $script)
 									<div class="input-group mb-3" id="params-scripts-{{ $i }}-row">
-										<label class="sr-only visually-hidden" for="params-scripts-{{ $i }}">{{ trans('pages::pages.scripts') }}:</label>
+										<label class="form-label sr-only visually-hidden" for="params-scripts-{{ $i }}">{{ trans('pages::pages.scripts') }}:</label>
 										<input type="text" class="form-control" name="params[scripts][{{ $i }}]" id="params-scripts-{{ $i }}" value="{{ $script }}" />
 										<div class="input-group-append">
 											<a href="#params-scripts-{{ $i }}-row" class="btn btn-danger delete-row" id="params-scripts-{{ $i }}-btn" data-id="params-scripts-{{ $i }}">
@@ -269,7 +269,7 @@ app('pathway')
 									@endphp
 								@endforeach
 								<div class="d-none input-group mb-3" id="params-scripts-{{ $i }}-row">
-									<label class="sr-only visually-hidden" for="params-scripts-{{ $i }}">{{ trans('pages::pages.scripts') }}:</label>
+									<label class="form-label sr-only visually-hidden" for="params-scripts-{{ $i }}">{{ trans('pages::pages.scripts') }}:</label>
 									<input type="text" class="form-control" name="params[scripts][{{ $i }}]" id="params-scripts-{{ $i }}" value="" />
 									<div class="input-group-append">
 										<a href="#params-scripts-{{ $i }}-row" class="btn btn-danger delete-row disabled" id="params-scripts-{{ $i }}-btn" data-id="params-scripts-{{ $i }}">
@@ -297,22 +297,22 @@ app('pathway')
 					<fieldset class="card-body mb-0">
 
 						<div class="form-group">
-							<label for="field-metakey">{{ trans('pages::pages.metakey') }}:</label>
+							<label class="form-label" for="field-metakey">{{ trans('pages::pages.metakey') }}:</label>
 							<input type="text" name="fields[metakey]" id="field-metakey" class="form-control taggable" data-api="{{ route('api.tags.index') }}" value="{{ implode(', ', $row->tags->pluck('name')->toArray()) }}" />
 						</div>
 
 						<!--<div class="form-group">
-							<label for="field-metakey">{{ trans('pages::pages.metakey') }}:</label>
+							<label class="form-label" for="field-metakey">{{ trans('pages::pages.metakey') }}:</label>
 							<textarea class="form-control" name="fields[metakey]" id="field-metakey" rows="3" cols="40">{{ $row->metakey }}</textarea>
 						</div>-->
 
 						<div class="form-group">
-							<label for="field-metadesc">{{ trans('pages::pages.metadesc') }}:</label>
+							<label class="form-label" for="field-metadesc">{{ trans('pages::pages.metadesc') }}:</label>
 							<textarea class="form-control" name="fields[metadesc]" id="field-metadesc" rows="3" cols="40">{{ $row->metadesc }}</textarea>
 						</div>
 
 						<div class="form-group">
-							<label for="field-metadata">{{ trans('pages::pages.metadata') }}:</label>
+							<label class="form-label" for="field-metadata">{{ trans('pages::pages.metadata') }}:</label>
 							<textarea class="form-control" name="fields[metadata]" id="field-metadata" rows="3" cols="40">{{ json_encode($row->metadata->all()) }}</textarea>
 						</div>
 					</fieldset>

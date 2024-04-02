@@ -12,7 +12,7 @@
 	<div class="card-body">
 
 		<table class="table table-hover adminlist">
-			<caption class="sr-only">{{ trans('orders::orders.orders placed') }}</caption>
+			<caption class="sr-only visually-hidden">{{ trans('orders::orders.orders placed') }}</caption>
 			<thead>
 				<tr>
 					<th scope="col" class="priority-5">

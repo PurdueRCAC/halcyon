@@ -45,7 +45,7 @@ app('pathway')
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col col-md-12 filter-select text-right">
-				<label class="sr-only" for="filter_type">{{ trans('queues::queues.type') }}</label>
+				<label class="sr-only visually-hidden" for="filter_type">{{ trans('queues::queues.type') }}</label>
 				<select name="type" id="filter_type" class="form-control filter filter-submit">
 					<option value="0">{{ trans('queues::queues.all types') }}</option>
 					@foreach ($types as $type)
@@ -53,7 +53,7 @@ app('pathway')
 					@endforeach
 				</select>
 
-				<label class="sr-only" for="filter_resource">{{ trans('queues::queues.resource') }}</label>
+				<label class="sr-only visually-hidden" for="filter_resource">{{ trans('queues::queues.resource') }}</label>
 				<select name="resource" id="filter_resource" class="form-control filter filter-submit">
 					<option value="0">{{ trans('queues::queues.all resources') }}</option>
 					@foreach ($resources as $res)
@@ -62,7 +62,7 @@ app('pathway')
 					@endforeach
 				</select>
 
-				<label class="sr-only" for="filter_class">{{ trans('queues::queues.class') }}</label>
+				<label class="sr-only visually-hidden" for="filter_class">{{ trans('queues::queues.class') }}</label>
 				<select name="class" id="filter_class" class="form-control filter filter-submit">
 					<option value="*">{{ trans('queues::queues.all queue classes') }}</option>
 					<option value="system"<?php if ($filters['class'] == 'system'): echo ' selected="selected"'; endif;?>>{{ trans('queues::queues.system queues') }}</option>
@@ -136,7 +136,7 @@ app('pathway')
 						<h3 class="card-title">Total allocations</h3>
 					</div>
 					<table class="table">
-						<caption class="sr-only">Total allocations</caption>
+						<caption class="sr-only visually-hidden">Total allocations</caption>
 						<thead>
 							<th scope="col">Resource</th>
 							<!-- <th scope="col" class="text-right">Queues</th> -->
@@ -339,7 +339,7 @@ app('pathway')
 						<div>
 							<canvas id="queue-types" class="pie-chart" width="275" height="275" data-labels="{{ json_encode(array_keys($cats)) }}" data-values="{{ json_encode(array_values($cats)) }}">
 								<table class="table">
-									<caption class="sr-only">Queues by type</caption>
+									<caption class="sr-only visually-hidden">Queues by type</caption>
 									<thead>
 										<tr>
 											<th scope="col">Queue</th>
@@ -373,7 +373,7 @@ app('pathway')
 						<div>
 							<canvas id="queue-types" class="pie-chart" width="275" height="275" data-labels="{{ json_encode(array_keys($ress)) }}" data-values="{{ json_encode(array_values($ress)) }}">
 								<table class="table">
-									<caption class="sr-only">Queues by resource</caption>
+									<caption class="sr-only visually-hidden">Queues by resource</caption>
 									<thead>
 										<tr>
 											<th scope="col">Queue</th>
@@ -462,7 +462,7 @@ app('pathway')
 						<h3 class="card-title">Total allocations by sub-resource</h3>
 					</div>
 					<table class="table">
-						<caption class="sr-only">Total allocations by sub-resource</caption>
+						<caption class="sr-only visually-hidden">Total allocations by sub-resource</caption>
 						<thead>
 							<th scope="col">Sub-Resource</th>
 							<th scope="col" class="text-right">Queues</th>
@@ -764,7 +764,7 @@ app('pathway')
 							<h3 class="card-title">Top Allocated Queues</h3>
 						</div>
 						<table class="table">
-							<caption class="sr-only">Top Allocated Queues</caption>
+							<caption class="sr-only visually-hidden">Top Allocated Queues</caption>
 							<thead>
 								<th scope="col">Queue</th>
 								<th scope="col">Sub-Resource</th>

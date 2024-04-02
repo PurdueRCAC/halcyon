@@ -16,7 +16,7 @@
 
 		<div class="card-body">
 			<table class="table">
-				<caption class="sr-only">Active Groups</caption>
+				<caption class="sr-only visually-hidden">Active Groups</caption>
 				<thead>
 					<tr>
 						<th scope="col">

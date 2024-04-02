@@ -114,7 +114,7 @@ app('pathway')
 						<div class="col-md-6">
 							<div class="form-group">
 								<label for="field-schedulerid">{{ trans('queues::queues.scheduler') }}  <span class="required">{{ trans('global.required') }}</span></label>
-								<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
+								<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only visually-hidden">{{ trans('global.loading') }}</span></span>
 								<select name="fields[schedulerid]" id="field-schedulerid" class="form-control{{ $errors->has('fields.schedulerid') ? ' is-invalid' : '' }}" required>
 									<option value="0">{{ trans('global.none') }}</option>
 									@foreach ($schedulers as $scheduler)

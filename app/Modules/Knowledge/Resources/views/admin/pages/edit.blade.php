@@ -249,7 +249,7 @@ app('pathway')
 								<tr>
 									<th scope="col">{{ trans('knowledge::knowledge.key') }}</th>
 									<th scope="col">{{ trans('knowledge::knowledge.value') }}</th>
-									<th scope="col"><span class="sr-only">{{ trans('knowledge::knowledge.options') }}</span></th>
+									<th scope="col"><span class="sr-only visually-hidden">{{ trans('knowledge::knowledge.options') }}</span></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -272,7 +272,7 @@ app('pathway')
 									<td class="text-right">
 										<a href="#params-variables-{{ $i }}" class="btn text-danger delete-row">
 											<span class="fa fa-trash" aria-hidden="true"></span>
-											<span class="sr-only">{{ trans('global.delete') }}</span>
+											<span class="sr-only visually-hidden">{{ trans('global.delete') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -295,7 +295,7 @@ app('pathway')
 									<td class="text-right">
 										<a href="#params-variables-{{ $i }}" class="btn text-danger delete-row disabled">
 											<span class="fa fa-trash" aria-hidden="true"></span>
-											<span class="sr-only">{{ trans('global.delete') }}</span>
+											<span class="sr-only visually-hidden">{{ trans('global.delete') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -305,7 +305,7 @@ app('pathway')
 									<td colspan="3" class="text-right">
 										<button data-type="script" data-container="param-variables" class="add-row btn btn-success param-variable-new">
 											<span class="fa fa-plus" aria-hidden="true"></span>
-											<span class="sr-only">{{ trans('global.add') }}</span>
+											<span class="sr-only visually-hidden">{{ trans('global.add') }}</span>
 										</button>
 									</td>
 								</tr>
@@ -338,7 +338,7 @@ app('pathway')
 									<td class="text-right">
 										<a href="#params-tags-{{ $i }}" class="btn text-danger delete-row">
 											<span class="fa fa-trash" aria-hidden="true"></span>
-											<span class="sr-only">{{ trans('global.delete') }}</span>
+											<span class="sr-only visually-hidden">{{ trans('global.delete') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -353,7 +353,7 @@ app('pathway')
 									<td class="text-right">
 										<a href="#params-tags-{{ $i }}" class="btn text-danger delete-row disabled">
 											<span class="fa fa-trash" aria-hidden="true"></span>
-											<span class="sr-only">{{ trans('global.delete') }}</span>
+											<span class="sr-only visually-hidden">{{ trans('global.delete') }}</span>
 										</a>
 									</td>
 								</tr>
@@ -363,7 +363,7 @@ app('pathway')
 									<td colspan="3" class="text-right">
 										<button data-type="script" data-container="param-tags" class="add-row btn btn-success param-tag-new">
 											<span class="fa fa-plus" aria-hidden="true"></span>
-											<span class="sr-only">{{ trans('global.add') }}</span>
+											<span class="sr-only visually-hidden">{{ trans('global.add') }}</span>
 										</button>
 									</td>
 								</tr>

@@ -59,15 +59,15 @@
 		<div class="row">
 			<div class="col-md-4">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" name="search" enterkeyhint="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
 			<div class="col-md-8 text-right">
-				<label class="sr-only" for="filter_level">{{ trans('knowledge::knowledge.depth') }}</label>
+				<label class="sr-only visually-hidden" for="filter_level">{{ trans('knowledge::knowledge.depth') }}</label>
 				<select name="level" id="filter_level" class="form-control filter filter-submit">
 					<option value="0"<?php if ($filters['level'] == '0'): echo ' selected="selected"'; endif;?>>{{ trans('knowledge::knowledge.all levels') }}</option>
 					<option value="1"<?php if ($filters['level'] == 1): echo ' selected="selected"'; endif;?>>1</option>
@@ -82,7 +82,7 @@
 					<option value="10"<?php if ($filters['level'] == 10): echo ' selected="selected"'; endif;?>>10</option>
 				</select>
 
-				<label class="sr-only" for="filter_state">{{ trans('knowledge::knowledge.state') }}</label>
+				<label class="sr-only visually-hidden" for="filter_state">{{ trans('knowledge::knowledge.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('knowledge::knowledge.all states') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('global.published') }}</option>
@@ -91,7 +91,7 @@
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('global.trashed') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter-access">{{ trans('knowledge::knowledge.access level') }}</label>
+				<label class="sr-only visually-hidden" for="filter-access">{{ trans('knowledge::knowledge.access level') }}</label>
 				<select name="access" id="filter-access" class="form-control filter filter-submit">
 					<option value="">{{ trans('knowledge::knowledge.all access levels') }}</option>
 					@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
@@ -99,7 +99,7 @@
 					@endforeach
 				</select>
 
-				<label class="sr-only" for="filter_parent">{{ trans('knowledge::knowledge.parent') }}</label>
+				<label class="sr-only visually-hidden" for="filter_parent">{{ trans('knowledge::knowledge.parent') }}</label>
 				<select name="parent" id="filter_parent" class="form-control filter filter-submit searchable-select">
 					<option value="0" data-indent="">{{ trans('knowledge::knowledge.all pages') }}</option>
 					@foreach ($tree as $page)
@@ -120,7 +120,7 @@
 	<div class="card mb-4">
 		<div class="table-responsive">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{!! config('knowledge.name') !!}</caption>
+		<caption class="sr-only visually-hidden">{!! config('knowledge.name') !!}</caption>
 		<thead>
 			<tr>
 				@if (auth()->user()->can('delete knowledge'))
@@ -204,7 +204,7 @@
 					@if ($row->snippet)
 						<span data-tip="{{ trans('knowledge::knowledge.snippet') }}">
 							<span class="fa fa-repeat" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('knowledge::knowledge.snippet') }}</span>
+							<span class="sr-only visually-hidden">{{ trans('knowledge::knowledge.snippet') }}</span>
 						</span>
 					@endif
 				</td>
@@ -285,7 +285,7 @@
 					@if ($row->parent_id)
 					<a href="{{ route('admin.knowledge.copy', ['id' => $row->id]) }}" data-hint="{{ trans('knowledge::knowledge.copy') }}">
 						<span class="fa fa-copy" aria-hidden="true"></span>
-						<span class="sr-only">{{ trans('knowledge::knowledge.copy') }}</span>
+						<span class="sr-only visually-hidden">{{ trans('knowledge::knowledge.copy') }}</span>
 					</a>
 					@endif
 				</td>

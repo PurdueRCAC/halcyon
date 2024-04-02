@@ -108,7 +108,7 @@ var Roles = {
 		cell.innerHTML = '<span class="badge badge-' + status + '">' + results['status_text'] + '</span>';
 
 		if (results.errors.length) {
-			cell.innerHTML = cell.innerHTML + ' <span class="fa fa-exclamation-triangle text-warning tip ml-2" aria-hidden="true" title="' + results.errors.join('<br />') + '"></span><span class="sr-only"> ' + results.errors.join('<br />') + '</span>';
+			cell.innerHTML = cell.innerHTML + ' <span class="fa fa-exclamation-triangle text-warning tip ml-2" aria-hidden="true" title="' + results.errors.join('<br />') + '"></span><span class="sr-only visually-hidden"> ' + results.errors.join('<br />') + '</span>';
 		}
 
 		cell.setAttribute('data-api', results['api']);

@@ -100,11 +100,11 @@ app('pathway')
 @stop
 
 @section('panel')
-	<h2 class="sr-only">Order Stats</h2>
+	<h2 class="sr-only visually-hidden">Order Stats</h2>
 
 	<div class="car mb-3">
 		<form action="{{ route('admin.orders.index') }}" method="post" name="statsForm">
-			<label for="timeframe" class="sr-only">Stats for</label>
+			<label for="timeframe" class="sr-only visually-hidden">Stats for</label>
 			<select name="timeframe" id="timeframe" class="form-control filter-submit">
 				<option value="7"<?php if ($filters['timeframe'] == 7) { echo ' selected="slected"'; } ?>>Past 7 days</option>
 				<option value="14"<?php if ($filters['timeframe'] == 14) { echo ' selected="slected"'; } ?>>Past 14 days</option>
@@ -120,7 +120,7 @@ app('pathway')
 	$stop  = Carbon\Carbon::now()->modify('+1 day');
 	$stats = App\Modules\Orders\Models\Order::stats($start, $stop);
 	?>
-	<h3 class="sr-only">Overview</h3>
+	<h3 class="sr-only visually-hidden">Overview</h3>
 
 	<div class="card">
 		<div class="card-body">
@@ -195,15 +195,15 @@ app('pathway')
 		<div class="row">
 			<div class="col col-md-3 filter-search">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
 			<div class="col col-md-9 text-right">
-				<label class="sr-only" for="filter_status">{{ trans('orders::orders.status') }}</label>
+				<label class="sr-only visually-hidden" for="filter_status">{{ trans('orders::orders.status') }}</label>
 				<select name="status" id="filter_status" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all statuses') }}</option>
 					<option value="active"<?php if ($filters['status'] == 'active'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.active') }}</option>
@@ -331,12 +331,12 @@ app('pathway')
 
 				<div class="btn-group">
 					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						<span class="fa fa-filter" aria-hidden="true"></span><span class="sr-only">Filters</span>
+						<span class="fa fa-filter" aria-hidden="true"></span><span class="sr-only visually-hidden">Filters</span>
 					</button>
 					<div class="dropdown-menu dropdown-menu-right">
 						<div class="px-4 py-3">
 							<div class="form-group mb-3">
-								<label class="sr-only" for="filter_category">{{ trans('orders::orders.category') }}</label>
+								<label class="sr-only visually-hidden" for="filter_category">{{ trans('orders::orders.category') }}</label>
 								<select name="category" id="filter_category" class="form-control filter filter-submit">
 									<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
 									<?php foreach ($categories as $category): ?>
@@ -379,7 +379,7 @@ app('pathway')
 					{!! Html::grid('sort', trans('orders::orders.total'), 'ordertotal', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
-					<span class="sr-only">Items</span>
+					<span class="sr-only visually-hidden">Items</span>
 				</th>
 			</tr>
 		</thead>
@@ -448,14 +448,14 @@ app('pathway')
 				</td>
 				<td>
 					<a class="items-toggle" data-toggle="collapse" data-parent="#orders" href="#row{{ $row->id }}" title="Items in this order">
-						<span class="fa fa-shopping-cart" aria-hidden="true"></span><span class="sr-only">Items</span>
+						<span class="fa fa-shopping-cart" aria-hidden="true"></span><span class="sr-only visually-hidden">Items</span>
 					</a>
 				</td>
 			</tr>
 			<tr class="details-row collapse" id="row{{ $row->id }}">
 				<td colspan="<?php echo (auth()->user()->can('delete orders') ? 7 : 6); ?>">
 					<table class="table">
-						<caption class="sr-only">{{ trans('orders::orders.items') }}</caption>
+						<caption class="sr-only visually-hidden">{{ trans('orders::orders.items') }}</caption>
 						<thead>
 							<tr>
 								<?php /*<th scope="col">{{ trans('orders::orders.status') }}</th>*/ ?>

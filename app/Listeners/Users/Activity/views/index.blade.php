@@ -6,7 +6,7 @@
 
 		<div class="row">
 			<div class="col filter-search col-md-6">
-				<label class="sr-only" for="filter_action">{{ trans('history::history.transport') }}</label>
+				<label class="sr-only visually-hidden" for="filter_action">{{ trans('history::history.transport') }}</label>
 				<select name="action" id="filter_action" class="form-control filter filter-submit">
 					<option value=""<?php if ($filters['action'] == ''): echo ' selected="selected"'; endif;?>>{{ trans('history::history.all actions') }}</option>
 					<option value="emailed"<?php if ($filters['action'] == 'emailed'): echo ' selected="selected"'; endif;?>>Emailed</option>
@@ -16,7 +16,7 @@
 				</select>
 			</div>
 			<div class="col filter-search col-md-4">
-				<label class="sr-only" for="filter_status">{{ trans('history::history.status') }}</label>
+				<label class="sr-only visually-hidden" for="filter_status">{{ trans('history::history.status') }}</label>
 				<select name="status" id="filter_status" class="form-control filter filter-submit">
 					<option value=""<?php if ($filters['status'] == ''): echo ' selected="selected"'; endif;?>>{{ trans('history::history.all status') }}</option>
 					<option value="success"<?php if ($filters['status'] == 'success'): echo ' selected="selected"'; endif;?>>{{ trans('listener.users.activity::activity.success') }}</option>
@@ -33,7 +33,7 @@
 
 	@if (count($history) > 0)
 		<?php /*<table class="table table-hover adminlist">
-			<caption class="sr-only">{{ trans('history::history.activity') }}</caption>
+			<caption class="sr-only visually-hidden">{{ trans('history::history.activity') }}</caption>
 			<thead>
 				<tr>
 					<th scope="col" class="text-center">
@@ -61,10 +61,10 @@
 					<td class="text-center">
 						@if ($row->status >= 400)
 							<span class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('listener.users.activity::activity.error') }} - {{ $row->status }}</span>
+							<span class="sr-only visually-hidden">{{ trans('listener.users.activity::activity.error') }} - {{ $row->status }}</span>
 						@else
 							<span class="fa fa-check-circle text-success" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('listener.users.activity::activity.success') }}</span>
+							<span class="sr-only visually-hidden">{{ trans('listener.users.activity::activity.success') }}</span>
 						@endif
 					</td>
 					<td>
@@ -113,7 +113,7 @@
 						<div class="col-md-1 text-right">
 							@if ($row->datetime)
 								<time datetime="{{ $row->datetime->toDateTimeLocalString() }}">
-									<span class="sr-only">{{ $row->datetime->format('M j, Y') }}</span> {{ $row->datetime->format('g:ia') }}
+									<span class="sr-only visually-hidden">{{ $row->datetime->format('M j, Y') }}</span> {{ $row->datetime->format('g:ia') }}
 								</time>
 							@else
 								<span class="text-muted never">{{ trans('global.unknown') }}</span>
@@ -122,10 +122,10 @@
 						<div class="col-md-1 text-center">
 							@if ($row->status >= 400)
 								<span class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></span>
-								<span class="sr-only">{{ trans('listener.users.activity::activity.error') }} - {{ $row->status }}</span>
+								<span class="sr-only visually-hidden">{{ trans('listener.users.activity::activity.error') }} - {{ $row->status }}</span>
 							@else
 								<span class="fa fa-check-circle text-success" aria-hidden="true"></span>
-								<span class="sr-only">{{ trans('listener.users.activity::activity.success') }}</span>
+								<span class="sr-only visually-hidden">{{ trans('listener.users.activity::activity.success') }}</span>
 							@endif
 						</div>
 						<div class="col-md-10">

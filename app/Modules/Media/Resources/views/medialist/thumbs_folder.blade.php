@@ -55,7 +55,7 @@ $ext = 'folder';
 
 		<div class="dialog dialog-filerename" id="filerename-{{ $file->getId() }}" title="{{ trans('media::media.rename') }}">
 			<div class="form-group">
-				<label for="rename-{{ $file->getId() }}" class="sr-only">{{ trans('pages::pages.path') }}:</label>
+				<label for="rename-{{ $file->getId() }}" class="sr-only visually-hidden">{{ trans('pages::pages.path') }}:</label>
 				<div class="input-group mb-2 mr-sm-2">
 					<div class="input-group-prepend">
 						<div class="input-group-text">/{{ (strstr($path, '/') ? dirname($path) . '/' : '') }}</div>

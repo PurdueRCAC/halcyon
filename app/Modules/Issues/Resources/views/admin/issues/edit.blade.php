@@ -109,10 +109,10 @@ Toolbar::cancel(route('admin.issues.cancel'));
 								</div>
 								<div class="col-md-6 text-right">
 									<a href="#comment_{{ $comment->id }}_comment" class="btn comment-edit hide-when-editing">
-										<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
+										<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.edit') }}</span>
 									</a>
 									<a href="#comment_{{ $comment->id }}" class="btn text-danger comment-delete" data-confirm="{{ trans('global.confirm delete') }}">
-										<span class="fa fa-trash" aria-hidden="true"><span class="sr-only">{{ trans('global.button.delete') }}</span>
+										<span class="fa fa-trash" aria-hidden="true"><span class="sr-only visually-hidden">{{ trans('global.button.delete') }}</span>
 									</a>
 								</div>
 							</div>
@@ -121,7 +121,7 @@ Toolbar::cancel(route('admin.issues.cancel'));
 							</div>
 							<div id="comment_{{ $comment->id }}_edit" class="show-when-editing">
 								<div class="form-group">
-									<label for="comment_{{ $comment->id }}_comment" class="sr-only">{{ trans('issues::issues.comment') }}</label>
+									<label for="comment_{{ $comment->id }}_comment" class="sr-only visually-hidden">{{ trans('issues::issues.comment') }}</label>
 									<textarea name="comment" id="comment_{{ $comment->id }}_comment" class="form-control" cols="45" rows="3">{{ $comment->comment }}</textarea>
 									<span class="form-text text-muted">{{ trans('issues::issues.formatting help') }}</span>
 								</div>
@@ -155,10 +155,10 @@ Toolbar::cancel(route('admin.issues.cancel'));
 								</div>
 								<div class="col-md-6 text-right">
 									<a href="#comment_<?php echo '{id}'; ?>_comment" class="btn btn-link comment-edit hide-when-editing">
-										<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
+										<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.edit') }}</span>
 									</a>
 									<a href="#comment_<?php echo '{id}'; ?>" class="btn btn-link comment-delete" data-confirm="{{ trans('global.confirm delete') }}">
-										<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }}</span><
+										<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.delete') }}</span><
 									</a>
 								</div>
 							</div>
@@ -166,7 +166,7 @@ Toolbar::cancel(route('admin.issues.cancel'));
 							</div>
 							<div id="comment_<?php echo '{id}'; ?>_edit" class="show-when-editing">
 								<div class="form-group">
-									<label for="comment_<?php echo '{id}'; ?>_comment" class="sr-only">{{ trans('issues::issues.comment') }}</label>
+									<label for="comment_<?php echo '{id}'; ?>_comment" class="sr-only visually-hidden">{{ trans('issues::issues.comment') }}</label>
 									<textarea name="comment" id="comment_<?php echo '{id}'; ?>_comment" class="form-control" cols="45" rows="3"></textarea>
 									<span class="form-text text-muted">{{ trans('issues::issues.formatting help') }}</span>
 								</div>
@@ -191,7 +191,7 @@ Toolbar::cancel(route('admin.issues.cancel'));
 						</li>
 						<li id="comment_new" data-api="{{ route('api.issues.comments.create') }}">
 							<div class="form-group">
-								<label for="comment_new_comment" class="sr-only">{{ trans('issues::issues.comment') }}</label>
+								<label for="comment_new_comment" class="sr-only visually-hidden">{{ trans('issues::issues.comment') }}</label>
 								<textarea name="comment" id="comment_new_comment" class="form-control" cols="45" rows="3"></textarea>
 								<span class="form-text text-muted">{{ trans('issues::issues.formatting help') }}</span>
 							</div>

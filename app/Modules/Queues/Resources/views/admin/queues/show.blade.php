@@ -75,7 +75,7 @@ endif;
 				@if (auth()->user()->can('edit queues'))
 					<a class="btn btn-sm btn-link float-right" data-toggl="modal" href="{{ route('admin.queues.edit', ['id' => $row->id]) }}" data-tip="{{ trans('global.edit') }}">
 						<span class="fa fa-pencil" aria-hidden="true"></span>
-						<span class="sr-only">{{ trans('global.edit') }}</span>
+						<span class="sr-only visually-hidden">{{ trans('global.edit') }}</span>
 					</a>
 				@endif
 				<h3 class="card-title">{{ trans('global.details') }}</h3>
@@ -83,7 +83,7 @@ endif;
 			<div class="card-body">
 
 				<table>
-					<caption class="sr-only">{{ trans('global.details') }}</caption>
+					<caption class="sr-only visually-hidden">{{ trans('global.details') }}</caption>
 					<tbody>
 						<tr>
 							<th scope="row">{{ trans('queues::queues.scheduling') }}</th>
@@ -227,7 +227,7 @@ endif;
 
 					<div class="card-body">
 						<table>
-							<caption class="sr-only">{{ trans('queues::queues.walltime') }}</caption>
+							<caption class="sr-only visually-hidden">{{ trans('queues::queues.walltime') }}</caption>
 							<tbody>
 								<tr>
 									<th scope="row">{{ trans('queues::queues.default walltime') }}</th>
@@ -251,7 +251,7 @@ endif;
 
 					<div class="card-body">
 						<table>
-							<caption class="sr-only">{{ trans('queues::queues.jobs') }}</caption>
+							<caption class="sr-only visually-hidden">{{ trans('queues::queues.jobs') }}</caption>
 							<tbody>
 								<tr>
 									<th scope="col">{{ trans('queues::queues.max jobs queued') }}</th>
@@ -291,7 +291,7 @@ endif;
 
 					<div class="card-body">
 						<table>
-							<caption class="sr-only">{{ trans('queues::queues.nodes') }}</caption>
+							<caption class="sr-only visually-hidden">{{ trans('queues::queues.nodes') }}</caption>
 							<tbody>
 								<tr>
 									<th scope="col">{{ trans('queues::queues.node cores default') }}</th>
@@ -343,7 +343,7 @@ endif;
 				$items = $items->merge($loans)->sortBy('datetimestart');
 				?>
 				<table class="table table-hover adminlist">
-					<caption class="sr-only">{{ trans('queues::queues.purchases and loans') }}</caption>
+					<caption class="sr-only visually-hidden">{{ trans('queues::queues.purchases and loans') }}</caption>
 					<thead>
 						<tr>
 							<th scope="col">{{ trans('queues::queues.id') }}</th>
@@ -522,7 +522,7 @@ endif;
 									data-id="{{ $item->id }}"
 									data-toggle="modal"
 									data-target="#dialog-edit{{ $item->id }}">
-									<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }}</span>
+									<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.edit') }}</span>
 								</a>
 							</td>
 							<td>
@@ -532,7 +532,7 @@ endif;
 									data-success="{{ trans('global.messages.item deleted', ['count' => 1]) }}"
 									data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes'). '.delete', ['id' => $item->id]) }}"
 									data-id="{{ $item->id }}">
-									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }}</span>
+									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.delete') }}</span>
 								</button>
 								@endif
 
@@ -647,7 +647,7 @@ endif;
 											</div>
 											<div class="modal-footer dialog-footer text-right">
 												<button type="submit" class="btn btn-success queue-dialog-submit" data-action="update" data-success="{{ trans('queues::queues.item updated') }}">
-													<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('queues::queues.saving') }}</span></span>
+													<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only visually-hidden">{{ trans('queues::queues.saving') }}</span></span>
 													{{ trans('global.button.update') }}
 												</button>
 											</div>
@@ -844,7 +844,7 @@ endif;
 						</div>
 						<div class="modal-footer dialog-footer text-right">
 							<button type="submit" class="btn btn-success queue-dialog-submit" data-success="{{ trans('queues::queues.item created') }}">
-								<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('queues::queues.saving') }}</span></span>
+								<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only visually-hidden">{{ trans('queues::queues.saving') }}</span></span>
 								{{ trans('global.button.create') }}
 							</button>
 						</div>
@@ -1006,7 +1006,7 @@ endif;
 						</div>
 						<div class="modal-footer dialog-footer text-right">
 							<button type="submit" class="btn btn-success queue-dialog-submit" data-success="{{ trans('queues::queues.item created') }}">
-								<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('queues::queues.saving') }}</span></span>
+								<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only visually-hidden">{{ trans('queues::queues.saving') }}</span></span>
 								{{ trans('global.button.create') }}
 							</button>
 						</div>

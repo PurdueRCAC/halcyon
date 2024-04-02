@@ -52,10 +52,10 @@ app('pathway')
 		<fieldset id="filter-bar" class="container-fluid">
 			<div class="form-group">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
@@ -395,7 +395,7 @@ app('pathway')
 						$u .= ($user->user ? $user->user->name : $user->userid . ' <span class="unknown">' . trans('global.unknown') . '</span>');
 
 						if ($user->notified()):
-							$u .= ' <span class="fa fa-envelope" data-tip="Followup email sent on ' . $user->datetimelastnotify->toDateTimeString() . '"><time class="sr-only" datetime="' . $user->datetimelastnotify->toDateTimeString() . '">' . $user->datetimelastnotify->format('Y-m-d') . '</time></span>';
+							$u .= ' <span class="fa fa-envelope" data-tip="Followup email sent on ' . $user->datetimelastnotify->toDateTimeString() . '"><time class="sr-only visually-hidden" datetime="' . $user->datetimelastnotify->toDateTimeString() . '">' . $user->datetimelastnotify->format('Y-m-d') . '</time></span>';
 						endif;
 						$u .= '</a>';
 
@@ -475,7 +475,7 @@ app('pathway')
 							</div>
 							<div id="comment_{{ $comment->id }}_edit" class="show-when-editing">
 								<div class="form-group">
-									<label for="comment_{{ $comment->id }}_comment" class="sr-only">{{ trans('contactreports::contactreports.comment') }}</label>
+									<label for="comment_{{ $comment->id }}_comment" class="sr-only visually-hidden">{{ trans('contactreports::contactreports.comment') }}</label>
 									<!-- <textarea name="comment" id="comment_{{ $comment->id }}_comment" class="form-control" cols="45" rows="3">{{ $comment->comment }}</textarea> -->
 									{!! markdown_editor('comment', $comment->comment, ['rows' => 2, 'id' => 'comment_' . $comment->id . '_comment']) !!}
 								</div>
@@ -511,7 +511,7 @@ app('pathway')
 							</div>
 							<div id="comment_<?php echo '{id}'; ?>_edit" class="show-when-editing">
 								<div class="form-group">
-									<label for="comment_<?php echo '{id}'; ?>_comment" class="sr-only">{{ trans('contactreports::contactreports.comment') }}</label>
+									<label for="comment_<?php echo '{id}'; ?>_comment" class="sr-only visually-hidden">{{ trans('contactreports::contactreports.comment') }}</label>
 									<textarea name="comment" id="comment_<?php echo '{id}'; ?>_comment" class="form-control md" cols="45" rows="3"></textarea>
 								</div>
 								<div class="form-group text-right">
@@ -539,7 +539,7 @@ app('pathway')
 						</li>
 						<li id="comment_new{{ $row->id }}" data-api="{{ route('api.contactreports.comments.create') }}">
 							<div class="form-group">
-								<label for="comment_new{{ $row->id }}_comment" class="sr-only">{{ trans('contactreports::contactreports.comment') }}</label>
+								<label for="comment_new{{ $row->id }}_comment" class="sr-only visually-hidden">{{ trans('contactreports::contactreports.comment') }}</label>
 								{!! markdown_editor('comment', '', ['rows' => 2, 'id' => 'comment_new' . $row->id . '_comment']) !!}
 							</div>
 							<div class="form-group text-right">

@@ -81,7 +81,7 @@ app('pathway')
 			<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 
 				<div id="applied-filters" class="mb-0" aria-label="{{ trans('software::software.applied filters') }}">
-					<p class="sr-only">{{ trans('software::software.applied filters') }}:</p>
+					<p class="sr-only visually-hidden">{{ trans('software::software.applied filters') }}:</p>
 					<ul class="filters-list">
 						<?php
 						$allfilters = collect($filters);
@@ -138,7 +138,7 @@ app('pathway')
 							<li class="mb-3">
 								<strong>{{ trans('software::software.' . $key) }}</strong>: {{ $val }}
 								<a href="{{ route('site.software.index', $f) }}" class="filters-x" title="{{ trans('software::software.remove filter') }}">
-									<span class="fa fa-times" aria-hidden="true"><span class="sr-only">{{ trans('software::software.remove filter') }}</span>
+									<span class="fa fa-times" aria-hidden="true"><span class="sr-only visually-hidden">{{ trans('software::software.remove filter') }}</span>
 								</a>
 							</li>
 							<?php
@@ -158,7 +158,7 @@ app('pathway')
 								<summary>{{ trans('software::software.available versions') }}</summary>
 								<div>
 									<table class="table table-bordered">
-										<caption class="sr-only">{{ trans('software::software.available versions') }}</caption>
+										<caption class="sr-only visually-hidden">{{ trans('software::software.available versions') }}</caption>
 										<tbody>
 											@foreach ($row->versionsByResource() as $resource => $versions)
 												<tr>
@@ -185,12 +185,12 @@ app('pathway')
 								@if (auth()->user() && (auth()->user()->can('edit software') || auth()->user()->can('delete software')))
 									@if (auth()->user()->can('edit software'))
 										<a href="{{ route('site.software.edit', ['id' => $row->id]) }}" data-api="{{ route('api.software.read', ['id' => $row->id]) }}" class="btn btn-sm btn-edit tip" title="{{ trans('global.button.edit') }}">
-											<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }} #{{ $row->id }}</span>
+											<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.edit') }} #{{ $row->id }}</span>
 										</a>
 									@endif
 									@if (auth()->user()->can('delete software'))
 										<a href="{{ route('site.software.delete', ['id' => $row->id]) }}" data-api="{{ route('api.software.delete', ['id' => $row->id]) }}" class="btn btn-sm btn-delete text-danger tip remove-application" title="{{ trans('global.button.delete') }}" data-confirm="{{ trans('global.confirm delete') }}">
-											<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }} #{{ $row->id }}</span>
+											<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.delete') }} #{{ $row->id }}</span>
 										</a>
 									@endif
 								@endif

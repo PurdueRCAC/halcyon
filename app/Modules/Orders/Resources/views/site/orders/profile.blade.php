@@ -12,14 +12,14 @@
 <form action="{{ route('site.orders.index') }}" method="get" class="form-inline">
 
 	<fieldset id="filter-bar">
-		<legend class="sr-only">Filter</legend>
+		<legend class="sr-only visually-hidden">Filter</legend>
 
 		<div class="row">
 			<div class="col-md-12">
-				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+				<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 				<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 
-				<label class="sr-only" for="filter_category">{{ trans('orders::orders.category') }}</label>
+				<label class="sr-only visually-hidden" for="filter_category">{{ trans('orders::orders.category') }}</label>
 				<select name="category" id="filter_category" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
 					<?php foreach ($categories as $category) { ?>
@@ -27,7 +27,7 @@
 					<?php } ?>
 				</select>
 
-				<label class="sr-only" for="filter_status">{{ trans('orders::orders.status') }}</label>
+				<label class="sr-only visually-hidden" for="filter_status">{{ trans('orders::orders.status') }}</label>
 				<select name="status" id="filter_status" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all statuses') }}</option>
 					<option value="active"<?php if ($filters['status'] == 'active'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.active') }}</option>
@@ -40,10 +40,10 @@
 					<option value="canceled"<?php if ($filters['status'] == 'canceled'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.canceled') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_start">{{ trans('orders::orders.start date') }}</label>
+				<label class="sr-only visually-hidden" for="filter_start">{{ trans('orders::orders.start date') }}</label>
 				<input type="text" name="start" id="filter_start" size="10" class="form-control date-pick filter filter-submit" value="{{ $filters['start'] }}" placeholder="Start date" />
 
-				<label class="sr-only" for="filter_end">{{ trans('orders::orders.end date') }}</label>
+				<label class="sr-only visually-hidden" for="filter_end">{{ trans('orders::orders.end date') }}</label>
 				<input type="text" name="end" id="filter_end" size="10" class="form-control date-pick filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
 			</div>
 		</div>
@@ -56,7 +56,7 @@
 
 	@if (count($rows))
 		<table class="table table-hover adminlist">
-			<caption class="sr-only">{{ trans('orders::orders.orders placed') }}</caption>
+			<caption class="sr-only visually-hidden">{{ trans('orders::orders.orders placed') }}</caption>
 			<thead>
 				<tr>
 					<th scope="col" class="priority-5">

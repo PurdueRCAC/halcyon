@@ -28,7 +28,7 @@
 		@stack('scripts')
 	</head>
 	<body>
-		<header class="sr-only">
+		<header class="sr-only visually-hidden">
 			<div class="top">
 				<h1>{{ config('app.name') }}</h1>
 			</div>
@@ -46,7 +46,7 @@
 					<span class="bar"></span>
 					<span class="bar"></span>
 					<span class="bar"></span>
-					<span class="sr-only">{{ trans('core::docs.menu') }}</span>
+					<span class="sr-only visually-hidden">{{ trans('core::docs.menu') }}</span>
 				</a>
 			</div>
 			<ul class="docs-sidebar-tree" id="endpoints">
@@ -173,7 +173,7 @@
 														<div class="table-container">
 															@if (count($endpoint['parameters']) > 0)
 																<table class="table mb-0">
-																	<caption class="sr-only">{{ trans('core::docs.parameters') }}</caption>
+																	<caption class="sr-only visually-hidden">{{ trans('core::docs.parameters') }}</caption>
 																	<thead>
 																		<tr>
 																			<th scope="col">{{ trans('core::docs.name') }}</th>
@@ -403,7 +403,7 @@ fetch(url, {
 													</div>
 													<div class="response-container">
 														<table class="table mb-0">
-															<caption class="sr-only">{{ trans('core::docs.response codes') }}</caption>
+															<caption class="sr-only visually-hidden">{{ trans('core::docs.response codes') }}</caption>
 															<thead>
 																<tr>
 																	<th scope="col">{{ trans('core::docs.code') }}</th>

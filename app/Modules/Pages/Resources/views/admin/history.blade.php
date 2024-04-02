@@ -1,5 +1,16 @@
 @extends('layouts.master')
 
+@push('styles')
+<style>
+	td.diff-deletedline {
+		background-color: rgba(200, 0, 0, 0.1);
+	}
+	td.diff-addedline {
+		background-color: rgba(0, 200, 0, 0.1);
+	}
+</style>
+@endpush
+
 @push('scripts')
 <script src="{{ timestamped_asset('modules/core/vendor/chartjs/Chart.min.js') }}"></script>
 <script src="{{ timestamped_asset('modules/pages/js/pages.js') }}"></script>
@@ -101,7 +112,7 @@ app('pathway')
 						@endif
 					</td>
 					<td>
-						<a href="#page-history{{ $action->id }}" data-toggle="modal" class="tip" title="View changes from previous version">
+						<a href="#page-history{{ $action->id }}" data-toggle="modal" data-bs-toggle="modal" class="tip" title="View changes from previous version">
 							<time datetime="{{ $action->created_at->toDateTimeLocalString() }}">
 								@if ($action->created_at < $old)
 									{{ $action->created_at->format('d M Y') }}
@@ -115,7 +126,7 @@ app('pathway')
 								<div class="modal-content">
 									<div class="modal-header">
 										<h3 class="modal-title" id="page-history-title{{ $action->id }}">Changes</h3>
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
 											<span aria-hidden="true">&times;</span>
 										</button>
 									</div>

@@ -55,27 +55,27 @@ app('pathway')
 		<div class="row">
 			<div class="col filter-search col-md-4">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 						<span class="input-group-append">
 							<button class="input-group-text" type="submit">
 								<span class="fa fa-search" aria-hidden="true"></span>
-								<span class="sr-only">{{ trans('search.submit') }}</span>
+								<span class="sr-only visually-hidden">{{ trans('search.submit') }}</span>
 							</button>
 						</span>
 					</span>
 				</div>
 			</div>
 			<div class="col filter-select col-md-8 text-right">
-				<label class="sr-only" for="filter_state">{{ trans('resources::assets.state') }}</label>
+				<label class="sr-only visually-hidden" for="filter_state">{{ trans('resources::assets.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="all"<?php if ($filters['state'] == 'all'): echo ' selected="selected"'; endif;?>>{{ trans('resources::assets.all states') }}</option>
 					<option value="active"<?php if ($filters['state'] == 'active'): echo ' selected="selected"'; endif;?>>{{ trans('global.active') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('global.trashed') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_resource">{{ trans('resources::assets.resource') }}</label>
+				<label class="sr-only visually-hidden" for="filter_resource">{{ trans('resources::assets.resource') }}</label>
 				<select name="resource" id="filter_resource" class="form-control filter filter-submit">
 					<option value="0">{{ trans('resources::assets.all resources') }}</option>
 					<?php foreach ($resources as $resource): ?>
@@ -93,7 +93,7 @@ app('pathway')
 	<div class="card mb-4">
 		<div class="table-responsive">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('resources::resources.subresources') }}</caption>
+		<caption class="sr-only visually-hidden">{{ trans('resources::resources.subresources') }}</caption>
 		<thead>
 			<tr>
 				@if (auth()->user()->can('edit.state resources') || auth()->user()->can('delete resources'))
@@ -187,17 +187,17 @@ app('pathway')
 					@if ($row->queuestatus == 1)
 						<span class="text-success" data-tip="{{ trans('resources::resources.queue status.all queues running') }}">
 							<span class="fa fa-check-circle" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('resources::resources.queue status.all queues running') }}</span>
+							<span class="sr-only visually-hidden">{{ trans('resources::resources.queue status.all queues running') }}</span>
 						</span>
 					@elseif ($row->queuestatus == 0)
 						<span class="text-danger tip" data-tip="{{ trans('resources::resources.queue status.all queues stopped') }}">
 							<span class="fa fa-minus-circleh" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('resources::resources.queue status.all queues stopped') }}</span>
+							<span class="sr-only visually-hidden">{{ trans('resources::resources.queue status.all queues stopped') }}</span>
 						</span>
 					@else
 						<span class="text-warning tip" data-tip="{{ trans('resources::resources.queue status.stopped queues') }}">
 							<span class="fa fa-exclamation-triangle" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('resources::resources.queue status.stopped queues') }}</span>
+							<span class="sr-only visually-hidden">{{ trans('resources::resources.queue status.stopped queues') }}</span>
 						</span>
 					@endif
 				</td>

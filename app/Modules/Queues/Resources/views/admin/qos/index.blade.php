@@ -56,22 +56,22 @@ app('pathway')
 		<div class="row">
 			<div class="col col-md-4">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
 			<div class="col col-md-8 filter-select text-right">
-				<label class="sr-only" for="filter_state">{{ trans('queues::queues.state') }}</label>
+				<label class="sr-only visually-hidden" for="filter_state">{{ trans('queues::queues.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('queues::queues.all states') }}</option>
 					<option value="enabled"<?php if ($filters['state'] == 'enabled'): echo ' selected="selected"'; endif;?>>{{ trans('queues::queues.enabled') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('queues::queues.trashed') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_scheduler">{{ trans('queues::queues.scheduler') }}:</label>
+				<label class="sr-only visually-hidden" for="filter_scheduler">{{ trans('queues::queues.scheduler') }}:</label>
 				<select name="scheduler" id="filter_scheduler" class="form-control filter filter-submit">
 					<option value="0">{{ trans('queues::queues.all schedulers') }}</option>
 					<?php foreach ($schedulers as $scheduler): ?>
@@ -92,7 +92,7 @@ app('pathway')
 	<div class="card mb-4">
 		<div class="table-responsive">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('queues::queues.qos') }}</caption>
+		<caption class="sr-only visually-hidden">{{ trans('queues::queues.qos') }}</caption>
 		<thead>
 			<tr>
 				@if (auth()->user()->can('delete queues.qos'))	
@@ -135,7 +135,7 @@ app('pathway')
 					@if ($row->trashed())
 						<span class="text-danger">
 							<span class="fa fa-trash" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('global.trashed') }}</span>
+							<span class="sr-only visually-hidden">{{ trans('global.trashed') }}</span>
 						</span>
 					@endif
 					@if (auth()->user()->can('edit queues.qos'))

@@ -397,7 +397,7 @@ app('pathway')
 				<div class="card-body">
 					<h4>Most Ordered Products</h4>
 					<table class="table">
-						<caption class="sr-only">Most Ordered Products</caption>
+						<caption class="sr-only visually-hidden">Most Ordered Products</caption>
 						<thead>
 							<tr>
 								<th scope="col">Product</th>
@@ -456,7 +456,7 @@ app('pathway')
 					<div>
 						<canvas id="orders-categories" class="pie-chart" width="275" height="275" data-labels="{{ json_encode(array_keys($cats)) }}" data-values="{{ json_encode(array_values($cats)) }}">
 							<table class="table">
-								<caption class="sr-only">Orders By Category</caption>
+								<caption class="sr-only visually-hidden">Orders By Category</caption>
 								<thead>
 									<tr>
 										<th scope="col">Category</th>
@@ -518,7 +518,7 @@ app('pathway')
 					<div>
 						<canvas id="revenue-categories" class="pie-chart" width="275" height="275" data-labels="{{ json_encode(array_keys($cats)) }}" data-values="{{ json_encode(array_values($cats)) }}">
 							<table class="table">
-								<caption class="sr-only">Revenue By Category</caption>
+								<caption class="sr-only visually-hidden">Revenue By Category</caption>
 								<thead>
 									<tr>
 										<th scope="col">Category</th>

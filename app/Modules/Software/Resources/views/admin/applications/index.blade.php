@@ -51,7 +51,7 @@ app('pathway')
 		<div class="row">
 			<div class="col filter-search col-md-4">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 						<span class="input-group-append"><span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span></span>
@@ -59,7 +59,7 @@ app('pathway')
 				</div>
 			</div>
 			<div class="col filter-select col-md-8 text-right">
-				<label class="sr-only" for="filter_state">{{ trans('global.state') }}</label>
+				<label class="sr-only visually-hidden" for="filter_state">{{ trans('global.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.all states') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('global.published') }}</option>
@@ -67,7 +67,7 @@ app('pathway')
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('global.trashed') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_type">{{ trans('software::software.type') }}</label>
+				<label class="sr-only visually-hidden" for="filter_type">{{ trans('software::software.type') }}</label>
 				<select name="type" id="filter_type" class="form-control filter filter-submit">
 					<option value="0">{{ trans('software::software.all types') }}</option>
 					@foreach ($types as $type)
@@ -75,7 +75,7 @@ app('pathway')
 					@endforeach
 				</select>
 
-				<label class="sr-only" for="filter_resource">{{ trans('software::software.resources') }}</label>
+				<label class="sr-only visually-hidden" for="filter_resource">{{ trans('software::software.resources') }}</label>
 				<select class="filter_resource" name="resource" class="form-control filter filter-submit">
 					<option value="0">{{ trans('software::software.all resources') }}</option>
 					@foreach ($resources as $resource)
@@ -95,7 +95,7 @@ app('pathway')
 	<div class="card mb-4">
 		<div class="table-responsive">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('software::software.software') }}</caption>
+		<caption class="sr-only visually-hidden">{{ trans('software::software.software') }}</caption>
 		<thead>
 			<tr>
 				<th>

@@ -78,7 +78,7 @@ app('pathway')
 							<tr<?php if ($snippet->level > 1) { echo ' class="d-none"'; } ?> id="snippet{{ $snippet->id }}" data-parent="{{ $snippet->parent_id }}">
 								<td>
 									<a href="#snippet{{ $snippet->id }}" class="toggle-tree" data-id="{{ $snippet->id }}">
-										<span class="sr-only">{{ trans('knowledge::knowledge.toggle open close') }}</span>
+										<span class="sr-only visually-hidden">{{ trans('knowledge::knowledge.toggle open close') }}</span>
 									</a>
 								</td>
 								<td>
@@ -90,7 +90,7 @@ app('pathway')
 									<span class="form-text text-muted">{{ $snippet->path }}</span>
 								</td>
 								<td>
-									<label for="field-{{ $snippet->id }}-access" class="sr-only">{{ trans('knowledge::knowledge.access') }}:</label>
+									<label for="field-{{ $snippet->id }}-access" class="sr-only visually-hidden">{{ trans('knowledge::knowledge.access') }}:</label>
 									<select class="form-control" name="snippets[{{ $snippet->parent_id }}][{{ $snippet->id }}][access]" id="field-{{ $snippet->id }}-access">
 										@foreach (App\Halcyon\Access\Viewlevel::all() as $access)
 											<option value="{{ $access->id }}">{{ $access->title }}</option>
@@ -98,7 +98,7 @@ app('pathway')
 									</select>
 								</td>
 								<td>
-									<label for="field-{{ $snippet->id }}-state" class="sr-only">{{ trans('knowledge::knowledge.state') }}:</label>
+									<label for="field-{{ $snippet->id }}-state" class="sr-only visually-hidden">{{ trans('knowledge::knowledge.state') }}:</label>
 									<select class="form-control" name="snippets[{{ $snippet->parent_id }}][{{ $snippet->id }}][state]" id="field-{{ $snippet->id }}-state">
 										<option value="1">{{ trans('global.published') }}</option>
 										<option value="0">{{ trans('global.unpublished') }}</option>

@@ -56,15 +56,15 @@ app('pathway')
 		<div class="row">
 			<div class="col-md-3">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" name="search" enterkeyhint="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
 			<div class="col-md-9 text-right">
-				<label class="sr-only" for="filter_parent">{{ trans('knowledge::knowledge.parent') }}</label>
+				<label class="sr-only visually-hidden" for="filter_parent">{{ trans('knowledge::knowledge.parent') }}</label>
 				<select name="parent" id="filter_parent" class="form-control filter filter-submit">
 					<option value="0">{{ trans('knowledge::knowledge.all snippets') }}</option>
 					<?php foreach ($tree as $page): ?>
@@ -197,7 +197,7 @@ app('pathway')
 				<td>
 					<a href="{{ route('admin.knowledge.snippets.copy', ['id' => $row->id]) }}" data-hint="{{ trans('knowledge::knowledge.copy') }}">
 						<span class="fa fa-copy" aria-hidden="true"></span>
-						<span class="sr-only">{{ trans('knowledge::knowledge.copy') }}</span>
+						<span class="sr-only visually-hidden">{{ trans('knowledge::knowledge.copy') }}</span>
 					</a>
 				</td>
 			</tr>

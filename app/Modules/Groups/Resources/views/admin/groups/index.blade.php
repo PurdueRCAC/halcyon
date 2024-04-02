@@ -117,15 +117,15 @@ app('pathway')
 		<div class="row">
 			<div class="col-md-3 filter-search">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
 			<div class="col col-md-9 text-right">
-				<label class="sr-only" for="filter-state">{{ trans('groups::groups.state') }}</label>
+				<label class="sr-only visually-hidden" for="filter-state">{{ trans('groups::groups.state') }}</label>
 				<select name="state" id="filter-state" class="form-control filter filter-submit">
 					<option value="*">{{ trans('groups::groups.all states') }}</option>
 					<option value="enabled"<?php if ($filters['state'] == 'enabled') { echo ' selected="selected"'; } ?>>{{ trans('global.enabled') }}</option>
@@ -133,7 +133,7 @@ app('pathway')
 					<option value="trashed"<?php if ($filters['state'] == 'trashed') { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_fieldofscience">{{ trans('groups::groups.field of science') }}</label>
+				<label class="sr-only visually-hidden" for="filter_fieldofscience">{{ trans('groups::groups.field of science') }}</label>
 				<select name="fieldofscience" id="filter_fieldofscience" class="form-control filter-submit searchable-select">
 					<option value="0">{{ trans('groups::groups.all fields of science') }}</option>
 					@foreach ($fields as $field)
@@ -146,7 +146,7 @@ app('pathway')
 					@endforeach
 				</select>
 
-				<label class="sr-only" for="filter_department">{{ trans('groups::groups.department') }}</label>
+				<label class="sr-only visually-hidden" for="filter_department">{{ trans('groups::groups.department') }}</label>
 				<select name="department" id="filter_department" class="form-control filter-submit searchable-select">
 					<option value="0">{{ trans('groups::groups.all departments') }}</option>
 					@foreach ($departments as $department)
@@ -171,7 +171,7 @@ app('pathway')
 	<div class="card mb-4">
 		<div class="table-responsive">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('groups::groups.groups') }}</caption>
+		<caption class="sr-only visually-hidden">{{ trans('groups::groups.groups') }}</caption>
 		<thead>
 			<tr>
 				@if (auth()->user()->can('delete groups'))

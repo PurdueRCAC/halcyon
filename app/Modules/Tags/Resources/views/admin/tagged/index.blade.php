@@ -55,7 +55,7 @@ app('pathway')
 		<div class="card mb-4">
 			<div class="table-responsive">
 				<table class="table table-hover adminlist">
-					<caption class="sr-only">{{ trans('tags::tags.tagged') }}</caption>
+					<caption class="sr-only visually-hidden">{{ trans('tags::tags.tagged') }}</caption>
 					<thead>
 						<tr>
 							<th>

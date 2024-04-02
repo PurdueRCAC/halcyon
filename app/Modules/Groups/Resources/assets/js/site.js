@@ -1283,7 +1283,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						if (al.length) {
 							al.removeClass('hide').html(data.error);
 						}
-						bx.after($('<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true" title="' + data.error + '"><span class="sr-only">' + data.error + '</span></span>'));
+						bx.after($('<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true" title="' + data.error + '"><span class="sr-only visually-hidden">' + data.error + '</span></span>'));
 						alert('An error occurred. Try toggling the checkbox. If issues persist, please contact help.');
 					}
 				},
@@ -1322,7 +1322,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						msg = xhr.responseJSON.message;
 					}
 
-					bx.after($('<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true" title="' + msg + '"><span class="sr-only">' + msg + '</span></span>'));
+					bx.after($('<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true" title="' + msg + '"><span class="sr-only visually-hidden">' + msg + '</span></span>'));
 
 					if (al.length) {
 						al.removeClass('hide').html(msg);

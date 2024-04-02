@@ -32,14 +32,14 @@ app('pathway')
 @endcomponent
 
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-	<h2 class="sr-only">{{ trans('orders::orders.products') }}</h2>
+	<h2 class="sr-only visually-hidden">{{ trans('orders::orders.products') }}</h2>
 
 	<div class="row">
 		<div class="sidenav col-lg-3 col-md-3 col-sm-12 col-xs-12">
 			<form action="{{ route('site.orders.products') }}" method="get" name="products" id="products">
 				<div>
 					<fieldset class="filters mt-0">
-						<legend class="sr-only">Filter Results</legend>
+						<legend class="sr-only visually-hidden">Filter Results</legend>
 						<?php $cat = null; ?>
 
 						<div class="form-group">
@@ -87,7 +87,7 @@ app('pathway')
 						</div>
 						@endif
 
-						<button class="sr-only" type="submit">{{ trans('global.filter') }}</button>
+						<button class="sr-only visually-hidden" type="submit">{{ trans('global.filter') }}</button>
 					</fieldset>
 				</div>
 			</form>
@@ -180,7 +180,7 @@ app('pathway')
 				@endif
 
 				<div id="applied-filters" aria-label="{{ trans('orders::orders.applied filters') }}">
-					<p class="sr-only">{{ trans('orders::orders.applied filters') }}:</p>
+					<p class="sr-only visually-hidden">{{ trans('orders::orders.applied filters') }}:</p>
 					<ul class="filters-list">
 						<?php
 						$allfilters = collect($filters);
@@ -234,7 +234,7 @@ app('pathway')
 							<li>
 								<strong>{{ trans('orders::orders.filters.' . $key) }}</strong>: {{ $val }}
 								<a href="{{ route('site.orders.products', $f) }}" class="filters-x" title="{{ trans('orders::orders.remove filter') }}">
-									<span class="fa fa-times" aria-hidden="true"><span class="sr-only">{{ trans('orders::orders.remove filter') }}</span>
+									<span class="fa fa-times" aria-hidden="true"><span class="sr-only visually-hidden">{{ trans('orders::orders.remove filter') }}</span>
 								</a>
 							</li>
 							<?php
@@ -250,7 +250,7 @@ app('pathway')
 
 				@if (count($rows))
 				<table class="table order-products">
-					<caption class="sr-only">{{ trans('orders::orders.products') }}</caption>
+					<caption class="sr-only visually-hidden">{{ trans('orders::orders.products') }}</caption>
 					<thead>
 						<tr>
 							<th scope="col">
@@ -328,7 +328,7 @@ app('pathway')
 								<input type="hidden" id="{{ $product->id }}_category" value="{{ $product->ordercategoryid }}" />
 							</td>
 							<td class="orderproductitem text-center">
-								<label class="sr-only" for="{{ $product->id }}_quantity">Quantity</label>
+								<label class="sr-only visually-hidden" for="{{ $product->id }}_quantity">Quantity</label>
 								@if (auth()->user() && auth()->user()->enabled)
 									<input type="number" name="quantity[{{ $product->id }}][]" id="{{ $product->id }}_quantity" data-id="{{ $product->id }}" size="4" min="0" class="form-control quantity-input" value="{{ $found ? $found->qty : 1 }}" />
 								@else
@@ -361,14 +361,14 @@ app('pathway')
 								@if (auth()->user()->can('edit orders'))
 							<td class="text-nowrap">
 								<a href="{{ route('site.orders.products.edit', ['id' => $product->id]) }}" class="btn btn-sm btn-edit tip" title="{{ trans('global.button.edit') }} '{{ $product->name }}' product">
-									<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.edit') }} '{{ $product->name }}' product</span>
+									<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.edit') }} '{{ $product->name }}' product</span>
 								</a>
 							</td>
 								@endif
 								@if (auth()->user()->can('delete orders'))
 							<td class="text-nowrap">
 								<a href="{{ route('site.orders.products.delete', ['id' => $product->id]) }}" class="btn btn-sm btn-delete text-danger tip" title="{{ trans('global.button.delete') }} '{{ $product->name }}' product" data-confirm="{{ trans('global.confirm delete') }}">
-									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only">{{ trans('global.button.delete') }} '{{ $product->name }}' product</span>
+									<span class="fa fa-trash" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.delete') }} '{{ $product->name }}' product</span>
 								</a>
 							</td>
 								@endif

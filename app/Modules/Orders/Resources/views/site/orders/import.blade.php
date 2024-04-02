@@ -41,7 +41,7 @@
 		@if (count($data))
 			<p class="alert alert-info">This is a preview of the data being imported. Please verify that data looks correct before submitting.</p>
 			<table class="table order-import datatable nowrap mt-0">
-				<caption class="sr-only">{{ trans('orders::orders.import preview') }}</caption>
+				<caption class="sr-only visually-hidden">{{ trans('orders::orders.import preview') }}</caption>
 				<thead>
 					<tr>
 						@foreach ($headers as $header)

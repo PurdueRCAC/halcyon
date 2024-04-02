@@ -46,7 +46,7 @@ app('pathway')
 		<div class="row">
 			<div class="col-md-12 filter-search">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 						<span class="input-group-append"><span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span></span>
@@ -61,7 +61,7 @@ app('pathway')
 	<div class="card mb-4">
 		<div class="table-responsive">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('messages::messages.types') }}</caption>
+		<caption class="sr-only visually-hidden">{{ trans('messages::messages.types') }}</caption>
 		<thead>
 			<tr>
 				@if (auth()->user()->can('delete messages.types'))

@@ -84,7 +84,7 @@ app('pathway')
 		<h3>{{ trans('software::software.available versions') }}</h3>
 
 		<table class="table table-bordered">
-			<caption class="sr-only">{{ trans('software::software.available versions') }}</caption>
+			<caption class="sr-only visually-hidden">{{ trans('software::software.available versions') }}</caption>
 			<tbody>
 				@foreach ($row->versionsByResource() as $resource => $versions)
 					<tr>

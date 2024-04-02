@@ -216,7 +216,7 @@ app('pathway')
 			@else
 				<tr>
 					<td colspan="5">
-						<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
+						<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only visually-hidden">{{ trans('global.loading') }}</span></span>
 					</td>
 				</tr>
 			@endif

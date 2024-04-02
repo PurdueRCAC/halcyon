@@ -9,7 +9,7 @@
 	<div class="card-body panel-body">
 		<form method="post" action="{{ route('admin.groups.edit', ['id' => $group->id]) }}">
 			<fieldset>
-				<legend class="sr-only">{{ trans('groups::groups.set notice') }}</legend>
+				<legend class="sr-only visually-hidden">{{ trans('groups::groups.set notice') }}</legend>
 
 				<div class="form-group">
 					<label for="MotdText_{{ $group->id }}">{{ trans('groups::groups.enter motd') }}</label>
@@ -48,7 +48,7 @@ if (count($past))
 		</div>
 		<div class="card-body panel-body">
 			<table class="table table-hover">
-				<caption class="sr-only">{{ trans('groups::groups.past motd') }}</caption>
+				<caption class="sr-only visually-hidden">{{ trans('groups::groups.past motd') }}</caption>
 				<thead>
 					<tr>
 						<th scope="col">{{ trans('groups::groups.from') }}</th>

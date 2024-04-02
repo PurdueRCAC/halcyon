@@ -53,21 +53,21 @@ app('pathway')
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
 			<div class="col col-md-3 filter-search">
-				<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+				<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 				<span class="input-group">
 					<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 					<span class="input-group-append"><span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span></span>
 				</span>
 			</div>
 			<div class="col col-md-9 filter-select text-right">
-				<label class="sr-only" for="filter_state">{{ trans('global.state') }}</label>
+				<label class="sr-only visually-hidden" for="filter_state">{{ trans('global.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.option.all states') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('global.published') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('global.trashed') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_category">{{ trans('orders::orders.category') }}</label>
+				<label class="sr-only visually-hidden" for="filter_category">{{ trans('orders::orders.category') }}</label>
 				<select name="category" id="filter_category" class="form-control filter filter-submit">
 					<option value="0"<?php if (!$filters['category']): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
 					@foreach ($categories as $category)
@@ -75,21 +75,21 @@ app('pathway')
 					@endforeach
 				</select>
 
-				<label class="sr-only" for="filter_restricteddata">{{ trans('orders::orders.restricted data') }}</label>
+				<label class="sr-only visually-hidden" for="filter_restricteddata">{{ trans('orders::orders.restricted data') }}</label>
 				<select name="restricteddata" id="filter_restricteddata" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['restricteddata'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all restricted data') }}</option>
 					<option value="0"<?php if (!$filters['restricteddata']): echo ' selected="selected"'; endif;?>>{{ trans('global.no') }}</option>
 					<option value="1"<?php if ($filters['restricteddata'] == 1): echo ' selected="selected"'; endif;?>>{{ trans('global.yes') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_public">{{ trans('orders::orders.visibility') }}</label>
+				<label class="sr-only visually-hidden" for="filter_public">{{ trans('orders::orders.visibility') }}</label>
 				<select name="public" id="filter_public" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['public'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all visibilities') }}</option>
 					<option value="1"<?php if ($filters['public'] == 1): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.public') }}</option>
 					<option value="0"<?php if (!$filters['public']): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.hidden') }}</option>
 				</select>
 
-				<label class="sr-only" for="filter_recurrence">{{ trans('orders::orders.recurrence') }}</label>
+				<label class="sr-only visually-hidden" for="filter_recurrence">{{ trans('orders::orders.recurrence') }}</label>
 				<select name="recurrence" id="filter_recurrence" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['recurrence'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all recurrence') }}</option>
 					@foreach (App\Modules\Orders\Models\Timeperiod::all() as $timeperiod)
@@ -109,7 +109,7 @@ app('pathway')
 	<div class="card w-100 mb-4">
 		<div class="table-responsive">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('orders::orders.products') }}</caption>
+		<caption class="sr-only visually-hidden">{{ trans('orders::orders.products') }}</caption>
 		<thead>
 			<tr>
 				@if (auth()->user()->can('delete orders.products'))
@@ -159,13 +159,13 @@ app('pathway')
 					@if ($row->trashed())
 						<span class="text-danger" aria-hidden="true" data-tip="{{ trans('global.trashed') }}">
 							<span class="fa fa-trash" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('global.trashed') }}</span>
+							<span class="sr-only visually-hidden">{{ trans('global.trashed') }}</span>
 						</span>
 					@endif
 					@if (!$row->public)
 						<span class="text-warning" aria-hidden="true" data-tip="{{ trans('orders::orders.hidden') }}">
 							<span class="fa fa-eye-slash" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('orders::orders.hidden') }}</span>
+							<span class="sr-only visually-hidden">{{ trans('orders::orders.hidden') }}</span>
 						</span>
 					@endif
 					@if (auth()->user()->can('edit orders.products'))

@@ -57,14 +57,14 @@ app('pathway')->append(
 					<div class="col-md-4 text-right">
 						<nav class="btn-group" aria-label="Calendar options for {{ $type->name }}">
 							<a class="btn btn-default tip" href="{{ $type->rssLink }}" title="{{ trans('news::news.rss feed') }}">
-								<span class="fa fa-rss-square" aria-hidden="true"></span><span class="sr-only">{{ trans('news::news.rss feed') }} for {{ $type->name }}</span>
+								<span class="fa fa-rss-square" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('news::news.rss feed') }} for {{ $type->name }}</span>
 							</a>
 						@if ($type->calendar)
 							<a target="_blank" class="btn btn-default calendar calendar-subscribe tip" href="{{ $type->subscribeCalendarLink }}" title="{{ trans('news::news.subscribe calendar', ['name' => $type->name]) }}"><!--
-								--><span class="fa fa-fw fa-calendar" aria-hidden="true"></span><span class="sr-only">{{ trans('news::news.subscribe calendar', ['name' => $type->name]) }}</span><!--
+								--><span class="fa fa-fw fa-calendar" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('news::news.subscribe calendar', ['name' => $type->name]) }}</span><!--
 							--></a>
 							<a target="_blank" class="btn btn-default calendar calendar-download tip" href="{{ $type->downloadCalendarLink }}" title="{{ trans('news::news.download calendar', ['name' => $type->name]) }}"><!--
-								--><span class="fa fa-fw fa-download" aria-hidden="true"></span><span class="sr-only">{{ trans('news::news.download calendar', ['name' => $type->name]) }}</span><!--
+								--><span class="fa fa-fw fa-download" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('news::news.download calendar', ['name' => $type->name]) }}</span><!--
 							--></a>
 						@endif
 						</nav>
@@ -83,7 +83,7 @@ app('pathway')->append(
 							<li>
 								<article id="article-{{ $article->id }}" aria-labelledby="article-{{ $article->id }}-title" itemscope itemtype="https://schema.org/<?php echo ($type->calendar ? 'Event' : 'NewsArticle'); ?>">
 									<h3 id="article-{{ $article->id }}-title" class="news-title">
-										<a href="{{ route('site.news.show', ['id' => $article->id]) }}"><span class="sr-only">{{ trans('news::news.article id', ['id' => $article->id]) }}:</span> <span itemprop="name">{{ $article->headline }}</span></a>
+										<a href="{{ route('site.news.show', ['id' => $article->id]) }}"><span class="sr-only visually-hidden">{{ trans('news::news.article id', ['id' => $article->id]) }}:</span> <span itemprop="name">{{ $article->headline }}</span></a>
 									</h3>
 									<ul class="news-meta text-muted">
 										<li>

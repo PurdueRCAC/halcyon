@@ -46,7 +46,7 @@ app('pathway')
 			<div class="card-title">{{ trans('issues::issues.checklist') }}</div>
 		</div>
 		<div class="col-md-6 text-right">
-			<label for="checklist_status" class="sr-only">{{ trans('issues::issues.show') }}</label>
+			<label for="checklist_status" class="sr-only visually-hidden">{{ trans('issues::issues.show') }}</label>
 			<select name="checklist_status" id="checklist_status" class="form-control form-control-sm">
 				<option value="all">{{ trans('issues::issues.all') }}</option>
 				<option value="incomplete" selected="selected">{{ trans('issues::issues.incomplete') }}</option>
@@ -72,7 +72,7 @@ app('pathway')
 									id="todo{{ $todo->id }}"
 									value="1"
 									{{ $todo->status == 'complete' ? 'checked="checked"' : '' }} />
-								<label class="form-check-label" for="todo{{ $todo->id }}"><span class="sr-only">{{ trans('issues::issues.mark as complete') }}</span></label>
+								<label class="form-check-label" for="todo{{ $todo->id }}"><span class="sr-only visually-hidden">{{ trans('issues::issues.mark as complete') }}</span></label>
 							</div>
 						</div>
 						<div>
@@ -123,7 +123,7 @@ app('pathway')
 		<div class="row">
 			<div class="col col-md-4">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 						<span class="input-group-append"><span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span></span>
@@ -142,21 +142,21 @@ app('pathway')
 					<span class="input-group-append">
 						<span class="input-group-text">
 							<span class="fa fa-tag" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('issues::issues.tags') }}</span>
+							<span class="sr-only visually-hidden">{{ trans('issues::issues.tags') }}</span>
 						</span>
 					</span>
 				</span>
 				@endif
 			</div>
 			<div class="col col-md-3">
-				<label class="sr-only" for="filter_start">{{ trans('issues::issues.start') }}</label>
+				<label class="sr-only visually-hidden" for="filter_start">{{ trans('issues::issues.start') }}</label>
 				<span class="input-group">
 					<input type="text" name="start" id="filter_start" class="form-control filter filter-submit date" size="10" value="{{ $filters['start'] }}" placeholder="{{ trans('issues::issues.start') }}" />
 					<span class="input-group-append"><span class="input-group-text"><span class="fa fa-calendar" aria-hidden="true"></span></span>
 				</span>
 			</div>
 			<div class="col col-md-3">
-				<label class="sr-only" for="filter_stop">{{ trans('issues::issues.stop') }}</label>
+				<label class="sr-only visually-hidden" for="filter_stop">{{ trans('issues::issues.stop') }}</label>
 				<span class="input-group">
 					<input type="text" name="stop" id="filter_stop" class="form-control filter filter-submit date" size="10" value="{{ $filters['stop'] }}" placeholder="{{ trans('issues::issues.stop') }}" />
 					<span class="input-group-append"><span class="input-group-text"><span class="fa fa-calendar" aria-hidden="true"></span></span></span>
@@ -204,7 +204,7 @@ app('pathway')
 							@if (auth()->user()->can('edit issues'))
 								<a class="btn" href="{{ route('admin.issues.edit', ['id' => $row->id]) }}">
 									<span class="fa fa-pencil" aria-hidden="true"></span>
-									<span class="sr-only"># {{ $row->id }}</span>
+									<span class="sr-only visually-hidden"># {{ $row->id }}</span>
 								</a>
 							@else
 								# {{ $row->id }}

@@ -92,7 +92,7 @@ app('pathway')
 					<div class="row version" id="version{{ $i }}">
 						<div class="col-md-3">
 							<div class="form-group">
-								<label for="version{{ $i }}-title" class="sr-only">{{ trans('software::software.versions') }}</label>
+								<label for="version{{ $i }}-title" class="sr-only visually-hidden">{{ trans('software::software.versions') }}</label>
 								<input type="text" name="version[{{ $i }}][title]" id="version{{ $i }}-title" class="form-control" value="{{ $version->title }}" />
 							</div>
 							<input type="hidden" name="version[{{ $i }}][id]" value="{{ $version->id }}" />
@@ -102,7 +102,7 @@ app('pathway')
 							$r = $version->associations->pluck('resource_id')->toArray();
 							?>
 							<div class="form-group">
-								<label for="version{{ $i }}-resources" class="sr-only">{{ trans('software::software.resources') }}</label>
+								<label for="version{{ $i }}-resources" class="sr-only visually-hidden">{{ trans('software::software.resources') }}</label>
 								<select class="form-control resources-select" id="version{{ $i }}-resources" name="version[{{ $i }}][resources][]" multiple="multiple" data-placeholder="Select resources ...">
 									<?php
 									foreach ($resources as $resource):
@@ -117,7 +117,7 @@ app('pathway')
 						<div class="col-md-1">
 							<button class="btn text-danger remove-version" data-target="version{{ $i }}">
 								<span class="fa fa-trash" aria-hidden="true"></span>
-								<span class="sr-only">{{ trans('global.button.trash') }}</span>
+								<span class="sr-only visually-hidden">{{ trans('global.button.trash') }}</span>
 							</button>
 						</div>
 					</div>
@@ -129,14 +129,14 @@ app('pathway')
 				<div class="row d-none" id="version<?php echo '{{id}}'; ?>">
 					<div class="col-md-3">
 						<div class="form-group">
-							<label for="version<?php echo '{{id}}'; ?>-title" class="sr-only">{{ trans('software::software.versions') }}</label>
+							<label for="version<?php echo '{{id}}'; ?>-title" class="sr-only visually-hidden">{{ trans('software::software.versions') }}</label>
 							<input type="text" name="version[<?php echo '{{id}}'; ?>][title]" id="version<?php echo '{{id}}'; ?>-title" class="form-control" value="" />
 						</div>
 						<input type="hidden" name="version[<?php echo '{{id}}'; ?>][id]" value="" />
 					</div>
 					<div class="col-md-8">
 						<div class="form-group">
-							<label for="version<?php echo '{{id}}'; ?>-resources" class="sr-only">{{ trans('software::software.resources') }}</label>
+							<label for="version<?php echo '{{id}}'; ?>-resources" class="sr-only visually-hidden">{{ trans('software::software.resources') }}</label>
 							<select class="form-control" id="version<?php echo '{{id}}'; ?>-resources" name="version[<?php echo '{{id}}'; ?>][resources][]" multiple="multiple">
 								@foreach ($resources as $resource)
 									<option value="{{ $resource->id }}">{{ $resource->name }}</option>
@@ -147,7 +147,7 @@ app('pathway')
 					<div class="col-md-1">
 						<button class="btn text-danger remove-version" data-target="version<?php echo '{{id}}'; ?>">
 							<span class="fa fa-trash" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('global.button.trash') }}</span>
+							<span class="sr-only visually-hidden">{{ trans('global.button.trash') }}</span>
 						</button>
 					</div>
 				</div>
@@ -156,7 +156,7 @@ app('pathway')
 					<div class="col-md-12 text-right">
 						<button class="btn btn-success add-version" data-length="{{ $i }}" data-target="version<?php echo '{{id}}'; ?>">
 							<span class="fa fa-plus" aria-hidden="true"></span>
-							<span class="sr-only">{{ trans('global.button.add') }}</span>
+							<span class="sr-only visually-hidden">{{ trans('global.button.add') }}</span>
 						</button>
 					</div>
 				</div>
