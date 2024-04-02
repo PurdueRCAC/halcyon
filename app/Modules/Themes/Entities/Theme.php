@@ -44,7 +44,7 @@ class Theme
 	 *
 	 * @param   string  $name
 	 * @param   string  $path
-	 * @param   array   $params
+	 * @param   array<string,mixed>|Repository   $params
 	 * @return  void
 	 */
 	public function __construct($name, $path, $params = array())
@@ -57,9 +57,14 @@ class Theme
 		{
 			$params = json_decode($params, true);
 		}
-		$params = is_array($params) ? $params : [];
 
-		$this->params = new Repository($params);
+		if (!($params instanceof Repository))
+		{
+			$params = is_array($params) ? $params : [];
+			$params = new Repository($params);
+		}
+
+		$this->params = $params;
 	}
 
 	/**
@@ -189,7 +194,7 @@ class Theme
 	 * @param   mixed   $default
 	 * @return  mixed
 	 */
-	public function getParams(string $param = null, $default = null)
+	public function getParams(string $param = null, mixed $default = null): mixed
 	{
 		if ($param)
 		{
