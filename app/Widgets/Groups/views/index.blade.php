@@ -17,7 +17,7 @@
 		@endif
 
 		<table class="table table-hover">
-			<caption class="sr-only">{{ trans('widget.groups::groups.recent') }}</caption>
+			<caption class="sr-only visually-hidden">{{ trans('widget.groups::groups.recent') }}</caption>
 			<thead>
 				<tr>
 					<th scope="col">{{ trans('widget.groups::groups.name') }}</th>

@@ -108,7 +108,7 @@ foreach ($rows as $event):
 	$events[] = $slot;
 	?>
 	<section id="coffee{{ $event->id }}" class="dialog dialog-event" title="{{ $event->headline }}" aria-labelledby="coffee{{ $event->id }}-title">
-		<h3 id="coffee{{ $event->id }}-title" class="sr-only"><span class="sr-only">Article #{{ $event->id }}:</span> {{ $event->headline }}</h3>
+		<h3 id="coffee{{ $event->id }}-title" class="sr-only visually-hidden"><span class="sr-only visually-hidden">Article #{{ $event->id }}:</span> {{ $event->headline }}</h3>
 
 		<ul class="news-meta text-muted">
 			<li>
@@ -160,12 +160,12 @@ foreach ($rows as $event):
 					<li>
 					<span class="fa fa-fw fa-calendar" aria-hidden="true"></span>
 					<a target="_blank" class="calendar calendar-subscribe" href="{{ $event->subscribeCalendarLink }}"><!--
-						-->Subscribe<span class="sr-only"> to event #{{ $event->id }} at {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}</span><!--
+						-->Subscribe<span class="sr-only visually-hidden"> to event #{{ $event->id }} at {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}</span><!--
 					--></a>
 					&nbsp;|&nbsp;
 					<span class="fa fa-fw fa-download" aria-hidden="true"></span>
 					<a target="_blank" class="calendar calendar-download" href="{{ $event->downloadCalendarLink }}"><!--
-						-->Download<span class="sr-only"> event #{{ $event->id }} at {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}</span><!--
+						-->Download<span class="sr-only visually-hidden"> event #{{ $event->id }} at {!! $event->formatDate($event->datetimenews, $event->datetimenewsend) !!}</span><!--
 					--></a>
 					</li>
 					<?php
@@ -180,7 +180,7 @@ foreach ($rows as $event):
 			@endif
 		@endif
 
-		<div class="sr-only">{!! $event->toHtml() !!}</div>
+		<div class="sr-only visually-hidden">{!! $event->toHtml() !!}</div>
 
 		<div class="dialog-footer newsattend">
 
@@ -286,11 +286,11 @@ foreach ($rows as $event):
 				<div class="col-md-6 text-right">
 					<a class="edit tip" href="{{ route('site.news.manage', ['id' => $event->id]) }}&edit" title="{{ trans('global.edit') }}"><!--
 						--><span class="fa fa-fw fa-pencil" aria-hidden="true"></span><!--
-						--><span class="sr-only">{{ trans('global.button.edit') }}</span><!--
+						--><span class="sr-only visually-hidden">{{ trans('global.button.edit') }}</span><!--
 					--></a>
 					<a href="#coffee{{ $event->id }}" class="delete-news tip text-danger ml-3" data-confirm="Are you sure you want to delete this event?" data-api="{{ route('api.news.delete', ['id' => $event->id]) }}" title="{{ trans('global.button.delete') }}"><!--
 						--><span class="fa fa-fw fa-trash" aria-hidden="true"></span><!--
-						--><span class="sr-only">{{ trans('global.button.delete') }}</span><!--
+						--><span class="sr-only visually-hidden">{{ trans('global.button.delete') }}</span><!--
 					--></a>
 				</div>
 			</div>

@@ -7,7 +7,7 @@
 <div class="media-files media-list" id="media-list">
 	<div class="media-list">
 		<table class="table">
-			<caption class="sr-only">{{ trans('media::media.files') }}</caption>
+			<caption class="sr-only visually-hidden">{{ trans('media::media.files') }}</caption>
 			<thead>
 				<tr>
 					<th scope="col">{{ trans('media::media.list.name') }}</th>
