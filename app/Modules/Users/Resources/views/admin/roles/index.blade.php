@@ -78,7 +78,7 @@ app('pathway')
 					<div class="pane-slider content pane-hide">
 
 						<table class="table table-hover role-rules">
-							<caption class="sr-only">{{ $role->text }}</caption>
+							<caption class="sr-only visually-hidden">{{ $role->text }}</caption>
 							<thead>
 								<tr>
 									<th class="actions" id="actions-th{{ $role->value }}" scope="col">

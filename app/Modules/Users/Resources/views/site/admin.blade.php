@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		@else
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 		@endif
-				<label for="newuser" class="sr-only">Show data for user:</label>
+				<label for="newuser" class="sr-only visually-hidden">Show data for user:</label>
 				<div class="input-group">
 					<select name="u" id="newuser" class="form-control searchuser" multiple="multiple" data-placeholder="Select user..." data-noaccount="No local account" data-api="{{ route('api.users.index') }}" data-url="{{ request()->url() }}">
 						@if ($user->id != auth()->user()->id)
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					<span class="input-group-append">
 						<button type="submit" class="btn input-group-text">
 							<span class="fa fa-search" id="add_button_a" aria-hidden="true"></span>
-							<span class="sr-only">Search</span>
+							<span class="sr-only visually-hidden">Search</span>
 						</button>
 					</span>
 				</div>

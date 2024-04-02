@@ -168,7 +168,7 @@ app('pathway')
 			<div class="tab-pane" id="user-attributes" role="tabpanel" aria-labelledby="user-attributes-tab">
 				<div class="card">
 					<table class="table table-hover">
-						<caption class="sr-only">{{ trans('users::users.attributes') }}</caption>
+						<caption class="sr-only visually-hidden">{{ trans('users::users.attributes') }}</caption>
 						<thead>
 							<tr>
 								<th scope="col" width="25">{{ trans('users::users.locked') }}</th>
@@ -186,7 +186,7 @@ app('pathway')
 								<td>
 									@if ($facet->locked)
 										<span class="fa fa-lock" aria-hidden="true"></span>
-										<span class="sr-only">{{ trans('users::users.locked') }}</span>
+										<span class="sr-only visually-hidden">{{ trans('users::users.locked') }}</span>
 									@endif
 								</td>
 								<td><input type="text" name="facet[{{ $i }}][key]" class="form-control" value="{{ $facet->key }}" {{ $facet->locked ? ' readonly="readonly"' : '' }} /></td>
@@ -205,7 +205,7 @@ app('pathway')
 										data-api="{{ route('api.users.facets.delete', ['id' => $facet->id]) }}"
 										data-confirm="{{ trans('users::users.confirm delete') }}">
 										<span class="fa fa-trash" aria-hidden="true"></span>
-										<span class="sr-only">{{ trans('global.trash') }}</span>
+										<span class="sr-only visually-hidden">{{ trans('global.trash') }}</span>
 									</a>
 								</td>
 							</tr>
@@ -232,7 +232,7 @@ app('pathway')
 										data-userid="{{ $user->id }}"
 										data-api="{{ route('api.users.facets.create') }}">
 										<span class="fa fa-plus" aria-hidden="true"></span>
-										<span class="sr-only">{{ trans('global.add') }}</span>
+										<span class="sr-only visually-hidden">{{ trans('global.add') }}</span>
 									</a>
 								</td>
 							</tr>
@@ -257,7 +257,7 @@ app('pathway')
 									data-api="{{ route('api.users.facets.create') }}/{id}"
 									data-confirm="{{ trans('users::users.confirm delete') }}">
 									<span class="fa fa-trash" aria-hidden="true"></span>
-									<span class="sr-only">{{ trans('global.trash') }}</span>
+									<span class="sr-only visually-hidden">{{ trans('global.trash') }}</span>
 								</a>
 							</td>
 						</tr>

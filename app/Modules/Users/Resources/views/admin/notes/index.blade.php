@@ -46,15 +46,15 @@ app('pathway')
 		<div class="row">
 			<div class="col col-md-6 filter-search">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="search" enterkeyhint="search" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
-						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only">{{ trans('search.submit') }}</span></button></span>
+						<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
 					</span>
 				</div>
 			</div>
 			<div class="col col-md-6 text-right">
-				<label class="sr-only" for="filter_published"></label>
+				<label class="sr-only visually-hidden" for="filter_published"></label>
 				<select name="published" id="filter_published" class="form-control filter filter-submit">
 					<?php echo App\Halcyon\Html\Builder\Select::options(App\Halcyon\Html\Builder\Grid::publishedOptions(), 'value', 'text', $filters['state'], true); ?>
 				</select>
@@ -70,7 +70,7 @@ app('pathway')
 	<div class="card md-4">
 		<div class="table-responsive">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">{{ trans('users::users.notes') }}</caption>
+		<caption class="sr-only visually-hidden">{{ trans('users::users.notes') }}</caption>
 		<thead>
 			<tr>
 				<th>

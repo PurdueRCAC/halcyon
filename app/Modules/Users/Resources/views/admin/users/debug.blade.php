@@ -39,7 +39,7 @@ app('pathway')
 		<div class="row">
 			<div class="filter-search col col-xs-12 col-sm-3">
 				<div class="form-group">
-					<label class="sr-only" for="filter_search">{{ trans('search.label') }}</label>
+					<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 					<span class="input-group">
 						<input type="text" name="search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 						<span class="input-group-append"><span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span></span>
@@ -48,7 +48,7 @@ app('pathway')
 				<button type="submit" class="btn sr-only">{{ trans('search.submit') }}</button>
 			</div>
 			<div class="filter-select col col-xs-12 col-sm-7 text-right">
-				<label class="sr-only" for="filter_module">{{ trans('users::users.module') }}</label>
+				<label class="sr-only visually-hidden" for="filter_module">{{ trans('users::users.module') }}</label>
 				<select name="filter_module" class="form-control filter filter-submit">
 					<option value="">{{ trans('users::users.select module') }}</option>
 					<?php
@@ -59,13 +59,13 @@ app('pathway')
 					?>
 				</select>
 
-				<label class="sr-only" for="filter_level_start">{{ trans('users::users.start level') }}</label>
+				<label class="sr-only visually-hidden" for="filter_level_start">{{ trans('users::users.start level') }}</label>
 				<select name="filter_level_start" class="form-control filter filter-submit">
 					<option value="">{{ trans('users::users.select level start') }}</option>
 					<?php echo Html::select('options', $levels, 'value', 'text', $filters['level_start']); ?>
 				</select>
 
-				<label class="sr-only" for="filter_level_end">{{ trans('users::users.end level') }}</label>
+				<label class="sr-only visually-hidden" for="filter_level_end">{{ trans('users::users.end level') }}</label>
 				<select name="filter_level_end" class="form-control filter filter-submit">
 					<option value="">{{ trans('users::users.select level end') }}</option>
 					<?php echo Html::select('options', $levels, 'value', 'text', $filters['level_end']); ?>
@@ -88,7 +88,7 @@ app('pathway')
 
 	<div class="card mb-4">
 	<table class="table table-hover adminlist">
-		<caption class="sr-only">Permissions</caption>
+		<caption class="sr-only visually-hidden">Permissions</caption>
 		<thead>
 			<tr>
 				<th scope="col">

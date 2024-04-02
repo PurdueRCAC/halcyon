@@ -79,14 +79,14 @@ app('pathway')
 								@if (auth()->user()->can('edit users') || (auth()->user()->can('edit.own users') && auth()->user()->id == $user->id))
 								<a class="btn btn-sm btn-link float-right" data-toggle="modal" href="#manage_details_dialog" data-tip="Edit User Info">
 									<span class="fa fa-pencil" aria-hidden="true"></span>
-									<span class="sr-only">Edit</span>
+									<span class="sr-only visually-hidden">Edit</span>
 								</a>
 								@endif
 								<div class="card-title">{{ trans('global.details') }}</div>
 							</div>
 							<div class="card-body">
 								<table class="table mb-3">
-									<caption class="sr-only">{{ trans('global.metadata') }}</caption>
+									<caption class="sr-only visually-hidden">{{ trans('global.metadata') }}</caption>
 									<tbody>
 										<tr>
 											<th scope="row">{{ trans('users::users.id') }}</th>
@@ -123,7 +123,7 @@ app('pathway')
 								</table>
 
 								<table class="table table-bordered mb-3">
-									<caption class="sr-only">Usernames</caption>
+									<caption class="sr-only visually-hidden">Usernames</caption>
 									<thead>
 										<tr>
 											<th scope="col">Username</th>
@@ -189,7 +189,7 @@ app('pathway')
 								@if (auth()->user()->can('edit.state users'))
 								<a class="btn btn-sm btn-link float-right" data-toggle="modal" href="#manage_access_dialog" data-tip="Edit Assigned Roles">
 									<span class="fa fa-pencil" aria-hidden="true"></span>
-									<span class="sr-only">Edit</span>
+									<span class="sr-only visually-hidden">Edit</span>
 								</a>
 								@endif
 								<div class="card-title">{{ trans('users::users.assigned roles') }}</div>
@@ -237,11 +237,11 @@ app('pathway')
 										$html[] = '		<div class="form-check' . ($checked ? ' text-success' : '') . '">';
 										if ($checked)
 										{
-											$html[] = '			<span class="fa fa-check-square" aria-hidden="true"></span><span class="sr-only">' . trans('global.yes') . '</span>';
+											$html[] = '			<span class="fa fa-check-square" aria-hidden="true"></span><span class="sr-only visually-hidden">' . trans('global.yes') . '</span>';
 										}
 										else
 										{
-											$html[] = '			<span class="fa fa-square" aria-hidden="true"></span><span class="sr-only">' . trans('global.no') . '</span>';
+											$html[] = '			<span class="fa fa-square" aria-hidden="true"></span><span class="sr-only visually-hidden">' . trans('global.no') . '</span>';
 										}
 										//$html[] = '		<input type="checkbox" class="form-check-input" disabled name="role[]" value="' . $item->id . '" id="' . $eid . '"' . $checked . $rel . ' />';
 										//$html[] = '		<label for="' . $eid . '" class="form-check-label">';
@@ -367,7 +367,7 @@ app('pathway')
 			<div id="user-attributes" aria-labelledby="user-attributes-tab">
 				<div class="card">
 					<table class="table table-hover">
-						<caption class="sr-only">{{ trans('users::users.attributes') }}</caption>
+						<caption class="sr-only visually-hidden">{{ trans('users::users.attributes') }}</caption>
 						<thead>
 							<tr>
 								<th scope="col" width="25">{{ trans('users::users.locked') }}</th>
@@ -385,7 +385,7 @@ app('pathway')
 								<td>
 									@if ($facet->locked)
 										<span class="fa fa-lock" aria-hidden="true"></span>
-										<span class="sr-only">{{ trans('users::users.locked') }}</span>
+										<span class="sr-only visually-hidden">{{ trans('users::users.locked') }}</span>
 									@endif
 								</td>
 								<td><input type="text" name="facet[{{ $i }}][key]" id="facet-{{ $facet->id }}-key" class="form-control" value="{{ $facet->key }}" {{ $facet->locked ? ' readonly="readonly"' : '' }} /></td>
@@ -404,9 +404,9 @@ app('pathway')
 										data-target="#facet-{{ $facet->id }}"
 										data-success="Item updated"
 										data-api="{{ route('api.users.facets.update', ['id' => $facet->id]) }}">
-										<span class="spinner-border spinner-border-sm d-none" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
+										<span class="spinner-border spinner-border-sm d-none" role="status"><span class="sr-only visually-hidden">{{ trans('global.loading') }}</span></span>
 										<span class="fa fa-save" aria-hidden="true"></span>
-										<span class="sr-only">{{ trans('global.save') }}</span>
+										<span class="sr-only visually-hidden">{{ trans('global.save') }}</span>
 									</button>
 									<button class="btn text-danger remove-facet"
 										data-target="#facet-{{ $facet->id }}"
@@ -414,7 +414,7 @@ app('pathway')
 										data-api="{{ route('api.users.facets.delete', ['id' => $facet->id]) }}"
 										data-confirm="{{ trans('global.confirm delete') }}">
 										<span class="fa fa-trash" aria-hidden="true"></span>
-										<span class="sr-only">{{ trans('global.trash') }}</span>
+										<span class="sr-only visually-hidden">{{ trans('global.trash') }}</span>
 									</button>
 								</td>
 							</tr>
@@ -442,7 +442,7 @@ app('pathway')
 										data-userid="{{ $user->id }}"
 										data-api="{{ route('api.users.facets.create') }}">
 										<span class="fa fa-plus" aria-hidden="true"></span>
-										<span class="sr-only">{{ trans('global.add') }}</span>
+										<span class="sr-only visually-hidden">{{ trans('global.add') }}</span>
 									</a>
 								</td>
 							</tr>
@@ -467,9 +467,9 @@ app('pathway')
 									data-target="#facet-{id}"
 									data-success="Item updated"
 									data-api="{{ route('api.users.facets') }}/{id}">
-									<span class="spinner-border spinner-border-sm d-none" role="status"><span class="sr-only">{{ trans('global.loading') }}</span></span>
+									<span class="spinner-border spinner-border-sm d-none" role="status"><span class="sr-only visually-hidden">{{ trans('global.loading') }}</span></span>
 									<span class="fa fa-save" aria-hidden="true"></span>
-									<span class="sr-only">{{ trans('global.save') }}</span>
+									<span class="sr-only visually-hidden">{{ trans('global.save') }}</span>
 								</button>
 								<button class="btn text-danger remove-facet"
 									data-target="#facet-{id}"
@@ -477,7 +477,7 @@ app('pathway')
 									data-api="{{ route('api.users.facets.create') }}/{id}"
 									data-confirm="{{ trans('global.confirm delete') }}">
 									<span class="fa fa-trash" aria-hidden="true"></span>
-									<span class="sr-only">{{ trans('global.trash') }}</span>
+									<span class="sr-only visually-hidden">{{ trans('global.trash') }}</span>
 								</button>
 							</td>
 						</tr>
@@ -499,7 +499,7 @@ app('pathway')
 							</div>
 							<div id="note_{{ $note->id }}_edit" class="show-when-editing">
 								<div class="form-group">
-									<label for="note_{{ $note->id }}_body" class="sr-only">{{ trans('users::notes.note') }}</label>
+									<label for="note_{{ $note->id }}_body" class="sr-only visually-hidden">{{ trans('users::notes.note') }}</label>
 									<!-- <textarea name="note" id="note_{{ $note->id }}_note" class="form-control" cols="45" rows="3">{{ $note->note }}</textarea> -->
 									{!! markdown_editor('note', $note->body, ['rows' => 2, 'id' => 'note_' . $note->id . '_body']) !!}
 								</div>
@@ -516,10 +516,10 @@ app('pathway')
 								</div>
 								<div class="col-md-3 text-right">
 									<a href="#note_{{ $note->id }}_note" class="note-edit hide-when-editing">
-										<span class="fa fa-pencil"><span class="sr-only">{{ trans('global.button.edit') }}</span></span>
+										<span class="fa fa-pencil"><span class="sr-only visually-hidden">{{ trans('global.button.edit') }}</span></span>
 									</a>
 									<a href="#note_{{ $note->id }}" class="note-delete text-danger" data-confirm="{{ trans('global.confirm delete') }}">
-										<span class="fa fa-trash"><span class="sr-only">{{ trans('global.button.delete') }}</span></span>
+										<span class="fa fa-trash"><span class="sr-only visually-hidden">{{ trans('global.button.delete') }}</span></span>
 									</a>
 								</div>
 							</div>
@@ -530,7 +530,7 @@ app('pathway')
 						</div>
 						<div id="note_<?php echo '{id}'; ?>_edit" class="show-when-editing">
 							<div class="form-group">
-								<label for="note_<?php echo '{id}'; ?>_body" class="sr-only">{{ trans('users::notes.note') }}</label>
+								<label for="note_<?php echo '{id}'; ?>_body" class="sr-only visually-hidden">{{ trans('users::notes.note') }}</label>
 								<textarea name="note" id="note_<?php echo '{id}'; ?>_body" class="form-control md" cols="45" rows="3"></textarea>
 							</div>
 							<div class="form-group text-right">
@@ -546,10 +546,10 @@ app('pathway')
 							</div>
 							<div class="col-md-3 text-right">
 								<a href="#note_<?php echo '{id}'; ?>_note" class="note-edit hide-when-editing">
-									<span class="fa fa-pencil"><span class="sr-only">{{ trans('global.button.edit') }}</span></span>
+									<span class="fa fa-pencil"><span class="sr-only visually-hidden">{{ trans('global.button.edit') }}</span></span>
 								</a>
 								<a href="#note_<?php echo '{id}'; ?>" class="note-delete text-danger" data-confirm="{{ trans('global.confirm delete') }}">
-									<span class="fa fa-trash"><span class="sr-only">{{ trans('global.button.delete') }}</span></span>
+									<span class="fa fa-trash"><span class="sr-only visually-hidden">{{ trans('global.button.delete') }}</span></span>
 								</a>
 							</div>
 						</div>

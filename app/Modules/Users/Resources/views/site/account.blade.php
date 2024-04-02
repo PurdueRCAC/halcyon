@@ -127,7 +127,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 							<dt>
 								Login Shell
 								<a href="#box1_account" data-toggle="modal" class="text-info tip" title="Help">
-									<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only">Help</span>
+									<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 								</a>
 							</dt>
 							<dd>
@@ -137,7 +137,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 									<span id="SPAN_loginshell" class="edit-hide text-muted">{!! $user->loginShell ? e($user->loginShell) : trans('global.unknown') !!}</span>
 
 									<a href="#loginshell" id="edit-loginshell" class="edit-hide property-edit" data-prop="loginshell">
-										<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span>
+										<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only visually-hidden">Edit</span>
 									</a>
 									<div id="loginshell" class="edit-show hide">
 										<div class="form-group">
@@ -183,10 +183,10 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 												</select>
 												<span class="input-group-append">
 													<a href="{{ auth()->user()->id != $user->id ? route('site.users.account', ['u' => $user->id]) : route('site.users.account') }}" data-api="{{ route('api.users.update', ['id' => $user->id]) }}" class="btn input-group-text text-success property-save" title="Save">
-														<span class="fa fa-save" aria-hidden="true"></span><span class="sr-only">Save</span>
+														<span class="fa fa-save" aria-hidden="true"></span><span class="sr-only visually-hidden">Save</span>
 													</a>
 													<a href="#edit-loginshell" class="btn input-group-text text-danger property-cancel" title="Cancel">
-														<span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only">Cancel</span>
+														<span class="fa fa-ban" aria-hidden="true"></span><span class="sr-only visually-hidden">Cancel</span>
 													</a>
 												</span>
 											</span>
