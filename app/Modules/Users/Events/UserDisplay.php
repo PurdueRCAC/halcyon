@@ -87,13 +87,14 @@ class UserDisplay
 	 * @param  string  $content
 	 * @return void
 	 */
-	public function addSection($route, $name, $active = false, $content = null): void
+	public function addSection($route, $name, $active = false, $content = null, $subitems = array()): void
 	{
 		$this->sections[$name] = array(
 			'route'   => $route,
 			'name'    => $name,
 			'active'  => $active,
 			'content' => $content,
+			'subitems' => $subitems,
 			'parts'   => array(),
 		);
 	}

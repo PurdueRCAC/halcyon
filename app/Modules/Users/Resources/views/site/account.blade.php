@@ -42,6 +42,15 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 			@foreach ($sections as $section)
 				<li class="nav-item<?php if ($section['active']) { echo ' active'; } ?>">
 					<a class="nav-link" href="{{ $section['route'] }}">{!! $section['name'] !!}</a>
+					@if (isset($section['subitems']) && count($section['subitems']))
+						<ul>
+							@foreach ($section['subitems'] as $subitem)
+								<li class="nav-ite<?php if ($subitem['active']) { echo ' active'; } ?>">
+									<a class="nav-lin" href="{{ $subitem['route'] }}">{!! $subitem['name'] !!}</a>
+								</li>
+							@endforeach
+						</ul>
+					@endif
 				</li>
 			@endforeach
 		</ul>
