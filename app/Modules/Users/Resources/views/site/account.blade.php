@@ -145,28 +145,28 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 												<select class="form-control property-edit" id="INPUT_loginshell" data-prop="loginshell">
 													<?php
 													$selected = '';
-													if (preg_match("/bash$/", $user->loginShell)):
+													if ($user->loginShell && preg_match("/bash$/", $user->loginShell)):
 														$selected = ' selected="selected"';
 													endif;
 													?>
 													<option value="/bin/bash"<?php echo $selected; ?>>bash</option>
 													<?php
 													$selected = '';
-													if (preg_match("/\/csh$/", $user->loginShell)):
+													if ($user->loginShell && preg_match("/\/csh$/", $user->loginShell)):
 														$selected = ' selected="selected"';
 													endif;
 													?>
 													<option value="/bin/csh"<?php echo $selected; ?>>csh</option>
 													<?php
 													$selected = '';
-													if (preg_match("/tcsh$/", $user->loginShell)):
+													if ($user->loginShell && preg_match("/tcsh$/", $user->loginShell)):
 														$selected = ' selected="selected"';
 													endif;
 													?>
 													<option value="/bin/tcsh"<?php echo $selected; ?>>tcsh</option>
 													<?php
 													$selected = '';
-													if (preg_match("/zsh$/", $user->loginShell)):
+													if ($user->loginShell && preg_match("/zsh$/", $user->loginShell)):
 														$selected = ' selected="selected"';
 													endif;
 													?>
@@ -174,7 +174,7 @@ $title = $title ?: ($active ? str_replace(['<span class="badge pull-right">', '<
 												@if (auth()->user()->can('manage users'))
 													<?php
 													$selected = '';
-													if (preg_match("/nologin$/", $user->loginShell)):
+													if ($user->loginShell && preg_match("/nologin$/", $user->loginShell)):
 														$selected = ' selected="selected"';
 													endif;
 													?>
