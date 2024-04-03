@@ -100,7 +100,7 @@ class AuthController extends Controller
 			return redirect()
 				->back()
 				->withInput()
-				->withError(trans('users::auth.authentication failed'));
+				->withError($event->error ? $event->error : trans('users::auth.authentication failed'));
 		}
 
 		return redirect($this->authenticatedRoute());

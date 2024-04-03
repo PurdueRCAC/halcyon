@@ -172,13 +172,23 @@ class CILogon
 
 		if (empty($state) || $storedState !== $state)
 		{
-			//throw new \Exception('Mismatched state', 401);
+			//$event->error = 'Mismatched state';
+			//return;
 		}
 
 		session()->forget(self::$auth_name . '.state');
 
 		if (!auth()->user())
 		{
+			if ($request->has('error'))
+			{
+				if ($message = $request->input('error_description'))
+				{
+					$event->error = $message;
+				}
+				return;
+			}
+
 			// Try to get an access token using the authorization code grant
 			$token = $provider->getAccessToken(
 				'authorization_code',
@@ -236,13 +246,13 @@ class CILogon
 			if (!count($user->roles))
 			{
 				$user->setDefaultRole();
-				$user->save();
+				$user->saveQuietly();
 			}
 
 			if (!$user->api_token)
 			{
 				$user->api_token = $user->generateApiToken();
-				$user->save();
+				$user->saveQuietly();
 			}
 
 			Auth::loginUsingId($user->id);

@@ -21,13 +21,18 @@ class Authenticate
 	public $authenticated;
 
 	/**
+	 * @var string
+	 */
+	public $error = null;
+
+	/**
 	 * Constructor
 	 *
 	 * @param  Request $request
 	 * @param  string $authenticator
 	 * @return void
 	 */
-	public function __construct(Request $request, $authenticator = '')
+	public function __construct(Request $request, string $authenticator = '')
 	{
 		$this->request = $request;
 		$this->authenticator = $authenticator;
