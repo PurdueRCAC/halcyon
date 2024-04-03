@@ -57,7 +57,7 @@ class CreateCommand extends Command
 
 		$user = new User;
 		$user->name = $name;
-		$user->api_token = Str::random(60);
+		$user->api_token = $user->generateApiToken();
 		$user->password = Hash::make($password);
 
 		$user->setDefaultRole();

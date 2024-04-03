@@ -96,7 +96,7 @@ class RegisterController extends Controller
 
 		$user = new User;
 		$user->name = $request->input('name');
-		$user->api_token = Str::random(60);
+		$user->api_token = $user->generateApiToken();
 		$user->password = Hash::make($request->input('password'));
 
 		$user->setDefaultRole();

@@ -887,7 +887,7 @@ class User extends Model implements
 		}
 
 		$user->name = $user->name ?: $username;
-		$user->api_token = Str::random(60);
+		$user->api_token = $this->generateApiToken();
 
 		$user->setDefaultRole();
 
@@ -912,6 +912,21 @@ class User extends Model implements
 		}
 
 		return $user;
+	}
+
+	/**
+	 * Generate an API token
+	 *
+	 * @return string
+	 */
+	public function generateApiToken(): string
+	{
+		return sprintf(
+			'%s%s%s',
+			config('module.users.token_prefix', ''),
+			$tokenEntropy = Str::random(52),
+			hash('crc32b', $tokenEntropy)
+		);
 	}
 
 	/**

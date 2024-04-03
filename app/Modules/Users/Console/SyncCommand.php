@@ -81,7 +81,7 @@ class SyncCommand extends Command
 
 			/*if (!$user->api_token)
 			{
-				$user->api_token = Str::random(60);
+				$user->api_token = $user->generateApiToken();
 
 				$update = true;
 

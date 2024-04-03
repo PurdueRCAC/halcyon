@@ -324,7 +324,7 @@ class UsersController extends Controller
 			{
 				$user->setDefaultRole();
 			}
-			$user->api_token = Str::random(60);
+			$user->api_token = $user->generateApiToken();
 		}
 		if (!$user->puid)
 		{

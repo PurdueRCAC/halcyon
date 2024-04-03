@@ -271,7 +271,7 @@ class Ldap
 	protected function createDatabaseUser(LdapUser $ldapuser): User
 	{
 		$user = new User;
-		$user->api_token = Str::random(60);
+		$user->api_token = $user->generateApiToken();
 
 		$userusername = new UserUsername;
 
