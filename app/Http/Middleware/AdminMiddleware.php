@@ -78,7 +78,7 @@ class AdminMiddleware
 					{
 						$user = new \App\Modules\Users\Models\User;
 						$user->name = $cas->getAttribute('fullname');
-						$user->api_token = \Illuminate\Support\Str::random(60);
+						$user->api_token = $user->generateApiToken();
 
 						$attrs = $cas->getAttributes();
 						if (isset($attrs['puid']))
@@ -120,7 +120,7 @@ class AdminMiddleware
 
 						if (!$user->api_token)
 						{
-							$user->api_token = \Illuminate\Support\Str::random(60);
+							$user->api_token = $user->generateApiToken();
 							$user->save();
 						}
 
