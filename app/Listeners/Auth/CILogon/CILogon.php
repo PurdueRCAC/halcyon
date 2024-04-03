@@ -23,6 +23,13 @@ class CILogon
 	protected $cilogon = null;
 
 	/**
+	 * Authenticator name
+	 *
+	 * @var string
+	 */
+	protected static $auth_name = 'cilogon';
+
+	/**
 	 * Register the listeners for the subscriber.
 	 *
 	 * @param  Dispatcher  $events
@@ -52,7 +59,7 @@ class CILogon
 				return null;
 			}
 
-			$config['redirectUri'] = route('callback', ['authenticator' => 'cilogon']);
+			$config['redirectUri'] = route('callback', ['authenticator' => self::$auth_name]);
 
 			if (!in_array($config['server'], ['test', 'dev']))
 			{
@@ -66,13 +73,20 @@ class CILogon
 	}
 
 	/**
-	 * Handle user login events.
+	 * Add to the list of available authenticators
 	 * 
 	 * @param  Authenticators $event
 	 * @return void
 	 */
 	public function handleAuthenticators(Authenticators $event): void
 	{
+		$config = config('listener.cilogon', []);
+
+		if (empty($config) || !$config['clientId'] || !$config['clientSecret'])
+		{
+			return;
+		}
+
 		app('translator')->addNamespace(
 			'listener.auth.cilogon',
 			__DIR__ . '/lang'
@@ -83,21 +97,21 @@ class CILogon
 			__DIR__ . '/views'
 		);
 
-		$event->addAuthenticator('cilogon', [
+		$event->addAuthenticator(self::$auth_name, [
 			'label' => 'CILogon',
 			'view' => 'listener.auth.cilogon::index',
 		]);
 	}
 
 	/**
-	 * Handle user login events.
+	 * Handle user login event
 	 * 
 	 * @param  Login $event
 	 * @return void
 	 */
 	public function handleLogin(Login $event): void
 	{
-		if ($event->authenticator != 'cilogon')
+		if ($event->authenticator != self::$auth_name)
 		{
 			return;
 		}
@@ -123,22 +137,22 @@ class CILogon
 		));
 		$returnUrl = $request->input('return', route(config('module.users.redirect_route_after_login', 'home')));
 
-		session()->put('cilogon.state', $provider->getState());
-		session()->put('cilogon.returnUrl', $returnUrl);
+		session()->put(self::$auth_name . '.state', $provider->getState());
+		session()->put(self::$auth_name . '.returnUrl', $returnUrl);
 
 		// Redirect to the login URL
 		abort(redirect($loginUrl));
 	}
 
 	/**
-	 * Handle user login events.
+	 * Handle authentication event
 	 * 
 	 * @param  Authenticate $event
 	 * @return void
 	 */
 	public function handleAuthenticate(Authenticate $event): void
 	{
-		if ($event->authenticator != 'cilogon')
+		if ($event->authenticator != self::$auth_name)
 		{
 			return;
 		}
@@ -153,7 +167,7 @@ class CILogon
 		}
 
 		// Check given state against previously stored one to mitigate CSRF attack
-		$storedState = session()->get('cilogon.state');
+		$storedState = session()->get(self::$auth_name . '.state');
 		$state = $request->input('state');
 
 		if (empty($state) || $storedState !== $state)
@@ -161,7 +175,7 @@ class CILogon
 			//throw new \Exception('Mismatched state', 401);
 		}
 
-		session()->forget('cilogon.state');
+		session()->forget(self::$auth_name . '.state');
 
 		if (!auth()->user())
 		{
@@ -187,7 +201,7 @@ class CILogon
 				{
 					$user->name = $cilogonResponse->getGivenName() . ' ' . $cilogonResponse->getFamilyName();
 				}
-				$user->api_token = Str::random(60);
+				$user->api_token = $user->generateApiToken();
 				//$user->puid = $cilogonResponse->getId();
 
 				$user->setDefaultRole();
@@ -227,7 +241,7 @@ class CILogon
 
 			if (!$user->api_token)
 			{
-				$user->api_token = Str::random(60);
+				$user->api_token = $user->generateApiToken();
 				$user->save();
 			}
 
