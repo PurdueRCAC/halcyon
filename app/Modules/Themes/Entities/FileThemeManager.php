@@ -23,11 +23,16 @@ class FileThemeManager implements \Countable
 	private $view;
 
 	/**
+	 * @var Theme|null
+	 */
+	private $activeTheme = null;
+
+	/**
 	 * @param Application $app
 	 * @param string $path
 	 * @return void
 	 */
-	public function __construct(Application $app, $path)
+	public function __construct(Application $app, string $path)
 	{
 		$this->app  = $app;
 		$this->path = $path;
@@ -35,20 +40,24 @@ class FileThemeManager implements \Countable
 	}
 
 	/**
-	 * @param  string     $name
+	 * Find a theme by name
+	 *
+	 * @param  string  $name
 	 * @return Theme|null
 	 */
-	public function find($name)
+	public function find(string $name): ?Theme
 	{
+		$name = strtolower($name);
+
 		foreach ($this->all() as $theme)
 		{
-			if ($theme->getLowerName() == strtolower($name))
+			if ($theme->getLowerName() == $name)
 			{
 				return $theme;
 			}
 		}
 
-		return;
+		return null;
 	}
 
 	/**
@@ -56,7 +65,7 @@ class FileThemeManager implements \Countable
 	 *
 	 * @return array<string,Theme>
 	 */
-	public function all()
+	public function all(): array
 	{
 		$themes = [];
 
@@ -85,7 +94,7 @@ class FileThemeManager implements \Countable
 	 *
 	 * @return array<string,Theme>
 	 */
-	public function allByType($type = 'site')
+	public function allByType(string $type = 'site'): array
 	{
 		$themes = [];
 
@@ -130,7 +139,7 @@ class FileThemeManager implements \Countable
 	 * @param  string $theme
 	 * @return string
 	 */
-	public function getAssetPath($theme)
+	public function getAssetPath(string $theme): string
 	{
 		return public_path($this->getConfig()->get('app.themes_assets_path', 'themes') . '/' . $theme);
 	}
@@ -156,7 +165,7 @@ class FileThemeManager implements \Countable
 	 *
 	 * @return int
 	 */
-	public function count()
+	public function count(): int
 	{
 		return count($this->all());
 	}
@@ -164,9 +173,9 @@ class FileThemeManager implements \Countable
 	/**
 	 * Get the active theme
 	 *
-	 * @return Theme
+	 * @return Theme|null
 	 */
-	public function getActiveTheme()
+	public function getActiveTheme(): ?Theme
 	{
 		return $this->activeTheme;
 	}
@@ -178,7 +187,7 @@ class FileThemeManager implements \Countable
 	 * @return void
 	 * @throws ThemeNotFoundException
 	 */
-	public function activate($theme)
+	public function activate($theme): void
 	{
 		if (!$theme instanceof Theme)
 		{
@@ -198,7 +207,7 @@ class FileThemeManager implements \Countable
 	 * @param Theme $theme
 	 * @return void
 	 */
-	protected function activateFinderPaths(Theme $theme)
+	protected function activateFinderPaths(Theme $theme): void
 	{
 		$this->app->get('view')->addLocation($theme->getPath() . '/views/');
 	}
@@ -207,10 +216,10 @@ class FileThemeManager implements \Countable
 	 * Returns the theme json file
 	 *
 	 * @param  string $theme
-	 * @return string
+	 * @return \stdClass
 	 * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
 	 */
-	private function getThemeJsonFile($theme)
+	private function getThemeJsonFile(string $theme)
 	{
 		return json_decode($this->getFinder()->get("$theme/theme.json"));
 	}
@@ -218,11 +227,11 @@ class FileThemeManager implements \Countable
 	/**
 	 * Check if a theme is a specific type (site|admin)
 	 *
-	 * @param object $themeJson
+	 * @param \stdClass $themeJson
 	 * @param string $type
 	 * @return bool
 	 */
-	private function isType($themeJson, $type = 'site')
+	private function isType($themeJson, string $type = 'site'): bool
 	{
 		return isset($themeJson->type) && $themeJson->type !== $type ? false : true;
 	}
