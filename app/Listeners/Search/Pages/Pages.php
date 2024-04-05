@@ -38,7 +38,7 @@ class Pages
 		$rows = Page::query()
 			->with('viewlevel')
 			->whereState('published')
-			->whereAccess([0, 1], auth()->user())
+			->whereAccess(1, auth()->user())
 			->whereSearch($event->search)
 			->limit($event->limit * $event->page)
 			->get();
