@@ -17,7 +17,7 @@ if ($filters['search'])
 }
 @endphp
 
-@section('title'){{ trans('ksearch::search.search') . ($filters['search'] ? ': ' . $filters['search'] : '') }}@stop
+@section('title'){{ trans('search::search.search') . ($filters['search'] ? ': ' . $filters['search'] : '') }}@stop
 
 @push('styles')
 <link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/search/css/search.css') }}" />
