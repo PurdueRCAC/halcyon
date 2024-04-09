@@ -142,7 +142,7 @@ class File extends \SplFileInfo
 	 * @param   string  $dim
 	 * @return  int
 	 */
-	private function calculateDimension($dim): int
+	private function calculateDimension(string $dim): int
 	{
 		if (empty($this->dimensions))
 		{

@@ -3,8 +3,9 @@
 namespace App\Modules\Media\Events;
 
 use Illuminate\Http\Request;
+use App\Modules\Media\Contracts\DirectoryEvent;
 
-class DirectoryUpdating
+class DirectoryUpdating implements DirectoryEvent
 {
 	/**
 	 * @var string
@@ -34,7 +35,7 @@ class DirectoryUpdating
 	}
 
 	/**
-	 * @return string
+	 * @inheritdoc
 	 */
 	public function disk(): string
 	{

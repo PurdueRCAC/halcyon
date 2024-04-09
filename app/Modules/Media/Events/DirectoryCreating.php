@@ -3,8 +3,9 @@
 namespace App\Modules\Media\Events;
 
 use Illuminate\Http\Request;
+use App\Modules\Media\Contracts\DirectoryEvent;
 
-class DirectoryCreating
+class DirectoryCreating implements DirectoryEvent
 {
 	/**
 	 * @var string
@@ -34,7 +35,7 @@ class DirectoryCreating
 	}
 
 	/**
-	 * @return string
+	 * @inheritdoc
 	 */
 	public function disk(): string
 	{

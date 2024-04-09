@@ -3,8 +3,9 @@
 namespace App\Modules\Media\Events;
 
 use Illuminate\Http\Request;
+use App\Modules\Media\Contracts\DirectoryEvent;
 
-class DirectoryCreated
+class DirectoryCreated implements DirectoryEvent
 {
 	/**
 	 * @var string
@@ -22,19 +23,17 @@ class DirectoryCreated
 	private $name;
 
 	/**
-	 * DirectoryCreated constructor.
-	 *
-	 * @param Request $request
+	 * Constructor.
 	 */
-	public function __construct(Request $request)
+	public function __construct(string $disk, string $path = '', string $name = '')
 	{
-		$this->disk = (string)$request->input('disk', 'public');
-		$this->path = (string)$request->input('path', '');
-		$this->name = (string)$request->input('name', '');
+		$this->disk = $disk ? $disk : 'public';
+		$this->path = $path;
+		$this->name = $name;
 	}
 
 	/**
-	 * @return string
+	 * @inheritdoc
 	 */
 	public function disk(): string
 	{

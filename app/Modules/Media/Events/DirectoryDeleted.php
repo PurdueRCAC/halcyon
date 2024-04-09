@@ -3,8 +3,9 @@
 namespace App\Modules\Media\Events;
 
 use Illuminate\Http\Request;
+use App\Modules\Media\Contracts\DirectoryEvent;
 
-class DirectoryDeleted
+class DirectoryDeleted implements DirectoryEvent
 {
 	/**
 	 * @var string
@@ -22,9 +23,9 @@ class DirectoryDeleted
 	 * @param string $disk
 	 * @param array  $items
 	 */
-	public function __construct($disk, $items)
+	public function __construct(string $disk, array $items)
 	{
-		$this->disk  = $disk;
+		$this->disk  = $disk ? $disk : 'public';
 		$this->items = $items;
 	}
 

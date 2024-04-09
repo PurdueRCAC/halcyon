@@ -4,21 +4,19 @@ namespace App\Modules\Media\Listeners;
 
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Cache;
+use App\Modules\Media\Contracts\DirectoryEvent;
 use App\Modules\Media\Events\DirectoryCreated;
 use App\Modules\Media\Events\DirectoryUpdated;
 use App\Modules\Media\Events\DirectoryDeleted;
 use App\Modules\Media\Helpers\MediaHelper;
 
 /**
- * Update cache when a directory si created or deleted
+ * Update cache when a directory is created or deleted
  */
 class CacheTree
 {
 	/**
 	 * Register the listeners for the subscriber.
-	 *
-	 * @param  Dispatcher  $events
-	 * @return void
 	 */
 	public function subscribe(Dispatcher $events): void
 	{
@@ -28,20 +26,10 @@ class CacheTree
 	}
 
 	/**
-	 * Plugin that loads module positions within content
-	 *
-	 * @param   DirectoryCreated|DirectoryUpdated|DirectoryDeleted $event
-	 * @return  void
+	 * Rebuild the cached directory tree
 	 */
-	public function handle($event): void
+	public function handle(DirectoryEvent $event): void
 	{
-		if (!($event instanceof DirectoryCreated)
-		 && !($event instanceof DirectoryUpdated)
-		 && !($event instanceof DirectoryDeleted))
-		{
-			return;
-		}
-
 		$base = storage_path('app/public');
 
 		$folders = MediaHelper::getTree($base);

@@ -26,22 +26,27 @@ class FolderController extends Controller
 	{
 		event($event = new DirectoryCreating($request));
 
-		$folder = trim($event->name(), '/');
+		$disk   = $event->disk();
+		$name   = trim($event->name(), '/');
 		$parent = trim($event->path(), '/');
 
 		$rtrn = route('admin.media.index', ['folder' => $parent]);
 
-		if (strlen($folder) > 0)
+		if (strlen($name) > 0)
 		{
-			$path = storage_path($parent . '/' . $folder);
+			$path = ($parent ? $parent . '/' : '') . $name;
 			$path = str_replace(' ', '_', $path);
 			$path = preg_replace('/[a-zA-Z0-9\-_\/]+/', '', $item);
 
-			if (!is_dir($path) && !is_file($path))
+			if (!Storage::disk($disk)->exists($path))
 			{
-				Storage::disk($event->disk())->makeDirectory($path);
+				Storage::disk($disk)->makeDirectory($path);
 
-				event($event = new DirectoryCreated($request));
+				event(new DirectoryCreated(
+					$disk,
+					$event->name(),
+					$event->path()
+				));
 			}
 		}
 
@@ -49,7 +54,7 @@ class FolderController extends Controller
 		{
 			return response()->json([
 				'path' => $parent,
-				'name' => $folder,
+				'name' => $name,
 			]);
 		}
 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Arr;
 use App\Modules\Media\Helpers\MediaHelper;
 use App\Modules\Media\Helpers\ImageProcessor;
 use App\Modules\Media\Events\Updating;
@@ -55,11 +56,10 @@ class MediaController extends Controller
 	public function index(Request $request)
 	{
 		$disk = $request->input('disk', 'public');
-		$path = $request->input('path', '/');
+		$path = MediaHelper::sanitizePath($request->input('path', '/'));
 
 		$content = Storage::disk($disk)->listContents($path);
-
-		$content = \Arr::where($content, function ($item)
+		$content = Arr::where($content, function ($item)
 		{
 			return substr($item['path'], 0, 1) !== '.';
 		});
@@ -86,11 +86,11 @@ class MediaController extends Controller
 	 */
 	public function tree(Request $request)
 	{
-		/*$disk = $request->input('disk');
+		$disk = $request->input('disk', 'public');
 
-		$content = Storage::disk($disk)->listContents('/');
+		/*$content = Storage::disk($disk)->listContents('/');
 
-		$dirsList = \Arr::where($content, function ($item)
+		$dirsList = Arr::where($content, function ($item)
 		{
 			return $item['type'] === 'dir';
 		});
@@ -98,7 +98,7 @@ class MediaController extends Controller
 		// remove 'filename' param
 		$dirs = array_map(function ($item)
 		{
-			return \Arr::except($item, ['filename']);
+			return Arr::except($item, ['filename']);
 		}, $dirsList);
 
 		foreach ($dirs as $index => $dir)
@@ -115,6 +115,7 @@ class MediaController extends Controller
 			],
 			'data' => array_values($dirs) //MediaHelper::_buildFolderTree($folders, -1),
 		];*/
+		//$base = rtrim(Storage::disk('public')->path('/'), '/');
 		$base = storage_path('app/public');
 
 		$folder = $request->input('folder', '');
@@ -152,7 +153,7 @@ class MediaController extends Controller
 	 * @param   Request  $request
 	 * @return  JsonResponse
 	 */
-	public function layout(Request $request)
+	public function layout(Request $request): JsonResponse
 	{
 		$layout = $request->input('layout');
 
@@ -221,7 +222,7 @@ class MediaController extends Controller
 	 * @param   Request  $request
 	 * @return  JsonResponse
 	 */
-	public function upload(Request $request)
+	public function upload(Request $request): JsonResponse
 	{
 		event(new FilesUploading($request));
 
@@ -294,7 +295,7 @@ class MediaController extends Controller
 
 			if ($resize = $request->input('resize'))
 			{
-				$final = storage_path('app/' . $disk . ($path != '/' ? $path : '') . '/' . $name);
+				$final = Storage::disk($disk)->path(($path != '/' ? $path : '') . '/' . $name);
 
 				// Resize image
 				$hi = new ImageProcessor($final);
@@ -320,12 +321,12 @@ class MediaController extends Controller
 			}
 
 			$data[] = [
-				'type' => $content['type'],
-				'path' => $content['path'],
-				'fileSize' => $content->isFile() ? $content['fileSize'] : 0,
+				'type'         => $content['type'],
+				'path'         => $content['path'],
+				'fileSize'     => $content->isFile() ? $content['fileSize'] : 0,
 				'lastModified' => $content['lastModified'],
-				'mimeType' => $content->isFile() ? $content['mimeType'] : null,
-				'url' => asset('/files' . ($path != '/' ? $path : '') . '/' . $content['path'])
+				'mimeType'     => $content->isFile() ? $content['mimeType'] : null,
+				'url'          => asset('/files' . ($path != '/' ? $path : '') . '/' . $content['path'])
 			];
 		}
 
@@ -387,7 +388,7 @@ class MediaController extends Controller
 	 * @param   Request  $request
 	 * @return  JsonResponse
 	 */
-	public function update(Request $request)
+	public function update(Request $request): JsonResponse
 	{
 		event($event = new Updating($request));
 
@@ -400,8 +401,8 @@ class MediaController extends Controller
 			return response()->json(['message' => trans('media::media.error.missing name')], 415);
 		}
 
-		$before = $this->sanitize($before);
-		$after  = $this->sanitize($after);
+		$before = MediaHelper::sanitizePath($before);
+		$after  = MediaHelper::sanitizePath($after);
 
 		if (!$before || !$after)
 		{
@@ -458,7 +459,7 @@ class MediaController extends Controller
 	 * @param   Request  $request
 	 * @return  JsonResponse
 	 */
-	public function delete(Request $request)
+	public function delete(Request $request): JsonResponse
 	{
 		event(new Deleting($request));
 
@@ -469,6 +470,8 @@ class MediaController extends Controller
 
 		foreach ($items as $item)
 		{
+			$item['path'] = MediaHelper::sanitizePath($item['path']);
+
 			// check all files and folders - exists or no
 			if (!Storage::disk($disk)->exists($item['path']))
 			{
@@ -534,16 +537,13 @@ class MediaController extends Controller
 		event(new Download($request));
 
 		$disk = $request->input('disk', 'public');
-		$path = $request->input('path');
+		$path = MediaHelper::sanitizePath($request->input('path'));
 
 		// If file name not in ASCII format
-		if (!preg_match('/^[\x20-\x7e]*$/', basename($path)))
+		$filename = basename($path);
+		if (!preg_match('/^[\x20-\x7e]*$/', $filename))
 		{
-			$filename = \Illuminate\Support\Facades\Str::ascii(basename($path));
-		}
-		else
-		{
-			$filename = basename($path);
+			$filename = \Illuminate\Support\Facades\Str::ascii($filename);
 		}
 
 		if (!Storage::disk($disk)->exists($path))
@@ -584,47 +584,17 @@ class MediaController extends Controller
 	 * @param   Request  $request
 	 * @return  JsonResponse
 	 */
-	public function url(Request $request)
+	public function url(Request $request): JsonResponse
 	{
 		$disk = $request->input('disk', 'public');
-		$path = $request->input('path');
+		$path = MediaHelper::sanitizePath($request->input('path'));
 
 		return response()->json([
 			'result' => [
 				'status'  => 'success',
 				'message' => null,
 			],
-			'url'    => Storage::disk($disk)->url($path),
+			'url' => Storage::disk($disk)->url($path),
 		]);
-	}
-
-	/**
-	 * Sanitize a path
-	 *
-	 * @param   string  $path
-	 * @return  string
-	 */
-	private function sanitize($path): string
-	{
-		/*$path = str_replace(' ', '_', $path);
-		$path = preg_replace('/[^a-zA-Z0-9\-_\/]+/', '', $path);
-
-		if (!preg_match('/^[\x20-\x7e]*$/', $path))
-		{
-			$path = \Illuminate\Support\Facades\Str::ascii($path);
-		}*/
-
-		$path = trim($path, '/');
-
-		$parts = explode('/', $path);
-		foreach ($parts as $i => $p)
-		{
-			$parts[$i] = MediaHelper::sanitize($p);
-		}
-		$parts = array_filter($parts);
-		$path = implode('/', $parts);
-		$path = trim($path, '/');
-
-		return $path;
 	}
 }

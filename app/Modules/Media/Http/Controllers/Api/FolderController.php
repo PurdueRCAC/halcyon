@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Arr;
 use App\Modules\Media\Helpers\MediaHelper;
 use App\Modules\Media\Events\DirectoryCreating;
 use App\Modules\Media\Events\DirectoryCreated;
+use App\Modules\Media\Events\DirectoryUpdating;
+use App\Modules\Media\Events\DirectoryUpdated;
 use App\Modules\Media\Events\DirectoryDeleting;
 use App\Modules\Media\Events\DirectoryDeleted;
 
@@ -37,19 +39,20 @@ class FolderController extends Controller
 	 * @param  Request $request
 	 * @return JsonResponse
 	 */
-	public function read(Request $request)
+	public function read(Request $request): JsonResponse
 	{
 		$disk = $request->input('disk', 'public');
-		$path = $this->sanitize($request->input('path'));
+		$path = MediaHelper::sanitizePath($request->input('path', '/'));
 
 		$content = Storage::disk($disk)->listContents($path);
-
 		$content = Arr::where($content, function ($item)
 		{
 			return substr($item['path'], 0, 1) !== '.';
 		});
 
-		return response()->json(['data' => $content]);
+		return response()->json([
+			'data' => $content
+		]);
 	}
 
 	/**
@@ -88,25 +91,20 @@ class FolderController extends Controller
 	 * @param  Request $request
 	 * @return JsonResponse
 	 */
-	public function create(Request $request)
+	public function create(Request $request): JsonResponse
 	{
 		event($event = new DirectoryCreating($request));
 
 		$disk   = $event->disk();
-		$folder = $this->sanitize($event->name());
-		$parent = $this->sanitize($event->path());
+		$name   = MediaHelper::sanitizePath($event->name());
+		$parent = MediaHelper::sanitizePath($event->path());
 
-		if (!$folder)
+		if (!$name)
 		{
 			return response()->json(['message' => trans('media::media.error.missing directory name')], 415);
 		}
 
-		$path = ($parent ? $parent . '/' : '') . $folder;
-
-		if (!$path)
-		{
-			return response()->json(['message' => trans('media::media.error.invalid directory name')], 415);
-		}
+		$path = ($parent ? $parent . '/' : '') . $name;
 
 		// Check if directory already exists
 		if (!Storage::disk($disk)->exists($path))
@@ -114,7 +112,11 @@ class FolderController extends Controller
 			// Create new directory
 			if (Storage::disk($disk)->makeDirectory($path))
 			{
-				event(new DirectoryCreated($request));
+				event(new DirectoryCreated(
+					$disk,
+					$name,
+					$parent
+				));
 			}
 		}
 
@@ -160,24 +162,26 @@ class FolderController extends Controller
 	 * @param  Request $request
 	 * @return JsonResponse
 	 */
-	public function update(Request $request)
+	public function update(Request $request): JsonResponse
 	{
 		event($event = new DirectoryUpdating($request));
 
 		$disk   = $event->disk();
-		$before = $this->sanitize($event->before());
-		$after  = $this->sanitize($event->after());
+		$before = MediaHelper::sanitizePath($event->before());
+		$after  = MediaHelper::sanitizePath($event->after());
 
 		if (!$before || !$after)
 		{
 			return response()->json(['message' => trans('media::media.error.invalid directory name')], 415);
 		}
 
+		// Does the source directory exists?
 		if (!Storage::disk($disk)->exists($before))
 		{
 			return response()->json(['message' => trans('media::media.error.missing source directory')], 415);
 		}
 
+		// Douse the destination directory already exists?
 		if (Storage::disk($disk)->exists($after))
 		{
 			return response()->json(['message' => trans('media::media.error.destination exists')], 415);
@@ -186,7 +190,11 @@ class FolderController extends Controller
 		// Rename directory
 		Storage::disk($disk)->move($before, $after);
 
-		event(new DirectoryUpdated($request));
+		event(new DirectoryUpdated(
+			$disk,
+			$before,
+			$after
+		));
 
 		return response()->json([
 			'path' => $after,
@@ -222,14 +230,13 @@ class FolderController extends Controller
 	 * @param  Request $request
 	 * @return JsonResponse
 	 */
-	public function delete(Request $request)
+	public function delete(Request $request): JsonResponse
 	{
 		event($event = new DirectoryDeleting($request));
 
 		// Get some data from the request
 		$disk = $event->disk();
-		//$folder = $this->sanitize($event->name());
-		$path = $this->sanitize($event->path());
+		$path = MediaHelper::sanitizePath($event->path());
 
 		// Nothing to delete
 		if (empty($path))
@@ -260,35 +267,5 @@ class FolderController extends Controller
 		}
 
 		return response()->json(null, 204);
-	}
-
-	/**
-	 * Sanitize a path
-	 *
-	 * @param   string  $path
-	 * @return  string
-	 */
-	private function sanitize(string $path): string
-	{
-		/*$path = str_replace(' ', '_', $path);
-		$path = preg_replace('/[^a-zA-Z0-9\-_\/]+/', '', $path);
-
-		if (!preg_match('/^[\x20-\x7e]*$/', $path))
-		{
-			$path = \Illuminate\Support\Facades\Str::ascii($path);
-		}*/
-
-		$path = trim($path, '/');
-
-		$parts = explode('/', $path);
-		foreach ($parts as $i => $p)
-		{
-			$parts[$i] = MediaHelper::sanitize($p);
-		}
-		$parts = array_filter($parts);
-		$path = implode('/', $parts);
-		$path = trim($path, '/');
-
-		return $path;
 	}
 }

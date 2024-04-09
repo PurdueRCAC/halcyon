@@ -41,7 +41,7 @@ class ImageProcessor
 	/**
 	 * Configuration options
 	 *
-	 * @var  array
+	 * @var  array<string,mixed>
 	 */
 	private $config = array();
 
@@ -49,11 +49,11 @@ class ImageProcessor
 	 * Constructor
 	 *
 	 * @param   string  $image_source  Path to image
-	 * @param   array   $config        Optional configurations
+	 * @param   array<string,mixed>   $config        Optional configurations
 	 * @return  void
 	 * @throws Exception
 	 */
-	public function __construct($image_source = null, $config = array())
+	public function __construct(string $image_source = null, array $config = array())
 	{
 		$this->source = $image_source;
 		$this->config = $config;
@@ -82,7 +82,7 @@ class ImageProcessor
 	 * @param   string  $type  Image type to set
 	 * @return  void
 	 */
-	public function setImageType($type): void
+	public function setImageType(string $type): void
 	{
 		if ($type)
 		{
@@ -102,7 +102,7 @@ class ImageProcessor
 	 * @param   string  $package  Package name
 	 * @return  bool
 	 */
-	private function checkPackageRequirements($package): bool
+	private function checkPackageRequirements(string $package): bool
 	{
 		$installed_exts = get_loaded_extensions();
 
@@ -230,11 +230,11 @@ class ImageProcessor
 	/**
 	 * Image Flip
 	 *
-	 * @param   integer  $rotation    Degrees to rotate
-	 * @param   integer  $background  Point to rotate from
+	 * @param   int  $rotation    Degrees to rotate
+	 * @param   int  $background  Point to rotate from
 	 * @return  void
 	 */
-	public function rotate($rotation = 0, $background = 0): void
+	public function rotate(int $rotation = 0, int $background = 0): void
 	{
 		if (empty($this->resource))
 		{
@@ -248,11 +248,11 @@ class ImageProcessor
 	/**
 	 * Image Flip
 	 *
-	 * @param   boolean  $flip_horizontal  Flip the image horizontally?
-	 * @param   boolean  $flip_vertical    Flip the image vertically?
+	 * @param   bool  $flip_horizontal  Flip the image horizontally?
+	 * @param   bool  $flip_vertical    Flip the image vertically?
 	 * @return  void
 	 */
-	public function flip($flip_horizontal, $flip_vertical = false): void
+	public function flip(bool $flip_horizontal = true, bool $flip_vertical = false): void
 	{
 		if (empty($this->resource))
 		{
@@ -290,13 +290,13 @@ class ImageProcessor
 	/**
 	 * Image Crop
 	 *
-	 * @param   integer  $top     Top point to crop from
-	 * @param   integer  $right   Right point to crop from
-	 * @param   integer  $bottom  Bottom point to crop from
-	 * @param   integer  $left    Left point to crop from
+	 * @param   int  $top     Top point to crop from
+	 * @param   int  $right   Right point to crop from
+	 * @param   int  $bottom  Bottom point to crop from
+	 * @param   int  $left    Left point to crop from
 	 * @return  void
 	 */
-	public function crop($top, $right = 0, $bottom = 0, $left = 0): void
+	public function crop(int $top, int $right = 0, int $bottom = 0, int $left = 0): void
 	{
 		if (empty($this->resource))
 		{
@@ -317,13 +317,13 @@ class ImageProcessor
 	/**
 	 * Image Resize
 	 *
-	 * @param   integer  $new_dimension  Size to resize image to
-	 * @param   boolean  $use_height     Use the height as the baseline? (uses width by default)
-	 * @param   boolean  $squared        Make the image square?
-	 * @param   boolean  $resample       Resample the image?
+	 * @param   int  $new_dimension  Size to resize image to
+	 * @param   bool  $use_height     Use the height as the baseline? (uses width by default)
+	 * @param   bool  $squared        Make the image square?
+	 * @param   bool  $resample       Resample the image?
 	 * @return  void
 	 */
-	public function resize($new_dimension, $use_height = false, $squared = false, $resample = true): void
+	public function resize(int $new_dimension, bool $use_height = false, bool $squared = false, bool $resample = true): void
 	{
 		if (empty($this->resource))
 		{
@@ -493,7 +493,7 @@ class ImageProcessor
 	 * @param   string   $str  Fraction to convert
 	 * @return  int
 	 */
-	private function geo_frac2dec($str): int
+	private function geo_frac2dec(string $str): int
 	{
 		list($n, $d) = explode('/', $str);
 
@@ -563,10 +563,10 @@ class ImageProcessor
 	 * Save an image
 	 *
 	 * @param   string   $save_path   Path to save image
-	 * @param   boolean  $make_paths  Allow for path generation?
+	 * @param   bool  $make_paths  Allow for path generation?
 	 * @return  void
 	 */
-	public function save($save_path = null, $make_paths = false): void
+	public function save(string $save_path = null, bool $make_paths = false): void
 	{
 		$path = $this->source;
 
@@ -599,7 +599,7 @@ class ImageProcessor
 	 * @param   string  $save_path  Path to save image
 	 * @return  void
 	 */
-	private function output($save_path): void
+	private function output(string $save_path): void
 	{
 		if ($this->resource != null)
 		{

@@ -56,9 +56,9 @@ class FilesUploading
 	}
 
 	/**
-	 * @return array
+	 * @return array<int,array<string,mixed>>
 	 */
-	public function files()
+	public function files(): array
 	{
 		return array_map(function ($file): array
 		{
@@ -73,7 +73,7 @@ class FilesUploading
 	/**
 	 * @return bool
 	 */
-	public function overwrite()
+	public function overwrite(): bool
 	{
 		return !!$this->overwrite;
 	}

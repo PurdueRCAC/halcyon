@@ -3,8 +3,9 @@
 namespace App\Modules\Media\Events;
 
 use Illuminate\Http\Request;
+use App\Modules\Media\Contracts\DirectoryEvent;
 
-class DirectoryUpdated
+class DirectoryUpdated implements DirectoryEvent
 {
 	/**
 	 * @var string
@@ -28,15 +29,15 @@ class DirectoryUpdated
 	 * @param string $before
 	 * @param string $after
 	 */
-	public function __construct($disk, $before, $after)
+	public function __construct(string $disk, string $before, string $after)
 	{
-		$this->disk = $disk;
+		$this->disk   = $disk ? $disk : 'public';
 		$this->before = $before;
-		$this->after = $after;
+		$this->after  = $after;
 	}
 
 	/**
-	 * @return string
+	 * @inheritdoc
 	 */
 	public function disk(): string
 	{

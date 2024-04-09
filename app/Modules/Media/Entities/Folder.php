@@ -2,6 +2,8 @@
 
 namespace App\Modules\Media\Entities;
 
+use Illuminate\Support\Collection;
+
 /**
  * Folder
  */
@@ -40,9 +42,9 @@ class Folder extends File
 	/**
 	 * Get children
 	 *
-	 * @return  array
+	 * @return  Collection
 	 */
-	public function children()
+	public function children(): Collection
 	{
 		$path = $this->getPathname();
 
@@ -64,9 +66,9 @@ class Folder extends File
 	/**
 	 * Get data as a tree
 	 *
-	 * @return array
+	 * @return array<int,array<string,mixed>>
 	 */
-	public function tree()
+	public function tree(): array
 	{
 		$folders = self::nest($this->getPathname());
 
@@ -76,12 +78,12 @@ class Folder extends File
 	/**
 	 * Build a folder tree
 	 *
-	 * @param   array   $folders
+	 * @param   array<int,array<string,mixed>>   $folders
 	 * @param   int     $parent_id
 	 * @param   string  $path
-	 * @return  array
+	 * @return  array<int,array<string,mixed>>
 	 */
-	public static function buildTree($folders, $parent_id = 0, $path = '')
+	public static function buildTree(array $folders, int $parent_id = 0, string $path = ''): array
 	{
 		$branch = array();
 		foreach ($folders as $folder)
@@ -117,9 +119,9 @@ class Folder extends File
 	 * @param   int     $maxLevel  The maximum number of levels to recursively read, defaults to three.
 	 * @param   int     $level     The current level, optional.
 	 * @param   int     $parent    Unique identifier of the parent folder, if any.
-	 * @return  array
+	 * @return  array<int,array<string,mixed>>
 	 */
-	public static function nest($path = null, $filter = '.', $maxLevel = 10, $level = 0, $parent = 0)
+	public static function nest(string $path = null, string $filter = '.', int $maxLevel = 10, int $level = 0, int $parent = 0): array
 	{
 		$dirs = array();
 

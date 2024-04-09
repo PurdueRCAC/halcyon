@@ -15,7 +15,7 @@ class DiskSelected
 	 *
 	 * @param string $disk
 	 */
-	public function __construct($disk)
+	public function __construct(string $disk)
 	{
 		$this->disk = $disk;
 	}

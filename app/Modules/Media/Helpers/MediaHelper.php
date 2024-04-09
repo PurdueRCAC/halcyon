@@ -14,23 +14,23 @@ class MediaHelper
 	/**
 	 * Checks if the file can be uploaded
 	 *
-	 * @param   array    $file  File information
+	 * @param   array<string,mixed>    $file  File information
 	 * @param   string   $err   An error message to be returned
 	 * @return  bool
 	 */
-	public static function canUpload($file, &$err)
+	public static function canUpload($file, &$err): bool
 	{
 		$params = config('module.media');
 
 		if (empty($file['name']))
 		{
-			$err = 'media::media.error.UPLOAD_INPUT';
+			$err = 'media::media.error.no input';
 			return false;
 		}
 
 		if ($file['name'] !== Filesystem::clean($file['name']))
 		{
-			$err = 'media::media.error.WARNFILENAME';
+			$err = 'media::media.error.invalid file name';
 			return false;
 		}
 
@@ -52,7 +52,7 @@ class MediaHelper
 			{
 				if (in_array($extensionName, $explodedFileName))
 				{
-					$err = 'media::media.error.WARNFILETYPE';
+					$err = 'media::media.error.invalid file type';
 					return false;
 				}
 			}
@@ -87,13 +87,13 @@ class MediaHelper
 				{
 					if (($imginfo = getimagesize($file['tmp_name'])) === false)
 					{
-						$err = 'media::media.error.WARNINVALID_IMG';
+						$err = 'media::media.error.unsupported image type';
 						return false;
 					}
 				}
 				else
 				{
-					$err = 'media::media.error.WARNFILETOOLARGE';
+					$err = 'media::media.error.file too large';
 					return false;
 				}
 			}
@@ -110,7 +110,7 @@ class MediaHelper
 					$type = finfo_file($finfo, $file['tmp_name']);
 					if (strlen($type) && !in_array($type, $allowed_mime) && in_array($type, $illegal_mime))
 					{
-						$err = 'media::media.error.WARNINVALID_MIME';
+						$err = 'media::media.error.invalid mime type';
 						return false;
 					}
 
@@ -123,13 +123,13 @@ class MediaHelper
 
 					if (strlen($type) && !in_array($type, $allowed_mime) && in_array($type, $illegal_mime))
 					{
-						$err = 'media::media.error.WARNINVALID_MIME';
+						$err = 'media::media.error.invalid mime type';
 						return false;
 					}
 				}
 				elseif (!auth()->user() || !auth()->user()->can('manage'))
 				{
-					$err = 'media::media.error.WARNNOTADMIN';
+					$err = 'media::media.error.not admin';
 					return false;
 				}
 			}
@@ -158,7 +158,7 @@ class MediaHelper
 				if (stristr($xss_check, '<' . $tag . ' ')
 				 || stristr($xss_check, '<' . $tag . '>'))
 				{
-					$err = 'media::media.error.WARNIEXSS';
+					$err = 'media::media.error.possible xss';
 					return false;
 				}
 			}
@@ -167,12 +167,35 @@ class MediaHelper
 	}
 
 	/**
+	 * Sanitize file path
+	 *
+	 * @param   string  $path
+	 * @return  string
+	 */
+	public static function sanitizePath(string $path): string
+	{
+		$path = trim($path, '/');
+
+		$parts = explode('/', $path);
+		foreach ($parts as $i => $p)
+		{
+			$parts[$i] = self::sanitize($p);
+		}
+		$parts = array_filter($parts);
+
+		$path = implode('/', $parts);
+		$path = trim($path, '/');
+
+		return $path;
+	}
+
+	/**
 	 * Sanitize file names
 	 *
 	 * @param   string  $name
 	 * @return  string
 	 */
-	public static function sanitize($name)
+	public static function sanitize(string $name): string
 	{
 		if (!preg_match('/^[\x20-\x7e]*$/', $name))
 		{
@@ -223,9 +246,9 @@ class MediaHelper
 	 * @param   int  $width   Original width
 	 * @param   int  $height  Original height
 	 * @param   int  $target  Target size
-	 * @return  array
+	 * @return  array<int,int>
 	 */
-	public static function imageResize($width, $height, $target)
+	public static function imageResize(int $width, int $height, int $target): array
 	{
 		// Take the larger size of the width and height and applies the
 		// formula accordingly...this is so this script will work
@@ -250,9 +273,9 @@ class MediaHelper
 	 * Count files in a directory
 	 *
 	 * @param   string  $dir  Directory
-	 * @return  array
+	 * @return  array<int,int>
 	 */
-	public static function countFiles($dir)
+	public static function countFiles(string $dir): array
 	{
 		$total_file = 0;
 		$total_dir = 0;
@@ -289,7 +312,7 @@ class MediaHelper
 	 * @param   string  $folder
 	 * @return  string
 	 */
-	public static function getParent($folder)
+	public static function getParent(string $folder): string
 	{
 		$parent = substr($folder, 0, strrpos($folder, '/'));
 		return $parent;
@@ -300,9 +323,9 @@ class MediaHelper
 	 *
 	 * @param   string  $directory
 	 * @param   string  $folder
-	 * @return  array
+	 * @return  array<string,array<int,File|Folder>>
 	 */
-	public static function getChildren($directory, $folder)
+	public static function getChildren(string $directory, string $folder): array
 	{
 		$data = array(
 			'files' => array(),
@@ -325,12 +348,12 @@ class MediaHelper
 	/**
 	 * Build a folder tree
 	 *
-	 * @param   array   $folders
+	 * @param   array<int,array<string,mixed>>  $folders
 	 * @param   int     $parent_id
 	 * @param   string  $path
-	 * @return  void
+	 * @return  array<int,array<string,mixed>>
 	 */
-	public static function _buildFolderTree($folders, $parent_id = 0, $path = '')
+	public static function _buildFolderTree(array $folders, int $parent_id = 0, string $path = ''): array
 	{
 		$branch = array();
 		foreach ($folders as $folder)
@@ -354,19 +377,25 @@ class MediaHelper
 	/**
 	 * Build a path
 	 *
-	 * @param   array   $folders
+	 * @param   array<int,array<string,mixed>>   $folders
 	 * @param   string  $path
-	 * @return  void
+	 * @return  array<int,array<string,mixed>>
 	 */
-	public static function createPath(&$folders, $path)
+	public static function createPath(array $folders, string $path): array
 	{
-		foreach ($folders as &$folder)
+		foreach ($folders as $i => $folder)
 		{
-			$folder['path'] = str_replace($path, '', $folder['fullname']);
+			$folders[$i]['path'] = str_replace($path, '', $folder['fullname']);
 		}
+
+		return $folders;
 	}
 
-
+	/**
+	 * Counter used for IDs
+	 *
+	 * @var int
+	 */
 	private static $index = 0;
 
 	/**
@@ -377,9 +406,9 @@ class MediaHelper
 	 * @param   int     $maxLevel  The maximum number of levels to recursively read, defaults to three.
 	 * @param   int     $level     The current level, optional.
 	 * @param   int     $parent    Unique identifier of the parent folder, if any.
-	 * @return  array
+	 * @return  array<int,array<string,mixed>>
 	 */
-	public static function getTree($path, $filter = '.', $maxLevel = 10, $level = 0, $parent = 0)
+	public static function getTree(string $path, string $filter = '.', int $maxLevel = 10, int $level = 0, int $parent = 0): array
 	{
 		$dirs = array();
 
@@ -391,6 +420,8 @@ class MediaHelper
 		if ($level < $maxLevel)
 		{
 			$folders = app('files')->directories($path);
+
+			$public_path = storage_path() . '/app/public';
 
 			// First path, index foldernames
 			foreach ($folders as $name)
@@ -405,7 +436,7 @@ class MediaHelper
 					'parent'   => $parent,
 					'name'     => ltrim($short, '\\/'),
 					'fullname' => $fullName,
-					'relname'  => str_replace(storage_path() . '/app/public', '', $fullName)
+					'relname'  => str_replace($public_path, '', $fullName)
 				);
 
 				$dirs2 = self::getTree($fullName, $filter, $maxLevel, $level + 1, self::$index);

@@ -22,7 +22,7 @@ class Deleted
 	 * @param string $disk
 	 * @param array $items
 	 */
-	public function __construct($disk, $items)
+	public function __construct(string $disk, array $items)
 	{
 		$this->disk = $disk;
 		$this->items = $items;
