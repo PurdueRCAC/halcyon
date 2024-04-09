@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Modules\Storage\Models\Directory;
 use App\Modules\Storage\Models\StorageResource;
 use App\Modules\Storage\Models\Notification;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Halcyon\Utility\Number;
 use App\Modules\Users\Models\User;
 use App\Modules\Groups\Models\Group;
@@ -18,15 +18,17 @@ use Carbon\Carbon;
 
 class DirectoriesController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'storage.dirs', [
 			'search'   => null,
 			'state'    => 'active',
 			'parent'   => 0,
@@ -37,21 +39,7 @@ class DirectoriesController extends Controller
 			// Sorting
 			'order'     => 'path',
 			'order_dir' => 'asc'
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('storage.dirs.filter_' . $key)
-			 && $request->input($key) != session()->get('storage.dirs.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('storage.dirs.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		// Get records
 		$query = Directory::query()

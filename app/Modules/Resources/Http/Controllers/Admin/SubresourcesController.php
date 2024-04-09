@@ -11,20 +11,22 @@ use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Models\Subresource;
 use App\Modules\Resources\Models\Child;
 use App\Modules\Resources\Models\Type;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 
 class SubresourcesController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 *
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request): View
+	public function index(Request $request): View
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'subresources', [
 			'search'   => null,
 			'resource' => 0,
 			'state'    => 'active',
@@ -34,21 +36,7 @@ class SubresourcesController extends Controller
 			// Sorting
 			'order'     => Subresource::$orderBy,
 			'order_dir' => Subresource::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('subresources.filter_' . $key)
-			 && $request->input($key) != session()->get('subresources.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('subresources.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'name', 'state', 'resource']))
 		{

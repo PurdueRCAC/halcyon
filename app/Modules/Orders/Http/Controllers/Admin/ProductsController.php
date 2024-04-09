@@ -12,20 +12,22 @@ use App\Modules\Orders\Models\Category;
 use App\Modules\Orders\Models\Product;
 use App\Modules\Orders\Models\Item;
 use App\Modules\Users\Models\User;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 
 class ProductsController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param   StatefulRequest  $request
+	 * @param   Request  $request
 	 * @return  View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'orders.products', [
 			'search'    => null,
 			'state'    => 'published',
 			'category'  => 0,
@@ -38,21 +40,7 @@ class ProductsController extends Controller
 			// Sorting
 			'order'     => 'name',
 			'order_dir' => Product::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('orders.products.filter_' . $key)
-			 && $request->input($key) != session()->get('orders.products.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('orders.products.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'name', 'unitprice', 'ordercategoryid', 'sequence', 'datetimecreated', 'datetimeremoved']))
 		{

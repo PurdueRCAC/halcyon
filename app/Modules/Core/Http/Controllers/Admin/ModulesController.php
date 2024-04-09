@@ -9,21 +9,23 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Artisan;
 use App\Modules\Core\Models\Extension;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Halcyon\Access\Rules;
 use App\Halcyon\Access\Asset;
 
 class ModulesController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'core.modules', [
 			'search'   => null,
 			'state'    => 'enabled',
 			// Paging
@@ -32,21 +34,7 @@ class ModulesController extends Controller
 			// Sorting
 			'order'     => 'name',
 			'order_dir' => 'asc'
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('core.modules.filter_' . $key)
-			 && $request->input($key) != session()->get('core.modules.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('core.modules.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'name', 'element', 'folder', 'ordering', 'enabled']))
 		{

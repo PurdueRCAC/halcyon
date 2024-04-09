@@ -8,20 +8,22 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Queues\Models\SchedulerPolicy;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 
 class SchedulerPoliciesController extends Controller
 {
+	use UsesFilters;
+
 	/**
-	 * Display a listing of the queue.
+	 * Display a listing of the entries
 	 * 
-	 * @param  StatefulRequest  $request
+	 * @param  Request  $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'queues.schedulerpolicies', [
 			'search'   => null,
 			// Paging
 			'limit'    => config('list_limit', 20),
@@ -29,21 +31,7 @@ class SchedulerPoliciesController extends Controller
 			// Sorting
 			'order'     => SchedulerPolicy::$orderBy,
 			'order_dir' => SchedulerPolicy::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('queues.schedulerpolicies.filter_' . $key)
-			 && $request->input($key) != session()->get('queues.schedulerpolicies.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('queues.schedulerpolicies.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'name']))
 		{

@@ -7,20 +7,22 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use App\Modules\Orders\Models\Category;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 
 class CategoriesController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 *
 	 * @param   Request  $request
 	 * @return  View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'orders.site.categories', [
 			'search'    => null,
 			'parent'    => 1, // Root node
 			'state'     => 'published',
@@ -28,22 +30,7 @@ class CategoriesController extends Controller
 			'page'      => 1,
 			'order'     => Category::$orderBy,
 			'order_dir' => Category::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key)
-			 && session()->has('orders.site.categories.filter_' . $key)
-			 && session()->get('orders.site.categories.filter_' . $key) != $request->input($key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('orders.site.categories.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'name']))
 		{

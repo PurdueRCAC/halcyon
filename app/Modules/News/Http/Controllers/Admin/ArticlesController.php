@@ -13,12 +13,14 @@ use App\Modules\News\Models\Type;
 use App\Modules\News\Models\Stemmedtext;
 use App\Modules\News\Notifications\ArticleCreated;
 use App\Modules\News\Notifications\ArticleUpdated;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Halcyon\Utility\PorterStemmer;
 use Carbon\Carbon;
 
 class ArticlesController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display templates?
 	 *
@@ -29,43 +31,28 @@ class ArticlesController extends Controller
 	/**
 	 * Display a listing of articles
 	 *
-	 * @param   StatefulRequest  $request
+	 * @param   Request  $request
 	 * @return  View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
+		$action = 'index';
+		if ($this->template)
+		{
+			$action = 'template';
+		}
+
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'news.' . $action, [
 			'search'    => null,
-			'state'     => 'published',
+			'state'     => ($this->template ? '*' : 'published'),
 			'access'    => null,
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
 			'order'     => 'id',
 			'order_dir' => 'desc',
 			'type'      => null,
-		);
-
-		$action = 'index';
-		if ($this->template)
-		{
-			$action = 'template';
-			$filters['state'] = '*';
-		}
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('news.' . $action . '.filter_' . $key)
-			 && $request->input($key) != session()->get('news.' . $action . '.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('news.' . $action . '.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'headline', 'datetimecreated', 'state', 'newstypeid']))
 		{
@@ -157,10 +144,10 @@ class ArticlesController extends Controller
 	/**
 	 * Display a listing of templates
 	 *
-	 * @param   StatefulRequest  $request
+	 * @param   Request  $request
 	 * @return  View
 	 */
-	public function templates(StatefulRequest $request)
+	public function templates(Request $request)
 	{
 		$this->template = 1;
 

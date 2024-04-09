@@ -11,45 +11,33 @@ use App\Modules\Queues\Models\Scheduler;
 use App\Modules\Queues\Models\SchedulerPolicy;
 use App\Modules\Resources\Models\Batchsystem;
 use App\Modules\Resources\Models\Asset;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 
 class SchedulersController extends Controller
 {
+	use UsesFilters;
+
 	/**
-	 * Display a listing of the queue.
+	 * Display a listing of the entries
 	 * 
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
-			'search'   => null,
+		$filters = $this->getStatefulFilters($request, 'queues.schedulers', [
+			'search'    => null,
 			'batchsystem' => null,
-			'policy' => null,
-			'state' => 'enabled',
+			'policy'    => null,
+			'state'     => 'enabled',
 			// Paging
-			'limit'    => config('list_limit', 20),
-			'page'     => 1,
+			'limit'     => config('list_limit', 20),
+			'page'      => 1,
 			// Sorting
 			'order'     => Scheduler::$orderBy,
 			'order_dir' => Scheduler::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('queues.schedulers.filter_' . $key)
-			 && $request->input($key) != session()->get('queues.schedulers.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('queues.schedulers.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'hostname', 'defaultmaxwalltime', 'schedulerpolicyid', 'batchsystem']))
 		{

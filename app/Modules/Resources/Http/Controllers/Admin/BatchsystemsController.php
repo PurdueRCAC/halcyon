@@ -8,20 +8,22 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Resources\Models\Batchsystem;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 
 class BatchsystemsController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 *
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'resources.batchsystems', [
 			'search'   => null,
 			// Paging
 			'limit'    => config('list_limit', 20),
@@ -30,21 +32,7 @@ class BatchsystemsController extends Controller
 			// Sorting
 			'order'     => Batchsystem::$orderBy,
 			'order_dir' => Batchsystem::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('resources.batchsystems.filter_' . $key)
-			 && $request->input($key) != session()->get('resources.batchsystems.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('resources.batchsystems.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'name']))
 		{

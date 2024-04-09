@@ -11,20 +11,22 @@ use App\Modules\Resources\Models\Asset;
 use App\Modules\Resources\Models\Type;
 use App\Modules\Resources\Models\FacetType;
 use App\Modules\Resources\Models\FacetOption;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 
 class TypesController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'resources.types', [
 			'search'   => null,
 			// Paging
 			'limit'    => config('list_limit', 20),
@@ -32,21 +34,7 @@ class TypesController extends Controller
 			// Sorting
 			'order'     => Type::$orderBy,
 			'order_dir' => Type::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('resources.types.filter_' . $key)
-			 && $request->input($key) != session()->get('resources.types.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('resources.types.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'name', 'description']))
 		{

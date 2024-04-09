@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Modules\Impact\Models\Table;
 use App\Modules\Impact\Models\Impact;
 use App\Modules\Impact\Models\AwardReport;
@@ -15,26 +15,23 @@ use Carbon\Carbon;
 
 class ImpactController extends Controller
 {
+	use UsesFilters;
+
 	/**
-	 * Display a listing of tags
+	 * Display a listing of entries
 	 *
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'impact', [
 			'search'    => null,
 			// Paging
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
-		);
-
-		foreach ($filters as $key => $default)
-		{
-			$filters[$key] = $request->state('impact.filter_' . $key, $key, $default);
-		}
+		]);
 		$filters['start'] = ($filters['limit'] * $filters['page']) - $filters['limit'];
 
 		$it = (new Table)->getTable();

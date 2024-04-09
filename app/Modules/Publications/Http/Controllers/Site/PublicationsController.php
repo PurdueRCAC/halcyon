@@ -13,21 +13,23 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Modules\Publications\Models\Type;
 use App\Modules\Publications\Models\Publication;
 use App\Modules\Publications\Helpers\Download;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use Carbon\Carbon;
 
 class PublicationsController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing
 	 * 
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'publications.site', [
 			'search'   => null,
 			'state'    => 'published',
 			'type'     => null,
@@ -39,21 +41,7 @@ class PublicationsController extends Controller
 			// Sorting
 			'order'     => Publication::$orderBy,
 			'order_dir' => Publication::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('publications.filter_' . $key)
-			 && $request->input($key) != session()->get('publications.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('publications.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'title', 'state', 'published_at']))
 		{

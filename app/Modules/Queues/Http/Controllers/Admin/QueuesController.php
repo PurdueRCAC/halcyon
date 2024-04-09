@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\Type;
 use App\Modules\Queues\Models\Scheduler;
@@ -29,16 +29,18 @@ use Carbon\Carbon;
 
 class QueuesController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the queue.
 	 * 
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View|Response
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'queues', [
 			'search'    => null,
 			'state'     => 'enabled',
 			'type'      => 0,
@@ -51,21 +53,7 @@ class QueuesController extends Controller
 			// Sorting
 			'order'     => Queue::$orderBy,
 			'order_dir' => Queue::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('queues.filter_' . $key)
-			 && $request->input($key) != session()->get('queues.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('queues.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'name', 'enabled', 'type', 'parent', 'queuetype', 'groupid']))
 		{

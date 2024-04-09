@@ -7,7 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Modules\Issues\Models\Issue;
 use App\Modules\Issues\Models\Issueresource;
 use App\Modules\Issues\Models\Comment;
@@ -16,28 +16,25 @@ use App\Halcyon\Utility\PorterStemmer;
 
 class TodosController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of articles
 	 *
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'issues.todos', [
 			'search'    => null,
 			'timeperiod' => null,
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
 			'order'     => Issue::$orderBy,
 			'order_dir' => Issue::$orderDir,
-		);
-
-		foreach ($filters as $key => $default)
-		{
-			$filters[$key] = $request->state('issues.todos.filter_' . $key, $key, $default);
-		}
+		]);
 
 		if (!in_array($filters['order'], ['id', 'userid', 'name', 'description', 'datetimecreated', 'recurringtimeperiodid']))
 		{

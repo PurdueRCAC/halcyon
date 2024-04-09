@@ -9,21 +9,23 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Publications\Models\Type;
 use App\Modules\Publications\Models\Author;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use Carbon\Carbon;
 
 class AuthorsController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of entries.
 	 * 
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'publications.authors', [
 			'search'   => null,
 			'publication_id'   => 0,
 			// Paging
@@ -32,22 +34,7 @@ class AuthorsController extends Controller
 			// Sorting
 			'order'     => Author::$orderBy,
 			'order_dir' => Author::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('publications.authors.filter_' . $key)
-			 && $request->input($key) != session()->get('publications.authors.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('publications.authors.' . $key, $key, $default);
-		}
-
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'name', 'created_at', 'publication_id']))
 		{

@@ -10,20 +10,22 @@ use Illuminate\Support\Facades\Validator;
 use App\Modules\Queues\Models\Qos;
 use App\Modules\Queues\Models\QueueQos;
 use App\Modules\Queues\Models\Scheduler;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 
 class QosController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the queue.
 	 * 
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'queues.qos', [
 			'search'   => null,
 			'priority' => null,
 			'scheduler' => null,
@@ -34,21 +36,7 @@ class QosController extends Controller
 			// Sorting
 			'order'     => Qos::$orderBy,
 			'order_dir' => Qos::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('queues.qos.filter_' . $key)
-			 && $request->input($key) != session()->get('queues.qos.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('queues.qos.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'name', 'description', 'limit_factor', 'priority']))
 		{

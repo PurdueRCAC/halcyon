@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use OpenSpout\Reader\CSV\Reader as CsvReader;
 use OpenSpout\Reader\XLSX\Reader as XlsxReader;
-use App\Halcyon\Http\StatefulRequest;
 use App\Modules\Groups\Models\FieldOfScience;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Department;
@@ -28,10 +27,10 @@ class GroupsController extends Controller
 	/**
 	 * Display a listing of tags
 	 *
-	 * @param  StatefulRequest  $request
+	 * @param  Request  $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		$user = auth()->user();
 

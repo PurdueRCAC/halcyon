@@ -12,17 +12,19 @@ use App\Modules\Orders\Models\Category;
 use App\Modules\Orders\Models\Product;
 use App\Modules\Orders\Models\Item;
 use App\Modules\Users\Models\User;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 
 class ProductsController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param  StatefulRequest  $request
+	 * @param  Request  $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
 		$filters = array(
@@ -42,19 +44,7 @@ class ProductsController extends Controller
 			$filters['public'] = '*';
 		}
 
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) && session()->has('orders.site.products.filter_' . $key)
-			 && $request->input($key) != session()->get('orders.site.products.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('orders.site.products.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		$filters = $this->getStatefulFilters($request, 'orders.site.products', $filters);
 
 		if (!in_array($filters['order'], ['id', 'name', 'unitprice', 'ordercategoryid', 'sequence']))
 		{

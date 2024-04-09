@@ -7,23 +7,25 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Modules\Finder\Models\Service;
 use App\Modules\Finder\Models\Field;
 use App\Modules\Finder\Models\ServiceField;
 
 class ServicesController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of tags
 	 *
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'finder.services', [
 			'search'    => null,
 			'state'     => 'published',
 			// Paging
@@ -32,21 +34,7 @@ class ServicesController extends Controller
 			// Sorting
 			'order'     => Service::$orderBy,
 			'order_dir' => Service::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('finder.services.filter_' . $key)
-			 && $request->input($key) != session()->get('finder.services.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('finder.services.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], array('id', 'name')))
 		{

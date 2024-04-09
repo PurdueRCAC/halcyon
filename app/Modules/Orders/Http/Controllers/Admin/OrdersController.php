@@ -16,21 +16,23 @@ use App\Modules\Orders\Models\Item;
 use App\Modules\Orders\Models\Account;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use Carbon\Carbon;
 
 class OrdersController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param   StatefulRequest  $request
+	 * @param   Request  $request
 	 * @return  View|StreamedResponse
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'orders', [
 			'search'    => null,
 			'status'    => 'active',
 			'category'  => '*',
@@ -45,21 +47,7 @@ class OrdersController extends Controller
 			// Sorting
 			'order'     => Order::$orderBy,
 			'order_dir' => Order::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('orders.filter_' . $key)
-			 && $request->input($key) != session()->get('orders.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('orders.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'datetimecreated', 'datetimeremoved', 'userid', 'ordertotal', 'usernotes']))
 		{

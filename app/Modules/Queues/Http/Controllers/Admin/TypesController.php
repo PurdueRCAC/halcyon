@@ -9,20 +9,22 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\Type;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 
 class TypesController extends Controller
 {
+	use UsesFilters;
+
 	/**
-	 * Display a listing of the queue.
+	 * Display a listing of the entries
 	 * 
-	 * @param  StatefulRequest  $request
+	 * @param  Request  $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'queues.types', [
 			'search'   => null,
 			// Paging
 			'limit'    => config('list_limit', 20),
@@ -30,21 +32,7 @@ class TypesController extends Controller
 			// Sorting
 			'order'     => Type::$orderBy,
 			'order_dir' => Type::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('queues.types.filter_' . $key)
-			 && $request->input($key) != session()->get('queues.types.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('queues.types.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'name']))
 		{

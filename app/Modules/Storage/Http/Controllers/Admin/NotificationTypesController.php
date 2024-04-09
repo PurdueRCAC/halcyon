@@ -8,20 +8,22 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Storage\Models\Notification\Type;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Halcyon\Models\Timeperiod;
 
 class NotificationTypesController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request): View
+	public function index(Request $request): View
 	{
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'storage.notifytypes', [
 			'search'   => '',
 			'state'    => 'active',
 			// Paging
@@ -30,21 +32,7 @@ class NotificationTypesController extends Controller
 			// Sorting
 			'order'     => 'name',
 			'order_dir' => 'asc'
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('storage.notifytypes.filter_' . $key)
-			 && $request->input($key) != session()->get('storage.notifytypes.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('storage.notifytypes.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		// Get records
 		$query = Type::query();

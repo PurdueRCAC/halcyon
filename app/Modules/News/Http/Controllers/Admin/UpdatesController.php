@@ -10,21 +10,23 @@ use Illuminate\Support\Facades\Validator;
 use App\Modules\News\Models\Article;
 use App\Modules\News\Models\Update;
 use App\Modules\News\Notifications\ArticleUpdated;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 
 class UpdatesController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of entries
 	 *
 	 * @param  int  $art  Article ID
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index($art, StatefulRequest $request)
+	public function index($art, Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'news.updates', [
 			'article'   => 0,
 			'search'    => null,
 			'state'     => 'published',
@@ -32,21 +34,7 @@ class UpdatesController extends Controller
 			'page'      => 1,
 			'order'     => 'datetimecreated',
 			'order_dir' => 'desc'
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('news.updates.filter_' . $key)
-			 && $request->input($key) != session()->get('news.updates.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('news.updates.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'headline', 'datetimecreated']))
 		{

@@ -13,20 +13,22 @@ use App\Modules\Resources\Models\Type;
 use App\Modules\Resources\Models\Batchsystem;
 use App\Modules\Resources\Models\Facet;
 use App\Modules\Resources\Events\AssetDisplaying;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 
 class ResourcesController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 *
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request): View
+	public function index(Request $request): View
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'resources', [
 			'search'   => null,
 			'state'    => 'active',
 			'type'     => 0,
@@ -38,21 +40,7 @@ class ResourcesController extends Controller
 			// Sorting
 			'order'     => 'name',
 			'order_dir' => 'asc',
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('resources.filter_' . $key)
-			 && $request->input($key) != session()->get('resources.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('resources.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 		$filters['start'] = ($filters['limit'] * $filters['page']) - $filters['limit'];
 
 		if (!in_array($filters['order'], ['id', 'name', 'state', 'type', 'parent', 'display']))

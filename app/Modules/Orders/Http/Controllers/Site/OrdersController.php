@@ -18,23 +18,25 @@ use App\Modules\Orders\Models\Item;
 use App\Modules\Orders\Models\Account;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use OpenSpout\Reader\CSV\Reader as CsvReader;
 use OpenSpout\Reader\XLSX\Reader as XlsxReader;
 use Carbon\Carbon;
 
 class OrdersController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param  StatefulRequest  $request
+	 * @param  Request  $request
 	 * @return View|StreamedResponse
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'orders.site', [
 			'search'    => null,
 			'status'    => 'active',
 			'category'  => '*',
@@ -49,21 +51,7 @@ class OrdersController extends Controller
 			// Sorting
 			'order'     => Order::$orderBy,
 			'order_dir' => Order::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) && session()->has('orders.site.filter_' . $key)
-			 && $request->input($key) != session()->get('orders.site.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('orders.site.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'state', 'userid', 'datetimecreated', 'datetimeremoved']))
 		{
@@ -401,13 +389,13 @@ class OrdersController extends Controller
 	/**
 	 * Show the specified resource.
 	 * 
-	 * @param  StatefulRequest  $request
+	 * @param  Request  $request
 	 * @return View
 	 */
-	public function recurring(StatefulRequest $request)
+	public function recurring(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'orders.recur', [
 			'search'    => null,
 			'product'   => 0,
 			'userid'    => 0,
@@ -417,35 +405,7 @@ class OrdersController extends Controller
 			// Sorting
 			'order'     => 'id',
 			'order_dir' => 'asc',
-		);
-
-		/*$k = array();
-		foreach ($filters as $key => $default)
-		{
-			$filters[$key] = $request->input($key, $default);
-			if (!in_array($key, ['page', 'order', 'order_dir']))
-			{
-				$k[$key] = $filters[$key];
-			}
-		}
-		$k = json_encode($k);
-		
-		if (session()->get('filters.orders.recur') && session()->get('filters.orders.recur') != $k)
-		{
-			$filters['page'] = 1;
-		}
-		session()->put('orders.recur', $k);*/
-
-		$reset = false;
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page' && session()->get('orders.recur.filter_' . $key) != $request->mergeWithBase()->input($key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('orders.recur.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'product', 'billeduntil', 'paiduntil']))
 		{
