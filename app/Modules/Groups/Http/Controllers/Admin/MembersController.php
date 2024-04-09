@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Modules\Groups\Models\Group;
 use App\Modules\Groups\Models\Member;
 use App\Modules\Groups\Models\Type;
@@ -15,17 +15,19 @@ use App\Modules\Users\Models\User;
 
 class MembersController extends Controller
 {
+	use UsesFilters;
+
 	/**
-	 * Display a listing of tags
+	 * Display a listing of entries
 	 *
 	 * @param  int  $group
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index($group, StatefulRequest $request)
+	public function index($group, Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'groups.members', [
 			'group'     => $group,
 			'search'    => null,
 			'state'     => 'active',
@@ -36,21 +38,7 @@ class MembersController extends Controller
 			// Sorting
 			'order'     => Member::$orderBy,
 			'order_dir' => Member::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('groups.members.filter_' . $key)
-			 && $request->input($key) != session()->get('groups.members.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('groups.members.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'name', 'created_at', 'updated_at']))
 		{

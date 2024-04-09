@@ -10,24 +10,26 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Modules\Messages\Models\Message;
 use App\Modules\Messages\Models\Type;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use Symfony\Component\Process\Process;
 use Carbon\Carbon;
 
 class MessagesController extends Controller
 {
+	use UsesFilters;
+
 	/**
-	 * Display a listing of articles
+	 * Display a listing of entries
 	 *
-	 * @param  StatefulRequest  $request
+	 * @param  Request  $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		$weekago = Carbon::now()->modify('-1 week');
 
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'messages.index', [
 			'state'     => 'published',
 			'status'    => '*',
 			'start'     => $weekago->format('Y-m-d'),
@@ -39,21 +41,7 @@ class MessagesController extends Controller
 			// Ordering
 			'order'     => Message::$orderBy,
 			'order_dir' => Message::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('messages.index.filter_' . $key)
-			 && $request->input($key) != session()->get('messages.index.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('messages.index.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'messagequeuetypeid', 'targetobjectid', 'datetimesubmitted', 'returnstatus']))
 		{

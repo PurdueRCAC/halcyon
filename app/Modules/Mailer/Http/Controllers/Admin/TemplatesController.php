@@ -13,22 +13,24 @@ use App\Modules\Users\Models\User;
 use App\Modules\History\Models\Log;
 use App\Modules\Mailer\Models\Message;
 use App\Modules\Mailer\Mail\GenericMessage;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Halcyon\Access\Map;
 use Carbon\Carbon;
 
 class TemplatesController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'mailer.templates', [
 			'search'   => null,
 			// Paging
 			'limit'    => config('list_limit', 20),
@@ -36,20 +38,7 @@ class TemplatesController extends Controller
 			// Sorting
 			'order'     => Message::$orderBy,
 			'order_dir' => Message::$orderDir,
-		);
-
-		$reset = false;
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('users.messages.filter_' . $key)
-			 && $request->input($key) != session()->get('users.messages.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('users.messages.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'subject', 'body', 'state', 'access', 'category_id']))
 		{
@@ -118,7 +107,7 @@ class TemplatesController extends Controller
 	 * @param   int  $id
 	 * @return  View
 	 */
-	public function edit(Request $request, $id)
+	public function edit(Request $request, int $id)
 	{
 		$row = Message::findOrFail($id);
 
@@ -139,7 +128,7 @@ class TemplatesController extends Controller
 	 * @param  int $id
 	 * @return View
 	 */
-	public function copy(Request $request, $id)
+	public function copy(Request $request, int $id)
 	{
 		$row = Message::findOrFail($id);
 

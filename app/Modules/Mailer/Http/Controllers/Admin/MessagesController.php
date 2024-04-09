@@ -13,22 +13,24 @@ use App\Modules\Users\Models\UserUsername;
 use App\Modules\Groups\Models\Member;
 use App\Modules\Mailer\Models\Message;
 use App\Modules\Mailer\Mail\GenericMessage;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Halcyon\Access\Map;
 use Carbon\Carbon;
 
 class MessagesController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'mailer.messages', [
 			'search'   => null,
 			// Paging
 			'limit'    => config('list_limit', 20),
@@ -36,20 +38,7 @@ class MessagesController extends Controller
 			// Sorting
 			'order'     => 'sent_at',
 			'order_dir' => 'desc',
-		);
-
-		$reset = false;
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key)
-			 && $request->input($key) != session()->get('users.messages.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('users.messages.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'subject', 'body', 'state', 'access', 'category_id']))
 		{

@@ -11,46 +11,33 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Pages\Models\Page;
 use App\Modules\Pages\Models\Version;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 
 class PagesController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
-			'search'   => null,
-			'state'    => 'published',
-			'access'   => 0,
-			'parent'   => 0,
+		$filters = $this->getStatefulFilters($request, 'pages', [
+			'search'    => null,
+			'state'     => 'published',
+			'access'    => 0,
+			'parent'    => 0,
 			// Paging
-			'limit'    => config('list_limit', 20),
-			'page'     => 1,
-			//'start'    => $request->input('limitstart', 0),
+			'limit'     => config('list_limit', 20),
+			'page'      => 1,
 			// Sorting
 			'order'     => 'path',
 			'order_dir' => 'asc',
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('pages.filter_' . $key)
-			 && $request->input($key) != session()->get('pages.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('pages.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'title', 'path', 'lft', 'rgt', 'level', 'state', 'access', 'created_at', 'updated_at']))
 		{
@@ -178,7 +165,7 @@ class PagesController extends Controller
 	 * @param  int  $id
 	 * @return View
 	 */
-	public function history($id)
+	public function history(int $id)
 	{
 		$row = Page::findOrFail($id);
 
@@ -312,7 +299,7 @@ class PagesController extends Controller
 	 * @param   int  $id
 	 * @return  RedirectResponse
 	 */
-	public function state(Request $request, $id = null)
+	public function state(Request $request, int $id = null)
 	{
 		$action = app('request')->segment(count($request->segments()) - 1);
 		$state  = $action == 'publish' ? 1 : 0;
@@ -416,7 +403,7 @@ class PagesController extends Controller
 	 * @param  int  $revision
 	 * @return RedirectResponse
 	 */
-	public function revert($id, $revision)
+	public function revert(int $id, int $revision)
 	{
 		$row = Page::findOrFail($id);
 

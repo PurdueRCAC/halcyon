@@ -6,21 +6,23 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Modules\History\Models\History;
 
 class HistoryController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 *
-	 * @param   StatefulRequest  $request
+	 * @param   Request  $request
 	 * @return  View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'history', [
 			'search'    => null,
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
@@ -30,21 +32,7 @@ class HistoryController extends Controller
 			'type'      => '',
 			'start'     => null,
 			'end'       => null,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key)
-			 && $request->input($key) != session()->get('history.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('history.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		$filters['order'] = History::getSortField($filters['order']);
 		$filters['order_dir'] = History::getSortDirection($filters['order_dir']);

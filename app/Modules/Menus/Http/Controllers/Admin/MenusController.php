@@ -10,45 +10,33 @@ use Illuminate\Support\Facades\Validator;
 use App\Modules\Menus\Models\Type;
 use App\Modules\Menus\Models\Item;
 use App\Halcyon\Access\Viewlevel;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 
 class MenusController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
-			'search'   => null,
-			'state'    => 'published',
-			'access'   => null,
-			'parent'   => 0,
+		$filters = $this->getStatefulFilters($request, 'menus', [
+			'search'    => null,
+			'state'     => 'published',
+			'access'    => null,
+			'parent'    => 0,
 			// Paging
-			'limit'    => config('list_limit', 20),
-			'page'     => 1,
+			'limit'     => config('list_limit', 20),
+			'page'      => 1,
 			// Sorting
 			'order'     => Type::$orderBy,
 			'order_dir' => Type::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('menus.filter_' . $key)
-			 && $request->input($key) != session()->get('menus.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('menus.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'title', 'published', 'access', 'items_count']))
 		{
@@ -153,7 +141,7 @@ class MenusController extends Controller
 	 * @param   int  $id
 	 * @return  View
 	 */
-	public function edit(Request $request, $id)
+	public function edit(Request $request, int $id)
 	{
 		$row = Type::findOrFail($id);
 
@@ -268,7 +256,7 @@ class MenusController extends Controller
 	 * @param   string  $menutype
 	 * @return  RedirectResponse
 	 */
-	public function rebuild(Request $request, $menutype)
+	public function rebuild(Request $request, string $menutype)
 	{
 		// Initialise variables.
 		$model = new Item;

@@ -7,34 +7,32 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Modules\Issues\Models\Issue;
 use App\Modules\Issues\Models\Comment;
 
 class CommentsController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of entries
 	 *
-	 * @param  StatefulRequest  $request
+	 * @param  int $report
+	 * @param  Request  $request
 	 * @return View
 	 */
-	public function index($report, StatefulRequest $request)
+	public function index(int $report, Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'issues.comments', [
 			'report'    => 0,
 			'search'    => null,
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
 			'order'     => Comment::$orderBy,
 			'order_dir' => Comment::$orderDir
-		);
-
-		foreach ($filters as $key => $default)
-		{
-			$filters[$key] = $request->state('issues.comments.filter_' . $key, $key, $default);
-		}
+		]);
 
 		if (!in_array($filters['order'], ['id', 'datetimecreated', 'userid', 'comment', 'issueid']))
 		{

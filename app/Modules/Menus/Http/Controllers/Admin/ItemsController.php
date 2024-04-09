@@ -12,22 +12,24 @@ use App\Modules\Menus\Models\Type;
 use App\Modules\Menus\Models\Item;
 use App\Halcyon\Html\Builder\Select;
 use App\Halcyon\Models\Extension;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use Carbon\Carbon;
 
 class ItemsController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @param  string  $menutype
 	 * @return View|RedirectResponse
 	 */
-	public function index(StatefulRequest $request, $menutype = null)
+	public function index(Request $request, string $menutype = '')
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'menus.items', [
 			'menutype' => $menutype,
 			'search'   => null,
 			'state'    => 'published',
@@ -41,25 +43,11 @@ class ItemsController extends Controller
 			// Sorting
 			'order'     => Item::$orderBy,
 			'order_dir' => Item::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
+		]);
+		if ($menutype)
 		{
-			if ($key == 'menutype' && $filters['menutype'])
-			{
-				continue;
-			}
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('menus.items.filter_' . $key)
-			 && $request->input($key) != session()->get('menus.items.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('menus.items.filter_' . $key, $key, $default);
+			$filters['menutype'] = $menutype;
 		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
 
 		if (!in_array($filters['order'], ['id', 'title', 'published', 'access']))
 		{

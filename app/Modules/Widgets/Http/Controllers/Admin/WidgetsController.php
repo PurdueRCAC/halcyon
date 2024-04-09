@@ -13,20 +13,22 @@ use App\Modules\Widgets\Models\Widget;
 use App\Modules\Widgets\Models\Menu;
 use App\Modules\Users\Models\User;
 use App\Halcyon\Access\Viewlevel;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 
 class WidgetsController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'widgets', [
 			'search'    => null,
 			'state'     => '*',
 			'access'    => null,
@@ -37,24 +39,10 @@ class WidgetsController extends Controller
 			// Pagination
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
+			// Sorting
 			'order'     => Widget::$orderBy,
 			'order_dir' => Widget::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('widgets.filter_' . $key)
-			 && $request->input($key) != session()->get('widgets.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('widgets.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
-
+		]);
 		$filters['order'] = Widget::getSortField($filters['order']);
 		$filters['order_dir'] = Widget::getSortDirection($filters['order_dir']);
 

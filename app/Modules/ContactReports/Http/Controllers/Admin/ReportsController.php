@@ -8,7 +8,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\Comment;
 use App\Modules\ContactReports\Models\Reportresource;
@@ -20,16 +20,18 @@ use Carbon\Carbon;
 
 class ReportsController extends Controller
 {
+	use UsesFilters;
+
 	/**
-	 * Display a listing of articles
+	 * Display a listing of entries
 	 *
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'crm.reports', [
 			'timeframe' => 1,
 			'search'    => null,
 			'tag'       => '',
@@ -45,21 +47,7 @@ class ReportsController extends Controller
 			'page'      => 1,
 			'order'     => Report::$orderBy,
 			'order_dir' => Report::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('crm.reports.filter_' . $key)
-			 && $request->input($key) != session()->get('crm.reports.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('crm.reports.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'report', 'datetimecreated', 'datetimecontact', 'groupid', 'userid', 'contactreporttypeid']))
 		{

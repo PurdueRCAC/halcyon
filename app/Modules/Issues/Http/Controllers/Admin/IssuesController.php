@@ -8,7 +8,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Modules\Issues\Models\Issue;
 use App\Modules\Issues\Models\Issueresource;
 use App\Modules\Issues\Models\Comment;
@@ -18,16 +18,18 @@ use Carbon\Carbon;
 
 class IssuesController extends Controller
 {
+	use UsesFilters;
+
 	/**
-	 * Display a listing of articles
+	 * Display a listing of entries
 	 *
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'issues.reports', [
 			'search'    => null,
 			'tag'       => '',
 			'group'     => null,
@@ -38,12 +40,7 @@ class IssuesController extends Controller
 			'page'      => 1,
 			'order'     => Issue::$orderBy,
 			'order_dir' => Issue::$orderDir,
-		);
-
-		foreach ($filters as $key => $default)
-		{
-			$filters[$key] = $request->state('issues.reports.filter_' . $key, $key, $default);
-		}
+		]);
 
 		if (!in_array($filters['order'], ['id', 'userid', 'report', 'datetimecreated', 'issuetodoid']))
 		{

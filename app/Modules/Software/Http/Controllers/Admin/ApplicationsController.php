@@ -13,21 +13,23 @@ use App\Modules\Software\Models\Application;
 use App\Modules\Software\Models\Version;
 use App\Modules\Software\Models\VersionResource;
 use App\Modules\Resources\Models\Asset;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use Carbon\Carbon;
 
 class ApplicationsController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'software.admin', [
 			'search'   => null,
 			'state'    => 'published',
 			'type'     => null,
@@ -38,21 +40,7 @@ class ApplicationsController extends Controller
 			// Sorting
 			'order'     => Application::$orderBy,
 			'order_dir' => Application::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('software.admin.filter_' . $key)
-			 && $request->input($key) != session()->get('software.admin.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('software.admin.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'title', 'state', 'published_at']))
 		{
@@ -201,7 +189,7 @@ class ApplicationsController extends Controller
 	 * @param   int  $id
 	 * @return  View
 	 */
-	public function edit(Request $request, $id)
+	public function edit(Request $request, int $id)
 	{
 		$row = Application::findOrFail($id);
 

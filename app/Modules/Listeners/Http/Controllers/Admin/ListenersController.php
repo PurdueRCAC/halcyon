@@ -7,48 +7,37 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Modules\Listeners\Models\Listener;
 use App\Modules\Users\Models\User;
 use App\Halcyon\Access\Viewlevel;
 
 class ListenersController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'listeners', [
 			'search'    => null,
 			'state'     => '',
 			'access'    => 0,
-			'folder'  => null,
-			'enabled'    => null,
+			'folder'    => null,
+			'enabled'   => null,
 			// Pagination
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
+			// Sorting
 			'order'     => Listener::$orderBy,
 			'order_dir' => Listener::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('listeners.filter_' . $key)
-			 && $request->input($key) != session()->get('listeners.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('listeners.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'name', 'element', 'folder', 'state', 'access', 'ordering']))
 		{

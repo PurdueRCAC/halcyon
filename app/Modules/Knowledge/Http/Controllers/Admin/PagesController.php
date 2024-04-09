@@ -8,7 +8,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Modules\Knowledge\Models\Page;
 use App\Modules\Knowledge\Models\Association;
 use App\Modules\Knowledge\Models\Associations;
@@ -16,16 +16,18 @@ use App\Modules\Knowledge\Models\SnippetAssociation;
 
 class PagesController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of articles
 	 *
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'kb', [
 			'search'    => null,
 			'parent'    => null,
 			'state'     => 'published',
@@ -35,21 +37,7 @@ class PagesController extends Controller
 			'order'     => Associations::$orderBy,
 			'order_dir' => Associations::$orderDir,
 			'level'     => 0,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('kb.filter_' . $key)
-			 && $request->input($key) != session()->get('kb.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('kb.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'lft', 'rgt', 'title', 'state', 'access', 'updated_at', 'created_at']))
 		{

@@ -7,44 +7,32 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Modules\ContactReports\Models\Report;
 use App\Modules\ContactReports\Models\Comment;
 
 class CommentsController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of entries
 	 *
 	 * @param  int  $report
-	 * @param  StatefulRequest  $request
+	 * @param  Request  $request
 	 * @return View
 	 */
-	public function index($report, StatefulRequest $request)
+	public function index($report, Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'crm.comments', [
 			'report'    => 0,
 			'search'    => null,
 			'limit'     => config('list_limit', 20),
 			'page'      => 1,
 			'order'     => Comment::$orderBy,
 			'order_dir' => Comment::$orderDir
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('crm.comments.filter_' . $key)
-			 && $request->input($key) != session()->get('crm.comments.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('crm.comments.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'comment', 'datetimecreated', 'userid']))
 		{

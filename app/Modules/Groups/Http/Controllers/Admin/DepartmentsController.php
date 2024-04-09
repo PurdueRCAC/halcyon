@@ -7,22 +7,24 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Modules\Groups\Models\Department;
 use App\Modules\Groups\Models\GroupDepartment;
 
 class DepartmentsController extends Controller
 {
+	use UsesFilters;
+
 	/**
-	 * Display a listing of tags
+	 * Display a listing of entries
 	 *
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'groups.deps', [
 			'search'    => null,
 			'parent'    => 1,
 			// Paging
@@ -31,21 +33,7 @@ class DepartmentsController extends Controller
 			// Sorting
 			'order'     => Department::$orderBy,
 			'order_dir' => Department::$orderDir,
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('groups.deps.filter_' . $key)
-			 && $request->input($key) != session()->get('groups.deps.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('groups.deps.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 		$filters['start'] = ($filters['limit'] * $filters['page']) - $filters['limit'];
 
 		if (!in_array($filters['order'], array('id', 'name')))

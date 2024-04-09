@@ -8,20 +8,22 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\DatabaseNotification;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 
 class NotificationsController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 *
-	 * @param   StatefulRequest  $request
+	 * @param   Request  $request
 	 * @return  View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'history.notifications', [
 			'search'    => null,
 			'notifiable_id'   => 0,
 			'notifiable_type' => null,
@@ -34,21 +36,7 @@ class NotificationsController extends Controller
 			// Sorting
 			'order'     => 'created_at',
 			'order_dir' => 'desc',
-		);
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key)
-			 && $request->input($key) != session()->get('history.notifications.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('history.notifications.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
+		]);
 
 		if (!in_array($filters['order'], ['id', 'created_at', 'user_id', 'read_at', 'notifiable_id', 'notifiable_type']))
 		{
