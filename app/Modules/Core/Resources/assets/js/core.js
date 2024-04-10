@@ -29,9 +29,9 @@ Halcyon.editors.instances = {};
 /**
  * Generic submit form
  *
- * @param   string  task
- * @param   mixed   form
- * @return  void
+ * @param   {string}  task
+ * @param   {mixed}   form
+ * @return  {void}
  */
 Halcyon.submitform = function(task, form) {
 	if (typeof(form) === 'undefined') {
@@ -75,10 +75,10 @@ Halcyon.submitform = function(task, form) {
 };
 
 /**
- * Default function. Usually would be overriden by the component
+ * Default function. Usually would be overriden by the module
  *
- * @param   string  pressbutton
- * @return  void
+ * @param   {string}  task
+ * @return  {void}
  */
 Halcyon.submitbutton = function(task) {
 	//Halcyon.submitform(task);
@@ -137,7 +137,7 @@ Halcyon.submitbutton = function(task) {
  *
  * Allows you to call Halcyon.Lang.trans() to get a translated JavaScript string pushed in with Lang::script() in Halcyon.
  *
- * @return  mixed
+ * @return  {mixed}
  */
 Halcyon.Lang = {
 	strings: {},
@@ -155,8 +155,8 @@ Halcyon.Lang = {
 /**
  * Method to replace all request tokens on the page with a new one.
  *
- * @param   string  n
- * @return  void
+ * @param   {string}  n
+ * @return  {void}
  */
 Halcyon.replaceTokens = function(n) {
 	var els = document.getElementsByTagName('input');
@@ -170,8 +170,8 @@ Halcyon.replaceTokens = function(n) {
 /**
  * Verifies if the string is in a valid email format
  *
- * @param   string   text
- * @return  boolean
+ * @param   {string}   text
+ * @return  {bool}
  */
 Halcyon.isEmail = function(text) {
 	var regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -184,9 +184,9 @@ Halcyon.isEmail = function(text) {
  *
  * Checkboxes must have an id attribute in the form cb0, cb1...
  *
- * @param   mixed   checkbox  The number of box to 'check', for a checkbox element
- * @param   string  stub      An alternative field name
- * @return  bool
+ * @param   {mixed}   checkbox  The number of box to 'check', for a checkbox element
+ * @param   {string}  stub      An alternative field name
+ * @return  {bool}
  */
 Halcyon.checkAll = function(checkbox, stub) {
 	if (!stub) {
@@ -212,30 +212,35 @@ Halcyon.checkAll = function(checkbox, stub) {
 	return false;
 }
 
+/**
+ * Toggle button disabled state
+ *
+ * @param   {number}  num
+ * @return  {void}
+ */
 Halcyon.enableDisableBtn = function(num) {
-	var toolbarbuttons = document.getElementsByClassName('toolbar-btn');
-	for (var i = 0; i < toolbarbuttons.length; i++) {
-		if (Halcyon.hasClass(toolbarbuttons[i], 'toolbar-list')) {
+	document.getElementsByClassName('toolbar-btn').forEach(function (toolbarbutton) {
+		if (toolbarbutton.classList.contains('toolbar-list')) {
 			if (!num) {
-				Halcyon.addClass(toolbarbuttons[i], 'disabled');
+				toolbarbutton.classList.add('disabled');
 			} else {
-				Halcyon.removeClass(toolbarbuttons[i], 'disabled');
+				toolbarbutton.classList.remove('disabled');
 			}
 		} else {
 			if (num) {
-				Halcyon.addClass(toolbarbuttons[i], 'disabled');
+				toolbarbutton.classList.add('disabled');
 			} else {
-				Halcyon.removeClass(toolbarbuttons[i], 'disabled');
+				toolbarbutton.classList.remove('disabled');
 			}
 		}
-	}
+	});
 }
 
 /**
  * Render messages send via JSON
  *
- * @param   object  messages  JavaScript object containing the messages to render
- * @return  void
+ * @param   {object}  messages  JavaScript object containing the messages to render
+ * @return  {void}
  */
 Halcyon.message = function(type, message) {
 	var container = document.getElementById('system-messages');
@@ -260,7 +265,7 @@ Halcyon.message = function(type, message) {
 /**
  * Remove messages
  *
- * @return  void
+ * @return  {void}
  */
 Halcyon.removeMessages = function() {
 	document.querySelectorAll('#system-messages > *').forEach(function(el) {
@@ -271,9 +276,9 @@ Halcyon.removeMessages = function() {
 /**
  * Evaluate if any items in a list of checkboxes are checked
  *
- * @param   isitchecked
- * @param   form
- * @return  void
+ * @param   {bool} isitchecked
+ * @param   {object} form
+ * @return  {void}
  */
 Halcyon.isChecked = function(isitchecked, form) {
 	if (typeof(form) === 'undefined') {
@@ -294,12 +299,12 @@ Halcyon.isChecked = function(isitchecked, form) {
 /**
  * Pops up a new window in the middle of the screen
  *
- * @param   string  mypage
- * @param   string  myname
- * @param   string  w
- * @param   string  h
- * @param   string  scroll
- * @return  void
+ * @param   {string}  mypage
+ * @param   {string}  myname
+ * @param   {string}  w
+ * @param   {string}  h
+ * @param   {string}  scroll
+ * @return  {void}
  */
 Halcyon.popupWindow = function(mypage, myname, w, h, scroll) {
 	var winl = (screen.width - w) / 2;
@@ -313,11 +318,11 @@ Halcyon.popupWindow = function(mypage, myname, w, h, scroll) {
 /**
  * Set the table sort and direction on a form and submit it
  *
- * @param   string  order
- * @param   string  dir
- * @param   string  task
- * @param   mixed   form
- * @return  void
+ * @param   {string}  order
+ * @param   {string}  dir
+ * @param   {string}  task
+ * @param   {mixed}   form
+ * @return  {void}
  */
 Halcyon.tableOrdering = function(order, dir, task, form) {
 	if (typeof(form) === 'undefined') {
@@ -342,9 +347,9 @@ Halcyon.tableOrdering = function(order, dir, task, form) {
 /**
  * Check the checkbox for this item and submit the form with the task
  *
- * @param   string  id
- * @param   string  task
- * @return  bool
+ * @param   {string}  id
+ * @param   {string}  task
+ * @return  {bool}
  */
 Halcyon.listItemTask = function(id, task) {
 	var f = document.adminForm;
@@ -373,9 +378,9 @@ Halcyon.listItemTask = function(id, task) {
 /**
  * Check if an element has the specified class name
  *
- * @param   integer  n
- * @param   string   task
- * @return  mixed
+ * @param   {integer}  n
+ * @param   {string}   task
+ * @return  {mixed}
  */
 Halcyon.saveOrder = function(n, task) {
 	if (!task) {
@@ -398,68 +403,18 @@ Halcyon.saveOrder = function(n, task) {
 }
 
 /**
- * Check if an element has the specified class name
- *
- * @param   el         The element to test
- * @param   className  The class to test for
- * @return  bool
- */
-Halcyon.hasClass = function(el, className) {
-	if (!el || !className) {
-		return false;
-	}
-	return el.classList ? el.classList.contains(className) : new RegExp('\\b'+ className+'\\b').test(el.className);
-}
-
-/**
- * Add a class to an element
- *
- * @param   el         The element to add the class to
- * @param   className  The class to add
- * @return  bool
- */
-Halcyon.addClass = function(el, className) {
-	if (!el) {
-		return;
-	}
-	if (el.classList) {
-		el.classList.add(className);
-	} else if (!Halcyon.hasClass(el, className)) {
-		el.className += ' ' + className;
-	}
-}
-
-/**
- * Remove a class from an element
- *
- * @param   el         The element to remove the class from
- * @param   className  The class to remove
- * @return  bool
- */
-Halcyon.removeClass = function(el, className) {
-	if (!el) {
-		return;
-	}
-	if (el.classList) {
-		el.classList.remove(className);
-	} else {
-		el.className = el.className.replace(new RegExp('\\b'+ className+'\\b', 'g'), '');
-	}
-}
-
-/**
  * Handle toolbar actions
  *
- * @param   event
- * @return  void
+ * @param   {object} event
+ * @return  {void}
  */
 Halcyon.toolbarAction = function(event) {
 	var el = this;
 
-	if (Halcyon.hasClass(el, 'toolbar-submit')) {
+	if (el.classList.contains('toolbar-submit')) {
 		event.preventDefault();
 
-		if (Halcyon.hasClass(el, 'toolbar-list') && document.adminForm.boxchecked.value == 0) {
+		if (el.classList.contains('toolbar-list') && document.adminForm.boxchecked.value == 0) {
 			alert(el.getAttribute('data-message'));
 		} else {
 			if (el.getAttribute('data-action')) {
@@ -472,7 +427,7 @@ Halcyon.toolbarAction = function(event) {
 		}
 	}
 
-	if (Halcyon.hasClass(el, 'toolbar-popup')) {
+	if (el.classList.contains('toolbar-popup')) {
 		event.preventDefault();
 
 		var width  = (el.getAttribute('data-width') ? el.getAttribute('data-width') : 700),
@@ -488,10 +443,10 @@ Halcyon.toolbarAction = function(event) {
 		);
 	}
 
-	if (Halcyon.hasClass(el, 'toolbar-confirm')) {
+	if (el.classList.contains('toolbar-confirm')) {
 		event.preventDefault();
 
-		if (Halcyon.hasClass(el, 'toolbar-list') && document.adminForm.boxchecked.value == 0) {
+		if (el.classList.contains('toolbar-list') && document.adminForm.boxchecked.value == 0) {
 			alert(el.getAttribute('data-message'));
 		} else {
 			if (confirm(el.getAttribute('data-confirm'))) {
@@ -510,8 +465,7 @@ Halcyon.toolbarAction = function(event) {
 /**
  * Submit a form
  *
- * @param   event
- * @return  void
+ * @return  {void}
  */
 Halcyon.filterSubmit = function()
 {
@@ -521,8 +475,8 @@ Halcyon.filterSubmit = function()
 /**
  * Clear filters in a form and submit
  *
- * @param   event
- * @return  void
+ * @param   {object} event
+ * @return  {void}
  */
 Halcyon.filterClear = function()
 {
@@ -545,20 +499,19 @@ Halcyon.filterClear = function()
 /**
  * Toggle check-all checkbox
  *
- * @param   event
- * @return  void
+ * @return  {void}
  */
 Halcyon.gridCheckboxToggle = function()
 {
-	if (Halcyon.hasClass(this, 'toggle-all')) {
+	if (this.classList.contains('toggle-all')) {
 		Halcyon.checkAll(this);
 	} else {
 		Halcyon.isChecked(this.checked);
 		var c = this.closest('tr');
 		if (this.checked) {
-			Halcyon.addClass(c, 'checked');
+			c.classList.add('checked');
 		} else {
-			Halcyon.removeClass(c, 'checked');
+			c.classList.remove('checked');
 		}
 	}
 
@@ -569,8 +522,8 @@ Halcyon.gridCheckboxToggle = function()
 /**
  * Grid ordering
  *
- * @param   event
- * @return  void
+ * @param   {object} event
+ * @return  {void}
  */
 Halcyon.gridOrder = function(event)
 {
@@ -602,8 +555,8 @@ Halcyon.gridOrderSave = function(event)
 /**
  * Grid actions
  *
- * @param   event
- * @return  void
+ * @param   {object} event
+ * @return  {void}
  */
 Halcyon.gridAction = function(event)
 {
@@ -622,7 +575,7 @@ Halcyon.gridAction = function(event)
 /**
  * Attach pagination events
  *
- * @return  void
+ * @return  {void}
  */
 Halcyon.paginate = function()
 {
@@ -652,71 +605,46 @@ var ROOT_URL = '/api/';
  * Initiate event hooks
  */
 document.addEventListener('DOMContentLoaded', function() {
-	var i;
-
 	ROOT_URL = document.querySelector('meta[name="base-url"]').getAttribute('content') + '/api/';
 
 	// Add event listeners to toolbar buttons
-	var toolbarbuttons = document.getElementsByClassName('toolbar-btn');
-	for (i = 0; i < toolbarbuttons.length; i++)
-	{
-		if (Halcyon.hasClass(toolbarbuttons[i], 'toolbar-list')) {
-			//toolbarbuttons[i].setAttribute('disabled', true);
-			Halcyon.addClass(toolbarbuttons[i], 'disabled');
+	document.getElementsByClassName('toolbar-btn').forEach(function (toolbarbutton) {
+		if (toolbarbutton.classList.contains('toolbar-list')) {
+			//toolbarbutton.setAttribute('disabled', true);
+			toolbarbutton.classList.add('disabled');
 		}
-		toolbarbuttons[i].addEventListener('click', Halcyon.toolbarAction);
-	}
+		toolbarbutton.addEventListener('click', Halcyon.toolbarAction);
+	});
 
 	// Add event listener for checkbox toggles
-	var checkboxes = document.getElementsByClassName('checkbox-toggle');
-	for (i = 0; i < checkboxes.length; i++)
-	{
-		checkboxes[i].addEventListener('click', Halcyon.gridCheckboxToggle);
-	}
+	document.getElementsByClassName('checkbox-toggle').forEach(function (checkbox) {
+		checkbox.addEventListener('click', Halcyon.gridCheckboxToggle);
+	});
 
 	// Add event listener for filters
-	var filters = document.getElementsByClassName('filter-submit');
-	for (i = 0; i < filters.length; i++)
-	{
-		filters[i].addEventListener('change', Halcyon.filterSubmit);
-	}
+	document.getElementsByClassName('filter-submit').forEach(function (filter) {
+		filter.addEventListener('change', Halcyon.filterSubmit);
+	});
 
 	// Add event listener for clearing filters
-	var clearfilters = document.getElementsByClassName('filter-clear');
-	for (i = 0; i < clearfilters.length; i++)
-	{
-		clearfilters[i].addEventListener('click', Halcyon.filterClear);
-	}
+	document.getElementsByClassName('filter-clear').forEach(function (clearfilter) {
+		clearfilter.addEventListener('click', Halcyon.filterClear);
+	});
 
 	// Add event listener for table sorting
-	var ordering = document.getElementsByClassName('grid-order');
-	for (i = 0; i < ordering.length; i++)
-	{
-		ordering[i].addEventListener('click', Halcyon.gridOrder);
-	}
+	document.getElementsByClassName('grid-order').forEach(function (ordering) {
+		ordering.addEventListener('click', Halcyon.gridOrder);
+	});
 
 	// Add event listener for saving table sorting
-	var orderingsave = document.getElementsByClassName('grid-order-save');
-	for (i = 0; i < orderingsave.length; i++)
-	{
-		orderingsave[i].addEventListener('click', Halcyon.gridOrderSave);
-	}
+	document.getElementsByClassName('grid-order-save').forEach(function (orderingsave) {
+		orderingsave.addEventListener('click', Halcyon.gridOrderSave);
+	});
 
 	// Add event listener for action items
-	var actions = document.getElementsByClassName('grid-action');
-	for (i = 0; i < actions.length; i++)
-	{
-		actions[i].addEventListener('click', Halcyon.gridAction);
-	}
-
-	/*
-	$('input[maxlength]').on('keyup', function(e){
-		$(this)
-			.parent()
-			.data($(this).length + ' / ' + $(this).attr('maxlength'));
-
-		$(this).after($('<span></span>').text($(this).length + ' / ' + $(this).attr('maxlength')));
-	});*/
+	document.getElementsByClassName('grid-action').forEach(function (action) {
+		action.addEventListener('click', Halcyon.gridAction);
+	});
 
 	// Attach pagination events
 	//Halcyon.paginate();
@@ -726,8 +654,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			'Authorization': 'Bearer ' + $('meta[name="api-token"]').attr('content'),
 		}
 	});
-
-	$('.accordian').accordion({heightStyle: "content"});
 
 	$('input.date').datepicker({
 		duration: '',
@@ -743,6 +669,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			$(this).val('').datepicker("refresh");
 		}
 	});
+
 	$('input.datetime').datetimepicker({
 		duration: '',
 		constrainInput: false,
@@ -761,26 +688,30 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	$('.dropdown-toggle').on('click', function(event){
-		event.preventDefault();
-		event.stopPropagation();
+	document.querySelectorAll('.dropdown-toggle').forEach(function (el) {
+		el.addEventListener('click', function(event) {
+			event.preventDefault();
+			event.stopPropagation();
 
-		var isActive = $(this).parent().find('.dropdown-menu').hasClass('show');
+			var isActive = this.parentNode.querySelector('.dropdown-menu').classList.contains('show');
 
-		$('.dropdown-menu').removeClass('show');
+			document.querySelectorAll('.dropdown-toggle').forEach(function (dm) {
+				dm.classList.remove('show');
+			});
 
-		if (isActive) {
-			return;
-		}
+			if (isActive) {
+				return;
+			}
 
-		if (this.disabled || $(this).hasClass('disabled')) {
-			return;
-		}
+			if (this.disabled || this.classList.contains('disabled')) {
+				return;
+			}
 
-		$(this).parent().find('.dropdown-menu').toggleClass('show');
+			this.parentNode.querySelector('.dropdown-menu').classList.toggle('show');
+		});
 	});
 
-	$('[data-tip]').tooltip({
+	/*$('[data-tip]').tooltip({
 		items: "[data-tip]",
 		show: false,
 		content: function() {
@@ -795,26 +726,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				tip.data('tip', '<div class="tip-title">' + parts[0] + '</div><div class="tip-text">' + parts[1] + '</div>');
 			} else {
 				tip.data('tip', '<div class="tip-text">' + tipText + '</div>');
-			}
-		},
-		tooltipClass: 'tool-tip'
-	});
-
-	/*$('.has-tip').tooltip({
-		//track: true,
-		show: false,
-		content: function() {
-			return $(this).attr('title');
-		},
-		create: function(event, ui) {
-			var tip = $(this),
-				tipText = tip.attr('title');
-
-			if (tipText && tipText.indexOf('::') != -1) {
-				var parts = tipText.split('::');
-				tip.attr('title', '<div class="tip-title">' + parts[0] + '</div><div class="tip-text">' + parts[1] + '</div>');
-			} else {
-				tip.attr('title', '<div class="tip-text">' + tipText + '</div>');
 			}
 		},
 		tooltipClass: 'tool-tip'
@@ -918,18 +829,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		});
 	});
-	/*
-	$('.input-datetime input').datetimepicker({
-		duration: '',
-		showTime: true,
-		constrainInput: false,
-		stepMinutes: 1,
-		stepHours: 1,
-		altTimeField: '',
-		time24h: true,
-		dateFormat: 'yy-mm-dd',
-		timeFormat: 'HH:mm:00'
-	});*/
 
 	document.querySelectorAll('[maxlength]').forEach(function (el) {
 		if (el.getAttribute('data-counter') && el.getAttribute('data-counter') == 'false') {
