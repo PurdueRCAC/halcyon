@@ -2758,7 +2758,7 @@ fieldset.adminform fieldset {
   top: 1em;
   right: 1em;
 }
-
+/*
 .btn {
   color: var(--btn-cl);
 }
@@ -2782,7 +2782,7 @@ fieldset.adminform fieldset {
   border-color: var(--btn-secondary-br-active);
   color: var(--btn-secondary-cl-active);
 }
-
+*/
 .ui-widget {
   font-family: inherit !important;
 }
@@ -3291,10 +3291,7 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   overflow: visible;
   z-index: 1000000;
   pointer-events: none;
-  -webkit-transition: 0.3s ease;
-  -moz-transition: 0.3s ease;
-  -o-transition: 0.3s ease;
-  transition: 0.3s ease;
+  transition: all 0.3s ease-in-out;
   content: attr(data-title);
   background: var(--tip-back);
   color: var(--tip-color);
@@ -3304,28 +3301,24 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   line-height: 1;
   white-space: nowrap;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3);
-  -webkit-border-radius: 0.25em;
-  -moz-border-radius: 0.25em;
   border-radius: 0.25em;
   left: 100%;
   bottom: 50%;
   margin-bottom: -1.2em;
-  visibility: hidden\9;
-
   /* tail dimension */
   --b: 0.8em; /* base */
   --h: 0.4em; /* height */
   --r: 0.25em; /* radius */
   --p: 50%; /* position  */
   /*border-image: fill 0 // var(--h) conic-gradient(var(--tip-back) 0 0);*/
-  border-image: conic-gradient(var(--tip-back) 0 0) fill 0/
-    calc(50% - var(--b) / 2) 0 calc(50% - var(--b) / 2) 0 /* create a white box */
-    0 0 0 0.8em; /* nudge the box over */
-  /*clip-path:
+  /*border-image: conic-gradient(var(--tip-back) 0 0) fill 0/
+    calc(50% - var(--b) / 2) 0 calc(50% - var(--b) / 2) 0
+    0 0 0 0.8em;
+  clip-path:
       polygon(0 100%, 0 0, 100% 0, 100% 100%,
           calc(50% + var(--b) / 2) 100%,
           50% calc(100% + var(--h)),
-          calc(50% - var(--b) / 2) 100%);*/
+          calc(50% - var(--b) / 2) 100%);
   clip-path: polygon(
     0 0,
     100% 0,
@@ -3334,9 +3327,10 @@ html .select2-container--default .select2-selection--multiple .select2-selection
     0 calc(50% + var(--b) / 2),
     calc(0% - var(--h)) 50%,
     0 calc(50% - var(--b) / 2)
-  );
+  );*/
+  transform: translate3d(-10px, 0, 0);
 }
-/*#header [data-title]:before {
+#header [data-title]:after {
   content: "";
   padding: 0;
   margin-left: -10px;
@@ -3347,15 +3341,11 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   box-shadow: none;
   display: block;
   width: 0;
-}*/
+}
 #header [data-title]:hover:before,
 #header [data-title]:hover:after {
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-  filter: alpha(opacity=100);
-  -webkit-opacity: 1;
-  -moz-opacity: 1;
   opacity: 1;
-  visibility: visible\9;
+  transform: translate3d(0, 0, 0);
 }
 #header .user-options li a {
   border: none;
@@ -3365,7 +3355,6 @@ html .select2-container--default .select2-selection--multiple .select2-selection
   cursor: pointer;
   white-space: nowrap;
   position: relative;
-  /*color: transparent;*/
   color: rgba(255, 255, 255, 0.6);
   overflow: hidden;
   -webkit-transition: all 0.2s;
@@ -4241,6 +4230,50 @@ label[data-hint] {
 .tool-tip table tbody td {
   padding: 0.418em;
   border-color: #f7eabc;
+}
+
+[data-tip] {
+  position: relative;
+}
+[data-tip]:before,
+[data-tip]:after {
+  position: absolute;
+  opacity: 0;
+  text-indent: 0;
+  overflow: visible;
+  z-index: 1000000;
+  pointer-events: none;
+  transition: all 0.3s ease-in-out;
+  content: attr(data-tip);
+  background: var(--tip-back);
+  color: var(--tip-color);
+  padding: 0.55em 0.85em 0.65em 0.85em;
+  font-size: 1em;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3);
+  border-radius: 0.25em;
+  left: 50%;
+  bottom: 110%;
+  transform: translate3d(-50%, -10px, 0);
+}
+[data-tip]:after {
+  content: "";
+  padding: 0;
+  margin-bottom: -10px;
+  margin-left: 6px;
+  background: transparent;
+  border: 6px solid transparent;
+  border-color: var(--tip-back) transparent transparent transparent;
+  box-shadow: none;
+  display: block;
+  height: 0;
+}
+[data-tip]:hover:before,
+[data-tip]:hover:after {
+  opacity: 1;
+  transform: translate3d(-50%, 0, 0);
 }
 
 .ordering-control {

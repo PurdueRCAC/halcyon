@@ -307,15 +307,15 @@ app('pathway')
 										$timetable .= '</div>';
 										?>
 										@if ($message->completed())
-											<span class="badge badge-success has-tip" data-tip="{!! $timetable !!}">
+											<span class="badge badge-success" data-tip="{!! $timetable !!}">
 												<span class="fa fa-check" aria-hidden="true"></span> {{ $message->elapsed }}
 											</span>
 										@elseif ($message->started())
-											<span class="badge badge-warning has-tip" data-tip="{!! $timetable !!}">
+											<span class="badge badge-warning" data-tip="{!! $timetable !!}">
 												<span class="fa fa-undo" aria-hidden="true"></span> {{ trans('messages::messages.processing') }}
 											</span>
 										@else
-											<span class="badge badge-info has-tip" data-tip="{!! $timetable !!}">
+											<span class="badge badge-info" data-tip="{!! $timetable !!}">
 												<span class="fa fa-ellipsis-h" aria-hidden="true"></span> {{ trans('messages::messages.pending') }}
 											</span>
 										@endif

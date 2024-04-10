@@ -148,7 +148,7 @@ app('pathway')
 					</a>
 				</td>
 				<td class="text-right">
-					<a href="{{ route('admin.mailer.templates.copy', ['id' => $row->id]) }}" data-hint="{{ trans('mailer::mailer.copy') }}">
+					<a href="{{ route('admin.mailer.templates.copy', ['id' => $row->id]) }}" title="{{ trans('mailer::mailer.copy') }}">
 						<span class="fa fa-copy" aria-hidden="true"></span>
 						<span class="sr-only visually-hidden">{{ trans('mailer::mailer.copy') }}</span>
 					</a>

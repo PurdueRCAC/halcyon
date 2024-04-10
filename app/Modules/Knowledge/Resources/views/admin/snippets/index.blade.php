@@ -195,7 +195,7 @@ app('pathway')
 					{{ $row->used }}
 				</td>
 				<td>
-					<a href="{{ route('admin.knowledge.snippets.copy', ['id' => $row->id]) }}" data-hint="{{ trans('knowledge::knowledge.copy') }}">
+					<a href="{{ route('admin.knowledge.snippets.copy', ['id' => $row->id]) }}" title="{{ trans('knowledge::knowledge.copy') }}">
 						<span class="fa fa-copy" aria-hidden="true"></span>
 						<span class="sr-only visually-hidden">{{ trans('knowledge::knowledge.copy') }}</span>
 					</a>

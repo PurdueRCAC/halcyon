@@ -86,12 +86,12 @@ app('pathway')
 				<legend>{{ trans('global.publishing') }}</legend>
 
 				@if ($row->id)
-				<div class="input-wrap form-group">
+				<div class="form-group">
 					<label class="form-label" for="field-datetimesubmitted">{{ trans('messages::messages.submitted') }}:</label>
 					<input type="text" name="datetimesubmitted" id="field-datetimesubmitted" readonly class="form-control-plaintext" value="{{ $row->datetimesubmitted }}" />
 				</div>
 
-				<div class="input-wrap form-group">
+				<div class="form-group">
 					<label for="field-datetimestarted">{{ trans('messages::messages.started') }}:</label>
 					<span class="input-group">
 						<input type="text" name="fields[datetimestarted]" id="field-datetimestarted" class="form-control date" value="{{ $row->started() ? $row->datetimestarted : '' }}" />
@@ -99,7 +99,7 @@ app('pathway')
 					</span>
 				</div>
 
-				<div class="input-wrap form-group">
+				<div class="form-group">
 					<label class="form-label" for="field-datetimecompleted">{{ trans('messages::messages.completed') }}:</label>
 					<span class="input-group">
 						<input type="text" name="fields[datetimecompleted]" id="field-datetimecompleted" class="form-control date" value="{{ $row->completed() ? $row->datetimecompleted : '' }}" />
@@ -108,7 +108,7 @@ app('pathway')
 				</div>
 			</fieldset>
 				@else
-				<div class="input-wrap form-group">
+				<div class="form-group">
 					<label class="form-label" for="field-datetimesubmitted">{{ trans('messages::messages.submitted') }}:</label>
 					<span class="input-group">
 						<input type="text" name="fields[datetimesubmitted]" id="field-datetimesubmitted" class="form-control date" placeholder="{{ trans('messages::messages.now') }}" value="" />

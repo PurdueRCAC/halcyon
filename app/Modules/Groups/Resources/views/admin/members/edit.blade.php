@@ -34,9 +34,10 @@
 			<fieldset class="adminform">
 				<legend><span>{{ trans('global.details') }}</span></legend>
 
-				<div class="form-group" data-hint="{{ trans('groups::groups.name hint') }}">
+				<div class="form-group">
 					<label for="field-name">{{ trans('groups::groups.name') }}</label>
 					<input type="text" name="fields[name]" id="field-user" class="form-control disabled" disabled="disabled" readonly="readonly" value="{{ $row->user->name }}" />
+					<span class="text-muted">{{ trans('groups::groups.name hint') }}</span>
 				</div>
 			</fieldset>
 

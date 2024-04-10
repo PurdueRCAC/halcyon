@@ -189,6 +189,7 @@ class TemplatesController extends Controller
 		{
 			$row->alert = $request->input('alert');
 		}
+		$row->alert = $row->alert ?: '';
 		$row->template = 1;
 
 		if (!$row->save())

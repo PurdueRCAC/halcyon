@@ -151,63 +151,70 @@ Toolbar::cancel(route('admin.widgets.cancel', ['id' => $row->id]));
 						<div class="form-group">
 							<label id="field_menuselect-lbl" for="field_menuselect" class="form-label">{{ trans('widgets::widgets.menu selection') }}</label>
 
-							<div id="menu-assignment" class="accordian">
-								<?php $menuTypes = App\Modules\Menus\Helpers\Menus::getMenuLinks(null, 0, 0, [1]); ?>
-								<?php foreach ($menuTypes as &$type) : ?>
-									<h3 data-ref="{{ $type->menutype }}-details">
-										<a href="#{{ $type->menutype }}-details">
-											{{ $type->title ? $type->title : $type->menutype }}
-										</a>
-									</h3>
-									<div id="{{ $type->menutype }}-details">
-										<?php $chkbox_class = 'chk-menulink-' . $type->id; ?>
+							<div id="menu-assignment">
+								<?php
+								$menuTypes = App\Modules\Menus\Helpers\Menus::getMenuLinks(null, 0, 0, [1]);
 
-										<div class="btn-group mb-3" role="group" aria-label="Selection options">
-											<button class="btn-assignments btn btn-secondary btn-selectinvert" data-name=".{{ $chkbox_class }}">
-												{{ trans('widgets::widgets.invert selection') }}
-											</button>
+								foreach ($menuTypes as $type):
+									$count = count($type->links);
 
-											<button class="btn-assignments btn btn-warning btn-selectnone" data-name=".{{ $chkbox_class }}">
-												{{ trans('widgets::widgets.select none') }}
-											</button>
-
-											<button class="btn-assignments btn btn-success btn-selectall" data-name=".{{ $chkbox_class }}">
-												{{ trans('widgets::widgets.select all') }}
-											</button>
-										</div>
-
-										<?php
-										$count = count($type->links);
-										$i     = 0;
-										if ($count):
-										?>
-										<ul class="menu-links">
+									$chkbox_class = 'chk-menulink-' . $type->id;
+									?>
+									<details class="card mb-1" open>
+										<summary class="card-header" data-ref="{{ $type->menutype }}-details">
+											<!--<a href="#{{ $type->menutype }}-details">-->
+												{{ $type->title ? $type->title : $type->menutype }}
+											<!--</a>-->
+										</summary>
+										<div id="{{ $type->menutype }}-details" class="card-body">
 											<?php
-											foreach ($type->links as $link):
-												if (trim($assignment) == '-'):
-													$checked = '';
-												elseif ($assignment == 0):
-													$checked = ' checked="checked"';
-												elseif ($assignment < 0):
-													$checked = in_array(-$link->value, $row->menuAssigned()) ? ' checked="checked"' : '';
-												elseif ($assignment > 0) :
-													$checked = in_array($link->value, $row->menuAssigned()) ? ' checked="checked"' : '';
-												endif;
+											$count = count($type->links);
+											$i     = 0;
+											if ($count):
 												?>
-												<li class="menu-link">
-													<div class="form-check">
-														<input type="checkbox" class="form-check-input chkbox <?php echo $chkbox_class; ?>" name="menu[assigned][]" value="<?php echo (int) $link->value;?>" id="link<?php echo (int) $link->value;?>"<?php echo $checked;?>/>
-														<label class="form-check-label" for="link<?php echo (int) $link->value;?>"><?php echo $link->text; ?></label>
-													</div>
-												</li>
-												<?php if ($count > 20 && ++$i == ceil($count/2)): ?>
-											</ul>
-											<ul class="menu-links">
-												<?php endif; ?>
-											<?php endforeach; ?>
-										</ul>
-										<?php endif; ?>
-									</div><!-- / #{{ $type->menutype }}-details -->
+												<div class="btn-group mb-3" role="group" aria-label="Selection options">
+													<button class="btn-assignments btn btn-sm btn-outline-secondary btn-selectinvert" data-name=".{{ $chkbox_class }}">
+														{{ trans('widgets::widgets.invert selection') }}
+													</button>
+
+													<button class="btn-assignments btn btn-sm btn-outline-secondary btn-selectnone" data-name=".{{ $chkbox_class }}">
+														{{ trans('widgets::widgets.select none') }}
+													</button>
+
+													<button class="btn-assignments btn btn-sm btn-outline-secondary btn-selectall" data-name=".{{ $chkbox_class }}">
+														{{ trans('widgets::widgets.select all') }}
+													</button>
+												</div>
+												<ul class="menu-links">
+													<?php
+													foreach ($type->links as $link):
+														if (trim($assignment) == '-'):
+															$checked = '';
+														elseif ($assignment == 0):
+															$checked = ' checked="checked"';
+														elseif ($assignment < 0):
+															$checked = in_array(-$link->value, $row->menuAssigned()) ? ' checked="checked"' : '';
+														elseif ($assignment > 0) :
+															$checked = in_array($link->value, $row->menuAssigned()) ? ' checked="checked"' : '';
+														endif;
+														?>
+														<li class="menu-link">
+															<div class="form-check">
+																<input type="checkbox" class="form-check-input chkbox <?php echo $chkbox_class; ?>" name="menu[assigned][]" value="<?php echo (int) $link->value;?>" id="link<?php echo (int) $link->value;?>"<?php echo $checked;?>/>
+																<label class="form-check-label" for="link<?php echo (int) $link->value;?>"><?php echo $link->text; ?></label>
+															</div>
+														</li>
+														<?php if ($count > 20 && ++$i == ceil($count/2)): ?>
+													</ul>
+													<ul class="menu-links">
+														<?php endif; ?>
+													<?php endforeach; ?>
+												</ul>
+											<?php else: ?>
+												<div class="text-muted"><span class="fa fa-exclamation-triangle" aria-hidden="true"></span> Menu has no active items.</div>
+											<?php endif; ?>
+										</div><!-- / #{{ $type->menutype }}-details -->
+									</details>
 								<?php endforeach; ?>
 							</div>
 						</div><!-- / #menu-assignment -->
