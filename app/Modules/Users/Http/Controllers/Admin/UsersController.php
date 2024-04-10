@@ -19,7 +19,7 @@ use App\Modules\Users\Events\UserDisplay;
 use App\Modules\Users\Events\UserDeleted;
 use App\Modules\Users\Helpers\Debug;
 use App\Modules\Users\Helpers\Admin;
-use App\Halcyon\Http\StatefulRequest;
+use App\Halcyon\Http\Concerns\UsesFilters;
 use App\Halcyon\Access\Map;
 use App\Halcyon\Access\Role;
 use App\Halcyon\Access\Gate;
@@ -29,16 +29,18 @@ use App\Modules\Groups\Models\Member;
 
 class UsersController extends Controller
 {
+	use UsesFilters;
+
 	/**
 	 * Display a listing of the resource.
 	 * 
-	 * @param  StatefulRequest $request
+	 * @param  Request $request
 	 * @return View
 	 */
-	public function index(StatefulRequest $request)
+	public function index(Request $request)
 	{
 		// Get filters
-		$filters = array(
+		$filters = $this->getStatefulFilters($request, 'users', [
 			'search'     => null,
 			'range'      => null,
 			'created_at' => null,
@@ -53,27 +55,13 @@ class UsersController extends Controller
 			// Sorting
 			'order'     => 'name',
 			'order_dir' => 'asc',
-		);
+		]);
 		$extraFields = RegistrationField::all()->where('include_admin', true);
 		$extraFieldKeys = array();
 		foreach ($extraFields as $extra)
 		{
 			$extraFieldKeys[] = $extra->name;
 		}
-
-		$reset = false;
-		$request = $request->mergeWithBase();
-		foreach ($filters as $key => $default)
-		{
-			if ($key != 'page'
-			 && $request->has($key) //&& session()->has('users.filter_' . $key)
-			 && $request->input($key) != session()->get('users.filter_' . $key))
-			{
-				$reset = true;
-			}
-			$filters[$key] = $request->state('users.filter_' . $key, $key, $default);
-		}
-		$filters['page'] = $reset ? 1 : $filters['page'];
 
 		if (!in_array($filters['order'], ['id', 'name', 'username', 'email', 'access', 'datecreated', 'datelastseen', ...$extraFieldKeys]))
 		{
