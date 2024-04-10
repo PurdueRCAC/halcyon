@@ -135,21 +135,6 @@ app('pathway')
 						<option value="0"<?php if ($page->state == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
 					</select>
 				</div>
-
-				<!--
-				<div class="form-group">
-					<label for="field-publish_up">{{ trans('knowledge::knowledge.publish up') }}</label>
-					{!! Html::input('calendar', 'fields[publish_up]', Carbon\Carbon::parse($row->publish_up ? $row->publish_up : $page->created_at)) !!}
-				</div>
-
-				<div class="form-group">
-					<label for="field-publish_down">{{ trans('knowledge::knowledge.publish down') }}</label>
-					<span class="input-group input-datetime">
-						<input type="text" name="fields[publish_down]" id="field-publish_down" class="form-control datetime" value="<?php echo ($row->publish_down ? e(Carbon\Carbon::parse($row->publish_down)->toDateTimeString()) : ''); ?>" placeholder="<?php echo ($row->publish_down ? '' : trans('global.never')); ?>" />
-						<span class="input-group-append"><span class="input-group-text fa fa-calendar"></span></span>
-					</span>
-				</div>
-				-->
 			</fieldset>
 
 			<fieldset class="adminform">

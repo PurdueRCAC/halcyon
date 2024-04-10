@@ -247,29 +247,27 @@
 					<span class="badge access {{ str_replace(' ', '', strtolower($row->viewlevel ? $row->viewlevel->title : '')) }}">{{ $row->viewlevel ? $row->viewlevel->title : trans('global.unknown') }}</span>
 				</td>
 				<td class="priority-6">
-					<span class="datetime">
-						@if ($row->updated_at)
-							<time datetime="{{ Carbon\Carbon::parse($row->updated_at)->toDateTimeLocalString() }}">
-								@if ($row->updated_at->timestamp > Carbon\Carbon::now()->timestamp)
-									{{ $row->updated_at->diffForHumans() }}
+					@if ($row->updated_at)
+						<time datetime="{{ Carbon\Carbon::parse($row->updated_at)->toDateTimeLocalString() }}">
+							@if ($row->updated_at->timestamp > Carbon\Carbon::now()->timestamp)
+								{{ $row->updated_at->diffForHumans() }}
+							@else
+								{{ $row->updated_at->format('Y-m-d') }}
+							@endif
+						</time>
+					@else
+						@if ($row->created_at)
+							<time datetime="{{ Carbon\Carbon::parse($row->created_at)->toDateTimeLocalString() }}">
+								@if ($row->created_at->timestamp > Carbon\Carbon::now()->timestamp)
+									{{ $row->created_at->diffForHumans() }}
 								@else
-									{{ $row->updated_at->format('Y-m-d') }}
+									{{ $row->created_at->format('Y-m-d') }}
 								@endif
 							</time>
 						@else
-							@if ($row->created_at)
-								<time datetime="{{ Carbon\Carbon::parse($row->created_at)->toDateTimeLocalString() }}">
-									@if ($row->created_at->timestamp > Carbon\Carbon::now()->timestamp)
-										{{ $row->created_at->diffForHumans() }}
-									@else
-										{{ $row->created_at->format('Y-m-d') }}
-									@endif
-								</time>
-							@else
-								<span class="never">{{ trans('global.unknown') }}</span>
-							@endif
+							<span class="never">{{ trans('global.unknown') }}</span>
 						@endif
-					</span>
+					@endif
 				</td>
 				<td class="priority-5 text-cente">
 					{!! str_repeat('<span class="gi">|&mdash;</span>', $row->level) !!}

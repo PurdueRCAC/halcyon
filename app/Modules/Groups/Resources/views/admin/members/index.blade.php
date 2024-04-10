@@ -280,22 +280,18 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-4">
-					<span class="datetime">
-						@if ($row->datecreated)
-							<time datetime="{{ $row->datecreated->toDateTimeLocalString() }}">{{ $row->datecreated }}</time>
-						@else
-							<span class="never">{{ trans('global.never') }}</span>
-						@endif
-					</span>
+					@if ($row->datecreated)
+						<time datetime="{{ $row->datecreated->toDateTimeLocalString() }}">{{ $row->datecreated }}</time>
+					@else
+						<span class="never">{{ trans('global.never') }}</span>
+					@endif
 				</td>
 				<td class="priority-4">
-					<span class="datetime">
-						@if ($row->datelastseen)
-							<time datetime="{{ $row->datelastseen->toDateTimeLocalString() }}">{{ $row->datelastseen }}</time>
-						@else
-							<span class="never">{{ trans('global.never') }}</span>
-						@endif
-					</span>
+					@if ($row->datelastseen)
+						<time datetime="{{ $row->datelastseen->toDateTimeLocalString() }}">{{ $row->datelastseen }}</time>
+					@else
+						<span class="never">{{ trans('global.never') }}</span>
+					@endif
 				</td>
 				<td>
 					@if (($row->user && $row->user->trashed()) || $row->trashed())

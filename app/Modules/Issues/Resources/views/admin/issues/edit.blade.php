@@ -57,8 +57,11 @@ Toolbar::cancel(route('admin.issues.cancel'));
 
 				<div class="form-group">
 					<label for="field-datetimecreated">{{ trans('issues::issues.created') }} <span class="required">{{ trans('global.required') }}</span></label>
-					{!! Html::input('calendar', 'fields[datetimecreated]', $row->datetimecreated ? $row->datetimecreated->format('Y-m-d') : '', ['required' => true, 'time' => false]) !!}
-					<span class="invalid-feedback">{{ trans('issues::issues.invalid.contacted') }}</span>
+					<span class="input-group input-datetime">
+						<input type="date" name="fields[datetimecreated]" id="field-datetimecreated" class="form-control date" required value="{{ $row->datetimecreated->format('Y-m-d') }}" />
+						<span class="input-group-append"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
+					</span>
+					<span class="invalid-feedback">{{ trans('issues::issues.invalid.date') }}</span>
 				</div>
 
 				<div class="form-group">

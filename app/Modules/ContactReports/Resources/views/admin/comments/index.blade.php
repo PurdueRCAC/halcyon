@@ -90,13 +90,11 @@
 					@endif
 				</td>
 				<td class="priority-4">
-					<span class="datetime">
-						@if ($row->datetimecreated)
-							<time datetime="{{ $row->datetimecreated->toDateTimeLocalString() }}">{{ $row->datetimecreated }}</time>
-						@else
-							<span class="never">{{ trans('global.unknown') }}</span>
-						@endif
-					</span>
+					@if ($row->datetimecreated)
+						<time datetime="{{ $row->datetimecreated->toDateTimeLocalString() }}">{{ $row->datetimecreated }}</time>
+					@else
+						<span class="never">{{ trans('global.unknown') }}</span>
+					@endif
 				</td>
 				<td class="priority-4">
 					{{ ($row->creator ? $row->creator->name : trans('global.unknown')) }}

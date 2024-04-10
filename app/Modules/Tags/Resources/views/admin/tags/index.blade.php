@@ -143,19 +143,17 @@ app('pathway')
 									{{ number_format($row->alias_count) }}
 								</td>
 								<td class="priority-4 text-center">
-									<span class="datetime">
-										@if ($row->created_at)
-											<time datetime="{{ $row->created_at->toDateTimeLocalString() }}">
-												@if ($row->created_at->getTimestamp() > $weekAgo)
-													{{ $row->created_at->diffForHumans() }}
-												@else
-													{{ $row->created_at->format('Y-m-d') }}
-												@endif
-											</time>
-										@else
-											<span class="never">{{ trans('global.unknown') }}</span>
-										@endif
-									</span>
+									@if ($row->created_at)
+										<time datetime="{{ $row->created_at->toDateTimeLocalString() }}">
+											@if ($row->created_at->getTimestamp() > $weekAgo)
+												{{ $row->created_at->diffForHumans() }}
+											@else
+												{{ $row->created_at->format('Y-m-d') }}
+											@endif
+										</time>
+									@else
+										<span class="never">{{ trans('global.unknown') }}</span>
+									@endif
 								</td>
 							</tr>
 						@endforeach

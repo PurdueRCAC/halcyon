@@ -207,12 +207,12 @@ $page->gatherMetadata();
 
 								<div class="form-group col-md-6">
 									<label class="form-label" for="field-publish_up">{{ trans('pages::pages.publish up') }}:</label>
-									<input type="text" name="publish_up" id="field-publish_up" class="form-control datetime date-pick" value="<?php echo e(Carbon\Carbon::parse($page->publish_up ? $page->publish_up : $page->created)->toDateTimeString()); ?>" />
+									<input type="text" name="publish_up" id="field-publish_up" class="form-control datetime date-pick" value="<?php echo ($page->publish_up ? $page->publish_up->toDateTimeString() : $page->created->toDateTimeString()); ?>" />
 								</div>
 
 								<div class="form-group col-md-6">
 									<label class="form-label" for="field-publish_down">{{ trans('pages::pages.publish down') }}:</label>
-									<input type="text" name="publish_down" id="field-publish_down" class="form-control datetime date-pick" value="<?php echo ($page->publish_down ? e(Carbon\Carbon::parse($page->publish_down)->toDateTimeString()) : ''); ?>" placeholder="<?php echo ($page->publish_down ? '' : trans('global.never')); ?>" />
+									<input type="text" name="publish_down" id="field-publish_down" class="form-control datetime date-pick" value="<?php echo ($page->publish_down ? $page->publish_down->toDateTimeString() : ''); ?>" placeholder="<?php echo ($page->publish_down ? '' : trans('global.never')); ?>" />
 								</div>
 							</div>
 						@endif

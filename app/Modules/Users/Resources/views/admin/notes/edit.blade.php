@@ -47,7 +47,7 @@ app('pathway')
 	@endif
 
 	<div class="row">
-		<div class="col col-md-7">
+		<div class="mx-auto col-md-7">
 			<fieldset class="adminform">
 				<legend>{{ trans('global.details') }}</legend>
 
@@ -75,26 +75,6 @@ app('pathway')
 				</div>
 
 				<input type="hidden" name="id" value="{{ $row->id }}" />
-			</fieldset>
-		</div>
-		<div class="col span5">
-			<fieldset class="adminform">
-				<legend>{{ trans('global.publishing') }}</legend>
-
-				<div class="form-group">
-					<label for="field-state">{{ trans('global.state') }}:</label>
-					<select name="fields[state]" class="form-control" id="field-state">
-						<option value="0"<?php if ($row->state == 0) { echo ' selected="selected"'; } ?>>{{ trans('global.unpublished') }}</option>
-						<option value="1"<?php if ($row->state == 1) { echo ' selected="selected"'; } ?>>{{ trans('global.published') }}</option>
-						<option value="2"<?php if ($row->state == 2) { echo ' selected="selected"'; } ?>>{{ trans('global.trashed') }}</option>
-					</select>
-				</div>
-
-				<div class="form-group">
-					<label for="field-review_time">{{ trans('users::notes.reviewed') }}:</label>
-					<?php echo Html::input('calendar', 'fields[review_time]', ($row->review_time ? $row->review_time : ''), array('id' => 'field-review_time')); ?>
-					<span class="form-text text-muted">{{ trans('users::notes.reviewed desc') }}</span>
-				</div>
 			</fieldset>
 		</div>
 	</div>

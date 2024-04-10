@@ -160,23 +160,21 @@ app('pathway')
 					@endif
 				</td>
 				<td class="priority-6">
-					<span class="datetime">
-						@if ($row->updated_at)
-							<time datetime="{{ Carbon\Carbon::parse($row->updated_at)->toDateTimeLocalString() }}">{{ $row->updated_at->format('Y-m-d') }}</time>
+					@if ($row->updated_at)
+						<time datetime="{{ Carbon\Carbon::parse($row->updated_at)->toDateTimeLocalString() }}">{{ $row->updated_at->format('Y-m-d') }}</time>
+					@else
+						@if ($row->created_at)
+							<time datetime="{{ Carbon\Carbon::parse($row->created_at)->toDateTimeLocalString() }}">
+								@if ($row->getOriginal('created_at') > Carbon\Carbon::now()->toDateTimeString())
+									{{ $row->created_at->diffForHumans() }}
+								@else
+									{{ $row->created_at->format('Y-m-d') }}
+								@endif
+							</time>
 						@else
-							@if ($row->created_at)
-								<time datetime="{{ Carbon\Carbon::parse($row->created_at)->toDateTimeLocalString() }}">
-									@if ($row->getOriginal('created_at') > Carbon\Carbon::now()->toDateTimeString())
-										{{ $row->created_at->diffForHumans() }}
-									@else
-										{{ $row->created_at->format('Y-m-d') }}
-									@endif
-								</time>
-							@else
-								<span class="never">{{ trans('global.unknown') }}</span>
-							@endif
+							<span class="never">{{ trans('global.unknown') }}</span>
 						@endif
-					</span>
+					@endif
 				</td>
 				<td class="priority-5 text-centr">
 					@if ($row->level > 1)

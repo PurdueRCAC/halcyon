@@ -198,17 +198,15 @@ app('pathway')
 								@endif
 							</td>
 							<td class="priority-4">
-								<span class="datetime">
-									@if ($row->updated_at)
-										<time datetime="{{ $row->updated_at->toDateTimeLocalString() }}">{{ $row->updated_at }}</time>
+								@if ($row->updated_at)
+									<time datetime="{{ $row->updated_at->toDateTimeLocalString() }}">{{ $row->updated_at }}</time>
+								@else
+									@if ($row->created_at)
+										<time datetime="{{ $row->created_at->toDateTimeLocalString() }}">{{ $row->created_at }}</time>
 									@else
-										@if ($row->created_at)
-											<time datetime="{{ $row->created_at->toDateTimeLocalString() }}">{{ $row->created_at }}</time>
-										@else
-											<span class="never">{{ trans('global.unknown') }}</span>
-										@endif
+										<span class="never">{{ trans('global.unknown') }}</span>
 									@endif
-								</span>
+								@endif
 							</td>
 						</tr>
 					@endforeach

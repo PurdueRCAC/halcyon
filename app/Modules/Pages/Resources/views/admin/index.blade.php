@@ -215,19 +215,17 @@ app('pathway')
 								<span class="badge access {{ str_replace(' ', '', strtolower($row->viewlevel->title)) }}">{{ $row->viewlevel->title }}</span>
 							</td>
 							<td class="priority-6">
-								<span class="datetime">
-									@if ($row->updated_at)
-										<time datetime="{{ $row->updated_at->toDateTimeLocalString() }}">
-											{{ $row->updated_at->diffForHumans() }}
-										</time>
-									@elseif ($row->created_at)
-										<time datetime="{{ $row->created_at->toDateTimeLocalString() }}">
-											{{ $row->created_at->diffForHumans() }}
-										</time>
-									@else
-										<span class="text-muted">{{ trans('global.unknown') }}</span>
-									@endif
-								</span>
+								@if ($row->updated_at)
+									<time datetime="{{ $row->updated_at->toDateTimeLocalString() }}">
+										{{ $row->updated_at->diffForHumans() }}
+									</time>
+								@elseif ($row->created_at)
+									<time datetime="{{ $row->created_at->toDateTimeLocalString() }}">
+										{{ $row->created_at->diffForHumans() }}
+									</time>
+								@else
+									<span class="text-muted">{{ trans('global.unknown') }}</span>
+								@endif
 							</td>
 							<td class="priority-6">
 								<a href="{{ route('admin.pages.history', ['id' => $row->id]) }}" data-href="#history{{ $row->id }}">

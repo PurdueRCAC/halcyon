@@ -7,6 +7,24 @@
 @push('scripts')
 <script src="{{ timestamped_asset('modules/core/vendor/tom-select/js/tom-select.complete.min.js') }}"></script>
 <script src="{{ timestamped_asset('modules/pages/js/pages.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+	document.querySelectorAll('[type="datetime-local"]').forEach(function (el) {
+		if (!el.value) {
+			el.type = 'text';
+		}
+		el.addEventListener('focus', function (event) {
+			this.type = 'datetime-local';
+			this.focus();
+		});
+		el.addEventListener('blur', function (event) {
+			if (!this.value) {
+				this.type = 'text';
+			}
+		});
+	});
+});
+</script>
 @endpush
 
 @php
@@ -119,14 +137,17 @@ app('pathway')
 
 				<div class="form-group">
 					<label class="form-label" for="field-publish_up">{{ trans('pages::pages.publish up') }}:</label>
-					{!! Html::input('calendar', 'fields[publish_up]', Carbon\Carbon::parse($row->publish_up ? $row->publish_up : $row->created)) !!}
+					<span class="input-group input-datetime">
+						<input type="datetime-local" name="fields[publish_up]" id="field-publish_up" class="form-control date-time" value="{{ ($row->publish_up ? $row->publish_up->toDateTimeString() : ($row->created ? $row->created->toDateTimeString() : '')) }}" placeholder="{{ ($row->created_at ? $row->created_at->toDateTimeString() : trans('global.immediately')) }}" />
+						<span class="input-group-append"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
+					</span>
 				</div>
 
 				<div class="form-group">
 					<label class="form-label" for="field-publish_down">{{ trans('pages::pages.publish down') }}:</label>
 					<span class="input-group input-datetime">
-						<input type="text" name="fields[publish_down]" id="field-publish_down" class="form-control datetime" value="<?php echo ($row->publish_down ? e(Carbon\Carbon::parse($row->publish_down)->toDateTimeString()) : ''); ?>" placeholder="<?php echo ($row->publish_down ? '' : trans('global.never')); ?>" />
-						<span class="input-group-append"><span class="input-group-text fa fa-calendar"></span></span>
+						<input type="datetime-local" name="fields[publish_down]" id="field-publish_down" class="form-control date-time" value="{{ ($row->publish_down ? $row->publish_down->toDateTimeString() : '') }}" placeholder="{{ ($row->publish_down ? '' : trans('global.never')) }}" />
+						<span class="input-group-append"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
 					</span>
 				</div>
 			</fieldset>

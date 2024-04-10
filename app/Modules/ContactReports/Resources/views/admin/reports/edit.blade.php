@@ -61,7 +61,10 @@ app('pathway')
 					<div class="col-md-5">
 						<div class="form-group">
 							<label for="field-datetimecontact">{{ trans('contactreports::contactreports.contacted') }} <span class="required">{{ trans('global.required') }}</span></label>
-							{!! Html::input('calendar', 'fields[datetimecontact]', $row->datetimecontact ? $row->datetimecontact->format('Y-m-d') : '', ['required' => true, 'time' => false]) !!}
+							<span class="input-group input-datetime">
+								<input type="date" name="fields[datetimecontact]" id="field-datetimecontact" class="form-control" required value="{{ $row->datetimecontact->format('Y-m-d') }}" />
+								<span class="input-group-append"><span class="input-group-text fa fa-calendar" aria-hidden="true"></span></span>
+							</span>
 							<span class="invalid-feedback">{{ trans('contactreports::contactreports.invalid.contacted') }}</span>
 						</div>
 					</div>

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Modules\Pages\Models\Page;
 use App\Modules\Pages\Models\Version;
 use App\Halcyon\Http\Concerns\UsesFilters;
+use Carbon\Carbon;
 
 class PagesController extends Controller
 {
@@ -96,6 +97,7 @@ class PagesController extends Controller
 		$row = new Page;
 		$row->access = 1;
 		$row->state = 1;
+		$row->created_at = Carbon::now();
 
 		foreach (['show_title', 'show_author', 'show_create_date', 'show_modify_date', 'show_publish_date', 'layout'] as $key)
 		{

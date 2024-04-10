@@ -108,6 +108,8 @@ class Page extends Model
 		'level' => 'integer',
 		'asset_id' => 'integer',
 		'version_id' => 'integer',
+		'publish_up' => 'datetime',
+		'publish_down' => 'datetime',
 		'params' => Params::class,
 		'metadata' => Params::class,
 	];

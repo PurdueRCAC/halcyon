@@ -147,6 +147,7 @@ class ReportsController extends Controller
 	public function create(Request $request)
 	{
 		$row = new Report();
+		$row->datetimecontact = Carbon::now();
 
 		if ($groupid = $request->input('groupid'))
 		{

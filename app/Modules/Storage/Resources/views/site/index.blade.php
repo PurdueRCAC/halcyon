@@ -80,22 +80,18 @@
 					{{ $row->type->name }}
 				</td>
 				<td class="priority-4">
-					<span class="datetime">
-						@if ($row->datetimecreated)
-							<time datetime="{{ $row->datetimecreated->toDateTimeLocalString() }}">{{ $row->datetimecreated }}</time>
-						@else
-							<span class="never">{{ __('resources::assets.UNKNOWN') }}</span>
-						@endif
-					</span>
+					@if ($row->datetimecreated)
+						<time datetime="{{ $row->datetimecreated->toDateTimeLocalString() }}">{{ $row->datetimecreated }}</time>
+					@else
+						<span class="never">{{ trans('global.unknown') }}</span>
+					@endif
 				</td>
 				<td class="priority-4">
-					<span class="datetime">
-						@if ($row->datetimeremoved)
-							<time datetime="{{ $row->datetimeremoved->toDateTimeLocalString() }}">{{ $row->datetimeremoved }}</time>
-						@else
-							<span class="never">{{ __('resources::assets.NEVER') }}</span>
-						@endif
-					</span>
+					@if ($row->datetimeremoved)
+						<time datetime="{{ $row->datetimeremoved->toDateTimeLocalString() }}">{{ $row->datetimeremoved }}</time>
+					@else
+						<span class="never">{{ trans('global.never') }}</span>
+					@endif
 				</td>
 				<td class="priority-4">
 					<a href="{{ app('request')->root() }}/admin/resources/children/{{ $row->id }}">

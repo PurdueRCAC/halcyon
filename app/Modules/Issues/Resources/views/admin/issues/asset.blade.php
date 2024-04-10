@@ -43,19 +43,17 @@
 					@endif
 				</td>
 				<td class="priority-4">
-					<span class="datetime">
-						@if ($row->datetimecreated)
-							<time datetime="{{ $row->datetimecreated->toDateTimeLocalString() }}">
-								@if ($row->datetimecreated->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
-									{{ $row->datetimecreated->diffForHumans() }}
-								@else
-									{{ $row->datetimecreated->format('Y-m-d') }}
-								@endif
-							</time>
-						@else
-							<span class="text-muted">{{ trans('global.unknown') }}</span>
-						@endif
-					</span>
+					@if ($row->datetimecreated)
+						<time datetime="{{ $row->datetimecreated->toDateTimeLocalString() }}">
+							@if ($row->datetimecreated->format('Y-m-dTh:i:s') > Carbon\Carbon::now()->toDateTimeString())
+								{{ $row->datetimecreated->diffForHumans() }}
+							@else
+								{{ $row->datetimecreated->format('Y-m-d') }}
+							@endif
+						</time>
+					@else
+						<span class="text-muted">{{ trans('global.unknown') }}</span>
+					@endif
 				</td>
 				<td class="priority-4 text-right">
 					@if ($row->comments_count)

@@ -114,28 +114,24 @@ app('pathway')
 								</a>
 							</td>
 							<td class="priority-4">
-								<span class="datetime">
-									@if ($row->created_at)
+								@if ($row->created_at)
 									<time datetime="{{ $row->created_at->toDateTimeLocalString() }}">
-										@if ($row->created_at->getTimestamp() > $past->getTimestamp())
-											{{ $row->created_at->diffForHumans() }}
-										@else
-											{{ $row->created_at->format('F j, Y') }}
-										@endif
-										</time>
+									@if ($row->created_at->getTimestamp() > $past->getTimestamp())
+										{{ $row->created_at->diffForHumans() }}
 									@else
-										<span class="never">{{ trans('global.unknown') }}</span>
+										{{ $row->created_at->format('F j, Y') }}
 									@endif
-								</span>
+									</time>
+								@else
+									<span class="never">{{ trans('global.unknown') }}</span>
+								@endif
 							</td>
 							<td class="priority-4">
-								<span class="datetime">
-									@if ($row->read_at)
-										<time datetime="{{ $row->read_at->toDateTimeLocalString() }}">{{ $row->read_at->toDateTimeString() }}</time>
-									@else
-										<span class="never">{{ trans('global.never') }}</span>
-									@endif
-								</span>
+								@if ($row->read_at)
+									<time datetime="{{ $row->read_at->toDateTimeLocalString() }}">{{ $row->read_at->toDateTimeString() }}</time>
+								@else
+									<span class="never">{{ trans('global.never') }}</span>
+								@endif
 							</td>
 						</tr>
 					@endforeach

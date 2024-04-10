@@ -91,13 +91,11 @@ app('pathway')
 								{{ $row->taggable_id }}
 							</td>
 							<td class="priority-4">
-								<span class="datetime">
-									@if ($row->created_at)
-										<time datetime="{{ $row->created_at->toDateTimeLocalString() }}">{{ $row->created_at->format('Y-m-d') }}</time>
-									@else
-										<span class="never">{{ trans('global.unknown') }}</span>
-									@endif
-								</span>
+								@if ($row->created_at)
+									<time datetime="{{ $row->created_at->toDateTimeLocalString() }}">{{ $row->created_at->format('Y-m-d') }}</time>
+								@else
+									<span class="never">{{ trans('global.unknown') }}</span>
+								@endif
 							</td>
 						</tr>
 					@endforeach
