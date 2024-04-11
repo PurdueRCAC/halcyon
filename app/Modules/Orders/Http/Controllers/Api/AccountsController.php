@@ -12,6 +12,7 @@ use App\Modules\Orders\Models\Account;
 use App\Modules\Orders\Models\Order;
 use App\Modules\Orders\Models\NoticeStatus;
 use App\Modules\Users\Models\User;
+use App\Modules\Orders\Events\NotifyApprover;
 use Carbon\Carbon;
 
 /**
@@ -712,7 +713,8 @@ class AccountsController extends Controller
 				// New approver. Reset dates and notification status.
 				$row->datetimeapproved = null;
 				$row->datetimedenied = null;
-
+				$row->approveruserid = $approveruserid;
+				event(new NotifyApprover($row));
 				$row->notice = NoticeStatus::PENDING_APPROVAL;
 			}
 

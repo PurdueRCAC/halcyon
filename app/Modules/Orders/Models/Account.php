@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Modules\History\Traits\Historable;
 use App\Modules\Orders\Helpers\Currency;
 use App\Modules\Orders\Events\AccountCreating;
+use App\Modules\Orders\Events\NotifyApprover;
 use App\Modules\Orders\Events\AccountUpdating;
 use Carbon\Carbon;
 
@@ -86,6 +87,7 @@ class Account extends Model
 	protected $dispatchesEvents = [
 		'creating' => AccountCreating::class,
 		'updating' => AccountUpdating::class,
+		'created' => NotifyApprover::class,
 	];
 
 	/**

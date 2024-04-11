@@ -13,6 +13,7 @@ use App\Modules\Orders\Listeners\GroupOrders;
 use App\Modules\Orders\Listeners\UserOrders;
 use App\Modules\Orders\Listeners\RouteCollector;
 use App\Modules\Orders\Listeners\SyncItemsToProduct;
+use App\Modules\Orders\Listeners\NotifyAccountApprover;
 use App\Modules\Orders\LogProcessors\Orders as OrdersProcessor;
 use Nwidart\Modules\Facades\Module;
 
@@ -57,6 +58,7 @@ class OrdersServiceProvider extends ServiceProvider
 		if (Module::isEnabled('users'))
 		{
 			$this->app['events']->subscribe(new UserOrders);
+			$this->app['events']->subscribe(new NotifyAccountApprover);
 		}
 
 		if (Module::isEnabled('menus'))
