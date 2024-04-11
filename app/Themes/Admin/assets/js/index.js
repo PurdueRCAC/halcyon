@@ -245,6 +245,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			msg.querySelectorAll('.alert').forEach(function (el) {
 				var type = '';
 				type = el.classList.contains('alert-warning') ? 'warning' : type;
+				type = el.classList.contains('alert-error') ? 'danger' : type;
 				type = el.classList.contains('alert-danger') ? 'danger' : type;
 				type = el.classList.contains('alert-info') ? 'info' : type;
 				type = el.classList.contains('alert-success') ? 'success' : type;

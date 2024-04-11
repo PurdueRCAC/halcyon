@@ -1,5 +1,5 @@
 <div id="system-messages">
-@foreach (['success', 'error', 'warning', 'info'] as $type)
+@foreach (['success', 'error', 'danger', 'warning', 'info'] as $type)
 	@if (\Illuminate\Support\Facades\Session::has($type))
 		<div class="alert alert-{{ $type }}" role="alert">
 			<?php
