@@ -22,7 +22,7 @@ class PagesController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		if ($request->wantsJson()) //$request->expectsJson())
+		if ($request->wantsJson())
 		{
 			return response()->json(['message' => trans('global.unacceptable header')], 406);
 		}
@@ -250,7 +250,7 @@ class PagesController extends Controller
 		if ($row->checked_out
 		 && $row->checked_out <> auth()->user()->id)
 		{
-			return redirect(route('home'))->with('warning', trans('global.checked out'));
+			return redirect(route('home'))->with('warning', trans('global.messages.checked out'));
 		}
 
 		$parents = Page::query()

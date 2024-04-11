@@ -129,10 +129,13 @@ app('pathway')
 						?>
 						<tr<?php if (!$path) { echo ' class="locked"'; } ?>>
 							<td class="text-center">
-								@if ($path && $canEdit)
-									{!! App\Halcyon\Html\Builder\Grid::id($i, $row->id) !!}
-								@elseif (!$path)
-									<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span>
+								@if ($row->checked_out && !$canCheckin)
+								@else
+									@if ($path && $canEdit)
+										{!! App\Halcyon\Html\Builder\Grid::id($i, $row->id) !!}
+									@elseif (!$path)
+										<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span>
+									@endif
 								@endif
 							</td>
 							<td class="priority-5">

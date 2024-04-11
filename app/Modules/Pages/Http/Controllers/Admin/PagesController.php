@@ -146,7 +146,7 @@ class PagesController extends Controller
 		if ($row->checked_out
 		 && $row->checked_out <> auth()->user()->id)
 		{
-			return redirect(route('admin.pages.index'))->with('warning', trans('global.checked out'));
+			return redirect(route('admin.pages.index'))->with('warning', trans('global.messages.checked out'));
 		}
 
 		$parents = Page::query()

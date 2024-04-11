@@ -281,13 +281,13 @@ class Grid
 	/**
 	 * Method to create a checked out icon with optional overlib in a grid.
 	 *
-	 * @param   object  &$row     The row object
+	 * @param   object  $row     The row object
 	 * @param   bool    $tooltip  True if an overlib with checkout information should be created.
 	 * @return  string  HTML for the icon and tooltip
 	 */
-	protected static function _checkedOut(&$row, $tooltip = true)
+	protected static function _checkedOut($row, bool $tooltip = true): string
 	{
-		$hover = '<span class="checkedout">';
+		$hover  = '<span class="checkedout text-warning';
 
 		if ($tooltip && isset($row->checked_out_time))
 		{
@@ -297,10 +297,12 @@ class Grid
 			$date = $dt->format('l, d F Y');
 			$time = $dt->format('H:i');
 
-			$hover = '<span class="editlinktip hasTip" title="' . trans('global.check out') . '::' . e($text) . '<br />' . $date . '<br />' . $time . '">';
+			$hover .= ' has-tip" data-tip="' . trans('global.messages.check out') . '::' . e($text) . '<br />' . $date . '<br />' . $time;
 		}
 
-		return $hover . trans('global.checked out') . '</span>';
+		$hover .= '"><span class="fa fa-check-square-o" aria-hidden="true"></span>';
+
+		return $hover . '<span class="sr-only visually-hidden">' . trans('global.messages.checked out') . '</span></span>';
 	}
 
 	/**
@@ -329,10 +331,10 @@ class Grid
 		$time = addslashes(htmlspecialchars(Carbon::parse($time)->format('H:i'), ENT_COMPAT, 'UTF-8'));
 
 		$active_title   = trans('global.check in') . '::' . $text . '<br />' . $date . '<br />' . $time;
-		$inactive_title = trans('global.checked out') . '::' . $text . '<br />' . $date . '<br />' . $time;
+		$inactive_title = trans('global.messages.checked out') . '::' . $text . '<br />' . $date . '<br />' . $time;
 
 		return self::action(
-			$i, 'checkin', $prefix, trans('global.checked out'), $active_title, $inactive_title, true, 'checkedout',
+			$i, 'checkin', $prefix, trans('global.messages.checked out'), $active_title, $inactive_title, true, 'checkedout',
 			'checkedout', $enabled, false, $checkbox
 		);
 	}

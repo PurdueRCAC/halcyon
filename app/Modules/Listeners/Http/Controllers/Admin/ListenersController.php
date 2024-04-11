@@ -176,7 +176,7 @@ class ListenersController extends Controller
 		if ($row->checked_out
 		 && $row->checked_out <> auth()->user()->id)
 		{
-			return $this->cancel()->with('warning', trans('global.checked out'));
+			return $this->cancel()->with('warning', trans('global.messages.checked out'));
 		}
 
 		if ($row->id)
