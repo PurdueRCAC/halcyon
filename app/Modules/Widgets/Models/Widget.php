@@ -680,7 +680,7 @@ class Widget extends Model
 			)
 			->where($e . '.type', '=', 'widget');
 		
-		if (!empty($filters['client_id']))
+		if (!is_null($filters['client_id']))
 		{
 			$query->where($p . '.client_id', '=', $filters['client_id']);
 		}
