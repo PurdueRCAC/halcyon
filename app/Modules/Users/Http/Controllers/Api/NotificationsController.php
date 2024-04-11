@@ -11,6 +11,7 @@ use Illuminate\Notifications\DatabaseNotification;
 use App\Modules\Users\Http\Resources\NotificationResourceCollection;
 use App\Modules\Users\Http\Resources\NotificationResource;
 use App\Modules\Users\Models\User;
+use Carbon\Carbon;
 
 /**
  * User Notifications
@@ -301,6 +302,12 @@ class NotificationsController extends Controller
 			->where('notifiable_id', '=', auth()->user()->id)
 			->whereNull('read_at')
 			->get();
+
+		foreach($rows as $row)
+		{
+			$row->markAsRead();
+			$row->save();
+		}
 
 		return new NotificationResourceCollection($rows);
 	}
