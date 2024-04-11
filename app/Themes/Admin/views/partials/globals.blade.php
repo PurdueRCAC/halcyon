@@ -12,8 +12,8 @@
         },
         user: {
             id: {{ auth()->user() ? auth()->user()->id : 0 }},
-            name: "{{ auth()->user() ? auth()->user()->name : '' }}",
-            username: "{{ auth()->user() ? auth()->user()->username : '' }}"
+            name: "{{ auth()->user()?->name }}",
+            username: "{{ auth()->user()?->username }}"
         }
     };
 </script>

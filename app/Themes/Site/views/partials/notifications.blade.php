@@ -1,53 +1,21 @@
-@if (Session::has('success'))
-    <div class="alert alert-success fade in alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <?php
-        $err = Session::get('success');
+<div id="system-messages">
+@foreach (['success', 'error', 'warning', 'info'] as $type)
+    @if (\Illuminate\Support\Facades\Session::has($type))
+        <div class="alert alert-{{ $type }} fade in alert-dismissable" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <?php
+            $err = \Illuminate\Support\Facades\Session::get($type);
 
-        if (is_array($err)):
-            foreach ($err as $i => $er):
-                $err[$i] = e($er);
-                echo implode('<br />', $err);
-            endforeach;
-        else:
-            echo e($err);
-        endif;
-        ?>
-    </div>
-@endif
-
-@if (Session::has('error'))
-    <div class="alert alert-danger fade in alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <?php
-        $err = Session::get('error');
-
-        if (is_array($err)):
-            foreach ($err as $i => $er):
-                $err[$i] = e($er);
-                echo implode('<br />', $err);
-            endforeach;
-        else:
-            echo e($err);
-        endif;
-        ?>
-    </div>
-@endif
-
-@if (Session::has('warning'))
-    <div class="alert alert-warning fade in alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <?php
-        $err = Session::get('warning');
-
-        if (is_array($err)):
-            foreach ($err as $i => $er):
-                $err[$i] = e($er);
-                echo implode('<br />', $err);
-            endforeach;
-        else:
-            echo e($err);
-        endif;
-        ?>
-    </div>
-@endif
+            if (is_array($err)):
+                foreach ($err as $i => $er):
+                    $err[$i] = e($er);
+                    echo implode('<br />', $err);
+                endforeach;
+            else:
+                echo e($err);
+            endif;
+            ?>
+        </div>
+    @endif
+@endforeach
+</div>
