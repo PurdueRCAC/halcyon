@@ -331,14 +331,15 @@ class Extension extends Model
 	 */
 	public function publish(): void
 	{
-		$sourcePath = $this->path();
+		$sourcePath = $this->path() . '/assets';
 
 		$path  = ucfirst($this->type) . 's';
 		if ($this->type == 'listener')
 		{
-			$path .= '/' . strtolower($item->folder);
+			$path .= '/' . strtolower($this->folder);
 		}
-		$path .= '/' . strtolower($item->element);
+		$path .= '/' . strtolower($this->element);
+		$path = strtolower($path);
 		$destinationPath = public_path($path);
 		$files = app('files');
 
