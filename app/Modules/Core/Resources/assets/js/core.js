@@ -219,7 +219,7 @@ Halcyon.checkAll = function(checkbox, stub) {
  * @return  {void}
  */
 Halcyon.enableDisableBtn = function(num) {
-	document.getElementsByClassName('toolbar-btn').forEach(function (toolbarbutton) {
+	document.querySelectorAll('.toolbar-btn').forEach(function (toolbarbutton) {
 		if (toolbarbutton.classList.contains('toolbar-list')) {
 			if (!num) {
 				toolbarbutton.classList.add('disabled');
@@ -608,7 +608,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	ROOT_URL = document.querySelector('meta[name="base-url"]').getAttribute('content') + '/api/';
 
 	// Add event listeners to toolbar buttons
-	document.getElementsByClassName('toolbar-btn').forEach(function (toolbarbutton) {
+	document.querySelectorAll('.toolbar-btn').forEach(function (toolbarbutton) {
 		if (toolbarbutton.classList.contains('toolbar-list')) {
 			//toolbarbutton.setAttribute('disabled', true);
 			toolbarbutton.classList.add('disabled');
@@ -617,32 +617,32 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	// Add event listener for checkbox toggles
-	document.getElementsByClassName('checkbox-toggle').forEach(function (checkbox) {
+	document.querySelectorAll('.checkbox-toggle').forEach(function (checkbox) {
 		checkbox.addEventListener('click', Halcyon.gridCheckboxToggle);
 	});
 
 	// Add event listener for filters
-	document.getElementsByClassName('filter-submit').forEach(function (filter) {
+	document.querySelectorAll('.filter-submit').forEach(function (filter) {
 		filter.addEventListener('change', Halcyon.filterSubmit);
 	});
 
 	// Add event listener for clearing filters
-	document.getElementsByClassName('filter-clear').forEach(function (clearfilter) {
+	document.querySelectorAll('.filter-clear').forEach(function (clearfilter) {
 		clearfilter.addEventListener('click', Halcyon.filterClear);
 	});
 
 	// Add event listener for table sorting
-	document.getElementsByClassName('grid-order').forEach(function (ordering) {
+	document.querySelectorAll('.grid-order').forEach(function (ordering) {
 		ordering.addEventListener('click', Halcyon.gridOrder);
 	});
 
 	// Add event listener for saving table sorting
-	document.getElementsByClassName('grid-order-save').forEach(function (orderingsave) {
+	document.querySelectorAll('.grid-order-save').forEach(function (orderingsave) {
 		orderingsave.addEventListener('click', Halcyon.gridOrderSave);
 	});
 
 	// Add event listener for action items
-	document.getElementsByClassName('grid-action').forEach(function (action) {
+	document.querySelectorAll('.grid-action').forEach(function (action) {
 		action.addEventListener('click', Halcyon.gridAction);
 	});
 
