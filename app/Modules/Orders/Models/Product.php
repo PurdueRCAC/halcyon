@@ -113,12 +113,11 @@ class Product extends Model
 			// Set sequence value for new entries
 			if (!$model->id)
 			{
-				$sequence = self::query()
+				$sequenceModel = self::query()
 					->where('ordercategoryid', '=', $model->ordercategoryid)
 					->orderBy('sequence', 'desc')
-					->first()
-					->sequence;
-
+					->first();
+				$sequence = $sequenceModel->sequence ?? 0;
 				$model->sequence = intval($sequence) + 1;
 			}
 		});
