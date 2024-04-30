@@ -194,7 +194,7 @@ if ($user->can('manage pages')
 {
 	$menu->addChild(new Node(
 		trans('widget.adminmenu::adminmenu.content'),
-		route('admin.pages.index'),
+		(Module::isEnabled('pages') ? route('admin.pages.index') : route('admin.media.index')),
 		'class:' . (isset($groupings['content']) ? $groupings['content'] : 'file-text'),
 		in_array($active, ['pages', 'knowledge', 'media', 'news'])
 	), true);
