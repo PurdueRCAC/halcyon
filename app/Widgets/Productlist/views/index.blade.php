@@ -33,7 +33,7 @@ $ids = array();
 									<div class="col-md-8">
 										<p class="card-title"><a class="purchase-resource" href="{{ route('site.orders.products', ['category' => $category->id]) }}">{{ $resource->name }}</a></p>
 									</div>
-									<div class="col-md-4 text-right">
+									<div class="col-md-4 text-right text-end">
 										<p><a class="btn btn-default btn-sm btn-purchase" href="{{ route('site.orders.products', ['category' => $category->id]) }}">{!! trans('widget.productlist::productlist.purchase now', ['name' => e($resource->name)]) !!}</a></p>
 									</div>
 								</div>
@@ -51,7 +51,7 @@ $ids = array();
 													@endif
 													{{ $prod->name }}
 												</div>
-												<div class="col-md-2 text-right">
+												<div class="col-md-2 text-right text-end">
 													$ {{ $prod->price }}
 												</div>
 												<div class="col-md-3">

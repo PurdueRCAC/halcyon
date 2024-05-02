@@ -26,7 +26,7 @@
 				<label class="sr-only visually-hidden" for="filter_search">{{ trans('search.label') }}</label>
 				<input type="text" name="filter_search" id="filter_search" class="form-control filter" placeholder="{{ trans('search.placeholder') }}" value="{{ $filters['search'] }}" />
 			</div>
-			<div class="col col-md-8 filter-select text-right">
+			<div class="col col-md-8 filter-select text-right text-end">
 				<label class="sr-only visually-hidden" for="filter_access">{{ trans('orders::orders.access') }}</label>
 				<select name="filter_access" id="filter_access" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['access'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all accesses') }}</option>
@@ -83,14 +83,14 @@
 				<th scope="col" class="text-center">
 					{!! Html::grid('sort', 'global.access', 'public', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-2 text-right">
+				<th scope="col" class="priority-2 text-right text-end">
 					{!! Html::grid('sort', 'orders::orders.price', 'unitprice', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="text-center">/</th>
 				<th scope="col">
 					{!! Html::grid('sort', 'orders::orders.unit', 'unit', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-2 text-right" colspan="2">
+				<th scope="col" class="priority-2 text-right text-end" colspan="2">
 					{!! Html::grid('sort', 'orders::orders.sequence', 'sequence', $filters['order_dir'], $filters['order']) !!}
 				</th>
 			</tr>
@@ -138,7 +138,7 @@
 						<span class="badge badge-default access private">{{ trans('orders::orders.private') }}</span>
 					@endif
 				</td>
-				<td class="priority-2 text-right">
+				<td class="priority-2 text-right text-end">
 					{{ config('orders.currency', '$') }} {{ number_format($row->unitprice, 2) }}
 				</td>
 				<td class="text-center">
@@ -147,10 +147,10 @@
 				<td>
 					{{ $row->unit }}
 				</td>
-				<td class="priority-2 text-right">
+				<td class="priority-2 text-right text-end">
 					{{ $row->sequence }}
 				</td>
-				<td class="text-right">
+				<td class="text-right text-end">
 					@if ($filters['order'] == 'sequence')
 						<span class="drag-handle" draggable="true">
 							<svg class="MiniIcon DragMiniIcon DragHandle-icon" viewBox="0 0 24 24"><path d="M10,4c0,1.1-0.9,2-2,2S6,5.1,6,4s0.9-2,2-2S10,2.9,10,4z M16,2c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,2,16,2z M8,10 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,10,8,10z M16,10c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,10,16,10z M8,18 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,18,8,18z M16,18c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,18,16,18z"></path></svg>
@@ -166,7 +166,7 @@
 		<div class="col col-md-8">
 			{{ $rows->render() }}
 		</div>
-		<div class="col col-md-4 text-right">
+		<div class="col col-md-4 text-right text-end">
 			<div class="pagination-limit">
 				<label class="sr-onlys" for="filter_limit">Per page</label>
 				<select name="filter_limit" id="filter_limit">

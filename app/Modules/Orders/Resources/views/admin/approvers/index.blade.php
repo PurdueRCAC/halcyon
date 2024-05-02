@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	if (btnnew) {
 		btnnew.setAttribute('data-toggle', 'modal');
 		btnnew.setAttribute('data-target', '#new-approver');
+		btnnew.setAttribute('data-bs-toggle', 'modal');
+		btnnew.setAttribute('data-bs-target', '#new-approver');
 
 		btnnew.addEventListener('click', function (e) {
 			e.preventDefault();
@@ -196,7 +198,7 @@ app('pathway')
 					</span>
 				</div>
 
-				<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+				<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 			</div>
 		</div>
 
@@ -280,7 +282,7 @@ app('pathway')
 						</div>
 					@endif
 				</td>
-				<td class="text-right">
+				<td class="text-right text-end">
 					@if (auth()->user()->can('manage orders'))
 						<a class="approver-edit-controls approver-edit" href="#user{{ $row->id }}-field" data-hide="user{{ $row->id }}" data-show="user{{ $row->id }}-cancel" id="user{{ $row->id }}-edit" title="{{ trans('global.button.edit') }}">
 							<span class="fa fa-pencil" aria-hidden="true"></span>
@@ -315,8 +317,8 @@ app('pathway')
 			<div class="modal-content">
 				<div class="modal-header">
 					<h3 class="modal-title" id="new-approver-title">Assign Department Approver</h3>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
+					<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+						<span class="visually-hidden" aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				 <div class="modal-body">

@@ -22,6 +22,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	if (btnnew) {
 		btnnew.setAttribute('data-toggle', 'modal');
 		btnnew.setAttribute('data-target', '#new-group');
+		btnnew.setAttribute('data-bs-toggle', 'modal');
+		btnnew.setAttribute('data-bs-target', '#new-group');
 
 		btnnew.addEventListener('click', function (e) {
 			e.preventDefault();
@@ -124,7 +126,7 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col col-md-9 text-right">
+			<div class="col col-md-9 text-right text-end">
 				<label class="sr-only visually-hidden" for="filter-state">{{ trans('groups::groups.state') }}</label>
 				<select name="state" id="filter-state" class="form-control filter filter-submit">
 					<option value="*">{{ trans('groups::groups.all states') }}</option>
@@ -164,7 +166,7 @@ app('pathway')
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
@@ -188,7 +190,7 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('groups::groups.unix group'), 'unixgroup', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4 text-right">
+				<th scope="col" class="priority-4 text-right text-end">
 					{!! Html::grid('sort', trans('groups::groups.members'), 'members_count', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-6">
@@ -227,7 +229,7 @@ app('pathway')
 						@endif
 					@endif
 				</td>
-				<td class="priority-4 text-right">
+				<td class="priority-4 text-right text-end">
 					{{ number_format($row->members_count) }}
 				</td>
 				<td class="priority-6">
@@ -268,8 +270,8 @@ app('pathway')
 		<div class="modal-content">
 			<div class="modal-header">
 				<h3 class="modal-title" id="new-group-title">{{ trans('groups::groups.create group') }}</h3>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
+				<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+					<span class="visually-hidden" aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">

@@ -32,7 +32,7 @@
 		<div class="col-md-6">
 			<h2 class="mt-0">{{ trans('orders::orders.import') }}</h2>
 		</div>
-		<div class="col-md-6 text-right">
+		<div class="col-md-6 text-right text-end">
 			<a class="btn btn-link" href="{{ route('site.orders.index') }}"><span class="fa fa-arrow-left" aria-hidden="true"></span> Back to Orders</a>
 		</div>
 	</div>

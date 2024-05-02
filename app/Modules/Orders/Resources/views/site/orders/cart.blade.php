@@ -32,7 +32,7 @@
 		<div class="col-md-6">
 			<h2 class="mt-0">{{ trans('orders::orders.cart') }}</h2>
 		</div>
-		<div class="col-md-6 text-right">
+		<div class="col-md-6 text-right text-end">
 			<a class="btn btn-link" href="{{ route('site.orders.products') }}"><span class="fa fa-arrow-left" aria-hidden="true"></span> Back to Products</a>
 		</div>
 	</div>
@@ -122,7 +122,7 @@
 											<span class="form-inline">
 												<span class="input-group">
 													<span class="input-group-prepend"><span class="input-group-text">$</span></span>
-													<input type="text" name="subtotal[{{ $product->id }}][]" id="{{ $product->id }}_linetotal" size="10" class="form-control total-input text-right" value="{{ $item->total() }}" />
+													<input type="text" name="subtotal[{{ $product->id }}][]" id="{{ $product->id }}_linetotal" size="10" class="form-control total-input text-right text-end" value="{{ $item->total() }}" />
 												</span>
 											</span>
 										@else
@@ -140,7 +140,7 @@
 						</tbody>
 						<tfoot>
 							<tr>
-								<td class="orderproductitem text-right" colspan="3">{{ trans('orders::orders.total') }}</td>
+								<td class="orderproductitem text-right text-end" colspan="3">{{ trans('orders::orders.total') }}</td>
 								<td class="orderproductitem text-right orderprice">$<span id="ordertotal" class="category-total">{{ $cart->total() }}</span></td>
 								<td></td>
 							</tr>
@@ -161,7 +161,7 @@
 		<div id="forme" class="cancellable stash">
 			<p>
 				Are you placing this order on behalf of a faculty member?
-				<a href="#help1" data-toggle="modal" class="text-info tip" title="Help">
+				<a href="#help1" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help">
 					<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 				</a>
 			</p>
@@ -171,8 +171,8 @@
 					<div class="modal-content shadow-sm">
 						<div class="modal-header">
 							<div class="modal-title" id="help1-title">Placing order on behalf of someone else</div>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
+							<button type="button" class="btn-closeclose" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+								<span class="visually-hidden" aria-hidden="true">&times;</span>
 							</button>
 						</div>
 						<div class="modal-body">
@@ -208,7 +208,7 @@
 		<div id="usersearch" class="cancellable stash">
 			<p>
 				Please use the search box below to select the faculty member this order is for:
-				<a href="#help2" data-toggle="modal" class="text-info tip" title="Help">
+				<a href="#help2" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help">
 					<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 				</a>
 			</p>
@@ -218,8 +218,8 @@
 					<div class="modal-content shadow-sm">
 						<div class="modal-header">
 							<div class="modal-title" id="help2-title">Placing order on behalf of someone else</div>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
+							<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+								<span class="visually-hidden" aria-hidden="true">&times;</span>
 							</button>
 						</div>
 						<div class="modal-body">
@@ -247,8 +247,8 @@
 					<div class="modal-content shadow-sm">
 						<div class="modal-header">
 							<div class="modal-title" id="help3-title">MOU Agreement</div>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
+							<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+								<span class="visually-hidden" aria-hidden="true">&times;</span>
 							</button>
 						</div>
 						<div class="modal-body">
@@ -271,7 +271,7 @@
 							<p class="form-text text-muted">
 								<a href="{{ $product->mou }}" target="_blank">{{ $product->name }} - <abbr title="Memorandum of Understanding">MOU</abbr> Agreement</a>
 
-								<a href="#help3" data-toggle="modal" class="text-info tip" title="Help">
+								<a href="#help3" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help">
 									<strong class="fa fa-question-circle" aria-hidden="true"></strong><span class="sr-only visually-hidden">Please click checkbox after reading and consenting to MOU Agreement.</span>
 								</a>
 							</p>

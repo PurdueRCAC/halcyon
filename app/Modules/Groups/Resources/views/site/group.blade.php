@@ -30,7 +30,7 @@ $subsection = $subsection ?: 'overview';
 			<div class="col-md-9">
 				<h2>{{ $group->name }}</h2>
 			</div>
-			<div class="col-md-3 text-right">
+			<div class="col-md-3 text-right text-end">
 				@if ($membership)
 					@if ($membership->trashed())
 						<span class="badge badge-danger">{{ trans('users::users.removed') }}</span>

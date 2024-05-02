@@ -113,8 +113,8 @@ app('pathway')
 							<th scope="col">{{ trans('groups::groups.id') }}</th>
 							<th scope="col">{{ trans('groups::groups.unix group') }}</th>
 							<th scope="col">{{ trans('groups::groups.short name') }}</th>
-							<th scope="col" class="text-right">{{ trans('groups::groups.members') }}</th>
-							<th scope="col" class="text-right"></th>
+							<th scope="col" class="text-right text-end">{{ trans('groups::groups.members') }}</th>
+							<th scope="col" class="text-right text-end"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -123,8 +123,8 @@ app('pathway')
 								<td>{{ $u->id }}</td>
 								<td>{{ $u->longname }}</td>
 								<td>{{ $u->shortname }}</td>
-								<td class="text-right">{{ $u->members()->count() }}</td>
-								<td class="text-right">
+								<td class="text-right text-end">{{ $u->members()->count() }}</td>
+								<td class="text-right text-end">
 									<a href="#unixgroup-{{ $u->id }}" class="btn text-danger remove-unixgroup"
 										data-api="{{ route('api.unixgroups.delete', ['id' => $u->id]) }}"
 										data-confirm="{{ trans('groups::groups.confirm delete') }}">
@@ -137,8 +137,8 @@ app('pathway')
 							<td>{id}</td>
 							<td>{longname}</td>
 							<td>{shortname}</td>
-							<td class="text-right">0</td>
-							<td class="text-right">
+							<td class="text-right text-end">0</td>
+							<td class="text-right text-end">
 								<a href="#unixgroup-{id}" class="btn text-danger remove-unixgroup"
 									data-api="{{ route('api.unixgroups.create') }}/{id}"
 									data-confirm="{{ trans('groups::groups.confirm delete') }}">
@@ -160,7 +160,7 @@ app('pathway')
 								<input type="text" name="longname" id="longname" class="form-control input-unixgroup" maxlength="48" pattern="[a-z0-9-]+" placeholder="{{ strtolower(trans('groups::groups.name')) }}" value="{{ $row->unixgroup }}-" />
 								@endif
 							</td>
-							<td class="text-right">
+							<td class="text-right text-end">
 								<a href="#longname" class="btn text-success add-unixgroup"
 									data-group="{{ $row->id }}"
 									data-api="{{ route('api.unixgroups.create') }}">
@@ -210,7 +210,7 @@ app('pathway')
 								endforeach;
 								?>{{ $prf . $dept->department->name }}
 							</td>
-							<td class="text-right">
+							<td class="text-right text-end">
 								<a href="#department-{{ $dept->id }}" class="btn text-danger remove-category"
 									data-api="{{ route('api.groups.groupdepartments.delete', ['group' => $row->id, 'id' => $dept->id]) }}"
 									data-confirm="{{ trans('groups::groups.confirm delete') }}">
@@ -221,7 +221,7 @@ app('pathway')
 					@endforeach
 						<tr class="hidden" id="department-{id}" data-id="{id}">
 							<td>{name}</td>
-							<td class="text-right">
+							<td class="text-right text-end">
 								<a href="#department-{id}" class="btn text-danger remove-category"
 									data-api="{{ route('api.groups.groupdepartments.create', ['group' => $row->id]) }}/{id}"
 									data-confirm="{{ trans('groups::groups.confirm delete') }}">
@@ -254,7 +254,7 @@ app('pathway')
 									@endforeach
 								</select>
 							</td>
-							<td class="text-right">
+							<td class="text-right text-end">
 								<a href="#department"
 									class="btn text-success add-category"
 									data-group="{{ $row->id }}"
@@ -287,7 +287,7 @@ app('pathway')
 								endforeach;
 								?>{{ $prf . $field->field->name }}
 							</td>
-							<td class="text-right">
+							<td class="text-right text-end">
 								<a href="#fieldofscience-{{ $field->id }}" class="btn text-danger remove-category"
 									data-api="{{ route('api.groups.groupfieldsofscience.delete', ['group' => $row->id, 'id' => $field->id]) }}"
 									data-confirm="{{ trans('groups::groups.confirm delete') }}">
@@ -298,7 +298,7 @@ app('pathway')
 					@endforeach
 						<tr class="hidden" id="fieldofscience-{id}" data-id="{id}">
 							<td>{name}</td>
-							<td class="text-right">
+							<td class="text-right text-end">
 								<a href="#fieldofscience-{id}" class="btn text-danger remove-category"
 									data-api="{{ route('api.groups.groupfieldsofscience.create', ['group' => $row->id]) }}/{id}"
 									data-confirm="{{ trans('groups::groups.confirm delete') }}">
@@ -331,7 +331,7 @@ app('pathway')
 									@endforeach
 								</select>
 							</td>
-							<td class="text-right">
+							<td class="text-right text-end">
 								<a href="#fieldofscience"
 									class="btn text-success add-category"
 									data-group="{{ $row->id }}"

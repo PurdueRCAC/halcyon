@@ -158,12 +158,12 @@ app('pathway')
 				<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 				<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-				<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+				<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 			</fieldset>
 		</div>
 		<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 			@if (auth()->user()->can('create orders.categories'))
-			<p class="text-right">
+			<p class="text-right text-end">
 				<a href="{{ route('site.orders.categories.create') }}" class="btn btn-info">
 					<span class="fa fa-plus" aria-hidden="true"></span> {{ trans('orders::orders.create category') }}
 				</a>
@@ -235,10 +235,10 @@ app('pathway')
 						<th scope="col">
 							{!! Html::grid('sort', trans('orders::orders.name'), 'name', $filters['order_dir'], $filters['order']) !!}
 						</th>
-						<th scope="col" class="priority-2 text-right">
+						<th scope="col" class="priority-2 text-right text-end">
 							{{ trans('orders::orders.products') }}
 						</th>
-						<th scope="col" class="priority-2 text-right">
+						<th scope="col" class="priority-2 text-right text-end">
 							{!! Html::grid('sort', trans('orders::orders.sequence'), 'sequence', $filters['order_dir'], $filters['order']) !!}
 						</th>
 					</tr>
@@ -269,10 +269,10 @@ app('pathway')
 								{{ $row->name }}
 							@endif
 						</td>
-						<td class="priority-2 text-right">
+						<td class="priority-2 text-right text-end">
 							{{ $row->products_count }}
 						</td>
-						<td class="priority-2 text-right">
+						<td class="priority-2 text-right text-end">
 							<!-- {{ $row->sequence }} -->
 							@if ($filters['order'] == 'sequence')
 								<span class="draghandle" draggable="true">

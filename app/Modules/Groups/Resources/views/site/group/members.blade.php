@@ -302,11 +302,11 @@ $i = 0;
 			<span class="fa fa-table" ara-hidden="true"></span> Export
 		</button>
 	</div>
-	<div class="col-md-6 text-right">
-		<a href="#add_member_dialog" data-toggle="modal" class="add_member btn btn-secondary btn-sm" data-membertype="1">
+	<div class="col-md-6 text-right text-end">
+		<a href="#add_member_dialog" data-toggle="modal" data-bs-toggle="modal" class="add_member btn btn-secondary btn-sm" data-membertype="1">
 			<span class="fa fa-plus-circle" aria-hidden="true"></span> Add Member
 		</a>
-		<a href="#import_member_dialog" data-toggle="modal" class="import_member btn btn-secondary btn-sm" data-membertype="1">
+		<a href="#import_member_dialog" data-toggle="modal" data-bs-toggle="modal" class="import_member btn btn-secondary btn-sm" data-membertype="1">
 			<span class="fa fa-upload" aria-hidden="true"></span> Import
 		</a>
 	</div>
@@ -394,7 +394,7 @@ $i = 0;
 <div class="card">
 	<div class="card-header">
 		Managers
-		<a href="#help_managers_span_{{ $group->id }}" data-toggle="modal" class="text-info tip" title="Help">
+		<a href="#help_managers_span_{{ $group->id }}" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help">
 			<span class="fa fa-question-circle" aria-hidden="true"></span>
 			<span class="sr-only visually-hidden">Help</span>
 		</a>
@@ -403,8 +403,8 @@ $i = 0;
 				<div class="modal-content dialog-content shadow-sm">
 					<div class="modal-header">
 						<div class="modal-title" id="help_managers_span_{{ $group->id }}-title">Managers</div>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+						<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+							<span class="visually-hidden" aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body dialog-body">
@@ -488,7 +488,7 @@ $i = 0;
 									<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span>
 								@elseif ($member->userid != $user->id || auth()->user()->can('manage groups'))
 									<div class="dropdown dropright mx-3">
-										<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 											<span class="sr-only visually-hidden">Options</span>
 										</button>
 										<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
@@ -611,7 +611,7 @@ $i = 0;
 <div class="card">
 	<div class="card-header">
 		Members
-		<a href="#help_members_span_{{ $group->id }}" data-toggle="modal" class="text-info tip" title="Help">
+		<a href="#help_members_span_{{ $group->id }}" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help">
 			<span class="fa fa-question-circle" aria-hidden="true"></span>
 			<span class="sr-only visually-hidden">Help</span>
 		</a>
@@ -620,8 +620,8 @@ $i = 0;
 				<div class="modal-content dialog-content shadow-sm">
 					<div class="modal-header">
 						<div class="modal-title" id="help_members_span_{{ $group->id }}-title">Members</div>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+						<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+							<span class="visually-hidden" aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body dialog-body">
@@ -687,7 +687,7 @@ $i = 0;
 										<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span>
 									@elseif ($member->userid != $user->id || auth()->user()->can('manage groups'))
 										<div class="dropdown dropleft mx-3">
-											<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 												<span class="sr-only visually-hidden">Options</span>
 											</button>
 											<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
@@ -819,7 +819,7 @@ $i = 0;
 <div class="card">
 	<div class="card-header">
 		Usage Reporting Viewers
-		<a href="#help_viewers_span_{{ $group->id }}" data-toggle="modal" class="text-help tip" title="Help">
+		<a href="#help_viewers_span_{{ $group->id }}" data-toggle="modal" data-bs-toggle="modal" class="text-help tip" title="Help">
 			<span class="fa fa-question-circle" aria-hidden="true"></span>
 			<span class="sr-only visually-hidden">Help</span>
 		</a>
@@ -828,8 +828,8 @@ $i = 0;
 				<div class="modal-content dialog-content shadow-sm">
 					<div class="modal-header">
 						<div class="modal-title" id="help_viewers_span_{{ $group->id }}-title">Usage Reporting Viewers</div>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+						<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+							<span class="visually-hidden" aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body dialog-body">
@@ -892,7 +892,7 @@ $i = 0;
 									<span class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></span>
 								@elseif ($member->userid != $user->id || auth()->user()->can('manage groups'))
 									<div class="dropdown dropright mx-3">
-										<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 											<span class="sr-only visually-hidden">Options</span>
 										</button>
 										<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
@@ -1008,7 +1008,7 @@ $i = 0;
 <div class="card">
 	<div class="card-header">
 		Disabled Members
-		<a href="#help_disabledmembers_span_{{ $group->id }}" data-toggle="modal" class="text-help tip" title="Help">
+		<a href="#help_disabledmembers_span_{{ $group->id }}" data-toggle="modal" data-bs-toggle="modal" class="text-help tip" title="Help">
 			<span class="fa fa-question-circle" aria-hidden="true"></span>
 			<span class="sr-only visually-hidden">Help</span>
 		</a>
@@ -1017,8 +1017,8 @@ $i = 0;
 				<div class="modal-content dialog-content shadow-sm">
 					<div class="modal-header">
 						<div class="modal-title" id="help_disabledmembers_span_{{ $group->id }}-title">Disabled Members</div>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+						<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+							<span class="visually-hidden" aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body dialog-body">
@@ -1157,8 +1157,8 @@ $i = 0;
 		<form id="form_{{ $group->id }}" method="post" class="modal-content dialog-content shadow-sm">
 			<div class="modal-header">
 				<div class="modal-title" id="add_member_dialog-title">Add users to {{ $group->name }}</div>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
+				<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+					<span class="visually-hidden" aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body dialog-body">
@@ -1230,7 +1230,7 @@ $i = 0;
 
 				<div class="alert alert-danger hide" id="add_member_error"></div>
 			</div>
-			<div class="modal-footer dialog-footer text-right">
+			<div class="modal-footer dialog-footer text-right text-end">
 				<button disabled="disabled" id="add_member_save" class="btn btn-success"
 					data-group="{{ $group->id }}"
 					data-api="{{ route('api.groups.members.create') }}"
@@ -1252,8 +1252,8 @@ $i = 0;
 		<form action="{{ route('site.groups.import') }}" method="post" enctype="multipart/form-data" class="modal-content dialog-content shadow-sm">
 			<div class="modal-header">
 				<div class="modal-title" id="import_member_dialog-title">Import spreadsheet to {{ $group->name }}</div>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
+				<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+					<span class="visually-hidden" aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body dialog-body">
@@ -1284,7 +1284,7 @@ $i = 0;
 					</div>
 				@endif
 			</div>
-			<div class="modal-footer dialog-footer text-right">
+			<div class="modal-footer dialog-footer text-right text-end">
 				<input type="submit" class="order btn btn-primary" data-group="{{ $group->id }}" value="Import" />
 			</div>
 

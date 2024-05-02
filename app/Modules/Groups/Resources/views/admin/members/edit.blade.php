@@ -49,7 +49,7 @@
 						<tr>
 							<th scope="col">{{ trans('groups::groups.unix group') }}</th>
 							<th scope="col" class="text-center">{{ trans('groups::groups.member') }}</th>
-							<th scope="col" class="text-right">Added</th>
+							<th scope="col" class="text-right text-end">Added</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -68,7 +68,7 @@
 									<label class="form-check-label" for="unixgroup-{{ $u->id }}">{{ trans('global.yes') }}</label>
 								</div>
 							</td>
-							<td class="text-right">
+							<td class="text-right text-end">
 								@if ($has !== false)
 									<time>{{ $u->datetimecreated }}</time>
 								@endif

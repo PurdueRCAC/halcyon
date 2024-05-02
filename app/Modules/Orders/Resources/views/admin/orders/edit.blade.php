@@ -514,9 +514,9 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 @if ($order->id)
 	<nav class="container-fluid">
 		<ul id="queue-tabs" class="nav nav-tabs" role="tablist">
-			<li class="nav-item" role="presentation"><a class="nav-link active" href="#order-info" data-toggle="tab" role="tab" id="order-info-tab" aria-controls="order-info" aria-selected="true">{{ trans('orders::orders.order') }}</a></li>
-			<li class="nav-item" role="presentation"><a class="nav-link" href="#order-notes" data-toggle="tab" role="tab" id="order-notes-tab" aria-controls="order-notes" aria-selected="false">{{ trans('orders::orders.notes') }}</a></li>
-			<li class="nav-item" role="presentation"><a class="nav-link" href="#order-history" data-toggle="tab" role="tab" id="order-history-tab" aria-controls="order-history" aria-selected="false">{{ trans('orders::orders.history') }}</a></li>
+			<li class="nav-item" role="presentation"><a class="nav-link active" href="#order-info" data-toggle="tab" data-bs-toggle="tab" role="tab" id="order-info-tab" aria-controls="order-info" aria-selected="true">{{ trans('orders::orders.order') }}</a></li>
+			<li class="nav-item" role="presentation"><a class="nav-link" href="#order-notes" data-toggle="tab" data-bs-toggle="tab" role="tab" id="order-notes-tab" aria-controls="order-notes" aria-selected="false">{{ trans('orders::orders.notes') }}</a></li>
+			<li class="nav-item" role="presentation"><a class="nav-link" href="#order-history" data-toggle="tab" data-bs-toggle="tab" role="tab" id="order-history-tab" aria-controls="order-history" aria-selected="false">{{ trans('orders::orders.history') }}</a></li>
 		</ul>
 	</nav>
 	<div class="tab-content" id="order-tabs-content">
@@ -656,7 +656,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							<div class="col col-md-6">
 								<h3 class="pane-title card-title">{{ '#' . $order->id }}</h3>
 							</div>
-							<div class="col col-md-6 text-right">
+							<div class="col col-md-6 text-right text-end">
 								<?php
 								if ($order->status == 'pending_payment'
 								|| $order->status == 'pending_boassignment'
@@ -802,7 +802,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							<div class="col col-md-6">
 								<h3 class="card-title">{{ trans('orders::orders.items') }}</h3>
 							</div>
-							<div class="col col-md-6 text-right">
+							<div class="col col-md-6 text-right text-end">
 								<?php
 								if (
 								($order->status == 'pending_payment'
@@ -810,7 +810,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								|| (
 									($order->status == 'pending_approval' || $order->status == 'pending_fulfillment') && auth()->user()->can('manage orders'))
 									|| ($order->status == 'pending_approval' && !$myorder)) && (auth()->user()->can('manage orders') || $myorder)): ?>
-									<a href="#help4" data-toggle="modal" class="tip text-info" title="Help">
+									<a href="#help4" data-toggle="modal" data-bs-toggle="modal" class="tip text-info" title="Help">
 										<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 									</a>
 
@@ -826,8 +826,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											<div class="modal-content shadow-sm">
 												<div class="modal-header">
 													<div class="modal-title" id="help4-title">Edit Quantities</div>
-													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-														<span aria-hidden="true">&times;</span>
+													<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+														<span class="visually-hidden" aria-hidden="true">&times;</span>
 													</button>
 												</div>
 												<div class="modal-body">
@@ -849,9 +849,9 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								<tr>
 									<th scope="col">{{ trans('orders::orders.status') }}</th>
 									<th scope="col">{{ trans('orders::orders.item') }}</th>
-									<th scope="col" class="text-right">{{ trans('orders::orders.quantity') }}</th>
-									<th scope="col" class="text-right">{{ trans('orders::orders.price') }}</th>
-									<th scope="col" class="text-right">{{ trans('orders::orders.total') }}</th>
+									<th scope="col" class="text-right text-end">{{ trans('orders::orders.quantity') }}</th>
+									<th scope="col" class="text-right text-end">{{ trans('orders::orders.price') }}</th>
+									<th scope="col" class="text-right text-end">{{ trans('orders::orders.total') }}</th>
 									@if (auth()->user()->can('manage orders'))
 										<th class="item-edit-show hide"></th>
 									@endif
@@ -910,7 +910,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 												@endif
 											</p>
 										</td>
-										<td class="text-right">
+										<td class="text-right text-end">
 											<input type="hidden" name="item" value="{{ $item->id }}" data-api="{{ route('api.orders.items.update', ['id' => $item->id]) }}" />
 											<input type="hidden" name="original_quantity" value="{{ $item->quantity }}" />
 
@@ -938,7 +938,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 												</span>
 											@endif
 										</td>
-										<td class="text-right">
+										<td class="text-right text-end">
 											{{ config('orders.currency', '$') }} <span name="price">{{ $item->formattedPrice }}</span><br/>
 											<span class="text-nowrap">per {{ $item->product->unit }}</span>
 										</td>
@@ -983,7 +983,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 												@endforeach
 											</select>
 										</td>
-										<td class="text-right">
+										<td class="text-right text-end">
 											<span class="quantity_span hide"></span>
 											<input type="number" name="newquantity" value="0" size="4" class="item-quantity form-control total-update" />
 											<span class="item-period hide">
@@ -992,7 +992,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 												<span class="periods_span"></span>
 											</span>
 										</td>
-										<td class="text-right">
+										<td class="text-right text-end">
 											{{ config('orders.currency', '$') }} <span name="price" class="item-price">0.00</span><br/>
 											<span class="text-nowrap">per <span class="item-unit">unit</span></span>
 										</td>
@@ -1014,7 +1014,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							</tbody>
 							<tfoot>
 								<tr>
-									<th class="text-right" colspan="4" scope="row">
+									<th class="text-right text-end" colspan="4" scope="row">
 										<strong>{{ trans('orders::orders.order total') }}</strong>
 									</th>
 									<td class="text-right text-nowrap orderprice">
@@ -1046,7 +1046,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 									{{ trans('orders::orders.payment information') }}
 								</h3>
 							</div>
-							<div class="col col-md-6 text-right">
+							<div class="col col-md-6 text-right text-end">
 								@if (count($order->accounts) == 0 && $canEdit)
 									<a href="#help2" class="help icn tip text-info" title="Help on Payment Information">
 										<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden"> Help</span>
@@ -1295,8 +1295,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							</tbody>
 							<tfoot>
 								<tr>
-									<td class="text-right" colspan="{{ count($order->accounts) == 0 ? 2 : 3 }}">
-										<a href="#help2" data-toggle="modal" class="text-info"><!--
+									<td class="text-right text-end" colspan="{{ count($order->accounts) == 0 ? 2 : 3 }}">
+										<a href="#help2" data-toggle="modal" data-bs-toggle="modal" class="text-info"><!--
 											--><span id="balance_error" aria-hidden="true" class="fa fa-exclamation-triangle text-warning stash"></span><span class="sr-only visually-hidden">Balance should be $0.00 before saving changes.</span><!--
 										--></a>
 										<strong>{{ trans('orders::orders.balance remaining') }}</strong>
@@ -1320,8 +1320,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								<div class="modal-content shadow-sm">
 									<div class="modal-header">
 										<div class="modal-title" id="help2-title">Payment Information</div>
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true">&times;</span>
+										<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+											<span class="visually-hidden" aria-hidden="true">&times;</span>
 										</button>
 									</div>
 									<div class="modal-body">
@@ -1354,7 +1354,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 										</a>
 									</h3>
 								</div>
-								<div class="col-md-6 text-right">
+								<div class="col-md-6 text-right text-end">
 									@if ($order->status != 'canceled')
 									<a href="{{ route('site.orders.read', ['id' => $order->id, 'edit' => 'usernotes']) }}" class="edit-property tip" title="Edit" data-prop="usernotes" data-value="{{ $order->id }}">
 										<span class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_usernotes"></span><span class="sr-only visually-hidden">Edit</span>
@@ -1368,7 +1368,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 						@else
 							<h3 class="panel-title card-title">
 								{{ trans('orders::orders.notes') }}
-								<a href="#help1" data-toggle="modal" class="tip text-info" title="Help on Order Notes">
+								<a href="#help1" data-toggle="modal" data-bs-toggle="modal" class="tip text-info" title="Help on Order Notes">
 									<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 								</a>
 							</h3>
@@ -1380,8 +1380,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								<div class="modal-content shadow-sm">
 									<div class="modal-header">
 										<div class="modal-title" id="help1-title">Order Notes</div>
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true">&times;</span>
+										<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+											<span class="visually-hidden" aria-hidden="true">&times;</span>
 										</button>
 									</div>
 									<div class="modal-body">
@@ -1403,7 +1403,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 					<div class="card-footer">
 						@foreach ($order->items as $item)
 							@if ($item->origorderitemid)
-								<a href="#recurringusernotes" data-toggle="modal" class="text-info tip" title="Recurring item notes">
+								<a href="#recurringusernotes" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Recurring item notes">
 									<span class="fa fa-sticky-note" aria-hidden="true"></span> Past Notes on recurring orders
 								</a>
 								@php
@@ -1419,8 +1419,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 						<div class="modal-content shadow-sm">
 							<div class="modal-header">
 								<div class="modal-title" id="recurringusernotes-title">Past User Notes</div>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
+								<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+									<span class="visually-hidden" aria-hidden="true">&times;</span>
 								</button>
 							</div>
 							<div class="modal-body">
@@ -1441,7 +1441,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 													<li class="list-group-item">
 														<div class="mb-1">
 															<strong>Order <a href="{{ route('site.orders.read', ['id' => $usernote->orderid]) }}">#{{ $usernote->orderid }}</a></strong>
-															<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
+															<div class="float-right float-end">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
 														</div>
 														<blockquote>
 															<p>{!! $usernote->order->usernotes ? nl2br($usernote->order->usernotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
@@ -1466,7 +1466,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 								<div class="col-md-6">
 									<h3 class="pane-title card-title">{{ trans('orders::orders.staff notes') }}</h3>
 								</div>
-								<div class="col-md-6 text-right">
+								<div class="col-md-6 text-right text-end">
 								@if ($order->status != 'canceled')
 									<a href="{{ route('site.orders.read', ['id' => $order->id, 'edit' => 'usernotes']) }}" class="edit-property tip" title="Edit" data-prop="staffnotes" data-value="{{ $order->id }}">
 										<span class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_staffnotes"></span><span class="sr-only visually-hidden">Edit</span>
@@ -1489,7 +1489,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 						<div class="card-footer">
 							@foreach ($order->items as $item)
 								@if ($item->origorderitemid)
-									<a href="#recurringstaffnotes" data-toggle="modal" class="text-info tip" title="Recurring item notes">
+									<a href="#recurringstaffnotes" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Recurring item notes">
 										<span class="fa fa-sticky-note" aria-hidden="true"></span> Past Notes on recurring orders
 									</a>
 									@php
@@ -1505,8 +1505,8 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 							<div class="modal-content shadow-sm">
 								<div class="modal-header">
 									<div class="modal-title" id="recurringstaffnotes-title">Past Staff Notes</div>
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
+									<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+										<span class="visually-hidden" aria-hidden="true">&times;</span>
 									</button>
 								</div>
 								<div class="modal-body">
@@ -1527,7 +1527,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 														<li class="list-group-item">
 															<div class="mb-1">
 																<strong>Order <a href="{{ route('site.orders.read', ['id' => $usernote->orderid]) }}">#{{ $usernote->orderid }}</a></strong>
-																<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
+																<div class="float-right float-end">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
 															</div>
 															<blockquote>
 																<p>{!! $usernote->order->staffnotes ? nl2br($usernote->order->staffnotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
@@ -1780,7 +1780,7 @@ $canEdit = (auth()->user()->can('edit orders') || (auth()->user()->can('edit.own
 											<div class="col-md-8">
 											{!! $actor . ' ' . $did !!}
 											</div>
-											<div class="col-md-4 text-right">
+											<div class="col-md-4 text-right text-end">
 												<time datetime="{{ $dt->toDateTimeLocalString() }}" class="entry-log-date">
 													@if ($dt < $old)
 														{{ $dt ? $dt->format('d M Y') : trans('global.unknown') }}

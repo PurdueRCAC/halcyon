@@ -41,7 +41,7 @@ app('pathway')
 						<div class="col-md-8">
 							<h3 class="card-title">Recurring Item #{{ $item->id }}</h3>
 						</div>
-						<div class="col-md-4 text-right">
+						<div class="col-md-4 text-right text-end">
 							@if ($item->paiduntil && $item->paiduntil == $item->billeduntil)
 								<button class="btn btn-sm btn-secondary recur-renew tip" title="Generate an order to extend service for this recurring item" data-api="{{ route('api.orders.create') }}" data-item="{{ $item->id }}">Renew Now</button>
 							@endif
@@ -126,7 +126,7 @@ app('pathway')
 							<th scope="col" class="priority-4" colspan="2">
 								{{ trans('orders::orders.service') }}
 							</th>
-							<th scope="col" class="priority-4 text-right">
+							<th scope="col" class="priority-4 text-right text-end">
 								{{ trans('orders::orders.price') }}
 							</th>
 						</tr>
@@ -168,7 +168,7 @@ app('pathway')
 									{{ $row->end ? $row->end->format('Y-m-d') : '-' }}
 								@endif
 							</td>
-							<td class="text-right">
+							<td class="text-right text-end">
 								@if ($row->order->isCanceled())
 									-
 								@else
@@ -183,10 +183,10 @@ app('pathway')
 					</tbody>
 					<tfoot>
 						<tr>
-							<th scope="row" colspan="5" class="text-right">
+							<th scope="row" colspan="5" class="text-right text-end">
 								<strong>Total</strong>
 							</th>
-							<td class="text-right">
+							<td class="text-right text-end">
 								$&nbsp;{{ $item->formatCurrency($total) }}
 							</td>
 						</tr>

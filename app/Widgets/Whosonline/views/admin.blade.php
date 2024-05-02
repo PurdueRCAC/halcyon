@@ -11,7 +11,7 @@
 				<th scope="col">{{ trans('widget.whosonline::whosonline.user') }}</td>
 				<th scope="col" class="priority-3">{{ trans('widget.whosonline::whosonline.last activity') }}</th>
 				@if ($editAuthorized)
-					<th scope="col" class="text-right">{{ trans('widget.whosonline::whosonline.logout') }}</th>
+					<th scope="col" class="text-right text-end">{{ trans('widget.whosonline::whosonline.logout') }}</th>
 				@endif
 			</tr>
 		</thead>
@@ -47,7 +47,7 @@
 								{{ Carbon\Carbon::parse($row->last_activity)->diffForHumans() }}
 							</td>
 							@if ($editAuthorized)
-							<td class="text-right">
+							<td class="text-right text-end">
 								@if ($user)
 									<a class="btn btn-sm btn-danger force-logout" href="{{ route('admin.users.edit', ['id' => $row->user_id]) }}">
 										{{ trans('widget.whosonline::whosonline.logout') }}

@@ -27,7 +27,7 @@
 					<th scope="col" class="priority-4">
 						<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('orders::orders.submitter'), 'userid', $filters['order_dir'], $filters['order']); ?>
 					</th>
-					<th scope="col" class="priority-2 text-right">
+					<th scope="col" class="priority-2 text-right text-end">
 						{{ trans('orders::orders.total') }}
 					</th>
 				</tr>
@@ -81,7 +81,7 @@
 							@endif
 						@endif
 					</td>
-					<td class="priority-2 text-right">
+					<td class="priority-2 text-right text-end">
 						{{ config('orders.currency', '$') }} {{ $row->formatNumber($row->ordertotal) }}
 					</td>
 				</tr>

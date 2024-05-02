@@ -10,7 +10,7 @@
 				<div class="col-md-8">
 					<h4 class="card-title py-0">{{ $widget->title }}</h4>
 				</div>
-				<div class="col-md-4 text-right">
+				<div class="col-md-4 text-right text-end">
 					<a href="{{ route('admin.groups.index') }}">{{ trans('widget.groups::groups.view all') }}</a>
 				</div>
 			</div>
@@ -21,7 +21,7 @@
 			<thead>
 				<tr>
 					<th scope="col">{{ trans('widget.groups::groups.name') }}</th>
-					<th scope="col" class="text-right">{{ trans('widget.groups::groups.members') }}</th>
+					<th scope="col" class="text-right text-end">{{ trans('widget.groups::groups.members') }}</th>
 					<th scope="col" class="text-center">{{ trans('widget.groups::groups.created') }}</th>
 				</tr>
 			</thead>
@@ -36,7 +36,7 @@
 							{{ $group->name }}
 						</a>
 					</td>
-					<td class="text-right">
+					<td class="text-right text-end">
 						<a href="{{ route('admin.groups.members', ['group' => $group->id]) }}">
 							{{ $group->members_count }}
 						</a>

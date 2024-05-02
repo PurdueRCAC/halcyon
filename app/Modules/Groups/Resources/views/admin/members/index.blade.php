@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	if (btnnew) {
 		btnnew.setAttribute('data-toggle', 'modal');
 		btnnew.setAttribute('data-target', '#new-member');
+		btnnew.setAttribute('data-bs-toggle', 'modal');
+		btnnew.setAttribute('data-bs-target', '#new-member');
 
 		btnnew.addEventListener('click', function (e) {
 			e.preventDefault();
@@ -185,13 +187,13 @@ app('pathway')
 					</span>
 				</div>
 
-				<button type="submit" class="btn btn-secondary sr-only">{{ trans('search.submit') }}</button>
+				<button type="submit" class="btn btn-secondary sr-only visually-hidden">{{ trans('search.submit') }}</button>
 
 				<input type="hidden" name="group" value="{{ $filters['group'] }}" />
 				<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
 				<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
 			</div>
-			<div class="col col-md-8 filter-select text-right">
+			<div class="col col-md-8 filter-select text-right text-end">
 				<label class="sr-only visually-hidden" for="filter-state">{{ trans('groups::groups.state') }}</label>
 				<select name="state" id="filter-state" class="form-control filter filter-submit">
 					<option value="*">{{ trans('groups::groups.all states') }}</option>
@@ -313,7 +315,7 @@ app('pathway')
 							{{ $type->name }}
 						@endif
 					<!-- <div class="btn-group btn-group-sm dropdown" role="group" aria-label="Group membership type">
-						<button type="button" class="btn btn-secondary {{ $cls }} dropdown-toggle" id="btnGroupDrop{{ $row->id }}" title="{{ trans('groups::groups.membership type') }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<button type="button" class="btn btn-secondary {{ $cls }} dropdown-toggle" id="btnGroupDrop{{ $row->id }}" title="{{ trans('groups::groups.membership type') }}" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							{{ $row->type->name }}
 						</button>
 						@if (auth()->user()->can('edit groups'))
@@ -389,8 +391,8 @@ app('pathway')
 		<form id="form_{{ $group->id }}" action="{{ route('admin.groups.members.create', ['group' => $group->id]) }}" method="post" class="modal-content shadow-sm">
 			<div class="modal-header">
 				<div class="modal-title" id="new-member-title">Add users to {{ $group->name }}</div>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
+				<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+					<span class="visually-hidden" aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">
@@ -412,7 +414,7 @@ app('pathway')
 			</div>
 			<div class="modal-footer">
 				<div class="row">
-					<div class="col-md-12 text-right">
+					<div class="col-md-12 text-right text-end">
 						<input type="button" disabled="disabled" id="add-member" class="btn btn-success"
 							data-group="{{ $group->id }}"
 							data-api="{{ route('api.groups.members.create') }}"

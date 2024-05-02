@@ -248,8 +248,8 @@ $i = 0;
 			<span class="fa fa-download" ara-hidden="true"></span> Export to CSV
 		</button>
 	</div>
-	<div class="col-md-6 text-right">
-		<a href="#add_member_dialog" data-toggle="modal" class="add_member btn btn-info btn-sm" data-membertype="1">
+	<div class="col-md-6 text-right text-end">
+		<a href="#add_member_dialog" data-toggle="modal" data-bs-toggle="modal" class="add_member btn btn-info btn-sm" data-membertype="1">
 			<span class="fa fa-plus-circle" ara-hidden="true"></span> Add Member
 		</a>
 	</div>
@@ -319,7 +319,7 @@ $i = 0;
 	<div class="card-header">
 		<h4 class="m-0 p-0">
 			Managers
-			<a href="#help_managers_span_{{ $group->id }}" data-toggle="modal" class="btn text-info" data-tip="Help">
+			<a href="#help_managers_span_{{ $group->id }}" data-toggle="modal" data-bs-toggle="modal" class="btn text-info" data-tip="Help">
 				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 			</a>
 		</h4>
@@ -328,8 +328,8 @@ $i = 0;
 				<div class="modal-content shadow-sm">
 					<div class="modal-header">
 						<div class="modal-title" id="help_managers_span_{{ $group->id }}-title">Managers</div>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+						<button type="button" class="btn-close close" data-dismiss="modal" data-bs-toggle="modal" aria-label="Close">
+							<span class="visually-hidden" aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body dialog-body">
@@ -399,7 +399,7 @@ $i = 0;
 						<td class="text-center">
 							@if (auth()->user()->can('manage groups'))
 								<div class="dropdown dropright">
-									<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 										<span class="sr-only visually-hidden">Options</span>
 									</button>
 									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
@@ -513,7 +513,7 @@ $i = 0;
 	<div class="card-header">
 		<h4 class="m-0 p-0">
 			Members
-			<a href="#help_members_span_{{ $group->id }}" data-toggle="modal" class="btn text-info" data-tip="Help">
+			<a href="#help_members_span_{{ $group->id }}" data-toggle="modal" data-bs-toggle="modal" class="btn text-info" data-tip="Help">
 				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 			</a>
 		</h4>
@@ -522,8 +522,8 @@ $i = 0;
 				<div class="modal-content shadow-sm">
 					<div class="modal-header">
 						<div class="modal-title" id="help_members_span_{{ $group->id }}-title">Members</div>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+						<button type="button" class="btn-close close" data-dismiss="modal" data-bs-toggle="modal" aria-label="Close">
+							<span class="visually-hidden" aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body dialog-body">
@@ -578,7 +578,7 @@ $i = 0;
 							</td>
 							<td class="text-center">
 								<div class="dropdown dropleft">
-									<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 										<span class="sr-only visually-hidden">Options</span>
 									</button>
 									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
@@ -701,7 +701,7 @@ $i = 0;
 	<div class="card-header">
 		<h4 class="m-0 p-0">
 			Usage Reporting Viewers
-			<a href="#help_viewers_span_{{ $group->id }}" data-toggle="modal" class="btn text-info" data-tip="Help">
+			<a href="#help_viewers_span_{{ $group->id }}" data-toggle="modal" data-bs-toggle="modal" class="btn text-info" data-tip="Help">
 				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 			</a>
 		</h4>
@@ -710,8 +710,8 @@ $i = 0;
 				<div class="modal-content shadow-sm">
 					<div class="modal-header">
 						<div class="modal-title" id="help_viewers_span_{{ $group->id }}-title">Usage Reporting Viewers</div>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+						<button type="button" class="btn-close close" data-dismiss="modal" data-bs-toggle="modal" aria-label="Close">
+							<span class="visually-hidden" aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body dialog-body">
@@ -763,7 +763,7 @@ $i = 0;
 						</td>
 						<td class="text-right text-nowrap">
 							<div class="dropdown dropright">
-								<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<button class="btn btn-options fa fa-ellipsis-h" type="button" id="dropdownMenuButton{{ $member->id }}" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									<span class="sr-only visually-hidden">Options</span>
 								</button>
 								<div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $member->id }}">
@@ -869,7 +869,7 @@ $i = 0;
 	<div class="card-header">
 		<h4 class="m-0 p-0">
 			Disabled Members
-			<a href="#help_disabledmembers_span_{{ $group->id }}" data-toggle="modal" class="btn text-info" data-tip="Help">
+			<a href="#help_disabledmembers_span_{{ $group->id }}" data-toggle="modal" data-bs-toggle="modal" class="btn text-info" data-tip="Help">
 				<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 			</a>
 		</h4>
@@ -878,8 +878,8 @@ $i = 0;
 				<div class="modal-content shadow-sm">
 					<div class="modal-header">
 						<div class="modal-title" id="help_disabledmembers_span_{{ $group->id }}-title">Disabled Members</div>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+						<button type="button" class="btn-close close" data-dismiss="modal" data-bs-toggle="modal" aria-label="Close">
+							<span class="visually-hidden" aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body dialog-body">
@@ -914,7 +914,7 @@ $i = 0;
 						@foreach ($unixgroups as $unix)
 							<th scope="col" class="text-nowrap text-center">{{ $unix->longname }}</th>
 						@endforeach
-						<th scope="col" class="text-right">Options</th>
+						<th scope="col" class="text-right text-end">Options</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -1022,8 +1022,8 @@ $i = 0;
 		<form id="form_{{ $group->id }}" method="post" class="modal-content shadow-sm">
 			<div class="modal-header">
 				<div class="modal-title" id="add_member_dialog-title">Add users to {{ $group->name }}</div>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
+				<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+					<span class="visually-hidden" aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			
@@ -1102,7 +1102,7 @@ $i = 0;
 				</div>
 				<div class="modal-footer">
 					<div class="row">
-						<div class="col-md-12 text-right">
+						<div class="col-md-12 text-right text-end">
 							<input type="button" disabled="disabled" id="add_member_save" class="btn btn-success"
 								data-group="{{ $group->id }}"
 								data-api="{{ route('api.groups.members.create') }}"

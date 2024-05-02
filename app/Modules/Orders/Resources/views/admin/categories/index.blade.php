@@ -59,7 +59,9 @@ app('pathway')
 					<span class="input-group-append"><span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span></span>
 				</span>
 			</div>
-			<div class="col col-md-9 filter-select text-right">
+			<div class="col col-md-6">
+			</div>
+			<div class="col col-md-3 filter-select text-right text-end">
 				<label class="sr-only visually-hidden" for="filter_state">{{ trans('global.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.option.all states') }}</option>
@@ -72,7 +74,7 @@ app('pathway')
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
@@ -95,7 +97,7 @@ app('pathway')
 				<th scope="col" class="priority-2 numeric">
 					{{ trans('orders::orders.products') }}
 				</th>
-				<th scope="col" class="priority-2 text-right">
+				<th scope="col" class="priority-2 text-right text-end">
 					{!! Html::grid('sort', trans('orders::orders.sequence'), 'sequence', $filters['order_dir'], $filters['order']) !!}
 				</th>
 			</tr>
@@ -132,7 +134,7 @@ app('pathway')
 				<td class="priority-2 numeric">
 					{{ $row->products_count }}
 				</td>
-				<td class="priority-6 text-right">
+				<td class="priority-6 text-right text-end">
 					<span class="badge badge-secondary">{{ $row->sequence }}</span>
 						<!-- <span class="drag-handle" draggable="true">
 							<svg class="MiniIcon DragMiniIcon DragHandle-icon" viewBox="0 0 24 24"><path d="M10,4c0,1.1-0.9,2-2,2S6,5.1,6,4s0.9-2,2-2S10,2.9,10,4z M16,2c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,2,16,2z M8,10 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,10,8,10z M16,10c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,10,16,10z M8,18 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,18,8,18z M16,18c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,18,16,18z"></path></svg>

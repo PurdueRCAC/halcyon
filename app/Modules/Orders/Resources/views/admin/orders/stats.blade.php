@@ -167,9 +167,9 @@ app('pathway')
 				</div>
 				<input type="hidden" name="recurring" value="{{ $filters['recurring'] }}" />
 			</div>
-			<div class="col col-md-6 text-right">
+			<div class="col col-md-6 text-right text-end">
 				<div class="btn-group position-static" role="group" aria-label="Specific date range">
-					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						@if ($filters['start'] || $filters['end'])
 							@if ($filters['start'])
 								{{ $filters['start'] }}
@@ -292,7 +292,7 @@ app('pathway')
 				<div class="card-body">
 					<div class="stat-block">
 						<div class="text-info">
-							<strong class="float-right">{{ config('orders.currency', '$') }} {{ $stats['sold'] }}</strong>
+							<strong class="float-right float-end">{{ config('orders.currency', '$') }} {{ $stats['sold'] }}</strong>
 							<span class="fa fa-shopping-cart display-4 float-left" aria-hidden="true"></span>
 							<span class="value">{{ number_format($stats['submitted']) }}</span><br />
 							<span class="key">{{ trans('orders::orders.submitted') }}</span>
@@ -314,7 +314,7 @@ app('pathway')
 				<div class="card-body">
 					<div class="stat-block">
 						<div class="text-danger">
-							<strong class="float-right">{{ config('orders.currency', '$') }} {{ $stats['uncharged'] }}</strong>
+							<strong class="float-right float-end">{{ config('orders.currency', '$') }} {{ $stats['uncharged'] }}</strong>
 							<span class="fa fa-exclamation-triangle display-4 float-left" aria-hidden="true"></span>
 							<span class="value">{{ number_format($stats['canceled']) }}</span><br />
 							<span class="key">{{ trans('orders::orders.canceled') }}</span>
@@ -335,7 +335,7 @@ app('pathway')
 				<div class="card-body">
 					<div class="stat-block">
 						<div class="text-success">
-							<strong class="float-right">{{ config('orders.currency', '$') }} {{ $stats['collected'] }}</strong>
+							<strong class="float-right float-end">{{ config('orders.currency', '$') }} {{ $stats['collected'] }}</strong>
 							<span class="fa fa-check display-4 float-left" aria-hidden="true"></span>
 							<span class="value">{{ number_format($stats['fulfilled']) }}</span><br />
 							<span class="key">{{ trans('orders::orders.fulfilled') }}</span>
@@ -369,7 +369,7 @@ app('pathway')
 							<li>
 								<strong>Fulfillment</strong><br />
 								<span class="text-muted">{{ $stats['steps']['fulfilled']['average'] }}</span>
-								<span class="text-muted float-right">{{ $stats['steps']['completed']['average'] }}</span>
+								<span class="text-muted float-right float-end">{{ $stats['steps']['completed']['average'] }}</span>
 							</li>
 						</ol>
 					</div>
@@ -410,7 +410,7 @@ app('pathway')
 								<td>
 									{{ $name }}
 								</td>
-								<td class="text-right">
+								<td class="text-right text-end">
 									{{ number_format($val) }}
 								</td>
 							</tr>
@@ -460,7 +460,7 @@ app('pathway')
 								<thead>
 									<tr>
 										<th scope="col">Category</th>
-										<th scope="col" class="text-right">Total</th>
+										<th scope="col" class="text-right text-end">Total</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -469,7 +469,7 @@ app('pathway')
 										<td>
 											<span class="legend-key"></span> {{ $name }}
 										</td>
-										<td class="text-right">
+										<td class="text-right text-end">
 											{{ number_format($val) }}
 										</td>
 									</tr>
@@ -522,7 +522,7 @@ app('pathway')
 								<thead>
 									<tr>
 										<th scope="col">Category</th>
-										<th scope="col" class="text-right">Total</th>
+										<th scope="col" class="text-right text-end">Total</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -531,7 +531,7 @@ app('pathway')
 										<td>
 											<span class="legend-key"></span> {{ $name }}
 										</td>
-										<td class="text-right">
+										<td class="text-right text-end">
 											{{ config('orders.currency', '$') }} {{ App\Modules\Orders\Helpers\Currency::formatNumber($val) }}
 										</td>
 									</tr>

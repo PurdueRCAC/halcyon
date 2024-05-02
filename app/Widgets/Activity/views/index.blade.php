@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				<div class="col-md-8">
 					<h4 class="card-title py-0">{{ $widget->title }}</h4>
 				</div>
-				<div class="col-md-4 text-right">
+				<div class="col-md-4 text-right text-end">
 					<a href="{{ route('admin.history.activity') }}">{{ trans('widget.activity::activity.view all') }}</a>
 				</div>
 			</div>
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				<th scope="col">{{ trans('widget.activity::activity.timestamp') }}</th>
 				<th scope="col">{{ trans('widget.activity::activity.transportmethod') }}</th>
 				<th scope="col">{{ trans('widget.activity::activity.uri') }}</th>
-				<th scope="col" class="text-right">{{ trans('widget.activity::activity.status') }}</th>
+				<th scope="col" class="text-right text-end">{{ trans('widget.activity::activity.status') }}</th>
 			</thead>
 			<tbody>
 				@php
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
 							{{ $row->uri }}
 						@endif
 					</td>
-					<td class="text-right">
+					<td class="text-right text-end">
 						@if ($row->status >= 500)
 							<span class="badge badge-danger">
 						@elseif ($row->status >= 300)

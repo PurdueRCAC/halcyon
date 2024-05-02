@@ -84,14 +84,14 @@ app('pathway')
 			<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
 			<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
 
-			<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+			<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 		</fieldset>
 	</div>
 	<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 		@if (auth()->user()->can('manage orders'))
-			<div class="text-right">
+			<div class="text-right text-end">
 				<div class="dropdown btn-group">
-					<button class="btn btn-primary dropdown-toggle" type="button" id="exportbutton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<button class="btn btn-primary dropdown-toggle" type="button" id="exportbutton" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						<span class="fa fa-table" aria-hidden="true"></span> {{ trans('orders::orders.export') }}
 					</button>
 					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="exportbutton">
@@ -115,7 +115,7 @@ app('pathway')
 						</a>
 					</div>
 				</div>
-				<a href="#import-orders" data-toggle="modal" class="btn btn-secondary btn-import">
+				<a href="#import-orders" data-toggle="modal" data-bs-toggle="modal" class="btn btn-secondary btn-import">
 					<span class="fa fa-upload" aria-hidden="true"></span> {{ trans('orders::orders.import') }}
 				</a>
 			</div>
@@ -279,7 +279,7 @@ app('pathway')
 						{{ config('orders.currency', '$') }} {{ $row->formatNumber($row->ordertotal) }}
 					</td>
 					<td>
-						<a class="items-toggle tip" data-toggle="collapse" data-parent="#orders" href="#row{{ $row->id }}" title="Items in this order">
+						<a class="items-toggle tip" data-toggle="collapse" data-bs-toggle="collapse" data-parent="#orders" href="#row{{ $row->id }}" title="Items in this order">
 							<span class="fa fa-shopping-cart" aria-hidden="true"></span><span class="sr-only visually-hidden">Items</span>
 						</a>
 					</td>
@@ -291,9 +291,9 @@ app('pathway')
 							<thead>
 								<tr>
 									<th scope="col">{{ trans('orders::orders.item') }}</th>
-									<th scope="col" class="text-right">{{ trans('orders::orders.quantity') }}</th>
-									<th scope="col" class="text-right">{{ trans('orders::orders.price') }}</th>
-									<th scope="col" class="text-right">{{ trans('orders::orders.total') }}</th>
+									<th scope="col" class="text-right text-end">{{ trans('orders::orders.quantity') }}</th>
+									<th scope="col" class="text-right text-end">{{ trans('orders::orders.price') }}</th>
+									<th scope="col" class="text-right text-end">{{ trans('orders::orders.total') }}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -321,7 +321,7 @@ app('pathway')
 												@endif
 											</p>
 										</td>
-										<td class="text-right">
+										<td class="text-right text-end">
 											<span class="item-edit-hide quantity_span">{{ $item->quantity }}</span>
 											@if ($item->product->timeperiod && $item->origorderitemid)
 												for<br/>
@@ -333,7 +333,7 @@ app('pathway')
 												@endif
 											@endif
 										</td>
-										<td class="text-right">
+										<td class="text-right text-end">
 											{{ config('orders.currency', '$') }} <span name="price">{{ $item->formattedPrice }}</span><br/>
 											<span class="text-nowrap">per {{ $item->product->unit }}</span>
 										</td>
@@ -369,8 +369,8 @@ app('pathway')
 		<div class="modal-content dialog-content shadow-sm">
 			<div class="modal-header">
 				<div class="modal-title" id="import-orders-title">{{ trans('orders::orders.import') }}</div>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
+				<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+					<span class="visually-hidden" aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body dialog-body">

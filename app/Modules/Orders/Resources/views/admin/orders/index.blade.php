@@ -176,7 +176,7 @@ app('pathway')
 				<li>
 					<strong>Fulfillment</strong><br />
 					<span class="text-muted">{{ $stats['steps']['fulfilled']['average'] }}</span>
-					<span class="text-muted float-right">{{ $stats['steps']['completed']['average'] }}</span>
+					<span class="text-muted float-right float-end">{{ $stats['steps']['completed']['average'] }}</span>
 				</li>
 			</ol>
 		</div>
@@ -202,7 +202,7 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col col-md-9 text-right">
+			<div class="col">
 				<label class="sr-only visually-hidden" for="filter_status">{{ trans('orders::orders.status') }}</label>
 				<select name="status" id="filter_status" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['status'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all statuses') }}</option>
@@ -215,9 +215,10 @@ app('pathway')
 					<option value="complete"<?php if ($filters['status'] == 'complete'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.complete') }}</option>
 					<option value="canceled"<?php if ($filters['status'] == 'canceled'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.canceled') }}</option>
 				</select>
-
+			</div>
+			<div class="col text-right text-end">
 				<div class="btn-group position-static" role="group" aria-label="Specific date range">
-					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						@if ($filters['start'] || $filters['end'])
 							@if ($filters['start'])
 								{{ $filters['start'] }}
@@ -330,7 +331,7 @@ app('pathway')
 				</div>
 
 				<div class="btn-group">
-					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						<span class="fa fa-filter" aria-hidden="true"></span><span class="sr-only visually-hidden">Filters</span>
 					</button>
 					<div class="dropdown-menu dropdown-menu-right">
@@ -375,7 +376,7 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('orders::orders.submitter'), 'userid', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="text-right">
+				<th scope="col" class="text-right text-end">
 					{!! Html::grid('sort', trans('orders::orders.total'), 'ordertotal', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
@@ -460,9 +461,9 @@ app('pathway')
 							<tr>
 								<?php /*<th scope="col">{{ trans('orders::orders.status') }}</th>*/ ?>
 								<th scope="col">{{ trans('orders::orders.item') }}</th>
-								<th scope="col" class="text-right">{{ trans('orders::orders.quantity') }}</th>
-								<th scope="col" class="text-right">{{ trans('orders::orders.price') }}</th>
-								<th scope="col" class="text-right">{{ trans('orders::orders.total') }}</th>
+								<th scope="col" class="text-right text-end">{{ trans('orders::orders.quantity') }}</th>
+								<th scope="col" class="text-right text-end">{{ trans('orders::orders.price') }}</th>
+								<th scope="col" class="text-right text-end">{{ trans('orders::orders.total') }}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -512,7 +513,7 @@ app('pathway')
 											@endif
 										</p>
 									</td>
-									<td class="text-right">
+									<td class="text-right text-end">
 										<span class="item-edit-hide quantity_span">{{ $item->quantity }}</span>
 										@if ($item->product->timeperiod && $item->origorderitemid)
 											for<br/>
@@ -524,7 +525,7 @@ app('pathway')
 											@endif
 										@endif
 									</td>
-									<td class="text-right">
+									<td class="text-right text-end">
 										{{ config('orders.currency', '$') }} <span name="price">{{ $item->formattedPrice }}</span><br/>
 										<span class="text-nowrap">per {{ $item->product->unit }}</span>
 									</td>

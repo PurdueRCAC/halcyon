@@ -172,7 +172,7 @@ app('pathway')
 		<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 			<form action="{{ route('site.orders.products') }}" method="post" name="adminForm" id="adminForm" class="form-iline">
 				@if (auth()->user() && auth()->user()->can('manage orders'))
-					<p class="text-right">
+					<p class="text-right text-end">
 						<a href="{{ route('site.orders.products.create') }}" class="btn btn-info">
 							<span class="fa fa-plus" aria-hidden="true"></span> {{ trans('orders::orders.create product') }}
 						</a>
@@ -268,7 +268,7 @@ app('pathway')
 								{{ trans('orders::orders.purchase') }}
 							</th>
 							@if (auth()->user() && auth()->user()->can('manage orders'))
-								<th scope="col" class="text-right"<?php if (auth()->user()->can('edit orders') && auth()->user()->can('delete orders')) { echo ' colspan="2"'; } ?>>
+								<th scope="col" class="text-right text-end"<?php if (auth()->user()->can('edit orders') && auth()->user()->can('delete orders')) { echo ' colspan="2"'; } ?>>
 									Options
 								</td>
 							@endif
@@ -378,7 +378,7 @@ app('pathway')
 					</tbody>
 					<tfoot>
 						<tr class="hide">
-							<td class="orderproductitem text-right" colspan="3">{{ trans('orders::orders.total') }}</td>
+							<td class="orderproductitem text-right text-end" colspan="3">{{ trans('orders::orders.total') }}</td>
 							<td class="orderproductitem text-right orderprice">$ <span id="ordertotal" class="category-total">0.00</span></td>
 							@if (auth()->user() && auth()->user()->can('manage orders'))
 							<td></td>

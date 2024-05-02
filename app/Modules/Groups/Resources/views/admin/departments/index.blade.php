@@ -53,7 +53,7 @@ app('pathway')
 					</span>
 				</div>
 
-				<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+				<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 			</div>
 		</div>
 
@@ -79,7 +79,7 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('groups::groups.name'), 'name', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="text-right">
+				<th scope="col" class="text-right text-end">
 					{{ trans('groups::groups.groups') }}
 				</th>
 			</tr>
@@ -113,7 +113,7 @@ app('pathway')
 						</a>
 					@endif
 				</td>
-				<td class="text-right">
+				<td class="text-right text-end">
 					<a href="{{ route('admin.groups.index', ['department' => $row->id]) }}">
 						{{ number_format($row->groups_count) }}
 					</a>

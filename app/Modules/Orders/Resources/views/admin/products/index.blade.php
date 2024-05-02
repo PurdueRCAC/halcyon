@@ -48,7 +48,7 @@ app('pathway')
 	products
 @endcomponent
 
-<form action="{{ route('admin.orders.products') }}" method="get" name="adminForm" id="adminForm" class="form-inline">
+<form action="{{ route('admin.orders.products') }}" method="get" name="adminForm" id="adminForm">
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
@@ -59,14 +59,15 @@ app('pathway')
 					<span class="input-group-append"><span class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span></span></span>
 				</span>
 			</div>
-			<div class="col col-md-9 filter-select text-right">
+			<div class="col filter-select">
 				<label class="sr-only visually-hidden" for="filter_state">{{ trans('global.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.option.all states') }}</option>
 					<option value="published"<?php if ($filters['state'] == 'published'): echo ' selected="selected"'; endif;?>>{{ trans('global.published') }}</option>
 					<option value="trashed"<?php if ($filters['state'] == 'trashed'): echo ' selected="selected"'; endif;?>>{{ trans('global.trashed') }}</option>
 				</select>
-
+			</div>
+			<div class="col filter-select">
 				<label class="sr-only visually-hidden" for="filter_category">{{ trans('orders::orders.category') }}</label>
 				<select name="category" id="filter_category" class="form-control filter filter-submit">
 					<option value="0"<?php if (!$filters['category']): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all categories') }}</option>
@@ -74,21 +75,24 @@ app('pathway')
 						<option value="{{ $category->id }}"<?php if ($filters['category'] == $category->id): echo ' selected="selected"'; endif;?>>{{ $category->name }}</option>
 					@endforeach
 				</select>
-
+			</div>
+			<div class="col filter-select">
 				<label class="sr-only visually-hidden" for="filter_restricteddata">{{ trans('orders::orders.restricted data') }}</label>
 				<select name="restricteddata" id="filter_restricteddata" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['restricteddata'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all restricted data') }}</option>
 					<option value="0"<?php if (!$filters['restricteddata']): echo ' selected="selected"'; endif;?>>{{ trans('global.no') }}</option>
 					<option value="1"<?php if ($filters['restricteddata'] == 1): echo ' selected="selected"'; endif;?>>{{ trans('global.yes') }}</option>
 				</select>
-
+			</div>
+			<div class="col filter-select">
 				<label class="sr-only visually-hidden" for="filter_public">{{ trans('orders::orders.visibility') }}</label>
 				<select name="public" id="filter_public" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['public'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all visibilities') }}</option>
 					<option value="1"<?php if ($filters['public'] == 1): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.public') }}</option>
 					<option value="0"<?php if (!$filters['public']): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.hidden') }}</option>
 				</select>
-
+			</div>
+			<div class="col filter-select">
 				<label class="sr-only visually-hidden" for="filter_recurrence">{{ trans('orders::orders.recurrence') }}</label>
 				<select name="recurrence" id="filter_recurrence" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['recurrence'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('orders::orders.all recurrence') }}</option>
@@ -102,7 +106,7 @@ app('pathway')
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
@@ -129,14 +133,14 @@ app('pathway')
 				<th scope="col" class="priority-3 text-center">
 					{!! Html::grid('sort', trans('orders::orders.recurrence'), 'recurringtimeperiodid', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-2 text-right">
+				<th scope="col" class="priority-2 text-right text-end">
 					{!! Html::grid('sort', trans('orders::orders.price'), 'unitprice', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="text-center">/</th>
 				<th scope="col">
 					{!! Html::grid('sort', trans('orders::orders.unit'), 'unit', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-6 text-right">
+				<th scope="col" class="priority-6 text-right text-end">
 					{!! Html::grid('sort', trans('orders::orders.sequence'), 'sequence', $filters['order_dir'], $filters['order']) !!}
 				</th>
 			</tr>
@@ -185,7 +189,7 @@ app('pathway')
 				<td class="priority-3 text-center">
 					{{ $row->timeperiod ? $row->timeperiod->name : '' }}
 				</td>
-				<td class="priority-2 text-right">
+				<td class="priority-2 text-right text-end">
 					{{ number_format($row->unitprice / 100, 2) }}
 				</td>
 				<td class="text-center">
@@ -194,7 +198,7 @@ app('pathway')
 				<td>
 					{{ $row->unit }}
 				</td>
-				<td class="priority-6 text-right">
+				<td class="priority-6 text-right text-end">
 					<span class="badge badge-secondary">{{ $row->sequence }}</span>
 					@if (auth()->user()->can('manage orders'))
 						@if ($filters['order'] == 'sequence')

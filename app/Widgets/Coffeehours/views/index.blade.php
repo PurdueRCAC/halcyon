@@ -218,10 +218,10 @@ foreach ($rows as $event):
 									<textarea class="form-control" name="comment" id="comment{{ $event->id }}" required rows="2" cols="35"></textarea>
 								</div>
 								<div class="row">
-									<div class="col-md-6 text-right">
+									<div class="col-md-6 text-right text-end">
 										<div class="alert hide" data-success="You reserved this time." data-hide="#reserve-comment{{ $event->id }}" data-error="An error occurred. We were unable to reserve this time."></div>
 									</div>
-									<div class="col-md-6 text-right">
+									<div class="col-md-6 text-right text-end">
 										<a class="btn-attend btn btn-primary" href="{{ route('page', ['uri' => 'coffee', 'attend' => 1]) }}" data-comment="#comment{{ $event->id }}" data-newsid="{{ $event->id }}" data-assoc="{{ auth()->user()->id }}">{{ $event->url ? 'Reserve this time' : 'I plan to attend' }}</a>
 									</div>
 								</div>
@@ -233,7 +233,7 @@ foreach ($rows as $event):
 										<div class="text-success">{{ $event->url ? 'You reserved this time.' : 'You will be attending.' }}
 										</div>
 									</div>
-									<div class="col-md-6 text-right">
+									<div class="col-md-6 text-right text-end">
 										<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $attending }}">Cancel</a>
 									</div>
 								</div>
@@ -243,7 +243,7 @@ foreach ($rows as $event):
 							@endif
 						@else
 							<div class="row">
-								<div class="col-md-12 text-right">
+								<div class="col-md-12 text-right text-end">
 									<a href="{{ route('login') }}?return=<?php echo base64_encode(route('page', ['uri' => 'coffee', 'attend' => 1, 'event' => $event->id])); ?>" data-newsid="{{ $event->id }}" data-assoc="0">Login</a> is required to reserve times.
 								</div>
 							</div>
@@ -256,7 +256,7 @@ foreach ($rows as $event):
 				@if (auth()->user())
 					@if (!$attending)
 						<div class="row">
-							<div class="col-md-12 text-right">
+							<div class="col-md-12 text-right text-end">
 								<a class="btn-attend btn btn-primary" href="{{ route('page', ['uri' => 'coffee', 'attend' => 1, 'event' => $event->id]) }}" data-newsid="{{ $event->id }}" data-assoc="{{ auth()->user()->id }}">I'm interested in attending</a>
 							</div>
 						</div>
@@ -265,14 +265,14 @@ foreach ($rows as $event):
 							<div class="col-md-6">
 								<div class="text-success">You expressed interest in attending.</div>
 							</div>
-							<div class="col-md-6 text-right">
+							<div class="col-md-6 text-right text-end">
 								<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0, 'event' => $event->id]) }}" data-id="{{ $attending }}">Cancel reservation</a>
 							</div>
 						</div>
 					@endif
 				@else
 					<div class="row">
-						<div class="col-md-12 text-right">
+						<div class="col-md-12 text-right text-end">
 							<a href="/login?return=<?php echo base64_encode(route('page', ['uri' => 'coffee', 'attend' => 1, 'event' => $event->id])); ?>" data-newsid="{{ $event->id }}" data-assoc="0">Login</a> is required to reserve times.
 						</div>
 					</div>
@@ -283,7 +283,7 @@ foreach ($rows as $event):
 				<div class="col-md-6">
 					ID #{{ $event->id }}
 				</div>
-				<div class="col-md-6 text-right">
+				<div class="col-md-6 text-right text-end">
 					<a class="edit tip" href="{{ route('site.news.manage', ['id' => $event->id]) }}&edit" title="{{ trans('global.edit') }}"><!--
 						--><span class="fa fa-fw fa-pencil" aria-hidden="true"></span><!--
 						--><span class="sr-only visually-hidden">{{ trans('global.button.edit') }}</span><!--

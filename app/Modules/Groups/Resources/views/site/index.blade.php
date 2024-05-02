@@ -18,7 +18,7 @@ app('pathway')
 			<div class="col-md-9">
 				<h2>{{ trans('groups::groups.groups') }}</h2>
 			</div>
-			<div class="col-md-3 text-right">
+			<div class="col-md-3 text-right text-end">
 				<a class="btn btn-outline-secondary float-right add-group" href="{{ route('site.groups.create') }}">
 					<span class="fa fa-plus-circle" aria-hidden="true"></span> {{ trans('global.create') }}
 				</a>
@@ -36,7 +36,7 @@ app('pathway')
 
 				<div class="dialog-footer">
 					<div class="row">
-						<div class="col-md-12 text-right">
+						<div class="col-md-12 text-right text-end">
 							<span id="#new_group_spinner" class="spinner-border spinner-border-sm hide" role="status"><span class="sr-only visually-hidden">Sending...</span></span>
 							<button type="submit" id="new_group_btn" data-indicator="new_group_spinner" class="btn btn-success">
 								<span class="fa fa-plus-circle" aria-hidden="true"></span> {{ trans('global.button.create') }}

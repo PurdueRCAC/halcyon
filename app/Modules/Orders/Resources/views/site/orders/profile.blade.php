@@ -51,7 +51,7 @@
 		<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
@@ -71,7 +71,7 @@
 					<th scope="col" class="priority-4">
 						<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('orders::orders.submitter'), 'userid', $filters['order_dir'], $filters['order']); ?>
 					</th>
-					<th scope="col" class="priority-2 text-right">
+					<th scope="col" class="priority-2 text-right text-end">
 						{{ trans('orders::orders.total') }}
 					</th>
 				</tr>
@@ -125,7 +125,7 @@
 							@endif
 						@endif
 					</td>
-					<td class="priority-2 text-right">
+					<td class="priority-2 text-right text-end">
 						{{ config('orders.currency', '$') }} {{ $row->formatNumber($row->ordertotal) }}
 					</td>
 				</tr>

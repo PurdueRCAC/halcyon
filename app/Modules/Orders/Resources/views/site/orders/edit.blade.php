@@ -432,7 +432,7 @@ $user = null;
 				<div class="alert alert-success">
 					<p>Your order has been submitted. Thank you for your order!</p>
 
-					<p><a href="#orderheaderpopup" data-toggle="modal" class="order-status">Order status information</a></p>
+					<p><a href="#orderheaderpopup" data-toggle="modal" data-bs-toggle="modal" class="order-status">Order status information</a></p>
 				</div>
 				<ol class="steps">
 					<li class="text-success complete">Submit order</li>
@@ -453,8 +453,8 @@ $user = null;
 						<div class="modal-content dialog-content shadow-sm">
 							<div class="modal-header">
 								<div class="modal-title" id="orderheaderpopup-title">Order Submitted</div>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
+								<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+									<span class="visually-hidden" aria-hidden="true">&times;</span>
 								</button>
 							</div>
 							<div class="modal-body dialog-body">
@@ -468,7 +468,7 @@ $user = null;
 			@elseif ($order->status == 'pending_boassignment')
 				<div class="alert alert-info">
 					<p>Payment information has been entered for this order.</p>
-					<p><a href="#orderheaderpopup" data-toggle="modal" class="order-status">Order status information</a></p>
+					<p><a href="#orderheaderpopup" data-toggle="modal" data-bs-toggle="modal" class="order-status">Order status information</a></p>
 				</div>
 				<ol class="steps">
 					<li class="text-success complete">Submit order</li>
@@ -483,8 +483,8 @@ $user = null;
 						<div class="modal-content dialog-content shadow-sm">
 							<div class="modal-header">
 								<div class="modal-title" id="orderheaderpopup-title">Payment Information Entered</div>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
+								<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+									<span class="visually-hidden" aria-hidden="true">&times;</span>
 								</button>
 							</div>
 							<div class="modal-body dialog-body">
@@ -497,7 +497,7 @@ $user = null;
 			@elseif ($order->status == 'pending_approval')
 				<div class="alert alert-info">
 					<p>Order has been assigned to your business office and is awaiting their approval.</p>
-					<p><a href="#orderheaderpopup" data-toggle="modal" class="order-status">Order status information</a></p>
+					<p><a href="#orderheaderpopup" data-toggle="modal" data-bs-toggle="modal" class="order-status">Order status information</a></p>
 				</div>
 				<ol class="steps">
 					<li class="text-success complete">Submit order</li>
@@ -512,8 +512,8 @@ $user = null;
 						<div class="modal-content dialog-content shadow-sm">
 							<div class="modal-header">
 								<div class="modal-title" id="orderheaderpopup-title">Awaiting Business Office Approval</div>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
+								<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+									<span class="visually-hidden" aria-hidden="true">&times;</span>
 								</button>
 							</div>
 							<div class="modal-body dialog-body">
@@ -526,7 +526,7 @@ $user = null;
 			@elseif ($order->status == 'pending_fulfillment')
 				<div class="alert alert-info">
 					<p>This order has been approved by your business office(s). Staff have begun the process of fulfilling this order.</p>
-					<p><a href="#orderheaderpopup" data-toggle="modal" class="order-status">Order status information</a></p>
+					<p><a href="#orderheaderpopup" data-toggle="modal" data-bs-toggle="modal" class="order-status">Order status information</a></p>
 				</div>
 				<ol class="steps">
 					<li class="text-success complete">Submit order</li>
@@ -541,8 +541,8 @@ $user = null;
 						<div class="modal-content dialog-content shadow-sm">
 							<div class="modal-header">
 								<div class="modal-title" id="orderheaderpopup-title">Awaiting Fulfillment</div>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
+								<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+									<span class="visually-hidden" aria-hidden="true">&times;</span>
 								</button>
 							</div>
 							<div class="modal-body dialog-body">
@@ -555,7 +555,7 @@ $user = null;
 			@elseif ($order->status == 'pending_collection')
 				<div class="alert alert-success">
 					<p>This order has been fulfilled. Please contact support if you have questions on how to use new resources.</p>
-					<p><a href="#orderheaderpopup" data-toggle="modal" class="order-status">Order status information</a></p>
+					<p><a href="#orderheaderpopup" data-toggle="modal" data-bs-toggle="modal" class="order-status">Order status information</a></p>
 				</div>
 				<ol class="steps">
 					<li class="text-success complete">Submit order</li>
@@ -570,8 +570,8 @@ $user = null;
 						<div class="modal-content dialog-content shadow-sm">
 							<div class="modal-header">
 								<div class="modal-title" id="orderheaderpopup-title">Order Complete</div>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
+								<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+									<span class="visually-hidden" aria-hidden="true">&times;</span>
 								</button>
 							</div>
 							<div class="modal-body dialog-body">
@@ -614,7 +614,7 @@ $user = null;
 							<div class="col col-md-6">
 								<h3 class="pane-title card-title">{{ '#' . $order->id }}</h3>
 							</div>
-							<div class="col col-md-6 text-right">
+							<div class="col col-md-6 text-right text-end">
 								<?php
 								if (($order->status == 'pending_payment'
 								|| $order->status == 'pending_boassignment'
@@ -760,7 +760,7 @@ $user = null;
 							<div class="col col-md-6">
 								<h3 class="card-title">{{ trans('orders::orders.items') }}</h3>
 							</div>
-							<div class="col col-md-6 text-right">
+							<div class="col col-md-6 text-right text-end">
 								<?php
 								if (
 								($order->status == 'pending_payment'
@@ -768,7 +768,7 @@ $user = null;
 								|| (
 									($order->status == 'pending_approval' || $order->status == 'pending_fulfillment') && auth()->user()->can('manage orders'))
 									|| ($order->status == 'pending_approval' && !$myorder)) && (auth()->user()->can('manage orders') || $myorder)): ?>
-									<a href="#help4" data-toggle="modal" class="text-info tip" title="Help"><!--
+									<a href="#help4" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help"><!--
 										--><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span><!--
 									--></a>
 
@@ -780,8 +780,8 @@ $user = null;
 											<div class="modal-content dialog-content shadow-sm">
 												<div class="modal-header">
 													<div class="modal-title" id="help4-title">Edit Quantities</div>
-													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-														<span aria-hidden="true">&times;</span>
+													<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+														<span class="visually-hidden" aria-hidden="true">&times;</span>
 													</button>
 												</div>
 												<div class="modal-body dialog-body">
@@ -801,9 +801,9 @@ $user = null;
 								<tr>
 									<th scope="col">{{ trans('orders::orders.status') }}</th>
 									<th scope="col">{{ trans('orders::orders.item') }}</th>
-									<th scope="col" class="text-right">{{ trans('orders::orders.quantity') }}</th>
-									<th scope="col" class="text-right">{{ trans('orders::orders.price') }}</th>
-									<th scope="col" class="text-right">{{ trans('orders::orders.total') }}</th>
+									<th scope="col" class="text-right text-end">{{ trans('orders::orders.quantity') }}</th>
+									<th scope="col" class="text-right text-end">{{ trans('orders::orders.price') }}</th>
+									<th scope="col" class="text-right text-end">{{ trans('orders::orders.total') }}</th>
 									@if (auth()->user()->can('manage orders'))
 										<th class="item-edit-show hide"></th>
 									@endif
@@ -874,7 +874,7 @@ $user = null;
 												<input type="text" name="datetimecreated" value="{{ $item->datetimecreated }}" class="datetime item-edit-show hide form-control" />
 											@endif
 										</td>
-										<td class="text-right">
+										<td class="text-right text-end">
 											<input type="hidden" name="item" value="{{ $item->id }}" data-api="{{ route('api.orders.items.update', ['id' => $item->id]) }}" />
 											<input type="hidden" name="original_quantity" value="{{ $item->quantity }}" />
 
@@ -902,7 +902,7 @@ $user = null;
 												</span>
 											@endif
 										</td>
-										<td class="text-right">
+										<td class="text-right text-end">
 											{{ config('orders.currency', '$') }} <span name="price">{{ $item->formattedPrice }}</span><br/>
 											<span class="text-nowrap">per {{ $item->product->unit }}</span>
 										</td>
@@ -947,7 +947,7 @@ $user = null;
 												@endforeach
 											</select>
 										</td>
-										<td class="text-right">
+										<td class="text-right text-end">
 											<span class="quantity_span hide"></span>
 											<input type="number" name="newquantity" value="0" size="4" class="item-quantity form-control total-update" />
 											<span class="item-period hide">
@@ -956,7 +956,7 @@ $user = null;
 												<span class="periods_span"></span>
 											</span>
 										</td>
-										<td class="text-right">
+										<td class="text-right text-end">
 											{{ config('orders.currency', '$') }} <span name="price" class="item-price">0.00</span><br/>
 											<span class="text-nowrap">per <span class="item-unit">unit</span></span>
 										</td>
@@ -978,7 +978,7 @@ $user = null;
 							</tbody>
 							<tfoot>
 								<tr>
-									<th class="text-right" colspan="4" scope="row">
+									<th class="text-right text-end" colspan="4" scope="row">
 										<strong>{{ trans('orders::orders.order total') }}</strong>
 									</th>
 									<td class="text-right text-nowrap orderprice">
@@ -1010,7 +1010,7 @@ $user = null;
 									{{ trans('orders::orders.payment information') }}
 								</h3>
 							</div>
-							<div class="col col-md-6 text-right">
+							<div class="col col-md-6 text-right text-end">
 								@if (count($order->accounts) == 0 && $canEdit)
 									<a href="#help2" class="help icn tip" title="Help on Payment Information">
 										<span class="fa fa-question-circle" aria-hidden="true"></span> Help
@@ -1113,8 +1113,8 @@ $user = null;
 																<div class="modal-content dialog-content shadow-sm">
 																	<div class="modal-header">
 																		<div class="modal-title" id="modal_{{ $account->id }}_deny-title">Deny</div>
-																		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-																			<span aria-hidden="true">&times;</span>
+																		<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+																			<span class="visually-hidden" aria-hidden="true">&times;</span>
 																		</button>
 																	</div>
 																	<div class="modal-body">
@@ -1326,8 +1326,8 @@ $user = null;
 							</tbody>
 							<tfoot>
 								<tr>
-									<td class="text-right" colspan="{{ count($order->accounts) == 0 ? 2 : 3 }}">
-										<a href="#help2" data-toggle="modal" class="text-warning"><!--
+									<td class="text-right text-end" colspan="{{ count($order->accounts) == 0 ? 2 : 3 }}">
+										<a href="#help2" data-toggle="modal" data-bs-toggle="modal" class="text-warning"><!--
 											--><span id="balance_error" aria-hidden="true" class="fa fa-exclamation-triangle stash"></span><span class="sr-only visually-hidden">Balance should be $0.00 before saving changes.</span><!--
 										--></a>
 										<strong>{{ trans('orders::orders.balance remaining') }}</strong>
@@ -1351,8 +1351,8 @@ $user = null;
 								<div class="modal-content dialog-content shadow-sm">
 									<div class="modal-header">
 										<div class="modal-title" id="help2-title">Payment Information</div>
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true">&times;</span>
+										<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+											<span class="visually-hidden" aria-hidden="true">&times;</span>
 										</button>
 									</div>
 									<div class="modal-body dialog-body">
@@ -1380,12 +1380,12 @@ $user = null;
 								<div class="col-md-6">
 									<h3 class="panel-title card-title">
 										{{ trans('orders::orders.notes') }}
-										<a href="#help1" data-toggle="modal" class="text-info tip" title="Help on Order Notes">
+										<a href="#help1" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help on Order Notes">
 											<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 										</a>
 									</h3>
 								</div>
-								<div class="col-md-6 text-right">
+								<div class="col-md-6 text-right text-end">
 									@if ($order->status != 'canceled')
 									<a href="{{ route('site.orders.read', ['id' => $order->id, 'edit' => 'usernotes']) }}" class="edit-property tip" title="Edit" data-prop="usernotes" data-value="{{ $order->id }}">
 										<span class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_usernotes"></span><span class="sr-only visually-hidden">Edit</span>
@@ -1399,7 +1399,7 @@ $user = null;
 						@else
 							<h3 class="panel-title card-title">
 								{{ trans('orders::orders.notes') }}
-								<a href="#help1" data-toggle="modal" class="text-info tip" title="Help on Order Notes">
+								<a href="#help1" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help on Order Notes">
 									<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 								</a>
 							</h3>
@@ -1411,8 +1411,8 @@ $user = null;
 								<div class="modal-content dialog-content shadow-sm">
 									<div class="modal-header">
 										<div class="modal-title" id="help1-title">Order Notes</div>
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true">&times;</span>
+										<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+											<span class="visually-hidden" aria-hidden="true">&times;</span>
 										</button>
 									</div>
 									<div class="modal-body dialog-body">
@@ -1450,8 +1450,8 @@ $user = null;
 						<div class="modal-content dialog-content shadow-sm">
 							<div class="modal-header">
 								<div class="modal-title" id="recurringusernotes-title">Past User Notes</div>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
+								<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+									<span class="visually-hidden" aria-hidden="true">&times;</span>
 								</button>
 							</div>
 							<div class="modal-body dialog-body">
@@ -1472,7 +1472,7 @@ $user = null;
 													<li class="list-group-item">
 														<div class="mb-1">
 															<strong>Order <a href="{{ route('site.orders.read', ['id' => $usernote->orderid]) }}">#{{ $usernote->orderid }}</a></strong>
-															<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
+															<div class="float-right float-end">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
 														</div>
 														<blockquote>
 															<p>{!! $usernote->order->usernotes ? nl2br($usernote->order->usernotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
@@ -1497,7 +1497,7 @@ $user = null;
 								<div class="col-md-6">
 									<h3 class="pane-title card-title">{{ trans('orders::orders.staff notes') }}</h3>
 								</div>
-								<div class="col-md-6 text-right">
+								<div class="col-md-6 text-right text-end">
 								@if ($order->status != 'canceled')
 									<a href="{{ route('site.orders.read', ['id' => $order->id, 'edit' => 'usernotes']) }}" class="edit-property tip" title="Edit" data-prop="staffnotes" data-value="{{ $order->id }}">
 										<span class="fa fa-pencil" aria-hidden="true" id="IMG_{{ $order->id }}_staffnotes"></span><span class="sr-only visually-hidden">Edit</span>
@@ -1536,8 +1536,8 @@ $user = null;
 							<div class="modal-content dialog-content shadow-sm">
 								<div class="modal-header">
 									<div class="modal-title" id="recurringstaffnotes-title">Past Staff Notes</div>
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
+									<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+										<span class="visually-hidden" aria-hidden="true">&times;</span>
 									</button>
 								</div>
 								<div class="modal-body dialog-body">
@@ -1558,7 +1558,7 @@ $user = null;
 														<li class="list-group-item">
 															<div class="mb-1">
 																<strong>Order <a href="{{ route('site.orders.read', ['id' => $usernote->orderid]) }}">#{{ $usernote->orderid }}</a></strong>
-																<div class="float-right">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
+																<div class="float-right float-end">{{ $usernote->datetimecreated->format('M d, Y') }}</div>
 															</div>
 															<blockquote>
 																<p>{!! $usernote->order->staffnotes ? nl2br($usernote->order->staffnotes) : '<span class="none">' . trans('global.none') . '</span>' !!}</p>
@@ -1629,7 +1629,7 @@ $user = null;
 											<div class="col-md-8">
 												{!! $action->summary !!}
 											</div>
-											<div class="col-md-4 text-right">
+											<div class="col-md-4 text-right text-end">
 												@if ($action->created_at)
 													<time datetime="{{ $action->created_at->toDateTimeLocalString() }}" class="entry-log-date">
 														@if ($action->created_at < $old)

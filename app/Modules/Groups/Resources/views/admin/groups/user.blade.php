@@ -5,8 +5,8 @@
 				<div class="col-md-6">
 					<h3 class="card-title">{{ trans('groups::groups.groups') }}</h3>
 				</div>
-				<div class="col-md-6 text-right">
-					<a class="btn btn-primary float-right add-group" href="#add-to-group" data-toggle="modal">
+				<div class="col-md-6 text-right text-end">
+					<a class="btn btn-primary float-right add-group" href="#add-to-group" data-toggle="modal" data-bs-toggle="modal">
 						<span class="fa fa-plus-circle" aria-hidden="true"></span> {{ trans('groups::groups.add to group') }}
 					</a>
 				</div>
@@ -73,9 +73,9 @@
 				<div class="col-md-6">
 					<h3 class="card-title">{{ trans('groups::groups.groups') }}</h3>
 				</div>
-				<div class="col-md-6 text-right">
+				<div class="col-md-6 text-right text-end">
 					@if (auth()->user()->can('manage groups'))
-					<a class="btn btn-primary float-right add-group" href="#add-to-group" data-toggle="modal">
+					<a class="btn btn-primary float-right add-group" href="#add-to-group" data-toggle="modal" data-bs-toggle="modal">
 						<span class="fa fa-plus-circle" aria-hidden="true"></span> {{ trans('groups::groups.add to group') }}
 					</a>
 					@endif
@@ -97,8 +97,8 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h3 class="modal-title" id="add-to-group-title">{{ trans('groups::groups.choose group') }}</h3>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
+				<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+					<span class="visually-hidden" aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">
@@ -124,7 +124,7 @@
 
 					<div class="dialog-footer">
 						<div class="row">
-							<div class="col-md-12 text-right">
+							<div class="col-md-12 text-right text-end">
 								<button type="submit" id="new_group_btn" class="btn btn-success" data-api="{{ route('api.groups.members.create') }}">
 									<span class="fa fa-plus-circle" aria-hidden="true"></span> {{ trans('global.button.create') }}
 								</button>

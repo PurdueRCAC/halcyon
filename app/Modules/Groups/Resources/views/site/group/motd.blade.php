@@ -20,7 +20,7 @@
 					<div class="col-sm-6">
 						<button class="motd-set btn btn-success" data-group="{{ $group->id }}">{{ trans('groups::groups.set notice') }}</button>
 					</div>
-					<div class="col-sm-6 text-right">
+					<div class="col-sm-6 text-right text-end">
 					@if ($group->motd)
 						<button class="motd-delete btn btn-danger" id="MotdText_delete_{{ $group->id }}" data-api="{{ route('api.groups.motd.delete', ['id' => $group->motd->id]) }}" data-group="{{ $group->id }}"><span class="fa fa-trash"></span> {{ trans('groups::groups.delete notice') }}</button>
 					@endif

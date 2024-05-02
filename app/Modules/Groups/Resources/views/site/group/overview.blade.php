@@ -10,13 +10,13 @@
 	</div>
 	<div class="card-body panel-body">
 		<div class="row">
-			<div class="col-md-3 text-right"><label for="INPUT_name_{{ $group->id }}">Research Group Name:</label></div>
+			<div class="col-md-3 text-right text-end"><label for="INPUT_name_{{ $group->id }}">Research Group Name:</label></div>
 
 			<div class="col-md-7">
 				<span id="SPAN_name_{{ $group->id }}">{{ $group->name }}</span>
 				<input type="text" class="form-control hide edit-property-input" id="INPUT_name_{{ $group->id }}" data-prop="name" maxlength="48" data-value="{{ $group->id }}" value="{{ $group->name }}" />
 			</div>
-			<div class="col-md-2 text-right">
+			<div class="col-md-2 text-right text-end">
 				@if ($canManage)
 				<a href="{{ route('site.users.account.section', ['section' => 'groups', 'edit' => 'name']) }}" class="edit-property tip" id="EDIT_name_{{ $group->id }}" data-prop="name" data-value="{{ $group->id }}" title="{{ trans('global.edit') }}"><!--
 					--><span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.edit') }}</span><!--
@@ -34,13 +34,13 @@
 		</div>
 
 		<div class="row">
-			<div class="col-md-3 text-right"><label for="INPUT_name_{{ $group->id }}">Description:</label></div>
+			<div class="col-md-3 text-right text-end"><label for="INPUT_name_{{ $group->id }}">Description:</label></div>
 
 			<div class="col-md-7">
 				<span id="SPAN_description_{{ $group->id }}">{{ $group->description ? $group->description : trans('global.none') }}</span>
 				<textarea class="form-control hide edit-property-input" id="INPUT_description_{{ $group->id }}" data-prop="description" maxlength="5000" rows="5" cols="50" data-value="{{ $group->id }}">{{ $group->description }}</textarea>
 			</div>
-			<div class="col-md-2 text-right">
+			<div class="col-md-2 text-right text-end">
 				@if ($canManage)
 				<a href="{{ route('site.users.account.section', ['section' => 'groups', 'edit' => 'description']) }}" class="edit-property tip" id="EDIT_description_{{ $group->id }}" data-prop="description" data-value="{{ $group->id }}" title="{{ trans('global.edit') }}"><!--
 					--><span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.edit') }}</span><!--
@@ -65,7 +65,7 @@
 			<div class="col-md-11">
 				Departments
 			</div>
-			<div class="col-md-1 text-right">
+			<div class="col-md-1 text-right text-end">
 				@if ($canManage)
 					<a href="#departments"
 						class="edit edit-categories edit-hide tip"
@@ -149,7 +149,7 @@
 							@endforeach
 						</select>
 					</div>
-					<div class="col-md-1 text-right">
+					<div class="col-md-1 text-right text-end">
 						<a href="#new-department"
 							class="add add-category add-row tip"
 							title="{{ trans('global.button.add') }}"
@@ -172,7 +172,7 @@
 					<?php echo '{{/each}}'; ?>
 					<?php echo '{{ name }}'; ?>
 				</div>
-				<div class="col-md-1 text-right">
+				<div class="col-md-1 text-right text-end">
 					<a href="#department-<?php echo '{{ id }}'; ?>"
 						class="delete delete-department remove-category"
 						data-confirm="{{ trans('groups::groups.confirm delete') }}"
@@ -191,7 +191,7 @@
 			<div class="col-md-11">
 				Field of Science
 			</div>
-			<div class="col-md-1 text-right">
+			<div class="col-md-1 text-right text-end">
 				@if ($canManage)
 					<a href="#fieldofscience"
 						class="edit edit-categories edit-hide tip"
@@ -223,7 +223,7 @@
 							@endforeach
 							{{ $field->field->name }}
 						</div>
-						<div class="col-md-1 edit-show hide text-right">
+						<div class="col-md-1 edit-show hide text-right text-end">
 							@if ($canManage)
 								<a href="#fieldofscience-{{ $field->id }}"
 									class="delete delete-fieldofscience remove-category tip"
@@ -246,7 +246,7 @@
 					<div class="col-md-11">
 						{name}
 					</div>
-					<div class="col-md-1 edit-show text-right">
+					<div class="col-md-1 edit-show text-right text-end">
 						<a href="#fieldofscience-{id}"
 							class="delete delete-fieldofscience remove-category tip"
 							title="{{ trans('global.button.delete') }}"
@@ -273,7 +273,7 @@
 							@endforeach
 						</select>
 					</div>
-					<div class="col-md-1 text-right">
+					<div class="col-md-1 text-right text-end">
 						<a href="#new-fieldofscience"
 							class="add add-fieldofscience-row add-category tip"
 							title="{{ trans('global.button.add') }}"
@@ -295,7 +295,7 @@
 					<?php echo '{{/each}}'; ?>
 					<?php echo '{{ name }}'; ?>
 				</div>
-				<div class="col-md-1 text-right">
+				<div class="col-md-1 text-right text-end">
 					<a href="#fieldofscience-<?php echo '{{ id }}'; ?>"
 						class="delete delete-fieldofscience remove-category"
 						data-confirm="{{ trans('groups::groups.confirm delete') }}"
@@ -323,10 +323,10 @@
 			<div class="col col-md-6">
 				Unix Groups
 				@if ($canManage)
-					<a href="#box2_{{ $group->id }}" data-toggle="modal" class="text-info tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span></a>
+					<a href="#box2_{{ $group->id }}" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span></a>
 				@endif
 			</div>
-			<div class="col col-md-6 text-right">
+			<div class="col col-md-6 text-right text-end">
 				@if ($canManage)
 					@if (count($unixgroups) > 0)
 						@if ($used == 26)
@@ -335,7 +335,7 @@
 								<span class="fa fa-plus-circle" aria-hidden="true"></span> Add New Unix Group
 							</button>
 						@else
-							<a href="#new-unixgroup_{{ $group->id }}" data-toggle="modal" class="btn btn-default btn-sm add-unix-group">
+							<a href="#new-unixgroup_{{ $group->id }}" data-toggle="modal" data-bs-toggle="modal" class="btn btn-default btn-sm add-unix-group">
 								<span class="fa fa-plus-circle" aria-hidden="true"></span> Add New Unix Group
 							</a>
 						@endif
@@ -348,14 +348,14 @@
 		<div class="card panel panel-default">
 			<div class="card-body panel-body">
 				<div class="form-inline row">
-					<label class="col-md-3" for="INPUT_unixgroup_{{ $group->id }}">Base Name: <a href="#box1_{{ $group->id }}" data-toggle="modal" class="text-info tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span></a></label>
+					<label class="col-md-3" for="INPUT_unixgroup_{{ $group->id }}">Base Name: <a href="#box1_{{ $group->id }}" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help"><span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span></a></label>
 
 					<div class="col-md-5">
 						<span id="SPAN_unixgroup_{{ $group->id }}">{{ $group->unixgroup ? $group->unixgroup : trans('global.none') }}</span>
 						<input type="{{ $canManage ? 'text' : 'hidden' }}" class="form-control edit-property-input hide" id="INPUT_unixgroup_{{ $group->id }}" maxlength="10" pattern="[a-z0-9\-]+" data-prop="unixgroup" data-value="{{ $group->id }}" value="" />
 						<span class="form-text text-muted edit-property-input hide">Lowercase letters, numbers, and dashes only. Max 10 characters.</span>
 					</div>
-					<div class="col-md-4 text-right">
+					<div class="col-md-4 text-right text-end">
 						@if ($canManage)
 							<a href="{{ route('site.users.account.section', ['section' => 'groups']) }}#edit-property" id="EDIT_unixgroup_{{ $group->id }}" class="btn edit-property tip" data-prop="unixgroup" data-value="{{ $group->id }}" title="{{ trans('global.edit') }}"><!--
 								--><span class="fa fa-pencil" id="IMG_unixgroup_{{ $group->id }}"></span><span class="sr-only visually-hidden">{{ trans('global.edit') }}</span><!--
@@ -379,8 +379,8 @@
 				<div class="modal-content shadow-sm">
 					<div class="modal-header">
 						<div class="modal-title" id="box1_{{ $group->id }}-title">Base Unix Group</div>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+						<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+							<span class="visually-hidden" aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body">
@@ -418,9 +418,9 @@
 						<th scope="col">Name</th>
 						<th scope="col" class="extendedinfo hide">System Name</th>
 						<th scope="col" class="extendedinfo hide">Short Name</th>
-						<th scope="col" class="extendedinfo hide text-right">GID Number</th>
+						<th scope="col" class="extendedinfo hide text-right text-end">GID Number</th>
 						@if ($canManage)
-						<th scope="col" class="text-right">Actions</th>
+						<th scope="col" class="text-right text-end">Actions</th>
 						@endif
 					</tr>
 				</thead>
@@ -430,9 +430,9 @@
 							<td>{{ $unixgroup->longname }}</td>
 							<td class="extendedinfo hide">{{ config('module.groups.unix_group_prefix', 'sys-') . $unixgroup->longname }}</td>
 							<td class="extendedinfo hide">{{ $unixgroup->shortname }}</td>
-							<td class="extendedinfo hide text-right">{{ $unixgroup->unixgid }}</td>
+							<td class="extendedinfo hide text-right text-end">{{ $unixgroup->unixgid }}</td>
 							@if ($canManage)
-							<td class="text-right">
+							<td class="text-right text-end">
 								@if (!preg_match("/rcs[0-9]{4}[0-9]/", $unixgroup->shortname) || auth()->user()->can('manage groups'))
 									<a href="{{ route('site.users.account.section', ['section' => 'groups', 'delete' => $unixgroup->id]) }}"
 										class="delete delete-unix-group remove-unixgroup"
@@ -451,8 +451,8 @@
 							<td>{longname}</td>
 							<td class="extendedinfo hide">{{ config('module.groups.unix_group_prefix', 'sys-') }}{longname}</td>
 							<td class="extendedinfo hide">{shortname}</td>
-							<td class="extendedinfo hide text-right">0</td>
-							<td class="text-right">
+							<td class="extendedinfo hide text-right text-end">0</td>
+							<td class="text-right text-end">
 								<a href="#unixgroup-{id}"
 									class="delete delete-unix-group remove-unixgroup"
 									data-api="{{ route('api.unixgroups.create') }}/{id}"
@@ -468,7 +468,7 @@
 				<div class="col-md-9">
 					<span class="text-sm text-muted"><span id="unix-used">{{ $used }}</span> custom unix {{ $used == 1 ? 'group' : 'groups' }} (of 26 allowed, not including base, <code>-data</code>, or <code>-apps</code>).</span>
 				</div>
-				<div class="col-md-3 text-right">
+				<div class="col-md-3 text-right text-end">
 					<button class="btn btn-sm reveal" data-toggle=".extendedinfo" data-text="<span class='fa fa-eye-slash'></span> Hide Extended Info</button>"><span class="fa fa-eye"></span> Show Extended Info</button>
 				</div>
 			</div>
@@ -481,8 +481,8 @@
 				<div class="modal-content shadow-sm">
 					<div class="modal-header">
 						<div class="modal-title" id="new-unixgroup_{{ $group->id }}-title">New Unix Group</div>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+						<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+							<span class="visually-hidden" aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body">
@@ -495,7 +495,7 @@
 							<span class="form-text text-muted">Lowercase letters and numbers only. Max length: {{ (17 - strlen($group->unixgroup . '-')) }} characters.</span>
 						</div>
 						<div class="alert alert-danger hide" id="new-unixgroup_{{ $group->id }}_error"></div>
-						<div class="text-right">
+						<div class="text-right text-end">
 							<a href="#longname" class="btn btn-secondary btn-success add-unixgroup"
 								data-group="{{ $group->id }}"
 								data-container="#actmaint_info"
@@ -515,8 +515,8 @@
 				<div class="modal-content shadow-sm">
 					<div class="modal-header">
 						<div class="modal-title" id="box2_{{ $group->id }}-title">Unix Groups</div>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+						<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+							<span class="visually-hidden" aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body">

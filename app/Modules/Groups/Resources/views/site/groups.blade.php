@@ -9,8 +9,8 @@
 			<div class="col-md-9">
 				<h2>{{ trans('groups::groups.groups') }}</h2>
 			</div>
-			<div class="col-md-3 text-right">
-				<a class="btn btn-outline-secondary float-right add-group" data-toggle="modal" href="#new_group_dialog">
+			<div class="col-md-3 text-right text-end">
+				<a class="btn btn-outline-secondary float-right add-group" data-toggle="modal" data-bs-toggle="modal" href="#new_group_dialog">
 					<span class="fa fa-plus-circle" aria-hidden="true"></span> {{ trans('global.create') }}
 				</a>
 			</div>
@@ -21,8 +21,8 @@
 				<div class="modal-content shadow-sm">
 					<div class="modal-header">
 						<div class="modal-title" id="new_group_dialog-title">{{ trans('groups::groups.create group') }}</div>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+						<button type="button" class="btn-close close" data-dismiss="modal" aria-label="Close">
+							<span class="visually-hidden" aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<form method="post" action="{{ route('site.users.account.section', ['section' => 'groups']) }}">
@@ -37,7 +37,7 @@
 						</div>
 						<div class="modal-footer">
 							<div class="row">
-								<div class="col-md-12 text-right">
+								<div class="col-md-12 text-right text-end">
 									<span id="new_group_spinner" class="spinner-border spinner-border-sm hide" role="status"><span class="sr-only visually-hidden">Sending...</span></span>
 									<button type="submit" id="new_group_btn" data-indicator="new_group_spinner" class="btn btn-success">
 										<span class="fa fa-plus-circle" aria-hidden="true"></span> {{ trans('global.button.create') }}
@@ -68,7 +68,7 @@
 					<th scope="col">
 						{{ trans('groups::groups.membership type') }}
 					</th>
-					<th scope="col" class="text-right">
+					<th scope="col" class="text-right text-end">
 						{{ trans('groups::groups.joined') }}
 					</th>
 				</tr>
@@ -97,7 +97,7 @@
 						{{ $g->type->name }}
 					</span>
 				</td>
-				<td class="text-right">
+				<td class="text-right text-end">
 					@if ($g->datecreated)
 						<time datetime="{{ $g->datecreated->toDateTimeLocalString() }}">
 							@if ($g->datecreated->getTimestamp() > Carbon\Carbon::now()->getTimestamp())

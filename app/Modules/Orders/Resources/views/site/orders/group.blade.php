@@ -13,7 +13,7 @@
 					<th scope="col">{{ trans('orders::orders.status') }}</th>
 					<th scope="col">{{ trans('orders::orders.created') }}</th>
 					<th scope="col">{{ trans('orders::orders.items') }}</th>
-					<th scope="col" class="text-right">{{ trans('orders::orders.total') }}</th>
+					<th scope="col" class="text-right text-end">{{ trans('orders::orders.total') }}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -71,7 +71,7 @@
 								echo implode('<br />', $products);
 								?>
 							</td>
-							<td class="text-right">
+							<td class="text-right text-end">
 								{{ config('orders.currency', '$') }} {{ $order->formattedTotal }}
 							</td>
 						</tr>

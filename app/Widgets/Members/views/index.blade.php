@@ -15,7 +15,7 @@
 				<div class="col-md-8">
 					<h4 class="card-title py-0">{{ $widget->title }}</h4>
 				</div>
-				<div class="col-md-4 text-right">
+				<div class="col-md-4 text-right text-end">
 					<a href="{{ route('admin.users.index') }}">{{ trans('widget.members::members.view all') }}</a>
 				</div>
 			</div>
