@@ -58,10 +58,10 @@ app('pathway')
 	<nav class="container-fluid">
 		<ul id="dir-tabs" class="nav nav-tabs" role="tablist">
 			<li class="nav-item" role="presentation">
-				<a class="nav-link active" href="#dir-details" data-toggle="tab" role="tab" id="dir-details-tab" aria-controls="dir-details" aria-selected="true">{{ trans('global.details') }}</a>
+				<a class="nav-link active" href="#dir-details" data-toggle="tab" data-bs-toggle="tab" role="tab" id="dir-details-tab" aria-controls="dir-details" aria-selected="true">{{ trans('global.details') }}</a>
 			</li>
 			<li class="nav-item" role="presentation">
-				<a class="nav-link" href="#dir-messages" data-toggle="tab" role="tab" id="dir-messages-tab" aria-controls="dir-messages" aria-selected="false">{{ trans('storage::storage.messages') }}</a>
+				<a class="nav-link" href="#dir-messages" data-toggle="tab" data-bs-toggle="tab" role="tab" id="dir-messages-tab" aria-controls="dir-messages" aria-selected="false">{{ trans('storage::storage.messages') }}</a>
 			</li>
 		</ul>
 	</nav>

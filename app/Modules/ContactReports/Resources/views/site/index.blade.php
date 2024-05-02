@@ -294,7 +294,7 @@ app('pathway')->append(
 							</label>
 							<div class="col-sm-10">
 								{!! markdown_editor('NotesText', '', ['rows' => 10, 'cols' => 80, 'class' => 'required', 'required' => 'required']) !!}
-								<span class="form-text text-muted">Reports can be formatted with <a href="#markdown-help" data-toggle="modal" class="tip" title="MarkDown Formatting Help">MarkDown</a>. Hash tags (e.g., #python) can be used to tag entries.</span>
+								<span class="form-text text-muted">Reports can be formatted with <a href="#markdown-help" data-toggle="modal" data-bs-toggle="modal" class="tip" title="MarkDown Formatting Help">MarkDown</a>. Hash tags (e.g., #python) can be used to tag entries.</span>
 							</div>
 						</div>
 
@@ -405,19 +405,19 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 		<div class="modal-content shadow-sm">
 			<div class="modal-header">
 				<div class="modal-title" id="markdown-help-title">MarkDown Help</div>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
+				<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+					<span class="visually-hidden" aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">
 				<div id="markdown-help-tabs" class="tabs">
 					<ul class="nav nav-tabs mb-3" id="help1" role="tablist">
-						<li class="nav-item" role="presentation"><a class="nav-link active" href="#help1a" data-toggle="tab" role="tab" id="help1-tab-1" aria-controls="help1a" aria-selected="true">Fonts</a></li>
-						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1b" data-toggle="tab" role="tab" id="help1-tab-2" aria-controls="help1b" aria-selected="false">Lists</a></li>
-						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1c" data-toggle="tab" role="tab" id="help1-tab-3" aria-controls="help1c" aria-selected="false">Links</a></li>
-						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1e" data-toggle="tab" role="tab" id="help1-tab-5" aria-controls="help1e" aria-selected="false">Line Breaks</a></li>
-						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1f" data-toggle="tab" role="tab" id="help1-tab-6" aria-controls="help1f" aria-selected="false">Code</a></li>
-						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1g" data-toggle="tab" role="tab" id="help1-tab-7" aria-controls="help1g" aria-selected="false">Tables</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link active" href="#help1a" data-toggle="tab" data-bs-toggle="tab" role="tab" id="help1-tab-1" aria-controls="help1a" aria-selected="true">Fonts</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1b" data-toggle="tab" data-bs-toggle="tab" role="tab" id="help1-tab-2" aria-controls="help1b" aria-selected="false">Lists</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1c" data-toggle="tab" data-bs-toggle="tab" role="tab" id="help1-tab-3" aria-controls="help1c" aria-selected="false">Links</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1e" data-toggle="tab" data-bs-toggle="tab" role="tab" id="help1-tab-5" aria-controls="help1e" aria-selected="false">Line Breaks</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1f" data-toggle="tab" data-bs-toggle="tab" role="tab" id="help1-tab-6" aria-controls="help1f" aria-selected="false">Code</a></li>
+						<li class="nav-item" role="presentation"><a class="nav-link" href="#help1g" data-toggle="tab" data-bs-toggle="tab" role="tab" id="help1-tab-7" aria-controls="help1g" aria-selected="false">Tables</a></li>
 					</ul>
 					<div class="tab-content" id="help1-content">
 						<div class="tab-pane fade show active" role="tabpanel" aria-labelledby="help1-tab-1" id="help1a">

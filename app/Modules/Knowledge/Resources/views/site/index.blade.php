@@ -81,7 +81,7 @@
 			</form>
 		</div>
 	@if ($allow_all)
-		<div class="col-md-3 text-right">
+		<div class="col-md-3 text-right text-end">
 		@if ($p)
 			@if ($all)
 				<a class="btn btn-secondary" href="<?php if ($p) { echo route('site.knowledge.page', ['uri' => $p]); } else { echo route('site.knowledge.index'); } ?>">{{ trans('knowledge::knowledge.collapse topics') }}</a>
@@ -98,12 +98,12 @@
 		@if (auth()->user() && (auth()->user()->can('create knowledge') || auth()->user()->can('edit knowledge')))
 		<div class="edit-controls">
 			<div class="dropdown btn-group">
-				<button class="btn ropdown-toggle" type="button" id="optionsbutton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<button class="btn ropdown-toggle" type="button" id="optionsbutton" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<span class="fa fa-ellipsis-v" aria-hidden="true"></span><span class="sr-only visually-hidden"> {{ trans('knowledge::knowledge.options') }}</span>
 				</button>
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="optionsbutton">
 					@if (auth()->user()->can('create knowledge'))
-						<a href="#new-page" data-toggle="modal" data-id="{{ $page->id }}" id="add-page" class="dropdown-item tip" title="{{ trans('knowledge::knowledge.add child page') }}">
+						<a href="#new-page" data-toggle="modal" data-bs-toggle="modal" data-id="{{ $page->id }}" id="add-page" class="dropdown-item tip" title="{{ trans('knowledge::knowledge.add child page') }}">
 							<span class="fa fa-plus" aria-hidden="true"></span> {{ trans('global.button.add') }}
 						</a>
 					@endif
@@ -327,7 +327,7 @@
 						</div>
 
 						<div class="form-group">
-							<a href="#var-help" data-toggle="modal" class="float-right">
+							<a href="#var-help" data-toggle="modal" data-bs-toggle="modal" class="float-right float-end">
 								Content Helpers
 							</a>
 							<label for="field-content">{{ trans('pages::pages.content') }} <span class="required">{{ trans('global.required') }}</span></label>
@@ -422,16 +422,16 @@
 				<div class="modal-content shadow-sm">
 					<div class="modal-header">
 						<div class="modal-title" id="var-help-title">Content Helpers</div>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+						<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+							<span class="visually-hidden" aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body">
 						<div id="markdown-help-tabs" class="tabs">
 							<ul class="nav nav-tabs mb-3" id="help1" role="tablist">
-								<li class="nav-item" role="presentation"><a class="nav-link active" href="#help1a" data-toggle="tab" role="tab" id="help1-tab-1" aria-controls="help1a" aria-selected="true">If Statements</a></li>
-								<li class="nav-item" role="presentation"><a class="nav-link" href="#help1b" data-toggle="tab" role="tab" id="help1-tab-2" aria-controls="help1b" aria-selected="false">Variable Usage</a></li>
-								<li class="nav-item" role="presentation"><a class="nav-link" href="#help1c" data-toggle="tab" role="tab" id="help1-tab-3" aria-controls="help1c" aria-selected="false">Available Variables</a></li>
+								<li class="nav-item" role="presentation"><a class="nav-link active" href="#help1a" data-toggle="tab" data-bs-toggle="tab" role="tab" id="help1-tab-1" aria-controls="help1a" aria-selected="true">If Statements</a></li>
+								<li class="nav-item" role="presentation"><a class="nav-link" href="#help1b" data-toggle="tab" data-bs-toggle="tab" role="tab" id="help1-tab-2" aria-controls="help1b" aria-selected="false">Variable Usage</a></li>
+								<li class="nav-item" role="presentation"><a class="nav-link" href="#help1c" data-toggle="tab" data-bs-toggle="tab" role="tab" id="help1-tab-3" aria-controls="help1c" aria-selected="false">Available Variables</a></li>
 							</ul>
 							<div class="tab-content" id="help1-content">
 								<div class="tab-pane fade show active" role="tabpanel" aria-labelledby="help1-tab-1" id="help1a">
@@ -527,8 +527,8 @@ $help1b = '<p>Here, we can output variables such as the resource name. This is u
 				<div class="modal-content dialog-content shadow-sm">
 					<div class="modal-header">
 						<div class="modal-title" id="new-page-title">{{ trans('knowledge::knowledge.choose type') }}</div>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+						<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+							<span class="visually-hidden" aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body dialog-body">

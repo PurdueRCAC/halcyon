@@ -49,7 +49,7 @@ app('pathway')
 			</div>
 			<div class="col col-md-2">
 				<div class="btn-group position-static" role="group" aria-label="Specific date range">
-					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						@if ($filters['start'] || $filters['end'])
 							@if ($filters['start'])
 								{{ $filters['start'] }}

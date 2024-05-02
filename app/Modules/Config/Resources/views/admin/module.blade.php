@@ -33,7 +33,7 @@ app('pathway')
 <form action="{{ route('admin.config.module.update', ['module' => $module->element]) }}" id="adminForm{{ request()->ajax() ? '-ajax' : '' }}" method="post" name="adminform" autocomplete="off" class="form-validate">
 	@if (request()->ajax())
 		<div class="toolbar-box">
-			<div class="pagetitle text-right">
+			<div class="pagetitle text-right text-end">
 				{!! Toolbar::render() !!}
 			</div>
 		</div>
@@ -52,7 +52,7 @@ app('pathway')
 					@endphp
 					@foreach ($fieldSets as $name => $fieldSet)
 						<li class="nav-item" role="presentation">
-							<a class="nav-link{{ $i == 0 ? ' active' : '' }}" href="#config-tab-{{ $name }}" data-toggle="tab" role="tab" id="config-tab-{{ $name }}-tab" aria-controls="config-tab-{{ $name }}" aria-selected="true">
+							<a class="nav-link{{ $i == 0 ? ' active' : '' }}" href="#config-tab-{{ $name }}" data-toggle="tab" data-bs-toggle="tab" role="tab" id="config-tab-{{ $name }}-tab" aria-controls="config-tab-{{ $name }}" aria-selected="true">
 								{{ trans(empty($fieldSet->label) ? 'config::modules.' . $name . ' fieldset label' : $fieldSet->label) }}
 							</a>
 						</li>

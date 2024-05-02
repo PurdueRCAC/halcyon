@@ -56,7 +56,7 @@ app('pathway')
 			<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 			<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-			<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+			<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 		</fieldset>
 
 		@if (count($rows))
@@ -112,7 +112,7 @@ app('pathway')
 									<span class="text-muted">{{ trans('global.none') }}</span>
 								@endif
 							</td>
-							<td class="priority-4 text-right">
+							<td class="priority-4 text-right text-end">
 								{{ number_format($row->notifications_count) }}
 							</td>
 						</tr>

@@ -269,8 +269,8 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 			<div class="modal-content dialog-content shadow-sm">
 				<div class="modal-header">
 					<div class="modal-title" id="markdown-title">MarkDown Help</div>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
+					<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+						<span class="visually-hidden" aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body dialog-body">
@@ -278,22 +278,22 @@ $help1g = "Tables can be created using \"|\" to start a line to mark the beginni
 					<nav class="container-fluid">
 						<ul id="help-tabs" class="nav nav-tabs" role="tablist">
 							<li class="nav-item" role="presentation">
-								<a href="#help1a" id="help1a-tab" class="nav-link active" data-toggle="tab" role="tab" aria-controls="help1a" aria-selected="true">Fonts</a>
+								<a href="#help1a" id="help1a-tab" class="nav-link active" data-toggle="tab" data-bs-toggle="tab" role="tab" aria-controls="help1a" aria-selected="true">Fonts</a>
 							</li>
 							<li class="nav-item" role="presentation">
-								<a href="#help1b" id="help1b-tab" class="nav-link" data-toggle="tab" role="tab" aria-controls="help1b" aria-selected="false">Lists</a>
+								<a href="#help1b" id="help1b-tab" class="nav-link" data-toggle="tab" data-bs-toggle="tab" role="tab" aria-controls="help1b" aria-selected="false">Lists</a>
 							</li>
 							<li class="nav-item" role="presentation">
-								<a href="#help1c" id="help1c-tab" class="nav-link" data-toggle="tab" role="tab" aria-controls="help1c" aria-selected="false">Links</a>
+								<a href="#help1c" id="help1c-tab" class="nav-link" data-toggle="tab" data-bs-toggle="tab" role="tab" aria-controls="help1c" aria-selected="false">Links</a>
 							</li>
 							<li class="nav-item" role="presentation">
-								<a href="#help1e" id="help1e-tab" class="nav-link" data-toggle="tab" role="tab" aria-controls="help1e" aria-selected="false">Line Breaks</a>
+								<a href="#help1e" id="help1e-tab" class="nav-link" data-toggle="tab" data-bs-toggle="tab" role="tab" aria-controls="help1e" aria-selected="false">Line Breaks</a>
 							</li>
 							<li class="nav-item" role="presentation">
-								<a href="#help1f" id="help1f-tab" class="nav-link" data-toggle="tab" role="tab" aria-controls="help1f" aria-selected="false">Code</a>
+								<a href="#help1f" id="help1f-tab" class="nav-link" data-toggle="tab" data-bs-toggle="tab" role="tab" aria-controls="help1f" aria-selected="false">Code</a>
 							</li>
 							<li class="nav-item" role="presentation">
-								<a href="#help1g" id="help1g-tab" class="nav-link" data-toggle="tab" role="tab" aria-controls="help1g" aria-selected="false">Tables</a>
+								<a href="#help1g" id="help1g-tab" class="nav-link" data-toggle="tab" data-bs-toggle="tab" role="tab" aria-controls="help1g" aria-selected="false">Tables</a>
 							</li>
 						</ul>
 					</nav>

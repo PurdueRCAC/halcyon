@@ -59,7 +59,7 @@ app('pathway')
 					@foreach ($stats->pendingtypes as $t)
 						<tr>
 							<th scope="row"><a href="{{ route('admin.messages.index', ['state' => 'pending', 'type' => $t->id]) }}">{{ $t->name }}</a></th>
-							<td class="text-right">{{ $t->total }}</td>
+							<td class="text-right text-end">{{ $t->total }}</td>
 						</tr>
 					@endforeach
 				</tbody>
@@ -82,7 +82,7 @@ app('pathway')
 					@foreach ($stats->failedtypes as $t)
 						<tr>
 							<th scope="row"><a href="{{ route('admin.messages.index', ['status' => 'failure', 'type' => $t->id]) }}">{{ $t->name }}</a></th>
-							<td class="text-right">{{ number_format($t->total) }}</td>
+							<td class="text-right text-end">{{ number_format($t->total) }}</td>
 						</tr>
 					@endforeach
 				</tbody>
@@ -105,7 +105,7 @@ app('pathway')
 					@foreach ($stats->succeededtypes as $t)
 						<tr>
 							<th scope="row"><a href="{{ route('admin.messages.index', ['status' => 'success', 'type' => $t->id]) }}">{{ $t->name }}</a></th>
-							<td class="text-right">{{ number_format($t->total) }}</td>
+							<td class="text-right text-end">{{ number_format($t->total) }}</td>
 						</tr>
 					@endforeach
 				</tbody>

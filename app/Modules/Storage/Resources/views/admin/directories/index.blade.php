@@ -57,7 +57,7 @@ if ($parent)
 					<span class="input-group-append"><button type="submit" class="input-group-text"><span class="fa fa-search" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('search.submit') }}</span></button></span>
 				</span>
 			</div>
-			<div class="col filter-select col-md-9 text-right">
+			<div class="col filter-select col-md-9 text-right text-end">
 				<label class="sr-only visually-hidden" for="filter_state">{{ trans('global.state') }}</label>
 				<select name="state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.option.all states') }}</option>
@@ -78,7 +78,7 @@ if ($parent)
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
@@ -102,7 +102,7 @@ if ($parent)
 				<th scope="col" class="priority-2">
 					{!! Html::grid('sort', trans('storage::storage.path'), 'path', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-6 text-right">
+				<th scope="col" class="priority-6 text-right text-end">
 					{!! Html::grid('sort', trans('storage::storage.quota'), 'bytes', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col" class="priority-3">
@@ -111,7 +111,7 @@ if ($parent)
 				<th scope="col" class="priority-4">
 					{!! Html::grid('sort', trans('storage::storage.storage'), 'storageresourceid', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="text-right">
+				<th scope="col" class="text-right text-end">
 					{{ trans('storage::storage.directories') }}
 				</th>
 			</tr>
@@ -154,7 +154,7 @@ if ($parent)
 					</a>
 					@endif
 				</td>
-				<td class="priority-6 text-right">
+				<td class="priority-6 text-right text-end">
 					@if ($row->bytes)
 						{{ App\Halcyon\Utility\Number::formatBytes($row->bytes, 0) }}
 					@else
@@ -188,7 +188,7 @@ if ($parent)
 						<span class="unknown">{{ trans('global.unknown') }}</span>
 					@endif
 				</td>
-				<td class="text-right">
+				<td class="text-right text-end">
 					@if ($row->children_count)
 						<a href="{{ route('admin.storage.directories', ['parent' => $row->id, 'search' => '']) }}">
 							{{ number_format($row->children_count) }}

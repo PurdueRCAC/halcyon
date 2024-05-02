@@ -154,7 +154,7 @@ Style guide
 	</div>
 
 	<div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Dropdown button
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -196,7 +196,7 @@ Style guide
     <strong class="mr-auto">Bootstrap</strong>
     <small>11 mins ago</small>
     <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
+      <span class="visually-hidden" aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="toast-body">

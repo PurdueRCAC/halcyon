@@ -66,7 +66,7 @@
 					</span>
 				</div>
 			</div>
-			<div class="col-md-8 text-right">
+			<div class="col-md-8 text-right text-end">
 				<label class="sr-only visually-hidden" for="filter_level">{{ trans('knowledge::knowledge.depth') }}</label>
 				<select name="level" id="filter_level" class="form-control filter filter-submit">
 					<option value="0"<?php if ($filters['level'] == '0'): echo ' selected="selected"'; endif;?>>{{ trans('knowledge::knowledge.all levels') }}</option>
@@ -113,7 +113,7 @@
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
@@ -309,8 +309,8 @@
 			<div class="modal-content dialog-content shadow-sm">
 				<div class="modal-header">
 					<div class="modal-title" id="new-page-title">{{ trans('knowledge::knowledge.choose type') }}</div>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
+					<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+						<span class="visually-hidden" aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body dialog-body">

@@ -70,7 +70,7 @@
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
-					<a class="btn btn-sm btn-secondary btn-diff" href="#page-history" data-toggle="modal" data-api="{{ route('api.knowledge.diff') }}" data-emptydiff="No diffable values found between the revisions.">Compare</a>
+					<a class="btn btn-sm btn-secondary btn-diff" href="#page-history" data-toggle="modal" data-bs-toggle="modal" data-api="{{ route('api.knowledge.diff') }}" data-emptydiff="No diffable values found between the revisions.">Compare</a>
 				</th>
 				<th scope="col">When</th>
 				<th scope="col">Changed</th>
@@ -138,7 +138,7 @@
 						</td>
 					@endif
 					<td>
-						<a href="#page-history{{ $revision->id }}" data-toggle="modal" class="tip" title="View changes from previous version">
+						<a href="#page-history{{ $revision->id }}" data-toggle="modal" data-bs-toggle="modal" class="tip" title="View changes from previous version">
 							<time datetime="{{ $revision->created_at->toDateTimeString() }}">{{ $revision->created_at->toDateTimeString() }}</time>
 						</a>
 						<div id="page-history{{ $revision->id }}" class="modal fade" tabindex="-1" aria-labelledby="page-history-title{{ $revision->id }}" aria-hidden="true">
@@ -146,8 +146,8 @@
 								<div class="modal-content">
 									<div class="modal-header">
 										<h3 class="modal-title" id="page-history-title{{ $revision->id }}">Changes</h3>
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true">&times;</span>
+										<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+											<span class="visually-hidden" aria-hidden="true">&times;</span>
 										</button>
 									</div>
 									<div class="modal-body">
@@ -274,7 +274,7 @@
 		<tfoot>
 			<tr>
 				<td colspan="2">
-					<a class="btn btn-sm btn-secondary btn-diff" href="#page-history" data-toggle="modal" data-api="{{ route('api.knowledge.diff') }}" data-emptydiff="No diffable values found between the revisions.">Compare</a>
+					<a class="btn btn-sm btn-secondary btn-diff" href="#page-history" data-toggle="modal" data-bs-toggle="modal" data-api="{{ route('api.knowledge.diff') }}" data-emptydiff="No diffable values found between the revisions.">Compare</a>
 				</td>
 				<td></td>
 				<td></td>
@@ -292,8 +292,8 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h3 class="modal-title" id="page-history-title">Changes</h3>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
+					<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+						<span class="visually-hidden" aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body" id="page-diff">

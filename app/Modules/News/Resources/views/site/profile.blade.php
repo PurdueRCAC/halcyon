@@ -31,7 +31,7 @@
 										@endif
 									</span>
 								@else
-									<div class="text-right">
+									<div class="text-right text-end">
 										<a class="btn-notattend btn btn-danger" href="{{ route('page', ['uri' => 'coffee', 'attend' => 0]) }}" data-id="{{ $row->attending }}">{{ trans('news::news.cancel reservation') }}</a>
 									</div>
 								@endif

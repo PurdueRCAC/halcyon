@@ -63,7 +63,7 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col-md-9 text-right">
+			<div class="col-md-9 text-right text-end">
 				<label class="sr-only visually-hidden" for="filter_parent">{{ trans('knowledge::knowledge.parent') }}</label>
 				<select name="parent" id="filter_parent" class="form-control filter filter-submit">
 					<option value="0">{{ trans('knowledge::knowledge.all snippets') }}</option>
@@ -78,7 +78,7 @@ app('pathway')
 		<input type="hidden" name="filter_order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="filter_order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
@@ -107,7 +107,7 @@ app('pathway')
 				<th scope="col" class="priority-5">
 					{!! Html::grid('sort', trans('knowledge::knowledge.ordering'), 'lft', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-2 text-right">
+				<th scope="col" class="priority-2 text-right text-end">
 					{{ trans('knowledge::knowledge.used') }}
 				</th>
 				<th scope="col">
@@ -189,7 +189,7 @@ app('pathway')
 						<?php endif; ?>
 					@endif
 				</td>
-				<td class="priority-2 text-right">
+				<td class="priority-2 text-right text-end">
 					{{ $row->used }}
 				</td>
 				<td>

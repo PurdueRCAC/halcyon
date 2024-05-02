@@ -158,7 +158,7 @@ app('pathway')
 				</div>
 
 				<div class="row">
-					<div class="col-md-12 text-right">
+					<div class="col-md-12 text-right text-end">
 						<button class="btn btn-success add-version" data-length="{{ $i }}" data-target="version<?php echo '{{id}}'; ?>">
 							<span class="fa fa-plus" aria-hidden="true"></span>
 							<span class="sr-only visually-hidden">{{ trans('global.button.add') }}</span>

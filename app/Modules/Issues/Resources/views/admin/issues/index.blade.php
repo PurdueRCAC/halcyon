@@ -45,7 +45,7 @@ app('pathway')
 		<div class="col-md-6">
 			<div class="card-title">{{ trans('issues::issues.checklist') }}</div>
 		</div>
-		<div class="col-md-6 text-right">
+		<div class="col-md-6 text-right text-end">
 			<label for="checklist_status" class="sr-only visually-hidden">{{ trans('issues::issues.show') }}</label>
 			<select name="checklist_status" id="checklist_status" class="form-control form-control-sm">
 				<option value="all">{{ trans('issues::issues.all') }}</option>
@@ -167,7 +167,7 @@ app('pathway')
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
@@ -200,7 +200,7 @@ app('pathway')
 							{{ $row->creator->name }}
 						@endif
 						</div>
-						<div class="flex-fill text-right">
+						<div class="flex-fill text-right text-end">
 							@if (auth()->user()->can('edit issues'))
 								<a class="btn" href="{{ route('admin.issues.edit', ['id' => $row->id]) }}">
 									<span class="fa fa-pencil" aria-hidden="true"></span>
@@ -241,7 +241,7 @@ app('pathway')
 							endif;
 							?>
 						</div>
-						<div class="flex-fill text-right">
+						<div class="flex-fill text-right text-end">
 							<span class="fa fa-comment" aria-hidden="true"></span>
 							@if ($row->comments_count)
 								<a href="#comments_{{ $row->id }}" class="comments-show">{{ $row->comments_count }}</a>
@@ -277,7 +277,7 @@ app('pathway')
 											{{ $comment->creator->name }}
 										@endif
 									</div>
-									<div class="flex-fill text-right">
+									<div class="flex-fill text-right text-end">
 										<span class="badge badge-success<?php if (!$comment->resolution) { echo ' hide'; } ?>">{{ trans('issues::issues.resolution') }}</span>
 									</div>
 								</div>

@@ -269,7 +269,7 @@ app('pathway')
 									<td>
 										<input type="text" name="params[variables][{{ $i }}][value]" id="params-variables-{{ $i }}-value" value="{{ $val }}" class="form-control" />
 									</td>
-									<td class="text-right">
+									<td class="text-right text-end">
 										<a href="#params-variables-{{ $i }}" class="btn text-danger delete-row">
 											<span class="fa fa-trash" aria-hidden="true"></span>
 											<span class="sr-only visually-hidden">{{ trans('global.delete') }}</span>
@@ -292,7 +292,7 @@ app('pathway')
 									<td>
 										<input type="text" name="params[variables][{{ $i }}][value]" id="params-variables-{{ $i }}-value" value="" class="form-control" />
 									</td>
-									<td class="text-right">
+									<td class="text-right text-end">
 										<a href="#params-variables-{{ $i }}" class="btn text-danger delete-row disabled">
 											<span class="fa fa-trash" aria-hidden="true"></span>
 											<span class="sr-only visually-hidden">{{ trans('global.delete') }}</span>
@@ -302,7 +302,7 @@ app('pathway')
 							</tbody>
 							<tfoot>
 								<tr>
-									<td colspan="3" class="text-right">
+									<td colspan="3" class="text-right text-end">
 										<button data-type="script" data-container="param-variables" class="add-row btn btn-success param-variable-new">
 											<span class="fa fa-plus" aria-hidden="true"></span>
 											<span class="sr-only visually-hidden">{{ trans('global.add') }}</span>
@@ -335,7 +335,7 @@ app('pathway')
 									<td>
 										<input type="text" name="params[tags][{{ $i }}]" id="params-tags-{{ $i }}-value" value="{{ $val }}" class="form-control" />
 									</td>
-									<td class="text-right">
+									<td class="text-right text-end">
 										<a href="#params-tags-{{ $i }}" class="btn text-danger delete-row">
 											<span class="fa fa-trash" aria-hidden="true"></span>
 											<span class="sr-only visually-hidden">{{ trans('global.delete') }}</span>
@@ -350,7 +350,7 @@ app('pathway')
 									<td>
 										<input type="text" name="params[tags][{{ $i }}]" id="params-tags-{{ $i }}-value" value="" class="form-control" />
 									</td>
-									<td class="text-right">
+									<td class="text-right text-end">
 										<a href="#params-tags-{{ $i }}" class="btn text-danger delete-row disabled">
 											<span class="fa fa-trash" aria-hidden="true"></span>
 											<span class="sr-only visually-hidden">{{ trans('global.delete') }}</span>
@@ -360,7 +360,7 @@ app('pathway')
 							</tbody>
 							<tfoot>
 								<tr>
-									<td colspan="3" class="text-right">
+									<td colspan="3" class="text-right text-end">
 										<button data-type="script" data-container="param-tags" class="add-row btn btn-success param-tag-new">
 											<span class="fa fa-plus" aria-hidden="true"></span>
 											<span class="sr-only visually-hidden">{{ trans('global.add') }}</span>

@@ -15,7 +15,7 @@
 				<th scope="col" class="priority-4">
 					{{ trans('issues::issues.created') }}
 				</th>
-				<th scope="col" class="priority-2 text-right">
+				<th scope="col" class="priority-2 text-right text-end">
 					{{ trans('issues::issues.comments') }}
 				</th>
 			</tr>
@@ -55,7 +55,7 @@
 						<span class="text-muted">{{ trans('global.unknown') }}</span>
 					@endif
 				</td>
-				<td class="priority-4 text-right">
+				<td class="priority-4 text-right text-end">
 					@if ($row->comments_count)
 						{{ $row->comments_count }}
 					@else

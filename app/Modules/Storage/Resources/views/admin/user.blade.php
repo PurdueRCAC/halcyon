@@ -17,7 +17,7 @@
 		<div class="card-header">
 			<h3 class="card-title my-0">
 				Storage Spaces
-				<a href="#storagespacehelp" data-toggle="modal" class="text-info tip" title="Help">
+				<a href="#storagespacehelp" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help">
 					<span class="fa fa-question-circle" aria-hidden="true"></span>
 					<span class="sr-only visually-hidden">Help</span>
 				</a>
@@ -29,8 +29,8 @@
 					<div class="modal-content dialog-content shadow-sm">
 						<div class="modal-header">
 							<div class="modal-title" id="storagespacehelp-title">Storage Spaces</div>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
+							<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+								<span class="visually-hidden" aria-hidden="true">&times;</span>
 							</button>
 						</div>
 						<div class="modal-body dialog-body">
@@ -157,15 +157,15 @@
 				<div class="col col-md-6">
 					<h3 class="card-title my-0">
 						Storage Alerts
-						<a href="#storagealerthelp" data-toggle="modal" class="text-info tip" title="Help">
+						<a href="#storagealerthelp" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help">
 							<span class="fa fa-question-circle" aria-hidden="true"></span>
 							<span class="sr-only visually-hidden">Help</span>
 						</a>
 					</h3>
 				</div>
-				<div class="col col-md-6 text-right">
+				<div class="col col-md-6 text-right text-end">
 					@if ($user->enabled && ($user->id == auth()->user()->id || auth()->user()->can('manage storage')))
-						<a href="#newalert" data-toggle="modal" class="btn btn-default btn-sm accountsbtn" id="create-newalert">
+						<a href="#newalert" data-toggle="modal" data-bs-toggle="modal" class="btn btn-default btn-sm accountsbtn" id="create-newalert">
 							<span class="fa fa-plus-circle" aria-hidden="true"></span> Create New Alert
 						</a>
 					@endif
@@ -178,8 +178,8 @@
 					<div class="modal-content dialog-content shadow-sm">
 						<div class="modal-header">
 							<div class="modal-title" id="storagealerthelp-title">Storage Alerts</div>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
+							<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+								<span class="visually-hidden" aria-hidden="true">&times;</span>
 							</button>
 						</div>
 						<div class="modal-body dialog-body">
@@ -217,7 +217,7 @@
 							<th scope="col" class="text-center">Enabled</th>
 							<th scope="col">Last Notify</th>
 							@if ($user->enabled && ($user->id == auth()->user()->id || auth()->user()->can('manage storage')))
-								<th scope="col" colspan="2" class="text-right">Actions</th>
+								<th scope="col" colspan="2" class="text-right text-end">Actions</th>
 							@endif
 						</tr>
 					</thead>
@@ -269,7 +269,7 @@
 									@endif
 								</td>
 								@if ($user->enabled && ($user->id == auth()->user()->id || auth()->user()->can('manage storage')))
-									<td class="text-right">
+									<td class="text-right text-end">
 										<a href="#not_dialog_{{ $not->id }}"
 											data-toggle="modal"
 											class="storagealert-edit tip"
@@ -277,7 +277,7 @@
 											--><span class="fa fa-pencil"></span><span class="sr-only visually-hidden">{{ trans('global.button.edit') }}</span><!--
 										--></a>
 									</td>
-									<td class="text-right">
+									<td class="text-right text-end">
 										<a href="#dialog-confirm-delete"
 											class="storagealert-confirm-delete delete tip"
 											title="{{ trans('global.button.delete') }}"
@@ -313,8 +313,8 @@
 								<div class="modal-content dialog-content shadow-sm">
 									<div class="modal-header">
 										<div class="modal-title" id="not_dialog_{{ $not->id }}-title">Storage Alert Details</div>
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true">&times;</span>
+										<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+											<span class="visually-hidden" aria-hidden="true">&times;</span>
 										</button>
 									</div>
 									<form method="post" action="{{ route('api.storage.notifications.update', ['id' => $not->id]) }}">
@@ -406,8 +406,8 @@
 			<div class="modal-content dialog-content shadow-sm">
 				<div class="modal-header">
 					<div class="modal-title" id="newalert-title">New Quota Alert</div>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
+					<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+						<span class="visually-hidden" aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<form method="post" action="{{ route('site.users.account.section', ['section' => 'quotas']) }}">
@@ -478,14 +478,14 @@
 				<div class="col col-md-6">
 					<h3 class="card-title my-0">
 						Storage Usage Reports
-						<a href="#storageusagehelp" data-toggle="modal" class="text-info tip" title="Help">
+						<a href="#storageusagehelp" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help">
 							<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 						</a>
 					</h3>
 				</div>
-				<div class="col col-md-6 text-right">
+				<div class="col col-md-6 text-right text-end">
 					@if ($user->enabled && ($user->id == auth()->user()->id || auth()->user()->can('manage storage')))
-						<a href="#newreport" data-toggle="modal" class="btn btn-default btn-sm accountsbtn" id="create-newreport">
+						<a href="#newreport" data-toggle="modal" data-bs-toggle="modal" class="btn btn-default btn-sm accountsbtn" id="create-newreport">
 							<span class="fa fa-plus-circle" aria-hidden="true"></span> Create New Usage Report
 						</a>
 					@endif
@@ -498,8 +498,8 @@
 					<div class="modal-content dialog-content shadow-sm">
 						<div class="modal-header">
 							<div class="modal-title" id="storageusagehelp-title">Storage Usage Reports</div>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
+							<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+								<span class="visually-hidden" aria-hidden="true">&times;</span>
 							</button>
 						</div>
 						<div class="modal-body dialog-body">
@@ -544,7 +544,7 @@
 							<th scope="col" class="text-center">Enabled</th>
 							<th scope="col">Next Report</th>
 							@if ($user->enabled && ($user->id == auth()->user()->id || auth()->user()->can('manage storage')))
-							<th scope="col" colspan="2" class="text-right">Actions</th>
+							<th scope="col" colspan="2" class="text-right text-end">Actions</th>
 							@endif
 						</tr>
 					</thead>
@@ -582,7 +582,7 @@
 									<time datetime="{{ $not->datetimelastnotify->toDateTimeLocalString() }}">{{ $not->wasNotified() ? $not->datetimelastnotify->format('m/d/Y') : trans('global.unknown') }}</time>
 								</td>
 								@if ($user->enabled && ($user->id == auth()->user()->id || auth()->user()->can('manage storage')))
-									<td class="text-right">
+									<td class="text-right text-end">
 										<a href="#not_dialog_{{ $not->id }}"
 											data-toggle="modal"
 											class="storagealert-edit tip"
@@ -590,7 +590,7 @@
 											--><span class="fa fa-pencil"></span><span class="sr-only visually-hidden">Edit</span><!--
 										--></a>
 									</td>
-									<td class="text-right">
+									<td class="text-right text-end">
 										<a href="#dialog-confirm-delete"
 											class="storagealert-confirm-delete delete tip"
 											title="{{ trans('global.button.delete') }}"
@@ -625,8 +625,8 @@
 								<div class="modal-content dialog-content shadow-sm">
 									<div class="modal-header">
 										<div class="modal-title" id="not_dialog_{{ $not->id }}-title">Storage Usage Report Details</div>
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true">&times;</span>
+										<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+											<span class="visually-hidden" aria-hidden="true">&times;</span>
 										</button>
 									</div>
 									<form method="post" action="{{ route('api.storage.notifications.update', ['id' => $not->id]) }}">
@@ -701,8 +701,8 @@
 					<div class="modal-content dialog-content shadow-sm">
 						<div class="modal-header">
 							<div class="modal-title" id="newreport-title">New Usage Report</div>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
+							<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+								<span class="visually-hidden" aria-hidden="true">&times;</span>
 							</button>
 						</div>
 						<form method="post" action="{{ route('site.users.account.section', ['section' => 'quotas']) }}">

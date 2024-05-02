@@ -58,7 +58,7 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col filter-select col-md-8 text-right">
+			<div class="col filter-select col-md-8 text-right text-end">
 				<!-- <div class="btn-group" role="group" aria-label="{{ trans('global.state') }}">
 					<a class="btn btn-outline-secondary<?php if ($filters['state'] == '*'): echo ' active"'; endif; ?>" href="{{ route('admin.storage.index', ['state' => '*']) }}">{{ trans('global.option.all states') }}</a>
 					<a class="btn btn-outline-secondary<?php if ($filters['state'] == 'active'): echo ' active"'; endif; ?>" href="{{ route('admin.storage.index', ['state' => 'active']) }}">{{ trans('global.active') }}</a>
@@ -85,7 +85,7 @@ app('pathway')
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
@@ -109,16 +109,16 @@ app('pathway')
 					<th scope="col">
 						{!! Html::grid('sort', trans('storage::storage.path'), 'path', $filters['order_dir'], $filters['order']) !!}
 					</th>
-					<th scope="col" class="priority-5 text-right">
+					<th scope="col" class="priority-5 text-right text-end">
 						{!! Html::grid('sort', trans('storage::storage.quota space'), 'defaultquotaspace', $filters['order_dir'], $filters['order']) !!}
 					</th>
-					<th scope="col" class="priority-5 text-right">
+					<th scope="col" class="priority-5 text-right text-end">
 						{!! Html::grid('sort', trans('storage::storage.quota file'), 'defaultquotafile', $filters['order_dir'], $filters['order']) !!}
 					</th>
 					<th scope="col" class="priority-4">
 						{!! Html::grid('sort', trans('storage::storage.resource'), 'storageresourceid', $filters['order_dir'], $filters['order']) !!}
 					</th>
-					<th scope="col" class="text-right">
+					<th scope="col" class="text-right text-end">
 						{{ trans('storage::storage.directories') }}
 					</th>
 				</tr>
@@ -158,12 +158,12 @@ app('pathway')
 							</a>
 							@endif
 						</td>
-						<td class="priority-5 text-right">
+						<td class="priority-5 text-right text-end">
 							@if ($row->defaultquotaspace)
 								{{ App\Halcyon\Utility\Number::formatBytes($row->defaultquotaspace, 0) }}
 							@endif
 						</td>
-						<td class="priority-5 text-right">
+						<td class="priority-5 text-right text-end">
 							@if ($row->defaultquotafile)
 								{{ number_format($row->defaultquotafile, 2) }}
 							@endif
@@ -182,7 +182,7 @@ app('pathway')
 								@endif
 							@endif
 						</td>
-						<td class="text-right">
+						<td class="text-right text-end">
 							@if ($row->directories_count)
 								<a href="{{ route('admin.storage.directories', ['resource' => $row->id]) }}">
 									{{ number_format($row->directories_count) }}

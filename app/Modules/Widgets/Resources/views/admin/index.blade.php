@@ -299,7 +299,7 @@ app('pathway')
 				<div class="modal-header">
 					<h3 class="modal-title" id="new-widget-title">{{ trans('widgets::widgets.choose type') }}</h3>
 					<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
+						<span class="visually-hidden" aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">

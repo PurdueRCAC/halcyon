@@ -110,7 +110,7 @@ Toolbar::cancel(route('admin.issues.cancel'));
 								<div class="col-md-6">
 									<span class="badge badge-success<?php if (!$comment->resolution) { echo ' hide'; } ?>">{{ trans('issues::issues.resolution') }}</span>
 								</div>
-								<div class="col-md-6 text-right">
+								<div class="col-md-6 text-right text-end">
 									<a href="#comment_{{ $comment->id }}_comment" class="btn comment-edit hide-when-editing">
 										<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.edit') }}</span>
 									</a>
@@ -136,7 +136,7 @@ Toolbar::cancel(route('admin.issues.cancel'));
 										</div>
 									</div>
 									<div class="col-md-6">
-										<div class="form-group text-right">
+										<div class="form-group text-right text-end">
 											<button class="btn btn-secondary comment-save" data-parent="#comment_{{ $comment->id }}">{{ trans('global.button.save') }}</button>
 											<a href="#comment_{{ $comment->id }}" class="btn btn-link comment-cancel">
 												{{ trans('global.button.cancel') }}
@@ -156,7 +156,7 @@ Toolbar::cancel(route('admin.issues.cancel'));
 								<div class="col-md-6">
 									<span class="badge badge-success hide">{{ trans('issues::issues.resolution') }}</span>
 								</div>
-								<div class="col-md-6 text-right">
+								<div class="col-md-6 text-right text-end">
 									<a href="#comment_<?php echo '{id}'; ?>_comment" class="btn btn-link comment-edit hide-when-editing">
 										<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.edit') }}</span>
 									</a>
@@ -181,7 +181,7 @@ Toolbar::cancel(route('admin.issues.cancel'));
 										</div>
 									</div>
 									<div class="col-md-6">
-										<div class="form-group text-right">
+										<div class="form-group text-right text-end">
 											<button class="btn btn-secondary comment-save" data-parent="#comment_<?php echo '{id}'; ?>">{{ trans('global.button.save') }}</button>
 											<a href="#comment_<?php echo '{id}'; ?>" class="btn btn-link comment-cancel">
 												{{ trans('global.button.cancel') }}
@@ -206,7 +206,7 @@ Toolbar::cancel(route('admin.issues.cancel'));
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group text-right">
+									<div class="form-group text-right text-end">
 										<button class="btn btn-secondary comment-add" data-parent="#comment_new">{{ trans('issues::issues.add') }}</button>
 									</div>
 								</div>

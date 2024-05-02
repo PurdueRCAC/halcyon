@@ -56,7 +56,7 @@ app('pathway')
 				{{ $type->name }}
 			</h2>
 		</div>
-		<div class="col-md-4 text-right">
+		<div class="col-md-4 text-right text-end">
 			<nav class="btn-group" aria-label="Calendar options for {{ $type->name }}">
 				<a class="btn btn-default tip" href="{{ $type->rssLink }}" title="{{ trans('news::news.rss feed') }}">
 					<span class="fa fa-rss-square" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('news::news.rss feed') }}</span>
@@ -82,7 +82,7 @@ app('pathway')
 					<a href="{{ route('site.news.type', ['name' => $type->alias, 'state' => 'ended', 'order_dir' => 'desc']) }}" class="btn btn-outline-secondary<?php if ($filters['state'] == 'ended'): echo ' active'; endif;?>">{{ trans('news::news.ended') }}</a>
 				</div>
 			</div>
-			<div class="col col-md-8 filter-select text-right">
+			<div class="col col-md-8 filter-select text-right text-end">
 				<div class="btn-group mr-2" role="group" aria-label="Sort options">
 					<a href="{{ route('site.news.type', ['name' => $type->alias, 'state' => $filters['state'], 'order_dir' => 'asc']) }}" class="btn btn-outline-secondary<?php if ($filters['order_dir'] == 'asc'): echo ' active'; endif;?>">{{ trans('news::news.sort asc') }}</a>
 					<a href="{{ route('site.news.type', ['name' => $type->alias, 'state' => $filters['state'], 'order_dir' => 'desc']) }}" class="btn btn-outline-secondary<?php if ($filters['order_dir'] == 'desc'): echo ' active'; endif;?>">{{ trans('news::news.sort desc') }}</a>

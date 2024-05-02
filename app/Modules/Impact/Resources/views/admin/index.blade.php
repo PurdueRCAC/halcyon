@@ -46,8 +46,8 @@ for ($i = 0; $i < count($all_rows); $i++)
 						?>
 						<tr>
 							<th scope="col">{{ trans('impact::impact.cluster') }}</th>
-							<th scope="col" class="text-right">{{ trans('impact::impact.departments') }}</th>
-							<th scope="col" class="text-right">{{ trans('impact::impact.faculty') }}</th>
+							<th scope="col" class="text-right text-end">{{ trans('impact::impact.departments') }}</th>
+							<th scope="col" class="text-right text-end">{{ trans('impact::impact.faculty') }}</th>
 						</tr>
 						<?php
 					elseif (preg_match("/[a-zA-Z]/i", $all_rows[$i]->columnname)):
@@ -60,14 +60,14 @@ for ($i = 0; $i < count($all_rows); $i++)
 								echo $matches[1];
 							endif;
 							?></th>
-							<th scope="col" class="text-right"><?php echo $all_rows[$i]->columnname; ?></th>
+							<th scope="col" class="text-right text-end"><?php echo $all_rows[$i]->columnname; ?></th>
 						</tr>
 						<?php
 					else:
 						?>
 						<tr>
 							<th scope="col">{{ trans('impact::impact.metric') }}</th>
-							<th scope="col" class="text-right">{{ trans('impact::impact.value') }}</th>
+							<th scope="col" class="text-right text-end">{{ trans('impact::impact.value') }}</th>
 						</tr>
 						<?php
 					endif;
@@ -82,8 +82,8 @@ for ($i = 0; $i < count($all_rows); $i++)
 			?>
 				<tr>
 					<td>{{ $all_rows[$i]->rowname }}</td>
-					<td class="text-right">{{ number_format(intval($all_rows[$i]->value)) }}</td>
-					<td class="text-right">{{ number_format(intval($all_rows[$i+1]->value)) }}</td>
+					<td class="text-right text-end">{{ number_format(intval($all_rows[$i]->value)) }}</td>
+					<td class="text-right text-end">{{ number_format(intval($all_rows[$i+1]->value)) }}</td>
 				</tr>
 			<?php
 		endif;
@@ -95,16 +95,16 @@ for ($i = 0; $i < count($all_rows); $i++)
 				if (is_numeric($all_rows[$i]->value)):
 					if (floor($all_rows[$i]->value) != $all_rows[$i]->value):
 						?>
-						<td class="text-right"><?php echo number_format(intval($all_rows[$i]->value), 2); ?></td>
+						<td class="text-right text-end"><?php echo number_format(intval($all_rows[$i]->value), 2); ?></td>
 						<?php
 					else:
 						?>
-						<td class="text-right"><?php echo number_format(intval($all_rows[$i]->value)); ?></td>
+						<td class="text-right text-end"><?php echo number_format(intval($all_rows[$i]->value)); ?></td>
 						<?php
 					endif;
 				else:
 					?>
-					<td class="text-right"><?php echo $all_rows[$i]->value; ?></td>
+					<td class="text-right text-end"><?php echo $all_rows[$i]->value; ?></td>
 					<?php
 				endif;
 				?>
@@ -135,16 +135,16 @@ for ($i = 0; $i < count($all_rows); $i++)
 		<thead>
 			<tr>
 				<th scope="col">{{ trans('impact::impact.fiscal year') }}</th>
-				<th scope="col" class="text-right">{{ trans('impact::impact.faculty awards') }}</th>
-				<th scope="col" class="text-right">{{ trans('impact::impact.total awards') }}</th>
+				<th scope="col" class="text-right text-end">{{ trans('impact::impact.faculty awards') }}</th>
+				<th scope="col" class="text-right text-end">{{ trans('impact::impact.total awards') }}</th>
 			</tr>
 		</thead>
 		<tbody>
 			@foreach ($data as $row)
 				<tr>
 					<td>{{ $row->fiscalyear }}</td>
-					<td class="text-right">${{ number_format(round(($row->awards/100)/1000000), 1) }} {{ trans('impact::impact.million') }}</td>
-					<td class="text-right">${{ number_format(round(($row->totalawards/100)/1000000), 1) }} {{ trans('impact::impact.million') }}</td>
+					<td class="text-right text-end">${{ number_format(round(($row->awards/100)/1000000), 1) }} {{ trans('impact::impact.million') }}</td>
+					<td class="text-right text-end">${{ number_format(round(($row->totalawards/100)/1000000), 1) }} {{ trans('impact::impact.million') }}</td>
 				</tr>
 			@endforeach
 		</tbody>

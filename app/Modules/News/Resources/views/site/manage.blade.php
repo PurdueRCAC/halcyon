@@ -250,7 +250,7 @@ app('pathway')
 						<div class="form-group row tab-search tab-add tab-edit" id="TR_published">
 							<label for="published" class="col-sm-2 col-form-label">
 								{{ trans('news::news.published') }}
-								<a href="#help2" data-toggle="modal" class="text-info tip" title="Help">
+								<a href="#help2" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help">
 									<span class="fa fa-question-circle" aria-hidden="true"></span>
 									<span class="sr-only visually-hidden">Help</span>
 								</a>
@@ -268,7 +268,7 @@ app('pathway')
 						<div class="form-group row tab-add tab-edit" id="TR_use_template">
 							<label for="template_select" class="col-sm-2 col-form-label">
 								{{ trans('news::news.template') }}
-								<a href="#help4" data-toggle="modal" class="text-info tip" title="Help">
+								<a href="#help4" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help">
 									<span class="fa fa-question-circle" aria-hidden="true"></span>
 									<span class="sr-only visually-hidden">Help</span>
 								</a>
@@ -304,7 +304,7 @@ app('pathway')
 						<div class="form-group row tab-add tab-edit" id="TR_notes">
 							<label for="NotesText" class="col-sm-2 col-form-label">
 								{{ trans('news::news.body') }}
-								<a href="#markdown-help" data-toggle="modal" class="text-info tip" title="Help">
+								<a href="#markdown-help" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help">
 									<span class="fa fa-question-circle" aria-hidden="true"></span>
 									<span class="sr-only visually-hidden">Help</span>
 								</a>
@@ -332,7 +332,7 @@ app('pathway')
 							</div>
 							<div class="col-sm-10">
 								<input id="INPUT_add" type="submit" class="btn btn-primary" data-add="Add News" data-edit="Save Changes" value="Add News" disabled="true" />
-								<input id="INPUT_preview" type="button" data-toggle="modal" data-target="#preview-modal" class="btn btn-secondary" value="Preview" data-id="{{ request('id') }}" />
+								<input id="INPUT_preview" type="button" data-toggle="modal" data-bs-toggle="modal" data-bs-target="#preview-modal" data-target="#preview-modal" class="btn btn-secondary" value="Preview" data-id="{{ request('id') }}" />
 								<input id="INPUT_clear" type="reset" class="btn btn-danger" data-add="Add News" data-edit="Save Changes" value="Clear" />
 							</div>
 						</div>
@@ -388,8 +388,8 @@ app('pathway')
 			<div class="modal-content shadow-sm">
 				<div class="modal-header">
 					<div class="modal-title" id="help2-title">Published</div>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
+					<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+						<span class="visually-hidden" aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
@@ -404,8 +404,8 @@ app('pathway')
 			<div class="modal-content shadow-sm">
 				<div class="modal-header">
 					<div class="modal-title" id="help3-title">Update</div>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
+					<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+						<span class="visually-hidden" aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
@@ -421,8 +421,8 @@ app('pathway')
 			<div class="modal-content shadow-sm">
 				<div class="modal-header">
 					<div class="modal-title" id="help4-title">Template</div>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
+					<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+						<span class="visually-hidden" aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
@@ -437,8 +437,8 @@ app('pathway')
 			<div class="modal-content shadow-sm">
 				<div class="modal-header">
 					<div class="modal-title" id="preview-title">News Preview</div>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
+					<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+						<span class="visually-hidden" aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body" id="preview">
@@ -455,8 +455,8 @@ app('pathway')
 			<div class="modal-content shadow-sm">
 				<div class="modal-header">
 					<div class="modal-title" id="mailpreview-title">Mail Preview</div>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
+					<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+						<span class="visually-hidden" aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body" id="mailpreview">
@@ -464,7 +464,7 @@ app('pathway')
 						<span class="sr-only visually-hidden">Loading...</span>
 					</div>
 				</div>
-				<div class="modal-footer text-right">
+				<div class="modal-footer text-right text-end">
 					<button id="mailsend" data-dismiss="modal" class="btn btn-success" data-confirm="You have unsaved changes that need to be saved before mailing news item. Would you like to save the changes?">Send mail</button>
 				</div>
 			</div>
@@ -476,8 +476,8 @@ app('pathway')
 			<div class="modal-content dialog-content shadow-sm">
 				<div class="modal-header">
 					<div class="modal-title" id="mailwrite-title">Write Mail</div>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
+					<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+						<span class="visually-hidden" aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body dialog-body" id="mailwrite">
@@ -503,7 +503,7 @@ app('pathway')
 						<div class="form-group row">
 							<label for="NotesText" class="col-sm-2 col-form-label">
 								Body
-								<a href="#help1" data-toggle="modal" class="text-info tip" title="Help">
+								<a href="#help1" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help">
 									<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">Help</span>
 								</a>
 							</label>
@@ -514,7 +514,7 @@ app('pathway')
 						@csrf
 					</form>
 				</div>
-				<div class="modal-footer text-right">
+				<div class="modal-footer text-right text-end">
 					<button id="mailsend-write" data-dismiss="modal" class="btn btn-success">Send mail</button>
 				</div>
 			</div>

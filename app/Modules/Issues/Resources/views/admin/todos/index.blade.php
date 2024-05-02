@@ -53,7 +53,7 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col col-md-6 text-right">
+			<div class="col col-md-6 text-right text-end">
 				<label class="sr-only visually-hidden" for="filter_start">{{ trans('issues::issues.recurrence') }}</label>
 				<select class="form-control" name="fields[recurringtimeperiodid]" id="field-recurringtimeperiodid">
 					<option value="0"<?php if (!$filters['timeperiod']) { echo ' selected="selected"'; } ?>>{{ trans('issues::issues.all recurrence') }}</option>
@@ -67,7 +67,7 @@ app('pathway')
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	<div class="card mb-4">

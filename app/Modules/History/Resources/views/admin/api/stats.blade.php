@@ -145,9 +145,9 @@ app('pathway')
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col col-md-12 text-right">
+			<div class="col col-md-12 text-right text-end">
 				<div class="btn-group position-static" role="group" aria-label="Specific date range">
-					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						@if ($filters['start'] || $filters['end'])
 							@if ($filters['start'])
 								{{ $filters['start'] }}
@@ -262,7 +262,7 @@ app('pathway')
 								<thead>
 									<tr>
 										<th scope="col">Transport Method</th>
-										<th scope="col" class="text-right">Requests</th>
+										<th scope="col" class="text-right text-end">Requests</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -271,7 +271,7 @@ app('pathway')
 										<td>
 											<span class="legend-key"></span> {{ $name }}
 										</td>
-										<td class="text-right">
+										<td class="text-right text-end">
 											{{ number_format($val) }}
 										</td>
 									</tr>
@@ -308,8 +308,8 @@ app('pathway')
 						<thead>
 							<tr>
 								<th scope="col">URI</th>
-								<th scope="col" class="text-right">Requests</th>
-								<th scope="col" class="text-right">% of all</th>
+								<th scope="col" class="text-right text-end">Requests</th>
+								<th scope="col" class="text-right text-end">% of all</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -332,10 +332,10 @@ app('pathway')
 										</div>
 									</div>
 								</td>
-								<td class="text-right">
+								<td class="text-right text-end">
 									{{ number_format($row->requests) }}
 								</td>
-								<td class="text-right">
+								<td class="text-right text-end">
 									{{ $per . '%' }}
 								</td>
 							</tr>
@@ -355,8 +355,8 @@ app('pathway')
 						<thead>
 							<tr>
 								<th scope="col">IP</th>
-								<th scope="col" class="text-right">Requests</th>
-								<th scope="col" class="text-right">% of all</th>
+								<th scope="col" class="text-right text-end">Requests</th>
+								<th scope="col" class="text-right text-end">% of all</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -373,10 +373,10 @@ app('pathway')
 										</div>
 									</div>
 								</td>
-								<td class="text-right">
+								<td class="text-right text-end">
 									{{ number_format($row->requests) }}
 								</td>
-								<td class="text-right">
+								<td class="text-right text-end">
 									{{ $per . '%' }}
 								</td>
 							</tr>

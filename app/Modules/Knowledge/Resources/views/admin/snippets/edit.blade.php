@@ -241,7 +241,7 @@ app('pathway')
 							</tbody>
 							<tfoot>
 								<tr>
-									<td colspan="3" class="text-right">
+									<td colspan="3" class="text-right text-end">
 										<button data-type="script" data-container="param-variables" class="add-row btn btn-success param-variable-new">
 											<span class="fa fa-plus" aria-hidden="true"></span>
 											<span class="sr-only visually-hidden">{{ trans('global.add') }}</span>

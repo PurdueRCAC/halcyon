@@ -104,13 +104,13 @@ app('pathway')
 						<th scope="col">
 							{!! Html::grid('sort', trans('menus::menus.title'), 'title', $filters['order_dir'], $filters['order']) !!}
 						</th>
-						<th scope="col" class="priority-4 text-right">
+						<th scope="col" class="priority-4 text-right text-end">
 							{{ trans('menus::menus.published items') }}
 						</th>
-						<th scope="col" class="priority-6 text-right">
+						<th scope="col" class="priority-6 text-right text-end">
 							{{ trans('menus::menus.unpublished items') }}
 						</th>
-						<th scope="col" class="priority-6 text-right">
+						<th scope="col" class="priority-6 text-right text-end">
 							{{ trans('menus::menus.trashed items') }}
 						</th>
 						<th scope="col" class="priority-5">
@@ -145,7 +145,7 @@ app('pathway')
 											<div class="modal-header">
 												<h3 class="modal-title" id="item{{ $row->id }}-title">{{ trans('global.edit') . ' #' . $row->id }}</h3>
 												<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
-													<span aria-hidden="true">&times;</span>
+													<span class="visually-hidden" aria-hidden="true">&times;</span>
 												</button>
 											</div>
 											<div class="modal-body">
@@ -185,17 +185,17 @@ app('pathway')
 								<br /><span class="text-muted">{{ $row->description }}</span>
 							@endif
 						</td>
-						<td class="priority-4 text-right">
+						<td class="priority-4 text-right text-end">
 							<a href="{{ route('admin.menus.items', ['menutype' => $row->menutype]) }}">
 								{{ number_format($row->countPublishedItems()) }}
 							</a>
 						</td>
-						<td class="priority-6 text-right">
+						<td class="priority-6 text-right text-end">
 							<a href="{{ route('admin.menus.items', ['menutype' => $row->menutype]) }}">
 								{{ number_format($row->countUnpublishedItems()) }}
 							</a>
 						</td>
-						<td class="priority-6 text-right">
+						<td class="priority-6 text-right text-end">
 							<a href="{{ route('admin.menus.items', ['menutype' => $row->menutype]) }}">
 								{{ number_format($row->countTrashedItems()) }}
 							</a>
@@ -247,7 +247,7 @@ app('pathway')
 			<div class="modal-header">
 				<h3 class="modal-title" id="new-menu-title">{{ trans('menus::menus.create menu') }}</h3>
 				<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
+					<span class="visually-hidden" aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">

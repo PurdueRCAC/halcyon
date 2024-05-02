@@ -82,7 +82,7 @@ app('pathway')
 					$lastyear = Carbon\Carbon::now()->modify('-1 year');
 					?>
 					Time range
-					<button class="btn btn-form-control btn-block dropdown-toggle text-left" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<button class="btn btn-form-control btn-block dropdown-toggle text-left" type="button" id="dropdownMenuButton" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						<?php
 						$active = 'all';
 						$text = 'All time';
@@ -91,42 +91,42 @@ app('pathway')
 						{
 							if ($filters['start'] == $thisweek->startOfWeek()->format('Y-m-d') && $filters['stop'] == $thisweek->endOfWeek()->format('Y-m-d'))
 							{
-								$text = 'This week <span class="text-muted float-right">' . $thisweek->startOfWeek()->format('d M') . ' - ' . $thisweek->endOfWeek()->format('d M') . ', ' . $thisweek->format('Y') . '</span>';
+								$text = 'This week <span class="text-muted float-right float-end">' . $thisweek->startOfWeek()->format('d M') . ' - ' . $thisweek->endOfWeek()->format('d M') . ', ' . $thisweek->format('Y') . '</span>';
 								$active = 'thisweek';
 								$filters['start'] = '';
 								$filters['stop'] = '';
 							}
 							elseif ($filters['start'] == $thismonth->startOfMonth()->format('Y-m-d') && $filters['stop'] == $thismonth->endOfMonth()->format('Y-m-d'))
 							{
-								$text = 'This month <span class="text-muted float-right">' . $thismonth->startOfMonth()->format('M, Y') . '</span>';
+								$text = 'This month <span class="text-muted float-right float-end">' . $thismonth->startOfMonth()->format('M, Y') . '</span>';
 								$active = 'thismonth';
 								$filters['start'] = '';
 								$filters['stop'] = '';
 							}
 							elseif ($filters['start'] == $thisyear->format('Y-01-01') && $filters['stop'] == $thisyear->format('Y-12-31'))
 							{
-								$text = 'This year <span class="text-muted float-right">' . $thisyear->format('Y') . '</span>';
+								$text = 'This year <span class="text-muted float-right float-end">' . $thisyear->format('Y') . '</span>';
 								$active = 'thisyear';
 								$filters['start'] = '';
 								$filters['stop'] = '';
 							}
 							elseif ($filters['start'] == $lastweek->startOfWeek()->format('Y-m-d') && $filters['stop'] == $lastweek->endOfWeek()->format('Y-m-d'))
 							{
-								$text = 'Last week <span class="text-muted float-right">' . $lastweek->startOfWeek()->format('d M') . ' - ' . $lastweek->endOfWeek()->format('d M') . ', ' . $lastweek->format('Y') . '</span>';
+								$text = 'Last week <span class="text-muted float-right float-end">' . $lastweek->startOfWeek()->format('d M') . ' - ' . $lastweek->endOfWeek()->format('d M') . ', ' . $lastweek->format('Y') . '</span>';
 								$active = 'lastweek';
 								$filters['start'] = '';
 								$filters['stop'] = '';
 							}
 							elseif ($filters['start'] == $lastmonth->startOfMonth()->format('Y-m-d') && $filters['stop'] == $lastmonth->endOfMonth()->format('Y-m-d'))
 							{
-								$text = 'Last month <span class="text-muted float-right">' . $lastmonth->startOfMonth()->format('M, Y') . '</span>';
+								$text = 'Last month <span class="text-muted float-right float-end">' . $lastmonth->startOfMonth()->format('M, Y') . '</span>';
 								$active = 'lastmonth';
 								$filters['start'] = '';
 								$filters['stop'] = '';
 							}
 							elseif ($filters['start'] == $lastyear->format('Y-01-01') && $filters['stop'] == $lastyear->format('Y-12-31'))
 							{
-								$text = 'Last year <span class="text-muted float-right">' . $lastyear->format('Y') . '</span>';
+								$text = 'Last year <span class="text-muted float-right float-end">' . $lastyear->format('Y') . '</span>';
 								$active = 'lastyear';
 								$filters['start'] = '';
 								$filters['stop'] = '';
@@ -158,13 +158,13 @@ app('pathway')
 						<a class="dropdown-item<?php if ($active == 'all') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => '', 'stop' => '']) }}">All time</span></a>
 						<div class="dropdown-divider"></div>
 						@endif
-						<a class="dropdown-item<?php if ($active == 'thisweek') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => $thisweek->startOfWeek()->format('Y-m-d'), 'stop' => $thisweek->endOfWeek()->format('Y-m-d')]) }}">This week <span class="text-muted float-right">{{ $thisweek->startOfWeek()->format('d M') }} - {{ $thisweek->endOfWeek()->format('d M') }}, {{ $thisweek->format('Y') }}</span></a>
-						<a class="dropdown-item<?php if ($active == 'thismonth') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => $thismonth->startOfMonth()->format('Y-m-d'), 'stop' => $thismonth->endOfMonth()->format('Y-m-d')]) }}">This month <span class="text-muted float-right">{{ $thismonth->format('M, Y') }}</span></a>
-						<a class="dropdown-item<?php if ($active == 'thisyear') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => $thisyear->format('Y') . '-01-01', 'stop' => $thisyear->format('Y-12-31')]) }}">This year <span class="text-muted float-right">{{ $thisyear->format('Y') }}</span></a>
+						<a class="dropdown-item<?php if ($active == 'thisweek') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => $thisweek->startOfWeek()->format('Y-m-d'), 'stop' => $thisweek->endOfWeek()->format('Y-m-d')]) }}">This week <span class="text-muted float-right float-end">{{ $thisweek->startOfWeek()->format('d M') }} - {{ $thisweek->endOfWeek()->format('d M') }}, {{ $thisweek->format('Y') }}</span></a>
+						<a class="dropdown-item<?php if ($active == 'thismonth') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => $thismonth->startOfMonth()->format('Y-m-d'), 'stop' => $thismonth->endOfMonth()->format('Y-m-d')]) }}">This month <span class="text-muted float-right float-end">{{ $thismonth->format('M, Y') }}</span></a>
+						<a class="dropdown-item<?php if ($active == 'thisyear') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => $thisyear->format('Y') . '-01-01', 'stop' => $thisyear->format('Y-12-31')]) }}">This year <span class="text-muted float-right float-end">{{ $thisyear->format('Y') }}</span></a>
 						<div class="dropdown-divider"></div>
-						<a class="dropdown-item<?php if ($active == 'lastweek') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => $lastweek->startOfWeek()->format('Y-m-d'), 'stop' => $lastweek->endOfWeek()->format('Y-m-d')]) }}">Last week <span class="text-muted float-right">{{ $lastweek->startOfWeek()->format('d M') }} - {{ $lastweek->endOfWeek()->format('d M') }}, {{ $lastweek->format('Y') }}</span></a>
-						<a class="dropdown-item<?php if ($active == 'lastmonth') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => $lastmonth->startOfMonth()->format('Y-m-d'), 'stop' => $lastmonth->endOfMonth()->format('Y-m-d')]) }}">Last month <span class="text-muted float-right">{{ $lastmonth->format('M, Y') }}</span></a>
-						<a class="dropdown-item<?php if ($active == 'lastyear') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => $lastyear->format('Y') . '-01-01', 'stop' => $lastyear->format('Y') . '-12-31']) }}">Last year <span class="text-muted float-right">{{ $lastyear->format('Y') }}</span></a>
+						<a class="dropdown-item<?php if ($active == 'lastweek') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => $lastweek->startOfWeek()->format('Y-m-d'), 'stop' => $lastweek->endOfWeek()->format('Y-m-d')]) }}">Last week <span class="text-muted float-right float-end">{{ $lastweek->startOfWeek()->format('d M') }} - {{ $lastweek->endOfWeek()->format('d M') }}, {{ $lastweek->format('Y') }}</span></a>
+						<a class="dropdown-item<?php if ($active == 'lastmonth') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => $lastmonth->startOfMonth()->format('Y-m-d'), 'stop' => $lastmonth->endOfMonth()->format('Y-m-d')]) }}">Last month <span class="text-muted float-right float-end">{{ $lastmonth->format('M, Y') }}</span></a>
+						<a class="dropdown-item<?php if ($active == 'lastyear') { echo ' active'; } ?>" href="{{ route('admin.contactreports.index', ['start' => $lastyear->format('Y') . '-01-01', 'stop' => $lastyear->format('Y') . '-12-31']) }}">Last year <span class="text-muted float-right float-end">{{ $lastyear->format('Y') }}</span></a>
 						<div class="dropdown-divider"></div>
 						<h6 class="dropdown-header">Custom range</h6>
 						<div class="px-4">
@@ -310,7 +310,7 @@ app('pathway')
 			<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 			<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-			<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+			<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 		</fieldset>
 		</div>
 		<div class="col-md-9">
@@ -345,7 +345,7 @@ app('pathway')
 						<?php
 						$uids = $row->users->pluck('userid')->toArray();
 						?>
-						<div class="flex-fill text-right">
+						<div class="flex-fill text-right text-end">
 							@if (auth()->user()->can('create contactreports'))
 								<a href="{{ route('admin.contactreports.create', ['groupid' => $row->groupid, 'contactreporttypeid' => $row->contactreporttypeid, 'people' => implode(',', $uids), 'resources' => implode(',', $row->resources->pluck('resourceid')->toArray())]) }}" class="bt bt-sm ml-3" title="Start new Contact Report with these details.">
 									<span class="fa fa-copy" aria-hidden="true"></span>
@@ -449,7 +449,7 @@ app('pathway')
 							<span class="fa fa-folder" aria-hidden="true"></span>
 							{{ $row->type ? $row->type->name : trans('global.none') }}
 						</div>
-						<div class="flex-fill text-right">
+						<div class="flex-fill text-right text-end">
 							<span class="fa fa-comment" aria-hidden="true"></span>
 							@if (count($row->comments))
 								<a href="#comments_{{ $row->id }}" class="comments-show">{{ number_format(count($row->comments)) }}</a>
@@ -479,7 +479,7 @@ app('pathway')
 									<!-- <textarea name="comment" id="comment_{{ $comment->id }}_comment" class="form-control" cols="45" rows="3">{{ $comment->comment }}</textarea> -->
 									{!! markdown_editor('comment', $comment->comment, ['rows' => 2, 'id' => 'comment_' . $comment->id . '_comment']) !!}
 								</div>
-								<div class="form-group text-right">
+								<div class="form-group text-right text-end">
 									<button class="btn btn-secondary comment-save" data-parent="#comment_{{ $comment->id }}">{{ trans('global.button.save') }}</button>
 									<a href="#comment_{{ $comment->id }}" class="btn btn-link comment-cancel">
 										{{ trans('global.button.cancel') }}
@@ -490,7 +490,7 @@ app('pathway')
 								<div class="col-md-9 text-muted">
 									{{ trans('contactreports::contactreports.posted by', ['who' => ($comment->creator ? $comment->creator->name : trans('global.unknown')), 'when' => $comment->datetimecreated->format('M d, Y')]) }}
 								</div>
-								<div class="col-md-3 text-right">
+								<div class="col-md-3 text-right text-end">
 									<a href="#comment_{{ $comment->id }}_comment" class="comment-edit hide-when-editing ml-3">
 										<span class="fa fa-pencil" aria-hidden="true"></span>
 										<span class="s-only">{{ trans('global.button.edit') }}</span>
@@ -514,7 +514,7 @@ app('pathway')
 									<label for="comment_<?php echo '{id}'; ?>_comment" class="sr-only visually-hidden">{{ trans('contactreports::contactreports.comment') }}</label>
 									<textarea name="comment" id="comment_<?php echo '{id}'; ?>_comment" class="form-control md" cols="45" rows="3"></textarea>
 								</div>
-								<div class="form-group text-right">
+								<div class="form-group text-right text-end">
 									<button class="btn btn-secondary comment-save" data-parent="#comment_<?php echo '{id}'; ?>">{{ trans('global.button.save') }}</button>
 									<a href="#comment_<?php echo '{id}'; ?>" class="btn btn-link comment-cancel">
 										{{ trans('global.button.cancel') }}
@@ -525,7 +525,7 @@ app('pathway')
 								<div class="col-md-9 text-muted">
 									{{ trans('contactreports::contactreports.posted by', ['who' => '{who}', 'when' => '{when}']) }}
 								</div>
-								<div class="col-md-3 text-right">
+								<div class="col-md-3 text-right text-end">
 									<a href="#comment_<?php echo '{id}'; ?>_comment" class="comment-edit hide-when-editing ml-3">
 										<span class="fa fa-pencil" aria-hidden="true"></span>
 										<span class="s-only">{{ trans('global.button.edit') }}</span>
@@ -542,7 +542,7 @@ app('pathway')
 								<label for="comment_new{{ $row->id }}_comment" class="sr-only visually-hidden">{{ trans('contactreports::contactreports.comment') }}</label>
 								{!! markdown_editor('comment', '', ['rows' => 2, 'id' => 'comment_new' . $row->id . '_comment']) !!}
 							</div>
-							<div class="form-group text-right">
+							<div class="form-group text-right text-end">
 								<button class="btn btn-secondary comment-add" data-parent="#comment_new{{ $row->id }}" data-id="{{ $row->id }}">{{ trans('contactreports::contactreports.add') }}</button>
 							</div>
 						</li>
@@ -572,7 +572,7 @@ app('pathway')
 											{{ $comment->creator->name }}
 										@endif
 									</div>
-									<div class="flex-fill text-right">
+									<div class="flex-fill text-right text-end">
 									</div>
 								</div>
 							</li>

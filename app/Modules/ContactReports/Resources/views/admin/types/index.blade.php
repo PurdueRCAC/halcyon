@@ -76,7 +76,7 @@ app('pathway')
 				<th scope="col">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('contactreports::contactreports.name'), 'name', $filters['order_dir'], $filters['order']); ?>
 				</th>
-				<th scope="col" class="text-right">
+				<th scope="col" class="text-right text-end">
 					<?php echo App\Halcyon\Html\Builder\Grid::sort(trans('contactreports::contactreports.reports'), 'reports_count', $filters['order_dir'], $filters['order']); ?>
 				</th>
 				<th scope="col">
@@ -109,7 +109,7 @@ app('pathway')
 						</span>
 					@endif
 				</td>
-				<td class="text-right">
+				<td class="text-right text-end">
 					<a href="{{ route('admin.contactreports.index', ['type' => $row->id]) }}">
 						{{ number_format($row->reports_count) }}
 					</a>

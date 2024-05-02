@@ -180,7 +180,7 @@ app('pathway')
 									<thead>
 										<tr>
 											<th scope="col">Category</th>
-											<th scope="col" class="text-right">Total</th>
+											<th scope="col" class="text-right text-end">Total</th>
 										</tr>
 									</thead>
 									<tbody>

@@ -11,7 +11,7 @@
 			<div class="card-body panel-body crmcomment crmcommenttext" v-html="formattedbody">
 			</div>
 			<div class="card-footer panel-footer bg-white">
-				<div class="crmcommentpostedby text-right">
+				<div class="crmcommentpostedby text-right text-end">
 				</div>
 			</div>
 		</div>

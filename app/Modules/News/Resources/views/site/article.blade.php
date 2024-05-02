@@ -66,7 +66,7 @@ app('pathway')
 			<div class="col-sm-12 col-md-10">
 				<h2 itemprop="name">{{ $article->headline }}</h2>
 			</div>
-			<div class="col-sm-12 col-md-2 text-right">
+			<div class="col-sm-12 col-md-2 text-right text-end">
 				<div class="btn-group" role="navigation" aria-label="{{ trans('news::news.calendar options') }}">
 					<a target="_blank" class="btn btn-default calendar calendar-subscribe tip" href="{{ $article->subscribeCalendarLink }}" title="{{ trans('news::news.subscribe event') }}"><!--
 						--><span class="fa fa-fw fa-calendar" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('news::news.subscribe') }}</span><!--
@@ -85,7 +85,7 @@ app('pathway')
 
 	<div class="wrapper-news">
 		@if ($article->url && !$article->ended())
-			<div class="float-right">
+			<div class="float-right float-end">
 				@if (auth()->user())
 					<?php
 					$attending = false;

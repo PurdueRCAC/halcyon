@@ -52,7 +52,7 @@
 				<span class="none">(none)</span>
 			</span>
 		</td>
-		<td class="priority-4 text-right">
+		<td class="priority-4 text-right text-end">
 			<a href="#updates">
 				{{ updates.length }}
 			</a>

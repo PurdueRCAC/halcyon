@@ -8,7 +8,7 @@
 
 				<button class="btn btn-secondary" type="submit">submit</button>
 			</div>
-			<div class="col col-md-8 filter-select text-right">
+			<div class="col col-md-8 filter-select text-right text-end">
 				<label class="sr-only visually-hidden" for="filter_state">state</label>
 				<select name="state" class="form-control filter filter-submit">
 					<option value="*">all states</option>
@@ -51,7 +51,7 @@
 				<th scope="col" colspan="2">
 					Publish window
 				</th>
-				<th scope="col" class="text-right">
+				<th scope="col" class="text-right text-end">
 					Updates !
 				</th>
 			</tr>

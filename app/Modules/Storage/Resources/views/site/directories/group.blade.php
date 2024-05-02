@@ -57,8 +57,8 @@
 							<div class="modal-content dialog-content shadow-sm">
 								<div class="modal-header">
 									<div class="modal-title" id="new_dir_dialog-title">Add new directory</div>
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
+									<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+										<span class="visually-hidden" aria-hidden="true">&times;</span>
 									</button>
 								</div>
 								<form method="post">
@@ -168,7 +168,7 @@
 
 										<div id="new_dir_error" class="alert alert-danger hide"></div>
 									</div>
-									<div class="modal-footer text-right">
+									<div class="modal-footer text-right text-end">
 										<button id="new_dir" class="btn btn-success" data-resource="{{ $row->storageResource->parentresourceid }}" data-api="{{ route('api.storage.directories.create') }}">
 											<span id="new_dir_img" class="fa fa-plus" aria-hidden="true"></span> Create directory
 										</button>
@@ -187,8 +187,8 @@
 					<div id="tree{{ $row->id }}" class="tree">
 						<div class="row">
 							<div class="col-md-8"><strong>Directory</strong></div>
-							<div class="col-md-2 text-right"><strong>Current Quota</strong></div>
-							<div class="col-md-2 text-right"><strong>Future Quota</strong></div>
+							<div class="col-md-2 text-right text-end"><strong>Current Quota</strong></div>
+							<div class="col-md-2 text-right text-end"><strong>Future Quota</strong></div>
 						</div>
 						
 						@foreach ($data as $dir)
@@ -221,8 +221,8 @@
 								<form method="post" class="modal-content dialog-content shadow-sm">
 									<div class="modal-header">
 										<div class="modal-title" id="{{ $did }}_dialog-title">{{ $dir->storageResource->path . '/' . $dir->path }}</div>
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true">&times;</span>
+										<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+											<span class="visually-hidden" aria-hidden="true">&times;</span>
 										</button>
 									</div>
 									<div class="modal-body dialog-body">
@@ -675,7 +675,7 @@
 													@endif
 												@endif
 											</div>
-											<div class="col-md-6 text-right">
+											<div class="col-md-6 text-right text-end">
 												<input id="{{ $dir->id }}_save_button" class="btn btn-success unixgroup-edit" data-dir="{{ $dir->id }}" data-api="{{ route('api.storage.directories.update', ['id' => $dir->id]) }}" type="button" value="{{ trans('global.button.save') }}" />
 											</div>
 										</div><!--/ .row -->
@@ -717,14 +717,14 @@
 									</div>
 								@endif
 							</div>
-							<div class="col-md-7 text-right">
+							<div class="col-md-7 text-right text-end">
 								@if ($usage->datetimerecorded)
 									Last checked: {{ $usage->datetimerecorded->diffForHumans() }}
 								@else
 									Never checked: <span class="none text-muted">-</span>
 								@endif
 							</div>
-							<div class="col-md-1 text-right">
+							<div class="col-md-1 text-right text-end">
 								<a href="#{{ $dir->id }}_dialog" class="details updatequota tip" data-api="{{ route('api.storage.directories.update', ['id' => $top]) }}" data-id="{{ $top }}" title="Update usage now"><!--
 								--><span class="fa fa-undo updater" aria-hidden="true"></span><!--
 								--><span class="spinner-border spinner-border-sm hide" role="status"><span class="sr-only visually-hidden">Loading...</span></span><!--
@@ -746,7 +746,7 @@
 						<div class="col-md-6">
 					@endif
 							{{ trans('storage::storage.history') }}
-							<a href="#help_history" data-toggle="modal" class="text-info tip" title="Help">
+							<a href="#help_history" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help">
 								<span class="fa fa-question-circle" aria-hidden="true"></span>
 								<span class="sr-only visually-hidden">Help</span>
 							</a>
@@ -755,8 +755,8 @@
 									<div class="modal-content dialog-content shadow-sm">
 										<div class="modal-header">
 											<div class="modal-title" id="help_history-title">{{ trans('storage::storage.history') }}</div>
-											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-												<span aria-hidden="true">&times;</span>
+											<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+												<span class="visually-hidden" aria-hidden="true">&times;</span>
 											</button>
 										</div>
 										<div class="modal-body dialog-body">
@@ -767,9 +767,9 @@
 							</div>
 					@if (auth()->user()->can('manage storage'))
 						</div>
-						<div class="col-md-6 text-right">
-							<a href="#dialog-sell" id="space-sell" data-toggle="modal" class="btn btn-sm btn-secondary dialog-btn"><span class="fa fa-usd" aria-hidden="true"></span> {{ trans('storage::storage.sell space') }}</a>
-							<a href="#dialog-loan" id="space-loan" data-toggle="modal" class="btn btn-sm btn-secondary dialog-btn"><span class="fa fa-random" aria-hidden="true"></span> {{ trans('storage::storage.loan space') }}</a>
+						<div class="col-md-6 text-right text-end">
+							<a href="#dialog-sell" id="space-sell" data-toggle="modal" data-bs-toggle="modal" class="btn btn-sm btn-secondary dialog-btn"><span class="fa fa-usd" aria-hidden="true"></span> {{ trans('storage::storage.sell space') }}</a>
+							<a href="#dialog-loan" id="space-loan" data-toggle="modal" data-bs-toggle="modal" class="btn btn-sm btn-secondary dialog-btn"><span class="fa fa-random" aria-hidden="true"></span> {{ trans('storage::storage.loan space') }}</a>
 						</div>
 					</div>
 					@endif
@@ -809,12 +809,12 @@
 									<th scope="col">{{ trans('storage::storage.source') }}</th>
 									<th scope="col">{{ trans('storage::storage.start') }}</th>
 									<th scope="col">{{ trans('storage::storage.end') }}</th>
-									<th scope="col" class="text-right">{{ trans('storage::storage.amount') }}</th>
-									<th scope="col" class="text-right">{{ trans('storage::storage.total') }}</th>
+									<th scope="col" class="text-right text-end">{{ trans('storage::storage.amount') }}</th>
+									<th scope="col" class="text-right text-end">{{ trans('storage::storage.total') }}</th>
 									@if (auth()->user()->can('admin storage'))
-										<th scope="col" colspan="2" class="text-right">{{ trans('storage::storage.options') }}</th>
+										<th scope="col" colspan="2" class="text-right text-end">{{ trans('storage::storage.options') }}</th>
 									@elseif (auth()->user()->can('manage storage'))
-										<th scope="col" class="text-right">{{ trans('storage::storage.options') }}</th>
+										<th scope="col" class="text-right text-end">{{ trans('storage::storage.options') }}</th>
 									@endif
 								</tr>
 							</thead>
@@ -858,18 +858,18 @@
 												-
 											@endif
 										</td>
-										<td class="text-right">
+										<td class="text-right text-end">
 											@if ($item->hasEnded())
 												<del class="decrease text-warning">{!! ($item->bytes > 0 ? '+ ' : '- ') . App\Halcyon\Utility\Number::formatBytes(abs($item->bytes)) !!}</del>
 											@else
 												{!! ($item->bytes > 0 ? '<span class="increase text-success">+ ' : '<span class="decrease text-danger">- ') . App\Halcyon\Utility\Number::formatBytes(abs($item->bytes)) . '</span>' !!}
 											@endif
 										</td>
-										<td class="text-right">
+										<td class="text-right text-end">
 											{{ App\Halcyon\Utility\Number::formatBytes($item->total) }}
 										</td>
 										@if (auth()->user()->can('manage storage'))
-										<td class="text-right">
+										<td class="text-right text-end">
 											<a href="#dialog-edit-{{ $item->type . $item->id }}" class="btn btn-sm dialog-btn"
 												data-toggle="modal"
 												data-api="{{ route('api.storage.' . ($item->type == 'loan' ? 'loans' : 'purchases'). '.update', ['id' => $item->id]) }}"
@@ -888,8 +888,8 @@
 													<div class="modal-content dialog-content shadow-sm">
 														<div class="modal-header">
 															<div class="modal-title" id="dialog-edit-{{ $t . $item->id }}-title">{{ trans('storage::storage.edit ' . $t) }}</div>
-															<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-																<span aria-hidden="true">&times;</span>
+															<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+																<span class="visually-hidden" aria-hidden="true">&times;</span>
 															</button>
 														</div>
 														<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.storage.' . ($item->type == 'loan' ? 'loans' : 'purchases'). '.update', ['id' => $item->id]) }}">
@@ -982,7 +982,7 @@
 
 													<div id="error_{{ $t }}{{ $item->id }}" class="alert alert-danger hide"></div>
 													</div>
-													<div class="modal-footer text-right">
+													<div class="modal-footer text-right text-end">
 														<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.update') }}" data-id="{{ $item->id }}" data-type="{{ $t }}" data-success="{{ trans('queues::queues.item updated') }}" />
 													</div>
 
@@ -995,7 +995,7 @@
 											</div><!-- / .modal-->
 										</td>
 										@if (auth()->user()->can('admin storage'))
-										<td class="text-right">
+										<td class="text-right text-end">
 											<button class="btn btn-sm text-danger storage-delete"
 												data-confirm="{{ trans('global.confirm delete') }}"
 												data-api="{{ route('api.storage.' . ($item->type == 'loan' ? 'loans' : 'purchases'). '.delete', ['id' => $item->id]) }}"
@@ -1025,8 +1025,8 @@
 							<div class="modal-content dialog-content shadow-sm">
 								<div class="modal-header">
 									<div class="modal-title" id="dialog-sell-title">{{ trans('storage::storage.sell space') }}</div>
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
+									<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+										<span class="visually-hidden" aria-hidden="true">&times;</span>
 									</button>
 								</div>
 						<form method="post" action="{{ route('admin.storage.store') }}" data-api="{{ route('api.storage.purchases.create') }}">
@@ -1091,7 +1091,7 @@
 
 								<div id="error_purchase" class="alert alert-danger hide"></div>
 							</div>
-							<div class="modal-footer text-right">
+							<div class="modal-footer text-right text-end">
 								<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.create') }}" data-type="purchase" data-success="{{ trans('storage::storage.item created') }}" />
 							</div>
 
@@ -1107,8 +1107,8 @@
 							<div class="modal-content dialog-content shadow-sm">
 								<div class="modal-header">
 									<div class="modal-title" id="dialog-loan-title">{{ trans('storage::storage.loan space') }}</div>
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
+									<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+										<span class="visually-hidden" aria-hidden="true">&times;</span>
 									</button>
 								</div>
 								<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.storage.loans.create') }}">
@@ -1173,7 +1173,7 @@
 
 							<div id="error_loan" class="alert alert-danger hide"></div>
 							</div>
-							<div class="modal-footer text-right">
+							<div class="modal-footer text-right text-end">
 								<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.create') }}" data-type="loan" data-success="{{ trans('queues::queues.item created') }}" />
 							</div>
 
@@ -1190,7 +1190,7 @@
 			<div class="card panel panel-default">
 				<div class="card-header panel-heading">
 					{{ trans('storage::storage.messages') }}
-					<a href="#help_messages" data-toggle="modal" class="text-info tip" title="Help">
+					<a href="#help_messages" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="Help">
 						<span class="fa fa-question-circle" aria-hidden="true"></span>
 						<span class="sr-only visually-hidden">Help</span>
 					</a>
@@ -1199,8 +1199,8 @@
 							<div class="modal-content dialog-content shadow-sm">
 								<div class="modal-header">
 									<div class="modal-title" id="help_messages-title">{{ trans('storage::storage.messages') }}</div>
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
+									<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+										<span class="visually-hidden" aria-hidden="true">&times;</span>
 									</button>
 								</div>
 								<div class="modal-body dialog-body">
@@ -1364,8 +1364,8 @@
 									<div class="modal-content dialog-content shadow-sm">
 										<div class="modal-header">
 											<div class="modal-title" id="dialog-sell-title">{{ trans('storage::storage.sell space') }}</div>
-											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-												<span aria-hidden="true">&times;</span>
+											<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+												<span class="visually-hidden" aria-hidden="true">&times;</span>
 											</button>
 										</div>
 										<form method="post" action="{{ route('admin.storage.store') }}" data-api="{{ route('api.storage.purchases.create') }}">
@@ -1428,7 +1428,7 @@
 
 												<div id="error_purchase" class="alert alert-danger hide"></div>
 											</div>
-											<div class="modal-footer text-right">
+											<div class="modal-footer text-right text-end">
 												<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.create') }}" data-type="purchase" data-success="{{ trans('storage::storage.item created') }}" />
 											</div>
 
@@ -1443,8 +1443,8 @@
 									<div class="modal-content dialog-content shadow-sm">
 										<div class="modal-header">
 											<div class="modal-title" id="dialog-loan-title">{{ trans('storage::storage.loan space') }}</div>
-											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-												<span aria-hidden="true">&times;</span>
+											<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+												<span class="visually-hidden" aria-hidden="true">&times;</span>
 											</button>
 										</div>
 										<form method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.storage.loans.create') }}">
@@ -1507,7 +1507,7 @@
 
 												<div id="error_loan" class="alert alert-danger hide"></div>
 											</div>
-											<div class="modal-footer text-right">
+											<div class="modal-footer text-right text-end">
 												<input type="submit" class="btn btn-success dialog-submit" value="{{ trans('global.button.create') }}" data-type="loan" data-success="{{ trans('queues::queues.item created') }}" />
 											</div>
 

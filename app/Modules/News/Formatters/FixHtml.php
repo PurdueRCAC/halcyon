@@ -20,7 +20,7 @@ class FixHtml
 		$text = $data['content'];
 
 		$text = str_replace('<th>', '<th scope="col">', $text);
-		$text = str_replace('align="right"', 'class="text-right"', $text);
+		$text = str_replace('align="right"', 'class="text-right text-end"', $text);
 
 		$text = preg_replace('/<p>([^\n]+)<\/p>\n(<table.*?>)(.*?<\/table>)/usm', '$2 <caption>$1</caption>$3', $text);
 		$text = preg_replace('/src="\/include\/images\/(.*?)"/i', 'src="' . asset("files/$1") . '"', $text);

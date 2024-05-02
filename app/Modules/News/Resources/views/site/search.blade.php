@@ -279,8 +279,8 @@ app('pathway')
 				<div class="modal-content shadow-sm">
 					<div class="modal-header">
 						<div class="modal-title" id="preview-title">News Preview</div>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+						<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+							<span class="visually-hidden" aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body" id="preview">
@@ -297,8 +297,8 @@ app('pathway')
 				<div class="modal-content shadow-sm">
 					<div class="modal-header">
 						<div class="modal-title" id="mailpreview-title">Mail Preview</div>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+						<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+							<span class="visually-hidden" aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body" id="mailpreview">
@@ -306,7 +306,7 @@ app('pathway')
 							<span class="sr-only visually-hidden">Loading...</span>
 						</div>
 					</div>
-					<div class="modal-footer text-right">
+					<div class="modal-footer text-right text-end">
 						<button id="mailsend" data-dismiss="modal" class="btn btn-success" data-confirm="You have unsaved changes that need to be saved before mailing news item. Would you like to save the changes?">Send mail</button>
 					</div>
 				</div>

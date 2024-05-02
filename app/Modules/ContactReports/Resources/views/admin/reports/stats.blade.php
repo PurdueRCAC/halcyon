@@ -46,12 +46,12 @@ app('pathway')
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col col-md-12 text-right">
+			<div class="col col-md-12 text-right text-end">
 				<label class="sr-only visually-hidden" for="filter_start">Start date</label>
-				<input type="text" name="start" id="filter_start" class="form-control date filter filter-submit" value="{{ $filters['start'] }}" placeholder="Start date" />
+				<input type="date" name="start" id="filter_start" class="form-control date filter filter-submit" value="{{ $filters['start'] }}" placeholder="Start date" />
 				to
 				<label class="sr-only visually-hidden" for="filter_end">End date</label>
-				<input type="text" name="end" id="filter_end" class="form-control date filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
+				<input type="date" name="end" id="filter_end" class="form-control date filter filter-submit" value="{{ $filters['end'] }}" placeholder="End date" />
 
 				<button type="submit" class="btn btn-secondary">Filter</button>
 			</div>
@@ -113,7 +113,7 @@ app('pathway')
 								@foreach ($resources as $i => $res)
 									<tr>
 										<th scope="row"><span class="badge badge-info">{{ $res->resource->name }}</span></th>
-										<td class="text-right">{{ $res->total }}</td>
+										<td class="text-right text-end">{{ $res->total }}</td>
 									</tr>
 								@endforeach
 								@if ($i < 4)
@@ -123,7 +123,7 @@ app('pathway')
 									@for ($i; $i < 5; $i++)
 										<tr>
 											<th scope="row"><span class="text-muted">-</span></th>
-											<td class="text-right"></td>
+											<td class="text-right text-end"></td>
 										</tr>
 									@endfor
 								@endif
@@ -154,7 +154,7 @@ app('pathway')
 								@foreach ($tags as $i => $tag)
 									<tr>
 										<th scope="row"><span class="badge badge-secondary">{{ $tag->tag->name }}</span></th>
-										<td class="text-right">{{ $tag->total }}</td>
+										<td class="text-right text-end">{{ $tag->total }}</td>
 									</tr>
 								@endforeach
 								@if ($i < 4)
@@ -164,7 +164,7 @@ app('pathway')
 									@for ($i; $i < 5; $i++)
 										<tr>
 											<th scope="row"><span class="text-muted">-</span></th>
-											<td class="text-right"></td>
+											<td class="text-right text-end"></td>
 										</tr>
 									@endfor
 								@endif

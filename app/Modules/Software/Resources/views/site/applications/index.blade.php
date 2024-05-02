@@ -181,7 +181,7 @@ app('pathway')
 								<div class="col-md-6 text-muted">
 									<span class="fa fa-folder" aria-hidden="true"></span> {{ $row->type->title }}
 								</div>
-								<div class="col-md-6 text-right">
+								<div class="col-md-6 text-right text-end">
 								@if (auth()->user() && (auth()->user()->can('edit software') || auth()->user()->can('delete software')))
 									@if (auth()->user()->can('edit software'))
 										<a href="{{ route('site.software.edit', ['id' => $row->id]) }}" data-api="{{ route('api.software.read', ['id' => $row->id]) }}" class="btn btn-sm btn-edit tip" title="{{ trans('global.button.edit') }}">

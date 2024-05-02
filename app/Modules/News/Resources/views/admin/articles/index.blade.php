@@ -337,7 +337,7 @@ else
 						<span class="sr-only visually-hidden">Loading...</span>
 					</div>
 				</div>
-				<div class="modal-footer text-right">
+				<div class="modal-footer text-right text-end">
 					<button id="mailsend" data-bs-dismiss="modal" data-dismiss="modal" class="btn btn-success" data-confirm="You have unsaved changes that need to be saved before mailing news item. Would you like to save the changes?">Send mail</button>
 				</div>
 			</div>
@@ -353,7 +353,7 @@ else
 			<div class="modal-header">
 				<div class="modal-title" id="copy-article-title">{{ trans('news::news.copy article') }}</div>
 				<button type="button" class="btn-close close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
+					<span class="visually-hidden" aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">

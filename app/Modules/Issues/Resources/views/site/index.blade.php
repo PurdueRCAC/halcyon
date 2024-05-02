@@ -27,7 +27,7 @@ app('pathway')->append(
 		@if (auth()->user()->can('manage issues'))
 			<div class="card-header panel-heading">
 				<div class="row">
-					<div class="col-md-12 text-right">
+					<div class="col-md-12 text-right text-end">
 						<a href="{{ route('site.issues.todos') }}" class="btn btn-sm btn-default btn-secondary">Manage</a>
 					</div>
 				</div>
@@ -107,8 +107,8 @@ app('pathway')->append(
 
 <div id="everything">
 	<ul class="nav nav-tabs issues-tabs">
-		<li class="nav-item active" data-toggle="tab"><a id="TAB_search" class="nav-link active tab activeTab" href="#search">Search</a></li>
-		<li class="nav-item" data-toggle="tab"><a id="TAB_add" class="nav-link tab" href="#add">Add New</a></li>
+		<li class="nav-item active" data-toggle="tab" data-bs-toggle="tab"><a id="TAB_search" class="nav-link active tab activeTab" href="#search">Search</a></li>
+		<li class="nav-item" data-toggle="tab" data-bs-toggle="tab"><a id="TAB_add" class="nav-link tab" href="#add">Add New</a></li>
 	</ul>
 	<div class="tabMain" id="tabMain">
 		<div id="DIV_search">
@@ -274,7 +274,7 @@ app('pathway')->append(
 					<div class="form-group row tab-search" id="TR_search">
 						<div class="col-sm-2">
 						</div>
-						<div class="col-sm-10 text-right">
+						<div class="col-sm-10 text-right text-end">
 							<input type="submit" class="btn btn-primary" value="Search" id="INPUT_search" />
 							<input type="reset" class="btn btn-default btn-clear" value="Clear" id="INPUT_clearsearch" />
 						</div>
@@ -283,7 +283,7 @@ app('pathway')->append(
 					<div class="form-group row tab-add tab-edit hide" id="TR_create">
 						<div class="col-sm-2">
 						</div>
-						<div class="col-sm-10 text-right">
+						<div class="col-sm-10 text-right text-end">
 							<input id="INPUT_add" type="submit" class="btn btn-primary" value="Add Report" disabled="true" />
 							<input id="INPUT_clear" type="reset" class="btn btn-default btn-clear" value="Clear" />
 						</div>

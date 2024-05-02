@@ -145,7 +145,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 						<div class="text-center" style="width: 10em;">
 							{{ trans('menus::menus.access') }}
 						</div>
-						<div class="text-right">
+						<div class="text-right text-end">
 							<div style="width: 1em;"></div>
 						</div>
 					</div>
@@ -260,7 +260,7 @@ $saveOrder = ($filters['order'] == 'lft' && $filters['order_dir'] == 'asc');
 						<div class="text-center" style="width: 10em;">
 							<span class="badge access {{ preg_replace('/[^a-z0-9\-_]+/', '', strtolower($row->viewlevel->title)) }}">{{ $row->viewlevel->title }}</span>
 						</div>
-						<div class="text-right">
+						<div class="text-right text-end">
 							<div class="draghandle" draggable="true" style="width: 1em;">
 								<svg class="draghandle-icon" viewBox="0 0 24 24"><path d="M10,4c0,1.1-0.9,2-2,2S6,5.1,6,4s0.9-2,2-2S10,2.9,10,4z M16,2c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,2,16,2z M8,10 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,10,8,10z M16,10c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,10,16,10z M8,18 c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S9.1,18,8,18z M16,18c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S17.1,18,16,18z"></path></svg>
 							</div>

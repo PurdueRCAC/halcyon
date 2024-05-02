@@ -55,7 +55,7 @@ app('pathway')
 			</div>
 		</div>
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	<div class="card mb-4">
@@ -78,7 +78,7 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('software::software.alias'), 'alias', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="text-right">
+				<th scope="col" class="text-right text-end">
 					{!! Html::grid('sort', trans('software::software.applications'), 'applications_count', $filters['order_dir'], $filters['order']) !!}
 				</th>
 			</tr>
@@ -118,7 +118,7 @@ app('pathway')
 						{{ $row->alias }}
 					@endif
 				</td>
-				<td class="text-right">
+				<td class="text-right text-end">
 					{{ $row->applications_count }}
 				</td>
 			</tr>

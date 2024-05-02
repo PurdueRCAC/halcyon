@@ -56,7 +56,7 @@ app('pathway')
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
@@ -84,10 +84,10 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('mailer::mailer.alert level'), 'alert', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="text-right">
+				<th scope="col" class="text-right text-end">
 					{{ trans('mailer::mailer.options') }}
 				</th>
-				<th scope="col" class="text-right">
+				<th scope="col" class="text-right text-end">
 					{{ trans('mailer::mailer.copy') }}
 				</th>
 			</tr>
@@ -141,13 +141,13 @@ app('pathway')
 						<span class="text-muted">{{ trans('global.none') }}</span>
 					@endif
 				</td>
-				<td class="text-right">
+				<td class="text-right text-end">
 					<a class="btn btn-secondary" href="{{ route('admin.mailer.create', ['id' => $row->id]) }}">
 						<span class="fa fa-plus" aria-hidden="true"></span>
 						{{ trans('mailer::mailer.use template') }}
 					</a>
 				</td>
-				<td class="text-right">
+				<td class="text-right text-end">
 					<a href="{{ route('admin.mailer.templates.copy', ['id' => $row->id]) }}" title="{{ trans('mailer::mailer.copy') }}">
 						<span class="fa fa-copy" aria-hidden="true"></span>
 						<span class="sr-only visually-hidden">{{ trans('mailer::mailer.copy') }}</span>

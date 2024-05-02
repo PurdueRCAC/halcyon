@@ -166,7 +166,7 @@ app('pathway')
 
 				<div class="form-group">
 					<label class="form-label" for="field-body">{{ trans('news::news.body') }}: <span class="required">{{ trans('global.required') }}</span></label>
-					<span class="form-text text-muted">{!! trans('news::news.body formatting') !!} <button class="btn btn-link preview float-right" data-target="#preview-modal" data-toggle="modal" data-id="{{ $row->id }}" data-api="{{ route('api.news.preview') }}">Preview</button></span>
+					<span class="form-text text-muted">{!! trans('news::news.body formatting') !!} <button class="btn btn-link preview float-right float-end" data-target="#preview-modal" data-toggle="modal" data-id="{{ $row->id }}" data-api="{{ route('api.news.preview') }}">Preview</button></span>
 					{!! markdown_editor('fields[body]', $row->body, ['id' => 'field-body', 'rows' => 35, 'class' => ($errors->has('fields.body') ? 'is-invalid' : 'required'), 'required' => 'required']) !!}
 					<span class="invalid-feedback">{{ trans('news::news.error.invalid body') }}</span>
 				</div>
@@ -305,7 +305,7 @@ app('pathway')
 				<div class="modal-header">
 					<div class="modal-title" id="preview-title">News Preview</div>
 					<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
+						<span class="visually-hidden" aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body" id="preview">
@@ -323,7 +323,7 @@ app('pathway')
 				<div class="modal-header">
 					<div class="modal-title" id="mailpreview-title">Mail Preview</div>
 					<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
+						<span class="visually-hidden" aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body" id="mailpreview">
@@ -331,7 +331,7 @@ app('pathway')
 						<span class="sr-only visually-hidden">Loading...</span>
 					</div>
 				</div>
-				<div class="modal-footer text-right">
+				<div class="modal-footer text-right text-end">
 					<button id="mailsend" data-dismiss="modal" class="btn btn-success" data-confirm="You have unsaved changes that need to be saved before mailing news item. Would you like to save the changes?">Send mail</button>
 				</div>
 			</div>

@@ -54,7 +54,7 @@ app('pathway')->append(
 							{{ $type->name }}
 						</h2>
 					</div>
-					<div class="col-md-4 text-right">
+					<div class="col-md-4 text-right text-end">
 						<nav class="btn-group" aria-label="Calendar options for {{ $type->name }}">
 							<a class="btn btn-default tip" href="{{ $type->rssLink }}" title="{{ trans('news::news.rss feed') }}">
 								<span class="fa fa-rss-square" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('news::news.rss feed') }} for {{ $type->name }}</span>
