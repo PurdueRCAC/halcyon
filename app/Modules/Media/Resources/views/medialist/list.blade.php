@@ -12,7 +12,7 @@ endif;
 				<thead>
 					<tr>
 						<th scope="col">{{ trans('media::media.list.name') }}</th>
-						<th scope="col" class="text-nowrap text-right">{{ trans('media::media.list.size') }}</th>
+						<th scope="col" class="text-nowrap text-right text-end">{{ trans('media::media.list.size') }}</th>
 						<th scope="col">{{ trans('media::media.list.type') }}</th>
 						<th scope="col">{{ trans('media::media.list.modified') }}</th>
 					@if (auth()->user()->can('manage media'))

@@ -28,7 +28,7 @@ $path = ltrim($file->getRelativePath(), '/');
 				<div class="media-options">
 					<ul>
 						<li>
-							<a class="media-opt-info" href="#fileinfo-{{ $file->getId() }}">
+							<a class="media-opt-info" href="#fileinfo-{{ $file->getId() }}" data-toggle="modal" data-bs-toggle="modal">
 								<span class="fa fa-fw fa-info" aria-hidden="true"></span>
 								{{ trans('media::media.file info') }}
 							</a>
@@ -41,7 +41,7 @@ $path = ltrim($file->getRelativePath(), '/');
 								</a>
 							</li>
 							<li>
-								<a class="media-opt-move" href="{{ route('admin.media.medialist', ['folder' => '/' . $path]) }}" data-api="{{ route('api.media.move') }}" data-path="{{ dirname($path) }}" data-name="{{ basename($path) }}" data-prompt="{{ trans('media::media.move prompt') }}">
+								<a class="media-opt-move" href="#media-move" data-toggle="modal" data-bs-toggle="modal" data-api="{{ route('api.media.move') }}" data-path="{{ dirname($path) }}" data-name="{{ basename($path) }}" data-prompt="{{ trans('media::media.move prompt') }}">
 									<span class="fa fa-fw fa-arrows" aria-hidden="true"></span>
 									{{ trans('media::media.move') }}
 								</a>

@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.css') }}" />
+<link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/media/vendor/dropzone-5.9.3/dist/min/dropzone.min.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ timestamped_asset('modules/media/css/media.css') }}" />
 @endpush
 
 @push('scripts')
-<script src="{{ timestamped_asset('modules/media/vendor/dropzone-5.7.0/dist/min/dropzone.min.js') }}"></script>
+<script src="{{ timestamped_asset('modules/media/vendor/dropzone-5.9.3/dist/min/dropzone.min.js') }}"></script>
 <script src="{{ timestamped_asset('modules/media/js/media.js') }}"></script>
 @endpush
 
@@ -18,7 +18,7 @@ app('pathway')
 	);
 
 	if (auth()->user()->can('create media')):
-		Toolbar::append('Custom', '<a class="btn toolbar-btn media-upload" data-title="' . trans('media::media.upload') . '" href="#media-upload" data-api="' . route('api.media.upload') . '"><span class="fa fa-upload" aria-hidden="true"></span> ' . trans('media::media.upload') . '</a>', 'upload');
+		Toolbar::append('Custom', '<a class="btn toolbar-btn media-upload" data-title="' . trans('media::media.upload') . '" href="#media-upload" data-toggle="modal" data-bs-toggle="modal" data-api="' . route('api.media.upload') . '"><span class="fa fa-upload" aria-hidden="true"></span> ' . trans('media::media.upload') . '</a>', 'upload');
 		Toolbar::append('Custom', '<a class="btn toolbar-btn" data-title="' . trans('media::media.create folder') . '" href="' . route('admin.media.folder.create') . '" data-api="' . route('api.media.folder.create') . '" data-prompt="' . trans('media::media.folder name') . '"><span class="fa fa-folder" aria-hidden="true"></span> ' . trans('media::media.create folder') . '</a>', 'folder-new');
 	endif;
 	if (auth()->user()->can('admin media')):
@@ -111,41 +111,65 @@ app('pathway')
 			</form>
 
 			<?php if (auth()->user()->can('create media')): ?>
-				<div class="dialog dialog-upload" id="media-upload" title="{{ trans('media::media.upload') }}">
-					<form action="{{ route('api.media.upload', ['api_token' => auth()->user()->api_token]) }}" id="uploader" class="dropzone" data-instructions="{{ trans('media::media.upload instructions') }}">
-						<div class="fallback">
-							<input type="file" name="files" multiple />
+				<div id="media-upload" class="modal fade dialog-upload" tabindex="-1" aria-labelledby="media-upload-title" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h3 class="modal-title mt-0" id="media-upload-title">{{ trans('media::media.upload') }}</h3>
+								<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+									<span class="visually-hidden" aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<form action="{{ route('api.media.upload', ['api_token' => auth()->user()->api_token]) }}" id="uploader" class="dropzone" data-instructions="{{ trans('media::media.upload instructions') }}">
+									<div class="fallback">
+										<input type="file" name="files" multiple />
+									</div>
+									@csrf
+								</form>
+							</div>
 						</div>
-						@csrf
-					</form>
-				</div>
+					</div>
+				</div><!-- / .modal -->
 			<?php endif; ?>
 
-			<div class="dialog dialog-move" id="media-move" title="{{ trans('media::media.move') }}">
-				<form action="{{ route('api.media.move', ['api_token' => auth()->user()->api_token]) }}" id="mover">
-					<div class="form-group">
-						<label for="move-destination">{{ trans('media::media.destination folder') }}</label>
-						<select id="move-destination" class="form-control">
-							<option>/</option>
-							<?php
-							foreach ($folders as $j => $fold):
-								if ($j == 0):
-									continue;
-								endif;
-								?>
-								<option>{{ '/' . trim($fold['relname'], '/') }}</option>
-								<?php
-							endforeach;
-							?>
-						</select>
-					</div>
+			<div id="media-move" class="modal fade dialog-move" tabindex="-1" aria-labelledby="media-move-title" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h3 class="modal-title mt-0" id="media-move-title">{{ trans('media::media.move') }}</h3>
+							<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+								<span class="visually-hidden" aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form action="{{ route('api.media.move', ['api_token' => auth()->user()->api_token]) }}" id="mover">
+								<div class="form-group">
+									<label for="move-destination">{{ trans('media::media.destination folder') }}</label>
+									<select id="move-destination" class="form-control">
+										<option>/</option>
+										<?php
+										foreach ($folders as $j => $fold):
+											if ($j == 0):
+												continue;
+											endif;
+											?>
+											<option>{{ '/' . trim($fold['relname'], '/') }}</option>
+											<?php
+										endforeach;
+										?>
+									</select>
+								</div>
 
-					<div class="form-group text-right">
-						<input type="submit" class="btn btn-success" value="{{ trans('media::media.move') }}" />
+								<div class="form-group text-right text-end">
+									<input type="submit" class="btn btn-success" value="{{ trans('media::media.move') }}" />
+								</div>
+								@csrf
+							</form>
+						</div>
 					</div>
-					@csrf
-				</form>
-			</div>
+				</div>
+			</div><!-- / .modal -->
 		</div><!-- / .panel-files -->
 	</div><!-- / .media-panels -->
 </div>

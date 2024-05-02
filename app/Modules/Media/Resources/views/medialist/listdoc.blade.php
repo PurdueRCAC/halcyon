@@ -19,7 +19,7 @@ endif;
 				</span>
 			</a>
 		</td>
-		<td class="text-nowrap text-right">
+		<td class="text-nowrap text-right text-end">
 			<span class="media-size">{{ $file->getFormattedSize() }}</span>
 		</td>
 		<td>
@@ -34,7 +34,7 @@ endif;
 				<div class="media-options">
 					<ul>
 						<li>
-							<a class="media-opt-info" href="#fileinfo-{{ $file->getId() }}">
+							<a class="media-opt-info" href="#fileinfo-{{ $file->getId() }}" data-toggle="modal" data-bs-toggle="modal">
 								<span class="fa fa-fw fa-info" aria-hidden="true"></span>
 								{{ trans('media::media.file info') }}
 							</a>
@@ -49,7 +49,7 @@ endif;
 							</a>
 						</li>
 						<li>
-							<a class="media-opt-path" href="#filepath-{{ $file->getId() }}">
+							<a class="media-opt-path" href="#filepath-{{ $file->getId() }}" data-toggle="modal" data-bs-toggle="modal">
 								<span class="fa fa-fw fa-link" aria-hidden="true"></span>
 								{{ trans('media::media.file link') }}
 							</a>
@@ -62,7 +62,7 @@ endif;
 							</a>
 						</li>
 						<li>
-							<a class="media-opt-move" href="{{ $href }}" data-api="{{ route('api.media.move') }}" data-path="{{ dirname($path) }}" data-name="{{ basename($path) }}">
+							<a class="media-opt-move" href="#media-move" data-api="{{ route('api.media.move') }}" data-toggle="modal" data-bs-toggle="modal" data-path="{{ dirname($path) }}" data-name="{{ basename($path) }}">
 								<span class="fa fa-fw fa-arrows" aria-hidden="true"></span>
 								{{ trans('media::media.move') }}
 							</a>
