@@ -2,7 +2,7 @@
 @foreach (['success', 'error', 'danger', 'warning', 'info'] as $type)
     @if (\Illuminate\Support\Facades\Session::has($type))
         <div class="alert alert-{{ $type }} fade in alert-dismissable" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <button type="button" class="btn-close close" data-dismiss="alert" data-bs-dismiss="alert" aria-hidden="true">&times;</button>
             <?php
             $err = \Illuminate\Support\Facades\Session::get($type);
 

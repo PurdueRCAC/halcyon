@@ -97,7 +97,7 @@
 
 						@if (Auth::check())
 							<div class="user-dropdown dropdown">
-								<button class="btn dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<button class="btn dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									{{ Auth::user()->name }}
 								</button>
 								<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
