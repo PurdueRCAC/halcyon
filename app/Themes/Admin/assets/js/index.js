@@ -33,7 +33,7 @@ function notify(type, message, animate, autoRemove) {
 	<div class="toast" role="alert" aria-atomic="true" aria-live="assertive">
 		<div class="d-flex">
 			<button class="btn-close close" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
+				<span class="visually-hidden" aria-hidden="true">&times;</span>
 			</button>
 			<div class="toast-body">
 				<div class="message">
@@ -49,6 +49,7 @@ function notify(type, message, animate, autoRemove) {
 
 	let node = document.createElement('div');
 	node.classList.add('toast');
+	node.classList.add('show');
 	node.classList.add('alert-' + type);
 	node.setAttribute('role', 'alert');
 	node.setAttribute('aria-atomic', 'true');
@@ -58,7 +59,7 @@ function notify(type, message, animate, autoRemove) {
 	close.classList.add('btn-close');
 	close.classList.add('close');
 	close.setAttribute('aria-label', 'Close');
-	close.innerHTML = '<span aria-hidden="true">&times;</span>';
+	close.innerHTML = '<span class="visually-hidden" aria-hidden="true">&times;</span>';
 	close.addEventListener('click', function () {
 		// animate when closing; then remove the DOM element entirely
 		var n = this.parentNode.parentNode;

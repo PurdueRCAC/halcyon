@@ -3562,25 +3562,25 @@ select.filter_search {
   overflow: hidden;
   white-space: nowrap;
 }
-.toolbar-box ul,
-.toolbar-box ul li {
+.toolbar-btn-list>ul,
+.toolbar-btn-list>ul>li {
   background: transparent;
   margin: 0;
   padding: 0;
   border: none;
 }
-.toolbar-box ul {
+.toolbar-btn-list>ul {
   display: -ms-flexbox;
   display: flex;
   flex-flow: row;
 }
-.toolbar-box ul li {
+.toolbar-btn-list>ul>li {
   margin: 0;
   padding: 0;
   list-style: none;
   flex: 0 1 auto;
 }
-.toolbar-box ul>li + li>a {
+.toolbar-btn-list>ul>li + li>a {
   margin-left: 0.5em;
 }
 .toolbar-box .spacer,
@@ -3713,6 +3713,10 @@ select.filter_search {
   .toolbar-box ul li a span:before {
     margin-right: 1em;
   }
+}
+
+.modal-body .toolbar-box {
+  position: static;
 }
 
 .breadcrumbs {
@@ -4417,7 +4421,7 @@ a.menulist:hover:before {
   font-family: var(--font-family-icons);
   color: orange;
 }
-#panel {
+/*#panel {
   position: fixed;
   top: 0;
   right: 0;
@@ -4428,21 +4432,21 @@ a.menulist:hover:before {
   background: var(--body-bg);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   display: none;
-}
-#panel .toolbar-box {
+}*/
+.modal .toolbar-box {
   position: static;
 }
-#panel .toolbar-box .toolbar-btn-list {
+.modal .toolbar-box .toolbar-btn-list {
   width: 100%;
 }
-#panel .toolbar-box .pagetitle {
+.modal .toolbar-box .pagetitle {
   margin: 0 0 2em 0;
   padding: 0 0.8em;
 }
-#panel .toolbar-box ul {
+.modal .toolbar-box ul {
   width: 100%;
 }
-#panel .toolbar-box ul li:first-child {
+.modal .toolbar-box ul li:first-child {
   margin: 0;
   align-self: stretch;
   -webkit-box-flex: 1;
