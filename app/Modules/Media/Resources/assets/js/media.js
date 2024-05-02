@@ -455,7 +455,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 								hideSpinner();
 
-								if (bootstrap && bootstrap.Modal.VERSION < '5') {
+								if (bootstrap && bootstrap.Modal.VERSION > '5') {
 									bootstrap.Modal.getInstance(document.getElementById('media-move')).hide();
 								} else {
 									$('#media-move').modal('hide');
@@ -663,7 +663,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 				Dropzone.forElement('.dropzone').removeAllFiles();
 
-				if (bootstrap && bootstrap.Modal.VERSION < '5') {
+				if (bootstrap && bootstrap.Modal.VERSION > '5') {
 					bootstrap.Modal.getInstance(document.getElementById('media-upload')).hide();
 				} else {
 					$('#media-upload').modal('hide');
