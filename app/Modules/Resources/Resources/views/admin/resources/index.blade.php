@@ -61,7 +61,7 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col filter-select col-md-8 text-right">
+			<div class="col filter-select col-md-8 text-right text-end">
 				<label class="sr-only visually-hidden" for="filter_state">{{ trans('resources::assets.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="all"<?php if ($filters['state'] == 'all'): echo ' selected="selected"'; endif;?>>{{ trans('resources::assets.all states') }}</option>
@@ -90,7 +90,7 @@ app('pathway')
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
@@ -161,7 +161,7 @@ app('pathway')
 				<!-- <th scope="col" class="priority-6">
 					{!! Html::grid('sort', trans('resources::assets.batchsystem'), 'batchsystem', $filters['order_dir'], $filters['order']) !!}
 				</th> -->
-				<th scope="col" class="priority-4 text-right">
+				<th scope="col" class="priority-4 text-right text-end">
 					{{ trans('resources::assets.subresources') }}
 				</th>
 				<th scope="col" class="priority-6">
@@ -254,7 +254,7 @@ app('pathway')
 					@endphp
 					{{ $b ? $b->name : '' }}
 				</td> -->
-				<td class="priority-4 text-right">
+				<td class="priority-4 text-right text-end">
 					<a href="{{ route('admin.resources.subresources', ['resource' => $row->id]) }}">
 						{{ $row->children_count }}
 					</a>

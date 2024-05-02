@@ -274,7 +274,7 @@ app('pathway')
 						</tbody>
 					</table>
 
-					<div class="text-right">
+					<div class="text-right text-end">
 						<a class="btn text-danger" href="{{ route('admin.publications.deletefile', ['id' => $row->id]) }}">
 							<span class="fa fa-trash" aria-hidden="true"></span>
 							<span class="sr-only visually-hidden">{{ trans('global.button.trash') }}</span>

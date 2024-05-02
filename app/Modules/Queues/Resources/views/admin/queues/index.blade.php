@@ -92,7 +92,7 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col col-md-8 filter-select text-right">
+			<div class="col col-md-8 filter-select text-right text-end">
 				<label class="sr-only visually-hidden" for="filter_state">{{ trans('queues::queues.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('global.option.all states') }}</option>
@@ -152,7 +152,7 @@ app('pathway')
 		<input type="hidden" name="order" id="filter_order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" id="filter_order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
@@ -172,7 +172,7 @@ app('pathway')
 					<th class="priority-5" colspan="2">{{ trans('queues::queues.nodes') }}</th>
 					<th class="priority-5" colspan="2">{{ trans('queues::queues.cores') }}</th>
 					<th class="priority-2"></th>
-					<th class="priority-6 text-right"></th>
+					<th class="priority-6 text-right text-end"></th>
 				</tr> -->
 				<tr>
 					<th>
@@ -196,16 +196,16 @@ app('pathway')
 					<th scope="col" class="priority-6 text-center">
 						{!! Html::grid('sort', trans('queues::queues.class'), 'groupid', $filters['order_dir'], $filters['order']) !!}
 					</th>
-					<th scope="col" class="priority-5 text-right">
+					<th scope="col" class="priority-5 text-right text-end">
 						{{ trans('queues::queues.active allocation') }}
 					</th>
-					<!-- <th scope="col" class="priority-5 text-right">
+					<!-- <th scope="col" class="priority-5 text-right text-end">
 						{{ trans('queues::queues.loans') }}
 					</th>
-					<th scope="col" class="priority-5 text-right">
+					<th scope="col" class="priority-5 text-right text-end">
 						{{ trans('queues::queues.total') }}
 					</th>
-					<th scope="col" class="priority-5 text-right">
+					<th scope="col" class="priority-5 text-right text-end">
 						{{ trans('queues::queues.loans') }}
 					</th> -->
 					<th scope="col" class="priority-2">
@@ -326,7 +326,7 @@ app('pathway')
 								<span class="fa fa-user" aria-hidden="true"></span> {{ trans('queues::queues.owner') }}
 							@endif
 						</td>
-						<td class="text-right">
+						<td class="text-right text-end">
 							@if (!$row->active)
 								@if ($upcoming = $row->getUpcomingLoanOrPurchase())
 									@if ($upcoming->serviceunits > 0)
@@ -367,16 +367,16 @@ app('pathway')
 							@endif
 						</div>
 						<?php
-							/*<td class="priority-5 text-right">
+							/*<td class="priority-5 text-right text-end">
 							{!! $row->totalnodes ? number_format($row->totalnodes) : '<span class="text-muted none">' . $row->totalnodes . '</span>' !!}
 						</td>
-						<td class="priority-5 text-right">
+						<td class="priority-5 text-right text-end">
 							{!! $row->loanednodes ? number_format($row->loanednodes) : '<span class="text-muted none">' . $row->loanednodes . '</span>' !!}
 						</td>
-						<td class="priority-5 text-right">
+						<td class="priority-5 text-right text-end">
 							{!! $row->totalcores ? number_format($row->totalcores) : '<span class="text-muted none">' . $row->totalcores . '</span>' !!}
 						</td>
-						<td class="priority-5 text-right">
+						<td class="priority-5 text-right text-end">
 							{!! $row->loanedcores ? number_format($row->loanedcores) : '<span class="text-muted none">' . $row->loanedcores . '</span>' !!}
 							$soldpercent = $row->totalcores ? round(($row->soldcores / $row->totalcores) * 100, 1) : 0;
 							$loanedpercent = $row->totalcores ? round(($row->loanedcores / $row->totalcores) * 100, 1) : 0;

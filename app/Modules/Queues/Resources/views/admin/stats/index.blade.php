@@ -44,7 +44,7 @@ app('pathway')
 
 	<fieldset id="filter-bar" class="container-fluid">
 		<div class="row">
-			<div class="col col-md-12 filter-select text-right">
+			<div class="col col-md-12 filter-select text-right text-end">
 				<label class="sr-only visually-hidden" for="filter_type">{{ trans('queues::queues.type') }}</label>
 				<select name="type" id="filter_type" class="form-control filter filter-submit">
 					<option value="0">{{ trans('queues::queues.all types') }}</option>
@@ -74,7 +74,7 @@ app('pathway')
 		<input type="hidden" name="order" id="filter_order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" id="filter_order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (!$filters['resource'])
@@ -139,9 +139,9 @@ app('pathway')
 						<caption class="sr-only visually-hidden">Total allocations</caption>
 						<thead>
 							<th scope="col">Resource</th>
-							<!-- <th scope="col" class="text-right">Queues</th> -->
-							<th scope="col" class="text-right">Sold</th>
-							<th scope="col" class="text-right">Loaned</th>
+							<!-- <th scope="col" class="text-right text-end">Queues</th> -->
+							<th scope="col" class="text-right text-end">Sold</th>
+							<th scope="col" class="text-right text-end">Loaned</th>
 						</thead>
 						<tbody>
 							<?php
@@ -150,7 +150,7 @@ app('pathway')
 							@foreach ($resources as $resource)
 								<tr>
 									<td><a href="{{ route('admin.queues.stats', ['resource' => $resource->id]) }}">{{ str_repeat('- ', $resource->level) . $resource->name }}</a></td>
-									<!-- <td class="text-right"> -->
+									<!-- <td class="text-right text-end"> -->
 										<?php
 										$unit = 'nodes';
 
@@ -269,7 +269,7 @@ app('pathway')
 										//echo $total;
 										?>
 									<!-- </td> -->
-									<td class="text-right">
+									<td class="text-right text-end">
 										@if ($unit == 'sus')
 											@if ($purchased['sus'])
 												{{ number_format($purchased['sus']) }} <span class="text-muted"><abbr title="Service Units">SUs</abbr></span>
@@ -292,7 +292,7 @@ app('pathway')
 											@endif
 										@endif
 									</td>
-									<td class="text-right">
+									<td class="text-right text-end">
 										@if ($unit == 'sus')
 											@if ($loaned['sus'])
 												{{ number_format($loaned['sus']) }} <span class="text-muted"><abbr title="Service Units">SUs</abbr></span>
@@ -343,7 +343,7 @@ app('pathway')
 									<thead>
 										<tr>
 											<th scope="col">Queue</th>
-											<th scope="col" class="text-right">Total</th>
+											<th scope="col" class="text-right text-end">Total</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -352,7 +352,7 @@ app('pathway')
 											<td>
 												<span class="legend-key"></span> {{ $name }}
 											</td>
-											<td class="text-right">
+											<td class="text-right text-end">
 												{{ number_format($val) }}
 											</td>
 										</tr>
@@ -377,7 +377,7 @@ app('pathway')
 									<thead>
 										<tr>
 											<th scope="col">Queue</th>
-											<th scope="col" class="text-right">Total</th>
+											<th scope="col" class="text-right text-end">Total</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -386,7 +386,7 @@ app('pathway')
 											<td>
 												<span class="legend-key"></span> {{ $name }}
 											</td>
-											<td class="text-right">
+											<td class="text-right text-end">
 												{{ number_format($val) }}
 											</td>
 										</tr>
@@ -465,10 +465,10 @@ app('pathway')
 						<caption class="sr-only visually-hidden">Total allocations by sub-resource</caption>
 						<thead>
 							<th scope="col">Sub-Resource</th>
-							<th scope="col" class="text-right">Queues</th>
-							<th scope="col" class="text-right">Sold</th>
-							<th scope="col" class="text-right">Loaned</th>
-							<th scope="col" class="text-right">Remaining</th>
+							<th scope="col" class="text-right text-end">Queues</th>
+							<th scope="col" class="text-right text-end">Sold</th>
+							<th scope="col" class="text-right text-end">Loaned</th>
+							<th scope="col" class="text-right text-end">Remaining</th>
 						</thead>
 						<tbody>
 							@foreach ($subresources as $subresource)
@@ -653,8 +653,8 @@ app('pathway')
 								?>
 								<tr>
 									<td>{{ $subresource->name }}</td>
-									<td class="text-right">{{ $total }}</td>
-									<td class="text-right">
+									<td class="text-right text-end">{{ $total }}</td>
+									<td class="text-right text-end">
 										@if ($unit == 'sus')
 											@if ($purchased['sus'])
 												{{ number_format($purchased['sus']) }} <span class="text-muted"><abbr title="Service Units">SUs</abbr></span>
@@ -677,7 +677,7 @@ app('pathway')
 											@endif
 										@endif
 									</td>
-									<td class="text-right">
+									<td class="text-right text-end">
 										@if ($unit == 'sus')
 											@if ($loaned['sus'])
 												{{ number_format($loaned['sus']) }} <span class="text-muted"><abbr title="Service Units">SUs</abbr></span>
@@ -700,7 +700,7 @@ app('pathway')
 											@endif
 										@endif
 									</td>
-									<td class="text-right">
+									<td class="text-right text-end">
 										@if ($unit == 'sus')
 											@if ($remaining['sus'])
 												{{ number_format($remaining['sus']) }} <span class="text-muted"><abbr title="Service Units">SUs</abbr></span>
@@ -768,7 +768,7 @@ app('pathway')
 							<thead>
 								<th scope="col">Queue</th>
 								<th scope="col">Sub-Resource</th>
-								<th scope="col" class="text-right">Allocation</th>
+								<th scope="col" class="text-right text-end">Allocation</th>
 							</thead>
 							<tbody>
 							<?php
@@ -802,7 +802,7 @@ app('pathway')
 								<tr>
 									<td><a href="{{ route('admin.queues.show', ['id' => $qu->id]) }}">{{ $qu->name }}</a></td>
 									<td>{{ $qu->subresource->name }}</td>
-									<td class="text-right">
+									<td class="text-right text-end">
 										@if ($unit == 'sus')
 											{{ number_format($qu->serviceunits) }} <span class="text-muted"><abbr title="Service Units">SUs</abbr></span>
 										@elseif ($unit == 'gpus')

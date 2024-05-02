@@ -57,7 +57,7 @@ app('pathway')
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
@@ -78,7 +78,7 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('queues::queues.name'), 'name', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4 text-right">
+				<th scope="col" class="priority-4 text-right text-end">
 					{{ trans('queues::queues.schedulers') }}
 				</th>
 			</tr>
@@ -103,7 +103,7 @@ app('pathway')
 						{!! App\Halcyon\Utility\Str::highlight(e($row->name), $filters['search']) !!}
 					@endif
 				</td>
-				<td class="priority-4 text-right">
+				<td class="priority-4 text-right text-end">
 					<a href="{{ route('admin.queues.schedulers', ['type' => $row->id]) }}">
 						{{ number_format($row->schedulers_count) }}
 					</a>

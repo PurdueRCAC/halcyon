@@ -71,7 +71,7 @@ $page->gatherMetadata();
 @section('content')
 	<article id="article-content{{ $page->id }}">
 		@if (auth()->user() && (auth()->user()->can('create pages') || auth()->user()->can('edit pages') || auth()->user()->can('edit.state pages') || auth()->user()->can('delete pages')))
-			<div class="edit-controls float-right">
+			<div class="edit-controls float-right float-end">
 				<div class="dropdown btn-group">
 					<button class="btn ropdown-toggle" type="button" id="optionsbutton" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						<span class="fa fa-ellipsis-v" aria-hidden="true"></span><span class="sr-only visually-hidden"> {{ trans('pages::pages.options') }}</span>
@@ -142,7 +142,7 @@ $page->gatherMetadata();
 					<div class="modal-header">
 						<h3 class="modal-title" id="article-form{{ $page->id }}-title">{{ trans('global.edit') }}</h3>
 						<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+							<span class="visually-hidden" aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body">

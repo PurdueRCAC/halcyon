@@ -8,7 +8,7 @@
 			<div class="col-md-9">
 				<h3 class="card-title">
 					{{ trans('resources::assets.resources') }}
-					<a href="#roles_help" data-toggle="modal" class="text-info tip" title="{{ trans('resources::assets.roles help') }}">
+					<a href="#roles_help" data-toggle="modal" data-bs-toggle="modal" class="text-info tip" title="{{ trans('resources::assets.roles help') }}">
 						<span class="fa fa-question-circle" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('resources::assets.roles help') }}</span>
 					</a>
 				</h3>
@@ -18,8 +18,8 @@
 						<div class="modal-content shadow-sm">
 							<div class="modal-header">
 								<div class="modal-title" id="roles_help-title">Resources</div>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
+								<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+									<span class="visually-hidden" aria-hidden="true">&times;</span>
 								</button>
 							</div>
 							<div class="modal-body dialog-body">
@@ -35,9 +35,9 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-3 text-right">
+			<div class="col-md-3 text-right text-end">
 				@if ($user->enabled)
-				<a href="#manage_roles_dialog" data-toggle="modal" id="manage_roles" data-membertype="1" class="btn btn-sm" data-tip="{{ trans('resources::assets.manage access') }}">
+				<a href="#manage_roles_dialog" data-toggle="modal" data-bs-toggle="modal" id="manage_roles" data-membertype="1" class="btn btn-sm" data-tip="{{ trans('resources::assets.manage access') }}">
 					<span class="fa fa-pencil" aria-hidden="true"></span> {{ trans('resources::assets.manage') }}
 				</a>
 				@endif
@@ -80,8 +80,8 @@
 		<div class="modal-content shadow-sm">
 			<div class="modal-header">
 				<div class="modal-title" id="manage_roles_dialog-title">{{ trans('resources::assets.manage access') }}</div>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
+				<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+					<span class="visually-hidden" aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body dialog-body">

@@ -63,7 +63,7 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col col-md-8 filter-select text-right">
+			<div class="col col-md-8 filter-select text-right text-end">
 				<label class="sr-only visually-hidden" for="filter_state">{{ trans('queues::queues.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('queues::queues.all states') }}</option>
@@ -85,7 +85,7 @@ app('pathway')
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
@@ -109,13 +109,13 @@ app('pathway')
 				<th scope="col">
 					{!! Html::grid('sort', trans('queues::queues.description'), 'description', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="text-right">
+				<th scope="col" class="text-right text-end">
 					{!! Html::grid('sort', trans('queues::queues.priority'), 'priority', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">
 					{{ trans('queues::queues.scheduler') }}
 				</th>
-				<th scope="col" class="text-right">
+				<th scope="col" class="text-right text-end">
 					{{ trans('queues::queues.queues') }}
 				</th>
 			</tr>
@@ -149,13 +149,13 @@ app('pathway')
 				<td>
 					{{ $row->description }}
 				</td>
-				<td class="text-right">
+				<td class="text-right text-end">
 					{{ $row->priority }}
 				</td>
 				<td>
 					{{ $row->scheduler ? $row->scheduler->hostname : '' }}
 				</td>
-				<td class="text-right">
+				<td class="text-right text-end">
 					@if (auth()->user()->can('edit queues.qos'))
 						<a href="{{ route('admin.queues.index') }}?type={{ $row->id }}">
 							{{ number_format($row->queues_count) }}

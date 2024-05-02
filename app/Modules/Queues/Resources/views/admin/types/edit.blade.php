@@ -64,7 +64,7 @@ app('pathway')
 				<tbody>
 					<tr>
 						<th scope="row">{{ trans('queues::queues.queues') }}</th>
-						<td class="text-right">{{ number_format($row->queues()->count()) }}</td>
+						<td class="text-right text-end">{{ number_format($row->queues()->count()) }}</td>
 					</tr>
 				</tbody>
 			</table>

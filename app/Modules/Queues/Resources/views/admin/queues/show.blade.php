@@ -60,8 +60,8 @@ endif;
 
 	<nav class="container-fluid">
 		<ul id="queue-tabs" class="nav nav-tabs" role="tablist">
-			<li class="nav-item" role="presentation"><a class="nav-link active" href="#queue-details" data-toggle="tab" role="tab" id="queue-details-tab" aria-controls="queue-details" aria-selected="true">{{ trans('queues::queues.queue') }}</a></li>
-			<li class="nav-item" role="presentation"><a class="nav-link" href="#queue-history" data-toggle="tab" role="tab" id="queue-history-tab" aria-controls="queue-history" aria-selected="false">{{ trans('queues::queues.history') }}</a></li>
+			<li class="nav-item" role="presentation"><a class="nav-link active" href="#queue-details" data-toggle="tab" data-bs-toggle="tab" role="tab" id="queue-details-tab" aria-controls="queue-details" aria-selected="true">{{ trans('queues::queues.queue') }}</a></li>
+			<li class="nav-item" role="presentation"><a class="nav-link" href="#queue-history" data-toggle="tab" data-bs-toggle="tab" role="tab" id="queue-history-tab" aria-controls="queue-history" aria-selected="false">{{ trans('queues::queues.history') }}</a></li>
 		</ul>
 	</nav>
 	<div class="tab-content" id="queue-tabs-contant">
@@ -73,7 +73,7 @@ endif;
 		<div class="card">
 			<div class="card-header">
 				@if (auth()->user()->can('edit queues'))
-					<a class="btn btn-sm btn-link float-right" data-toggl="modal" href="{{ route('admin.queues.edit', ['id' => $row->id]) }}" data-tip="{{ trans('global.edit') }}">
+					<a class="btn btn-sm btn-link float-right float-end" data-toggl="modal" href="{{ route('admin.queues.edit', ['id' => $row->id]) }}" data-tip="{{ trans('global.edit') }}">
 						<span class="fa fa-pencil" aria-hidden="true"></span>
 						<span class="sr-only visually-hidden">{{ trans('global.edit') }}</span>
 					</a>
@@ -255,31 +255,31 @@ endif;
 							<tbody>
 								<tr>
 									<th scope="col">{{ trans('queues::queues.max jobs queued') }}</th>
-									<td class="text-right">{{ number_format($row->maxjobsqueued) }}</td>
+									<td class="text-right text-end">{{ number_format($row->maxjobsqueued) }}</td>
 								</tr>
 								<tr>
 									<th scope="col">{{ trans('queues::queues.max jobs queued per user') }}</th>
-									<td class="text-right">{{ number_format($row->maxjobsqueueduser) }}</td>
+									<td class="text-right text-end">{{ number_format($row->maxjobsqueueduser) }}</td>
 								</tr>
 								<tr>
 									<th scope="col">{{ trans('queues::queues.max jobs run') }}</th>
-									<td class="text-right">{{ number_format($row->maxjobsrun) }}</td>
+									<td class="text-right text-end">{{ number_format($row->maxjobsrun) }}</td>
 								</tr>
 								<tr>
 									<th scope="col">{{ trans('queues::queues.max jobs run per user') }}</th>
-									<td class="text-right">{{ number_format($row->maxjobsrunuser) }}</td>
+									<td class="text-right text-end">{{ number_format($row->maxjobsrunuser) }}</td>
 								</tr>
 								<tr>
 									<th scope="col">{{ trans('queues::queues.max job cores') }}</th>
-									<td class="text-right">{{ number_format($row->maxjobcores) }}</td>
+									<td class="text-right text-end">{{ number_format($row->maxjobcores) }}</td>
 								</tr>
 								<tr>
 									<th scope="col">{{ trans('queues::queues.max ijob factor') }}</th>
-									<td class="text-right">{{ number_format($row->maxijobfactor) }}</td>
+									<td class="text-right text-end">{{ number_format($row->maxijobfactor) }}</td>
 								</tr>
 								<tr>
 									<th scope="col">{{ trans('queues::queues.max ijob user factor') }}</th>
-									<td class="text-right">{{ number_format($row->maxijobuserfactor) }}</td>
+									<td class="text-right text-end">{{ number_format($row->maxijobuserfactor) }}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -295,23 +295,23 @@ endif;
 							<tbody>
 								<tr>
 									<th scope="col">{{ trans('queues::queues.node cores default') }}</th>
-									<td class="text-right">{{ number_format($row->nodecoresdefault) }}</td>
+									<td class="text-right text-end">{{ number_format($row->nodecoresdefault) }}</td>
 								</tr>
 								<tr>
 									<th scope="col">{{ trans('queues::queues.node cores min') }}</th>
-									<td class="text-right">{{ number_format($row->nodecoresmin) }}</td>
+									<td class="text-right text-end">{{ number_format($row->nodecoresmin) }}</td>
 								</tr>
 								<tr>
 									<th scope="col">{{ trans('queues::queues.node cores max') }}</th>
-									<td class="text-right">{{ number_format($row->nodecoresmax) }}</td>
+									<td class="text-right text-end">{{ number_format($row->nodecoresmax) }}</td>
 								</tr>
 								<tr>
 									<th scope="col">{{ trans('queues::queues.node mem min') }}</th>
-									<td class="text-right">{{ $row->nodememmin }}</td>
+									<td class="text-right text-end">{{ $row->nodememmin }}</td>
 								</tr>
 								<tr>
 									<th scope="col">{{ trans('queues::queues.node mem max') }}</th>
-									<td class="text-right">{{ $row->nodememmax }}</td>
+									<td class="text-right text-end">{{ $row->nodememmax }}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -324,7 +324,7 @@ endif;
 	<div class="col-md-12">
 		<div class="card">
 			<div class="card-header">
-				<div class="float-right">
+				<div class="float-right float-end">
 					<a href="#dialog-sell" id="node-sell" data-toggle="modal" data-target="#dialog-sell" class="btn btn-secondary dialog-btn"><span class="fa fa-usd" aria-hidden="true"></span> {{ trans('queues::queues.sell') }}</a>
 					<a href="#dialog-loan" id="node-loan" data-toggle="modal" data-target="#dialog-loan" class="btn btn-secondary dialog-btn"><span class="fa fa-random" aria-hidden="true"></span> {{ trans('queues::queues.loan') }}</a>
 				</div>
@@ -353,9 +353,9 @@ endif;
 							<th scope="col">{{ trans('queues::queues.source') }}</th>
 							<th scope="col">{{ trans('queues::queues.resource') }}</th>
 							<th scope="col">{{ trans('queues::queues.queue') }}</th>
-							<th scope="col" class="text-right">{{ trans('queues::queues.amount') }}</th>
-							<th scope="col" class="text-right">{{ trans('queues::queues.total') }}</th>
-							<th scope="col" class="text-right" colspan="2">{{ trans('queues::queues.options') }}</th>
+							<th scope="col" class="text-right text-end">{{ trans('queues::queues.amount') }}</th>
+							<th scope="col" class="text-right text-end">{{ trans('queues::queues.total') }}</th>
+							<th scope="col" class="text-right text-end" colspan="2">{{ trans('queues::queues.options') }}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -512,10 +512,10 @@ endif;
 									</del>
 								@endif
 							</td>
-							<td class="text-right">
+							<td class="text-right text-end">
 								{{ number_format($item->total, 1) }}
 							</td>
-							<td class="text-right">
+							<td class="text-right text-end">
 								<a href="#dialog-edit{{ $item->id }}" class="btn btn-sm edit"
 									data-success="{{ trans('global.messages.item updated') }}"
 									data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes'). '.update', ['id' => $item->id]) }}"
@@ -541,8 +541,8 @@ endif;
 										<form class="modal-content dialog-content shadow-sm" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes') . '.update', ['id' => $item->id]) }}">
 											<div class="modal-header">
 												<div class="modal-title" id="dialog-edit{{ $item->id }}-title">{{ trans('queues::queues.edit ' . ($item->type == 1 ? 'loan' : 'size')) }}</div>
-												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-													<span aria-hidden="true">&times;</span>
+												<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+													<span class="visually-hidden" aria-hidden="true">&times;</span>
 												</button>
 											</div>
 											<div class="modal-body dialog-body">
@@ -645,7 +645,7 @@ endif;
 													</div>
 												@endif
 											</div>
-											<div class="modal-footer dialog-footer text-right">
+											<div class="modal-footer dialog-footer text-right text-end">
 												<button type="submit" class="btn btn-success queue-dialog-submit" data-action="update" data-success="{{ trans('queues::queues.item updated') }}">
 													<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only visually-hidden">{{ trans('queues::queues.saving') }}</span></span>
 													{{ trans('global.button.update') }}
@@ -670,8 +670,8 @@ endif;
 					<form class="modal-content dialog-content shadow-sm" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.sizes.create') }}">
 						<div class="modal-header">
 							<div class="modal-title" id="dialog-sell-title">{{ trans('queues::queues.sell') }}</div>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
+							<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+								<span class="visually-hidden" aria-hidden="true">&times;</span>
 							</button>
 						</div>
 						<div class="modal-body dialog-body">
@@ -842,7 +842,7 @@ endif;
 								<textarea id="sell-comment" name="comment" class="form-control" cols="35" rows="2" maxlength="2000"></textarea>
 							</div>
 						</div>
-						<div class="modal-footer dialog-footer text-right">
+						<div class="modal-footer dialog-footer text-right text-end">
 							<button type="submit" class="btn btn-success queue-dialog-submit" data-success="{{ trans('queues::queues.item created') }}">
 								<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only visually-hidden">{{ trans('queues::queues.saving') }}</span></span>
 								{{ trans('global.button.create') }}
@@ -859,8 +859,8 @@ endif;
 					<form class="modal-content dialog-content shadow-sm" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.loans.create') }}">
 						<div class="modal-header">
 							<div class="modal-title" id="dialog-loan-title">{{ trans('queues::queues.loan') }}</div>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
+							<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+								<span class="visually-hidden" aria-hidden="true">&times;</span>
 							</button>
 						</div>
 						<div class="modal-body dialog-body">
@@ -1004,7 +1004,7 @@ endif;
 								<textarea id="loan-comment" name="comment" class="form-control" rows="2" cols="40" maxlength="2000"></textarea>
 							</div>
 						</div>
-						<div class="modal-footer dialog-footer text-right">
+						<div class="modal-footer dialog-footer text-right text-end">
 							<button type="submit" class="btn btn-success queue-dialog-submit" data-success="{{ trans('queues::queues.item created') }}">
 								<span class="spinner-border spinner-border-sm" role="status"><span class="sr-only visually-hidden">{{ trans('queues::queues.saving') }}</span></span>
 								{{ trans('global.button.create') }}

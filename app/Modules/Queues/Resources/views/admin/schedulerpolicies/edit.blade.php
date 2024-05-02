@@ -68,7 +68,7 @@ app('pathway')
 				<tbody>
 					<tr>
 						<th scope="row">{{ trans('queues::queues.schedulers') }}</th>
-						<td class="text-right">{{ $row->schedulers()->count() }}</td>
+						<td class="text-right text-end">{{ $row->schedulers()->count() }}</td>
 					</tr>
 				</tbody>
 			</table>

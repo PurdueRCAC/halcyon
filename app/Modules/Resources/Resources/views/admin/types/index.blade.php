@@ -60,7 +60,7 @@ app('pathway')
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
@@ -84,7 +84,7 @@ app('pathway')
 				<th scope="col" class="priority-2">
 					{!! Html::grid('sort', trans('resources::assets.description'), 'description', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-4 text-right">
+				<th scope="col" class="priority-4 text-right text-end">
 					{{ trans('resources::assets.resources') }}
 				</th>
 			</tr>
@@ -122,7 +122,7 @@ app('pathway')
 					</a>
 					@endif
 				</td>
-				<td class="priority-4 text-right">
+				<td class="priority-4 text-right text-end">
 					<a href="{{ route('admin.resources.index') }}?type={{ $row->id }}">
 						{{ number_format($row->resources_count) }}
 					</a>

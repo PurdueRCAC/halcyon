@@ -52,7 +52,7 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col col-md-8 filter-select text-right">
+			<div class="col col-md-8 filter-select text-right text-end">
 				<label class="sr-only visually-hidden" for="filter_state">{{ trans('queues::queues.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('queues::queues.all states') }}</option>
@@ -83,7 +83,7 @@ app('pathway')
 		<input type="hidden" name="order" value="{{ $filters['order'] }}" />
 		<input type="hidden" name="order_dir" value="{{ $filters['order_dir'] }}" />
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	@if (count($rows))
@@ -113,7 +113,7 @@ app('pathway')
 				<th scope="col" class="priority-4 text-center">
 					{!! Html::grid('sort', trans('queues::queues.default max walltime'), 'defaultmaxwalltime', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="priority-3 text-right">
+				<th scope="col" class="priority-3 text-right text-end">
 					{{ trans('queues::queues.queues') }}
 				</th>
 			</tr>
@@ -155,7 +155,7 @@ app('pathway')
 						{{ $row->humanDefaultmaxwalltime() }}
 					@endif
 				</td>
-				<td class="priority-3 text-right">
+				<td class="priority-3 text-right text-end">
 					@if (auth()->user()->can('edit queues.schedulers'))
 						<a href="{{ route('admin.queues.index') }}?type={{ $row->id }}">
 							{{ number_format($row->queues_count) }}

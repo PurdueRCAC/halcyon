@@ -84,9 +84,9 @@ app('pathway')
 	<div class="contentInner col-lg-9 col-md-9 col-sm-12 col-xs-12">
 		<?php /*
 		@if (auth()->user() && auth()->user()->can('manage publications'))
-			<div class="text-right">
+			<div class="text-right text-end">
 				<div class="dropdown btn-group">
-					<button class="btn btn-primary dropdown-toggle" type="button" id="exportbutton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<button class="btn btn-primary dropdown-toggle" type="button" id="exportbutton" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						<span class="fa fa-table" aria-hidden="true"></span> {{ trans('publications::publications.export') }}
 					</button>
 					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="exportbutton">
@@ -110,7 +110,7 @@ app('pathway')
 						</a>
 					</div>
 				</div>
-				<a href="#import-publications" data-toggle="modal" class="btn btn-secondary btn-import">
+				<a href="#import-publications" data-toggle="modal" data-bs-toggle="modal" class="btn btn-secondary btn-import">
 					<span class="fa fa-upload" aria-hidden="true"></span> {{ trans('publications::publications.import') }}
 				</a>
 			</div>
@@ -204,7 +204,7 @@ app('pathway')
 							</a>
 						@endif
 					</div>
-					<div class="col-md-4 text-right">
+					<div class="col-md-4 text-right text-end">
 					@if (auth()->user() && (auth()->user()->can('edit publications') || auth()->user()->can('delete publications')))
 						@if (auth()->user()->can('edit publications'))
 							<a href="{{ route('site.publications.edit', ['id' => $row->id]) }}" data-api="{{ route('api.publications.read', ['id' => $row->id]) }}" class="btn btn-sm btn-edit tip" title="{{ trans('global.button.edit') }}">
@@ -242,8 +242,8 @@ app('pathway')
 			<form action="{{ route('site.publications.import') }}" method="post" enctype="multipart/form-data">
 				<div class="modal-header">
 					<div class="modal-title" id="import-publications-title">{{ trans('publications::publications.import') }}</div>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
+					<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+						<span class="visually-hidden" aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">

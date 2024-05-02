@@ -362,7 +362,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				<tbody>
 					<tr>
 						<th scope="row">{{ trans('queues::queues.queues') }}</th>
-						<td class="text-right">{{ $row->queues()->count() }}</td>
+						<td class="text-right text-end">{{ $row->queues()->count() }}</td>
 					</tr>
 				</tbody>
 			</table>*/ ?>

@@ -67,7 +67,7 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col filter-select col-md-8 text-right">
+			<div class="col filter-select col-md-8 text-right text-end">
 				<label class="sr-only visually-hidden" for="filter_state">{{ trans('resources::assets.state') }}</label>
 				<select name="state" id="filter_state" class="form-control filter filter-submit">
 					<option value="all"<?php if ($filters['state'] == 'all'): echo ' selected="selected"'; endif;?>>{{ trans('resources::assets.all states') }}</option>
@@ -113,13 +113,13 @@ app('pathway')
 				<th scope="col">
 					{{ trans('resources::assets.resource') }}
 				</th>
-				<th scope="col" class="text-right">
+				<th scope="col" class="text-right text-end">
 					{!! Html::grid('sort', trans('resources::assets.node mem'), 'nodemem', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="text-right">
+				<th scope="col" class="text-right text-end">
 					{!! Html::grid('sort', trans('resources::assets.node cores'), 'nodecores', $filters['order_dir'], $filters['order']) !!}
 				</th>
-				<th scope="col" class="text-right">
+				<th scope="col" class="text-right text-end">
 					{!! Html::grid('sort', trans('resources::assets.node gpus'), 'nodegpus', $filters['order_dir'], $filters['order']) !!}
 				</th>
 				<th scope="col">{{ trans('global.state') }}</th>
@@ -162,13 +162,13 @@ app('pathway')
 				<td>
 					{{ $row->resource ? $row->resource->name : '' }}
 				</td>
-				<td class="text-right">
+				<td class="text-right text-end">
 					{{ $row->nodemem }}
 				</td>
-				<td class="text-right">
+				<td class="text-right text-end">
 					{{ $row->nodecores }}
 				</td>
-				<td class="text-right">
+				<td class="text-right text-end">
 					{{ $row->nodegpus }}
 				</td>
 				<td>
@@ -178,7 +178,7 @@ app('pathway')
 						<span class="badge badge-success">{{ trans('global.active') }}</span>
 					@endif
 				</td>
-				<td class="priority-4 text-right">
+				<td class="priority-4 text-right text-end">
 					<a href="{{ route('admin.queues.index', ['resource' => 's' . $row->id]) }}">
 						{{ $row->queues_count }}
 					</a>

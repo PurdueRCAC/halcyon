@@ -39,8 +39,8 @@ $queues = $queues->reject(function($q) use ($canManage)
 
 @if (auth()->user()->can('manage groups'))
 <div class="row mb-3">
-	<div class="col-md-12 text-right">
-		<a href="#add_queue_dialog" data-toggle="modal" class="add_queue btn btn-secondary btn-sm dialog-pl-btn">
+	<div class="col-md-12 text-right text-end">
+		<a href="#add_queue_dialog" data-toggle="modal" data-bs-toggle="modal" class="add_queue btn btn-secondary btn-sm dialog-pl-btn">
 			<span class="fa fa-plus-circle"></span> Add Queue
 		</a>
 	</div>
@@ -51,8 +51,8 @@ $queues = $queues->reject(function($q) use ($canManage)
 		<form class="modal-content dialog-content shadow-sm" id="form_queue_{{ $group->id }}" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.create') }}">
 			<div class="modal-header">
 				<div class="modal-title" id="add_queue_dialog-title">Add queue to {{ $group->name }}</div>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
+				<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+					<span class="visually-hidden" aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<?php
@@ -240,7 +240,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 
 				<div class="alert alert-danger hide" id="add_queue_error"></div>
 			</div>
-			<div class="modal-footer text-right">
+			<div class="modal-footer text-right text-end">
 				<input type="submit" id="add_queue_save" class="btn btn-success queue-dialog-submit"
 					data-group="{{ $group->id }}"
 					data-api="{{ route('api.queues.create') }}"
@@ -260,8 +260,8 @@ $queues = $queues->reject(function($q) use ($canManage)
 			<th scope="col" class="text-center">{{ trans('queues::queues.state') }}</th>
 			<th scope="col">{{ trans('queues::queues.resource') }}</th>
 			<th scope="col">{{ trans('queues::queues.name') }}</th>
-			<th scope="col" class="text-right" colspan="2">{{ trans('queues::queues.total') }}</th>
-			<th scope="col" class="text-right">{{ trans('queues::queues.walltime') }}</th>
+			<th scope="col" class="text-right text-end" colspan="2">{{ trans('queues::queues.total') }}</th>
+			<th scope="col" class="text-right text-end">{{ trans('queues::queues.walltime') }}</th>
 			@if (auth()->user()->can('edit.state queues'))
 			<th scope="col">{{ trans('queues::queues.options') }}</th>
 			@endif
@@ -314,19 +314,19 @@ $queues = $queues->reject(function($q) use ($canManage)
 						@endif
 					</td>
 				@if (!$q->active && $upcoming = $q->getUpcomingLoanOrPurchase())
-					<td class="text-right" colspan="2">
+					<td class="text-right text-end" colspan="2">
 						<span class="text-success">{{ $upcoming->type ? 'loan' : 'purchase' }} starts {{ $upcoming->datetimestart->diffForHumans() }}</span>
 					</div>
 				@else
 					@if ($unit == 'sus')
-						<td class="text-right" colspan="2">
+						<td class="text-right text-end" colspan="2">
 							{{ $q->serviceunits }} <span class="text-muted">SUs</span>
 						</div>
 					@elseif ($unit == 'gpus')
-						<td class="text-right">
+						<td class="text-right text-end">
 							{{ $q->totalcores }} <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>
 						</td>
-						<td class="text-right">
+						<td class="text-right text-end">
 							<?php
 							$nodes = ($q->subresource->nodecores ? round($q->totalcores / $q->subresource->nodecores, 1) : 0);
 							$gpus = ($q->serviceunits && $q->serviceunits > 0 ? $q->serviceunits : round($nodes * $q->subresource->nodegpus));
@@ -334,17 +334,17 @@ $queues = $queues->reject(function($q) use ($canManage)
 							{{ number_format($gpus) }} <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
 						</td>
 					@else
-						<td class="text-right">
+						<td class="text-right text-end">
 							{{ $q->totalcores }} <span class="text-muted">{{ strtolower(trans('queues::queues.cores')) }}</span>
 						</td>
-						<td class="text-right">
+						<td class="text-right text-end">
 							@if ($q->subresource && $q->subresource->nodecores > 0)
 								{{ round($q->totalcores/$q->subresource->nodecores, 1) }} <span class="text-muted">{{ strtolower(trans('queues::queues.' . $unit)) }}</span>
 							@endif
 						</td>
 					@endif
 				@endif
-					<td class="text-right">
+					<td class="text-right text-end">
 						{{ $q->humanWalltime }}
 					</td>
 					@if (auth()->user()->can('edit.state queues'))
@@ -371,7 +371,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 					</td>
 					@endif
 					@if (auth()->user()->can('delete queues') || auth()->user()->can('edit queues'))
-					<td class="text-right">
+					<td class="text-right text-end">
 						@if (auth()->user()->can('edit queues'))
 						<a class="btn tip" data-toggle="collapse" data-parent="#queues" href="#collapse{{ $q->id }}" title="{{ trans('queues::queues.purchases and loans') }}">
 							<span class="fa fa-list"></span><span class="sr-only visually-hidden">{{ trans('queues::queues.purchases and loans') }}</span>
@@ -400,9 +400,9 @@ $queues = $queues->reject(function($q) use ($canManage)
 										<div class="col-md-6">
 											{{ trans('queues::queues.purchases and loans') }}
 										</div>
-										<div class="col-md-6 text-right">
-											<a href="#dialog-sell{{ $q->id }}" id="node-sell{{ $q->id }}" data-toggle="modal" class="btn btn-secondary btn-sm dialog-pl-btn">{{ trans('queues::queues.sell') }}</a>
-											<a href="#dialog-loan{{ $q->id }}" id="node-loan{{ $q->id }}" data-toggle="modal" class="btn btn-secondary btn-sm dialog-pl-btn">{{ trans('queues::queues.loan') }}</a>
+										<div class="col-md-6 text-right text-end">
+											<a href="#dialog-sell{{ $q->id }}" id="node-sell{{ $q->id }}" data-toggle="modal" data-bs-toggle="modal" class="btn btn-secondary btn-sm dialog-pl-btn">{{ trans('queues::queues.sell') }}</a>
+											<a href="#dialog-loan{{ $q->id }}" id="node-loan{{ $q->id }}" data-toggle="modal" data-bs-toggle="modal" class="btn btn-secondary btn-sm dialog-pl-btn">{{ trans('queues::queues.loan') }}</a>
 										</div>
 									</div>
 								</div>
@@ -428,9 +428,9 @@ $queues = $queues->reject(function($q) use ($canManage)
 												<th scope="col">{{ trans('queues::queues.source') }}</th>
 												<th scope="col">{{ trans('queues::queues.resource') }}</th>
 												<th scope="col">{{ trans('queues::queues.queue') }}</th>
-												<th scope="col" class="text-right">{{ trans('queues::queues.amount') }}</th>
-												<th scope="col" class="text-right">{{ trans('queues::queues.total') }}</th>
-												<th scope="col" class="text-right" colspan="2">{{ trans('queues::queues.options') }}</th>
+												<th scope="col" class="text-right text-end">{{ trans('queues::queues.amount') }}</th>
+												<th scope="col" class="text-right text-end">{{ trans('queues::queues.total') }}</th>
+												<th scope="col" class="text-right text-end" colspan="2">{{ trans('queues::queues.options') }}</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -576,7 +576,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 														{{ $item->source->name }}
 													@endif
 												</td>
-												<td class="text-right">
+												<td class="text-right text-end">
 													@if ($unit == 'sus')
 														<span class="{{ $cls }}">{{ ($cls == 'text-success' ? '+' : '-') }} {{ number_format(abs($amt), 1) }}</span>
 													@elseif ($unit == 'gpus')
@@ -587,18 +587,18 @@ $queues = $queues->reject(function($q) use ($canManage)
 														<span class="{{ $cls }}">{{ number_format($nodes, 1) }}</span> <span class="text-muted">{{ strtolower(trans('queues::queues.nodes')) }}</span>
 													@endif
 												</td>
-												<td class="text-right">
+												<td class="text-right text-end">
 													{{ number_format($item->total, 1) }}
 												</td>
-												<td class="text-right">
-													<a href="#dialog-edit{{ $item->id }}" data-toggle="modal" class="btn btn-sm queue-pl-edit"
+												<td class="text-right text-end">
+													<a href="#dialog-edit{{ $item->id }}" data-toggle="modal" data-bs-toggle="modal" class="btn btn-sm queue-pl-edit"
 														data-success="{{ trans('global.messages.item updated') }}"
 														data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes'). '.update', ['id' => $item->id]) }}"
 														data-id="{{ $item->id }}">
 														<span class="fa fa-pencil" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.button.edit') }}</span>
 													</a>
 												</td>
-												<td class="text-right">
+												<td class="text-right text-end">
 													@if (auth()->user()->can('admin queues'))
 													<button class="btn btn-sm text-danger queue-pl-delete"
 														data-confirm="{{ trans('global.confirm delete') }}"
@@ -614,8 +614,8 @@ $queues = $queues->reject(function($q) use ($canManage)
 														<form class="modal-content dialog-content shadow-sm" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.' . ($item->type == 1 ? 'loans' : 'sizes') . '.update', ['id' => $item->id]) }}">
 															<div class="modal-header">
 																<div class="modal-title" id="dialog-edit{{ $item->id }}-title">{{ trans('queues::queues.edit ' . ($item->type == 1 ? 'loan' : 'size')) }}</div>
-																<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-																	<span aria-hidden="true">&times;</span>
+																<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+																	<span class="visually-hidden" aria-hidden="true">&times;</span>
 																</button>
 															</div>
 															<div class="modal-body">
@@ -718,7 +718,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 																	</div>
 																@endif
 
-																<div class="dialog-footer text-right">
+																<div class="dialog-footer text-right text-end">
 																	<input type="submit" class="btn btn-success queue-dialog-submit" value="{{ trans('global.button.update') }}" data-action="update" data-success="{{ trans('queues::queues.item updated') }}" />
 																</div>
 
@@ -742,8 +742,8 @@ $queues = $queues->reject(function($q) use ($canManage)
 									<form class="modal-content dialog-content shadow-sm" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.sizes.create') }}">
 										<div class="modal-header">
 											<div class="modal-title" id="dialog-sell{{ $q->id }}-title">{{ trans('queues::queues.sell') }}</div>
-											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-												<span aria-hidden="true">&times;</span>
+											<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+												<span class="visually-hidden" aria-hidden="true">&times;</span>
 											</button>
 										</div>
 									<div class="modal-body">
@@ -918,7 +918,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 										</div>
 									</div>
 
-									<div class="modal-footer text-right">
+									<div class="modal-footer text-right text-end">
 										<input type="submit" class="btn btn-success queue-dialog-submit" value="{{ trans('global.button.create') }}" data-success="{{ trans('queues::queues.item created') }}" />
 									</div>
 
@@ -932,8 +932,8 @@ $queues = $queues->reject(function($q) use ($canManage)
 									<form class="modal-content dialog-content shadow-sm" method="post" action="{{ route('admin.queues.store') }}" data-api="{{ route('api.queues.loans.create') }}">
 										<div class="modal-header">
 											<div class="modal-title" id="dialog-loan{{ $q->id }}-title">{{ trans('queues::queues.loan') }}</div>
-											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-												<span aria-hidden="true">&times;</span>
+											<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+												<span class="visually-hidden" aria-hidden="true">&times;</span>
 											</button>
 										</div>
 									<div class="modal-body">
@@ -1077,7 +1077,7 @@ $queues = $queues->reject(function($q) use ($canManage)
 										</div>
 									</div>
 
-									<div class="modal-footer text-right">
+									<div class="modal-footer text-right text-end">
 										<input type="submit" class="btn btn-success queue-dialog-submit" value="{{ trans('global.button.create') }}" data-success="{{ trans('queues::queues.item created') }}" />
 									</div>
 

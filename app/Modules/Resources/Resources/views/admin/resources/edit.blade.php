@@ -54,11 +54,11 @@ app('pathway')
 	<nav class="container-fluid">
 		<ul id="user-tabs" class="nav nav-tabs" role="tablist">
 			<li class="nav-item" role="presentation">
-				<a class="nav-link active" href="#resource-details" data-toggle="tab" role="tab" id="resource-details-tab" aria-controls="resource-details" aria-selected="true">{{ trans('global.details') }}</a>
+				<a class="nav-link active" href="#resource-details" data-toggle="tab" data-bs-toggle="tab" role="tab" id="resource-details-tab" aria-controls="resource-details" aria-selected="true">{{ trans('global.details') }}</a>
 			</li>
 			@foreach ($sections as $k => $section)
 				<li class="nav-item" role="presentation">
-					<a class="nav-link" href="#resource-{{ $k }}" data-toggle="tab" role="tab" id="resource-{{ $k }}-tab" aria-controls="resource-{{ $k }}" aria-selected="false">{{ $section['name'] }}</a>
+					<a class="nav-link" href="#resource-{{ $k }}" data-toggle="tab" data-bs-toggle="tab" role="tab" id="resource-{{ $k }}-tab" aria-controls="resource-{{ $k }}" aria-selected="false">{{ $section['name'] }}</a>
 				</li>
 			@endforeach
 		</ul>

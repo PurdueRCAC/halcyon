@@ -55,7 +55,7 @@ app('pathway')
 			</div>
 		</div>
 
-		<button class="btn btn-secondary sr-only" type="submit">{{ trans('search.submit') }}</button>
+		<button class="btn btn-secondary sr-only visually-hidden" type="submit">{{ trans('search.submit') }}</button>
 	</fieldset>
 
 	<div class="card mb-4">
