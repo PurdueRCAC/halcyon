@@ -30,18 +30,18 @@ class Help extends Button
 
 		$id = str_replace(['::', '.'], ['_', '-'], $url);
 
-		$html  = '<a href="#' . $id . '" data-toggle="modal" data-title="' . e($text) . '" rel="help" class="btn btn-help toolbar toolbar-popup">' . "\n";
+		$html  = '<a href="#' . $id . '" data-toggle="modal" data-bs-toggle="modal" data-title="' . e($text) . '" rel="help" class="btn btn-help toolbar toolbar-popup">' . "\n";
 		$html .= '<span class="' . $class . '">' . "\n";
 		$html .= $text . "\n";
 		$html .= '</span>' . "\n";
 		$html .= '</a>' . "\n";
-		$html .= '<div class="modal modal-help dialog" id="' . $id . '" tabindex="-1" aria-labelledby="' . $id . '-title" aria-hidden="true" title="' . e($text) . '">
+		$html .= '<div class="modal fade modal-help dialog" id="' . $id . '" tabindex="-1" aria-labelledby="' . $id . '-title" aria-hidden="true" title="' . e($text) . '">
 		<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
 			<div class="modal-content dialog-content shadow-sm">
 				<div class="modal-header">
 					<div class="modal-title" id="' . $id . '-title">' . e($text) . '</div>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
+					<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+						<span class="visually-hidden" aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body dialog-body">

@@ -39,13 +39,28 @@ class Popup extends Button
 		$class = $this->fetchIconClass($name);
 		$url   = $this->_getCommand($name, $url, $width, $height, $top, $left);
 
-		$html  = "<a data-title=\"$text\" class=\"btn popup btn-" . $name . "\" href=\"$url\" data-width=\"$width\" data-height=\"$height\" data-close=\"function() {" . $onClose . "}\">\n";
-		$html .= "<span class=\"$class\">\n";
-		$html .= "$text\n";
-		$html .= "</span>\n";
-		$html .= "</a>\n";
+		$html = [];
+		$html[] = '<a data-title="' . $text . '" class="btn popup btn-' . $name . '" href="' . $url . '" data-toggle="modal" data-bs-toggle="modal" data-target="#modal-' . $name . '" data-bs-target="#modal-' . $name . '" data-width="' . $width . '" data-height="' . $height . '" data-close="function() {' . $onClose . '}">';
+		$html[] = '<span class="' . $class . '">';
+		$html[] = $text;
+		$html[] = '</span>';
+		$html[] = '</a>';
+		$html[] = '<div class="modal fade" id="modal-' . $name . '" tabindex="-1" aria-labelledby="modal-' . $name . '-title" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-scrollable modal-dialog-slideout"><!-- modal-dialog-centered -->
+				<div class="modal-content shadow-sm">
+					<div class="modal-header">
+						<div class="modal-title" id="modal-' . $name . '-title">' . $text . '</div>
+						<button type="button" class="btn-close close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+							<span class="visually-hidden" aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+					</div>
+				</div>
+			</div>
+		</div>';
 
-		return $html;
+		return implode("\n", $html);
 	}
 
 	/**

@@ -31,7 +31,7 @@ class Dropdown extends Button
 		$class = $this->fetchIconClass($name);
 
 		$html  = '<div class="dropdown btn-group">';
-			$html .= '<button class="btn toolbar-btn dropdown-toggle" type="button" id="' . $name . '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+			$html .= '<button class="btn toolbar-btn dropdown-toggle" type="button" id="' . $name . '" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
 				$html .= '<span class="' . $class . '">' . $text . '</span>';
 			$html .= '</button>';
 			$html .= '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="' . $name . '">';

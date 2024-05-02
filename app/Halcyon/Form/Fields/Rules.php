@@ -123,7 +123,7 @@ class Rules extends Field
 			$html[] = '<summary class="card-header">';
 			//$html[] = '<input type="checkbox" name="cb' . $group->value . '" value="' . $group->value . '" /> &nbsp;';
 			$html[] = str_repeat('<span class="level">|&mdash;</span> ', $curLevel = $group->level) . $group->text;
-			$html[] = ' <span class="badge badge-secondary float-right">' . number_format($group->maps_count) . '</span></summary>';
+			$html[] = ' <span class="badge badge-secondary float-right float-end">' . number_format($group->maps_count) . '</span></summary>';
 
 			$html[] = '<div class="card-bpdy">';
 			//$html[] = '<div class="pane-slider content pane-hide">';

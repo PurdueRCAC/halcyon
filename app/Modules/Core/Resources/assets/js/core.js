@@ -41,7 +41,7 @@ Halcyon.submitform = function(task, form) {
 			form = document.adminForm;
 		}
 	} else {
-		if (form instanceof jQuery) {
+		if (jQuery && form instanceof jQuery) {
 			form = form[0];
 		}
 	}
@@ -688,7 +688,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	document.querySelectorAll('.dropdown-toggle').forEach(function (el) {
+	/*document.querySelectorAll('.dropdown-toggle').forEach(function (el) {
 		el.addEventListener('click', function(event) {
 			event.preventDefault();
 			event.stopPropagation();
@@ -711,7 +711,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
-	/*$('[data-tip]').tooltip({
+	$('[data-tip]').tooltip({
 		items: "[data-tip]",
 		show: false,
 		content: function() {
@@ -735,16 +735,13 @@ document.addEventListener('DOMContentLoaded', function() {
 		el.addEventListener('click', function (e) {
 			e.preventDefault();
 
-			let overlay = document.createElement('div');
-			overlay.classList.add('ui-widget-overlay');
-			overlay.classList.add('ui-front');
-			overlay.style.zIndex = 100;
+			let modal = document.getElementById(el.getAttribute('data-bs-target').replace('#', ''));
+			let panel = modal.querySelector('.modal-body');
 
-			document.querySelector('body').appendChild(overlay);
-
+			/*
 			let panel = document.createElement('div');
 			panel.id = 'panel';
-			panel.style.zIndex = 101;
+			panel.style.zIndex = 101;*/
 
 			let spinner = document.createElement('div');
 			spinner.classList.add('spinner-border');
@@ -752,10 +749,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			spinner.setAttribute('role', 'status');
 
 			panel.appendChild(spinner);
-
-			document.querySelector('body').appendChild(panel);
-
-			$(panel).show("slide", { direction: "right" }, 500);
 
 			fetch(this.getAttribute('href'), {
 				method: 'GET',
@@ -766,67 +759,75 @@ document.addEventListener('DOMContentLoaded', function() {
 					'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
 				}
 			})
-			.then(function (response) {
-				if (response.ok) {
-					return response.text();
-				}
-				return response.json().then(function (data) {
-					var msg = data.message;
-					if (typeof msg === 'object') {
-						msg = Object.values(msg).join('<br />');
+				.then(function (response) {
+					if (response.ok) {
+						return response.text();
 					}
-					throw msg;
-				});
-			})
-			.then(function (result) {
-				panel.innerHTML = result;
-
-				panel.querySelectorAll('.btn-cancel').forEach(function(item) {
-					item.addEventListener('click', function (e) {
-						e.preventDefault();
-						$(panel).hide("slide", { direction: "right" }, 500);
-						document.querySelector('.ui-widget-overlay').remove();
-					});
-				});
-
-				panel.querySelector('.btn-save').addEventListener('click', function (e) {
-					e.preventDefault();
-
-					var frm = this.closest('form');
-					const formData = new FormData(frm);
-
-					fetch(this.getAttribute('href'), {
-						method: 'POST',
-						headers: {
-							//'Content-Type': 'application/json',
-							'X-Requested-With': 'XMLHttpRequest',
-							'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-							'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-						},
-						body: formData//JSON.stringify(serializeFormData(formData))//frm.serialize())
-					})
-					.then(function (response) {
-						if (response.ok) {
-							$(panel).hide("slide", { direction: "right" }, 500);
-							document.querySelector('.ui-widget-overlay').remove();
-							return;
+					return response.json().then(function (data) {
+						var msg = data.message;
+						if (typeof msg === 'object') {
+							msg = Object.values(msg).join('<br />');
 						}
-						return response.json().then(function (data) {
-							var msg = data.message;
-							if (typeof msg === 'object') {
-								msg = Object.values(msg).join('<br />');
-							}
-							throw msg;
-						});
-					})
-					.catch(function (err) {
-						Halcyon.message('danger', err);
+						throw msg;
 					});
+				})
+				.then(function (result) {
+					panel.innerHTML = result;
+
+					panel.querySelectorAll('.btn-cancel').forEach(function (item) {
+						item.addEventListener('click', function (e) {
+							e.preventDefault();
+
+							if (bootstrap && bootstrap.Modal.VERSION > '5') {
+								bootstrap.Modal.getInstance(modal).hide();
+							} else {
+								$(modal).modal('hide');
+							}
+						});
+					});
+
+					panel.querySelector('.btn-save').addEventListener('click', function (e) {
+						e.preventDefault();
+
+						var frm = panel.querySelector('form');
+						const formData = new FormData(frm);
+
+						fetch(this.getAttribute('href'), {
+							method: 'POST',
+							headers: {
+								//'Content-Type': 'application/json',
+								'X-Requested-With': 'XMLHttpRequest',
+								'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+								'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
+							},
+							body: formData//JSON.stringify(serializeFormData(formData))//frm.serialize())
+						})
+						.then(function (response) {
+							if (response.ok) {
+								if (bootstrap && bootstrap.Modal.VERSION > '5') {
+									bootstrap.Modal.getInstance(modal).hide();
+								} else {
+									$(modal).modal('hide');
+								}
+								Halcyon.message('success', 'Options updated.');
+								return;
+							}
+							return response.json().then(function (data) {
+								var msg = data.message;
+								if (typeof msg === 'object') {
+									msg = Object.values(msg).join('<br />');
+								}
+								throw msg;
+							});
+						})
+						.catch(function (err) {
+							Halcyon.message('danger', err);
+						});
+					});
+				})
+				.catch(function (err) {
+					Halcyon.message('danger', err);
 				});
-			})
-			.catch(function (err) {
-				Halcyon.message('danger', err);
-			});
 		});
 	});
 
