@@ -50,7 +50,7 @@ app('pathway')->append(
                     <div class="cd-row">
                         <div class="cd-cell cd-questions">
                             <div class="cd-overflow">
-                                <div class="step-header questions-header sr-only">
+                                <div class="step-header questions-header sr-only visually-hidden">
                                     <h3 class="sub-heading">Filter Questions</h3>
 
                                     <p>Answer these questions to help identify storage solutions and services that are most suitable for your needs.</p>
@@ -73,7 +73,7 @@ app('pathway')->append(
                                 </div>
                             </div>
 
-                            <div class="text-right">
+                            <div class="text-right text-end">
                                 <button class="btn btn-sm btn-secondary btn-select-all selectall-button">Select All</button>
                                 <button class="btn btn-sm btn-select-none clear-button">Clear Selections</button>
                             </div>

@@ -67,7 +67,7 @@ app('pathway')
 					</span>
 				</div>
 			</div>
-			<div class="col col-md-8 filter-select text-right">
+			<div class="col col-md-8 filter-select text-right text-end">
 				<label class="sr-only visually-hidden" for="filter_state">{{ trans('finder::finder.state') }}</label>
 				<select name="state" class="form-control filter filter-submit">
 					<option value="*"<?php if ($filters['state'] == '*'): echo ' selected="selected"'; endif;?>>{{ trans('finder::finder.state_all') }}</option>

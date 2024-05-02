@@ -105,7 +105,7 @@ app('pathway')
 								<input type="hidden" name="choice[{{ $k }}][id]" id="choice-{{ $k }}-id" value="{{ $choice->id }}" />
 							</div>
 						</div>
-						<div class="col-md-2 text-right">
+						<div class="col-md-2 text-right text-end">
 							<button class="btn remove-choice" data-confirm="{{ trans('finder::finder.confirm delete') }}" data-target="#choice-{{ $k }}">
 								<span class="fa fa-trash text-danger" aria-hidden="true" data-tip="{{ trans('finder::finder.remove choice') }}"></span>
 								<span class="sr-only visually-hidden">{{ trans('finder::finder.remove choice') }}</span>
@@ -141,7 +141,7 @@ app('pathway')
 				</fieldset>
 				@endforeach
 				</div>
-				<div class="text-right">
+				<div class="text-right text-end">
 					<button class="btn btn-secondary add-choice" id="add-choice" data-template="#choice-template" data-container="#choices">{{ trans('finder::finder.add choice') }}</button>
 				</div>
 
@@ -155,7 +155,7 @@ app('pathway')
 								<input type="hidden" name="choice[<?php echo '{{i}}'; ?>][id]" id="choice-<?php echo '{{i}}'; ?>-id" value="" />
 							</div>
 						</div>
-						<div class="col-md-2 text-right">
+						<div class="col-md-2 text-right text-end">
 							<button class="btn remove-choice" data-confirm="{{ trans('finder::finder.confirm delete') }}" data-target="#choice-<?php echo '{{i}}'; ?>">
 								<span class="fa fa-trash text-danger" aria-hidden="true" data-tip="{{ trans('finder::finder.remove choice') }}"></span>
 								<span class="sr-only visually-hidden">{{ trans('finder::finder.remove choice') }}</span>
