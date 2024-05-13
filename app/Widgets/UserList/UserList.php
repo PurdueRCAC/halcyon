@@ -150,7 +150,7 @@ class UserList extends Widget
 			->orderBy($a . '.' . (string)$this->params->get('order', 'name'), (string)$this->params->get('order_dir', 'asc'))
 			->get();
 
-		$users->each(function($user, $key) use ($segments)
+		$users->each(function($user, $key) use ($segments, $photoExtensions)
 		{
 			//event($e = new UserBeforeDisplay($user));
 
