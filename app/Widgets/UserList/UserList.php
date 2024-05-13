@@ -22,6 +22,7 @@ class UserList extends Widget
 	{
 		$segments = request()->segments();
 		$last = end($segments);
+		$photoExtensions = ['jpg', 'jpeg', 'png'];
 
 		if ($last)
 		{
@@ -35,10 +36,13 @@ class UserList extends Widget
 				$user->phone = $user->facet('phone');
 				$user->bio = $user->facet('bio');
 				$user->thumb = asset('files/staff_thumb.png');
-
-				if (file_exists(storage_path('app/public/users/' . $user->username . '/photo.jpg')))
+				foreach ($photoExtensions as $ext)
 				{
-					$user->thumb = asset('files/users/' . $user->username . '/photo.jpg');
+					if (file_exists(storage_path('app/public/users/' . $user->username . '/photo.' . $ext)))
+					{
+						$user->thumb = asset('files/users/' . $user->username . '/photo.' . $ext);
+						break;
+					}
 				}
 
 				return view($this->getViewName('profile'), [
@@ -162,7 +166,7 @@ class UserList extends Widget
 				$dir = 'users/' . $user->username;
 			}
 
-			foreach (['jpg', 'jpeg', 'png'] as $ext)
+			foreach ($photoExtensions as $ext)
 			{
 				if (file_exists(storage_path('app/public/' . $dir . '/photo.' . $ext)))
 				{
