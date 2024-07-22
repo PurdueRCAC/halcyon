@@ -166,36 +166,56 @@ class UsersController extends Controller
 
 		if ($filters['search'])
 		{
-			if (is_numeric($filters['search']))
+			// Exact matches are surrounded in quotes
+			if (preg_match('/^(["\']).*\1$/m', $filters['search']))
 			{
-				$query->where($a . '.id', '=', (int)$filters['search']);
-			}
-			elseif (strstr($filters['search'], '@'))
-			{
-				$query->where(function($where) use ($filters, $u)
+				$search = trim($filters['search'], '"');
+
+				if (strstr($search, '@'))
 				{
-					$where->where($u . '.email', '=', $filters['search'])
-						->orWhere($u . '.email', 'like', $filters['search'] . '%');
-				});
+					$query->where($u . '.email', '=', $search);
+				}
+				elseif (strstr($search, ' '))
+				{
+					$query->where($a . '.name', '=', $search);
+				}
+				else
+				{
+					$query->where($u . '.username', '=', $search);
+				}
 			}
 			else
 			{
-				$query->select($a . '.id', $a . '.name', $a . '.puid', DB::raw("CASE WHEN " . $u . ".username='" . strtolower((string)$filters['search']) . "' THEN 100 ELSE 1 END AS score"))
-					->orderBy('score', 'desc');
-				$query->where(function($where) use ($filters, $a, $u)
+				if (is_numeric($filters['search']))
 				{
-					$search = strtolower((string)$filters['search']);
-					$skipmiddlename = preg_replace('/ /', '% ', $search);
+					$query->where($a . '.id', '=', (int)$filters['search']);
+				}
+				elseif (strstr($filters['search'], '@'))
+				{
+					$query->where(function($where) use ($filters, $u)
+					{
+						$where->where($u . '.email', '=', $filters['search'])
+							->orWhere($u . '.email', 'like', $filters['search'] . '%');
+					});
+				}
+				else
+				{
+					$query->select($a . '.id', $a . '.name', $a . '.puid', DB::raw("CASE WHEN " . $u . ".username='" . strtolower((string)$filters['search']) . "' THEN 100 ELSE 1 END AS score"))
+						->orderBy('score', 'desc');
+					$query->where(function($where) use ($filters, $a, $u)
+					{
+						$search = strtolower((string)$filters['search']);
+						$skipmiddlename = preg_replace('/ /', '% ', $search);
 
-					$where->where($u . '.username', '=', $search)
-						->orWhere($u . '.username', 'like', $search . '%')
-						->orWhere($u . '.username', 'like', '%' . $search . '%')
-						->orWhere($a . '.name', 'like', '% ' . $search . '%')
-						->orWhere($a . '.name', 'like', $search . '%')
-						->orWhere($a . '.name', 'like', '% ' . $skipmiddlename . '%')
-						->orWhere($a . '.name', 'like', $skipmiddlename . '%');
-						//->orWhere($u . '.email', 'like', '%' . $search . '%');
-				});
+						$where->where($u . '.username', '=', $search)
+							->orWhere($u . '.username', 'like', $search . '%')
+							->orWhere($u . '.username', 'like', '%' . $search . '%')
+							->orWhere($a . '.name', 'like', '% ' . $search . '%')
+							->orWhere($a . '.name', 'like', $search . '%')
+							->orWhere($a . '.name', 'like', '% ' . $skipmiddlename . '%')
+							->orWhere($a . '.name', 'like', $skipmiddlename . '%');
+					});
+				}
 			}
 		}
 
@@ -203,25 +223,6 @@ class UsersController extends Controller
 		{
 			$query->where($a . '.datecreated', '>=', $filters['created_at']);
 		}
-
-		/*if ($filters['access'] > 0)
-		{
-			$query->where($a . '.access', '=', (int)$filters['access']);
-		}
-
-		if (is_numeric($filters['block']))
-		{
-			$query->where($a . '.block', '=', (int)$filters['block']);
-		}
-
-		if (!$filters['email_verified'] && auth()->user() && auth()->user()->can('manage users'))
-		{
-			$query->whereNull($a . '.email_verified_at');
-		}
-		else
-		{
-			$query->whereNotNull($a . '.email_verified_at');
-		}*/
 
 		// Apply the range filter.
 		if ($filters['range'])

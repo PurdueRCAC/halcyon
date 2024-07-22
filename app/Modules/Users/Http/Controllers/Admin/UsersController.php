@@ -141,42 +141,62 @@ class UsersController extends Controller
 			}
 			else
 			{
-				$search = strtolower((string)$filters['search']);
-				$skipmiddlename = preg_replace('/ /', '% ', $search);
-				$query->select(
-					$a . '.*', $u . '.username', $u . '.datecreated', $u . '.dateremoved', $u . '.datelastseen',
-					DB::raw('IF(' . $u . '.username="' . $filters['search'] . '", 20,
-							IF(' . $u . '.username LIKE "' . $filters['search'] . '%", 10, 0)
-						)
-						+ IF(' . $a . '.name LIKE "%' . $search . '%", 5, 0)
-						+ IF(' . $a . '.name LIKE "' . $search . '%", 1, 0)
-						+ IF(' . $a . '.name LIKE "%' . $skipmiddlename . '%", 3, 0)
-						+ IF(' . $a . '.name LIKE "' . $skipmiddlename . '%", 1, 0)
-						AS `weight`'),
-						...array_map(
-							function($index, $value)
-							{
-								return 'facet-' . $index . '.value as ' . $value;
-							},
-							array_keys($extraFieldKeys),
-							array_values($extraFieldKeys)
-						)
-
-					)
-					->orderBy('weight', 'desc');
-				$query->where(function($where) use ($search, $skipmiddlename, $a, $u, $extraFieldKeys)
+				if (preg_match('/^(["\']).*\1$/m', $filters['search']))
 				{
-					$where->where($a . '.name', 'like', '% ' . $search . '%')
-						->orWhere($a . '.name', 'like', $search . '%')
-						->orWhere($a . '.name', 'like', '% ' . $skipmiddlename . '%')
-						->orWhere($a . '.name', 'like', $skipmiddlename . '%')
-						->orWhere($u . '.username', 'like', '' . $search . '%')
-						->orWhere($u . '.username', 'like', '%' . $search . '%');
-					foreach (array_keys($extraFieldKeys) as $extraKey)
+					$search = trim($filters['search'], '"');
+
+					if (strstr($search, '@'))
 					{
-						$where->orWhere('facet-' . $extraKey . '.value', 'like', '%' . $search . '%');
+						$query->where($u . '.email', '=', $search);
 					}
-				});
+					elseif (strstr($search, ' '))
+					{
+						$query->where($a . '.name', '=', $search);
+					}
+					else
+					{
+						$query->where($u . '.username', '=', $search);
+					}
+				}
+				else
+				{
+					$search = strtolower((string)$filters['search']);
+					$skipmiddlename = preg_replace('/ /', '% ', $search);
+					$query->select(
+						$a . '.*', $u . '.username', $u . '.datecreated', $u . '.dateremoved', $u . '.datelastseen',
+						DB::raw('IF(' . $u . '.username="' . $filters['search'] . '", 20,
+								IF(' . $u . '.username LIKE "' . $filters['search'] . '%", 10, 0)
+							)
+							+ IF(' . $a . '.name LIKE "%' . $search . '%", 5, 0)
+							+ IF(' . $a . '.name LIKE "' . $search . '%", 1, 0)
+							+ IF(' . $a . '.name LIKE "%' . $skipmiddlename . '%", 3, 0)
+							+ IF(' . $a . '.name LIKE "' . $skipmiddlename . '%", 1, 0)
+							AS `weight`'),
+							...array_map(
+								function($index, $value)
+								{
+									return 'facet-' . $index . '.value as ' . $value;
+								},
+								array_keys($extraFieldKeys),
+								array_values($extraFieldKeys)
+							)
+
+						)
+						->orderBy('weight', 'desc');
+					$query->where(function($where) use ($search, $skipmiddlename, $a, $u, $extraFieldKeys)
+					{
+						$where->where($a . '.name', 'like', '% ' . $search . '%')
+							->orWhere($a . '.name', 'like', $search . '%')
+							->orWhere($a . '.name', 'like', '% ' . $skipmiddlename . '%')
+							->orWhere($a . '.name', 'like', $skipmiddlename . '%')
+							->orWhere($u . '.username', 'like', '' . $search . '%')
+							->orWhere($u . '.username', 'like', '%' . $search . '%');
+						foreach (array_keys($extraFieldKeys) as $extraKey)
+						{
+							$where->orWhere('facet-' . $extraKey . '.value', 'like', '%' . $search . '%');
+						}
+					});
+				}
 			}
 		}
 
