@@ -115,7 +115,7 @@ abstract class RoutingServiceProvider extends ServiceProvider
 			$router->group(
 				[
 					'namespace'  => 'Admin',
-					'prefix'     => 'admin', //config('admin-prefix'),
+					'prefix'     => 'admin',
 					'middleware' => config('admin.middleware', ['auth']),
 				],
 				function (Router $router) use ($backend)
@@ -138,17 +138,25 @@ abstract class RoutingServiceProvider extends ServiceProvider
 		{
 			RateLimiter::for('api', function (Request $request)
 			{
-				return $request->user()
-					? Limit::perMinute(420)->by($request->user()->id)
-					: Limit::perMinute(120)->by($request->ip());
+				$limit = config('api.rate_limit.anonymous', 360);
+				$by = $request->ip();
+
+				if ($request->user())
+				{
+					$limit = config('api.rate_limit.registered', 1000);
+					$by = $request->user()->id;
+				}
+
+				return $limit
+					? Limit::perMinute($limit)->by($by)
+					: Limit::none();
 			});
 
 			$router->group(
 				[
 					'namespace'  => 'Api',
 					'prefix'     => 'api',
-					'middleware' => ['api'],
-					//'middleware' => config('api.middleware', ['auth:api']),
+					'middleware' => config('api.middleware', ['api']),
 				],
 				function (Router $router) use ($api)
 				{
@@ -162,16 +170,17 @@ abstract class RoutingServiceProvider extends ServiceProvider
 
 		if ($ws && file_exists($ws))
 		{
+			// Disable rate limiting for internal legacy routes
 			RateLimiter::for('ws', function (Request $request)
 			{
-				return Limit::none(); //perMinute(1000)->by(optional($request->user())->id ?: $request->ip());
+				return Limit::none();
 			});
 
 			$router->group(
 				[
 					'namespace'  => 'Api',
 					'prefix'     => 'ws',
-					'middleware' => ['throttle:2000,1', \Illuminate\Routing\Middleware\SubstituteBindings::class],
+					'middleware' => ['ws', \Illuminate\Routing\Middleware\SubstituteBindings::class], //'throttle:2000,1'
 				],
 				function (Router $router) use ($ws)
 				{
