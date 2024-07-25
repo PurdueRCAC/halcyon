@@ -150,4 +150,8 @@ return [
 	'notify update desc' => 'Select news types that should send a notification upon article updates of that.',
 	'notify delete' => 'Notify on deletion',
 	'notify delete desc' => 'Select news types that should send a notification upon article deletion of that.',
+	'route' => 'Route',
+	'route desc' => 'Custom URL route for the module. Defaults to "/news"',
+	'show image' => 'Show image',
+	'show image desc' => 'This extracts the first image found in the article and shows it along side the article title and summary in listings.',
 ];

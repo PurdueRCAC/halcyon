@@ -103,6 +103,14 @@ app('pathway')
 							--><span class="fa fa-fw fa-pencil" aria-hidden="true"></span><span class="sr-only visually-hidden">{{ trans('global.edit') }}</span><!--
 						--></a>
 					@endif
+					@if (config('module.news.show_image'))
+						@if ($src = $article->firstImage)
+						<div class="d-flex">
+							<div class="news-img mr-3">
+								<img src="{{ $src }}" alt="" width="150" />
+							</div>
+						@endif
+					@endif
 					<article id="article-{{ $article->id }}" aria-labelledby="article-{{ $article->id }}-title" itemscope itemtype="https://schema.org/<?php echo ($type->calendar ? 'Event' : 'NewsArticle'); ?>">
 						<h3 id="article-{{ $article->id }}-title" class="news-title">
 							<a href="{{ route('site.news.show', ['id' => $article->id]) }}"><span class="sr-only visually-hidden">{{ trans('news::news.article id', ['id' => $article->id]) }}:</span> <span itemprop="name">{{ $article->headline }}</span></a>
@@ -158,6 +166,9 @@ app('pathway')
 							{{ Illuminate\Support\Str::limit(strip_tags($article->toHtml()), 150) }}
 						</p>
 					</article>
+					@if (config('module.news.show_image') && $article->firstImage)
+						</div>
+					@endif
 				</li>
 			@endforeach
 		</ul>

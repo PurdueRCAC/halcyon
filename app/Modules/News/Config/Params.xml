@@ -5,6 +5,10 @@
 			<field name="end_registration" type="text" default="-2 hours" label="news::news.end registration" description="news::news.end registration desc" />
 			<field name="route" type="text" default="news" label="news::news.route" description="news::news.route desc" />
 			<field name="module name" type="text" default="" label="news::news.module name" description="news::news.module name desc" />
+			<field name="show_image" type="list" default="0" label="news::news.show image" description="news::news.show image desc">
+				<option value="0">global.no</option>
+				<option value="1">global.yes</option>
+			</field>
 			<field name="notify_create" type="App\Modules\News\Models\Fields\Types" default="" multiple="multiple" size="5" label="news::news.notify create" description="news::news.notify create desc" />
 			<field name="notify_update" type="App\Modules\News\Models\Fields\Types" default="" multiple="multiple" size="5" label="news::news.notify update" description="news::news.notify update desc" />
 			<field name="notify_delete" type="App\Modules\News\Models\Fields\Types" default="" multiple="multiple" size="5" label="news::news.notify delete" description="news::news.notify delete desc" />

@@ -43,4 +43,13 @@ return [
 	*/
 	'schedule' => [
 	],
+
+	/*
+	|--------------------------------------------------------------------------
+	| Show image
+	|--------------------------------------------------------------------------
+	| This extracts the first image found in the article and shows it alongside
+	| the article title and summary in listings.
+	*/
+	'show_image' => false,
 ];
