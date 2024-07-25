@@ -328,7 +328,6 @@ class MembersController extends Controller
 			'userid' => 'required',
 			'membertype' => 'nullable|integer',
 			'userrequestid' => 'nullable|integer',
-			'notice' => 'nullable|integer',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -410,24 +409,17 @@ class MembersController extends Controller
 			}
 		}
 
-		if ($request->has('notice'))
+		// Notify other managers of this person being made a manager
+		if ($row->isManager())
 		{
-			$row->notice = $request->input('notice', Member::NO_NOTICE);
+			$row->notice = Member::MEMBERSHIP_AUTHORIZED;
 		}
-		else
-		{
-			// Notify other managers of this person being made a manager
-			if ($row->isManager())
-			{
-				$row->notice = Member::MEMBERSHIP_AUTHORIZED;
-			}
 
-			// Do we have any owners?
-			// If not, there's no one else to notify
-			if (count($row->group->managers) == 0)
-			{
-				$row->notice = Member::NO_NOTICE;
-			}
+		// Do we have any owners?
+		// If not, there's no one else to notify
+		if (count($row->group->managers) == 0)
+		{
+			$row->notice = Member::NO_NOTICE;
 		}
 
 		$row->userrequestid = $request->input('userrequestid', 0);

@@ -98,5 +98,4 @@ return [
 	'pending membership requests' => 'Pending membership requests',
 	'enter motd' => 'Enter the notice your group will see at login',
 	'delete notice' => 'Delete Notice',
-	'user not authorized' => 'User not authorized to perform this action.',
 ];

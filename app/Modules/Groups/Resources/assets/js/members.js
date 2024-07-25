@@ -78,8 +78,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	//$('.tabs').on("tabsactivate", function (event, ui) {
 	if ($('.datatable').length && !inited) {
 		$('.datatable').DataTable({
-			pageLength: 20,
+			pageLength: 200,
 			pagingType: 'numbers',
+			paging: ($(el).attr('data-length') && parseInt($(el).attr('data-length')) > 200 ? true : false),
 			info: false,
 			ordering: false,
 			lengthChange: false,
