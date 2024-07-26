@@ -61,15 +61,13 @@ trait UsesFilters
 		$val = $request->input($requested);
 
 		// Save the new value only if it was set in this request.
-		if ($request->exists($requested))
-		{
-			// Save to session
-			session()->put($key, $val);
-		}
-		else
+		if (!$request->exists($requested))
 		{
 			$val = $old;
 		}
+
+		// Save to session
+		session()->put($key, $val);
 
 		return $val;
 	}

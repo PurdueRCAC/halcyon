@@ -28,15 +28,13 @@ class StatefulRequest extends Request
 		$val = $this->input($request);
 
 		// Save the new value only if it was set in this request.
-		if ($this->exists($request))
-		{
-			// Save to session
-			session()->put($key, $val);
-		}
-		else
+		if (!$this->exists($request))
 		{
 			$val = $old;
 		}
+
+		// Save to session
+		session()->put($key, $val);
 
 		return $val;
 	}
