@@ -3,7 +3,7 @@
     "alias": "media",
     "description": "",
     "keywords": [],
-    "priority": 0,
+    "priority": 1,
     "providers": [
         "App\\Modules\\Media\\Providers\\MediaServiceProvider",
         "App\\Modules\\Media\\Providers\\RouteServiceProvider"

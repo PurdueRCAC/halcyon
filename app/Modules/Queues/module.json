@@ -3,7 +3,7 @@
     "alias": "queues",
     "description": "",
     "keywords": [],
-    "priority": 0,
+    "priority": 2,
     "providers": [
         "App\\Modules\\Queues\\Providers\\QueuesServiceProvider",
         "App\\Modules\\Queues\\Providers\\RouteServiceProvider",

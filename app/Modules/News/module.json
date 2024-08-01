@@ -3,7 +3,7 @@
     "alias": "news",
     "description": "",
     "keywords": [],
-    "priority": 0,
+    "priority": 2,
     "providers": [
         "App\\Modules\\News\\Providers\\NewsServiceProvider",
         "App\\Modules\\News\\Providers\\RouteServiceProvider",

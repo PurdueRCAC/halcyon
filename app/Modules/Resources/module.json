@@ -3,7 +3,7 @@
     "alias": "resources",
     "description": "",
     "keywords": [],
-    "priority": 0,
+    "priority": 2,
     "providers": [
         "App\\Modules\\Resources\\Providers\\ResourcesServiceProvider",
         "App\\Modules\\Resources\\Providers\\RouteServiceProvider",

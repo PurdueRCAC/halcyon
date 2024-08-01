@@ -3,7 +3,7 @@
     "alias": "tags",
     "description": "This is a module for management of tags and acts as a generic tagging system for any other module.",
     "keywords": [],
-    "priority": 0,
+    "priority": 1,
     "providers": [
         "App\\Modules\\Tags\\Providers\\TagsServiceProvider",
         "App\\Modules\\Tags\\Providers\\RouteServiceProvider"

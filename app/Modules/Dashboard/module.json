@@ -3,7 +3,7 @@
     "alias": "dashboard",
     "description": "",
     "keywords": [],
-    "priority": 0,
+    "priority": 2,
     "providers": [
         "App\\Modules\\Dashboard\\Providers\\DashboardServiceProvider",
         "App\\Modules\\Dashboard\\Providers\\RouteServiceProvider"

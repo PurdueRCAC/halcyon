@@ -3,7 +3,7 @@
     "alias": "themes",
     "description": "",
     "keywords": [],
-    "priority": 0,
+    "priority": 1,
     "providers": [
         "App\\Modules\\Themes\\Providers\\ThemesServiceProvider",
         "App\\Modules\\Themes\\Providers\\RouteServiceProvider"

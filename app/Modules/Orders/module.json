@@ -3,7 +3,7 @@
     "alias": "orders",
     "description": "",
     "keywords": [],
-    "priority": 0,
+    "priority": 2,
     "providers": [
         "App\\Modules\\Orders\\Providers\\OrdersServiceProvider",
         "App\\Modules\\Orders\\Providers\\RouteServiceProvider",

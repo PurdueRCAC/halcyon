@@ -3,7 +3,7 @@
     "alias": "core",
     "description": "",
     "keywords": [],
-    "priority": 1,
+    "priority": 0,
     "providers": [
         "App\\Modules\\Core\\Providers\\CoreServiceProvider",
         "App\\Modules\\Core\\Providers\\RouteServiceProvider"

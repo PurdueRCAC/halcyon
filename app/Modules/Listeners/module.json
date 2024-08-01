@@ -3,7 +3,7 @@
     "alias": "listeners",
     "description": "",
     "keywords": [],
-    "priority": 2,
+    "priority": 1,
     "providers": [
         "App\\Modules\\Listeners\\Providers\\ListenersServiceProvider",
         "App\\Modules\\Listeners\\Providers\\RouteServiceProvider"

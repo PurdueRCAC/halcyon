@@ -3,7 +3,7 @@
     "alias": "menus",
     "description": "",
     "keywords": [],
-    "priority": 0,
+    "priority": 1,
     "providers": [
         "App\\Modules\\Menus\\Providers\\MenusServiceProvider",
         "App\\Modules\\Menus\\Providers\\RouteServiceProvider"

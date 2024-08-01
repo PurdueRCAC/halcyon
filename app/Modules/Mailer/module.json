@@ -3,7 +3,7 @@
     "alias": "mailer",
     "description": "",
     "keywords": [],
-    "priority": 0,
+    "priority": 1,
     "providers": [
         "App\\Modules\\Mailer\\Providers\\MailServiceProvider",
         "App\\Modules\\Mailer\\Providers\\RouteServiceProvider"

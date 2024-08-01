@@ -3,7 +3,7 @@
     "alias": "knowledge",
     "description": "",
     "keywords": [],
-    "priority": 0,
+    "priority": 2,
     "providers": [
         "App\\Modules\\Knowledge\\Providers\\KnowledgeServiceProvider",
         "App\\Modules\\Knowledge\\Providers\\RouteServiceProvider"

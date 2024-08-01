@@ -3,7 +3,7 @@
     "alias": "Software",
     "description": "",
     "keywords": [],
-    "priority": 0,
+    "priority": 2,
     "providers": [
         "App\\Modules\\Software\\Providers\\SoftwareServiceProvider",
         "App\\Modules\\Software\\Providers\\RouteServiceProvider"

@@ -3,7 +3,7 @@
     "alias": "impact",
     "description": "",
     "keywords": [],
-    "priority": 0,
+    "priority": 2,
     "providers": [
         "App\\Modules\\Impact\\Providers\\ImpactServiceProvider",
         "App\\Modules\\Impact\\Providers\\RouteServiceProvider"

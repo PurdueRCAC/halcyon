@@ -3,7 +3,7 @@
     "alias": "issues",
     "description": "",
     "keywords": [],
-    "priority": 0,
+    "priority": 2,
     "providers": [
         "App\\Modules\\Issues\\Providers\\IssuesServiceProvider",
         "App\\Modules\\Issues\\Providers\\RouteServiceProvider"

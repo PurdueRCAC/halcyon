@@ -3,7 +3,7 @@
     "alias": "search",
     "description": "",
     "keywords": [],
-    "priority": 0,
+    "priority": 1,
     "providers": [
         "App\\Modules\\Search\\Providers\\SearchServiceProvider",
         "App\\Modules\\Search\\Providers\\RouteServiceProvider"
