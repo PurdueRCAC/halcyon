@@ -63,7 +63,6 @@ class RegisterModules extends Migration
 					switch ($element)
 					{
 						case 'Config':
-						case 'Cron':
 						case 'History':
 						case 'Messages':
 						case 'Dashboard':
@@ -74,6 +73,7 @@ class RegisterModules extends Migration
 						case 'Issues':
 						case 'Queues':
 						case 'Resources':
+						case 'Software':
 						case 'Storage':
 							$folder = 'resources';
 						break;
