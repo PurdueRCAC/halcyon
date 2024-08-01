@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class CreateUsersTables extends Migration
@@ -24,13 +25,7 @@ class CreateUsersTables extends Migration
 				$table->index('name');
 				$table->index('puid');
 			});
-
-			DB::table('users')->insert([
-				'name' => 'Administrator',
-			]);
 		}
-
-		$admin = DB::table('users')->where('name', '=', 'Administrator')->first();
 
 		if (!Schema::hasTable('userusernames'))
 		{
@@ -49,16 +44,6 @@ class CreateUsersTables extends Migration
 				$table->index('userid');
 				$table->index('datelastseen');
 			});
-
-			if ($admin)
-			{
-				DB::table('userusernames')->insert([
-					'userid' => $admin->id,
-					'username' => 'admin',
-					'datecreated' => Carbon::now()->toDateTimeString(),
-					'email' => 'admin@your.org',
-				]);
-			}
 		}
 
 		if (!Schema::hasTable('user_notes'))
@@ -67,17 +52,13 @@ class CreateUsersTables extends Migration
 			{
 				$table->increments('id');
 				$table->integer('user_id')->unsigned()->default(0)->comment('Foreign Key to users.id');
-				//$table->string('subject', 100)->default('');
 				$table->text('body');
-				//$table->string('body', 5000);
 				$table->integer('created_by')->unsigned()->default(0);
 				$table->dateTime('created_at')->nullable();
 				$table->integer('updated_by')->unsigned()->default(0);
 				$table->dateTime('updated_at')->nullable();
 				$table->dateTime('deleted_at')->nullable();
 				$table->index('user_id');
-
-				//$table->foreign('user_id')->references('id')->on('users');
 			});
 		}
 
@@ -158,19 +139,6 @@ class CreateUsersTables extends Migration
 
 				$table->foreign('user_id')->references('id')->on('users');
 			});
-
-			if ($admin)
-			{
-				$super = DB::table('user_roles')->where('title', '=', 'Super Users')->first();
-
-				if ($super)
-				{
-					DB::table('user_role_map')->insert([
-						'user_id' => $admin->id,
-						'role_id' => $super->id
-					]);
-				}
-			}
 		}
 
 		if (!Schema::hasTable('permissions'))

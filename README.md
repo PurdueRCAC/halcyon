@@ -209,6 +209,14 @@ php artisan theme:publish
 php artisan listener:publish
 ```
 
+#### Administrator Account
+
+Regardless if using the Docker setup or manual installation, you will probably need to create an administrator account. Follow the prompts using the following command:
+
+```
+php artisan users:create
+```
+
 #### Git Hooks
 
 The repo contains some useful git hooks for development.

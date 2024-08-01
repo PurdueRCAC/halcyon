@@ -6,6 +6,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
+use function Laravel\Prompts\text;
+use function Laravel\Prompts\password;
+use function Laravel\Prompts\select;
+use App\Halcyon\Access\Map;
 use App\Halcyon\Access\Role;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserUsername;
@@ -18,10 +22,9 @@ class RoleCommand extends Command
 	 * @var string
 	 */
 	protected $signature = 'users:role
-							{username : Username or email of user to add or remove roles}
 							{--list : List roles for the user}
-							{--add= : Comma separated list of roles to add}
-							{--remove= : Comma separated list of roles to remove}';
+							{--add : Add a role to a user}
+							{--remove : Remove a role from a user}';
 
 	/**
 	 * The console command description.
@@ -35,10 +38,11 @@ class RoleCommand extends Command
 	 */
 	public function handle(): int
 	{
-		$username   = $this->argument('username');
 		$listRole   = $this->option('list');
 		$addRole    = $this->option('add');
 		$removeRole = $this->option('remove');
+
+		$username = text('Username?', '', '', true);
 
 		if (!$username)
 		{
@@ -83,52 +87,46 @@ class RoleCommand extends Command
 			return Command::SUCCESS;
 		}
 
+		$opts = array();
+		foreach ($allRoles as $allRole)
+		{
+			$opts[$allRole->id] = $allRole->title;
+		}
+
 		if ($addRole)
 		{
-			$role = explode(',', $addRole);
-			$role = array_map('trim', $role);
-			$role = array_filter($role);
+			$role = select(
+				'What role should the user have?',
+				$opts,
+				1,
+				count($opts)
+			);
 
-			$this->comment('Adding roles to user ' . $user->username . ': ' . implode(', ', $role));
+			$ids = [$role];
 
-			$ids = Role::query()
-				->whereIn('title', $role)
-				->get()
-				->pluck('id')
-				->toArray();
-
-			$roles = array_merge($roles, $ids);
+			Map::addUserToRole($user->id, $ids);
 		}
 
 		if ($removeRole)
 		{
-			$role = explode(',', $removeRole);
-			$role = array_map('trim', $role);
-			$role = array_filter($role);
+			$role = select(
+				'What role should be removed from the user?',
+				$opts,
+				null,
+				count($opts)
+			);
 
-			$this->comment('Removing roles from user ' . $user->username . ': ' . implode(', ', $role));
+			$ids = [$role];
 
-			$ids = Role::query()
-				->whereIn('title', $role)
-				->get()
-				->pluck('id')
-				->toArray();
-
-			$roles = array_diff($roles, $ids);
+			Map::removeUserFromRole($user->id, $ids);
 		}
 
-		$user->newroles = $roles;
+		$roles = Map::query()
+			->where('user_id', '=', $user->id)
+			->pluck('role_id')
+			->toArray();
 
-		if ($user->save())
-		{
-			$this->listRoles($allRoles, $user, $roles);
-		}
-		else
-		{
-			$this->error(trans('users::users.error.role set failed', ['username' => $user->username]));
-
-			return Command::FAILURE;
-		}
+		$this->listRoles($allRoles, $user, $roles);
 
 		return Command::SUCCESS;
 	}
