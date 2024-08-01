@@ -21,7 +21,6 @@ class AddRegistrationFieldsColumn extends Migration
 				$table->json('options')->nullable();
 			});
 		}
-
 	}
 
 	/**

@@ -21,14 +21,13 @@ class CreateRegistrationFieldsTable extends Migration
 				$table->increments('id');
 				$table->string('name', 128);
 				$table->string('type', 128)->default('text');
-                $table->boolean('required')->default(false);
-                $table->boolean('include_admin')->default(false);
-                $table->timestamps();
+				$table->boolean('required')->default(false);
+				$table->boolean('include_admin')->default(false);
+				$table->timestamps();
 				$table->dateTime('deleted_at')->nullable();
 				$table->index('name');
 			});
 		}
-
 	}
 
 	/**
@@ -37,6 +36,6 @@ class CreateRegistrationFieldsTable extends Migration
 	 */
 	public function down()
 	{
-	    Schema::dropIfExists('registration_fields');
+		Schema::dropIfExists('registration_fields');
 	}
 }
