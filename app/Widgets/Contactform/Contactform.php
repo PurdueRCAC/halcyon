@@ -35,17 +35,17 @@ class Contactform extends Widget
 
 			if (!isset($data['name']))
 			{
-				$errors[] = trans('widget.earlyuserform::earlyuserform.error.invalid name');
+				$errors[] = trans('widget.contactform::contactform.error.invalid name');
 			}
 
 			if (!isset($data['email']))
 			{
-				$errors[] = $this->params->get('no_email', trans('widget.earlyuserform::earlyuserform.error.invalid email'));
+				$errors[] = $this->params->get('no_email', trans('widget.contactform::contactform.error.invalid email'));
 			}
 
 			if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL))
 			{
-				$errors[] = $this->params->get('invalid_email', trans('widget.earlyuserform::earlyuserform.error.invalid email'));
+				$errors[] = $this->params->get('invalid_email', trans('widget.contactform::contactform.error.invalid email'));
 			}
 
 			if (empty($errors))

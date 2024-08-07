@@ -20,7 +20,7 @@
 				<option value="0">global.no</option>
 				<option value="1">global.yes</option>
 			</field>
-			<field name="send_confirmation" type="list" default="0" label="widget.earlyuserform::earlyuserform.params.confirmation" description="widget.earlyuserform::earlyuserform.params.confirmation desc">
+			<field name="send_confirmation" type="list" default="0" label="widget.contactform::contactform.params.confirmation" description="widget.contactform::contactform.params.confirmation desc">
 				<option value="1">global.yes</option>
 				<option value="0">global.no</option>
 			</field>
