@@ -37,6 +37,7 @@ return [
 	'metadesc' => 'Description',
 	'file not found' => 'file not found',
 	'change history' => 'Change history',
+	'styles' => 'Styles',
 	// Site
 	'article not found' => 'Article not found',
 	'article hits' => 'Hits: :hits',

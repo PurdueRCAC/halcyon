@@ -233,7 +233,7 @@ app('pathway')
 								@endphp
 								@foreach ($row->params->get('styles', []) as $style)
 									<div class="input-group mb-3" id="params-styles-{{ $i }}-row">
-										<label class="form-label" class="sr-only visually-hidden" for="params-styles-{{ $i }}">{{ trans('pages::pages.styles') }}:</label>
+										<label class="form-label sr-only visually-hidden" for="params-styles-{{ $i }}">{{ trans('pages::pages.styles') }}:</label>
 										<input type="text" class="form-control" name="params[styles][{{ $i }}]" id="params-styles-{{ $i }}" value="{{ $style }}" />
 										<div class="input-group-append">
 											<a href="#params-styles-{{ $i }}-row" class="btn btn-danger delete-row" id="params-styles-{{ $i }}-btn" data-id="params-styles-{{ $i }}">
@@ -248,7 +248,7 @@ app('pathway')
 								@endforeach
 
 								<div class="d-none input-group mb-3" id="params-styles-{{ $i }}">
-									<label class="form-label" class="sr-only visually-hidden" for="params-styles-{{ $i }}">{{ trans('pages::pages.styles') }}:</label>
+									<label class="form-label sr-only visually-hidden" for="params-styles-{{ $i }}">{{ trans('pages::pages.styles') }}:</label>
 									<input type="text" class="form-control" name="params[styles][{{ $i }}]" id="params-styles-{{ $i }}" value="" />
 									<div class="input-group-append">
 										<a href="#params-styles-{{ $i }}" class="btn btn-danger delete-row disabled" id="params-styles-{{ $i }}-btn" data-id="params-styles-{{ $i }}">
