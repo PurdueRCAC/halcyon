@@ -588,10 +588,12 @@ class UsersController extends Controller
 
 		if ($request->has('name')
 		 || $request->has('puid')
+		 || $request->has('api_token')
 		 || $request->has('roles'))
 		{
 			$user->name = $request->input('name', $user->name);
 			$user->puid = $request->input('puid', $user->puid);
+			$user->api_token = $request->input('apitoken', $user->api_token);
 
 			//$id = $request->input('id');
 			//$fields = $request->input('fields');
