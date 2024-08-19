@@ -509,15 +509,6 @@ class MessagesController extends Controller
 	 * @apiMethod POST
 	 * @apiUri    /mail/send
 	 * @apiParameter {
-	 * 		"in":            "path",
-	 * 		"name":          "id",
-	 * 		"description":   "Entry identifier",
-	 * 		"required":      true,
-	 * 		"schema": {
-	 * 			"type":      "integer"
-	 * 		}
-	 * }
-	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "subject",
 	 * 		"description":   "Message subject",
@@ -537,8 +528,8 @@ class MessagesController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "body",
-	 * 		"name":          "to",
-	 * 		"description":   "A comma-separated list of user IDs or email addresses",
+	 * 		"name":          "user",
+	 * 		"description":   "A comma-separated list of user IDs, usernames, or email addresses",
 	 * 		"required":      true,
 	 * 		"schema": {
 	 * 			"type":      "string"
@@ -716,9 +707,9 @@ class MessagesController extends Controller
 				{
 					$user = User::find($id);
 				}
-				elseif (filter_var($id, FILTER_VALIDATE_EMAIL))
+				else
 				{
-					$user = User::findByEmail($id);
+					$user = User::findByUsername($id);
 
 					if (!$user)
 					{
