@@ -222,7 +222,7 @@ class MessagesController extends Controller
 	 * 						"deleted_at": null,
 	 * 						"sent_at": "2022-05-24 12:31:01",
 	 * 						"sent_by": 1234,
-	 * 						"api": "https://example.org/api/mail/2"
+	 * 						"api": "https://example.org/api/mailer/2"
 	 * 					}
 	 * 				}
 	 * 			}
@@ -279,7 +279,7 @@ class MessagesController extends Controller
 	 * Retrieve an entry
 	 *
 	 * @apiMethod GET
-	 * @apiUri    /mail/{id}
+	 * @apiUri    /mailer/{id}
 	 * @apiParameter {
 	 * 		"in":            "path",
 	 * 		"name":          "id",
@@ -305,7 +305,7 @@ class MessagesController extends Controller
 	 * 						"deleted_at": null,
 	 * 						"sent_at": "2022-05-24 12:31:01",
 	 * 						"sent_by": 1234,
-	 * 						"api": "https://example.org/api/mail/2"
+	 * 						"api": "https://example.org/api/mailer/2"
 	 * 					}
 	 * 				}
 	 * 			}
@@ -330,7 +330,7 @@ class MessagesController extends Controller
 	 * Update an entry
 	 *
 	 * @apiMethod PUT
-	 * @apiUri    /mail/{id}
+	 * @apiUri    /mailer/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -413,7 +413,7 @@ class MessagesController extends Controller
 	 * 						"deleted_at": null,
 	 * 						"sent_at": "2022-05-24 12:31:01",
 	 * 						"sent_by": 1234,
-	 * 						"api": "https://example.org/api/mail/2"
+	 * 						"api": "https://example.org/api/mailer/2"
 	 * 					}
 	 * 				}
 	 * 			}
@@ -469,7 +469,7 @@ class MessagesController extends Controller
 	 * Delete an entry
 	 *
 	 * @apiMethod DELETE
-	 * @apiUri    /mail/{id}
+	 * @apiUri    /mailer/{id}
 	 * @apiAuthorization  true
 	 * @apiParameter {
 	 * 		"in":            "path",
@@ -507,7 +507,7 @@ class MessagesController extends Controller
 	 * Post a message
 	 *
 	 * @apiMethod POST
-	 * @apiUri    /mail/send
+	 * @apiUri    /mailer/send
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "subject",
@@ -538,7 +538,16 @@ class MessagesController extends Controller
 	 * @apiParameter {
 	 * 		"in":            "body",
 	 * 		"name":          "group",
-	 * 		"description":   "A comma-separated list of group IDs to email all users in those gorups",
+	 * 		"description":   "A comma-separated list of group IDs to email all users in those groups",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "role",
+	 * 		"description":   "A comma-separated list of role IDs to email all users in those roles",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "string"
@@ -580,6 +589,22 @@ class MessagesController extends Controller
 	 * 			"type":      "string"
 	 * 		}
 	 * }
+	 * @apiParameter {
+	 * 		"in":            "body",
+	 * 		"name":          "alert",
+	 * 		"description":   "An alert level to use for styling HTML portions of emails",
+	 * 		"type":          "integer",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   null,
+	 * 			"enum": [
+	 * 				"info",
+	 * 				"warning",
+	 * 				"danger"
+	 * 			]
+	 * 		}
+	 * }
 	 * @apiResponse {
 	 * 		"200": {
 	 * 			"description": "Successful entry read",
@@ -596,7 +621,7 @@ class MessagesController extends Controller
 	 * 						"deleted_at": null,
 	 * 						"sent_at": "2022-05-24 12:31:01",
 	 * 						"sent_by": 1234,
-	 * 						"api": "https://example.org/api/mail/2"
+	 * 						"api": "https://example.org/api/mailer/2"
 	 * 					}
 	 * 				}
 	 * 			}
@@ -612,7 +637,8 @@ class MessagesController extends Controller
 	{
 		$rules = [
 			'subject' => 'required|string|max:255',
-			'body' => 'required|string|max:15000'
+			'body' => 'required|string|max:15000',
+			'alert' => 'nullable|string|max:50',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
@@ -625,6 +651,10 @@ class MessagesController extends Controller
 		$row = new Message;
 		$row->subject = $request->input('subject');
 		$row->body = $request->input('body');
+		if ($request->has('alert'))
+		{
+			$row->alert = $request->input('alert');
+		}
 		$row->save();
 
 		$from = [
