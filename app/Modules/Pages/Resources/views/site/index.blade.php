@@ -207,7 +207,7 @@ $page->gatherMetadata();
 
 								<div class="form-group col-md-6">
 									<label class="form-label" for="field-publish_up">{{ trans('pages::pages.publish up') }}:</label>
-									<input type="text" name="publish_up" id="field-publish_up" class="form-control datetime date-pick" value="<?php echo ($page->publish_up ? $page->publish_up->toDateTimeString() : $page->created->toDateTimeString()); ?>" />
+									<input type="text" name="publish_up" id="field-publish_up" class="form-control datetime date-pick" value="<?php echo ($page->publish_up ? $page->publish_up->toDateTimeString() : $page->created_at->toDateTimeString()); ?>" />
 								</div>
 
 								<div class="form-group col-md-6">

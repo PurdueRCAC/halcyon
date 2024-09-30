@@ -341,6 +341,17 @@ class Page extends Model
 			->whereRaw('n.lft BETWEEN p.lft AND p.rgt')
 			->where('n.path', '=', (string) $path)
 			->whereNull('p.deleted_at')
+			->where('p.state', '=', 1)
+			->where(function ($where)
+			{
+				$where->whereNull('p.publish_up')
+					->orWhere('p.publish_up', '<=', Carbon::now()->toDateTimeString());
+			})
+			->where(function ($where)
+			{
+				$where->whereNull('p.publish_down')
+					->orWhere('p.publish_down', '>', Carbon::now()->toDateTimeString());
+			})
 			->orderBy('p.lft', 'asc')
 			->get();
 	}
