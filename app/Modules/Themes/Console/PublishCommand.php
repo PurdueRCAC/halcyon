@@ -15,7 +15,9 @@ class PublishCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $name = 'theme:publish';
+	protected $signature = 'theme:publish
+					{theme?* : The name of the theme will be used}
+					{--t|--tidy : Clean up old files}';
 
 	/**
 	 * The console command description.
@@ -107,6 +109,10 @@ class PublishCommand extends Command
 		if (!$this->getFilesystem()->isDirectory($destinationPath))
 		{
 			$this->getFilesystem()->makeDirectory($destinationPath, 0775, true);
+		}
+		elseif ($this->option('tidy'))
+		{
+			$this->getFilesystem()->cleanDirectory($destinationPath);
 		}
 
 		if ($this->getFilesystem()->copyDirectory($sourcePath, $destinationPath))

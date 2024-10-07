@@ -13,7 +13,10 @@ class PublishCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $name = 'listener:publish';
+	protected $signature = 'listener:publish
+					{folder? :  The type/folder of the listener.}
+					{element? : The element name of the listener.}
+					{--t|--tidy : Clean up old files}';
 
 	/**
 	 * The console command description.
@@ -89,6 +92,10 @@ class PublishCommand extends Command
 		{
 			$this->getFilesystem()->makeDirectory($destinationPath, 0775, true);
 		}
+		elseif ($this->option('tidy'))
+		{
+			$this->getFilesystem()->cleanDirectory($destinationPath);
+		}
 
 		if ($this->getFilesystem()->copyDirectory($sourcePath, $destinationPath))
 		{
@@ -106,18 +113,5 @@ class PublishCommand extends Command
 	protected function getFilesystem()
 	{
 		return $this->laravel['files'];
-	}
-
-	/**
-	 * Get the console command arguments.
-	 *
-	 * @return array
-	 */
-	protected function getArguments()
-	{
-		return [
-			['folder', InputArgument::OPTIONAL, 'The type/folder of the listener.'],
-			['element', InputArgument::OPTIONAL, 'The element name of the listener.'],
-		];
 	}
 }

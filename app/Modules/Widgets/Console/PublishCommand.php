@@ -13,7 +13,9 @@ class PublishCommand extends Command
 	 *
 	 * @var string
 	 */
-	protected $name = 'widget:publish';
+	protected $signature = 'widget:publish
+						{widget?* : The name of the widget that will be used.}
+						{--t|--tidy : Clean up old files}';
 
 	/**
 	 * The console command description.
@@ -95,6 +97,10 @@ class PublishCommand extends Command
 			{
 				$this->getFilesystem()->makeDirectory($destinationPath, 0775, true);
 			}
+			elseif ($this->option('tidy'))
+			{
+				$this->getFilesystem()->cleanDirectory($destinationPath);
+			}
 
 			if ($this->getFilesystem()->copyDirectory($sourcePath, $destinationPath))
 			{
@@ -113,17 +119,5 @@ class PublishCommand extends Command
 	protected function getFilesystem()
 	{
 		return $this->laravel['files'];
-	}
-
-	/**
-	 * Get the console command arguments.
-	 *
-	 * @return array<int,string>
-	 */
-	protected function getArguments()
-	{
-		return [
-			['widget', InputArgument::OPTIONAL, 'The name of the widget to be used.'],
-		];
 	}
 }
