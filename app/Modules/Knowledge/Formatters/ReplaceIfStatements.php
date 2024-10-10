@@ -13,9 +13,9 @@ class ReplaceIfStatements
 	 *
 	 * @var string
 	 */
-	const REGEXP_IF_STATEMENT = "/\{::if\s+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~)\s*([^\}]+)\s*\}(.+?)\{::\/\}/s";
-	const REGEXP_IF_ELSE = "/\{::elseif\s+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~)\s*([^\}]+)\s*\}(.+?)(?=\{::)/s";
-	const REGEXP_IF = "/\{::if\s+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~)\s*([^\}]+)\s*\}_\d+(.+?)(?=\{::)/s";
+	const REGEXP_IF_STATEMENT = "/\{::if\s+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~|&gt;|&gt;=|&lt;|&lt;=)\s*([^\}]+)\s*\}(.+?)\{::\/\}/s";
+	const REGEXP_IF_ELSE = "/\{::elseif\s+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~|&gt;|&gt;=|&lt;|&lt;=)\s*([^\}]+)\s*\}(.+?)(?=\{::)/s";
+	const REGEXP_IF = "/\{::if\s+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~|&gt;|&gt;=|&lt;|&lt;=)\s*([^\}]+)\s*\}_\d+(.+?)(?=\{::)/s";
 	const REGEXP_ELSE = "/\{::else\}(.+?)(?=\{::)/s";
 	const REGEXP_LINK = "/\[(.+?)\]\((.+?)\)/";
 
@@ -49,7 +49,7 @@ class ReplaceIfStatements
 		for (self::$matches; self::$matches > 0; self::$matches--)
 		{
 			$m = self::$matches;
-			$text = preg_replace_callback("/\{::if\s+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~)\s*([^\}]+)\s*\}_$m(.+?)\{::\/\}/s", array($this, 'replaceIfStatement'), $text);
+			$text = preg_replace_callback("/\{::if\s+([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~|&gt;|&gt;=|&lt;|&lt;=)\s*([^\}]+)\s*\}_$m(.+?)\{::\/\}/s", array($this, 'replaceIfStatement'), $text);
 		}
 		//$text = preg_replace_callback(self::REGEXP_IF_STATEMENT, array($this, 'replaceIfStatement'), $text);
 
@@ -154,7 +154,7 @@ class ReplaceIfStatements
 				{
 					$condition = trim($condition);
 
-					if (preg_match('/([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~)\s*([^\}]+)/', $condition, $subclause))
+					if (preg_match('/([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*(==|!=|>|>=|<|<=|=~|&gt;|&gt;=|&lt;|&lt;=)\s*([^\}]+)/', $condition, $subclause))
 					{
 						$cond_results[] = $this->condition(
 							$subclause[1],
@@ -297,19 +297,19 @@ class ReplaceIfStatements
 				$result = ($left != $right ? true : false);
 			}
 		}
-		elseif ($operator == '>')
+		elseif ($operator == '>' || $operator == '&gt;')
 		{
 			$result = ($left > $right ? true : false);
 		}
-		elseif ($operator == '<')
+		elseif ($operator == '<' || $operator == '&lt;')
 		{
 			$result = ($left < $right ? true : false);
 		}
-		elseif ($operator == '<=')
+		elseif ($operator == '<=' || $operator == '&lt;=')
 		{
 			$result = ($left <= $right ? true : false);
 		}
-		elseif ($operator == '>=')
+		elseif ($operator == '>=' || $operator == '&gt;=')
 		{
 			$result = ($left >= $right ? true : false);
 		}
