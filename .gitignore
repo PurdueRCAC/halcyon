@@ -24,3 +24,6 @@ yarn-error.log
 /storage/dump/*
 /.idea
 /.vscode
+.gitignore
+ISSUESTRACKER.md
+BUGTRACKER.md
