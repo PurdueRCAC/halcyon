@@ -81,6 +81,14 @@ class ThemeManager implements RepositoryInterface, \Countable
 			}
 		}
 
+		foreach ($this->allDisabled() as $theme)
+		{
+			if ($theme->getLowerElement() == $lname)
+			{
+				return $theme;
+			}
+		}
+
 		return null;
 	}
 
@@ -105,6 +113,7 @@ class ThemeManager implements RepositoryInterface, \Countable
 
 		foreach ($this->allDisabled() as $theme)
 		{
+			echo $theme->getLowerElement() . "\n";
 			if ($theme->getLowerElement() == $lname)
 			{
 				return $theme;
@@ -330,7 +339,7 @@ class ThemeManager implements RepositoryInterface, \Countable
 	 * @param  Theme $theme
 	 * @return bool
 	 */
-	private function registerTheme(Theme $theme): bool
+	public function registerTheme(Theme $theme): bool
 	{
 		$row = new Model;
 		$row->fill([
@@ -340,8 +349,8 @@ class ThemeManager implements RepositoryInterface, \Countable
 			'enabled'   => 1,
 			'access'    => 1,
 			'protected' => 0,
-			'client_id' => $theme->getClient() == 'site' ? 1 : 0,
-			'params'    => $theme->getParams()->toString()
+			'client_id' => $theme->getType() == 'site' ? 0 : 1,
+			'params'    => json_encode($theme->getParams()->all())
 		]);
 
 		return $row->save();
@@ -499,7 +508,7 @@ class ThemeManager implements RepositoryInterface, \Countable
 	{
 		$theme = $this->find($name);
 
-		return $theme ? true : false;
+		return $theme ? $theme->enabled : false;
 	}
 
 	/**

@@ -4,7 +4,7 @@ namespace App\Modules\Themes\Entities;
 
 use Illuminate\Config\Repository;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Arr;
+use Illuminate\Support\Arr;
 
 class Theme
 {

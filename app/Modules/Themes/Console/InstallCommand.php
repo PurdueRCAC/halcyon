@@ -5,6 +5,7 @@ namespace App\Modules\Themes\Console;
 use Illuminate\Console\Command;
 use Nwidart\Modules\Json;
 use App\Modules\Themes\Process\Installer;
+use App\Modules\Themes\Entities\Theme;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -59,12 +60,16 @@ class InstallCommand extends Command
 
 			foreach ($dirs as $dir)
 			{
-				if ($found = $this->laravel['themes']->find(basename($dir)))
+				$found = $this->laravel['themes']->find(basename($dir));
+
+				if ($found)
 				{
+					$this->comment('Theme [' . basename($dir) . '] already installed.');
 					continue;
 				}
 
 				$this->laravel['themes']->registerTheme(new Theme(basename($dir), $dir));
+				$this->info('Theme [' . basename($dir) . '] installed.');
 			}
 
 			/*return;
