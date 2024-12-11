@@ -29,6 +29,10 @@ class UserResource extends JsonResource
 		$data['api'] = route('api.users.read', ['id' => $this->id]);
 		//$data['uri'] = route('site.users.account', ['id' => $this->id]);
 
+		if ($request->has('search'))
+		{
+			$data['search'] = $request->input('search');
+		}
 		$data['datecreated'] = $this->datecreated;
 		$data['datelastseen'] = $this->getUserUsername()->hasVisited() ? $this->datelastseen : null;
 		$data['dateremoved'] = $this->getUserUsername()->trashed() ? $this->dateremoved : null;

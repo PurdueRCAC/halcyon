@@ -297,13 +297,17 @@ class UsersController extends Controller
 			$rows = $event->getResults();
 		}
 
-		$rows->each(function($item, $key)
+		$rows->each(function($item, $key) use ($filters)
 		{
 			if ($item->id)
 			{
 				$item->api = route('api.users.read', ['id' => $item->id]);
 				$item->email = $item->getUserUsername()->email;
 				$item->access = $item->getAuthorisedViewLevels();
+			}
+			if ($filters['search'])
+			{
+				$item->search = $filters['search'];
 			}
 			$item->api_token = null;
 		});
