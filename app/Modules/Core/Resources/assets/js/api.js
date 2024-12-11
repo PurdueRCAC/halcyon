@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 				// Show the targetted section
 				var section = document.querySelector(this.getAttribute('href'));
-				section.classList.add('hide');
+				section.classList.remove('hide');
 
 				// Close the menu if open (mobile)
 				var menu = this.parentNode.parentNode;
