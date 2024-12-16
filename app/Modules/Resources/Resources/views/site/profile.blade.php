@@ -37,7 +37,7 @@
 			</div>
 			<div class="col-md-3 text-right text-end">
 				@if ($user->enabled)
-				<a href="#manage_roles_dialog" data-toggle="modal" data-bs-toggle="modal" id="manage_roles" data-membertype="1" class="btn btn-sm" data-tip="{{ trans('resources::assets.manage access') }}">
+				<a href="#manage_roles_dialog" data-toggle="modal" data-bs-toggle="modal" id="manage_roles" data-membertype="1" class="btn btn-sm text-primary" data-tip="{{ trans('resources::assets.manage access') }}">
 					<span class="fa fa-pencil" aria-hidden="true"></span> {{ trans('resources::assets.manage') }}
 				</a>
 				@endif
@@ -57,7 +57,7 @@
 				</tr>
 			</thead>
 			<tbody>
-			@foreach ($resources as $resource)
+				@foreach ($resources as $resource)
 				<tr>
 					<td>{{ $resource->name }}</td>
 					<td id="resource{{ $resource->id }}_group"></td>
@@ -68,7 +68,7 @@
 						<span class="sr-only visually-hidden">{{ trans('global.loading') }}</span>
 					</td>
 				</tr>
-			@endforeach
+				@endforeach
 			</tbody>
 		</table>
 	</div>
@@ -92,7 +92,7 @@
 						<select id="role" class="form-control" required data-id="{{ $user->id }}" data-api="{{ route('api.resources.members.create') }}">
 							<option value="">{{ trans('resources::assets.select resource') }}</option>
 							@foreach ($resources as $resource)
-								<option value="{{ $resource->id }}" data-api="{{ route('api.resources.members.read', ['id' => $resource->id . '.' . $user->id]) }}">{{ $resource->name }}</option>
+							<option value="{{ $resource->id }}" data-api="{{ route('api.resources.members.read', ['id' => $resource->id . '.' . $user->id]) }}">{{ $resource->name }}</option>
 							@endforeach
 						</select>
 					</div>
@@ -116,28 +116,28 @@
 									$selected = ' selected="selected"';
 								endif;
 								?>
-								<option value="/bin/bash"<?php echo $selected; ?>>bash</option>
+								<option value="/bin/bash" <?php echo $selected; ?>>bash</option>
 								<?php
 								$selected = '';
 								if (preg_match("/\/csh$/", $user->loginShell)):
 									$selected = ' selected="selected"';
 								endif;
 								?>
-								<option value="/bin/csh"<?php echo $selected; ?>>csh</option>
+								<option value="/bin/csh" <?php echo $selected; ?>>csh</option>
 								<?php
 								$selected = '';
 								if (preg_match("/tcsh$/", $user->loginShell)):
 									$selected = ' selected="selected"';
 								endif;
 								?>
-								<option value="/bin/tcsh"<?php echo $selected; ?>>tcsh</option>
+								<option value="/bin/tcsh" <?php echo $selected; ?>>tcsh</option>
 								<?php
 								$selected = '';
 								if (preg_match("/zsh$/", $user->loginShell)):
 									$selected = ' selected="selected"';
 								endif;
 								?>
-								<option value="/bin/zsh"<?php echo $selected; ?>>zsh</option>
+								<option value="/bin/zsh" <?php echo $selected; ?>>zsh</option>
 							</select>
 						</div>
 						<div class="form-group">
