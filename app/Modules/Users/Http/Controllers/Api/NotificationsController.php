@@ -274,10 +274,12 @@ class NotificationsController extends Controller
 		if ($request->input('mark') == 'read')
 		{
 			$row->markAsRead();
+			$row->save();
 		}
 		elseif ($request->input('mark') == 'unread')
 		{
 			$row->markAsUnread();
+			$row->save();
 		}
 
 		return new NotificationResource($row);
