@@ -887,7 +887,7 @@ class User extends Model implements
 		}
 
 		$user->name = $user->name ?: $username;
-		$user->api_token = $this->generateApiToken();
+		$user->api_token = $user->generateApiToken();
 
 		$user->setDefaultRole();
 
