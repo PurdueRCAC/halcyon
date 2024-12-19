@@ -543,7 +543,7 @@ class MediaController extends Controller
 		$filename = basename($path);
 		if (!preg_match('/^[\x20-\x7e]*$/', $filename))
 		{
-			$filename = \Illuminate\Support\Facades\Str::ascii($filename);
+			$filename = \Illuminate\Support\Str::ascii($filename);
 		}
 
 		if (!Storage::disk($disk)->exists($path))

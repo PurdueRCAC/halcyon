@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Str;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use App\Modules\Media\Entities\Folder;
 use App\Modules\Media\Helpers\MediaHelper;

@@ -199,7 +199,7 @@ class MediaHelper
 	{
 		if (!preg_match('/^[\x20-\x7e]*$/', $name))
 		{
-			$name = \Illuminate\Support\Facades\Str::ascii($name);
+			$name = \Illuminate\Support\Str::ascii($name);
 		}
 		$name = preg_replace(
 			'~
