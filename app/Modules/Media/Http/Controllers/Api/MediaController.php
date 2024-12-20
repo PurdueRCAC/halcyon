@@ -465,33 +465,23 @@ class MediaController extends Controller
 
 		$disk  = $request->input('disk', 'public');
 		$items = $request->input('items');
-
 		$deletedItems = [];
 
-		foreach ($items as $item)
-		{
-			//$item['path'] = MediaHelper::sanitizePath($item['path']);
+		foreach ($items as $item) {
+			// Use raw path for existing files
+			$path = trim($item['path'], '/');
 
-			// check all files and folders - exists or no
-			if (!Storage::disk($disk)->exists($item['path']))
-			{
+			if (!Storage::disk($disk)->exists($path)) {
 				continue;
 			}
 
-			if ($item['type'] === 'dir')
-			{
-				// delete directory
-				Storage::disk($disk)->deleteDirectory($item['path']);
-
-				event(new DirectoryDeleted($disk, [$item['path']]));
-			}
-			else
-			{
-				// delete file
-				Storage::disk($disk)->delete($item['path']);
+			if ($item['type'] === 'dir') {
+				Storage::disk($disk)->deleteDirectory($path);
+				event(new DirectoryDeleted($disk, [$path]));
+			} else {
+				Storage::disk($disk)->delete($path);
 			}
 
-			// add deleted item
 			$deletedItems[] = $item;
 		}
 
