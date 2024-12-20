@@ -470,7 +470,7 @@ class MediaController extends Controller
 
 		foreach ($items as $item)
 		{
-			$item['path'] = MediaHelper::sanitizePath($item['path']);
+			//$item['path'] = MediaHelper::sanitizePath($item['path']);
 
 			// check all files and folders - exists or no
 			if (!Storage::disk($disk)->exists($item['path']))
