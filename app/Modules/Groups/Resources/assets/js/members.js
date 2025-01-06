@@ -76,8 +76,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	//$('a.tab').on('shown.bs.tab', function(e){
 	var inited = false;
 	//$('.tabs').on("tabsactivate", function (event, ui) {
-	if ($('.datatable').length && !inited) {
-		$('.datatable').DataTable({
+	let datatables = document.querySelectorAll('.datatable');
+	if (datatables.length && !inited) {
+		datatables.forEach(function (el) {
+			$(el).DataTable({
 			pageLength: 200,
 			pagingType: 'numbers',
 			paging: ($(el).attr('data-length') && parseInt($(el).attr('data-length')) > 200 ? true : false),
@@ -152,6 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					table.api().draw();
 				});
 			}
+		});
 		});
 
 		inited = true;
@@ -310,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			e.preventDefault();
 
 			var btn = this;
-			var users = $('#addmembers').val();
+			var users = $('#addmembers').val().split(',');
 
 			var post = {
 				'groupid': btn.getAttribute('data-group'),
