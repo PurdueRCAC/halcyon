@@ -12,6 +12,7 @@ use App\Modules\Media\Helpers\ImageProcessor;
 use App\Modules\Media\Events\Updating;
 use App\Modules\Media\Events\Updated;
 use App\Modules\Media\Events\Deleting;
+use Illuminate\Support\Str;
 use App\Modules\Media\Events\Deleted;
 use App\Modules\Media\Events\DirectoryDeleted;
 use App\Modules\Media\Events\Download;
