@@ -48,8 +48,8 @@ class MembersController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 * 		"name":          "owneruserid",
-	 * 		"description":   "Owner user ID",
+	 * 		"name":          "groupid",
+	 * 		"description":   "Group ID",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -58,17 +58,49 @@ class MembersController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 * 		"name":          "unixgroup",
-	 * 		"description":   "Unix group name",
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID",
 	 * 		"required":      false,
 	 * 		"schema": {
-	 * 			"type":      "string"
+	 * 			"type":      "integer",
+	 * 			"default":   0
 	 * 		}
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
-	 * 		"name":          "unixid",
-	 * 		"description":   "Unix ID",
+	 * 		"name":          "membertype",
+	 * 		"description":   "Member type",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer",
+	 * 			"default":   0,
+	 * 			"enum": [
+	 * 				"1 (members)",
+	 * 				"2 (managers)",
+	 * 				"3 (viewers)",
+	 * 				"4 (pending)"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "state",
+	 * 		"description":   "State",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "string",
+	 * 			"default":   "active",
+	 * 			"enum": [
+	 * 				"active",
+	 * 				"trashed",
+	 * 				"all"
+	 * 			]
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "userrequestid",
+	 * 		"description":   "User request ID",
 	 * 		"required":      false,
 	 * 		"schema": {
 	 * 			"type":      "integer",
@@ -94,10 +126,11 @@ class MembersController extends Controller
 	 * 			"default":   "name",
 	 * 			"enum": [
 	 * 				"id",
-	 * 				"name",
-	 * 				"owneruserid",
-	 * 				"unixgroup",
-	 * 				"unixid"
+	 * 				"groupid",
+	 * 				"userid",
+	 * 				"membertype",
+	 * 				"datecreated",
+	 * 				"dateremoved"
 	 * 			]
 	 * 		}
 	 * }
