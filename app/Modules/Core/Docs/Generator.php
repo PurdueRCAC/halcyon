@@ -5,6 +5,7 @@ namespace App\Modules\Core\Docs;
 use ReflectionClass;
 use phpDocumentor\Reflection\DocBlockFactory;
 use Nwidart\Modules\Facades\Module;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Documentation Generator Class
@@ -50,10 +51,71 @@ class Generator
 	public function __construct(int $cacheTime = 720)
 	{
 		$this->cacheTime = $cacheTime * 60;
+	}
 
-		// create all needed keys in output
-		$this->output = array(
-			'openapi'  => '3.0.0',
+	/**
+	 * Return documentation
+	 * 
+	 * @param   string  $format  Output format
+	 * @param   bool    $force  Force new version
+	 * @return  string|array<string,mixed>
+	 */
+	public function output(string $format = 'json', bool $force = false)
+	{
+		$output = $this->getOutputFromCache($force)->output;
+
+		// option to switch formats
+		switch ($format)
+		{
+			case 'array':
+				break;
+			case 'php':
+				$output = serialize($output);
+				break;
+			case 'json':
+			default:
+				$output = json_encode($output);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Load from cache
+	 */
+	private function getOutputFromCache(bool $force = false): self
+	{
+		if ($force || $this->cacheTime == 0)
+		{
+			$output = $this->generate();
+		}
+		else
+		{
+			$output = Cache::remember('apidocs', $this->cacheTime, function ()
+			{
+				$docs = $this->generate();
+				return json_encode($docs);
+			});
+			$output = json_decode($output, true);
+		}
+
+		$this->sections = $output;
+		$this->output = $this->toOpenAPI();
+		$this->saveOpenAPI($this->output);
+
+		return $this;
+	}
+
+	/**
+	 * Generate the OpenAPI documentation
+	 *
+	 * @return array<string,mixed>
+	 */
+	public function toOpenAPI(): array
+	{
+		$ignore = ['method', '_metadata', 'uri', 'authorization', 'param', 'return'];
+		$output = array(
+			'openapi' => '3.0.0',
 			'info' => array(
 				'title' => trans('core::docs.api title', ['title' => config('app.name')]),
 				//'description' => trans('core::docs.api description'),
@@ -96,94 +158,10 @@ class Generator
 					),
 				),
 			),
-			'paths'    => array()
+			'paths' => array()
 		);
-	}
 
-	/**
-	 * Return documentation
-	 * 
-	 * @param   string  $format  Output format
-	 * @param   bool    $force  Force new version
-	 * @return  string|array<string,mixed>
-	 */
-	public function output(string $format = 'json', bool $force = false)
-	{
-		$output = $this->getOutputFromCache($force)->output;
-
-		// option to switch formats
-		switch ($format)
-		{
-			case 'array':
-				break;
-			case 'php':
-				$output = serialize($output);
-				break;
-			case 'json':
-			default:
-				$output = json_encode($output);
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Load from cache
-	 */
-	private function getOutputFromCache(bool $force = false): self
-	{
-		$output = null;
-
-		if (!$force)
-		{
-			// Check if we have a cache file
-			$cacheFile = public_path($this->cacheFile . '.json');
-
-			if (file_exists($cacheFile))
-			{
-				// Check if its still valid
-				$lastModified = @filemtime($cacheFile);
-
-				if (time() - $this->cacheTime < $lastModified)
-				{
-					$output = json_decode(file_get_contents($cacheFile), true);
-				}
-			}
-		}
-
-		if (!$output)
-		{
-			$output = $this->generate();
-
-			// create cache ffile
-			$cacheFile = public_path($this->cacheFile . '.json');
-
-			// save cache file
-			file_put_contents($cacheFile, json_encode($output));
-		}
-
-		$this->output = $output;
-
-		return $this;
-	}
-
-	/**
-	 * Generate Doc
-	 * 
-	 * @return  array<string,mixed>
-	 */
-	private function generate(): array
-	{
-		// only load sections if we dont have a cache
-		$this->discoverModuleSections();
-
-		// generate output by processing sections
-		$sections = $this->processModuleSections($this->sections);
-
-		$ignore = ['method', '_metadata', 'uri', 'authorization', 'param', 'return'];
-		$output = $this->output;
-
-		foreach ($sections as $name => $section)
+		foreach ($this->sections as $name => $section)
 		{
 			foreach ($section as $controller => $info)
 			{
@@ -282,6 +260,34 @@ class Generator
 	}
 
 	/**
+	 * Save the OpenAPI documentation to file
+	 */
+	public function saveOpenAPI($output): void
+	{
+		// create cache ffile
+		$file = public_path('openapi.json');
+
+		// save cache file
+		file_put_contents($file, json_encode($output));
+	}
+
+	/**
+	 * Generate Doc
+	 * 
+	 * @return  array<string,mixed>
+	 */
+	private function generate(): array
+	{
+		// only load sections if we dont have a cache
+		$this->discoverModuleSections();
+
+		// generate output by processing sections
+		$this->sections = $this->processModuleSections($this->sections);
+
+		return $this->sections;
+	}
+
+	/**
 	 * Get all modules that have API routes
 	 *
 	 * @return \Illuminate\Support\Collection|\Tightenco\Collect\Support\Collection
@@ -330,19 +336,18 @@ class Generator
 	 */
 	private function processModuleSections(array $sections): array
 	{
-		// var to hold output
 		$output = array();
 
-		// loop through each module grouping
+		// Loop through each module grouping
 		foreach ($sections as $module => $files)
 		{
-			// if we dont have an array for that module let's create it
+			// If we dont have an array for that module let's create it
 			if (!isset($output[$module]))
 			{
 				$output[$module] = [];
 			}
 
-			// loop through each file
+			// Loop through each controller and get documentation
 			foreach ($files as $file)
 			{
 				if (!preg_match('/(.*)Controller.php$/', $file))
@@ -364,9 +369,6 @@ class Generator
 			ksort($output[$module]);
 		}
 
-		$this->sections = $output;
-
-		// return output
 		return $output;
 	}
 
