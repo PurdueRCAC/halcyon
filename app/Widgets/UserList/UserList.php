@@ -20,6 +20,7 @@ class UserList extends Widget
 	 */
 	public function run()
 	{
+		$roles = $this->params->get('role_id');
 		$segments = request()->segments();
 		$last = end($segments);
 		$photoExtensions = ['jpg', 'jpeg', 'png'];
@@ -30,6 +31,24 @@ class UserList extends Widget
 
 			if ($user && $user->id)
 			{
+				// Ensure selected user is in the configured allowed roles
+				$allowed = false;
+				if (!empty($roles))
+				{
+					foreach ($user->getAuthorisedRoles() as $userRole)
+					{
+						if (in_array($userRole, $roles))
+						{
+							$allowed = true;
+						}
+					}
+				}
+
+				if (!$allowed)
+				{
+					abort(404);
+				}
+
 				$user->title = $user->facet('title');
 				$user->specialty = $user->facet('specialty');
 				$user->office = $user->facet('office');
@@ -62,7 +81,6 @@ class UserList extends Widget
 			->with('roles')
 			->with('facets');
 
-		$roles = $this->params->get('role_id');
 		if (!empty($roles))
 		{
 			$query
