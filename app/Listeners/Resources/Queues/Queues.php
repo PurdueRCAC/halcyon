@@ -5,6 +5,7 @@ use Illuminate\Events\Dispatcher;
 use App\Modules\Resources\Events\AssetCreated;
 use App\Modules\Resources\Events\SubresourceCreated;
 use App\Modules\Resources\Events\SubresourceDeleted;
+use App\Modules\Resources\Events\ChildCreated;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Queues\Models\Walltime;
 use App\Modules\Queues\Models\Scheduler;
@@ -22,7 +23,7 @@ class Queues
 	 */
 	public function subscribe(Dispatcher $events): void
 	{
-		$events->listen(AssetCreated::class, self::class . '@handleAssetCreated');
+		$events->listen(ChildCreated::class, self::class . '@handleChildCreated');
 		$events->listen(SubresourceCreated::class, self::class . '@handleSubresourceCreated');
 		$events->listen(SubresourceDeleted::class, self::class . '@handleSubresourceDeleted');
 	}
@@ -30,28 +31,30 @@ class Queues
 	/**
 	 * Create a default scheduler for a new compute asset
 	 *
-	 * @param   AssetCreated  $event
+	 * @param   ChildCreated  $event
 	 * @return  void
 	 */
-	public function handleAssetCreated(AssetCreated $event): void
+	public function handleChildCreated(ChildCreated $event): void
 	{
-		if ($event->asset->resourcetype != 1)
-		{
-			return;
-		}
+		$subresource = $event->child->subresource;
 
-		$child = $event->asset->children->first();
-
-		$scheduler = new Scheduler;
-		$scheduler->hostname = $event->asset->rolename . '-adm.' . str_replace('www', '', request()->getHost());
-		if ($child)
+		if (substr($subresource->name, -strlen('-Nonspecific')) == '-Nonspecific')
 		{
-			$scheduler->queuesubresourceid = $child->subresourceid;
+			$scheduler = Scheduler::query()
+				->where('queuesubresourceid', '=', $subresource->id)
+				->first();
+
+			if (!$scheduler)
+			{
+				$scheduler = new Scheduler;
+				$scheduler->hostname = $subresource->resource->rolename . '-adm.' . str_replace('www.', '', request()->getHost());
+				$scheduler->queuesubresourceid = $subresource->id;
+				$scheduler->batchsystem = $subresource->resource->batchsystem;
+				$scheduler->schedulerpolicyid = 1;
+				$scheduler->defaultmaxwalltime = 1209600;
+				$scheduler->save();
+			}
 		}
-		$scheduler->batchsystem = $event->asset->batchsystem;
-		$scheduler->schedulerpolicyid = 1;
-		$scheduler->defaultmaxwalltime = 1209600;
-		$scheduler->save();
 	}
 
 	/**
@@ -70,7 +73,6 @@ class Queues
 		}
 
 		$queue = new Queue;
-
 		$queue->name          = config()->get('module.queues.prefix', 'system-') . $subresource->cluster;
 		$queue->cluster       = $subresource->cluster;
 		$queue->groupid       = '-1';
