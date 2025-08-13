@@ -168,6 +168,10 @@ class ServicesController extends Controller
 		$id = $request->input('id');
 
 		$row = Service::findOrNew($id);
+		if (!$row->id)
+		{
+			$row->status = 1;
+		}
 		$row->fill($request->input('fields'));
 
 		if (!$row->save())

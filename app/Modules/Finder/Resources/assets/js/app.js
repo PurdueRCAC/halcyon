@@ -295,11 +295,17 @@ $(document).ready(function () {
             chart = chart + "<tr>";
             chart = chart + "<th scope='row'>" + servicelist[0].field_data[field].label;
             help_text_counter++;
-            var help = servicehelp.field_data[field].value ? "<a class='popup' aria-haspop='true' href='#help-" + help_text_counter + "'><span class='sr-only'>More information about " + servicelist[0].field_data[field].label + "</span><span class='fa fa-info-circle'></span></a><div class='help' id='help-" + help_text_counter + "'><h3>" + servicelist[0].field_data[field].label + "</h3>" + servicehelp.field_data[field].value + "</div>" : "";
-            chart = chart + help;
+            if (typeof servicehelp.field_data[field] !== 'undefined') {
+                var help = servicehelp.field_data[field].value ? "<a class='popup' aria-haspop='true' href='#help-" + help_text_counter + "'><span class='sr-only'>More information about " + servicelist[0].field_data[field].label + "</span><span class='fa fa-info-circle'></span></a><div class='help' id='help-" + help_text_counter + "'><h3>" + servicelist[0].field_data[field].label + "</h3>" + servicehelp.field_data[field].value + "</div>" : "";
+                chart = chart + help;
+            }
             chart = chart + "</th>"; // row title
             for (var j = 0; j < servicelist.length; j++) {
-                chart = chart + "<td class='service service-" + servicelist[j].id + "' data-label='" + servicelist[0].field_data[field].label + "'>" + servicelist[j].field_data[field].value + "</td>";
+                if (typeof servicelist[j].field_data[field] !== 'undefined') {
+                    chart = chart + "<td class='service service-" + servicelist[j].id + "' data-label='" + servicelist[0].field_data[field].label + "'>" + servicelist[j].field_data[field].value + "</td>";
+                } else {
+                    chart = chart + "<td class='service service-" + servicelist[j].id + "' data-label=''></td>";
+                }
             }
             chart = chart + "</tr>";
         }
