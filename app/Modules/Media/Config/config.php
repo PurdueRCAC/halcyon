@@ -12,8 +12,15 @@ return [
     |--------------------------------------------------------------------------
     | Specify all the allowed file extensions a user can upload on the server
     |--------------------------------------------------------------------------
+    | List of lowercase file extensions. Example:
+    | [
+    |    'bmp','csv','doc','docx','epg','eps','gif','ico','jpg','jpeg','jpe',
+    |    'key','keynote','mp4','mp3','m4a','m4v','odg','odp','ods','odt','pdf',
+    |    'png','ppt','pptx','svg','txt','xcf','xls','xlsx','webp','avif','zip'
+    | ]
+    | Leave empty to allow any file type.
     */
-    'allowed-extensions' => 'bmp,csv,doc,docx,epg,eps,gif,ico,jpg,jpeg,key,keynote,mp4,mp3,m4a,m4v,odg,odp,ods,odt,pdf,png,ppt,pptx,swf,txt,xcf,xls,xlsx,svg',
+    'allowed-extensions' => [],
 
     /*
     |--------------------------------------------------------------------------

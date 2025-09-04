@@ -239,6 +239,12 @@ class MediaController extends Controller
 		}
 
 		$fileNotUploaded = false;
+		$maxSize = config('module.media.max-file-size', 0);
+		$allowedTypes = config('module.media.allowed-extensions', []);
+		if (is_string($allowedTypes))
+		{
+			$allowedTypes = explode(',', $allowedTypes);
+		}
 
 		foreach ($files as $file)
 		{
@@ -250,8 +256,6 @@ class MediaController extends Controller
 			}
 
 			// Check file size
-			$maxSize = config('module.media.max-file-size', 0);
-
 			if (($maxSize && $file->getSize() / 1024 > $maxSize)
 			 || $file->getSize() / 1024 > $file->getMaxFilesize())
 			{
@@ -269,8 +273,6 @@ class MediaController extends Controller
 			}*/
 
 			// Check allowed file type
-			$allowedTypes = config('module.media.allowed-extensions', []);
-
 			if (!empty($allowedTypes)
 			 && !in_array(
 				$file->getClientOriginalExtension(),
