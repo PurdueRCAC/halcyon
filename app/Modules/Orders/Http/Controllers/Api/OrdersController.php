@@ -58,6 +58,24 @@ class OrdersController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
+	 * 		"name":          "userid",
+	 * 		"description":   "User ID the orders belong to.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
+	 * 		"name":          "groupid",
+	 * 		"description":   "Group ID the orders belong to.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "start",
 	 * 		"description":   "Orders created on or after this datetime.",
 	 * 		"required":      false,
@@ -161,6 +179,8 @@ class OrdersController extends Controller
 			'category'  => $request->input('category', 0),
 			'start'     => null,
 			'end'       => null,
+			'userid'    => $request->input('userid', 0),
+			'groupid'    => $request->input('groupid', 0),
 			// Paging
 			'limit'     => $request->input('limit', config('list_limit', 20)),
 			// Sorting
@@ -176,6 +196,11 @@ class OrdersController extends Controller
 		if (!in_array($filters['order_dir'], ['asc', 'desc']))
 		{
 			$filters['order_dir'] = 'desc';
+		}
+
+		if (auth()->user() && !auth()->user()->can('manage orders'))
+		{
+			$filters['userid'] = auth()->user()->id;
 		}
 
 		$order = new Order;
@@ -246,6 +271,21 @@ class OrdersController extends Controller
 				if ($filters['end'])
 				{
 					$sub->where($o . '.datetimecreated', '<', $filters['end']);
+				}
+
+				if ($filters['userid'])
+				{
+					$sub->where(function($query) use ($filters, $o, $a)
+					{
+						$query->where($o . '.userid', '=', $filters['userid'])
+							->orWhere($o . '.submitteruserid', '=', $filters['userid'])
+							->orWhere($a . '.approveruserid', '=', $filters['userid']);
+					});
+				}
+
+				if ($filters['groupid'])
+				{
+					$sub->where($o . '.groupid', '=', $filters['groupid']);
 				}
 
 				if ($filters['category'])

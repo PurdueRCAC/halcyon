@@ -22,6 +22,7 @@ class OrderResource extends JsonResource
 		$data['formattedtotal'] = $this->ordertotal ? $this->formatNumber($this->ordertotal) : $this->formattedTotal;
 		$data['accounts'] = $this->accounts;
 		$data['items'] = $this->items;
+		$data['status'] = $this->status;
 
 		$data['api'] = route('api.orders.read', ['id' => $this->id]);
 		$data['url'] = route('site.orders.read', ['id' => $this->id]);

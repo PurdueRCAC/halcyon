@@ -54,6 +54,15 @@ class ItemsController extends Controller
 	 * }
 	 * @apiParameter {
 	 * 		"in":            "query",
+	 * 		"name":          "orderid",
+	 * 		"description":   "Order ID the items belong to.",
+	 * 		"required":      false,
+	 * 		"schema": {
+	 * 			"type":      "integer"
+	 * 		}
+	 * }
+	 * @apiParameter {
+	 * 		"in":            "query",
 	 * 		"name":          "start",
 	 * 		"description":   "Orders created on or after this datetime.",
 	 * 		"required":      false,
@@ -143,6 +152,7 @@ class ItemsController extends Controller
 			'state'     => $request->input('state', '*'),
 			'product'   => $request->input('product', 0),
 			'user'      => $request->input('user', 0),
+			'orderid'   => $request->input('orderid', 0),
 			'recurring' => 0,
 			// Paging
 			'limit'     => $request->input('limit', config('list_limit', 20)),
@@ -196,6 +206,11 @@ class ItemsController extends Controller
 		if ($filters['product'])
 		{
 			$query->where($i . '.orderproductid', '=', $filters['product']);
+		}
+
+		if ($filters['orderid'])
+		{
+			$query->where($i . '.orderid', '=', $filters['orderid']);
 		}
 
 		if ($filters['search'])
