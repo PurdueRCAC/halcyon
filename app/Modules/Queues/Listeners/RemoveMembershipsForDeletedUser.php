@@ -4,10 +4,12 @@ namespace App\Modules\Queues\Listeners;
 
 use Illuminate\Events\Dispatcher;
 use App\Modules\Users\Events\UserDeleted;
-use App\Modules\Queues\Models\User;
+use App\Modules\Queues\Models\User as QueueUser;
 use App\Modules\Queues\Models\GroupUser;
 use App\Modules\Queues\Models\Queue;
 use App\Modules\Groups\Events\MemberDeleted;
+use App\Modules\Resources\Events\ResourceMemberStatus;
+use App\Modules\Resources\Events\ResourceMemberDeleted;
 
 /**
  * Queue listener to remove memberships when a user is removed
@@ -27,7 +29,7 @@ class RemoveMembershipsForDeletedUser
 	}
 
 	/**
-	 * Handle an updated User Request
+	 * Handle a user account being deleted
 	 *
 	 * @param   UserDeleted  $event
 	 * @return  void
@@ -39,7 +41,7 @@ class RemoveMembershipsForDeletedUser
 			return;
 		}
 
-		User::query()
+		QueueUser::query()
 			->where('userid', '=', $event->user->id)
 			->delete();
 
@@ -61,33 +63,53 @@ class RemoveMembershipsForDeletedUser
 			return;
 		}
 
+		// Get all queues that belong to the same group
 		$queues = Queue::query()
 			->where('groupid', '=', $event->member->groupid)
 			->pluck('id')
 			->toArray();
 
-		if (count($queues) > 0)
+		if (count($queues) == 0)
 		{
 			return;
 		}
 
-		$queueusers = User::query()
+		// Delete group queue user entries
+		$queueusers = QueueUser::query()
 			->where('userid', '=', $event->member->userid)
 			->whereIn('queueid', $queues)
 			->get()
 			->pluck('id')
 			->toArray();
-	
-		User::query()
-			->where('userid', '=', $event->member->userid)
-			->whereIn('queueid', $queues)
-			->delete();
 
 		if (count($queueusers) > 0)
 		{
 			GroupUser::query()
 				->whereIn('queueuserid', $queueusers)
 				->delete();
+		}
+
+		// Delete queue user entries
+		//
+		// NOTE: We do this in a loop rather than the batch delete
+		//       because we need each entry to trigger its 'deleted'
+		//       event. Other modules may be listening to perform
+		//       clean up operations.
+
+		/* Batch deletion
+		QueueUser::query()
+			->where('userid', '=', $event->member->userid)
+			->whereIn('queueid', $queues)
+			->delete();*/
+
+		$queueusers = QueueUser::query()
+			->where('userid', '=', $event->member->userid)
+			->whereIn('queueid', $queues)
+			->get();
+
+		foreach ($queueusers as $queueuser)
+		{
+			$queueuser->delete();
 		}
 	}
 }

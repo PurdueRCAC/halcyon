@@ -61,9 +61,18 @@ class RemoveMembershipsForDeletedUser
 			->pluck('id')
 			->toArray();
 
-		UnixGroupMember::query()
+		// NOTE: We do this in a loop rather than the batch delete
+		//       because we need each entry to trigger its 'deleted'
+		//       event. Other modules may be listening to perform
+		//       clean up operations.
+		$rows = UnixGroupMember::query()
 			->where('userid', '=', $event->member->userid)
 			->whereIn('unixgroupid', $unixgroups)
-			->delete();
+			->get();
+
+		foreach ($rows as $row)
+		{
+			$row->delete();
+		}
 	}
 }

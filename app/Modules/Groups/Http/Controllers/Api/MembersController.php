@@ -696,10 +696,7 @@ class MembersController extends Controller
 
 		if ($row && !$row->trashed())
 		{
-			if (!$row->delete())
-			{
-				return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
-			}
+			$row->delete();
 		}
 
 		return response()->json(null, 204);

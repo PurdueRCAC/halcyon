@@ -576,7 +576,7 @@ class UsersController extends Controller
 	 * @param   int  $id
 	 * @return  JsonResponse
 	 */
-	public function delete($id)
+	public function delete(int $id): JsonResponse
 	{
 		$row = QueueUser::findOrFail($id);
 
@@ -617,82 +617,11 @@ class UsersController extends Controller
 
 			// Set notice to 0 for now
 			$row->notice = QueueUser::NOTICE_NONE;
+			$row->save();
 		}
 
-		$row->save(); //update(['notice' => $row->notice]);
+		$row->delete();
 
-		// Skip actually deleting the database entry if there are pending requests for this queue (but continue with deleting accounts)
-		/*$gqusers = GroupUser::query()
-			->where('queueuserid', '=', $row->id)
-			->whereIsMember()
-			->get();*/
-
-		if (!$row->delete())
-		{
-			return response()->json(['message' => trans('global.messages.delete failed', ['id' => $id])], 500);
-		}
-
-		$response = null;
-		$status = 204;
-
-		event($resourcemember = new ResourceMemberStatus($row->queue->scheduler->resource, $row->user));
-
-		if ($resourcemember->isPending() || $resourcemember->isReady())
-		{
-			$rows = 0;
-
-			/*$owned = $row->user->groups->pluck('id')->toArray();
-
-			// Check for other queue memberships on this resource that might conflict with removing the role
-			$resources = Asset::query()
-				->where('rolename', '!=', '')
-				->where('listname', '!=', '')
-				->get();
-
-			foreach ($resources as $res)
-			{
-				$subresources = $res->subresources;*/
-				$subresources = $row->queue->scheduler->resource->subresources;
-
-				foreach ($subresources as $sub)
-				{
-					$queues = $sub->queues()
-						//->whereIn('groupid', $owned)
-						->get();
-						//->pluck('queuid')
-						//->toArray();
-
-					foreach ($queues as $queue)
-					{
-						$rows += $queue->users()
-							->whereIsMember()
-							->where('userid', '=', $row->userid)
-							->count();
-
-						if ($queue->group)
-						{
-							$rows += $queue->group->members()
-								->whereIsManager()
-								->where('userid', '=', $row->userid)
-								->count();
-						}
-					}
-				}
-			//}
-
-			if ($rows == 0)
-			{
-				// No other active memberships found, remove resource access
-				event($resourcemember = new ResourceMemberDeleted($row->queue->scheduler->resource, $row->user));
-
-				if (count($resourcemember->errors))
-				{
-					$response = ['message' => implode("\n", $resourcemember->errors)];
-					$status = 500;
-				}
-			}
-		}
-
-		return response()->json($response, $status);
+		return response()->json(null, 204);
 	}
 }
