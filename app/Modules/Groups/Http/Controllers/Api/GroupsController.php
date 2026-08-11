@@ -456,7 +456,7 @@ class GroupsController extends Controller
 		$rules = [
 			'name' => 'required|string|max:48',
 			'description' => 'nullable|string|max:2000',
-			'unixgroup' => 'nullable|integer|max:10',
+			'unixgroup' => 'nullable|string|max:10',
 			'userid' => 'nullable|integer',
 			'cascademanagers' => 'nullable|integer',
 			'prefix_unixgroup' => 'nullable|integer',
