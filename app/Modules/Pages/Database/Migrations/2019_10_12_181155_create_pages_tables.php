@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class CreatePagesTables extends Migration
 {
@@ -71,6 +72,8 @@ class CreatePagesTables extends Migration
 					'level'      => 0,
 					'params'     => '[]',
 					'language'   => '*',
+					'created_at' => Carbon::now()->toDateTimeString(),
+					'updated_at' => Carbon::now()->toDateTimeString(),
 				]);
 			}
 		}

@@ -5,12 +5,12 @@
 @if ($page->params->get('show_author') || $page->params->get('show_create_date') || $page->params->get('show_modify_date') || $page->params->get('show_hits'))
 	<dl class="article-info">
 		<dt class="article-info-term">{{ trans('pages::pages.article info') }}</dt>
-	@if ($page->params->get('show_create_date'))
+	@if ($page->params->get('show_create_date') && $page->created_at)
 		<dd class="create">
 			{{ trans('pages::pages.created on', ['date' => $page->created_at->toDateTimeString()]) }}
 		</dd>
 	@endif
-	@if ($page->params->get('show_modify_date'))
+	@if ($page->params->get('show_modify_date') && $page->updated_at)
 		<dd class="updated">
 			{{ trans('pages::pages.last updated', ['date' => $page->updated_at->toDateTimeString()]) }}
 		</dd>
