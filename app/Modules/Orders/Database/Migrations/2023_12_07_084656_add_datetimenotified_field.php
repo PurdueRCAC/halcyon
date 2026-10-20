@@ -13,7 +13,7 @@ class AddDatetimenotifiedField extends Migration
 	 */
 	public function up()
 	{
-		if (!Schema::hasTable('orders'))
+		if (Schema::hasTable('orders') && !Schema::hasColumn('orders', 'datetimenotified'))
 		{
 			Schema::table('orders', function (Blueprint $table)
 			{

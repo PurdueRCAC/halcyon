@@ -13,7 +13,7 @@ class AddDeniedreasonField extends Migration
 	 */
 	public function up()
 	{
-		if (!Schema::hasTable('orderpurchaseaccounts'))
+		if (Schema::hasTable('orderpurchaseaccounts') && !Schema::hasColumn('orderpurchaseaccounts', 'deniedreason'))
 		{
 			Schema::table('orderpurchaseaccounts', function (Blueprint $table)
 			{

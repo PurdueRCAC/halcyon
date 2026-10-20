@@ -177,7 +177,7 @@ class History
 				}
 			}
 
-			if (Module::isEnabled('courses'))
+			if (Module::find('courses') && Module::isEnabled('courses'))
 			{
 				$courses = \App\Modules\Courses\Models\Member::query()
 					->withTrashed()

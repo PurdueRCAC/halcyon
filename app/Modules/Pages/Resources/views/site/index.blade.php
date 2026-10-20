@@ -107,12 +107,12 @@ $page->gatherMetadata();
 			if ($useDefList) : ?>
 				<dl class="article-info">
 					<dt class="article-info-term">{{ trans('pages::pages.article info') }}</dt>
-				<?php if ($page->params->get('show_create_date')) : ?>
+				<?php if ($page->params->get('show_create_date') && $page->created_at) : ?>
 					<dd class="create">
 						{{ trans('pages::pages.created on', ['date' => $page->created_at->toDateTimeString()]) }}
 					</dd>
 				<?php endif; ?>
-				<?php if ($page->params->get('show_modify_date')) : ?>
+				<?php if ($page->params->get('show_modify_date') && $page->updated_at) : ?>
 					<dd class="updated">
 						{{ trans('pages::pages.last updated', ['date' => $page->updated_at->toDateTimeString()]) }}
 					</dd>
@@ -207,7 +207,7 @@ $page->gatherMetadata();
 
 								<div class="form-group col-md-6">
 									<label class="form-label" for="field-publish_up">{{ trans('pages::pages.publish up') }}:</label>
-									<input type="text" name="publish_up" id="field-publish_up" class="form-control datetime date-pick" value="<?php echo ($page->publish_up ? $page->publish_up->toDateTimeString() : $page->created_at->toDateTimeString()); ?>" />
+									<input type="text" name="publish_up" id="field-publish_up" class="form-control datetime date-pick" value="<?php echo ($page->publish_up ? $page->publish_up->toDateTimeString() : ($page->created_at ? $page->created_at->toDateTimeString() : '')); ?>" />
 								</div>
 
 								<div class="form-group col-md-6">
